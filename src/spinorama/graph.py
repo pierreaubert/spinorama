@@ -200,3 +200,25 @@ def display_template1(df, speaker, width=900, heigth=500):
                        hspl | vspl,
                        hcontour | vcontour)
 
+def display_vertical(df, speaker, width=900, heigth=500):
+    spinorama = display_spinorama(df, speaker, width, heigth)
+    onaxis    = display_onaxis(df, speaker, width, heigth)
+    inroom    = display_inroom(df, speaker, width, heigth)
+    ereflex   = display_reflection_early(df, speaker, width, heigth)
+    hreflex   = display_reflection_horizontal(df, speaker, width, heigth)
+    vreflex   = display_reflection_vertical(df, speaker, width, heigth)
+    hspl      = display_spl_horizontal(df, speaker, width, heigth)
+    vspl      = display_spl_vertical(df, speaker, width, heigth)
+    hcontour  = display_contour(compute_contour(df[speaker]['SPL Horizontal_unmelted']), width, heigth)
+    vcontour  = display_contour(compute_contour(df[speaker]['SPL Vertical_unmelted']), width, heigth)
+    return alt.vconcat(spinorama,
+                       onaxis,
+                       inroom,
+                       ereflex,
+                       hreflex,
+                       vreflex,
+                       hspl,
+                       vspl,
+                       hcontour,
+                       vcontour)
+
