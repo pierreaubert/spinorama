@@ -4,8 +4,6 @@ from locale import atof
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 import pandas as pd
 import numpy as np
-import altair as alt
-alt.data_transformers.disable_max_rows()
 
 removequote = str.maketrans({'"': None, '\n': ''})
 
