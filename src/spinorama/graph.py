@@ -1,5 +1,7 @@
+import pandas as pd
 import altair as alt
 alt.data_transformers.disable_max_rows()
+from .contour import compute_contour
 
 nearest = alt.selection(type='single', nearest=True, on='mouseover',fields=['Freq'], empty='none')
 # nearest
@@ -56,7 +58,7 @@ def display_contour_smoothing(speaker):
     ).configure_range(
     )
 
-def display_contour_sidebyside(speaker):
+def display_contour_sidebyside(df, speaker):
     contourH = compute_contour(df[speaker]['SPL Horizontal_unmelted'])
     contourV = compute_contour(df[speaker]['SPL Vertical_unmelted'])
     return alt.hconcat(
