@@ -1,4 +1,7 @@
 altair
 pandas
+voila
+jupyterlab
+
 
 
