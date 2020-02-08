@@ -54,27 +54,30 @@ def parse_graphs_speaker(speakerpath):
             dfs[title] = graph_melt(df)
             dfs[title+'_unmelted']=df
         except FileNotFoundError:
-            print('Speaker: '+speakerpath+' Not found: '+title)
+            # print('Speaker: '+speakerpath+' Not found: '+csv)
+            pass
 
     return dfs
 
 def parse_all_speakers():
     speakerlist= [
-    "Emotiva Airmotive 6s",
-    "Harbeth Monitor",
-    "JBL 104",
-    "KEF LS50",
-    "Kali IN-8",
-    "Micca RB42",
-    "Neumann KH 80",
-    "Pioneer SP-BS22-LR",
-    "Realistic MC-1000",
-    "Revel C52",
-    "Selah Audio RC3R",
-    "Yamaha HS5"
+        "Emotiva Airmotive 6s",
+        "Harbeth Monitor",
+        "JBL 104",
+        "KEF LS50",
+        "Kali IN-8",
+        "Micca RB42",
+        "Neumann KH 80",
+        "Pioneer SP-BS22-LR",
+        "Realistic MC-1000",
+        "Revel C52",
+        "Selah Audio RC3R",
+        "Yamaha HS5"
     ]
     df = {}
+    print('Loading speaker: ')
     for speaker in speakerlist:
+        print('  '+speaker+', ')
         df[speaker] = parse_graphs_speaker(speaker)
     return df
     
