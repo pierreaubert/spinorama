@@ -1,5 +1,7 @@
+.ipynb_checkpoints
 Untitled*.ipynb
 snippets*.ipynb
 *~
+__pycache__
 
 
