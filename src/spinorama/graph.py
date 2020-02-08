@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import altair as alt
 import matplotlib.pyplot as plt
@@ -31,22 +32,40 @@ def display_freq_sidebyside(s1, s2, name, width=450, heigth=450):
     return alt.hconcat(d1, d2)
     
 
-def display_contour(contour, width=400, heigth=180):
-    af, am, az = contour
-    source = pd.DataFrame({'Freq': af.ravel(), 'Angle': am.ravel(), 'dB': az.ravel()})
-    return alt.Chart(source).mark_rect(
-    ).transform_filter(
-        'datum.Freq>400'
-    ).encode(
-        alt.X('Freq:O'),
-        alt.Y('Angle:O'),
-        alt.Color('dB:Q',
-                  scale=alt.Scale(
-                      scheme='category20c'))
-    ).properties(
-        width=width, 
-        height=heigth
-    )
+def display_contour(df, width=400, heigth=180):
+    try:
+        af, am, az = compute_contour(df)
+        source = pd.DataFrame({'Freq': af.ravel(), 'Angle': am.ravel(), 'dB': az.ravel()})
+        return alt.Chart(source).mark_rect(
+           ).transform_filter(
+               'datum.Freq>400'
+           ).encode(
+               alt.X('Freq:O'),
+               alt.Y('Angle:O'),
+               alt.Color('dB:Q',
+                     scale=alt.Scale(
+                         scheme='category20c'))
+           ).properties(
+               width=width, 
+               height=heigth
+           )
+    except KeyError:
+        return None
+
+
+def display_contour_horizontal(df, speaker, width=400, heigth=180):
+    try:
+        dfs = df[speaker]['SPL Horizontal_unmelted']
+        return display_contour(dfs, width, heigth)
+    except KeyError:
+        return None
+
+def display_contour_vertical(df, speaker, width=400, heigth=180):
+    try:
+        dfs = df[speaker]['SPL Vertical_unmelted']
+        return display_contour(dfs, width, heigth)
+    except KeyError:
+        return None
 
 def display_contour2(contour, width=400, heigth=180):
     # slighly better looking
@@ -76,7 +95,7 @@ def display_contour_smoothing(speaker, width=450, heigth=450):
             display_contour(contourH, width, heigth), 
             display_contour(contourV, width, heigth)
             )
-    except KeyNotFound:
+    except KeyError:
        return None
 
 def display_contour_sidebyside(df, speaker, width=450, heigth=450):
@@ -85,7 +104,7 @@ def display_contour_sidebyside(df, speaker, width=450, heigth=450):
         contourV = compute_contour(df[speaker]['SPL Vertical_unmelted'])
         return alt.hconcat(display_contour(contourH, width, heigth), 
                            display_contour(contourV, width, heigth))
-    except KeyNotFound:
+    except KeyError:
        return None
 
 
@@ -94,13 +113,13 @@ def display_spinorama(df, speaker, width, heigth):
         spinorama=df[speaker]['CEA2034']
         spinorama = spinorama.loc[spinorama['Measurements'] != 'DI offset']
         return display_freq(spinorama, width, heigth)
-    except KeyNotFound:
-       return None
+    except KeyError:
+        return None
 
 def display_reflection_early(df, speaker, width, heigth):
     try:
         return display_freq(df[speaker]['Early Reflections'], width, heigth)
-    except KeyNotFound:
+    except KeyError:
        return None
 
 def display_onaxis(df, speaker, width, heigth):
@@ -118,7 +137,7 @@ def display_onaxis(df, speaker, width, heigth):
             color=alt.value('red')
         )
         return onaxis_graph+onaxis_reg
-    except KeyNotFound:
+    except KeyError:
         return None
 
 
@@ -136,20 +155,20 @@ def display_inroom(df, speaker, width, heigth):
             color=alt.value('red')
         )
         return inroom_graph+inroom_reg
-    except KeyNotFound:
+    except KeyError:
        return None
 
 
 def display_reflection_horizontal(df, speaker, width, heigth):
     try:
         return display_freq(df[speaker]['Horizontal Reflections'], width, heigth)
-    except KeyNotFound:
+    except KeyError:
        return None
 
 def display_reflection_vertical(df, speaker, width, heigth):
     try:
         return display_freq(df[speaker]['Vertical Reflections'], width, heigth)
-    except KeyNotFound:
+    except KeyError:
        return None
 
 def display_spl(df, speaker, axis, width, heigth):
@@ -158,20 +177,16 @@ def display_spl(df, speaker, axis, width, heigth):
         filter = {'Measurements': ['On-Axis', '10°', '20°', '30°', '40°', '50°', '60°']}
         mask = spl.isin(filter).any(1)
         return display_freq(spl[mask], width, heigth) #.interactive()
-    except KeyNotFound:
+    except KeyError:
        return None
+
 
 def display_spl_horizontal(df, speaker, width, heigth):
-    try:
-        return display_spl(df, speaker, 'SPL Horizontal', width, heigth)
-    except KeyNotFound:
-       return None
+    return display_spl(df, speaker, 'SPL Horizontal', width, heigth)
+
 
 def display_spl_vertical(df, speaker, width, heigth):
-    try:
-        return display_spl(df, speaker, 'SPL Vertical', width, heigth)
-    except KeyNotFound:
-       return None
+    return display_spl(df, speaker, 'SPL Vertical', width, heigth)
 
 
 def display_template1(df, speaker, width=900, heigth=500):
@@ -192,8 +207,8 @@ def display_template1(df, speaker, width=900, heigth=500):
     hspl      = display_spl_horizontal(df, speaker, width2, heigth2)
     vspl      = display_spl_vertical(df, speaker, width2, heigth2)
     # side by side
-    hcontour  = display_contour(compute_contour(df[speaker]['SPL Horizontal_unmelted']), width2, heigth2)
-    vcontour  = display_contour(compute_contour(df[speaker]['SPL Vertical_unmelted']), width2, heigth2)
+    hcontour  = display_contour_horizontal(df,speaker, width2, heigth2)
+    vcontour  = display_contour_vertical(df,speaker, width2, heigth2)
     return alt.vconcat(spinorama,
                        onaxis | inroom,
                        ereflex | hreflex | vreflex,
@@ -209,8 +224,8 @@ def display_vertical(df, speaker, width=900, heigth=500):
     vreflex   = display_reflection_vertical(df, speaker, width, heigth)
     hspl      = display_spl_horizontal(df, speaker, width, heigth)
     vspl      = display_spl_vertical(df, speaker, width, heigth)
-    hcontour  = display_contour(compute_contour(df[speaker]['SPL Horizontal_unmelted']), width, heigth)
-    vcontour  = display_contour(compute_contour(df[speaker]['SPL Vertical_unmelted']), width, heigth)
+    hcontour  = display_contour_horizontal(df,speaker, width, heigth)
+    vcontour  = display_contour_vertical(df,speaker, width, heigth)
     return alt.vconcat(spinorama,
                        onaxis,
                        inroom,
@@ -222,3 +237,31 @@ def display_vertical(df, speaker, width=900, heigth=500):
                        hcontour,
                        vcontour)
 
+
+def print_graph(speaker, title, chart, width, heigth):
+    filepath='docs/'+speaker+'/'+title
+    if chart is not None:
+        print('Writing: '+filepath+'.json')
+        chart.save(filepath+'.json')
+        chart.save(filepath+'.svg')
+        chart.save(filepath+'.png')
+
+
+def print_graphs(df, speaker, width=900, heigth=500):
+    dirpath = 'docs/'+speaker
+    if not os.path.exists(dirpath):
+        os.mkdir(dirpath)
+    graphs = {}
+    graphs['spinorama'] = display_spinorama(df, speaker, width, heigth)
+    graphs['onaxis']    = display_onaxis(df, speaker, width, heigth)
+    graphs['inroom']    = display_inroom(df, speaker, width, heigth)
+    graphs['ereflex']   = display_reflection_early(df, speaker, width, heigth)
+    graphs['hreflex']   = display_reflection_horizontal(df, speaker, width, heigth)
+    graphs['vreflex']   = display_reflection_vertical(df, speaker, width, heigth)
+    graphs['hspl']      = display_spl_horizontal(df, speaker, width, heigth)
+    graphs['vspl']      = display_spl_vertical(df, speaker, width, heigth)
+    graphs['hcontour']  = display_contour_horizontal(df, speaker, width, heigth)
+    graphs['vcontour']  = display_contour_vertical(df, speaker, width, heigth)
+
+    for (title, graph) in graphs.items():
+        print_graph(speaker, title, graph, width, heigth)
