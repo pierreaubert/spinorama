@@ -8,17 +8,17 @@ Here is an example:
 
 ## Usage
 
-### Browse the gallery
+### Browse the [gallery]()
 
 ### Using Voila
 
 ### Using python, ipython and Jupyter-Lab
 
+```
 pip3 install -r requirements.txt 
+```
+
+```
 jupiter-lab &
-
-## And now
-
-
-[spinex](https://github.com/pierreaubert/docs/)
+```
 
