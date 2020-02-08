@@ -4,7 +4,7 @@ alt.data_transformers.disable_max_rows()
 nearest = alt.selection(type='single', nearest=True, on='mouseover',fields=['Freq'], empty='none')
 # nearest
 
-def display_graph_freq(df, width=900, heigth=500):
+def display_freq(df, width=900, heigth=500):
     line = alt.Chart(df).mark_line(
             interpolate='basis'
     ).encode(
@@ -22,8 +22,45 @@ def display_graph_freq(df, width=900, heigth=500):
     return line+selectors+points+rules+text
 
 
-def display_graph_sidebyside(s1, s2, name):
-    d1 = display_graph_freq(s1[name], 450, 450)
-    d2 = display_graph_freq(s2[name], 450, 450)
+def display_freq_sidebyside(s1, s2, name):
+    d1 = display_freq(s1[name], 450, 450)
+    d2 = display_freq(s2[name], 450, 450)
     return alt.hconcat(d1, d2)
     
+
+def display_contour(contour):
+    af, am, az = contour
+    source = pd.DataFrame({'Freq': af.ravel(), 'Angle': am.ravel(), 'dB': az.ravel()})
+    return alt.Chart(source).mark_rect(
+    ).transform_filter(
+        'datum.Freq>400'
+    ).encode(
+        alt.X('Freq:O'),
+        alt.Y('Angle:O'),
+        alt.Color('dB:Q',
+                  scale=alt.Scale(
+                      scheme='category20c'))
+    ).properties(
+        width=400,
+        height=180
+    )
+
+def display_contour_smoothing(speaker):
+    contourH = compute_contour(df[speaker]['SPL Horizontal_unmelted'])
+    hx, hy, hz = contourH
+    contourV = (hx, hy, np.array(smooth2D(hz)))
+    #contourV = compute_contour(df[speaker]['SPL Vertical_unmelted'])
+    return alt.hconcat(
+        contour_graph(contourH), 
+        contour_graph(contourV)
+    ).configure_range(
+    )
+
+def display_contour_sidebyside(speaker):
+    contourH = compute_contour(df[speaker]['SPL Horizontal_unmelted'])
+    contourV = compute_contour(df[speaker]['SPL Vertical_unmelted'])
+    return alt.hconcat(
+        display_contour(contourH), 
+        display_contour(contourV)
+    ).configure_range(
+    )
