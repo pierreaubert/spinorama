@@ -1,0 +1,66 @@
+<html>
+<head>
+  <title>Spinorama for Revel C52 measured at audiosciencereview.com</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@4"></script>
+</head>
+<body>
+  <h1>Spinorama for Revel C52 measured at <a href="audiosciencereview.com">AudioScienceReview</a></h1>
+
+  
+
+  <ul>
+    <li>CEA2034</li>
+    <div>
+       <img src="https://github.com/pierreaubert/spinorama/raw/master/docs/Revel%20C52/CEA2034.png">
+    </div>
+    <li>CEA2034_unmelted</li>
+    <div>
+       <img src="https://github.com/pierreaubert/spinorama/raw/master/docs/Revel%20C52/CEA2034_unmelted.png">
+    </div>
+    <li>Estimated In-Room Response</li>
+    <div>
+       <img src="https://github.com/pierreaubert/spinorama/raw/master/docs/Revel%20C52/Estimated In-Room Response.png">
+    </div>
+    <li>Estimated In-Room Response_unmelted</li>
+    <div>
+       <img src="https://github.com/pierreaubert/spinorama/raw/master/docs/Revel%20C52/Estimated In-Room Response_unmelted.png">
+    </div>
+  </ul>
+
+  <div id="vis"></div>
+  <script type="text/javascript">
+    var spec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+      "config": {
+        "view": {
+          "height": 300,
+          "width": 400
+        }
+      },
+      "data": {
+        "url": "https://vega.github.io/vega-datasets/data/cars.json"
+      },
+      "encoding": {
+        "color": {
+          "field": "Origin",
+          "type": "nominal"
+        },
+        "x": {
+          "field": "Horsepower",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "Miles_per_Gallon",
+          "type": "quantitative"
+        }
+      },
+      "mark": "point"
+    };
+    var opt = {"renderer": "canvas", "actions": false};
+    vegaEmbed("#vis", spec, opt);
+  </script>
+
+</body>
+</html>
