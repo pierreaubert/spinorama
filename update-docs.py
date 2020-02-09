@@ -24,6 +24,7 @@ usage: update-docs.py [--version]
 from mako.template import Template
 from src.spinorama.load import parse_all_speakers
 from src.spinorama.graph import print_graphs
+from src.spinorama.analysis import estimates
 
 from docopt import docopt
 
@@ -34,9 +35,18 @@ if __name__ == '__main__':
     
     df = parse_all_speakers()
 
+    meta = {}
+    for k,v in df.items():
+        try:
+            spin = df[k]['CEA2034']
+            onaxis = spin.loc[spin['Measurements']=='On Axis']
+            meta[k] = estimates(onaxis)
+        except ValueError:
+            print('Computing estimates failed for speaker: '+k)
+
     index_html = Template(filename='templates/index.html')
     with open('docs/index.html','w') as f:
-        f.write(index_html.render(speakers=df))
+        f.write(index_html.render(speakers=df, meta=meta))
         f.close()
 
     speaker_html = Template(filename='templates/speaker.html')
@@ -57,6 +67,9 @@ if __name__ == '__main__':
                 ]
             freqs={key: measurements[key] for key in freq_filter if key in measurements}
             contours={key: measurements[key] for key in contour_filter if key in measurements}
-            f.write(speaker_html.render(speaker=speaker, freqs=freqs, contours=contours))
+            f.write(speaker_html.render(speaker=speaker, 
+                                        freqs=freqs, 
+                                        contours=contours, 
+                                        meta=meta))
             f.close()
 
