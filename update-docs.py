@@ -18,12 +18,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-usage: update-graphs.py [--version] [-w|--width] [-h|--heigth]
+usage: update-docs.py [--version] 
 
-options:
-   -w width size in pixel
-   -h heigth size in pixel
 """
+from mako.template import Template
 from src.spinorama.load import parse_all_speakers
 from src.spinorama.graph import print_graphs
 
@@ -31,14 +29,13 @@ from docopt import docopt
 
 if __name__ == '__main__':
     args = docopt(__doc__,
-                  version='update-graphs.py version 1.0',
+                  version='update-docs.py version 1.0',
                   options_first=True)
     
-    print(args)
-
-    width = 900
-    heigth = 500
-
     df = parse_all_speakers()
-    for (speaker, measurements) in df.items():
-        print_graphs(df, speaker, width, heigth)
+
+    index_html = Template(filename='templates/index.html')
+    with open('docs/index.html','w') as f:
+        f.write(index_html.render(speakers=df))
+        f.close()
+
