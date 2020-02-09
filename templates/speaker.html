@@ -20,13 +20,17 @@
   % for freq in freqs:
     <li>${freq}</li>
     <div>
-       <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${freq}.png">
+       <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${freq | space2url}.html">>
+         <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${freq | space2url}.png">
+       </a>
     </div>
   % endfor
   % for contour in contours:
     <li>${contour | unmelt }</li>
     <div>
-       <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${contour | unmelt}.png">
+       <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${contour | space2url}.html">>
+         <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${contour | unmelt, space2url}.png">
+       </a>
     </div>
   % endfor
   </ul>
