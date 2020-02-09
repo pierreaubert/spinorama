@@ -11,49 +11,25 @@
 <%!
     def space2url(text):
         return text.replace(' ', '%20')
+
+    def unmelt(text):
+        return text.replace('_unmelted', ' Contour')
 %>  
 
   <ul>
-  % for measurement in measurements:
-    <li>${measurement}</li>
+  % for freq in freqs:
+    <li>${freq}</li>
     <div>
-       <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${measurement}.png">
+       <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${freq}.png">
+    </div>
+  % endfor
+  % for contour in contours:
+    <li>${contour | unmelt }</li>
+    <div>
+       <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${contour | unmelt}.png">
     </div>
   % endfor
   </ul>
-
-  <div id="vis"></div>
-  <script type="text/javascript">
-    var spec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
-      "config": {
-        "view": {
-          "height": 300,
-          "width": 400
-        }
-      },
-      "data": {
-        "url": "https://vega.github.io/vega-datasets/data/cars.json"
-      },
-      "encoding": {
-        "color": {
-          "field": "Origin",
-          "type": "nominal"
-        },
-        "x": {
-          "field": "Horsepower",
-          "type": "quantitative"
-        },
-        "y": {
-          "field": "Miles_per_Gallon",
-          "type": "quantitative"
-        }
-      },
-      "mark": "point"
-    };
-    var opt = {"renderer": "canvas", "actions": false};
-    vegaEmbed("#vis", spec, opt);
-  </script>
 
 </body>
 </html>

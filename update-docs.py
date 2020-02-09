@@ -42,7 +42,7 @@ if __name__ == '__main__':
     speaker_html = Template(filename='templates/speaker.html')
     for speaker, measurements in df.items():
         with open('docs/'+speaker+'.html','w') as f:
-            filter = [
+            freq_filter = [
                 "CEA2034", 
                 "Early Reflections", 
                 "Estimated In-Room Response", 
@@ -51,7 +51,12 @@ if __name__ == '__main__':
                 "SPL Horizontal", 
                 "SPL Vertical"
                 ]
-            freq={key: measurements[key] for key in filter if key in measurements}
-            f.write(speaker_html.render(speaker=speaker, measurements=freq))
+            contour_filter = [
+                "SPL Horizontal_unmelted", 
+                "SPL Vertical_unmelted"
+                ]
+            freqs={key: measurements[key] for key in freq_filter if key in measurements}
+            contours={key: measurements[key] for key in contour_filter if key in measurements}
+            f.write(speaker_html.render(speaker=speaker, freqs=freqs, contours=contours))
             f.close()
 
