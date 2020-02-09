@@ -15,11 +15,11 @@
 
   <table>
   % for speaker in speakers:
-    <tr>
-      <td>${speaker}</td><td></td>
+    <tr rowspan=2>
+      <td><h2>${speaker}</h2></td>
     </tr>
     <tr>
-      <td>
+      <td style="vertical-align: top">
 	% if meta[speaker] is not UNDEFINED:
         <ul>
           <li>-3dB at ${meta[speaker][1]} Hz</li>
