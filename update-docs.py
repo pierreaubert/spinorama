@@ -39,3 +39,9 @@ if __name__ == '__main__':
         f.write(index_html.render(speakers=df))
         f.close()
 
+    speaker_html = Template(filename='templates/speaker.html')
+    for speaker, measurements in df.items():
+        with open('docs/'+speaker+'.html','w') as f:
+            f.write(speaker_html.render(speaker=speaker, measurements=measurements))
+            f.close()
+

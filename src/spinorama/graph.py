@@ -243,7 +243,7 @@ def print_graph(speaker, title, chart, width, heigth):
     if chart is not None:
         print('Writing: '+filepath+'.json')
         chart.save(filepath+'.json')
-        chart.save(filepath+'.svg')
+        # large file :chart.save(filepath+'.svg')
         chart.save(filepath+'.png')
 
 
@@ -252,16 +252,16 @@ def print_graphs(df, speaker, width=900, heigth=500):
     if not os.path.exists(dirpath):
         os.mkdir(dirpath)
     graphs = {}
-    graphs['spinorama'] = display_spinorama(df, speaker, width, heigth)
-    graphs['onaxis']    = display_onaxis(df, speaker, width, heigth)
-    graphs['inroom']    = display_inroom(df, speaker, width, heigth)
-    graphs['ereflex']   = display_reflection_early(df, speaker, width, heigth)
-    graphs['hreflex']   = display_reflection_horizontal(df, speaker, width, heigth)
-    graphs['vreflex']   = display_reflection_vertical(df, speaker, width, heigth)
-    graphs['hspl']      = display_spl_horizontal(df, speaker, width, heigth)
-    graphs['vspl']      = display_spl_vertical(df, speaker, width, heigth)
-    graphs['hcontour']  = display_contour_horizontal(df, speaker, width, heigth)
-    graphs['vcontour']  = display_contour_vertical(df, speaker, width, heigth)
+    graphs['CEA2034'] = display_spinorama(df, speaker, width, heigth)
+    graphs['On Axis'] = display_onaxis(df, speaker, width, heigth)
+    graphs['Estimated In-Room Response']  = display_inroom(df, speaker, width, heigth)
+    graphs['Early Reflections'] = display_reflection_early(df, speaker, width, heigth)
+    graphs['Horizontal Reflections'] = display_reflection_horizontal(df, speaker, width, heigth)
+    graphs['Vertical Reflections'] = display_reflection_vertical(df, speaker, width, heigth)
+    graphs['SPL Horizontal'] = display_spl_horizontal(df, speaker, width, heigth)
+    graphs['SPL Vertical'] = display_spl_vertical(df, speaker, width, heigth)
+    graphs['SPL Horizontal Contour'] = display_contour_horizontal(df, speaker, width, heigth)
+    graphs['SPL Vertical Contour'] = display_contour_vertical(df, speaker, width, heigth)
 
     for (title, graph) in graphs.items():
         print_graph(speaker, title, graph, width, heigth)

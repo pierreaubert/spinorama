@@ -34,8 +34,6 @@ if __name__ == '__main__':
                   version='update-graphs.py version 1.0',
                   options_first=True)
     
-    print(args)
-
     width = 900
     heigth = 500
 
