@@ -4,7 +4,7 @@ What's a spinorama graph? It is a way to understand quickly a speaker properties
 
 Here is an example:
 
-![image](https://github.com/pierreaubert/spinorama/blob/master/docs/graphs/Neumann%20KH%2080/cea2034.png)
+![image](https://github.com/pierreaubert/spinorama/blob/master/docs/Neumann%20KH%2080/spinorama.png)
 
 ## Usage
 
