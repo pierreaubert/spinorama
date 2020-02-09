@@ -2,6 +2,8 @@
 Untitled*.ipynb
 snippets*.ipynb
 *~
+#*#
+.#*
 __pycache__
 
 
