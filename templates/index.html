@@ -13,16 +13,29 @@
         return text.replace(' ', '%20')
 %>  
 
-  <ul>
+  <table>
   % for speaker in speakers:
-    <li>${speaker}</li>
-    <div>
-      <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}.html">
-       <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/CEA2034.png" alt='Spinorama' width=400 heigth=400>
-      </a>
-    </div>
+    <tr>
+      <td>${speaker}</td><td></td>
+    </tr>
+    <tr>
+      <td>
+	% if meta[speaker] is not UNDEFINED:
+        <ul>
+          <li>-3dB at ${meta[speaker][1]} Hz</li>
+	  <li>-6dB at ${meta[speaker][2]} Hz</li>
+	  <li>Freqency response is ${meta[speaker][0]}+/-${meta[speaker][3]}dB over 80Hz-20kHz</li>
+          </ul>
+	% endif
+      </td> 
+      <td>
+        <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}.html">
+         <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/CEA2034.png" alt='Spinorama' width=400 heigth=400 />
+        </a>
+      </td>
+    </tr>
   % endfor
-  </ul>
+  </table>
 
 </body>
 </html>
