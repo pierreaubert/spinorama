@@ -241,8 +241,9 @@ def display_vertical(df, speaker, width=900, heigth=500):
 def print_graph(speaker, title, chart, width, heigth):
     filepath='docs/'+speaker+'/'+title
     if chart is not None:
-        print('Writing: '+filepath+'.json')
+        print('Writing: '+filepath+'.(json|svg|html|png)')
         chart.save(filepath+'.json')
+        chart.save(filepath+'.html')
         # large file :chart.save(filepath+'.svg')
         chart.save(filepath+'.png')
 
@@ -251,6 +252,7 @@ def print_graphs(df, speaker, width=900, heigth=500):
     dirpath = 'docs/'+speaker
     if not os.path.exists(dirpath):
         os.mkdir(dirpath)
+
     graphs = {}
     graphs['CEA2034'] = display_spinorama(df, speaker, width, heigth)
     graphs['On Axis'] = display_onaxis(df, speaker, width, heigth)
