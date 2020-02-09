@@ -6,7 +6,16 @@ Here is an example:
 
 ![image](https://github.com/pierreaubert/spinorama/blob/master/docs/Neumann%20KH%2080/CEA2034.png)
 
-# Browse the [gallery](https://github.com/pierreaubert/spinorama/blob/master/docs/index.html)
+- On Axis: this the frequency response. You expect it to be as flat as possible after 100Hz.
+- Listening Window: an average of various measurements around on axis. Expected to be close to the previous one.
+- Sound power: expected to be a smooth, slowy growing line.
+
+The speaker above is *very* good.
+
+Please read this [post](https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-and-control-1-pro-monitors-review.10811/) 
+to get a better insight on how to analyse a spinorama.
+
+# Browse the [gallery](https://pierreaubert.github.com/spinorama) of all ASR speaker measurements.
 
 # Other ways to look at the graphs in a more interactive way.
 
