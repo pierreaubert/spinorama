@@ -8,4 +8,4 @@ jupyterlab
 matplotlib
 selenium
 docopt
-
+mako
