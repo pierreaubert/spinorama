@@ -6,7 +6,6 @@ alt.data_transformers.disable_max_rows()
 from .contour import compute_contour
 
 nearest = alt.selection(type='single', nearest=True, on='mouseover',fields=['Freq'], empty='none')
-# nearest
 
 def display_freq(df, width=900, heigth=500):
     line = alt.Chart(df).mark_line(
