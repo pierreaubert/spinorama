@@ -1,5 +1,6 @@
 import os
-import  math
+import math
+import numpy as np
 import pandas as pd
 import altair as alt
 import matplotlib.pyplot as plt
@@ -52,7 +53,7 @@ def display_contour(df, width=400, heigth=180):
     except KeyError:
         return None
 
-def display_radar(df, width, heigth):
+def display_radar(dfu, width, heigth):
     # build a grid
     radius=0
     anglelist = [a for a in range(-180,180,10)]
@@ -112,7 +113,7 @@ def display_radar(df, width, heigth):
     dbY = []
     hzZ = []
     for ihz in [47, 113, 180]:
-        X, Y, Z = project(splu.loc[ihz][1:])
+        X, Y, Z = project(dfu.loc[ihz][1:])
         # add to global variable
         dbX.append(X)
         dbY.append(Y)
