@@ -1,4 +1,5 @@
 import os
+import  math
 import pandas as pd
 import altair as alt
 import matplotlib.pyplot as plt
@@ -51,6 +52,131 @@ def display_contour(df, width=400, heigth=180):
     except KeyError:
         return None
 
+def display_radar(df, width, heigth):
+    # build a grid
+    radius=0
+    anglelist = [a for a in range(-180,180,10)]
+    grid0 = [(radius*math.cos(p*math.pi/180), radius*math.sin(p*math.pi/180)) for p in anglelist]
+    radius=1
+    gridC = [(radius*math.cos(p*math.pi/180), radius*math.sin(p*math.pi/180)) for p in anglelist]
+    gridX = [(g0[0],gC[0]) for (g0, gC) in zip(grid0, gridC)] 
+    gridX = [s for s2 in gridX for s in s2]
+    gridY = [(g0[1],gC[1]) for (g0, gC) in zip(grid0, gridC)] 
+    gridY = [s for s2 in gridY for s in s2]
+
+    def build_circle(radius):
+        circleC = [radius for i in range(0, len(anglelist)+1)]
+        circleX = [circleC[i]*math.cos(anglelist[i]*math.pi/180) for i in range(0,len(anglelist))]
+        circleY = [circleC[i]*math.sin(anglelist[i]*math.pi/180) for i in range(0,len(anglelist))]
+        circleX.append(circleX[0])
+        circleY.append(circleY[0])
+        return circleX, circleY
+
+    # 100hz 47
+    #  1khz 113
+    # 10khz 180
+    def hzname(i):
+        if i == 47:
+            return '100 Hz'
+        elif i == 113:
+            return '1 kHz'
+        elif i == 180:
+            return '10 kHz'
+        else:
+            return 'error'
+
+    def project(gridZ):
+        angles = []
+        values = {}
+        dbs = []
+        for a, z in zip(gridZ.index,gridZ):
+            angle = 0
+            if a != 'On-Axis':
+                angle = int(a[:-1])
+            angles.append(angle)
+            dbs.append(z)
+
+        # map in 2d
+        dbsX = [db*math.cos(a*math.pi/180) for a,db in zip(angles, dbs)]
+        dbsY = [db*math.sin(a*math.pi/180) for a,db in zip(angles, dbs)]
+    
+        # join with first point (-180=180)
+        dbsX.append(dbsX[0])
+        dbsY.append(dbsY[0])
+
+        return dbsX, dbsY, [ihz for i in range(0,len(dbsX))]
+
+
+    # build 3 plots 
+    dbX = []
+    dbY = []
+    hzZ = []
+    for ihz in [47, 113, 180]:
+        X, Y, Z = project(splu.loc[ihz][1:])
+        # add to global variable
+        dbX.append(X)
+        dbY.append(Y)
+        hzZ.append(Z)
+
+    # normalise
+    dbmax = max(np.array(dbX).max(), np.array(dbY).max())
+    dbX = [v2/dbmax for v1 in dbX for v2 in v1]
+    dbY = [v2/dbmax for v1 in dbY for v2 in v1]
+    hzZ = [hzname(i2) for i1 in hzZ for i2 in i1]
+
+    grid_df = pd.DataFrame({'x': gridX, 'y': gridY })
+    grid = alt.Chart(grid_df).mark_line(
+    ).encode(
+        alt.Latitude('x:Q'), 
+        alt.Longitude('y:Q'),
+        size=alt.value(1)
+    ).project(
+        type='azimuthalEquidistant',
+        rotate=[0, 0, 90]   
+    )
+
+    circleX, circleY = build_circle(0.8)
+    circle_df = pd.DataFrame({'x': circleX, 'y': circleY })
+    circle = alt.Chart(circle_df).mark_line().encode(
+        alt.Latitude('x:Q'), 
+        alt.Longitude('y:Q'),
+        size=alt.value(1)
+    ).project(
+        type='azimuthalEquidistant',
+        rotate=[0, 0, 90]   
+    )
+   
+    def angle2str(a):
+        if a % 30 == 0:
+            return '{:d}°'.format(a)
+        else:
+            return ''
+   
+    textX, textY = build_circle(1.1)
+    textT = [angle2str(a) for a in anglelist] + ['']
+    text_df = pd.DataFrame({'x': textX, 'y': textY, 'text': textT })
+    text = alt.Chart(text_df).mark_text().encode(
+        alt.Latitude('x:Q'), 
+        alt.Longitude('y:Q'),
+        text='text:O'
+    ).project(
+        type='azimuthalEquidistant',
+        rotate=[0, 0, 90]   
+    )
+
+    dbs_df = pd.DataFrame({'x': dbX, 'y': dbY, 'Freq': hzZ })
+    dbs = alt.Chart(dbs_df).mark_line().encode(
+        alt.Latitude('x:Q'), 
+        alt.Longitude('y:Q'),
+        alt.Color('Freq:N', sort=None),
+        size=alt.value(3)
+    ).project(
+        type='azimuthalEquidistant',
+        rotate=[0, 0, 90]   
+    )
+   
+    return dbs+grid+circle+text
+
 
 def display_contour_horizontal(df, speaker, width=400, heigth=180):
     try:
@@ -63,6 +189,20 @@ def display_contour_vertical(df, speaker, width=400, heigth=180):
     try:
         dfs = df[speaker]['SPL Vertical_unmelted']
         return display_contour(dfs, width, heigth)
+    except KeyError:
+        return None
+
+def display_radar_horizontal(df, speaker, width=400, heigth=180):
+    try:
+        dfs = df[speaker]['SPL Horizontal_unmelted']
+        return display_radar(dfs, width, heigth)
+    except KeyError:
+        return None
+
+def display_radar_vertical(df, speaker, width=400, heigth=180):
+    try:
+        dfs = df[speaker]['SPL Vertical_unmelted']
+        return display_radar(dfs, width, heigth)
     except KeyError:
         return None
 
@@ -224,7 +364,9 @@ def display_vertical(df, speaker, width=900, heigth=500):
     hspl      = display_spl_horizontal(df, speaker, width, heigth)
     vspl      = display_spl_vertical(df, speaker, width, heigth)
     hcontour  = display_contour_horizontal(df,speaker, width, heigth)
+    hradar    = display_radar_horizontal(df,speaker, width, heigth)
     vcontour  = display_contour_vertical(df,speaker, width, heigth)
+    vradar    = display_radar_vertical(df,speaker, width, heigth)
     return alt.vconcat(spinorama,
                        onaxis,
                        inroom,
@@ -234,7 +376,9 @@ def display_vertical(df, speaker, width=900, heigth=500):
                        hspl,
                        vspl,
                        hcontour,
-                       vcontour)
+                       hradar,
+                       vcontour,
+                       vradar)
 
 
 def print_graph(speaker, title, chart, width, heigth, force):
@@ -264,6 +408,8 @@ def print_graphs(df, speaker, width=900, heigth=500, force=False):
     graphs['SPL Vertical'] = display_spl_vertical(df, speaker, width, heigth)
     graphs['SPL Horizontal Contour'] = display_contour_horizontal(df, speaker, width, heigth)
     graphs['SPL Vertical Contour'] = display_contour_vertical(df, speaker, width, heigth)
+    graphs['SPL Horizontal Radar'] = display_radar_horizontal(df, speaker, width, heigth)
+    graphs['SPL Vertical Radar'] = display_radar_vertical(df, speaker, width, heigth)
 
     updated = 0
     for (title, graph) in graphs.items():
