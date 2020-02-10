@@ -238,17 +238,18 @@ def display_vertical(df, speaker, width=900, heigth=500):
                        vcontour)
 
 
-def print_graph(speaker, title, chart, width, heigth):
+def print_graph(speaker, title, chart, width, heigth, force):
+    updated = 0
     filepath='docs/'+speaker+'/'+title
     if chart is not None:
-        print('Writing: '+filepath+'.(json|svg|html|png)')
-        chart.save(filepath+'.json')
-        chart.save(filepath+'.html')
-        # large file :chart.save(filepath+'.svg')
-        chart.save(filepath+'.png')
+        for ext in ['.json', '.png', '.html']: # .svg skipped slow
+            if force or not os.path.exists(filepath+ext):
+                chart.save(filepath+ext)
+                updated += 1
+    return updated
 
 
-def print_graphs(df, speaker, width=900, heigth=500):
+def print_graphs(df, speaker, width=900, heigth=500, force=False):
     dirpath = 'docs/'+speaker
     if not os.path.exists(dirpath):
         os.mkdir(dirpath)
@@ -265,5 +266,7 @@ def print_graphs(df, speaker, width=900, heigth=500):
     graphs['SPL Horizontal Contour'] = display_contour_horizontal(df, speaker, width, heigth)
     graphs['SPL Vertical Contour'] = display_contour_vertical(df, speaker, width, heigth)
 
+    updated = 0
     for (title, graph) in graphs.items():
-        print_graph(speaker, title, graph, width, heigth)
+        updated += print_graph(speaker, title, graph, width, heigth, force)
+    print('Speaker: {:s} updated {:2d} files'.format(speaker, updated))
