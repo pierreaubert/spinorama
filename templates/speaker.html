@@ -33,6 +33,14 @@
        </a>
     </div>
   % endfor
+  % for radar in radars:
+    <li>${radar | unmelt }</li>
+    <div>
+       <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${radar | space2url}.html">
+         <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${radar | unmelt, space2url}.png">
+       </a>
+    </div>
+  % endfor
   </ul>
 
 </body>
