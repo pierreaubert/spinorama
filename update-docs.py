@@ -61,15 +61,21 @@ if __name__ == '__main__':
                 "SPL Horizontal", 
                 "SPL Vertical"
                 ]
+            freqs={key: measurements[key] for key in freq_filter if key in measurements}
             contour_filter = [
                 "SPL Horizontal_unmelted", 
                 "SPL Vertical_unmelted"
                 ]
-            freqs={key: measurements[key] for key in freq_filter if key in measurements}
             contours={key: measurements[key] for key in contour_filter if key in measurements}
+            radar_filter = [
+                "SPL Horizontal_unmelted", 
+                "SPL Vertical_unmelted"
+                ]
+            radars={key: measurements[key] for key in radar_filter if key in measurements}
             f.write(speaker_html.render(speaker=speaker, 
                                         freqs=freqs, 
                                         contours=contours, 
+                                        radars=radars, 
                                         meta=meta))
             f.close()
 
