@@ -12,8 +12,11 @@
     def space2url(text):
         return text.replace(' ', '%20')
 
-    def unmelt(text):
+    def unmeltC(text):
         return text.replace('_unmelted', ' Contour')
+
+    def unmeltR(text):
+        return text.replace('_unmelted', ' Radar')
 %>  
 
   <ul>
@@ -26,18 +29,18 @@
     </div>
   % endfor
   % for contour in contours:
-    <li>${contour | unmelt }</li>
+    <li>${contour | unmeltC }</li>
     <div>
-       <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${contour | space2url}.html">
-         <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${contour | unmelt, space2url}.png">
+       <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${contour | unmeltC, space2url}.html">
+         <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${contour | unmeltC, space2url}.png">
        </a>
     </div>
   % endfor
   % for radar in radars:
-    <li>${radar | unmelt }</li>
+    <li>${radar | unmeltR }</li>
     <div>
-       <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${radar | space2url}.html">
-         <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${radar | unmelt, space2url}.png">
+       <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${radar | unmeltR, space2url}.html">
+         <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${radar | unmeltR, space2url}.png">
        </a>
     </div>
   % endfor
