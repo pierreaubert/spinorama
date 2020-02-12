@@ -448,7 +448,7 @@ def print_graph(speaker, title, chart, width, heigth, force, fileext):
         for ext in ['json', 'png', 'html']:  # svg skipped slow
             filename = filepath + '.' + ext
             if force or not os.path.exists(filepathname):
-                if fileext is None or (filext is not None and fileext == ext):
+                if fileext is None or (fileext is not None and fileext == ext):
                     chart.save(filename)
                     updated += 1
     return updated
