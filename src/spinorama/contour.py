@@ -54,7 +54,7 @@ kernel55 = [
 offset55 = 2
 sum55 = np.array(kernel55).sum()
 
-def smooth(z,i,j,zx,zy):
+def smooth(z,i,j,zx,zy, offset, kernel, total):
     s = 0
     if i<offset or (zx-i)<offset or j<offset or (zy-j)<offset:
         s = z[i][j]
@@ -63,7 +63,7 @@ def smooth(z,i,j,zx,zy):
         for ii in range(-offset,offset):
             for jj in range(-offset,offset):
                 s += kernel[ii+offset][jj+offset]*z[i+ii][j+jj]
-        s /= kernel_total
+        s /= total
     return s
 
 def smooth2D(z):
@@ -72,7 +72,7 @@ def smooth2D(z):
     kernel = kernel55
     offset = offset55
     kernel_total = sum55
-    return [[smooth(z,i,j,zx,zy) for j in range(0,zy)] for i in range(0,zx)]
+    return [[smooth(z,i,j,zx,zy, offset, kernel, kernel_total) for j in range(0,zy)] for i in range(0,zx)]
 
 
 def near(t,v):

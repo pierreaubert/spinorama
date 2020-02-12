@@ -5,7 +5,7 @@ import pandas as pd
 import altair as alt
 import matplotlib.pyplot as plt
 alt.data_transformers.disable_max_rows()
-from .contour import compute_contour
+from .contour import compute_contour, smooth2D
 
 nearest = alt.selection(type='single', nearest=True, on='mouseover',fields=['Freq'], empty='none')
 
@@ -28,8 +28,8 @@ def display_freq(df, width=900, heigth=500):
 
 
 def display_freq_sidebyside(s1, s2, name, width=450, heigth=450):
-    d1 = display_freq(s1[name], weigth, heigth)
-    d2 = display_freq(s2[name], weigth, heigth)
+    d1 = display_freq(s1[name], width, heigth)
+    d2 = display_freq(s2[name], width, heigth)
     return alt.hconcat(d1, d2)
     
 
@@ -225,7 +225,7 @@ def display_contour2(contour, width=400, heigth=180):
     plt.show()
 
 
-def display_contour_smoothing(speaker, width=450, heigth=450):
+def display_contour_smoothing(df, speaker, width=450, heigth=450):
     try:
         contourH = compute_contour(df[speaker]['SPL Horizontal_unmelted'])
         hx, hy, hz = contourH
