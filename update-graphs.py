@@ -17,12 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Usage: update-graphs.py [-v] [-f] [--width=SIZE] [--heigth=SIZE]
+"""Usage: update-graphs.py [-v] [--width=SIZE] [--heigth=SIZE] [--force]
 
 Options:
   --width=<width>   width size in pixel
   --heigth=<heigth> heigth size in pixel
-  -f                   force regeneration of all graphs, by default only generate new ones
+  --force           force regeneration of all graphs, by default only generate new ones
 """
 from src.spinorama.load import parse_all_speakers
 from src.spinorama.graph import print_graphs
@@ -34,9 +34,9 @@ if __name__ == '__main__':
                   version='update-graphs.py version 1.0',
                   options_first=True)
 
-    width = 900
-    heigth = 500
-    force = args['-f']
+    width = 1200
+    heigth = 600
+    force = args['--force']
 
     if args['--width'] is not None:
         width = int(args['--width'])
