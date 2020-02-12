@@ -20,7 +20,7 @@ def display_freq(df, width=900, heigth=500):
     # one on Frequency one on Measurements
     selectorFreqs = alt.Chart(df).mark_point().encode(
         x='Freq:Q', opacity=alt.value(0)).add_selection(nearest)
-    selectorsMeasurements = alt.selection_multi(
+    selectorMeasurements = alt.selection_multi(
         fields=['Measurements'], 
         bind='legend')
 
@@ -36,8 +36,7 @@ def display_freq(df, width=900, heigth=500):
         height=heigth
     )
     # points+text+rules goes together
-    points = line.mark_point().encode(
-        opacity=alt.condition(
+    points = line.mark_point().encode(opacity=alt.condition(
             nearest, alt.value(1), alt.value(0)))
     textDB = line.mark_text(align='left', dx=50, dy=25).encode(
         text=alt.condition(nearest, 'dB:Q', alt.value(' '), format='0.f'))
@@ -45,7 +44,7 @@ def display_freq(df, width=900, heigth=500):
         text=alt.condition(nearest, 'Freq:Q', alt.value(' '), format='0.f'))
     rules = alt.Chart(df).mark_rule(color='gray').encode(
         x='Freq:Q').transform_filter(nearest)
-    return line.add_selection(selectorsMeasurements) + \
+    return line.add_selection(selectorMeasurements) + \
         selectorFreqs + points + rules + textDB + textFreq
 
 
@@ -440,18 +439,20 @@ def display_vertical(df, speaker, width=900, heigth=500):
                        vradar)
 
 
-def print_graph(speaker, title, chart, width, heigth, force):
+def print_graph(speaker, title, chart, width, heigth, force, fileext):
     updated = 0
     filepath = 'docs/' + speaker + '/' + title
     if chart is not None:
-        for ext in ['.json', '.png', '.html']:  # .svg skipped slow
-            if force or not os.path.exists(filepath + ext):
-                chart.save(filepath + ext)
-                updated += 1
+        for ext in ['json', 'png', 'html']:  # svg skipped slow
+            filename = filepath + '.' + ext
+            if force or not os.path.exists(filepathname):
+                if fileext is not None and fileext == ext:
+                    chart.save(filename)
+                    updated += 1
     return updated
 
 
-def print_graphs(df, speaker, width=900, heigth=500, force=False):
+def print_graphs(df, speaker, width=900, heigth=500, force=False, fileext=None):
     dirpath = 'docs/' + speaker
     if not os.path.exists(dirpath):
         os.mkdir(dirpath)
@@ -481,5 +482,6 @@ def print_graphs(df, speaker, width=900, heigth=500, force=False):
 
     updated = 0
     for (title, graph) in graphs.items():
-        updated += print_graph(speaker, title, graph, width, heigth, force)
+        updated += print_graph(speaker, title, graph, width, 
+                               heigth, force, fileext)
     print('Speaker: {:s} updated {:2d} files'.format(speaker, updated))
