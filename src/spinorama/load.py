@@ -118,6 +118,7 @@ def parse_graphs_speaker(speakerpath):
 
 def parse_all_speakers():
     speakerlist = [
+        "Dayton Audio B652-AIR",
         "Emotiva Airmotive 6s",
         "Harbeth Monitor",
         "JBL 104",
