@@ -33,7 +33,7 @@ if __name__ == '__main__':
     args = docopt(__doc__,
                   version='update-graphs.py version 1.0',
                   options_first=True)
-    
+
     width = 900
     heigth = 500
     force = args['-f']
