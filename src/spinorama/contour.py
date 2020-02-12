@@ -1,4 +1,3 @@
-import math
 import numpy as np
 from .load import graph_melt
 
@@ -27,15 +26,15 @@ def compute_contour(dfu):
     hrange = np.floor(np.logspace(1.3, 4.3, nf))
     # print(vrange)
     # sort data per experiments (not usefull for DataFrame but for 2d array)
-    #anglemin = np.array(vrange).min()/10
-    #perm = [int(vrange[i]/10-anglemin) for i in range(0, len(vrange))]
-    #pvrange = [vrange[perm[i]] for i in range(0,len(vrange))]
+    # anglemin = np.array(vrange).min()/10
+    # perm = [int(vrange[i]/10-anglemin) for i in range(0, len(vrange))]
+    # pvrange = [vrange[perm[i]] for i in range(0,len(vrange))]
     # 3d mesh
     af, am = np.meshgrid(hrange, vrange)
     # since it is melted generate slices
     az = np.array([dfm.dB[nf * i:nf * (i + 1)] for i in range(0, nm)])
     # smooth values to .1
-    #az = np.floor(az*10)/10
+    # az = np.floor(az*10)/10
     return (af, am, az)
 
 
@@ -59,7 +58,7 @@ sum55 = np.array(kernel55).sum()
 
 def smooth(z, i, j, zx, zy, offset, kernel, total):
     s = 0
-    if i < offset or (zx - i) < offset or j < offset or (zy - j) < offset:
+    if not (not (i < offset) and not ((zx - i) < offset) and not (j < offset) and not ((zy - j) < offset)):
         s = z[i][j]
     else:
         s = 0
