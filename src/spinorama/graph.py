@@ -23,6 +23,7 @@ def display_freq(df, width=900, heigth=500):
     selectorMeasurements = alt.selection_multi(
         fields=['Measurements'], 
         bind='legend')
+    scales = alt.selection_interval(bind='scales')
 
     # main charts
     line = alt.Chart(df).mark_line(
@@ -44,7 +45,8 @@ def display_freq(df, width=900, heigth=500):
         text=alt.condition(nearest, 'Freq:Q', alt.value(' '), format='0.f'))
     rules = alt.Chart(df).mark_rule(color='gray').encode(
         x='Freq:Q').transform_filter(nearest)
-    return line.add_selection(selectorMeasurements) + \
+    # assemble all
+    return line.add_selection(selectorMeasurements).add_selection(scales) + \
         selectorFreqs + points + rules + textDB + textFreq
 
 
@@ -446,7 +448,7 @@ def print_graph(speaker, title, chart, width, heigth, force, fileext):
         for ext in ['json', 'png', 'html']:  # svg skipped slow
             filename = filepath + '.' + ext
             if force or not os.path.exists(filepathname):
-                if fileext is not None and fileext == ext:
+                if fileext is None or (filext is not None and fileext == ext):
                     chart.save(filename)
                     updated += 1
     return updated
