@@ -16,6 +16,15 @@ nearest = alt.selection(
 
 
 def display_freq(df, width=900, heigth=500):
+    # add selectors
+    # one on Frequency one on Measurements
+    selectorFreqs = alt.Chart(df).mark_point().encode(
+        x='Freq:Q', opacity=alt.value(0)).add_selection(nearest)
+    selectorsMeasurements = alt.selection_multi(
+        fields=['Measurements'], 
+        bind='legend')
+
+    # main charts
     line = alt.Chart(df).mark_line(
         interpolate='basis'
     ).encode(
@@ -26,24 +35,18 @@ def display_freq(df, width=900, heigth=500):
         width=width,
         height=heigth
     )
-    selectors = alt.Chart(df).mark_point().encode(
-        x='Freq:Q', opacity=alt.value(0)).add_selection(nearest)
+    # points+text+rules goes together
     points = line.mark_point().encode(
         opacity=alt.condition(
             nearest, alt.value(1), alt.value(0)))
-    text = line.mark_text(
-        align='left',
-        dx=5,
-        dy=-
-        5).encode(
-        text=alt.condition(
-            nearest,
-            'dB:Q',
-            alt.value(' ')))
-    rules = alt.Chart(df).mark_rule(
-        color='gray').encode(
+    textDB = line.mark_text(align='left', dx=50, dy=25).encode(
+        text=alt.condition(nearest, 'dB:Q', alt.value(' '), format='0.f'))
+    textFreq = line.mark_text(align='left', dx=20, dy=25).encode(
+        text=alt.condition(nearest, 'Freq:Q', alt.value(' '), format='0.f'))
+    rules = alt.Chart(df).mark_rule(color='gray').encode(
         x='Freq:Q').transform_filter(nearest)
-    return line + selectors + points + rules + text
+    return line.add_selection(selectorsMeasurements) + \
+        selectorFreqs + points + rules + textDB + textFreq
 
 
 def display_freq_sidebyside(s1, s2, name, width=450, heigth=450):
