@@ -1,6 +1,7 @@
 import math
 from scipy.optimize import curve_fit
 import numpy as np
+import pandas as pd
 
 
 def flinear(x, a, b):
@@ -11,8 +12,7 @@ def fconst(x, a):
     return a
 
 
-def estimates(onaxis):
-
+def estimates(onaxis: pd.DataFrames):
     xdata1 = np.array(onaxis.loc[onaxis['Freq'] < 60].Freq)
     ydata1 = np.array(onaxis.loc[onaxis['Freq'] < 60].dB)
 
@@ -28,8 +28,8 @@ def estimates(onaxis):
     inter_6 = math.exp((popt2[0] - popt1[1] - 6) / popt1[0])
 
     # search band up/down
-    up = ydata2.max() - popt2[0]
-    down = ydata2.min() - popt2[0]
+    up: float = ydata2.max() - popt2[0]
+    down: float = ydata2.min() - popt2[0]
 
     return [int(inter), int(inter_3), int(inter_6),
             math.floor(max(up, -down) * 10) / 10]
