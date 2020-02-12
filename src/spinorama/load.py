@@ -1,8 +1,7 @@
-import numpy as np
 import pandas as pd
-import math
 import locale
 from locale import atof
+
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 removequote = str.maketrans({'"': None, '\n': ''})
@@ -24,8 +23,8 @@ def parse_graph_freq(filename):
         csvcolumns = [c.translate(removequote)
                       for c in csvfile.readline().split('\t')]
         # third line is column units
-        units = [c.translate(removequote)
-                 for c in csvfile.readline().split('\t')]
+        # units = [c.translate(removequote)
+        #         for c in csvfile.readline().split('\t')]
         # print(units)
         columns.extend([c for c in csvcolumns if len(c) > 0])
         # print(columns)
@@ -43,11 +42,12 @@ def parse_graph_freq(filename):
     # convert to float (issues with , and . in numbers)
     df = df.applymap(atof)
     # reorder column if we are reading a file with angles (Pandas doesn't care but easier to plot)
-    # c: Freq  0 10 -10 20 -20 30 -30 40-40 50 -50 60 -60 70 -70 -80 90 -90 100 -100 110 -110 120 -120 130 -130 140 -140 150 -150 160 -160 170 -170 180
-    # i: 0     1  2   3  4   5  6   7  9 10 11  12 13  14 15  16  17 18  19  20   21  22   23  24   25  26   27  28   29  30   31  32   33  34   35  36
-    # p: 0    18 17  19 16  20 15  22 14 23 13  24 12  25 11  26  10 27   9
-    # 28    8  29    7  30    6  31    5  32    4  33    3  34    2  35    1
-    # 36
+    # c: Freq  0 10 -10 20 -20 30 -30 40-40 50 -50 60 -60 70 -70 -80 90 -90 100 -100 110 -110
+    #                               120 -120 130 -130 140 -140 150 -150 160 -160 170 -170 180
+    # i: 0     1  2   3  4   5  6   7  9 10 11  12 13  14 15  16  17 18  19  20   21  22   23
+    #                                24   25  26   27  28   29  30   31  32   33  34   35  36
+    # p: 0    18 17  19 16  20 15  22 14 23 13  24 12  25 11  26  10 27   9   28    8  29   7
+    #                                 30    6  31    5  32    4  33    3  34    2  35    1 36
     perm = [
         0,
         35,
@@ -86,7 +86,6 @@ def parse_graph_freq(filename):
         32,
         34,
         36]
-    # perm = [0, 18, 17, 19, 16, 20, 15, 22, 14, 23, 13, 24, 12, 25, 11, 26, 10, 27, 9, 28, 8, 29, 7, 30, 6, 31, 5, 32, 4, 33, 3, 34, 2, 35, 1, 36]
 
     if len(df.columns) > 2 and df.columns[2] == '10°':
         return title, df[[df.columns[perm[i]] for i in range(0, len(perm))]]

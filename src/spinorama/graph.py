@@ -125,7 +125,6 @@ def display_radar(dfu, width, heigth):
 
     def project(gridZ):
         angles = []
-        values = {}
         dbs = []
         for a, z in zip(gridZ.index, gridZ):
             angle = 0
@@ -252,9 +251,9 @@ def display_contour2(contour, width=400, heigth=180):
     x, y, z = contour
 
     plt.figure()
-    #levels = [-9,-6,-3]
-    #contour = plt.contour(x, y, z, levels=3, alpha=0.2)
-    #plt.clabel(contour, colors = 'k', fmt = '%2.1f', fontsize=12)
+    # levels = [-9,-6,-3]
+    # contour = plt.contour(x, y, z, levels=3, alpha=0.2)
+    # plt.clabel(contour, colors = 'k', fmt = '%2.1f', fontsize=12)
     levels = [-60, -40, -20, -10, -6, -5.5, -5, -
               4.5, -4, -3.5, -3, -2.5, -2, -1.5, -1, -0.5, 0]
     contour_filled = plt.contourf(x, y, z, levels, alpha=0.5, cmap='rainbow')
@@ -271,7 +270,7 @@ def display_contour_smoothing(df, speaker, width=450, heigth=450):
         contourH = compute_contour(df[speaker]['SPL Horizontal_unmelted'])
         hx, hy, hz = contourH
         contourV = (hx, hy, np.array(smooth2D(hz)))
-        #contourV = compute_contour(df[speaker]['SPL Vertical_unmelted'])
+        # contourV = compute_contour(df[speaker]['SPL Vertical_unmelted'])
         return alt.hconcat(
             display_contour(contourH, width, heigth),
             display_contour(contourV, width, heigth)
@@ -385,10 +384,10 @@ def display_spl_vertical(df, speaker, width, heigth):
 
 
 def display_template1(df, speaker, width=900, heigth=500):
-    width2 = width * 45 / 100
-    heigth2 = heigth * 45 / 100
-    width3 = width * 30 / 100
-    heigth3 = heigth * 30 / 100
+    width2 = math.floor(width * 45 / 100)
+    heigth2 = math.floor(heigth * 45 / 100)
+    width3 = math.floor(width * 30 / 100)
+    heigth3 = math.floor(heigth * 30 / 100)
     # full size
     spinorama = display_spinorama(df, speaker, width, heigth)
     # side by side
