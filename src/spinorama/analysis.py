@@ -12,7 +12,7 @@ def fconst(x, a):
     return a
 
 
-def estimates(onaxis: pd.DataFrames):
+def estimates(onaxis: pd.DataFrame):
     xdata1 = np.array(onaxis.loc[onaxis['Freq'] < 60].Freq)
     ydata1 = np.array(onaxis.loc[onaxis['Freq'] < 60].dB)
 
