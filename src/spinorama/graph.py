@@ -40,9 +40,9 @@ def display_freq(df, width=900, heigth=500):
     points = line.mark_point().encode(opacity=alt.condition(
             nearest, alt.value(1), alt.value(0)))
     textDB = line.mark_text(align='left', dx=50, dy=25).encode(
-        text=alt.condition(nearest, 'dB:Q', alt.value(' '), format='0.f'))
+        text=alt.condition(nearest, 'dB:Q', alt.value(' '), format='.0f'))
     textFreq = line.mark_text(align='left', dx=20, dy=25).encode(
-        text=alt.condition(nearest, 'Freq:Q', alt.value(' '), format='0.f'))
+        text=alt.condition(nearest, 'Freq:Q', alt.value(' '), format='.0f'))
     rules = alt.Chart(df).mark_rule(color='gray').encode(
         x='Freq:Q').transform_filter(nearest)
     # assemble all
