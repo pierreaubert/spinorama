@@ -1,11 +1,12 @@
-from .contour import compute_contour, smooth2D
-import os
 import math
 import numpy as np
 import pandas as pd
 import altair as alt
-import matplotlib.pyplot as plt
+from .contour import compute_contour
+
+
 alt.data_transformers.disable_max_rows()
+
 
 nearest = alt.selection(
     type='single',
@@ -16,33 +17,33 @@ nearest = alt.selection(
 
 
 def graph_freq(dfu, width, height):
-    # add selectors                                                                                                                          
-    # one on Frequency one on Measurements 
+    # add selectors
+    # one on Frequency one on Measurements
     selectorsFreq = alt.Chart(dfu).mark_point(
     ).encode(
-        x='Freq:Q', 
+        x='Freq:Q',
         opacity=alt.value(0)
     ).add_selection(nearest)
     selectorsMeasurements = alt.selection_multi(
-        fields=['Measurements'], 
+        fields=['Measurements'],
         bind='legend')
     scales = alt.selection_interval(
         bind='scales'
     )
-    
+
     # main charts
-    line=alt.Chart(dfu).mark_line(
+    line = alt.Chart(dfu).mark_line(
     ).encode(
-        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[20,20000])),
+        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[20, 20000])),
         alt.Y('dB:Q',   scale=alt.Scale(zero=False)),
         alt.Color('Measurements', type='nominal', sort=None),
-        opacity=alt.condition(selectorsMeasurements, 
+        opacity=alt.condition(selectorsMeasurements,
                               alt.value(1), alt.value(0.2))
     ).properties(
         width=width,
         height=height
     )
-    
+
     # points+text+rules goes together
     rules = alt.Chart(dfu).mark_rule(
         color='gray'
@@ -58,22 +59,22 @@ def graph_freq(dfu, width, height):
                               alt.value(0)),
         tooltip='db:Q')
     textDB = line.mark_text(
-        align='right', 
-        dx=50, 
+        align='right',
+        dx=50,
         dy=25
     ).encode(
-        text=alt.condition(nearest, 
-                           'dB:Q', 
-                           alt.value(' '), 
+        text=alt.condition(nearest,
+                           'dB:Q',
+                           alt.value(' '),
                            format='.0f')
     )
 
     textFreq = line.mark_text(
-        align='left', dx=20, dy=25, 
+        align='left', dx=20, dy=25,
     ).encode(
-        text=alt.condition(nearest, 
-                           'Freq:Q', 
-                           alt.value(' '), 
+        text=alt.condition(nearest,
+                           'Freq:Q',
+                           alt.value(' '),
                            format='.0f')
     ).transform_calculate(
         text='datum.Freq + "hz"'
@@ -86,7 +87,7 @@ def graph_freq(dfu, width, height):
     ).transform_filter(
         nearest
     )
-    
+
     # assemble elements together
     line = line.add_selection(selectorsMeasurements).add_selection(scales)
     info = selectorsFreq+points+rules+textDB+textFreq

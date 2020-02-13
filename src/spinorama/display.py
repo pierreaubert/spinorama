@@ -1,12 +1,13 @@
-import os
 import math
 import numpy as np
-import pandas as pd
 import altair as alt
 import matplotlib.pyplot as plt
-alt.data_transformers.disable_max_rows()
 from .contour import compute_contour, smooth2D
-from .graph   import graph_freq, graph_contour, graph_radar
+from .graph import graph_freq, graph_contour, graph_radar
+
+
+alt.data_transformers.disable_max_rows()
+
 
 def graph_freq_sidebyside(s1, s2, name, width=450, heigth=450):
     d1 = graph_freq(s1[name], width, heigth)
@@ -235,5 +236,3 @@ def display_vertical(df, speaker, width=900, heigth=500):
                        hradar,
                        vcontour,
                        vradar)
-
-
