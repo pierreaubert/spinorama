@@ -1,12 +1,5 @@
-.speakers {
-      width: 100%
-}
-
-.first {
-     width: 20%;
-     vertical-align: top
-}
-
-.second {
-     width: 80%
+.col3 {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
 }
