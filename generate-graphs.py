@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Usage: 
+"""Usage:
   update-graphs.py [-h|--help] [-v] [--width=<width>] [--heigth=<heigth>] [--force] [--type=<ext>]
 
 Options:

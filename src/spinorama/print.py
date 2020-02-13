@@ -1,5 +1,10 @@
 import os
-from .display import *
+from .display import display_spinorama, display_onaxis, display_inroom, \
+    display_reflection_early, display_reflection_horizontal, display_reflection_vertical, \
+    display_spl_horizontal, display_spl_vertical, \
+    display_contour_horizontal, display_contour_vertical, \
+    display_radar_horizontal, display_radar_vertical
+
 
 def print_graph(speaker, title, chart, width, heigth, force, fileext):
     updated = 0
@@ -44,6 +49,6 @@ def print_graphs(df, speaker, width=900, heigth=500, force=False, fileext=None):
 
     updated = 0
     for (title, graph) in graphs.items():
-        updated += print_graph(speaker, title, graph, width, 
+        updated += print_graph(speaker, title, graph, width,
                                heigth, force, fileext)
     print('Speaker: {:s} updated {:2d} files'.format(speaker, updated))
