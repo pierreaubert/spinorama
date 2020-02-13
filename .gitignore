@@ -6,6 +6,7 @@ snippets*.ipynb
 .#*
 __pycache__
 .idea
+TAGS
 
 
 
