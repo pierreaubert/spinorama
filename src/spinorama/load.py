@@ -1,3 +1,5 @@
+import os
+import glob
 import pandas as pd
 import locale
 from locale import atof
@@ -81,22 +83,16 @@ def parse_graphs_speaker(speakerpath):
     return dfs
 
 
-def parse_all_speakers():
-    speakerlist = [
-        "Dayton Audio B652-AIR",
-        "Emotiva Airmotive 6s",
-        "Harbeth Monitor",
-        "JBL 104",
-        "KEF LS50",
-        "Kali IN-8",
-        "Micca RB42",
-        "Neumann KH 80",
-        "Pioneer SP-BS22-LR",
-        "Realistic MC-1000",
-        "Revel C52",
-        "Selah Audio RC3R",
-        "Yamaha HS5"
-    ]
+def get_speaker_list(speakerpath):
+    speakers = []
+    dirs = glob.glob(speakerpath+'/[A-Z]*')
+    for d in dirs:
+        if os.path.isdir(d):
+            speakers.append(os.path.basename(d))
+    return speakers
+
+def parse_all_speakers(speakerpath='./datas'):
+    speakerlist = get_speaker_list(speakerpath)
     df = {}
     # print('Loading speaker: ')
     for speaker in speakerlist:
