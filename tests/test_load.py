@@ -1,10 +1,8 @@
-
-
-import os
+# import os
 import unittest
-import logging
+# import logging
+# from spinorama import load
 
-from spinorama import load
 
 class SpinoramaLoadTests(unittest.TestCase):
 

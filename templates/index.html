@@ -1,9 +1,13 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Spinorama for speakers measured at audiosciencereview.com</title>
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@3"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@4"></script>
+  <link rel="stylesheet" type="text/css" href="spinorama.css">
 </head>
 <body>
   <h1>Spinorama for speakers measured at <a href="https://audiosciencereview.com">AudioScienceReview</a></h1>
@@ -13,13 +17,13 @@
         return text.replace(' ', '%20')
 %>  
 
-  <table>
+  <table class="speakers">
   % for speaker in speakers:
     <tr rowspan=2>
       <td><h2>${speaker}</h2></td>
     </tr>
     <tr>
-      <td style="vertical-align: top">
+      <td class="first">
 	% if meta[speaker] is not UNDEFINED:
         <ul>
           <li>-3dB at ${meta[speaker][1]} Hz</li>
@@ -28,9 +32,9 @@
           </ul>
 	% endif
       </td> 
-      <td>
+      <td class="second">
         <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}.html">
-         <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/CEA2034.png" alt='Spinorama' width=400 heigth=400 />
+         <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/CEA2034.png" alt='Spinorama' />
         </a>
       </td>
     </tr>
