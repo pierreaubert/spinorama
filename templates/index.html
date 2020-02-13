@@ -19,16 +19,17 @@
 
 <div class="grid-container">
   % for speaker in speakers:
-  <table class="speakers">
+  <div class="speaker">
+    <table>
     <tr>
-      <td>
+      <td align="center">
         <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}.html">
-         <img src="https://pierreaubert.github.io/spinorama/metadata/${speaker | space2url}.jpg" alt='Spinorama' width="150" />
+         <img src="https://pierreaubert.github.io/spinorama/metadata/${speaker | space2url}.jpg" alt='Spinorama' height="200" />
         </a>
       </td>
     </tr>
     <tr>
-      <td><b>${speaker}</b></td>
+      <td align="center"><b>${speaker}</b></td>
     </tr>
     <tr>
       <td>
@@ -41,7 +42,8 @@
 	% endif
       </td> 
     </tr>
-  </table>
+    </table>
+  </div>
   % endfor
 </div>
 
