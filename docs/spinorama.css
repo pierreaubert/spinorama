@@ -9,3 +9,8 @@
   grid-template-columns: auto auto auto auto;
   justify-content: space-evenly;
 }
+
+.speaker {
+  display: inline-block;
+  vertical-align: bottom;
+}
