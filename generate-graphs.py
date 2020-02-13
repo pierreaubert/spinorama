@@ -17,9 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Usage: 
-  update-graphs.py [-v] [--width=SIZE] [--heigth=SIZE] [--force] [--type=<ext>]
+  update-graphs.py [-h|--help] [-v] [--width=<width>] [--heigth=<heigth>] [--force] [--type=<ext>]
 
 Options:
+  -h|--help         display usage()
   --width=<width>   width size in pixel
   --heigth=<heigth> heigth size in pixel
   --force           force regeneration of all graphs, by default only generate new ones
