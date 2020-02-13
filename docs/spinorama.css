@@ -1,5 +1,11 @@
-.col3 {
+.flex {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  justify-content: space-evenly;
 }
