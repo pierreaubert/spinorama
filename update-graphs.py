@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #                                                  -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
@@ -26,7 +26,7 @@ Options:
   --type=<ext>      choose one of: json, html, png, svg
 """
 from src.spinorama.load import parse_all_speakers
-from src.spinorama.graph import print_graphs
+from src.spinorama.print import print_graphs
 
 from docopt import docopt
 
