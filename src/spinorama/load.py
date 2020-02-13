@@ -91,6 +91,7 @@ def get_speaker_list(speakerpath):
             speakers.append(os.path.basename(d))
     return speakers
 
+
 def parse_all_speakers(speakerpath='./datas'):
     speakerlist = get_speaker_list(speakerpath)
     df = {}
