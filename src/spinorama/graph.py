@@ -19,11 +19,6 @@ nearest = alt.selection(
 def graph_freq(dfu, width, height):
     # add selectors
     # one on Frequency one on Measurements
-    selectorsFreq = alt.Chart(dfu).mark_point(
-    ).encode(
-        x='Freq:Q',
-        opacity=alt.value(0)
-    ).add_selection(nearest)
     selectorsMeasurements = alt.selection_multi(
         fields=['Measurements'],
         bind='legend')
@@ -43,56 +38,25 @@ def graph_freq(dfu, width, height):
         width=width,
         height=height
     )
-
-    # points+text+rules goes together
-    rules = alt.Chart(dfu).mark_rule(
-        color='gray'
+    circle = alt.Chart(dfu).mark_circle(
+        size=100
     ).encode(
-        x='Freq:Q'
-    ).transform_filter(
-        nearest
-    )
-
-    points = line.mark_point().encode(
-        opacity=alt.condition(nearest,
-                              alt.value(1),
-                              alt.value(0)),
-        tooltip='db:Q')
-    textDB = line.mark_text(
-        align='right',
-        dx=50,
-        dy=25
-    ).encode(
-        text=alt.condition(nearest,
-                           'dB:Q',
-                           alt.value(' '),
-                           format='.0f')
-    )
-
-    textFreq = line.mark_text(
-        align='left', dx=20, dy=25,
-    ).encode(
-        text=alt.condition(nearest,
-                           'Freq:Q',
-                           alt.value(' '),
-                           format='.0f')
+        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[20, 20000])),
+        alt.Y('dB:Q',   scale=alt.Scale(zero=False)),
+        alt.Color('Measurements', type='nominal', sort=None),
+        opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
+        tooltip=['Measurements', 'Freq', 'dB']
     ).transform_calculate(
-        text='datum.Freq + "hz"'
-    )
-
-    rules = alt.Chart(dfu).mark_rule(
-        color='gray'
-    ).encode(
-        x='Freq:Q'
-    ).transform_filter(
-        nearest
+        Freq=f'format(datum.Freq, ".0f")',
+        dB=f'format(datum.dB, ".1f")'
     )
 
     # assemble elements together
-    line = line.add_selection(selectorsMeasurements).add_selection(scales)
-    info = selectorsFreq+points+rules+textDB+textFreq
-
-    return line+info
+    line = (circle+line)\
+        .add_selection(selectorsMeasurements)\
+        .add_selection(scales)\
+        .add_selection(nearest)
+    return line
 
 
 def graph_contour(df, width=400, heigth=180):
