@@ -7,9 +7,9 @@ body {
 }
 
 .card-image {
-    height: 400px;
+    height: 450px;
     position: relative;
-    margin-top: 0px;
+    margin-top: -70px;
 }
 
 .card.large {
