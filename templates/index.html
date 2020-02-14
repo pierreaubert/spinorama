@@ -22,29 +22,35 @@
         return text.replace(' ', '%20')
 %>  
 
-  <table class="speakers">
+<div class="grid-container">
   % for speaker in speakers:
-    <tr rowspan=2>
-      <td><h2>${speaker}</h2></td>
+  <div class="speaker">
+    <table>
+    <tr>
+      <td align="center">
+        <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}.html">
+         <img src="https://pierreaubert.github.io/spinorama/metadata/${speaker | space2url}.jpg" alt='Spinorama' height="200" />
+        </a>
+      </td>
     </tr>
     <tr>
-      <td class="first">
+      <td align="center"><b>${speaker}</b></td>
+    </tr>
+    <tr>
+      <td>
 	% if meta[speaker] is not UNDEFINED:
         <ul>
           <li>-3dB at ${meta[speaker][1]} Hz</li>
 	  <li>-6dB at ${meta[speaker][2]} Hz</li>
-	  <li>Freqency response is +/-${meta[speaker][3]}dB over 80Hz-20kHz</li>
+	  <li>+/-${meta[speaker][3]}dB ~ 80-20kHz</li>
           </ul>
 	% endif
       </td> 
-      <td class="second">
-        <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}.html">
-         <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/CEA2034.png" alt='Spinorama' />
-        </a>
-      </td>
     </tr>
+    </table>
+  </div>
   % endfor
-  </table>
+</div>
 
 </body>
 </html>
