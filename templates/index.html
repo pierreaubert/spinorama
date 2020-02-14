@@ -75,14 +75,18 @@
                 <div class="card-content">
                   <div class="media">
                     <div class="content">
-                      <p class="title is-4 no-padding">${speaker}</p>
+                      % if meta[speaker] is UNDEFINED:
+                        <p class="title is-4 no-padding">${speaker}</p>
+		      % else:
+                        <p class="title is-4 no-padding">${meta[speaker]['brand']} ${meta[speaker]['model']}</p>
+		      % endif
                     </div>
                   </div>
                   <div class="media">
                     % if meta[speaker] is not UNDEFINED:
-		      -3dB at ${meta[speaker][1]} Hz<br/>
-		      -6dB at ${meta[speaker][2]} Hz<br/>
-		      +/-${meta[speaker][3]}dB ~ 80-20kHz
+		      -3dB at ${meta[speaker]['estimates'][1]} Hz<br/>
+		      -6dB at ${meta[speaker]['estimates'][2]} Hz<br/>
+		      &plusmn;${meta[speaker]['estimates'][3]}dB ~ 80-20kHz
 		    % endif
                   </div>
                 </div>
