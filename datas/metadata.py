@@ -1,9 +1,9 @@
 speakes_metadata = {
-    'Dayton Audio B652-AIR'  = {
+    'Dayton Audio B652-AIR': {
         'type': '',
         'price': '',
         },
-    'JBL 104' = {
+    'JBL 104': {
         'type': '',
         'price': '',
         },
@@ -11,50 +11,48 @@ speakes_metadata = {
         'type': 'active',
         'price': '',
         },
-    'Pioneer SP-BS22-LR' = {
+    'Pioneer SP-BS22-LR': {
         'type': '',
         'price': '',
         },
-    'Revel C52' = {
+    'Revel C52': {
         'type': '',
         'price': '',
         },
-    'Emotiva Airmotive 6s' = {
+    'Emotiva Airmotive 6s': {
         'type': '',
         'price': '',
         },
-    'JBL Control 1 Pro' = {
+    'JBL Control 1 Pro': {
         'type': '',
         'price': '',
         },
-    'Micca RB42' = {
+    'Micca RB42': {
         'type': '',
         'price': '',
         },
-    'Selah Audio RC3R' = {
+    'Selah Audio RC3R': {
         'type': '',
         'price': '',
         },
-    'Harbeth Monitor' = {
+    'Harbeth Monitor': {
         'type': '',
         'price': '',
         },
-    'KEF LS50' = {
+    'KEF LS50': {
         'type': '',
         'price': '',
         },
-    'Neumann KH 80' = {
+    'Neumann KH 80': {
         'type': '',
         'price': '',
         },
-    'Realistic MC-1000' = {
+    'Realistic MC-1000': {
         'type': '',
         'price': '',
         },
-     'Yamaha HS5'  = {
+    'Yamaha HS5': {
         'type': '',
         'price': '',
         },
 }
-
-
