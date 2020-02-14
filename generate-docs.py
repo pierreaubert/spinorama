@@ -23,6 +23,7 @@ usage: update-docs.py [--version]
 from mako.template import Template
 from src.spinorama.load import parse_all_speakers
 from src.spinorama.analysis import estimates
+import datas.metadata as metadata
 
 from docopt import docopt
 
@@ -33,18 +34,17 @@ if __name__ == '__main__':
 
     df = parse_all_speakers()
 
-    meta = {}
     for k, v in df.items():
         try:
             spin = df[k]['CEA2034']
             onaxis = spin.loc[spin['Measurements'] == 'On Axis']
-            meta[k] = estimates(onaxis)
+            metadata.speakers_info[k]['estimates'] = estimates(onaxis)
         except ValueError:
             print('Computing estimates failed for speaker: ' + k)
 
     index_html = Template(filename='templates/index.html')
     with open('docs/index.html', 'w') as f:
-        f.write(index_html.render(speakers=df, meta=meta))
+        f.write(index_html.render(speakers=df, meta=metadata.speakers_info))
         f.close()
 
     speaker_html = Template(filename='templates/speaker.html')
@@ -77,5 +77,5 @@ if __name__ == '__main__':
                                         freqs=freqs,
                                         contours=contours,
                                         radars=radars,
-                                        meta=meta))
+                                        meta=metadata.speakers_info))
             f.close()
