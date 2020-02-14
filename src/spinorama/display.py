@@ -2,8 +2,9 @@ import math
 import numpy as np
 import altair as alt
 import matplotlib.pyplot as plt
-from .contour import compute_contour, smooth2D
-from .graph import graph_freq, graph_contour, graph_radar
+from .contour import compute_contour, compute_contour_smoothed
+from .graph import graph_freq, graph_contour, graph_radar, \
+    graph_contour_smoothed
 
 
 alt.data_transformers.disable_max_rows()
@@ -18,7 +19,7 @@ def graph_freq_sidebyside(s1, s2, name, width=450, heigth=450):
 def display_contour_horizontal(df, speaker, width=400, heigth=180):
     try:
         dfs = df[speaker]['SPL Horizontal_unmelted']
-        return graph_contour(dfs, width, heigth)
+        return graph_contour_smoothed(dfs, width, heigth)
     except KeyError:
         return None
 
@@ -26,7 +27,7 @@ def display_contour_horizontal(df, speaker, width=400, heigth=180):
 def display_contour_vertical(df, speaker, width=400, heigth=180):
     try:
         dfs = df[speaker]['SPL Vertical_unmelted']
-        return graph_contour(dfs, width, heigth)
+        return graph_contour_smoothed(dfs, width, heigth)
     except KeyError:
         return None
 
@@ -66,26 +67,13 @@ def display_contour2(contour, width=400, heigth=180):
     plt.show()
 
 
-def display_contour_smoothing(df, speaker, width=450, heigth=450):
-    try:
-        contourH = compute_contour(df[speaker]['SPL Horizontal_unmelted'])
-        hx, hy, hz = contourH
-        contourV = (hx, hy, np.array(smooth2D(hz)))
-        # contourV = compute_contour(df[speaker]['SPL Vertical_unmelted'])
-        return alt.hconcat(
-            graph_contour(contourH, width, heigth),
-            graph_contour(contourV, width, heigth)
-        )
-    except KeyError:
-        return None
-
-
 def display_contour_sidebyside(df, speaker, width=450, heigth=450):
     try:
-        contourH = compute_contour(df[speaker]['SPL Horizontal_unmelted'])
-        contourV = compute_contour(df[speaker]['SPL Vertical_unmelted'])
-        return alt.hconcat(graph_contour(contourH, width, heigth),
-                           graph_contour(contourV, width, heigth))
+        contourH = df[speaker]['SPL Horizontal_unmelted']
+        contourV = df[speaker]['SPL Vertical_unmelted']
+        return alt.hconcat(
+            graph_contour_smoothed(contourH, width, heigth),
+            graph_contour_smoothed(contourV, width, heigth))
     except KeyError:
         return None
 
