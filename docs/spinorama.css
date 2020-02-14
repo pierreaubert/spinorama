@@ -1,12 +1,16 @@
-.speakers {
-      width: 100%
+.flex {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
 }
 
-.first {
-     width: 20%;
-     vertical-align: top
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  justify-content: space-evenly;
 }
 
-.second {
-     width: 80%
+.speaker {
+  display: inline-block;
+  vertical-align: bottom;
 }
