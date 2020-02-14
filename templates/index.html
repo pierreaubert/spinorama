@@ -7,50 +7,105 @@
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@3"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@4"></script>
-  <link rel="stylesheet" type="text/css" href="spinorama.css">
+  <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.0/css/bulma.min.css" />
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="spinorama.css"/> 
 </head>
 <body>
-  <h1>Spinorama for speakers measured at <a href="https://audiosciencereview.com">AudioScienceReview</a></h1>
-  <ul>
-    <li>What is a speaker <i>spinorama<i>? Read this well illustrated <a href="https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-and-control-1-pro-monitors-review.10811/">explanation</a>. I advise to read <em>Sound Reproduction: The Acoustics and Psychoacoustics of Loudspeakers and Rooms</em> book by <em>Floyd Toole</em>.</li>
-    <li>Click on a graph to look at all graphs for one speaker, then click again to get an interactive graph.</li>
-    <li>This website is generated from <a href="https://github.com/pierreaubert/spinorama">this code</a> and datas from <a href="https://audiosciencereview.com">ASR</a> website</li>. 
-    <li>You can provide feedback on <a href="https://github.com/pierreaubert/spinorama/issues">github</a> or in this <a href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/">thread</a> at ASR.</li>
-  </ul>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="./"><p class="title">Spinorama</p></a>
+        <span class="navbar-burger burger" data-target="navbarMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </div>
+      <div id="navbarMenu" class="navbar-menu">
+        <div class="navbar-end">
+          <a class="navbar-item is-active">
+            Home
+          </a>
+          <a class="navbar-item">
+	    Compare
+          </a>
+          <a class="navbar-item">
+            Help
+          </a>
+        </div>
+      </div>
+    </nav>
+
 <%!
     def space2url(text):
         return text.replace(' ', '%20')
 %>  
 
-<div class="grid-container">
-  % for speaker in speakers:
-  <div class="speaker">
-    <table>
-    <tr>
-      <td align="center">
-        <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}.html">
-         <img src="https://pierreaubert.github.io/spinorama/metadata/${speaker | space2url}.jpg" alt='Spinorama' height="200" />
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td align="center"><b>${speaker}</b></td>
-    </tr>
-    <tr>
-      <td>
-	% if meta[speaker] is not UNDEFINED:
-        <ul>
-          <li>-3dB at ${meta[speaker][1]} Hz</li>
-	  <li>-6dB at ${meta[speaker][2]} Hz</li>
-	  <li>+/-${meta[speaker][3]}dB ~ 80-20kHz</li>
-          </ul>
-	% endif
-      </td> 
-    </tr>
-    </table>
-  </div>
-  % endfor
-</div>
+    <div class="container">
+      <div id="flow">
+        <span class="flow-1"></span>
+        <span class="flow-2"></span>
+        <span class="flow-3"></span>
+      </div>
+      <div class="section">
+        <div class="box">
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <input class="input has-text-centered" type="search" placeholder="find a speaker">
+              </div>
+              <div class="control">
+                <a class="button is-info">Search</a>
+              </div>
+            </div>
+          </div>
+          <!-- Speakers -->
+          <div class="row columns is-multiline">
+            % for speaker in speakers:
+            <div class="column is-one-third">
+              <div class="card large">
+                <div class="card-image">
+                  <figure class="image">
+		    <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}.html">
+		      <img src="metadata/${speaker | space2url}.jpg" alt="Spinorama" width="200" height="400"/>
+		    </a>
+                  </figure>
+                </div>
+                <div class="card-content">
+                  <div class="media">
+                    <div class="content">
+                      <p class="title is-4 no-padding">${speaker}</p>
+                    </div>
+                  </div>
+                  <div class="content">
+              		    % if meta[speaker] is not UNDEFINED:
+		                  <p>-3dB at ${meta[speaker][1]} Hz</p>
+		                  <p>-6dB at ${meta[speaker][2]} Hz</p>
+		                  <p>+/-${meta[speaker][3]}dB ~ 80-20kHz</p>
+		                  % endif
+                  </div>
+                </div>
+              </div>
+            </div>
+            % endfor
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <div class="container">
+          <div class="content has-text-centered">
+            <div class="soc">
+              <a href="#"><i class="fa fa-github-alt fa-2x" aria-hidden="true"></i></a>
+            </div>
+            <p>
+              <strong>Spinorama</strong> by <a href="https://github.com/pierreaubert">Pierre Aubert</a>.
+              The <a href="https://github.com/pierreaubert/spinorama">source code</a> is licensed under GPL. <br>
+            </p>
+            </div>
+          </div>
+        </footer>
 
 </body>
 </html>
