@@ -120,7 +120,7 @@ body {
 }
 
 *  {
-   border: red solid 1px;
+   // border: red solid 1px;
 }
 
 .has-text-primary  {
