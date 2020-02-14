@@ -68,7 +68,7 @@
                 <div class="card-image">
                   <figure class="image">
 		    <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}.html">
-		      <img src="metadata/${speaker | space2url}.jpg" alt="Spinorama" width="200" height="400"/>
+		      <img src="metadata/${speaker | space2url}.jpg" alt="Spinorama"/>
 		    </a>
                   </figure>
                 </div>
@@ -78,12 +78,12 @@
                       <p class="title is-4 no-padding">${speaker}</p>
                     </div>
                   </div>
-                  <div class="content">
-              		    % if meta[speaker] is not UNDEFINED:
-		                  <p>-3dB at ${meta[speaker][1]} Hz</p>
-		                  <p>-6dB at ${meta[speaker][2]} Hz</p>
-		                  <p>+/-${meta[speaker][3]}dB ~ 80-20kHz</p>
-		                  % endif
+                  <div class="media">
+                    % if meta[speaker] is not UNDEFINED:
+		      -3dB at ${meta[speaker][1]} Hz<br/>
+		      -6dB at ${meta[speaker][2]} Hz<br/>
+		      +/-${meta[speaker][3]}dB ~ 80-20kHz
+		    % endif
                   </div>
                 </div>
               </div>
