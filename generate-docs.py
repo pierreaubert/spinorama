@@ -20,6 +20,7 @@
 """
 usage: update-docs.py [--version]
 """
+import json
 from mako.template import Template
 from src.spinorama.load import parse_all_speakers
 from src.spinorama.analysis import estimates
