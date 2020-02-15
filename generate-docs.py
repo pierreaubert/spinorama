@@ -91,7 +91,7 @@ if __name__ == '__main__':
                                         meta=metadata.speakers_info,
                                         site=site))
             f.close()
-        
+
     # write metadata in a json file for easy search
     def flatten(d):
         f = []
@@ -103,13 +103,11 @@ if __name__ == '__main__':
             f.append(s)
         return f
 
-
     with open('docs/assets/metadata.json', 'w') as f:
         meta = flatten(metadata.speakers_info)
         js = json.dumps(meta)
         f.write(js)
         f.close()
-
 
     search_js = Template(filename='templates/search.js')
     with open('docs/assets/metadata.js', 'w') as f:

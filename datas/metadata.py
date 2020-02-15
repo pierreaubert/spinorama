@@ -39,7 +39,6 @@ speakers_info = {
     'Emotiva Airmotive 6s': {
         'brand': 'Emotiva',
         'model': 'Airmotiv 6s',
-        'type': '',
         'type': 'passive',
         'price': '',
         },
@@ -58,7 +57,6 @@ speakers_info = {
     'Selah Audio RC3R': {
         'brand': 'Selah Audio',
         'model': 'RC3R',
-        'type': '',
         'type': 'passive',
         'price': '',
         },

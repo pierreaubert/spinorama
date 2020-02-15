@@ -1,3 +1,5 @@
+import math
+import altair as alt
 from .display import \
     display_spinorama, \
     display_onaxis, \
@@ -5,6 +7,8 @@ from .display import \
     display_reflection_early, \
     display_reflection_horizontal, \
     display_reflection_vertical, \
+    display_spl_horizontal, \
+    display_spl_vertical, \
     display_contour_horizontal, \
     display_contour_vertical, \
     display_radar_horizontal, \

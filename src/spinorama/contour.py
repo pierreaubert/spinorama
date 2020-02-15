@@ -46,7 +46,7 @@ def reshape(x, y, z, nscale):
     rx, ry = np.meshgrid(np.linspace(np.min(x), np.max(x), nx*nscale),
                          np.linspace(np.min(y), np.max(y), ny*nscale))
     # copy paste the values of z into rz
-    rz  = np.repeat(np.repeat(z , nscale, axis=1), nscale, axis=0)
+    rz = np.repeat(np.repeat(z, nscale, axis=1), nscale, axis=0)
     return rx, ry, np.transpose(rz)
 
 
@@ -60,7 +60,7 @@ def compute_contour_smoothed(dfu):
     # convolve with kernel
     rzs = ndimage.convolve(rz, kernel.array, mode='mirror')
     # return
-    return (rx, ry, rz)
+    return (rx, ry, rzs)
 
 
 def near(t, v):
