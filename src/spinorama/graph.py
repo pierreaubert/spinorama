@@ -59,7 +59,7 @@ def graph_freq(dfu, width, height):
     return line
 
 
-def graph_contour_common(df, transformer, width, heigth):
+def graph_contour_common(df, transformer, width, height):
     try:
         af, am, az = transformer(df)
         source = pd.DataFrame(
@@ -75,23 +75,23 @@ def graph_contour_common(df, transformer, width, heigth):
                           scheme='category20c'))
         ).properties(
             width=width,
-            height=heigth
+            height=height
         )
     except KeyError:
         return None
 
 
-def graph_contour(df, width, heigth):
+def graph_contour(df, width, height):
     return graph_contour_common(df, compute_contour,
-                                width, heigth)
+                                width, height)
 
 
-def graph_contour_smoothed(df, width, heigth):
+def graph_contour_smoothed(df, width, height):
     return graph_contour_common(df, compute_contour_smoothed,
-                                width, heigth)
+                                width, height)
 
 
-def graph_radar(dfu, width, heigth):
+def graph_radar(dfu, width, height):
     # build a grid
     radius = 0
     anglelist = [a for a in range(-180, 180, 10)]
@@ -226,6 +226,9 @@ def graph_radar(dfu, width, heigth):
     ).project(
         type='azimuthalEquidistant',
         rotate=[0, 0, 90]
+    ).properties(
+        width=width,
+        height=height
     )
 
     return dbs + grid + circle + text
