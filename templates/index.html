@@ -6,34 +6,36 @@
   <title>Spinorama for speakers measured at audiosciencereview.com</title>
   <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.0/css/bulma.min.css" />
   <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="spinorama.css"/> 
+  <link rel="stylesheet" href="assets/spinorama.css"/> 
+  <script src="assets/fuse.js"/>
+  <script src="assets/metadata.js"/>
 </head>
 <body>
 
-  <nav class="navbar">
-    <div class="container">
-      <div class="navbar-brand">
-        <a class="navbar-item" href="./"><p class="title">Spinorama</p></a>
-        <span class="navbar-burger burger" data-target="navbarMenu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-      </div>
-      <div id="navbarMenu" class="navbar-menu">
-        <div class="navbar-end">
-          <a class="navbar-item is-active">
-            Home
-          </a>
-          <a class="navbar-item">
+<nav class="navbar">
+ <div class="container">
+   <div class="navbar-brand">
+     <a class="navbar-item" href="./"><p class="title">Spinorama</p></a>
+     <span class="navbar-burger burger" data-target="navbarMenu">
+       <span></span>
+       <span></span>
+       <span></span>
+     </span>
+   </div>
+   <div id="navbarMenu" class="navbar-menu">
+     <div class="navbar-end">
+       <a class="navbar-item is-active">
+         Home
+       </a>
+       <a class="navbar-item">
 	    Compare
-          </a>
-          <a class="navbar-item">
-            Help
-          </a>
-        </div>
-      </div>
-    </nav>
+       </a>
+       <a class="navbar-item">
+         Help
+       </a>
+     </div>
+   </div>
+</nav>
 
 <%!
     def space2url(text):
@@ -46,7 +48,10 @@
         <span class="flow-2"></span>
         <span class="flow-3"></span>
       </div>
+
       <div class="section">
+	
+          <!-- Search -->
         <div class="box">
           <div class="field has-addons">
             <div class="control is-expanded">
@@ -57,6 +62,7 @@
               </div>
             </div>
           </div>
+
           <!-- Speakers -->
           <div class="row columns is-multiline">
             % for speaker in speakers:
