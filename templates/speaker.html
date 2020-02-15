@@ -23,24 +23,24 @@
   % for freq in freqs:
     <li>${freq}</li>
     <div>
-       <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${freq | space2url}.html">
-         <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${freq | space2url}.png">
+       <a href="${speaker | space2url}/${freq | space2url}.html">
+         <img src="${speaker | space2url}/${freq | space2url}.png">
        </a>
     </div>
   % endfor
   % for contour in contours:
     <li>${contour | unmeltC }</li>
     <div>
-       <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${contour | unmeltC, space2url}.html">
-         <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${contour | unmeltC, space2url}.png">
+       <a href="${speaker | space2url}/${contour | unmeltC, space2url}.html">
+         <img src="${speaker | space2url}/${contour | unmeltC, space2url}.png">
        </a>
     </div>
   % endfor
   % for radar in radars:
     <li>${radar | unmeltR }</li>
     <div>
-       <a href="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${radar | unmeltR, space2url}.html">
-         <img src="https://pierreaubert.github.io/spinorama/${speaker | space2url}/${radar | unmeltR, space2url}.png">
+       <a href="${speaker | space2url}/${radar | unmeltR, space2url}.html">
+         <img src="${speaker | space2url}/${radar | unmeltR, space2url}.png">
        </a>
     </div>
   % endfor
