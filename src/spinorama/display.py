@@ -10,45 +10,45 @@ from .graph import graph_freq, graph_contour, graph_radar, \
 alt.data_transformers.disable_max_rows()
 
 
-def graph_freq_sidebyside(s1, s2, name, width=450, heigth=450):
-    d1 = graph_freq(s1[name], width, heigth)
-    d2 = graph_freq(s2[name], width, heigth)
+def graph_freq_sidebyside(s1, s2, name, width=450, height=450):
+    d1 = graph_freq(s1[name], width, height)
+    d2 = graph_freq(s2[name], width, height)
     return alt.hconcat(d1, d2)
 
 
-def display_contour_horizontal(df, speaker, width=400, heigth=180):
+def display_contour_horizontal(df, speaker, width=400, height=180):
     try:
         dfs = df[speaker]['SPL Horizontal_unmelted']
-        return graph_contour(dfs, width, heigth)
+        return graph_contour(dfs, width, height)
     except KeyError:
         return None
 
 
-def display_contour_vertical(df, speaker, width=400, heigth=180):
+def display_contour_vertical(df, speaker, width=400, height=180):
     try:
         dfs = df[speaker]['SPL Vertical_unmelted']
-        return graph_contour(dfs, width, heigth)
+        return graph_contour(dfs, width, height)
     except KeyError:
         return None
 
 
-def display_radar_horizontal(df, speaker, width=400, heigth=180):
+def display_radar_horizontal(df, speaker, width=400, height=180):
     try:
         dfs = df[speaker]['SPL Horizontal_unmelted']
-        return graph_radar(dfs, width, heigth)
+        return graph_radar(dfs, width, height)
     except KeyError:
         return None
 
 
-def display_radar_vertical(df, speaker, width=400, heigth=180):
+def display_radar_vertical(df, speaker, width=400, height=180):
     try:
         dfs = df[speaker]['SPL Vertical_unmelted']
-        return graph_radar(dfs, width, heigth)
+        return graph_radar(dfs, width, height)
     except KeyError:
         return None
 
 
-def display_contour2(contour, width=400, heigth=180):
+def display_contour2(contour, width=400, height=180):
     # slighly better looking
     x, y, z = contour
 
@@ -67,38 +67,38 @@ def display_contour2(contour, width=400, heigth=180):
     plt.show()
 
 
-def display_contour_sidebyside(df, speaker, width=450, heigth=450):
+def display_contour_sidebyside(df, speaker, width=450, height=450):
     try:
         contourH = df[speaker]['SPL Horizontal_unmelted']
         contourV = df[speaker]['SPL Vertical_unmelted']
         return alt.hconcat(
-            graph_contour(contourH, width, heigth),
-            graph_contour(contourV, width, heigth))
+            graph_contour(contourH, width, height),
+            graph_contour(contourV, width, height))
     except KeyError:
         return None
 
 
-def display_spinorama(df, speaker, width, heigth):
+def display_spinorama(df, speaker, width, height):
     try:
         spinorama = df[speaker]['CEA2034']
         spinorama = spinorama.loc[spinorama['Measurements'] != 'DI offset']
-        return graph_freq(spinorama, width, heigth)
+        return graph_freq(spinorama, width, height)
     except KeyError:
         return None
 
 
-def display_reflection_early(df, speaker, width, heigth):
+def display_reflection_early(df, speaker, width, height):
     try:
-        return graph_freq(df[speaker]['Early Reflections'], width, heigth)
+        return graph_freq(df[speaker]['Early Reflections'], width, height)
     except KeyError:
         return None
 
 
-def display_onaxis(df, speaker, width, heigth):
+def display_onaxis(df, speaker, width, height):
     try:
         onaxis = df[speaker]['CEA2034']
         onaxis = onaxis.loc[onaxis['Measurements'] == 'On Axis']
-        onaxis_graph = graph_freq(onaxis, width, heigth)
+        onaxis_graph = graph_freq(onaxis, width, height)
         onaxis_reg = alt.Chart(onaxis).transform_filter(
             'datum.Freq>80 & datum.Freq<18000'
         ).transform_regression(
@@ -113,10 +113,10 @@ def display_onaxis(df, speaker, width, heigth):
         return None
 
 
-def display_inroom(df, speaker, width, heigth):
+def display_inroom(df, speaker, width, height):
     try:
         inroom = df[speaker]['Estimated In-Room Response']
-        inroom_graph = graph_freq(inroom, width, heigth)
+        inroom_graph = graph_freq(inroom, width, height)
         inroom_reg = alt.Chart(inroom).transform_filter(
             'datum.Freq>100 & datum.Freq<10000'
         ).transform_regression(
@@ -131,22 +131,22 @@ def display_inroom(df, speaker, width, heigth):
         return None
 
 
-def display_reflection_horizontal(df, speaker, width, heigth):
+def display_reflection_horizontal(df, speaker, width, height):
     try:
         return graph_freq(
-            df[speaker]['Horizontal Reflections'], width, heigth)
+            df[speaker]['Horizontal Reflections'], width, height)
     except KeyError:
         return None
 
 
-def display_reflection_vertical(df, speaker, width, heigth):
+def display_reflection_vertical(df, speaker, width, height):
     try:
-        return graph_freq(df[speaker]['Vertical Reflections'], width, heigth)
+        return graph_freq(df[speaker]['Vertical Reflections'], width, height)
     except KeyError:
         return None
 
 
-def display_spl(df, speaker, axis, width, heigth):
+def display_spl(df, speaker, axis, width, height):
     try:
         spl = df[speaker][axis]
         filter = {
@@ -159,16 +159,16 @@ def display_spl(df, speaker, axis, width, heigth):
                 '50°',
                 '60°']}
         mask = spl.isin(filter).any(1)
-        return graph_freq(spl[mask], width, heigth)  # .interactive()
+        return graph_freq(spl[mask], width, height)  # .interactive()
     except KeyError:
         return None
 
 
-def display_spl_horizontal(df, speaker, width, heigth):
-    return display_spl(df, speaker, 'SPL Horizontal', width, heigth)
+def display_spl_horizontal(df, speaker, width, height):
+    return display_spl(df, speaker, 'SPL Horizontal', width, height)
 
 
-def display_spl_vertical(df, speaker, width, heigth):
-    return display_spl(df, speaker, 'SPL Vertical', width, heigth)
+def display_spl_vertical(df, speaker, width, height):
+    return display_spl(df, speaker, 'SPL Vertical', width, height)
 
 

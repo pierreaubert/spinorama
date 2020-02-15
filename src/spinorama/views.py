@@ -11,26 +11,26 @@ from .display import \
     display_radar_vertical
 
 
-def template_compact(df, speaker, width=900, heigth=500):
+def template_compact(df, speaker, width=900, height=500):
     width2 = math.floor(width * 45 / 100)
-    heigth2 = math.floor(heigth * 45 / 100)
+    height2 = math.floor(height * 45 / 100)
     width3 = math.floor(width * 30 / 100)
-    heigth3 = math.floor(heigth * 30 / 100)
+    height3 = math.floor(height * 30 / 100)
     # full size
-    spinorama = display_spinorama(df, speaker, width, heigth)
+    spinorama = display_spinorama(df, speaker, width, height)
     # side by side
-    onaxis = display_onaxis(df, speaker, width2, heigth2)
-    inroom = display_inroom(df, speaker, width2, heigth2)
+    onaxis = display_onaxis(df, speaker, width2, height2)
+    inroom = display_inroom(df, speaker, width2, height2)
     # side by side
-    ereflex = display_reflection_early(df, speaker, width3, heigth3)
-    hreflex = display_reflection_horizontal(df, speaker, width3, heigth3)
-    vreflex = display_reflection_vertical(df, speaker, width3, heigth3)
+    ereflex = display_reflection_early(df, speaker, width3, height3)
+    hreflex = display_reflection_horizontal(df, speaker, width3, height3)
+    vreflex = display_reflection_vertical(df, speaker, width3, height3)
     # side by side
-    hspl = display_spl_horizontal(df, speaker, width2, heigth2)
-    vspl = display_spl_vertical(df, speaker, width2, heigth2)
+    hspl = display_spl_horizontal(df, speaker, width2, height2)
+    vspl = display_spl_vertical(df, speaker, width2, height2)
     # side by side
-    hcontour = display_contour_horizontal(df, speaker, width2, heigth2)
-    vcontour = display_contour_vertical(df, speaker, width2, heigth2)
+    hcontour = display_contour_horizontal(df, speaker, width2, height2)
+    vcontour = display_contour_vertical(df, speaker, width2, height2)
     return alt.vconcat(spinorama,
                        onaxis | inroom,
                        ereflex | hreflex | vreflex,
@@ -38,19 +38,19 @@ def template_compact(df, speaker, width=900, heigth=500):
                        hcontour | vcontour)
 
 
-def template_vertical(df, speaker, width=900, heigth=500):
-    spinorama = display_spinorama(df, speaker, width, heigth)
-    onaxis = display_onaxis(df, speaker, width, heigth)
-    inroom = display_inroom(df, speaker, width, heigth)
-    ereflex = display_reflection_early(df, speaker, width, heigth)
-    hreflex = display_reflection_horizontal(df, speaker, width, heigth)
-    vreflex = display_reflection_vertical(df, speaker, width, heigth)
-    hspl = display_spl_horizontal(df, speaker, width, heigth)
-    vspl = display_spl_vertical(df, speaker, width, heigth)
-    hcontour = display_contour_horizontal(df, speaker, width, heigth)
-    hradar = display_radar_horizontal(df, speaker, width, heigth)
-    vcontour = display_contour_vertical(df, speaker, width, heigth)
-    vradar = display_radar_vertical(df, speaker, width, heigth)
+def template_vertical(df, speaker, width=900, height=500):
+    spinorama = display_spinorama(df, speaker, width, height)
+    onaxis = display_onaxis(df, speaker, width, height)
+    inroom = display_inroom(df, speaker, width, height)
+    ereflex = display_reflection_early(df, speaker, width, height)
+    hreflex = display_reflection_horizontal(df, speaker, width, height)
+    vreflex = display_reflection_vertical(df, speaker, width, height)
+    hspl = display_spl_horizontal(df, speaker, width, height)
+    vspl = display_spl_vertical(df, speaker, width, height)
+    hcontour = display_contour_horizontal(df, speaker, width, height)
+    hradar = display_radar_horizontal(df, speaker, width, height)
+    vcontour = display_contour_vertical(df, speaker, width, height)
+    vradar = display_radar_vertical(df, speaker, width, height)
     return alt.vconcat(spinorama,
                        onaxis,
                        inroom,

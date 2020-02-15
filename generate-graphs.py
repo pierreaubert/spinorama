@@ -17,12 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Usage:
-  update-graphs.py [-h|--help] [-v] [--width=<width>] [--heigth=<heigth>] [--force] [--type=<ext>]
+  update-graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>] [--force] [--type=<ext>]
 
 Options:
   -h|--help         display usage()
   --width=<width>   width size in pixel
-  --heigth=<heigth> heigth size in pixel
+  --height=<height> height size in pixel
   --force           force regeneration of all graphs, by default only generate new ones
   --type=<ext>      choose one of: json, html, png, svg
 """
@@ -37,15 +37,15 @@ if __name__ == '__main__':
                   options_first=True)
 
     width = 1200
-    heigth = 600
+    height = 600
     force = args['--force']
     type = None
 
     if args['--width'] is not None:
         width = int(args['--width'])
 
-    if args['--heigth'] is not None:
-        heigth = int(args['--heigth'])
+    if args['--height'] is not None:
+        height = int(args['--height'])
 
     if args['--type'] is not None:
         type = args['--type']
@@ -55,4 +55,4 @@ if __name__ == '__main__':
 
     df = parse_all_speakers()
     for (speaker, measurements) in df.items():
-        print_graphs(df, speaker, width, heigth, force, type)
+        print_graphs(df, speaker, width, height, force, type)
