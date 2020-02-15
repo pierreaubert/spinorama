@@ -61,18 +61,19 @@ def graph_freq(dfu, width, height):
 
 def graph_contour_common(df, transformer, width, height):
     try:
+        speaker_scale = [-12, -9, -8, -7, -6, -5, -4, -3, -2.5, -2, -1.5, -1, -0.5, 0]
         af, am, az = transformer(df)
         source = pd.DataFrame(
             {'Freq': af.ravel(), 'Angle': am.ravel(), 'dB': az.ravel()})
         return alt.Chart(source).mark_rect(
+            size=8,
+            height=12
         ).transform_filter(
             'datum.Freq>400'
         ).encode(
             alt.X('Freq:O'),
             alt.Y('Angle:O'),
-            alt.Color('dB:Q',
-                      scale=alt.Scale(
-                          scheme='category20c'))
+            alt.Color('dB:Q', scale=alt.Scale(domain=speaker_scale))
         ).properties(
             width=width,
             height=height

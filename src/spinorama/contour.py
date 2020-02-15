@@ -42,12 +42,19 @@ def compute_contour(dfu):
 
 def reshape(x, y, z, nscale):
     nx, ny = x.shape
-    # increase the size of the grid by nscale*nscale
-    rx, ry = np.meshgrid(np.linspace(np.min(x), np.max(x), nx*nscale),
-                         np.linspace(np.min(y), np.max(y), ny*nscale))
+    # linear axis
+    lx = np.linspace(np.min(y), np.max(y), nx*nscale)
+    # this is not, interpolate between each point
+    lyi = [np.linspace(x[0][i], x[0][i+1], nscale, endpoint=False)
+           for i in range(0, len(x[0])-1)]
+    # flatten then pad with the last value
+    ly = [i for j in lyi for i in j] + \
+        [x[0][len(x[0])-1] for i in range(0, nscale)]
+    # build the mesh (reverse order)
+    rx, ry = np.meshgrid(ly, lx)
     # copy paste the values of z into rz
     rz = np.repeat(np.repeat(z, nscale, axis=1), nscale, axis=0)
-    return rx, ry, np.transpose(rz)
+    return (rx, ry, rz)
 
 
 def compute_contour_smoothed(dfu):
