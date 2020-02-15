@@ -65,9 +65,15 @@ def graph_contour_common(df, transformer, width, height):
         af, am, az = transformer(df)
         source = pd.DataFrame(
             {'Freq': af.ravel(), 'Angle': am.ravel(), 'dB': az.ravel()})
+        m_size = 8
+        m_height = 12
+        if width > 800:
+            m_size = np.floor(m_size*width/800)
+        if height > 360:
+            m_height = np.floor(m_height*height/360)
         return alt.Chart(source).mark_rect(
-            size=8,
-            height=12
+            size=m_size,
+            height=m_height
         ).transform_filter(
             'datum.Freq>400'
         ).encode(
