@@ -1,4 +1,7 @@
 import numpy as np
+from scipy import ndimage
+from astropy.convolution import Gaussian2DKernel
+
 from .load import graph_melt
 
 
@@ -14,7 +17,6 @@ def compute_contour(dfu):
         if c == 'On-Axis':
             vrange.append(0)
     dfm['On-Axis'] = 0
-    # print([(math.floor(min*10)/10, math.floor(max*10)/10) for (min,max) in zip(dfm.min(), dfm.max())])
 
     # melt
     dfm = graph_melt(dfm)
@@ -38,45 +40,27 @@ def compute_contour(dfu):
     return (af, am, az)
 
 
-kernel33 = [
-    [1, 1, 1],
-    [1, 3, 1],
-    [1, 1, 1]
-]
-offset33 = 1
-sum33 = np.array(kernel33).sum()
-kernel55 = [
-    [1, 1, 1, 1, 1],
-    [1, 3, 3, 3, 1],
-    [1, 3, 9, 3, 1],
-    [1, 3, 3, 3, 1],
-    [1, 1, 1, 1, 1]
-]
-offset55 = 2
-sum55 = np.array(kernel55).sum()
+def reshape(x, y, z, nscale):
+    nx, ny = x.shape
+    # increase the size of the grid by nscale*nscale
+    rx, ry = np.meshgrid(np.linspace(np.min(x), np.max(x), nx*nscale),
+                         np.linspace(np.min(y), np.max(y), ny*nscale))
+    # copy paste the values of z into rz
+    rz  = np.repeat(np.repeat(z , nscale, axis=1), nscale, axis=0)
+    return rx, ry, np.transpose(rz)
 
 
-def smooth(z, i, j, zx, zy, offset, kernel, total):
-    s = 0
-    if not (not (i < offset) and not ((zx - i) < offset) and not (j < offset) and not ((zy - j) < offset)):
-        s = z[i][j]
-    else:
-        s = 0
-        for ii in range(-offset, offset):
-            for jj in range(-offset, offset):
-                s += kernel[ii + offset][jj + offset] * z[i + ii][j + jj]
-        s /= total
-    return s
-
-
-def smooth2D(z):
-    zx = len(z)
-    zy = len(z[0])
-    kernel = kernel55
-    offset = offset55
-    kernel_total = sum55
-    return [[smooth(z, i, j, zx, zy, offset, kernel, kernel_total)
-             for j in range(0, zy)] for i in range(0, zx)]
+def compute_contour_smoothed(dfu):
+    # compute contour
+    x, y, z = compute_contour(dfu)
+    # std_dev = 1
+    kernel = Gaussian2DKernel(1, mode='oversample', factor=10)
+    # extend array by 5
+    rx, ry, rz = reshape(x, y, z, 5)
+    # convolve with kernel
+    rzs = ndimage.convolve(rz, kernel.array, mode='mirror')
+    # return
+    return (rx, ry, rz)
 
 
 def near(t, v):

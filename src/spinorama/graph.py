@@ -2,7 +2,7 @@ import math
 import numpy as np
 import pandas as pd
 import altair as alt
-from .contour import compute_contour
+from .contour import compute_contour, compute_contour_smoothed
 
 
 alt.data_transformers.disable_max_rows()
@@ -59,9 +59,9 @@ def graph_freq(dfu, width, height):
     return line
 
 
-def graph_contour(df, width=400, heigth=180):
+def graph_contour_common(df, transformer, width, heigth):
     try:
-        af, am, az = compute_contour(df)
+        af, am, az = transformer(df)
         source = pd.DataFrame(
             {'Freq': af.ravel(), 'Angle': am.ravel(), 'dB': az.ravel()})
         return alt.Chart(source).mark_rect(
@@ -79,6 +79,16 @@ def graph_contour(df, width=400, heigth=180):
         )
     except KeyError:
         return None
+
+
+def graph_contour(df, width, heigth):
+    return graph_contour_common(df, compute_contour,
+                                width, heigth)
+
+
+def graph_contour_smoothed(df, width, heigth):
+    return graph_contour_common(df, compute_contour_smoothed,
+                                width, heigth)
 
 
 def graph_radar(dfu, width, heigth):
