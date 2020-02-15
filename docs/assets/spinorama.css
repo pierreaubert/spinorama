@@ -9,11 +9,11 @@ body {
 .card-image {
     height: 450px;
     position: relative;
-    margin-top: -70px;
+    margin-top: 0px;
 }
 
 .card.large {
-    height: 600px;
+    height: 500px;
     border-radius: 5px;
 }
 
@@ -36,7 +36,7 @@ body {
 
 .media {
     position: relative;
-    margin-top: 0px;
+    margin-top: -140px;
     background-color: white;
 }
 

@@ -6,34 +6,37 @@
   <title>Spinorama for speakers measured at audiosciencereview.com</title>
   <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.0/css/bulma.min.css" />
   <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="spinorama.css"/> 
+  <link rel="stylesheet" href="assets/spinorama.css"/> 
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://pierreaubert.github.io/spinorama/assets/fuse.js"></script>
+  <script src="https://pierreaubert.github.io/spinorama/assets/metadata.js"></script>
 </head>
 <body>
 
-  <nav class="navbar">
-    <div class="container">
-      <div class="navbar-brand">
-        <a class="navbar-item" href="./"><p class="title">Spinorama</p></a>
-        <span class="navbar-burger burger" data-target="navbarMenu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-      </div>
-      <div id="navbarMenu" class="navbar-menu">
-        <div class="navbar-end">
-          <a class="navbar-item is-active">
-            Home
-          </a>
-          <a class="navbar-item">
+<nav class="navbar">
+ <div class="container">
+   <div class="navbar-brand">
+     <a class="navbar-item" href="./"><p class="title">Spinorama</p></a>
+     <span class="navbar-burger burger" data-target="navbarMenu">
+       <span></span>
+       <span></span>
+       <span></span>
+     </span>
+   </div>
+   <div id="navbarMenu" class="navbar-menu">
+     <div class="navbar-end">
+       <a class="navbar-item is-active">
+         Home
+       </a>
+       <a class="navbar-item">
 	    Compare
-          </a>
-          <a class="navbar-item">
-            Help
-          </a>
-        </div>
-      </div>
-    </nav>
+       </a>
+       <a class="navbar-item">
+         Help
+       </a>
+     </div>
+   </div>
+</nav>
 
   
 
@@ -43,19 +46,22 @@
         <span class="flow-2"></span>
         <span class="flow-3"></span>
       </div>
+
       <div class="section">
+	
+          <!-- Search -->
         <div class="box">
           <div class="field has-addons">
             <div class="control is-expanded">
-              <input class="input has-text-centered" type="search" placeholder="find a speaker">
-              </div>
-              <div class="control">
+              <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl ..." />
+            </div>
+            <div class="control">
                 <a class="button is-info">Search</a>
-              </div>
             </div>
           </div>
+
           <!-- Speakers -->
-          <div class="row columns is-multiline">
+          <div class="row columns is-multiline searchresults">
             <div class="column is-one-third">
               <div class="card large">
                 <div class="card-image">
@@ -72,9 +78,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 50 Hz<br/>
-		      -6dB at 46 Hz<br/>
-		      &plusmn;2.7dB ~ 80-20kHz
+		                -3dB at 50 Hz<br/>
+		                -6dB at 46 Hz<br/>
+		                &plusmn;2.7dB ~ 80-20kHz
                   </div>
                 </div>
               </div>
@@ -95,9 +101,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 94 Hz<br/>
-		      -6dB at 77 Hz<br/>
-		      &plusmn;7.0dB ~ 80-20kHz
+		                -3dB at 94 Hz<br/>
+		                -6dB at 77 Hz<br/>
+		                &plusmn;7.0dB ~ 80-20kHz
                   </div>
                 </div>
               </div>
@@ -118,9 +124,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 47 Hz<br/>
-		      -6dB at 44 Hz<br/>
-		      &plusmn;3.0dB ~ 80-20kHz
+		                -3dB at 47 Hz<br/>
+		                -6dB at 44 Hz<br/>
+		                &plusmn;3.0dB ~ 80-20kHz
                   </div>
                 </div>
               </div>
@@ -141,9 +147,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 63 Hz<br/>
-		      -6dB at 55 Hz<br/>
-		      &plusmn;4.0dB ~ 80-20kHz
+		                -3dB at 63 Hz<br/>
+		                -6dB at 55 Hz<br/>
+		                &plusmn;4.0dB ~ 80-20kHz
                   </div>
                 </div>
               </div>
@@ -164,9 +170,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 68 Hz<br/>
-		      -6dB at 63 Hz<br/>
-		      &plusmn;12.7dB ~ 80-20kHz
+		                -3dB at 68 Hz<br/>
+		                -6dB at 63 Hz<br/>
+		                &plusmn;12.7dB ~ 80-20kHz
                   </div>
                 </div>
               </div>
@@ -187,9 +193,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 73 Hz<br/>
-		      -6dB at 66 Hz<br/>
-		      &plusmn;4.9dB ~ 80-20kHz
+		                -3dB at 73 Hz<br/>
+		                -6dB at 66 Hz<br/>
+		                &plusmn;4.9dB ~ 80-20kHz
                   </div>
                 </div>
               </div>
@@ -210,9 +216,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 44 Hz<br/>
-		      -6dB at 41 Hz<br/>
-		      &plusmn;9.7dB ~ 80-20kHz
+		                -3dB at 44 Hz<br/>
+		                -6dB at 41 Hz<br/>
+		                &plusmn;9.7dB ~ 80-20kHz
                   </div>
                 </div>
               </div>
@@ -233,9 +239,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 54 Hz<br/>
-		      -6dB at 50 Hz<br/>
-		      &plusmn;4.0dB ~ 80-20kHz
+		                -3dB at 54 Hz<br/>
+		                -6dB at 50 Hz<br/>
+		                &plusmn;4.0dB ~ 80-20kHz
                   </div>
                 </div>
               </div>
@@ -256,9 +262,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 55 Hz<br/>
-		      -6dB at 51 Hz<br/>
-		      &plusmn;2.8dB ~ 80-20kHz
+		                -3dB at 55 Hz<br/>
+		                -6dB at 51 Hz<br/>
+		                &plusmn;2.8dB ~ 80-20kHz
                   </div>
                 </div>
               </div>
@@ -279,9 +285,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 57 Hz<br/>
-		      -6dB at 54 Hz<br/>
-		      &plusmn;3.0dB ~ 80-20kHz
+		                -3dB at 57 Hz<br/>
+		                -6dB at 54 Hz<br/>
+		                &plusmn;3.0dB ~ 80-20kHz
                   </div>
                 </div>
               </div>
@@ -302,9 +308,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 68 Hz<br/>
-		      -6dB at 62 Hz<br/>
-		      &plusmn;3.6dB ~ 80-20kHz
+		                -3dB at 68 Hz<br/>
+		                -6dB at 62 Hz<br/>
+		                &plusmn;3.6dB ~ 80-20kHz
                   </div>
                 </div>
               </div>
@@ -325,9 +331,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 138 Hz<br/>
-		      -6dB at 119 Hz<br/>
-		      &plusmn;17.6dB ~ 80-20kHz
+		                -3dB at 138 Hz<br/>
+		                -6dB at 119 Hz<br/>
+		                &plusmn;17.6dB ~ 80-20kHz
                   </div>
                 </div>
               </div>
@@ -348,9 +354,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 75 Hz<br/>
-		      -6dB at 63 Hz<br/>
-		      &plusmn;3.1dB ~ 80-20kHz
+		                -3dB at 75 Hz<br/>
+		                -6dB at 63 Hz<br/>
+		                &plusmn;3.1dB ~ 80-20kHz
                   </div>
                 </div>
               </div>
@@ -371,9 +377,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 73 Hz<br/>
-		      -6dB at 56 Hz<br/>
-		      &plusmn;4.3dB ~ 80-20kHz
+		                -3dB at 73 Hz<br/>
+		                -6dB at 56 Hz<br/>
+		                &plusmn;4.3dB ~ 80-20kHz
                   </div>
                 </div>
               </div>
@@ -394,9 +400,9 @@
                     </div>
                   </div>
                   <div class="media">
-		      -3dB at 56 Hz<br/>
-		      -6dB at 53 Hz<br/>
-		      &plusmn;4.9dB ~ 80-20kHz
+		                -3dB at 56 Hz<br/>
+		                -6dB at 53 Hz<br/>
+		                &plusmn;4.9dB ~ 80-20kHz
                   </div>
                 </div>
               </div>

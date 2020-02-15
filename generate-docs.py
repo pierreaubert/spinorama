@@ -18,7 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-usage: update-docs.py [--version]
+usage: update-docs.py [--version] [--dev]
 """
 import json
 from mako.template import Template
@@ -28,10 +28,18 @@ import datas.metadata as metadata
 
 from docopt import docopt
 
+siteprod = 'https://pierreaubert.github.io/spinorama'
+sitedev = 'http://localhost:8000/docs/'
+
 if __name__ == '__main__':
     args = docopt(__doc__,
-                  version='update-docs.py version 1.0',
+                  version='update-docs.py version 1.1',
                   options_first=True)
+
+    dev = args['--dev']
+    site = siteprod
+    if dev is True:
+        site = sitedev
 
     df = parse_all_speakers()
 
@@ -43,11 +51,13 @@ if __name__ == '__main__':
         except ValueError:
             print('Computing estimates failed for speaker: ' + k)
 
+    # write index.html
     index_html = Template(filename='templates/index.html')
     with open('docs/index.html', 'w') as f:
-        f.write(index_html.render(speakers=df, meta=metadata.speakers_info))
+        f.write(index_html.render(speakers=df, meta=metadata.speakers_info, site=site))
         f.close()
 
+    # write a file per speaker
     speaker_html = Template(filename='templates/speaker.html')
     for speaker, measurements in df.items():
         with open('docs/' + speaker + '.html', 'w') as f:
@@ -78,5 +88,30 @@ if __name__ == '__main__':
                                         freqs=freqs,
                                         contours=contours,
                                         radars=radars,
-                                        meta=metadata.speakers_info))
+                                        meta=metadata.speakers_info,
+                                        site=site))
             f.close()
+        
+    # write metadata in a json file for easy search
+    def flatten(d):
+        f = []
+        for k, v in d.items():
+            s = {}
+            s['speaker'] = k
+            for k2, v2 in v.items():
+                s[k2] = v2
+            f.append(s)
+        return f
+
+
+    with open('docs/assets/metadata.json', 'w') as f:
+        meta = flatten(metadata.speakers_info)
+        js = json.dumps(meta)
+        f.write(js)
+        f.close()
+
+
+    search_js = Template(filename='templates/search.js')
+    with open('docs/assets/metadata.js', 'w') as f:
+        f.write(search_js.render(site=site))
+        f.close()
