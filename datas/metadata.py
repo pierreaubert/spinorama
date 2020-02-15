@@ -1,5 +1,11 @@
 # extra speaker info
 speakers_info = {
+    'Adam S2V': {
+        'brand': 'Adam',
+        'model': 'S2V',
+        'type': 'active',
+        'price': '1750',
+        },
     'Dayton Audio B652-AIR': {
         'brand': 'Dayton Audio',
         'model': 'B652-AIR',
