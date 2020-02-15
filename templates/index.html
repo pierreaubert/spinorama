@@ -7,8 +7,9 @@
   <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.0/css/bulma.min.css" />
   <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
   <link rel="stylesheet" href="assets/spinorama.css"/> 
-  <script src="assets/fuse.js"/>
-  <script src="assets/metadata.js"/>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="${site}/assets/fuse.js"></script>
+  <script src="${site}/assets/metadata.js"></script>
 </head>
 <body>
 
@@ -55,16 +56,15 @@
         <div class="box">
           <div class="field has-addons">
             <div class="control is-expanded">
-              <input class="input has-text-centered" type="search" placeholder="find a speaker">
-              </div>
-              <div class="control">
+              <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl ..." />
+            </div>
+            <div class="control">
                 <a class="button is-info">Search</a>
-              </div>
             </div>
           </div>
 
           <!-- Speakers -->
-          <div class="row columns is-multiline">
+          <div class="row columns is-multiline searchresults">
             % for speaker in speakers:
             <div class="column is-one-third">
               <div class="card large">
@@ -80,17 +80,17 @@
                     <div class="content">
                       % if meta[speaker] is UNDEFINED:
                         <p class="title is-4 no-padding">${speaker}</p>
-		      % else:
+		                  % else:
                         <p class="title is-4 no-padding">${meta[speaker]['brand']} ${meta[speaker]['model']}</p>
-		      % endif
+		                  % endif
                     </div>
                   </div>
                   <div class="media">
                     % if meta[speaker] is not UNDEFINED:
-		      -3dB at ${meta[speaker]['estimates'][1]} Hz<br/>
-		      -6dB at ${meta[speaker]['estimates'][2]} Hz<br/>
-		      &plusmn;${meta[speaker]['estimates'][3]}dB ~ 80-20kHz
-		    % endif
+		                -3dB at ${meta[speaker]['estimates'][1]} Hz<br/>
+		                -6dB at ${meta[speaker]['estimates'][2]} Hz<br/>
+		                &plusmn;${meta[speaker]['estimates'][3]}dB ~ 80-20kHz
+		                % endif
                   </div>
                 </div>
               </div>
