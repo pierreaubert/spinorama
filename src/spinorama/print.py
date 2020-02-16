@@ -43,15 +43,12 @@ def print_graphs(df, speaker, width=900, height=500, force=False, fileext=None):
         df, speaker, width, height)
     graphs['SPL Vertical Contour'] = display_contour_vertical(
         df, speaker, width, height)
+    graphs['2cols'] = template_compact(df, speaker, width*2, height*2)
+    graphs['3cols'] = template_panorama(df, speaker, width*3, height*3)
+    # better square
     size = max(width, height)
-    graphs['SPL Horizontal Radar'] = display_radar_horizontal(
-        df, speaker, size, size)
-    graphs['SPL Vertical Radar'] = display_radar_vertical(
-        df, speaker, size, size)
-    graphs['2cols'] = template_compact(
-        df, speaker, size, size)
-    graphs['3cols'] = template_panorama(
-        df, speaker, size, size)
+    graphs['SPL Horizontal Radar'] = display_radar_horizontal(df, speaker, size, size)
+    graphs['SPL Vertical Radar'] = display_radar_vertical(df, speaker, size, size)
 
     updated = 0
     for (title, graph) in graphs.items():

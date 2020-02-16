@@ -51,8 +51,8 @@ if __name__ == '__main__':
                   version='update-docs.py version 1.1',
                   options_first=True)
 
-    width = 1200
-    height = 600
+    width = 600
+    height = 200
     force = args['--force']
     type = None
 
