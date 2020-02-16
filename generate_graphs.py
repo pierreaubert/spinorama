@@ -32,10 +32,10 @@ from src.spinorama.print import print_graphs
 from docopt import docopt
 
 
-def generate_graphs(df, width, height, force, type):
+def generate_graphs(df, width, height, force, ptype):
     print('Speaker                         #updated')
     for (speaker, measurements) in df.items():
-        updated = print_graphs(df, speaker, width, height, force, type)
+        updated = print_graphs(df, speaker, width, height, force, ptype)
         print('{:30s} {:2d}'.format(speaker, updated))
 
 
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     width = 1200
     height = 600
     force = args['--force']
-    type = None
+    ptype = None
 
     if args['--width'] is not None:
         width = int(args['--width'])
@@ -56,10 +56,10 @@ if __name__ == '__main__':
         height = int(args['--height'])
 
     if args['--type'] is not None:
-        type = args['--type']
-        if type not in ('png', 'html', 'svg', 'json'):
-            print('type %s is not recognize!'.format(type))
+        ptype = args['--type']
+        if ptype not in ('png', 'html', 'svg', 'json'):
+            print('type %s is not recognize!'.format(ptype))
             exit(1)
 
     df = parse_all_speakers()
-    generate_graph(df, width, height, force, type)
+    generate_graphs(df, width, height, force, ptype=ptype)

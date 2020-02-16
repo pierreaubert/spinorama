@@ -4,12 +4,15 @@
   <meta http-equiv="content-type" content="text/html;charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Spinorama for speakers measured at audiosciencereview.com</title>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-lite@4.0.2"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-embed@6"></script>
+  <script src="http://192.168.1.104:8001/docs/assets/fuse.js"></script>
+  <script src="http://192.168.1.104:8001/docs/assets/metadata.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.0/css/bulma.min.css" />
   <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
   <link rel="stylesheet" href="assets/spinorama.css"/> 
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="http://localhost:8000/docs//assets/fuse.js"></script>
-  <script src="http://localhost:8000/docs//assets/metadata.js"></script>
 </head>
 <body>
 
@@ -34,78 +37,141 @@
 
 
 
-<h1>Spinorama for KEF LS50 measured at <a href="audiosciencereview.com">AudioScienceReview</a></h1>
-
   
 
-<ul>
-  <li>CEA2034</li>
-  <div>
-     <a href="KEF%20LS50/CEA2034.html">
-       <img src="KEF%20LS50/CEA2034.png">
-     </a>
+<section class="hero is-info">
+
+<div class="hero-body">
+  <div class="container">
+    <p class="title">
+      KEF LS50
+      <p class="subtitle">
+	measurements provided by
+	<img align="center" src="metadata/asr-small.png" alt="Audio Science Review">
+      </p>
+    </p>
   </div>
-  <li>Early Reflections</li>
-  <div>
-     <a href="KEF%20LS50/Early%20Reflections.html">
-       <img src="KEF%20LS50/Early%20Reflections.png">
-     </a>
-  </div>
-  <li>Estimated In-Room Response</li>
-  <div>
-     <a href="KEF%20LS50/Estimated%20In-Room%20Response.html">
-       <img src="KEF%20LS50/Estimated%20In-Room%20Response.png">
-     </a>
-  </div>
-  <li>Horizontal Reflections</li>
-  <div>
-     <a href="KEF%20LS50/Horizontal%20Reflections.html">
-       <img src="KEF%20LS50/Horizontal%20Reflections.png">
-     </a>
-  </div>
-  <li>Vertical Reflections</li>
-  <div>
-     <a href="KEF%20LS50/Vertical%20Reflections.html">
-       <img src="KEF%20LS50/Vertical%20Reflections.png">
-     </a>
-  </div>
-  <li>SPL Horizontal</li>
-  <div>
-     <a href="KEF%20LS50/SPL%20Horizontal.html">
-       <img src="KEF%20LS50/SPL%20Horizontal.png">
-     </a>
-  </div>
-  <li>SPL Vertical</li>
-  <div>
-     <a href="KEF%20LS50/SPL%20Vertical.html">
-       <img src="KEF%20LS50/SPL%20Vertical.png">
-     </a>
-  </div>
-  <li>SPL Horizontal Contour</li>
-  <div>
-     <a href="KEF%20LS50/SPL%20Horizontal%20Contour.html">
-       <img src="KEF%20LS50/SPL%20Horizontal%20Contour.png">
-     </a>
-  </div>
-  <li>SPL Vertical Contour</li>
-  <div>
-     <a href="KEF%20LS50/SPL%20Vertical%20Contour.html">
-       <img src="KEF%20LS50/SPL%20Vertical%20Contour.png">
-     </a>
-  </div>
-  <li>SPL Horizontal Radar</li>
-  <div>
-     <a href="KEF%20LS50/SPL%20Horizontal%20Radar.html">
-       <img src="KEF%20LS50/SPL%20Horizontal%20Radar.png">
-     </a>
-  </div>
-  <li>SPL Vertical Radar</li>
-  <div>
-     <a href="KEF%20LS50/SPL%20Vertical%20Radar.html">
-       <img src="KEF%20LS50/SPL%20Vertical%20Radar.png">
-     </a>
-  </div>
-</ul>
+</div>
+
+<div class="tabs is-boxed is-centered main-menu" id="nav">
+  <ul>
+    <li data-target="pane-1" id="1">
+      <a>
+        <span class="icon is-small"><i class="fb fa-mobile"></i></span>
+        <span>Mobile</span>
+      </a>
+    </li>
+    <li data-target="pane-2" id="2" class="is-active">
+      <a>
+        <span class="icon is-small"><i class="fb fa-laptop"></i></span>
+        <span>Laptop</span>
+      </a>
+    </li>
+    <li data-target="pane-3" id="3">
+      <a>
+        <span class="icon is-small"><i class="fb fa-desktop"></i></span>
+        <span>Desktop</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<div class="tab-content">
+
+
+<!-- Mobile view: sequential-->
+<div class="tab-pane" id="pane-1">
+  <ul>
+    <li>CEA2034</li>
+    <div>
+      <a href="KEF%20LS50/CEA2034.html">
+	<img src="KEF%20LS50/CEA2034.png"/>
+      </a>
+    </div>
+    <li>Early Reflections</li>
+    <div>
+      <a href="KEF%20LS50/Early%20Reflections.html">
+	<img src="KEF%20LS50/Early%20Reflections.png"/>
+      </a>
+    </div>
+    <li>Estimated In-Room Response</li>
+    <div>
+      <a href="KEF%20LS50/Estimated%20In-Room%20Response.html">
+	<img src="KEF%20LS50/Estimated%20In-Room%20Response.png"/>
+      </a>
+    </div>
+    <li>Horizontal Reflections</li>
+    <div>
+      <a href="KEF%20LS50/Horizontal%20Reflections.html">
+	<img src="KEF%20LS50/Horizontal%20Reflections.png"/>
+      </a>
+    </div>
+    <li>Vertical Reflections</li>
+    <div>
+      <a href="KEF%20LS50/Vertical%20Reflections.html">
+	<img src="KEF%20LS50/Vertical%20Reflections.png"/>
+      </a>
+    </div>
+    <li>SPL Horizontal</li>
+    <div>
+      <a href="KEF%20LS50/SPL%20Horizontal.html">
+	<img src="KEF%20LS50/SPL%20Horizontal.png"/>
+      </a>
+    </div>
+    <li>SPL Vertical</li>
+    <div>
+      <a href="KEF%20LS50/SPL%20Vertical.html">
+	<img src="KEF%20LS50/SPL%20Vertical.png"/>
+      </a>
+    </div>
+    <li>SPL Horizontal Contour</li>
+    <div>
+      <a href="KEF%20LS50/SPL%20Horizontal%20Contour.html">
+	<img src="KEF%20LS50/SPL%20Horizontal%20Contour.png"/>
+      </a>
+    </div>
+    <li>SPL Vertical Contour</li>
+    <div>
+      <a href="KEF%20LS50/SPL%20Vertical%20Contour.html">
+	<img src="KEF%20LS50/SPL%20Vertical%20Contour.png"/>
+      </a>
+    </div>
+    <li>SPL Horizontal Radar</li>
+    <div>
+      <a href="KEF%20LS50/SPL%20Horizontal%20Radar.html">
+	<img src="KEF%20LS50/SPL%20Horizontal%20Radar.png"/>
+      </a>
+    </div>
+    <li>SPL Vertical Radar</li>
+    <div>
+      <a href="KEF%20LS50/SPL%20Vertical%20Radar.html">
+	<img src="KEF%20LS50/SPL%20Vertical%20Radar.png"/>
+      </a>
+    </div>
+  </ul>
+</div>
+<!-- Laptop view: 2 cols-->
+<div class="tab-pane" id="pane-2">
+  <div id="vis"></div>
+  <script type="text/javascript">
+    var spec = "KEF%20LS50/2cols.json";
+    vegaEmbed('#vis', spec).then(function(result) {
+    }).catch(console.error);
+  </script>
+</div>
+<!-- Desktop view: 3 cols-->
+<div class="tab-pane" id="pane-3">
+  <div id="vis"></div>
+  <script type="text/javascript">
+    var spec = "KEF%20LS50/3cols.json";
+    vegaEmbed('#vis', spec).then(function(result) {
+    }).catch(console.error);
+  </script>
+</div>
+</div>
+</section>
+<script src="assets/tabs.js"></script>
+
 
 <footer class="footer">
 <div class="container">
