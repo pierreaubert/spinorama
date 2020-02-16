@@ -31,6 +31,14 @@ from src.spinorama.print import print_graphs
 
 from docopt import docopt
 
+
+def generate_graphs(df, width, height, force, type):
+    print('Speaker                         #updated')
+    for (speaker, measurements) in df.items():
+        updated = print_graphs(df, speaker, width, height, force, type)
+        print('{:30s} {:2d}'.format(speaker, updated))
+
+
 if __name__ == '__main__':
     args = docopt(__doc__,
                   version='update-graphs.py version 1.0',
@@ -54,5 +62,4 @@ if __name__ == '__main__':
             exit(1)
 
     df = parse_all_speakers()
-    for (speaker, measurements) in df.items():
-        print_graphs(df, speaker, width, height, force, type)
+    generate_graph(df, width, height, force, type)

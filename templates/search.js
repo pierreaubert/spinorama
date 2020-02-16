@@ -8,24 +8,25 @@ function display_speaker(speaker) {
 	let s_name = speaker.brand + ' ' + speaker.model 
 	let content = '\
 	    <div class="column is-one-third">\
-		    <div class="card large">\
-				<div class="card-image">\
-				  <figure class="image">\
-				    <a href="' + s_href +'"><img src="' + s_img + '" alt="Spinorama"/></a>\
-			      </figure>\
-				  </div>\
-				  <div class="card-content">\
-					<div class="media">\
-					  <div class="content">' + s_name + '</div>\
-					</div>\
-					<div class="media">\
-						  -3dB at ' + speaker.estimates[0] + 'Hz<br/>\
-						  -6dB at ' + speaker.estimates[1] + 'Hz<br/>\
-						  &plusmn;' + speaker.estimates[2] + 'dB ~ 80-20kHz\
-					</div>\
-				  </div>';
-	content += speaker.speaker
-	content += '</div>'
+		<div class="card large">\
+		  <div class="card-image">\
+		    <figure class="image">\
+		      <a href="' + s_href +'"><img src="' + s_img + '" alt="Spinorama"/></a>\
+ 		    </figure>\
+		  </div>\
+		  <div class="card-content">\
+		    <div class="media">\
+                      <div class="content">\
+			<div class="content">' + s_name + '</div>\
+	              </div>\
+	            </div>\
+		    <div class="media">\
+			-3dB at ' + speaker.estimates[0] + 'Hz<br/>\
+			-6dB at ' + speaker.estimates[1] + 'Hz<br/>\
+			&plusmn;' + speaker.estimates[2] + 'dB ~ 80-20kHz\
+		  </div>\
+		</div>\
+             </div>';
 	return content
 }
 
