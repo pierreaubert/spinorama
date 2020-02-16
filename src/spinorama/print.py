@@ -52,4 +52,4 @@ def print_graphs(df, speaker, width=900, height=500, force=False, fileext=None):
     for (title, graph) in graphs.items():
         updated += print_graph(speaker, title, graph, width,
                                height, force, fileext)
-    print('Speaker: {:s} updated {:2d} files'.format(speaker, updated))
+    return updated

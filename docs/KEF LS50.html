@@ -1,83 +1,126 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Spinorama for KEF LS50 measured at audiosciencereview.com</title>
-  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spinorama for speakers measured at audiosciencereview.com</title>
+  <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.0/css/bulma.min.css" />
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="assets/spinorama.css"/> 
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="http://localhost:8000/docs//assets/fuse.js"></script>
+  <script src="http://localhost:8000/docs//assets/metadata.js"></script>
 </head>
 <body>
-  <h1>Spinorama for KEF LS50 measured at <a href="audiosciencereview.com">AudioScienceReview</a></h1>
+
+
+<nav class="navbar">
+ <div class="container">
+   <div class="navbar-brand">
+     <a class="navbar-item" href="./"><p class="title">Spinorama</p></a>
+     <span class="navbar-burger burger" data-target="navbarMenu">
+       <span></span>
+       <span></span>
+       <span></span>
+     </span>
+   </div>
+   <div id="navbarMenu" class="navbar-menu">
+     <div class="navbar-end">
+       <a class="navbar-item" href="compare.html">Compare</a>
+       <a class="navbar-item" href="help.html">Help</a>
+     </div>
+   </div>
+</nav>
+
+
+
+<h1>Spinorama for KEF LS50 measured at <a href="audiosciencereview.com">AudioScienceReview</a></h1>
 
   
 
-  <ul>
-    <li>CEA2034</li>
-    <div>
-       <a href="KEF%20LS50/CEA2034.html">
-         <img src="KEF%20LS50/CEA2034.png">
-       </a>
+<ul>
+  <li>CEA2034</li>
+  <div>
+     <a href="KEF%20LS50/CEA2034.html">
+       <img src="KEF%20LS50/CEA2034.png">
+     </a>
+  </div>
+  <li>Early Reflections</li>
+  <div>
+     <a href="KEF%20LS50/Early%20Reflections.html">
+       <img src="KEF%20LS50/Early%20Reflections.png">
+     </a>
+  </div>
+  <li>Estimated In-Room Response</li>
+  <div>
+     <a href="KEF%20LS50/Estimated%20In-Room%20Response.html">
+       <img src="KEF%20LS50/Estimated%20In-Room%20Response.png">
+     </a>
+  </div>
+  <li>Horizontal Reflections</li>
+  <div>
+     <a href="KEF%20LS50/Horizontal%20Reflections.html">
+       <img src="KEF%20LS50/Horizontal%20Reflections.png">
+     </a>
+  </div>
+  <li>Vertical Reflections</li>
+  <div>
+     <a href="KEF%20LS50/Vertical%20Reflections.html">
+       <img src="KEF%20LS50/Vertical%20Reflections.png">
+     </a>
+  </div>
+  <li>SPL Horizontal</li>
+  <div>
+     <a href="KEF%20LS50/SPL%20Horizontal.html">
+       <img src="KEF%20LS50/SPL%20Horizontal.png">
+     </a>
+  </div>
+  <li>SPL Vertical</li>
+  <div>
+     <a href="KEF%20LS50/SPL%20Vertical.html">
+       <img src="KEF%20LS50/SPL%20Vertical.png">
+     </a>
+  </div>
+  <li>SPL Horizontal Contour</li>
+  <div>
+     <a href="KEF%20LS50/SPL%20Horizontal%20Contour.html">
+       <img src="KEF%20LS50/SPL%20Horizontal%20Contour.png">
+     </a>
+  </div>
+  <li>SPL Vertical Contour</li>
+  <div>
+     <a href="KEF%20LS50/SPL%20Vertical%20Contour.html">
+       <img src="KEF%20LS50/SPL%20Vertical%20Contour.png">
+     </a>
+  </div>
+  <li>SPL Horizontal Radar</li>
+  <div>
+     <a href="KEF%20LS50/SPL%20Horizontal%20Radar.html">
+       <img src="KEF%20LS50/SPL%20Horizontal%20Radar.png">
+     </a>
+  </div>
+  <li>SPL Vertical Radar</li>
+  <div>
+     <a href="KEF%20LS50/SPL%20Vertical%20Radar.html">
+       <img src="KEF%20LS50/SPL%20Vertical%20Radar.png">
+     </a>
+  </div>
+</ul>
+
+<footer class="footer">
+<div class="container">
+  <div class="content has-text-centered">
+    <div class="soc">
+      <a href="#"><i class="fa fa-github-alt fa-2x" aria-hidden="true"></i></a>
     </div>
-    <li>Early Reflections</li>
-    <div>
-       <a href="KEF%20LS50/Early%20Reflections.html">
-         <img src="KEF%20LS50/Early%20Reflections.png">
-       </a>
+    <p>
+      <strong>Spinorama</strong> by <a href="https://github.com/pierreaubert">Pierre Aubert</a>.
+      The <a href="https://github.com/pierreaubert/spinorama">source code</a> is licensed under GPL. <br>
+    </p>
     </div>
-    <li>Estimated In-Room Response</li>
-    <div>
-       <a href="KEF%20LS50/Estimated%20In-Room%20Response.html">
-         <img src="KEF%20LS50/Estimated%20In-Room%20Response.png">
-       </a>
-    </div>
-    <li>Horizontal Reflections</li>
-    <div>
-       <a href="KEF%20LS50/Horizontal%20Reflections.html">
-         <img src="KEF%20LS50/Horizontal%20Reflections.png">
-       </a>
-    </div>
-    <li>Vertical Reflections</li>
-    <div>
-       <a href="KEF%20LS50/Vertical%20Reflections.html">
-         <img src="KEF%20LS50/Vertical%20Reflections.png">
-       </a>
-    </div>
-    <li>SPL Horizontal</li>
-    <div>
-       <a href="KEF%20LS50/SPL%20Horizontal.html">
-         <img src="KEF%20LS50/SPL%20Horizontal.png">
-       </a>
-    </div>
-    <li>SPL Vertical</li>
-    <div>
-       <a href="KEF%20LS50/SPL%20Vertical.html">
-         <img src="KEF%20LS50/SPL%20Vertical.png">
-       </a>
-    </div>
-    <li>SPL Horizontal Contour</li>
-    <div>
-       <a href="KEF%20LS50/SPL%20Horizontal%20Contour.html">
-         <img src="KEF%20LS50/SPL%20Horizontal%20Contour.png">
-       </a>
-    </div>
-    <li>SPL Vertical Contour</li>
-    <div>
-       <a href="KEF%20LS50/SPL%20Vertical%20Contour.html">
-         <img src="KEF%20LS50/SPL%20Vertical%20Contour.png">
-       </a>
-    </div>
-    <li>SPL Horizontal Radar</li>
-    <div>
-       <a href="KEF%20LS50/SPL%20Horizontal%20Radar.html">
-         <img src="KEF%20LS50/SPL%20Horizontal%20Radar.png">
-       </a>
-    </div>
-    <li>SPL Vertical Radar</li>
-    <div>
-       <a href="KEF%20LS50/SPL%20Vertical%20Radar.html">
-         <img src="KEF%20LS50/SPL%20Vertical%20Radar.png">
-       </a>
-    </div>
-  </ul>
+  </div>
+</footer>
 
 </body>
 </html>
+

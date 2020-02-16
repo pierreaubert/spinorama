@@ -6,15 +6,13 @@ function display_speaker(speaker) {
 	let s_href = speaker.speaker + '.html'
 	let s_img  = 'metadata/' + speaker.speaker + '.jpg'
 	let s_name = speaker.brand + ' ' + speaker.model 
-	let content = '	    <div class="column is-one-third">		    <div class="card large">				<div class="card-image">				  <figure class="image">				    <a href="' + s_href +'"><img src="' + s_img + '" alt="Spinorama"/></a>			      </figure>				  </div>				  <div class="card-content">					<div class="media">					  <div class="content">' + s_name + '</div>					</div>					<div class="media">						  -3dB at ' + speaker.estimates[0] + 'Hz<br/>						  -6dB at ' + speaker.estimates[1] + 'Hz<br/>						  &plusmn;' + speaker.estimates[2] + 'dB ~ 80-20kHz					</div>				  </div>';
-	content += speaker.speaker
-	content += '</div>'
+	let content = '	    <div class="column is-one-third">		<div class="card large">		  <div class="card-image">		    <figure class="image">		      <a href="' + s_href +'"><img src="' + s_img + '" alt="Spinorama"/></a> 		    </figure>		  </div>		  <div class="card-content">		    <div class="media">                      <div class="content">			<div class="content">' + s_name + '</div>	              </div>	            </div>		    <div class="media">			-3dB at ' + speaker.estimates[0] + 'Hz<br/>			-6dB at ' + speaker.estimates[1] + 'Hz<br/>			&plusmn;' + speaker.estimates[2] + 'dB ~ 80-20kHz		  </div>		</div>             </div>';
 	return content
 }
 
 $(document).ready(function () {
 
-	window.$.getJSON('https://pierreaubert.github.io/spinorama/assets/metadata.json', function (response) {
+	window.$.getJSON('http://localhost:8000/docs//assets/metadata.json', function (response) {
 
 		const fuse = new Fuse(response, {
 			matchAllTokens: true,
