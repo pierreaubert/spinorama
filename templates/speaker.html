@@ -1,8 +1,6 @@
 <%include file="header.html"/>
 <%include file="nav.html"/>
 
-<h1>Spinorama for ${speaker} measured at <a href="audiosciencereview.com">AudioScienceReview</a></h1>
-
 <%!
     def space2url(text):
         return text.replace(' ', '%20')
@@ -14,31 +12,54 @@
         return text.replace('_unmelted', ' Radar')
 %>  
 
-<ul>
-% for freq in freqs:
-  <li>${freq}</li>
-  <div>
-     <a href="${speaker | space2url}/${freq | space2url}.html">
-       <img src="${speaker | space2url}/${freq | space2url}.png">
-     </a>
-  </div>
-% endfor
-% for contour in contours:
-  <li>${contour | unmeltC }</li>
-  <div>
-     <a href="${speaker | space2url}/${contour | unmeltC, space2url}.html">
-       <img src="${speaker | space2url}/${contour | unmeltC, space2url}.png">
-     </a>
-  </div>
-% endfor
-% for radar in radars:
-  <li>${radar | unmeltR }</li>
-  <div>
-     <a href="${speaker | space2url}/${radar | unmeltR, space2url}.html">
-       <img src="${speaker | space2url}/${radar | unmeltR, space2url}.png">
-     </a>
-  </div>
-% endfor
-</ul>
+<%include file="tabs_header.html"/>
+<!-- Mobile view: sequential-->
+<div class="tab-pane" id="pane-1">
+  <ul>
+    % for freq in freqs:
+    <li>${freq}</li>
+    <div>
+      <a href="${speaker | space2url}/${freq | space2url}.html">
+	<img src="${speaker | space2url}/${freq | space2url}.png"/>
+      </a>
+    </div>
+    % endfor
+    % for contour in contours:
+    <li>${contour | unmeltC }</li>
+    <div>
+      <a href="${speaker | space2url}/${contour | unmeltC, space2url}.html">
+	<img src="${speaker | space2url}/${contour | unmeltC, space2url}.png"/>
+      </a>
+    </div>
+    % endfor
+    % for radar in radars:
+    <li>${radar | unmeltR }</li>
+    <div>
+      <a href="${speaker | space2url}/${radar | unmeltR, space2url}.html">
+	<img src="${speaker | space2url}/${radar | unmeltR, space2url}.png"/>
+      </a>
+    </div>
+    % endfor
+  </ul>
+</div>
+<!-- Laptop view: 2 cols-->
+<div class="tab-pane" id="pane-2">
+  <div id="vis"></div>
+  <script type="text/javascript">
+    var spec = "${speaker | space2url}/2cols.json";
+    vegaEmbed('#vis', spec).then(function(result) {
+    }).catch(console.error);
+  </script>
+</div>
+<!-- Desktop view: 3 cols-->
+<div class="tab-pane" id="pane-3">
+  <div id="vis"></div>
+  <script type="text/javascript">
+    var spec = "${speaker | space2url}/3cols.json";
+    vegaEmbed('#vis', spec).then(function(result) {
+    }).catch(console.error);
+  </script>
+</div>
+<%include file="tabs_footer.html"/>
 
 <%include file="footer.html"/>
