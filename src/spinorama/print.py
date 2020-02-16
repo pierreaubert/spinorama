@@ -4,6 +4,7 @@ from .display import display_spinorama, display_onaxis, display_inroom, \
     display_spl_horizontal, display_spl_vertical, \
     display_contour_horizontal, display_contour_vertical, \
     display_radar_horizontal, display_radar_vertical
+from .views import template_compact, template_panorama
 
 
 def print_graph(speaker, title, chart, width, height, force, fileext):
@@ -46,6 +47,10 @@ def print_graphs(df, speaker, width=900, height=500, force=False, fileext=None):
     graphs['SPL Horizontal Radar'] = display_radar_horizontal(
         df, speaker, size, size)
     graphs['SPL Vertical Radar'] = display_radar_vertical(
+        df, speaker, size, size)
+    graphs['2cols'] = template_compact(
+        df, speaker, size, size)
+    graphs['3cols'] = template_panorama(
         df, speaker, size, size)
 
     updated = 0

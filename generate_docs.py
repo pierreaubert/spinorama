@@ -18,7 +18,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-usage: update-docs.py [--help] [--version] [--dev] [--width=<width>] [--height=<height>] [--force] [--type=<ext>]
+usage: update-docs.py [--help] [--version] [--dev]\
+ [--width=<width>] [--height=<height>] [--force] [--type=<ext>]\
+ [--sitedev=<http>]
 
 Options:
   --help            display usage()
@@ -27,6 +29,7 @@ Options:
   --height=<height> height size in pixel
   --force           force regeneration of all graphs, by default only generate new ones
   --type=<ext>      choose one of: json, html, png, svg
+  --sitedev=<http>  default: http://localhost:8000/docs
 """
 import os
 import sys
@@ -48,11 +51,6 @@ if __name__ == '__main__':
                   version='update-docs.py version 1.1',
                   options_first=True)
 
-    dev = args['--dev']
-    site = siteprod
-    if dev is True:
-        site = sitedev
-
     width = 1200
     height = 600
     force = args['--force']
@@ -70,7 +68,20 @@ if __name__ == '__main__':
             print('type %s is not recognize!'.format(type))
             exit(1)
 
-    # read data from disk
+    dev = args['--dev']
+    site = siteprod
+    if dev is True:
+        if args['--sitedev'] is not None:
+            sitedev = args['--sitedev']
+            if len(sitedev)<4 or sitedev[0:4] != 'http':
+                print('sitedev %s does not start with http!'.format(sitedev))
+                exit(1)
+
+        site = sitedev
+
+            
+
+# read data from disk
     df = parse_all_speakers()
 
     # some sanity checks

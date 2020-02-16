@@ -38,12 +38,21 @@ def template_compact(df, speaker, width=900, height=500):
     # side by side
     hradar = display_radar_horizontal(df, speaker, width2, height2)
     vradar = display_radar_vertical(df, speaker, width2, height2)
-    return alt.vconcat(spinorama,
-                       onaxis | inroom,
-                       ereflex | hreflex | vreflex,
-                       hspl | vspl,
-                       hradar | vradar,
-                       hcontour | vcontour)
+    # build the chart
+    chart = alt.vconcat()
+    if spinorama is not None:
+        chart &= spinorama
+    if onaxis is not None and inroom is not None:
+        chart &= alt.hconcat(onaxis, inroom)
+    if ereflex is not None and hreflex is not None and vreflex is not None:
+        chart &= alt.hconcat(ereflex, hreflex, vreflex)
+    if hspl is not None and vspl is not None:
+        chart &= alt.hconcat(hspl, vspl)
+    if hcontour is not None and vcontour is not None:
+        chart &= alt.hconcat(hcontour, vcontour)
+    if hradar is not None and vradar is not None:
+        chart &= alt.hconcat(hradar, vradar)
+    return chart
 
 
 def template_panorama(df, speaker, width=900, height=500):
@@ -69,10 +78,17 @@ def template_panorama(df, speaker, width=900, height=500):
     # side by side
     hradar = display_radar_horizontal(df, speaker, width2, height2)
     vradar = display_radar_vertical(df, speaker, width2, height2)
-    return alt.vconcat(spinorama | onaxis | inroom,
-                       ereflex | hreflex | vreflex,
-                       hcontour | hradar | hspl,
-                       vcontour | vradar | vspl)
+    # build the chart
+    chart = alt.vconcat()
+    if spinorama is not None and onaxis is not None and inroom is not None:
+        chart &= spinorama | onaxis | inroom
+    if ereflex is not None and hreflex is not None and vreflex is not None:
+        chart &= ereflex | hreflex | vreflex
+    if hspl is not None and hcontour is not None and hradar is not None:
+        chart &= hcontour | hradar | hspl
+    if vspl is not None and vcontour is not None and vradar is not None:
+        chart &= vcontour | vradar | vspl
+    return chart
 
 
 def template_vertical(df, speaker, width=900, height=500):
