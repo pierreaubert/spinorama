@@ -1,1 +1,2 @@
-All datas comes from reviews done at ASR (audiosciencereview.com)
+Please look at the metadata.py file to see from where the data is coming from.
+

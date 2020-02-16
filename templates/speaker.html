@@ -1,12 +1,7 @@
-<html>
-<head>
-  <title>Spinorama for ${speaker} measured at audiosciencereview.com</title>
-  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-</head>
-<body>
-  <h1>Spinorama for ${speaker} measured at <a href="audiosciencereview.com">AudioScienceReview</a></h1>
+<%include file="header.html"/>
+<%include file="nav.html"/>
+
+<h1>Spinorama for ${speaker} measured at <a href="audiosciencereview.com">AudioScienceReview</a></h1>
 
 <%!
     def space2url(text):
@@ -19,32 +14,31 @@
         return text.replace('_unmelted', ' Radar')
 %>  
 
-  <ul>
-  % for freq in freqs:
-    <li>${freq}</li>
-    <div>
-       <a href="${speaker | space2url}/${freq | space2url}.html">
-         <img src="${speaker | space2url}/${freq | space2url}.png">
-       </a>
-    </div>
-  % endfor
-  % for contour in contours:
-    <li>${contour | unmeltC }</li>
-    <div>
-       <a href="${speaker | space2url}/${contour | unmeltC, space2url}.html">
-         <img src="${speaker | space2url}/${contour | unmeltC, space2url}.png">
-       </a>
-    </div>
-  % endfor
-  % for radar in radars:
-    <li>${radar | unmeltR }</li>
-    <div>
-       <a href="${speaker | space2url}/${radar | unmeltR, space2url}.html">
-         <img src="${speaker | space2url}/${radar | unmeltR, space2url}.png">
-       </a>
-    </div>
-  % endfor
-  </ul>
+<ul>
+% for freq in freqs:
+  <li>${freq}</li>
+  <div>
+     <a href="${speaker | space2url}/${freq | space2url}.html">
+       <img src="${speaker | space2url}/${freq | space2url}.png">
+     </a>
+  </div>
+% endfor
+% for contour in contours:
+  <li>${contour | unmeltC }</li>
+  <div>
+     <a href="${speaker | space2url}/${contour | unmeltC, space2url}.html">
+       <img src="${speaker | space2url}/${contour | unmeltC, space2url}.png">
+     </a>
+  </div>
+% endfor
+% for radar in radars:
+  <li>${radar | unmeltR }</li>
+  <div>
+     <a href="${speaker | space2url}/${radar | unmeltR, space2url}.html">
+       <img src="${speaker | space2url}/${radar | unmeltR, space2url}.png">
+     </a>
+  </div>
+% endfor
+</ul>
 
-</body>
-</html>
+<%include file="footer.html"/>

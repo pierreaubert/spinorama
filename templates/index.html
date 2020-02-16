@@ -1,118 +1,64 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Spinorama for speakers measured at audiosciencereview.com</title>
-  <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.0/css/bulma.min.css" />
-  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="assets/spinorama.css"/> 
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="${site}/assets/fuse.js"></script>
-  <script src="${site}/assets/metadata.js"></script>
-</head>
-<body>
+<%include file="header.html"/>
+<%include file="nav.html"/>
+<%include file="animation.html"/>
+<%include file="func.html"/>
 
-<nav class="navbar">
- <div class="container">
-   <div class="navbar-brand">
-     <a class="navbar-item" href="./"><p class="title">Spinorama</p></a>
-     <span class="navbar-burger burger" data-target="navbarMenu">
-       <span></span>
-       <span></span>
-       <span></span>
-     </span>
-   </div>
-   <div id="navbarMenu" class="navbar-menu">
-     <div class="navbar-end">
-       <a class="navbar-item is-active">
-         Home
-       </a>
-       <a class="navbar-item">
-	    Compare
-       </a>
-       <a class="navbar-item">
-         Help
-       </a>
-     </div>
-   </div>
-</nav>
+<div class="section">
+  <div class="box">
+	
+    <!-- Search -->
+    <div class="field has-addons">
+      <div class="control is-expanded">
+        <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl ..." />
+      </div>
+      <div class="control">
+        <a class="button is-info">Search</a>
+      </div>
+    </div>
+    <!-- Search -->
 
 <%!
     def space2url(text):
         return text.replace(' ', '%20')
 %>  
 
-    <div class="container">
-      <div id="flow">
-        <span class="flow-1"></span>
-        <span class="flow-2"></span>
-        <span class="flow-3"></span>
-      </div>
-
-      <div class="section">
-	
-          <!-- Search -->
-        <div class="box">
-          <div class="field has-addons">
-            <div class="control is-expanded">
-              <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl ..." />
-            </div>
-            <div class="control">
-                <a class="button is-info">Search</a>
-            </div>
+    <!-- Speakers -->
+    <div class="row columns is-multiline searchresults">
+      % for speaker in speakers:
+      <div class="column is-one-third">
+        <div class="card large">
+          <div class="card-image">
+            <figure class="image">
+	      <a href="${speaker | space2url}.html">
+		<img src="metadata/${speaker | space2url}.jpg" alt="Spinorama"/>
+	      </a>
+            </figure>
           </div>
-
-          <!-- Speakers -->
-          <div class="row columns is-multiline searchresults">
-            % for speaker in speakers:
-            <div class="column is-one-third">
-              <div class="card large">
-                <div class="card-image">
-                  <figure class="image">
-		    <a href="${speaker | space2url}.html">
-		      <img src="metadata/${speaker | space2url}.jpg" alt="Spinorama"/>
-		    </a>
-                  </figure>
-                </div>
-                <div class="card-content">
-                  <div class="media">
-                    <div class="content">
-                      % if meta[speaker] is UNDEFINED:
-                        <p class="title is-4 no-padding">${speaker}</p>
-		                  % else:
-                        <p class="title is-4 no-padding">${meta[speaker]['brand']} ${meta[speaker]['model']}</p>
-		                  % endif
-                    </div>
-                  </div>
-                  <div class="media">
-                    % if meta[speaker] is not UNDEFINED:
-		                -3dB at ${meta[speaker]['estimates'][1]} Hz<br/>
-		                -6dB at ${meta[speaker]['estimates'][2]} Hz<br/>
-		                &plusmn;${meta[speaker]['estimates'][3]}dB ~ 80-20kHz
-		                % endif
-                  </div>
-                </div>
+          <div class="card-content">
+            <div class="media">
+              <div class="content">
+                % if meta[speaker] is UNDEFINED:
+                <p class="title is-4 no-padding">${speaker}</p>
+		% else:
+                <p class="title is-4 no-padding">${meta[speaker]['brand']} ${meta[speaker]['model']}</p>
+		% endif
               </div>
             </div>
-            % endfor
+            <div class="media">
+              % if meta[speaker] is not UNDEFINED:
+	      -3dB at ${meta[speaker]['estimates'][1]} Hz<br/>
+	      -6dB at ${meta[speaker]['estimates'][2]} Hz<br/>
+	      &plusmn;${meta[speaker]['estimates'][3]}dB ~ 80-20kHz
+	      % endif
+            </div>
           </div>
         </div>
       </div>
+      % endfor
+    </div>
+    <!-- End Speaker -->
 
-      <footer class="footer">
-        <div class="container">
-          <div class="content has-text-centered">
-            <div class="soc">
-              <a href="#"><i class="fa fa-github-alt fa-2x" aria-hidden="true"></i></a>
-            </div>
-            <p>
-              <strong>Spinorama</strong> by <a href="https://github.com/pierreaubert">Pierre Aubert</a>.
-              The <a href="https://github.com/pierreaubert/spinorama">source code</a> is licensed under GPL. <br>
-            </p>
-            </div>
-          </div>
-        </footer>
+  </div>
+</div>
 
-</body>
-</html>
+<%include file="footer.html"/>
