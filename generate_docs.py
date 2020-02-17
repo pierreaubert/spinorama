@@ -79,9 +79,7 @@ if __name__ == '__main__':
 
         site = sitedev
 
-            
-
-# read data from disk
+    # read data from disk
     df = parse_all_speakers()
 
     # some sanity checks
