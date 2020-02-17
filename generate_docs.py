@@ -80,7 +80,7 @@ if __name__ == '__main__':
         site = sitedev
 
     # read data from disk
-    df = parse_all_speakers()
+    df = parse_all_speakers(metadata.speakers_info)
 
     # some sanity checks
     for k, v in df.items():
