@@ -25,6 +25,9 @@ function display_speaker(speaker) {
 			-6dB at ' + speaker.estimates[1] + 'Hz<br/>\
 			&plusmn;' + speaker.estimates[2] + 'dB ~ 80-20kHz\
 		  </div>\
+                  <div class="right">\
+		    <label class="checkbox is-large"><input type="checkbox"/></label>\
+	          </div>\
 		</div>\
              </div>';
     return content
