@@ -172,16 +172,17 @@ body {
     color: #000;
     background-color: white;
 }
+
 .tab-pane {
     display: none;
 }
 
 .tab-pane.is-active {
     display: block;
-    width: 50%;
+    width: 90%;
     position: relative;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 10%;
+    transform: translateX(-10%);
 }
 
 .is-active {

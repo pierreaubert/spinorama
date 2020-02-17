@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Spinorama for speakers measured at audiosciencereview.com</title>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega@5"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-lite@4.0.2"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-embed@6"></script>
-  <script src="https://pierreaubert.github.io/spinorama/assets/fuse.js"></script>
-  <script src="https://pierreaubert.github.io/spinorama/assets/metadata.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <script src="https://kit.fontawesome.com/7dc3015a44.js" crossorigin="anonymous"></script>
+  <script src="http://localhost:8000/docs//assets/fuse.js"></script>
+  <script src="http://localhost:8000/docs//assets/metadata.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.0/css/bulma.min.css" />
   <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
   <link rel="stylesheet" href="assets/spinorama.css"/> 
@@ -80,7 +81,7 @@
 
 
 <!-- Mobile view: sequential-->
-<div class="tab-pane" id="pane-1" class="is-active">
+<div class="tab-pane is-active" id="pane-1">
   <ul>
     <li>CEA2034</li>
     <div>
@@ -155,8 +156,7 @@
   <div id="vis2"></div>
   <script type="text/javascript">
     var spec = "Neumann%20KH%2080/2cols.json";
-    vegaEmbed('#vis2', spec).then(function(result) {
-    }).catch(console.error);
+    vegaEmbed('#vis2', spec).then(function(result) {}).catch(console.error);
   </script>
 </div>
 <!-- Desktop view: 3 cols-->
@@ -164,8 +164,7 @@
   <div id="vis3"></div>
   <script type="text/javascript">
     var spec = "Neumann%20KH%2080/3cols.json";
-    vegaEmbed('#vis3', spec).then(function(result) {
-    }).catch(console.error);
+    vegaEmbed('#vis3', spec).then(function(result) {}).catch(console.error);
   </script>
 </div>
 </div>
