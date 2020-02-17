@@ -42,6 +42,13 @@ speakers_info = {
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
         },
+    'Elac Adante AS-61': {
+        'brand': 'Elac',
+        'model': 'Adante AS-61',
+        'type': 'passive',
+        'price': '',
+        'origin': 'https://www.audiosciencereview.com/',
+        },
     'Emotiva Airmotive 6s': {
         'brand': 'Emotiva',
         'model': 'Airmotiv 6s',
