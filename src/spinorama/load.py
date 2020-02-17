@@ -95,13 +95,17 @@ def parse_graph_freq_webplotdigitizer(filename):
                     ref_p += 1
                     if ref_p>=len(ref_freq):
                         continue
+                # if ref_f is too large, skip
+                ref_f = ref_freq[ref_p]
+                if ref_f > frn:
+                    continue
                 # linear interpolation
-                    ref_db = db+((dbn-db)*(ref_freq[ref_p]-fr))/(frn-fr)
+                ref_db = db+((dbn-db)*(ref_f-fr))/(frn-fr)
                 # print('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} \
                 #       db={:.1f} db_ref={:.1f} db_n={:.1f}'\
-                #      .format(fr, ref_freq[ref_p], frn, 
+                #      .format(fr, ref_f, frn, 
                 #              db, ref_db,          dbn))
-                res.append([ref_freq[ref_p], ref_db, col['name']])
+                res.append([ref_f, ref_db, col['name']])
     
         # build dataframe
         ares = np.array(res)
