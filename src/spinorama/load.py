@@ -1,8 +1,11 @@
 import os
+import sys
 import glob
-import pandas as pd
 import locale
 from locale import atof
+import json
+import numpy as np
+import pandas as pd
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
@@ -14,7 +17,7 @@ def graph_melt(df):
                                  value_name='dB').loc[lambda df: df['Measurements'] != 'index']
 
 
-def parse_graph_freq(filename):
+def parse_graph_freq_klippel(filename):
     title = None
     columns = ['Freq']
     usecols = [0]
@@ -59,27 +62,90 @@ def parse_graph_freq(filename):
     return title, df
 
 
-def parse_graphs_speaker(speakerpath):
+def parse_graph_freq_webplotdigitizer(filename):
+    """ """
+    # from 20Hz to 20kHz, log(2)~0.3
+    ref_freq = np.logspace(0.30103, 4.30103, 203)
+    #
+    with open(filename, 'r') as f:
+        # data are stored in a json file.
+        speaker_data = json.load(f)
+        # store all results
+        res = []
+        for col in speaker_data['datasetColl']:
+            data = col['data']
+            # sort data
+            sdata = np.sort([[data[d]['value'][0],data[d]['value'][1]] for d in range(0, len(data))], axis=0)
+            # print(col['name'], len(sdata))
+            # print(sdata)
+            # since sdata and freq_ref are both sorted, iterate over both
+            ref_p = 0
+            for di in range(0, len(sdata)-1):
+                d = sdata[di]
+                dn = sdata[di+1]
+                fr = d[0]
+                db = d[1]
+                frn = dn[0]
+                dbn = dn[1]
+                # remove possible errors
+                if fr == frn:
+                    continue
+                # look for closest match
+                while ref_freq[ref_p]<=fr:
+                    ref_p += 1
+                    if ref_p>=len(ref_freq):
+                        continue
+                # if ref_f is too large, skip
+                ref_f = ref_freq[ref_p]
+                if ref_f > frn:
+                    continue
+                # linear interpolation
+                ref_db = db+((dbn-db)*(ref_f-fr))/(frn-fr)
+                # print('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} \
+                #       db={:.1f} db_ref={:.1f} db_n={:.1f}'\
+                #      .format(fr, ref_f, frn, 
+                #              db, ref_db,          dbn))
+                res.append([ref_f, ref_db, col['name']])
+    
+        # build dataframe
+        ares = np.array(res)
+        df = pd.DataFrame({'Freq': ares[:,0], 'dB': ares[:,1], 'Measurements': ares[:,2]})
+        # print(df)
+        return 'CEA2034', df
+
+
+def parse_graphs_speaker(speakerpath, format='klippel'):
     dfs = {}
-    csvfiles = ["CEA2034",
-                "Early Reflections",
-                "Directivity Index",
-                "Estimated In-Room Response",
-                "Horizontal Reflections",
-                "Vertical Reflections",
-                "SPL Horizontal",
-                "SPL Vertical"]
-    for csv in csvfiles:
-        csvfilename = "datas/" + speakerpath + "/" + csv + ".txt"
+    if format == 'klippel':
+        csvfiles = ["CEA2034",
+                    "Early Reflections",
+                    "Directivity Index",
+                    "Estimated In-Room Response",
+                    "Horizontal Reflections",
+                    "Vertical Reflections",
+                    "SPL Horizontal",
+                    "SPL Vertical"]
+        for csv in csvfiles:
+            csvfilename = "datas/" + speakerpath + "/" + csv + ".txt"
+            try:
+                title, df = parse_graph_freq_klippel(csvfilename)
+                # print('Speaker: '+speakerpath+' Loaded: '+title)
+                dfs[title + '_unmelted'] = df
+                dfs[title] = graph_melt(df)
+            except FileNotFoundError:
+                # print('Speaker: '+speakerpath+' Not found: '+csv)
+                pass
+    elif format == 'webplotdigitizer':
+        jsonfilename = 'datas/' + speakerpath + '/'+ speakerpath + '.json'
         try:
-            title, df = parse_graph_freq(csvfilename)
-            # print('Speaker: '+speakerpath+' Loaded: '+title)
-            dfs[title + '_unmelted'] = df
-            dfs[title] = graph_melt(df)
+            title, df = parse_graph_freq_webplotdigitizer(jsonfilename)
+            dfs[title] = df
         except FileNotFoundError:
             # print('Speaker: '+speakerpath+' Not found: '+csv)
             pass
-
+    else:
+        print('Format {:s} is unkown'.format(format))
+        sys.exit(1)
     return dfs
 
 
@@ -92,12 +158,16 @@ def get_speaker_list(speakerpath):
     return speakers
 
 
-def parse_all_speakers(speakerpath='./datas'):
+def parse_all_speakers(metadata, speakerpath='./datas'):
     speakerlist = get_speaker_list(speakerpath)
     df = {}
     # print('Loading speaker: ')
     for speaker in speakerlist:
         # print('  '+speaker+', ')
-        df[speaker] = parse_graphs_speaker(speaker)
+        if 'format' not in metadata[speaker].keys():
+            print('No format specify for ',speaker)
+            print(metadata[speaker].keys())
+            sys.exit(1)
+        df[speaker] = parse_graphs_speaker(speaker, metadata[speaker]['format'])
     print('Loaded {:2d} speakers'.format(len(speakerlist)))
     return df

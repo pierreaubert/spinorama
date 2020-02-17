@@ -26,6 +26,7 @@ Options:
   --force           force regeneration of all graphs, by default only generate new ones
   --type=<ext>      choose one of: json, html, png, svg
 """
+import datas.metadata as metadata
 from src.spinorama.load import parse_all_speakers
 from src.spinorama.print import print_graphs
 
@@ -61,5 +62,5 @@ if __name__ == '__main__':
             print('type %s is not recognize!'.format(ptype))
             exit(1)
 
-    df = parse_all_speakers()
+    df = parse_all_speakers(meta=metadata.speakers_info)
     generate_graphs(df, width, height, force, ptype=ptype)
