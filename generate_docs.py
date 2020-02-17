@@ -79,9 +79,7 @@ if __name__ == '__main__':
 
         site = sitedev
 
-            
-
-# read data from disk
+    # read data from disk
     df = parse_all_speakers()
 
     # some sanity checks
@@ -178,7 +176,7 @@ if __name__ == '__main__':
         f.close()
 
     search_js = Template(filename='templates/search.js')
-    with open('docs/assets/metadata.js', 'w') as f:
+    with open('docs/assets/search.js', 'w') as f:
         f.write(search_js.render(site=site))
         f.close()
 
