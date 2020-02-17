@@ -106,7 +106,7 @@ def parse_graph_freq_webplotdigitizer(filename):
         # build dataframe
         ares = np.array(res)
         df = pd.DataFrame({'Freq': ares[:,0], 'dB': ares[:,1], 'Measurements': ares[:,2]})
-        print(df)
+        # print(df)
         return 'CEA2034', df
 
 
@@ -160,6 +160,10 @@ def parse_all_speakers(metadata, speakerpath='./datas'):
     # print('Loading speaker: ')
     for speaker in speakerlist:
         # print('  '+speaker+', ')
+        if 'format' not in metadata[speaker].keys():
+            print('No format specify for ',speaker)
+            print(metadata[speaker].keys())
+            sys.exit(1)
         df[speaker] = parse_graphs_speaker(speaker, metadata[speaker]['format'])
     print('Loaded {:2d} speakers'.format(len(speakerlist)))
     return df
