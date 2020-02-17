@@ -14,7 +14,7 @@ def graph_melt(df):
                                  value_name='dB').loc[lambda df: df['Measurements'] != 'index']
 
 
-def parse_graph_freq(filename):
+def parse_graph_freq_klipel(filename):
     title = None
     columns = ['Freq']
     usecols = [0]
@@ -59,7 +59,53 @@ def parse_graph_freq(filename):
     return title, df
 
 
-def parse_graphs_speaker(speakerpath):
+~# from 20Hz to 20kHz, log(2)~0.3
+ref_freq = np.logspace(0.30103, 4.30103, 203)
+
+def parse_graph_freq_webplotdigitizer(speakerpath):
+    with open(speakerpath, 'r') as f:
+        # data are stored in a json file.
+        speaker_data = json.load(f)
+        # store all results
+        res = []
+        for col in speaker_data['datasetColl']:
+            data = col['data']
+            # sort data
+            sdata = np.sort([[data[d]['value'][0],data[d]['value'][1]] for d in range(0, len(data))], axis=0)
+            # print(col['name'], len(sdata))
+            # print(sdata)
+            # since sdata and freq_ref are both sorted, iterate over both
+            ref_p = 0
+            for di in range(0, len(sdata)-1):
+                d = sdata[di]
+                dn = sdata[di+1]
+                fr = d[0]
+                db = d[1]
+                frn = dn[0]
+                dbn = dn[1]
+                # remove possible errors
+                if fr == frn:
+                    continue
+                # look for closest match
+                while ref_freq[ref_p]<=fr:
+                    ref_p += 1
+                    if ref_p>=len(ref_freq):
+                        continue
+                # linear interpolation
+                    ref_db = db+((dbn-db)*(ref_freq[ref_p]-fr))/(frn-fr)
+                # print('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} \
+                #       db={:.1f} db_ref={:.1f} db_n={:.1f}'\
+                #      .format(fr, ref_freq[ref_p], frn, 
+                #              db, ref_db,          dbn))
+                res.append([ref_freq[ref_p], ref_db, col['name']])
+    
+        # build dataframe
+        ares = np.array(res)
+        df = pd.DataFrame({'Freq': ares[:,0], 'dB': ares[:,1], 'Measurement': ares[:,2]})
+        return df
+
+
+def parse_graphs_speaker(speakerpath, model='klipel'):
     dfs = {}
     csvfiles = ["CEA2034",
                 "Early Reflections",
