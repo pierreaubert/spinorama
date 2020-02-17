@@ -6,13 +6,18 @@
 <div class="section">
   <div class="box">
 	
+  <form>
+      
     <!-- Search -->
-    <div class="field has-addons">
+    <div class="field is-grouped has-addons">
       <div class="control is-expanded">
-        <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl ..." />
+        <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl ..." autofocus />
       </div>
       <div class="control">
         <a class="button is-info">Search</a>
+      </div>
+      <div class="control">
+        <a class="button" id="compareInput">Compare</a>
       </div>
     </div>
     <!-- Search -->
@@ -22,7 +27,7 @@
         return text.replace(' ', '%20')
 %>  
 
-    <!-- Speakers -->
+  <!-- Speakers -->
     <div class="row columns is-multiline searchresults">
       % for speaker in speakers:
       <div class="column is-one-third">
@@ -45,19 +50,25 @@
               </div>
             </div>
             <div class="media">
+              <div class="content">
               % if meta[speaker] is not UNDEFINED:
 	      -3dB at ${meta[speaker]['estimates'][1]} Hz<br/>
 	      -6dB at ${meta[speaker]['estimates'][2]} Hz<br/>
 	      &plusmn;${meta[speaker]['estimates'][3]}dB ~ 80-20kHz
 	      % endif
+              </div>
+              <div class="right">
+		<label class="checkbox is-large"><input type="checkbox"/></label>
+	      </div>
             </div>
           </div>
         </div>
       </div>
       % endfor
     </div>
-    <!-- End Speaker -->
+  <!-- End Speaker -->
 
+  <form>
   </div>
 </div>
 
