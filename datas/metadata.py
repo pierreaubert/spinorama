@@ -14,13 +14,6 @@ speakers_info = {
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
         },
-    'JBL 104': {
-        'brand': 'JBL',
-        'model': '104',
-        'type': 'passive',
-        'price': '',
-        'origin': 'https://www.audiosciencereview.com/',
-        },
     'Kali IN-8': {
         'brand': 'Kali',
         'model': 'IN-8',
@@ -56,9 +49,23 @@ speakers_info = {
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
         },
+    'JBL 104': {
+        'brand': 'JBL',
+        'model': '104',
+        'type': 'passive',
+        'price': '',
+        'origin': 'https://www.audiosciencereview.com/',
+        },
     'JBL Control 1 Pro': {
         'brand': 'JBL',
         'model': 'Control 1 Pro',
+        'type': 'active',
+        'price': '',
+        'origin': 'https://www.audiosciencereview.com/',
+        },
+    'JBL 305P Mark ii': {
+        'brand': 'JBL',
+        'model': '305P Mark ii',
         'type': 'active',
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
