@@ -14,7 +14,7 @@
 
 <%include file="tabs_header.html"/>
 <!-- Mobile view: sequential-->
-<div class="tab-pane" id="pane-1" class="is-active">
+<div class="tab-pane is-active" id="pane-1">
   <ul>
     % for freq in freqs:
     <li>${freq}</li>
@@ -47,8 +47,7 @@
   <div id="vis2"></div>
   <script type="text/javascript">
     var spec = "${speaker | space2url}/2cols.json";
-    vegaEmbed('#vis2', spec).then(function(result) {
-    }).catch(console.error);
+    vegaEmbed('#vis2', spec).then(function(result) {}).catch(console.error);
   </script>
 </div>
 <!-- Desktop view: 3 cols-->
@@ -56,8 +55,7 @@
   <div id="vis3"></div>
   <script type="text/javascript">
     var spec = "${speaker | space2url}/3cols.json";
-    vegaEmbed('#vis3', spec).then(function(result) {
-    }).catch(console.error);
+    vegaEmbed('#vis3', spec).then(function(result) {}).catch(console.error);
   </script>
 </div>
 <%include file="tabs_footer.html"/>
