@@ -6,6 +6,7 @@ speakers_info = {
         'type': 'active',
         'price': '1750',
         'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
         },
     'Dayton Audio B652-AIR': {
         'brand': 'Dayton Audio',
@@ -13,41 +14,7 @@ speakers_info = {
         'type': 'passive',
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
-        },
-    'Kali IN-8': {
-        'brand': 'Kali',
-        'model': 'IN-8',
-        'type': 'active',
-        'price': '',
-        'origin': 'https://www.audiosciencereview.com/',
-        },
-    'Pioneer SP-BS22-LR': {
-        'brand': 'Pioneer',
-        'model': 'SP-BS22-LR',
-        'type': 'passive',
-        'price': '',
-        'origin': 'https://www.audiosciencereview.com/',
-        },
-    'Revel C52': {
-        'brand': 'Revel',
-        'model': 'C52',
-        'type': 'passive',
-        'price': '',
-        'origin': 'https://www.audiosciencereview.com/',
-        },
-    'Elac Adante AS-61': {
-        'brand': 'Elac',
-        'model': 'Adante AS-61',
-        'type': 'passive',
-        'price': '',
-        'origin': 'https://www.audiosciencereview.com/',
-        },
-    'Emotiva Airmotive 6s': {
-        'brand': 'Emotiva',
-        'model': 'Airmotiv 6s',
-        'type': 'passive',
-        'price': '',
-        'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
         },
     'JBL 104': {
         'brand': 'JBL',
@@ -55,6 +22,47 @@ speakers_info = {
         'type': 'passive',
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
+        },
+    'Kali IN-8': {
+        'brand': 'Kali',
+        'model': 'IN-8',
+        'type': 'active',
+        'price': '',
+        'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
+        },
+    'Pioneer SP-BS22-LR': {
+        'brand': 'Pioneer',
+        'model': 'SP-BS22-LR',
+        'type': 'passive',
+        'price': '',
+        'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
+        },
+    'Revel C52': {
+        'brand': 'Revel',
+        'model': 'C52',
+        'type': 'passive',
+        'price': '',
+        'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
+        },
+    'Elac Adante AS-61': {
+        'brand': 'Elac',
+        'model': 'Adante AS-61',
+        'type': 'passive',
+        'price': '',
+        'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
+        },
+    'Emotiva Airmotive 6s': {
+        'brand': 'Emotiva',
+        'model': 'Airmotiv 6s',
+        'type': 'passive',
+        'price': '',
+        'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
         },
     'JBL Control 1 Pro': {
         'brand': 'JBL',
@@ -62,6 +70,7 @@ speakers_info = {
         'type': 'active',
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
         },
     'JBL 305P Mark ii': {
         'brand': 'JBL',
@@ -69,6 +78,7 @@ speakers_info = {
         'type': 'active',
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
         },
     'Micca RB42': {
         'brand': 'Micca',
@@ -76,6 +86,7 @@ speakers_info = {
         'type': 'passive',
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
         },
     'Selah Audio RC3R': {
         'brand': 'Selah Audio',
@@ -83,6 +94,7 @@ speakers_info = {
         'type': 'passive',
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
         },
     'Harbeth Monitor': {
         'brand': 'Harbeth',
@@ -90,6 +102,7 @@ speakers_info = {
         'type': 'passive',
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
         },
     'KEF LS50': {
         'brand': 'KEF',
@@ -97,6 +110,15 @@ speakers_info = {
         'type': 'passive',
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
+        },
+    'KEF Reference 5': {
+        'brand': 'KEF',
+        'model': 'Reference 5',
+        'type': 'passive',
+        'price': '',
+        'origin': 'https://www.kef.com/',
+        'format': 'webplotdigitizer',
         },
     'Neumann KH 80': {
         'brand': 'Neumann',
@@ -104,6 +126,7 @@ speakers_info = {
         'type': 'active',
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
         },
     'Realistic MC-1000': {
         'brand': 'Realistic',
@@ -111,6 +134,7 @@ speakers_info = {
         'type': 'passive',
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
         },
     'Yamaha HS5': {
         'brand': 'Yamaha',
@@ -118,6 +142,7 @@ speakers_info = {
         'type': 'active',
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
         },
     'NHT Pro M-00': {
         'brand': 'NHT',
@@ -125,5 +150,6 @@ speakers_info = {
         'type': 'active',
         'price': '',
         'origin': 'https://www.audiosciencereview.com/',
+        'format': 'klippel',
         },
 }
