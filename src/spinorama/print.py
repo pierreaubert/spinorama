@@ -43,7 +43,9 @@ def print_graphs(df, speaker, width=900, height=500, force=False, fileext=None):
         df, speaker, width, height)
     graphs['SPL Vertical Contour'] = display_contour_vertical(
         df, speaker, width, height)
-    graphs['2cols'] = template_compact(df, speaker, width*2, height*2)
+    # 1080p to 2k screen
+    graphs['2cols'] = template_compact(df, speaker, width, height)
+    # 4k screen
     graphs['3cols'] = template_panorama(df, speaker, width*3, height*3)
     # better square
     size = max(width, height)
