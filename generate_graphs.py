@@ -62,5 +62,5 @@ if __name__ == '__main__':
             print('type %s is not recognize!'.format(ptype))
             exit(1)
 
-    df = parse_all_speakers(meta=metadata.speakers_info)
+    df = parse_all_speakers(metadata.speakers_info)
     generate_graphs(df, width, height, force, ptype=ptype)

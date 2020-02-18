@@ -54,7 +54,7 @@ if __name__ == '__main__':
     width = 600
     height = 200
     force = args['--force']
-    type = None
+    ptype = None
 
     if args['--width'] is not None:
         width = int(args['--width'])
@@ -63,9 +63,9 @@ if __name__ == '__main__':
         height = int(args['--height'])
 
     if args['--type'] is not None:
-        type = args['--type']
+        ptype = args['--type']
         if type not in ('png', 'html', 'svg', 'json'):
-            print('type %s is not recognize!'.format(type))
+            print('type %s is not recognize!'.format(ptype))
             exit(1)
 
     dev = args['--dev']
@@ -181,6 +181,6 @@ if __name__ == '__main__':
         f.close()
 
     # generate potential missing graphs
-    generate_graphs(df, width, height, force, type)
+    generate_graphs(df, width, height, force, ptype)
 
     sys.exit(0)
