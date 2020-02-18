@@ -40,85 +40,44 @@ from src.spinorama.load import parse_all_speakers
 from src.spinorama.analysis import estimates
 import datas.metadata as metadata
 from generate_graphs import generate_graphs
-
 from docopt import docopt
+
 
 siteprod = 'https://pierreaubert.github.io/spinorama'
 sitedev = 'http://localhost:8000/docs/'
 
-if __name__ == '__main__':
-    args = docopt(__doc__,
-                  version='update-docs.py version 1.1',
-                  options_first=True)
 
-    width = 600
-    height = 200
-    force = args['--force']
-    ptype = None
-
-    if args['--width'] is not None:
-        width = int(args['--width'])
-
-    if args['--height'] is not None:
-        height = int(args['--height'])
-
-    if args['--type'] is not None:
-        ptype = args['--type']
-        if type not in ('png', 'html', 'svg', 'json'):
-            print('type %s is not recognize!'.format(ptype))
-            exit(1)
-
-    dev = args['--dev']
-    site = siteprod
-    if dev is True:
-        if args['--sitedev'] is not None:
-            sitedev = args['--sitedev']
-            if len(sitedev)<4 or sitedev[0:4] != 'http':
-                print('sitedev %s does not start with http!'.format(sitedev))
-                exit(1)
-
-        site = sitedev
-
-    # read data from disk
-    df = parse_all_speakers(metadata.speakers_info)
-
-    # some sanity checks
+def sanity_check(df, meta):
     for k, v in df.items():
         # check if metadata exists
-        if k not in metadata.speakers_info:
-            print('Metadata not found for >', k, '<')
-            sys.exit(1)
+        if k not in meta:
+            print('Fatal: Metadata not found for >', k, '<')
+            return 1
         # check if image exists
         if not os.path.exists('datas/originals/' + k + '.jpg'):
-            print('Image associated with >', k, '< not found!')
-            sys.exit(1)
+            print('Fatal: Image associated with >', k, '< not found!')
+            return 1
         # check if downscale image exists
         if not os.path.exists('docs/metadata/' + k + '.jpg'):
-            print('Image associated with >', k, '< not found!')
+            print('Fatal: Image associated with >', k, '< not found!')
             print('Please run: cd docs && ./convert.sh')
-            sys.exit(1)
+            return 1
+    return 0
 
 
-    # add computed data to metadata
+def add_estimates(df):
+    """""Compute some values per speaker and add them to metadata """
     for k, v in df.items():
         try:
             spin = df[k]['CEA2034']
             onaxis = spin.loc[spin['Measurements'] == 'On Axis']
             metadata.speakers_info[k]['estimates'] = estimates(onaxis)
         except ValueError:
-            print('Computing estimates failed for speaker: ' + k)
+            print('Warning: Computing estimates failed for speaker: ' + k)
 
-    # configure Mako
-    mako_templates = TemplateLookup(directories=['templates'], module_directory='/tmp/mako_modules')
-
-    # write index.html
-    index_html = mako_templates.get_template('index.html')
-    with open('docs/index.html', 'w') as f:
-        f.write(index_html.render(speakers=df, meta=metadata.speakers_info, site=site))
-        f.close()
-
-    # write a file per speaker
-    speaker_html = mako_templates.get_template('speaker.html')
+            
+def generate_speaker(mako, df):
+    speaker_html = mako.get_template('speaker.html')
     for speaker, measurements in df.items():
         with open('docs/' + speaker + '.html', 'w') as f:
             freq_filter = [
@@ -151,12 +110,68 @@ if __name__ == '__main__':
                                         meta=metadata.speakers_info,
                                         site=site))
             f.close()
+    return 0
+            
+            
+if __name__ == '__main__':
+    args = docopt(__doc__,
+                  version='update-docs.py version 1.1',
+                  options_first=True)
+
+    # check args section
+    width = 600
+    height = 200
+    force = args['--force']
+    ptype = None
+
+    if args['--width'] is not None:
+        width = int(args['--width'])
+
+    if args['--height'] is not None:
+        height = int(args['--height'])
+
+    if args['--type'] is not None:
+        ptype = args['--type']
+        if type not in ('png', 'html', 'svg', 'json'):
+            print('type %s is not recognize!'.format(ptype))
+            exit(1)
+
+    dev = args['--dev']
+    site = siteprod
+    if dev is True:
+        if args['--sitedev'] is not None:
+            sitedev = args['--sitedev']
+            if len(sitedev)<4 or sitedev[0:4] != 'http':
+                print('sitedev %s does not start with http!'.format(sitedev))
+                exit(1)
+
+        site = sitedev
+
+    # read data from disk
+    df = parse_all_speakers(metadata.speakers_info)
+    if sanity_check(df, metadata.speakers_info) != 0:
+        sys.exit(1)
+
+    # add computed data to metadata
+    add_estimates(df)
+    
+    # configure Mako
+    mako_templates = TemplateLookup(directories=['templates'], module_directory='/tmp/mako_modules')
+    
+    # write index.html
+    index_html = mako_templates.get_template('index.html')
+    with open('docs/index.html', 'w') as f:
+        f.write(index_html.render(speakers=df, meta=metadata.speakers_info, site=site))
+        f.close()
 
     # write help.html
     help_html = mako_templates.get_template('help.html')
     with open('docs/help.html', 'w') as f:
         f.write(help_html.render(speakers=df, meta=metadata.speakers_info, site=site))
         f.close()
+
+    # write a file per speaker
+    generate_speaker(mako_templates, df)
 
     # write metadata in a json file for easy search
     def flatten(d):
@@ -175,10 +190,11 @@ if __name__ == '__main__':
         f.write(js)
         f.close()
 
-    search_js = Template(filename='templates/search.js')
-    with open('docs/assets/search.js', 'w') as f:
-        f.write(search_js.render(site=site))
-        f.close()
+    for f in ['search.js', 'bulma.js', 'compare.js', 'tabs.js', 'spinorama.css']:
+        file_ext = Template(filename='templates/assets/'+f)
+        with open('docs/assets/'+f, 'w') as fd:
+            fd.write(file_ext.render(site=site))
+            fd.close()
 
     # generate potential missing graphs
     generate_graphs(df, width, height, force, ptype)

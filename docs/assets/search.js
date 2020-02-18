@@ -12,7 +12,7 @@ function display_speaker(speaker) {
 
 $(document).ready(function () {
 
-    window.$.getJSON('http://localhost:8000/docs//assets/metadata.json', function (response) {
+    window.$.getJSON('https://pierreaubert.github.io/spinorama/assets/metadata.json', function (response) {
 	
 	const fuse = new Fuse(response, {
 	    matchAllTokens: true,
