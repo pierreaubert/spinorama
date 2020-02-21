@@ -72,8 +72,6 @@ def graph_contour_common(df, transformer, width, height):
         if height > 360:
             m_height = np.floor(m_height*height/360)
         return alt.Chart(source).mark_rect(
-            #size=m_size,
-            #height=m_height
         ).transform_filter(
             'datum.Freq>400'
         ).encode(

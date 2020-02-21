@@ -27,48 +27,33 @@
         return text.replace(' ', '%20')
 %>  
 
-  <!-- Speakers -->
+    <!-- Speakers -->
     <div class="row columns is-multiline searchresults">
-      % for speaker in speakers:
+      % for speaker in meta:
       <div class="column is-one-third">
+	
         <div class="card large">
-          <div class="card-image">
-            <figure class="image">
-	      <a href="${speaker | space2url}.html">
-		<img src="metadata/${speaker | space2url}.jpg" alt="Spinorama"/>
-	      </a>
-            </figure>
-          </div>
-          <div class="card-content">
+	  <div class="box">
             <div class="media">
-              <div class="content">
-                % if meta[speaker] is UNDEFINED:
-                <p class="title is-4 no-padding">${speaker}</p>
-		% else:
-                <p class="title is-4 no-padding">${meta[speaker]['brand']} ${meta[speaker]['model']}</p>
-		% endif
-              </div>
+	      <figure class="image"><img src="metadata/${speaker | space2url}.jpg" alt="Spinorama"/></figure>
             </div>
-            <div class="media">
-              <div class="content">
-              % if meta[speaker] is not UNDEFINED:
+            <div class="content">
+		<p class="title is-4 no-padding">${meta[speaker]['brand']} $meta[speaker]['model']}</p>
+            </div>
+            <div class="content">
+	      % if meta[speaker]['estimates'] is not UNDEFINED:
 	      -3dB at ${meta[speaker]['estimates'][1]} Hz<br/>
 	      -6dB at ${meta[speaker]['estimates'][2]} Hz<br/>
 	      &plusmn;${meta[speaker]['estimates'][3]}dB ~ 80-20kHz
 	      % endif
-              </div>
-              <div class="right">
-		<label class="checkbox is-large"><input type="checkbox"/></label>
-	      </div>
             </div>
-          </div>
-        </div>
-      </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
       % endfor
-    </div>
-  <!-- End Speaker -->
+    </div> <!-- End all Speakers -->
 
-  <form>
+    <form>
   </div>
 </div>
 

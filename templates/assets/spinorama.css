@@ -7,13 +7,11 @@ body {
 }
 
 .card-image {
-    height: 450px;
     position: relative;
-    margin-top: -50px;
 }
 
 .card.large {
-    height: 500px;
+    height: 450px;
     border-radius: 5px;
 }
 
@@ -44,20 +42,20 @@ body {
 
 .media {
     position: relative;
-    margin-top: -85px;
+    margin-top: -45px;
     background-color: white;
 }
 
 .content-main {
-    padding: .6em; 
+    padding: .2em; 
 }
 			 
 .card .media:not(:last-child) {
-    margin-bottom: .5rem;
+    margin-bottom: .2rem;
 }
 
 .media-left img {
-  border-bottom-right-radius: 50%;
+  border-bottom-right-radius: 30%;
 } 
 
 #flow span {
@@ -167,8 +165,8 @@ body {
 }
 
 .tab-content {
-    padding: 60px;
-    top: 197px;
+    padding: 30px;
+    top: 120px;
     color: #000;
     background-color: white;
 }
@@ -187,18 +185,6 @@ body {
 
 .is-active {
     display: initial;
-}
-
-.cent {
-    display: block;
-    margin: 10px auto;
-    padding: 5px;
-    border: 1px solid #ccc
-}
-
-.video {
-    display: block;
-    margin: 0 auto;
 }
 
 /* CSS from http://embedresponsively.com */

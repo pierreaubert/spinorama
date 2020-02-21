@@ -41,25 +41,26 @@ from src.spinorama.analysis import estimates
 import datas.metadata as metadata
 from generate_graphs import generate_graphs
 from docopt import docopt
-
+from src.spinorama.path import name2measurement, measurement2name
 
 siteprod = 'https://pierreaubert.github.io/spinorama'
 sitedev = 'http://localhost:8000/docs/'
 
 
 def sanity_check(df, meta):
-    for k, v in df.items():
+    for measurement, graph in df.items():
         # check if metadata exists
-        if k not in meta:
-            print('Fatal: Metadata not found for >', k, '<')
+        (speaker, origin) = name2measurement(measurement)
+        if speaker not in meta:
+            print('Fatal: Metadata not found for >', measurement, '<')
             return 1
         # check if image exists
-        if not os.path.exists('datas/originals/' + k + '.jpg'):
-            print('Fatal: Image associated with >', k, '< not found!')
+        if not os.path.exists('datas/originals/' + speaker + '.jpg'):
+            print('Fatal: Image associated with >', speaker, '< not found!')
             return 1
         # check if downscale image exists
-        if not os.path.exists('docs/metadata/' + k + '.jpg'):
-            print('Fatal: Image associated with >', k, '< not found!')
+        if not os.path.exists('docs/metadata/' + speaker + '.jpg'):
+            print('Fatal: Image associated with >', speaker, '< not found!')
             print('Please run: cd docs && ./convert.sh')
             return 1
     return 0
@@ -69,13 +70,16 @@ def add_estimates(df):
     """""Compute some values per speaker and add them to metadata """
     for k, v in df.items():
         try:
-            spin = df[k]['CEA2034']
-            onaxis = spin.loc[spin['Measurements'] == 'On Axis']
-            metadata.speakers_info[k]['estimates'] = estimates(onaxis)
+            if 'CEA2034' in df[k].keys():
+                spin = df[k]['CEA2034']
+                if spin is not None:
+                    onaxis = spin.loc[spin['Measurements'] == 'On Axis']
+                    (speaker, title) = name2measurement(k)
+                    metadata.speakers_info[speaker]['estimates'] = estimates(onaxis)
         except ValueError:
             print('Warning: Computing estimates failed for speaker: ' + k)
 
-            
+
 def generate_speaker(mako, df):
     speaker_html = mako.get_template('speaker.html')
     for speaker, measurements in df.items():
@@ -111,8 +115,29 @@ def generate_speaker(mako, df):
                                         site=site))
             f.close()
     return 0
-            
-            
+
+
+def dump_metadata(meta):
+    def flatten(d):
+        f = {}
+        for k, v in d.items():
+            s = {}
+            for m in v['measurements']:
+                for k2, v2 in v.items():
+                    if k2 != 'measurements':
+                        s[k2] = v2
+                f[measurement2name(k, m)] = s
+        return f
+
+    with open('docs/assets/metadata.json', 'w') as f:
+        meta = flatten(metadata.speakers_info)
+        js = json.dumps(meta)
+        f.write(js)
+        f.close()
+        return meta
+    return None
+
+
 if __name__ == '__main__':
     args = docopt(__doc__,
                   version='update-docs.py version 1.1',
@@ -141,7 +166,7 @@ if __name__ == '__main__':
     if dev is True:
         if args['--sitedev'] is not None:
             sitedev = args['--sitedev']
-            if len(sitedev)<4 or sitedev[0:4] != 'http':
+            if len(sitedev) < 4 or sitedev[0:4] != 'http':
                 print('sitedev %s does not start with http!'.format(sitedev))
                 exit(1)
 
@@ -154,14 +179,18 @@ if __name__ == '__main__':
 
     # add computed data to metadata
     add_estimates(df)
-    
+
     # configure Mako
     mako_templates = TemplateLookup(directories=['templates'], module_directory='/tmp/mako_modules')
-    
+
+    # write metadata in a json file for easy search
+    metameasurements = dump_metadata(metadata.speakers_info)
+    print(metameasurements)
+
     # write index.html
     index_html = mako_templates.get_template('index.html')
     with open('docs/index.html', 'w') as f:
-        f.write(index_html.render(speakers=df, meta=metadata.speakers_info, site=site))
+        f.write(index_html.render(speakers=df, meta=metameasurements, site=site))
         f.close()
 
     # write help.html
@@ -172,23 +201,6 @@ if __name__ == '__main__':
 
     # write a file per speaker
     generate_speaker(mako_templates, df)
-
-    # write metadata in a json file for easy search
-    def flatten(d):
-        f = []
-        for k, v in d.items():
-            s = {}
-            s['speaker'] = k
-            for k2, v2 in v.items():
-                s[k2] = v2
-            f.append(s)
-        return f
-
-    with open('docs/assets/metadata.json', 'w') as f:
-        meta = flatten(metadata.speakers_info)
-        js = json.dumps(meta)
-        f.write(js)
-        f.close()
 
     for f in ['search.js', 'bulma.js', 'compare.js', 'tabs.js', 'spinorama.css']:
         file_ext = Template(filename='templates/assets/'+f)

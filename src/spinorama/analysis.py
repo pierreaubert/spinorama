@@ -35,5 +35,5 @@ def estimates(onaxis: pd.DataFrame):
         return [int(inter), int(inter_3), int(inter_6),
                 math.floor(max(up, -down) * 10) / 10]
     except TypeError:
-        print('Type error:')
-        return [-1,-1,-1,-1]
+        print('Warning: Type error:')
+        return [-1, -1, -1, -1]
