@@ -8,9 +8,15 @@ alt.data_transformers.disable_max_rows()
 
 
 def graph_freq_sidebyside(s1, s2, name, width=450, height=450):
-    d1 = graph_freq(s1[name], width, height)
-    d2 = graph_freq(s2[name], width, height)
-    return alt.hconcat(d1, d2)
+    df1 = graph_freq(s1[name], width, height)
+    df2 = graph_freq(s2[name], width, height)
+    if df1 is None and df2 is None:
+        return None
+    if df1 is None:
+        return df2
+    if df2 is None:
+        return df1
+    return alt.hconcat(df1, df2)
 
 
 def display_contour_horizontal(df, speaker, width=400, height=180):
@@ -78,10 +84,12 @@ def display_contour_sidebyside(df, speaker, width=450, height=450):
 def display_spinorama(df, speaker, width, height):
     try:
         spinorama = df[speaker]['CEA2034']
-        spinorama = spinorama.loc[spinorama['Measurements'] != 'DI offset']
-        return graph_freq(spinorama, width, height)
+        if spinorama is not None:
+            spinorama = spinorama.loc[spinorama['Measurements'] != 'DI offset']
+            return graph_freq(spinorama, width, height)
     except KeyError:
-        return None
+        pass
+    return None
 
 
 def display_reflection_early(df, speaker, width, height):
@@ -106,7 +114,7 @@ def display_onaxis(df, speaker, width, height):
             color=alt.value('red')
         )
         return onaxis_graph + onaxis_reg
-    except KeyError:
+    except (KeyError, AttributeError):
         return None
 
 
