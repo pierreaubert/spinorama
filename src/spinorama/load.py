@@ -6,6 +6,9 @@ from locale import atof
 import json
 import numpy as np
 import pandas as pd
+from scipy.io import loadmat
+from .path import measurement2name
+# from scipy.interpolate import InterpolatedUnivariateSpline
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
@@ -75,7 +78,9 @@ def parse_graph_freq_webplotdigitizer(filename):
         for col in speaker_data['datasetColl']:
             data = col['data']
             # sort data
-            sdata = np.sort([[data[d]['value'][0],data[d]['value'][1]] for d in range(0, len(data))], axis=0)
+            sdata = np.sort([[data[d]['value'][0],
+                              data[d]['value'][1]]
+                             for d in range(0, len(data))], axis=0)
             # print(col['name'], len(sdata))
             # print(sdata)
             # since sdata and freq_ref are both sorted, iterate over both
@@ -91,9 +96,9 @@ def parse_graph_freq_webplotdigitizer(filename):
                 if fr == frn:
                     continue
                 # look for closest match
-                while ref_freq[ref_p]<=fr:
+                while ref_freq[ref_p] <= fr:
                     ref_p += 1
-                    if ref_p>=len(ref_freq):
+                    if ref_p >= len(ref_freq):
                         continue
                 # if ref_f is too large, skip
                 ref_f = ref_freq[ref_p]
@@ -103,15 +108,61 @@ def parse_graph_freq_webplotdigitizer(filename):
                 ref_db = db+((dbn-db)*(ref_f-fr))/(frn-fr)
                 # print('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} \
                 #       db={:.1f} db_ref={:.1f} db_n={:.1f}'\
-                #      .format(fr, ref_f, frn, 
+                #      .format(fr, ref_f, frn,
                 #              db, ref_db,          dbn))
                 res.append([ref_f, ref_db, col['name']])
-    
+
         # build dataframe
         ares = np.array(res)
-        df = pd.DataFrame({'Freq': ares[:,0], 'dB': ares[:,1], 'Measurements': ares[:,2]})
+        df = pd.DataFrame({'Freq': ares[:, 0],
+                           'dB': ares[:, 1],
+                           'Measurements': ares[:, 2]})
         # print(df)
         return 'CEA2034', df
+
+
+def parse_graph_freq_princeton_mat(mat, suffix):
+    """ Suffix can be either H or V """
+    ir_name = 'IR_{:1s}'.format(suffix)
+    fs_name = 'fs_{:1s}'.format(suffix)
+    # compute Freq
+    timestep = 1./mat[fs_name]
+    # hummm
+    freq = np.fft.fftfreq(2**14, d=timestep)
+    #
+    dfx = []
+    dfy = []
+    dfz = []
+    # loop over measurements
+    for i in range(0, 3):
+        # extract ir
+        ir = mat[ir_name][i]
+        # compute FFT
+        y = np.fft.fft(ir)
+        # reduce spectrum to 0 to 24kHz
+        lg = y.size
+        lgs = int(lg/4)
+        # sample by N element
+        xs = freq  # [freq[i] for i in range(0, lgs) if i % 1 == 0]
+        # sample by N elements and take |db|
+        ys = np.abs([y[i] for i in range(0, lgs) if i % 1 == 0])
+        # apply formula from paper to translate to dbFS
+        ys = 105.+np.log10(ys)*20.
+        # interpolate to smooth response
+        # s = InterpolatedUnivariateSpline(xs, ys)
+        dfx.append(xs)
+        dfy.append(ys)
+        label = '{:2d}°'.format(i*10)
+        # pretty print label
+        dfz.append([label for j in range(0, len(xs))])
+    return dfx, dfy, dfz
+
+
+def parse_graph_freq_princeton(h_file, v_file):
+    # h_mat = loadmat(h_file)
+    # v_mat = loadmat(v_file)
+    # h_df = parse_graph_freq_princeton_mat(h_mat, 'H')
+    return 'CEA2034', None
 
 
 def parse_graphs_speaker(speakerpath, format='klippel'):
@@ -126,7 +177,7 @@ def parse_graphs_speaker(speakerpath, format='klippel'):
                     "SPL Horizontal",
                     "SPL Vertical"]
         for csv in csvfiles:
-            csvfilename = "datas/" + speakerpath + "/" + csv + ".txt"
+            csvfilename = "datas/ASR/" + speakerpath + "/" + csv + ".txt"
             try:
                 title, df = parse_graph_freq_klippel(csvfilename)
                 # print('Speaker: '+speakerpath+' Loaded: '+title)
@@ -136,13 +187,32 @@ def parse_graphs_speaker(speakerpath, format='klippel'):
                 # print('Speaker: '+speakerpath+' Not found: '+csv)
                 pass
     elif format == 'webplotdigitizer':
-        jsonfilename = 'datas/' + speakerpath + '/'+ speakerpath + '.json'
+        jsonfilename = 'datas/Vendors/' + speakerpath + '/' + speakerpath + '.json'
         try:
             title, df = parse_graph_freq_webplotdigitizer(jsonfilename)
             dfs[title] = df
         except FileNotFoundError:
             # print('Speaker: '+speakerpath+' Not found: '+csv)
             pass
+    elif format == 'princeton':
+        # 2 files per directory xxx_H_IR.mat and xxx_V_IR.mat
+        matfilename = 'datas/Princeton/' + speakerpath 
+        dirpath = glob.glob(matfilename+'/*.mat')
+        h_file = None
+        v_file = None
+        for d in dirpath:
+            if d[-9:] == '_H_IR.mat':
+                h_file = d
+            elif d[-9:] == '_V_IR.mat':
+                v_file = d
+        if h_file is None or v_file is None:
+            print('Couldn\'t find Horizontal and Vertical IR files for speaker '+speakerpath)
+            print('Looking in directory {:s}'.format(matfilename))
+            for d in dirpath:
+                print('Found file {:s}'.format(d))
+        else:
+            title, df = parse_graph_freq_princeton(h_file, v_file)
+            dfs[title] = df
     else:
         print('Format {:s} is unkown'.format(format))
         sys.exit(1)
@@ -151,7 +221,10 @@ def parse_graphs_speaker(speakerpath, format='klippel'):
 
 def get_speaker_list(speakerpath):
     speakers = []
-    dirs = glob.glob(speakerpath+'/[A-Z]*')
+    asr = glob.glob(speakerpath+'/ASR/[A-Z]*')
+    vendors = glob.glob(speakerpath+'/Vendors/*/[A-Z]*')
+    princeton = glob.glob(speakerpath+'/Princeton/[A-Z]*')
+    dirs = asr + vendors + princeton
     for d in dirs:
         if os.path.isdir(d):
             speakers.append(os.path.basename(d))
@@ -161,13 +234,33 @@ def get_speaker_list(speakerpath):
 def parse_all_speakers(metadata, speakerpath='./datas'):
     speakerlist = get_speaker_list(speakerpath)
     df = {}
-    # print('Loading speaker: ')
+    count_measurements = 0
     for speaker in speakerlist:
-        # print('  '+speaker+', ')
-        if 'format' not in metadata[speaker].keys():
-            print('No format specify for ',speaker)
-            print(metadata[speaker].keys())
+        df[speaker] = {}
+        if speaker not in metadata.keys():
+            print('Error: {:s} is not in metadata.py!'.format(speaker))
             sys.exit(1)
-        df[speaker] = parse_graphs_speaker(speaker, metadata[speaker]['format'])
-    print('Loaded {:2d} speakers'.format(len(speakerlist)))
+        current = metadata[speaker]
+        if 'measurements' not in current.keys():
+            print('Error: no measurements for speaker {:s}, please add to metadata.py!'.format(speaker))
+            sys.exit(1)
+        for m in current['measurements']:
+            if 'format' not in m.keys():
+                print('Error: measurement for speaker {:s} need a format field, please add to metadata.py!'.format(speaker))
+                sys.exit(1)
+            mformat = m['format']
+            if mformat not in ['klippel', 'princeton', 'webplotdigitizer']:
+                print('Error: format field must be one of klippel, princeton, webplotdigitizer. Current value is: {:s}'.format(mformat))
+                sys.exit(1)
+            if 'origin' not in m.keys():
+                print('Error: measurement for speaker {:s} need an origin field, please add to metadata.py!'.format(speaker))
+                sys.exit(1)
+            origin = m['origin']
+            # keep it simple: df indexed on speaker indexed on measurement provenance and if we have a key a third level?
+            df[speaker][origin] = parse_graphs_speaker(speaker, mformat)
+            count_measurements += 1
+
+    print('Loaded {:d} speakers {:d} measurements'.format(len(speakerlist),
+          count_measurements))
+    
     return df

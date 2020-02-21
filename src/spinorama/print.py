@@ -1,4 +1,5 @@
 import os
+import pathlib
 from .display import display_spinorama, display_onaxis, display_inroom, \
     display_reflection_early, display_reflection_horizontal, display_reflection_vertical, \
     display_spl_horizontal, display_spl_vertical, \
@@ -7,12 +8,13 @@ from .display import display_spinorama, display_onaxis, display_inroom, \
 from .views import template_compact, template_panorama
 
 
-def print_graph(speaker, title, chart, width, height, force, fileext):
+def print_graph(speaker, origin, key, title, chart, width, height, force, fileext):
     updated = 0
-    filepath = 'docs/' + speaker + '/' + title
     if chart is not None:
+        filedir = 'docs/'+ speaker + '/' + origin + '/' + key
+        pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
         for ext in ['json', 'png', 'html']:  # svg skipped slow
-            filename = filepath + '.' + ext
+            filename = filedir + '/' + title.replace('_unmelted', '') + '.' + ext
             if force or not os.path.exists(filename):
                 if fileext is None or (fileext is not None and fileext == ext):
                     chart.save(filename)
@@ -20,10 +22,10 @@ def print_graph(speaker, title, chart, width, height, force, fileext):
     return updated
 
 
-def print_graphs(df, speaker, width=900, height=500, force=False, fileext=None):
-    dirpath = 'docs/' + speaker
-    if not os.path.exists(dirpath):
-        os.mkdir(dirpath)
+def print_graphs(df, speaker, origin, key, width=900, height=500, force_print=False, filter_file_ext=None):
+    # may happens at development time
+    if df is None:
+        return 0
 
     graphs = {}
     graphs['CEA2034'] = display_spinorama(df, speaker, width, height)
@@ -54,6 +56,8 @@ def print_graphs(df, speaker, width=900, height=500, force=False, fileext=None):
 
     updated = 0
     for (title, graph) in graphs.items():
-        updated += print_graph(speaker, title, graph, width,
-                               height, force, fileext)
+        #                      adam / asr / default
+        updated += print_graph(speaker, origin, key,
+                               title, graph,
+                               width, height, force_print, filter_file_ext)
     return updated
