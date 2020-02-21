@@ -289,7 +289,7 @@ speakers_info = {
             'format': 'princeton',
             }],
         },
-    'Genelec 8351AA': {
+    'Genelec 8351A': {
         'brand': 'Genelec',
         'model': '8351A',
         'type': 'active',
@@ -394,9 +394,9 @@ speakers_info = {
         'model': 'Model 11',
         'type': 'passive',
         'price': '',
-        'measurements': [{ 'origin': 'Princeton',  'format': 'princeton', },
-                         { 'origin': 'Princeton with Anechoic Foam',  'format': 'princeton', },
-                         { 'origin': 'Princeton with Back-Wave Absorber',  'format': 'princeton', },
+        'measurements': [{ 'origin': 'Princeton', 'key': 'unmodified', 'format': 'princeton', },
+                         { 'origin': 'Princeton', 'key': 'with Anechoic Foam',  'format': 'princeton', },
+                         { 'origin': 'Princeton', 'key': 'with Back-Wave Absorber', 'format': 'princeton', },
         ],},
     'Spendor Audio Systems SA1': {
         'brand': 'Spendor Audio',
@@ -409,8 +409,8 @@ speakers_info = {
             }],
         },
     'Tannoy Definition DC6i': {
-        'brand': 'Tannoy Definition',
-        'model': 'DC6i',
+        'brand': 'Tannoy',
+        'model': 'Definition DC6i',
         'type': 'passive',
         'price': '',
         'measurements': [{
@@ -421,6 +421,16 @@ speakers_info = {
     'iKey-Audio M-808V2': {
         'brand': 'iKey-Audio',
         'model': 'M-808V2',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+        },
+    'Fisher STE-720': {
+        'brand': 'Fisher',
+        'model': 'STE-720',
         'type': 'passive',
         'price': '',
         'measurements': [{
