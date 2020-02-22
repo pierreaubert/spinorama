@@ -180,11 +180,11 @@ def parse_graphs_speaker(speakerpath, format='klippel'):
             csvfilename = "datas/ASR/" + speakerpath + "/" + csv + ".txt"
             try:
                 title, df = parse_graph_freq_klippel(csvfilename)
-                # print('Speaker: '+speakerpath+' Loaded: '+title)
+                print('Speaker: '+speakerpath+' Loaded: '+title)
                 dfs[title + '_unmelted'] = df
                 dfs[title] = graph_melt(df)
             except FileNotFoundError:
-                # print('Speaker: '+speakerpath+' Not found: '+csv)
+                print('Speaker: '+speakerpath+' Not found: '+csv)
                 pass
     elif format == 'webplotdigitizer':
         jsonfilename = 'datas/Vendors/' + speakerpath + '/' + speakerpath + '.json'
@@ -256,9 +256,12 @@ def parse_all_speakers(metadata, speakerpath='./datas'):
                 print('Error: measurement for speaker {:s} need an origin field, please add to metadata.py!'.format(speaker))
                 sys.exit(1)
             origin = m['origin']
-            # keep it simple: df indexed on speaker indexed on measurement provenance and if we have a key a third level?
-            df[speaker][origin] = parse_graphs_speaker(speaker, mformat)
-            count_measurements += 1
+            # keep it simple
+            df[speaker][origin] = {}
+            # speaker / origin / measurement 
+            df[speaker][origin]['default'] = parse_graphs_speaker(speaker, mformat)
+            if df[speaker][origin]['default'] is not None:
+                count_measurements += 1
 
     print('Loaded {:d} speakers {:d} measurements'.format(len(speakerlist),
           count_measurements))
