@@ -38,8 +38,9 @@ def generate_graphs(df, width, height, force, ptype):
     for speaker_name, speaker_data in df.items():
         for origin, dataframe in speaker_data.items():
             key = 'default'
-            # print('{:30s} {:20s} {:20s}'.format(speaker_name, origin, key))
-            updated = print_graphs(df, speaker_name, origin, key, width, height, force, ptype)
+            print('Debug: generate_graph: {:30s} {:20s} {:20s}'.format(speaker_name, origin, key))
+            dfs = df[speaker_name][origin][key]
+            updated = print_graphs(dfs, speaker_name, origin, key, width, height, force, ptype)
     print('{:30s} {:2d}'.format(speaker_name, updated))
 
 
