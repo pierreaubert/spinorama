@@ -1,0 +1,642 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spinorama for speakers measured at audiosciencereview.com</title>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <script src="https://kit.fontawesome.com/7dc3015a44.js" crossorigin="anonymous"></script>
+  <script src="http://localhost:8000/docs//assets/fuse.js"></script>
+  <script src="http://localhost:8000/docs//assets/search.js"></script>
+  <script src="http://localhost:8000/docs//assets/compare.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.0/css/bulma.min.css" />
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="assets/spinorama.css"/> 
+</head>
+<body>
+
+
+<nav class="navbar">
+ <div class="container">
+   <div class="navbar-brand">
+     <a class="navbar-item" href="./"><p class="title">Spinorama</p></a>
+     <span class="navbar-burger burger" data-target="navbarMenu">
+       <span></span>
+       <span></span>
+       <span></span>
+     </span>
+   </div>
+   <div id="navbarMenu" class="navbar-menu">
+     <div class="navbar-end">
+       <a class="navbar-item" href="help.html">Help</a>
+     </div>
+   </div>
+</nav>
+
+
+<div class="container">
+ <div id="flow">
+   <span class="flow-1"></span>
+   <span class="flow-2"></span>
+   <span class="flow-3"></span>
+ </div>
+
+
+  
+
+
+<div class="section">
+  <div class="box">
+	
+  <form>
+      
+    <!-- Search -->
+    <div class="field is-grouped has-addons">
+      <div class="control is-expanded">
+        <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl ..." autofocus />
+      </div>
+      <div class="control">
+        <a class="button is-info">Search</a>
+      </div>
+      <div class="control">
+        <a class="button" id="compareInput">Compare</a>
+      </div>
+    </div>
+    <!-- Search -->
+
+  
+
+    <!-- Speakers -->
+    <div class="row columns is-multiline searchresults">
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Adam%20S2V.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Adam $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Dayton%20Audio%20B652-AIR.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Dayton Audio $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Elac%20Adante%20AS-61.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Elac $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Emotiva%20Airmotive%206s.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Emotiva $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Harbeth%20Monitor.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Harbeth $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/JBL%20104.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">JBL $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/JBL%20305P%20Mark%20ii.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">JBL $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/JBL%20Control%201%20Pro.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">JBL $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Kali%20IN-8.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Kali $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/KEF%20LS50.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">KEF $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Klipsch%20R41M.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Klipsh $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Micca%20RB42.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Micca $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Neumann%20KH%2080.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Neumann $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/NHT%20Pro%20M-00.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">NHT $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Pioneer%20SP-BS22-LR.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Pioneer $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Realistic%20MC-1000.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Realistic $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Revel%20C52.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Revel $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Selah%20Audio%20RC3R.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Selah Audio $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Yamaha%20HS5.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Yamaha $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/KEF%20Reference%205.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">KEF $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Ascend%20Acoustics%20CBM-170%20SE.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Ascend Acoustics $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Avantgarde%20Acoustic%20Solo.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Avantgarde Acoustic $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/CommonSense%20Audio%205.6.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">CommonSense Audio $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Dynaudio%20Xeo%203.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Dynaudio $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Essence%20Electrostatic%20Model%201600.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Essence Electrostatic $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Fisher%20STE-720.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Fisher $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Gainphile%20R16.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Gainphile $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/GedLee%20Nathan.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">GedLee $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Genelec%208030A.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Genelec $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Genelec%208351A.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Genelec $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Gradient%20Helsinki%201.5.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Gradient $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/JansZen%20Loudspeaker%20zA1.1.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">JansZen Loudspeaker $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/JansZen%20Loudspeaker%20zA2.1.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">JansZen Loudspeaker $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/JBL%20Professional%20PRX635.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">JBL $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/King's%20Audio%20KingSound%20KS%203001.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">King's Audio $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/KRK%20Systems%20RoKit%206%20G2.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">KRK Systems $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Manger%20Sidekick.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Manger $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Polk%20Audio%205JR.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Polk Audio $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Quad%20Electroacoustics%20ESL-57.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Quad Electroacoustics $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Sanders%20Sound%20Systems%20Model%2011.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Sanders Sound Systems $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Spendor%20Audio%20Systems%20SA1.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Spendor Audio $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+      <div class="column is-one-third">
+        <div class="card large">
+	  <div class="box">
+            <div class="media">
+	      <figure class="image"><img src="metadata/Tannoy%20Definition%20DC6i.jpg" alt="Spinorama"/></figure>
+            </div>
+            <div class="content">
+	      <p class="title is-4 no-padding">Tannoy $meta[speaker_name]['model']}</p>
+            </div>
+            </div>
+	  </div>  <!-- End box -->
+	</div>  <!-- End card -->
+      </div> <!-- End for one Speaker -->
+    </div> <!-- End all Speakers -->
+
+    <form>
+  </div>
+</div>
+
+<footer class="footer">
+<div class="container">
+  <div class="content has-text-centered">
+    <div class="soc">
+      <a href="#"><i class="fa fa-github-alt fa-2x" aria-hidden="true"></i></a>
+    </div>
+    <p>
+      <strong>Spinorama</strong> by <a href="https://github.com/pierreaubert">Pierre Aubert</a>.
+      The <a href="https://github.com/pierreaubert/spinorama">source code</a> is licensed under GPL. <br>
+    </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+
