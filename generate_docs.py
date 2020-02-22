@@ -20,7 +20,7 @@
 """
 usage: update-docs.py [--help] [--version] [--dev]\
  [--width=<width>] [--height=<height>] [--force] [--type=<ext>]\
- [--sitedev=<http>]
+ [--sitedev=<http>]  [--log-level=<level>]
 
 Options:
   --help            display usage()
@@ -30,10 +30,12 @@ Options:
   --force           force regeneration of all graphs, by default only generate new ones
   --type=<ext>      choose one of: json, html, png, svg
   --sitedev=<http>  default: http://localhost:8000/docs
+  --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
 import os
 import sys
 import json
+import logging
 from mako.template import Template
 from mako.lookup import TemplateLookup
 from src.spinorama.load import parse_all_speakers
@@ -43,24 +45,32 @@ from generate_graphs import generate_graphs
 from docopt import docopt
 from src.spinorama.path import name2measurement, measurement2name
 
+
 siteprod = 'https://pierreaubert.github.io/spinorama'
 sitedev = 'http://localhost:8000/docs/'
 
 
 def sanity_check(df, meta):
-    for measurement, graph in df.items():
+    for speaker_name, origins in df.items():
         # check if metadata exists
-        (speaker, origin) = name2measurement(measurement)
-        if speaker not in meta:
-            print('Fatal: Metadata not found for >', measurement, '<')
+        if speaker_name not in meta:
+            logging.error('Metadata not found for >{:s}<'.format(speaker_name))
             return 1
+        # check if each measurement looks reasonable
+        for origin, keys in origins.items():
+            if origin not in ['ASR', 'Princeton'] and origin[0:8] != 'Vendors/':
+                logging.error('Measurement origin >{:s}< is unkown for >{:s}'.format(origin, speaker_name))
+                return 1
+            if 'default' not in keys.keys():
+                logging.error('Key default is mandatory for >{:s}<'.format(speaker_name))
+                return 1
         # check if image exists
-        if not os.path.exists('datas/originals/' + speaker + '.jpg'):
-            print('Fatal: Image associated with >', speaker, '< not found!')
+        if not os.path.exists('datas/originals/' + speaker_name + '.jpg'):
+            print('Fatal: Image associated with >', speaker_name, '< not found!')
             return 1
         # check if downscale image exists
-        if not os.path.exists('docs/metadata/' + speaker + '.jpg'):
-            print('Fatal: Image associated with >', speaker, '< not found!')
+        if not os.path.exists('docs/metadata/' + speaker_name + '.jpg'):
+            print('Fatal: Image associated with >', speaker_name, '< not found!')
             print('Please run: cd docs && ./convert.sh')
             return 1
     return 0
@@ -82,60 +92,36 @@ def add_estimates(df):
 
 def generate_speaker(mako, df):
     speaker_html = mako.get_template('speaker.html')
-    for speaker, measurements in df.items():
-        with open('docs/' + speaker + '.html', 'w') as f:
-            freq_filter = [
-                "CEA2034",
-                "Early Reflections",
-                "Estimated In-Room Response",
-                "Horizontal Reflections",
-                "Vertical Reflections",
-                "SPL Horizontal",
-                "SPL Vertical"
-            ]
-            freqs = {key: measurements[key]
-                     for key in freq_filter if key in measurements}
-            contour_filter = [
-                "SPL Horizontal_unmelted",
-                "SPL Vertical_unmelted"
-            ]
-            contours = {key: measurements[key]
-                        for key in contour_filter if key in measurements}
-            radar_filter = [
-                "SPL Horizontal_unmelted",
-                "SPL Vertical_unmelted"
-            ]
-            radars = {key: measurements[key]
-                      for key in radar_filter if key in measurements}
-            f.write(speaker_html.render(speaker=speaker,
-                                        freqs=freqs,
-                                        contours=contours,
-                                        radars=radars,
-                                        meta=metadata.speakers_info,
-                                        site=site))
-            f.close()
+    for speaker_name, origins in df.items():
+        for origin, measurements in origins.items():
+            for m, dfs in measurements.items():
+                indexname = 'docs/' + speaker_name + '/' + origin + '/index.html'
+                logging.info('Writing index.html for {:s}'.format(speaker_name))
+                with open(indexname, 'w') as f:
+                    # freq
+                    freq_filter = ["CEA2034", "Early Reflections", "Estimated In-Room Response",\
+                                   "Horizontal Reflections", "Vertical Reflections",\
+                                   "SPL Horizontal", "SPL Vertical"]
+                    freqs = {key: measurements[key] for key in freq_filter if key in measurements}
+                    # contour
+                    contour_filter = ["SPL Horizontal_unmelted", "SPL Vertical_unmelted"]
+                    contours = {key: measurements[key] for key in contour_filter if key in measurements}
+                    # radar
+                    radar_filter = ["SPL Horizontal_unmelted", "SPL Vertical_unmelted"]
+                    radars = {key: measurements[key] for key in radar_filter if key in measurements}
+                    # write all
+                    f.write(speaker_html.render(speaker=speaker_name, freqs=freqs, contours=contours,
+                                                radars=radars, meta=metadata.speakers_info,
+                                                site=site))
+                    f.close()
     return 0
 
 
 def dump_metadata(meta):
-    def flatten(d):
-        f = {}
-        for k, v in d.items():
-            s = {}
-            for m in v['measurements']:
-                for k2, v2 in v.items():
-                    if k2 != 'measurements':
-                        s[k2] = v2
-                f[measurement2name(k, m)] = s
-        return f
-
     with open('docs/assets/metadata.json', 'w') as f:
-        meta = flatten(metadata.speakers_info)
         js = json.dumps(meta)
         f.write(js)
         f.close()
-        return meta
-    return None
 
 
 if __name__ == '__main__':
@@ -172,36 +158,47 @@ if __name__ == '__main__':
 
         site = sitedev
 
+    if args['--log-level'] is not None:
+        level = args['--log-level']
+        if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
+            logging.basicConfig(level=level)
+
     # read data from disk
     df = parse_all_speakers(metadata.speakers_info)
     if sanity_check(df, metadata.speakers_info) != 0:
+        logging.error('Sanity checks failed!')
         sys.exit(1)
 
     # add computed data to metadata
+    logging.info('Compute estimates per speaker')
     add_estimates(df)
 
     # configure Mako
     mako_templates = TemplateLookup(directories=['templates'], module_directory='/tmp/mako_modules')
 
     # write metadata in a json file for easy search
-    metameasurements = dump_metadata(metadata.speakers_info)
-    print(metameasurements)
+    logging.info('Write metadat')
+    dump_metadata(metadata.speakers_info)
 
     # write index.html
+    logging.info('Write index.html')
     index_html = mako_templates.get_template('index.html')
     with open('docs/index.html', 'w') as f:
-        f.write(index_html.render(speakers=df, meta=metameasurements, site=site))
+        f.write(index_html.render(df=df, meta=metadata.speakers_info, site=site))
         f.close()
 
     # write help.html
+    logging.info('Write help.html')
     help_html = mako_templates.get_template('help.html')
     with open('docs/help.html', 'w') as f:
-        f.write(help_html.render(speakers=df, meta=metadata.speakers_info, site=site))
+        f.write(help_html.render(df=df, meta=metadata.speakers_info, site=site))
         f.close()
 
     # write a file per speaker
+    logging.info('Write a file per speaker')
     generate_speaker(mako_templates, df)
 
+    logging.info('Copy js/css files to docs')
     for f in ['search.js', 'bulma.js', 'compare.js', 'tabs.js', 'spinorama.css']:
         file_ext = Template(filename='templates/assets/'+f)
         with open('docs/assets/'+f, 'w') as fd:
@@ -209,6 +206,7 @@ if __name__ == '__main__':
             fd.close()
 
     # generate potential missing graphs
-    generate_graphs(df, width, height, force, ptype)
+    # logging.info('Generate missing graphs')
+    # generate_graphs(df, width, height, force, ptype)
 
     sys.exit(0)

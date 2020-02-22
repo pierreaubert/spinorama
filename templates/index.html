@@ -23,29 +23,23 @@
     <!-- Search -->
 
 <%!
-    def space2url(text):
-        return text.replace(' ', '%20')
+  def space2url(text):
+      return text.replace(' ', '%20')
+
 %>  
 
     <!-- Speakers -->
     <div class="row columns is-multiline searchresults">
-      % for speaker in meta:
+      % for speaker_name in df:
       <div class="column is-one-third">
-	
         <div class="card large">
 	  <div class="box">
             <div class="media">
-	      <figure class="image"><img src="metadata/${speaker | space2url}.jpg" alt="Spinorama"/></figure>
+	      <figure class="image"><img src="metadata/${speaker_name | space2url}.jpg" alt="Spinorama"/></figure>
             </div>
             <div class="content">
-		<p class="title is-4 no-padding">${meta[speaker]['brand']} $meta[speaker]['model']}</p>
+	      <p class="title is-4 no-padding">${meta[speaker_name]['brand']} $meta[speaker_name]['model']}</p>
             </div>
-            <div class="content">
-	      % if meta[speaker]['estimates'] is not UNDEFINED:
-	      -3dB at ${meta[speaker]['estimates'][1]} Hz<br/>
-	      -6dB at ${meta[speaker]['estimates'][2]} Hz<br/>
-	      &plusmn;${meta[speaker]['estimates'][3]}dB ~ 80-20kHz
-	      % endif
             </div>
 	  </div>  <!-- End box -->
 	</div>  <!-- End card -->
