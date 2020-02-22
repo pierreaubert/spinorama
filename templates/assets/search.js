@@ -10,9 +10,7 @@ function display_speaker(speaker) {
 	    <div class="column is-one-third">\
 		<div class="card large">\
 		  <div class="card-image">\
-		    <figure class="image">\
-		      <a href="' + s_href +'"><img src="' + s_img + '" alt="Spinorama"/></a>\
- 		    </figure>\
+		    <figure class="image"><img src="' + s_img + '" alt="Spinorama"/></figure>\
 		  </div>\
 		  <div class="card-content">\
 		    <div class="media">\
@@ -21,9 +19,9 @@ function display_speaker(speaker) {
 	              </div>\
 	            </div>\
 		    <div class="media">\
-			-3dB at ' + speaker.estimates[0] + 'Hz<br/>\
-			-6dB at ' + speaker.estimates[1] + 'Hz<br/>\
-			&plusmn;' + speaker.estimates[2] + 'dB ~ 80-20kHz\
+			-3dB at ' + speaker.estimates[1] + 'Hz<br/>\
+			-6dB at ' + speaker.estimates[2] + 'Hz<br/>\
+			&plusmn;' + speaker.estimates[3] + 'dB ~ 80-20kHz\
 		  </div>\
                   <div class="right">\
 		    <label class="checkbox is-large"><input type="checkbox"/></label>\
