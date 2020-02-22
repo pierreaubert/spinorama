@@ -78,19 +78,20 @@ def sanity_check(df, meta):
 
 def add_estimates(df):
     """""Compute some values per speaker and add them to metadata """
-    for k, v in df.items():
-        try:
-            if 'CEA2034' in df[k].keys():
-                spin = df[k]['CEA2034']
-                if spin is not None:
-                    onaxis = spin.loc[spin['Measurements'] == 'On Axis']
-                    (speaker, title) = name2measurement(k)
-                    metadata.speakers_info[speaker]['estimates'] = estimates(onaxis)
-        except ValueError:
-            print('Warning: Computing estimates failed for speaker: ' + k)
+    for speaker_name, speaker_data in df.items():
+        for origin, measurements in speaker_data.items():
+            for m, dfs in measurements.items():
+                if m == 'default':
+                    if 'CEA2034' in dfs.keys():
+                        spin = dfs['CEA2034']
+                        if spin is not None:
+                            onaxis = spin.loc[spin['Measurements'] == 'On Axis']
+                            est = estimates(onaxis)
+                            logging.info('Adding -3dB {:d}Hz -6dB {:d}Hz +/-{:f}dB'.format(est[1], est[2], est[3]))
+                            metadata.speakers_info[speaker_name]['estimates'] = est
 
 
-def generate_speaker(mako, df):
+def generate_speaker(mako, df, meta, site):
     speaker_html = mako.get_template('speaker.html')
     for speaker_name, origins in df.items():
         for origin, measurements in origins.items():
@@ -102,17 +103,16 @@ def generate_speaker(mako, df):
                     freq_filter = ["CEA2034", "Early Reflections", "Estimated In-Room Response",\
                                    "Horizontal Reflections", "Vertical Reflections",\
                                    "SPL Horizontal", "SPL Vertical"]
-                    freqs = {key: measurements[key] for key in freq_filter if key in measurements}
+                    freqs = {key: dfs[key] for key in freq_filter if key in dfs}
                     # contour
                     contour_filter = ["SPL Horizontal_unmelted", "SPL Vertical_unmelted"]
-                    contours = {key: measurements[key] for key in contour_filter if key in measurements}
+                    contours = {key: dfs[key] for key in contour_filter if key in dfs}
                     # radar
                     radar_filter = ["SPL Horizontal_unmelted", "SPL Vertical_unmelted"]
-                    radars = {key: measurements[key] for key in radar_filter if key in measurements}
+                    radars = {key: dfs[key] for key in radar_filter if key in dfs}
                     # write all
                     f.write(speaker_html.render(speaker=speaker_name, freqs=freqs, contours=contours,
-                                                radars=radars, meta=metadata.speakers_info,
-                                                site=site))
+                                                radars=radars, meta=meta, site=site))
                     f.close()
     return 0
 
@@ -196,7 +196,7 @@ if __name__ == '__main__':
 
     # write a file per speaker
     logging.info('Write a file per speaker')
-    generate_speaker(mako_templates, df)
+    generate_speaker(mako_templates, df, metadata.speakers_info, site=site)
 
     logging.info('Copy js/css files to docs')
     for f in ['search.js', 'bulma.js', 'compare.js', 'tabs.js', 'spinorama.css']:
