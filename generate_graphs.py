@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Usage:
-  update-graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>] [--force] [--type=<ext>]
+  update-graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>] [--force] [--type=<ext>] [--log-level=<level>]
 
 Options:
   -h|--help         display usage()
@@ -25,7 +25,9 @@ Options:
   --height=<height> height size in pixel
   --force           force regeneration of all graphs, by default only generate new ones
   --type=<ext>      choose one of: json, html, png, svg
+  --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
+import logging
 import datas.metadata as metadata
 from src.spinorama.load import parse_all_speakers
 from src.spinorama.print import print_graphs
@@ -38,7 +40,7 @@ def generate_graphs(df, width, height, force, ptype):
     for speaker_name, speaker_data in df.items():
         for origin, dataframe in speaker_data.items():
             key = 'default'
-            print('Debug: generate_graph: {:30s} {:20s} {:20s}'.format(speaker_name, origin, key))
+            logging.debug('{:30s} {:20s} {:20s}'.format(speaker_name, origin, key))
             dfs = df[speaker_name][origin][key]
             updated = print_graphs(dfs, speaker_name, origin, key, width, height, force, ptype)
     print('{:30s} {:2d}'.format(speaker_name, updated))
@@ -65,6 +67,11 @@ if __name__ == '__main__':
         if ptype not in ('png', 'html', 'svg', 'json'):
             print('type %s is not recognize!'.format(ptype))
             exit(1)
+
+    if args['--log-level'] is not None:
+        level = args['--log-level']
+        if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
+            logging.basicConfig(level=level)
 
     df = parse_all_speakers(metadata.speakers_info)
     generate_graphs(df, width, height, force, ptype=ptype)

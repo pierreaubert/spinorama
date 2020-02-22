@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 from scipy import ndimage
 from astropy.convolution import Gaussian2DKernel
@@ -23,7 +24,7 @@ def compute_contour(dfu):
     # compute numbers of measurements
     nm = dfm.Measurements.nunique()
     nf = int(len(dfm.index) / nm)
-    # print((nm,nf))
+    logging.debug((nm,nf))
     # index grid on a log scale log 2 ±= 0.3
     hrange = np.floor(np.logspace(1.3, 4.3, nf))
     # print(vrange)
