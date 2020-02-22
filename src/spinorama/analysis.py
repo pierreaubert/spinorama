@@ -1,14 +1,15 @@
+import logging
 import math
 from scipy.optimize import curve_fit
 import numpy as np
 import pandas as pd
 
 
-def flinear(x, a, b):
+def flinear(x: float, a: float, b: float):
     return np.log(x) * a + b
 
 
-def fconst(x, a):
+def fconst(x :float, a: float):
     return a
 
 
@@ -35,5 +36,5 @@ def estimates(onaxis: pd.DataFrame):
         return [int(inter), int(inter_3), int(inter_6),
                 math.floor(max(up, -down) * 10) / 10]
     except TypeError:
-        print('Warning: Type error:')
+        logging.warning('Type error:')
         return [-1, -1, -1, -1]

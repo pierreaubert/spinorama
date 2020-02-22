@@ -4,6 +4,7 @@ import glob
 import locale
 from locale import atof
 import json
+import logging
 import numpy as np
 import pandas as pd
 from scipy.io import loadmat
@@ -180,20 +181,18 @@ def parse_graphs_speaker(speakerpath, format='klippel'):
             csvfilename = "datas/ASR/" + speakerpath + "/" + csv + ".txt"
             try:
                 title, df = parse_graph_freq_klippel(csvfilename)
-                print('Speaker: '+speakerpath+' Loaded: '+title)
+                logging.info('Speaker: ' + speakerpath + ' Loaded: '+title)
                 dfs[title + '_unmelted'] = df
                 dfs[title] = graph_melt(df)
             except FileNotFoundError:
-                print('Speaker: '+speakerpath+' Not found: '+csv)
-                pass
+                logging.info('Speaker: ' + speakerpath +' Not found: ' + csvfilename)
     elif format == 'webplotdigitizer':
         jsonfilename = 'datas/Vendors/' + speakerpath + '/' + speakerpath + '.json'
         try:
             title, df = parse_graph_freq_webplotdigitizer(jsonfilename)
             dfs[title] = df
         except FileNotFoundError:
-            # print('Speaker: '+speakerpath+' Not found: '+csv)
-            pass
+            logging.info('Speaker: ' + speakerpath +' Not found: '+ jsonfilename)
     elif format == 'princeton':
         # 2 files per directory xxx_H_IR.mat and xxx_V_IR.mat
         matfilename = 'datas/Princeton/' + speakerpath 
@@ -206,15 +205,15 @@ def parse_graphs_speaker(speakerpath, format='klippel'):
             elif d[-9:] == '_V_IR.mat':
                 v_file = d
         if h_file is None or v_file is None:
-            print('Couldn\'t find Horizontal and Vertical IR files for speaker '+speakerpath)
-            print('Looking in directory {:s}'.format(matfilename))
+            logging.info('Couldn\'t find Horizontal and Vertical IR files for speaker '+speakerpath)
+            logging.info('Looking in directory {:s}'.format(matfilename))
             for d in dirpath:
-                print('Found file {:s}'.format(d))
+                logging.info('Found file {:s}'.format(d))
         else:
             title, df = parse_graph_freq_princeton(h_file, v_file)
             dfs[title] = df
     else:
-        print('Format {:s} is unkown'.format(format))
+        logging.error('Format {:s} is unkown'.format(format))
         sys.exit(1)
     return dfs
 
@@ -238,22 +237,22 @@ def parse_all_speakers(metadata, speakerpath='./datas'):
     for speaker in speakerlist:
         df[speaker] = {}
         if speaker not in metadata.keys():
-            print('Error: {:s} is not in metadata.py!'.format(speaker))
+            logging.error('{:s} is not in metadata.py!'.format(speaker))
             sys.exit(1)
         current = metadata[speaker]
         if 'measurements' not in current.keys():
-            print('Error: no measurements for speaker {:s}, please add to metadata.py!'.format(speaker))
+            logging.error('no measurements for speaker {:s}, please add to metadata.py!'.format(speaker))
             sys.exit(1)
         for m in current['measurements']:
             if 'format' not in m.keys():
-                print('Error: measurement for speaker {:s} need a format field, please add to metadata.py!'.format(speaker))
+                logging.error('measurement for speaker {:s} need a format field, please add to metadata.py!'.format(speaker))
                 sys.exit(1)
             mformat = m['format']
             if mformat not in ['klippel', 'princeton', 'webplotdigitizer']:
-                print('Error: format field must be one of klippel, princeton, webplotdigitizer. Current value is: {:s}'.format(mformat))
+                logging.error('format field must be one of klippel, princeton, webplotdigitizer. Current value is: {:s}'.format(mformat))
                 sys.exit(1)
             if 'origin' not in m.keys():
-                print('Error: measurement for speaker {:s} need an origin field, please add to metadata.py!'.format(speaker))
+                logging.error('measurement for speaker {:s} need an origin field, please add to metadata.py!'.format(speaker))
                 sys.exit(1)
             origin = m['origin']
             # keep it simple

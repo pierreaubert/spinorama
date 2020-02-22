@@ -1,4 +1,5 @@
 import os
+import logging
 import pathlib
 from .display import display_spinorama, display_onaxis, display_inroom, \
     display_reflection_early, display_reflection_horizontal, display_reflection_vertical, \
@@ -21,7 +22,7 @@ def print_graph(speaker, origin, key, title, chart, width, height, force, fileex
                     chart.save(filename)
                     updated += 1
     else:
-        print('Chart is None for {:s} {:s} {:s} {:s}'.format(speaker, origin, key, title))
+        logging.debug('Chart is None for {:s} {:s} {:s} {:s}'.format(speaker, origin, key, title))
     return updated
 
 
