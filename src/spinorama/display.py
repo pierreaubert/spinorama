@@ -1,3 +1,4 @@
+import logging
 import altair as alt
 import matplotlib.pyplot as plt
 from .graph import graph_freq, graph_contour, graph_radar
@@ -76,9 +77,9 @@ def display_spinorama(df, width, height):
             spinorama = spinorama.loc[spinorama['Measurements'] != 'DI offset']
             return graph_freq(spinorama, width, height)
         else:
-            print('Info: display_spinorama: \'CEA2034\' is empty')
+            logging.info('\'CEA2034\' is empty')
     except KeyError:
-        print('Info: display_spinorama: \'CEA2034\' not in dataframe')
+        logging.info('\'CEA2034\' not in dataframe')
     return None
 
 

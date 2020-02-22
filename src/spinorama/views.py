@@ -114,13 +114,13 @@ def template_vertical(df, width=900, height=500):
                        vradar)
 
 
-def template_freq_sidebyside(s1, s2, name, width=450, height=450):
-    df1 = display_graph_freq(s1[name], width, height)
-    df2 = display_graph_freq(s2[name], width, height)
-    if df1 is None and df2 is None:
-        return None
-    if df1 is None:
-        return df2
-    if df2 is None:
-        return df1
-    return alt.hconcat(df1, df2)
+# def template_freq_sidebyside(s1, s2, name, width=450, height=450):
+#     df1 = display_graph_freq(s1[name], width, height)
+#     df2 = display_graph_freq(s2[name], width, height)
+#     if df1 is None and df2 is None:
+#         return None
+#     if df1 is None:
+#         return df2
+#     if df2 is None:
+#         return df1
+#     return alt.hconcat(df1, df2)
