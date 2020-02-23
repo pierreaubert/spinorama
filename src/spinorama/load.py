@@ -16,7 +16,7 @@ locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 removequote = str.maketrans({'"': None, '\n': ''})
 
 
-def graph_melt(df):
+def graph_melt(df : pd.DataFrame):
     return df.reset_index().melt(id_vars='Freq', var_name='Measurements',
                                  value_name='dB').loc[lambda df: df['Measurements'] != 'index']
 
@@ -130,40 +130,48 @@ def parse_graph_freq_princeton_mat(mat, suffix):
     timestep = 1./mat[fs_name]
     # hummm
     freq = np.fft.fftfreq(2**14, d=timestep)
+    # reduce spectrum to 0 to 24kHz
+    # lg = 2**14
+    # 24k is lgs = int(lg/4)
+    # 20k is at 3414
+    lgs = 3414
     #
-    dfx = []
-    dfy = []
-    dfz = []
+    dfx = np.empty(0, dtype=float)
+    dfy = np.empty(0, dtype=float)
+    dfz = np.empty(0, dtype=float)
     # loop over measurements
-    for i in range(0, 3):
+    for i in range(0, 72):
         # extract ir
         ir = mat[ir_name][i]
         # compute FFT
         y = np.fft.fft(ir)
-        # reduce spectrum to 0 to 24kHz
-        lg = y.size
-        lgs = int(lg/4)
-        # sample by N element
-        xs = freq  # [freq[i] for i in range(0, lgs) if i % 1 == 0]
-        # sample by N elements and take |db|
-        ys = np.abs([y[i] for i in range(0, lgs) if i % 1 == 0])
+        xs = freq[0][0:lgs]
+        ys = np.abs(y[0:lgs])
+        # check for 0 (from manual: 0 means not measured)
+        if ys.max() == 0.0:
+            continue
         # apply formula from paper to translate to dbFS
         ys = 105.+np.log10(ys)*20.
         # interpolate to smooth response
         # s = InterpolatedUnivariateSpline(xs, ys)
-        dfx.append(xs)
-        dfy.append(ys)
-        label = '{:2d}°'.format(i*10)
-        # pretty print label
-        dfz.append([label for j in range(0, len(xs))])
+        dfx = np.append(dfx, xs)
+        dfy = np.append(dfy, ys)
+        # pretty print label, per 5 deg increment, follow klippel labelling
+        ilabel =i*5
+        if ilabel > 180:
+            ilabel -= 360
+        label = '{:2d}°'.format(ilabel)
+        if ilabel == 0:
+            label = 'On Axis'
+        dfz = np.append(dfz, [label for j in range(0, lgs)])
     return dfx, dfy, dfz
 
 
-def parse_graph_freq_princeton(h_file, v_file):
-    # h_mat = loadmat(h_file)
-    # v_mat = loadmat(v_file)
-    # h_df = parse_graph_freq_princeton_mat(h_mat, 'H')
-    return 'CEA2034', None
+def parse_graph_princeton(filename, orient):
+    matfile = loadmat(filename)
+    freq, db, m = parse_graph_freq_princeton_mat(matfile, orient)
+    print(freq.size, db.size, m.size)
+    return pd.DataFrame({'Freq': freq.flatten(),'dB': db.flatten(), 'Measurements': m.flatten()})
 
 
 def parse_graphs_speaker(speakerpath, format='klippel'):
@@ -209,9 +217,13 @@ def parse_graphs_speaker(speakerpath, format='klippel'):
             logging.info('Looking in directory {:s}'.format(matfilename))
             for d in dirpath:
                 logging.info('Found file {:s}'.format(d))
-        else:
-            title, df = parse_graph_freq_princeton(h_file, v_file)
-            dfs[title] = df
+            return None
+
+        h_spl = parse_graph_princeton(h_file, 'H')
+        v_spl = parse_graph_princeton(v_file, 'V')
+        dfs['SPL Vertical'] = v_spl
+        dfs['SPL Horizontal'] = h_spl
+        # dfs['CEA2034'] = compute_spinorama(h_spl, v_spl)
     else:
         logging.error('Format {:s} is unkown'.format(format))
         sys.exit(1)
