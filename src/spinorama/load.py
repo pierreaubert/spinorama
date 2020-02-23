@@ -8,8 +8,9 @@ import logging
 import numpy as np
 import pandas as pd
 from scipy.io import loadmat
-from .path import measurement2name
-# from scipy.interpolate import InterpolatedUnivariateSpline
+from .analysis import early_reflections, vertical_reflections, horizontal_reflections,\
+     cea2034
+
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
@@ -126,52 +127,47 @@ def parse_graph_freq_princeton_mat(mat, suffix):
     """ Suffix can be either H or V """
     ir_name = 'IR_{:1s}'.format(suffix)
     fs_name = 'fs_{:1s}'.format(suffix)
-    # compute Freq
+    # compute Freq                                                                                                                   
     timestep = 1./mat[fs_name]
-    # hummm
+    # hummm                                                                                                                          
     freq = np.fft.fftfreq(2**14, d=timestep)
-    # reduce spectrum to 0 to 24kHz
-    # lg = 2**14
-    # 24k is lgs = int(lg/4)
-    # 20k is at 3414
+    # reduce spectrum to 0 to 24kHz                                                                                                  
+    # lg = 2**14                                                                                                                     
+    # 24k is lgs = int(lg/4)                                                                                                         
+    # 20k is at 3414                                                                                                                 
     lgs = 3414
-    #
-    dfx = np.empty(0, dtype=float)
+    xs = freq[0][0:lgs]
+    #    
+    df = pd.DataFrame({'Freq': xs})
     dfy = np.empty(0, dtype=float)
-    dfz = np.empty(0, dtype=float)
-    # loop over measurements
+    # loop over measurements                                                                                                         
     for i in range(0, 72):
-        # extract ir
+        # extract ir                                                                                                                 
         ir = mat[ir_name][i]
-        # compute FFT
+        # compute FFT                                                                                                                
         y = np.fft.fft(ir)
-        xs = freq[0][0:lgs]
         ys = np.abs(y[0:lgs])
-        # check for 0 (from manual: 0 means not measured)
+        # check for 0 (from manual: 0 means not measured)                                                                            
         if ys.max() == 0.0:
             continue
-        # apply formula from paper to translate to dbFS
+        # apply formula from paper to translate to dbFS                                                                              
         ys = 105.+np.log10(ys)*20.
-        # interpolate to smooth response
-        # s = InterpolatedUnivariateSpline(xs, ys)
-        dfx = np.append(dfx, xs)
-        dfy = np.append(dfy, ys)
-        # pretty print label, per 5 deg increment, follow klippel labelling
+        # interpolate to smooth response                                                                                             
+        # s = InterpolatedUnivariateSpline(xs, ys)                                                                                   
+        # pretty print label, per 5 deg increment, follow klippel labelling                                                          
         ilabel =i*5
-        if ilabel > 180:
-            ilabel -= 360
-        label = '{:2d}°'.format(ilabel)
+        if ilabel > 180: 
+            ilabel = ilabel-360
+        label = '{:d}°'.format(ilabel)
         if ilabel == 0:
             label = 'On Axis'
-        dfz = np.append(dfz, [label for j in range(0, lgs)])
-    return dfx, dfy, dfz
+        df[label] = ys
+    return df
 
 
 def parse_graph_princeton(filename, orient):
     matfile = loadmat(filename)
-    freq, db, m = parse_graph_freq_princeton_mat(matfile, orient)
-    print(freq.size, db.size, m.size)
-    return pd.DataFrame({'Freq': freq.flatten(),'dB': db.flatten(), 'Measurements': m.flatten()})
+    return parse_graph_freq_princeton_mat(matfile, orient)
 
 
 def parse_graphs_speaker(speakerpath, format='klippel'):
@@ -213,7 +209,7 @@ def parse_graphs_speaker(speakerpath, format='klippel'):
             elif d[-9:] == '_V_IR.mat':
                 v_file = d
         if h_file is None or v_file is None:
-            logging.info('Couldn\'t find Horizontal and Vertical IR files for speaker '+speakerpath)
+            logging.info('Couldn\'t find Horizontal and Vertical IR files for speaker {:s}'.format(speakerpath))
             logging.info('Looking in directory {:s}'.format(matfilename))
             for d in dirpath:
                 logging.info('Found file {:s}'.format(d))
@@ -221,9 +217,35 @@ def parse_graphs_speaker(speakerpath, format='klippel'):
 
         h_spl = parse_graph_princeton(h_file, 'H')
         v_spl = parse_graph_princeton(v_file, 'V')
-        dfs['SPL Vertical'] = v_spl
-        dfs['SPL Horizontal'] = h_spl
-        # dfs['CEA2034'] = compute_spinorama(h_spl, v_spl)
+        #
+        dfs['SPL Horizontal_unmelted'] = h_spl
+        dfs['SPL Vertical_unmelted'] = v_spl
+        dfs['SPL Horizontal'] = graph_melt(h_spl)
+        dfs['SPL Vertical'] = graph_melt(v_spl)
+        try:
+            df = early_reflections(h_spl, v_spl)
+            dfs['Early Reflections_unmelted'] = df
+            dfs['Early Reflections'] = graph_melt(df)
+        except KeyError:
+            logging.warning('Early Reflections computation failed with a KeyError for speaker{:s}'.format(speakerpath))
+        try:
+            df = horizontal_reflections(h_spl, v_spl)
+            dfs['Horizontal Reflections_unmelted'] = df
+            dfs['Horizontal Reflections'] = graph_melt(df)
+        except KeyError:
+            logging.warning('Horizontal Reflections computation failed with a KeyError for speaker{:s}'.format(speakerpath))
+        try:
+            df = vertical_reflections(h_spl, v_spl)
+            dfs['Vertical Reflections_unmelted'] = df
+            dfs['Vertical Reflections'] = graph_melt(df)
+        except KeyError:
+            logging.warning('Vertical Reflections computation failed with a KeyError for speaker{:s}'.format(speakerpath))
+        try:
+            df = cea2034(h_spl, v_spl)
+            dfs['CEA2034_unmelted'] = df
+            dfs['CEA2034'] = graph_melt(df)
+        except KeyError:
+            logging.warning('CEA2034 computation failed with a KeyError for speaker{:s}'.format(speakerpath))
     else:
         logging.error('Format {:s} is unkown'.format(format))
         sys.exit(1)
