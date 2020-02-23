@@ -150,7 +150,7 @@ def graph_radar(dfu, width, height):
         dbs = []
         for a, z in zip(gridZ.index, gridZ):
             angle = 0
-            if a != 'On-Axis':
+            if a[0:6] != 'On-Axis':
                 angle = int(a[:-1])
             angles.append(angle)
             dbs.append(z)
