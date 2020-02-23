@@ -3,7 +3,7 @@
 window.$ = window.jQuery;
 
 function display_speaker(speaker) {
-    let s_href = speaker.speaker + '.html'
+    let s_href = speaker.speaker + '/'+ speaker.speaker.origin + '/index.html'
     let s_img  = 'metadata/' + speaker.speaker + '.jpg'
     let s_name = speaker.brand + ' ' + speaker.model 
     let content = '	    <div class="column is-one-third">		<div class="card large">		  <div class="card-image">		    <figure class="image"><img src="' + s_img + '" alt="Spinorama"/></figure>		  </div>		  <div class="card-content">		    <div class="media">                      <div class="content">			<div class="content">' + s_name + '</div>	              </div>	            </div>		    <div class="media">			-3dB at ' + speaker.estimates[1] + 'Hz<br/>			-6dB at ' + speaker.estimates[2] + 'Hz<br/>			&plusmn;' + speaker.estimates[3] + 'dB ~ 80-20kHz		  </div>                  <div class="right">		    <label class="checkbox is-large"><input type="checkbox"/></label>	          </div>		</div>             </div>';
