@@ -53,6 +53,9 @@ def spatial_average2(h_df, h_sel, v_df, v_sel):
     # some graphs don't have all angles
     h_df_sel = h_df[[c for c in h_df.columns if c in h_sel]]
     v_df_sel = v_df[[c for c in v_df.columns if c in v_sel]]
+    # some don't have vertical measurements
+    if len(v_df_sel.columns) == 1:
+        return spatial_average1(h_df, h_sel)
     # merge both
     window = h_df_sel.merge(v_df_sel, left_on='Freq', right_on='Freq', suffixes=('_h', '_v'))
     return pd.DataFrame({
@@ -83,10 +86,11 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     rear_wall_bounce = spatial_average1(
         h_spl, ['Freq', '90°',  '180°'])
 
+    onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
+
     return pd.DataFrame({
         'Freq': listening_window(h_spl, v_spl).Freq,
-        'On-Axis (H)': h_spl.loc[:, 'On Axis'],
-        'On-Axis (V)': v_spl.loc[:, 'On Axis'],
+        'On-Axis': onaxis.dB,
         'Floor Bounce': floor_bounce.dB,
         'Ceiling Bounce': ceiling_bounce.dB,
         'Front Wall Bounce': front_wall_bounce.dB,
@@ -102,10 +106,11 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
     ceiling_reflection = spatial_average1(
         v_spl, ['Freq', '40°',  '50°', '60°'])
 
+    onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
+
     return pd.DataFrame({
         'Freq': listening_window(h_spl, v_spl).Freq,
-        'On-Axis (H)': h_spl.loc[:, 'On Axis'],
-        'On-Axis (V)': v_spl.loc[:, 'On Axis'],
+        'On-Axis': onaxis.dB,
         'Floor Reflection': floor_reflection.dB,
         'Ceiling Reflection': ceiling_reflection.dB,
         })
@@ -127,10 +132,11 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
         h_spl, ['Freq', '90°',  '100°', '110°', '120°', '130°',
                                               '140°', '150°', '160°', '170°', '180°'])
 
+    onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
+
     return pd.DataFrame({
         'Freq': listening_window(h_spl, v_spl).Freq,
-        'On-Axis (H)': h_spl.loc[:, 'On Axis'],
-        'On-Axis (V)': v_spl.loc[:, 'On Axis'],
+        'On-Axis': onaxis.dB,
         'Front': front.dB,
         'Side': side.dB,
         'Rear': rear.dB
@@ -248,10 +254,10 @@ def cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     # An SPDI of 0 dB indicates omnidirectional radiation. The larger the SPDI, the
     # more directional the loudspeaker is in the direction of the reference axis.
     spdi = lw.dB - sp.dB + 60
+    onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
     return pd.DataFrame({
         'Freq': lw.Freq,
-        'On-Axis (H)': h_spl.loc[:, 'On Axis'],
-        'On-Axis (V)': v_spl.loc[:, 'On Axis'],
+        'On-Axis': onaxis.dB,
         'Listening Window': lw.dB,
         'Sound Power': sp.dB,
         'Early Reflections Directivity Index': erdi,
