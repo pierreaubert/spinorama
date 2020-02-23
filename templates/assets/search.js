@@ -3,7 +3,7 @@
 window.$ = window.jQuery;
 
 function display_speaker(speaker) {
-    let s_href = speaker.speaker + '.html'
+    let s_href = speaker.speaker + '/'+ speaker.speaker.origin + '/index.html'
     let s_img  = 'metadata/' + speaker.speaker + '.jpg'
     let s_name = speaker.brand + ' ' + speaker.model 
     let content = '\
