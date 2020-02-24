@@ -96,7 +96,11 @@ def generate_speaker(mako, df, meta, site):
     for speaker_name, origins in df.items():
         for origin, measurements in origins.items():
             for m, dfs in measurements.items():
-                indexname = 'docs/' + speaker_name + '/' + origin + '/index.html'
+                if origin == 'ASR' or origin == 'Princeton':
+                    indexname = 'docs/' + speaker_name + '/' + origin + '/index.html'
+                else:
+                    vendors = meta[speaker_name]['brand']
+                    indexname = 'docs/' + speaker_name + '/' + vendors + '/index.html'
                 logging.info('Writing index.html for {:s}'.format(speaker_name))
                 with open(indexname, 'w') as f:
                     # freq

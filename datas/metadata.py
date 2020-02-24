@@ -142,10 +142,21 @@ speakers_info = {
         'brand': 'KEF',
         'model': 'Reference 5',
         'type': 'passive',
-        'price': '',
+        'price': '16800',
         'measurements': [{
             'origin': 'Vendors/KEF',
             'website': 'www.kef.com',
+            'format': 'webplotdigitizer',
+            }],
+        },
+    'JBL 4367': {
+        'brand': 'JBL',
+        'model': '4367',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Vendors/JBL',
+            'website': 'www.jbl.com',
             'format': 'webplotdigitizer',
             }],
         },
@@ -448,4 +459,37 @@ speakers_info = {
             'format': 'princeton',
             }],
         },
+}
+
+# add some information about precisions of graphs
+# for example the Princeton 3d3a measurements are valid >500hz
+origins_info = {
+    'ASR': {
+        'min hz': 20,
+        'max hz': 20000,
+        'logo': 'docs/metadata/asr.png',
+        'logo-small': 'docs/metadata/asr-small.png',
+        'url': 'http://www.audiosciencereview.com',
+    },
+    'Princeton': {
+        'min hz': 500,
+        'max hz': 20000,
+        'logo': 'docs/metadata/3d3a.jpg',
+        'logo-small': 'docs/metadata/3d3a.jpg',
+        'url': 'https://www.princeton.edu/3D3A/Directivity.html',
+    },
+    'Vendors/KEF': {
+        'min hz': 20,
+        'max hz': 20000,
+        'logo': 'docs/metadata/asr.png',
+        'logo-small': 'docs/metadata/asr-small.png',
+        'url': 'http://www.kef.com',
+    },
+    'Vendors/JBL': {
+        'min hz': 20,
+        'max hz': 20000,
+        'logo': 'docs/metadata/jbl.png',
+        'logo-small': 'docs/metadata/jbl-small.png',
+        'url': 'http://www.jbl.com',
+    },
 }
