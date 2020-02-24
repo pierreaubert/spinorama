@@ -12,11 +12,11 @@ from .views import template_compact, template_panorama
 def print_graph(speaker, origin, key, title, chart, width, height, force, fileext):
     updated = 0
     if chart is not None:
-        filedir = 'docs/'+ speaker + '/' + origin + '/' + key
+        filedir = 'docs/' + speaker + '/' + origin + '/' + key
+        logging.debug('print_graph: write to directory {0}'.format(filedir))
         pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
         for ext in ['json', 'png', 'html']:  # svg skipped slow
             filename = filedir + '/' + title.replace('_unmelted', '') + '.' + ext
-            # print(filename)
             if force or not os.path.exists(filename):
                 if fileext is None or (fileext is not None and fileext == ext):
                     chart.save(filename)

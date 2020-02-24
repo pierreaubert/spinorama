@@ -89,8 +89,8 @@ def graph_contour_common(df, transformer, width, height):
             width=width,
             height=height
         )
-    except KeyError:
-        logging.warning('Failed with KeyError')
+    except KeyError as ke:
+        logging.warning('Failed with {0}'.format(ke))
         return None
 
 

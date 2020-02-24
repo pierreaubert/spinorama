@@ -99,9 +99,9 @@ def parse_graph_freq_webplotdigitizer(filename):
                     continue
                 # look for closest match
                 while ref_freq[ref_p] <= fr:
+                    if ref_p >= len(ref_freq)-1:
+                        break
                     ref_p += 1
-                    if ref_p >= len(ref_freq):
-                        continue
                 # if ref_f is too large, skip
                 ref_f = ref_freq[ref_p]
                 if ref_f > frn:
@@ -170,86 +170,108 @@ def parse_graph_princeton(filename, orient):
     return parse_graph_freq_princeton_mat(matfile, orient)
 
 
-def parse_graphs_speaker(speakerpath, format='klippel'):
+def parse_graphs_speaker_klippel(speaker_name):
     dfs = {}
-    if format == 'klippel':
-        csvfiles = ["CEA2034",
-                    "Early Reflections",
-                    "Directivity Index",
-                    "Estimated In-Room Response",
-                    "Horizontal Reflections",
-                    "Vertical Reflections",
-                    "SPL Horizontal",
-                    "SPL Vertical"]
-        for csv in csvfiles:
-            csvfilename = "datas/ASR/" + speakerpath + "/" + csv + ".txt"
-            try:
-                title, df = parse_graph_freq_klippel(csvfilename)
-                logging.info('Speaker: ' + speakerpath + ' Loaded: '+title)
-                dfs[title + '_unmelted'] = df
-                dfs[title] = graph_melt(df)
-            except FileNotFoundError:
-                logging.info('Speaker: ' + speakerpath +' Not found: ' + csvfilename)
-    elif format == 'webplotdigitizer':
-        jsonfilename = 'datas/Vendors/' + speakerpath + '/' + speakerpath + '.json'
+    csvfiles = ["CEA2034",
+                "Early Reflections",
+                "Directivity Index",
+                "Estimated In-Room Response",
+                "Horizontal Reflections",
+                "Vertical Reflections",
+                "SPL Horizontal",
+                "SPL Vertical"]
+    for csv in csvfiles:
+        csvfilename = "datas/ASR/" + speaker_name + "/" + csv + ".txt"
         try:
-            title, df = parse_graph_freq_webplotdigitizer(jsonfilename)
-            dfs[title] = df
+            title, df = parse_graph_freq_klippel(csvfilename)
+            logging.info('Speaker: ' + speaker_name + ' Loaded: '+title)
+            dfs[title + '_unmelted'] = df
+            dfs[title] = graph_melt(df)
         except FileNotFoundError:
-            logging.info('Speaker: ' + speakerpath +' Not found: '+ jsonfilename)
-    elif format == 'princeton':
-        # 2 files per directory xxx_H_IR.mat and xxx_V_IR.mat
-        matfilename = 'datas/Princeton/' + speakerpath 
-        dirpath = glob.glob(matfilename+'/*.mat')
-        h_file = None
-        v_file = None
-        for d in dirpath:
-            if d[-9:] == '_H_IR.mat':
-                h_file = d
-            elif d[-9:] == '_V_IR.mat':
-                v_file = d
-        if h_file is None or v_file is None:
-            logging.info('Couldn\'t find Horizontal and Vertical IR files for speaker {:s}'.format(speakerpath))
-            logging.info('Looking in directory {:s}'.format(matfilename))
-            for d in dirpath:
-                logging.info('Found file {:s}'.format(d))
-            return None
-
-        h_spl = parse_graph_princeton(h_file, 'H')
-        v_spl = parse_graph_princeton(v_file, 'V')
-        #
-        dfs['SPL Horizontal_unmelted'] = h_spl
-        dfs['SPL Vertical_unmelted'] = v_spl
-        dfs['SPL Horizontal'] = graph_melt(h_spl)
-        dfs['SPL Vertical'] = graph_melt(v_spl)
-        try:
-            df = early_reflections(h_spl, v_spl)
-            dfs['Early Reflections_unmelted'] = df
-            dfs['Early Reflections'] = graph_melt(df)
-        except KeyError:
-            logging.warning('Early Reflections computation failed with a KeyError for speaker{:s}'.format(speakerpath))
-        try:
-            df = horizontal_reflections(h_spl, v_spl)
-            dfs['Horizontal Reflections_unmelted'] = df
-            dfs['Horizontal Reflections'] = graph_melt(df)
-        except KeyError:
-            logging.warning('Horizontal Reflections computation failed with a KeyError for speaker{:s}'.format(speakerpath))
-        try:
-            df = vertical_reflections(h_spl, v_spl)
-            dfs['Vertical Reflections_unmelted'] = df
-            dfs['Vertical Reflections'] = graph_melt(df)
-        except KeyError:
-            logging.warning('Vertical Reflections computation failed with a KeyError for speaker{:s}'.format(speakerpath))
-        try:
-            df = cea2034(h_spl, v_spl)
-            dfs['CEA2034_unmelted'] = df
-            dfs['CEA2034'] = graph_melt(df)
-        except KeyError:
-            logging.warning('CEA2034 computation failed with a KeyError for speaker{:s}'.format(speakerpath))
-    else:
-        logging.error('Format {:s} is unkown'.format(format))
-        sys.exit(1)
+            logging.warning('Speaker: ' + speaker_name +' Not found: ' + csvfilename)
     return dfs
+
+
+def parse_graphs_speaker_webplotdigitizer(speaker_brand, speaker_name):
+    dfs = {}
+    jsonfilename = 'datas/Vendors/' + speaker_brand + '/' + speaker_name + '/' + speaker_name + '.json'
+    try:
+        title, df = parse_graph_freq_webplotdigitizer(jsonfilename)
+        dfs[title] = df
+    except FileNotFoundError:
+        logging.warning('Speaker: ' + speaker_name +' Not found: '+ jsonfilename)
+    return dfs
+        
+    
+def parse_graphs_speaker_princeton(speaker_name):
+    dfs = {}
+    # 2 files per directory xxx_H_IR.mat and xxx_V_IR.mat
+    matfilename = 'datas/Princeton/' + speaker_name 
+    dirpath = glob.glob(matfilename+'/*.mat')
+    h_file = None
+    v_file = None
+    for d in dirpath:
+        if d[-9:] == '_H_IR.mat':
+            h_file = d
+        elif d[-9:] == '_V_IR.mat':
+            v_file = d
+    if h_file is None or v_file is None:
+        logging.info('Couldn\'t find Horizontal and Vertical IR files for speaker {:s}'.format(speaker_name))
+        logging.info('Looking in directory {:s}'.format(matfilename))
+        for d in dirpath:
+            logging.info('Found file {:s}'.format(d))
+        return None
+
+    h_spl = parse_graph_princeton(h_file, 'H')
+    v_spl = parse_graph_princeton(v_file, 'V')
+    #
+    dfs['SPL Horizontal_unmelted'] = h_spl
+    dfs['SPL Vertical_unmelted'] = v_spl
+    dfs['SPL Horizontal'] = graph_melt(h_spl)
+    dfs['SPL Vertical'] = graph_melt(v_spl)
+
+    table = [['Early Reflections', early_reflections],]
+
+    for title, functor in table:
+        try:
+            df = functor(h_spl, v_spl)
+            dfs[title+'_unmelted'] = df
+            dfs[title] = graph_melt(df)
+        except KeyError as ke:
+            logging.warning('{0} computation failed with {1} for speaker{2:s}'.format(title, ke, speaker_name))
+            
+    try:
+        df = horizontal_reflections(h_spl, v_spl)
+        dfs['Horizontal Reflections_unmelted'] = df
+        dfs['Horizontal Reflections'] = graph_melt(df)
+    except KeyError:
+        logging.warning('Horizontal Reflections computation failed with a KeyError for speaker{:s}'.format(speaker_name))
+    try:
+        df = vertical_reflections(h_spl, v_spl)
+        dfs['Vertical Reflections_unmelted'] = df
+        dfs['Vertical Reflections'] = graph_melt(df)
+    except KeyError:
+        logging.warning('Vertical Reflections computation failed with a KeyError for speaker{:s}'.format(speaker_name))
+    try:
+        df = cea2034(h_spl, v_spl)
+        dfs['CEA2034_unmelted'] = df
+        dfs['CEA2034'] = graph_melt(df)
+    except KeyError:
+        logging.warning('CEA2034 computation failed with a KeyError for speaker{:s}'.format(speaker_name))
+    return dfs
+
+
+
+def parse_graphs_speaker(speaker_brand : str, speaker_name : str, mformat='klippel') -> str:
+    if mformat == 'klippel':
+        return parse_graphs_speaker_klippel(speaker_name)
+    elif mformat == 'webplotdigitizer':
+        return parse_graphs_speaker_webplotdigitizer(speaker_brand, speaker_name)
+    elif mformat == 'princeton':
+        return parse_graphs_speaker_princeton(speaker_name)
+
+    logging.error('Format {:s} is unkown'.format(mformat))
+    sys.exit(1)
 
 
 def get_speaker_list(speakerpath):
@@ -291,8 +313,9 @@ def parse_all_speakers(metadata, speakerpath='./datas'):
             origin = m['origin']
             # keep it simple
             df[speaker][origin] = {}
-            # speaker / origin / measurement 
-            df[speaker][origin]['default'] = parse_graphs_speaker(speaker, mformat)
+            # speaker / origin / measurement
+            brand = metadata[speaker]['brand']
+            df[speaker][origin]['default'] = parse_graphs_speaker(brand, speaker, mformat)
             if df[speaker][origin]['default'] is not None:
                 count_measurements += 1
 

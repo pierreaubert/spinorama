@@ -13,7 +13,7 @@ def display_contour_horizontal(df, width=400, height=180):
         dfs = df['SPL Horizontal_unmelted']
         return graph_contour(dfs, width, height)
     except KeyError as ke:
-        logging.warning('Contour Horizontal failed with {0}'.format(ke))
+        logging.warning('Display Contour Horizontal failed with {0}'.format(ke))
         return None
 
 
@@ -22,7 +22,7 @@ def display_contour_vertical(df, width=400, height=180):
         dfs = df['SPL Vertical_unmelted']
         return graph_contour(dfs, width, height)
     except KeyError as ke:
-        logging.warning('Contour Vertical failed with {0}'.format(ke))
+        logging.warning('Display Contour Vertical failed with {0}'.format(ke))
         return None
 
 
@@ -31,10 +31,10 @@ def display_radar_horizontal(df, width=400, height=180):
         dfs = df['SPL Horizontal_unmelted']
         return graph_radar(dfs, width, height)
     except KeyError as ke:
-        logging.warning('Radar Horizontal failed with {0}'.format(ke))
+        logging.warning('Display Radar Horizontal failed with {0}'.format(ke))
         return None
     except IndexError as ie:
-        logging.warning('Radar Horizontal failed with {0}'.format(ie))
+        logging.warning('Display Radar Horizontal failed with {0}'.format(ie))
         return None
 
 
@@ -43,10 +43,10 @@ def display_radar_vertical(df, width=400, height=180):
         dfs = df['SPL Vertical_unmelted']
         return graph_radar(dfs, width, height)
     except KeyError as ke:
-        logging.warning('Radar Vertical failed with {0}'.format(ke))
+        logging.warning('Display Radar Vertical failed with {0}'.format(ke))
         return None
     except IndexError as ie:
-        logging.warning('Radar Vertical failed with {0}'.format(ie))
+        logging.warning('Display Radar Vertical failed with {0}'.format(ie))
         return None
 
 
@@ -76,7 +76,8 @@ def display_contour_sidebyside(df, width=450, height=450):
         return alt.hconcat(
             graph_contour(contourH, width, height),
             graph_contour(contourV, width, height))
-    except KeyError:
+    except KeyError as ke:
+        logging.warning('Display Contour side by side failed with {0}'.format(ke))
         return None
 
 
@@ -87,16 +88,17 @@ def display_spinorama(df, width, height):
             spinorama = spinorama.loc[spinorama['Measurements'] != 'DI offset']
             return graph_freq(spinorama, width, height)
         else:
-            logging.info('\'CEA2034\' is empty')
-    except KeyError:
-        logging.info('\'CEA2034\' not in dataframe')
+            logging.info('Display CEA2034 is empty')
+    except KeyError as ke:
+        logging.info('Display CEA2034 not in dataframe {0}'.format(ke))
     return None
 
 
 def display_reflection_early(df, width, height):
     try:
         return graph_freq(df['Early Reflections'], width, height)
-    except KeyError:
+    except KeyError as ke:
+        logging.warning('Display Early Reflections failed with {0}'.format(ke))
         return None
 
 
@@ -115,7 +117,11 @@ def display_onaxis(df, width, height):
             color=alt.value('red')
         )
         return onaxis_graph + onaxis_reg
-    except (KeyError, AttributeError):
+    except KeyError:
+        logging.warning('Display On Axis failed with {0}'.format(ke))
+        return None
+    except AttributeError:
+        logging.warning('Display On Axis failed with {0}'.format(ae))
         return None
 
 
@@ -133,7 +139,8 @@ def display_inroom(df, width, height):
             color=alt.value('red')
         )
         return inroom_graph + inroom_reg
-    except KeyError:
+    except KeyError as ke:
+        logging.warning('Display In Room failed with {0}'.format(ke))
         return None
 
 
@@ -141,7 +148,8 @@ def display_reflection_horizontal(df, width, height):
     try:
         return graph_freq(
             df['Horizontal Reflections'], width, height)
-    except KeyError:
+    except KeyError as ke:
+        logging.warning('Display Horizontal Reflections failed with {0}'.format(ke))
         return None
 
 
@@ -166,7 +174,8 @@ def display_spl(df, axis, width, height):
                 '60°']}
         mask = spl.isin(filter).any(1)
         return graph_freq(spl[mask], width, height)  # .interactive()
-    except KeyError:
+    except KeyError as ke:
+        logging.warning('Display SPL failed with {0}'.format(ke))
         return None
 
 

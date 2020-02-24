@@ -34,6 +34,19 @@ from src.spinorama.print import print_graphs
 
 from docopt import docopt
 
+def get_logger(level):
+    """ get a logger """
+    logger = logging.getLogger('generate_graphs')
+    # prevent to create another handler if called multipletime
+    if not len(logger.handlers):
+        logger.setLevel(level)
+        fh = logging.FileHandler(env['LOGFILE'])
+        fm = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        fh.setFormatter(fm)
+        logger.addHandler(fh)
+    return logger
+
 
 def generate_graphs(df, width, height, force, ptype):
     print('Speaker                         #updated')
