@@ -12,7 +12,8 @@ def display_contour_horizontal(df, width=400, height=180):
     try:
         dfs = df['SPL Horizontal_unmelted']
         return graph_contour(dfs, width, height)
-    except KeyError:
+    except KeyError as ke:
+        logging.warning('Contour Horizontal failed with {0}'.format(ke))
         return None
 
 
@@ -20,7 +21,8 @@ def display_contour_vertical(df, width=400, height=180):
     try:
         dfs = df['SPL Vertical_unmelted']
         return graph_contour(dfs, width, height)
-    except KeyError:
+    except KeyError as ke:
+        logging.warning('Contour Vertical failed with {0}'.format(ke))
         return None
 
 
@@ -28,7 +30,11 @@ def display_radar_horizontal(df, width=400, height=180):
     try:
         dfs = df['SPL Horizontal_unmelted']
         return graph_radar(dfs, width, height)
-    except KeyError:
+    except KeyError as ke:
+        logging.warning('Radar Horizontal failed with {0}'.format(ke))
+        return None
+    except IndexError as ie:
+        logging.warning('Radar Horizontal failed with {0}'.format(ie))
         return None
 
 
@@ -36,7 +42,11 @@ def display_radar_vertical(df, width=400, height=180):
     try:
         dfs = df['SPL Vertical_unmelted']
         return graph_radar(dfs, width, height)
-    except KeyError:
+    except KeyError as ke:
+        logging.warning('Radar Vertical failed with {0}'.format(ke))
+        return None
+    except IndexError as ie:
+        logging.warning('Radar Vertical failed with {0}'.format(ie))
         return None
 
 
