@@ -299,6 +299,16 @@ speakers_info = {
             'format': 'princeton',
             }],
         },
+    'Genelec 8341A': {
+        'brand': 'Genelec',
+        'model': '8354A',
+        'type': 'active',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
     'Gradient Helsinki 1.5': {
         'brand': 'Gradient',
         'model': 'Helsinki 1.5',
