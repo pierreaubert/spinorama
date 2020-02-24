@@ -36,8 +36,11 @@ def estimates(onaxis: pd.DataFrame):
 
         return [int(inter), int(inter_3), int(inter_6),
                 math.floor(max(up, -down) * 10) / 10]
-    except TypeError:
-        logging.warning('Type error:')
+    except TypeError as te:
+        logging.warning('Estimates failed for {0} with {1}'.format(onaxis.shape, te))
+        return [-1, -1, -1, -1]
+    except ValueError as ve:
+        logging.warning('Estimates failed for {0} with {1}'.format(onaxis.shape, ve))
         return [-1, -1, -1, -1]
 
    
