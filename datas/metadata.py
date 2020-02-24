@@ -301,7 +301,7 @@ speakers_info = {
         },
     'Genelec 8341A': {
         'brand': 'Genelec',
-        'model': '8354A',
+        'model': '8341A',
         'type': 'active',
         'price': '',
         'measurements': [{
