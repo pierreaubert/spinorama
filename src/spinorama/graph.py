@@ -61,10 +61,16 @@ def graph_freq(dfu, width, height):
 
 def graph_contour_common(df, transformer, width, height):
     try:
+        # more interesting to look at -3/0 range
         speaker_scale = [-12, -9, -8, -7, -6, -5, -4, -3, -2.5, -2, -1.5, -1, -0.5, 0]
         af, am, az = transformer(df)
-        source = pd.DataFrame(
-            {'Freq': af.ravel(), 'Angle': am.ravel(), 'dB': az.ravel()})
+        freq = af.ravel()
+        angle = am.ravel()
+        db = az.ravel()
+        if (freq.size != angle.size) or (freq.size != db.size):
+            logging.warning('Size freq={:d} angle={:d} db={:d}'.format(freq.size, angle.size, db.size))
+            return None
+        source = pd.DataFrame({'Freq': freq, 'Angle': angle, 'dB': db})
         m_height = 12
         m_size = 8
         if width > 800:
@@ -83,6 +89,7 @@ def graph_contour_common(df, transformer, width, height):
             height=height
         )
     except KeyError:
+        logging.warning('Failed with KeyError')
         return None
 
 

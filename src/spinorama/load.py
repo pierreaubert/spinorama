@@ -140,8 +140,8 @@ def parse_graph_freq_princeton_mat(mat, suffix):
     #    
     df = pd.DataFrame({'Freq': xs})
     dfy = np.empty(0, dtype=float)
-    # loop over measurements                                                                                                         
-    for i in range(0, 72):
+    # loop over measurements (skipping the 5 increments)
+    for i in range(0, 72, 2):
         # extract ir                                                                                                                 
         ir = mat[ir_name][i]
         # compute FFT                                                                                                                

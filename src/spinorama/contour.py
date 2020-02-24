@@ -24,7 +24,7 @@ def compute_contour(dfu):
     # compute numbers of measurements
     nm = dfm.Measurements.nunique()
     nf = int(len(dfm.index) / nm)
-    logging.debug((nm,nf))
+    logging.debug('unique={:d} nf={:d}'.format(nm,nf))
     # index grid on a log scale log 2 ±= 0.3
     hrange = np.floor(np.logspace(1.3, 4.3, nf))
     # print(vrange)
