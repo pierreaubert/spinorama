@@ -12,11 +12,12 @@ Options:
   --ip=<ip>     ip to bind, default is localhost
   --port=<port> port to listen to, default is 8000
 """
-from docopt import docopt
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+from docopt import docopt
 
 
 class CORSRequestHandler(SimpleHTTPRequestHandler):
+    """ Generate CORS headers """
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET')
@@ -38,6 +39,6 @@ if __name__ == '__main__':
 
     if args['--port'] is not None:
         port = int(args['--port'])
-    
+
     httpd = HTTPServer((ip, port), CORSRequestHandler)
     httpd.serve_forever()
