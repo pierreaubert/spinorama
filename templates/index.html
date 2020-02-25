@@ -26,6 +26,9 @@
   def space2url(text):
       return text.replace(' ', '%20')
 
+  def removeVendors(text):
+      return text.replace('Vendors/','')
+  
 %>  
 
     <!-- Speakers -->
@@ -46,11 +49,11 @@
             <div class="content">
 	      Measurements: 
 	      % for origin in df[speaker_name]:
-	        <a href="${speaker_name}/${origin}/index.html">${origin}</a>
+	        <a href="${speaker_name}/${origin | removeVendors}/index.html">${origin | removeVendors}</a>
 	      % endfor
             </div>
             <div class="content">
-              % if 'estimates'in meta[speaker_name]:
+              % if 'estimates' in meta[speaker_name]:
 	      -3dB at ${meta[speaker_name]['estimates'][1]}Hz<br/>
 	      -6dB at ${meta[speaker_name]['estimates'][2]}Hz<br/>
 	      &plusmn;${meta[speaker_name]['estimates'][3]}dB ~ 80-20kHz
