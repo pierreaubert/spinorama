@@ -39,6 +39,7 @@ radar_params_default = {
     'contour_scale': [-12, -9, -8, -7, -6, -5, -4, -3, -2.5, -2, -1.5, -1, -0.5, 0],
 }
 
+
 def graph_freq(dfu, graph_params):
     # add selectors
     # one on Frequency one on Measurements
@@ -50,39 +51,41 @@ def graph_freq(dfu, graph_params):
         bind='scales'
     )
     # main charts
+    xaxis = alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[graph_params['xmin'], graph_params['xmax']]))
+    yaxis = alt.Y('dB:Q',   scale=alt.Scale(zero=False))
+    color = alt.Color('Measurements', type='nominal', sort=None)
+    opacity = alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     line = alt.Chart(dfu).mark_line(
-    ).encode(
-        alt.X('Freq:Q', scale=alt.Scale(type="log",
-                                domain=[graph_params['xmin'], graph_params['xmax']])),
-        alt.Y('dB:Q',   scale=alt.Scale(zero=False)),
-        alt.Color('Measurements', type='nominal', sort=None),
-        opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
+    ).transform_filter(
+        alt.FieldOneOfPredicate(field='Measurements', oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
+    ).encode(xaxis, yaxis, color, opacity=opacity
     ).properties(
         width=graph_params['width'],
         height=graph_params['height']
     )
+
+    di = alt.Chart(dfu).mark_line().transform_filter(
+        alt.FieldOneOfPredicate(field='Measurements', oneOf=['Early Reflections DI', 'Sound Power DI'])
+    ).encode(xaxis, yaxis, color, opacity=opacity)
+
     circle = alt.Chart(dfu).mark_circle(
         size=100
     ).encode(
-        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[20, 20000])),
-        alt.Y('dB:Q',   scale=alt.Scale(zero=False)),
-        alt.Color('Measurements', type='nominal', sort=None),
-        opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
-        tooltip=['Measurements', 'Freq', 'dB']
+        xaxis, yaxis, color, opacity=opacity, tooltip=['Measurements', 'Freq', 'dB']
     ).transform_calculate(
         Freq=f'format(datum.Freq, ".0f")',
         dB=f'format(datum.dB, ".1f")'
     )
 
     # assemble elements together
-    line = (circle+line)\
-        .add_selection(selectorsMeasurements)\
-        .add_selection(scales)\
-        .add_selection(nearest)
-    return line
+    spin = alt.layer(circle, line, di
+        ).resolve_scale(y='independent'
+        ).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
+
+    return spin
 
 
-def graph_contour_common(df, transformer,graph_params):
+def graph_contour_common(df, transformer, graph_params):
     try:
         width = graph_params['width']
         height = graph_params['height']
@@ -127,6 +130,7 @@ def graph_contour_smoothed(df, graph_params):
 
 
 def graph_radar(dfu, graph_params):
+
     # build a grid
     radius = 0
     anglelist = [a for a in range(-180, 180, 10)]
