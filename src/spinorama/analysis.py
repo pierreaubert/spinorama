@@ -15,6 +15,7 @@ def fconst(x :float, a: float):
 
 
 def estimates(onaxis: pd.DataFrame):
+    # TODO doesn't work for Princeton measurements which are valid >500hz
     try:
         xdata1 = np.array(onaxis.loc[onaxis['Freq'] < 60].Freq)
         ydata1 = np.array(onaxis.loc[onaxis['Freq'] < 60].dB)
