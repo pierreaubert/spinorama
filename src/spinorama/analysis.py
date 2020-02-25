@@ -263,6 +263,6 @@ def cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
         'On-Axis': onaxis.dB,
         'Listening Window': lw.dB,
         'Sound Power': sp.dB,
-        'Early Reflections Directivity Index': erdi,
-        'Sound Power Directivity Index': spdi,
+        'Early Reflections DI': erdi,
+        'Sound Power DI': spdi,
     })

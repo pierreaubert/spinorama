@@ -1,10 +1,14 @@
 # Spinorama : a library to display Spinorama and similar graphs
 
-What's a spinorama graph? It is a way to understand quickly a speaker properties.
+# Jump to the [gallery](https://pierreaubert.github.com/spinorama) of all speakers measurements.
+
+# What is a spinorama graph?
+
+It is a way to understand quickly a speaker properties.
 
 Here is an example:
 
-![image](https://github.com/pierreaubert/spinorama/blob/master/docs/Neumann%20KH%2080/CEA2034.png)
+![image](https://github.com/pierreaubert/spinorama/blob/master/docs/Neumann%20KH%2080/ASR/default/CEA2034.png)
 
 - On Axis: this the frequency response. You expect it to be as flat as possible after 100Hz.
 - Listening Window: an average of various measurements around on axis. Expected to be close to the previous one.
@@ -14,8 +18,6 @@ The speaker above is *very* good.
 
 Please read this [post](https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-and-control-1-pro-monitors-review.10811/) 
 to get a better insight on how to analyse a spinorama.
-
-# Browse the [gallery](https://pierreaubert.github.com/spinorama) of all ASR speaker measurements.
 
 # Other ways to look at the graphs in a more interactive way.
 
