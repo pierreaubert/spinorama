@@ -16,28 +16,50 @@ nearest = alt.selection(
     fields=['Freq'],
     empty='none')
 
+graph_params_default = {
+    'xmin': 20,
+    'xmax': 20000,
+    'width': 900,
+    'height': 400,
+}
 
-def graph_freq(dfu, width, height):
+contour_params_default = {
+    'xmin': 400,
+    'xmax': 20000,
+    'width': 400,
+    'height': 180,
+    'contour_scale': [-12, -9, -8, -7, -6, -5, -4, -3, -2.5, -2, -1.5, -1, -0.5, 0],
+}
+
+radar_params_default = {
+    'xmin': 400,
+    'xmax': 20000,
+    'width': 180,
+    'height': 180,
+    'contour_scale': [-12, -9, -8, -7, -6, -5, -4, -3, -2.5, -2, -1.5, -1, -0.5, 0],
+}
+
+def graph_freq(dfu, graph_params):
     # add selectors
     # one on Frequency one on Measurements
     selectorsMeasurements = alt.selection_multi(
         fields=['Measurements'],
         bind='legend')
+    # use a scale
     scales = alt.selection_interval(
         bind='scales'
     )
-
     # main charts
     line = alt.Chart(dfu).mark_line(
     ).encode(
-        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[20, 20000])),
+        alt.X('Freq:Q', scale=alt.Scale(type="log",
+                                domain=[graph_params['xmin'], graph_params['xmax']])),
         alt.Y('dB:Q',   scale=alt.Scale(zero=False)),
         alt.Color('Measurements', type='nominal', sort=None),
-        opacity=alt.condition(selectorsMeasurements,
-                              alt.value(1), alt.value(0.2))
+        opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     ).properties(
-        width=width,
-        height=height
+        width=graph_params['width'],
+        height=graph_params['height']
     )
     circle = alt.Chart(dfu).mark_circle(
         size=100
@@ -60,10 +82,12 @@ def graph_freq(dfu, width, height):
     return line
 
 
-def graph_contour_common(df, transformer, width, height):
+def graph_contour_common(df, transformer,graph_params):
     try:
+        width = graph_params['width']
+        height = graph_params['height']
         # more interesting to look at -3/0 range
-        speaker_scale = [-12, -9, -8, -7, -6, -5, -4, -3, -2.5, -2, -1.5, -1, -0.5, 0]
+        speaker_scale = graph_params['contour_scale']
         af, am, az = transformer(df)
         freq = af.ravel()
         angle = am.ravel()
@@ -94,17 +118,15 @@ def graph_contour_common(df, transformer, width, height):
         return None
 
 
-def graph_contour(df, width, height):
-    return graph_contour_common(df, compute_contour,
-                                width, height)
+def graph_contour(df, graph_params):
+    return graph_contour_common(df, compute_contour, graph_params)
 
 
-def graph_contour_smoothed(df, width, height):
-    return graph_contour_common(df, compute_contour_smoothed,
-                                width, height)
+def graph_contour_smoothed(df, graph_params):
+    return graph_contour_common(df, compute_contour_smoothed, graph_params)
 
 
-def graph_radar(dfu, width, height):
+def graph_radar(dfu, graph_params):
     # build a grid
     radius = 0
     anglelist = [a for a in range(-180, 180, 10)]
@@ -241,8 +263,8 @@ def graph_radar(dfu, width, height):
         type='azimuthalEquidistant',
         rotate=[0, 0, 90]
     ).properties(
-        width=width,
-        height=height
+        width=graph_params['width'],
+        height=graph_params['height']
     )
 
     return dbs + grid + circle + text
