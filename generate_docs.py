@@ -78,6 +78,9 @@ def add_estimates(df):
     """""Compute some values per speaker and add them to metadata """
     for speaker_name, speaker_data in df.items():
         for origin, measurements in speaker_data.items():
+            if origin == 'Princeton':
+                # this measurements are only valid above 500hz
+                return
             for m, dfs in measurements.items():
                 if m == 'default':
                     if 'CEA2034' in dfs.keys():
