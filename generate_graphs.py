@@ -40,7 +40,7 @@ def get_logger(level):
     # prevent to create another handler if called multipletime
     if not len(logger.handlers):
         logger.setLevel(level)
-        fh = logging.FileHandler(env['LOGFILE'])
+        fh = logging.FileHandler('generate_graphs.log')
         fm = logging.Formatter(
             "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         fh.setFormatter(fm)
@@ -55,7 +55,9 @@ def generate_graphs(df, width, height, force, ptype):
             key = 'default'
             logging.debug('{:30s} {:20s} {:20s}'.format(speaker_name, origin, key))
             dfs = df[speaker_name][origin][key]
-            updated = print_graphs(dfs, speaker_name, origin, key, width, height, force, ptype)
+            updated = print_graphs(dfs,
+                                   speaker_name, origin, metadata.origins_info, key,
+                                   width, height, force, ptype)
     print('{:30s} {:2d}'.format(speaker_name, updated))
 
 

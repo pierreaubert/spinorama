@@ -139,7 +139,6 @@ def parse_graph_freq_princeton_mat(mat, suffix):
     xs = freq[0][0:lgs]
     #    
     df = pd.DataFrame({'Freq': xs})
-    dfy = np.empty(0, dtype=float)
     # loop over measurements (skipping the 5 increments)
     for i in range(0, 72, 2):
         # extract ir                                                                                                                 
@@ -224,14 +223,17 @@ def parse_graphs_speaker_princeton(speaker_name):
 
     h_spl = parse_graph_princeton(h_file, 'H')
     v_spl = parse_graph_princeton(v_file, 'V')
-    #
+    # add H and V SPL graphs
     dfs['SPL Horizontal_unmelted'] = h_spl
     dfs['SPL Vertical_unmelted'] = v_spl
     dfs['SPL Horizontal'] = graph_melt(h_spl)
     dfs['SPL Vertical'] = graph_melt(v_spl)
-
-    table = [['Early Reflections', early_reflections],]
-
+    # add computed graphs
+    table = [['Early Reflections', early_reflections],
+             ['Horizontal Reflections', horizontal_reflections],
+             ['Vertical Reflections', vertical_reflections],
+             ['CEA2034', cea2034],
+             ]
     for title, functor in table:
         try:
             df = functor(h_spl, v_spl)
@@ -240,24 +242,6 @@ def parse_graphs_speaker_princeton(speaker_name):
         except KeyError as ke:
             logging.warning('{0} computation failed with {1} for speaker{2:s}'.format(title, ke, speaker_name))
             
-    try:
-        df = horizontal_reflections(h_spl, v_spl)
-        dfs['Horizontal Reflections_unmelted'] = df
-        dfs['Horizontal Reflections'] = graph_melt(df)
-    except KeyError:
-        logging.warning('Horizontal Reflections computation failed with a KeyError for speaker{:s}'.format(speaker_name))
-    try:
-        df = vertical_reflections(h_spl, v_spl)
-        dfs['Vertical Reflections_unmelted'] = df
-        dfs['Vertical Reflections'] = graph_melt(df)
-    except KeyError:
-        logging.warning('Vertical Reflections computation failed with a KeyError for speaker{:s}'.format(speaker_name))
-    try:
-        df = cea2034(h_spl, v_spl)
-        dfs['CEA2034_unmelted'] = df
-        dfs['CEA2034'] = graph_melt(df)
-    except KeyError:
-        logging.warning('CEA2034 computation failed with a KeyError for speaker{:s}'.format(speaker_name))
     return dfs
 
 

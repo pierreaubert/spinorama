@@ -41,9 +41,7 @@ from mako.lookup import TemplateLookup
 from src.spinorama.load import parse_all_speakers
 from src.spinorama.analysis import estimates
 import datas.metadata as metadata
-from generate_graphs import generate_graphs
 from docopt import docopt
-from src.spinorama.path import name2measurement, measurement2name
 
 
 siteprod = 'https://pierreaubert.github.io/spinorama'
