@@ -17,7 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Usage:
-  update-graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>] [--force] [--type=<ext>] [--log-level=<level>]
+update-graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
+  [--force] [--type=<ext>] [--log-level=<level>] [--origin=<origin>]\
+  [--speaker=<speaker>]
 
 Options:
   -h|--help         display usage()
@@ -26,10 +28,12 @@ Options:
   --force           force regeneration of all graphs, by default only generate new ones
   --type=<ext>      choose one of: json, html, png, svg
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
+  --origin=<origin> restrict to a specific origin, usefull for debugging
+  --speaker=<speaker> restrict to a specific speaker, usefull for debugging
 """
 import logging
 import datas.metadata as metadata
-from src.spinorama.load import parse_all_speakers
+from src.spinorama.load import parse_all_speakers, parse_graphs_speaker
 from src.spinorama.print import print_graphs
 
 from docopt import docopt
@@ -88,5 +92,22 @@ if __name__ == '__main__':
         if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
             logging.basicConfig(level=level)
 
-    df = parse_all_speakers(metadata.speakers_info)
+    df = None
+    if args['--speaker'] is not None and args['--origin'] is not None:
+        speaker = args['--speaker']
+        origin = args['--origin']
+        mformat = None
+        if origin == 'Princeton':
+            mformat = 'princeton'
+        elif origin == 'ASR':
+            mformat = 'klippel'
+        else:
+            mformat = 'webplotdigitizer'
+        brand = metadata.speakers_info[speaker]['brand']
+        df = {}
+        df[speaker] = {}
+        df[speaker][origin] = {}
+        df[speaker][origin]['default'] = parse_graphs_speaker(brand, speaker, mformat)
+    else:
+        df = parse_all_speakers(metadata.speakers_info)
     generate_graphs(df, width, height, force, ptype=ptype)
