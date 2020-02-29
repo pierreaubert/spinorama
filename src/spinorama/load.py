@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 from scipy.io import loadmat
 from .analysis import early_reflections, vertical_reflections, horizontal_reflections,\
-     cea2034
+     compute_cea2034
 
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
@@ -164,7 +164,8 @@ def parse_graph_freq_princeton_mat(mat, suffix):
         if ilabel == 0:
             label = 'On Axis'
         df[label] = ys
-    return df
+    # precision of measurement is ok above 500
+    return df[df.Freq>=500]
 
 
 def parse_graph_princeton(filename, orient):

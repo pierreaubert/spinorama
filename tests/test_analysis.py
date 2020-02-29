@@ -1,17 +1,23 @@
 # import os
 import unittest
 import logging
+import pandas as pd
 from spinorama.load import parse_graph_freq_klippel, graph_melt
-from spinorama.analysis import estimates, compute_cea2034
+from spinorama.analysis import estimates, compute_cea2034, early_reflections
+
+
+pd.set_option("display.max_rows", 202)
 
 
 class SpinoramaAnalysisTests(unittest.TestCase):
+
 
     def setUp(self):
         self.title, self.df_unmelted = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/CEA2034.txt')
         self.df = graph_melt(self.df_unmelted)
         self.onaxis = self.df.loc[self.df['Measurements'] == 'On Axis']
         
+
     def test_estimates(self):
         self.estimates = estimates(self.onaxis)
         self.assertNotEqual(-1, self.estimates[0])
@@ -26,6 +32,7 @@ class SpinoramaAnalysisTests(unittest.TestCase):
 
 class SpinoramaSpinoramaTests(unittest.TestCase):
 
+
     def setUp(self):
         # load spin from klippel data
         self.title, self.spin_unmelted = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/CEA2034.txt')
@@ -37,6 +44,7 @@ class SpinoramaSpinoramaTests(unittest.TestCase):
         self.computed_spin_unmelted = compute_cea2034(self.splH, self.splV)
         self.computed_spin = graph_melt(self.computed_spin_unmelted)
         
+
     def test_validate_cea2034(self):
         for measurement in ['On Axis', 'Listening Window']:
             # from klippel
@@ -52,6 +60,7 @@ class SpinoramaSpinoramaTests(unittest.TestCase):
             # TODO(pierreaubert): that's too high
             self.assertLess(delta, 1.0)
         
+
     def test_validate_cea2034_soundpower(self):
         for measurement in ['Sound Power']:
             # from klippel
@@ -68,6 +77,45 @@ class SpinoramaSpinoramaTests(unittest.TestCase):
             # and should be equal or close in dB
             self.assertLess( abs(reference.dB.abs().max()-computed.dB.abs().max()), 1.0 )
             self.assertLess( abs(reference.dB.mean(axis=0)-computed.dB.mean(axis=0)), 1.0 )
+        
+
+class SpinoramaEarlyReflectionsTests(unittest.TestCase):
+
+
+    def setUp(self):
+        # load spin from klippel data
+        self.title, self.reference_unmelted = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/Early Reflections.txt')
+        self.reference = graph_melt(self.reference_unmelted)
+        # load spl vertical and horizontal
+        self.titleH, self.splH = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Horizontal.txt')
+        self.titleV, self.splV = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Vertical.txt')
+        # computed graphs
+        self.computed_unmelted = early_reflections(self.splH, self.splV).loc[:199]
+        self.computed = graph_melt(self.computed_unmelted)
+
+
+    def test_smoke(self):
+       self.assertEqual( self.reference_unmelted.shape, self.computed_unmelted.shape)
+       self.assertEqual( self.reference.shape, self.computed.shape)
+        
+
+    def test_validate_early_reflections(self):
+        for measurement in ['Floor Bounce', 'Ceiling Bounce', 'Front Wall Bounce', 'Side Wall Bounce', 'Rear Wall Bounce']:
+            # key check 
+            self.assertIn(measurement, self.computed_unmelted.keys())
+            self.assertIn(measurement, self.reference_unmelted.keys())
+            # from klippel
+            reference = self.reference.loc[self.reference['Measurements'] == measurement]
+            # computed
+            computed = self.computed.loc[self.computed['Measurements'] == measurement]
+            # should have the same Freq
+            self.assertEqual(computed.Freq.size , reference.Freq.size)
+            # self.assertTrue(computed.Freq.eq(reference.Freq).all())
+            # and should be equal or close in dB
+            # 1 db tolerance?
+            # TODO(pierreaubert): that's too high
+            self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), 1.0)
+        
         
 
 if __name__ == '__main__':
