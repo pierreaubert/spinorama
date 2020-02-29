@@ -47,18 +47,24 @@ def estimates(onaxis: pd.DataFrame):
    
 def spatial_average1(window, sel):
     window_sel = window[[c for c in window.columns if c in sel and c != 'Freq']]
-    # if len(window_sel.columns) < 2:
-    #     logging.error('not enough data {0}'.format(window_sel.columns))
-    # print(window_sel.mean(axis=1))
-    spa1 = pd.DataFrame({
-        'Freq': window.Freq, 
-        'dB': window_sel.mean(axis=1)
-    })
-    # print(spa1.dropna().shape, spa1.shape, window.shape, window_sel.shape)
-    # print(spa1)
-    # print(spa1.dropna())
+    if len(window_sel.columns) == 0:
+        return None
+    spa1 = None
+    if len(window_sel.columns) == 1:
+        spa1 = pd.DataFrame({
+            'Freq': window.Freq, 
+            'dB': window_sel[0]
+        })
+    else:
+        spa1 = pd.DataFrame({
+            'Freq': window.Freq, 
+            'dB': window_sel.mean(axis=1)
+        })
+        
     if spa1.isnull().sum().sum() > 0:
+        log.error(spa1.dropna().shape, spa1.shape, window.shape, window_sel.shape)
         logging.error('Null value in spa1')
+
     return spa1 #.dropna(inplace=True)
 
 
@@ -109,18 +115,22 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     total = floor_bounce.dB+ceiling_bounce.dB+front_wall_bounce.dB+side_wall_bounce.dB+rear_wall_bounce.dB
     total /= 5.0
 
-    # print(onaxis.shape, floor_bounce.shape, ceiling_bounce.shape, front_wall_bounce.shape, rear_wall_bounce.shape)
-
     er = pd.DataFrame({
         'Freq': listening_window(h_spl, v_spl).Freq,
-        'Floor Bounce': floor_bounce.dB,
-        'Ceiling Bounce': ceiling_bounce.dB,
-        'Front Wall Bounce': front_wall_bounce.dB,
-        'Side Wall Bounce': side_wall_bounce.dB,
-        'Rear Wall Bounce': rear_wall_bounce.dB,
-        'Total Early Reflection': total,
     })
-    # print(er.shape, onaxis.shape, floor_bounce.shape, ceiling_bounce.shape, front_wall_bounce.shape, rear_wall_bounce.shape)
+    for (key, name) in [('Floor Bounce', floor_bounce),
+                        ('Ceiling Bounce', ceiling_bounce),
+                        ('Front Wall Bounce', front_wall_bounce),
+                        ('Side Wall Bounce', side_wall_bounce),
+                        ('Rear Wall Bounce', rear_wall_bounce),
+                        ('Total Early Reflection', total)]:
+        if name is not None:
+            if key == 'Total Early Reflection':
+                er[key] = name
+            else:
+                er[key] = name.dB
+        else:
+            logging.debug('{0} is None'.format(key))
     return er
 
 
@@ -133,12 +143,20 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
 
     onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
 
-    return pd.DataFrame({
+    vr = pd.DataFrame({
         'Freq': listening_window(h_spl, v_spl).Freq,
         'On Axis': onaxis.dB,
-        'Floor Reflection': floor_reflection.dB,
-        'Ceiling Reflection': ceiling_reflection.dB,
         })
+    
+    # print(vr.shape, onaxis.shape, floor_reflection.shape)
+    for (key, name) in [('Floor Reflection', floor_reflection),
+                        ('Ceiling Reflection', ceiling_reflection)]:
+        if name is not None:
+            vr[key] = name.dB
+        else:
+            logging.debug('{0} is None'.format(key))
+
+    return vr
 
 
 def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
@@ -155,17 +173,20 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
 
     rear = spatial_average1(
         h_spl, ['Freq', '90°',  '100°', '110°', '120°', '130°',
-                                              '140°', '150°', '160°', '170°', '180°'])
+                '140°', '150°', '160°', '170°', '180°'])
 
     onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
 
-    return pd.DataFrame({
+    hr = pd.DataFrame({
         'Freq': listening_window(h_spl, v_spl).Freq,
         'On Axis': onaxis.dB,
-        'Front': front.dB,
-        'Side': side.dB,
-        'Rear': rear.dB
     })
+    for (key, name) in [('Front', front), ('Side', side), ('Rear', rear)]:
+        if name is not None:
+            hr[key] = name.dB
+        else:
+            logging.debug('{0} is None'.format(key))
+    return hr
 
 
 def early_reflections_bounce(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Series:
@@ -307,11 +328,20 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     # more directional the loudspeaker is in the direction of the reference axis.
     spdi = lw.dB - sp.dB + 60
     onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
-    return pd.DataFrame({
+    spin = pd.DataFrame({
         'Freq': lw.Freq,
         'On Axis': onaxis.dB,
-        'Listening Window': lw.dB,
-        'Sound Power': sp.dB,
-        'Early Reflections DI': erdi,
-        'Sound Power DI': spdi,
     })
+    for (key, name) in [('Listening Window', lw), ('Sound Power', sp)]:
+        if name is not None:
+            spin[key] = name.dB
+        else:
+            logging.debug('{0} is None'.format(key))
+    for (key, name) in [('Early Reflections DI', erdi), ('Sound Power DI', spdi)]:
+        if name is not None:
+            spin[key] = name
+        else:
+            logging.debug('{0} is None'.format(key))
+    return spin
+
+
