@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 from scipy.io import loadmat
 from .analysis import early_reflections, vertical_reflections, horizontal_reflections,\
-     compute_cea2034
+     compute_cea2034, estimated_inroom
 
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
@@ -236,7 +236,8 @@ def parse_graphs_speaker_princeton(speaker_name):
     table = [['Early Reflections', early_reflections],
              ['Horizontal Reflections', horizontal_reflections],
              ['Vertical Reflections', vertical_reflections],
-             ['CEA2034', cea2034],
+             ['Estimated In-Room Reflection', estimated_inroom],
+             ['CEA2034', compute_cea2034],
              ]
     for title, functor in table:
         try:
