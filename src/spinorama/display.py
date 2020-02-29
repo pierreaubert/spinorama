@@ -1,7 +1,7 @@
 import logging
 import altair as alt
 # import matplotlib.pyplot as plt
-from .graph import graph_freq, graph_contour, graph_radar, \
+from .graph import graph_freq, graph_contour, graph_radar, graph_spinorama,\
     graph_params_default, contour_params_default, radar_params_default
 
 
@@ -86,7 +86,7 @@ def display_spinorama(df, graph_params=graph_params_default):
         spinorama = df['CEA2034']
         if spinorama is not None:
             spinorama = spinorama.loc[spinorama['Measurements'] != 'DI offset']
-            return graph_freq(spinorama, graph_params)
+            return graph_spinorama(spinorama, graph_params)
         else:
             logging.info('Display CEA2034 is empty')
     except KeyError as ke:
