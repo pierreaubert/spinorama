@@ -163,6 +163,7 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
         'Rear': rear.dB
     })
 
+
 def early_reflections_bounce(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Series:
     return spatial_average2(
         h_spl, ['Freq', 'On Axis', '10°',  '20°', '30°', '40°',  '50°',  '60°',  '70°',  '80°', '90°',  '180°'],
