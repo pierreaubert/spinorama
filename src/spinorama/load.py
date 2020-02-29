@@ -236,7 +236,7 @@ def parse_graphs_speaker_princeton(speaker_name):
     table = [['Early Reflections', early_reflections],
              ['Horizontal Reflections', horizontal_reflections],
              ['Vertical Reflections', vertical_reflections],
-             ['Estimated In-Room Reflection', estimated_inroom],
+             ['Estimated In-Room Response', estimated_inroom],
              ['CEA2034', compute_cea2034],
              ]
     for title, functor in table:
