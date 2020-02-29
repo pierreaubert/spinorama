@@ -187,11 +187,11 @@ def parse_graphs_speaker_klippel(speaker_name):
         csvfilename = "datas/ASR/" + speaker_name + "/" + csv + ".txt"
         try:
             title, df = parse_graph_freq_klippel(csvfilename)
-            logging.info('Speaker: ' + speaker_name + ' Loaded: '+title)
+            logging.info('Speaker: ' + speaker_name + ' (ASR) Loaded: '+title)
             dfs[title + '_unmelted'] = df
             dfs[title] = graph_melt(df)
         except FileNotFoundError:
-            logging.warning('Speaker: ' + speaker_name +' Not found: ' + csvfilename)
+            logging.warning('Speaker: ' + speaker_name +' (ASR) Not found: ' + csvfilename)
     return dfs
 
 
@@ -242,10 +242,13 @@ def parse_graphs_speaker_princeton(speaker_name):
     for title, functor in table:
         try:
             df = functor(h_spl, v_spl)
-            dfs[title+'_unmelted'] = df
-            dfs[title] = graph_melt(df)
+            if df is not None:
+                dfs[title+'_unmelted'] = df
+                dfs[title] = graph_melt(df)
+            else:
+                logging.warning('{0} computation is None for speaker{1:s} (Princeton)'.format(title, speaker_name))
         except KeyError as ke:
-            logging.warning('{0} computation failed with {1} for speaker{2:s}'.format(title, ke, speaker_name))
+            logging.warning('{0} computation failed with {1} for speaker{2:s} (Princeton)'.format(title, ke, speaker_name))
             
     return dfs
 
