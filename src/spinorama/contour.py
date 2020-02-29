@@ -11,13 +11,13 @@ def compute_contour(dfu):
     # normalize dB values wrt on axis
     dfm = dfu.copy()
     for c in dfu.columns:
-        if c != 'Freq' and c != 'On-Axis':
-            dfm[c] = dfu[c] - dfu['On-Axis']
+        if c != 'Freq' and c != 'On Axis':
+            dfm[c] = dfu[c] - dfu['On Axis']
             angle = int(c[:-1])
             vrange.append(angle)
-        if c == 'On-Axis':
+        if c == 'On Axis':
             vrange.append(0)
-    dfm['On-Axis'] = 0
+    dfm['On Axis'] = 0
 
     # melt
     dfm = graph_melt(dfm)
