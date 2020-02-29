@@ -47,10 +47,19 @@ def estimates(onaxis: pd.DataFrame):
    
 def spatial_average1(window, sel):
     window_sel = window[[c for c in window.columns if c in sel and c != 'Freq']]
-    return pd.DataFrame({
+    # if len(window_sel.columns) < 2:
+    #     logging.error('not enough data {0}'.format(window_sel.columns))
+    # print(window_sel.mean(axis=1))
+    spa1 = pd.DataFrame({
         'Freq': window.Freq, 
         'dB': window_sel.mean(axis=1)
     })
+    # print(spa1.dropna().shape, spa1.shape, window.shape, window_sel.shape)
+    # print(spa1)
+    # print(spa1.dropna())
+    if spa1.isnull().sum().sum() > 0:
+        logging.error('Null value in spa1')
+    return spa1 #.dropna(inplace=True)
 
 
 def spatial_average2(h_df, h_sel, v_df, v_sel):
@@ -62,10 +71,14 @@ def spatial_average2(h_df, h_sel, v_df, v_sel):
         return spatial_average1(h_df, h_sel)
     # merge both
     window = h_df_sel.merge(v_df_sel, left_on='Freq', right_on='Freq', suffixes=('_h', '_v'))
-    return pd.DataFrame({
+    spa2 = pd.DataFrame({
         'Freq': window.Freq, 
         'dB': window.loc[:, lambda df: [c for c in df.columns if c != 'Freq']].mean(axis=1)
     })
+    # print(spa2.shape, h_df_sel.shape, v_df_sel.shape, window.shape)
+    if spa2.isnull().sum().sum() > 0:
+        logging.error('Null value in spa2')
+    return spa2 # .dropna(inplace=True)
 
 
 def listening_window(h_spl, v_spl):
@@ -92,7 +105,9 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
     onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
 
-    return pd.DataFrame({
+    # print(onaxis.shape, floor_bounce.shape, ceiling_bounce.shape, front_wall_bounce.shape, rear_wall_bounce.shape)
+
+    er = pd.DataFrame({
         'Freq': listening_window(h_spl, v_spl).Freq,
         'On Axis': onaxis.dB,
         'Floor Bounce': floor_bounce.dB,
@@ -101,6 +116,8 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
         'Side Wall Bounce': side_wall_bounce.dB,
         'Rear Wall Bounce': rear_wall_bounce.dB,
     })
+    # print(er.shape, onaxis.shape, floor_bounce.shape, ceiling_bounce.shape, front_wall_bounce.shape, rear_wall_bounce.shape)
+    return er
 
 
 def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
