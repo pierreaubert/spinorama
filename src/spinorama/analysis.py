@@ -44,7 +44,7 @@ def estimates(onaxis: pd.DataFrame):
         logging.warning('Estimates failed for {0} with {1}'.format(onaxis.shape, ve))
         return [-1, -1, -1, -1]
 
-   
+
 def spatial_average1(window, sel):
     window_sel = window[[c for c in window.columns if c in sel and c != 'Freq']]
     if len(window_sel.columns) == 0:
@@ -109,12 +109,6 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     rear_wall_bounce = spatial_average1(
         h_spl, ['Freq', '90°',  '180°'])
 
-    onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
-
-    # not sure it is this average
-    total = floor_bounce.dB+ceiling_bounce.dB+front_wall_bounce.dB+side_wall_bounce.dB+rear_wall_bounce.dB
-    total /= 5.0
-
     er = pd.DataFrame({
         'Freq': listening_window(h_spl, v_spl).Freq,
     })
@@ -122,15 +116,22 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
                         ('Ceiling Bounce', ceiling_bounce),
                         ('Front Wall Bounce', front_wall_bounce),
                         ('Side Wall Bounce', side_wall_bounce),
-                        ('Rear Wall Bounce', rear_wall_bounce),
-                        ('Total Early Reflection', total)]:
+                        ('Rear Wall Bounce', rear_wall_bounce)]:
         if name is not None:
-            if key == 'Total Early Reflection':
-                er[key] = name
-            else:
-                er[key] = name.dB
+            er[key] = name.dB
         else:
             logging.debug('{0} is None'.format(key))
+            
+    # not sure it is this an average
+    if floor_bounce is not None and \
+        ceiling_bounce is not None and \
+        side_wall_bounce is not None and \
+        rear_wall_bounce is not None:
+        total = floor_bounce.dB+ceiling_bounce.dB+\
+            front_wall_bounce.dB+side_wall_bounce.dB+rear_wall_bounce.dB
+        total /= 5.0
+        er['Total Early Reflection'] = total
+    
     return er
 
 
