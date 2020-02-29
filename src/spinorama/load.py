@@ -62,6 +62,9 @@ def parse_graph_freq_klippel(filename):
             3, 1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30,
             32, 34, 36]
 
+    # make it consistent
+    df = df.rename(columns={'On-Axis': 'On Axis'})
+    # put it in order, not relevant for pandas but for np array
     if len(df.columns) > 2 and df.columns[2] == '10°':
         return title, df[[df.columns[perm[i]] for i in range(0, len(perm))]]
     return title, df
