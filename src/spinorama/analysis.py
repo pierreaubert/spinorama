@@ -243,7 +243,7 @@ def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     })
 
 
-def cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     lw = listening_window(h_spl, v_spl)
     sp = sound_power(h_spl, v_spl)
     # Early Reflections Directivity Index (ERDI)
