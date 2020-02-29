@@ -19,6 +19,8 @@ nearest = alt.selection(
 graph_params_default = {
     'xmin': 20,
     'xmax': 20000,
+    'ymin': 40,
+    'ymax': 110,
     'width': 900,
     'height': 400,
 }
@@ -41,47 +43,80 @@ radar_params_default = {
 
 
 def graph_freq(dfu, graph_params):
-    # add selectors
-    # one on Frequency one on Measurements
+    # add selectors                                                                                                                          
     selectorsMeasurements = alt.selection_multi(
-        fields=['Measurements'],
+        fields=['Measurements'], 
         bind='legend')
-    # use a scale
+    scales = alt.selection_interval(
+        bind='scales'
+    )
+    # main charts
+    xaxis = alt.X('Freq:Q', 
+                  scale=alt.Scale(type="log", 
+                                    domain=[graph_params['xmin'], graph_params['xmax']]))
+    line=alt.Chart(dfu).mark_line().encode(
+        xaxis,
+        alt.Y('dB:Q',   scale=alt.Scale(zero=False)),
+        alt.Color('Measurements', type='nominal', sort=None),
+        opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
+    ).properties(
+        width=graph_params['width'],
+        height=graph_params['height']
+    )
+    circle=alt.Chart(dfu).mark_circle(size=100).encode(
+        xaxis,
+        alt.Y('dB:Q',   scale=alt.Scale(zero=False)),
+        alt.Color('Measurements', type='nominal', sort=None),
+        opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
+        tooltip=['Measurements', 'Freq', 'dB']
+    ).transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
+    # assemble elements together
+    spin = alt.layer(circle, line).resolve_scale(
+        y='independent'
+    ).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
+    return spin
+
+
+def graph_spinorama(dfu, graph_params):
+    # add selectors                                                                                                                          
+    selectorsMeasurements = alt.selection_multi(
+        fields=['Measurements'], 
+        bind='legend')
     scales = alt.selection_interval(
         bind='scales'
     )
     # main charts
     xaxis = alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[graph_params['xmin'], graph_params['xmax']]))
-    yaxis = alt.Y('dB:Q',   scale=alt.Scale(zero=False))
-    color = alt.Color('Measurements', type='nominal', sort=None)
-    opacity = alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
-    line = alt.Chart(dfu).mark_line(
-    ).transform_filter(
+    line=alt.Chart(dfu).mark_line().transform_filter(
         alt.FieldOneOfPredicate(field='Measurements', oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
-    ).encode(xaxis, yaxis, color, opacity=opacity
+    ).encode(
+        xaxis,
+        alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[graph_params['ymin'], graph_params['ymax']])),
+        alt.Color('Measurements', type='nominal', sort=None),
+        opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     ).properties(
         width=graph_params['width'],
         height=graph_params['height']
     )
-
-    di = alt.Chart(dfu).mark_line().transform_filter(
+    di=alt.Chart(dfu).mark_line().transform_filter(
         alt.FieldOneOfPredicate(field='Measurements', oneOf=['Early Reflections DI', 'Sound Power DI'])
-    ).encode(xaxis, yaxis, color, opacity=opacity)
-
-    circle = alt.Chart(dfu).mark_circle(
-        size=100
     ).encode(
-        xaxis, yaxis, color, opacity=opacity, tooltip=['Measurements', 'Freq', 'dB']
-    ).transform_calculate(
-        Freq=f'format(datum.Freq, ".0f")',
-        dB=f'format(datum.dB, ".1f")'
+        xaxis,
+        alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[graph_params['ymin'], graph_params['ymax']])),
+        alt.Color('Measurements', type='nominal', sort=None),
+        opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     )
-
+    circle=alt.Chart(dfu).mark_circle(size=100).encode(
+        xaxis,
+        alt.Y('dB:Q',   scale=alt.Scale(zero=False)),
+        alt.Color('Measurements', type='nominal', sort=None),
+        opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
+        tooltip=['Measurements', 'Freq', 'dB']
+    ).transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
     # assemble elements together
-    spin = alt.layer(circle, line, di
-        ).resolve_scale(y='independent'
-        ).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
-
+    spin = alt.layer(circle, line, di).resolve_scale(
+        y='independent'
+    ).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
     return spin
 
 

@@ -44,6 +44,7 @@ def print_graphs(df: pd.DataFrame,
     params['height'] = height
     params['xmin'] = origins_info[origin]['min hz']
     params['xmax'] = origins_info[origin]['max hz']
+    logging.debug('Graph configured with {0}'.format(params))
     
     graphs = {}
     graphs['CEA2034'] = display_spinorama(df, params)

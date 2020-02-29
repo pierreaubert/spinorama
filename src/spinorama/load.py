@@ -248,7 +248,7 @@ def parse_graphs_speaker_princeton(speaker_name):
             else:
                 logging.warning('{0} computation is None for speaker{1:s} (Princeton)'.format(title, speaker_name))
         except KeyError as ke:
-            logging.warning('{0} computation failed with {1} for speaker{2:s} (Princeton)'.format(title, ke, speaker_name))
+            logging.warning('{0} computation failed with key:{1} for speaker{2:s} (Princeton)'.format(title, ke, speaker_name))
             
     return dfs
 
