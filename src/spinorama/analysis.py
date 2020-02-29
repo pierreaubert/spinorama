@@ -94,7 +94,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
     return pd.DataFrame({
         'Freq': listening_window(h_spl, v_spl).Freq,
-        'On-Axis': onaxis.dB,
+        'On Axis': onaxis.dB,
         'Floor Bounce': floor_bounce.dB,
         'Ceiling Bounce': ceiling_bounce.dB,
         'Front Wall Bounce': front_wall_bounce.dB,
@@ -114,7 +114,7 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
 
     return pd.DataFrame({
         'Freq': listening_window(h_spl, v_spl).Freq,
-        'On-Axis': onaxis.dB,
+        'On Axis': onaxis.dB,
         'Floor Reflection': floor_reflection.dB,
         'Ceiling Reflection': ceiling_reflection.dB,
         })
@@ -140,7 +140,7 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
 
     return pd.DataFrame({
         'Freq': listening_window(h_spl, v_spl).Freq,
-        'On-Axis': onaxis.dB,
+        'On Axis': onaxis.dB,
         'Front': front.dB,
         'Side': side.dB,
         'Rear': rear.dB
@@ -261,7 +261,7 @@ def cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
     return pd.DataFrame({
         'Freq': lw.Freq,
-        'On-Axis': onaxis.dB,
+        'On Axis': onaxis.dB,
         'Listening Window': lw.dB,
         'Sound Power': sp.dB,
         'Early Reflections DI': erdi,
