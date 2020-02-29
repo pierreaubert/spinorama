@@ -165,7 +165,7 @@ def display_spl(df, axis, graph_params=graph_params_default):
         spl = df[axis]
         filter = {
             'Measurements': [
-                'On-Axis',
+                'On Axis',
                 '10°',
                 '20°',
                 '30°',
