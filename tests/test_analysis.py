@@ -1,6 +1,6 @@
 # import os
 import unittest
-# import logging
+import logging
 from spinorama.load import parse_graph_freq_klippel, graph_melt
 from spinorama.analysis import estimates, cea2034
 
@@ -35,13 +35,17 @@ class SpinoramaSpinoramaTests(unittest.TestCase):
         self.titleH, self.splH = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Horizontal.txt')
         self.titleV, self.splV = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Vertical.txt')
         
-    def test_validate_cea2034(self):
+    def test_validate_cea2034_onaxis(self):
         computed_spin_unmelted = cea2034(self.splH, self.splV)
         computed_spin = graph_melt(computed_spin_unmelted)
         computed_onaxis = computed_spin.loc[computed_spin['Measurements'] == 'On Axis']
-        # self.assertEqual(computed_onaxi.Freq.size , self.onaxis.Freq.size)
-        pass
-        
+        # should have the same Freq
+        self.assertEqual(computed_onaxis.Freq.size , self.onaxis.Freq.size)
+        # and should be close in dB
+        mean = self.onaxis.mean(0)
+        computed_mean = computed_onaxis.mean(0)
+        # looks to good to be true
+        self.assertEqual(mean.dB, computed_mean.dB)
         
 
 if __name__ == '__main__':
