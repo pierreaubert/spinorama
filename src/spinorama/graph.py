@@ -184,7 +184,7 @@ def graph_radar(dfu, graph_params):
         dbs = []
         for a, z in zip(gridZ.index, gridZ):
             angle = 0
-            # On-Axis case
+            # On Axis case
             if a[0] != 'O':
                 angle = int(a[:-1])
             angles.append(angle)
