@@ -105,16 +105,20 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
     onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
 
+    # not sure it is this average
+    total = floor_bounce.dB+ceiling_bounce.dB+front_wall_bounce.dB+side_wall_bounce.dB+rear_wall_bounce.dB
+    total /= 5.0
+
     # print(onaxis.shape, floor_bounce.shape, ceiling_bounce.shape, front_wall_bounce.shape, rear_wall_bounce.shape)
 
     er = pd.DataFrame({
         'Freq': listening_window(h_spl, v_spl).Freq,
-        'On Axis': onaxis.dB,
         'Floor Bounce': floor_bounce.dB,
         'Ceiling Bounce': ceiling_bounce.dB,
         'Front Wall Bounce': front_wall_bounce.dB,
         'Side Wall Bounce': side_wall_bounce.dB,
         'Rear Wall Bounce': rear_wall_bounce.dB,
+        'Total Early Reflection': total,
     })
     # print(er.shape, onaxis.shape, floor_bounce.shape, ceiling_bounce.shape, front_wall_bounce.shape, rear_wall_bounce.shape)
     return er
@@ -255,10 +259,36 @@ def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
         return pressure2spl(np.sqrt(avg/wsm))
 
     sp_window['rms'] = sp_window.apply(rms, axis=1)
+    
     return pd.DataFrame({
         'Freq': sp_window.Freq,
-        'dB': sp_window.rms
+        'dB': sp_window.rms,
     })
+
+
+def estimated_inroom(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    # The Estimated In-Room Response shall be calculated using the directivity
+    # data acquired in Section 5 or Section 6.
+    # It shall be comprised of a weighted average of
+    #     12 % Listening Window,
+    #     44 % Early Reflections,
+    # and 44 % Sound Power.
+    lw = listening_window(h_spl, v_spl)
+    er = early_reflections(h_spl, v_spl)
+    sp = sound_power(h_spl, v_spl)
+    # The sound pressure levels shall be converted to squared pressure values
+    # prior to the weighting and summation. After the weightings have been
+    # applied and the squared pressure values summed they shall be converted
+    # back to sound pressure levels.
+    eir = \
+      0.12*lw.dB.apply(spl2pressure) + \
+      0.44*er['Total Early Reflection'].apply(spl2pressure) + \
+      0.44*sp.dB.apply(spl2pressure)
+    
+    return pd.DataFrame({
+        'Freq': lw.Freq,
+        'Estimated In-Room Response': eir.apply(pressure2spl)
+        })
 
 
 def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:

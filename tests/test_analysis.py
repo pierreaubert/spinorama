@@ -4,7 +4,7 @@ import logging
 import pandas as pd
 from spinorama.load import parse_graph_freq_klippel, graph_melt
 from spinorama.analysis import estimates, compute_cea2034, early_reflections,\
-     vertical_reflections, horizontal_reflections
+     vertical_reflections, horizontal_reflections, estimated_inroom
 
 
 pd.set_option("display.max_rows", 202)
@@ -101,7 +101,7 @@ class SpinoramaEarlyReflectionsTests(unittest.TestCase):
         
 
     def test_validate_early_reflections(self):
-        for measurement in ['Floor Bounce', 'Ceiling Bounce', 'Front Wall Bounce', 'Side Wall Bounce', 'Rear Wall Bounce']:
+        for measurement in ['Floor Bounce', 'Ceiling Bounce', 'Front Wall Bounce', 'Side Wall Bounce', 'Rear Wall Bounce', 'Total Early Reflection']:
             # key check 
             self.assertIn(measurement, self.computed_unmelted.keys())
             self.assertIn(measurement, self.reference_unmelted.keys())
@@ -113,9 +113,9 @@ class SpinoramaEarlyReflectionsTests(unittest.TestCase):
             self.assertEqual(computed.Freq.size , reference.Freq.size)
             # self.assertTrue(computed.Freq.eq(reference.Freq).all())
             # and should be equal or close in dB
-            # 1 db tolerance?
+            # 0.2 db tolerance?
             # TODO(pierreaubert): that's too high
-            self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), 1.0)
+            self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), 0.2)
         
         
 class SpinoramaVerticalReflectionsTests(unittest.TestCase):
@@ -151,9 +151,9 @@ class SpinoramaVerticalReflectionsTests(unittest.TestCase):
             self.assertEqual(computed.Freq.size , reference.Freq.size)
             # self.assertTrue(computed.Freq.eq(reference.Freq).all())
             # and should be equal or close in dB
-            # 1 db tolerance?
+            # 0.2 db tolerance?
             # TODO(pierreaubert): that's too high
-            self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), 1.0)
+            self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), .2)
         
         
 
@@ -190,9 +190,45 @@ class SpinoramaHorizontalReflectionsTests(unittest.TestCase):
             self.assertEqual(computed.Freq.size , reference.Freq.size)
             # self.assertTrue(computed.Freq.eq(reference.Freq).all())
             # and should be equal or close in dB
-            # 1 db tolerance?
-            # TODO(pierreaubert): that's too high
-            self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), 1.0)
+            # 0.2 db tolerance?
+            self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), .2)
+        
+        
+
+class SpinoramaEstimatedInRoomTests(unittest.TestCase):
+
+
+    def setUp(self):
+        # load spin from klippel data
+        self.title, self.reference_unmelted = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/Estimated In-Room Response.txt')
+        self.reference = graph_melt(self.reference_unmelted)
+        # load spl vertical and horizontal
+        self.titleH, self.splH = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Horizontal.txt')
+        self.titleV, self.splV = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Vertical.txt')
+        # computed graphs
+        self.computed_unmelted = estimated_inroom(self.splH, self.splV).loc[:199]
+        self.computed = graph_melt(self.computed_unmelted)
+
+
+    def test_smoke(self):
+       self.assertEqual( self.reference_unmelted.shape, self.computed_unmelted.shape)
+       self.assertEqual( self.reference.shape, self.computed.shape)
+        
+
+    def test_validate_estimated_inroom(self):
+        # key check 
+        self.assertIn('Estimated In-Room Response', self.computed_unmelted.keys())
+        self.assertIn('Estimated In-Room Response', self.reference_unmelted.keys())
+        # from klippel
+        reference = self.reference.loc[self.reference['Measurements'] == 'Estimated In-Room Response']
+        # computed
+        computed = self.computed.loc[self.computed['Measurements'] == 'Estimated In-Room Response']
+        # should have the same Freq
+        self.assertEqual(computed.Freq.size , reference.Freq.size)
+        # self.assertTrue(computed.Freq.eq(reference.Freq).all())
+        # and should be equal or close in dB
+        # 0.1 db tolerance?
+        self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), 0.1)
         
         
 
