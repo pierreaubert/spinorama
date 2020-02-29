@@ -1,7 +1,7 @@
 # import os
 import unittest
 # import logging
-from spinorama.load import parse_graph_freq_klippel
+from spinorama.load import parse_graph_freq_klippel, parse_graph_princeton
 
 
 class SpinoramaLoadTests(unittest.TestCase):
@@ -32,6 +32,22 @@ class SpinoramaLoadSPLTests(unittest.TestCase):
         self.assertNotIn('On-Axis', self.df.columns)
         # 200 in Freq, 36 off axis and 0
         self.assertEqual(self.df.shape, (200, 37))
+
+
+class SpinoramaLoadPrinceton(unittest.TestCase):
+
+    def setUp(self):
+        self.df = parse_graph_princeton('datas/Princeton/Genelec 8351A/Genelec8351A_H_IR.mat', 'H')
+
+    def test_smoke1(self):
+        self.assertIsNotNone(self.df)
+
+    def test_smoke2(self):
+        self.assertIn('Freq', self.df.columns)
+        self.assertIn('On Axis', self.df.columns)
+        self.assertNotIn('On-Axis', self.df.columns)
+        self.assertEqual(self.df.shape, (3328, 20))
+        self.assertLess(500, self.df.Freq.min())
 
 
 if __name__ == '__main__':
