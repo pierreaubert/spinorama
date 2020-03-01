@@ -10,4 +10,4 @@ selenium
 docopt
 mako
 astropy
-json
+
