@@ -10,6 +10,16 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
+    'Ascend Acoustic Sierra 2': {
+        'brand': 'Ascend Acoustic',
+        'model': 'Sierra 2',
+        'type': 'passive',
+        'price': '750',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
     'Dayton Audio B652-AIR': {
         'brand': 'Dayton Audio',
         'model': 'B652-AIR',
