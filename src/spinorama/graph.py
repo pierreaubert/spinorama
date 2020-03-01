@@ -60,7 +60,9 @@ def graph_freq(dfu, graph_params):
     )
     # main charts
     line=alt.Chart(dfu).mark_line().encode(
-        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[xmin, xmax])),
+        alt.X('Freq:Q', title='Freqency (Hz)',
+              scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]), 
+              axis=alt.Axis(format='s')),
         alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[ymin, ymax])),
         alt.Color('Measurements', type='nominal', sort=None),
         opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
@@ -100,7 +102,9 @@ def graph_spinorama(dfu, graph_params):
     line=alt.Chart(dfu).mark_line().transform_filter(
         alt.FieldOneOfPredicate(field='Measurements', oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
     ).encode(
-        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[xmin, xmax])),
+        alt.X('Freq:Q', title='Freqency (Hz)',
+              scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]), 
+              axis=alt.Axis(format='s')),
         alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[ymin, ymax])),
         alt.Color('Measurements', type='nominal', sort=None),
         opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
@@ -124,7 +128,6 @@ def graph_spinorama(dfu, graph_params):
         tooltip=['Measurements', 'Freq', 'dB']
     ).transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
     # assemble elements together
-    #spin = alt.layer(circle, line, di).resolve_scale(y='independent').add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
     spin = alt.layer(circle, line, di).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
     return spin
 
