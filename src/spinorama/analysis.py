@@ -62,7 +62,7 @@ def spatial_average1(window, sel):
         })
         
     if spa1.isnull().sum().sum() > 0:
-        log.error(spa1.dropna().shape, spa1.shape, window.shape, window_sel.shape)
+        logging.error(spa1.dropna().shape, spa1.shape, window.shape, window_sel.shape)
         logging.error('Null value in spa1')
 
     return spa1 #.dropna(inplace=True)
