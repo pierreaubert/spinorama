@@ -20,7 +20,8 @@
 """
 usage: update-docs.py [--help] [--version] [--dev]\
  [--width=<width>] [--height=<height>] [--force] [--type=<ext>]\
- [--sitedev=<http>]  [--log-level=<level>]
+ [--sitedev=<http>]  [--log-level=<level>] [--origin=<origin>]\
+ [--speaker=<speaker>]
 
 Options:
   --help            display usage()
@@ -31,6 +32,8 @@ Options:
   --type=<ext>      choose one of: json, html, png, svg
   --sitedev=<http>  default: http://localhost:8000/docs
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
+  --origin=<origin> restrict to a specific origin, usefull for debugging
+  --speaker=<speaker> restrict to a specific speaker, usefull for debugging
 """
 import os
 import sys
