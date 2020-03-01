@@ -467,6 +467,8 @@ origins_info = {
     'ASR': {
         'min hz': 20,
         'max hz': 20000,
+        'min dB': 45,
+        'max dB': 105,
         'logo': 'docs/metadata/asr.png',
         'logo-small': 'docs/metadata/asr-small.png',
         'url': 'http://www.audiosciencereview.com',
@@ -474,6 +476,8 @@ origins_info = {
     'Princeton': {
         'min hz': 500,
         'max hz': 20000,
+        'min dB': 45,
+        'max dB': 105,
         'logo': 'docs/metadata/3d3a.jpg',
         'logo-small': 'docs/metadata/3d3a.jpg',
         'url': 'https://www.princeton.edu/3D3A/Directivity.html',
@@ -481,6 +485,8 @@ origins_info = {
     'Vendors/KEF': {
         'min hz': 20,
         'max hz': 20000,
+        'min dB': 45,
+        'max dB': 105,
         'logo': 'docs/metadata/asr.png',
         'logo-small': 'docs/metadata/asr-small.png',
         'url': 'http://www.kef.com',
@@ -488,6 +494,8 @@ origins_info = {
     'Vendors/JBL': {
         'min hz': 20,
         'max hz': 20000,
+        'min dB': 45,
+        'max dB': 105,
         'logo': 'docs/metadata/jbl.png',
         'logo-small': 'docs/metadata/jbl-small.png',
         'url': 'http://www.jbl.com',

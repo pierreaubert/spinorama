@@ -43,6 +43,14 @@ radar_params_default = {
 
 
 def graph_freq(dfu, graph_params):
+    xmin = graph_params['xmin']
+    xmax = graph_params['xmax']
+    ymin = graph_params['ymin']
+    ymax = graph_params['ymax']
+    if xmax == xmin:
+        logging.error('Graph configuration is incorrect: xmin==xmax')
+    if ymax == ymin:
+        logging.error('Graph configuration is incorrect: ymin==ymax')
     # add selectors                                                                                                                          
     selectorsMeasurements = alt.selection_multi(
         fields=['Measurements'], 
@@ -51,12 +59,9 @@ def graph_freq(dfu, graph_params):
         bind='scales'
     )
     # main charts
-    xaxis = alt.X('Freq:Q', 
-                  scale=alt.Scale(type="log", 
-                                    domain=[graph_params['xmin'], graph_params['xmax']]))
     line=alt.Chart(dfu).mark_line().encode(
-        xaxis,
-        alt.Y('dB:Q',   scale=alt.Scale(zero=False)),
+        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[xmin, xmax])),
+        alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[ymin, ymax])),
         alt.Color('Measurements', type='nominal', sort=None),
         opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     ).properties(
@@ -64,20 +69,26 @@ def graph_freq(dfu, graph_params):
         height=graph_params['height']
     )
     circle=alt.Chart(dfu).mark_circle(size=100).encode(
-        xaxis,
-        alt.Y('dB:Q',   scale=alt.Scale(zero=False)),
+        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[xmin, xmax])),
+        alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[ymin, ymax])),
         alt.Color('Measurements', type='nominal', sort=None),
         opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
         tooltip=['Measurements', 'Freq', 'dB']
     ).transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
     # assemble elements together
-    spin = alt.layer(circle, line).resolve_scale(
-        y='independent'
-    ).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
+    spin = alt.layer(circle, line).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
     return spin
 
 
 def graph_spinorama(dfu, graph_params):
+    xmin = graph_params['xmin']
+    xmax = graph_params['xmax']
+    ymin = graph_params['ymin']
+    ymax = graph_params['ymax']
+    if xmax == xmin:
+        logging.error('Graph configuration is incorrect: xmin==xmax')
+    if ymax == ymin:
+        logging.error('Graph configuration is incorrect: ymin==ymax')
     # add selectors                                                                                                                          
     selectorsMeasurements = alt.selection_multi(
         fields=['Measurements'], 
@@ -86,12 +97,11 @@ def graph_spinorama(dfu, graph_params):
         bind='scales'
     )
     # main charts
-    xaxis = alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[graph_params['xmin'], graph_params['xmax']]))
     line=alt.Chart(dfu).mark_line().transform_filter(
         alt.FieldOneOfPredicate(field='Measurements', oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
     ).encode(
-        xaxis,
-        alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[graph_params['ymin'], graph_params['ymax']])),
+        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[xmin, xmax])),
+        alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[ymin, ymax])),
         alt.Color('Measurements', type='nominal', sort=None),
         opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     ).properties(
@@ -101,22 +111,21 @@ def graph_spinorama(dfu, graph_params):
     di=alt.Chart(dfu).mark_line().transform_filter(
         alt.FieldOneOfPredicate(field='Measurements', oneOf=['Early Reflections DI', 'Sound Power DI'])
     ).encode(
-        xaxis,
-        alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[graph_params['ymin'], graph_params['ymax']])),
+        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[xmin, xmax])),
+        alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[ymin, ymax])),
         alt.Color('Measurements', type='nominal', sort=None),
         opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     )
     circle=alt.Chart(dfu).mark_circle(size=100).encode(
-        xaxis,
+        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[graph_params['xmin'], graph_params['xmax']])),
         alt.Y('dB:Q',   scale=alt.Scale(zero=False)),
         alt.Color('Measurements', type='nominal', sort=None),
         opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
         tooltip=['Measurements', 'Freq', 'dB']
     ).transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
     # assemble elements together
-    spin = alt.layer(circle, line, di).resolve_scale(
-        y='independent'
-    ).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
+    #spin = alt.layer(circle, line, di).resolve_scale(y='independent').add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
+    spin = alt.layer(circle, line, di).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
     return spin
 
 
@@ -125,7 +134,11 @@ def graph_contour_common(df, transformer, graph_params):
         width = graph_params['width']
         height = graph_params['height']
         # more interesting to look at -3/0 range
-        speaker_scale = graph_params['contour_scale']
+        speaker_scale = None
+        if 'contour_scale' in graph_params.keys():
+            speaker_scale = graph_params['contour_scale']
+        else:
+            speaker_scale = contour_params_default['contour_scale']
         af, am, az = transformer(df)
         freq = af.ravel()
         angle = am.ravel()

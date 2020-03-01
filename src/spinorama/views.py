@@ -1,3 +1,4 @@
+import logging
 import math
 import copy
 import altair as alt
@@ -28,6 +29,13 @@ def scale_params(params, factor):
         new_height = math.floor(height * 45 / 100)
     new_params['width'] = new_width
     new_params['height'] = new_height
+    for check in ('xmin', 'xmax'):
+        if check not in new_params.keys():
+            logging.error('scale_param {0} is not a key'.format(check))
+    if new_params['xmin'] == new_params['xmax']:
+            logging.error('scale_param x-range is empty')
+    if 'ymin' in new_params.keys() and 'ymax' in new_params.keys() and new_params['ymin'] == new_params['ymax']:
+            logging.error('scale_param y-range is empty')
     return new_params
 
 
@@ -118,7 +126,6 @@ def template_vertical(df, params):
               hspl, vspl, hcontour, hradar, vcontour, vradar):
         if g is not None:
             chart &= g
-        
     return chart 
 
 
