@@ -1,3 +1,5 @@
+![Spinorama](https://github.com/pierreaubert/spinorama/workflows/Spinorama/badge.svg?branch=master)
+
 # Spinorama : a library to display Spinorama and similar graphs
 
 ## Jump to the [gallery](https://pierreaubert.github.com/spinorama) of all speakers measurements.
