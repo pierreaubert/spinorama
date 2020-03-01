@@ -44,6 +44,8 @@ def print_graphs(df: pd.DataFrame,
     params['height'] = height
     params['xmin'] = origins_info[origin]['min hz']
     params['xmax'] = origins_info[origin]['max hz']
+    params['ymin'] = origins_info[origin]['min dB']
+    params['ymax'] = origins_info[origin]['max dB']
     logging.debug('Graph configured with {0}'.format(params))
     
     graphs = {}
@@ -79,8 +81,13 @@ def print_graphs(df: pd.DataFrame,
 
 
     # 1080p to 2k screen
+    params = copy.deepcopy(graph_params_default)
     params['width'] = 2160
     params['height'] = 1200
+    params['xmin'] = origins_info[origin]['min hz']
+    params['xmax'] = origins_info[origin]['max hz']
+    params['ymin'] = origins_info[origin]['min dB']
+    params['ymax'] = origins_info[origin]['max dB']
     graphs['2cols'] = template_compact(df, params)
     # 4k screen
     params['width'] = 4096
