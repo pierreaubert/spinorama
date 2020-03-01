@@ -177,146 +177,226 @@ def graph_contour_smoothed(df, graph_params):
     return graph_contour_common(df, compute_contour_smoothed, graph_params)
 
 
-def graph_radar(dfu, graph_params):
+def radar_angle2str(a):
 
-    # build a grid
-    radius = 0
-    anglelist = [a for a in range(-180, 180, 10)]
+    if a % 30 == 0:
+        return '{:d}°'.format(a)
+    else:
+        return ''
+    
+
+def radar_join(anglelist):
+    """return true if we should join the last point and the first one"""
+    # 180-170-10 => join points
+    delta = anglelist[-1]+anglelist[0]-10
+    # print(delta)
+    if delta == 0:
+        return True
+    else:
+        return False
+
+def radar_angle_range(columns):
+    amin = 0
+    amax = 0
+    for c in columns:
+        if c != 'Freq':
+            v = angle2value(c)
+            if v < 0:
+                amin = min(amin, v)
+            else:
+                amax = max(amax, v)
+    return amin, amax
+
+
+def radar_projection(anglelist, gridZ, hz):
+    # map in 2d                                                                                                                                                                                  
+    dbsX = [db * math.cos(a * math.pi / 180) for a, db in zip(anglelist, gridZ)]
+    dbsY = [db * math.sin(a * math.pi / 180) for a, db in zip(anglelist, gridZ)]
+
+    # join with first point (-180=180) 
+    # print('Calling project', anglelist)
+    if radar_join(anglelist):
+        dbsX.append(dbsX[0])
+        dbsY.append(dbsY[0])
+
+    return dbsX, dbsY, [hz for i in range(0, len(dbsX))]
+
+
+def radar_circle(radius, anglelist):
+    rg = range(0, len(anglelist))
+    circleC = [radius for i in rg]
+    circleX = [circleC[i]*math.cos(anglelist[i]*math.pi/180) for i in rg]
+    circleY = [circleC[i]*math.sin(anglelist[i]*math.pi/180) for i in rg]
+    # print('Calling circles', anglelist)
+    if radar_join(anglelist):
+        circleX.append(circleX[0])
+        circleY.append(circleY[0])
+    return circleX, circleY
+
+def radar_label(i):
+    return '{:d} Hz'.format(i)
+
+
+def radar_grid_grid(anglelist):
+    # to limit the annoying effect of all lines crossing at 0,0
+    radius = 0.25
     grid0 = [(radius * math.cos(p * math.pi / 180), radius *
               math.sin(p * math.pi / 180)) for p in anglelist]
     radius = 1
     gridC = [(radius * math.cos(p * math.pi / 180), radius *
               math.sin(p * math.pi / 180)) for p in anglelist]
-    gridX = [(g0[0], gC[0]) for (g0, gC) in zip(grid0, gridC)]
+    gridX = [(g0[0], gC[0], g0[0]) for (g0, gC) in zip(grid0, gridC)]
+    gridY = [(g0[1], gC[1], g0[1]) for (g0, gC) in zip(grid0, gridC)]
+    
     gridX = [s for s2 in gridX for s in s2]
-    gridY = [(g0[1], gC[1]) for (g0, gC) in zip(grid0, gridC)]
     gridY = [s for s2 in gridY for s in s2]
+    # print(gridX)
+    return pd.DataFrame({'x': gridX, 'y': gridY})
 
-    def build_circle(radius):
-        circleC = [radius for i in range(0, len(anglelist) + 1)]
-        circleX = [
-            circleC[i] *
-            math.cos(
-                anglelist[i] *
-                math.pi /
-                180) for i in range(
-                0,
-                len(anglelist))]
-        circleY = [
-            circleC[i] *
-            math.sin(
-                anglelist[i] *
-                math.pi /
-                180) for i in range(
-                0,
-                len(anglelist))]
-        circleX.append(circleX[0])
-        circleY.append(circleY[0])
-        return circleX, circleY
 
-    # 100hz 47
-    #  1khz 113
-    # 10khz 180
-    def hzname(i):
-        if i == 47:
-            return '100 Hz'
-        elif i == 113:
-            return '1 kHz'
-        elif i == 180:
-            return '10 kHz'
-        else:
-            return 'error'
+def radar_grid_circle(anglelist, dbmax):
+    circleX = []
+    circleY = []
+    circleL = []
+    legendX = []
+    legendY = []
+    legendT = []
+    for c in [0.25, 0.5, 0.75, 1]:
+        X, Y = radar_circle(c, anglelist)
+        circleX.append(X)
+        circleY.append(Y)
+        label = dbmax*(1-c)
+        circleL.append([label for i in range(0, len(X))])
+        legendX.append(X[0])
+        legendY.append(Y[0])
+        legendT.append('{:.0f}dB'.format(dbmax*(c-1)))
 
-    def project(gridZ):
-        angles = []
-        dbs = []
-        for a, z in zip(gridZ.index, gridZ):
-            angle = 0
-            # On Axis case
-            if a[0] != 'O':
-                angle = int(a[:-1])
-            angles.append(angle)
-            dbs.append(z)
+    circleX = [v2 for v1 in circleX  for v2 in v1]
+    circleY = [v2 for v1 in circleY  for v2 in v1]
+    circleL = [v2 for v1 in circleL  for v2 in v1]
 
-        # map in 2d
-        dbsX = [db * math.cos(a * math.pi / 180) for a, db in zip(angles, dbs)]
-        dbsY = [db * math.sin(a * math.pi / 180) for a, db in zip(angles, dbs)]
+    df = pd.DataFrame({'x': circleX, 'y': circleY, 'label': circleL})
+    circles = df.reset_index().melt(id_vars=['x', 'y'], var_name='label').loc[lambda df: df['label'] != 'index']
+    # print(circles)
+    text = pd.DataFrame({'x': legendX, 'y': legendY, 'text': legendT})
+    # print(text)
+    return circles, text
 
-        # join with first point (-180=180)
-        dbsX.append(dbsX[0])
-        dbsY.append(dbsY[0])
 
-        return dbsX, dbsY, [ihz for i in range(0, len(dbsX))]
+def radar_grid_text(anglelist):
+    textX, textY = radar_circle(1.02, anglelist)
+    textT = [radar_angle2str(a) for a in anglelist] 
+    if radar_join(anglelist):
+        textT += ['']
+    return pd.DataFrame({'x': textX, 'y': textY, 'text': textT})
 
-    # build 3 plots
+
+def radar_find_nearest_freq(dfu, hz, tolerance=0.05):
+    """ return the index of the nearest freq in dfu, return None if not found """
+    ihz = None
+    for i in dfu.index:
+        f = dfu.loc[i, 'Freq']
+        if abs(f-hz) < hz*tolerance:
+            ihz = i
+            break
+    # print('nearest: {0} hz at loc {1}'.format(hz, ihz))                                                                                                                                        
+    return ihz
+
+
+def radar_plot(anglelist, dfu):
+    # build 3 plots                                                                                                                                                                              
     dbX = []
     dbY = []
     hzZ = []
-    for ihz in [47, 113, 180]:
-        X, Y, Z = project(dfu.loc[ihz][1:])
-        # add to global variable
+    for hz in [100, 500, 1000, 10000, 15000]:
+        # ihz = [47, 113, 180]                                                                                                                                                                   
+        ihz = radar_find_nearest_freq(dfu, hz)
+        if ihz is None:
+            continue
+        X, Y, Z = radar_projection(anglelist, dfu.loc[ihz][1:], hz)
+        # add to global variable                                                                                                                                                                 
         dbX.append(X)
         dbY.append(Y)
         hzZ.append(Z)
 
-    # normalise
+    # normalise                                                                                                                                                                                  
     dbmax = max(np.array(dbX).max(), np.array(dbY).max())
     dbX = [v2 / dbmax for v1 in dbX for v2 in v1]
     dbY = [v2 / dbmax for v1 in dbY for v2 in v1]
-    hzZ = [hzname(i2) for i1 in hzZ for i2 in i1]
+    hzZ = [radar_label(i2) for i1 in hzZ for i2 in i1]
 
-    grid_df = pd.DataFrame({'x': gridX, 'y': gridY})
+    return dbmax, pd.DataFrame({'x': dbX, 'y': dbY, 'Freq': hzZ})
+
+
+def angle2value(angle):
+    if angle == 'On Axis':
+        return 0
+    else:
+        return int(angle[:-1])
+
+
+def graph_radar(dfu, graph_params):
+
+    # which part of the circle do we plot?
+    angle_min, angle_max = radar_angle_range(dfu.columns)
+    anglelist = [a for a in range(angle_min, angle_max+10, 10)]
+    # print(angle_min, angle_max)
+    # print(dfu.columns)
+    # print(anglelist)
+
+    # display some curves                                                                                                                                                                        
+    dbmax, dbs_df = radar_plot(anglelist, dfu)
+    
+    # build a grid                                                                                                                                                                               
+    grid_df = radar_grid_grid(anglelist)
+    circle_df, circle_text = radar_grid_circle(anglelist, dbmax)
+    text_df = radar_grid_text(anglelist)
+
     grid = alt.Chart(grid_df).mark_line(
+    ).encode(
+        alt.Latitude('x:Q'), 
+        alt.Longitude('y:Q'), 
+        size=alt.value(1),
+        opacity=alt.value(0.2)
+    ).project(type='azimuthalEquidistant', rotate=[0, 0, 90])
+
+    circle = alt.Chart(circle_df).mark_line(
     ).encode(
         alt.Latitude('x:Q'),
         alt.Longitude('y:Q'),
-        size=alt.value(1)
+        alt.Color('value:Q', legend=None),
+        size=alt.value(0.5)
     ).project(
         type='azimuthalEquidistant',
         rotate=[0, 0, 90]
     )
-
-    circleX, circleY = build_circle(0.8)
-    circle_df = pd.DataFrame({'x': circleX, 'y': circleY})
-    circle = alt.Chart(circle_df).mark_line().encode(
-        alt.Latitude('x:Q'),
-        alt.Longitude('y:Q'),
-        size=alt.value(1)
-    ).project(
-        type='azimuthalEquidistant',
-        rotate=[0, 0, 90]
-    )
-
-    def angle2str(a):
-        if a % 30 == 0:
-            return '{:d}°'.format(a)
-        else:
-            return ''
-
-    textX, textY = build_circle(1.1)
-    textT = [angle2str(a) for a in anglelist] + ['']
-    text_df = pd.DataFrame({'x': textX, 'y': textY, 'text': textT})
-    text = alt.Chart(text_df).mark_text().encode(
-        alt.Latitude('x:Q'),
-        alt.Longitude('y:Q'),
+    
+    legend = alt.Chart(circle_text).mark_text(
+        dx=15,
+        dy=-10
+    ).encode(
+        alt.Latitude('x:Q'), 
+        alt.Longitude('y:Q'), 
         text='text:O'
-    ).project(
-        type='azimuthalEquidistant',
-        rotate=[0, 0, 90]
-    )
+    ).project(type='azimuthalEquidistant', rotate=[0, 0, 90])
+        
+    text = alt.Chart(text_df).mark_text(
+    ).encode(
+        alt.Latitude('x:Q'), 
+        alt.Longitude('y:Q'), 
+        text='text:O'
+    ).project(type='azimuthalEquidistant', rotate=[0, 0, 90])
 
-    dbs_df = pd.DataFrame({'x': dbX, 'y': dbY, 'Freq': hzZ})
-    dbs = alt.Chart(dbs_df).mark_line().encode(
-        alt.Latitude('x:Q'),
-        alt.Longitude('y:Q'),
-        alt.Color('Freq:N', sort=None),
-        size=alt.value(3)
+    dbs = alt.Chart(dbs_df).mark_line(
+        thickness=3
+    ).encode(
+        alt.Latitude('x:Q'), 
+        alt.Longitude('y:Q'), 
+        alt.Color('Freq:N', sort=None), 
     ).project(
-        type='azimuthalEquidistant',
-        rotate=[0, 0, 90]
-    ).properties(
-        width=graph_params['width'],
-        height=graph_params['height']
-    )
+        type='azimuthalEquidistant', rotate=[0, 0, 90]
+    ).properties(width=graph_params['width'], height=graph_params['height'])
 
-    return dbs + grid + circle + text
+    # return (dbs | grid) & (circle+legend | text) & (grid+circle+legend+text+dbs)
+    return (grid+circle+legend+text+dbs)
+

@@ -121,7 +121,7 @@ def template_vertical(df, params):
     hradar = display_radar_horizontal(df, params)
     vcontour = display_contour_vertical(df, params)
     vradar = display_radar_vertical(df, params)
-    char = alt.vconcat()
+    chart = alt.vconcat()
     for g in (spinorama, onaxis, inroom, ereflex, hreflex, vreflex,
               hspl, vspl, hcontour, hradar, vcontour, vradar):
         if g is not None:
