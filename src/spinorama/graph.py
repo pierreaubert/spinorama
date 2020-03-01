@@ -144,7 +144,7 @@ def graph_contour_common(df, transformer, graph_params):
         angle = am.ravel()
         db = az.ravel()
         if (freq.size != angle.size) or (freq.size != db.size):
-            logging.warning('Size freq={:d} angle={:d} db={:d}'.format(freq.size, angle.size, db.size))
+            logging.debug('Contour: Size freq={:d} angle={:d} db={:d}'.format(freq.size, angle.size, db.size))
             return None
         source = pd.DataFrame({'Freq': freq, 'Angle': angle, 'dB': db})
         m_height = 12
@@ -339,6 +339,9 @@ def graph_radar(dfu, graph_params):
 
     # which part of the circle do we plot?
     angle_min, angle_max = radar_angle_range(dfu.columns)
+    if angle_min is None or angle_max is None or angle_max == angle_min:
+        logging.debug('Angle is empty')
+        return None
     anglelist = [a for a in range(angle_min, angle_max+10, 10)]
     # print(angle_min, angle_max)
     # print(dfu.columns)
