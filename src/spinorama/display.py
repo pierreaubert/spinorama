@@ -10,6 +10,8 @@ alt.data_transformers.disable_max_rows()
 
 def display_contour_horizontal(df, graph_params=contour_params_default):
     try:
+        if 'SPL Horizontal_unmelted' not in df.keys():
+            return None
         dfs = df['SPL Horizontal_unmelted']
         return graph_contour(dfs, graph_params)
     except KeyError as ke:
@@ -19,6 +21,8 @@ def display_contour_horizontal(df, graph_params=contour_params_default):
 
 def display_contour_vertical(df, graph_params=contour_params_default):
     try:
+        if 'SPL Vertical_unmelted' not in df.keys():
+            return None
         dfs = df['SPL Vertical_unmelted']
         return graph_contour(dfs, graph_params)
     except KeyError as ke:
@@ -28,25 +32,23 @@ def display_contour_vertical(df, graph_params=contour_params_default):
 
 def display_radar_horizontal(df, graph_params=radar_params_default):
     try:
+        if 'SPL Horizontal_unmelted' not in df.keys():
+            return None
         dfs = df['SPL Horizontal_unmelted']
         return graph_radar(dfs, graph_params)
-    except KeyError as ke:
-        logging.warning('Display Radar Horizontal failed with {0}'.format(ke))
-        return None
-    except IndexError as ie:
-        logging.warning('Display Radar Horizontal failed with {0}'.format(ie))
+    except (KeyError, IndexError, ValueError) as e:
+        logging.warning('Display Radar Horizontal failed with {0}'.format(e))
         return None
 
 
 def display_radar_vertical(df, graph_params=radar_params_default):
     try:
+        if 'SPL Vertical_unmelted' not in df.keys():
+            return None
         dfs = df['SPL Vertical_unmelted']
         return graph_radar(dfs, graph_params)
-    except KeyError as ke:
-        logging.warning('Display Radar Vertical failed with {0}'.format(ke))
-        return None
-    except IndexError as ie:
-        logging.warning('Display Radar Vertical failed with {0}'.format(ie))
+    except (KeyError, IndexError, ValueError) as e:
+        logging.warning('Display Radar Horizontal failed with {0}'.format(e))
         return None
 
 
@@ -83,6 +85,8 @@ def display_contour_sidebyside(df, graph_params=contour_params_default):
 
 def display_spinorama(df, graph_params=graph_params_default):
     try:
+        if 'CEA2034' not in df.keys():
+            return None
         spinorama = df['CEA2034']
         if spinorama is not None:
             spinorama = spinorama.loc[spinorama['Measurements'] != 'DI offset']
@@ -96,6 +100,8 @@ def display_spinorama(df, graph_params=graph_params_default):
 
 def display_reflection_early(df, graph_params=graph_params_default):
     try:
+        if 'Early Reflections' not in df.keys():
+            return None
         return graph_freq(df['Early Reflections'], graph_params)
     except KeyError as ke:
         logging.warning('Display Early Reflections failed with {0}'.format(ke))
@@ -104,6 +110,8 @@ def display_reflection_early(df, graph_params=graph_params_default):
 
 def display_onaxis(df, graph_params=graph_params_default):
     try:
+        if 'CEA2034' not in df.keys():
+            return None
         onaxis = df['CEA2034']
         onaxis = onaxis.loc[onaxis['Measurements'] == 'On Axis']
         onaxis_graph = graph_freq(onaxis, graph_params)
@@ -127,6 +135,8 @@ def display_onaxis(df, graph_params=graph_params_default):
 
 def display_inroom(df, graph_params=graph_params_default):
     try:
+        if 'Estimated In-Room Response' not in df.keys():
+            return None
         inroom = df['Estimated In-Room Response']
         inroom_graph = graph_freq(inroom, graph_params)
         inroom_reg = alt.Chart(inroom).transform_filter(
@@ -146,6 +156,8 @@ def display_inroom(df, graph_params=graph_params_default):
 
 def display_reflection_horizontal(df, graph_params=graph_params_default):
     try:
+        if 'Horizontal Reflections' not in df.keys():
+            return None
         return graph_freq(
             df['Horizontal Reflections'], graph_params)
     except KeyError as ke:
@@ -155,6 +167,8 @@ def display_reflection_horizontal(df, graph_params=graph_params_default):
 
 def display_reflection_vertical(df, graph_params=graph_params_default):
     try:
+        if 'Vertical Reflections' not in df.keys():
+            return None
         return graph_freq(df['Vertical Reflections'], graph_params)
     except KeyError:
         return None
@@ -162,6 +176,8 @@ def display_reflection_vertical(df, graph_params=graph_params_default):
 
 def display_spl(df, axis, graph_params=graph_params_default):
     try:
+        if axis not in df.keys():
+            return None
         spl = df[axis]
         filter = {
             'Measurements': [
