@@ -10,8 +10,8 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
-    'Ascend Acoustic Sierra 2': {
-        'brand': 'Ascend Acoustic',
+    'Ascend Acoustics Sierra 2': {
+        'brand': 'Ascend Acoustics',
         'model': 'Sierra 2',
         'type': 'passive',
         'price': '750',
