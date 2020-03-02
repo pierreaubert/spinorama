@@ -21,14 +21,14 @@ graph_params_default = {
     'xmax': 20000,
     'ymin': 40,
     'ymax': 110,
-    'width': 900,
-    'height': 400,
+    'width': 600,
+    'height': 360,
 }
 
 contour_params_default = {
     'xmin': 400,
     'xmax': 20000,
-    'width': 400,
+    'width': 420,
     'height': 180,
     'contour_scale': [-12, -9, -8, -7, -6, -5, -4, -3, -2.5, -2, -1.5, -1, -0.5, 0],
 }
@@ -80,6 +80,7 @@ def graph_freq(dfu, graph_params):
     # assemble elements together
     spin = alt.layer(circle, line).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
     return spin
+
 
 def graph_spinorama(dfu, graph_params):
     xmin = graph_params['xmin']

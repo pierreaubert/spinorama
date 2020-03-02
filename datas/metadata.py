@@ -20,6 +20,16 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
+    'Ascend Acoustics CMT-340': {
+        'brand': 'Ascend Acoustics',
+        'model': 'Sierra 2',
+        'type': 'passive',
+        'price': '300',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
     'Dayton Audio B652-AIR': {
         'brand': 'Dayton Audio',
         'model': 'B652-AIR',
@@ -168,6 +178,16 @@ speakers_info = {
             'origin': 'Vendors/JBL',
             'website': 'www.jbl.com',
             'format': 'webplotdigitizer',
+            }],
+        },
+    'Polk T15': {
+        'brand': 'Polk',
+        'model': 'T15',
+        'type': 'passive',
+        'price': '100',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
             }],
         },
     'Neumann KH 80': {
