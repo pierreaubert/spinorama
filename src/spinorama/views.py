@@ -99,12 +99,24 @@ def template_panorama(df, params):
     chart = alt.vconcat()
     if spinorama is not None and onaxis is not None and inroom is not None:
         chart &= alt.hconcat(spinorama, onaxis, inroom)
+    else:
+        logging.info('Panaroma: spin={0} onaxis={1} inroom={2}'.format(
+            spinorama is not None, onaxis is not None, inroom is not None))
     if ereflex is not None and hreflex is not None and vreflex is not None:
         chart &= alt.hconcat(ereflex, hreflex, vreflex)
+    else:
+        logging.info('Panaroma: ereflex={0} hreflex={1} vreflex={2}'.format(
+            ereflex is not None, hreflex is not None, vreflex is not None))
     if hspl is not None and hcontour is not None and hradar is not None:
         chart &= alt.hconcat(hcontour, hradar, hspl)
+    else:
+        logging.info('Panaroma: hspl={0} hcontour={1} hradar={2}'.format(
+            hspl is not None, hcontour is not None, hradar is not None))
     if vspl is not None and vcontour is not None and vradar is not None:
         chart &= alt.hconcat(vcontour, vradar, vspl)
+    else:
+        logging.info('Panaroma: vspl={0} vcontour={1} vradar={2}'.format(
+            vspl is not None, vcontour is not None, vradar is not None))
     return chart
 
 
