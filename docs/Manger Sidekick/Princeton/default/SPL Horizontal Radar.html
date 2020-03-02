@@ -1,35 +1,67 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <style>
-    .error {
-        color: red;
-    }
-  </style>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega@5"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-lite@4.0.2"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-embed@6"></script>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A collection of loudspeakers measurements</title>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <script src="https://kit.fontawesome.com/7dc3015a44.js" crossorigin="anonymous"></script>
+  <script src="https://pierreaubert.github.io/spinorama/assets/fuse.js"></script>
+  <script src="https://pierreaubert.github.io/spinorama/assets/search.js"></script>
+  <script src="https://pierreaubert.github.io/spinorama/assets/compare.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.0/css/bulma.min.css" />
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="https://pierreaubert.github.io/spinorama/assets/spinorama.css"/> 
 </head>
 <body>
-  <div id="vis"></div>
-  <script>
-    (function(vegaEmbed) {
-      var spec = {"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "layer": [{"data": {"name": "data-1e42e86b3a1265d94ecb97313c3b8bdf"}, "mark": "line", "encoding": {"latitude": {"field": "x", "type": "quantitative"}, "longitude": {"field": "y", "type": "quantitative"}, "opacity": {"value": 0.2}, "size": {"value": 1}}, "projection": {"rotate": [0, 0, 90], "type": "azimuthalEquidistant"}}, {"data": {"name": "data-a93f6908678d300e159dff37e50a9925"}, "mark": "line", "encoding": {"color": {"type": "quantitative", "field": "value", "legend": null}, "latitude": {"field": "x", "type": "quantitative"}, "longitude": {"field": "y", "type": "quantitative"}, "size": {"value": 0.5}}, "projection": {"rotate": [0, 0, 90], "type": "azimuthalEquidistant"}}, {"data": {"name": "data-d985e174b280126776639b925bc68e33"}, "mark": {"type": "text", "dx": 15, "dy": -10}, "encoding": {"latitude": {"field": "x", "type": "quantitative"}, "longitude": {"field": "y", "type": "quantitative"}, "text": {"type": "ordinal", "field": "text"}}, "projection": {"rotate": [0, 0, 90], "type": "azimuthalEquidistant"}}, {"data": {"name": "data-48282c519c563d73ab6d6b1dd8443308"}, "mark": "text", "encoding": {"latitude": {"field": "x", "type": "quantitative"}, "longitude": {"field": "y", "type": "quantitative"}, "text": {"type": "ordinal", "field": "text"}}, "projection": {"rotate": [0, 0, 90], "type": "azimuthalEquidistant"}}, {"data": {"name": "data-a073d093740ee88259bddb94507572bf"}, "mark": {"type": "line", "thickness": 3}, "encoding": {"color": {"type": "nominal", "field": "Freq", "sort": null}, "latitude": {"field": "x", "type": "quantitative"}, "longitude": {"field": "y", "type": "quantitative"}}, "height": 600, "projection": {"rotate": [0, 0, 90], "type": "azimuthalEquidistant"}, "width": 600}], "$schema": "https://vega.github.io/schema/vega-lite/v4.0.2.json", "datasets": {"data-1e42e86b3a1265d94ecb97313c3b8bdf": [{"x": 0.25, "y": 0.0}, {"x": 1.0, "y": 0.0}, {"x": 0.25, "y": 0.0}, {"x": 0.246201938253052, "y": 0.04341204441673258}, {"x": 0.984807753012208, "y": 0.17364817766693033}, {"x": 0.246201938253052, "y": 0.04341204441673258}, {"x": 0.2349231551964771, "y": 0.08550503583141718}, {"x": 0.9396926207859084, "y": 0.3420201433256687}, {"x": 0.2349231551964771, "y": 0.08550503583141718}, {"x": 0.21650635094610968, "y": 0.12499999999999999}, {"x": 0.8660254037844387, "y": 0.49999999999999994}, {"x": 0.21650635094610968, "y": 0.12499999999999999}, {"x": 0.19151111077974453, "y": 0.1606969024216348}, {"x": 0.7660444431189781, "y": 0.6427876096865393}, {"x": 0.19151111077974453, "y": 0.1606969024216348}, {"x": 0.16069690242163484, "y": 0.1915111107797445}, {"x": 0.6427876096865394, "y": 0.766044443118978}, {"x": 0.16069690242163484, "y": 0.1915111107797445}, {"x": 0.12500000000000003, "y": 0.21650635094610965}, {"x": 0.5000000000000001, "y": 0.8660254037844386}, {"x": 0.12500000000000003, "y": 0.21650635094610965}, {"x": 0.0855050358314172, "y": 0.23492315519647708}, {"x": 0.3420201433256688, "y": 0.9396926207859083}, {"x": 0.0855050358314172, "y": 0.23492315519647708}, {"x": 0.043412044416732604, "y": 0.246201938253052}, {"x": 0.17364817766693041, "y": 0.984807753012208}, {"x": 0.043412044416732604, "y": 0.246201938253052}, {"x": 1.5308084989341915e-17, "y": 0.25}, {"x": 6.123233995736766e-17, "y": 1.0}, {"x": 1.5308084989341915e-17, "y": 0.25}], "data-a93f6908678d300e159dff37e50a9925": [{"x": 0.25, "y": 0.0, "label": "label", "value": 65.48097260814077}, {"x": 0.246201938253052, "y": 0.04341204441673258, "label": "label", "value": 65.48097260814077}, {"x": 0.2349231551964771, "y": 0.08550503583141718, "label": "label", "value": 65.48097260814077}, {"x": 0.21650635094610968, "y": 0.12499999999999999, "label": "label", "value": 65.48097260814077}, {"x": 0.19151111077974453, "y": 0.1606969024216348, "label": "label", "value": 65.48097260814077}, {"x": 0.16069690242163484, "y": 0.1915111107797445, "label": "label", "value": 65.48097260814077}, {"x": 0.12500000000000003, "y": 0.21650635094610965, "label": "label", "value": 65.48097260814077}, {"x": 0.0855050358314172, "y": 0.23492315519647708, "label": "label", "value": 65.48097260814077}, {"x": 0.043412044416732604, "y": 0.246201938253052, "label": "label", "value": 65.48097260814077}, {"x": 1.5308084989341915e-17, "y": 0.25, "label": "label", "value": 65.48097260814077}, {"x": 0.5, "y": 0.0, "label": "label", "value": 43.653981738760514}, {"x": 0.492403876506104, "y": 0.08682408883346517, "label": "label", "value": 43.653981738760514}, {"x": 0.4698463103929542, "y": 0.17101007166283436, "label": "label", "value": 43.653981738760514}, {"x": 0.43301270189221935, "y": 0.24999999999999997, "label": "label", "value": 43.653981738760514}, {"x": 0.38302222155948906, "y": 0.3213938048432696, "label": "label", "value": 43.653981738760514}, {"x": 0.3213938048432697, "y": 0.383022221559489, "label": "label", "value": 43.653981738760514}, {"x": 0.25000000000000006, "y": 0.4330127018922193, "label": "label", "value": 43.653981738760514}, {"x": 0.1710100716628344, "y": 0.46984631039295416, "label": "label", "value": 43.653981738760514}, {"x": 0.08682408883346521, "y": 0.492403876506104, "label": "label", "value": 43.653981738760514}, {"x": 3.061616997868383e-17, "y": 0.5, "label": "label", "value": 43.653981738760514}, {"x": 0.75, "y": 0.0, "label": "label", "value": 21.826990869380257}, {"x": 0.738605814759156, "y": 0.13023613325019776, "label": "label", "value": 21.826990869380257}, {"x": 0.7047694655894313, "y": 0.25651510749425155, "label": "label", "value": 21.826990869380257}, {"x": 0.649519052838329, "y": 0.37499999999999994, "label": "label", "value": 21.826990869380257}, {"x": 0.5745333323392336, "y": 0.48209070726490444, "label": "label", "value": 21.826990869380257}, {"x": 0.48209070726490455, "y": 0.5745333323392335, "label": "label", "value": 21.826990869380257}, {"x": 0.3750000000000001, "y": 0.649519052838329, "label": "label", "value": 21.826990869380257}, {"x": 0.2565151074942516, "y": 0.7047694655894312, "label": "label", "value": 21.826990869380257}, {"x": 0.1302361332501978, "y": 0.738605814759156, "label": "label", "value": 21.826990869380257}, {"x": 4.592425496802574e-17, "y": 0.75, "label": "label", "value": 21.826990869380257}, {"x": 1.0, "y": 0.0, "label": "label", "value": 0.0}, {"x": 0.984807753012208, "y": 0.17364817766693033, "label": "label", "value": 0.0}, {"x": 0.9396926207859084, "y": 0.3420201433256687, "label": "label", "value": 0.0}, {"x": 0.8660254037844387, "y": 0.49999999999999994, "label": "label", "value": 0.0}, {"x": 0.7660444431189781, "y": 0.6427876096865393, "label": "label", "value": 0.0}, {"x": 0.6427876096865394, "y": 0.766044443118978, "label": "label", "value": 0.0}, {"x": 0.5000000000000001, "y": 0.8660254037844386, "label": "label", "value": 0.0}, {"x": 0.3420201433256688, "y": 0.9396926207859083, "label": "label", "value": 0.0}, {"x": 0.17364817766693041, "y": 0.984807753012208, "label": "label", "value": 0.0}, {"x": 6.123233995736766e-17, "y": 1.0, "label": "label", "value": 0.0}], "data-d985e174b280126776639b925bc68e33": [{"x": 0.25, "y": 0.0, "text": "-65dB"}, {"x": 0.5, "y": 0.0, "text": "-44dB"}, {"x": 0.75, "y": 0.0, "text": "-22dB"}, {"x": 1.0, "y": 0.0, "text": "0dB"}], "data-48282c519c563d73ab6d6b1dd8443308": [{"x": 1.02, "y": 0.0, "text": "0\u00b0"}, {"x": 1.0045039080724523, "y": 0.17712114122026895, "text": ""}, {"x": 0.9584864732016266, "y": 0.3488605461921821, "text": ""}, {"x": 0.8833459118601275, "y": 0.5099999999999999, "text": "30\u00b0"}, {"x": 0.7813653319813577, "y": 0.6556433618802701, "text": ""}, {"x": 0.6556433618802702, "y": 0.7813653319813576, "text": ""}, {"x": 0.5100000000000001, "y": 0.8833459118601273, "text": "60\u00b0"}, {"x": 0.3488605461921822, "y": 0.9584864732016265, "text": ""}, {"x": 0.17712114122026903, "y": 1.0045039080724523, "text": ""}, {"x": 6.245698675651501e-17, "y": 1.02, "text": "90\u00b0"}], "data-a073d093740ee88259bddb94507572bf": [{"x": 0.9757803530317604, "y": 0.0, "Freq": "500 Hz"}, {"x": 0.9595851410780926, "y": 0.16920075065900644, "Freq": "500 Hz"}, {"x": 0.912275463264255, "y": 0.33204111407959913, "Freq": "500 Hz"}, {"x": 0.8361587978931323, "y": 0.48275650704887374, "Freq": "500 Hz"}, {"x": 0.7342816586700442, "y": 0.6161354689702754, "Freq": "500 Hz"}, {"x": 0.6098527565480013, "y": 0.7267942135695625, "Freq": "500 Hz"}, {"x": 0.46843674549491204, "y": 0.8113562433293989, "Freq": "500 Hz"}, {"x": 0.3157397559304168, "y": 0.8674878498429336, "Freq": "500 Hz"}, {"x": 0.15743609623026172, "y": 0.8928644703022671, "Freq": "500 Hz"}, {"x": 5.4331239891648135e-17, "y": 0.8872964830263822, "Freq": "500 Hz"}, {"x": 1.0, "y": 0.0, "Freq": "1000 Hz"}, {"x": 0.986222604256471, "y": 0.17389765411498284, "Freq": "1000 Hz"}, {"x": 0.938128254222009, "y": 0.34145076046092804, "Freq": "1000 Hz"}, {"x": 0.8576186653611775, "y": 0.4951463673083233, "Freq": "1000 Hz"}, {"x": 0.7493866030446814, "y": 0.6288100222239867, "Freq": "1000 Hz"}, {"x": 0.6184323418770776, "y": 0.7370189652084578, "Freq": "1000 Hz"}, {"x": 0.4709703061824377, "y": 0.8157444991642525, "Freq": "1000 Hz"}, {"x": 0.31488610765164826, "y": 0.8651424704728605, "Freq": "1000 Hz"}, {"x": 0.155554948295203, "y": 0.8821959502181573, "Freq": "1000 Hz"}, {"x": 5.307465966421257e-17, "y": 0.8667749705656392, "Freq": "1000 Hz"}, {"x": 0.9854349369254761, "y": 0.0, "Freq": "10000 Hz"}, {"x": 0.919189777386374, "y": 0.16207795814462536, "Freq": "10000 Hz"}, {"x": 0.7623079452658167, "y": 0.27745740142138664, "Freq": "10000 Hz"}, {"x": 0.7587865761799981, "y": 0.4380856340149963, "Freq": "10000 Hz"}, {"x": 0.6859067716774299, "y": 0.57554411913653, "Freq": "10000 Hz"}, {"x": 0.555595030294756, "y": 0.6621323733812643, "Freq": "10000 Hz"}, {"x": 0.3666407945749466, "y": 0.6350404843312308, "Freq": "10000 Hz"}, {"x": 0.25076525393736365, "y": 0.6889718727767107, "Freq": "10000 Hz"}, {"x": 0.1258612544063105, "y": 0.7137946439087877, "Freq": "10000 Hz"}, {"x": 4.3889340239224706e-17, "y": 0.7167673205006077, "Freq": "10000 Hz"}, {"x": 0.9926300544915748, "y": 0.0, "Freq": "15000 Hz"}, {"x": 0.8776237945186786, "y": 0.15474875388538487, "Freq": "15000 Hz"}, {"x": 0.850126793379896, "y": 0.30942084814245613, "Freq": "15000 Hz"}, {"x": 0.7348530023162884, "y": 0.4242675787021136, "Freq": "15000 Hz"}, {"x": 0.6370515638121067, "y": 0.5345497322356481, "Freq": "15000 Hz"}, {"x": 0.5601350531769281, "y": 0.6675429619615528, "Freq": "15000 Hz"}, {"x": 0.405670216228716, "y": 0.7026414256255885, "Freq": "15000 Hz"}, {"x": 0.25669475043913215, "y": 0.7052630305240549, "Freq": "15000 Hz"}, {"x": 0.12888369674359482, "y": 0.7309357661870712, "Freq": "15000 Hz"}, {"x": 4.2890362338981294e-17, "y": 0.7004527733031799, "Freq": "15000 Hz"}]}};
-      var embedOpt = {"mode": "vega-lite"};
 
-      function showError(el, error){
-          el.innerHTML = ('<div class="error" style="color:red;">'
-                          + '<p>JavaScript Error: ' + error.message + '</p>'
-                          + "<p>This usually means there's a typo in your chart specification. "
-                          + "See the javascript console for the full traceback.</p>"
-                          + '</div>');
-          throw error;
-      }
-      const el = document.getElementById('vis');
-      vegaEmbed("#vis", spec, embedOpt)
-        .catch(error => showError(el, error));
-    })(vegaEmbed);
 
+<nav class="navbar">
+ <div class="container">
+   <div class="navbar-brand">
+     <a class="navbar-item" href="https://pierreaubert.github.io/spinorama"><p class="title">Spinorama</p></a>
+     <span class="navbar-burger burger" data-target="navbarMenu">
+       <span></span>
+       <span></span>
+       <span></span>
+     </span>
+   </div>
+   <div id="navbarMenu" class="navbar-menu">
+     <div class="navbar-end">
+       <a class="navbar-item" href="https://pierreaubert.github.io/spinorama/help.html">Help</a>
+     </div>
+   </div>
+</nav>
+
+
+
+  
+
+<div class="box">
+  <div id="vis2"></div>
+  <script type="text/javascript">
+    var spec = "SPL%20Horizontal%20Radar.json";
+    vegaEmbed('#vis2', spec).then(function(result) {}).catch(console.error);
   </script>
+</div>
+
+<footer class="footer">
+<div class="container">
+  <div class="content has-text-centered">
+    <div class="soc">
+      <a href="#"><i class="fa fa-github-alt fa-2x" aria-hidden="true"></i></a>
+    </div>
+    <p>
+      <strong>Spinorama</strong> by <a href="https://github.com/pierreaubert">Pierre Aubert</a>.
+      The <a href="https://github.com/pierreaubert/spinorama">source code</a> is licensed under GPL. <br>
+    </p>
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
+
