@@ -81,7 +81,6 @@ def graph_freq(dfu, graph_params):
     spin = alt.layer(circle, line).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
     return spin
 
-
 def graph_spinorama(dfu, graph_params):
     xmin = graph_params['xmin']
     xmax = graph_params['xmax']
@@ -100,7 +99,9 @@ def graph_spinorama(dfu, graph_params):
     )
     # main charts
     line=alt.Chart(dfu).mark_line().transform_filter(
-        alt.FieldOneOfPredicate(field='Measurements', oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
+        alt.FieldOneOfPredicate(
+            field='Measurements', 
+            oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
     ).encode(
         alt.X('Freq:Q', title='Freqency (Hz)',
               scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]), 
@@ -116,19 +117,20 @@ def graph_spinorama(dfu, graph_params):
         alt.FieldOneOfPredicate(field='Measurements', oneOf=['Early Reflections DI', 'Sound Power DI'])
     ).encode(
         alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[xmin, xmax])),
-        alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[ymin, ymax])),
+        alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[60, 100])),
         alt.Color('Measurements', type='nominal', sort=None),
         opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     )
     circle=alt.Chart(dfu).mark_circle(size=100).encode(
-        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[graph_params['xmin'], graph_params['xmax']])),
+        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[xmin, xmax])),
         alt.Y('dB:Q',   scale=alt.Scale(zero=False)),
         alt.Color('Measurements', type='nominal', sort=None),
         opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
         tooltip=['Measurements', 'Freq', 'dB']
     ).transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
     # assemble elements together
-    spin = alt.layer(circle, line, di).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
+    spin = (circle + (line + di) #.resolve_scale(y='independent'
+    ).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
     return spin
 
 
@@ -405,4 +407,5 @@ def graph_radar(dfu, graph_params):
 
     # return (dbs | grid) & (circle+legend | text) & (grid+circle+legend+text+dbs)
     return (grid+circle+legend+text+dbs)
+
 
