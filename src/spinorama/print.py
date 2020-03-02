@@ -18,7 +18,7 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
         filedir = 'docs/' + speaker + '/' + origin.replace('Vendors/','') + '/' + key
         logging.debug('print_graph: write to directory {0}'.format(filedir))
         pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
-        for ext in ['json', 'png', 'html']:  # svg skipped slow
+        for ext in ['json', 'png']: # svg and html skipped to keep size small
             filename = filedir + '/' + title.replace('_unmelted', '') + '.' + ext
             if force or not os.path.exists(filename):
                 if fileext is None or (fileext is not None and fileext == ext):

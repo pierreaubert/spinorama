@@ -106,10 +106,40 @@ pytest --cov=src
 
 # Source of data and citations
 
-# ASR is a fantastic source of speakers data
+## [AudioScienceReview *aka* ASR](https://www.audiosciencereview.com) is a fantastic source of speakers data thanks to [amirm@](https://www.audiosciencereview.com/forum/index.php?threads/a-bit-about-your-host.1906/).
 
-# 3D3A is a research organisation at Princeton: they provided a set of measurements.
+## [3D3A](https://www.princeton.edu/3D3A/) is a research organisation at [Princeton](https://www.princeton.edu).
 
-# Others and gathered from the web and manually translated into graphs.
+- They provide a database of speaker measurements ([manual](https://www.princeton.edu/3D3A/Manuals/3D3A_Directivity_Database.pdf))
+- Some scientific papers I have used:
+  - Metrics for Constant Directivity ([abstract](https://www.princeton.edu/3D3A/Publications/Sridhar_AES140_CDMetrics.html), [paper](https://www.princeton.edu/3D3A/Publications/Sridhar_AES140_CDMetrics.pdf), [poster](https://www.princeton.edu/3D3A/Publications/Sridhar_AES140_CDMetrics-poster.pdf))
+    - Authors: Sridhar, R., Tylka, J. G., Choueiri, E. Y.
+    - Publication: 140th Convention of the Audio Engineering Society (AES 140)
+    - Date: May 26, 2016
+  - A Database of Loudspeaker Polar Radiation Measurements ([abstract](https://www.princeton.edu/3D3A/Publications/Tylka_AES139_3D3ADirectivity.html), )
+  - On the Calculation of Full and Partial Directivity Indices ([abstract](https://www.princeton.edu/3D3A/Publications/Tylka_3D3A_DICalculation.html))
+    - Authors: Tylka, J. G., Choueiri, E. Y.
+    - Publication: 3D3A Lab Technical Report #1
+    - Date: November 16, 2014
 
-If you are a manufacturer of speakers, it would be great if you could provide
+## Books and research papers
+
+- [Sound Reproduction: The Acoustics and Psychoacoustics of Loudspeakers and Rooms](https://books.google.ch/books/about/Sound_Reproduction.html?id=tJ0uDwAAQBAJ&printsec=frontcover&source=kp_read_button&redir_esc=y#v=onepage&q&f=false) By Floyd E. Toole
+- Standard Method of Measurement for In-Home Loudspeakers is available for free at [CTA](https://www.cta.tech)
+- A Multiple Regression Model for Predicting Loudspeaker Preference Using Objective Measurements: Part II - Development of the Model by Sean E. Olive, AES Fellow. Convention paper 6190 from the [AES](https://www.aes.org).
+
+## Speakers manufacturers.
+
+- If you are a manufacturer of speakers, it would be great if you could provide spinorama datas.
+- Manufactures with good datas usually in speaker's manual:
+  - JBL
+  - Revel
+  - Genelec
+  - Adam
+  - Eve Audio
+  - Buscard Audio
+  - KEF
+
+
+
+
