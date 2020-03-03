@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A collection of loudspeakers measurements</title>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <script src="https://kit.fontawesome.com/7dc3015a44.js" crossorigin="anonymous"></script>
+  <script src="https://pierreaubert.github.io/spinorama/assets/fuse.js"></script>
+  <script src="https://pierreaubert.github.io/spinorama/assets/search.js"></script>
+  <script src="https://pierreaubert.github.io/spinorama/assets/compare.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.0/css/bulma.min.css" />
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="https://pierreaubert.github.io/spinorama/assets/spinorama.css"/> 
+</head>
+<body>
+
+
+<nav class="navbar">
+ <div class="container">
+   <div class="navbar-brand">
+     <a class="navbar-item" href="https://pierreaubert.github.io/spinorama"><p class="title">Spinorama</p></a>
+     <span class="navbar-burger burger" data-target="navbarMenu">
+       <span></span>
+       <span></span>
+       <span></span>
+     </span>
+   </div>
+   <div id="navbarMenu" class="navbar-menu">
+     <div class="navbar-end">
+       <a class="navbar-item" href="https://pierreaubert.github.io/spinorama/help.html">Help</a>
+     </div>
+   </div>
+</nav>
+
+
+
+  
+
+<div class="box">
+  <div id="vis2"></div>
+  <script type="text/javascript">
+    var spec = "SPL%20Vertical%20Radar.json";
+    vegaEmbed('#vis2', spec).then(function(result) {}).catch(console.error);
+  </script>
+</div>
+
+<footer class="footer">
+<div class="container">
+  <div class="content has-text-centered">
+    <div class="soc">
+      <a href="#"><i class="fa fa-github-alt fa-2x" aria-hidden="true"></i></a>
+    </div>
+    <p>
+      <strong>Spinorama</strong> by <a href="https://github.com/pierreaubert">Pierre Aubert</a>.
+      The <a href="https://github.com/pierreaubert/spinorama">source code</a> is licensed under GPL. <br>
+    </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+
