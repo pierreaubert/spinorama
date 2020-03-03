@@ -1,6 +1,7 @@
 import logging
 import math
-from math import log10, pow
+from math import log10
+from scipy.stats import linregress
 from scipy.optimize import curve_fit
 import numpy as np
 import pandas as pd
@@ -346,3 +347,104 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     return spin
 
 
+def octave(N):
+    """compute 1/N octave band"""
+    p = pow(2,1/N)
+    p_band= pow(2,1/(2*N))
+    iter = int((N*10+1)/2)
+    center = [1000 / p**i for i in range(iter,0,-1)]+[1000*p**i for i in range(0,iter,1)]
+    return [(c/p_band,c*p_band) for c in center]
+
+
+def aad(dfu):
+    # mean betwenn 200hz and 400hz
+    y_ref = np.mean(dfu.loc[(dfu.Freq>=200) & (dfu.Freq<=400)].dB)
+    #print(y_ref)
+    sum = 0
+    n = 0
+    # 1/20 octave
+    for (omin, omax) in octave(20):
+        # 100hz to 16k hz
+        if omin < 100:
+            continue
+        if omax > 16000:
+            break
+        sum += abs(y_ref-np.mean(dfu.loc[(dfu.Freq>=omin) & (dfu.Freq<omax)].dB))
+        n += 1
+    return sum/n
+
+def nbd(dfu):
+    sum = 0
+    n = 0
+    # 1/2 octave
+    for (omin, omax) in octave(2):
+        # 100hz to 12k hz
+        if omin < 100:
+            continue
+        if omax > 12000:
+            break
+        y = dfu.loc[(dfu.Freq>=omin) & (dfu.Freq<omax)].dB
+        y_avg = np.mean(y)
+        # don't sample, take all points in this octave
+        sum += np.mean(np.abs(y_avg-y))
+        n += 1
+    return sum/n
+
+
+def lfx(lw, sp):
+    y_ref = np.mean(lw.loc[(lw.Freq>=300) & (lw.Freq<=10000)].dB)-6
+    # find first freq such that y[freq]<y_ref-6dB
+    y = math.log10(sp.loc[(sp.Freq<300)&(sp.dB<=y_ref)].Freq.max())
+    return y
+
+
+def lfq(lw, sp, lfx_log):
+    lfx = pow(10,lfx_log)
+    sum = 0
+    n = 0
+    for (omin, omax) in octave(20):
+        # 100hz to 12k hz
+        if omin < lfx:
+            continue
+        if omax > 300:
+            break
+        y_lw = np.mean(lw.loc[(lw.Freq>=omin) & (lw.Freq<omax)].dB)
+        y_sp = np.mean(sp.loc[(sp.Freq>=omin) & (sp.Freq<omax)].dB)
+        sum += abs(y_lw-y_sp)
+        n += 1
+    return sum/n
+
+def sm(dfu):
+    data = dfu.loc[(dfu.Freq>=100) & (dfu.Freq<=16000)]
+    slope, intercept, r_value, p_value, std_err = linregress(data.Freq, data.dB)
+    return r_value**2
+                
+
+def pref_rating(nbd_on, nbd_pir, lfx, sm_pir):
+    return 12.69-2.49*nbd_on-2.99*nbd_pir-4.31*lfx+2.32*sm_pir
+
+
+def speaker_pref_rating(cea2034):
+    df_on = cea2034.loc[lambda df: df.Measurements == 'On Axis']
+    df_lw = cea2034.loc[lambda df: df.Measurements == 'Listening Window']
+    df_sp = cea2034.loc[lambda df: df.Measurements == 'Sound Power']
+    # 
+    aad_on = aad(df_on)
+    nbd_on = nbd(df_on)
+    nbd_lw = nbd(df_lw)
+    nbd_sp = nbd(df_sp)
+    lfx_hz = lfx(df_lw, df_sp)
+    lfq_db = lfq(df_lw, df_sp, lfx_hz)
+    sm_sp = sm(df_sp)
+    pref = pref_rating(nbd_on, nbd_sp, lfx_hz, sm_sp)
+    return {
+        'aad_on': aad_on,
+        'nbd_on': nbd_on,
+        'nbd_lw': nbd_lw,
+        'nbs_sp': nbd_sp,
+        'lfx_hz': pow(10, lfx_hz), # in Hz
+        'lfq': lfq_db,
+        'sm_sp': sm_sp,
+        'pref': pref,
+    }
+    
