@@ -42,7 +42,7 @@ import logging
 from mako.template import Template
 from mako.lookup import TemplateLookup
 from src.spinorama.load import parse_all_speakers, parse_graphs_speaker
-from src.spinorama.analysis import estimates
+from src.spinorama.analysis import estimates, speaker_pref_rating
 import datas.metadata as metadata
 from docopt import docopt
 
@@ -89,10 +89,13 @@ def add_estimates(df):
                     if 'CEA2034' in dfs.keys():
                         spin = dfs['CEA2034']
                         if spin is not None:
+                            # basic math
                             onaxis = spin.loc[spin['Measurements'] == 'On Axis']
                             est = estimates(onaxis)
                             logging.info('Adding -3dB {:d}Hz -6dB {:d}Hz +/-{:f}dB'.format(est[1], est[2], est[3]))
                             metadata.speakers_info[speaker_name]['estimates'] = est
+                            # from Olive&all paper
+                            metadata.speakers_info[speaker_name]['pref_rating'] = speaker_pref_rating(spin)
 
 
 def generate_speaker(mako, df, meta, site):
@@ -197,6 +200,7 @@ if __name__ == '__main__':
         if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
             logging.basicConfig(level=level)
 
+    generate_all_speakers = True
     # read data from disk
     if args['--speaker'] is not None and args['--origin'] is not None:
         speaker = args['--speaker']
@@ -213,6 +217,7 @@ if __name__ == '__main__':
         df[speaker] = {}
         df[speaker][origin] = {}
         df[speaker][origin]['default'] = parse_graphs_speaker(brand, speaker, mformat)
+        generate_all_speakers = False
     else:
         df = parse_all_speakers(metadata.speakers_info)
         
@@ -228,33 +233,37 @@ if __name__ == '__main__':
     mako_templates = TemplateLookup(directories=['templates'], module_directory='/tmp/mako_modules')
 
     # write metadata in a json file for easy search
-    logging.info('Write metadat')
-    dump_metadata(metadata.speakers_info)
+    if generate_all_speakers:
+        logging.info('Write metadat')
+        dump_metadata(metadata.speakers_info)
 
     # write index.html
-    logging.info('Write index.html')
-    index_html = mako_templates.get_template('index.html')
-    with open('docs/index.html', 'w') as f:
-        f.write(index_html.render(df=df, meta=metadata.speakers_info, site=site))
-        f.close()
+    if generate_all_speakers:
+        logging.info('Write index.html')
+        index_html = mako_templates.get_template('index.html')
+        with open('docs/index.html', 'w') as f:
+            f.write(index_html.render(df=df, meta=metadata.speakers_info, site=site))
+            f.close()
 
     # write help.html
-    logging.info('Write help.html')
-    help_html = mako_templates.get_template('help.html')
-    with open('docs/help.html', 'w') as f:
-        f.write(help_html.render(df=df, meta=metadata.speakers_info, site=site))
-        f.close()
+    if generate_all_speakers:
+        logging.info('Write help.html')
+        help_html = mako_templates.get_template('help.html')
+        with open('docs/help.html', 'w') as f:
+            f.write(help_html.render(df=df, meta=metadata.speakers_info, site=site))
+            f.close()
 
     # write a file per speaker
     logging.info('Write a file per speaker')
     generate_speaker(mako_templates, df, metadata.speakers_info, site=site)
 
-    logging.info('Copy js/css files to docs')
-    for f in ['search.js', 'bulma.js', 'compare.js', 'tabs.js', 'spinorama.css']:
-        file_ext = Template(filename='templates/assets/'+f)
-        with open('docs/assets/'+f, 'w') as fd:
-            fd.write(file_ext.render(site=site))
-            fd.close()
+    if generate_all_speakers:
+        logging.info('Copy js/css files to docs')
+        for f in ['search.js', 'bulma.js', 'compare.js', 'tabs.js', 'spinorama.css']:
+            file_ext = Template(filename='templates/assets/'+f)
+            with open('docs/assets/'+f, 'w') as fd:
+                fd.write(file_ext.render(site=site))
+                fd.close()
 
     # generate potential missing graphs
     # logging.info('Generate missing graphs')
