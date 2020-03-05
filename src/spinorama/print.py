@@ -19,7 +19,12 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
         logging.debug('print_graph: write to directory {0}'.format(filedir))
         pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
         for ext in ['json', 'png']: # svg and html skipped to keep size small
-            filename = filedir + '/' + title.replace('_unmelted', '') + '.' + ext
+            filename = filedir + '/' + title.replace('_unmelted', '')
+            if ext == 'png':
+                # generate large image that are then easy to find and compress
+                # before uploading
+                filename +=  '_large'
+            filename +=  '.' + ext
             if force or not os.path.exists(filename):
                 if fileext is None or (fileext is not None and fileext == ext):
                     chart.save(filename)
