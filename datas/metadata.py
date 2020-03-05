@@ -92,7 +92,7 @@ speakers_info = {
         'brand': 'Revel',
         'model': 'C16',
         'type': 'passive',
-        'price': '',
+        'price': '900',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
