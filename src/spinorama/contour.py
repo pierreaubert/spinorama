@@ -64,7 +64,7 @@ def compute_contour_smoothed(dfu):
     # std_dev = 1
     kernel = Gaussian2DKernel(1, mode='oversample', factor=10)
     # extend array by x5
-    rx, ry, rz = reshape(x, y, z, 5)
+    rx, ry, rz = reshape(x, y, z, 2)
     # convolve with kernel
     rzs = ndimage.convolve(rz, kernel.array, mode='mirror')
     # return

@@ -74,7 +74,13 @@ def template_compact(df, params):
         chart &= alt.hconcat(hcontour, hradar)
     if vcontour is not None and vradar is not None:
         chart &= alt.hconcat(vcontour, vradar)
-    return chart
+    return chart.configure_legend(
+        orient='top'
+    ).configure_title(
+        orient='top',
+        anchor='middle',
+        fontSize=18
+    )
 
 
 def template_panorama(df, params):
@@ -117,7 +123,13 @@ def template_panorama(df, params):
     else:
         logging.info('Panaroma: vspl={0} vcontour={1} vradar={2}'.format(
             vspl is not None, vcontour is not None, vradar is not None))
-    return chart
+    return chart.configure_legend(
+        orient='top'
+    ).configure_title(
+        orient='top',
+        anchor='middle',
+        fontSize=18
+    )
 
 
 def template_vertical(df, params):
@@ -138,7 +150,13 @@ def template_vertical(df, params):
               hspl, vspl, hcontour, hradar, vcontour, vradar):
         if g is not None:
             chart &= g
-    return chart 
+    return chart.configure_legend(
+        orient='top'
+    ).configure_title(
+        orient='top',
+        anchor='middle',
+        fontSize=18
+    )
 
 
 # def template_freq_sidebyside(s1, s2, name, width=450, height=450):
