@@ -30,6 +30,14 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
+    'Ascend Acoustics CBM-170 SE': {
+        'brand': 'Ascend Acoustics',
+        'model': 'CBM-170 SE',
+        'type': 'passive',
+        'price': '400',
+        'measurements': [{'origin': 'ASR', 'format': 'klippel',},
+                         {'origin': 'Princeton', 'format': 'princeton'}],
+        },
     'Dayton Audio B652-AIR': {
         'brand': 'Dayton Audio',
         'model': 'B652-AIR',
@@ -73,6 +81,16 @@ speakers_info = {
     'Revel C52': {
         'brand': 'Revel',
         'model': 'C52',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
+    'Revel M16': {
+        'brand': 'Revel',
+        'model': 'C16',
         'type': 'passive',
         'price': '',
         'measurements': [{
@@ -238,16 +256,6 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            }],
-        },
-    'Ascend Acoustics CBM-170 SE': {
-        'brand': 'Ascend Acoustics',
-        'model': 'CBM-170 SE',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
             }],
         },
     'Avantgarde Acoustic Solo': {
