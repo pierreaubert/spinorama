@@ -168,7 +168,7 @@ def graph_contour_common(df, transformer, graph_params):
         ).encode(
             alt.X('Freq:O'),
             alt.Y('Angle:O'),
-            alt.Color('dB:Q', scale=alt.Scale(domain=speaker_scale))
+            alt.Color('dB:Q', scale=alt.Scale(scheme='lightmulti', domain=speaker_scale, nice=True))
         ).properties(
             width=width,
             height=height

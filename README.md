@@ -1,10 +1,13 @@
 ![Spinorama](https://github.com/pierreaubert/spinorama/workflows/Spinorama/badge.svg?branch=master)
 
-# Spinorama : a library to display Spinorama and similar graphs
+# Spinorama : a library to display speaker frequency response and similar graphs
+
+This library provides an easy way to view, compare or analyse speakers data. This can help you take informed
+decision when buying a speaker instead of relying on commercial information or internet buzz.
 
 ## Jump to the [gallery](https://pierreaubert.github.com/spinorama) of all speakers measurements.
 
-# What is a spinorama graph?
+# What is a spinorama set of graphs?
 
 It is a way to understand quickly a speaker properties.
 
@@ -93,8 +96,7 @@ pytest --cov=src
 
 2. Generate datas and webpages
 
-   - ```cd datas && ./convert.sh``` will generate a thumbnail picture
-   - ```./generate_docs.py``` will generate both graphs and website
+   - ```./scripts/generate_docs.sh``` will generate both graphs and website. All files will end up in the ```docs``` directory`. This directory is ignored by git.
 
 3. Add your files to git and push to github on master branch
 
@@ -106,7 +108,8 @@ pytest --cov=src
 
 # Source of data and citations
 
-## [AudioScienceReview *aka* ASR](https://www.audiosciencereview.com) is a fantastic source of speakers data thanks to [amirm@](https://www.audiosciencereview.com/forum/index.php?threads/a-bit-about-your-host.1906/).
+## [AudioScienceReview *aka* ASR](https://www.audiosciencereview.com)
+ASR is a fantastic source of speakers data thanks to [amirm@](https://www.audiosciencereview.com/forum/index.php?threads/a-bit-about-your-host.1906/). They also have a lot of data about DACs that you may found useful. There is little correlation between price and quality in the audio world and this data gives some objective criteria to decide what to buy.
 
 ## [3D3A](https://www.princeton.edu/3D3A/) is a research organisation at [Princeton](https://www.princeton.edu).
 

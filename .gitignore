@@ -9,8 +9,5 @@ __pycache__
 TAGS
 .coverage
 .idea
-
-
-
-
-
+*_large.png
+docs
