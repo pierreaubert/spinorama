@@ -49,6 +49,7 @@ from docopt import docopt
 
 siteprod = 'https://pierreaubert.github.io/spinorama'
 sitedev = 'http://localhost:8000/docs/'
+root='./'
 
 
 def sanity_check(df, meta):
@@ -66,11 +67,11 @@ def sanity_check(df, meta):
                 logging.error('Key default is mandatory for >{:s}<'.format(speaker_name))
                 return 1
         # check if image exists
-        if not os.path.exists('datas/originals/' + speaker_name + '.jpg'):
+        if not os.path.exists(root + 'datas/pictures/' + speaker_name + '.jpg'):
             print('Fatal: Image associated with >', speaker_name, '< not found!')
             return 1
         # check if downscale image exists
-        if not os.path.exists('docs/metadata/' + speaker_name + '.jpg'):
+        if not os.path.exists(root + 'docs/pictures/' + speaker_name + '.jpg'):
             print('Fatal: Image associated with >', speaker_name, '< not found!')
             print('Please run: cd docs && ./convert.sh')
             return 1
