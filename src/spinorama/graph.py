@@ -78,7 +78,15 @@ def graph_freq(dfu, graph_params):
         tooltip=['Measurements', 'Freq', 'dB']
     ).transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
     # assemble elements together
-    spin = alt.layer(circle, line).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
+    spin = alt.layer(
+        circle, line
+    ).add_selection(
+        selectorsMeasurements
+    ).add_selection(
+        scales
+    ).add_selection(
+        nearest
+    )
     return spin
 
 
@@ -99,7 +107,7 @@ def graph_spinorama(dfu, graph_params):
         bind='scales'
     )
     # main charts
-    line=alt.Chart(dfu).mark_line().transform_filter(
+    line=alt.Chart(dfu, title=f'CEA2034').mark_line(clip=True).transform_filter(
         alt.FieldOneOfPredicate(
             field='Measurements',
             oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
@@ -114,7 +122,7 @@ def graph_spinorama(dfu, graph_params):
         width=graph_params['width'],
         height=graph_params['height']
     )
-    di=alt.Chart(dfu).mark_line().transform_filter(
+    di=alt.Chart(dfu).mark_line(clip=True).transform_filter(
         alt.FieldOneOfPredicate(
             field='Measurements',
             oneOf=['Early Reflections DI', 'Sound Power DI'])
@@ -134,7 +142,13 @@ def graph_spinorama(dfu, graph_params):
 
     # assemble elements together
     spin = (circle + (line + di) #.resolve_scale(y='independent'
-    ).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest)
+    ).add_selection(
+        selectorsMeasurements
+    ).add_selection(
+        scales
+    ).add_selection(
+        nearest
+    )
     return spin
 
 
@@ -162,7 +176,7 @@ def graph_contour_common(df, transformer, graph_params):
             m_size = np.floor(m_size*width/800)
         if height > 360:
             m_height = np.floor(m_height*height/360)
-        return alt.Chart(source).mark_rect(
+        return alt.Chart(source).mark_circle(
         ).transform_filter(
             'datum.Freq>400'
         ).encode(
