@@ -347,12 +347,13 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     return spin
 
 
+# https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
 def octave(N):
     """compute 1/N octave band"""
     p = pow(2,1/N)
     p_band= pow(2,1/(2*N))
     iter = int((N*10+1)/2)
-    center = [1000 / p**i for i in range(iter,0,-1)]+[1000*p**i for i in range(0,iter,1)]
+    center = [1000 / p**i for i in range(iter,0,-1)]+[1000*p**i for i in range(0,iter+1,1)]
     return [(c/p_band,c*p_band) for c in center]
 
 
@@ -371,6 +372,8 @@ def aad(dfu):
             break
         sum += abs(y_ref-np.mean(dfu.loc[(dfu.Freq>=omin) & (dfu.Freq<omax)].dB))
         n += 1
+    if n == 0:
+        return -1
     return sum/n
 
 def nbd(dfu):
@@ -437,7 +440,7 @@ def speaker_pref_rating(cea2034):
     lfq_db = lfq(df_lw, df_sp, lfx_hz)
     sm_sp = sm(df_sp)
     pref = pref_rating(nbd_on, nbd_sp, lfx_hz, sm_sp)
-    return {
+    ratings = {
         'aad_on': aad_on,
         'nbd_on': nbd_on,
         'nbd_lw': nbd_lw,
@@ -447,4 +450,6 @@ def speaker_pref_rating(cea2034):
         'sm_sp': sm_sp,
         'pref': pref,
     }
+    logging.info('Ratings: {0}'.format(ratings))
+    return ratings
     
