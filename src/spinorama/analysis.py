@@ -360,8 +360,8 @@ def octave(N):
 def aad(dfu):
     # mean betwenn 200hz and 400hz
     y_ref = np.mean(dfu.loc[(dfu.Freq>=200) & (dfu.Freq<=400)].dB)
-    #print(y_ref)
-    sum = 0
+    print(y_ref)
+    aad_sum = 0
     n = 0
     # 1/20 octave
     for (omin, omax) in octave(20):
@@ -370,14 +370,14 @@ def aad(dfu):
             continue
         if omax > 16000:
             break
-        sum += abs(y_ref-np.mean(dfu.loc[(dfu.Freq>=omin) & (dfu.Freq<omax)].dB))
-        n += 1
-    if n == 0:
-        logging.error('aad is None')
-        return None
-    aad_value = sum/n
-    if isnan(aad_value):
-        print(dfu)
+        selection = dfu.loc[(dfu.Freq>=omin) & (dfu.Freq<omax)]
+        if selection.shape[0] > 0:
+            aad_sum += abs(y_ref-np.mean(selection.dB))
+            n += 1
+    aad_value = aad_sum/n
+    #if math.isnan(aad_value):
+    #    pd.set_option('display.max_rows', dfu.shape[0]+1)
+    #    print(aad_sum, n, dfu)
     return aad_value
 
 def nbd(dfu):
@@ -418,13 +418,13 @@ def lfq(lw, sp, lfx_log):
             continue
         if omax > 300:
             break
-        y_lw = np.mean(lw.loc[(lw.Freq>=omin) & (lw.Freq<omax)].dB)
-        y_sp = np.mean(sp.loc[(sp.Freq>=omin) & (sp.Freq<omax)].dB)
-        sum += abs(y_lw-y_sp)
-        n += 1
-    if n == 0:
-        logging.error('lfq is None')
-        return None
+        s_lw = lw.loc[(lw.Freq>=omin) & (lw.Freq<omax)]
+        s_sp = sp.loc[(sp.Freq>=omin) & (sp.Freq<omax)]
+        if s_lw.shape[0] > 0 and s_sp.shape[0] > 0:
+            y_lw = np.mean(s_lw.dB)
+            y_sp = np.mean(s_sp.dB)
+            sum += abs(y_lw-y_sp)
+            n += 1
     return sum/n
 
 def sm(dfu):
