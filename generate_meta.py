@@ -30,10 +30,11 @@ import math
 import sys
 import json
 import logging
-from src.spinorama.load import parse_all_speakers, parse_graphs_speaker
+from src.spinorama.load import parse_all_speakers
 from src.spinorama.analysis import estimates, speaker_pref_rating
 import datas.metadata as metadata
 from docopt import docopt
+
 
 def sanity_check(df, meta):
     for speaker_name, origins in df.items():
@@ -51,56 +52,67 @@ def sanity_check(df, meta):
                 return 1
         # check if image exists
         if not os.path.exists('./datas/pictures/' + speaker_name + '.jpg'):
-            print('Fatal: Image associated with >', speaker_name, '< not found!')
+            logging.fatal('Image associated with >', speaker_name, '< not found!')
             return 1
         # check if downscale image exists
         if not os.path.exists('./docs/pictures/' + speaker_name + '.jpg'):
-            print('Fatal: Image associated with >', speaker_name, '< not found!')
-            print('Please run: cd docs && ./convert.sh')
+            logging.fatal('Image associated with >', speaker_name, '< not found!')
+            logging.fatal('Please run: minimise_pictures.sh')
             return 1
     return 0
 
 
 def add_estimates(df):
     """""Compute some values per speaker and add them to metadata """
-    min_pref_score = -10
-    max_pref_score = 20
-    min_lfx_hz = 0
-    max_lfx_hz = 1000
-    min_nbd_on = 0
-    max_nbd_on = 1
-    min_flatness = 0
-    max_flatness = 100
+    min_pref_score = +100
+    max_pref_score = -100
+    min_lfx_hz = 1000
+    max_lfx_hz = 0
+    min_nbd_on = 1
+    max_nbd_on = 0
+    min_flatness = 100
+    max_flatness = 1
+    min_sm_sp = 1
+    max_sm_sp = 0
     for speaker_name, speaker_data in df.items():
         for origin, measurements in speaker_data.items():
             if origin != 'ASR':
                 # this measurements are only valid above 500hz
                 continue
             for m, dfs in measurements.items():
-                if m == 'default':
-                    if 'CEA2034' in dfs.keys():
-                        spin = dfs['CEA2034']
-                        if spin is not None:
-                            # basic math
-                            onaxis = spin.loc[spin['Measurements'] == 'On Axis']
-                            est = estimates(onaxis)
-                            if est[0] == -1:
-                                continue
-                            logging.info('Adding -3dB {:d}Hz -6dB {:d}Hz +/-{:f}dB'.format(est[1], est[2], est[3]))
-                            metadata.speakers_info[speaker_name]['estimates'] = est
-                            min_flatness = min(est[3], min_flatness)
-                            max_flatness = max(est[3], max_flatness)
-                            # from Olive&all paper
-                            pref_rating = speaker_pref_rating(spin)
-                            logging.info('Adding {0}'.format(pref_rating))
-                            metadata.speakers_info[speaker_name]['pref_rating'] = pref_rating
-                            # compute min and max for each value
-                            min_pref_score = min(min_pref_score, pref_rating['pref_score'])
-                            max_pref_score = max(max_pref_score, pref_rating['pref_score'])
-                            min_lfx_hz = min(min_lfx_hz, pref_rating['lfx_hz'])
-                            max_lfx_hz = max(max_lfx_hz, pref_rating['lfx_hz'])
-                            min_nbd_on = min(min_nbd_on, pref_rating['nbd_on'])
-                            max_nbd_on = max(max_nbd_on, pref_rating['nbd_on'])
+                if m != 'default':
+                    continue
+                
+                if 'CEA2034' not in dfs.keys():
+                    continue
+
+                spin = dfs['CEA2034']
+                if spin is None:
+                    continue
+                    
+                logging.debug('Compute score for speaker {0}'.format(speaker_name))
+                # basic math
+                onaxis = spin.loc[spin['Measurements'] == 'On Axis']
+                est = estimates(onaxis)
+                if est[0] == -1:
+                    continue
+                logging.info('Adding -3dB {:d}Hz -6dB {:d}Hz +/-{:f}dB'.format(est[1], est[2], est[3]))
+                metadata.speakers_info[speaker_name]['estimates'] = est
+                # from Olive&all paper
+                pref_rating = speaker_pref_rating(spin)
+                logging.info('Adding {0}'.format(pref_rating))
+                metadata.speakers_info[speaker_name]['pref_rating'] = pref_rating
+                # compute min and max for each value
+                min_flatness = min(est[3], min_flatness)
+                max_flatness = max(est[3], max_flatness)
+                min_pref_score = min(min_pref_score, pref_rating['pref_score'])
+                max_pref_score = max(max_pref_score, pref_rating['pref_score'])
+                min_lfx_hz = min(min_lfx_hz, pref_rating['lfx_hz'])
+                max_lfx_hz = max(max_lfx_hz, pref_rating['lfx_hz'])
+                min_nbd_on = min(min_nbd_on, pref_rating['nbd_on_axis'])
+                max_nbd_on = max(max_nbd_on, pref_rating['nbd_on_axis'])  
+                min_sm_sp = min(min_nbd_on, pref_rating['sm_sound_power'])
+                max_sm_sp = max(max_nbd_on, pref_rating['sm_sound_power'])
                             
     # add normalized value to metadata
     for speaker_name, speaker_data in df.items():
@@ -109,34 +121,45 @@ def add_estimates(df):
                 # this measurements are only valid above 500hz
                 continue
             for m, dfs in measurements.items():
-                if m == 'default':
-                    if 'CEA2034' in dfs.keys():
-                        spin = dfs['CEA2034']
-                        if spin is not None and \
-                            'pref_rating' in metadata.speakers_info[speaker_name].keys() and \
-                            'estimates' in metadata.speakers_info[speaker_name].keys() and \
-                            metadata.speakers_info[speaker_name]['estimates'][0] != -1:
-                            # get values
-                            pref_rating = metadata.speakers_info[speaker_name]['pref_rating']
-                            pref_score = pref_rating['pref_score']
-                            lfx_hz = pref_rating['lfx_hz']
-                            nbd_on = pref_rating['nbd_on']
-                            flatness = metadata.speakers_info[speaker_name]['estimates'][3]
-                            # normalize min and max
-                            scaled_pref_score = math.floor(100*(pref_score-min_pref_score)/(max_pref_score-min_pref_score))
-                            scaled_lfx_hz = math.floor(100*(lfx_hz-min_lfx_hz)/(max_lfx_hz-min_lfx_hz))
-                            scaled_nbd_on = math.floor(100*(nbd_on-min_nbd_on)/(max_nbd_on-min_nbd_on))
-                            scaled_flatness = math.floor(100*(flatness-min_flatness)/(max_flatness-min_flatness))
-                            # add normalized values
-                            scaled_pref_rating = {
-                                'scaled_pref_score': scaled_pref_score,
-                                'scaled_lfx_hz': scaled_lfx_hz,
-                                'scaled_nbd_on': scaled_nbd_on,
-                                'scaled_flatness': scaled_flatness,
-                            }
-                            logging.info('Adding {0}'.format(scaled_pref_rating))
-                            metadata.speakers_info[speaker_name]['scaled_pref_rating'] = scaled_pref_rating
+                if m != 'default':
+                    continue
+                if 'CEA2034' not in dfs.keys():
+                    continue
 
+                spin = dfs['CEA2034']
+                if spin is None or \
+                  'pref_rating' not in metadata.speakers_info[speaker_name].keys() or \
+                  'estimates' not in metadata.speakers_info[speaker_name].keys() or \
+                  metadata.speakers_info[speaker_name]['estimates'][0] == -1:
+                    continue
+                        
+                logging.debug('Compute relative score for speaker {0}'.format(speaker_name))
+                # get values
+                pref_rating = metadata.speakers_info[speaker_name]['pref_rating']
+                pref_score = pref_rating['pref_score']
+                lfx_hz = pref_rating['lfx_hz']
+                nbd_on = pref_rating['nbd_on_axis']
+                sm_sp = pref_rating['sm_sound_power']
+                flatness = metadata.speakers_info[speaker_name]['estimates'][3]
+                # normalize min and max
+                def percent(val, vmin, vmax):
+                    return math.floor(100*(val-vmin)/(vmax-vmin))
+                scaled_pref_score =     percent(pref_score, min_pref_score, max_pref_score)
+                scaled_lfx_hz     = 100-percent(lfx_hz,     min_lfx_hz,     max_lfx_hz)
+                scaled_nbd_on     = 100-percent(nbd_on,     min_nbd_on,     max_nbd_on)
+                scaled_flatness   = 100-percent(flatness,   min_flatness,   max_flatness)
+                scaled_sm_sp      =     percent(sm_sp,      min_sm_sp,      max_sm_sp)
+                # add normalized values
+                scaled_pref_rating = {
+                    'scaled_pref_score': scaled_pref_score,
+                    'scaled_lfx_hz': scaled_lfx_hz,
+                    'scaled_nbd_on_axis': scaled_nbd_on,
+                    'scaled_flatness': scaled_flatness,
+                    'scaled_sm_sound_power': scaled_sm_sp,
+                    }
+                logging.info('Adding {0}'.format(scaled_pref_rating))
+                metadata.speakers_info[speaker_name]['scaled_pref_rating'] = scaled_pref_rating
+                
 
 def dump_metadata(meta):
     with open('docs/assets/metadata.json', 'w') as f:

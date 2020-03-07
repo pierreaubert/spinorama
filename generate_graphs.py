@@ -33,10 +33,10 @@ Options:
 """
 import logging
 import datas.metadata as metadata
+from docopt import docopt
 from src.spinorama.load import parse_all_speakers, parse_graphs_speaker
 from src.spinorama.print import print_graphs
 
-from docopt import docopt
 
 def get_logger(level):
     """ get a logger """
