@@ -76,8 +76,8 @@ def display_contour_sidebyside(df, graph_params=contour_params_default):
         contourH = df['SPL Horizontal_unmelted']
         contourV = df['SPL Vertical_unmelted']
         return alt.hconcat(
-            graph_contour(contourH, graph_params),
-            graph_contour(contourV, graph_params))
+            graph_contour_smoothed(contourH, graph_params),
+            graph_contour_smoothed(contourV, graph_params))
     except KeyError as ke:
         logging.warning('Display Contour side by side failed with {0}'.format(ke))
         return None
