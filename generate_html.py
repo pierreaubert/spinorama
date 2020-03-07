@@ -175,12 +175,14 @@ if __name__ == '__main__':
         f.write(index_html.render(df=df, meta=meta_sorted, site=site))
         f.close()
 
-    # write help.html
-    logging.info('Write help.html')
-    help_html = mako_templates.get_template('help.html')
-    with open('docs/help.html', 'w') as f:
-        f.write(help_html.render(df=df, meta=meta, site=site))
-        f.close()
+    # write help.html and compare.html
+    for item in ('help', 'compare'):
+        item_name = '{0}.html'.format(item)
+        logging.info('Write {0}'.format(item_name))
+        item_html = mako_templates.get_template(item_name)
+        with open('./docs/' + item_name, 'w') as f:
+            f.write(item_html.render(df=df, meta=meta, site=site))
+            f.close()
 
     # write a file per speaker
     logging.info('Write a file per speaker')
@@ -189,7 +191,7 @@ if __name__ == '__main__':
     logging.info('Copy js/css files to docs')
     for f in ['search.js', 'bulma.js', 'compare.js', 'tabs.js', 'spinorama.css']:
         file_ext = Template(filename='templates/assets/'+f)
-        with open('docs/assets/'+f, 'w') as fd:
+        with open('./docs/assets/'+f, 'w') as fd:
             fd.write(file_ext.render(site=site))
             fd.close()
 

@@ -18,12 +18,12 @@
 <div class="tab-pane is-active" id="pane-1">
   <ul>
     % for freq in freqs:
+    <li>
+      <div>
+	<a href="default/${freq | space2url}.html"><img src="default/${freq | space2url}.png"/></a>
+      </div>
+    </li>
     <li>${freq}</li>
-    <div>
-      <a href="default/${freq | space2url}.html">
-	<img src="default/${freq | space2url}.png"/>
-      </a>
-    </div>
     % endfor
     % for contour in contours:
     <li>${contour | unmeltC }</li>
@@ -34,12 +34,12 @@
     </div>
     % endfor
     % for radar in radars:
-    <li>${radar | unmeltR }</li>
     <div>
       <a href="default/${radar | unmeltR, space2url}.html">
 	<img src="default/${radar | unmeltR, space2url}.png"/>
       </a>
     </div>
+    <li>${radar | unmeltR }</li>
     % endfor
   </ul>
 </div>

@@ -22,7 +22,7 @@ speakers_info = {
         },
     'Ascend Acoustics CMT-340': {
         'brand': 'Ascend Acoustics',
-        'model': 'Sierra 2',
+        'model': 'CMT-340',
         'type': 'passive',
         'price': '300',
         'measurements': [{
@@ -90,7 +90,7 @@ speakers_info = {
         },
     'Revel M16': {
         'brand': 'Revel',
-        'model': 'C16',
+        'model': 'M16',
         'type': 'passive',
         'price': '900',
         'measurements': [{
@@ -110,7 +110,7 @@ speakers_info = {
         },
     'Emotiva Airmotive 6s': {
         'brand': 'Emotiva',
-        'model': 'Airmotiv 6s',
+        'model': 'Airmotive 6s',
         'type': 'passive',
         'price': '',
         'measurements': [{
@@ -158,7 +158,7 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
-    'Harbeth Monitor': {
+    'Harbeth Monitor 30.0': {
         'brand': 'Harbeth',
         'model': 'Monitor 30.0',
         'type': 'passive',
@@ -249,7 +249,7 @@ speakers_info = {
             }],
         },
     'Klipsch R41M': {
-        'brand': 'Klipsh',
+        'brand': 'Klipsch',
         'model': 'R41M',
         'type': 'passive',
         'price': '150',
@@ -298,9 +298,9 @@ speakers_info = {
             'format': 'princeton',
             }],
         },
-    'Fisher STE-72': {
+    'Fisher STE-720': {
         'brand': 'Fisher',
-        'model': 'STE-72',
+        'model': 'STE-720',
         'type': 'passive',
         'price': '',
         'measurements': [{
@@ -368,7 +368,7 @@ speakers_info = {
             'format': 'princeton',
             }],
         },
-    'JBL Professional PRX635': {
+    'JBL PRX635': {
         'brand': 'JBL',
         'model': 'PRX635',
         'type': 'passive',
@@ -480,16 +480,6 @@ speakers_info = {
     'iKey-Audio M-808V2': {
         'brand': 'iKey-Audio',
         'model': 'M-808V2',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'Fisher STE-720': {
-        'brand': 'Fisher',
-        'model': 'STE-720',
         'type': 'passive',
         'price': '',
         'measurements': [{
