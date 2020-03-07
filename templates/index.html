@@ -4,74 +4,68 @@
 <%include file="func.html"/>
 
 <div class="section">
-  <div class="box">
-	
-<!-- Search
 
-  <form>
-      
-    <div class="field is-grouped has-addons">
-      <div class="control is-expanded">
-        <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl ..." autofocus />
-      </div>
-      <div class="control">
-        <a class="button is-info">Search</a>
-      </div>
-      <div class="control">
-        <a class="button" id="compareInput">Compare</a>
+  <div class="field is-grouped has-addons">
+    <div class="control is-expanded">
+      <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl ..." autofocus />
+    </div>
+    <div class="control">
+      <a class="button is-info">Search</a>
+    </div>
+    <div class="control">
+      <a class="button" id="compareInput">Compare</a>
+    </div>
+  </div>
+
+  <!-- Speakers -->
+  <div class="tile is-ancestor">
+    % for speaker_name in df:
+    <div class="column is-one-third">
+      <div class="tile is-parent is-vertical is-3">
+	<div class="tile is-child">
+	  <figure class="image is-3x4">
+	      <figure class="image"><img src="pictures/${speaker_name | space2url}.jpg" alt="Spinorama"/></figure>
+	  </figure>
+	</div>
+	<div class="tile is-child">
+	  <div class="subtitle is-pulled-left">${speaker_name}</div>
+          % if 'pref_rating' in meta[speaker_name]:
+	  <div class="title is-pulled-right">${meta[speaker_name]}['pref_rating']['pref']/10</div>
+	  % endif
+	</div>
+	<div class="tile is-child">
+	  <div class="content is-small">
+            % if 'pref_ratings' in meta[speaker_name]:
+	      Bass extension: ${meta[speaker_name]}['pref_rating']['lfx_hz']Hz at -6dB
+	      <progress class="progress is-small is-info"    value="45" max="100"></progress>
+	      Flatness: &plusmn;2.7dB ~ 80-20kHz
+	      <progress class="progress is-small is-success" value="60" max="100"></progress>
+	      Smoothness: ${meta[speaker_name]}['pref_rating']['sm_sp']
+	      <progress class="progress is-small is-warning" value="75" max="100"></progress>
+	    % else:
+	      % if 'estimates' in meta[speaker_name]:
+	        -3dB at ${meta[speaker_name]['estimates'][1]}Hz<br/>
+	        -6dB at ${meta[speaker_name]['estimates'][2]}Hz<br/>
+	        &plusmn;${meta[speaker_name]['estimates'][3]}dB ~ 80-20kHz
+	      % endif
+	    % endif
+	  </div>
+	</div>
+	<div class="tile is-child">
+	  <div class="buttons has-addons is-centered">
+	    <button class="button is-white disable">Measurement</button>
+	    % for origin in df[speaker_name]:
+	    <button class="button is-info">
+	      <a href="${speaker_name}/${origin | removeVendors}/index.html">${origin | removeVendors}</a>
+	    </button>
+	    % endfor
+	  </div>
+	</div>
       </div>
     </div>
-
-Search -->
-
-<%!
-  def space2url(text):
-      return text.replace(' ', '%20')
-
-  def removeVendors(text):
-      return text.replace('Vendors/','')
-  
-%>  
-
-    <!-- Speakers -->
-    <div class="row columns is-multiline searchresults">
-      % for speaker_name in df:
-      <div class="column is-one-third">
-        <div class="card large">
-	  <div class="box">
-            <div class="media">
-	      <figure class="image"><img src="metadata/${speaker_name | space2url}.jpg" alt="Spinorama"/></figure>
-            </div>
-            <div class="content">
-	      <p class="title is-4 no-padding">
-		${meta[speaker_name]['brand']}
-		${meta[speaker_name]['model']}
-	      </p>
-            </div>
-            <div class="content">
-	      Measurements: 
-	      % for origin in df[speaker_name]:
-	        <a href="${speaker_name}/${origin | removeVendors}/index.html">${origin | removeVendors}</a>
-	      % endfor
-            </div>
-            <div class="content">
-              % if 'estimates' in meta[speaker_name]:
-	      -3dB at ${meta[speaker_name]['estimates'][1]}Hz<br/>
-	      -6dB at ${meta[speaker_name]['estimates'][2]}Hz<br/>
-	      &plusmn;${meta[speaker_name]['estimates'][3]}dB ~ 80-20kHz
-	      % endif
-            </div>
-	  </div>  <!-- End box -->
-	</div>  <!-- End card -->
-      </div> <!-- End for one Speaker -->
-      % endfor
-    </div> <!-- End all Speakers -->
-
-<!-- Search
-    <form>
--->
-      
+    %endfor
   </div>
 </div>
+
 
 <%include file="footer.html"/>

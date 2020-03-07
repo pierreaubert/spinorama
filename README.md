@@ -13,7 +13,7 @@ It is a way to understand quickly a speaker properties.
 
 Here is an example:
 
-![image](https://github.com/pierreaubert/spinorama/blob/master/docs/Neumann%20KH%2080/ASR/default/CEA2034.png)
+![image](https://github.com/pierreaubert/spinorama/blob/develop/datas/pictures/ex-Genelec-8241A-cea2034.png)
 
 - On Axis: this the frequency response. You expect it to be as flat as possible after 100Hz.
 - Listening Window: an average of various measurements around on axis. Expected to be close to the previous one.
