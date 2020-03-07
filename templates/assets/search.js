@@ -1,56 +1,27 @@
-// import Fuse from 'fuse.js';
-
 window.$ = window.jQuery;
-
-function display_speaker(speaker) {
-    let s_href = speaker.speaker + '/'+ speaker.speaker.origin + '/index.html'
-    let s_img  = 'metadata/' + speaker.speaker + '.jpg'
-    let s_name = speaker.brand + ' ' + speaker.model 
-    let content = '\
-	    <div class="column is-one-third">\
-		<div class="card large">\
-		  <div class="card-image">\
-		    <figure class="image"><img src="' + s_img + '" alt="Spinorama"/></figure>\
-		  </div>\
-		  <div class="card-content">\
-		    <div class="media">\
-                      <div class="content">\
-			<div class="content">' + s_name + '</div>\
-	              </div>\
-	            </div>\
-		    <div class="media">\
-			-3dB at ' + speaker.estimates[1] + 'Hz<br/>\
-			-6dB at ' + speaker.estimates[2] + 'Hz<br/>\
-			&plusmn;' + speaker.estimates[3] + 'dB ~ 80-20kHz\
-		  </div>\
-                  <div class="right">\
-		    <label class="checkbox is-large"><input type="checkbox"/></label>\
-	          </div>\
-		</div>\
-             </div>';
-    return content
-}
 
 $(document).ready(function () {
 
     window.$.getJSON('${site}/assets/metadata.json', function (response) {
-	
-	const fuse = new Fuse(response, {
+
+	const metadata = Object.values(response);
+	const fuse = new Fuse(metadata, {
 	    matchAllTokens: true,
-	    minMatchCharLength: 2,
-	    includeMatches: true,
+	    findAllMatches: true,
+	    minMatchCharLength: 3,
 	    keys: ['brand', 'model'],
-	    // id: 'speaker',
-	    tags: ['type']
+	    tags: ['type', 'measurements.origin'],
+	    treshhold: 0.0,
+	    distance: 1,
+	    includeScore: true,
 	});
 	
 	$('#searchInput').on('keyup', function () {
 	    let resultdiv = $('div.searchresults');
 	    let keywords = $(this).val();
 	    if (keywords.length === 0) {
-		resultdiv.empty();
 		for( let item in response ) {
-		    resultdiv.append(display_speaker(response[item]));
+		    resultdiv.hide();
 		}	
 		resultdiv.show();
 	    } else { 
@@ -58,13 +29,24 @@ $(document).ready(function () {
 		if (result.length === 0) {
 		    resultdiv.hide();
 		} else {
-		    resultdiv.empty();
+		    for (let item in metadata) {
+			let id = (metadata[item].brand + '-' + metadata[item].model).replace(/[' ]/g, '-');
+			console.log('hide:'+id);
+			$('#'+id).hide();
+		    }
+		    let minScore = 1;
 		    for (let item in result) {
-			let name = result[item].item.speaker
-			let match = response.find(response => response.speaker === name);
-			let searchitem = display_speaker(match);
-			resultdiv.append(searchitem);
-		    }	
+			if( result[item].score < minScore ) {
+			    minScore = result[item].score;
+			}
+		    }
+		    for (let item in result) {
+			let id = (result[item].item.brand + '-' + result[item].item.model).replace(/[' ]/g, '-');
+			if( (minScore > 0.0) || (result[item].score === 0.0 )) {
+			    console.log('show:'+id+' maxscore:' + minScore+' score:' + result[item].score);
+			    $('#'+id).show();
+			}
+		    }
 		    resultdiv.show();
 		}
 	    }	 
