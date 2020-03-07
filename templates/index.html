@@ -65,10 +65,10 @@
 	</div>
       </div>
       <div class="tile is-child">
-	<div class="buttons has-addons is-centered">
-	  <button class="button is-small is-white disable">Measurement</button>
+	<div class="buttons has-addons is-centered are-small">
+	  <button class="button is-white disable">Measurement</button>
 	  % for m in meta[speaker_name]['measurements']:
-	  <button class="button is-small is-info">
+	  <button class="button is-outlined">
 	    <a href="${speaker_name}/${m['origin']}/index.html">${m['origin']}</a>
 	  </button>
 	  % endfor

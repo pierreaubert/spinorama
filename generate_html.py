@@ -169,6 +169,7 @@ if __name__ == '__main__':
         return -1
         
     with open('docs/index.html', 'w') as f:
+        # by default sort by pref_rating decreasing
         keys_sorted = sorted(meta, key=lambda a: sort_meta(meta[a]), reverse=True)
         meta_sorted = {k: meta[k] for k in keys_sorted}
         f.write(index_html.render(df=df, meta=meta_sorted, site=site))
