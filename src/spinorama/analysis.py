@@ -360,7 +360,7 @@ def octave(N):
 def aad(dfu):
     # mean betwenn 200hz and 400hz
     y_ref = np.mean(dfu.loc[(dfu.Freq>=200) & (dfu.Freq<=400)].dB)
-    print(y_ref)
+    # print(y_ref)
     aad_sum = 0
     n = 0
     # 1/20 octave
@@ -438,30 +438,30 @@ def pref_rating(nbd_on, nbd_pir, lfx, sm_pir):
 
 
 def speaker_pref_rating(cea2034):
-    df_on = cea2034.loc[lambda df: df.Measurements == 'On Axis']
-    df_lw = cea2034.loc[lambda df: df.Measurements == 'Listening Window']
-    df_sp = cea2034.loc[lambda df: df.Measurements == 'Sound Power']
-    for dfu in (df_on, df_lw, df_sp):
+    df_on_axis = cea2034.loc[lambda df: df.Measurements == 'On Axis']
+    df_listening_window = cea2034.loc[lambda df: df.Measurements == 'Listening Window']
+    df_sound_power = cea2034.loc[lambda df: df.Measurements == 'Sound Power']
+    for dfu in (df_on_axis, df_listening_window, df_sound_power):
         if dfu.loc[(dfu.Freq>=100) & (dfu.Freq<=400)].shape[0] == 0:
             logging.info('No freq under 400hz, skipping pref_rating'.format())
             return None
-    aad_on = aad(df_on)
-    nbd_on = nbd(df_on)
-    nbd_lw = nbd(df_lw)
-    nbd_sp = nbd(df_sp)
-    lfx_hz = lfx(df_lw, df_sp)
-    lfq_db = lfq(df_lw, df_sp, lfx_hz)
-    sm_sp = sm(df_sp)
-    pref = pref_rating(nbd_on, nbd_sp, lfx_hz, sm_sp)
+    aad_on_axis = aad(df_on_axis)
+    nbd_on_axis = nbd(df_on_axis)
+    nbd_listening_window = nbd(df_listening_window)
+    nbd_sound_power = nbd(df_sound_power)
+    lfx_hz = lfx(df_listening_window, df_sound_power)
+    lfq_db = lfq(df_listening_window, df_sound_power, lfx_hz)
+    sm_sound_power = sm(df_sound_power)
+    pref = pref_rating(nbd_on_axis, nbd_sound_power, lfx_hz, sm_sound_power)
     ratings = {
-        'aad_on': aad_on,
-        'nbd_on': nbd_on,
-        'nbd_lw': nbd_lw,
-        'nbs_sp': nbd_sp,
-        'lfx_hz': pow(10, lfx_hz), # in Hz
-        'lfq': lfq_db,
-        'sm_sp': sm_sp,
-        'pref_score': pref,
+        'aad_on_axis': round(aad_on_axis, 2),
+        'nbd_on_axis': round(nbd_on_axis, 2),
+        'nbd_listening_window': round(nbd_listening_window, 2),
+        'nbd_sound_power': round(nbd_sound_power, 2),
+        'lfx_hz': int(pow(10, lfx_hz)), # in Hz
+        'lfq': round(lfq_db, 2),
+        'sm_sound_power': round(sm_sound_power, 2),
+        'pref_score': round(pref, 1),
     }
     logging.info('Ratings: {0}'.format(ratings))
     return ratings
