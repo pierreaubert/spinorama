@@ -26,66 +26,59 @@
 
   <!-- Speakers -->
   <div class="searchresults">
-  % for speaker_name in meta:
-  % if loop.index % 4 == 0:
-  <div class="tile is-ancestor">
-  % endif
-    <div class="tile is-parent is-vertical is-3" id="${speaker_name | space2dash}">
-      <div class="tile is-child">
-	<figure class="image is-3x4">
-	  <img src="pictures/${speaker_name | space2url}.jpg" alt="Spinorama"/>
-	</figure>
-      </div>
-      <div class="tile is-child">
-	<div class="title is-6 is-pulled-left">${speaker_name}</div>
-      </div>
-      % if 'pref_rating' in meta[speaker_name]:
-      <div class="subtile is-child">
-	<div class="title is-6 is-pulled-right">${meta[speaker_name]['scaled_pref_rating']['scaled_pref_score']}/100</div>
-      </div>
-	% endif
-      <div class="tile is-child">
-	<div class="content is-small">
-          % if 'pref_rating' in meta[speaker_name]:
-  	  Bass extension: ${meta[speaker_name]['pref_rating']['lfx_hz']}Hz at -6dB
-  	  <progress class="progress is-small is-info"
-		    value="${meta[speaker_name]['scaled_pref_rating']['scaled_lfx_hz']}"
-		    max="100"></progress>
-	  Flatness: &plusmn;${meta[speaker_name]['estimates'][3]}dB ~ 80-20kHz
-	  <progress class="progress is-small is-success"
-		    value="${meta[speaker_name]['scaled_pref_rating']['scaled_flatness']}"
-		    max="100"></progress>
-	  Smoothness: ${meta[speaker_name]['pref_rating']['sm_sound_power']}
-	  <progress class="progress is-small is-warning"
-		    value="${meta[speaker_name]['scaled_pref_rating']['scaled_sm_sound_power']}"
-		    max="100"></progress>
-	  % else:
-  	  % if 'estimates' in meta[speaker_name]:
-	    ${meta[speaker_name]['estimates'][1]}Hz at -3dB<br/>
-	    ${meta[speaker_name]['estimates'][2]}Hz at -6dB<br/>
-	    &plusmn;${meta[speaker_name]['estimates'][3]}dB ~ 80-20kHz
-	  % endif
-	  % endif
+    <div class="columns is-multiline is-1">
+      % for speaker_name in meta:
+      <div class="column is-one-quarter" id="${speaker_name | space2dash}">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/${speaker_name | space2url}.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      ${meta[speaker_name]['brand']} ${meta[speaker_name]['model']}
+	    </p>
+	    % if 'pref_rating' in meta[speaker_name]:
+	    <p class="card-header-title">
+	      ${meta[speaker_name]['scaled_pref_rating']['scaled_pref_score']}/100
+	    </p>
+	    % endif
+	  </header>
+	  <div class="card-content is-small">
+	    <div class="content">
+              % if 'pref_rating' in meta[speaker_name]:
+  	      <p>Bass extension: ${meta[speaker_name]['pref_rating']['lfx_hz']}Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="${meta[speaker_name]['scaled_pref_rating']['scaled_lfx_hz']}"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;${meta[speaker_name]['estimates'][3]}dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="${meta[speaker_name]['scaled_pref_rating']['scaled_flatness']}"
+			max="100"></progress>
+	      <p>Smoothness: ${meta[speaker_name]['pref_rating']['sm_sound_power']}</p>
+	      <progress class="progress is-small is-warning"
+			value="${meta[speaker_name]['scaled_pref_rating']['scaled_sm_sound_power']}"
+			max="100"></progress>
+	      % else:
+  	      % if 'estimates' in meta[speaker_name]:
+	      <p>${meta[speaker_name]['estimates'][1]}Hz at -3dB<br/></p>
+	      <p>${meta[speaker_name]['estimates'][2]}Hz at -6dB<br/></p>
+	      <p>&plusmn;${meta[speaker_name]['estimates'][3]}dB ~ 80-20kHz</p>
+	      % endif
+	      % endif
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    % for m in meta[speaker_name]['measurements']:
+	    <a class="card-footer-item" href="${speaker_name}/${m['origin']}/index.html">${m['origin']}</a>
+	    % endfor
+	  </footer>
 	</div>
       </div>
-      <div class="tile is-child">
-	<div class="buttons has-addons is-centered are-small">
-	  <button class="button is-white disable">Measurement</button>
-	  % for m in meta[speaker_name]['measurements']:
-	  <button class="button is-outlined">
-	    <a href="${speaker_name}/${m['origin']}/index.html">${m['origin']}</a>
-	  </button>
-	  % endfor
-	</div>
-      </div>
+      % endfor
     </div>
-
-  % if loop.index % 4 == 3 or loop.index == len(meta)-1:
   </div>
-  % endif
-  % endfor
-  </div>
-  
 </div>
 
 
