@@ -88,6 +88,8 @@ if __name__ == '__main__':
             print('type %s is not recognize!'.format(ptype))
             exit(1)
 
+    logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+                        datefmt='%Y-%m-%d:%H:%M:%S')
     if args['--log-level'] is not None:
         level = args['--log-level']
         if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
