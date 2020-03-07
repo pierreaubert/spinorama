@@ -18,7 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-usage: update_html.py [--help] [--version] [--dev]\
+usage: generate_html.py [--help] [--version] [--dev]\
  [--width=<width>] [--height=<height>] [--force] [--type=<ext>]\
  [--sitedev=<http>]  [--log-level=<level>] [--origin=<origin>]\
  [--speaker=<speaker>]
@@ -36,67 +36,19 @@ Options:
   --speaker=<speaker> restrict to a specific speaker, usefull for debugging
 """
 import os
+import math
 import sys
 import json
 import logging
 from mako.template import Template
 from mako.lookup import TemplateLookup
-from src.spinorama.load import parse_all_speakers, parse_graphs_speaker
-from src.spinorama.analysis import estimates, speaker_pref_rating
 import datas.metadata as metadata
 from docopt import docopt
 
 
 siteprod = 'https://pierreaubert.github.io/spinorama'
-sitedev = 'http://localhost:8000/docs/'
+sitedev = 'http://localhost:8000/docs'
 root='./'
-
-
-def sanity_check(df, meta):
-    for speaker_name, origins in df.items():
-        # check if metadata exists
-        if speaker_name not in meta:
-            logging.error('Metadata not found for >{:s}<'.format(speaker_name))
-            return 1
-        # check if each measurement looks reasonable
-        for origin, keys in origins.items():
-            if origin not in ['ASR', 'Princeton'] and origin[0:8] != 'Vendors/':
-                logging.error('Measurement origin >{:s}< is unkown for >{:s}'.format(origin, speaker_name))
-                return 1
-            if 'default' not in keys.keys():
-                logging.error('Key default is mandatory for >{:s}<'.format(speaker_name))
-                return 1
-        # check if image exists
-        if not os.path.exists(root + 'datas/pictures/' + speaker_name + '.jpg'):
-            print('Fatal: Image associated with >', speaker_name, '< not found!')
-            return 1
-        # check if downscale image exists
-        if not os.path.exists(root + 'docs/pictures/' + speaker_name + '.jpg'):
-            print('Fatal: Image associated with >', speaker_name, '< not found!')
-            print('Please run: cd docs && ./convert.sh')
-            return 1
-    return 0
-
-
-def add_estimates(df):
-    """""Compute some values per speaker and add them to metadata """
-    for speaker_name, speaker_data in df.items():
-        for origin, measurements in speaker_data.items():
-            if origin == 'Princeton':
-                # this measurements are only valid above 500hz
-                return
-            for m, dfs in measurements.items():
-                if m == 'default':
-                    if 'CEA2034' in dfs.keys():
-                        spin = dfs['CEA2034']
-                        if spin is not None:
-                            # basic math
-                            onaxis = spin.loc[spin['Measurements'] == 'On Axis']
-                            est = estimates(onaxis)
-                            logging.info('Adding -3dB {:d}Hz -6dB {:d}Hz +/-{:f}dB'.format(est[1], est[2], est[3]))
-                            metadata.speakers_info[speaker_name]['estimates'] = est
-                            # from Olive&all paper
-                            metadata.speakers_info[speaker_name]['pref_rating'] = speaker_pref_rating(spin)
 
 
 def generate_speaker(mako, df, meta, site):
@@ -155,13 +107,6 @@ def generate_speaker(mako, df, meta, site):
     return 0
 
 
-def dump_metadata(meta):
-    with open('docs/assets/metadata.json', 'w') as f:
-        js = json.dumps(meta)
-        f.write(js)
-        f.close()
-
-
 if __name__ == '__main__':
     args = docopt(__doc__,
                   version='update_html.py version 1.21',
@@ -196,6 +141,8 @@ if __name__ == '__main__':
 
         site = sitedev
 
+    logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+                        datefmt='%Y-%m-%d:%H:%M:%S')
     if args['--log-level'] is not None:
         level = args['--log-level']
         if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
@@ -222,21 +169,8 @@ if __name__ == '__main__':
     else:
         df = parse_all_speakers(metadata.speakers_info)
         
-    if sanity_check(df, metadata.speakers_info) != 0:
-        logging.error('Sanity checks failed!')
-        sys.exit(1)
-
-    # add computed data to metadata
-    logging.info('Compute estimates per speaker')
-    add_estimates(df)
-
     # configure Mako
     mako_templates = TemplateLookup(directories=['templates'], module_directory='/tmp/mako_modules')
-
-    # write metadata in a json file for easy search
-    if generate_all_speakers:
-        logging.info('Write metadat')
-        dump_metadata(metadata.speakers_info)
 
     # write index.html
     if generate_all_speakers:
@@ -265,9 +199,5 @@ if __name__ == '__main__':
             with open('docs/assets/'+f, 'w') as fd:
                 fd.write(file_ext.render(site=site))
                 fd.close()
-
-    # generate potential missing graphs
-    # logging.info('Generate missing graphs')
-    # generate_graphs(df, width, height, force, ptype)
 
     sys.exit(0)

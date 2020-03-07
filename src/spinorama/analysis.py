@@ -373,8 +373,12 @@ def aad(dfu):
         sum += abs(y_ref-np.mean(dfu.loc[(dfu.Freq>=omin) & (dfu.Freq<omax)].dB))
         n += 1
     if n == 0:
-        return -1
-    return sum/n
+        logging.error('aad is None')
+        return None
+    aad_value = sum/n
+    if isnan(aad_value):
+        print(dfu)
+    return aad_value
 
 def nbd(dfu):
     sum = 0
@@ -391,6 +395,9 @@ def nbd(dfu):
         # don't sample, take all points in this octave
         sum += np.mean(np.abs(y_avg-y))
         n += 1
+    if n == 0:
+        logging.error('nbd is None')
+        return None
     return sum/n
 
 
@@ -415,6 +422,9 @@ def lfq(lw, sp, lfx_log):
         y_sp = np.mean(sp.loc[(sp.Freq>=omin) & (sp.Freq<omax)].dB)
         sum += abs(y_lw-y_sp)
         n += 1
+    if n == 0:
+        logging.error('lfq is None')
+        return None
     return sum/n
 
 def sm(dfu):
@@ -431,7 +441,10 @@ def speaker_pref_rating(cea2034):
     df_on = cea2034.loc[lambda df: df.Measurements == 'On Axis']
     df_lw = cea2034.loc[lambda df: df.Measurements == 'Listening Window']
     df_sp = cea2034.loc[lambda df: df.Measurements == 'Sound Power']
-    # 
+    for dfu in (df_on, df_lw, df_sp):
+        if dfu.loc[(dfu.Freq>=100) & (dfu.Freq<=400)].shape[0] == 0:
+            logging.info('No freq under 400hz, skipping pref_rating'.format())
+            return None
     aad_on = aad(df_on)
     nbd_on = nbd(df_on)
     nbd_lw = nbd(df_lw)
@@ -448,7 +461,7 @@ def speaker_pref_rating(cea2034):
         'lfx_hz': pow(10, lfx_hz), # in Hz
         'lfq': lfq_db,
         'sm_sp': sm_sp,
-        'pref': pref,
+        'pref_score': pref,
     }
     logging.info('Ratings: {0}'.format(ratings))
     return ratings
