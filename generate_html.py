@@ -163,8 +163,15 @@ if __name__ == '__main__':
     # write index.html
     logging.info('Write index.html')
     index_html = mako_templates.get_template('index.html')
+    def sort_meta(s):
+        if 'pref_rating' in s.keys():
+            return s['pref_rating']['pref_score']
+        return -1
+        
     with open('docs/index.html', 'w') as f:
-        f.write(index_html.render(df=df, meta=meta, site=site))
+        keys_sorted = sorted(meta, key=lambda a: sort_meta(meta[a]), reverse=True)
+        meta_sorted = {k: meta[k] for k in keys_sorted}
+        f.write(index_html.render(df=df, meta=meta_sorted, site=site))
         f.close()
 
     # write help.html
