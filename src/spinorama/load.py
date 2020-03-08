@@ -238,10 +238,12 @@ def parse_graphs_speaker_princeton(speaker_name):
     h_spl = parse_graph_princeton(h_file, 'H')
     v_spl = parse_graph_princeton(v_file, 'V')
     # add H and V SPL graphs
-    dfs['SPL Horizontal_unmelted'] = h_spl
-    dfs['SPL Vertical_unmelted'] = v_spl
+    if h_spl is not None:
+        dfs['SPL Horizontal_unmelted'] = h_spl
     dfs['SPL Horizontal'] = graph_melt(h_spl)
-    dfs['SPL Vertical'] = graph_melt(v_spl)
+    if v_spl is not None:
+        dfs['SPL Vertical_unmelted'] = v_spl
+        dfs['SPL Vertical'] = graph_melt(v_spl)
     # add computed graphs
     table = [['Early Reflections', early_reflections],
              ['Horizontal Reflections', horizontal_reflections],

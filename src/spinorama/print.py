@@ -7,6 +7,7 @@ from .display import display_spinorama, display_onaxis, display_inroom, \
     display_reflection_early, display_reflection_horizontal, display_reflection_vertical, \
     display_spl_horizontal, display_spl_vertical, \
     display_contour_horizontal, display_contour_vertical, \
+    display_contour_smoothed_horizontal, display_contour_smoothed_vertical, \
     display_radar_horizontal, display_radar_vertical
 from .views import template_compact, template_panorama
 from .graph import graph_params_default, contour_params_default, radar_params_default
@@ -19,6 +20,10 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
         logging.debug('print_graph: write to directory {0}'.format(filedir))
         pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
         for ext in ['json', 'png']: # svg and html skipped to keep size small
+            # skip the 2cols.json and 3cols.json as they are really large
+            # 2cols and 3cols are more for printing
+            if ext == 'json' and title in ('2cols', '3cols'):
+                continue
             filename = filedir + '/' + title.replace('_unmelted', '')
             if ext == 'png':
                 # generate large image that are then easy to find and compress
@@ -27,8 +32,11 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
             filename +=  '.' + ext
             if force or not os.path.exists(filename):
                 if fileext is None or (fileext is not None and fileext == ext):
-                    chart.save(filename)
-                    updated += 1
+                    try:
+                        chart.save(filename)
+                        updated += 1
+                    except Exception as e:
+                        logging.error('Got unkown error {0}'.format(e))
     else:
         logging.debug('Chart is None for {:s} {:s} {:s} {:s}'.format(speaker, origin, key, title))
     return updated
@@ -70,8 +78,12 @@ def print_graphs(df: pd.DataFrame,
     params['xmin'] = origins_info[origin]['min hz']
     params['xmax'] = origins_info[origin]['max hz']
 
-    graphs['SPL Horizontal Contour'] = display_contour_horizontal(df, params)
-    graphs['SPL Vertical Contour'] = display_contour_vertical(df, params)
+    if origin == 'ASR':
+        graphs['SPL Horizontal Contour'] = display_contour_smoothed_horizontal(df, params)
+        graphs['SPL Vertical Contour'] = display_contour_smoothed_vertical(df, params)
+    else:
+        graphs['SPL Horizontal Contour'] = display_contour_horizontal(df, params)
+        graphs['SPL Vertical Contour'] = display_contour_vertical(df, params)
 
     # better square
     params = copy.deepcopy(radar_params_default)
