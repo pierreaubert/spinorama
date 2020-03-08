@@ -8,9 +8,8 @@ $(document).ready(function () {
 	const fuse = new Fuse(metadata, {
 	    matchAllTokens: true,
 	    findAllMatches: true,
-	    minMatchCharLength: 3,
-	    keys: ['brand', 'model'],
-	    tags: ['type', 'measurements.origin'],
+	    minMatchCharLength: 2,
+	    keys: ['brand', 'model', 'type', 'measurements.origin'],
 	    treshhold: 0.0,
 	    distance: 1,
 	    includeScore: true,
@@ -30,8 +29,8 @@ $(document).ready(function () {
 		    resultdiv.hide();
 		} else {
 		    for (let item in metadata) {
-			let id = (metadata[item].brand + '-' + metadata[item].model).replace(/[' ]/g, '-');
-			console.log('hide:'+id);
+			let id = (metadata[item].brand + '-' + metadata[item].model).replace(/['. ]/g, '-');
+			// console.log('hide:'+id);
 			$('#'+id).hide();
 		    }
 		    let minScore = 1;
@@ -41,9 +40,9 @@ $(document).ready(function () {
 			}
 		    }
 		    for (let item in result) {
-			let id = (result[item].item.brand + '-' + result[item].item.model).replace(/[' ]/g, '-');
+			let id = (result[item].item.brand + '-' + result[item].item.model).replace(/['. ]/g, '-');
 			if( (minScore > 0.0) || (result[item].score === 0.0 )) {
-			    console.log('show:'+id+' maxscore:' + minScore+' score:' + result[item].score);
+			    // console.log('show:'+id+' maxscore:' + minScore+' score:' + result[item].score);
 			    $('#'+id).show();
 			}
 		    }
