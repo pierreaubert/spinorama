@@ -483,8 +483,8 @@ speakers_info = {
         'type': 'passive',
         'price': '',
         'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
+            'origin': 'ASR',
+            'format': 'klippel',
             }],
         },
     'iKey-Audio M-808V2': {

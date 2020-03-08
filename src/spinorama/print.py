@@ -7,6 +7,7 @@ from .display import display_spinorama, display_onaxis, display_inroom, \
     display_reflection_early, display_reflection_horizontal, display_reflection_vertical, \
     display_spl_horizontal, display_spl_vertical, \
     display_contour_horizontal, display_contour_vertical, \
+    display_contour_smoothed_horizontal, display_contour_smoothed_vertical, \
     display_radar_horizontal, display_radar_vertical
 from .views import template_compact, template_panorama
 from .graph import graph_params_default, contour_params_default, radar_params_default
@@ -73,8 +74,12 @@ def print_graphs(df: pd.DataFrame,
     params['xmin'] = origins_info[origin]['min hz']
     params['xmax'] = origins_info[origin]['max hz']
 
-    graphs['SPL Horizontal Contour'] = display_contour_horizontal(df, params)
-    graphs['SPL Vertical Contour'] = display_contour_vertical(df, params)
+    if origin == 'ASR':
+        graphs['SPL Horizontal Contour'] = display_contour_smoothed_horizontal(df, params)
+        graphs['SPL Vertical Contour'] = display_contour_smoothed_vertical(df, params)
+    else:
+        graphs['SPL Horizontal Contour'] = display_contour_horizontal(df, params)
+        graphs['SPL Vertical Contour'] = display_contour_vertical(df, params)
 
     # better square
     params = copy.deepcopy(radar_params_default)
