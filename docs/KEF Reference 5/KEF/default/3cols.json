@@ -1,0 +1,1 @@
+{"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}, "legend": {"orient": "top"}, "title": {"anchor": "middle", "fontSize": 18, "orient": "top"}}, "vconcat": [], "$schema": "https://vega.github.io/schema/vega-lite/v4.0.2.json"}

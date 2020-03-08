@@ -1,0 +1,1528 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A collection of loudspeakers measurements</title>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <script src="https://kit.fontawesome.com/7dc3015a44.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.0/css/bulma.min.css" />
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.4.6/fuse.min.js"></script>
+  <script type="text/javascript" src="https://pierreaubert.github.io/spinorama/assets/search.js"></script>
+</head>
+<body>
+
+
+<nav class="navbar is-white is-bold">
+ <div class="container">
+   <div class="navbar-brand">
+     <a class="navbar-item" href="https://pierreaubert.github.io/spinorama"><p class="title">Spinorama</p></a>
+     <span class="navbar-burger burger" data-target="navbarMenu">
+       <span></span>
+       <span></span>
+       <span></span>
+     </span>
+   </div>
+   <div id="navbarMenu" class="navbar-menu">
+     <div class="navbar-end">
+       <a class="navbar-item" href="https://pierreaubert.github.io/spinorama/compare.html">Compare</a>
+       <a class="navbar-item" href="https://pierreaubert.github.io/spinorama/help.html">Help</a>
+     </div>
+   </div>
+</nav>
+
+
+<div class="container">
+ <div id="flow">
+   <span class="flow-1"></span>
+   <span class="flow-2"></span>
+   <span class="flow-3"></span>
+ </div>
+
+
+
+  
+
+<div class="section">
+
+  <div class="field is-grouped has-addons">
+    <div class="control is-expanded">
+      <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl ..." autofocus />
+    </div>
+    <div class="control">
+      <a class="button is-info">Search</a>
+    </div>
+  </div>
+
+  <!-- Speakers -->
+  <div class="searchresults">
+    <div class="columns is-multiline is-1">
+      <div class="column is-one-quarter" id="Genelec-8341A">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Genelec%208341A.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Genelec<br/>8341A
+	    </p>
+	    <p class="card-header-title">
+	      100/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 35Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="100"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;2.2dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="100"
+			max="100"></progress>
+	      <p>Smoothness: 0.59</p>
+	      <progress class="progress is-small is-warning"
+			value="44"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Genelec 8341A/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Adam-S2V">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Adam%20S2V.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Adam<br/>S2V
+	    </p>
+	    <p class="card-header-title">
+	      89/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 43Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="90"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;2.7dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="97"
+			max="100"></progress>
+	      <p>Smoothness: 0.7</p>
+	      <progress class="progress is-small is-warning"
+			value="59"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Adam S2V/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Emotiva-Airmotive-6s">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Emotiva%20Airmotive%206s.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Emotiva<br/>Airmotive 6s
+	    </p>
+	    <p class="card-header-title">
+	      86/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 38Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="96"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;3.0dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="95"
+			max="100"></progress>
+	      <p>Smoothness: 0.78</p>
+	      <progress class="progress is-small is-warning"
+			value="71"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Emotiva Airmotive 6s/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Revel-C52">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Revel%20C52.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Revel<br/>C52
+	    </p>
+	    <p class="card-header-title">
+	      81/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 62Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="64"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;3.9dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="89"
+			max="100"></progress>
+	      <p>Smoothness: 0.84</p>
+	      <progress class="progress is-small is-warning"
+			value="80"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Revel C52/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Pioneer-SP-BS22-LR">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Pioneer%20SP-BS22-LR.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Pioneer<br/>SP-BS22-LR
+	    </p>
+	    <p class="card-header-title">
+	      79/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 56Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="72"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;3.6dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="91"
+			max="100"></progress>
+	      <p>Smoothness: 0.82</p>
+	      <progress class="progress is-small is-warning"
+			value="77"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Pioneer SP-BS22-LR/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Neumann-KH-80">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Neumann%20KH%2080.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Neumann<br/>KH 80
+	    </p>
+	    <p class="card-header-title">
+	      79/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 52Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="78"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;3.0dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="95"
+			max="100"></progress>
+	      <p>Smoothness: 0.59</p>
+	      <progress class="progress is-small is-warning"
+			value="44"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Neumann KH 80/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Kali-IN-8">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Kali%20IN-8.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Kali<br/>IN-8
+	    </p>
+	    <p class="card-header-title">
+	      77/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 35Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="100"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;9.7dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="52"
+			max="100"></progress>
+	      <p>Smoothness: 0.63</p>
+	      <progress class="progress is-small is-warning"
+			value="50"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Kali IN-8/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Yamaha-HS5">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Yamaha%20HS5.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Yamaha<br/>HS5
+	    </p>
+	    <p class="card-header-title">
+	      77/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 54Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="75"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;4.9dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="83"
+			max="100"></progress>
+	      <p>Smoothness: 0.67</p>
+	      <progress class="progress is-small is-warning"
+			value="55"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Yamaha HS5/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Ascend-Acoustics-Sierra-2">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Ascend%20Acoustics%20Sierra%202.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Ascend Acoustics<br/>Sierra 2
+	    </p>
+	    <p class="card-header-title">
+	      75/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 49Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="82"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;3.3dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="93"
+			max="100"></progress>
+	      <p>Smoothness: 0.75</p>
+	      <progress class="progress is-small is-warning"
+			value="67"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Ascend Acoustics Sierra 2/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Selah-Audio-RC3R">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Selah%20Audio%20RC3R.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Selah Audio<br/>RC3R
+	    </p>
+	    <p class="card-header-title">
+	      75/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 54Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="75"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;4.3dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="87"
+			max="100"></progress>
+	      <p>Smoothness: 0.55</p>
+	      <progress class="progress is-small is-warning"
+			value="38"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Selah Audio RC3R/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Revel-M16">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Revel%20M16.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Revel<br/>M16
+	    </p>
+	    <p class="card-header-title">
+	      74/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 45Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="87"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;4.6dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="85"
+			max="100"></progress>
+	      <p>Smoothness: 0.58</p>
+	      <progress class="progress is-small is-warning"
+			value="42"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Revel M16/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="JBL-305P-Mark-ii">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/JBL%20305P%20Mark%20ii.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      JBL<br/>305P Mark ii
+	    </p>
+	    <p class="card-header-title">
+	      74/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 41Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="92"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;4.3dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="87"
+			max="100"></progress>
+	      <p>Smoothness: 0.41</p>
+	      <progress class="progress is-small is-warning"
+			value="18"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="JBL 305P Mark ii/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="KEF-LS50">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/KEF%20LS50.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      KEF<br/>LS50
+	    </p>
+	    <p class="card-header-title">
+	      74/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 45Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="87"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;4.0dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="89"
+			max="100"></progress>
+	      <p>Smoothness: 0.7</p>
+	      <progress class="progress is-small is-warning"
+			value="59"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="KEF LS50/ASR/index.html">ASR</a>
+	    <a class="card-footer-item" href="KEF LS50/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Elac-Adante-AS-61">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Elac%20Adante%20AS-61.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Elac<br/>Adante AS-61
+	    </p>
+	    <p class="card-header-title">
+	      72/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 41Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="92"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;4.9dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="83"
+			max="100"></progress>
+	      <p>Smoothness: 0.83</p>
+	      <progress class="progress is-small is-warning"
+			value="78"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Elac Adante AS-61/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Harbeth-Monitor-30-0">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Harbeth%20Monitor%2030.0.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Harbeth<br/>Monitor 30.0
+	    </p>
+	    <p class="card-header-title">
+	      72/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 52Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="78"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;4.0dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="89"
+			max="100"></progress>
+	      <p>Smoothness: 0.68</p>
+	      <progress class="progress is-small is-warning"
+			value="57"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Harbeth Monitor 30.0/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Micca-RB42">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Micca%20RB42.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Micca<br/>RB42
+	    </p>
+	    <p class="card-header-title">
+	      70/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 47Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="84"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;2.8dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="97"
+			max="100"></progress>
+	      <p>Smoothness: 0.57</p>
+	      <progress class="progress is-small is-warning"
+			value="41"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Micca RB42/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Ascend-Acoustics-CBM-170-SE">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Ascend%20Acoustics%20CBM-170%20SE.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Ascend Acoustics<br/>CBM-170 SE
+	    </p>
+	    <p class="card-header-title">
+	      67/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 62Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="64"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;6.2dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="75"
+			max="100"></progress>
+	      <p>Smoothness: 0.53</p>
+	      <progress class="progress is-small is-warning"
+			value="35"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Ascend Acoustics CBM-170 SE/ASR/index.html">ASR</a>
+	    <a class="card-footer-item" href="Ascend Acoustics CBM-170 SE/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="NHT-Pro-M-00">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/NHT%20Pro%20M-00.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      NHT<br/>Pro M-00
+	    </p>
+	    <p class="card-header-title">
+	      62/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 66Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="59"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;4.2dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="88"
+			max="100"></progress>
+	      <p>Smoothness: 0.63</p>
+	      <progress class="progress is-small is-warning"
+			value="50"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="NHT Pro M-00/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Ascend-Acoustics-CMT-340">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Ascend%20Acoustics%20CMT-340.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Ascend Acoustics<br/>CMT-340
+	    </p>
+	    <p class="card-header-title">
+	      53/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 64Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="61"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;4.2dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="88"
+			max="100"></progress>
+	      <p>Smoothness: 0.61</p>
+	      <progress class="progress is-small is-warning"
+			value="47"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Ascend Acoustics CMT-340/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Klipsch-R41M">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Klipsch%20R41M.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Klipsch<br/>R41M
+	    </p>
+	    <p class="card-header-title">
+	      46/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 69Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="55"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;4.4dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="86"
+			max="100"></progress>
+	      <p>Smoothness: 0.64</p>
+	      <progress class="progress is-small is-warning"
+			value="51"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Klipsch R41M/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Tannoy-System-600">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Tannoy%20System%20600.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Tannoy<br/>System 600
+	    </p>
+	    <p class="card-header-title">
+	      46/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 69Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="55"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;11.5dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="40"
+			max="100"></progress>
+	      <p>Smoothness: 0.72</p>
+	      <progress class="progress is-small is-warning"
+			value="62"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Tannoy System 600/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="JBL-Control-1-Pro">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/JBL%20Control%201%20Pro.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      JBL<br/>Control 1 Pro
+	    </p>
+	    <p class="card-header-title">
+	      36/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 87Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="30"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;4.9dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="83"
+			max="100"></progress>
+	      <p>Smoothness: 0.31</p>
+	      <progress class="progress is-small is-warning"
+			value="4"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="JBL Control 1 Pro/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Dayton-Audio-B652-AIR">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Dayton%20Audio%20B652-AIR.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Dayton Audio<br/>B652-AIR
+	    </p>
+	    <p class="card-header-title">
+	      31/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 73Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="49"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;7.0dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="69"
+			max="100"></progress>
+	      <p>Smoothness: 0.65</p>
+	      <progress class="progress is-small is-warning"
+			value="52"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Dayton Audio B652-AIR/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Polk-T15">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Polk%20T15.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Polk<br/>T15
+	    </p>
+	    <p class="card-header-title">
+	      22/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 71Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="52"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;12.6dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="33"
+			max="100"></progress>
+	      <p>Smoothness: 0.45</p>
+	      <progress class="progress is-small is-warning"
+			value="24"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Polk T15/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="JBL-104">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/JBL%20104.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      JBL<br/>104
+	    </p>
+	    <p class="card-header-title">
+	      17/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 60Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="67"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;12.7dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="32"
+			max="100"></progress>
+	      <p>Smoothness: 0.24</p>
+	      <progress class="progress is-small is-warning"
+			value="-6"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="JBL 104/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Realistic-MC-1000">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Realistic%20MC-1000.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Realistic<br/>MC-1000
+	    </p>
+	    <p class="card-header-title">
+	      0/100
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+  	      <p>Bass extension: 109Hz at -6dB</p>
+  	      <progress class="progress is-small is-info"
+			value="0"
+			max="100"></progress>
+	      <p>Flatness: &plusmn;17.6dB ~ 80-20kHz</p>
+	      <progress class="progress is-small is-success"
+			value="0"
+			max="100"></progress>
+	      <p>Smoothness: 0.68</p>
+	      <progress class="progress is-small is-warning"
+			value="57"
+			max="100"></progress>
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Realistic MC-1000/ASR/index.html">ASR</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="KEF-Reference-5">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/KEF%20Reference%205.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      KEF<br/>Reference 5
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="KEF Reference 5/Vendors/KEF/index.html">Vendors/KEF</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="JBL-4367">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/JBL%204367.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      JBL<br/>4367
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="JBL 4367/Vendors/JBL/index.html">Vendors/JBL</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Avantgarde-Acoustic-Solo">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Avantgarde%20Acoustic%20Solo.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Avantgarde Acoustic<br/>Solo
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Avantgarde Acoustic Solo/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="CommonSense-Audio-5-6">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/CommonSense%20Audio%205.6.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      CommonSense Audio<br/>5.6
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="CommonSense Audio 5.6/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Dynaudio-Xeo-3">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Dynaudio%20Xeo%203.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Dynaudio<br/>Xeo 3
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Dynaudio Xeo 3/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Essence-Electrostatic-Model-1600">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Essence%20Electrostatic%20Model%201600.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Essence Electrostatic<br/>Model 1600
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Essence Electrostatic Model 1600/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Fisher-STE-720">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Fisher%20STE-720.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Fisher<br/>STE-720
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Fisher STE-720/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Gainphile-R16">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Gainphile%20R16.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Gainphile<br/>R16
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Gainphile R16/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="GedLee-Nathan">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/GedLee%20Nathan.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      GedLee<br/>Nathan
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="GedLee Nathan/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Genelec-8030A">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Genelec%208030A.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Genelec<br/>8030A
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Genelec 8030A/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Genelec-8351A">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Genelec%208351A.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Genelec<br/>8351A
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Genelec 8351A/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Gradient-Helsinki-1-5">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Gradient%20Helsinki%201.5.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Gradient<br/>Helsinki 1.5
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Gradient Helsinki 1.5/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="JBL-PRX635">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/JBL%20PRX635.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      JBL<br/>PRX635
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="JBL PRX635/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="JansZen-Loudspeaker-zA1-1">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/JansZen%20Loudspeaker%20zA1.1.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      JansZen Loudspeaker<br/>zA1.1
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="JansZen Loudspeaker zA1.1/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="JansZen-Loudspeaker-zA2-1">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/JansZen%20Loudspeaker%20zA2.1.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      JansZen Loudspeaker<br/>zA2.1
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="JansZen Loudspeaker zA2.1/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="KRK-Systems-RoKit-6-G2">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/KRK%20Systems%20RoKit%206%20G2.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      KRK Systems<br/>RoKit 6 G2
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="KRK Systems RoKit 6 G2/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="King-s-Audio-KingSound-KS-3001">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/King's%20Audio%20KingSound%20KS%203001.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      King's Audio<br/>KingSound KS 3001
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="King's Audio KingSound KS 3001/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Manger-Sidekick">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Manger%20Sidekick.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Manger<br/>Sidekick
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Manger Sidekick/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Polk-Audio-5JR">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Polk%20Audio%205JR.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Polk Audio<br/>5JR
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Polk Audio 5JR/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Quad-Electroacoustics-ESL-57">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Quad%20Electroacoustics%20ESL-57.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Quad Electroacoustics<br/>ESL-57
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Quad Electroacoustics ESL-57/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Sanders-Sound-Systems-Model-11">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Sanders%20Sound%20Systems%20Model%2011.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Sanders Sound Systems<br/>Model 11
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Sanders Sound Systems Model 11/Princeton/index.html">Princeton</a>
+	    <a class="card-footer-item" href="Sanders Sound Systems Model 11/Princeton/index.html">Princeton</a>
+	    <a class="card-footer-item" href="Sanders Sound Systems Model 11/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Spendor-Audio-Systems-SA1">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Spendor%20Audio%20Systems%20SA1.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Spendor Audio<br/>Systems SA1
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Spendor Audio Systems SA1/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="Tannoy-Definition-DC6i">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/Tannoy%20Definition%20DC6i.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      Tannoy<br/>Definition DC6i
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="Tannoy Definition DC6i/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+      <div class="column is-one-quarter" id="iKey-Audio-M-808V2">
+	<div class="card">
+	  <div class="card-image">
+	    <figure class="image is-3x4">
+	      <img src="pictures/iKey-Audio%20M-808V2.jpg" alt="Spinorama"/>
+	    </figure>
+	  </div>
+	  <header class="card-header">
+	    <p class="card-header-title">
+	      iKey-Audio<br/>M-808V2
+	    </p>
+	  </header>
+	  <div class="card-content">
+	    <div class="content is-small">
+	    </div>
+	  </div>
+	  <footer class="card-footer">
+	    <a class="card-footer-item" href="iKey-Audio M-808V2/Princeton/index.html">Princeton</a>
+	  </footer>
+	</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<footer class="footer">
+<div class="container">
+  <div class="content has-text-centered">
+    <div class="soc">
+      <a href="#"><i class="fa fa-github-alt fa-2x" aria-hidden="true"></i></a>
+    </div>
+    <p>
+      <strong>Spinorama</strong> by <a href="https://github.com/pierreaubert">Pierre Aubert</a>.
+      The <a href="https://github.com/pierreaubert/spinorama">source code</a> is licensed under GPL. <br>
+    </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+
