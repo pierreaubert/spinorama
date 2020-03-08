@@ -61,6 +61,8 @@ def reshape(x, y, z, nscale):
 def compute_contour_smoothed(dfu):
     # compute contour
     x, y, z = compute_contour(dfu)
+    if len(x) == 0 or len(y) == 0 or len(z) == 0:
+        return (None, None, None)
     # std_dev = 1
     kernel = Gaussian2DKernel(1, mode='oversample', factor=10)
     # extend array by x5
