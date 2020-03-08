@@ -171,13 +171,16 @@ def graph_contour_common(df, transformer, graph_params):
         if (freq.size != angle.size) or (freq.size != db.size):
             logging.debug('Contour: Size freq={:d} angle={:d} db={:d}'.format(freq.size, angle.size, db.size))
             return None
+
         source = pd.DataFrame({'Freq': freq, 'Angle': angle, 'dB': db})
-        return alt.Chart(source).mark_rect(
+        return alt.Chart(source).mark_point(
         ).transform_filter(
             'datum.Freq>400'
         ).encode(
             alt.X('Freq:O'),
-            alt.Y('Angle:O'),
+            alt.Y('Angle:O', axis=alt.Axis(
+                format='.0d', title='Angle',
+                labelExpr="datum.value % 30 ? null : datum.label")),
             alt.Color('dB:Q', scale=alt.Scale(scheme='lightmulti', domain=speaker_scale, nice=True))
         ).properties(
             width=width,
