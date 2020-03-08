@@ -477,6 +477,16 @@ speakers_info = {
             'format': 'princeton',
             }],
         },
+    'Tannoy System 600': {
+        'brand': 'Tannoy',
+        'model': 'System 600',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+        },
     'iKey-Audio M-808V2': {
         'brand': 'iKey-Audio',
         'model': 'M-808V2',

@@ -27,8 +27,11 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
             filename +=  '.' + ext
             if force or not os.path.exists(filename):
                 if fileext is None or (fileext is not None and fileext == ext):
-                    chart.save(filename)
-                    updated += 1
+                    try:
+                        chart.save(filename)
+                        updated += 1
+                    except Exception as e:
+                        logging.error('Got unkown error {0}'.format(e))
     else:
         logging.debug('Chart is None for {:s} {:s} {:s} {:s}'.format(speaker, origin, key, title))
     return updated
