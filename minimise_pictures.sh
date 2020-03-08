@@ -5,11 +5,19 @@ sourcedir=datas
 targetdir=docs
 mkdir -p ${targetdir}/logos
 mkdir -p ${targetdir}/pictures
-for d in "${sourcedir}/pictures" "${sourcedir}/logos"; do
+for d in "${sourcedir}/pictures"; do
     find $d -type f | while read pict; do
 	smaller=$targetdir${pict#$sourcedir}
 	if ! test -f "$smaller"; then
             convert "$pict" -define jpeg:size=300x500  -thumbnail '200x300>' -gravity center -extent 200x300 "$smaller";
+	fi
+    done
+done
+for d in "${sourcedir}/logos"; do
+    find $d -type f | while read pict; do
+	smaller=$targetdir${pict#$sourcedir}
+	if ! test -f "$smaller"; then
+            convert "$pict" "$smaller";
 	fi
     done
 done
