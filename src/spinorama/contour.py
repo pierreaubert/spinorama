@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 from scipy import ndimage
 from astropy.convolution import Gaussian2DKernel
@@ -10,20 +11,20 @@ def compute_contour(dfu):
     # normalize dB values wrt on axis
     dfm = dfu.copy()
     for c in dfu.columns:
-        if c != 'Freq' and c != 'On-Axis':
-            dfm[c] = dfu[c] - dfu['On-Axis']
+        if c != 'Freq' and c != 'On Axis':
+            dfm[c] = dfu[c] - dfu['On Axis']
             angle = int(c[:-1])
             vrange.append(angle)
-        if c == 'On-Axis':
+        if c == 'On Axis':
             vrange.append(0)
-    dfm['On-Axis'] = 0
+    dfm['On Axis'] = 0
 
     # melt
     dfm = graph_melt(dfm)
     # compute numbers of measurements
     nm = dfm.Measurements.nunique()
     nf = int(len(dfm.index) / nm)
-    # print((nm,nf))
+    logging.debug('unique={:d} nf={:d}'.format(nm,nf))
     # index grid on a log scale log 2 ±= 0.3
     hrange = np.floor(np.logspace(1.3, 4.3, nf))
     # print(vrange)
@@ -60,10 +61,12 @@ def reshape(x, y, z, nscale):
 def compute_contour_smoothed(dfu):
     # compute contour
     x, y, z = compute_contour(dfu)
+    if len(x) == 0 or len(y) == 0 or len(z) == 0:
+        return (None, None, None)
     # std_dev = 1
     kernel = Gaussian2DKernel(1, mode='oversample', factor=10)
-    # extend array by 5
-    rx, ry, rz = reshape(x, y, z, 5)
+    # extend array by x5
+    rx, ry, rz = reshape(x, y, z, 2)
     # convolve with kernel
     rzs = ndimage.convolve(rz, kernel.array, mode='mirror')
     # return

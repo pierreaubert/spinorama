@@ -7,6 +7,7 @@ snippets*.ipynb
 __pycache__
 .idea
 TAGS
-
-
-
+.coverage
+.idea
+*_large.png
+docs
