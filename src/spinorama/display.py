@@ -2,7 +2,8 @@ import logging
 import altair as alt
 # import matplotlib.pyplot as plt
 from .graph import graph_freq, graph_contour_smoothed, graph_radar, graph_spinorama,\
-    graph_params_default, contour_params_default, radar_params_default
+    graph_params_default, contour_params_default, radar_params_default, \
+    graph_contour
 
 
 alt.data_transformers.disable_max_rows()
@@ -13,13 +14,35 @@ def display_contour_horizontal(df, graph_params=contour_params_default):
         if 'SPL Horizontal_unmelted' not in df.keys():
             return None
         dfs = df['SPL Horizontal_unmelted']
-        return graph_contour_smoothed(dfs, graph_params)
+        return graph_contour(dfs, graph_params)
     except KeyError as ke:
         logging.warning('Display Contour Horizontal failed with {0}'.format(ke))
         return None
 
 
 def display_contour_vertical(df, graph_params=contour_params_default):
+    try:
+        if 'SPL Vertical_unmelted' not in df.keys():
+            return None
+        dfs = df['SPL Vertical_unmelted']
+        return graph_contour(dfs, graph_params)
+    except KeyError as ke:
+        logging.warning('Display Contour Vertical failed with {0}'.format(ke))
+        return None
+
+
+def display_contour_smoothed_horizontal(df, graph_params=contour_params_default):
+    try:
+        if 'SPL Horizontal_unmelted' not in df.keys():
+            return None
+        dfs = df['SPL Horizontal_unmelted']
+        return graph_contour_smoothed(dfs, graph_params)
+    except KeyError as ke:
+        logging.warning('Display Contour Horizontal failed with {0}'.format(ke))
+        return None
+
+
+def display_contour_smoothed_vertical(df, graph_params=contour_params_default):
     try:
         if 'SPL Vertical_unmelted' not in df.keys():
             return None
