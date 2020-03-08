@@ -172,13 +172,7 @@ def graph_contour_common(df, transformer, graph_params):
             logging.debug('Contour: Size freq={:d} angle={:d} db={:d}'.format(freq.size, angle.size, db.size))
             return None
         source = pd.DataFrame({'Freq': freq, 'Angle': angle, 'dB': db})
-        m_height = 12
-        m_size = 8
-        if width > 800:
-            m_size = np.floor(m_size*width/800)
-        if height > 360:
-            m_height = np.floor(m_height*height/360)
-        return alt.Chart(source).mark_circle(
+        return alt.Chart(source).mark_rect(
         ).transform_filter(
             'datum.Freq>400'
         ).encode(
