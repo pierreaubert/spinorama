@@ -7,7 +7,7 @@
       return text.replace(' ', '%20')
 
   def space2dash(text):
-      return text.replace(' ', '-').replace("'", '-')
+      return text.replace(' ', '-').replace("'", '-').replace(".", '-')
 
   def removeVendors(text):
       return text.replace('Vendors/','')
@@ -37,7 +37,7 @@
 	  </div>
 	  <header class="card-header">
 	    <p class="card-header-title">
-	      ${meta[speaker_name]['brand']} ${meta[speaker_name]['model']}
+	      ${meta[speaker_name]['brand']}<br/>${meta[speaker_name]['model']}
 	    </p>
 	    % if 'pref_rating' in meta[speaker_name]:
 	    <p class="card-header-title">
@@ -45,8 +45,8 @@
 	    </p>
 	    % endif
 	  </header>
-	  <div class="card-content is-small">
-	    <div class="content">
+	  <div class="card-content">
+	    <div class="content is-small">
               % if 'pref_rating' in meta[speaker_name]:
   	      <p>Bass extension: ${meta[speaker_name]['pref_rating']['lfx_hz']}Hz at -6dB</p>
   	      <progress class="progress is-small is-info"

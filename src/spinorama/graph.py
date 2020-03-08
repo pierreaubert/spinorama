@@ -163,6 +163,8 @@ def graph_contour_common(df, transformer, graph_params):
         else:
             speaker_scale = contour_params_default['contour_scale']
         af, am, az = transformer(df)
+        if af is None or am is None or az is None:
+            return None
         freq = af.ravel()
         angle = am.ravel()
         db = az.ravel()
