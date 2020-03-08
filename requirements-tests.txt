@@ -3,4 +3,8 @@ pytest-cov
 flake8
 autopep8
 readline
+ipython
+yapf
+importmagic
+
 
