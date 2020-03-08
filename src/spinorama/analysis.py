@@ -89,12 +89,16 @@ def spatial_average2(h_df, h_sel, v_df, v_sel):
 
 
 def listening_window(h_spl, v_spl):
+    if v_spl is None or h_spl is None:
+        return None
     return spatial_average2(
         h_spl, ['Freq', '10°', '20°', '30°'], 
         v_spl, ['Freq', 'On Axis', '10°', '-10°'])
     
 
 def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    if v_spl is None or h_spl is None:
+        return None
     floor_bounce = spatial_average1(
         v_spl, ['Freq', '-20°',  '-30°', '-40°'])
 
@@ -137,6 +141,8 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
 
 def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    if v_spl is None:
+        return None
     floor_reflection = spatial_average1(
         v_spl, ['Freq', '-20°',  '-30°', '-40°'])
 
@@ -162,6 +168,8 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
 
 
 def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    if h_spl is None:
+        return None
     # Horizontal Reflections
     # Front: 0°, ± 10o, ± 20o, ± 30o horizontal
     # Side: ± 40°, ± 50°, ± 60°, ± 70°, ± 80° horizontal
@@ -192,6 +200,8 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
 
 
 def early_reflections_bounce(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Series:
+    if v_spl is None or h_spl is None:
+        return None
     return spatial_average2(
         h_spl, ['Freq', 'On Axis', '10°',  '20°', '30°', '40°',  '50°',  '60°',  '70°',  '80°', '90°',  '180°'],
         v_spl, ['Freq', 'On Axis', '10°', '-10°', '-20°',  '-30°', '-40°', '40°',  '50°', '60°']
@@ -247,6 +257,8 @@ def pressure2spl(p : float) -> float:
 
 
 def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    if v_spl is None or h_spl is None:
+        return None
     # Sound Power
     # The sound power is the weighted rms average of all 70 measurements,
     # with individual measurements weighted according to the portion of the
@@ -290,6 +302,8 @@ def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
 
 def estimated_inroom(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    if v_spl is None or h_spl is None:
+        return None
     # The Estimated In-Room Response shall be calculated using the directivity
     # data acquired in Section 5 or Section 6.
     # It shall be comprised of a weighted average of
@@ -315,6 +329,14 @@ def estimated_inroom(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
 
 def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    if v_spl is None or h_spl is None:
+        return None
+    # average the 2 onaxis
+    onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
+    spin = pd.DataFrame({
+        'Freq': onaxis.Freq,
+        'On Axis': onaxis.dB,
+    })
     lw = listening_window(h_spl, v_spl)
     sp = sound_power(h_spl, v_spl)
     # Early Reflections Directivity Index (ERDI)
@@ -329,11 +351,6 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     # An SPDI of 0 dB indicates omnidirectional radiation. The larger the SPDI, the
     # more directional the loudspeaker is in the direction of the reference axis.
     spdi = lw.dB - sp.dB + 60
-    onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
-    spin = pd.DataFrame({
-        'Freq': lw.Freq,
-        'On Axis': onaxis.dB,
-    })
     for (key, name) in [('Listening Window', lw), ('Sound Power', sp)]:
         if name is not None:
             spin[key] = name.dB
