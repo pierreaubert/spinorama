@@ -20,15 +20,16 @@ from .display import \
 
 
 def scale_params(params, factor):
+    spacing = 20
     new_params = copy.deepcopy(params)
     width = params['width']
     height = params['height']
     if factor == 3:
-        new_width = math.floor(width * 30 / 100)
-        new_height = math.floor(height * 30 / 100)
+        new_width = math.floor(width - 6*spacing)/3
+        new_height = math.floor(height /3)
     else:
-        new_width = math.floor(width * 45 / 100)
-        new_height = math.floor(height * 45 / 100)
+        new_width = math.floor(width - 3*spacing)/2
+        new_height = math.floor(height /2)
     new_params['width'] = new_width
     new_params['height'] = new_height
     for check in ('xmin', 'xmax'):
@@ -45,23 +46,23 @@ def template_compact(df, params):
     params2 = scale_params(params, 2)
     params3 = scale_params(params, 3)
     # full size
-    spinorama = display_spinorama(df, params)
+    spinorama = display_spinorama(df, params).properties(title='CEA2034')
     # side by side
-    onaxis = display_onaxis(df, params2)
-    inroom = display_inroom(df, params2)
+    onaxis = display_onaxis(df, params2).properties(title='On Axis')
+    inroom = display_inroom(df, params2).properties(title='In Room prediction')
     # side by side
-    ereflex = display_reflection_early(df, params3)
-    hreflex = display_reflection_horizontal(df, params3)
-    vreflex = display_reflection_vertical(df, params3)
+    ereflex = display_reflection_early(df, params3).properties(title='Early Reflections')
+    hreflex = display_reflection_horizontal(df, params3).properties(title='Horizontal Reflections')
+    vreflex = display_reflection_vertical(df, params3).properties(title='Vertical Reflections')
     # side by side
-    hspl = display_spl_horizontal(df, params2)
-    vspl = display_spl_vertical(df, params2)
+    hspl = display_spl_horizontal(df, params2).properties(title='Horizontal SPL')
+    vspl = display_spl_vertical(df, params2).properties(title='Vertical SPL')
     # side by side
-    hcontour = display_contour_smoothed_horizontal(df, params2)
-    hradar = display_radar_horizontal(df, params2)
+    hcontour = display_contour_smoothed_horizontal(df, params2).properties(title='Horizontal SPL')
+    hradar = display_radar_horizontal(df, params2).properties(title='Horizontal SPL')
     # side by side
-    vcontour = display_contour_smoothed_vertical(df, params2)
-    vradar = display_radar_vertical(df, params2)
+    vcontour = display_contour_smoothed_vertical(df, params2).properties(title='Vertical SPL')
+    vradar = display_radar_vertical(df, params2).properties(title='Vertical SPL')
     # build the chart
     chart = alt.vconcat()
     if spinorama is not None:

@@ -13,19 +13,13 @@ for d in "${sourcedir}/pictures"; do
 	fi
     done
 done
-for d in "${sourcedir}/logos"; do
-    find $d -type f | while read pict; do
-	smaller=$targetdir${pict#$sourcedir}
-	if ! test -f "$smaller"; then
-            convert "$pict" "$smaller";
-	fi
-    done
-done
+# copy logs
+cp datas/logos/* docs/logos
 
 # reduce size of large image
 find docs  -type f -name '*_large.png' -print | while read pict; do
-    target="${pict%_large.png}.png"
+    target="${pict%_large.png}.jpg"
     if ! test -f "${target}"; then
-	convert "$pict" -quality 25 "${pict%_large.png}.png"
+	convert "$pict" -quality 75 "${target}"
     fi
 done
