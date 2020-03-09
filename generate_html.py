@@ -90,8 +90,7 @@ def generate_speaker(mako, df, meta, site):
                 for kind in [freqs, contours, radars]:
                     for graph_name in kind:
                         graph_filename = dirname + '/default/' + graph_name + '.html'
-                        print('Writing default/{0}.html for {1}'.format(graph_filename, speaker_name))
-                        logging.info('Writing default/{0}.html for {1}'.format(graph_filename, speaker_name))
+                        logging.info('Writing default/{0} for {1}'.format(graph_filename, speaker_name))
                         with open(graph_filename, 'w') as f:
                             f.write(graph_html.render(graph=graph_name, meta=meta, site=site))
                             f.close()
