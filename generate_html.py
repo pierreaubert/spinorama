@@ -90,6 +90,7 @@ def generate_speaker(mako, df, meta, site):
                 for kind in [freqs, contours, radars]:
                     for graph_name in kind:
                         graph_filename = dirname + '/default/' + graph_name + '.html'
+                        print('Writing default/{0}.html for {1}'.format(graph_filename, speaker_name))
                         logging.info('Writing default/{0}.html for {1}'.format(graph_filename, speaker_name))
                         with open(graph_filename, 'w') as f:
                             f.write(graph_html.render(graph=graph_name, meta=meta, site=site))
@@ -111,12 +112,10 @@ if __name__ == '__main__':
             if len(sitedev) < 4 or sitedev[0:4] != 'http':
                 print('sitedev %s does not start with http!'.format(sitedev))
                 exit(1)
-
         site = sitedev
 
-    logging.basicConfig(
-        format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-        datefmt='%Y-%m-%d:%H:%M:%S')
+    #logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+    #                    datefmt='%Y-%m-%d:%H:%M:%S')
     if args['--log-level'] is not None:
         level = args['--log-level']
         if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
@@ -152,15 +151,15 @@ if __name__ == '__main__':
                     continue
                 default_name = os.path.basename(default)
                 df[speaker_name][origin_name][default_name] = {}
-                graphs = glob(default + '/*.png')
+                graphs = glob(default + '/*.jpg')
                 for graph in graphs:
-                    g = os.path.basename(graph).replace('.png', '')
+                    g = os.path.basename(graph).replace('.jpg', '')
                     df[speaker_name][origin_name][default_name][g] = {}
-
+ 
     # configure Mako
     mako_templates = TemplateLookup(directories=['templates'], module_directory='/tmp/mako_modules')
 
-    # write index.html
+    # write index.html  
     logging.info('Write index.html')
     index_html = mako_templates.get_template('index.html')
     def sort_meta(s):
