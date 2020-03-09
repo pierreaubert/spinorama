@@ -151,6 +151,9 @@ def graph_spinorama(dfu, graph_params):
     )
     return spin
 
+# explicitly set ticks for X and Y axis
+xTicks = [i*10 for i in range(2,10)] + [i*100 for i in range(1,10)] + [i*1000 for i in range(1, 21)]
+yTicks = [-180+10*i for i in range(0,37)]
 
 def graph_contour_common(df, transformer, graph_params):
     try:
@@ -182,11 +185,14 @@ def graph_contour_common(df, transformer, graph_params):
                   axis=alt.Axis(
                       format='.0s',
                       labelAngle=0,
+                      values=xTicks,
                       title='Freq (Hz)',
                       labelExpr="datum.value % 100 ? null : datum.label")),
             alt.Y('Angle:O',
                   axis=alt.Axis(
-                    format='.0d', title='Angle',
+                    format='.0d',
+                      title='Angle',
+                      values=yTicks,
                     labelExpr="datum.value % 30 ? null : datum.label")),
             alt.Color('dB:Q',
                       scale=alt.Scale(scheme='lightmulti',
