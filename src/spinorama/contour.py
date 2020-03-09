@@ -49,8 +49,21 @@ def reshape(x, y, z, nscale):
     lx = [i for j in lxi for i in j] + [x[0][len(x[0])-1] for i in range(0, nscale)]
     nly = (nx-1)*nscale+1
     ly = np.linspace(np.min(y), np.max(y), nly)
+    # on this axis, cheat by 1% to generate round values that are better in legend
+    # round off values close to those in ykeep
+    ykeep = [20, 30, 100, 200, 300, 400, 500,
+             1000, 2000, 3000, 4000, 5000,
+             10000, 20000]
+    def close(x1, x2, ykeep):
+        for z in ykeep:
+            if abs((x1-z)/z) < 0.01 and z<x2:
+                ykeep.remove(z)
+                return z
+        return x1
+    lx2 = [close(lx[i], lx[i+1], ykeep) for i in range(0,len(lx)-1)]
+    lx2 = np.append(lx2, lx[-1])
     # build the mesh
-    rx, ry = np.meshgrid(lx, ly)
+    rx, ry = np.meshgrid(lx2, ly)
     # copy paste the values of z into rz 
     rzi = np.repeat(z[:-1], nscale, axis=0)
     rzi_x, rzi_y = rzi.shape
