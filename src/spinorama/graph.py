@@ -151,6 +151,9 @@ def graph_spinorama(dfu, graph_params):
     )
     return spin
 
+# explicitly set ticks for X and Y axis
+xTicks = [i*10 for i in range(2,10)] + [i*100 for i in range(1,10)] + [i*1000 for i in range(1, 21)]
+yTicks = [-180+10*i for i in range(0,37)]
 
 def graph_contour_common(df, transformer, graph_params):
     try:
@@ -171,14 +174,30 @@ def graph_contour_common(df, transformer, graph_params):
         if (freq.size != angle.size) or (freq.size != db.size):
             logging.debug('Contour: Size freq={:d} angle={:d} db={:d}'.format(freq.size, angle.size, db.size))
             return None
+
         source = pd.DataFrame({'Freq': freq, 'Angle': angle, 'dB': db})
-        return alt.Chart(source).mark_rect(
+        return alt.Chart(source).mark_point(
         ).transform_filter(
             'datum.Freq>400'
         ).encode(
-            alt.X('Freq:O'),
-            alt.Y('Angle:O'),
-            alt.Color('dB:Q', scale=alt.Scale(scheme='lightmulti', domain=speaker_scale, nice=True))
+            alt.X('Freq:O', 
+                  scale=alt.Scale(type="log", base=10, nice=True),
+                  axis=alt.Axis(
+                      format='.0s',
+                      labelAngle=0,
+                      values=xTicks,
+                      title='Freq (Hz)',
+                      labelExpr="datum.value % 100 ? null : datum.label")),
+            alt.Y('Angle:O',
+                  axis=alt.Axis(
+                    format='.0d',
+                      title='Angle',
+                      values=yTicks,
+                    labelExpr="datum.value % 30 ? null : datum.label")),
+            alt.Color('dB:Q',
+                      scale=alt.Scale(scheme='lightmulti',
+                                      domain=speaker_scale,
+                                      nice=True))
         ).properties(
             width=width,
             height=height

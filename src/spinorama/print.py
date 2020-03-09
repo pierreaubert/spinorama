@@ -22,9 +22,12 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
         for ext in ['json', 'png']: # svg and html skipped to keep size small
             # skip the 2cols.json and 3cols.json as they are really large
             # 2cols and 3cols are more for printing
-            if ext == 'json' and title in ('2cols', '3cols'):
+            if ext == 'json' and title in ('2cols', '3cols', 'SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed'):
                 continue
-            filename = filedir + '/' + title.replace('_unmelted', '')
+            # print high quality smoother contour and skip the others
+            if ext == 'png' and title in ('SPL Horizontal Contour', 'SPL Vertical Contour'):
+                continue
+            filename = filedir + '/' + title.replace('_smoothed', '')
             if ext == 'png':
                 # generate large image that are then easy to find and compress
                 # before uploading
@@ -33,10 +36,11 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
             if force or not os.path.exists(filename):
                 if fileext is None or (fileext is not None and fileext == ext):
                     try:
+                        print('Saving {0} in {1}'.format(title, filename))
                         chart.save(filename)
                         updated += 1
                     except Exception as e:
-                        logging.error('Got unkown error {0}'.format(e))
+                        logging.error('Got unkown error {0} for {1}'.format(e, filename))
     else:
         logging.debug('Chart is None for {:s} {:s} {:s} {:s}'.format(speaker, origin, key, title))
     return updated
@@ -71,19 +75,18 @@ def print_graphs(df: pd.DataFrame,
     graphs['SPL Horizontal'] = display_spl_horizontal(df, params)
     graphs['SPL Vertical'] = display_spl_vertical(df, params)
 
-    # change params for coutour
+    # change params for contour
     params = copy.deepcopy(contour_params_default)
     params['width'] = width
     params['height'] = height
     params['xmin'] = origins_info[origin]['min hz']
     params['xmax'] = origins_info[origin]['max hz']
 
-    if origin == 'ASR':
-        graphs['SPL Horizontal Contour'] = display_contour_smoothed_horizontal(df, params)
-        graphs['SPL Vertical Contour'] = display_contour_smoothed_vertical(df, params)
-    else:
-        graphs['SPL Horizontal Contour'] = display_contour_horizontal(df, params)
-        graphs['SPL Vertical Contour'] = display_contour_vertical(df, params)
+    # compute both: smoothed are large but looks better 
+    graphs['SPL Horizontal Contour_smoothed'] = display_contour_smoothed_horizontal(df, params)
+    graphs['SPL Vertical Contour_smoothed'] = display_contour_smoothed_vertical(df, params)
+    graphs['SPL Horizontal Contour'] = display_contour_horizontal(df, params)
+    graphs['SPL Vertical Contour'] = display_contour_vertical(df, params)
 
     # better square
     params = copy.deepcopy(radar_params_default)
