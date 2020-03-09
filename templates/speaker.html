@@ -20,7 +20,7 @@
     % for freq in freqs:
     <li>
       <div>
-	<a href="default/${freq | space2url}.html"><img src="default/${freq | space2url}.png"/></a>
+	<a href="default/${freq | space2url}.html"><img src="default/${freq | space2url}.jpg"/></a>
       </div>
     </li>
     <li>${freq}</li>
@@ -29,14 +29,14 @@
     <li>${contour | unmeltC }</li>
     <div>
       <a href="default/${contour | unmeltC, space2url}.html">
-	<img src="default/${contour | unmeltC, space2url}.png"/>
+	<img src="default/${contour | unmeltC, space2url}.jpg"/>
       </a>
     </div>
     % endfor
     % for radar in radars:
     <div>
       <a href="default/${radar | unmeltR, space2url}.html">
-	<img src="default/${radar | unmeltR, space2url}.png"/>
+	<img src="default/${radar | unmeltR, space2url}.jpg"/>
       </a>
     </div>
     <li>${radar | unmeltR }</li>
@@ -47,14 +47,14 @@
 <div class="tab-pane display:none" id="pane-2">
   <div id="vis2"></div>
   <figure class="image">
-    <img src="default/2cols.png" alt="all graphs"/>
+    <img src="default/2cols.jpg" alt="all graphs"/>
   </figure>
 </div>
 <!-- Desktop view: 3 cols-->
 <div class="tab-pane display:none" id="pane-3">
   <div id="vis3"></div>
   <figure class="image">
-    <img src="default/3cols.png" alt="all graphs"/>
+    <img src="default/3cols.jpg" alt="all graphs"/>
   </figure>
 </div>
 <%include file="tabs_footer.html"/>
