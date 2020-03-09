@@ -58,6 +58,16 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
+    'JBL 705P': {
+        'brand': 'JBL',
+        'model': '705P',
+        'type': 'active',
+        'price': '1000',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
     'Kali IN-8': {
         'brand': 'Kali',
         'model': 'IN-8',
