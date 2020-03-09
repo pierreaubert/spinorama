@@ -177,11 +177,21 @@ def graph_contour_common(df, transformer, graph_params):
         ).transform_filter(
             'datum.Freq>400'
         ).encode(
-            alt.X('Freq:O'),
-            alt.Y('Angle:O', axis=alt.Axis(
-                format='.0d', title='Angle',
-                labelExpr="datum.value % 30 ? null : datum.label")),
-            alt.Color('dB:Q', scale=alt.Scale(scheme='lightmulti', domain=speaker_scale, nice=True))
+            alt.X('Freq:O', 
+                  scale=alt.Scale(type="log", base=10, nice=True),
+                  axis=alt.Axis(
+                      format='.0s',
+                      labelAngle=0,
+                      title='Freq (Hz)',
+                      labelExpr="datum.value % 100 ? null : datum.label")),
+            alt.Y('Angle:O',
+                  axis=alt.Axis(
+                    format='.0d', title='Angle',
+                    labelExpr="datum.value % 30 ? null : datum.label")),
+            alt.Color('dB:Q',
+                      scale=alt.Scale(scheme='lightmulti',
+                                      domain=speaker_scale,
+                                      nice=True))
         ).properties(
             width=width,
             height=height
