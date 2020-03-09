@@ -13,6 +13,8 @@ from .display import \
     display_spl_vertical, \
     display_contour_horizontal, \
     display_contour_vertical, \
+    display_contour_smoothed_horizontal, \
+    display_contour_smoothed_vertical, \
     display_radar_horizontal, \
     display_radar_vertical
 
@@ -55,10 +57,10 @@ def template_compact(df, params):
     hspl = display_spl_horizontal(df, params2)
     vspl = display_spl_vertical(df, params2)
     # side by side
-    hcontour = display_contour_horizontal(df, params2)
+    hcontour = display_contour_smoothed_horizontal(df, params2)
     hradar = display_radar_horizontal(df, params2)
     # side by side
-    vcontour = display_contour_vertical(df, params2)
+    vcontour = display_contour_smoothed_vertical(df, params2)
     vradar = display_radar_vertical(df, params2)
     # build the chart
     chart = alt.vconcat()
@@ -95,10 +97,10 @@ def template_panorama(df, params):
     vreflex = display_reflection_vertical(df, params3)
     # side by side
     hspl = display_spl_horizontal(df, params3)
-    hcontour = display_contour_horizontal(df, params3)
+    hcontour = display_contour_smoothed_horizontal(df, params3)
     hradar = display_radar_horizontal(df, params3)
     # side by side
-    vcontour = display_contour_vertical(df, params3)
+    vcontour = display_contour_smoothed_vertical(df, params3)
     vspl = display_spl_vertical(df, params3)
     vradar = display_radar_vertical(df, params3)
     # build the chart
