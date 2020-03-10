@@ -46,37 +46,43 @@ def template_compact(df, params):
     params2 = scale_params(params, 2)
     params3 = scale_params(params, 3)
     # full size
-    spinorama = display_spinorama(df, params).properties(title='CEA2034')
+    spinorama = display_spinorama(df, params)
     # side by side
-    onaxis = display_onaxis(df, params2).properties(title='On Axis')
-    inroom = display_inroom(df, params2).properties(title='In Room prediction')
+    onaxis = display_onaxis(df, params2)
+    inroom = display_inroom(df, params2)
     # side by side
-    ereflex = display_reflection_early(df, params3).properties(title='Early Reflections')
-    hreflex = display_reflection_horizontal(df, params3).properties(title='Horizontal Reflections')
-    vreflex = display_reflection_vertical(df, params3).properties(title='Vertical Reflections')
+    ereflex = display_reflection_early(df, params3)
+    hreflex = display_reflection_horizontal(df, params3)
+    vreflex = display_reflection_vertical(df, params3)
     # side by side
-    hspl = display_spl_horizontal(df, params2).properties(title='Horizontal SPL')
-    vspl = display_spl_vertical(df, params2).properties(title='Vertical SPL')
+    hspl = display_spl_horizontal(df, params2)
+    vspl = display_spl_vertical(df, params2)
     # side by side
-    hcontour = display_contour_smoothed_horizontal(df, params2).properties(title='Horizontal SPL')
-    hradar = display_radar_horizontal(df, params2).properties(title='Horizontal SPL')
+    hcontour = display_contour_smoothed_horizontal(df, params2)
+    hradar = display_radar_horizontal(df, params2)
     # side by side
-    vcontour = display_contour_smoothed_vertical(df, params2).properties(title='Vertical SPL')
-    vradar = display_radar_vertical(df, params2).properties(title='Vertical SPL')
+    vcontour = display_contour_smoothed_vertical(df, params2)
+    vradar = display_radar_vertical(df, params2)
     # build the chart
     chart = alt.vconcat()
     if spinorama is not None:
-        chart &= alt.hconcat(spinorama)
+        chart &= alt.hconcat(spinorama.properties(title='CEA2034'))
     if onaxis is not None and inroom is not None:
-        chart &= alt.hconcat(onaxis, inroom)
+        chart &= alt.hconcat(onaxis.properties(title='On Axis'),
+                             inroom.properties(title='In Room prediction'))
     if ereflex is not None and hreflex is not None and vreflex is not None:
-        chart &= alt.hconcat(ereflex, hreflex, vreflex)
+        chart &= alt.hconcat(ereflex.properties(title='Early Reflections'),
+                             hreflex.properties(title='Horizontal Reflections'),
+                             vreflex.properties(title='Vertical Reflections'))
     if hspl is not None and vspl is not None:
-        chart &= alt.hconcat(hspl, vspl)
+        chart &= alt.hconcat(hspl.properties(title='Horizontal SPL'),
+                             vspl.properties(title='Vertical SPL'))
     if hcontour is not None and hradar is not None:
-        chart &= alt.hconcat(hcontour, hradar)
+        chart &= alt.hconcat(hcontour.properties(title='Horizontal SPL'),
+                             hradar.properties(title='Vertical SPL'))
     if vcontour is not None and vradar is not None:
-        chart &= alt.hconcat(vcontour, vradar)
+        chart &= alt.hconcat(vcontour.properties(title='Horizontal SPL'),
+                             vradar.properties(title='Vertical SPL'))
     return chart.configure_legend(
         orient='top'
     ).configure_title(
@@ -107,22 +113,30 @@ def template_panorama(df, params):
     # build the chart
     chart = alt.vconcat()
     if spinorama is not None and onaxis is not None and inroom is not None:
-        chart &= alt.hconcat(spinorama, onaxis, inroom)
+        chart &= alt.hconcat(spinorama.properties(title='CEA2034'),
+                             onaxis.properties(title='On Axis'),
+                             inroom.properties(title='In Room prediction'))
     else:
         logging.info('Panaroma: spin={0} onaxis={1} inroom={2}'.format(
             spinorama is not None, onaxis is not None, inroom is not None))
     if ereflex is not None and hreflex is not None and vreflex is not None:
-        chart &= alt.hconcat(ereflex, hreflex, vreflex)
+        chart &= alt.hconcat(ereflex.properties(title='Early Reflections'),
+                             hreflex.properties(title='Horizontal Reflections'),
+                             vreflex.properties(title='Vertical Reflections'))
     else:
         logging.info('Panaroma: ereflex={0} hreflex={1} vreflex={2}'.format(
             ereflex is not None, hreflex is not None, vreflex is not None))
     if hspl is not None and hcontour is not None and hradar is not None:
-        chart &= alt.hconcat(hcontour, hradar, hspl)
+        chart &= alt.hconcat(hcontour.properties(title='Horizontal SPL'),
+                             hradar.properties(title='Horizontal SPL'),
+                             hspl.properties(title='Horizontal SPL'))
     else:
         logging.info('Panaroma: hspl={0} hcontour={1} hradar={2}'.format(
             hspl is not None, hcontour is not None, hradar is not None))
     if vspl is not None and vcontour is not None and vradar is not None:
-        chart &= alt.hconcat(vcontour, vradar, vspl)
+        chart &= alt.hconcat(vcontour.properties(title='Vertical SPL'),
+                             vradar.properties(title='Vertical SPL'),
+                             vspl.properties(title='Vertical SPL'))
     else:
         logging.info('Panaroma: vspl={0} vcontour={1} vradar={2}'.format(
             vspl is not None, vcontour is not None, vradar is not None))
