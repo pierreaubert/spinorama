@@ -25,7 +25,9 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
             if ext == 'json' and title in ('2cols', '3cols', 'SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed'):
                 continue
             # print high quality smoother contour and skip the others
-            if ext == 'png' and title in ('SPL Horizontal Contour', 'SPL Vertical Contour'):
+            if ext == 'png' and (\
+                (title in ('SPL Horizontal Contour', 'SPL Vertical Contour') and origin == 'ASR') or \
+                (title in ('SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed') and origin == 'Princeton')):
                 continue
             filename = filedir + '/' + title.replace('_smoothed', '')
             if ext == 'png':

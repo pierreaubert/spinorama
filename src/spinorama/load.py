@@ -143,7 +143,7 @@ def parse_graph_freq_princeton_mat(mat, suffix):
     #    
     df = pd.DataFrame({'Freq': xs})
     # loop over measurements (skipping the 5 increments)
-    for i in range(0, 72, 2):
+    for i in range(0, 72, 1):
         # extract ir                                                                                                                 
         ir = mat[ir_name][i]
         # compute FFT                                                                                                                
@@ -151,7 +151,6 @@ def parse_graph_freq_princeton_mat(mat, suffix):
         ys = np.abs(y[0:lgs])
         # check for 0 (from manual: 0 means not measured)                                                                            
         if ys.max() == 0.0:
-            print()
             continue
         # apply formula from paper to translate to dbFS                                                                              
         ys = 105.+np.log10(ys)*20.
@@ -244,7 +243,7 @@ def parse_graphs_speaker_princeton(speaker_name):
     # add H and V SPL graphs
     if h_spl is not None:
         dfs['SPL Horizontal_unmelted'] = h_spl
-    dfs['SPL Horizontal'] = graph_melt(h_spl)
+        dfs['SPL Horizontal'] = graph_melt(h_spl)
     if v_spl is not None:
         dfs['SPL Vertical_unmelted'] = v_spl
         dfs['SPL Vertical'] = graph_melt(v_spl)

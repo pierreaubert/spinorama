@@ -155,7 +155,7 @@ def graph_spinorama(dfu, graph_params):
 xTicks = [i*10 for i in range(2,10)] + [i*100 for i in range(1,10)] + [i*1000 for i in range(1, 21)]
 yTicks = [-180+10*i for i in range(0,37)]
 
-def graph_contour_common(df, transformer, graph_params):
+def graph_contour_common(af, am, az, graph_params):
     try:
         width = graph_params['width']
         height = graph_params['height']
@@ -165,9 +165,6 @@ def graph_contour_common(df, transformer, graph_params):
             speaker_scale = graph_params['contour_scale']
         else:
             speaker_scale = contour_params_default['contour_scale']
-        af, am, az = transformer(df)
-        if af is None or am is None or az is None:
-            return None
         freq = af.ravel()
         angle = am.ravel()
         db = az.ravel()
@@ -208,11 +205,22 @@ def graph_contour_common(df, transformer, graph_params):
 
 
 def graph_contour(df, graph_params):
-    return graph_contour_common(df, compute_contour, graph_params)
+    af, am, az = compute_contour(df)
+    if af is None or am is None or az is None:
+        logging.error('contour is None')
+        return None
+    return graph_contour_common(af, am, az, graph_params)
 
 
 def graph_contour_smoothed(df, graph_params):
-    return graph_contour_common(df, compute_contour_smoothed, graph_params)
+    af, am, az = compute_contour_smoothed(df)
+    if af is None or am is None or az is None:
+        logging.warning('contour is None')
+        return None
+    if np.max(np.abs(az)) == 0.0:
+        logging.warning('contour is flat')
+        return None
+    return graph_contour_common(af, am, az, graph_params)
 
 
 def radar_angle2str(a):

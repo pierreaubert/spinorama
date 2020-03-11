@@ -141,6 +141,11 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
 
 def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    """Compute horizontal reflections
+
+    h_spl: unused
+    v_spl: vertical data
+    """
     if v_spl is None:
         return None
     floor_reflection = spatial_average1(
@@ -149,11 +154,9 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
     ceiling_reflection = spatial_average1(
         v_spl, ['Freq', '40°',  '50°', '60°'])
 
-    onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
-
     vr = pd.DataFrame({
-        'Freq': listening_window(h_spl, v_spl).Freq,
-        'On Axis': onaxis.dB,
+        'Freq': v_spl.Freq,
+        'On Axis': v_spl['On Axis'],
         })
     
     # print(vr.shape, onaxis.shape, floor_reflection.shape)
@@ -168,6 +171,11 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
 
 
 def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    """Compute horizontal reflections
+
+    h_spl: horizontal data
+    v_spl: unused
+    """
     if h_spl is None:
         return None
     # Horizontal Reflections
@@ -185,11 +193,9 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
         h_spl, ['Freq', '90°',  '100°', '110°', '120°', '130°',
                 '140°', '150°', '160°', '170°', '180°'])
 
-    onaxis = spatial_average2(h_spl, ['Freq', 'On Axis'], v_spl, ['Freq', 'On Axis'])
-
     hr = pd.DataFrame({
-        'Freq': listening_window(h_spl, v_spl).Freq,
-        'On Axis': onaxis.dB,
+        'Freq': h_spl.Freq,
+        'On Axis': h_spl['On Axis'],
     })
     for (key, name) in [('Front', front), ('Side', side), ('Rear', rear)]:
         if name is not None:
