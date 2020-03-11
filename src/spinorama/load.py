@@ -151,6 +151,7 @@ def parse_graph_freq_princeton_mat(mat, suffix):
         ys = np.abs(y[0:lgs])
         # check for 0 (from manual: 0 means not measured)                                                                            
         if ys.max() == 0.0:
+            print()
             continue
         # apply formula from paper to translate to dbFS                                                                              
         ys = 105.+np.log10(ys)*20.
@@ -174,6 +175,9 @@ def parse_graph_freq_princeton_mat(mat, suffix):
             return int(angle[:-1])
 
     df = df.reindex(columns=sorted(df.columns, key=lambda a: a2v(a)))
+    # check empty case
+    if 'On Axis' not in df.keys():
+        return None
     # precision of measurement is ok above 500
     return df[df.Freq>=500]
 
