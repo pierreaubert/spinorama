@@ -20,6 +20,19 @@ def compute_contour(dfu):
             vrange.append(0)
     dfm['On Axis'] = 0
 
+    # reorder from -90 to +270 and not -180 to 180 to be closer to other plots
+    def a2v(angle):
+        if angle == 'Freq':
+            return -1000
+        elif angle == 'On Axis':
+            return 0
+        iangle = int(angle[:-1])
+        if iangle <-90:
+            return iangle+270
+        return iangle
+        
+    dfu = dfu.reindex(columns=sorted(dfu.columns, key=lambda a: a2v(a)))
+    print(dfu.keys())
     # melt
     dfm = graph_melt(dfm)
     # compute numbers of measurements
@@ -37,8 +50,6 @@ def compute_contour(dfu):
     af, am = np.meshgrid(hrange, vrange)
     # since it is melted generate slices
     az = np.array([dfm.dB[nf * i:nf * (i + 1)] for i in range(0, nm)])
-    # smooth values to .1
-    # az = np.floor(az*10)/10
     return (af, am, az)
 
 
