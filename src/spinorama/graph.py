@@ -28,8 +28,8 @@ graph_params_default = {
 contour_params_default = {
     'xmin': 400,
     'xmax': 20000,
-    'width': 420,
-    'height': 180,
+    'width': 400,
+    'height': 360,
     'contour_scale': [-12, -9, -8, -7, -6, -5, -4, -3, -2.5, -2, -1.5, -1, -0.5, 0],
 }
 
@@ -165,6 +165,8 @@ def graph_contour_common(af, am, az, graph_params):
             speaker_scale = graph_params['contour_scale']
         else:
             speaker_scale = contour_params_default['contour_scale']
+
+        # flatten and build a Frame
         freq = af.ravel()
         angle = am.ravel()
         db = az.ravel()
@@ -173,8 +175,21 @@ def graph_contour_common(af, am, az, graph_params):
             return None
 
         source = pd.DataFrame({'Freq': freq, 'Angle': angle, 'dB': db})
-        return alt.Chart(source).mark_point(
-        ).transform_filter(
+
+        # tweak ratios and sizes
+        chart = alt.Chart(source)
+        # classical case is 200 points for freq and 36 or 72 measurements on angles
+        # check that width is a multiple of len(freq)
+        # same for angles
+        
+        # build and return graph
+        print('w={0} h={1}'.format(width, height))
+        if width/source.shape[0] < 2 and height/source.shape[1] < 2:
+            chart = chart.mark_point()
+        else:
+            chart = chart.mark_rect()
+
+        chart = chart.transform_filter(
             'datum.Freq>400'
         ).encode(
             alt.X('Freq:O', 
@@ -187,10 +202,11 @@ def graph_contour_common(af, am, az, graph_params):
                       labelExpr="datum.value % 100 ? null : datum.label")),
             alt.Y('Angle:O',
                   axis=alt.Axis(
-                    format='.0d',
+                      format='.0d',
                       title='Angle',
                       values=yTicks,
-                    labelExpr="datum.value % 30 ? null : datum.label")),
+                    labelExpr="datum.value % 30 ? null : datum.label"),
+                  sort=None),
             alt.Color('dB:Q',
                       scale=alt.Scale(scheme='lightmulti',
                                       domain=speaker_scale,
@@ -199,6 +215,7 @@ def graph_contour_common(af, am, az, graph_params):
             width=width,
             height=height
         )
+        return chart
     except KeyError as ke:
         logging.warning('Failed with {0}'.format(ke))
         return None
