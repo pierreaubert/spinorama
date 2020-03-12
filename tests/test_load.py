@@ -30,14 +30,14 @@ class SpinoramaLoadSPLTests(unittest.TestCase):
     def test_smoke2(self):
         self.assertIn('On Axis', self.df.columns)
         self.assertNotIn('On-Axis', self.df.columns)
-        # 200 in Freq, 36 off axis and 0
-        self.assertEqual(self.df.shape, (200, 37))
+        # 200 in Freq, -170 to 180 10 by 10
+        self.assertEqual(self.df.shape, (200, 2*18+1))
 
 
 class SpinoramaLoadPrinceton(unittest.TestCase):
 
     def setUp(self):
-        self.df = parse_graph_princeton('datas/Princeton/Genelec 8351A/Genelec8351A_H_IR.mat', 'H')
+        self.df = parse_graph_princeton('datas/Princeton/Genelec 8351A/Genelec8351A_V_IR.mat', 'V')
 
     def test_smoke1(self):
         self.assertIsNotNone(self.df)
@@ -46,7 +46,7 @@ class SpinoramaLoadPrinceton(unittest.TestCase):
         self.assertIn('Freq', self.df.columns)
         self.assertIn('On Axis', self.df.columns)
         self.assertNotIn('On-Axis', self.df.columns)
-        self.assertEqual(self.df.shape, (3328, 20))
+        self.assertEqual(self.df.shape, (3328, 2*36+1))
         self.assertLess(500, self.df.Freq.min())
 
 

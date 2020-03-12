@@ -93,7 +93,7 @@ class SpinoramaEarlyReflectionsTests(unittest.TestCase):
         self.titleH, self.splH = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Horizontal.txt')
         self.titleV, self.splV = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Vertical.txt')
         # computed graphs
-        self.computed_unmelted = early_reflections(self.splH, self.splV).loc[:199]
+        self.computed_unmelted = early_reflections(self.splH, self.splV)
         self.computed = graph_melt(self.computed_unmelted)
 
 
@@ -131,7 +131,7 @@ class SpinoramaVerticalReflectionsTests(unittest.TestCase):
         self.titleH, self.splH = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Horizontal.txt')
         self.titleV, self.splV = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Vertical.txt')
         # computed graphs
-        self.computed_unmelted = vertical_reflections(self.splH, self.splV).loc[:199]
+        self.computed_unmelted = vertical_reflections(self.splH, self.splV)
         self.computed = graph_melt(self.computed_unmelted)
 
 
@@ -170,7 +170,7 @@ class SpinoramaHorizontalReflectionsTests(unittest.TestCase):
         self.titleH, self.splH = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Horizontal.txt')
         self.titleV, self.splV = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Vertical.txt')
         # computed graphs
-        self.computed_unmelted = horizontal_reflections(self.splH, self.splV).loc[:199]
+        self.computed_unmelted = horizontal_reflections(self.splH, self.splV)
         self.computed = graph_melt(self.computed_unmelted)
 
 
@@ -208,7 +208,7 @@ class SpinoramaEstimatedInRoomTests(unittest.TestCase):
         self.titleH, self.splH = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Horizontal.txt')
         self.titleV, self.splV = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Vertical.txt')
         # computed graphs
-        self.computed_unmelted = estimated_inroom(self.splH, self.splV).loc[:199]
+        self.computed_unmelted = estimated_inroom(self.splH, self.splV)
         self.computed = graph_melt(self.computed_unmelted)
 
 
