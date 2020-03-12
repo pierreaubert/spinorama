@@ -143,7 +143,7 @@ def parse_graph_freq_princeton_mat(mat, suffix):
     #    
     df = pd.DataFrame({'Freq': xs})
     # loop over measurements (skipping the 5 increments)
-    for i in range(0, 72, 2):
+    for i in range(0, 72, 1):
         # extract ir                                                                                                                 
         ir = mat[ir_name][i]
         # compute FFT                                                                                                                
@@ -174,6 +174,9 @@ def parse_graph_freq_princeton_mat(mat, suffix):
             return int(angle[:-1])
 
     df = df.reindex(columns=sorted(df.columns, key=lambda a: a2v(a)))
+    # check empty case
+    if 'On Axis' not in df.keys():
+        return None
     # precision of measurement is ok above 500
     return df[df.Freq>=500]
 
@@ -240,7 +243,7 @@ def parse_graphs_speaker_princeton(speaker_name):
     # add H and V SPL graphs
     if h_spl is not None:
         dfs['SPL Horizontal_unmelted'] = h_spl
-    dfs['SPL Horizontal'] = graph_melt(h_spl)
+        dfs['SPL Horizontal'] = graph_melt(h_spl)
     if v_spl is not None:
         dfs['SPL Vertical_unmelted'] = v_spl
         dfs['SPL Vertical'] = graph_melt(v_spl)

@@ -178,6 +178,13 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
+    'KEF Q100': {
+        'brand': 'KEF',
+        'model': 'Q100',
+        'type': 'passive',
+        'price': '600',
+        'measurements': [{'origin': 'ASR', 'format': 'klippel', },],
+        },
     'KEF LS50': {
         'brand': 'KEF',
         'model': 'LS50',
