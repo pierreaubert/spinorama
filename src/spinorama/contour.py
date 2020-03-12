@@ -32,7 +32,7 @@ def compute_contour(dfu):
         return iangle
         
     dfu = dfu.reindex(columns=sorted(dfu.columns, key=lambda a: a2v(a)))
-    print(dfu.keys())
+    # print(dfu.keys())
     # melt
     dfm = graph_melt(dfm)
     # compute numbers of measurements
