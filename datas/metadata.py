@@ -185,6 +185,13 @@ speakers_info = {
         'price': '600',
         'measurements': [{'origin': 'ASR', 'format': 'klippel', },],
         },
+    'KEF Reference 3': {
+        'brand': 'KEF',
+        'model': 'Reference 3',
+        'type': 'passive',
+        'price': '3800',
+        'measurements': [{'origin': 'ASR', 'format': 'klippel', },],
+        },
     'KEF LS50': {
         'brand': 'KEF',
         'model': 'LS50',
