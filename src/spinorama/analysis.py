@@ -214,45 +214,55 @@ def early_reflections_bounce(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Ser
     )
 
 
+# from the standard appendix
 # weigth http://emis.impa.br/EMIS/journals/BAG/vol.51/no.1/b51h1san.pdf
 sp_weigths = {
-        'On Axis': 0.000604486,
-        '10°': 0.004730189,
-        '20°': 0.008955027,
-        '30°': 0.012387354,
-        '40°': 0.014989611,
-        '50°': 0.016868154,
-        '60°': 0.018165962,
-        '70°': 0.019006744,
-        '80°': 0.019477787,
-        '90°': 0.019629373,
-       '100°': 0.019477787,
-       '110°': 0.019006744,
-       '120°': 0.018165962,
-       '130°': 0.016868154,
-       '140°': 0.014989611,
-       '150°': 0.012387354,
-       '160°': 0.008955027,
-       '170°': 0.004730189,
+    'On Axis': 0.000604486,
        '180°': 0.000604486,
-      '-170°': 0.004730189,
-      '-160°': 0.008955027,
-      '-150°': 0.012387354,
-      '-140°': 0.014989611,
-      '-130°': 0.016868154,
-      '-120°': 0.018165962,
-      '-110°': 0.019006744,
-      '-100°': 0.019477787,
-       '-90°': 0.019629373,
-       '-80°': 0.019477787,
-       '-70°': 0.019006744,
-       '-60°': 0.018165962,
-       '-50°': 0.016868154,
-       '-40°': 0.014989611,
-       '-30°': 0.012387354,
-       '-20°': 0.008955027,
-       '-10°': 0.004730189,
-    }
+    #
+    '10°':   0.004730189,
+    '170°':  0.004730189,
+    '-170°': 0.004730189,
+    '-10°':  0.004730189,
+    #
+    '20°':   0.008955027,
+    '160°':  0.008955027,
+    '-160°': 0.008955027,
+    '-20°':  0.008955027,
+    #
+    '30°':   0.012387354,
+    '150°':  0.012387354,
+    '-150°': 0.012387354,
+    '-30°':  0.012387354,
+    # 
+    '40°':   0.014989611,
+    '140°':  0.014989611,
+    '-140°': 0.014989611,
+    '-40°':  0.014989611,
+    # 
+    '50°':   0.016868154,
+    '130°':  0.016868154,
+    '-130°': 0.016868154,
+    '-50°':  0.016868154,
+    # 
+    '60°':   0.018165962,
+    '120°':  0.018165962,
+    '-120°': 0.018165962,
+    '-60°':  0.018165962,
+    #
+    '70°':   0.019006744,
+    '110°':  0.019006744,
+    '-110°': 0.019006744,
+    '-70°':  0.019006744,
+    #
+    '80°':   0.019477787,
+    '100°':  0.019477787,
+    '-100°': 0.019477787,
+    '-80°':  0.019477787,
+    #
+    '90°':   0.019629373,
+    '-90°':  0.019629373,
+}
 
 def spl2pressure(spl : float) -> float:
     return pow(10,(spl-105)/20)
@@ -274,30 +284,31 @@ def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     # to the values shown in Appendix C and an energy average (rms) is
     # calculated using the weighted values. The final average is converted
     # to SPL.
-    def trim(c):
-        if c[-2:] == '_v' or c[-2:] == '_h':
-            return c[:-2]
-        return c
-
-    def valid(c):
-        if c[0] == 'O':
-            return True
-        elif c[0] == 'F':
-            return False
-        elif int(trim(c)[:-1]) % 10 == 0:
-            return True
-        return False
-
     sp_window = h_spl.merge(
         v_spl,
         left_on='Freq', right_on='Freq', suffixes=('_h', '_v')
     )
     sp_cols = sp_window.columns
 
-    def rms(spl : np.array) -> float:
-        avg = np.sum([sp_weigths[trim(c)]*spl2pressure(spl[c])**2 for c in sp_cols if valid(c)])
-        wsm = np.sum([sp_weigths[trim(c)]                         for c in sp_cols if valid(c)])
-        return pressure2spl(np.sqrt(avg/wsm))
+    def column_trim(c):
+        if c[-2:] == '_v' or c[-2:] == '_h':
+            return c[:-2]
+        return c
+
+    def column_valid(c):
+        if c[0] == 'O':
+            return True
+        elif c[0] == 'F':
+            return False
+        elif int(column_trim(c)[:-1]) % 10 == 0:
+            return True
+        return False
+
+    def rms(spl):
+        print(len([c for c in sp_cols if column_valid(c)]))
+        avg = [(sp_weigths[column_trim(c)] * spl2pressure(spl[c]))**2 for c in sp_cols if column_valid(c)]
+        wsm = [sp_weigths[column_trim(c)]**2 for c in sp_cols if column_valid(c)]
+        return pressure2spl(np.sqrt(np.sum(avg)/np.sum(wsm)))
 
     sp_window['rms'] = sp_window.apply(rms, axis=1)
     
