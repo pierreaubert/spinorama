@@ -41,6 +41,14 @@
     </div>
     <li>${radar | unmeltR }</li>
     % endfor
+    % for directivity in directivities:
+    <div>
+      <a href="default/${directivity | unmeltR, space2url}.html">
+	<img src="default/${directivity | unmeltR, space2url}.jpg"/>
+      </a>
+    </div>
+    <li>${directivity | unmeltR }</li>
+    % endfor
   </ul>
 </div>
 <!-- Laptop view: 2 cols-->

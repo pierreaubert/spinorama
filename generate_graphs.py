@@ -111,5 +111,9 @@ if __name__ == '__main__':
         df[speaker][origin] = {}
         df[speaker][origin]['default'] = parse_graphs_speaker(brand, speaker, mformat)
     else:
-        df = parse_all_speakers(metadata.speakers_info)
+        origin = None
+        if args['--origin'] is not None:
+            origin = args['--origin']
+
+        df = parse_all_speakers(metadata.speakers_info, origin)
     generate_graphs(df, width, height, force, ptype=ptype)
