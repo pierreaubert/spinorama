@@ -98,8 +98,16 @@ def add_estimates(df):
                     continue
                 logging.info('Adding -3dB {:d}Hz -6dB {:d}Hz +/-{:f}dB'.format(est[1], est[2], est[3]))
                 metadata.speakers_info[speaker_name]['estimates'] = est
+                
                 # from Olive&all paper
-                pref_rating = speaker_pref_rating(spin)
+                if 'Estimated In-Room Response' not in dfs.keys():
+                    continue
+
+                inroom = dfs['Estimated In-Room Response']
+                if inroom is None:
+                    continue
+                    
+                pref_rating = speaker_pref_rating(spin, inroom)
                 logging.info('Adding {0}'.format(pref_rating))
                 metadata.speakers_info[speaker_name]['pref_rating'] = pref_rating
                 # compute min and max for each value
