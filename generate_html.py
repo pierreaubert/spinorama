@@ -174,7 +174,7 @@ if __name__ == '__main__':
         f.close()
 
     # write help.html and compare.html
-    for item in ('help', 'compare'):
+    for item in ('help', 'compare', 'scores'):
         item_name = '{0}.html'.format(item)
         logging.info('Write {0}'.format(item_name))
         item_html = mako_templates.get_template(item_name)
