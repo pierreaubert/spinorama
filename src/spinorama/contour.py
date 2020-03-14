@@ -6,19 +6,36 @@ from astropy.convolution import Gaussian2DKernel
 
 from .load import graph_melt
 
-
-def compute_contour(dfu):
-    vrange = []
-    # normalize dB values wrt on axis
+def normalize1(dfu):
     dfm = dfu.copy()
     for c in dfu.columns:
         if c != 'Freq' and c != 'On Axis':
-            dfm[c] = dfu[c] - dfu['On Axis']
+            dfm[c] = 20*log10(dfu[c]/dfu['On Axis'])
+    dfm['On Axis'] = 0
+    return dfm
+
+def normalize2(dfu):
+    dfm = dfu.copy()
+    for c in dfu.columns:
+        if c != 'Freq' and c != 'On Axis':
+            dfm[c] -= dfu['On Axis'])
+    dfm['On Axis'] = 0
+    return dfm
+
+def compute_contour(dfu):
+    # normalize dB values wrt on axis
+    dfm = normalize2(dfu)
+
+    # get a list of sorted columns
+    vrange = []
+    for c in dfu.columns:
+        if c != 'Freq' and c != 'On Axis':
             angle = int(c[:-1])
             vrange.append(angle)
         if c == 'On Axis':
             vrange.append(0)
-    dfm['On Axis'] = 0
+
+    
 
     # reorder from -90 to +270 and not -180 to 180 to be closer to other plots
     def a2v(angle):
