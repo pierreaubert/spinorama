@@ -50,11 +50,12 @@ def sanity_check(df, meta):
             if 'default' not in keys.keys():
                 logging.error('Key default is mandatory for >{:s}<'.format(speaker_name))
                 return 1
-        # check if image exists
-        if not os.path.exists('./datas/pictures/' + speaker_name + '.jpg'):
+        # check if image exists (jpg or png)
+        if not os.path.exists('./datas/pictures/' + speaker_name + '.jpg') and \
+          not  os.path.exists('./datas/pictures/' + speaker_name + '.png'):
             logging.fatal('Image associated with >', speaker_name, '< not found!')
             return 1
-        # check if downscale image exists
+        # check if downscale image exists (all jpg)
         if not os.path.exists('./docs/pictures/' + speaker_name + '.jpg'):
             logging.fatal('Image associated with >', speaker_name, '< not found!')
             logging.fatal('Please run: minimise_pictures.sh')
@@ -189,7 +190,7 @@ if __name__ == '__main__':
         if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
             logging.basicConfig(level=level)
 
-    df = parse_all_speakers(metadata.speakers_info)
+    df = parse_all_speakers(metadata.speakers_info, None)
         
     if sanity_check(df, metadata.speakers_info) != 0:
         logging.error('Sanity checks failed!')
