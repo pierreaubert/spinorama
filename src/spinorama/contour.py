@@ -10,7 +10,7 @@ def normalize1(dfu):
     dfm = dfu.copy()
     for c in dfu.columns:
         if c != 'Freq' and c != 'On Axis':
-            dfm[c] = 20*log10(dfu[c]/dfu['On Axis'])
+            dfm[c] = 20*np.log10(dfu[c]/dfu['On Axis'])
     dfm['On Axis'] = 0
     return dfm
 

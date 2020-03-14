@@ -3,6 +3,7 @@ import math
 import numpy as np
 import pandas as pd
 import altair as alt
+from .analysis import directivity_matrix
 from .contour import compute_contour, compute_contour_smoothed
 
 
@@ -183,7 +184,7 @@ def graph_contour_common(af, am, az, graph_params):
         # same for angles
         
         # build and return graph
-        print('w={0} h={1}'.format(width, height))
+        logging.debug('w={0} h={1}'.format(width, height))
         if width/source.shape[0] < 2 and height/source.shape[1] < 2:
             chart = chart.mark_point()
         else:
@@ -466,4 +467,19 @@ def graph_radar(dfu, graph_params):
     # return (dbs | grid) & (circle+legend | text) & (grid+circle+legend+text+dbs)
     return (grid+circle+legend+text+dbs)
 
+
+def graph_directivity_matrix(dfu, graph_params):
+    splH = dfu['SPL Horizontal_unmelted']
+    splV = dfu['SPL Vertical_unmelted']
+    x, y, z = directivity_matrix(splH, splV)
+    source = pd.DataFrame({'x': x.ravel(), 'y': y.ravel(),'z': z.melt().value})
+
+    return alt.Chart(source).mark_rect(
+    ).encode(
+        x=alt.X('x:O', scale=alt.Scale(type='log')),
+        y=alt.Y('y:O', scale=alt.Scale(type='log')),
+        color=alt.Color('z:Q', scale=alt.Scale(scheme='spectral', nice=True))
+    ).properties(
+        width=800,
+        height=800)
 

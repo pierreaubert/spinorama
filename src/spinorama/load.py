@@ -293,7 +293,7 @@ def get_speaker_list(speakerpath):
     return speakers
 
 
-def parse_all_speakers(metadata, speakerpath='./datas'):
+def parse_all_speakers(metadata, filter_origin, speakerpath='./datas'):
     speakerlist = get_speaker_list(speakerpath)
     df = {}
     count_measurements = 0
@@ -318,6 +318,8 @@ def parse_all_speakers(metadata, speakerpath='./datas'):
                 logging.error('measurement for speaker {:s} need an origin field, please add to metadata.py!'.format(speaker))
                 sys.exit(1)
             origin = m['origin']
+            if filter_origin is not None and origin != filter_origin:
+                continue
             # keep it simple
             df[speaker][origin] = {}
             # speaker / origin / measurement

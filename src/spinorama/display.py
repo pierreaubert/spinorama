@@ -3,7 +3,7 @@ import altair as alt
 # import matplotlib.pyplot as plt
 from .graph import graph_freq, graph_contour_smoothed, graph_radar, graph_spinorama,\
     graph_params_default, contour_params_default, radar_params_default, \
-    graph_contour
+    graph_contour, graph_directivity_matrix
 
 
 alt.data_transformers.disable_max_rows()
@@ -224,3 +224,10 @@ def display_spl_horizontal(df, graph_params=graph_params_default):
 
 def display_spl_vertical(df, graph_params=graph_params_default):
     return display_spl(df, 'SPL Vertical', graph_params)
+
+def display_directivity_matrix(df, graph_params=graph_params_default):
+    try:
+        return graph_directivity_matrix(df, graph_params)
+    except Exception as e:
+        logging.warning('Display directivity matrix failed with {0}'.format(e))
+        return None
