@@ -35,8 +35,6 @@ def compute_contour(dfu):
         if c == 'On Axis':
             vrange.append(0)
 
-    
-
     # reorder from -90 to +270 and not -180 to 180 to be closer to other plots
     def a2v(angle):
         if angle == 'Freq':
@@ -136,8 +134,7 @@ def near(t, v):
     return w, d
 
 
-def compute_isoline(x, y, z, value):
-    data = np.array(z)
-    # print(len(data))
-    isoline = [near(data[i], -3) for i in range(0, len(data))]
-    return isoline
+# inspired heavily by
+# https://blog.bruce-hill.com/code?f=meandering-triangles/meandering_triangles.py
+
+
