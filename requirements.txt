@@ -1,9 +1,7 @@
 altair
-seaborn
 numpy
 scipy
 pandas
-voila
 jupyterlab
 matplotlib
 selenium
@@ -11,3 +9,4 @@ docopt
 mako
 astropy
 nbstripout
+shapely
