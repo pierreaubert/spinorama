@@ -232,6 +232,28 @@ speakers_info = {
             'format': 'webplotdigitizer',
             }],
         },
+    'JBL M2': {
+        'brand': 'JBL',
+        'model': 'M2',
+        'type': 'active',
+        'price': '',
+        'measurements': [{
+            'origin': 'Vendors/JBL',
+            'website': 'www.jbl.com',
+            'format': 'webplotdigitizer',
+            }],
+        },
+    'Revel C25': {
+        'brand': 'Revel',
+        'model': 'C25',
+        'type': 'active',
+        'price': '',
+        'measurements': [{
+            'origin': 'Vendors/Revel',
+            'website': 'www.revel.com',
+            'format': 'webplotdigitizer',
+            }],
+        },
     'Polk T15': {
         'brand': 'Polk',
         'model': 'T15',
@@ -571,5 +593,14 @@ origins_info = {
         'logo': 'docs/metadata/jbl.png',
         'logo-small': 'docs/metadata/jbl-small.png',
         'url': 'http://www.jbl.com',
+    },
+    'Vendors/Revel': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': 45,
+        'max dB': 105,
+        'logo': 'docs/metadata/revel.png',
+        'logo-small': 'docs/metadata/jbl-small.png',
+        'url': 'http://www.revel.com',
     },
 }

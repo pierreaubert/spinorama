@@ -53,11 +53,11 @@ def sanity_check(df, meta):
         # check if image exists (jpg or png)
         if not os.path.exists('./datas/pictures/' + speaker_name + '.jpg') and \
           not  os.path.exists('./datas/pictures/' + speaker_name + '.png'):
-            logging.fatal('Image associated with >', speaker_name, '< not found!')
+            logging.fatal('Image associated with >{0}< not found.'.format(speaker_name))
             return 1
         # check if downscale image exists (all jpg)
         if not os.path.exists('./docs/pictures/' + speaker_name + '.jpg'):
-            logging.fatal('Image associated with >', speaker_name, '< not found!')
+            logging.fatal('Image associated with >{0}< not found.'.format(speaker_name))
             logging.fatal('Please run: minimise_pictures.sh')
             return 1
     return 0
@@ -156,9 +156,11 @@ def add_estimates(df):
                 def percent(val, vmin, vmax):
                     return math.floor(100*(val-vmin)/(vmax-vmin))
                 scaled_pref_score =     percent(pref_score, min_pref_score, max_pref_score)
+                # lower is better
                 scaled_lfx_hz     = 100-percent(lfx_hz,     min_lfx_hz,     max_lfx_hz)
                 scaled_nbd_on     = 100-percent(nbd_on,     min_nbd_on,     max_nbd_on)
                 scaled_flatness   = 100-percent(flatness,   min_flatness,   max_flatness)
+                # higher is better
                 scaled_sm_sp      =     percent(sm_sp,      min_sm_sp,      max_sm_sp)
                 # add normalized values
                 scaled_pref_rating = {

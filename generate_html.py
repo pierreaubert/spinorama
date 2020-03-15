@@ -94,6 +94,7 @@ def generate_speaker(mako, df, meta, site):
                                                 g_radar=radar,
                                                 g_directivity=directivity,
                                                 meta=meta,
+                                                origin=origin,
                                                 site=site))
                     f.close()
 
