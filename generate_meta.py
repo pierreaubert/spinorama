@@ -77,9 +77,6 @@ def add_estimates(df):
     max_sm_sp = 0
     for speaker_name, speaker_data in df.items():
         for origin, measurements in speaker_data.items():
-            if origin != 'ASR':
-                # this measurements are only valid above 500hz
-                continue
             for m, dfs in measurements.items():
                 if m != 'default':
                     continue
@@ -97,8 +94,13 @@ def add_estimates(df):
                 est = estimates(onaxis)
                 if est[0] == -1:
                     continue
-                logging.info('Adding -3dB {:d}Hz -6dB {:d}Hz +/-{:f}dB'.format(est[1], est[2], est[3]))
-                metadata.speakers_info[speaker_name]['estimates'] = est
+                logging.info('Adding -3dB {0}Hz -6dB {1}Hz +/-{2}dB'.format(est[1], est[2], est[3]))
+                if 'estimates' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
+                    metadata.speakers_info[speaker_name]['estimates'] = est
+                
+                if origin == 'Princeton':
+                    # this measurements are only valid above 500hz
+                    continue
                 
                 # from Olive&all paper
                 if 'Estimated In-Room Response' not in dfs.keys():
