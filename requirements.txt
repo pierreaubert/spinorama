@@ -10,3 +10,4 @@ mako
 astropy
 nbstripout
 shapely
+geopandas
