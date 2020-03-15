@@ -98,6 +98,16 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
+    'Revel F35': {
+        'brand': 'Revel',
+        'model': 'F35',
+        'type': 'passive',
+        'price': '1800',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
     'Revel M16': {
         'brand': 'Revel',
         'model': 'M16',
