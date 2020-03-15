@@ -29,7 +29,7 @@ to get a better insight on how to analyse a spinorama.
 ## Import
 
 The library support 3 kinds of data:
-1. ASR format provided by klippel: a set of CSV files
+1. ASR format provided by Klippel: a set of CSV files
 2. Princeton 3D3A files: they are IR data in hdf5 format
 3. Scanned data from a picture with WebPlotDigitizer (takes 10 minutes per picture)
 
@@ -38,6 +38,7 @@ The library support 3 kinds of data:
 1. Generate CEA2034 data from horizontal and vertical SPL data (in beta)
 2. Calculate contour plot, radar plot
 3. Estimate basic data for a speaker (-3dB output, flatness over a range)
+4. Compute various parameters defined in a paper from Olive (ref. below).
 
 ## Generation
 
