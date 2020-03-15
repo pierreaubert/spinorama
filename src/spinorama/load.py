@@ -2,6 +2,7 @@ import os
 import sys
 import glob
 import locale
+import math
 from locale import atof
 import json
 import logging
@@ -73,7 +74,7 @@ def parse_graph_freq_klippel(filename):
 def parse_graph_freq_webplotdigitizer(filename):
     """ """
     # from 20Hz to 20kHz, log(2)~0.3
-    ref_freq = np.logspace(0.30103, 4.30103, 203)
+    ref_freq = np.logspace(1+math.log10(2), 4+math.log10(2), 500)
     #
     with open(filename, 'r') as f:
         # data are stored in a json file.
@@ -83,11 +84,10 @@ def parse_graph_freq_webplotdigitizer(filename):
         for col in speaker_data['datasetColl']:
             data = col['data']
             # sort data
-            sdata = np.sort([[data[d]['value'][0],
-                              data[d]['value'][1]]
-                             for d in range(0, len(data))], axis=0)
-            # print(col['name'], len(sdata))
-            # print(sdata)
+            udata = [(data[d]['value'][0], data[d]['value'][1]) for d in range(0, len(data))]
+            sdata = sorted(udata, key=lambda a: a[0])
+            print(col['name'], len(sdata))
+            print(sdata)
             # since sdata and freq_ref are both sorted, iterate over both
             ref_p = 0
             for di in range(0, len(sdata)-1):
@@ -119,9 +119,7 @@ def parse_graph_freq_webplotdigitizer(filename):
 
         # build dataframe
         ares = np.array(res)
-        df = pd.DataFrame({'Freq': ares[:, 0],
-                           'dB': ares[:, 1],
-                           'Measurements': ares[:, 2]})
+        df = pd.DataFrame({'Freq': ares[:, 0], 'dB': ares[:, 1], 'Measurements': ares[:, 2]})
         # print(df)
         return 'CEA2034', df
 
