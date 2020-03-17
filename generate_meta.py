@@ -128,9 +128,6 @@ def add_estimates(df):
     # add normalized value to metadata
     for speaker_name, speaker_data in df.items():
         for origin, measurements in speaker_data.items():
-            if origin != 'ASR':
-                # this measurements are only valid above 500hz
-                continue
             for m, dfs in measurements.items():
                 if m != 'default':
                     continue
