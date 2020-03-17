@@ -52,6 +52,7 @@ def unify_freq(dfs):
                          'Listening Window': a_lw.LW, 
                          'Early Reflections': a_er.ER, 
                          'Sound Power': a_sp.SP})
+    # print(res2.head())
     return res2.dropna().reset_index(drop=True)
 
 
@@ -122,7 +123,6 @@ def parse_graph_freq_webplotdigitizer(filename):
             sdata = sorted(udata, key=lambda a: a[0])
             #print(col['name'], len(sdata))
             #print(sdata[0])
-            #print(type(sdata[0][0]), type(sdata[0][1]))
             # since sdata and freq_ref are both sorted, iterate over both
             ref_p = 0
             for di in range(0, len(sdata)-1):
@@ -146,7 +146,7 @@ def parse_graph_freq_webplotdigitizer(filename):
                     continue
                 # linear interpolation
                 ref_db = db+((dbn-db)*(ref_f-fr))/(frn-fr)
-                # print('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} db={:.1f} db_ref={:.1f} db_n={:.1f}'.format(fr, ref_f, frn, db, ref_db, dbn))
+                #print('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} db={:.1f} db_ref={:.1f} db_n={:.1f}'.format(fr, ref_f, frn, db, ref_db, dbn))
                 res.append([ref_f, ref_db, col['name']])
 
         # build dataframe
@@ -154,7 +154,6 @@ def parse_graph_freq_webplotdigitizer(filename):
         dB   = np.array([res[i][1] for i in range(0, len(res))]).astype(np.float)
         mrt  = [res[i][2] for i in range(0, len(res))]
         df = pd.DataFrame({'Freq': freq, 'dB': dB, 'Measurements': mrt})
-
         # print(df)
         return 'CEA2034', df 
 
@@ -259,10 +258,10 @@ def parse_graphs_speaker_webplotdigitizer(speaker_brand, speaker_name):
             er = spin.loc[spin['Measurements'] == 'Early Reflections'].reset_index(drop=True)
             sp = spin.loc[spin['Measurements'] == 'Sound Power'].reset_index(drop=True)
 
-            print(on.shape, lw.shape, er.shape, sp.shape)
+            # print(on.shape, lw.shape, er.shape, sp.shape)
             eir = estimated_inroom(lw, er, sp)
-            print('eir {0}'.format(eir.shape))
-            print(eir)
+            # print('eir {0}'.format(eir.shape))
+            # print(eir)
             logging.debug('eir {0}'.format(eir.shape))
             dfs['Estimated In-Room Response'] = graph_melt(eir)
     except FileNotFoundError:
