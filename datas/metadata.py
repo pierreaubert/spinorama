@@ -242,11 +242,11 @@ speakers_info = {
             'website': 'www.jbl.com',
             'format': 'webplotdigitizer',
             }],
-        },
+        }, 
     'Revel C25': {
         'brand': 'Revel',
         'model': 'C25',
-        'type': 'active',
+        'type': 'passive',
         'price': '',
         'measurements': [{
             'origin': 'Vendors/Revel',
@@ -254,6 +254,17 @@ speakers_info = {
             'format': 'webplotdigitizer',
             }],
         },
+    'Revel F208': {
+        'brand': 'Revel',
+        'model': 'F208',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Vendors/Revel',
+            'website': 'www.revel.com',
+            'format': 'webplotdigitizer',
+            }],
+            },
     'Polk T15': {
         'brand': 'Polk',
         'model': 'T15',
