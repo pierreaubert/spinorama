@@ -553,6 +553,16 @@ speakers_info = {
             'format': 'princeton',
             }],
         },
+    'Zaph Audio ZA5': {
+        'brand': 'Zaph Audio',
+        'model': 'ZA5',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
 }
 
 # add some information about precisions of graphs
