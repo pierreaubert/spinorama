@@ -17,7 +17,7 @@
 <!-- Mobile view: sequential-->
 <div class="tab-pane is-active" id="pane-1">
   <ul>
-    % for freq in freqs:
+    % for freq in g_freq:
     <li>
       <div>
 	<a href="default/${freq | space2url}.html"><img src="default/${freq | space2url}.jpg"/></a>
@@ -25,7 +25,7 @@
     </li>
     <li>${freq}</li>
     % endfor
-    % for contour in contours:
+    % for contour in g_contour:
     <li>${contour | unmeltC }</li>
     <div>
       <a href="default/${contour | unmeltC, space2url}.html">
@@ -33,13 +33,21 @@
       </a>
     </div>
     % endfor
-    % for radar in radars:
+    % for radar in g_radar:
     <div>
       <a href="default/${radar | unmeltR, space2url}.html">
 	<img src="default/${radar | unmeltR, space2url}.jpg"/>
       </a>
     </div>
     <li>${radar | unmeltR }</li>
+    % endfor
+    % for directivity in g_directivity:
+    <div>
+      <a href="default/${directivity | unmeltR, space2url}.html">
+	<img src="default/${directivity | unmeltR, space2url}.jpg"/>
+      </a>
+    </div>
+    <li>${directivity | unmeltR }</li>
     % endfor
   </ul>
 </div>

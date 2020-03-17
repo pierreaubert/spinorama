@@ -98,6 +98,16 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
+    'Revel F35': {
+        'brand': 'Revel',
+        'model': 'F35',
+        'type': 'passive',
+        'price': '1800',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
     'Revel M16': {
         'brand': 'Revel',
         'model': 'M16',
@@ -185,11 +195,11 @@ speakers_info = {
         'price': '600',
         'measurements': [{'origin': 'ASR', 'format': 'klippel', },],
         },
-    'KEF Reference 3': {
+    'KEF R3': {
         'brand': 'KEF',
-        'model': 'Reference 3',
+        'model': 'R3',
         'type': 'passive',
-        'price': '3800',
+        'price': '2000',
         'measurements': [{'origin': 'ASR', 'format': 'klippel', },],
         },
     'KEF LS50': {
@@ -222,6 +232,39 @@ speakers_info = {
             'format': 'webplotdigitizer',
             }],
         },
+    'JBL M2': {
+        'brand': 'JBL',
+        'model': 'M2',
+        'type': 'active',
+        'price': '',
+        'measurements': [{
+            'origin': 'Vendors/JBL',
+            'website': 'www.jbl.com',
+            'format': 'webplotdigitizer',
+            }],
+        }, 
+    'Revel C25': {
+        'brand': 'Revel',
+        'model': 'C25',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Vendors/Revel',
+            'website': 'www.revel.com',
+            'format': 'webplotdigitizer',
+            }],
+        },
+    'Revel F208': {
+        'brand': 'Revel',
+        'model': 'F208',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Vendors/Revel',
+            'website': 'www.revel.com',
+            'format': 'webplotdigitizer',
+            }],
+            },
     'Polk T15': {
         'brand': 'Polk',
         'model': 'T15',
@@ -521,6 +564,16 @@ speakers_info = {
             'format': 'princeton',
             }],
         },
+    'Zaph Audio ZA5': {
+        'brand': 'Zaph Audio',
+        'model': 'ZA5',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
 }
 
 # add some information about precisions of graphs
@@ -561,5 +614,14 @@ origins_info = {
         'logo': 'docs/metadata/jbl.png',
         'logo-small': 'docs/metadata/jbl-small.png',
         'url': 'http://www.jbl.com',
+    },
+    'Vendors/Revel': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': 45,
+        'max dB': 105,
+        'logo': 'docs/metadata/revel.png',
+        'logo-small': 'docs/metadata/jbl-small.png',
+        'url': 'http://www.revel.com',
     },
 }

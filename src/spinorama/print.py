@@ -8,7 +8,7 @@ from .display import display_spinorama, display_onaxis, display_inroom, \
     display_spl_horizontal, display_spl_vertical, \
     display_contour_horizontal, display_contour_vertical, \
     display_contour_smoothed_horizontal, display_contour_smoothed_vertical, \
-    display_radar_horizontal, display_radar_vertical
+    display_radar_horizontal, display_radar_vertical, display_directivity_matrix
 from .views import template_compact, template_panorama
 from .graph import graph_params_default, contour_params_default, radar_params_default
 
@@ -101,6 +101,8 @@ def print_graphs(df: pd.DataFrame,
     graphs['SPL Horizontal Radar'] = display_radar_horizontal(df, params)
     graphs['SPL Vertical Radar'] = display_radar_vertical(df, params)
 
+    # compute directivity plots
+    graphs['Directivity Matrix'] = display_directivity_matrix(df, params)
 
     # 1080p to 2k screen
     params = copy.deepcopy(graph_params_default)

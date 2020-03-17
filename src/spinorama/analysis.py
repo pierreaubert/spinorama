@@ -16,28 +16,25 @@ def fconst(x :float, a: float):
 
 
 def estimates(onaxis: pd.DataFrame):
-    # TODO doesn't work for Princeton measurements which are valid >500hz
     try:
-        xdata1 = np.array(onaxis.loc[onaxis['Freq'] < 60].Freq)
-        ydata1 = np.array(onaxis.loc[onaxis['Freq'] < 60].dB)
-
-        popt1, pcov1 = curve_fit(flinear, xdata1, ydata1)
-
-        xdata2 = np.array(onaxis.loc[onaxis['Freq'] >= 100].Freq)
-        ydata2 = np.array(onaxis.loc[onaxis['Freq'] >= 100].dB)
-
-        popt2, pcov2 = curve_fit(fconst, xdata2, ydata2)
-
-        inter = math.exp((popt2[0] - popt1[1]) / popt1[0])
-        inter_3 = math.exp((popt2[0] - popt1[1] - 3) / popt1[0])
-        inter_6 = math.exp((popt2[0] - popt1[1] - 6) / popt1[0])
-
-        # search band up/down
-        up: float = ydata2.max() - popt2[0]
-        down: float = ydata2.min() - popt2[0]
-
-        return [int(inter), int(inter_3), int(inter_6),
-                math.floor(max(up, -down) * 10) / 10]
+        freq_min = onaxis.Freq.min()
+        if freq_min < 300:
+            # mean over 300-10k
+            y_ref = np.mean(onaxis.loc[(onaxis.Freq>=300) & (onaxis.Freq<=10000)].dB)
+            y_3 = onaxis.loc[(onaxis.Freq<150)&(onaxis.dB<=y_ref-3)].Freq.max()
+            y_6 = onaxis.loc[(onaxis.Freq<150)&(onaxis.dB<=y_ref-6)].Freq.max()
+            # search band up/down
+            up:   float = onaxis.loc[(onaxis.Freq>=100) & (onaxis.Freq<=10000)].dB.max()
+            down: float = onaxis.loc[(onaxis.Freq>=100) & (onaxis.Freq<=10000)].dB.min()
+            band = max(abs(up-y_ref), abs(y_ref-down))
+            return [round(y_ref, 0), round(y_3, 0) , round(y_6, 0), round(band,1)]
+        else:
+            y_ref = np.mean(onaxis.loc[(onaxis.Freq>=freq_min) & (onaxis.Freq<=10000)].dB)
+            # search band up/down
+            up:   float = onaxis.loc[(onaxis.Freq>=freq_min) & (onaxis.Freq<=10000)].dB.max()
+            down: float = onaxis.loc[(onaxis.Freq>=freq_min) & (onaxis.Freq<=10000)].dB.min()
+            band = max(abs(up-y_ref), abs(y_ref-down))
+            return [round(y_ref, 0), -1, -1, round(band,1)]
     except TypeError as te:
         logging.warning('Estimates failed for {0} with {1}'.format(onaxis.shape, te))
         return [-1, -1, -1, -1]
@@ -214,52 +211,66 @@ def early_reflections_bounce(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Ser
     )
 
 
+# from the standard appendix
 # weigth http://emis.impa.br/EMIS/journals/BAG/vol.51/no.1/b51h1san.pdf
 sp_weigths = {
-        'On Axis': 0.000604486,
-        '10°': 0.004730189,
-        '20°': 0.008955027,
-        '30°': 0.012387354,
-        '40°': 0.014989611,
-        '50°': 0.016868154,
-        '60°': 0.018165962,
-        '70°': 0.019006744,
-        '80°': 0.019477787,
-        '90°': 0.019629373,
-       '100°': 0.019477787,
-       '110°': 0.019006744,
-       '120°': 0.018165962,
-       '130°': 0.016868154,
-       '140°': 0.014989611,
-       '150°': 0.012387354,
-       '160°': 0.008955027,
-       '170°': 0.004730189,
+    'On Axis': 0.000604486,
        '180°': 0.000604486,
-      '-170°': 0.004730189,
-      '-160°': 0.008955027,
-      '-150°': 0.012387354,
-      '-140°': 0.014989611,
-      '-130°': 0.016868154,
-      '-120°': 0.018165962,
-      '-110°': 0.019006744,
-      '-100°': 0.019477787,
-       '-90°': 0.019629373,
-       '-80°': 0.019477787,
-       '-70°': 0.019006744,
-       '-60°': 0.018165962,
-       '-50°': 0.016868154,
-       '-40°': 0.014989611,
-       '-30°': 0.012387354,
-       '-20°': 0.008955027,
-       '-10°': 0.004730189,
-    }
+    #
+    '10°':   0.004730189,
+    '170°':  0.004730189,
+    '-170°': 0.004730189,
+    '-10°':  0.004730189,
+    #
+    '20°':   0.008955027,
+    '160°':  0.008955027,
+    '-160°': 0.008955027,
+    '-20°':  0.008955027,
+    #
+    '30°':   0.012387354,
+    '150°':  0.012387354,
+    '-150°': 0.012387354,
+    '-30°':  0.012387354,
+    # 
+    '40°':   0.014989611,
+    '140°':  0.014989611,
+    '-140°': 0.014989611,
+    '-40°':  0.014989611,
+    # 
+    '50°':   0.016868154,
+    '130°':  0.016868154,
+    '-130°': 0.016868154,
+    '-50°':  0.016868154,
+    # 
+    '60°':   0.018165962,
+    '120°':  0.018165962,
+    '-120°': 0.018165962,
+    '-60°':  0.018165962,
+    #
+    '70°':   0.019006744,
+    '110°':  0.019006744,
+    '-110°': 0.019006744,
+    '-70°':  0.019006744,
+    #
+    '80°':   0.019477787,
+    '100°':  0.019477787,
+    '-100°': 0.019477787,
+    '-80°':  0.019477787,
+    #
+    '90°':   0.019629373,
+    '-90°':  0.019629373,
+}
 
 def spl2pressure(spl : float) -> float:
-    return pow(10,(spl-105)/20)
+    try:
+        p = pow(10,(spl-105.0)/20.0)
+        return p
+    except TypeError as e:
+        logging.error('spl={0} e={1}'.format(spl, e))
 
 
 def pressure2spl(p : float) -> float:
-    return 105+20*log10(p)
+    return 105.0+20.0*log10(p)
 
 
 def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
@@ -274,30 +285,30 @@ def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     # to the values shown in Appendix C and an energy average (rms) is
     # calculated using the weighted values. The final average is converted
     # to SPL.
-    def trim(c):
-        if c[-2:] == '_v' or c[-2:] == '_h':
-            return c[:-2]
-        return c
-
-    def valid(c):
-        if c[0] == 'O':
-            return True
-        elif c[0] == 'F':
-            return False
-        elif int(trim(c)[:-1]) % 10 == 0:
-            return True
-        return False
-
     sp_window = h_spl.merge(
         v_spl,
         left_on='Freq', right_on='Freq', suffixes=('_h', '_v')
     )
     sp_cols = sp_window.columns
 
-    def rms(spl : np.array) -> float:
-        avg = np.sum([sp_weigths[trim(c)]*spl2pressure(spl[c])**2 for c in sp_cols if valid(c)])
-        wsm = np.sum([sp_weigths[trim(c)]                         for c in sp_cols if valid(c)])
-        return pressure2spl(np.sqrt(avg/wsm))
+    def column_trim(c):
+        if c[-2:] == '_v' or c[-2:] == '_h':
+            return c[:-2]
+        return c
+
+    def column_valid(c):
+        if c[0] == 'O':
+            return True
+        elif c[0] == 'F':
+            return False
+        elif int(column_trim(c)[:-1]) % 10 == 0:
+            return True
+        return False
+
+    def rms(spl):
+        avg = [(sp_weigths[column_trim(c)] * spl2pressure(spl[c]))**2 for c in sp_cols if column_valid(c)]
+        wsm = [sp_weigths[column_trim(c)]**2 for c in sp_cols if column_valid(c)]
+        return pressure2spl(np.sqrt(np.sum(avg)/np.sum(wsm)))
 
     sp_window['rms'] = sp_window.apply(rms, axis=1)
     
@@ -307,8 +318,8 @@ def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     })
 
 
-def estimated_inroom(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
-    if v_spl is None or h_spl is None:
+def estimated_inroom(lw: pd.DataFrame, er: pd.DataFrame, sp: pd.DataFrame) -> pd.DataFrame:
+    if lw is None or er is None or sp is None:
         return None
     # The Estimated In-Room Response shall be calculated using the directivity
     # data acquired in Section 5 or Section 6.
@@ -316,22 +327,43 @@ def estimated_inroom(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     #     12 % Listening Window,
     #     44 % Early Reflections,
     # and 44 % Sound Power.
-    lw = listening_window(h_spl, v_spl)
-    er = early_reflections(h_spl, v_spl)
-    sp = sound_power(h_spl, v_spl)
     # The sound pressure levels shall be converted to squared pressure values
     # prior to the weighting and summation. After the weightings have been
     # applied and the squared pressure values summed they shall be converted
     # back to sound pressure levels.
-    eir = \
-      0.12*lw.dB.apply(spl2pressure) + \
-      0.44*er['Total Early Reflection'].apply(spl2pressure) + \
-      0.44*sp.dB.apply(spl2pressure)
+    key = 'Total Early Reflection'
+    if key not in er.keys():
+        key = 'dB'
+
+    try:
+        # print(lw.dB.shape, er[key].shape, sp.dB.shape)
+        # print(lw.dB.apply(spl2pressure))
+        # print(er[key].apply(spl2pressure))
+        # print(sp.dB.apply(spl2pressure))
+
+        eir = \
+            0.12*lw.dB.apply(spl2pressure) + \
+            0.44*er[key].apply(spl2pressure) + \
+            0.44*sp.dB.apply(spl2pressure)
     
-    return pd.DataFrame({
-        'Freq': lw.Freq,
-        'Estimated In-Room Response': eir.apply(pressure2spl)
+        # print(eir)
+
+        return pd.DataFrame({
+            'Freq': lw.Freq,
+            'Estimated In-Room Response': eir.apply(pressure2spl)
         })
+    except TypeError as e:
+        logging.error(e)
+        return None
+
+
+def estimated_inroom_HV(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    if v_spl is None or h_spl is None:
+        return None
+    lw = listening_window(h_spl, v_spl)
+    er = early_reflections(h_spl, v_spl)
+    sp = sound_power(h_spl, v_spl)
+    return estimated_inroom(lw, er, sp)
 
 
 def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
@@ -372,7 +404,10 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
 # https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
 def octave(N):
-    """compute 1/N octave band"""
+    """compute 1/N octave band
+
+    N: >=2 when N increases, bands are narrower
+    """
     p = pow(2,1/N)
     p_band= pow(2,1/(2*N))
     iter = int((N*10+1)/2)
@@ -381,6 +416,9 @@ def octave(N):
 
 
 def aad(dfu):
+    """ aad Absolute Average Deviation
+    """
+    
     # mean betwenn 200hz and 400hz
     y_ref = np.mean(dfu.loc[(dfu.Freq>=200) & (dfu.Freq<=400)].dB)
     # print(y_ref)
@@ -403,7 +441,18 @@ def aad(dfu):
     #    print(aad_sum, n, dfu)
     return aad_value
 
+
 def nbd(dfu):
+    """ nbd Narrow Band
+
+    The narrow band deviation is defined by:
+      NBD(dB)=⎜ ∑ y −y ⎟÷N  ⎛
+    where ⎜ OctaveBandn⎟ is the average amplitude value
+    within the 1⁄2-octave band n, yb is the amplitude
+    value of band b, and N is the total number of 1⁄2­ octave bands 
+    between 100 Hz-12 kHz. The mean absolute deviation within each 
+    1⁄2-octave band is based a sample of 10 equally log-spaced data points.
+    """
     sum = 0
     n = 0
     # 1/2 octave
@@ -425,6 +474,18 @@ def nbd(dfu):
 
 
 def lfx(lw, sp):
+    """ lfx Low Frequency Extension
+
+    The low frequency extension (LFX) 
+         LFX = log10(xSP−6dB.re:y _ LW(300Hz−10kHz) (7)
+    where LFX is the log10 of the first frequency x_SP below 300 Hz
+    in the sound power curve, that is -6 dB relative to the mean level y_LW 
+    measured in listening window (LW) between 300 Hz-10 kHz. 
+    LFX is log-transformed to produce a linear relationship between the 
+    variable LFX and preference rating. The sound power curve (SP) is used 
+    for the calculation because it better defines the true bass output of
+    the loudspeaker, particularly speakers that have rear-firing ports.
+    """
     y_ref = np.mean(lw.loc[(lw.Freq>=300) & (lw.Freq<=10000)].dB)-6
     # find first freq such that y[freq]<y_ref-6dB
     y = math.log10(sp.loc[(sp.Freq<300)&(sp.dB<=y_ref)].Freq.max())
@@ -432,6 +493,11 @@ def lfx(lw, sp):
 
 
 def lfq(lw, sp, lfx_log):
+    """ lfq Low Frequency Quality
+
+    LFQ is intended to quantify deviations in amplitude response over the
+    bass region between the low frequency cut-off and 300 Hz.
+    """
     lfx = pow(10,lfx_log)
     sum = 0
     n = 0
@@ -451,6 +517,23 @@ def lfq(lw, sp, lfx_log):
     return sum/n
 
 def sm(dfu):
+    """ sm Smoothness
+
+    For each of the 7 frequency response curves, the overall smoothness (SM) and
+    slope (SL) of the curve was determined by estimating the line that best fits
+    the frequency curve over the range of 100 Hz-16 kHz. This was done using a
+    regression based on least square error. SM is the Pearson correlation 
+    coefficient of determination (r2) that describes the goodness of fit of the
+    regression line defined by:
+    ⎛ SM =⎜ n(∑XY)−(∑X)(∑Y) ⎟ / ⎜ (n∑X2 −(∑X)2)(n∑Y2 −(∑Y)2)⎟
+
+    where n is number of data points used to estimate the regression curve and 
+    X and Y represent the measured versus estimated amplitude values of the 
+    regression line. A natural log transformation is applied to the measured 
+    frequency values (Hz) so that they are linearly spaced (see equation 5). 
+    Smoothness (SM) values can range from 0 to 1, with larger values representing 
+    smoother frequency response curves.
+    """
     data = dfu.loc[(dfu.Freq>=100) & (dfu.Freq<=16000)]
     slope, intercept, r_value, p_value, std_err = linregress(data.Freq, data.dB)
     return r_value**2
@@ -460,7 +543,7 @@ def pref_rating(nbd_on, nbd_pir, lfx, sm_pir):
     return 12.69-2.49*nbd_on-2.99*nbd_pir-4.31*lfx+2.32*sm_pir
 
 
-def speaker_pref_rating(cea2034):
+def speaker_pref_rating(cea2034, df_pred_in_room):
     df_on_axis = cea2034.loc[lambda df: df.Measurements == 'On Axis']
     df_listening_window = cea2034.loc[lambda df: df.Measurements == 'Listening Window']
     df_sound_power = cea2034.loc[lambda df: df.Measurements == 'Sound Power']
@@ -472,20 +555,35 @@ def speaker_pref_rating(cea2034):
     nbd_on_axis = nbd(df_on_axis)
     nbd_listening_window = nbd(df_listening_window)
     nbd_sound_power = nbd(df_sound_power)
+    nbd_pred_in_room = nbd(df_pred_in_room)
     lfx_hz = lfx(df_listening_window, df_sound_power)
     lfq_db = lfq(df_listening_window, df_sound_power, lfx_hz)
     sm_sound_power = sm(df_sound_power)
-    pref = pref_rating(nbd_on_axis, nbd_sound_power, lfx_hz, sm_sound_power)
+    sm_pred_in_room = sm(df_pred_in_room)
+    pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)
     ratings = {
         'aad_on_axis': round(aad_on_axis, 2),
         'nbd_on_axis': round(nbd_on_axis, 2),
         'nbd_listening_window': round(nbd_listening_window, 2),
         'nbd_sound_power': round(nbd_sound_power, 2),
+        'nbd_pred_in_room': round(nbd_pred_in_room, 2),
         'lfx_hz': int(pow(10, lfx_hz)), # in Hz
         'lfq': round(lfq_db, 2),
+        'sm_pred_in_room': round(sm_pred_in_room, 2),
         'sm_sound_power': round(sm_sound_power, 2),
         'pref_score': round(pref, 1),
     }
     logging.info('Ratings: {0}'.format(ratings))
     return ratings
+
+
+def directivity_matrix(splH, splV):
+    n = splH.Freq.shape[0]
+    r = np.floor(np.logspace(1.0+math.log10(2), 4.0+math.log10(2), n))
+    x, y = np.meshgrid(r, r)
+    splV = splV.set_index('Freq')
+    splH = splH.set_index('Freq')
+    z = splV.dot(splH.T)/np.sqrt(splV.dot(splV.T) * splH.dot(splH.T))-1.0
+    return (x, y, z)
+
     

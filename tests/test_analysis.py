@@ -5,8 +5,8 @@ import numpy as np
 import pandas as pd
 from spinorama.load import parse_graph_freq_klippel, graph_melt
 from spinorama.analysis import estimates, compute_cea2034, early_reflections,\
-     vertical_reflections, horizontal_reflections, estimated_inroom, octave, \
-     aad
+     vertical_reflections, horizontal_reflections, estimated_inroom_HV, \
+     octave, aad
 
 
 pd.set_option("display.max_rows", 202)
@@ -27,10 +27,11 @@ class SpinoramaAnalysisTests(unittest.TestCase):
         self.assertNotEqual(-1, self.estimates[1])
         self.assertNotEqual(-1, self.estimates[2])
         self.assertNotEqual(-1, self.estimates[3])
-        self.assertAlmostEqual(self.estimates[0], 60)
-        self.assertAlmostEqual(self.estimates[1], 57)
-        self.assertAlmostEqual(self.estimates[2], 54)
-        self.assertAlmostEqual(self.estimates[3], 3.0)
+        # 
+        self.assertAlmostEqual(self.estimates[0], 106)
+        self.assertAlmostEqual(self.estimates[1],  59)
+        self.assertAlmostEqual(self.estimates[2],  53)
+        self.assertAlmostEqual(self.estimates[3],  2.0)
 
 
 class SpinoramaSpinoramaTests(unittest.TestCase):
@@ -208,7 +209,7 @@ class SpinoramaEstimatedInRoomTests(unittest.TestCase):
         self.titleH, self.splH = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Horizontal.txt')
         self.titleV, self.splV = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Vertical.txt')
         # computed graphs
-        self.computed_unmelted = estimated_inroom(self.splH, self.splV)
+        self.computed_unmelted = estimated_inroom_HV(self.splH, self.splV)
         self.computed = graph_melt(self.computed_unmelted)
 
 

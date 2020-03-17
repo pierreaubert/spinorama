@@ -2,6 +2,7 @@ import os
 import sys
 import glob
 import locale
+import math
 from locale import atof
 import json
 import logging
@@ -9,7 +10,7 @@ import numpy as np
 import pandas as pd
 from scipy.io import loadmat
 from .analysis import early_reflections, vertical_reflections, horizontal_reflections,\
-     compute_cea2034, estimated_inroom
+     compute_cea2034, estimated_inroom, estimated_inroom_HV
 
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
@@ -20,6 +21,39 @@ removequote = str.maketrans({'"': None, '\n': ''})
 def graph_melt(df : pd.DataFrame):
     return df.reset_index().melt(id_vars='Freq', var_name='Measurements',
                                  value_name='dB').loc[lambda df: df['Measurements'] != 'index']
+
+def unify_freq(dfs):
+    on = dfs[dfs.Measurements == 'On Axis'].rename(columns={'dB': 'ON'}).set_index('Freq')
+    lw = dfs[dfs.Measurements == 'Listening Window'].rename(columns={'dB': 'LW'}).set_index('Freq')
+    er = dfs[dfs.Measurements == 'Early Reflections'].rename(columns={'dB': 'ER'}).set_index('Freq')
+    sp = dfs[dfs.Measurements == 'Sound Power'].rename(columns={'dB': 'SP'}).set_index('Freq')
+    # align 2 by 2
+    align = on.align(lw, axis=0)
+    # print(align[0].shape)
+    align = align[0].align(er, axis=0)
+    # print(align[0].shape)
+    all_on = align[0].align(sp, axis=0)
+    # print(all_on[0].head())
+    # print(all_on[0].shape)
+    # realigned with the largest frame
+    all_lw = all_on[0].align(lw, axis=0)
+    all_er = all_on[0].align(er, axis=0)
+    all_sp = all_on[0].align(sp, axis=0)
+    # print(all_lw[1].shape, all_er[1].shape, all_sp[1].shape)
+    # extract right parts and interpolate
+    a_on = all_on[0].drop('Measurements', axis=1).interpolate()
+    a_lw = all_lw[1].drop('Measurements', axis=1).interpolate()
+    a_er = all_er[1].drop('Measurements', axis=1).interpolate()
+    a_sp = all_sp[1].drop('Measurements', axis=1).interpolate()
+    # print(a_lw.shape, a_er.shape, a_sp.shape)
+    # remove NaN numbers
+    res2 = pd.DataFrame({'Freq': a_lw.index, 
+                         'On Axis': a_on.ON,
+                         'Listening Window': a_lw.LW, 
+                         'Early Reflections': a_er.ER, 
+                         'Sound Power': a_sp.SP})
+    # print(res2.head())
+    return res2.dropna().reset_index(drop=True)
 
 
 def parse_graph_freq_klippel(filename):
@@ -73,7 +107,7 @@ def parse_graph_freq_klippel(filename):
 def parse_graph_freq_webplotdigitizer(filename):
     """ """
     # from 20Hz to 20kHz, log(2)~0.3
-    ref_freq = np.logspace(0.30103, 4.30103, 203)
+    ref_freq = np.logspace(1+math.log10(2), 4+math.log10(2), 500)
     #
     with open(filename, 'r') as f:
         # data are stored in a json file.
@@ -83,11 +117,12 @@ def parse_graph_freq_webplotdigitizer(filename):
         for col in speaker_data['datasetColl']:
             data = col['data']
             # sort data
-            sdata = np.sort([[data[d]['value'][0],
-                              data[d]['value'][1]]
-                             for d in range(0, len(data))], axis=0)
-            # print(col['name'], len(sdata))
-            # print(sdata)
+            udata = [(data[d]['value'][0],
+                      data[d]['value'][1])
+                     for d in range(0, len(data))]
+            sdata = sorted(udata, key=lambda a: a[0])
+            #print(col['name'], len(sdata))
+            #print(sdata[0])
             # since sdata and freq_ref are both sorted, iterate over both
             ref_p = 0
             for di in range(0, len(sdata)-1):
@@ -111,19 +146,16 @@ def parse_graph_freq_webplotdigitizer(filename):
                     continue
                 # linear interpolation
                 ref_db = db+((dbn-db)*(ref_f-fr))/(frn-fr)
-                # print('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} \
-                #       db={:.1f} db_ref={:.1f} db_n={:.1f}'\
-                #      .format(fr, ref_f, frn,
-                #              db, ref_db,          dbn))
+                #print('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} db={:.1f} db_ref={:.1f} db_n={:.1f}'.format(fr, ref_f, frn, db, ref_db, dbn))
                 res.append([ref_f, ref_db, col['name']])
 
         # build dataframe
-        ares = np.array(res)
-        df = pd.DataFrame({'Freq': ares[:, 0],
-                           'dB': ares[:, 1],
-                           'Measurements': ares[:, 2]})
+        freq = np.array([res[i][0] for i in range(0, len(res))]).astype(np.float)
+        dB   = np.array([res[i][1] for i in range(0, len(res))]).astype(np.float)
+        mrt  = [res[i][2] for i in range(0, len(res))]
+        df = pd.DataFrame({'Freq': freq, 'dB': dB, 'Measurements': mrt})
         # print(df)
-        return 'CEA2034', df
+        return 'CEA2034', df 
 
 
 def parse_graph_freq_princeton_mat(mat, suffix):
@@ -212,8 +244,26 @@ def parse_graphs_speaker_webplotdigitizer(speaker_brand, speaker_name):
     dfs = {}
     jsonfilename = 'datas/Vendors/' + speaker_brand + '/' + speaker_name + '/' + speaker_name + '.json'
     try:
-        title, df = parse_graph_freq_webplotdigitizer(jsonfilename)
-        dfs[title] = df
+        title, spin_uneven = parse_graph_freq_webplotdigitizer(jsonfilename)
+        spin = graph_melt(unify_freq(spin_uneven))
+        if title != 'CEA2034':
+            logging.debug('title is {0}'.format(title))
+            return spin
+
+        if spin is not None:
+            dfs[title] = spin
+
+            on = spin.loc[spin['Measurements'] == 'On Axis'].reset_index(drop=True)
+            lw = spin.loc[spin['Measurements'] == 'Listening Window'].reset_index(drop=True)
+            er = spin.loc[spin['Measurements'] == 'Early Reflections'].reset_index(drop=True)
+            sp = spin.loc[spin['Measurements'] == 'Sound Power'].reset_index(drop=True)
+
+            # print(on.shape, lw.shape, er.shape, sp.shape)
+            eir = estimated_inroom(lw, er, sp)
+            # print('eir {0}'.format(eir.shape))
+            # print(eir)
+            logging.debug('eir {0}'.format(eir.shape))
+            dfs['Estimated In-Room Response'] = graph_melt(eir)
     except FileNotFoundError:
         logging.warning('Speaker: ' + speaker_name +' Not found: '+ jsonfilename)
     return dfs
@@ -251,7 +301,7 @@ def parse_graphs_speaker_princeton(speaker_name):
     table = [['Early Reflections', early_reflections],
              ['Horizontal Reflections', horizontal_reflections],
              ['Vertical Reflections', vertical_reflections],
-             ['Estimated In-Room Response', estimated_inroom],
+             ['Estimated In-Room Response', estimated_inroom_HV],
              ['CEA2034', compute_cea2034],
              ]
     for title, functor in table:
@@ -293,7 +343,7 @@ def get_speaker_list(speakerpath):
     return speakers
 
 
-def parse_all_speakers(metadata, speakerpath='./datas'):
+def parse_all_speakers(metadata, filter_origin, speakerpath='./datas'):
     speakerlist = get_speaker_list(speakerpath)
     df = {}
     count_measurements = 0
@@ -318,6 +368,8 @@ def parse_all_speakers(metadata, speakerpath='./datas'):
                 logging.error('measurement for speaker {:s} need an origin field, please add to metadata.py!'.format(speaker))
                 sys.exit(1)
             origin = m['origin']
+            if filter_origin is not None and origin != filter_origin:
+                continue
             # keep it simple
             df[speaker][origin] = {}
             # speaker / origin / measurement

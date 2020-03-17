@@ -1,6 +1,16 @@
 <section class="hero is-dark">
   <div class="container">
-    <p class="title">${speaker} measurements provided by <img align="center" src="${site}/logos/asr-small.png" alt="Audio Science Review"></p>
+    <p class="title">${speaker} measurements provided by
+      % if origin == 'ASR':
+      <img align="center" src="${site}/logos/asr-small.png" alt="Audio Science Review">
+      % elif origin == 'Princeton':
+      <img align="center" src="${site}/logos/3d3a.png" alt="Princeton 3D3A">
+      % elif origin == 'KEF':
+      <img align="center" src="${site}/logos/kef.png" style="background-color:white;" alt="KEF">
+      % elif origin == 'JBL':
+      <img align="center" src="${site}/logos/jbl.jpg" alt="JBL">
+      % endif
+    </p>
   </div>
 </section>
 

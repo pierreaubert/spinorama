@@ -50,13 +50,14 @@ def sanity_check(df, meta):
             if 'default' not in keys.keys():
                 logging.error('Key default is mandatory for >{:s}<'.format(speaker_name))
                 return 1
-        # check if image exists
-        if not os.path.exists('./datas/pictures/' + speaker_name + '.jpg'):
-            logging.fatal('Image associated with >', speaker_name, '< not found!')
+        # check if image exists (jpg or png)
+        if not os.path.exists('./datas/pictures/' + speaker_name + '.jpg') and \
+          not  os.path.exists('./datas/pictures/' + speaker_name + '.png'):
+            logging.fatal('Image associated with >{0}< not found.'.format(speaker_name))
             return 1
-        # check if downscale image exists
+        # check if downscale image exists (all jpg)
         if not os.path.exists('./docs/pictures/' + speaker_name + '.jpg'):
-            logging.fatal('Image associated with >', speaker_name, '< not found!')
+            logging.fatal('Image associated with >{0}< not found.'.format(speaker_name))
             logging.fatal('Please run: minimise_pictures.sh')
             return 1
     return 0
@@ -76,9 +77,6 @@ def add_estimates(df):
     max_sm_sp = 0
     for speaker_name, speaker_data in df.items():
         for origin, measurements in speaker_data.items():
-            if origin != 'ASR':
-                # this measurements are only valid above 500hz
-                continue
             for m, dfs in measurements.items():
                 if m != 'default':
                     continue
@@ -96,10 +94,23 @@ def add_estimates(df):
                 est = estimates(onaxis)
                 if est[0] == -1:
                     continue
-                logging.info('Adding -3dB {:d}Hz -6dB {:d}Hz +/-{:f}dB'.format(est[1], est[2], est[3]))
-                metadata.speakers_info[speaker_name]['estimates'] = est
+                logging.info('Adding -3dB {0}Hz -6dB {1}Hz +/-{2}dB'.format(est[1], est[2], est[3]))
+                if 'estimates' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
+                    metadata.speakers_info[speaker_name]['estimates'] = est
+                
+                if origin == 'Princeton':
+                    # this measurements are only valid above 500hz
+                    continue
+                
                 # from Olive&all paper
-                pref_rating = speaker_pref_rating(spin)
+                if 'Estimated In-Room Response' not in dfs.keys():
+                    continue
+
+                inroom = dfs['Estimated In-Room Response']
+                if inroom is None:
+                    continue
+                    
+                pref_rating = speaker_pref_rating(spin, inroom)
                 logging.info('Adding {0}'.format(pref_rating))
                 metadata.speakers_info[speaker_name]['pref_rating'] = pref_rating
                 # compute min and max for each value
@@ -117,9 +128,6 @@ def add_estimates(df):
     # add normalized value to metadata
     for speaker_name, speaker_data in df.items():
         for origin, measurements in speaker_data.items():
-            if origin != 'ASR':
-                # this measurements are only valid above 500hz
-                continue
             for m, dfs in measurements.items():
                 if m != 'default':
                     continue
@@ -145,9 +153,11 @@ def add_estimates(df):
                 def percent(val, vmin, vmax):
                     return math.floor(100*(val-vmin)/(vmax-vmin))
                 scaled_pref_score =     percent(pref_score, min_pref_score, max_pref_score)
+                # lower is better
                 scaled_lfx_hz     = 100-percent(lfx_hz,     min_lfx_hz,     max_lfx_hz)
                 scaled_nbd_on     = 100-percent(nbd_on,     min_nbd_on,     max_nbd_on)
                 scaled_flatness   = 100-percent(flatness,   min_flatness,   max_flatness)
+                # higher is better
                 scaled_sm_sp      =     percent(sm_sp,      min_sm_sp,      max_sm_sp)
                 # add normalized values
                 scaled_pref_rating = {
@@ -181,7 +191,7 @@ if __name__ == '__main__':
         if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
             logging.basicConfig(level=level)
 
-    df = parse_all_speakers(metadata.speakers_info)
+    df = parse_all_speakers(metadata.speakers_info, None)
         
     if sanity_check(df, metadata.speakers_info) != 0:
         logging.error('Sanity checks failed!')

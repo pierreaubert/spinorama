@@ -1,9 +1,7 @@
 altair
-seaborn
 numpy
 scipy
 pandas
-voila
 jupyterlab
 matplotlib
 selenium
