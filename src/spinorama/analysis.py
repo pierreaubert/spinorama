@@ -262,11 +262,15 @@ sp_weigths = {
 }
 
 def spl2pressure(spl : float) -> float:
-    return pow(10,(spl-105)/20)
+    try:
+        p = pow(10,(spl-105.0)/20.0)
+        return p
+    except TypeError as e:
+        logging.error('spl={0} e={1}'.format(spl, e))
 
 
 def pressure2spl(p : float) -> float:
-    return 105+20*log10(p)
+    return 105.0+20.0*log10(p)
 
 
 def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
@@ -314,8 +318,8 @@ def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     })
 
 
-def estimated_inroom(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
-    if v_spl is None or h_spl is None:
+def estimated_inroom(lw: pd.DataFrame, er: pd.DataFrame, sp: pd.DataFrame) -> pd.DataFrame:
+    if lw is None or er is None or sp is None:
         return None
     # The Estimated In-Room Response shall be calculated using the directivity
     # data acquired in Section 5 or Section 6.
@@ -323,22 +327,43 @@ def estimated_inroom(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     #     12 % Listening Window,
     #     44 % Early Reflections,
     # and 44 % Sound Power.
-    lw = listening_window(h_spl, v_spl)
-    er = early_reflections(h_spl, v_spl)
-    sp = sound_power(h_spl, v_spl)
     # The sound pressure levels shall be converted to squared pressure values
     # prior to the weighting and summation. After the weightings have been
     # applied and the squared pressure values summed they shall be converted
     # back to sound pressure levels.
-    eir = \
-      0.12*lw.dB.apply(spl2pressure) + \
-      0.44*er['Total Early Reflection'].apply(spl2pressure) + \
-      0.44*sp.dB.apply(spl2pressure)
+    key = 'Total Early Reflection'
+    if key not in er.keys():
+        key = 'dB'
+
+    try:
+        # print(lw.dB.shape, er[key].shape, sp.dB.shape)
+        # print(lw.dB.apply(spl2pressure))
+        # print(er[key].apply(spl2pressure))
+        # print(sp.dB.apply(spl2pressure))
+
+        eir = \
+            0.12*lw.dB.apply(spl2pressure) + \
+            0.44*er[key].apply(spl2pressure) + \
+            0.44*sp.dB.apply(spl2pressure)
     
-    return pd.DataFrame({
-        'Freq': lw.Freq,
-        'Estimated In-Room Response': eir.apply(pressure2spl)
+        # print(eir)
+
+        return pd.DataFrame({
+            'Freq': lw.Freq,
+            'Estimated In-Room Response': eir.apply(pressure2spl)
         })
+    except TypeError as e:
+        logging.error(e)
+        return None
+
+
+def estimated_inroom_HV(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    if v_spl is None or h_spl is None:
+        return None
+    lw = listening_window(h_spl, v_spl)
+    er = early_reflections(h_spl, v_spl)
+    sp = sound_power(h_spl, v_spl)
+    return estimated_inroom(lw, er, sp)
 
 
 def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
