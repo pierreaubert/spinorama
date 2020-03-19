@@ -11,6 +11,7 @@ import pandas as pd
 from scipy.io import loadmat
 from .analysis import early_reflections, vertical_reflections, horizontal_reflections,\
      compute_cea2034, estimated_inroom, estimated_inroom_HV
+from .normalize import unify_freq
 
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
@@ -21,40 +22,6 @@ removequote = str.maketrans({'"': None, '\n': ''})
 def graph_melt(df : pd.DataFrame):
     return df.reset_index().melt(id_vars='Freq', var_name='Measurements',
                                  value_name='dB').loc[lambda df: df['Measurements'] != 'index']
-
-def unify_freq(dfs):
-    on = dfs[dfs.Measurements == 'On Axis'].rename(columns={'dB': 'ON'}).set_index('Freq')
-    lw = dfs[dfs.Measurements == 'Listening Window'].rename(columns={'dB': 'LW'}).set_index('Freq')
-    er = dfs[dfs.Measurements == 'Early Reflections'].rename(columns={'dB': 'ER'}).set_index('Freq')
-    sp = dfs[dfs.Measurements == 'Sound Power'].rename(columns={'dB': 'SP'}).set_index('Freq')
-    # align 2 by 2
-    align = on.align(lw, axis=0)
-    # print(align[0].shape)
-    align = align[0].align(er, axis=0)
-    # print(align[0].shape)
-    all_on = align[0].align(sp, axis=0)
-    # print(all_on[0].head())
-    # print(all_on[0].shape)
-    # realigned with the largest frame
-    all_lw = all_on[0].align(lw, axis=0)
-    all_er = all_on[0].align(er, axis=0)
-    all_sp = all_on[0].align(sp, axis=0)
-    # print(all_lw[1].shape, all_er[1].shape, all_sp[1].shape)
-    # extract right parts and interpolate
-    a_on = all_on[0].drop('Measurements', axis=1).interpolate()
-    a_lw = all_lw[1].drop('Measurements', axis=1).interpolate()
-    a_er = all_er[1].drop('Measurements', axis=1).interpolate()
-    a_sp = all_sp[1].drop('Measurements', axis=1).interpolate()
-    # print(a_lw.shape, a_er.shape, a_sp.shape)
-    # remove NaN numbers
-    res2 = pd.DataFrame({'Freq': a_lw.index, 
-                         'On Axis': a_on.ON,
-                         'Listening Window': a_lw.LW, 
-                         'Early Reflections': a_er.ER, 
-                         'Sound Power': a_sp.SP})
-    # print(res2.head())
-    return res2.dropna().reset_index(drop=True)
-
 
 def parse_graph_freq_klippel(filename):
     title = None
