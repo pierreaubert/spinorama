@@ -11,8 +11,13 @@
 %>  
 
 <div class="section">
-
+  <div class="box">
+    <div id="vis2"></div>
+    <script type="text/javascript">
+      var spec = "compare/spinorama.json";
+      vegaEmbed('#vis2', spec).then(function(result) {}).catch(console.error);
+    </script>
+  </div>
 </div>
-
 
 <%include file="footer.html"/>

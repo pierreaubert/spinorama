@@ -383,6 +383,8 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     # add 60 (graph start at 60)
     erb = early_reflections_bounce(h_spl, v_spl)
     erdi = lw.dB - erb.dB + 60
+    # add a di offset to mimic other systems
+    di_offset = [60 for i in range(0, len(erdi))]
     # Sound Power Directivity Index (SPDI)
     # For the purposes of this standard the Sound Power Directivity Index is defined
     # as the difference between the listening window curve and the sound power curve.
@@ -394,7 +396,7 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
             spin[key] = name.dB
         else:
             logging.debug('{0} is None'.format(key))
-    for (key, name) in [('Early Reflections DI', erdi), ('Sound Power DI', spdi)]:
+    for (key, name) in [('Early Reflections DI', erdi), ('Sound Power DI', spdi), ('DI offset', di_offset)]:
         if name is not None:
             spin[key] = name
         else:
@@ -578,6 +580,9 @@ def speaker_pref_rating(cea2034, df_pred_in_room):
 
 
 def directivity_matrix(splH, splV):
+    print(splH.shape, splV.shape)
+    print(splH.head())
+    print(splV.head())
     n = splH.Freq.shape[0]
     r = np.floor(np.logspace(1.0+math.log10(2), 4.0+math.log10(2), n))
     x, y = np.meshgrid(r, r)

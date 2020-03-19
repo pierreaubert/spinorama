@@ -5,6 +5,7 @@ import pandas as pd
 import altair as alt
 from .analysis import directivity_matrix
 from .contour import compute_contour, compute_contour_smoothed
+from .normalize import resample
 
 
 alt.data_transformers.disable_max_rows()
@@ -471,7 +472,16 @@ def graph_radar(dfu, graph_params):
 def graph_directivity_matrix(dfu, graph_params):
     splH = dfu['SPL Horizontal_unmelted']
     splV = dfu['SPL Vertical_unmelted']
+
+    if splH.shape != splV.shape:
+        logging.debug('shapes do not match {0} and {1}'.format(splH.shape, splV.shape))
+        return None
+    
+    splH = resample(splH, 300).reset_index()
+    splV = resample(splV, 300).reset_index()
+
     x, y, z = directivity_matrix(splH, splV)
+    
     source = pd.DataFrame({'x': x.ravel(), 'y': y.ravel(),'z': z.melt().value})
 
     return alt.Chart(source).mark_rect(
@@ -483,3 +493,53 @@ def graph_directivity_matrix(dfu, graph_params):
         width=800,
         height=800)
 
+
+def graph_compare(df, graph_params, speaker1, speaker2):
+    speakers = df.Speaker.unique()
+    input_dropdown1 = alt.binding_select(options=[s for s in speakers])
+    selection1 = alt.selection_single(
+        fields=['Speaker'],
+        bind=input_dropdown1,
+        name='Select right ',
+        init={'Speaker': speaker1})
+    input_dropdown2 = alt.binding_select(options=[s for s in speakers])
+    selection2 = alt.selection_single(
+        fields=['Speaker'],
+        bind=input_dropdown2,
+        name='Select left ',
+        init={'Speaker': speaker2})
+
+    line = alt.Chart(df).mark_line(
+        clip=True,
+        # strokeDash=[5,5]
+    ).transform_filter(
+        alt.FieldOneOfPredicate(
+            field='Measurements',
+            oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
+    ).encode(
+        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[20,20000], nice=False)),
+        alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[-40,10])),
+        alt.Color('Measurements', type='nominal', sort=None)
+    )
+    
+    di = alt.Chart(df).mark_line(clip=True).transform_filter(
+        alt.FieldOneOfPredicate(
+            field='Measurements',
+            oneOf=['Early Reflections DI', 'Sound Power DI'])
+    ).encode(
+        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[20,20000], nice=False)),
+        alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[0,30], nice=False)),
+        alt.Color('Measurements', type='nominal', sort=None)
+    )
+    
+    spin = (line+di).resolve_scale(y='independent').properties(width=600, height=300)
+
+    line1 = spin.add_selection(selection1).transform_filter(selection1)
+    line2 = spin.add_selection(selection2).transform_filter(selection2)
+
+    #selectors = alt.Chart(df).mark_point().encode(x='Freq:Q', opacity=alt.value(0)).add_selection(nearest)                                               
+    #points = line.mark_point().encode(opacity=alt.condition(nearest, alt.value(1), alt.value(0)))                                                        
+    #text = line.mark_text(align='left', dx=5, dy=-5).encode(text=alt.condition(nearest, 'dB:Q', alt.value(' ')))                                         
+    #rules = alt.Chart(df).mark_rule(color='gray').encode(x='Freq:Q').transform_filter(nearest)                                                           
+    center = alt.layer(line2,line1)# .interactive()
+    return center

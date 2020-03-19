@@ -1,9 +1,10 @@
 import logging
 import altair as alt
-# import matplotlib.pyplot as plt
+import pandas as pd
+from .normalize import resample, normalize
 from .graph import graph_freq, graph_contour_smoothed, graph_radar, graph_spinorama,\
     graph_params_default, contour_params_default, radar_params_default, \
-    graph_contour, graph_directivity_matrix
+    graph_contour, graph_directivity_matrix, graph_compare
 
 
 alt.data_transformers.disable_max_rows()
@@ -14,6 +15,7 @@ def display_contour_horizontal(df, graph_params=contour_params_default):
         if 'SPL Horizontal_unmelted' not in df.keys():
             return None
         dfs = df['SPL Horizontal_unmelted']
+        dfs = resample(dfs, 400)
         return graph_contour(dfs, graph_params)
     except KeyError as ke:
         logging.warning('Display Contour Horizontal failed with {0}'.format(ke))
@@ -25,6 +27,7 @@ def display_contour_vertical(df, graph_params=contour_params_default):
         if 'SPL Vertical_unmelted' not in df.keys():
             return None
         dfs = df['SPL Vertical_unmelted']
+        dfs = resample(dfs, 400)
         return graph_contour(dfs, graph_params)
     except KeyError as ke:
         logging.warning('Display Contour Vertical failed with {0}'.format(ke))
@@ -36,6 +39,7 @@ def display_contour_smoothed_horizontal(df, graph_params=contour_params_default)
         if 'SPL Horizontal_unmelted' not in df.keys():
             return None
         dfs = df['SPL Horizontal_unmelted']
+        dfs = resample(dfs, 400)
         return graph_contour_smoothed(dfs, graph_params)
     except KeyError as ke:
         logging.warning('Display Contour Horizontal failed with {0}'.format(ke))
@@ -47,6 +51,7 @@ def display_contour_smoothed_vertical(df, graph_params=contour_params_default):
         if 'SPL Vertical_unmelted' not in df.keys():
             return None
         dfs = df['SPL Vertical_unmelted']
+        dfs = resample(dfs, 400)
         return graph_contour_smoothed(dfs, graph_params)
     except KeyError as ke:
         logging.warning('Display Contour Vertical failed with {0}'.format(ke))
@@ -73,25 +78,6 @@ def display_radar_vertical(df, graph_params=radar_params_default):
     except (KeyError, IndexError, ValueError) as e:
         logging.warning('Display Radar Horizontal failed with {0}'.format(e))
         return None
-
-
-# def display_contour2(contour, width=400, height=180):
-#    # slighly better looking
-#    x, y, z = contour
-#
-#    plt.figure()
-#    # levels = [-9,-6,-3]
-#    # contour = plt.contour(x, y, z, levels=3, alpha=0.2)
-#    # plt.clabel(contour, colors = 'k', fmt = '%2.1f', fontsize=12)
-#    levels = [-60, -40, -20, -10, -6, -5.5, -5, -
-#              4.5, -4, -3.5, -3, -2.5, -2, -1.5, -1, -0.5, 0]
-#    contour_filled = plt.contourf(x, y, z, levels, alpha=0.5, cmap='rainbow')
-#    plt.colorbar(contour_filled)
-#    # plt.pcolormesh(x, y, z, shading='gouraud') #, cmap=plt.cm.BuGn_r)
-#    plt.title('Plot from level list')
-#    plt.xlabel('frequency (hz)')
-#    plt.ylabel('angle (degree)')
-#    plt.show()
 
 
 def display_contour_sidebyside(df, graph_params=contour_params_default):
@@ -212,7 +198,9 @@ def display_spl(df, axis, graph_params=graph_params_default):
                 '50°',
                 '60°']}
         mask = spl.isin(filter).any(1)
-        return graph_freq(spl[mask], graph_params)  # .interactive()
+        spl = spl[mask]
+        spl = resample(spl, 400)
+        return graph_freq(spl, graph_params)
     except KeyError as ke:
         logging.warning('Display SPL failed with {0}'.format(ke))
         return None
@@ -225,9 +213,34 @@ def display_spl_horizontal(df, graph_params=graph_params_default):
 def display_spl_vertical(df, graph_params=graph_params_default):
     return display_spl(df, 'SPL Vertical', graph_params)
 
+
 def display_directivity_matrix(df, graph_params=graph_params_default):
     try:
         return graph_directivity_matrix(df, graph_params)
     except Exception as e:
         logging.warning('Display directivity matrix failed with {0}'.format(e))
+        return None
+
+
+def display_compare(df,  graph_params=graph_params_default):
+    def augment(dfa, name):
+        # print(name)
+        namearray = [name for i in range(0,len(dfa))]
+        dfa['Speaker'] = name
+        return dfa
+
+    source = pd.concat( 
+        [augment(
+            normalize(
+                resample(df[k][o]['default']['CEA2034'],300)),
+            k+' - '+o)
+         for k in df.keys() for o in df[k].keys() if 'CEA2034' in df[k][o]['default']]
+    )
+
+    try:
+        speaker1 = 'KEF LS50 - ASR'
+        speaker2 = 'KEF LS50 - Princeton'
+        return graph_compare(source, graph_params, speaker1, speaker2)
+    except Exception as e:
+        logging.warning('Display compare with {0}'.format(e))
         return None

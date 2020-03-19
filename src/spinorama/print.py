@@ -8,7 +8,8 @@ from .display import display_spinorama, display_onaxis, display_inroom, \
     display_spl_horizontal, display_spl_vertical, \
     display_contour_horizontal, display_contour_vertical, \
     display_contour_smoothed_horizontal, display_contour_smoothed_vertical, \
-    display_radar_horizontal, display_radar_vertical, display_directivity_matrix
+    display_radar_horizontal, display_radar_vertical, display_directivity_matrix, \
+    display_compare
 from .views import template_compact, template_panorama
 from .graph import graph_params_default, contour_params_default, radar_params_default
 
@@ -23,6 +24,9 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
             # skip the 2cols.json and 3cols.json as they are really large
             # 2cols and 3cols are more for printing
             if ext == 'json' and title in ('2cols', '3cols', 'SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed'):
+                continue
+            # for now skip 2cols and 3cols for Princeton graphs
+            if origin == 'Princeton' and title in  ('2cols', '3cols', 'SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed'):
                 continue
             # print high quality smoother contour and skip the others
             if ext == 'png' and (\
@@ -121,7 +125,25 @@ def print_graphs(df: pd.DataFrame,
     updated = 0
     for (title, graph) in graphs.items():
         #                      adam / asr / default
-        updated += print_graph(speaker, origin, key,
-                               title, graph,
-                               force_print, filter_file_ext)
+        if graph is not None:
+            updated += print_graph(speaker, origin, key,
+                                title, graph,
+                                force_print, filter_file_ext)
     return updated
+
+
+def print_compare(df, force_print=False, filter_file_ext=None):
+    graph = display_compare(df)
+    if graph is not None:
+        filedir = 'docs/compare'
+        pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
+        filename = '{0}/spinorama.json'.format(filedir)
+        if force_print or not os.path.exists(filename):
+            if filter_file_ext is None or (filter_file_ext is not None and fileext == ext):
+                try:
+                    print('Saving {0}'.format(filename))
+                    graph.save(filename)
+                except Exception as e:
+                    logging.error('Got unkown error {0} for {1}'.format(e, filename))
+    
+    
