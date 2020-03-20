@@ -325,6 +325,16 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
+    'Klipsch RP-600M': {
+        'brand': 'Klipsch',
+        'model': 'RP-600M',
+        'type': 'passive',
+        'price': '670',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
     'Avantgarde Acoustic Solo': {
         'brand': 'Avantgarde Acoustic',
         'model': 'Solo',
