@@ -133,17 +133,20 @@ def print_graphs(df: pd.DataFrame,
 
 
 def print_compare(df, force_print=False, filter_file_ext=None):
-    graph = display_compare(df)
-    if graph is not None:
-        filedir = 'docs/compare'
-        pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
-        filename = '{0}/spinorama.json'.format(filedir)
-        if force_print or not os.path.exists(filename):
-            if filter_file_ext is None or (filter_file_ext is not None and fileext == ext):
-                try:
-                    print('Saving {0}'.format(filename))
-                    graph.save(filename)
-                except Exception as e:
-                    logging.error('Got unkown error {0} for {1}'.format(e, filename))
+    filedir = 'docs/compare'
+    pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
+    
+    for filter in ('CEA2034', 'On Axis', 'Estimated In-Room Response',
+                   'Early Reflections', 'Horizontal Reflections', 'Vertical Reflections'):
+        graph = display_compare(df, filter)
+        if graph is not None:
+            filename = '{0}/{1}.json'.format(filedir, filter)
+            if force_print or not os.path.exists(filename):
+                if filter_file_ext is None or (filter_file_ext is not None and fileext == ext):
+                    try:
+                        print('Saving {0}'.format(filename))
+                        graph.save(filename)
+                    except Exception as e:
+                        logging.error('Got unkown error {0} for {1}'.format(e, filename))
     
     

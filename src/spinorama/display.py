@@ -222,25 +222,26 @@ def display_directivity_matrix(df, graph_params=graph_params_default):
         return None
 
 
-def display_compare(df,  graph_params=graph_params_default):
+def display_compare(df,  graph_filter, graph_params=graph_params_default):
+
     def augment(dfa, name):
         # print(name)
         namearray = [name for i in range(0,len(dfa))]
         dfa['Speaker'] = name
         return dfa
 
-    source = pd.concat( 
-        [augment(
-            normalize(
-                resample(df[k][o]['default']['CEA2034'],300)),
-            k+' - '+o)
-         for k in df.keys() for o in df[k].keys() if 'CEA2034' in df[k][o]['default']]
-    )
-
     try:
+        source = pd.concat( 
+            [augment(
+                normalize(
+                    resample(df[k][o]['default'][graph_filter], 300)),
+                k+' - '+o)
+            for k in df.keys() for o in df[k].keys() if graph_filter in df[k][o]['default']]
+        )
+
         speaker1 = 'KEF LS50 - ASR'
         speaker2 = 'KEF LS50 - Princeton'
         return graph_compare(source, graph_params, speaker1, speaker2)
-    except Exception as e:
-        logging.warning('Display compare with {0}'.format(e))
+    except ValueError as e:
+        logging.warning('failed for {0} with {1}'.format(graph_filter, e))
         return None

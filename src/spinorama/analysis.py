@@ -580,9 +580,9 @@ def speaker_pref_rating(cea2034, df_pred_in_room):
 
 
 def directivity_matrix(splH, splV):
-    print(splH.shape, splV.shape)
-    print(splH.head())
-    print(splV.head())
+    # print(splH.shape, splV.shape)
+    # print(splH.head())
+    # print(splV.head())
     n = splH.Freq.shape[0]
     r = np.floor(np.logspace(1.0+math.log10(2), 4.0+math.log10(2), n))
     x, y = np.meshgrid(r, r)
