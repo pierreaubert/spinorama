@@ -553,6 +553,9 @@ def pref_rating(nbd_on, nbd_pir, lfx, sm_pir):
 
 def speaker_pref_rating(cea2034, df_pred_in_room):
     try:
+        if df_pred_in_room is None or df_pred_in_room.shape[0] == 0:
+            logging.info('PIR is empty')
+            return None
         df_on_axis = cea2034.loc[lambda df: df.Measurements == 'On Axis']
         df_listening_window = cea2034.loc[lambda df: df.Measurements == 'Listening Window']
         df_sound_power = cea2034.loc[lambda df: df.Measurements == 'Sound Power']
