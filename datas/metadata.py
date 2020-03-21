@@ -118,6 +118,28 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
+    'Revel C25': {
+        'brand': 'Revel',
+        'model': 'C25',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Vendors/Revel',
+            'website': 'www.revel.com',
+            'format': 'webplotdigitizer',
+            }],
+        },
+    'Revel F208': {
+        'brand': 'Revel',
+        'model': 'F208',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Vendors/Revel',
+            'website': 'www.revel.com',
+            'format': 'webplotdigitizer',
+            }],
+            },
     'Elac Adante AS-61': {
         'brand': 'Elac',
         'model': 'Adante AS-61',
@@ -158,6 +180,28 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
+    'JBL 4367': {
+        'brand': 'JBL',
+        'model': '4367',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Vendors/JBL',
+            'website': 'www.jbl.com',
+            'format': 'webplotdigitizer',
+            }],
+        },
+    'JBL M2': {
+        'brand': 'JBL',
+        'model': 'M2',
+        'type': 'active',
+        'price': '',
+        'measurements': [{
+            'origin': 'Vendors/JBL',
+            'website': 'www.jbl.com',
+            'format': 'webplotdigitizer',
+            }],
+        }, 
     'Micca RB42': {
         'brand': 'Micca',
         'model': 'RB42',
@@ -221,50 +265,6 @@ speakers_info = {
             'format': 'webplotdigitizer',
             }],
         },
-    'JBL 4367': {
-        'brand': 'JBL',
-        'model': '4367',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Vendors/JBL',
-            'website': 'www.jbl.com',
-            'format': 'webplotdigitizer',
-            }],
-        },
-    'JBL M2': {
-        'brand': 'JBL',
-        'model': 'M2',
-        'type': 'active',
-        'price': '',
-        'measurements': [{
-            'origin': 'Vendors/JBL',
-            'website': 'www.jbl.com',
-            'format': 'webplotdigitizer',
-            }],
-        }, 
-    'Revel C25': {
-        'brand': 'Revel',
-        'model': 'C25',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Vendors/Revel',
-            'website': 'www.revel.com',
-            'format': 'webplotdigitizer',
-            }],
-        },
-    'Revel F208': {
-        'brand': 'Revel',
-        'model': 'F208',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Vendors/Revel',
-            'website': 'www.revel.com',
-            'format': 'webplotdigitizer',
-            }],
-            },
     'Polk T15': {
         'brand': 'Polk',
         'model': 'T15',
@@ -584,6 +584,17 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
+    'Buchardt Audio S400': {
+        'brand': 'Buchardt Audio',
+        'model': 'S400',
+        'type': 'passive',
+        'price': '1800',
+        'measurements': [{
+            'origin': 'Vendors/Buchart Audio',
+            'website': 'https://www.buchardtaudio.com',
+            'format': 'webplotdigitizer',
+            }],
+            },
 }
 
 # add some information about precisions of graphs
@@ -633,5 +644,14 @@ origins_info = {
         'logo': 'docs/metadata/revel.png',
         'logo-small': 'docs/metadata/jbl-small.png',
         'url': 'http://www.revel.com',
+    },
+    'Vendors/Buchardt Audio': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': 20,
+        'max dB': 70,
+        'logo': 'docs/metadata/buchardt-audio.png',
+        'logo-small': 'docs/metadata/buchardt-audio-small.png',
+        'url': 'https://www.buchardtaudio.com',
     },
 }

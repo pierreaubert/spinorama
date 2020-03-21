@@ -1,4 +1,4 @@
-TARGET=$HOME/src/spinorama.master/pierreaubert.github.io/spinorama
+TARGET=$HOME/src/pierreaubert.github.io/spinorama
 
 ./minimise_pictures.sh 
 ./generate_html.py
