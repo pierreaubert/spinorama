@@ -590,7 +590,7 @@ speakers_info = {
         'type': 'passive',
         'price': '1800',
         'measurements': [{
-            'origin': 'Vendors/Buchart Audio',
+            'origin': 'Vendors/Buchardt Audio',
             'website': 'https://www.buchardtaudio.com',
             'format': 'webplotdigitizer',
             }],
