@@ -47,24 +47,31 @@ def unify_freq(dfs):
     return res2.dropna().reset_index(drop=True)
 
 
-def normalize(df):
+def normalize_mean(df):
     on = df[df.Measurements == 'On Axis']
     mean = np.mean(on.loc[(on.Freq>500) & (on.Freq<10000)].dB)
+    return mean
 
-    offset = 0
+
+def normalize_cea2034(dfc, mean):
+    df = dfc.copy()
+
+    offset = mean
     if 'DI offset' in df.Measurements.unique():
         offset = np.mean(df[df.Measurements == 'DI offset'].dB)
-    else:
-        offset = mean
 
-    # print(mean, offset, df.Measurements.unique())
-    # print(df[df.Measurements == 'Sound Power DI'].head())
     for measurement in ('On Axis', 'Listening Window', 'Sound Power', 'Early Reflections'):
         df.loc[df.Measurements == measurement, 'dB'] -= mean
 
     for measurement in ('Sound Power DI', 'Early Reflections DI', 'DI offset'):
         df.loc[df.Measurements == measurement, 'dB'] -= offset
 
+    return df
+
+
+def normalize(dfc, mean):
+    df = dfc.copy()
+    df.dB -= mean
     return df
 
 
@@ -82,3 +89,5 @@ def resample(df, target_size):
         sampled = df.loc[df.Freq.rolling(roll).max()[1::roll].index,:]
         return sampled
     return df
+
+

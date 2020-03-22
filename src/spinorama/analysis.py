@@ -2,7 +2,6 @@ import logging
 import math
 from math import log10
 from scipy.stats import linregress
-from scipy.optimize import curve_fit
 import numpy as np
 import pandas as pd
 

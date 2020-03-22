@@ -220,7 +220,7 @@ def parse_graphs_speaker_webplotdigitizer(speaker_brand, speaker_name):
         if spin is not None:
             dfs[title] = spin_uneven
 
-            on = spin.loc[spin['Measurements'] == 'On Axis'].reset_index(drop=True)
+            # on = spin.loc[spin['Measurements'] == 'On Axis'].reset_index(drop=True)
             lw = spin.loc[spin['Measurements'] == 'Listening Window'].reset_index(drop=True)
             er = spin.loc[spin['Measurements'] == 'Early Reflections'].reset_index(drop=True)
             sp = spin.loc[spin['Measurements'] == 'Sound Power'].reset_index(drop=True)
