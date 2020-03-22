@@ -136,13 +136,14 @@ def print_compare(df, force_print=False, filter_file_ext=None):
     filedir = 'docs/compare'
     pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
     
-    for filter in ('CEA2034', 'On Axis', 'Estimated In-Room Response',
-                   'Early Reflections', 'Horizontal Reflections', 'Vertical Reflections'):
+    for filter in ('CEA2034', 'Estimated In-Room Response',
+                   'Early Reflections', 'Horizontal Reflections', 'Vertical Reflections',
+                   'SPL Horizontal', 'SPL Vertical'):
         graph = display_compare(df, filter)
         if graph is not None:
             filename = '{0}/{1}.json'.format(filedir, filter)
             if force_print or not os.path.exists(filename):
-                if filter_file_ext is None or (filter_file_ext is not None and fileext == ext):
+                if filter_file_ext is None or (filter_file_ext is not None and filter_file_ext == 'json'):
                     try:
                         print('Saving {0}'.format(filename))
                         graph.save(filename)

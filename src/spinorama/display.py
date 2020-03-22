@@ -1,10 +1,11 @@
 import logging
 import altair as alt
 import pandas as pd
-from .normalize import resample, normalize
+from .normalize import resample, normalize_mean, normalize_cea2034, normalize
 from .graph import graph_freq, graph_contour_smoothed, graph_radar, graph_spinorama,\
     graph_params_default, contour_params_default, radar_params_default, \
-    graph_contour, graph_directivity_matrix, graph_compare
+    graph_contour, graph_directivity_matrix,\
+    graph_compare_freq, graph_compare_cea2034
 
 
 alt.data_transformers.disable_max_rows()
@@ -222,26 +223,40 @@ def display_directivity_matrix(df, graph_params=graph_params_default):
         return None
 
 
-def display_compare(df,  graph_filter, graph_params=graph_params_default):
+def display_compare(df, graph_filter, graph_params=graph_params_default):
 
     def augment(dfa, name):
-        # print(name)
+        # print(name)                                                                                                                                 
         namearray = [name for i in range(0,len(dfa))]
-        dfa['Speaker'] = name
+        dfa['Speaker'] = namearray
         return dfa
 
     try:
-        source = pd.concat( 
-            [augment(
-                normalize(
-                    resample(df[k][o]['default'][graph_filter], 300)),
-                k+' - '+o)
-            for k in df.keys() for o in df[k].keys() if graph_filter in df[k][o]['default']]
-        )
+        norm = normalize
+        if graph_filter == 'CEA2034':
+            norm = normalize_cea2034
+        source = pd.concat([
+            augment(
+                norm(
+                    # max 300 Freq points to minimise space                                                                                           
+                    resample(df[speaker][origin]['default'][graph_filter], 300),
+                    normalize_mean(df[speaker][origin]['default']['CEA2034'])),
+                '{0} - {1}'.format(speaker, origin))
+            for speaker in df.keys()
+             for origin in df[speaker].keys() if graph_filter  in df[speaker][origin]['default'] and 'CEA2034'in df[speaker][origin]['default']
+        ])
 
         speaker1 = 'KEF LS50 - ASR'
         speaker2 = 'KEF LS50 - Princeton'
-        return graph_compare(source, graph_params, speaker1, speaker2)
+
+        if graph_filter == 'CEA2034':
+            graph = graph_compare_cea2034(source, graph_params, speaker1, speaker2)
+        else:
+            graph = graph_compare_freq(source, graph_params, speaker1, speaker2)
+        return graph
+    except KeyError as e:
+        logging.warning('failed for {0} with {1}'.format(graph_filter, e))
+        return None
     except ValueError as e:
         logging.warning('failed for {0} with {1}'.format(graph_filter, e))
         return None
