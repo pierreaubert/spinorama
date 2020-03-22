@@ -88,6 +88,16 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
+    'Pioneer SP-EBS73-LR': {
+        'brand': 'Pioneer',
+        'model': 'SP-EBS73-LR',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
     'Revel C52': {
         'brand': 'Revel',
         'model': 'C52',
