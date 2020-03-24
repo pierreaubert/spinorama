@@ -68,10 +68,8 @@ def graph_freq(dfu, graph_params):
         alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[ymin, ymax])),
         alt.Color('Measurements', type='nominal', sort=None),
         opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
-    ).properties(
-        width=graph_params['width'],
-        height=graph_params['height']
-    )
+    ).properties(width=graph_params['width'], height=graph_params['height'])
+    
     circle=alt.Chart(dfu).mark_circle(size=100).encode(
         alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[xmin, xmax])),
         alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[ymin, ymax])),
@@ -120,10 +118,8 @@ def graph_spinorama(dfu, graph_params):
         alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[ymin, ymax])),
         alt.Color('Measurements', type='nominal', sort=None),
         opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
-    ).properties(
-        width=graph_params['width'],
-        height=graph_params['height']
-    )
+    ).properties(width=graph_params['width'], height=graph_params['height'])
+    
     di=alt.Chart(dfu).mark_line(clip=True).transform_filter(
         alt.FieldOneOfPredicate(
             field='Measurements',
