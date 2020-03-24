@@ -122,8 +122,7 @@ if __name__ == '__main__':
             origin = args['--origin']
 
         df = parse_all_speakers(metadata.speakers_info, origin)
-        if not '--only_compare'in args:
-            generate_graphs(df, width, height, force, ptype=ptype)
+        generate_graphs(df, width, height, force, ptype=ptype)
 
     if args['--speaker'] is None and args['--origin'] is None:
         generate_compare(df, width, height, force, ptype=ptype)

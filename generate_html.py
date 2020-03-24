@@ -201,7 +201,7 @@ if __name__ == '__main__':
 
     # copy css/js files
     logging.info('Copy js/css files to docs')
-    for f in ['search.js', 'bulma.js', 'compare.js', 'tabs.js', 'spinorama.css', 'brotli.min.js']:
+    for f in ['search.js', 'bulma.js', 'compare.js', 'tabs.js', 'spinorama.css', 'graph.js']:
         file_ext = Template(filename='templates/assets/'+f)
         with open('./docs/assets/'+f, 'w') as fd:
             fd.write(file_ext.render(site=site))

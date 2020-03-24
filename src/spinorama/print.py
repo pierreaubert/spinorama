@@ -108,6 +108,20 @@ def print_graphs(df: pd.DataFrame,
     # compute directivity plots
     graphs['Directivity Matrix'] = display_directivity_matrix(df, params)
 
+    # add a title and setup legend
+    for k in graphs.keys():
+        title = k.replace('_smoothed', '')
+        # optimised for small screens / vertical orientation
+        graphs[k] = graphs[k].configure_legend(
+            orient='bottom'
+        ).configure_title(
+            orient='top',
+            anchor='middle',
+            fontSize=16
+        ).properties(
+            title='{2} for {0} measured by {1}'.format(speaker, origin, title)
+        )
+
     # 1080p to 2k screen
     params = copy.deepcopy(graph_params_default)
     params['width'] = 2160

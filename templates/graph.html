@@ -6,33 +6,11 @@
         return text.replace(' ', '%20')
 %>  
 
-<div class="section">
-  <div class="box">
-    <div id="vis2"></div>
+<div id="visGraph"></div>
 
-    <script type="text/javascript">
-      var spec = "${graph | space2url}.json";
-      
-      // var spec_br = "${graph | space2url}.json.br";
-      // function checkStatus(response) {
-      // if (!response.ok) {
-      // throw new Error(`HTTP response.status`);
-      // }
-      // return response;
-      // }
-      // function load(data) {
-      // fetch(data)
-      // .then( response => checkStatus(response) && response.arrayBuffer())
-      // .then( buffer => {
-      // return BrotliDecode(buffer);
-      // })
-      // .catch(err => console.error(err));
-      // }
-      
-      vegaEmbed('#vis2', spec).then( function(data) {} ).catch(console.error);
-    </script>
-  </div>
-</div>
-  
+<script type="text/javascript">
+  var spec = "${graph | space2url}.json";
+  displayGraph(spec, visGraph);
+</script>
 
 <%include file="footer.html"/>
