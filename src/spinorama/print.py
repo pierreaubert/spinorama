@@ -8,7 +8,8 @@ from .display import display_spinorama, display_onaxis, display_inroom, \
     display_spl_horizontal, display_spl_vertical, \
     display_contour_horizontal, display_contour_vertical, \
     display_contour_smoothed_horizontal, display_contour_smoothed_vertical, \
-    display_radar_horizontal, display_radar_vertical, display_directivity_matrix
+    display_radar_horizontal, display_radar_vertical, display_directivity_matrix, \
+    display_compare
 from .views import template_compact, template_panorama
 from .graph import graph_params_default, contour_params_default, radar_params_default
 
@@ -23,6 +24,9 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
             # skip the 2cols.json and 3cols.json as they are really large
             # 2cols and 3cols are more for printing
             if ext == 'json' and title in ('2cols', '3cols', 'SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed'):
+                continue
+            # for now skip 2cols and 3cols for Princeton graphs
+            if origin == 'Princeton' and title in  ('2cols', '3cols', 'SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed'):
                 continue
             # print high quality smoother contour and skip the others
             if ext == 'png' and (\
@@ -104,6 +108,20 @@ def print_graphs(df: pd.DataFrame,
     # compute directivity plots
     graphs['Directivity Matrix'] = display_directivity_matrix(df, params)
 
+    # add a title and setup legend
+    for k in graphs.keys():
+        title = k.replace('_smoothed', '')
+        # optimised for small screens / vertical orientation
+        graphs[k] = graphs[k].configure_legend(
+            orient='bottom'
+        ).configure_title(
+            orient='top',
+            anchor='middle',
+            fontSize=16
+        ).properties(
+            title='{2} for {0} measured by {1}'.format(speaker, origin, title)
+        )
+
     # 1080p to 2k screen
     params = copy.deepcopy(graph_params_default)
     params['width'] = 2160
@@ -121,7 +139,29 @@ def print_graphs(df: pd.DataFrame,
     updated = 0
     for (title, graph) in graphs.items():
         #                      adam / asr / default
-        updated += print_graph(speaker, origin, key,
-                               title, graph,
-                               force_print, filter_file_ext)
+        if graph is not None:
+            updated += print_graph(speaker, origin, key,
+                                title, graph,
+                                force_print, filter_file_ext)
     return updated
+
+
+def print_compare(df, force_print=False, filter_file_ext=None):
+    filedir = 'docs/compare'
+    pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
+    
+    for filter in ('CEA2034', 'Estimated In-Room Response',
+                   'Early Reflections', 'Horizontal Reflections', 'Vertical Reflections',
+                   'SPL Horizontal', 'SPL Vertical'):
+        graph = display_compare(df, filter)
+        if graph is not None:
+            filename = '{0}/{1}.json'.format(filedir, filter)
+            if force_print or not os.path.exists(filename):
+                if filter_file_ext is None or (filter_file_ext is not None and filter_file_ext == 'json'):
+                    try:
+                        print('Saving {0}'.format(filename))
+                        graph.save(filename)
+                    except Exception as e:
+                        logging.error('Got unkown error {0} for {1}'.format(e, filename))
+    
+    

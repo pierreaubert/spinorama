@@ -92,7 +92,7 @@ def add_estimates(df):
                 # basic math
                 onaxis = spin.loc[spin['Measurements'] == 'On Axis']
                 est = estimates(onaxis)
-                if est[0] == -1:
+                if est is None or est[0] == -1:
                     continue
                 logging.info('Adding -3dB {0}Hz -6dB {1}Hz +/-{2}dB'.format(est[1], est[2], est[3]))
                 if 'estimates' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
@@ -111,6 +111,8 @@ def add_estimates(df):
                     continue
                     
                 pref_rating = speaker_pref_rating(spin, inroom)
+                if pref_rating is None:
+                    continue
                 logging.info('Adding {0}'.format(pref_rating))
                 metadata.speakers_info[speaker_name]['pref_rating'] = pref_rating
                 # compute min and max for each value

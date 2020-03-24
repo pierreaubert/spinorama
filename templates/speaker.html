@@ -20,7 +20,7 @@
     % for freq in g_freq:
     <li>
       <div>
-	<a href="default/${freq | space2url}.html"><img src="default/${freq | space2url}.jpg"/></a>
+	<a href="default/${freq | space2url}.html"><img class="graph" src="default/${freq | space2url}.jpg"/></a>
       </div>
     </li>
     <li>${freq}</li>
@@ -29,14 +29,14 @@
     <li>${contour | unmeltC }</li>
     <div>
       <a href="default/${contour | unmeltC, space2url}.html">
-	<img src="default/${contour | unmeltC, space2url}.jpg"/>
+	<img class="graph" src="default/${contour | unmeltC, space2url}.jpg"/>
       </a>
     </div>
     % endfor
     % for radar in g_radar:
     <div>
       <a href="default/${radar | unmeltR, space2url}.html">
-	<img src="default/${radar | unmeltR, space2url}.jpg"/>
+	<img class="graph" src="default/${radar | unmeltR, space2url}.jpg"/>
       </a>
     </div>
     <li>${radar | unmeltR }</li>
@@ -44,7 +44,7 @@
     % for directivity in g_directivity:
     <div>
       <a href="default/${directivity | unmeltR, space2url}.html">
-	<img src="default/${directivity | unmeltR, space2url}.jpg"/>
+	<img class="graph" src="default/${directivity | unmeltR, space2url}.jpg"/>
       </a>
     </div>
     <li>${directivity | unmeltR }</li>
@@ -55,14 +55,14 @@
 <div class="tab-pane display:none" id="pane-2">
   <div id="vis2"></div>
   <figure class="image">
-    <img src="default/2cols.jpg" alt="all graphs"/>
+    <img class="graph" src="default/2cols.jpg" alt="all graphs"/>
   </figure>
 </div>
 <!-- Desktop view: 3 cols-->
 <div class="tab-pane display:none" id="pane-3">
   <div id="vis3"></div>
   <figure class="image">
-    <img src="default/3cols.jpg" alt="all graphs"/>
+    <img class="graph" src="default/3cols.jpg" alt="all graphs"/>
   </figure>
 </div>
 <%include file="tabs_footer.html"/>

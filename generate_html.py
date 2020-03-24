@@ -187,7 +187,7 @@ if __name__ == '__main__':
         f.close()
 
     # write help.html and compare.html
-    for item in ('help', 'compare', 'scores'):
+    for item in ('help', 'compare', 'scores', 'statistics'):
         item_name = '{0}.html'.format(item)
         logging.info('Write {0}'.format(item_name))
         item_html = mako_templates.get_template(item_name)
@@ -201,7 +201,7 @@ if __name__ == '__main__':
 
     # copy css/js files
     logging.info('Copy js/css files to docs')
-    for f in ['search.js', 'bulma.js', 'compare.js', 'tabs.js', 'spinorama.css']:
+    for f in ['search.js', 'bulma.js', 'compare.js', 'tabs.js', 'spinorama.css', 'graph.js']:
         file_ext = Template(filename='templates/assets/'+f)
         with open('./docs/assets/'+f, 'w') as fd:
             fd.write(file_ext.render(site=site))

@@ -2,7 +2,6 @@ import logging
 import math
 from math import log10
 from scipy.stats import linregress
-from scipy.optimize import curve_fit
 import numpy as np
 import pandas as pd
 
@@ -383,6 +382,8 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     # add 60 (graph start at 60)
     erb = early_reflections_bounce(h_spl, v_spl)
     erdi = lw.dB - erb.dB + 60
+    # add a di offset to mimic other systems
+    di_offset = [60 for i in range(0, len(erdi))]
     # Sound Power Directivity Index (SPDI)
     # For the purposes of this standard the Sound Power Directivity Index is defined
     # as the difference between the listening window curve and the sound power curve.
@@ -394,7 +395,7 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
             spin[key] = name.dB
         else:
             logging.debug('{0} is None'.format(key))
-    for (key, name) in [('Early Reflections DI', erdi), ('Sound Power DI', spdi)]:
+    for (key, name) in [('Early Reflections DI', erdi), ('Sound Power DI', spdi), ('DI offset', di_offset)]:
         if name is not None:
             spin[key] = name
         else:
@@ -435,6 +436,9 @@ def aad(dfu):
         if selection.shape[0] > 0:
             aad_sum += abs(y_ref-np.mean(selection.dB))
             n += 1
+    if n == 0:
+        logging.error('aad is None')
+        return None
     aad_value = aad_sum/n
     #if math.isnan(aad_value):
     #    pd.set_option('display.max_rows', dfu.shape[0]+1)
@@ -514,6 +518,9 @@ def lfq(lw, sp, lfx_log):
             y_sp = np.mean(s_sp.dB)
             sum += abs(y_lw-y_sp)
             n += 1
+    if n == 0:
+        logging.error('lfq is None')
+        return None
     return sum/n
 
 def sm(dfu):
@@ -544,40 +551,56 @@ def pref_rating(nbd_on, nbd_pir, lfx, sm_pir):
 
 
 def speaker_pref_rating(cea2034, df_pred_in_room):
-    df_on_axis = cea2034.loc[lambda df: df.Measurements == 'On Axis']
-    df_listening_window = cea2034.loc[lambda df: df.Measurements == 'Listening Window']
-    df_sound_power = cea2034.loc[lambda df: df.Measurements == 'Sound Power']
-    for dfu in (df_on_axis, df_listening_window, df_sound_power):
-        if dfu.loc[(dfu.Freq>=100) & (dfu.Freq<=400)].shape[0] == 0:
-            logging.info('No freq under 400hz, skipping pref_rating'.format())
+    try:
+        if df_pred_in_room is None or df_pred_in_room.shape[0] == 0:
+            logging.info('PIR is empty')
             return None
-    aad_on_axis = aad(df_on_axis)
-    nbd_on_axis = nbd(df_on_axis)
-    nbd_listening_window = nbd(df_listening_window)
-    nbd_sound_power = nbd(df_sound_power)
-    nbd_pred_in_room = nbd(df_pred_in_room)
-    lfx_hz = lfx(df_listening_window, df_sound_power)
-    lfq_db = lfq(df_listening_window, df_sound_power, lfx_hz)
-    sm_sound_power = sm(df_sound_power)
-    sm_pred_in_room = sm(df_pred_in_room)
-    pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)
-    ratings = {
-        'aad_on_axis': round(aad_on_axis, 2),
-        'nbd_on_axis': round(nbd_on_axis, 2),
-        'nbd_listening_window': round(nbd_listening_window, 2),
-        'nbd_sound_power': round(nbd_sound_power, 2),
-        'nbd_pred_in_room': round(nbd_pred_in_room, 2),
-        'lfx_hz': int(pow(10, lfx_hz)), # in Hz
-        'lfq': round(lfq_db, 2),
-        'sm_pred_in_room': round(sm_pred_in_room, 2),
-        'sm_sound_power': round(sm_sound_power, 2),
-        'pref_score': round(pref, 1),
-    }
-    logging.info('Ratings: {0}'.format(ratings))
-    return ratings
+        df_on_axis = cea2034.loc[lambda df: df.Measurements == 'On Axis']
+        df_listening_window = cea2034.loc[lambda df: df.Measurements == 'Listening Window']
+        df_sound_power = cea2034.loc[lambda df: df.Measurements == 'Sound Power']
+        for dfu in (df_on_axis, df_listening_window, df_sound_power):
+            if dfu.loc[(dfu.Freq>=100) & (dfu.Freq<=400)].shape[0] == 0:
+                logging.info('No freq under 400hz, skipping pref_rating'.format())
+                return None
+        aad_on_axis = aad(df_on_axis)
+        nbd_on_axis = nbd(df_on_axis)
+        nbd_listening_window = nbd(df_listening_window)
+        nbd_sound_power = nbd(df_sound_power)
+        nbd_pred_in_room = nbd(df_pred_in_room)
+        lfx_hz = lfx(df_listening_window, df_sound_power)
+        lfq_db = lfq(df_listening_window, df_sound_power, lfx_hz)
+        sm_sound_power = sm(df_sound_power)
+        sm_pred_in_room = sm(df_pred_in_room)
+        if nbd_on_axis is None or \
+          nbd_pred_in_room is None or \
+          lfx_hz is None or \
+          sm_pred_in_room is None or \
+          lfq_db is None:
+            return None
+        pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)
+        ratings = {
+            'aad_on_axis': round(aad_on_axis, 2),
+            'nbd_on_axis': round(nbd_on_axis, 2),
+            'nbd_listening_window': round(nbd_listening_window, 2),
+            'nbd_sound_power': round(nbd_sound_power, 2),
+            'nbd_pred_in_room': round(nbd_pred_in_room, 2),
+            'lfx_hz': int(pow(10, lfx_hz)), # in Hz
+            'lfq': round(lfq_db, 2),
+            'sm_pred_in_room': round(sm_pred_in_room, 2),
+            'sm_sound_power': round(sm_sound_power, 2),
+            'pref_score': round(pref, 1),
+        }
+        logging.info('Ratings: {0}'.format(ratings))
+        return ratings
+    except ValueError as e:
+        logging.error('{0}'.format(e))
+        return None
 
 
 def directivity_matrix(splH, splV):
+    # print(splH.shape, splV.shape)
+    # print(splH.head())
+    # print(splV.head())
     n = splH.Freq.shape[0]
     r = np.floor(np.logspace(1.0+math.log10(2), 4.0+math.log10(2), n))
     x, y = np.meshgrid(r, r)

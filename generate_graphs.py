@@ -19,7 +19,7 @@
 """Usage:
 update-graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
   [--force] [--type=<ext>] [--log-level=<level>] [--origin=<origin>]\
-  [--speaker=<speaker>]
+  [--speaker=<speaker>] [--only_compare=<compare>]
 
 Options:
   -h|--help         display usage()
@@ -30,12 +30,13 @@ Options:
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
   --origin=<origin> restrict to a specific origin, usefull for debugging
   --speaker=<speaker> restrict to a specific speaker, usefull for debugging
+  --only_compare=<compare> if true then skip graphs generation and only dump compare data
 """
 import logging
 import datas.metadata as metadata
 from docopt import docopt
 from src.spinorama.load import parse_all_speakers, parse_graphs_speaker
-from src.spinorama.print import print_graphs
+from src.spinorama.print import print_graphs, print_compare
 
 
 def get_logger(level):
@@ -63,6 +64,10 @@ def generate_graphs(df, width, height, force, ptype):
                                    speaker_name, origin, metadata.origins_info, key,
                                    width, height, force, ptype)
     print('{:30s} {:2d}'.format(speaker_name, updated))
+
+
+def generate_compare(df, width, height, force, ptype):
+    print_compare(df, force, ptype)
 
 
 if __name__ == '__main__':
@@ -110,10 +115,14 @@ if __name__ == '__main__':
         df[speaker] = {}
         df[speaker][origin] = {}
         df[speaker][origin]['default'] = parse_graphs_speaker(brand, speaker, mformat)
+        generate_graphs(df, width, height, force, ptype=ptype)
     else:
         origin = None
         if args['--origin'] is not None:
             origin = args['--origin']
 
         df = parse_all_speakers(metadata.speakers_info, origin)
-    generate_graphs(df, width, height, force, ptype=ptype)
+        generate_graphs(df, width, height, force, ptype=ptype)
+
+    if args['--speaker'] is None and args['--origin'] is None:
+        generate_compare(df, width, height, force, ptype=ptype)
