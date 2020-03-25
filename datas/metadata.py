@@ -98,6 +98,16 @@ speakers_info = {
             'format': 'klippel',
             }],
         },
+    'Pioneer SP-EC73': {
+        'brand': 'Pioneer',
+        'model': 'SP-EC73',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
     'Revel C52': {
         'brand': 'Revel',
         'model': 'C52',
