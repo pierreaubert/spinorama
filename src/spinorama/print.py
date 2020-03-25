@@ -112,15 +112,16 @@ def print_graphs(df: pd.DataFrame,
     for k in graphs.keys():
         title = k.replace('_smoothed', '')
         # optimised for small screens / vertical orientation
-        graphs[k] = graphs[k].configure_legend(
-            orient='bottom'
-        ).configure_title(
-            orient='top',
-            anchor='middle',
-            fontSize=16
-        ).properties(
-            title='{2} for {0} measured by {1}'.format(speaker, origin, title)
-        )
+        if graphs[k] is not None:
+            graphs[k] = graphs[k].configure_legend(
+                orient='bottom'
+            ).configure_title(
+                orient='top',
+                anchor='middle',
+                fontSize=16
+            ).properties(
+                    title='{2} for {0} measured by {1}'.format(speaker, origin, title)
+            )
 
     # 1080p to 2k screen
     params = copy.deepcopy(graph_params_default)
@@ -154,6 +155,7 @@ def print_compare(df, force_print=False, filter_file_ext=None):
                    'Early Reflections', 'Horizontal Reflections', 'Vertical Reflections',
                    'SPL Horizontal', 'SPL Vertical'):
         graph = display_compare(df, filter)
+        graph = graph.configure_legend(orient='bottom').configure_title(orient='top', anchor='middle', fontSize=16)
         if graph is not None:
             filename = '{0}/{1}.json'.format(filedir, filter)
             if force_print or not os.path.exists(filename):

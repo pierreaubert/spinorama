@@ -19,7 +19,7 @@ function displayGraph(spec, divName) {
 	    return spec;
 	}
 	
-	const result = await vegaEmbed("#visGraph", spec, {
+	const result = await vegaEmbed(divName, spec, {
             config: config,
             tooltip: { theme: "dark" },
 	    patch: patch

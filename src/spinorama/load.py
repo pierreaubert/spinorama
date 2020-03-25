@@ -2,8 +2,8 @@ import os
 import sys
 import glob
 import locale
-import math
 from locale import atof
+import math
 import json
 import logging
 import numpy as np
@@ -285,7 +285,6 @@ def parse_graphs_speaker_princeton(speaker_name):
     return dfs
 
 
-
 def parse_graphs_speaker(speaker_brand : str, speaker_name : str, mformat='klippel') -> str:
     if mformat == 'klippel':
         return parse_graphs_speaker_klippel(speaker_name)
@@ -344,7 +343,7 @@ def parse_all_speakers(metadata, filter_origin, speakerpath='./datas'):
             df[speaker][origin]['default'] = parse_graphs_speaker(brand, speaker, mformat)
             if df[speaker][origin]['default'] is not None:
                 count_measurements += 1
-
+        
     print('Loaded {:d} speakers {:d} measurements'.format(len(speakerlist),
           count_measurements))
     
