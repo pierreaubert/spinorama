@@ -1,84 +1,49 @@
 <%include file="header.html"/>
 <%include file="nav.html"/>
-<%include file="animation.html"/>
 
-<%!
-  def space2url(text):
-      return text.replace(' ', '%20')
-
-  def removeVendors(text):
-      return text.replace('Vendors/','')
-%>  
-
-<div class="container">
-  <div class="tabs is-centered" id="nav">
-    <ul>
-      <li data-target="pane-1" id="1" class="is-active">
-	<a><span>Spinorama</span></a>
-      </li>
-      <li data-target="pane-2" id="2">
-	<a><span>Early Reflections</span></a>
-      </li>
-      <li data-target="pane-3" id="3">
-	<a><span>Estimated In-Room Response</span></a>
-      </li>
-      <li data-target="pane-4" id="4">
-	<a><span>Horizontal Reflections</span></a>
-      </li>
-      <li data-target="pane-5" id="5">
-	<a><span>Vertical Reflections</span></a>
-      </li>
-    </ul>
-  </div>
+<div class="tabs is-centered" id="nav">
+  <ul>
+    <li data-target="pane-1" id="1" class="is-active">
+      <a><span>Spinorama</span></a>
+    </li>
+    <li data-target="pane-2" id="2">
+      <a><span>Early Reflections</span></a>
+    </li>
+    <li data-target="pane-3" id="3">
+      <a><span>Estimated In-Room Response</span></a>
+    </li>
+    <li data-target="pane-4" id="4">
+      <a><span>Horizontal Reflections</span></a>
+    </li>
+    <li data-target="pane-5" id="5">
+      <a><span>Vertical Reflections</span></a>
+    </li>
+  </ul>
+</div>
   
-  <div class="tab-content">
-    
-    <div class="tab-pane is-active" id="pane-1">
-      <div id="visCEA2034"></div>
-      <script type="text/javascript">
-	var spec = "compare/CEA2034.json";
-	vegaEmbed('#visCEA2034', spec).then(
-	    function(result) {}).catch(console.error);
-      </script>
-    </div>
-    
-    <div class="tab-pane" id="pane-2">
-      <div id="visER"></div>
-      <script type="text/javascript">
-	var spec = "compare/Early Reflections.json";
-	vegaEmbed('#visER', spec).then(
-	    function(result) {}).catch(console.error);
-      </script>
-    </div>
+<div class="tab-pane is-active" id="pane-1">
+  <div id="visCEA2034"></div>
+  <script type="text/javascript">displayGraph("compare/CEA2034.json", '#visCEA2034');</script>
+</div>
 
-    <div class="tab-pane" id="pane-3">
-      <div id="visEIR"></div>
-      <script type="text/javascript">
-	var spec = "compare/Estimated In-Room Response.json";
-	vegaEmbed('#visEIR', spec).then(
-	    function(result) {}).catch(console.error);
-      </script>
-    </div>
+<div class="tab-pane" id="pane-2">
+  <div id="visER"></div>
+  <script type="text/javascript">displayGraph("compare/Early Reflections.json", "#visER");</script>
+</div>
 
-    <div class="tab-pane" id="pane-4">
-      <div id="visHR"></div>
-      <script type="text/javascript">
-	var spec = "compare/Horizontal Reflections.json";
-	vegaEmbed('#visHR', spec).then(
-	    function(result) {}).catch(console.error);
-      </script>
-    </div>
-    
-    <div class="tab-pane" id="pane-5">
-      <div id="visVR"></div>
-      <script type="text/javascript">
-	var spec = "compare/Vertical Reflections.json";
-	vegaEmbed('#visVR', spec).then(
-	    function(result) {}).catch(console.error);
-      </script>
-    </div>
+<div class="tab-pane" id="pane-3">
+  <div id="visEIR"></div>
+  <script type="text/javascript">displayGraph("compare/Estimated In-Room Response.json", '#visEIR');</script>
+</div>
 
-  </div>
+<div class="tab-pane" id="pane-4">
+  <div id="visHR"></div>
+  <script type="text/javascript">displayGraph("compare/Horizontal Reflections.json", '#visHR');</script>
+</div>
+
+<div class="tab-pane" id="pane-5">
+  <div id="visVR"></div>
+  <script type="text/javascript">displayGraph("compare/Vertical Reflections.json", '#visVR');</script>
 </div>
 
 <script src="${site}/assets/tabs.js"></script>
