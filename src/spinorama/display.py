@@ -1,7 +1,7 @@
 import logging
 import altair as alt
 import pandas as pd
-from .normalize import resample, normalize_mean, normalize_cea2034, normalize
+from .normalize import resample
 from .graph import graph_freq, graph_contour_smoothed, graph_radar, graph_spinorama,\
     graph_params_default, contour_params_default, radar_params_default, \
     graph_contour, graph_directivity_matrix,\
@@ -232,18 +232,12 @@ def display_compare(df, graph_filter, graph_params=graph_params_default):
         return dfa
 
     try:
-        norm = normalize
-        if graph_filter == 'CEA2034':
-            norm = normalize_cea2034
         source = pd.concat([
-            augment(
-                norm(
-                    # max 300 Freq points to minimise space                                                                                           
-                    resample(df[speaker][origin]['default'][graph_filter], 300),
-                    normalize_mean(df[speaker][origin]['default']['CEA2034'])),
-                '{0} - {1}'.format(speaker, origin))
+            augment(resample(df[speaker][origin]['default'][graph_filter], 300), # max 300 Freq points to minimise space
+                    '{0} - {1}'.format(speaker, origin))
             for speaker in df.keys()
-             for origin in df[speaker].keys() if graph_filter  in df[speaker][origin]['default'] and 'CEA2034'in df[speaker][origin]['default']
+                for origin in df[speaker].keys()
+                    if graph_filter in df[speaker][origin]['default'] and 'CEA2034'in df[speaker][origin]['default']
         ])
 
         speaker1 = 'KEF LS50 - ASR'

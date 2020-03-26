@@ -11,7 +11,7 @@ import pandas as pd
 from scipy.io import loadmat
 from .analysis import early_reflections, vertical_reflections, horizontal_reflections,\
      compute_cea2034, estimated_inroom, estimated_inroom_HV
-from .normalize import unify_freq
+from .normalize import unify_freq, normalize_mean, normalize_cea2034, normalize_graph
 
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
@@ -285,16 +285,35 @@ def parse_graphs_speaker_princeton(speaker_name):
     return dfs
 
 
-def parse_graphs_speaker(speaker_brand : str, speaker_name : str, mformat='klippel') -> str:
-    if mformat == 'klippel':
-        return parse_graphs_speaker_klippel(speaker_name)
-    elif mformat == 'webplotdigitizer':
-        return parse_graphs_speaker_webplotdigitizer(speaker_brand, speaker_name)
-    elif mformat == 'princeton':
-        return parse_graphs_speaker_princeton(speaker_name)
+def normalize(df):
+    # normalize all melted graphs
+    dfc = {}
+    if 'CEA2034' in df:
+        mean = normalize_mean(df['CEA2034'])
+        for graph in df.keys():
+            if graph != 'CEA2034':
+                if graph.replace('_unmelted', '') != graph:
+                    dfc[graph] = df[graph]
+                else:
+                    dfc[graph] = normalize_graph(df[graph], mean)
+        dfc['CEA2034'] = normalize_cea2034(df['CEA2034'], mean)
+    return dfc
 
-    logging.error('Format {:s} is unkown'.format(mformat))
-    sys.exit(1)
+
+def parse_graphs_speaker(speaker_brand : str, speaker_name : str, mformat='klippel') -> str:
+    df = None
+    if mformat == 'klippel':
+        df = parse_graphs_speaker_klippel(speaker_name)
+    elif mformat == 'webplotdigitizer':
+        df = parse_graphs_speaker_webplotdigitizer(speaker_brand, speaker_name)
+    elif mformat == 'princeton':
+        df = parse_graphs_speaker_princeton(speaker_name)
+    else:
+        logging.fatal('Format {:s} is unkown'.format(mformat))
+        sys.exit(1)
+
+    return normalize(df)
+        
 
 
 def get_speaker_list(speakerpath):
