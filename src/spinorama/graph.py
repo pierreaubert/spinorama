@@ -491,7 +491,7 @@ def graph_directivity_matrix(dfu, graph_params):
 
 
 def build_selections(df, speaker1, speaker2):
-    speakers = df.Speaker.unique()
+    speakers = sorted(df.Speaker.unique())
     input_dropdown1 = alt.binding_select(options=[s for s in speakers])
     selection1 = alt.selection_single(fields=['Speaker'], bind=input_dropdown1, name='Select right ', init={'Speaker': speaker1})
     input_dropdown2 = alt.binding_select(options=[s for s in speakers])
