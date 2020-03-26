@@ -158,12 +158,10 @@ def print_compare(df, force_print=False, filter_file_ext=None):
         graph = graph.configure_legend(orient='bottom').configure_title(orient='top', anchor='middle', fontSize=16)
         if graph is not None:
             filename = '{0}/{1}.json'.format(filedir, filter)
-            if force_print or not os.path.exists(filename):
-                if filter_file_ext is None or (filter_file_ext is not None and filter_file_ext == 'json'):
-                    try:
-                        print('Saving {0}'.format(filename))
-                        graph.save(filename)
-                    except Exception as e:
-                        logging.error('Got unkown error {0} for {1}'.format(e, filename))
+            try:
+                print('Saving {0}'.format(filename))
+                graph.save(filename)
+            except Exception as e:
+                logging.error('Got unkown error {0} for {1}'.format(e, filename))
     
     
