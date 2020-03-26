@@ -69,7 +69,7 @@ def normalize_cea2034(dfc, mean):
     return df
 
 
-def normalize(dfc, mean):
+def normalize_graph(dfc, mean):
     df = dfc.copy()
     df.dB -= mean
     return df
