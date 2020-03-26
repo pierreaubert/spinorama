@@ -32,7 +32,7 @@ speakers_info = {
         'model': 'CBM-170 SE',
         'type': 'passive',
         'price': '400',
-        'measurements': [{'origin': 'ASR', 'format': 'klippel',}, {'origin': 'Princeton', 'format': 'princeton'}],
+        'measurements': [{'origin': 'ASR', 'format': 'klippel', }, {'origin': 'Princeton', 'format': 'princeton'}],
     },
     'Dayton Audio B652-AIR': {
         'brand': 'Dayton Audio',
@@ -43,14 +43,13 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
-        'Elac Adante AS-61': {
+    },
+    'Elac Adante AS-61': {
         'brand': 'Elac',
         'model': 'Adante AS-61',
         'type': 'passive',
         'price': '',
-        'measurements': [
-                         {'origin': 'ASR', 'format': 'klippel',}],
+        'measurements': [{'origin': 'ASR', 'format': 'klippel', }],
     },
     'Elac Debut Reference DBR-62': {
         'brand': 'Elac',
@@ -61,7 +60,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
     'Emotiva Airmotive 6s': {
         'brand': 'Emotiva',
         'model': 'Airmotive 6s',
@@ -71,7 +70,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
     'Harbeth Monitor 30.0': {
         'brand': 'Harbeth',
         'model': 'Monitor 30.0',
@@ -81,7 +80,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
     'JBL 104': {
         'brand': 'JBL',
         'model': '104',
@@ -91,7 +90,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
     'JBL 705P': {
         'brand': 'JBL',
         'model': '705P',
@@ -101,7 +100,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
     'JBL Control 1 Pro': {
         'brand': 'JBL',
         'model': 'Control 1 Pro',
@@ -111,7 +110,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
     'JBL 305P Mark ii': {
         'brand': 'JBL',
         'model': '305P Mark ii',
@@ -121,7 +120,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
     'JBL 4367': {
         'brand': 'JBL',
         'model': '4367',
@@ -132,7 +131,7 @@ speakers_info = {
             'website': 'www.jbl.com',
             'format': 'webplotdigitizer',
             }],
-        },
+    },
     'JBL M2': {
         'brand': 'JBL',
         'model': 'M2',
@@ -143,7 +142,7 @@ speakers_info = {
             'website': 'www.jbl.com',
             'format': 'webplotdigitizer',
             }],
-        }, 
+        },
     'Kali IN-8': {
         'brand': 'Kali',
         'model': 'IN-8',
@@ -159,22 +158,22 @@ speakers_info = {
         'model': 'Q100',
         'type': 'passive',
         'price': '600',
-        'measurements': [{'origin': 'ASR', 'format': 'klippel', },],
+        'measurements': [{'origin': 'ASR', 'format': 'klippel', }, ],
         },
     'KEF R3': {
         'brand': 'KEF',
         'model': 'R3',
         'type': 'passive',
         'price': '2000',
-        'measurements': [{'origin': 'ASR', 'format': 'klippel', },],
+        'measurements': [{'origin': 'ASR', 'format': 'klippel', }, ],
         },
     'KEF LS50': {
         'brand': 'KEF',
         'model': 'LS50',
         'type': 'passive',
         'price': '',
-        'measurements': [{'origin': 'ASR', 'format': 'klippel', }, 
-                         {'origin': 'Princeton', 'format': 'princeton', } ],
+        'measurements': [{'origin': 'ASR', 'format': 'klippel', },
+                         {'origin': 'Princeton', 'format': 'princeton', }],
         },
     'KEF Reference 5': {
         'brand': 'KEF',
@@ -548,16 +547,17 @@ speakers_info = {
             'origin': 'Princeton',
             'format': 'princeton',
             }],
-        },
+    },
     'Sanders Sound Systems Model 11': {
         'brand': 'Sanders Sound Systems',
         'model': 'Model 11',
         'type': 'passive',
         'price': '',
-        'measurements': [{ 'origin': 'Princeton', 'key': 'unmodified', 'format': 'princeton', },
-                         { 'origin': 'Princeton', 'key': 'with Anechoic Foam',  'format': 'princeton', },
-                         { 'origin': 'Princeton', 'key': 'with Back-Wave Absorber', 'format': 'princeton', },
-        ],},
+        'measurements': [{'origin': 'Princeton', 'key': 'unmodified', 'format': 'princeton', },
+                         {'origin': 'Princeton', 'key': 'with Anechoic Foam',  'format': 'princeton', },
+                         {'origin': 'Princeton', 'key': 'with Back-Wave Absorber', 'format': 'princeton', },
+                         ],
+    },
     'Spendor Audio Systems SA1': {
         'brand': 'Spendor Audio',
         'model': 'Systems SA1',
@@ -567,7 +567,7 @@ speakers_info = {
             'origin': 'Princeton',
             'format': 'princeton',
             }],
-        },
+    },
     'Tannoy Definition DC6i': {
         'brand': 'Tannoy',
         'model': 'Definition DC6i',

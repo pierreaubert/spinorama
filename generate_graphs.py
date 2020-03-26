@@ -65,26 +65,6 @@ def generate_graphs(df, width, height, force, ptype):
     print('{:30s} {:2d}'.format(speaker_name, updated))
 
 
-def multi_generate_graphs(df, width, height, force, ptype):
-    def process_graph(func, params):
-        result = func(*params)
-        print('{0:30s} {1:20s} {2:20s} {3} {4}{5}'.format(
-            df[0], df[0][0], df[0][0][0], multiprocessing.current_process().name, func.__name__, params))
-        return
-    
-    print('Speaker                         #updated')
-    nb_process = 16
-    with multiprocessing.Pool(nb_process) as pool:
-        for speaker in df.keys():
-            for origin in df[speaker].keys():
-                for m in df[speaker][origin].keys():
-                    dfu = {}
-                    dfu[speaker] = df[speaker]
-                    dfu[speaker][origin] = df[speaker][origin]
-                    dfu[speaker][origin][m] = df[speaker][origin][m]
-                    pool.apply_async(process_graph(generate_graphs, (dfu, width, height, force, ptype)))
-
-
 def generate_compare(df, width, height, force, ptype):
     print_compare(df, force, ptype)
 
@@ -111,7 +91,9 @@ if __name__ == '__main__':
             print('type %s is not recognize!'.format(ptype))
             exit(1)
 
-    logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s', datefmt='%Y-%m-%d:%H:%M:%S')
+    logging.basicConfig(
+        format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+        datefmt='%Y-%m-%d:%H:%M:%S')
     if args['--log-level'] is not None:
         level = args['--log-level']
         if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:

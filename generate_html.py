@@ -125,7 +125,7 @@ if __name__ == '__main__':
                 exit(1)
         site = sitedev
 
-    #logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+    # logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
     #                    datefmt='%Y-%m-%d:%H:%M:%S')
     if args['--log-level'] is not None:
         level = args['--log-level']
@@ -166,21 +166,22 @@ if __name__ == '__main__':
                 for graph in graphs:
                     g = os.path.basename(graph).replace('.jpg', '')
                     df[speaker_name][origin_name][default_name][g] = {}
- 
+
     # configure Mako
     mako_templates = TemplateLookup(directories=['templates'], module_directory='/tmp/mako_modules')
 
-    # write index.html  
+    # write index.html
     logging.info('Write index.html')
     index_html = mako_templates.get_template('index.html')
+
     def sort_meta(s):
         if 'pref_rating' in s.keys():
             return s['pref_rating']['pref_score']
         return -1
-        
+
     keys_sorted = sorted(meta, key=lambda a: sort_meta(meta[a]), reverse=True)
     meta_sorted = {k: meta[k] for k in keys_sorted}
-    
+
     with open('docs/index.html', 'w') as f:
         # by default sort by pref_rating decreasing
         f.write(index_html.render(df=df, meta=meta_sorted, site=site))
