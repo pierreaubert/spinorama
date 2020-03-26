@@ -5,11 +5,8 @@ speakers_info = {
         'model': 'S2V',
         'type': 'active',
         'price': '1750',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
+        'measurements': [{'origin': 'ASR', 'format': 'klippel', }],
+    },
     'Ascend Acoustics Sierra 2': {
         'brand': 'Ascend Acoustics',
         'model': 'Sierra 2',
@@ -19,7 +16,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
     'Ascend Acoustics CMT-340': {
         'brand': 'Ascend Acoustics',
         'model': 'CMT-340',
@@ -29,18 +26,55 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
     'Ascend Acoustics CBM-170 SE': {
         'brand': 'Ascend Acoustics',
         'model': 'CBM-170 SE',
         'type': 'passive',
         'price': '400',
-        'measurements': [{'origin': 'ASR', 'format': 'klippel',},
-                         {'origin': 'Princeton', 'format': 'princeton'}],
-        },
+        'measurements': [{'origin': 'ASR', 'format': 'klippel',}, {'origin': 'Princeton', 'format': 'princeton'}],
+    },
     'Dayton Audio B652-AIR': {
         'brand': 'Dayton Audio',
         'model': 'B652-AIR',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
+        'Elac Adante AS-61': {
+        'brand': 'Elac',
+        'model': 'Adante AS-61',
+        'type': 'passive',
+        'price': '',
+        'measurements': [
+                         {'origin': 'ASR', 'format': 'klippel',}],
+    },
+    'Elac Debut Reference DBR-62': {
+        'brand': 'Elac',
+        'model': 'Debut Reference DBR-62',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
+    'Emotiva Airmotive 6s': {
+        'brand': 'Emotiva',
+        'model': 'Airmotive 6s',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
+    'Harbeth Monitor 30.0': {
+        'brand': 'Harbeth',
+        'model': 'Monitor 30.0',
         'type': 'passive',
         'price': '',
         'measurements': [{
@@ -63,108 +97,6 @@ speakers_info = {
         'model': '705P',
         'type': 'active',
         'price': '1000',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Kali IN-8': {
-        'brand': 'Kali',
-        'model': 'IN-8',
-        'type': 'active',
-        'price': '',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Pioneer SP-BS22-LR': {
-        'brand': 'Pioneer',
-        'model': 'SP-BS22-LR',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Pioneer SP-EBS73-LR': {
-        'brand': 'Pioneer',
-        'model': 'SP-EBS73-LR',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Revel C52': {
-        'brand': 'Revel',
-        'model': 'C52',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Revel F35': {
-        'brand': 'Revel',
-        'model': 'F35',
-        'type': 'passive',
-        'price': '1800',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Revel M16': {
-        'brand': 'Revel',
-        'model': 'M16',
-        'type': 'passive',
-        'price': '900',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Revel C25': {
-        'brand': 'Revel',
-        'model': 'C25',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Vendors/Revel',
-            'website': 'www.revel.com',
-            'format': 'webplotdigitizer',
-            }],
-        },
-    'Revel F208': {
-        'brand': 'Revel',
-        'model': 'F208',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Vendors/Revel',
-            'website': 'www.revel.com',
-            'format': 'webplotdigitizer',
-            }],
-            },
-    'Elac Adante AS-61': {
-        'brand': 'Elac',
-        'model': 'Adante AS-61',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Emotiva Airmotive 6s': {
-        'brand': 'Emotiva',
-        'model': 'Airmotive 6s',
-        'type': 'passive',
-        'price': '',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -212,30 +144,10 @@ speakers_info = {
             'format': 'webplotdigitizer',
             }],
         }, 
-    'Micca RB42': {
-        'brand': 'Micca',
-        'model': 'RB42',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Selah Audio RC3R': {
-        'brand': 'Selah Audio',
-        'model': 'RC3R',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Harbeth Monitor 30.0': {
-        'brand': 'Harbeth',
-        'model': 'Monitor 30.0',
-        'type': 'passive',
+    'Kali IN-8': {
+        'brand': 'Kali',
+        'model': 'IN-8',
+        'type': 'active',
         'price': '',
         'measurements': [{
             'origin': 'ASR',
@@ -273,6 +185,108 @@ speakers_info = {
             'origin': 'Vendors/KEF',
             'website': 'www.kef.com',
             'format': 'webplotdigitizer',
+            }],
+        },
+    'Micca RB42': {
+        'brand': 'Micca',
+        'model': 'RB42',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
+    'Pioneer SP-BS22-LR': {
+        'brand': 'Pioneer',
+        'model': 'SP-BS22-LR',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
+    'Pioneer SP-EBS73-LR': {
+        'brand': 'Pioneer',
+        'model': 'SP-EBS73-LR',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
+    'Pioneer SP-EC73': {
+        'brand': 'Pioneer',
+        'model': 'SP-EC73',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
+    'Revel C52': {
+        'brand': 'Revel',
+        'model': 'C52',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
+    'Revel F35': {
+        'brand': 'Revel',
+        'model': 'F35',
+        'type': 'passive',
+        'price': '1800',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
+    'Revel M16': {
+        'brand': 'Revel',
+        'model': 'M16',
+        'type': 'passive',
+        'price': '900',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+    },
+    'Revel C25': {
+        'brand': 'Revel',
+        'model': 'C25',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Vendors/Revel',
+            'website': 'www.revel.com',
+            'format': 'webplotdigitizer',
+            }],
+    },
+    'Revel F208': {
+        'brand': 'Revel',
+        'model': 'F208',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Vendors/Revel',
+            'website': 'www.revel.com',
+            'format': 'webplotdigitizer',
+            }],
+    },
+    'Selah Audio RC3R': {
+        'brand': 'Selah Audio',
+        'model': 'RC3R',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
             }],
         },
     'Polk T15': {
@@ -613,8 +627,8 @@ origins_info = {
     'ASR': {
         'min hz': 20,
         'max hz': 20000,
-        'min dB': 45,
-        'max dB': 105,
+        'min dB': -40,
+        'max dB': 10,
         'logo': 'docs/metadata/asr.png',
         'logo-small': 'docs/metadata/asr-small.png',
         'url': 'http://www.audiosciencereview.com',
@@ -622,8 +636,8 @@ origins_info = {
     'Princeton': {
         'min hz': 500,
         'max hz': 20000,
-        'min dB': 45,
-        'max dB': 105,
+        'min dB': -40,
+        'max dB': 10,
         'logo': 'docs/metadata/3d3a.jpg',
         'logo-small': 'docs/metadata/3d3a.jpg',
         'url': 'https://www.princeton.edu/3D3A/Directivity.html',
@@ -631,8 +645,8 @@ origins_info = {
     'Vendors/KEF': {
         'min hz': 20,
         'max hz': 20000,
-        'min dB': 45,
-        'max dB': 105,
+        'min dB': -40,
+        'max dB': 10,
         'logo': 'docs/metadata/asr.png',
         'logo-small': 'docs/metadata/asr-small.png',
         'url': 'http://www.kef.com',
@@ -640,8 +654,8 @@ origins_info = {
     'Vendors/JBL': {
         'min hz': 20,
         'max hz': 20000,
-        'min dB': 45,
-        'max dB': 105,
+        'min dB': -40,
+        'max dB': 10,
         'logo': 'docs/metadata/jbl.png',
         'logo-small': 'docs/metadata/jbl-small.png',
         'url': 'http://www.jbl.com',
@@ -649,8 +663,8 @@ origins_info = {
     'Vendors/Revel': {
         'min hz': 20,
         'max hz': 20000,
-        'min dB': 45,
-        'max dB': 105,
+        'min dB': -40,
+        'max dB': 10,
         'logo': 'docs/metadata/revel.png',
         'logo-small': 'docs/metadata/jbl-small.png',
         'url': 'http://www.revel.com',
@@ -658,8 +672,8 @@ origins_info = {
     'Vendors/Buchardt Audio': {
         'min hz': 20,
         'max hz': 20000,
-        'min dB': 20,
-        'max dB': 70,
+        'min dB': -40,
+        'max dB': 10,
         'logo': 'docs/metadata/buchardt-audio.png',
         'logo-small': 'docs/metadata/buchardt-audio-small.png',
         'url': 'https://www.buchardtaudio.com',

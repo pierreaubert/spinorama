@@ -79,9 +79,9 @@ def template_compact(df, params):
                              vspl.properties(title='Vertical SPL'))
     if hcontour is not None and hradar is not None:
         chart &= alt.hconcat(hcontour.properties(title='Horizontal SPL'),
-                             vradar.properties(title='Vertical SPL'))
+                             hradar.properties(title=' HorizontalSPL'))
     if vcontour is not None and vradar is not None:
-        chart &= alt.hconcat(hcontour.properties(title='Horizontal SPL'),
+        chart &= alt.hconcat(vcontour.properties(title='Vertical SPL'),
                              vradar.properties(title='Vertical SPL'))
     return chart.configure_legend(
         orient='top'

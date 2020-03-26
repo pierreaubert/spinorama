@@ -107,46 +107,60 @@ def graph_spinorama(dfu, graph_params):
         bind='scales'
     )
     # main charts
-    line=alt.Chart(dfu, title=f'CEA2034').mark_line(clip=True).transform_filter(
+    xaxis =alt.X('Freq:Q', title='Freqency (Hz)',
+                scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]),
+                axis=alt.Axis(format='s'))
+    yaxis = alt.Y('dB:Q', scale=alt.Scale(zero=False, domain=[ymin, ymax]))
+    di_yaxis = alt.Y('dB:Q', scale=alt.Scale(zero=False, domain=[0,ymax-ymin]))
+    color = alt.Color('Measurements', type='nominal', sort=None)
+    opacity = alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
+    
+    line=alt.Chart(dfu).mark_line().transform_filter(
+        alt.FieldOneOfPredicate(
+            field='Measurements',
+            oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
+    ).encode(x=xaxis, y=yaxis, color=color, opacity=opacity
+    )
+
+    circle=alt.Chart(dfu).mark_circle(size=100).transform_filter(
         alt.FieldOneOfPredicate(
             field='Measurements',
             oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
     ).encode(
-        alt.X('Freq:Q', title='Freqency (Hz)',
-              scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]), 
-              axis=alt.Axis(format='s')),
-        alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[ymin, ymax])),
-        alt.Color('Measurements', type='nominal', sort=None),
-        opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
-    ).properties(width=graph_params['width'], height=graph_params['height'])
+        x=xaxis, y=yaxis, color=color, 
+        opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
+        tooltip=['Measurements', 'Freq', 'dB']
+    ) #.transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
     
-    di=alt.Chart(dfu).mark_line(clip=True).transform_filter(
+    di=alt.Chart(dfu).mark_line().transform_filter(
+        alt.FieldOneOfPredicate(
+            field='Measurements',
+            oneOf=['Early Reflections DI', 'Sound Power DI'])
+    ).encode(x=xaxis, y=di_yaxis, color=color, opacity=opacity)
+
+    circle_di = alt.Chart(dfu).mark_circle(size=100).transform_filter(
         alt.FieldOneOfPredicate(
             field='Measurements',
             oneOf=['Early Reflections DI', 'Sound Power DI'])
     ).encode(
-        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[xmin, xmax])),
-        alt.Y('dB:Q',   scale=alt.Scale(zero=False)),
-        alt.Color('Measurements', type='nominal', sort=None),
-        opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
-    )
-    circle=alt.Chart(dfu).mark_circle(size=100).encode(
-        alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[xmin, xmax])),
-        alt.Y('dB:Q',   scale=alt.Scale(zero=False)),
-        alt.Color('Measurements', type='nominal', sort=None),
+        x=xaxis, y=di_yaxis, color=color, 
         opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
         tooltip=['Measurements', 'Freq', 'dB']
     ) #.transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
+    
 
     # assemble elements together
-    spin = (circle + (line + di) #.resolve_scale(y='independent'
+    spin = alt.layer(circle+line, circle_di+di).resolve_scale(y='independent'
     ).add_selection(
         selectorsMeasurements
     ).add_selection(
         scales
     ).add_selection(
         nearest
-    )
+    ).properties(
+        width=graph_params['width'],
+        height=graph_params['height']
+    ).interactive()
     return spin
 
 # explicitly set ticks for X and Y axis
@@ -491,7 +505,7 @@ def graph_directivity_matrix(dfu, graph_params):
 
 
 def build_selections(df, speaker1, speaker2):
-    speakers = df.Speaker.unique()
+    speakers = sorted(df.Speaker.unique())
     input_dropdown1 = alt.binding_select(options=[s for s in speakers])
     selection1 = alt.selection_single(fields=['Speaker'], bind=input_dropdown1, name='Select right ', init={'Speaker': speaker1})
     input_dropdown2 = alt.binding_select(options=[s for s in speakers])

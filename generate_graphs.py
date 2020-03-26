@@ -19,7 +19,7 @@
 """Usage:
 update-graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
   [--force] [--type=<ext>] [--log-level=<level>] [--origin=<origin>]\
-  [--speaker=<speaker>] [--only_compare=<compare>]
+  [--speaker=<speaker>] [--only-compare=<compare>]
 
 Options:
   -h|--help         display usage()
@@ -30,7 +30,7 @@ Options:
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
   --origin=<origin> restrict to a specific origin, usefull for debugging
   --speaker=<speaker> restrict to a specific speaker, usefull for debugging
-  --only_compare=<compare> if true then skip graphs generation and only dump compare data
+  --only-compare=<compare> if true then skip graphs generation and only dump compare data
 """
 import logging
 import datas.metadata as metadata
@@ -54,7 +54,6 @@ def get_logger(level):
 
 
 def generate_graphs(df, width, height, force, ptype):
-    print('Speaker                         #updated')
     for speaker_name, speaker_data in df.items():
         for origin, dataframe in speaker_data.items():
             key = 'default'
@@ -66,13 +65,33 @@ def generate_graphs(df, width, height, force, ptype):
     print('{:30s} {:2d}'.format(speaker_name, updated))
 
 
+def multi_generate_graphs(df, width, height, force, ptype):
+    def process_graph(func, params):
+        result = func(*params)
+        print('{0:30s} {1:20s} {2:20s} {3} {4}{5}'.format(
+            df[0], df[0][0], df[0][0][0], multiprocessing.current_process().name, func.__name__, params))
+        return
+    
+    print('Speaker                         #updated')
+    nb_process = 16
+    with multiprocessing.Pool(nb_process) as pool:
+        for speaker in df.keys():
+            for origin in df[speaker].keys():
+                for m in df[speaker][origin].keys():
+                    dfu = {}
+                    dfu[speaker] = df[speaker]
+                    dfu[speaker][origin] = df[speaker][origin]
+                    dfu[speaker][origin][m] = df[speaker][origin][m]
+                    pool.apply_async(process_graph(generate_graphs, (dfu, width, height, force, ptype)))
+
+
 def generate_compare(df, width, height, force, ptype):
     print_compare(df, force, ptype)
 
 
 if __name__ == '__main__':
     args = docopt(__doc__,
-                  version='update-graphs.py version 1.17',
+                  version='generate_raphs.py version 1.18',
                   options_first=True)
 
     width = 1200
@@ -92,8 +111,7 @@ if __name__ == '__main__':
             print('type %s is not recognize!'.format(ptype))
             exit(1)
 
-    logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-                        datefmt='%Y-%m-%d:%H:%M:%S')
+    logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s', datefmt='%Y-%m-%d:%H:%M:%S')
     if args['--log-level'] is not None:
         level = args['--log-level']
         if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
@@ -115,6 +133,7 @@ if __name__ == '__main__':
         df[speaker] = {}
         df[speaker][origin] = {}
         df[speaker][origin]['default'] = parse_graphs_speaker(brand, speaker, mformat)
+        print('Speaker                         #updated')
         generate_graphs(df, width, height, force, ptype=ptype)
     else:
         origin = None
@@ -122,7 +141,8 @@ if __name__ == '__main__':
             origin = args['--origin']
 
         df = parse_all_speakers(metadata.speakers_info, origin)
-        generate_graphs(df, width, height, force, ptype=ptype)
+        if args['--only-compare'] is not True:
+            generate_graphs(df, width, height, force, ptype=ptype)
 
     if args['--speaker'] is None and args['--origin'] is None:
         generate_compare(df, width, height, force, ptype=ptype)
