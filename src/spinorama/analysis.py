@@ -10,7 +10,7 @@ def flinear(x: float, a: float, b: float):
     return np.log(x) * a + b
 
 
-def fconst(x :float, a: float):
+def fconst(x: float, a: float):
     return a
 
 
@@ -19,21 +19,21 @@ def estimates(onaxis: pd.DataFrame):
         freq_min = onaxis.Freq.min()
         if freq_min < 300:
             # mean over 300-10k
-            y_ref = np.mean(onaxis.loc[(onaxis.Freq>=300) & (onaxis.Freq<=10000)].dB)
-            y_3 = onaxis.loc[(onaxis.Freq<150)&(onaxis.dB<=y_ref-3)].Freq.max()
-            y_6 = onaxis.loc[(onaxis.Freq<150)&(onaxis.dB<=y_ref-6)].Freq.max()
+            y_ref = np.mean(onaxis.loc[(onaxis.Freq >= 300) & (onaxis.Freq <= 10000)].dB)
+            y_3 = onaxis.loc[(onaxis.Freq < 150) & (onaxis.dB <= y_ref-3)].Freq.max()
+            y_6 = onaxis.loc[(onaxis.Freq < 150) & (onaxis.dB <= y_ref-6)].Freq.max()
             # search band up/down
-            up:   float = onaxis.loc[(onaxis.Freq>=100) & (onaxis.Freq<=10000)].dB.max()
-            down: float = onaxis.loc[(onaxis.Freq>=100) & (onaxis.Freq<=10000)].dB.min()
+            up:   float = onaxis.loc[(onaxis.Freq >= 100) & (onaxis.Freq <= 10000)].dB.max()
+            down: float = onaxis.loc[(onaxis.Freq >= 100) & (onaxis.Freq <= 10000)].dB.min()
             band = max(abs(up-y_ref), abs(y_ref-down))
-            return [round(y_ref, 0), round(y_3, 0) , round(y_6, 0), round(band,1)]
+            return [round(y_ref, 0), round(y_3, 0), round(y_6, 0), round(band, 1)]
         else:
-            y_ref = np.mean(onaxis.loc[(onaxis.Freq>=freq_min) & (onaxis.Freq<=10000)].dB)
+            y_ref = np.mean(onaxis.loc[(onaxis.Freq >= freq_min) & (onaxis.Freq <= 10000)].dB)
             # search band up/down
-            up:   float = onaxis.loc[(onaxis.Freq>=freq_min) & (onaxis.Freq<=10000)].dB.max()
-            down: float = onaxis.loc[(onaxis.Freq>=freq_min) & (onaxis.Freq<=10000)].dB.min()
+            up:   float = onaxis.loc[(onaxis.Freq >= freq_min) & (onaxis.Freq <= 10000)].dB.max()
+            down: float = onaxis.loc[(onaxis.Freq >= freq_min) & (onaxis.Freq <= 10000)].dB.min()
             band = max(abs(up-y_ref), abs(y_ref-down))
-            return [round(y_ref, 0), -1, -1, round(band,1)]
+            return [round(y_ref, 0), -1, -1, round(band, 1)]
     except TypeError as te:
         logging.warning('Estimates failed for {0} with {1}'.format(onaxis.shape, te))
         return [-1, -1, -1, -1]
@@ -49,20 +49,20 @@ def spatial_average1(window, sel):
     spa1 = None
     if len(window_sel.columns) == 1:
         spa1 = pd.DataFrame({
-            'Freq': window.Freq, 
+            'Freq': window.Freq,
             'dB': window_sel[0]
         })
     else:
         spa1 = pd.DataFrame({
-            'Freq': window.Freq, 
+            'Freq': window.Freq,
             'dB': window_sel.mean(axis=1)
         })
-        
+
     if spa1.isnull().sum().sum() > 0:
         logging.error(spa1.dropna().shape, spa1.shape, window.shape, window_sel.shape)
         logging.error('Null value in spa1')
 
-    return spa1 #.dropna(inplace=True)
+    return spa1  # .dropna(inplace=True)
 
 
 def spatial_average2(h_df, h_sel, v_df, v_sel):
@@ -75,22 +75,22 @@ def spatial_average2(h_df, h_sel, v_df, v_sel):
     # merge both
     window = h_df_sel.merge(v_df_sel, left_on='Freq', right_on='Freq', suffixes=('_h', '_v'))
     spa2 = pd.DataFrame({
-        'Freq': window.Freq, 
+        'Freq': window.Freq,
         'dB': window.loc[:, lambda df: [c for c in df.columns if c != 'Freq']].mean(axis=1)
     })
     # print(spa2.shape, h_df_sel.shape, v_df_sel.shape, window.shape)
     if spa2.isnull().sum().sum() > 0:
         logging.error('Null value in spa2')
-    return spa2 # .dropna(inplace=True)
+    return spa2  # .dropna(inplace=True)
 
 
 def listening_window(h_spl, v_spl):
     if v_spl is None or h_spl is None:
         return None
     return spatial_average2(
-        h_spl, ['Freq', '10°', '20°', '30°'], 
+        h_spl, ['Freq', '10°', '20°', '30°'],
         v_spl, ['Freq', 'On Axis', '10°', '-10°'])
-    
+
 
 def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     if v_spl is None or h_spl is None:
@@ -122,17 +122,13 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
             er[key] = name.dB
         else:
             logging.debug('{0} is None'.format(key))
-            
+
     # not sure it is this an average
-    if floor_bounce is not None and \
-        ceiling_bounce is not None and \
-        side_wall_bounce is not None and \
-        rear_wall_bounce is not None:
-        total = floor_bounce.dB+ceiling_bounce.dB+\
-            front_wall_bounce.dB+side_wall_bounce.dB+rear_wall_bounce.dB
+    if floor_bounce is not None and ceiling_bounce is not None and side_wall_bounce is not None and rear_wall_bounce is not None:
+        total = floor_bounce.dB+ceiling_bounce.dB + front_wall_bounce.dB+side_wall_bounce.dB+rear_wall_bounce.dB
         total /= 5.0
         er['Total Early Reflection'] = total
-    
+
     return er
 
 
@@ -154,7 +150,7 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
         'Freq': v_spl.Freq,
         'On Axis': v_spl['On Axis'],
         })
-    
+
     # print(vr.shape, onaxis.shape, floor_reflection.shape)
     for (key, name) in [('Floor Reflection', floor_reflection),
                         ('Ceiling Reflection', ceiling_reflection)]:
@@ -230,12 +226,12 @@ sp_weigths = {
     '150°':  0.012387354,
     '-150°': 0.012387354,
     '-30°':  0.012387354,
-    # 
+    #
     '40°':   0.014989611,
     '140°':  0.014989611,
     '-140°': 0.014989611,
     '-40°':  0.014989611,
-    # 
+    #
     '50°':   0.016868154,
     '130°':  0.016868154,
     '-130°': 0.016868154,
@@ -260,15 +256,16 @@ sp_weigths = {
     '-90°':  0.019629373,
 }
 
-def spl2pressure(spl : float) -> float:
+
+def spl2pressure(spl: float) -> float:
     try:
-        p = pow(10,(spl-105.0)/20.0)
+        p = pow(10, (spl-105.0)/20.0)
         return p
     except TypeError as e:
         logging.error('spl={0} e={1}'.format(spl, e))
 
 
-def pressure2spl(p : float) -> float:
+def pressure2spl(p: float) -> float:
     return 105.0+20.0*log10(p)
 
 
@@ -310,7 +307,7 @@ def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
         return pressure2spl(np.sqrt(np.sum(avg)/np.sum(wsm)))
 
     sp_window['rms'] = sp_window.apply(rms, axis=1)
-    
+
     return pd.DataFrame({
         'Freq': sp_window.Freq,
         'dB': sp_window.rms,
@@ -344,7 +341,7 @@ def estimated_inroom(lw: pd.DataFrame, er: pd.DataFrame, sp: pd.DataFrame) -> pd
             0.12*lw.dB.apply(spl2pressure) + \
             0.44*er[key].apply(spl2pressure) + \
             0.44*sp.dB.apply(spl2pressure)
-    
+
         # print(eir)
 
         return pd.DataFrame({
@@ -377,7 +374,7 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     lw = listening_window(h_spl, v_spl)
     sp = sound_power(h_spl, v_spl)
     # Early Reflections Directivity Index (ERDI)
-    # The Early Reflections Directivity Index is defined as the difference 
+    # The Early Reflections Directivity Index is defined as the difference
     # between the listening window curve and the early reflections curve.
     # add 60 (graph start at 60)
     erb = early_reflections_bounce(h_spl, v_spl)
@@ -409,19 +406,18 @@ def octave(N):
 
     N: >=2 when N increases, bands are narrower
     """
-    p = pow(2,1/N)
-    p_band= pow(2,1/(2*N))
+    p = pow(2, 1/N)
+    p_band = pow(2, 1/(2*N))
     iter = int((N*10+1)/2)
-    center = [1000 / p**i for i in range(iter,0,-1)]+[1000*p**i for i in range(0,iter+1,1)]
-    return [(c/p_band,c*p_band) for c in center]
+    center = [1000 / p**i for i in range(iter, 0, -1)]+[1000*p**i for i in range(0, iter+1, 1)]
+    return [(c/p_band, c*p_band) for c in center]
 
 
 def aad(dfu):
     """ aad Absolute Average Deviation
     """
-    
     # mean betwenn 200hz and 400hz
-    y_ref = np.mean(dfu.loc[(dfu.Freq>=200) & (dfu.Freq<=400)].dB)
+    y_ref = np.mean(dfu.loc[(dfu.Freq >= 200) & (dfu.Freq <= 400)].dB)
     # print(y_ref)
     aad_sum = 0
     n = 0
@@ -432,7 +428,7 @@ def aad(dfu):
             continue
         if omax > 16000:
             break
-        selection = dfu.loc[(dfu.Freq>=omin) & (dfu.Freq<omax)]
+        selection = dfu.loc[(dfu.Freq >= omin) & (dfu.Freq < omax)]
         if selection.shape[0] > 0:
             aad_sum += abs(y_ref-np.mean(selection.dB))
             n += 1
@@ -466,7 +462,7 @@ def nbd(dfu):
             continue
         if omax > 12000:
             break
-        y = dfu.loc[(dfu.Freq>=omin) & (dfu.Freq<omax)].dB
+        y = dfu.loc[(dfu.Freq >= omin) & (dfu.Freq < omax)].dB
         y_avg = np.mean(y)
         # don't sample, take all points in this octave
         sum += np.mean(np.abs(y_avg-y))
@@ -480,19 +476,19 @@ def nbd(dfu):
 def lfx(lw, sp):
     """ lfx Low Frequency Extension
 
-    The low frequency extension (LFX) 
+    The low frequency extension (LFX)
          LFX = log10(xSP−6dB.re:y _ LW(300Hz−10kHz) (7)
     where LFX is the log10 of the first frequency x_SP below 300 Hz
-    in the sound power curve, that is -6 dB relative to the mean level y_LW 
-    measured in listening window (LW) between 300 Hz-10 kHz. 
+    in the sound power curve, that is -6 dB relative to the mean level y_LW
+    measured in listening window (LW) between 300 Hz-10 kHz.
     LFX is log-transformed to produce a linear relationship between the 
-    variable LFX and preference rating. The sound power curve (SP) is used 
+    variable LFX and preference rating. The sound power curve (SP) is used
     for the calculation because it better defines the true bass output of
     the loudspeaker, particularly speakers that have rear-firing ports.
     """
-    y_ref = np.mean(lw.loc[(lw.Freq>=300) & (lw.Freq<=10000)].dB)-6
+    y_ref = np.mean(lw.loc[(lw.Freq >= 300) & (lw.Freq <= 10000)].dB)-6
     # find first freq such that y[freq]<y_ref-6dB
-    y = math.log10(sp.loc[(sp.Freq<300)&(sp.dB<=y_ref)].Freq.max())
+    y = math.log10(sp.loc[(sp.Freq < 300) & (sp.dB <= y_ref)].Freq.max())
     return y
 
 
@@ -502,7 +498,7 @@ def lfq(lw, sp, lfx_log):
     LFQ is intended to quantify deviations in amplitude response over the
     bass region between the low frequency cut-off and 300 Hz.
     """
-    lfx = pow(10,lfx_log)
+    lfx = pow(10, lfx_log)
     sum = 0
     n = 0
     for (omin, omax) in octave(20):
@@ -511,8 +507,8 @@ def lfq(lw, sp, lfx_log):
             continue
         if omax > 300:
             break
-        s_lw = lw.loc[(lw.Freq>=omin) & (lw.Freq<omax)]
-        s_sp = sp.loc[(sp.Freq>=omin) & (sp.Freq<omax)]
+        s_lw = lw.loc[(lw.Freq >= omin) & (lw.Freq < omax)]
+        s_sp = sp.loc[(sp.Freq >= omin) & (sp.Freq < omax)]
         if s_lw.shape[0] > 0 and s_sp.shape[0] > 0:
             y_lw = np.mean(s_lw.dB)
             y_sp = np.mean(s_sp.dB)
@@ -522,6 +518,7 @@ def lfq(lw, sp, lfx_log):
         logging.error('lfq is None')
         return None
     return sum/n
+
 
 def sm(dfu):
     """ sm Smoothness

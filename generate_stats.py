@@ -42,7 +42,7 @@ root = './'
 
 
 def meta2df(meta):
-    df = pd.DataFrame({'speaker':[], 'param':[], 'value':[]})
+    df = pd.DataFrame({'speaker': [], 'param': [], 'value': []})
     count = 0
     for i in meta:
         speaker = meta[i]
@@ -50,7 +50,7 @@ def meta2df(meta):
             val = speaker[p]
             if type(val) is dict:
                 for v in val.keys():
-                    #print('{0} {1} {2}'.format(i, v, val[v]))
+                    # print('{0} {1} {2}'.format(i, v, val[v]))
                     df.loc[count] = [i, v, val[v]]
                     count += 1
             else:
@@ -63,18 +63,18 @@ def meta2df(meta):
 
 def generate_stats(meta):
     df = meta2df(meta)
-    
-    pref_score = df.loc[(df.param=='pref_score')].reset_index()
-    brand = df.loc[(df.param=='brand')].reset_index()
-    lfx_hz = df.loc[(df.param=='lfx_hz')].reset_index()
-    nbd_on = df.loc[(df.param=='nbd_on_axis')].reset_index()
-    nbd_pir = df.loc[(df.param=='nbd_pred_in_room')].reset_index()
-    sm_pir = df.loc[(df.param=='sm_pred_in_room')].reset_index()
+
+    pref_score = df.loc[(df.param == 'pref_score')].reset_index()
+    brand = df.loc[(df.param == 'brand')].reset_index()
+    lfx_hz = df.loc[(df.param == 'lfx_hz')].reset_index()
+    nbd_on = df.loc[(df.param == 'nbd_on_axis')].reset_index()
+    nbd_pir = df.loc[(df.param == 'nbd_pred_in_room')].reset_index()
+    sm_pir = df.loc[(df.param == 'sm_pred_in_room')].reset_index()
 
     source = pd.DataFrame({
-        'speaker': pref_score.speaker, 
+        'speaker': pref_score.speaker,
         'brand': brand.value,
-        'pref_score': pref_score.value, 
+        'pref_score': pref_score.value,
         'lfx_hz': lfx_hz.value,
         'nbd_on': nbd_on.value,
         'nbd_pir': nbd_pir.value,
@@ -91,13 +91,13 @@ def generate_stats(meta):
         )
         graphs[g] = data+data.transform_regression(g, 'pref_score').mark_line()
 
-    correlation = (graphs['lfx_hz'] | graphs['nbd_on'] ) & ( graphs['nbd_pir'] | graphs['sm_pir'] )
+    correlation = (graphs['lfx_hz'] | graphs['nbd_on']) & (graphs['nbd_pir'] | graphs['sm_pir'])
 
     distribution = alt.Chart(source).mark_bar().encode(
         x=alt.X('pref_score:Q', bin=True),
         y='count()'
-    ).properties(width=300,height=300)
-    
+    ).properties(width=300, height=300)
+
     spread = alt.Chart(source).mark_circle(size=30).encode(
         x=alt.X('speaker', sort='y', axis=alt.Axis(labelAngle=45)),
         y=alt.Y('pref_score')

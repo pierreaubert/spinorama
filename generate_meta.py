@@ -51,8 +51,7 @@ def sanity_check(df, meta):
                 logging.error('Key default is mandatory for >{:s}<'.format(speaker_name))
                 return 1
         # check if image exists (jpg or png)
-        if not os.path.exists('./datas/pictures/' + speaker_name + '.jpg') and \
-          not  os.path.exists('./datas/pictures/' + speaker_name + '.png'):
+        if not os.path.exists('./datas/pictures/' + speaker_name + '.jpg') and not os.path.exists('./datas/pictures/' + speaker_name + '.png'):
             logging.fatal('Image associated with >{0}< not found.'.format(speaker_name))
             return 1
         # check if downscale image exists (all jpg)
@@ -80,14 +79,14 @@ def add_estimates(df):
             for m, dfs in measurements.items():
                 if m != 'default':
                     continue
-                
+
                 if 'CEA2034' not in dfs.keys():
                     continue
 
                 spin = dfs['CEA2034']
                 if spin is None:
                     continue
-                    
+
                 logging.debug('Compute score for speaker {0}'.format(speaker_name))
                 # basic math
                 onaxis = spin.loc[spin['Measurements'] == 'On Axis']
@@ -97,11 +96,11 @@ def add_estimates(df):
                 logging.info('Adding -3dB {0}Hz -6dB {1}Hz +/-{2}dB'.format(est[1], est[2], est[3]))
                 if 'estimates' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
                     metadata.speakers_info[speaker_name]['estimates'] = est
-                
+
                 if origin == 'Princeton':
                     # this measurements are only valid above 500hz
                     continue
-                
+
                 # from Olive&all paper
                 if 'Estimated In-Room Response' not in dfs.keys():
                     continue
@@ -109,7 +108,7 @@ def add_estimates(df):
                 inroom = dfs['Estimated In-Room Response']
                 if inroom is None:
                     continue
-                    
+
                 pref_rating = speaker_pref_rating(spin, inroom)
                 if pref_rating is None:
                     continue
@@ -123,10 +122,10 @@ def add_estimates(df):
                 min_lfx_hz = min(min_lfx_hz, pref_rating['lfx_hz'])
                 max_lfx_hz = max(max_lfx_hz, pref_rating['lfx_hz'])
                 min_nbd_on = min(min_nbd_on, pref_rating['nbd_on_axis'])
-                max_nbd_on = max(max_nbd_on, pref_rating['nbd_on_axis'])  
+                max_nbd_on = max(max_nbd_on, pref_rating['nbd_on_axis'])
                 min_sm_sp = min(min_nbd_on, pref_rating['sm_sound_power'])
                 max_sm_sp = max(max_nbd_on, pref_rating['sm_sound_power'])
-                            
+
     # add normalized value to metadata
     for speaker_name, speaker_data in df.items():
         for origin, measurements in speaker_data.items():
@@ -137,12 +136,11 @@ def add_estimates(df):
                     continue
 
                 spin = dfs['CEA2034']
-                if spin is None or \
-                  'pref_rating' not in metadata.speakers_info[speaker_name].keys() or \
-                  'estimates' not in metadata.speakers_info[speaker_name].keys() or \
-                  metadata.speakers_info[speaker_name]['estimates'][0] == -1:
+                if spin is None or 'pref_rating' not in metadata.speakers_info[speaker_name].keys() \
+                  or 'estimates' not in metadata.speakers_info[speaker_name].keys() \
+                  or metadata.speakers_info[speaker_name]['estimates'][0] == -1:
                     continue
-                        
+
                 logging.debug('Compute relative score for speaker {0}'.format(speaker_name))
                 # get values
                 pref_rating = metadata.speakers_info[speaker_name]['pref_rating']
@@ -151,16 +149,18 @@ def add_estimates(df):
                 nbd_on = pref_rating['nbd_on_axis']
                 sm_sp = pref_rating['sm_sound_power']
                 flatness = metadata.speakers_info[speaker_name]['estimates'][3]
+
                 # normalize min and max
                 def percent(val, vmin, vmax):
                     return math.floor(100*(val-vmin)/(vmax-vmin))
-                scaled_pref_score =     percent(pref_score, min_pref_score, max_pref_score)
+
+                scaled_pref_score = percent(pref_score, min_pref_score, max_pref_score)
                 # lower is better
-                scaled_lfx_hz     = 100-percent(lfx_hz,     min_lfx_hz,     max_lfx_hz)
-                scaled_nbd_on     = 100-percent(nbd_on,     min_nbd_on,     max_nbd_on)
-                scaled_flatness   = 100-percent(flatness,   min_flatness,   max_flatness)
+                scaled_lfx_hz = 100-percent(lfx_hz, min_lfx_hz, max_lfx_hz)
+                scaled_nbd_on = 100-percent(nbd_on, min_nbd_on, max_nbd_on)
+                scaled_flatness = 100-percent(flatness, min_flatness, max_flatness)
                 # higher is better
-                scaled_sm_sp      =     percent(sm_sp,      min_sm_sp,      max_sm_sp)
+                scaled_sm_sp = percent(sm_sp, min_sm_sp, max_sm_sp)
                 # add normalized values
                 scaled_pref_rating = {
                     'scaled_pref_score': scaled_pref_score,
@@ -171,7 +171,7 @@ def add_estimates(df):
                     }
                 logging.info('Adding {0}'.format(scaled_pref_rating))
                 metadata.speakers_info[speaker_name]['scaled_pref_rating'] = scaled_pref_rating
-                
+
 
 def dump_metadata(meta):
     with open('docs/assets/metadata.json', 'w') as f:
@@ -194,7 +194,7 @@ if __name__ == '__main__':
             logging.basicConfig(level=level)
 
     df = parse_all_speakers(metadata.speakers_info, None)
-        
+
     if sanity_check(df, metadata.speakers_info) != 0:
         logging.error('Sanity checks failed!')
         sys.exit(1)
