@@ -256,6 +256,16 @@ speakers_info = {
             'format': 'klippel',
             }],
     },
+    'Revel M22': {
+        'brand': 'Revel',
+        'model': 'M22',
+        'type': 'passive',
+        'price': '2000',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+    },
     'Revel C25': {
         'brand': 'Revel',
         'model': 'C25',
