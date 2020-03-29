@@ -163,9 +163,9 @@ if __name__ == '__main__':
                     continue
                 default_name = os.path.basename(default)
                 df[speaker_name][origin_name][default_name] = {}
-                graphs = glob(default + '/*.jpg')
+                graphs = glob(default + '/*_large.png')
                 for graph in graphs:
-                    g = os.path.basename(graph).replace('.jpg', '')
+                    g = os.path.basename(graph).replace('_large.png', '')
                     df[speaker_name][origin_name][default_name][g] = {}
 
     # configure Mako
@@ -188,7 +188,7 @@ if __name__ == '__main__':
         f.write(index_html.render(df=df, meta=meta_sorted, site=site))
         f.close()
 
-    # write help.html and compare.html
+    # write various html files
     for item in ('help', 'compare', 'scores', 'statistics'):
         item_name = '{0}.html'.format(item)
         logging.info('Write {0}'.format(item_name))
