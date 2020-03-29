@@ -51,6 +51,7 @@ def generate_speaker(mako, df, meta, site):
                 # freq
                 freq_filter = [
                     "CEA2034",
+                    "On Axis",
                     "Early Reflections",
                     "Estimated In-Room Response",
                     "Horizontal Reflections", "Vertical Reflections",
