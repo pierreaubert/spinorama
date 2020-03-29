@@ -18,6 +18,12 @@
     <li data-target="pane-5" id="5">
       <a><span>Vertical Reflections</span></a>
     </li>
+    <li data-target="pane-6" id="6">
+      <a><span>SPL Horizontal</span></a>
+    </li>
+    <li data-target="pane-7" id="7">
+      <a><span>SPL Vertical</span></a>
+    </li>
   </ul>
 </div>
   
@@ -44,6 +50,16 @@
 <div class="tab-pane" id="pane-5">
   <div id="visVR"></div>
   <script type="text/javascript">displayGraph("compare/Vertical Reflections.json", '#visVR');</script>
+</div>
+
+<div class="tab-pane" id="pane-6">
+  <div id="visSH"></div>
+  <script type="text/javascript">displayGraph("compare/SPL Horizontal.json", '#visSH');</script>
+</div>
+
+<div class="tab-pane" id="pane-7">
+  <div id="visSV"></div>
+  <script type="text/javascript">displayGraph("compare/SPL Vertical.json", '#visSV');</script>
 </div>
 
 <script src="${site}/assets/tabs.js"></script>
