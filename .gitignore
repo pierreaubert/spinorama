@@ -11,4 +11,13 @@ TAGS
 .idea
 *_large.png
 docs
+tmp
+asrbook.aux
+asrbook.bbl
+asrbook.blg
+asrbook.lof
+asrbook.toc
+asrbook.log
+asrbook.pdf
+
 
