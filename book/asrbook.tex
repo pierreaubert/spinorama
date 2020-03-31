@@ -1,0 +1,75 @@
+\documentclass[11pt,oneside,a4paper]{report}
+
+\usepackage[margin=1cm]{geometry}
+\usepackage{graphicx}
+\usepackage{caption}
+\graphicspath{ {./tmp/} }
+
+\begin{document}
+\title{ASR Speaker reviews}
+\author{P. Aubert \& A. Majidimehr}
+\date{2020}
+\maketitle
+
+\listoffigures
+
+\pagebreak
+
+\chapter{Introduction}
+
+AudioSciencereview \emph{aka} ASR \footnote{https://www.audiosciencereview.com} is a website created by A. Majidimehr.
+His aim is to provide objective data for audio equipements.
+
+This booklet provides an introduction and a set of measurements for speakers measured on ASR.
+
+\section{Why it is important?}
+
+Audio world is plaggued with subjective reviews. They do not help you to make a decision. What ones like is
+not necesary what you like. This reviews usually gets more dithyrambic with the price of the speaker and
+get you confused.
+
+Science has been studing speakers for a long time and there is a vast amount of scientific research available.
+If you only want to read one book on this topic, we advise you to read \cite{Toole2013}. It proves over and over
+that you should trust science over subjective reviews, which is what you usually do when you go to a medical
+doctor or when you get your car checked.
+
+In a nutshell, a few graphs characterize pretty well a speaker. You get unbiased informations and then it is
+easy to compare between speakers. Some vendors do provides this informations in manuals but very few do. Why?
+Possibly because there is very little correlation between price and quality.
+
+\section{What are the most important parameters for a speaker?}
+
+\begin{itemize}
+\item A flat frequency response:
+
+  you expect a speaker to reproduce the sound as it has been recorded without emphasis.
+\item Bass extension:
+
+  bass reproduction is important but requires bigger speakers to get enough of them. Small speakers
+  usually need a subwoofer to cover the full spectrum.
+\item Constant directivity:
+
+  when you move off axis (you are not exactly in front of a speaker), you expect the sound
+  to vary regulary).
+\end{itemize}
+
+This parameters are now standardized. You can get the standard focument for free at ...
+
+
+\chapter{Measurements}
+
+\section{How to read this measurement?}
+
+\pagebreak
+
+% for speaker in speakers:
+\begin{center}
+   \includegraphics[width=0.6\textwidth]{${speakers[speaker]['image']}}
+   \captionof{figure}{${speakers[speaker]['title']}}
+ \end{center}
+% endfor
+
+\bibliography{audio}{}
+\bibliographystyle{plain}
+
+\end{document}

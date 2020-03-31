@@ -76,7 +76,7 @@ def graph_freq(dfu, graph_params):
         alt.Color('Measurements', type='nominal', sort=None),
         opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
         tooltip=['Measurements', 'Freq', 'dB']
-    ).transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
+    ) # .transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
     # assemble elements together
     spin = alt.layer(
         circle, line
@@ -130,7 +130,7 @@ def graph_spinorama(dfu, graph_params):
         x=xaxis, y=yaxis, color=color, 
         opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
         tooltip=['Measurements', 'Freq', 'dB']
-    ) #.transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
+    ) # .transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
     
     di=alt.Chart(dfu).mark_line().transform_filter(
         alt.FieldOneOfPredicate(
@@ -146,7 +146,7 @@ def graph_spinorama(dfu, graph_params):
         x=xaxis, y=di_yaxis, color=color, 
         opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
         tooltip=['Measurements', 'Freq', 'dB']
-    ) #.transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
+    ) # .transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
     
 
     # assemble elements together

@@ -48,9 +48,10 @@ def spatial_average1(window, sel):
         return None
     spa1 = None
     if len(window_sel.columns) == 1:
+        # print(window_sel.shape)
         spa1 = pd.DataFrame({
             'Freq': window.Freq,
-            'dB': window_sel[0]
+            'dB': window_sel[window_sel.columns[0]]
         })
     else:
         spa1 = pd.DataFrame({
@@ -62,7 +63,7 @@ def spatial_average1(window, sel):
         logging.error(spa1.dropna().shape, spa1.shape, window.shape, window_sel.shape)
         logging.error('Null value in spa1')
 
-    return spa1  # .dropna(inplace=True)
+    return spa1
 
 
 def spatial_average2(h_df, h_sel, v_df, v_sel):
@@ -399,6 +400,23 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
             logging.debug('{0} is None'.format(key))
     return spin
 
+
+def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    # 4 cases
+    onaxis = None
+    if v_spl is None:
+        if h_spl is None:
+            return None
+        else:
+            onaxis = spatial_average1(h_spl, ['On Axis'])
+    else:
+        onaxis = spatial_average1(v_spl, ['On Axis'])
+
+    df = pd.DataFrame({
+        'Freq': onaxis.Freq,
+        'On Axis': onaxis.dB,
+    })
+    return df
 
 # https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
 def octave(N):

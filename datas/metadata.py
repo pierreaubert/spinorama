@@ -91,6 +91,16 @@ speakers_info = {
             'format': 'klippel',
             }],
     },
+    'JBL Studio 530': {
+        'brand': 'JBL',
+        'model': 'Studio 530',
+        'type': 'passive',
+        'price': '300',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+    },
     'JBL 705P': {
         'brand': 'JBL',
         'model': '705P',
