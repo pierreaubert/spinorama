@@ -6,10 +6,7 @@ TARGET=$HOME/src/pierreaubert.github.io/spinorama
 ./generate_stats.py
 ./generate_html.py
 rsync -arv --delete docs/* $TARGET
-<<<<<<< HEAD
-rm  $TARGET/(assets|compare|stats)/*\ 2.*
-=======
->>>>>>> 45f20c4475d9c39f848a277e755a3b0c677628b5
+# rm  $TARGET/(assets|compare|stats)/*\ 2.*
 rm  $TARGET/[A-Z]*/*/*/*.png
 cd $TARGET && git status
 

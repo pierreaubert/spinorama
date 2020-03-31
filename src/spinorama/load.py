@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 from scipy.io import loadmat
 from .analysis import early_reflections, vertical_reflections, horizontal_reflections,\
-     compute_cea2034, estimated_inroom, estimated_inroom_HV
+     compute_cea2034, compute_onaxis, estimated_inroom, estimated_inroom_HV
 from .normalize import unify_freq, normalize_mean, normalize_cea2034, normalize_graph
 
 
@@ -269,6 +269,7 @@ def parse_graphs_speaker_princeton(speaker_name):
              ['Horizontal Reflections', horizontal_reflections],
              ['Vertical Reflections', vertical_reflections],
              ['Estimated In-Room Response', estimated_inroom_HV],
+             ['On Axis', compute_onaxis],
              ['CEA2034', compute_cea2034],
              ]
     for title, functor in table:
@@ -297,7 +298,10 @@ def normalize(df):
                 else:
                     dfc[graph] = normalize_graph(df[graph], mean)
         dfc['CEA2034'] = normalize_cea2034(df['CEA2034'], mean)
-    return dfc
+        return dfc
+    # could use on axis if it exist
+    # do nothing
+    return df
 
 
 def parse_graphs_speaker(speaker_brand : str, speaker_name : str, mformat='klippel') -> str:

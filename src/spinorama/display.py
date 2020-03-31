@@ -121,9 +121,14 @@ def display_reflection_early(df, graph_params=graph_params_default):
 
 def display_onaxis(df, graph_params=graph_params_default):
     try:
-        if 'CEA2034' not in df.keys():
+        onaxis = None
+        if 'CEA2034' in df.keys():
+            onaxis = df['CEA2034']
+        elif 'On Axis' in df.keys():
+            onaxis = df['On Axis']
+        else:
             return None
-        onaxis = df['CEA2034']
+       
         onaxis = onaxis.loc[onaxis['Measurements'] == 'On Axis']
         onaxis_graph = graph_freq(onaxis, graph_params)
         onaxis_reg = graph_regression(onaxis, 80, 10000)
