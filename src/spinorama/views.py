@@ -67,9 +67,12 @@ def template_compact(df, params):
     chart = alt.vconcat()
     if spinorama is not None:
         chart &= alt.hconcat(spinorama.properties(title='CEA2034'))
-    if onaxis is not None and inroom is not None:
-        chart &= alt.hconcat(onaxis.properties(title='On Axis'),
-                             inroom.properties(title='In Room prediction'))
+    if onaxis is not None:
+        if inroom is not None:
+            chart &= alt.hconcat(onaxis.properties(title='On Axis'),
+                                inroom.properties(title='In Room prediction'))
+        else:
+            chart &= onaxis
     if ereflex is not None and hreflex is not None and vreflex is not None:
         chart &= alt.hconcat(ereflex.properties(title='Early Reflections'),
                              hreflex.properties(title='Horizontal Reflections'),
@@ -77,6 +80,11 @@ def template_compact(df, params):
     if hspl is not None and vspl is not None:
         chart &= alt.hconcat(hspl.properties(title='Horizontal SPL'),
                              vspl.properties(title='Vertical SPL'))
+    else:
+        if hspl is not None:
+            chart &= hspl
+        elif vspl is not None:
+            chart &= vspl
     if hcontour is not None and hradar is not None:
         chart &= alt.hconcat(hcontour.properties(title='Horizontal SPL'),
                              hradar.properties(title=' HorizontalSPL'))
@@ -117,8 +125,12 @@ def template_panorama(df, params):
                              onaxis.properties(title='On Axis'),
                              inroom.properties(title='In Room prediction'))
     else:
-        logging.info('Panaroma: spin={0} onaxis={1} inroom={2}'.format(
-            spinorama is not None, onaxis is not None, inroom is not None))
+        if spinorama is not None:
+            chart &= spinorama
+        if onaxis is not None:
+            chart &= onaxis
+        if inroom is not None:
+            chart &= inroom
     if ereflex is not None and hreflex is not None and vreflex is not None:
         chart &= alt.hconcat(ereflex.properties(title='Early Reflections'),
                              hreflex.properties(title='Horizontal Reflections'),

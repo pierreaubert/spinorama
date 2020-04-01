@@ -26,7 +26,7 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
             if ext == 'json' and title in ('2cols', '3cols', 'SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed'):
                 continue
             # for now skip 2cols and 3cols for Princeton graphs
-            if origin == 'Princeton' and title in  ('2cols', '3cols', 'SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed'):
+            if origin == 'Princeton' and title in  ('SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed'):
                 continue
             # print high quality smoother contour and skip the others
             if ext == 'png' and (\
