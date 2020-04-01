@@ -64,6 +64,9 @@ def template_compact(df, params):
     vcontour = display_contour_smoothed_vertical(df, params2)
     vradar = display_radar_vertical(df, params2)
     # build the chart
+    # print('Status {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11}'.format(
+    #     spinorama is None, onaxis is None, inroom is None, ereflex is None, vreflex is None, hreflex is None,
+    #     hspl is None, vspl is None, hcontour is None, vcontour is None, hradar is None, vradar is None))
     chart = alt.vconcat()
     if spinorama is not None:
         chart &= alt.hconcat(spinorama.properties(title='CEA2034'))
