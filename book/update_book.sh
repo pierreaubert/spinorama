@@ -5,7 +5,7 @@ for i in ../docs/[A-Z]*/ASR/default/2cols.jpg; do
     speaker1=${j%/ASR/default/2cols.jpg}
     speaker2=${speaker1// /-}
     speaker3=${speaker2//./-}
-    cp $i ./tmp/$speaker3.jpg
+    cp "$i" ./tmp/$speaker3.jpg
 done
 # convert to eps to prevent bounding box complaints
 for i in ./tmp/*.jpg; do
@@ -13,7 +13,7 @@ for i in ./tmp/*.jpg; do
 done
 #
 python3 generate_book.py
-#
+# latex dance
 pdflatex tmp/asrbook.tex
 bibtex   tmp/asrbook.tex
 pdflatex tmp/asrbook.tex

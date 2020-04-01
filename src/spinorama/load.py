@@ -299,7 +299,15 @@ def normalize(df):
                     dfc[graph] = normalize_graph(df[graph], mean)
         dfc['CEA2034'] = normalize_cea2034(df['CEA2034'], mean)
         return dfc
-    # could use on axis if it exist
+    elif 'On Axis' in df:
+        mean = normalize_mean(df['On Axis'])
+        for graph in df.keys():
+            if graph.replace('_unmelted', '') != graph:
+                dfc[graph] = df[graph]
+            else:
+                dfc[graph] = normalize_graph(df[graph], mean)
+        return dfc
+        
     # do nothing
     return df
 

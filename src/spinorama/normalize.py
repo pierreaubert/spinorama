@@ -48,12 +48,21 @@ def unify_freq(dfs):
 
 
 def normalize_mean(df):
-    on = df[df.Measurements == 'On Axis']
-    mean = np.mean(on.loc[(on.Freq>500) & (on.Freq<10000)].dB)
+    # this is messy: first version was using On Axis data from Spinorama but some
+    # speaker don't have it. 
+    mean = None
+    if 'dB' in df.keys():
+        on = df[df.Measurements == 'On Axis']
+        mean = np.mean(on.loc[(on.Freq>500) & (on.Freq<10000)].dB)
+    elif 'On Axis' in df.columns:
+        on = df[['Freq', 'On Axis']]
+        mean = np.mean(on.loc[(on.Freq>500) & (on.Freq<10000)].dB)
+
     return mean
 
 
 def normalize_cea2034(dfc, mean):
+    # use a copy to be able to run it multiple times in one session
     df = dfc.copy()
 
     offset = mean
