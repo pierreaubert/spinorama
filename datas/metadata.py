@@ -81,6 +81,16 @@ speakers_info = {
             'format': 'klippel',
             }],
     },
+    'Infinity R162': {
+        'brand': 'Infinity',
+        'model': 'R162',
+        'type': 'passive',
+        'price': '270',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+        },
     'JBL 104': {
         'brand': 'JBL',
         'model': '104',
