@@ -55,7 +55,7 @@ def template_compact(df, params):
     hreflex = display_reflection_horizontal(df, params3)
     vreflex = display_reflection_vertical(df, params3)
     # side by side
-    hspl = display_spl_horizontal(df, params2)
+    hspl = display_spl_horizontal(df, params2)  
     vspl = display_spl_vertical(df, params2)
     # side by side
     hcontour = display_contour_smoothed_horizontal(df, params2)
@@ -64,12 +64,18 @@ def template_compact(df, params):
     vcontour = display_contour_smoothed_vertical(df, params2)
     vradar = display_radar_vertical(df, params2)
     # build the chart
+    # print('Status {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11}'.format(
+    #     spinorama is None, onaxis is None, inroom is None, ereflex is None, vreflex is None, hreflex is None,
+    #     hspl is None, vspl is None, hcontour is None, vcontour is None, hradar is None, vradar is None))
     chart = alt.vconcat()
     if spinorama is not None:
         chart &= alt.hconcat(spinorama.properties(title='CEA2034'))
-    if onaxis is not None and inroom is not None:
-        chart &= alt.hconcat(onaxis.properties(title='On Axis'),
-                             inroom.properties(title='In Room prediction'))
+    if onaxis is not None:
+        if inroom is not None:
+            chart &= alt.hconcat(onaxis.properties(title='On Axis'),
+                                inroom.properties(title='In Room prediction'))
+        else:
+            chart &= onaxis
     if ereflex is not None and hreflex is not None and vreflex is not None:
         chart &= alt.hconcat(ereflex.properties(title='Early Reflections'),
                              hreflex.properties(title='Horizontal Reflections'),
@@ -77,15 +83,18 @@ def template_compact(df, params):
     if hspl is not None and vspl is not None:
         chart &= alt.hconcat(hspl.properties(title='Horizontal SPL'),
                              vspl.properties(title='Vertical SPL'))
+    else:
+        if hspl is not None:
+            chart &= hspl
+        elif vspl is not None:
+            chart &= vspl
     if hcontour is not None and hradar is not None:
         chart &= alt.hconcat(hcontour.properties(title='Horizontal SPL'),
                              hradar.properties(title=' HorizontalSPL'))
     if vcontour is not None and vradar is not None:
         chart &= alt.hconcat(vcontour.properties(title='Vertical SPL'),
                              vradar.properties(title='Vertical SPL'))
-    return chart.configure_legend(
-        orient='top'
-    ).configure_title(
+    return chart.configure_title(
         orient='top',
         anchor='middle',
         fontSize=18
@@ -117,8 +126,12 @@ def template_panorama(df, params):
                              onaxis.properties(title='On Axis'),
                              inroom.properties(title='In Room prediction'))
     else:
-        logging.info('Panaroma: spin={0} onaxis={1} inroom={2}'.format(
-            spinorama is not None, onaxis is not None, inroom is not None))
+        if spinorama is not None:
+            chart &= spinorama
+        if onaxis is not None:
+            chart &= onaxis
+        if inroom is not None:
+            chart &= inroom
     if ereflex is not None and hreflex is not None and vreflex is not None:
         chart &= alt.hconcat(ereflex.properties(title='Early Reflections'),
                              hreflex.properties(title='Horizontal Reflections'),

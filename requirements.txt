@@ -1,10 +1,10 @@
-altair
 numpy
 scipy
 pandas
+altair
+altair-saver
 jupyterlab
 matplotlib
-selenium
 docopt
 mako
 astropy

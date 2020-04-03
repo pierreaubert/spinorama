@@ -3,6 +3,7 @@ import logging
 import pathlib
 import copy
 import pandas as pd
+from altair_saver import save
 from .display import display_spinorama, display_onaxis, display_inroom, \
     display_reflection_early, display_reflection_horizontal, display_reflection_vertical, \
     display_spl_horizontal, display_spl_vertical, \
@@ -25,8 +26,8 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
             # 2cols and 3cols are more for printing
             if ext == 'json' and title in ('2cols', '3cols', 'SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed'):
                 continue
-            # for now skip 2cols and 3cols for Princeton graphs
-            if origin == 'Princeton' and title in  ('2cols', '3cols', 'SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed'):
+            # for now skip smoothed contours for Princeton graphs
+            if origin == 'Princeton' and title in  ('SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed'):
                 continue
             # print high quality smoother contour and skip the others
             if ext == 'png' and (\
@@ -43,7 +44,7 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
                 if fileext is None or (fileext is not None and fileext == ext):
                     try:
                         print('Saving {0} in {1}'.format(title, filename))
-                        chart.save(filename)
+                        save(chart, filename)
                         updated += 1
                     except Exception as e:
                         logging.error('Got unkown error {0} for {1}'.format(e, filename))
@@ -126,7 +127,8 @@ def print_graphs(df: pd.DataFrame,
     # 1080p to 2k screen
     params = copy.deepcopy(graph_params_default)
     params['width'] = 2160
-    params['height'] = 1200
+    # ratio for A4 is 21cm / 29.7cm, TODO for letter 
+    params['height'] = 400
     params['xmin'] = origins_info[origin]['min hz']
     params['xmax'] = origins_info[origin]['max hz']
     params['ymin'] = origins_info[origin]['min dB']
