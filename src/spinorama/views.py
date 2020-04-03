@@ -55,7 +55,7 @@ def template_compact(df, params):
     hreflex = display_reflection_horizontal(df, params3)
     vreflex = display_reflection_vertical(df, params3)
     # side by side
-    hspl = display_spl_horizontal(df, params2)
+    hspl = display_spl_horizontal(df, params2)  
     vspl = display_spl_vertical(df, params2)
     # side by side
     hcontour = display_contour_smoothed_horizontal(df, params2)
@@ -94,9 +94,7 @@ def template_compact(df, params):
     if vcontour is not None and vradar is not None:
         chart &= alt.hconcat(vcontour.properties(title='Vertical SPL'),
                              vradar.properties(title='Vertical SPL'))
-    return chart.configure_legend(
-        orient='top'
-    ).configure_title(
+    return chart.configure_title(
         orient='top',
         anchor='middle',
         fontSize=18

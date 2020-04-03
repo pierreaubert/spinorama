@@ -1,9 +1,10 @@
-\documentclass[11pt,oneside,a4paper]{report}
+\documentclass{tufte-book}
 
-\usepackage[margin=1cm]{geometry}
+\usepackage{geometry}
 \usepackage{graphicx}
-\usepackage{caption}
+\setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
 \graphicspath{ {./tmp/} }
+\usepackage{caption}
 
 \begin{document}
 \title{ASR Speaker reviews}
@@ -21,6 +22,9 @@ AudioSciencereview \emph{aka} ASR \footnote{https://www.audiosciencereview.com} 
 His aim is to provide objective data for audio equipements.
 
 This booklet provides an introduction and a set of measurements for speakers measured on ASR.
+The introduction explains first why it is important to have measurements and then how to interpret them.
+You should be able to decide by yourself how good a loudspeaker is for your use case and if the price
+seems adapted.
 
 \section{Why it is important?}
 
@@ -41,41 +45,50 @@ Possibly because there is very little correlation between price and quality.
 \section{What are the most important parameters for a speaker?}
 
 Pragmatically, price, size and look\&feel usually come first and depend on usage. Another question is
-active or passive? Active means amplifier and dac are built into the speaker (like most bluetooth speakers) and passive means a box with drivers,
-you use separate amplifier and dac.
+active or passive? Active means amplifier and dac are built into the speaker (like most bluetooth speakers)
+and passive means a box with drivers, you use a separate amplifier and dac, that's the classical case.
 
-After that, for a given price, what are the speakers which are the most likely to have a pleasing sound? For you but also for most people as
-we will see.
+After that, for a given price, what are the speakers which are the most likely to have a pleasing sound? For you
+but also for most people as we will see.
 
 Here are 3 key parameters:
 \begin{itemize}
 \item A flat frequency response:
 
-  you expect a speaker to reproduce the sound as it has been recorded without emphasis.
+  you expect a speaker to reproduce the sound as it has been put on a CD, a vinyl or a streaming service
+  without emphasis. Flat means in a anechoic room, this should not be the case in your room where you expect
+  a downward curve, the so-called X-curve.
 \item Bass extension:
 
-  bass reproduction is important but requires bigger speakers to get enough of them. Small speakers
+  bass reproduction is important but requires bigger speakers to go low and to have enough volume. Small speakers
   usually need a subwoofer to cover the full spectrum.
 \item Constant directivity:
 
-  when you move off axis (you are not exactly in front of a speaker), you expect the sound
+  when you move off axis (you are not exactly in front of a speaker, or right in the middle), you expect the sound
   to vary regulary).
 \end{itemize}
 
-This parameters are now standardized. You can get the standard focument for free at ...
+This parameters are now standardized. You can get the standard document for free \cite{CEA2034}.
 
 \chapter{Measurements}
 
-\section{How to read this measurement?}
+\section{How to read this measurements?}
+\section{Where do the measurements come from?}
+There are 3 sources of data:
+\begin{enumerate}
+\item AudioScienceReview: Amir use a special measurement machine built by Klipel. This machine can emulate an anechoid room and provides very precise measurements in a normal room. Methodology is backed by \cite{Klippel2016} and multiple comparisons with anechoid rooms.
+\item 3D3A a laboratory within Princeton university. They did a directivity analysis of many speakers \cite{Tylka2015} and published multiple related papers \cite{Tylka2015}, \cite{Tylka2014}.
+\item Data provided by vendors. They may or not be accurate. Independant measurements by other organisations help to qualify and improve confidence in this measurements.
+\end{enumerate}
 
 \pagebreak
 
 % for speaker in speakers:
-\begin{center}
-   \includegraphics[width=0.6\textwidth]{${speakers[speaker]['image']}}
-   \captionof{figure}{${speakers[speaker]['title']}}
- \end{center}
-% endfor
+\begin{figure*}[ht]
+  \includegraphics[width=\linewidth]{${speakers[speaker]['image']}}
+  \caption{${speakers[speaker]['title']}}
+\end{figure*}
+ % endfor
 
 \bibliography{audio}{}
 \bibliographystyle{plain}

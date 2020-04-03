@@ -72,6 +72,20 @@ pip3 install -r requirements.txt
 pip3 install -r requirements-tests.txt 
 ```
 
+For saving picture, you need either chromedriver or a set of nodejs packages
+Linux:
+```
+apt install chromedriver
+```
+Mac:
+```
+brew install chromedriver
+```
+Both:
+```
+npm install vega-lite vega-cli canvas
+```
+
 Please add tests and
 ```
 export PYTHONPATH=src

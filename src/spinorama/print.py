@@ -127,7 +127,8 @@ def print_graphs(df: pd.DataFrame,
     # 1080p to 2k screen
     params = copy.deepcopy(graph_params_default)
     params['width'] = 2160
-    params['height'] = 1200
+    # ratio for A4 is 21cm / 29.7cm, TODO for letter 
+    params['height'] = 400
     params['xmin'] = origins_info[origin]['min hz']
     params['xmax'] = origins_info[origin]['max hz']
     params['ymin'] = origins_info[origin]['min dB']

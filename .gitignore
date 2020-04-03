@@ -19,4 +19,7 @@ asrbook.lof
 asrbook.toc
 asrbook.log
 asrbook.pdf
+asrbook.out
 node_modules
+geckodriver.log
+package-lock.json
