@@ -74,21 +74,137 @@ Here are 3 key parameters:
 
 This parameters are now standardized. You can get the standard document for free \cite{CEA2034}.
 
-\chapter{Measurements}
+\chapter{How to understand a Spinorama?}
 
-\section{How to read this measurements?}
 \section{Where do the measurements come from?}
 There are 3 sources of data:
 \begin{enumerate}
-\item AudioScienceReview: Amir use a special measurement machine built by Klipel. This machine can emulate an anechoid room and provides very precise measurements in a normal room. Methodology is backed by \cite{Klippel2016} and multiple comparisons with anechoid rooms.
-\item 3D3A a laboratory within Princeton university. They did a directivity analysis of many speakers \cite{Tylka2015} and published multiple related papers \cite{Tylka2015}, \cite{Tylka2014}.
-\item Data provided by vendors. They may or not be accurate. Independant measurements by other organisations help to qualify and improve confidence in this measurements.
+\item AudioScienceReview: Amir use a special measurement machine built by Klipel. This machine can emulate
+  an anechoid room and provides very precise measurements in a normal room. Methodology is backed by a
+  theoritical framework \cite{Klippel2016} and multiple comparisons with anechoid rooms.
+\item 3D3A a laboratory within Princeton university. They did a directivity analysis of many speakers \cite{Tylka2015}
+  and published related papers \cite{Tylka2015}, \cite{Tylka2014}.
+\item Data provided by vendors. They may or not be accurate. Independant measurements by other organisations
+  help to qualify and improve confidence in this measurements.
 \end{enumerate}
 
-\pagebreak
+\section{How to read this measurements?}
+
+\chapter{Two case studies}
+
+\section{Genelec 8341A \emph{v.s.} Harbeth 30.0}
+
+This section compare two speakers which are both well known and expensive:
+\begin{enumerate}
+\item Genelec 8341A is a coaxial speakers, a 3 ways, an active studio monitor design for near-field listening.
+\item Harbeth Monitor 30.0 is a larger 2 ways, passive monitor.
+\end{enumerate}
+
+\begin{figure*}[ht]
+  \includegraphics[width=0.45\linewidth]{tmp/Genelec-8341A/CEA2034}
+  \includegraphics[width=0.45\linewidth]{tmp/Harbeth-Monitor-30-0/CEA2034}
+\end{figure*}
+This Genelec speaker is extremely flat on axis while having an flat directivity.
+This Harbeth is less flat on axis and has bump into its directivity.
+
+Looking at the reflections, we see the same pattern:
+\begin{figure*}[ht]
+  \includegraphics[width=0.45\linewidth]{tmp/Genelec-8341A/Early-Reflections}
+  \includegraphics[width=0.45\linewidth]{tmp/Harbeth-Monitor-30-0/Early-Reflections}
+\end{figure*}
+The Harbeth will benefit from a thick carpet and ideally some room treatment on
+the ceiling in order to minimise the bounces.
+
+\begin{figure*}[ht]
+  \includegraphics[width=0.45\linewidth]{tmp/Genelec-8341A/Estimated-In-Room-Response}
+  \includegraphics[width=0.45\linewidth]{tmp/Harbeth-Monitor-30-0/Estimated-In-Room-Response}
+\end{figure*}
+Both speakers behave very well with a downward trending curve. 
+
+\begin{figure*}[ht]
+  \includegraphics[width=0.45\linewidth]{tmp/Genelec-8341A/SPL-Horizontal-Contour}
+  \includegraphics[width=0.45\linewidth]{tmp/Harbeth-Monitor-30-0/SPL-Horizontal-Contour}
+  \\\vspace{\baselineskip}
+  \includegraphics[width=0.45\linewidth]{tmp/Genelec-8341A/SPL-Horizontal-Contour}
+  \includegraphics[width=0.45\linewidth]{tmp/Harbeth-Monitor-30-0/SPL-Horizontal-Contour}
+\end{figure*}
+Here we see textbook result from the coaxial. The passive speaker has issue around its crossover.
+We can have a look at the same data in a radar plot or in a flat graph:
+
+\begin{figure*}[ht]
+  \includegraphics[width=0.45\linewidth]{tmp/Genelec-8341A/SPL-Horizontal-Radar}
+  \includegraphics[width=0.45\linewidth]{tmp/Harbeth-Monitor-30-0/SPL-Horizontal-Radar}
+  \\\vspace{\baselineskip}
+  \includegraphics[width=0.45\linewidth]{tmp/Genelec-8341A/SPL-Horizontal-Radar}
+  \includegraphics[width=0.45\linewidth]{tmp/Harbeth-Monitor-30-0/SPL-Horizontal-Radar}
+\end{figure*}
+
+\begin{figure*}[ht]
+  \includegraphics[width=0.45\linewidth]{tmp/Genelec-8341A/SPL-Horizontal}
+  \includegraphics[width=0.45\linewidth]{tmp/Harbeth-Monitor-30-0/SPL-Horizontal}
+  \\\vspace{\baselineskip}
+  \includegraphics[width=0.45\linewidth]{tmp/Genelec-8341A/SPL-Horizontal}
+  \includegraphics[width=0.45\linewidth]{tmp/Harbeth-Monitor-30-0/SPL-Horizontal}
+\end{figure*}
+The contour, the radar and the graph represent the same values. Sometimes it is easier
+to read one or the other.
+
+
+\section{Infinity v.s. Verdant Audio Bambusa G 1}
+
+This section compare 2 other speakers: both are passive bookshelves:
+\begin{enumerate}
+\item Infinity R162, 270\$ a pair.
+\item Verdant Audio Bambusa MG 1, 5000\$ a pair.
+\end{enumerate}
+
+\begin{figure*}[ht]
+  \includegraphics[width=0.45\linewidth]{tmp/Infinity-R162/CEA2034}
+  \includegraphics[width=0.45\linewidth]{tmp/Verdant-Audio-Bambusa-MG-1/CEA2034}
+\end{figure*}
+
+Looking at the reflections, we see the same pattern:
+\begin{figure*}[ht]
+  \includegraphics[width=0.45\linewidth]{tmp/Infinity-R162/Early-Reflections}
+  \includegraphics[width=0.45\linewidth]{tmp/Verdant-Audio-Bambusa-MG-1/Early-Reflections}
+\end{figure*}
+
+\begin{figure*}[ht]
+  \includegraphics[width=0.45\linewidth]{tmp/Infinity-R162/Estimated-In-Room-Response}
+  \includegraphics[width=0.45\linewidth]{tmp/Verdant-Audio-Bambusa-MG-1/Estimated-In-Room-Response}
+\end{figure*}
+
+\begin{figure*}[ht]
+  \includegraphics[width=0.45\linewidth]{tmp/Infinity-R162/SPL-Horizontal-Contour}
+  \includegraphics[width=0.45\linewidth]{tmp/Verdant-Audio-Bambusa-MG-1/SPL-Horizontal-Contour}
+  \\\vspace{\baselineskip}
+  \includegraphics[width=0.45\linewidth]{tmp/Infinity-R162/SPL-Horizontal-Contour}
+  \includegraphics[width=0.45\linewidth]{tmp/Verdant-Audio-Bambusa-MG-1/SPL-Horizontal-Contour}
+\end{figure*}
+
+\begin{figure*}[ht]
+  \includegraphics[width=0.45\linewidth]{tmp/Infinity-R162/SPL-Horizontal-Radar}
+  \includegraphics[width=0.45\linewidth]{tmp/Verdant-Audio-Bambusa-MG-1/SPL-Horizontal-Radar}
+  \\\vspace{\baselineskip}
+  \includegraphics[width=0.45\linewidth]{tmp/Infinity-R162/SPL-Horizontal-Radar}
+  \includegraphics[width=0.45\linewidth]{tmp/Verdant-Audio-Bambusa-MG-1/SPL-Horizontal-Radar}
+\end{figure*}
+
+\begin{figure*}[ht]
+  \includegraphics[width=0.45\linewidth]{tmp/Infinity-R162/SPL-Horizontal}
+  \includegraphics[width=0.45\linewidth]{tmp/Verdant-Audio-Bambusa-MG-1/SPL-Horizontal}
+  \\\vspace{\baselineskip}
+  \includegraphics[width=0.45\linewidth]{tmp/Infinity-R162/SPL-Horizontal}
+  \includegraphics[width=0.45\linewidth]{tmp/Verdant-Audio-Bambusa-MG-1/SPL-Horizontal}
+\end{figure*}
+
+Conclusion: this two speakers have very close graphs and very close scores. They are likely
+to sound very close to each other.
+
+\chapter{Measurements}
 
 % for speaker in speakers:
-\begin{figure*}[ht]
+\begin{figure*}[p]
   \includegraphics[width=\linewidth]{${speakers[speaker]['image']}}
   \caption{${speakers[speaker]['title']}}
 \end{figure*}
@@ -96,15 +212,37 @@ There are 3 sources of data:
 
 \chapter{Tables}
 
-\begin{table}[p]
+\begin{marginfigure}
+  \includegraphics[width=\linewidth]{stats/distribution.png}
+  \caption{Scores distribution}
+\end{marginfigure}
+
+\begin{figure*}[p]
+  \includegraphics[width=\linewidth]{stats/spread.png}
+  \caption{Scores}
+\end{figure*}
+
+\begin{figure*}[p]
+\fbox{\includegraphics[width=0.45\linewidth]{stats/lfx_hz.png}}
+\hfill
+\fbox{\includegraphics[width=0.45\linewidth]{stats/nbd_on.png}}
+\\\vspace{\baselineskip}
+\fbox{\includegraphics[width=0.45\linewidth]{stats/nbd_pir.png}}
+\hfill
+\fbox{\includegraphics[width=0.45\linewidth]{stats/sm_pir.png}}
+\end{figure*}
+
+\pagebreak
+
+\begin{table}[ht]
 \begin{center}
 \begin{tabular}{r|rrrr|rrrrr}
-& \multicolumn{4}{r}{Standard Measurements} & \multicolumn{5}{r}{Preference Scores from Harmann} \\\
+Speaker & \multicolumn{4}{r|}{Standard Measurements} & \multicolumn{5}{r}{Preference Scores from Harmann} \\\
  
 \hline
   
-Speaker & -3dB & -6dB & Dev & LFX  & LFQ & NBD & NBD & SM  & Pref \\\
-        & (Hz) & (Hz) &(dB) & (Hz) & LFQ &  ON & PIR & PIR & Score \\\
+ & -3dB & -6dB & Dev & LFX  & LFQ & NBD & NBD & SM  & Pref \\\
+ & (Hz) & (Hz) &(dB) & (Hz) &     &  ON & PIR & PIR & Score \\\
   
 \hline
   
@@ -145,7 +283,7 @@ ${meta[speaker_name]['pref_rating']['sm_pred_in_room']}
 % endif
 &
 % if 'pref_rating' in meta[speaker_name]:
-${meta[speaker_name]['pref_rating']['pref_score']}
+\emph{${meta[speaker_name]['pref_rating']['pref_score']}}
 % endif
 \\\
 
