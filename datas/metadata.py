@@ -34,6 +34,37 @@ speakers_info = {
         'price': '400',
         'measurements': [{'origin': 'ASR', 'format': 'klippel', }, {'origin': 'Princeton', 'format': 'princeton'}],
     },
+    'Avantgarde Acoustic Solo': {
+        'brand': 'Avantgarde Acoustic',
+        'model': 'Solo',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
+    'Buchardt Audio S400': {
+        'brand': 'Buchardt Audio',
+        'model': 'S400',
+        'type': 'passive',
+        'price': '1800',
+        'measurements': [{
+            'origin': 'Vendors/Buchardt Audio',
+            'website': 'https://www.buchardtaudio.com',
+            'format': 'webplotdigitizer',
+            }],
+    },
+    'CommonSense Audio 5.6': {
+        'brand': 'CommonSense Audio',
+        'model': '5.6',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
     'Dayton Audio B652-AIR': {
         'brand': 'Dayton Audio',
         'model': 'B652-AIR',
@@ -42,6 +73,16 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            }],
+    },
+    'Dynaudio Xeo 3': {
+        'brand': 'Dynaudio',
+        'model': 'Xeo 3',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
             }],
     },
     'Elac Adante AS-61': {
@@ -71,6 +112,86 @@ speakers_info = {
             'format': 'klippel',
             }],
     },
+    'Essence Electrostatic Model 1600': {
+        'brand': 'Essence Electrostatic',
+        'model': 'Model 1600',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
+    'Fisher STE-720': {
+        'brand': 'Fisher',
+        'model': 'STE-720',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
+    'Gainphile R16': {
+        'brand': 'Gainphile',
+        'model': 'R16',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
+    'GedLee Nathan': {
+        'brand': 'GedLee',
+        'model': 'Nathan',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
+    'Genelec 8030A': {
+        'brand': 'Genelec',
+        'model': '8030A',
+        'type': 'active',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
+    'Genelec 8351A': {
+        'brand': 'Genelec',
+        'model': '8351A',
+        'type': 'active',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
+    'Genelec 8341A': {
+        'brand': 'Genelec',
+        'model': '8341A',
+        'type': 'active',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+    },
+    'Gradient Helsinki 1.5': {
+        'brand': 'Gradient',
+        'model': 'Helsinki 1.5',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
     'Harbeth Monitor 30.0': {
         'brand': 'Harbeth',
         'model': 'Monitor 30.0',
@@ -79,6 +200,16 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            }],
+    },
+    'iKey-Audio M-808V2': {
+        'brand': 'iKey-Audio',
+        'model': 'M-808V2',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
             }],
     },
     'Infinity R162': {
@@ -90,7 +221,27 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
+    'JansZen Loudspeaker zA1.1': {
+        'brand': 'JansZen Loudspeaker',
+        'model': 'zA1.1',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
+    'JansZen Loudspeaker zA2.1': {
+        'brand': 'JansZen Loudspeaker',
+        'model': 'zA2.1',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
     'JBL 104': {
         'brand': 'JBL',
         'model': '104',
@@ -162,7 +313,17 @@ speakers_info = {
             'website': 'www.jbl.com',
             'format': 'webplotdigitizer',
             }],
-        },
+    },
+    'JBL PRX635': {
+        'brand': 'JBL',
+        'model': 'PRX635',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
     'Kali IN-8': {
         'brand': 'Kali',
         'model': 'IN-8',
@@ -172,21 +333,21 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
     'KEF Q100': {
         'brand': 'KEF',
         'model': 'Q100',
         'type': 'passive',
         'price': '600',
         'measurements': [{'origin': 'ASR', 'format': 'klippel', }, ],
-        },
+    },
     'KEF R3': {
         'brand': 'KEF',
         'model': 'R3',
         'type': 'passive',
         'price': '2000',
         'measurements': [{'origin': 'ASR', 'format': 'klippel', }, ],
-        },
+    },
     'KEF LS50': {
         'brand': 'KEF',
         'model': 'LS50',
@@ -194,7 +355,7 @@ speakers_info = {
         'price': '',
         'measurements': [{'origin': 'ASR', 'format': 'klippel', },
                          {'origin': 'Princeton', 'format': 'princeton', }],
-        },
+    },
     'KEF Reference 5': {
         'brand': 'KEF',
         'model': 'Reference 5',
@@ -205,7 +366,57 @@ speakers_info = {
             'website': 'www.kef.com',
             'format': 'webplotdigitizer',
             }],
-        },
+    },
+    'King\'s Audio KingSound KS 3001': {
+        'brand': 'King\'s Audio',
+        'model': 'KingSound KS 3001',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
+    'Klipsch R41M': {
+        'brand': 'Klipsch',
+        'model': 'R41M',
+        'type': 'passive',
+        'price': '150',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+    },
+    'Klipsch RP-600M': {
+        'brand': 'Klipsch',
+        'model': 'RP-600M',
+        'type': 'passive',
+        'price': '670',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+    },
+    'KRK Systems RoKit 6 G2': {
+        'brand': 'KRK Systems',
+        'model': 'RoKit 6 G2',
+        'type': 'active',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
+    'Manger Sidekick': {
+        'brand': 'Manger',
+        'model': 'Sidekick',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
     'Micca RB42': {
         'brand': 'Micca',
         'model': 'RB42',
@@ -215,7 +426,27 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
+    'Neumann KH 80': {
+        'brand': 'Neumann',
+        'model': 'KH 80',
+        'type': 'active',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+    },
+    'NHT Pro M-00': {
+        'brand': 'NHT',
+        'model': 'Pro M-00',
+        'type': 'active',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+    },
     'Pioneer SP-BS22-LR': {
         'brand': 'Pioneer',
         'model': 'SP-BS22-LR',
@@ -225,7 +456,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
     'Pioneer SP-EBS73-LR': {
         'brand': 'Pioneer',
         'model': 'SP-EBS73-LR',
@@ -235,7 +466,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
     'Pioneer SP-EC73': {
         'brand': 'Pioneer',
         'model': 'SP-EC73',
@@ -245,7 +476,47 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
+    'Polk Audio 5JR': {
+        'brand': 'Polk Audio',
+        'model': '5JR',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
+    'Polk T15': {
+        'brand': 'Polk',
+        'model': 'T15',
+        'type': 'passive',
+        'price': '100',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+    },
+    'Quad Electroacoustics ESL-57': {
+        'brand': 'Quad Electroacoustics',
+        'model': 'ESL-57',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Princeton',
+            'format': 'princeton',
+            }],
+    },
+    'Realistic MC-1000': {
+        'brand': 'Realistic',
+        'model': 'MC-1000',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+    },
     'Revel C52': {
         'brand': 'Revel',
         'model': 'C52',
@@ -255,7 +526,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
     'Revel F35': {
         'brand': 'Revel',
         'model': 'F35',
@@ -265,7 +536,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
+    },
     'Revel M16': {
         'brand': 'Revel',
         'model': 'M16',
@@ -308,276 +579,6 @@ speakers_info = {
             'format': 'webplotdigitizer',
             }],
     },
-    'Selah Audio RC3R': {
-        'brand': 'Selah Audio',
-        'model': 'RC3R',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Polk T15': {
-        'brand': 'Polk',
-        'model': 'T15',
-        'type': 'passive',
-        'price': '100',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Neumann KH 80': {
-        'brand': 'Neumann',
-        'model': 'KH 80',
-        'type': 'active',
-        'price': '',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Realistic MC-1000': {
-        'brand': 'Realistic',
-        'model': 'MC-1000',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Yamaha HS5': {
-        'brand': 'Yamaha',
-        'model': 'HS5',
-        'type': 'active',
-        'price': '',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'NHT Pro M-00': {
-        'brand': 'NHT',
-        'model': 'Pro M-00',
-        'type': 'active',
-        'price': '',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Klipsch R41M': {
-        'brand': 'Klipsch',
-        'model': 'R41M',
-        'type': 'passive',
-        'price': '150',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Klipsch RP-600M': {
-        'brand': 'Klipsch',
-        'model': 'RP-600M',
-        'type': 'passive',
-        'price': '670',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Avantgarde Acoustic Solo': {
-        'brand': 'Avantgarde Acoustic',
-        'model': 'Solo',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'CommonSense Audio 5.6': {
-        'brand': 'CommonSense Audio',
-        'model': '5.6',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'Dynaudio Xeo 3': {
-        'brand': 'Dynaudio',
-        'model': 'Xeo 3',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'Essence Electrostatic Model 1600': {
-        'brand': 'Essence Electrostatic',
-        'model': 'Model 1600',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'Fisher STE-720': {
-        'brand': 'Fisher',
-        'model': 'STE-720',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'Gainphile R16': {
-        'brand': 'Gainphile',
-        'model': 'R16',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'GedLee Nathan': {
-        'brand': 'GedLee',
-        'model': 'Nathan',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'Genelec 8030A': {
-        'brand': 'Genelec',
-        'model': '8030A',
-        'type': 'active',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'Genelec 8351A': {
-        'brand': 'Genelec',
-        'model': '8351A',
-        'type': 'active',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'Genelec 8341A': {
-        'brand': 'Genelec',
-        'model': '8341A',
-        'type': 'active',
-        'price': '',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-        },
-    'Gradient Helsinki 1.5': {
-        'brand': 'Gradient',
-        'model': 'Helsinki 1.5',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'JBL PRX635': {
-        'brand': 'JBL',
-        'model': 'PRX635',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'JansZen Loudspeaker zA1.1': {
-        'brand': 'JansZen Loudspeaker',
-        'model': 'zA1.1',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'JansZen Loudspeaker zA2.1': {
-        'brand': 'JansZen Loudspeaker',
-        'model': 'zA2.1',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'KRK Systems RoKit 6 G2': {
-        'brand': 'KRK Systems',
-        'model': 'RoKit 6 G2',
-        'type': 'active',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'King\'s Audio KingSound KS 3001': {
-        'brand': 'King\'s Audio',
-        'model': 'KingSound KS 3001',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'Manger Sidekick': {
-        'brand': 'Manger',
-        'model': 'Sidekick',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'Polk Audio 5JR': {
-        'brand': 'Polk Audio',
-        'model': '5JR',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-        },
-    'Quad Electroacoustics ESL-57': {
-        'brand': 'Quad Electroacoustics',
-        'model': 'ESL-57',
-        'type': 'passive',
-        'price': '',
-        'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
-            }],
-    },
     'Sanders Sound Systems Model 11': {
         'brand': 'Sanders Sound Systems',
         'model': 'Model 11',
@@ -587,6 +588,16 @@ speakers_info = {
                          {'origin': 'Princeton', 'key': 'with Anechoic Foam',  'format': 'princeton', },
                          {'origin': 'Princeton', 'key': 'with Back-Wave Absorber', 'format': 'princeton', },
                          ],
+    },
+    'Selah Audio RC3R': {
+        'brand': 'Selah Audio',
+        'model': 'RC3R',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
     },
     'Spendor Audio Systems SA1': {
         'brand': 'Spendor Audio',
@@ -607,7 +618,7 @@ speakers_info = {
             'origin': 'Princeton',
             'format': 'princeton',
             }],
-        },
+    },
     'Tannoy System 600': {
         'brand': 'Tannoy',
         'model': 'System 600',
@@ -617,17 +628,27 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
-    'iKey-Audio M-808V2': {
-        'brand': 'iKey-Audio',
-        'model': 'M-808V2',
+    },
+    'Verdant Audio Bambusa MG 1': {
+        'brand': 'Verdant Audio',
+        'model': 'Bambusa MG 1',
         'type': 'passive',
+        'price': '5000',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+    },
+    'Yamaha HS5': {
+        'brand': 'Yamaha',
+        'model': 'HS5',
+        'type': 'active',
         'price': '',
         'measurements': [{
-            'origin': 'Princeton',
-            'format': 'princeton',
+            'origin': 'ASR',
+            'format': 'klippel',
             }],
-        },
+    },
     'Zaph Audio ZA5': {
         'brand': 'Zaph Audio',
         'model': 'ZA5',
@@ -637,18 +658,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             }],
-        },
-    'Buchardt Audio S400': {
-        'brand': 'Buchardt Audio',
-        'model': 'S400',
-        'type': 'passive',
-        'price': '1800',
-        'measurements': [{
-            'origin': 'Vendors/Buchardt Audio',
-            'website': 'https://www.buchardtaudio.com',
-            'format': 'webplotdigitizer',
-            }],
-            },
+    },
 }
 
 # add some information about precisions of graphs
