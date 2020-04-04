@@ -1,10 +1,13 @@
 \documentclass{tufte-book}
 
+\IfFileExists{bergamo.sty}{\usepackage[osf]{bergamo}}{}% Bembo
+\IfFileExists{chantill.sty}{\usepackage{chantill}}{}% Gill Sans
+
 \usepackage{geometry}
 \usepackage{graphicx}
 \setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
 \graphicspath{ {./tmp/} }
-\usepackage{caption}
+\usepackage{booktabs}
 
 \begin{document}
 \title{ASR Speaker reviews}
@@ -12,6 +15,7 @@
 \date{2020}
 \maketitle
 
+\tableofcontents
 \listoffigures
 
 \pagebreak
@@ -88,7 +92,70 @@ There are 3 sources of data:
   \includegraphics[width=\linewidth]{${speakers[speaker]['image']}}
   \caption{${speakers[speaker]['title']}}
 \end{figure*}
- % endfor
+% endfor
+
+\chapter{Tables}
+
+\begin{table}[p]
+\begin{center}
+\begin{tabular}{r|rrrr|rrrrr}
+& \multicolumn{4}{r}{Standard Measurements} & \multicolumn{5}{r}{Preference Scores from Harmann} \\\
+ 
+\hline
+  
+Speaker & -3dB & -6dB & Dev & LFX  & LFQ & NBD & NBD & SM  & Pref \\\
+        & (Hz) & (Hz) &(dB) & (Hz) & LFQ &  ON & PIR & PIR & Score \\\
+  
+\hline
+  
+% for speaker_name in meta:
+% if 'pref_rating' in meta[speaker_name]:
+${speaker_name}
+& 
+% if 'estimates' in meta[speaker_name] and meta[speaker_name]['estimates'][1] != -1:
+${meta[speaker_name]['estimates'][1]}
+% endif
+&
+% if 'estimates' in meta[speaker_name] and meta[speaker_name]['estimates'][2] != -1:
+${meta[speaker_name]['estimates'][2]}
+% endif
+&
+% if 'estimates' in meta[speaker_name] and meta[speaker_name]['estimates'][3] != -1:
+${meta[speaker_name]['estimates'][3]}
+% endif
+&
+% if 'pref_rating' in meta[speaker_name]:
+${meta[speaker_name]['pref_rating']['lfx_hz']}
+% endif
+&
+% if 'pref_rating' in meta[speaker_name]:
+${meta[speaker_name]['pref_rating']['lfq']}
+% endif
+&
+% if 'pref_rating' in meta[speaker_name]:
+${meta[speaker_name]['pref_rating']['nbd_on_axis']}
+% endif
+&
+% if 'pref_rating' in meta[speaker_name]:
+${meta[speaker_name]['pref_rating']['nbd_pred_in_room']}
+% endif
+&
+% if 'pref_rating' in meta[speaker_name]:
+${meta[speaker_name]['pref_rating']['sm_pred_in_room']}
+% endif
+&
+% if 'pref_rating' in meta[speaker_name]:
+${meta[speaker_name]['pref_rating']['pref_score']}
+% endif
+\\\
+
+% endif
+% endfor
+\end{tabular}
+\end{center}
+\caption{Speakers key metrics}
+\end{table}
+
 
 \bibliography{audio}{}
 \bibliographystyle{plain}
