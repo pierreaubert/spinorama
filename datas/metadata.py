@@ -222,6 +222,16 @@ speakers_info = {
             'format': 'klippel',
             }],
     },
+    'Infinity RC163': {
+        'brand': 'Infinity',
+        'model': 'RC163',
+        'type': 'passive',
+        'price': '160',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+    },
     'JansZen Loudspeaker zA1.1': {
         'brand': 'JansZen Loudspeaker',
         'model': 'zA1.1',
