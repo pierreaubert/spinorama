@@ -557,7 +557,8 @@ def sm(dfu):
     smoother frequency response curves.
     """
     data = dfu.loc[(dfu.Freq>=100) & (dfu.Freq<=16000)]
-    slope, intercept, r_value, p_value, std_err = linregress(data.Freq, data.dB)
+    log_freq = np.log(data.Freq)
+    slope, intercept, r_value, p_value, std_err = linregress(log_freq, data.dB)
     return r_value**2
                 
 
