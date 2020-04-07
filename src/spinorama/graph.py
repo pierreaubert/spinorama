@@ -21,8 +21,8 @@ nearest = alt.selection(
 graph_params_default = {
     'xmin': 20,
     'xmax': 20000,
-    'ymin': 40,
-    'ymax': 110,
+    'ymin': -40,
+    'ymax': 10,
     'width': 600,
     'height': 360,
 }

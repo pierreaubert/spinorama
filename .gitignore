@@ -4,6 +4,7 @@ snippets*.ipynb
 *~
 #*#
 .#*
+*.bak
 __pycache__
 .idea
 TAGS
@@ -20,6 +21,9 @@ asrbook.toc
 asrbook.log
 asrbook.pdf
 asrbook.out
+book/stats
 node_modules
 geckodriver.log
 package-lock.json
+tutorial.slides.html
+
