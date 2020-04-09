@@ -4,33 +4,43 @@ speakers_info = {
         'brand': 'Adam',
         'model': 'S2V',
         'type': 'active',
-        'price': '1750',
-        'measurements': [{'origin': 'ASR', 'format': 'klippel', }],
+        'price': '3500',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/adam-s2v-studio-monitor-review.11455',
+        }],
     },
     'Ascend Acoustics Sierra 2': {
         'brand': 'Ascend Acoustics',
         'model': 'Sierra 2',
         'type': 'passive',
-        'price': '750',
+        'shape': 'bookshelves',
+        'price': '1500',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            }],
+        }],
     },
     'Ascend Acoustics CMT-340': {
         'brand': 'Ascend Acoustics',
         'model': 'CMT-340',
         'type': 'passive',
+        'shape': 'center',
         'price': '300',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            }],
+        }],
     },
     'Ascend Acoustics CBM-170 SE': {
         'brand': 'Ascend Acoustics',
         'model': 'CBM-170 SE',
         'type': 'passive',
+        'shape': 'bookshelves',
         'price': '400',
         'measurements': [{'origin': 'ASR', 'format': 'klippel', }, {'origin': 'Princeton', 'format': 'princeton'}],
     },
@@ -38,7 +48,8 @@ speakers_info = {
         'brand': 'Avantgarde Acoustic',
         'model': 'Solo',
         'type': 'passive',
-        'price': '',
+        'shape': 'tower',
+        'price': '7000',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
@@ -48,6 +59,7 @@ speakers_info = {
         'brand': 'Buchardt Audio',
         'model': 'S400',
         'type': 'passive',
+        'shape': 'bookshelves',
         'price': '1800',
         'measurements': [{
             'origin': 'Vendors/Buchardt Audio',
@@ -156,6 +168,7 @@ speakers_info = {
         'brand': 'Genelec',
         'model': '8030A',
         'type': 'active',
+        'shape': 'bookshelves',
         'price': '',
         'measurements': [{
             'origin': 'Princeton',
@@ -166,6 +179,7 @@ speakers_info = {
         'brand': 'Genelec',
         'model': '8351A',
         'type': 'active',
+        'shape': 'bookshelves',
         'price': '',
         'measurements': [{
             'origin': 'Princeton',
@@ -176,6 +190,7 @@ speakers_info = {
         'brand': 'Genelec',
         'model': '8341A',
         'type': 'active',
+        'shape': 'bookshelves',
         'price': '',
         'measurements': [{
             'origin': 'ASR',
@@ -222,10 +237,11 @@ speakers_info = {
             'format': 'klippel',
             }],
     },
-    'Infinity RC163': {
+    'Infinity RC263': {
         'brand': 'Infinity',
-        'model': 'RC163',
+        'model': 'RC263',
         'type': 'passive',
+        'shape': 'center',
         'price': '160',
         'measurements': [{
             'origin': 'ASR',
@@ -262,21 +278,13 @@ speakers_info = {
             'format': 'klippel',
             }],
     },
-    'JBL Studio 530': {
-        'brand': 'JBL',
-        'model': 'Studio 530',
-        'type': 'passive',
-        'price': '300',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-            }],
-    },
     'JBL 705P': {
         'brand': 'JBL',
         'model': '705P',
         'type': 'active',
-        'price': '1000',
+        'price': '2000',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -307,17 +315,33 @@ speakers_info = {
         'model': '4367',
         'type': 'passive',
         'price': '',
+        'shape': 'floorstander',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'Vendors/JBL',
             'website': 'www.jbl.com',
             'format': 'webplotdigitizer',
             }],
     },
+    'JBL HDI-1600': {
+        'brand': 'JBL',
+        'model': 'HDI-1600',
+        'type': 'passive',
+        'price': '1800',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+    },
     'JBL M2': {
         'brand': 'JBL',
         'model': 'M2',
         'type': 'active',
-        'price': '',
+        'price': '20000',
+        'shape': 'floorstander',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'Vendors/JBL',
             'website': 'www.jbl.com',
@@ -334,11 +358,23 @@ speakers_info = {
             'format': 'princeton',
             }],
     },
+    'JBL Studio 530': {
+        'brand': 'JBL',
+        'model': 'Studio 530',
+        'type': 'passive',
+        'price': '300',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            }],
+    },
     'Kali IN-8': {
         'brand': 'Kali',
         'model': 'IN-8',
         'type': 'active',
         'price': '',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -349,6 +385,8 @@ speakers_info = {
         'model': 'Q100',
         'type': 'passive',
         'price': '600',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{'origin': 'ASR', 'format': 'klippel', }, ],
     },
     'KEF R3': {
@@ -356,6 +394,8 @@ speakers_info = {
         'model': 'R3',
         'type': 'passive',
         'price': '2000',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{'origin': 'ASR', 'format': 'klippel', }, ],
     },
     'KEF LS50': {
@@ -363,6 +403,8 @@ speakers_info = {
         'model': 'LS50',
         'type': 'passive',
         'price': '',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{'origin': 'ASR', 'format': 'klippel', },
                          {'origin': 'Princeton', 'format': 'princeton', }],
     },
@@ -392,6 +434,8 @@ speakers_info = {
         'model': 'R41M',
         'type': 'passive',
         'price': '150',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -402,6 +446,8 @@ speakers_info = {
         'model': 'RP-600M',
         'type': 'passive',
         'price': '670',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -412,6 +458,8 @@ speakers_info = {
         'model': 'RoKit 6 G2',
         'type': 'active',
         'price': '',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
@@ -432,6 +480,8 @@ speakers_info = {
         'model': 'RB42',
         'type': 'passive',
         'price': '',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -442,6 +492,8 @@ speakers_info = {
         'model': 'KH 80',
         'type': 'active',
         'price': '',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -452,6 +504,8 @@ speakers_info = {
         'model': 'Pro M-00',
         'type': 'active',
         'price': '',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -462,6 +516,8 @@ speakers_info = {
         'model': 'SP-BS22-LR',
         'type': 'passive',
         'price': '',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -472,6 +528,8 @@ speakers_info = {
         'model': 'SP-EBS73-LR',
         'type': 'passive',
         'price': '',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -492,6 +550,8 @@ speakers_info = {
         'model': '5JR',
         'type': 'passive',
         'price': '',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
@@ -502,6 +562,8 @@ speakers_info = {
         'model': 'T15',
         'type': 'passive',
         'price': '100',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -542,6 +604,8 @@ speakers_info = {
         'model': 'F35',
         'type': 'passive',
         'price': '1800',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -552,6 +616,8 @@ speakers_info = {
         'model': 'M16',
         'type': 'passive',
         'price': '900',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -562,6 +628,8 @@ speakers_info = {
         'model': 'M22',
         'type': 'passive',
         'price': '2000',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -583,6 +651,8 @@ speakers_info = {
         'model': 'F208',
         'type': 'passive',
         'price': '',
+        'shape': 'floorstander',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'Vendors/Revel',
             'website': 'www.revel.com',
@@ -604,6 +674,8 @@ speakers_info = {
         'model': 'RC3R',
         'type': 'passive',
         'price': '',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
