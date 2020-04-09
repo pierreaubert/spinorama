@@ -13,6 +13,35 @@ speakers_info = {
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/adam-s2v-studio-monitor-review.11455',
         }],
     },
+    'Ascend Acoustics CBM-170 SE': {
+        'brand': 'Ascend Acoustics',
+        'model': 'CBM-170 SE',
+        'type': 'passive',
+        'shape': 'bookshelves',
+        'price': '400',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ascend-cbm-170-se-speaker-review.11839',
+        }, {
+            'origin': 'Princeton',
+            'format': 'princeton'
+        }],
+    },
+    'Ascend Acoustics CMT-340': {
+        'brand': 'Ascend Acoustics',
+        'model': 'CMT-340',
+        'type': 'passive',
+        'shape': 'center',
+        'price': '300',
+        'amount': 'each',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ascend-cmt-340-se-center-channel-speaker-review.11797/#post-340461',
+        }],
+    },
     'Ascend Acoustics Sierra 2': {
         'brand': 'Ascend Acoustics',
         'model': 'Sierra 2',
@@ -23,26 +52,8 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-2-speaker-review.11813/#post-341009',
         }],
-    },
-    'Ascend Acoustics CMT-340': {
-        'brand': 'Ascend Acoustics',
-        'model': 'CMT-340',
-        'type': 'passive',
-        'shape': 'center',
-        'price': '300',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
-        }],
-    },
-    'Ascend Acoustics CBM-170 SE': {
-        'brand': 'Ascend Acoustics',
-        'model': 'CBM-170 SE',
-        'type': 'passive',
-        'shape': 'bookshelves',
-        'price': '400',
-        'measurements': [{'origin': 'ASR', 'format': 'klippel', }, {'origin': 'Princeton', 'format': 'princeton'}],
     },
     'Avantgarde Acoustic Solo': {
         'brand': 'Avantgarde Acoustic',
@@ -81,10 +92,13 @@ speakers_info = {
         'brand': 'Dayton Audio',
         'model': 'B652-AIR',
         'type': 'passive',
-        'price': '',
+        'price': '70',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/dayton-audio-b652-air-speaker-review.11410/',
             }],
     },
     'Dynaudio Xeo 3': {
@@ -101,27 +115,37 @@ speakers_info = {
         'brand': 'Elac',
         'model': 'Adante AS-61',
         'type': 'passive',
-        'price': '',
-        'measurements': [{'origin': 'ASR', 'format': 'klippel', }],
+        'price': '1500',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/elac-adante-as-61-speaker-review.11507/#post-329527',
+        }],
     },
     'Elac Debut Reference DBR-62': {
         'brand': 'Elac',
         'model': 'Debut Reference DBR-62',
         'type': 'passive',
-        'price': '',
+        'price': '600',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            }],
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/elac-debut-reference-dbr-62-speaker-review.12232/#post-357719',
+         }],
     },
     'Emotiva Airmotive 6s': {
         'brand': 'Emotiva',
         'model': 'Airmotive 6s',
         'type': 'passive',
-        'price': '',
+        'price': '600',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Essence Electrostatic Model 1600': {
@@ -132,6 +156,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
+            'review': '',
             }],
     },
     'Fisher STE-720': {
@@ -179,8 +204,9 @@ speakers_info = {
         'brand': 'Genelec',
         'model': '8351A',
         'type': 'active',
+        'price': '5700',
         'shape': 'bookshelves',
-        'price': '',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
@@ -190,11 +216,13 @@ speakers_info = {
         'brand': 'Genelec',
         'model': '8341A',
         'type': 'active',
+        'price': '4500',
         'shape': 'bookshelves',
-        'price': '',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/genelec-8341a-sam%E2%84%A2-studio-monitor-review.11652/#post-335087',
             }],
     },
     'Gradient Helsinki 1.5': {
@@ -211,10 +239,13 @@ speakers_info = {
         'brand': 'Harbeth',
         'model': 'Monitor 30.0',
         'type': 'passive',
-        'price': '',
+        'price': '3200',
+        'shape': 'large',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'iKey-Audio M-808V2': {
@@ -231,21 +262,26 @@ speakers_info = {
         'brand': 'Infinity',
         'model': 'R162',
         'type': 'passive',
-        'price': '270',
+        'price': '540',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Infinity RC263': {
         'brand': 'Infinity',
         'model': 'RC263',
         'type': 'passive',
+        'amount': 'each',
         'shape': 'center',
-        'price': '160',
+        'price': '500',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'JansZen Loudspeaker zA1.1': {
@@ -268,14 +304,30 @@ speakers_info = {
             'format': 'princeton',
             }],
     },
+    'JBL Control 1 Pro': {
+        'brand': 'JBL',
+        'model': 'Control 1 Pro',
+        'type': 'active',
+        'price': '164',
+        'shape': 'small',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': '',
+            }],
+    },
     'JBL 104': {
         'brand': 'JBL',
         'model': '104',
         'type': 'passive',
-        'price': '',
+        'price': '130',
+        'shape': 'small',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'JBL 705P': {
@@ -288,33 +340,27 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            }],
-    },
-    'JBL Control 1 Pro': {
-        'brand': 'JBL',
-        'model': 'Control 1 Pro',
-        'type': 'active',
-        'price': '',
-        'measurements': [{
-            'origin': 'ASR',
-            'format': 'klippel',
+            'review': '',
             }],
     },
     'JBL 305P Mark ii': {
         'brand': 'JBL',
         'model': '305P Mark ii',
         'type': 'active',
-        'price': '',
+        'price': '300',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'JBL 4367': {
         'brand': 'JBL',
         'model': '4367',
         'type': 'passive',
-        'price': '',
+        'price': '8500',
         'shape': 'floorstander',
         'amount': 'pair',
         'measurements': [{
@@ -333,6 +379,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'JBL M2': {
@@ -352,7 +399,9 @@ speakers_info = {
         'brand': 'JBL',
         'model': 'PRX635',
         'type': 'passive',
-        'price': '',
+        'price': '2540',
+        'shape': 'floorstander',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
@@ -362,22 +411,26 @@ speakers_info = {
         'brand': 'JBL',
         'model': 'Studio 530',
         'type': 'passive',
-        'price': '300',
+        'price': '600',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Kali IN-8': {
         'brand': 'Kali',
         'model': 'IN-8',
         'type': 'active',
-        'price': '',
+        'price': '760',
         'shape': 'bookshelves',
         'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'KEF Q100': {
@@ -387,7 +440,11 @@ speakers_info = {
         'price': '600',
         'shape': 'bookshelves',
         'amount': 'pair',
-        'measurements': [{'origin': 'ASR', 'format': 'klippel', }, ],
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': '',
+            },],
     },
     'KEF R3': {
         'brand': 'KEF',
@@ -396,17 +453,27 @@ speakers_info = {
         'price': '2000',
         'shape': 'bookshelves',
         'amount': 'pair',
-        'measurements': [{'origin': 'ASR', 'format': 'klippel', }, ],
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': '',
+            }, ],
     },
     'KEF LS50': {
         'brand': 'KEF',
         'model': 'LS50',
         'type': 'passive',
-        'price': '',
+        'price': '1500',
         'shape': 'bookshelves',
         'amount': 'pair',
-        'measurements': [{'origin': 'ASR', 'format': 'klippel', },
-                         {'origin': 'Princeton', 'format': 'princeton', }],
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': '',
+        }, {
+            'origin': 'Princeton',
+            'format': 'princeton',
+        }],
     },
     'KEF Reference 5': {
         'brand': 'KEF',
@@ -439,6 +506,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Klipsch RP-600M': {
@@ -451,13 +519,14 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'KRK Systems RoKit 6 G2': {
         'brand': 'KRK Systems',
         'model': 'RoKit 6 G2',
         'type': 'active',
-        'price': '',
+        'price': '400',
         'shape': 'bookshelves',
         'amount': 'pair',
         'measurements': [{
@@ -479,70 +548,78 @@ speakers_info = {
         'brand': 'Micca',
         'model': 'RB42',
         'type': 'passive',
-        'price': '',
+        'price': '150',
         'shape': 'bookshelves',
         'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Neumann KH 80': {
         'brand': 'Neumann',
         'model': 'KH 80',
         'type': 'active',
-        'price': '',
+        'price': '1000',
         'shape': 'bookshelves',
         'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'NHT Pro M-00': {
         'brand': 'NHT',
         'model': 'Pro M-00',
         'type': 'active',
-        'price': '',
+        'price': '500',
         'shape': 'bookshelves',
         'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Pioneer SP-BS22-LR': {
         'brand': 'Pioneer',
         'model': 'SP-BS22-LR',
         'type': 'passive',
-        'price': '',
+        'price': '160',
         'shape': 'bookshelves',
         'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Pioneer SP-EBS73-LR': {
         'brand': 'Pioneer',
         'model': 'SP-EBS73-LR',
         'type': 'passive',
-        'price': '',
+        'price': '750',
         'shape': 'bookshelves',
         'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Pioneer SP-EC73': {
         'brand': 'Pioneer',
         'model': 'SP-EC73',
         'type': 'passive',
-        'price': '',
+        'price': '400',
+        'shape': 'center',
+        'amount': 'each',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Polk Audio 5JR': {
@@ -555,6 +632,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
+            'review': '',
             }],
     },
     'Polk T15': {
@@ -567,6 +645,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Quad Electroacoustics ESL-57': {
@@ -583,32 +662,37 @@ speakers_info = {
         'brand': 'Realistic',
         'model': 'MC-1000',
         'type': 'passive',
-        'price': '',
+        'price': '60',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Revel C52': {
         'brand': 'Revel',
         'model': 'C52',
         'type': 'passive',
-        'price': '',
+        'price': '2500',
+        'shape': 'center',
+        'amount': 'each',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Revel F35': {
         'brand': 'Revel',
         'model': 'F35',
         'type': 'passive',
-        'price': '1800',
+        'price': '1600',
         'shape': 'bookshelves',
         'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Revel M16': {
@@ -621,6 +705,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Revel M22': {
@@ -633,6 +718,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Revel C25': {
@@ -673,12 +759,13 @@ speakers_info = {
         'brand': 'Selah Audio',
         'model': 'RC3R',
         'type': 'passive',
-        'price': '',
+        'price': '1300',
         'shape': 'bookshelves',
         'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Spendor Audio Systems SA1': {
@@ -709,6 +796,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Verdant Audio Bambusa MG 1': {
@@ -716,29 +804,38 @@ speakers_info = {
         'model': 'Bambusa MG 1',
         'type': 'passive',
         'price': '5000',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Yamaha HS5': {
         'brand': 'Yamaha',
         'model': 'HS5',
         'type': 'active',
-        'price': '',
+        'price': '399',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
     'Zaph Audio ZA5': {
         'brand': 'Zaph Audio',
         'model': 'ZA5',
         'type': 'passive',
-        'price': '',
+        'price': '350',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
+            'review': '',
             }],
     },
 }
