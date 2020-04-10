@@ -134,6 +134,10 @@ def column_valid(c):
 
 def spatial_average(sp_window, func='rms'):
     sp_cols = sp_window.columns
+    if 'Freq' not in sp_cols:
+        logging.debug('Freq is not in sp_cols')
+        return None
+    
     result = pd.DataFrame({
         'Freq': sp_window.Freq,
     })
@@ -171,6 +175,9 @@ def spatial_average1(spl, sel, func='rms'):
     if spl is None:
         return None
     spl_window = spl[[c for c in spl.columns if c in sel]]
+    if 'Freq' not in spl_window.columns:
+        logging.debug('Freq not in spl_window')
+        return None
     return spatial_average(spl_window, func)
 
 
@@ -190,9 +197,20 @@ def spatial_average2(h_spl: pd.DataFrame, h_sel,
 
 
 def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
-    # Sound Power                                                                                                                                           # The sound power is the weighted rms average of all 70 measurements,                                                                                   # with individual measurements weighted according to the portion of the                                                                                 # spherical surface that they represent. Calculation of the sound power                                                                                 # curve begins with a conversion from SPL to pressure, a scalar magnitude.                                                                              # The individual measures of sound pressure are then weighted according                                                                                 # to the values shown in Appendix C and an energy average (rms) is                                                                                      # calculated using the weighted values. The final average is converted                                                                                  # to SPL.      
+    # Sound Power
+    # The sound power is the weighted rms average of all 70 measurements,
+    # with individual measurements weighted according to the portion of the
+    # spherical surface that they represent. Calculation of the sound power
+    # curve begins with a conversion from SPL to pressure, a scalar magnitude.
+    # The individual measures of sound pressure are then weighted according
+    # to the values shown in Appendix C and an energy average (rms) is
+    # calculated using the weighted values. The final average is converted
+    # to SPL.      
     h_cols = h_spl.columns
-    v_cols = v_spl.columns.drop(['On Axis', '180°'])
+    v_cols = v_spl.columns #.drop(['On Axis', '180°'])
+    for to_be_dropped in ['On Axis', '180°']:
+        if to_be_dropped in v_cols:
+            v_cols = v_cols.drop([to_be_dropped])
     return spatial_average2(h_spl, h_cols, v_spl, v_cols, 'weighted_rms')
 
 
@@ -209,11 +227,12 @@ def total_early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Seri
         return None
     return spatial_average2(
         h_spl, ['Freq', 'On Axis',
-                '10°',  '20°', '30°', '40°',  '50°',  '60°',  '70°',  '80°', '90°',
-                '-10°',  '-20°', '-30°', '-40°',  '-50°',  '-60°',  '-70°',  '-80°', '-90°',
+                 '10°',  '20°',  '30°',  '40°',  '50°',  '60°',  '70°',  '80°',  '90°',
+                '-10°', '-20°', '-30°', '-40°', '-50°', '-60°', '-70°', '-80°', '-90°',
                 '180°'],
         v_spl, ['Freq', 'On Axis',
-                '-20°',  '-30°', '-40°', '40°',  '50°', '60°']
+                '-20°',  '-30°', '-40°',
+                '40°',  '50°', '60°']
     )
 
 
@@ -235,7 +254,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     rear_wall_bounce = spatial_average1(
         h_spl, ['Freq', '-90°', '90°',  '180°'])
 
-    ter = total_early_reflections(h_spl, v_spl)
+    total_early_reflection = total_early_reflections(h_spl, v_spl)
 
     er = pd.DataFrame({
         'Freq': h_spl.Freq,
@@ -246,7 +265,8 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
                         ('Front Wall Bounce', front_wall_bounce),
                         ('Side Wall Bounce', side_wall_bounce),
                         ('Rear Wall Bounce', rear_wall_bounce),
-                        ('Total Early Reflection', ter)]:
+                        ('Total Early Reflection', total_early_reflection)
+                       ]:
         if name is not None:
             er[key] = name.dB
         else:
@@ -391,7 +411,7 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     # An SPDI of 0 dB indicates omnidirectional radiation. The larger the SPDI, the
     # more directional the loudspeaker is in the direction of the reference axis.
     spdi = lw.dB - sp.dB + 60
-    for (key, name) in [('Listening Window', lw), ('Sound Power', sp)]:
+    for (key, name) in [('Listening Window', lw), ('Sound Power', sp), ('Early Reflections', erb)]:
         if name is not None:
             spin[key] = name.dB
         else:
@@ -415,6 +435,9 @@ def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     else:
         onaxis = spatial_average1(v_spl, ['On Axis'])
 
+    if onaxis is None:
+        return None
+    
     df = pd.DataFrame({
         'Freq': onaxis.Freq,
         'On Axis': onaxis.dB,
