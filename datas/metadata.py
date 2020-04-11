@@ -260,15 +260,15 @@ speakers_info = {
     },
     'Infinity R152': {
         'brand': 'Infinity',
-        'model': 'Reference R152',
+        'model': 'R152',
         'type': 'passive',
         'price': '350',
         'shape': 'bookshelves',
         'amount': 'pair',
         'measurements': [{
-            'origin': 'Vendor/Infinity',
+            'origin': 'Vendors/Infinity',
             'website': 'www.infinityspeakers.com',
-            'format': 'webplotdifitizer',
+            'format': 'webplotdigitizer',
             }],
     },
     'Infinity R162': {
