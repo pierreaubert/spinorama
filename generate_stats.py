@@ -105,6 +105,7 @@ def generate_stats(meta):
 
     scores = spread | distribution
 
+    # used in website
     filedir = 'docs/stats'
     pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
 
@@ -113,6 +114,20 @@ def generate_stats(meta):
 
     scoresname = filedir + '/scores.json'
     scores.save(scoresname)
+
+    # used in book
+    filedir = 'book/stats'
+    pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
+
+    for graph in graphs.keys():
+        graph_name = '{0}/{1}.png'.format(filedir, graph)
+        graphs[graph].save(graph_name)
+
+    spread_name = '{0}/spread.png'.format(filedir)
+    spread.save(spread_name)
+
+    distribution_name = '{0}/distribution.png'.format(filedir)
+    distribution.save(distribution_name)
 
     return 0
 

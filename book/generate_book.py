@@ -25,6 +25,7 @@ Options:
   --version         script version number
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
+import json
 import logging
 import os
 import sys
@@ -46,6 +47,24 @@ if __name__ == '__main__':
         if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
             logging.basicConfig(level=level)
             
+    # load all metadata from generated json file
+    json_filename = '../docs/assets/metadata.json'
+    if not os.path.exists(json_filename):
+        logging.fatal('Cannot find {0}'.format(json_filename))
+        sys.exit(1)
+
+    meta = None
+    with open(json_filename, 'r') as f:
+        meta = json.load(f)
+
+    def sort_meta(s):
+        if 'pref_rating' in s.keys():
+            return s['pref_rating']['pref_score']
+        return -1
+
+    keys_sorted = sorted(meta, key=lambda a: sort_meta(meta[a]), reverse=True)
+    meta_sorted = {k: meta[k] for k in keys_sorted}
+
     # only build a dictionnary will all graphs
     speakers = {}
     names = glob('./tmp/*.eps')
@@ -57,16 +76,17 @@ if __name__ == '__main__':
             'title': speaker_title
         }
         
-
     # configure Mako
     mako_templates = TemplateLookup(directories=['.'], module_directory='/tmp/mako_modules')
 
     # write index.html
-    logging.info('Write asrbook.tex ({0} speakers found'.format(len(speakers.keys())))
-    asrbook_tex = mako_templates.get_template('asrbook.tex')
+    for template in ('asrbook', ):
+        name = '{0}.tex'.format(template)
+        logging.info('Write {0} ({1} speakers found'.format(name, len(speakers.keys())))
+        template_tex = mako_templates.get_template(name)
 
-    with open('tmp/asrbook.tex', 'w') as f:
-        f.write(asrbook_tex.render(speakers=speakers))
-        f.close()
+        with open('tmp/{0}'.format(name), 'w') as f:
+            f.write(template_tex.render(speakers=speakers, meta=meta_sorted))
+            f.close()
 
     sys.exit(0)
