@@ -168,7 +168,7 @@ def spatial_average(sp_window, func='rms'):
             .apply(weighted_rms, axis=1)\
             .apply(pressure2spl)
 
-    return result.reset_index()
+    return result.reset_index(drop=True)
 
 
 def spatial_average1(spl, sel, func='rms'):
@@ -271,7 +271,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
             er[key] = name.dB
         else:
             logging.debug('{0} is None'.format(key))
-    return er
+    return er.reset_index(drop=True)
 
 
 def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
@@ -298,7 +298,7 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
         else:
             logging.debug('{0} is None'.format(key))
 
-    return vr
+    return vr.reset_index(drop=True)
 
 
 def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
@@ -335,7 +335,7 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
             hr[key] = name.dB
         else:
             logging.debug('{0} is None'.format(key))
-    return hr
+    return hr.reset_index(drop=True)
 
 
 def estimated_inroom(lw: pd.DataFrame, er: pd.DataFrame, sp: pd.DataFrame) -> pd.DataFrame:
@@ -421,7 +421,7 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
             spin[key] = name
         else:
             logging.debug('{0} is None'.format(key))
-    return spin
+    return spin.reset_index(drop=True)
 
 
 def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:

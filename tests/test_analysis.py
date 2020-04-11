@@ -50,37 +50,19 @@ class SpinoramaSpinoramaTests(unittest.TestCase):
         
 
     def test_validate_cea2034(self):
-        for measurement in ['On Axis', 'Listening Window']:
+        for measurement in ['On Axis', 'Listening Window', 'Sound Power']: # , 'Early Reflections']:
             # from klippel
-            reference = self.spin.loc[self.spin['Measurements'] == measurement]
+            reference = self.spin.loc[self.spin['Measurements'] == measurement].reset_index(drop=True)
             # computed
-            computed = self.computed_spin.loc[self.computed_spin['Measurements'] == measurement]
+            computed = self.computed_spin.loc[self.computed_spin['Measurements'] == measurement].reset_index(drop=True)
             # should have the same Freq
             self.assertEqual(computed.Freq.size , reference.Freq.size)
+            print(computed.Freq, reference.Freq)
             self.assertTrue(computed.Freq.eq(reference.Freq).all())
             # and should be equal or close in dB
             delta = (computed.dB-reference.dB).abs().max()
-            # 1 db tolerance?
-            # TODO(pierreaubert): that's too high
-            self.assertLess(delta, 1.0)
-        
-
-    def test_validate_cea2034_soundpower(self):
-        for measurement in ['Sound Power']:
-            # from klippel
-            reference = self.spin.loc[self.spin['Measurements'] == measurement]
-            # computed
-            computed = self.computed_spin.loc[self.computed_spin['Measurements'] == measurement]
-            # delta
-            self.assertEqual(computed.shape, reference.shape)
-            # freq are not exactly the same
-            # print(reference.dB.abs().max())
-            # print(computed.dB.abs().max())
-            # print(reference.dB.mean(axis=0))
-            # print(computed.dB.mean(axis=0))
-            # and should be equal or close in dB
-            self.assertLess( abs(reference.dB.abs().max()-computed.dB.abs().max()), 1.0 )
-            self.assertLess( abs(reference.dB.mean(axis=0)-computed.dB.mean(axis=0)), 1.0 )
+            # TODO(pierreaubert): that's a bit too high
+            self.assertLess(delta, .001)
         
 
 class SpinoramaEarlyReflectionsTests(unittest.TestCase):
@@ -116,9 +98,8 @@ class SpinoramaEarlyReflectionsTests(unittest.TestCase):
             self.assertEqual(computed.Freq.size , reference.Freq.size)
             # self.assertTrue(computed.Freq.eq(reference.Freq).all())
             # and should be equal or close in dB
-            # 0.2 db tolerance?
             # TODO(pierreaubert): that's too high
-            self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), 0.2)
+            self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), 0.02)
         
         
 class SpinoramaVerticalReflectionsTests(unittest.TestCase):
@@ -193,8 +174,7 @@ class SpinoramaHorizontalReflectionsTests(unittest.TestCase):
             self.assertEqual(computed.Freq.size , reference.Freq.size)
             # self.assertTrue(computed.Freq.eq(reference.Freq).all())
             # and should be equal or close in dB
-            # 0.2 db tolerance?
-            self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), .2)
+            self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), .001)
         
         
 
@@ -230,8 +210,7 @@ class SpinoramaEstimatedInRoomTests(unittest.TestCase):
         self.assertEqual(computed.Freq.size , reference.Freq.size)
         # self.assertTrue(computed.Freq.eq(reference.Freq).all())
         # and should be equal or close in dB
-        # 0.1 db tolerance?
-        self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), 0.1)
+        self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), 0.005)
         
         
 class PrefRatingTests(unittest.TestCase):
