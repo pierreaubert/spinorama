@@ -431,9 +431,9 @@ def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
         if h_spl is None:
             return None
         else:
-            onaxis = spatial_average1(h_spl, ['On Axis'])
+            onaxis = spatial_average1(h_spl, ['Freq', 'On Axis'])
     else:
-        onaxis = spatial_average1(v_spl, ['On Axis'])
+        onaxis = spatial_average1(v_spl, ['Freq', 'On Axis'])
 
     if onaxis is None:
         return None
