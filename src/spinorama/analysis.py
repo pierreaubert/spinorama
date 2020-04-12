@@ -260,13 +260,14 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
         'Freq': h_spl.Freq,
     }).reset_index(drop=True)
     
-    for (key, name) in [('Floor Bounce', floor_bounce),
-                        ('Ceiling Bounce', ceiling_bounce),
-                        ('Front Wall Bounce', front_wall_bounce),
-                        ('Side Wall Bounce', side_wall_bounce),
-                        ('Rear Wall Bounce', rear_wall_bounce),
-                        ('Total Early Reflection', total_early_reflection)
-                       ]:
+    for (key, name) in [
+        ('Floor Bounce', floor_bounce),
+        ('Ceiling Bounce', ceiling_bounce),
+        ('Front Wall Bounce', front_wall_bounce),
+        ('Side Wall Bounce', side_wall_bounce),
+        ('Rear Wall Bounce', rear_wall_bounce),
+        ('Total Early Reflection', total_early_reflection),
+        ]:
         if name is not None:
             er[key] = name.dB
         else:
