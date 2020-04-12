@@ -253,7 +253,7 @@ def graph_contour_smoothed(df, graph_params):
 
 
 def radar_angle2str(a):
-
+    """display an angle every 30 deg"""
     if a % 30 == 0:
         return '{:d}°'.format(a)
     else:
@@ -263,9 +263,9 @@ def radar_angle2str(a):
 def radar_join(anglelist):
     """return true if we should join the last point and the first one"""
     # 180-170-10 => join points
-    delta = anglelist[-1]+anglelist[0]-10
+    delta = anglelist[-1]+anglelist[0]
     # print(delta)
-    if delta == 0:
+    if delta == 10 or delta == 5:
         return True
     else:
         return False
@@ -410,14 +410,18 @@ def angle2value(angle):
         return int(angle[:-1])
 
 
-def graph_radar(dfu, graph_params):
-
+def graph_radar(df_in, graph_params):
+    dfu = df_in.copy()
     # which part of the circle do we plot?
     angle_min, angle_max = radar_angle_range(dfu.columns)
     if angle_min is None or angle_max is None or angle_max == angle_min:
         logging.debug('Angle is empty')
         return None
-    anglelist = [a for a in range(angle_min, angle_max+10, 10)]
+    # do we have +10 or +5 deg measurements?
+    delta = 10
+    if (len(dfu.columns)-1)/36 == 2:
+        delta = 5
+    anglelist = [a for a in range(angle_min, angle_max+delta, delta)]
     # print(angle_min, angle_max)
     # print(dfu.columns)
     # print(anglelist)
