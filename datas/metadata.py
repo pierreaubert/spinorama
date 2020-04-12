@@ -169,6 +169,19 @@ speakers_info = {
             'format': 'princeton',
             }],
     },
+    'Fostex PM03': {
+        'brand': 'Fostexm',
+        'model': 'PM03',
+        'type': 'active',
+        'price': '150',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/fostex-pm-03-active-speaker-review.12517/',
+        }],
+    },
     'Gainphile R16': {
         'brand': 'Gainphile',
         'model': 'R16',
@@ -260,15 +273,15 @@ speakers_info = {
     },
     'Infinity R152': {
         'brand': 'Infinity',
-        'model': 'Reference R152',
+        'model': 'R152',
         'type': 'passive',
         'price': '350',
         'shape': 'bookshelves',
         'amount': 'pair',
         'measurements': [{
-            'origin': 'Vendor/Infinity',
+            'origin': 'Vendors/Infinity',
             'website': 'www.infinityspeakers.com',
-            'format': 'webplotdifitizer',
+            'format': 'webplotdigitizer',
             }],
     },
     'Infinity R162': {

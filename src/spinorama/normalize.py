@@ -73,7 +73,8 @@ def normalize_cea2034(dfc, mean):
         df.loc[df.Measurements == measurement, 'dB'] -= mean
 
     for measurement in ('Sound Power DI', 'Early Reflections DI', 'DI offset'):
-        df.loc[df.Measurements == measurement, 'dB'] -= offset
+        # for Vendors graphs without a DI offset
+        df.loc[df.Measurements == measurement, 'dB'] -= offset-40
 
     return df
 
