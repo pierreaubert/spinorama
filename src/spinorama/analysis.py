@@ -17,6 +17,7 @@ def fconst(x: float, a: float):
 def estimates(onaxis: pd.DataFrame):
     try:
         freq_min = onaxis.Freq.min()
+        logging.debug('Freq min: {0}'.format(freq_min))
         if freq_min < 300:
             # mean over 300-10k
             y_ref = np.mean(onaxis.loc[(onaxis.Freq >= 300) & (onaxis.Freq <= 10000)].dB)
@@ -26,14 +27,19 @@ def estimates(onaxis: pd.DataFrame):
             up:   float = onaxis.loc[(onaxis.Freq >= 100) & (onaxis.Freq <= 10000)].dB.max()
             down: float = onaxis.loc[(onaxis.Freq >= 100) & (onaxis.Freq <= 10000)].dB.min()
             band = max(abs(up-y_ref), abs(y_ref-down))
-            return [round(y_ref, 0), round(y_3, 0), round(y_6, 0), round(band, 1)]
+            est = [round(y_ref, 0), round(y_3, 0), round(y_6, 0), round(band, 1)]
+            logging.debug('Estimates: {0}'.format(est))
+            return est
         else:
             y_ref = np.mean(onaxis.loc[(onaxis.Freq >= freq_min) & (onaxis.Freq <= 10000)].dB)
             # search band up/down
             up:   float = onaxis.loc[(onaxis.Freq >= freq_min) & (onaxis.Freq <= 10000)].dB.max()
             down: float = onaxis.loc[(onaxis.Freq >= freq_min) & (onaxis.Freq <= 10000)].dB.min()
             band = max(abs(up-y_ref), abs(y_ref-down))
-            return [round(y_ref, 0), -1, -1, round(band, 1)]
+            est = [round(y_ref, 0), -1, -1, round(band, 1)]
+            logging.debug('Estimates: {0}'.format(est))
+            return est
+
     except TypeError as te:
         logging.warning('Estimates failed for {0} with {1}'.format(onaxis.shape, te))
         return [-1, -1, -1, -1]
@@ -42,7 +48,8 @@ def estimates(onaxis: pd.DataFrame):
         return [-1, -1, -1, -1]
 
 
-# from the standard appendix                                                                                                                            # weigth http://emis.impa.br/EMIS/journals/BAG/vol.51/no.1/b51h1san.pdf
+# from the standard appendix
+# weigth http://emis.impa.br/EMIS/journals/BAG/vol.51/no.1/b51h1san.pdf
 
 sp_weigths = {
     'On Axis': 0.000604486,
@@ -137,6 +144,9 @@ def spatial_average(sp_window, func='rms'):
     if 'Freq' not in sp_cols:
         logging.debug('Freq is not in sp_cols')
         return None
+    if len(sp_window) < 2:
+        logging.debug('Len window is {0}'.format(len(sp_window)))
+        return None
     
     result = pd.DataFrame({
         'Freq': sp_window.Freq,
@@ -150,9 +160,10 @@ def spatial_average(sp_window, func='rms'):
     def rms(spl):
         avg = [spl[c]**2 for c in sp_cols if column_valid(c)]
         n = len(avg)
+        # hack
+        if n == 0:
+            return 0.000000001
         r = np.sqrt(np.sum(avg)/n)
-        if isnan(r):
-            print(spl)
         return r
 
     if func == 'rms':

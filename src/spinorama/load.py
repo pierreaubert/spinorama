@@ -203,7 +203,7 @@ def parse_graphs_speaker_klippel(speaker_name):
             dfs[title + '_unmelted'] = df
             dfs[title] = graph_melt(df)
         except FileNotFoundError:
-            logging.warning('Speaker: ' + speaker_name +' (ASR) Not found: ' + csvfilename)
+            logging.info('Speaker: {0} (ASR) Not found: {1}'.format(speaker_name, csvfilename))
     return dfs
 
 
@@ -232,7 +232,7 @@ def parse_graphs_speaker_webplotdigitizer(speaker_brand, speaker_name):
             logging.debug('eir {0}'.format(eir.shape))
             dfs['Estimated In-Room Response'] = graph_melt(eir)
     except FileNotFoundError:
-        logging.warning('Speaker: ' + speaker_name +' Not found: '+ jsonfilename)
+        logging.info('Speaker: {0} Not found: {1}'.format(speaker_name, jsonfilename))
     return dfs
         
     
@@ -279,7 +279,7 @@ def parse_graphs_speaker_princeton(speaker_name):
                 dfs[title+'_unmelted'] = df
                 dfs[title] = graph_melt(df)
             else:
-                logging.warning('{0} computation is None for speaker{1:s} (Princeton)'.format(title, speaker_name))
+                logging.info('{0} computation is None for speaker{1:s} (Princeton)'.format(title, speaker_name))
         except KeyError as ke:
             logging.warning('{0} computation failed with key:{1} for speaker{2:s} (Princeton)'.format(title, ke, speaker_name))
             
@@ -345,6 +345,7 @@ def parse_all_speakers(metadata, filter_origin, speakerpath='./datas'):
     df = {}
     count_measurements = 0
     for speaker in speakerlist:
+        logging.info('Parsing {0}'.format(speaker))
         df[speaker] = {}
         if speaker not in metadata.keys():
             logging.error('{:s} is not in metadata.py!'.format(speaker))

@@ -18,19 +18,22 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-usage: generate_meta.py [--help] [--version] [--log-level=<level>]
+usage: generate_meta.py [--help] [--version] [--log-level=<level>]\
+    [--origin=<origin>] [--speaker=<speaker>]
 
 Options:
   --help            display usage()
   --version         script version number
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
+  --origin=<origin> restrict to a specific origin, usefull for debugging
+  --speaker=<speaker> restrict to a specific speaker, usefull for debugging
 """
+import logging
 import os
 import math
 import sys
 import json
-import logging
-from src.spinorama.load import parse_all_speakers
+from src.spinorama.load import parse_all_speakers, parse_graphs_speaker
 from src.spinorama.analysis import estimates, speaker_pref_rating
 import datas.metadata as metadata
 from docopt import docopt
@@ -75,6 +78,7 @@ def add_estimates(df):
     min_sm_sp = 1
     max_sm_sp = 0
     for speaker_name, speaker_data in df.items():
+        logging.info('Processing {0}'.format(speaker_name))
         for origin, measurements in speaker_data.items():
             for m, dfs in measurements.items():
                 if m != 'default':
@@ -89,9 +93,10 @@ def add_estimates(df):
 
                 logging.debug('Compute score for speaker {0}'.format(speaker_name))
                 # basic math
-                onaxis = spin.loc[spin['Measurements'] == 'On Axis']
+                onaxis = spin.loc[spin['Measurements'] == 'On Axis'].reset_index(drop=True)
                 est = estimates(onaxis)
-                if est is None or est[0] == -1:
+                logging.info('Computing estimated for {0}'.format(speaker_name))
+                if est is None or est == [-1, -1, -1, -1]:
                     continue
                 logging.info('Adding -3dB {0}Hz -6dB {1}Hz +/-{2}dB'.format(est[1], est[2], est[3]))
                 if 'estimates' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
@@ -128,6 +133,7 @@ def add_estimates(df):
 
     # add normalized value to metadata
     for speaker_name, speaker_data in df.items():
+        logging.info('Normalize data for {0}'.format(speaker_name))
         for origin, measurements in speaker_data.items():
             for m, dfs in measurements.items():
                 if m != 'default':
@@ -182,18 +188,34 @@ def dump_metadata(meta):
 
 if __name__ == '__main__':
     args = docopt(__doc__,
-                  version='generate_meta.py version 1.0',
+                  version='generate_meta.py version 1.1',
                   options_first=True)
 
     # check args section
-    logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-                        datefmt='%Y-%m-%d:%H:%M:%S')
+    # logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s', datefmt='%Y-%m-%d:%H:%M:%S')
     if args['--log-level'] is not None:
         level = args['--log-level']
         if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
             logging.basicConfig(level=level)
 
-    df = parse_all_speakers(metadata.speakers_info, None)
+    df = None
+    if args['--speaker'] is not None and args['--origin'] is not None:
+        speaker = args['--speaker']
+        origin = args['--origin']
+        mformat = None
+        if origin == 'Princeton':
+            mformat = 'princeton'
+        elif origin == 'ASR':
+            mformat = 'klippel'
+        else:
+            mformat = 'webplotdigitizer'
+        brand = metadata.speakers_info[speaker]['brand']
+        df = {}
+        df[speaker] = {}
+        df[speaker][origin] = {}
+        df[speaker][origin]['default'] = parse_graphs_speaker(brand, speaker, mformat)
+    else:    
+        df = parse_all_speakers(metadata.speakers_info, None)
 
     if sanity_check(df, metadata.speakers_info) != 0:
         logging.error('Sanity checks failed!')
@@ -204,7 +226,8 @@ if __name__ == '__main__':
     add_estimates(df)
 
     # write metadata in a json file for easy search
-    logging.info('Write metadat')
+    logging.info('Write metadata')
     dump_metadata(metadata.speakers_info)
 
+    logging.info('Bye')
     sys.exit(0)

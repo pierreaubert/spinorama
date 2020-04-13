@@ -36,11 +36,6 @@ import pandas as pd
 import altair as alt
 
 
-siteprod = 'https://pierreaubert.github.io/spinorama'
-sitedev = 'http://localhost:8000/docs'
-root = './'
-
-
 def meta2df(meta):
     df = pd.DataFrame({'speaker': [], 'param': [], 'value': []})
     count = 0
