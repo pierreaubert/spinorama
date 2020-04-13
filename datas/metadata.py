@@ -771,6 +771,19 @@ speakers_info = {
             'format': 'webplotdigitizer',
             }],
     },
+    'Revel Ultima Salon': {
+        'brand': 'Revel',
+        'model': 'Ultima Salon',
+        'type': 'passive',
+        'price': '',
+        'shape': 'floorstander',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'Vendors/Revel',
+            'website': 'www.revel.com',
+            'format': 'webplotdigitizer',
+            }],
+    },
     'Sanders Sound Systems Model 11': {
         'brand': 'Sanders Sound Systems',
         'model': 'Model 11',
