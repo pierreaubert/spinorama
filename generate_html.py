@@ -145,9 +145,11 @@ if __name__ == '__main__':
 
     # only build a dictionnary will all graphs
     df = {}
-    speakers = glob('./docs/[A-Z]*')
+    speakers = glob('./docs/*')
     for speaker in speakers:
         if not os.path.isdir(speaker):
+            continue
+        if speaker in ('score', 'assets', 'stats', ):
             continue
         speaker_name = speaker.replace('./docs/', '')
         df[speaker_name] = {}
