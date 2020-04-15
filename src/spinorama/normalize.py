@@ -67,7 +67,7 @@ def normalize_cea2034(dfc, mean):
 
     offset = mean
     if 'DI offset' in df.Measurements.unique():
-        offset = np.mean(df[df.Measurements == 'DI offset'].dB)
+        offset = np.mean(df[df.Measurements == 'DI offset'].dB)+40
 
     for measurement in ('On Axis', 'Listening Window', 'Sound Power', 'Early Reflections'):
         df.loc[df.Measurements == measurement, 'dB'] -= mean
