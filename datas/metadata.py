@@ -356,6 +356,19 @@ speakers_info = {
             'review': '',
             }],
     },
+    'JBL 705i': {
+        'brand': 'JBL',
+        'model': '705i',
+        'type': 'passive',
+        'price': '1500',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'Vendors/JBL',
+            'format': 'webplotdigitizer',
+            'review': '',
+            }],
+    },
     'JBL 705P': {
         'brand': 'JBL',
         'model': '705P',
@@ -832,6 +845,19 @@ speakers_info = {
         'model': 'System 600',
         'type': 'passive',
         'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': '',
+            }],
+    },
+    'Verdant Audio Bambusa AL 1': {
+        'brand': 'Verdant Audio',
+        'model': 'Bambusa AL 1',
+        'type': 'passive',
+        'price': '3500',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
