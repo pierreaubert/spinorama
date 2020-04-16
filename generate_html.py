@@ -149,7 +149,8 @@ if __name__ == '__main__':
     for speaker in speakers:
         if not os.path.isdir(speaker):
             continue
-        if speaker in ('score', 'assets', 'stats', ):
+        # humm annoying
+        if speaker in ('score', 'assets', 'stats', 'compare', 'logos', 'pictures'):
             continue
         speaker_name = speaker.replace('./docs/', '')
         df[speaker_name] = {}
