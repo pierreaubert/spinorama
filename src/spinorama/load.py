@@ -6,6 +6,7 @@ from locale import atof
 import math
 import json
 import logging
+import tarfile
 import numpy as np
 import pandas as pd
 from scipy.io import loadmat
@@ -76,54 +77,58 @@ def parse_graph_freq_webplotdigitizer(filename):
     # from 20Hz to 20kHz, log(2)~0.3
     ref_freq = np.logspace(1+math.log10(2), 4+math.log10(2), 500)
     #
-    with open(filename, 'r') as f:
-        # data are stored in a json file.
-        speaker_data = json.load(f)
-        # store all results
-        res = []
-        for col in speaker_data['datasetColl']:
-            data = col['data']
-            # sort data
-            udata = [(data[d]['value'][0],
-                      data[d]['value'][1])
-                     for d in range(0, len(data))]
-            sdata = sorted(udata, key=lambda a: a[0])
-            #print(col['name'], len(sdata))
-            #print(sdata[0])
-            # since sdata and freq_ref are both sorted, iterate over both
-            ref_p = 0
-            for di in range(0, len(sdata)-1):
-                d = sdata[di]
-                dn = sdata[di+1]
-                fr = d[0]
-                db = d[1]
-                frn = dn[0]
-                dbn = dn[1]
-                # remove possible errors
-                if fr == frn:
-                    continue
-                # look for closest match
-                while ref_freq[ref_p] <= fr:
-                    if ref_p >= len(ref_freq)-1:
-                        break
-                    ref_p += 1
-                # if ref_f is too large, skip
-                ref_f = ref_freq[ref_p]
-                if ref_f > frn:
-                    continue
-                # linear interpolation
-                ref_db = db+((dbn-db)*(ref_f-fr))/(frn-fr)
-                #print('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} db={:.1f} db_ref={:.1f} db_n={:.1f}'.format(fr, ref_f, frn, db, ref_db, dbn))
-                res.append([ref_f, ref_db, col['name']])
-
-        # build dataframe
-        freq = np.array([res[i][0] for i in range(0, len(res))]).astype(np.float)
-        dB   = np.array([res[i][1] for i in range(0, len(res))]).astype(np.float)
-        mrt  = [res[i][2] for i in range(0, len(res))]
-        df = pd.DataFrame({'Freq': freq, 'dB': dB, 'Measurements': mrt})
-        # print(df)
-        return 'CEA2034', df 
-
+    try:
+        with open(filename, 'r') as f:
+            # data are stored in a json file.
+            speaker_data = json.load(f)
+            # store all results
+            res = []
+            for col in speaker_data['datasetColl']:
+                data = col['data']
+                # sort data
+                udata = [(data[d]['value'][0],
+                          data[d]['value'][1])
+                         for d in range(0, len(data))]
+                sdata = sorted(udata, key=lambda a: a[0])
+                #print(col['name'], len(sdata))
+                #print(sdata[0])
+                # since sdata and freq_ref are both sorted, iterate over both
+                ref_p = 0
+                for di in range(0, len(sdata)-1):
+                    d = sdata[di]
+                    dn = sdata[di+1]
+                    fr = d[0]
+                    db = d[1]
+                    frn = dn[0]
+                    dbn = dn[1]
+                    # remove possible errors
+                    if fr == frn:
+                        continue
+                    # look for closest match
+                    while ref_freq[ref_p] <= fr:
+                        if ref_p >= len(ref_freq)-1:
+                            break
+                        ref_p += 1
+                    # if ref_f is too large, skip
+                    ref_f = ref_freq[ref_p]
+                    if ref_f > frn:
+                        continue
+                    # linear interpolation
+                    ref_db = db+((dbn-db)*(ref_f-fr))/(frn-fr)
+                    #print('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} db={:.1f} db_ref={:.1f} db_n={:.1f}'.format(fr, ref_f, frn, db, ref_db, dbn))
+                    res.append([ref_f, ref_db, col['name']])
+    
+            # build dataframe
+            freq = np.array([res[i][0] for i in range(0, len(res))]).astype(np.float)
+            dB   = np.array([res[i][1] for i in range(0, len(res))]).astype(np.float)
+            mrt  = [res[i][2] for i in range(0, len(res))]
+            df = pd.DataFrame({'Freq': freq, 'dB': dB, 'Measurements': mrt})
+            # print(df)
+            return 'CEA2034', df 
+    except IOError as e:
+        logging.error('Cannot not open: {0}'.format(e))
+        return None, None
+            
 
 def parse_graph_freq_princeton_mat(mat, suffix):
     """ Suffix can be either H or V """
@@ -207,9 +212,45 @@ def parse_graphs_speaker_klippel(speaker_name):
     return dfs
 
 
+def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name):
+    filename = dirname + '/' + speaker_name
+    tarfilename = filename + '.tar'
+    jsonfilename = None
+    try:
+        if os.path.exists(tarfilename):
+            # we are looking for info.json that may or not be in a directory
+            with tarfile.open(tarfilename, 'r|*') as tar:
+                info_json = None
+                for tarinfo in tar:
+                    print(tarinfo.name)
+                    if tarinfo.isreg() and tarinfo.name[-9:] == 'info.json':
+                        # note that files/directory with name tmp are in .gitignore
+                        tar.extract(tarinfo, path=dirname+'/tmp', set_attrs=False)
+                        info_json = dirname + 'tmp/' + tarinfo.name
+                        with open(info_json, 'r') as f:
+                            info = json.load(f)
+                            jsonfilename = dirname + 'tmp/' + tarinfo.name[:-9] + info['json']
+                            
+            # now extract the large json file
+            if jsonfilename is not None:
+                with tarfile.open(tarfilename, 'r|*') as tar:
+                    for tarinfo in tar:
+                        if tarinfo.isfile() and tarinfo.name in jsonfilename:
+                            logging.debug('Extracting: {0}'.format(tarinfo.name))
+                            tar.extract(tarinfo, path=dirname+'/tmp', set_attrs=False)
+                   
+    except tarfile.ReadError as re:
+        logging.error('Tarfile {0}: {1}'.format(tarfilename, re))
+    if jsonfilename is None:
+        jsonfilename = filename + '.json'
+    logging.debug('Jsonfilename {0}'.format(jsonfilename))
+    return jsonfilename
+
 def parse_graphs_speaker_webplotdigitizer(speaker_brand, speaker_name):
     dfs = {}
-    jsonfilename = 'datas/Vendors/' + speaker_brand + '/' + speaker_name + '/' + speaker_name + '.json'
+    dirname = 'datas/Vendors/' + speaker_brand + '/' + speaker_name + '/'
+    jsonfilename = parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name)
+
     try:
         title, spin_uneven = parse_graph_freq_webplotdigitizer(jsonfilename)
         spin = graph_melt(unify_freq(spin_uneven))
