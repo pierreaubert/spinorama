@@ -1,3 +1,5 @@
+var brotli = require('brotli');
+
 document.querySelectorAll('#nav li').forEach(function (navEl) {
   navEl.onclick = function () { toggleCompare(this.id, this.dataset.target) }
 })

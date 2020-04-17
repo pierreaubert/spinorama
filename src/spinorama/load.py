@@ -115,10 +115,13 @@ def parse_graph_freq_webplotdigitizer(filename):
                         continue
                     # linear interpolation
                     ref_db = db+((dbn-db)*(ref_f-fr))/(frn-fr)
-                    #print('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} db={:.1f} db_ref={:.1f} db_n={:.1f}'.format(fr, ref_f, frn, db, ref_db, dbn))
-                    res.append([ref_f, ref_db, col['name']])
-    
+                    if ref_f <= 20000 and ref_f > 0 and ref_db > -50 and ref_db < 200:
+                        res.append([ref_f, ref_db, col['name']])
+                    else:
+                        logging.error('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} db={:.1f} db_ref={:.1f} db_n={:.1f}'.format(fr, ref_f, frn, db, ref_db, dbn))
+
             # build dataframe
+            # print(res)
             freq = np.array([res[i][0] for i in range(0, len(res))]).astype(np.float)
             dB   = np.array([res[i][1] for i in range(0, len(res))]).astype(np.float)
             mrt  = [res[i][2] for i in range(0, len(res))]
@@ -222,7 +225,7 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name):
             with tarfile.open(tarfilename, 'r|*') as tar:
                 info_json = None
                 for tarinfo in tar:
-                    print(tarinfo.name)
+                    # print(tarinfo.name)
                     if tarinfo.isreg() and tarinfo.name[-9:] == 'info.json':
                         # note that files/directory with name tmp are in .gitignore
                         tar.extract(tarinfo, path=dirname+'/tmp', set_attrs=False)

@@ -496,7 +496,11 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }, ],
+            },{
+            'origin': 'Vendors/KEF',
+            'format': 'webplotdigitizer',
+            'review': '',
+            },],
     },
     'KEF LS50': {
         'brand': 'KEF',
@@ -745,6 +749,10 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
+            },{
+            'origin': 'Vendors/Revel',
+            'format': 'webplotdigitizer',
+            'review': '',
             }],
     },
     'Revel M22': {
@@ -800,6 +808,19 @@ speakers_info = {
     'Revel Ultima Salon2': {
         'brand': 'Revel',
         'model': 'Ultima Salon2',
+        'type': 'passive',
+        'price': '',
+        'shape': 'floorstander',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'Vendors/Revel',
+            'website': 'www.revel.com',
+            'format': 'webplotdigitizer',
+            }],
+    },
+    'Revel Ultima2 Salon2': {
+        'brand': 'Revel',
+        'model': 'Ultima2 Salon2',
         'type': 'passive',
         'price': '',
         'shape': 'floorstander',
