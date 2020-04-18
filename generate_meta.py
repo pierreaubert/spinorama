@@ -192,11 +192,21 @@ if __name__ == '__main__':
                   options_first=True)
 
     # check args section
-    # logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s', datefmt='%Y-%m-%d:%H:%M:%S')
+    level = None
     if args['--log-level'] is not None:
-        level = args['--log-level']
-        if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
-            logging.basicConfig(level=level)
+        check_level = args['--log-level']
+        if check_level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
+            level = check_level
+
+    if level is not None:
+        logging.basicConfig(
+            format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+            datefmt='%Y-%m-%d:%H:%M:%S',
+            level=level)
+    else:
+        logging.basicConfig(
+            format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+            datefmt='%Y-%m-%d:%H:%M:%S')
 
     df = None
     if args['--speaker'] is not None and args['--origin'] is not None:

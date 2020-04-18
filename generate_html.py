@@ -126,12 +126,21 @@ if __name__ == '__main__':
                 exit(1)
         site = sitedev
 
-    # logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-    #                    datefmt='%Y-%m-%d:%H:%M:%S')
+    level = None
     if args['--log-level'] is not None:
-        level = args['--log-level']
-        if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
-            logging.basicConfig(level=level)
+        check_level = args['--log-level']
+        if check_level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
+            level = check_level
+
+    if level is not None:
+        logging.basicConfig(
+            format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+            datefmt='%Y-%m-%d:%H:%M:%S',
+            level=level)
+    else:
+        logging.basicConfig(
+            format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+            datefmt='%Y-%m-%d:%H:%M:%S')
 
     # load all metadata from generated json file
     json_filename = './docs/assets/metadata.json'
