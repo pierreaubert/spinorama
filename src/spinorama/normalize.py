@@ -84,7 +84,7 @@ def normalize_cea2034(dfc, mean):
     for measurement in ('Sound Power DI', 'Early Reflections DI', 'DI offset'):
         df.loc[df.Measurements == measurement, 'dB'] -= offset
         s = df.loc[df.Measurements == measurement, 'dB']
-        print('{0} min={1} max={2}'.format(measurement, np.min(s), np.max(s)))
+        logging.debug('{0} min={1} max={2}'.format(measurement, np.min(s), np.max(s)))
 
     return df
 

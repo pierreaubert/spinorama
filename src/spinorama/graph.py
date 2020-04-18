@@ -552,6 +552,7 @@ def graph_compare_freq(df, graph_params, speaker1, speaker2):
 def graph_compare_cea2034(df, graph_params, speaker1, speaker2):
     selection1, selection2, selectorsMeasurements, scales = build_selections(df, speaker1, speaker2)
 
+    # TODO(move to parameters)
     x_axis = alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[20,20000], nice=False))
     y_axis = alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[-40,10]))
     color = alt.Color('Measurements', type='nominal', sort=None)
@@ -567,7 +568,7 @@ def graph_compare_cea2034(df, graph_params, speaker1, speaker2):
         tooltip=['Measurements', 'Freq', 'dB']
     )
 
-    di_axis = alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[0,30], nice=False))
+    di_axis = alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[-10, 40], nice=False))
     di = alt.Chart(df).transform_filter(
         alt.FieldOneOfPredicate(
             field='Measurements',
