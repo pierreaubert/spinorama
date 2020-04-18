@@ -36,11 +36,6 @@ import pandas as pd
 import altair as alt
 
 
-siteprod = 'https://pierreaubert.github.io/spinorama'
-sitedev = 'http://localhost:8000/docs'
-root = './'
-
-
 def meta2df(meta):
     df = pd.DataFrame({'speaker': [], 'param': [], 'value': []})
     count = 0
@@ -136,6 +131,22 @@ if __name__ == '__main__':
     args = docopt(__doc__,
                   version='generate_stats.py version 0.1',
                   options_first=True)
+
+    level = None
+    if args['--log-level'] is not None:
+        check_level = args['--log-level']
+        if check_level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
+            level = check_level
+
+    if level is not None:
+        logging.basicConfig(
+            format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+            datefmt='%Y-%m-%d:%H:%M:%S',
+            level=level)
+    else:
+        logging.basicConfig(
+            format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+            datefmt='%Y-%m-%d:%H:%M:%S')
 
     # load all metadata from generated json file
     json_filename = './docs/assets/metadata.json'

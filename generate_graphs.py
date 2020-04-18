@@ -39,20 +39,6 @@ from src.spinorama.load import parse_all_speakers, parse_graphs_speaker
 from src.spinorama.print import print_graphs, print_compare
 
 
-def get_logger(level):
-    """ get a logger """
-    logger = logging.getLogger('generate_graphs')
-    # prevent to create another handler if called multipletime
-    if not len(logger.handlers):
-        logger.setLevel(level)
-        fh = logging.FileHandler('generate_graphs.log')
-        fm = logging.Formatter(
-            "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-        fh.setFormatter(fm)
-        logger.addHandler(fh)
-    return logger
-
-
 def generate_graphs(df, width, height, force, ptype):
     for speaker_name, speaker_data in df.items():
         for origin, dataframe in speaker_data.items():
@@ -91,13 +77,21 @@ if __name__ == '__main__':
             print('type %s is not recognize!'.format(ptype))
             exit(1)
 
-    logging.basicConfig(
-        format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-        datefmt='%Y-%m-%d:%H:%M:%S')
+    level = None
     if args['--log-level'] is not None:
-        level = args['--log-level']
-        if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
-            logging.basicConfig(level=level)
+        check_level = args['--log-level']
+        if check_level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
+            level = check_level
+
+    if level is not None:
+        logging.basicConfig(
+            format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+            datefmt='%Y-%m-%d:%H:%M:%S',
+            level=level)
+    else:
+        logging.basicConfig(
+            format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+            datefmt='%Y-%m-%d:%H:%M:%S')
 
     df = None
     if args['--speaker'] is not None and args['--origin'] is not None:

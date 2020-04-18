@@ -16,7 +16,7 @@
 
   <div class="field is-grouped has-addons">
     <div class="control is-expanded">
-      <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl ..." autofocus />
+      <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl asr center..." autofocus />
     </div>
     <div class="control">
       <a class="button is-info">Search</a>
@@ -47,15 +47,15 @@
 	  <div class="card-content">
 	    <div class="content is-small">
               % if 'pref_rating' in meta[speaker_name]:
-  	      <p>Bass extension: ${meta[speaker_name]['pref_rating']['lfx_hz']}Hz at -6dB</p>
+  	      <p>Bass extension: <b>${meta[speaker_name]['pref_rating']['lfx_hz']}</b>Hz at -6dB</p>
   	      <progress class="progress is-small is-info"
 			value="${meta[speaker_name]['scaled_pref_rating']['scaled_lfx_hz']}"
 			max="100"></progress>
-	      <p>Flatness: &plusmn;${meta[speaker_name]['estimates'][3]}dB ~ 80-20kHz</p>
+	      <p>Flatness: <b>&plusmn;${meta[speaker_name]['estimates'][3]}</b>dB ~ 100-10kHz</p>
 	      <progress class="progress is-small is-success"
 			value="${meta[speaker_name]['scaled_pref_rating']['scaled_flatness']}"
 			max="100"></progress>
-	      <p>Smoothness: ${meta[speaker_name]['pref_rating']['sm_sound_power']}</p>
+	      <p>Smoothness: <b>${meta[speaker_name]['pref_rating']['sm_sound_power']}</b></p>
 	      <progress class="progress is-small is-warning"
 			value="${meta[speaker_name]['scaled_pref_rating']['scaled_sm_sound_power']}"
 			max="100"></progress>
@@ -67,7 +67,7 @@
 	      % if meta[speaker_name]['estimates'][2] != -1:
 	      <p>${meta[speaker_name]['estimates'][2]}Hz at -6dB<br/></p>
 	      % endif
-	      <p>&plusmn;${meta[speaker_name]['estimates'][3]}dB ~ 80-20kHz</p>
+	      <p>&plusmn;${meta[speaker_name]['estimates'][3]}dB ~ 100-100kHz</p>
 	      % endif
 	      % endif
 	    </div>

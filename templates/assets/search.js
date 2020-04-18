@@ -7,7 +7,7 @@ $(document).ready(function () {
 	    matchAllTokens: true,
 	    findAllMatches: true,
 	    minMatchCharLength: 2,
-	    keys: ['brand', 'model', 'type', 'measurements.origin'],
+	    keys: ['brand', 'model', 'type', 'measurements.origin', 'shape'],
 	    treshhold: 0.0,
 	    distance: 1,
 	    includeScore: true

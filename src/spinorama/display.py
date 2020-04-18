@@ -190,7 +190,7 @@ def display_spl(df, axis, graph_params=graph_params_default):
                 '60°']}
         mask = spl.isin(filter).any(1)
         spl = spl[mask]
-        spl = resample(spl, 400)
+        spl = resample(spl, 700) # 100x number of graphs
         return graph_freq(spl, graph_params)
     except KeyError as ke:
         logging.warning('Display SPL failed with {0}'.format(ke))
@@ -223,7 +223,7 @@ def display_compare(df, graph_filter, graph_params=graph_params_default):
 
     try:
         source = pd.concat([
-            augment(resample(df[speaker][origin]['default'][graph_filter], 300), # max 300 Freq points to minimise space
+            augment(resample(df[speaker][origin]['default'][graph_filter], 600), # max 600 Freq points to minimise space
                     '{0} - {1}'.format(speaker, origin))
             for speaker in df.keys()
                 for origin in df[speaker].keys()

@@ -356,6 +356,19 @@ speakers_info = {
             'review': '',
             }],
     },
+    'JBL 705i': {
+        'brand': 'JBL',
+        'model': '705i',
+        'type': 'passive',
+        'price': '1500',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'Vendors/JBL',
+            'format': 'webplotdigitizer',
+            'review': '',
+            }],
+    },
     'JBL 705P': {
         'brand': 'JBL',
         'model': '705P',
@@ -483,7 +496,11 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }, ],
+            },{
+            'origin': 'Vendors/KEF',
+            'format': 'webplotdigitizer',
+            'review': '',
+            },],
     },
     'KEF LS50': {
         'brand': 'KEF',
@@ -732,6 +749,10 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
+            },{
+            'origin': 'Vendors/Revel',
+            'format': 'webplotdigitizer',
+            'review': '',
             }],
     },
     'Revel M22': {
@@ -761,6 +782,45 @@ speakers_info = {
     'Revel F208': {
         'brand': 'Revel',
         'model': 'F208',
+        'type': 'passive',
+        'price': '',
+        'shape': 'floorstander',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'Vendors/Revel',
+            'website': 'www.revel.com',
+            'format': 'webplotdigitizer',
+            }],
+    },
+    'Revel Ultima Salon': {
+        'brand': 'Revel',
+        'model': 'Ultima Salon',
+        'type': 'passive',
+        'price': '',
+        'shape': 'floorstander',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'Vendors/Revel',
+            'website': 'www.revel.com',
+            'format': 'webplotdigitizer',
+            }],
+    },
+    'Revel Ultima Salon2': {
+        'brand': 'Revel',
+        'model': 'Ultima Salon2',
+        'type': 'passive',
+        'price': '',
+        'shape': 'floorstander',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'Vendors/Revel',
+            'website': 'www.revel.com',
+            'format': 'webplotdigitizer',
+            }],
+    },
+    'Revel Ultima2 Salon2': {
+        'brand': 'Revel',
+        'model': 'Ultima2 Salon2',
         'type': 'passive',
         'price': '',
         'shape': 'floorstander',
@@ -819,6 +879,19 @@ speakers_info = {
         'model': 'System 600',
         'type': 'passive',
         'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': '',
+            }],
+    },
+    'Verdant Audio Bambusa AL 1': {
+        'brand': 'Verdant Audio',
+        'model': 'Bambusa AL 1',
+        'type': 'passive',
+        'price': '3500',
+        'shape': 'bookshelves',
+        'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',

@@ -1,6 +1,8 @@
+import logging
 import numpy as np
 import pandas as pd
 
+# pd.set_option('display.max_rows', None)
 
 def unify_freq(dfs):
     """ unify_freq
@@ -18,25 +20,31 @@ def unify_freq(dfs):
     lw = dfs[dfs.Measurements == 'Listening Window'].rename(columns={'dB': 'LW'}).set_index('Freq')
     er = dfs[dfs.Measurements == 'Early Reflections'].rename(columns={'dB': 'ER'}).set_index('Freq')
     sp = dfs[dfs.Measurements == 'Sound Power'].rename(columns={'dB': 'SP'}).set_index('Freq')
+    logging.debug('unify_freq: on.shape={0} lw.shape={1} er.shape={2} sp.shape={3}'.format(on.shape, lw.shape, er.shape, sp.shape))
     # align 2 by 2
     align = on.align(lw, axis=0)
-    # print(align[0].shape)
+    logging.debug('on+lw shape: {0}'.format(align[0].shape))
     align = align[0].align(er, axis=0)
-    # print(align[0].shape)
+    logging.debug('+er shape: {0}'.format(align[0].shape))
     all_on = align[0].align(sp, axis=0)
-    # print(all_on[0].head())
-    # print(all_on[0].shape)
+    logging.debug('+sp shape: {0}'.format(all_on[0].shape))
+    # logging.debug('All: {0}'.format(all_on[0].head()))
     # realigned with the largest frame
     all_lw = all_on[0].align(lw, axis=0)
+    logging.debug('Before call: {0} and {1}'.format(er.shape, all_on[0].shape))
+    # logging.debug(all_on[0])
+    # logging.debug(er)
     all_er = all_on[0].align(er, axis=0)
     all_sp = all_on[0].align(sp, axis=0)
-    # print(all_lw[1].shape, all_er[1].shape, all_sp[1].shape)
+    # expect all the same
+    logging.debug('Shapes {0} {1} {2} {3}'.format(all_on[0].shape, all_lw[1].shape, all_er[1].shape, all_sp[1].shape))
     # extract right parts and interpolate
     a_on = all_on[0].drop('Measurements', axis=1).interpolate()
     a_lw = all_lw[1].drop('Measurements', axis=1).interpolate()
     a_er = all_er[1].drop('Measurements', axis=1).interpolate()
     a_sp = all_sp[1].drop('Measurements', axis=1).interpolate()
-    # print(a_lw.shape, a_er.shape, a_sp.shape)
+    # expect all the same
+    logging.debug('Shapes: {0} {1} {2}'.format(a_lw.shape, a_er.shape, a_sp.shape))
     # remove NaN numbers
     res2 = pd.DataFrame({'Freq': a_lw.index, 
                          'On Axis': a_on.ON,
@@ -65,16 +73,18 @@ def normalize_cea2034(dfc, mean):
     # use a copy to be able to run it multiple times in one session
     df = dfc.copy()
 
-    offset = mean
-    if 'DI offset' in df.Measurements.unique():
-        offset = np.mean(df[df.Measurements == 'DI offset'].dB)
-
     for measurement in ('On Axis', 'Listening Window', 'Sound Power', 'Early Reflections'):
         df.loc[df.Measurements == measurement, 'dB'] -= mean
 
+    # 3 different cases Princeton+ASR and Vendors
+    offset = 0
+    if 'DI offset' in df.Measurements.unique():
+        offset = np.mean(df[df.Measurements == 'DI offset'].dB)
+
     for measurement in ('Sound Power DI', 'Early Reflections DI', 'DI offset'):
-        # for Vendors graphs without a DI offset
-        df.loc[df.Measurements == measurement, 'dB'] -= offset-40
+        df.loc[df.Measurements == measurement, 'dB'] -= offset
+        s = df.loc[df.Measurements == measurement, 'dB']
+        logging.debug('{0} min={1} max={2}'.format(measurement, np.min(s), np.max(s)))
 
     return df
 
