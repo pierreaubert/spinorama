@@ -119,6 +119,7 @@ def parse_graph_freq_webplotdigitizer(filename):
                         res.append([ref_f, ref_db, col['name']])
                     else:
                         logging.error('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} db={:.1f} db_ref={:.1f} db_n={:.1f}'.format(fr, ref_f, frn, db, ref_db, dbn))
+                        break
 
             # build dataframe
             # print(res)
@@ -249,6 +250,7 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name):
     logging.debug('Jsonfilename {0}'.format(jsonfilename))
     return jsonfilename
 
+
 def parse_graphs_speaker_webplotdigitizer(speaker_brand, speaker_name):
     dfs = {}
     dirname = 'datas/Vendors/' + speaker_brand + '/' + speaker_name + '/'
@@ -256,25 +258,66 @@ def parse_graphs_speaker_webplotdigitizer(speaker_brand, speaker_name):
 
     try:
         title, spin_uneven = parse_graph_freq_webplotdigitizer(jsonfilename)
-        spin = graph_melt(unify_freq(spin_uneven))
+        spin_even = unify_freq(spin_uneven)
+        spin = graph_melt(spin_even)
         if title != 'CEA2034':
             logging.debug('title is {0}'.format(title))
             return spin
 
         if spin is not None:
-            dfs[title] = spin_uneven
-
-            # on = spin.loc[spin['Measurements'] == 'On Axis'].reset_index(drop=True)
+            # compute EIR
+            on = spin.loc[spin['Measurements'] == 'On Axis'].reset_index(drop=True)
             lw = spin.loc[spin['Measurements'] == 'Listening Window'].reset_index(drop=True)
             er = spin.loc[spin['Measurements'] == 'Early Reflections'].reset_index(drop=True)
             sp = spin.loc[spin['Measurements'] == 'Sound Power'].reset_index(drop=True)
 
+            # check DI index
+            sp_di_computed = lw.dB-sp.dB
+            sp_di = spin.loc[spin['Measurements'] == 'Sound Power DI'].reset_index(drop=True) 
+            if sp_di.shape[0] == 0:
+                logging.debug('No Sound Power DI curve!')
+                df2 = pd.DataFrame({'Freq': on.Freq, 'dB': sp_di_computed, 'Measurements': 'Sound Power DI'})
+                spin = spin.append(df2).reset_index(drop=True)
+            else:
+                delta = np.mean(sp_di)-np.mean(sp_di_computed)
+                logging.debug('Sound Power DI curve: removing {0}'.format(delta))
+                spin.loc[spin['Measurements'] == 'Sound Power DI', 'dB'] -= delta
+
+            # sp_di = spin.loc[spin['Measurements'] == 'Sound Power DI'].reset_index(drop=True)
+            # print('Post treatment SP DI: shape={0} min={1} max={2}'.format(sp_di.shape, sp_di.dB.min(), sp_di.dB.max()))
+            # print(sp_di)
+
+            er_di_computed = lw.dB-er.dB
+            er_di = spin.loc[spin['Measurements'] == 'Early Reflections DI'].reset_index(drop=True) 
+            if er_di.shape[0] == 0:
+                logging.debug('No Early Reflections DI curve!')
+                df2 = pd.DataFrame({'Freq': on.Freq, 'dB': er_di_computed, 'Measurements': 'Early Reflections DI'})
+                spin = spin.append(df2).reset_index(drop=True)
+            else:
+                delta = np.mean(er_di)-np.mean(er_di_computed)
+                logging.debug('Early Reflections DI curve: removing {0}'.format(delta))
+                spin.loc[spin['Measurements'] == 'Early Reflections DI', 'dB'] -= delta
+
+            # er_di = spin.loc[spin['Measurements'] == 'Early Reflections DI'].reset_index(drop=True)
+            # print('Post treatment ER DI: shape={0} min={1} max={2}'.format(er_di.shape, er_di.dB.min(), er_di.dB.max()))
+            # print(er_di)
+
+            di_offset = spin.loc[spin['Measurements'] == 'DI offset'].reset_index(drop=True) 
+            if di_offset.shape[0] == 0:
+                logging.debug('No DI offset curve!')
+                df2 = pd.DataFrame({'Freq': on.Freq, 'dB': 0, 'Measurements': 'DI offset'})
+                spin = spin.append(df2).reset_index(drop=True)
+                
             # print(on.shape, lw.shape, er.shape, sp.shape)
             eir = estimated_inroom(lw, er, sp)
             # print('eir {0}'.format(eir.shape))
             # print(eir)
             logging.debug('eir {0}'.format(eir.shape))
             dfs['Estimated In-Room Response'] = graph_melt(eir)
+
+            # add spin (at the end because we could have modified DI curves
+            dfs[title] = spin
+
     except FileNotFoundError:
         logging.info('Speaker: {0} Not found: {1}'.format(speaker_name, jsonfilename))
     return dfs

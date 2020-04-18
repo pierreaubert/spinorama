@@ -111,7 +111,8 @@ def graph_spinorama(dfu, graph_params):
                 scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]),
                 axis=alt.Axis(format='s'))
     yaxis = alt.Y('dB:Q', scale=alt.Scale(zero=False, domain=[ymin, ymax]))
-    di_yaxis = alt.Y('dB:Q', scale=alt.Scale(zero=False, domain=[0,ymax-ymin]))
+    # why -10?
+    di_yaxis = alt.Y('dB:Q', scale=alt.Scale(zero=False, domain=[-10,ymax-ymin-10]))
     color = alt.Color('Measurements', type='nominal', sort=None)
     opacity = alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     

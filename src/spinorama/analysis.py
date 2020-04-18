@@ -412,17 +412,16 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     # Early Reflections Directivity Index (ERDI)
     # The Early Reflections Directivity Index is defined as the difference
     # between the listening window curve and the early reflections curve.
-    # add 60 (graph start at 60)
     erb = total_early_reflections(h_spl, v_spl)
-    erdi = lw.dB - erb.dB + 60
+    erdi = lw.dB - erb.dB
     # add a di offset to mimic other systems
-    di_offset = [60 for i in range(0, len(erdi))]
+    di_offset = [0 for i in range(0, len(erdi))]
     # Sound Power Directivity Index (SPDI)
     # For the purposes of this standard the Sound Power Directivity Index is defined
     # as the difference between the listening window curve and the sound power curve.
     # An SPDI of 0 dB indicates omnidirectional radiation. The larger the SPDI, the
     # more directional the loudspeaker is in the direction of the reference axis.
-    spdi = lw.dB - sp.dB + 60
+    spdi = lw.dB - sp.dB
     for (key, name) in [('Listening Window', lw), ('Sound Power', sp), ('Early Reflections', erb)]:
         if name is not None:
             spin[key] = name.dB
