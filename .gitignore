@@ -26,4 +26,4 @@ node_modules
 geckodriver.log
 package-lock.json
 tutorial.slides.html
-
+htmlcov

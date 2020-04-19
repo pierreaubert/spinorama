@@ -459,6 +459,19 @@ speakers_info = {
             'review': '',
             }],
     },
+    'JTR Noesis 212rt': {
+        'brand': 'JTR',
+        'model': 'Noesis 212rt',
+        'type': 'passive',
+        'price': '5600',
+        'shape': 'floorstander',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'Vendors/JTR',
+            'website': 'https://www.jtrspeakers.com',
+            'format': 'webplotdigitizer',
+            }],
+    },
     'Kali IN-8': {
         'brand': 'Kali',
         'model': 'IN-8',
@@ -999,6 +1012,15 @@ origins_info = {
         'logo': 'docs/metadata/jbl.png',
         'logo-small': 'docs/metadata/jbl-small.png',
         'url': 'https://www.jbl.com',
+    },
+    'Vendors/JTR': {
+        'min hz': 50,
+        'max hz': 20000,
+        'min dB': -40,
+        'max dB': 10,
+        'logo': 'docs/metadata/jtr.png',
+        'logo-small': 'docs/metadata/jtr-small.png',
+        'url': 'https://www.jtrspeakers.com',
     },
     'Vendors/KEF': {
         'min hz': 20,
