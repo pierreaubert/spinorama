@@ -626,6 +626,19 @@ speakers_info = {
             'review': '',
             }],
     },
+    'Part Express DIY C-Note': {
+        'brand': 'Part Express',
+        'model': 'DIY C-Note',
+        'type': 'passive',
+        'price': '100',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': '',
+            }],
+    },
     'Pioneer SP-BS22-LR': {
         'brand': 'Pioneer',
         'model': 'SP-BS22-LR',
