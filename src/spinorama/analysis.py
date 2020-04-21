@@ -13,11 +13,14 @@ def flinear(x: float, a: float, b: float):
 def fconst(x: float, a: float):
     return a
 
-
 def estimates(onaxis: pd.DataFrame):
+    estimates_error = [-1, -1, -1, -1]
     try:
         freq_min = onaxis.Freq.min()
         logging.debug('Freq min: {0}'.format(freq_min))
+        if math.isnan(freq_min):
+            logging.warning('Estimates failed for onaxis {0}'.format(onaxis.shape))
+            return estimates_error
         if freq_min < 300:
             # mean over 300-10k
             y_ref = np.mean(onaxis.loc[(onaxis.Freq >= 300) & (onaxis.Freq <= 10000)].dB)
@@ -39,13 +42,12 @@ def estimates(onaxis: pd.DataFrame):
             est = [round(y_ref, 0), -1, -1, round(band, 1)]
             logging.debug('Estimates: {0}'.format(est))
             return est
-
     except TypeError as te:
         logging.warning('Estimates failed for {0} with {1}'.format(onaxis.shape, te))
-        return [-1, -1, -1, -1]
+        return estimates_error
     except ValueError as ve:
         logging.warning('Estimates failed for {0} with {1}'.format(onaxis.shape, ve))
-        return [-1, -1, -1, -1]
+        return estimates_error
 
 
 # from the standard appendix

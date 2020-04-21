@@ -417,12 +417,12 @@ def parse_graphs_speaker(speaker_brand : str, speaker_name : str, mformat='klipp
 
 def get_speaker_list(speakerpath):
     speakers = []
-    asr = glob.glob(speakerpath+'/ASR/[A-Z]*')
+    asr = glob.glob(speakerpath+'/ASR/*')
     vendors = glob.glob(speakerpath+'/Vendors/*/[A-Z]*')
     princeton = glob.glob(speakerpath+'/Princeton/[A-Z]*')
     dirs = asr + vendors + princeton
     for d in dirs:
-        if os.path.isdir(d):
+        if os.path.isdir(d) and d not in ('assets', 'compare', 'stats', 'pictures', 'logos'):
             speakers.append(os.path.basename(d))
     return speakers
 

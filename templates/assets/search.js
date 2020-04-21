@@ -1,21 +1,29 @@
-window.$ = window.jQuery
+window.$ = window.jQuery;
 
 $(document).ready(function () {
+
     window.$.getJSON('${site}/assets/metadata.json', function (response) {
+	console.log('got json')
 	const metadata = Object.values(response)
+	console.log('got metadata')
 	const fuse = new Fuse(metadata, {
+	    isCaseSensitive: false,
 	    matchAllTokens: true,
 	    findAllMatches: true,
 	    minMatchCharLength: 2,
 	    keys: ['brand', 'model', 'type', 'measurements.origin', 'shape'],
-	    treshhold: 0.0,
-	    distance: 1,
-	    includeScore: true
+	    treshhold: 0.1,
+	    distance: 2,
+	    includeScore: true,
+	    useExtendedSearch: true
 	})
+	
+	console.log('starting search')
 	
 	$('#searchInput').on('keyup', function () {
 	    const resultdiv = $('div.searchresults')
 	    const keywords = $(this).val()
+	    console.log('searching: '+keywords)
 	    if (keywords.length === 0) {
 		for (const item in metadata) {
 		    const id = (metadata[item].brand + '-' + metadata[item].model).replace(/['. ]/g, '-')
@@ -49,5 +57,7 @@ $(document).ready(function () {
 		}
 	    }
 	})
+    }).fail( function(jqXHR, textStatus, errorThrown) {
+	console.log('getJSON request failed! ' + textStatus);
     })
 })

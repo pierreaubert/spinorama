@@ -108,6 +108,14 @@ pytest --cov=src
         - a complete [tutorial](tutorial/digitalization/Digitalisation-Tutorial.md) is available.
 
    b. add a picture of the speaker in datas/originals
+   c. test it works with:
+      - if from ASR
+        - ```./generate_graphs --origin=ASR --speaker='name of speaker'```
+      - if from a Vendor with brand Great
+        - ```./generate_graphs --origin='Vendors/Great' --speaker='name of speaker'```
+      - visualize results
+        - ```docs/name of speaker/origin/default/CEA2034_large.png``` or
+	- ```docs/name of speaker/origin/default/2cols_large.png```
 
 2. Generate datas and webpages
 
@@ -160,6 +168,7 @@ ASR is a fantastic source of speakers data thanks to [amirm@](https://www.audios
   - Eve Audio
   - Buscard Audio
   - KEF
+  - JTR
 
 
 
