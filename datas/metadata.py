@@ -170,7 +170,7 @@ speakers_info = {
             }],
     },
     'Fostex PM03': {
-        'brand': 'Fostexm',
+        'brand': 'Fostex',
         'model': 'PM03',
         'type': 'active',
         'price': '150',

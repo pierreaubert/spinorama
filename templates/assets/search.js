@@ -46,11 +46,25 @@ $(document).ready(function () {
 			    minScore = result[item].score
 			}
 		    }
-		    for (const item in result) {
-			const id = (result[item].item.brand + '-' + result[item].item.model).replace(/['. ]/g, '-')
-			if ((minScore > 0.0) || (result[item].score === 0.0)) {
-			    // console.log('show:'+id+' maxscore:' + minScore+' score:' + result[item].score);
-			    $('#' + id).show()
+		    if (minScore < Math.pow(10,-15)) {
+			for (const item in result) {
+			    const id = (result[item].item.brand + '-' + result[item].item.model).replace(/['. ]/g, '-')
+			    if (result[item].score < Math.pow(10,-15)) {
+				console.log('perfect match:'+id+' minscore:' + minScore+' score:' + result[item].score);
+				$('#' + id).show()
+			    } else {
+				console.log('skip match:'+id+' minscore:' + minScore+' score:' + result[item].score);
+			    }
+			}
+		    } else {
+			for (const item in result) {
+			    const id = (result[item].item.brand + '-' + result[item].item.model).replace(/['. ]/g, '-')
+			    if (result[item].score === minScore) {
+				console.log('show:'+id+' minscore:' + minScore+' score:' + result[item].score);
+				$('#' + id).show()
+			    } else {
+				console.log('skip partial match:'+id+' minscore:' + minScore+' score:' + result[item].score);
+			    }
 			}
 		    }
 		    resultdiv.show()
