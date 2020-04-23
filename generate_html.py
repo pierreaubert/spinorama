@@ -30,6 +30,7 @@ Options:
 import json
 import logging
 import os
+import shutil
 import sys
 from glob import glob
 from mako.template import Template
@@ -220,5 +221,11 @@ if __name__ == '__main__':
         with open('./docs/assets/'+f, 'w') as fd:
             fd.write(file_ext.render(site=site))
             fd.close()
+
+    # copy favicon(s)
+    for f in ['favicon.ico', 'favicon-16x16.png']:
+        file_in = './templates/assets/'+f
+        file_out = './docs/assets/'+f
+        shutil.copy(file_in, file_out)
 
     sys.exit(0)

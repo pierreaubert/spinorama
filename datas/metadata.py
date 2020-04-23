@@ -170,7 +170,7 @@ speakers_info = {
             }],
     },
     'Fostex PM03': {
-        'brand': 'Fostexm',
+        'brand': 'Fostex',
         'model': 'PM03',
         'type': 'active',
         'price': '150',
@@ -459,6 +459,19 @@ speakers_info = {
             'review': '',
             }],
     },
+    'JTR Noesis 212rt': {
+        'brand': 'JTR',
+        'model': 'Noesis 212rt',
+        'type': 'passive',
+        'price': '5600',
+        'shape': 'floorstander',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'Vendors/JTR',
+            'website': 'https://www.jtrspeakers.com',
+            'format': 'webplotdigitizer',
+            }],
+    },
     'Kali IN-8': {
         'brand': 'Kali',
         'model': 'IN-8',
@@ -618,6 +631,19 @@ speakers_info = {
         'model': 'Pro M-00',
         'type': 'active',
         'price': '500',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': '',
+            }],
+    },
+    'Part Express DIY C-Note': {
+        'brand': 'Part Express',
+        'model': 'DIY C-Note',
+        'type': 'passive',
+        'price': '100',
         'shape': 'bookshelves',
         'amount': 'pair',
         'measurements': [{
@@ -986,6 +1012,15 @@ origins_info = {
         'logo': 'docs/metadata/jbl.png',
         'logo-small': 'docs/metadata/jbl-small.png',
         'url': 'https://www.jbl.com',
+    },
+    'Vendors/JTR': {
+        'min hz': 50,
+        'max hz': 20000,
+        'min dB': -40,
+        'max dB': 10,
+        'logo': 'docs/metadata/jtr.png',
+        'logo-small': 'docs/metadata/jtr-small.png',
+        'url': 'https://www.jtrspeakers.com',
     },
     'Vendors/KEF': {
         'min hz': 20,

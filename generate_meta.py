@@ -43,7 +43,7 @@ def sanity_check(df, meta):
     for speaker_name, origins in df.items():
         # check if metadata exists
         if speaker_name not in meta:
-            logging.error('Metadata not found for >{:s}<'.format(speaker_name))
+            logging.error('Metadata not found for >{0}<'.format(speaker_name))
             return 1
         # check if each measurement looks reasonable
         for origin, keys in origins.items():
@@ -97,6 +97,10 @@ def add_estimates(df):
                 est = estimates(onaxis)
                 logging.info('Computing estimated for {0}'.format(speaker_name))
                 if est is None or est == [-1, -1, -1, -1]:
+                    logging.debug('estimated return None for {0}'.format(speaker_name))
+                    continue
+                if math.isnan(est[0]) or math.isnan(est[1]) or math.isnan(est[2]) or math.isnan(est[3]):
+                    logging.error('estimated return NaN for {0}'.format(speaker_name))
                     continue
                 logging.info('Adding -3dB {0}Hz -6dB {1}Hz +/-{2}dB'.format(est[1], est[2], est[3]))
                 if 'estimates' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
@@ -234,6 +238,13 @@ if __name__ == '__main__':
     # add computed data to metadata
     logging.info('Compute estimates per speaker')
     add_estimates(df)
+
+    # check that json is valid
+    #try:
+    #    json.loads(metadata.speakers_info)
+    #except ValueError as ve:
+    #    logging.fatal('Metadata Json is not valid {0}'.format(ve))
+    #    sys.exit(1)
 
     # write metadata in a json file for easy search
     logging.info('Write metadata')

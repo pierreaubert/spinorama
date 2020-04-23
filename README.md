@@ -1,6 +1,5 @@
-![Spinorama](https://github.com/pierreaubert/spinorama/workflows/Spinorama/badge.svg?branch=master)
-
 # Spinorama : a library to display speaker frequency response and similar graphs
+[Spinorama](https://github.com/pierreaubert/spinorama/workflows/Spinorama/badge.svg?branch=master)
 
 This library provides an easy way to view, compare or analyse speakers data. This can help you take informed
 decision when buying a speaker instead of relying on commercial information or internet buzz.
@@ -103,11 +102,20 @@ pytest --cov=src
         - add the unzip files to *datas/ASR/name of speaker/all text* files
       - if from Princeton/3d3a 
         - add the 2 IR files to *datas/Princeton/name of speaker/*, i have normally done all of them.
-      - if you only have a picture of the spinorame:
+      - if you only have a picture of the spinorama:
         - please use WebPlotDigitizer to generate a parsed json file
         - add it to *datas/Vendors* if it comes from the manufacturers.
+        - a complete [tutorial](tutorial/digitalization/Digitalisation-Tutorial.md) is available.
 
    b. add a picture of the speaker in datas/originals
+   c. test it works with:
+      - if from ASR
+        - ```./generate_graphs --origin=ASR --speaker='name of speaker'```
+      - if from a Vendor with brand Great
+        - ```./generate_graphs --origin='Vendors/Great' --speaker='name of speaker'```
+      - visualize results
+        - ```docs/name of speaker/origin/default/CEA2034_large.png``` or
+	- ```docs/name of speaker/origin/default/2cols_large.png```
 
 2. Generate datas and webpages
 
@@ -160,6 +168,7 @@ ASR is a fantastic source of speakers data thanks to [amirm@](https://www.audios
   - Eve Audio
   - Buscard Audio
   - KEF
+  - JTR
 
 
 
