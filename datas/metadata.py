@@ -73,6 +73,10 @@ speakers_info = {
         'shape': 'bookshelves',
         'price': '1800',
         'measurements': [{
+            'origin': 'ASR',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/buchardt-s400-speaker-review.12844/',
+            'format': 'klippel',
+            }, {
             'origin': 'Vendors/Buchardt Audio',
             'website': 'https://www.buchardtaudio.com',
             'format': 'webplotdigitizer',
@@ -393,6 +397,19 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
+            }],
+    },
+    'JBL 4319': {
+        'brand': 'JBL',
+        'model': '4367',
+        'type': 'passive',
+        'price': '8400',
+        'shape': 'floorstander',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-4319-studio-monitor-review.12986/',
             }],
     },
     'JBL 4367': {
