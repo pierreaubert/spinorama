@@ -438,6 +438,19 @@ speakers_info = {
             'review': '',
             }],
     },
+    'JBL HDI-3600': {
+        'brand': 'JBL',
+        'model': 'HDI-3600',
+        'type': 'passive',
+        'price': '3800',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-hdi-3600-speaker-review.13027/',
+            }],
+    },
     'JBL M2': {
         'brand': 'JBL',
         'model': 'M2',
