@@ -64,7 +64,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Buchardt Audio S400': {
         'brand': 'Buchardt Audio',
@@ -80,7 +80,7 @@ speakers_info = {
             'origin': 'Vendors/Buchardt Audio',
             'website': 'https://www.buchardtaudio.com',
             'format': 'webplotdigitizer',
-            }],
+        }],
     },
     'CommonSense Audio 5.6': {
         'brand': 'CommonSense Audio',
@@ -90,7 +90,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Dayton Audio B652-AIR': {
         'brand': 'Dayton Audio',
@@ -103,7 +103,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/dayton-audio-b652-air-speaker-review.11410/',
-            }],
+        }],
     },
     'Dynaudio Xeo 3': {
         'brand': 'Dynaudio',
@@ -113,7 +113,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Elac Adante AS-61': {
         'brand': 'Elac',
@@ -150,7 +150,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Essence Electrostatic Model 1600': {
         'brand': 'Essence Electrostatic',
@@ -161,7 +161,7 @@ speakers_info = {
             'origin': 'Princeton',
             'format': 'princeton',
             'review': '',
-            }],
+        }],
     },
     'Fisher STE-720': {
         'brand': 'Fisher',
@@ -171,7 +171,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Fostex PM03': {
         'brand': 'Fostex',
@@ -194,7 +194,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'GedLee Nathan': {
         'brand': 'GedLee',
@@ -204,7 +204,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Genelec 8030A': {
         'brand': 'Genelec',
@@ -215,7 +215,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Genelec 8351A': {
         'brand': 'Genelec',
@@ -227,7 +227,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Genelec 8341A': {
         'brand': 'Genelec',
@@ -240,7 +240,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/genelec-8341a-sam%E2%84%A2-studio-monitor-review.11652/#post-335087',
-            }],
+        }],
     },
     'Gradient Helsinki 1.5': {
         'brand': 'Gradient',
@@ -250,7 +250,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Harbeth Monitor 30.0': {
         'brand': 'Harbeth',
@@ -263,7 +263,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'iKey-Audio M-808V2': {
         'brand': 'iKey-Audio',
@@ -273,7 +273,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Infinity R152': {
         'brand': 'Infinity',
@@ -286,7 +286,7 @@ speakers_info = {
             'origin': 'Vendors/Infinity',
             'website': 'www.infinityspeakers.com',
             'format': 'webplotdigitizer',
-            }],
+        }],
     },
     'Infinity R162': {
         'brand': 'Infinity',
@@ -299,7 +299,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Infinity RC263': {
         'brand': 'Infinity',
@@ -312,7 +312,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'JansZen Loudspeaker zA1.1': {
         'brand': 'JansZen Loudspeaker',
@@ -322,7 +322,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'JansZen Loudspeaker zA2.1': {
         'brand': 'JansZen Loudspeaker',
@@ -332,7 +332,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'JBL Control 1 Pro': {
         'brand': 'JBL',
@@ -345,7 +345,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'JBL 104': {
         'brand': 'JBL',
@@ -358,7 +358,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'JBL 705i': {
         'brand': 'JBL',
@@ -371,7 +371,7 @@ speakers_info = {
             'origin': 'Vendors/JBL',
             'format': 'webplotdigitizer',
             'review': '',
-            }],
+        }],
     },
     'JBL 705P': {
         'brand': 'JBL',
@@ -384,7 +384,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'JBL 305P Mark ii': {
         'brand': 'JBL',
@@ -397,7 +397,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'JBL 4319': {
         'brand': 'JBL',
@@ -410,7 +410,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-4319-studio-monitor-review.12986/',
-            }],
+        }],
     },
     'JBL 4367': {
         'brand': 'JBL',
@@ -423,7 +423,7 @@ speakers_info = {
             'origin': 'Vendors/JBL',
             'website': 'www.jbl.com',
             'format': 'webplotdigitizer',
-            }],
+        }],
     },
     'JBL HDI-1600': {
         'brand': 'JBL',
@@ -436,7 +436,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'JBL HDI-3600': {
         'brand': 'JBL',
@@ -449,7 +449,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-hdi-3600-speaker-review.13027/',
-            }],
+        }],
     },
     'JBL M2': {
         'brand': 'JBL',
@@ -462,7 +462,7 @@ speakers_info = {
             'origin': 'Vendors/JBL',
             'website': 'www.jbl.com',
             'format': 'webplotdigitizer',
-            }],
+        }],
     },
     'JBL PRX635': {
         'brand': 'JBL',
@@ -474,7 +474,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'JBL Studio 530': {
         'brand': 'JBL',
@@ -487,7 +487,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'JTR Noesis 212rt': {
         'brand': 'JTR',
@@ -500,7 +500,7 @@ speakers_info = {
             'origin': 'Vendors/JTR',
             'website': 'https://www.jtrspeakers.com',
             'format': 'webplotdigitizer',
-            }],
+        }],
     },
     'Kali IN-8': {
         'brand': 'Kali',
@@ -513,7 +513,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'KEF Q100': {
         'brand': 'KEF',
@@ -570,7 +570,7 @@ speakers_info = {
             'origin': 'Vendors/KEF',
             'website': 'www.kef.com',
             'format': 'webplotdigitizer',
-            }],
+        }],
     },
     'King\'s Audio KingSound KS 3001': {
         'brand': 'King\'s Audio',
@@ -580,7 +580,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Klipsch R41M': {
         'brand': 'Klipsch',
@@ -593,7 +593,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Klipsch RP-600M': {
         'brand': 'Klipsch',
@@ -606,7 +606,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'KRK Systems RoKit 6 G2': {
         'brand': 'KRK Systems',
@@ -618,7 +618,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Manger Sidekick': {
         'brand': 'Manger',
@@ -628,7 +628,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Micca RB42': {
         'brand': 'Micca',
@@ -641,7 +641,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Neumann KH 80': {
         'brand': 'Neumann',
@@ -654,7 +654,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'NHT Pro M-00': {
         'brand': 'NHT',
@@ -667,7 +667,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Part Express DIY C-Note': {
         'brand': 'Part Express',
@@ -680,7 +680,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Pioneer SP-BS22-LR': {
         'brand': 'Pioneer',
@@ -693,7 +693,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Pioneer SP-EBS73-LR': {
         'brand': 'Pioneer',
@@ -706,7 +706,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Pioneer SP-EC73': {
         'brand': 'Pioneer',
@@ -719,7 +719,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Polk Audio 5JR': {
         'brand': 'Polk Audio',
@@ -732,7 +732,7 @@ speakers_info = {
             'origin': 'Princeton',
             'format': 'princeton',
             'review': '',
-            }],
+        }],
     },
     'Polk T15': {
         'brand': 'Polk',
@@ -745,7 +745,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Quad Electroacoustics ESL-57': {
         'brand': 'Quad Electroacoustics',
@@ -755,7 +755,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Realistic MC-1000': {
         'brand': 'Realistic',
@@ -766,7 +766,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Revel C52': {
         'brand': 'Revel',
@@ -779,7 +779,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Revel F35': {
         'brand': 'Revel',
@@ -792,7 +792,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Revel M16': {
         'brand': 'Revel',
@@ -809,7 +809,7 @@ speakers_info = {
             'origin': 'Vendors/Revel',
             'format': 'webplotdigitizer',
             'review': '',
-            }],
+        }],
     },
     'Revel M22': {
         'brand': 'Revel',
@@ -822,7 +822,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Revel C25': {
         'brand': 'Revel',
@@ -833,20 +833,24 @@ speakers_info = {
             'origin': 'Vendors/Revel',
             'website': 'www.revel.com',
             'format': 'webplotdigitizer',
-            }],
+        }],
     },
     'Revel F208': {
         'brand': 'Revel',
         'model': 'F208',
         'type': 'passive',
-        'price': '',
+        'price': '5000',
         'shape': 'floorstander',
         'amount': 'pair',
-        'measurements': [{
+        'measurements': [
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-f208-tower-speaker-review.13192/',
+        }, {
             'origin': 'Vendors/Revel',
             'website': 'www.revel.com',
             'format': 'webplotdigitizer',
-            }],
+        }],
     },
     'Revel Ultima Salon': {
         'brand': 'Revel',
@@ -859,7 +863,7 @@ speakers_info = {
             'origin': 'Vendors/Revel',
             'website': 'www.revel.com',
             'format': 'webplotdigitizer',
-            }],
+        }],
     },
     'Revel Ultima Salon2': {
         'brand': 'Revel',
@@ -872,7 +876,7 @@ speakers_info = {
             'origin': 'Vendors/Revel',
             'website': 'www.revel.com',
             'format': 'webplotdigitizer',
-            }],
+        }],
     },
     'Revel Ultima2 Salon2': {
         'brand': 'Revel',
@@ -885,7 +889,7 @@ speakers_info = {
             'origin': 'Vendors/Revel',
             'website': 'www.revel.com',
             'format': 'webplotdigitizer',
-            }],
+        }],
     },
     'Sanders Sound Systems Model 11': {
         'brand': 'Sanders Sound Systems',
@@ -908,7 +912,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Spendor Audio Systems SA1': {
         'brand': 'Spendor Audio',
@@ -918,7 +922,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Tannoy Definition DC6i': {
         'brand': 'Tannoy',
@@ -928,7 +932,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
-            }],
+        }],
     },
     'Tannoy System 600': {
         'brand': 'Tannoy',
@@ -939,7 +943,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Verdant Audio Bambusa AL 1': {
         'brand': 'Verdant Audio',
@@ -952,7 +956,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Verdant Audio Bambusa MG 1': {
         'brand': 'Verdant Audio',
@@ -965,7 +969,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Yamaha HS5': {
         'brand': 'Yamaha',
@@ -978,7 +982,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
     'Zaph Audio ZA5': {
         'brand': 'Zaph Audio',
@@ -991,7 +995,7 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': '',
-            }],
+        }],
     },
 }
 
