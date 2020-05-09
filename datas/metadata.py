@@ -842,7 +842,7 @@ speakers_info = {
         'price': '5000',
         'shape': 'floorstander',
         'amount': 'pair',
-        'measurements': [
+        'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-f208-tower-speaker-review.13192/',
