@@ -153,13 +153,13 @@ def print_compare(df, force_print=False, filter_file_ext=None):
     filedir = 'docs/compare'
     pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
     
-    for filter in ('CEA2034', 'Estimated In-Room Response',
+    for graph_filter in ('CEA2034', 'Estimated In-Room Response',
                    'Early Reflections', 'Horizontal Reflections', 'Vertical Reflections',
                    'SPL Horizontal', 'SPL Vertical'):
-        graph = display_compare(df, filter)
+        graph = display_compare(df, graph_filter)
         graph = graph.configure_legend(orient='bottom').configure_title(orient='top', anchor='middle', fontSize=16)
         if graph is not None:
-            filename = '{0}/{1}.json'.format(filedir, filter)
+            filename = '{0}/{1}.json'.format(filedir, graph_filter)
             try:
                 print('Saving {0}'.format(filename))
                 graph.save(filename)
