@@ -669,6 +669,19 @@ speakers_info = {
             'review': '',
         }],
     },
+    'NHT SB2': {
+        'brand': 'NHT',
+        'model': 'SB2',
+        'type': 'active',
+        'price': '400',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/nht-sb2-speaker-review.13273/',
+        }],
+    },
     'Part Express DIY C-Note': {
         'brand': 'Part Express',
         'model': 'DIY C-Note',

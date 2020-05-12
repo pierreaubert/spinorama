@@ -27,3 +27,7 @@ geckodriver.log
 package-lock.json
 tutorial.slides.html
 htmlcov
+*.mkv
+*.mp4
+*.mpeg
+
