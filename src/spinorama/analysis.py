@@ -1,7 +1,7 @@
 import logging
 import math
 from math import log10, isnan
-from scipy.stats import linregress
+from scipy.stats import linregress, median_absolute_deviation
 import numpy as np
 import pandas as pd
 
@@ -464,11 +464,15 @@ def octave(N):
 
     N: >=2 when N increases, bands are narrower
     """
+    # why 1290 and not 1000?
+    reference = 1290
     p = pow(2, 1/N)
     p_band = pow(2, 1/(2*N))
     iter = int((N*10+1)/2)
-    center = [1000 / p**i for i in range(iter, 0, -1)]+[1000*p**i for i in range(0, iter+1, 1)]
-    return [(c/p_band, c*p_band) for c in center]
+    center = [reference / p**i for i in range(iter, 0, -1)]+[reference]+[reference*p**i for i in range(1, iter+1, 1)]
+    octave = [(c/p_band, c, c*p_band) for c in center]
+    # print('Octave({0}) octave[{1}], octave[{2}'.format(N, octave[0], octave[-1]))
+    return octave
 
 
 def aad(dfu):
@@ -480,13 +484,11 @@ def aad(dfu):
     aad_sum = 0
     n = 0
     # 1/20 octave
-    for (omin, omax) in octave(20):
+    for (bmin, bcenter, bmax) in octave(20):
         # 100hz to 16k hz
-        if omin < 100:
+        if bcenter < 100 or bmax > 16000:
             continue
-        if omax > 16000:
-            break
-        selection = dfu.loc[(dfu.Freq >= omin) & (dfu.Freq < omax)]
+        selection = dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq < bmax)]
         if selection.shape[0] > 0:
             aad_sum += abs(y_ref-np.mean(selection.dB))
             n += 1
@@ -511,24 +513,12 @@ def nbd(dfu):
     between 100 Hz-12 kHz. The mean absolute deviation within each 
     1⁄2-octave band is based a sample of 10 equally log-spaced data points.
     """
-    sum = 0
-    n = 0
-    # 1/2 octave
-    for (omin, omax) in octave(2):
-        # 100hz to 12k hz
-        if omin < 100:
-            continue
-        if omax > 12000:
-            break
-        y = dfu.loc[(dfu.Freq >= omin) & (dfu.Freq < omax)].dB
-        y_avg = np.mean(y)
-        # don't sample, take all points in this octave
-        sum += np.mean(np.abs(y_avg-y))
-        n += 1
-    if n == 0:
-        logging.error('nbd is None')
-        return None
-    return sum/n
+    #return np.mean([median_absolute_deviation(dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB)
+    #                for (bmin, bcenter, bmax) in octave(2)
+    #                if bcenter >=100 and bcenter <=12000])
+    return np.mean([dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB.mad()
+                    for (bmin, bcenter, bmax) in octave(2)
+                    if bcenter >=100 and bcenter <=12000])
 
 
 def lfx(lw, sp):
@@ -559,14 +549,13 @@ def lfq(lw, sp, lfx_log):
     lfx = pow(10, lfx_log)
     sum = 0
     n = 0
-    for (omin, omax) in octave(20):
+    # print('DEBUG lfx={1} octave(20): {0}'.format(octave(20), lfx))
+    for (bmin, bcenter, bmax) in octave(20):
         # 100hz to 12k hz
-        if omin < lfx:
+        if bmin < lfx or bmax > 300:
             continue
-        if omax > 300:
-            break
-        s_lw = lw.loc[(lw.Freq >= omin) & (lw.Freq < omax)]
-        s_sp = sp.loc[(sp.Freq >= omin) & (sp.Freq < omax)]
+        s_lw = lw.loc[(lw.Freq >= bmin) & (lw.Freq < bmax)]
+        s_sp = sp.loc[(sp.Freq >= bmin) & (sp.Freq < bmax)]
         if s_lw.shape[0] > 0 and s_sp.shape[0] > 0:
             y_lw = np.mean(s_lw.dB)
             y_sp = np.mean(s_sp.dB)
@@ -627,11 +616,8 @@ def speaker_pref_rating(cea2034, df_pred_in_room):
         lfq_db = lfq(df_listening_window, df_sound_power, lfx_hz)
         sm_sound_power = sm(df_sound_power)
         sm_pred_in_room = sm(df_pred_in_room)
-        if nbd_on_axis is None or \
-          nbd_pred_in_room is None or \
-          lfx_hz is None or \
-          sm_pred_in_room is None or \
-          lfq_db is None:
+        if nbd_on_axis is None or nbd_pred_in_room is None or \
+          lfx_hz is None or sm_pred_in_room is None or lfq_db is None:
             return None
         pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)
         ratings = {
