@@ -33,6 +33,7 @@ contour_params_default = {
     'width': 400,
     'height': 360,
     'contour_scale': [-12, -9, -8, -7, -6, -5, -4, -3, -2.5, -2, -1.5, -1, -0.5, 0],
+    'colormap': 'spectral',
 }
 
 radar_params_default = {
@@ -178,6 +179,12 @@ def graph_contour_common(af, am, az, graph_params):
             speaker_scale = graph_params['contour_scale']
         else:
             speaker_scale = contour_params_default['contour_scale']
+        #
+        colormap = 'veridis'
+        if 'colormap' in graph_params:
+            colormap = graph_params['colormap']
+        else:
+            colormap = contour_params_default['colormap']
 
         # flatten and build a Frame
         freq = af.ravel()
@@ -221,7 +228,7 @@ def graph_contour_common(af, am, az, graph_params):
                     labelExpr="datum.value % 30 ? null : datum.label"),
                   sort=None),
             alt.Color('dB:Q',
-                      scale=alt.Scale(scheme='lightmulti',
+                      scale=alt.Scale(scheme=colormap,
                                       domain=speaker_scale,
                                       nice=True))
         ).properties(
