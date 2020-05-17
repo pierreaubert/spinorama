@@ -55,6 +55,7 @@
 	    </p>
 	    % if 'pref_rating' in meta[speaker_name]:
 	    <p class="card-header-title">
+	      (${meta[speaker_name]['pref_rating']['pref_score']})&nbsp;
 	      ${meta[speaker_name]['scaled_pref_rating']['scaled_pref_score']}/100
 	    </p>
 	    % endif
