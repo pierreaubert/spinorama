@@ -760,6 +760,19 @@ speakers_info = {
             'review': '',
         }],
     },
+    'Presonus Eris E5 XT': {
+        'brand': 'Presonus',
+        'model': 'Eris E5 XT',
+        'type': 'active',
+        'price': '260',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/presonus-e5-xt-active-speaker-review.13436/',
+        }],
+    },
     'Quad Electroacoustics ESL-57': {
         'brand': 'Quad Electroacoustics',
         'model': 'ESL-57',
