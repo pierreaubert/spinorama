@@ -2,7 +2,7 @@ import logging
 import math
 import numpy as np
 from scipy import ndimage
-from astropy.convolution import Gaussian2DKernel
+from astropy.convolution import Gaussian2DKernel, RickerWavelet2DKernel
 
 from .load import graph_melt
 
@@ -105,7 +105,8 @@ def compute_contour_smoothed(dfu, nscale=5):
     if len(x) == 0 or len(y) == 0 or len(z) == 0:
         return (None, None, None)
     # std_dev = 1
-    kernel = Gaussian2DKernel(1, mode='oversample', factor=10)
+    kernel = Gaussian2DKernel(1, 5)
+    # kernel = RickerWavelet2DKernel(4)
     # extend array by x5
     rx, ry, rz = reshape(x, y, z, nscale)
     # convolve with kernel

@@ -28,12 +28,17 @@ graph_params_default = {
 }
 
 contour_params_default = {
-    'xmin': 400,
+    'xmin': 100,
     'xmax': 20000,
     'width': 400,
     'height': 360,
-    'contour_scale': [-12, -9, -8, -7, -6, -5, -4, -3, -2.5, -2, -1.5, -1, -0.5, 0],
+    # 'contour_scale': [-12, -9, -8, -7, -6, -5, -4, -3, -2.5, -2, -1.5, -1, -0.5, 0],
+    'contour_scale': [-30, 0],
+    # 'contour_scale': [-30, -25, -20, -15, -10, -5, 0],
     'colormap': 'spectral',
+    # 'colormap': 'redyellowblue',
+    # 'colormap': 'blueorange',
+    # 'colormap': 'blues',
 }
 
 radar_params_default = {
