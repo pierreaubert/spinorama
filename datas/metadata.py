@@ -489,6 +489,19 @@ speakers_info = {
             'review': '',
         }],
     },
+    'JBL XPL90': {
+        'brand': 'JBL',
+        'model': 'XPL90',
+        'type': 'passive',
+        'price': '700',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-xpl90-speaker-review.13449/',
+        }],
+    },
     'JTR Noesis 212rt': {
         'brand': 'JTR',
         'model': 'Noesis 212rt',
