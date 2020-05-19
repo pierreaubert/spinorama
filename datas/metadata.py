@@ -541,6 +541,19 @@ speakers_info = {
             'review': '',
             },],
     },
+    'KEF Q350': {
+        'brand': 'KEF',
+        'model': 'Q350',
+        'type': 'passive',
+        'price': '700',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/kef-q350-speaker-review.13484/',
+            },],
+    },
     'KEF R3': {
         'brand': 'KEF',
         'model': 'R3',
