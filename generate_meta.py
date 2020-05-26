@@ -34,7 +34,8 @@ import math
 import sys
 import json
 from src.spinorama.load import parse_all_speakers, parse_graphs_speaker
-from src.spinorama.analysis import estimates, speaker_pref_rating
+from src.spinorama.estimates import estimates
+from src.spinorama.scores import speaker_pref_rating
 import datas.metadata as metadata
 from docopt import docopt
 
