@@ -1,4 +1,16 @@
-def radar_angle2str(a):
+import math
+import numpy as np
+import pandas as pd
+
+
+def angle2value(angle):
+    if angle == 'On Axis':
+        return 0
+    else:
+        return int(angle[:-1])
+
+
+def angle2str(a):
     """display an angle every 30 deg"""
     if a % 30 == 0:
         return '{:d}°'.format(a)
@@ -6,7 +18,7 @@ def radar_angle2str(a):
         return ''
     
 
-def radar_join(anglelist):
+def join(anglelist):
     """return true if we should join the last point and the first one"""
     # 180-170-10 => join points
     delta = anglelist[-1]+anglelist[0]
@@ -16,7 +28,7 @@ def radar_join(anglelist):
     else:
         return False
 
-def radar_angle_range(columns):
+def angle_range(columns):
     amin = 0
     amax = 0
     for c in columns:
@@ -29,36 +41,36 @@ def radar_angle_range(columns):
     return amin, amax
 
 
-def radar_projection(anglelist, gridZ, hz):
+def projection(anglelist, gridZ, hz):
     # map in 2d                                                                                                                                                                                  
     dbsX = [db * math.cos(a * math.pi / 180) for a, db in zip(anglelist, gridZ)]
     dbsY = [db * math.sin(a * math.pi / 180) for a, db in zip(anglelist, gridZ)]
 
     # join with first point (-180=180) 
     # print('Calling project', anglelist)
-    if radar_join(anglelist):
+    if join(anglelist):
         dbsX.append(dbsX[0])
         dbsY.append(dbsY[0])
 
     return dbsX, dbsY, [hz for i in range(0, len(dbsX))]
 
 
-def radar_circle(radius, anglelist):
+def circle(radius, anglelist):
     rg = range(0, len(anglelist))
     circleC = [radius for i in rg]
     circleX = [circleC[i]*math.cos(anglelist[i]*math.pi/180) for i in rg]
     circleY = [circleC[i]*math.sin(anglelist[i]*math.pi/180) for i in rg]
     # print('Calling circles', anglelist)
-    if radar_join(anglelist):
+    if join(anglelist):
         circleX.append(circleX[0])
         circleY.append(circleY[0])
     return circleX, circleY
 
-def radar_label(i):
+def label(i):
     return '{:d} Hz'.format(i)
 
 
-def radar_grid_grid(anglelist):
+def grid_grid(anglelist):
     # to limit the annoying effect of all lines crossing at 0,0
     radius = 0.25
     grid0 = [(radius * math.cos(p * math.pi / 180), radius *
@@ -75,7 +87,7 @@ def radar_grid_grid(anglelist):
     return pd.DataFrame({'x': gridX, 'y': gridY})
 
 
-def radar_grid_circle(anglelist, dbmax):
+def grid_circle(anglelist, dbmax):
     circleX = []
     circleY = []
     circleL = []
@@ -83,7 +95,7 @@ def radar_grid_circle(anglelist, dbmax):
     legendY = []
     legendT = []
     for c in [0.25, 0.5, 0.75, 1]:
-        X, Y = radar_circle(c, anglelist)
+        X, Y = circle(c, anglelist)
         circleX.append(X)
         circleY.append(Y)
         label = dbmax*(1-c)
@@ -104,15 +116,15 @@ def radar_grid_circle(anglelist, dbmax):
     return circles, text
 
 
-def radar_grid_text(anglelist):
-    textX, textY = radar_circle(1.02, anglelist)
-    textT = [radar_angle2str(a) for a in anglelist] 
-    if radar_join(anglelist):
+def grid_text(anglelist):
+    textX, textY = circle(1.02, anglelist)
+    textT = [angle2str(a) for a in anglelist] 
+    if join(anglelist):
         textT += ['']
     return pd.DataFrame({'x': textX, 'y': textY, 'text': textT})
 
 
-def radar_find_nearest_freq(dfu, hz, tolerance=0.05):
+def find_nearest_freq(dfu, hz, tolerance=0.05):
     """ return the index of the nearest freq in dfu, return None if not found """
     ihz = None
     for i in dfu.index:
@@ -124,17 +136,17 @@ def radar_find_nearest_freq(dfu, hz, tolerance=0.05):
     return ihz
 
 
-def radar_plot(anglelist, dfu):
+def plot(anglelist, dfu):
     # build 3 plots                                                                                                                                                                              
     dbX = []
     dbY = []
     hzZ = []
     for hz in [100, 500, 1000, 10000, 15000]:
         # ihz = [47, 113, 180]                                                                                                                                                                   
-        ihz = radar_find_nearest_freq(dfu, hz)
+        ihz = find_nearest_freq(dfu, hz)
         if ihz is None:
             continue
-        X, Y, Z = radar_projection(anglelist, dfu.loc[ihz][1:], hz)
+        X, Y, Z = projection(anglelist, dfu.loc[ihz][1:], hz)
         # add to global variable                                                                                                                                                                 
         dbX.append(X)
         dbY.append(Y)
@@ -144,15 +156,7 @@ def radar_plot(anglelist, dfu):
     dbmax = max(np.array(dbX).max(), np.array(dbY).max())
     dbX = [v2 / dbmax for v1 in dbX for v2 in v1]
     dbY = [v2 / dbmax for v1 in dbY for v2 in v1]
-    hzZ = [radar_label(i2) for i1 in hzZ for i2 in i1]
+    hzZ = [label(i2) for i1 in hzZ for i2 in i1]
 
     return dbmax, pd.DataFrame({'x': dbX, 'y': dbY, 'Freq': hzZ})
-
-
-def angle2value(angle):
-    if angle == 'On Axis':
-        return 0
-    else:
-        return int(angle[:-1])
-
 

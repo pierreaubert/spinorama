@@ -67,7 +67,7 @@ def merge_connected_polygons(isoband):
             elif swapped in common:
                 common[swapped].append(i)
             else:
-                common[segment] = [i]
+                common[segment] = (i)
 
     count_common = len([1 for c in common.keys() if len(common[c])>1])
     if count_common == 0:
@@ -86,11 +86,16 @@ def merge_connected_polygons(isoband):
                 new_isoband.append(merge_2polygons(poly1, poly2,
                                                 [(segment[0], segment[1]),
                                                  (segment[2], segment[3])]))
-                set_of_polygons.remove(polygons[0])
+                # remove poly1 from set to deal with
                 set_of_polygons.remove(polygons[1])
+                # update common and replace poly1 by poly2
+                for k in common.keys():
+                    v = common[k]
+                    new_v = [i if v[i] != polygons[1] else polygons[0] for i in v]
+                    common[k] = new_v
 
     for p in set_of_polygons:
         new_isoband.append(isoband[p])
     
     # need to iterate
-    return new_isoband
+    return merge_connected_polygons(new_isoband)

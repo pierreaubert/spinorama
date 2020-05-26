@@ -123,14 +123,24 @@ class PolyMergeTests(unittest.TestCase):
             poly2_close = poly2
             poly2_close.append(poly2[0])
             self.assertEqual(poly.merge_2polygons(poly1_close, poly2_close, segment), expected)
+
             
 class PolyMergeConnectedTests(unittest.TestCase):
 
     def setUp(self):
         self.datasets = [
-         ([p0, p1, p2, p0], [p0, p2, p3, p0])
+         # 2 triangles with a common edge => a rectangle
+         (([p0, p1, p2, p0], [p0, p2, p3, p0]), [[p0, p1, p2, p3, p0]]),
+         # 2 triangles without a common edge => 2 triangles
+         (([p0, p1, p2, p0], [p0, p4, p5, p0]), ([p0, p1, p2, p0], [p0, p4, p5, p0])),
+         # 3 triangles with common edge3 => a rectangle
+         (([p0, p1, p2, p0], [p0, p2, p3, p0], [p0, p5, p3]), [[p0, p1, p2, p3, p5, p0]]),
         ]
 
     def test_merge_connected(self):
-        for data in self.datasets:
-            self.assertEqual(poly.merge_connected_polygons(data), [[p0, p1, p2, p3, p0]])
+        for data, result in self.datasets:
+            self.assertEqual(poly.merge_connected_polygons(data), result)
+
+
+if __name__ == '__main__':
+    unittest.main()
