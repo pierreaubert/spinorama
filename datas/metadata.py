@@ -101,7 +101,7 @@ speakers_info = {
         'shape': 'bookshelves',
         'price': '',
         'measurements': [{
-            'origin': 'Vendors/Bise',
+            'origin': 'Vendors/Bose',
             'website': 'https://www.bose.com',
             'format': 'rewstextdump',
         }],
@@ -768,7 +768,7 @@ speakers_info = {
         'shape': 'bookshelves',
         'amount': 'pair',
         'measurements': [{
-            'origin': 'Vendors/Klipsh',
+            'origin': 'Vendors/Klipsch',
             'format': 'rewstextdump',
             'review': '',
         }],
@@ -1212,7 +1212,7 @@ speakers_info = {
             'review': '',
         }],
     },
-    'Yamaha Yamaha NS-A638': {
+    'Yamaha NS-A638': {
         'brand': 'Yamaha',
         'model': 'NS-A638',
         'type': 'passive',

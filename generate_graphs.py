@@ -48,7 +48,7 @@ def generate_graphs(df, width, height, force, ptype):
             updated = print_graphs(dfs,
                                    speaker_name, origin, metadata.origins_info, key,
                                    width, height, force, ptype)
-    print('{:30s} {:2d}'.format(speaker_name, updated))
+            print('{:30s} {:2d}'.format(speaker_name, updated))
 
 
 def generate_compare(df, width, height, force, ptype):
