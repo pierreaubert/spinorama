@@ -35,7 +35,7 @@ Options:
 import logging
 import datas.metadata as metadata
 from docopt import docopt
-from src.spinorama.load import parse_all_speakers, parse_graphs_speaker
+from src.spinorama.load.parse import parse_all_speakers, parse_graphs_speaker
 from src.spinorama.print import print_graphs, print_compare
 
 
@@ -103,7 +103,8 @@ if __name__ == '__main__':
         elif origin == 'ASR':
             mformat = 'klippel'
         else:
-            mformat = 'webplotdigitizer'
+            # need to get this information from meta
+            mformat = metadata.speakers_info[speaker]['measurements'][0]['format']
         brand = metadata.speakers_info[speaker]['brand']
         df = {}
         df[speaker] = {}
