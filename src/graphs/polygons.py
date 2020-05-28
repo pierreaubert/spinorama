@@ -44,15 +44,15 @@ def order_polygon(poly, segment):
 
 def merge_2polygons(poly1, poly2, segment):
     # return a merged polygon from the 2 polygons that share a common segment
-    print('debug p1={0} p2={1} on {2}'.format(poly1, poly2, segment))
+    # print('debug p1={0} p2={1} on {2}'.format(poly1, poly2, segment))
     o1 = order_polygon(poly1, segment)
     c1 = is_close(poly1)
     o2 = order_polygon(poly2, segment)
     c2 = is_close(poly2)
-    print('debug o1={0} o2={1}'.format(o1, o2))
+    # print('debug o1={0} o2={1}'.format(o1, o2))
     m1 = [o1[k] for k in range(1, len(o1)-c1)] + [o1[0]]
     m2 = [o2[k] for k in range(len(o2)-1-c2, 0, -1)]
-    print('debug m1={0} + m2={1} + c={2}'.format(m1, m2, m1[0]))
+    # print('debug m1={0} + m2={1} + c={2}'.format(m1, m2, m1[0]))
     return m1 + m2 
 
 
@@ -67,35 +67,64 @@ def merge_connected_polygons(isoband):
             elif swapped in common:
                 common[swapped].append(i)
             else:
-                common[segment] = (i)
+                common[segment] = [i]
 
-    count_common = len([1 for c in common.keys() if len(common[c])>1])
-    if count_common == 0:
+
+    get_segment[p1,p2] = s
+
+    print('debug: common segment:')
+    for i in common.keys():
+        print('    {0}: {1}'.format(i, common[i]))
+
+    pointer_polygons = {}
+    count_connected = 0
+    connected_polygons = {}
+    print('debug: START:')
+    for c in common.keys():
+        len_c = len(common[c])
+        if len_c == 2:
+            # polygons are connected
+            p1 = common[c][0]
+            p2 = common[c][1]
+            print('debug c={0} p1={1} p2={2}'.format(c, p1, p2))
+            if p1 in pointer_polygons:
+                print('debug case1 add {1} to pp[{0}]'.format(p1, p2))
+                connected_polygons[pointer_polygons[p1]].add(p2)
+                pointer_polygons[p2] = pointer_polygons[p1]
+            elif p2 in pointer_polygons:
+                print('debug case2 add {0} to pp[{1}]'.format(p1, p2))
+                connected_polygons[pointer_polygons[p2]].add(p1)
+                pointer_polygons[p1] = pointer_polygons[p2]
+            else:
+                connected_polygons[count_connected] = set([p1, p2])
+                pointer_polygons[p1] = count_connected
+                pointer_polygons[p2] = count_connected
+                print('debug case3 pp[{0}]={2} pp[{1}]={2}'.format(p1, p2, count_connected))
+                count_connected += 1
+        elif len_c > 2:
+            print('Error more than 2 polygons connected to 1 edge')
+    print('debug: END')
+
+    print('debug count connected {0}'.format(count_connected))
+    print('debug pointer_polygons {0}'.format(pointer_polygons))
+    for cp_k, cp_v in connected_polygons.items():
+        print('  {0} {1}'.format(cp_k, cp_v))
+
+    if count_connected == 0:
         return isoband
 
-    
     new_isoband = []
-    index_of_polygons = [i for i in range(0, len(isoband))]
-    set_of_polygons = set(index_of_polygons)
-    for segment in common.keys():
-        polygons = common[segment]
-        if len(polygons) == 2:
-            if polygons[0] in set_of_polygons and polygons[1] in set_of_polygons:
-                poly1 = isoband[polygons[0]]
-                poly2 = isoband[polygons[1]]
-                new_isoband.append(merge_2polygons(poly1, poly2,
-                                                [(segment[0], segment[1]),
-                                                 (segment[2], segment[3])]))
-                # remove poly1 from set to deal with
-                set_of_polygons.remove(polygons[1])
-                # update common and replace poly1 by poly2
-                for k in common.keys():
-                    v = common[k]
-                    new_v = [i if v[i] != polygons[1] else polygons[0] for i in v]
-                    common[k] = new_v
-
-    for p in set_of_polygons:
-        new_isoband.append(isoband[p])
+    for i, polyset in connected_polygons.items():
+        prev_poly = polyset.pop()
+        current = isoband[prev_poly]
+        try:
+            while 1:
+                next_poly = polyset.pop()
+                TODO get segment
+                current = merge_2polygons(current, isoband[next_poly], get_segment[(prev_poly, next_poly)])
+                prev = next_poly
+        except KeyError:
+            new_isoband.append(current)
     
     # need to iterate
-    return merge_connected_polygons(new_isoband)
+    return new_isoband

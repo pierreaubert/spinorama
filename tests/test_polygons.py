@@ -130,11 +130,11 @@ class PolyMergeConnectedTests(unittest.TestCase):
     def setUp(self):
         self.datasets = [
          # 2 triangles with a common edge => a rectangle
-         (([p0, p1, p2, p0], [p0, p2, p3, p0]), [[p0, p1, p2, p3, p0]]),
+         # (([p0, p1, p2, p0], [p0, p2, p3, p0]), [[p0, p1, p2, p3, p0]]),
          # 2 triangles without a common edge => 2 triangles
-         (([p0, p1, p2, p0], [p0, p4, p5, p0]), ([p0, p1, p2, p0], [p0, p4, p5, p0])),
-         # 3 triangles with common edge3 => a rectangle
-         (([p0, p1, p2, p0], [p0, p2, p3, p0], [p0, p5, p3]), [[p0, p1, p2, p3, p5, p0]]),
+         # (([p0, p1, p2, p0], [p0, p4, p5, p0]), ([p0, p1, p2, p0], [p0, p4, p5, p0])),
+         # 4 triangles with common edges => a rectangle
+         (([p0, p1, p2, p0], [p0, p2, p3, p0], [p0, p5, p3, p0], (p3, p4, p5, p3)), [[p0, p1, p2, p3, p4, p5, p0]]),
         ]
 
     def test_merge_connected(self):
