@@ -3,10 +3,10 @@ import math
 import numpy as np
 import pandas as pd
 import altair as alt
-from .analysis import directivity_matrix
+from .directivity import directivity_matrix
 from .contour import compute_contour, compute_contour_smoothed
 from .normalize import resample
-import .radar
+import src.spinorama.radar as radar
 
 
 alt.data_transformers.disable_max_rows()
