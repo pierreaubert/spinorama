@@ -1,8 +1,5 @@
-import tarfile
-import json
-import numpy as np
+import logging
 import pandas as pd
-from . import graph_melt
 
 def parse_graphs_speaker_rewstextdump(speaker_brand, speaker_name):
     dfs = {}
@@ -34,7 +31,7 @@ def parse_graphs_speaker_rewstextdump(speaker_brand, speaker_name):
         spin = pd.DataFrame({'Freq': freqs, 'dB': spls, 'Measurements': msrts})    
         dfs['CEA2034'] = spin
     except FileNotFoundError:
-        logging.info('Speaker: {0} Not found: {1}'.format(speaker_name, jsonfilename))
+        logging.info('Speaker: {0} Not found: {1}'.format(speaker_brand, speaker_name))
     return dfs
         
     

@@ -1,10 +1,8 @@
-import collections
 import logging
 import math
 import numpy as np
-import pandas as pd
 from scipy import ndimage
-from astropy.convolution import Gaussian2DKernel, RickerWavelet2DKernel
+from astropy.convolution import Gaussian2DKernel
 
 from .load import graph_melt
 

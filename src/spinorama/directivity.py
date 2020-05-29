@@ -1,6 +1,5 @@
 import math
 import numpy as np
-import pandas as pd
 
 def directivity_matrix(splH, splV):
     # print(splH.shape, splV.shape)

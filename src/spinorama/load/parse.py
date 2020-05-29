@@ -1,14 +1,9 @@
 import os
 import sys
 import glob
-import math
 import logging
-import numpy as np
-import pandas as pd
 
-from ..cea2034 import early_reflections, vertical_reflections, horizontal_reflections,\
-     compute_cea2034, compute_onaxis, estimated_inroom, estimated_inroom_HV
-from ..normalize import unify_freq, normalize_mean, normalize_cea2034, normalize_graph
+from ..normalize import normalize_mean, normalize_cea2034, normalize_graph
 
 from .klippel import parse_graphs_speaker_klippel
 from .webplotdigitizer import parse_graphs_speaker_webplotdigitizer

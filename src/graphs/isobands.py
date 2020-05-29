@@ -1,8 +1,6 @@
-import math
+import logging
 import collections
 import numpy as np
-import pandas as pd
-import altair as alt
 
 Triangle = collections.namedtuple("Triangle", "v1 v2 v3")
 Edge = collections.namedtuple("Edge", "e1 e2")

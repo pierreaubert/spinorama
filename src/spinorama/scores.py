@@ -1,8 +1,7 @@
 import logging
 import math
 import numpy as np
-import pandas as pd
-from scipy.stats import linregress, median_absolute_deviation
+from scypy.stats import linregress
 
 # https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
 def octave(N):

@@ -5,9 +5,8 @@ import numpy as np
 import os
 import pandas as pd
 import tarfile
-from ..cea2034 import early_reflections, vertical_reflections, horizontal_reflections,\
-     compute_cea2034, compute_onaxis, estimated_inroom, estimated_inroom_HV
-from ..normalize import unify_freq, normalize_mean, normalize_cea2034, normalize_graph
+from ..cea2034 import estimated_inroom
+from ..normalize import unify_freq
 from . import graph_melt
 
 def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name):

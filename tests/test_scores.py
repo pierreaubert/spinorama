@@ -1,6 +1,5 @@
 # import os
 import unittest
-import logging
 import numpy as np
 import pandas as pd
 from spinorama.scores import octave, aad

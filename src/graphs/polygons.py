@@ -70,7 +70,7 @@ def merge_connected_polygons(isoband):
                 common[segment] = [i]
 
 
-    get_segment[p1,p2] = s
+    # get_segment[p1,p2] = s
 
     print('debug: common segment:')
     for i in common.keys():
@@ -120,7 +120,7 @@ def merge_connected_polygons(isoband):
         try:
             while 1:
                 next_poly = polyset.pop()
-                TODO get segment
+                # TODO get segment
                 current = merge_2polygons(current, isoband[next_poly], get_segment[(prev_poly, next_poly)])
                 prev = next_poly
         except KeyError:

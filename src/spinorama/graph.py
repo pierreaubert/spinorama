@@ -1,5 +1,4 @@
 import logging
-import math
 import numpy as np
 import pandas as pd
 import altair as alt
@@ -492,10 +491,10 @@ def graph_compare_freq_regression(df, graph_params, speaker1, speaker2):
         opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     )
 
-    points = line.mark_circle(size=100).encode(
-        opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
-        tooltip=['Measurements', 'Freq', 'dB']
-    )
+    #points = line.mark_circle(size=100).encode(
+    #    opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
+    #    tooltip=['Measurements', 'Freq', 'dB']
+    #)
 
     rules = alt.Chart(df).mark_rule(color='gray').encode(x='Freq:Q').transform_filter(nearest)
 
