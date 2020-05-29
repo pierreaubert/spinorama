@@ -1,7 +1,8 @@
 # import os
 import unittest
 import pandas as pd
-from spinorama.load import parse_graph_freq_klippel, graph_melt
+from spinorama.load import graph_melt
+from spinorama.load.klippel import parse_graph_freq_klippel
 from spinorama.estimates import estimates
 
 

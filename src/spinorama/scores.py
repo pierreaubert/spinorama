@@ -1,7 +1,7 @@
 import logging
 import math
 import numpy as np
-from scypy.stats import linregress
+from scipy.stats import linregress
 
 # https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
 def octave(N):
