@@ -27,10 +27,11 @@ to get a better insight on how to analyse a spinorama.
 
 ## Import
 
-The library support 3 kinds of data:
-1. ASR format provided by Klippel: a set of CSV files
-2. Princeton 3D3A files: they are IR data in hdf5 format
-3. Scanned data from a picture with WebPlotDigitizer (takes 10 minutes per picture)
+The library support 4 kinds of data:
+1. ASR format provided by a [Klippel NFS](https://www.klippel.de/products/rd-system/modules/nfs-near-field-scanner.html): a set of CSV files
+2. Princeton 3D3A files: they are IR data in [hdf5](https://www.hdfgroup.org/solutions/hdf5/) format
+3. Scanned data from a picture with [WebPlotDigitizer](https://automeris.io/WebPlotDigitizer/) (takes 10 minutes per picture)
+4. Export in text form from [REW](https://www.roomeqwizard.com/)
 
 ## Computations
 
