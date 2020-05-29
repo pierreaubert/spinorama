@@ -33,7 +33,7 @@ import os
 import math
 import sys
 import json
-from src.spinorama.load import parse_all_speakers, parse_graphs_speaker
+from src.spinorama.load.parse import parse_all_speakers, parse_graphs_speaker
 from src.spinorama.estimates import estimates
 from src.spinorama.scores import speaker_pref_rating
 import datas.metadata as metadata
