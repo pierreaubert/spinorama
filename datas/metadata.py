@@ -82,9 +82,9 @@ speakers_info = {
             'format': 'webplotdigitizer',
         }],
     },
-    'BIC America Venturi DV72si': {
+    'BIC America Venturi DV62si': {
         'brand': 'BIC America',
-        'model': 'Venturi DV72si',
+        'model': 'Venturi DV62si',
         'type': 'passive',
         'shape': 'bookshelves',
         'price': '',
@@ -1285,7 +1285,7 @@ origins_info = {
         'min dB': -40,
         'max dB': 10,
         'logo': 'docs/metadata/bose.png',
-        'logo-small': 'docs/metadata/bose-small.png',
+        'logo-small': 'docs/metadata/bose.png',
         'url': 'https://www.bose.com',
     },
     'Vendors/Cambridge Soundworks': {
