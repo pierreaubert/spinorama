@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 import pandas as pd
 from ..cea2034 import estimated_inroom
 from . import graph_melt
