@@ -55,7 +55,7 @@ def compute_contour(dfu):
     nf = int(len(dfm.index) / nm)
     logging.debug('unique={:d} nf={:d}'.format(nm,nf))
     # index grid on a log scale log 2 ±= 0.3
-    hrange = np.floor(np.logspace(1.0+math.log10(2), 4.0+math.log10(2), nf))
+    hrange = np.logspace(1.0+math.log10(2), 4.0+math.log10(2), nf)
     # print(vrange)
     # sort data per experiments (not usefull for DataFrame but for 2d array)
     # anglemin = np.array(vrange).min()/10
@@ -65,6 +65,8 @@ def compute_contour(dfu):
     af, am = np.meshgrid(hrange, vrange)
     # since it is melted generate slices
     az = np.array([dfm.dB[nf * i:nf * (i + 1)] for i in range(0, nm)])
+    if af.shape != am.shape or af.shape != az.shape:
+        logging.error('Shape mismatch af={0} am={1} az={2}'.format(af.shape, az.shape, am.shape))
     return (af, am, az)
 
 
@@ -105,7 +107,8 @@ def compute_contour_smoothed(dfu, nscale=5):
     if len(x) == 0 or len(y) == 0 or len(z) == 0:
         return (None, None, None)
     # std_dev = 1
-    kernel = Gaussian2DKernel(1, mode='oversample', factor=10)
+    kernel = Gaussian2DKernel(1, 5)
+    # kernel = RickerWavelet2DKernel(4)
     # extend array by x5
     rx, ry, rz = reshape(x, y, z, nscale)
     # convolve with kernel
@@ -113,28 +116,5 @@ def compute_contour_smoothed(dfu, nscale=5):
     # return
     return (rx, ry, rzs)
 
-
-def near(t, v):
-    w = 0
-    d = abs(t[0] - v)
-    for i in range(len(t)):
-        c = abs(t[i] - v)
-        if c < d:
-            d = c
-            w = i
-    # print(w, d)
-    if v < 0 and t[w] > v:
-        return None, 0
-    if v > 0 and t[w] < v:
-        return None, 0
-    # linear interpolation (w-1, t[w-1]) (w,t[w])  ax+b=v x=>(v-b)/a
-    if w > 1 and t[w] != 0 and d != 0:
-        w = w - (t[w] - t[w - 1]) / t[w]
-        d = 0
-    return w, d
-
-
-# inspired heavily by
-# https://blog.bruce-hill.com/code?f=meandering-triangles/meandering_triangles.py
 
 

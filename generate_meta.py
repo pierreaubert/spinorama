@@ -33,8 +33,9 @@ import os
 import math
 import sys
 import json
-from src.spinorama.load import parse_all_speakers, parse_graphs_speaker
-from src.spinorama.analysis import estimates, speaker_pref_rating
+from src.spinorama.load.parse import parse_all_speakers, parse_graphs_speaker
+from src.spinorama.estimates import estimates
+from src.spinorama.scores import speaker_pref_rating
 import datas.metadata as metadata
 from docopt import docopt
 
@@ -55,8 +56,7 @@ def sanity_check(df, meta):
                 return 1
         # check if image exists (jpg or png)
         if not os.path.exists('./datas/pictures/' + speaker_name + '.jpg') and not os.path.exists('./datas/pictures/' + speaker_name + '.png'):
-            logging.fatal('Image associated with >{0}< not found.'.format(speaker_name))
-            return 1
+            logging.error('Image associated with >{0}< not found.'.format(speaker_name))
         # check if downscale image exists (all jpg)
         if not os.path.exists('./docs/pictures/' + speaker_name + '.jpg'):
             logging.fatal('Image associated with >{0}< not found.'.format(speaker_name))
@@ -77,6 +77,8 @@ def add_estimates(df):
     max_flatness = 1
     min_sm_sp = 1
     max_sm_sp = 0
+    min_sm_pir = 1
+    max_sm_pir = 0
     for speaker_name, speaker_data in df.items():
         logging.info('Processing {0}'.format(speaker_name))
         for origin, measurements in speaker_data.items():
@@ -134,7 +136,13 @@ def add_estimates(df):
                 max_nbd_on = max(max_nbd_on, pref_rating['nbd_on_axis'])
                 min_sm_sp = min(min_nbd_on, pref_rating['sm_sound_power'])
                 max_sm_sp = max(max_nbd_on, pref_rating['sm_sound_power'])
+                min_sm_pir = min(min_nbd_on, pref_rating['sm_pred_in_room'])
+                max_sm_pir = max(max_nbd_on, pref_rating['sm_pred_in_room'])
 
+    # if we are looking only after 1 speaker, return
+    if len(df.items()) == 1:
+        return
+    
     # add normalized value to metadata
     for speaker_name, speaker_data in df.items():
         logging.info('Normalize data for {0}'.format(speaker_name))
@@ -158,10 +166,13 @@ def add_estimates(df):
                 lfx_hz = pref_rating['lfx_hz']
                 nbd_on = pref_rating['nbd_on_axis']
                 sm_sp = pref_rating['sm_sound_power']
+                sm_pir = pref_rating['sm_pred_in_room']
                 flatness = metadata.speakers_info[speaker_name]['estimates'][3]
 
                 # normalize min and max
                 def percent(val, vmin, vmax):
+                    if vmax == vmin:
+                        logging.debug('max == min')
                     return math.floor(100*(val-vmin)/(vmax-vmin))
 
                 scaled_pref_score = percent(pref_score, min_pref_score, max_pref_score)
@@ -171,6 +182,7 @@ def add_estimates(df):
                 scaled_flatness = 100-percent(flatness, min_flatness, max_flatness)
                 # higher is better
                 scaled_sm_sp = percent(sm_sp, min_sm_sp, max_sm_sp)
+                scaled_sm_pir = percent(sm_pir, min_sm_pir, max_sm_pir)
                 # add normalized values
                 scaled_pref_rating = {
                     'scaled_pref_score': scaled_pref_score,
@@ -178,6 +190,7 @@ def add_estimates(df):
                     'scaled_nbd_on_axis': scaled_nbd_on,
                     'scaled_flatness': scaled_flatness,
                     'scaled_sm_sound_power': scaled_sm_sp,
+                    'scaled_sm_pred_in_room': scaled_sm_pir,
                     }
                 logging.info('Adding {0}'.format(scaled_pref_rating))
                 metadata.speakers_info[speaker_name]['scaled_pref_rating'] = scaled_pref_rating

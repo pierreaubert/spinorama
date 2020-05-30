@@ -55,6 +55,7 @@
 	    </p>
 	    % if 'pref_rating' in meta[speaker_name]:
 	    <p class="card-header-title">
+	      (${meta[speaker_name]['pref_rating']['pref_score']})&nbsp;
 	      ${meta[speaker_name]['scaled_pref_rating']['scaled_pref_score']}/100
 	    </p>
 	    % endif
@@ -70,9 +71,9 @@
 	      <progress class="progress is-small is-success"
 			value="${meta[speaker_name]['scaled_pref_rating']['scaled_flatness']}"
 			max="100"></progress>
-	      <p>Smoothness: <b>${meta[speaker_name]['pref_rating']['sm_sound_power']}</b></p>
+	      <p>Smoothness (PIR): <b>${meta[speaker_name]['pref_rating']['sm_pred_in_room']}</b></p>
 	      <progress class="progress is-small is-warning"
-			value="${meta[speaker_name]['scaled_pref_rating']['scaled_sm_sound_power']}"
+			value="${meta[speaker_name]['scaled_pref_rating']['scaled_sm_pred_in_room']}"
 			max="100"></progress>
 	      % else:
   	      % if 'estimates' in meta[speaker_name]:

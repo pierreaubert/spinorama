@@ -1,37 +1,13 @@
 # import os
 import unittest
-import logging
-import numpy as np
 import pandas as pd
-from spinorama.load import parse_graph_freq_klippel, graph_melt
-from spinorama.analysis import estimates, compute_cea2034, early_reflections,\
-     vertical_reflections, horizontal_reflections, estimated_inroom_HV, \
-     octave, aad
+from spinorama.load import graph_melt
+from spinorama.load.klippel import parse_graph_freq_klippel
+from spinorama.cea2034 import compute_cea2034, early_reflections,\
+     vertical_reflections, horizontal_reflections, estimated_inroom_HV
 
 
 pd.set_option("display.max_rows", 202)
-
-
-class SpinoramaAnalysisTests(unittest.TestCase):
-
-
-    def setUp(self):
-        self.title, self.df_unmelted = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/CEA2034.txt')
-        self.df = graph_melt(self.df_unmelted)
-        self.onaxis = self.df.loc[self.df['Measurements'] == 'On Axis']
-        
-
-    def test_estimates(self):
-        self.estimates = estimates(self.onaxis)
-        self.assertNotEqual(-1, self.estimates[0])
-        self.assertNotEqual(-1, self.estimates[1])
-        self.assertNotEqual(-1, self.estimates[2])
-        self.assertNotEqual(-1, self.estimates[3])
-        # 
-        self.assertAlmostEqual(self.estimates[0], 106)
-        self.assertAlmostEqual(self.estimates[1],  59)
-        self.assertAlmostEqual(self.estimates[2],  53)
-        self.assertAlmostEqual(self.estimates[3],  2.0)
 
 
 class SpinoramaSpinoramaTests(unittest.TestCase):
@@ -213,30 +189,4 @@ class SpinoramaEstimatedInRoomTests(unittest.TestCase):
         self.assertLess(abs(reference.dB.abs().max()-computed.dB.abs().max()), 0.005)
         
         
-class PrefRatingTests(unittest.TestCase):
-
-    def setUp(self):
-        self.octave2 = octave(2)
-        self.octave3 = octave(3)
-        self.octave20 = octave(20)
-
-    def test_octave(self):
-        self.assertEqual(len(self.octave2), 21)
-        self.assertLess(self.octave2[0][0], 100)
-        self.assertLess(20000, self.octave2[-1][1])
-        
-        self.assertEqual(len(self.octave3), 31)
-        self.assertLess(self.octave3[0][0], 100)
-        self.assertLess(20000, self.octave3[-1][1])
-
-    def test_aad(self):
-        freq = [i for i in np.logspace(0.3,4.3,1000)]
-        db = [100 for i in np.logspace(0.3,4.3,1000)]
-        df = pd.DataFrame({'Freq': freq, 'dB': db})
-        # expect 0 deviation from flat line
-        self.assertEqual(aad(df), 0.0)
-    
-if __name__ == '__main__':
-    unittest.main()
-
     

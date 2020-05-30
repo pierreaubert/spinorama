@@ -30,7 +30,6 @@ import logging
 import os
 import sys
 from glob import glob
-from mako.template import Template
 from mako.lookup import TemplateLookup
 from docopt import docopt
 
