@@ -33,6 +33,7 @@ def parse_graphs_speaker_rewstextdump(speaker_brand, speaker_name):
                         msrts.append(msrt)
         spin = pd.DataFrame({'Freq': freqs, 'dB': spls, 'Measurements': msrts})
 
+        # TODO(pierre): should be factored out (same as in webplotdigitizer
         # compute ERDI and SPDI
         if spin is not None:
             # compute EIR

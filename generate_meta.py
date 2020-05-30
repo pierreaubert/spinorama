@@ -56,8 +56,7 @@ def sanity_check(df, meta):
                 return 1
         # check if image exists (jpg or png)
         if not os.path.exists('./datas/pictures/' + speaker_name + '.jpg') and not os.path.exists('./datas/pictures/' + speaker_name + '.png'):
-            logging.fatal('Image associated with >{0}< not found.'.format(speaker_name))
-            return 1
+            logging.error('Image associated with >{0}< not found.'.format(speaker_name))
         # check if downscale image exists (all jpg)
         if not os.path.exists('./docs/pictures/' + speaker_name + '.jpg'):
             logging.fatal('Image associated with >{0}< not found.'.format(speaker_name))

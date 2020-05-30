@@ -30,4 +30,5 @@ htmlcov
 *.mkv
 *.mp4
 *.mpeg
+.DS_Store
 
