@@ -96,9 +96,9 @@ def generate_stats(meta):
     spread = alt.Chart(source).mark_circle(size=30).encode(
         x=alt.X('speaker', sort='y', axis=alt.Axis(labelAngle=45)),
         y=alt.Y('pref_score')
-    ).properties(width=700,height=300)
+    ).properties(width=1024,height=300)
 
-    scores = spread | distribution
+    scores = spread & distribution
 
     # used in website
     filedir = 'docs/stats'
