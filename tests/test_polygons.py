@@ -2,15 +2,15 @@ import unittest
 
 import graphs.polygons as poly
 
-p0 = (0,0)    
-p1 = (1,0)
-p2 = (1,1)
-p3 = (0,1)
-p4 = (-1,1)
-p5 = (-1,0)
-p6 = (-1,-1)
-p7 = (0,-1)
-p8 = (1,-1)
+p0 = (0, 0)    
+p1 = (1, 0)
+p2 = (1, 1)
+p3 = (0, 1)
+p4 = (-1, 1)
+p5 = (-1, 0)
+p6 = (-1, -1)
+p7 = (0, -1)
+p8 = (1, -1)
 
 class PolyIsCloseTests(unittest.TestCase):
 
@@ -26,9 +26,9 @@ class PolyOrderTests(unittest.TestCase):
 
     def setUp(self):
         self.triangles = ([p0, p1, p2], [p0, p2, p1], [p2, p1, p0], [p2, p0, p1], [p1, p0, p2], [p1, p2, p0])
-        self.rectangles = ([p0, p1, p2, p3], [p0, p3, p2, p1],
-                           [p1, p2, p3, p0], [p1, p0, p3, p2],
-                           [p2, p3, p0, p1], [p2, p1, p0, p3],
+        self.rectangles = ([p0, p1, p2, p3], [p0, p3, p2, p1], 
+                           [p1, p2, p3, p0], [p1, p0, p3, p2], 
+                           [p2, p3, p0, p1], [p2, p1, p0, p3], 
                            [p3, p0, p1, p2], [p3, p2, p1, p0])
     
     def test_ordering_triangles(self):
@@ -78,9 +78,9 @@ class PolyOrderTests(unittest.TestCase):
             self.assertEqual(poly.order_polygon(rectangle_close, [p0, p3]), [p0, p3, p2, p1, p0])
 
     def test_case1(self):
-        self.assertEqual(poly.order_polygon([[1.5, 0.0], [1.0, 1.0], [0, 0], [1.5, 0.0]],
-                                            [[1.0, 1.0], [0, 0]]),
-                         [[1.0, 1.0], [0,0], [1.5, 0.0], [1.0, 1.0]])
+        self.assertEqual(poly.order_polygon([[1.5, 0.0], [1.0, 1.0], [0, 0], [1.5, 0.0]], 
+                                            [[1.0, 1.0], [0, 0]]), 
+                         [[1.0, 1.0], [0, 0], [1.5, 0.0], [1.0, 1.0]])
                                            
 
        
@@ -89,18 +89,18 @@ class PolyMergeTests(unittest.TestCase):
 
     def setUp(self):
         self.triangles = [
-         ([p0, p1, p2], [p0, p2, p3], [p2, p0], [p0, p1, p2, p3, p0]),
-         ([p0, p1, p2], [p0, p2, p3], [p0, p2], [p2, p1, p0, p3, p2]),
-         ([p0, p1, p3], [p1, p2, p3], [p1, p3], [p3, p0, p1, p2, p3]),
-         ([p0, p1, p3], [p1, p2, p3], [p3, p1], [p1, p0, p3, p2, p1]),
+         ([p0, p1, p2], [p0, p2, p3], [p2, p0], [p0, p1, p2, p3, p0]), 
+         ([p0, p1, p2], [p0, p2, p3], [p0, p2], [p2, p1, p0, p3, p2]), 
+         ([p0, p1, p3], [p1, p2, p3], [p1, p3], [p3, p0, p1, p2, p3]), 
+         ([p0, p1, p3], [p1, p2, p3], [p3, p1], [p1, p0, p3, p2, p1]), 
         ]
         self.rectangles = [
-         ([p0, p1, p2, p3], [p0, p3, p4, p5], [p0, p3], [p3, p2, p1, p0, p5, p4, p3]),
+         ([p0, p1, p2, p3], [p0, p3, p4, p5], [p0, p3], [p3, p2, p1, p0, p5, p4, p3]), 
         ]
         self.mixed = [
-         ([p0, p1, p2], [p2, p4, p5, p0], [p0, p2], [p2, p1, p0, p5, p4, p2]),
-         ([p0, p1, p2], [p2, p4, p5, p0], [p2, p0], [p0, p1, p2, p4, p5, p0]),
-         ([p0, p1, p2], [p2, p3, p4, p5, p0], [p0, p2], [p2, p1, p0, p5, p4, p3, p2]),
+         ([p0, p1, p2], [p2, p4, p5, p0], [p0, p2], [p2, p1, p0, p5, p4, p2]), 
+         ([p0, p1, p2], [p2, p4, p5, p0], [p2, p0], [p0, p1, p2, p4, p5, p0]), 
+         ([p0, p1, p2], [p2, p3, p4, p5, p0], [p0, p2], [p2, p1, p0, p5, p4, p3, p2]), 
         ]
                             
 
@@ -132,16 +132,16 @@ class PolyMergeTests(unittest.TestCase):
             self.assertEqual(poly.merge_2polygons(poly1_close, poly2_close, segment), expected)
 
             
-pA = (0,0)
-pB = (2,0)
-pC = (4,0)
-pD = (0,1)
-pE = (3,1)
-pF = (4,3)
-pG = (0,4)
-pH = (3,4)
-pI = (4,4)
-pZ = (2,2)
+pA = (0, 0)
+pB = (2, 0)
+pC = (4, 0)
+pD = (0, 1)
+pE = (3, 1)
+pF = (4, 3)
+pG = (0, 4)
+pH = (3, 4)
+pI = (4, 4)
+pZ = (2, 2)
 
 
 q0 = [0.0, -0.2]
@@ -161,43 +161,36 @@ class PolyMergeConnectedTests(unittest.TestCase):
 
     def setUp(self):
         self.datasets = [
-#         # 2 triangles with a common edge => a rectangle
-#         (([p0, p1, p2, p0], [p0, p2, p3, p0]), [[p0, p1, p2, p3, p0]]),
-#         # 2 triangles without a common edge => 2 triangles
-#         (([p0, p1, p2, p0], [p0, p4, p5, p0]), ([p0, p1, p2, p0], [p0, p4, p5, p0])),
-#         # 4 triangles with common edges => a rectangle
-#         (
-#             # inputs
-#             ([p0, p1, p2, p0], [p0, p2, p3, p0], [p0, p5, p3, p0], (p3, p4, p5, p3)),
-#             # outputs
-#             [[p3, p2, p1, p0, p5, p4, p3]]
-#         ),
-#         # same as above plus another triangle
-#         (
-#             # inputs
-#
-#             # outputs
-#             [[p3, p2, p1, p0, p5, p4, p3], [p0, p6, p7, p0]]
-#         ),
-#         # from a test case
-#         (
-#             # inputs
-#             ([pA, pB, pE, pZ, pD, pA], [pE, pZ, pH, pI, pF, pE]),
-#             # outputs
-#             [[pZ, pD, pA, pB, pE, pF, pI, pH, pZ]]
-#         ),
-#         # from a test case
+         # 2 triangles with a common edge => a rectangle
+         (([p0, p1, p2, p0], [p0, p2, p3, p0]), [[p0, p1, p2, p3, p0]]), 
+         # 2 triangles without a common edge => 2 triangles
+         (([p0, p1, p2, p0], [p0, p4, p5, p0]), ([p0, p1, p2, p0], [p0, p4, p5, p0])), 
+         # 4 triangles with common edges => a rectangle
          (
              # inputs
-             ([q0,q1,q2,q3,q0],
-              [q4,q5,q2,q3,q4],
-              [q4,q5,q6,q7,q4],
-              [q0,q1,q8,q9,q0],
-              [q9,q8,q10,q11,q9],
-              [q7,q6,q10,q11,q7]),
+             ([p0, p1, p2, p0], [p0, p2, p3, p0], [p0, p5, p3, p0], (p3, p4, p5, p3)), 
              # outputs
-             [[q11, q10, q9, q8, q7, q6, q5, q4, q3, q2, q1, q0, q11]]
-         ),
+             [[p3, p2, p1, p0, p5, p4, p3]]
+         ), 
+         # from a test case
+         (
+             # inputs
+             ([pA, pB, pE, pZ, pD, pA], [pE, pZ, pH, pI, pF, pE]), 
+             # outputs
+             [[pZ, pD, pA, pB, pE, pF, pI, pH, pZ]]
+         ), 
+         # from a test case
+#         (
+#             # inputs
+#             ([q0, q1, q2, q3, q0], 
+#              [q4, q5, q2, q3, q4], 
+#              [q4, q5, q6, q7, q4], 
+#              [q0, q1, q8, q9, q0], 
+#              [q9, q8, q10, q11, q9], 
+#              [q7, q6, q10, q11, q7]), 
+#             # outputs
+#             [[q11, q10, q9, q8, q7, q6, q5, q4, q3, q2, q1, q0, q11]]
+#         ), 
         ]
 
     def test_merge_connected(self):
