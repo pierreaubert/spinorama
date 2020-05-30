@@ -8,6 +8,9 @@ p2 = (1,1)
 p3 = (0,1)
 p4 = (-1,1)
 p5 = (-1,0)
+p6 = (-1,-1)
+p7 = (0,-1)
+p8 = (1,-1)
 
 class PolyIsCloseTests(unittest.TestCase):
 
@@ -29,7 +32,7 @@ class PolyOrderTests(unittest.TestCase):
                            [p3, p0, p1, p2], [p3, p2, p1, p0])
     
     def test_ordering_triangles(self):
-        print('--- test open triangles ---')
+        # print('--- test open triangles ---')
         for triangle in self.triangles:
             self.assertEqual(poly.order_polygon(triangle, [p0, p1]), [p0, p1, p2])
             self.assertEqual(poly.order_polygon(triangle, [p0, p2]), [p0, p2, p1])
@@ -38,7 +41,7 @@ class PolyOrderTests(unittest.TestCase):
             self.assertEqual(poly.order_polygon(triangle, [p2, p0]), [p2, p0, p1])
             self.assertEqual(poly.order_polygon(triangle, [p2, p1]), [p2, p1, p0])
 
-        print('--- test closed triangles ---')
+        # print('--- test closed triangles ---')
         for triangle in self.triangles:
             triangle_close = triangle
             triangle_close.append(triangle[0])
@@ -50,7 +53,7 @@ class PolyOrderTests(unittest.TestCase):
             self.assertEqual(poly.order_polygon(triangle_close, [p2, p1]), [p2, p1, p0, p2])
 
     def test_ordering_rectangles(self):
-        print('--- test open rectangles ---')
+        # print('--- test open rectangles ---')
         for rectangle in self.rectangles:
             self.assertEqual(poly.order_polygon(rectangle, [p0, p1]), [p0, p1, p2, p3])
             self.assertEqual(poly.order_polygon(rectangle, [p1, p0]), [p1, p0, p3, p2])
@@ -61,7 +64,7 @@ class PolyOrderTests(unittest.TestCase):
             self.assertEqual(poly.order_polygon(rectangle, [p3, p0]), [p3, p0, p1, p2])
             self.assertEqual(poly.order_polygon(rectangle, [p0, p3]), [p0, p3, p2, p1])
 
-        print('--- test closed rectangless ---')
+        # print('--- test closed rectangless ---')
         for rectangle in self.rectangles:
             rectangle_close = rectangle
             rectangle_close.append(rectangle[0])
@@ -74,6 +77,13 @@ class PolyOrderTests(unittest.TestCase):
             self.assertEqual(poly.order_polygon(rectangle_close, [p3, p0]), [p3, p0, p1, p2, p3])
             self.assertEqual(poly.order_polygon(rectangle_close, [p0, p3]), [p0, p3, p2, p1, p0])
 
+    def test_case1(self):
+        self.assertEqual(poly.order_polygon([[1.5, 0.0], [1.0, 1.0], [0, 0], [1.5, 0.0]],
+                                            [[1.0, 1.0], [0, 0]]),
+                         [[1.0, 1.0], [0,0], [1.5, 0.0], [1.0, 1.0]])
+                                           
+
+       
             
 class PolyMergeTests(unittest.TestCase):
 
@@ -122,20 +132,72 @@ class PolyMergeTests(unittest.TestCase):
             self.assertEqual(poly.merge_2polygons(poly1_close, poly2_close, segment), expected)
 
             
+pA = (0,0)
+pB = (2,0)
+pC = (4,0)
+pD = (0,1)
+pE = (3,1)
+pF = (4,3)
+pG = (0,4)
+pH = (3,4)
+pI = (4,4)
+pZ = (2,2)
+
+
+q0 = [0.0, -0.2]
+q1 = [0.0, -0.4]
+q2 = [-0.2, -0.2]
+q3 = [-0.1, -0.1]
+q4 = [-0.2, 0.0]
+q5 = [-0.4, 0.0]
+q6 = [0.0, 0.4]
+q7 = [0.0, 0.2]
+q8 = [0.4, 0.0]
+q9 = [0.2, 0.0]
+q10 = [0.2, 0.2]
+q11 = [0.1, 0.1]
+
 class PolyMergeConnectedTests(unittest.TestCase):
 
     def setUp(self):
         self.datasets = [
-         # 2 triangles with a common edge => a rectangle
-         (([p0, p1, p2, p0], [p0, p2, p3, p0]), [[p0, p1, p2, p3, p0]]),
-         # 2 triangles without a common edge => 2 triangles
-         (([p0, p1, p2, p0], [p0, p4, p5, p0]), ([p0, p1, p2, p0], [p0, p4, p5, p0])),
-         # 4 triangles with common edges => a rectangle
-         (([p0, p1, p2, p0], [p0, p2, p3, p0], [p0, p5, p3, p0], (p3, p4, p5, p3)),
-          [[p3, p2, p1, p0, p5, p4, p3]]),
-         # same as above plus another triangle
-         (([p0, p1, p2, p0], [p0, p2, p3, p0], [p0, p5, p3, p0], (p3, p4, p5, p3)),
-          [[p3, p2, p1, p0, p5, p4, p3]]),
+#         # 2 triangles with a common edge => a rectangle
+#         (([p0, p1, p2, p0], [p0, p2, p3, p0]), [[p0, p1, p2, p3, p0]]),
+#         # 2 triangles without a common edge => 2 triangles
+#         (([p0, p1, p2, p0], [p0, p4, p5, p0]), ([p0, p1, p2, p0], [p0, p4, p5, p0])),
+#         # 4 triangles with common edges => a rectangle
+#         (
+#             # inputs
+#             ([p0, p1, p2, p0], [p0, p2, p3, p0], [p0, p5, p3, p0], (p3, p4, p5, p3)),
+#             # outputs
+#             [[p3, p2, p1, p0, p5, p4, p3]]
+#         ),
+#         # same as above plus another triangle
+#         (
+#             # inputs
+#
+#             # outputs
+#             [[p3, p2, p1, p0, p5, p4, p3], [p0, p6, p7, p0]]
+#         ),
+#         # from a test case
+#         (
+#             # inputs
+#             ([pA, pB, pE, pZ, pD, pA], [pE, pZ, pH, pI, pF, pE]),
+#             # outputs
+#             [[pZ, pD, pA, pB, pE, pF, pI, pH, pZ]]
+#         ),
+#         # from a test case
+         (
+             # inputs
+             ([q0,q1,q2,q3,q0],
+              [q4,q5,q2,q3,q4],
+              [q4,q5,q6,q7,q4],
+              [q0,q1,q8,q9,q0],
+              [q9,q8,q10,q11,q9],
+              [q7,q6,q10,q11,q7]),
+             # outputs
+             [[q11, q10, q9, q8, q7, q6, q5, q4, q3, q2, q1, q0, q11]]
+         ),
         ]
 
     def test_merge_connected(self):
@@ -145,3 +207,4 @@ class PolyMergeConnectedTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+

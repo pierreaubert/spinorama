@@ -2,12 +2,16 @@ import logging
 import collections
 import numpy as np
 
+from .polygons import merge_connected_polygons
+from .prettyprint import pps
+
 Triangle = collections.namedtuple("Triangle", "v1 v2 v3")
 Edge = collections.namedtuple("Edge", "e1 e2")
 
 # from src.spinorama.contour import find_isobands
 def transform_id(x):
     return x
+
 
 def cross_point(e1, e2, z, z_target):
     ratio = (z_target-z[e2])/(z[e1]-z[e2])
@@ -82,8 +86,8 @@ def triangle2band(triangle, z, z_low, z_high):
 
     # 3 states
     below = [v for v in striangle if z[v] < z_low]
-    within = [v for v in striangle if z[v] >= z_low and z[v] < z_high]
-    above = [v for v in striangle if z[v] >= z_high]
+    within = [v for v in striangle if z[v] >= z_low and z[v] <= z_high]
+    above = [v for v in striangle if z[v] > z_high]
 
     if len(below) == 3 or len(above) == 3:
         return []
@@ -147,7 +151,15 @@ def find_isoband(grid_x, grid_y, grid_z, z_low, z_high, transform_x, transform_y
     for triangle in triangles:
         band = triangle2band(triangle, elevation, z_low, z_high)
         if band is not None and len(band) > 0:
-            isoband.append([[transform_x(p[0]), transform_y(p[1])] for p in band]+ [[transform_x(band[0][0]), transform_y(band[0][1])]])
+            transform_band = \
+              [[transform_x(p[0]), transform_y(p[1])] for p in band] + \
+              [[transform_x(band[0][0]), transform_y(band[0][1])]]
+            isoband.append(transform_band)
+            
+    #print('debug: z_low={0} z_high={1} isoband={2}'.format(z_low, z_high, pps(isoband)))
+    #print('debug: merged={0}'.format(pps(merge_connected_polygons(isoband))))
+    # don't work yet, need to take care of polygons with holes ...
+    #return merge_connected_polygons(isoband)
     return isoband
 
 
