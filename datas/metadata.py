@@ -210,7 +210,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/emotiva-airmotiv-6s-powered-speaker-review.11185/',
         }],
     },
     'Essence Electrostatic Model 1600': {
@@ -323,7 +323,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/harbeth-monitor-30-speaker-review.11108/',
         }],
     },
     'iKey-Audio M-808V2': {
@@ -385,7 +385,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/infinity-r162-bookshelf-speaker-review.12333/',
         }],
     },
     'Infinity RC263': {
@@ -398,7 +398,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/infinity-rc263-center-speaker-review.12442/',
         }],
     },
     'JansZen Loudspeaker zA1.1': {
@@ -431,7 +431,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-and-control-1-pro-monitors-review.10811/',
         }],
     },
     'JBL 104': {
@@ -444,7 +444,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-one-series-104-powered-monitor-review.11076/',
         }],
     },
     'JBL 705i': {
@@ -470,7 +470,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-705p-studio-monitor-review.11944/',
         }],
     },
     'JBL 305P Mark ii': {
@@ -483,7 +483,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-and-control-1-pro-monitors-review.10811/',
         }],
     },
     'JBL 4319': {
@@ -522,7 +522,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-hdi-1600-speaker-review.12477/',
         }],
     },
     'JBL HDI-3600': {
@@ -586,7 +586,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-studio-530-speaker-review.12298/',
         }],
     },
     'JBL Studio Series S26': {
@@ -638,7 +638,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8-studio-monitor-review.10897/',
         }],
     },
     'KEF Q100': {
@@ -651,7 +651,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/kef-q100-speaker-review.11987/',
             },],
     },
     'KEF Q350': {
@@ -694,7 +694,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/kef-ls50-bookshelf-speaker-review.11144/',
         }, {
             'origin': 'Princeton',
             'format': 'princeton',
@@ -744,7 +744,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/klipsch-r-41m-bookshelf-speaker-review.11566/',
         }],
     },
     'Klipsch RP-600M': {
@@ -757,7 +757,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/klipsch-rp-600m-speaker-review.12138/',
         }],
     },
     'Klipsch Synergy SB-3 Monitor': {
@@ -805,7 +805,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/micca-rb42-bookshelf-speaker-review.11267/',
         }],
     },
     'Neumann KH 80': {
@@ -818,7 +818,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-80-dsp-monitor-review.11018/',
         }],
     },
     'NHT Pro M-00': {
@@ -831,7 +831,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/nht-pro-m-00-powered-monitor-review.10859/',
         }],
     },
     'NHT SB2': {
@@ -883,7 +883,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/pioneer-sp-bs22-lr-bookshelf-speaker-review.11303/',
         }],
     },
     'Pioneer SP-EBS73-LR': {
@@ -896,7 +896,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/pioneer-elite-sp-ebs73-lr-atmos-speaker-review.12163/',
         }],
     },
     'Pioneer SP-EC73': {
@@ -909,7 +909,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/pioneer-elite-sp-ec73-center-speaker-review.12197/',
         }],
     },
     'Polk Audio RT15i': {
@@ -948,7 +948,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/polk-t15-bookshelf-speaker-review.11720/',
         }],
     },
     'Presonus Eris E5 XT': {
@@ -982,7 +982,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/mc-1000-best-speaker-in-the-world.11283/',
         }],
     },
     'Revel C52': {
@@ -995,7 +995,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/mc-1000-best-speaker-in-the-world.11283/',
         }],
     },
     'Revel F35': {
@@ -1008,7 +1008,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-f35-speaker-review.12053/',
         }],
     },
     'Revel M16': {
@@ -1021,7 +1021,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-speaker-review.11884/',
             },{
             'origin': 'Vendors/Revel',
             'format': 'webplotdigitizer',
@@ -1038,7 +1038,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-m22-speaker-review.12279/',
         }],
     },
     'Revel C25': {
@@ -1128,7 +1128,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/selah-audio-rc3r-3-way-speaker-review.11218/',
         }],
     },
     'Sony SS-CS5': {
@@ -1170,7 +1170,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/tannoy-system-600-speaker-review.11919/',
         }],
     },
     'Vanatoo Transparent Zero': {
