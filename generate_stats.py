@@ -60,11 +60,34 @@ def generate_stats(meta):
     df = meta2df(meta)
 
     pref_score = df.loc[(df.param == 'pref_score')].reset_index()
+    pref_score_wsub = df.loc[(df.param == 'pref_score_wsub')].reset_index()
     brand = df.loc[(df.param == 'brand')].reset_index()
     lfx_hz = df.loc[(df.param == 'lfx_hz')].reset_index()
     nbd_on = df.loc[(df.param == 'nbd_on_axis')].reset_index()
     nbd_pir = df.loc[(df.param == 'nbd_pred_in_room')].reset_index()
     sm_pir = df.loc[(df.param == 'sm_pred_in_room')].reset_index()
+
+    spread_score = alt.Chart(pref_score).mark_circle(size=30).encode(
+        x=alt.X('speaker', sort='y', axis=alt.Axis(labelAngle=45), title='Speakers sorted by Preference Score'),
+        y=alt.Y('value', title='Preference Score')
+    ).properties(width=1024,height=300)
+    
+    spread_score_wsub = alt.Chart(pref_score_wsub).mark_circle(size=30).encode(
+        x=alt.X('speaker', sort='y', axis=alt.Axis(labelAngle=45), title='Speakers sorted by Preference Score with a Subwoofer'),
+        y=alt.Y('value', title='Preference Score w/Sub')
+    ).properties(width=1024,height=300)
+
+    distribution1 = alt.Chart(pref_score).mark_bar().encode(
+        x=alt.X('value:Q', bin=True, title='Preference Score'),
+        y=alt.Y('count()', title='Count')
+    ).properties(width=450, height=300)
+
+    distribution2 = alt.Chart(pref_score_wsub).mark_bar().encode(
+        x=alt.X('value:Q', bin=True, title='Preference Score w/Sub'),
+        y=alt.Y('count()', title='Count')
+    ).properties(width=450, height=300)
+
+    distribution = distribution1 | distribution2 
 
     source = pd.DataFrame({
         'speaker': pref_score.speaker,
@@ -80,7 +103,7 @@ def generate_stats(meta):
     for g in ('lfx_hz', 'nbd_pir', 'nbd_on', 'sm_pir'):
         data = alt.Chart(source).mark_point().encode(
             x=alt.X('{0}:Q'.format(g)),
-            y=alt.Y('pref_score:Q'),
+            y=alt.Y('pref_score:Q', title='Preference Score'),
             color=alt.Color('brand:N'),
             tooltip=['speaker', g, 'pref_score']
         )
@@ -88,27 +111,16 @@ def generate_stats(meta):
 
     correlation = (graphs['lfx_hz'] | graphs['nbd_on']) & (graphs['nbd_pir'] | graphs['sm_pir'])
 
-    distribution = alt.Chart(source).mark_bar().encode(
-        x=alt.X('pref_score:Q', bin=True),
-        y='count()'
-    ).properties(width=300, height=300)
-
-    spread = alt.Chart(source).mark_circle(size=30).encode(
-        x=alt.X('speaker', sort='y', axis=alt.Axis(labelAngle=45)),
-        y=alt.Y('pref_score')
-    ).properties(width=1024,height=300)
-
-    scores = spread & distribution
-
     # used in website
     filedir = 'docs/stats'
     pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
 
-    corname = filedir + '/correlation.json'
-    correlation.save(corname)
-
-    scoresname = filedir + '/scores.json'
-    scores.save(scoresname)
+    for graph, name in ((correlation, 'correlation'),
+                        (distribution, 'distribution'),
+                        (spread_score, 'spread_score'),
+                        (spread_score_wsub, 'spread_score_wsub')):
+        filename = '{0}/{1}.json'.format(filedir, name)
+        graph.save(filename)
 
     # used in book
     filedir = 'book/stats'
@@ -118,11 +130,12 @@ def generate_stats(meta):
         graph_name = '{0}/{1}.png'.format(filedir, graph)
         graphs[graph].save(graph_name)
 
-    spread_name = '{0}/spread.png'.format(filedir)
-    spread.save(spread_name)
-
-    distribution_name = '{0}/distribution.png'.format(filedir)
-    distribution.save(distribution_name)
+    for graph, name in ((distribution1, 'distribution1'),
+                        (distribution2, 'distribution2'),
+                        (spread_score, 'spread_score'),
+                        (spread_score_wsub, 'spread_score_wsub')):
+        filename = '{0}/{1}.png'.format(filedir, name)
+        graph.save(filename)
 
     return 0
 
