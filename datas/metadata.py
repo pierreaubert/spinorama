@@ -1173,6 +1173,19 @@ speakers_info = {
             'review': '',
         }],
     },
+    'Vanatoo Transparent Zero': {
+        'brand': 'Vanatoo',
+        'model': 'Transparent Zero',
+        'type': 'passive',
+        'price': '350',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/vanatoo-transparent-zero-speaker-review.13717/',
+        }],
+    },
     'Verdant Audio Bambusa AL 1': {
         'brand': 'Verdant Audio',
         'model': 'Bambusa AL 1',
@@ -1183,7 +1196,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/verdant-audio-bambusa-al-1-review.12562/',
         }],
     },
     'Verdant Audio Bambusa MG 1': {
@@ -1196,7 +1209,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/verdant-audio-bambusa-mg-1-speaker-review.12385/',
         }],
     },
     'Yamaha HS5': {
@@ -1209,7 +1222,7 @@ speakers_info = {
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
-            'review': '',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/yamaha-hs5-powered-monitor-review.10967/',
         }],
     },
     'Yamaha NS-A638': {
