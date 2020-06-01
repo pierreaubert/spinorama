@@ -200,6 +200,17 @@ speakers_info = {
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/elac-debut-reference-dbr-62-speaker-review.12232/#post-357719',
          }],
     },
+    'Elac BS U5 Slim': {
+        'brand': 'Elac',
+        'model': 'BS U5 Slim',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/elac-bs-u5-slim-3-way-coaxial-speaker-review.13735/',
+         }],
+    },
     'Emotiva Airmotive 6s': {
         'brand': 'Emotiva',
         'model': 'Airmotive 6s',
