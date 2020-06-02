@@ -138,9 +138,10 @@ def add_estimates(df):
                 min_sm_pir = min(min_nbd_on, pref_rating['sm_pred_in_room'])
                 max_sm_pir = max(max_nbd_on, pref_rating['sm_pred_in_room'])
                 # if datas have low freq:
-                if 'pref_score' in metadata.speakers_info[speaker_name]:
+                if 'pref_score' in pref_rating:
                     min_pref_score = min(min_pref_score, pref_rating['pref_score'])
                     max_pref_score = max(max_pref_score, pref_rating['pref_score'])
+                if 'lfx_hz' in pref_rating:
                     min_lfx_hz = min(min_lfx_hz, pref_rating['lfx_hz'])
                     max_lfx_hz = max(max_lfx_hz, pref_rating['lfx_hz'])
                 metadata.speakers_info[speaker_name]['pref_rating'] = pref_rating
@@ -178,6 +179,7 @@ def add_estimates(df):
                 lfx_hz = -1
                 if 'pref_score' in pref_rating:
                     pref_score = pref_rating['pref_score']
+                if 'lfx_hz' in pref_rating:
                     lfx_hz = pref_rating['lfx_hz']
 
                 # normalize min and max
@@ -204,6 +206,7 @@ def add_estimates(df):
                 }
                 if 'pref_score'in pref_rating:
                     scaled_pref_rating['scaled_pref_score'] = scaled_pref_score
+                if 'lfx_hz' in pref_rating:
                     scaled_pref_rating['scaled_lfx_hz'] = scaled_lfx_hz
                 logging.info('Adding {0}'.format(scaled_pref_rating))
                 metadata.speakers_info[speaker_name]['scaled_pref_rating'] = scaled_pref_rating

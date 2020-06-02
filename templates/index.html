@@ -59,7 +59,7 @@
 	        (${meta[speaker_name]['pref_rating']['pref_score']})
   	      % endif
 	      &nbsp;
-      	      % if 'scaled_pref_score' in meta[speaker_name]['pref_rating']:
+      	      % if 'scaled_pref_score' in meta[speaker_name]['scaled_pref_rating']:
   	        ${meta[speaker_name]['scaled_pref_rating']['scaled_pref_score']}/100
   	      % endif
 	    </p>
@@ -73,8 +73,8 @@
 		  ${meta[speaker_name]['pref_rating']['lfx_hz']}
 		  % endif
 	      </b>Hz at -6dB</p>
-               % if 'scaled_lfx_hz' in meta[speaker_name]['pref_rating']:
-  	      <progress class="progress is-small is-info"
+               % if 'scaled_lfx_hz' in meta[speaker_name]['scaled_pref_rating']:
+    	      <progress class="progress is-small is-info"
 			value="${meta[speaker_name]['scaled_pref_rating']['scaled_lfx_hz']}"
 			max="100"></progress>
 	      % endif
