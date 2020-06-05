@@ -55,6 +55,19 @@ speakers_info = {
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-2-speaker-review.11813/#post-341009',
         }],
     },
+    'Audioengine A5+ Powered': {
+        'brand': 'Audioengine',
+        'model': 'A5+ Powered',
+        'type': 'active',
+        'shape': 'bookshelves',
+        'price': '400',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/audioengine-a5-powered-speaker-review.13803/',
+        }],
+    },
     'Avantgarde Acoustic Solo': {
         'brand': 'Avantgarde Acoustic',
         'model': 'Solo',
