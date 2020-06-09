@@ -871,6 +871,19 @@ speakers_info = {
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/nht-sb2-speaker-review.13273/',
         }],
     },
+    'Ocean Way HR5': {
+        'brand': 'Ocean Way',
+        'model': 'HR5',
+        'type': 'active',
+        'price': '2800',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ocean-way-hr5-studio-monitor-review.13925',
+        }],
+    },
     'Part Express DIY C-Note': {
         'brand': 'Part Express',
         'model': 'DIY C-Note',
