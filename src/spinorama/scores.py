@@ -1,3 +1,4 @@
+from more_itertools import consecutive_groups
 import logging
 import math
 import numpy as np
@@ -79,10 +80,12 @@ def lfx(lw, sp):
     for the calculation because it better defines the true bass output of
     the loudspeaker, particularly speakers that have rear-firing ports.
     """
-    y_ref = np.mean(lw.loc[(lw.Freq >= 300) & (lw.Freq <= 10000)].dB)-6
+    lw_ref = np.mean(lw.loc[(lw.Freq >= 300) & (lw.Freq <= 10000)].dB)-6
     # find first freq such that y[freq]<y_ref-6dB
-    y = math.log10(sp.loc[(sp.Freq < 300) & (sp.dB <= y_ref)].Freq.max())
-    return y
+    lfx_range = sp.loc[(sp.Freq < 300) & (sp.dB <= lw_ref)].Freq
+    lfx_grouped = consecutive_groups(lfx_range.iteritems(), lambda x: x[0])
+    lfx_hz = list(next(lfx_grouped))[-1][1]
+    return math.log10(lfx_hz)
 
 
 def lfq(lw, sp, lfx_log):
