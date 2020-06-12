@@ -84,7 +84,10 @@ def lfx(lw, sp):
     # find first freq such that y[freq]<y_ref-6dB
     lfx_range = sp.loc[(sp.Freq < 300) & (sp.dB <= lw_ref)].Freq
     lfx_grouped = consecutive_groups(lfx_range.iteritems(), lambda x: x[0])
-    lfx_hz = list(next(lfx_grouped))[-1][1]
+    try:
+        lfx_hz = list(next(lfx_grouped))[-1][1]
+    except Exception:
+        lfx_hz = lfx_range.max()
     return math.log10(lfx_hz)
 
 
