@@ -143,6 +143,18 @@ speakers_info = {
             'format': 'rewstextdump',
         }],
     },
+    'Cannon S-50': {
+        'brand': 'Canon',
+        'model': 'S-50',
+        'type': 'passive',
+        'shape': 'omnidirectional',
+        'price': '300',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/canon-s-50-wide-directivity-speaker-review.13982/'
+        }],
+    },
     'CommonSense Audio 5.6': {
         'brand': 'CommonSense Audio',
         'model': '5.6',
