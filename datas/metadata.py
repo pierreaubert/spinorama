@@ -143,7 +143,7 @@ speakers_info = {
             'format': 'rewstextdump',
         }],
     },
-    'Cannon S-50': {
+    'Canon S-50': {
         'brand': 'Canon',
         'model': 'S-50',
         'type': 'passive',
