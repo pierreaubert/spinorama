@@ -1,10 +1,12 @@
+import altair as alt
 import logging
+import math
 import numpy as np
 import pandas as pd
-import altair as alt
 from .directivity import directivity_matrix
 from .contour import compute_contour, compute_contour_smoothed
 from .normalize import resample
+from src.graphs.isobands import find_isobands
 import src.spinorama.radar as radar
 
 
@@ -39,6 +41,14 @@ contour_params_default = {
     # 'colormap': 'redyellowblue',
     # 'colormap': 'blueorange',
     # 'colormap': 'blues',
+}
+
+isoband_params_default = {
+    'xmin': 100,
+    'xmax': 20000,
+    'width': 600,
+    'height': 360,
+    'bands': [-72, -18, -15, -12, -9, -6, -3, +3],
 }
 
 radar_params_default = {
@@ -252,6 +262,50 @@ def graph_contour(df, graph_params):
         logging.error('contour is None')
         return None
     return graph_contour_common(af, am, az, graph_params)
+
+
+def graph_isoband(df, isoband_params):
+    af, am, az = compute_contour(df.loc[df.Freq>isoband_params['xmin']])
+    if af is None or am is None or az is None:
+        logging.error('contour is None')
+        return None
+
+    graph_width = isoband_params['width']
+    graph_height = isoband_params['height']
+    bands = isoband_params['bands']
+    freq_min = isoband_params['xmin']
+    freq_max = isoband_params['xmax']
+
+    def transform_log(x):
+        return 6*np.log10(x)*graph_width/800
+
+    def transform_radian(x):
+       return 1.325*x/180*math.pi*graph_height/360
+
+    df_iso = find_isobands(af, am, az.T, bands, transform_log, transform_radian)
+    color_legend = ['[{0}, {1}]'.format(bands[i], bands[i+1]) for i in range(0, len(bands)-1)] + ['>{0}'.format(bands[-1])]
+    color_range = ['black', 'blue', 'steelblue', 'green', 'yellow', 'orange', 'red', 'white']
+
+    isobands = alt.Chart(alt.Data(values=df_iso['features'])).mark_geoshape(
+        stroke='red',
+        strokeWidth=0
+    ).encode(
+        alt.Color('properties.z_low:O', 
+                  scale=alt.Scale(zero=False, domain=bands, range=color_range), 
+                  legend=alt.Legend(orient='bottom', title='Relative dB SPL'))
+    ).project('identity'
+    ).properties(
+        width=graph_width,
+        height=graph_height
+    )
+    # fake graph but with axis
+    empty = pd.DataFrame({'Freq', 'Angle'})
+    isoTicks = [-180+30*i for i in range(0,13)]
+    legends = alt.Chart(empty).mark_point(clip=True).encode(
+        x=alt.X('x:Q', scale=alt.Scale(type='log', nice=False, domain=[freq_min, freq_max]), title='Frequency (Hz)'),
+        y=alt.Y('y:Q', scale=alt.Scale(nice=False, domain=[-180, 180]), axis=alt.Axis(format='.0d', values=isoTicks, title='Angle')), 
+    )
+    return isobands+legends
 
 
 def graph_contour_smoothed(df, graph_params):

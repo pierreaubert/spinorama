@@ -9,6 +9,7 @@ from .display import display_spinorama, display_onaxis, display_inroom, \
     display_spl_horizontal, display_spl_vertical, \
     display_contour_horizontal, display_contour_vertical, \
     display_contour_smoothed_horizontal, display_contour_smoothed_vertical, \
+    display_isoband_horizontal, display_isoband_vertical, \
     display_radar_horizontal, display_radar_vertical, display_directivity_matrix, \
     display_compare
 from .views import template_compact, template_panorama
@@ -94,6 +95,18 @@ def print_graphs(df: pd.DataFrame,
     graphs['SPL Vertical Contour_smoothed'] = display_contour_smoothed_vertical(df, params)
     graphs['SPL Horizontal Contour'] = display_contour_horizontal(df, params)
     graphs['SPL Vertical Contour'] = display_contour_vertical(df, params)
+
+    # compute isoband
+    isoband_params = {
+        'xmin': 100,
+        'xmax': 20000,
+        'width': width,
+        'height': height,
+        'bands': [-72, -18, -15, -12, -9, -6, -3, +3],
+    }
+
+    graphs['SPL Horizontal IsoBand'] = display_isoband_horizontal(df, isoband_params)
+    graphs['SPL Vertical IsoBand'] = display_isoband_vertical(df, isoband_params)
 
     # better square
     params = copy.deepcopy(radar_params_default)

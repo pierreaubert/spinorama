@@ -6,7 +6,7 @@ from .graph import graph_freq, graph_contour_smoothed, graph_radar, graph_spinor
     graph_params_default, contour_params_default, radar_params_default, \
     graph_contour, graph_directivity_matrix,\
     graph_compare_freq, graph_compare_cea2034, graph_compare_freq_regression, \
-    graph_regression
+    graph_regression, graph_isoband, isoband_params_default
 
 
 alt.data_transformers.disable_max_rows()
@@ -246,3 +246,31 @@ def display_compare(df, graph_filter, graph_params=graph_params_default):
     except ValueError as e:
         logging.warning('failed for {0} with {1}'.format(graph_filter, e))
         return None
+
+
+
+def display_isoband_horizontal(df, graph_params=isoband_params_default):
+    try:
+        if 'SPL Horizontal_unmelted' not in df.keys():
+            return None
+        dfs = df['SPL Horizontal_unmelted']
+        dfs = resample(dfs, 400)
+        return graph_isoband(dfs, graph_params)
+    except KeyError as ke:
+        logging.warning('Display Isoband Horizontal failed with {0}'.format(ke))
+        return None
+
+
+def display_isoband_vertical(df, graph_params=isoband_params_default):
+    try:
+        if 'SPL Vertical_unmelted' not in df.keys():
+            return None
+        dfs = df['SPL Vertical_unmelted']
+        dfs = resample(dfs, 400)
+        return graph_isoband(dfs, graph_params)
+    except KeyError as ke:
+        logging.warning('Display Isoband Vertical failed with {0}'.format(ke))
+        return None
+
+
+    
