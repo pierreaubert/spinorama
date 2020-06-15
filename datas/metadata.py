@@ -270,6 +270,19 @@ speakers_info = {
             'format': 'princeton',
         }],
     },
+    'Focal Aria 906': {
+        'brand': 'Focal',
+        'model': 'Aria 906',
+        'type': 'passive',
+        'price': '450',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/focal-aria-906-speaker-review.14085/',
+        }],
+    },
     'Fostex PM03': {
         'brand': 'Fostex',
         'model': 'PM03',
