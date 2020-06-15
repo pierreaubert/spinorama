@@ -180,9 +180,16 @@ def graph_spinorama(dfu, graph_params):
     ).interactive()
     return spin
 
-# explicitly set ticks for X and Y axis
-xTicks = [i*10 for i in range(2,10)] + [i*100 for i in range(1,10)] + [i*1000 for i in range(1, 21)]
-yTicks = [-180+10*i for i in range(0,37)]
+
+def graph_empty(freq_min, freq_max, angle_min, angle_max):
+    # empty graph but with axis
+    empty = pd.DataFrame({'Freq', 'Angle'})
+    isoTicks = [-180+30*i for i in range(0,13)]
+    return alt.Chart(empty).mark_point(clip=True).encode(
+        x=alt.X('x:Q', scale=alt.Scale(type='log', nice=False, domain=[freq_min, freq_max]), title='Frequency (Hz)'),
+        y=alt.Y('y:Q', scale=alt.Scale(nice=False, domain=[angle_min, angle_max]), axis=alt.Axis(format='.0d', values=isoTicks, title='Angle')), 
+    )
+
 
 def graph_contour_common(af, am, az, graph_params):
     try:
@@ -227,30 +234,11 @@ def graph_contour_common(af, am, az, graph_params):
         chart = chart.transform_filter(
             'datum.Freq>400'
         ).encode(
-            alt.X('Freq:O', 
-                  scale=alt.Scale(type="log", base=10, nice=True),
-                  axis=alt.Axis(
-                      format='.0s',
-                      labelAngle=0,
-                      values=xTicks,
-                      title='Freq (Hz)',
-                      labelExpr="datum.value % 100 ? null : datum.label")),
-            alt.Y('Angle:O',
-                  axis=alt.Axis(
-                      format='.0d',
-                      title='Angle',
-                      values=yTicks,
-                    labelExpr="datum.value % 30 ? null : datum.label"),
-                  sort=None),
-            alt.Color('dB:Q',
-                      scale=alt.Scale(scheme=colormap,
-                                      domain=speaker_scale,
-                                      nice=True))
-        ).properties(
-            width=width,
-            height=height
+            alt.X('Freq:O', axis=None),
+            alt.Y('Angle:O', axis=None, sort=None),
+            alt.Color('dB:Q', scale=alt.Scale(scheme=colormap, domain=speaker_scale, nice=True))
         )
-        return chart
+        return (chart+graph_empty(400, 20000, -180, 180)).properties(width=width, height=height)
     except KeyError as ke:
         logging.warning('Failed with {0}'.format(ke))
         return None
@@ -272,9 +260,14 @@ def graph_isoband(df, isoband_params):
 
     graph_width = isoband_params['width']
     graph_height = isoband_params['height']
-    bands = isoband_params['bands']
+    if 'bands' in isoband_params:
+        bands = isoband_params['bands']
+    else:
+        bands = isoband_params_default['bands']
     freq_min = isoband_params['xmin']
     freq_max = isoband_params['xmax']
+
+    logging.debug('w {0} h {1} fq=[{2},{3}]'.format(graph_width, graph_height, freq_min, freq_max))
 
     def transform_log(x):
         return 6*np.log10(x)*graph_width/800
@@ -291,21 +284,11 @@ def graph_isoband(df, isoband_params):
         strokeWidth=0
     ).encode(
         alt.Color('properties.z_low:O', 
-                  scale=alt.Scale(zero=False, domain=bands, range=color_range), 
+                  scale=alt.Scale(domain=bands, range=color_range), 
                   legend=alt.Legend(orient='bottom', title='Relative dB SPL'))
-    ).project('identity'
-    ).properties(
-        width=graph_width,
-        height=graph_height
-    )
-    # fake graph but with axis
-    empty = pd.DataFrame({'Freq', 'Angle'})
-    isoTicks = [-180+30*i for i in range(0,13)]
-    legends = alt.Chart(empty).mark_point(clip=True).encode(
-        x=alt.X('x:Q', scale=alt.Scale(type='log', nice=False, domain=[freq_min, freq_max]), title='Frequency (Hz)'),
-        y=alt.Y('y:Q', scale=alt.Scale(nice=False, domain=[-180, 180]), axis=alt.Axis(format='.0d', values=isoTicks, title='Angle')), 
-    )
-    return isobands+legends
+    ).project('identity')
+    axis = graph_empty(freq_min, freq_max, -180, 180)
+    return (isobands+axis).properties(width=graph_width, height=graph_height)
 
 
 def graph_contour_smoothed(df, graph_params):
@@ -407,14 +390,21 @@ def graph_directivity_matrix(dfu, graph_params):
     
     source = pd.DataFrame({'x': x.ravel(), 'y': y.ravel(),'z': z.melt().value})
 
-    return alt.Chart(source).mark_rect(
+    matrix= alt.Chart(source
+    ).transform_filter(
+            'datum.x>=500 & datum.y>=500'
+    ).mark_rect(
     ).encode(
-        x=alt.X('x:O', scale=alt.Scale(type='log')),
-        y=alt.Y('y:O', scale=alt.Scale(type='log')),
+        x=alt.X('x:O', axis=None),
+        y=alt.Y('y:O', axis=None),
         color=alt.Color('z:Q', scale=alt.Scale(scheme='spectral', nice=True))
-    ).properties(
-        width=800,
-        height=800)
+    )
+    empty = pd.DataFrame({'Freq', 'Angle'})
+    axis = alt.Chart(empty).mark_point(clip=True).encode(
+        x=alt.X('x:Q', scale=alt.Scale(type='log', nice=False, domain=[500, 20000]), title='Frequency (Hz)'),
+        y=alt.Y('y:Q', scale=alt.Scale(type='log', nice=False, domain=[500, 20000]), title='Frequency (Hz)'),
+    )
+    return (matrix+axis).properties(width=800, height=800)
 
 
 def build_selections(df, speaker1, speaker2):
