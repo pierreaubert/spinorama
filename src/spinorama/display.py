@@ -1,12 +1,16 @@
 import logging
+import math
 import altair as alt
 import pandas as pd
+import datas.metadata as metadata
 from .normalize import resample
+from .estimates import estimates
+from .scores import speaker_pref_rating
 from .graph import graph_freq, graph_contour_smoothed, graph_radar, graph_spinorama,\
     graph_params_default, contour_params_default, radar_params_default, \
     graph_contour, graph_directivity_matrix,\
     graph_compare_freq, graph_compare_cea2034, graph_compare_freq_regression, \
-    graph_regression, graph_isoband, isoband_params_default
+    graph_regression, graph_isoband, isoband_params_default, graph_summary
 
 
 alt.data_transformers.disable_max_rows()
@@ -271,6 +275,69 @@ def display_isoband_vertical(df, graph_params=isoband_params_default):
     except KeyError as ke:
         logging.warning('Display Isoband Vertical failed with {0}'.format(ke))
         return None
+
+
+def display_summary(df, params, speaker, origin, key):
+    try:
+        speaker_type = ''
+        speaker_shape = ''
+        if speaker in metadata.speakers_info.keys():
+            speaker_type  = metadata.speakers_info[speaker]['type']
+            speaker_shape = metadata.speakers_info[speaker]['shape']
+
+        if 'CEA2034' not in df.keys():
+            return None
+        spin = df['CEA2034']
+        onaxis = spin.loc[spin['Measurements'] == 'On Axis'].reset_index(drop=True)
+        est = estimates(onaxis)
+
+        speaker_summary = ['{0} {1}'.format(speaker_shape, speaker_type)]
+        if est is None or math.isnan(est[0]) or math.isnan(est[1]) or math.isnan(est[2]) or math.isnan(est[3]):
+            speaker_summary += ['', '', '', '', '', '']
+        else:
+            if est[0] != -1:
+                speaker_summary += ['Reference level {0} dB'.format(est[0]), '(mean over 300-10k Hz)']
+            else:
+                speaker_summary += ['']
+
+            if est[1] != -1:
+                speaker_summary += ['-3dB at {0}Hz wrt Ref.'.format(est[1])]
+            else:
+                speaker_summary += ['']
+                
+            if est[2] != -1:
+                speaker_summary += ['-6dB at {0}Hz wrt Ref.'.format(est[2])]
+            else:
+                speaker_summary += ['']
+
+            if est[3] != -1:
+                speaker_summary += ['+/-{0}dB wrt Ref.'.format(est[3])]
+            else:
+                speaker_summary += ['']
+
+        pref_score = None
+        if 'Estimated In-Room Response' in df.keys():
+            inroom = df['Estimated In-Room Response']
+            if inroom is not None:
+                pref_score = speaker_pref_rating(spin, inroom)
+
+        if pref_score is not None:
+            speaker_summary += [
+               'Preference score: {0}'.format(pref_score['pref_score']),
+               'Low Frequency Extension: {0} Hz'.format(pref_score['lfx_hz']),
+               'Low Frequence Quality : {0}'.format(pref_score['lfq']),
+               'Narrow Bandwidth Deviation On Axis: {0}'.format(pref_score['nbd_on_axis']),
+               'Narrow Bandwidth Deviation Predicted In-Room: {0}'.format(pref_score['nbd_pred_in_room']),
+               'SM Deviation Predicted In-Room: {0}'.format(pref_score['sm_pred_in_room'])
+              ]
+        else:
+            speaker_summary += ['', '', '', '', '', '']
+            
+        return graph_summary(speaker, speaker_summary, params)
+    except KeyError as ke:
+        logging.warning('Display Summary failed with {0}'.format(ke))
+        return None
+    
 
 
     

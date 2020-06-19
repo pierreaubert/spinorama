@@ -560,3 +560,24 @@ def graph_compare_freq_regression(df, graph_params, speaker1, speaker2):
     ).add_selection(
         nearest
     ).interactive()
+
+def graph_summary(speaker_name, speaker_summary, params):
+    #  Title
+    #                Score
+    #  mean 300-10kHz
+    #  -3dB          lfx
+    #  -6dB          lfq
+    # +/- nDB        nbd_on
+    #                nbd_pir
+    #                sm_pir
+    # --------------------------
+    pointsX = np.array([0.0, 0.0, 0.05, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5])+0.05
+    pointsY = np.array([1.9, 1.6, 1.4,  1.2, 1.0, 0.8, 1.9, 1.6, 1.4, 1.2, 1.0, 0.8])-0.4
+    source = pd.DataFrame({'x': pointsX, 'y': pointsY, 'summary': speaker_summary})
+    return alt.Chart(source).mark_text(
+        align='left',
+        dx=0
+    ).encode(
+        x=alt.X('x', title='', scale=alt.Scale(domain=[0,1]), axis=alt.Axis(ticks=False, labels=False, grid=False)),
+        y=alt.Y('y', title='', axis=alt.Axis(ticks=False, labels=False, grid=False)), text='summary:N'
+    )

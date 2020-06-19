@@ -16,7 +16,10 @@ from .display import \
     display_contour_smoothed_horizontal, \
     display_contour_smoothed_vertical, \
     display_radar_horizontal, \
-    display_radar_vertical
+    display_radar_vertical, \
+    display_isoband_horizontal, \
+    display_isoband_vertical, \
+    display_summary
 
 
 def scale_params(params, factor):
@@ -26,42 +29,51 @@ def scale_params(params, factor):
     height = params['height']
     if factor == 3:
         new_width = math.floor(width - 6*spacing)/3
-        new_height = math.floor(height /3)
+        new_height = math.floor(height - 6*spacing)/3
+        new_params['height'] = new_height
     else:
         new_width = math.floor(width - 3*spacing)/2
-        new_height = math.floor(height /2)
     new_params['width'] = new_width
-    new_params['height'] = new_height
     for check in ('xmin', 'xmax'):
         if check not in new_params.keys():
             logging.error('scale_param {0} is not a key'.format(check))
     if new_params['xmin'] == new_params['xmax']:
-            logging.error('scale_param x-range is empty')
+        logging.error('scale_param x-range is empty')
     if 'ymin' in new_params.keys() and 'ymax' in new_params.keys() and new_params['ymin'] == new_params['ymax']:
-            logging.error('scale_param y-range is empty')
+        logging.error('scale_param y-range is empty')
     return new_params
 
 
-def template_compact(df, params):
+def template_compact(df, params, speaker, origin, key):
     params2 = scale_params(params, 2)
     params3 = scale_params(params, 3)
     # full size
-    spinorama = display_spinorama(df, params)
+    params_summary = copy.deepcopy(params)
+    params_spin = copy.deepcopy(params)
+    params_summary['width'] = 500
+    params_spin['width'] -= 660
+    summary = display_summary(df, params_summary, speaker, origin, key)
+    spinorama = display_spinorama(df, params_spin)
     # side by side
     onaxis = display_onaxis(df, params2)
     inroom = display_inroom(df, params2)
     # side by side
+    params3['height'] = params2['height']
     ereflex = display_reflection_early(df, params3)
     hreflex = display_reflection_horizontal(df, params3)
     vreflex = display_reflection_vertical(df, params3)
     # side by side
     hspl = display_spl_horizontal(df, params2)  
     vspl = display_spl_vertical(df, params2)
-    # side by side
+    # min value for contours & friends
+    params2['xmin'] = max(100, params2['xmin'])
+    # horizontal contour / isoband / radar
     hcontour = display_contour_smoothed_horizontal(df, params2)
+    hisoband = display_isoband_horizontal(df, params2)
     hradar = display_radar_horizontal(df, params2)
-    # side by side
+    # vertical contour / isoband / radar
     vcontour = display_contour_smoothed_vertical(df, params2)
+    visoband = display_isoband_vertical(df, params2)
     vradar = display_radar_vertical(df, params2)
     # build the chart
     # print('Status {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11}'.format(
@@ -69,39 +81,47 @@ def template_compact(df, params):
     #     hspl is None, vspl is None, hcontour is None, vcontour is None, hradar is None, vradar is None))
     chart = alt.vconcat()
     if spinorama is not None:
-        chart &= alt.hconcat(spinorama.properties(title='CEA2034'))
+        if summary is not None:
+            chart &= alt.hconcat(summary.properties(title=speaker), spinorama.properties(title='CEA2034'))
+        else:
+            chart &= alt.hconcat(spinorama.properties(title='CEA2034'))
     if onaxis is not None:
         if inroom is not None:
             chart &= alt.hconcat(onaxis.properties(title='On Axis'),
-                                inroom.properties(title='In Room prediction'))
+                                 inroom.properties(title='In Room prediction'))
         else:
             chart &= onaxis
     if ereflex is not None and hreflex is not None and vreflex is not None:
         chart &= alt.hconcat(ereflex.properties(title='Early Reflections'),
                              hreflex.properties(title='Horizontal Reflections'),
                              vreflex.properties(title='Vertical Reflections'))
+
     if hspl is not None and vspl is not None:
-        chart &= alt.hconcat(hspl.properties(title='Horizontal SPL'),
-                             vspl.properties(title='Vertical SPL'))
+        chart &= alt.hconcat(hspl.properties(title='Horizontal SPL'), vspl.properties(title='Vertical SPL'))
     else:
         if hspl is not None:
-            chart &= hspl
+            chart &= hspl.properties(title='Horizontal SPL')
         elif vspl is not None:
-            chart &= vspl
+            chart &= vspl.properties(title='Vertical SPL')
+
     if hcontour is not None and hradar is not None:
-        chart &= alt.hconcat(hcontour.properties(title='Horizontal SPL'),
-                             hradar.properties(title=' HorizontalSPL'))
+        chart &= alt.hconcat(hcontour.properties(title='Horizontal Contours'), hradar.properties(title='Horizontal Radar'))
+
     if vcontour is not None and vradar is not None:
-        chart &= alt.hconcat(vcontour.properties(title='Vertical SPL'),
-                             vradar.properties(title='Vertical SPL'))
-    return chart.configure_title(
-        orient='top',
-        anchor='middle',
-        fontSize=18
-    )
+        chart &= alt.hconcat(vcontour.properties(title='Vertical Contours'), vradar.properties(title='Vertical Radar'))
+
+#    if hisoband is not None and hradar is not None:
+#        chart &= alt.hconcat(hisoband.properties(title='Horizontal IsoBands'), hradar.properties(title='Horizontal Radar'))
+
+#    if visoband is not None and vradar is not None:
+#        chart &= alt.hconcat(visoband.properties(title='Vertical IsoBands'), vradar.properties(title='Vertical Radar'))
+
+    return chart.configure_title(orient='top', anchor='middle', fontSize=30
+           ).configure_text(fontSize=16).configure_view(strokeWidth=0, opacity=0)
 
 
-def template_panorama(df, params):
+
+def template_panorama(df, params, speaker, origin, key):
     params3 = scale_params(params, 3)
     # side by side
     spinorama = display_spinorama(df, params3)
@@ -187,15 +207,3 @@ def template_vertical(df, params):
         anchor='middle',
         fontSize=18
     )
-
-
-# def template_freq_sidebyside(s1, s2, name, width=450, height=450):
-#     df1 = display_graph_freq(s1[name], params)
-#     df2 = display_graph_freq(s2[name], params)
-#     if df1 is None and df2 is None:
-#         return None
-#     if df1 is None:
-#         return df2
-#     if df2 is None:
-#         return df1
-#     return alt.hconcat(df1, df2)

@@ -146,11 +146,11 @@ def print_graphs(df: pd.DataFrame,
     params['xmax'] = origins_info[origin]['max hz']
     params['ymin'] = origins_info[origin]['min dB']
     params['ymax'] = origins_info[origin]['max dB']
-    graphs['2cols'] = template_compact(df, params)
+    graphs['2cols'] = template_compact(df, params, speaker, origin, key)
     # 4k screen
     params['width'] = 4096
     params['height'] = 1200
-    graphs['3cols'] = template_panorama(df, params)
+    graphs['3cols'] = template_panorama(df, params, speaker, origin, key)
 
     updated = 0
     for (title, graph) in graphs.items():
