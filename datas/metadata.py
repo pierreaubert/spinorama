@@ -191,6 +191,19 @@ speakers_info = {
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/affordable-accuracy-monitor-review.13624/',
         }],
     },
+    'Definitive Technology ProMonitor 1000': {
+        'brand': 'Definitive Technology',
+        'model': 'ProMonitor 1000',
+        'type': 'passive',
+        'price': '400',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/definitive-technology-promonitor-1000-speaker-review.14220/',
+        }],
+    },
     'Dynaudio Xeo 3': {
         'brand': 'Dynaudio',
         'model': 'Xeo 3',
