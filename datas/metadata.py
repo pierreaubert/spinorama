@@ -844,6 +844,16 @@ speakers_info = {
             'format': 'princeton',
         }],
     },
+    'Magico A3': {
+        'brand': 'Magico',
+        'model': 'A3',
+        'type': 'passive',
+        'price': '',
+        'measurements': [{
+            'origin': 'Vendors/Magico',
+            'format': 'webplotdigitizer',
+        }],
+    },
     'Micca RB42': {
         'brand': 'Micca',
         'model': 'RB42',
@@ -1425,6 +1435,15 @@ origins_info = {
         'logo': 'docs/metadata/klipsch.png',
         'logo-small': 'docs/metadata/klipsch.png',
         'url': 'https://www.klipsch.com',
+    },
+    'Vendors/Magico': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': -40,
+        'max dB': 10,
+        'logo': 'docs/metadata/magico.png',
+        'logo-small': 'docs/metadata/magico.png',
+        'url': 'https://www.magicoaudio.com',
     },
     'Vendors/Pioneer': {
         'min hz': 20,
