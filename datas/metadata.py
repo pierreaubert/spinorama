@@ -232,10 +232,23 @@ speakers_info = {
         'model': 'Debut Reference DBR-62',
         'type': 'passive',
         'price': '600',
+        'shape': 'bookshelves',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/elac-debut-reference-dbr-62-speaker-review.12232/#post-357719',
+         }],
+    },
+    'Elac Debut 2.0 B6.2': {
+        'brand': 'Elac',
+        'model': 'Debut 2.0 B6.2',
+        'type': 'passive',
+        'price': '245',
+        'shape': 'bookshelves',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/elac-debut-2-0-b6-2-speaker-review.14272/',
          }],
     },
     'Elac BS U5 Slim': {
@@ -243,6 +256,7 @@ speakers_info = {
         'model': 'BS U5 Slim',
         'type': 'passive',
         'price': '',
+        'shape': 'bookshelves',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -861,7 +875,8 @@ speakers_info = {
         'brand': 'Magico',
         'model': 'A3',
         'type': 'passive',
-        'price': '',
+        'price': '12300',
+        'shape': 'floorstander',
         'measurements': [{
             'origin': 'Vendors/Magico',
             'format': 'webplotdigitizer',
