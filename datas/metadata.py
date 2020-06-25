@@ -446,6 +446,10 @@ speakers_info = {
         'shape': 'bookshelves',
         'amount': 'pair',
         'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/research-project-infinity-il10-speaker-review-measurements.14310/',
+        }, {
             'origin': 'Vendors/Infinity',
             'website': 'www.infinityspeakers.com',
             'format': 'rewstextdump',
@@ -1257,6 +1261,7 @@ speakers_info = {
         'model': 'Definition DC6i',
         'type': 'passive',
         'price': '',
+        'shape': 'floorstander',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
