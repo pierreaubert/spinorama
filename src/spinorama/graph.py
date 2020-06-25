@@ -490,10 +490,9 @@ def graph_compare_cea2034(df, graph_params, speaker1, speaker2):
     line1 = spin_full.add_selection(selection1).transform_filter(selection1)
     line2 = spin_dash.add_selection(selection2).transform_filter(selection2)
 
-    points = line.mark_point().encode(opacity=alt.condition(nearest, alt.value(1), alt.value(0)))                                                   \
+    points = line.mark_point().encode(opacity=alt.condition(nearest, alt.value(1), alt.value(0)))
+    rules = alt.Chart(df).mark_rule(color='gray').encode(x='Freq:Q').transform_filter(nearest)
 
-    rules = alt.Chart(df).mark_rule(color='gray').encode(x='Freq:Q').transform_filter(nearest)                                                      \
-                                                                                                                                                      
     layers = alt.layer(line2,line1, rules).add_selection(
         selectorsMeasurements
     ).add_selection(
@@ -504,7 +503,7 @@ def graph_compare_cea2034(df, graph_params, speaker1, speaker2):
     return layers
 
 
-def graph_regression_graph(graph, freq_start, freq_end):
+def graph_regression_graph(graph, freq_start, freq_end, withBands=True):
 
     # regression line
     reg = graph.transform_filter(
@@ -516,33 +515,36 @@ def graph_regression_graph(graph, freq_start, freq_end):
         extent=[20,20000]
     )
 
-    # +/- 3dB
-    reg3 = reg.transform_calculate(dBm3=alt.datum.dB-3).transform_calculate(dBp3=alt.datum.dB+3)
-
-    # +/- 1.5dB
-    reg1 = reg.transform_calculate(dBm1=alt.datum.dB-1.5).transform_calculate(dBp1=alt.datum.dB+1.5)
-
     # line
     line = reg.transform_calculate(text='"Linear Regression"').mark_line(color='firebrick').encode(
         x=alt.X('Freq:Q'),
         y=alt.Y('dB:Q', axis=alt.Axis(title='dB SPL')),
         color=alt.Color('text:N', legend=alt.Legend(title=None)))
 
-    # band at +/- 3dB
-    err3 = reg3.transform_calculate(text='"Band ±3dB"').mark_area(color='firebrick', opacity=0.06).encode(
-        x=alt.X('Freq:Q'), 
-        y=alt.Y('dBm3:Q'), 
-        y2=alt.Y2('dBp3:Q'), 
-        color=alt.Color('text:N'))
+    if withBands:
+        # +/- 3dB
+        reg3 = reg.transform_calculate(dBm3=alt.datum.dB-3).transform_calculate(dBp3=alt.datum.dB+3)
 
-    # band at +/- 1.5dB
-    err1 = reg1.transform_calculate(text='"Band ±1.5dB"').mark_area(opacity=0.12).encode(
-        x=alt.X('Freq:Q'), 
-        y=alt.Y('dBm1:Q'), 
-        y2=alt.Y2('dBp1:Q'), 
-        color=alt.Color('text:N'))
+        # +/- 1.5dB
+        reg1 = reg.transform_calculate(dBm1=alt.datum.dB-1.5).transform_calculate(dBp1=alt.datum.dB+1.5)
 
-    return (err3+err1+line)
+        # band at +/- 3dB
+        err3 = reg3.transform_calculate(text='"Band ±3dB"').mark_area(color='firebrick', opacity=0.06).encode(
+            x=alt.X('Freq:Q'), 
+            y=alt.Y('dBm3:Q'), 
+            y2=alt.Y2('dBp3:Q'), 
+            color=alt.Color('text:N'))
+
+        # band at +/- 1.5dB
+        err1 = reg1.transform_calculate(text='"Band ±1.5dB"').mark_area(opacity=0.12).encode(
+            x=alt.X('Freq:Q'), 
+            y=alt.Y('dBm1:Q'), 
+            y2=alt.Y2('dBp1:Q'), 
+            color=alt.Color('text:N'))
+
+        return (err3+err1+line)
+    else:
+        return line
 
 
 def graph_regression(source, freq_start, freq_end):
@@ -570,8 +572,8 @@ def graph_compare_freq_regression(df, graph_params, speaker1, speaker2):
     line1 = line.transform_filter(selection1)
     line2 = line.transform_filter(selection2)
 
-    reg1 = graph_regression_graph(line1, 80, 10000).mark_line()
-    reg2 = graph_regression_graph(line2, 80, 10000).mark_line(strokeDash=[4,2])
+    reg1 = graph_regression_graph(line1, 80, 10000, False)
+    reg2 = graph_regression_graph(line2, 80, 10000, False)
 
     graph1 = line1.mark_line().add_selection(selection1)
     graph2 = line2.mark_line(strokeDash=[4,2]).add_selection(selection2)
