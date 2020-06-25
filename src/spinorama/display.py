@@ -294,8 +294,8 @@ def display_summary(df, params, speaker, origin, key):
         # 1
         speaker_summary = ['{0} {1}'.format(speaker_shape, speaker_type)]
 
-        # 2-3-4-5
         if est is None or math.isnan(est[0]) or math.isnan(est[1]) or math.isnan(est[2]) or math.isnan(est[3]):
+            #                    2   3   4   5
             speaker_summary += ['', '', '', '']
         else:
             # 2
@@ -328,7 +328,7 @@ def display_summary(df, params, speaker, origin, key):
             if inroom is not None:
                 pref_score = speaker_pref_rating(spin, inroom)
 
-        # 6-7-8-9-10-11-12
+        # 6-7-8-9-10-11
         if pref_score is not None:
             speaker_summary += [
                # 6
@@ -345,7 +345,14 @@ def display_summary(df, params, speaker, origin, key):
                'SM Deviation Predicted In-Room: {0}'.format(pref_score['sm_pred_in_room'])
               ]
         else:
-            speaker_summary += ['', '', '', '', '', '', '']
+            #                    6   7   8
+            speaker_summary += ['', '', '',
+            #                    9  10  11
+                                '', '', '']
+
+        if len(speaker_summary) == 11:
+            logging.error('speaker summary lenght is incorrect {0}'.format(speaker_summary))
+            speaker_summary += ['']
             
         return graph_summary(speaker, speaker_summary, params)
     except KeyError as ke:
