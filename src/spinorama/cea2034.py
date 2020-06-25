@@ -69,14 +69,15 @@ def spl2pressure(spl: float) -> float:
         p = pow(10, (spl-105.0)/20.0)
         return p
     except TypeError as e:
-        print('spl={0} e={1}'.format(spl, e))
-        logging.error('spl={0} e={1}'.format(spl, e))
+        print('spl2pressure: spl={0} e={1}'.format(spl, e))
+        logging.error('spl2pressure spl={0} e={1}'.format(spl, e))
 
 
 def pressure2spl(p: float) -> float:
     # convert pressure back to SPL
     if p<0.0:
-        print('pressure is negative')
+        print('pressure is negative p={0}'.format(p))
+        logging.error('pressure is negative p={0}'.format(p))
     return 105.0+20.0*log10(p)
 
 
@@ -94,6 +95,7 @@ def column_valid(c):
     elif int(column_trim(c)[:-1]) % 10 == 0:
         return True
     return False
+
 
 def spatial_average(sp_window, func='rms'):
     sp_cols = sp_window.columns

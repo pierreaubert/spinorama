@@ -136,7 +136,7 @@ def display_onaxis(df, graph_params=graph_params_default):
         onaxis = onaxis.loc[onaxis['Measurements'] == 'On Axis']
         onaxis_graph = graph_freq(onaxis, graph_params)
         onaxis_reg = graph_regression(onaxis, 80, 10000)
-        return onaxis_graph + onaxis_reg
+        return onaxis_graph +  onaxis_reg
     except KeyError as ke:
         logging.warning('Display On Axis failed with {0}'.format(ke))
         return None
@@ -291,25 +291,32 @@ def display_summary(df, params, speaker, origin, key):
         onaxis = spin.loc[spin['Measurements'] == 'On Axis'].reset_index(drop=True)
         est = estimates(onaxis)
 
+        # 1
         speaker_summary = ['{0} {1}'.format(speaker_shape, speaker_type)]
+
+        # 2-3-4-5
         if est is None or math.isnan(est[0]) or math.isnan(est[1]) or math.isnan(est[2]) or math.isnan(est[3]):
-            speaker_summary += ['', '', '', '', '', '']
+            speaker_summary += ['', '', '', '']
         else:
+            # 2
             if est[0] != -1:
                 speaker_summary += ['Reference level {0} dB'.format(est[0]), '(mean over 300-10k Hz)']
             else:
                 speaker_summary += ['']
 
+            # 3
             if est[1] != -1:
                 speaker_summary += ['-3dB at {0}Hz wrt Ref.'.format(est[1])]
             else:
                 speaker_summary += ['']
                 
+            # 4
             if est[2] != -1:
                 speaker_summary += ['-6dB at {0}Hz wrt Ref.'.format(est[2])]
             else:
                 speaker_summary += ['']
 
+            # 5
             if est[3] != -1:
                 speaker_summary += ['+/-{0}dB wrt Ref.'.format(est[3])]
             else:
@@ -321,17 +328,24 @@ def display_summary(df, params, speaker, origin, key):
             if inroom is not None:
                 pref_score = speaker_pref_rating(spin, inroom)
 
+        # 6-7-8-9-10-11-12
         if pref_score is not None:
             speaker_summary += [
+               # 6
                'Preference score: {0}'.format(pref_score['pref_score']),
+               # 7
                'Low Frequency Extension: {0} Hz'.format(pref_score['lfx_hz']),
+               # 8
                'Low Frequence Quality : {0}'.format(pref_score['lfq']),
+               # 9
                'Narrow Bandwidth Deviation On Axis: {0}'.format(pref_score['nbd_on_axis']),
+               # 10
                'Narrow Bandwidth Deviation Predicted In-Room: {0}'.format(pref_score['nbd_pred_in_room']),
+               # 11
                'SM Deviation Predicted In-Room: {0}'.format(pref_score['sm_pred_in_room'])
               ]
         else:
-            speaker_summary += ['', '', '', '', '', '']
+            speaker_summary += ['', '', '', '', '', '', '']
             
         return graph_summary(speaker, speaker_summary, params)
     except KeyError as ke:

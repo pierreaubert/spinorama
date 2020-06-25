@@ -505,6 +505,8 @@ def graph_compare_cea2034(df, graph_params, speaker1, speaker2):
 
 
 def graph_regression_graph(graph, freq_start, freq_end):
+
+    # regression line
     reg = graph.transform_filter(
         'datum.Freq>{0} & datum.Freq<{1}'.format(freq_start, freq_end)
     ).transform_regression(
@@ -512,16 +514,39 @@ def graph_regression_graph(graph, freq_start, freq_end):
         on='Freq',
         regression='dB',
         extent=[20,20000]
-    ).encode(
-        alt.X('Freq:Q'),
-        alt.Y('dB:Q'),
-        color=alt.value('red')
     )
-    return reg
+
+    # +/- 3dB
+    reg3 = reg.transform_calculate(dBm3=alt.datum.dB-3).transform_calculate(dBp3=alt.datum.dB+3)
+
+    # +/- 1.5dB
+    reg1 = reg.transform_calculate(dBm1=alt.datum.dB-1.5).transform_calculate(dBp1=alt.datum.dB+1.5)
+
+    # line
+    line = reg.transform_calculate(text='"Linear Regression"').mark_line(color='firebrick').encode(
+        x=alt.X('Freq:Q'),
+        y=alt.Y('dB:Q', axis=alt.Axis(title='dB SPL')),
+        color=alt.Color('text:N', legend=alt.Legend(title=None)))
+
+    # band at +/- 3dB
+    err3 = reg3.transform_calculate(text='"Band ±3dB"').mark_area(color='firebrick', opacity=0.06).encode(
+        x=alt.X('Freq:Q'), 
+        y=alt.Y('dBm3:Q'), 
+        y2=alt.Y2('dBp3:Q'), 
+        color=alt.Color('text:N'))
+
+    # band at +/- 1.5dB
+    err1 = reg1.transform_calculate(text='"Band ±1.5dB"').mark_area(opacity=0.12).encode(
+        x=alt.X('Freq:Q'), 
+        y=alt.Y('dBm1:Q'), 
+        y2=alt.Y2('dBp1:Q'), 
+        color=alt.Color('text:N'))
+
+    return (err3+err1+line)
 
 
 def graph_regression(source, freq_start, freq_end):
-    return graph_regression_graph(alt.Chart(source), freq_start, freq_end).mark_line()
+    return graph_regression_graph(alt.Chart(source), freq_start, freq_end)
 
 
 def graph_compare_freq_regression(df, graph_params, speaker1, speaker2):
@@ -561,6 +586,7 @@ def graph_compare_freq_regression(df, graph_params, speaker1, speaker2):
         nearest
     ).interactive()
 
+
 def graph_summary(speaker_name, speaker_summary, params):
     #  Title
     #                Score
@@ -573,6 +599,7 @@ def graph_summary(speaker_name, speaker_summary, params):
     # --------------------------
     pointsX = np.array([0.0, 0.0, 0.05, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5])+0.05
     pointsY = np.array([1.9, 1.6, 1.4,  1.2, 1.0, 0.8, 1.9, 1.6, 1.4, 1.2, 1.0, 0.8])-0.4
+    logging.debug('sizes X={0} Y={1} summary={2}'.format(len(pointsX), len(pointsY), len(speaker_summary)))
     source = pd.DataFrame({'x': pointsX, 'y': pointsY, 'summary': speaker_summary})
     return alt.Chart(source).mark_text(
         align='left',
