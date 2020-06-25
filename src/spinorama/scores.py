@@ -149,7 +149,7 @@ def pref_rating(nbd_on, nbd_pir, lfx, sm_pir):
     return 12.69-2.49*nbd_on-2.99*nbd_pir-4.31*lfx+2.32*sm_pir
 
 
-def speaker_pref_rating(cea2034, df_pred_in_room):
+def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
     try:
         if df_pred_in_room is None or df_pred_in_room.shape[0] == 0:
             logging.info('PIR is empty')
@@ -176,20 +176,36 @@ def speaker_pref_rating(cea2034, df_pred_in_room):
         pref_wsub = pref_rating_wsub(nbd_on_axis, nbd_pred_in_room, sm_pred_in_room)
         if not skip_full:
             pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)
-        ratings = {
-            'nbd_on_axis': round(nbd_on_axis, 2),
-            'nbd_listening_window': round(nbd_listening_window, 2),
-            'nbd_sound_power': round(nbd_sound_power, 2),
-            'nbd_pred_in_room': round(nbd_pred_in_room, 2),
-            'sm_pred_in_room': round(sm_pred_in_room, 2),
-            'sm_sound_power': round(sm_sound_power, 2),
-            'pref_score_wsub': round(pref_wsub, 1),
-        }
-        if not skip_full:
-            ratings['aad_on_axis'] = round(aad_on_axis, 2)
-            ratings['lfx_hz'] = int(pow(10, lfx_hz)) # in Hz
-            ratings['lfq'] =  round(lfq_db, 2)
-            ratings['pref_score'] = round(pref, 1)
+        if rounded:
+            ratings = {
+                'nbd_on_axis': round(nbd_on_axis, 2),
+                'nbd_listening_window': round(nbd_listening_window, 2),
+                'nbd_sound_power': round(nbd_sound_power, 2),
+                'nbd_pred_in_room': round(nbd_pred_in_room, 2),
+                'sm_pred_in_room': round(sm_pred_in_room, 2),
+                'sm_sound_power': round(sm_sound_power, 2),
+                'pref_score_wsub': round(pref_wsub, 1),
+            }
+            if not skip_full:
+                ratings['aad_on_axis'] = round(aad_on_axis, 2)
+                ratings['lfx_hz'] = int(pow(10, lfx_hz)) # in Hz
+                ratings['lfq'] =  round(lfq_db, 2)
+                ratings['pref_score'] = round(pref, 1)
+        else:
+            ratings = {
+                'nbd_on_axis': nbd_on_axis,
+                'nbd_listening_window': nbd_listening_window,
+                'nbd_sound_power': nbd_sound_power,
+                'nbd_pred_in_room':nbd_pred_in_room,
+                'sm_pred_in_room': sm_pred_in_room,
+                'sm_sound_power': sm_sound_power,
+                'pref_score_wsub': pref_wsub,
+            }
+            if not skip_full:
+                ratings['aad_on_axis'] = aad_on_axis,
+                ratings['lfx_hz'] = pow(10, lfx_hz)
+                ratings['lfq'] =  lfq_db
+                ratings['pref_score'] = pref
         logging.info('Ratings: {0}'.format(ratings))
         return ratings
     except ValueError as e:
