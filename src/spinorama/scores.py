@@ -88,6 +88,7 @@ def lfx(lw, sp):
         lfx_hz = list(next(lfx_grouped))[-1][1]
     except Exception:
         lfx_hz = lfx_range.max()
+        logging.debug('lfx: selecting max {0}'.format(lfx_hz))
     return math.log10(lfx_hz)
 
 
@@ -188,8 +189,10 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
             }
             if not skip_full:
                 ratings['aad_on_axis'] = round(aad_on_axis, 2)
-                ratings['lfx_hz'] = int(pow(10, lfx_hz)) # in Hz
-                ratings['lfq'] =  round(lfq_db, 2)
+                if lfx_hz is not None:
+                    ratings['lfx_hz'] = int(pow(10, lfx_hz)) # in Hz
+                if lfq_db is not None:
+                    ratings['lfq'] =  round(lfq_db, 2)
                 ratings['pref_score'] = round(pref, 1)
         else:
             ratings = {
@@ -203,8 +206,10 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
             }
             if not skip_full:
                 ratings['aad_on_axis'] = aad_on_axis,
-                ratings['lfx_hz'] = pow(10, lfx_hz)
-                ratings['lfq'] =  lfq_db
+                if lfx_hz is not None:
+                    ratings['lfx_hz'] = pow(10, lfx_hz)
+                if lfq_db is not None:
+                    ratings['lfq'] =  lfq_db
                 ratings['pref_score'] = pref
         logging.info('Ratings: {0}'.format(ratings))
         return ratings
