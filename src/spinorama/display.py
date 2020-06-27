@@ -282,8 +282,8 @@ def display_summary(df, params, speaker, origin, key):
         speaker_type = ''
         speaker_shape = ''
         if speaker in metadata.speakers_info.keys():
-            speaker_type  = metadata.speakers_info[speaker]['type']
-            speaker_shape = metadata.speakers_info[speaker]['shape']
+            speaker_type  = metadata.speakers_info[speaker].get('type', '')
+            speaker_shape = metadata.speakers_info[speaker].get('shape', '')
 
         if 'CEA2034' not in df.keys():
             return None
@@ -331,20 +331,16 @@ def display_summary(df, params, speaker, origin, key):
         # 7-15
         if pref_score is not None:
             speaker_summary += [
-               # 7
-               'Preference score: {0}'.format(pref_score['pref_score']),
-               # 8-9-10
-               '• Low Frequency:',
-               '  • Extension: {0} Hz'.format(pref_score['lfx_hz']),
-               '  • Quality : {0}'.format(pref_score['lfq']),
-               # 11-13
-               '• Narrow Bandwidth Deviation',
-               '  • On Axis: {0}'.format(pref_score['nbd_on_axis']),
-               '  • Predicted In-Room: {0}'.format(pref_score['nbd_pred_in_room']),
-               # 14-15
-               '• SM Deviation:',
-               '  • Predicted In-Room: {0}'.format(pref_score['sm_pred_in_room'])
-              ]
+             'Preference score: {0}'.format(pref_score.get('pref_score', '--')),
+             '• Low Frequency:',
+             '  • Extension: {0} Hz'.format(pref_score.get('lfx_hz', '--')),
+             '  • Quality : {0}'.format(pref_score.get('lfq', '--')),
+             '• Narrow Bandwidth Deviation',
+             '  • On Axis: {0}'.format(pref_score.get('nbd_on_axis', '--')),
+             '  • Predicted In-Room: {0}'.format(pref_score.get('nbd_pred_in_room', '--')),
+             '• SM Deviation:',
+             '  • Predicted In-Room: {0}'.format(pref_score.get('sm_pred_in_room', '--')),
+            ]
         else:
             #                    7   8   9  10  11  12, 13, 14, 15
             speaker_summary += ['', '', '', '', '', '', '', '', '']
