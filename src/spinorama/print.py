@@ -20,7 +20,6 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
     updated = 0
     if chart is not None:
         filedir = 'docs/' + speaker + '/' + origin.replace('Vendors/','') + '/' + key
-        logging.debug('print_graph: write to directory {0}'.format(filedir))
         pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
         for ext in ['json', 'png']: # svg and html skipped to keep size small
             # skip the 2cols.json and 3cols.json as they are really large

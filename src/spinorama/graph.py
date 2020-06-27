@@ -116,12 +116,8 @@ def graph_spinorama(dfu, graph_params):
     if ymax == ymin:
         logging.error('Graph configuration is incorrect: ymin==ymax')
     # add selectors                                                                                                                          
-    selectorsMeasurements = alt.selection_multi(
-        fields=['Measurements'], 
-        bind='legend')
-    scales = alt.selection_interval(
-        bind='scales'
-    )
+    selectorsMeasurements = alt.selection_multi(fields=['Measurements'], bind='legend')
+    scales = alt.selection_interval(bind='scales')
     # main charts
     xaxis =alt.X('Freq:Q', title='Freqency (Hz)',
                 scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]),
@@ -136,48 +132,34 @@ def graph_spinorama(dfu, graph_params):
         alt.FieldOneOfPredicate(
             field='Measurements',
             oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
-    ).encode(x=xaxis, y=yaxis, color=color, opacity=opacity
-    )
+    ).encode(x=xaxis, y=yaxis, color=color, opacity=opacity)
 
     circle=alt.Chart(dfu).mark_circle(size=100).transform_filter(
-        alt.FieldOneOfPredicate(
-            field='Measurements',
-            oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
+        alt.FieldOneOfPredicate(field='Measurements', oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
     ).encode(
         x=xaxis, y=yaxis, color=color, 
         opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
         tooltip=['Measurements', 'Freq', 'dB']
-    ) # .transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
+    )
     
     di=alt.Chart(dfu).mark_line().transform_filter(
-        alt.FieldOneOfPredicate(
-            field='Measurements',
-            oneOf=['Early Reflections DI', 'Sound Power DI'])
+        alt.FieldOneOfPredicate(field='Measurements', oneOf=['Early Reflections DI', 'Sound Power DI'])
     ).encode(x=xaxis, y=di_yaxis, color=color, opacity=opacity)
 
     circle_di = alt.Chart(dfu).mark_circle(size=100).transform_filter(
-        alt.FieldOneOfPredicate(
-            field='Measurements',
-            oneOf=['Early Reflections DI', 'Sound Power DI'])
+        alt.FieldOneOfPredicate(field='Measurements', oneOf=['Early Reflections DI', 'Sound Power DI'])
     ).encode(
         x=xaxis, y=di_yaxis, color=color, 
         opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
         tooltip=['Measurements', 'Freq', 'dB']
-    ) # .transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
+    )
     
-
     # assemble elements together
-    spin = alt.layer(circle+line, circle_di+di).resolve_scale(y='independent'
-    ).add_selection(
-        selectorsMeasurements
-    ).add_selection(
-        scales
-    ).add_selection(
-        nearest
-    ).properties(
-        width=graph_params['width'],
-        height=graph_params['height']
-    ).interactive()
+    spin = alt.layer(circle+line, circle_di+di
+    ).resolve_scale(y='independent'
+    ).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest
+    ).properties(width=graph_params['width'], height=graph_params['height'])
+    
     return spin
 
 
@@ -285,7 +267,7 @@ def graph_isoband(df, isoband_params):
     ).encode(
         alt.Color('properties.z_low:O', 
                   scale=alt.Scale(domain=bands, range=color_range), 
-                  legend=alt.Legend(orient='bottom', title='Relative dB SPL'))
+                  legend=alt.Legend(title='Relative dB SPL'))
     ).project('identity')
     axis = graph_empty(freq_min, freq_max, -180, 180)
     return (isobands+axis).properties(width=graph_width, height=graph_height)
@@ -506,42 +488,35 @@ def graph_compare_cea2034(df, graph_params, speaker1, speaker2):
 def graph_regression_graph(graph, freq_start, freq_end, withBands=True):
 
     # regression line
-    reg = graph.transform_filter(
-        'datum.Freq>{0} & datum.Freq<{1}'.format(freq_start, freq_end)
-    ).transform_regression(
-        method='log',
-        on='Freq',
-        regression='dB',
-        extent=[20,20000]
-    )
+    reg = graph.transform_filter('datum.Freq>{0} & datum.Freq<{1}'.format(freq_start, freq_end)
+    ).transform_regression(method='log', on='Freq', regression='dB', extent=[20,20000])
+
+    if withBands:
+        # +/- 3dB
+        reg3 = reg.transform_calculate(dBm3=alt.datum.dB-3).transform_calculate(dBp3=alt.datum.dB+3).transform_calculate(text='"Band ±3dB"')
+
+        # +/- 1.5dB
+        reg1 = reg.transform_calculate(dBm1=alt.datum.dB-1.5).transform_calculate(dBp1=alt.datum.dB+1.5).transform_calculate(text='"Band ±1.5dB"')
+
+        # band at +/- 3dB
+        err3 = reg3.mark_area(opacity=0.06).encode(
+            x=alt.X('Freq:Q'),
+            y=alt.Y('dBm3:Q'),
+            y2=alt.Y2('dBp3:Q'))
+
+        # band at +/- 1.5dB
+        err1 = reg1.mark_area(opacity=0.12).encode(x=alt.X('Freq:Q'), y=alt.Y('dBm1:Q'), y2=alt.Y2('dBp1:Q'))
 
     # line
     line = reg.transform_calculate(text='"Linear Regression"').mark_line(color='firebrick').encode(
         x=alt.X('Freq:Q'),
-        y=alt.Y('dB:Q', axis=alt.Axis(title='dB SPL')),
-        color=alt.Color('text:N', legend=alt.Legend(title=None)))
+        y=alt.Y('dB:Q', axis=alt.Axis(title='dB (normalized)')),
+        color=alt.Color(
+            'text:O',
+            scale=alt.Scale(domain=['Linear Regression', 'Band ±3dB', 'Band ±1.5dB'], range=['firebrick', 'blue', 'blue']),
+            legend=alt.Legend(title='Regression')))
 
     if withBands:
-        # +/- 3dB
-        reg3 = reg.transform_calculate(dBm3=alt.datum.dB-3).transform_calculate(dBp3=alt.datum.dB+3)
-
-        # +/- 1.5dB
-        reg1 = reg.transform_calculate(dBm1=alt.datum.dB-1.5).transform_calculate(dBp1=alt.datum.dB+1.5)
-
-        # band at +/- 3dB
-        err3 = reg3.transform_calculate(text='"Band ±3dB"').mark_area(color='firebrick', opacity=0.06).encode(
-            x=alt.X('Freq:Q'), 
-            y=alt.Y('dBm3:Q'), 
-            y2=alt.Y2('dBp3:Q'), 
-            color=alt.Color('text:N'))
-
-        # band at +/- 1.5dB
-        err1 = reg1.transform_calculate(text='"Band ±1.5dB"').mark_area(opacity=0.12).encode(
-            x=alt.X('Freq:Q'), 
-            y=alt.Y('dBm1:Q'), 
-            y2=alt.Y2('dBp1:Q'), 
-            color=alt.Color('text:N'))
-
         return (err3+err1+line)
     else:
         return line
@@ -599,14 +574,17 @@ def graph_summary(speaker_name, speaker_summary, params):
     #                nbd_pir
     #                sm_pir
     # --------------------------
-    pointsX = np.array([0.0, 0.0, 0.05, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5])+0.05
-    pointsY = np.array([1.9, 1.6, 1.4,  1.2, 1.0, 0.8, 1.9, 1.6, 1.4, 1.2, 1.0, 0.8])-0.4
+    pointsX = np.array([0.0, 0.0, 0.05, 0.0, 0.0, 0.0,
+                        0.5, 0.5, 0.55, 0.55, 0.5, 0.55, 0.55, 0.5, 0.55])
+    pointsY = np.array([1.9, 1.6, 1.4,  1.2, 1.0, 0.8,
+                        1.9, 1.6, 1.4, 1.2, 1.0, 0.8, 0.6, 0.4, 0.2])-0.6
     logging.debug('sizes X={0} Y={1} summary={2}'.format(len(pointsX), len(pointsY), len(speaker_summary)))
     source = pd.DataFrame({'x': pointsX, 'y': pointsY, 'summary': speaker_summary})
     return alt.Chart(source).mark_text(
         align='left',
         dx=0
     ).encode(
-        x=alt.X('x', title='', scale=alt.Scale(domain=[0,1]), axis=alt.Axis(ticks=False, labels=False, grid=False)),
-        y=alt.Y('y', title='', axis=alt.Axis(ticks=False, labels=False, grid=False)), text='summary:N'
+        x=alt.X('x', title='', scale=alt.Scale(domain=[0,1]), axis=None),
+        y=alt.Y('y', title='', axis=None),
+        text='summary:N'
     )

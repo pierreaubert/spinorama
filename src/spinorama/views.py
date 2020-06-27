@@ -22,17 +22,19 @@ from .display import \
     display_summary
 
 
+SPACING = 20
+LEGEND = 60
+
 def scale_params(params, factor):
-    spacing = 20
     new_params = copy.deepcopy(params)
     width = params['width']
     height = params['height']
     if factor == 3:
-        new_width = math.floor(width - 6*spacing)/3
-        new_height = math.floor(height - 6*spacing)/3
+        new_width = math.floor(width - 6*SPACING)/3
+        new_height = math.floor(height - 6*SPACING)/3
         new_params['height'] = new_height
     else:
-        new_width = math.floor(width - 3*spacing)/2
+        new_width = math.floor(width - 3*SPACING)/2
     new_params['width'] = new_width
     for check in ('xmin', 'xmax'):
         if check not in new_params.keys():
@@ -51,12 +53,14 @@ def template_compact(df, params, speaker, origin, key):
     params_summary = copy.deepcopy(params)
     params_spin = copy.deepcopy(params)
     params_summary['width'] = 500
-    params_spin['width'] -= 660
+    params_spin['width'] -= 500
     summary = display_summary(df, params_summary, speaker, origin, key)
     spinorama = display_spinorama(df, params_spin)
     # side by side
-    onaxis = display_onaxis(df, params2)
-    inroom = display_inroom(df, params2)
+    params2v2 = copy.deepcopy(params2)
+    params2v2['width'] -= LEGEND
+    onaxis = display_onaxis(df, params2v2)
+    inroom = display_inroom(df, params2v2)
     # side by side
     params3['height'] = params2['height']
     ereflex = display_reflection_early(df, params3)
@@ -85,16 +89,23 @@ def template_compact(df, params, speaker, origin, key):
             chart &= alt.hconcat(summary.properties(title=speaker), spinorama.properties(title='CEA2034'))
         else:
             chart &= alt.hconcat(spinorama.properties(title='CEA2034'))
+
     if onaxis is not None:
         if inroom is not None:
-            chart &= alt.hconcat(onaxis.properties(title='On Axis'),
-                                 inroom.properties(title='In Room prediction'))
+            chart = alt.vconcat(
+                chart,
+                alt.hconcat(onaxis.properties(title='On Axis'), inroom.properties(title='In Room prediction'))
+                ).resolve_scale(color='independent')
         else:
             chart &= onaxis
+
     if ereflex is not None and hreflex is not None and vreflex is not None:
-        chart &= alt.hconcat(ereflex.properties(title='Early Reflections'),
-                             hreflex.properties(title='Horizontal Reflections'),
-                             vreflex.properties(title='Vertical Reflections'))
+        chart = alt.vconcat(
+            chart,
+            alt.hconcat(ereflex.properties(title='Early Reflections'),
+                        hreflex.properties(title='Horizontal Reflections'),
+                        vreflex.properties(title='Vertical Reflections'))
+            ).resolve_scale(color='independent')
 
     if hspl is not None and vspl is not None:
         chart &= alt.hconcat(hspl.properties(title='Horizontal SPL'), vspl.properties(title='Vertical SPL'))
@@ -104,20 +115,19 @@ def template_compact(df, params, speaker, origin, key):
         elif vspl is not None:
             chart &= vspl.properties(title='Vertical SPL')
 
-    if hcontour is not None and hradar is not None:
-        chart &= alt.hconcat(hcontour.properties(title='Horizontal Contours'), hradar.properties(title='Horizontal Radar'))
+#    if hcontour is not None and hradar is not None:
+#        chart &= alt.hconcat(hcontour.properties(title='Horizontal Contours'), hradar.properties(title='Horizontal Radar'))
 
-    if vcontour is not None and vradar is not None:
-        chart &= alt.hconcat(vcontour.properties(title='Vertical Contours'), vradar.properties(title='Vertical Radar'))
+#    if vcontour is not None and vradar is not None:
+#        chart &= alt.hconcat(vcontour.properties(title='Vertical Contours'), vradar.properties(title='Vertical Radar'))
 
-#    if hisoband is not None and hradar is not None:
-#        chart &= alt.hconcat(hisoband.properties(title='Horizontal IsoBands'), hradar.properties(title='Horizontal Radar'))
+    if hisoband is not None and hradar is not None:
+        chart &= alt.hconcat(hisoband.properties(title='Horizontal IsoBands'), hradar.properties(title='Horizontal Radar')).resolve_scale(color='independent')
 
-#    if visoband is not None and vradar is not None:
-#        chart &= alt.hconcat(visoband.properties(title='Vertical IsoBands'), vradar.properties(title='Vertical Radar'))
+    if visoband is not None and vradar is not None:
+        chart &= alt.hconcat(visoband.properties(title='Vertical IsoBands'), vradar.properties(title='Vertical Radar')).resolve_scale(color='independent')
 
-    return chart.configure_title(orient='top', anchor='middle', fontSize=30
-           ).configure_text(fontSize=16).configure_view(strokeWidth=0, opacity=0)
+    return chart.configure_title(orient='top', anchor='middle', fontSize=30).configure_text(fontSize=16).configure_view(strokeWidth=0, opacity=0)
 
 
 
