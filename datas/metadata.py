@@ -1303,6 +1303,7 @@ speakers_info = {
         'model': 'System 600',
         'type': 'passive',
         'price': '',
+        'shape': 'bookshelves',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
