@@ -209,6 +209,7 @@ speakers_info = {
         'model': 'Xeo 3',
         'type': 'passive',
         'price': '',
+        'shape': 'bookshelves',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
@@ -281,6 +282,7 @@ speakers_info = {
         'model': 'Model 1600',
         'type': 'passive',
         'price': '',
+        'shape': 'floorstander',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
@@ -292,6 +294,7 @@ speakers_info = {
         'model': 'STE-720',
         'type': 'passive',
         'price': '',
+        'shape': 'bookshelves',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
@@ -328,6 +331,7 @@ speakers_info = {
         'model': 'R16',
         'type': 'passive',
         'price': '',
+        'shape': 'floorstander',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
@@ -338,6 +342,7 @@ speakers_info = {
         'model': 'Nathan',
         'type': 'passive',
         'price': '',
+        'shape': 'floorstander',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
@@ -382,6 +387,7 @@ speakers_info = {
     'Gradient Helsinki 1.5': {
         'brand': 'Gradient',
         'model': 'Helsinki 1.5',
+        'shape': 'floorstander',
         'type': 'passive',
         'price': '',
         'measurements': [{
@@ -394,7 +400,7 @@ speakers_info = {
         'model': 'Monitor 30.0',
         'type': 'passive',
         'price': '3200',
-        'shape': 'large',
+        'shape': 'floorstander',
         'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
@@ -406,6 +412,7 @@ speakers_info = {
         'brand': 'iKey-Audio',
         'model': 'M-808V2',
         'type': 'passive',
+        'shape': 'bookshelves',
         'price': '',
         'measurements': [{
             'origin': 'Princeton',
@@ -486,6 +493,7 @@ speakers_info = {
         'model': 'zA1.1',
         'type': 'passive',
         'price': '',
+        'shape': 'floorstander',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
@@ -496,6 +504,7 @@ speakers_info = {
         'model': 'zA2.1',
         'type': 'passive',
         'price': '',
+        'shape': 'floorstander',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
@@ -610,7 +619,7 @@ speakers_info = {
         'model': 'HDI-3600',
         'type': 'passive',
         'price': '3800',
-        'shape': 'bookshelves',
+        'shape': 'floorstander',
         'amount': 'pair',
         'measurements': [{
             'origin': 'ASR',
@@ -785,6 +794,7 @@ speakers_info = {
         'model': 'Reference 5',
         'type': 'passive',
         'price': '16800',
+        'shape': 'floorstander',
         'measurements': [{
             'origin': 'Vendors/KEF',
             'website': 'www.kef.com',
@@ -796,6 +806,7 @@ speakers_info = {
         'model': 'KingSound KS 3001',
         'type': 'passive',
         'price': '',
+        'shape': 'bookshelves',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
@@ -869,6 +880,7 @@ speakers_info = {
         'brand': 'Manger',
         'model': 'Sidekick',
         'type': 'passive',
+        'shape': 'surround',
         'price': '',
         'measurements': [{
             'origin': 'Princeton',
@@ -1072,6 +1084,7 @@ speakers_info = {
         'brand': 'Quad Electroacoustics',
         'model': 'ESL-57',
         'type': 'passive',
+        'shape': 'floorstander',
         'price': '',
         'measurements': [{
             'origin': 'Princeton',
@@ -1083,6 +1096,7 @@ speakers_info = {
         'model': 'MC-1000',
         'type': 'passive',
         'price': '60',
+        'shape': 'bookshelves',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -1113,6 +1127,19 @@ speakers_info = {
             'origin': 'ASR',
             'format': 'klippel',
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-f35-speaker-review.12053/',
+        }],
+    },
+    'Revel M106': {
+        'brand': 'Revel',
+        'model': 'M106',
+        'type': 'passive',
+        'price': '4000',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-m106-bookshelf-speaker-review.14363/',
         }],
     },
     'Revel M16': {
@@ -1149,6 +1176,7 @@ speakers_info = {
         'brand': 'Revel',
         'model': 'C25',
         'type': 'passive',
+        'shape': 'center',
         'price': '',
         'measurements': [{
             'origin': 'Vendors/Revel',
@@ -1217,6 +1245,7 @@ speakers_info = {
         'model': 'Model 11',
         'type': 'passive',
         'price': '',
+        'shape': 'floorstander',
         'measurements': [{'origin': 'Princeton', 'key': 'unmodified', 'format': 'princeton', },
                          {'origin': 'Princeton', 'key': 'with Anechoic Foam',  'format': 'princeton', },
                          {'origin': 'Princeton', 'key': 'with Back-Wave Absorber', 'format': 'princeton', },
@@ -1240,6 +1269,7 @@ speakers_info = {
         'model': 'SS-CS5',
         'type': 'passive',
         'price': '150',
+        'shape': 'bookshelves',
         'measurements': [{
             'origin': 'ASR',
             'format': 'klippel',
@@ -1251,6 +1281,7 @@ speakers_info = {
         'model': 'Systems SA1',
         'type': 'passive',
         'price': '',
+        'shape': 'bookshelves',
         'measurements': [{
             'origin': 'Princeton',
             'format': 'princeton',
