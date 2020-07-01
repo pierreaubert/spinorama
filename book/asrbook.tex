@@ -15,8 +15,8 @@
 \date{2020}
 \maketitle
 
-\tableofcontents
-\listoffigures
+% \tableofcontents
+% \listoffigures
 
 \pagebreak
 
@@ -263,11 +263,15 @@ ${meta[speaker_name]['estimates'][3]}
 % endif
 &
 % if 'pref_rating' in meta[speaker_name]:
+%   if 'lfx_hz' in meta[speaker_name]['pref_rating']:
 ${meta[speaker_name]['pref_rating']['lfx_hz']}
+%   endif
 % endif
 &
 % if 'pref_rating' in meta[speaker_name]:
+%   if 'lfq' in meta[speaker_name]['pref_rating']:
 ${meta[speaker_name]['pref_rating']['lfq']}
+%   endif
 % endif
 &
 % if 'pref_rating' in meta[speaker_name]:
@@ -283,7 +287,9 @@ ${meta[speaker_name]['pref_rating']['sm_pred_in_room']}
 % endif
 &
 % if 'pref_rating' in meta[speaker_name]:
+%   if 'pref_score' in meta[speaker_name]['pref_rating']:
 \emph{${meta[speaker_name]['pref_rating']['pref_score']}}
+%   endif
 % endif
 \\\
 
