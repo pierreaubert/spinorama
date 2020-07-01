@@ -35,16 +35,21 @@ The library support 4 kinds of data:
 
 ## Computations
 
-1. Generate CEA2034 data from horizontal and vertical SPL data (in beta)
-2. Calculate contour plot, radar plot
+1. Generate CEA2034 data from horizontal and vertical SPL data
+2. Calculate contour plot, radar plot, isolines and isobands.
 3. Estimate basic data for a speaker (-3dB output, flatness over a range)
 4. Compute various parameters defined in a paper from Olive (ref. below).
+
+coming soon:
+5. Generate an EQ to optimise the speaker (and get a better preference score).
 
 ## Generation
 
 1. Webpages digestable on mobile but also on very large 4k screens
 2. Graphs are interactive
-4. Comparison between speakers (in beta)
+3. Comparison between speakers
+4. Some statistics
+
 
 # Other ways to look at the graphs in a more interactive way.
 

@@ -3,6 +3,7 @@ import math
 import numpy as np
 import pandas as pd
 
+pd.set_option('display.max_rows', 1000)
 
 def estimates(onaxis: pd.DataFrame):
     estimates_error = [-1, -1, -1, -1]
@@ -15,6 +16,8 @@ def estimates(onaxis: pd.DataFrame):
         if freq_min < 300:
             # mean over 300-10k
             y_ref = np.mean(onaxis.loc[(onaxis.Freq >= 300) & (onaxis.Freq <= 10000)].dB)
+            logging.debug('mean over 300-10k Hz = '.format(y_ref))
+            # print(onaxis)
             y_3 = onaxis.loc[(onaxis.Freq < 150) & (onaxis.dB <= y_ref-3)].Freq.max()
             y_6 = onaxis.loc[(onaxis.Freq < 150) & (onaxis.dB <= y_ref-6)].Freq.max()
             # search band up/down

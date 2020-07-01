@@ -58,7 +58,8 @@ if __name__ == '__main__':
 
     def sort_meta(s):
         if 'pref_rating' in s.keys():
-            return s['pref_rating']['pref_score']
+            if 'pref_score'in s['pref_rating'].keys():
+                return s['pref_rating']['pref_score']
         return -1
 
     keys_sorted = sorted(meta, key=lambda a: sort_meta(meta[a]), reverse=True)

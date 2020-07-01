@@ -12,10 +12,30 @@
 
 <div class="section">
   <div class="box">
-    <div id="visScores"></div>
+    <div id="visDistribution"></div>
     <script type="text/javascript">
-      var spec = "stats/scores.json";
-      vegaEmbed('#visScores', spec).then(function(result) {}).catch(console.error);
+      var spec = "stats/distribution.json";
+      vegaEmbed('#visDistribution', spec).then(function(result) {}).catch(console.error);
+    </script>
+  </div>
+</div>
+
+<div class="section">
+  <div class="box">
+    <div id="visSpreadScore"></div>
+    <script type="text/javascript">
+      var spec = "stats/spread_score.json";
+      vegaEmbed('#visSpreadScore', spec).then(function(result) {}).catch(console.error);
+    </script>
+  </div>
+</div>
+
+<div class="section">
+  <div class="box">
+    <div id="visSpreadScoreWsub"></div>
+    <script type="text/javascript">
+      var spec = "stats/spread_score_wsub.json";
+      vegaEmbed('#visSpreadScoreWsub', spec).then(function(result) {}).catch(console.error);
     </script>
   </div>
 </div>

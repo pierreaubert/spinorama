@@ -1,3 +1,4 @@
+from more_itertools import consecutive_groups
 import logging
 import math
 import numpy as np
@@ -35,7 +36,7 @@ def aad(dfu):
             continue
         selection = dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq < bmax)]
         if selection.shape[0] > 0:
-            aad_sum += abs(y_ref-np.mean(selection.dB))
+            aad_sum += abs(y_ref-np.nanmean(selection.dB))
             n += 1
     if n == 0:
         logging.error('aad is None')
@@ -61,9 +62,9 @@ def nbd(dfu):
     #return np.mean([median_absolute_deviation(dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB)
     #                for (bmin, bcenter, bmax) in octave(2)
     #                if bcenter >=100 and bcenter <=12000])
-    return np.mean([dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB.mad()
-                    for (bmin, bcenter, bmax) in octave(2)
-                    if bcenter >=100 and bcenter <=12000])
+    return np.nanmean([dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB.mad()
+                       for (bmin, bcenter, bmax) in octave(2)
+                       if bcenter >=100 and bcenter <=12000])
 
 
 def lfx(lw, sp):
@@ -79,10 +80,16 @@ def lfx(lw, sp):
     for the calculation because it better defines the true bass output of
     the loudspeaker, particularly speakers that have rear-firing ports.
     """
-    y_ref = np.mean(lw.loc[(lw.Freq >= 300) & (lw.Freq <= 10000)].dB)-6
+    lw_ref = np.mean(lw.loc[(lw.Freq >= 300) & (lw.Freq <= 10000)].dB)-6
     # find first freq such that y[freq]<y_ref-6dB
-    y = math.log10(sp.loc[(sp.Freq < 300) & (sp.dB <= y_ref)].Freq.max())
-    return y
+    lfx_range = sp.loc[(sp.Freq < 300) & (sp.dB <= lw_ref)].Freq
+    lfx_grouped = consecutive_groups(lfx_range.iteritems(), lambda x: x[0])
+    try:
+        lfx_hz = list(next(lfx_grouped))[-1][1]
+    except Exception:
+        lfx_hz = lfx_range.max()
+        logging.debug('lfx: selecting max {0}'.format(lfx_hz))
+    return math.log10(lfx_hz)
 
 
 def lfq(lw, sp, lfx_log):
@@ -136,11 +143,14 @@ def sm(dfu):
     return r_value**2
                 
 
+def pref_rating_wsub(nbd_on, nbd_pir, sm_pir):
+    return 12.69-2.49*nbd_on-2.99*nbd_pir+2.32*sm_pir
+
 def pref_rating(nbd_on, nbd_pir, lfx, sm_pir):
     return 12.69-2.49*nbd_on-2.99*nbd_pir-4.31*lfx+2.32*sm_pir
 
 
-def speaker_pref_rating(cea2034, df_pred_in_room):
+def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
     try:
         if df_pred_in_room is None or df_pred_in_room.shape[0] == 0:
             logging.info('PIR is empty')
@@ -148,35 +158,59 @@ def speaker_pref_rating(cea2034, df_pred_in_room):
         df_on_axis = cea2034.loc[lambda df: df.Measurements == 'On Axis']
         df_listening_window = cea2034.loc[lambda df: df.Measurements == 'Listening Window']
         df_sound_power = cea2034.loc[lambda df: df.Measurements == 'Sound Power']
+        skip_full = False
         for dfu in (df_on_axis, df_listening_window, df_sound_power):
             if dfu.loc[(dfu.Freq>=100) & (dfu.Freq<=400)].shape[0] == 0:
-                logging.info('No freq under 400hz, skipping pref_rating'.format())
-                return None
-        aad_on_axis = aad(df_on_axis)
+                skip_full = True
         nbd_on_axis = nbd(df_on_axis)
         nbd_listening_window = nbd(df_listening_window)
         nbd_sound_power = nbd(df_sound_power)
         nbd_pred_in_room = nbd(df_pred_in_room)
-        lfx_hz = lfx(df_listening_window, df_sound_power)
-        lfq_db = lfq(df_listening_window, df_sound_power, lfx_hz)
+        if not skip_full:
+            aad_on_axis = aad(df_on_axis)
+            lfx_hz = lfx(df_listening_window, df_sound_power)
+            lfq_db = lfq(df_listening_window, df_sound_power, lfx_hz)
         sm_sound_power = sm(df_sound_power)
         sm_pred_in_room = sm(df_pred_in_room)
-        if nbd_on_axis is None or nbd_pred_in_room is None or \
-          lfx_hz is None or sm_pred_in_room is None or lfq_db is None:
+        if nbd_on_axis is None or nbd_pred_in_room is None or sm_pred_in_room is None:
             return None
-        pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)
-        ratings = {
-            'aad_on_axis': round(aad_on_axis, 2),
-            'nbd_on_axis': round(nbd_on_axis, 2),
-            'nbd_listening_window': round(nbd_listening_window, 2),
-            'nbd_sound_power': round(nbd_sound_power, 2),
-            'nbd_pred_in_room': round(nbd_pred_in_room, 2),
-            'lfx_hz': int(pow(10, lfx_hz)), # in Hz
-            'lfq': round(lfq_db, 2),
-            'sm_pred_in_room': round(sm_pred_in_room, 2),
-            'sm_sound_power': round(sm_sound_power, 2),
-            'pref_score': round(pref, 1),
-        }
+        pref_wsub = pref_rating_wsub(nbd_on_axis, nbd_pred_in_room, sm_pred_in_room)
+        if not skip_full:
+            pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)
+        if rounded:
+            ratings = {
+                'nbd_on_axis': round(nbd_on_axis, 2),
+                'nbd_listening_window': round(nbd_listening_window, 2),
+                'nbd_sound_power': round(nbd_sound_power, 2),
+                'nbd_pred_in_room': round(nbd_pred_in_room, 2),
+                'sm_pred_in_room': round(sm_pred_in_room, 2),
+                'sm_sound_power': round(sm_sound_power, 2),
+                'pref_score_wsub': round(pref_wsub, 1),
+            }
+            if not skip_full:
+                ratings['aad_on_axis'] = round(aad_on_axis, 2)
+                if lfx_hz is not None:
+                    ratings['lfx_hz'] = int(pow(10, lfx_hz)) # in Hz
+                if lfq_db is not None:
+                    ratings['lfq'] =  round(lfq_db, 2)
+                ratings['pref_score'] = round(pref, 1)
+        else:
+            ratings = {
+                'nbd_on_axis': nbd_on_axis,
+                'nbd_listening_window': nbd_listening_window,
+                'nbd_sound_power': nbd_sound_power,
+                'nbd_pred_in_room':nbd_pred_in_room,
+                'sm_pred_in_room': sm_pred_in_room,
+                'sm_sound_power': sm_sound_power,
+                'pref_score_wsub': pref_wsub,
+            }
+            if not skip_full:
+                ratings['aad_on_axis'] = aad_on_axis,
+                if lfx_hz is not None:
+                    ratings['lfx_hz'] = pow(10, lfx_hz)
+                if lfq_db is not None:
+                    ratings['lfq'] =  lfq_db
+                ratings['pref_score'] = pref
         logging.info('Ratings: {0}'.format(ratings))
         return ratings
     except ValueError as e:

@@ -1,10 +1,12 @@
+import altair as alt
 import logging
+import math
 import numpy as np
 import pandas as pd
-import altair as alt
 from .directivity import directivity_matrix
 from .contour import compute_contour, compute_contour_smoothed
 from .normalize import resample
+from src.graphs.isobands import find_isobands
 import src.spinorama.radar as radar
 
 
@@ -39,6 +41,14 @@ contour_params_default = {
     # 'colormap': 'redyellowblue',
     # 'colormap': 'blueorange',
     # 'colormap': 'blues',
+}
+
+isoband_params_default = {
+    'xmin': 100,
+    'xmax': 20000,
+    'width': 600,
+    'height': 360,
+    'bands': [-72, -18, -15, -12, -9, -6, -3, +3],
 }
 
 radar_params_default = {
@@ -106,12 +116,8 @@ def graph_spinorama(dfu, graph_params):
     if ymax == ymin:
         logging.error('Graph configuration is incorrect: ymin==ymax')
     # add selectors                                                                                                                          
-    selectorsMeasurements = alt.selection_multi(
-        fields=['Measurements'], 
-        bind='legend')
-    scales = alt.selection_interval(
-        bind='scales'
-    )
+    selectorsMeasurements = alt.selection_multi(fields=['Measurements'], bind='legend')
+    scales = alt.selection_interval(bind='scales')
     # main charts
     xaxis =alt.X('Freq:Q', title='Freqency (Hz)',
                 scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]),
@@ -126,53 +132,46 @@ def graph_spinorama(dfu, graph_params):
         alt.FieldOneOfPredicate(
             field='Measurements',
             oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
-    ).encode(x=xaxis, y=yaxis, color=color, opacity=opacity
-    )
+    ).encode(x=xaxis, y=yaxis, color=color, opacity=opacity)
 
     circle=alt.Chart(dfu).mark_circle(size=100).transform_filter(
-        alt.FieldOneOfPredicate(
-            field='Measurements',
-            oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
+        alt.FieldOneOfPredicate(field='Measurements', oneOf=['On Axis', 'Listening Window', 'Early Reflections', 'Sound Power'])
     ).encode(
         x=xaxis, y=yaxis, color=color, 
         opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
         tooltip=['Measurements', 'Freq', 'dB']
-    ) # .transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
+    )
     
     di=alt.Chart(dfu).mark_line().transform_filter(
-        alt.FieldOneOfPredicate(
-            field='Measurements',
-            oneOf=['Early Reflections DI', 'Sound Power DI'])
+        alt.FieldOneOfPredicate(field='Measurements', oneOf=['Early Reflections DI', 'Sound Power DI'])
     ).encode(x=xaxis, y=di_yaxis, color=color, opacity=opacity)
 
     circle_di = alt.Chart(dfu).mark_circle(size=100).transform_filter(
-        alt.FieldOneOfPredicate(
-            field='Measurements',
-            oneOf=['Early Reflections DI', 'Sound Power DI'])
+        alt.FieldOneOfPredicate(field='Measurements', oneOf=['Early Reflections DI', 'Sound Power DI'])
     ).encode(
         x=xaxis, y=di_yaxis, color=color, 
         opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
         tooltip=['Measurements', 'Freq', 'dB']
-    ) # .transform_calculate(Freq=f'format(datum.Freq, ".0f")', dB=f'format(datum.dB, ".1f")')    
+    )
     
-
     # assemble elements together
-    spin = alt.layer(circle+line, circle_di+di).resolve_scale(y='independent'
-    ).add_selection(
-        selectorsMeasurements
-    ).add_selection(
-        scales
-    ).add_selection(
-        nearest
-    ).properties(
-        width=graph_params['width'],
-        height=graph_params['height']
-    ).interactive()
+    spin = alt.layer(circle+line, circle_di+di
+    ).resolve_scale(y='independent'
+    ).add_selection(selectorsMeasurements).add_selection(scales).add_selection(nearest
+    ).properties(width=graph_params['width'], height=graph_params['height'])
+    
     return spin
 
-# explicitly set ticks for X and Y axis
-xTicks = [i*10 for i in range(2,10)] + [i*100 for i in range(1,10)] + [i*1000 for i in range(1, 21)]
-yTicks = [-180+10*i for i in range(0,37)]
+
+def graph_empty(freq_min, freq_max, angle_min, angle_max):
+    # empty graph but with axis
+    empty = pd.DataFrame({'Freq', 'Angle'})
+    isoTicks = [-180+30*i for i in range(0,13)]
+    return alt.Chart(empty).mark_point(clip=True).encode(
+        x=alt.X('x:Q', scale=alt.Scale(type='log', nice=False, domain=[freq_min, freq_max]), title='Frequency (Hz)'),
+        y=alt.Y('y:Q', scale=alt.Scale(nice=False, domain=[angle_min, angle_max]), axis=alt.Axis(format='.0d', values=isoTicks, title='Angle')), 
+    )
+
 
 def graph_contour_common(af, am, az, graph_params):
     try:
@@ -217,30 +216,11 @@ def graph_contour_common(af, am, az, graph_params):
         chart = chart.transform_filter(
             'datum.Freq>400'
         ).encode(
-            alt.X('Freq:O', 
-                  scale=alt.Scale(type="log", base=10, nice=True),
-                  axis=alt.Axis(
-                      format='.0s',
-                      labelAngle=0,
-                      values=xTicks,
-                      title='Freq (Hz)',
-                      labelExpr="datum.value % 100 ? null : datum.label")),
-            alt.Y('Angle:O',
-                  axis=alt.Axis(
-                      format='.0d',
-                      title='Angle',
-                      values=yTicks,
-                    labelExpr="datum.value % 30 ? null : datum.label"),
-                  sort=None),
-            alt.Color('dB:Q',
-                      scale=alt.Scale(scheme=colormap,
-                                      domain=speaker_scale,
-                                      nice=True))
-        ).properties(
-            width=width,
-            height=height
+            alt.X('Freq:O', axis=None),
+            alt.Y('Angle:O', axis=None, sort=None),
+            alt.Color('dB:Q', scale=alt.Scale(scheme=colormap, domain=speaker_scale, nice=True))
         )
-        return chart
+        return (chart+graph_empty(400, 20000, -180, 180)).properties(width=width, height=height)
     except KeyError as ke:
         logging.warning('Failed with {0}'.format(ke))
         return None
@@ -252,6 +232,45 @@ def graph_contour(df, graph_params):
         logging.error('contour is None')
         return None
     return graph_contour_common(af, am, az, graph_params)
+
+
+def graph_isoband(df, isoband_params):
+    af, am, az = compute_contour(df.loc[df.Freq>isoband_params['xmin']])
+    if af is None or am is None or az is None:
+        logging.error('contour is None')
+        return None
+
+    graph_width = isoband_params['width']
+    graph_height = isoband_params['height']
+    if 'bands' in isoband_params:
+        bands = isoband_params['bands']
+    else:
+        bands = isoband_params_default['bands']
+    freq_min = isoband_params['xmin']
+    freq_max = isoband_params['xmax']
+
+    logging.debug('w {0} h {1} fq=[{2},{3}]'.format(graph_width, graph_height, freq_min, freq_max))
+
+    def transform_log(x):
+        return 6*np.log10(x)*graph_width/800
+
+    def transform_radian(x):
+       return 1.325*x/180*math.pi*graph_height/360
+
+    df_iso = find_isobands(af, am, az.T, bands, transform_log, transform_radian)
+    color_legend = ['[{0}, {1}]'.format(bands[i], bands[i+1]) for i in range(0, len(bands)-1)] + ['>{0}'.format(bands[-1])]
+    color_range = ['black', 'blue', 'steelblue', 'green', 'yellow', 'orange', 'red', 'white']
+
+    isobands = alt.Chart(alt.Data(values=df_iso['features'])).mark_geoshape(
+        stroke='red',
+        strokeWidth=0
+    ).encode(
+        alt.Color('properties.z_low:O', 
+                  scale=alt.Scale(domain=bands, range=color_range), 
+                  legend=alt.Legend(title='Relative dB SPL'))
+    ).project('identity')
+    axis = graph_empty(freq_min, freq_max, -180, 180)
+    return (isobands+axis).properties(width=graph_width, height=graph_height)
 
 
 def graph_contour_smoothed(df, graph_params):
@@ -353,14 +372,21 @@ def graph_directivity_matrix(dfu, graph_params):
     
     source = pd.DataFrame({'x': x.ravel(), 'y': y.ravel(),'z': z.melt().value})
 
-    return alt.Chart(source).mark_rect(
+    matrix= alt.Chart(source
+    ).transform_filter(
+            'datum.x>=500 & datum.y>=500'
+    ).mark_rect(
     ).encode(
-        x=alt.X('x:O', scale=alt.Scale(type='log')),
-        y=alt.Y('y:O', scale=alt.Scale(type='log')),
+        x=alt.X('x:O', axis=None),
+        y=alt.Y('y:O', axis=None),
         color=alt.Color('z:Q', scale=alt.Scale(scheme='spectral', nice=True))
-    ).properties(
-        width=800,
-        height=800)
+    )
+    empty = pd.DataFrame({'Freq', 'Angle'})
+    axis = alt.Chart(empty).mark_point(clip=True).encode(
+        x=alt.X('x:Q', scale=alt.Scale(type='log', nice=False, domain=[500, 20000]), title='Frequency (Hz)'),
+        y=alt.Y('y:Q', scale=alt.Scale(type='log', nice=False, domain=[500, 20000]), title='Frequency (Hz)'),
+    )
+    return (matrix+axis).properties(width=800, height=800)
 
 
 def build_selections(df, speaker1, speaker2):
@@ -446,11 +472,11 @@ def graph_compare_cea2034(df, graph_params, speaker1, speaker2):
     line1 = spin_full.add_selection(selection1).transform_filter(selection1)
     line2 = spin_dash.add_selection(selection2).transform_filter(selection2)
 
-    points = line.mark_point().encode(opacity=alt.condition(nearest, alt.value(1), alt.value(0)))                                                   \
+    points = line.mark_point().encode(opacity=alt.condition(nearest, alt.value(1), alt.value(0)))
+    rules = alt.Chart(df).mark_rule(color='gray').encode(x='Freq:Q').transform_filter(nearest)
 
-    rules = alt.Chart(df).mark_rule(color='gray').encode(x='Freq:Q').transform_filter(nearest)                                                      \
-                                                                                                                                                      
-    layers = alt.layer(line2,line1, rules).add_selection(
+    layers = alt.layer(line2, line1, rules
+    ).add_selection(
         selectorsMeasurements
     ).add_selection(
         scales
@@ -460,24 +486,45 @@ def graph_compare_cea2034(df, graph_params, speaker1, speaker2):
     return layers
 
 
-def graph_regression_graph(graph, freq_start, freq_end):
-    reg = graph.transform_filter(
-        'datum.Freq>{0} & datum.Freq<{1}'.format(freq_start, freq_end)
-    ).transform_regression(
-        method='log',
-        on='Freq',
-        regression='dB',
-        extent=[20,20000]
-    ).encode(
-        alt.X('Freq:Q'),
-        alt.Y('dB:Q'),
-        color=alt.value('red')
-    )
-    return reg
+def graph_regression_graph(graph, freq_start, freq_end, withBands=True):
+
+    # regression line
+    reg = graph.transform_filter('datum.Freq>{0} & datum.Freq<{1}'.format(freq_start, freq_end)
+    ).transform_regression(method='log', on='Freq', regression='dB', extent=[20,20000])
+
+    if withBands:
+        # +/- 3dB
+        reg3 = reg.transform_calculate(dBm3=alt.datum.dB-3).transform_calculate(dBp3=alt.datum.dB+3).transform_calculate(text='"Band ±3dB"')
+
+        # +/- 1.5dB
+        reg1 = reg.transform_calculate(dBm1=alt.datum.dB-1.5).transform_calculate(dBp1=alt.datum.dB+1.5).transform_calculate(text='"Band ±1.5dB"')
+
+        # band at +/- 3dB
+        err3 = reg3.mark_area(opacity=0.06).encode(
+            x=alt.X('Freq:Q'),
+            y=alt.Y('dBm3:Q'),
+            y2=alt.Y2('dBp3:Q'))
+
+        # band at +/- 1.5dB
+        err1 = reg1.mark_area(opacity=0.12).encode(x=alt.X('Freq:Q'), y=alt.Y('dBm1:Q'), y2=alt.Y2('dBp1:Q'))
+
+    # line
+    line = reg.transform_calculate(text='"Linear Regression"').mark_line(color='firebrick').encode(
+        x=alt.X('Freq:Q'),
+        y=alt.Y('dB:Q', axis=alt.Axis(title='dB (normalized)')),
+        color=alt.Color(
+            'text:O',
+            scale=alt.Scale(domain=['Linear Regression', 'Band ±3dB', 'Band ±1.5dB'], range=['firebrick', 'blue', 'blue']),
+            legend=alt.Legend(title='Regression')))
+
+    if withBands:
+        return (err3+err1+line)
+    else:
+        return line
 
 
 def graph_regression(source, freq_start, freq_end):
-    return graph_regression_graph(alt.Chart(source), freq_start, freq_end).mark_line()
+    return graph_regression_graph(alt.Chart(source), freq_start, freq_end)
 
 
 def graph_compare_freq_regression(df, graph_params, speaker1, speaker2):
@@ -501,14 +548,15 @@ def graph_compare_freq_regression(df, graph_params, speaker1, speaker2):
     line1 = line.transform_filter(selection1)
     line2 = line.transform_filter(selection2)
 
-    reg1 = graph_regression_graph(line1, 80, 10000).mark_line()
-    reg2 = graph_regression_graph(line2, 80, 10000).mark_line(strokeDash=[4,2])
+    reg1 = graph_regression_graph(line1, 80, 10000, False)
+    reg2 = graph_regression_graph(line2, 80, 10000, False)
 
     graph1 = line1.mark_line().add_selection(selection1)
     graph2 = line2.mark_line(strokeDash=[4,2]).add_selection(selection2)
 
     return alt.layer(
-        graph2, reg2, graph1, reg1, rules
+        graph2+reg2, graph1+reg1, rules
+    ).resolve_scale(y='independent'
     ).add_selection(
         selectorsMeasurements
     ).add_selection(
@@ -516,3 +564,29 @@ def graph_compare_freq_regression(df, graph_params, speaker1, speaker2):
     ).add_selection(
         nearest
     ).interactive()
+
+
+def graph_summary(speaker_name, speaker_summary, params):
+    #  Title
+    #                Score
+    #  mean 300-10kHz
+    #  -3dB          lfx
+    #  -6dB          lfq
+    # +/- nDB        nbd_on
+    #                nbd_pir
+    #                sm_pir
+    # --------------------------
+    pointsX = np.array([0.0, 0.0, 0.05, 0.0, 0.0, 0.0,
+                        0.5, 0.5, 0.55, 0.55, 0.5, 0.55, 0.55, 0.5, 0.55])
+    pointsY = np.array([1.9, 1.6, 1.4,  1.2, 1.0, 0.8,
+                        1.9, 1.6, 1.4, 1.2, 1.0, 0.8, 0.6, 0.4, 0.2])-0.6
+    logging.debug('sizes X={0} Y={1} summary={2}'.format(len(pointsX), len(pointsY), len(speaker_summary)))
+    source = pd.DataFrame({'x': pointsX, 'y': pointsY, 'summary': speaker_summary})
+    return alt.Chart(source).mark_text(
+        align='left',
+        dx=0
+    ).encode(
+        x=alt.X('x', title='', scale=alt.Scale(domain=[0,1]), axis=None),
+        y=alt.Y('y', title='', axis=None),
+        text='summary:N'
+    )

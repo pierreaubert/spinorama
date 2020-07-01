@@ -7,6 +7,7 @@ from ..cea2034 import early_reflections, vertical_reflections, horizontal_reflec
      compute_cea2034, compute_onaxis, estimated_inroom_HV
 from . import graph_melt
 
+
 def parse_graph_freq_princeton_mat(mat, suffix):
     """ Suffix can be either H or V """
     ir_name = 'IR_{:1s}'.format(suffix)

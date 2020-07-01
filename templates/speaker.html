@@ -8,6 +8,9 @@
     def unmeltC(text):
         return text.replace('_unmelted', ' Contour')
 
+    def unmeltI(text):
+        return text.replace('_unmelted', ' IsoBand')
+
     def unmeltR(text):
         return text.replace('_unmelted', ' Radar')
 %>  
@@ -40,6 +43,14 @@
       </a>
     </div>
     <li>${radar | unmeltR }</li>
+    % endfor
+    % for isoband in g_isoband:
+    <div>
+      <a href="default/${isoband | unmeltI, space2url}.html">
+	<img class="graph" src="default/${isoband | unmeltI, space2url}.jpg"/>
+      </a>
+    </div>
+    <li>${isoband | unmeltI }</li>
     % endfor
     % for directivity in g_directivity:
     <div>

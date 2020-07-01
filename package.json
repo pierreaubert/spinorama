@@ -14,8 +14,8 @@
     "exorcist": "^1.0.1",
     "gulp": "^4.0.2",
     "jslint": "^0.12.1",
-    "vega-cli": "^5.12.0",
-    "vega-lite": "^4.12.1"
+    "vega-cli": "^5.13.0",
+    "vega-lite": "^4.13.1"
   },
   "devDependencies": {
     "gulp-minify": "^3.1.0"

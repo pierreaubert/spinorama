@@ -69,6 +69,8 @@ def add_estimates(df):
     """""Compute some values per speaker and add them to metadata """
     min_pref_score = +100
     max_pref_score = -100
+    min_pref_score_wsub = +100
+    max_pref_score_wsub = -100
     min_lfx_hz = 1000
     max_lfx_hz = 0
     min_nbd_on = 1
@@ -108,9 +110,9 @@ def add_estimates(df):
                 if 'estimates' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
                     metadata.speakers_info[speaker_name]['estimates'] = est
 
-                if origin == 'Princeton':
-                    # this measurements are only valid above 500hz
-                    continue
+                #if origin == 'Princeton':
+                #    # this measurements are only valid above 500hz
+                #    continue
 
                 # from Olive&all paper
                 if 'Estimated In-Room Response' not in dfs.keys():
@@ -124,20 +126,27 @@ def add_estimates(df):
                 if pref_rating is None:
                     continue
                 logging.info('Adding {0}'.format(pref_rating))
-                metadata.speakers_info[speaker_name]['pref_rating'] = pref_rating
                 # compute min and max for each value
                 min_flatness = min(est[3], min_flatness)
                 max_flatness = max(est[3], max_flatness)
-                min_pref_score = min(min_pref_score, pref_rating['pref_score'])
-                max_pref_score = max(max_pref_score, pref_rating['pref_score'])
-                min_lfx_hz = min(min_lfx_hz, pref_rating['lfx_hz'])
-                max_lfx_hz = max(max_lfx_hz, pref_rating['lfx_hz'])
+                min_pref_score_wsub = min(min_pref_score_wsub, pref_rating['pref_score_wsub'])
+                max_pref_score_wsub = max(max_pref_score_wsub, pref_rating['pref_score_wsub'])
                 min_nbd_on = min(min_nbd_on, pref_rating['nbd_on_axis'])
                 max_nbd_on = max(max_nbd_on, pref_rating['nbd_on_axis'])
                 min_sm_sp = min(min_nbd_on, pref_rating['sm_sound_power'])
                 max_sm_sp = max(max_nbd_on, pref_rating['sm_sound_power'])
                 min_sm_pir = min(min_nbd_on, pref_rating['sm_pred_in_room'])
                 max_sm_pir = max(max_nbd_on, pref_rating['sm_pred_in_room'])
+                # if datas have low freq:
+                if 'pref_score' in pref_rating:
+                    min_pref_score = min(min_pref_score, pref_rating['pref_score'])
+                    max_pref_score = max(max_pref_score, pref_rating['pref_score'])
+                if 'lfx_hz' in pref_rating:
+                    min_lfx_hz = min(min_lfx_hz, pref_rating['lfx_hz'])
+                    max_lfx_hz = max(max_lfx_hz, pref_rating['lfx_hz'])
+                if 'pref_rating' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
+                    metadata.speakers_info[speaker_name]['pref_rating'] = pref_rating
+
 
     # if we are looking only after 1 speaker, return
     if len(df.items()) == 1:
@@ -162,12 +171,17 @@ def add_estimates(df):
                 logging.debug('Compute relative score for speaker {0}'.format(speaker_name))
                 # get values
                 pref_rating = metadata.speakers_info[speaker_name]['pref_rating']
-                pref_score = pref_rating['pref_score']
-                lfx_hz = pref_rating['lfx_hz']
+                pref_score_wsub = pref_rating['pref_score_wsub']
                 nbd_on = pref_rating['nbd_on_axis']
                 sm_sp = pref_rating['sm_sound_power']
                 sm_pir = pref_rating['sm_pred_in_room']
                 flatness = metadata.speakers_info[speaker_name]['estimates'][3]
+                pref_score = -1
+                lfx_hz = -1
+                if 'pref_score' in pref_rating:
+                    pref_score = pref_rating['pref_score']
+                if 'lfx_hz' in pref_rating:
+                    lfx_hz = pref_rating['lfx_hz']
 
                 # normalize min and max
                 def percent(val, vmin, vmax):
@@ -175,25 +189,29 @@ def add_estimates(df):
                         logging.debug('max == min')
                     return math.floor(100*(val-vmin)/(vmax-vmin))
 
-                scaled_pref_score = percent(pref_score, min_pref_score, max_pref_score)
-                # lower is better
-                scaled_lfx_hz = 100-percent(lfx_hz, min_lfx_hz, max_lfx_hz)
+                scaled_pref_score_wsub = percent(pref_score_wsub, min_pref_score_wsub, max_pref_score_wsub)
+                if 'pref_score'in pref_rating:
+                    scaled_pref_score = percent(pref_score, min_pref_score, max_pref_score)
+                    scaled_lfx_hz = 100-percent(lfx_hz, min_lfx_hz, max_lfx_hz)
                 scaled_nbd_on = 100-percent(nbd_on, min_nbd_on, max_nbd_on)
                 scaled_flatness = 100-percent(flatness, min_flatness, max_flatness)
-                # higher is better
                 scaled_sm_sp = percent(sm_sp, min_sm_sp, max_sm_sp)
                 scaled_sm_pir = percent(sm_pir, min_sm_pir, max_sm_pir)
                 # add normalized values
                 scaled_pref_rating = {
-                    'scaled_pref_score': scaled_pref_score,
-                    'scaled_lfx_hz': scaled_lfx_hz,
+                    'scaled_pref_score_wsub': scaled_pref_score_wsub,
                     'scaled_nbd_on_axis': scaled_nbd_on,
                     'scaled_flatness': scaled_flatness,
                     'scaled_sm_sound_power': scaled_sm_sp,
                     'scaled_sm_pred_in_room': scaled_sm_pir,
-                    }
+                }
+                if 'pref_score'in pref_rating:
+                    scaled_pref_rating['scaled_pref_score'] = scaled_pref_score
+                if 'lfx_hz' in pref_rating:
+                    scaled_pref_rating['scaled_lfx_hz'] = scaled_lfx_hz
                 logging.info('Adding {0}'.format(scaled_pref_rating))
-                metadata.speakers_info[speaker_name]['scaled_pref_rating'] = scaled_pref_rating
+                if 'scaled_pref_rating' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
+                    metadata.speakers_info[speaker_name]['scaled_pref_rating'] = scaled_pref_rating
 
 
 def dump_metadata(meta):

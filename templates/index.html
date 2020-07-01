@@ -55,18 +55,29 @@
 	    </p>
 	    % if 'pref_rating' in meta[speaker_name]:
 	    <p class="card-header-title">
-	      (${meta[speaker_name]['pref_rating']['pref_score']})&nbsp;
-	      ${meta[speaker_name]['scaled_pref_rating']['scaled_pref_score']}/100
+	      % if 'pref_score' in meta[speaker_name]['pref_rating']:
+	        (${meta[speaker_name]['pref_rating']['pref_score']})
+  	      % endif
+	      &nbsp;
+      	      % if 'scaled_pref_score' in meta[speaker_name]['scaled_pref_rating']:
+  	        ${meta[speaker_name]['scaled_pref_rating']['scaled_pref_score']}/100
+  	      % endif
 	    </p>
 	    % endif
 	  </header>
 	  <div class="card-content">
 	    <div class="content is-small">
               % if 'pref_rating' in meta[speaker_name]:
-  	      <p>Bass extension: <b>${meta[speaker_name]['pref_rating']['lfx_hz']}</b>Hz at -6dB</p>
-  	      <progress class="progress is-small is-info"
+  	      <p>Bass extension: <b>
+		  % if 'lfx_hz' in meta[speaker_name]['pref_rating']:
+		  ${meta[speaker_name]['pref_rating']['lfx_hz']}
+		  % endif
+	      </b>Hz at -6dB</p>
+               % if 'scaled_lfx_hz' in meta[speaker_name]['scaled_pref_rating']:
+    	      <progress class="progress is-small is-info"
 			value="${meta[speaker_name]['scaled_pref_rating']['scaled_lfx_hz']}"
 			max="100"></progress>
+	      % endif
 	      <p>Flatness: <b>&plusmn;${meta[speaker_name]['estimates'][3]}</b>dB ~ 100-10kHz</p>
 	      <progress class="progress is-small is-success"
 			value="${meta[speaker_name]['scaled_pref_rating']['scaled_flatness']}"

@@ -1,12 +1,16 @@
 import logging
+import math
 import altair as alt
 import pandas as pd
+import datas.metadata as metadata
 from .normalize import resample
+from .estimates import estimates
+from .scores import speaker_pref_rating
 from .graph import graph_freq, graph_contour_smoothed, graph_radar, graph_spinorama,\
     graph_params_default, contour_params_default, radar_params_default, \
     graph_contour, graph_directivity_matrix,\
     graph_compare_freq, graph_compare_cea2034, graph_compare_freq_regression, \
-    graph_regression
+    graph_regression, graph_isoband, isoband_params_default, graph_summary
 
 
 alt.data_transformers.disable_max_rows()
@@ -124,15 +128,15 @@ def display_onaxis(df, graph_params=graph_params_default):
         onaxis = None
         if 'CEA2034' in df.keys():
             onaxis = df['CEA2034']
+            onaxis = onaxis.loc[onaxis['Measurements'] == 'On Axis']
         elif 'On Axis' in df.keys():
             onaxis = df['On Axis']
         else:
             return None
        
-        onaxis = onaxis.loc[onaxis['Measurements'] == 'On Axis']
         onaxis_graph = graph_freq(onaxis, graph_params)
         onaxis_reg = graph_regression(onaxis, 80, 10000)
-        return onaxis_graph + onaxis_reg
+        return (onaxis_reg +  onaxis_graph).resolve_scale(color='independent')
     except KeyError as ke:
         logging.warning('Display On Axis failed with {0}'.format(ke))
         return None
@@ -148,7 +152,7 @@ def display_inroom(df, graph_params=graph_params_default):
         inroom = df['Estimated In-Room Response']
         inroom_graph = graph_freq(inroom, graph_params)
         inroom_reg = graph_regression(inroom, 80, 10000)
-        return inroom_graph + inroom_reg
+        return (inroom_reg + inroom_graph).resolve_scale(color='independent')
     except KeyError as ke:
         logging.warning('Display In Room failed with {0}'.format(ke))
         return None
@@ -209,7 +213,7 @@ def display_directivity_matrix(df, graph_params=graph_params_default):
     try:
         return graph_directivity_matrix(df, graph_params)
     except Exception as e:
-        logging.warning('Display directivity matrix failed with {0}'.format(e))
+        logging.info('Display directivity matrix failed with {0}'.format(e))
         return None
 
 
@@ -246,3 +250,109 @@ def display_compare(df, graph_filter, graph_params=graph_params_default):
     except ValueError as e:
         logging.warning('failed for {0} with {1}'.format(graph_filter, e))
         return None
+
+
+
+def display_isoband_horizontal(df, graph_params=isoband_params_default):
+    try:
+        if 'SPL Horizontal_unmelted' not in df.keys():
+            return None
+        dfs = df['SPL Horizontal_unmelted']
+        dfs = resample(dfs, 400)
+        return graph_isoband(dfs, graph_params)
+    except KeyError as ke:
+        logging.warning('Display Isoband Horizontal failed with {0}'.format(ke))
+        return None
+
+
+def display_isoband_vertical(df, graph_params=isoband_params_default):
+    try:
+        if 'SPL Vertical_unmelted' not in df.keys():
+            return None
+        dfs = df['SPL Vertical_unmelted']
+        dfs = resample(dfs, 400)
+        return graph_isoband(dfs, graph_params)
+    except KeyError as ke:
+        logging.warning('Display Isoband Vertical failed with {0}'.format(ke))
+        return None
+
+
+def display_summary(df, params, speaker, origin, key):
+    try:
+        speaker_type = ''
+        speaker_shape = ''
+        if speaker in metadata.speakers_info.keys():
+            speaker_type  = metadata.speakers_info[speaker].get('type', '')
+            speaker_shape = metadata.speakers_info[speaker].get('shape', '')
+
+        if 'CEA2034' not in df.keys():
+            return None
+        spin = df['CEA2034']
+        onaxis = spin.loc[spin['Measurements'] == 'On Axis'].reset_index(drop=True)
+        est = estimates(onaxis)
+
+        # 1
+        speaker_summary = ['{0} {1}'.format(speaker_shape.capitalize(), speaker_type.capitalize())]
+
+        if est is None or math.isnan(est[0]) or math.isnan(est[1]) or math.isnan(est[2]) or math.isnan(est[3]):
+            #                    2   3   4   5   6
+            speaker_summary += ['', '', '', '', '']
+        else:
+            # 2', 3
+            if est[0] != -1:
+                speaker_summary += ['• Reference level {0} dB'.format(est[0]), '(mean over 300-10k Hz)']
+            else:
+                speaker_summary += ['', '']
+
+            # 4
+            if est[1] != -1:
+                speaker_summary += ['• -3dB at {0}Hz wrt Ref.'.format(est[1])]
+            else:
+                speaker_summary += ['']
+                
+            # 5
+            if est[2] != -1:
+                speaker_summary += ['• -6dB at {0}Hz wrt Ref.'.format(est[2])]
+            else:
+                speaker_summary += ['']
+
+            # 6
+            if est[3] != -1:
+                speaker_summary += ['• +/-{0}dB wrt Ref.'.format(est[3])]
+            else:
+                speaker_summary += ['']
+
+        pref_score = None
+        if 'Estimated In-Room Response' in df.keys():
+            inroom = df['Estimated In-Room Response']
+            if inroom is not None:
+                pref_score = speaker_pref_rating(spin, inroom)
+
+        # 7-15
+        if pref_score is not None:
+            speaker_summary += [
+             'Preference score: {0}'.format(pref_score.get('pref_score', '--')),
+             '• Low Frequency:',
+             '  • Extension: {0} Hz'.format(pref_score.get('lfx_hz', '--')),
+             '  • Quality : {0}'.format(pref_score.get('lfq', '--')),
+             '• Narrow Bandwidth Deviation',
+             '  • On Axis: {0}'.format(pref_score.get('nbd_on_axis', '--')),
+             '  • Predicted In-Room: {0}'.format(pref_score.get('nbd_pred_in_room', '--')),
+             '• SM Deviation:',
+             '  • Predicted In-Room: {0}'.format(pref_score.get('sm_pred_in_room', '--')),
+            ]
+        else:
+            #                    7   8   9  10  11  12, 13, 14, 15
+            speaker_summary += ['', '', '', '', '', '', '', '', '']
+
+        if len(speaker_summary) != 15:
+            logging.error('speaker summary lenght is incorrect {0}'.format(speaker_summary))
+            
+        return graph_summary(speaker, speaker_summary, params)
+    except KeyError as ke:
+        logging.warning('Display Summary failed with {0}'.format(ke))
+        return None
+    
+
+
+    

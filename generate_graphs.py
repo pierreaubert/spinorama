@@ -33,6 +33,7 @@ Options:
   --only-compare=<compare> if true then skip graphs generation and only dump compare data
 """
 import logging
+import sys
 import datas.metadata as metadata
 from docopt import docopt
 from src.spinorama.load.parse import parse_all_speakers, parse_graphs_speaker
@@ -104,7 +105,15 @@ if __name__ == '__main__':
             mformat = 'klippel'
         else:
             # need to get this information from meta
-            mformat = metadata.speakers_info[speaker]['measurements'][0]['format']
+            mformat = None
+            for m in range(0, len(metadata.speakers_info[speaker]['measurements'])):
+                measurement = metadata.speakers_info[speaker]['measurements'][m]
+                if measurement['origin'] == origin:
+                    mformat = measurement['format']
+                    logging.debug('found mformat {0} in metadata'.format(mformat))
+            if mformat is None:
+                logging.fatal('Origin {0} is not our metadata'.format(origin))
+                sys.exit(1)
         brand = metadata.speakers_info[speaker]['brand']
         df = {}
         df[speaker] = {}
@@ -123,3 +132,6 @@ if __name__ == '__main__':
 
     if args['--speaker'] is None and args['--origin'] is None:
         generate_compare(df, width, height, force, ptype=ptype)
+
+    sys.exit(0)
+        

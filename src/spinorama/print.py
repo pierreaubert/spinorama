@@ -9,6 +9,7 @@ from .display import display_spinorama, display_onaxis, display_inroom, \
     display_spl_horizontal, display_spl_vertical, \
     display_contour_horizontal, display_contour_vertical, \
     display_contour_smoothed_horizontal, display_contour_smoothed_vertical, \
+    display_isoband_horizontal, display_isoband_vertical, \
     display_radar_horizontal, display_radar_vertical, display_directivity_matrix, \
     display_compare
 from .views import template_compact, template_panorama
@@ -19,7 +20,6 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
     updated = 0
     if chart is not None:
         filedir = 'docs/' + speaker + '/' + origin.replace('Vendors/','') + '/' + key
-        logging.debug('print_graph: write to directory {0}'.format(filedir))
         pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
         for ext in ['json', 'png']: # svg and html skipped to keep size small
             # skip the 2cols.json and 3cols.json as they are really large
@@ -95,6 +95,18 @@ def print_graphs(df: pd.DataFrame,
     graphs['SPL Horizontal Contour'] = display_contour_horizontal(df, params)
     graphs['SPL Vertical Contour'] = display_contour_vertical(df, params)
 
+    # compute isoband
+    isoband_params = {
+        'xmin': 100,
+        'xmax': 20000,
+        'width': width,
+        'height': height,
+        'bands': [-72, -18, -15, -12, -9, -6, -3, +3],
+    }
+
+    graphs['SPL Horizontal IsoBand'] = display_isoband_horizontal(df, isoband_params)
+    graphs['SPL Vertical IsoBand'] = display_isoband_vertical(df, isoband_params)
+
     # better square
     params = copy.deepcopy(radar_params_default)
     size = min(width, height)
@@ -133,11 +145,11 @@ def print_graphs(df: pd.DataFrame,
     params['xmax'] = origins_info[origin]['max hz']
     params['ymin'] = origins_info[origin]['min dB']
     params['ymax'] = origins_info[origin]['max dB']
-    graphs['2cols'] = template_compact(df, params)
+    graphs['2cols'] = template_compact(df, params, speaker, origin, key)
     # 4k screen
     params['width'] = 4096
     params['height'] = 1200
-    graphs['3cols'] = template_panorama(df, params)
+    graphs['3cols'] = template_panorama(df, params, speaker, origin, key)
 
     updated = 0
     for (title, graph) in graphs.items():

@@ -10,52 +10,52 @@ import pandas as pd
 sp_weigths = {
     'On Axis': 0.000604486,
        '180°': 0.000604486,
-    #                                                                                                                                                    
+    #
     '10°':   0.004730189,
     '170°':  0.004730189,
     '-170°': 0.004730189,
     '-10°':  0.004730189,
-    #                                                                                                                                                    
+    #
     '20°':   0.008955027,
     '160°':  0.008955027,
     '-160°': 0.008955027,
     '-20°':  0.008955027,
-    #                                                                                                                                                    
+    #
     '30°':   0.012387354,
     '150°':  0.012387354,
     '-150°': 0.012387354,
     '-30°':  0.012387354,
-    #                                                                                                                                                    
+    #
     '40°':   0.014989611,
     '140°':  0.014989611,
     '-140°': 0.014989611,
     '-40°':  0.014989611,
-    #                                                                                                                                                    
+    #
     '50°':   0.016868154,
     '130°':  0.016868154,
     '-130°': 0.016868154,
     '-50°':  0.016868154,
-    #                                                                                                                                                    
+    #
     '60°':   0.018165962,
     '120°':  0.018165962,
     '-120°': 0.018165962,
     '-60°':  0.018165962,
-    #                                                                                                                                                    
+    #
     '70°':   0.019006744,
     '110°':  0.019006744,
     '-110°': 0.019006744,
     '-70°':  0.019006744,
-    #                                                                                                                                                    
+    #
     '80°':   0.019477787,
     '100°':  0.019477787,
     '-100°': 0.019477787,
     '-80°':  0.019477787,
-    #                                                                                                                                                    
+    #
     '90°':   0.019629373,
     '-90°':  0.019629373,
 }
 
-# same weigths with mutiples keys, this helps when merging dataframes
+# same weigths with multiples keys, this helps when merging dataframes
 sp_weigths_hv = {}
 for k,v in sp_weigths.items():
     sp_weigths_hv[k] = v
@@ -69,14 +69,15 @@ def spl2pressure(spl: float) -> float:
         p = pow(10, (spl-105.0)/20.0)
         return p
     except TypeError as e:
-        print('spl={0} e={1}'.format(spl, e))
-        logging.error('spl={0} e={1}'.format(spl, e))
+        print('spl2pressure: spl={0} e={1}'.format(spl, e))
+        logging.error('spl2pressure spl={0} e={1}'.format(spl, e))
 
 
 def pressure2spl(p: float) -> float:
     # convert pressure back to SPL
     if p<0.0:
-        print('pressure is negative')
+        print('pressure is negative p={0}'.format(p))
+        logging.error('pressure is negative p={0}'.format(p))
     return 105.0+20.0*log10(p)
 
 
@@ -94,6 +95,7 @@ def column_valid(c):
     elif int(column_trim(c)[:-1]) % 10 == 0:
         return True
     return False
+
 
 def spatial_average(sp_window, func='rms'):
     sp_cols = sp_window.columns
