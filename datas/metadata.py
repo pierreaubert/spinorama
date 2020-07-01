@@ -1028,6 +1028,19 @@ speakers_info = {
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/pioneer-elite-sp-ec73-center-speaker-review.12197/',
         }],
     },
+    'PMC Twenty 21': {
+        'brand': 'PMC',
+        'model': 'Twenty 21',
+        'type': 'passive',
+        'price': '2000',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/pmc-twenty-21-bookshelf-speaker-review.14442/',
+        }],
+    },
     'Polk Audio RT15i': {
         'brand': 'Polk Audio',
         'model': 'RT15i',
@@ -1518,6 +1531,15 @@ origins_info = {
         'logo': 'docs/metadata/pioneer.png',
         'logo-small': 'docs/metadata/pioneer.png',
         'url': 'https://www.pioneer.com',
+    },
+    'Vendors/PMC': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': -40,
+        'max dB': 10,
+        'logo': 'docs/metadata/pmc.png',
+        'logo-small': 'docs/metadata/pmc.png',
+        'url': 'https://www.pmc-speakers.com/',
     },
     'Vendors/Polk Audio': {
         'min hz': 20,
