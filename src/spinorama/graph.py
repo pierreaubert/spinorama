@@ -475,7 +475,8 @@ def graph_compare_cea2034(df, graph_params, speaker1, speaker2):
     points = line.mark_point().encode(opacity=alt.condition(nearest, alt.value(1), alt.value(0)))
     rules = alt.Chart(df).mark_rule(color='gray').encode(x='Freq:Q').transform_filter(nearest)
 
-    layers = alt.layer(line2,line1, rules).add_selection(
+    layers = alt.layer(line2, line1, rules
+    ).add_selection(
         selectorsMeasurements
     ).add_selection(
         scales
@@ -554,7 +555,8 @@ def graph_compare_freq_regression(df, graph_params, speaker1, speaker2):
     graph2 = line2.mark_line(strokeDash=[4,2]).add_selection(selection2)
 
     return alt.layer(
-        graph2, reg2, graph1, reg1, rules
+        graph2+reg2, graph1+reg1, rules
+    ).resolve_scale(y='independent'
     ).add_selection(
         selectorsMeasurements
     ).add_selection(
