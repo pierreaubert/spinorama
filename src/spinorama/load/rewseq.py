@@ -46,7 +46,7 @@ def parse_eq_iir_rews(filename, srate):
                         logging.warning('kind {0} is unknown'.format(kind))
 
     except FileNotFoundError:
-        logging.error('Loading filter failed file {0} not found'.format(filenaeme))
+        logging.error('Loading filter failed file {0} not found'.format(filename))
     return peq
         
     
