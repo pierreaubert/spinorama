@@ -144,7 +144,8 @@ def add_estimates(df):
                 if 'lfx_hz' in pref_rating:
                     min_lfx_hz = min(min_lfx_hz, pref_rating['lfx_hz'])
                     max_lfx_hz = max(max_lfx_hz, pref_rating['lfx_hz'])
-                metadata.speakers_info[speaker_name]['pref_rating'] = pref_rating
+                if 'pref_rating' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
+                    metadata.speakers_info[speaker_name]['pref_rating'] = pref_rating
 
 
     # if we are looking only after 1 speaker, return
@@ -209,7 +210,8 @@ def add_estimates(df):
                 if 'lfx_hz' in pref_rating:
                     scaled_pref_rating['scaled_lfx_hz'] = scaled_lfx_hz
                 logging.info('Adding {0}'.format(scaled_pref_rating))
-                metadata.speakers_info[speaker_name]['scaled_pref_rating'] = scaled_pref_rating
+                if 'scaled_pref_rating' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
+                    metadata.speakers_info[speaker_name]['scaled_pref_rating'] = scaled_pref_rating
 
 
 def dump_metadata(meta):
