@@ -55,6 +55,19 @@ speakers_info = {
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-2-speaker-review.11813/#post-341009',
         }],
     },
+    'ATC SCM19 v1': {
+        'brand': 'ATC',
+        'model': 'SCM19 v1',
+        'type': 'passive',
+        'price': '4000',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/atc-scm19-bookshelf-speaker-review.14519/',
+        }],
+    },
     'Audioengine A5+ Powered': {
         'brand': 'Audioengine',
         'model': 'A5+ Powered',
