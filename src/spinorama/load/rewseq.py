@@ -1,7 +1,7 @@
 import logging
 import numpy as np
 import pandas as pd
-from ..iir import Biquad
+from src.filters.iir import Biquad
 
 def parse_eq_iir_rews(filename, srate):
     peq = []
