@@ -3,6 +3,8 @@ import logging
 import math
 import numpy as np
 from scipy.stats import linregress
+from .load import graph_melt
+from .cea2034 import estimated_inroom_HV
 
 # https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
 def octave(N):
@@ -218,3 +220,9 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         return None
 
 
+def scores(df_speaker):
+    spin  = df_speaker['CEA2034_unmelted']
+    splH  = df_speaker['SPL Horizontal_unmelted']
+    splV  = df_speaker['SPL Vertical_unmelted']
+    pir   = estimated_inroom_HV(splH, splV)
+    return speaker_pref_rating(graph_melt(spin), graph_melt(pir))

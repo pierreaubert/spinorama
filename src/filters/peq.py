@@ -51,6 +51,10 @@ def peq_graph_measurements(spin, measurement, peq):
     )
 
 
+def peq_print(peq):
+    for i in range(0, len(peq)):
+        if peq[i][0] != 0:
+            print(peq[i][1])
 
 
     
