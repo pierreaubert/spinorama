@@ -1,16 +1,18 @@
+#                                                  -*- coding: utf-8 -*-
 import math
 import logging
 import numpy as np
 import pandas as pd
 import scipy.signal as sig
 import altair as alt
-from ..spinorama.load import graph_melt
-from ..spinorama.graph import graph_spinorama, graph_freq
-from ..spinorama.scores import speaker_pref_rating
-from ..spinorama.cea2034 import compute_cea2034, estimated_inroom_HV, spl2pressure, pressure2spl
-from ..spinorama.load.parse import normalize
-from .iir import Biquad
-from .peq import peq_build, peq_apply_measurements, peq_print
+
+from .load import graph_melt
+from .graph import graph_spinorama, graph_freq
+from .compute_scores import speaker_pref_rating
+from .compute_cea2034 import compute_cea2034, estimated_inroom_HV, spl2pressure, pressure2spl
+from .load_parse import normalize
+from .filter_iir import Biquad
+from .filter_peq import peq_build, peq_apply_measurements, peq_print
 
 
 def scores_apply_filter(splH, splV, peq):
@@ -44,7 +46,7 @@ def scores_print(score, score_filtered):
 
 
 def scores_loss(df_speaker, peq):
-    _, _, score_filtered = scores_appply_filter(df_speaker['SPL Horizontal_unmelted'], df_speaker['SPL Vertical_unmelted'], peq)
+    _, _, score_filtered = scores_apply_filter(df_speaker['SPL Horizontal_unmelted'], df_speaker['SPL Vertical_unmelted'], peq)
     # optimize max score is the same as optimize min -score
     return -score_filtered['pref_score']
 

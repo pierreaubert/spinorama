@@ -1,10 +1,11 @@
+#                                                  -*- coding: utf-8 -*-
 from more_itertools import consecutive_groups
 import logging
 import math
 import numpy as np
 from scipy.stats import linregress
 from .load import graph_melt
-from .cea2034 import estimated_inroom_HV
+from .compute_cea2034 import estimated_inroom_HV
 
 # https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
 def octave(N):
@@ -145,9 +146,6 @@ def sm(dfu):
     return r_value**2
                 
 
-def pref_rating_wsub(nbd_on, nbd_pir, sm_pir):
-    return 12.69-2.49*nbd_on-2.99*nbd_pir+2.32*sm_pir
-
 def pref_rating(nbd_on, nbd_pir, lfx, sm_pir):
     return 12.69-2.49*nbd_on-2.99*nbd_pir-4.31*lfx+2.32*sm_pir
 
@@ -176,7 +174,9 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         sm_pred_in_room = sm(df_pred_in_room)
         if nbd_on_axis is None or nbd_pred_in_room is None or sm_pred_in_room is None:
             return None
-        pref_wsub = pref_rating_wsub(nbd_on_axis, nbd_pred_in_room, sm_pred_in_room)
+        # 20hz see discussion
+        # https://www.audiosciencereview.com/forum/index.php?threads/master-preference-ratings-for-loudspeakers.11091/page-25#post-448733
+        pref_wsub = pref_rating(nbd_on_axis, nbd_pred_in_room, math.log10(20), sm_pred_in_room)
         if not skip_full:
             pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)
         if rounded:

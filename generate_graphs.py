@@ -36,20 +36,23 @@ import logging
 import sys
 import datas.metadata as metadata
 from docopt import docopt
-from src.spinorama.load.parse import parse_all_speakers, parse_graphs_speaker
-from src.spinorama.print import print_graphs, print_compare
+from src.spinorama.load_parse import parse_all_speakers, parse_graphs_speaker, parse_eq_speaker
+from src.spinorama.speaker_print import print_graphs, print_compare
 
 
 def generate_graphs(df, width, height, force, ptype):
     for speaker_name, speaker_data in df.items():
         for origin, dataframe in speaker_data.items():
-            key = 'default'
-            logging.debug('{:30s} {:20s} {:20s}'.format(speaker_name, origin, key))
-            dfs = df[speaker_name][origin][key]
-            updated = print_graphs(dfs,
-                                   speaker_name, origin, metadata.origins_info, key,
-                                   width, height, force, ptype)
-            print('{:30s} {:2d}'.format(speaker_name, updated))
+            for key in df[speaker_name][origin].keys():
+                logging.debug('{:30s} {:20s} {:20s}'.format(speaker_name, origin, key))
+                dfs_ref = df[speaker_name][origin][key]
+                key_eq = '{0}_eq'.format(key)
+                dfs_eq = df[speaker_name][origin].get(key_eq, None)
+                updated = print_graphs(dfs_ref,
+                                       dfs_eq,
+                                       speaker_name, origin, metadata.origins_info, key,
+                                       width, height, force, ptype)
+    print('{:30s} {:2d}'.format(speaker_name, updated))
 
 
 def generate_compare(df, width, height, force, ptype):
@@ -58,7 +61,7 @@ def generate_compare(df, width, height, force, ptype):
 
 if __name__ == '__main__':
     args = docopt(__doc__,
-                  version='generate_raphs.py version 1.18',
+                  version='generate_graphs.py version 1.19',
                   options_first=True)
 
     width = 1200
@@ -118,7 +121,11 @@ if __name__ == '__main__':
         df = {}
         df[speaker] = {}
         df[speaker][origin] = {}
-        df[speaker][origin]['default'] = parse_graphs_speaker(brand, speaker, mformat)
+        df_ref = parse_graphs_speaker(brand, speaker, mformat)
+        df[speaker][origin]['default'] = df_ref
+        df_eq = parse_eq_speaker(speaker, df_ref)
+        if df_eq is not None:
+            df[speaker][origin]['default_eq'] = df_eq
         print('Speaker                         #updated')
         generate_graphs(df, width, height, force, ptype=ptype)
     else:

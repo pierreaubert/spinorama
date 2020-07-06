@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from spinorama.contour import compute_contour
+from spinorama.graph_contour import compute_contour
 
 
 class SpinoramaContourTests(unittest.TestCase):

@@ -1,11 +1,10 @@
+#                                                  -*- coding: utf-8 -*-
 import logging
 import glob
 import numpy as np
 import pandas as pd
 from scipy.io import loadmat
-from ..cea2034 import early_reflections, vertical_reflections, horizontal_reflections,\
-     compute_cea2034, compute_onaxis, estimated_inroom_HV
-from . import graph_melt
+from .load import compute_graphs
 
 
 def parse_graph_freq_princeton_mat(mat, suffix):
@@ -69,7 +68,6 @@ def parse_graph_princeton(filename, orient):
 
 
 def parse_graphs_speaker_princeton(speaker_name):
-    dfs = {}
     # 2 files per directory xxx_H_IR.mat and xxx_V_IR.mat
     matfilename = 'datas/Princeton/' + speaker_name 
     dirpath = glob.glob(matfilename+'/*.mat')
@@ -89,32 +87,7 @@ def parse_graphs_speaker_princeton(speaker_name):
 
     h_spl = parse_graph_princeton(h_file, 'H')
     v_spl = parse_graph_princeton(v_file, 'V')
-    # add H and V SPL graphs
-    if h_spl is not None:
-        dfs['SPL Horizontal_unmelted'] = h_spl
-        dfs['SPL Horizontal'] = graph_melt(h_spl)
-    if v_spl is not None:
-        dfs['SPL Vertical_unmelted'] = v_spl
-        dfs['SPL Vertical'] = graph_melt(v_spl)
-    # add computed graphs
-    table = [['Early Reflections', early_reflections],
-             ['Horizontal Reflections', horizontal_reflections],
-             ['Vertical Reflections', vertical_reflections],
-             ['Estimated In-Room Response', estimated_inroom_HV],
-             ['On Axis', compute_onaxis],
-             ['CEA2034', compute_cea2034],
-             ]
-    for title, functor in table:
-        try:
-            df = functor(h_spl, v_spl)
-            if df is not None:
-                dfs[title+'_unmelted'] = df
-                dfs[title] = graph_melt(df)
-            else:
-                logging.info('{0} computation is None for speaker{1:s} (Princeton)'.format(title, speaker_name))
-        except KeyError as ke:
-            logging.warning('{0} computation failed with key:{1} for speaker{2:s} (Princeton)'.format(title, ke, speaker_name))
-            
-    return dfs
+
+    return compute_graphs(speaker_name, h_spl, v_spl)
 
 

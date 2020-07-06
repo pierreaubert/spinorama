@@ -1,3 +1,4 @@
+#                                                  -*- coding: utf-8 -*-
 import logging
 from math import log10
 import numpy as np

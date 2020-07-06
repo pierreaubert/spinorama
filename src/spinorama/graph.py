@@ -1,13 +1,14 @@
+#                                                  -*- coding: utf-8 -*-
 import altair as alt
 import logging
 import math
 import numpy as np
 import pandas as pd
-from .directivity import directivity_matrix
-from .contour import compute_contour, compute_contour_smoothed
-from .normalize import resample
-from src.graphs.isobands import find_isobands
-import src.spinorama.radar as radar
+from .compute_directivity import directivity_matrix
+from .compute_normalize import resample
+from .graph_contour import compute_contour, compute_contour_smoothed
+from .graph_isobands import find_isobands
+from . import graph_radar as radar
 
 
 alt.data_transformers.disable_max_rows()

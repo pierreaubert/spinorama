@@ -1,9 +1,10 @@
+#                                                  -*- coding: utf-8 -*-
 import logging
 import collections
 import numpy as np
 
-from .polygons import merge_connected_polygons
-from .prettyprint import pps
+from .graph_polygons import merge_connected_polygons
+from .graph_pp import pps
 
 Triangle = collections.namedtuple("Triangle", "v1 v2 v3")
 Edge = collections.namedtuple("Edge", "e1 e2")

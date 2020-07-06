@@ -9,3 +9,8 @@ docopt
 mako
 astropy
 nbstripout
+more_itertools
+keras
+plaidml
+plaidml-keras
+plaidbench

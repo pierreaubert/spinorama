@@ -1,7 +1,8 @@
+#                                                  -*- coding: utf-8 -*-
 import locale
 import logging
 import pandas as pd
-from . import graph_melt
+from .load import graph_melt
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 

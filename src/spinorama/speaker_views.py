@@ -1,8 +1,9 @@
+#                                                  -*- coding: utf-8 -*-
 import logging
 import math
 import copy
 import altair as alt
-from .display import \
+from .speaker_display import \
     display_spinorama, \
     display_onaxis, \
     display_inroom, \
@@ -217,3 +218,76 @@ def template_vertical(df, params):
         anchor='middle',
         fontSize=18
     )
+
+def template_sidebyside_eq(df_ref, df_eq, params, speaker, origin, key):
+    params2 = scale_params(params, 2)
+    # ref
+    summary_ref = display_summary(df_ref, params2, speaker, origin, key)
+    spinorama_ref = display_spinorama(df_ref, params2)
+    onaxis_ref = display_onaxis(df_ref, params2)
+    inroom_ref = display_inroom(df_ref, params2)
+    ereflex_ref = display_reflection_early(df_ref, params2)
+    hreflex_ref = display_reflection_horizontal(df_ref, params2)
+    vreflex_ref = display_reflection_vertical(df_ref, params2)
+    hspl_ref = display_spl_horizontal(df_ref, params2)  
+    vspl_ref = display_spl_vertical(df_ref, params2)
+    # eq
+    summary_eq = display_summary(df_eq, params2, speaker, origin, key)
+    spinorama_eq = display_spinorama(df_eq, params2)
+    onaxis_eq = display_onaxis(df_eq, params2)
+    inroom_eq = display_inroom(df_eq, params2)
+    ereflex_eq = display_reflection_early(df_eq, params2)
+    hreflex_eq = display_reflection_horizontal(df_eq, params2)
+    vreflex_eq = display_reflection_vertical(df_eq, params2)
+    hspl_eq = display_spl_horizontal(df_eq, params2)  
+    vspl_eq = display_spl_vertical(df_eq, params2)
+    # min value for contours & friends
+    params2['xmin'] = max(100, params2['xmin'])
+    # ref
+    hcontour_ref = display_contour_smoothed_horizontal(df_ref, params2)
+    hisoband_ref = display_isoband_horizontal(df_ref, params2)
+    hradar_ref = display_radar_horizontal(df_ref, params2)
+    vcontour_ref = display_contour_smoothed_vertical(df_ref, params2)
+    visoband_ref = display_isoband_vertical(df_ref, params2)
+    vradar_ref = display_radar_vertical(df_ref, params2)
+    # eq
+    hcontour_eq = display_contour_smoothed_horizontal(df_eq, params2)
+    hisoband_eq = display_isoband_horizontal(df_eq, params2)
+    hradar_eq = display_radar_horizontal(df_eq, params2)
+    vcontour_eq = display_contour_smoothed_vertical(df_eq, params2)
+    visoband_eq = display_isoband_vertical(df_eq, params2)
+    vradar_eq = display_radar_vertical(df_eq, params2)
+
+    chart = alt.vconcat()
+
+    for (title, g_ref, g_eq) in [
+            ('summary', summary_ref, summary_eq),
+            ('spinorama', spinorama_ref, spinorama_eq),
+            ('onaxis', onaxis_ref, onaxis_eq),
+            ('inroom', inroom_ref, inroom_eq),
+            ('ereflex', ereflex_ref, ereflex_eq),
+            ('hreflex', hreflex_ref, hreflex_eq),
+            ('vreflex', vreflex_ref, vreflex_eq),
+            ('hspl', hspl_ref, hspl_eq),
+            ('vspl', vspl_ref, vspl_eq),
+            ('hcontour', hcontour_ref, hcontour_eq),
+            ('vcontour', vcontour_ref, vcontour_eq),
+            ('hisoband', hisoband_ref, hisoband_eq),
+            ('visoband', visoband_ref, visoband_eq),
+            ('hradar', hradar_ref, hradar_eq),
+            ('vradar', vradar_ref, vradar_eq),
+        ]:
+        logging.debug('concatenating {0} for {1}'.format(title, speaker))
+        if g_ref is not None:
+            if g_eq is not None:
+                chart &= alt.hconcat(g_ref, g_eq)
+            else:
+                chart &= alt.hconcat(g_ref)
+        else:
+            if g_eq is not None:
+                chart &= alt.hconcat(g_eq)
+
+    return chart.configure_title(orient='top', anchor='middle', fontSize=30).configure_text(fontSize=16).configure_view(strokeWidth=0, opacity=0)
+
+
+

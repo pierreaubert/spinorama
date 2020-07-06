@@ -2,8 +2,8 @@
 import unittest
 import pandas as pd
 from spinorama.load import graph_melt
-from spinorama.load.klippel import parse_graph_freq_klippel
-from spinorama.estimates import estimates
+from spinorama.load_klippel import parse_graph_freq_klippel
+from spinorama.compute_estimates import estimates
 
 
 pd.set_option("display.max_rows", 202)

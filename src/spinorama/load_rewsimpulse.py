@@ -1,8 +1,9 @@
+#                                                  -*- coding: utf-8 -*-
 import logging
 import math
 import numpy as np
 import pandas as pd
-from ..iir import Biquad
+from .filter_iir import Biquad
 
 def parse_impulse_rews(filename, srate):
     impulse = []

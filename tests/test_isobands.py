@@ -1,6 +1,6 @@
 # import os
 import unittest
-import graphs.isobands as gi
+import spinorama.graph_isobands as gi
 
 
 class CrossPointTests(unittest.TestCase):

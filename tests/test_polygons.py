@@ -1,6 +1,6 @@
 import unittest
 
-import graphs.polygons as poly
+import spinorama.graph_polygons as poly
 
 p0 = (0, 0)    
 p1 = (1, 0)

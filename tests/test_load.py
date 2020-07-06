@@ -1,6 +1,6 @@
 import unittest
-from spinorama.load.klippel import parse_graph_freq_klippel
-from spinorama.load.princeton import parse_graph_princeton
+from spinorama.load_klippel import parse_graph_freq_klippel
+from spinorama.load_princeton import parse_graph_princeton
 
 
 class SpinoramaLoadTests(unittest.TestCase):

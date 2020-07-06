@@ -33,9 +33,9 @@ import os
 import math
 import sys
 import json
-from src.spinorama.load.parse import parse_all_speakers, parse_graphs_speaker
-from src.spinorama.estimates import estimates
-from src.spinorama.scores import speaker_pref_rating
+from src.spinorama.load_parse import parse_all_speakers, parse_graphs_speaker
+from src.spinorama.compute_estimates import estimates
+from src.spinorama.compute_scores import speaker_pref_rating
 import datas.metadata as metadata
 from docopt import docopt
 
@@ -84,10 +84,7 @@ def add_estimates(df):
     for speaker_name, speaker_data in df.items():
         logging.info('Processing {0}'.format(speaker_name))
         for origin, measurements in speaker_data.items():
-            for m, dfs in measurements.items():
-                if m != 'default':
-                    continue
-
+            for key, dfs in measurements.items():
                 if 'CEA2034' not in dfs.keys():
                     continue
 
@@ -108,7 +105,10 @@ def add_estimates(df):
                     continue
                 logging.info('Adding -3dB {0}Hz -6dB {1}Hz +/-{2}dB'.format(est[1], est[2], est[3]))
                 if 'estimates' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
-                    metadata.speakers_info[speaker_name]['estimates'] = est
+                    if key == 'default':
+                        metadata.speakers_info[speaker_name]['estimates'] = est
+                    elif key == 'default_eq':
+                        metadata.speakers_info[speaker_name]['estimates_eq'] = est
 
                 #if origin == 'Princeton':
                 #    # this measurements are only valid above 500hz
@@ -145,7 +145,10 @@ def add_estimates(df):
                     min_lfx_hz = min(min_lfx_hz, pref_rating['lfx_hz'])
                     max_lfx_hz = max(max_lfx_hz, pref_rating['lfx_hz'])
                 if 'pref_rating' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
-                    metadata.speakers_info[speaker_name]['pref_rating'] = pref_rating
+                    if key == 'default':
+                        metadata.speakers_info[speaker_name]['pref_rating'] = pref_rating
+                    elif key == 'default_eq':
+                        metadata.speakers_info[speaker_name]['pref_rating_eq'] = pref_rating
 
 
     # if we are looking only after 1 speaker, return
@@ -211,7 +214,10 @@ def add_estimates(df):
                     scaled_pref_rating['scaled_lfx_hz'] = scaled_lfx_hz
                 logging.info('Adding {0}'.format(scaled_pref_rating))
                 if 'scaled_pref_rating' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
-                    metadata.speakers_info[speaker_name]['scaled_pref_rating'] = scaled_pref_rating
+                    if key == 'default':
+                        metadata.speakers_info[speaker_name]['scaled_pref_rating'] = scaled_pref_rating
+                    elif key == 'default_eq':
+                        metadata.speakers_info[speaker_name]['scaled_pref_rating_eq'] = scaled_pref_rating
 
 
 def dump_metadata(meta):

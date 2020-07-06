@@ -1,5 +1,6 @@
+#                                                  -*- coding: utf-8 -*-
 import logging
-from .prettyprint import pp
+from .graph_pp import pp
 
 def is_close(poly):
     # if polygon is closed then return 1 else return 0

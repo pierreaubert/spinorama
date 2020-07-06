@@ -1,11 +1,12 @@
+#                                                  -*- coding: utf-8 -*-
 import logging
 import math
 import altair as alt
 import pandas as pd
 import datas.metadata as metadata
-from .normalize import resample
-from .estimates import estimates
-from .scores import speaker_pref_rating
+from .compute_normalize import resample
+from .compute_estimates import estimates
+from .compute_scores import speaker_pref_rating
 from .graph import graph_freq, graph_contour_smoothed, graph_radar, graph_spinorama,\
     graph_params_default, contour_params_default, radar_params_default, \
     graph_contour, graph_directivity_matrix,\
@@ -227,11 +228,12 @@ def display_compare(df, graph_filter, graph_params=graph_params_default):
 
     try:
         source = pd.concat([
-            augment(resample(df[speaker][origin]['default'][graph_filter], 600), # max 600 Freq points to minimise space
-                    '{0} - {1}'.format(speaker, origin))
+            augment(resample(df[speaker][origin][key][graph_filter], 1000), # max 1000 Freq points to minimise space
+                    '{0} - {1} - {2}'.format(speaker, origin, key))
             for speaker in df.keys()
                 for origin in df[speaker].keys()
-                    if graph_filter in df[speaker][origin]['default'] and 'CEA2034'in df[speaker][origin]['default']
+                    for key in df[speaker][origin].keys()
+                            if graph_filter in df[speaker][origin][key] and 'CEA2034'in df[speaker][origin][key]
         ])
 
         speaker1 = 'KEF LS50 - ASR'

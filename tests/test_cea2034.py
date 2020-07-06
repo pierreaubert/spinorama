@@ -2,8 +2,8 @@
 import unittest
 import pandas as pd
 from spinorama.load import graph_melt
-from spinorama.load.klippel import parse_graph_freq_klippel
-from spinorama.cea2034 import compute_cea2034, early_reflections,\
+from spinorama.load_klippel import parse_graph_freq_klippel
+from spinorama.compute_cea2034 import compute_cea2034, early_reflections,\
      vertical_reflections, horizontal_reflections, estimated_inroom_HV
 
 

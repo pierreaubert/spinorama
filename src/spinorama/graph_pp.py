@@ -1,3 +1,4 @@
+#                                                  -*- coding: utf-8 -*-
 pstart = 0
 pref = {}
 

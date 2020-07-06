@@ -1,10 +1,11 @@
+#                                                  -*- coding: utf-8 -*-
 import logging
 import math
 import altair as alt
 import numpy as np
 import pandas as pd
-from .iir import Biquad
-from src.spinorama.load import graph_melt
+from .filter_iir import Biquad
+from .load import graph_melt
 
 
 def peq_build(freq, peq):

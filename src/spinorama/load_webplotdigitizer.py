@@ -1,3 +1,4 @@
+#                                                  -*- coding: utf-8 -*-
 import logging
 import json
 import math
@@ -5,11 +6,13 @@ import numpy as np
 import os
 import pandas as pd
 import tarfile
-from ..cea2034 import estimated_inroom
-from ..normalize import unify_freq, pprint
-from . import graph_melt
+from .compute_cea2034 import estimated_inroom
+from .compute_normalize import unify_freq, pprint
+from .load import graph_melt
+
 
 pd.set_option('display.max_rows', 1000)
+
 
 def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name):
     filename = dirname + '/' + speaker_name

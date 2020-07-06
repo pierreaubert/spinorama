@@ -1,10 +1,11 @@
+#                                                  -*- coding: utf-8 -*-
 import os
 import logging
 import pathlib
 import copy
 import pandas as pd
 from altair_saver import save
-from .display import display_spinorama, display_onaxis, display_inroom, \
+from .speaker_display import display_spinorama, display_onaxis, display_inroom, \
     display_reflection_early, display_reflection_horizontal, display_reflection_vertical, \
     display_spl_horizontal, display_spl_vertical, \
     display_contour_horizontal, display_contour_vertical, \
@@ -12,7 +13,7 @@ from .display import display_spinorama, display_onaxis, display_inroom, \
     display_isoband_horizontal, display_isoband_vertical, \
     display_radar_horizontal, display_radar_vertical, display_directivity_matrix, \
     display_compare
-from .views import template_compact, template_panorama
+from .speaker_views import template_compact, template_panorama, template_sidebyside_eq
 from .graph import graph_params_default, contour_params_default, radar_params_default
 
 
@@ -24,7 +25,12 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
         for ext in ['json', 'png']: # svg and html skipped to keep size small
             # skip the 2cols.json and 3cols.json as they are really large
             # 2cols and 3cols are more for printing
-            if ext == 'json' and title in ('2cols', '3cols', 'SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed'):
+            if ext == 'json' and title in (
+                '2cols', '3cols',
+                'SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed',
+                'SPL Horizontal IsoBand', 'SPL Vertical IsoBand',
+                'Directivity Matrix',
+                'ref_vs_eq'):
                 continue
             # for now skip smoothed contours for Princeton graphs
             if origin == 'Princeton' and title in  ('SPL Horizontal Contour_smoothed', 'SPL Vertical Contour_smoothed'):
@@ -54,6 +60,7 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
 
 
 def print_graphs(df: pd.DataFrame,
+                 df_eq: pd.DataFrame,
                  speaker, origin, origins_info,
                  key='default',
                  width=900, height=500,
@@ -147,9 +154,15 @@ def print_graphs(df: pd.DataFrame,
     params['ymax'] = origins_info[origin]['max dB']
     graphs['2cols'] = template_compact(df, params, speaker, origin, key)
     # 4k screen
-    params['width'] = 4096
-    params['height'] = 1200
-    graphs['3cols'] = template_panorama(df, params, speaker, origin, key)
+    #params['width'] = 4096
+    #params['height'] = 1200
+    #graphs['3cols'] = template_panorama(df, params, speaker, origin, key)
+    # eq
+    params = copy.deepcopy(graph_params_default)
+    params['width'] = 1280
+    params['height'] = 400
+    if df_eq is not None:
+        graphs['ref_vs_eq'] = template_sidebyside_eq(df, df_eq, params, speaker, origin, key)
 
     updated = 0
     for (title, graph) in graphs.items():
@@ -165,9 +178,10 @@ def print_compare(df, force_print=False, filter_file_ext=None):
     filedir = 'docs/compare'
     pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
     
-    for graph_filter in ('CEA2034', 'Estimated In-Room Response',
-                   'Early Reflections', 'Horizontal Reflections', 'Vertical Reflections',
-                   'SPL Horizontal', 'SPL Vertical'):
+    for graph_filter in (
+        'CEA2034', 'Estimated In-Room Response',
+        'Early Reflections', 'Horizontal Reflections', 'Vertical Reflections',
+        'SPL Horizontal', 'SPL Vertical'):
         graph = display_compare(df, graph_filter)
         graph = graph.configure_legend(orient='bottom').configure_title(orient='top', anchor='middle', fontSize=16)
         if graph is not None:

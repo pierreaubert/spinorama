@@ -1,0 +1,30 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 04-07-2020 22:02:13
+
+Notes:ATC SCM19 V1 IIR
+
+Equaliser: Generic
+ATC SCM19 V1 LW.txt
+Filter  1: ON  PK       Fc     325 Hz  Gain  -1.0 dB  Q 10.000
+Filter  2: ON  PK       Fc     345 Hz  Gain   1.2 dB  Q 4.000
+Filter  3: ON  PK       Fc     408 Hz  Gain  -1.4 dB  Q 7.000
+Filter  4: ON  PK       Fc     482 Hz  Gain   1.6 dB  Q 30.000
+Filter  5: ON  PK       Fc     541 Hz  Gain  -0.5 dB  Q 8.000
+Filter  6: ON  PK       Fc     603 Hz  Gain  -1.9 dB  Q 5.000
+Filter  7: ON  PK       Fc     675 Hz  Gain  -1.7 dB  Q 5.000
+Filter  8: ON  PK       Fc     945 Hz  Gain  -3.3 dB  Q 1.372
+Filter  9: ON  PK       Fc     985 Hz  Gain  -0.5 dB  Q 10.000
+Filter 10: ON  PK       Fc    1131 Hz  Gain   0.7 dB  Q 10.000
+Filter 11: ON  PK       Fc    1265 Hz  Gain  -0.6 dB  Q 20.000
+Filter 12: ON  PK       Fc    1580 Hz  Gain  -0.8 dB  Q 20.000
+Filter 13: ON  PK       Fc    1820 Hz  Gain  -0.5 dB  Q 15.000
+Filter 14: ON  PK       Fc    2800 Hz  Gain  -0.4 dB  Q 7.000
+Filter 15: ON  PK       Fc    3137 Hz  Gain  -1.5 dB  Q 1.001
+Filter 16: ON  PK       Fc    4200 Hz  Gain   0.7 dB  Q 10.000
+Filter 17: ON  PK       Fc    5020 Hz  Gain  -0.7 dB  Q 5.000
+Filter 18: ON  PK       Fc    6180 Hz  Gain   1.0 dB  Q 7.000
+Filter 19: ON  PK       Fc    7460 Hz  Gain   2.1 dB  Q 5.000
+Filter 20: ON  PK       Fc   12250 Hz  Gain   1.5 dB  Q 5.000
+

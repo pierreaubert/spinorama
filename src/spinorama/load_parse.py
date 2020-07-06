@@ -1,14 +1,16 @@
+#                                                  -*- coding: utf-8 -*-
 import os
 import sys
 import glob
 import logging
-
-from ..normalize import normalize_mean, normalize_cea2034, normalize_graph
-
-from .klippel import parse_graphs_speaker_klippel
-from .webplotdigitizer import parse_graphs_speaker_webplotdigitizer
-from .princeton import parse_graphs_speaker_princeton
-from .rewstextdump import parse_graphs_speaker_rewstextdump
+from .compute_normalize import normalize_mean, normalize_cea2034, normalize_graph
+from .load import compute_graphs
+from .load_klippel import parse_graphs_speaker_klippel
+from .load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
+from .load_princeton import parse_graphs_speaker_princeton
+from .load_rewstextdump import parse_graphs_speaker_rewstextdump
+from .load_rewseq import parse_eq_iir_rews
+from .filter_peq import peq_apply_measurements
 
 
 def normalize(df):
@@ -52,10 +54,24 @@ def parse_graphs_speaker(speaker_brand : str, speaker_name : str, mformat='klipp
         sys.exit(1)
 
     return normalize(df)
-        
 
 
-def get_speaker_list(speakerpath):
+def parse_eq_speaker(speaker_name : str, df_ref) -> dict:
+    iirname = './datas/eq/{0}/iir.txt'.format(speaker_name)
+    if os.path.isfile(iirname):
+        srate = 48000
+        logging.debug('found IIR eq {0}: applying to {1}'.format(iirname, speaker_name))
+        iir = parse_eq_iir_rews(iirname, srate)
+        h_spl = df_ref['SPL Horizontal_unmelted']
+        v_spl = df_ref['SPL Vertical_unmelted']
+        eq_h_spl = peq_apply_measurements(h_spl, iir)
+        eq_v_spl = peq_apply_measurements(v_spl, iir)
+        df_eq = compute_graphs(speaker_name, eq_h_spl, eq_v_spl)
+        return df_eq
+    return None
+
+
+def get_speaker_list(speakerpath : str):
     speakers = []
     asr = glob.glob(speakerpath+'/ASR/*')
     vendors = glob.glob(speakerpath+'/Vendors/*/*')
@@ -67,10 +83,11 @@ def get_speaker_list(speakerpath):
     return speakers
 
 
-def parse_all_speakers(metadata, filter_origin, speakerpath='./datas'):
+def parse_all_speakers(metadata : dict, filter_origin: str, speakerpath='./datas') -> dict:
     speakerlist = get_speaker_list(speakerpath)
     df = {}
     count_measurements = 0
+    count_eqs = 0
     for speaker in speakerlist:
         logging.info('Parsing {0}'.format(speaker))
         df[speaker] = {}
@@ -99,11 +116,14 @@ def parse_all_speakers(metadata, filter_origin, speakerpath='./datas'):
             df[speaker][origin] = {}
             # speaker / origin / measurement
             brand = metadata[speaker]['brand']
-            df[speaker][origin]['default'] = parse_graphs_speaker(brand, speaker, mformat)
-            if df[speaker][origin]['default'] is not None:
+            df_ref = parse_graphs_speaker(brand, speaker, mformat)
+            if df_ref is not None:
+                df[speaker][origin]['default'] = df_ref
                 count_measurements += 1
+                df_eq = parse_eq_speaker(speaker, df_ref)
+                if df_eq is not None:
+                    df[speaker][origin]['default_eq'] = df_eq
+                    count_eqs += 1
         
-    print('Loaded {:d} speakers {:d} measurements'.format(len(speakerlist),
-          count_measurements))
-    
+    print('Loaded {0} speakers {1} measurements and {2} EQs'.format(len(speakerlist), count_measurements, count_eqs))
     return df

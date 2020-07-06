@@ -1,8 +1,10 @@
+#                                                  -*- coding: utf-8 -*-
 import logging
 import numpy as np
 import pandas as pd
-from ..cea2034 import estimated_inroom
-from . import graph_melt
+from .compute_cea2034 import estimated_inroom
+from .load import graph_melt
+
 
 def parse_graphs_speaker_rewstextdump(speaker_brand, speaker_name):
     dfs = {}
