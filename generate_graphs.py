@@ -121,7 +121,7 @@ if __name__ == '__main__':
         df = {}
         df[speaker] = {}
         df[speaker][origin] = {}
-        df_ref = parse_graphs_speaker(brand, speaker, mformat)
+        df_ref = parse_graphs_speaker('./datas', brand, speaker, mformat)
         df[speaker][origin]['default'] = df_ref
         df_eq = parse_eq_speaker(speaker, df_ref)
         if df_eq is not None:

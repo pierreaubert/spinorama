@@ -42,11 +42,11 @@ def normalize(df):
 def parse_graphs_speaker(speaker_path : str, speaker_brand : str, speaker_name : str, mformat='klippel') -> dict:
     df = None
     if mformat == 'klippel':
-        df = parse_graphs_speaker_klippel(speaker_path, speaker_name)
+        df = parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name)
     elif mformat == 'webplotdigitizer':
         df = parse_graphs_speaker_webplotdigitizer(speaker_path, speaker_brand, speaker_name)
     elif mformat == 'princeton':
-        df = parse_graphs_speaker_princeton(speaker_path, speaker_name)
+        df = parse_graphs_speaker_princeton(speaker_path, speaker_brand, speaker_name)
     elif mformat == 'rewstextdump':
         df = parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name)
     else:

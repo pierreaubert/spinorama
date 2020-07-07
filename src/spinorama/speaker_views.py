@@ -221,6 +221,9 @@ def template_vertical(df, params):
 
 def template_sidebyside_eq(df_ref, df_eq, params, speaker, origin, key):
     params2 = scale_params(params, 2)
+    logging.debug('params width {0} height {1} xmin {2} xmax {3} ymin {4} ymax {5}'.format(params2['width'], params2['height'],
+                                                                                           params2['xmin'], params2['xmax'],
+                                                                                           params2['ymin'], params2['ymax']))
     # ref
     summary_ref = display_summary(df_ref, params2, speaker, origin, key)
     spinorama_ref = display_spinorama(df_ref, params2)

@@ -57,7 +57,7 @@ def parse_graph_freq_klippel(filename):
     return title, df
 
 
-def parse_graphs_speaker_klippel(speaker_path, speaker_name):
+def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name):
     dfs = {}
     csvfiles = ["CEA2034",
                 "Early Reflections",
