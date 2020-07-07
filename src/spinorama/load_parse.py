@@ -39,16 +39,16 @@ def normalize(df):
     return df
 
 
-def parse_graphs_speaker(speaker_brand : str, speaker_name : str, mformat='klippel') -> str:
+def parse_graphs_speaker(speaker_path : str, speaker_brand : str, speaker_name : str, mformat='klippel') -> dict:
     df = None
     if mformat == 'klippel':
-        df = parse_graphs_speaker_klippel(speaker_name)
+        df = parse_graphs_speaker_klippel(speaker_path, speaker_name)
     elif mformat == 'webplotdigitizer':
-        df = parse_graphs_speaker_webplotdigitizer(speaker_brand, speaker_name)
+        df = parse_graphs_speaker_webplotdigitizer(speaker_path, speaker_brand, speaker_name)
     elif mformat == 'princeton':
-        df = parse_graphs_speaker_princeton(speaker_name)
+        df = parse_graphs_speaker_princeton(speaker_path, speaker_name)
     elif mformat == 'rewstextdump':
-        df = parse_graphs_speaker_rewstextdump(speaker_brand, speaker_name)
+        df = parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name)
     else:
         logging.fatal('Format {:s} is unkown'.format(mformat))
         sys.exit(1)
@@ -116,7 +116,7 @@ def parse_all_speakers(metadata : dict, filter_origin: str, speakerpath='./datas
             df[speaker][origin] = {}
             # speaker / origin / measurement
             brand = metadata[speaker]['brand']
-            df_ref = parse_graphs_speaker(brand, speaker, mformat)
+            df_ref = parse_graphs_speaker(speakerpath, brand, speaker, mformat)
             if df_ref is not None:
                 df[speaker][origin]['default'] = df_ref
                 count_measurements += 1

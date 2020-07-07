@@ -67,9 +67,9 @@ def parse_graph_princeton(filename, orient):
     return parse_graph_freq_princeton_mat(matfile, orient)
 
 
-def parse_graphs_speaker_princeton(speaker_name):
+def parse_graphs_speaker_princeton(speaker_path, speaker_name):
     # 2 files per directory xxx_H_IR.mat and xxx_V_IR.mat
-    matfilename = 'datas/Princeton/' + speaker_name 
+    matfilename = '{0}/Princeton/{1}'.format(speaker_path, speaker_name)
     dirpath = glob.glob(matfilename+'/*.mat')
     h_file = None
     v_file = None

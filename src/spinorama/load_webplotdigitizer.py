@@ -111,9 +111,9 @@ def parse_graph_freq_webplotdigitizer(filename):
         return None, None
             
 
-def parse_graphs_speaker_webplotdigitizer(speaker_brand, speaker_name):
+def parse_graphs_speaker_webplotdigitizer(speaker_path, speaker_brand, speaker_name):
     dfs = {}
-    dirname = 'datas/Vendors/' + speaker_brand + '/' + speaker_name + '/'
+    dirname = '{0}/Vendors/{1}/{2}/'.format(speaker_path, speaker_brand, speaker_name)
     jsonfilename = parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name)
 
     try:

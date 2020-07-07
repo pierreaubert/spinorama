@@ -6,7 +6,7 @@ from .compute_cea2034 import estimated_inroom
 from .load import graph_melt
 
 
-def parse_graphs_speaker_rewstextdump(speaker_brand, speaker_name):
+def parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name):
     dfs = {}
     try:
         spin = None
@@ -20,7 +20,7 @@ def parse_graphs_speaker_rewstextdump(speaker_brand, speaker_name):
                           ('SP', 'Sound Power'),
                           #('ERDI', 'Early Reflections DI'),
                           ):
-            filename = 'datas/Vendors/{0}/{1}/{2}.txt'.format(speaker_brand, speaker_name, txt)
+            filename = '{0}/Vendors/{1}/{2}/{3}.txt'.format(speaker_path, speaker_brand, speaker_name, txt)
             with open(filename, 'r') as f:
                 lines = f.readlines()
                 for l in lines:

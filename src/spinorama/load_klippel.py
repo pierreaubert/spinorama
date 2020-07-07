@@ -57,7 +57,7 @@ def parse_graph_freq_klippel(filename):
     return title, df
 
 
-def parse_graphs_speaker_klippel(speaker_name):
+def parse_graphs_speaker_klippel(speaker_path, speaker_name):
     dfs = {}
     csvfiles = ["CEA2034",
                 "Early Reflections",
@@ -68,7 +68,7 @@ def parse_graphs_speaker_klippel(speaker_name):
                 "SPL Horizontal",
                 "SPL Vertical"]
     for csv in csvfiles:
-        csvfilename = "datas/ASR/" + speaker_name + "/" + csv + ".txt"
+        csvfilename = '{0}/ASR/{1}/{2}.txt'.format(speaker_path, speaker_name, csv)
         try:
             title, df = parse_graph_freq_klippel(csvfilename)
             logging.info('Speaker: ' + speaker_name + ' (ASR) Loaded: '+title)
