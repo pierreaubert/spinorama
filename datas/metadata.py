@@ -1106,6 +1106,19 @@ speakers_info = {
             'review': 'https://www.audiosciencereview.com/forum/index.php?threads/presonus-e5-xt-active-speaker-review.13436/',
         }],
     },
+    'Q Acoustics 3020i': {
+        'brand': 'Q Acoustics',
+        'model': '3020i',
+        'type': 'passive',
+        'price': '315',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'measurements': [{
+            'origin': 'ASR',
+            'format': 'klippel',
+            'review': 'https://www.audiosciencereview.com/forum/index.php?threads/q-acoustics-3020i-bookshelf-speaker-review.14568/',
+        }],
+    },
     'Quad Electroacoustics ESL-57': {
         'brand': 'Quad Electroacoustics',
         'model': 'ESL-57',
