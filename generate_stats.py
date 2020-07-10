@@ -18,12 +18,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-usage: generate_stats.py [--help] [--version] [--dev]\
+usage: generate_stats.py [--help] [--version] [--dev] [--print=<what>]\
  [--sitedev=<http>]  [--log-level=<level>]
 
 Options:
   --help            display usage()
   --version         script version number
+  --print=<what>    print information. Options are 'eq'
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
 import json
@@ -37,24 +38,66 @@ import altair as alt
 
 
 def meta2df(meta):
-    df = pd.DataFrame({'speaker': [], 'param': [], 'value': []})
+    df = pd.DataFrame({'speaker': [], 'param': [], 'value': [], 'ref': [], 'origin': []})
     count = 0
     for i in meta:
         speaker = meta[i]
+        origin = 'unknown'
+        for p in speaker:
+            if p == 'measurements':
+                m = speaker[p]
+                if len(m) == 1:
+                    origin = m[0]['origin']
+                else:
+                    origin = 'ASR'
         for p in speaker:
             val = speaker[p]
+            ref = 'Original'
+            if p in ('pref_rating_eq', 'estimates_eq'):
+                ref = 'EQ'
             if type(val) is dict:
                 for v in val.keys():
                     # print('{0} {1} {2}'.format(i, v, val[v]))
-                    df.loc[count] = [i, v, val[v]]
+                    df.loc[count] = [i, v, val[v], ref, origin]
                     count += 1
             else:
                 # print('{0} {1} {2}'.format(i, p, val))
-                df.loc[count] = [i, p, val]
+                df.loc[count] = [i, p, val, ref, origin]
                 count += 1
 
     return df
 
+
+def print_eq(speakers):
+    results = []
+    for i in speakers:
+        speaker = speakers[i]
+        pref = speaker.get('pref_rating', None)
+        pref_eq = speaker.get('pref_rating_eq', None)
+        if pref is not None and pref_eq is not None:
+            results.append((i, pref, pref_eq))
+
+    print('                                         | NBD  NBD LFX   SM | SCR | NBD  NBD LFX   SM |  EQ | DIFF')
+    print('Speaker                                  |  ON  PIR  Hz  PIR |     |  ON  PIR Hz   PIR |     |     ')
+    print('-----------------------------------------+-------------------+-----+-------------------+-----+-----')
+    for i, pref, pref_eq in sorted(results, key=lambda a: -a[2]['pref_score']):
+        print('{0:40s} | {1:0.2f} {2:0.2f} {3:2.0f} {4:0.2f} | {5:1.1f} | {6:0.2f} {7:0.2f} {8:2.0f} {9:0.2f} | {10:1.1f} | {11:+1.1f}'.format(
+            i,
+            pref['nbd_on_axis'], 
+            pref['nbd_pred_in_room'], 
+            pref['lfx_hz'], 
+            pref['sm_pred_in_room'], 
+            pref['pref_score'], 
+            pref_eq['nbd_on_axis'], 
+            pref_eq['nbd_pred_in_room'], 
+            pref_eq['lfx_hz'], 
+            pref_eq['sm_pred_in_room'], 
+            pref_eq['pref_score'],
+            pref_eq['pref_score']-pref['pref_score']
+            ))
+        
+
+        
 
 def generate_stats(meta):
     df = meta2df(meta)
@@ -67,14 +110,18 @@ def generate_stats(meta):
     nbd_pir = df.loc[(df.param == 'nbd_pred_in_room')].reset_index()
     sm_pir = df.loc[(df.param == 'sm_pred_in_room')].reset_index()
 
-    spread_score = alt.Chart(pref_score).mark_circle(size=30).encode(
-        x=alt.X('speaker', sort='y', axis=alt.Axis(labelAngle=45), title='Speakers sorted by Preference Score'),
-        y=alt.Y('value', title='Preference Score')
+    spread_score = alt.Chart(pref_score).mark_circle(size=50).encode(
+        x=alt.X('speaker', sort='y', axis=None, title='Speakers sorted by Preference Score (over point to get data)'),
+        y=alt.Y('value', title='Preference Score'),
+        color=alt.Color('ref'),
+        tooltip=['speaker', 'origin', 'value', 'ref']
     ).properties(width=1024,height=300)
     
-    spread_score_wsub = alt.Chart(pref_score_wsub).mark_circle(size=30).encode(
+    spread_score_wsub = alt.Chart(pref_score_wsub).mark_circle(size=50).encode(
         x=alt.X('speaker', sort='y', axis=alt.Axis(labelAngle=45), title='Speakers sorted by Preference Score with a Subwoofer'),
-        y=alt.Y('value', title='Preference Score w/Sub')
+        y=alt.Y('value', title='Preference Score w/Sub'),
+        color=alt.Color('ref'),
+        tooltip=['speaker', 'origin', 'value', 'ref']
     ).properties(width=1024,height=300)
 
     distribution1 = alt.Chart(pref_score).mark_bar().encode(
@@ -145,6 +192,10 @@ if __name__ == '__main__':
                   version='generate_stats.py version 0.1',
                   options_first=True)
 
+    print_what = None
+    if args['--print'] is not None:
+        print_what = args['--print']
+
     level = None
     if args['--log-level'] is not None:
         check_level = args['--log-level']
@@ -170,7 +221,13 @@ if __name__ == '__main__':
     meta = None
     with open(json_filename, 'r') as f:
         meta = json.load(f)
+        
+    logging.info('Data {0} loaded!'.format(json_filename))
 
-    generate_stats(meta)
+    if print_what is not None:
+        if print_what == 'eq':
+            print_eq(meta)
+    else:
+        generate_stats(meta)
 
     sys.exit(0)

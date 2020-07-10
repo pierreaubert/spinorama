@@ -159,8 +159,8 @@ def print_graphs(df: pd.DataFrame,
     #graphs['3cols'] = template_panorama(df, params, speaker, origin, key)
     # eq
     params = copy.deepcopy(graph_params_default)
-    params['width'] = 1280
-    params['height'] = 400
+    params['width'] = 2560
+    params['height'] = 600
     if df_eq is not None:
         graphs['ref_vs_eq'] = template_sidebyside_eq(df, df_eq, params, speaker, origin, key)
 

@@ -120,12 +120,10 @@ def graph_spinorama(dfu, graph_params):
     selectorsMeasurements = alt.selection_multi(fields=['Measurements'], bind='legend')
     scales = alt.selection_interval(bind='scales')
     # main charts
-    xaxis =alt.X('Freq:Q', title='Freqency (Hz)',
-                scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]),
-                axis=alt.Axis(format='s'))
-    yaxis = alt.Y('dB:Q', scale=alt.Scale(zero=False, domain=[ymin, ymax]))
+    xaxis =alt.X('Freq:Q', title='Freqency (Hz)', scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]), axis=alt.Axis(format='s'))
+    yaxis = alt.Y('dB:Q', title='Sound Pressure (dB)', scale=alt.Scale(zero=False, domain=[ymin, ymax]))
     # why -10?
-    di_yaxis = alt.Y('dB:Q', scale=alt.Scale(zero=False, domain=[-10,ymax-ymin-10]))
+    di_yaxis = alt.Y('dB:Q', title='Sound Pressure DI (dB)', scale=alt.Scale(zero=False, domain=[-5, ymax-ymin-5]))
     color = alt.Color('Measurements', type='nominal', sort=None)
     opacity = alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     
@@ -590,4 +588,4 @@ def graph_summary(speaker_name, speaker_summary, params):
         x=alt.X('x', title='', scale=alt.Scale(domain=[0,1]), axis=None),
         y=alt.Y('y', title='', axis=None),
         text='summary:N'
-    )
+    ).properties(width=params['width'], height=params['height'])

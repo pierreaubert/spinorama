@@ -62,12 +62,13 @@ def parse_eq_speaker(speaker_name : str, df_ref) -> dict:
         srate = 48000
         logging.debug('found IIR eq {0}: applying to {1}'.format(iirname, speaker_name))
         iir = parse_eq_iir_rews(iirname, srate)
-        h_spl = df_ref['SPL Horizontal_unmelted']
-        v_spl = df_ref['SPL Vertical_unmelted']
-        eq_h_spl = peq_apply_measurements(h_spl, iir)
-        eq_v_spl = peq_apply_measurements(v_spl, iir)
-        df_eq = compute_graphs(speaker_name, eq_h_spl, eq_v_spl)
-        return df_eq
+        if 'SPL Horizontal_unmelted' in df_ref.keys() and 'SPL Vertical_unmelted' in df_ref.keys():
+            h_spl = df_ref['SPL Horizontal_unmelted']
+            v_spl = df_ref['SPL Vertical_unmelted']
+            eq_h_spl = peq_apply_measurements(h_spl, iir)
+            eq_v_spl = peq_apply_measurements(v_spl, iir)
+            df_eq = compute_graphs(speaker_name, eq_h_spl, eq_v_spl)
+            return df_eq
     return None
 
 
