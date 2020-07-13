@@ -10,6 +10,7 @@
 
   def removeVendors(text):
       return text.replace('Vendors/','')
+
 %>  
 
 <div class="section">
@@ -18,11 +19,13 @@
       <thead>
 	<tr>
 	  <th>Speaker</th>
+	  <th>Origin</th>
 	  <th colspan="3" class="has-text-right">Standard Measurements</th>
 	  <th colspan="6" class="has-text-right">Preference Scores from Harmann</th>
 	  <th colspan="2" class="has-text-right">Scores (modified)</th>
 	</tr>
 	<tr>
+	  <th></th>
 	  <th></th>
 
 	  <th>
@@ -54,7 +57,7 @@
 	    <abbr title="Smoothness In Room">SM PIR</abbr>
 	  </th>
 	  <th>
-	    <abbr title="Preference Score">Pref Score</abbr>
+	    <abbr title="Preference Score">Score</abbr>
 	    <span class="has-tooltip-info has-tooltip-multiline" data-tooltip="Preference Score as defined by Harmann. See reference papers in help section">(def)<span>
 	  </th>
 	  
@@ -69,66 +72,28 @@
 	</tr>
       </thead>
       % for speaker_name in meta:
-      <tr id="${speaker_name | space2dash}">
-	<td>
-  	  ${speaker_name}
-	</td>
-	<td>
-  	  % if 'estimates' in meta[speaker_name] and meta[speaker_name]['estimates'][1] != -1:
-	    ${meta[speaker_name]['estimates'][1]}
-  	  % endif
-	</td>
-	<td>
-  	  % if 'estimates' in meta[speaker_name] and meta[speaker_name]['estimates'][2] != -1:
-	    ${meta[speaker_name]['estimates'][2]}
-  	  % endif
-	</td>
-	<td>
-  	  % if 'estimates' in meta[speaker_name] and meta[speaker_name]['estimates'][3] != -1:
-	    &plusmn;${meta[speaker_name]['estimates'][3]}
-  	  % endif
-	</td>
-	<td>
-	  % if 'pref_rating' in meta[speaker_name] and 'lfx_hz' in meta[speaker_name]['pref_rating']:
-	      ${meta[speaker_name]['pref_rating']['lfx_hz']}
-  	  % endif
-	</td>
-	<td>
-	  % if 'pref_rating' in meta[speaker_name] and 'lfq' in meta[speaker_name]['pref_rating']:
-   	        ${meta[speaker_name]['pref_rating']['lfq']}
-  	  % endif
-	</td>
-	<td>
-	  % if 'pref_rating' in meta[speaker_name]:
-	      ${meta[speaker_name]['pref_rating']['nbd_on_axis']}
-  	  % endif
-	</td>
-	<td>
-	  % if 'pref_rating' in meta[speaker_name]:
-	      ${meta[speaker_name]['pref_rating']['nbd_pred_in_room']}
-  	  % endif
-	</td>
-	<td>
-	  % if 'pref_rating' in meta[speaker_name]:
-	      ${meta[speaker_name]['pref_rating']['sm_pred_in_room']}
-  	  % endif
-	</td>
-	<th>
-	  % if 'pref_rating' in meta[speaker_name] and 'pref_score' in meta[speaker_name]['pref_rating']:
-	      ${meta[speaker_name]['pref_rating']['pref_score']}
-  	  % endif
-	</th>
-	<th>
-	  % if 'pref_rating_eq' in meta[speaker_name] and 'pref_score' in meta[speaker_name]['pref_rating_eq']:
-	      ${meta[speaker_name]['pref_rating_eq']['pref_score']}
-  	  % endif
-	</th>
-	<th>
-	  % if 'pref_rating' in meta[speaker_name]:
-	      ${meta[speaker_name]['pref_rating']['pref_score_wsub']}
-  	  % endif
-	</th>
-      </tr>
+<%
+        if 'default_measurement' in meta[speaker_name]:
+            default =  meta[speaker_name]['default_measurement']
+            if default not in meta[speaker_name]['measurements'].keys():
+                continue
+            compute = meta[speaker_name]['measurements'][default]
+%>
+            <tr id="${speaker_name | space2dash}">
+	      <td>${speaker_name}</td>
+	      ${ligne(compute, default)}
+            </tr>
+        % for version, measurement in meta[speaker_name]['measurements'].items():
+<%
+            if version == default or version not in meta[speaker_name]['measurements'].keys():
+                continue
+            compute = meta[speaker_name]['measurements'][version]
+%>
+            <tr>
+	      <td></td>
+	      ${ligne(compute, version)}
+            </tr>
+       % endfor
       % endfor
     </table>
   </div>
@@ -136,3 +101,32 @@
 
 
 <%include file="footer.html"/>
+
+<%def name="ligne(compute, default)">
+  	<td>${default}</td>
+	% if 'estimates' in compute.keys():
+	  <td>${compute['estimates'].get('ref_3dB', '')}</td>
+	  <td>${compute['estimates'].get('ref_6dB', '')}</td>
+	  <td>&plusmn;${compute['estimates'].get('ref_band', '')}</td>
+	  </td>
+	% else:
+	  <td></td><td></td><td></td><td></td>
+	% endif
+	% if 'pref_rating' in compute.keys():
+	<td>${compute['pref_rating'].get('lfx_hz', '')}</td>
+	<td>${compute['pref_rating'].get('lfq', '')}</td>
+	<td>${compute['pref_rating'].get('nbd_on_axis', '')}</td>    
+	<td>${compute['pref_rating'].get('nbd_pred_in_room', '')}</td>
+	<td>${compute['pref_rating'].get('sm_pred_in_room', '')}</td>
+	<th>${compute['pref_rating'].get('pref_score', '')}</th>
+	% if 'pref_rating_eq' in compute.keys():
+	<th>${compute['pref_rating_eq'].get('pref_score', '')}</th>
+	% else:
+	<th></th>
+	% endif
+	<th>${compute['pref_rating'].get('pref_score_wsub', '')}</th>
+	% else:
+	<td></td><td></td><td></td><td></td><th></th>
+	<th></th><th></th><th></th>
+	% endif
+</%def>

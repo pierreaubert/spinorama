@@ -189,11 +189,11 @@ if __name__ == '__main__':
     index_html = mako_templates.get_template('index.html')
 
     def sort_meta(s):
-        if 'pref_rating' in s.keys() and 'pref_score' in s['pref_rating']:
+        if s is not None and 'pref_rating' in s.keys() and 'pref_score' in s['pref_rating']:
             return s['pref_rating']['pref_score']
         return -1
 
-    keys_sorted = sorted(meta, key=lambda a: sort_meta(meta[a]), reverse=True)
+    keys_sorted = sorted(meta, key=lambda a: sort_meta(meta[a]['measurements'].get(meta[a].get('default_measurement'))), reverse=True)
     meta_sorted = {k: meta[k] for k in keys_sorted}
 
     with open('docs/index.html', 'w') as f:

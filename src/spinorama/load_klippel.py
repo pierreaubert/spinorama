@@ -57,7 +57,7 @@ def parse_graph_freq_klippel(filename):
     return title, df
 
 
-def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name):
+def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mversion):
     dfs = {}
     csvfiles = ["CEA2034",
                 "Early Reflections",
@@ -68,10 +68,14 @@ def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name):
                 "SPL Horizontal",
                 "SPL Vertical"]
     for csv in csvfiles:
-        csvfilename = '{0}/ASR/{1}/{2}.txt'.format(speaker_path, speaker_name, csv)
+        csvfilename = None
+        if mversion is None or mversion == 'asr':
+            csvfilename = '{0}/ASR/{1}/{2}.txt'.format(speaker_path, speaker_name, csv)
+        else:
+            csvfilename = '{0}/ASR/{1}/{3}/{2}.txt'.format(speaker_path, speaker_name, csv, mversion)
         try:
             title, df = parse_graph_freq_klippel(csvfilename)
-            logging.info('Speaker: ' + speaker_name + ' (ASR) Loaded: '+title)
+            logging.debug('Speaker: {0} (ASR)  Loaded: {1}'.format(speaker_name, csvfilename))
             dfs[title + '_unmelted'] = df
             dfs[title] = graph_melt(df)
         except FileNotFoundError:

@@ -23,6 +23,8 @@ def scores_apply_filter(splH, splV, peq):
     spin_filtered = normalize(graph_melt(compute_cea2034(ddf_horizontal, ddf_vertical)))
     pir_filtered  = normalize(graph_melt(estimated_inroom_HV(ddf_horizontal, ddf_vertical)))
     score_filtered = speaker_pref_rating(spin_filtered, pir_filtered, rounded=False)
+    if score_filtered is None:
+        logging.warning('computing pref score for eq failed')
     return spin_filtered, pir_filtered, score_filtered
 
 
@@ -47,6 +49,9 @@ def scores_print(score, score_filtered):
 
 def scores_loss(df_speaker, peq):
     _, _, score_filtered = scores_apply_filter(df_speaker['SPL Horizontal_unmelted'], df_speaker['SPL Vertical_unmelted'], peq)
+    #TODO
+    # if score_filtered is None:
+    #    return -
     # optimize max score is the same as optimize min -score
     return -score_filtered['pref_score']
 

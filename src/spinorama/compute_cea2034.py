@@ -177,7 +177,7 @@ def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     # calculated using the weighted values. The final average is converted
     # to SPL.      
     h_cols = h_spl.columns
-    v_cols = v_spl.columns #.drop(['On Axis', '180°'])
+    v_cols = v_spl.columns
     for to_be_dropped in ['On Axis', '180°']:
         if to_be_dropped in v_cols:
             v_cols = v_cols.drop([to_be_dropped])

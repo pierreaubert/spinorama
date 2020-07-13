@@ -18,8 +18,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Usage:
 update-graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
-  [--force] [--type=<ext>] [--log-level=<level>] [--origin=<origin>]\
-  [--speaker=<speaker>] [--only-compare=<compare>]
+  [--force] [--type=<ext>] [--log-level=<level>]\
+  [--origin=<origin>]  [--speaker=<speaker>] [--mversion=<mversion>]\
+  [--only-compare=<compare>]
 
 Options:
   -h|--help         display usage()
@@ -30,6 +31,7 @@ Options:
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
   --origin=<origin> restrict to a specific origin, usefull for debugging
   --speaker=<speaker> restrict to a specific speaker, usefull for debugging
+  --mversion=<mversion> restrict to a specific mversion (for a given origin you can have multiple measurements)
   --only-compare=<compare> if true then skip graphs generation and only dump compare data
 """
 import logging
@@ -41,6 +43,7 @@ from src.spinorama.speaker_print import print_graphs, print_compare
 
 
 def generate_graphs(df, width, height, force, ptype):
+    updated = 0
     for speaker_name, speaker_data in df.items():
         for origin, dataframe in speaker_data.items():
             for key in df[speaker_name][origin].keys():
@@ -61,7 +64,7 @@ def generate_compare(df, width, height, force, ptype):
 
 if __name__ == '__main__':
     args = docopt(__doc__,
-                  version='generate_graphs.py version 1.19',
+                  version='generate_graphs.py version 1.20',
                   options_first=True)
 
     width = 1200
@@ -100,32 +103,27 @@ if __name__ == '__main__':
     df = None
     if args['--speaker'] is not None and args['--origin'] is not None:
         speaker = args['--speaker']
-        origin = args['--origin']
-        mformat = None
-        if origin == 'Princeton':
-            mformat = 'princeton'
-        elif origin == 'ASR':
-            mformat = 'klippel'
-        else:
-            # need to get this information from meta
-            mformat = None
-            for m in range(0, len(metadata.speakers_info[speaker]['measurements'])):
-                measurement = metadata.speakers_info[speaker]['measurements'][m]
-                if measurement['origin'] == origin:
-                    mformat = measurement['format']
-                    logging.debug('found mformat {0} in metadata'.format(mformat))
-            if mformat is None:
-                logging.fatal('Origin {0} is not our metadata'.format(origin))
-                sys.exit(1)
         brand = metadata.speakers_info[speaker]['brand']
+        origin = args['--origin']
+        mversion = metadata.speakers_info[speaker]['default_measurement']
+        if args['--mversion'] is not None:
+            mversion = args['--mversion']
+        mformat = metadata.speakers_info[speaker]['measurements'][mversion].get('format')
+
         df = {}
         df[speaker] = {}
         df[speaker][origin] = {}
-        df_ref = parse_graphs_speaker('./datas', brand, speaker, mformat)
-        df[speaker][origin]['default'] = df_ref
-        df_eq = parse_eq_speaker(speaker, df_ref)
-        if df_eq is not None:
-            df[speaker][origin]['default_eq'] = df_eq
+
+        logging.info('Parsing: {} {} {} {}'.format(brand, speaker, mformat, mversion))
+        df_ref = parse_graphs_speaker('./datas', brand, speaker, mformat, mversion)
+        if df_ref is not None:
+            df[speaker][origin][mversion] = df_ref
+            df_eq = parse_eq_speaker(speaker, df_ref)
+            if df_eq is not None:
+                logging.info('Parsing: {} {} {} {} with eq'.format(brand, speaker, mformat, mversion))
+                df[speaker][origin]['{0}_eq'.format(mversion)] = df_eq
+        else:
+            logging.info('{0} {1} {2} {3} returned None'.format(brand, speaker, mformat, mversion))
         print('Speaker                         #updated')
         generate_graphs(df, width, height, force, ptype=ptype)
     else:
@@ -137,7 +135,7 @@ if __name__ == '__main__':
         if args['--only-compare'] is not True:
             generate_graphs(df, width, height, force, ptype=ptype)
 
-    if args['--speaker'] is None and args['--origin'] is None:
+    if args['--speaker'] is None and args['--origin'] is None and args['--mversion'] is None:
         generate_compare(df, width, height, force, ptype=ptype)
 
     sys.exit(0)

@@ -296,31 +296,32 @@ def display_summary(df, params, speaker, origin, key):
         # 1
         speaker_summary = ['{0} {1}'.format(speaker_shape.capitalize(), speaker_type.capitalize())]
 
-        if est is None or math.isnan(est[0]) or math.isnan(est[1]) or math.isnan(est[2]) or math.isnan(est[3]):
+        if est is None:
             #                    2   3   4   5   6
             speaker_summary += ['', '', '', '', '']
         else:
-            # 2', 3
-            if est[0] != -1:
-                speaker_summary += ['• Reference level {0} dB'.format(est[0]), '(mean over 300-10k Hz)']
+            # 2, 3
+            if 'ref_level' in est.keys():
+                speaker_summary += ['• Reference level {0} dB'.format(est['ref_level']),
+                                    '(mean over {0}-{1}k Hz)'.format(est['ref_from'], int(est['ref_to'])/1000)]
             else:
                 speaker_summary += ['', '']
 
             # 4
-            if est[1] != -1:
-                speaker_summary += ['• -3dB at {0}Hz wrt Ref.'.format(est[1])]
+            if 'ref_3dB' in est.keys():
+                speaker_summary += ['• -3dB at {0}Hz wrt Ref.'.format(est['ref_3dB'])]
             else:
                 speaker_summary += ['']
                 
             # 5
-            if est[2] != -1:
-                speaker_summary += ['• -6dB at {0}Hz wrt Ref.'.format(est[2])]
+            if 'ref_6dB' in est.keys():
+                speaker_summary += ['• -6dB at {0}Hz wrt Ref.'.format(est['ref_6dB'])]
             else:
                 speaker_summary += ['']
 
             # 6
-            if est[3] != -1:
-                speaker_summary += ['• +/-{0}dB wrt Ref.'.format(est[3])]
+            if 'ref_band' in est.keys():
+                speaker_summary += ['• +/-{0}dB wrt Ref.'.format(est['ref_band'])]
             else:
                 speaker_summary += ['']
 

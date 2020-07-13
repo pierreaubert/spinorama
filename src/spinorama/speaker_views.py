@@ -86,6 +86,11 @@ def template_compact(df, params, speaker, origin, key):
     #     hspl is None, vspl is None, hcontour is None, vcontour is None, hradar is None, vradar is None))
     chart = alt.vconcat()
     if spinorama is not None:
+        title = None
+        if key is not None and key != 'default':
+            title = '{0} ({1})'.format(speaker, key)
+        else:
+            title = speaker
         if summary is not None:
             chart &= alt.hconcat(summary.properties(title=speaker), spinorama.properties(title='CEA2034'))
         else:

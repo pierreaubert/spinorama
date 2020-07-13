@@ -29,12 +29,20 @@
         <span>1 Pager</span>
       </a>
     </li>
+    % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
     <li data-target="pane-3" id="3">
       <a>
         <span class="icon is-small"><i class="fb fa-desktop"></i></span>
         <span>With EQ</span>
       </a>
     </li>
+    <li data-target="pane-4" id="4">
+      <a>
+        <span class="icon is-small"><i class="fb fa-desktop"></i></span>
+        <span>Ref. v.s. EQ</span>
+      </a>
+    </li>
+    % endif
   </ul>
 </div>
   

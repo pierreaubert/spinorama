@@ -4,7 +4,7 @@ import glob
 import numpy as np
 import pandas as pd
 from scipy.io import loadmat
-from .load import compute_graphs
+from .load import filter_graphs
 
 
 def parse_graph_freq_princeton_mat(mat, suffix):
@@ -67,9 +67,12 @@ def parse_graph_princeton(filename, orient):
     return parse_graph_freq_princeton_mat(matfile, orient)
 
 
-def parse_graphs_speaker_princeton(speaker_path, speaker_brand, speaker_name):
+def parse_graphs_speaker_princeton(speaker_path, speaker_brand, speaker_name, version):
     # 2 files per directory xxx_H_IR.mat and xxx_V_IR.mat
     matfilename = '{0}/Princeton/{1}'.format(speaker_path, speaker_name)
+    if version is not None and version != 'princeton':
+        matfilename = '{0}/Princeton/{1}/{2}'.format(speaker_path, speaker_name, version)
+        
     dirpath = glob.glob(matfilename+'/*.mat')
     h_file = None
     v_file = None
@@ -88,6 +91,6 @@ def parse_graphs_speaker_princeton(speaker_path, speaker_brand, speaker_name):
     h_spl = parse_graph_princeton(h_file, 'H')
     v_spl = parse_graph_princeton(v_file, 'V')
 
-    return compute_graphs(speaker_name, h_spl, v_spl)
+    return filter_graphs(speaker_name, h_spl, v_spl)
 
 

@@ -38,33 +38,31 @@ import altair as alt
 
 
 def meta2df(meta):
-    df = pd.DataFrame({'speaker': [], 'param': [], 'value': [], 'ref': [], 'origin': []})
+    df = pd.DataFrame({'speaker': [], 'param': [], 'value': [], 'ref': [], 'origin': [], 'brand': [], })
     count = 0
     for i in meta:
         speaker = meta[i]
-        origin = 'unknown'
-        for p in speaker:
-            if p == 'measurements':
-                m = speaker[p]
-                if len(m) == 1:
-                    origin = m[0]['origin']
-                else:
-                    origin = 'ASR'
-        for p in speaker:
-            val = speaker[p]
-            ref = 'Original'
-            if p in ('pref_rating_eq', 'estimates_eq'):
-                ref = 'EQ'
-            if type(val) is dict:
-                for v in val.keys():
-                    # print('{0} {1} {2}'.format(i, v, val[v]))
-                    df.loc[count] = [i, v, val[v], ref, origin]
+        brand = speaker.get('brand', 'unknown')
+        measurements = speaker['measurements']
+        for version, measurement in measurements.items():
+            origin = measurement['origin']
+            if origin[1:5] == 'endor':
+                origin = 'Vendor'
+            if version not in ('asr', 'vendor', 'princeton'):
+                origin = '{} - {}'.format(origin, version)
+            if 'pref_rating' in measurement:
+                ref = 'Origin'
+                for k,v in measurement['pref_rating'].items():
+                    logging.debug('{} {} {} {} {} {}'.format(i, k, v, ref, origin, brand))
+                    df.loc[count] = [i, k, v, ref, origin, brand]
                     count += 1
-            else:
-                # print('{0} {1} {2}'.format(i, p, val))
-                df.loc[count] = [i, p, val, ref, origin]
-                count += 1
-
+            if 'pref_rating_eq' in measurement:
+                ref = 'EQ'
+                for k,v in measurement['pref_rating_eq'].items():
+                    logging.debug('{} {} {} {} {} {}'.format(i, k, v, ref, origin, brand))
+                    df.loc[count] = [i, k, v, ref, origin, brand]
+                    count += 1
+    logging.info('meta2df {0} generated data'.format(count))
     return df
 
 
@@ -72,16 +70,18 @@ def print_eq(speakers):
     results = []
     for i in speakers:
         speaker = speakers[i]
-        pref = speaker.get('pref_rating', None)
-        pref_eq = speaker.get('pref_rating_eq', None)
-        if pref is not None and pref_eq is not None:
-            results.append((i, pref, pref_eq))
+        measurements = speaker['measurements']
+        for key, measurement in measurements.items():
+            pref = measurement.get('pref_rating', None)
+            pref_eq = measurement.get('pref_rating_eq', None)
+            if pref is not None and pref_eq is not None:
+                results.append((i, pref, pref_eq))
 
-    print('                                         | NBD  NBD LFX   SM | SCR | NBD  NBD LFX   SM |  EQ | DIFF')
-    print('Speaker                                  |  ON  PIR  Hz  PIR |     |  ON  PIR Hz   PIR |     |     ')
-    print('-----------------------------------------+-------------------+-----+-------------------+-----+-----')
+    print('                                         | NBD  NBD  LFX   SM | SCR | NBD  NBD  LFX   SM |  EQ | DIFF')
+    print('Speaker                                  |  ON  PIR   Hz  PIR |     |  ON  PIR   Hz  PIR |     |     ')
+    print('-----------------------------------------+--------------------+-----+--------------------+-----+-----')
     for i, pref, pref_eq in sorted(results, key=lambda a: -a[2]['pref_score']):
-        print('{0:40s} | {1:0.2f} {2:0.2f} {3:2.0f} {4:0.2f} | {5:1.1f} | {6:0.2f} {7:0.2f} {8:2.0f} {9:0.2f} | {10:1.1f} | {11:+1.1f}'.format(
+        print('{0:40s} | {1:0.2f} {2:0.2f} {3:3.0f} {4:0.2f} | {5:1.1f} | {6:0.2f} {7:0.2f} {8:3.0f} {9:0.2f} | {10:1.1f} | {11:+1.1f}'.format(
             i,
             pref['nbd_on_axis'], 
             pref['nbd_pred_in_room'], 
@@ -110,19 +110,23 @@ def generate_stats(meta):
     nbd_pir = df.loc[(df.param == 'nbd_pred_in_room')].reset_index()
     sm_pir = df.loc[(df.param == 'sm_pred_in_room')].reset_index()
 
-    spread_score = alt.Chart(pref_score).mark_circle(size=50).encode(
-        x=alt.X('speaker', sort='y', axis=None, title='Speakers sorted by Preference Score (over point to get data)'),
+    spread_score = alt.Chart(pref_score).mark_circle(size=100).encode(
+        x=alt.X('speaker', sort='y', axis=None),
         y=alt.Y('value', title='Preference Score'),
         color=alt.Color('ref'),
         tooltip=['speaker', 'origin', 'value', 'ref']
-    ).properties(width=1024,height=300)
+    ).properties(
+        width=1024, height=300,
+        title='Speakers sorted by Preference Score (move your mouse over a point to get data)')
     
-    spread_score_wsub = alt.Chart(pref_score_wsub).mark_circle(size=50).encode(
-        x=alt.X('speaker', sort='y', axis=alt.Axis(labelAngle=45), title='Speakers sorted by Preference Score with a Subwoofer'),
+    spread_score_wsub = alt.Chart(pref_score_wsub).mark_circle(size=100).encode(
+        x=alt.X('speaker', sort='y', axis=None),
         y=alt.Y('value', title='Preference Score w/Sub'),
         color=alt.Color('ref'),
         tooltip=['speaker', 'origin', 'value', 'ref']
-    ).properties(width=1024,height=300)
+    ).properties(
+        width=1024,height=300,
+        title='Speakers sorted by Preference Score with a Subwoofer (move your mouse over a point to get data)')
 
     distribution1 = alt.Chart(pref_score).mark_bar().encode(
         x=alt.X('value:Q', bin=True, title='Preference Score'),
@@ -138,13 +142,15 @@ def generate_stats(meta):
 
     source = pd.DataFrame({
         'speaker': pref_score.speaker,
-        'brand': brand.value,
         'pref_score': pref_score.value,
         'lfx_hz': lfx_hz.value,
         'nbd_on': nbd_on.value,
         'nbd_pir': nbd_pir.value,
         'sm_pir': sm_pir.value,
-    }).dropna()
+        'brand': brand.value,
+    })
+
+    logging.debug(source)
 
     graphs = {}
     for g in ('lfx_hz', 'nbd_pir', 'nbd_on', 'sm_pir'):
@@ -180,7 +186,8 @@ def generate_stats(meta):
     for graph, name in ((distribution1, 'distribution1'),
                         (distribution2, 'distribution2'),
                         (spread_score, 'spread_score'),
-                        (spread_score_wsub, 'spread_score_wsub')):
+                       #(spread_score_wsub, 'spread_score_wsub'),
+                       ):
         filename = '{0}/{1}.png'.format(filedir, name)
         graph.save(filename)
 
@@ -222,7 +229,7 @@ if __name__ == '__main__':
     with open(json_filename, 'r') as f:
         meta = json.load(f)
         
-    logging.info('Data {0} loaded!'.format(json_filename))
+    logging.warning('Data {0} loaded ({1} speakers)!'.format(json_filename, len(meta)))
 
     if print_what is not None:
         if print_what == 'eq':

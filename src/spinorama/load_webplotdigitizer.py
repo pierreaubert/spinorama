@@ -14,8 +14,11 @@ from .load import graph_melt
 pd.set_option('display.max_rows', 1000)
 
 
-def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name):
+def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, version):
     filename = dirname + '/' + speaker_name
+    if version is not None and version not in ('vendor'):
+        filename = '{0}/{1}/{2}'.format(dirname, version,  speaker_name)
+        
     tarfilename = filename + '.tar'
     jsonfilename = None
     try:
@@ -111,10 +114,10 @@ def parse_graph_freq_webplotdigitizer(filename):
         return None, None
             
 
-def parse_graphs_speaker_webplotdigitizer(speaker_path, speaker_brand, speaker_name):
+def parse_graphs_speaker_webplotdigitizer(speaker_path, speaker_brand, speaker_name, version):
     dfs = {}
     dirname = '{0}/Vendors/{1}/{2}/'.format(speaker_path, speaker_brand, speaker_name)
-    jsonfilename = parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name)
+    jsonfilename = parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, version)
 
     try:
         title, spin_uneven = parse_graph_freq_webplotdigitizer(jsonfilename)
@@ -145,7 +148,7 @@ def parse_graphs_speaker_webplotdigitizer(speaker_path, speaker_brand, speaker_n
                     spin.loc[spin['Measurements'] == 'Sound Power DI', 'dB'] -= delta
 
                 # sp_di = spin.loc[spin['Measurements'] == 'Sound Power DI'].reset_index(drop=True)
-                logging.debug('Post treatment SP DI: shape={0} min={1} max={2}'.format(sp_di.shape, sp_di.dB.min(), sp_di.dB.max()))
+                logging.debug('Post treatment SP DI: shape={0} min={1} max={2}'.format(sp_di.shape, sp_di_computed.min(), sp_di_computed.max()))
                 # print(sp_di)
             else:
                 logging.debug('Shape LW={0} SP={1}'.format(lw.shape, sp.shape))
@@ -163,7 +166,7 @@ def parse_graphs_speaker_webplotdigitizer(speaker_path, speaker_brand, speaker_n
                     spin.loc[spin['Measurements'] == 'Early Reflections DI', 'dB'] -= delta
 
                 # er_di = spin.loc[spin['Measurements'] == 'Early Reflections DI'].reset_index(drop=True)
-                logging.debug('Post treatment ER DI: shape={0} min={1} max={2}'.format(er_di.shape, er_di.dB.min(), er_di.dB.max()))
+                logging.debug('Post treatment ER DI: shape={0} min={1} max={2}'.format(er_di.shape, er_di_computed.min(), er_di_computed.max()))
                 # print(er_di)
             else:
                 logging.debug('Shape LW={0} ER={1}'.format(lw.shape, er.shape))

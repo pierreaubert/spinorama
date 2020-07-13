@@ -1,4 +1,5 @@
 #                                                  -*- coding: utf-8 -*-
+import logging
 import math
 import numpy as np
 import pandas as pd
@@ -133,28 +134,28 @@ def find_nearest_freq(dfu, hz, tolerance=0.05):
         if abs(f-hz) < hz*tolerance:
             ihz = i
             break
-    # print('nearest: {0} hz at loc {1}'.format(hz, ihz))                                                                                                                                        
+    logging.debug('nearest: {0} hz at loc {1}'.format(hz, ihz))
     return ihz
 
 
 def plot(anglelist, dfu):
-    # build 3 plots                                                                                                                                                                              
+    # build 3 plots
     dbX = []
     dbY = []
     hzZ = []
     for hz in [100, 500, 1000, 10000, 15000]:
-        # ihz = [47, 113, 180]                                                                                                                                                                   
         ihz = find_nearest_freq(dfu, hz)
         if ihz is None:
             continue
         X, Y, Z = projection(anglelist, dfu.loc[ihz][1:], hz)
-        # add to global variable                                                                                                                                                                 
+        # add to global variable
         dbX.append(X)
         dbY.append(Y)
         hzZ.append(Z)
 
-    # normalise                                                                                                                                                                                  
+    # normalise
     dbmax = max(np.array(dbX).max(), np.array(dbY).max())
+    logging.info('radar plot: dbmax {0}'.format(dbmax))
     dbX = [v2 / dbmax for v1 in dbX for v2 in v1]
     dbY = [v2 / dbmax for v1 in dbY for v2 in v1]
     hzZ = [label(i2) for i1 in hzZ for i2 in i1]

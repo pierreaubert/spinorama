@@ -144,6 +144,7 @@ def print_graphs(df: pd.DataFrame,
             )
 
     # 1080p to 2k screen
+    # -----------
     params = copy.deepcopy(graph_params_default)
     params['width'] = 2160
     # ratio for A4 is 21cm / 29.7cm, TODO for letter 
@@ -153,20 +154,25 @@ def print_graphs(df: pd.DataFrame,
     params['ymin'] = origins_info[origin]['min dB']
     params['ymax'] = origins_info[origin]['max dB']
     graphs['2cols'] = template_compact(df, params, speaker, origin, key)
+
     # 4k screen
+    # -----------
     #params['width'] = 4096
     #params['height'] = 1200
     #graphs['3cols'] = template_panorama(df, params, speaker, origin, key)
-    # eq
-    params = copy.deepcopy(graph_params_default)
-    params['width'] = 2560
-    params['height'] = 600
-    if df_eq is not None:
-        graphs['ref_vs_eq'] = template_sidebyside_eq(df, df_eq, params, speaker, origin, key)
+
+    # Ref vs. EQ
+    # -----------
+    # this graphs works but we can generate the same with html by building a 2 columns table
+    # pointing to ref and eq versions
+    # params = copy.deepcopy(graph_params_default)
+    # params['width'] = 1200
+    # params['height'] = 300
+    # if df_eq is not None:
+    #     graphs['ref_vs_eq'] = template_sidebyside_eq(df, df_eq, params, speaker, origin, key)
 
     updated = 0
     for (title, graph) in graphs.items():
-        #                      adam / asr / default
         if graph is not None:
             updated += print_graph(speaker, origin, key,
                                 title, graph,
@@ -183,8 +189,8 @@ def print_compare(df, force_print=False, filter_file_ext=None):
         'Early Reflections', 'Horizontal Reflections', 'Vertical Reflections',
         'SPL Horizontal', 'SPL Vertical'):
         graph = display_compare(df, graph_filter)
-        graph = graph.configure_legend(orient='bottom').configure_title(orient='top', anchor='middle', fontSize=16)
         if graph is not None:
+            graph = graph.configure_legend(orient='bottom').configure_title(orient='top', anchor='middle', fontSize=16)
             filename = '{0}/{1}.json'.format(filedir, graph_filter)
             try:
                 print('Saving {0}'.format(filename))

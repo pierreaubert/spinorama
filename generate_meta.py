@@ -19,14 +19,18 @@
 
 """
 usage: generate_meta.py [--help] [--version] [--log-level=<level>]\
-    [--origin=<origin>] [--speaker=<speaker>]
+    [--metadata=<metadata>] [--parse-max=<max>]\
+    [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>]
 
 Options:
   --help            display usage()
   --version         script version number
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
+  --metadata=<metadata> metadata file to use (default is ./datas/metadata.py)
+  --parse-max=<max> for debugging, set a max number of speakers to look at
   --origin=<origin> restrict to a specific origin, usefull for debugging
   --speaker=<speaker> restrict to a specific speaker, usefull for debugging
+  --mversion=<mversion> restrict to a specific mversion (for a given origin you can have multiple measurements)
 """
 import logging
 import os
@@ -46,22 +50,13 @@ def sanity_check(df, meta):
         if speaker_name not in meta:
             logging.error('Metadata not found for >{0}<'.format(speaker_name))
             return 1
-        # check if each measurement looks reasonable
-        for origin, keys in origins.items():
-            if origin not in ['ASR', 'Princeton'] and origin[0:8] != 'Vendors/':
-                logging.error('Measurement origin >{:s}< is unkown for >{:s}'.format(origin, speaker_name))
-                return 1
-            if 'default' not in keys.keys():
-                logging.error('Key default is mandatory for >{:s}<'.format(speaker_name))
-                return 1
         # check if image exists (jpg or png)
         if not os.path.exists('./datas/pictures/' + speaker_name + '.jpg') and not os.path.exists('./datas/pictures/' + speaker_name + '.png'):
             logging.error('Image associated with >{0}< not found.'.format(speaker_name))
         # check if downscale image exists (all jpg)
         if not os.path.exists('./docs/pictures/' + speaker_name + '.jpg'):
-            logging.fatal('Image associated with >{0}< not found.'.format(speaker_name))
-            logging.fatal('Please run: minimise_pictures.sh')
-            return 1
+            logging.error('Image associated with >{0}< not found.'.format(speaker_name))
+            logging.error('Please run: minimise_pictures.sh')
     return 0
 
 
@@ -92,23 +87,20 @@ def add_estimates(df):
                 if spin is None:
                     continue
 
-                logging.debug('Compute score for speaker {0}'.format(speaker_name))
+                logging.debug('Compute score for speaker {0} key {1}'.format(speaker_name, key))
                 # basic math
                 onaxis = spin.loc[spin['Measurements'] == 'On Axis'].reset_index(drop=True)
                 est = estimates(onaxis)
                 logging.info('Computing estimated for {0}'.format(speaker_name))
-                if est is None or est == [-1, -1, -1, -1]:
+                if est is None:
                     logging.debug('estimated return None for {0}'.format(speaker_name))
                     continue
-                if math.isnan(est[0]) or math.isnan(est[1]) or math.isnan(est[2]) or math.isnan(est[3]):
-                    logging.error('estimated return NaN for {0}'.format(speaker_name))
-                    continue
-                logging.info('Adding -3dB {0}Hz -6dB {1}Hz +/-{2}dB'.format(est[1], est[2], est[3]))
-                if 'estimates' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
-                    if key == 'default':
-                        metadata.speakers_info[speaker_name]['estimates'] = est
-                    elif key == 'default_eq':
-                        metadata.speakers_info[speaker_name]['estimates_eq'] = est
+                logging.info('Adding -3dB {0}Hz -6dB {1}Hz +/-{2}dB'.format(
+                    est.get('ref_3dB', '--'), est.get('ref_6dB', '--'), est.get('ref_band', '--')))
+                if key[-3:] == '_eq':
+                    metadata.speakers_info[speaker_name]['measurements'][key[:-3]]['estimates_eq'] = est
+                else:
+                    metadata.speakers_info[speaker_name]['measurements'][key]['estimates'] = est
 
                 #if origin == 'Princeton':
                 #    # this measurements are only valid above 500hz
@@ -124,11 +116,12 @@ def add_estimates(df):
 
                 pref_rating = speaker_pref_rating(spin, inroom)
                 if pref_rating is None:
+                    logging.warning('pref_rating failed for {0} {1}'.format(speaker_name, key))
                     continue
                 logging.info('Adding {0}'.format(pref_rating))
                 # compute min and max for each value
-                min_flatness = min(est[3], min_flatness)
-                max_flatness = max(est[3], max_flatness)
+                min_flatness = min(est['ref_band'], min_flatness)
+                max_flatness = max(est['ref_band'], max_flatness)
                 min_pref_score_wsub = min(min_pref_score_wsub, pref_rating['pref_score_wsub'])
                 max_pref_score_wsub = max(max_pref_score_wsub, pref_rating['pref_score_wsub'])
                 min_nbd_on = min(min_nbd_on, pref_rating['nbd_on_axis'])
@@ -144,41 +137,49 @@ def add_estimates(df):
                 if 'lfx_hz' in pref_rating:
                     min_lfx_hz = min(min_lfx_hz, pref_rating['lfx_hz'])
                     max_lfx_hz = max(max_lfx_hz, pref_rating['lfx_hz'])
-                if 'pref_rating' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
-                    if key == 'default':
-                        metadata.speakers_info[speaker_name]['pref_rating'] = pref_rating
-                    elif key == 'default_eq':
-                        metadata.speakers_info[speaker_name]['pref_rating_eq'] = pref_rating
+                    
+                if key[-3:] == '_eq':
+                    metadata.speakers_info[speaker_name]['measurements'][key[:-3]]['pref_rating_eq'] = pref_rating
+                else:
+                    metadata.speakers_info[speaker_name]['measurements'][key]['pref_rating'] = pref_rating
 
 
     # if we are looking only after 1 speaker, return
     if len(df.items()) == 1:
+        logging.info('skipping normalization with only one speaker')
         return
     
     # add normalized value to metadata
     for speaker_name, speaker_data in df.items():
         logging.info('Normalize data for {0}'.format(speaker_name))
         for origin, measurements in speaker_data.items():
-            for m, dfs in measurements.items():
-                if m != 'default':
-                    continue
-                if 'CEA2034' not in dfs.keys():
+            for version, measurement in measurements.items():
+                if 'CEA2034' not in measurement.keys():
+                    logging.debug('skipping normalization no spinorama for {0}'.format(speaker_name))
                     continue
 
-                spin = dfs['CEA2034']
-                if spin is None or 'pref_rating' not in metadata.speakers_info[speaker_name].keys() \
-                  or 'estimates' not in metadata.speakers_info[speaker_name].keys() \
-                  or metadata.speakers_info[speaker_name]['estimates'][0] == -1:
+                spin = measurement['CEA2034']
+                if spin is None:
+                    logging.debug('skipping normalization no spinorama for {0}'.format(speaker_name))
+                    continue
+                if version[-3:] == '_eq':
+                    logging.debug('skipping normalization for eq for {0}'.format(speaker_name))
+                    continue
+                if 'estimates' not in metadata.speakers_info[speaker_name]['measurements'][version].keys():
+                    logging.debug('skipping normalization no estimates in {0} for {1}'.format(version, speaker_name))
+                    continue
+                if 'pref_rating' not in metadata.speakers_info[speaker_name]['measurements'][version].keys():
+                    logging.debug('skipping normalization no pref_rating in {0} for {1}'.format(version, speaker_name))
                     continue
 
                 logging.debug('Compute relative score for speaker {0}'.format(speaker_name))
                 # get values
-                pref_rating = metadata.speakers_info[speaker_name]['pref_rating']
+                pref_rating = metadata.speakers_info[speaker_name]['measurements'][version]['pref_rating']
                 pref_score_wsub = pref_rating['pref_score_wsub']
                 nbd_on = pref_rating['nbd_on_axis']
                 sm_sp = pref_rating['sm_sound_power']
                 sm_pir = pref_rating['sm_pred_in_room']
-                flatness = metadata.speakers_info[speaker_name]['estimates'][3]
+                flatness = metadata.speakers_info[speaker_name]['measurements'][version]['estimates']['ref_band']
                 pref_score = -1
                 lfx_hz = -1
                 if 'pref_score' in pref_rating:
@@ -208,16 +209,12 @@ def add_estimates(df):
                     'scaled_sm_sound_power': scaled_sm_sp,
                     'scaled_sm_pred_in_room': scaled_sm_pir,
                 }
-                if 'pref_score'in pref_rating:
+                if 'pref_score' in pref_rating:
                     scaled_pref_rating['scaled_pref_score'] = scaled_pref_score
                 if 'lfx_hz' in pref_rating:
                     scaled_pref_rating['scaled_lfx_hz'] = scaled_lfx_hz
                 logging.info('Adding {0}'.format(scaled_pref_rating))
-                if 'scaled_pref_rating' not in metadata.speakers_info[speaker_name] or origin == 'ASR':
-                    if key == 'default':
-                        metadata.speakers_info[speaker_name]['scaled_pref_rating'] = scaled_pref_rating
-                    elif key == 'default_eq':
-                        metadata.speakers_info[speaker_name]['scaled_pref_rating_eq'] = scaled_pref_rating
+                metadata.speakers_info[speaker_name]['measurements'][version]['scaled_pref_rating'] = scaled_pref_rating
 
 
 def dump_metadata(meta):
@@ -229,7 +226,7 @@ def dump_metadata(meta):
 
 if __name__ == '__main__':
     args = docopt(__doc__,
-                  version='generate_meta.py version 1.1',
+                  version='generate_meta.py version 1.3',
                   options_first=True)
 
     # check args section
@@ -250,27 +247,27 @@ if __name__ == '__main__':
             datefmt='%Y-%m-%d:%H:%M:%S')
 
     df = None
-    if args['--speaker'] is not None and args['--origin'] is not None:
-        speaker = args['--speaker']
-        origin = args['--origin']
-        mformat = None
-        if origin == 'Princeton':
-            mformat = 'princeton'
-        elif origin == 'ASR':
-            mformat = 'klippel'
-        else:
-            mformat = 'webplotdigitizer'
+    speaker = args['--speaker']
+    origin = args['--origin']
+    mversion = args['--mversion']
+    if speaker is not None and origin is not None:
+        if mversion is None:
+            mversion = metadata.speakers_info[speaker]['default_measurement']
+        mformat = metadata.speakers_info[speaker]['measurements'][mversion]['format']
         brand = metadata.speakers_info[speaker]['brand']
         df = {}
         df[speaker] = {}
         df[speaker][origin] = {}
-        df[speaker][origin]['default'] = parse_graphs_speaker(brand, speaker, mformat)
+        df[speaker][origin][mversion] = {}
+        df[speaker][origin][mversion] = parse_graphs_speaker('./datas', brand, speaker, mformat, mversion)
     else:    
-        df = parse_all_speakers(metadata.speakers_info, None)
-
-    if sanity_check(df, metadata.speakers_info) != 0:
-        logging.error('Sanity checks failed!')
-        sys.exit(1)
+        parse_max = args['--parse-max']
+        if parse_max is not None:
+            parse_max = int(parse_max)
+        df = parse_all_speakers(metadata.speakers_info, origin, './datas', None, parse_max)
+        if sanity_check(df, metadata.speakers_info) != 0:
+            logging.error('Sanity checks failed!')
+            sys.exit(1)
 
     # add computed data to metadata
     logging.info('Compute estimates per speaker')

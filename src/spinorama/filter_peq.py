@@ -32,10 +32,13 @@ def peq_apply_measurements(spl, peq):
             continue
         curve = spl[angle]-mean
         curve_filtered = curve+peq_build(freq, peq)
-        # logging.debug('{0:7s} range [{1:.1f}, {2:.1f}] filtered [{3:.1f}, {4:.1f}]'.format(angle, np.min(curve), np.max(curve), np.min(curve_filtered), np.max(curve_filtered)))
+        logging.debug('{0:7s} range [{1:.1f}, {2:.1f}] filtered [{3:.1f}, {4:.1f}]'.format(angle, np.min(curve), np.max(curve), np.min(curve_filtered), np.max(curve_filtered)))
         # print(curve, curve_filtered)
         ddf.append(pd.DataFrame({angle: curve_filtered}))
-    return pd.concat(ddf, axis=1)
+    filtered = pd.concat(ddf, axis=1)
+    if filtered.isnull().values.any():
+        logging.warning('Some filtered values post EQ are NaN')
+    return filtered.dropna()
 
 
 def peq_graph_measurements(spin, measurement, peq):

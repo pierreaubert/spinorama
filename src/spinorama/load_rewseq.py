@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 from .filter_iir import Biquad
 
+# TODO(pierre): max rgain and max Q should be in parameters
+
 def parse_eq_iir_rews(filename, srate):
     peq = []
     try:
@@ -35,7 +37,7 @@ def parse_eq_iir_rews(filename, srate):
                         continue
 
                     rq = float(q)
-                    if rq < 0 or rq > 10:
+                    if rq < 0 or rq > 50:
                         logging.info('IIR peq Q {0} is out of bounds!'.format(rq))
                         continue
 
