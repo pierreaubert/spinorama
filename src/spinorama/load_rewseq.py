@@ -32,14 +32,14 @@ def parse_eq_iir_rews(filename, srate):
                         continue
 
                     rgain = float(gain)
-                    if rgain < -20 or rgain > 20:
+                    if rgain < -10 or rgain > 10:
                         logging.info('IIR peq gain {0} is large!'.format(rgain))
-                        continue
+                        # continue
 
                     rq = float(q)
-                    if rq < 0 or rq > 50:
+                    if rq < 0 or rq > 10:
                         logging.info('IIR peq Q {0} is out of bounds!'.format(rq))
-                        continue
+                        # continue
 
                     if kind == 'PK':
                         iir = Biquad(Biquad.PEAK, ifreq, srate, rq, rgain)
