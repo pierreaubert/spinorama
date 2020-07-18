@@ -12,8 +12,8 @@ from .load_rewseq import parse_eq_iir_rews
 from .filter_peq import peq_apply_measurements
 
 
-def parse_eq_speaker(speaker_name : str, df_ref) -> dict:
-    iirname = './datas/eq/{0}/iir.txt'.format(speaker_name)
+def parse_eq_speaker(speaker_path : str, speaker_name : str, df_ref) -> dict:
+    iirname = '{0}/eq/{1}/iir.txt'.format(speaker_path, speaker_name)
     if os.path.isfile(iirname):
         srate = 48000
         logging.debug('found IIR eq {0}: applying to {1}'.format(iirname, speaker_name))
@@ -25,8 +25,9 @@ def parse_eq_speaker(speaker_name : str, df_ref) -> dict:
             eq_v_spl = peq_apply_measurements(v_spl, iir)
             df_eq = filter_graphs(speaker_name, eq_h_spl, eq_v_spl)
             # normalize wrt to original measurement to make comparison easier
-            original_mean = df_ref.get('CEA2034_original_mean', None)
-            return load_normalize(df_eq, original_mean)
+            # original_mean = df_ref.get('CEA2034_original_mean', None)
+            # return load_normalize(df_eq, original_mean)
+            return df_eq
     return None
 
 

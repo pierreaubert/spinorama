@@ -77,11 +77,11 @@ def print_eq(speakers):
             if pref is not None and pref_eq is not None:
                 results.append((i, pref, pref_eq))
 
-    print('                                         | NBD  NBD  LFX   SM | SCR | NBD  NBD  LFX   SM |  EQ | DIFF')
-    print('Speaker                                  |  ON  PIR   Hz  PIR |     |  ON  PIR   Hz  PIR |     |     ')
-    print('-----------------------------------------+--------------------+-----+--------------------+-----+-----')
+    print('                                           | NBD  NBD  LFX   SM |  SCR | NBD  NBD  LFX   SM | SCR | ')
+    print('Speaker                                    |  ON  PIR   Hz  PIR |  ASR |  ON  PIR   Hz  PIR |  EQ | DIFF')
+    print('-------------------------------------------+--------------------+------+--------------------+-----+-----')
     for i, pref, pref_eq in sorted(results, key=lambda a: -a[2]['pref_score']):
-        print('{0:40s} | {1:0.2f} {2:0.2f} {3:3.0f} {4:0.2f} | {5:1.1f} | {6:0.2f} {7:0.2f} {8:3.0f} {9:0.2f} | {10:1.1f} | {11:+1.1f}'.format(
+        print('{0:42s} | {1:0.2f} {2:0.2f} {3:3.0f} {4:0.2f} | {5:+1.1f} | {6:0.2f} {7:0.2f} {8:3.0f} {9:0.2f} | {10:1.1f} | {11:+1.1f}'.format(
             i,
             pref['nbd_on_axis'], 
             pref['nbd_pred_in_room'], 

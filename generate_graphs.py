@@ -19,8 +19,7 @@
 """Usage:
 generate_graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
   [--force] [--type=<ext>] [--log-level=<level>]\
-  [--origin=<origin>]  [--speaker=<speaker>] [--mversion=<mversion>]\
-  [--only-compare=<compare>]
+  [--origin=<origin>]  [--speaker=<speaker>] [--mversion=<mversion>]
 
 Options:
   -h|--help         display usage()
@@ -32,33 +31,16 @@ Options:
   --origin=<origin> restrict to a specific origin, usefull for debugging
   --speaker=<speaker> restrict to a specific speaker, usefull for debugging
   --mversion=<mversion> restrict to a specific mversion (for a given origin you can have multiple measurements)
-  --only-compare=<compare> if true then skip graphs generation and only dump compare data
 """
 import json
 import logging
 import sys
 import pandas as pd
 import flammkuchen as fl
-# import ray
 import datas.metadata as metadata
 from docopt import docopt
 from src.spinorama.load_parse import parse_all_speakers, parse_graphs_speaker, parse_eq_speaker
-from src.spinorama.speaker_print import print_graphs, print_compare
-
-
-# ray.init(num_cpus=12)
-
-
-class JSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if hasattr(obj, 'to_json'):
-            return obj.to_json(orient='records')
-        return json.JSONEncoder.default(self, obj)
-
-
-def dump_to_json(df, path):
-    with open(path, 'w') as fp:
-        json.dump(df, fp, cls=JSONEncoder)
+from src.spinorama.speaker_print import print_graphs
 
 
 def generate_graphs(df, width, height, force, ptype):
@@ -77,13 +59,10 @@ def generate_graphs(df, width, height, force, ptype):
     print('{:30s} {:2d}'.format(speaker_name, updated))
 
 
-def generate_compare(df, width, height, force, ptype):
-    print_compare(df, force, ptype)
-
 
 if __name__ == '__main__':
     args = docopt(__doc__,
-                  version='generate_graphs.py version 1.21',
+                  version='generate_graphs.py version 1.20',
                   options_first=True)
 
     width = 1200
@@ -137,11 +116,10 @@ if __name__ == '__main__':
         df_ref = parse_graphs_speaker('./datas', brand, speaker, mformat, mversion)
         if df_ref is not None:
             df[speaker][origin][mversion] = df_ref
-            df_eq = parse_eq_speaker(speaker, df_ref)
+            df_eq = parse_eq_speaker('./datas', speaker, df_ref)
             if df_eq is not None:
                 logging.info('Parsing: {} {} {} {} with eq'.format(brand, speaker, mformat, mversion))
-                speaker_ns = speaker.replace(' ', '_')
-                df[speaker_ns][origin]['{0}_eq'.format(mversion)] = df_eq
+                df[speaker][origin]['{0}_eq'.format(mversion)] = df_eq
         else:
             logging.info('{0} {1} {2} {3} returned None'.format(brand, speaker, mformat, mversion))
         print('Speaker                         #updated')
@@ -156,11 +134,7 @@ if __name__ == '__main__':
         #with open('cache.parse_all_speakers.pkl', 'w') as fp:
         #    pickle.dump(df, fp)
         fl.save('cache.parse_all_speakers.h5', df)
-        if args['--only-compare'] is not True:
-            generate_graphs(df, width, height, force, ptype=ptype)
-
-    if args['--speaker'] is None and args['--origin'] is None and args['--mversion'] is None:
-        generate_compare(df, width, height, force, ptype=ptype)
+        generate_graphs(df, width, height, force, ptype=ptype)
 
     sys.exit(0)
         

@@ -47,7 +47,7 @@ def get_speaker_list(speakerpath : str):
 
 def queue_measurement(brand, speaker, mformat, morigin, mversion):
     id_df = parse_graphs_speaker.remote('./datas', brand, speaker, mformat, mversion)
-    id_eq = parse_eq_speaker.remote(speaker, id_df)
+    id_eq = parse_eq_speaker.remote('./datas', speaker, id_df)
     force = False
     ptype = None
     width = 1024
@@ -93,11 +93,11 @@ def compute(speakerkist, metadata, ray_ids):
         logging.info('State: {0} ready IDs {1} remainings IDs {2} Total IDs {3} Done'.format(len(ready_ids), len(remaining_ids), len(ids), len(done_ids)))
         
         for speaker in speakerlist:
-            speaker_key = speaker.translate({ord(ch) : '_' for ch in '-.;/\' '})
+            speaker_key = speaker #.translate({ord(ch) : '_' for ch in '-.;/\' '})
             if speaker not in df.keys():
                 df[speaker_key] = {}
             for m_version, measurement in metadata[speaker]['measurements'].items():
-                m_version_key = m_version.translate({ord(ch) : '_' for ch in '-.;/\' '})
+                m_version_key = m_version #.translate({ord(ch) : '_' for ch in '-.;/\' '})
                 m_origin = measurement['origin']
                 if m_origin not in df[speaker_key].keys():
                     df[speaker_key][m_origin] = {}
@@ -152,6 +152,5 @@ if __name__ == '__main__':
     ray_ids = queue_speakers(speakerlist, metadata.speakers_info)
     df = compute(speakerlist, metadata.speakers_info, ray_ids)
     fl.save('cache.parse_all_speakers.h5', df)
-    print_compare.remote(df, force, ptype)
 
         

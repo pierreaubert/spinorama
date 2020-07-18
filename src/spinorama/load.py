@@ -14,11 +14,10 @@ def load_normalize(df, ref_mean=None):
     # normalize all melted graphs
     dfc = {}
     if 'CEA2034' in df:
+        mean = ref_mean
         if ref_mean == None:
             mean = normalize_mean(df['CEA2034'])
             dfc['CEA2034_original_mean'] = mean
-        else:
-            mean = ref_mean
         for graph in df.keys():
             if graph != 'CEA2034':
                 if graph.replace('_unmelted', '') != graph:
@@ -29,11 +28,10 @@ def load_normalize(df, ref_mean=None):
         logging.debug('mean for normalisation {0}'.format(mean))
         return dfc
     elif 'On Axis' in df:
+        mean = ref_mean
         if ref_mean == None:
             mean = normalize_mean(df['On Axis'])
             dfc['On Axis_original_mean'] = mean
-        else:
-            mean = ref_mean
         for graph in df.keys():
             if graph.replace('_unmelted', '') != graph:
                 dfc[graph] = df[graph]
