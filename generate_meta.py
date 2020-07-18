@@ -19,7 +19,7 @@
 
 """
 usage: generate_meta.py [--help] [--version] [--log-level=<level>]\
-    [--metadata=<metadata>] [--parse-max=<max>]\
+    [--metadata=<metadata>] [--parse-max=<max>] [--use-cache=<cache>]\
     [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>]
 
 Options:
@@ -34,14 +34,18 @@ Options:
 """
 import logging
 import os
+import json
 import math
 import sys
-import json
+
+from docopt import docopt
+import pandas as pd
+import flammkuchen as fl
+
 from src.spinorama.load_parse import parse_all_speakers, parse_graphs_speaker
 from src.spinorama.compute_estimates import estimates
 from src.spinorama.compute_scores import speaker_pref_rating
 import datas.metadata as metadata
-from docopt import docopt
 
 
 def sanity_check(df, meta):
@@ -264,7 +268,9 @@ if __name__ == '__main__':
         parse_max = args['--parse-max']
         if parse_max is not None:
             parse_max = int(parse_max)
-        df = parse_all_speakers(metadata.speakers_info, origin, './datas', None, parse_max)
+        df = fl.load('cache.parse_all_speakers.h5')
+        if df is None:
+            df = parse_all_speakers(metadata.speakers_info, origin, './datas', None, parse_max)
         if sanity_check(df, metadata.speakers_info) != 0:
             logging.error('Sanity checks failed!')
             sys.exit(1)

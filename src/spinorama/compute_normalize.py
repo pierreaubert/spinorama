@@ -1,7 +1,9 @@
 #                                                  -*- coding: utf-8 -*-
 import logging
+
 import numpy as np
 import pandas as pd
+
 
 # pd.set_option('display.max_rows', None)
 
@@ -21,7 +23,8 @@ def unify_freq(dfs):
     lw = dfs[dfs.Measurements == 'Listening Window'].rename(columns={'dB': 'LW'}).set_index('Freq')
     er = dfs[dfs.Measurements == 'Early Reflections'].rename(columns={'dB': 'ER'}).set_index('Freq')
     sp = dfs[dfs.Measurements == 'Sound Power'].rename(columns={'dB': 'SP'}).set_index('Freq')
-    logging.debug('unify_freq: on.shape={0} lw.shape={1} er.shape={2} sp.shape={3}'.format(on.shape, lw.shape, er.shape, sp.shape))
+    logging.debug('unify_freq: on.shape={0} lw.shape={1} er.shape={2} sp.shape={3}'.format(on.shape, lw.shape, er.shape,
+                                                                                           sp.shape))
 
     # align 2 by 2
     align = on.align(lw, axis=0)
@@ -74,9 +77,9 @@ def unify_freq(dfs):
         data['Early Reflections'] = a_er.ER
     if a_sp is not None:
         data['Sound Power'] = a_sp.SP
-        
+
     res2 = pd.DataFrame(data)
-    
+
     # print(res2.head())
     return res2.dropna().reset_index(drop=True)
 
@@ -87,10 +90,10 @@ def normalize_mean(df):
     mean = None
     if 'dB' in df.keys():
         on = df[df.Measurements == 'On Axis']
-        mean = np.mean(on.loc[(on.Freq>500) & (on.Freq<10000)].dB)
+        mean = np.mean(on.loc[(on.Freq > 500) & (on.Freq < 10000)].dB)
     elif 'On Axis' in df.columns:
         on = df[['Freq', 'On Axis']]
-        mean = np.mean(on.loc[(on.Freq>500) & (on.Freq<10000)].dB)
+        mean = np.mean(on.loc[(on.Freq > 500) & (on.Freq < 10000)].dB)
 
     return mean
 
@@ -132,10 +135,8 @@ def pprint(df):
 
 def resample(df, target_size):
     len_freq = df.shape[0]
-    if len_freq > 2*target_size:
-        roll = int(len_freq/target_size)
-        sampled = df.loc[df.Freq.rolling(roll).max()[1::roll].index,:]
+    if len_freq > 2 * target_size:
+        roll = int(len_freq / target_size)
+        sampled = df.loc[df.Freq.rolling(roll).max()[1::roll].index, :]
         return sampled
     return df
-
-

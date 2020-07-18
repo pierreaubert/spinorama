@@ -1,6 +1,8 @@
 numpy
 scipy
 pandas
+tables
+flammkuchen
 altair
 altair-saver
 jupyterlab

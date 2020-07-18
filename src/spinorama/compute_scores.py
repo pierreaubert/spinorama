@@ -1,11 +1,14 @@
 #                                                  -*- coding: utf-8 -*-
-from more_itertools import consecutive_groups
 import logging
 import math
+
 import numpy as np
+from more_itertools import consecutive_groups
 from scipy.stats import linregress
-from .load import graph_melt
+
 from .compute_cea2034 import estimated_inroom_HV
+from .load import graph_melt
+
 
 # https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
 def octave(N):
@@ -15,11 +18,12 @@ def octave(N):
     """
     # why 1290 and not 1000?
     reference = 1290
-    p = pow(2, 1/N)
-    p_band = pow(2, 1/(2*N))
-    iter = int((N*10+1)/2)
-    center = [reference / p**i for i in range(iter, 0, -1)]+[reference]+[reference*p**i for i in range(1, iter+1, 1)]
-    octave = [(c/p_band, c, c*p_band) for c in center]
+    p = pow(2, 1 / N)
+    p_band = pow(2, 1 / (2 * N))
+    iter = int((N * 10 + 1) / 2)
+    center = [reference / p ** i for i in range(iter, 0, -1)] + [reference] + [reference * p ** i for i in
+                                                                               range(1, iter + 1, 1)]
+    octave = [(c / p_band, c, c * p_band) for c in center]
     # print('Octave({0}) octave[{1}], octave[{2}'.format(N, octave[0], octave[-1]))
     return octave
 
@@ -39,13 +43,13 @@ def aad(dfu):
             continue
         selection = dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq < bmax)]
         if selection.shape[0] > 0:
-            aad_sum += abs(y_ref-np.nanmean(selection.dB))
+            aad_sum += abs(y_ref - np.nanmean(selection.dB))
             n += 1
     if n == 0:
         logging.error('aad is None')
         return None
-    aad_value = aad_sum/n
-    #if math.isnan(aad_value):
+    aad_value = aad_sum / n
+    # if math.isnan(aad_value):
     #    pd.set_option('display.max_rows', dfu.shape[0]+1)
     #    print(aad_sum, n, dfu)
     return aad_value
@@ -62,12 +66,12 @@ def nbd(dfu):
     between 100 Hz-12 kHz. The mean absolute deviation within each 
     1⁄2-octave band is based a sample of 10 equally log-spaced data points.
     """
-    #return np.mean([median_absolute_deviation(dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB)
+    # return np.mean([median_absolute_deviation(dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB)
     #                for (bmin, bcenter, bmax) in octave(2)
     #                if bcenter >=100 and bcenter <=12000])
     return np.nanmean([dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB.mad()
                        for (bmin, bcenter, bmax) in octave(2)
-                       if bcenter >=100 and bcenter <=12000])
+                       if bcenter >= 100 and bcenter <= 12000])
 
 
 def lfx(lw, sp):
@@ -83,7 +87,7 @@ def lfx(lw, sp):
     for the calculation because it better defines the true bass output of
     the loudspeaker, particularly speakers that have rear-firing ports.
     """
-    lw_ref = np.mean(lw.loc[(lw.Freq >= 300) & (lw.Freq <= 10000)].dB)-6
+    lw_ref = np.mean(lw.loc[(lw.Freq >= 300) & (lw.Freq <= 10000)].dB) - 6
     # find first freq such that y[freq]<y_ref-6dB
     lfx_range = sp.loc[(sp.Freq < 300) & (sp.dB <= lw_ref)].Freq
     lfx_grouped = consecutive_groups(lfx_range.iteritems(), lambda x: x[0])
@@ -114,12 +118,12 @@ def lfq(lw, sp, lfx_log):
         if s_lw.shape[0] > 0 and s_sp.shape[0] > 0:
             y_lw = np.mean(s_lw.dB)
             y_sp = np.mean(s_sp.dB)
-            sum += abs(y_lw-y_sp)
+            sum += abs(y_lw - y_sp)
             n += 1
     if n == 0:
         logging.error('lfq is None')
         return None
-    return sum/n
+    return sum / n
 
 
 def sm(dfu):
@@ -140,14 +144,14 @@ def sm(dfu):
     Smoothness (SM) values can range from 0 to 1, with larger values representing 
     smoother frequency response curves.
     """
-    data = dfu.loc[(dfu.Freq>=100) & (dfu.Freq<=16000)]
+    data = dfu.loc[(dfu.Freq >= 100) & (dfu.Freq <= 16000)]
     log_freq = np.log(data.Freq)
     slope, intercept, r_value, p_value, std_err = linregress(log_freq, data.dB)
-    return r_value**2
-                
+    return r_value ** 2
+
 
 def pref_rating(nbd_on, nbd_pir, lfx, sm_pir):
-    return 12.69-2.49*nbd_on-2.99*nbd_pir-4.31*lfx+2.32*sm_pir
+    return 12.69 - 2.49 * nbd_on - 2.99 * nbd_pir - 4.31 * lfx + 2.32 * sm_pir
 
 
 def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
@@ -160,7 +164,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         df_sound_power = cea2034.loc[lambda df: df.Measurements == 'Sound Power']
         skip_full = False
         for dfu in (df_on_axis, df_listening_window, df_sound_power):
-            if dfu.loc[(dfu.Freq>=100) & (dfu.Freq<=400)].shape[0] == 0:
+            if dfu.loc[(dfu.Freq >= 100) & (dfu.Freq <= 400)].shape[0] == 0:
                 skip_full = True
         nbd_on_axis = nbd(df_on_axis)
         nbd_listening_window = nbd(df_listening_window)
@@ -184,7 +188,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         if pref is None or pref_wsub is None:
             logging.info('Pref score is None')
             return None
-            
+
         if rounded:
             ratings = {
                 'nbd_on_axis': round(nbd_on_axis, 2),
@@ -198,16 +202,16 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
             if not skip_full:
                 ratings['aad_on_axis'] = round(aad_on_axis, 2)
                 if lfx_hz is not None:
-                    ratings['lfx_hz'] = int(pow(10, lfx_hz)) # in Hz
+                    ratings['lfx_hz'] = int(pow(10, lfx_hz))  # in Hz
                 if lfq_db is not None:
-                    ratings['lfq'] =  round(lfq_db, 2)
+                    ratings['lfq'] = round(lfq_db, 2)
                 ratings['pref_score'] = round(pref, 1)
         else:
             ratings = {
                 'nbd_on_axis': nbd_on_axis,
                 'nbd_listening_window': nbd_listening_window,
                 'nbd_sound_power': nbd_sound_power,
-                'nbd_pred_in_room':nbd_pred_in_room,
+                'nbd_pred_in_room': nbd_pred_in_room,
                 'sm_pred_in_room': sm_pred_in_room,
                 'sm_sound_power': sm_sound_power,
                 'pref_score_wsub': pref_wsub,
@@ -217,7 +221,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
                 if lfx_hz is not None:
                     ratings['lfx_hz'] = pow(10, lfx_hz)
                 if lfq_db is not None:
-                    ratings['lfq'] =  lfq_db
+                    ratings['lfq'] = lfq_db
                 ratings['pref_score'] = pref
         logging.info('Ratings: {0}'.format(ratings))
         return ratings
@@ -227,8 +231,8 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
 
 
 def scores(df_speaker):
-    spin  = df_speaker['CEA2034_unmelted']
-    splH  = df_speaker['SPL Horizontal_unmelted']
-    splV  = df_speaker['SPL Vertical_unmelted']
-    pir   = estimated_inroom_HV(splH, splV)
+    spin = df_speaker['CEA2034_unmelted']
+    splH = df_speaker['SPL Horizontal_unmelted']
+    splV = df_speaker['SPL Vertical_unmelted']
+    pir = estimated_inroom_HV(splH, splV)
     return speaker_pref_rating(graph_melt(spin), graph_melt(pir))

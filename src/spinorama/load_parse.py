@@ -105,21 +105,19 @@ def parse_all_speakers(metadata : dict, filter_origin: str, speakerpath='./datas
             if origin not in df[speaker]:
                 df[speaker][origin] = {}
             brand = metadata[speaker]['brand']
-            logging.info('Parsing {0} {1} {2} {3} {4}'.format(speakerpath, brand, speaker, mformat, version))
             # start // version here
+            logging.info('Stacking {0} {1} {2} {3} {4}'.format(speakerpath, brand, speaker, mformat, version))
             df_ref = parse_graphs_speaker(speakerpath, brand, speaker, mformat, version)
             if df_ref is not None:
-                if version in df[speaker][origin]:
-                    logging.error('{0} already in df[{1}][{2}]'.format(version, speaker, origin))
-                    continue
                 df[speaker][origin][version] = df_ref
                 count_measurements += 1
                 df_eq = parse_eq_speaker(speaker, df_ref)
                 if df_eq is not None:
                     df[speaker][origin]['{0}_eq'.format(version)] = df_eq
                     count_eqs += 1
+                            
         if parse_max is not None and count_measurements > parse_max:
             break
-        
+
     print('Loaded {0} speakers {1} measurements and {2} EQs'.format(len(speakerlist), count_measurements, count_eqs))
     return df
