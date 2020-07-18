@@ -114,6 +114,22 @@ speakers_info = {
             },
         },
     },
+    'Behringer B2030p': {
+        'brand': 'Behringer',
+        'model': 'B2030p',
+        'type': 'active',
+        'shape': 'bookshelves',
+        'price': '200',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/behringer-b2030p-studio-monitor-review.14719', 
+            },
+        },
+    },
     'Buchardt Audio S400': {
         'brand': 'Buchardt Audio',
         'model': 'S400',
@@ -128,7 +144,7 @@ speakers_info = {
                 'format': 'klippel',
             },
             'vendor' : {
-                'origin': 'Vendors/Buchardt Audio',
+                'origin': 'Vendors-Buchardt Audio',
                 'website': 'https://www.buchardtaudio.com',
                 'format': 'webplotdigitizer',
             },
@@ -143,7 +159,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/BIC America',
+                'origin': 'Vendors-BIC America',
                 'website': 'https://www.bicamerica.com',
                 'format': 'rewstextdump',
             },
@@ -158,7 +174,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/Bose',
+                'origin': 'Vendors-Bose',
                 'website': 'https://www.bose.com',
                 'format': 'rewstextdump',
             },
@@ -173,7 +189,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/Bose',
+                'origin': 'Vendors-Bose',
                 'website': 'https://www.bose.com',
                 'format': 'rewstextdump',
             },
@@ -188,7 +204,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/Cambridge Soundworks',
+                'origin': 'Vendors-Cambridge Soundworks',
                 'website': 'https://en.wikipedia.org/wiki/Cambridge_SoundWorks',
                 'format': 'rewstextdump',
             },
@@ -550,7 +566,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/Infinity',
+                'origin': 'Vendors-Infinity',
                 'website': 'www.infinityspeakers.com',
                 'format': 'webplotdigitizer',
             },
@@ -566,7 +582,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/Infinity',
+                'origin': 'Vendors-Infinity',
                 'website': 'www.infinityspeakers.com',
                 'format': 'rewstextdump',
             },
@@ -587,7 +603,7 @@ speakers_info = {
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/research-project-infinity-il10-speaker-review-measurements.14310/',
             },
             'vendor': {
-                'origin': 'Vendors/Infinity',
+                'origin': 'Vendors-Infinity',
                 'website': 'www.infinityspeakers.com',
                 'format': 'rewstextdump',
             },
@@ -695,7 +711,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/JBL',
+                'origin': 'Vendors-JBL',
                 'format': 'webplotdigitizer',
                 'review': '',
             },
@@ -759,7 +775,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/JBL',
+                'origin': 'Vendors-JBL',
                 'website': 'www.jbl.com',
                 'format': 'webplotdigitizer',
             },
@@ -807,7 +823,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/JBL',
+                'origin': 'Vendors-JBL',
                 'website': 'www.jbl.com',
                 'format': 'webplotdigitizer',
             },
@@ -823,7 +839,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/JBL',
+                'origin': 'Vendors-JBL',
                 'website': 'www.jbl.com',
                 'format': 'rewstextdump',
             },
@@ -870,7 +886,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/JBL',
+                'origin': 'Vendors-JBL',
                 'website': 'www.jbl.com',
                 'format': 'rewstextdump',
             },
@@ -902,7 +918,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/JTR',
+                'origin': 'Vendors-JTR',
                 'website': 'https://www.jtrspeakers.com',
                 'format': 'webplotdigitizer',
             },
@@ -971,7 +987,7 @@ speakers_info = {
                 'review': '',
                 },
             'vendor': {
-                'origin': 'Vendors/KEF',
+                'origin': 'Vendors-KEF',
                 'format': 'webplotdigitizer',
                 'review': '',
             },
@@ -1006,7 +1022,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/KEF',
+                'origin': 'Vendors-KEF',
                 'website': 'www.kef.com',
                 'format': 'webplotdigitizer',
             },
@@ -1036,7 +1052,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/KLH',
+                'origin': 'Vendors-KLH',
                 'website': 'www.klh.com',
                 'format': 'rewstextdump',
             },
@@ -1084,7 +1100,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/Klipsch',
+                'origin': 'Vendors-Klipsch',
                 'format': 'rewstextdump',
                 'review': '',
             },
@@ -1128,7 +1144,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/Magico',
+                'origin': 'Vendors-Magico',
                 'format': 'webplotdigitizer',
             },
         },
@@ -1249,7 +1265,7 @@ speakers_info = {
         'default_measurement': 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/Pioneer',
+                'origin': 'Vendors-Pioneer',
                 'format': 'rewstextdump',
                 'review': '',
             },
@@ -1329,7 +1345,7 @@ speakers_info = {
         'default_measurement': 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/Polk Audio',
+                'origin': 'Vendors-Polk Audio',
                 'format': 'rewstextdump',
                 'review': '',
             },
@@ -1460,6 +1476,22 @@ speakers_info = {
             },
         },
     },
+    'Revel M105': {
+        'brand': 'Revel',
+        'model': 'M105',
+        'type': 'passive',
+        'price': '1500',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-m105-bookshelf-speaker-review.14745/',
+            },
+        },
+    },
     'Revel M106': {
         'brand': 'Revel',
         'model': 'M106',
@@ -1491,7 +1523,7 @@ speakers_info = {
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-speaker-review.11884/',
             },
             'vendor': {
-                'origin': 'Vendors/Revel',
+                'origin': 'Vendors-Revel',
                 'format': 'webplotdigitizer',
                 'review': '',
             },
@@ -1522,7 +1554,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/Revel',
+                'origin': 'Vendors-Revel',
                 'website': 'www.revel.com',
                 'format': 'webplotdigitizer',
             },
@@ -1543,7 +1575,7 @@ speakers_info = {
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-f208-tower-speaker-review.13192/',
             },
             'vendor' : {
-                'origin': 'Vendors/Revel',
+                'origin': 'Vendors-Revel',
                 'website': 'www.revel.com',
                 'format': 'webplotdigitizer',
             },
@@ -1559,7 +1591,7 @@ speakers_info = {
         'default_measurement' : 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/Revel',
+                'origin': 'Vendors-Revel',
                 'website': 'www.revel.com',
                 'format': 'webplotdigitizer',
             },
@@ -1575,12 +1607,12 @@ speakers_info = {
         'default_measurement': 'harman-v2-2017',
         'measurements': {
             'harman-v1-2007': {
-                'origin': 'Vendors/Revel',
+                'origin': 'Vendors-Revel',
                 'website': 'www.revel.com',
                 'format': 'webplotdigitizer',
             },
             'harman-v2-2017': {
-                'origin': 'Vendors/Revel',
+                'origin': 'Vendors-Revel',
                 'website': 'www.revel.com',
                 'format': 'webplotdigitizer',
             },
@@ -1770,7 +1802,7 @@ speakers_info = {
         'default_measurement': 'vendor',
         'measurements': {
             'vendor': {
-                'origin': 'Vendors/Yamaha',
+                'origin': 'Vendors-Yamaha',
                 'format': 'rewstextdump',
                 'review': '',
             },
@@ -1815,7 +1847,7 @@ origins_info = {
         'logo-small': 'docs/metadata/3d3a.jpg',
         'url': 'https://www.princeton.edu/3D3A/Directivity.html',
     },
-    'Vendors/BIC America': {
+    'Vendors-BIC America': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
@@ -1824,7 +1856,7 @@ origins_info = {
         'logo-small': 'docs/metadata/BIC America.jpg',
         'url': 'https://bicamerica.com/',
     },
-    'Vendors/Buchardt Audio': {
+    'Vendors-Buchardt Audio': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
@@ -1833,7 +1865,7 @@ origins_info = {
         'logo-small': 'docs/metadata/buchardt-audio-small.png',
         'url': 'https://www.buchardtaudio.com',
     },
-    'Vendors/Bose': {
+    'Vendors-Bose': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
@@ -1842,7 +1874,7 @@ origins_info = {
         'logo-small': 'docs/metadata/bose.png',
         'url': 'https://www.bose.com',
     },
-    'Vendors/Cambridge Soundworks': {
+    'Vendors-Cambridge Soundworks': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
@@ -1851,7 +1883,7 @@ origins_info = {
         'logo-small': 'docs/metadata/.png',
         'url': 'https://en.wikipedia.org/wiki/Cambridge_SoundWorks',
     },
-    'Vendors/Infinity': {
+    'Vendors-Infinity': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
@@ -1860,7 +1892,7 @@ origins_info = {
         'logo-small': 'docs/metadata/infinity-small.png',
         'url': 'https://www.infinityspeakers.com',
     },
-    'Vendors/JBL': {
+    'Vendors-JBL': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
@@ -1869,7 +1901,7 @@ origins_info = {
         'logo-small': 'docs/metadata/jbl-small.png',
         'url': 'https://www.jbl.com',
     },
-    'Vendors/JTR': {
+    'Vendors-JTR': {
         'min hz': 50,
         'max hz': 20000,
         'min dB': -40,
@@ -1878,7 +1910,7 @@ origins_info = {
         'logo-small': 'docs/metadata/jtr-small.png',
         'url': 'https://www.jtrspeakers.com',
     },
-    'Vendors/KLH': {
+    'Vendors-KLH': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
@@ -1887,7 +1919,7 @@ origins_info = {
         'logo-small': 'docs/metadata/klh-small.png',
         'url': 'https://www.klh.com',
     },
-    'Vendors/KEF': {
+    'Vendors-KEF': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
@@ -1896,7 +1928,7 @@ origins_info = {
         'logo-small': 'docs/metadata/kef.png',
         'url': 'https://www.kef.com',
     },
-    'Vendors/Klipsch': {
+    'Vendors-Klipsch': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
@@ -1905,7 +1937,7 @@ origins_info = {
         'logo-small': 'docs/metadata/klipsch.png',
         'url': 'https://www.klipsch.com',
     },
-    'Vendors/Magico': {
+    'Vendors-Magico': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
@@ -1914,7 +1946,7 @@ origins_info = {
         'logo-small': 'docs/metadata/magico.png',
         'url': 'https://www.magicoaudio.com',
     },
-    'Vendors/Pioneer': {
+    'Vendors-Pioneer': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
@@ -1923,7 +1955,7 @@ origins_info = {
         'logo-small': 'docs/metadata/pioneer.png',
         'url': 'https://www.pioneer.com',
     },
-    'Vendors/PMC': {
+    'Vendors-PMC': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
@@ -1932,7 +1964,7 @@ origins_info = {
         'logo-small': 'docs/metadata/pmc.png',
         'url': 'https://www.pmc-speakers.com/',
     },
-    'Vendors/Polk Audio': {
+    'Vendors-Polk Audio': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
@@ -1941,7 +1973,7 @@ origins_info = {
         'logo-small': 'docs/metadata/polkaudio.png',
         'url': 'https://www.polkaudio.com',
     },
-    'Vendors/Revel': {
+    'Vendors-Revel': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
@@ -1950,7 +1982,7 @@ origins_info = {
         'logo-small': 'docs/metadata/jbl-small.png',
         'url': 'http://www.revel.com',
     },
-    'Vendors/Yamaha': {
+    'Vendors-Yamaha': {
         'min hz': 20,
         'max hz': 20000,
         'min dB': -40,
