@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
     df = fl.load('cache.parse_all_speakers.h5')
     if df is None:
-        df = parse_all_speakers(metadata.speakers_info, origin, './datas')
+        df = parse_all_speakers(metadata.speakers_info, None, './datas')
     force = True
     ptype = None
     print_compare(df, force, ptype)
