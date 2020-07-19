@@ -9,6 +9,7 @@ from .load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
 from .load_princeton import parse_graphs_speaker_princeton
 from .load_rewstextdump import parse_graphs_speaker_rewstextdump
 from .load_rewseq import parse_eq_iir_rews
+from .load_splHVtxt import parse_graphs_speaker_splHVtxt
 from .filter_peq import peq_apply_measurements
 
 
@@ -39,6 +40,8 @@ def parse_graphs_speaker(speaker_path : str, speaker_brand : str, speaker_name :
         df = parse_graphs_speaker_webplotdigitizer(speaker_path, speaker_brand, speaker_name, mversion)
     elif mformat == 'princeton':
         df = parse_graphs_speaker_princeton(speaker_path, speaker_brand, speaker_name, mversion)
+    elif mformat == 'splHVtxt':
+        df = parse_graphs_speaker_splHVtxt(speaker_path, speaker_brand, speaker_name, mversion)
     elif mformat == 'rewstextdump':
         df = parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name, mversion)
     else:
@@ -112,7 +115,7 @@ def parse_all_speakers(metadata : dict, filter_origin: str, speakerpath='./datas
             if df_ref is not None:
                 df[speaker][origin][version] = df_ref
                 count_measurements += 1
-                df_eq = parse_eq_speaker(speaker, df_ref)
+                df_eq = parse_eq_speaker(speakerpath, speaker, df_ref)
                 if df_eq is not None:
                     df[speaker][origin]['{0}_eq'.format(version)] = df_eq
                     count_eqs += 1

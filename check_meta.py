@@ -76,7 +76,7 @@ def sanity_check_default_measurement(name, speaker):
 
 
 def sanity_check_measurement(name, speaker, version, measurement):
-    if version[0:3] not in ('asr', 'pri', 'ven', 'har'):
+    if version[0:3] not in ('asr', 'pri', 'ven', 'har', 'eac'):
         logging.error('{0}: key {1} doesn\'t look correct'.format(name, version))
     for k, v in measurement.items():
         if k not in ('origin', 'format', 'review', 'website'):

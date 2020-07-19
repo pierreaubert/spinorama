@@ -69,9 +69,9 @@ def filter_graphs(speaker_name, h_spl, v_spl):
                 dfs[title+'_unmelted'] = df
                 dfs[title] = graph_melt(df)
             else:
-                logging.info('{0} computation is None for speaker{1:s} (Princeton)'.format(title, speaker_name))
+                logging.info('{0} computation is None for speaker{1:s}'.format(title, speaker_name))
         except KeyError as ke:
-            logging.warning('{0} computation failed with key:{1} for speaker{2:s} (Princeton)'.format(title, ke, speaker_name))
+            logging.warning('{0} computation failed with key:{1} for speaker{2:s}'.format(title, ke, speaker_name))
     return dfs
 
 

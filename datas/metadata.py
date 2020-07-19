@@ -271,6 +271,22 @@ speakers_info = {
             },
         },
     },
+    'Philharmonic BMR': {
+        'brand': 'Philharmonic',
+        'model': 'BMR',
+        'type': 'passive',
+        'price': '2400',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'eac',
+        'measurements': {
+            'eac': {
+                'origin': 'ErinsAudioCorner',
+                'format': 'splHVtxt',
+                'review': 'https://www.erinsaudiocorner.com/loudspeakers/philharmonic_bmr/',
+            },
+        },
+    },
     'Definitive Technology ProMonitor 1000': {
         'brand': 'Definitive Technology',
         'model': 'ProMonitor 1000',
@@ -1846,6 +1862,15 @@ origins_info = {
         'logo': 'docs/metadata/3d3a.jpg',
         'logo-small': 'docs/metadata/3d3a.jpg',
         'url': 'https://www.princeton.edu/3D3A/Directivity.html',
+    },
+    'ErinsAudioCorner': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': -40,
+        'max dB': 10,
+        'logo': 'docs/metadata/eac.png',
+        'logo-small': 'docs/metadata/eac.png',
+        'url': 'https://www.erinsaudiocorner.com',
     },
     'Vendors-BIC America': {
         'min hz': 20,

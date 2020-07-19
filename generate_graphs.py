@@ -130,9 +130,6 @@ if __name__ == '__main__':
             origin = args['--origin']
 
         df = parse_all_speakers(metadata.speakers_info, origin)
-        # dump_to_json(df, 'cache.parse_all_speakers.json')
-        #with open('cache.parse_all_speakers.pkl', 'w') as fp:
-        #    pickle.dump(df, fp)
         fl.save('cache.parse_all_speakers.h5', df)
         generate_graphs(df, width, height, force, ptype=ptype)
 

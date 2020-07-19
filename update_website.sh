@@ -6,8 +6,10 @@ TARGET=$HOME/src/pierreaubert.github.io/spinorama
 rm -f docs/assets/metadata.json
 ./generate_meta.py
 rm -f docs/compare/*.json
+./generate_compare.py
 # generate all graphs if some are missing
-./generate_graphs.py
+rm -fr /tmp/ray
+./ray_graphs.py
 # generate all jpg if some are missing
 ./minimise_pictures.sh
 # generate stats
