@@ -20,5 +20,9 @@ def directivity_matrix(splH, splV):
     x, y = np.meshgrid(r, r)
     splV = splV.set_index('Freq')
     splH = splH.set_index('Freq')
-    z = splV.dot(splH.T)/np.sqrt(splV.dot(splV.T) * splH.dot(splH.T))-1.0
+    zU = splV.dot(splH.T)
+    zD = splV.dot(splV.T) * splH.dot(splH.T)
+    # not completly sure why it is possible to get negative values
+    zD[zD<0] = 0.0
+    z = zU/np.sqrt(zD)-1.0
     return (x, y, z)
