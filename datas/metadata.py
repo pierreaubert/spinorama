@@ -497,6 +497,22 @@ speakers_info = {
              },
         },
     },
+    'Genelec 8030C': {
+        'brand': 'Genelec',
+        'model': '8030C',
+        'type': 'active',
+        'price': '1000',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/genelec-8030c-studio-monitor-review.14795/',
+            },
+        },
+    },
     'Genelec 8351A': {
         'brand': 'Genelec',
         'model': '8351A',
