@@ -26,7 +26,7 @@ def peq_apply_measurements(spl, peq):
     freq   = spl['Freq'].to_numpy()
     mean = np.mean(spl.loc[(spl.Freq>500) & (spl.Freq<10000)]['On Axis'])
     ddf = []
-    ddf.append(pd.DataFrame({'Freq': freq}))
+    ddf.append(pd.DataFrame({'Freq': spl.Freq}))
     for angle in spl.keys():
         if angle == 'Freq':
             continue
@@ -37,6 +37,8 @@ def peq_apply_measurements(spl, peq):
         ddf.append(pd.DataFrame({angle: curve_filtered}))
     filtered = pd.concat(ddf, axis=1)
     if filtered.isnull().values.any():
+        logging.debug(ddf)
+        logging.debug(filtered)
         logging.warning('Some filtered values post EQ are NaN')
     return filtered.dropna()
 
