@@ -1,0 +1,1 @@
+Filter  1: ON  PK       Fc    2500 Hz  Gain  2.0 dB  Q 3.0
