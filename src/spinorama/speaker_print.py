@@ -190,7 +190,8 @@ def print_compare(df, force_print=False, filter_file_ext=None):
         'SPL Horizontal', 'SPL Vertical'):
         graph = display_compare(df, graph_filter)
         if graph is not None:
-            graph = graph.configure_legend(orient='bottom').configure_title(orient='top', anchor='middle', fontSize=16)
+            # graph = graph.configure_legend(orient='bottom').configure_title(orient='top', anchor='middle', fontSize=16)
+            graph = graph.configure_title(orient='top', anchor='middle', fontSize=16).properties(width=1200, heigth=600)
             filename = '{0}/{1}.json'.format(filedir, graph_filter)
             try:
                 print('Saving {0}'.format(filename))

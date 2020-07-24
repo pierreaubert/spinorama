@@ -8,6 +8,7 @@ python3 ./generate_graphs.py
 ./minimise_pictures.sh
 # all metadata (computed)
 python3 ./generate_meta.py
+python3 ./generate_compare.py
 # some stats for all speakers
 python3 ./generate_stats.py
 # static website generation

@@ -30,12 +30,16 @@ import os
 import sys
 
 from docopt import docopt
-import pandas as pd
 import flammkuchen as fl
+import pandas as pd
+import ray
 
 from src.spinorama.load_parse import parse_all_speakers
-from src.spinorama.speaker_print import print_compare
+from src.spinorama.speaker_print_ray import print_compare
 import datas.metadata as metadata
+
+
+ray.init()
 
 
 if __name__ == '__main__':

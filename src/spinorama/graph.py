@@ -407,7 +407,7 @@ def graph_compare_freq(df, graph_params, speaker1, speaker2):
     line = alt.Chart(df).encode(
         xaxis, yaxis, color,
         opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
-    ).properties(width=600, height=300)
+    )
 
     points = line.mark_circle(size=100).encode(
         opacity=alt.condition(nearest, alt.value(1), alt.value(0)),

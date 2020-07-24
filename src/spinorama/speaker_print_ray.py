@@ -179,23 +179,32 @@ def print_graphs(df: pd.DataFrame,
             updated = print_graph(speaker, origin, key, title, graph, force_print, filter_file_ext)
     return updated
 
+
 @ray.remote
+def print_compare_graph(df, graph_filter, filedir):
+    graph = display_compare(df, graph_filter)
+    if graph is not None:
+        graph = graph.configure_legend(orient='bottom').configure_title(orient='top', anchor='middle', fontSize=16)
+        filename = '{0}/{1}.json'.format(filedir, graph_filter)
+        try:
+            print('Saving {0}'.format(filename))
+            graph.save(filename)
+        except Exception as e:
+            logging.error('Got unkown error {0} for {1}'.format(e, filename))
+
+
 def print_compare(df, force_print=False, filter_file_ext=None):
     filedir = 'docs/compare'
     pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
     
+    ids = []
     for graph_filter in (
         'CEA2034', 'Estimated In-Room Response',
         'Early Reflections', 'Horizontal Reflections', 'Vertical Reflections',
         'SPL Horizontal', 'SPL Vertical'):
-        graph = display_compare(df, graph_filter)
-        if graph is not None:
-            graph = graph.configure_legend(orient='bottom').configure_title(orient='top', anchor='middle', fontSize=16)
-            filename = '{0}/{1}.json'.format(filedir, graph_filter)
-            try:
-                print('Saving {0}'.format(filename))
-                graph.save(filename)
-            except Exception as e:
-                logging.error('Got unkown error {0} for {1}'.format(e, filename))
+        ids.append(print_compare_graph.remote(df, graph_filter, filedir))
+
+    for id in ids:
+        ray.get(id)
     
     

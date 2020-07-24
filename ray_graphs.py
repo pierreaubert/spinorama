@@ -19,8 +19,8 @@
 import flammkuchen as fl
 import glob
 import logging
-import pandas as pd
 import os
+import pandas as pd
 import ray
 import sys
 import time
@@ -30,6 +30,7 @@ from src.spinorama.load_parse_ray import parse_graphs_speaker, parse_eq_speaker
 from src.spinorama.speaker_print_ray import print_graphs, print_compare
 
 
+# will eat all your CPUs
 ray.init()
 
 
@@ -142,6 +143,7 @@ def compute(speakerkist, metadata, ray_ids):
 
     
 if __name__ == '__main__':
+    # TODO remove it and replace by iterating over metadatas
     speakerlist = get_speaker_list('./datas')
 
     width = 1200
