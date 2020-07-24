@@ -195,6 +195,31 @@ speakers_info = {
             },
         },
     },
+    'Bose 901 Series V': {
+        'brand': 'Bose',
+        'model': '901 Series V',
+        'type': 'active',
+        'shape': 'bookshelves',
+        'price': '',
+        'default_measurement' : 'eac-noeq',
+        'measurements': {
+            'eac-noeq': {
+                'origin': 'ErinsAudioCorner',
+                'format': 'splHVtxt',
+                'review': 'https://www.erinsaudiocorner.com/loudspeakers/bose_901_series_v/',
+            },
+            'eac-eq-neutral': {
+                'origin': 'ErinsAudioCorner',
+                'format': 'splHVtxt',
+                'review': 'https://www.erinsaudiocorner.com/loudspeakers/bose_901_series_v/',
+            },
+            'eac-eq-v3': {
+                'origin': 'ErinsAudioCorner',
+                'format': 'splHVtxt',
+                'review': 'https://www.erinsaudiocorner.com/loudspeakers/bose_901_series_v/',
+            },
+        },
+    },
     'Cambridge Soundworks Model Six': {
         'brand': 'Cambridge Soundworks',
         'model': 'Model Six',
@@ -1206,16 +1231,19 @@ speakers_info = {
         'amount': 'pair',
         'default_measurement': 'asr-v3-20200711',
         'measurements': {
-            'asr-v1-20200120' : {
-                'origin': 'ASR',
-                'format': 'klippel',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-80-dsp-monitor-review.11018/',
-            },
+            # review is here but I do not find the data
+            #'asr-v1-20200120' : {
+            #    'origin': 'ASR',
+            #    'format': 'klippel',
+            #    'review': 'https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-80-dsp-monitor-review.11018/',
+            #},
+            # that's the working sample
             'asr-v2-20200208': {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-80-dsp-speaker-measurements-take-two.11323/',
             },
+            # 3rd measurement later
             'asr-v3-20200711' : {
                 'origin': 'ASR',
                 'format': 'klippel',
@@ -1647,6 +1675,21 @@ speakers_info = {
                 'origin': 'Vendors-Revel',
                 'website': 'www.revel.com',
                 'format': 'webplotdigitizer',
+            },
+        },
+    },
+    'Salk WoW1': {
+        'brand': 'Salk',
+        'model': 'WoW1',
+        'type': 'passive',
+        'price': '1295',
+        'shape': 'bookshelves',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/salk-wow1-bookshelf-speaker-review.14842/',
             },
         },
     },
