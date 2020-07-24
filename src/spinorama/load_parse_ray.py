@@ -10,6 +10,7 @@ from .load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
 from .load_princeton import parse_graphs_speaker_princeton
 from .load_rewstextdump import parse_graphs_speaker_rewstextdump
 from .load_rewseq import parse_eq_iir_rews
+from .load_splHVtxt import parse_graphs_speaker_splHVtxt
 from .filter_peq import peq_apply_measurements
 
 
@@ -42,6 +43,8 @@ def parse_graphs_speaker(speaker_path : str, speaker_brand : str, speaker_name :
         df = parse_graphs_speaker_webplotdigitizer(speaker_path, speaker_brand, speaker_name, mversion)
     elif mformat == 'princeton':
         df = parse_graphs_speaker_princeton(speaker_path, speaker_brand, speaker_name, mversion)
+    elif mformat == 'splHVtxt':
+        df = parse_graphs_speaker_splHVtxt(speaker_path, speaker_brand, speaker_name, mversion)
     elif mformat == 'rewstextdump':
         df = parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name, mversion)
     else:
