@@ -156,8 +156,13 @@ speakers_info = {
         'type': 'passive',
         'shape': 'bookshelves',
         'price': '',
-        'default_measurement' : 'vendor',
+        'default_measurement' : 'asr',
         'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/bic-america-dv62si-bookshelf-speaker-review.14918/',
+            },
             'vendor': {
                 'origin': 'Vendors-BIC America',
                 'website': 'https://www.bicamerica.com',
