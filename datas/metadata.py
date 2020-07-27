@@ -1610,6 +1610,22 @@ speakers_info = {
             },
         },
     },
+    'Revel M55XC': {
+        'brand': 'Revel',
+        'model': 'M55XC',
+        'type': 'passive',
+        'price': '420',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-m55xc-outdoor-speaker-review.14881/',
+            },
+        },
+    },
     'Revel C25': {
         'brand': 'Revel',
         'model': 'C25',
