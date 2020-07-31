@@ -287,9 +287,7 @@ def template_sidebyside_eq(df_ref, df_eq, params, speaker, origin, key):
         logging.debug('concatenating {0} for {1}'.format(title, speaker))
         if g_ref is not None:
             if g_eq is not None:
-                chart &= alt.hconcat(g_ref.properties(title=speaker),
-                                     g_eq.properties(title='with EQ')
-                ).resolve_scale(color='independent')
+                chart &= alt.hconcat(g_ref.properties(title=speaker), g_eq.properties(title='with EQ')).resolve_scale(color='independent')
             else:
                 chart &= alt.hconcat(g_ref)
         else:

@@ -184,7 +184,7 @@ def print_graphs(df: pd.DataFrame,
 def print_compare_graph(df, graph_filter, filedir):
     graph = display_compare(df, graph_filter)
     if graph is not None:
-        graph = graph.configure_legend(orient='bottom').configure_title(orient='top', anchor='middle', fontSize=16)
+        graph = graph.configure_title(orient='top', anchor='middle', fontSize=16)
         filename = '{0}/{1}.json'.format(filedir, graph_filter)
         try:
             print('Saving {0}'.format(filename))

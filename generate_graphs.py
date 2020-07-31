@@ -41,6 +41,7 @@ import datas.metadata as metadata
 from docopt import docopt
 from src.spinorama.load_parse import parse_all_speakers, parse_graphs_speaker, parse_eq_speaker
 from src.spinorama.speaker_print import print_graphs
+from src.spinorama.graph import graph_params_default
 
 
 def generate_graphs(df, width, height, force, ptype):
@@ -65,8 +66,8 @@ if __name__ == '__main__':
                   version='generate_graphs.py version 1.20',
                   options_first=True)
 
-    width = 1200
-    height = 600
+    width = graph_params_default['width']
+    height = graph_params_default['height']
     force = args['--force']
     ptype = None
 

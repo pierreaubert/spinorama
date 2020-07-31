@@ -28,7 +28,7 @@ import time
 import datas.metadata as metadata
 from src.spinorama.load_parse_ray import parse_graphs_speaker, parse_eq_speaker
 from src.spinorama.speaker_print_ray import print_graphs, print_compare
-
+from src.spinorama.graph import graph_params_default
 
 # will eat all your CPUs
 ray.init()
@@ -52,8 +52,8 @@ def queue_measurement(brand, speaker, mformat, morigin, mversion):
     id_eq = parse_eq_speaker.remote('./datas', speaker, id_df)
     force = False
     ptype = None
-    width = 1024
-    height = 400
+    width = graph_params_default['width']
+    height = graph_params_default['heigth']
     id_g1 = print_graphs.remote(id_df, id_eq, speaker, morigin, metadata.origins_info, mversion, width, height, force, ptype)
     id_g2 = print_graphs.remote(id_eq, id_eq, speaker, morigin, metadata.origins_info, mversion+'_eq', width, height, force, ptype)
     return (id_df, id_eq, id_g1, id_g2)
@@ -147,8 +147,8 @@ if __name__ == '__main__':
     # TODO remove it and replace by iterating over metadatas
     speakerlist = get_speaker_list('./datas')
 
-    width = 1200
-    height = 600
+    width = graph_params_default['width']
+    height = graph_params_default['height']
     force = False
     ptype = None
     
