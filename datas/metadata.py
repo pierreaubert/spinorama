@@ -472,6 +472,7 @@ speakers_info = {
     'Fostex PM03': {
         'brand': 'Fostex',
         'model': 'PM03',
+
         'type': 'active',
         'price': '150',
         'shape': 'bookshelves',
@@ -585,6 +586,21 @@ speakers_info = {
             'princeton': {
                 'origin': 'Princeton',
                 'format': 'princeton',
+             },
+        },
+    },
+    'GR Research X-LS Encore Kit': {
+        'brand': 'GR Research',
+        'model': 'X-LS Encore Kit',
+        'shape': 'bookshelves',
+        'type': 'passive',
+        'price': '500',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/gr-research-x-ls-encore-kit-speaker-review.14957/',
              },
         },
     },
