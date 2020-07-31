@@ -39,7 +39,8 @@ def get_speaker_list(speakerpath : str):
     asr = glob.glob(speakerpath+'/ASR/*')
     vendors = glob.glob(speakerpath+'/Vendors/*/*')
     princeton = glob.glob(speakerpath+'/Princeton/*')
-    dirs = asr + vendors + princeton
+    ear = glob.glob(speakerpath+'/ErinsAudioCorner/*')
+    dirs = asr + vendors + princeton + ear
     for d in dirs:
         if os.path.isdir(d) and d not in ('assets', 'compare', 'stats', 'pictures', 'logos'):
             speakers.append(os.path.basename(d))
