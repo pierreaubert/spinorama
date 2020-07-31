@@ -13,9 +13,9 @@ function displayGraph(spec, divName) {
 	};
 	
 	function patch(spec) {
-	    width = window.innerWidth-120;
+	    width = window.innerWidth-180;
 	    spec.width = width;
-	    spec.height = width/2;
+	    spec.height = width/2-180;
 	    return spec;
 	}
 	

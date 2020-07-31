@@ -1,0 +1,30 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 05-07-2020 18:56:33
+
+Notes:Dayton Audio B652-AIR IIR
+
+Equaliser: Generic
+Dayton Audio B652-AIR 
+Filter  1: ON  PK       Fc     380 Hz  Gain  -1.4 dB  Q 10.000
+Filter  2: ON  PK       Fc     450 Hz  Gain  -2.6 dB  Q 10.000
+Filter  3: ON  PK       Fc     610 Hz  Gain  -2.5 dB  Q 3.000
+Filter  4: ON  PK       Fc     770 Hz  Gain  -0.8 dB  Q 8.000
+Filter  5: ON  PK       Fc     953 Hz  Gain  -4.7 dB  Q 5.000
+Filter  6: ON  PK       Fc    1135 Hz  Gain   5.0 dB  Q 5.000
+Filter  7: ON  PK       Fc    1205 Hz  Gain  -7.5 dB  Q 4.988
+Filter  8: ON  PK       Fc    1861 Hz  Gain  -3.6 dB  Q 1.147
+Filter  9: ON  PK       Fc    2566 Hz  Gain   5.0 dB  Q 1.000
+Filter 10: ON  PK       Fc    2874 Hz  Gain  -7.5 dB  Q 2.944
+Filter 11: ON  PK       Fc    3178 Hz  Gain   3.6 dB  Q 4.895
+Filter 12: ON  PK       Fc    3721 Hz  Gain  -8.4 dB  Q 5.000
+Filter 13: ON  PK       Fc    5760 Hz  Gain  -2.0 dB  Q 17.000
+Filter 14: ON  PK       Fc    6450 Hz  Gain   2.5 dB  Q 18.000
+Filter 15: ON  PK       Fc    7186 Hz  Gain   3.4 dB  Q 1.000
+Filter 16: ON  PK       Fc    7820 Hz  Gain   1.8 dB  Q 10.000
+Filter 17: ON  PK       Fc    8530 Hz  Gain  -2.5 dB  Q 12.000
+Filter 18: ON  PK       Fc   11177 Hz  Gain  -5.2 dB  Q 1.914
+Filter 19: ON  PK       Fc   12480 Hz  Gain  -1.2 dB  Q 10.000
+Filter 20: ON  PK       Fc   16400 Hz  Gain   4.3 dB  Q 4.000
+

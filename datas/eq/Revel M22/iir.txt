@@ -1,0 +1,30 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 24-07-2020 15:10:42
+
+Notes:Revel M22 IIR
+
+Equaliser: Generic
+Revel M22 PIR.txt
+Filter  1: ON  PK       Fc     347 Hz  Gain   0.7 dB  Q 12.000
+Filter  2: ON  PK       Fc     401 Hz  Gain   0.6 dB  Q 15.000
+Filter  3: ON  PK       Fc     490 Hz  Gain   0.8 dB  Q 6.800
+Filter  4: ON  PK       Fc     605 Hz  Gain   1.0 dB  Q 10.000
+Filter  5: ON  PK       Fc     795 Hz  Gain   0.5 dB  Q 9.000
+Filter  6: ON  PK       Fc    1273 Hz  Gain  -7.4 dB  Q 1.146
+Filter  7: ON  PK       Fc    1406 Hz  Gain   0.5 dB  Q 15.000
+Filter  8: ON  PK       Fc    1422 Hz  Gain   8.7 dB  Q 1.001
+Filter  9: ON  PK       Fc    1933 Hz  Gain   0.8 dB  Q 20.000
+Filter 10: ON  PK       Fc    2070 Hz  Gain  -0.6 dB  Q 20.000
+Filter 11: ON  PK       Fc    3197 Hz  Gain  -1.4 dB  Q 1.972
+Filter 12: ON  PK       Fc    4660 Hz  Gain  -2.0 dB  Q 4.000
+Filter 13: ON  PK       Fc    5630 Hz  Gain   0.5 dB  Q 6.800
+Filter 14: ON  PK       Fc    6720 Hz  Gain  -0.4 dB  Q 10.000
+Filter 15: ON  PK       Fc    7620 Hz  Gain   0.6 dB  Q 9.000
+Filter 16: ON  PK       Fc    7739 Hz  Gain  -2.4 dB  Q 1.000
+Filter 17: ON  PK       Fc    9480 Hz  Gain   0.4 dB  Q 10.000
+Filter 18: ON  PK       Fc   13080 Hz  Gain  -0.5 dB  Q 5.500
+Filter 19: ON  PK       Fc   17630 Hz  Gain  -0.7 dB  Q 2.500
+Filter 20: ON  LP       Fc   19200 Hz
+

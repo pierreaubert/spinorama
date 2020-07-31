@@ -1,0 +1,30 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 27-07-2020 14:58:38
+
+Notes:Genelec 8341A IIR v2
+
+Equaliser: Generic
+Genelec 8431A PIR.txt
+Filter  1: ON  PK       Fc     323 Hz  Gain  -0.4 dB  Q 10.000
+Filter  2: ON  PK       Fc     379 Hz  Gain  -0.8 dB  Q 20.000
+Filter  3: ON  PK       Fc     418 Hz  Gain  -1.1 dB  Q 10.000
+Filter  4: ON  PK       Fc     530 Hz  Gain   0.7 dB  Q 8.000
+Filter  5: ON  PK       Fc     609 Hz  Gain   0.5 dB  Q 20.000
+Filter  6: ON  PK       Fc     701 Hz  Gain   0.5 dB  Q 5.000
+Filter  7: ON  PK       Fc     904 Hz  Gain  -0.4 dB  Q 8.000
+Filter  8: ON  PK       Fc    1100 Hz  Gain   0.7 dB  Q 5.800
+Filter  9: ON  PK       Fc    1295 Hz  Gain  -0.7 dB  Q 8.500
+Filter 10: ON  PK       Fc    1550 Hz  Gain  -0.4 dB  Q 10.000
+Filter 11: ON  PK       Fc    1695 Hz  Gain   0.5 dB  Q 15.000
+Filter 12: ON  PK       Fc    1960 Hz  Gain   1.1 dB  Q 15.000
+Filter 13: ON  PK       Fc    2240 Hz  Gain   0.8 dB  Q 19.000
+Filter 14: ON  PK       Fc    3780 Hz  Gain   0.3 dB  Q 10.000
+Filter 15: ON  PK       Fc    4530 Hz  Gain   0.4 dB  Q 9.000
+Filter 16: ON  PK       Fc    5820 Hz  Gain  -0.9 dB  Q 8.000
+Filter 17: ON  PK       Fc    6680 Hz  Gain   0.4 dB  Q 5.000
+Filter 18: ON  PK       Fc    8660 Hz  Gain  -0.4 dB  Q 10.000
+Filter 19: ON  PK       Fc   10170 Hz  Gain  -0.5 dB  Q 12.000
+Filter 20: ON  PK       Fc   11980 Hz  Gain  -0.8 dB  Q 12.000
+

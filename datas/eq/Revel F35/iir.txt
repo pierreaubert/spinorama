@@ -1,0 +1,30 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 23-07-2020 12:59:46
+
+Notes:Revel F35 IIR
+
+Equaliser: Generic
+Revel F35 PIR.txt
+Filter  1: ON  PK       Fc     349 Hz  Gain  -0.7 dB  Q 10.000
+Filter  2: ON  PK       Fc     576 Hz  Gain   1.3 dB  Q 5.000
+Filter  3: ON  PK       Fc     707 Hz  Gain  -1.2 dB  Q 5.000
+Filter  4: ON  PK       Fc     870 Hz  Gain  -0.9 dB  Q 30.000
+Filter  5: ON  PK       Fc     927 Hz  Gain  -1.0 dB  Q 4.204
+Filter  6: ON  PK       Fc     999 Hz  Gain  -1.0 dB  Q 30.000
+Filter  7: ON  PK       Fc    1279 Hz  Gain  -1.5 dB  Q 5.000
+Filter  8: ON  PK       Fc    1400 Hz  Gain   0.6 dB  Q 18.000
+Filter  9: ON  PK       Fc    1504 Hz  Gain   0.9 dB  Q 2.000
+Filter 10: ON  PK       Fc    1670 Hz  Gain   1.1 dB  Q 7.000
+Filter 11: ON  PK       Fc    1830 Hz  Gain  -0.5 dB  Q 10.000
+Filter 12: ON  PK       Fc    1930 Hz  Gain   1.3 dB  Q 14.000
+Filter 13: ON  PK       Fc    2060 Hz  Gain  -0.8 dB  Q 11.000
+Filter 14: ON  PK       Fc    2086 Hz  Gain   0.8 dB  Q 2.555
+Filter 15: ON  PK       Fc    2205 Hz  Gain   0.9 dB  Q 20.000
+Filter 16: ON  PK       Fc    5968 Hz  Gain  -2.1 dB  Q 1.000
+Filter 17: ON  PK       Fc    7600 Hz  Gain   0.7 dB  Q 9.000
+Filter 18: ON  PK       Fc    8570 Hz  Gain  -1.1 dB  Q 8.000
+Filter 19: ON  PK       Fc   10544 Hz  Gain  -1.0 dB  Q 5.000
+Filter 20: ON  PK       Fc   14000 Hz  Gain   1.4 dB  Q 3.500
+

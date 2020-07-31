@@ -1,10 +1,10 @@
 # Spinorama : a library to display speaker frequency response and similar graphs
-[Spinorama](https://github.com/pierreaubert/spinorama/workflows/Spinorama/badge.svg?branch=master)
+![image](https://github.com/pierreaubert/spinorama/workflows/Spinorama/badge.svg?branch=master)
 
 This library provides an easy way to view, compare or analyse speakers data. This can help you take informed
 decision when buying a speaker instead of relying on commercial information or internet buzz.
 
-## Jump to the [gallery](https://pierreaubert.github.com/spinorama) of all speakers measurements.
+## Jump to the [gallery](https://pierreaubert.github.com/spinorama) of all (150+) speakers measurements.
 
 # What is a spinorama set of graphs?
 
@@ -39,9 +39,10 @@ The library support 4 kinds of data:
 2. Calculate contour plot, radar plot, isolines and isobands.
 3. Estimate basic data for a speaker (-3dB output, flatness over a range)
 4. Compute various parameters defined in a paper from Olive (ref. below).
+5. Can compute effect of an EQ (IIR) on the spinorama.
 
 coming soon:
-5. Generate an EQ to optimise the speaker (and get a better preference score).
+6. Generate an EQ to optimise the speaker (and get a better preference score).
 
 ## Generation
 

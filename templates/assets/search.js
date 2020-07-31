@@ -11,7 +11,9 @@ $(document).ready(function () {
 	    matchAllTokens: true,
 	    findAllMatches: true,
 	    minMatchCharLength: 2,
-	    keys: ['brand', 'model', 'type', 'measurements.origin', 'shape'],
+	    keys: ['brand', 'model', 'type', 'shape',
+		   'measurements.asr.origin', 'measurements.vendor.origin', 'measurements.printeton.origin'
+		  ],
 	    treshhold: 0.1,
 	    distance: 2,
 	    includeScore: true,
@@ -26,7 +28,7 @@ $(document).ready(function () {
 	    console.log('searching: '+keywords)
 	    if (keywords.length === 0) {
 		for (const item in metadata) {
-		    const id = (metadata[item].brand + '-' + metadata[item].model).replace(/['. ]/g, '-')
+		    const id = (metadata[item].brand + '-' + metadata[item].model).replace(/['.+ ]/g, '-')
 		    $('#' + id).show()
 		}
 		resultdiv.show()
@@ -36,8 +38,8 @@ $(document).ready(function () {
 		    resultdiv.hide()
 		} else {
 		    for (const item in metadata) {
-			const id = (metadata[item].brand + '-' + metadata[item].model).replace(/['. ]/g, '-')
-			// console.log('hide:'+id);
+			const id = (metadata[item].brand + '-' + metadata[item].model).replace(/['.+ ]/g, '-')
+			console.log('hide:'+id);
 			$('#' + id).hide()
 		    }
 		    let minScore = 1
@@ -48,17 +50,17 @@ $(document).ready(function () {
 		    }
 		    if (minScore < Math.pow(10,-15)) {
 			for (const item in result) {
-			    const id = (result[item].item.brand + '-' + result[item].item.model).replace(/['. ]/g, '-')
+			    const id = (result[item].item.brand + '-' + result[item].item.model).replace(/['.+ ]/g, '-')
 			    if (result[item].score < Math.pow(10,-15)) {
-				console.log('perfect match:'+id+' minscore:' + minScore+' score:' + result[item].score);
 				$('#' + id).show()
+				console.log('perfect match:'+id+' minscore:' + minScore+' score:' + result[item].score);
 			    } else {
 				console.log('skip match:'+id+' minscore:' + minScore+' score:' + result[item].score);
 			    }
 			}
 		    } else {
 			for (const item in result) {
-			    const id = (result[item].item.brand + '-' + result[item].item.model).replace(/['. ]/g, '-')
+			    const id = (result[item].item.brand + '-' + result[item].item.model).replace(/['.+ ]/g, '-')
 			    if (result[item].score === minScore) {
 				console.log('show:'+id+' minscore:' + minScore+' score:' + result[item].score);
 				$('#' + id).show()

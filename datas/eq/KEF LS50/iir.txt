@@ -1,0 +1,30 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 13-07-2020 18:01:59
+
+Notes:KEF LS50 IIR
+
+Equaliser: Generic
+KEF LS50 PIR.txt
+Filter  1: ON  PK       Fc     466 Hz  Gain  -0.6 dB  Q 4.209
+Filter  2: ON  PK       Fc     527 Hz  Gain   2.2 dB  Q 1.889
+Filter  3: ON  PK       Fc     857 Hz  Gain  -2.7 dB  Q 1.000
+Filter  4: ON  PK       Fc    1224 Hz  Gain  -2.0 dB  Q 5.000
+Filter  5: ON  PK       Fc    1459 Hz  Gain   4.6 dB  Q 1.123
+Filter  6: ON  PK       Fc    1639 Hz  Gain -11.5 dB  Q 4.703
+Filter  7: ON  PK       Fc    1645 Hz  Gain  11.7 dB  Q 4.807
+Filter  8: ON  PK       Fc    2285 Hz  Gain  -3.1 dB  Q 1.000
+Filter  9: ON  PK       Fc    2400 Hz  Gain  -0.6 dB  Q 18.000
+Filter 10: ON  PK       Fc    4429 Hz  Gain  -1.4 dB  Q 1.000
+Filter 11: ON  PK       Fc    4873 Hz  Gain  -2.3 dB  Q 5.000
+Filter 12: ON  PK       Fc    6985 Hz  Gain  -2.1 dB  Q 4.998
+Filter 13: ON  PK       Fc    8917 Hz  Gain  -3.4 dB  Q 5.000
+Filter 14: ON  PK       Fc   10636 Hz  Gain  -3.1 dB  Q 5.000
+Filter 15: ON  PK       Fc   11460 Hz  Gain  -2.2 dB  Q 5.000
+Filter 16: ON  PK       Fc   12192 Hz  Gain  12.0 dB  Q 1.001
+Filter 17: ON  PK       Fc   13179 Hz  Gain -12.3 dB  Q 1.386
+Filter 18: ON  PK       Fc   14084 Hz  Gain   1.2 dB  Q 5.000
+Filter 19: ON  PK       Fc   16192 Hz  Gain  -1.5 dB  Q 5.000
+Filter 20: ON  PK       Fc   17760 Hz  Gain  -1.6 dB  Q 5.000
+

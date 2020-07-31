@@ -1,13 +1,14 @@
+#                                                  -*- coding: utf-8 -*-
 import altair as alt
 import logging
 import math
 import numpy as np
 import pandas as pd
-from .directivity import directivity_matrix
-from .contour import compute_contour, compute_contour_smoothed
-from .normalize import resample
-from src.graphs.isobands import find_isobands
-import src.spinorama.radar as radar
+from .compute_directivity import directivity_matrix
+from .compute_normalize import resample
+from .graph_contour import compute_contour, compute_contour_smoothed
+from .graph_isobands import find_isobands
+from . import graph_radar as radar
 
 
 alt.data_transformers.disable_max_rows()
@@ -119,12 +120,10 @@ def graph_spinorama(dfu, graph_params):
     selectorsMeasurements = alt.selection_multi(fields=['Measurements'], bind='legend')
     scales = alt.selection_interval(bind='scales')
     # main charts
-    xaxis =alt.X('Freq:Q', title='Freqency (Hz)',
-                scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]),
-                axis=alt.Axis(format='s'))
-    yaxis = alt.Y('dB:Q', scale=alt.Scale(zero=False, domain=[ymin, ymax]))
+    xaxis =alt.X('Freq:Q', title='Freqency (Hz)', scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]), axis=alt.Axis(format='s'))
+    yaxis = alt.Y('dB:Q', title='Sound Pressure (dB)', scale=alt.Scale(zero=False, domain=[ymin, ymax]))
     # why -10?
-    di_yaxis = alt.Y('dB:Q', scale=alt.Scale(zero=False, domain=[-10,ymax-ymin-10]))
+    di_yaxis = alt.Y('dB:Q', title='Sound Pressure DI (dB)', scale=alt.Scale(zero=False, domain=[-5, ymax-ymin-5]))
     color = alt.Color('Measurements', type='nominal', sort=None)
     opacity = alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     
@@ -408,7 +407,7 @@ def graph_compare_freq(df, graph_params, speaker1, speaker2):
     line = alt.Chart(df).encode(
         xaxis, yaxis, color,
         opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
-    ).properties(width=600, height=300)
+    )
 
     points = line.mark_circle(size=100).encode(
         opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
@@ -527,6 +526,22 @@ def graph_regression(source, freq_start, freq_end):
     return graph_regression_graph(alt.Chart(source), freq_start, freq_end)
 
 
+def graph_regression_graph_simple(graph, freq_start, freq_end):
+    reg = graph.transform_filter(
+        'datum.Freq>{0} & datum.Freq<{1}'.format(freq_start, freq_end)
+    ).transform_regression(
+        method='log',
+        on='Freq',
+        regression='dB',
+        extent=[20,20000]
+    ).encode(
+        alt.X('Freq:Q'),
+        alt.Y('dB:Q'),
+        color=alt.value('red')
+    )
+    return reg
+
+
 def graph_compare_freq_regression(df, graph_params, speaker1, speaker2):
     selection1, selection2, selectorsMeasurements, scales = build_selections(df, speaker1, speaker2)
     xaxis = alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[20,20000], nice=False))
@@ -538,25 +553,24 @@ def graph_compare_freq_regression(df, graph_params, speaker1, speaker2):
         opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     )
 
-    #points = line.mark_circle(size=100).encode(
-    #    opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
-    #    tooltip=['Measurements', 'Freq', 'dB']
-    #)
+    points = line.mark_circle(size=100).encode(
+        opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
+        tooltip=['Measurements', 'Freq', 'dB']
+    )
 
     rules = alt.Chart(df).mark_rule(color='gray').encode(x='Freq:Q').transform_filter(nearest)
 
     line1 = line.transform_filter(selection1)
     line2 = line.transform_filter(selection2)
 
-    reg1 = graph_regression_graph(line1, 80, 10000, False)
-    reg2 = graph_regression_graph(line2, 80, 10000, False)
+    reg1 = graph_regression_graph_simple(line1, 80, 10000).mark_line()
+    reg2 = graph_regression_graph_simple(line2, 80, 10000).mark_line(strokeDash=[4,2])
 
     graph1 = line1.mark_line().add_selection(selection1)
     graph2 = line2.mark_line(strokeDash=[4,2]).add_selection(selection2)
 
     return alt.layer(
-        graph2+reg2, graph1+reg1, rules
-    ).resolve_scale(y='independent'
+        graph2, reg2, graph1, reg1, rules
     ).add_selection(
         selectorsMeasurements
     ).add_selection(
@@ -589,4 +603,4 @@ def graph_summary(speaker_name, speaker_summary, params):
         x=alt.X('x', title='', scale=alt.Scale(domain=[0,1]), axis=None),
         y=alt.Y('y', title='', axis=None),
         text='summary:N'
-    )
+    ).properties(width=params['width'], height=params['height'])

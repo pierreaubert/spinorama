@@ -1,0 +1,30 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 15-07-2020 19:53:02
+
+Notes:Ocean Way HR5 IIR
+
+Equaliser: Generic
+Ocean Way HR5 PIR.txt
+Filter  1: ON  PK       Fc     328 Hz  Gain  -2.9 dB  Q 14.000
+Filter  2: ON  PK       Fc     437 Hz  Gain   0.7 dB  Q 9.000
+Filter  3: ON  PK       Fc     515 Hz  Gain  -0.8 dB  Q 5.000
+Filter  4: ON  PK       Fc     756 Hz  Gain  12.0 dB  Q 5.000
+Filter  5: ON  PK       Fc     775 Hz  Gain -15.4 dB  Q 5.000
+Filter  6: ON  PK       Fc     822 Hz  Gain   2.3 dB  Q 5.000
+Filter  7: ON  PK       Fc     963 Hz  Gain  -1.4 dB  Q 5.000
+Filter  8: ON  PK       Fc    1404 Hz  Gain   1.5 dB  Q 1.427
+Filter  9: ON  PK       Fc    1841 Hz  Gain  -8.8 dB  Q 4.452
+Filter 10: ON  PK       Fc    1873 Hz  Gain   8.9 dB  Q 5.000
+Filter 11: ON  PK       Fc    2272 Hz  Gain   0.6 dB  Q 5.000
+Filter 12: ON  PK       Fc    3056 Hz  Gain  -1.9 dB  Q 5.000
+Filter 13: ON  PK       Fc    4394 Hz  Gain   1.9 dB  Q 5.000
+Filter 14: ON  PK       Fc    4799 Hz  Gain  -2.5 dB  Q 5.000
+Filter 15: ON  PK       Fc    6710 Hz  Gain  -1.2 dB  Q 16.000
+Filter 16: ON  PK       Fc    7883 Hz  Gain   2.0 dB  Q 5.000
+Filter 17: ON  PK       Fc    8637 Hz  Gain  -8.8 dB  Q 5.000
+Filter 18: ON  PK       Fc    8782 Hz  Gain   9.0 dB  Q 5.000
+Filter 19: ON  PK       Fc   11847 Hz  Gain  -4.5 dB  Q 2.424
+Filter 20: ON  PK       Fc   14931 Hz  Gain  -5.9 dB  Q 5.000
+

@@ -1,12 +1,12 @@
 import unittest
-from spinorama.load.klippel import parse_graph_freq_klippel
-from spinorama.load.princeton import parse_graph_princeton
+from spinorama.load_klippel import parse_graph_freq_klippel
+from spinorama.load_princeton import parse_graph_princeton
 
 
 class SpinoramaLoadTests(unittest.TestCase):
 
     def setUp(self):
-        self.title, self.df = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/CEA2034.txt')
+        self.title, self.df = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/asr-v3-20200711/CEA2034.txt')
 
     def test_smoke1(self):
         self.assertEqual(self.title, 'CEA2034')
@@ -20,7 +20,7 @@ class SpinoramaLoadTests(unittest.TestCase):
 class SpinoramaLoadSPLTests(unittest.TestCase):
 
     def setUp(self):
-        self.title, self.df = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/SPL Horizontal.txt')
+        self.title, self.df = parse_graph_freq_klippel('datas/ASR/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt')
 
     def test_smoke1(self):
         self.assertEqual(self.title, 'SPL Horizontal')
@@ -30,7 +30,7 @@ class SpinoramaLoadSPLTests(unittest.TestCase):
         self.assertIn('On Axis', self.df.columns)
         self.assertNotIn('On-Axis', self.df.columns)
         # 200 in Freq, -170 to 180 10 by 10
-        self.assertEqual(self.df.shape, (200, 2*18+1))
+        self.assertEqual(self.df.shape, (194, 2*18+1))
 
 
 class SpinoramaLoadPrinceton(unittest.TestCase):

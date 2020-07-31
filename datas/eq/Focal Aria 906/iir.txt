@@ -1,0 +1,30 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 10-07-2020 14:48:26
+
+Notes:Focal Aria 906 IIR v2
+
+Equaliser: Generic
+Focal Aria 906 LW.txt
+Filter  1: ON  PK       Fc     344 Hz  Gain   0.6 dB  Q 26.000
+Filter  2: ON  PK       Fc     379 Hz  Gain  -0.4 dB  Q 25.000
+Filter  3: ON  PK       Fc     400 Hz  Gain   0.4 dB  Q 25.000
+Filter  4: ON  PK       Fc     486 Hz  Gain   0.4 dB  Q 18.000
+Filter  5: ON  PK       Fc     569 Hz  Gain  -0.3 dB  Q 25.000
+Filter  6: ON  PK       Fc     594 Hz  Gain   0.4 dB  Q 30.000
+Filter  7: ON  PK       Fc     786 Hz  Gain  -1.4 dB  Q 7.000
+Filter  8: ON  PK       Fc     950 Hz  Gain  -1.0 dB  Q 3.500
+Filter  9: ON  PK       Fc    1130 Hz  Gain   1.3 dB  Q 9.000
+Filter 10: ON  PK       Fc    1430 Hz  Gain   2.3 dB  Q 5.000
+Filter 11: ON  PK       Fc    1587 Hz  Gain  -1.2 dB  Q 16.000
+Filter 12: ON  PK       Fc    1713 Hz  Gain   0.5 dB  Q 25.000
+Filter 13: ON  PK       Fc    1950 Hz  Gain   1.4 dB  Q 14.000
+Filter 14: ON  PK       Fc    2228 Hz  Gain   1.2 dB  Q 20.000
+Filter 15: ON  PK       Fc    2380 Hz  Gain  -0.4 dB  Q 30.000
+Filter 16: ON  PK       Fc    2540 Hz  Gain   1.3 dB  Q 11.000
+Filter 17: ON  PK       Fc    2920 Hz  Gain   2.7 dB  Q 7.000
+Filter 18: ON  PK       Fc   14700 Hz  Gain   1.2 dB  Q 2.500
+Filter 19: ON  PK       Fc   16600 Hz  Gain   1.4 dB  Q 1.700
+Filter 20: ON  PK       Fc   19980 Hz  Gain  -0.5 dB  Q 7.000
+

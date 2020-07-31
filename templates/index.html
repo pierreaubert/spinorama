@@ -21,7 +21,7 @@
       return text.replace(' ', '%20')
 
   def space2dash(text):
-      return text.replace(' ', '-').replace("'", '-').replace(".", '-')
+      return text.replace(' ', '-').replace("'", '-').replace(".", '-').replace("+",'-')
 
   def removeVendors(text):
       return text.replace('Vendors/','')
@@ -50,58 +50,52 @@
 	    </figure>
 	  </div>
 	  <header class="card-header">
-	    <p class="card-header-title">
-	      ${meta[speaker_name]['brand']}<br/>${meta[speaker_name]['model']}
-	    </p>
-	    % if 'pref_rating' in meta[speaker_name]:
-	    <p class="card-header-title">
-	      % if 'pref_score' in meta[speaker_name]['pref_rating']:
-	        (${meta[speaker_name]['pref_rating']['pref_score']})
-  	      % endif
+	    <p class="card-header-title">${meta[speaker_name]['brand']}<br/>${meta[speaker_name]['model']}</p>
+<%
+  compute = None
+  if 'default_measurement' in meta[speaker_name]:
+      default =  meta[speaker_name]['default_measurement']
+      if default in meta[speaker_name]['measurements'].keys():
+         compute = meta[speaker_name]['measurements'][default]
+%>
+	  % if compute is not None and 'pref_rating' in compute.keys():
+	    <p class="card-header-title">(${compute['pref_rating'].get('pref_score', '')})
 	      &nbsp;
-      	      % if 'scaled_pref_score' in meta[speaker_name]['scaled_pref_rating']:
-  	        ${meta[speaker_name]['scaled_pref_rating']['scaled_pref_score']}/100
-  	      % endif
+	      ${compute['scaled_pref_rating'].get('scaled_pref_score')}/100
 	    </p>
-	    % endif
+	  % endif
 	  </header>
-	  <div class="card-content">
+    	  <div class="card-content">
 	    <div class="content is-small">
-              % if 'pref_rating' in meta[speaker_name]:
-  	      <p>Bass extension: <b>
-		  % if 'lfx_hz' in meta[speaker_name]['pref_rating']:
-		  ${meta[speaker_name]['pref_rating']['lfx_hz']}
-		  % endif
-	      </b>Hz at -6dB</p>
-               % if 'scaled_lfx_hz' in meta[speaker_name]['scaled_pref_rating']:
-    	      <progress class="progress is-small is-info"
-			value="${meta[speaker_name]['scaled_pref_rating']['scaled_lfx_hz']}"
-			max="100"></progress>
-	      % endif
-	      <p>Flatness: <b>&plusmn;${meta[speaker_name]['estimates'][3]}</b>dB ~ 100-10kHz</p>
-	      <progress class="progress is-small is-success"
-			value="${meta[speaker_name]['scaled_pref_rating']['scaled_flatness']}"
-			max="100"></progress>
-	      <p>Smoothness (PIR): <b>${meta[speaker_name]['pref_rating']['sm_pred_in_room']}</b></p>
-	      <progress class="progress is-small is-warning"
-			value="${meta[speaker_name]['scaled_pref_rating']['scaled_sm_pred_in_room']}"
-			max="100"></progress>
-	      % else:
-  	      % if 'estimates' in meta[speaker_name]:
-	      % if meta[speaker_name]['estimates'][1] != -1:
-	      <p>${meta[speaker_name]['estimates'][1]}Hz at -3dB<br/></p>
-	      % endif
-	      % if meta[speaker_name]['estimates'][2] != -1:
-	      <p>${meta[speaker_name]['estimates'][2]}Hz at -6dB<br/></p>
-	      % endif
-	      <p>&plusmn;${meta[speaker_name]['estimates'][3]}dB ~ 100-100kHz</p>
-	      % endif
+              % if compute is not None:
+	      %   if 'pref_rating' in compute.keys():
+  	            <p>Bass extension: <b>${compute['pref_rating'].get('lfx_hz', '')}</b>Hz at -6dB</p>
+                    % if 'scaled_lfx_hz' in compute['scaled_pref_rating']:
+    	              <progress class="progress is-small is-info" value="${compute['scaled_pref_rating']['scaled_lfx_hz']}" max="100"></progress>
+	            % endif
+	            <p>Flatness: <b>&plusmn;${compute['estimates']['ref_band']}</b>dB ~ ${compute['estimates']['ref_from']}-${compute['estimates']['ref_to']}Hz</p>
+	            <progress class="progress is-small is-success" value="${compute['scaled_pref_rating']['scaled_flatness']}" max="100"></progress>
+	            <p>Smoothness (PIR): <b>${compute['pref_rating']['sm_pred_in_room']}</b></p>
+	            <progress class="progress is-small is-warning" value="${compute['scaled_pref_rating']['scaled_sm_pred_in_room']}" max="100"></progress>
+	      %   else:
+  	      %     if 'estimates' in compute:
+	      %       if 'ref_3dB' in compute['estimates'].keys():
+	                <p>${compute['estimates']['ref_3dB']}Hz at -3dB<br/></p>
+	      %       endif
+	      %       if 'ref_6dB' in compute['estimates'].keys():
+	                <p>${compute['estimates']['ref_6dB']}Hz at -6dB<br/></p>
+	      %       endif
+	      %       if 'ref_band' in compute['estimates'].keys():
+	                <p>&plusmn;${compute['estimates']['ref_band']}dB ~ ${compute['estimates']['ref_from']}-${compute['estimates']['ref_to']}Hz</p>
+	      %       endif
+	      %     endif
+	      %   endif
 	      % endif
 	    </div>
 	  </div>
 	  <footer class="card-footer">
-	    % for m in meta[speaker_name]['measurements']:
-	    <a class="card-footer-item" href="${speaker_name}/${m['origin']|removeVendors}/index.html">${m['origin']}</a>
+	    % for v, m in meta[speaker_name]['measurements'].items():
+	    <a class="card-footer-item" href="${speaker_name}/${m['origin']|removeVendors}/index_${v}.html">${m['origin']}</a>
 	    % endfor
 	  </footer>
 	</div>

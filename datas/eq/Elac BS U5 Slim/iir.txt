@@ -1,0 +1,30 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 07-07-2020 01:36:25
+
+Notes:Elac BS U5 IIR
+
+Equaliser: Generic
+Elac BS U5 LW.txt
+Filter  1: ON  PK       Fc     347 Hz  Gain   0.7 dB  Q 20.000
+Filter  2: ON  PK       Fc     435 Hz  Gain   0.8 dB  Q 4.000
+Filter  3: ON  PK       Fc     594 Hz  Gain   0.7 dB  Q 15.000
+Filter  4: ON  PK       Fc     710 Hz  Gain  -0.9 dB  Q 6.000
+Filter  5: ON  PK       Fc     925 Hz  Gain  -0.5 dB  Q 5.000
+Filter  6: ON  PK       Fc    1150 Hz  Gain   1.3 dB  Q 7.000
+Filter  7: ON  PK       Fc    1275 Hz  Gain  -0.8 dB  Q 16.000
+Filter  8: ON  PK       Fc    1560 Hz  Gain  -1.2 dB  Q 6.000
+Filter  9: ON  PK       Fc    1850 Hz  Gain  -1.0 dB  Q 14.000
+Filter 10: ON  PK       Fc    2090 Hz  Gain  -1.9 dB  Q 13.000
+Filter 11: ON  PK       Fc    2400 Hz  Gain  -1.3 dB  Q 15.000
+Filter 12: ON  PK       Fc    2675 Hz  Gain  -0.5 dB  Q 16.000
+Filter 13: ON  PK       Fc    3350 Hz  Gain   2.6 dB  Q 3.000
+Filter 14: ON  PK       Fc    4360 Hz  Gain  -0.8 dB  Q 15.000
+Filter 15: ON  PK       Fc    4980 Hz  Gain   2.5 dB  Q 3.500
+Filter 16: ON  PK       Fc    8030 Hz  Gain   4.4 dB  Q 4.000
+Filter 17: ON  PK       Fc   10350 Hz  Gain   1.4 dB  Q 8.000
+Filter 18: ON  PK       Fc   11380 Hz  Gain  -0.7 dB  Q 7.000
+Filter 19: ON  PK       Fc   13900 Hz  Gain   2.0 dB  Q 3.000
+Filter 20: ON  PK       Fc   16100 Hz  Gain   4.2 dB  Q 2.300
+

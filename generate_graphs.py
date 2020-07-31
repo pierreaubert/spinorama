@@ -17,9 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Usage:
-update-graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
-  [--force] [--type=<ext>] [--log-level=<level>] [--origin=<origin>]\
-  [--speaker=<speaker>] [--only-compare=<compare>]
+generate_graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
+  [--force] [--type=<ext>] [--log-level=<level>]\
+  [--origin=<origin>]  [--speaker=<speaker>] [--mversion=<mversion>]
 
 Options:
   -h|--help         display usage()
@@ -30,39 +30,44 @@ Options:
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
   --origin=<origin> restrict to a specific origin, usefull for debugging
   --speaker=<speaker> restrict to a specific speaker, usefull for debugging
-  --only-compare=<compare> if true then skip graphs generation and only dump compare data
+  --mversion=<mversion> restrict to a specific mversion (for a given origin you can have multiple measurements)
 """
+import json
 import logging
 import sys
+import pandas as pd
+import flammkuchen as fl
 import datas.metadata as metadata
 from docopt import docopt
-from src.spinorama.load.parse import parse_all_speakers, parse_graphs_speaker
-from src.spinorama.print import print_graphs, print_compare
+from src.spinorama.load_parse import parse_all_speakers, parse_graphs_speaker, parse_eq_speaker
+from src.spinorama.speaker_print import print_graphs
+from src.spinorama.graph import graph_params_default
 
 
 def generate_graphs(df, width, height, force, ptype):
+    updated = 0
     for speaker_name, speaker_data in df.items():
         for origin, dataframe in speaker_data.items():
-            key = 'default'
-            logging.debug('{:30s} {:20s} {:20s}'.format(speaker_name, origin, key))
-            dfs = df[speaker_name][origin][key]
-            updated = print_graphs(dfs,
-                                   speaker_name, origin, metadata.origins_info, key,
-                                   width, height, force, ptype)
-            print('{:30s} {:2d}'.format(speaker_name, updated))
+            for key in df[speaker_name][origin].keys():
+                logging.debug('{:30s} {:20s} {:20s}'.format(speaker_name, origin, key))
+                dfs_ref = df[speaker_name][origin][key]
+                key_eq = '{0}_eq'.format(key)
+                dfs_eq = df[speaker_name][origin].get(key_eq, None)
+                updated = print_graphs(dfs_ref,
+                                       dfs_eq,
+                                       speaker_name, origin, metadata.origins_info, key,
+                                       width, height, force, ptype)
+    print('{:30s} {:2d}'.format(speaker_name, updated))
 
-
-def generate_compare(df, width, height, force, ptype):
-    print_compare(df, force, ptype)
 
 
 if __name__ == '__main__':
     args = docopt(__doc__,
-                  version='generate_raphs.py version 1.18',
+                  version='generate_graphs.py version 1.20',
                   options_first=True)
 
-    width = 1200
-    height = 600
+    width = graph_params_default['width']
+    height = graph_params_default['height']
     force = args['--force']
     ptype = None
 
@@ -97,28 +102,27 @@ if __name__ == '__main__':
     df = None
     if args['--speaker'] is not None and args['--origin'] is not None:
         speaker = args['--speaker']
-        origin = args['--origin']
-        mformat = None
-        if origin == 'Princeton':
-            mformat = 'princeton'
-        elif origin == 'ASR':
-            mformat = 'klippel'
-        else:
-            # need to get this information from meta
-            mformat = None
-            for m in range(0, len(metadata.speakers_info[speaker]['measurements'])):
-                measurement = metadata.speakers_info[speaker]['measurements'][m]
-                if measurement['origin'] == origin:
-                    mformat = measurement['format']
-                    logging.debug('found mformat {0} in metadata'.format(mformat))
-            if mformat is None:
-                logging.fatal('Origin {0} is not our metadata'.format(origin))
-                sys.exit(1)
         brand = metadata.speakers_info[speaker]['brand']
+        origin = args['--origin']
+        mversion = metadata.speakers_info[speaker]['default_measurement']
+        if args['--mversion'] is not None:
+            mversion = args['--mversion']
+        mformat = metadata.speakers_info[speaker]['measurements'][mversion].get('format')
+
         df = {}
         df[speaker] = {}
         df[speaker][origin] = {}
-        df[speaker][origin]['default'] = parse_graphs_speaker(brand, speaker, mformat)
+
+        logging.info('Parsing: {} {} {} {}'.format(brand, speaker, mformat, mversion))
+        df_ref = parse_graphs_speaker('./datas', brand, speaker, mformat, mversion)
+        if df_ref is not None:
+            df[speaker][origin][mversion] = df_ref
+            df_eq = parse_eq_speaker('./datas', speaker, df_ref)
+            if df_eq is not None:
+                logging.info('Parsing: {} {} {} {} with eq'.format(brand, speaker, mformat, mversion))
+                df[speaker][origin]['{0}_eq'.format(mversion)] = df_eq
+        else:
+            logging.info('{0} {1} {2} {3} returned None'.format(brand, speaker, mformat, mversion))
         print('Speaker                         #updated')
         generate_graphs(df, width, height, force, ptype=ptype)
     else:
@@ -127,11 +131,8 @@ if __name__ == '__main__':
             origin = args['--origin']
 
         df = parse_all_speakers(metadata.speakers_info, origin)
-        if args['--only-compare'] is not True:
-            generate_graphs(df, width, height, force, ptype=ptype)
-
-    if args['--speaker'] is None and args['--origin'] is None:
-        generate_compare(df, width, height, force, ptype=ptype)
+        fl.save('cache.parse_all_speakers.h5', df)
+        generate_graphs(df, width, height, force, ptype=ptype)
 
     sys.exit(0)
         
