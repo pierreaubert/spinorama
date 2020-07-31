@@ -1,13 +1,13 @@
 Filter Settings file
 
 Room EQ V5.19
-Dated: 27-07-2020 20:12:44
+Dated: 17-07-2020 20:25:58
 
-Notes:Realistic MC-1000 no bass hump
+Notes:Realistic MC-1000 IIR
 
 Equaliser: Generic
 Realistic MC-1000 PIR.tx
-Filter  1: ON  PK       Fc     169 Hz  Gain  -3.9 dB  Q 2.400
+Filter  1: ON  PK       Fc     342 Hz  Gain   1.0 dB  Q 10.000
 Filter  2: ON  PK       Fc     444 Hz  Gain  -1.7 dB  Q 5.000
 Filter  3: ON  PK       Fc     575 Hz  Gain  -1.7 dB  Q 5.000
 Filter  4: ON  PK       Fc     705 Hz  Gain  -2.0 dB  Q 4.500
