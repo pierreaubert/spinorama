@@ -53,7 +53,7 @@ def queue_measurement(brand, speaker, mformat, morigin, mversion):
     force = False
     ptype = None
     width = graph_params_default['width']
-    height = graph_params_default['heigth']
+    height = graph_params_default['height']
     id_g1 = print_graphs.remote(id_df, id_eq, speaker, morigin, metadata.origins_info, mversion, width, height, force, ptype)
     id_g2 = print_graphs.remote(id_eq, id_eq, speaker, morigin, metadata.origins_info, mversion+'_eq', width, height, force, ptype)
     return (id_df, id_eq, id_g1, id_g2)
