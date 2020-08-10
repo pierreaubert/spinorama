@@ -1,0 +1,30 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 04-08-2020 20:46:34
+
+Notes:Canon S-50 IIR
+
+Equaliser: Generic
+Canon S-50 LW.txt
+Filter  1: ON  PK       Fc     400 Hz  Gain   1.2 dB  Q 4.000
+Filter  2: ON  PK       Fc     532 Hz  Gain   1.8 dB  Q 8.000
+Filter  3: ON  PK       Fc     935 Hz  Gain  -2.0 dB  Q 5.000
+Filter  4: ON  PK       Fc    1075 Hz  Gain   3.6 dB  Q 5.000
+Filter  5: ON  PK       Fc    1352 Hz  Gain   2.0 dB  Q 5.000
+Filter  6: ON  PK       Fc    1561 Hz  Gain  -3.7 dB  Q 5.000
+Filter  7: ON  PK       Fc    2005 Hz  Gain   8.6 dB  Q 5.000
+Filter  8: ON  PK       Fc    2122 Hz  Gain  -9.6 dB  Q 5.000
+Filter  9: ON  PK       Fc    2232 Hz  Gain   6.6 dB  Q 5.000
+Filter 10: ON  PK       Fc    2756 Hz  Gain   9.3 dB  Q 2.184
+Filter 11: ON  PK       Fc    3066 Hz  Gain  -9.7 dB  Q 1.000
+Filter 12: ON  PK       Fc    3298 Hz  Gain   9.2 dB  Q 5.000
+Filter 13: ON  PK       Fc    4752 Hz  Gain  16.3 dB  Q 5.000
+Filter 14: ON  PK       Fc    5150 Hz  Gain  -9.1 dB  Q 5.000
+Filter 15: ON  PK       Fc    6171 Hz  Gain  -1.4 dB  Q 1.103
+Filter 16: ON  PK       Fc    7041 Hz  Gain  -8.9 dB  Q 5.000
+Filter 17: ON  PK       Fc    8747 Hz  Gain  12.6 dB  Q 2.115
+Filter 18: ON  PK       Fc    9066 Hz  Gain  -6.3 dB  Q 5.000
+Filter 19: ON  PK       Fc   10744 Hz  Gain  -4.9 dB  Q 5.000
+Filter 20: ON  PK       Fc   13500 Hz  Gain   7.5 dB  Q 8.000
+

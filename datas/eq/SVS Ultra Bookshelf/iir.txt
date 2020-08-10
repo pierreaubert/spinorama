@@ -1,0 +1,30 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 02-08-2020 11:58:46
+
+Notes:SVS Ultra Bookshelf IIR
+
+Equaliser: Generic
+SVS Ultra Bookshelf LW
+Filter  1: ON  PK       Fc     351 Hz  Gain   0.9 dB  Q 10.000
+Filter  2: ON  PK       Fc     407 Hz  Gain   1.5 dB  Q 11.000
+Filter  3: ON  PK       Fc     552 Hz  Gain  -0.6 dB  Q 15.000
+Filter  4: ON  PK       Fc     790 Hz  Gain  -1.0 dB  Q 5.000
+Filter  5: ON  PK       Fc     912 Hz  Gain  -1.4 dB  Q 1.000
+Filter  6: ON  PK       Fc    1414 Hz  Gain   0.4 dB  Q 17.000
+Filter  7: ON  PK       Fc    1550 Hz  Gain  -0.8 dB  Q 16.000
+Filter  8: ON  PK       Fc    1642 Hz  Gain   0.9 dB  Q 14.000
+Filter  9: ON  PK       Fc    1755 Hz  Gain  -0.8 dB  Q 10.000
+Filter 10: ON  PK       Fc    2000 Hz  Gain  -0.7 dB  Q 18.000
+Filter 11: ON  PK       Fc    2215 Hz  Gain  -0.7 dB  Q 25.000
+Filter 12: ON  PK       Fc    2570 Hz  Gain   0.6 dB  Q 18.000
+Filter 13: ON  PK       Fc    2820 Hz  Gain   0.7 dB  Q 10.000
+Filter 14: ON  PK       Fc    3840 Hz  Gain  -0.6 dB  Q 15.000
+Filter 15: ON  PK       Fc    5480 Hz  Gain   0.7 dB  Q 1.000
+Filter 16: ON  PK       Fc    8900 Hz  Gain  -0.5 dB  Q 4.000
+Filter 17: ON  PK       Fc   10850 Hz  Gain   0.4 dB  Q 7.000
+Filter 18: ON  PK       Fc   12400 Hz  Gain  -1.2 dB  Q 1.500
+Filter 19: ON  PK       Fc   15913 Hz  Gain  -0.7 dB  Q 4.000
+Filter 20: ON  HS       Fc   17200 Hz  Gain  -2.7 dB
+

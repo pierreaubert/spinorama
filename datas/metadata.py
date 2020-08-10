@@ -52,6 +52,22 @@ speakers_info = {
             },
         },
     },
+    'Ascend Acoustics Horizon Center': {
+        'brand': 'Ascend Acoustics',
+        'model': 'Horizon Center',
+        'type': 'passive',
+        'shape': 'center',
+        'price': '1490',
+        'amount': 'each',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ascend-acoustics-horizon-center-speaker-review.15199/',
+            },
+        },
+    },
     'Ascend Acoustics Sierra 2': {
         'brand': 'Ascend Acoustics',
         'model': 'Sierra 2',
@@ -1480,6 +1496,22 @@ speakers_info = {
             },
         },
     },
+    'PSB Alpha P5': {
+        'brand': 'PSB',
+        'model': 'Alpha P5',
+        'type': 'passive',
+        'price': '349',
+        'shape': 'bookshelves',
+        'amount': 'each',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/psb-alpha-p5-speaker-review.15161/',
+            },
+        },
+    },
     'Q Acoustics 3020i': {
         'brand': 'Q Acoustics',
         'model': '3020i',
@@ -1793,6 +1825,22 @@ speakers_info = {
             'princeton': {
                 'origin': 'Princeton',
                 'format': 'princeton',
+             },
+        },
+    },
+    'SVS Ultra Bookshelf': {
+        'brand': 'SVS',
+        'model': 'Ultra Bookshelf',
+        'type': 'passive',
+        'price': '1000',
+        'amount': 'pair',
+        'shape': 'bookshelves',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/svs-ultra-bookshelf-speaker-review.15055/',
              },
         },
     },
