@@ -5,6 +5,8 @@ import pathlib
 import copy
 import pandas as pd
 from altair_saver import save
+import ray
+
 from .speaker_display import display_spinorama, display_onaxis, display_inroom, \
     display_reflection_early, display_reflection_horizontal, display_reflection_vertical, \
     display_spl_horizontal, display_spl_vertical, \
@@ -59,6 +61,7 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
     return updated
 
 
+@ray.remote
 def print_graphs(df: pd.DataFrame,
                  df_eq: pd.DataFrame,
                  speaker, origin, origins_info,
@@ -67,7 +70,6 @@ def print_graphs(df: pd.DataFrame,
                  force_print=False, filter_file_ext=None):
     # may happens at development time
     if df is None:
-        print('Error: print_graph is None')
         return 0
 
     params = copy.deepcopy(graph_params_default)
@@ -174,29 +176,35 @@ def print_graphs(df: pd.DataFrame,
     updated = 0
     for (title, graph) in graphs.items():
         if graph is not None:
-            updated += print_graph(speaker, origin, key,
-                                title, graph,
-                                force_print, filter_file_ext)
+            updated = print_graph(speaker, origin, key, title, graph, force_print, filter_file_ext)
     return updated
+
+
+@ray.remote
+def print_compare_graph(df, graph_filter, filedir):
+    graph = display_compare(df, graph_filter)
+    if graph is not None:
+        graph = graph.configure_title(orient='top', anchor='middle', fontSize=16)
+        filename = '{0}/{1}.json'.format(filedir, graph_filter)
+        try:
+            print('Saving {0}'.format(filename))
+            graph.save(filename)
+        except Exception as e:
+            logging.error('Got unkown error {0} for {1}'.format(e, filename))
 
 
 def print_compare(df, force_print=False, filter_file_ext=None):
     filedir = 'docs/compare'
     pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
     
+    ids = []
     for graph_filter in (
         'CEA2034', 'Estimated In-Room Response',
         'Early Reflections', 'Horizontal Reflections', 'Vertical Reflections',
         'SPL Horizontal', 'SPL Vertical'):
-        graph = display_compare(df, graph_filter)
-        if graph is not None:
-            # graph = graph.configure_legend(orient='bottom').configure_title(orient='top', anchor='middle', fontSize=16)
-            graph = graph.configure_title(orient='top', anchor='middle', fontSize=16).properties(width=1200, heigth=600)
-            filename = '{0}/{1}.json'.format(filedir, graph_filter)
-            try:
-                print('Saving {0}'.format(filename))
-                graph.save(filename)
-            except Exception as e:
-                logging.error('Got unkown error {0} for {1}'.format(e, filename))
+        ids.append(print_compare_graph.remote(df, graph_filter, filedir))
+
+    for id in ids:
+        ray.get(id)
     
     
