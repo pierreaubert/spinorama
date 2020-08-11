@@ -10,21 +10,23 @@ from .load import graph_melt
 from .graph import graph_spinorama, graph_freq
 from .compute_scores import speaker_pref_rating
 from .compute_cea2034 import compute_cea2034, estimated_inroom_HV, spl2pressure, pressure2spl
-from .load_parse import normalize
+from .load_parse import load_normalize
 from .filter_iir import Biquad
 from .filter_peq import peq_build, peq_apply_measurements, peq_print
 
 
 def scores_apply_filter(splH, splV, peq):
     # apply EQ to all horizontal and vertical measurements
-    ddf_horizontal = peq_apply_measurements(splH, peq)
-    ddf_vertical   = peq_apply_measurements(splV, peq)
+    splH_filtered = peq_apply_measurements(splH, peq)
+    splV_filtered = peq_apply_measurements(splV, peq)
     # compute filtered score
-    spin_filtered = normalize(graph_melt(compute_cea2034(ddf_horizontal, ddf_vertical)))
-    pir_filtered  = normalize(graph_melt(estimated_inroom_HV(ddf_horizontal, ddf_vertical)))
+    spin_filtered = load_normalize(graph_melt(compute_cea2034(splH_filtered, splV_filtered)))
+    pir_filtered  = load_normalize(graph_melt(estimated_inroom_HV(splH_filtered, splV_filtered)))
     score_filtered = speaker_pref_rating(spin_filtered, pir_filtered, rounded=False)
     if score_filtered is None:
-        logging.warning('computing pref score for eq failed')
+        logging.info('computing pref score for eq failed')
+        # max score is around 10
+        return -10.0
     return spin_filtered, pir_filtered, score_filtered
 
 
@@ -49,9 +51,6 @@ def scores_print(score, score_filtered):
 
 def scores_loss(df_speaker, peq):
     _, _, score_filtered = scores_apply_filter(df_speaker['SPL Horizontal_unmelted'], df_speaker['SPL Vertical_unmelted'], peq)
-    #TODO
-    # if score_filtered is None:
-    #    return -
     # optimize max score is the same as optimize min -score
     return -score_filtered['pref_score']
 
