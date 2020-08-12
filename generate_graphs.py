@@ -16,18 +16,37 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import flammkuchen as fl
+"""Usage:
+generate_graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
+  [--force] [--type=<ext>] [--log-level=<level>]\
+  [--origin=<origin>]  [--speaker=<speaker>] [--version=<version>] [--brand=<brand>]
+
+Options:
+  -h|--help         display usage()
+  --width=<width>   width size in pixel
+  --height=<height> height size in pixel
+  --force           force regeneration of all graphs, by default only generate new ones
+  --type=<ext>      choose one of: json, html, png, svg
+  --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
+  --origin=<origin> filter by origin
+  --brand=<brand> filter by brand
+  --speaker=<speaker> filter by speaker
+  --version=<version> filter by measurement
+"""
 import glob
 import logging
 import os
-import pandas as pd
-import ray
 import sys
 import time
 
+from docopt import docopt
+import flammkuchen as fl
+import pandas as pd
+import ray
+
 import datas.metadata as metadata
-from src.spinorama.load_parse_ray import parse_graphs_speaker, parse_eq_speaker
-from src.spinorama.speaker_print_ray import print_graphs, print_compare
+from src.spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
+from src.spinorama.speaker_print import print_graphs, print_compare
 from src.spinorama.graph import graph_params_default
 
 # will eat all your CPUs
@@ -59,15 +78,32 @@ def queue_measurement(brand, speaker, mformat, morigin, mversion):
     return (id_df, id_eq, id_g1, id_g2)
 
 
-def queue_speakers(speakerlist, metadata : dict) -> dict:
+def queue_speakers(speakerlist, metadata : dict, filters: dict) -> dict:
     ray_ids = {}
     count = 0
     for speaker in speakerlist:
+        if 'speaker' in filters and speaker != filters['speaker']:
+            logging.debug('skipping {}'.format(speaker))
+            continue
         ray_ids[speaker] = {}
         for mversion, measurement in metadata[speaker]['measurements'].items():
+            # mversion looks like asr and asr_eq
+            if 'version' in filters and not (mversion == filters['version'] or mversion != '{}_eq'.format(filters['version'])):
+                logging.debug('skipping {}/{}/{}'.format(speaker, mversion, mformat))
+                continue
+            # filter on format (klippel, princeton, ...)
             mformat = measurement['format']
+            if 'format' in filters and mformat != filters['format']:
+                logging.debug('skipping {}/{}/{}'.format(speaker, mversion, mformat))
+                continue
+            # filter on origin (ASR, princeton, ...)
             morigin = measurement['origin']
+            if 'origin' in filters and morigin != filters['origin']:
+                logging.debug('skipping {}/{}/{}/{}'.format(speaker, mversion, mformat, morigin))
+                continue
+            # TODO(add filter on brand)
             brand = metadata[speaker]['brand']
+            logging.debug('queing {}/{}/{}/{}'.format(speaker, mformat, morigin, mversion))
             ray_ids[speaker][mversion] = queue_measurement(brand, speaker, mformat, morigin, mversion)
             count += 1
     print('Queued {0} speakers {1} measurements'.format(len(speakerlist), count))
@@ -104,12 +140,14 @@ def compute(speakerkist, metadata, ray_ids):
                 if m_origin not in df[speaker_key].keys():
                     df[speaker_key][m_origin] = {}
 
+                if speaker not in ray_ids:
+                    continue
+                
                 current_id = ray_ids[speaker][m_version][0]
                 if current_id in ready_ids:
                     df[speaker_key][m_origin][m_version_key] = ray.get(current_id)
                     logging.debug('Getting df done for {0} / {1} / {2}'.format(speaker, m_origin, m_version))
                     done_ids[current_id] = True
-                    continue
                 
                 m_version_eq = '{0}_eq'.format(m_version_key)
                 current_id = ray_ids[speaker][m_version][1]
@@ -118,24 +156,23 @@ def compute(speakerkist, metadata, ray_ids):
                     eq = ray.get(current_id)
                     if eq is not None:
                         df[speaker_key][m_origin][m_version_eq] = eq
+                        logging.debug('Getting preamp eq done for {0} / {1} / {2}'.format(speaker, m_version_eq, m_version))
+                        if 'preamp_gain' in eq:
+                            df[speaker_key][m_origin][m_version_eq]['preamp_gain'] = eq['preamp_gain']
                     done_ids[current_id] = True
-                    continue
 
                 current_id = ray_ids[speaker][m_version][2]
                 if current_id in g1_ids:
                     logging.debug('Getting graph done for {0} / {1} / {2}'.format(speaker, m_version, m_origin))
                     ray.get(current_id)
                     done_ids[current_id] = True
-                    continue
 
                 current_id = ray_ids[speaker][m_version][3]
                 if current_id in g2_ids:
                     logging.debug('Getting graph done for {0} / {1} / {2}'.format(speaker, m_version_eq, m_origin))
                     ray.get(current_id)
                     done_ids[current_id] = True
-                    continue
 
-                done_ids[current_id] = True
 
         if len(remaining_ids) == 0:
             break
@@ -144,16 +181,54 @@ def compute(speakerkist, metadata, ray_ids):
 
     
 if __name__ == '__main__':
+    args = docopt(__doc__, version='generate_graphs.py version 1.21', options_first=True)
+
     # TODO remove it and replace by iterating over metadatas
     speakerlist = get_speaker_list('./datas')
 
     width = graph_params_default['width']
     height = graph_params_default['height']
-    force = False
+    force = args['--force']
     ptype = None
+
+    if args['--width'] is not None:
+        width = int(args['--width'])
+
+    if args['--height'] is not None:
+        height = int(args['--height'])
+
+    if args['--type'] is not None:
+        ptype = args['--type']
+        if ptype not in ('png', 'html', 'svg', 'json'):
+            print('type %s is not recognize!'.format(ptype))
+            exit(1)
+
+    level = None
+    if args['--log-level'] is not None:
+        check_level = args['--log-level']
+        if check_level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
+            level = check_level
+
+    if level is not None:
+        logging.basicConfig(
+            format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+            datefmt='%Y-%m-%d:%H:%M:%S',
+            level=level)
+    else:
+        logging.basicConfig(
+            format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+            datefmt='%Y-%m-%d:%H:%M:%S')
+
+    filters = {}
+    for filter in ('speaker', 'origin', 'version'):
+        flag = '--{}'.format(filter)
+        if args[flag] is not None:
+            filters[filter] = args[flag]
     
-    ray_ids = queue_speakers(speakerlist, metadata.speakers_info)
+    ray_ids = queue_speakers(speakerlist, metadata.speakers_info, filters)
     df = compute(speakerlist, metadata.speakers_info, ray_ids)
-    fl.save('cache.parse_all_speakers.h5', df)
+    if len(filters.keys()) == 0:
+        fl.save('cache.parse_all_speakers.h5', df)
+
 
         

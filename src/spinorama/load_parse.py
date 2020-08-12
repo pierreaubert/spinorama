@@ -30,10 +30,12 @@ def parse_eq_speaker(speaker_path : str, speaker_name : str, df_ref : dict) -> d
             eq_v_spl = peq_apply_measurements(v_spl, iir)
             df_eq = filter_graphs(speaker_name, eq_h_spl, eq_v_spl)
             df_eq['preamp_gain'] = peq_preamp_gain(iir)
+            logging.debug('adding preamp_gain {}'.format(df_eq['preamp_gain']))
             # normalize wrt to original measurement to make comparison easier
             # original_mean = df_ref.get('CEA2034_original_mean', None)
             # return load_normalize(df_eq, original_mean)
             return df_eq
+    logging.debug('no EQ for {}/{}'.format(speaker_path, speaker_name))
     return None
 
 
