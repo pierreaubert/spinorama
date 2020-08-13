@@ -42,9 +42,13 @@ from docopt import docopt
 import pandas as pd
 import flammkuchen as fl
 
-from src.spinorama.load_parse import parse_all_speakers, parse_graphs_speaker
 from src.spinorama.compute_estimates import estimates
 from src.spinorama.compute_scores import speaker_pref_rating
+from src.spinorama.filter_peq import peq_preamp_gain
+from src.spinorama.load_parse import parse_graphs_speaker
+from src.spinorama.load_rewseq import parse_eq_iir_rews
+
+
 import datas.metadata as metadata
 
 
@@ -64,7 +68,8 @@ def sanity_check(df, meta):
     return 0
 
 
-def add_estimates(df):
+
+def add_scores(df):
     """""Compute some values per speaker and add them to metadata """
     min_pref_score = +100
     max_pref_score = -100
@@ -88,7 +93,7 @@ def add_estimates(df):
                     continue
 
                 spin = dfs['CEA2034']
-                if spin is None:
+                if spin is None or 'Estimated In-Room Response' not in dfs.keys():
                     continue
 
                 logging.debug('Compute score for speaker {0} key {1}'.format(speaker_name, key))
@@ -106,17 +111,11 @@ def add_estimates(df):
                 else:
                     metadata.speakers_info[speaker_name]['measurements'][key]['estimates'] = est
 
-                #if origin == 'Princeton':
-                #    # this measurements are only valid above 500hz
-                #    continue
-
-                # from Olive&all paper
-                if 'Estimated In-Room Response' not in dfs.keys():
-                    continue
-
                 inroom = dfs['Estimated In-Room Response']
                 if inroom is None:
                     continue
+
+                logging.debug('Compute score for speaker {0} key {1}'.format(speaker_name, key))
 
                 pref_rating = speaker_pref_rating(spin, inroom)
                 if pref_rating is None:
@@ -221,6 +220,31 @@ def add_estimates(df):
                 metadata.speakers_info[speaker_name]['measurements'][version]['scaled_pref_rating'] = scaled_pref_rating
 
 
+def add_eq(speaker_path, df):
+    """ Compute some values per speaker and add them to metadata """
+    for speaker_name, speaker_data in df.items():
+        logging.info('Processing {0}'.format(speaker_name))
+        
+        iir = parse_eq_iir_rews('{}/eq/{}/iir.txt'.format(speaker_path, speaker_name), 48000)
+        if iir is not None:
+            metadata.speakers_info[speaker_name]['eq'] = {}
+            metadata.speakers_info[speaker_name]['eq']['preamp_gain'] = round(peq_preamp_gain(iir), 1)
+            metadata.speakers_info[speaker_name]['eq']['type'] = 'peq'
+            metadata.speakers_info[speaker_name]['eq']['peq'] = []
+            for i in range(0, len(iir)):
+                weigth = iir[i][0]
+                filter = iir[i][1]
+                if weigth != 0.0:
+                    metadata.speakers_info[speaker_name]['eq']['peq'].append(
+                        {'type': filter.typ,
+                         'freq': filter.freq,
+                         'srate': filter.srate,
+                         'Q': filter.Q,
+                         'dbGain': filter.dbGain,
+                         })
+            logging.debug('adding eq: {}'.format(metadata.speakers_info[speaker_name]['eq']))
+
+
 def dump_metadata(meta):
     with open('docs/assets/metadata.json', 'w') as f:
         js = json.dumps(meta)
@@ -270,14 +294,16 @@ if __name__ == '__main__':
             parse_max = int(parse_max)
         df = fl.load('cache.parse_all_speakers.h5')
         if df is None:
-            df = parse_all_speakers(metadata.speakers_info, origin, './datas', None, parse_max)
+            logging.error('Load failed! Please run ./generate_graphs.py')
+            sys.exit(1)
         if sanity_check(df, metadata.speakers_info) != 0:
             logging.error('Sanity checks failed!')
             sys.exit(1)
 
     # add computed data to metadata
-    logging.info('Compute estimates per speaker')
-    add_estimates(df)
+    logging.info('Compute scores per speaker')
+    add_scores(df)
+    add_eq('./datas', df)
 
     # check that json is valid
     #try:

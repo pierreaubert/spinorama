@@ -89,21 +89,21 @@ def queue_speakers(speakerlist, metadata : dict, filters: dict) -> dict:
         for mversion, measurement in metadata[speaker]['measurements'].items():
             # mversion looks like asr and asr_eq
             if 'version' in filters and not (mversion == filters['version'] or mversion != '{}_eq'.format(filters['version'])):
-                logging.debug('skipping {}/{}/{}'.format(speaker, mversion, mformat))
+                logging.debug('skipping {}/{}'.format(speaker, mversion))
                 continue
             # filter on format (klippel, princeton, ...)
             mformat = measurement['format']
             if 'format' in filters and mformat != filters['format']:
-                logging.debug('skipping {}/{}/{}'.format(speaker, mversion, mformat))
+                logging.debug('skipping {}/{}/{}'.format(speaker, mformat, mversion))
                 continue
             # filter on origin (ASR, princeton, ...)
             morigin = measurement['origin']
             if 'origin' in filters and morigin != filters['origin']:
-                logging.debug('skipping {}/{}/{}/{}'.format(speaker, mversion, mformat, morigin))
+                logging.debug('skipping {}/{}/{}/{}'.format(speaker, morigin, mformat, mversion))
                 continue
             # TODO(add filter on brand)
             brand = metadata[speaker]['brand']
-            logging.debug('queing {}/{}/{}/{}'.format(speaker, mformat, morigin, mversion))
+            logging.debug('queing {}/{}/{}/{}'.format(speaker, morigin, mformat, mversion))
             ray_ids[speaker][mversion] = queue_measurement(brand, speaker, mformat, morigin, mversion)
             count += 1
     print('Queued {0} speakers {1} measurements'.format(len(speakerlist), count))
