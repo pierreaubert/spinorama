@@ -7,6 +7,7 @@ Notes:Kali Audio IN-8 IIR
 
 Equaliser: Generic
 Kali Audio IN-8 PIR.txt
+Preamp:	-1.7 dB
 Filter  1: ON  PK       Fc     318 Hz  Gain   0.7 dB  Q 15.000
 Filter  2: ON  PK       Fc     348 Hz  Gain   0.8 dB  Q 10.000
 Filter  3: ON  PK       Fc     421 Hz  Gain  -0.9 dB  Q 11.000
