@@ -7,6 +7,7 @@ Notes:PMC Twenty.21 IIR
 
 Equaliser: Generic
 PMC Twenty.21 PIR.txt
+Preamp:	-4.7 dB
 Filter  1: ON  PK       Fc     325 Hz  Gain  -0.6 dB  Q 5.000
 Filter  2: ON  PK       Fc     425 Hz  Gain   2.6 dB  Q 5.000
 Filter  3: ON  PK       Fc     480 Hz  Gain   1.0 dB  Q 5.000
