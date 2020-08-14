@@ -7,6 +7,7 @@ Notes:Ascend CMT-340 SE IIR
 
 Equaliser: Generic
 Ascend CMT-340 SE L
+Preamp:	-4.5 dB
 Filter  1: ON  PK       Fc     371 Hz  Gain  -0.3 dB  Q 10.000
 Filter  2: ON  PK       Fc     430 Hz  Gain   4.8 dB  Q 5.000
 Filter  3: ON  PK       Fc     444 Hz  Gain  -4.5 dB  Q 4.998
