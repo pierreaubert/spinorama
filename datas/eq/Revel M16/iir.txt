@@ -7,6 +7,7 @@ Notes:Revel M16 IIR
 
 Equaliser: Generic
 Revel M16 PIR.txt
+Preamp:	-1.2 dB
 Filter  1: ON  PK       Fc     323 Hz  Gain   1.0 dB  Q 13.000
 Filter  2: ON  PK       Fc     355 Hz  Gain  -0.8 dB  Q 13.000
 Filter  3: ON  PK       Fc     408 Hz  Gain   1.3 dB  Q 10.000
