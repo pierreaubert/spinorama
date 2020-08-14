@@ -7,6 +7,7 @@ Notes:Revel C52 IIR
 
 Equaliser: Generic
 Revel C52 PIR.txt
+Preamp:	-0.8 dB
 Filter  1: ON  PK       Fc     379 Hz  Gain  -0.5 dB  Q 10.000
 Filter  2: ON  PK       Fc     522 Hz  Gain   0.5 dB  Q 9.000
 Filter  3: ON  PK       Fc     685 Hz  Gain  -1.4 dB  Q 2.150
