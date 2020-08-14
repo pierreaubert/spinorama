@@ -7,6 +7,7 @@ Notes:Verdant Audio Bambusa AL-1 IIR
 
 Equaliser: Generic
 Verdant Audio Bambusa
+Preamp:	-0.2	dB
 Filter  1: ON  PK       Fc     343 Hz  Gain   0.9 dB  Q 1.400
 Filter  2: ON  PK       Fc     405 Hz  Gain   0.7 dB  Q 13.000
 Filter  3: ON  PK       Fc     460 Hz  Gain  -0.7 dB  Q 12.000
