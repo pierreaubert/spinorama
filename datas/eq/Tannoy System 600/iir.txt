@@ -7,6 +7,7 @@ Notes:Tannoy System 600 IIR
 
 Equaliser: Generic
 Tannoy System 600 PIR.
+Preamp:	-7.8 dB
 Filter  1: ON  PK       Fc     515 Hz  Gain  -0.5 dB  Q 4.500
 Filter  2: ON  PK       Fc     655 Hz  Gain   1.0 dB  Q 4.000
 Filter  3: ON  PK       Fc     722 Hz  Gain  -1.1 dB  Q 9.000
