@@ -7,6 +7,7 @@ Notes:KEF R3 IIR
 
 Equaliser: Generic
 KEF R3 PIR.txt
+Preamp: -2.1	
 Filter  1: ON  PK       Fc     370 Hz  Gain  -0.8 dB  Q 14.000
 Filter  2: ON  PK       Fc     545 Hz  Gain   0.5 dB  Q 10.000
 Filter  3: ON  PK       Fc     638 Hz  Gain  -0.4 dB  Q 25.000
