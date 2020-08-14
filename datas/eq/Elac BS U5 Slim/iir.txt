@@ -7,6 +7,7 @@ Notes:Elac BS U5 IIR
 
 Equaliser: Generic
 Elac BS U5 LW.txt
+Preamp:	-5 dB
 Filter  1: ON  PK       Fc     347 Hz  Gain   0.7 dB  Q 20.000
 Filter  2: ON  PK       Fc     435 Hz  Gain   0.8 dB  Q 4.000
 Filter  3: ON  PK       Fc     594 Hz  Gain   0.7 dB  Q 15.000
