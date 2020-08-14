@@ -7,6 +7,7 @@ Notes:Revel M22 IIR
 
 Equaliser: Generic
 Revel M22 PIR.txt
+Preamp:	-2.9 dB
 Filter  1: ON  PK       Fc     347 Hz  Gain   0.7 dB  Q 12.000
 Filter  2: ON  PK       Fc     401 Hz  Gain   0.6 dB  Q 15.000
 Filter  3: ON  PK       Fc     490 Hz  Gain   0.8 dB  Q 6.800
