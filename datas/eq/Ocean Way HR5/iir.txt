@@ -7,6 +7,7 @@ Notes:Ocean Way HR5 IIR
 
 Equaliser: Generic
 Ocean Way HR5 PIR.txt
+Preamp:	-1.7 dB
 Filter  1: ON  PK       Fc     328 Hz  Gain  -2.9 dB  Q 14.000
 Filter  2: ON  PK       Fc     437 Hz  Gain   0.7 dB  Q 9.000
 Filter  3: ON  PK       Fc     515 Hz  Gain  -0.8 dB  Q 5.000
