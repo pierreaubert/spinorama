@@ -7,6 +7,7 @@ Notes:Pioneer Elite SP-EBS73-LR IIR
 
 Equaliser: Generic
 Pioneer Elite SP-EBS73-
+Preamp:	-4.5 dB
 Filter  1: ON  PK       Fc     351 Hz  Gain   0.9 dB  Q 6.500
 Filter  2: ON  PK       Fc     400 Hz  Gain   1.1 dB  Q 10.000
 Filter  3: ON  PK       Fc     701 Hz  Gain  -0.6 dB  Q 6.000
