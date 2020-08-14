@@ -7,6 +7,7 @@ Notes:Harbeth Monitor 30 IIR v2
 
 Equaliser: Generic
 Harbeth Monitor 30 PIR.t
+Preamp:	-5.5 dB
 Filter  1: ON  PK       Fc     327 Hz  Gain  -0.6 dB  Q 9.000
 Filter  2: ON  PK       Fc     452 Hz  Gain   1.0 dB  Q 4.000
 Filter  3: ON  PK       Fc     546 Hz  Gain   2.5 dB  Q 5.000
