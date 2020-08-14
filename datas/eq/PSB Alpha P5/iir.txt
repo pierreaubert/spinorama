@@ -7,6 +7,7 @@ Notes:PSB Alpha P5 IIR
 
 Equaliser: Generic
 PSB Alpha P5 LW.txt
+Preamp:	-1.5 dB
 Filter  1: ON  PK       Fc     377 Hz  Gain  14.6 dB  Q 5.000
 Filter  2: ON  PK       Fc     379 Hz  Gain -17.1 dB  Q 5.000
 Filter  3: ON  PK       Fc     403 Hz  Gain  16.9 dB  Q 5.000
