@@ -7,6 +7,7 @@ Notes:Focal Aria 906 IIR v2
 
 Equaliser: Generic
 Focal Aria 906 LW.txt
+Preamp:	-3.1 dB
 Filter  1: ON  PK       Fc     344 Hz  Gain   0.6 dB  Q 26.000
 Filter  2: ON  PK       Fc     379 Hz  Gain  -0.4 dB  Q 25.000
 Filter  3: ON  PK       Fc     400 Hz  Gain   0.4 dB  Q 25.000
