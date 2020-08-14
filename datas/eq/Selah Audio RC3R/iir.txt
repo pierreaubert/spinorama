@@ -7,6 +7,7 @@ Notes:Selah Audio RC3R IIR
 
 Equaliser: Generic
 Selah Audio RC3R.txt
+Preamp:	-2.2 dB
 Filter  1: ON  PK       Fc     380 Hz  Gain  -0.5 dB  Q 15.000
 Filter  2: ON  PK       Fc     560 Hz  Gain   1.8 dB  Q 2.488
 Filter  3: ON  PK       Fc     724 Hz  Gain  -0.6 dB  Q 1.000

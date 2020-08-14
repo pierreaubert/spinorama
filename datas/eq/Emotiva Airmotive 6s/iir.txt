@@ -7,6 +7,7 @@ Notes:Emotiva Airmotiv 6s IIR
 
 Equaliser: Generic
 Emotiva Airmotiv 6s LW.
+Preamp:	-0.9 dB
 Filter  1: ON  PK       Fc     467 Hz  Gain   1.2 dB  Q 12.000
 Filter  2: ON  PK       Fc     563 Hz  Gain   1.4 dB  Q 10.000
 Filter  3: ON  PK       Fc     635 Hz  Gain  -2.9 dB  Q 10.000

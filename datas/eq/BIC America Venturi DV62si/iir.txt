@@ -7,6 +7,7 @@ Notes:BIC America DV62si IIR
 
 Equaliser: Generic
 BIC America DV62si PIR.
+Preamp:	-1.5 dB
 Filter  1: ON  PK       Fc     351 Hz  Gain   0.5 dB  Q 2.500
 Filter  2: ON  PK       Fc     518 Hz  Gain  -1.6 dB  Q 2.400
 Filter  3: ON  PK       Fc     790 Hz  Gain  -2.2 dB  Q 3.175

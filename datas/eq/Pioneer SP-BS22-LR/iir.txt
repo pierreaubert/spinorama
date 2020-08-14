@@ -7,6 +7,7 @@ Notes:Pioneer SP-BS22-LR IIR
 
 Equaliser: Generic
 Pioneer SP-BS22-LR PIR
+Preamp:	-1.7 dB
 Filter  1: ON  PK       Fc     477 Hz  Gain   0.6 dB  Q 9.000
 Filter  2: ON  PK       Fc     610 Hz  Gain   0.5 dB  Q 5.000
 Filter  3: ON  PK       Fc     757 Hz  Gain  -0.6 dB  Q 9.000

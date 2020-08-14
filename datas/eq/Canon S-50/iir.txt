@@ -7,6 +7,7 @@ Notes:Canon S-50 IIR
 
 Equaliser: Generic
 Canon S-50 LW.txt
+Preamp:	-8.3 dB
 Filter  1: ON  PK       Fc     400 Hz  Gain   1.2 dB  Q 4.000
 Filter  2: ON  PK       Fc     532 Hz  Gain   1.8 dB  Q 8.000
 Filter  3: ON  PK       Fc     935 Hz  Gain  -2.0 dB  Q 5.000

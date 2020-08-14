@@ -7,6 +7,7 @@ Notes:Vanatoo Transparent Zero IIR
 
 Equaliser: Generic
 Vanatoo Transparent Z
+Preamp:	-1.7 dB
 Filter  1: ON  PK       Fc     504 Hz  Gain  -0.7 dB  Q 7.000
 Filter  2: ON  PK       Fc     742 Hz  Gain  -2.2 dB  Q 8.000
 Filter  3: ON  PK       Fc     840 Hz  Gain  -0.2 dB  Q 5.000

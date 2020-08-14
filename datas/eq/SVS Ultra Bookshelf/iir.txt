@@ -7,6 +7,7 @@ Notes:SVS Ultra Bookshelf IIR
 
 Equaliser: Generic
 SVS Ultra Bookshelf LW
+Preamp:	-1.4 dB
 Filter  1: ON  PK       Fc     351 Hz  Gain   0.9 dB  Q 10.000
 Filter  2: ON  PK       Fc     407 Hz  Gain   1.5 dB  Q 11.000
 Filter  3: ON  PK       Fc     552 Hz  Gain  -0.6 dB  Q 15.000

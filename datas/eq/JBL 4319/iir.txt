@@ -7,6 +7,7 @@ Notes:JBL 4319 IIR
 
 Equaliser: Generic
 JBL 4319 PIR.txt
+Preamp:	-2.3 dB
 Filter  1: ON  PK       Fc     332 Hz  Gain  -0.8 dB  Q 20.000
 Filter  2: ON  PK       Fc     381 Hz  Gain  -0.6 dB  Q 15.000
 Filter  3: ON  PK       Fc     428 Hz  Gain  -1.2 dB  Q 10.000

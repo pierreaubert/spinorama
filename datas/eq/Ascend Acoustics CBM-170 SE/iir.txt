@@ -7,6 +7,7 @@ Notes:Ascend CBM-170 SE IIR
 
 Equaliser: Generic
 Ascend CBM-170 SE L
+Preamp:	-1.7 dB
 Filter  1: ON  PK       Fc     379 Hz  Gain   0.7 dB  Q 4.500
 Filter  2: ON  PK       Fc     512 Hz  Gain   1.6 dB  Q 10.000
 Filter  3: ON  PK       Fc     627 Hz  Gain   0.5 dB  Q 7.000

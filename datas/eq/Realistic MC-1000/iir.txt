@@ -7,6 +7,7 @@ Notes:Realistic MC-1000 no bass hump
 
 Equaliser: Generic
 Realistic MC-1000 PIR.tx
+Preamp:	-4.7 dB
 Filter  1: ON  PK       Fc     169 Hz  Gain  -3.9 dB  Q 2.400
 Filter  2: ON  PK       Fc     444 Hz  Gain  -1.7 dB  Q 5.000
 Filter  3: ON  PK       Fc     575 Hz  Gain  -1.7 dB  Q 5.000

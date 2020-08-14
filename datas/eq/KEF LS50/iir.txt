@@ -7,6 +7,7 @@ Notes:KEF LS50 IIR
 
 Equaliser: Generic
 KEF LS50 PIR.txt
+Preamp:	-1.4 dB
 Filter  1: ON  PK       Fc     466 Hz  Gain  -0.6 dB  Q 4.209
 Filter  2: ON  PK       Fc     527 Hz  Gain   2.2 dB  Q 1.889
 Filter  3: ON  PK       Fc     857 Hz  Gain  -2.7 dB  Q 1.000

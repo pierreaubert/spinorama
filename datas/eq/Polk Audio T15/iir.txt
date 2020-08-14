@@ -7,6 +7,7 @@ Notes:Polk T15 IIR
 
 Equaliser: Generic
 Polk T15 PIR.txt
+Preamp:	-5.8 dB
 Filter  1: ON  PK       Fc     436 Hz  Gain  10.3 dB  Q 5.000
 Filter  2: ON  PK       Fc     440 Hz  Gain -10.3 dB  Q 5.000
 Filter  3: ON  PK       Fc     587 Hz  Gain  -2.9 dB  Q 5.000

@@ -7,6 +7,7 @@ Notes:JBL HDI-1600 IIR
 
 Equaliser: Generic
 JBL HDI-1600 PIR.txt
+Preamp:	-1 dB
 Filter  1: ON  PK       Fc     341 Hz  Gain   1.5 dB  Q 12.000
 Filter  2: ON  PK       Fc     361 Hz  Gain  -1.0 dB  Q 8.000
 Filter  3: ON  PK       Fc     406 Hz  Gain   0.8 dB  Q 20.000

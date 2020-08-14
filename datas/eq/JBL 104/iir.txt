@@ -7,6 +7,7 @@ Notes:JBL 104 IIR
 
 Equaliser: Generic
 JBL 104 PIR.txt
+Preamp:	-2.2 dB
 Filter  1: ON  PK       Fc     387 Hz  Gain   1.4 dB  Q 7.000
 Filter  2: ON  PK       Fc     541 Hz  Gain   0.9 dB  Q 2.485
 Filter  3: ON  PK       Fc     835 Hz  Gain   0.6 dB  Q 10.000
