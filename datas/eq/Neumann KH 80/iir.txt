@@ -7,6 +7,7 @@ Notes:Neumann KH80 DSP Monitor IIR
 
 Equaliser: Generic
 Neumann KH80 DSP Mo
+Preamp:	-2 dB
 Filter  1: ON  PK       Fc     381 Hz  Gain  -0.7 dB  Q 12.000
 Filter  2: ON  PK       Fc     588 Hz  Gain   0.8 dB  Q 11.000
 Filter  3: ON  PK       Fc     638 Hz  Gain  -1.0 dB  Q 10.000
