@@ -7,6 +7,7 @@ Notes:Elac Adante AS-61 IIR v2
 
 Equaliser: Generic
 Elac Adante AS-61 PIR.t
+Preamp:	-3.7 dB
 Filter  1: ON  PK       Fc     332 Hz  Gain  -0.6 dB  Q 12.000
 Filter  2: ON  PK       Fc     566 Hz  Gain  -1.5 dB  Q 3.041
 Filter  3: ON  PK       Fc     622 Hz  Gain  -0.6 dB  Q 13.000
