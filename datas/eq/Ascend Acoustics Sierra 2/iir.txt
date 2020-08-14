@@ -7,6 +7,7 @@ Notes:Ascend Sierra 2
 
 Equaliser: Generic
 Ascend Sierra 2 LW.txt
+Preamp:	-2.4 dB
 Filter  1: ON  PK       Fc     350 Hz  Gain   3.1 dB  Q 12.000
 Filter  2: ON  PK       Fc     376 Hz  Gain  -1.4 dB  Q 20.000
 Filter  3: ON  PK       Fc     400 Hz  Gain  -1.8 dB  Q 4.892
