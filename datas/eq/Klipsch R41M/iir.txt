@@ -7,6 +7,7 @@ Notes:Klipsch R-41M IIR
 
 Equaliser: Generic
 Klipsch R-41M PIR.txt
+Preamp:	-3.6 dB
 Filter  1: ON  PK       Fc     445 Hz  Gain   1.1 dB  Q 5.000
 Filter  2: ON  PK       Fc     844 Hz  Gain   2.2 dB  Q 5.000
 Filter  3: ON  PK       Fc     971 Hz  Gain  -3.7 dB  Q 5.000
