@@ -7,6 +7,7 @@ Notes:Verdant Audio Bambusa MG 1 IIR
 
 Equaliser: Generic
 Verdant Audio Bambusa
+Preamp:	-0.7
 Filter  1: ON  PK       Fc     343 Hz  Gain   0.3 dB  Q 1.600
 Filter  2: ON  PK       Fc     377 Hz  Gain  -0.4 dB  Q 14.000
 Filter  3: ON  PK       Fc     406 Hz  Gain   1.0 dB  Q 9.000
