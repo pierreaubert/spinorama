@@ -7,6 +7,7 @@ Notes:Micca RB42 IIR
 
 Equaliser: Generic
 Micca RB42 PIR.txt
+Preamp:	-2.4 dB
 Filter  1: ON  PK       Fc     358 Hz  Gain   0.4 dB  Q 7.000
 Filter  2: ON  PK       Fc     457 Hz  Gain   1.4 dB  Q 4.000
 Filter  3: ON  PK       Fc     523 Hz  Gain   0.8 dB  Q 13.000
