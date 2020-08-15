@@ -226,7 +226,7 @@ def add_eq(speaker_path, df):
         logging.info('Processing {0}'.format(speaker_name))
         
         iir = parse_eq_iir_rews('{}/eq/{}/iir.txt'.format(speaker_path, speaker_name), 48000)
-        if iir is not None:
+        if iir is not None and len(iir)>0:
             metadata.speakers_info[speaker_name]['eq'] = {}
             metadata.speakers_info[speaker_name]['eq']['preamp_gain'] = round(peq_preamp_gain(iir), 1)
             metadata.speakers_info[speaker_name]['eq']['type'] = 'peq'
