@@ -39,9 +39,18 @@ def load_normalize(df, ref_mean=None):
                 dfc[graph] = normalize_graph(df[graph], mean)
         logging.debug('mean for normalisation {0}'.format(mean))
         return dfc
+    elif ref_mean is not None:
+        mean = ref_mean
+        for graph in df.keys():
+            if graph.replace('_unmelted', '') != graph:
+                dfc[graph] = df[graph]
+            else:
+                dfc[graph] = normalize_graph(df[graph], mean)
+        logging.debug('mean for normalisation {0}'.format(mean))
+        return dfc
         
     # do nothing
-    logging.error('CEA2034 and On Axis are not in df knows keys are {0}'.format(df.keys()))
+    logging.debug('CEA2034 and On Axis are not in df knows keys are {0}'.format(df.keys()))
     return df
 
 
