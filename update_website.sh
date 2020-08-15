@@ -2,14 +2,14 @@ TARGET=$HOME/src/pierreaubert.github.io/spinorama
 
 # update logos and speakers picture
 ./minimise_pictures.sh
+# generate all graphs if some are missing
+rm -fr /tmp/ray
+./generate_graphs.py
 # recompute metadata for all speakers
 rm -f docs/assets/metadata.json
 ./generate_meta.py
 rm -f docs/compare/*.json
 ./generate_compare.py
-# generate all graphs if some are missing
-rm -fr /tmp/ray
-./ray_graphs.py
 # generate all jpg if some are missing
 ./minimise_pictures.sh
 # generate stats
