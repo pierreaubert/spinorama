@@ -39,8 +39,9 @@ import math
 import sys
 
 from docopt import docopt
-import pandas as pd
 import flammkuchen as fl
+import pandas as pd
+import ray
 
 from src.spinorama.compute_estimates import estimates
 from src.spinorama.compute_scores import speaker_pref_rating
@@ -287,7 +288,13 @@ if __name__ == '__main__':
         df[speaker] = {}
         df[speaker][origin] = {}
         df[speaker][origin][mversion] = {}
-        df[speaker][origin][mversion] = parse_graphs_speaker('./datas', brand, speaker, mformat, mversion)
+        ray.init(num_cpus=1)
+        ray_id = parse_graphs_speaker.remote('./datas', brand, speaker, mformat, mversion)
+        while(1):
+            ready_ids, remaining_ids = ray.wait([ray_id], num_returns=1)
+            if ray_id in ready_ids:
+                df[speaker][origin][mversion] = ray.get(ray_id)
+                break
     else:    
         parse_max = args['--parse-max']
         if parse_max is not None:

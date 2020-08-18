@@ -27,9 +27,16 @@
       return text.replace('Vendors-','').replace(' ', '%20')
 
   def eq2text(eq):
-      if eq == '3':
-          return 'Peak'
-      return 'Unknown'
+      text = {
+          '0': 'LowPass',
+          '1': 'HighPass',
+          '2': 'BandPass',
+          '3': 'Peak',
+          '4': 'Notch',
+          '5': 'LowShelf',
+          '6': 'HighShelf',
+      }
+      return text.get(eq, 'ERROR')
 %>  
 
 <div class="section">
