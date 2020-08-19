@@ -8,8 +8,8 @@ import altair as alt
 
 from .load import graph_melt
 from .graph import graph_spinorama, graph_freq
-from .compute_scores import speaker_pref_rating
-from .compute_cea2034 import compute_cea2034, estimated_inroom_HV, spl2pressure, pressure2spl
+from .compute_scores import speaker_pref_rating, nbd
+from .compute_cea2034 import compute_cea2034, estimated_inroom_HV, spl2pressure, pressure2spl, listening_window
 from .load_parse import load_normalize
 from .filter_iir import Biquad
 from .filter_peq import peq_build, peq_apply_measurements, peq_print
@@ -53,8 +53,25 @@ def scores_print(score, score_filtered):
 
 
 def scores_loss(df_speaker, peq):
+    # optimise for score directly
     _, _, score_filtered = scores_apply_filter(df_speaker, peq)
     # optimize max score is the same as optimize min -score
     return -score_filtered['pref_score']
+
+
+def lw_loss(df_speaker, peq):
+    # optimise LW
+    # get SPL H & V
+    splH = df_speaker['SPL Horizontal_unmelted']
+    splV = df_speaker['SPL Vertical_unmelted']
+    # apply EQ to all horizontal and vertical measurements
+    splH_filtered = peq_apply_measurements(splH, peq)
+    splV_filtered = peq_apply_measurements(splV, peq)
+    # compute LW
+    lw_filtered = listening_window(splH_filtered, splV_filtered)
+    # optimize nbd
+    score = nbd(lw_filtered)
+    print('LW score: {}'.format(score))
+    return score
 
 
