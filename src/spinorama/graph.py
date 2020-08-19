@@ -178,10 +178,13 @@ def graph_spinorama(dfu, graph_params):
     selectorsMeasurements = alt.selection_multi(fields=['Measurements'], bind='legend')
     scales = alt.selection_interval(bind='scales')
     # main charts
-    xaxis =alt.X('Freq:Q', title='Freqency (Hz)', scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]), axis=alt.Axis(format='s'))
+    xaxis = alt.X('Freq:Q', title='Freqency (Hz)', scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]), axis=alt.Axis(format='s'))
     yaxis = alt.Y('dB:Q', title='Sound Pressure (dB)', scale=alt.Scale(zero=False, domain=[ymin, ymax]))
     # why -10?
-    di_yaxis = alt.Y('dB:Q', title='Sound Pressure DI (dB)', scale=alt.Scale(zero=False, domain=[-5, ymax-ymin-5]))
+    di_yaxis = alt.Y('dB:Q',
+                     title='Sound Pressure DI (dB)',
+                     scale=alt.Scale(zero=False, nice=False, domain=[-5, ymax-ymin-5]),
+                     axis=alt.Axis(grid=True, tickCount=5, labelExpr='datum.value >15 ? null : datum.label'))
     color = alt.Color('Measurements', scale=filtered_scale(dfu), type='nominal', sort=None)
     opacity = alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     
