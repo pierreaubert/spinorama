@@ -1464,6 +1464,22 @@ speakers_info = {
             },
         },
     },
+    'Polk Audio Signature S15': {
+        'brand': 'Polk Audio',
+        'model': 'Signature S15',
+        'type': 'passive',
+        'price': '230',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/polk-audio-signature-s15-speaker-review.15437/',
+            },
+        },
+    },
     'Polk Audio T15': {
         'brand': 'Polk Audio',
         'model': 'T15',
