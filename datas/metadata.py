@@ -1815,6 +1815,22 @@ speakers_info = {
             },
         },
     },
+    'Sehlin Helium DIY': {
+        'brand': 'Sehlin',
+        'model': 'Helium DIY',
+        'type': 'passive',
+        'price': '140',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/sehlin-helium-diy-speaker-review.15518/',
+            },
+        },
+    },
     'Sony SS-CS5': {
         'brand': 'Sony',
         'model': 'SS-CS5',
