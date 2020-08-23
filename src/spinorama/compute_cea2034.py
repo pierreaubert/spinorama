@@ -248,10 +248,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 def total_vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Series:
     if v_spl is None or h_spl is None:
         return None
-    return spatial_average2(
-        h_spl, ['Freq', 'On Axis', '-20°',  '-30°', '-40°'],
-        v_spl, ['Freq', 'On Axis', '40°',  '50°', '60°']
-    )
+    return spatial_average1(v_spl, ['Freq', 'On Axis', '-20°',  '-30°', '-40°', '40°',  '50°', '60°'])
     
 
 def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
