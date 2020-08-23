@@ -63,7 +63,7 @@ def meta2df(meta):
                     df.loc[count] = [i, k, v, ref, origin, brand]
                     count += 1
     logging.info('meta2df {0} generated data'.format(count))
-    print(df)
+    # print(df)
     return df
 
 
