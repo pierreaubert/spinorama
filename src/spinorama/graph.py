@@ -140,7 +140,7 @@ def graph_freq(dfu, graph_params):
         alt.X('Freq:Q', title='Freqency (Hz)',
               scale=alt.Scale(type='log', base=10, nice=False, domain=[xmin, xmax]), 
               axis=alt.Axis(format='s')),
-        alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[ymin, ymax])),
+        alt.Y('dB:Q', title='Sound Pressure (dB)', scale=alt.Scale(zero=False, domain=[ymin, ymax])),
         alt.Color('Measurements', scale=filtered_scale(dfu), type='nominal', sort=None),
         opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     ).properties(width=graph_params['width'], height=graph_params['height'])
@@ -184,7 +184,7 @@ def graph_spinorama(dfu, graph_params):
     di_yaxis = alt.Y('dB:Q',
                      title='Sound Pressure DI (dB)',
                      scale=alt.Scale(zero=False, nice=False, domain=[-5, ymax-ymin-5]),
-                     axis=alt.Axis(grid=True, tickCount=5, labelExpr='datum.value >15 ? null : datum.label'))
+                     axis=alt.Axis(grid=True, tickCount=10, labelExpr='datum.value >15 ? null : datum.label'))
     color = alt.Color('Measurements', scale=filtered_scale(dfu), type='nominal', sort=None)
     opacity = alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     
@@ -277,7 +277,7 @@ def graph_contour_common(af, am, az, graph_params):
             'datum.Freq>400'
         ).encode(
             alt.X('Freq:O', axis=None),
-            alt.Y('Angle:O', axis=None, sort=None),
+            alt.Y('Angle:O', title='Angle (deg.)', axis=None, sort=None),
             alt.Color('dB:Q', scale=alt.Scale(scheme=colormap, domain=speaker_scale, nice=True))
         )
         return (chart+graph_empty(400, 20000, -180, 180)).properties(width=width, height=height)
@@ -462,8 +462,8 @@ def build_selections(df, speaker1, speaker2):
 
 def graph_compare_freq(df, graph_params, speaker1, speaker2):
     selection1, selection2, selectorsMeasurements, scales = build_selections(df, speaker1, speaker2)
-    xaxis = alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[20,20000], nice=False))
-    yaxis = alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[-40,10]))
+    xaxis = alt.X('Freq:Q', title='Frequency (Hz)', scale=alt.Scale(type="log", domain=[20,20000], nice=False))
+    yaxis = alt.Y('dB:Q', title='Sound Pressure (dB)', scale=alt.Scale(zero=False, domain=[-40,10]))
     color = alt.Color('Measurements', type='nominal', sort=None)
     line = alt.Chart(df).encode(
         xaxis, yaxis, color,
@@ -494,7 +494,7 @@ def graph_compare_cea2034(df, graph_params, speaker1, speaker2):
 
     # TODO(move to parameters)
     x_axis = alt.X('Freq:Q', scale=alt.Scale(type="log", domain=[20,20000], nice=False))
-    y_axis = alt.Y('dB:Q',   scale=alt.Scale(zero=False, domain=[-40,10]))
+    y_axis = alt.Y('dB:Q', title='Sound Pressure (dB)',  scale=alt.Scale(zero=False, domain=[-40,10]))
     color = alt.Color('Measurements', type='nominal', sort=None)
     opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
     
@@ -571,7 +571,7 @@ def graph_regression_graph(graph, freq_start, freq_end, withBands=True):
     # line
     line = reg.transform_calculate(text='"Linear Regression"').mark_line(color='firebrick').encode(
         x=alt.X('Freq:Q'),
-        y=alt.Y('dB:Q', axis=alt.Axis(title='dB (normalized)')),
+        y=alt.Y('dB:Q', axis=alt.Axis(title='Sound Pressure (dB)')),
         color=alt.Color(
             'text:O',
             scale=alt.Scale(domain=['Linear Regression', 'Band ±3dB', 'Band ±1.5dB'], range=['firebrick', 'blue', 'blue']),
