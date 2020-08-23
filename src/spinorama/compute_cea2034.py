@@ -245,6 +245,15 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     return er.reset_index(drop=True)
 
 
+def total_vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Series:
+    if v_spl is None or h_spl is None:
+        return None
+    return spatial_average2(
+        h_spl, ['Freq', 'On Axis', '-20°',  '-30°', '-40°'],
+        v_spl, ['Freq', 'On Axis', '40°',  '50°', '60°']
+    )
+    
+
 def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     """Compute horizontal reflections
 
@@ -259,11 +268,14 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
     ceiling_reflection = spatial_average1(
         v_spl, ['Freq', '40°',  '50°', '60°'])
 
-    vr = pd.DataFrame({'Freq': v_spl.Freq, 'On Axis': v_spl['On Axis']}).reset_index(drop=True)
+    total_vertical_reflection = total_vertical_reflections(h_spl, v_spl)
+
+    vr = pd.DataFrame({'Freq': v_spl.Freq}).reset_index(drop=True)
 
     # print(vr.shape, onaxis.shape, floor_reflection.shape)
     for (key, name) in [('Floor Reflection', floor_reflection),
-                        ('Ceiling Reflection', ceiling_reflection)]:
+                        ('Ceiling Reflection', ceiling_reflection),
+                        ('Total Vertical Reflection', total_vertical_reflection)]:
         if name is not None:
             vr[key] = name.dB
         else:
@@ -271,6 +283,16 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
 
     return vr.reset_index(drop=True)
 
+
+def total_horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Series:
+    if v_spl is None or h_spl is None:
+        return None
+    return spatial_average1(
+        h_spl,
+        ['Freq', 'On Axis',
+         '10°',  '20°', '30°', '40°',  '50°', '60°', '70°', '80°', '90°',  '100°', '110°', '120°', '130°', '140°', '150°', '160°', '170°',
+         '-10°',  '-20°', '-30°', '-40°',  '-50°', '-60°', '-70°', '-80°', '-90°',  '-100°', '-110°', '-120°', '-130°', '-140°', '-150°', '-160°', '-170°', '180°'])
+    
 
 def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     """Compute horizontal reflections
@@ -297,11 +319,12 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
                 '-90°',  '-100°', '-110°', '-120°', '-130°', '-140°', '-150°', '-160°', '-170°',
                 '180°'])
 
+    total_horizontal_reflection = total_horizontal_reflections(h_spl, v_spl)
+
     hr = pd.DataFrame({
         'Freq': h_spl.Freq,
-        'On Axis': h_spl['On Axis'],
     }).reset_index(drop=True)
-    for (key, name) in [('Front', front), ('Side', side), ('Rear', rear)]:
+    for (key, name) in [('Front', front), ('Side', side), ('Rear', rear), ('Total Horizontal Reflection', total_horizontal_reflection)]:
         if name is not None:
             hr[key] = name.dB
         else:

@@ -64,7 +64,8 @@ radar_params_default = {
 # https://help.tableau.com/current/pro/desktop/en-us/formatting_create_custom_colors.htm
 # tablea10
 colorsA = ['#17becf', '#bcbd22', '#7f7f7f', '#e377c2', '#8c564b', '#9467bd', '#d62728', '#2ca02c', '#ff7f0e', '#1f77b4']
-colors = ['#4e79a7', '#59a14f', '#9c755f', '#f28e2b', '#edc948', '#bab0ac', '#e15759', '#b07aa1', '#76b7b2', '#ff9da7']
+colorsB = ['#4e79a7', '#59a14f', '#9c755f', '#f28e2b', '#edc948', '#bab0ac', '#e15759', '#b07aa1', '#76b7b2', '#ff9da7']
+colors  = ['#5c77a5', '#dc842a', '#c85857', '#89b5b1', '#71a152', '#bab0ac', '#e15759', '#b07aa1', '#76b7b2', '#ff9da7']
 
 uniform_color_pair = {
     # regression
