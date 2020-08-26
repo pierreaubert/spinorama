@@ -301,6 +301,22 @@ speakers_info = {
             },
         },
     },
+    'Definitive Technology Demand D11': {
+        'brand': 'Definitive Technology',
+        'model': 'Demand D11',
+        'type': 'passive',
+        'price': '1200',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/definitive-demand-d11-speaker-review.15581/',
+            },
+        },
+    },
     'Dennis Murphy Affordable Accuracy Monitor': {
         'brand': 'Dennis Murphy',
         'model': 'Affordable Accuracy Monitor',
