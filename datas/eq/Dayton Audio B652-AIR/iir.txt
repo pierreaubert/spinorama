@@ -7,6 +7,7 @@ Notes:Dayton Audio B652-AIR IIR
 
 Equaliser: Generic
 Dayton Audio B652-AIR 
+Preamp:	-5.4 dB
 Filter  1: ON  PK       Fc     380 Hz  Gain  -1.4 dB  Q 10.000
 Filter  2: ON  PK       Fc     450 Hz  Gain  -2.6 dB  Q 10.000
 Filter  3: ON  PK       Fc     610 Hz  Gain  -2.5 dB  Q 3.000

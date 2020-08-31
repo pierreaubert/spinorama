@@ -201,6 +201,15 @@ if __name__ == '__main__':
         f.write(index_html.render(df=df, meta=meta_sorted, site=site))
         f.close()
 
+    # write eqs.html
+    logging.info('Write eqs.html')
+    eqs_html = mako_templates.get_template('eqs.html')
+
+    with open('docs/eqs.html', 'w') as f:
+        # by default sort by pref_rating decreasing
+        f.write(eqs_html.render(df=df, meta=meta, site=site))
+        f.close()
+
     # write various html files
     for item in ('help', 'compare', 'scores', 'statistics'):
         item_name = '{0}.html'.format(item)
@@ -213,6 +222,7 @@ if __name__ == '__main__':
     # write a file per speaker
     logging.info('Write a file per speaker')
     generate_speaker(mako_templates, df, meta=meta, site=site)
+    # generate_eqs(mako_templates, df, meta=meta, site=site)
 
     # copy css/js files
     logging.info('Copy js/css files to docs')

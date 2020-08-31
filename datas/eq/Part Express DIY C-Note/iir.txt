@@ -7,6 +7,7 @@ Notes:Parts Express DIY C-Note IIR
 
 Equaliser: Generic
 Parts Express DIY C-Not
+Preamp:	-1 dB
 Filter  1: ON  PK       Fc     329 Hz  Gain  -0.6 dB  Q 12.000
 Filter  2: ON  PK       Fc     380 Hz  Gain  -0.7 dB  Q 8.000
 Filter  3: ON  PK       Fc     520 Hz  Gain   1.6 dB  Q 10.000

@@ -7,6 +7,7 @@ Notes:KEF Q350 IIR
 
 Equaliser: Generic
 KEF Q350 PIR.txt
+Preamp:	-2.9 dB
 Filter  1: ON  PK       Fc     353 Hz  Gain   0.5 dB  Q 12.000
 Filter  2: ON  PK       Fc     421 Hz  Gain  -0.5 dB  Q 25.000
 Filter  3: ON  PK       Fc     452 Hz  Gain  -0.7 dB  Q 10.000

@@ -1,0 +1,31 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 09-08-2020 15:21:31
+
+Notes:Ascend Acoustics Horizon Center IIR
+
+Equaliser: Generic
+Ascend Acoustics Horiz
+Preamp:	-3 dB
+Filter  1: ON  PK       Fc     348 Hz  Gain   1.4 dB  Q 10.000
+Filter  2: ON  PK       Fc     379 Hz  Gain  -1.1 dB  Q 18.000
+Filter  3: ON  PK       Fc     401 Hz  Gain   1.2 dB  Q 10.000
+Filter  4: ON  PK       Fc     461 Hz  Gain  -1.4 dB  Q 16.000
+Filter  5: ON  PK       Fc     497 Hz  Gain   1.2 dB  Q 22.000
+Filter  6: ON  PK       Fc     509 Hz  Gain   5.2 dB  Q 5.000
+Filter  7: ON  PK       Fc     555 Hz  Gain  -4.6 dB  Q 3.293
+Filter  8: ON  PK       Fc     746 Hz  Gain  17.1 dB  Q 5.000
+Filter  9: ON  PK       Fc     749 Hz  Gain -17.8 dB  Q 5.000
+Filter 10: ON  PK       Fc    1024 Hz  Gain   1.7 dB  Q 5.000
+Filter 11: ON  PK       Fc    1226 Hz  Gain  -0.4 dB  Q 12.000
+Filter 12: ON  PK       Fc    1370 Hz  Gain   0.9 dB  Q 18.000
+Filter 13: ON  PK       Fc    1570 Hz  Gain   1.4 dB  Q 2.313
+Filter 14: ON  PK       Fc    1811 Hz  Gain  -0.7 dB  Q 1.000
+Filter 15: ON  PK       Fc    3598 Hz  Gain   3.1 dB  Q 1.927
+Filter 16: ON  PK       Fc    3614 Hz  Gain  -4.1 dB  Q 5.000
+Filter 17: ON  PK       Fc    5037 Hz  Gain  -0.6 dB  Q 3.123
+Filter 18: ON  PK       Fc    8343 Hz  Gain  -0.8 dB  Q 1.000
+Filter 19: ON  PK       Fc    9230 Hz  Gain  -0.3 dB  Q 5.500
+Filter 20: ON  PK       Fc   14800 Hz  Gain   0.8 dB  Q 3.000
+

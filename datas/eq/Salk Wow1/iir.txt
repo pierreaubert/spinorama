@@ -7,6 +7,7 @@ Notes:Salk WoW1 IIR
 
 Equaliser: Generic
 Salk WoW1 PIR.txt
+Preamp:	-3 dB
 Filter  1: ON  PK       Fc     423 Hz  Gain   0.3 dB  Q 6.000
 Filter  2: ON  PK       Fc     511 Hz  Gain  -2.1 dB  Q 8.500
 Filter  3: ON  PK       Fc     553 Hz  Gain   4.8 dB  Q 8.000

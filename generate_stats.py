@@ -63,6 +63,7 @@ def meta2df(meta):
                     df.loc[count] = [i, k, v, ref, origin, brand]
                     count += 1
     logging.info('meta2df {0} generated data'.format(count))
+    # print(df)
     return df
 
 
@@ -71,6 +72,7 @@ def print_eq(speakers, txt_format):
     for i in speakers:
         speaker = speakers[i]
         measurements = speaker['measurements']
+        eq = speaker.get('eq', None)
         for key, measurement in measurements.items():
             pref = measurement.get('pref_rating', None)
             pref_eq = measurement.get('pref_rating_eq', None)
@@ -78,14 +80,14 @@ def print_eq(speakers, txt_format):
                 name = i
                 if key not in ('asr', 'princeton', 'eac', 'vendor'):
                     name = '{} ({})'.format(i, key)
-                results.append((name, pref, pref_eq))
+                results.append((name, pref, pref_eq, eq))
 
     if txt_format == 'txt':
-        print('                                           | NBD  NBD  LFX   SM |  SCR | NBD  NBD  LFX   SM | SCR | ')
-        print('Speaker                                    |  ON  PIR   Hz  PIR |  ASR |  ON  PIR   Hz  PIR |  EQ | DIFF')
-        print('-------------------------------------------+--------------------+------+--------------------+-----+-----')
-        for i, pref, pref_eq in sorted(results, key=lambda a: -a[2]['pref_score']):
-            print('{0:42s} | {1:0.2f} {2:0.2f} {3:3.0f} {4:0.2f} | {5:+1.1f} | {6:0.2f} {7:0.2f} {8:3.0f} {9:0.2f} | {10:1.1f} | {11:+1.1f}'.format(
+        print('                                           | NBD  NBD  LFX   SM |  SCR | NBD  NBD  LFX   SM | SCR |  SCR|Pre AMP')
+        print('Speaker                                    |  ON  PIR   Hz  PIR |  ASR |  ON  PIR   Hz  PIR |  EQ | DIFF|     dB')
+        print('-------------------------------------------+--------------------+------+--------------------+-----+-----+-------')
+        for i, pref, pref_eq, eq in sorted(results, key=lambda a: -a[2]['pref_score']):
+            print('{0:42s} | {1:0.2f} {2:0.2f} {3:3.0f} {4:0.2f} | {5:+1.1f} | {6:0.2f} {7:0.2f} {8:3.0f} {9:0.2f} | {10:1.1f} | {11:+1.1f} |  {12:+1.1f}'.format(
                 i,
                 pref['nbd_on_axis'], 
                 pref['nbd_pred_in_room'], 
@@ -97,13 +99,14 @@ def print_eq(speakers, txt_format):
                 pref_eq['lfx_hz'], 
                 pref_eq['sm_pred_in_room'], 
                 pref_eq['pref_score'],
-                pref_eq['pref_score']-pref['pref_score']
+                pref_eq['pref_score']-pref['pref_score'],
+                eq['preamp_gain']
                 ))
     elif txt_format == 'csv':
-        print('"Speaker", "NBD", "NBD", "LFX", "SM", "SCR", "NBD", "NBD", "LFX", "SM", "SCR"')
-        print('"Speaker", "ON", "PIR", "Hz", "PIR", "ASR", "ON", "PIR", "Hz", "PIR", "EQ", "DIFF"')
-        for i, pref, pref_eq in sorted(results, key=lambda a: -a[2]['pref_score']):
-            print('"{0}", {1:0.2f}, {2:0.2f}, {3:3.0f}, {4:0.2f}, {5:+1.1f}, {6:0.2f}, {7:0.2f}, {8:3.0f}, {9:0.2f}, {10:+1.1f}, {11:+1.1f}'.format(
+        print('"Speaker", "NBD", "NBD", "LFX", "SM", "SCR", "NBD", "NBD", "LFX", "SM", "SCR", "SCR", "PRE"')
+        print('"Speaker", "ON", "PIR", "Hz", "PIR", "ASR", "ON", "PIR", "Hz", "PIR", "EQ", "DIFF", "dB"')
+        for i, pref, pref_eq, eq in sorted(results, key=lambda a: -a[2]['pref_score']):
+            print('"{0}", {1:0.2f}, {2:0.2f}, {3:3.0f}, {4:0.2f}, {5:+1.1f}, {6:0.2f}, {7:0.2f}, {8:3.0f}, {9:0.2f}, {10:+1.1f}, {11:+1.1f}, {12:+1.1f}'.format(
                 i,
                 pref['nbd_on_axis'], 
                 pref['nbd_pred_in_room'], 
@@ -115,7 +118,8 @@ def print_eq(speakers, txt_format):
                 pref_eq['lfx_hz'], 
                 pref_eq['sm_pred_in_room'], 
                 pref_eq['pref_score'],
-                pref_eq['pref_score']-pref['pref_score']
+                pref_eq['pref_score']-pref['pref_score'],
+                eq['preamp_gain']
                 ))
         
 
@@ -218,7 +222,7 @@ def generate_stats(meta):
 
 if __name__ == '__main__':
     args = docopt(__doc__,
-                  version='generate_stats.py version 0.2',
+                  version='generate_stats.py version 0.3',
                   options_first=True)
 
     print_what = None

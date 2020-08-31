@@ -24,7 +24,7 @@
       return text.replace(' ', '-').replace("'", '-').replace(".", '-').replace("+",'-')
 
   def removeVendors(text):
-      return text.replace('Vendors/','')
+      return text.replace('Vendors-','').replace(' ', '%20')
 %>  
 
 <div class="section">
@@ -95,7 +95,7 @@
 	  </div>
 	  <footer class="card-footer">
 	    % for v, m in meta[speaker_name]['measurements'].items():
-	    <a class="card-footer-item" href="${speaker_name}/${m['origin']|removeVendors}/index_${v}.html">${m['origin']}</a>
+	    <a class="card-footer-item" href="${speaker_name|space2url}/${m['origin']|removeVendors}/index_${v}.html">${m['origin']}</a>
 	    % endfor
 	  </footer>
 	</div>

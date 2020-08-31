@@ -7,6 +7,7 @@ Notes:JBL XPL90 IIR
 
 Equaliser: Generic
 JBL XPL90 PIR.txt
+Preamp:	-2 dB
 Filter  1: ON  PK       Fc     347 Hz  Gain   0.5 dB  Q 10.000
 Filter  2: ON  PK       Fc     379 Hz  Gain  -0.5 dB  Q 23.000
 Filter  3: ON  PK       Fc     452 Hz  Gain  -1.6 dB  Q 6.000

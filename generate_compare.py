@@ -34,8 +34,7 @@ import flammkuchen as fl
 import pandas as pd
 import ray
 
-from src.spinorama.load_parse import parse_all_speakers
-from src.spinorama.speaker_print_ray import print_compare
+from src.spinorama.speaker_print import print_compare
 import datas.metadata as metadata
 
 
@@ -44,7 +43,7 @@ ray.init()
 
 if __name__ == '__main__':
     args = docopt(__doc__,
-                  version='generate_compare.py version 1.1',
+                  version='generate_compare.py version 1.2',
                   options_first=True)
 
     # check args section
@@ -66,7 +65,8 @@ if __name__ == '__main__':
 
     df = fl.load('cache.parse_all_speakers.h5')
     if df is None:
-        df = parse_all_speakers(metadata.speakers_info, None, './datas')
+        logging.error('Load failed! Please run ./generate_graphs.py')
+        sys.exit(1)
     force = True
     ptype = None
     print_compare(df, force, ptype)

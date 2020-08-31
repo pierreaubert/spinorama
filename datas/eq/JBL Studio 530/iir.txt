@@ -7,6 +7,7 @@ Notes:JBL Studio 530 IIR
 
 Equaliser: Generic
 JBL Studio 530 PIR.txt
+Preamp:	-0.9 dB
 Filter  1: ON  PK       Fc     345 Hz  Gain   1.2 dB  Q 10.000
 Filter  2: ON  PK       Fc     382 Hz  Gain  -1.1 dB  Q 15.000
 Filter  3: ON  PK       Fc     736 Hz  Gain  -1.5 dB  Q 1.000

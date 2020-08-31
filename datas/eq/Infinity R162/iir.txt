@@ -7,6 +7,7 @@ Notes:Infinity R162 IIR
 
 Equaliser: Generic
 Infinity R162 LW.txt
+Preamp:	-1.3 dB
 Filter  1: ON  PK       Fc     416 Hz  Gain   1.5 dB  Q 5.000
 Filter  2: ON  PK       Fc     451 Hz  Gain  -1.9 dB  Q 5.000
 Filter  3: ON  PK       Fc     641 Hz  Gain   5.2 dB  Q 5.000

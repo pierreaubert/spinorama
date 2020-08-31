@@ -7,6 +7,7 @@ Notes:Revel M105 IIR
 
 Equaliser: Generic
 Revel M105 PIR.txt
+Preamp:	-0.6 dB
 Filter  1: ON  PK       Fc     382 Hz  Gain  -0.4 dB  Q 18.000
 Filter  2: ON  PK       Fc     445 Hz  Gain   0.8 dB  Q 5.000
 Filter  3: ON  PK       Fc     505 Hz  Gain  -1.0 dB  Q 5.000

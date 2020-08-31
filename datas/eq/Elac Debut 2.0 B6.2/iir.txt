@@ -7,6 +7,7 @@ Notes:ELAC Debut 2.0 B6.2 IIR
 
 Equaliser: Generic
 ELAC Debut 2.0 B6.2 L
+Preamp:	-4.5 dB
 Filter  1: ON  PK       Fc     664 Hz  Gain   4.0 dB  Q 5.000
 Filter  2: ON  PK       Fc     704 Hz  Gain  -5.9 dB  Q 4.871
 Filter  3: ON  PK       Fc     861 Hz  Gain  11.8 dB  Q 5.000

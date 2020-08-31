@@ -7,6 +7,7 @@ Notes:GR Research X-LS Encore Kit IIR
 
 Equaliser: Generic
 GR Research X-LS Enc
+Preamp:	-1.7 dB
 Filter  1: ON  PK       Fc     355 Hz  Gain   0.6 dB  Q 11.000
 Filter  2: ON  PK       Fc     408 Hz  Gain   1.0 dB  Q 15.000
 Filter  3: ON  PK       Fc     439 Hz  Gain   0.7 dB  Q 16.000

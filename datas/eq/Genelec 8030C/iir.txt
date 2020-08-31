@@ -7,6 +7,7 @@ Notes:Genelec 8030C IIR v2
 
 Equaliser: Generic
 Genelec 8030C PIR.txt
+Preamp:	-1.8 dB
 Filter  1: ON  PK       Fc     355 Hz  Gain   0.3 dB  Q 17.000
 Filter  2: ON  PK       Fc     541 Hz  Gain   0.8 dB  Q 20.000
 Filter  3: ON  PK       Fc     585 Hz  Gain  -0.4 dB  Q 8.000

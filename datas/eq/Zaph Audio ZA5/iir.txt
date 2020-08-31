@@ -7,6 +7,7 @@ Notes:Zaph Audio ZA5.2 IIR
 
 Equaliser: Generic
 Zaph Audio ZA5.2 PIR.t
+Preamp:	-1.4 dB
 Filter  1: ON  PK       Fc     415 Hz  Gain   0.5 dB  Q 4.000
 Filter  2: ON  PK       Fc     490 Hz  Gain  -0.5 dB  Q 18.000
 Filter  3: ON  PK       Fc     602 Hz  Gain   0.8 dB  Q 4.929

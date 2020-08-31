@@ -7,6 +7,7 @@ Notes:Infinity IL10 IIR
 
 Equaliser: Generic
 Infinity IL10 LW.txt
+Preamp:	-1.5 dB
 Filter  1: ON  PK       Fc     350 Hz  Gain   0.6 dB  Q 13.000
 Filter  2: ON  PK       Fc     405 Hz  Gain   1.0 dB  Q 19.000
 Filter  3: ON  PK       Fc     485 Hz  Gain   0.8 dB  Q 21.000

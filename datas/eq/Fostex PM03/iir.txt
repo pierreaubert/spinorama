@@ -7,6 +7,7 @@ Notes:Fostex PM.03 IIR v3
 
 Equaliser: Generic
 Fostex PM.03 PIR.txt
+Preamp:	-3.1 dB
 Filter  1: ON  PK       Fc     410 Hz  Gain   0.4 dB  Q 4.000
 Filter  2: ON  PK       Fc     515 Hz  Gain   0.6 dB  Q 4.000
 Filter  3: ON  PK       Fc     748 Hz  Gain  -0.2 dB  Q 11.000

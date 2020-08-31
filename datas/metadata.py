@@ -52,6 +52,22 @@ speakers_info = {
             },
         },
     },
+    'Ascend Acoustics Horizon Center': {
+        'brand': 'Ascend Acoustics',
+        'model': 'Horizon Center',
+        'type': 'passive',
+        'shape': 'center',
+        'price': '1490',
+        'amount': 'each',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ascend-acoustics-horizon-center-speaker-review.15199/',
+            },
+        },
+    },
     'Ascend Acoustics Sierra 2': {
         'brand': 'Ascend Acoustics',
         'model': 'Sierra 2',
@@ -282,6 +298,22 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/dayton-audio-b652-air-speaker-review.11410/',
+            },
+        },
+    },
+    'Definitive Technology Demand D11': {
+        'brand': 'Definitive Technology',
+        'model': 'Demand D11',
+        'type': 'passive',
+        'price': '1200',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/definitive-demand-d11-speaker-review.15581/',
             },
         },
     },
@@ -1448,6 +1480,22 @@ speakers_info = {
             },
         },
     },
+    'Polk Audio Signature S15': {
+        'brand': 'Polk Audio',
+        'model': 'Signature S15',
+        'type': 'passive',
+        'price': '230',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/polk-audio-signature-s15-speaker-review.15437/',
+            },
+        },
+    },
     'Polk Audio T15': {
         'brand': 'Polk Audio',
         'model': 'T15',
@@ -1477,6 +1525,22 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/presonus-e5-xt-active-speaker-review.13436/',
+            },
+        },
+    },
+    'PSB Alpha P5': {
+        'brand': 'PSB',
+        'model': 'Alpha P5',
+        'type': 'passive',
+        'price': '349',
+        'shape': 'bookshelves',
+        'amount': 'each',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/psb-alpha-p5-speaker-review.15161/',
             },
         },
     },
@@ -1767,6 +1831,38 @@ speakers_info = {
             },
         },
     },
+    'Selah Audio Integrity DIY': {
+        'brand': 'Selah Audio',
+        'model': 'Integrity DIY',
+        'type': 'passive',
+        'price': '700',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/selah-integrity-diy-speaker-kit-review.15695/',
+            },
+        },
+    },
+    'Sehlin Helium DIY': {
+        'brand': 'Sehlin',
+        'model': 'Helium DIY',
+        'type': 'passive',
+        'price': '140',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/sehlin-helium-diy-speaker-review.15518/',
+            },
+        },
+    },
     'Sony SS-CS5': {
         'brand': 'Sony',
         'model': 'SS-CS5',
@@ -1793,6 +1889,22 @@ speakers_info = {
             'princeton': {
                 'origin': 'Princeton',
                 'format': 'princeton',
+             },
+        },
+    },
+    'SVS Ultra Bookshelf': {
+        'brand': 'SVS',
+        'model': 'Ultra Bookshelf',
+        'type': 'passive',
+        'price': '1000',
+        'amount': 'pair',
+        'shape': 'bookshelves',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/svs-ultra-bookshelf-speaker-review.15055/',
              },
         },
     },

@@ -7,6 +7,7 @@ Notes:Behringer B2030P IIR
 
 Equaliser: Generic
 Behringer B2030P PIR.tx
+Preamp:	-1.6 dB
 Filter  1: ON  PK       Fc     357 Hz  Gain   1.3 dB  Q 7.500
 Filter  2: ON  PK       Fc     404 Hz  Gain   0.5 dB  Q 15.000
 Filter  3: ON  PK       Fc     450 Hz  Gain   0.9 dB  Q 4.800

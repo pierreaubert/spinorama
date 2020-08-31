@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>A collection of loudspeakers measurements</title>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.5.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fuse.js@5.2.1/dist/fuse.min.js"></script>
+  <script type="text/javascript" src="${site}/assets/search.js"></script>
+  <script type="text/javascript" src="${site}/assets/graph.js"></script> 
+  <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.2/css/bulma.min.css" />
+  <link crossorigin="anonymous" media="all" rel="stylesheet" href="${site}/assets/spinorama.css" />
+  <link rel="icon" type="image/png" href="${site}/assets/favicon-16x16.png" sizes="16x16" />
+</head>
+<body>
+
+<%include file="nav.html"/>
+
+<%!
+  def space2url(text):
+      return text.replace(' ', '%20')
+
+  def space2dash(text):
+      return text.replace(' ', '-').replace("'", '-').replace(".", '-').replace("+",'-')
+
+  def removeVendors(text):
+      return text.replace('Vendors-','').replace(' ', '%20')
+
+  def eq2text(eq):
+      text = {
+          '0': 'LowPass',
+          '1': 'HighPass',
+          '2': 'BandPass',
+          '3': 'Peak',
+          '4': 'Notch',
+          '5': 'LowShelf',
+          '6': 'HighShelf',
+      }
+      return text.get(eq, 'ERROR')
+%>  
+
+<div class="section">
+
+  <div class="field is-grouped has-addons">
+    <div class="control is-expanded">
+      <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl asr center..." autofocus />
+    </div>
+    <div class="control">
+      <a class="button is-info">Search</a>
+    </div>
+  </div>
+
+  <div class="searchresults">
+    <div class="columns is-multiline is-1">
+      % for speaker_name in meta:
+      %  if 'eq' in meta[speaker_name]:
+      <div class="column is-one-third" id="${speaker_name | space2dash}">
+	<table class="table is-striped">
+	  <tr>
+	    <th>
+	      ${meta[speaker_name]['brand']} ${meta[speaker_name]['model']}
+	      (<a href="https://raw.githubusercontent.com/pierreaubert/spinorama/master/datas/eq/${meta[speaker_name]['brand']} ${meta[speaker_name]['model']}/iir.txt">download</a>)
+	    </th>
+	  </tr>
+	  <tr>
+	    <td>
+	      Set preamp gain to: ${meta[speaker_name]['eq']['preamp_gain']} dB.
+	    </td>
+	  </tr>
+	  <tr>
+	    <td>
+	      <table class="table is-striped">
+		<thead>
+		  <tr>
+		    <th>Type</th>
+		    <th>Freq</th>
+		    <th>Q</th>
+		    <th>Gain</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  % for pek in meta[speaker_name]['eq'][meta[speaker_name]['eq']['type']]:
+		  <tr>
+		    <td>${pek['type'] | eq2text}</td>
+		    <td>${pek['freq']}</td>
+		    <td>${pek['Q']}</td>
+		    <td>${pek['dbGain']}</td>
+		  </tr>
+		  % endfor
+		</tbody>
+	      </table>
+	    </td>
+	  </tr>
+	</table>
+      </div>
+      %  endif
+      % endfor
+    </div>
+  </div>
+</div>
+  
+<%include file="footer.html"/>
