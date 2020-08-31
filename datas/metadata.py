@@ -1831,6 +1831,22 @@ speakers_info = {
             },
         },
     },
+    'Selah Audio Integrity DIY': {
+        'brand': 'Selah Audio',
+        'model': 'Integrity DIY',
+        'type': 'passive',
+        'price': '700',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/selah-integrity-diy-speaker-kit-review.15695/',
+            },
+        },
+    },
     'Sehlin Helium DIY': {
         'brand': 'Sehlin',
         'model': 'Helium DIY',
