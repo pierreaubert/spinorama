@@ -652,6 +652,22 @@ speakers_info = {
             },
         },
     },
+    'Hivi 3.1A DIY': {
+        'brand': 'Hivi',
+        'model': '3.1A DIY',
+        'type': 'passive',
+        'price': '300',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/hivi-3-1a-diy-speaker-with-sehlin-mod-review.15802/',
+            },
+        },
+    },
     'iKey-Audio M-808V2': {
         'brand': 'iKey-Audio',
         'model': 'M-808V2',
