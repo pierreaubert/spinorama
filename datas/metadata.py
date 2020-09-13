@@ -365,6 +365,21 @@ speakers_info = {
             },
         },
     },
+    'Dynaudio LYD 5': {
+        'brand': 'Dynaudio',
+        'model': 'LYD 5',
+        'type': 'active',
+        'price': '900',
+        'shape': 'bookshelves',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/dynaudio-lyd-5-studio-monitor-review.15963/',
+             },
+        },
+    },
     'Dynaudio Xeo 3': {
         'brand': 'Dynaudio',
         'model': 'Xeo 3',
@@ -1831,22 +1846,6 @@ speakers_info = {
                 'format': 'princeton', },
         },
     },
-    'Selah Audio RC3R': {
-        'brand': 'Selah Audio',
-        'model': 'RC3R',
-        'type': 'passive',
-        'price': '1300',
-        'shape': 'bookshelves',
-        'amount': 'pair',
-        'default_measurement': 'asr',
-        'measurements': {
-            'asr': {
-                'origin': 'ASR',
-                'format': 'klippel',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/selah-audio-rc3r-3-way-speaker-review.11218/',
-            },
-        },
-    },
     'Selah Audio Integrity DIY': {
         'brand': 'Selah Audio',
         'model': 'Integrity DIY',
@@ -1860,6 +1859,42 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/selah-integrity-diy-speaker-kit-review.15695/',
+            },
+        },
+    },
+    'Selah Audio Purezza': {
+        'brand': 'Selah Audio',
+        'model': 'Purezza',
+        'type': 'passive',
+        'shape': 'bookshelves',
+        'price': '2700',
+        'default_measurement' : 'eac-original',
+        'measurements': {
+            'eac-original': {
+                'origin': 'ErinsAudioCorner',
+                'format': 'splHVtxt',
+                'review': 'https://www.erinsaudiocorner.com/loudspeakers/selah_audio_purezza/',
+            },
+            'eac-eq': {
+                'origin': 'ErinsAudioCorner',
+                'format': 'splHVtxt',
+                'review': 'https://www.erinsaudiocorner.com/loudspeakers/selah_audio_purezza/',
+            },
+        },
+    },
+    'Selah Audio RC3R': {
+        'brand': 'Selah Audio',
+        'model': 'RC3R',
+        'type': 'passive',
+        'price': '1300',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/selah-audio-rc3r-3-way-speaker-review.11218/',
             },
         },
     },
