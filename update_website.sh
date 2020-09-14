@@ -1,4 +1,6 @@
 TARGET=$HOME/src/pierreaubert.github.io/spinorama
+echo "Update starts"
+export PYTHONPATH=src:.
 
 # update logos and speakers picture
 ./minimise_pictures.sh
@@ -18,7 +20,10 @@ rm -f docs/stats/*.json
 # generate website
 ./generate_html.py
 # copy 
-rsync -arv --delete docs/* $TARGET
+echo "Sync"
+rsync -arv --exclude '*.png' --delete ./docs/* $TARGET
+rsync -arv --include '*.png' ./docs/pictures/* $TARGET/pictures
+rsync -arv --include '*.png' ./docs/logos/* $TARGET/logos
 # remove unneeded files
 # rm  $TARGET/(assets|compare|stats)/*\ 2.*
 rm  $TARGET/[A-Z]*/*/*/*.png
