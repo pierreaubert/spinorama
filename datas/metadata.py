@@ -1652,6 +1652,21 @@ speakers_info = {
             },
         },
     },
+    'Revel F328be': {
+        'brand': 'Revel',
+        'model': 'F328be',
+        'type': 'passive',
+        'price': '16000',
+        'shape': 'floorstanders',
+        'amount': 'pair',
+        'default_measurement': 'vendor',
+        'measurements': {
+            'vendor': {
+                'origin': 'Vendors-Revel',
+                'format': 'webplotdigitizer',
+            },
+        },
+    },
     'Revel M105': {
         'brand': 'Revel',
         'model': 'M105',
