@@ -16,6 +16,21 @@ speakers_info = {
             },
         },
     },
+    'Apple Homepod': {
+        'brand': 'Apple',
+        'model': 'Homepod',
+        'type': 'active',
+        'price': '500',
+        'shape': 'bookshelves',
+        'amount': 'single',
+        'default_measurement' : 'vendor',
+        'measurements': {
+            'vendor': {
+                'origin': 'Vendors-Apple',
+                'format': 'webplotdigitizer',
+            },
+        },
+    },
     'Ascend Acoustics CBM-170 SE': {
         'brand': 'Ascend Acoustics',
         'model': 'CBM-170 SE',
@@ -2145,6 +2160,15 @@ origins_info = {
         'logo': 'docs/metadata/eac.png',
         'logo-small': 'docs/metadata/eac.png',
         'url': 'https://www.erinsaudiocorner.com',
+    },
+    'Vendors-Apple': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': -40,
+        'max dB': 10,
+        'logo': 'docs/metadata/apple.png',
+        'logo-small': 'docs/metadata/apple.png',
+        'url': 'https://www.apple.com',
     },
     'Vendors-BIC America': {
         'min hz': 20,
