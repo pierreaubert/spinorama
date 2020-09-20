@@ -1291,6 +1291,21 @@ speakers_info = {
              },
         },
     },
+    'Magnepan LRS': {
+        'brand': 'Magnepan',
+        'model': 'LRS',
+        'type': 'passive',
+        'shape': 'floorstanders',
+        'price': '650',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/magnepan-lrs-speaker-review.16068/',
+             },
+        },
+    },
     'Magico A3': {
         'brand': 'Magico',
         'model': 'A3',
