@@ -219,7 +219,7 @@ speakers_info = {
     'Bose 141': {
         'brand': 'Bose',
         'model': '141',
-        'type': 'passive',
+7        'type': 'passive',
         'shape': 'bookshelves',
         'price': '',
         'default_measurement' : 'vendor',
@@ -348,6 +348,22 @@ speakers_info = {
             },
         },
     },
+    'Diapason Emera': {
+        'brand': 'Diapason',
+        'model': 'Emera',
+        'type': 'passive',
+        'price': '1000',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/diapason-emera-italian-speaker-review.16193/',
+            },
+        },
+    },
     'Philharmonic BMR': {
         'brand': 'Philharmonic',
         'model': 'BMR',
@@ -407,6 +423,22 @@ speakers_info = {
                 'origin': 'Princeton',
                 'format': 'princeton',
              },
+        },
+    },
+    'Edifier R1280T': {
+        'brand': 'Edifier',
+        'model': 'R1280T',
+        'type': 'active',
+        'price': '100',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/edifier-r1280t-powered-speaker-review.16112/',
+            },
         },
     },
     'Elac Adante AS-61': {
