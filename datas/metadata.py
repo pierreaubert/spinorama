@@ -219,7 +219,7 @@ speakers_info = {
     'Bose 141': {
         'brand': 'Bose',
         'model': '141',
-7        'type': 'passive',
+        'type': 'passive',
         'shape': 'bookshelves',
         'price': '',
         'default_measurement' : 'vendor',
