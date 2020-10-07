@@ -256,6 +256,21 @@ speakers_info = {
             },
         },
     },
+    'Bowers & Wilkins 805S': {
+        'brand': 'Bowers & Wilkins',
+        'model': '805S',
+        'type': 'passive',
+        'shape': 'bookshelves',
+        'price': '2500',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-805s-bookshelf-speaker-review.16523/',
+            },
+        },
+    },
     'Cambridge Soundworks Model Six': {
         'brand': 'Cambridge Soundworks',
         'model': 'Model Six',
@@ -544,6 +559,21 @@ speakers_info = {
             'princeton': {
                 'origin': 'Princeton',
                 'format': 'princeton',
+             },
+        },
+    },
+    'Fluance HFS Signature': {
+        'brand': 'Fluance',
+        'model': 'HFS Signature',
+        'type': 'passive',
+        'price': '170',
+        'shape': 'bookshelves',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/fluance-signature-bookshelf-speaker-review.16337/',
              },
         },
     },
