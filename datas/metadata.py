@@ -1744,6 +1744,21 @@ speakers_info = {
             },
         },
     },
+    'Revel F226be': {
+        'brand': 'Revel',
+        'model': 'F226be',
+        'type': 'passive',
+        'price': '',
+        'shape': 'floorstanders',
+        'amount': 'pair',
+        'default_measurement': 'vendor',
+        'measurements': {
+            'vendor': {
+                'origin': 'Vendors-Revel',
+                'format': 'webplotdigitizer',
+            },
+        },
+    },
     'Revel F328be': {
         'brand': 'Revel',
         'model': 'F328be',
