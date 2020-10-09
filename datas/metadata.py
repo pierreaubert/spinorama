@@ -593,6 +593,22 @@ speakers_info = {
             },
         },
     },
+    'Focal Chorus OD 706 V': {
+        'brand': 'Focal',
+        'model': 'Chorus OD 706 V',
+        'type': 'passive',
+        'price': '600',
+        'shape': 'outdoor',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/focal-chorus-od-706-v-outdoor-speaker-review.16561/',
+            },
+        },
+    },
     'Fostex PM03': {
         'brand': 'Fostex',
         'model': 'PM03',
