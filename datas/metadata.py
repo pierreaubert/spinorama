@@ -1728,6 +1728,21 @@ speakers_info = {
             },
         },
     },
+    'Revel C25': {
+        'brand': 'Revel',
+        'model': 'C25',
+        'type': 'passive',
+        'shape': 'center',
+        'price': '',
+        'default_measurement' : 'vendor',
+        'measurements': {
+            'vendor': {
+                'origin': 'Vendors-Revel',
+                'website': 'www.revel.com',
+                'format': 'webplotdigitizer',
+            },
+        },
+    },
     'Revel C52': {
         'brand': 'Revel',
         'model': 'C52',
@@ -1744,19 +1759,39 @@ speakers_info = {
             },
         },
     },
-    'Revel F35': {
+    'Revel F206': {
         'brand': 'Revel',
-        'model': 'F35',
+        'model': 'F206',
         'type': 'passive',
-        'price': '1600',
-        'shape': 'bookshelves',
+        'price': '',
+        'shape': 'floorstanders',
+        'amount': 'pair',
+        'default_measurement': 'vendor',
+        'measurements': {
+            'vendor': {
+                'origin': 'Vendors-Revel',
+                'format': 'webplotdigitizer',
+            },
+        },
+    },
+    'Revel F208': {
+        'brand': 'Revel',
+        'model': 'F208',
+        'type': 'passive',
+        'price': '5000',
+        'shape': 'floorstanders',
         'amount': 'pair',
         'default_measurement': 'asr',
         'measurements': {
             'asr': {
                 'origin': 'ASR',
                 'format': 'klippel',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-f35-speaker-review.12053/',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-f208-tower-speaker-review.13192/',
+            },
+            'vendor' : {
+                'origin': 'Vendors-Revel',
+                'website': 'www.revel.com',
+                'format': 'webplotdigitizer',
             },
         },
     },
@@ -1787,6 +1822,22 @@ speakers_info = {
             'vendor': {
                 'origin': 'Vendors-Revel',
                 'format': 'webplotdigitizer',
+            },
+        },
+    },
+    'Revel F35': {
+        'brand': 'Revel',
+        'model': 'F35',
+        'type': 'passive',
+        'price': '1600',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-f35-speaker-review.12053/',
             },
         },
     },
@@ -1872,42 +1923,6 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-m55xc-outdoor-speaker-review.14881/',
-            },
-        },
-    },
-    'Revel C25': {
-        'brand': 'Revel',
-        'model': 'C25',
-        'type': 'passive',
-        'shape': 'center',
-        'price': '',
-        'default_measurement' : 'vendor',
-        'measurements': {
-            'vendor': {
-                'origin': 'Vendors-Revel',
-                'website': 'www.revel.com',
-                'format': 'webplotdigitizer',
-            },
-        },
-    },
-    'Revel F208': {
-        'brand': 'Revel',
-        'model': 'F208',
-        'type': 'passive',
-        'price': '5000',
-        'shape': 'floorstanders',
-        'amount': 'pair',
-        'default_measurement': 'asr',
-        'measurements': {
-            'asr': {
-                'origin': 'ASR',
-                'format': 'klippel',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-f208-tower-speaker-review.13192/',
-            },
-            'vendor' : {
-                'origin': 'Vendors-Revel',
-                'website': 'www.revel.com',
-                'format': 'webplotdigitizer',
             },
         },
     },
