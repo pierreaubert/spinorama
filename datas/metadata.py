@@ -256,6 +256,20 @@ speakers_info = {
             },
         },
     },
+    'Bowers & Wilkins 802N': {
+        'brand': 'Bowers & Wilkins',
+        'model': '802N',
+        'type': 'passive',
+        'shape': 'floorstanders',
+        'price': '',
+        'default_measurement' : 'vendor',
+        'measurements': {
+            'vendor': {
+                'origin': 'Vendors-Bowers & Wilkins',
+                'format': 'webplotdigitizer',
+            },
+        },
+    },
     'Bowers & Wilkins 805S': {
         'brand': 'Bowers & Wilkins',
         'model': '805S',
@@ -598,7 +612,7 @@ speakers_info = {
         'model': 'Chorus OD 706 V',
         'type': 'passive',
         'price': '600',
-        'shape': 'outdoor',
+        'shape': 'bookshelves',
         'amount': 'pair',
         'default_measurement': 'asr',
         'measurements': {
@@ -1963,6 +1977,22 @@ speakers_info = {
             },
         },
     },
+    'RSL Outsider II': {
+        'brand': 'RSL',
+        'model': 'RSL Outsider II',
+        'type': 'passive',
+        'price': '300',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/rsl-outsider-ii-outdoor-speaker-review.16659/',
+            },
+        },
+    },
     'Salk WoW1': {
         'brand': 'Salk',
         'model': 'WoW1',
@@ -2319,6 +2349,15 @@ origins_info = {
         'logo': 'docs/metadata/bose.png',
         'logo-small': 'docs/metadata/bose.png',
         'url': 'https://www.bose.com',
+    },
+    'Vendors-Bowers & Wilkins': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': -40,
+        'max dB': 10,
+        'logo': 'docs/metadata/bose.png',
+        'logo-small': 'docs/metadata/bose.png',
+        'url': 'https://www.bowerswilkins.com/',
     },
     'Vendors-Cambridge Soundworks': {
         'min hz': 20,
