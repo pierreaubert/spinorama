@@ -1816,8 +1816,13 @@ speakers_info = {
         'price': '',
         'shape': 'floorstanders',
         'amount': 'pair',
-        'default_measurement': 'vendor',
+        'default_measurement': 'eac',
         'measurements': {
+            'eac': {
+                'origin': 'ErinsAudioCorner',
+                'format': 'splHVtxt',
+                'review': 'https://www.erinsaudiocorner.com/loudspeakers/revel_f226be/',
+            },
             'vendor': {
                 'origin': 'Vendors-Revel',
                 'format': 'webplotdigitizer',
