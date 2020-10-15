@@ -2239,6 +2239,22 @@ speakers_info = {
             },
         },
     },
+    'Wharfedale Diamond 220': {
+        'brand': 'Wharfedale',
+        'model': 'Diamond 220',
+        'type': 'passive',
+        'price': '200',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/wharfedale-diamond-220-budget-speaker-review.16752/',
+            },
+        },
+    },
     'Yamaha HS5': {
         'brand': 'Yamaha',
         'model': 'HS5',
