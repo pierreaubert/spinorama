@@ -16,6 +16,21 @@ speakers_info = {
             },
         },
     },
+    'Apple Homepod': {
+        'brand': 'Apple',
+        'model': 'Homepod',
+        'type': 'active',
+        'price': '500',
+        'shape': 'bookshelves',
+        'amount': 'single',
+        'default_measurement' : 'vendor',
+        'measurements': {
+            'vendor': {
+                'origin': 'Vendors-Apple',
+                'format': 'webplotdigitizer',
+            },
+        },
+    },
     'Ascend Acoustics CBM-170 SE': {
         'brand': 'Ascend Acoustics',
         'model': 'CBM-170 SE',
@@ -241,6 +256,35 @@ speakers_info = {
             },
         },
     },
+    'Bowers & Wilkins 802N': {
+        'brand': 'Bowers & Wilkins',
+        'model': '802N',
+        'type': 'passive',
+        'shape': 'floorstanders',
+        'price': '',
+        'default_measurement' : 'vendor',
+        'measurements': {
+            'vendor': {
+                'origin': 'Vendors-Bowers & Wilkins',
+                'format': 'webplotdigitizer',
+            },
+        },
+    },
+    'Bowers & Wilkins 805S': {
+        'brand': 'Bowers & Wilkins',
+        'model': '805S',
+        'type': 'passive',
+        'shape': 'bookshelves',
+        'price': '2500',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-805s-bookshelf-speaker-review.16523/',
+            },
+        },
+    },
     'Cambridge Soundworks Model Six': {
         'brand': 'Cambridge Soundworks',
         'model': 'Model Six',
@@ -333,6 +377,22 @@ speakers_info = {
             },
         },
     },
+    'Diapason Emera': {
+        'brand': 'Diapason',
+        'model': 'Emera',
+        'type': 'passive',
+        'price': '1000',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/diapason-emera-italian-speaker-review.16193/',
+            },
+        },
+    },
     'Philharmonic BMR': {
         'brand': 'Philharmonic',
         'model': 'BMR',
@@ -365,6 +425,21 @@ speakers_info = {
             },
         },
     },
+    'Dynaudio LYD 5': {
+        'brand': 'Dynaudio',
+        'model': 'LYD 5',
+        'type': 'active',
+        'price': '900',
+        'shape': 'bookshelves',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/dynaudio-lyd-5-studio-monitor-review.15963/',
+             },
+        },
+    },
     'Dynaudio Xeo 3': {
         'brand': 'Dynaudio',
         'model': 'Xeo 3',
@@ -377,6 +452,22 @@ speakers_info = {
                 'origin': 'Princeton',
                 'format': 'princeton',
              },
+        },
+    },
+    'Edifier R1280T': {
+        'brand': 'Edifier',
+        'model': 'R1280T',
+        'type': 'active',
+        'price': '100',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/edifier-r1280t-powered-speaker-review.16112/',
+            },
         },
     },
     'Elac Adante AS-61': {
@@ -485,6 +576,21 @@ speakers_info = {
              },
         },
     },
+    'Fluance HFS Signature': {
+        'brand': 'Fluance',
+        'model': 'HFS Signature',
+        'type': 'passive',
+        'price': '170',
+        'shape': 'bookshelves',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/fluance-signature-bookshelf-speaker-review.16337/',
+             },
+        },
+    },
     'Focal Aria 906': {
         'brand': 'Focal',
         'model': 'Aria 906',
@@ -498,6 +604,22 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/focal-aria-906-speaker-review.14085/',
+            },
+        },
+    },
+    'Focal Chorus OD 706 V': {
+        'brand': 'Focal',
+        'model': 'Chorus OD 706 V',
+        'type': 'passive',
+        'price': '600',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/focal-chorus-od-706-v-outdoor-speaker-review.16561/',
             },
         },
     },
@@ -649,6 +771,22 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/harbeth-monitor-30-speaker-review.11108/',
+            },
+        },
+    },
+    'Hivi 3.1A DIY': {
+        'brand': 'Hivi',
+        'model': '3.1A DIY',
+        'type': 'passive',
+        'price': '300',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/hivi-3-1a-diy-speaker-with-sehlin-mod-review.15802/',
             },
         },
     },
@@ -1245,6 +1383,21 @@ speakers_info = {
              },
         },
     },
+    'Magnepan LRS': {
+        'brand': 'Magnepan',
+        'model': 'LRS',
+        'type': 'passive',
+        'shape': 'floorstanders',
+        'price': '650',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/magnepan-lrs-speaker-review.16068/',
+             },
+        },
+    },
     'Magico A3': {
         'brand': 'Magico',
         'model': 'A3',
@@ -1589,6 +1742,21 @@ speakers_info = {
             },
         },
     },
+    'Revel C25': {
+        'brand': 'Revel',
+        'model': 'C25',
+        'type': 'passive',
+        'shape': 'center',
+        'price': '',
+        'default_measurement' : 'vendor',
+        'measurements': {
+            'vendor': {
+                'origin': 'Vendors-Revel',
+                'website': 'www.revel.com',
+                'format': 'webplotdigitizer',
+            },
+        },
+    },
     'Revel C52': {
         'brand': 'Revel',
         'model': 'C52',
@@ -1602,6 +1770,77 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/mc-1000-best-speaker-in-the-world.11283/',
+            },
+        },
+    },
+    'Revel F206': {
+        'brand': 'Revel',
+        'model': 'F206',
+        'type': 'passive',
+        'price': '',
+        'shape': 'floorstanders',
+        'amount': 'pair',
+        'default_measurement': 'vendor',
+        'measurements': {
+            'vendor': {
+                'origin': 'Vendors-Revel',
+                'format': 'webplotdigitizer',
+            },
+        },
+    },
+    'Revel F208': {
+        'brand': 'Revel',
+        'model': 'F208',
+        'type': 'passive',
+        'price': '5000',
+        'shape': 'floorstanders',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-f208-tower-speaker-review.13192/',
+            },
+            'vendor' : {
+                'origin': 'Vendors-Revel',
+                'website': 'www.revel.com',
+                'format': 'webplotdigitizer',
+            },
+        },
+    },
+    'Revel F226be': {
+        'brand': 'Revel',
+        'model': 'F226be',
+        'type': 'passive',
+        'price': '',
+        'shape': 'floorstanders',
+        'amount': 'pair',
+        'default_measurement': 'eac',
+        'measurements': {
+            'eac': {
+                'origin': 'ErinsAudioCorner',
+                'format': 'splHVtxt',
+                'review': 'https://www.erinsaudiocorner.com/loudspeakers/revel_f226be/',
+            },
+            'vendor': {
+                'origin': 'Vendors-Revel',
+                'format': 'webplotdigitizer',
+            },
+        },
+    },
+    'Revel F328be': {
+        'brand': 'Revel',
+        'model': 'F328be',
+        'type': 'passive',
+        'price': '16000',
+        'shape': 'floorstanders',
+        'amount': 'pair',
+        'default_measurement': 'vendor',
+        'measurements': {
+            'vendor': {
+                'origin': 'Vendors-Revel',
+                'format': 'webplotdigitizer',
             },
         },
     },
@@ -1706,42 +1945,6 @@ speakers_info = {
             },
         },
     },
-    'Revel C25': {
-        'brand': 'Revel',
-        'model': 'C25',
-        'type': 'passive',
-        'shape': 'center',
-        'price': '',
-        'default_measurement' : 'vendor',
-        'measurements': {
-            'vendor': {
-                'origin': 'Vendors-Revel',
-                'website': 'www.revel.com',
-                'format': 'webplotdigitizer',
-            },
-        },
-    },
-    'Revel F208': {
-        'brand': 'Revel',
-        'model': 'F208',
-        'type': 'passive',
-        'price': '5000',
-        'shape': 'floorstanders',
-        'amount': 'pair',
-        'default_measurement': 'asr',
-        'measurements': {
-            'asr': {
-                'origin': 'ASR',
-                'format': 'klippel',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-f208-tower-speaker-review.13192/',
-            },
-            'vendor' : {
-                'origin': 'Vendors-Revel',
-                'website': 'www.revel.com',
-                'format': 'webplotdigitizer',
-            },
-        },
-    },
     'Revel Ultima Salon': {
         'brand': 'Revel',
         'model': 'Ultima Salon',
@@ -1776,6 +1979,22 @@ speakers_info = {
                 'origin': 'Vendors-Revel',
                 'website': 'www.revel.com',
                 'format': 'webplotdigitizer',
+            },
+        },
+    },
+    'RSL Outsider II': {
+        'brand': 'RSL',
+        'model': 'RSL Outsider II',
+        'type': 'passive',
+        'price': '300',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/rsl-outsider-ii-outdoor-speaker-review.16659/',
             },
         },
     },
@@ -1815,22 +2034,6 @@ speakers_info = {
                 'format': 'princeton', },
         },
     },
-    'Selah Audio RC3R': {
-        'brand': 'Selah Audio',
-        'model': 'RC3R',
-        'type': 'passive',
-        'price': '1300',
-        'shape': 'bookshelves',
-        'amount': 'pair',
-        'default_measurement': 'asr',
-        'measurements': {
-            'asr': {
-                'origin': 'ASR',
-                'format': 'klippel',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/selah-audio-rc3r-3-way-speaker-review.11218/',
-            },
-        },
-    },
     'Selah Audio Integrity DIY': {
         'brand': 'Selah Audio',
         'model': 'Integrity DIY',
@@ -1844,6 +2047,42 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/selah-integrity-diy-speaker-kit-review.15695/',
+            },
+        },
+    },
+    'Selah Audio Purezza': {
+        'brand': 'Selah Audio',
+        'model': 'Purezza',
+        'type': 'passive',
+        'shape': 'bookshelves',
+        'price': '2700',
+        'default_measurement' : 'eac-original',
+        'measurements': {
+            'eac-original': {
+                'origin': 'ErinsAudioCorner',
+                'format': 'splHVtxt',
+                'review': 'https://www.erinsaudiocorner.com/loudspeakers/selah_audio_purezza/',
+            },
+            'eac-eq': {
+                'origin': 'ErinsAudioCorner',
+                'format': 'splHVtxt',
+                'review': 'https://www.erinsaudiocorner.com/loudspeakers/selah_audio_purezza/',
+            },
+        },
+    },
+    'Selah Audio RC3R': {
+        'brand': 'Selah Audio',
+        'model': 'RC3R',
+        'type': 'passive',
+        'price': '1300',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/selah-audio-rc3r-3-way-speaker-review.11218/',
             },
         },
     },
@@ -2000,6 +2239,22 @@ speakers_info = {
             },
         },
     },
+    'Wharfedale Diamond 220': {
+        'brand': 'Wharfedale',
+        'model': 'Diamond 220',
+        'type': 'passive',
+        'price': '200',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/wharfedale-diamond-220-budget-speaker-review.16752/',
+            },
+        },
+    },
     'Yamaha HS5': {
         'brand': 'Yamaha',
         'model': 'HS5',
@@ -2080,6 +2335,15 @@ origins_info = {
         'logo-small': 'docs/metadata/eac.png',
         'url': 'https://www.erinsaudiocorner.com',
     },
+    'Vendors-Apple': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': -40,
+        'max dB': 10,
+        'logo': 'docs/metadata/apple.png',
+        'logo-small': 'docs/metadata/apple.png',
+        'url': 'https://www.apple.com',
+    },
     'Vendors-BIC America': {
         'min hz': 20,
         'max hz': 20000,
@@ -2106,6 +2370,15 @@ origins_info = {
         'logo': 'docs/metadata/bose.png',
         'logo-small': 'docs/metadata/bose.png',
         'url': 'https://www.bose.com',
+    },
+    'Vendors-Bowers & Wilkins': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': -40,
+        'max dB': 10,
+        'logo': 'docs/metadata/bose.png',
+        'logo-small': 'docs/metadata/bose.png',
+        'url': 'https://www.bowerswilkins.com/',
     },
     'Vendors-Cambridge Soundworks': {
         'min hz': 20,

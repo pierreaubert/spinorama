@@ -28,7 +28,7 @@ $(document).ready(function () {
 	    console.log('searching: '+keywords)
 	    if (keywords.length === 0) {
 		for (const item in metadata) {
-		    const id = (metadata[item].brand + '-' + metadata[item].model).replace(/['.+ ]/g, '-')
+		    const id = (metadata[item].brand + '-' + metadata[item].model).replace(/['.+& ]/g, '-')
 		    $('#' + id).show()
 		}
 		resultdiv.show()
@@ -38,7 +38,7 @@ $(document).ready(function () {
 		    resultdiv.hide()
 		} else {
 		    for (const item in metadata) {
-			const id = (metadata[item].brand + '-' + metadata[item].model).replace(/['.+ ]/g, '-')
+			const id = (metadata[item].brand + '-' + metadata[item].model).replace(/['.+& ]/g, '-')
 			console.log('hide:'+id);
 			$('#' + id).hide()
 		    }
@@ -50,7 +50,7 @@ $(document).ready(function () {
 		    }
 		    if (minScore < Math.pow(10,-15)) {
 			for (const item in result) {
-			    const id = (result[item].item.brand + '-' + result[item].item.model).replace(/['.+ ]/g, '-')
+			    const id = (result[item].item.brand + '-' + result[item].item.model).replace(/['.+& ]/g, '-')
 			    if (result[item].score < Math.pow(10,-15)) {
 				$('#' + id).show()
 				console.log('perfect match:'+id+' minscore:' + minScore+' score:' + result[item].score);
@@ -60,7 +60,7 @@ $(document).ready(function () {
 			}
 		    } else {
 			for (const item in result) {
-			    const id = (result[item].item.brand + '-' + result[item].item.model).replace(/['.+ ]/g, '-')
+			    const id = (result[item].item.brand + '-' + result[item].item.model).replace(/['.+& ]/g, '-')
 			    if (result[item].score === minScore) {
 				console.log('show:'+id+' minscore:' + minScore+' score:' + result[item].score);
 				$('#' + id).show()

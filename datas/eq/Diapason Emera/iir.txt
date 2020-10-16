@@ -1,0 +1,30 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 24-09-2020 13:11:17
+
+Notes:Diapson Emera IIR
+
+Equaliser: Generic
+Diapson Emera LW.txt
+Filter  1: ON  PK       Fc     490 Hz  Gain   0.6 dB  Q 2.000
+Filter  2: ON  PK       Fc     557 Hz  Gain  -1.2 dB  Q 15.000
+Filter  3: ON  PK       Fc     569 Hz  Gain  -1.8 dB  Q 5.000
+Filter  4: ON  PK       Fc     728 Hz  Gain   1.0 dB  Q 5.000
+Filter  5: ON  PK       Fc     791 Hz  Gain  -0.9 dB  Q 18.000
+Filter  6: ON  PK       Fc     911 Hz  Gain  -4.8 dB  Q 1.589
+Filter  7: ON  PK       Fc    1380 Hz  Gain   0.6 dB  Q 13.000
+Filter  8: ON  PK       Fc    1854 Hz  Gain  -2.7 dB  Q 2.179
+Filter  9: ON  PK       Fc    2216 Hz  Gain  -1.8 dB  Q 5.000
+Filter 10: ON  PK       Fc    2523 Hz  Gain   2.9 dB  Q 5.000
+Filter 11: ON  PK       Fc    2767 Hz  Gain  -7.1 dB  Q 5.000
+Filter 12: ON  PK       Fc    2803 Hz  Gain  10.5 dB  Q 4.998
+Filter 13: ON  PK       Fc    3140 Hz  Gain  -5.7 dB  Q 5.000
+Filter 14: ON  PK       Fc    3483 Hz  Gain   2.3 dB  Q 5.000
+Filter 15: ON  PK       Fc    3987 Hz  Gain  -3.8 dB  Q 5.000
+Filter 16: ON  PK       Fc    4286 Hz  Gain   4.4 dB  Q 1.968
+Filter 17: ON  PK       Fc    7126 Hz  Gain  -3.9 dB  Q 1.582
+Filter 18: ON  PK       Fc   13519 Hz  Gain  -2.0 dB  Q 5.000
+Filter 19: ON  PK       Fc   14894 Hz  Gain  -2.7 dB  Q 5.000
+Filter 20: ON  PK       Fc   15994 Hz  Gain  -2.4 dB  Q 5.000
+
