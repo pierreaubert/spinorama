@@ -743,6 +743,21 @@ speakers_info = {
              },
         },
     },
+    'GGNTKT M1': {
+        'brand': 'GGNTKT',
+        'model': 'M1',
+        'shape': 'bookshelves',
+        'type': 'active',
+        'price': '',
+        'default_measurement': 'vendor',
+        'measurements': {
+            'vendor': {
+                'origin': 'Vendors-GGNTKT',
+                'format': 'webplotdigitizer',
+                'website': 'https://ggntkt.de/en/model-m1',
+             },
+        },
+    },
     'GR Research X-LS Encore Kit': {
         'brand': 'GR Research',
         'model': 'X-LS Encore Kit',
@@ -2397,6 +2412,15 @@ origins_info = {
         'logo': 'docs/metadata/infinity.png',
         'logo-small': 'docs/metadata/infinity-small.png',
         'url': 'https://www.infinityspeakers.com',
+    },
+    'Vendors-GGNTKT': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': -40,
+        'max dB': 10,
+        'logo': 'docs/metadata/ggntkt.png',
+        'logo-small': 'docs/metadata/ggntkt-small.png',
+        'url': 'https://www.ggntkt.de',
     },
     'Vendors-JBL': {
         'min hz': 20,
