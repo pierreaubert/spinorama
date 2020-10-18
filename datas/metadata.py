@@ -749,9 +749,14 @@ speakers_info = {
         'shape': 'bookshelves',
         'type': 'active',
         'price': '',
-        'default_measurement': 'vendor',
+        'default_measurement': 'v2-202009-monopole',
         'measurements': {
-            'vendor': {
+            'v2-202009-monopole': {
+                'origin': 'Vendors-GGNTKT',
+                'format': 'webplotdigitizer',
+                'website': 'https://ggntkt.de/en/model-m1',
+             },
+            'v1-202008': {
                 'origin': 'Vendors-GGNTKT',
                 'format': 'webplotdigitizer',
                 'website': 'https://ggntkt.de/en/model-m1',
