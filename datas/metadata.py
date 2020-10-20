@@ -668,6 +668,22 @@ speakers_info = {
              },
         },
     },
+    'Genelec 8010A': {
+        'brand': 'Genelec',
+        'model': '8010A',
+        'type': 'active',
+        'price': '600',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/genelec-8010a-powered-studio-monitor-review.16866/',
+            },
+        },
+    },
     'Genelec 8030A': {
         'brand': 'Genelec',
         'model': '8030A',
