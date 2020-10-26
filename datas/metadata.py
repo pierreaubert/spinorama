@@ -2323,6 +2323,22 @@ speakers_info = {
             },
         },
     },
+    'Yamaha NS-6490': {
+        'brand': 'Yamaha',
+        'model': 'NS-6490',
+        'type': 'passive',
+        'price': '130',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/yamaha-ns-6490-3-way-budget-speaker-review.17042/',
+            },
+        },
+    },
     'Zaph Audio ZA5': {
         'brand': 'Zaph Audio',
         'model': 'ZA5',
