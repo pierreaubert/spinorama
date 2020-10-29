@@ -2036,7 +2036,7 @@ speakers_info = {
     },
     'RSL Outsider II': {
         'brand': 'RSL',
-        'model': 'RSL Outsider II',
+        'model': 'Outsider II',
         'type': 'passive',
         'price': '300',
         'shape': 'bookshelves',
