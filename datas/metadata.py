@@ -16,6 +16,22 @@ speakers_info = {
             },
         },
     },
+    'Adam T8V': {
+        'brand': 'Adam',
+        'model': 'T8V',
+        'type': 'active',
+        'price': '600',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/adam-t8v-studio-monitor-review.17118/',
+            },
+        },
+    },
     'Apple Homepod': {
         'brand': 'Apple',
         'model': 'Homepod',
@@ -668,6 +684,22 @@ speakers_info = {
              },
         },
     },
+    'Genelec 8010A': {
+        'brand': 'Genelec',
+        'model': '8010A',
+        'type': 'active',
+        'price': '600',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/genelec-8010a-powered-studio-monitor-review.16866/',
+            },
+        },
+    },
     'Genelec 8030A': {
         'brand': 'Genelec',
         'model': '8030A',
@@ -740,6 +772,26 @@ speakers_info = {
             'princeton': {
                 'origin': 'Princeton',
                 'format': 'princeton',
+             },
+        },
+    },
+    'GGNTKT M1': {
+        'brand': 'GGNTKT',
+        'model': 'M1',
+        'shape': 'bookshelves',
+        'type': 'active',
+        'price': '',
+        'default_measurement': 'vendor-v2-202009-monopole',
+        'measurements': {
+            'vendor-v2-202009-monopole': {
+                'origin': 'Vendors-GGNTKT',
+                'format': 'webplotdigitizer',
+                'website': 'https://ggntkt.de/en/model-m1',
+             },
+            'vendor-v1-202008': {
+                'origin': 'Vendors-GGNTKT',
+                'format': 'webplotdigitizer',
+                'website': 'https://ggntkt.de/en/model-m1',
              },
         },
     },
@@ -1984,7 +2036,7 @@ speakers_info = {
     },
     'RSL Outsider II': {
         'brand': 'RSL',
-        'model': 'RSL Outsider II',
+        'model': 'Outsider II',
         'type': 'passive',
         'price': '300',
         'shape': 'bookshelves',
@@ -2287,6 +2339,22 @@ speakers_info = {
             },
         },
     },
+    'Yamaha NS-6490': {
+        'brand': 'Yamaha',
+        'model': 'NS-6490',
+        'type': 'passive',
+        'price': '130',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/yamaha-ns-6490-3-way-budget-speaker-review.17042/',
+            },
+        },
+    },
     'Zaph Audio ZA5': {
         'brand': 'Zaph Audio',
         'model': 'ZA5',
@@ -2397,6 +2465,15 @@ origins_info = {
         'logo': 'docs/metadata/infinity.png',
         'logo-small': 'docs/metadata/infinity-small.png',
         'url': 'https://www.infinityspeakers.com',
+    },
+    'Vendors-GGNTKT': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': -40,
+        'max dB': 10,
+        'logo': 'docs/metadata/ggntkt.png',
+        'logo-small': 'docs/metadata/ggntkt-small.png',
+        'url': 'https://www.ggntkt.de',
     },
     'Vendors-JBL': {
         'min hz': 20,

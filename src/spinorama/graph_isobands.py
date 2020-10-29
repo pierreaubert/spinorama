@@ -153,8 +153,8 @@ def find_isoband(grid_x, grid_y, grid_z, z_low, z_high, transform_x, transform_y
         band = triangle2band(triangle, elevation, z_low, z_high)
         if band is not None and len(band) > 0:
             transform_band = \
-              [[transform_x(p[0]), transform_y(p[1])] for p in band] + \
-              [[transform_x(band[0][0]), transform_y(band[0][1])]]
+              [[transform_x(p[0]), transform_y(p[1]), z_high+10000] for p in band] + \
+              [[transform_x(band[0][0]), transform_y(band[0][1]), z_high+10000]]
             isoband.append(transform_band)
             
     #print('debug: z_low={0} z_high={1} isoband={2}'.format(z_low, z_high, pps(isoband)))
@@ -167,6 +167,7 @@ def find_isoband(grid_x, grid_y, grid_z, z_low, z_high, transform_x, transform_y
 def find_isobands(grid_x, grid_y, grid_z, z_values, transform_x, transform_y):
     # find iso bands on a x,y grid where z is the elevation, z_values define the boundaries of the bands
     # return data in geojson to please altair
+    z_colors  = ['#5c77a5', '#dc842a', '#c85857', '#89b5b1', '#71a152', '#bab0ac', '#e15759', '#b07aa1', '#76b7b2', '#ff9da7']
     geojson = {}
     geojson['type'] = 'FeatureCollection'
     geojson['features'] = []
@@ -183,6 +184,11 @@ def find_isobands(grid_x, grid_y, grid_z, z_values, transform_x, transform_y):
             'properties': {
                 'z_low': z_low,
                 'z_high': z_high,
+                'stroke': '#000000',
+                'stroke-opacity': 0,
+                'stroke-width': 0,
+                'fill-opacity': 1,
+                'fill': z_colors[z % len(z_colors)]
                 },
             }
         )
