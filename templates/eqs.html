@@ -18,13 +18,13 @@
 
 <%!
   def space2url(text):
-      return text.replace(' ', '%20')
+      return text.replace(' ', '%20').replace('&', '%26')
 
   def space2dash(text):
-      return text.replace(' ', '-').replace("'", '-').replace(".", '-').replace("+",'-')
+      return text.replace(' ', '-').replace("'", '-').replace(".", '-').replace("+",'-').replace('&','-')
 
   def removeVendors(text):
-      return text.replace('Vendors-','').replace(' ', '%20')
+      return text.replace('Vendors-','').replace(' ', '%20').replace('&', '%26')
 
   def eq2text(eq):
       text = {
