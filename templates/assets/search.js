@@ -12,7 +12,7 @@ $(document).ready(function () {
 	    findAllMatches: true,
 	    minMatchCharLength: 2,
 	    keys: ['brand', 'model', 'type', 'shape',
-		   'measurements.asr.origin', 'measurements.vendor.origin', 'measurements.printeton.origin'
+		   'measurements.asr.origin', 'measurements.vendor.origin', 'measurements.printeton.origin', 'measurements.eac.origin'
 		  ],
 	    treshhold: 0.1,
 	    distance: 2,
@@ -48,6 +48,7 @@ $(document).ready(function () {
 			    minScore = result[item].score
 			}
 		    }
+		    console.log('minscore '+minScore)
 		    if (minScore < Math.pow(10,-15)) {
 			for (const item in result) {
 			    const id = (result[item].item.brand + '-' + result[item].item.model).replace(/['.+& ]/g, '-')

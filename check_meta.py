@@ -43,7 +43,11 @@ def sanity_check_model(name, speaker):
     if 'model' not in speaker:
         logging.error('model is not in {0}'.format(name))
     else:
+        brand = speaker['brand']
         model = speaker['model']
+        name_split = model.split(' ')
+        if len(name_split) > 0 and name_split[0] == brand:
+            logging.warning('{0} does start with brand {1}'.format(name, brand))
         if name[-len(model):] != model:
             logging.error('{0} doesn\'t end with {1}'.format(name, model))
 
