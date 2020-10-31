@@ -106,9 +106,9 @@ def grid_circle(anglelist, dbmax):
         legendY.append(Y[0])
         legendT.append('{:.0f}dB'.format(dbmax*(c-1)))
 
-    circleX = [v2 for v1 in circleX  for v2 in v1]
-    circleY = [v2 for v1 in circleY  for v2 in v1]
-    circleL = [v2 for v1 in circleL  for v2 in v1]
+    circleX = [v2 for v1 in circleX for v2 in v1]
+    circleY = [v2 for v1 in circleY for v2 in v1]
+    circleL = [v2 for v1 in circleL for v2 in v1]
 
     df = pd.DataFrame({'x': circleX, 'y': circleY, 'label': circleL})
     circles = df.reset_index().melt(id_vars=['x', 'y'], var_name='label').loc[lambda df: df['label'] != 'index']
@@ -143,22 +143,26 @@ def plot(anglelist, dfu):
     dbX = []
     dbY = []
     hzZ = []
+    db_max_onaxis = dfu['On Axis'].max()-100
     for hz in [100, 500, 1000, 10000, 15000]:
         ihz = find_nearest_freq(dfu, hz)
         if ihz is None:
             continue
-        X, Y, Z = projection(anglelist, dfu.loc[ihz][1:], hz)
+        X, Y, Z = projection(anglelist, dfu.loc[ihz][1:]-db_max_onaxis, hz)
         # add to global variable
         dbX.append(X)
         dbY.append(Y)
         hzZ.append(Z)
 
     # normalise
-    dbmax = max(np.array(dbX).max(), np.array(dbY).max())
-    logging.info('radar plot: dbmax {0}'.format(dbmax))
-    dbX = [v2 / dbmax for v1 in dbX for v2 in v1]
-    dbY = [v2 / dbmax for v1 in dbY for v2 in v1]
+    db_min = min(np.array(dbX).min(), np.array(dbY).min())
+    db_max = max(np.array(dbX).max(), np.array(dbY).max())
+    dbX = [v2/db_max for v1 in dbX for v2 in v1]
+    dbY = [v2/db_max for v1 in dbY for v2 in v1]
+    #print('dbX min={} max={}'.format(np.array(dbX).min(), np.array(dbX).max()))
+    #print('dbY min={} max={}'.format(np.array(dbY).min(), np.array(dbY).max()))
+
     hzZ = [label(i2) for i1 in hzZ for i2 in i1]
 
-    return dbmax, pd.DataFrame({'x': dbX, 'y': dbY, 'Freq': hzZ})
+    return db_max, pd.DataFrame({'x': dbX, 'y': dbY, 'Freq': hzZ})
 

@@ -366,7 +366,7 @@ def graph_radar(df_in, graph_params):
     
     # build a grid                                                                                                                                                                               
     grid_df = radar.grid_grid(anglelist)
-    circle_df, circle_text = radar.grid_circle(anglelist, dbmax)
+    circle_df, circle_text = radar.grid_circle(anglelist, 100)
     text_df = radar.grid_text(anglelist)
 
     grid = alt.Chart(grid_df).mark_line(
