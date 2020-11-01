@@ -99,6 +99,22 @@ speakers_info = {
             },
         },
     },
+    'Ascend Acoustics Luna Mini-Monitor': {
+        'brand': 'Ascend Acoustics',
+        'model': 'Luna Mini-Monitor',
+        'type': 'passive',
+        'shape': 'bookshelves',
+        'price': '1148',
+        'amount': 'pair',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-luna-mini-monitor-review.17181/#post-556036',
+            },
+        },
+    },
     'Ascend Acoustics Sierra 2': {
         'brand': 'Ascend Acoustics',
         'model': 'Sierra 2',
