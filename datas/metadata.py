@@ -104,7 +104,7 @@ speakers_info = {
         'model': 'Luna Mini-Monitor',
         'type': 'passive',
         'shape': 'bookshelves',
-        'price': '1148',
+        'price': '1150',
         'amount': 'pair',
         'default_measurement' : 'asr',
         'measurements': {
@@ -112,6 +112,22 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-luna-mini-monitor-review.17181/#post-556036',
+            },
+        },
+    },
+    'Ascend Acoustics Luna Duo': {
+        'brand': 'Ascend Acoustics',
+        'model': 'Luna Duo',
+        'type': 'passive',
+        'shape': 'center',
+        'price': '800',
+        'amount': 'each',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-luna-duo-center-main-speaker-review.17259/',
             },
         },
     },
