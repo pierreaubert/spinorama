@@ -99,6 +99,38 @@ speakers_info = {
             },
         },
     },
+    'Ascend Acoustics Luna Mini-Monitor': {
+        'brand': 'Ascend Acoustics',
+        'model': 'Luna Mini-Monitor',
+        'type': 'passive',
+        'shape': 'bookshelves',
+        'price': '1150',
+        'amount': 'pair',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-luna-mini-monitor-review.17181/#post-556036',
+            },
+        },
+    },
+    'Ascend Acoustics Luna Duo': {
+        'brand': 'Ascend Acoustics',
+        'model': 'Luna Duo',
+        'type': 'passive',
+        'shape': 'center',
+        'price': '800',
+        'amount': 'each',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-luna-duo-center-main-speaker-review.17259/',
+            },
+        },
+    },
     'Ascend Acoustics Sierra 2': {
         'brand': 'Ascend Acoustics',
         'model': 'Sierra 2',
@@ -1464,6 +1496,20 @@ speakers_info = {
             },
         },
     },
+    'Mesanovic RTM10': {
+        'brand': 'Mesanovic',
+        'model': 'RTM10',
+        'type': 'active',
+        'price': '7500',
+        'shape': 'floorstanders',
+        'default_measurement' : 'vendor',
+        'measurements': {
+            'vendor': {
+                'origin': 'Vendors-Mesanovic',
+                'format': 'rewstextdump',
+            },
+        },
+    },
     'Micca RB42': {
         'brand': 'Micca',
         'model': 'RB42',
@@ -2528,6 +2574,15 @@ origins_info = {
         'logo': 'docs/metadata/magico.png',
         'logo-small': 'docs/metadata/magico.png',
         'url': 'https://www.magicoaudio.com',
+    },
+    'Vendors-Mesanovic': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': -40,
+        'max dB': 10,
+        'logo': 'docs/metadata/mesanovic.png',
+        'logo-small': 'docs/metadata/mesanovic.png',
+        'url': 'https://www.mesanovicmicrophones.com',
     },
     'Vendors-Pioneer': {
         'min hz': 20,
