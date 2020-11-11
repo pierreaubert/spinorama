@@ -1081,6 +1081,22 @@ speakers_info = {
             },
         },
     },
+    'JBL 308P Mark ii': {
+        'brand': 'JBL',
+        'model': '308P Mark ii',
+        'type': 'active',
+        'price': '500',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-308p-mkii-studio-monitor-review.17338/',
+            },
+        },
+    },
     'JBL 4319': {
         'brand': 'JBL',
         'model': '4319',
@@ -1934,8 +1950,13 @@ speakers_info = {
         'price': '16000',
         'shape': 'floorstanders',
         'amount': 'pair',
-        'default_measurement': 'vendor',
+        'default_measurement': 'asr',
         'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-f328be-speaker-review.17443/',
+            },
             'vendor': {
                 'origin': 'Vendors-Revel',
                 'format': 'webplotdigitizer',
