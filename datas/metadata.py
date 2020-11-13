@@ -363,6 +363,21 @@ speakers_info = {
             },
         },
     },
+    'Carmody S2000 DIY Speaker Kit': {
+        'brand': 'Carmody',
+        'model': 'S2000 DIY Speaker Kit',
+        'type': 'passive',
+        'shape': 'bookshelves',
+        'price': '240',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/carmody-s2000-diy-speaker-kit-reivew.17507/',
+            },
+        },
+    },
     'CommonSense Audio 5.6': {
         'brand': 'CommonSense Audio',
         'model': '5.6',
