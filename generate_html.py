@@ -77,7 +77,7 @@ def generate_speaker(mako, df, meta, site):
                     eq = {k: dfs[k] for k in eq_filter if k in dfs}
                 # get index.html filename
                 dirname = 'docs/' + speaker_name + '/'
-                if origin == 'ASR' or origin == 'Princeton' or origin == 'ErinsAudioCorner':
+                if origin == 'ASR' or origin == 'Princeton' or origin == 'ErinsAudioCorner' or origin == 'Misc':
                     dirname += origin
                 else:
                     dirname += meta[speaker_name]['brand']

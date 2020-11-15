@@ -363,6 +363,21 @@ speakers_info = {
             },
         },
     },
+    'Carmody S2000 DIY Speaker Kit': {
+        'brand': 'Carmody',
+        'model': 'S2000 DIY Speaker Kit',
+        'type': 'passive',
+        'shape': 'bookshelves',
+        'price': '240',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/carmody-s2000-diy-speaker-kit-reivew.17507/',
+            },
+        },
+    },
     'CommonSense Audio 5.6': {
         'brand': 'CommonSense Audio',
         'model': '5.6',
@@ -714,6 +729,22 @@ speakers_info = {
                 'origin': 'Princeton',
                 'format': 'princeton',
              },
+        },
+    },
+    'Genelec 1032A': {
+        'brand': 'Genelec',
+        'model': '1032A',
+        'type': 'active',
+        'price': '',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'misc',
+        'measurements': {
+            'misc': {
+                'origin': 'Misc',
+                'format': 'rewstextdump',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/genelec-1032a-measurements-including-spinorama.17491/',
+            },
         },
     },
     'Genelec 8010A': {
@@ -1078,6 +1109,22 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-and-control-1-pro-monitors-review.10811/',
+            },
+        },
+    },
+    'JBL 308P Mark ii': {
+        'brand': 'JBL',
+        'model': '308P Mark ii',
+        'type': 'active',
+        'price': '500',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-308p-mkii-studio-monitor-review.17338/',
             },
         },
     },
@@ -1934,8 +1981,13 @@ speakers_info = {
         'price': '16000',
         'shape': 'floorstanders',
         'amount': 'pair',
-        'default_measurement': 'vendor',
+        'default_measurement': 'asr',
         'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/revel-f328be-speaker-review.17443/',
+            },
             'vendor': {
                 'origin': 'Vendors-Revel',
                 'format': 'webplotdigitizer',
@@ -2448,6 +2500,15 @@ origins_info = {
         'logo': 'docs/metadata/eac.png',
         'logo-small': 'docs/metadata/eac.png',
         'url': 'https://www.erinsaudiocorner.com',
+    },
+    'Misc': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': -40,
+        'max dB': 10,
+        'logo': '',
+        'logo-small': '',
+        'url': '',
     },
     'Vendors-Apple': {
         'min hz': 20,

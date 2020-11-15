@@ -80,11 +80,19 @@ def sanity_check_default_measurement(name, speaker):
 
 
 def sanity_check_measurement(name, speaker, version, measurement):
-    if version[0:3] not in ('asr', 'pri', 'ven', 'har', 'eac'):
+    if version[0:3] not in ('asr', 'pri', 'ven', 'har', 'eac', 'mis'):
         logging.error('{0}: key {1} doesn\'t look correct'.format(name, version))
     for k, v in measurement.items():
-        if k not in ('origin', 'format', 'review', 'website'):
+        if k not in ('origin', 'format', 'review', 'website', 'misc'):
             logging.error('{0}: version {1} : {2} is not known'.format(name, version, k))
+        if k == 'origin' and \
+          (v not in ['ASR', 'Misc', 'ErinsAudioCorner', 'Princeton'] \
+           and v[0:8] != 'Vendors-'):
+            logging.error('{0}: origin {1} is not known'.format(name, v))
+        if k == 'format' and v not in ['klippel', 'princeton', 'webplotdigitizer', 'rewstextdump', 'splHVtxt']:
+            logging.error('{0}: format {1} is not known'.format(name, v))
+                
+                        
         
 
 def sanity_check_measurements(name, speaker):

@@ -13,6 +13,8 @@ from .load import graph_melt
 
 pd.set_option('display.max_rows', 1000)
 
+logger = logging.getLogger('spinorama')
+
 
 def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, version):
     filename = dirname + '/' + speaker_name
@@ -41,14 +43,14 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, version):
                 with tarfile.open(tarfilename, 'r|*') as tar:
                     for tarinfo in tar:
                         if tarinfo.isfile() and tarinfo.name in jsonfilename:
-                            logging.debug('Extracting: {0}'.format(tarinfo.name))
+                            logger.debug('Extracting: {0}'.format(tarinfo.name))
                             tar.extract(tarinfo, path=dirname+'/tmp', set_attrs=False)
                    
     except tarfile.ReadError as re:
-        logging.error('Tarfile {0}: {1}'.format(tarfilename, re))
+        logger.error('Tarfile {0}: {1}'.format(tarfilename, re))
     if jsonfilename is None:
         jsonfilename = filename + '.json'
-    logging.debug('Jsonfilename {0}'.format(jsonfilename))
+    logger.debug('Jsonfilename {0}'.format(jsonfilename))
     return jsonfilename
 
 
@@ -98,7 +100,7 @@ def parse_graph_freq_webplotdigitizer(filename):
                     if ref_f <= 20000 and ref_f > 0 and ref_db > -50 and ref_db < 200:
                         res.append([ref_f, ref_db, col['name']])
                     else:
-                        logging.info('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} db={:.1f} db_ref={:.1f} db_n={:.1f}'.format(fr, ref_f, frn, db, ref_db, dbn))
+                        logger.info('fr={:.2f} fr_ref={:.2f} fr_n={:.2f} db={:.1f} db_ref={:.1f} db_n={:.1f}'.format(fr, ref_f, frn, db, ref_db, dbn))
                         break
 
             # build dataframe
@@ -110,7 +112,7 @@ def parse_graph_freq_webplotdigitizer(filename):
             # print(df)
             return 'CEA2034', df 
     except IOError as e:
-        logging.error('Cannot not open: {0}'.format(e))
+        logger.error('Cannot not open: {0}'.format(e))
         return None, None
             
 
@@ -124,7 +126,7 @@ def parse_graphs_speaker_webplotdigitizer(speaker_path, speaker_brand, speaker_n
         spin_even = unify_freq(spin_uneven)
         spin = graph_melt(spin_even)
         if title != 'CEA2034':
-            logging.debug('title is {0}'.format(title))
+            logger.debug('title is {0}'.format(title))
             return spin
 
         if spin is not None:
@@ -139,61 +141,61 @@ def parse_graphs_speaker_webplotdigitizer(speaker_path, speaker_brand, speaker_n
                 sp_di_computed = lw.dB-sp.dB
                 sp_di = spin.loc[spin['Measurements'] == 'Sound Power DI'].reset_index(drop=True) 
                 if sp_di.shape[0] == 0:
-                    logging.debug('No Sound Power DI curve, computing one!')
+                    logger.debug('No Sound Power DI curve, computing one!')
                     df2 = pd.DataFrame({'Freq': on.Freq, 'dB': sp_di_computed, 'Measurements': 'Sound Power DI'})
                     spin = spin.append(df2).reset_index(drop=True)
                 else:
                     delta = np.mean(sp_di)-np.mean(sp_di_computed)
-                    logging.debug('Sound Power DI curve: removing {0}'.format(delta))
+                    logger.debug('Sound Power DI curve: removing {0}'.format(delta))
                     spin.loc[spin['Measurements'] == 'Sound Power DI', 'dB'] -= delta
 
                 # sp_di = spin.loc[spin['Measurements'] == 'Sound Power DI'].reset_index(drop=True)
-                logging.debug('Post treatment SP DI: shape={0} min={1} max={2}'.format(sp_di.shape, sp_di_computed.min(), sp_di_computed.max()))
+                logger.debug('Post treatment SP DI: shape={0} min={1} max={2}'.format(sp_di.shape, sp_di_computed.min(), sp_di_computed.max()))
                 # print(sp_di)
             else:
-                logging.debug('Shape LW={0} SP={1}'.format(lw.shape, sp.shape))
+                logger.debug('Shape LW={0} SP={1}'.format(lw.shape, sp.shape))
 
             if lw.shape[0] != 0 and er.shape[0] != 0:
                 er_di_computed = lw.dB-er.dB
                 er_di = spin.loc[spin['Measurements'] == 'Early Reflections DI'].reset_index(drop=True) 
                 if er_di.shape[0] == 0:
-                    logging.debug('No Early Reflections DI curve!')
+                    logger.debug('No Early Reflections DI curve!')
                     df2 = pd.DataFrame({'Freq': on.Freq, 'dB': er_di_computed, 'Measurements': 'Early Reflections DI'})
                     spin = spin.append(df2).reset_index(drop=True)
                 else:
                     delta = np.mean(er_di)-np.mean(er_di_computed)
-                    logging.debug('Early Reflections DI curve: removing {0}'.format(delta))
+                    logger.debug('Early Reflections DI curve: removing {0}'.format(delta))
                     spin.loc[spin['Measurements'] == 'Early Reflections DI', 'dB'] -= delta
 
                 # er_di = spin.loc[spin['Measurements'] == 'Early Reflections DI'].reset_index(drop=True)
-                logging.debug('Post treatment ER DI: shape={0} min={1} max={2}'.format(er_di.shape, er_di_computed.min(), er_di_computed.max()))
+                logger.debug('Post treatment ER DI: shape={0} min={1} max={2}'.format(er_di.shape, er_di_computed.min(), er_di_computed.max()))
                 # print(er_di)
             else:
-                logging.debug('Shape LW={0} ER={1}'.format(lw.shape, er.shape))
+                logger.debug('Shape LW={0} ER={1}'.format(lw.shape, er.shape))
 
             di_offset = spin.loc[spin['Measurements'] == 'DI offset'].reset_index(drop=True) 
             if di_offset.shape[0] == 0:
-                logging.debug('No DI offset curve!')
+                logger.debug('No DI offset curve!')
                 df2 = pd.DataFrame({'Freq': on.Freq, 'dB': 0, 'Measurements': 'DI offset'})
                 spin = spin.append(df2).reset_index(drop=True)
                 
-            logging.debug('Shape ON {0} LW {1} ER {2} SP {3}'.format(on.shape, lw.shape, er.shape, sp.shape))
+            logger.debug('Shape ON {0} LW {1} ER {2} SP {3}'.format(on.shape, lw.shape, er.shape, sp.shape))
             if lw.shape[0] != 0 and er.shape[0] != 0 and sp.shape[0] != 0:
                 eir = estimated_inroom(lw, er, sp)
-                logging.debug('eir {0}'.format(eir.shape))
+                logger.debug('eir {0}'.format(eir.shape))
                 # print(eir)
                 dfs['Estimated In-Room Response'] = graph_melt(eir)
             else:
-                logging.debug('Shape LW={0} ER={1} SP={2}'.format(lw.shape, er.shape, sp.shape))
+                logger.debug('Shape LW={0} ER={1} SP={2}'.format(lw.shape, er.shape, sp.shape))
 
             # add spin (at the end because we could have modified DI curves
             dfs[title] = spin
 
             if on.isna().values.any():
-                logging.error('On Axis has NaN values')
+                logger.error('On Axis has NaN values')
 
     except FileNotFoundError:
-        logging.info('Speaker: {0} Not found: {1}'.format(speaker_name, jsonfilename))
+        logger.info('Speaker: {0} Not found: {1}'.format(speaker_name, jsonfilename))
     return dfs
         
     

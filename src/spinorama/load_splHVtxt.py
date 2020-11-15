@@ -8,6 +8,9 @@ from scipy.io import loadmat
 from .load import filter_graphs
 
 
+logger = logging.getLogger('spinorama')
+
+
 def parse_graph_splHVtxt(dirpath, orientation):
     df = pd.DataFrame()
 
@@ -28,7 +31,7 @@ def parse_graph_splHVtxt(dirpath, orientation):
         if int(angle) < 0:
             symmetry = False
 
-    logging.info('Symmetrie is {}'.format(symmetry))
+    logger.info('Symmetrie is {}'.format(symmetry))
 
     dfs = []
     for file in files:
@@ -49,7 +52,7 @@ def parse_graph_splHVtxt(dirpath, orientation):
         else:
             angle += '°'
 
-        logging.debug('read file "{}" for angle "{}"'.format(file, angle))
+        logger.debug('read file "{}" for angle "{}"'.format(file, angle))
         with open(file, 'r') as fd:
             lines = fd.readlines()
             for l in lines:
@@ -72,7 +75,7 @@ def parse_graph_splHVtxt(dirpath, orientation):
                         dbs.append(float(db))
                     continue
 
-                logging.warning('unkown file format len words {} for line {}'.format(len(words), l))
+                logger.warning('unkown file format len words {} for line {}'.format(len(words), l))
 
         if angle == 'On Axis':
             dfs.append(pd.DataFrame({'Freq': freqs, angle: dbs}))
@@ -106,7 +109,7 @@ def parse_graphs_speaker_splHVtxt(speaker_path, speaker_brand, speaker_name, ver
     else:
         dirname = '{0}/ErinsAudioCorner/{1}/{2}'.format(speaker_path, speaker_name, version)
 
-    logging.debug('scanning path {}'.format(dirname))
+    logger.debug('scanning path {}'.format(dirname))
 
     h_spl = parse_graph_splHVtxt(dirname, 'H')
     v_spl = parse_graph_splHVtxt(dirname, 'V')

@@ -5,6 +5,10 @@ import numpy as np
 import pandas as pd
 from .filter_iir import Biquad
 
+
+logger = logging.getLogger('spinorama')
+
+
 def parse_impulse_rews(filename, srate):
     impulse = []
     try:
@@ -22,7 +26,7 @@ def parse_impulse_rews(filename, srate):
 
 
     except FileNotFoundError:
-        logging.error('Loading filter failed file {0} not found'.format(filename))
+        logger.error('Loading filter failed file {0} not found'.format(filename))
     return impulse
         
     
