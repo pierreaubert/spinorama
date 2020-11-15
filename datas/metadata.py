@@ -731,6 +731,22 @@ speakers_info = {
              },
         },
     },
+    'Genelec 1032A': {
+        'brand': 'Genelec',
+        'model': '1032A',
+        'type': 'active',
+        'price': '',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'misc',
+        'measurements': {
+            'misc': {
+                'origin': 'Misc',
+                'format': 'rewstextdump',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/genelec-1032a-measurements-including-spinorama.17491/',
+            },
+        },
+    },
     'Genelec 8010A': {
         'brand': 'Genelec',
         'model': '8010A',
@@ -2484,6 +2500,15 @@ origins_info = {
         'logo': 'docs/metadata/eac.png',
         'logo-small': 'docs/metadata/eac.png',
         'url': 'https://www.erinsaudiocorner.com',
+    },
+    'Misc': {
+        'min hz': 20,
+        'max hz': 20000,
+        'min dB': -40,
+        'max dB': 10,
+        'logo': '',
+        'logo-small': '',
+        'url': '',
     },
     'Vendors-Apple': {
         'min hz': 20,
