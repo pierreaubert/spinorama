@@ -49,7 +49,14 @@ from src.spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
 from src.spinorama.speaker_print import print_graphs, print_compare
 from src.spinorama.graph import graph_params_default
 
+logger = logging.getLogger('spinorama')
+
+def setup_logger(worker):
+    logger = logging.getLogger('spinorama')
+    logger.setLevel(logging.DEBUG)
+
 # will eat all your CPUs
+ray.worker.global_worker.run_function_on_all_workers(setup_logger)
 ray.init()
 
 
@@ -57,9 +64,10 @@ def get_speaker_list(speakerpath : str):
     speakers = []
     asr = glob.glob(speakerpath+'/ASR/*')
     vendors = glob.glob(speakerpath+'/Vendors/*/*')
+    misc = glob.glob(speakerpath+'/Misc/*/*')
     princeton = glob.glob(speakerpath+'/Princeton/*')
     ear = glob.glob(speakerpath+'/ErinsAudioCorner/*')
-    dirs = asr + vendors + princeton + ear
+    dirs = asr + vendors + princeton + ear + misc
     for d in dirs:
         if os.path.isdir(d) and d not in ('assets', 'compare', 'stats', 'pictures', 'logos'):
             speakers.append(os.path.basename(d))
@@ -67,7 +75,7 @@ def get_speaker_list(speakerpath : str):
 
 
 def queue_measurement(brand, speaker, mformat, morigin, mversion):
-    id_df = parse_graphs_speaker.remote('./datas', brand, speaker, mformat, mversion)
+    id_df = parse_graphs_speaker.remote('./datas', brand, speaker, mformat, morigin, mversion)
     id_eq = parse_eq_speaker.remote('./datas', speaker, id_df)
     force = False
     ptype = None
@@ -83,27 +91,27 @@ def queue_speakers(speakerlist, metadata : dict, filters: dict) -> dict:
     count = 0
     for speaker in speakerlist:
         if 'speaker' in filters and speaker != filters['speaker']:
-            logging.debug('skipping {}'.format(speaker))
+            logger.debug('skipping {}'.format(speaker))
             continue
         ray_ids[speaker] = {}
         for mversion, measurement in metadata[speaker]['measurements'].items():
             # mversion looks like asr and asr_eq
             if 'version' in filters and not (mversion == filters['version'] or mversion != '{}_eq'.format(filters['version'])):
-                logging.debug('skipping {}/{}'.format(speaker, mversion))
+                logger.debug('skipping {}/{}'.format(speaker, mversion))
                 continue
             # filter on format (klippel, princeton, ...)
             mformat = measurement['format']
             if 'format' in filters and mformat != filters['format']:
-                logging.debug('skipping {}/{}/{}'.format(speaker, mformat, mversion))
+                logger.debug('skipping {}/{}/{}'.format(speaker, mformat, mversion))
                 continue
             # filter on origin (ASR, princeton, ...)
             morigin = measurement['origin']
             if 'origin' in filters and morigin != filters['origin']:
-                logging.debug('skipping {}/{}/{}/{}'.format(speaker, morigin, mformat, mversion))
+                logger.debug('skipping {}/{}/{}/{}'.format(speaker, morigin, mformat, mversion))
                 continue
             # TODO(add filter on brand)
             brand = metadata[speaker]['brand']
-            logging.debug('queing {}/{}/{}/{}'.format(speaker, morigin, mformat, mversion))
+            logger.debug('queing {}/{}/{}/{}'.format(speaker, morigin, mformat, mversion))
             ray_ids[speaker][mversion] = queue_measurement(brand, speaker, mformat, morigin, mversion)
             count += 1
     print('Queued {0} speakers {1} measurements'.format(len(speakerlist), count))
@@ -128,7 +136,7 @@ def compute(speakerkist, metadata, ray_ids):
         num_returns = min(len(ids), 16)
         ready_ids, remaining_ids = ray.wait(ids, num_returns=num_returns)
 
-        logging.info('State: {0} ready IDs {1} remainings IDs {2} Total IDs {3} Done'.format(len(ready_ids), len(remaining_ids), len(ids), len(done_ids)))
+        logger.info('State: {0} ready IDs {1} remainings IDs {2} Total IDs {3} Done'.format(len(ready_ids), len(remaining_ids), len(ids), len(done_ids)))
         
         for speaker in speakerlist:
             speaker_key = speaker #.translate({ord(ch) : '_' for ch in '-.;/\' '})
@@ -146,30 +154,30 @@ def compute(speakerkist, metadata, ray_ids):
                 current_id = ray_ids[speaker][m_version][0]
                 if current_id in ready_ids:
                     df[speaker_key][m_origin][m_version_key] = ray.get(current_id)
-                    logging.debug('Getting df done for {0} / {1} / {2}'.format(speaker, m_origin, m_version))
+                    logger.debug('Getting df done for {0} / {1} / {2}'.format(speaker, m_origin, m_version))
                     done_ids[current_id] = True
                 
                 m_version_eq = '{0}_eq'.format(m_version_key)
                 current_id = ray_ids[speaker][m_version][1]
                 if current_id in eq_ids:
-                    logging.debug('Getting eq done for {0} / {1} / {2}'.format(speaker, m_version_eq, m_version))
+                    logger.debug('Getting eq done for {0} / {1} / {2}'.format(speaker, m_version_eq, m_version))
                     eq = ray.get(current_id)
                     if eq is not None:
                         df[speaker_key][m_origin][m_version_eq] = eq
-                        logging.debug('Getting preamp eq done for {0} / {1} / {2}'.format(speaker, m_version_eq, m_version))
+                        logger.debug('Getting preamp eq done for {0} / {1} / {2}'.format(speaker, m_version_eq, m_version))
                         if 'preamp_gain' in eq:
                             df[speaker_key][m_origin][m_version_eq]['preamp_gain'] = eq['preamp_gain']
                     done_ids[current_id] = True
 
                 current_id = ray_ids[speaker][m_version][2]
                 if current_id in g1_ids:
-                    logging.debug('Getting graph done for {0} / {1} / {2}'.format(speaker, m_version, m_origin))
+                    logger.debug('Getting graph done for {0} / {1} / {2}'.format(speaker, m_version, m_origin))
                     ray.get(current_id)
                     done_ids[current_id] = True
 
                 current_id = ray_ids[speaker][m_version][3]
                 if current_id in g2_ids:
-                    logging.debug('Getting graph done for {0} / {1} / {2}'.format(speaker, m_version_eq, m_origin))
+                    logger.debug('Getting graph done for {0} / {1} / {2}'.format(speaker, m_version_eq, m_origin))
                     ray.get(current_id)
                     done_ids[current_id] = True
 
@@ -209,15 +217,12 @@ if __name__ == '__main__':
         if check_level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
             level = check_level
 
+    fh = logging.FileHandler('debug_graphs.log')
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
     if level is not None:
-        logging.basicConfig(
-            format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-            datefmt='%Y-%m-%d:%H:%M:%S',
-            level=level)
-    else:
-        logging.basicConfig(
-            format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-            datefmt='%Y-%m-%d:%H:%M:%S')
+        logger.setLevel(level)
 
     filters = {}
     for filter in ('speaker', 'origin', 'version'):

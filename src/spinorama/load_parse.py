@@ -16,6 +16,9 @@ from .load_splHVtxt import parse_graphs_speaker_splHVtxt
 from .filter_peq import peq_apply_measurements, peq_preamp_gain
 
 
+logger = logging.getLogger('spinorama')
+
+
 @ray.remote(num_cpus=1)
 def parse_eq_speaker(speaker_path : str, speaker_name : str, df_ref : dict) -> dict:
     iirname = '{0}/eq/{1}/iir.txt'.format(speaker_path, speaker_name)
@@ -38,7 +41,7 @@ def parse_eq_speaker(speaker_path : str, speaker_name : str, df_ref : dict) -> d
 
 
 @ray.remote(num_cpus=1)
-def parse_graphs_speaker(speaker_path : str, speaker_brand : str, speaker_name : str, mformat='klippel', mversion='default') -> dict:
+def parse_graphs_speaker(speaker_path : str, speaker_brand : str, speaker_name : str, mformat='klippel', morigin='ASR', mversion='default') -> dict:
     df = None
     if mformat == 'klippel':
         df = parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mversion)
@@ -49,17 +52,17 @@ def parse_graphs_speaker(speaker_path : str, speaker_brand : str, speaker_name :
     elif mformat == 'splHVtxt':
         df = parse_graphs_speaker_splHVtxt(speaker_path, speaker_brand, speaker_name, mversion)
     elif mformat == 'rewstextdump':
-        df = parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name, mversion)
+        df = parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name, morigin, mversion)
     else:
-        logging.fatal('Format {:s} is unkown'.format(mformat))
+        logger.fatal('Format {:s} is unkown'.format(mformat))
         sys.exit(1)
 
     if df is None:
-        logging.warning('Parsing failed for {0} {1} {2} {3} {4}'.format(speaker_path, speaker_brand, speaker_name, mformat, mversion))
+        logger.warning('Parsing failed for {0} {1} {2} {3} {4}'.format(speaker_path, speaker_brand, speaker_name, mformat, mversion))
         return None
     df_normalized = load_normalize(df)
     if df_normalized is None:
-        logging.warning('Normalisation failed for {0} {1} {2} {3} {4}'.format(speaker_path, speaker_brand, speaker_name, mformat, mversion))
+        logger.warning('Normalisation failed for {0} {1} {2} {3} {4}'.format(speaker_path, speaker_brand, speaker_name, mformat, mversion))
         return None
     return df_normalized
 

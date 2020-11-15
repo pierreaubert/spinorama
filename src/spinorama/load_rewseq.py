@@ -8,6 +8,9 @@ from .filter_iir import Biquad
 # TODO(pierre): max rgain and max Q should be in parameters
 # https://www.roomeqwizard.com/help/help_en-GB/html/eqfilters.html
 
+logger = logging.getLogger('spinorama')
+
+
 def parse_eq_iir_rews(filename, srate):
     peq = []
     try:

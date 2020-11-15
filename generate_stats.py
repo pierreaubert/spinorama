@@ -78,7 +78,7 @@ def print_eq(speakers, txt_format):
             pref_eq = measurement.get('pref_rating_eq', None)
             if pref is not None and pref_eq is not None:
                 name = i
-                if key not in ('asr', 'princeton', 'eac', 'vendor'):
+                if key not in ('asr', 'princeton', 'eac', 'vendor', 'misc'):
                     name = '{} ({})'.format(i, key)
                 results.append((name, pref, pref_eq, eq))
 

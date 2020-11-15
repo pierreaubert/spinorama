@@ -7,6 +7,9 @@ from scipy.io import loadmat
 from .load import filter_graphs
 
 
+logger = logging.getLogger('spinorama')
+
+
 def parse_graph_freq_princeton_mat(mat, suffix):
     """ Suffix can be either H or V """
     ir_name = 'IR_{:1s}'.format(suffix)
@@ -82,10 +85,10 @@ def parse_graphs_speaker_princeton(speaker_path, speaker_brand, speaker_name, ve
         elif d[-9:] == '_V_IR.mat':
             v_file = d
     if h_file is None or v_file is None:
-        logging.info('Couldn\'t find Horizontal and Vertical IR files for speaker {:s}'.format(speaker_name))
-        logging.info('Looking in directory {:s}'.format(matfilename))
+        logger.info('Couldn\'t find Horizontal and Vertical IR files for speaker {:s}'.format(speaker_name))
+        logger.info('Looking in directory {:s}'.format(matfilename))
         for d in dirpath:
-            logging.info('Found file {:s}'.format(d))
+            logger.info('Found file {:s}'.format(d))
         return None
 
     h_spl = parse_graph_princeton(h_file, 'H')

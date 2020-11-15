@@ -8,6 +8,8 @@ locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 removequote = str.maketrans({'"': None, '\n': ''})
 
+logger = logging.getLogger('spinorama')
+
 
 def parse_graph_freq_klippel(filename):
     title = None
@@ -75,11 +77,11 @@ def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mver
             csvfilename = '{0}/ASR/{1}/{3}/{2}.txt'.format(speaker_path, speaker_name, csv, mversion)
         try:
             title, df = parse_graph_freq_klippel(csvfilename)
-            logging.debug('Speaker: {0} (ASR)  Loaded: {1}'.format(speaker_name, csvfilename))
+            logger.debug('Speaker: {0} (ASR)  Loaded: {1}'.format(speaker_name, csvfilename))
             dfs[title + '_unmelted'] = df
             dfs[title] = graph_melt(df)
         except FileNotFoundError:
-            logging.info('Speaker: {0} (ASR) Not found: {1}'.format(speaker_name, csvfilename))
+            logger.info('Speaker: {0} (ASR) Not found: {1}'.format(speaker_name, csvfilename))
     return dfs
 
 
