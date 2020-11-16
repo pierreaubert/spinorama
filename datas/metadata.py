@@ -503,6 +503,21 @@ speakers_info = {
              },
         },
     },
+    'Dynaudio Excite X14': {
+        'brand': 'Dynaudio',
+        'model': 'Excite X14',
+        'type': 'passive',
+        'price': '1500',
+        'shape': 'bookshelves',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/dynaudio-x14-speaker-review.17569/',
+             },
+        },
+    },
     'Dynaudio Xeo 3': {
         'brand': 'Dynaudio',
         'model': 'Xeo 3',
