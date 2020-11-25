@@ -304,6 +304,21 @@ speakers_info = {
             },
         },
     },
+    'Boston Acoustics A 25': {
+        'brand': 'Boston Acoustics',
+        'model': 'A 25',
+        'type': 'passive',
+        'shape': 'bookshelves',
+        'price': '180',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/boston-acoustics-a-25-speaker-review.17625/',
+            },
+        },
+    },
     'Bowers & Wilkins 802N': {
         'brand': 'Bowers & Wilkins',
         'model': '802N',
@@ -375,6 +390,22 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/carmody-s2000-diy-speaker-kit-reivew.17507/',
+            },
+        },
+    },
+    'Celuaris Purify SPK5 prototype': {
+        'brand': 'Celuaris',
+        'model': 'Purify SPK5 prototype',
+        'type': 'passive',
+        'price': '2000',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/purifi-spk5-speaker-review-prototype.17806/',
             },
         },
     },
@@ -1617,6 +1648,22 @@ speakers_info = {
             },
         },
     },
+    'Neumann KH 310A': {
+        'brand': 'Neumann',
+        'model': 'KH 310A',
+        'type': 'active',
+        'price': '4400',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-310a-review-powered-monitor.17723/',
+            },
+        },
+    },
     'NHT Pro M-00': {
         'brand': 'NHT',
         'model': 'Pro M-00',
@@ -1662,6 +1709,22 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ocean-way-hr5-studio-monitor-review.13925',
+            },
+        },
+    },
+    'Paradigm Monitor SE Atom': {
+        'brand': 'Paradigm',
+        'model': 'Monitor SE Atom',
+        'type': 'passive',
+        'price': '239',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/paradigm-monitor-se-atom-speaker-review.17837/',
             },
         },
     },
