@@ -981,6 +981,22 @@ speakers_info = {
             },
         },
     },
+    'Infinity R253': {
+        'brand': 'Infinity',
+        'model': 'R253',
+        'type': 'passive',
+        'price': '200',
+        'shape': 'bookshelves',
+        'amount': 'floorstanders',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/infinity-reference-253-review-speaker.17923/'
+            },
+        },
+    },
     'Infinity Entra One': {
         'brand': 'Infinity',
         'model': 'Entra One',
