@@ -24,7 +24,7 @@ def parse_eq_speaker(speaker_path : str, speaker_name : str, df_ref : dict) -> d
     iirname = '{0}/eq/{1}/iir.txt'.format(speaker_path, speaker_name)
     if df_ref is not None and os.path.isfile(iirname):
         srate = 48000
-        logging.debug('found IIR eq {0}: applying to {1}'.format(iirname, speaker_name))
+        logger.debug('found IIR eq {0}: applying to {1}'.format(iirname, speaker_name))
         iir = parse_eq_iir_rews(iirname, srate)
         if 'SPL Horizontal_unmelted' in df_ref.keys() and 'SPL Vertical_unmelted' in df_ref.keys():
             h_spl = df_ref['SPL Horizontal_unmelted']
@@ -36,7 +36,7 @@ def parse_eq_speaker(speaker_path : str, speaker_name : str, df_ref : dict) -> d
             # original_mean = df_ref.get('CEA2034_original_mean', None)
             # return load_normalize(df_eq, original_mean)
             return df_eq
-    logging.debug('no EQ for {}/{}'.format(speaker_path, speaker_name))
+    logger.debug('no EQ for {}/{}'.format(speaker_path, speaker_name))
     return None
 
 

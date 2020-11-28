@@ -4,6 +4,7 @@ import logging
 import math
 import numpy as np
 import pandas as pd
+from urllib.parse import quote
 from .compute_directivity import directivity_matrix
 from .compute_normalize import resample
 from .graph_contour import compute_contour, compute_contour_smoothed
@@ -666,3 +667,19 @@ def graph_summary(speaker_name, speaker_summary, params):
         y=alt.Y('y', title='', axis=None),
         text='summary:N'
     ).properties(width=params['width'], height=params['height'])
+
+
+def graph_image(speaker_name, params):
+    url = 'https://pierreaubert.github.io/spinorama/pictures/{0}.jpg'.format(quote(speaker_name))
+    source = pd.DataFrame.from_records([{'x': 0, 'y': 0.0, 'img': url}])
+    return alt.Chart(source).mark_image(
+        width=params['width']-40,
+        height=params['height']-40,
+    ).encode(
+        x=alt.X('x', axis=None),
+        y=alt.Y('y', axis=None),
+        url='img',
+    ).properties(
+        width=params['width'],
+        height=params['height'],
+    )

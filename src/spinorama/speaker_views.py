@@ -20,7 +20,11 @@ from .speaker_display import \
     display_radar_vertical, \
     display_isoband_horizontal, \
     display_isoband_vertical, \
-    display_summary
+    display_summary, \
+    display_pict
+
+
+logger = logging.getLogger('spinorama')
 
 
 SPACING = 20
@@ -39,11 +43,11 @@ def scale_params(params, factor):
     new_params['width'] = new_width
     for check in ('xmin', 'xmax'):
         if check not in new_params.keys():
-            logging.error('scale_param {0} is not a key'.format(check))
+            logger.error('scale_param {0} is not a key'.format(check))
     if new_params['xmin'] == new_params['xmax']:
-        logging.error('scale_param x-range is empty')
+        logger.error('scale_param x-range is empty')
     if 'ymin' in new_params.keys() and 'ymax' in new_params.keys() and new_params['ymin'] == new_params['ymax']:
-        logging.error('scale_param y-range is empty')
+        logger.error('scale_param y-range is empty')
     return new_params
 
 
@@ -53,10 +57,13 @@ def template_compact(df, params, speaker, origin, key):
     # full size
     params_summary = copy.deepcopy(params)
     params_spin = copy.deepcopy(params)
-    params_summary['width'] = 500
-    params_spin['width'] -= 500
+    params_pict = copy.deepcopy(params)
+    params_summary['width'] = 600
+    params_pict['width'] = 400
+    params_spin['width'] -= params_summary['width']+params_pict['width']+2*SPACING+LEGEND
     summary = display_summary(df, params_summary, speaker, origin, key)
     spinorama = display_spinorama(df, params_spin)
+    pict = display_pict(speaker, params_pict)
     # side by side
     params2v2 = copy.deepcopy(params2)
     params2v2['width'] -= LEGEND
@@ -72,14 +79,15 @@ def template_compact(df, params, speaker, origin, key):
     vspl = display_spl_vertical(df, params2)
     # min value for contours & friends
     params2['xmin'] = max(100, params2['xmin'])
+    params2v2['xmin'] = params2['xmin']
     # horizontal contour / isoband / radar
     hcontour = display_contour_smoothed_horizontal(df, params2)
     hisoband = display_isoband_horizontal(df, params2)
-    hradar = display_radar_horizontal(df, params2)
+    hradar = display_radar_horizontal(df, params2v2)
     # vertical contour / isoband / radar
     vcontour = display_contour_smoothed_vertical(df, params2)
     visoband = display_isoband_vertical(df, params2)
-    vradar = display_radar_vertical(df, params2)
+    vradar = display_radar_vertical(df, params2v2)
     # build the chart
     # print('Status {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11}'.format(
     #     spinorama is None, onaxis is None, inroom is None, ereflex is None, vreflex is None, hreflex is None,
@@ -91,8 +99,10 @@ def template_compact(df, params, speaker, origin, key):
             title = '{0} ({1})'.format(speaker, key)
         else:
             title = speaker
-        if summary is not None:
-            chart &= alt.hconcat(summary.properties(title=speaker), spinorama.properties(title='CEA2034'))
+        if summary is not None and pict is not None:
+            chart &= alt.hconcat(summary.properties(title=speaker),
+                                 spinorama.properties(title='CEA2034'),
+                                 pict)
         else:
             chart &= alt.hconcat(spinorama.properties(title='CEA2034'))
 
@@ -173,21 +183,21 @@ def template_panorama(df, params, speaker, origin, key):
                              hreflex.properties(title='Horizontal Reflections'),
                              vreflex.properties(title='Vertical Reflections'))
     else:
-        logging.info('Panaroma: ereflex={0} hreflex={1} vreflex={2}'.format(
+        logger.info('Panaroma: ereflex={0} hreflex={1} vreflex={2}'.format(
             ereflex is not None, hreflex is not None, vreflex is not None))
     if hspl is not None and hcontour is not None and hradar is not None:
         chart &= alt.hconcat(hcontour.properties(title='Horizontal SPL'),
                              hradar.properties(title='Horizontal SPL'),
                              hspl.properties(title='Horizontal SPL'))
     else:
-        logging.info('Panaroma: hspl={0} hcontour={1} hradar={2}'.format(
+        logger.info('Panaroma: hspl={0} hcontour={1} hradar={2}'.format(
             hspl is not None, hcontour is not None, hradar is not None))
     if vspl is not None and vcontour is not None and vradar is not None:
         chart &= alt.hconcat(vcontour.properties(title='Vertical SPL'),
                              vradar.properties(title='Vertical SPL'),
                              vspl.properties(title='Vertical SPL'))
     else:
-        logging.info('Panaroma: vspl={0} vcontour={1} vradar={2}'.format(
+        logger.info('Panaroma: vspl={0} vcontour={1} vradar={2}'.format(
             vspl is not None, vcontour is not None, vradar is not None))
     return chart.configure_legend(
         orient='top'
@@ -226,7 +236,7 @@ def template_vertical(df, params):
 
 def template_sidebyside_eq(df_ref, df_eq, params, speaker, origin, key):
     params2 = scale_params(params, 2)
-    logging.debug('params width {0} height {1} xmin {2} xmax {3} ymin {4} ymax {5}'\
+    logger.debug('params width {0} height {1} xmin {2} xmax {3} ymin {4} ymax {5}'\
                   .format(params2['width'], params2['height'], params2['xmin'], params2['xmax'], params2['ymin'], params2['ymax']))
     # ref
     summary_ref = display_summary(df_ref, params2, speaker, origin, key)
@@ -284,7 +294,7 @@ def template_sidebyside_eq(df_ref, df_eq, params, speaker, origin, key):
             ('hradar', hradar_ref, hradar_eq),
             ('vradar', vradar_ref, vradar_eq),
         ]:
-        logging.debug('concatenating {0} for {1}'.format(title, speaker))
+        logger.debug('concatenating {0} for {1}'.format(title, speaker))
         if g_ref is not None:
             if g_eq is not None:
                 chart &= alt.hconcat(g_ref.properties(title=speaker), g_eq.properties(title='with EQ')).resolve_scale(color='independent')

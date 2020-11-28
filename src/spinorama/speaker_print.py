@@ -19,6 +19,9 @@ from .speaker_views import template_compact, template_panorama, template_sidebys
 from .graph import graph_params_default, contour_params_default, radar_params_default
 
 
+logger = logging.getLogger('spinorama')
+
+
 def print_graph(speaker, origin, key, title, chart, force, fileext):
     updated = 0
     if chart is not None:
@@ -55,9 +58,9 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
                         save(chart, filename)
                         updated += 1
                     except Exception as e:
-                        logging.error('Got unkown error {0} for {1}'.format(e, filename))
+                        logger.error('Got unkown error {0} for {1}'.format(e, filename))
     else:
-        logging.debug('Chart is None for {:s} {:s} {:s} {:s}'.format(speaker, origin, key, title))
+        logger.debug('Chart is None for {:s} {:s} {:s} {:s}'.format(speaker, origin, key, title))
     return updated
 
 
@@ -79,7 +82,7 @@ def print_graphs(df: pd.DataFrame,
     params['xmax'] = origins_info[origin]['max hz']
     params['ymin'] = origins_info[origin]['min dB']
     params['ymax'] = origins_info[origin]['max dB']
-    logging.debug('Graph configured with {0}'.format(params))
+    logger.debug('Graph configured with {0}'.format(params))
     
     graphs = {}
     graphs['CEA2034'] = display_spinorama(df, params)
@@ -190,7 +193,7 @@ def print_compare_graph(df, graph_filter, filedir):
             print('Saving {0}'.format(filename))
             graph.save(filename)
         except Exception as e:
-            logging.error('Got unkown error {0} for {1}'.format(e, filename))
+            logger.error('Got unkown error {0} for {1}'.format(e, filename))
 
 
 def print_compare(df, force_print=False, filter_file_ext=None):
