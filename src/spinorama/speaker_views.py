@@ -76,14 +76,15 @@ def template_compact(df, params, speaker, origin, key):
     vspl = display_spl_vertical(df, params2)
     # min value for contours & friends
     params2['xmin'] = max(100, params2['xmin'])
+    params2v2['xmin'] = params2['xmin']
     # horizontal contour / isoband / radar
     hcontour = display_contour_smoothed_horizontal(df, params2)
     hisoband = display_isoband_horizontal(df, params2)
-    hradar = display_radar_horizontal(df, params2)
+    hradar = display_radar_horizontal(df, params2v2)
     # vertical contour / isoband / radar
     vcontour = display_contour_smoothed_vertical(df, params2)
     visoband = display_isoband_vertical(df, params2)
-    vradar = display_radar_vertical(df, params2)
+    vradar = display_radar_vertical(df, params2v2)
     # build the chart
     # print('Status {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11}'.format(
     #     spinorama is None, onaxis is None, inroom is None, ereflex is None, vreflex is None, hreflex is None,
