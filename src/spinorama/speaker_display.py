@@ -11,7 +11,8 @@ from .graph import graph_freq, graph_contour_smoothed, graph_radar, graph_spinor
     graph_params_default, contour_params_default, radar_params_default, \
     graph_contour, graph_directivity_matrix,\
     graph_compare_freq, graph_compare_cea2034, graph_compare_freq_regression, \
-    graph_regression, graph_isoband, isoband_params_default, graph_summary
+    graph_regression, graph_isoband, isoband_params_default, graph_summary, \
+    graph_image
 
 
 alt.data_transformers.disable_max_rows()
@@ -357,5 +358,6 @@ def display_summary(df, params, speaker, origin, key):
         return None
     
 
-
-    
+def display_pict(speaker, params):
+    return graph_image(speaker, params)
+    return None

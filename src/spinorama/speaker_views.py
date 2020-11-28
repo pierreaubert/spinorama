@@ -20,7 +20,8 @@ from .speaker_display import \
     display_radar_vertical, \
     display_isoband_horizontal, \
     display_isoband_vertical, \
-    display_summary
+    display_summary, \
+    display_pict
 
 
 SPACING = 20
@@ -53,10 +54,13 @@ def template_compact(df, params, speaker, origin, key):
     # full size
     params_summary = copy.deepcopy(params)
     params_spin = copy.deepcopy(params)
-    params_summary['width'] = 500
-    params_spin['width'] -= 500
+    params_pict = copy.deepcopy(params)
+    params_summary['width'] = 600
+    params_pict['width'] = 400
+    params_spin['width'] -= params_summary['width']+params_pict['width']+2*SPACING+LEGEND
     summary = display_summary(df, params_summary, speaker, origin, key)
     spinorama = display_spinorama(df, params_spin)
+    pict = display_pict(speaker, params_pict)
     # side by side
     params2v2 = copy.deepcopy(params2)
     params2v2['width'] -= LEGEND
@@ -91,8 +95,10 @@ def template_compact(df, params, speaker, origin, key):
             title = '{0} ({1})'.format(speaker, key)
         else:
             title = speaker
-        if summary is not None:
-            chart &= alt.hconcat(summary.properties(title=speaker), spinorama.properties(title='CEA2034'))
+        if summary is not None and pict is not None:
+            chart &= alt.hconcat(summary.properties(title=speaker),
+                                 spinorama.properties(title='CEA2034'),
+                                 pict)
         else:
             chart &= alt.hconcat(spinorama.properties(title='CEA2034'))
 
