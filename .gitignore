@@ -34,3 +34,6 @@ htmlcov
 spinorama-venv
 cache.*.json
 cache.*.h5
+*.pyc
+*.log
+
