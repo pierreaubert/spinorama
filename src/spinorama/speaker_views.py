@@ -24,6 +24,9 @@ from .speaker_display import \
     display_pict
 
 
+logger = logging.getLogger('spinorama')
+
+
 SPACING = 20
 LEGEND = 60
 
@@ -40,11 +43,11 @@ def scale_params(params, factor):
     new_params['width'] = new_width
     for check in ('xmin', 'xmax'):
         if check not in new_params.keys():
-            logging.error('scale_param {0} is not a key'.format(check))
+            logger.error('scale_param {0} is not a key'.format(check))
     if new_params['xmin'] == new_params['xmax']:
-        logging.error('scale_param x-range is empty')
+        logger.error('scale_param x-range is empty')
     if 'ymin' in new_params.keys() and 'ymax' in new_params.keys() and new_params['ymin'] == new_params['ymax']:
-        logging.error('scale_param y-range is empty')
+        logger.error('scale_param y-range is empty')
     return new_params
 
 
@@ -180,21 +183,21 @@ def template_panorama(df, params, speaker, origin, key):
                              hreflex.properties(title='Horizontal Reflections'),
                              vreflex.properties(title='Vertical Reflections'))
     else:
-        logging.info('Panaroma: ereflex={0} hreflex={1} vreflex={2}'.format(
+        logger.info('Panaroma: ereflex={0} hreflex={1} vreflex={2}'.format(
             ereflex is not None, hreflex is not None, vreflex is not None))
     if hspl is not None and hcontour is not None and hradar is not None:
         chart &= alt.hconcat(hcontour.properties(title='Horizontal SPL'),
                              hradar.properties(title='Horizontal SPL'),
                              hspl.properties(title='Horizontal SPL'))
     else:
-        logging.info('Panaroma: hspl={0} hcontour={1} hradar={2}'.format(
+        logger.info('Panaroma: hspl={0} hcontour={1} hradar={2}'.format(
             hspl is not None, hcontour is not None, hradar is not None))
     if vspl is not None and vcontour is not None and vradar is not None:
         chart &= alt.hconcat(vcontour.properties(title='Vertical SPL'),
                              vradar.properties(title='Vertical SPL'),
                              vspl.properties(title='Vertical SPL'))
     else:
-        logging.info('Panaroma: vspl={0} vcontour={1} vradar={2}'.format(
+        logger.info('Panaroma: vspl={0} vcontour={1} vradar={2}'.format(
             vspl is not None, vcontour is not None, vradar is not None))
     return chart.configure_legend(
         orient='top'
@@ -233,7 +236,7 @@ def template_vertical(df, params):
 
 def template_sidebyside_eq(df_ref, df_eq, params, speaker, origin, key):
     params2 = scale_params(params, 2)
-    logging.debug('params width {0} height {1} xmin {2} xmax {3} ymin {4} ymax {5}'\
+    logger.debug('params width {0} height {1} xmin {2} xmax {3} ymin {4} ymax {5}'\
                   .format(params2['width'], params2['height'], params2['xmin'], params2['xmax'], params2['ymin'], params2['ymax']))
     # ref
     summary_ref = display_summary(df_ref, params2, speaker, origin, key)
@@ -291,7 +294,7 @@ def template_sidebyside_eq(df_ref, df_eq, params, speaker, origin, key):
             ('hradar', hradar_ref, hradar_eq),
             ('vradar', vradar_ref, vradar_eq),
         ]:
-        logging.debug('concatenating {0} for {1}'.format(title, speaker))
+        logger.debug('concatenating {0} for {1}'.format(title, speaker))
         if g_ref is not None:
             if g_eq is not None:
                 chart &= alt.hconcat(g_ref.properties(title=speaker), g_eq.properties(title='with EQ')).resolve_scale(color='independent')
