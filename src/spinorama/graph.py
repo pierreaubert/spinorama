@@ -313,11 +313,11 @@ def graph_isoband(df, isoband_params):
 
     logging.debug('w {0} h {1} fq=[{2},{3}]'.format(graph_width, graph_height, freq_min, freq_max))
 
-    def transform_log(x):
+    def transform_log(x, y):
         return 6*np.log10(x)*graph_width/800
 
-    def transform_radian(x):
-       return 1.325*x/180*math.pi*graph_height/360
+    def transform_radian(x, y):
+       return 1.325*y/180*math.pi*graph_height/360
 
     df_iso = find_isobands(af, am, az.T, bands, transform_log, transform_radian)
     color_legend = ['[{0}, {1}]'.format(bands[i], bands[i+1]) for i in range(0, len(bands)-1)] + ['>{0}'.format(bands[-1])]
