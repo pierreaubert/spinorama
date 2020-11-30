@@ -1381,6 +1381,22 @@ speakers_info = {
             },
         },
     },
+    'Kali LP-6': {
+        'brand': 'Kali',
+        'model': 'LP-6',
+        'type': 'active',
+        'price': '300',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/kali-lp-6-review-studio-monitor.17978/',
+            },
+        },
+    },
     'KEF Q100': {
         'brand': 'KEF',
         'model': 'Q100',
