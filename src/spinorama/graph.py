@@ -314,10 +314,10 @@ def graph_isoband(df, isoband_params):
     logging.debug('w {0} h {1} fq=[{2},{3}]'.format(graph_width, graph_height, freq_min, freq_max))
 
     def transform_log(x, y):
-        return 6*np.log10(x)*graph_width/800
+        return np.log10(x)*graph_width/172
 
     def transform_radian(x, y):
-       return 1.325*y/180*math.pi*graph_height/360
+       return y/180*math.pi*graph_height/360
 
     df_iso = find_isobands(af, am, az.T, bands, transform_log, transform_radian)
     color_legend = ['[{0}, {1}]'.format(bands[i], bands[i+1]) for i in range(0, len(bands)-1)] + ['>{0}'.format(bands[-1])]
@@ -670,7 +670,8 @@ def graph_summary(speaker_name, speaker_summary, params):
 
 
 def graph_image(speaker_name, params):
-    url = 'https://pierreaubert.github.io/spinorama/pictures/{0}.jpg'.format(quote(speaker_name))
+    # url = 'https://pierreaubert.github.io/spinorama/pictures/{0}.jpg'.format(quote(speaker_name))
+    url = 'file://./docs/pictures/{0}.jpg'.format(speaker_name)
     source = pd.DataFrame.from_records([{'x': 0, 'y': 0.0, 'img': url}])
     return alt.Chart(source).mark_image(
         width=params['width']-40,
