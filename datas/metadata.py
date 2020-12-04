@@ -870,6 +870,22 @@ speakers_info = {
             },
         },
     },
+    'Genelec G2': {
+        'brand': 'Genelec',
+        'model': 'G2',
+        'type': 'active',
+        'price': '',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'misc',
+        'measurements': {
+            'misc': {
+                'origin': 'Misc',
+                'format': 'rewstextdump',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/genelec-g2-8020-measurements.18076/#post-588571',
+            },
+        },
+    },
     'Gradient Helsinki 1.5': {
         'brand': 'Gradient',
         'model': 'Helsinki 1.5',
@@ -988,9 +1004,14 @@ speakers_info = {
         'price': '200',
         'shape': 'bookshelves',
         'amount': 'floorstanders',
-        'default_measurement' : 'asr',
+        'default_measurement' : 'asr-v2-20201202',
         'measurements': {
-            'asr': {
+            'asr-v1-20201126': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/infinity-reference-253-review-speaker.17923/'
+            },
+            'asr-v2-202012026': {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/infinity-reference-253-review-speaker.17923/'
