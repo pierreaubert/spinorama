@@ -28,11 +28,11 @@ speakers_info = {
             'asr': {
                 'origin': 'ASR',
                 'format': 'klippel',
-                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/adam-t5v-review-studio-monitor.18122/'.
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/adam-t5v-review-studio-monitor.18122/',
             },
         },
     },
-        'Adam T8V': {
+    'Adam T8V': {
         'brand': 'Adam',
         'model': 'T8V',
         'type': 'active',
@@ -1027,7 +1027,7 @@ speakers_info = {
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/infinity-reference-253-review-speaker.17923/'
             },
-            'asr-v2-202012026': {
+            'asr-v2-20201202': {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/infinity-reference-253-review-speaker.17923/'
