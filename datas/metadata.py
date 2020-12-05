@@ -16,7 +16,23 @@ speakers_info = {
             },
         },
     },
-    'Adam T8V': {
+    'Adam T5V': {
+        'brand': 'Adam',
+        'model': 'T5V',
+        'type': 'active',
+        'price': '400',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/adam-t5v-review-studio-monitor.18122/'.
+            },
+        },
+    },
+        'Adam T8V': {
         'brand': 'Adam',
         'model': 'T8V',
         'type': 'active',
