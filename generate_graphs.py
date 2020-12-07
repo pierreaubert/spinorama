@@ -233,7 +233,7 @@ if __name__ == '__main__':
         try:
             address = ipaddress.ip_address(ip)
             ip = check_ip
-        except AddressValueError:
+        except ipaddress.AddressValueError:
             logger.error('ip {} is not valid!'.format(ip))
             sys.exit(1)
 
