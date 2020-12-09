@@ -394,6 +394,22 @@ speakers_info = {
             },
         },
     },
+    'Canton Plus GLX.3': {
+        'brand': 'Canton',
+        'model': 'Plus GLX.3',
+        'type': 'passive',
+        'shape': 'bookshelves',
+        'price': '170',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/canton-plus-glx-3-review-speaker.18203/',
+            },
+        },
+    },
     'Carmody S2000 DIY Speaker Kit': {
         'brand': 'Carmody',
         'model': 'S2000 DIY Speaker Kit',
@@ -401,6 +417,7 @@ speakers_info = {
         'shape': 'bookshelves',
         'price': '240',
         'default_measurement': 'asr',
+        'amount': 'pair',
         'measurements': {
             'asr': {
                 'origin': 'ASR',
