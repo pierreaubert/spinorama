@@ -1164,6 +1164,22 @@ speakers_info = {
             },
         },
     },
+    'JBL Stage A130': {
+        'brand': 'JBL',
+        'model': 'Stage A130',
+        'type': 'passive',
+        'price': '200',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-stage-a130-review-speaker.18260/',
+            },
+        },
+    },
     'JBL 104': {
         'brand': 'JBL',
         'model': '104',
