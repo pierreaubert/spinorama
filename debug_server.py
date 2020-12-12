@@ -12,6 +12,7 @@ Options:
   --ip=<ip>     ip to bind, default is localhost
   --port=<port> port to listen to, default is 8000
 """
+import sys
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from docopt import docopt
 
@@ -40,5 +41,10 @@ if __name__ == '__main__':
     if args['--port'] is not None:
         port = int(args['--port'])
 
-    httpd = HTTPServer((ip, port), CORSRequestHandler)
-    httpd.serve_forever()
+    try:
+        httpd = HTTPServer((ip, port), CORSRequestHandler)
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print('... Bye')
+        sys.exit(0)
+    sys.exit(1)
