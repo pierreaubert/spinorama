@@ -21,7 +21,7 @@
       return text.replace(' ', '%20').replace('&', '%26')
 
   def space2dash(text):
-      return text.replace(' ', '-').replace("'", '-').replace(".", '-').replace("+",'-').replace('&','-')
+      return text.replace(' ', '-').replace("'", '-').replace('.', '-').replace('+','-').replace('&','-')
 
   def removeVendors(text):
       return text.replace('Vendors-','').replace(' ', '%20').replace('&', '%26')
@@ -29,6 +29,48 @@
 
 <div class="section">
 
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <label class="label">Filters:</label>
+    </div>
+    <div class="field-body">
+      <div class="field is-grouped">
+	<div class="control">
+	  <div class="select is-primary">
+	    <select id="selectReviewer">
+	      <option value="">Reviewer</option>
+	      <option value="ASR">ASR</option>
+	      <option value="EAC">ErinsAudioCorner</option>
+	      <option value="Princeton">Princeton</option>
+	      <option value="Vendor">Vendor</option>
+	      <option value="Misc">Others</option>
+	    </select>
+	  </div>
+	</div>
+	<div class="control">
+	  <div class="select is-primary">
+	    <select id="selectShape">
+	      <option value="">Shape</option>
+	      <option value="bookshelves">Bookshelves</option>
+	      <option value="floorstanders">Floorstanders</option>
+	      <option value="center">Center</option>
+	      <option value="surround">Surround</option>
+	      <option value="omnidirectional">Omnidirectional</option>
+	    </select>
+	  </div>
+	</div>
+	<div class="control">
+	  <div class="select is-primary">
+	    <select id="selectPower">
+	      <option value="">Powered?</option>
+	      <option value="active">Active</option>
+	      <option value="passive">Passive</option>
+	    </select>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </div>
   <div class="field is-grouped has-addons">
     <div class="control is-expanded">
       <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl asr center..." autofocus />
@@ -37,7 +79,7 @@
       <a class="button is-info">Search</a>
     </div>
   </div>
-
+      
   <!-- Speakers -->
   <div class="searchresults">
     <div class="columns is-multiline is-1">
@@ -50,43 +92,43 @@
 	    </figure>
 	  </div>
 	  <header class="card-header">
-	    <p class="card-header-title">${meta[speaker_name]['brand']}<br/>${meta[speaker_name]['model']}</p>
+	    <p class="card-header-title">${meta[speaker_name]["brand"]}<br/>${meta[speaker_name]["model"]}</p>
 <%
   compute = None
-  if 'default_measurement' in meta[speaker_name]:
-      default =  meta[speaker_name]['default_measurement']
-      if default in meta[speaker_name]['measurements'].keys():
-         compute = meta[speaker_name]['measurements'][default]
+  if "default_measurement" in meta[speaker_name]:
+      default =  meta[speaker_name]["default_measurement"]
+      if default in meta[speaker_name]["measurements"].keys():
+         compute = meta[speaker_name]["measurements"][default]
 %>
-	  % if compute is not None and 'pref_rating' in compute.keys():
-	    <p class="card-header-title">(${compute['pref_rating'].get('pref_score', '')})
+	  % if compute is not None and "pref_rating" in compute.keys():
+	    <p class="card-header-title">(${compute["pref_rating"].get("pref_score", "")})
 	      &nbsp;
-	      ${compute['scaled_pref_rating'].get('scaled_pref_score')}/100
+	      ${compute["scaled_pref_rating"].get("scaled_pref_score")}/100
 	    </p>
 	  % endif
 	  </header>
     	  <div class="card-content">
 	    <div class="content is-small">
               % if compute is not None:
-	      %   if 'pref_rating' in compute.keys():
-  	            <p>Bass extension: <b>${compute['pref_rating'].get('lfx_hz', '')}</b>Hz at -6dB</p>
-                    % if 'scaled_lfx_hz' in compute['scaled_pref_rating']:
-    	              <progress class="progress is-small is-info" value="${compute['scaled_pref_rating']['scaled_lfx_hz']}" max="100"></progress>
+	      %   if "pref_rating" in compute.keys():
+  	            <p>Bass extension: <b>${compute["pref_rating"].get("lfx_hz", "")}</b>Hz at -6dB</p>
+                    % if "scaled_lfx_hz" in compute["scaled_pref_rating"]:
+    	              <progress class="progress is-small is-info" value="${compute["scaled_pref_rating"]["scaled_lfx_hz"]}" max="100"></progress>
 	            % endif
-	            <p>Flatness: <b>&plusmn;${compute['estimates']['ref_band']}</b>dB ~ ${compute['estimates']['ref_from']}-${compute['estimates']['ref_to']}Hz</p>
-	            <progress class="progress is-small is-success" value="${compute['scaled_pref_rating']['scaled_flatness']}" max="100"></progress>
-	            <p>Smoothness (PIR): <b>${compute['pref_rating']['sm_pred_in_room']}</b></p>
-	            <progress class="progress is-small is-warning" value="${compute['scaled_pref_rating']['scaled_sm_pred_in_room']}" max="100"></progress>
+	            <p>Flatness: <b>&plusmn;${compute["estimates"]["ref_band"]}</b>dB ~ ${compute["estimates"]["ref_from"]}-${compute["estimates"]["ref_to"]}Hz</p>
+	            <progress class="progress is-small is-success" value="${compute["scaled_pref_rating"]["scaled_flatness"]}" max="100"></progress>
+	            <p>Smoothness (PIR): <b>${compute["pref_rating"]["sm_pred_in_room"]}</b></p>
+	            <progress class="progress is-small is-warning" value="${compute["scaled_pref_rating"]["scaled_sm_pred_in_room"]}" max="100"></progress>
 	      %   else:
-  	      %     if 'estimates' in compute:
-	      %       if 'ref_3dB' in compute['estimates'].keys():
-	                <p>${compute['estimates']['ref_3dB']}Hz at -3dB<br/></p>
+  	      %     if "estimates" in compute:
+	      %       if "ref_3dB" in compute["estimates"].keys():
+	                <p>${compute["estimates"]["ref_3dB"]}Hz at -3dB<br/></p>
 	      %       endif
-	      %       if 'ref_6dB' in compute['estimates'].keys():
-	                <p>${compute['estimates']['ref_6dB']}Hz at -6dB<br/></p>
+	      %       if "ref_6dB" in compute["estimates"].keys():
+	                <p>${compute["estimates"]["ref_6dB"]}Hz at -6dB<br/></p>
 	      %       endif
-	      %       if 'ref_band' in compute['estimates'].keys():
-	                <p>&plusmn;${compute['estimates']['ref_band']}dB ~ ${compute['estimates']['ref_from']}-${compute['estimates']['ref_to']}Hz</p>
+	      %       if "ref_band" in compute["estimates"].keys():
+	                <p>&plusmn;${compute["estimates"]["ref_band"]}dB ~ ${compute["estimates"]["ref_from"]}-${compute["estimates"]["ref_to"]}Hz</p>
 	      %       endif
 	      %     endif
 	      %   endif
@@ -94,8 +136,8 @@
 	    </div>
 	  </div>
 	  <footer class="card-footer">
-	    % for v, m in meta[speaker_name]['measurements'].items():
-	    <a class="card-footer-item" href="${speaker_name|space2url}/${m['origin']|removeVendors}/index_${v}.html">${m['origin']}</a>
+	    % for v, m in meta[speaker_name]["measurements"].items():
+	    <a class="card-footer-item" href="${speaker_name|space2url}/${m["origin"]|removeVendors}/index_${v}.html">${m["origin"]}</a>
 	    % endfor
 	  </footer>
 	</div>
