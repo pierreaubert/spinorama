@@ -129,7 +129,7 @@ $(document).ready(function () {
 						}
 					}
 				}
-				const id = (meta.brand + "-" + meta.model).replace(/[".+& ]/g, "-");
+				const id = (meta.brand + "-" + meta.model).replace(/['.+& ]/g, "-");
 				if (show) {
 					$("#" + id).show();
 				} else {
@@ -145,3 +145,4 @@ $(document).ready(function () {
 	});
 
 });
+
