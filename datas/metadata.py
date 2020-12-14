@@ -1000,6 +1000,22 @@ speakers_info = {
             },
         },
     },
+    'IK Multimedia iLoud MTM': {
+        'brand': 'IK Multimedia',
+        'model': 'iLoud MTM',
+        'type': 'passive',
+        'price': '300',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ik-multimedia-iloud-mtm-review-active-monitor.18347/',
+            },
+        },
+    },
     'iKey-Audio M-808V2': {
         'brand': 'iKey-Audio',
         'model': 'M-808V2',
