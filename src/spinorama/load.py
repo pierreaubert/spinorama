@@ -13,8 +13,8 @@ def graph_melt(df : pd.DataFrame):
 def load_normalize(df, ref_mean=None):
     # normalize all melted graphs
     dfc = {}
+    mean = ref_mean
     if 'CEA2034' in df:
-        mean = ref_mean
         if ref_mean == None:
             mean = normalize_mean(df['CEA2034'])
             dfc['CEA2034_original_mean'] = mean
@@ -28,7 +28,6 @@ def load_normalize(df, ref_mean=None):
         logging.debug('mean for normalisation {0}'.format(mean))
         return dfc
     elif 'On Axis' in df:
-        mean = ref_mean
         if ref_mean == None:
             mean = normalize_mean(df['On Axis'])
             dfc['On Axis_original_mean'] = mean
@@ -40,7 +39,6 @@ def load_normalize(df, ref_mean=None):
         logging.debug('mean for normalisation {0}'.format(mean))
         return dfc
     elif ref_mean is not None:
-        mean = ref_mean
         for graph in df.keys():
             if graph.replace('_unmelted', '') != graph:
                 dfc[graph] = df[graph]
@@ -60,9 +58,15 @@ def filter_graphs(speaker_name, h_spl, v_spl):
     if h_spl is not None:
         dfs['SPL Horizontal_unmelted'] = h_spl
         dfs['SPL Horizontal'] = graph_melt(h_spl)
+    else:
+        logging.error('h_spl is None')
+        return None
     if v_spl is not None:
         dfs['SPL Vertical_unmelted'] = v_spl
         dfs['SPL Vertical'] = graph_melt(v_spl)
+    else:
+        logging.error('v_spl is None')
+        return None
     # add computed graphs
     table = [['Early Reflections', early_reflections],
              ['Horizontal Reflections', horizontal_reflections],
@@ -77,6 +81,19 @@ def filter_graphs(speaker_name, h_spl, v_spl):
             if df is not None:
                 dfs[title+'_unmelted'] = df
                 dfs[title] = graph_melt(df)
+                # MAYBE ----------------------------------------------------------------------
+                # if title == 'CEA2034':
+                #    try:
+                #        for key in ('Early Reflections DI', 'Sound Power DI', 'DI offset'):
+                #            if key in df.keys():
+                #                dfs[key] = df[key]
+                #                # dfs[key+'_unmelted'] = graph_melt(df[key])
+                #            else:
+                #                logging.error('Key {} not in CEA2034'.format(key))
+                #    except KeyError as ike:
+                #        logging.warning('{0} computation failed with key:{1} for speaker{2:s}'.format(key, ike, speaker_name))
+                #                
+                # MAYBE ----------------------------------------------------------------------
             else:
                 logging.info('{0} computation is None for speaker{1:s}'.format(title, speaker_name))
         except KeyError as ke:
