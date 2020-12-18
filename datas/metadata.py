@@ -1260,6 +1260,22 @@ speakers_info = {
             },
         },
     },
+    'JBL 306P Mark ii': {
+        'brand': 'JBL',
+        'model': '306P Mark ii',
+        'type': 'active',
+        'price': '150',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-306p-mk-ii-review-studio-monitor.18505/',
+            },
+        },
+    },
     'JBL 308P Mark ii': {
         'brand': 'JBL',
         'model': '308P Mark ii',
