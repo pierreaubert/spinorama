@@ -40,9 +40,9 @@
 	    <select id="selectReviewer">
 	      <option value="">Reviewer</option>
 	      <option value="ASR">ASR</option>
-	      <option value="EAC">ErinsAudioCorner</option>
+	      <option value="ErinsAudioCorner">ErinsAudioCorner</option>
 	      <option value="Princeton">Princeton</option>
-	      <option value="Vendor">Vendor</option>
+	      <option value="Vendors">Vendors</option>
 	      <option value="Misc">Others</option>
 	    </select>
 	  </div>
@@ -65,6 +65,14 @@
 	      <option value="">Powered?</option>
 	      <option value="active">Active</option>
 	      <option value="passive">Passive</option>
+	    </select>
+	  </div>
+	</div>
+	<div class="control">
+	  <div class="select is-primary">
+	    <select id="selectBrand">
+	      <option value="">Brand</option>
+	      <%include file="brands.html"/>
 	    </select>
 	  </div>
 	</div>
