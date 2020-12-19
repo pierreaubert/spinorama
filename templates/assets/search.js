@@ -26,6 +26,10 @@ $(document).ready(function () {
 	    power: "",
 	    brand: "",
 	};
+
+	var sorter = {
+	    by: "",
+	}
 	
 	function selectDispatch(filter) {
 	    var keywords = $("#searchInput").val();
@@ -58,6 +62,12 @@ $(document).ready(function () {
 	$("#selectBrand").on("change", function () {
 	    filter["brand"] = this.value;
 	    selectDispatch(filter);
+	});
+
+	$("#sortBy").on("change", function () {
+	    sorter["by"] = this.value;
+	    selectDispatch(filter);
+	    sortBy(sorter);
 	});
 	
 	$("#searchInput").on("keyup", function () {
@@ -154,6 +164,15 @@ $(document).ready(function () {
 		}
 		
 	    }
+	    resultdiv.show();
+	}
+
+	function sortBy(sorter) {
+	    // if (sorter["by"] !== "") {
+	    // resultdiv = Object.fromEntries(
+	    // Object.entries(resultdiv).sort(([,a],[,b]) => a-b)
+	    // );
+	    // }
 	    resultdiv.show();
 	}
 	
