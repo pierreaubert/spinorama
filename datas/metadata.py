@@ -1830,6 +1830,22 @@ speakers_info = {
             },
         },
     },
+    'NHT Super Zero 2.1': {
+        'brand': 'NHT',
+        'model': 'Super Zero 2.1',
+        'type': 'passive',
+        'price': '250',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/nht-super-zero-2-1-review-bookshelf-speaker.18643/',
+            },
+        },
+    },
     'Ocean Way HR5': {
         'brand': 'Ocean Way',
         'model': 'HR5',
