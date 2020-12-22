@@ -1,6 +1,7 @@
 echo "Starting Generation"
 export PYTHONPATH=src:.
 rm -fr docs
+rm -f cache.parse_all_speakers.h5
 mkdir docs docs/assets docs/pictures
 # generates smaller pictures
 ./minimise_pictures.sh
