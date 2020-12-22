@@ -4,7 +4,7 @@
 This library provides an easy way to view, compare or analyse speakers data. This can help you take informed
 decision when buying a speaker instead of relying on commercial information or internet buzz.
 
-## Jump to the [gallery](https://pierreaubert.github.com/spinorama) of all (150+) speakers measurements.
+## Jump to the [gallery](https://pierreaubert.github.com/spinorama) of all (200+) speakers measurements.
 
 # What is a spinorama set of graphs?
 
@@ -56,6 +56,11 @@ coming soon:
 
 ## Linux or Mac user
 
+First install a few packages:
+```
+apt install imagemagick
+```
+
 ### Using python3, ipython and Jupyter-Lab
 
 ```
@@ -78,7 +83,7 @@ pip3 install -r requirements.txt
 pip3 install -r requirements-tests.txt 
 ```
 
-For saving picture, you need either chromedriver or a set of nodejs packages
+For saving picture, you need either chromedriver or a set of nodejs packages. I recommend the later.
 Linux:
 ```
 apt install chromedriver
@@ -87,7 +92,7 @@ Mac:
 ```
 brew install chromedriver
 ```
-Both:
+or on both platform
 ```
 npm install vega-lite vega-cli canvas
 ```
