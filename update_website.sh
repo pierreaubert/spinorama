@@ -1,3 +1,4 @@
+#!/bin/sh
 TARGET=$HOME/src/pierreaubert.github.io/spinorama
 echo "Update starts"
 export PYTHONPATH=src:.
@@ -18,6 +19,7 @@ rm -f docs/compare/*.json
 rm -f docs/stats/*.json
 ./generate_stats.py
 # generate website
+sh ./update_brands.sh
 ./generate_html.py
 # copy 
 echo "Sync"

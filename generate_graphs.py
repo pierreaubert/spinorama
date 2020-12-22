@@ -19,7 +19,8 @@
 """Usage:
 generate_graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
   [--force] [--type=<ext>] [--log-level=<level>]\
-  [--origin=<origin>]  [--speaker=<speaker>] [--version=<version>] [--brand=<brand>]
+  [--origin=<origin>]  [--speaker=<speaker>] [--version=<version>] [--brand=<brand>]\
+  [--ip=<ip>] [--port=<port>]                                         
 
 Options:
   -h|--help         display usage()
@@ -32,10 +33,14 @@ Options:
   --brand=<brand> filter by brand
   --speaker=<speaker> filter by speaker
   --version=<version> filter by measurement
+  --ip=<ip>         ip of dashboard to track execution, default to localhost/127.0.0.1
+  --port=<port>     port for the dashbboard, default to 8265    
 """
 import glob
+import ipaddress
 import logging
 import os
+import socket
 import sys
 import time
 
@@ -48,16 +53,6 @@ import datas.metadata as metadata
 from src.spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
 from src.spinorama.speaker_print import print_graphs, print_compare
 from src.spinorama.graph import graph_params_default
-
-logger = logging.getLogger('spinorama')
-
-def setup_logger(worker):
-    logger = logging.getLogger('spinorama')
-    logger.setLevel(logging.DEBUG)
-
-# will eat all your CPUs
-ray.worker.global_worker.run_function_on_all_workers(setup_logger)
-ray.init()
 
 
 def get_speaker_list(speakerpath : str):
@@ -189,7 +184,7 @@ def compute(speakerkist, metadata, ray_ids):
 
     
 if __name__ == '__main__':
-    args = docopt(__doc__, version='generate_graphs.py version 1.21', options_first=True)
+    args = docopt(__doc__, version='generate_graphs.py version 1.22', options_first=True)
 
     # TODO remove it and replace by iterating over metadatas
     speakerlist = get_speaker_list('./datas')
@@ -217,12 +212,39 @@ if __name__ == '__main__':
         if check_level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
             level = check_level
 
+    logger = logging.getLogger('spinorama')
     fh = logging.FileHandler('debug_graphs.log')
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     fh.setFormatter(formatter)
     logger.addHandler(fh)
     if level is not None:
         logger.setLevel(level)
+
+    def setup_logger(worker):
+        logger = logging.getLogger('spinorama')
+        if level is not None:
+            logger.setLevel(level)
+
+    # will eat all your CPUs
+    ip = '127.0.0.1'
+    port = 8265
+    if 'ip' in args and args['ip'] is not None:
+        check_ip = args['ip']
+        try:
+            address = ipaddress.ip_address(ip)
+            ip = check_ip
+        except ipaddress.AddressValueError:
+            logger.error('ip {} is not valid!'.format(ip))
+            sys.exit(1)
+
+    if 'port' in args and args['port'] is not None:
+        check_port = args['port']
+        port = check_port
+
+    ray.worker.global_worker.run_function_on_all_workers(setup_logger)
+    # address is the one from the ray server
+    # ray.init(address='{}:{}'.format(ip, port))
+    ray.init()
 
     filters = {}
     for filter in ('speaker', 'origin', 'version'):
@@ -235,5 +257,5 @@ if __name__ == '__main__':
     if len(filters.keys()) == 0:
         fl.save('cache.parse_all_speakers.h5', df)
 
-
-        
+    ray.shutdown()
+    sys.exit(0)

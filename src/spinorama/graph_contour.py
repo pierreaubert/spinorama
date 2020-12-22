@@ -15,40 +15,31 @@ def normalize1(dfu):
     dfm['On Axis'] = 0
     return dfm
 
+
 def normalize2(dfu):
     dfm = dfu.copy()
     for c in dfu.columns:
         if c != 'Freq' and c != 'On Axis':
             dfm[c] -= dfu['On Axis']
+        if c == '180°':
+            dfm.insert(1, '-180°', dfu['180°']-dfu['On Axis'])
     dfm['On Axis'] = 0
     return dfm
+
 
 def compute_contour(dfu):
     # normalize dB values wrt on axis
     dfm = normalize2(dfu)
 
-    # get a list of sorted columns
+    # get a list of columns
     vrange = []
-    for c in dfu.columns:
+    for c in dfm.columns:
         if c != 'Freq' and c != 'On Axis':
             angle = int(c[:-1])
             vrange.append(angle)
         if c == 'On Axis':
             vrange.append(0)
 
-    # reorder from -90 to +270 and not -180 to 180 to be closer to other plots
-    def a2v(angle):
-        if angle == 'Freq':
-            return -1000
-        elif angle == 'On Axis':
-            return 0
-        iangle = int(angle[:-1])
-        if iangle <-90:
-            return iangle+270
-        return iangle
-        
-    dfu = dfu.reindex(columns=sorted(dfu.columns, key=lambda a: a2v(a)))
-    # print(dfu.keys())
     # melt
     dfm = graph_melt(dfm)
     # compute numbers of measurements
@@ -57,11 +48,6 @@ def compute_contour(dfu):
     logging.debug('unique={:d} nf={:d}'.format(nm,nf))
     # index grid on a log scale log 2 ±= 0.3
     hrange = np.logspace(1.0+math.log10(2), 4.0+math.log10(2), nf)
-    # print(vrange)
-    # sort data per experiments (not usefull for DataFrame but for 2d array)
-    # anglemin = np.array(vrange).min()/10
-    # perm = [int(vrange[i]/10-anglemin) for i in range(0, len(vrange))]
-    # pvrange = [vrange[perm[i]] for i in range(0,len(vrange))]
     # 3d mesh
     af, am = np.meshgrid(hrange, vrange)
     # since it is melted generate slices

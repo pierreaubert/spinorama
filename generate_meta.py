@@ -90,7 +90,8 @@ def add_scores(df):
         logging.info('Processing {0}'.format(speaker_name))
         for origin, measurements in speaker_data.items():
             for key, dfs in measurements.items():
-                if 'CEA2034' not in dfs.keys():
+                if dfs is None or 'CEA2034' not in dfs.keys():
+                    logging.debug('skipping add_score no spinorama for {0}'.format(speaker_name))
                     continue
 
                 spin = dfs['CEA2034']
@@ -158,7 +159,7 @@ def add_scores(df):
         logging.info('Normalize data for {0}'.format(speaker_name))
         for origin, measurements in speaker_data.items():
             for version, measurement in measurements.items():
-                if 'CEA2034' not in measurement.keys():
+                if measurement is None or 'CEA2034' not in measurement.keys():
                     logging.debug('skipping normalization no spinorama for {0}'.format(speaker_name))
                     continue
 

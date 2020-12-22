@@ -232,12 +232,19 @@ def display_compare(df, graph_filter, graph_params=graph_params_default):
 
     try:
         source = pd.concat([
-            augment(resample(df[speaker][origin][key][graph_filter], 1000), # max 1000 Freq points to minimise space
-                    '{0} - {1} - {2}'.format(speaker, origin, key))
+            augment(
+                resample(
+                    df[speaker][origin][key][graph_filter], 1000), # max 1000 Freq points to minimise space
+                    '{0} - {1} - {2}'.format(speaker, origin, key)
+            ) 
             for speaker in df.keys()
                 for origin in df[speaker].keys()
                     for key in df[speaker][origin].keys()
-                            if graph_filter in df[speaker][origin][key] and 'CEA2034'in df[speaker][origin][key]
+                        if df is not None and
+                           df[speaker] is not None and
+                           df[speaker][origin] is not None and
+                           df[speaker][origin][key] is not None and
+                           graph_filter in df[speaker][origin][key]
         ])
 
         speaker1 = 'KEF LS50 - ASR'

@@ -9,9 +9,13 @@ from .graph_pp import pps
 Triangle = collections.namedtuple("Triangle", "v1 v2 v3")
 Edge = collections.namedtuple("Edge", "e1 e2")
 
-# from src.spinorama.contour import find_isobands
-def transform_id(x):
+
+def transform_id_x(x, y):
     return x
+
+
+def transform_id_y(x, y):
+    return y
 
 
 def cross_point(e1, e2, z, z_target):
@@ -116,7 +120,7 @@ def triangle2band(triangle, z, z_low, z_high):
     return polygon
 
 
-def find_isoband(grid_x, grid_y, grid_z, z_low, z_high, transform_x, transform_y):
+def find_isoband(grid_x, grid_y, grid_z, z_low, z_high, transform_x, transform_y, wrap_x, wrap_y):
     # find iso band on a x,y grid where z is the elevation
     # z_low and z_high define the boundaries of the band
     gx = grid_x[-1]
@@ -141,6 +145,24 @@ def find_isoband(grid_x, grid_y, grid_z, z_low, z_high, transform_x, transform_y
                 continue
             triangles.append(Triangle((x1,y1), (x2,y1), (x2,y2)))
             triangles.append(Triangle((x1,y1), (x1,y2), (x2,y2)))
+    if wrap_x:
+        x1 = gx[0]
+        x2 = gx[-1]
+        for iy in range(0, len(gy)-1):
+            y1 = gy[iy]
+            y2 = gy[iy+1]
+            triangles.append(Triangle((x1,y1), (x2,y1), (x2,y2)))
+            triangles.append(Triangle((x1,y1), (x1,y2), (x2,y2)))
+    if wrap_y:
+        y1 = gy[0]
+        y2 = gy[-1]
+        print(y1, y2)
+        for ix in range(0, len(gx)-1):
+            x1 = gx[ix]
+            x2 = gx[ix+1]
+            triangles.append(Triangle((x1,y1), (x2,y1), (x2,y2)))
+            triangles.append(Triangle((x1,y1), (x1,y2), (x2,y2)))
+            
 
     # print('Triangles range X=[{0}, {1}] Y=[{2}, {3}]'.format(x_min, x_max, y_min, y_max))
     elevation = {}
@@ -153,8 +175,8 @@ def find_isoband(grid_x, grid_y, grid_z, z_low, z_high, transform_x, transform_y
         band = triangle2band(triangle, elevation, z_low, z_high)
         if band is not None and len(band) > 0:
             transform_band = \
-              [[transform_x(p[0]), transform_y(p[1]), z_high+10000] for p in band] + \
-              [[transform_x(band[0][0]), transform_y(band[0][1]), z_high+10000]]
+              [[transform_x(p[0], p[1]), transform_y(p[0], p[1]), z_high+10000] for p in band] + \
+              [[transform_x(band[0][0], band[0][1]), transform_y(band[0][0], band[0][1]), z_high+10000]]
             isoband.append(transform_band)
             
     #print('debug: z_low={0} z_high={1} isoband={2}'.format(z_low, z_high, pps(isoband)))
@@ -164,7 +186,7 @@ def find_isoband(grid_x, grid_y, grid_z, z_low, z_high, transform_x, transform_y
     return isoband
 
 
-def find_isobands(grid_x, grid_y, grid_z, z_values, transform_x, transform_y):
+def find_isobands(grid_x, grid_y, grid_z, z_values, transform_x, transform_y, wrap_x=False, wrap_y=False):
     # find iso bands on a x,y grid where z is the elevation, z_values define the boundaries of the bands
     # return data in geojson to please altair
     z_colors  = ['#5c77a5', '#dc842a', '#c85857', '#89b5b1', '#71a152', '#bab0ac', '#e15759', '#b07aa1', '#76b7b2', '#ff9da7']
@@ -174,7 +196,7 @@ def find_isobands(grid_x, grid_y, grid_z, z_values, transform_x, transform_y):
     for z in range(0, len(z_values)-1):
         z_low = z_values[z]
         z_high = z_values[z+1]
-        isobands = find_isoband(grid_x, grid_y, grid_z, z_low, z_high, transform_x, transform_y)
+        isobands = find_isoband(grid_x, grid_y, grid_z, z_low, z_high, transform_x, transform_y, wrap_x, wrap_y)
         geojson['features'].append({ 
             'type': 'Feature',
             'geometry': {

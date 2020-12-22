@@ -16,6 +16,22 @@ speakers_info = {
             },
         },
     },
+    'Adam T5V': {
+        'brand': 'Adam',
+        'model': 'T5V',
+        'type': 'active',
+        'price': '400',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/adam-t5v-review-studio-monitor.18122/',
+            },
+        },
+    },
     'Adam T8V': {
         'brand': 'Adam',
         'model': 'T8V',
@@ -378,6 +394,22 @@ speakers_info = {
             },
         },
     },
+    'Canton Plus GLX.3': {
+        'brand': 'Canton',
+        'model': 'Plus GLX.3',
+        'type': 'passive',
+        'shape': 'bookshelves',
+        'price': '170',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/canton-plus-glx-3-review-speaker.18203/',
+            },
+        },
+    },
     'Carmody S2000 DIY Speaker Kit': {
         'brand': 'Carmody',
         'model': 'S2000 DIY Speaker Kit',
@@ -385,6 +417,7 @@ speakers_info = {
         'shape': 'bookshelves',
         'price': '240',
         'default_measurement': 'asr',
+        'amount': 'pair',
         'measurements': {
             'asr': {
                 'origin': 'ASR',
@@ -870,6 +903,22 @@ speakers_info = {
             },
         },
     },
+    'Genelec G2': {
+        'brand': 'Genelec',
+        'model': 'G2',
+        'type': 'active',
+        'price': '',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'misc',
+        'measurements': {
+            'misc': {
+                'origin': 'Misc',
+                'format': 'rewstextdump',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/genelec-g2-8020-measurements.18076/#post-588571',
+            },
+        },
+    },
     'Gradient Helsinki 1.5': {
         'brand': 'Gradient',
         'model': 'Helsinki 1.5',
@@ -951,6 +1000,22 @@ speakers_info = {
             },
         },
     },
+    'IK Multimedia iLoud MTM': {
+        'brand': 'IK Multimedia',
+        'model': 'iLoud MTM',
+        'type': 'passive',
+        'price': '300',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/ik-multimedia-iloud-mtm-review-active-monitor.18347/',
+            },
+        },
+    },
     'iKey-Audio M-808V2': {
         'brand': 'iKey-Audio',
         'model': 'M-808V2',
@@ -988,9 +1053,14 @@ speakers_info = {
         'price': '200',
         'shape': 'bookshelves',
         'amount': 'floorstanders',
-        'default_measurement' : 'asr',
+        'default_measurement' : 'asr-v2-20201202',
         'measurements': {
-            'asr': {
+            'asr-v1-20201126': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/infinity-reference-253-review-speaker.17923/'
+            },
+            'asr-v2-20201202': {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/infinity-reference-253-review-speaker.17923/'
@@ -1110,6 +1180,22 @@ speakers_info = {
             },
         },
     },
+    'JBL Stage A130': {
+        'brand': 'JBL',
+        'model': 'Stage A130',
+        'type': 'passive',
+        'price': '200',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-stage-a130-review-speaker.18260/',
+            },
+        },
+    },
     'JBL 104': {
         'brand': 'JBL',
         'model': '104',
@@ -1171,6 +1257,22 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-and-control-1-pro-monitors-review.10811/',
+            },
+        },
+    },
+    'JBL 306P Mark ii': {
+        'brand': 'JBL',
+        'model': '306P Mark ii',
+        'type': 'active',
+        'price': '150',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-306p-mk-ii-review-studio-monitor.18505/',
             },
         },
     },
@@ -1378,6 +1480,22 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8-studio-monitor-review.10897/',
+            },
+        },
+    },
+    'Kali LP-6': {
+        'brand': 'Kali',
+        'model': 'LP-6',
+        'type': 'active',
+        'price': '300',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/kali-lp-6-review-studio-monitor.17978/',
             },
         },
     },
@@ -1709,6 +1827,22 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/nht-sb2-speaker-review.13273/',
+            },
+        },
+    },
+    'NHT Super Zero 2.1': {
+        'brand': 'NHT',
+        'model': 'Super Zero 2.1',
+        'type': 'passive',
+        'price': '250',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/nht-super-zero-2-1-review-bookshelf-speaker.18643/',
             },
         },
     },
