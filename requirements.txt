@@ -9,8 +9,8 @@ more_itertools
 ray
 ray[tune]
 tables
-#tabulate
-#tensorflow
-#tensorboard
+tabulate
+tensorflow
+tensorboard
 jupyterlab
 
