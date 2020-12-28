@@ -1723,6 +1723,21 @@ speakers_info = {
             },
         },
     },
+    'MartinLogan Motion 4i': {
+        'brand': 'MartinLogan',
+        'model': 'Motion 4i',
+        'type': 'passive',
+        'price': '360',
+        'shape': 'bookshelves',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/martinlogan-motion-4i-review-bookshelf-speaker.18805/',
+            },
+        },
+    },
     'Mesanovic RTM10': {
         'brand': 'Mesanovic',
         'model': 'RTM10',
