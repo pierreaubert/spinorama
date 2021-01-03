@@ -1665,6 +1665,22 @@ speakers_info = {
             },
         },
     },
+    'KRK Systems Classic 5': {
+        'brand': 'KRK Systems',
+        'model': 'Classic 5',
+        'type': 'active',
+        'price': '150',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/krk-classic-5-review-studio-monitor.19031/',
+             },
+        },
+    },
     'KRK Systems RoKit 6 G2': {
         'brand': 'KRK Systems',
         'model': 'RoKit 6 G2',
