@@ -58,8 +58,9 @@ coming soon:
 
 First install a few packages:
 ```
-apt install imagemagick
+apt install imagemagick npm
 ```
+On a Mac you can replace all `apt` calls by `brew`.
 
 ### Using python3, ipython and Jupyter-Lab
 
@@ -69,10 +70,11 @@ pip3 install -r requirements.txt
 pip3 may also be pip depending on your system.
 
 ```
+export PYTHONPATH=src
 jupiter-lab &
 ```
 
-Your browser will open, click on spinorama.ipynb and play around.
+Your browser will open, go to *experiments* directitory and click on *spinorama.ipynb* and play around.
 
 ## Linux or Mac developer
 
@@ -83,16 +85,7 @@ pip3 install -r requirements.txt
 pip3 install -r requirements-tests.txt 
 ```
 
-For saving picture, you need either chromedriver or a set of nodejs packages. I recommend the later.
-Linux:
-```
-apt install chromedriver
-```
-Mac:
-```
-brew install chromedriver
-```
-or on both platform
+For saving picture, you need a set of nodejs packages:
 ```
 npm install vega-lite vega-cli canvas
 ```
@@ -121,23 +114,22 @@ pytest --cov=src
 
    b. add a picture of the speaker in datas/originals
    c. test it works with:
-      - if from ASR
-        - ```./generate_graphs --origin=ASR --speaker='name of speaker'```
-      - if from a Vendor with brand Great
-        - ```./generate_graphs --origin='Vendors/Great' --speaker='name of speaker'```
+        - ```./generate_graphs --speaker='name of speaker'```
       - visualize results
         - ```docs/name of speaker/origin/default/CEA2034_large.png``` or
 	- ```docs/name of speaker/origin/default/2cols_large.png```
 
 2. Generate datas and webpages
 
-   - ```sh .generate_docs.sh``` will generate both graphs and website. All files will end up in the ```docs``` directory`. This directory is ignored by git on the develop branch.
+   - ```sh ./generate_docs.sh``` will generate both graphs and website. All files will end up in the ```docs``` directory`. This directory is ignored by git on the develop branch.
+   - This will take a long time and take all your CPU. For subsequent calls, you only need to generate the new graphs by calling:
+   - ```sh ./update_website.sh``` which is usually much faster (less than 1 minute per speaker).
 
-3. Add your files to git and push to github on master branch
+3. Add your files to git and push to github on *develop* branch
 
    - ```git status``` you should see a long list of files that git doesn't now about yet.
    - ```git add all new files```
-   - ```git commit -m 'add data for new speaker name' -a```
+   - ```git commit -m 'add data for new speaker name' datas```
    - ```git push```
 
 
