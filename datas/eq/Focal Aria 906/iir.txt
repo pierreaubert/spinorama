@@ -1,31 +1,30 @@
 Filter Settings file
 
 Room EQ V5.19
-Dated: 10-07-2020 14:48:26
+Dated: 19-12-2020 21:01:13
 
-Notes:Focal Aria 906 IIR v2
+Notes:Focal Aria 906 IIR v3
 
 Equaliser: Generic
-Focal Aria 906 LW.txt
-Preamp:	-3.1 dB
-Filter  1: ON  PK       Fc     344 Hz  Gain   0.6 dB  Q 26.000
-Filter  2: ON  PK       Fc     379 Hz  Gain  -0.4 dB  Q 25.000
-Filter  3: ON  PK       Fc     400 Hz  Gain   0.4 dB  Q 25.000
-Filter  4: ON  PK       Fc     486 Hz  Gain   0.4 dB  Q 18.000
-Filter  5: ON  PK       Fc     569 Hz  Gain  -0.3 dB  Q 25.000
-Filter  6: ON  PK       Fc     594 Hz  Gain   0.4 dB  Q 30.000
-Filter  7: ON  PK       Fc     786 Hz  Gain  -1.4 dB  Q 7.000
-Filter  8: ON  PK       Fc     950 Hz  Gain  -1.0 dB  Q 3.500
-Filter  9: ON  PK       Fc    1130 Hz  Gain   1.3 dB  Q 9.000
-Filter 10: ON  PK       Fc    1430 Hz  Gain   2.3 dB  Q 5.000
-Filter 11: ON  PK       Fc    1587 Hz  Gain  -1.2 dB  Q 16.000
-Filter 12: ON  PK       Fc    1713 Hz  Gain   0.5 dB  Q 25.000
-Filter 13: ON  PK       Fc    1950 Hz  Gain   1.4 dB  Q 14.000
-Filter 14: ON  PK       Fc    2228 Hz  Gain   1.2 dB  Q 20.000
-Filter 15: ON  PK       Fc    2380 Hz  Gain  -0.4 dB  Q 30.000
-Filter 16: ON  PK       Fc    2540 Hz  Gain   1.3 dB  Q 11.000
-Filter 17: ON  PK       Fc    2920 Hz  Gain   2.7 dB  Q 7.000
-Filter 18: ON  PK       Fc   14700 Hz  Gain   1.2 dB  Q 2.500
-Filter 19: ON  PK       Fc   16600 Hz  Gain   1.4 dB  Q 1.700
-Filter 20: ON  PK       Fc   19980 Hz  Gain  -0.5 dB  Q 7.000
+Focal Aria 906 PIR.txt
+Filter  1: ON  PK       Fc     571 Hz  Gain  -0.4 dB  Q 20.000
+Filter  2: ON  PK       Fc     791 Hz  Gain  -1.1 dB  Q 5.500
+Filter  3: ON  PK       Fc     969 Hz  Gain  -0.6 dB  Q 6.000
+Filter  4: ON  PK       Fc    1138 Hz  Gain   1.2 dB  Q 8.500
+Filter  5: ON  PK       Fc    1425 Hz  Gain   2.1 dB  Q 6.000
+Filter  6: ON  PK       Fc    1720 Hz  Gain   0.8 dB  Q 17.000
+Filter  7: ON  PK       Fc    1965 Hz  Gain   1.5 dB  Q 14.000
+Filter  8: ON  PK       Fc    2218 Hz  Gain   1.2 dB  Q 17.000
+Filter  9: ON  PK       Fc    2544 Hz  Gain   0.9 dB  Q 15.000
+Filter 10: ON  PK       Fc    2870 Hz  Gain   0.6 dB  Q 9.000
+Filter 11: ON  PK       Fc    3000 Hz  Gain   1.5 dB  Q 4.000
+Filter 12: ON  PK       Fc    3600 Hz  Gain   1.7 dB  Q 5.000
+Filter 13: ON  PK       Fc    4600 Hz  Gain   0.8 dB  Q 8.500
+Filter 14: ON  PK       Fc    6350 Hz  Gain   0.3 dB  Q 3.000
+Filter 15: ON  PK       Fc    6980 Hz  Gain  -0.6 dB  Q 8.700
+Filter 16: ON  PK       Fc    7700 Hz  Gain   0.3 dB  Q 13.000
+Filter 17: ON  PK       Fc    8800 Hz  Gain  -0.7 dB  Q 6.000
+Filter 18: ON  PK       Fc   10400 Hz  Gain  -0.3 dB  Q 5.000
+Filter 19: ON  PK       Fc   14790 Hz  Gain   1.1 dB  Q 1.000
+Filter 20: ON  HS       Fc   19500 Hz  Gain  -2.1 dB
 
