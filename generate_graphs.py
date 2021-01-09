@@ -20,7 +20,7 @@
 generate_graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
   [--force] [--type=<ext>] [--log-level=<level>]\
   [--origin=<origin>]  [--speaker=<speaker>] [--version=<version>] [--brand=<brand>]\
-  [--ip=<ip>] [--port=<port>]                                         
+  [--ip=<ip>] [--port=<port>]
 
 Options:
   -h|--help         display usage()
@@ -34,7 +34,7 @@ Options:
   --speaker=<speaker> filter by speaker
   --version=<version> filter by measurement
   --ip=<ip>         ip of dashboard to track execution, default to localhost/127.0.0.1
-  --port=<port>     port for the dashbboard, default to 8265    
+  --port=<port>     port for the dashbboard, default to 8265
 """
 import glob
 import ipaddress
@@ -43,6 +43,7 @@ import os
 import socket
 import sys
 import time
+from typing import List, Mapping
 
 from docopt import docopt
 import flammkuchen as fl
@@ -55,7 +56,8 @@ from src.spinorama.speaker_print import print_graphs, print_compare
 from src.spinorama.graph import graph_params_default
 
 
-def get_speaker_list(speakerpath : str):
+def get_speaker_list(speakerpath : str) -> List[str]:
+    """return a list of speakers from data subdirectory"""
     speakers = []
     asr = glob.glob(speakerpath+'/ASR/*')
     vendors = glob.glob(speakerpath+'/Vendors/*/*')
@@ -63,25 +65,27 @@ def get_speaker_list(speakerpath : str):
     princeton = glob.glob(speakerpath+'/Princeton/*')
     ear = glob.glob(speakerpath+'/ErinsAudioCorner/*')
     dirs = asr + vendors + princeton + ear + misc
-    for d in dirs:
-        if os.path.isdir(d) and d not in ('assets', 'compare', 'stats', 'pictures', 'logos'):
-            speakers.append(os.path.basename(d))
+    for dir in dirs:
+        if os.path.isdir(dir) and dir not in ('assets', 'compare', 'stats', 'pictures', 'logos'):
+            speakers.append(os.path.basename(dir))
     return speakers
 
 
-def queue_measurement(brand, speaker, mformat, morigin, mversion):
+def queue_measurement(brand: str, speaker: str, mformat: str, morigin: str, mversion: str) -> List[int]:
     id_df = parse_graphs_speaker.remote('./datas', brand, speaker, mformat, morigin, mversion)
     id_eq = parse_eq_speaker.remote('./datas', speaker, id_df)
     force = False
     ptype = None
     width = graph_params_default['width']
     height = graph_params_default['height']
-    id_g1 = print_graphs.remote(id_df, id_eq, speaker, morigin, metadata.origins_info, mversion, width, height, force, ptype)
-    id_g2 = print_graphs.remote(id_eq, id_eq, speaker, morigin, metadata.origins_info, mversion+'_eq', width, height, force, ptype)
+    id_g1 = print_graphs.remote(id_df, id_eq, speaker, morigin, metadata.origins_info,
+                                mversion, width, height, force, ptype)
+    id_g2 = print_graphs.remote(id_eq, id_eq, speaker, morigin, metadata.origins_info,
+                                mversion+'_eq', width, height, force, ptype)
     return (id_df, id_eq, id_g1, id_g2)
 
 
-def queue_speakers(speakerlist, metadata : dict, filters: dict) -> dict:
+def queue_speakers(speakerlist: List[str], metadata : Mapping[str, dict], filters: Mapping[str, dict]) -> dict:
     ray_ids = {}
     count = 0
     for speaker in speakerlist:
@@ -91,7 +95,9 @@ def queue_speakers(speakerlist, metadata : dict, filters: dict) -> dict:
         ray_ids[speaker] = {}
         for mversion, measurement in metadata[speaker]['measurements'].items():
             # mversion looks like asr and asr_eq
-            if 'version' in filters and not (mversion == filters['version'] or mversion != '{}_eq'.format(filters['version'])):
+            if 'version' in filters \
+               and not (mversion == filters['version'] \
+               or mversion != '{}_eq'.format(filters['version'])):
                 logger.debug('skipping {}/{}'.format(speaker, mversion))
                 continue
             # filter on format (klippel, princeton, ...)
@@ -113,26 +119,28 @@ def queue_speakers(speakerlist, metadata : dict, filters: dict) -> dict:
     return ray_ids
 
 
-def compute(speakerkist, metadata, ray_ids):
+def compute(speakerkist: List[str], metadata: Mapping[str, dict], ray_ids: dict):
 
     df = {}
-
     done_ids = {}
-    
-    while(1):
-        
-        df_ids = [ray_ids[s][v][0] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][0] not in done_ids.keys()]
-        eq_ids = [ray_ids[s][v][1] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][1] not in done_ids.keys()]
-        g1_ids = [ray_ids[s][v][2] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][2] not in done_ids.keys()]
-        g2_ids = [ray_ids[s][v][3] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][3] not in done_ids.keys()]
+    while 1:
+        df_ids = [ray_ids[s][v][0] for s in ray_ids.keys() for v in ray_ids[s].keys() \
+                  if ray_ids[s][v][0] not in done_ids.keys()]
+        eq_ids = [ray_ids[s][v][1] for s in ray_ids.keys() for v in ray_ids[s].keys() \
+                  if ray_ids[s][v][1] not in done_ids.keys()]
+        g1_ids = [ray_ids[s][v][2] for s in ray_ids.keys() for v in ray_ids[s].keys() \
+                  if ray_ids[s][v][2] not in done_ids.keys()]
+        g2_ids = [ray_ids[s][v][3] for s in ray_ids.keys() for v in ray_ids[s].keys() \
+                  if ray_ids[s][v][3] not in done_ids.keys()]
         ids = df_ids + eq_ids + g1_ids + g2_ids
         if len(ids) == 0:
             break
         num_returns = min(len(ids), 16)
         ready_ids, remaining_ids = ray.wait(ids, num_returns=num_returns)
 
-        logger.info('State: {0} ready IDs {1} remainings IDs {2} Total IDs {3} Done'.format(len(ready_ids), len(remaining_ids), len(ids), len(done_ids)))
-        
+        logger.info('State: {0} ready IDs {1} remainings IDs {2} Total IDs {3} Done'.format(
+            len(ready_ids), len(remaining_ids), len(ids), len(done_ids)))
+
         for speaker in speakerlist:
             speaker_key = speaker #.translate({ord(ch) : '_' for ch in '-.;/\' '})
             if speaker not in df.keys():
@@ -145,44 +153,49 @@ def compute(speakerkist, metadata, ray_ids):
 
                 if speaker not in ray_ids:
                     continue
-                
+
                 current_id = ray_ids[speaker][m_version][0]
                 if current_id in ready_ids:
                     df[speaker_key][m_origin][m_version_key] = ray.get(current_id)
-                    logger.debug('Getting df done for {0} / {1} / {2}'.format(speaker, m_origin, m_version))
+                    logger.debug('Getting df done for {0} / {1} / {2}'.format(
+                        speaker, m_origin, m_version))
                     done_ids[current_id] = True
-                
+
                 m_version_eq = '{0}_eq'.format(m_version_key)
                 current_id = ray_ids[speaker][m_version][1]
                 if current_id in eq_ids:
-                    logger.debug('Getting eq done for {0} / {1} / {2}'.format(speaker, m_version_eq, m_version))
+                    logger.debug('Getting eq done for {0} / {1} / {2}'.format(
+                        speaker, m_version_eq, m_version))
                     eq = ray.get(current_id)
                     if eq is not None:
                         df[speaker_key][m_origin][m_version_eq] = eq
-                        logger.debug('Getting preamp eq done for {0} / {1} / {2}'.format(speaker, m_version_eq, m_version))
+                        logger.debug('Getting preamp eq done for {0} / {1} / {2}'.format(
+                            speaker, m_version_eq, m_version))
                         if 'preamp_gain' in eq:
                             df[speaker_key][m_origin][m_version_eq]['preamp_gain'] = eq['preamp_gain']
                     done_ids[current_id] = True
 
                 current_id = ray_ids[speaker][m_version][2]
                 if current_id in g1_ids:
-                    logger.debug('Getting graph done for {0} / {1} / {2}'.format(speaker, m_version, m_origin))
+                    logger.debug('Getting graph done for {0} / {1} / {2}'.format(
+                        speaker, m_version, m_origin))
                     ray.get(current_id)
                     done_ids[current_id] = True
 
                 current_id = ray_ids[speaker][m_version][3]
                 if current_id in g2_ids:
-                    logger.debug('Getting graph done for {0} / {1} / {2}'.format(speaker, m_version_eq, m_origin))
+                    logger.debug('Getting graph done for {0} / {1} / {2}'.format(
+                        speaker, m_version_eq, m_origin))
                     ray.get(current_id)
                     done_ids[current_id] = True
 
 
         if len(remaining_ids) == 0:
             break
-        
+
     return df
 
-    
+
 if __name__ == '__main__':
     args = docopt(__doc__, version='generate_graphs.py version 1.22', options_first=True)
 
@@ -203,7 +216,7 @@ if __name__ == '__main__':
     if args['--type'] is not None:
         ptype = args['--type']
         if ptype not in ('png', 'html', 'svg', 'json'):
-            print('type %s is not recognize!'.format(ptype))
+            print('type {} is not recognize!'.format(ptype))
             exit(1)
 
     level = None
@@ -247,11 +260,11 @@ if __name__ == '__main__':
     ray.init()
 
     filters = {}
-    for filter in ('speaker', 'origin', 'version'):
-        flag = '--{}'.format(filter)
+    for ifilter in ('speaker', 'origin', 'version'):
+        flag = '--{}'.format(ifilter)
         if args[flag] is not None:
-            filters[filter] = args[flag]
-    
+            filters[ifilter] = args[flag]
+
     ray_ids = queue_speakers(speakerlist, metadata.speakers_info, filters)
     df = compute(speakerlist, metadata.speakers_info, ray_ids)
     if len(filters.keys()) == 0:

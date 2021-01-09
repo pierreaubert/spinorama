@@ -2,6 +2,7 @@ pytest
 pytest-cov
 flake8
 autopep8
+pylint
 ipython
 yapf
 importmagic
