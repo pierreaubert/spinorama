@@ -673,6 +673,21 @@ speakers_info = {
             },
         },
     },
+    'Elac Uni-Fi 2.0 UB52': {
+        'brand': 'Elac',
+        'model': 'Uni-Fi 2.0 UB52',
+        'type': 'passive',
+        'price': '600',
+        'shape': 'bookshelves',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/elac-uni-fi-2-0-review-bookshelf-speaker.19216/',
+            },
+        },
+    },
     'Emotiva Airmotive 6s': {
         'brand': 'Emotiva',
         'model': 'Airmotive 6s',
