@@ -10,15 +10,17 @@ from .load import graph_melt
 
 def peq_build(freq, peq):
     filter = 0
-    for w, iir in peq:
-        filter += w*np.array([iir.log_result(f) for f in freq])
+    if len(peq)>0:
+        for w, iir in peq:
+            filter += w*np.array([iir.log_result(f) for f in freq])
     return filter
 
 
 def peq_freq(spl, peq):
     filter = 0
-    for w, iir in peq:
-        filter += w*np.array([iir(v) for v in spl])
+    if len(peq)>0:
+        for w, iir in peq:
+            filter += w*np.array([iir(v) for v in spl])
     return filter
 
 
@@ -31,6 +33,8 @@ def peq_preamp_gain(peq):
 
 
 def peq_apply_measurements(spl, peq):
+    if len(peq) == 0:
+        return spl
     freq   = spl['Freq'].to_numpy()
     mean = np.mean(spl.loc[(spl.Freq>500) & (spl.Freq<10000)]['On Axis'])
     ddf = []
