@@ -1,0 +1,27 @@
+EQ for Elac Adante AS-61 computed from ASR data
+Preference Score 4.0 with EQ 4.7
+Generated from http://github.com/pierreaubert/spinorama
+Date 2021-01-16-21:47:42
+
+Preamp: -7.781227660088782 dB
+
+Filter 0: ON PK Fc 575 Hz Gain 5.62 dB Q -1.96
+Filter 1: ON PK Fc 8705 Hz Gain 0.50 dB Q 2.48
+Filter 2: ON PK Fc 4782 Hz Gain 5.75 dB Q -1.81
+Filter 3: ON PK Fc 8745 Hz Gain 10.19 dB Q -3.78
+Filter 4: ON PK Fc 1547 Hz Gain 5.51 dB Q 1.90
+Filter 5: ON PK Fc 2343 Hz Gain 4.02 dB Q -1.24
+Filter 6: ON PK Fc 10813 Hz Gain 12.00 dB Q -1.98
+Filter 7: ON PK Fc 8705 Hz Gain 0.50 dB Q 0.90
+Filter 8: ON PK Fc 769 Hz Gain 12.00 dB Q 1.40
+Filter 9: ON PK Fc 19361 Hz Gain 1.06 dB Q 7.09
+Filter 10: ON PK Fc 10076 Hz Gain 1.79 dB Q -1.55
+Filter 11: ON PK Fc 15440 Hz Gain 3.06 dB Q 1.72
+Filter 12: ON PK Fc 18070 Hz Gain 12.00 dB Q -2.51
+Filter 13: ON PK Fc 9715 Hz Gain 12.00 dB Q 0.53
+Filter 14: ON PK Fc 4078 Hz Gain 1.24 dB Q -0.50
+Filter 15: ON PK Fc 263 Hz Gain 1.43 dB Q -0.74
+Filter 16: ON PK Fc 6920 Hz Gain 12.00 dB Q 1.14
+Filter 17: ON PK Fc 5975 Hz Gain 12.00 dB Q 0.55
+Filter 18: ON PK Fc 1689 Hz Gain 12.00 dB Q 0.76
+Filter 19: ON PK Fc 11436 Hz Gain 12.00 dB Q -1.29

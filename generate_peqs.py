@@ -43,6 +43,7 @@ import sys
 from docopt import docopt
 import flammkuchen as fl
 import numpy as np
+import ray
 import scipy.signal as sig
 from scipy.stats import linregress
 import scipy.optimize as opt
@@ -339,12 +340,9 @@ def optim_greedy(speaker_name, df_speaker, freq, target, target_interp, optim_co
         'OPTIM {} START {} #PEQ {:d} Freq #{:d} Gain #{:d} +/-[{}, {}] Q #{} [{}, {}] Loss {:2.2f} Score {:2.2f}'.format(
             speaker_name,
             optim_config['curve_names'],
-            optim_config['MAX_NUMBER_PEQ'],
-            optim_config['MAX_STEPS_FREQ'],
-            optim_config['MAX_STEPS_DBGAIN'],
-            optim_config['MIN_DBGAIN'], optim_config['MAX_DBGAIN'],
-            optim_config['MAX_STEPS_Q'],
-            optim_config['MIN_Q'], optim_config['MAX_Q'],
+            optim_config['MAX_NUMBER_PEQ'], optim_config['MAX_STEPS_FREQ'],
+            optim_config['MAX_STEPS_DBGAIN'], optim_config['MIN_DBGAIN'], optim_config['MAX_DBGAIN'],
+            optim_config['MAX_STEPS_Q'], optim_config['MIN_Q'], optim_config['MAX_Q'],
             best_loss, pref_score))
 
     for optim_iter in range(0, optim_config['MAX_NUMBER_PEQ']):
@@ -396,7 +394,8 @@ def optim_auto_peq(speaker_name, df_speaker, optim_config):
     return auto_peq
 
 
-def optim_save_peq(speaker_name, df_all_speakers, optim_config, verbose, smoke_test):
+@ray.remote
+def optim_save_peq(speaker_name, df_speaker, optim_config, verbose, smoke_test):
     """Compute ans save PEQ for this speaker """
     eq_dir = 'datas/eq/{}'.format(speaker_name)
     pathlib.Path(eq_dir).mkdir(parents=True, exist_ok=True)
@@ -407,7 +406,6 @@ def optim_save_peq(speaker_name, df_all_speakers, optim_config, verbose, smoke_t
         return 0
 
     # extract current speaker
-    df_speaker = df_all_speakers[speaker_name]['ASR']['asr']
     _, _, score = scores_apply_filter(df_speaker, [])
 
     # compute an optimal PEQ
@@ -446,6 +444,46 @@ def optim_save_peq(speaker_name, df_all_speakers, optim_config, verbose, smoke_t
         scores_print2(score, score_manual, score_auto)
         print('----------------------------------------------------------------------')
 
+    return 0
+
+
+def queue_speakers(df_all_speakers, optim_config, verbose, smoke_test):
+    ray_ids = {}
+    for speaker_name in df_all_speakers.keys():
+        if 'ASR' not in df_all_speakers[speaker_name].keys():
+            # currently doing only ASR but should work for the others
+            # Princeton start around 500hz
+            continue
+        if 'asr' not in df_all_speakers[speaker_name]['ASR'].keys():
+            logger.error('no asr for {}'.format(speaker_name))
+            continue
+        df_speaker = df_all_speakers[speaker_name]['ASR']['asr']
+        if 'SPL Horizontal_unmelted' not in df_speaker.keys() or 'SPL Vertical_unmelted' not in df_speaker.keys():
+            logger.error('no Horizontal or Vertical measurement for {}'.format(speaker_name))
+            continue
+            
+        id = optim_save_peq.remote(speaker_name, df_speaker, optim_config, verbose, smoke_test)
+        ray_ids[speaker_name] = id
+
+    print('Queing {} speakers for EQ computations'.format(len(ray_ids)))
+    return ray_ids
+
+
+def compute_peqs(ray_ids):
+    done_ids = set()
+    while 1:
+        ids = [id for id in ray_ids.values() if id not in done_ids]
+        num_returns = min(len(ids), 16)
+        ready_ids, remaining_ids = ray.wait(ids, num_returns=num_returns)
+
+        if len(remaining_ids) == 0:
+            break
+
+        for id in ready_ids:
+            ray.get(id)
+            done_ids.add(id)
+
+        logger.info('State: {0} ready IDs {1} remainings IDs '.format(len(ready_ids), len(remaining_ids)))
     return 0
 
 
@@ -539,15 +577,30 @@ if __name__ == '__main__':
     if args['--speaker'] is not None:
         speaker_name = args['--speaker']
 
-    # select current speaker
-    if speaker_name is None:
-        print('Not yet supported')
-        sys.exit(1)
-        
-    if speaker_name not in df_all_speakers.keys():
-        logger.error('{} is not known!'.format(speaker_name))
-        sys.exit(1)
+    # ray section
+    ray.worker.global_worker.run_function_on_all_workers(setup_logger)
+    # address is the one from the ray server
+    # ray.init(address='{}:{}'.format(ip, port))
+    ray.init()
 
-    optim_save_peq(speaker_name, df_all_speakers, optim_config, verbose, smoke_test)
+    # select all speakers
+    if speaker_name is None:
+        ids = queue_speakers(df_all_speakers, optim_config, verbose, smoke_test)
+        compute_peqs(ids)
+    else:
+        if speaker_name not in df_all_speakers.keys():
+            logger.error('{} is not known!'.format(speaker_name))
+            sys.exit(1)
+        if 'ASR' not in df_all_speakers[speaker_name].keys():
+            sys,exit(0)
+        df_speaker = df_all_speakers[speaker_name]['ASR']['asr']
+        id = optim_save_peq.remote(speaker_name, df_speaker, optim_config, verbose, smoke_test)
+        while 1:
+            ready_ids, remaining_ids = ray.wait([id], num_returns=1)
+            if len(ready_ids) == 1:
+                ray.get(ready_ids[0])
+                break
+            if len(remaining_ids) == 0:
+                break
         
     sys.exit(0)

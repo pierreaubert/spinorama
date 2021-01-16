@@ -1,0 +1,27 @@
+EQ for Harbeth Monitor 30.0 computed from ASR data
+Preference Score 5.1 with EQ 5.6
+Generated from http://github.com/pierreaubert/spinorama
+Date 2021-01-16-21:51:37
+
+Preamp: -6.847355148852341 dB
+
+Filter 0: ON PK Fc 3789 Hz Gain 0.50 dB Q 5.74
+Filter 1: ON PK Fc 532 Hz Gain 3.77 dB Q 2.47
+Filter 2: ON PK Fc 16140 Hz Gain 0.73 dB Q 6.15
+Filter 3: ON PK Fc 5381 Hz Gain 0.86 dB Q -1.15
+Filter 4: ON PK Fc 2437 Hz Gain 9.67 dB Q -2.67
+Filter 5: ON PK Fc 11912 Hz Gain 3.52 dB Q 1.72
+Filter 6: ON PK Fc 17461 Hz Gain 12.00 dB Q -4.37
+Filter 7: ON PK Fc 7100 Hz Gain 12.00 dB Q -1.33
+Filter 8: ON PK Fc 8756 Hz Gain 12.00 dB Q -1.22
+Filter 9: ON PK Fc 5723 Hz Gain 12.00 dB Q 0.92
+Filter 10: ON PK Fc 9752 Hz Gain 12.00 dB Q 1.45
+Filter 11: ON PK Fc 7879 Hz Gain 12.00 dB Q 1.06
+Filter 12: ON PK Fc 3064 Hz Gain 12.00 dB Q 1.68
+Filter 13: ON PK Fc 443 Hz Gain 12.00 dB Q 0.53
+Filter 14: ON PK Fc 1421 Hz Gain 5.98 dB Q -0.84
+Filter 15: ON PK Fc 3828 Hz Gain 12.00 dB Q 0.50
+Filter 16: ON PK Fc 1967 Hz Gain 12.00 dB Q 0.50
+Filter 17: ON PK Fc 1824 Hz Gain 12.00 dB Q -0.55
+Filter 18: ON PK Fc 607 Hz Gain 12.00 dB Q 0.50
+Filter 19: ON PK Fc 8747 Hz Gain 11.01 dB Q -0.70

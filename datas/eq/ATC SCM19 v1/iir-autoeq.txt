@@ -1,0 +1,27 @@
+EQ for ATC SCM19 v1 computed from ASR data
+Preference Score 4.6 with EQ 6.1
+Generated from http://github.com/pierreaubert/spinorama
+Date 2021-01-16-21:37:09
+
+Preamp: -1.7651123940391948 dB
+
+Filter 0: ON PK Fc 823 Hz Gain 0.63 dB Q -3.84
+Filter 1: ON PK Fc 3313 Hz Gain 1.91 dB Q -1.71
+Filter 2: ON PK Fc 648 Hz Gain 11.24 dB Q -1.29
+Filter 3: ON PK Fc 7411 Hz Gain 6.05 dB Q 1.70
+Filter 4: ON PK Fc 4967 Hz Gain 8.84 dB Q -1.39
+Filter 5: ON PK Fc 379 Hz Gain 1.65 dB Q 1.11
+Filter 6: ON PK Fc 402 Hz Gain 12.00 dB Q -0.57
+Filter 7: ON PK Fc 6184 Hz Gain 10.14 dB Q 0.54
+Filter 8: ON PK Fc 977 Hz Gain 12.00 dB Q -0.62
+Filter 9: ON PK Fc 15157 Hz Gain 0.51 dB Q 1.59
+Filter 10: ON PK Fc 9950 Hz Gain 1.67 dB Q -1.34
+Filter 11: ON PK Fc 14142 Hz Gain 12.00 dB Q -0.90
+Filter 12: ON PK Fc 481 Hz Gain 12.00 dB Q 1.33
+Filter 13: ON PK Fc 1437 Hz Gain 12.00 dB Q 0.85
+Filter 14: ON PK Fc 1142 Hz Gain 12.00 dB Q 0.70
+Filter 15: ON PK Fc 2751 Hz Gain 11.85 dB Q -0.68
+Filter 16: ON PK Fc 3322 Hz Gain 12.00 dB Q 0.50
+Filter 17: ON PK Fc 349 Hz Gain 12.00 dB Q 0.50
+Filter 18: ON PK Fc 588 Hz Gain 4.59 dB Q -0.66
+Filter 19: ON PK Fc 4107 Hz Gain 12.00 dB Q 0.50
