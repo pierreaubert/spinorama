@@ -18,13 +18,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 usage: generate_peqs.py [--help] [--version] [--log-level=<level>]\
-    [--force] [--smoke-test]\
+    [--force] [--smoke-test] [-v|--verbose]\
     [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>]
 
 Options:
   --help            display usage()
   --version         script version number
   --force           force generation of eq even if already computed
+  --verbose         print some informations
   --smoke-test      test the optimiser with a small amount of variables
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
   --origin=<origin> restrict to a specific origin, usefull for debugging
@@ -35,6 +36,8 @@ Options:
 from datetime import datetime
 import logging
 import math
+import os
+import pathlib
 import sys
 
 from docopt import docopt
@@ -74,18 +77,17 @@ def pref_loss(local_target, freq, peq, iterations):
     return -score['pref_score']
 
 
-def flat_loss(local_target, freq, peq, iterations):
+def flat_loss(freq, local_target, peq, iterations):
     # make LW as close as target as possible and SP flat
     lw = lw_loss1(local_target[0], freq, peq)
     # want sound power to be flat but not necessary aligned
     # with a target
-    _, _, r_value, _, _ = \
-        linregress(np.log10(freq), local_target[1])
+    _, _, r_value, _, _ = linregress(np.log10(freq), local_target[1])
     sp = 1-r_value**2
     return lw+sp
 
 
-def swap_loss(local_target, freq, peq, iteration):
+def swap_loss(freq, local_target, peq, iteration):
     # try to alternate, optimise for 1 objective then the second one
     if len(local_target) == 0 or iteration < 10:
         return lw_loss2([local_target[0]], peq)
@@ -93,7 +95,7 @@ def swap_loss(local_target, freq, peq, iteration):
         return lw_loss2([local_target[1]], peq)
 
 
-def alternate_loss(local_target, freq, peq, iteration):
+def alternate_loss(freq, local_target, peq, iteration):
     # optimise for 2 objectives 1 each time
     if len(local_target) == 0 or iteration % 2 == 0:
         return lw_loss2([local_target[0]], peq)
@@ -269,7 +271,7 @@ def find_best_biquad(freq, auto_target, freq_range, Q_range, dbGain_range,
 
     def opt_peq(x):
         peq = [(1.0, Biquad(bT, x[0], 48000, x[1], x[2]))]
-        return flat_loss(auto_target, freq, peq, count)
+        return flat_loss(freq, auto_target, peq, count)
 
     bounds = [(freq_range[0], freq_range[-1]),
               (Q_range[0], Q_range[-1]),
@@ -280,16 +282,9 @@ def find_best_biquad(freq, auto_target, freq_range, Q_range, dbGain_range,
         bounds[1][0], bounds[1][1],
         bounds[2][0], bounds[2][1]))
     # can use differential_evolution basinhoppin dual_annealing
-    res = opt.dual_annealing(
-        opt_peq,
-        bounds,
-        # disp=True,
-        # tol=0.01, # increasing precision doesn't help
-    )
-    logger.debug(
-        '          shgo optim loss {:2.2f} in {} iter at F {:.0f} Hz Q {:2.2f} \
-            dbGain {:2.2f}'.format(res.fun, res.nfev,
-                                   res.x[0], res.x[1], res.x[2]))
+    res = opt.dual_annealing(opt_peq, bounds)
+    logger.debug('          optim loss {:2.2f} in {} iter at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f}'.format(
+        res.fun, res.nfev, res.x[0], res.x[1], res.x[2]))
     return True, bT, res.x[0], res.x[1], res.x[2], res.fun
 
 
@@ -329,20 +324,20 @@ def optim_compute_auto_target(freq, target, target_interp, peq):
     return [target[i]-target_interp[i]+peq_freq for i in range(0, len(target))]
 
 
-def optim_greedy(freq, target, target_interp, optim_config):
+def optim_greedy(speaker_name, df_speaker, freq, target, target_interp, optim_config):
 
     if optim_preflight(freq, target, target_interp, optim_config) is False:
         logger.error('Preflight check failed!')
         return None
 
     auto_peq = []
-    auto_target = optim_compute_auto_target(
-        freq, target, target_interp, auto_peq)
-    best_loss = flat_loss(auto_target, freq, auto_peq, 0)
+    auto_target = optim_compute_auto_target(freq, target, target_interp, auto_peq)
+    best_loss = flat_loss(freq, auto_target, auto_peq, 0)
     pref_score = score_loss(df_speaker, auto_peq)
 
     print(
-        'OPTIM {} START #PEQ {:d} Freq #{:d} Gain #{:d} +/-[{}, {}] Q #{} [{}, {}] Loss {:2.2f} Score {:2.2f}'.format(
+        'OPTIM {} START {} #PEQ {:d} Freq #{:d} Gain #{:d} +/-[{}, {}] Q #{} [{}, {}] Loss {:2.2f} Score {:2.2f}'.format(
+            speaker_name,
             optim_config['curve_names'],
             optim_config['MAX_NUMBER_PEQ'],
             optim_config['MAX_STEPS_FREQ'],
@@ -355,15 +350,11 @@ def optim_greedy(freq, target, target_interp, optim_config):
     for optim_iter in range(0, optim_config['MAX_NUMBER_PEQ']):
 
         # we are optimizing above my_freq_reg_min hz on anechoic data
-        auto_target = optim_compute_auto_target(
-            freq, target, target_interp, auto_peq)
-        # print('Auto target {}'.format(auto_target[0]))
+        auto_target = optim_compute_auto_target(freq, target, target_interp, auto_peq)
 
         # greedy strategy: look for lowest & highest peak
-        sign, init_freq, init_freq_range = propose_range_freq(
-            freq, auto_target[0], optim_config)
-        init_dbGain_range = propose_range_dbGain(
-            freq, auto_target[0], sign, init_freq, optim_config)
+        sign, init_freq, init_freq_range = propose_range_freq(freq, auto_target[0], optim_config)
+        init_dbGain_range = propose_range_dbGain(freq, auto_target[0], sign, init_freq, optim_config)
         init_Q_range = propose_range_Q(optim_config)
         biquad_range = propose_range_biquad(optim_config)
 
@@ -374,8 +365,7 @@ def optim_greedy(freq, target, target_interp, optim_config):
                                             biquad_range, optim_iter,
                                             optim_config)
         if state:
-            biquad = (1.0, Biquad(current_type, current_freq,
-                                  48000, current_Q, current_dbGain))
+            biquad = (1.0, Biquad(current_type, current_freq, 48000, current_Q, current_dbGain))
             auto_peq.append(biquad)
             best_loss = current_loss
             pref_score = score_loss(df_speaker, auto_peq)
@@ -392,7 +382,7 @@ def optim_greedy(freq, target, target_interp, optim_config):
                          .format(best_loss, current_loss))
             break
 
-    print('OPTIM END: best loss {} with {} PEQs'.format(flat_loss(auto_target, freq, [], 0), len(auto_peq)))
+    print('OPTIM END {}: best loss {:2.2f} with {:2d} PEQs'.format(speaker_name, flat_loss(freq, auto_target, [], 0), len(auto_peq)))
     return auto_peq
 
 
@@ -402,8 +392,61 @@ def optim_auto_peq(speaker_name, df_speaker, optim_config):
     target_interp = []
     for curve in curves:
         target_interp.append(getTarget(df, freq, curve, optim_config))
-    auto_peq = optim_greedy(freq, target, target_interp, optim_config)
+    auto_peq = optim_greedy(speaker_name, df_speaker, freq, target, target_interp, optim_config)
     return auto_peq
+
+
+def optim_save_peq(speaker_name, df_all_speakers, optim_config, verbose, smoke_test):
+    """Compute ans save PEQ for this speaker """
+    eq_dir = 'datas/eq/{}'.format(speaker_name)
+    pathlib.Path(eq_dir).mkdir(parents=True, exist_ok=True)
+    eq_name = '{}/iir-autoeq.txt'.format(eq_dir)
+    if not force and os.path.exists(eq_name):
+        if verbose:
+            print('eq {} already exist!'.format(eq_name))
+        return 0
+
+    # extract current speaker
+    df_speaker = df_all_speakers[speaker_name]['ASR']['asr']
+    _, _, score = scores_apply_filter(df_speaker, [])
+
+    # compute an optimal PEQ
+    auto_peq = optim_auto_peq(speaker_name, df_speaker, optim_config)
+
+    # do we have a manual peq?
+    if verbose:
+        manual_peq_name = './datas/eq/{}/iir.txt'.format(speaker_name)
+        manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config['fs'])
+        spin_manual, pir_manual, score_manual = scores_apply_filter(df_speaker, manual_peq)
+
+    # compute new score with this PEQ
+    spin_auto, pir_auto, score_auto = scores_apply_filter(df_speaker, auto_peq)
+
+    # print peq
+    comments = ['EQ for {:s} computed from ASR data'.format(speaker_name),
+                'Preference Score {:2.1f} with EQ {:2.1f}'.format(
+                    score['pref_score'],
+                    score_auto['pref_score']),
+                'Generated from http://github.com/pierreaubert/spinorama',
+                'Date {}'.format(datetime.today().strftime('%Y-%m-%d-%H:%M:%S')),
+                '',
+    ]
+    eq_apo = peq_format_apo('\n'.join(comments), auto_peq)
+    if verbose:
+        print('{:30s} ---------------------------------------'.format(speaker_name))
+        print(peq_format_apo('\n'.join(comments), auto_peq))
+        print('----------------------------------------------------------------------')
+    if not smoke_test:
+        with open(eq_name, 'w') as fd:
+            fd.write(eq_apo)
+
+    # print scores
+    if verbose:
+        print('{:30s} ---------------------------------------'.format(speaker_name))
+        scores_print2(score, score_manual, score_auto)
+        print('----------------------------------------------------------------------')
+
+    return 0
 
 
 if __name__ == '__main__':
@@ -411,6 +454,7 @@ if __name__ == '__main__':
                   options_first=True)
 
     force = args['--force']
+    verbose = args['--verbose']
     ptype = None
     smoke_test = args['--smoke-test']
 
@@ -503,38 +547,7 @@ if __name__ == '__main__':
     if speaker_name not in df_all_speakers.keys():
         logger.error('{} is not known!'.format(speaker_name))
         sys.exit(1)
+
+    optim_save_peq(speaker_name, df_all_speakers, optim_config, verbose, smoke_test)
         
-    # extract current speaker
-    df_speaker = df_all_speakers[speaker_name]['ASR']['asr']
-    _, _, score = scores_apply_filter(df_speaker, [])
-
-    # compute an optimal PEQ
-    auto_peq = optim_auto_peq(speaker_name, df_speaker, optim_config)
-
-    # do we have a manual peq?
-    manual_peq_name = './datas/eq/{}/iir.txt'.format(speaker_name)
-    manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config['fs'])
-    spin_manual, pir_manual, score_manual = scores_apply_filter(df_speaker,
-                                                                manual_peq)
-
-    # compute new score with this PEQ
-    spin_auto, pir_auto, score_auto = scores_apply_filter(df_speaker, auto_peq)
-
-    # print peq
-    comments = ['EQ for {:s} computed from ASR data'.format(speaker_name),
-                'Preference Score {:2.1f} with EQ {:2.1f}'.format(
-                    score['pref_score'],
-                    score_auto['pref_score']),
-                'Generated from http://github.com/pierreaubert/spinorama',
-                'Date {}'.format(datetime.today().strftime('%Y-%m-%d-%H:%M:%S')),
-    ]
-    print('----------------------------------------------------------------------')
-    print(peq_format_apo('\n'.join(comments), auto_peq))
-    print('----------------------------------------------------------------------')
-
-    # print scores
-    print('----------------------------------------------------------------------')
-    scores_print2(score, score_manual, score_auto)
-    print('----------------------------------------------------------------------')
-
     sys.exit(0)

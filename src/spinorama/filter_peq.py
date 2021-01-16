@@ -82,6 +82,7 @@ def peq_format_apo(comment, peq):
     for i, data in enumerate(peq):
         w, iir = data
         res.append('Filter {}: ON PK Fc {:d} Hz Gain {:0.2f} dB Q {:0.2f}'.format(i, int(iir.freq), iir.Q, iir.dbGain))
+    res.append('')
     return '\n'.join(res)
 
 

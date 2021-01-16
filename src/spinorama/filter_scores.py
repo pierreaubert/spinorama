@@ -47,7 +47,7 @@ def scores_print(score, score_filtered):
 
 
 def scores_print2(score, score1, score2):
-    print('         SPK  S1  S2')
+    print('         SPK   S1   S2')
     print('----------------------')
     print('NBD  ON {0:0.2f} {1:0.2f} {2:0.2f}'.format(
         score['nbd_on_axis'], score1['nbd_on_axis'], score2['nbd_on_axis']))
