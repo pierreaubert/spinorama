@@ -4,7 +4,7 @@ echo "Update starts"
 export PYTHONPATH=src:.
 
 # update logos and speakers picture
-./minimise_pictures.sh
+./update_pictures.sh
 # generate all graphs if some are missing
 rm -fr /tmp/ray
 ./generate_graphs.py
@@ -14,7 +14,7 @@ rm -f docs/assets/metadata.json
 rm -f docs/compare/*.json
 ./generate_compare.py
 # generate all jpg if some are missing
-./minimise_pictures.sh
+./update_pictures.sh
 # generate stats
 rm -f docs/stats/*.json
 ./generate_stats.py
