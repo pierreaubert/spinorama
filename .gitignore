@@ -37,3 +37,5 @@ cache.*.h5
 *.pyc
 *.log
 
+#generate_meta.py#
+.vscode
