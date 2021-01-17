@@ -39,6 +39,7 @@ import math
 import os
 import pathlib
 import sys
+from typing import Literal, List, Tuple
 
 from docopt import docopt
 import flammkuchen as fl
@@ -50,26 +51,26 @@ import scipy.optimize as opt
 from scipy.interpolate import InterpolatedUnivariateSpline
 
 from datas.metadata import speakers_info as metadata
+from spinorama.ltype import Vector, Peq
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import peq_build  # peq_print
 from spinorama.load_rewseq import parse_eq_iir_rews
 from spinorama.filter_peq import peq_format_apo
 from spinorama.filter_scores import scores_apply_filter, scores_print2
 
-
 # ------------------------------------------------------------------------------
 # various loss function
 # ------------------------------------------------------------------------------
 
 
-def l2_loss(local_target, freq, peq):
+def l2_loss(local_target: Vector, freq: Vector, peq: Peq) -> float:
     # L2 norm
     return np.linalg.norm(local_target+peq_build(freq, peq), 2)
 
 
-def lw_loss(local_target, freq, peq, iterations):
+def lw_loss(local_target, freq, peq, iterations: int) -> float:
     # sum of L2 norms if we have multiple targets
-    return np.sum([l2_loss(local_target[i], peq)
+    return np.sum([l2_loss(local_target[i], freq, peq)
                    for i in range(0, len(local_target))])
 
 
@@ -86,17 +87,17 @@ def flat_loss(freq, local_target, peq, iterations):
 def swap_loss(freq, local_target, peq, iteration):
     # try to alternate, optimise for 1 objective then the second one
     if len(local_target) == 0 or iteration < 10:
-        return l2_loss([local_target[0]], peq)
+        return l2_loss([local_target[0]], freq, peq)
     else:
-        return l2_loss([local_target[1]], peq)
+        return l2_loss([local_target[1]], freq, peq)
 
 
 def alternate_loss(freq, local_target, peq, iteration):
     # optimise for 2 objectives 1 each time
     if len(local_target) == 0 or iteration % 2 == 0:
-        return l2_loss([local_target[0]], peq)
+        return l2_loss([local_target[0]], freq, peq)
     else:
-        return l2_loss([local_target[1]], peq)
+        return l2_loss([local_target[1]], freq, peq)
 
 
 def score_loss(df_spin, peq):
@@ -193,7 +194,7 @@ def find_largest_area(freq, curve, optim_config):
 
     if minus_areas is None and plus_areas is None:
         logger.error('No initial freq found')
-        return None, None, None
+        return +1, None, None
 
     if minus_areas is None:
         return +1, plus_index, freq[plus_index]
@@ -214,35 +215,30 @@ def propose_range_freq(freq, local_target, optim_config):
     #print('Scale={} init_freq {}'.format(scale, init_freq))
     init_freq_min = max(init_freq*scale, 20)
     init_freq_max = min(init_freq/scale, 20000)
-    init_freq_range = np.linspace(init_freq_min, init_freq_max,
-                                  optim_config['MAX_STEPS_FREQ']).tolist()
-    if optim_config['MAX_STEPS_FREQ'] == 1:
-        init_freq_range = [init_freq]
-    init_freq_range = np.linspace(init_freq_min, init_freq_max,
-                                  optim_config['MAX_STEPS_FREQ']).tolist()
     logger.debug('freq min {}Hz peak {}Hz max {}Hz'.format(
         init_freq_min, init_freq, init_freq_max))
-    return sign, init_freq, init_freq_range
+    if optim_config['MAX_STEPS_FREQ'] == 1:
+        return sign, init_freq, [init_freq]
+    else:
+        return sign, init_freq, np.linspace(init_freq_min, init_freq_max, optim_config['MAX_STEPS_FREQ']).tolist()
 
 
-def propose_range_dbGain(freq, local_target, sign, init_freq, optim_config):
+def propose_range_dbGain(freq: Vector, 
+                         local_target: List[Vector], 
+                         sign: Literal[-1, 1], 
+                         init_freq: Vector,
+                         optim_config: dict) -> Vector:
     spline = InterpolatedUnivariateSpline(np.log10(freq), local_target, k=1)
-    init_dbGain = abs(spline(np.log10(init_freq)))
+    init_dbGain = abs(spline(np.log10(init_freq))[0])
     init_dbGain_min = max(init_dbGain/5, optim_config['MIN_DBGAIN'])
     init_dbGain_max = min(init_dbGain*5, optim_config['MAX_DBGAIN'])
-    init_dbGain_range = ()
-    if sign < 0:
-        init_dbGain_range = np.linspace(
-            init_dbGain_min, init_dbGain_max,
-            optim_config['MAX_STEPS_DBGAIN']).tolist()
-    else:
-        init_dbGain_range = np.linspace(
-            -init_dbGain_max, -init_dbGain_min,
-            optim_config['MAX_STEPS_DBGAIN']
-            ).tolist()
     logger.debug('gain min {}dB peak {}dB max {}dB'.format(
         init_dbGain_min, init_dbGain, init_dbGain_max))
-    return init_dbGain_range
+
+    if sign < 0:
+        return np.linspace(init_dbGain_min, init_dbGain_max, optim_config['MAX_STEPS_DBGAIN']).tolist()
+    else:
+        return np.linspace(-init_dbGain_max, -init_dbGain_min, optim_config['MAX_STEPS_DBGAIN']).tolist()
 
 
 def propose_range_Q(optim_config):
@@ -567,9 +563,9 @@ if __name__ == '__main__':
     # load data
     df_all_speakers = {}
     if smoke_test is True:
-        df_all_speakers = fl.load('./cache.smoketest_speakers.h5')
+        df_all_speakers = fl.load(path='./cache.smoketest_speakers.h5')
     else:
-        df_all_speakers = fl.load('./cache.parse_all_speakers.h5')
+        df_all_speakers = fl.load(path='./cache.parse_all_speakers.h5')
 
     # name of speaker
     speaker_name = None

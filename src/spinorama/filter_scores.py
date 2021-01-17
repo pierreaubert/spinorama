@@ -23,7 +23,7 @@ def scores_apply_filter(df_speaker, peq):
     if score_filtered is None:
         logging.info('computing pref score for eq failed')
         # max score is around 10
-        return None, None, -10.0
+        return None, None, {'pref_score': -10.0}
     return spin_filtered, pir_filtered, score_filtered
 
 
@@ -31,7 +31,7 @@ def scores_graph(spin, spin_filtered, params):
     return graph_spinorama(spin, params) | graph_spinorama(spin_filtered, params)
 
 
-def scores_print(score, score_filtered):
+def scores_print(score: dict, score_filtered:dict):
     print('         SPK FLT')
     print('-----------------')
     print('NBD  ON {0:0.2f} {1:0.2f}'.format(score['nbd_on_axis'], score_filtered['nbd_on_axis']))
@@ -46,7 +46,7 @@ def scores_print(score, score_filtered):
     print('-----------------')
 
 
-def scores_print2(score, score1, score2):
+def scores_print2(score:dict , score1:dict, score2:dict):
     print('         SPK   S1   S2')
     print('----------------------')
     print('NBD  ON {0:0.2f} {1:0.2f} {2:0.2f}'.format(
@@ -69,14 +69,14 @@ def scores_print2(score, score1, score2):
     print('----------------------')
 
 
-def scores_loss(df_speaker, peq):
+def scores_loss(df_speaker: dict, peq) -> float:
     # optimise for score directly
     _, _, score_filtered = scores_apply_filter(df_speaker, peq)
     # optimize max score is the same as optimize min -score
     return -score_filtered['pref_score']
 
 
-def lw_loss(df_speaker, peq):
+def lw_loss(df_speaker: dict, peq) -> float:
     # optimise LW
     # get SPL H & V
     splH = df_speaker['SPL Horizontal_unmelted']

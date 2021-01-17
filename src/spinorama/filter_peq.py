@@ -4,27 +4,29 @@ import math
 import altair as alt
 import numpy as np
 import pandas as pd
+
+from .ltype import Vector, Peq
 from .filter_iir import Biquad
 from .load import graph_melt
 
 
-def peq_build(freq, peq):
-    filter = 0
+def peq_build(freq: Vector, peq: Peq) -> Vector:
+    filter = [0.0]
     if len(peq)>0:
         for w, iir in peq:
             filter += w*np.array([iir.log_result(f) for f in freq])
     return filter
 
 
-def peq_freq(spl, peq):
-    filter = 0
+def peq_freq(spl: Vector, peq: Peq) -> Vector:
+    filter = [0.0]
     if len(peq)>0:
         for w, iir in peq:
             filter += w*np.array([iir(v) for v in spl])
     return filter
 
 
-def peq_preamp_gain(peq):
+def peq_preamp_gain(peq: Peq) -> float:
     # add 0.2 dB to have a margin for clipping
     # this assume that the DSP is operating at more that 16 or 24 bits
     # and that max gain of each PK is not generating clipping by itself
@@ -32,7 +34,7 @@ def peq_preamp_gain(peq):
     return -(np.max(peq_build(freq, peq))+0.2)
 
 
-def peq_apply_measurements(spl, peq):
+def peq_apply_measurements(spl : pd.DataFrame, peq: Peq) -> pd.DataFrame:
     if len(peq) == 0:
         return spl
     freq   = spl['Freq'].to_numpy()
@@ -55,7 +57,7 @@ def peq_apply_measurements(spl, peq):
     return filtered.dropna()
 
 
-def peq_graph_measurements(spin, measurement, peq):
+def peq_graph_measurements(spin: pd.DataFrame, measurement: str, peq: Peq):
     spin_freq   = spin['Freq'].to_numpy()
     mean = np.mean(spin.loc[(spin.Freq>500) & (spin.Freq<10000)]['On Axis'])
     curve = spin[measurement]-mean
@@ -69,13 +71,13 @@ def peq_graph_measurements(spin, measurement, peq):
     )
 
 
-def peq_print(peq):
+def peq_print(peq: Peq) -> None:
     for i in range(0, len(peq)):
         if peq[i][0] != 0:
             print(peq[i][1])
 
 
-def peq_format_apo(comment, peq):
+def peq_format_apo(comment: str, peq: Peq) -> str:
     res = [comment]
     res.append('Preamp: {} dB'.format(peq_preamp_gain(peq)))
     res.append('')
