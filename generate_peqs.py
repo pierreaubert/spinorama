@@ -81,7 +81,8 @@ def flat_loss(freq, local_target, peq, iterations):
     # with a target
     _, _, r_value, _, _ = linregress(np.log10(freq), local_target[1])
     sp = 1-r_value**2
-    return lw+sp
+    q# * or + 
+    return lw*sp
 
 
 def swap_loss(freq, local_target, peq, iteration):

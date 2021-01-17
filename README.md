@@ -40,9 +40,7 @@ The library support 4 kinds of data:
 3. Estimate basic data for a speaker (-3dB output, flatness over a range)
 4. Compute various parameters defined in a paper from Olive (ref. below).
 5. Can compute effect of an EQ (IIR) on the spinorama.
-
-coming soon:
-6. Generate an EQ to optimise the speaker (and get a better preference score).
+6. Generate an EQ to optimise the speaker (and get a better preference score) based on anechoic data. Note: this is not yet a room correction software.
 
 ## Generation
 
