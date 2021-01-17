@@ -49,6 +49,7 @@ from scipy.stats import linregress
 import scipy.optimize as opt
 from scipy.interpolate import InterpolatedUnivariateSpline
 
+from datas.metadata import speakers_info as metadata
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import peq_build  # peq_print
 from spinorama.load_rewseq import parse_eq_iir_rews
@@ -61,26 +62,20 @@ from spinorama.filter_scores import scores_apply_filter, scores_print2
 # ------------------------------------------------------------------------------
 
 
-def lw_loss1(local_target, freq, peq):
+def l2_loss(local_target, freq, peq):
     # L2 norm
     return np.linalg.norm(local_target+peq_build(freq, peq), 2)
 
 
-def lw_loss2(local_target, freq, peq, iterations):
+def lw_loss(local_target, freq, peq, iterations):
     # sum of L2 norms if we have multiple targets
-    return np.sum([lw_loss1(local_target[i], peq)
+    return np.sum([l2_loss(local_target[i], peq)
                    for i in range(0, len(local_target))])
-
-
-def pref_loss(local_target, freq, peq, iterations):
-    # pref score
-    _, _, score = scores_apply_filter(df_speaker, peq)
-    return -score['pref_score']
 
 
 def flat_loss(freq, local_target, peq, iterations):
     # make LW as close as target as possible and SP flat
-    lw = lw_loss1(local_target[0], freq, peq)
+    lw = l2_loss(local_target[0], freq, peq)
     # want sound power to be flat but not necessary aligned
     # with a target
     _, _, r_value, _, _ = linregress(np.log10(freq), local_target[1])
@@ -91,17 +86,17 @@ def flat_loss(freq, local_target, peq, iterations):
 def swap_loss(freq, local_target, peq, iteration):
     # try to alternate, optimise for 1 objective then the second one
     if len(local_target) == 0 or iteration < 10:
-        return lw_loss2([local_target[0]], peq)
+        return l2_loss([local_target[0]], peq)
     else:
-        return lw_loss2([local_target[1]], peq)
+        return l2_loss([local_target[1]], peq)
 
 
 def alternate_loss(freq, local_target, peq, iteration):
     # optimise for 2 objectives 1 each time
     if len(local_target) == 0 or iteration % 2 == 0:
-        return lw_loss2([local_target[0]], peq)
+        return l2_loss([local_target[0]], peq)
     else:
-        return lw_loss2([local_target[1]], peq)
+        return l2_loss([local_target[1]], peq)
 
 
 def score_loss(df_spin, peq):
@@ -412,10 +407,11 @@ def optim_save_peq(speaker_name, df_speaker, optim_config, verbose, smoke_test):
     auto_peq = optim_auto_peq(speaker_name, df_speaker, optim_config)
 
     # do we have a manual peq?
+    score_manual = {}
     if verbose:
         manual_peq_name = './datas/eq/{}/iir.txt'.format(speaker_name)
         manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config['fs'])
-        spin_manual, pir_manual, score_manual = scores_apply_filter(df_speaker, manual_peq)
+        _, _, score_manual = scores_apply_filter(df_speaker, manual_peq)
 
     # compute new score with this PEQ
     spin_auto, pir_auto, score_auto = scores_apply_filter(df_speaker, auto_peq)
@@ -454,10 +450,13 @@ def queue_speakers(df_all_speakers, optim_config, verbose, smoke_test):
             # currently doing only ASR but should work for the others
             # Princeton start around 500hz
             continue
-        if 'asr' not in df_all_speakers[speaker_name]['ASR'].keys():
-            logger.error('no asr for {}'.format(speaker_name))
+        default = 'asr'
+        if speaker_name in metadata.keys() and 'default_measurement' in metadata[speaker_name].keys():
+            default = metadata[speaker_name]['default_measurement']
+        if default not in df_all_speakers[speaker_name]['ASR'].keys():
+            logger.error('no {} for {}'.format(default, speaker_name))
             continue
-        df_speaker = df_all_speakers[speaker_name]['ASR']['asr']
+        df_speaker = df_all_speakers[speaker_name]['ASR'][default]
         if 'SPL Horizontal_unmelted' not in df_speaker.keys() or 'SPL Vertical_unmelted' not in df_speaker.keys():
             logger.error('no Horizontal or Vertical measurement for {}'.format(speaker_name))
             continue
@@ -579,7 +578,7 @@ if __name__ == '__main__':
 
     # ray section
     ray.worker.global_worker.run_function_on_all_workers(setup_logger)
-    # address is the one from the ray server
+    # address is the one from the ray server<
     # ray.init(address='{}:{}'.format(ip, port))
     ray.init()
 
@@ -593,7 +592,10 @@ if __name__ == '__main__':
             sys.exit(1)
         if 'ASR' not in df_all_speakers[speaker_name].keys():
             sys,exit(0)
-        df_speaker = df_all_speakers[speaker_name]['ASR']['asr']
+        default = 'asr'
+        if speaker_name in metadata.keys() and 'default_measurement'in metadata[speaker_name].keys():
+            default = metadata[speaker_name]['default_measurement']
+        df_speaker = df_all_speakers[speaker_name]['ASR'][default]
         id = optim_save_peq.remote(speaker_name, df_speaker, optim_config, verbose, smoke_test)
         while 1:
             ready_ids, remaining_ids = ray.wait([id], num_returns=1)
