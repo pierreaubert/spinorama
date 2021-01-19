@@ -230,7 +230,7 @@ def propose_range_dbGain(freq: Vector,
                          init_freq: Vector,
                          optim_config: dict) -> Vector:
     spline = InterpolatedUnivariateSpline(np.log10(freq), local_target, k=1)
-    init_dbGain = abs(spline(np.log10(init_freq))[0])
+    init_dbGain = abs(spline(np.log10(init_freq)))
     init_dbGain_min = max(init_dbGain/5, optim_config['MIN_DBGAIN'])
     init_dbGain_max = min(init_dbGain*5, optim_config['MAX_DBGAIN'])
     logger.debug('gain min {}dB peak {}dB max {}dB'.format(

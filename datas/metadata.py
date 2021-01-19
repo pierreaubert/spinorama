@@ -1924,6 +1924,22 @@ speakers_info = {
             },
         },
     },
+    'Paradigm Prestige 15B': {
+        'brand': 'Paradigm',
+        'model': 'Prestige 15B',
+        'type': 'passive',
+        'price': '1600',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/paradigm-prestige-15b-review-bookshelf-speaker.19466/',
+            },
+        },
+    },
     'Part Express DIY C-Note': {
         'brand': 'Part Express',
         'model': 'DIY C-Note',
