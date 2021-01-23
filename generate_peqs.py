@@ -17,21 +17,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-usage: generate_peqs.py [--help] [--version] [--log-level=<level>]\
-    [--force] [--smoke-test] [-v|--verbose]\
-    [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>]
+usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
+[--force] [--smoke-test] [-v|--verbose] \
+[--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>] \
+[--max-peq=<count>] [--min-Q=<minQ>] [--max-Q=<maxQ>] [--min-dB=<mindB>] [--max-dB=<maxdB>] \
+[--only-biquad-peak] [--curve-peak-only]
 
 Options:
-  --help            display usage()
-  --version         script version number
-  --force           force generation of eq even if already computed
-  --verbose         print some informations
-  --smoke-test      test the optimiser with a small amount of variables
-  --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
-  --origin=<origin> restrict to a specific origin, usefull for debugging
-  --speaker=<speaker> restrict to a specific speaker, usefull for debugging
-  --mversion=<mversion> restrict to a specific mversion (for a given origin
-                        you can have multiple measurements)
+  --help                   Display usage()
+  --version                Script version number
+  --force                  Force generation of eq even if already computed
+  --verbose                Print some informations
+  --smoke-test             Test the optimiser with a small amount of variables
+  --log-level=<level>      Default is WARNING, options are DEBUG or INFO or ERROR.
+  --origin=<origin>        Restrict to a specific origin
+  --speaker=<speaker>      Restrict to a specific speaker, if not specified it will optimise all speakers
+  --mversion=<mversion>    Restrict to a specific mversion (for a given origin you can have multiple measurements)
+  --max-peq=<count>        Maximum allowed number of Biquad
+  --min-Q=<minQ>           Minumum value for Q
+  --max-Q=<maxQ>           Maximum value for Q
+  --min-dB=<mindB>         Minumum value for dBGain
+  --max-dB=<maxdB>         Maximum value for dBGain
+  --only-biquad-peak       PEQ can only be of type Peak aka PK
+  --curve-peak-only        Optimise both for peaks and valleys on a curve
 """
 from datetime import datetime
 import logging
@@ -196,18 +204,21 @@ def find_largest_area(freq, curve, optim_config):
 
     plus_curve = np.clip(curve, a_min=0, a_max=None)
     plus_index, plus_areas = largest_area(plus_curve)
-    minus_curve = -np.clip(curve, a_min=None, a_max=0)
-    minus_index, minus_areas = largest_area(minus_curve)
+
+    minus_index, minus_areas = None, None
+    if optim_config['plus_and_minus'] is True:
+        minus_curve = -np.clip(curve, a_min=None, a_max=0)
+        minus_index, minus_areas = largest_area(minus_curve)
 
     if minus_areas is None and plus_areas is None:
         logger.error('No initial freq found')
         return +1, None, None
 
-    if minus_areas is None:
-        return +1, plus_index, freq[plus_index]
-
     if plus_areas is None:
         return -1, minus_index, freq[minus_index]
+
+    if minus_areas is None:
+        return +1, plus_index, freq[plus_index]
 
     if minus_areas > plus_areas:
         return -1, minus_index, freq[minus_index]
@@ -216,8 +227,7 @@ def find_largest_area(freq, curve, optim_config):
 
 
 def propose_range_freq(freq, local_target, optim_config):
-    sign, indice, init_freq = find_largest_area(freq, local_target,
-                                                optim_config)
+    sign, indice, init_freq = find_largest_area(freq, local_target, optim_config)
     scale = optim_config['elastic']
     #print('Scale={} init_freq {}'.format(scale, init_freq))
     init_freq_min = max(init_freq*scale, 20)
@@ -230,17 +240,12 @@ def propose_range_freq(freq, local_target, optim_config):
         return sign, init_freq, np.linspace(init_freq_min, init_freq_max, optim_config['MAX_STEPS_FREQ']).tolist()
 
 
-def propose_range_dbGain(freq: Vector, 
-                         local_target: List[Vector], 
-                         sign: Literal[-1, 1], 
-                         init_freq: Vector,
-                         optim_config: dict) -> Vector:
+def propose_range_dbGain(freq: Vector, local_target: List[Vector], sign: Literal[-1, 1], init_freq: Vector, optim_config: dict) -> Vector:
     spline = InterpolatedUnivariateSpline(np.log10(freq), local_target, k=1)
     init_dbGain = abs(spline(np.log10(init_freq)))
     init_dbGain_min = max(init_dbGain/5, optim_config['MIN_DBGAIN'])
     init_dbGain_max = min(init_dbGain*5, optim_config['MAX_DBGAIN'])
-    logger.debug('gain min {}dB peak {}dB max {}dB'.format(
-        init_dbGain_min, init_dbGain, init_dbGain_max))
+    logger.debug('gain min {}dB peak {}dB max {}dB'.format(init_dbGain_min, init_dbGain, init_dbGain_max))
 
     if sign < 0:
         return np.linspace(init_dbGain_min, init_dbGain_max, optim_config['MAX_STEPS_DBGAIN']).tolist()
@@ -249,11 +254,9 @@ def propose_range_dbGain(freq: Vector,
 
 
 def propose_range_Q(optim_config):
-    return np.concatenate(
-        (np.linspace(optim_config['MIN_Q'], 1.0, optim_config['MAX_STEPS_Q']),
-         np.linspace(1+optim_config['MIN_Q'], optim_config['MAX_Q'],
-                     optim_config['MAX_STEPS_Q'])),
-        axis=0).tolist()
+    return np.concatenate((np.linspace(optim_config['MIN_Q'], 1.0, optim_config['MAX_STEPS_Q']),
+                           np.linspace(1+optim_config['MIN_Q'], optim_config['MAX_Q'], optim_config['MAX_STEPS_Q'])),
+                          axis=0).tolist()
 
 
 def propose_range_biquad(optim_config):
@@ -268,8 +271,9 @@ def propose_range_biquad(optim_config):
     ]
 
 
-def find_best_biquad(freq, auto_target, freq_range, Q_range, dbGain_range,
-                     biquad_range, count, optim_config):
+def find_best_biquad(
+        freq, auto_target, freq_range, Q_range, dbGain_range,
+        biquad_range, count, optim_config):
 
     weigths = optim_config['loss_weigths']
 
@@ -291,11 +295,45 @@ def find_best_biquad(freq, auto_target, freq_range, Q_range, dbGain_range,
         bounds[3][0], bounds[3][1],
     ))
     # can use differential_evolution basinhoppin dual_annealing
-    res = opt.dual_annealing(opt_peq, bounds)
-    logger.debug(
-        '          optim loss {:2.2f} in {} iter type {:d} at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f}'.format(
-        res.fun, res.nfev, int(res.x[0]), res.x[1], res.x[2], res.x[3]))
+    res = opt.dual_annealing(opt_peq, bounds,
+                             # maxiter=2000,
+                             # initial_temp=10000
+    )
+    logger.debug('          optim loss {:2.2f} in {} iter type {:d} at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}'.format(
+        res.fun, res.nfev, int(res.x[0]), res.x[1], res.x[2], res.x[3], res.message))
     return True, int(res.x[0]), res.x[1], res.x[2], res.x[3], res.fun
+
+
+def find_best_peak(freq, auto_target, freq_range, Q_range, dbGain_range,
+                   biquad_range, count, optim_config):
+
+    biquad_type = 3
+
+    weigths = optim_config['loss_weigths']
+
+    def opt_peq(x):
+        peq = [(1.0, Biquad(biquad_type, x[0], 48000, x[1], x[2]))]
+        return flat_loss(freq, auto_target, peq, count, weigths)
+
+    bounds = [
+        (freq_range[0], freq_range[-1]),
+        (Q_range[0], Q_range[-1]),
+        (dbGain_range[0], dbGain_range[-1]),
+    ]
+
+    logger.debug('range is [{}, {}], [{}, {}], [{}, {}]'.format(
+        bounds[0][0], bounds[0][1],
+        bounds[1][0], bounds[1][1],
+        bounds[2][0], bounds[2][1],
+    ))
+    # can use differential_evolution basinhoppin dual_annealing
+    res = opt.dual_annealing(opt_peq, bounds,
+                             # maxiter=2000,
+                             # initial_temp=10000
+    )
+    logger.debug('          optim loss {:2.2f} in {} iter type PK at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}'.format(
+        res.fun, res.nfev, res.x[0], res.x[1], res.x[2], res.message))
+    return True, biquad_type, res.x[0], res.x[1], res.x[2], res.fun
 
 
 # ------------------------------------------------------------------------------
@@ -352,23 +390,9 @@ def graph_eq(freq, peq, title):
     )
     return g_eq
     
-    
-def print_results(speaker_name, freq,
-                  manual_peq, auto_peq,
-                  target, target_interp,
-                  manual_target, manual_interp,
-                  spin, spin_manual, spin_auto,
-                  pir, pir_manual, pir_auto,
-                  optim_config):
 
-    # what's the min over freq?
-    reg_min = optim_config['freq_reg_min']
-    # build a graph for each peq
-    g_manual_eq = graph_eq(freq, manual_peq, '{} manual'.format(speaker_name))
-    g_auto_eq = graph_eq(freq, auto_peq, '{} auto'.format(speaker_name))
-
-    # full eqs compared
-    g_eq_full = alt.Chart(
+def graph_eq_compare(freq, manual_peq, auto_peq, reg_min, speaker_name):
+    return alt.Chart(
         graph_melt(
             pd.DataFrame({
                 'Freq': freq,
@@ -385,7 +409,25 @@ def print_results(speaker_name, freq,
         title='{} manual and auto filter'.format(speaker_name)
     )
 
-    # target curves
+
+def graph_results(speaker_name, freq,
+                  manual_peq, auto_peq,
+                  target, target_interp,
+                  manual_target, manual_interp,
+                  spin, spin_manual, spin_auto,
+                  pir, pir_manual, pir_auto,
+                  optim_config):
+
+    # what's the min over freq?
+    reg_min = optim_config['freq_reg_min']
+    # build a graph for each peq
+    g_manual_eq = graph_eq(freq, manual_peq, '{} manual'.format(speaker_name))
+    g_auto_eq = graph_eq(freq, auto_peq, '{} auto'.format(speaker_name))
+
+    # compare the 2 eqs
+    g_eq_full = graph_eq_compare(freq, manual_peq, auto_peq, reg_min, speaker_name)
+
+    # compare the 2 corrected curves
     df_optim = pd.DataFrame({'Freq': freq})
     df_optim['Auto'] = target[0]-target_interp[0]+peq_build(freq, auto_peq)
     if manual_target is not None:
@@ -401,7 +443,7 @@ def print_results(speaker_name, freq,
         title='{} manual and auto corrected {}'.format(speaker_name, optim_config['curve_names'][0])
     )
 
-    # 3 spinoramas
+    # show the 3 spinoramas
     g_params = {'xmin': 20, 'xmax': 20000, 'ymin': -40, 'ymax': 10, 'width': 400, 'height': 250}
     g_params['width'] = 800
     g_params['height'] = 400
@@ -409,7 +451,7 @@ def print_results(speaker_name, freq,
     g_spin_manual = graph_spinorama(spin_manual, g_params).properties(title='{} ASR + manual EQ'.format(speaker_name)) 
     g_spin_auto = graph_spinorama(spin_auto, g_params).properties(title='{} ASR + auto EQ'.format(speaker_name))
 
-    # 3 optimised curves
+    # show the 3 optimised curves
     # which_curve='Listening Window
     # which_curve='Sound Power'
     which_curve='Estimated In-Room Response'
@@ -468,12 +510,13 @@ def optim_greedy(speaker_name, df_speaker, freq, target, target_interp, optim_co
         init_Q_range = propose_range_Q(optim_config)
         biquad_range = propose_range_biquad(optim_config)
 
-        state, current_type, current_freq, current_Q, current_dbGain, \
-            current_loss = find_best_biquad(freq,
-                                            auto_target, init_freq_range,
-                                            init_Q_range, init_dbGain_range,
-                                            biquad_range, optim_iter,
-                                            optim_config)
+        state, current_type, current_freq, current_Q, current_dbGain, current_loss = False, -1, -1, -1, -1, -1
+        if optim_config['full_biquad_optim'] is True:
+            state, current_type, current_freq, current_Q, current_dbGain, current_loss = find_best_biquad(
+                freq, auto_target, init_freq_range, init_Q_range, init_dbGain_range, biquad_range, optim_iter, optim_config)
+        else:
+            state, current_type, current_freq, current_Q, current_dbGain, current_loss = find_best_peak(
+                freq, auto_target, init_freq_range, init_Q_range, init_dbGain_range, biquad_range, optim_iter, optim_config)
         if state:
             biquad = (1.0, Biquad(current_type, current_freq, 48000, current_Q, current_dbGain))
             auto_peq.append(biquad)
@@ -565,7 +608,7 @@ def optim_save_peq(speaker_name, df_speaker, df_speaker_eq, optim_config, verbos
 
     # print results
     if len(manual_peq) > 0 and len(auto_peq) > 0:
-        graphs = print_results(
+        graphs = graph_results(
             speaker_name, freq,  manual_peq, auto_peq,
             target, target_interp,
             manual_target, manual_interp,
@@ -630,8 +673,7 @@ def compute_peqs(ray_ids):
 
 
 if __name__ == '__main__':
-    args = docopt(__doc__, version='generate_peqs.py version 0.1',
-                  options_first=True)
+    args = docopt(__doc__, version='generate_peqs.py version 0.2', options_first=True)
 
     force = args['--force']
     verbose = args['--verbose']
@@ -666,7 +708,12 @@ if __name__ == '__main__':
     optim_config = {
         # name of the loss function
         'loss': 'flat_loss',
+        # if you have multiple loss functions, define the weigth for each
         'loss_weigths': [1.0, 1.0],
+        # do you optimise only peaks or both peaks and valleys?
+        'plus_and_minus': True,
+        # do you optimise for all kind of biquad or do you want only Peaks?
+        'full_biquad_optim': True,
         # lookup around a value is [value*elastic, value/elastic]
         'elastic': 0.8,
         # cut frequency
@@ -693,7 +740,7 @@ if __name__ == '__main__':
     # MAX_STEPS_XXX are usefull for grid search when the algorithm is looking
     # for random values (or trying all) across a range
     if smoke_test:
-        optim_config['MAX_NUMBER_PEQ'] = 3
+        optim_config['MAX_NUMBER_PEQ'] = 5
         optim_config['MAX_STEPS_FREQ'] = 3
         optim_config['MAX_STEPS_DBGAIN'] = 3
         optim_config['MAX_STEPS_Q'] = 3
@@ -709,6 +756,30 @@ if __name__ == '__main__':
     optim_config['MAX_DBGAIN'] = 12
     optim_config['MIN_Q'] = 0.1
     optim_config['MAX_Q'] = 12
+
+    # do we override optim default?
+    if args['--max-peq'] is not None:
+        max_number_peq = int(args['--max-peq'])
+        optim_config['MAX_NUMBER_PEQ'] = max_number_peq
+    if args['--min-Q'] is not None:
+        min_Q = float(args['--min-Q'])
+        optim_config['MIN_Q'] = min_Q
+    if args['--max-Q'] is not None:
+        max_Q = float(args['--max-Q'])
+        optim_config['MAX_Q'] = max_Q
+    if args['--min-dB'] is not None:
+        min_dB = float(args['--min-dB'])
+        optim_config['MIN_DBGAIN'] = min_dB
+    if args['--max-dB'] is not None:
+        max_dB = float(args['--max-dB'])
+        optim_config['MAX_DBGAIN'] = max_dB
+    if args['--only-biquad-peak'] is not None:
+        if args['--only-biquad-peak'] is True:
+            print('opt is true')
+            optim_config['full_biquad_optim'] = False
+    if args['--curve-peak-only'] is not None:
+        if args['--curve-peak-only'] is True:
+            optim_config['plus_and_minus'] = False
 
     # name of speaker
     speaker_name = None
