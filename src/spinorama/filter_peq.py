@@ -79,11 +79,27 @@ def peq_print(peq: Peq) -> None:
 
 def peq_format_apo(comment: str, peq: Peq) -> str:
     res = [comment]
-    res.append('Preamp: {} dB'.format(peq_preamp_gain(peq)))
+    res.append('Preamp: {:.1f} dB'.format(peq_preamp_gain(peq)))
     res.append('')
     for i, data in enumerate(peq):
         w, iir = data
-        res.append('Filter {}: ON {:s} Fc {:d} Hz Gain {:0.2f} dB Q {:0.2f}'.format(i, iir.type2str(), int(iir.freq), iir.Q, iir.dbGain))
+        if iir.typ in (Biquad.PEAK, Biquad.NOTCH, Biquad.BANDPASS):
+            res.append('Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB Q {:0.2f}'.format(
+                i+1,
+                iir.type2str(),
+                int(iir.freq), iir.dbGain, iir.Q))
+        elif iir.typ in (Biquad.LOWPASS, Biquad.HIGHPASS):
+            res.append('Filter {:2d}: ON {:2s} Fc {:5d} Hz'.format(
+                i+1,
+                iir.type2str(),
+                int(iir.freq)))
+        elif iir.typ in (Biquad.LOWSHELF, Biquad.HIGHSHELF):
+            res.append('Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB'.format(
+                i+1,
+                iir.type2str(),
+                int(iir.freq), iir.dbGain))
+        else:
+            logger.error('kind {} is unkown'.format(iir.typ))
     res.append('')
     return '\n'.join(res)
 

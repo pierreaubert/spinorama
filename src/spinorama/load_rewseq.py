@@ -32,7 +32,7 @@ def parse_eq_iir_rews(filename, srate):
                     gain = words[8]
                     q    = words[11]
 
-                    ifreq = int(freq)
+                    ifreq = int(float(freq))
                     if ifreq < 0 or ifreq > srate/2:
                         logger.info('IIR peq freq {0}Hz out of bounds (srate={1}'.format(freq, srate))
                         continue
@@ -48,7 +48,7 @@ def parse_eq_iir_rews(filename, srate):
                         # continue
 
                     # TODO: factor code
-                    if kind == 'PK':
+                    if kind == 'PK' or kind == 'PEQ' or kind == 'Modal':
                         iir = Biquad(Biquad.PEAK, ifreq, srate, rq, rgain)
                         logger.debug('add IIR peq PEAK freq {0}Hz srate {1} Q {2} Gain {3}'.format(ifreq, srate, rq, rgain))
                         peq.append((status, iir))
@@ -77,11 +77,11 @@ def parse_eq_iir_rews(filename, srate):
                         continue
 
                     # TODO: factor code
-                    if kind == 'HP':
+                    if kind == 'HP' or kind == 'HPQ':
                         iir = Biquad(Biquad.HIGHPASS, ifreq, srate, 1.0/math.sqrt(2.0), 1.0)
                         logger.debug('add IIR peq LOWPASS freq {0}Hz srate {1} Q {2} Gain {3}'.format(ifreq, srate, rq, rgain))
                         peq.append((status, iir))
-                    elif kind == 'LP':
+                    elif kind == 'LP' or kind == 'LPQ':
                         iir = Biquad(Biquad.LOWPASS, ifreq, srate,  1.0/math.sqrt(2.0), 1.0)
                         logger.debug('add IIR peq LOWPASS freq {0}Hz srate {1} Q {2} Gain {3}'.format(ifreq, srate, rq, rgain))
                         peq.append((status, iir))
@@ -107,11 +107,11 @@ def parse_eq_iir_rews(filename, srate):
                         logger.info('IIR peq freq {0}Hz out of bounds (srate={1}'.format(freq, srate))
                         continue
 
-                    if kind == 'LS':
+                    if kind == 'LS' or kind == 'LSC':
                         iir = Biquad(Biquad.LOWSHELF, ifreq, srate, 1.0, rgain)
                         logger.debug('add IIR peq LOWSHELF freq {0}Hz srate {1} Q {2} Gain {3}'.format(ifreq, srate, rq, rgain))
                         peq.append((status, iir))
-                    elif kind == 'HS':
+                    elif kind == 'HS' or kind == 'HSC':
                         iir = Biquad(Biquad.HIGHSHELF, ifreq, srate, 1.0, rgain)
                         logger.debug('add IIR peq HIGHSHELF freq {0}Hz srate {1} Q {2} Gain {3}'.format(ifreq, srate, rq, rgain))
                         peq.append((status, iir))

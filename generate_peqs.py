@@ -21,7 +21,7 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
 [--force] [--smoke-test] [-v|--verbose] \
 [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>] \
 [--max-peq=<count>] [--min-Q=<minQ>] [--max-Q=<maxQ>] [--min-dB=<mindB>] [--max-dB=<maxdB>] \
-[--only-biquad-peak] [--curve-peak-only]
+[--only-biquad-peak] [--curve-peak-only] [--loss=<pick>]
 
 Options:
   --help                   Display usage()
@@ -72,6 +72,8 @@ from spinorama.filter_scores import scores_apply_filter, scores_print2
 from spinorama.graph import graph_spinorama, graph_freq, graph_regression_graph, graph_regression
 
 
+VERSION=0.3
+
 # ------------------------------------------------------------------------------
 # various loss function
 # ------------------------------------------------------------------------------
@@ -82,10 +84,9 @@ def l2_loss(local_target: Vector, freq: Vector, peq: Peq) -> float:
     return np.linalg.norm(local_target+peq_build(freq, peq), 2)
 
 
-def lw_loss(local_target, freq, peq, iterations: int) -> float:
+def leastsquare_loss(freq, local_target, peq, iterations: int) -> float:
     # sum of L2 norms if we have multiple targets
-    return np.sum([l2_loss(local_target[i], freq, peq)
-                   for i in range(0, len(local_target))])
+    return np.sum([l2_loss(local_target[i], freq, peq) for i in range(0, len(local_target))])
 
 
 def flat_loss(freq, local_target, peq, iterations, weigths):
@@ -124,6 +125,19 @@ def score_loss(df_spin, peq):
     _, _, score = scores_apply_filter(df_spin, peq)
     return -score['pref_score']
 
+
+def loss(freq, local_target, peq, iterations, optim_config):
+    which_loss = optim_config['loss']
+    if which_loss == 'flat_loss':
+        weigths = optim_config['loss_weigths']
+        return flat_loss(freq, local_target, peq, iterations, weigths)
+    elif which_loss == 'leastsquare_loss':
+        return leastsquare_loss(freq, local_target, peq, iterations)
+    elif which_loss == 'alternate_loss':
+        return altenate_loss(freq, local_target, peq, iterations)
+    logger.error('loss function is unkown')
+    
+    
 # ------------------------------------------------------------------------------
 # compute freq and targets
 # ------------------------------------------------------------------------------
@@ -275,11 +289,9 @@ def find_best_biquad(
         freq, auto_target, freq_range, Q_range, dbGain_range,
         biquad_range, count, optim_config):
 
-    weigths = optim_config['loss_weigths']
-
     def opt_peq(x):
         peq = [(1.0, Biquad(int(x[0]), x[1], 48000, x[2], x[3]))]
-        return flat_loss(freq, auto_target, peq, count, weigths)
+        return loss(freq, auto_target, peq, count, optim_config)
 
     bounds = [
         (biquad_range[0], biquad_range[-1]),
@@ -309,11 +321,9 @@ def find_best_peak(freq, auto_target, freq_range, Q_range, dbGain_range,
 
     biquad_type = 3
 
-    weigths = optim_config['loss_weigths']
-
     def opt_peq(x):
         peq = [(1.0, Biquad(biquad_type, x[0], 48000, x[1], x[2]))]
-        return flat_loss(freq, auto_target, peq, count, weigths)
+        return loss(freq, auto_target, peq, count, optim_config)
 
     bounds = [
         (freq_range[0], freq_range[-1]),
@@ -328,8 +338,8 @@ def find_best_peak(freq, auto_target, freq_range, Q_range, dbGain_range,
     ))
     # can use differential_evolution basinhoppin dual_annealing
     res = opt.dual_annealing(opt_peq, bounds,
-                             # maxiter=2000,
-                             # initial_temp=10000
+                             maxiter=10000,
+                             initial_temp=10000
     )
     logger.debug('          optim loss {:2.2f} in {} iter type PK at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}'.format(
         res.fun, res.nfev, res.x[0], res.x[1], res.x[2], res.message))
@@ -487,9 +497,10 @@ def optim_greedy(speaker_name, df_speaker, freq, target, target_interp, optim_co
 
     auto_peq = []
     auto_target = optim_compute_auto_target(freq, target, target_interp, auto_peq)
-    best_loss = flat_loss(freq, auto_target, auto_peq, 0, optim_config['loss_weigths'])
+    best_loss = loss(freq, auto_target, auto_peq, 0, optim_config)
     pref_score = score_loss(df_speaker, auto_peq)
 
+    results = [(0, best_loss, -pref_score)]
     print(
         'OPTIM {} START {} #PEQ {:d} Freq #{:d} Gain #{:d} +/-[{}, {}] Q #{} [{}, {}] Loss {:2.2f} Score {:2.2f}'.format(
             speaker_name,
@@ -522,10 +533,11 @@ def optim_greedy(speaker_name, df_speaker, freq, target, target_interp, optim_co
             auto_peq.append(biquad)
             best_loss = current_loss
             pref_score = score_loss(df_speaker, auto_peq)
+            results.append((optim_iter+1, best_loss, -pref_score))
             print('Iter {:2d} Optim converged loss {:2.2f} pref score {:2.2f} biquad {:2s} F:{:5.0f}Hz Q:{:2.2f} G:{:+2.2f}dB'
                   .format(optim_iter,
                           best_loss,
-                          pref_score,
+                          -pref_score,
                           biquad[1].type2str(),
                           current_freq,
                           current_Q,
@@ -535,11 +547,17 @@ def optim_greedy(speaker_name, df_speaker, freq, target, target_interp, optim_co
                          .format(best_loss, current_loss))
             break
 
-    print('OPTIM END {}: best loss {:2.2f} with {:2d} PEQs'.format(
+    # recompute auto_target with the full auto_peq
+    auto_target = optim_compute_auto_target(freq, target, target_interp, auto_peq)
+    final_loss = loss(freq, auto_target, [], 0, optim_config)
+    final_score = score_loss(df_speaker, auto_peq)
+    results.append((optim_iter+1, best_loss, -pref_score))
+    print('OPTIM END {}: best loss {:2.2f} final score {:2.2f} with {:2d} PEQs'.format(
         speaker_name,
-        flat_loss(freq, auto_target, [], 0, optim_config['loss_weigths']),
+        final_loss,
+        -final_score,
         len(auto_peq)))
-    return auto_peq
+    return results, auto_peq
 
 
 @ray.remote
@@ -562,7 +580,7 @@ def optim_save_peq(speaker_name, df_speaker, df_speaker_eq, optim_config, verbos
     target_interp = []
     for curve in curves:
         target_interp.append(getTarget(df, freq, curve, optim_config))
-    auto_peq = optim_greedy(speaker_name, df_speaker, freq, target, target_interp, optim_config)
+    auto_results, auto_peq = optim_greedy(speaker_name, df_speaker, freq, target, target_interp, optim_config)
 
     # do we have a manual peq?
     score_manual = {}
@@ -587,8 +605,8 @@ def optim_save_peq(speaker_name, df_speaker, df_speaker_eq, optim_config, verbos
                 'Preference Score {:2.1f} with EQ {:2.1f}'.format(
                     score['pref_score'],
                     score_auto['pref_score']),
-                'Generated from http://github.com/pierreaubert/spinorama',
-                'Date {}'.format(datetime.today().strftime('%Y-%m-%d-%H:%M:%S')),
+                'Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v{}'.format(VERSION),
+                'Dated: {}'.format(datetime.today().strftime('%Y-%m-%d-%H:%M:%S')),
                 '',
     ]
     eq_apo = peq_format_apo('\n'.join(comments), auto_peq)
@@ -620,8 +638,14 @@ def optim_save_peq(speaker_name, df_speaker, df_speaker_eq, optim_config, verbos
             graphs_filename += '_smoketest'
         graphs_filename += '.png'
         graphs.save(graphs_filename)
-    
-    return 0
+
+    # print a compact table of results
+    if verbose:
+        print('ITER  LOSS SCORE -----------------------------------------------------')
+        print('\n'.join(['  {:2d} {:+2.2f} {:+2.2f}'.format(r[0], r[1], r[2]) for r in auto_results]))
+        print('----------------------------------------------------------------------')
+        
+    return auto_results
 
 
 def queue_speakers(df_all_speakers, optim_config, verbose, smoke_test):
@@ -673,7 +697,9 @@ def compute_peqs(ray_ids):
 
 
 if __name__ == '__main__':
-    args = docopt(__doc__, version='generate_peqs.py version 0.2', options_first=True)
+    args = docopt(__doc__,
+                  version='generate_peqs.py version {}'.format(VERSION),
+                  options_first=True)
 
     force = args['--force']
     verbose = args['--verbose']
