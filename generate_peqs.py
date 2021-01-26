@@ -138,6 +138,7 @@ def loss(freq, local_target, peq, iterations, optim_config):
     logger.error('loss function is unkown')
     
     
+
 # ------------------------------------------------------------------------------
 # compute freq and targets
 # ------------------------------------------------------------------------------
@@ -171,25 +172,21 @@ def getTarget(df_speaker_data, freq, current_curve_name, optim_config):
     # normalise to have a flat target (primarly for bright speakers)
     if current_curve_name == 'On Axis':
         slope = 0
-        intercept = current_curve[0]
     elif current_curve_name == 'Listening Window':
         # slighlithy downward
-        slope = -2/math.log(20000)
-        intercept = current_curve[0]
+        slope = -2
     elif current_curve_name == 'Early Reflections':
-        slope = -5/math.log(20000)
-        intercept = current_curve[0]
+        slope = -5
     elif current_curve_name == 'Sound Power':
-        slope = -8/math.log(20000)
-        intercept = current_curve[0]
+        slope = -8
     else:
         logger.error('No match for getTarget')
         return None
-        
-    target_interp = [(slope*math.log10(freq[i])+intercept)
-                     for i in range(0, len(freq))]
-    logger.debug('Slope {} Intercept {} R {} P {} err {}'.format(
-        slope, intercept, r_value, p_value, std_err))
+    slope *= math.log10(freq[0])/math.log10(freq[-1])
+    intercept = current_curve[0]-slope
+    target_interp = [slope*math.log10(freq[i])+intercept for i in range(0, len(freq))]
+    logger.debug('Slope {} Intercept {} R {} P {} err {}'.format(slope, intercept, r_value, p_value, std_err))
+    logger.debug('Target_interp from {:.1f}dB at {}Hz to {:.1f}dB at {}Hz'.format(target_interp[0], freq[0], target_interp[-1], freq[-1]))
     return target_interp
 
 # ------------------------------------------------------------------------------
@@ -205,11 +202,9 @@ def find_largest_area(freq, curve, optim_config):
         if len(found_peaks) == 0:
             return None, None
         #print('found peaks at {}'.format(found_peaks))
-        found_widths = sig.peak_widths(positive_curve, found_peaks,
-                                       rel_height=0.1)[0]
+        found_widths = sig.peak_widths(positive_curve, found_peaks, rel_height=0.1)[0]
         #print('computed width at {}'.format(found_widths))
-        areas = [(i, positive_curve[found_peaks[i]]*found_widths[i])
-                 for i in range(0, len(found_peaks))]
+        areas = [(i, positive_curve[found_peaks[i]]*found_widths[i]) for i in range(0, len(found_peaks))]
         #print('areas {}'.format(areas))
         sorted_areas = sorted(areas, key=lambda a: -a[1])
         #print('sorted {}'.format(sorted_areas))
@@ -716,10 +711,10 @@ if __name__ == '__main__':
     fh = logging.FileHandler('debug_optim.log')
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     fh.setFormatter(formatter)
-    # sh = logging.StreamHandler(sys.stdout)
-    # sh.setFormatter(formatter)
+    sh = logging.StreamHandler(sys.stdout)
+    sh.setFormatter(formatter)
     logger.addHandler(fh)
-    # logger.addHandler(sh)
+    logger.addHandler(sh)
     if level is not None:
         logger.setLevel(level)
     else:
@@ -760,6 +755,7 @@ if __name__ == '__main__':
         # the target and having a Sound Power as flat as possible (without a
         # target)
         'curve_names': ['Listening Window', 'Sound Power'],
+        # 'curve_names': ['Early Reflections', 'Sound Power'],
     }
 
     # define other parameters for the optimisation algorithms
