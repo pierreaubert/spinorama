@@ -2711,6 +2711,22 @@ speakers_info = {
             },
         },
     },
+    'Yamaha HS7': {
+        'brand': 'Yamaha',
+        'model': 'HS5',
+        'type': 'active',
+        'price': '640',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/yamaha-hs7-review-studio-monitor.19761/',
+            },
+        },
+    },
     'Yamaha NS-A638': {
         'brand': 'Yamaha',
         'model': 'NS-A638',

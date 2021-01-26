@@ -1,0 +1,11 @@
+Yamaha HS7 APO EQ Score 96000Hz
+January252021-132733
+
+Preamp: -2.1 dB
+
+Filter 1: ON HPQ Fc 43.6 Hz Q 1.14
+Filter 2: ON PK Fc 380.5 Hz Gain -1.57 dB Q 2.43
+Filter 3: ON PK Fc 896.5 Hz Gain -4.13 dB Q 1.88
+Filter 4: ON PK Fc 1712 Hz Gain 1.82 dB Q 1.41
+Filter 5: ON PK Fc 3942 Hz Gain -3.04 dB Q 1.05
+Filter 6: ON PK Fc 12184 Hz Gain -3.6 dB Q 2.73
