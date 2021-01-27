@@ -91,13 +91,14 @@ def leastsquare_loss(freq, local_target, peq, iterations: int) -> float:
 
 def flat_loss(freq, local_target, peq, iterations, weigths):
     # make LW as close as target as possible and SP flat
-    lw = l2_loss(local_target[0], freq, peq)
+    lw = np.sum([l2_loss(local_target[i], freq, peq) for i in range(0, len(local_target)-1)])
     # want sound power to be flat but not necessary aligned
     # with a target
-    _, _, r_value, _, _ = linregress(np.log10(freq), local_target[1])
+    _, _, r_value, _, _ = linregress(np.log10(freq), local_target[-1])
     sp = 1-r_value**2
     # * or + 
-    return weigths[0]*lw+weigths[1]*sp
+    # return weigths[0]*lw+weigths[1]*sp
+    return lw*sp
 
 
 def swap_loss(freq, local_target, peq, iteration):
@@ -496,14 +497,13 @@ def optim_greedy(speaker_name, df_speaker, freq, target, target_interp, optim_co
     pref_score = score_loss(df_speaker, auto_peq)
 
     results = [(0, best_loss, -pref_score)]
-    print(
-        'OPTIM {} START {} #PEQ {:d} Freq #{:d} Gain #{:d} +/-[{}, {}] Q #{} [{}, {}] Loss {:2.2f} Score {:2.2f}'.format(
-            speaker_name,
-            optim_config['curve_names'],
-            optim_config['MAX_NUMBER_PEQ'], optim_config['MAX_STEPS_FREQ'],
-            optim_config['MAX_STEPS_DBGAIN'], optim_config['MIN_DBGAIN'], optim_config['MAX_DBGAIN'],
-            optim_config['MAX_STEPS_Q'], optim_config['MIN_Q'], optim_config['MAX_Q'],
-            best_loss, pref_score))
+    print('OPTIM {} START {} #PEQ {:d} Freq #{:d} Gain #{:d} +/-[{}, {}] Q #{} [{}, {}] Loss {:2.2f} Score {:2.2f}'.format(
+        speaker_name,
+        optim_config['curve_names'],
+        optim_config['MAX_NUMBER_PEQ'], optim_config['MAX_STEPS_FREQ'],
+        optim_config['MAX_STEPS_DBGAIN'], optim_config['MIN_DBGAIN'], optim_config['MAX_DBGAIN'],
+        optim_config['MAX_STEPS_Q'], optim_config['MIN_Q'], optim_config['MAX_Q'],
+        best_loss, -pref_score))
 
     for optim_iter in range(0, optim_config['MAX_NUMBER_PEQ']):
 
@@ -754,7 +754,9 @@ if __name__ == '__main__':
         # it will optimise for having a Listening Window as close as possible
         # the target and having a Sound Power as flat as possible (without a
         # target)
-        'curve_names': ['Listening Window', 'Sound Power'],
+        # 'curve_names': ['Listening Window', 'Sound Power'],
+        'curve_names': ['Listening Window', 'Early Reflections'],
+        # 'curve_names': ['On Axis', 'Early Reflections'],
         # 'curve_names': ['Early Reflections', 'Sound Power'],
     }
 
