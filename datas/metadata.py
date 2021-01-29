@@ -748,6 +748,21 @@ speakers_info = {
              },
         },
     },
+    'Fluid Audio FX50': {
+        'brand': 'Fluid Audio',
+        'model': 'FX50',
+        'type': 'active',
+        'price': '300',
+        'shape': 'bookshelves',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/fluid-audio-fx50-review-active-speaker.19881/',
+             },
+        },
+    },
     'Focal Aria 906': {
         'brand': 'Focal',
         'model': 'Aria 906',
