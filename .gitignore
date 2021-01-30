@@ -20,7 +20,6 @@ asrbook.lof
 asrbook.toc
 asrbook.log
 asrbook.pdf
-asrbook.out
 book/stats
 node_modules
 geckodriver.log
@@ -36,6 +35,7 @@ cache.*.json
 cache.*.h5
 *.pyc
 *.log
-
+*.csv
+*.out
 #generate_meta.py#
 .vscode
