@@ -17,11 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
-[--force] [--smoke-test] [-v|--verbose] \
-[--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>] \
-[--max-peq=<count>] [--min-Q=<minQ>] [--max-Q=<maxQ>] [--min-dB=<mindB>] [--max-dB=<maxdB>] \
-[--only-biquad-peak] [--curve-peak-only] [--loss=<pick>]
+usage: generate_peqs.py [--help] [--version] [--log-level=<level>] [--force] [--smoke-test] [-v|--verbose] [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>] [--max-peq=<count>] [--min-Q=<minQ>] [--max-Q=<maxQ>] [--min-dB=<mindB>] [--max-dB=<maxdB>]  [--min-freq=<minFreq>] [--max-freq=<maxFreq>][--max-iter=<maxiter>] [--only-biquad-peak] [--curve-peak-only] [--loss=<pick>]
 
 Options:
   --help                   Display usage()
@@ -38,6 +34,9 @@ Options:
   --max-Q=<maxQ>           Maximum value for Q
   --min-dB=<mindB>         Minumum value for dBGain
   --max-dB=<maxdB>         Maximum value for dBGain
+  --min-freq=<minFreq>     Optimisation will happen above min freq
+  --max-freq=<maxFreq>     Optimisation will happen below max freq
+  --max-iter=<maxiter>     Maximum number of iterations
   --only-biquad-peak       PEQ can only be of type Peak aka PK
   --curve-peak-only        Optimise both for peaks and valleys on a curve
 """
@@ -72,7 +71,7 @@ from spinorama.filter_scores import scores_apply_filter, scores_print2
 from spinorama.graph import graph_spinorama, graph_freq, graph_regression_graph, graph_regression
 
 
-VERSION=0.3
+VERSION=0.4
 
 # ------------------------------------------------------------------------------
 # various loss function
@@ -97,8 +96,8 @@ def flat_loss(freq, local_target, peq, iterations, weigths):
     _, _, r_value, _, _ = linregress(np.log10(freq), local_target[-1])
     sp = 1-r_value**2
     # * or + 
-    # return weigths[0]*lw+weigths[1]*sp
-    return lw*sp
+    return weigths[0]*lw+weigths[1]*sp
+    #return lw*sp
 
 
 def swap_loss(freq, local_target, peq, iteration):
@@ -185,10 +184,10 @@ def getTarget(df_speaker_data, freq, current_curve_name, optim_config):
         return None
     slope *= math.log10(freq[0])/math.log10(freq[-1])
     intercept = current_curve[0]-slope
-    target_interp = [slope*math.log10(freq[i])+intercept for i in range(0, len(freq))]
+    line= [slope*math.log10(freq[i])+intercept for i in range(0, len(freq))]
     logger.debug('Slope {} Intercept {} R {} P {} err {}'.format(slope, intercept, r_value, p_value, std_err))
-    logger.debug('Target_interp from {:.1f}dB at {}Hz to {:.1f}dB at {}Hz'.format(target_interp[0], freq[0], target_interp[-1], freq[-1]))
-    return target_interp
+    logger.debug('Target_interp from {:.1f}dB at {}Hz to {:.1f}dB at {}Hz'.format(line[0], freq[0], line[-1], freq[-1]))
+    return line
 
 # ------------------------------------------------------------------------------
 # find initial values for biquads
@@ -240,10 +239,9 @@ def propose_range_freq(freq, local_target, optim_config):
     sign, indice, init_freq = find_largest_area(freq, local_target, optim_config)
     scale = optim_config['elastic']
     #print('Scale={} init_freq {}'.format(scale, init_freq))
-    init_freq_min = max(init_freq*scale, 20)
-    init_freq_max = min(init_freq/scale, 20000)
-    logger.debug('freq min {}Hz peak {}Hz max {}Hz'.format(
-        init_freq_min, init_freq, init_freq_max))
+    init_freq_min = max(init_freq*scale, optim_config['freq_reg_min'])
+    init_freq_max = min(init_freq/scale, optim_config['freq_reg_max'])
+    logger.debug('freq min {}Hz peak {}Hz max {}Hz'.format(init_freq_min, init_freq, init_freq_max))
     if optim_config['MAX_STEPS_FREQ'] == 1:
         return sign, init_freq, [init_freq]
     else:
@@ -252,9 +250,10 @@ def propose_range_freq(freq, local_target, optim_config):
 
 def propose_range_dbGain(freq: Vector, local_target: List[Vector], sign: Literal[-1, 1], init_freq: Vector, optim_config: dict) -> Vector:
     spline = InterpolatedUnivariateSpline(np.log10(freq), local_target, k=1)
+    scale = optim_config['elastic']
     init_dbGain = abs(spline(np.log10(init_freq)))
-    init_dbGain_min = max(init_dbGain/5, optim_config['MIN_DBGAIN'])
-    init_dbGain_max = min(init_dbGain*5, optim_config['MAX_DBGAIN'])
+    init_dbGain_min = max(init_dbGain*scale, optim_config['MIN_DBGAIN'])
+    init_dbGain_max = min(init_dbGain/scale, optim_config['MAX_DBGAIN'])
     logger.debug('gain min {}dB peak {}dB max {}dB'.format(init_dbGain_min, init_dbGain, init_dbGain_max))
 
     if sign < 0:
@@ -304,12 +303,12 @@ def find_best_biquad(
     ))
     # can use differential_evolution basinhoppin dual_annealing
     res = opt.dual_annealing(opt_peq, bounds,
-                             # maxiter=2000,
-                             # initial_temp=10000
+                             maxiter=optim_config['maxiter'],
+                             #initial_temp=10000
     )
     logger.debug('          optim loss {:2.2f} in {} iter type {:d} at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}'.format(
         res.fun, res.nfev, int(res.x[0]), res.x[1], res.x[2], res.x[3], res.message))
-    return True, int(res.x[0]), res.x[1], res.x[2], res.x[3], res.fun
+    return res.success, int(res.x[0]), res.x[1], res.x[2], res.x[3], res.fun, res.nit
 
 
 def find_best_peak(freq, auto_target, freq_range, Q_range, dbGain_range,
@@ -334,22 +333,22 @@ def find_best_peak(freq, auto_target, freq_range, Q_range, dbGain_range,
     ))
     # can use differential_evolution basinhoppin dual_annealing
     res = opt.dual_annealing(opt_peq, bounds,
-                             maxiter=10000,
+                             maxiter=optim_config['maxiter'],
                              initial_temp=10000
     )
     logger.debug('          optim loss {:2.2f} in {} iter type PK at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}'.format(
         res.fun, res.nfev, res.x[0], res.x[1], res.x[2], res.message))
-    return True, biquad_type, res.x[0], res.x[1], res.x[2], res.fun
+    return res.success, biquad_type, res.x[0], res.x[1], res.x[2], res.fun, res.nit
 
 
 # ------------------------------------------------------------------------------
 # find next best biquad
 # ------------------------------------------------------------------------------
 
-def optim_preflight(freq, target, target_interp, optim_config):
+def optim_preflight(freq, target, auto_target_interp, optim_config):
     sz = len(freq)
     nbt = len(target)
-    nbi = len(target_interp)
+    nbi = len(auto_target_interp)
 
     status = True
 
@@ -359,26 +358,26 @@ def optim_preflight(freq, target, target_interp, optim_config):
         status = False
 
     if nbt != nbi:
-        logger.error('Size mismatch #target {} != #target_interp {}'.format(
+        logger.error('Size mismatch #target {} != #auto_target_interp {}'.format(
             nbt, nbi))
         status = False
 
     for i in range(0, len(target)):
-        if len(target[i]) != len(target_interp[i]):
+        if len(target[i]) != len(auto_target_interp[i]):
             logger.error(
-                'Size mismatch #target[{}] {} != #target_interp[{}] {}'.format(
-                    i, len(target[i]), i, len(target_interp[i])))
+                'Size mismatch #target[{}] {} != #auto_target_interp[{}] {}'.format(
+                    i, len(target[i]), i, len(auto_target_interp[i])))
             status = False
 
     return status
 
 
-def optim_compute_auto_target(freq, target, target_interp, peq):
+def optim_compute_auto_target(freq, target, auto_target_interp, peq):
     peq_freq = peq_build(freq, peq)
-    return [target[i]-target_interp[i]+peq_freq for i in range(0, len(target))]
+    return [target[i]-auto_target_interp[i]+peq_freq for i in range(0, len(target))]
 
 
-def graph_eq(freq, peq, title):
+def graph_eq(freq, peq, domain, title):
     df_eq = pd.DataFrame({'Freq': freq})
     for i, (pos, eq) in enumerate(peq):
         df_eq['EQ {}'.format(i)] = peq_build(freq, [(pos, eq)])
@@ -386,7 +385,7 @@ def graph_eq(freq, peq, title):
     g_eq = alt.Chart(
         graph_melt(df_eq)
     ).mark_line().encode(
-        alt.X('Freq:Q', title='Freq (Hz)', scale=alt.Scale(type='log', nice=False, domain=[20, 20000])),
+        alt.X('Freq:Q', title='Freq (Hz)', scale=alt.Scale(type='log', nice=False, domain=domain)),
         alt.Y('dB:Q', title='Sound Pressure (dB)', scale=alt.Scale(zero=False, domain=[-12,12 ])),
         alt.Color('Measurements', type='nominal', sort=None),
     ).properties(
@@ -397,7 +396,7 @@ def graph_eq(freq, peq, title):
     return g_eq
     
 
-def graph_eq_compare(freq, manual_peq, auto_peq, reg_min, speaker_name):
+def graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name):
     return alt.Chart(
         graph_melt(
             pd.DataFrame({
@@ -406,7 +405,7 @@ def graph_eq_compare(freq, manual_peq, auto_peq, reg_min, speaker_name):
                 'Auto': peq_build(freq, auto_peq),
             }))
     ).mark_line().encode(
-        alt.X('Freq:Q', title='Freq (Hz)', scale=alt.Scale(type='log', nice=False, domain=[reg_min, 20000])),
+        alt.X('Freq:Q', title='Freq (Hz)', scale=alt.Scale(type='log', nice=False, domain=domain)),
         alt.Y('dB:Q', title='Sound Pressure (dB)', scale=alt.Scale(zero=False, domain=[-5,5 ])),
         alt.Color('Measurements', type='nominal', sort=None),
     ).properties(
@@ -418,29 +417,31 @@ def graph_eq_compare(freq, manual_peq, auto_peq, reg_min, speaker_name):
 
 def graph_results(speaker_name, freq,
                   manual_peq, auto_peq,
-                  target, target_interp,
-                  manual_target, manual_interp,
+                  auto_target, auto_target_interp,
+                  manual_target, manual_target_interp,
                   spin, spin_manual, spin_auto,
                   pir, pir_manual, pir_auto,
                   optim_config):
 
     # what's the min over freq?
     reg_min = optim_config['freq_reg_min']
+    reg_max = optim_config['freq_reg_max']
+    domain = [reg_min, reg_max]
     # build a graph for each peq
-    g_manual_eq = graph_eq(freq, manual_peq, '{} manual'.format(speaker_name))
-    g_auto_eq = graph_eq(freq, auto_peq, '{} auto'.format(speaker_name))
+    g_manual_eq = graph_eq(freq, manual_peq, domain, '{} manual'.format(speaker_name))
+    g_auto_eq = graph_eq(freq, auto_peq, domain,  '{} auto'.format(speaker_name))
 
     # compare the 2 eqs
-    g_eq_full = graph_eq_compare(freq, manual_peq, auto_peq, reg_min, speaker_name)
+    g_eq_full = graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name)
 
     # compare the 2 corrected curves
     df_optim = pd.DataFrame({'Freq': freq})
-    df_optim['Auto'] = target[0]-target_interp[0]+peq_build(freq, auto_peq)
+    df_optim['Auto'] = auto_target[0]-auto_target_interp[0]+peq_build(freq, auto_peq)
     if manual_target is not None:
-        df_optim['Manual'] = manual_target[0]-manual_interp[0]+peq_build(freq, manual_peq)
+        df_optim['Manual'] = manual_target[0]-manual_target_interp[0]+peq_build(freq, manual_peq)
     g_optim = alt.Chart(graph_melt(df_optim)
     ).mark_line().encode(
-        alt.X('Freq:Q', title='Freq (Hz)', scale=alt.Scale(type='log', nice=False, domain=[reg_min, 20000])),
+        alt.X('Freq:Q', title='Freq (Hz)', scale=alt.Scale(type='log', nice=False, domain=domain)),
         alt.Y('dB:Q', title='Sound Pressure (dB)', scale=alt.Scale(zero=False, domain=[-5,5 ])),
         alt.Color('Measurements', type='nominal', sort=None),
     ).properties(
@@ -468,7 +469,7 @@ def graph_results(speaker_name, freq,
         data = pir
         data_manual = pir_manual
         data_auto = pir_auto
-    g_pir_reg = graph_regression(data_auto.loc[(data_auto.Measurements==which_curve)], reg_min, 20000)
+    g_pir_reg = graph_regression(data_auto.loc[(data_auto.Measurements==which_curve)], 100, reg_max)
     g_pir_asr = (graph_freq(data.loc[(data.Measurements==which_curve)], g_params)+g_pir_reg).properties(
         title='{} from ASR [{}]'.format(speaker_name, which_curve))
     g_pir_manual = (graph_freq(data_manual.loc[(data_manual.Measurements==which_curve)], g_params)+g_pir_reg).properties(
@@ -485,19 +486,19 @@ def graph_results(speaker_name, freq,
     return graphs
     
 
-def optim_greedy(speaker_name, df_speaker, freq, target, target_interp, optim_config):
+def optim_greedy(speaker_name, df_speaker, freq, auto_target, auto_target_interp, optim_config):
 
-    if optim_preflight(freq, target, target_interp, optim_config) is False:
+    if optim_preflight(freq, auto_target, auto_target_interp, optim_config) is False:
         logger.error('Preflight check failed!')
         return None
 
     auto_peq = []
-    auto_target = optim_compute_auto_target(freq, target, target_interp, auto_peq)
+    current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq)
     best_loss = loss(freq, auto_target, auto_peq, 0, optim_config)
     pref_score = score_loss(df_speaker, auto_peq)
 
     results = [(0, best_loss, -pref_score)]
-    print('OPTIM {} START {} #PEQ {:d} Freq #{:d} Gain #{:d} +/-[{}, {}] Q #{} [{}, {}] Loss {:2.2f} Score {:2.2f}'.format(
+    logger.info('OPTIM {} START {} #PEQ {:d} Freq #{:d} Gain #{:d} +/-[{}, {}] Q #{} [{}, {}] Loss {:2.2f} Score {:2.2f}'.format(
         speaker_name,
         optim_config['curve_names'],
         optim_config['MAX_NUMBER_PEQ'], optim_config['MAX_STEPS_FREQ'],
@@ -508,46 +509,47 @@ def optim_greedy(speaker_name, df_speaker, freq, target, target_interp, optim_co
     for optim_iter in range(0, optim_config['MAX_NUMBER_PEQ']):
 
         # we are optimizing above my_freq_reg_min hz on anechoic data
-        auto_target = optim_compute_auto_target(freq, target, target_interp, auto_peq)
+        current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq)
 
         # greedy strategy: look for lowest & highest peak
-        sign, init_freq, init_freq_range = propose_range_freq(freq, auto_target[0], optim_config)
-        init_dbGain_range = propose_range_dbGain(freq, auto_target[0], sign, init_freq, optim_config)
+        sign, init_freq, init_freq_range = propose_range_freq(freq, current_auto_target[0], optim_config)
+        init_dbGain_range = propose_range_dbGain(freq, current_auto_target[0], sign, init_freq, optim_config)
         init_Q_range = propose_range_Q(optim_config)
         biquad_range = propose_range_biquad(optim_config)
 
-        state, current_type, current_freq, current_Q, current_dbGain, current_loss = False, -1, -1, -1, -1, -1
+        state, current_type, current_freq, current_Q, current_dbGain, current_loss, current_nit = False, -1, -1, -1, -1, -1, -1
         if optim_config['full_biquad_optim'] is True:
-            state, current_type, current_freq, current_Q, current_dbGain, current_loss = find_best_biquad(
-                freq, auto_target, init_freq_range, init_Q_range, init_dbGain_range, biquad_range, optim_iter, optim_config)
+            state, current_type, current_freq, current_Q, current_dbGain, current_loss, current_nit = find_best_biquad(
+                freq, current_auto_target, init_freq_range, init_Q_range, init_dbGain_range, biquad_range, optim_iter, optim_config)
         else:
-            state, current_type, current_freq, current_Q, current_dbGain, current_loss = find_best_peak(
-                freq, auto_target, init_freq_range, init_Q_range, init_dbGain_range, biquad_range, optim_iter, optim_config)
+            state, current_type, current_freq, current_Q, current_dbGain, current_loss, current_nit = find_best_peak(
+                freq, current_auto_target, init_freq_range, init_Q_range, init_dbGain_range, biquad_range, optim_iter, optim_config)
         if state:
             biquad = (1.0, Biquad(current_type, current_freq, 48000, current_Q, current_dbGain))
             auto_peq.append(biquad)
             best_loss = current_loss
             pref_score = score_loss(df_speaker, auto_peq)
             results.append((optim_iter+1, best_loss, -pref_score))
-            print('Iter {:2d} Optim converged loss {:2.2f} pref score {:2.2f} biquad {:2s} F:{:5.0f}Hz Q:{:2.2f} G:{:+2.2f}dB'
+            logger.info('Iter {:2d} Optim converged loss {:2.2f} pref score {:2.2f} biquad {:2s} F:{:5.0f}Hz Q:{:2.2f} G:{:+2.2f}dB in {} iterations'
                   .format(optim_iter,
                           best_loss,
                           -pref_score,
                           biquad[1].type2str(),
                           current_freq,
                           current_Q,
-                          current_dbGain))
+                          current_dbGain,
+                          current_nit))
         else:
             logger.error('Skip failed optim for best {:2.2f} current {:2.2f}'
                          .format(best_loss, current_loss))
             break
 
     # recompute auto_target with the full auto_peq
-    auto_target = optim_compute_auto_target(freq, target, target_interp, auto_peq)
-    final_loss = loss(freq, auto_target, [], 0, optim_config)
+    current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq)
+    final_loss = loss(freq, current_auto_target, [], 0, optim_config)
     final_score = score_loss(df_speaker, auto_peq)
-    results.append((optim_iter+1, best_loss, -pref_score))
-    print('OPTIM END {}: best loss {:2.2f} final score {:2.2f} with {:2d} PEQs'.format(
+    results.append((optim_config['MAX_NUMBER_PEQ']+1, best_loss, -pref_score))
+    logger.info('OPTIM END {}: best loss {:2.2f} final score {:2.2f} with {:2d} PEQs'.format(
         speaker_name,
         final_loss,
         -final_score,
@@ -563,34 +565,34 @@ def optim_save_peq(speaker_name, df_speaker, df_speaker_eq, optim_config, verbos
     eq_name = '{}/iir-autoeq.txt'.format(eq_dir)
     if not force and os.path.exists(eq_name):
         if verbose:
-            print('eq {} already exist!'.format(eq_name))
-        return 0
+            logger.info('eq {} already exist!'.format(eq_name))
+        return None, None
 
     # extract current speaker
     _, _, score = scores_apply_filter(df_speaker, [])
 
     # compute an optimal PEQ
     curves = optim_config['curve_names']
-    df, freq, target = getFreq(df_speaker, optim_config)
-    target_interp = []
+    df, freq, auto_target = getFreq(df_speaker, optim_config)
+    auto_target_interp = []
     for curve in curves:
-        target_interp.append(getTarget(df, freq, curve, optim_config))
-    auto_results, auto_peq = optim_greedy(speaker_name, df_speaker, freq, target, target_interp, optim_config)
+        auto_target_interp.append(getTarget(df, freq, curve, optim_config))
+    auto_results, auto_peq = optim_greedy(speaker_name, df_speaker, freq, auto_target, auto_target_interp, optim_config)
 
     # do we have a manual peq?
     score_manual = {}
     manual_peq = []
     manual_target = None
-    manual_interp = None
+    manual_target_interp = None
     if verbose:
         manual_peq_name = './datas/eq/{}/iir.txt'.format(speaker_name)
         manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config['fs'])
         manual_spin, manual_pir, score_manual = scores_apply_filter(df_speaker, manual_peq)
         if df_speaker_eq is not None:
             manual_df, manual_freq, manual_target = getFreq(df_speaker_eq, optim_config)
-            manual_interp = []
+            manual_target_interp = []
             for curve in curves:
-                manual_interp.append(getTarget(manual_df, manual_freq, curve, optim_config))
+                manual_target_interp.append(getTarget(manual_df, manual_freq, curve, optim_config))
 
     # compute new score with this PEQ
     spin_auto, pir_auto, score_auto = scores_apply_filter(df_speaker, auto_peq)
@@ -605,26 +607,24 @@ def optim_save_peq(speaker_name, df_speaker, df_speaker_eq, optim_config, verbos
                 '',
     ]
     eq_apo = peq_format_apo('\n'.join(comments), auto_peq)
-    if verbose:
-        print('{:30s} ---------------------------------------'.format(speaker_name))
-        print(peq_format_apo('\n'.join(comments), auto_peq))
-        print('----------------------------------------------------------------------')
+    
+    # print eq
     if not smoke_test:
         with open(eq_name, 'w') as fd:
             fd.write(eq_apo)
-
-    # print scores
-    if verbose:
-        print('{:30s} ---------------------------------------'.format(speaker_name))
-        scores_print2(score, score_manual, score_auto)
-        print('----------------------------------------------------------------------')
+            iir_name = '{}/iir.txt'.format(eq_dir)
+            if not os.path.exists(iir_name):
+                try:
+                    os.symlink(eq_name, iir_name)
+                except OSError:
+                    pass
 
     # print results
     if len(manual_peq) > 0 and len(auto_peq) > 0:
         graphs = graph_results(
             speaker_name, freq,  manual_peq, auto_peq,
-            target, target_interp,
-            manual_target, manual_interp,
+            auto_target, auto_target_interp,
+            manual_target, manual_target_interp,
             df_speaker['CEA2034'], manual_spin, spin_auto,
             df_speaker['Estimated In-Room Response'], manual_pir, pir_auto,
             optim_config)
@@ -636,11 +636,18 @@ def optim_save_peq(speaker_name, df_speaker, df_speaker_eq, optim_config, verbos
 
     # print a compact table of results
     if verbose:
+        print('{:30s} ---------------------------------------'.format(speaker_name))
+        print(peq_format_apo('\n'.join(comments), auto_peq))
+        print('----------------------------------------------------------------------')
         print('ITER  LOSS SCORE -----------------------------------------------------')
         print('\n'.join(['  {:2d} {:+2.2f} {:+2.2f}'.format(r[0], r[1], r[2]) for r in auto_results]))
         print('----------------------------------------------------------------------')
+        print('{:30s} ---------------------------------------'.format(speaker_name))
+        scores_print2(score, score_manual, score_auto)
+        print('----------------------------------------------------------------------')
+
         
-    return auto_results
+    return speaker_name, auto_results
 
 
 def queue_speakers(df_all_speakers, optim_config, verbose, smoke_test):
@@ -675,19 +682,35 @@ def queue_speakers(df_all_speakers, optim_config, verbose, smoke_test):
 
 def compute_peqs(ray_ids):
     done_ids = set()
+    aggregated_results = {}
     while 1:
         ids = [id for id in ray_ids.values() if id not in done_ids]
         num_returns = min(len(ids), 16)
         ready_ids, remaining_ids = ray.wait(ids, num_returns=num_returns)
 
+        for id in ready_ids:
+            speaker_name, results = ray.get(id)
+            if results is not None:
+                aggregated_results[speaker_name] = results
+            done_ids.add(id)
+
         if len(remaining_ids) == 0:
             break
 
-        for id in ready_ids:
-            ray.get(id)
-            done_ids.add(id)
-
         logger.info('State: {0} ready IDs {1} remainings IDs '.format(len(ready_ids), len(remaining_ids)))
+
+    v_sn = []
+    v_iter = []
+    v_loss = []
+    v_score = []
+    for speaker, results in aggregated_results.items():
+        for r in results:
+            v_sn.append('{}'.format(speaker))
+            v_iter.append(r[0])
+            v_loss.append(r[1])
+            v_score.append(r[2])
+    df_results = pd.DataFrame({'speaker_name': v_sn, 'iter': v_iter, 'loss': v_loss, 'score': v_score})
+    df_results.to_csv('results.csv', index=False)
     return 0
 
 
@@ -711,10 +734,10 @@ if __name__ == '__main__':
     fh = logging.FileHandler('debug_optim.log')
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     fh.setFormatter(formatter)
-    sh = logging.StreamHandler(sys.stdout)
-    sh.setFormatter(formatter)
+    #sh = logging.StreamHandler(sys.stdout)
+    #sh.setFormatter(formatter)
     logger.addHandler(fh)
-    logger.addHandler(sh)
+    #logger.addHandler(sh)
     if level is not None:
         logger.setLevel(level)
     else:
@@ -736,7 +759,7 @@ if __name__ == '__main__':
         # do you optimise for all kind of biquad or do you want only Peaks?
         'full_biquad_optim': True,
         # lookup around a value is [value*elastic, value/elastic]
-        'elastic': 0.8,
+        'elastic': 0.9,
         # cut frequency
         'fs': 48000,
         # optimise the curve above the Schroeder frequency (here default is
@@ -756,6 +779,7 @@ if __name__ == '__main__':
         # target)
         # 'curve_names': ['Listening Window', 'Sound Power'],
         'curve_names': ['Listening Window', 'Early Reflections'],
+        # 'curve_names': ['Listening Window', 'On Axis', 'Early Reflections'],
         # 'curve_names': ['On Axis', 'Early Reflections'],
         # 'curve_names': ['Early Reflections', 'Sound Power'],
     }
@@ -768,11 +792,15 @@ if __name__ == '__main__':
         optim_config['MAX_STEPS_FREQ'] = 3
         optim_config['MAX_STEPS_DBGAIN'] = 3
         optim_config['MAX_STEPS_Q'] = 3
+        # max iterations (if algorithm is iterative)
+        optim_config['maxiter'] = 20
     else:
         optim_config['MAX_NUMBER_PEQ'] = 20
         optim_config['MAX_STEPS_FREQ'] = 5
         optim_config['MAX_STEPS_DBGAIN'] = 5
         optim_config['MAX_STEPS_Q'] = 5
+        # max iterations (if algorithm is iterative)
+        optim_config['maxiter'] = 500
 
     # MIN or MAX_Q or MIN or MAX_DBGAIN control the shape of the biquad which
     # are admissible.
@@ -797,9 +825,17 @@ if __name__ == '__main__':
     if args['--max-dB'] is not None:
         max_dB = float(args['--max-dB'])
         optim_config['MAX_DBGAIN'] = max_dB
+    if args['--max-iter'] is not None:
+        max_iter = int(args['--max-iter'])
+        optim_config['maxiter'] = max_iter
+    if args['--min-freq'] is not None:
+        min_freq = int(args['--min-freq'])
+        optim_config['freq_req_min'] = min_freq
+    if args['--max-freq'] is not None:
+        max_freq = int(args['--max-freq'])
+        optim_config['freq_req_max'] = max_freq
     if args['--only-biquad-peak'] is not None:
         if args['--only-biquad-peak'] is True:
-            print('opt is true')
             optim_config['full_biquad_optim'] = False
     if args['--curve-peak-only'] is not None:
         if args['--curve-peak-only'] is True:
@@ -852,7 +888,7 @@ if __name__ == '__main__':
         while 1:
             ready_ids, remaining_ids = ray.wait([id], num_returns=1)
             if len(ready_ids) == 1:
-                ray.get(ready_ids[0])
+                _, _ = ray.get(ready_ids[0])
                 break
             if len(remaining_ids) == 0:
                 break
