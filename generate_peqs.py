@@ -72,6 +72,7 @@ from spinorama.graph import graph_spinorama, graph_freq, graph_regression_graph,
 
 
 VERSION=0.4
+logger = logging.getLogger('spinorama')
 
 # ------------------------------------------------------------------------------
 # various loss function
@@ -134,8 +135,9 @@ def loss(freq, local_target, peq, iterations, optim_config):
     elif which_loss == 'leastsquare_loss':
         return leastsquare_loss(freq, local_target, peq, iterations)
     elif which_loss == 'alternate_loss':
-        return altenate_loss(freq, local_target, peq, iterations)
-    logger.error('loss function is unkown')
+        return alternate_loss(freq, local_target, peq, iterations)
+    else:
+        logger.error('loss function is unkown')
     
     
 
@@ -730,7 +732,6 @@ if __name__ == '__main__':
         if check_level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
             level = check_level
 
-    logger = logging.getLogger('spinorama')
     fh = logging.FileHandler('debug_optim.log')
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     fh.setFormatter(formatter)

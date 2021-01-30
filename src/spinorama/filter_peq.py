@@ -9,7 +9,9 @@ from .ltype import Vector, Peq
 from .filter_iir import Biquad
 from .load import graph_melt
 
+logger = logging.getLogger('spinorama')
 
+ 
 def peq_build(freq: Vector, peq: Peq) -> Vector:
     filter = [0.0]
     if len(peq)>0:
