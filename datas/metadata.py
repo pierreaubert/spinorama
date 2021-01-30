@@ -2728,7 +2728,7 @@ speakers_info = {
     },
     'Yamaha HS7': {
         'brand': 'Yamaha',
-        'model': 'HS5',
+        'model': 'HS7',
         'type': 'active',
         'price': '640',
         'shape': 'bookshelves',
