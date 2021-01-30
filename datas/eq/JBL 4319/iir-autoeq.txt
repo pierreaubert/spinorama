@@ -1,0 +1,27 @@
+EQ for JBL 4319 computed from ASR data
+Preference Score 3.7 with EQ 6.1
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.3
+Dated: 2021-01-26-21:14:53
+
+Preamp: -1.3 dB
+
+Filter  1: ON PK Fc  9051 Hz Gain -4.83 dB Q 0.10
+Filter  2: ON PK Fc 11672 Hz Gain -3.47 dB Q 2.14
+Filter  3: ON PK Fc  3526 Hz Gain +2.69 dB Q 1.36
+Filter  4: ON LS Fc   827 Hz Gain -2.32 dB
+Filter  5: ON PK Fc   875 Hz Gain +3.66 dB Q 12.00
+Filter  6: ON PK Fc  1001 Hz Gain -2.19 dB Q 10.12
+Filter  7: ON PK Fc 15414 Hz Gain -2.56 dB Q 5.20
+Filter  8: ON PK Fc  1286 Hz Gain -1.20 dB Q 12.00
+Filter  9: ON PK Fc  8734 Hz Gain -1.09 dB Q 6.98
+Filter 10: ON PK Fc  5806 Hz Gain +1.01 dB Q 9.28
+Filter 11: ON PK Fc   635 Hz Gain -1.25 dB Q 5.49
+Filter 12: ON PK Fc   284 Hz Gain +1.31 dB Q 3.99
+Filter 13: ON PK Fc  1706 Hz Gain +1.03 dB Q 3.96
+Filter 14: ON PK Fc 13760 Hz Gain +1.57 dB Q 12.00
+Filter 15: ON PK Fc  2276 Hz Gain +0.92 dB Q 12.00
+Filter 16: ON PK Fc 10175 Hz Gain -0.45 dB Q 8.88
+Filter 17: ON PK Fc   352 Hz Gain +0.21 dB Q 12.00
+Filter 18: ON PK Fc   895 Hz Gain +1.10 dB Q 12.00
+Filter 19: ON PK Fc  2078 Hz Gain -0.72 dB Q 12.00
+Filter 20: ON PK Fc  2881 Hz Gain -0.52 dB Q 11.63

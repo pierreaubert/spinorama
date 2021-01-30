@@ -1,0 +1,27 @@
+EQ for Audioengine A5+ Powered computed from ASR data
+Preference Score 4.9 with EQ 5.8
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.3
+Dated: 2021-01-26-21:00:44
+
+Preamp: -0.2 dB
+
+Filter  1: ON LS Fc 13194 Hz Gain -4.20 dB
+Filter  2: ON PK Fc 13624 Hz Gain -2.13 dB Q 1.46
+Filter  3: ON PK Fc  5727 Hz Gain +1.63 dB Q 4.89
+Filter  4: ON PK Fc  3414 Hz Gain +2.04 dB Q 12.00
+Filter  5: ON PK Fc  2216 Hz Gain -1.47 dB Q 2.05
+Filter  6: ON PK Fc   915 Hz Gain -1.03 dB Q 5.52
+Filter  7: ON PK Fc   721 Hz Gain -1.05 dB Q 12.00
+Filter  8: ON LS Fc  5971 Hz Gain +0.46 dB
+Filter  9: ON PK Fc  1046 Hz Gain -1.98 dB Q 12.00
+Filter 10: ON PK Fc  3550 Hz Gain -0.44 dB Q 0.72
+Filter 11: ON LS Fc  5971 Hz Gain +0.27 dB
+Filter 12: ON PK Fc   706 Hz Gain -1.07 dB Q 8.14
+Filter 13: ON PK Fc  7515 Hz Gain +0.72 dB Q 12.00
+Filter 14: ON PK Fc  8444 Hz Gain -0.21 dB Q 0.14
+Filter 15: ON LS Fc 11535 Hz Gain +0.20 dB
+Filter 16: ON PK Fc   647 Hz Gain -0.64 dB Q 12.00
+Filter 17: ON PK Fc 13775 Hz Gain +0.53 dB Q 7.57
+Filter 18: ON PK Fc  4392 Hz Gain -1.61 dB Q 12.00
+Filter 19: ON PK Fc  1564 Hz Gain -0.64 dB Q 1.66
+Filter 20: ON LS Fc   951 Hz Gain +0.68 dB

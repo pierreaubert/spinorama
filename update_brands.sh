@@ -1,4 +1,5 @@
 #!/bin/sh
+export LOCALE=C
 json_pp < docs/assets/metadata.json  | \
     grep '"brand" : ' | \
     cut -d: -f 2 | \

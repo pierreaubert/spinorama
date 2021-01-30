@@ -1,0 +1,27 @@
+EQ for Selah Audio Integrity DIY computed from ASR data
+Preference Score 6.0 with EQ 6.8
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.3
+Dated: 2021-01-26-21:28:45
+
+Preamp: -1.3 dB
+
+Filter  1: ON PK Fc   981 Hz Gain -2.93 dB Q 0.10
+Filter  2: ON PK Fc 13649 Hz Gain -3.58 dB Q 0.74
+Filter  3: ON PK Fc  1665 Hz Gain +3.09 dB Q 8.30
+Filter  4: ON PK Fc  6922 Hz Gain -1.16 dB Q 6.76
+Filter  5: ON PK Fc   771 Hz Gain -0.96 dB Q 10.02
+Filter  6: ON PK Fc  3550 Hz Gain +0.65 dB Q 0.99
+Filter  7: ON PK Fc  1863 Hz Gain -1.17 dB Q 12.00
+Filter  8: ON PK Fc  7463 Hz Gain -0.34 dB Q 3.03
+Filter  9: ON PK Fc  1055 Hz Gain -0.37 dB Q 10.12
+Filter 10: ON PK Fc  1289 Hz Gain -0.30 dB Q 12.00
+Filter 11: ON PK Fc  6339 Hz Gain -0.38 dB Q 12.00
+Filter 12: ON LS Fc  9050 Hz Gain +0.20 dB
+Filter 13: ON PK Fc  3715 Hz Gain -1.02 dB Q 8.43
+Filter 14: ON PK Fc  9656 Hz Gain -0.47 dB Q 12.00
+Filter 15: ON PK Fc   512 Hz Gain -0.51 dB Q 12.00
+Filter 16: ON PK Fc 11263 Hz Gain +0.36 dB Q 7.44
+Filter 17: ON PK Fc  2496 Hz Gain +0.75 dB Q 6.81
+Filter 18: ON PK Fc  1055 Hz Gain -0.22 dB Q 1.60
+Filter 19: ON LS Fc   325 Hz Gain +1.13 dB
+Filter 20: ON PK Fc  6132 Hz Gain -0.29 dB Q 11.06

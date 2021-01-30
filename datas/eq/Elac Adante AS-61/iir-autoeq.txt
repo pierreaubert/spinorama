@@ -1,0 +1,27 @@
+EQ for Elac Adante AS-61 computed from ASR data
+Preference Score 4.0 with EQ 5.3
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.3
+Dated: 2021-01-26-21:05:54
+
+Preamp: -2.5 dB
+
+Filter  1: ON PK Fc   717 Hz Gain -1.82 dB Q 0.10
+Filter  2: ON PK Fc   584 Hz Gain -1.76 dB Q 7.82
+Filter  3: ON PK Fc  4766 Hz Gain -1.39 dB Q 8.92
+Filter  4: ON PK Fc  8753 Hz Gain -3.39 dB Q 12.00
+Filter  5: ON PK Fc  1538 Hz Gain +1.92 dB Q 5.06
+Filter  6: ON PK Fc 11051 Hz Gain -2.24 dB Q 10.55
+Filter  7: ON PK Fc  2329 Hz Gain -1.25 dB Q 4.63
+Filter  8: ON PK Fc  6790 Hz Gain +1.89 dB Q 4.47
+Filter  9: ON PK Fc  5931 Hz Gain +0.77 dB Q 12.00
+Filter 10: ON PK Fc   769 Hz Gain +1.70 dB Q 12.00
+Filter 11: ON PK Fc 15309 Hz Gain +2.46 dB Q 3.00
+Filter 12: ON PK Fc 14161 Hz Gain +0.92 dB Q 12.00
+Filter 13: ON PK Fc  6372 Hz Gain -0.22 dB Q 0.53
+Filter 14: ON PK Fc  3746 Hz Gain +0.49 dB Q 9.96
+Filter 15: ON PK Fc   866 Hz Gain +0.51 dB Q 12.00
+Filter 16: ON PK Fc   629 Hz Gain -0.55 dB Q 12.00
+Filter 17: ON PK Fc  2059 Hz Gain -0.44 dB Q 12.00
+Filter 18: ON PK Fc  1775 Hz Gain +0.38 dB Q 4.48
+Filter 19: ON PK Fc  2216 Hz Gain +0.37 dB Q 12.00
+Filter 20: ON PK Fc  2061 Hz Gain -0.49 dB Q 12.00

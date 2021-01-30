@@ -673,6 +673,21 @@ speakers_info = {
             },
         },
     },
+    'Elac Uni-Fi 2.0 UB52': {
+        'brand': 'Elac',
+        'model': 'Uni-Fi 2.0 UB52',
+        'type': 'passive',
+        'price': '600',
+        'shape': 'bookshelves',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/elac-uni-fi-2-0-review-bookshelf-speaker.19216/',
+            },
+        },
+    },
     'Emotiva Airmotive 6s': {
         'brand': 'Emotiva',
         'model': 'Airmotive 6s',
@@ -730,6 +745,21 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/fluance-signature-bookshelf-speaker-review.16337/',
+             },
+        },
+    },
+    'Fluid Audio FX50': {
+        'brand': 'Fluid Audio',
+        'model': 'FX50',
+        'type': 'active',
+        'price': '300',
+        'shape': 'bookshelves',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/fluid-audio-fx50-review-active-speaker.19881/',
              },
         },
     },
@@ -1665,6 +1695,22 @@ speakers_info = {
             },
         },
     },
+    'KRK Systems Classic 5': {
+        'brand': 'KRK Systems',
+        'model': 'Classic 5',
+        'type': 'active',
+        'price': '150',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/krk-classic-5-review-studio-monitor.19031/',
+             },
+        },
+    },
     'KRK Systems RoKit 6 G2': {
         'brand': 'KRK Systems',
         'model': 'RoKit 6 G2',
@@ -1720,6 +1766,21 @@ speakers_info = {
             'vendor': {
                 'origin': 'Vendors-Magico',
                 'format': 'webplotdigitizer',
+            },
+        },
+    },
+    'MartinLogan Motion 4i': {
+        'brand': 'MartinLogan',
+        'model': 'Motion 4i',
+        'type': 'passive',
+        'price': '360',
+        'shape': 'bookshelves',
+        'default_measurement' : 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/martinlogan-motion-4i-review-bookshelf-speaker.18805/',
             },
         },
     },
@@ -1875,6 +1936,22 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/paradigm-monitor-se-atom-speaker-review.17837/',
+            },
+        },
+    },
+    'Paradigm Prestige 15B': {
+        'brand': 'Paradigm',
+        'model': 'Prestige 15B',
+        'type': 'passive',
+        'price': '1600',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/paradigm-prestige-15b-review-bookshelf-speaker.19466/',
             },
         },
     },
@@ -2646,6 +2723,22 @@ speakers_info = {
                 'origin': 'ASR',
                 'format': 'klippel',
                 'review': 'https://www.audiosciencereview.com/forum/index.php?threads/yamaha-hs5-powered-monitor-review.10967/',
+            },
+        },
+    },
+    'Yamaha HS7': {
+        'brand': 'Yamaha',
+        'model': 'HS7',
+        'type': 'active',
+        'price': '640',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/yamaha-hs7-review-studio-monitor.19761/',
             },
         },
     },

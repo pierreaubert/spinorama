@@ -1,8 +1,12 @@
 #                                                  -*- coding: utf-8 -*-
 import logging
 import math
+from typing import List, Tuple
 
+
+from .ltype import Vector, Peq
 import numpy as np
+import pandas as pd
 from more_itertools import consecutive_groups
 from scipy.stats import linregress
 
@@ -11,13 +15,13 @@ from .load import graph_melt
 
 
 # https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
-def octave(N):
+def octave(N: int) -> List[Tuple[float, float, float]]:
     """compute 1/N octave band
 
     N: >=2 when N increases, bands are narrower
     """
     # why 1290 and not 1000?
-    reference = 1290
+    reference = 1290.0
     p = pow(2, 1 / N)
     p_band = pow(2, 1 / (2 * N))
     iter = int((N * 10 + 1) / 2)
@@ -28,7 +32,7 @@ def octave(N):
     return octave
 
 
-def aad(dfu):
+def aad(dfu: pd.DataFrame) -> float:
     """ aad Absolute Average Deviation
     """
     # mean betwenn 200hz and 400hz
@@ -47,7 +51,7 @@ def aad(dfu):
             n += 1
     if n == 0:
         logging.error('aad is None')
-        return None
+        return -1.0
     aad_value = aad_sum / n
     # if math.isnan(aad_value):
     #    pd.set_option('display.max_rows', dfu.shape[0]+1)
@@ -55,7 +59,7 @@ def aad(dfu):
     return aad_value
 
 
-def nbd(dfu):
+def nbd(dfu: pd.DataFrame) -> float:
     """ nbd Narrow Band
 
     The narrow band deviation is defined by:
@@ -74,7 +78,7 @@ def nbd(dfu):
                        if bcenter >= 100 and bcenter <= 12000])
 
 
-def lfx(lw, sp):
+def lfx(lw, sp) -> float:
     """ lfx Low Frequency Extension
 
     The low frequency extension (LFX)
@@ -94,12 +98,12 @@ def lfx(lw, sp):
     try:
         lfx_hz = list(next(lfx_grouped))[-1][1]
     except Exception:
-        lfx_hz = lfx_range.max()
+        lfx_hz = -1.0
         logging.debug('lfx: selecting max {0}'.format(lfx_hz))
     return math.log10(lfx_hz)
 
 
-def lfq(lw, sp, lfx_log):
+def lfq(lw, sp, lfx_log) -> float:
     """ lfq Low Frequency Quality
 
     LFQ is intended to quantify deviations in amplitude response over the
@@ -122,7 +126,7 @@ def lfq(lw, sp, lfx_log):
             n += 1
     if n == 0:
         logging.error('lfq is None')
-        return None
+        return -1.0
     return sum / n
 
 
@@ -170,6 +174,9 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         nbd_listening_window = nbd(df_listening_window)
         nbd_sound_power = nbd(df_sound_power)
         nbd_pred_in_room = nbd(df_pred_in_room)
+        lfx_hz = -1.0
+        lfq_db = -1.0
+        aad_on_axis = -1.0
         if not skip_full:
             aad_on_axis = aad(df_on_axis)
             lfx_hz = lfx(df_listening_window, df_sound_power)
@@ -200,10 +207,11 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
                 'pref_score_wsub': round(pref_wsub, 1),
             }
             if not skip_full:
-                ratings['aad_on_axis'] = round(aad_on_axis, 2)
-                if lfx_hz is not None:
+                if aad_on_axis != -1.0:
+                    ratings['aad_on_axis'] = round(aad_on_axis, 2)
+                if lfx_hz != -1.0:
                     ratings['lfx_hz'] = int(pow(10, lfx_hz))  # in Hz
-                if lfq_db is not None:
+                if lfq_db != -1.0:
                     ratings['lfq'] = round(lfq_db, 2)
                 ratings['pref_score'] = round(pref, 1)
         else:

@@ -1,0 +1,27 @@
+EQ for Yamaha HS5 computed from ASR data
+Preference Score 3.1 with EQ 6.1
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.3
+Dated: 2021-01-26-21:29:41
+
+Preamp: -2.4 dB
+
+Filter  1: ON PK Fc  1166 Hz Gain -5.83 dB Q 0.10
+Filter  2: ON PK Fc   970 Hz Gain -3.97 dB Q 6.48
+Filter  3: ON LS Fc  2297 Hz Gain +1.30 dB
+Filter  4: ON PK Fc 13157 Hz Gain -5.17 dB Q 1.01
+Filter  5: ON PK Fc  1932 Hz Gain +1.81 dB Q 6.22
+Filter  6: ON PK Fc  4897 Hz Gain -1.63 dB Q 4.94
+Filter  7: ON PK Fc  1068 Hz Gain -2.13 dB Q 3.01
+Filter  8: ON LS Fc  1299 Hz Gain +0.52 dB
+Filter  9: ON PK Fc   753 Hz Gain -1.07 dB Q 2.51
+Filter 10: ON LS Fc  1299 Hz Gain +0.39 dB
+Filter 11: ON PK Fc  7946 Hz Gain +1.81 dB Q 12.00
+Filter 12: ON PK Fc   873 Hz Gain -1.52 dB Q 12.00
+Filter 13: ON PK Fc   588 Hz Gain -1.28 dB Q 7.40
+Filter 14: ON PK Fc  1197 Hz Gain -1.43 dB Q 12.00
+Filter 15: ON LS Fc  1704 Hz Gain +0.38 dB
+Filter 16: ON PK Fc  1186 Hz Gain -0.71 dB Q 12.00
+Filter 17: ON PK Fc   521 Hz Gain -0.81 dB Q 6.75
+Filter 18: ON PK Fc  6771 Hz Gain -1.08 dB Q 12.00
+Filter 19: ON PK Fc  2864 Hz Gain -0.72 dB Q 8.94
+Filter 20: ON PK Fc  9819 Hz Gain +1.04 dB Q 12.00

@@ -8,6 +8,16 @@ class Biquad:
   # pretend enumeration
   LOWPASS, HIGHPASS, BANDPASS, PEAK, NOTCH, LOWSHELF, HIGHSHELF = range(7)
 
+  type2name = {
+    LOWPASS: ['Lowpass', 'LP'],
+    HIGHPASS: ['Highpass', 'HP'],
+    BANDPASS: ['Bandpath', 'BP'],
+    PEAK: ['Peak', 'PK'],
+    NOTCH: ['Notch', 'NO'],
+    LOWSHELF: ['Lowshelf', 'LS'],
+    HIGHSHELF: ['Highshelf', 'HS'],
+  }
+
   def __init__(self, typ, freq, srate, Q, dbGain=0):
     types = {
       Biquad.LOWPASS : Biquad.lowpass,
@@ -131,6 +141,13 @@ class Biquad:
   # return computed constants
   def constants(self):
     return self.a1, self.a2, self.b0, self.b1, self.b2
+
+  def type2str(self, short=True):
+    if short is True:
+      return self.type2name[self.typ][1]
+    else:
+      return self.type2name[self.typ][0]
+
     
   def __str__(self):
-    return "Type:%d,Freq:%.1f,Rate:%.1f,Q:%.1f,Gain:%.1f" % (self.typ,self.freq,self.srate,self.Q,self.dbGain)
+    return "Type:%s,Freq:%.1f,Rate:%.1f,Q:%.1f,Gain:%.1f" % (self.type2str(),self.freq,self.srate,self.Q,self.dbGain)

@@ -1,0 +1,27 @@
+EQ for Diapason Emera computed from ASR data
+Preference Score 1.8 with EQ 5.1
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.3
+Dated: 2021-01-26-21:05:31
+
+Preamp: -1.3 dB
+
+Filter  1: ON PK Fc  1250 Hz Gain -4.03 dB Q 0.10
+Filter  2: ON PK Fc  2697 Hz Gain +4.56 dB Q 5.82
+Filter  3: ON PK Fc   963 Hz Gain -2.59 dB Q 2.89
+Filter  4: ON PK Fc  9331 Hz Gain -2.28 dB Q 1.00
+Filter  5: ON PK Fc  4554 Hz Gain +3.72 dB Q 3.65
+Filter  6: ON PK Fc  7111 Hz Gain -1.53 dB Q 5.14
+Filter  7: ON PK Fc  3575 Hz Gain +1.93 dB Q 12.00
+Filter  8: ON PK Fc  1914 Hz Gain -1.58 dB Q 4.69
+Filter  9: ON LS Fc  1969 Hz Gain +0.58 dB
+Filter 10: ON PK Fc   566 Hz Gain -1.58 dB Q 12.00
+Filter 11: ON PK Fc  9975 Hz Gain +1.26 dB Q 9.56
+Filter 12: ON PK Fc   821 Hz Gain -1.59 dB Q 9.65
+Filter 13: ON LS Fc  1969 Hz Gain +0.27 dB
+Filter 14: ON PK Fc  1459 Hz Gain -0.65 dB Q 1.28
+Filter 15: ON LS Fc  1969 Hz Gain +0.26 dB
+Filter 16: ON PK Fc  2468 Hz Gain +0.91 dB Q 12.00
+Filter 17: ON PK Fc  3922 Hz Gain -0.38 dB Q 0.10
+Filter 18: ON LS Fc  6829 Hz Gain +0.27 dB
+Filter 19: ON LP Fc 13078 Hz
+Filter 20: ON PK Fc 11086 Hz Gain +0.87 dB Q 9.52
