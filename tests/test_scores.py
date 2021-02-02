@@ -25,7 +25,7 @@ class PrefRatingTests(unittest.TestCase):
         self.assertLess(20000, self.octave3[-1][1])
 
     def test_aad(self):
-        freq = [i for i in np.logspace(0.3,4.3,1000)]
+        freq = list(np.logspace(0.3,4.3,1000))
         db = [100 for i in np.logspace(0.3,4.3,1000)]
         df = pd.DataFrame({'Freq': freq, 'dB': db})
         # expect 0 deviation from flat line

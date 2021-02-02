@@ -108,8 +108,8 @@ uniform_color_pair = {
     '60°': colors[6],
 }
 
-uniform_color_domain = [k for k in uniform_color_pair.keys()]
-uniform_color_range = [v for v in uniform_color_pair.values()]
+uniform_color_domain = list(uniform_color_pair.keys())
+uniform_color_range = list(uniform_color_pair.values())
 uniform_scale=alt.Scale(domain=uniform_color_domain, range=uniform_color_range)
 
 
@@ -357,7 +357,7 @@ def graph_radar(df_in, graph_params):
     delta = 10
     if (len(dfu.columns)-1)/36 == 2:
         delta = 5
-    anglelist = [a for a in range(angle_min, angle_max+delta, delta)]
+    anglelist = list(range(angle_min, angle_max+delta, delta))
     # print(angle_min, angle_max)
     # print(dfu.columns)
     # print(anglelist)
@@ -453,9 +453,9 @@ def graph_directivity_matrix(dfu, graph_params):
 
 def build_selections(df, speaker1, speaker2):
     speakers = sorted(df.Speaker.unique())
-    input_dropdown1 = alt.binding_select(options=[s for s in speakers])
+    input_dropdown1 = alt.binding_select(options=list(speakers))
     selection1 = alt.selection_single(fields=['Speaker'], bind=input_dropdown1, name='Select right ', init={'Speaker': speaker1})
-    input_dropdown2 = alt.binding_select(options=[s for s in speakers])
+    input_dropdown2 = alt.binding_select(options=list(speakers))
     selection2 = alt.selection_single(fields=['Speaker'], bind=input_dropdown2, name='Select left ', init={'Speaker': speaker2})
     selectorsMeasurements = alt.selection_multi(fields=['Measurements'], bind='legend')
     scales = alt.selection_interval(bind='scales')

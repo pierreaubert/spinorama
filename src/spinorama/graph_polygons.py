@@ -165,7 +165,7 @@ def merge_connected_polygons(isoband):
     for i, polygon in enumerate(isoband):
         if i not in pointer_polygons:
             #print('debug adding polygon[{0}] = {1}'.format(i, polygon))
-            new_isoband.append([p for p in polygon])
+            new_isoband.append(list(polygon))
 
     #for i, polygon in enumerate(isoband):
     #    print('debug:  INPUT {0} {1}'.format(i, pp(polygon)))
