@@ -21,7 +21,9 @@ logger = logging.getLogger('spinorama')
 alt.data_transformers.disable_max_rows()
 
 
-def display_contour_horizontal(df, graph_params=contour_params_default):
+def display_contour_horizontal(df, graph_params=None):
+    if graph_params is None:
+        graph_params = contour_params_default
     try:
         if 'SPL Horizontal_unmelted' not in df.keys():
             return None
@@ -33,7 +35,9 @@ def display_contour_horizontal(df, graph_params=contour_params_default):
         return None
 
 
-def display_contour_vertical(df, graph_params=contour_params_default):
+def display_contour_vertical(df, graph_params=None):
+    if graph_params is None:
+        graph_params = contour_params_default
     try:
         if 'SPL Vertical_unmelted' not in df.keys():
             return None
@@ -45,7 +49,9 @@ def display_contour_vertical(df, graph_params=contour_params_default):
         return None
 
 
-def display_contour_smoothed_horizontal(df, graph_params=contour_params_default):
+def display_contour_smoothed_horizontal(df, graph_params=None):
+    if graph_params is None:
+        graph_params = contour_params_default
     try:
         if 'SPL Horizontal_unmelted' not in df.keys():
             return None
@@ -57,7 +63,9 @@ def display_contour_smoothed_horizontal(df, graph_params=contour_params_default)
         return None
 
 
-def display_contour_smoothed_vertical(df, graph_params=contour_params_default):
+def display_contour_smoothed_vertical(df, graph_params=None):
+    if graph_params is None:
+        graph_params = contour_params_default
     try:
         if 'SPL Vertical_unmelted' not in df.keys():
             return None
@@ -69,7 +77,9 @@ def display_contour_smoothed_vertical(df, graph_params=contour_params_default):
         return None
 
 
-def display_radar_horizontal(df, graph_params=radar_params_default):
+def display_radar_horizontal(df, graph_params=None):
+    if graph_params is None:
+        graph_params = radar_params_default
     try:
         if 'SPL Horizontal_unmelted' not in df.keys():
             return None
@@ -80,7 +90,9 @@ def display_radar_horizontal(df, graph_params=radar_params_default):
         return None
 
 
-def display_radar_vertical(df, graph_params=radar_params_default):
+def display_radar_vertical(df, graph_params=None):
+    if graph_params is None:
+        graph_params = radar_params_default
     try:
         if 'SPL Vertical_unmelted' not in df.keys():
             return None
@@ -91,7 +103,9 @@ def display_radar_vertical(df, graph_params=radar_params_default):
         return None
 
 
-def display_contour_sidebyside(df, graph_params=contour_params_default):
+def display_contour_sidebyside(df, graph_params=None):
+    if graph_params is None:
+        graph_params = contour_params_default
     try:
         contourH = df['SPL Horizontal_unmelted']
         contourV = df['SPL Vertical_unmelted']
@@ -103,7 +117,9 @@ def display_contour_sidebyside(df, graph_params=contour_params_default):
         return None
 
 
-def display_spinorama(df, graph_params=graph_params_default):
+def display_spinorama(df, graph_params=None):
+    if graph_params is None:
+        graph_params = graph_params_default
     try:
         if 'CEA2034' not in df.keys():
             return None
@@ -118,7 +134,9 @@ def display_spinorama(df, graph_params=graph_params_default):
     return None
 
 
-def display_reflection_early(df, graph_params=graph_params_default):
+def display_reflection_early(df, graph_params=None):
+    if graph_params is None:
+        graph_params = graph_params_default
     try:
         if 'Early Reflections' not in df.keys():
             return None
@@ -128,7 +146,9 @@ def display_reflection_early(df, graph_params=graph_params_default):
         return None
 
 
-def display_onaxis(df, graph_params=graph_params_default):
+def display_onaxis(df, graph_params=None):
+    if graph_params is None:
+        graph_params = graph_params_default
     try:
         onaxis = None
         if 'CEA2034' in df.keys():
@@ -150,7 +170,9 @@ def display_onaxis(df, graph_params=graph_params_default):
         return None
 
 
-def display_inroom(df, graph_params=graph_params_default):
+def display_inroom(df, graph_params=None):
+    if graph_params is None:
+        graph_params = graph_params_default
     try:
         if 'Estimated In-Room Response' not in df.keys():
             return None
@@ -163,7 +185,9 @@ def display_inroom(df, graph_params=graph_params_default):
         return None
 
 
-def display_reflection_horizontal(df, graph_params=graph_params_default):
+def display_reflection_horizontal(df, graph_params=None):
+    if graph_params is None:
+        graph_params = graph_params_default
     try:
         if 'Horizontal Reflections' not in df.keys():
             return None
@@ -174,7 +198,9 @@ def display_reflection_horizontal(df, graph_params=graph_params_default):
         return None
 
 
-def display_reflection_vertical(df, graph_params=graph_params_default):
+def display_reflection_vertical(df, graph_params=None):
+    if graph_params is None:
+        graph_params = graph_params_default
     try:
         if 'Vertical Reflections' not in df.keys():
             return None
@@ -183,7 +209,9 @@ def display_reflection_vertical(df, graph_params=graph_params_default):
         return None
 
 
-def display_spl(df, axis, graph_params=graph_params_default):
+def display_spl(df, axis, graph_params=None):
+    if graph_params is None:
+        graph_params = graph_params_default
     try:
         if axis not in df.keys():
             return None
@@ -206,15 +234,21 @@ def display_spl(df, axis, graph_params=graph_params_default):
         return None
 
 
-def display_spl_horizontal(df, graph_params=graph_params_default):
+def display_spl_horizontal(df, graph_params=None):
+    if graph_params is None:
+        graph_params = graph_params_default
     return display_spl(df, 'SPL Horizontal', graph_params)
 
 
-def display_spl_vertical(df, graph_params=graph_params_default):
+def display_spl_vertical(df, graph_params=None):
+    if graph_params is None:
+        graph_params = graph_params_default
     return display_spl(df, 'SPL Vertical', graph_params)
 
 
-def display_directivity_matrix(df, graph_params=graph_params_default):
+def display_directivity_matrix(df, graph_params=None):
+    if graph_params is None:
+        graph_params = graph_params_default
     try:
         return graph_directivity_matrix(df, graph_params)
     except Exception as e:
@@ -222,7 +256,9 @@ def display_directivity_matrix(df, graph_params=graph_params_default):
         return None
 
 
-def display_compare(df, graph_filter, graph_params=graph_params_default):
+def display_compare(df, graph_filter, graph_params=None):
+    if graph_params is None:
+        graph_params = graph_params_default
 
     def augment(dfa, name):
         # print(name)                                                                                                                                 
@@ -266,7 +302,9 @@ def display_compare(df, graph_filter, graph_params=graph_params_default):
 
 
 
-def display_isoband_horizontal(df, graph_params=isoband_params_default):
+def display_isoband_horizontal(df, graph_params=None):
+    if graph_params is None:
+        graph_params = isoband_params_default
     try:
         if 'SPL Horizontal_unmelted' not in df.keys():
             return None
@@ -278,7 +316,9 @@ def display_isoband_horizontal(df, graph_params=isoband_params_default):
         return None
 
 
-def display_isoband_vertical(df, graph_params=isoband_params_default):
+def display_isoband_vertical(df, graph_params=None):
+    if graph_params is None:
+        graph_params = isoband_params_default
     try:
         if 'SPL Vertical_unmelted' not in df.keys():
             return None
