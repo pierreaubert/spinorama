@@ -19,11 +19,15 @@
 import pandas as pd
 import flammkuchen as fl
 
-if __name__ == '__main__':
-    df = fl.load('cache.parse_all_speakers.h5')
+if __name__ == "__main__":
+    df = fl.load("cache.parse_all_speakers.h5")
     df_small = {}
-    for speaker in ('Genelec 8030C', 'KEF LS50', 'KRK Systems Classic 5', 'Verdant Audio Bambusa MG 1'):
+    for speaker in (
+        "Genelec 8030C",
+        "KEF LS50",
+        "KRK Systems Classic 5",
+        "Verdant Audio Bambusa MG 1",
+    ):
         if speaker in df.keys():
             df_small[speaker] = df[speaker]
-    fl.save('cache.smoketest_speakers.h5', df_small)
-
+    fl.save("cache.smoketest_speakers.h5", df_small)
