@@ -1274,6 +1274,22 @@ speakers_info = {
             },
         },
     },
+    'JBL 708P': {
+        'brand': 'JBL',
+        'model': '708P',
+        'type': 'active',
+        'price': '3600',
+        'shape': 'bookshelves',
+        'amount': 'pair',
+        'default_measurement': 'asr',
+        'measurements': {
+            'asr': {
+                'origin': 'ASR',
+                'format': 'klippel',
+                'review': 'https://www.audiosciencereview.com/forum/index.php?threads/jbl-708p-review-professional-monitor.20006/',
+            },
+        },
+    },
     'JBL 305P Mark ii': {
         'brand': 'JBL',
         'model': '305P Mark ii',
