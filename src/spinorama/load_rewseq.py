@@ -79,11 +79,11 @@ def parse_eq_iir_rews(filename, srate):
                     # TODO: factor code
                     if kind == 'HP' or kind == 'HPQ':
                         iir = Biquad(Biquad.HIGHPASS, ifreq, srate, 1.0/math.sqrt(2.0), 1.0)
-                        logger.debug('add IIR peq LOWPASS freq {0}Hz srate {1} Q {2} Gain {3}'.format(ifreq, srate, rq, rgain))
+                        logger.debug('add IIR peq LOWPASS freq {0}Hz srate {1}'.format(ifreq, srate))
                         peq.append((status, iir))
                     elif kind == 'LP' or kind == 'LPQ':
                         iir = Biquad(Biquad.LOWPASS, ifreq, srate,  1.0/math.sqrt(2.0), 1.0)
-                        logger.debug('add IIR peq LOWPASS freq {0}Hz srate {1} Q {2} Gain {3}'.format(ifreq, srate, rq, rgain))
+                        logger.debug('add IIR peq LOWPASS freq {0}Hz srate {1}'.format(ifreq, srate))
                         peq.append((status, iir))
                     else:
                         logger.warning('kind {0} is unknown'.format(kind))
@@ -109,11 +109,11 @@ def parse_eq_iir_rews(filename, srate):
 
                     if kind == 'LS' or kind == 'LSC':
                         iir = Biquad(Biquad.LOWSHELF, ifreq, srate, 1.0, rgain)
-                        logger.debug('add IIR peq LOWSHELF freq {0}Hz srate {1} Q {2} Gain {3}'.format(ifreq, srate, rq, rgain))
+                        logger.debug('add IIR peq LOWSHELF freq {0}Hz srate {1} Gain {2}'.format(ifreq, srate, rgain))
                         peq.append((status, iir))
                     elif kind == 'HS' or kind == 'HSC':
                         iir = Biquad(Biquad.HIGHSHELF, ifreq, srate, 1.0, rgain)
-                        logger.debug('add IIR peq HIGHSHELF freq {0}Hz srate {1} Q {2} Gain {3}'.format(ifreq, srate, rq, rgain))
+                        logger.debug('add IIR peq HIGHSHELF freq {0}Hz srate {1} Gain {2}'.format(ifreq, srate, rgain))
                         peq.append((status, iir))
                     else:
                         logger.warning('kind {0} is unknown'.format(kind))
