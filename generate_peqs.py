@@ -97,8 +97,8 @@ def flat_loss(freq, local_target, peq, iterations, weigths):
     _, _, r_value, _, _ = linregress(np.log10(freq), local_target[-1])
     sp = 1-r_value**2
     # * or + 
-    return weigths[0]*lw+weigths[1]*sp
-    #return lw*sp
+    #return weigths[0]*lw+weigths[1]*sp
+    return lw*sp
 
 
 def swap_loss(freq, local_target, peq, iteration):
@@ -614,10 +614,11 @@ def optim_save_peq(speaker_name, df_speaker, df_speaker_eq, optim_config, verbos
     if not smoke_test:
         with open(eq_name, 'w') as fd:
             fd.write(eq_apo)
-            iir_name = '{}/iir.txt'.format(eq_dir)
+            iir_txt = 'iir.txt'
+            iir_name = '{}/{}'.format(eq_dir, iir_txt)
             if not os.path.exists(iir_name):
                 try:
-                    os.symlink(eq_name, iir_name)
+                    os.symlink(eq_name, iir_txt)
                 except OSError:
                     pass
 
@@ -760,7 +761,7 @@ if __name__ == '__main__':
         # do you optimise for all kind of biquad or do you want only Peaks?
         'full_biquad_optim': True,
         # lookup around a value is [value*elastic, value/elastic]
-        'elastic': 0.9,
+        'elastic': 0.8,
         # cut frequency
         'fs': 48000,
         # optimise the curve above the Schroeder frequency (here default is
