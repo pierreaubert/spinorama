@@ -227,24 +227,26 @@ def add_eq(speaker_path, df):
     for speaker_name, speaker_data in df.items():
         logging.info('Processing {0}'.format(speaker_name))
         
-        iir = parse_eq_iir_rews('{}/eq/{}/iir.txt'.format(speaker_path, speaker_name), 48000)
-        if iir is not None and len(iir)>0:
-            metadata.speakers_info[speaker_name]['eq'] = {}
-            metadata.speakers_info[speaker_name]['eq']['preamp_gain'] = round(peq_preamp_gain(iir), 1)
-            metadata.speakers_info[speaker_name]['eq']['type'] = 'peq'
-            metadata.speakers_info[speaker_name]['eq']['peq'] = []
-            for i in range(0, len(iir)):
-                weigth = iir[i][0]
-                filter = iir[i][1]
-                if weigth != 0.0:
-                    metadata.speakers_info[speaker_name]['eq']['peq'].append(
-                        {'type': filter.typ,
-                         'freq': filter.freq,
-                         'srate': filter.srate,
-                         'Q': filter.Q,
-                         'dbGain': filter.dbGain,
-                         })
-            logging.debug('adding eq: {}'.format(metadata.speakers_info[speaker_name]['eq']))
+        for suffix in ('', '-autoeq', '-amirm', '-maiky76', '-flipflop'):
+            iir = parse_eq_iir_rews('{}/eq/{}/iir{}.txt'.format(speaker_path, speaker_name, suffix), 48000)
+            if iir is not None and len(iir)>0:
+                eq_key = 'eq{}'.format(suffix.replace('-', '_'))
+                metadata.speakers_info[speaker_name][eq_key] = {}
+                metadata.speakers_info[speaker_name][eq_key]['preamp_gain'] = round(peq_preamp_gain(iir), 1)
+                metadata.speakers_info[speaker_name][eq_key]['type'] = 'peq'
+                metadata.speakers_info[speaker_name][eq_key]['peq'] = []
+                for i in range(0, len(iir)):
+                    weigth = iir[i][0]
+                    filter = iir[i][1]
+                    if weigth != 0.0:
+                        metadata.speakers_info[speaker_name][eq_key]['peq'].append(
+                            {'type': filter.typ,
+                             'freq': filter.freq,
+                             'srate': filter.srate,
+                             'Q': filter.Q,
+                             'dbGain': filter.dbGain,
+                            })
+                        logging.debug('adding eq: {}'.format(metadata.speakers_info[speaker_name][eq_key]))
 
 
 def dump_metadata(meta):
