@@ -67,10 +67,7 @@ from spinorama.load import graph_melt
 from spinorama.load_rewseq import parse_eq_iir_rews
 from spinorama.filter_peq import peq_format_apo
 from spinorama.filter_scores import scores_apply_filter, scores_print2
-from spinorama.graph import (
-    graph_spinorama,
-    graph_freq,
-    graph_regression)
+from spinorama.graph import graph_spinorama, graph_freq, graph_regression
 
 
 VERSION = 0.4
