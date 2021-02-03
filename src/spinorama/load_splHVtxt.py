@@ -97,7 +97,7 @@ def parse_graph_splHVtxt(dirpath, orientation):
             return iangle+270
         return iangle
         
-    return df.reindex(columns=sorted(df.columns, key=lambda a: a2v(a)))
+    return df.reindex(columns=sorted(df.columns, key=a2v))
     
 
 def parse_graphs_speaker_splHVtxt(speaker_path, speaker_brand, speaker_name, version):

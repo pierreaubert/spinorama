@@ -25,10 +25,8 @@ def join(anglelist):
     # 180-170-10 => join points
     delta = anglelist[-1]+anglelist[0]
     # print(delta)
-    if delta == 10 or delta == 5:
-        return True
-    else:
-        return False
+    return bool(delta == 10 or delta == 5)
+
 
 def angle_range(columns):
     amin = 0

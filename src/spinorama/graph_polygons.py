@@ -110,7 +110,7 @@ def merge_connected_polygons(isoband):
     count_connected = 0
     connected_polygons = {}
     # print('debug: connected_polygons:')
-    for c in segment_to_polygons.keys():
+    for c in segment_to_polygons:
         len_c = len(segment_to_polygons[c])
         if len_c == 2:
             # polygons are connected

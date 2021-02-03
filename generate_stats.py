@@ -205,7 +205,7 @@ def generate_stats(meta):
     filedir = 'book/stats'
     pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
 
-    for graph in graphs.keys():
+    for graph in graphs:
         graph_name = '{0}/{1}.png'.format(filedir, graph)
         graphs[graph].save(graph_name)
 

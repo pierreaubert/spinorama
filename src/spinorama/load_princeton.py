@@ -57,7 +57,7 @@ def parse_graph_freq_princeton_mat(mat, suffix):
         else:
             return int(angle[:-1])
 
-    df = df.reindex(columns=sorted(df.columns, key=lambda a: a2v(a)))
+    df = df.reindex(columns=sorted(df.columns, key=a2v))
     # check empty case
     if 'On Axis' not in df.keys():
         return None

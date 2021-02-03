@@ -134,7 +134,7 @@ def print_graphs(df: pd.DataFrame,
     graphs['Directivity Matrix'] = display_directivity_matrix(df, params)
 
     # add a title and setup legend
-    for k in graphs.keys():
+    for k in graphs:
         title = k.replace('_smoothed', '')
         # optimised for small screens / vertical orientation
         if graphs[k] is not None:
