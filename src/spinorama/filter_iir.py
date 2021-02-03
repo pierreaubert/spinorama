@@ -28,7 +28,8 @@ class Biquad:
       Biquad.LOWSHELF : Biquad.lowshelf,
       Biquad.HIGHSHELF : Biquad.highshelf
     }
-    assert typ in types
+    if typ not in types:
+      raise AssertionError
     self.typ = typ
     self.freq = float(freq)
     self.srate = float(srate)
