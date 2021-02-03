@@ -295,7 +295,7 @@ if __name__ == "__main__":
         ptype = args["--type"]
         if ptype not in ("png", "html", "svg", "json"):
             print("type {} is not recognize!".format(ptype))
-            sys.exit(1)
+        sys.exit(1)
 
     level = None
     if args["--log-level"] is not None:
