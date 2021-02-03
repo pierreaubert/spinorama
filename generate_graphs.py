@@ -40,19 +40,16 @@ import glob
 import ipaddress
 import logging
 import os
-import socket
 import sys
-import time
 from typing import List, Mapping
 
 from docopt import docopt
 import flammkuchen as fl
-import pandas as pd
 import ray
 
 import datas.metadata as metadata
 from src.spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
-from src.spinorama.speaker_print import print_graphs, print_compare
+from src.spinorama.speaker_print import print_graphs
 from src.spinorama.graph import graph_params_default
 
 

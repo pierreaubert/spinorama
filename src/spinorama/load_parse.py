@@ -1,6 +1,5 @@
 #                                                  -*- coding: utf-8 -*-
 import os
-import glob
 import logging
 import sys
 
@@ -13,7 +12,7 @@ from .load_princeton import parse_graphs_speaker_princeton
 from .load_rewstextdump import parse_graphs_speaker_rewstextdump
 from .load_rewseq import parse_eq_iir_rews
 from .load_splHVtxt import parse_graphs_speaker_splHVtxt
-from .filter_peq import peq_apply_measurements, peq_preamp_gain
+from .filter_peq import peq_apply_measurements
 
 
 logger = logging.getLogger('spinorama')

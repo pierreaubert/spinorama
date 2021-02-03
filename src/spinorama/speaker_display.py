@@ -1,6 +1,5 @@
 #                                                  -*- coding: utf-8 -*-
 import logging
-import math
 import altair as alt
 import pandas as pd
 import datas.metadata as metadata

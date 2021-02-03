@@ -2,9 +2,7 @@
 import logging
 import os
 import glob
-import numpy as np
 import pandas as pd
-from scipy.io import loadmat
 from .load import filter_graphs
 
 

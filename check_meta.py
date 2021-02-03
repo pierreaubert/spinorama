@@ -25,7 +25,6 @@ Options:
   --version         script version number
 """
 import logging
-import json
 import sys
 import datas.metadata as metadata
 

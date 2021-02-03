@@ -49,7 +49,6 @@ import sys
 from typing import Literal, List, Tuple
 
 import altair as alt
-from altair_saver import save
 from docopt import docopt
 import flammkuchen as fl
 import numpy as np
@@ -71,9 +70,7 @@ from spinorama.filter_scores import scores_apply_filter, scores_print2
 from spinorama.graph import (
     graph_spinorama,
     graph_freq,
-    graph_regression_graph,
-    graph_regression,
-)
+    graph_regression)
 
 
 VERSION = 0.4

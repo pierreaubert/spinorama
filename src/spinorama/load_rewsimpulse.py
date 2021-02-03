@@ -1,9 +1,6 @@
 #                                                  -*- coding: utf-8 -*-
 import logging
 import math
-import numpy as np
-import pandas as pd
-from .filter_iir import Biquad
 
 
 logger = logging.getLogger('spinorama')

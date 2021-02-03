@@ -1,6 +1,5 @@
 #                                                  -*- coding: utf-8 -*-
 import logging
-from .graph_pp import pp
 
 
 def is_close(poly):
