@@ -67,10 +67,7 @@ from spinorama.load import graph_melt
 from spinorama.load_rewseq import parse_eq_iir_rews
 from spinorama.filter_peq import peq_format_apo
 from spinorama.filter_scores import scores_apply_filter, scores_print2
-from spinorama.graph import (
-    graph_spinorama,
-    graph_freq,
-    graph_regression)
+from spinorama.graph import graph_spinorama, graph_freq, graph_regression
 
 
 VERSION = 0.4
@@ -1166,7 +1163,12 @@ if __name__ == "__main__":
             df_speaker_eq = df_all_speakers[speaker_name]["ASR"][key_eq]
         # compute
         id = optim_save_peq.remote(
-            speaker_name, df_speaker, df_speaker_eq, current_optim_config, verbose, smoke_test
+            speaker_name,
+            df_speaker,
+            df_speaker_eq,
+            current_optim_config,
+            verbose,
+            smoke_test,
         )
         while 1:
             ready_ids, remaining_ids = ray.wait([id], num_returns=1)

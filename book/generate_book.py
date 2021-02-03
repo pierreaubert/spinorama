@@ -34,32 +34,30 @@ from mako.lookup import TemplateLookup
 from docopt import docopt
 
 
-if __name__ == '__main__':
-    args = docopt(__doc__,
-                  version='generate_book.py version 0.1',
-                  options_first=True)
-    
+if __name__ == "__main__":
+    args = docopt(__doc__, version="generate_book.py version 0.1", options_first=True)
+
     # logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
     #                    datefmt='%Y-%m-%d:%H:%M:%S')
-    if args['--log-level'] is not None:
-        level = args['--log-level']
-        if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
+    if args["--log-level"] is not None:
+        level = args["--log-level"]
+        if level in ["INFO", "DEBUG", "WARNING", "ERROR"]:
             logging.basicConfig(level=level)
-            
+
     # load all metadata from generated json file
-    json_filename = '../docs/assets/metadata.json'
+    json_filename = "../docs/assets/metadata.json"
     if not os.path.exists(json_filename):
-        logging.fatal('Cannot find {0}'.format(json_filename))
+        logging.fatal("Cannot find {0}".format(json_filename))
         sys.exit(1)
 
     meta = None
-    with open(json_filename, 'r') as f:
+    with open(json_filename, "r") as f:
         meta = json.load(f)
 
     def sort_meta(s):
-        if 'pref_rating' in s.keys():
-            if 'pref_score'in s['pref_rating'].keys():
-                return s['pref_rating']['pref_score']
+        if "pref_rating" in s.keys():
+            if "pref_score" in s["pref_rating"].keys():
+                return s["pref_rating"]["pref_score"]
         return -1
 
     keys_sorted = sorted(meta, key=lambda a: sort_meta(meta[a]), reverse=True)
@@ -67,25 +65,24 @@ if __name__ == '__main__':
 
     # only build a dictionnary will all graphs
     speakers = {}
-    names = glob('./tmp/*.eps')
+    names = glob("./tmp/*.eps")
     for name in names:
-        speaker_name = name.replace('./tmp/', '')
-        speaker_title = speaker_name.replace('-', ' ').replace('.eps', '')
-        speakers[speaker_name] = {
-            'image': speaker_name,
-            'title': speaker_title
-        }
-        
+        speaker_name = name.replace("./tmp/", "")
+        speaker_title = speaker_name.replace("-", " ").replace(".eps", "")
+        speakers[speaker_name] = {"image": speaker_name, "title": speaker_title}
+
     # configure Mako
-    mako_templates = TemplateLookup(directories=['.'], module_directory='/tmp/mako_modules')
+    mako_templates = TemplateLookup(
+        directories=["."], module_directory="/tmp/mako_modules"
+    )
 
     # write index.html
-    for template in ('asrbook', ):
-        name = '{0}.tex'.format(template)
-        logging.info('Write {0} ({1} speakers found'.format(name, len(speakers.keys())))
+    for template in ("asrbook",):
+        name = "{0}.tex".format(template)
+        logging.info("Write {0} ({1} speakers found".format(name, len(speakers.keys())))
         template_tex = mako_templates.get_template(name)
 
-        with open('tmp/{0}'.format(name), 'w') as f:
+        with open("tmp/{0}".format(name), "w") as f:
             f.write(template_tex.render(speakers=speakers, meta=meta_sorted))
             f.close()
 

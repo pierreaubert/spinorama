@@ -4,23 +4,22 @@ import logging
 import pandas as pd
 from .load import graph_melt
 
-locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
-removequote = str.maketrans({'"': None, '\n': ''})
+removequote = str.maketrans({'"': None, "\n": ""})
 
-logger = logging.getLogger('spinorama')
+logger = logging.getLogger("spinorama")
 
 
 def parse_graph_freq_klippel(filename):
     title = None
-    columns = ['Freq']
+    columns = ["Freq"]
     usecols = [0]
     with open(filename) as csvfile:
         # first line is graph title
-        title = csvfile.readline().split('\t')[0][1:-1]
+        title = csvfile.readline().split("\t")[0][1:-1]
         # second line is column titles
-        csvcolumns = [c.translate(removequote)
-                      for c in csvfile.readline().split('\t')]
+        csvcolumns = [c.translate(removequote) for c in csvfile.readline().split("\t")]
         # third line is column units
         # units = [c.translate(removequote)
         #         for c in csvfile.readline().split('\t')]
@@ -32,12 +31,8 @@ def parse_graph_freq_klippel(filename):
 
     # read all columns, drop 0
     df = pd.read_csv(
-        filename,
-        sep='\t',
-        skiprows=2,
-        usecols=usecols,
-        names=columns,
-        thousands=',').drop(0)
+        filename, sep="\t", skiprows=2, usecols=usecols, names=columns, thousands=","
+    ).drop(0)
     # convert to float (issues with , and . in numbers)
     df = df.applymap(locale.atof)
     # reorder column if we are reading a file with angles (Pandas doesn't care but easier to plot)
@@ -47,41 +42,83 @@ def parse_graph_freq_klippel(filename):
     #                                24   25  26   27  28   29  30   31  32   33  34   35  36
     # p: 0    18 17  19 16  20 15  22 14 23 13  24 12  25 11  26  10 27   9   28    8  29   7
     #                                 30    6  31    5  32    4  33    3  34    2  35    1 36
-    perm = [0, 35, 33, 31, 29, 27, 25, 23, 21, 19, 17, 15, 13, 11, 9, 7, 5,
-            3, 1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30,
-            32, 34, 36]
+    perm = [
+        0,
+        35,
+        33,
+        31,
+        29,
+        27,
+        25,
+        23,
+        21,
+        19,
+        17,
+        15,
+        13,
+        11,
+        9,
+        7,
+        5,
+        3,
+        1,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32,
+        34,
+        36,
+    ]
 
     # make it consistent
-    df = df.rename(columns={'On-Axis': 'On Axis'})
+    df = df.rename(columns={"On-Axis": "On Axis"})
     # put it in order, not relevant for pandas but for np array
-    if len(df.columns) > 2 and df.columns[2] == '10°':
+    if len(df.columns) > 2 and df.columns[2] == "10°":
         return title, df[[df.columns[perm[i]] for i in range(0, len(perm))]]
     return title, df
 
 
 def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mversion):
     dfs = {}
-    csvfiles = ["CEA2034",
-                "Early Reflections",
-                "Directivity Index",
-                "Estimated In-Room Response",
-                "Horizontal Reflections",
-                "Vertical Reflections",
-                "SPL Horizontal",
-                "SPL Vertical"]
+    csvfiles = [
+        "CEA2034",
+        "Early Reflections",
+        "Directivity Index",
+        "Estimated In-Room Response",
+        "Horizontal Reflections",
+        "Vertical Reflections",
+        "SPL Horizontal",
+        "SPL Vertical",
+    ]
     for csv in csvfiles:
         csvfilename = None
-        if mversion is None or mversion == 'asr':
-            csvfilename = '{0}/ASR/{1}/{2}.txt'.format(speaker_path, speaker_name, csv)
+        if mversion is None or mversion == "asr":
+            csvfilename = "{0}/ASR/{1}/{2}.txt".format(speaker_path, speaker_name, csv)
         else:
-            csvfilename = '{0}/ASR/{1}/{3}/{2}.txt'.format(speaker_path, speaker_name, csv, mversion)
+            csvfilename = "{0}/ASR/{1}/{3}/{2}.txt".format(
+                speaker_path, speaker_name, csv, mversion
+            )
         try:
             title, df = parse_graph_freq_klippel(csvfilename)
-            logger.debug('Speaker: {0} (ASR)  Loaded: {1}'.format(speaker_name, csvfilename))
-            dfs[title + '_unmelted'] = df
+            logger.debug(
+                "Speaker: {0} (ASR)  Loaded: {1}".format(speaker_name, csvfilename)
+            )
+            dfs[title + "_unmelted"] = df
             dfs[title] = graph_melt(df)
         except FileNotFoundError:
-            logger.info('Speaker: {0} (ASR) Not found: {1}'.format(speaker_name, csvfilename))
+            logger.info(
+                "Speaker: {0} (ASR) Not found: {1}".format(speaker_name, csvfilename)
+            )
     return dfs
-
-
