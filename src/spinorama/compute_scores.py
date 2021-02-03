@@ -2,9 +2,6 @@
 import logging
 import math
 from typing import List, Tuple
-
-
-from .ltype import Vector, Peq
 import numpy as np
 import pandas as pd
 from more_itertools import consecutive_groups

@@ -40,7 +40,6 @@ import sys
 
 from docopt import docopt
 import flammkuchen as fl
-import pandas as pd
 import ray
 
 from src.spinorama.compute_estimates import estimates

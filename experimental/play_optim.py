@@ -1,23 +1,12 @@
 #!/usr/bin/env python3
 
-import math
-import logging
-import numpy as np
-import pandas as pd
 import scipy.signal as sig
-import altair as alt
 import flammkuchen as fl
-import ray
 from ray import tune
 
 import sys,os,os.path
 sys.path.append(os.path.expanduser('./src'))
-
-from spinorama.load import graph_melt
-from spinorama.load_rewseq import parse_eq_iir_rews
-from spinorama.graph import graph_spinorama, graph_freq
-from spinorama.compute_scores import scores
-from spinorama.filter_scores import scores_apply_filter, scores_print, scores_loss, lw_loss
+from spinorama.filter_scores import scores_loss, lw_loss
 from spinorama.filter_iir import Biquad
 
 def config2peq(config):

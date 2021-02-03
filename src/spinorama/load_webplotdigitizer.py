@@ -7,7 +7,7 @@ import os
 import pandas as pd
 import tarfile
 from .compute_cea2034 import estimated_inroom
-from .compute_normalize import unify_freq, pprint
+from .compute_normalize import unify_freq
 from .load import graph_melt
 
 

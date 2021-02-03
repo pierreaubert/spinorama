@@ -26,12 +26,10 @@ Options:
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
 import logging
-import os
 import sys
 
 from docopt import docopt
 import flammkuchen as fl
-import pandas as pd
 import ray
 
 from src.spinorama.speaker_print import print_compare

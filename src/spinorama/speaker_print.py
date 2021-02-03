@@ -15,7 +15,7 @@ from .speaker_display import display_spinorama, display_onaxis, display_inroom, 
     display_isoband_horizontal, display_isoband_vertical, \
     display_radar_horizontal, display_radar_vertical, display_directivity_matrix, \
     display_compare
-from .speaker_views import template_compact, template_panorama, template_sidebyside_eq
+from .speaker_views import template_compact
 from .graph import graph_params_default, contour_params_default, radar_params_default
 
 

@@ -4,7 +4,6 @@ import logging
 import math
 import numpy as np
 import pandas as pd
-from urllib.parse import quote
 from .compute_directivity import directivity_matrix
 from .compute_normalize import resample
 from .graph_contour import compute_contour, compute_contour_smoothed
