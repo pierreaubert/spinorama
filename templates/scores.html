@@ -3,14 +3,13 @@
 
 <%!
   def space2url(text):
-      return text.replace(' ', '%20')
+      return text.replace(' ', '%20').replace('&', '%26')
 
   def space2dash(text):
-      return text.replace(' ', '-').replace("'", '-').replace(".", '-')
+      return text.replace(' ', '-').replace("'", '-').replace('.', '-').replace('+','-').replace('&','-')
 
   def removeVendors(text):
-      return text.replace('Vendors/','')
-
+      return text.replace('Vendors-','').replace(' ', '%20').replace('&', '%26')
 %>  
 
 <div class="section">
@@ -81,7 +80,7 @@
 %>
             <tr id="${speaker_name | space2dash}">
 	      <td>${speaker_name}</td>
-	      ${ligne(compute, default)}
+	      ${ligne(speaker_name, compute, default)}
             </tr>
         % for version, measurement in meta[speaker_name]['measurements'].items():
 <%
@@ -91,7 +90,7 @@
 %>
             <tr>
 	      <td></td>
-	      ${ligne(compute, version)}
+	      ${ligne(speaker_name, compute, version)}
             </tr>
        % endfor
       % endfor
@@ -102,31 +101,36 @@
 
 <%include file="footer.html"/>
 
-<%def name="ligne(compute, default)">
-  	<td>${default}</td>
-	% if 'estimates' in compute.keys():
-	  <td>${compute['estimates'].get('ref_3dB', '')}</td>
-	  <td>${compute['estimates'].get('ref_6dB', '')}</td>
-	  <td>&plusmn;${compute['estimates'].get('ref_band', '')}</td>
-	  </td>
-	% else:
-	  <td></td><td></td><td></td><td></td>
-	% endif
-	% if 'pref_rating' in compute.keys():
-	<td>${compute['pref_rating'].get('lfx_hz', '')}</td>
-	<td>${compute['pref_rating'].get('lfq', '')}</td>
-	<td>${compute['pref_rating'].get('nbd_on_axis', '')}</td>    
-	<td>${compute['pref_rating'].get('nbd_pred_in_room', '')}</td>
-	<td>${compute['pref_rating'].get('sm_pred_in_room', '')}</td>
-	<th>${compute['pref_rating'].get('pref_score', '')}</th>
-	% if 'pref_rating_eq' in compute.keys():
-	<th>${compute['pref_rating_eq'].get('pref_score', '')}</th>
-	% else:
-	<th></th>
-	% endif
-	<th>${compute['pref_rating'].get('pref_score_wsub', '')}</th>
-	% else:
-	<td></td><td></td><td></td><td></td><th></th>
-	<th></th><th></th><th></th>
-	% endif
+<%def name="ligne(speaker_name, compute, default)">
+<td>
+  <a href="${speaker_name|space2url}/${compute['origin']|removeVendors}/index_${default}.html">${default}</a>
+</td>
+% if 'estimates' in compute.keys():
+<td>${compute['estimates'].get('ref_3dB', '')}</td>
+<td>${compute['estimates'].get('ref_6dB', '')}</td>
+<td>&plusmn;${compute['estimates'].get('ref_band', '')}</td>
+% else:
+<td></td><td></td><td></td><td></td>
+% endif
+% if 'pref_rating' in compute.keys():
+<td>${compute['pref_rating'].get('lfx_hz', '')}</td>
+<td>${compute['pref_rating'].get('lfq', '')}</td>
+<td>${compute['pref_rating'].get('nbd_on_axis', '')}</td>    
+<td>${compute['pref_rating'].get('nbd_pred_in_room', '')}</td>
+<td>${compute['pref_rating'].get('sm_pred_in_room', '')}</td>
+<th>${compute['pref_rating'].get('pref_score', '')}</th>
+% if 'pref_rating_eq' in compute.keys():
+<th>
+  ${compute['pref_rating_eq'].get('pref_score', '')}
+  &nbsp;
+  <a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${speaker_name|space2url}/iir.txt">(eq)</a>
+</th>
+% else:
+<th></th>
+% endif
+<th>${compute['pref_rating'].get('pref_score_wsub', '')}</th>
+% else:
+<td></td><td></td><td></td><td></td><th></th>
+<th></th><th></th><th></th>
+% endif
 </%def>
