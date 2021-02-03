@@ -875,7 +875,7 @@ if __name__ == '__main__':
             logger.error('{} is not known!'.format(speaker_name))
             sys.exit(1)
         if 'ASR' not in df_all_speakers[speaker_name].keys():
-            sys,exit(0)
+            sys,sys.exit(0)
         default = 'asr'
         if speaker_name in metadata.keys() and 'default_measurement'in metadata[speaker_name].keys():
             default = metadata[speaker_name]['default_measurement']

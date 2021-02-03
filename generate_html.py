@@ -124,7 +124,7 @@ if __name__ == '__main__':
             sitedev = args['--sitedev']
             if len(sitedev) < 4 or sitedev[0:4] != 'http':
                 print('sitedev {} does not start with http!'.format(sitedev))
-                exit(1)
+                sys.exit(1)
         site = sitedev
 
     level = None
