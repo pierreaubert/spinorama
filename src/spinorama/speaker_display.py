@@ -228,8 +228,8 @@ def display_spl(df, axis, graph_params=None):
         if axis not in df.keys():
             return None
         spl = df[axis]
-        filter = {"Measurements": ["On Axis", "10°", "20°", "30°", "40°", "50°", "60°"]}
-        mask = spl.isin(filter).any(1)
+        mfilter = {"Measurements": ["On Axis", "10°", "20°", "30°", "40°", "50°", "60°"]}
+        mask = spl.isin(mfilter).any(1)
         spl = spl[mask]
         spl = resample(spl, 700)  # 100x number of graphs
         return graph_freq(spl, graph_params)

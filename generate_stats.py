@@ -251,20 +251,20 @@ if __name__ == '__main__':
         logging.fatal('Cannot find {0}'.format(json_filename))
         sys.exit(1)
 
-    meta = None
+    jsmeta = None
     with open(json_filename, 'r') as f:
-        meta = json.load(f)
+        jsmeta = json.load(f)
         
-    logging.warning('Data {0} loaded ({1} speakers)!'.format(json_filename, len(meta)))
+    logging.warning('Data {0} loaded ({1} speakers)!'.format(json_filename, len(jsmeta)))
 
     if print_what is not None:
         if print_what == 'eq_txt':
-            print_eq(meta, 'txt')
+            print_eq(jsmeta, 'txt')
         elif  print_what == 'eq_csv':
-            print_eq(meta, 'csv')
+            print_eq(jsmeta, 'csv')
         else:
             logging.error('unkown print type either "eq_txt" or "eq_csv"')
     else:
-        generate_stats(meta)
+        generate_stats(jsmeta)
 
     sys.exit(0)

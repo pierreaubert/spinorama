@@ -20,9 +20,9 @@ def parse_graph_splHVtxt(dirpath, orientation):
         
     symmetry = True
     for file in files:
-        format = os.path.basename(file).split()
-        if len(format) > 2:
-            angle = format[-1][:-4]
+        file_format = os.path.basename(file).split()
+        if len(file_format) > 2:
+            angle = file_format[-1][:-4]
         else:
             angle = os.path.basename(file).split('_')[0]
             
@@ -39,9 +39,9 @@ def parse_graph_splHVtxt(dirpath, orientation):
         # 2 possible formats:
         # 1. angle_H or angle_V.txt
         # 2. name _H angle.txt
-        format = os.path.basename(file).split()
-        if len(format) > 2:
-            angle = format[-1][:-4]
+        file_format = os.path.basename(file).split()
+        if len(file_format) > 2:
+            angle = file_format[-1][:-4]
         else:
             angle = os.path.basename(file).split('_')[0]
             

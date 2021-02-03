@@ -128,9 +128,9 @@ def normalize_graph(dfc, mean):
 
 def pprint(df):
     for m in df.Measurements.unique():
-        min = np.min(df[df.Measurements == m].dB)
-        max = np.max(df[df.Measurements == m].dB)
-        print('{0} {1} {2}'.format(min, max, m))
+        df_min = np.min(df[df.Measurements == m].dB)
+        df_max = np.max(df[df.Measurements == m].dB)
+        print('{0} {1} {2}'.format(df_min, df_max, m))
 
 
 def resample(df, target_size):

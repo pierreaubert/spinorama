@@ -21,12 +21,10 @@ def octave(N: int) -> List[Tuple[float, float, float]]:
     reference = 1290.0
     p = pow(2, 1 / N)
     p_band = pow(2, 1 / (2 * N))
-    iter = int((N * 10 + 1) / 2)
-    center = [reference / p ** i for i in range(iter, 0, -1)] + [reference] + [reference * p ** i for i in
-                                                                               range(1, iter + 1, 1)]
-    octave = [(c / p_band, c, c * p_band) for c in center]
-    # print('Octave({0}) octave[{1}], octave[{2}'.format(N, octave[0], octave[-1]))
-    return octave
+    o_iter = int((N * 10 + 1) / 2)
+    center = [reference / p ** i for i in range(o_iter, 0, -1)] + \
+        [reference] + [reference * p ** i for i in range(1, o_iter + 1, 1)]
+    return [(c / p_band, c, c * p_band) for c in center]
 
 
 def aad(dfu: pd.DataFrame) -> float:
@@ -106,25 +104,25 @@ def lfq(lw, sp, lfx_log) -> float:
     LFQ is intended to quantify deviations in amplitude response over the
     bass region between the low frequency cut-off and 300 Hz.
     """
-    lfx = pow(10, lfx_log)
-    sum = 0
+    val_lfx = pow(10, lfx_log)
+    lfq_sum = 0
     n = 0
-    # print('DEBUG lfx={1} octave(20): {0}'.format(octave(20), lfx))
+    # print('DEBUG lfx={1} octave(20): {0}'.format(octave(20), val_lfx))
     for (bmin, bcenter, bmax) in octave(20):
         # 100hz to 12k hz
-        if bmin < lfx or bmax > 300:
+        if bmin < val_lfx or bmax > 300:
             continue
         s_lw = lw.loc[(lw.Freq >= bmin) & (lw.Freq < bmax)]
         s_sp = sp.loc[(sp.Freq >= bmin) & (sp.Freq < bmax)]
         if s_lw.shape[0] > 0 and s_sp.shape[0] > 0:
             y_lw = np.mean(s_lw.dB)
             y_sp = np.mean(s_sp.dB)
-            sum += abs(y_lw - y_sp)
+            lfq_sum += abs(y_lw - y_sp)
             n += 1
     if n == 0:
         logging.error('lfq is None')
         return -1.0
-    return sum / n
+    return lfq_sum / n
 
 
 def sm(dfu):
@@ -151,8 +149,8 @@ def sm(dfu):
     return r_value ** 2
 
 
-def pref_rating(nbd_on, nbd_pir, lfx, sm_pir):
-    return 12.69 - 2.49 * nbd_on - 2.99 * nbd_pir - 4.31 * lfx + 2.32 * sm_pir
+def pref_rating(nbd_on, nbd_pir, lf_x, sm_pir):
+    return 12.69 - 2.49 * nbd_on - 2.99 * nbd_pir - 4.31 * lf_x + 2.32 * sm_pir
 
 
 def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):

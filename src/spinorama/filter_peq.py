@@ -13,19 +13,19 @@ logger = logging.getLogger('spinorama')
 
  
 def peq_build(freq: Vector, peq: Peq) -> Vector:
-    filter = [0.0]
+    current_filter = [0.0]
     if len(peq)>0:
         for w, iir in peq:
-            filter += w*np.array([iir.log_result(f) for f in freq])
-    return filter
+            current_filter += w*np.array([iir.log_result(f) for f in freq])
+    return current_filter
 
 
 def peq_freq(spl: Vector, peq: Peq) -> Vector:
-    filter = [0.0]
+    current_filter = [0.0]
     if len(peq)>0:
         for w, iir in peq:
-            filter += w*np.array([iir(v) for v in spl])
-    return filter
+            current_filter += w*np.array([iir(v) for v in spl])
+    return current_filter
 
 
 def peq_preamp_gain(peq: Peq) -> float:

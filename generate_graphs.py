@@ -62,15 +62,15 @@ def get_speaker_list(speakerpath: str) -> List[str]:
     princeton = glob.glob(speakerpath + "/Princeton/*")
     ear = glob.glob(speakerpath + "/ErinsAudioCorner/*")
     dirs = asr + vendors + princeton + ear + misc
-    for dir in dirs:
-        if os.path.isdir(dir) and dir not in (
+    for current_dir in dirs:
+        if os.path.isdir(current_dir) and current_dir not in (
             "assets",
             "compare",
             "stats",
             "pictures",
             "logos",
         ):
-            speakers.append(os.path.basename(dir))
+            speakers.append(os.path.basename(current_dir))
     return speakers
 
 

@@ -1027,7 +1027,7 @@ if __name__ == "__main__":
             logger.setLevel(level)
 
     # read optimisation parameter
-    optim_config = {
+    current_optim_config = {
         # name of the loss function
         "loss": "flat_loss",
         # if you have multiple loss functions, define the weigth for each
@@ -1066,58 +1066,58 @@ if __name__ == "__main__":
     # MAX_STEPS_XXX are usefull for grid search when the algorithm is looking
     # for random values (or trying all) across a range
     if smoke_test:
-        optim_config["MAX_NUMBER_PEQ"] = 5
-        optim_config["MAX_STEPS_FREQ"] = 3
-        optim_config["MAX_STEPS_DBGAIN"] = 3
-        optim_config["MAX_STEPS_Q"] = 3
+        current_optim_config["MAX_NUMBER_PEQ"] = 5
+        current_optim_config["MAX_STEPS_FREQ"] = 3
+        current_optim_config["MAX_STEPS_DBGAIN"] = 3
+        current_optim_config["MAX_STEPS_Q"] = 3
         # max iterations (if algorithm is iterative)
-        optim_config["maxiter"] = 20
+        current_optim_config["maxiter"] = 20
     else:
-        optim_config["MAX_NUMBER_PEQ"] = 20
-        optim_config["MAX_STEPS_FREQ"] = 5
-        optim_config["MAX_STEPS_DBGAIN"] = 5
-        optim_config["MAX_STEPS_Q"] = 5
+        current_optim_config["MAX_NUMBER_PEQ"] = 20
+        current_optim_config["MAX_STEPS_FREQ"] = 5
+        current_optim_config["MAX_STEPS_DBGAIN"] = 5
+        current_optim_config["MAX_STEPS_Q"] = 5
         # max iterations (if algorithm is iterative)
-        optim_config["maxiter"] = 500
+        current_optim_config["maxiter"] = 500
 
     # MIN or MAX_Q or MIN or MAX_DBGAIN control the shape of the biquad which
     # are admissible.
-    optim_config["MIN_DBGAIN"] = 0.2
-    optim_config["MAX_DBGAIN"] = 12
-    optim_config["MIN_Q"] = 0.1
-    optim_config["MAX_Q"] = 12
+    current_optim_config["MIN_DBGAIN"] = 0.2
+    current_optim_config["MAX_DBGAIN"] = 12
+    current_optim_config["MIN_Q"] = 0.1
+    current_optim_config["MAX_Q"] = 12
 
     # do we override optim default?
     if args["--max-peq"] is not None:
         max_number_peq = int(args["--max-peq"])
-        optim_config["MAX_NUMBER_PEQ"] = max_number_peq
+        current_optim_config["MAX_NUMBER_PEQ"] = max_number_peq
     if args["--min-Q"] is not None:
         min_Q = float(args["--min-Q"])
-        optim_config["MIN_Q"] = min_Q
+        current_optim_config["MIN_Q"] = min_Q
     if args["--max-Q"] is not None:
         max_Q = float(args["--max-Q"])
-        optim_config["MAX_Q"] = max_Q
+        current_optim_config["MAX_Q"] = max_Q
     if args["--min-dB"] is not None:
         min_dB = float(args["--min-dB"])
-        optim_config["MIN_DBGAIN"] = min_dB
+        current_optim_config["MIN_DBGAIN"] = min_dB
     if args["--max-dB"] is not None:
         max_dB = float(args["--max-dB"])
-        optim_config["MAX_DBGAIN"] = max_dB
+        current_optim_config["MAX_DBGAIN"] = max_dB
     if args["--max-iter"] is not None:
         max_iter = int(args["--max-iter"])
-        optim_config["maxiter"] = max_iter
+        current_optim_config["maxiter"] = max_iter
     if args["--min-freq"] is not None:
         min_freq = int(args["--min-freq"])
-        optim_config["freq_req_min"] = min_freq
+        current_optim_config["freq_req_min"] = min_freq
     if args["--max-freq"] is not None:
         max_freq = int(args["--max-freq"])
-        optim_config["freq_req_max"] = max_freq
+        current_optim_config["freq_req_max"] = max_freq
     if args["--only-biquad-peak"] is not None:
         if args["--only-biquad-peak"] is True:
-            optim_config["full_biquad_optim"] = False
+            current_optim_config["full_biquad_optim"] = False
     if args["--curve-peak-only"] is not None:
         if args["--curve-peak-only"] is True:
-            optim_config["plus_and_minus"] = False
+            current_optim_config["plus_and_minus"] = False
 
     # name of speaker
     speaker_name = None
@@ -1145,7 +1145,7 @@ if __name__ == "__main__":
 
     # select all speakers
     if speaker_name is None:
-        ids = queue_speakers(df_all_speakers, optim_config, verbose, smoke_test)
+        ids = queue_speakers(df_all_speakers, current_optim_config, verbose, smoke_test)
         compute_peqs(ids)
     else:
         if speaker_name not in df_all_speakers.keys():
@@ -1161,12 +1161,12 @@ if __name__ == "__main__":
             default = metadata[speaker_name]["default_measurement"]
         df_speaker = df_all_speakers[speaker_name]["ASR"][default]
         df_speaker_eq = None
-        default_eq = "{}_eq".format(default)
-        if default_eq in df_all_speakers[speaker_name]["ASR"].keys():
-            df_speaker_eq = df_all_speakers[speaker_name]["ASR"][default_eq]
+        key_eq = "{}_eq".format(default)
+        if key_eq in df_all_speakers[speaker_name]["ASR"].keys():
+            df_speaker_eq = df_all_speakers[speaker_name]["ASR"][key_eq]
         # compute
         id = optim_save_peq.remote(
-            speaker_name, df_speaker, df_speaker_eq, optim_config, verbose, smoke_test
+            speaker_name, df_speaker, df_speaker_eq, current_optim_config, verbose, smoke_test
         )
         while 1:
             ready_ids, remaining_ids = ray.wait([id], num_returns=1)

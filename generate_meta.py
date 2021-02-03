@@ -235,15 +235,15 @@ def add_eq(speaker_path, df):
                 metadata.speakers_info[speaker_name][eq_key]['type'] = 'peq'
                 metadata.speakers_info[speaker_name][eq_key]['peq'] = []
                 for i in range(0, len(iir)):
-                    weigth = iir[i][0]
-                    filter = iir[i][1]
-                    if weigth != 0.0:
+                    iir_weigth = iir[i][0]
+                    iir_filter = iir[i][1]
+                    if iir_weigth != 0.0:
                         metadata.speakers_info[speaker_name][eq_key]['peq'].append(
-                            {'type': filter.typ,
-                             'freq': filter.freq,
-                             'srate': filter.srate,
-                             'Q': filter.Q,
-                             'dbGain': filter.dbGain,
+                            {'type': iir_filter.typ,
+                             'freq': iir_filter.freq,
+                             'srate': iir_filter.srate,
+                             'Q': iir_filter.Q,
+                             'dbGain': iir_filter.dbGain,
                             })
                         logging.debug('adding eq: {}'.format(metadata.speakers_info[speaker_name][eq_key]))
 
