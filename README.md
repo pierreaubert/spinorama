@@ -1,5 +1,6 @@
 # Spinorama : a library to display speaker frequency response and similar graphs
 ![image](https://github.com/pierreaubert/spinorama/workflows/Spinorama/badge.svg?branch=master)
+[![DeepSource](https://deepsource.io/gh/pierreaubert/spinorama.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/pierreaubert/spinorama/?ref=repository-badge)
 
 This library provides an easy way to view, compare or analyse speakers data. This can help you take informed
 decision when buying a speaker instead of relying on commercial information or internet buzz.
