@@ -118,8 +118,7 @@ def find_largest_area(freq, curve, optim_config):
 
     if minus_areas > plus_areas:
         return -1, minus_index, freq[minus_index]
-    else:
-        return +1, plus_index, freq[plus_index]
+    return +1, plus_index, freq[plus_index]
 
 
 def propose_range_freq(freq, local_target, optim_config):
@@ -135,14 +134,13 @@ def propose_range_freq(freq, local_target, optim_config):
     )
     if optim_config["MAX_STEPS_FREQ"] == 1:
         return sign, init_freq, [init_freq]
-    else:
-        return (
-            sign,
-            init_freq,
-            np.linspace(
-                init_freq_min, init_freq_max, optim_config["MAX_STEPS_FREQ"]
-            ).tolist(),
-        )
+    return (
+        sign,
+        init_freq,
+        np.linspace(
+            init_freq_min, init_freq_max, optim_config["MAX_STEPS_FREQ"]
+        ).tolist(),
+    )
 
 
 def propose_range_dbGain(
@@ -167,10 +165,9 @@ def propose_range_dbGain(
         return np.linspace(
             init_dbGain_min, init_dbGain_max, optim_config["MAX_STEPS_DBGAIN"]
         ).tolist()
-    else:
-        return np.linspace(
-            -init_dbGain_max, -init_dbGain_min, optim_config["MAX_STEPS_DBGAIN"]
-        ).tolist()
+    return np.linspace(
+        -init_dbGain_max, -init_dbGain_min, optim_config["MAX_STEPS_DBGAIN"]
+    ).tolist()
 
 
 def propose_range_Q(optim_config):

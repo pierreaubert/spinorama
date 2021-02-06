@@ -52,10 +52,9 @@ def parse_graph_freq_princeton_mat(mat, suffix):
     def a2v(angle):
         if angle == "Freq":
             return -1000
-        elif angle == "On Axis":
+        if angle == "On Axis":
             return 0
-        else:
-            return int(angle[:-1])
+        return int(angle[:-1])
 
     df = df.reindex(columns=sorted(df.columns, key=a2v))
     # check empty case

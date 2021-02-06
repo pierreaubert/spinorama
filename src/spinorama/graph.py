@@ -825,8 +825,7 @@ def graph_regression_graph(graph, freq_start, freq_end, withBands=True):
 
     if withBands:
         return err3 + err1 + line
-    else:
-        return line
+    return line
 
 
 def graph_regression(source, freq_start, freq_end):

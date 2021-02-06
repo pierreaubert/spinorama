@@ -8,16 +8,14 @@ import pandas as pd
 def angle2value(angle):
     if angle == "On Axis":
         return 0
-    else:
-        return int(angle[:-1])
+    return int(angle[:-1])
 
 
 def angle2str(a):
     """display an angle every 30 deg"""
     if a % 30 == 0:
         return "{:d}°".format(a)
-    else:
-        return ""
+    return ""
 
 
 def join(anglelist):
