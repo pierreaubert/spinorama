@@ -91,9 +91,9 @@ def column_trim(c):
 def column_valid(c):
     if c[0] == "O":
         return True
-    elif c[0] == "F":
+    if c[0] == "F":
         return False
-    elif int(column_trim(c)[:-1]) % 10 == 0:
+    if int(column_trim(c)[:-1]) % 10 == 0:
         return True
     return False
 
@@ -555,8 +555,7 @@ def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     if v_spl is None:
         if h_spl is None:
             return None
-        else:
-            onaxis = spatial_average1(h_spl, ["Freq", "On Axis"])
+        onaxis = spatial_average1(h_spl, ["Freq", "On Axis"])
     else:
         onaxis = spatial_average1(v_spl, ["Freq", "On Axis"])
 

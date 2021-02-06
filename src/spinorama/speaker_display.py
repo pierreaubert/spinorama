@@ -140,8 +140,7 @@ def display_spinorama(df, graph_params=None):
         if spinorama is not None:
             spinorama = spinorama.loc[spinorama["Measurements"] != "DI offset"]
             return graph_spinorama(spinorama, graph_params)
-        else:
-            logger.info("Display CEA2034 is empty")
+        logger.info("Display CEA2034 is empty")
     except KeyError as ke:
         logger.info("Display CEA2034 not in dataframe {0}".format(ke))
     return None

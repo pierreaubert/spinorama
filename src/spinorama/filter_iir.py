@@ -156,8 +156,7 @@ class Biquad:
     def type2str(self, short=True):
         if short is True:
             return self.type2name[self.typ][1]
-        else:
-            return self.type2name[self.typ][0]
+        return self.type2name[self.typ][0]
 
     def __str__(self):
         return "Type:%s,Freq:%.1f,Rate:%.1f,Q:%.1f,Gain:%.1f" % (

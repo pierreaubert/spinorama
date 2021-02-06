@@ -91,7 +91,7 @@ def parse_graph_splHVtxt(dirpath, orientation):
     def a2v(angle):
         if angle == "Freq":
             return -1000
-        elif angle == "On Axis":
+        if angle == "On Axis":
             return 0
         iangle = int(angle[:-1])
         if iangle < -90:
