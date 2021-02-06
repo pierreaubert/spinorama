@@ -191,9 +191,9 @@ def getTarget(df_speaker_data, freq, current_curve_name, optim_config):
     else:
         logger.error("No match for getTarget")
         return None
-    slope *= math.log10(freq[0]) / math.log10(freq[-1])
-    intercept = current_curve[0] - slope
-    line = [slope * math.log10(freq[i]) + intercept for i in range(0, len(freq))]
+    slope /= math.log10(freq[-1])-math.log10(freq[0])
+    intercept = current_curve[0] - slope * math.log10(freq[0])
+    line = [slope * math.log10(f) for f in freq]+intercept
     logger.debug(
         "Slope {} Intercept {} R {} P {} err {}".format(
             slope, intercept, r_value, p_value, std_err
