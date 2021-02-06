@@ -138,8 +138,7 @@ class Biquad:
             - 4 * (self.a1 + 4 * self.a2 + self.a1 * self.a2) * phi
             + 16 * self.a2 * phi * phi
         )
-        if r < 0:
-            r = 0
+        r = max(0, r)
         return r ** (0.5)
 
     # provide a static log result for a given frequency f
