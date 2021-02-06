@@ -55,7 +55,6 @@ import numpy as np
 import pandas as pd
 import ray
 import scipy.signal as sig
-from scipy.stats import linregress
 import scipy.optimize as opt
 from scipy.interpolate import InterpolatedUnivariateSpline
 
@@ -68,144 +67,12 @@ from spinorama.load_rewseq import parse_eq_iir_rews
 from spinorama.filter_peq import peq_format_apo
 from spinorama.filter_scores import scores_apply_filter, scores_print2
 from spinorama.graph import graph_spinorama, graph_freq, graph_regression
+from spinorama.auto_loss import loss, score_loss
+from spinorama.auto_target import get_freq, get_target
 
 
 VERSION = 0.4
 logger = logging.getLogger("spinorama")
-
-# ------------------------------------------------------------------------------
-# various loss function
-# ------------------------------------------------------------------------------
-
-
-def l2_loss(local_target: Vector, freq: Vector, peq: Peq) -> float:
-    # L2 norm
-    return np.linalg.norm(local_target + peq_build(freq, peq), 2)
-
-
-def leastsquare_loss(freq, local_target, peq, iterations: int) -> float:
-    # sum of L2 norms if we have multiple targets
-    return np.sum(
-        [l2_loss(local_target[i], freq, peq) for i in range(0, len(local_target))]
-    )
-
-
-def flat_loss(freq, local_target, peq, iterations, weigths):
-    # make LW as close as target as possible and SP flat
-    lw = np.sum(
-        [l2_loss(local_target[i], freq, peq) for i in range(0, len(local_target) - 1)]
-    )
-    # want sound power to be flat but not necessary aligned
-    # with a target
-    _, _, r_value, _, _ = linregress(np.log10(freq), local_target[-1])
-    sp = 1 - r_value ** 2
-    # * or +
-    # return weigths[0]*lw+weigths[1]*sp
-    return lw * sp
-
-
-def swap_loss(freq, local_target, peq, iteration):
-    # try to alternate, optimise for 1 objective then the second one
-    if len(local_target) == 0 or iteration < 10:
-        return l2_loss([local_target[0]], freq, peq)
-    else:
-        return l2_loss([local_target[1]], freq, peq)
-
-
-def alternate_loss(freq, local_target, peq, iteration):
-    # optimise for 2 objectives 1 each time
-    if len(local_target) == 0 or iteration % 2 == 0:
-        return l2_loss([local_target[0]], freq, peq)
-    else:
-        return l2_loss([local_target[1]], freq, peq)
-
-
-def score_loss(df_spin, peq):
-    """Compute the preference score for speaker
-    local_target: unsued
-    peq: evaluated peq
-    return minus score (we want to maximise the score)
-    """
-    _, _, score = scores_apply_filter(df_spin, peq)
-    return -score["pref_score"]
-
-
-def loss(freq, local_target, peq, iterations, optim_config):
-    which_loss = optim_config["loss"]
-    if which_loss == "flat_loss":
-        weigths = optim_config["loss_weigths"]
-        return flat_loss(freq, local_target, peq, iterations, weigths)
-    elif which_loss == "leastsquare_loss":
-        return leastsquare_loss(freq, local_target, peq, iterations)
-    elif which_loss == "alternate_loss":
-        return alternate_loss(freq, local_target, peq, iterations)
-    else:
-        logger.error("loss function is unkown")
-
-
-# ------------------------------------------------------------------------------
-# compute freq and targets
-# ------------------------------------------------------------------------------
-
-
-def getSelector(df, optim_config):
-    return (df["Freq"] > optim_config["freq_reg_min"]) & (
-        df["Freq"] < optim_config["freq_reg_max"]
-    )
-
-
-def getFreq(df_speaker_data, optim_config):
-    """extract freq and one curve"""
-    curves = optim_config["curve_names"]
-    # extract LW
-    columns = {"Freq"}.union(curves)
-    local_df = df_speaker_data["CEA2034_unmelted"].loc[:, columns]
-    # selector
-    selector = getSelector(local_df, optim_config)
-    # freq
-    local_freq = local_df.loc[selector, "Freq"].values
-    local_target = []
-    for curve in curves:
-        local_target.append(local_df.loc[selector, curve].values)
-    return local_df, local_freq, local_target
-
-
-def getTarget(df_speaker_data, freq, current_curve_name, optim_config):
-    # freq
-    selector = getSelector(df_speaker_data, optim_config)
-    current_curve = df_speaker_data.loc[selector, current_curve_name].values
-    # compute linear reg on lw
-    slope, intercept, r_value, p_value, std_err = linregress(
-        np.log10(freq), current_curve
-    )
-    # normalise to have a flat target (primarly for bright speakers)
-    if current_curve_name == "On Axis":
-        slope = 0
-    elif current_curve_name == "Listening Window":
-        # slighlithy downward
-        slope = -2
-    elif current_curve_name == "Early Reflections":
-        slope = -5
-    elif current_curve_name == "Sound Power":
-        slope = -8
-    else:
-        logger.error("No match for getTarget")
-        return None
-    slope /= math.log10(freq[-1])-math.log10(freq[0])
-    intercept = current_curve[0] - slope * math.log10(freq[0])
-    line = [slope * math.log10(f) for f in freq]+intercept
-    logger.debug(
-        "Slope {} Intercept {} R {} P {} err {}".format(
-            slope, intercept, r_value, p_value, std_err
-        )
-    )
-    logger.debug(
-        "Target_interp from {:.1f}dB at {}Hz to {:.1f}dB at {}Hz".format(
-            line[0], freq[0], line[-1], freq[-1]
-        )
-    )
-    return line
-
 
 # ------------------------------------------------------------------------------
 # find initial values for biquads
@@ -366,17 +233,31 @@ def find_best_biquad(
         )
     )
     # can use differential_evolution basinhoppin dual_annealing
-    res = opt.dual_annealing(
-        opt_peq,
-        bounds,
-        maxiter=optim_config["maxiter"],
-        # initial_temp=10000
-    )
-    logger.debug(
-        "          optim loss {:2.2f} in {} iter type {:d} at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(
-            res.fun, res.nfev, int(res.x[0]), res.x[1], res.x[2], res.x[3], res.message
+    res = {"success": False}
+    try:
+        res = opt.dual_annealing(
+            opt_peq,
+            bounds,
+            maxiter=optim_config["maxiter"],
+            # initial_temp=10000
         )
-    )
+        logger.debug(
+            "          optim loss {:2.2f} in {} iter type {:d} at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(
+                res.fun,
+                res.nfev,
+                int(res.x[0]),
+                res.x[1],
+                res.x[2],
+                res.x[3],
+                res.message,
+            )
+        )
+    except ValueError as ve:
+        res.success = False
+        print("ERROR: {} bounds {}".format(ve, bounds))
+        for i in range(0, 4):
+            if bounds[i][0] >= bounds[i][1]:
+                print("ERROR on bound [{}]".format(i))
     return res.success, int(res.x[0]), res.x[1], res.x[2], res.x[3], res.fun, res.nit
 
 
@@ -751,7 +632,8 @@ def optim_greedy(
             pref_score = score_loss(df_speaker, auto_peq)
             results.append((optim_iter + 1, best_loss, -pref_score))
             logger.info(
-                "Iter {:2d} Optim converged loss {:2.2f} pref score {:2.2f} biquad {:2s} F:{:5.0f}Hz Q:{:2.2f} G:{:+2.2f}dB in {} iterations".format(
+                "Speaker {} Iter {:2d} Optim converged loss {:2.2f} pref score {:2.2f} biquad {:2s} F:{:5.0f}Hz Q:{:2.2f} G:{:+2.2f}dB in {} iterations".format(
+                    speaker_name,
                     optim_iter,
                     best_loss,
                     -pref_score,
@@ -764,8 +646,8 @@ def optim_greedy(
             )
         else:
             logger.error(
-                "Skip failed optim for best {:2.2f} current {:2.2f}".format(
-                    best_loss, current_loss
+                "Speaker {} Skip failed optim for best {:2.2f} current {:2.2f}".format(
+                    speaker_name, best_loss, current_loss
                 )
             )
             break
@@ -803,10 +685,10 @@ def optim_save_peq(
 
     # compute an optimal PEQ
     curves = optim_config["curve_names"]
-    df, freq, auto_target = getFreq(df_speaker, optim_config)
+    df, freq, auto_target = get_freq(df_speaker, optim_config)
     auto_target_interp = []
     for curve in curves:
-        auto_target_interp.append(getTarget(df, freq, curve, optim_config))
+        auto_target_interp.append(get_target(df, freq, curve, optim_config))
     auto_results, auto_peq = optim_greedy(
         speaker_name, df_speaker, freq, auto_target, auto_target_interp, optim_config
     )
@@ -823,11 +705,13 @@ def optim_save_peq(
             df_speaker, manual_peq
         )
         if df_speaker_eq is not None:
-            manual_df, manual_freq, manual_target = getFreq(df_speaker_eq, optim_config)
+            manual_df, manual_freq, manual_target = get_freq(
+                df_speaker_eq, optim_config
+            )
             manual_target_interp = []
             for curve in curves:
                 manual_target_interp.append(
-                    getTarget(manual_df, manual_freq, curve, optim_config)
+                    get_target(manual_df, manual_freq, curve, optim_config)
                 )
 
     # compute new score with this PEQ
