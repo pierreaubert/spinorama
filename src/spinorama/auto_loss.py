@@ -63,16 +63,14 @@ def swap_loss(freq, local_target, peq, iteration):
     # try to alternate, optimise for 1 objective then the second one
     if len(local_target) == 0 or iteration < 10:
         return l2_loss([local_target[0]], freq, peq)
-    else:
-        return l2_loss([local_target[1]], freq, peq)
+    return l2_loss([local_target[1]], freq, peq)
 
 
 def alternate_loss(freq, local_target, peq, iteration):
     # optimise for 2 objectives 1 each time
     if len(local_target) == 0 or iteration % 2 == 0:
         return l2_loss([local_target[0]], freq, peq)
-    else:
-        return l2_loss([local_target[1]], freq, peq)
+    return l2_loss([local_target[1]], freq, peq)
 
 
 def score_loss(df_spin, peq):
@@ -90,9 +88,8 @@ def loss(freq, local_target, peq, iterations, optim_config):
     if which_loss == "flat_loss":
         weigths = optim_config["loss_weigths"]
         return flat_loss(freq, local_target, peq, iterations, weigths)
-    elif which_loss == "leastsquare_loss":
+    if which_loss == "leastsquare_loss":
         return leastsquare_loss(freq, local_target, peq, iterations)
-    elif which_loss == "alternate_loss":
+    if which_loss == "alternate_loss":
         return alternate_loss(freq, local_target, peq, iterations)
-    else:
-        logger.error("loss function is unkown")
+    logger.error("loss function is unkown")

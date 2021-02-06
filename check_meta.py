@@ -33,11 +33,10 @@ def sanity_check_brand(name, speaker):
     if "brand" not in speaker:
         logging.error("brand is not in {0}".format(name))
         return 1
-    else:
-        brand = speaker["brand"]
-        if name[0 : len(brand)] != brand:
-            logging.error("{0} doesn't start with {1}".format(name, brand))
-            return 1
+    brand = speaker["brand"]
+    if name[0 : len(brand)] != brand:
+        logging.error("{0} doesn't start with {1}".format(name, brand))
+        return 1
     return 0
 
 
@@ -45,16 +44,15 @@ def sanity_check_model(name, speaker):
     if "model" not in speaker:
         logging.error("model is not in {0}".format(name))
         return 1
-    else:
-        brand = speaker["brand"]
-        model = speaker["model"]
-        name_split = model.split(" ")
-        if len(name_split) > 0 and name_split[0] == brand:
-            logging.warning("{0} does start with brand {1}".format(name, brand))
-            return 1
-        if name[-len(model) :] != model:
-            logging.error("{0} doesn't end with {1}".format(name, model))
-            return 1
+    brand = speaker["brand"]
+    model = speaker["model"]
+    name_split = model.split(" ")
+    if len(name_split) > 0 and name_split[0] == brand:
+        logging.warning("{0} does start with brand {1}".format(name, brand))
+        return 1
+    if name[-len(model) :] != model:
+        logging.error("{0} doesn't end with {1}".format(name, model))
+        return 1
     return 0
 
 
@@ -62,11 +60,10 @@ def sanity_check_type(name, speaker):
     if "type" not in speaker:
         logging.error("type is not in {0}".format(name))
         return 1
-    else:
-        thetype = speaker["type"]
-        if thetype not in ("active", "passive"):
-            logging.error("{0}: type {1} is not allowed".format(name, thetype))
-            return 1
+    thetype = speaker["type"]
+    if thetype not in ("active", "passive"):
+        logging.error("{0}: type {1} is not allowed".format(name, thetype))
+        return 1
     return 0
 
 
@@ -74,17 +71,16 @@ def sanity_check_shape(name, speaker):
     if "shape" not in speaker:
         logging.error("shape is not in {0}".format(name))
         return 1
-    else:
-        theshape = speaker["shape"]
-        if theshape not in (
-            "floorstanders",
-            "bookshelves",
-            "center",
-            "surround",
-            "omnidirectional",
-        ):
-            logging.error("{0}: shape {1} is not allowed".format(name, theshape))
-            return 1
+    theshape = speaker["shape"]
+    if theshape not in (
+        "floorstanders",
+        "bookshelves",
+        "center",
+        "surround",
+        "omnidirectional",
+    ):
+        logging.error("{0}: shape {1} is not allowed".format(name, theshape))
+        return 1
     return 0
 
 
@@ -92,11 +88,10 @@ def sanity_check_default_measurement(name, speaker):
     if "default_measurement" not in speaker:
         logging.error("default_measurement is not in {0}".format(name))
         return 1
-    else:
-        default = speaker["default_measurement"]
-        if "measurements" in speaker and default not in speaker["measurements"].keys():
-            logging.error("{0}: no measurement with key {1}".format(name, default))
-            return 1
+    default = speaker["default_measurement"]
+    if "measurements" in speaker and default not in speaker["measurements"].keys():
+        logging.error("{0}: no measurement with key {1}".format(name, default))
+        return 1
     return 0
 
 
