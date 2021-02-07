@@ -155,5 +155,3 @@ def propose_range_biquad(optim_config):
         5,  # Biquad.lowshelf
         6,  # Biquad.highshelf
     ]
-
-

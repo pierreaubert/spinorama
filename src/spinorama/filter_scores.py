@@ -70,56 +70,58 @@ def scores_print(score: dict, score_filtered: dict):
 
 
 def scores_print2(score: dict, score1: dict, score2: dict):
-    print("         SPK   S1   S2")
-    print("----------------------")
-    print(
+    res = []
+    res.append("         SPK   S1   S2")
+    res.append("----------------------")
+    res.append(
         "NBD  ON {0:0.2f} {1:0.2f} {2:0.2f}".format(
             score["nbd_on_axis"], score1["nbd_on_axis"], score2["nbd_on_axis"]
         )
     )
-    print(
+    res.append(
         "NBD  LW {0:0.2f} {1:0.2f} {2:0.2f}".format(
             score["nbd_listening_window"],
             score1["nbd_listening_window"],
             score2["nbd_listening_window"],
         )
     )
-    print(
+    res.append(
         "NBD PIR {0:0.2f} {1:0.2f} {2:0.2f}".format(
             score["nbd_pred_in_room"],
             score1["nbd_pred_in_room"],
             score2["nbd_pred_in_room"],
         )
     )
-    print(
+    res.append(
         "SM  PIR {0:0.2f} {1:0.2f} {2:0.2f}".format(
             score["sm_pred_in_room"],
             score1["sm_pred_in_room"],
             score2["sm_pred_in_room"],
         )
     )
-    print(
+    res.append(
         "SM   SP {0:0.2f} {1:0.2f} {2:0.2f}".format(
             score["sm_sound_power"], score1["sm_sound_power"], score2["sm_sound_power"]
         )
     )
-    print(
+    res.append(
         "LFX       {0:0.0f}   {1:0.0f}   {2:0.0f}".format(
             score["lfx_hz"], score1["lfx_hz"], score2["lfx_hz"]
         )
     )
-    print(
+    res.append(
         "LFQ     {0:0.2f} {1:0.2f} {2:0.2f}".format(
             score["lfq"], score1["lfq"], score2["lfq"]
         )
     )
-    print("----------------------")
-    print(
+    res.append("----------------------")
+    res.append(
         "Score    {0:0.1f}  {1:0.1f}  {2:0.1f}".format(
             score["pref_score"], score1["pref_score"], score2["pref_score"]
         )
     )
-    print("----------------------")
+    res.append("----------------------")
+    return "\n".join(res)
 
 
 def scores_loss(df_speaker: dict, peq) -> float:
@@ -141,5 +143,5 @@ def lw_loss(df_speaker: dict, peq) -> float:
     lw_filtered = listening_window(splH_filtered, splV_filtered)
     # optimize nbd
     score = nbd(lw_filtered)
-    print("LW score: {}".format(score))
+    # print("LW score: {}".format(score))
     return score

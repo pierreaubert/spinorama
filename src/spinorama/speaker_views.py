@@ -124,7 +124,7 @@ def template_compact(df, params, speaker, origin, key):
                     onaxis.properties(title="On Axis"),
                     inroom.properties(title="In Room prediction"),
                 ),
-            ).resolve_scale(color="independent")
+            )
         else:
             chart &= onaxis
 
@@ -135,7 +135,7 @@ def template_compact(df, params, speaker, origin, key):
                 ereflex.properties(title="Early Reflections"),
                 hreflex.properties(title="Horizontal Reflections"),
                 vreflex.properties(title="Vertical Reflections"),
-            ),
+            ).resolve_scale(color="shared") # generates a warning
         ).resolve_scale(color="independent")
 
     if hspl is not None and vspl is not None:

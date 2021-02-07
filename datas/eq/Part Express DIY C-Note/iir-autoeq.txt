@@ -1,7 +1,7 @@
 EQ for Part Express DIY C-Note computed from ASR data
 Preference Score 4.0 with EQ 6.2
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.4
-Dated: 2021-02-06-17:55:33
+Dated: 2021-02-07-13:01:31
 
 Preamp: -1.8 dB
 
@@ -19,7 +19,7 @@ Filter 11: ON PK Fc 11857 Hz Gain +0.83 dB Q 12.00
 Filter 12: ON PK Fc  5388 Hz Gain +0.72 dB Q 9.53
 Filter 13: ON PK Fc  1331 Hz Gain -1.04 dB Q 12.00
 Filter 14: ON PK Fc  1505 Hz Gain -0.48 dB Q 12.00
-Filter 15: ON PK Fc  3096 Hz Gain +0.85 dB Q 10.92
+Filter 15: ON PK Fc  3095 Hz Gain +0.85 dB Q 11.02
 Filter 16: ON PK Fc  6640 Hz Gain -0.69 dB Q 10.69
 Filter 17: ON PK Fc  1215 Hz Gain +1.14 dB Q 12.00
 Filter 18: ON PK Fc   943 Hz Gain +0.96 dB Q 12.00

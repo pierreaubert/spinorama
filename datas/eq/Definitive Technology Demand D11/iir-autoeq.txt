@@ -1,7 +1,7 @@
 EQ for Definitive Technology Demand D11 computed from ASR data
 Preference Score 4.6 with EQ 6.3
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.4
-Dated: 2021-02-06-17:42:10
+Dated: 2021-02-07-12:51:34
 
 Preamp: -1.7 dB
 
@@ -14,13 +14,13 @@ Filter  6: ON PK Fc   532 Hz Gain +2.44 dB Q 12.00
 Filter  7: ON PK Fc   662 Hz Gain -1.39 dB Q 7.11
 Filter  8: ON PK Fc   444 Hz Gain -1.52 dB Q 12.00
 Filter  9: ON PK Fc   605 Hz Gain -0.84 dB Q 12.00
-Filter 10: ON PK Fc 13757 Hz Gain -1.29 dB Q 5.21
-Filter 11: ON PK Fc 11443 Hz Gain +1.61 dB Q 11.32
+Filter 10: ON PK Fc 13757 Hz Gain -1.29 dB Q 5.20
+Filter 11: ON PK Fc 11443 Hz Gain +1.61 dB Q 11.33
 Filter 12: ON PK Fc  2783 Hz Gain +1.47 dB Q 6.11
 Filter 13: ON PK Fc  1774 Hz Gain -1.14 dB Q 12.00
-Filter 14: ON PK Fc  8147 Hz Gain +0.52 dB Q 8.79
+Filter 14: ON PK Fc  8147 Hz Gain +0.52 dB Q 8.78
 Filter 15: ON PK Fc   426 Hz Gain +0.23 dB Q 0.39
-Filter 16: ON PK Fc   692 Hz Gain -0.42 dB Q 12.00
+Filter 16: ON PK Fc   691 Hz Gain -0.42 dB Q 12.00
 Filter 17: ON PK Fc   492 Hz Gain -0.39 dB Q 12.00
 Filter 18: ON PK Fc   604 Hz Gain -0.38 dB Q 12.00
 Filter 19: ON PK Fc  3364 Hz Gain -0.28 dB Q 12.00

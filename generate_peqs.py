@@ -64,12 +64,18 @@ from spinorama.filter_peq import peq_format_apo
 from spinorama.filter_scores import scores_apply_filter, scores_print2
 from spinorama.auto_loss import loss, score_loss
 from spinorama.auto_target import get_freq, get_target
-from spinorama.auto_range import propose_range_freq, propose_range_Q, propose_range_dbGain, propose_range_biquad
+from spinorama.auto_range import (
+    propose_range_freq,
+    propose_range_Q,
+    propose_range_dbGain,
+    propose_range_biquad,
+)
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
 VERSION = 0.4
 logger = logging.getLogger("spinorama")
+
 
 def find_best_biquad(
     freq,
@@ -126,10 +132,10 @@ def find_best_biquad(
         )
     except ValueError as ve:
         res.success = False
-        print("ERROR: {} bounds {}".format(ve, bounds))
+        logger.error("{} bounds {}".format(ve, bounds))
         for i in range(0, 4):
             if bounds[i][0] >= bounds[i][1]:
-                print("ERROR on bound [{}]".format(i))
+                logger.error("on bound [{}]".format(i))
     return res.success, int(res.x[0]), res.x[1], res.x[2], res.x[3], res.fun, res.nit
 
 
@@ -179,10 +185,10 @@ def find_best_peak(
         )
         return res.success, biquad_type, res.x[0], res.x[1], res.x[2], res.fun, res.nit
     except ValueError as ve:
-        print("ERROR: {} bounds {}".format(ve, bounds))
+        logger.error("{} bounds {}".format(ve, bounds))
         for i in range(0, 4):
             if bounds[i][0] >= bounds[i][1]:
-                print("ERROR on bound [{}]".format(i))
+                logger.error("on bound [{}]".format(i))
         return False, 0, -1, -1, -1, -1, -1
 
 
@@ -470,11 +476,17 @@ def optim_save_peq(
 
     # print a compact table of results
     if verbose:
-        print("{:30s} ---------------------------------------".format(speaker_name))
-        print(peq_format_apo("\n".join(comments), auto_peq))
-        print("----------------------------------------------------------------------")
-        print("ITER  LOSS SCORE -----------------------------------------------------")
-        print(
+        logger.info(
+            "{:30s} ---------------------------------------".format(speaker_name)
+        )
+        logger.info(peq_format_apo("\n".join(comments), auto_peq))
+        logger.info(
+            "----------------------------------------------------------------------"
+        )
+        logger.info(
+            "ITER  LOSS SCORE -----------------------------------------------------"
+        )
+        logger.info(
             "\n".join(
                 [
                     "  {:2d} {:+2.2f} {:+2.2f}".format(r[0], r[1], r[2])
@@ -482,10 +494,24 @@ def optim_save_peq(
                 ]
             )
         )
-        print("----------------------------------------------------------------------")
-        print("{:30s} ---------------------------------------".format(speaker_name))
-        scores_print2(score, score_manual, score_auto)
-        print("----------------------------------------------------------------------")
+        logger.info(
+            "----------------------------------------------------------------------"
+        )
+        logger.info(
+            "{:30s} ---------------------------------------".format(speaker_name)
+        )
+        logger.info(scores_print2(score, score_manual, score_auto))
+        logger.info(
+            "----------------------------------------------------------------------"
+        )
+        print(
+            "{:30s} {:+2.2f} {:+2.2f} {:+2.2f}".format(
+                speaker_name,
+                score["pref_score"],
+                score_manual["pref_score"],
+                score_auto["pref_score"],
+            )
+        )
 
     return speaker_name, auto_results
 
@@ -719,7 +745,7 @@ if __name__ == "__main__":
             df_all_speakers[speaker_name] = df_speaker
 
     # ray section
-    ray.worker.global_worker.run_function_on_all_workers(setup_logger)
+    # ray.worker.global_worker.run_function_on_all_workers(setup_logger)
     # address is the one from the ray server<
     # ray.init(address='{}:{}'.format(ip, port))
     ray.init()

@@ -184,27 +184,32 @@ def graph_results(
         data = pir
         data_manual = pir_manual
         data_auto = pir_auto
+        
     g_pir_reg = graph_regression(
         data_auto.loc[(data_auto.Measurements == which_curve)], 100, reg_max
     )
+    
     g_pir_asr = (
         graph_freq(data.loc[(data.Measurements == which_curve)], g_params) + g_pir_reg
-    ).properties(title="{} from ASR [{}]".format(speaker_name, which_curve))
+    ).properties(title="{} from ASR [{}]".format(speaker_name, which_curve)
+    ).resolve_scale(color="independent").resolve_legend(shape="independent")
+    
     g_pir_manual = (
         graph_freq(data_manual.loc[(data_manual.Measurements == which_curve)], g_params)
         + g_pir_reg
-    ).properties(title="{} from ASR [{}] + manual EQ".format(speaker_name, which_curve))
+    ).properties(title="{} from ASR [{}] + manual EQ".format(speaker_name, which_curve)
+    ).resolve_scale(color="independent").resolve_legend(shape="independent")
+    
     g_pir_auto = (
         graph_freq(data_auto.loc[(data_auto.Measurements == which_curve)], g_params)
         + g_pir_reg
-    ).properties(title="{} from ASR [{}] + auto EQ".format(speaker_name, which_curve))
+    ).properties(title="{} from ASR [{}] + auto EQ".format(speaker_name, which_curve)
+    ).resolve_scale(color="independent").resolve_legend(shape="independent")
 
     # add all graphs and print it
     graphs = (
         ((g_manual_eq | g_auto_eq) & (g_eq_full | g_optim))
         & (g_spin_asr | g_spin_manual | g_spin_auto)
-        & (g_pir_asr | g_pir_manual | g_pir_auto)
-    ).resolve_scale("independent")
+        & (g_pir_asr | g_pir_manual | g_pir_auto).resolve_scale(y="independent")
+    )
     return graphs
-
-
