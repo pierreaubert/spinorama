@@ -1,7 +1,7 @@
 EQ for IK Multimedia iLoud MTM computed from ASR data
 Preference Score 5.4 with EQ 6.5
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.4
-Dated: 2021-02-06-15:28:39
+Dated: 2021-02-06-17:45:59
 
 Preamp: -1.2 dB
 
@@ -17,11 +17,11 @@ Filter  9: ON PK Fc 10714 Hz Gain -0.83 dB Q 7.65
 Filter 10: ON PK Fc  1322 Hz Gain -0.83 dB Q 12.00
 Filter 11: ON PK Fc   530 Hz Gain -0.93 dB Q 4.08
 Filter 12: ON PK Fc   372 Hz Gain +0.89 dB Q 9.42
-Filter 13: ON PK Fc  8024 Hz Gain +0.74 dB Q 10.52
+Filter 13: ON PK Fc  8024 Hz Gain +0.74 dB Q 10.53
 Filter 14: ON PK Fc   447 Hz Gain -0.73 dB Q 12.00
 Filter 15: ON PK Fc  2082 Hz Gain -0.43 dB Q 12.00
 Filter 16: ON PK Fc  2301 Hz Gain +0.33 dB Q 10.33
 Filter 17: ON PK Fc  2493 Hz Gain -0.28 dB Q 12.00
 Filter 18: ON PK Fc  2415 Hz Gain +0.20 dB Q 3.21
 Filter 19: ON PK Fc  4633 Hz Gain +0.70 dB Q 12.00
-Filter 20: ON PK Fc 14021 Hz Gain +0.71 dB Q 3.39
+Filter 20: ON PK Fc 14022 Hz Gain +0.71 dB Q 3.39

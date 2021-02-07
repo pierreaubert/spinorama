@@ -155,6 +155,9 @@ def propose_range_dbGain(
     init_dbGain = abs(spline(np.log10(init_freq)))
     init_dbGain_min = max(init_dbGain * scale, optim_config["MIN_DBGAIN"])
     init_dbGain_max = min(init_dbGain / scale, optim_config["MAX_DBGAIN"])
+    if init_dbGain_max <= init_dbGain_min:
+        init_dbGain_min = optim_config["MIN_DBGAIN"]
+        init_dbGain_max = optim_config["MAX_DBGAIN"]
     logger.debug(
         "gain min {}dB peak {}dB max {}dB".format(
             init_dbGain_min, init_dbGain, init_dbGain_max
@@ -292,15 +295,23 @@ def find_best_peak(
         )
     )
     # can use differential_evolution basinhoppin dual_annealing
-    res = opt.dual_annealing(
-        opt_peq, bounds, maxiter=optim_config["maxiter"], initial_temp=10000
-    )
-    logger.debug(
-        "          optim loss {:2.2f} in {} iter type PK at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(
-            res.fun, res.nfev, res.x[0], res.x[1], res.x[2], res.message
+    res = {"success": False}
+    try:
+        res = opt.dual_annealing(
+            opt_peq, bounds, maxiter=optim_config["maxiter"], initial_temp=10000
         )
-    )
-    return res.success, biquad_type, res.x[0], res.x[1], res.x[2], res.fun, res.nit
+        logger.debug(
+            "          optim loss {:2.2f} in {} iter type PK at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(
+                res.fun, res.nfev, res.x[0], res.x[1], res.x[2], res.message
+            )
+        )
+        return res.success, biquad_type, res.x[0], res.x[1], res.x[2], res.fun, res.nit
+    except ValueError as ve:
+        print("ERROR: {} bounds {}".format(ve, bounds))
+        for i in range(0, 4):
+            if bounds[i][0] >= bounds[i][1]:
+                print("ERROR on bound [{}]".format(i))
+        return False, 0, -1, -1, -1, -1, -1
 
 
 # ------------------------------------------------------------------------------

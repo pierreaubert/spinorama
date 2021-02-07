@@ -1,27 +1,27 @@
 EQ for Carmody S2000 DIY Speaker Kit computed from ASR data
-Preference Score 4.9 with EQ 5.8
+Preference Score 4.9 with EQ 5.9
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.4
-Dated: 2021-02-06-15:25:33
+Dated: 2021-02-06-17:42:02
 
-Preamp: -4.2 dB
+Preamp: -4.1 dB
 
 Filter  1: ON PK Fc  8278 Hz Gain +3.88 dB Q 1.17
 Filter  2: ON PK Fc  2697 Hz Gain -2.51 dB Q 3.05
 Filter  3: ON PK Fc  1165 Hz Gain -1.12 dB Q 5.63
 Filter  4: ON PK Fc 11977 Hz Gain -1.38 dB Q 10.75
 Filter  5: ON PK Fc  1574 Hz Gain -1.07 dB Q 12.00
-Filter  6: ON LS Fc  7879 Hz Gain +0.54 dB
-Filter  7: ON PK Fc  3299 Hz Gain -1.32 dB Q 5.47
-Filter  8: ON PK Fc  9980 Hz Gain +0.68 dB Q 10.53
-Filter  9: ON PK Fc  2247 Hz Gain -1.12 dB Q 12.00
-Filter 10: ON PK Fc  2603 Hz Gain -0.73 dB Q 12.00
-Filter 11: ON PK Fc  1004 Hz Gain -0.90 dB Q 3.83
-Filter 12: ON PK Fc  5046 Hz Gain +1.31 dB Q 6.16
-Filter 13: ON PK Fc   581 Hz Gain +0.87 dB Q 3.85
-Filter 14: ON PK Fc  7517 Hz Gain -0.78 dB Q 3.92
-Filter 15: ON PK Fc  1541 Hz Gain -0.68 dB Q 7.91
-Filter 16: ON PK Fc  2425 Hz Gain +0.70 dB Q 12.00
-Filter 17: ON PK Fc  9367 Hz Gain +0.41 dB Q 12.00
-Filter 18: ON PK Fc  1771 Hz Gain +0.48 dB Q 12.00
-Filter 19: ON PK Fc  1257 Hz Gain -0.34 dB Q 12.00
-Filter 20: ON PK Fc  2828 Hz Gain +0.55 dB Q 12.00
+Filter  6: ON PK Fc 12311 Hz Gain +0.53 dB Q 0.21
+Filter  7: ON PK Fc  7847 Hz Gain -1.06 dB Q 4.77
+Filter  8: ON PK Fc  3332 Hz Gain -1.16 dB Q 8.98
+Filter  9: ON PK Fc   564 Hz Gain +1.24 dB Q 2.19
+Filter 10: ON PK Fc 12589 Hz Gain -1.07 dB Q 7.96
+Filter 11: ON PK Fc  5049 Hz Gain +1.37 dB Q 5.60
+Filter 12: ON PK Fc  2251 Hz Gain -0.73 dB Q 12.00
+Filter 13: ON PK Fc  2609 Hz Gain -0.62 dB Q 12.00
+Filter 14: ON PK Fc  1783 Hz Gain +0.64 dB Q 12.00
+Filter 15: ON PK Fc  9683 Hz Gain +0.36 dB Q 12.00
+Filter 16: ON PK Fc   919 Hz Gain -0.82 dB Q 10.45
+Filter 17: ON PK Fc  2429 Hz Gain +0.78 dB Q 12.00
+Filter 18: ON PK Fc 11350 Hz Gain -0.63 dB Q 12.00
+Filter 19: ON PK Fc  1623 Hz Gain -0.51 dB Q 12.00
+Filter 20: ON PK Fc  6741 Hz Gain -0.70 dB Q 12.00

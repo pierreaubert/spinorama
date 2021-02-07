@@ -1,7 +1,7 @@
 EQ for Focal Chorus OD 706 V computed from ASR data
 Preference Score 3.9 with EQ 4.7
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.4
-Dated: 2021-02-06-15:28:33
+Dated: 2021-02-06-17:45:48
 
 Preamp: -2.0 dB
 
@@ -14,12 +14,12 @@ Filter  6: ON PK Fc 11483 Hz Gain -1.06 dB Q 12.00
 Filter  7: ON PK Fc   951 Hz Gain -0.99 dB Q 1.25
 Filter  8: ON PK Fc   980 Hz Gain +1.73 dB Q 12.00
 Filter  9: ON PK Fc  2426 Hz Gain +0.80 dB Q 12.00
-Filter 10: ON PK Fc 13255 Hz Gain -0.56 dB Q 12.00
+Filter 10: ON PK Fc 13254 Hz Gain -0.56 dB Q 12.00
 Filter 11: ON PK Fc  1366 Hz Gain +0.84 dB Q 12.00
 Filter 12: ON PK Fc  2213 Hz Gain -1.22 dB Q 12.00
 Filter 13: ON PK Fc   415 Hz Gain +1.08 dB Q 8.38
 Filter 14: ON PK Fc   572 Hz Gain -0.93 dB Q 12.00
-Filter 15: ON PK Fc  5486 Hz Gain +0.77 dB Q 9.28
+Filter 15: ON PK Fc  5486 Hz Gain +0.77 dB Q 9.27
 Filter 16: ON PK Fc  3193 Hz Gain -0.84 dB Q 12.00
 Filter 17: ON PK Fc  1603 Hz Gain -0.89 dB Q 12.00
 Filter 18: ON PK Fc  1708 Hz Gain +0.30 dB Q 12.00
