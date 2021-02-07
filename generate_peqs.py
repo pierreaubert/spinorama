@@ -64,12 +64,18 @@ from spinorama.filter_peq import peq_format_apo
 from spinorama.filter_scores import scores_apply_filter, scores_print2
 from spinorama.auto_loss import loss, score_loss
 from spinorama.auto_target import get_freq, get_target
-from spinorama.auto_range import propose_range_freq, propose_range_Q, propose_range_dbGain, propose_range_biquad
+from spinorama.auto_range import (
+    propose_range_freq,
+    propose_range_Q,
+    propose_range_dbGain,
+    propose_range_biquad,
+)
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
 VERSION = 0.4
 logger = logging.getLogger("spinorama")
+
 
 def find_best_biquad(
     freq,

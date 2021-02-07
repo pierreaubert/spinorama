@@ -206,5 +206,3 @@ def graph_results(
         & (g_pir_asr | g_pir_manual | g_pir_auto)
     ).resolve_scale("independent")
     return graphs
-
-
