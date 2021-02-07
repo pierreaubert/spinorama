@@ -223,9 +223,8 @@ def graph_results(
     )
 
     # add all graphs and print it
-    graphs = (
-        ((g_manual_eq | g_auto_eq) & (g_eq_full | g_optim))
-        & (g_spin_asr | g_spin_manual | g_spin_auto)
-        & (g_pir_asr | g_pir_manual | g_pir_auto).resolve_scale(y="independent")
-    )
-    return graphs
+    return [
+        (g_manual_eq | g_auto_eq) & (g_eq_full | g_optim),
+        (g_spin_asr | g_spin_manual | g_spin_auto),
+        (g_pir_asr | g_pir_manual | g_pir_auto).resolve_scale(y="independent"),
+    ]

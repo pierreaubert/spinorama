@@ -1,27 +1,27 @@
 EQ for Ascend Acoustics Luna Mini-Monitor computed from ASR data
-Preference Score 1.0 with EQ 4.7
+Preference Score 1.0 with EQ 4.5
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.4
-Dated: 2021-02-07-12:49:03
+Dated: 2021-02-07-14:55:21
 
-Preamp: -3.6 dB
+Preamp: -3.9 dB
 
 Filter  1: ON PK Fc  1961 Hz Gain -4.28 dB Q 0.50
 Filter  2: ON PK Fc  1106 Hz Gain +6.77 dB Q 8.36
 Filter  3: ON PK Fc   528 Hz Gain +4.58 dB Q 12.00
 Filter  4: ON PK Fc  1411 Hz Gain +3.72 dB Q 12.00
-Filter  5: ON PK Fc   595 Hz Gain -3.98 dB Q 12.00
+Filter  5: ON PK Fc   595 Hz Gain -3.99 dB Q 12.00
 Filter  6: ON PK Fc  2382 Hz Gain +3.35 dB Q 4.30
 Filter  7: ON PK Fc  1557 Hz Gain -2.10 dB Q 12.00
 Filter  8: ON PK Fc 11486 Hz Gain -4.60 dB Q 0.67
-Filter  9: ON PK Fc   793 Hz Gain +1.41 dB Q 7.29
-Filter 10: ON PK Fc  6303 Hz Gain -1.48 dB Q 6.90
-Filter 11: ON PK Fc  1825 Hz Gain -0.80 dB Q 12.00
-Filter 12: ON PK Fc  3698 Hz Gain +1.74 dB Q 2.70
-Filter 13: ON PK Fc  1016 Hz Gain -2.00 dB Q 12.00
-Filter 14: ON PK Fc 10877 Hz Gain +0.91 dB Q 8.82
-Filter 15: ON PK Fc   444 Hz Gain +2.61 dB Q 5.87
-Filter 16: ON PK Fc   343 Hz Gain +0.76 dB Q 8.95
-Filter 17: ON PK Fc   550 Hz Gain +2.34 dB Q 12.00
-Filter 18: ON PK Fc   579 Hz Gain -2.45 dB Q 12.00
-Filter 19: ON PK Fc   447 Hz Gain -1.54 dB Q 12.00
-Filter 20: ON PK Fc  2057 Hz Gain +1.67 dB Q 12.00
+Filter  9: ON PK Fc   628 Hz Gain +1.06 dB Q 1.05
+Filter 10: ON PK Fc  6303 Hz Gain -1.49 dB Q 6.79
+Filter 11: ON PK Fc  1016 Hz Gain -2.52 dB Q 12.00
+Filter 12: ON PK Fc  1824 Hz Gain -0.89 dB Q 12.00
+Filter 13: ON PK Fc  3717 Hz Gain +1.73 dB Q 2.86
+Filter 14: ON PK Fc   599 Hz Gain -2.10 dB Q 11.80
+Filter 15: ON PK Fc 10877 Hz Gain +0.91 dB Q 8.78
+Filter 16: ON PK Fc   444 Hz Gain +2.24 dB Q 12.00
+Filter 17: ON PK Fc   350 Hz Gain +0.58 dB Q 8.33
+Filter 18: ON PK Fc   552 Hz Gain +2.17 dB Q 12.00
+Filter 19: ON PK Fc   522 Hz Gain -2.27 dB Q 12.00
+Filter 20: ON PK Fc  2058 Hz Gain +1.62 dB Q 12.00

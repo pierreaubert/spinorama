@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-usage: generate_peqs.py [--help] [--version] [--log-level=<level>] [--force] [--smoke-test] [-v|--verbose] [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>] [--max-peq=<count>] [--min-Q=<minQ>] [--max-Q=<maxQ>] [--min-dB=<mindB>] [--max-dB=<maxdB>]  [--min-freq=<minFreq>] [--max-freq=<maxFreq>][--max-iter=<maxiter>] [--use-all-biquad] [--curve-peak-only] [--loss=<pick>]
+usage: generate_peqs.py [--help] [--version] [--log-level=<level>] [--force] [--smoke-test] [-v|--verbose] [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>] [--max-peq=<count>] [--min-Q=<minQ>] [--max-Q=<maxQ>] [--min-dB=<mindB>] [--max-dB=<maxdB>]  [--min-freq=<minFreq>] [--max-freq=<maxFreq>][--max-iter=<maxiter>] [--use-all-biquad] [--curve-peak-only] [--loss=<pick>] [--ip=<ip>] [--port=<port>]
 
 Options:
   --help                   Display usage()
@@ -39,6 +39,8 @@ Options:
   --max-iter=<maxiter>     Maximum number of iterations
   --use-all-biquad         PEQ can be any kind of biquad (by default it uses only PK, PeaK)
   --curve-peak-only        Optimise both for peaks and valleys on a curve
+  --ip=<ip>                ip of dashboard to track execution, default to localhost/127.0.0.1
+  --port=<port>            port for the dashbboard, default to 8265
 """
 from datetime import datetime
 import logging
@@ -73,7 +75,7 @@ from spinorama.auto_range import (
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
-VERSION = 0.4
+VERSION = 0.5
 logger = logging.getLogger("spinorama")
 
 
@@ -384,7 +386,7 @@ def optim_save_peq(
     if not force and os.path.exists(eq_name):
         if verbose:
             logger.info("eq {} already exist!".format(eq_name))
-        return None, None
+        return None, None, None
 
     # extract current speaker
     _, _, score = scores_apply_filter(df_speaker, [])
@@ -422,6 +424,11 @@ def optim_save_peq(
 
     # compute new score with this PEQ
     spin_auto, pir_auto, score_auto = scores_apply_filter(df_speaker, auto_peq)
+
+    # store the 3 different scores
+    scores = [score["pref_score"], score["pref_score"], score_auto["pref_score"]]
+    if verbose:
+        scores[1] = score_manual["pref_score"]
 
     # print peq
     comments = [
@@ -468,11 +475,12 @@ def optim_save_peq(
             pir_auto,
             optim_config,
         )
-        graphs_filename = "docs/{}/ASR/filters".format(speaker_name)
-        if smoke_test:
-            graphs_filename += "_smoketest"
-        graphs_filename += ".png"
-        graphs.save(graphs_filename)
+        for i, graph in enumerate(graphs):
+            graph_filename = "docs/{}/ASR/filters{}".format(speaker_name, i)
+            if smoke_test:
+                graph_filename += "_smoketest"
+            graph_filename += ".png"
+            graph.save(graph_filename)
 
     # print a compact table of results
     if verbose:
@@ -505,15 +513,16 @@ def optim_save_peq(
             "----------------------------------------------------------------------"
         )
         print(
-            "{:30s} {:+2.2f} {:+2.2f} {:+2.2f}".format(
-                speaker_name,
+            "{:+2.2f} {:+2.2f} {:+2.2f} {:+2.2f} {:s}".format(
                 score["pref_score"],
                 score_manual["pref_score"],
                 score_auto["pref_score"],
+                score_manual["pref_score"] - score_auto["pref_score"],
+                speaker_name,
             )
         )
 
-    return speaker_name, auto_results
+    return speaker_name, auto_results, scores
 
 
 def queue_speakers(df_all_speakers, optim_config, verbose, smoke_test):
@@ -559,15 +568,18 @@ def queue_speakers(df_all_speakers, optim_config, verbose, smoke_test):
 def compute_peqs(ray_ids):
     done_ids = set()
     aggregated_results = {}
+    aggregated_scores = {}
     while 1:
         ids = [id for id in ray_ids.values() if id not in done_ids]
         num_returns = min(len(ids), 16)
         ready_ids, remaining_ids = ray.wait(ids, num_returns=num_returns)
 
         for id in ready_ids:
-            speaker_name, results = ray.get(id)
-            if results is not None:
-                aggregated_results[speaker_name] = results
+            speaker_name, results_iter, scores = ray.get(id)
+            if results_iter is not None:
+                aggregated_results[speaker_name] = results_iter
+            if scores is not None:
+                aggregated_scores[speaker_name] = scores
             done_ids.add(id)
 
         if len(remaining_ids) == 0:
@@ -593,6 +605,21 @@ def compute_peqs(ray_ids):
         {"speaker_name": v_sn, "iter": v_iter, "loss": v_loss, "score": v_score}
     )
     df_results.to_csv("results_iter.csv", index=False)
+
+    s_sn = []
+    s_ref = []
+    s_manual = []
+    s_auto = []
+    for speaker, scores in aggregated_scores.items():
+        s_sn.append("{}".format(speaker))
+        s_ref.append(scores[0])
+        s_manual.append(scores[1])
+        s_auto.append(scores[2])
+    df_scores = pd.DataFrame(
+        {"speaker_name": s_sn, "reference": s_ref, "manual": s_manual, "auto": s_auto}
+    )
+    df_scores.to_csv("results_scores.csv", index=False)
+
     return 0
 
 
@@ -745,10 +772,24 @@ if __name__ == "__main__":
             df_all_speakers[speaker_name] = df_speaker
 
     # ray section
-    # ray.worker.global_worker.run_function_on_all_workers(setup_logger)
+    dashboard_ip = "127.0.0.1"
+    dashboard_port = 8265
+    if "ip" in args and args["ip"] is not None:
+        check_ip = args["ip"]
+        try:
+            address = ipaddress.ip_address(ip)
+            dashboard_ip = check_ip
+        except ipaddress.AddressValueError:
+            logger.error("ip {} is not valid!".format(dashboard_ip))
+            sys.exit(1)
+
+    if "port" in args and args["port"] is not None:
+        check_port = args["port"]
+        dashboard_port = check_port
+
+    ray.worker.global_worker.run_function_on_all_workers(setup_logger)
     # address is the one from the ray server<
-    # ray.init(address='{}:{}'.format(ip, port))
-    ray.init()
+    ray.init(dashboard_host=dashboard_ip, dashboard_port=dashboard_port)
 
     # select all speakers
     if speaker_name is None:
@@ -783,7 +824,7 @@ if __name__ == "__main__":
         while 1:
             ready_ids, remaining_ids = ray.wait([id], num_returns=1)
             if len(ready_ids) == 1:
-                _, _ = ray.get(ready_ids[0])
+                _, _, _ = ray.get(ready_ids[0])
                 break
             if len(remaining_ids) == 0:
                 break
