@@ -173,7 +173,11 @@ def display_onaxis(df, graph_params=None):
 
         onaxis_graph = graph_freq(onaxis, graph_params)
         onaxis_reg = graph_regression(onaxis, 80, 10000)
-        return (onaxis_reg + onaxis_graph).resolve_scale(color="independent").resolve_legend(shape="independent")
+        return (
+            (onaxis_reg + onaxis_graph)
+            .resolve_scale(color="independent")
+            .resolve_legend(shape="independent")
+        )
     except KeyError as ke:
         logger.warning("Display On Axis failed with {0}".format(ke))
         return None
@@ -191,7 +195,11 @@ def display_inroom(df, graph_params=None):
         inroom = df["Estimated In-Room Response"]
         inroom_graph = graph_freq(inroom, graph_params)
         inroom_reg = graph_regression(inroom, 80, 10000)
-        return (inroom_reg + inroom_graph).resolve_scale(color="independent").resolve_legend(shape="independent")
+        return (
+            (inroom_reg + inroom_graph)
+            .resolve_scale(color="independent")
+            .resolve_legend(shape="independent")
+        )
     except KeyError as ke:
         logger.warning("Display In Room failed with {0}".format(ke))
         return None
