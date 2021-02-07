@@ -7,7 +7,7 @@ document.querySelectorAll(" #nav li" ).forEach(function (navEl) {
 });
 
 function toggleCompare (selectedNav, targetId) {
-	var navEls = document.querySelectorAll(" #nav li" );
+	let navEls = document.querySelectorAll(" #nav li" );
 
 	navEls.forEach(function (navEl) {
 		if (navEl.id === selectedNav) {
@@ -19,7 +19,7 @@ function toggleCompare (selectedNav, targetId) {
 		}
 	});
 
-	var tabs = document.querySelectorAll(" .tab-pane" );
+	let tabs = document.querySelectorAll(" .tab-pane" );
 
 	tabs.forEach(function (tab) {
 		if (tab.id === targetId) {

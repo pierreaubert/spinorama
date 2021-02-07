@@ -20,26 +20,26 @@ $(document).ready(function () {
 	
 	const resultdiv = $("div.searchresults");
 	
-	var filter = {
+	let filter = {
 	    reviewer: "",
 	    shape: "",
 	    power: "",
 	    brand: "",
 	};
 
-	var sorter = {
+	let sorter = {
 	    by: "",
 	}
 	
 	function selectDispatch(filter) {
-	    var keywords = $("#searchInput").val();
+	    let keywords = $("#searchInput").val();
 	    // console.log("keywords: "+keywords)
 	    if (keywords === "") {
 		// console.log("display filter");
 		display_filter(resultdiv, metadata, filter);
 	    } else {
 		// console.log("display search");
-		var results = fuse.search(keywords);
+		let results = fuse.search(keywords);
 		display_search(resultdiv, results, filter);
 	    }
 	}
@@ -71,16 +71,16 @@ $(document).ready(function () {
 	});
 	
 	$("#searchInput").on("keyup", function () {
-	    var keywords = $(this).val();
+	    let keywords = $(this).val();
 	    // console.log("search start "+keywords);
-	    var results = fuse.search(keywords);
+	    let results = fuse.search(keywords);
 	    display_search(resultdiv, results, filter);
 	});
 	
 	function is_filtered(item, filter) {
-	    var show = true;
-	    var default_measurement = item["default_measurement"];
-	    var origin = item["measurements"][default_measurement]["origin"];
+	    let show = true;
+	    let default_measurement = item["default_measurement"];
+	    let origin = item["measurements"][default_measurement]["origin"];
 	    if (filter.reviewer !== "" ) {
 		if (filter.reviewer === 'Vendors' ) {
 		    if (origin.substr(0, 8) !== 'Vendors-' ) {
@@ -108,7 +108,7 @@ $(document).ready(function () {
 	function display_filter(resultdiv, meta, filter) {
 	    // console.log("display filter start");
 	    for (const item in meta) {
-		var show = is_filtered(meta[item], filter);
+		let show = is_filtered(meta[item], filter);
 		const id = (meta[item].brand + "-" + meta[item].model).replace(/['.+& ]/g, "-");
 		if (show) {
 		    $("#" + id).show();
@@ -138,11 +138,11 @@ $(document).ready(function () {
 		}
 	    }
 	    // console.log("minScore is "+minScore);
-	    for (var item in results) {
-		var show = true;
-		var result = results[item];
-		var meta = result.item;
-		var score = result.score;
+	    for (let item in results) {
+		let show = true;
+		let result = results[item];
+		let meta = result.item;
+		let score = result.score;
 		// console.log("evaluating "+meta.brand+" "+meta.model);
 		if (show && !is_filtered(meta, filter)) {
 		    show = false;
