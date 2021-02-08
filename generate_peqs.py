@@ -43,6 +43,7 @@ Options:
   --port=<port>            port for the dashbboard, default to 8265
 """
 from datetime import datetime
+import ipaddress
 import logging
 import math
 import os
@@ -777,7 +778,7 @@ if __name__ == "__main__":
     if "ip" in args and args["ip"] is not None:
         check_ip = args["ip"]
         try:
-            address = ipaddress.ip_address(ip)
+            address = ipaddress.ip_address(dashboard_ip)
             dashboard_ip = check_ip
         except ipaddress.AddressValueError:
             logger.error("ip {} is not valid!".format(dashboard_ip))

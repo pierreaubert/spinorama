@@ -433,9 +433,14 @@ speakers_info = {
         "price": "2000",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "asr",
+        "default_measurement": "asr-v2-20210206",
         "measurements": {
-            "asr": {
+            "asr-v2-20210206": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/celuaris-spk5-purifi-review-speaker.20125/",
+            },
+            "asr-v1-20201124": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/purifi-spk5-speaker-review-prototype.17806/",
