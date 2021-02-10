@@ -1943,6 +1943,22 @@ speakers_info = {
             },
         },
     },
+    "OSD Audio AP650": {
+        "brand": "OSD Audio",
+        "model": "AP650",
+        "type": "active",
+        "price": "200",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/osd-ap650-review-outdoor-speaker.20229/",
+            },
+        },
+    },
     "Paradigm Monitor SE Atom": {
         "brand": "Paradigm",
         "model": "Monitor SE Atom",

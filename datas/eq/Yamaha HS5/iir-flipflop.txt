@@ -1,0 +1,31 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 26-07-2020 15:12:21
+
+Notes:Yamaha HS5 IIR
+
+Equaliser: Generic
+Yamaha HS5 PIR.txt
+Preamp:	-0.3 dB
+Filter  1: ON  PK       Fc     345 Hz  Gain   0.7 dB  Q 2.800
+Filter  2: ON  PK       Fc     423 Hz  Gain   0.4 dB  Q 10.000
+Filter  3: ON  PK       Fc     470 Hz  Gain  -0.5 dB  Q 14.000
+Filter  4: ON  PK       Fc     568 Hz  Gain  -2.0 dB  Q 2.387
+Filter  5: ON  PK       Fc     788 Hz  Gain   0.7 dB  Q 7.500
+Filter  6: ON  PK       Fc     879 Hz  Gain  -0.8 dB  Q 10.000
+Filter  7: ON  PK       Fc     998 Hz  Gain  -6.0 dB  Q 1.779
+Filter  8: ON  PK       Fc    1040 Hz  Gain   0.6 dB  Q 9.000
+Filter  9: ON  PK       Fc    1215 Hz  Gain  -0.8 dB  Q 10.000
+Filter 10: ON  PK       Fc    1361 Hz  Gain   0.8 dB  Q 8.000
+Filter 11: ON  PK       Fc    2015 Hz  Gain   0.4 dB  Q 10.000
+Filter 12: ON  PK       Fc    2025 Hz  Gain   1.8 dB  Q 1.599
+Filter 13: ON  PK       Fc    2912 Hz  Gain  -3.6 dB  Q 1.504
+Filter 14: ON  PK       Fc    4894 Hz  Gain  -3.4 dB  Q 2.301
+Filter 15: ON  PK       Fc    7873 Hz  Gain  -6.0 dB  Q 2.327
+Filter 16: ON  PK       Fc    7892 Hz  Gain   5.1 dB  Q 4.900
+Filter 17: ON  PK       Fc    9830 Hz  Gain   0.6 dB  Q 13.000
+Filter 18: ON  PK       Fc   10800 Hz  Gain  -0.6 dB  Q 8.000
+Filter 19: ON  PK       Fc   12140 Hz  Gain   0.6 dB  Q 11.000
+Filter 20: ON  PK       Fc   12162 Hz  Gain  -4.3 dB  Q 1.358
+

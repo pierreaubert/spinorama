@@ -1,0 +1,31 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 25-07-2020 22:35:57
+
+Notes:BIC America DV62si IIR
+
+Equaliser: Generic
+BIC America DV62si PIR.
+Preamp:	-1.5 dB
+Filter  1: ON  PK       Fc     351 Hz  Gain   0.5 dB  Q 2.500
+Filter  2: ON  PK       Fc     518 Hz  Gain  -1.6 dB  Q 2.400
+Filter  3: ON  PK       Fc     790 Hz  Gain  -2.2 dB  Q 3.175
+Filter  4: ON  PK       Fc    1074 Hz  Gain  -1.8 dB  Q 5.000
+Filter  5: ON  PK       Fc    1244 Hz  Gain  -0.7 dB  Q 1.000
+Filter  6: ON  PK       Fc    1788 Hz  Gain  -1.2 dB  Q 5.000
+Filter  7: ON  PK       Fc    2141 Hz  Gain  -0.7 dB  Q 5.000
+Filter  8: ON  PK       Fc    2383 Hz  Gain   3.7 dB  Q 5.000
+Filter  9: ON  PK       Fc    2516 Hz  Gain   1.5 dB  Q 5.000
+Filter 10: ON  PK       Fc    2952 Hz  Gain  -5.4 dB  Q 1.000
+Filter 11: ON  PK       Fc    3115 Hz  Gain   6.8 dB  Q 4.370
+Filter 12: ON  PK       Fc    3590 Hz  Gain   3.6 dB  Q 5.000
+Filter 13: ON  PK       Fc    3697 Hz  Gain  -3.6 dB  Q 5.000
+Filter 14: ON  PK       Fc    4371 Hz  Gain   2.7 dB  Q 5.000
+Filter 15: ON  PK       Fc    5520 Hz  Gain  -3.1 dB  Q 1.917
+Filter 16: ON  PK       Fc    6852 Hz  Gain  -1.5 dB  Q 4.807
+Filter 17: ON  PK       Fc    9195 Hz  Gain  -5.9 dB  Q 1.147
+Filter 18: ON  PK       Fc   12643 Hz  Gain  -5.8 dB  Q 2.016
+Filter 19: ON  PK       Fc   14737 Hz  Gain  -5.1 dB  Q 2.200
+Filter 20: ON  PK       Fc   18701 Hz  Gain   1.1 dB  Q 5.000
+

@@ -1,0 +1,31 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 17-07-2020 15:26:35
+
+Notes:Polk T15 IIR
+
+Equaliser: Generic
+Polk T15 PIR.txt
+Preamp:	-5.8 dB
+Filter  1: ON  PK       Fc     436 Hz  Gain  10.3 dB  Q 5.000
+Filter  2: ON  PK       Fc     440 Hz  Gain -10.3 dB  Q 5.000
+Filter  3: ON  PK       Fc     587 Hz  Gain  -2.9 dB  Q 5.000
+Filter  4: ON  PK       Fc     608 Hz  Gain   6.0 dB  Q 4.171
+Filter  5: ON  PK       Fc     648 Hz  Gain  -4.0 dB  Q 5.000
+Filter  6: ON  PK       Fc    1044 Hz  Gain  -3.0 dB  Q 3.052
+Filter  7: ON  PK       Fc    1192 Hz  Gain  12.0 dB  Q 5.000
+Filter  8: ON  PK       Fc    1231 Hz  Gain -12.9 dB  Q 5.000
+Filter  9: ON  PK       Fc    1755 Hz  Gain   6.8 dB  Q 1.000
+Filter 10: ON  PK       Fc    2443 Hz  Gain  -3.1 dB  Q 5.000
+Filter 11: ON  PK       Fc    2471 Hz  Gain -17.0 dB  Q 1.000
+Filter 12: ON  PK       Fc    2625 Hz  Gain   7.2 dB  Q 5.000
+Filter 13: ON  PK       Fc    3504 Hz  Gain   3.2 dB  Q 5.000
+Filter 14: ON  PK       Fc    3725 Hz  Gain   8.8 dB  Q 1.425
+Filter 15: ON  PK       Fc    4092 Hz  Gain   2.0 dB  Q 1.000
+Filter 16: ON  PK       Fc   10815 Hz  Gain  -3.7 dB  Q 1.010
+Filter 17: ON  PK       Fc   11792 Hz  Gain   2.0 dB  Q 5.000
+Filter 18: ON  PK       Fc   13165 Hz  Gain  -2.7 dB  Q 5.000
+Filter 19: ON  PK       Fc   14730 Hz  Gain  -2.7 dB  Q 5.000
+Filter 20: ON  PK       Fc   15861 Hz  Gain  -2.1 dB  Q 4.999
+
