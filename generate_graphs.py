@@ -311,9 +311,9 @@ if __name__ == "__main__":
         logger.setLevel(level)
 
     def setup_logger(worker):
-        logger = logging.getLogger("spinorama")
+        worker_logger = logging.getLogger("spinorama")
         if level is not None:
-            logger.setLevel(level)
+            worker_logger.setLevel(level)
 
     # will eat all your CPUs
     ip = "127.0.0.1"

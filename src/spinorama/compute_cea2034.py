@@ -83,7 +83,7 @@ def pressure2spl(p: float) -> float:
 
 
 def column_trim(c):
-    if c[-2:] == "_v" or c[-2:] == "_h":
+    if c[-2:] in ("_v", "_h"):
         return c[:-2]
     return c
 

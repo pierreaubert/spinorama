@@ -67,7 +67,7 @@ def reshape(x, y, z, nscale):
         np.linspace(x[0][i], x[0][i + 1], nscale, endpoint=False)
         for i in range(0, len(x[0]) - 1)
     ]
-    lx = [i for j in lxi for i in j] + [x[0][len(x[0]) - 1] for i in range(0, nscale)]
+    lx = [i for j in lxi for i in j] + [x[0][-1] for i in range(0, nscale)]
     nly = (nx - 1) * nscale + 1
     ly = np.linspace(np.min(y), np.max(y), nly)
     # on this axis, cheat by 1% to generate round values that are better in legend

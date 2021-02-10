@@ -50,7 +50,7 @@ def parse_eq_iir_rews(filename, srate):
                         # continue
 
                     # TODO: factor code
-                    if kind == "PK" or kind == "PEQ" or kind == "Modal":
+                    if kind in ("PK", "PEQ", "Modal"):
                         iir = Biquad(Biquad.PEAK, ifreq, srate, rq, rgain)
                         logger.debug(
                             "add IIR peq PEAK freq {0}Hz srate {1} Q {2} Gain {3}".format(
@@ -95,7 +95,7 @@ def parse_eq_iir_rews(filename, srate):
                         continue
 
                     # TODO: factor code
-                    if kind == "HP" or kind == "HPQ":
+                    if kind in ("HP", "HPQ"):
                         iir = Biquad(
                             Biquad.HIGHPASS, ifreq, srate, 1.0 / math.sqrt(2.0), 1.0
                         )
@@ -105,7 +105,7 @@ def parse_eq_iir_rews(filename, srate):
                             )
                         )
                         peq.append((status, iir))
-                    elif kind == "LP" or kind == "LPQ":
+                    elif kind in ("LP", "LPQ"):
                         iir = Biquad(
                             Biquad.LOWPASS, ifreq, srate, 1.0 / math.sqrt(2.0), 1.0
                         )
@@ -141,7 +141,7 @@ def parse_eq_iir_rews(filename, srate):
                         )
                         continue
 
-                    if kind == "LS" or kind == "LSC":
+                    if kind in ("LS", "LSC"):
                         iir = Biquad(Biquad.LOWSHELF, ifreq, srate, 1.0, rgain)
                         logger.debug(
                             "add IIR peq LOWSHELF freq {0}Hz srate {1} Gain {2}".format(
@@ -149,7 +149,7 @@ def parse_eq_iir_rews(filename, srate):
                             )
                         )
                         peq.append((status, iir))
-                    elif kind == "HS" or kind == "HSC":
+                    elif kind in ("HS", "HSC"):
                         iir = Biquad(Biquad.HIGHSHELF, ifreq, srate, 1.0, rgain)
                         logger.debug(
                             "add IIR peq HIGHSHELF freq {0}Hz srate {1} Gain {2}".format(

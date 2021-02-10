@@ -26,7 +26,7 @@ def load_normalize(df, ref_mean=None):
     dfc = {}
     mean = ref_mean
     if "CEA2034" in df:
-        if ref_mean == None:
+        if ref_mean is None:
             mean = normalize_mean(df["CEA2034"])
             dfc["CEA2034_original_mean"] = mean
         for graph in df.keys():
@@ -39,7 +39,7 @@ def load_normalize(df, ref_mean=None):
         logging.debug("mean for normalisation {0}".format(mean))
         return dfc
     if "On Axis" in df:
-        if ref_mean == None:
+        if ref_mean is None:
             mean = normalize_mean(df["On Axis"])
             dfc["On Axis_original_mean"] = mean
         for graph in df.keys():

@@ -378,14 +378,14 @@ def optim_greedy(
 
 @ray.remote
 def optim_save_peq(
-    speaker_name, df_speaker, df_speaker_eq, optim_config, verbose, smoke_test
+    speaker_name, df_speaker, df_speaker_eq, optim_config, be_verbose, is_smoke_test
 ):
     """Compute ans save PEQ for this speaker """
     eq_dir = "datas/eq/{}".format(speaker_name)
     pathlib.Path(eq_dir).mkdir(parents=True, exist_ok=True)
     eq_name = "{}/iir-autoeq.txt".format(eq_dir)
     if not force and os.path.exists(eq_name):
-        if verbose:
+        if be_verbose:
             logger.info("eq {} already exist!".format(eq_name))
         return None, None, None
 
@@ -407,7 +407,7 @@ def optim_save_peq(
     manual_peq = []
     manual_target = None
     manual_target_interp = None
-    if verbose:
+    if be_verbose:
         manual_peq_name = "./datas/eq/{}/iir.txt".format(speaker_name)
         manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config["fs"])
         manual_spin, manual_pir, score_manual = scores_apply_filter(
@@ -428,7 +428,7 @@ def optim_save_peq(
 
     # store the 3 different scores
     scores = [score["pref_score"], score["pref_score"], score_auto["pref_score"]]
-    if verbose:
+    if be_verbose:
         scores[1] = score_manual["pref_score"]
 
     # print peq
@@ -446,7 +446,7 @@ def optim_save_peq(
     eq_apo = peq_format_apo("\n".join(comments), auto_peq)
 
     # print eq
-    if not smoke_test:
+    if not is_smoke_test:
         with open(eq_name, "w") as fd:
             fd.write(eq_apo)
             iir_txt = "iir.txt"
@@ -478,13 +478,13 @@ def optim_save_peq(
         )
         for i, graph in enumerate(graphs):
             graph_filename = "docs/{}/ASR/filters{}".format(speaker_name, i)
-            if smoke_test:
+            if is_smoke_test:
                 graph_filename += "_smoketest"
             graph_filename += ".png"
             graph.save(graph_filename)
 
     # print a compact table of results
-    if verbose:
+    if be_verbose:
         logger.info(
             "{:30s} ---------------------------------------".format(speaker_name)
         )
@@ -526,7 +526,7 @@ def optim_save_peq(
     return speaker_name, auto_results, scores
 
 
-def queue_speakers(df_all_speakers, optim_config, verbose, smoke_test):
+def queue_speakers(df_all_speakers, optim_config, be_verbose, is_smoke_test):
     ray_ids = {}
     for speaker_name in df_all_speakers.keys():
         if "ASR" not in df_all_speakers[speaker_name].keys():
@@ -558,7 +558,12 @@ def queue_speakers(df_all_speakers, optim_config, verbose, smoke_test):
             df_speaker_eq = df_all_speakers[speaker_name]["ASR"][default_eq]
 
         id = optim_save_peq.remote(
-            speaker_name, df_speaker, df_speaker_eq, optim_config, verbose, smoke_test
+            speaker_name,
+            df_speaker,
+            df_speaker_eq,
+            optim_config,
+            be_verbose,
+            is_smoke_test,
         )
         ray_ids[speaker_name] = id
 
@@ -657,9 +662,9 @@ if __name__ == "__main__":
         logger.setLevel(logging.INFO)
 
     def setup_logger(worker):
-        logger = logging.getLogger("spinorama")
+        worker_logger = logging.getLogger("spinorama")
         if level is not None:
-            logger.setLevel(level)
+            worker_logger.setLevel(level)
 
     # read optimisation parameter
     current_optim_config = {
@@ -814,7 +819,7 @@ if __name__ == "__main__":
         if key_eq in df_all_speakers[speaker_name]["ASR"].keys():
             df_speaker_eq = df_all_speakers[speaker_name]["ASR"][key_eq]
         # compute
-        id = optim_save_peq.remote(
+        current_id = optim_save_peq.remote(
             speaker_name,
             df_speaker,
             df_speaker_eq,
@@ -823,7 +828,7 @@ if __name__ == "__main__":
             smoke_test,
         )
         while 1:
-            ready_ids, remaining_ids = ray.wait([id], num_returns=1)
+            ready_ids, remaining_ids = ray.wait([current_id], num_returns=1)
             if len(ready_ids) == 1:
                 _, _, _ = ray.get(ready_ids[0])
                 break
