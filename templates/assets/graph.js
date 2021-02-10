@@ -13,7 +13,7 @@ function displayGraph(spec, divName) {
 		};
 
 		function patch(spec) {
-			var width = window.innerWidth - 180;
+			let width = window.innerWidth - 180;
 			spec.width = width;
 			spec.height = width / 2 - 180;
 			return spec;
