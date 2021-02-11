@@ -1895,6 +1895,22 @@ speakers_info = {
             },
         },
     },
+    "NHT C3": {
+        "brand": "NHT",
+        "model": "C3",
+        "type": "passive",
+        "price": "600",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/nht-c3-review-3-way-speaker.20287/",
+            },
+        },
+    },
     "NHT SB2": {
         "brand": "NHT",
         "model": "SB2",
