@@ -41,6 +41,9 @@ def compute_contour(dfu):
         if c == "On Axis":
             vrange.append(0)
 
+    # y are inverted for display
+    vrange = list(reversed(vrange))
+
     # melt
     dfm = graph_melt(dfm)
     # compute numbers of measurements
