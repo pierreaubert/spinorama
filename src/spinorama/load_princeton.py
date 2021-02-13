@@ -4,7 +4,7 @@ import glob
 import numpy as np
 import pandas as pd
 from scipy.io import loadmat
-from .load import filter_graphs
+from .load import filter_graphs, sort_angles
 
 
 logger = logging.getLogger("spinorama")
@@ -48,20 +48,13 @@ def parse_graph_freq_princeton_mat(mat, suffix):
         if ilabel == 0:
             label = "On Axis"
         df[label] = ys
-    # sort columns in increasing angle order
-    def a2v(angle):
-        if angle == "Freq":
-            return -1000
-        if angle == "On Axis":
-            return 0
-        return int(angle[:-1])
-
-    df = df.reindex(columns=sorted(df.columns, key=a2v))
     # check empty case
     if "On Axis" not in df.keys():
         return None
+    # sort datas
+    df_sa = sort_angles(df)
     # precision of measurement is ok above 500
-    return df[df.Freq >= 500]
+    return df_sa[df_sa.Freq >= 500]
 
 
 def parse_graph_princeton(filename, orient):

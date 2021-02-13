@@ -1,4 +1,6 @@
 import unittest
+
+from spinorama.load import sort_angles
 from spinorama.load_klippel import parse_graph_freq_klippel
 from spinorama.load_princeton import parse_graph_princeton
 
@@ -16,6 +18,28 @@ class SpinoramaLoadTests(unittest.TestCase):
     def test_smoke2(self):
         self.assertIn("On Axis", self.df.columns)
         self.assertNotIn("On-Axis", self.df.columns)
+
+
+class SpinoramaSortAngleKlippelTests(unittest.TestCase):
+    def setUp(self):
+        self.title, self.df = parse_graph_freq_klippel(
+            "datas/ASR/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
+        )
+
+    def test_sort_angles_klippel(self):
+        df_sa = sort_angles(self.df)
+        self.assertListEqual(list(df_sa.columns), list(self.df.columns))
+
+
+class SpinoramaSortAnglePrincetonTests(unittest.TestCase):
+    def setUp(self):
+        self.df = parse_graph_princeton(
+            "datas/Princeton/Genelec 8351A/Genelec8351A_V_IR.mat", "V"
+        )
+
+    def test_sort_angles_princeton(self):
+        df_sa = sort_angles(self.df)
+        self.assertListEqual(list(df_sa.columns), list(self.df.columns))
 
 
 class SpinoramaLoadSPLTests(unittest.TestCase):
