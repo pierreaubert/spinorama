@@ -72,10 +72,16 @@ def reshape(x, y, z, nscale):
     ]
     lx = [i for j in lxi for i in j] + [x[0][-1] for i in range(0, nscale)]
     nly = (nx - 1) * nscale + 1
-    ly = np.linspace(np.min(y), np.max(y), nly)
+    # keep order
+    ly = []
+    if y[0][0] > 0:
+        ly = np.linspace(np.max(y), np.min(y), nly)
+    else:
+        ly = np.linspace(np.min(y), np.max(y), nly)
+
     # on this axis, cheat by 1% to generate round values that are better in legend
     # round off values close to those in ykeep
-    ykeep = [
+    xkeep = [
         20,
         30,
         100,
@@ -92,14 +98,14 @@ def reshape(x, y, z, nscale):
         20000,
     ]
 
-    def close(x1, x2, ykeep):
-        for z in ykeep:
+    def close(x1, x2, xkeep):
+        for z in xkeep:
             if abs((x1 - z) / z) < 0.01 and z < x2:
-                ykeep.remove(z)
+                xkeep.remove(z)
                 return z
         return x1
 
-    lx2 = [close(lx[i], lx[i + 1], ykeep) for i in range(0, len(lx) - 1)]
+    lx2 = [close(lx[i], lx[i + 1], xkeep) for i in range(0, len(lx) - 1)]
     lx2 = np.append(lx2, lx[-1])
     # build the mesh
     rx, ry = np.meshgrid(lx2, ly)

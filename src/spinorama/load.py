@@ -35,7 +35,6 @@ def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:
     return dfu
 
 
-
 def load_normalize(df, ref_mean=None):
     # normalize all melted graphs
     dfc = {}
