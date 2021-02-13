@@ -141,5 +141,59 @@ class SpinoramaReshapeTests(unittest.TestCase):
             self.assertTrue(all([i > j for i, j in zip(angles, angles[1:])]))
 
 
+class SpinoramaContourSmoothedTests(unittest.TestCase):
+    def setUp(self):
+
+        freq = [20, 100, 200, 1000, 2000, 10000, 20000]
+        onaxis = [10, 10, 10, 10, 10, 10, 10]
+        d10p = [10, 10, 9, 9, 8, 8, 7]
+        d20p = [10, 10, 8, 8, 7, 7, 6]
+        d30p = [10, 10, 7, 7, 6, 6, 5]
+        # decrease faster on the neg size
+        d10m = [10, 10, 8, 8, 7, 7, 6]
+        d20m = [10, 8, 6, 6, 4, 4, 2]
+        d30m = [10, 6, 6, 4, 2, 2, 0]
+        self.df = sort_angles(
+            pd.DataFrame(
+                {
+                    "Freq": freq,
+                    "On Axis": onaxis,
+                    "10°": d10p,
+                    "-10°": d10m,
+                    "20°": d20p,
+                    "-20°": d20m,
+                    "30°": d30p,
+                    "-30°": d30m,
+                }
+            )
+        )
+        self.scale = 5
+        self.af, self.am, self.az = compute_contour_smoothed(self.df, self.scale)
+
+    def test_smoke_size(self):
+        self.assertEqual(self.af.size, self.am.size)
+        self.assertEqual(self.af.size, self.az.size)
+
+    def test_smoke_freq(self):
+        self.assertAlmostEqual(np.min(self.af), 20)
+        self.assertAlmostEqual(np.max(self.af), 20000)
+
+    def test_smoke_angle(self):
+        self.assertEqual(np.min(self.am), -30)
+        self.assertEqual(np.max(self.am), 30)
+
+    def test_smoke_db_normalized(self):
+        self.assertEqual(np.min(self.az), -9) # not -10 (kernel smoothing)
+        self.assertEqual(np.max(self.az), 0)
+
+    def test_smoke_preserve_angle(self):
+        # check that value is constant
+        self.assertTrue(all([a == self.am[0][0] for a in self.am[0]]))
+        # extract all angles in order
+        angles = [self.am[i][0] for i in range(0, len(self.am))]
+        # check it is decreasing
+        self.assertTrue(all([i > j for i, j in zip(angles, angles[1:])]))
+
+
 if __name__ == "__main__":
     unittest.main()
