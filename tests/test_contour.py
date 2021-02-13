@@ -183,7 +183,7 @@ class SpinoramaContourSmoothedTests(unittest.TestCase):
         self.assertEqual(np.max(self.am), 30)
 
     def test_smoke_db_normalized(self):
-        self.assertEqual(np.min(self.az), -9) # not -10 (kernel smoothing)
+        self.assertEqual(np.min(self.az), -9)  # not -10 (kernel smoothing)
         self.assertEqual(np.max(self.az), 0)
 
     def test_smoke_preserve_angle(self):
