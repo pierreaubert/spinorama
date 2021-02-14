@@ -17,8 +17,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import ipaddress
 import logging
 import sys
+
+import ray
 
 
 def get_custom_logger(duplicate=False):
@@ -50,3 +53,31 @@ def args2level(args):
             elif check_level == "ERROR":
                 level = logging.ERROR
     return level
+
+
+def custom_ray_init(args):
+    # ray section
+    dashboard_ip = "127.0.0.1"
+    dashboard_port = 8265
+    if "--dash-ip" in args and args["--dash-ip"] is not None:
+        check_ip = args["--dash-ip"]
+        try:
+            address = ipaddress.ip_address(check_ip)
+            dashboard_ip = check_ip
+        except ipaddress.AddressValueError as ave:
+            print("ip {} is not valid {}!".format(check_ip, ave))
+            sys.exit(1)
+
+    if "--dash-port" in args and args["--dash-port"] is not None:
+        check_port = args["--dash-port"]
+        dashboard_port = check_port
+
+    level = args2level(args)
+
+    def ray_setup_logger(worker):
+        worker_logger = get_custom_logger(False)
+        worker_logger.setLevel(level)
+
+    ray.worker.global_worker.run_function_on_all_workers(ray_setup_logger)
+    # address is the one from the ray server<
+    ray.init(dashboard_host=dashboard_ip, dashboard_port=dashboard_port)

@@ -20,7 +20,8 @@
 """
 usage: generate_meta.py [--help] [--version] [--log-level=<level>]\
     [--metadata=<metadata>] [--parse-max=<max>] [--use-cache=<cache>]\
-    [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>]
+    [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>]\
+    [--dash-ip=<ip>] [--dash-port=<port>] 
 
 Options:
   --help            display usage()
@@ -31,6 +32,8 @@ Options:
   --origin=<origin> restrict to a specific origin, usefull for debugging
   --speaker=<speaker> restrict to a specific speaker, usefull for debugging
   --mversion=<mversion> restrict to a specific mversion (for a given origin you can have multiple measurements)
+  --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
+  --dash-port=<dash-port>  Port for the ray dashbboard
 """
 import logging
 import os
@@ -42,7 +45,7 @@ from docopt import docopt
 import flammkuchen as fl
 import ray
 
-from generate_common import get_custom_logger, args2level
+from generate_common import get_custom_logger, args2level, custom_ray_init
 
 from src.spinorama.compute_estimates import estimates
 from src.spinorama.compute_scores import speaker_pref_rating
@@ -342,6 +345,9 @@ if __name__ == "__main__":
     logger = get_custom_logger(True)
     logger.setLevel(level)
 
+    # start ray
+    custom_ray_init(args)
+
     df = None
     speaker = args["--speaker"]
     origin = args["--origin"]
@@ -355,7 +361,6 @@ if __name__ == "__main__":
         df[speaker] = {}
         df[speaker][origin] = {}
         df[speaker][origin][mversion] = {}
-        ray.init(num_cpus=1)
         ray_id = parse_graphs_speaker.remote(
             "./datas", brand, speaker, mformat, mversion
         )

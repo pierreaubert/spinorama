@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-usage: generate_peqs.py [--help] [--version] [--log-level=<level>] [--force] [--smoke-test] [-v|--verbose] [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>] [--max-peq=<count>] [--min-Q=<minQ>] [--max-Q=<maxQ>] [--min-dB=<mindB>] [--max-dB=<maxdB>]  [--min-freq=<minFreq>] [--max-freq=<maxFreq>][--max-iter=<maxiter>] [--use-all-biquad] [--curve-peak-only] [--loss=<pick>] [--ip=<ip>] [--port=<port>]
+usage: generate_peqs.py [--help] [--version] [--log-level=<level>] [--force] [--smoke-test] [-v|--verbose] [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>] [--max-peq=<count>] [--min-Q=<minQ>] [--max-Q=<maxQ>] [--min-dB=<mindB>] [--max-dB=<maxdB>]  [--min-freq=<minFreq>] [--max-freq=<maxFreq>][--max-iter=<maxiter>] [--use-all-biquad] [--curve-peak-only] [--loss=<pick>] [--dash-ip=<dash-ip>] [--dash-port=<dash-port>]
 
 Options:
   --help                   Display usage()
@@ -39,11 +39,10 @@ Options:
   --max-iter=<maxiter>     Maximum number of iterations
   --use-all-biquad         PEQ can be any kind of biquad (by default it uses only PK, PeaK)
   --curve-peak-only        Optimise both for peaks and valleys on a curve
-  --ip=<ip>                ip of dashboard to track execution, default to localhost/127.0.0.1
-  --port=<port>            port for the dashbboard, default to 8265
+  --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
+  --dash-port=<dash-port>  Port for the ray dashbboard
 """
 from datetime import datetime
-import ipaddress
 import logging
 import math
 import os
@@ -58,7 +57,7 @@ import pandas as pd
 import ray
 import scipy.optimize as opt
 
-from generate_common import get_custom_logger, args2level
+from generate_common import get_custom_logger, args2level, custom_ray_init
 from datas.metadata import speakers_info as metadata
 from spinorama.ltype import Vector, Peq
 from spinorama.filter_iir import Biquad
@@ -645,10 +644,6 @@ if __name__ == "__main__":
     logger = get_custom_logger(True)
     logger.setLevel(level)
 
-    def setup_logger(worker):
-        worker_logger = get_custom_logger(False)
-        worker_logger.setLevel(level)
-
     # read optimisation parameter
     current_optim_config = {
         # name of the loss function
@@ -748,6 +743,7 @@ if __name__ == "__main__":
         speaker_name = args["--speaker"]
 
     # load data
+    print("Reading cache ...", end=" ", flush=True)
     df_all_speakers = {}
     if smoke_test is True:
         df_all_speakers = fl.load(path="./cache.smoketest_speakers.h5")
@@ -759,26 +755,10 @@ if __name__ == "__main__":
                 path="./cache.parse_all_speakers.h5", group="/{}".format(speaker_name)
             )
             df_all_speakers[speaker_name] = df_speaker
+    print("Done")
 
-    # ray section
-    dashboard_ip = "127.0.0.1"
-    dashboard_port = 8265
-    if "ip" in args and args["ip"] is not None:
-        check_ip = args["ip"]
-        try:
-            address = ipaddress.ip_address(dashboard_ip)
-            dashboard_ip = check_ip
-        except ipaddress.AddressValueError:
-            logger.error("ip {} is not valid!".format(dashboard_ip))
-            sys.exit(1)
-
-    if "port" in args and args["port"] is not None:
-        check_port = args["port"]
-        dashboard_port = check_port
-
-    ray.worker.global_worker.run_function_on_all_workers(setup_logger)
-    # address is the one from the ray server<
-    ray.init(dashboard_host=dashboard_ip, dashboard_port=dashboard_port)
+    # start ray
+    custom_ray_init(args)
 
     # select all speakers
     if speaker_name is None:

@@ -20,21 +20,21 @@
 generate_graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
   [--force] [--type=<ext>] [--log-level=<level>]\
   [--origin=<origin>]  [--speaker=<speaker>] [--version=<version>] [--brand=<brand>]\
-  [--ip=<ip>] [--port=<port>]
+  [--dash-ip=<ip>] [--dash-port=<port>]
 
 Options:
-  -h|--help         display usage()
-  --width=<width>   width size in pixel
-  --height=<height> height size in pixel
-  --force           force regeneration of all graphs, by default only generate new ones
-  --type=<ext>      choose one of: json, html, png, svg
+  -h|--help           display usage()
+  --width=<width>     width size in pixel
+  --height=<height>   height size in pixel
+  --force             force regeneration of all graphs, by default only generate new ones
+  --type=<ext>        choose one of: json, html, png, svg
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
-  --origin=<origin> filter by origin
-  --brand=<brand> filter by brand
+  --origin=<origin>   filter by origin
+  --brand=<brand>     filter by brand
   --speaker=<speaker> filter by speaker
   --version=<version> filter by measurement
-  --ip=<ip>         ip of dashboard to track execution, default to localhost/127.0.0.1
-  --port=<port>     port for the dashbboard, default to 8265
+  --dash-ip=<ip>      ip of dashboard to track execution, default to localhost/127.0.0.1
+  --dash-port=<port>  port for the dashbboard, default to 8265
 """
 import glob
 import ipaddress
@@ -47,7 +47,7 @@ from docopt import docopt
 import flammkuchen as fl
 import ray
 
-from generate_common import get_custom_logger, args2level
+from generate_common import get_custom_logger, args2level, custom_ray_init
 import datas.metadata as metadata
 from src.spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
 from src.spinorama.speaker_print import print_graphs
@@ -299,31 +299,9 @@ if __name__ == "__main__":
     logger = get_custom_logger(True)
     logger.setLevel(level)
 
-    def setup_logger(worker):
-        worker_logger = get_custom_logger(False)
-        worker_logger.setLevel(level)
-
-    # will eat all your CPUs
-    ip = "127.0.0.1"
-    port = 8265
-    if "ip" in args and args["ip"] is not None:
-        check_ip = args["ip"]
-        try:
-            address = ipaddress.ip_address(ip)
-            ip = check_ip
-        except ipaddress.AddressValueError:
-            logger.error("ip {} is not valid!".format(ip))
-            sys.exit(1)
-
-    if "port" in args and args["port"] is not None:
-        check_port = args["port"]
-        port = check_port
-
-    ray.worker.global_worker.run_function_on_all_workers(setup_logger)
-    # address is the one from the ray server
-    # ray.init(address='{}:{}'.format(ip, port))
-    ray.init()
-
+    # start ray
+    custom_ray_init(args)
+    
     filters = {}
     for ifilter in ("speaker", "origin", "version"):
         flag = "--{}".format(ifilter)
