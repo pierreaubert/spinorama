@@ -10,6 +10,8 @@ from scipy.stats import linregress
 from .compute_cea2034 import estimated_inroom_HV
 from .load import graph_melt
 
+logger = logging.getLogger("spinorama")
+
 
 # https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
 def octave(N: int) -> List[Tuple[float, float, float]]:
@@ -47,7 +49,7 @@ def aad(dfu: pd.DataFrame) -> float:
             aad_sum += abs(y_ref - np.nanmean(selection.dB))
             n += 1
     if n == 0:
-        logging.error("aad is None")
+        logger.error("aad is None")
         return -1.0
     aad_value = aad_sum / n
     # if math.isnan(aad_value):
@@ -100,7 +102,7 @@ def lfx(lw, sp) -> float:
         lfx_hz = list(next(lfx_grouped))[-1][1]
     except Exception:
         lfx_hz = -1.0
-        logging.debug("lfx: selecting max {0}".format(lfx_hz))
+        logger.debug("lfx: selecting max {0}".format(lfx_hz))
     return math.log10(lfx_hz)
 
 
@@ -126,7 +128,7 @@ def lfq(lw, sp, lfx_log) -> float:
             lfq_sum += abs(y_lw - y_sp)
             n += 1
     if n == 0:
-        logging.error("lfq is None")
+        logger.error("lfq is None")
         return -1.0
     return lfq_sum / n
 
@@ -162,7 +164,7 @@ def pref_rating(nbd_on, nbd_pir, lf_x, sm_pir):
 def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
     try:
         if df_pred_in_room is None or df_pred_in_room.shape[0] == 0:
-            logging.info("PIR is empty")
+            logger.info("PIR is empty")
             return None
         df_on_axis = cea2034.loc[lambda df: df.Measurements == "On Axis"]
         df_listening_window = cea2034.loc[
@@ -187,7 +189,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         sm_sound_power = sm(df_sound_power)
         sm_pred_in_room = sm(df_pred_in_room)
         if nbd_on_axis is None or nbd_pred_in_room is None or sm_pred_in_room is None:
-            logging.info("One of the pref score components is None")
+            logger.info("One of the pref score components is None")
             return None
         # 20hz see discussion
         # https://www.audiosciencereview.com/forum/index.php?threads/master-preference-ratings-for-loudspeakers.11091/page-25#post-448733
@@ -198,7 +200,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         if not skip_full:
             pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)
         if pref is None or pref_wsub is None:
-            logging.info("Pref score is None")
+            logger.info("Pref score is None")
             return None
 
         if rounded:
@@ -236,10 +238,10 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
                 if lfq_db is not None:
                     ratings["lfq"] = lfq_db
                 ratings["pref_score"] = pref
-        logging.info("Ratings: {0}".format(ratings))
+        logger.info("Ratings: {0}".format(ratings))
         return ratings
     except ValueError as e:
-        logging.error("{0}".format(e))
+        logger.error("{0}".format(e))
         return None
 
 

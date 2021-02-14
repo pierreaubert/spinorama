@@ -8,6 +8,9 @@ from .filter_peq import peq_apply_measurements
 from .graph import graph_spinorama
 
 
+logger = logging.getLogger("spinorama")
+
+
 def scores_apply_filter(df_speaker, peq):
     # get SPL H & V
     splH = df_speaker["SPL Horizontal_unmelted"]
@@ -20,7 +23,7 @@ def scores_apply_filter(df_speaker, peq):
     pir_filtered = graph_melt(estimated_inroom_HV(splH_filtered, splV_filtered))
     score_filtered = speaker_pref_rating(spin_filtered, pir_filtered, rounded=False)
     if score_filtered is None:
-        logging.info("computing pref score for eq failed")
+        logger.info("computing pref score for eq failed")
         # max score is around 10
         return None, None, {"pref_score": -10.0}
     return spin_filtered, pir_filtered, score_filtered

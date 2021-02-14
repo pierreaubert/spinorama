@@ -41,12 +41,12 @@ def args2level(args):
     if args["--log-level"] is not None:
         check_level = args["--log-level"]
         if check_level in ("INFO", "DEBUG", "WARNING", "ERROR"):
-            if check_level == 'INFO':
+            if check_level == "INFO":
                 level = logging.INFO
-            elif check_level == 'DEBUG':
+            elif check_level == "DEBUG":
                 level = logging.DEBUG
-            elif check_level == 'WARNING':
+            elif check_level == "WARNING":
                 level = logging.WARNING
-            elif check_level == 'ERROR':
+            elif check_level == "ERROR":
                 level = logging.ERROR
     return level

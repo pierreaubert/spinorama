@@ -1,6 +1,8 @@
 #                                                  -*- coding: utf-8 -*-
 import logging
 
+logger = logging.getLogger("spinorama")
+
 
 def is_close(poly):
     # if polygon is closed then return 1 else return 0
@@ -132,7 +134,7 @@ def merge_connected_polygons(isoband):
                 # print('debug case3 pp[{0}]={2} pp[{1}]={2}'.format(p1, p2, count_connected))
                 count_connected += 1
         elif len_c > 2:
-            logging.error("More than 2 polygons connected to one segment")
+            logger.error("More than 2 polygons connected to one segment")
 
     # print('debug count connected {0}'.format(count_connected))
     # print('debug pointer_polygons {0}'.format(pointer_polygons))

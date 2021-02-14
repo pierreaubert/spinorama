@@ -4,6 +4,7 @@ from math import log10
 import numpy as np
 import pandas as pd
 
+logger = logging.getLogger("spinorama")
 
 # from the standard appendix
 # weigth http://emis.impa.br/EMIS/journals/BAG/vol.51/no.1/b51h1san.pdf
@@ -71,14 +72,14 @@ def spl2pressure(spl: float) -> float:
         return p
     except TypeError as e:
         print("spl2pressure: spl={0} e={1}".format(spl, e))
-        logging.error("spl2pressure spl={0} e={1}".format(spl, e))
+        logger.error("spl2pressure spl={0} e={1}".format(spl, e))
 
 
 def pressure2spl(p: float) -> float:
     # convert pressure back to SPL
     if p < 0.0:
         print("pressure is negative p={0}".format(p))
-        logging.error("pressure is negative p={0}".format(p))
+        logger.error("pressure is negative p={0}".format(p))
     return 105.0 + 20.0 * log10(p)
 
 
@@ -101,10 +102,10 @@ def column_valid(c):
 def spatial_average(sp_window, func="rms"):
     sp_cols = sp_window.columns
     if "Freq" not in sp_cols:
-        logging.debug("Freq is not in sp_cols")
+        logger.debug("Freq is not in sp_cols")
         return None
     if len(sp_window) < 2:
-        logging.debug("Len window is {0}".format(len(sp_window)))
+        logger.debug("Len window is {0}".format(len(sp_window)))
         return None
 
     result = pd.DataFrame(
@@ -150,7 +151,7 @@ def spatial_average1(spl, sel, func="rms"):
         return None
     spl_window = spl[[c for c in spl.columns if c in sel]]
     if "Freq" not in spl_window.columns:
-        logging.debug("Freq not in spl_window")
+        logger.debug("Freq not in spl_window")
         return None
     return spatial_average(spl_window, func)
 
@@ -283,7 +284,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
         if name is not None:
             er[key] = name.dB
         else:
-            logging.debug("{0} is None".format(key))
+            logger.debug("{0} is None".format(key))
     return er.reset_index(drop=True)
 
 
@@ -320,7 +321,7 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
         if name is not None:
             vr[key] = name.dB
         else:
-            logging.debug("{0} is None".format(key))
+            logger.debug("{0} is None".format(key))
 
     return vr.reset_index(drop=True)
 
@@ -448,7 +449,7 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
         if name is not None:
             hr[key] = name.dB
         else:
-            logging.debug("{0} is None".format(key))
+            logger.debug("{0} is None".format(key))
     return hr.reset_index(drop=True)
 
 
@@ -489,7 +490,7 @@ def estimated_inroom(
             {"Freq": lw.Freq, "Estimated In-Room Response": eir.apply(pressure2spl)}
         ).reset_index(drop=True)
     except TypeError as e:
-        logging.error(e)
+        logger.error(e)
         return None
 
 
@@ -536,7 +537,7 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
         if name is not None:
             spin[key] = name.dB
         else:
-            logging.debug("{0} is None".format(key))
+            logger.debug("{0} is None".format(key))
     for (key, name) in [
         ("Early Reflections DI", erdi),
         ("Sound Power DI", spdi),
@@ -545,7 +546,7 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
         if name is not None:
             spin[key] = name
         else:
-            logging.debug("{0} is None".format(key))
+            logger.debug("{0} is None".format(key))
     return spin.reset_index(drop=True)
 
 

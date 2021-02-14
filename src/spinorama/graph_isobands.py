@@ -6,6 +6,8 @@ import numpy as np
 Triangle = collections.namedtuple("Triangle", "v1 v2 v3")
 Edge = collections.namedtuple("Edge", "e1 e2")
 
+logger = logging.getLogger("spinorama")
+
 
 def transform_id_x(x, y):
     return x
@@ -18,12 +20,12 @@ def transform_id_y(x, y):
 def cross_point(e1, e2, z, z_target):
     ratio = (z_target - z[e2]) / (z[e1] - z[e2])
     if ratio < 0 or ratio > 1:
-        logging.error(
+        logger.error(
             "debug e1={0} e2={1} z=[{2}, {3}] z_target={4}".format(
                 e1, e2, z[e1], z[e2], z_target
             )
         )
-        logging.error("Out of bounds: ratio={0}".format(ratio))
+        logger.error("Out of bounds: ratio={0}".format(ratio))
     return (ratio * e1[0] + (1 - ratio) * e2[0], ratio * e1[1] + (1 - ratio) * e2[1])
 
 
@@ -84,7 +86,7 @@ def triangle2band(triangle, z, z_low, z_high):
         or triangle[2] == triangle[1]
         or triangle[0] == triangle[2]
     ):
-        logging.error("incorrect: {0}".format(triangle))
+        logger.error("incorrect: {0}".format(triangle))
         return None
     # sort triangle in order of z
     striangle = [p[1] for p in sorted(enumerate(triangle), key=lambda p: z[p[1]])]
@@ -93,7 +95,7 @@ def triangle2band(triangle, z, z_low, z_high):
         or striangle[2] == striangle[1]
         or striangle[0] == striangle[2]
     ):
-        logging.error("incorrect (sorted): {0}".format(striangle))
+        logger.error("incorrect (sorted): {0}".format(striangle))
         return None
 
     # 3 states
@@ -123,7 +125,7 @@ def triangle2band(triangle, z, z_low, z_high):
     elif len(below) == 1 and len(within) == 1 and len(above) == 1:
         polygon = pentagon(striangle, z, z_low, z_high)
     else:
-        logging.error(
+        logger.error(
             "no match error below={0} within={1} above={2}".format(below, within, above)
         )
     return polygon
@@ -152,7 +154,7 @@ def find_isoband(
             # y_min = min(y1, y_min)
             # y_max = max(y2, y_max)
             if x1 == x2 or y1 == y2:
-                logging.error(
+                logger.error(
                     "Input error: not a rectangle ({0}, {1}) and ({2}, {3})".format(
                         x1, y1, x2, y2
                     )

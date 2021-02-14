@@ -42,6 +42,8 @@ from docopt import docopt
 import flammkuchen as fl
 import ray
 
+from generate_common import get_custom_logger, args2level
+
 from src.spinorama.compute_estimates import estimates
 from src.spinorama.compute_scores import speaker_pref_rating
 from src.spinorama.filter_peq import peq_preamp_gain
@@ -56,17 +58,17 @@ def sanity_check(df, meta):
     for speaker_name, origins in df.items():
         # check if metadata exists
         if speaker_name not in meta:
-            logging.error("Metadata not found for >{0}<".format(speaker_name))
+            logger.error("Metadata not found for >{0}<".format(speaker_name))
             return 1
         # check if image exists (jpg or png)
         if not os.path.exists(
             "./datas/pictures/" + speaker_name + ".jpg"
         ) and not os.path.exists("./datas/pictures/" + speaker_name + ".png"):
-            logging.error("Image associated with >{0}< not found.".format(speaker_name))
+            logger.error("Image associated with >{0}< not found.".format(speaker_name))
         # check if downscale image exists (all jpg)
         if not os.path.exists("./docs/pictures/" + speaker_name + ".jpg"):
-            logging.error("Image associated with >{0}< not found.".format(speaker_name))
-            logging.error("Please run: minimise_pictures.sh")
+            logger.error("Image associated with >{0}< not found.".format(speaker_name))
+            logger.error("Please run: minimise_pictures.sh")
     return 0
 
 
@@ -87,11 +89,11 @@ def add_scores(df):
     min_sm_pir = 1
     max_sm_pir = 0
     for speaker_name, speaker_data in df.items():
-        logging.info("Processing {0}".format(speaker_name))
+        logger.info("Processing {0}".format(speaker_name))
         for origin, measurements in speaker_data.items():
             for key, dfs in measurements.items():
                 if dfs is None or "CEA2034" not in dfs.keys():
-                    logging.debug(
+                    logger.debug(
                         "skipping add_score no spinorama for {0}".format(speaker_name)
                     )
                     continue
@@ -100,7 +102,7 @@ def add_scores(df):
                 if spin is None or "Estimated In-Room Response" not in dfs.keys():
                     continue
 
-                logging.debug(
+                logger.debug(
                     "Compute score for speaker {0} key {1}".format(speaker_name, key)
                 )
                 # basic math
@@ -108,11 +110,11 @@ def add_scores(df):
                     drop=True
                 )
                 est = estimates(onaxis)
-                logging.info("Computing estimated for {0}".format(speaker_name))
+                logger.info("Computing estimated for {0}".format(speaker_name))
                 if est is None:
-                    logging.debug("estimated return None for {0}".format(speaker_name))
+                    logger.debug("estimated return None for {0}".format(speaker_name))
                     continue
-                logging.info(
+                logger.info(
                     "Adding -3dB {0}Hz -6dB {1}Hz +/-{2}dB".format(
                         est.get("ref_3dB", "--"),
                         est.get("ref_6dB", "--"),
@@ -132,17 +134,17 @@ def add_scores(df):
                 if inroom is None:
                     continue
 
-                logging.debug(
+                logger.debug(
                     "Compute score for speaker {0} key {1}".format(speaker_name, key)
                 )
 
                 pref_rating = speaker_pref_rating(spin, inroom)
                 if pref_rating is None:
-                    logging.warning(
+                    logger.warning(
                         "pref_rating failed for {0} {1}".format(speaker_name, key)
                     )
                     continue
-                logging.info("Adding {0}".format(pref_rating))
+                logger.info("Adding {0}".format(pref_rating))
                 # compute min and max for each value
                 min_flatness = min(est["ref_band"], min_flatness)
                 max_flatness = max(est["ref_band"], max_flatness)
@@ -177,16 +179,16 @@ def add_scores(df):
 
     # if we are looking only after 1 speaker, return
     if len(df.items()) == 1:
-        logging.info("skipping normalization with only one speaker")
+        logger.info("skipping normalization with only one speaker")
         return
 
     # add normalized value to metadata
     for speaker_name, speaker_data in df.items():
-        logging.info("Normalize data for {0}".format(speaker_name))
+        logger.info("Normalize data for {0}".format(speaker_name))
         for origin, measurements in speaker_data.items():
             for version, measurement in measurements.items():
                 if measurement is None or "CEA2034" not in measurement.keys():
-                    logging.debug(
+                    logger.debug(
                         "skipping normalization no spinorama for {0}".format(
                             speaker_name
                         )
@@ -195,14 +197,14 @@ def add_scores(df):
 
                 spin = measurement["CEA2034"]
                 if spin is None:
-                    logging.debug(
+                    logger.debug(
                         "skipping normalization no spinorama for {0}".format(
                             speaker_name
                         )
                     )
                     continue
                 if version[-3:] == "_eq":
-                    logging.debug(
+                    logger.debug(
                         "skipping normalization for eq for {0}".format(speaker_name)
                     )
                     continue
@@ -212,7 +214,7 @@ def add_scores(df):
                         version
                     ].keys()
                 ):
-                    logging.debug(
+                    logger.debug(
                         "skipping normalization no estimates in {0} for {1}".format(
                             version, speaker_name
                         )
@@ -224,14 +226,14 @@ def add_scores(df):
                         version
                     ].keys()
                 ):
-                    logging.debug(
+                    logger.debug(
                         "skipping normalization no pref_rating in {0} for {1}".format(
                             version, speaker_name
                         )
                     )
                     continue
 
-                logging.debug(
+                logger.debug(
                     "Compute relative score for speaker {0}".format(speaker_name)
                 )
                 # get values
@@ -255,7 +257,7 @@ def add_scores(df):
                 # normalize min and max
                 def percent(val, vmin, vmax):
                     if vmax == vmin:
-                        logging.debug("max == min")
+                        logger.debug("max == min")
                     return math.floor(100 * (val - vmin) / (vmax - vmin))
 
                 scaled_pref_score_wsub = percent(
@@ -282,7 +284,7 @@ def add_scores(df):
                     scaled_pref_rating["scaled_pref_score"] = scaled_pref_score
                 if "lfx_hz" in pref_rating:
                     scaled_pref_rating["scaled_lfx_hz"] = scaled_lfx_hz
-                logging.info("Adding {0}".format(scaled_pref_rating))
+                logger.info("Adding {0}".format(scaled_pref_rating))
                 metadata.speakers_info[speaker_name]["measurements"][version][
                     "scaled_pref_rating"
                 ] = scaled_pref_rating
@@ -291,7 +293,7 @@ def add_scores(df):
 def add_eq(speaker_path, df):
     """ Compute some values per speaker and add them to metadata """
     for speaker_name, speaker_data in df.items():
-        logging.info("Processing {0}".format(speaker_name))
+        logger.info("Processing {0}".format(speaker_name))
 
         for suffix in ("", "-autoeq", "-amirm", "-maiky76", "-flipflop"):
             iir = parse_eq_iir_rews(
@@ -318,7 +320,7 @@ def add_eq(speaker_path, df):
                                 "dbGain": iir_filter.dbGain,
                             }
                         )
-                        logging.debug(
+                        logger.debug(
                             "adding eq: {}".format(
                                 metadata.speakers_info[speaker_name][eq_key]
                             )
@@ -336,23 +338,9 @@ if __name__ == "__main__":
     args = docopt(__doc__, version="generate_meta.py version 1.3", options_first=True)
 
     # check args section
-    level = None
-    if args["--log-level"] is not None:
-        check_level = args["--log-level"]
-        if check_level in ["INFO", "DEBUG", "WARNING", "ERROR"]:
-            level = check_level
-
-    if level is not None:
-        logging.basicConfig(
-            format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
-            datefmt="%Y-%m-%d:%H:%M:%S",
-            level=level,
-        )
-    else:
-        logging.basicConfig(
-            format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
-            datefmt="%Y-%m-%d:%H:%M:%S",
-        )
+    level = args2level(args)
+    logger = get_custom_logger(True)
+    logger.setLevel(level)
 
     df = None
     speaker = args["--speaker"]
@@ -382,14 +370,14 @@ if __name__ == "__main__":
             parse_max = int(parse_max)
         df = fl.load("cache.parse_all_speakers.h5")
         if df is None:
-            logging.error("Load failed! Please run ./generate_graphs.py")
+            logger.error("Load failed! Please run ./generate_graphs.py")
             sys.exit(1)
         if sanity_check(df, metadata.speakers_info) != 0:
-            logging.error("Sanity checks failed!")
+            logger.error("Sanity checks failed!")
             sys.exit(1)
 
     # add computed data to metadata
-    logging.info("Compute scores per speaker")
+    logger.info("Compute scores per speaker")
     add_scores(df)
     add_eq("./datas", df)
 
@@ -397,12 +385,12 @@ if __name__ == "__main__":
     # try:
     #    json.loads(metadata.speakers_info)
     # except ValueError as ve:
-    #    logging.fatal('Metadata Json is not valid {0}'.format(ve))
+    #    logger.fatal('Metadata Json is not valid {0}'.format(ve))
     #    sys.exit(1)
 
     # write metadata in a json file for easy search
-    logging.info("Write metadata")
+    logger.info("Write metadata")
     dump_metadata(metadata.speakers_info)
 
-    logging.info("Bye")
+    logger.info("Bye")
     sys.exit(0)

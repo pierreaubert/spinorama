@@ -4,6 +4,8 @@ import math
 import numpy as np
 import pandas as pd
 
+logger = logging.getLogger("spinorama")
+
 
 def angle2value(angle):
     if angle == "On Axis":
@@ -139,7 +141,7 @@ def find_nearest_freq(dfu, hz, tolerance=0.05):
         if abs(f - hz) < hz * tolerance:
             ihz = i
             break
-    logging.debug("nearest: {0} hz at loc {1}".format(hz, ihz))
+    logger.debug("nearest: {0} hz at loc {1}".format(hz, ihz))
     return ihz
 
 

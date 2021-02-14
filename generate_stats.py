@@ -37,6 +37,9 @@ import pandas as pd
 import altair as alt
 
 
+from generate_common import get_custom_logger, args2level
+
+
 def meta2df(meta):
     df = pd.DataFrame(
         {
@@ -62,7 +65,7 @@ def meta2df(meta):
             if "pref_rating" in measurement:
                 ref = "Origin"
                 for k, v in measurement["pref_rating"].items():
-                    logging.debug(
+                    logger.debug(
                         "{} {} {} {} {} {}".format(i, k, v, ref, origin, brand)
                     )
                     df.loc[count] = [i, k, v, ref, origin, brand]
@@ -70,12 +73,12 @@ def meta2df(meta):
             if "pref_rating_eq" in measurement:
                 ref = "EQ"
                 for k, v in measurement["pref_rating_eq"].items():
-                    logging.debug(
+                    logger.debug(
                         "{} {} {} {} {} {}".format(i, k, v, ref, origin, brand)
                     )
                     df.loc[count] = [i, k, v, ref, origin, brand]
                     count += 1
-    logging.info("meta2df {0} generated data".format(count))
+    logger.info("meta2df {0} generated data".format(count))
     # print(df)
     return df
 
@@ -227,7 +230,7 @@ def generate_stats(meta):
         }
     )
 
-    logging.debug(source)
+    logger.debug(source)
 
     graphs = {}
     for g in ("lfx_hz", "nbd_pir", "nbd_on", "sm_pir"):
@@ -287,37 +290,21 @@ if __name__ == "__main__":
     if args["--print"] is not None:
         print_what = args["--print"]
 
-    level = None
-    if args["--log-level"] is not None:
-        check_level = args["--log-level"]
-        if check_level in ["INFO", "DEBUG", "WARNING", "ERROR"]:
-            level = check_level
-
-    if level is not None:
-        logging.basicConfig(
-            format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
-            datefmt="%Y-%m-%d:%H:%M:%S",
-            level=level,
-        )
-    else:
-        logging.basicConfig(
-            format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
-            datefmt="%Y-%m-%d:%H:%M:%S",
-        )
+    level = args2level(args)
+    logger = get_custom_logger(True)
+    logger.setLevel(level)
 
     # load all metadata from generated json file
     json_filename = "./docs/assets/metadata.json"
     if not os.path.exists(json_filename):
-        logging.fatal("Cannot find {0}".format(json_filename))
+        logger.fatal("Cannot find {0}".format(json_filename))
         sys.exit(1)
 
     jsmeta = None
     with open(json_filename, "r") as f:
         jsmeta = json.load(f)
 
-    logging.warning(
-        "Data {0} loaded ({1} speakers)!".format(json_filename, len(jsmeta))
-    )
+    logger.warning("Data {0} loaded ({1} speakers)!".format(json_filename, len(jsmeta)))
 
     if print_what is not None:
         if print_what == "eq_txt":
@@ -325,7 +312,7 @@ if __name__ == "__main__":
         elif print_what == "eq_csv":
             print_eq(jsmeta, "csv")
         else:
-            logging.error('unkown print type either "eq_txt" or "eq_csv"')
+            logger.error('unkown print type either "eq_txt" or "eq_csv"')
     else:
         generate_stats(jsmeta)
 

@@ -48,7 +48,7 @@ def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
             continue
         curve = spl[angle] - mean
         curve_filtered = curve + peq_build(freq, peq)
-        logging.debug(
+        logger.debug(
             "{0:7s} range [{1:.1f}, {2:.1f}] filtered [{3:.1f}, {4:.1f}]".format(
                 angle,
                 np.min(curve),
@@ -61,9 +61,9 @@ def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
         ddf.append(pd.DataFrame({angle: curve_filtered}))
     filtered = pd.concat(ddf, axis=1)
     if filtered.isnull().values.any():
-        logging.debug(ddf)
-        logging.debug(filtered)
-        logging.warning("Some filtered values post EQ are NaN")
+        logger.debug(ddf)
+        logger.debug(filtered)
+        logger.warning("Some filtered values post EQ are NaN")
     return filtered.dropna()
 
 

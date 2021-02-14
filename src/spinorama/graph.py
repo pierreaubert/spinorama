@@ -12,7 +12,7 @@ from . import graph_radar as radar
 
 
 alt.data_transformers.disable_max_rows()
-
+logger = logging.getLogger("spinorama")
 
 nearest = alt.selection(
     type="single", nearest=True, on="mouseover", fields=["Freq"], empty="none"
@@ -158,9 +158,9 @@ def graph_freq(dfu, graph_params):
     ymin = graph_params["ymin"]
     ymax = graph_params["ymax"]
     if xmax == xmin:
-        logging.error("Graph configuration is incorrect: xmin==xmax")
+        logger.error("Graph configuration is incorrect: xmin==xmax")
     if ymax == ymin:
-        logging.error("Graph configuration is incorrect: ymin==ymax")
+        logger.error("Graph configuration is incorrect: ymin==ymax")
     # add selectors
     selectorsMeasurements = alt.selection_multi(fields=["Measurements"], bind="legend")
     scales = alt.selection_interval(bind="scales")
@@ -217,9 +217,9 @@ def graph_spinorama(dfu, graph_params):
     ymin = graph_params["ymin"]
     ymax = graph_params["ymax"]
     if xmax == xmin:
-        logging.error("Graph configuration is incorrect: xmin==xmax")
+        logger.error("Graph configuration is incorrect: xmin==xmax")
     if ymax == ymin:
-        logging.error("Graph configuration is incorrect: ymin==ymax")
+        logger.error("Graph configuration is incorrect: ymin==ymax")
     # add selectors
     selectorsMeasurements = alt.selection_multi(fields=["Measurements"], bind="legend")
     scales = alt.selection_interval(bind="scales")
@@ -374,7 +374,7 @@ def graph_contour_common(af, am, az, graph_params):
         angle = am.ravel()
         db = az.ravel()
         if (freq.size != angle.size) or (freq.size != db.size):
-            logging.debug(
+            logger.debug(
                 "Contour: Size freq={:d} angle={:d} db={:d}".format(
                     freq.size, angle.size, db.size
                 )
@@ -390,7 +390,7 @@ def graph_contour_common(af, am, az, graph_params):
         # same for angles
 
         # build and return graph
-        logging.debug("w={0} h={1}".format(width, height))
+        logger.debug("w={0} h={1}".format(width, height))
         if width / source.shape[0] < 2 and height / source.shape[1] < 2:
             chart = chart.mark_point()
         else:
@@ -408,14 +408,14 @@ def graph_contour_common(af, am, az, graph_params):
             width=width, height=height
         )
     except KeyError as ke:
-        logging.warning("Failed with {0}".format(ke))
+        logger.warning("Failed with {0}".format(ke))
         return None
 
 
 def graph_contour(df, graph_params):
     af, am, az = compute_contour(df)
     if af is None or am is None or az is None:
-        logging.error("contour is None")
+        logger.error("contour is None")
         return None
     return graph_contour_common(af, am, az, graph_params)
 
@@ -423,7 +423,7 @@ def graph_contour(df, graph_params):
 def graph_isoband(df, isoband_params):
     af, am, az = compute_contour(df.loc[df.Freq > isoband_params["xmin"]])
     if af is None or am is None or az is None:
-        logging.error("contour is None")
+        logger.error("contour is None")
         return None
 
     graph_width = isoband_params["width"]
@@ -435,7 +435,7 @@ def graph_isoband(df, isoband_params):
     freq_min = isoband_params["xmin"]
     freq_max = isoband_params["xmax"]
 
-    logging.debug(
+    logger.debug(
         "w {0} h {1} fq=[{2},{3}]".format(graph_width, graph_height, freq_min, freq_max)
     )
 
@@ -479,10 +479,10 @@ def graph_isoband(df, isoband_params):
 def graph_contour_smoothed(df, graph_params):
     af, am, az = compute_contour_smoothed(df)
     if af is None or am is None or az is None:
-        logging.warning("contour is None")
+        logger.warning("contour is None")
         return None
     if np.max(np.abs(az)) == 0.0:
-        logging.warning("contour is flat")
+        logger.warning("contour is flat")
         return None
     return graph_contour_common(af, am, az, graph_params)
 
@@ -492,7 +492,7 @@ def graph_radar(df_in, graph_params):
     # which part of the circle do we plot?
     angle_min, angle_max = radar.angle_range(dfu.columns)
     if angle_min is None or angle_max is None or angle_max == angle_min:
-        logging.debug("Angle is empty")
+        logger.debug("Angle is empty")
         return None
     # do we have +10 or +5 deg measurements?
     delta = 10
@@ -570,7 +570,7 @@ def graph_directivity_matrix(dfu, graph_params):
     splV = dfu["SPL Vertical_unmelted"]
 
     if splH.shape != splV.shape:
-        logging.debug("shapes do not match {0} and {1}".format(splH.shape, splV.shape))
+        logger.debug("shapes do not match {0} and {1}".format(splH.shape, splV.shape))
         return None
 
     splH = resample(splH, 300).reset_index()
@@ -925,7 +925,7 @@ def graph_summary(speaker_name, speaker_summary, params):
         )
         - 0.6
     )
-    logging.debug(
+    logger.debug(
         "sizes X={0} Y={1} summary={2}".format(
             len(pointsX), len(pointsY), len(speaker_summary)
         )

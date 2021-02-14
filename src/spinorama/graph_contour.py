@@ -7,6 +7,8 @@ from astropy.convolution import Gaussian2DKernel
 
 from .load import graph_melt
 
+logger = logging.getLogger("spinorama")
+
 
 def normalize1(dfu):
     dfm = dfu.copy()
@@ -49,7 +51,7 @@ def compute_contour(dfu):
     # compute numbers of measurements
     nm = dfm.Measurements.nunique()
     nf = int(len(dfm.index) / nm)
-    logging.debug("unique={:d} nf={:d}".format(nm, nf))
+    logger.debug("unique={:d} nf={:d}".format(nm, nf))
     # index grid on a log scale log 2 ±= 0.3
     hrange = np.logspace(1.0 + math.log10(2), 4.0 + math.log10(2), nf)
     # 3d mesh
@@ -57,7 +59,7 @@ def compute_contour(dfu):
     # since it is melted generate slices
     az = np.array([dfm.dB[nf * i : nf * (i + 1)] for i in range(0, nm)])
     if af.shape != am.shape or af.shape != az.shape:
-        logging.error(
+        logger.error(
             "Shape mismatch af={0} am={1} az={2}".format(af.shape, az.shape, am.shape)
         )
     return (af, am, az)

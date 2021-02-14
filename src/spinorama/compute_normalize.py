@@ -6,6 +6,7 @@ import pandas as pd
 
 
 # pd.set_option('display.max_rows', None)
+logger = logging.getLogger("spinorama")
 
 
 def unify_freq(dfs):
@@ -40,7 +41,7 @@ def unify_freq(dfs):
         .rename(columns={"dB": "SP"})
         .set_index("Freq")
     )
-    logging.debug(
+    logger.debug(
         "unify_freq: on.shape={0} lw.shape={1} er.shape={2} sp.shape={3}".format(
             on.shape, lw.shape, er.shape, sp.shape
         )
@@ -48,19 +49,19 @@ def unify_freq(dfs):
 
     # align 2 by 2
     align = on.align(lw, axis=0)
-    logging.debug("on+lw shape: {0}".format(align[0].shape))
+    logger.debug("on+lw shape: {0}".format(align[0].shape))
     if er.shape[0] != 0:
         align = align[0].align(er, axis=0)
-        logging.debug("+er shape: {0}".format(align[0].shape))
+        logger.debug("+er shape: {0}".format(align[0].shape))
     else:
-        logging.debug("skipping ER")
+        logger.debug("skipping ER")
     all_on = align[0].align(sp, axis=0)
-    logging.debug("+sp shape: {0}".format(all_on[0].shape))
+    logger.debug("+sp shape: {0}".format(all_on[0].shape))
     # realigned with the largest frame
     all_lw = None
     if lw.shape[0] != 0:
         all_lw = all_on[0].align(lw, axis=0)
-        logging.debug("Before call: {0} and {1}".format(er.shape, all_on[0].shape))
+        logger.debug("Before call: {0} and {1}".format(er.shape, all_on[0].shape))
     all_er = None
     if er.shape[0] != 0:
         all_er = all_on[0].align(er, axis=0)
@@ -68,7 +69,7 @@ def unify_freq(dfs):
     if sp.shape[0] != 0:
         all_sp = all_on[0].align(sp, axis=0)
     # expect all the same
-    logging.debug(
+    logger.debug(
         "Shapes ON {0} LW {1} ER {2} SP {3}".format(
             all_on[0].shape if all_on is not None else "--",
             all_lw[1].shape if all_lw is not None else "--",
@@ -88,7 +89,7 @@ def unify_freq(dfs):
     if sp.shape[0] != 0:
         a_sp = all_sp[1].drop("Measurements", axis=1).interpolate()
     # expect all the same
-    logging.debug(
+    logger.debug(
         "Shapes: {0} {1} {2}".format(
             a_lw.shape if a_lw is not None else "--",
             a_er.shape if a_er is not None else "--",
@@ -148,7 +149,7 @@ def normalize_cea2034(dfc, mean):
         if df.loc[df.Measurements == measurement, "dB"].shape[0] != 0:
             df.loc[df.Measurements == measurement, "dB"] -= offset
             s = df.loc[df.Measurements == measurement, "dB"]
-            logging.debug(
+            logger.debug(
                 "{0} min={1} max={2}".format(measurement, np.min(s), np.max(s))
             )
 

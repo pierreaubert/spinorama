@@ -6,20 +6,22 @@ import pandas as pd
 
 pd.set_option("display.max_rows", 1000)
 
+logger = logging.getLogger("spinorama")
+
 
 def estimates(onaxis: pd.DataFrame):
     try:
         freq_min = onaxis.Freq.min()
-        logging.debug("Freq min: {0}".format(freq_min))
+        logger.debug("Freq min: {0}".format(freq_min))
         if math.isnan(freq_min):
-            logging.warning("Estimates failed for onaxis {0}".format(onaxis.shape))
+            logger.warning("Estimates failed for onaxis {0}".format(onaxis.shape))
             return None
         if freq_min < 300:
             # mean over 300-10k
             y_ref = np.mean(
                 onaxis.loc[(onaxis.Freq >= 300) & (onaxis.Freq <= 10000)].dB
             )
-            logging.debug("mean over 300-10k Hz = {0}".format(y_ref))
+            logger.debug("mean over 300-10k Hz = {0}".format(y_ref))
             # print(onaxis)
             y_3 = onaxis.loc[(onaxis.Freq < 150) & (onaxis.dB <= y_ref - 3)].Freq.max()
             y_6 = onaxis.loc[(onaxis.Freq < 150) & (onaxis.dB <= y_ref - 6)].Freq.max()
@@ -64,11 +66,11 @@ def estimates(onaxis: pd.DataFrame):
             if not math.isnan(band):
                 est["ref_band"] = round(band, 1)
 
-        logging.debug("Estimates: {0}".format(est))
+        logger.debug("Estimates: {0}".format(est))
         return est
     except TypeError as te:
-        logging.warning("Estimates failed for {0} with {1}".format(onaxis.shape, te))
+        logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, te))
         return None
     except ValueError as ve:
-        logging.warning("Estimates failed for {0} with {1}".format(onaxis.shape, ve))
+        logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, ve))
         return None

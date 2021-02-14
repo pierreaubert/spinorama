@@ -79,6 +79,7 @@ from spinorama.auto_graph import graph_results as auto_graph_results
 
 VERSION = 0.5
 
+
 def find_best_biquad(
     freq,
     auto_target,
