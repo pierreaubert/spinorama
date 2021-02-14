@@ -58,6 +58,7 @@ import pandas as pd
 import ray
 import scipy.optimize as opt
 
+from generate_common import get_custom_logger, args2level
 from datas.metadata import speakers_info as metadata
 from spinorama.ltype import Vector, Peq
 from spinorama.filter_iir import Biquad
@@ -77,8 +78,6 @@ from spinorama.auto_graph import graph_results as auto_graph_results
 
 
 VERSION = 0.5
-logger = logging.getLogger("spinorama")
-
 
 def find_best_biquad(
     freq,
@@ -641,30 +640,13 @@ if __name__ == "__main__":
     ptype = None
     smoke_test = args["--smoke-test"]
 
-    level = None
-    if args["--log-level"] is not None:
-        check_level = args["--log-level"]
-        if check_level in ["INFO", "DEBUG", "WARNING", "ERROR"]:
-            level = check_level
-
-    fh = logging.FileHandler("debug_optim.log")
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
-    fh.setFormatter(formatter)
-    # sh = logging.StreamHandler(sys.stdout)
-    # sh.setFormatter(formatter)
-    logger.addHandler(fh)
-    # logger.addHandler(sh)
-    if level is not None:
-        logger.setLevel(level)
-    else:
-        logger.setLevel(logging.INFO)
+    level = args2level(args)
+    logger = get_custom_logger(True)
+    logger.setLevel(level)
 
     def setup_logger(worker):
-        worker_logger = logging.getLogger("spinorama")
-        if level is not None:
-            worker_logger.setLevel(level)
+        worker_logger = get_custom_logger(False)
+        worker_logger.setLevel(level)
 
     # read optimisation parameter
     current_optim_config = {

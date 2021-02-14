@@ -47,6 +47,7 @@ from docopt import docopt
 import flammkuchen as fl
 import ray
 
+from generate_common import get_custom_logger, args2level
 import datas.metadata as metadata
 from src.spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
 from src.spinorama.speaker_print import print_graphs
@@ -294,26 +295,13 @@ if __name__ == "__main__":
             print("type {} is not recognize!".format(ptype))
         sys.exit(1)
 
-    level = None
-    if args["--log-level"] is not None:
-        check_level = args["--log-level"]
-        if check_level in ["INFO", "DEBUG", "WARNING", "ERROR"]:
-            level = check_level
-
-    logger = logging.getLogger("spinorama")
-    fh = logging.FileHandler("debug_graphs.log")
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
-    if level is not None:
-        logger.setLevel(level)
+    level = args2level(args)
+    logger = get_custom_logger(True)
+    logger.setLevel(level)
 
     def setup_logger(worker):
-        worker_logger = logging.getLogger("spinorama")
-        if level is not None:
-            worker_logger.setLevel(level)
+        worker_logger = get_custom_logger(False)
+        worker_logger.setLevel(level)
 
     # will eat all your CPUs
     ip = "127.0.0.1"
