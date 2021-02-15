@@ -301,7 +301,7 @@ if __name__ == "__main__":
 
     # start ray
     custom_ray_init(args)
-    
+
     filters = {}
     for ifilter in ("speaker", "origin", "version"):
         flag = "--{}".format(ifilter)
