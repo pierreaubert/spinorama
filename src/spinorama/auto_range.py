@@ -37,41 +37,43 @@ logger = logging.getLogger("spinorama")
 # ------------------------------------------------------------------------------
 
 
-def find_largest_area(freq, curve, optim_config):
-    def largest_area(positive_curve):
-        # print('freq {} positive_curve {}'.format(freq, positive_curve))
+def find_largest_area(
+    freq: Vector, curve: List[Vector], optim_config: dict
+) -> Tuple[Literal[-1, 1], int, float]:
+    def largest_area(positive_curve) -> Tuple[int, float]:
+        logger.debug("freq {} positive_curve {}".format(freq, positive_curve))
         found_peaks, _ = sig.find_peaks(positive_curve, distance=10)
         if len(found_peaks) == 0:
-            return None, None
-        # print('found peaks at {}'.format(found_peaks))
+            return -1, -1
+        logger.debug("found peaks at {}".format(found_peaks))
         found_widths = sig.peak_widths(positive_curve, found_peaks, rel_height=0.1)[0]
-        # print('computed width at {}'.format(found_widths))
+        logger.debug("computed width at {}".format(found_widths))
         areas = [
             (i, positive_curve[found_peaks[i]] * found_widths[i])
             for i in range(0, len(found_peaks))
         ]
-        # print('areas {}'.format(areas))
+        logger.debug("areas {}".format(areas))
         sorted_areas = sorted(areas, key=lambda a: -a[1])
-        # print('sorted {}'.format(sorted_areas))
+        logger.debug("sorted {}".format(sorted_areas))
         ipeaks, area = sorted_areas[0]
         return found_peaks[ipeaks], area
 
     plus_curve = np.clip(curve, a_min=0, a_max=None)
     plus_index, plus_areas = largest_area(plus_curve)
 
-    minus_index, minus_areas = None, None
+    minus_index, minus_areas = -1, -1.0
     if optim_config["plus_and_minus"] is True:
         minus_curve = -np.clip(curve, a_min=None, a_max=0)
         minus_index, minus_areas = largest_area(minus_curve)
 
-    if minus_areas is None and plus_areas is None:
+    if minus_areas == -1 and plus_areas == -1:
         logger.error("No initial freq found")
-        return +1, None, None
+        return +1, -1, -1.0
 
-    if plus_areas is None:
+    if plus_areas == -1:
         return -1, minus_index, freq[minus_index]
 
-    if minus_areas is None:
+    if minus_areas == -1:
         return +1, plus_index, freq[plus_index]
 
     if minus_areas > plus_areas:
@@ -79,10 +81,12 @@ def find_largest_area(freq, curve, optim_config):
     return +1, plus_index, freq[plus_index]
 
 
-def propose_range_freq(freq, local_target, optim_config):
+def propose_range_freq(
+    freq: Vector, local_target: List[Vector], optim_config: dict
+) -> Tuple[Literal[-1, 1], float, Vector]:
     sign, indice, init_freq = find_largest_area(freq, local_target, optim_config)
     scale = optim_config["elastic"]
-    # print('Scale={} init_freq {}'.format(scale, init_freq))
+    logger.debug("Scale={} init_freq {}".format(scale, init_freq))
     init_freq_min = max(init_freq * scale, optim_config["freq_reg_min"])
     init_freq_max = min(init_freq / scale, optim_config["freq_reg_max"])
     logger.debug(
