@@ -261,7 +261,8 @@ def add_scores(df):
                 def percent(val, vmin, vmax):
                     if vmax == vmin:
                         logger.debug("max == min")
-                    return math.floor(100 * (val - vmin) / (vmax - vmin))
+                    p = math.floor(100 * (val - vmin) / (vmax - vmin))
+                    return min(max(0, p), 100)
 
                 scaled_pref_score_wsub = percent(
                     pref_score_wsub, min_pref_score_wsub, max_pref_score_wsub
