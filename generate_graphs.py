@@ -41,7 +41,7 @@ import ipaddress
 import logging
 import os
 import sys
-from typing import List, Mapping
+from typing import List, Mapping, Tuple
 
 from docopt import docopt
 import flammkuchen as fl
@@ -77,7 +77,7 @@ def get_speaker_list(speakerpath: str) -> List[str]:
 
 def queue_measurement(
     brand: str, speaker: str, mformat: str, morigin: str, mversion: str
-) -> List[int]:
+) -> Tuple[int, int, int, int]:
     id_df = parse_graphs_speaker.remote(
         "./datas", brand, speaker, mformat, morigin, mversion
     )
@@ -301,7 +301,7 @@ if __name__ == "__main__":
 
     # start ray
     custom_ray_init(args)
-    
+
     filters = {}
     for ifilter in ("speaker", "origin", "version"):
         flag = "--{}".format(ifilter)
@@ -311,7 +311,7 @@ if __name__ == "__main__":
     ray_ids = queue_speakers(speakerlist, metadata.speakers_info, filters)
     df = compute(speakerlist, metadata.speakers_info, ray_ids)
     if len(filters.keys()) == 0:
-        fl.save("cache.parse_all_speakers.h5", df)
+        fl.save(path="cache.parse_all_speakers.h5", data=df)
 
     ray.shutdown()
     sys.exit(0)
