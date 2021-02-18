@@ -53,8 +53,9 @@ class SpinoramaSpinoramaTests(unittest.TestCase):
             self.assertTrue(computed.Freq.eq(reference.Freq).all())
             # and should be equal or close in dB
             delta = (computed.dB - reference.dB).abs().max()
+            print(computed.dB-reference.dB, delta)
             # TODO(pierreaubert): that's a bit too high
-            self.assertLess(delta, 0.001)
+            self.assertLess(delta, 0.0001)
 
 
 class SpinoramaEarlyReflectionsTests(unittest.TestCase):
@@ -147,7 +148,7 @@ class SpinoramaVerticalReflectionsTests(unittest.TestCase):
             # 0.2 db tolerance?
             # TODO(pierreaubert): that's too high
             self.assertLess(
-                abs(reference.dB.abs().max() - computed.dB.abs().max()), 0.2
+                abs(reference.dB.abs().max() - computed.dB.abs().max()), 0.0001
             )
 
 
@@ -189,7 +190,7 @@ class SpinoramaHorizontalReflectionsTests(unittest.TestCase):
             # self.assertTrue(computed.Freq.eq(reference.Freq).all())
             # and should be equal or close in dB
             self.assertLess(
-                abs(reference.dB.abs().max() - computed.dB.abs().max()), 0.001
+                abs(reference.dB.abs().max() - computed.dB.abs().max()), 0.0001
             )
 
 
