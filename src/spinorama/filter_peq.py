@@ -16,7 +16,7 @@ def peq_build(freq: Vector, peq: Peq) -> Vector:
     current_filter = [0.0]
     if len(peq) > 0:
         for w, iir in peq:
-            current_filter += w * np.array([iir.log_result(f) for f in freq])
+            current_filter += w * iir.np_log_result(freq)
     return current_filter
 
 

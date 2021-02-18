@@ -2,6 +2,7 @@
 # taken somewhere, find reference, check license
 
 import math
+import numpy as np
 
 
 class Biquad:
@@ -54,6 +55,16 @@ class Biquad:
         self.b2 /= self.a0
         self.a1 /= self.a0
         self.a2 /= self.a0
+
+        # precompute other parameters
+        self.r_up0 = (self.b0 + self.b1 + self.b2) ** 2
+        self.r_up1 = -4 * (
+            self.b0 * self.b1 + 4 * self.b0 * self.b2 + self.b1 * self.b2
+        )
+        self.r_up2 = 16 * self.b0 * self.b2
+        self.r_dw0 = (1 + self.a1 + self.a2) ** 2
+        self.r_dw1 = -4 * (self.a1 + 4 * self.a2 + self.a1 * self.a2)
+        self.r_dw2 = 16 * self.a2
 
     def lowpass(self, A, omega, sn, cs, alpha, beta):
         self.b0 = (1 - cs) / 2
@@ -127,7 +138,7 @@ class Biquad:
         return y
 
     # provide a static result for a given frequency f
-    def result(self, f):
+    def resultSlow(self, f):
         phi = (math.sin(math.pi * f * 2 / (2 * self.srate))) ** 2
         r = (
             (self.b0 + self.b1 + self.b2) ** 2
@@ -137,6 +148,15 @@ class Biquad:
             (1 + self.a1 + self.a2) ** 2
             - 4 * (self.a1 + 4 * self.a2 + self.a1 * self.a2) * phi
             + 16 * self.a2 * phi * phi
+        )
+        r = max(0, r)
+        return r ** (0.5)
+
+    def result(self, f):
+        phi = (math.sin(math.pi * f * 2 / (2 * self.srate))) ** 2
+        phi2 = phi * phi
+        r = (self.r_up0 + self.r_up1 * phi + self.r_up2 * phi2) / (
+            self.r_dw0 + self.r_dw1 * phi + self.r_dw2 * phi2
         )
         r = max(0, r)
         return r ** (0.5)
@@ -166,3 +186,12 @@ class Biquad:
             self.Q,
             self.dbGain,
         )
+
+    # vector version (10x faster)
+    def np_log_result(self, freq):
+        phi = np.sin(math.pi * freq * 2 / (2 * self.srate)) ** 2
+        phi2 = phi ** 2
+        r = (self.r_up0 + self.r_up1 * phi + self.r_up2 * phi2) / (
+            self.r_dw0 + self.r_dw1 * phi + self.r_dw2 * phi2
+        )
+        return np.where(r <= 0.0, -200, 20.0 * np.log10(np.sqrt(r)))
