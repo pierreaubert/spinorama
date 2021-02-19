@@ -53,7 +53,7 @@ class SpinoramaSpinoramaTests(unittest.TestCase):
             self.assertTrue(computed.Freq.eq(reference.Freq).all())
             # and should be equal or close in dB
             delta = (computed.dB - reference.dB).abs().max()
-            print(computed.dB-reference.dB, delta)
+            print(computed.dB - reference.dB, delta)
             # TODO(pierreaubert): that's a bit too high
             self.assertLess(delta, 0.0001)
 
