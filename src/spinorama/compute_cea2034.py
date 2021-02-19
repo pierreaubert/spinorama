@@ -1,6 +1,6 @@
 #                                                  -*- coding: utf-8 -*-
 import logging
-from math import log10
+import math
 import numpy as np
 import pandas as pd
 
@@ -9,52 +9,78 @@ logger = logging.getLogger("spinorama")
 # from the standard appendix
 # weigth http://emis.impa.br/EMIS/journals/BAG/vol.51/no.1/b51h1san.pdf
 
+
+def compute_areaQ(alpha_d, beta_d):
+    alpha = alpha_d * 2 * math.pi / 360
+    beta = beta_d * 2 * math.pi / 360
+    gamma = math.acos(math.cos(alpha) * math.cos(beta))
+    A = math.atan(math.sin(beta) / math.tan(alpha))
+    B = math.atan(math.sin(alpha) / math.tan(beta))
+    C = math.acos(
+        -math.cos(A) * math.cos(B) + math.sin(A) * math.sin(B) * math.cos(gamma)
+    )
+    S = 4 * C - 2 * math.pi
+    # print('gamma {} A {} B {} C {} S {}'.format(
+    #    gamma*360/2/math.pi, A*360/2/math.pi, B*360/2/math.pi, C*360/2/math.pi, S))
+    return S
+
+
+def compute_weigths():
+    a = [i * 10 + 5 for i in range(0, 9)] + [90]
+    wa = [compute_areaQ(i, i) for i in a]
+    w = [wa[0]] + [wa[i] - wa[i - 1] for i in range(1, len(wa))]
+    w[9] *= 2.0
+    return w
+
+
+std_weigths = compute_weigths()
+
 sp_weigths = {
-    "On Axis": 0.000604486,
-    "180°": 0.000604486,
+    "On Axis": std_weigths[0],
+    "180°": std_weigths[0],
     #
-    "10°": 0.004730189,
-    "170°": 0.004730189,
-    "-170°": 0.004730189,
-    "-10°": 0.004730189,
+    "10°": std_weigths[1],
+    "170°": std_weigths[1],
+    "-170°": std_weigths[1],
+    "-10°": std_weigths[1],
     #
-    "20°": 0.008955027,
-    "160°": 0.008955027,
-    "-160°": 0.008955027,
-    "-20°": 0.008955027,
+    "20°": std_weigths[2],
+    "160°": std_weigths[2],
+    "-160°": std_weigths[2],
+    "-20°": std_weigths[2],
     #
-    "30°": 0.012387354,
-    "150°": 0.012387354,
-    "-150°": 0.012387354,
-    "-30°": 0.012387354,
+    "30°": std_weigths[3],
+    "150°": std_weigths[3],
+    "-150°": std_weigths[3],
+    "-30°": std_weigths[3],
     #
-    "40°": 0.014989611,
-    "140°": 0.014989611,
-    "-140°": 0.014989611,
-    "-40°": 0.014989611,
+    "40°": std_weigths[4],
+    "140°": std_weigths[4],
+    "-140°": std_weigths[4],
+    "-40°": std_weigths[4],
     #
-    "50°": 0.016868154,
-    "130°": 0.016868154,
-    "-130°": 0.016868154,
-    "-50°": 0.016868154,
+    "50°": std_weigths[5],
+    "130°": std_weigths[5],
+    "-130°": std_weigths[5],
+    "-50°": std_weigths[5],
     #
-    "60°": 0.018165962,
-    "120°": 0.018165962,
-    "-120°": 0.018165962,
-    "-60°": 0.018165962,
+    "60°": std_weigths[6],
+    "120°": std_weigths[6],
+    "-120°": std_weigths[6],
+    "-60°": std_weigths[6],
     #
-    "70°": 0.019006744,
-    "110°": 0.019006744,
-    "-110°": 0.019006744,
-    "-70°": 0.019006744,
+    "70°": std_weigths[7],
+    "110°": std_weigths[7],
+    "-110°": std_weigths[7],
+    "-70°": std_weigths[7],
     #
-    "80°": 0.019477787,
-    "100°": 0.019477787,
-    "-100°": 0.019477787,
-    "-80°": 0.019477787,
+    "80°": std_weigths[8],
+    "100°": std_weigths[8],
+    "-100°": std_weigths[8],
+    "-80°": std_weigths[8],
     #
-    "90°": 0.019629373,
-    "-90°": 0.019629373,
+    "90°": std_weigths[9],
+    "-90°": std_weigths[9],
 }
 
 # same weigths with multiples keys, this helps when merging dataframes
@@ -80,7 +106,7 @@ def pressure2spl(p: float) -> float:
     if p < 0.0:
         print("pressure is negative p={0}".format(p))
         logger.error("pressure is negative p={0}".format(p))
-    return 105.0 + 20.0 * log10(p)
+    return 105.0 + 20.0 * math.log10(p)
 
 
 def column_trim(c):
