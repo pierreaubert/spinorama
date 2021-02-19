@@ -19,6 +19,8 @@
 
 import logging
 
+from typing import Literal, List, Tuple
+from .ltype import Vector, Peq
 from .filter_iir import Biquad
 from .filter_peq import peq_build  # peq_print
 from .auto_loss import loss, score_loss
@@ -69,12 +71,17 @@ def optim_compute_auto_target(freq, target, auto_target_interp, peq):
 
 
 def optim_greedy(
-    speaker_name, df_speaker, freq, auto_target, auto_target_interp, optim_config
-):
+    speaker_name: str,
+    df_speaker: dict,
+    freq: Vector,
+    auto_target: List[Vector],
+    auto_target_interp: List[Vector],
+    optim_config: dict,
+) -> List[Tuple[int, float, float]]:
 
     if optim_preflight(freq, auto_target, auto_target_interp, optim_config) is False:
         logger.error("Preflight check failed!")
-        return None
+        return None, None
 
     auto_peq = []
     current_auto_target = optim_compute_auto_target(

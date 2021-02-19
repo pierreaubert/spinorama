@@ -87,6 +87,7 @@ def generate_speaker(mako, df, meta, site):
                 ]
                 directivity = {k: dfs[k] for k in directivity_filter if k in dfs}
                 # eq
+                eq = None
                 if key != "default_eq":
                     eq_filter = [
                         "ref_vs_eq",
@@ -168,7 +169,7 @@ if __name__ == "__main__":
     # load all metadata from generated json file
     json_filename = "./docs/assets/metadata.json"
     if not os.path.exists(json_filename):
-        logger.fatal("Cannot find {0}".format(json_filename))
+        logger.error("Cannot find {0}".format(json_filename))
         sys.exit(1)
 
     meta = None

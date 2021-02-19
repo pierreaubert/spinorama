@@ -88,12 +88,36 @@ For saving picture, you need a set of nodejs packages:
 ```
 npm install vega-lite vega-cli canvas
 ```
+and for linting the python code:
+```
+nvm install lts/fermium
+npm install pyright
+```
+You may have to update your npm version above 12.0:
+```
+nvm install lts/fermium
+```
 
 Please add tests and
 ```
 export PYTHONPATH=src
 pytest --cov=src
 ```
+
+Before committing, please check that the various checks are fine:
+
+1. ```./check_html.sh``` : check that HTML generated files are conforming.
+2. ```./check_meta.py``` : check that the metadata file looks sane.
+3. ```flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spinorama-venv``` should report 0
+4. ```black .``` will take care of formatting all the python files.
+
+and also (but WIP):
+5. ```./check_404.sh``` : check we do not have missing links.
+6. ```./node_modules/.bin/pyright````should not report new type error.
+7. Check that notebook are cleaned up before committing.
+
+
+Tests 1. to 4. should be in the presubmit.
 
 ## How to add a speaker?
 

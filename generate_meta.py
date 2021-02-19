@@ -374,7 +374,7 @@ if __name__ == "__main__":
         parse_max = args["--parse-max"]
         if parse_max is not None:
             parse_max = int(parse_max)
-        df = fl.load("cache.parse_all_speakers.h5")
+        df = fl.load(path="cache.parse_all_speakers.h5")
         if df is None:
             logger.error("Load failed! Please run ./generate_graphs.py")
             sys.exit(1)

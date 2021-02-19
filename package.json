@@ -4,7 +4,8 @@
     "canvas": "^2.6.1",
     "html-validator-cli": "^7.0.1",
     "npm": "^7.5.4",
-    "vega": "^5.17.0",
+    "pyright": "^1.1.112",
+    "vega": "^5.19.1",
     "vega-canvas": "^1.2.6",
     "vega-cli": "^5.19.1",
     "vega-lite": "^4.17.0"

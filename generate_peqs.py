@@ -101,6 +101,7 @@ def optim_save_peq(
     manual_peq = []
     manual_target = None
     manual_target_interp = None
+    manual_spin, manual_pir = None, None
     if be_verbose:
         manual_peq_name = "./datas/eq/{}/iir.txt".format(speaker_name)
         manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config["fs"])
