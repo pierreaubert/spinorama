@@ -88,10 +88,9 @@ For saving picture, you need a set of nodejs packages:
 ```
 npm install vega-lite vega-cli canvas
 ```
-and for linting the python code:
+and for linting the python and html code:
 ```
-nvm install lts/fermium
-npm install pyright
+npm install pyright html-validator-cli
 ```
 You may have to update your npm version above 12.0:
 ```
