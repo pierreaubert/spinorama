@@ -906,6 +906,22 @@ speakers_info = {
             },
         },
     },
+    "Genelec 8050B": {
+        "brand": "Genelec",
+        "model": "8050B",
+        "type": "active",
+        "price": "3000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8050b-review-studio-monitor.20542/",
+            },
+        },
+    },
     "Genelec 8351A": {
         "brand": "Genelec",
         "model": "8351A",
