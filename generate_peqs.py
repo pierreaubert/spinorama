@@ -43,8 +43,6 @@ Options:
   --dash-port=<dash-port>  Port for the ray dashbboard
 """
 from datetime import datetime
-import logging
-import math
 import os
 import pathlib
 import sys
@@ -52,13 +50,11 @@ from typing import Literal, List, Tuple
 
 from docopt import docopt
 import flammkuchen as fl
-import numpy as np
 import pandas as pd
 import ray
 
 from generate_common import get_custom_logger, args2level, custom_ray_init
 from datas.metadata import speakers_info as metadata
-from spinorama.ltype import Vector, Peq
 from spinorama.load_rewseq import parse_eq_iir_rews
 from spinorama.filter_peq import peq_format_apo
 from spinorama.filter_scores import scores_apply_filter, scores_print2

@@ -22,7 +22,7 @@ import logging
 import scipy.optimize as opt
 
 from .filter_iir import Biquad
-from .auto_loss import loss, score_loss
+from .auto_loss import loss
 
 
 logger = logging.getLogger("spinorama")

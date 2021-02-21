@@ -20,11 +20,10 @@
 import logging
 
 from typing import Literal, List, Tuple
-from .ltype import Vector, Peq
+from .ltype import Vector
 from .filter_iir import Biquad
 from .filter_peq import peq_build  # peq_print
 from .auto_loss import loss, score_loss
-from .auto_target import get_freq, get_target
 from .auto_range import (
     propose_range_freq,
     propose_range_Q,

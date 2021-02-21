@@ -37,8 +37,6 @@ Options:
   --dash-port=<port>  port for the dashbboard, default to 8265
 """
 import glob
-import ipaddress
-import logging
 import os
 import sys
 from typing import List, Mapping, Tuple
