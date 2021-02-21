@@ -144,7 +144,7 @@ def optim_save_peq(
             iir_name = "{}/{}".format(eq_dir, iir_txt)
             if not os.path.exists(iir_name):
                 try:
-                    os.symlink('iir-autoeq.txt', iir_name)
+                    os.symlink("iir-autoeq.txt", iir_name)
                 except OSError:
                     pass
 
