@@ -35,7 +35,6 @@ Options:
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
   --dash-port=<dash-port>  Port for the ray dashbboard
 """
-import logging
 import os
 import json
 import math

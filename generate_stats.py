@@ -28,7 +28,6 @@ Options:
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
 import json
-import logging
 import os
 import sys
 import pathlib

@@ -25,7 +25,6 @@ Options:
   --version         script version number
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
-import logging
 import sys
 
 from docopt import docopt
