@@ -20,14 +20,10 @@
 import logging
 import numpy as np
 from typing import Literal, List, Tuple
-
-from scipy.stats import linregress
 import scipy.signal as sig
 from scipy.interpolate import InterpolatedUnivariateSpline
 
-from spinorama.ltype import Vector, Peq
-from spinorama.filter_peq import peq_build
-from spinorama.filter_scores import scores_apply_filter
+from spinorama.ltype import Vector
 
 logger = logging.getLogger("spinorama")
 

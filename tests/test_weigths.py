@@ -1,6 +1,5 @@
 import math
 import unittest
-import pandas as pd
 import numpy as np
 import numpy.testing as npt
 from spinorama.compute_cea2034 import (
