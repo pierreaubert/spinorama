@@ -43,8 +43,8 @@ def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
     mean = np.mean(spl.loc[(spl.Freq > 500) & (spl.Freq < 10000)]["On Axis"])
     curve_peq = peq_build(freq, peq) - mean
     # create a new frame
-    filtered = spl.loc[:, spl.columns != 'Freq'].add(curve_peq, axis=0)
-    filtered['Freq'] = freq
+    filtered = spl.loc[:, spl.columns != "Freq"].add(curve_peq, axis=0)
+    filtered["Freq"] = freq
     # check for issues
     if filtered.isnull().values.any():
         logger.debug(filtered)
@@ -91,7 +91,7 @@ def peq_format_apo(comment: str, peq: Peq) -> str:
     res.append("Preamp: {:.1f} dB".format(peq_preamp_gain(peq)))
     res.append("")
     for i, data in enumerate(peq):
-        w, iir = data
+        _, iir = data
         if iir.typ in (Biquad.PEAK, Biquad.NOTCH, Biquad.BANDPASS):
             res.append(
                 "Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB Q {:0.2f}".format(

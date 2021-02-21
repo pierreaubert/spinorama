@@ -162,7 +162,7 @@ def plot(anglelist, dfu):
         hzZ.append(Z)
 
     # normalise
-    db_min = min(np.array(dbX).min(), np.array(dbY).min())
+    # db_min = min(np.array(dbX).min(), np.array(dbY).min())
     db_max = max(np.array(dbX).max(), np.array(dbY).max())
     dbX = [v2 / db_max for v1 in dbX for v2 in v1]
     dbY = [v2 / db_max for v1 in dbY for v2 in v1]

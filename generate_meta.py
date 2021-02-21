@@ -57,7 +57,7 @@ import datas.metadata as metadata
 
 
 def sanity_check(df, meta):
-    for speaker_name, origins in df.items():
+    for speaker_name in df.keys():
         # check if metadata exists
         if speaker_name not in meta:
             logger.error("Metadata not found for >{0}<".format(speaker_name))
@@ -92,7 +92,7 @@ def add_scores(df):
     max_sm_pir = 0
     for speaker_name, speaker_data in df.items():
         logger.info("Processing {0}".format(speaker_name))
-        for origin, measurements in speaker_data.items():
+        for _, measurements in speaker_data.items():
             for key, dfs in measurements.items():
                 if dfs is None or "CEA2034" not in dfs.keys():
                     logger.debug(
@@ -295,7 +295,7 @@ def add_scores(df):
 
 def add_eq(speaker_path, df):
     """ Compute some values per speaker and add them to metadata """
-    for speaker_name, speaker_data in df.items():
+    for speaker_name in df.keys():
         logger.info("Processing {0}".format(speaker_name))
 
         for suffix in ("", "-autoeq", "-amirm", "-maiky76", "-flipflop"):

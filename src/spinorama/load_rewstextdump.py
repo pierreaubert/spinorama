@@ -34,20 +34,20 @@ def parse_graphs_speaker_rewstextdump(
             # TODO :
             # if version is not None and version not in ('asr', 'princeton', 'vendor', 'rewstextdump'):
             #
-            f = open(filename, "r")
-            lines = f.readlines()
-            # logger.info('read f {} found {}'.format(f, len(lines)))
-            for l in lines:
-                if len(l) > 0 and l[0] == "*":
-                    continue
-                words = l.split()
-                if len(words) == 3:
-                    freq = float(words[0])
-                    spl = float(words[1])
-                    # phase = float(words[2])
-                freqs.append(freq)
-                spls.append(spl)
-                msrts.append(msrt)
+            with open(filename, "r") as f:
+                lines = f.readlines()
+                logger.info("read f {} found {}".format(f, len(lines)))
+                for l in lines:
+                    if len(l) > 0 and l[0] == "*":
+                        continue
+                    words = l.split()
+                    if len(words) == 3:
+                        freq = float(words[0])
+                        spl = float(words[1])
+                        # phase = float(words[2])
+                    freqs.append(freq)
+                    spls.append(spl)
+                    msrts.append(msrt)
 
         spin = pd.DataFrame({"Freq": freqs, "dB": spls, "Measurements": msrts})
 

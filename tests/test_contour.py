@@ -53,22 +53,22 @@ class SpinoramaContourTests(unittest.TestCase):
         self.assertEqual(af.size, az.size)
 
     def test_smoke_freq(self):
-        af, am, az = compute_contour(self.df)
+        af, _, _ = compute_contour(self.df)
         self.assertAlmostEqual(np.min(af), 20)
         self.assertAlmostEqual(np.max(af), 20000)
 
     def test_smoke_angle(self):
-        af, am, az = compute_contour(self.df)
+        _, am, _ = compute_contour(self.df)
         self.assertEqual(np.min(am), -30)
         self.assertEqual(np.max(am), 30)
 
     def test_smoke_db_normalized(self):
-        af, am, az = compute_contour(self.df)
+        _, _, az = compute_contour(self.df)
         self.assertEqual(np.min(az), -10)
         self.assertEqual(np.max(az), 0)
 
     def test_smoke_preserve_angle(self):
-        af, am, az = compute_contour(self.df)
+        _, am, _ = compute_contour(self.df)
         # check that value is constant
         self.assertTrue(all([a == am[0][0] for a in am[0]]))
         # extract all angles in order
@@ -113,26 +113,25 @@ class SpinoramaReshapeTests(unittest.TestCase):
 
     def test_smoke_freq(self):
         for scale in range(2, 10):
-            raf, ram, raz = reshape(self.af, self.am, self.az, scale)
+            raf, _, _ = reshape(self.af, self.am, self.az, scale)
             self.assertAlmostEqual(np.min(raf), 20)
             self.assertAlmostEqual(np.max(raf), 20000)
 
     def test_smoke_angle(self):
         for scale in range(2, 10):
-            raf, ram, raz = reshape(self.af, self.am, self.az, scale)
+            _, ram, _ = reshape(self.af, self.am, self.az, scale)
             self.assertEqual(np.min(ram), -30)
             self.assertEqual(np.max(ram), 30)
 
     def test_smoke_db_normalized(self):
         for scale in range(2, 10):
-            raf, ram, raz = reshape(self.af, self.am, self.az, scale)
+            _, _, raz = reshape(self.af, self.am, self.az, scale)
             self.assertEqual(np.min(raz), -10)
             self.assertEqual(np.max(raz), 0)
 
     def test_smoke_preserve_angle(self):
         for scale in range(2, 10):
-            raf, ram, raz = reshape(self.af, self.am, self.az, scale)
-            print(ram)
+            _, ram, _ = reshape(self.af, self.am, self.az, scale)
             # check that value is constant
             self.assertTrue(all([a == ram[0][0] for a in ram[0]]))
             # extract all angles in order

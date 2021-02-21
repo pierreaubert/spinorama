@@ -80,7 +80,7 @@ def find_largest_area(
 def propose_range_freq(
     freq: Vector, local_target: List[Vector], optim_config: dict
 ) -> Tuple[Literal[-1, 1], float, Vector]:
-    sign, indice, init_freq = find_largest_area(freq, local_target, optim_config)
+    sign, _, init_freq = find_largest_area(freq, local_target, optim_config)
     scale = optim_config["elastic"]
     logger.debug("Scale={} init_freq {}".format(scale, init_freq))
     init_freq_min = max(init_freq * scale, optim_config["freq_reg_min"])

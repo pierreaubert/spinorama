@@ -89,11 +89,11 @@ def template_compact(df, params, speaker, origin, key):
     params2["xmin"] = max(100, params2["xmin"])
     params2v2["xmin"] = params2["xmin"]
     # horizontal contour / isoband / radar
-    hcontour = display_contour_smoothed_horizontal(df, params2)
+    # hcontour = display_contour_smoothed_horizontal(df, params2)
     hisoband = display_isoband_horizontal(df, params2)
     hradar = display_radar_horizontal(df, params2v2)
     # vertical contour / isoband / radar
-    vcontour = display_contour_smoothed_vertical(df, params2)
+    # vcontour = display_contour_smoothed_vertical(df, params2)
     visoband = display_isoband_vertical(df, params2)
     vradar = display_radar_vertical(df, params2v2)
     # build the chart
@@ -102,11 +102,11 @@ def template_compact(df, params, speaker, origin, key):
     #     hspl is None, vspl is None, hcontour is None, vcontour is None, hradar is None, vradar is None))
     chart = alt.vconcat()
     if spinorama is not None:
-        title = None
-        if key is not None and key != "default":
-            title = "{0} ({1})".format(speaker, key)
-        else:
-            title = speaker
+        # title = None
+        # if key is not None and key != "default":
+        #    title = "{0} ({1})".format(speaker, key)
+        # else:
+        #    title = speaker
         if summary is not None and pict is not None:
             chart &= alt.hconcat(
                 summary.properties(title=speaker),

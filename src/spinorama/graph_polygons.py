@@ -1,5 +1,6 @@
 #                                                  -*- coding: utf-8 -*-
 import logging
+from .graph_pp import pp
 
 logger = logging.getLogger("spinorama")
 
@@ -128,7 +129,7 @@ def merge_connected_polygons(isoband):
                 connected_polygons[pointer_polygons[p2]].add(p1)
                 pointer_polygons[p1] = pointer_polygons[p2]
             else:
-                connected_polygons[count_connected] = set([p1, p2])
+                connected_polygons[count_connected] = {p1, p2}
                 pointer_polygons[p1] = count_connected
                 pointer_polygons[p2] = count_connected
                 # print('debug case3 pp[{0}]={2} pp[{1}]={2}'.format(p1, p2, count_connected))
@@ -171,7 +172,11 @@ def merge_connected_polygons(isoband):
                     del polygons_to_segment[p]
                 poly0 = polyset.pop()
         except KeyError as ke2:
-            # print('debug get a KeyError {0}, appending {1}'.format(ke2, pp(merged_polygon)))
+            logger.debug(
+                "debug get a KeyError {0}, appending {1}".format(
+                    ke2, pp(merged_polygon)
+                )
+            )
             new_isoband.append(merged_polygon)
 
     # add single polygons

@@ -446,9 +446,9 @@ def graph_isoband(df, isoband_params):
         return y / 180 * math.pi * graph_height / 360
 
     df_iso = find_isobands(af, am, az.T, bands, transform_log, transform_radian)
-    color_legend = [
-        "[{0}, {1}]".format(bands[i], bands[i + 1]) for i in range(0, len(bands) - 1)
-    ] + [">{0}".format(bands[-1])]
+    # color_legend = [
+    #    "[{0}, {1}]".format(bands[i], bands[i + 1]) for i in range(0, len(bands) - 1)
+    # ] + [">{0}".format(bands[-1])]
     color_range = [
         "black",
         "blue",
@@ -504,7 +504,7 @@ def graph_radar(df_in, graph_params):
     # print(anglelist)
 
     # display some curves
-    dbmax, dbs_df = radar.plot(anglelist, dfu)
+    _, dbs_df = radar.plot(anglelist, dfu)
 
     # build a grid
     grid_df = radar.grid_grid(anglelist)
@@ -860,10 +860,10 @@ def graph_compare_freq_regression(df, graph_params, speaker1, speaker2):
         opacity=alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2)),
     )
 
-    points = line.mark_circle(size=100).encode(
-        opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
-        tooltip=["Measurements", "Freq", "dB"],
-    )
+    # points = line.mark_circle(size=100).encode(
+    #    opacity=alt.condition(nearest, alt.value(1), alt.value(0)),
+    #    tooltip=["Measurements", "Freq", "dB"],
+    # )
 
     rules = (
         alt.Chart(df)

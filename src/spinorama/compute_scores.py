@@ -116,7 +116,7 @@ def lfq(lw, sp, lfx_log) -> float:
     lfq_sum = 0
     n = 0
     # print('DEBUG lfx={1} octave(20): {0}'.format(octave(20), val_lfx))
-    for (bmin, bcenter, bmax) in octave(20):
+    for bmin, _, bmax in octave(20):
         # 100hz to 12k hz
         if bmin < val_lfx or bmax > 300:
             continue
@@ -153,7 +153,7 @@ def sm(dfu):
     """
     data = dfu.loc[(dfu.Freq >= 100) & (dfu.Freq <= 16000)]
     log_freq = np.log(data.Freq)
-    slope, intercept, r_value, p_value, std_err = linregress(log_freq, data.dB)
+    _, _, r_value, _, _ = linregress(log_freq, data.dB)
     return r_value ** 2
 
 

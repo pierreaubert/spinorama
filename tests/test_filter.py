@@ -18,7 +18,7 @@ class SpinoramaFilterIIRTests(unittest.TestCase):
         )
         peq_fast = np.array([20.0 * math.log10(self.peak.result(f)) for f in self.freq])
         peq_vec = self.peak.np_log_result(self.freq)
-        with self.assertRaises(AssertionError) as e:
+        with self.assertRaises(AssertionError):
             npt.assert_array_almost_equal_nulp(peq_slow, peq_fast)
             npt.assert_array_almost_equal_nulp(peq_slow, peq_vec)
 

@@ -62,7 +62,7 @@ def custom_ray_init(args):
     if "--dash-ip" in args and args["--dash-ip"] is not None:
         check_ip = args["--dash-ip"]
         try:
-            address = ipaddress.ip_address(check_ip)
+            _ = ipaddress.ip_address(check_ip)
             dashboard_ip = check_ip
         except ipaddress.AddressValueError as ave:
             print("ip {} is not valid {}!".format(check_ip, ave))

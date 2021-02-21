@@ -66,7 +66,7 @@ def compute_contour(dfu):
 
 
 def reshape(x, y, z, nscale):
-    nx, ny = x.shape
+    nx, _ = x.shape
     # expand x-axis and y-axis
     lxi = [
         np.linspace(x[0][i], x[0][i + 1], nscale, endpoint=False)

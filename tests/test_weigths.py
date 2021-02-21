@@ -36,7 +36,7 @@ class WeigthsTests(unittest.TestCase):
         scale = np.linalg.norm(weigths) / np.linalg.norm(std_weigths)
         scaled_weigths = weigths / scale
 
-        with self.assertRaises(AssertionError) as e:
+        with self.assertRaises(AssertionError):
             npt.assert_array_almost_equal_nulp(scaled_weigths, std_weigths)
 
         delta = np.max(np.abs(scaled_weigths - std_weigths))
