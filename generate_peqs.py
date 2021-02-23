@@ -46,7 +46,7 @@ from datetime import datetime
 import os
 import pathlib
 import sys
-from typing import Literal, List, Tuple
+
 
 from docopt import docopt
 import flammkuchen as fl
