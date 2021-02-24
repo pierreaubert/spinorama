@@ -134,12 +134,13 @@ Tests 1. to 4. should be in the presubmit.
         - add it to *datas/Vendors* if it comes from the manufacturers.
         - a complete [tutorial](tutorial/digitalization/Digitalisation-Tutorial.md) is available.
 
-   b. add a picture of the speaker in datas/originals
+   b. add a picture of the speaker in datas/pictures in png or jpeg format.
+        - ```sh ./update_pictures.sh'```
    c. test it works with:
         - ```./generate_graphs --speaker='name of speaker'```
-      - visualize results
-        - ```docs/name of speaker/origin/default/CEA2034_large.png``` or
-	- ```docs/name of speaker/origin/default/2cols_large.png```
+      - visualize results in directory:
+        - ```./docs/name of speaker/origin/default/CEA2034_large.png``` or
+	- ```./docs/name of speaker/origin/default/2cols_large.png```
 
 2. Generate datas and webpages
 
