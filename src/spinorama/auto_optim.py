@@ -36,6 +36,7 @@ logger = logging.getLogger("spinorama")
 
 
 def optim_preflight(freq, target, auto_target_interp, optim_config):
+    """Some quick checks before optim runs."""
     sz = len(freq)
     nbt = len(target)
     nbi = len(auto_target_interp)
