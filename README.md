@@ -122,46 +122,11 @@ and also (but WIP):
 6. ```./node_modules/.bin/pyright````should not report new type error.
 7. Check that notebook are cleaned up before committing.
 
-
 Tests 1. to 4. should be in the presubmit.
 
-## How to add a speaker?
+# How to add a speaker to the database.
 
-0. Clone the repository with git.
-
-1. Add your data
-
-   a. it depends where your data come from:
-      - if from ASR
-        - add the unzip files to *datas/ASR/name of speaker/all text* files
-      - if from Princeton/3d3a 
-        - add the 2 IR files to *datas/Princeton/name of speaker/*, i have normally done all of them.
-      - if you only have a picture of the spinorama:
-        - please use WebPlotDigitizer to generate a parsed json file
-        - add it to *datas/Vendors* if it comes from the manufacturers.
-        - a complete [tutorial](tutorial/digitalization/Digitalisation-Tutorial.md) is available.
-
-   b. add a picture of the speaker in datas/pictures in png or jpeg format.
-        - ```sh ./update_pictures.sh'```
-   c. test it works with:
-        - ```./generate_graphs --speaker='name of speaker'```
-      - visualize results in directory:
-        - ```./docs/name of speaker/origin/default/CEA2034_large.png``` or
-	- ```./docs/name of speaker/origin/default/2cols_large.png```
-
-2. Generate datas and webpages
-
-   - ```sh ./generate_docs.sh``` will generate both graphs and website. All files will end up in the ```docs``` directory`. This directory is ignored by git on the develop branch.
-   - This will take a long time and take all your CPU. For subsequent calls, you only need to generate the new graphs by calling:
-   - ```sh ./update_website.sh``` which is usually much faster (less than 1 minute per speaker).
-
-3. Add your files to git and push to github on *develop* branch
-
-   - ```git status``` you should see a long list of files that git doesn't now about yet.
-   - ```git add all new files```
-   - ```git commit -m 'add data for new speaker name' datas```
-   - ```git push```
-
+We have a dedicated [tutorial](./tutorial/ADDSPEAKER.md).
 
 # Source of data and citations
 

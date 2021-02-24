@@ -57,29 +57,39 @@ def sanity_check_model(name, speaker):
 
 
 def sanity_check_type(name, speaker):
+    valid_types = ("active", "passive")
     if "type" not in speaker:
         logging.error("type is not in {0}".format(name))
         return 1
     thetype = speaker["type"]
-    if thetype not in ("active", "passive"):
-        logging.error("{0}: type {1} is not allowed".format(name, thetype))
+    if thetype not in valid_types:
+        logging.error(
+            "{0}: type {1} is not allowed. Valid items are {2}".format(
+                name, thetype, valid_types
+            )
+        )
         return 1
     return 0
 
 
 def sanity_check_shape(name, speaker):
-    if "shape" not in speaker:
-        logging.error("shape is not in {0}".format(name))
-        return 1
-    theshape = speaker["shape"]
-    if theshape not in (
+    valid_shapes = (
         "floorstanders",
         "bookshelves",
         "center",
         "surround",
         "omnidirectional",
-    ):
-        logging.error("{0}: shape {1} is not allowed".format(name, theshape))
+    )
+    if "shape" not in speaker:
+        logging.error("shape is not in {0}".format(name))
+        return 1
+    theshape = speaker["shape"]
+    if theshape not in valid_shapes:
+        logging.error(
+            "{0}: shape '{1}' is not allowed. Valid options are {2}".format(
+                name, theshape, valid_shapes
+            )
+        )
         return 1
     return 0
 
