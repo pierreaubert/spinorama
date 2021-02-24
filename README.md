@@ -79,6 +79,13 @@ Your browser will open, go to *experiments* directitory and click on *spinorama.
 
 You are very welcome to submit pull requests. Note that the license is GPLv3.
 
+Start with launching that should install a lot of software:
+```
+./setup.sh
+```
+
+If it doesn't work out of the box which is likely, please go step by step:
+
 ```
 pip3 install -r requirements.txt 
 pip3 install -r requirements-tests.txt 

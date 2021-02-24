@@ -1,3 +1,5 @@
+numpy
+pandas
 altair
 altair-saver
 astropy
