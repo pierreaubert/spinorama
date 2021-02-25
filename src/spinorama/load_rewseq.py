@@ -32,7 +32,7 @@ def parse_eq_iir_rews(filename, srate):
 
                     ifreq = int(float(freq))
                     if ifreq < 0 or ifreq > srate / 2:
-                        logger.info(
+                        logger.debug(
                             "IIR peq freq {0}Hz out of bounds (srate={1}".format(
                                 freq, srate
                             )
@@ -41,12 +41,12 @@ def parse_eq_iir_rews(filename, srate):
 
                     rgain = float(gain)
                     if rgain < -10 or rgain > 30:
-                        logger.info("IIR peq gain {0} is large!".format(rgain))
+                        logger.debug("IIR peq gain {0} is large!".format(rgain))
                         # continue
 
                     rq = float(q)
                     if rq < 0 or rq > 20:
-                        logger.info("IIR peq Q {0} is out of bounds!".format(rq))
+                        logger.debug("IIR peq Q {0} is out of bounds!".format(rq))
                         # continue
 
                     # TODO: factor code
@@ -87,7 +87,7 @@ def parse_eq_iir_rews(filename, srate):
 
                     ifreq = int(freq)
                     if ifreq < 0 or ifreq > srate / 2:
-                        logger.info(
+                        logger.debug(
                             "IIR peq freq {0}Hz out of bounds (srate={1}".format(
                                 freq, srate
                             )
@@ -129,12 +129,12 @@ def parse_eq_iir_rews(filename, srate):
 
                     rgain = float(gain)
                     if rgain < -10 or rgain > 30:
-                        logger.info("IIR peq gain {0} is large!".format(rgain))
+                        logger.debug("IIR peq gain {0} is large!".format(rgain))
                         # continue
 
                     ifreq = int(freq)
                     if ifreq < 0 or ifreq > srate / 2:
-                        logger.info(
+                        logger.debug(
                             "IIR peq freq {0}Hz out of bounds (srate={1}".format(
                                 freq, srate
                             )

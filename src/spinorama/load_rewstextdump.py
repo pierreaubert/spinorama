@@ -36,7 +36,7 @@ def parse_graphs_speaker_rewstextdump(
             #
             with open(filename, "r") as f:
                 lines = f.readlines()
-                logger.info("read f {} found {}".format(f, len(lines)))
+                logger.debug("read f {} found {}".format(f, len(lines)))
                 for l in lines:
                     if len(l) > 0 and l[0] == "*":
                         continue
