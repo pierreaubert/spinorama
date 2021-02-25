@@ -331,7 +331,7 @@ def add_eq(speaker_path, df):
 
 
 def dump_metadata(meta):
-    metadir = "./doc/assets/"
+    metadir = "./docs/assets/"
     metafile = "{}/metadata.json".format(metadir)
     if not os.path.isdir(metadir):
         os.makedirs(metadir)

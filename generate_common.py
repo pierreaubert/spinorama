@@ -91,4 +91,5 @@ def custom_ray_init(args):
     ray.init(
         dashboard_host=dashboard_ip,
         dashboard_port=dashboard_port,
-        local_mode=ray_local_mode)
+        local_mode=ray_local_mode,
+    )

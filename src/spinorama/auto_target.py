@@ -40,8 +40,14 @@ def get_freq(df_speaker_data, optim_config):
     curves = optim_config["curve_names"]
     # extract LW
     columns = {"Freq"}.union(curves)
-    local_df = df_speaker_data["CEA2034_unmelted"].loc[:, columns]
-    # selector
+    local_df = None
+    if "CEA2034_unmelted" in df_speaker_data.keys():
+        local_df = df_speaker_data["CEA2034_unmelted"].loc[:, columns]
+    else:
+        df_tmp = df_speaker_data["CEA2034"]
+        df_pivoted = df_tmp.pivot(*df_tmp).rename_axis(columns=None).reset_index()
+        local_df = df_pivoted.loc[:, columns]
+    # sselector
     selector = get_selector(local_df, optim_config)
     # freq
     local_freq = local_df.loc[selector, "Freq"].values

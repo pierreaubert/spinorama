@@ -77,6 +77,7 @@ def optim_greedy(
     auto_target: List[Vector],
     auto_target_interp: List[Vector],
     optim_config: dict,
+    use_score,
 ) -> List[Tuple[int, float, float]]:
 
     if optim_preflight(freq, auto_target, auto_target_interp, optim_config) is False:
@@ -88,7 +89,9 @@ def optim_greedy(
         freq, auto_target, auto_target_interp, auto_peq
     )
     best_loss = loss(freq, auto_target, auto_peq, 0, optim_config)
-    pref_score = score_loss(df_speaker, auto_peq)
+    pref_score = 1.0
+    if use_score:
+        pref_score = score_loss(df_speaker, auto_peq)
 
     results = [(0, best_loss, -pref_score)]
     logger.info(
@@ -179,7 +182,8 @@ def optim_greedy(
             )
             auto_peq.append(biquad)
             best_loss = current_loss
-            pref_score = score_loss(df_speaker, auto_peq)
+            if use_score:
+                pref_score = score_loss(df_speaker, auto_peq)
             results.append((optim_iter + 1, best_loss, -pref_score))
             logger.info(
                 "Speaker {} Iter {:2d} Optim converged loss {:2.2f} pref score {:2.2f} biquad {:2s} F:{:5.0f}Hz Q:{:2.2f} G:{:+2.2f}dB in {} iterations".format(
@@ -207,7 +211,9 @@ def optim_greedy(
         freq, auto_target, auto_target_interp, auto_peq
     )
     final_loss = loss(freq, current_auto_target, [], 0, optim_config)
-    final_score = score_loss(df_speaker, auto_peq)
+    final_score = 1.0
+    if use_score:
+        final_score = score_loss(df_speaker, auto_peq)
     results.append((optim_config["MAX_NUMBER_PEQ"] + 1, best_loss, -pref_score))
     logger.info(
         "OPTIM END {}: best loss {:2.2f} final score {:2.2f} with {:2d} PEQs".format(
