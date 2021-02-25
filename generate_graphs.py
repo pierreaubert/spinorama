@@ -20,7 +20,7 @@
 generate_graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
   [--force] [--type=<ext>] [--log-level=<level>]\
   [--origin=<origin>]  [--speaker=<speaker>] [--version=<version>] [--brand=<brand>]\
-  [--dash-ip=<ip>] [--dash-port=<port>]
+  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local]
 
 Options:
   -h|--help           display usage()
@@ -35,6 +35,7 @@ Options:
   --version=<version> filter by measurement
   --dash-ip=<ip>      ip of dashboard to track execution, default to localhost/127.0.0.1
   --dash-port=<port>  port for the dashbboard, default to 8265
+  --ray-local         if present, ray will run locally, it is usefull for debugging
 """
 import glob
 import os
@@ -76,6 +77,7 @@ def get_speaker_list(speakerpath: str) -> List[str]:
 def queue_measurement(
     brand: str, speaker: str, mformat: str, morigin: str, mversion: str
 ) -> Tuple[int, int, int, int]:
+    """Add all measurements in the queue to be processed"""
     id_df = parse_graphs_speaker.remote(
         "./datas", brand, speaker, mformat, morigin, mversion
     )
@@ -114,6 +116,7 @@ def queue_measurement(
 def queue_speakers(
     speakerlist: List[str], metadata: Mapping[str, dict], filters: Mapping[str, dict]
 ) -> dict:
+    """Add all speakers in the queue to be processed"""
     ray_ids = {}
     count = 0
     for speaker in speakerlist:
@@ -155,7 +158,7 @@ def queue_speakers(
 
 
 def compute(speakerkist: List[str], metadata: Mapping[str, dict], ray_ids: dict):
-
+    """Compute a series of measurements"""
     df = {}
     done_ids = {}
     while 1:
@@ -270,7 +273,7 @@ def compute(speakerkist: List[str], metadata: Mapping[str, dict], ray_ids: dict)
 
 if __name__ == "__main__":
     args = docopt(
-        __doc__, version="generate_graphs.py version 1.22", options_first=True
+        __doc__, version="generate_graphs.py version 1.23", options_first=True
     )
 
     # TODO remove it and replace by iterating over metadatas

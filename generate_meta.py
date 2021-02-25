@@ -21,7 +21,7 @@
 usage: generate_meta.py [--help] [--version] [--log-level=<level>]\
     [--metadata=<metadata>] [--parse-max=<max>] [--use-cache=<cache>]\
     [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>]\
-    [--dash-ip=<ip>] [--dash-port=<port>] 
+    [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local]
 
 Options:
   --help            display usage()
@@ -331,7 +331,11 @@ def add_eq(speaker_path, df):
 
 
 def dump_metadata(meta):
-    with open("docs/assets/metadata.json", "w") as f:
+    metadir = "./doc/assets/"
+    metafile = "{}/metadata.json".format(metadir)
+    if not os.path.isdir(metadir):
+        os.makedirs(metadir)
+    with open(metafile, "w") as f:
         js = json.dumps(meta)
         f.write(js)
         f.close()

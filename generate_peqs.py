@@ -17,7 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-usage: generate_peqs.py [--help] [--version] [--log-level=<level>] [--force] [--smoke-test] [-v|--verbose] [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>] [--max-peq=<count>] [--min-Q=<minQ>] [--max-Q=<maxQ>] [--min-dB=<mindB>] [--max-dB=<maxdB>]  [--min-freq=<minFreq>] [--max-freq=<maxFreq>][--max-iter=<maxiter>] [--use-all-biquad] [--curve-peak-only] [--loss=<pick>] [--dash-ip=<dash-ip>] [--dash-port=<dash-port>]
+usage: generate_peqs.py [--help] [--version] [--log-level=<level>] [--force] [--smoke-test] [-v|--verbose] [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>] [--max-peq=<count>] [--min-Q=<minQ>] [--max-Q=<maxQ>] [--min-dB=<mindB>] [--max-dB=<maxdB>]  [--min-freq=<minFreq>] [--max-freq=<maxFreq>][--max-iter=<maxiter>] [--use-all-biquad] [--curve-peak-only] [--loss=<pick>] [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local]
+
 
 Options:
   --help                   Display usage()
@@ -41,6 +42,7 @@ Options:
   --curve-peak-only        Optimise both for peaks and valleys on a curve
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
   --dash-port=<dash-port>  Port for the ray dashbboard
+  --ray-local              If present, ray will run locally, it is usefull for debugging
 """
 from datetime import datetime
 import os

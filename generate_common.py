@@ -25,21 +25,23 @@ import ray
 
 
 def get_custom_logger(duplicate=False):
+    """"define properties of our logger"""
     custom = logging.getLogger("spinorama")
-    fh = logging.FileHandler("debug_optim.log")
+    custom_file_handler = logging.FileHandler("debug_optim.log")
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
-    fh.setFormatter(formatter)
-    custom.addHandler(fh)
+    custom_file_handler.setFormatter(formatter)
+    custom.addHandler(custom_file_handler)
     if duplicate is True:
-        sh = logging.StreamHandler(sys.stdout)
-        sh.setFormatter(formatter)
-        custom.addHandler(sh)
+        custom_stream_handler = logging.StreamHandler(sys.stdout)
+        custom_stream_handler.setFormatter(formatter)
+        custom.addHandler(custom_stream_handler)
     return custom
 
 
 def args2level(args):
+    """"transform an argument into a logger level"""
     level = logging.INFO
     if args["--log-level"] is not None:
         check_level = args["--log-level"]
@@ -56,7 +58,8 @@ def args2level(args):
 
 
 def custom_ray_init(args):
-    # ray section
+    """Customize ray initialisation with a few parameters"""
+    # expose the dashboard on another ip if required
     dashboard_ip = "127.0.0.1"
     dashboard_port = 8265
     if "--dash-ip" in args and args["--dash-ip"] is not None:
@@ -72,12 +75,20 @@ def custom_ray_init(args):
         check_port = args["--dash-port"]
         dashboard_port = check_port
 
+    # this start ray in single process mode
+    ray_local_mode = False
+    if "--ray-local" in args and args["--ray-local"] is not None:
+        ray_local_mode = True
+
     level = args2level(args)
 
-    def ray_setup_logger(worker):
+    def ray_setup_logger(worker_logger):
         worker_logger = get_custom_logger(False)
         worker_logger.setLevel(level)
 
     ray.worker.global_worker.run_function_on_all_workers(ray_setup_logger)
     # address is the one from the ray server<
-    ray.init(dashboard_host=dashboard_ip, dashboard_port=dashboard_port)
+    ray.init(
+        dashboard_host=dashboard_ip,
+        dashboard_port=dashboard_port,
+        local_mode=ray_local_mode)
