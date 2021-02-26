@@ -474,17 +474,29 @@ if __name__ == "__main__":
     # load data
     print("Reading cache ...", end=" ", flush=True)
     df_all_speakers = {}
-    if smoke_test is True:
-        df_all_speakers = fl.load(path="./cache.smoketest_speakers.h5")
-    else:
-        if speaker_name is None:
-            df_all_speakers = fl.load(path="./cache.parse_all_speakers.h5")
+    try:
+        if smoke_test is True:
+            df_all_speakers = fl.load(path="./cache.smoketest_speakers.h5")
         else:
-            df_speaker = fl.load(
-                path="./cache.parse_all_speakers.h5", group="/{}".format(speaker_name)
+            if speaker_name is None:
+                df_all_speakers = fl.load(path="./cache.parse_all_speakers.h5")
+            else:
+                df_speaker = fl.load(
+                    path="./cache.parse_all_speakers.h5",
+                    group="/{}".format(speaker_name),
+                )
+                df_all_speakers[speaker_name] = df_speaker
+        print("Done")
+    except ValueError as ve:
+        if speaker_name is not None:
+            print(
+                "Speaker {0} is not in the cache. Did you run ./generate_graphs.py --speaker='{0}' --update-cache ?".format(
+                    speaker_name
+                )
             )
-            df_all_speakers[speaker_name] = df_speaker
-    print("Done")
+        else:
+            print(f"{ve}")
+        sys.exit(1)
 
     # start ray
     custom_ray_init(args)
@@ -511,14 +523,15 @@ if __name__ == "__main__":
                         speaker_name
                     )
                 )
-                sys.exit(0)
+                sys.exit(1)
         if (
             speaker_name in metadata.keys()
             and "speaker_default_measurement" in metadata[speaker_name].keys()
         ):
             speaker_default = metadata[speaker_name]["default_measurement"]
         df_speaker = None
-        if speaker_default == "ASR":
+        # print(speaker_name, speaker_default, speaker_origin)
+        if speaker_origin == "ASR":
             df_speaker = df_all_speakers[speaker_name][speaker_origin][speaker_default]
         elif speaker_default == "vendor":
             # print(speaker_name, speaker_origin, speaker_default, list(df_all_speakers[speaker_name][speaker_origin].keys()))
@@ -532,7 +545,7 @@ if __name__ == "__main__":
                         speaker_name
                     )
                 )
-                sys.exit(0)
+                sys.exit(1)
             keys = set(df_speaker["CEA2034"]["Measurements"].values)
             number_curves = len(current_optim_config["curve_names"])
             print(current_optim_config["curve_names"], keys)
@@ -543,7 +556,7 @@ if __name__ == "__main__":
                         speaker_name
                     )
                 )
-                sys.exit(0)
+                sys.exit(1)
             elif len(intersection) != number_curves:
                 logger.warning(
                     "Speaker {} doesn't have some data {}; final targets are {}".format(
