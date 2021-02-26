@@ -220,8 +220,8 @@ def optim_greedy(
         results.append((optim_config["MAX_NUMBER_PEQ"] + 1, best_loss, -pref_score))
     if use_score:
         idx_max = np.argmax((np.array(results).T)[-1])
-        results = results[0:idx_max+1]
-        auto_peq = auto_peq[0:idx_max+1]
+        results = results[0 : idx_max + 1]
+        auto_peq = auto_peq[0 : idx_max + 1]
     logger.info(
         "OPTIM END {}: best loss {:2.2f} final score {:2.2f} with {:2d} PEQs".format(
             speaker_name, results[-1][1], results[-1][2], len(auto_peq)

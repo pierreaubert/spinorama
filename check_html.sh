@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 for d in docs/*.html; do
     echo "Linting $d";
