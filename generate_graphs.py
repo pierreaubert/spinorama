@@ -20,7 +20,7 @@
 generate_graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
   [--force] [--type=<ext>] [--log-level=<level>]\
   [--origin=<origin>]  [--speaker=<speaker>] [--version=<version>] [--brand=<brand>]\
-  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local]
+  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] [--update-cache]
 
 Options:
   -h|--help           display usage()
@@ -36,6 +36,7 @@ Options:
   --dash-ip=<ip>      ip of dashboard to track execution, default to localhost/127.0.0.1
   --dash-port=<port>  port for the dashbboard, default to 8265
   --ray-local         if present, ray will run locally, it is usefull for debugging
+  --update-cache      force updating the cache
 """
 import glob
 import os
@@ -51,6 +52,9 @@ import datas.metadata as metadata
 from src.spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
 from src.spinorama.speaker_print import print_graphs
 from src.spinorama.graph import graph_params_default
+
+
+VERSION = 1.24
 
 
 def get_speaker_list(speakerpath: str) -> List[str]:
@@ -157,7 +161,7 @@ def queue_speakers(
     return ray_ids
 
 
-def compute(speakerkist: List[str], metadata: Mapping[str, dict], ray_ids: dict):
+def compute(metadata: Mapping[str, dict], ray_ids: dict):
     """Compute a series of measurements"""
     df = {}
     done_ids = {}
@@ -273,32 +277,40 @@ def compute(speakerkist: List[str], metadata: Mapping[str, dict], ray_ids: dict)
 
 if __name__ == "__main__":
     args = docopt(
-        __doc__, version="generate_graphs.py version 1.23", options_first=True
+        __doc__, version="generate_graphs.py v{}".format(VERSION), options_first=True
     )
 
     # TODO remove it and replace by iterating over metadatas
     speakerlist = get_speaker_list("./datas")
 
-    width = graph_params_default["width"]
-    height = graph_params_default["height"]
     force = args["--force"]
     ptype = None
 
     if args["--width"] is not None:
-        width = int(args["--width"])
+        opt_width = int(args["--width"])
+        graph_params_default["width"] = opt_width
 
     if args["--height"] is not None:
-        height = int(args["--height"])
+        opt_height = int(args["--height"])
+        graph_params_default["height"] = opt_height
 
     if args["--type"] is not None:
         ptype = args["--type"]
-        if ptype not in ("png", "html", "svg", "json"):
-            print("type {} is not recognize!".format(ptype))
+        picture_suffixes = ("png", "html", "svg", "json")
+        if ptype not in picture_suffixes:
+            print(
+                "Picture type {} is not recognize! Allowed list is {}".format(
+                    ptype, picture_suffixes
+                )
+            )
         sys.exit(1)
 
-    level = args2level(args)
+    update_cache = False
+    if args["--update-cache"] is not None:
+        update_cache = True
+
     logger = get_custom_logger(True)
-    logger.setLevel(level)
+    logger.setLevel(args2level(args))
 
     # start ray
     custom_ray_init(args)
@@ -310,9 +322,21 @@ if __name__ == "__main__":
             filters[ifilter] = args[flag]
 
     ray_ids = queue_speakers(speakerlist, metadata.speakers_info, filters)
-    df = compute(speakerlist, metadata.speakers_info, ray_ids)
+    df_new = compute(metadata.speakers_info, ray_ids)
+
+    cache_name = "cache.parse_all_speakers.h5"
     if len(filters.keys()) == 0:
-        fl.save(path="cache.parse_all_speakers.h5", data=df)
+        fl.save(path=cache_name, data=df_new)
+    else:
+        if os.path.exists(cache_name) or update_cache:
+            print("Updating cache ", end=" ", flush=True)
+            df_tbu = fl.load(path=cache_name)
+            print("(loaded) ", end=" ", flush=True)
+            for df_k, df_v in df_new.items():
+                df_tbu[df_k] = df_v
+            print("(updated) ", end=" ", flush=True)
+            fl.save(path=cache_name, data=df_tbu)
+            print("(saved).")
 
     ray.shutdown()
     sys.exit(0)
