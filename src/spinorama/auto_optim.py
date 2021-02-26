@@ -19,6 +19,8 @@
 
 import logging
 
+import numpy as np
+
 from typing import Literal, List, Tuple
 from .ltype import Vector
 from .filter_iir import Biquad
@@ -214,10 +216,15 @@ def optim_greedy(
     final_score = 1.0
     if use_score:
         final_score = score_loss(df_speaker, auto_peq)
-    results.append((optim_config["MAX_NUMBER_PEQ"] + 1, best_loss, -pref_score))
+    if results[-1][1] < best_loss:
+        results.append((optim_config["MAX_NUMBER_PEQ"] + 1, best_loss, -pref_score))
+    if use_score:
+        idx_max = np.argmax((np.array(results).T)[-1])
+        results = results[0:idx_max+1]
+        auto_peq = auto_peq[0:idx_max+1]
     logger.info(
         "OPTIM END {}: best loss {:2.2f} final score {:2.2f} with {:2d} PEQs".format(
-            speaker_name, final_loss, -final_score, len(auto_peq)
+            speaker_name, results[-1][1], results[-1][2], len(auto_peq)
         )
     )
     return results, auto_peq
