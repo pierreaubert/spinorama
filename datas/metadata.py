@@ -1747,6 +1747,22 @@ speakers_info = {
             },
         },
     },
+    "KRK Systems RoKit 5 G4": {
+        "brand": "KRK Systems",
+        "model": "RoKit 5 G4",
+        "type": "active",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/krk-rokit-5-gen-4-review-studio-monitor.20711/",
+            },
+        },
+    },
     "KRK Systems RoKit 6 G2": {
         "brand": "KRK Systems",
         "model": "RoKit 6 G2",
@@ -2499,6 +2515,21 @@ speakers_info = {
                 "format": "webplotdigitizer",
             },
             "harman-v2-2017": {
+                "origin": "Vendors-Revel",
+                "website": "www.revel.com",
+                "format": "webplotdigitizer",
+            },
+        },
+    },
+    "Revel W522L": {
+        "brand": "Revel",
+        "model": "W522L",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
                 "origin": "Vendors-Revel",
                 "website": "www.revel.com",
                 "format": "webplotdigitizer",
