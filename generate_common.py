@@ -77,7 +77,7 @@ def custom_ray_init(args):
 
     # this start ray in single process mode
     ray_local_mode = False
-    if "--ray-local" in args and args["--ray-local"] is not None:
+    if "--ray-local" in args and args["--ray-local"] is True:
         ray_local_mode = True
 
     level = args2level(args)
