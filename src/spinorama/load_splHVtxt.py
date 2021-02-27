@@ -3,8 +3,7 @@ import logging
 import os
 import glob
 import pandas as pd
-from .load import filter_graphs
-
+from .load import filter_graphs, sort_angles
 
 logger = logging.getLogger("spinorama")
 
@@ -86,19 +85,7 @@ def parse_graph_splHVtxt(dirpath, orientation):
                 mangle = "-{0}".format(angle)
                 dfs.append(pd.DataFrame({mangle: dbs}))
 
-    df = pd.concat(dfs, axis=1)
-    # reorder from -90 to +270 and not -180 to 180 to be closer to other plots
-    def a2v(angle):
-        if angle == "Freq":
-            return -1000
-        if angle == "On Axis":
-            return 0
-        iangle = int(angle[:-1])
-        if iangle < -90:
-            return iangle + 270
-        return iangle
-
-    return df.reindex(columns=sorted(df.columns, key=a2v))
+    return sort_angles(pd.concat(dfs, axis=1))
 
 
 def parse_graphs_speaker_splHVtxt(speaker_path, speaker_brand, speaker_name, version):
