@@ -220,6 +220,10 @@ def compute(metadata: Mapping[str, dict], ray_ids: dict):
                 if speaker not in ray_ids:
                     continue
 
+                if m_version not in ray_ids[speaker].keys():
+                    logger.error("Speaker {} mversion {} not in keys".format(speaker, m_version))
+                    continue
+
                 current_id = ray_ids[speaker][m_version][0]
                 if current_id in ready_ids:
                     df[speaker_key][m_origin][m_version_key] = ray.get(current_id)
@@ -330,16 +334,16 @@ if __name__ == "__main__":
     cache_name = "cache.parse_all_speakers.h5"
     if len(filters.keys()) == 0:
         fl.save(path=cache_name, data=df_new)
-    #else:
-        #if os.path.exists(cache_name) or update_cache:
-        #    print("Updating cache ", end=" ", flush=True)
-        #    df_tbu = fl.load(path=cache_name)
-        #    print("(loaded) ", end=" ", flush=True)
-        #    for df_k, df_v in df_new.items():
-        #        df_tbu[df_k] = df_v
-        #    print("(updated) ", end=" ", flush=True)
-        #    fl.save(path=cache_name, data=df_tbu)
-        #    print("(saved).")
+    # else:
+    # if os.path.exists(cache_name) or update_cache:
+    #    print("Updating cache ", end=" ", flush=True)
+    #    df_tbu = fl.load(path=cache_name)
+    #    print("(loaded) ", end=" ", flush=True)
+    #    for df_k, df_v in df_new.items():
+    #        df_tbu[df_k] = df_v
+    #    print("(updated) ", end=" ", flush=True)
+    #    fl.save(path=cache_name, data=df_tbu)
+    #    print("(saved).")
 
     ray.shutdown()
     sys.exit(0)
