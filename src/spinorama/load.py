@@ -106,21 +106,21 @@ def filter_graphs(speaker_name, h_spl, v_spl):
     if h_spl is None or v_spl is None:
         #
         df = compute_onaxis(h_spl, v_spl)
-        dfs['On Axis_unmelted'] = df
-        dfs['On Axis'] = graph_melt(df)
+        dfs["On Axis_unmelted"] = df
+        dfs["On Axis"] = graph_melt(df)
         # SPL H
         if h_spl is not None:
             df = horizontal_reflections(h_spl, v_spl)
-            dfs['Horizontal Reflections_unmelted'] = df
-            dfs['Horizontal Reflections'] = graph_melt(df)
+            dfs["Horizontal Reflections_unmelted"] = df
+            dfs["Horizontal Reflections"] = graph_melt(df)
         # SPL V
         if v_spl is not None:
-            df = Vertical_reflections(h_spl, v_spl)
-            dfs['Vectical Reflections_unmelted'] = df
-            dfs['Vectical Reflections'] = graph_melt(df)
+            df = vertical_reflections(h_spl, v_spl)
+            dfs["Vectical Reflections_unmelted"] = df
+            dfs["Vectical Reflections"] = graph_melt(df)
         # that's all folks
         return dfs
-    
+
     for title, functor in table:
         try:
             df = functor(h_spl, v_spl)

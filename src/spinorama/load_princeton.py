@@ -62,7 +62,39 @@ def parse_graph_princeton(filename, orient):
     return parse_graph_freq_princeton_mat(matfile, orient)
 
 
-def parse_graphs_speaker_princeton(speaker_path, speaker_brand, speaker_name, version):
+def symmetrise_measurement(spl):
+    if spl is None:
+        return None
+    
+    # look for min and max
+    cols = spl.columns;
+    min_angle = 180
+    max_angle = -180
+    for col in cols:
+        if col != 'Freq':
+            angle = None
+            if col == 'On Axis':
+                angle = 0
+            else:
+                angle = int(col[:-1])
+            min_angle = min(min_angle, angle)
+            max_angle = max(min_angle, angle)
+    # print('min {} max {}'.format(min_angle, max_angle))
+    
+    # extend 0-180 to -170 0 180
+    # extend 0-90  to -90 to 90
+    new_spl = spl.copy()
+    for col in cols:
+        if col not in ('Freq', 'On Axis', '180°'):
+            mangle = '-{}'.format(col)
+            if mangle not in spl.columns:
+                new_spl[mangle] = spl[col]
+    return sort_angles(new_spl)
+
+
+def parse_graphs_speaker_princeton(
+    speaker_path, speaker_brand, speaker_name, version, symmetry
+):
     # 2 files per directory xxx_H_IR.mat and xxx_V_IR.mat
     matfilename = "{0}/Princeton/{1}".format(speaker_path, speaker_name)
     if version is not None and version != "princeton":
@@ -91,5 +123,14 @@ def parse_graphs_speaker_princeton(speaker_path, speaker_brand, speaker_name, ve
 
     h_spl = parse_graph_princeton(h_file, "H")
     v_spl = parse_graph_princeton(v_file, "V")
+
+    if symmetry == "coaxial":
+        h_spl2 = symmetrise_measurement(h_spl)
+        if v_spl is None:
+            v_spl2 = sort_angles(h_spl.copy())
+        return filter_graphs(speaker_name, h_spl2, v_spl2)
+    elif symmetry == "horizontal":
+        h_spl2 = symmetrise_measurement(h_spl)
+        return filter_graphs(speaker_name, h_spl2, v_spl)
 
     return filter_graphs(speaker_name, h_spl, v_spl)

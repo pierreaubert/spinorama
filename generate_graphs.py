@@ -79,11 +79,11 @@ def get_speaker_list(speakerpath: str) -> List[str]:
 
 
 def queue_measurement(
-    brand: str, speaker: str, mformat: str, morigin: str, mversion: str
+    brand: str, speaker: str, mformat: str, morigin: str, mversion: str, msymmetry: str
 ) -> Tuple[int, int, int, int]:
     """Add all measurements in the queue to be processed"""
     id_df = parse_graphs_speaker.remote(
-        "./datas", brand, speaker, mformat, morigin, mversion
+        "./datas", brand, speaker, mformat, morigin, mversion, msymmetry
     )
     id_eq = parse_eq_speaker.remote("./datas", speaker, id_df)
     force = False
@@ -153,8 +153,11 @@ def queue_speakers(
             logger.debug(
                 "queing {}/{}/{}/{}".format(speaker, morigin, mformat, mversion)
             )
+            msymmetry = None
+            if "symmetry" in measurement:
+                msymmetry = measurement["symmetry"]
             ray_ids[speaker][mversion] = queue_measurement(
-                brand, speaker, mformat, morigin, mversion
+                brand, speaker, mformat, morigin, mversion, msymmetry
             )
             count += 1
     print("Queued {0} speakers {1} measurements".format(len(speakerlist), count))
@@ -327,16 +330,16 @@ if __name__ == "__main__":
     cache_name = "cache.parse_all_speakers.h5"
     if len(filters.keys()) == 0:
         fl.save(path=cache_name, data=df_new)
-    else:
-        if os.path.exists(cache_name) or update_cache:
-            print("Updating cache ", end=" ", flush=True)
-            df_tbu = fl.load(path=cache_name)
-            print("(loaded) ", end=" ", flush=True)
-            for df_k, df_v in df_new.items():
-                df_tbu[df_k] = df_v
-            print("(updated) ", end=" ", flush=True)
-            fl.save(path=cache_name, data=df_tbu)
-            print("(saved).")
+    #else:
+        #if os.path.exists(cache_name) or update_cache:
+        #    print("Updating cache ", end=" ", flush=True)
+        #    df_tbu = fl.load(path=cache_name)
+        #    print("(loaded) ", end=" ", flush=True)
+        #    for df_k, df_v in df_new.items():
+        #        df_tbu[df_k] = df_v
+        #    print("(updated) ", end=" ", flush=True)
+        #    fl.save(path=cache_name, data=df_tbu)
+        #    print("(saved).")
 
     ray.shutdown()
     sys.exit(0)

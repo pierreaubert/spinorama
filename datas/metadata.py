@@ -80,6 +80,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -206,6 +207,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "coaxial",
             },
         },
     },
@@ -720,7 +722,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
-                "review": "",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -735,6 +737,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -827,6 +830,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -841,6 +845,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -887,6 +892,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -934,6 +940,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -1077,6 +1084,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -1197,6 +1205,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -1211,6 +1220,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -1635,6 +1645,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -1775,6 +1786,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -1789,6 +1801,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "coaxial",
             },
         },
     },
@@ -2258,6 +2271,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -2578,14 +2592,17 @@ speakers_info = {
             "princeton-factory": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
             "princeton-with-anechoic-foam": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
             "princeton-with-backwave-absorber": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -2683,6 +2700,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "horizontal",
             },
         },
     },
@@ -2713,6 +2731,7 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+                "symmetry": "coaxial",
             },
         },
     },

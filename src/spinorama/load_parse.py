@@ -50,6 +50,7 @@ def parse_graphs_speaker(
     mformat="klippel",
     morigin="ASR",
     mversion="default",
+    msymmetry=None,
 ) -> dict:
     df = None
     if mformat == "klippel":
@@ -62,7 +63,7 @@ def parse_graphs_speaker(
         )
     elif mformat == "princeton":
         df = parse_graphs_speaker_princeton(
-            speaker_path, speaker_brand, speaker_name, mversion
+            speaker_path, speaker_brand, speaker_name, mversion, msymmetry
         )
     elif mformat == "splHVtxt":
         df = parse_graphs_speaker_splHVtxt(
