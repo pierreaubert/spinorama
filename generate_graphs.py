@@ -221,7 +221,9 @@ def compute(metadata: Mapping[str, dict], ray_ids: dict):
                     continue
 
                 if m_version not in ray_ids[speaker].keys():
-                    logger.error("Speaker {} mversion {} not in keys".format(speaker, m_version))
+                    logger.error(
+                        "Speaker {} mversion {} not in keys".format(speaker, m_version)
+                    )
                     continue
 
                 current_id = ray_ids[speaker][m_version][0]

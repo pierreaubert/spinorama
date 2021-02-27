@@ -85,7 +85,7 @@ def symmetrise_measurement(spl):
     # extend 0-90  to -90 to 90
     new_spl = spl.copy()
     for col in cols:
-        if col not in ("Freq", "On Axis", "180°") and col[0] != '-':
+        if col not in ("Freq", "On Axis", "180°") and col[0] != "-":
             mangle = "-{}".format(col)
             if mangle not in spl.columns:
                 new_spl[mangle] = spl[col]
@@ -136,7 +136,3 @@ def parse_graphs_speaker_princeton(
         return filter_graphs(speaker_name, h_spl2, v_spl)
 
     return filter_graphs(speaker_name, h_spl, v_spl)
-
-
-
-
