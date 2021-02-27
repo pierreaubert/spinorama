@@ -78,7 +78,7 @@ def parse_graphs_speaker(
 
     if df is None:
         logger.warning(
-            "Parsing failed for {0} {1} {2} {3} {4}".format(
+            "Parsing failed for {0}/{1}/{2}/{3}/{4}".format(
                 speaker_path, speaker_brand, speaker_name, mformat, mversion
             )
         )
