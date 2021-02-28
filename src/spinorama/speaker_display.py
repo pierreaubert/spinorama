@@ -1,6 +1,5 @@
 #                                                  -*- coding: utf-8 -*-
 import logging
-import math
 import altair as alt
 import pandas as pd
 import datas.metadata as metadata
@@ -141,8 +140,7 @@ def display_spinorama(df, graph_params=None):
         if spinorama is not None:
             spinorama = spinorama.loc[spinorama["Measurements"] != "DI offset"]
             return graph_spinorama(spinorama, graph_params)
-        else:
-            logger.info("Display CEA2034 is empty")
+        logger.info("Display CEA2034 is empty")
     except KeyError as ke:
         logger.info("Display CEA2034 not in dataframe {0}".format(ke))
     return None
@@ -175,7 +173,11 @@ def display_onaxis(df, graph_params=None):
 
         onaxis_graph = graph_freq(onaxis, graph_params)
         onaxis_reg = graph_regression(onaxis, 80, 10000)
-        return (onaxis_reg + onaxis_graph).resolve_scale(color="independent")
+        return (
+            (onaxis_reg + onaxis_graph)
+            .resolve_scale(color="independent")
+            .resolve_legend(shape="independent")
+        )
     except KeyError as ke:
         logger.warning("Display On Axis failed with {0}".format(ke))
         return None
@@ -193,7 +195,11 @@ def display_inroom(df, graph_params=None):
         inroom = df["Estimated In-Room Response"]
         inroom_graph = graph_freq(inroom, graph_params)
         inroom_reg = graph_regression(inroom, 80, 10000)
-        return (inroom_reg + inroom_graph).resolve_scale(color="independent")
+        return (
+            (inroom_reg + inroom_graph)
+            .resolve_scale(color="independent")
+            .resolve_legend(shape="independent")
+        )
     except KeyError as ke:
         logger.warning("Display In Room failed with {0}".format(ke))
         return None
@@ -229,8 +235,10 @@ def display_spl(df, axis, graph_params=None):
         if axis not in df.keys():
             return None
         spl = df[axis]
-        filter = {"Measurements": ["On Axis", "10°", "20°", "30°", "40°", "50°", "60°"]}
-        mask = spl.isin(filter).any(1)
+        mfilter = {
+            "Measurements": ["On Axis", "10°", "20°", "30°", "40°", "50°", "60°"]
+        }
+        mask = spl.isin(mfilter).any(1)
         spl = spl[mask]
         spl = resample(spl, 700)  # 100x number of graphs
         return graph_freq(spl, graph_params)

@@ -1,5 +1,6 @@
 # Spinorama : a library to display speaker frequency response and similar graphs
 ![image](https://github.com/pierreaubert/spinorama/workflows/Spinorama/badge.svg?branch=master)
+[![DeepSource](https://deepsource.io/gh/pierreaubert/spinorama.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/pierreaubert/spinorama/?ref=repository-badge)
 
 This library provides an easy way to view, compare or analyse speakers data. This can help you take informed
 decision when buying a speaker instead of relying on commercial information or internet buzz.
@@ -78,6 +79,13 @@ Your browser will open, go to *experiments* directitory and click on *spinorama.
 
 You are very welcome to submit pull requests. Note that the license is GPLv3.
 
+Start with launching that should install a lot of software:
+```
+./setup.sh
+```
+
+If it doesn't work out of the box which is likely, please go step by step:
+
 ```
 pip3 install -r requirements.txt 
 pip3 install -r requirements-tests.txt 
@@ -87,6 +95,14 @@ For saving picture, you need a set of nodejs packages:
 ```
 npm install vega-lite vega-cli canvas
 ```
+and for linting the python, html and javascript code:
+```
+npm install pyright html-validator-cli standard
+```
+You may have to update your npm version above 12.0:
+```
+nvm install lts/fermium
+```
 
 Please add tests and
 ```
@@ -94,42 +110,23 @@ export PYTHONPATH=src
 pytest --cov=src
 ```
 
-## How to add a speaker?
+Before committing, please check that the various checks are fine:
 
-0. Clone the repository with git.
+1. ```./check_html.sh``` : check that HTML generated files are conforming.
+2. ```./check_meta.py``` : check that the metadata file looks sane.
+3. ```flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spinorama-venv``` should report 0
+4. ```black .``` will take care of formatting all the python files.
 
-1. Add your data
+and also (but WIP):
+5. ```./check_404.sh``` : check we do not have missing links.
+6. ```./node_modules/.bin/pyright````should not report new type error.
+7. Check that notebook are cleaned up before committing.
 
-   a. it depends where your data come from:
-      - if from ASR
-        - add the unzip files to *datas/ASR/name of speaker/all text* files
-      - if from Princeton/3d3a 
-        - add the 2 IR files to *datas/Princeton/name of speaker/*, i have normally done all of them.
-      - if you only have a picture of the spinorama:
-        - please use WebPlotDigitizer to generate a parsed json file
-        - add it to *datas/Vendors* if it comes from the manufacturers.
-        - a complete [tutorial](tutorial/digitalization/Digitalisation-Tutorial.md) is available.
+Tests 1. to 4. should be in the presubmit.
 
-   b. add a picture of the speaker in datas/originals
-   c. test it works with:
-        - ```./generate_graphs --speaker='name of speaker'```
-      - visualize results
-        - ```docs/name of speaker/origin/default/CEA2034_large.png``` or
-	- ```docs/name of speaker/origin/default/2cols_large.png```
+# How to add a speaker to the database.
 
-2. Generate datas and webpages
-
-   - ```sh ./generate_docs.sh``` will generate both graphs and website. All files will end up in the ```docs``` directory`. This directory is ignored by git on the develop branch.
-   - This will take a long time and take all your CPU. For subsequent calls, you only need to generate the new graphs by calling:
-   - ```sh ./update_website.sh``` which is usually much faster (less than 1 minute per speaker).
-
-3. Add your files to git and push to github on *develop* branch
-
-   - ```git status``` you should see a long list of files that git doesn't now about yet.
-   - ```git add all new files```
-   - ```git commit -m 'add data for new speaker name' datas```
-   - ```git push```
-
+We have a dedicated [tutorial](./tutorial/ADDSPEAKER.md).
 
 # Source of data and citations
 

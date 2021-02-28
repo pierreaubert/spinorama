@@ -1,0 +1,31 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 11-07-2020 17:51:59
+
+Notes:JBL 4319 IIR
+
+Equaliser: Generic
+JBL 4319 PIR.txt
+Preamp:	-2.3 dB
+Filter  1: ON  PK       Fc     332 Hz  Gain  -0.8 dB  Q 20.000
+Filter  2: ON  PK       Fc     381 Hz  Gain  -0.6 dB  Q 15.000
+Filter  3: ON  PK       Fc     428 Hz  Gain  -1.2 dB  Q 10.000
+Filter  4: ON  PK       Fc     533 Hz  Gain  -0.6 dB  Q 5.000
+Filter  5: ON  PK       Fc     666 Hz  Gain  -1.9 dB  Q 1.697
+Filter  6: ON  PK       Fc     909 Hz  Gain  11.5 dB  Q 4.998
+Filter  7: ON  PK       Fc     937 Hz  Gain  -9.8 dB  Q 4.993
+Filter  8: ON  PK       Fc    1305 Hz  Gain  -1.0 dB  Q 10.000
+Filter  9: ON  PK       Fc    1389 Hz  Gain  -1.3 dB  Q 3.000
+Filter 10: ON  PK       Fc    1580 Hz  Gain  -0.7 dB  Q 10.000
+Filter 11: ON  PK       Fc    2085 Hz  Gain  -0.9 dB  Q 20.000
+Filter 12: ON  PK       Fc    2653 Hz  Gain  -1.2 dB  Q 4.600
+Filter 13: ON  PK       Fc    4409 Hz  Gain  -1.3 dB  Q 1.500
+Filter 14: ON  PK       Fc    6710 Hz  Gain  -0.5 dB  Q 8.500
+Filter 15: ON  PK       Fc   10462 Hz  Gain  -4.4 dB  Q 1.000
+Filter 16: ON  PK       Fc   13550 Hz  Gain   0.9 dB  Q 10.000
+Filter 17: ON  PK       Fc   14650 Hz  Gain  -1.4 dB  Q 8.000
+Filter 18: ON  PK       Fc   15843 Hz  Gain  -5.7 dB  Q 1.000
+Filter 19: ON  PK       Fc   16600 Hz  Gain   1.3 dB  Q 3.800
+Filter 20: ON  PK       Fc   19850 Hz  Gain  -3.2 dB  Q 2.400
+

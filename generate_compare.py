@@ -25,51 +25,35 @@ Options:
   --version         script version number
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
-import logging
-import os
 import sys
 
 from docopt import docopt
 import flammkuchen as fl
-import pandas as pd
 import ray
 
+from generate_common import get_custom_logger, args2level
 from src.spinorama.speaker_print import print_compare
-import datas.metadata as metadata
 
 
 ray.init()
 
 
-if __name__ == '__main__':
-    args = docopt(__doc__,
-                  version='generate_compare.py version 1.2',
-                  options_first=True)
+if __name__ == "__main__":
+    args = docopt(
+        __doc__, version="generate_compare.py version 1.2", options_first=True
+    )
 
-    # check args section
-    level = None
-    if args['--log-level'] is not None:
-        check_level = args['--log-level']
-        if check_level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
-            level = check_level
+    level = args2level(args)
+    logger = get_custom_logger(True)
+    logger.setLevel(level)
 
-    if level is not None:
-        logging.basicConfig(
-            format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-            datefmt='%Y-%m-%d:%H:%M:%S',
-            level=level)
-    else:
-        logging.basicConfig(
-            format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-            datefmt='%Y-%m-%d:%H:%M:%S')
-
-    df = fl.load('cache.parse_all_speakers.h5')
+    df = fl.load("cache.parse_all_speakers.h5")
     if df is None:
-        logging.error('Load failed! Please run ./generate_graphs.py')
+        logger.error("Load failed! Please run ./generate_graphs.py")
         sys.exit(1)
     force = True
     ptype = None
     print_compare(df, force, ptype)
 
-    logging.info('Bye')
+    logger.info("Bye")
     sys.exit(0)

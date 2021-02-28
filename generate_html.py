@@ -28,7 +28,6 @@ Options:
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
 import json
-import logging
 import os
 import shutil
 import sys
@@ -37,6 +36,7 @@ from mako.template import Template
 from mako.lookup import TemplateLookup
 from docopt import docopt
 
+from generate_common import get_custom_logger, args2level
 
 siteprod = "https://pierreaubert.github.io/spinorama"
 sitedev = "http://localhost:8000/docs"
@@ -49,7 +49,7 @@ def generate_speaker(mako, df, meta, site):
     for speaker_name, origins in df.items():
         for origin, measurements in origins.items():
             for key, dfs in measurements.items():
-                logging.debug("generate {0} {1} {2}".format(speaker_name, origin, key))
+                logger.debug("generate {0} {1} {2}".format(speaker_name, origin, key))
                 # freq
                 freq_filter = [
                     "CEA2034",
@@ -86,6 +86,7 @@ def generate_speaker(mako, df, meta, site):
                 ]
                 directivity = {k: dfs[k] for k in directivity_filter if k in dfs}
                 # eq
+                eq = None
                 if key != "default_eq":
                     eq_filter = [
                         "ref_vs_eq",
@@ -105,7 +106,7 @@ def generate_speaker(mako, df, meta, site):
                 index_name = "{0}/index_{1}.html".format(dirname, key)
 
                 # write index.html
-                logging.info("Writing {0} for {1}".format(index_name, speaker_name))
+                logger.info("Writing {0} for {1}".format(index_name, speaker_name))
                 with open(index_name, "w") as f:
                     # write all
                     f.write(
@@ -131,7 +132,7 @@ def generate_speaker(mako, df, meta, site):
                         graph_filename = "{0}/{1}/{2}.html".format(
                             dirname, key, graph_name
                         )
-                        logging.info(
+                        logger.info(
                             "Writing {2}/{0} for {1}".format(
                                 graph_filename, speaker_name, key
                             )
@@ -160,28 +161,14 @@ if __name__ == "__main__":
                 sys.exit(1)
         site = sitedev
 
-    level = None
-    if args["--log-level"] is not None:
-        check_level = args["--log-level"]
-        if check_level in ["INFO", "DEBUG", "WARNING", "ERROR"]:
-            level = check_level
-
-    if level is not None:
-        logging.basicConfig(
-            format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
-            datefmt="%Y-%m-%d:%H:%M:%S",
-            level=level,
-        )
-    else:
-        logging.basicConfig(
-            format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
-            datefmt="%Y-%m-%d:%H:%M:%S",
-        )
+    level = args2level(args)
+    logger = get_custom_logger(True)
+    logger.setLevel(level)
 
     # load all metadata from generated json file
     json_filename = "./docs/assets/metadata.json"
     if not os.path.exists(json_filename):
-        logging.fatal("Cannot find {0}".format(json_filename))
+        logger.error("Cannot find {0}".format(json_filename))
         sys.exit(1)
 
     meta = None
@@ -222,7 +209,7 @@ if __name__ == "__main__":
     )
 
     # write index.html
-    logging.info("Write index.html")
+    logger.info("Write index.html")
     index_html = mako_templates.get_template("index.html")
 
     def sort_meta(s):
@@ -249,7 +236,7 @@ if __name__ == "__main__":
         f.close()
 
     # write eqs.html
-    logging.info("Write eqs.html")
+    logger.info("Write eqs.html")
     eqs_html = mako_templates.get_template("eqs.html")
 
     with open("docs/eqs.html", "w") as f:
@@ -260,19 +247,19 @@ if __name__ == "__main__":
     # write various html files
     for item in ("help", "compare", "scores", "statistics"):
         item_name = "{0}.html".format(item)
-        logging.info("Write {0}".format(item_name))
+        logger.info("Write {0}".format(item_name))
         item_html = mako_templates.get_template(item_name)
         with open("./docs/" + item_name, "w") as f:
             f.write(item_html.render(df=df, meta=meta_sorted, site=site))
             f.close()
 
     # write a file per speaker
-    logging.info("Write a file per speaker")
+    logger.info("Write a file per speaker")
     generate_speaker(mako_templates, df, meta=meta, site=site)
     # generate_eqs(mako_templates, df, meta=meta, site=site)
 
     # copy css/js files
-    logging.info("Copy js/css files to docs")
+    logger.info("Copy js/css files to docs")
     for f in [
         "search.js",
         "bulma.js",

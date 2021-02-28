@@ -20,40 +20,41 @@
 generate_graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
   [--force] [--type=<ext>] [--log-level=<level>]\
   [--origin=<origin>]  [--speaker=<speaker>] [--version=<version>] [--brand=<brand>]\
-  [--ip=<ip>] [--port=<port>]
+  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] [--update-cache]
 
 Options:
-  -h|--help         display usage()
-  --width=<width>   width size in pixel
-  --height=<height> height size in pixel
-  --force           force regeneration of all graphs, by default only generate new ones
-  --type=<ext>      choose one of: json, html, png, svg
+  -h|--help           display usage()
+  --width=<width>     width size in pixel
+  --height=<height>   height size in pixel
+  --force             force regeneration of all graphs, by default only generate new ones
+  --type=<ext>        choose one of: json, html, png, svg
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
-  --origin=<origin> filter by origin
-  --brand=<brand> filter by brand
+  --origin=<origin>   filter by origin
+  --brand=<brand>     filter by brand
   --speaker=<speaker> filter by speaker
   --version=<version> filter by measurement
-  --ip=<ip>         ip of dashboard to track execution, default to localhost/127.0.0.1
-  --port=<port>     port for the dashbboard, default to 8265
+  --dash-ip=<ip>      ip of dashboard to track execution, default to localhost/127.0.0.1
+  --dash-port=<port>  port for the dashbboard, default to 8265
+  --ray-local         if present, ray will run locally, it is usefull for debugging
+  --update-cache      force updating the cache
 """
 import glob
-import ipaddress
-import logging
 import os
-import socket
 import sys
-import time
-from typing import List, Mapping
+from typing import List, Mapping, Tuple
 
 from docopt import docopt
 import flammkuchen as fl
-import pandas as pd
 import ray
 
+from generate_common import get_custom_logger, args2level, custom_ray_init
 import datas.metadata as metadata
 from src.spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
-from src.spinorama.speaker_print import print_graphs, print_compare
+from src.spinorama.speaker_print import print_graphs
 from src.spinorama.graph import graph_params_default
+
+
+VERSION = 1.24
 
 
 def get_speaker_list(speakerpath: str) -> List[str]:
@@ -65,23 +66,24 @@ def get_speaker_list(speakerpath: str) -> List[str]:
     princeton = glob.glob(speakerpath + "/Princeton/*")
     ear = glob.glob(speakerpath + "/ErinsAudioCorner/*")
     dirs = asr + vendors + princeton + ear + misc
-    for dir in dirs:
-        if os.path.isdir(dir) and dir not in (
+    for current_dir in dirs:
+        if os.path.isdir(current_dir) and current_dir not in (
             "assets",
             "compare",
             "stats",
             "pictures",
             "logos",
         ):
-            speakers.append(os.path.basename(dir))
+            speakers.append(os.path.basename(current_dir))
     return speakers
 
 
 def queue_measurement(
-    brand: str, speaker: str, mformat: str, morigin: str, mversion: str
-) -> List[int]:
+    brand: str, speaker: str, mformat: str, morigin: str, mversion: str, msymmetry: str
+) -> Tuple[int, int, int, int]:
+    """Add all measurements in the queue to be processed"""
     id_df = parse_graphs_speaker.remote(
-        "./datas", brand, speaker, mformat, morigin, mversion
+        "./datas", brand, speaker, mformat, morigin, mversion, msymmetry
     )
     id_eq = parse_eq_speaker.remote("./datas", speaker, id_df)
     force = False
@@ -118,6 +120,7 @@ def queue_measurement(
 def queue_speakers(
     speakerlist: List[str], metadata: Mapping[str, dict], filters: Mapping[str, dict]
 ) -> dict:
+    """Add all speakers in the queue to be processed"""
     ray_ids = {}
     count = 0
     for speaker in speakerlist:
@@ -150,16 +153,19 @@ def queue_speakers(
             logger.debug(
                 "queing {}/{}/{}/{}".format(speaker, morigin, mformat, mversion)
             )
+            msymmetry = None
+            if "symmetry" in measurement:
+                msymmetry = measurement["symmetry"]
             ray_ids[speaker][mversion] = queue_measurement(
-                brand, speaker, mformat, morigin, mversion
+                brand, speaker, mformat, morigin, mversion, msymmetry
             )
             count += 1
     print("Queued {0} speakers {1} measurements".format(len(speakerlist), count))
     return ray_ids
 
 
-def compute(speakerkist: List[str], metadata: Mapping[str, dict], ray_ids: dict):
-
+def compute(metadata: Mapping[str, dict], ray_ids: dict):
+    """Compute a series of measurements"""
     df = {}
     done_ids = {}
     while 1:
@@ -212,6 +218,12 @@ def compute(speakerkist: List[str], metadata: Mapping[str, dict], ray_ids: dict)
                     df[speaker_key][m_origin] = {}
 
                 if speaker not in ray_ids:
+                    continue
+
+                if m_version not in ray_ids[speaker].keys():
+                    logger.error(
+                        "Speaker {} mversion {} not in keys".format(speaker, m_version)
+                    )
                     continue
 
                 current_id = ray_ids[speaker][m_version][0]
@@ -274,70 +286,43 @@ def compute(speakerkist: List[str], metadata: Mapping[str, dict], ray_ids: dict)
 
 if __name__ == "__main__":
     args = docopt(
-        __doc__, version="generate_graphs.py version 1.22", options_first=True
+        __doc__, version="generate_graphs.py v{}".format(VERSION), options_first=True
     )
 
     # TODO remove it and replace by iterating over metadatas
     speakerlist = get_speaker_list("./datas")
 
-    width = graph_params_default["width"]
-    height = graph_params_default["height"]
     force = args["--force"]
     ptype = None
 
     if args["--width"] is not None:
-        width = int(args["--width"])
+        opt_width = int(args["--width"])
+        graph_params_default["width"] = opt_width
 
     if args["--height"] is not None:
-        height = int(args["--height"])
+        opt_height = int(args["--height"])
+        graph_params_default["height"] = opt_height
 
     if args["--type"] is not None:
         ptype = args["--type"]
-        if ptype not in ("png", "html", "svg", "json"):
-            print("type {} is not recognize!".format(ptype))
+        picture_suffixes = ("png", "html", "svg", "json")
+        if ptype not in picture_suffixes:
+            print(
+                "Picture type {} is not recognize! Allowed list is {}".format(
+                    ptype, picture_suffixes
+                )
+            )
         sys.exit(1)
 
-    level = None
-    if args["--log-level"] is not None:
-        check_level = args["--log-level"]
-        if check_level in ["INFO", "DEBUG", "WARNING", "ERROR"]:
-            level = check_level
+    update_cache = False
+    if args["--update-cache"] is not None:
+        update_cache = True
 
-    logger = logging.getLogger("spinorama")
-    fh = logging.FileHandler("debug_graphs.log")
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
-    if level is not None:
-        logger.setLevel(level)
+    logger = get_custom_logger(True)
+    logger.setLevel(args2level(args))
 
-    def setup_logger(worker):
-        logger = logging.getLogger("spinorama")
-        if level is not None:
-            logger.setLevel(level)
-
-    # will eat all your CPUs
-    ip = "127.0.0.1"
-    port = 8265
-    if "ip" in args and args["ip"] is not None:
-        check_ip = args["ip"]
-        try:
-            address = ipaddress.ip_address(ip)
-            ip = check_ip
-        except ipaddress.AddressValueError:
-            logger.error("ip {} is not valid!".format(ip))
-            sys.exit(1)
-
-    if "port" in args and args["port"] is not None:
-        check_port = args["port"]
-        port = check_port
-
-    ray.worker.global_worker.run_function_on_all_workers(setup_logger)
-    # address is the one from the ray server
-    # ray.init(address='{}:{}'.format(ip, port))
-    ray.init()
+    # start ray
+    custom_ray_init(args)
 
     filters = {}
     for ifilter in ("speaker", "origin", "version"):
@@ -346,9 +331,21 @@ if __name__ == "__main__":
             filters[ifilter] = args[flag]
 
     ray_ids = queue_speakers(speakerlist, metadata.speakers_info, filters)
-    df = compute(speakerlist, metadata.speakers_info, ray_ids)
+    df_new = compute(metadata.speakers_info, ray_ids)
+
+    cache_name = "cache.parse_all_speakers.h5"
     if len(filters.keys()) == 0:
-        fl.save("cache.parse_all_speakers.h5", df)
+        fl.save(path=cache_name, data=df_new)
+    # else:
+    # if os.path.exists(cache_name) or update_cache:
+    #    print("Updating cache ", end=" ", flush=True)
+    #    df_tbu = fl.load(path=cache_name)
+    #    print("(loaded) ", end=" ", flush=True)
+    #    for df_k, df_v in df_new.items():
+    #        df_tbu[df_k] = df_v
+    #    print("(updated) ", end=" ", flush=True)
+    #    fl.save(path=cache_name, data=df_tbu)
+    #    print("(saved).")
 
     ray.shutdown()
     sys.exit(0)

@@ -29,15 +29,15 @@
 
 	  <th>
 	    <abbr title="Low Freq -3dB">-3dB (Hz)</abbr>
-	    <span class="has-tooltip-info has-tooltip-multiline" data-tooltip="-3dB w.r.t reference (mean over freq between 400Hz and 10kHz)">(def)<span>
+	    <span class="has-tooltip-info has-tooltip-multiline" data-tooltip="-3dB w.r.t reference (mean over freq between 400Hz and 10kHz)">(def)</span>
 	  </th>
 	  <th>
 	    <abbr title="Low Freq -6dB">-6dB (Hz)</abbr>
-	    <span class="has-tooltip-info has-tooltip-multiline" data-tooltip="-6dB w.r.t reference (mean over freq between 400Hz and 10kHz)">(def)<span>
+	    <span class="has-tooltip-info has-tooltip-multiline" data-tooltip="-6dB w.r.t reference (mean over freq between 400Hz and 10kHz)">(def)</span>
 	  </th>
 	  <th>
 	    <abbr title="Deviation (dB)">Dev (dB)</abbr>
-	    <span class="has-tooltip-info has-tooltip-multiline" data-tooltip="+/- w.r.t reference (mean over freq between 400Hz and 10kHz)">(def)<span>
+	    <span class="has-tooltip-info has-tooltip-multiline" data-tooltip="+/- w.r.t reference (mean over freq between 400Hz and 10kHz)">(def)</span>
 	  </th>
 
 	  <th>
@@ -57,16 +57,16 @@
 	  </th>
 	  <th>
 	    <abbr title="Preference Score">Score</abbr>
-	    <span class="has-tooltip-info has-tooltip-multiline" data-tooltip="Preference Score as defined by Harmann. See reference papers in help section">(def)<span>
+	    <span class="has-tooltip-info has-tooltip-multiline" data-tooltip="Preference Score as defined by Harmann. See reference papers in help section">(def)</span>
 	  </th>
 	  
 	  <th>
 	    <abbr title="Preference Score with EQ">Score w/EQ</abbr>
-	    <span class="has-tooltip-info has-tooltip-multiline" data-tooltip="Preference Score with a simple parametric EQ">(def)<span>
+	    <span class="has-tooltip-info has-tooltip-multiline" data-tooltip="Preference Score with a simple parametric EQ">(def)</span>
 	  </th>
 	  <th>
 	    <abbr title="Preference Score with Subwoofer">Score w/Sub</abbr>
-	    <span class="has-tooltip-info has-tooltip-multiline" data-tooltip="Preference Score with a subwoofer">(def)<span>
+	    <span class="has-tooltip-info has-tooltip-multiline" data-tooltip="Preference Score with a subwoofer">(def)</span>
 	  </th>
 	</tr>
       </thead>
@@ -110,7 +110,7 @@
 <td>${compute['estimates'].get('ref_6dB', '')}</td>
 <td>&plusmn;${compute['estimates'].get('ref_band', '')}</td>
 % else:
-<td></td><td></td><td></td><td></td>
+<td></td><td></td><td></td>
 % endif
 % if 'pref_rating' in compute.keys():
 <td>${compute['pref_rating'].get('lfx_hz', '')}</td>
@@ -119,15 +119,13 @@
 <td>${compute['pref_rating'].get('nbd_pred_in_room', '')}</td>
 <td>${compute['pref_rating'].get('sm_pred_in_room', '')}</td>
 <th>${compute['pref_rating'].get('pref_score', '')}</th>
-% if 'pref_rating_eq' in compute.keys():
 <th>
+% if 'pref_rating_eq' in compute.keys():
   ${compute['pref_rating_eq'].get('pref_score', '')}
   &nbsp;
   <a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${speaker_name|space2url}/iir.txt">(eq)</a>
-</th>
-% else:
-<th></th>
 % endif
+</th>
 <th>${compute['pref_rating'].get('pref_score_wsub', '')}</th>
 % else:
 <td></td><td></td><td></td><td></td><th></th>

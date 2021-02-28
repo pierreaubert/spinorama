@@ -1,0 +1,31 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 23-07-2020 16:40:52
+
+Notes:Revel M105 IIR
+
+Equaliser: Generic
+Revel M105 PIR.txt
+Preamp:	-0.6 dB
+Filter  1: ON  PK       Fc     382 Hz  Gain  -0.4 dB  Q 18.000
+Filter  2: ON  PK       Fc     445 Hz  Gain   0.8 dB  Q 5.000
+Filter  3: ON  PK       Fc     505 Hz  Gain  -1.0 dB  Q 5.000
+Filter  4: ON  PK       Fc     604 Hz  Gain   1.1 dB  Q 7.000
+Filter  5: ON  PK       Fc     660 Hz  Gain  -0.8 dB  Q 10.000
+Filter  6: ON  PK       Fc     917 Hz  Gain  -0.4 dB  Q 3.000
+Filter  7: ON  PK       Fc    1540 Hz  Gain  -0.4 dB  Q 15.000
+Filter  8: ON  PK       Fc    1650 Hz  Gain   0.5 dB  Q 10.000
+Filter  9: ON  PK       Fc    1760 Hz  Gain  -0.5 dB  Q 15.000
+Filter 10: ON  PK       Fc    2000 Hz  Gain  -0.4 dB  Q 15.000
+Filter 11: ON  PK       Fc    2361 Hz  Gain  -0.9 dB  Q 1.000
+Filter 12: ON  PK       Fc    2451 Hz  Gain  -0.4 dB  Q 20.000
+Filter 13: ON  PK       Fc    2555 Hz  Gain   0.9 dB  Q 22.000
+Filter 14: ON  PK       Fc    3300 Hz  Gain  -0.3 dB  Q 5.000
+Filter 15: ON  PK       Fc    4894 Hz  Gain  -2.1 dB  Q 1.482
+Filter 16: ON  PK       Fc    4950 Hz  Gain   0.6 dB  Q 18.000
+Filter 17: ON  PK       Fc    5650 Hz  Gain  -0.4 dB  Q 6.000
+Filter 18: ON  PK       Fc    8050 Hz  Gain   0.5 dB  Q 4.000
+Filter 19: ON  PK       Fc   10515 Hz  Gain  -0.8 dB  Q 1.000
+Filter 20: ON  PK       Fc   13800 Hz  Gain  -0.4 dB  Q 1.700
+

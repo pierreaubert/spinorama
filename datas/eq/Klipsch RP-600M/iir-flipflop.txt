@@ -1,0 +1,31 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 14-07-2020 20:59:53
+
+Notes:Klipsch RP-600M IIR
+
+Equaliser: Generic
+Klipsch RP-600M PIR.txt
+Preamp:	-5.1 dB
+Filter  1: ON  PK       Fc     349 Hz  Gain  -1.4 dB  Q 9.000
+Filter  2: ON  PK       Fc     457 Hz  Gain  -0.9 dB  Q 10.000
+Filter  3: ON  PK       Fc     504 Hz  Gain  -0.6 dB  Q 5.000
+Filter  4: ON  PK       Fc     642 Hz  Gain  -1.8 dB  Q 8.000
+Filter  5: ON  PK       Fc     780 Hz  Gain  -1.0 dB  Q 18.000
+Filter  6: ON  PK       Fc     900 Hz  Gain  -5.0 dB  Q 1.769
+Filter  7: ON  PK       Fc    1225 Hz  Gain  -2.0 dB  Q 5.000
+Filter  8: ON  PK       Fc    1427 Hz  Gain   5.0 dB  Q 1.072
+Filter  9: ON  PK       Fc    1660 Hz  Gain   0.7 dB  Q 18.000
+Filter 10: ON  PK       Fc    1800 Hz  Gain  -0.6 dB  Q 15.000
+Filter 11: ON  PK       Fc    1930 Hz  Gain   0.7 dB  Q 15.000
+Filter 12: ON  PK       Fc    1970 Hz  Gain   2.6 dB  Q 2.715
+Filter 13: ON  PK       Fc    2045 Hz  Gain  -0.6 dB  Q 17.000
+Filter 14: ON  PK       Fc    3677 Hz  Gain   2.0 dB  Q 5.000
+Filter 15: ON  PK       Fc    3834 Hz  Gain  -3.1 dB  Q 1.005
+Filter 16: ON  PK       Fc    6977 Hz  Gain  -1.1 dB  Q 2.235
+Filter 17: ON  PK       Fc    8370 Hz  Gain  -0.5 dB  Q 10.000
+Filter 18: ON  PK       Fc    9430 Hz  Gain   0.4 dB  Q 8.000
+Filter 19: ON  PK       Fc   13169 Hz  Gain  -4.1 dB  Q 1.200
+Filter 20: ON  PK       Fc   17983 Hz  Gain  -2.1 dB  Q 4.986
+

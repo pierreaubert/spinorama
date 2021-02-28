@@ -1,27 +1,27 @@
 EQ for Adam T5V computed from ASR data
 Preference Score 4.3 with EQ 6.3
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.3
-Dated: 2021-01-26-21:00:55
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.4
+Dated: 2021-02-07-14:55:20
 
-Preamp: -2.0 dB
+Preamp: -0.2 dB
 
-Filter  1: ON PK Fc  1708 Hz Gain -4.85 dB Q 0.10
-Filter  2: ON PK Fc 11892 Hz Gain -4.18 dB Q 0.69
-Filter  3: ON LS Fc  3881 Hz Gain +1.20 dB
-Filter  4: ON PK Fc  1354 Hz Gain -1.64 dB Q 5.76
-Filter  5: ON PK Fc  5756 Hz Gain -1.87 dB Q 5.52
-Filter  6: ON PK Fc  3318 Hz Gain +1.82 dB Q 11.58
-Filter  7: ON PK Fc   826 Hz Gain -1.40 dB Q 10.66
-Filter  8: ON PK Fc  4541 Hz Gain +2.06 dB Q 12.00
-Filter  9: ON PK Fc  1715 Hz Gain -0.93 dB Q 12.00
-Filter 10: ON LS Fc   527 Hz Gain +1.00 dB
-Filter 11: ON PK Fc   741 Hz Gain -1.00 dB Q 12.00
-Filter 12: ON PK Fc   665 Hz Gain +1.27 dB Q 12.00
-Filter 13: ON PK Fc  2941 Hz Gain -0.77 dB Q 12.00
-Filter 14: ON PK Fc 10663 Hz Gain +1.21 dB Q 10.37
-Filter 15: ON PK Fc  2501 Hz Gain -0.62 dB Q 12.00
-Filter 16: ON PK Fc  1038 Hz Gain +1.28 dB Q 12.00
-Filter 17: ON PK Fc  5160 Hz Gain -1.07 dB Q 12.00
-Filter 18: ON PK Fc  2273 Hz Gain +0.91 dB Q 12.00
-Filter 19: ON PK Fc   665 Hz Gain +0.20 dB Q 12.00
-Filter 20: ON LS Fc  1969 Hz Gain -0.20 dB
+Filter  1: ON PK Fc  1708 Hz Gain -2.89 dB Q 0.10
+Filter  2: ON PK Fc 11096 Hz Gain -3.43 dB Q 0.69
+Filter  3: ON PK Fc  3311 Hz Gain +1.78 dB Q 3.02
+Filter  4: ON PK Fc  5722 Hz Gain -1.79 dB Q 5.56
+Filter  5: ON PK Fc  2250 Hz Gain +1.66 dB Q 12.00
+Filter  6: ON PK Fc   828 Hz Gain +2.03 dB Q 0.87
+Filter  7: ON PK Fc  1055 Hz Gain -1.40 dB Q 1.45
+Filter  8: ON PK Fc   816 Hz Gain -1.47 dB Q 10.17
+Filter  9: ON PK Fc  4553 Hz Gain +1.94 dB Q 12.00
+Filter 10: ON PK Fc  1040 Hz Gain +2.09 dB Q 12.00
+Filter 11: ON PK Fc  2958 Hz Gain -1.29 dB Q 12.00
+Filter 12: ON PK Fc  1347 Hz Gain -1.01 dB Q 12.00
+Filter 13: ON PK Fc   740 Hz Gain -0.93 dB Q 12.00
+Filter 14: ON PK Fc   527 Hz Gain +1.36 dB Q 1.22
+Filter 15: ON PK Fc   760 Hz Gain -0.75 dB Q 1.91
+Filter 16: ON PK Fc   668 Hz Gain +0.99 dB Q 12.00
+Filter 17: ON PK Fc   562 Hz Gain -1.22 dB Q 10.11
+Filter 18: ON PK Fc  5154 Hz Gain -1.02 dB Q 12.00
+Filter 19: ON PK Fc 10610 Hz Gain +1.09 dB Q 10.15
+Filter 20: ON PK Fc  2478 Hz Gain -0.82 dB Q 12.00

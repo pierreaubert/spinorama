@@ -1,0 +1,31 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 15-07-2020 14:03:10
+
+Notes:Neumann KH80 DSP Monitor IIR
+
+Equaliser: Generic
+Neumann KH80 DSP Mo
+Preamp:	-2 dB
+Filter  1: ON  PK       Fc     381 Hz  Gain  -0.7 dB  Q 12.000
+Filter  2: ON  PK       Fc     588 Hz  Gain   0.8 dB  Q 11.000
+Filter  3: ON  PK       Fc     638 Hz  Gain  -1.0 dB  Q 10.000
+Filter  4: ON  PK       Fc     709 Hz  Gain  -0.3 dB  Q 12.000
+Filter  5: ON  PK       Fc     778 Hz  Gain  -0.7 dB  Q 18.000
+Filter  6: ON  PK       Fc    1183 Hz  Gain   0.6 dB  Q 14.000
+Filter  7: ON  PK       Fc    1540 Hz  Gain   0.6 dB  Q 8.000
+Filter  8: ON  PK       Fc    1780 Hz  Gain   1.4 dB  Q 9.000
+Filter  9: ON  PK       Fc    2060 Hz  Gain   1.5 dB  Q 8.000
+Filter 10: ON  PK       Fc    2330 Hz  Gain   1.3 dB  Q 15.000
+Filter 11: ON  PK       Fc    2635 Hz  Gain   0.9 dB  Q 25.000
+Filter 12: ON  PK       Fc    2930 Hz  Gain   0.8 dB  Q 20.000
+Filter 13: ON  PK       Fc    3232 Hz  Gain   0.5 dB  Q 24.000
+Filter 14: ON  PK       Fc    3460 Hz  Gain  -0.4 dB  Q 10.000
+Filter 15: ON  PK       Fc    5600 Hz  Gain   0.8 dB  Q 10.000
+Filter 16: ON  PK       Fc    6500 Hz  Gain  -0.5 dB  Q 10.000
+Filter 17: ON  PK       Fc    9750 Hz  Gain  -1.0 dB  Q 4.500
+Filter 18: ON  PK       Fc   10940 Hz  Gain   0.4 dB  Q 10.000
+Filter 19: ON  PK       Fc   12650 Hz  Gain  -0.7 dB  Q 5.000
+Filter 20: ON  PK       Fc   16000 Hz  Gain  -2.6 dB  Q 1.400
+

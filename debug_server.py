@@ -19,32 +19,31 @@ from docopt import docopt
 
 class CORSRequestHandler(SimpleHTTPRequestHandler):
     """ Generate CORS headers """
+
     def end_headers(self):
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET')
-        self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET")
+        self.send_header("Cache-Control", "no-store, no-cache, must-revalidate")
         return super(CORSRequestHandler, self).end_headers()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
-    args = docopt(__doc__,
-                  version='debug_servers.py version 1.1',
-                  options_first=True)
+    args = docopt(__doc__, version="debug_servers.py version 1.1", options_first=True)
 
-    ip = '127.0.0.1'
+    ip = "127.0.0.1"
     port = 8000
 
-    if args['--ip'] is not None:
-        ip = args['--ip']
+    if args["--ip"] is not None:
+        ip = args["--ip"]
 
-    if args['--port'] is not None:
-        port = int(args['--port'])
+    if args["--port"] is not None:
+        port = int(args["--port"])
 
     try:
         httpd = HTTPServer((ip, port), CORSRequestHandler)
         httpd.serve_forever()
     except KeyboardInterrupt:
-        print('... Bye')
+        print("... Bye")
         sys.exit(0)
     sys.exit(1)
