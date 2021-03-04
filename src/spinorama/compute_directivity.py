@@ -25,7 +25,9 @@ def directivity_matrix(splH, splV):
     splH = splH.set_index("Freq")
     zU = splV.dot(splH.T)
     zD = splV.dot(splV.T) * splH.dot(splH.T)
+    # zD = np.matmult(np.matmult(splV, splV.T), np.matmult(splH, splH.T))
     # not completly sure why it is possible to get negative values
     zD[zD < 0] = 0.0
     z = zU / np.sqrt(zD) - 1.0
+    # print('min {} max {}'.format(np.min(np.min(z)), np.max(np.max(z))))
     return (x, y, z)
