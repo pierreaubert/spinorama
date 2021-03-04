@@ -1,27 +1,27 @@
 EQ for Elac Debut Reference DBR-62 computed from ASR data
 Preference Score 5.8 with EQ 6.4
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.4
-Dated: 2021-02-07-14:58:05
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.6
+Dated: 2021-02-28-11:49:25
 
 Preamp: -2.5 dB
 
 Filter  1: ON PK Fc  3091 Hz Gain +1.87 dB Q 1.15
-Filter  2: ON PK Fc   832 Hz Gain -1.82 dB Q 5.48
+Filter  2: ON PK Fc   832 Hz Gain -1.82 dB Q 5.47
 Filter  3: ON PK Fc  4980 Hz Gain -1.08 dB Q 5.73
 Filter  4: ON PK Fc  6706 Hz Gain -0.44 dB Q 7.61
-Filter  5: ON PK Fc   946 Hz Gain -0.63 dB Q 12.00
+Filter  5: ON PK Fc   947 Hz Gain -0.63 dB Q 12.00
 Filter  6: ON PK Fc  3867 Hz Gain +1.04 dB Q 12.00
 Filter  7: ON PK Fc  1540 Hz Gain +0.98 dB Q 2.41
 Filter  8: ON PK Fc   639 Hz Gain -1.13 dB Q 12.00
 Filter  9: ON PK Fc   566 Hz Gain +2.24 dB Q 12.00
-Filter 10: ON PK Fc 11482 Hz Gain -0.76 dB Q 6.66
+Filter 10: ON PK Fc 11480 Hz Gain -0.76 dB Q 6.67
 Filter 11: ON PK Fc  9647 Hz Gain +0.48 dB Q 12.00
 Filter 12: ON PK Fc   429 Hz Gain +0.90 dB Q 6.18
 Filter 13: ON PK Fc   495 Hz Gain +0.54 dB Q 12.00
 Filter 14: ON PK Fc   335 Hz Gain +0.31 dB Q 12.00
 Filter 15: ON PK Fc  2918 Hz Gain -0.83 dB Q 4.04
 Filter 16: ON PK Fc  1104 Hz Gain +0.66 dB Q 12.00
-Filter 17: ON PK Fc   619 Hz Gain -0.83 dB Q 12.00
-Filter 18: ON PK Fc  1935 Hz Gain +1.04 dB Q 12.00
+Filter 17: ON PK Fc   619 Hz Gain -0.84 dB Q 12.00
+Filter 18: ON PK Fc  1936 Hz Gain +1.04 dB Q 12.00
 Filter 19: ON PK Fc   975 Hz Gain -0.51 dB Q 12.00
 Filter 20: ON PK Fc   853 Hz Gain +0.27 dB Q 12.00

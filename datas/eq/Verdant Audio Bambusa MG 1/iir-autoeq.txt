@@ -1,27 +1,25 @@
 EQ for Verdant Audio Bambusa MG 1 computed from ASR data
 Preference Score 4.5 with EQ 6.7
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.4
-Dated: 2021-02-07-15:12:41
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.6
+Dated: 2021-02-28-11:54:06
 
 Preamp: -0.5 dB
 
-Filter  1: ON PK Fc  9555 Hz Gain -4.40 dB Q 0.30
+Filter  1: ON PK Fc  9566 Hz Gain -4.40 dB Q 0.29
 Filter  2: ON PK Fc   758 Hz Gain -1.97 dB Q 1.59
 Filter  3: ON PK Fc  2170 Hz Gain +1.85 dB Q 3.44
-Filter  4: ON PK Fc 11925 Hz Gain +1.58 dB Q 4.83
-Filter  5: ON PK Fc  6625 Hz Gain -0.67 dB Q 1.59
+Filter  4: ON PK Fc 11929 Hz Gain +1.58 dB Q 4.81
+Filter  5: ON PK Fc  6632 Hz Gain -0.68 dB Q 1.59
 Filter  6: ON PK Fc  1100 Hz Gain -0.76 dB Q 4.64
 Filter  7: ON PK Fc   820 Hz Gain +0.73 dB Q 12.00
 Filter  8: ON PK Fc  5800 Hz Gain +0.48 dB Q 12.00
 Filter  9: ON PK Fc   460 Hz Gain -0.55 dB Q 12.00
 Filter 10: ON PK Fc   404 Hz Gain +0.80 dB Q 12.00
 Filter 11: ON PK Fc  8436 Hz Gain -0.44 dB Q 12.00
-Filter 12: ON PK Fc 13345 Hz Gain +1.34 dB Q 12.00
+Filter 12: ON PK Fc 13347 Hz Gain +1.33 dB Q 12.00
 Filter 13: ON PK Fc  7551 Hz Gain +0.42 dB Q 12.00
-Filter 14: ON PK Fc  4572 Hz Gain -0.57 dB Q 8.41
-Filter 15: ON PK Fc  9469 Hz Gain +0.37 dB Q 12.00
-Filter 16: ON PK Fc   967 Hz Gain -0.44 dB Q 12.00
+Filter 14: ON PK Fc  4572 Hz Gain -0.57 dB Q 8.39
+Filter 15: ON PK Fc  9477 Hz Gain +0.37 dB Q 12.00
+Filter 16: ON PK Fc   967 Hz Gain -0.43 dB Q 12.00
 Filter 17: ON PK Fc  1237 Hz Gain -0.27 dB Q 12.00
-Filter 18: ON PK Fc  3321 Hz Gain +0.55 dB Q 5.14
-Filter 19: ON PK Fc   332 Hz Gain +0.22 dB Q 12.00
-Filter 20: ON PK Fc 15620 Hz Gain -2.05 dB Q 4.75
+Filter 18: ON PK Fc  3316 Hz Gain +0.55 dB Q 5.12

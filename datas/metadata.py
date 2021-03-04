@@ -574,6 +574,21 @@ speakers_info = {
             },
         },
     },
+    "Dynaudio Emit M10": {
+        "brand": "Dynaudio",
+        "model": "Emit M10",
+        "type": "passive",
+        "price": "800",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/dynaudio-emit-m10-review-bookshelf-speaker.20908/",
+            },
+        },
+    },
     "Dynaudio Excite X14": {
         "brand": "Dynaudio",
         "model": "Excite X14",
