@@ -571,7 +571,8 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/dutch-dutch-8c-review.21016/",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/dutch_dutch_8c/",
+                # https://www.audiosciencereview.com/forum/index.php?threads/dutch-dutch-8c-review.21016/
             },
         },
     },
