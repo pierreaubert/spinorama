@@ -1,10 +1,10 @@
 {
   "dependencies": {
     "altair": "^1.0.0",
-    "canvas": "^2.6.1",
+    "canvas": "^2.7.0",
     "html-validator-cli": "^7.0.1",
     "npm": "^7.5.4",
-    "pyright": "^1.1.114",
+    "pyright": "^1.1.118",
     "standard": "^16.0.3",
     "vega": "^5.19.1",
     "vega-canvas": "^1.2.6",

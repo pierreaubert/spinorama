@@ -156,9 +156,11 @@ def plot(anglelist, df):
     db_min = np.min(dfu.min(axis=0).values)
     db_max = np.max(dfu.max(axis=0).values)
     db_scale = max(abs(db_max), abs(db_min))
+    # if df is normalized then 0 will be at the center of the radar which is not what
+    # we want. Let's shift the whole graph up.
     if db_mean < 45:
         dfu += db_scale
-    print(db_min, db_max, db_mean, db_scale)
+    # print(db_min, db_max, db_mean, db_scale)
     # build 3 plots
     dbX = []
     dbY = []
@@ -178,8 +180,8 @@ def plot(anglelist, df):
     # normalise
     dbX = [v2 for v1 in dbX for v2 in v1]
     dbY = [v2 for v1 in dbY for v2 in v1]
-    print("dbX min={} max={}".format(np.array(dbX).min(), np.array(dbX).max()))
-    print("dbY min={} max={}".format(np.array(dbY).min(), np.array(dbY).max()))
+    # print("dbX min={} max={}".format(np.array(dbX).min(), np.array(dbX).max()))
+    # print("dbY min={} max={}".format(np.array(dbY).min(), np.array(dbY).max()))
 
     hzZ = [label(i2) for i1 in hzZ for i2 in i1]
 
