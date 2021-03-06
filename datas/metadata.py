@@ -559,6 +559,22 @@ speakers_info = {
             },
         },
     },
+    "Dutch Dutch 8C": {
+        "brand": "Dutch Dutch",
+        "model": "8C",
+        "type": "active",
+        "price": "10000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/dutch-dutch-8c-review.21016/",
+            },
+        },
+    },
     "Dynaudio LYD 5": {
         "brand": "Dynaudio",
         "model": "LYD 5",
