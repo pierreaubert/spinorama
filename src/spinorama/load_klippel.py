@@ -57,6 +57,8 @@ def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mver
         csvfilename = None
         if mversion is None or mversion == "asr":
             csvfilename = "{0}/ASR/{1}/{2}.txt".format(speaker_path, speaker_name, csv)
+        elif mversion == 'eac':
+            csvfilename = "{0}/ErinsAudioCorner/{1}/{2}.txt".format(speaker_path, speaker_name, csv)
         else:
             csvfilename = "{0}/ASR/{1}/{3}/{2}.txt".format(
                 speaker_path, speaker_name, csv, mversion
