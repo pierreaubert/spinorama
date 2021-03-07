@@ -2180,6 +2180,22 @@ speakers_info = {
             },
         },
     },
+    "Polk Audio Atrium 4": {
+        "brand": "Polk Audio",
+        "model": "Atrium 4",
+        "type": "passive",
+        "price": "117",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/polk-atrium-4-review-outdoor-speaker.21056/",
+            },
+        },
+    },
     "Polk Audio RT15i": {
         "brand": "Polk Audio",
         "model": "RT15i",
