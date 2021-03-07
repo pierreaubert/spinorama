@@ -2583,9 +2583,9 @@ speakers_info = {
             },
         },
     },
-    "Revel W522L": {
+    "Revel W553L": {
         "brand": "Revel",
-        "model": "W522L",
+        "model": "W553L",
         "type": "passive",
         "shape": "bookshelves",
         "price": "",
