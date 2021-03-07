@@ -29,7 +29,7 @@ $(document).ready(function () {
 
 	let sorter = {
 	    by: "",
-	}
+	};
 	
 	function selectDispatch(filter) {
 	    let keywords = $("#searchInput").val();
@@ -143,15 +143,18 @@ $(document).ready(function () {
 		let result = results[item];
 		let meta = result.item;
 		let score = result.score;
-		// console.log("evaluating "+meta.brand+" "+meta.model);
-		if (show && !is_filtered(meta, filter)) {
+		console.log("evaluating "+meta.brand+" "+meta.model);
+		if (!is_filtered(meta, filter)) {
+		    console.log("filtered out (filter)");
 		    show = false;
 		}
 		if (show) {
 		    if (minScore < Math.pow(10, -15) && score >= Math.pow(10, -15)) {
+		        // console.log("filtered out (minscore)" + score);
 			show = false;
 		    } else {
-			if (score !== minScore) {
+			if (Math.abs(score-minScore) >= Math.pow(10, -14)) {
+		            // console.log("filtered out (score="+score+"minscore="+minScore+")");
 			    show = false;
 			}
 		    }
