@@ -67,7 +67,7 @@ def template_compact(df, params, speaker, origin, key):
     params_summary["width"] = 600
     params_pict["width"] = 400
     params_spin["width"] -= (
-        params_summary["width"] + params_pict["width"] + 2 * SPACING + LEGEND
+        params_summary["width"] + params_pict["width"] + 3 * SPACING + LEGEND
     )
     summary = display_summary(df, params_summary, speaker, origin, key)
     spinorama = display_spinorama(df, params_spin)
@@ -108,11 +108,13 @@ def template_compact(df, params, speaker, origin, key):
         # else:
         #    title = speaker
         if summary is not None and pict is not None:
-            chart &= alt.hconcat(
-                summary.properties(title=speaker),
-                spinorama.properties(title="CEA2034"),
-                pict,
-            )
+            chart = alt.vconcat(
+                chart,
+                alt.hconcat(
+                    summary.properties(title=speaker),
+                    spinorama.properties(title="CEA2034"),
+                    pict)
+                ).resolve_scale(color="independent")
         else:
             chart &= alt.hconcat(spinorama.properties(title="CEA2034"))
 
@@ -122,9 +124,8 @@ def template_compact(df, params, speaker, origin, key):
                 chart,
                 alt.hconcat(
                     onaxis.properties(title="On Axis"),
-                    inroom.properties(title="In Room prediction"),
-                ),
-            )
+                    inroom.properties(title="In Room prediction"))
+                ).resolve_scale(color="independent")
         else:
             chart &= onaxis
 
@@ -173,6 +174,7 @@ def template_compact(df, params, speaker, origin, key):
         chart.configure_title(orient="top", anchor="middle", fontSize=30)
         .configure_text(fontSize=16)
         .configure_view(strokeWidth=0, opacity=0)
+        # .configure_legend(orient='bottom')
     )
 
 
