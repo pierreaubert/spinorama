@@ -58,8 +58,17 @@
 	<table class="table is-striped">
 	  <tr>
 	    <th>
-	      ${meta[speaker_name]['brand']} ${meta[speaker_name]['model']}
-	      (<a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${meta[speaker_name]['brand']|space2url}%20${meta[speaker_name]['model']|space2url}/iir.txt">download</a>)
+	      ${meta[speaker_name]['brand']} ${meta[speaker_name]['model']}(
+              % if 'eq_autoeq' in meta[speaker_name]:
+	      <a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${meta[speaker_name]['brand']|space2url}%20${meta[speaker_name]['model']|space2url}/iir-autoeq.txt">autoEQ</a>
+              % endif
+              % if 'eq_flipflop' in meta[speaker_name]:
+	      , <a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${meta[speaker_name]['brand']|space2url}%20${meta[speaker_name]['model']|space2url}/iir-flipflop.txt">fliflopEQ</a>
+              % endif
+              % if 'eq_maiky76' in meta[speaker_name]:
+	      , <a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${meta[speaker_name]['brand']|space2url}%20${meta[speaker_name]['model']|space2url}/iir-maiky76.txt">fliflopEQ</a>
+              % endif
+              )
 	    </th>
 	  </tr>
 	  <tr>
