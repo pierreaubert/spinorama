@@ -106,7 +106,7 @@ $(document).ready(function () {
 	}
 	    
 	function display_filter(resultdiv, meta, filter) {
-	    // console.log("display filter start");
+	    console.log("display filter start");
 	    for (const item in meta) {
 		let show = is_filtered(meta[item], filter);
 		const id = (meta[item].brand + "-" + meta[item].model).replace(/['.+& ]/g, "-");
@@ -120,7 +120,7 @@ $(document).ready(function () {
 	}
 	
 	function display_search(resultdiv, results, filter) {
-	    // console.log("display search start");
+	    console.log("---------- display search start ----------------");
 	    if (results.length === 0) {
 		display_filter(resultdiv, metadata, filter);
 		return;
@@ -143,26 +143,32 @@ $(document).ready(function () {
 		let result = results[item];
 		let meta = result.item;
 		let score = result.score;
-		console.log("evaluating "+meta.brand+" "+meta.model);
+		console.log("evaluating "+meta.brand+" "+meta.model+" "+score);
 		if (!is_filtered(meta, filter)) {
 		    console.log("filtered out (filter)");
 		    show = false;
 		}
 		if (show) {
-		    if (minScore < Math.pow(10, -15) && score >= Math.pow(10, -15)) {
-		        // console.log("filtered out (minscore)" + score);
-			show = false;
-		    } else {
-			if (Math.abs(score-minScore) >= Math.pow(10, -14)) {
-		            // console.log("filtered out (score="+score+"minscore="+minScore+")");
+		    if (minScore < Math.pow(10, -15)) {
+                        // we have an exact match, only show other exact matches
+                        if (score >= Math.pow(10, -15)) {
+		            console.log("filtered out (minscore)" + score);
 			    show = false;
-			}
+                        }
+		    } else {
+                        // only partial match
+                        if (score > minScore*10) {
+		            console.log("filtered out (score="+score+"minscore="+minScore+")");
+			    show = false;
+			} 
 		    }
 		}
 		const id = (meta.brand + "-" + meta.model).replace(/['.+& ]/g, "-");
 		if (show) {
+		    console.log("show "+meta.brand+" "+meta.model+" "+score);
 		    $("#" + id).show();
 		} else {
+		    console.log("hide "+meta.brand+" "+meta.model+" "+score);
 		    $("#" + id).hide();
 		}
 		
