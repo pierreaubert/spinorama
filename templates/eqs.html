@@ -1,20 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>A collection of loudspeakers measurements</title>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.5.0"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fuse.js@5.2.1/dist/fuse.min.js"></script>
-  <script type="text/javascript" src="${site}/assets/search.js"></script>
-  <script type="text/javascript" src="${site}/assets/graph.js"></script> 
-  <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.2/css/bulma.min.css" />
-  <link crossorigin="anonymous" media="all" rel="stylesheet" href="${site}/assets/spinorama.css" />
-  <link rel="icon" type="image/png" href="${site}/assets/favicon-16x16.png" sizes="16x16" />
-</head>
+  <head>
+<%include file="head.html"/>
+  </head>
 <body>
 
-<%include file="nav.html"/>
+<%include file="nav_menu.html"/>
+<%include file="nav_search.html"/>
 
 <%!
   def space2url(text):
