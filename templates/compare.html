@@ -1,5 +1,5 @@
 <%include file="header.html"/>
-<%include file="nav.html"/>
+<%include file="nav_menu.html"/>
 
 <div class="tabs is-centered" id="nav">
   <ul>
@@ -30,36 +30,43 @@
 <div class="tab-pane is-active" id="pane-1">
   <div id="visCEA2034"></div>
   <script type="text/javascript">displayGraph("compare/CEA2034.json", '#visCEA2034');</script>
+  <%include file="graph_help.html"/>
 </div>
 
 <div class="tab-pane" id="pane-2">
   <div id="visER"></div>
   <script type="text/javascript">displayGraph("compare/Early Reflections.json", "#visER");</script>
+  <%include file="graph_help.html"/>
 </div>
 
 <div class="tab-pane" id="pane-3">
   <div id="visEIR"></div>
   <script type="text/javascript">displayGraph("compare/Estimated In-Room Response.json", '#visEIR');</script>
+  <%include file="graph_help.html"/>
 </div>
 
 <div class="tab-pane" id="pane-4">
   <div id="visHR"></div>
   <script type="text/javascript">displayGraph("compare/Horizontal Reflections.json", '#visHR');</script>
+  <%include file="graph_help.html"/>
 </div>
 
 <div class="tab-pane" id="pane-5">
   <div id="visVR"></div>
   <script type="text/javascript">displayGraph("compare/Vertical Reflections.json", '#visVR');</script>
+  <%include file="graph_help.html"/>
 </div>
 
 <div class="tab-pane" id="pane-6">
   <div id="visSH"></div>
   <script type="text/javascript">displayGraph("compare/SPL Horizontal.json", '#visSH');</script>
+  <%include file="graph_help.html"/>
 </div>
 
 <div class="tab-pane" id="pane-7">
   <div id="visSV"></div>
   <script type="text/javascript">displayGraph("compare/SPL Vertical.json", '#visSV');</script>
+    <%include file="graph_help.html"/>
 </div>
 
 <script src="${site}/assets/tabs.js"></script>

@@ -506,10 +506,13 @@ def graph_radar(df_in, graph_params):
     # display some curves
     _, dbs_df = radar.plot(anglelist, dfu)
 
+    # normalize all
+    radius = 1
+
     # build a grid
-    grid_df = radar.grid_grid(anglelist)
-    circle_df, circle_text = radar.grid_circle(anglelist, 100)
-    text_df = radar.grid_text(anglelist)
+    grid_df = radar.grid_grid(radius, anglelist)
+    circle_df, circle_text = radar.grid_circle(radius, anglelist, 100)
+    text_df = radar.grid_text(radius, anglelist)
 
     grid = (
         alt.Chart(grid_df)
@@ -587,7 +590,12 @@ def graph_directivity_matrix(dfu, graph_params):
         .encode(
             x=alt.X("x:O", axis=None),
             y=alt.Y("y:O", axis=None),
-            color=alt.Color("z:Q", scale=alt.Scale(scheme="spectral", nice=True)),
+            color=alt.Color(
+                "z:Q",
+                scale=alt.Scale(
+                    scheme="spectral", domain=np.linspace(-0.15, 0.15, 50), nice=True
+                ),
+            ),
         )
     )
     empty = pd.DataFrame({"Freq", "Angle"})

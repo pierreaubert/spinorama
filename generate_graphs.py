@@ -41,7 +41,9 @@ Options:
 import glob
 import os
 import sys
+import tables
 from typing import List, Mapping, Tuple
+import warnings
 
 from docopt import docopt
 import flammkuchen as fl
@@ -315,7 +317,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     update_cache = False
-    if args["--update-cache"] is not None:
+    if args["--update-cache"] is True:
         update_cache = True
 
     logger = get_custom_logger(True)
@@ -335,17 +337,21 @@ if __name__ == "__main__":
 
     cache_name = "cache.parse_all_speakers.h5"
     if len(filters.keys()) == 0:
-        fl.save(path=cache_name, data=df_new)
-    # else:
-    # if os.path.exists(cache_name) or update_cache:
-    #    print("Updating cache ", end=" ", flush=True)
-    #    df_tbu = fl.load(path=cache_name)
-    #    print("(loaded) ", end=" ", flush=True)
-    #    for df_k, df_v in df_new.items():
-    #        df_tbu[df_k] = df_v
-    #    print("(updated) ", end=" ", flush=True)
-    #    fl.save(path=cache_name, data=df_tbu)
-    #    print("(saved).")
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", tables.NaturalNameWarning)
+            fl.save(path=cache_name, data=df_new)
+    else:
+        if os.path.exists(cache_name) and update_cache:
+            print("Updating cache ", end=" ", flush=True)
+            df_tbu = fl.load(path=cache_name)
+            print("(loaded) ", end=" ", flush=True)
+            for df_k, df_v in df_new.items():
+                df_tbu[df_k] = df_v
+            print("(updated) ", end=" ", flush=True)
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", tables.NaturalNameWarning)
+                fl.save(path=cache_name, data=df_tbu)
+            print("(saved).")
 
     ray.shutdown()
     sys.exit(0)

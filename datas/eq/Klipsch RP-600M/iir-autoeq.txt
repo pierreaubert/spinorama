@@ -1,27 +1,27 @@
 EQ for Klipsch RP-600M computed from ASR data
 Preference Score 4.1 with EQ 6.7
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.4
-Dated: 2021-02-07-15:06:16
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.6
+Dated: 2021-02-28-11:51:52
 
 Preamp: -3.6 dB
 
 Filter  1: ON PK Fc   741 Hz Gain -3.98 dB Q 2.05
-Filter  2: ON PK Fc 11865 Hz Gain -4.26 dB Q 0.41
+Filter  2: ON PK Fc 11958 Hz Gain -4.26 dB Q 0.41
 Filter  3: ON PK Fc  1789 Hz Gain +4.04 dB Q 2.82
 Filter  4: ON PK Fc   947 Hz Gain -1.61 dB Q 8.68
-Filter  5: ON PK Fc  9463 Hz Gain +1.30 dB Q 8.15
-Filter  6: ON PK Fc   352 Hz Gain -1.65 dB Q 8.39
-Filter  7: ON PK Fc  4634 Hz Gain -1.34 dB Q 1.92
-Filter  8: ON PK Fc  1413 Hz Gain +1.30 dB Q 10.92
+Filter  5: ON PK Fc   352 Hz Gain -1.65 dB Q 8.39
+Filter  6: ON PK Fc  9464 Hz Gain +1.28 dB Q 8.24
+Filter  7: ON PK Fc  4639 Hz Gain -1.35 dB Q 1.91
+Filter  8: ON PK Fc  1413 Hz Gain +1.30 dB Q 10.90
 Filter  9: ON PK Fc  1772 Hz Gain -0.82 dB Q 12.00
-Filter 10: ON PK Fc  2840 Hz Gain -0.99 dB Q 10.69
-Filter 11: ON PK Fc  6471 Hz Gain -0.37 dB Q 12.00
-Filter 12: ON PK Fc  2191 Hz Gain +1.44 dB Q 11.99
+Filter 10: ON PK Fc  2840 Hz Gain -0.99 dB Q 10.72
+Filter 11: ON PK Fc  6502 Hz Gain -0.38 dB Q 12.00
+Filter 12: ON PK Fc  2191 Hz Gain +1.44 dB Q 11.94
 Filter 13: ON PK Fc   466 Hz Gain -0.93 dB Q 12.00
 Filter 14: ON PK Fc   733 Hz Gain +1.28 dB Q 12.00
-Filter 15: ON PK Fc 13567 Hz Gain -0.75 dB Q 10.13
+Filter 15: ON PK Fc 13558 Hz Gain -0.72 dB Q 10.55
 Filter 16: ON PK Fc   421 Hz Gain +0.93 dB Q 12.00
 Filter 17: ON PK Fc  1940 Hz Gain +0.84 dB Q 12.00
 Filter 18: ON PK Fc   648 Hz Gain -0.76 dB Q 12.00
 Filter 19: ON PK Fc   601 Hz Gain +0.48 dB Q 12.00
-Filter 20: ON PK Fc  1814 Hz Gain -0.45 dB Q 12.00
+Filter 20: ON PK Fc  1813 Hz Gain -0.45 dB Q 12.00

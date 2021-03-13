@@ -1,20 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>A collection of loudspeakers measurements</title>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.5.0"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fuse.js@5.2.1/dist/fuse.min.js"></script>
-  <script type="text/javascript" src="${site}/assets/search.js"></script>
-  <script type="text/javascript" src="${site}/assets/graph.js"></script> 
-  <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.2/css/bulma.min.css" />
-  <link crossorigin="anonymous" media="all" rel="stylesheet" href="${site}/assets/spinorama.css" />
-  <link rel="icon" type="image/png" href="${site}/assets/favicon-16x16.png" sizes="16x16" />
-</head>
+  <head>
+<%include file="head.html"/>
+  </head>
 <body>
 
-<%include file="nav.html"/>
+<%include file="nav_menu.html"/>
+<%include file="nav_search.html"/>
 
 <%!
   def space2url(text):
@@ -41,15 +33,6 @@
 
 <div class="section">
 
-  <div class="field is-grouped has-addons">
-    <div class="control is-expanded">
-      <input class="input has-text-centered" type="text" id="searchInput" placeholder="jbl asr center..." autofocus />
-    </div>
-    <div class="control">
-      <a class="button is-info">Search</a>
-    </div>
-  </div>
-
   <div class="searchresults">
     <div class="columns is-multiline is-1">
       % for speaker_name in meta:
@@ -58,8 +41,17 @@
 	<table class="table is-striped">
 	  <tr>
 	    <th>
-	      ${meta[speaker_name]['brand']} ${meta[speaker_name]['model']}
-	      (<a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${meta[speaker_name]['brand']|space2url}%20${meta[speaker_name]['model']|space2url}/iir.txt">download</a>)
+	      ${meta[speaker_name]['brand']} ${meta[speaker_name]['model']}(
+              % if 'eq_autoeq' in meta[speaker_name]:
+	      <a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${meta[speaker_name]['brand']|space2url}%20${meta[speaker_name]['model']|space2url}/iir-autoeq.txt">autoEQ</a>
+              % endif
+              % if 'eq_flipflop' in meta[speaker_name]:
+	      , <a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${meta[speaker_name]['brand']|space2url}%20${meta[speaker_name]['model']|space2url}/iir-flipflop.txt">flipflopEQ</a>
+              % endif
+              % if 'eq_maiky76' in meta[speaker_name]:
+	      , <a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${meta[speaker_name]['brand']|space2url}%20${meta[speaker_name]['model']|space2url}/iir-maiky76.txt">maiky76EQ</a>
+              % endif
+              )
 	    </th>
 	  </tr>
 	  <tr>

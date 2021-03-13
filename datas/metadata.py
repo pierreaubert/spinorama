@@ -559,6 +559,23 @@ speakers_info = {
             },
         },
     },
+    "Dutch Dutch 8C": {
+        "brand": "Dutch Dutch",
+        "model": "8C",
+        "type": "active",
+        "price": "10000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/dutch_dutch_8c/",
+                # https://www.audiosciencereview.com/forum/index.php?threads/dutch-dutch-8c-review.21016/
+            },
+        },
+    },
     "Dynaudio LYD 5": {
         "brand": "Dynaudio",
         "model": "LYD 5",
@@ -571,6 +588,21 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/dynaudio-lyd-5-studio-monitor-review.15963/",
+            },
+        },
+    },
+    "Dynaudio Emit M10": {
+        "brand": "Dynaudio",
+        "model": "Emit M10",
+        "type": "passive",
+        "price": "800",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/dynaudio-emit-m10-review-bookshelf-speaker.20908/",
             },
         },
     },
@@ -2148,6 +2180,22 @@ speakers_info = {
             },
         },
     },
+    "Polk Audio Atrium 4": {
+        "brand": "Polk Audio",
+        "model": "Atrium 4",
+        "type": "passive",
+        "price": "117",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/polk-atrium-4-review-outdoor-speaker.21056/",
+            },
+        },
+    },
     "Polk Audio RT15i": {
         "brand": "Polk Audio",
         "model": "RT15i",
@@ -2535,9 +2583,9 @@ speakers_info = {
             },
         },
     },
-    "Revel W522L": {
+    "Revel W553L": {
         "brand": "Revel",
-        "model": "W522L",
+        "model": "W553L",
         "type": "passive",
         "shape": "bookshelves",
         "price": "",

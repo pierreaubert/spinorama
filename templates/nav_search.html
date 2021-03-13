@@ -1,0 +1,64 @@
+<nav class="level">
+  <div class="level-item">
+    <div class="field has-addons">
+      <div class="control has-icons-left">
+        <input id="searchInput" class="input has-text-centered" type="text" placeholder="brand or model..." autofocus />
+        <div class="icon is-left"><i class="fas fa-search"></i></div>
+      </div>
+    </div>
+  </div>
+  <div class="level-right">
+  <div class="level-item">
+    <div class="field-body">
+      <div class="field is-horizontal">
+	<div class="control has-icons-left">
+	  <div class="select">
+	    <select id="selectReviewer">
+	      <option value="">Reviewer</option>
+	      <option value="ASR">ASR</option>
+	      <option value="ErinsAudioCorner">ErinsAudioCorner</option>
+	      <option value="Princeton">Princeton</option>
+	      <option value="Vendors">Vendors</option>
+	      <option value="Misc">Others</option>
+	    </select>
+	  </div>
+          <div class="icon is-left"><i class="fas fa-user-alt"></i></div>
+	</div>
+	<div class="control has-icons-left">
+	  <div class="select">
+	    <select id="selectShape">
+	      <option value="">Shape</option>
+	      <option value="bookshelves">Bookshelves</option>
+	      <option value="floorstanders">Floorstanders</option>
+	      <option value="center">Center</option>
+	      <option value="surround">Surround</option>
+	      <option value="omnidirectional">Omnidirectional</option>
+	    </select>
+	  </div>
+          <div class="icon is-left"><i class="fas fa-shapes"></i></div>
+	</div>
+	<div class="control has-icons-left">
+	  <div class="select">
+	    <select id="selectPower">
+	      <option value="">Powered?</option>
+	      <option value="active">Active</option>
+	      <option value="passive">Passive</option>
+	    </select>
+	  </div>
+          <div class="icon is-left"><i class="fas fa-plug"></i></div>
+	</div>
+	<div class="control has-icons-left">
+	  <div class="select">
+	    <select id="selectBrand">
+	      <option value="">Brand</option>
+	      <%include file="brands.html"/>
+	    </select>
+	  </div>
+          <div class="icon is-left"><i class="fas fa-filter"></i></div>
+	</div>
+      </div>
+    </div>
+  </div>
+  </div>
+</nav>
+

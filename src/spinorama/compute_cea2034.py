@@ -6,11 +6,9 @@ import pandas as pd
 
 logger = logging.getLogger("spinorama")
 
-# from the standard appendix
-# weigth http://emis.impa.br/EMIS/journals/BAG/vol.51/no.1/b51h1san.pdf
-
 
 def compute_areaQ(alpha_d, beta_d):
+    """Compute the area of the sphere between 4 lines at alpha and beta angles"""
     alpha = alpha_d * 2 * math.pi / 360
     beta = beta_d * 2 * math.pi / 360
     gamma = math.acos(math.cos(alpha) * math.cos(beta))
@@ -26,9 +24,12 @@ def compute_areaQ(alpha_d, beta_d):
 
 
 def compute_weigths():
+    """Compute the weigths from the CEA2034 standards"""
     a = [i * 10 + 5 for i in range(0, 9)] + [90]
     wa = [compute_areaQ(i, i) for i in a]
+    # weigths are the delta between 2 consecutive areas
     w = [wa[0]] + [wa[i] - wa[i - 1] for i in range(1, len(wa))]
+    # hum not sure about that. It matches the standards
     w[9] *= 2.0
     return w
 
@@ -92,7 +93,7 @@ for k, v in sp_weigths.items():
 
 
 def spl2pressure(spl: float) -> float:
-    # convert SPL to pressure
+    """Convert SPL to pressure"""
     try:
         p = pow(10, (spl - 105.0) / 20.0)
         return p
@@ -102,7 +103,7 @@ def spl2pressure(spl: float) -> float:
 
 
 def pressure2spl(p: float) -> float:
-    # convert pressure back to SPL
+    """Convert pressure to SPL"""
     if p < 0.0:
         print("pressure is negative p={0}".format(p))
         logger.error("pressure is negative p={0}".format(p))
@@ -110,12 +111,14 @@ def pressure2spl(p: float) -> float:
 
 
 def column_trim(c):
+    """Remove _v or _h from a column name"""
     if c[-2:] in ("_v", "_h"):
         return c[:-2]
     return c
 
 
 def column_valid(c):
+    """True is a column is valid false otherwise"""
     if c[0] == "O":
         return True
     if c[0] == "F":
@@ -126,6 +129,7 @@ def column_valid(c):
 
 
 def spatial_average(sp_window, func="rms"):
+    """Compute the spatial average of pressure with a function"""
     sp_cols = sp_window.columns
     if "Freq" not in sp_cols:
         logger.debug("Freq is not in sp_cols")
@@ -173,6 +177,7 @@ def spatial_average(sp_window, func="rms"):
 
 
 def spatial_average1(spl, sel, func="rms"):
+    """Compute the spatial average of SPL 1D"""
     if spl is None:
         return None
     spl_window = spl[[c for c in spl.columns if c in sel]]
@@ -185,6 +190,7 @@ def spatial_average1(spl, sel, func="rms"):
 def spatial_average2(
     h_spl: pd.DataFrame, h_sel, v_spl: pd.DataFrame, v_sel, func="rms"
 ) -> pd.DataFrame:
+    """Compute the spatial average of SPL 2D"""
     if v_spl is None and h_spl is None:
         return None
     if v_spl is None:
@@ -200,7 +206,7 @@ def spatial_average2(
 
 
 def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
-    # Sound Power
+    """Sound Power
     # The sound power is the weighted rms average of all 70 measurements,
     # with individual measurements weighted according to the portion of the
     # spherical surface that they represent. Calculation of the sound power
@@ -209,6 +215,7 @@ def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     # to the values shown in Appendix C and an energy average (rms) is
     # calculated using the weighted values. The final average is converted
     # to SPL.
+    """
     h_cols = h_spl.columns
     v_cols = v_spl.columns
     for to_be_dropped in ["On Axis", "180°"]:
@@ -218,6 +225,7 @@ def sound_power(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
 
 def listening_window(h_spl, v_spl):
+    """Compute the Listening Window (LW) from the SPL horizontal and vertical"""
     if v_spl is None or h_spl is None:
         return None
     return spatial_average2(
@@ -229,6 +237,7 @@ def listening_window(h_spl, v_spl):
 
 
 def total_early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Series:
+    """Compute the Total Early Reflections from the SPL horizontal and vertical"""
     if v_spl is None or h_spl is None:
         return None
     return spatial_average2(
@@ -262,6 +271,7 @@ def total_early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Seri
 
 
 def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    """Compute the Early Reflections from the SPL horizontal and vertical"""
     if v_spl is None or h_spl is None:
         return None
     floor_bounce = spatial_average1(v_spl, ["Freq", "-20°", "-30°", "-40°"])
@@ -315,6 +325,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
 
 def total_vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Series:
+    """Compute the Total Vertical Reflections from the SPL horizontal and vertical"""
     if v_spl is None or h_spl is None:
         return None
     return spatial_average1(
@@ -323,7 +334,7 @@ def total_vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.S
 
 
 def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
-    """Compute horizontal reflections
+    """Compute vertical reflections
 
     h_spl: unused
     v_spl: vertical data
@@ -353,6 +364,7 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
 
 
 def total_horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Series:
+    """Compute the Total Horizontal Reflections from the SPL horizontal and vertical"""
     if v_spl is None or h_spl is None:
         return None
     return spatial_average1(
@@ -482,6 +494,7 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
 def estimated_inroom(
     lw: pd.DataFrame, er: pd.DataFrame, sp: pd.DataFrame
 ) -> pd.DataFrame:
+    """Compute the Estimated In-Room Response (PIR) from the SPL horizontal and vertical"""
     if lw is None or er is None or sp is None:
         return None
     # The Estimated In-Room Response shall be calculated using the directivity
@@ -521,6 +534,7 @@ def estimated_inroom(
 
 
 def estimated_inroom_HV(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    """Compute the PIR from the SPL horizontal and vertical"""
     if v_spl is None or h_spl is None:
         return None
     lw = listening_window(h_spl, v_spl)
@@ -530,6 +544,7 @@ def estimated_inroom_HV(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFram
 
 
 def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+    """Compute all the graphs from CEA2034 from the SPL horizontal and vertical"""
     if v_spl is None or h_spl is None:
         return None
     # average the 2 onaxis
@@ -577,7 +592,7 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
 
 def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
-    # 4 cases
+    """Compute On Axis depending of which kind of data we have"""
     onaxis = None
     if v_spl is None:
         if h_spl is None:

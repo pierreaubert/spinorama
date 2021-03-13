@@ -42,7 +42,7 @@ def get_custom_logger(duplicate=False):
 
 def args2level(args):
     """"transform an argument into a logger level"""
-    level = logging.INFO
+    level = logging.WARNING
     if args["--log-level"] is not None:
         check_level = args["--log-level"]
         if check_level in ("INFO", "DEBUG", "WARNING", "ERROR"):

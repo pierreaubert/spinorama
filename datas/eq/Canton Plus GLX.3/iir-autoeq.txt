@@ -1,7 +1,7 @@
 EQ for Canton Plus GLX.3 computed from ASR data
 Preference Score 0.9 with EQ 3.5
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.4
-Dated: 2021-02-07-14:58:01
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.6
+Dated: 2021-02-28-11:49:23
 
 Preamp: -0.7 dB
 
@@ -9,7 +9,7 @@ Filter  1: ON PK Fc 15692 Hz Gain -6.12 dB Q 0.25
 Filter  2: ON PK Fc  8494 Hz Gain +5.10 dB Q 4.34
 Filter  3: ON PK Fc  1309 Hz Gain -3.79 dB Q 1.44
 Filter  4: ON PK Fc 12294 Hz Gain -2.39 dB Q 4.42
-Filter  5: ON PK Fc  2556 Hz Gain -2.18 dB Q 6.58
+Filter  5: ON PK Fc  2555 Hz Gain -2.18 dB Q 6.60
 Filter  6: ON PK Fc  1561 Hz Gain +2.28 dB Q 10.43
 Filter  7: ON PK Fc   675 Hz Gain +1.34 dB Q 12.00
 Filter  8: ON PK Fc  2993 Hz Gain -1.28 dB Q 12.00
@@ -18,10 +18,10 @@ Filter 10: ON PK Fc  1163 Hz Gain +1.65 dB Q 12.00
 Filter 11: ON PK Fc  1907 Hz Gain +0.88 dB Q 12.00
 Filter 12: ON PK Fc  1354 Hz Gain -1.32 dB Q 12.00
 Filter 13: ON PK Fc   368 Hz Gain +0.75 dB Q 3.43
-Filter 14: ON PK Fc  9494 Hz Gain +1.37 dB Q 9.27
+Filter 14: ON PK Fc  9494 Hz Gain +1.37 dB Q 9.28
 Filter 15: ON PK Fc  7693 Hz Gain +1.02 dB Q 12.00
-Filter 16: ON PK Fc 11158 Hz Gain -0.68 dB Q 10.24
+Filter 16: ON PK Fc 11158 Hz Gain -0.68 dB Q 10.22
 Filter 17: ON PK Fc  3750 Hz Gain -0.83 dB Q 12.00
-Filter 18: ON PK Fc 13583 Hz Gain -0.56 dB Q 12.00
+Filter 18: ON PK Fc 13578 Hz Gain -0.56 dB Q 12.00
 Filter 19: ON PK Fc  8483 Hz Gain -0.69 dB Q 12.00
 Filter 20: ON PK Fc   600 Hz Gain -0.56 dB Q 12.00
