@@ -3,9 +3,9 @@ Window.$ = window.jQuery;
 $(document).ready(function () {
     
     window.$.getJSON("${site}/assets/metadata.json", function (response) {
-	console.log("got json");
+	// console.log("got json");
 	const metadata = Object.values(response);
-	console.log("got metadata");
+	// console.log("got metadata");
 	const fuse = new Fuse(metadata, {
 	    isCaseSensitive: false,
 	    matchAllTokens: true,
@@ -33,12 +33,12 @@ $(document).ready(function () {
 	
 	function selectDispatch(filter) {
 	    let keywords = $("#searchInput").val();
-	    console.log("keywords: "+keywords);
+	    // console.log("keywords: "+keywords);
 	    if (keywords === "") {
-		console.log("display filter");
+		// console.log("display filter");
 		display_filter(resultdiv, metadata, filter);
 	    } else {
-		console.log("display search");
+		// console.log("display search");
 		let results = fuse.search(keywords);
 		display_search(resultdiv, results, filter);
 	    }
@@ -72,7 +72,7 @@ $(document).ready(function () {
 	
 	$("#searchInput").on("keyup", function () {
 	    let keywords = $(this).val();
-	    console.log("search start "+keywords);
+	    // console.log("search start "+keywords);
 	    let results = fuse.search(keywords);
 	    display_search(resultdiv, results, filter);
 	});
@@ -84,7 +84,7 @@ $(document).ready(function () {
 	    if (filter.reviewer !== "" ) {
 		if (filter.reviewer === 'Vendors' ) {
 		    if (origin.substr(0, 8) !== 'Vendors-' ) {
-			console.log(origin.substr(0, 8));
+			// console.log(origin.substr(0, 8));
 			show = false;
 		    }
 		} else {
@@ -106,15 +106,15 @@ $(document).ready(function () {
 	}
 	    
 	function display_filter(resultdiv, meta, filter) {
-	    console.log("display filter start #" + meta.length);
+	    // console.log("display filter start #" + meta.length);
 	    for (const item in meta) {
 		let show = is_filtered(meta[item], filter);
 		const id = (meta[item].brand + "-" + meta[item].model).replace(/['.+& ]/g, "-");
 		if (show) {
-                    // console.log(meta[item].brand + "-"+ meta[item].model + " is shown");
+                    // // console.log(meta[item].brand + "-"+ meta[item].model + " is shown");
 		    $("#" + id).show();
 		} else {
-                    // console.log(meta[item].brand + "-"+ meta[item].model + " is filtered");
+                    // // console.log(meta[item].brand + "-"+ meta[item].model + " is filtered");
 		    $("#" + id).hide();
 		}
 	    }
@@ -122,7 +122,7 @@ $(document).ready(function () {
 	}
 	
 	function display_search(resultdiv, results, filter) {
-	    console.log("---------- display search start ----------------");
+	    // console.log("---------- display search start ----------------");
 	    if (results.length === 0) {
 		display_filter(resultdiv, metadata, filter);
 		return;
@@ -139,38 +139,38 @@ $(document).ready(function () {
 		    minScore = results[item].score;
 		}
 	    }
-	    console.log("minScore is "+minScore);
+	    // console.log("minScore is "+minScore);
 	    for (let item in results) {
 		let show = true;
 		let result = results[item];
 		let meta = result.item;
 		let score = result.score;
-		console.log("evaluating "+meta.brand+" "+meta.model+" "+score);
+		// console.log("evaluating "+meta.brand+" "+meta.model+" "+score);
 		if (!is_filtered(meta, filter)) {
-		    console.log("filtered out (filter)");
+		    // console.log("filtered out (filter)");
 		    show = false;
 		}
 		if (show) {
 		    if (minScore < Math.pow(10, -15)) {
                         // we have an exact match, only show other exact matches
                         if (score >= Math.pow(10, -15)) {
-		            console.log("filtered out (minscore)" + score);
+		            // console.log("filtered out (minscore)" + score);
 			    show = false;
                         }
 		    } else {
                         // only partial match
                         if (score > minScore*10) {
-		            console.log("filtered out (score="+score+"minscore="+minScore+")");
+		            // console.log("filtered out (score="+score+"minscore="+minScore+")");
 			    show = false;
 			} 
 		    }
 		}
 		const id = (meta.brand + "-" + meta.model).replace(/['.+& ]/g, "-");
 		if (show) {
-		    console.log("show "+meta.brand+" "+meta.model+" "+score);
+		    // console.log("show "+meta.brand+" "+meta.model+" "+score);
 		    $("#" + id).show();
 		} else {
-		    console.log("hide "+meta.brand+" "+meta.model+" "+score);
+		    // console.log("hide "+meta.brand+" "+meta.model+" "+score);
 		    $("#" + id).hide();
 		}
 		
@@ -188,7 +188,7 @@ $(document).ready(function () {
 	}
 	
     }).fail(function (jqXHR, textStatus) {
-	console.log("getJSON request failed! " + textStatus);
+	// console.log("getJSON request failed! " + textStatus);
     });
     
 });
