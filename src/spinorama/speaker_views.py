@@ -113,8 +113,9 @@ def template_compact(df, params, speaker, origin, key):
                 alt.hconcat(
                     summary.properties(title=speaker),
                     spinorama.properties(title="CEA2034"),
-                    pict)
-                ).resolve_scale(color="independent")
+                    pict,
+                ),
+            ).resolve_scale(color="independent")
         else:
             chart &= alt.hconcat(spinorama.properties(title="CEA2034"))
 
@@ -124,8 +125,9 @@ def template_compact(df, params, speaker, origin, key):
                 chart,
                 alt.hconcat(
                     onaxis.properties(title="On Axis"),
-                    inroom.properties(title="In Room prediction"))
-                ).resolve_scale(color="independent")
+                    inroom.properties(title="In Room prediction"),
+                ),
+            ).resolve_scale(color="independent")
         else:
             chart &= onaxis
 

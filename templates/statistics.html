@@ -1,52 +1,59 @@
 <%include file="header.html"/>
-<%include file="nav.html"/>
-<%include file="animation.html"/>
-
-<%!
-  def space2url(text):
-      return text.replace(' ', '%20')
-
-  def removeVendors(text):
-      return text.replace('Vendors/','')
-%>  
+<%include file="nav_menu.html"/>
 
 <div class="section">
+  <h1>Distribution of scores <emph>v.s.</emph> speakers</h1>
   <div class="box">
-    <div id="visDistribution"></div>
-    <script type="text/javascript">
-      var spec = "stats/distribution.json";
-      vegaEmbed('#visDistribution', spec).then(function(result) {}).catch(console.error);
-    </script>
+    <div id="visDistributionScore"></div>
+    <script type="text/javascript">displayStats("stats/distribution_score.json", '#visDistributionScore');</script>
+  </div>
+  <h1>Distribution of scores <emph>v.s.</emph> speakers if we also have a perfect subwoofer</h1>
+  <div id="visDistributionScoreWsub"></div>
+  <div class="box">
+    <script type="text/javascript">displayStats("stats/distribution_score_wsub.json", '#visDistributionScoreWsub');</script>
   </div>
 </div>
 
 <div class="section">
+  <h1>Score per speaker. Orange points are as measured, Blue points
+    are with an extra EQ</h1>
+  You can over a point to get more information.
   <div class="box">
     <div id="visSpreadScore"></div>
-    <script type="text/javascript">
-      var spec = "stats/spread_score.json";
-      vegaEmbed('#visSpreadScore', spec).then(function(result) {}).catch(console.error);
-    </script>
+    <script type="text/javascript">displayStats("stats/spread_score.json", '#visSpreadScore');</script>
   </div>
-</div>
-
-<div class="section">
+  <h1>Score per speaker with an extra perfect subwoofer. Orange points are as measured, Blue points are with an extra EQ</h1>
+  You can over a point to get more information.
   <div class="box">
     <div id="visSpreadScoreWsub"></div>
-    <script type="text/javascript">
-      var spec = "stats/spread_score_wsub.json";
-      vegaEmbed('#visSpreadScoreWsub', spec).then(function(result) {}).catch(console.error);
-    </script>
+    <script type="text/javascript">displayStats("stats/spread_score_wsub.json", '#visSpreadScoreWsub');</script>
   </div>
 </div>
 
 <div class="section">
+  <h1>How does the score correlate with one of the parameter that
+  define the score, here: LFX (hz) Low  Frequency Extension</h1>
   <div class="box">
-    <div id="visCorrelation"></div>
-    <script type="text/javascript">
-      var spec = "stats/correlation.json";
-      vegaEmbed('#visCorrelation', spec).then(function(result) {}).catch(console.error);
-    </script>
+    <div id="visDistributionLfxHz"></div>
+    <script type="text/javascript">displayStats("stats/distribution_lfx_hz.json", '#visDistributionLfxHz');</script>
+  </div>
+  <h1>How does the score correlate with one of the parameter that
+  define the score, here: NBD ON Narrow Bandwidth deviation for On
+  Axis frequency response</h1>
+  <div class="box">
+    <div id="visDistributionNbdOn"></div>
+    <script type="text/javascript">displayStats("stats/distribution_nbd_on.json", '#visDistributionNbdOn');</script>
+  </div>
+  <h1>How does the score correlate with one of the parameter that
+  define the score, here: NBD PIR Narrow Bandwidth deviation for
+  predicted in room frequency response</h1>
+  <div class="box">
+    <div id="visDistributionNbdPir"></div>
+    <script type="text/javascript">displayStats("stats/distribution_nbd_pir.json", '#visDistributionNbdPir');</script>
+  </div>
+  <div class="box">
+    <div id="visDistributionSmPir"></div>
+    <script type="text/javascript">displayStats("stats/distribution_sm_pir.json", '#visDistributionSmPir');</script>
   </div>
 </div>
 

@@ -39,6 +39,9 @@ import altair as alt
 from generate_common import get_custom_logger, args2level
 
 
+VERSION = 0.4
+
+
 def meta2df(meta):
     df = pd.DataFrame(
         {
@@ -167,15 +170,14 @@ def generate_stats(meta):
         alt.Chart(pref_score)
         .mark_circle(size=100)
         .encode(
-            x=alt.X("speaker", sort="y", axis=None),
-            y=alt.Y("value", title="Preference Score"),
+            x=alt.X("value", title="Preference Score"),
+            y=alt.Y("speaker", sort="y", axis=None),
             color=alt.Color("ref"),
             tooltip=["speaker", "origin", "value", "ref"],
         )
         .properties(
             width=1024,
             height=300,
-            title="Speakers sorted by Preference Score (move your mouse over a point to get data)",
         )
     )
 
@@ -183,19 +185,18 @@ def generate_stats(meta):
         alt.Chart(pref_score_wsub)
         .mark_circle(size=100)
         .encode(
-            x=alt.X("speaker", sort="y", axis=None),
-            y=alt.Y("value", title="Preference Score w/Sub"),
+            x=alt.X("value", title="Preference Score w/Sub"),
+            y=alt.Y("speaker", sort="y", axis=None),
             color=alt.Color("ref"),
             tooltip=["speaker", "origin", "value", "ref"],
         )
         .properties(
             width=1024,
             height=300,
-            title="Speakers sorted by Preference Score with a Subwoofer (move your mouse over a point to get data)",
         )
     )
 
-    distribution1 = (
+    distribution_score = (
         alt.Chart(pref_score)
         .mark_bar()
         .encode(
@@ -205,17 +206,18 @@ def generate_stats(meta):
         .properties(width=450, height=300)
     )
 
-    distribution2 = (
+    distribution_score_wsub = (
         alt.Chart(pref_score_wsub)
         .mark_bar()
         .encode(
             x=alt.X("value:Q", bin=True, title="Preference Score w/Sub"),
             y=alt.Y("count()", title="Count"),
         )
-        .properties(width=450, height=300)
+        .properties(
+            width=450,
+            height=300,
+        )
     )
-
-    distribution = distribution1 | distribution2
 
     source = pd.DataFrame(
         {
@@ -245,36 +247,39 @@ def generate_stats(meta):
         )
         graphs[g] = data + data.transform_regression(g, "pref_score").mark_line()
 
-    correlation = (graphs["lfx_hz"] | graphs["nbd_on"]) & (
-        graphs["nbd_pir"] | graphs["sm_pir"]
-    )
-
     # used in website
     filedir = "docs/stats"
     pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
 
     for graph, name in (
-        (correlation, "correlation"),
-        (distribution, "distribution"),
         (spread_score, "spread_score"),
         (spread_score_wsub, "spread_score_wsub"),
+        (distribution_score, "distribution_score"),
+        (distribution_score_wsub, "distribution_score_wsub"),
+        (spread_score, "spread_score"),
+        (spread_score_wsub, "spread_score_wsub"),
+        (graphs["lfx_hz"], "distribution_lfx_hz"),
+        (graphs["nbd_on"], "distribution_nbd_on"),
+        (graphs["nbd_pir"], "distribution_nbd_pir"),
+        (graphs["sm_pir"], "distribution_sm_pir"),
     ):
         filename = "{0}/{1}.json".format(filedir, name)
+        print("saving " + filename)
         graph.save(filename)
 
     # used in book
     filedir = "book/stats"
     pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
 
-    for graph in graphs:
-        graph_name = "{0}/{1}.png".format(filedir, graph)
-        graphs[graph].save(graph_name)
-
     for graph, name in (
-        (distribution1, "distribution1"),
-        (distribution2, "distribution2"),
+        (distribution_score, "distribution_score"),
+        (distribution_score_wsub, "distribution_score_wsub"),
         (spread_score, "spread_score"),
-        # (spread_score_wsub, 'spread_score_wsub'),
+        (spread_score_wsub, "spread_score_wsub"),
+        (graphs["lfx_hz"], "distribution_lfx_hz"),
+        (graphs["nbd_on"], "distribution_nbd_on"),
+        (graphs["nbd_pir"], "distribution_nbd_pir"),
+        (graphs["sm_pir"], "distribution_sm_pir"),
     ):
         filename = "{0}/{1}.png".format(filedir, name)
         graph.save(filename)
@@ -283,7 +288,11 @@ def generate_stats(meta):
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="generate_stats.py version 0.3", options_first=True)
+    args = docopt(
+        __doc__,
+        version="generate_stats.py version {:1.1f}".format(VERSION),
+        options_first=True,
+    )
 
     print_what = None
     if args["--print"] is not None:
