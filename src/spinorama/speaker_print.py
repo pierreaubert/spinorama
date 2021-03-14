@@ -5,7 +5,12 @@ import pathlib
 import copy
 import pandas as pd
 from altair_saver import save
-import ray
+
+try:
+    import ray
+except ModuleNotFoundError:
+    import src.miniray as ray
+
 
 from .speaker_display import (
     display_spinorama,

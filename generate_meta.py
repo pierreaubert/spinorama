@@ -42,7 +42,11 @@ import sys
 
 from docopt import docopt
 import flammkuchen as fl
-import ray
+
+try:
+    import ray
+except ModuleNotFoundError:
+    import src.miniray as ray
 
 from generate_common import get_custom_logger, args2level, custom_ray_init
 

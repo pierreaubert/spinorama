@@ -3,7 +3,11 @@ import os
 import logging
 import sys
 
-import ray
+try:
+    import ray
+except ModuleNotFoundError:
+    import src.miniray as ray
+
 
 from .load import filter_graphs, load_normalize
 from .load_klippel import parse_graphs_speaker_klippel
