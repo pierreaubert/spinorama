@@ -2353,6 +2353,22 @@ speakers_info = {
             },
         },
     },
+    "Revel C208": {
+        "brand": "Revel",
+        "model": "C08",
+        "type": "passive",
+        "price": "2000",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-c208-review-center-speaker.21303/",
+            },
+        },
+    },
     "Revel C52": {
         "brand": "Revel",
         "model": "C52",
