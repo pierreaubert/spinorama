@@ -138,11 +138,7 @@ def spatial_average(sp_window, func="rms"):
         logger.debug("Len window is {0}".format(len(sp_window)))
         return None
 
-    result = pd.DataFrame(
-        {
-            "Freq": sp_window.Freq,
-        }
-    )
+    result = pd.DataFrame({"Freq": sp_window.Freq,})
 
     def weighted_rms(spl):
         avg = [sp_weigths_hv[c] * spl[c] ** 2 for c in sp_cols if column_valid(c)]
@@ -303,11 +299,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
     total_early_reflection = total_early_reflections(h_spl, v_spl)
 
-    er = pd.DataFrame(
-        {
-            "Freq": h_spl.Freq,
-        }
-    ).reset_index(drop=True)
+    er = pd.DataFrame({"Freq": h_spl.Freq,}).reset_index(drop=True)
 
     for (key, name) in [
         ("Floor Bounce", floor_bounce),
@@ -473,11 +465,7 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
 
     total_horizontal_reflection = total_horizontal_reflections(h_spl, v_spl)
 
-    hr = pd.DataFrame(
-        {
-            "Freq": h_spl.Freq,
-        }
-    ).reset_index(drop=True)
+    hr = pd.DataFrame({"Freq": h_spl.Freq,}).reset_index(drop=True)
     for (key, name) in [
         ("Front", front),
         ("Side", side),
@@ -549,12 +537,9 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
         return None
     # average the 2 onaxis
     onaxis = spatial_average2(h_spl, ["Freq", "On Axis"], v_spl, ["Freq", "On Axis"])
-    spin = pd.DataFrame(
-        {
-            "Freq": onaxis.Freq,
-            "On Axis": onaxis.dB,
-        }
-    ).reset_index(drop=True)
+    spin = pd.DataFrame({"Freq": onaxis.Freq, "On Axis": onaxis.dB,}).reset_index(
+        drop=True
+    )
     lw = listening_window(h_spl, v_spl)
     sp = sound_power(h_spl, v_spl)
     # Early Reflections Directivity Index (ERDI)
@@ -604,10 +589,5 @@ def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     if onaxis is None:
         return None
 
-    df = pd.DataFrame(
-        {
-            "Freq": onaxis.Freq,
-            "On Axis": onaxis.dB,
-        }
-    )
+    df = pd.DataFrame({"Freq": onaxis.Freq, "On Axis": onaxis.dB,})
     return df

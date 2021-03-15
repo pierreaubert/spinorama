@@ -556,9 +556,7 @@ def graph_radar(df_in, graph_params):
         alt.Chart(dbs_df)
         .mark_line(thickness=3)
         .encode(
-            alt.Latitude("x:Q"),
-            alt.Longitude("y:Q"),
-            alt.Color("Freq:N", sort=None),
+            alt.Latitude("x:Q"), alt.Longitude("y:Q"), alt.Color("Freq:N", sort=None),
         )
         .project(type="azimuthalEquidistant", rotate=[0, 0, 90])
         .properties(width=graph_params["width"], height=graph_params["height"])
@@ -957,17 +955,7 @@ def graph_image(speaker_name, params):
     source = pd.DataFrame.from_records([{"x": 0, "y": 0.0, "img": url}])
     return (
         alt.Chart(source)
-        .mark_image(
-            width=params["width"] - 40,
-            height=params["height"] - 40,
-        )
-        .encode(
-            x=alt.X("x", axis=None),
-            y=alt.Y("y", axis=None),
-            url="img",
-        )
-        .properties(
-            width=params["width"],
-            height=params["height"],
-        )
+        .mark_image(width=params["width"] - 40, height=params["height"] - 40,)
+        .encode(x=alt.X("x", axis=None), y=alt.Y("y", axis=None), url="img",)
+        .properties(width=params["width"], height=params["height"],)
     )

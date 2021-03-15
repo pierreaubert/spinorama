@@ -253,10 +253,7 @@ def find_isobands(
         geojson["features"].append(
             {
                 "type": "Feature",
-                "geometry": {
-                    "type": "MultiPolygon",
-                    "coordinates": [isobands],
-                },
+                "geometry": {"type": "MultiPolygon", "coordinates": [isobands],},
                 "properties": {
                     "z_low": z_low,
                     "z_high": z_high,

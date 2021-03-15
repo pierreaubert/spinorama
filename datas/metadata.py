@@ -57,10 +57,7 @@ speakers_info = {
         "amount": "single",
         "default_measurement": "vendor",
         "measurements": {
-            "vendor": {
-                "origin": "Vendors-Apple",
-                "format": "webplotdigitizer",
-            },
+            "vendor": {"origin": "Vendors-Apple", "format": "webplotdigitizer",},
         },
     },
     "Ascend Acoustics CBM-170 SE": {
@@ -456,12 +453,7 @@ speakers_info = {
         "price": "",
         "shape": "floorstanders",
         "default_measurement": "princeton",
-        "measurements": {
-            "princeton": {
-                "origin": "Princeton",
-                "format": "princeton",
-            },
-        },
+        "measurements": {"princeton": {"origin": "Princeton", "format": "princeton",},},
     },
     "Dayton Audio B652-AIR": {
         "brand": "Dayton Audio",
@@ -628,12 +620,7 @@ speakers_info = {
         "price": "",
         "shape": "bookshelves",
         "default_measurement": "princeton",
-        "measurements": {
-            "princeton": {
-                "origin": "Princeton",
-                "format": "princeton",
-            },
-        },
+        "measurements": {"princeton": {"origin": "Princeton", "format": "princeton",},},
     },
     "Edifier R1280T": {
         "brand": "Edifier",
@@ -1015,12 +1002,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "default_measurement": "princeton",
-        "measurements": {
-            "princeton": {
-                "origin": "Princeton",
-                "format": "princeton",
-            },
-        },
+        "measurements": {"princeton": {"origin": "Princeton", "format": "princeton",},},
     },
     "GGNTKT M1": {
         "brand": "GGNTKT",
@@ -1504,12 +1486,7 @@ speakers_info = {
         "shape": "floorstanders",
         "amount": "pair",
         "default_measurement": "princeton",
-        "measurements": {
-            "princeton": {
-                "origin": "Princeton",
-                "format": "princeton",
-            },
-        },
+        "measurements": {"princeton": {"origin": "Princeton", "format": "princeton",},},
     },
     "JBL Studio 530": {
         "brand": "JBL",
@@ -1648,11 +1625,7 @@ speakers_info = {
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "",
-            },
+            "asr": {"origin": "ASR", "format": "klippel", "review": "",},
             "vendor": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
@@ -1703,12 +1676,7 @@ speakers_info = {
         "price": "",
         "shape": "bookshelves",
         "default_measurement": "princeton",
-        "measurements": {
-            "princeton": {
-                "origin": "Princeton",
-                "format": "princeton",
-            },
-        },
+        "measurements": {"princeton": {"origin": "Princeton", "format": "princeton",},},
     },
     "KLH 911B": {
         "brand": "KLH",
@@ -1860,10 +1828,7 @@ speakers_info = {
         "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {
-            "vendor": {
-                "origin": "Vendors-Magico",
-                "format": "webplotdigitizer",
-            },
+            "vendor": {"origin": "Vendors-Magico", "format": "webplotdigitizer",},
         },
     },
     "MartinLogan Motion 4i": {
@@ -1889,10 +1854,7 @@ speakers_info = {
         "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {
-            "vendor": {
-                "origin": "Vendors-Mesanovic",
-                "format": "rewstextdump",
-            },
+            "vendor": {"origin": "Vendors-Mesanovic", "format": "rewstextdump",},
         },
     },
     "Micca RB42": {
@@ -2092,13 +2054,7 @@ speakers_info = {
         "shape": "bookshelves",
         "amount": "pair",
         "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "",
-            },
-        },
+        "measurements": {"asr": {"origin": "ASR", "format": "klippel", "review": "",},},
     },
     "Pioneer S-DF3-K": {
         "brand": "Pioneer",
@@ -2221,11 +2177,7 @@ speakers_info = {
         "amount": "pair",
         "default_measurement": "princeton",
         "measurements": {
-            "princeton": {
-                "origin": "Princeton",
-                "format": "princeton",
-                "review": "",
-            },
+            "princeton": {"origin": "Princeton", "format": "princeton", "review": "",},
         },
     },
     "Polk Audio Signature S15": {
@@ -2355,7 +2307,7 @@ speakers_info = {
     },
     "Revel C208": {
         "brand": "Revel",
-        "model": "C08",
+        "model": "C208",
         "type": "passive",
         "price": "2000",
         "shape": "center",
@@ -2394,10 +2346,7 @@ speakers_info = {
         "amount": "pair",
         "default_measurement": "vendor",
         "measurements": {
-            "vendor": {
-                "origin": "Vendors-Revel",
-                "format": "webplotdigitizer",
-            },
+            "vendor": {"origin": "Vendors-Revel", "format": "webplotdigitizer",},
         },
     },
     "Revel F208": {
@@ -2435,10 +2384,7 @@ speakers_info = {
                 "format": "splHVtxt",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/revel_f226be/",
             },
-            "vendor": {
-                "origin": "Vendors-Revel",
-                "format": "webplotdigitizer",
-            },
+            "vendor": {"origin": "Vendors-Revel", "format": "webplotdigitizer",},
         },
     },
     "Revel F328be": {
@@ -2455,10 +2401,7 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-f328be-speaker-review.17443/",
             },
-            "vendor": {
-                "origin": "Vendors-Revel",
-                "format": "webplotdigitizer",
-            },
+            "vendor": {"origin": "Vendors-Revel", "format": "webplotdigitizer",},
         },
     },
     "Revel F35": {
@@ -2965,13 +2908,7 @@ speakers_info = {
         "shape": "bookshelves",
         "amount": "pair",
         "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "",
-            },
-        },
+        "measurements": {"asr": {"origin": "ASR", "format": "klippel", "review": "",},},
     },
 }
 

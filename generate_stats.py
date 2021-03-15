@@ -44,14 +44,7 @@ VERSION = 0.4
 
 def meta2df(meta):
     df = pd.DataFrame(
-        {
-            "speaker": [],
-            "param": [],
-            "value": [],
-            "ref": [],
-            "origin": [],
-            "brand": [],
-        }
+        {"speaker": [], "param": [], "value": [], "ref": [], "origin": [], "brand": [],}
     )
     count = 0
     for i in meta:
@@ -175,10 +168,7 @@ def generate_stats(meta):
             color=alt.Color("ref"),
             tooltip=["speaker", "origin", "value", "ref"],
         )
-        .properties(
-            width=1024,
-            height=300,
-        )
+        .properties(width=1024, height=300,)
     )
 
     spread_score_wsub = (
@@ -190,10 +180,7 @@ def generate_stats(meta):
             color=alt.Color("ref"),
             tooltip=["speaker", "origin", "value", "ref"],
         )
-        .properties(
-            width=1024,
-            height=300,
-        )
+        .properties(width=1024, height=300,)
     )
 
     distribution_score = (
@@ -213,10 +200,7 @@ def generate_stats(meta):
             x=alt.X("value:Q", bin=True, title="Preference Score w/Sub"),
             y=alt.Y("count()", title="Count"),
         )
-        .properties(
-            width=450,
-            height=300,
-        )
+        .properties(width=450, height=300,)
     )
 
     source = pd.DataFrame(
