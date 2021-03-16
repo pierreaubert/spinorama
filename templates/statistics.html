@@ -2,14 +2,18 @@
 <%include file="nav_menu.html"/>
 
 <div class="section">
-  <h1>Distribution of scores v.s. speakers</h1>
+  <div class="content">
+    <h1>Distribution of scores v.s. speakers</h1>
+  </div>
   <div class="box">
     <div id="visDistributionScore"></div>
     <script type="text/javascript">
       const specDS = downloadZip("stats/distribution_score.json.zip").then( function(specDS) { displayStats(JSON.parse(specDS), '#visDistributionScore'); });
     </script>
   </div>
-  <h1>Distribution of scores v.s. speakers if we also have a perfect subwoofer</h1>
+  <div class="content">
+    <h1>Distribution of scores v.s. speakers if we also have a perfect subwoofer</h1>
+  </div>
   <div id="visDistributionScoreWsub"></div>
   <div class="box">
     <script type="text/javascript">
@@ -19,17 +23,25 @@
 </div>
 
 <div class="section">
-  <h1>Score per speaker. Orange points are as measured, Blue points
-    are with an extra EQ</h1>
-  You can over a point to get more information.
+  <div class="content">
+    <h1>Score per speaker.</h1>
+    <ul>
+      <li>Orange points are as measured, Blue points are with an extra EQ</li>
+      <li>You can over a point to get more information.</li>
+    </ul>
+  </div>
   <div class="box">
     <div id="visSpreadScore"></div>
     <script type="text/javascript">
       const specSC = downloadZip("stats/spread_score.json.zip").then( function(specSC) { displayStats(JSON.parse(specSC), '#visSpreadScore'); });
     </script>
   </div>
-  <h1>Score per speaker with an extra perfect subwoofer. Orange points are as measured, Blue points are with an extra EQ</h1>
-  You can over a point to get more information.
+  <div class="content">
+    <h1>Score per speaker with an extra perfect subwoofer.</h1>
+    <ul>
+      <li>Orange points are as measured, Blue points are with an extra EQ</li>
+      <li>You can over a point to get more information.</li>
+    </ul>
   <div class="box">
     <div id="visSpreadScoreWsub"></div>
     <script type="text/javascript">
@@ -39,31 +51,46 @@
 </div>
 
 <div class="section">
-  <h1>How does the score correlate with one of the parameter that
-  define the score, here: LFX (hz) Low  Frequency Extension</h1>
+  <div class="content">
+    <h1>How does the score correlate with one of the parameter that
+      define the score?</h1>
+  </div>
+</div>
+
+<div class="section">
+  <div class="content">
+    <h2>Correlation with LFX</h2>
+    aka Low  Frequency Extension
+  </div>
   <div class="box">
     <div id="visDistributionLfxHz"></div>
     <script type="text/javascript">
       const specLfxHz = downloadZip("stats/distribution_lfx_hz.json.zip").then( function(specLfxHz) { displayStats(JSON.parse(specLfxHz), '#visDistributionLfxHz'); });
     </script>
   </div>
-  <h1>How does the score correlate with one of the parameter that
-  define the score, here: NBD ON Narrow Bandwidth deviation for On
-  Axis frequency response</h1>
+  <div class="content">
+    <h2>Correlation with NBD ON</h2>
+    aka Narrow Bandwidth Deviation for On Axis frequency response
+  </div>
   <div class="box">
     <div id="visDistributionNbdOn"></div>
     <script type="text/javascript">
       const specNbdOn = downloadZip("stats/distribution_nbd_on.json.zip").then( function(specNbdOn) { displayStats(JSON.parse(specNbdOn), '#visDistributionNbdOn'); });
     </script>
   </div>
-  <h1>How does the score correlate with one of the parameter that
-  define the score, here: NBD PIR Narrow Bandwidth deviation for
-  predicted in room frequency response</h1>
+  <div class="content">
+    <h2>Correlation with NBD PIR</h2>
+    aka Narrow Bandwidth Deviation for  Predicted In Room frequency response
+  </div>
   <div class="box">
     <div id="visDistributionNbdPir"></div>
     <script type="text/javascript">
       const specNbdPir = downloadZip("stats/distribution_nbd_pir.json.zip").then( function(specNbdPir) { displayStats(JSON.parse(specNbdPir), '#visDistributionNbdPir'); });
     </script>
+  </div>
+  <div class="content">
+    <h2>Correlation with SM PIR</h2>
+    aka Predicted In Room frequency response
   </div>
   <div class="box">
     <div id="visDistributionSmPir"></div>
