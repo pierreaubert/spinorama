@@ -286,7 +286,7 @@ def display_compare(df, graph_filter, graph_params=None):
             [
                 augment(
                     resample(
-                        df[speaker][origin][key][graph_filter], 5000
+                        df[speaker][origin][key][graph_filter], 1000
                     ),  # max 1000 Freq points to minimise space
                     "{0} - {1} - {2}".format(speaker, origin, key),
                 )

@@ -339,9 +339,7 @@ if __name__ == "__main__":
         if args[flag] is not None:
             filters[ifilter] = args[flag]
 
-    print("CALL QUEUE")
     ray_ids = queue_speakers(speakerlist, filters)
-    print("CALL COMPUTE")
     df_new = compute(ray_ids)
 
     cache_name = "cache.parse_all_speakers.h5"
