@@ -320,8 +320,10 @@ def graph_spinorama(dfu, graph_params):
 
     # assemble elements together
     spin = (
-        alt.layer((circle + line).add_selection(scales),
-                  (circle_di + di).add_selection(scales_di))
+        alt.layer(
+            (circle + line).add_selection(scales),
+            (circle_di + di).add_selection(scales_di),
+        )
         .resolve_scale(y="independent")
         .add_selection(selectorsMeasurements)
         .add_selection(nearest)
@@ -624,9 +626,7 @@ def graph_regression_graph(graph, freq_start, freq_end, withBands=True):
     # regression line
     reg = graph.transform_filter(
         "datum.Freq>{0} & datum.Freq<{1}".format(freq_start, freq_end)
-    ).transform_regression(
-        method="log", on="Freq", regression="dBG", extent=[20, 20000]
-    )
+    ).transform_regression(method="log", on="Freq", regression="dB", extent=[20, 20000])
 
     if withBands:
         # +/- 3dB

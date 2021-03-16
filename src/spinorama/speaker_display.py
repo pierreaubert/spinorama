@@ -198,7 +198,7 @@ def display_inroom(df, graph_params=None):
         inroom_graph = graph_freq(inroom, graph_params)
         inroom_reg = graph_regression(inroom, 80, 10000)
         return (
-            (inroom_reg + inroom_graph)
+            alt.layer(inroom_reg, inroom_graph)
             .resolve_scale(color="independent")
             .resolve_legend(shape="independent")
         )
