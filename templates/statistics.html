@@ -5,12 +5,16 @@
   <h1>Distribution of scores v.s. speakers</h1>
   <div class="box">
     <div id="visDistributionScore"></div>
-    <script type="text/javascript">displayStats("stats/distribution_score.json", '#visDistributionScore');</script>
+    <script type="text/javascript">
+      const specDS = downloadZip("stats/distribution_score.json.zip").then( function(specDS) { displayStats(JSON.parse(specDS), '#visDistributionScore'); });
+    </script>
   </div>
   <h1>Distribution of scores v.s. speakers if we also have a perfect subwoofer</h1>
   <div id="visDistributionScoreWsub"></div>
   <div class="box">
-    <script type="text/javascript">displayStats("stats/distribution_score_wsub.json", '#visDistributionScoreWsub');</script>
+    <script type="text/javascript">
+    const specDSW = downloadZip("stats/distribution_score_wsub.json.zip").then( function(specDSW) { displayStats(JSON.parse(specDSW), '#visDistributionScoreWsub'); });
+    </script>
   </div>
 </div>
 
@@ -20,13 +24,17 @@
   You can over a point to get more information.
   <div class="box">
     <div id="visSpreadScore"></div>
-    <script type="text/javascript">displayStats("stats/spread_score.json", '#visSpreadScore');</script>
+    <script type="text/javascript">
+      const specSC = downloadZip("stats/spread_score.json.zip").then( function(specSC) { displayStats(JSON.parse(specSC), '#visSpreadScore'); });
+    </script>
   </div>
   <h1>Score per speaker with an extra perfect subwoofer. Orange points are as measured, Blue points are with an extra EQ</h1>
   You can over a point to get more information.
   <div class="box">
     <div id="visSpreadScoreWsub"></div>
-    <script type="text/javascript">displayStats("stats/spread_score_wsub.json", '#visSpreadScoreWsub');</script>
+    <script type="text/javascript">
+      const specSCW = downloadZip("stats/spread_score_wsub.json.zip").then( function(specSCW) { displayStats(JSON.parse(specSCW), '#visSpreadScoreWsub'); });
+    </script>
   </div>
 </div>
 
@@ -35,25 +43,33 @@
   define the score, here: LFX (hz) Low  Frequency Extension</h1>
   <div class="box">
     <div id="visDistributionLfxHz"></div>
-    <script type="text/javascript">displayStats("stats/distribution_lfx_hz.json", '#visDistributionLfxHz');</script>
+    <script type="text/javascript">
+      const specLfxHz = downloadZip("stats/distribution_lfx_hz.json.zip").then( function(specLfxHz) { displayStats(JSON.parse(specLfxHz), '#visDistributionLfxHz'); });
+    </script>
   </div>
   <h1>How does the score correlate with one of the parameter that
   define the score, here: NBD ON Narrow Bandwidth deviation for On
   Axis frequency response</h1>
   <div class="box">
     <div id="visDistributionNbdOn"></div>
-    <script type="text/javascript">displayStats("stats/distribution_nbd_on.json", '#visDistributionNbdOn');</script>
+    <script type="text/javascript">
+      const specNbdOn = downloadZip("stats/distribution_nbd_on.json.zip").then( function(specNbdOn) { displayStats(JSON.parse(specNbdOn), '#visDistributionNbdOn'); });
+    </script>
   </div>
   <h1>How does the score correlate with one of the parameter that
   define the score, here: NBD PIR Narrow Bandwidth deviation for
   predicted in room frequency response</h1>
   <div class="box">
     <div id="visDistributionNbdPir"></div>
-    <script type="text/javascript">displayStats("stats/distribution_nbd_pir.json", '#visDistributionNbdPir');</script>
+    <script type="text/javascript">
+      const specNbdPir = downloadZip("stats/distribution_nbd_pir.json.zip").then( function(specNbdPir) { displayStats(JSON.parse(specNbdPir), '#visDistributionNbdPir'); });
+    </script>
   </div>
   <div class="box">
     <div id="visDistributionSmPir"></div>
-    <script type="text/javascript">displayStats("stats/distribution_sm_pir.json", '#visDistributionSmPir');</script>
+    <script type="text/javascript">
+      const specSmPir = downloadZip("stats/distribution_sm_pir.json.zip").then( function(specSmPir) { displayStats(JSON.parse(specSmPir), '#visDistributionSmPir'); });
+    </script>
   </div>
 </div>
 

@@ -267,6 +267,7 @@ if __name__ == "__main__":
         "tabs.js",
         "spinorama.css",
         "graph.js",
+        "zip.min.js",
     ]:
         file_ext = Template(filename="templates/assets/" + f)
         with open("./docs/assets/" + f, "w") as fd:
@@ -274,7 +275,7 @@ if __name__ == "__main__":
             fd.close()
 
     # copy favicon(s)
-    for f in ["favicon.ico", "favicon-16x16.png"]:
+    for f in ["favicon.ico", "favicon-16x16.png", "downloadzip.js"]:
         file_in = "./templates/assets/" + f
         file_out = "./docs/assets/" + f
         shutil.copy(file_in, file_out)

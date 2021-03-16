@@ -3,6 +3,7 @@ import os
 import logging
 import pathlib
 import copy
+import zipfile
 import pandas as pd
 from altair_saver import save
 
@@ -86,11 +87,18 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
                 # before uploading
                 filename += "_large"
             filename += "." + ext
+            if ext == "json":
+                filename += ".zip"
             if force or not os.path.exists(filename):
                 if fileext is None or (fileext is not None and fileext == ext):
                     try:
                         print("Saving {0} in {1}".format(title, filename))
-                        save(chart, filename)
+                        if ext == "json":
+                            content = chart.to_json()
+                            with zipfile.ZipFile(filename, "w") as current_zip:
+                                current_zip.writestr("{0}.json".format(title), content)
+                        else:
+                            save(chart, filename)
                         updated += 1
                     except Exception as e:
                         logger.error("Got unkown error {0} for {1}".format(e, filename))
@@ -238,8 +246,9 @@ def print_compare_graph(df, graph_filter, filedir):
         graph = graph.configure_title(orient="top", anchor="middle", fontSize=16)
         filename = "{0}/{1}.json".format(filedir, graph_filter)
         try:
-            print("Saving {0}".format(filename))
-            graph.save(filename)
+            content = graph.to_json()
+            with zipfile.ZipFile(filename + ".zip", "w") as current_zip:
+                current_zip.writestr("{0}.json".format(graph_filter), content)
         except Exception as e:
             logger.error("Got unkown error {0} for {1}".format(e, filename))
 
@@ -255,8 +264,9 @@ def print_compare(df, force_print=False, filter_file_ext=None):
         "Early Reflections",
         "Horizontal Reflections",
         "Vertical Reflections",
-        "SPL Horizontal",
-        "SPL Vertical",
+        # large and hard to see
+        # "SPL Horizontal",
+        # "SPL Vertical",
     ):
         ids.append(print_compare_graph.remote(df, graph_filter, filedir))
 

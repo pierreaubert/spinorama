@@ -52,7 +52,7 @@ function displayStats(spec, divName) {
         };
         
         function patch(spec) {
-            let width = window.innerWidth - 180;
+            let width = Math.min(window.innerWidth - 180, 800);
             spec.width = width;
             spec.height = width;
             return spec;
