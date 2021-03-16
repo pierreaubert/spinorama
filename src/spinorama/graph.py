@@ -223,6 +223,7 @@ def graph_spinorama(dfu, graph_params):
     # add selectors
     selectorsMeasurements = alt.selection_multi(fields=["Measurements"], bind="legend")
     scales = alt.selection_interval(bind="scales")
+    scales_di = alt.selection_interval(bind="scales")
     # main charts
     xaxis = alt.X(
         "Freq:Q",
@@ -319,10 +320,10 @@ def graph_spinorama(dfu, graph_params):
 
     # assemble elements together
     spin = (
-        alt.layer(circle + line, circle_di + di)
+        alt.layer((circle + line).add_selection(scales),
+                  (circle_di + di).add_selection(scales_di))
         .resolve_scale(y="independent")
         .add_selection(selectorsMeasurements)
-        .add_selection(scales)
         .add_selection(nearest)
         .properties(width=graph_params["width"], height=graph_params["height"])
     )
