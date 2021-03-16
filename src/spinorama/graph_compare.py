@@ -78,7 +78,9 @@ x_axis = alt.X(
 )
 
 y_axis = alt.Y(
-    "dB:Q", title="Sound Pressure (dB)", scale=alt.Scale(zero=False, domain=[-40, 10]),
+    "dB:Q",
+    title="Sound Pressure (dB)",
+    scale=alt.Scale(zero=False, domain=[-40, 10]),
 )
 
 color = alt.Color("Measurements", type="nominal", sort=None)
