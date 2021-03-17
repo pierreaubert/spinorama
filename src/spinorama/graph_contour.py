@@ -123,14 +123,18 @@ def reshape(x, y, z, nscale):
 def compute_contour_smoothed(dfu, nscale=5):
     # compute contour
     x, y, z = compute_contour(dfu)
+    z_range = np.max(z)-np.min(z)
     if len(x) == 0 or len(y) == 0 or len(z) == 0:
         return (None, None, None)
     # std_dev = 1
-    kernel = Gaussian2DKernel(1, 5)*math.pi*5*2
+    kernel = Gaussian2DKernel(1, 5)
     # kernel = RickerWavelet2DKernel(4)
     # extend array by x5
     rx, ry, rz = reshape(x, y, z, nscale)
     # convolve with kernel
     rzs = ndimage.convolve(rz, kernel.array, mode="mirror")
-    # return
+    # normalize
+    rzs_range = np.max(rzs)-np.min(rzs)
+    if rzs_range > 0:
+        rzs *= z_range/rzs_range
     return (rx, ry, rzs)
