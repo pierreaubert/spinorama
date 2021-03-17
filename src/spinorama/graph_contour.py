@@ -123,7 +123,7 @@ def reshape(x, y, z, nscale):
 def compute_contour_smoothed(dfu, nscale=5):
     # compute contour
     x, y, z = compute_contour(dfu)
-    z_range = np.max(z)-np.min(z)
+    z_range = np.max(z) - np.min(z)
     if len(x) == 0 or len(y) == 0 or len(z) == 0:
         return (None, None, None)
     # std_dev = 1
@@ -134,7 +134,7 @@ def compute_contour_smoothed(dfu, nscale=5):
     # convolve with kernel
     rzs = ndimage.convolve(rz, kernel.array, mode="mirror")
     # normalize
-    rzs_range = np.max(rzs)-np.min(rzs)
+    rzs_range = np.max(rzs) - np.min(rzs)
     if rzs_range > 0:
-        rzs *= z_range/rzs_range
+        rzs *= z_range / rzs_range
     return (rx, ry, rzs)
