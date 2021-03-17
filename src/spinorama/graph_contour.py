@@ -126,7 +126,7 @@ def compute_contour_smoothed(dfu, nscale=5):
     if len(x) == 0 or len(y) == 0 or len(z) == 0:
         return (None, None, None)
     # std_dev = 1
-    kernel = Gaussian2DKernel(1, 5)
+    kernel = Gaussian2DKernel(1, 5)*math.pi*5*2
     # kernel = RickerWavelet2DKernel(4)
     # extend array by x5
     rx, ry, rz = reshape(x, y, z, nscale)
