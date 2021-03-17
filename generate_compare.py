@@ -55,9 +55,9 @@ if __name__ == "__main__":
     smoke_test = args.get("smoke-test", False)
     df = None
     if smoke_test:
-        df = fl.load("cache.parse_all_speakers.h5")
-    else:
         df = fl.load("cache.smoketest_speakers.h5")
+    else:
+        df = fl.load("cache.parse_all_speakers.h5")
     if df is None:
         logger.error("Load failed! Please run ./generate_graphs.py")
         sys.exit(1)

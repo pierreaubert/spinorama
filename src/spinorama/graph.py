@@ -223,6 +223,7 @@ def graph_spinorama(dfu, graph_params):
     # add selectors
     selectorsMeasurements = alt.selection_multi(fields=["Measurements"], bind="legend")
     scales = alt.selection_interval(bind="scales")
+    scales_di = alt.selection_interval(bind="scales")
     # main charts
     xaxis = alt.X(
         "Freq:Q",
@@ -319,10 +320,12 @@ def graph_spinorama(dfu, graph_params):
 
     # assemble elements together
     spin = (
-        alt.layer(circle + line, circle_di + di)
+        alt.layer(
+            (circle + line).add_selection(scales),
+            (circle_di + di).add_selection(scales_di),
+        )
         .resolve_scale(y="independent")
         .add_selection(selectorsMeasurements)
-        .add_selection(scales)
         .add_selection(nearest)
         .properties(width=graph_params["width"], height=graph_params["height"])
     )
@@ -556,7 +559,9 @@ def graph_radar(df_in, graph_params):
         alt.Chart(dbs_df)
         .mark_line(thickness=3)
         .encode(
-            alt.Latitude("x:Q"), alt.Longitude("y:Q"), alt.Color("Freq:N", sort=None),
+            alt.Latitude("x:Q"),
+            alt.Longitude("y:Q"),
+            alt.Color("Freq:N", sort=None),
         )
         .project(type="azimuthalEquidistant", rotate=[0, 0, 90])
         .properties(width=graph_params["width"], height=graph_params["height"])
@@ -621,9 +626,7 @@ def graph_regression_graph(graph, freq_start, freq_end, withBands=True):
     # regression line
     reg = graph.transform_filter(
         "datum.Freq>{0} & datum.Freq<{1}".format(freq_start, freq_end)
-    ).transform_regression(
-        method="log", on="Freq", regression="dBG", extent=[20, 20000]
-    )
+    ).transform_regression(method="log", on="Freq", regression="dB", extent=[20, 20000])
 
     if withBands:
         # +/- 3dB
@@ -743,13 +746,26 @@ def graph_summary(speaker_name, speaker_summary, params):
     )
 
 
+# import urllib
+# import os
 def graph_image(speaker_name, params):
-    # url = 'https://pierreaubert.github.io/spinorama/pictures/{0}.jpg'.format(quote(speaker_name))
-    url = "file://./docs/pictures/{0}.jpg".format(speaker_name)
+    # url = 'https://pierreaubert.github.io/spinorama/pictures/{0}.jpg'.format(urllib.parse.quote(speaker_name))
+    # url = "file://{1}/docs/pictures/{0}.jpg".format(urllib.parse.quote(speaker_name), os.getcwd())
+    url = "file://docs/pictures/{0}.jpg".format(speaker_name)
     source = pd.DataFrame.from_records([{"x": 0, "y": 0.0, "img": url}])
     return (
         alt.Chart(source)
-        .mark_image(width=params["width"] - 40, height=params["height"] - 40,)
-        .encode(x=alt.X("x", axis=None), y=alt.Y("y", axis=None), url="img",)
-        .properties(width=params["width"], height=params["height"],)
+        .mark_image(
+            width=params["width"] - 40,
+            height=params["height"] - 40,
+        )
+        .encode(
+            x=alt.X("x", axis=None),
+            y=alt.Y("y", axis=None),
+            url="img",
+        )
+        .properties(
+            width=params["width"],
+            height=params["height"],
+        )
     )

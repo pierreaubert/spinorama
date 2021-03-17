@@ -198,7 +198,7 @@ def display_inroom(df, graph_params=None):
         inroom_graph = graph_freq(inroom, graph_params)
         inroom_reg = graph_regression(inroom, 80, 10000)
         return (
-            (inroom_reg + inroom_graph)
+            alt.layer(inroom_reg, inroom_graph)
             .resolve_scale(color="independent")
             .resolve_legend(shape="independent")
         )
@@ -286,7 +286,7 @@ def display_compare(df, graph_filter, graph_params=None):
             [
                 augment(
                     resample(
-                        df[speaker][origin][key][graph_filter], 5000
+                        df[speaker][origin][key][graph_filter], 1000
                     ),  # max 1000 Freq points to minimise space
                     "{0} - {1} - {2}".format(speaker, origin, key),
                 )

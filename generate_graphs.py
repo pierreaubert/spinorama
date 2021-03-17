@@ -61,7 +61,7 @@ from src.spinorama.speaker_print import print_graphs
 from src.spinorama.graph import graph_params_default
 
 
-VERSION = 1.24
+VERSION = 1.25
 
 
 def get_speaker_list(speakerpath: str) -> List[str]:
@@ -82,7 +82,7 @@ def get_speaker_list(speakerpath: str) -> List[str]:
             "logos",
         ):
             speakers.append(os.path.basename(current_dir))
-    return speakers
+    return set(speakers)
 
 
 def queue_measurement(
@@ -124,9 +124,7 @@ def queue_measurement(
     return (id_df, id_eq, id_g1, id_g2)
 
 
-def queue_speakers(
-    speakerlist: List[str], metadata: Mapping[str, dict], filters: Mapping[str, dict]
-) -> dict:
+def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict]) -> dict:
     """Add all speakers in the queue to be processed"""
     ray_ids = {}
     count = 0
@@ -135,7 +133,9 @@ def queue_speakers(
             logger.debug("skipping {}".format(speaker))
             continue
         ray_ids[speaker] = {}
-        for mversion, measurement in metadata[speaker]["measurements"].items():
+        for mversion, measurement in metadata.speakers_info[speaker][
+            "measurements"
+        ].items():
             # mversion looks like asr and asr_eq
             if "version" in filters and not (
                 mversion == filters["version"]
@@ -156,7 +156,7 @@ def queue_speakers(
                 )
                 continue
             # TODO(add filter on brand)
-            brand = metadata[speaker]["brand"]
+            brand = metadata.speakers_info[speaker]["brand"]
             logger.debug(
                 "queing {}/{}/{}/{}".format(speaker, morigin, mformat, mversion)
             )
@@ -171,7 +171,7 @@ def queue_speakers(
     return ray_ids
 
 
-def compute(metadata: Mapping[str, dict], ray_ids: dict):
+def compute(ray_ids: dict):
     """Compute a series of measurements"""
     df = {}
     done_ids = {}
@@ -216,7 +216,9 @@ def compute(metadata: Mapping[str, dict], ray_ids: dict):
             speaker_key = speaker  # .translate({ord(ch) : '_' for ch in '-.;/\' '})
             if speaker not in df.keys():
                 df[speaker_key] = {}
-            for m_version, measurement in metadata[speaker]["measurements"].items():
+            for m_version, measurement in metadata.speakers_info[speaker][
+                "measurements"
+            ].items():
                 m_version_key = (
                     m_version  # .translate({ord(ch) : '_' for ch in '-.;/\' '})
                 )
@@ -337,8 +339,8 @@ if __name__ == "__main__":
         if args[flag] is not None:
             filters[ifilter] = args[flag]
 
-    ray_ids = queue_speakers(speakerlist, metadata.speakers_info, filters)
-    df_new = compute(metadata.speakers_info, ray_ids)
+    ray_ids = queue_speakers(speakerlist, filters)
+    df_new = compute(ray_ids)
 
     cache_name = "cache.parse_all_speakers.h5"
     if len(filters.keys()) == 0:
