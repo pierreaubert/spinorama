@@ -824,7 +824,7 @@ speakers_info = {
         "model": "Chorus OD 706 V",
         "type": "passive",
         "price": "600",
-        "shape": "bookshelves",
+        "shape": "outdoor",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
@@ -1253,6 +1253,22 @@ speakers_info = {
                 "origin": "Princeton",
                 "format": "princeton",
                 "symmetry": "horizontal",
+            },
+        },
+    },
+    "JBL CBT 70J-1": {
+        "brand": "JBL",
+        "model": "CBT 70J-1",
+        "type": "passive",
+        "price": "1000",
+        "shape": "cbt",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-cbt-70j-1-review-constant-beam-transducer.21469/",
             },
         },
     },
@@ -1841,7 +1857,7 @@ speakers_info = {
         "brand": "Magnepan",
         "model": "LRS",
         "type": "passive",
-        "shape": "floorstanders",
+        "shape": "panel",
         "price": "650",
         "default_measurement": "asr",
         "measurements": {
@@ -2041,7 +2057,7 @@ speakers_info = {
         "model": "AP650",
         "type": "active",
         "price": "200",
-        "shape": "bookshelves",
+        "shape": "outdoor",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
@@ -2185,7 +2201,7 @@ speakers_info = {
         "model": "Atrium 4",
         "type": "passive",
         "price": "117",
-        "shape": "bookshelves",
+        "shape": "outdoor",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
@@ -2551,7 +2567,7 @@ speakers_info = {
         "model": "M55XC",
         "type": "passive",
         "price": "420",
-        "shape": "bookshelves",
+        "shape": "outdoor",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
@@ -2619,7 +2635,7 @@ speakers_info = {
         "model": "Outsider II",
         "type": "passive",
         "price": "300",
-        "shape": "bookshelves",
+        "shape": "outdoor",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
