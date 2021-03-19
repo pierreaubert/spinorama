@@ -6,7 +6,11 @@ import numpy as np
 import pandas as pd
 from .compute_directivity import directivity_matrix
 from .compute_normalize import resample
-from .graph_contour import compute_contour, compute_contour_smoothed
+from .graph_contour import (
+    compute_contour,
+    compute_contour_smoothed,
+    compute_directivity_deg,
+)
 from .graph_isobands import find_isobands
 from . import graph_radar as radar
 
@@ -344,7 +348,7 @@ def graph_empty(freq_min, freq_max, angle_min, angle_max):
             x=alt.X(
                 "x:Q",
                 scale=alt.Scale(type="log", nice=False, domain=[freq_min, freq_max]),
-                title="Frequency (Hz)",
+                axis=alt.Axis(title="Frequency (Hz)"),
             ),
             y=alt.Y(
                 "y:Q",
@@ -442,6 +446,9 @@ def graph_isoband(df, isoband_params):
         "w {0} h {1} fq=[{2},{3}]".format(graph_width, graph_height, freq_min, freq_max)
     )
 
+    dir_deg_p, dir_deg_m, _ = compute_directivity_deg(af, am, az)
+    lines = graph_directivity_lines(freq_min, dir_deg_p, dir_deg_m)
+
     def transform_log(x, y):
         return np.log10(x) * graph_width / 172
 
@@ -476,7 +483,11 @@ def graph_isoband(df, isoband_params):
         .project("identity")
     )
     axis = graph_empty(freq_min, freq_max, -180, 180)
-    return (isobands + axis).properties(width=graph_width, height=graph_height)
+    return (
+        (isobands + axis + lines)
+        .resolve_scale(y="independent")
+        .properties(width=graph_width, height=graph_height)
+    )
 
 
 def graph_contour_smoothed(df, graph_params):
@@ -769,3 +780,45 @@ def graph_image(speaker_name, params):
             height=params["height"],
         )
     )
+
+
+def graph_directivity_lines(freq_min, angle_p, angle_m):
+
+    x_axis = alt.X(
+        "Freq:Q",
+        axis=None,
+        scale=alt.Scale(type="log", domain=[freq_min, 20000], nice=False),
+    )
+    y_axis = y = alt.Y(
+        "Angle:Q", axis=None, scale=alt.Scale(domain=[-180, 180], nice=False)
+    )
+    color = alt.value("white")
+    size = alt.value(3)
+
+    line_source = pd.DataFrame(
+        {"Freq": [freq_min, 20000], "Angle": [0, 0], "dB": [0, 0]}
+    )
+    line_source_p = pd.DataFrame(
+        {"Freq": [freq_min, 20000], "Angle": [angle_p, angle_p], "dB": [-6, -6]}
+    )
+    line_source_m = pd.DataFrame(
+        {"Freq": [freq_min, 20000], "Angle": [angle_m, angle_m], "dB": [-6, -6]}
+    )
+
+    line = (
+        alt.Chart(line_source)
+        .mark_line()
+        .encode(x=x_axis, y=y_axis, color=color, size=size)
+    )
+    line_p = (
+        alt.Chart(line_source_p)
+        .mark_line()
+        .encode(x=x_axis, y=y_axis, color=color, size=size)
+    )
+    line_m = (
+        alt.Chart(line_source_m)
+        .mark_line()
+        .encode(x=x_axis, y=y_axis, color=color, size=size)
+    )
+
+    return line + line_p + line_m

@@ -10,16 +10,7 @@ from .load import graph_melt
 logger = logging.getLogger("spinorama")
 
 
-def normalize1(dfu):
-    dfm = dfu.copy()
-    for c in dfu.columns:
-        if c != "Freq" and c != "On Axis":
-            dfm[c] = 20 * np.log10(dfu[c] / dfu["On Axis"])
-    dfm["On Axis"] = 0
-    return dfm
-
-
-def normalize2(dfu):
+def normalize_onaxis(dfu):
     dfm = dfu.copy()
     for c in dfu.columns:
         if c != "Freq" and c != "On Axis":
@@ -32,7 +23,7 @@ def normalize2(dfu):
 
 def compute_contour(dfu):
     # normalize dB values wrt on axis
-    dfm = normalize2(dfu)
+    dfm = normalize_onaxis(dfu)
 
     # get a list of columns
     vrange = []
@@ -123,7 +114,7 @@ def reshape(x, y, z, nscale):
 def compute_contour_smoothed(dfu, nscale=5):
     # compute contour
     x, y, z = compute_contour(dfu)
-    z_range = np.max(z)-np.min(z)
+    z_range = np.max(z) - np.min(z)
     if len(x) == 0 or len(y) == 0 or len(z) == 0:
         return (None, None, None)
     # std_dev = 1
@@ -134,7 +125,45 @@ def compute_contour_smoothed(dfu, nscale=5):
     # convolve with kernel
     rzs = ndimage.convolve(rz, kernel.array, mode="mirror")
     # normalize
-    rzs_range = np.max(rzs)-np.min(rzs)
+    rzs_range = np.max(rzs) - np.min(rzs)
     if rzs_range > 0:
-        rzs *= z_range/rzs_range
+        rzs *= z_range / rzs_range
     return (rx, ry, rzs)
+
+
+def compute_directivity_deg(af, am, az):
+    """ "compute +/- angle where directivity is most constant between 1kHz and 10kz"""
+
+    # kHz1 = 110
+    # kHz10 = 180
+    def eval(x):
+        xp1 = int(x)
+        xp2 = xp1 + 1
+        zp1 = az[xp1][110:180]
+        zp2 = az[xp2][110:180]
+        # linear interpolation
+        zp = zp1 + (x - xp1) * (zp2 - zp1)
+        # normˆ2 (z-(-6dB))
+        return np.linalg.norm(zp + 6)
+
+    eval_count = 100
+
+    space_p = np.linspace(int(len(am.T[0]) / 2), 1, eval_count)
+    eval_p = [eval(x) for x in space_p]
+    # 10% tolerance
+    min_p = np.min(eval_p) * 1.1
+    # all minimum in this 10% band from min
+    pos_g = [i for i, v in enumerate(eval_p) if v < min_p]
+    # be generous and take best one
+    pos_p = pos_g[-1]
+    # translate in deg
+    angle_p = pos_p * 180 / eval_count
+
+    space_m = np.linspace(int(len(am.T[0]) / 2), len(am.T[0]) - 2, eval_count)
+    eval_m = [eval(x) for x in space_m]
+    min_m = np.min(eval_m) * 1.1
+    pos_g = [i for i, v in enumerate(eval_m) if v < min_m]
+    pos_m = pos_g[-1]
+    angle_m = -pos_m * 180 / eval_count
+
+    return angle_p, angle_m, (angle_p + angle_m) / 2
