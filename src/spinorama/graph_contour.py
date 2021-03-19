@@ -125,9 +125,9 @@ def compute_contour_smoothed(dfu, nscale=5):
     # convolve with kernel
     rzs = ndimage.convolve(rz, kernel.array, mode="mirror")
     # normalize
-    rzs_range = np.max(rzs) - np.min(rzs)
-    if rzs_range > 0:
-        rzs *= z_range / rzs_range
+    # rzs_range = np.max(rzs) - np.min(rzs)
+    # if rzs_range > 0:
+    #    rzs *= z_range / rzs_range
     return (rx, ry, rzs)
 
 
@@ -155,15 +155,22 @@ def compute_directivity_deg(af, am, az):
     # all minimum in this 10% band from min
     pos_g = [i for i, v in enumerate(eval_p) if v < min_p]
     # be generous and take best one
-    pos_p = pos_g[-1]
-    # translate in deg
+    if len(pos_g) > 1:
+        pos_p = pos_g[-1]
+        # translate in deg
+    else:
+        pos_p = np.argmin(eval_p)
     angle_p = pos_p * 180 / eval_count
 
     space_m = np.linspace(int(len(am.T[0]) / 2), len(am.T[0]) - 2, eval_count)
     eval_m = [eval(x) for x in space_m]
     min_m = np.min(eval_m) * 1.1
     pos_g = [i for i, v in enumerate(eval_m) if v < min_m]
-    pos_m = pos_g[-1]
+    if len(pos_g) > 1:
+        pos_m = pos_g[-1]
+    else:
+        pos_m = np.argmin(eval_m)
+
     angle_m = -pos_m * 180 / eval_count
 
     return angle_p, angle_m, (angle_p + angle_m) / 2
