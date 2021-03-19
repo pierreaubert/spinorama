@@ -177,7 +177,7 @@ def graph_freq(dfu, graph_params):
                 "Freq:Q",
                 title="Freqency (Hz)",
                 scale=alt.Scale(type="log", base=10, nice=False, domain=[xmin, xmax]),
-                axis=alt.Axis(format="s"),
+                axis=alt.Axis(format="~s"),
             ),
             alt.Y(
                 "dB:Q",
@@ -233,7 +233,7 @@ def graph_spinorama(dfu, graph_params):
         "Freq:Q",
         title="Freqency (Hz)",
         scale=alt.Scale(type="log", base=10, nice=False, domain=[xmin, xmax]),
-        axis=alt.Axis(format="s"),
+        axis=alt.Axis(format="~s"),
     )
     yaxis = alt.Y(
         "dB:Q",
@@ -348,12 +348,14 @@ def graph_empty(freq_min, freq_max, angle_min, angle_max):
             x=alt.X(
                 "x:Q",
                 scale=alt.Scale(type="log", nice=False, domain=[freq_min, freq_max]),
-                axis=alt.Axis(title="Frequency (Hz)"),
+                axis=alt.Axis(format="s", title="Frequency (Hz)"),
             ),
             y=alt.Y(
                 "y:Q",
                 scale=alt.Scale(nice=False, domain=[angle_min, angle_max]),
-                axis=alt.Axis(format=".0d", values=isoTicks, title="Angle"),
+                axis=alt.Axis(
+                    values=isoTicks, title="Angle (deg)", labelExpr="datum.value+'°'"
+                ),
             ),
         )
     )
@@ -378,6 +380,7 @@ def graph_contour_common(af, am, az, graph_params):
 
         # flatten and build a Frame
         freq = af.ravel()
+        freq_min = np.min(freq)
         angle = am.ravel()
         db = az.ravel()
         if (freq.size != angle.size) or (freq.size != db.size):
@@ -411,8 +414,16 @@ def graph_contour_common(af, am, az, graph_params):
                 scale=alt.Scale(scheme=colormap, domain=speaker_scale, nice=True),
             ),
         )
-        return (chart + graph_empty(400, 20000, -180, 180)).properties(
-            width=width, height=height
+
+        # add axis and 3 lines (0, +/-6dB)
+        dir_deg_p, dir_deg_m, _ = compute_directivity_deg(af, am, az)
+        lines = graph_directivity_lines(freq_min, dir_deg_p, dir_deg_m, True)
+        axis = graph_empty(400, 20000, -180, 180)
+
+        return (
+            (chart + lines + axis)
+            .resolve_scale(x="independent", y="independent")
+            .properties(width=width, height=height)
         )
     except KeyError as ke:
         logger.warning("Failed with {0}".format(ke))
@@ -484,8 +495,8 @@ def graph_isoband(df, isoband_params):
     )
     axis = graph_empty(freq_min, freq_max, -180, 180)
     return (
-        (isobands + axis + lines)
-        .resolve_scale(y="independent")
+        (isobands + lines + axis)
+        .resolve_scale(x="independent", y="independent")
         .properties(width=graph_width, height=graph_height)
     )
 
@@ -782,7 +793,7 @@ def graph_image(speaker_name, params):
     )
 
 
-def graph_directivity_lines(freq_min, angle_p, angle_m):
+def graph_directivity_lines(freq_min, angle_p, angle_m, onlyZero=False):
 
     x_axis = alt.X(
         "Freq:Q",
@@ -798,6 +809,14 @@ def graph_directivity_lines(freq_min, angle_p, angle_m):
     line_source = pd.DataFrame(
         {"Freq": [freq_min, 20000], "Angle": [0, 0], "dB": [0, 0]}
     )
+    line = (
+        alt.Chart(line_source)
+        .mark_line()
+        .encode(x=x_axis, y=y_axis, color=color, size=size)
+    )
+    if onlyZero:
+        return line
+
     line_source_p = pd.DataFrame(
         {"Freq": [freq_min, 20000], "Angle": [angle_p, angle_p], "dB": [-6, -6]}
     )
@@ -805,11 +824,6 @@ def graph_directivity_lines(freq_min, angle_p, angle_m):
         {"Freq": [freq_min, 20000], "Angle": [angle_m, angle_m], "dB": [-6, -6]}
     )
 
-    line = (
-        alt.Chart(line_source)
-        .mark_line()
-        .encode(x=x_axis, y=y_axis, color=color, size=size)
-    )
     line_p = (
         alt.Chart(line_source_p)
         .mark_line()
