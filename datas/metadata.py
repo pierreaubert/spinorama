@@ -53,7 +53,7 @@ speakers_info = {
         "model": "Homepod",
         "type": "active",
         "price": "500",
-        "shape": "bookshelves",
+        "shape": "omnidirectional",
         "amount": "single",
         "default_measurement": "vendor",
         "measurements": {
@@ -748,7 +748,7 @@ speakers_info = {
         "model": "Model 1600",
         "type": "passive",
         "price": "",
-        "shape": "floorstanders",
+        "shape": "panel",
         "default_measurement": "princeton",
         "measurements": {
             "princeton": {
@@ -856,7 +856,7 @@ speakers_info = {
         "model": "R16",
         "type": "passive",
         "price": "",
-        "shape": "floorstanders",
+        "shape": "panel",
         "default_measurement": "princeton",
         "measurements": {
             "princeton": {
@@ -2328,7 +2328,7 @@ speakers_info = {
         "brand": "Quad Electroacoustics",
         "model": "ESL-57",
         "type": "passive",
-        "shape": "floorstanders",
+        "shape": "panel",
         "price": "",
         "default_measurement": "princeton",
         "measurements": {
@@ -2666,7 +2666,7 @@ speakers_info = {
         "model": "Model 11",
         "type": "passive",
         "price": "",
-        "shape": "floorstanders",
+        "shape": "panel",
         "default_measurement": "princeton-factory",
         "measurements": {
             "princeton-factory": {
