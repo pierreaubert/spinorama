@@ -16,6 +16,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import tables
+import warnings
 import flammkuchen as fl
 
 if __name__ == "__main__":
@@ -29,4 +31,7 @@ if __name__ == "__main__":
     ):
         if speaker in df.keys():
             df_small[speaker] = df[speaker]
-    fl.save("cache.smoketest_speakers.h5", df_small)
+            
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", tables.NaturalNameWarning)
+        fl.save("cache.smoketest_speakers.h5", df_small)
