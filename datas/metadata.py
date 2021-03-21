@@ -366,6 +366,21 @@ speakers_info = {
             },
         },
     },
+    "Bowers & Wilkins 607 S2 Anniversary Edition": {
+        "brand": "Bowers & Wilkins",
+        "model": "607 S2 Anniversary Edition",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "740",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-607-s2-anniversary-edition-review.21597/",
+            },
+        },
+    },
     "Cambridge Soundworks Model Six": {
         "brand": "Cambridge Soundworks",
         "model": "Model Six",
@@ -2482,7 +2497,7 @@ speakers_info = {
         "model": "F35",
         "type": "passive",
         "price": "1600",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
