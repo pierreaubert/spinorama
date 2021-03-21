@@ -351,10 +351,22 @@ if __name__ == "__main__":
         if os.path.exists(cache_name) and update_cache:
             print("Updating cache ", end=" ", flush=True)
             df_tbu = fl.load(path=cache_name)
-            print("(loaded) ", end=" ", flush=True)
-            for df_k, df_v in df_new.items():
-                df_tbu[df_k] = df_v
-            print("(updated) ", end=" ", flush=True)
+            print("(loaded {}) ".format(len(df_tbu)), end=" ", flush=True)
+            count = 0
+            for new_speaker, new_datas in df_new.items():
+                for new_origin, new_measurements in new_datas.items():
+                    for new_measurement, new_data in new_measurements.items():
+                        if new_speaker not in df_tbu.keys():
+                            df_tbu[new_speaker] = {new_origin: { new_measurement: new_data}}
+                            count += 1
+                            continue
+                        if new_origin not in df_tbu[new_speaker].keys():
+                            df_tbu[new_speaker][new_origin]= { new_measurement: new_data}
+                            count += 1
+                            continue
+                        df_tbu[new_speaker][new_origin][new_measurement] = new_data
+                        count += 1
+            print("(updated +{}) ".format(count), end=" ", flush=True)
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore", tables.NaturalNameWarning)
                 fl.save(path=cache_name, data=df_tbu)
