@@ -357,11 +357,15 @@ if __name__ == "__main__":
                 for new_origin, new_measurements in new_datas.items():
                     for new_measurement, new_data in new_measurements.items():
                         if new_speaker not in df_tbu.keys():
-                            df_tbu[new_speaker] = {new_origin: { new_measurement: new_data}}
+                            df_tbu[new_speaker] = {
+                                new_origin: {new_measurement: new_data}
+                            }
                             count += 1
                             continue
                         if new_origin not in df_tbu[new_speaker].keys():
-                            df_tbu[new_speaker][new_origin]= { new_measurement: new_data}
+                            df_tbu[new_speaker][new_origin] = {
+                                new_measurement: new_data
+                            }
                             count += 1
                             continue
                         df_tbu[new_speaker][new_origin][new_measurement] = new_data

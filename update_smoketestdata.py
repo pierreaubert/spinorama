@@ -31,7 +31,7 @@ if __name__ == "__main__":
     ):
         if speaker in df.keys():
             df_small[speaker] = df[speaker]
-            
+
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", tables.NaturalNameWarning)
         fl.save("cache.smoketest_speakers.h5", df_small)
