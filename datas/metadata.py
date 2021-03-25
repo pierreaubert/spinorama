@@ -2860,6 +2860,21 @@ speakers_info = {
             },
         },
     },
+    "Triangle Borea BR03": {
+        "brand": "Triangle",
+        "model": "Triangle Borea BR03",
+        "type": "passive",
+        "price": "500",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/triangle-borea-br03-review-bookshelf-speaker.21739/",
+            },
+        },
+    },
     "Vanatoo Transparent Zero": {
         "brand": "Vanatoo",
         "model": "Transparent Zero",
