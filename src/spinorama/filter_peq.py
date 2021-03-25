@@ -12,6 +12,15 @@ from .load import graph_melt
 logger = logging.getLogger("spinorama")
 
 
+def peq_equal(left: Peq, right: Peq) -> bool:
+    if len(left) != len(right):
+        return False
+    for l, r in zip(left, right):
+        if l[0] != r[0] or l[1] != r[1]:
+            return False
+    return True
+
+
 def peq_build(freq: Vector, peq: Peq) -> Vector:
     current_filter = [0.0]
     if len(peq) > 0:
