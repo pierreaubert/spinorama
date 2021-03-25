@@ -70,8 +70,8 @@ except ModuleNotFoundError:
 from generate_common import get_custom_logger, args2level, custom_ray_init
 from datas.metadata import speakers_info as metadata
 from spinorama.load_rewseq import parse_eq_iir_rews
-from spinorama.filter_peq import peq_format_apo
-from spinorama.filter_scores import scores_apply_filter, scores_print2
+from spinorama.filter_peq import peq_format_apo, peq_equal
+from spinorama.filter_scores import scores_apply_filter, scores_print2, scores_print
 from spinorama.auto_target import get_freq, get_target
 from spinorama.auto_optim import optim_greedy
 from spinorama.auto_graph import graph_results as auto_graph_results
@@ -132,19 +132,21 @@ def optim_save_peq(
     manual_spin, manual_pir = None, None
     if be_verbose and use_score:
         manual_peq_name = "./datas/eq/{}/iir.txt".format(speaker_name)
-        manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config["fs"])
-        manual_spin, manual_pir, score_manual = scores_apply_filter(
-            df_speaker, manual_peq
-        )
-        if df_speaker_eq is not None:
-            manual_df, manual_freq, manual_target = get_freq(
-                df_speaker_eq, optim_config
+        print(os.readlink(manual_peq_name))
+        if os.readlink(manual_peq_name) != "iir-autoeq.txt":
+            manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config["fs"])
+            manual_spin, manual_pir, score_manual = scores_apply_filter(
+                df_speaker, manual_peq
             )
-            manual_target_interp = []
-            for curve in curves:
-                manual_target_interp.append(
-                    get_target(manual_df, manual_freq, curve, optim_config)
+            if df_speaker_eq is not None:
+                manual_df, manual_freq, manual_target = get_freq(
+                    df_speaker_eq, optim_config
                 )
+                manual_target_interp = []
+                for curve in curves:
+                    manual_target_interp.append(
+                        get_target(manual_df, manual_freq, curve, optim_config)
+                    )
 
     # compute new score with this PEQ
     spin_auto = None
@@ -156,7 +158,7 @@ def optim_save_peq(
         # store the 3 different scores
         scores = [score["pref_score"], score["pref_score"], score_auto["pref_score"]]
         if be_verbose:
-            scores[1] = score_manual["pref_score"]
+            scores[1] = score_manual.get("pref_score", -5)
 
     # print peq
     comments = [
@@ -191,24 +193,46 @@ def optim_save_peq(
                     pass
 
     # print results
-    if len(manual_peq) > 0 and len(auto_peq) > 0:
-        graphs = auto_graph_results(
-            speaker_name,
-            freq,
-            manual_peq,
-            auto_peq,
-            auto_target,
-            auto_target_interp,
-            manual_target,
-            manual_target_interp,
-            df_speaker["CEA2034"],
-            manual_spin,
-            spin_auto,
-            df_speaker["Estimated In-Room Response"],
-            manual_pir,
-            pir_auto,
-            optim_config,
-        )
+    if len(auto_peq) > 0:
+        graphs = None
+        if len(manual_peq) > 0 and not peq_equal(manual_peq, auto_peq):
+            graphs = auto_graph_results(
+                speaker_name,
+                freq,
+                manual_peq,
+                auto_peq,
+                auto_target,
+                auto_target_interp,
+                manual_target,
+                manual_target_interp,
+                df_speaker["CEA2034"],
+                manual_spin,
+                spin_auto,
+                df_speaker["Estimated In-Room Response"],
+                manual_pir,
+                pir_auto,
+                optim_config,
+            )
+        else:
+            graphs = auto_graph_results(
+                speaker_name,
+                freq,
+                None,
+                auto_peq,
+                auto_target,
+                auto_target_interp,
+                None,
+                None,
+                df_speaker["CEA2034"],
+                None,
+                spin_auto,
+                df_speaker["Estimated In-Room Response"],
+                None,
+                pir_auto,
+                optim_config,
+            )
+
+        print("Printing {} graphs".format(len(graphs)))
         for i, graph in enumerate(graphs):
             graph_filename = "docs/{}/ASR/filters{}".format(speaker_name, i)
             if is_smoke_test:
@@ -242,19 +266,31 @@ def optim_save_peq(
         logger.info(
             "{:30s} ---------------------------------------".format(speaker_name)
         )
-        logger.info(scores_print2(score, score_manual, score_auto))
+        if "nbd_on_axis" in score_manual:
+            logger.info(scores_print2(score, score_manual, score_auto))
+        else:
+            logger.info(scores_print(score, score_auto))
         logger.info(
             "----------------------------------------------------------------------"
         )
-        print(
-            "{:+2.2f} {:+2.2f} {:+2.2f} {:+2.2f} {:s}".format(
-                score["pref_score"],
-                score_manual["pref_score"],
-                score_auto["pref_score"],
-                score_manual["pref_score"] - score_auto["pref_score"],
-                speaker_name,
+        if "pref_score" in score_manual:
+            print(
+                "{:+2.2f} {:+2.2f} {:+2.2f} {:+2.2f} {:s}".format(
+                    score["pref_score"],
+                    score_manual["pref_score"],
+                    score_auto["pref_score"],
+                    score_manual["pref_score"] - score_auto["pref_score"],
+                    speaker_name,
+                )
             )
-        )
+        else:
+            print(
+                "{:+2.2f} {:+2.2f} {:s}".format(
+                    score["pref_score"],
+                    score_auto["pref_score"],
+                    speaker_name,
+                )
+            )
 
     return speaker_name, auto_results, scores
 
