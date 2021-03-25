@@ -61,8 +61,12 @@ def scores_print(score: dict, score_filtered: dict):
             score["sm_sound_power"], score_filtered["sm_sound_power"]
         )
     )
-    print("LFX       {0}   {1:0.0f}".format(score["lfx_hz"], score_filtered["lfx_hz"]))
-    print("LFQ     {0} {1:0.2f}".format(score["lfq"], score_filtered["lfq"]))
+    print(
+        "LFX       {0:0.0f}   {1:0.0f}".format(
+            score["lfx_hz"], score_filtered["lfx_hz"]
+        )
+    )
+    print("LFQ     {0:0.2f} {1:0.2f}".format(score["lfq"], score_filtered["lfq"]))
     print("-----------------")
     print(
         "Score    {0:0.1f}  {1:0.1f}".format(
