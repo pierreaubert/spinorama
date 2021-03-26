@@ -1495,6 +1495,23 @@ speakers_info = {
             },
         },
     },
+    "JBL HDI-3800": {
+        "brand": "JBL",
+        "model": "HDI-3800",
+        "type": "passive",
+        "price": "5800",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "review_published": "20210323",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/jbl_hdi-3800/",
+            },
+        },
+    },
     "JBL M2": {
         "brand": "JBL",
         "model": "M2",
