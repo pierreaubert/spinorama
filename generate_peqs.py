@@ -132,8 +132,7 @@ def optim_save_peq(
     manual_spin, manual_pir = None, None
     if be_verbose and use_score:
         manual_peq_name = "./datas/eq/{}/iir.txt".format(speaker_name)
-        print(os.readlink(manual_peq_name))
-        if os.readlink(manual_peq_name) != "iir-autoeq.txt":
+        if os.path.exists(manual_peq_name) and os.readlink(manual_peq_name) != "iir-autoeq.txt":
             manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config["fs"])
             manual_spin, manual_pir, score_manual = scores_apply_filter(
                 df_speaker, manual_peq
@@ -557,10 +556,13 @@ if __name__ == "__main__":
             if len(keys) > 0 and keys[0][0:8] == "Vendors-":
                 speaker_default = "vendor"
                 speaker_origin = keys[0]
+            elif len(keys) > 0 and keys[0] == "ErinsAudioCorner":
+                speaker_default = "eac"
+                speaker_origin = keys[0]
             else:
                 logger.debug("Speaker {} Keys are {}".format(speaker_name, keys[0]))
                 print(
-                    "Speaker {} measurements are not from ASR nor digitalized.".format(
+                    "Speaker {} measurements are not from ASR, EAC nor digitalized.".format(
                         speaker_name
                     )
                 )
@@ -572,7 +574,7 @@ if __name__ == "__main__":
             speaker_default = metadata[speaker_name]["default_measurement"]
         df_speaker = None
         # print(speaker_name, speaker_default, speaker_origin)
-        if speaker_origin == "ASR":
+        if speaker_origin == "ASR" or speaker_origin == "ErinsAudioCorner":
             df_speaker = df_all_speakers[speaker_name][speaker_origin][speaker_default]
         elif speaker_default == "vendor":
             # print(speaker_name, speaker_origin, speaker_default, list(df_all_speakers[speaker_name][speaker_origin].keys()))
