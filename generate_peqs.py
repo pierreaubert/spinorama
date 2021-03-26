@@ -82,7 +82,7 @@ VERSION = 0.6
 
 @ray.remote
 def optim_save_peq(
-    speaker_name, df_speaker, df_speaker_eq, optim_config, be_verbose, is_smoke_test
+        speaker_name, speaker_origin, df_speaker, df_speaker_eq, optim_config, be_verbose, is_smoke_test
 ):
     """Compute ans save PEQ for this speaker """
     eq_dir = "datas/eq/{}".format(speaker_name)
@@ -233,7 +233,7 @@ def optim_save_peq(
 
         print("Printing {} graphs".format(len(graphs)))
         for i, graph in enumerate(graphs):
-            graph_filename = "docs/{}/ASR/filters{}".format(speaker_name, i)
+            graph_filename = "docs/{}/{}/filters{}".format(speaker_name, speaker_origin, i)
             if is_smoke_test:
                 graph_filename += "_smoketest"
             graph_filename += ".png"
@@ -297,22 +297,31 @@ def optim_save_peq(
 def queue_speakers(df_all_speakers, optim_config, be_verbose, is_smoke_test):
     ray_ids = {}
     for speaker_name in df_all_speakers.keys():
-        if "ASR" not in df_all_speakers[speaker_name].keys():
+        default = None
+        default_eq = None
+        default_origin = None
+        if "ASR" in df_all_speakers[speaker_name].keys():
+            default = "asr"
+            default_eq = "asr_eq"
+            default_origin = "ASR"
+        elif "ErinsAudioCorner" in df_all_speakers[speaker_name].keys():
+            default = "eac"
+            default_eq = "eac_eq"
+            default_origin = "ErinsAudioCorner"
+        else:
             # currently doing only ASR but should work for the others
             # Princeton start around 500hz
             continue
-        default = "asr"
-        default_eq = "asr_eq"
         if (
             speaker_name in metadata.keys()
             and "default_measurement" in metadata[speaker_name].keys()
         ):
             default = metadata[speaker_name]["default_measurement"]
             default_eq = "{}_eq".format(default)
-        if default not in df_all_speakers[speaker_name]["ASR"].keys():
+        if default not in df_all_speakers[speaker_name]["ASR"].keys() or default not in df_all_speakers[speaker_name]["ErinsAudioCorner"].keys():
             logger.error("no {} for {}".format(default, speaker_name))
             continue
-        df_speaker = df_all_speakers[speaker_name]["ASR"][default]
+        df_speaker = df_all_speakers[speaker_name][default_origin][default]
         if (
             "SPL Horizontal_unmelted" not in df_speaker.keys()
             or "SPL Vertical_unmelted" not in df_speaker.keys()
@@ -322,11 +331,12 @@ def queue_speakers(df_all_speakers, optim_config, be_verbose, is_smoke_test):
             )
             continue
         df_speaker_eq = None
-        if default_eq in df_all_speakers[speaker_name]["ASR"].keys():
-            df_speaker_eq = df_all_speakers[speaker_name]["ASR"][default_eq]
+        if default_eq in df_all_speakers[speaker_name][default_origin].keys():
+            df_speaker_eq = df_all_speakers[speaker_name][default_origin][default_eq]
 
         current_id = optim_save_peq.remote(
             speaker_name,
+            default_origin,
             df_speaker,
             df_speaker_eq,
             optim_config,
@@ -614,6 +624,7 @@ if __name__ == "__main__":
         # compute
         current_id = optim_save_peq.remote(
             speaker_name,
+            speaker_origin,
             df_speaker,
             df_speaker_eq,
             current_optim_config,
