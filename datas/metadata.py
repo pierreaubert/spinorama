@@ -2862,7 +2862,7 @@ speakers_info = {
     },
     "Triangle Borea BR03": {
         "brand": "Triangle",
-        "model": "Triangle Borea BR03",
+        "model": "Borea BR03",
         "type": "passive",
         "price": "500",
         "shape": "bookshelves",
