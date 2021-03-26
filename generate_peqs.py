@@ -132,7 +132,10 @@ def optim_save_peq(
     manual_spin, manual_pir = None, None
     if be_verbose and use_score:
         manual_peq_name = "./datas/eq/{}/iir.txt".format(speaker_name)
-        if os.path.exists(manual_peq_name) and os.readlink(manual_peq_name) != "iir-autoeq.txt":
+        if (
+            os.path.exists(manual_peq_name)
+            and os.readlink(manual_peq_name) != "iir-autoeq.txt"
+        ):
             manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config["fs"])
             manual_spin, manual_pir, score_manual = scores_apply_filter(
                 df_speaker, manual_peq
