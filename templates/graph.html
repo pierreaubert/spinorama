@@ -8,7 +8,7 @@
 
 <div id="visGraph"></div>
 
-<script type="text/javascript">
+<script>
   const spec = downloadZip("${graph | space2url}.json.zip").then(
     function(spec) {
       displayGraph(JSON.parse(spec), visGraph);
