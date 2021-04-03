@@ -2892,6 +2892,22 @@ speakers_info = {
             },
         },
     },
+    "Triangle Esprit Antal Ez": {
+        "brand": "Triangle",
+        "model": "Esprit Antal Ez",
+        "type": "passive",
+        "price": "890",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "review_published": "20210403",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/triangle-esprit-antal-ez-review-tower-speaker.22080/",
+            },
+        },
+    },
     "Vanatoo Transparent Zero": {
         "brand": "Vanatoo",
         "model": "Transparent Zero",
