@@ -74,9 +74,9 @@ def label(i):
     return "{:d} Hz".format(i)
 
 
-def grid_grid(circle, anglelist):
+def grid_grid(circle_radius, anglelist):
     # to limit the annoying effect of all lines crossing at 0,0
-    radius = 0.25 * circle
+    radius = 0.25 * circle_radius
     grid0 = [
         (radius * math.cos(p * math.pi / 180), radius * math.sin(p * math.pi / 180))
         for p in anglelist

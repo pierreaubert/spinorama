@@ -74,7 +74,7 @@ def alternate_loss(
     freq: Vector, local_target: List[Vector], peq: Peq, iteration: int
 ) -> float:
     # optimise for 2 objectives 1 each time
-    if len(local_target) == 0 or iteration % 2 == 0:
+    if 0 in (len(local_target), iteration % 2):
         return l2_loss([local_target[0]], freq, peq)
     return l2_loss([local_target[1]], freq, peq)
 

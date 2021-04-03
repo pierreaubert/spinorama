@@ -28,7 +28,7 @@ def compute_contour(dfu):
     # get a list of columns
     vrange = []
     for c in dfm.columns:
-        if c != "Freq" and c != "On Axis":
+        if c not in ("Freq", "On Axis"):
             angle = int(c[:-1])
             vrange.append(angle)
         if c == "On Axis":
@@ -114,8 +114,8 @@ def reshape(x, y, z, nscale):
 def compute_contour_smoothed(dfu, nscale=5):
     # compute contour
     x, y, z = compute_contour(dfu)
-    z_range = np.max(z) - np.min(z)
-    if len(x) == 0 or len(y) == 0 or len(z) == 0:
+    # z_range = np.max(z) - np.min(z)
+    if 0 in (len(x), len(y), len(z)):
         return (None, None, None)
     # std_dev = 1
     kernel = Gaussian2DKernel(1, 5)

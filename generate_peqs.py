@@ -82,7 +82,13 @@ VERSION = 0.6
 
 @ray.remote
 def optim_save_peq(
-        speaker_name, speaker_origin, df_speaker, df_speaker_eq, optim_config, be_verbose, is_smoke_test
+    speaker_name,
+    speaker_origin,
+    df_speaker,
+    df_speaker_eq,
+    optim_config,
+    be_verbose,
+    is_smoke_test,
 ):
     """Compute ans save PEQ for this speaker """
     eq_dir = "datas/eq/{}".format(speaker_name)
@@ -132,7 +138,10 @@ def optim_save_peq(
     manual_spin, manual_pir = None, None
     if be_verbose and use_score:
         manual_peq_name = "./datas/eq/{}/iir.txt".format(speaker_name)
-        if os.path.exists(manual_peq_name) and os.readlink(manual_peq_name) != "iir-autoeq.txt":
+        if (
+            os.path.exists(manual_peq_name)
+            and os.readlink(manual_peq_name) != "iir-autoeq.txt"
+        ):
             manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config["fs"])
             manual_spin, manual_pir, score_manual = scores_apply_filter(
                 df_speaker, manual_peq
@@ -233,7 +242,9 @@ def optim_save_peq(
 
         print("Printing {} graphs".format(len(graphs)))
         for i, graph in enumerate(graphs):
-            graph_filename = "docs/{}/{}/filters{}".format(speaker_name, speaker_origin, i)
+            graph_filename = "docs/{}/{}/filters{}".format(
+                speaker_name, speaker_origin, i
+            )
             if is_smoke_test:
                 graph_filename += "_smoketest"
             graph_filename += ".png"
@@ -318,7 +329,10 @@ def queue_speakers(df_all_speakers, optim_config, be_verbose, is_smoke_test):
         ):
             default = metadata[speaker_name]["default_measurement"]
             default_eq = "{}_eq".format(default)
-        if default not in df_all_speakers[speaker_name]["ASR"].keys() or default not in df_all_speakers[speaker_name]["ErinsAudioCorner"].keys():
+        if (
+            default not in df_all_speakers[speaker_name]["ASR"].keys()
+            or default not in df_all_speakers[speaker_name]["ErinsAudioCorner"].keys()
+        ):
             logger.error("no {} for {}".format(default, speaker_name))
             continue
         df_speaker = df_all_speakers[speaker_name][default_origin][default]
@@ -584,7 +598,7 @@ if __name__ == "__main__":
             speaker_default = metadata[speaker_name]["default_measurement"]
         df_speaker = None
         # print(speaker_name, speaker_default, speaker_origin)
-        if speaker_origin == "ASR" or speaker_origin == "ErinsAudioCorner":
+        if speaker_origin in ("ASR", "ErinsAudioCorner"):
             df_speaker = df_all_speakers[speaker_name][speaker_origin][speaker_default]
         elif speaker_default == "vendor":
             # print(speaker_name, speaker_origin, speaker_default, list(df_all_speakers[speaker_name][speaker_origin].keys()))

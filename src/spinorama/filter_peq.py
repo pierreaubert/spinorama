@@ -90,7 +90,7 @@ def peq_graph_measurements(spin: pd.DataFrame, measurement: str, peq: Peq):
 
 
 def peq_print(peq: Peq) -> None:
-    for i in range(0, len(peq)):
+    for i in enumerate(peq):
         if peq[i][0] != 0:
             print(peq[i][1])
 

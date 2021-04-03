@@ -44,7 +44,8 @@ class RemoteFunction:
     def _remote(self, args=None, kwargs=None):
         kwargs = {} if kwargs is None else kwargs
         args = [] if args is None else args
-        list_args = flatten_args(self._function_signature, args, kwargs)
+        # unused
+        # list_args = flatten_args(self._function_signature, args, kwargs)
 
         def invocation(function, args, kwargs):
             ref = "".join(
@@ -64,7 +65,7 @@ def make_decorator():
         if inspect.isfunction(func):
             return RemoteFunction(function=func)
         if inspect.isclass(func):
-            raise NotImplemented()
+            raise NotImplemented
         raise TypeError("remote must be apply to a function or a class.")
 
     return decorator
@@ -89,7 +90,8 @@ def wait(ids: dict, num_returns: int):
     for ref, fun_args in global_worker["queue"].items():
         func = fun_args[0]
         args = fun_args[1]
-        kwargs = fun_args[2]
+        # unused
+        # kwargs = fun_args[2]
         results = func(*args)
         global_worker["results"][ref] = results
         returns += 1

@@ -9,8 +9,7 @@ logger = logging.getLogger("spinorama")
 
 
 def parse_graph_splHVtxt(dirpath, orientation):
-    df = pd.DataFrame()
-
+    """Parse text files with Horizontal and Vertical data"""
     filenames = "{0}/*_{1}.txt".format(dirpath, orientation)
     files = glob.glob(filenames)
     if len(files) == 0:
@@ -89,7 +88,7 @@ def parse_graph_splHVtxt(dirpath, orientation):
 
 
 def parse_graphs_speaker_splHVtxt(speaker_path, speaker_brand, speaker_name, version):
-    # 2 files per directory xxx_H_IR.mat and xxx_V_IR.mat
+    """2 files per directory xxx_H_IR.mat and xxx_V_IR.mat"""
     if version == "eac":
         dirname = "{0}/ErinsAudioCorner/{1}".format(speaker_path, speaker_name)
     else:

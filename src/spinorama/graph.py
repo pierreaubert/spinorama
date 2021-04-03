@@ -800,7 +800,7 @@ def graph_directivity_lines(freq_min, angle_p, angle_m, onlyZero=False):
         axis=None,
         scale=alt.Scale(type="log", domain=[freq_min, 20000], nice=False),
     )
-    y_axis = y = alt.Y(
+    y_axis = alt.Y(
         "Angle:Q", axis=None, scale=alt.Scale(domain=[-180, 180], nice=False)
     )
     color = alt.value("white")

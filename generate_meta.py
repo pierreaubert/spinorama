@@ -60,8 +60,8 @@ from src.spinorama.load_rewseq import parse_eq_iir_rews
 import datas.metadata as metadata
 
 
-def sanity_check(df, meta):
-    for speaker_name in df.keys():
+def sanity_check(dataframe, meta):
+    for speaker_name in dataframe.keys():
         # check if metadata exists
         if speaker_name not in meta:
             logger.error("Metadata not found for >{0}<".format(speaker_name))
@@ -78,7 +78,7 @@ def sanity_check(df, meta):
     return 0
 
 
-def add_scores(df):
+def add_scores(dataframe):
     """""Compute some values per speaker and add them to metadata """
     min_pref_score = +100
     max_pref_score = -100
@@ -94,7 +94,7 @@ def add_scores(df):
     max_sm_sp = 0
     min_sm_pir = 1
     max_sm_pir = 0
-    for speaker_name, speaker_data in df.items():
+    for speaker_name, speaker_data in dataframe.items():
         logger.info("Processing {0}".format(speaker_name))
         for _, measurements in speaker_data.items():
             for key, dfs in measurements.items():
@@ -184,14 +184,14 @@ def add_scores(df):
                     ] = pref_rating
 
     # if we are looking only after 1 speaker, return
-    if len(df.items()) == 1:
+    if len(dataframe.items()) == 1:
         logger.info("skipping normalization with only one speaker")
         return
 
     # add normalized value to metadata
-    for speaker_name, speaker_data in df.items():
+    for speaker_name, speaker_data in dataframe.items():
         logger.info("Normalize data for {0}".format(speaker_name))
-        for origin, measurements in speaker_data.items():
+        for _, measurements in speaker_data.items():
             for version, measurement in measurements.items():
                 if measurement is None or "CEA2034" not in measurement.keys():
                     logger.debug(
@@ -297,9 +297,9 @@ def add_scores(df):
                 ] = scaled_pref_rating
 
 
-def add_eq(speaker_path, df):
+def add_eq(speaker_path, dataframe):
     """ Compute some values per speaker and add them to metadata """
-    for speaker_name in df.keys():
+    for speaker_name in dataframe.keys():
         logger.info("Processing {0}".format(speaker_name))
 
         for suffix in ("", "-autoeq", "-amirm", "-maiky76", "-flipflop"):
@@ -314,7 +314,7 @@ def add_eq(speaker_path, df):
                 )
                 metadata.speakers_info[speaker_name][eq_key]["type"] = "peq"
                 metadata.speakers_info[speaker_name][eq_key]["peq"] = []
-                for i in range(0, len(iir)):
+                for i in enumerate(iir):
                     iir_weigth = iir[i][0]
                     iir_filter = iir[i][1]
                     if iir_weigth != 0.0:

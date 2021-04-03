@@ -133,12 +133,6 @@ def graph_compare_cea2034(df, graph_params, speaker1, speaker2):
     scales2 = alt.selection_interval(bind="scales")
     scales3 = alt.selection_interval(bind="scales")
     scales4 = alt.selection_interval(bind="scales")
-    x_axis = alt.X(
-        "Freq:Q",
-        scale=alt.Scale(type="log", domain=[20, 20000], nice=False),
-        title="Frequency (Hz)",
-    )
-    y_axis = alt.Y("dB:Q", scale=alt.Scale(zero=False, domain=[-40, 10]))
     di_yaxis = alt.Y(
         "dB:Q",
         title="Directivity Index (dB)",
@@ -147,7 +141,6 @@ def graph_compare_cea2034(df, graph_params, speaker1, speaker2):
             grid=True, tickCount=10, labelExpr="datum.value >15 ? null : datum.label"
         ),
     )
-    color = alt.Color("Measurements", type="nominal", sort=None)
     opacity = alt.condition(selectorsMeasurements, alt.value(1), alt.value(0.2))
 
     line = (
@@ -211,7 +204,6 @@ def graph_compare_freq_regression(df, graph_params, speaker1, speaker2):
     )
     xaxis = alt.X("Freq:Q", scale=alt.Scale(type="log", domain=[20, 20000], nice=False))
     yaxis = alt.Y("dB:Q", scale=alt.Scale(zero=False, domain=[-40, 10]))
-    color = alt.Color("Measurements", type="nominal", sort=None)
 
     line = alt.Chart(df).encode(
         xaxis,

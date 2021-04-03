@@ -1,6 +1,4 @@
 import unittest
-import sys
-from http.server import HTTPServer, SimpleHTTPRequestHandler
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -39,12 +37,10 @@ class SpinoramaTest(unittest.TestCase):
         search.send_keys(Keys.RETURN)
         try:
             wait = WebDriverWait(driver, 10)
-            found = wait.until(
-                EC.visibility_of_element_located((By.ID, "Genelec-8341A"))
-            )
-            notfound = wait.until(
-                EC.invisibility_of_element_located((By.ID, "KEF-LS50"))
-            )
+            # expect found
+            _ = wait.until(EC.visibility_of_element_located((By.ID, "Genelec-8341A")))
+            # expect notfound
+            _ = wait.until(EC.invisibility_of_element_located((By.ID, "KEF-LS50")))
         finally:
             pass
 
@@ -58,12 +54,10 @@ class SpinoramaTest(unittest.TestCase):
         search.send_keys(Keys.RETURN)
         try:
             wait = WebDriverWait(driver, 10)
-            found = wait.until(
-                EC.visibility_of_element_located((By.ID, "Genelec-8341A"))
-            )
-            notfound = wait.until(
-                EC.invisibility_of_element_located((By.ID, "KEF-LS50"))
-            )
+            # expect found
+            _ = wait.until(EC.visibility_of_element_located((By.ID, "Genelec-8341A")))
+            # expect notfound
+            _ = wait.until(EC.invisibility_of_element_located((By.ID, "KEF-LS50")))
         finally:
             pass
 
