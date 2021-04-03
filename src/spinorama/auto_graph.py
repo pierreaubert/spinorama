@@ -235,9 +235,9 @@ def graph_results(
             (g_spin_asr | g_spin_manual | g_spin_auto),
             (g_pir_asr | g_pir_manual | g_pir_auto).resolve_scale(y="independent"),
         ]
-    else:
-        return [
-            (g_auto_eq),
-            (g_spin_asr | g_spin_auto),
-            (g_pir_asr | g_pir_auto).resolve_scale(y="independent"),
-        ]
+
+    return [
+        (g_auto_eq),
+        (g_spin_asr | g_spin_auto),
+        (g_pir_asr | g_pir_auto).resolve_scale(y="independent"),
+    ]

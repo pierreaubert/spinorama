@@ -182,8 +182,8 @@ def find_isoband(
 
     # print('Triangles range X=[{0}, {1}] Y=[{2}, {3}]'.format(x_min, x_max, y_min, y_max))
     elevation = {}
-    for ix in enumerate(gx):
-        for iy in enumerate(gy):
+    for ix in range(0, len(gx)):
+        for iy in range(0, len(gy)):
             elevation[(gx[ix], gy[iy])] = grid_z[ix][iy]
 
     isoband = []

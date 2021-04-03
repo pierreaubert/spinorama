@@ -89,11 +89,11 @@ class SpinoramaContourTests(unittest.TestCase):
     def test_smoke_preserve_angle(self):
         _, am, _ = compute_contour(self.df)
         # check that value is constant
-        self.assertTrue(all([a == am[0][0] for a in am[0]]))
+        self.assertTrue(all(a == am[0][0] for a in am[0]))
         # extract all angles in order
         angles = [am[i][0] for i in range(0, len(am))]
         # check it is decreasing
-        self.assertTrue(all([i > j for i, j in zip(angles, angles[1:])]))
+        self.assertTrue(all(i > j for i, j in zip(angles, angles[1:])))
 
 
 class SpinoramaReshapeTests(unittest.TestCase):
@@ -152,11 +152,11 @@ class SpinoramaReshapeTests(unittest.TestCase):
         for scale in range(2, 10):
             _, ram, _ = reshape(self.af, self.am, self.az, scale)
             # check that value is constant
-            self.assertTrue(all([a == ram[0][0] for a in ram[0]]))
+            self.assertTrue(all(a == ram[0][0] for a in ram[0]))
             # extract all angles in order
             angles = [ram[i][0] for i in range(0, len(ram))]
             # check it is decreasing
-            self.assertTrue(all([i > j for i, j in zip(angles, angles[1:])]))
+            self.assertTrue(all(i > j for i, j in zip(angles, angles[1:])))
 
 
 class SpinoramaContourSmoothedTests(unittest.TestCase):
@@ -206,11 +206,11 @@ class SpinoramaContourSmoothedTests(unittest.TestCase):
 
     def test_smoke_preserve_angle(self):
         # check that value is constant
-        self.assertTrue(all([a == self.am[0][0] for a in self.am[0]]))
+        self.assertTrue(all(a == self.am[0][0] for a in self.am[0]))
         # extract all angles in order
         angles = [self.am[i][0] for i in range(0, len(self.am))]
         # check it is decreasing
-        self.assertTrue(all([i > j for i, j in zip(angles, angles[1:])]))
+        self.assertTrue(all(i > j for i, j in zip(angles, angles[1:])))
 
 
 if __name__ == "__main__":

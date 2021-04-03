@@ -35,9 +35,9 @@ class SpinoramaEstimatesNV2Tests(unittest.TestCase):
         )
         self.df = graph_melt(self.df_unmelted)
         self.onaxis = self.df.loc[self.df["Measurements"] == "On Axis"]
+        self.estimates = estimates(self.onaxis)
 
     def test_estimates(self):
-        self.estimates = estimates(self.onaxis)
         self.assertNotEqual(-1, self.estimates["ref_level"])
         self.assertNotEqual(-1, self.estimates["ref_3dB"])
         self.assertNotEqual(-1, self.estimates["ref_6dB"])
@@ -56,9 +56,9 @@ class SpinoramaEstimatesNV3Tests(unittest.TestCase):
         )
         self.df = graph_melt(self.df_unmelted)
         self.onaxis = self.df.loc[self.df["Measurements"] == "On Axis"]
+        self.estimates = estimates(self.onaxis)
 
     def test_estimates(self):
-        self.estimates = estimates(self.onaxis)
         self.assertNotEqual(-1, self.estimates["ref_level"])
         self.assertNotEqual(-1, self.estimates["ref_3dB"])
         self.assertNotEqual(-1, self.estimates["ref_6dB"])

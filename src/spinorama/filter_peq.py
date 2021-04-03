@@ -66,14 +66,14 @@ def peq_graph_measurements(spin: pd.DataFrame, measurement: str, peq: Peq):
     spin_freq = spin["Freq"].to_numpy()
     mean = np.mean(spin.loc[(spin.Freq > 500) & (spin.Freq < 10000)]["On Axis"])
     curve = spin[measurement] - mean
-    filter = peq_build(spin_freq, peq)
+    current_filter = peq_build(spin_freq, peq)
     curve_filtered = peq_apply_measurements(curve, peq)
     dff = pd.DataFrame(
         {
             "Freq": spin_freq,
             measurement: curve,
             "{0} Filtered".format(measurement): curve_filtered,
-            "Filter": filter,
+            "Filter": current_filter,
         }
     )
     return (
@@ -90,9 +90,9 @@ def peq_graph_measurements(spin: pd.DataFrame, measurement: str, peq: Peq):
 
 
 def peq_print(peq: Peq) -> None:
-    for i in enumerate(peq):
-        if peq[i][0] != 0:
-            print(peq[i][1])
+    for i, iir in enumerate(peq):
+        if iir[0] != 0:
+            print(iir[1])
 
 
 def peq_format_apo(comment: str, peq: Peq) -> str:

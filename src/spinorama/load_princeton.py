@@ -131,7 +131,8 @@ def parse_graphs_speaker_princeton(
         else:
             v_spl2 = symmetrise_measurement(v_spl)
         return filter_graphs(speaker_name, h_spl2, v_spl2)
-    elif symmetry == "horizontal":
+
+    if symmetry == "horizontal":
         h_spl2 = symmetrise_measurement(h_spl)
         return filter_graphs(speaker_name, h_spl2, v_spl)
 
