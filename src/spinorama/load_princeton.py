@@ -78,8 +78,8 @@ def symmetrise_measurement(spl):
             else:
                 angle = int(col[:-1])
             min_angle = min(min_angle, angle)
-            max_angle = max(min_angle, angle)
-    # print('min {} max {}'.format(min_angle, max_angle))
+            max_angle = max(max_angle, angle)
+    logger.debug("min {} max {}".format(min_angle, max_angle))
 
     # extend 0-180 to -170 0 180
     # extend 0-90  to -90 to 90

@@ -103,7 +103,7 @@ def triangle2band(triangle, z, z_low, z_high):
     within = [v for v in striangle if z[v] >= z_low and z[v] <= z_high]
     above = [v for v in striangle if z[v] > z_high]
 
-    if len(below) == 3 or len(above) == 3:
+    if 3 in (len(below), len(above)):
         return []
 
     polygon = None
@@ -182,8 +182,8 @@ def find_isoband(
 
     # print('Triangles range X=[{0}, {1}] Y=[{2}, {3}]'.format(x_min, x_max, y_min, y_max))
     elevation = {}
-    for ix in range(0, len(gx)):
-        for iy in range(0, len(gy)):
+    for ix in enumerate(gx):
+        for iy in enumerate(gy):
             elevation[(gx[ix], gy[iy])] = grid_z[ix][iy]
 
     isoband = []

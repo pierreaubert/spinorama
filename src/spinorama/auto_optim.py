@@ -55,7 +55,7 @@ def optim_preflight(freq, target, auto_target_interp, optim_config):
         )
         status = False
 
-    for i in range(0, len(target)):
+    for i in enumerate(target):
         if len(target[i]) != len(auto_target_interp[i]):
             logger.error(
                 "Size mismatch #target[{}] {} != #auto_target_interp[{}] {}".format(
@@ -69,7 +69,7 @@ def optim_preflight(freq, target, auto_target_interp, optim_config):
 
 def optim_compute_auto_target(freq, target, auto_target_interp, peq):
     peq_freq = peq_build(freq, peq)
-    return [target[i] - auto_target_interp[i] + peq_freq for i in range(0, len(target))]
+    return [target[i] - auto_target_interp[i] + peq_freq for i in enumerate(target)]
 
 
 def optim_greedy(
@@ -212,10 +212,10 @@ def optim_greedy(
     current_auto_target = optim_compute_auto_target(
         freq, auto_target, auto_target_interp, auto_peq
     )
-    final_loss = loss(freq, current_auto_target, [], 0, optim_config)
-    final_score = 1.0
-    if use_score:
-        final_score = score_loss(df_speaker, auto_peq)
+    # final_loss = loss(freq, current_auto_target, [], 0, optim_config)
+    # final_score = 1.0
+    # if use_score:
+    #    final_score = score_loss(df_speaker, auto_peq)
     if results[-1][1] < best_loss:
         results.append((optim_config["MAX_NUMBER_PEQ"] + 1, best_loss, -pref_score))
     if use_score:

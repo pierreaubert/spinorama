@@ -16,14 +16,16 @@ from .graph import (
     radar_params_default,
     graph_contour,
     graph_directivity_matrix,
-    graph_compare_freq,
-    graph_compare_cea2034,
-    graph_compare_freq_regression,
     graph_regression,
     graph_isoband,
     isoband_params_default,
     graph_summary,
     graph_image,
+)
+from .graph_compare import (
+    graph_compare_freq,
+    graph_compare_cea2034,
+    graph_compare_freq_regression,
 )
 
 
@@ -196,7 +198,7 @@ def display_inroom(df, graph_params=None):
         inroom_graph = graph_freq(inroom, graph_params)
         inroom_reg = graph_regression(inroom, 80, 10000)
         return (
-            (inroom_reg + inroom_graph)
+            alt.layer(inroom_reg, inroom_graph)
             .resolve_scale(color="independent")
             .resolve_legend(shape="independent")
         )
@@ -299,8 +301,8 @@ def display_compare(df, graph_filter, graph_params=None):
             ]
         )
 
-        speaker1 = "KEF LS50 - ASR"
-        speaker2 = "KEF LS50 - Princeton"
+        speaker1 = "KEF LS50 - ASR - asr"
+        speaker2 = "KEF LS50 - Princeton - princeton"
 
         if graph_filter == "CEA2034":
             graph = graph_compare_cea2034(source, graph_params, speaker1, speaker2)

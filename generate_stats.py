@@ -31,6 +31,8 @@ import json
 import os
 import sys
 import pathlib
+import zipfile
+
 from docopt import docopt
 import pandas as pd
 import altair as alt
@@ -263,9 +265,12 @@ def generate_stats(meta):
         (graphs["nbd_pir"], "distribution_nbd_pir"),
         (graphs["sm_pir"], "distribution_sm_pir"),
     ):
-        filename = "{0}/{1}.json".format(filedir, name)
-        print("saving " + filename)
-        graph.save(filename)
+        filename = "{0}/{1}.json.zip".format(filedir, name)
+        content = graph.to_json()
+        with zipfile.ZipFile(
+            filename, "w", compression=zipfile.ZIP_DEFLATED, allowZip64=True
+        ) as current_zip:
+            current_zip.writestr("{0}.json".format(name), content)
 
     # used in book
     filedir = "book/stats"

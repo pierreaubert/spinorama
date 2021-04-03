@@ -110,11 +110,15 @@ def graph_results(
     reg_max = optim_config["freq_reg_max"]
     domain = [reg_min, reg_max]
     # build a graph for each peq
-    g_manual_eq = graph_eq(freq, manual_peq, domain, "{} manual".format(speaker_name))
+    if manual_peq is not None:
+        g_manual_eq = graph_eq(
+            freq, manual_peq, domain, "{} manual".format(speaker_name)
+        )
     g_auto_eq = graph_eq(freq, auto_peq, domain, "{} auto".format(speaker_name))
 
     # compare the 2 eqs
-    g_eq_full = graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name)
+    if manual_peq is not None:
+        g_eq_full = graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name)
 
     # compare the 2 corrected curves
     df_optim = pd.DataFrame({"Freq": freq})
@@ -125,30 +129,30 @@ def graph_results(
         df_optim["Manual"] = (
             manual_target[0] - manual_target_interp[0] + peq_build(freq, manual_peq)
         )
-    g_optim = (
-        alt.Chart(graph_melt(df_optim))
-        .mark_line()
-        .encode(
-            alt.X(
-                "Freq:Q",
-                title="Freq (Hz)",
-                scale=alt.Scale(type="log", nice=False, domain=domain),
-            ),
-            alt.Y(
-                "dB:Q",
-                title="Sound Pressure (dB)",
-                scale=alt.Scale(zero=False, domain=[-5, 5]),
-            ),
-            alt.Color("Measurements", type="nominal", sort=None),
+        g_optim = (
+            alt.Chart(graph_melt(df_optim))
+            .mark_line()
+            .encode(
+                alt.X(
+                    "Freq:Q",
+                    title="Freq (Hz)",
+                    scale=alt.Scale(type="log", nice=False, domain=domain),
+                ),
+                alt.Y(
+                    "dB:Q",
+                    title="Sound Pressure (dB)",
+                    scale=alt.Scale(zero=False, domain=[-5, 5]),
+                ),
+                alt.Color("Measurements", type="nominal", sort=None),
+            )
+            .properties(
+                width=800,
+                height=400,
+                title="{} manual and auto corrected {}".format(
+                    speaker_name, optim_config["curve_names"][0]
+                ),
+            )
         )
-        .properties(
-            width=800,
-            height=400,
-            title="{} manual and auto corrected {}".format(
-                speaker_name, optim_config["curve_names"][0]
-            ),
-        )
-    )
 
     # show the 3 spinoramas
     g_params = {
@@ -164,9 +168,10 @@ def graph_results(
     g_spin_asr = graph_spinorama(spin, g_params).properties(
         title="{} from ASR".format(speaker_name)
     )
-    g_spin_manual = graph_spinorama(spin_manual, g_params).properties(
-        title="{} ASR + manual EQ".format(speaker_name)
-    )
+    if manual_peq is not None:
+        g_spin_manual = graph_spinorama(spin_manual, g_params).properties(
+            title="{} ASR + manual EQ".format(speaker_name)
+        )
     g_spin_auto = graph_spinorama(spin_auto, g_params).properties(
         title="{} ASR + auto EQ".format(speaker_name)
     )
@@ -176,11 +181,13 @@ def graph_results(
     # which_curve='Sound Power'
     which_curve = "Estimated In-Room Response"
     data = spin
-    data_manual = spin_manual
+    if manual_peq is not None:
+        data_manual = spin_manual
     data_auto = spin_auto
     if which_curve == "Estimated In-Room Response":
         data = pir
-        data_manual = pir_manual
+        if manual_peq is not None:
+            data_manual = pir_manual
         data_auto = pir_auto
 
     g_pir_reg = graph_regression(
@@ -194,19 +201,20 @@ def graph_results(
         .resolve_legend(shape="independent")
     )
 
-    g_pir_manual = (
-        (
-            graph_freq(
-                data_manual.loc[(data_manual.Measurements == which_curve)], g_params
+    if manual_peq is not None:
+        g_pir_manual = (
+            (
+                graph_freq(
+                    data_manual.loc[(data_manual.Measurements == which_curve)], g_params
+                )
+                + g_pir_reg
             )
-            + g_pir_reg
+            .properties(
+                title="{} from ASR [{}] + manual EQ".format(speaker_name, which_curve)
+            )
+            .resolve_scale(color="independent")
+            .resolve_legend(shape="independent")
         )
-        .properties(
-            title="{} from ASR [{}] + manual EQ".format(speaker_name, which_curve)
-        )
-        .resolve_scale(color="independent")
-        .resolve_legend(shape="independent")
-    )
 
     g_pir_auto = (
         (
@@ -221,8 +229,15 @@ def graph_results(
     )
 
     # add all graphs and print it
-    return [
-        (g_manual_eq | g_auto_eq) & (g_eq_full | g_optim),
-        (g_spin_asr | g_spin_manual | g_spin_auto),
-        (g_pir_asr | g_pir_manual | g_pir_auto).resolve_scale(y="independent"),
-    ]
+    if manual_peq is not None:
+        return [
+            (g_manual_eq | g_auto_eq) & (g_eq_full | g_optim),
+            (g_spin_asr | g_spin_manual | g_spin_auto),
+            (g_pir_asr | g_pir_manual | g_pir_auto).resolve_scale(y="independent"),
+        ]
+    else:
+        return [
+            (g_auto_eq),
+            (g_spin_asr | g_spin_auto),
+            (g_pir_asr | g_pir_auto).resolve_scale(y="independent"),
+        ]

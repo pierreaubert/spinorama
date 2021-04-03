@@ -18,18 +18,23 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-usage: generate_compare.py [--help] [--version] [--log-level=<level>]
+usage: generate_compare.py [--help] [--version] [--smoke-test] [--log-level=<level>]
 
 Options:
   --help            display usage()
   --version         script version number
+  --smoke-test             Test the optimiser with a small amount of variables
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
 import sys
 
 from docopt import docopt
 import flammkuchen as fl
-import ray
+
+try:
+    import ray
+except ModuleNotFoundError:
+    import src.miniray as ray
 
 from generate_common import get_custom_logger, args2level
 from src.spinorama.speaker_print import print_compare
@@ -47,7 +52,12 @@ if __name__ == "__main__":
     logger = get_custom_logger(True)
     logger.setLevel(level)
 
-    df = fl.load("cache.parse_all_speakers.h5")
+    smoke_test = args.get("smoke-test", False)
+    df = None
+    if smoke_test:
+        df = fl.load("cache.smoketest_speakers.h5")
+    else:
+        df = fl.load("cache.parse_all_speakers.h5")
     if df is None:
         logger.error("Load failed! Please run ./generate_graphs.py")
         sys.exit(1)

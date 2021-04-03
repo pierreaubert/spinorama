@@ -21,7 +21,14 @@ import ipaddress
 import logging
 import sys
 
-import ray
+try:
+    import ray
+
+    MINIRAY = False
+except ModuleNotFoundError:
+    import src.miniray as ray
+
+    MINIRAY = True
 
 
 def get_custom_logger(duplicate=False):
@@ -59,6 +66,8 @@ def args2level(args):
 
 def custom_ray_init(args):
     """Customize ray initialisation with a few parameters"""
+    if MINIRAY:
+        return
     # expose the dashboard on another ip if required
     dashboard_ip = "127.0.0.1"
     dashboard_port = 8265

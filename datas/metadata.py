@@ -53,7 +53,7 @@ speakers_info = {
         "model": "Homepod",
         "type": "active",
         "price": "500",
-        "shape": "bookshelves",
+        "shape": "omnidirectional",
         "amount": "single",
         "default_measurement": "vendor",
         "measurements": {
@@ -363,6 +363,21 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-805s-bookshelf-speaker-review.16523/",
+            },
+        },
+    },
+    "Bowers & Wilkins 607 S2 Anniversary Edition": {
+        "brand": "Bowers & Wilkins",
+        "model": "607 S2 Anniversary Edition",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "740",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-607-s2-anniversary-edition-review.21597/",
             },
         },
     },
@@ -748,7 +763,7 @@ speakers_info = {
         "model": "Model 1600",
         "type": "passive",
         "price": "",
-        "shape": "floorstanders",
+        "shape": "panel",
         "default_measurement": "princeton",
         "measurements": {
             "princeton": {
@@ -824,7 +839,7 @@ speakers_info = {
         "model": "Chorus OD 706 V",
         "type": "passive",
         "price": "600",
-        "shape": "bookshelves",
+        "shape": "outdoor",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
@@ -856,7 +871,7 @@ speakers_info = {
         "model": "R16",
         "type": "passive",
         "price": "",
-        "shape": "floorstanders",
+        "shape": "panel",
         "default_measurement": "princeton",
         "measurements": {
             "princeton": {
@@ -1256,6 +1271,22 @@ speakers_info = {
             },
         },
     },
+    "JBL CBT 70J-1": {
+        "brand": "JBL",
+        "model": "CBT 70J-1",
+        "type": "passive",
+        "price": "1000",
+        "shape": "cbt",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-cbt-70j-1-review-constant-beam-transducer.21469/",
+            },
+        },
+    },
     "JBL Control 1 Pro": {
         "brand": "JBL",
         "model": "Control 1 Pro",
@@ -1461,6 +1492,23 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-hdi-3600-speaker-review.13027/",
+            },
+        },
+    },
+    "JBL HDI-3800": {
+        "brand": "JBL",
+        "model": "HDI-3800",
+        "type": "passive",
+        "price": "5800",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "review_published": "20210323",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/jbl_hdi-3800/",
             },
         },
     },
@@ -1841,7 +1889,7 @@ speakers_info = {
         "brand": "Magnepan",
         "model": "LRS",
         "type": "passive",
-        "shape": "floorstanders",
+        "shape": "panel",
         "price": "650",
         "default_measurement": "asr",
         "measurements": {
@@ -2041,7 +2089,7 @@ speakers_info = {
         "model": "AP650",
         "type": "active",
         "price": "200",
-        "shape": "bookshelves",
+        "shape": "outdoor",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
@@ -2185,7 +2233,7 @@ speakers_info = {
         "model": "Atrium 4",
         "type": "passive",
         "price": "117",
-        "shape": "bookshelves",
+        "shape": "outdoor",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
@@ -2312,7 +2360,7 @@ speakers_info = {
         "brand": "Quad Electroacoustics",
         "model": "ESL-57",
         "type": "passive",
-        "shape": "floorstanders",
+        "shape": "panel",
         "price": "",
         "default_measurement": "princeton",
         "measurements": {
@@ -2350,6 +2398,22 @@ speakers_info = {
                 "origin": "Vendors-Revel",
                 "website": "www.revel.com",
                 "format": "webplotdigitizer",
+            },
+        },
+    },
+    "Revel C208": {
+        "brand": "Revel",
+        "model": "C208",
+        "type": "passive",
+        "price": "2000",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-c208-review-center-speaker.21303/",
             },
         },
     },
@@ -2450,7 +2514,7 @@ speakers_info = {
         "model": "F35",
         "type": "passive",
         "price": "1600",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
@@ -2535,7 +2599,7 @@ speakers_info = {
         "model": "M55XC",
         "type": "passive",
         "price": "420",
-        "shape": "bookshelves",
+        "shape": "outdoor",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
@@ -2603,7 +2667,7 @@ speakers_info = {
         "model": "Outsider II",
         "type": "passive",
         "price": "300",
-        "shape": "bookshelves",
+        "shape": "outdoor",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
@@ -2634,7 +2698,7 @@ speakers_info = {
         "model": "Model 11",
         "type": "passive",
         "price": "",
-        "shape": "floorstanders",
+        "shape": "panel",
         "default_measurement": "princeton-factory",
         "measurements": {
             "princeton-factory": {
@@ -2810,6 +2874,37 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/tannoy-system-600-speaker-review.11919/",
+            },
+        },
+    },
+    "Triangle Borea BR03": {
+        "brand": "Triangle",
+        "model": "Borea BR03",
+        "type": "passive",
+        "price": "500",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/triangle-borea-br03-review-bookshelf-speaker.21739/",
+            },
+        },
+    },
+    "Triangle Esprit Antal Ez": {
+        "brand": "Triangle",
+        "model": "Esprit Antal Ez",
+        "type": "passive",
+        "price": "890",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "review_published": "20210403",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/triangle-esprit-antal-ez-review-tower-speaker.22080/",
             },
         },
     },

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import scipy.signal as sig
 import flammkuchen as fl
 from ray import tune
 

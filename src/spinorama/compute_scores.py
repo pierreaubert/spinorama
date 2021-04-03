@@ -76,7 +76,7 @@ def nbd(dfu: pd.DataFrame) -> float:
         [
             dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB.mad()
             for (bmin, bcenter, bmax) in octave(2)
-            if bcenter >= 100 and bcenter <= 12000
+            if 100 <= bcenter <= 12000
         ]
     )
 

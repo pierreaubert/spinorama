@@ -3,7 +3,11 @@ import os
 import logging
 import sys
 
-import ray
+try:
+    import ray
+except ModuleNotFoundError:
+    import src.miniray as ray
+
 
 from .load import filter_graphs, load_normalize
 from .load_klippel import parse_graphs_speaker_klippel
@@ -21,7 +25,7 @@ logger = logging.getLogger("spinorama")
 @ray.remote(num_cpus=1)
 def parse_eq_speaker(speaker_path: str, speaker_name: str, df_ref: dict) -> dict:
     iirname = "{0}/eq/{1}/iir.txt".format(speaker_path, speaker_name)
-    if df_ref is not None and os.path.isfile(iirname):
+    if df_ref is not None and isinstance(df_ref, dict) and os.path.isfile(iirname):
         srate = 48000
         logger.debug("found IIR eq {0}: applying to {1}".format(iirname, speaker_name))
         iir = parse_eq_iir_rews(iirname, srate)

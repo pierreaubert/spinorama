@@ -100,7 +100,7 @@ def parse_graph_freq_webplotdigitizer(filename):
                         continue
                     # linear interpolation
                     ref_db = db + ((dbn - db) * (ref_f - fr)) / (frn - fr)
-                    if ref_f <= 20000 and ref_f > 0 and ref_db > -50 and ref_db < 200:
+                    if 0 < ref_f <= 20000 and -50 < ref_db < 200:
                         res.append([ref_f, ref_db, col["name"]])
                     else:
                         logger.info(
@@ -152,7 +152,7 @@ def parse_graphs_speaker_webplotdigitizer(
             sp = spin.loc[spin["Measurements"] == "Sound Power"].reset_index(drop=True)
 
             # check DI index
-            if lw.shape[0] != 0 and sp.shape[0] != 0:
+            if 0 not in (lw.shape[0], sp.shape[0]):
                 sp_di_computed = lw.dB - sp.dB
                 sp_di = spin.loc[spin["Measurements"] == "Sound Power DI"].reset_index(
                     drop=True
@@ -182,7 +182,7 @@ def parse_graphs_speaker_webplotdigitizer(
             else:
                 logger.debug("Shape LW={0} SP={1}".format(lw.shape, sp.shape))
 
-            if lw.shape[0] != 0 and er.shape[0] != 0:
+            if 0 not in (lw.shape[0], er.shape[0]):
                 er_di_computed = lw.dB - er.dB
                 er_di = spin.loc[
                     spin["Measurements"] == "Early Reflections DI"
@@ -231,7 +231,7 @@ def parse_graphs_speaker_webplotdigitizer(
                     on.shape, lw.shape, er.shape, sp.shape
                 )
             )
-            if lw.shape[0] != 0 and er.shape[0] != 0 and sp.shape[0] != 0:
+            if 0 not in (lw.shape[0], er.shape[0], sp.shape[0]):
                 eir = estimated_inroom(lw, er, sp)
                 logger.debug("eir {0}".format(eir.shape))
                 # print(eir)
