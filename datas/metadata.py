@@ -1502,13 +1502,30 @@ speakers_info = {
         "price": "5800",
         "shape": "floorstanders",
         "amount": "pair",
-        "review_published": "20210323",
         "default_measurement": "eac",
         "measurements": {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/jbl_hdi-3800/",
+                "review_published": "20210323",
+            },
+        },
+    },
+    "JBL HDI-4500": {
+        "brand": "JBL",
+        "model": "HDI-4500",
+        "type": "passive",
+        "price": "1750",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/jbl_hdi-4500/",
+                "review_published": "20210401",
             },
         },
     },
@@ -1699,7 +1716,13 @@ speakers_info = {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-r3-speaker-review.12021/",
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/kef_r3/",
+                "review_published": "20210314",
             },
             "vendor": {
                 "origin": "Vendors-KEF",
@@ -2899,12 +2922,12 @@ speakers_info = {
         "price": "890",
         "shape": "bookshelves",
         "default_measurement": "asr",
-        "review_published": "20210403",
         "measurements": {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/triangle-esprit-antal-ez-review-tower-speaker.22080/",
+                "review_published": "20210403",
             },
         },
     },
