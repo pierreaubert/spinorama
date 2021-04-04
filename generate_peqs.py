@@ -90,13 +90,26 @@ def optim_save_peq(
     be_verbose,
     is_smoke_test,
 ):
-    """Compute ans save PEQ for this speaker """
+    """Compute and then save PEQ for this speaker """
     eq_dir = "datas/eq/{}".format(current_speaker_name)
     pathlib.Path(eq_dir).mkdir(parents=True, exist_ok=True)
     eq_name = "{}/iir-autoeq.txt".format(eq_dir)
     if not force and os.path.exists(eq_name):
         if be_verbose:
             logger.info(f"eq {eq_name} already exist!")
+        return None, None, None
+
+    # do we have CEA2034 data
+    if (
+        "CEA2034_unmelted" not in df_speaker.keys()
+        and "CEA2034" not in df_speaker.keys()
+    ):
+        # this should not happen
+        logger.error(
+            "{} {} doesn't have CEA2034 data".format(
+                current_speaker_name, current_speaker_origin
+            )
+        )
         return None, None, None
 
     # do we have the full data?

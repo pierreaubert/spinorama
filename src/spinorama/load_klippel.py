@@ -1,6 +1,9 @@
 #                                                  -*- coding: utf-8 -*-
 import locale
 import logging
+import os
+import string
+
 import pandas as pd
 from .load import graph_melt, sort_angles
 
@@ -55,12 +58,24 @@ def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mver
     ]
     for csv in csvfiles:
         csvfilename = None
+        csvfilename2 = None
         if mversion is None or mversion == "asr":
             csvfilename = "{0}/ASR/{1}/{2}.txt".format(speaker_path, speaker_name, csv)
         elif mversion == "eac":
             csvfilename = "{0}/ErinsAudioCorner/{1}/{2}.txt".format(
                 speaker_path, speaker_name, csv
             )
+            csvfilename2 = "{0}/ErinsAudioCorner/{1}/{1} -- {2}.txt".format(
+                speaker_path, speaker_name, csv
+            )
+            csvfilename3 = "{0}/ErinsAudioCorner/{1}/{3} -- {2}.txt".format(
+                speaker_path, speaker_name, csv, string.capwords(speaker_name)
+            )
+            if not os.path.exists(csvfilename):
+                if csvfilename2 is not None and os.path.exists(csvfilename2):
+                    csvfilename = csvfilename2
+                elif csvfilename3 is not None and os.path.exists(csvfilename3):
+                    csvfilename = csvfilename3
         else:
             csvfilename = "{0}/ASR/{1}/{3}/{2}.txt".format(
                 speaker_path, speaker_name, csv, mversion
@@ -74,6 +89,8 @@ def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mver
             dfs[title] = graph_melt(df)
         except FileNotFoundError:
             logger.info(
-                "Speaker: {0} (ASR) Not found: {1}".format(speaker_name, csvfilename)
+                "Speaker: {} {} Not found: {}".format(
+                    speaker_name, mversion, csvfilename
+                )
             )
     return dfs
