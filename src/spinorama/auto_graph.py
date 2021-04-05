@@ -43,7 +43,7 @@ def graph_eq(freq, peq, domain, title):
             alt.Y(
                 "dB:Q",
                 title="Sound Pressure (dB)",
-                scale=alt.Scale(zero=False, domain=[-12, 12]),
+                scale=alt.Scale(zero=False, domain=[-5, 5]),
             ),
             alt.Color("Measurements", type="nominal", sort=None),
         )
