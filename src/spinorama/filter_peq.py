@@ -130,19 +130,19 @@ def peq_butterworth_q(order):
     q_values = []
     for i in range(0, order // 2):
         q = 2.0 * math.sin(math.pi / order * (i + 0.5))
-        q_values.append(1.0/q)
+        q_values.append(1.0 / q)
     if odd:
         q_values.append(-1.0)
     return q_values
 
 
 def peq_linkwitzriley_q(order):
-    q_bw = peq_butterworth_q(order//2)
+    q_bw = peq_butterworth_q(order // 2)
     q_values = []
-    if order %4 > 0:
-        q_values= np.concatenate([q_bw[:-1], q_bw[:-1], [0.5]])
+    if order % 4 > 0:
+        q_values = np.concatenate([q_bw[:-1], q_bw[:-1], [0.5]])
     else:
-        q_values= np.concatenate([q_bw, q_bw])
+        q_values = np.concatenate([q_bw, q_bw])
     return q_values
 
 
@@ -155,13 +155,12 @@ def peq_butterworth_highpass(order, freq, srate):
     q_values = peq_butterworth_q(order)
     return [(1.0, Biquad(Biquad.HIGHPASS, freq, srate, q)) for q in q_values]
 
-                   
+
 def peq_linkwitzriley_lowpass(order, freq, srate):
     q_values = peq_linkwitzriley_q(order)
     return [(1.0, Biquad(Biquad.LOWPASS, freq, srate, q)) for q in q_values]
 
-                   
+
 def peq_linkwitzriley_highpass(order, freq, srate):
     q_values = peq_linkwitzriley_q(order)
     return [(1.0, Biquad(Biquad.HIGHPASS, freq, srate, q)) for q in q_values]
-                   
