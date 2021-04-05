@@ -53,38 +53,68 @@ def graph_eq(freq, peq, domain, title):
 
 
 def graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name):
-    return (
-        alt.Chart(
-            graph_melt(
-                pd.DataFrame(
-                    {
-                        "Freq": freq,
-                        "Manual": peq_build(freq, manual_peq),
-                        "Auto": peq_build(freq, auto_peq),
-                    }
-                )
+    if manual_peq is None:
+        peq_df = pd.DataFrame(
+            {
+                "Freq": freq,
+                "dB": peq_build(freq, auto_peq),
+            }
+        )
+        chart = (
+            alt.Chart(peq_df)
+            .mark_line()
+            .encode(
+                alt.X(
+                    "Freq:Q",
+                    title="Freq (Hz)",
+                    scale=alt.Scale(type="log", nice=False, domain=domain),
+                ),
+                alt.Y(
+                    "dB:Q",
+                    title="Sound Pressure (dB)",
+                    scale=alt.Scale(zero=False, domain=[-5, 5]),
+                ),
+            )
+            .properties(
+                width=800,
+                height=400,
+                title="{} auto EQ".format(speaker_name),
             )
         )
-        .mark_line()
-        .encode(
-            alt.X(
-                "Freq:Q",
-                title="Freq (Hz)",
-                scale=alt.Scale(type="log", nice=False, domain=domain),
-            ),
-            alt.Y(
-                "dB:Q",
-                title="Sound Pressure (dB)",
-                scale=alt.Scale(zero=False, domain=[-5, 5]),
-            ),
-            alt.Color("Measurements", type="nominal", sort=None),
+    else:
+        chart = (
+            alt.Chart(
+                graph_melt(
+                    pd.DataFrame(
+                        {
+                            "Freq": freq,
+                            "Manual": peq_build(freq, manual_peq),
+                            "Auto": peq_build(freq, auto_peq),
+                        }
+                    )
+                )
+            )
+            .mark_line()
+            .encode(
+                alt.X(
+                    "Freq:Q",
+                    title="Freq (Hz)",
+                    scale=alt.Scale(type="log", nice=False, domain=domain),
+                ),
+                alt.Y(
+                    "dB:Q",
+                    title="Sound Pressure (dB)",
+                    scale=alt.Scale(zero=False, domain=[-5, 5]),
+                ),
+                alt.Color("Measurements", type="nominal", sort=None),
+            )
+            .properties(
+                width=800,
+                height=400,
+                title="{} manual and auto EQ filters".format(speaker_name),
+            )
         )
-        .properties(
-            width=800,
-            height=400,
-            title="{} manual and auto filter".format(speaker_name),
-        )
-    )
+    return chart
 
 
 def graph_results(
@@ -117,8 +147,7 @@ def graph_results(
     g_auto_eq = graph_eq(freq, auto_peq, domain, "{} auto".format(speaker_name))
 
     # compare the 2 eqs
-    if manual_peq is not None:
-        g_eq_full = graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name)
+    g_eq_full = graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name)
 
     # compare the 2 corrected curves
     df_optim = pd.DataFrame({"Freq": freq})
@@ -237,7 +266,7 @@ def graph_results(
         ]
 
     return [
-        (g_auto_eq),
+        (g_auto_eq | g_eq_full),
         (g_spin_asr | g_spin_auto),
         (g_pir_asr | g_pir_auto).resolve_scale(y="independent"),
     ]
