@@ -1,6 +1,10 @@
 # Spinorama : a library to display speaker frequency response and similar graphs
 ![image](https://github.com/pierreaubert/spinorama/workflows/Spinorama/badge.svg?branch=master)
 [![DeepSource](https://deepsource.io/gh/pierreaubert/spinorama.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/pierreaubert/spinorama/?ref=repository-badge)
+[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://gitHub.com/pierreaubert/spinorama/graphs/commit-activity)
+[![Website pierreaubert.github.io/spinorama](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://pierreaubert.github.io/spinorama/)
+
 
 This library provides an easy way to view, compare or analyse speakers data. This can help you take informed
 decision when buying a speaker instead of relying on commercial information or internet buzz.
@@ -131,7 +135,10 @@ We have a dedicated [tutorial](./tutorial/ADDSPEAKER.md).
 # Source of data and citations
 
 ## [AudioScienceReview *aka* ASR](https://www.audiosciencereview.com)
-ASR is a fantastic source of speakers data thanks to [amirm@](https://www.audiosciencereview.com/forum/index.php?threads/a-bit-about-your-host.1906/). They also have a lot of data about DACs that you may found useful. There is little correlation between price and quality in the audio world and this data gives some objective criteria to decide what to buy.
+ASR is a fantastic source of speakers data thanks to [amirm@](https://www.audiosciencereview.com/forum/index.php?threads/a-bit-about-your-host.1906/). They also have a lot of data about DACs that you may found useful. There is little correlation between price and quality in the audio world and this data gives some objective criteria to decide what to buy. You can [support ASR](https://www.audiosciencereview.com/forum/index.php?threads/how-to-support-audio-science-review.8150/).
+
+## [ErinsAudioCorner *aka* EAC](https://www.erinsaudiocorner.com/)
+Erin is a motivated person reviewing speakers. He is doing an outstanging jobs. He also has a [Youtube channel](https://youtube.com/c/ErinsAudioCorner). You can [support him](https://www.erinsaudiocorner.com/contribute/).
 
 ## [3D3A](https://www.princeton.edu/3D3A/) is a research organisation at [Princeton](https://www.princeton.edu).
 
