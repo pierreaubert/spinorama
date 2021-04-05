@@ -24,6 +24,10 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--min-dB=<mindB>] [--max-dB=<maxdB>] \
  [--min-freq=<minFreq>] [--max-freq=<maxFreq>] \
  [--max-iter=<maxiter>] [--use-all-biquad] [--curve-peak-only] \
+ [--slope-on-axis=<s_on>] \
+ [--slope-listening-window=<s_lw>] \
+ [--slope-early-reflections=<s_er>] \
+ [--slope-sound-power=<s_sp>] \
  [--loss=<pick>] [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local]
 
 
@@ -50,6 +54,10 @@ Options:
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
   --dash-port=<dash-port>  Port for the ray dashbboard
   --ray-local              If present, ray will run locally, it is usefull for debugging
+  --slope-on-axis=<s_on> Slope of the ideal target for On Axis, default is 0, as in flat anechoic
+  --slope-listening-window=<s_lw> Slope of listening window, default is -2dB
+  --slope-early-reflections=<s_er> Slope of early reflections, default is -5dB
+  --slope-sound-power=<s_sp> Slope of sound power, default is -8dB
 """
 from datetime import datetime
 import os
@@ -77,7 +85,7 @@ from spinorama.auto_optim import optim_greedy
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
-VERSION = 0.6
+VERSION = 0.7
 
 
 @ray.remote
@@ -495,6 +503,11 @@ if __name__ == "__main__":
         # 'curve_names': ['Listening Window', 'On Axis', 'Early Reflections'],
         # 'curve_names': ['On Axis', 'Early Reflections'],
         # 'curve_names': ['Early Reflections', 'Sound Power'],
+        # slope of the target (in dB) for each curve
+        "slope_on_axis": 0,
+        "slope_listening_window": -2,
+        "slope_early_reflections": -5,
+        "slope_sound_power": -8,
     }
 
     # define other parameters for the optimisation algorithms
@@ -526,6 +539,16 @@ if __name__ == "__main__":
     if args["--max-peq"] is not None:
         max_number_peq = int(args["--max-peq"])
         current_optim_config["MAX_NUMBER_PEQ"] = max_number_peq
+    if args["--max-iter"] is not None:
+        max_iter = int(args["--max-iter"])
+        current_optim_config["maxiter"] = max_iter
+    if args["--min-freq"] is not None:
+        min_freq = int(args["--min-freq"])
+        current_optim_config["freq_req_min"] = min_freq
+    if args["--max-freq"] is not None:
+        max_freq = int(args["--max-freq"])
+        current_optim_config["freq_req_max"] = max_freq
+
     if args["--min-Q"] is not None:
         min_Q = float(args["--min-Q"])
         current_optim_config["MIN_Q"] = min_Q
@@ -538,21 +561,25 @@ if __name__ == "__main__":
     if args["--max-dB"] is not None:
         max_dB = float(args["--max-dB"])
         current_optim_config["MAX_DBGAIN"] = max_dB
-    if args["--max-iter"] is not None:
-        max_iter = int(args["--max-iter"])
-        current_optim_config["maxiter"] = max_iter
-    if args["--min-freq"] is not None:
-        min_freq = int(args["--min-freq"])
-        current_optim_config["freq_req_min"] = min_freq
-    if args["--max-freq"] is not None:
-        max_freq = int(args["--max-freq"])
-        current_optim_config["freq_req_max"] = max_freq
-    if args["--use-all-biquad"] is not None:
-        if args["--use-all-biquad"] is True:
-            current_optim_config["full_biquad_optim"] = True
-    if args["--curve-peak-only"] is not None:
-        if args["--curve-peak-only"] is True:
-            current_optim_config["plus_and_minus"] = False
+
+    if args["--use-all-biquad"] is not None and args["--use-all-biquad"] is True:
+        current_optim_config["full_biquad_optim"] = True
+    if args["--curve-peak-only"] is not None and args["--curve-peak-only"] is True:
+        current_optim_config["plus_and_minus"] = False
+
+    for slope_name, slope_key in (
+        ("--slope-on-axis", "slope_on_axis"),
+        ("--slope-listening-window", "slope_listening_window"),
+        ("--slope-early-reflections", "slope_early_reflections"),
+        ("--slope-sound-power", "slope_sound_power"),
+    ):
+        if args[slope_name] is not None:
+            try:
+                slope = float(args[slope_name])
+                current_optim_config[slope_key] = slope
+            except ValueError:
+                print("{} is not a float".format(args[slope_name]))
+                sys.exit(1)
 
     # name of speaker
     speaker_name = None
