@@ -314,9 +314,7 @@ def add_eq(speaker_path, dataframe):
                 )
                 metadata.speakers_info[speaker_name][eq_key]["type"] = "peq"
                 metadata.speakers_info[speaker_name][eq_key]["peq"] = []
-                for i in enumerate(iir):
-                    iir_weigth = iir[i][0]
-                    iir_filter = iir[i][1]
+                for i, (iir_weigth, iir_filter) in enumerate(iir):
                     if iir_weigth != 0.0:
                         metadata.speakers_info[speaker_name][eq_key]["peq"].append(
                             {

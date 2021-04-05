@@ -13,7 +13,7 @@ logger = logging.getLogger("spinorama")
 def normalize_onaxis(dfu):
     dfm = dfu.copy()
     for c in dfu.columns:
-        if c != "Freq" and c != "On Axis":
+        if c not in ("Freq", "On Axis"):
             dfm[c] -= dfu["On Axis"]
         if c == "180°":
             dfm.insert(1, "-180°", dfu["180°"] - dfu["On Axis"])
@@ -136,7 +136,7 @@ def compute_directivity_deg(af, am, az):
 
     # kHz1 = 110
     # kHz10 = 180
-    def eval(x):
+    def linear_eval(x):
         xp1 = int(x)
         xp2 = xp1 + 1
         zp1 = az[xp1][110:180]
@@ -149,7 +149,7 @@ def compute_directivity_deg(af, am, az):
     eval_count = 100
 
     space_p = np.linspace(int(len(am.T[0]) / 2), 1, eval_count)
-    eval_p = [eval(x) for x in space_p]
+    eval_p = [linear_eval(x) for x in space_p]
     # 10% tolerance
     min_p = np.min(eval_p) * 1.1
     # all minimum in this 10% band from min
@@ -163,7 +163,7 @@ def compute_directivity_deg(af, am, az):
     angle_p = pos_p * 180 / eval_count
 
     space_m = np.linspace(int(len(am.T[0]) / 2), len(am.T[0]) - 2, eval_count)
-    eval_m = [eval(x) for x in space_m]
+    eval_m = [linear_eval(x) for x in space_m]
     min_m = np.min(eval_m) * 1.1
     pos_g = [i for i, v in enumerate(eval_m) if v < min_m]
     if len(pos_g) > 1:

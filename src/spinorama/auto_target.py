@@ -67,14 +67,14 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     )
     # normalise to have a flat target (primarly for bright speakers)
     if current_curve_name == "On Axis":
-        slope = 0
+        slope = optim_config["slope_on_axis"]
     elif current_curve_name == "Listening Window":
         # slighlithy downward
-        slope = -2
+        slope = optim_config["slope_listening_window"]
     elif current_curve_name == "Early Reflections":
-        slope = -5
+        slope = optim_config["slope_early_reflections"]
     elif current_curve_name == "Sound Power":
-        slope = -8
+        slope = optim_config["slope_sound_power"]
     else:
         logger.error("No match for getTarget")
         return None

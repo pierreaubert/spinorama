@@ -9,10 +9,6 @@ mako
 matplotlib
 more_itertools
 ray==1.1.0
-# ray[tune]
-#tables
-#tabulate
-#tensorflow
-#tensorboard
+ray[tune]
 jupyterlab
 

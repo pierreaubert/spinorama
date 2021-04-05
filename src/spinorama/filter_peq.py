@@ -66,14 +66,14 @@ def peq_graph_measurements(spin: pd.DataFrame, measurement: str, peq: Peq):
     spin_freq = spin["Freq"].to_numpy()
     mean = np.mean(spin.loc[(spin.Freq > 500) & (spin.Freq < 10000)]["On Axis"])
     curve = spin[measurement] - mean
-    filter = peq_build(spin_freq, peq)
+    current_filter = peq_build(spin_freq, peq)
     curve_filtered = peq_apply_measurements(curve, peq)
     dff = pd.DataFrame(
         {
             "Freq": spin_freq,
             measurement: curve,
             "{0} Filtered".format(measurement): curve_filtered,
-            "Filter": filter,
+            "Filter": current_filter,
         }
     )
     return (
@@ -90,9 +90,9 @@ def peq_graph_measurements(spin: pd.DataFrame, measurement: str, peq: Peq):
 
 
 def peq_print(peq: Peq) -> None:
-    for i in enumerate(peq):
-        if peq[i][0] != 0:
-            print(peq[i][1])
+    for i, iir in enumerate(peq):
+        if iir[0] != 0:
+            print(iir[1])
 
 
 def peq_format_apo(comment: str, peq: Peq) -> str:
@@ -123,3 +123,44 @@ def peq_format_apo(comment: str, peq: Peq) -> str:
             logger.error("kind {} is unkown".format(iir.typ))
     res.append("")
     return "\n".join(res)
+
+
+def peq_butterworth_q(order):
+    odd = (order % 2) > 0
+    q_values = []
+    for i in range(0, order // 2):
+        q = 2.0 * math.sin(math.pi / order * (i + 0.5))
+        q_values.append(1.0 / q)
+    if odd:
+        q_values.append(-1.0)
+    return q_values
+
+
+def peq_linkwitzriley_q(order):
+    q_bw = peq_butterworth_q(order // 2)
+    q_values = []
+    if order % 4 > 0:
+        q_values = np.concatenate([q_bw[:-1], q_bw[:-1], [0.5]])
+    else:
+        q_values = np.concatenate([q_bw, q_bw])
+    return q_values
+
+
+def peq_butterworth_lowpass(order, freq, srate):
+    q_values = peq_butterworth_q(order)
+    return [(1.0, Biquad(Biquad.LOWPASS, freq, srate, q)) for q in q_values]
+
+
+def peq_butterworth_highpass(order, freq, srate):
+    q_values = peq_butterworth_q(order)
+    return [(1.0, Biquad(Biquad.HIGHPASS, freq, srate, q)) for q in q_values]
+
+
+def peq_linkwitzriley_lowpass(order, freq, srate):
+    q_values = peq_linkwitzriley_q(order)
+    return [(1.0, Biquad(Biquad.LOWPASS, freq, srate, q)) for q in q_values]
+
+
+def peq_linkwitzriley_highpass(order, freq, srate):
+    q_values = peq_linkwitzriley_q(order)
+    return [(1.0, Biquad(Biquad.HIGHPASS, freq, srate, q)) for q in q_values]

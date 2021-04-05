@@ -114,7 +114,15 @@ def sanity_check_measurement(name, speaker, version, measurement):
         logging.error("{0}: key {1} doesn't look correct".format(name, version))
         status = 1
     for k, v in measurement.items():
-        if k not in ("origin", "format", "review", "website", "misc", "symmetry"):
+        if k not in (
+            "origin",
+            "format",
+            "review",
+            "website",
+            "misc",
+            "symmetry",
+            "review_published",
+        ):
             logging.error(
                 "{0}: version {1} : {2} is not known".format(name, version, k)
             )

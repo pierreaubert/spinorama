@@ -65,7 +65,7 @@ def make_decorator():
         if inspect.isfunction(func):
             return RemoteFunction(function=func)
         if inspect.isclass(func):
-            raise NotImplemented
+            raise NotImplementedError
         raise TypeError("remote must be apply to a function or a class.")
 
     return decorator
@@ -74,8 +74,7 @@ def make_decorator():
 def remote(*args, **kwargs):
     if len(args) == 1 and len(kwargs) == 0 and callable(args[0]):
         return make_decorator()(args[0])
-    else:
-        return make_decorator()
+    return make_decorator()
 
 
 def wait(ids: dict, num_returns: int):

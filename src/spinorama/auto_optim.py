@@ -55,11 +55,11 @@ def optim_preflight(freq, target, auto_target_interp, optim_config):
         )
         status = False
 
-    for i in enumerate(target):
+    for i in range(0, min(nbt, nbi)):
         if len(target[i]) != len(auto_target_interp[i]):
             logger.error(
-                "Size mismatch #target[{}] {} != #auto_target_interp[{}] {}".format(
-                    i, len(target[i]), i, len(auto_target_interp[i])
+                "Size mismatch #target[{0}] {1} != #auto_target_interp[{0}] {2}".format(
+                    i, len(target[i]), len(auto_target_interp[i])
                 )
             )
             status = False
@@ -69,7 +69,7 @@ def optim_preflight(freq, target, auto_target_interp, optim_config):
 
 def optim_compute_auto_target(freq, target, auto_target_interp, peq):
     peq_freq = peq_build(freq, peq)
-    return [target[i] - auto_target_interp[i] + peq_freq for i in enumerate(target)]
+    return [target[i] - auto_target_interp[i] + peq_freq for i, _ in enumerate(target)]
 
 
 def optim_greedy(
