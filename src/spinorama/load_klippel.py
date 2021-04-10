@@ -184,8 +184,12 @@ def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mver
                 )
         return dfs
     else:
-        h_name = find_data_klippel(speaker_path, speaker_brand, speaker_name, mversion, "SPL Horizontal")
-        v_name = find_data_klippel(speaker_path, speaker_brand, speaker_name, mversion, "SPL Vertical")
+        h_name = find_data_klippel(
+            speaker_path, speaker_brand, speaker_name, mversion, "SPL Horizontal"
+        )
+        v_name = find_data_klippel(
+            speaker_path, speaker_brand, speaker_name, mversion, "SPL Vertical"
+        )
         print(h_name, v_name)
         _, h_spl = parse_graph_freq_klippel(h_name)
         _, v_spl = parse_graph_freq_klippel(v_name)

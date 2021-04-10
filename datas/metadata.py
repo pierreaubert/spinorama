@@ -862,7 +862,7 @@ speakers_info = {
             "eac-horizontal": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": {
+                "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/focal_twin6be/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/focal-twin6-be-studio-monitor-review.22254/",
                     "sos": "https://www.soundonsound.com/reviews/focal-twin-6",
@@ -872,7 +872,7 @@ speakers_info = {
             "eac-vertical": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": {
+                "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/focal_twin6be/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/focal-twin6-be-studio-monitor-review.22254/",
                     "sos": "https://www.soundonsound.com/reviews/focal-twin-6",
@@ -1705,7 +1705,7 @@ speakers_info = {
     },
     "Kanto Yu": {
         "brand": "Kanto",
-        "model": "YU",
+        "model": "Yu",
         "type": "active",
         "price": "280",
         "shape": "bookshelves",

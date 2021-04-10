@@ -1,16 +1,7 @@
 <%include file="header.html"/>
 <%include file="nav_menu.html"/>
 
-<%!
-  def space2url(text):
-      return text.replace(' ', '%20').replace('&', '%26')
-
-  def space2dash(text):
-      return text.replace(' ', '-').replace("'", '-').replace('.', '-').replace('+','-').replace('&','-')
-
-  def removeVendors(text):
-      return text.replace('Vendors-','').replace(' ', '%20').replace('&', '%26')
-%>  
+<%namespace name="util" module="utils" import="*"/>
 
 <div class="section">
   <div class="table-container">

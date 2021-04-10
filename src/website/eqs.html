@@ -8,28 +8,7 @@
 <%include file="nav_menu.html"/>
 <%include file="nav_search.html"/>
 
-<%!
-  def space2url(text):
-      return text.replace(' ', '%20').replace('&', '%26')
-
-  def space2dash(text):
-      return text.replace(' ', '-').replace("'", '-').replace(".", '-').replace("+",'-').replace('&','-')
-
-  def removeVendors(text):
-      return text.replace('Vendors-','').replace(' ', '%20').replace('&', '%26')
-
-  def eq2text(eq):
-      text = {
-          '0': 'LowPass',
-          '1': 'HighPass',
-          '2': 'BandPass',
-          '3': 'Peak',
-          '4': 'Notch',
-          '5': 'LowShelf',
-          '6': 'HighShelf',
-      }
-      return text.get(eq, 'ERROR')
-%>  
+<%namespace name="util" module="utils" import="*"/>
 
 <div class="section">
 

@@ -200,7 +200,7 @@ if __name__ == "__main__":
 
     # configure Mako
     mako_templates = TemplateLookup(
-        directories=["templates"], module_directory="/tmp/mako_modules"
+        directories=["src/website"], module_directory="/tmp/mako_modules"
     )
 
     # write index.html
@@ -264,14 +264,14 @@ if __name__ == "__main__":
         "graph.js",
         "zip.min.js",
     ]:
-        file_ext = Template(filename="templates/assets/" + f)
+        file_ext = Template(filename="src/website/assets/" + f)
         with open("./docs/assets/" + f, "w") as fd:
             fd.write(file_ext.render(site=site))
             fd.close()
 
     # copy favicon(s)
     for f in ["favicon.ico", "favicon-16x16.png", "downloadzip.js"]:
-        file_in = "./templates/assets/" + f
+        file_in = "./src/website/assets/" + f
         file_out = "./docs/assets/" + f
         shutil.copy(file_in, file_out)
 

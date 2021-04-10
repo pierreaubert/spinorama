@@ -73,7 +73,7 @@ pip3 install -r requirements.txt
 pip3 may also be pip depending on your system.
 
 ```
-export PYTHONPATH=src
+export PYTHONPATH=src:src/website
 jupiter-lab &
 ```
 

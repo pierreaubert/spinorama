@@ -1,19 +1,7 @@
 <%include file="header.html"/>
 <%include file="nav_menu.html"/>
 
-<%!
-    def space2url(text):
-        return text.replace(' ', '%20')
-
-    def unmeltC(text):
-        return text.replace('_unmelted', ' Contour')
-
-    def unmeltI(text):
-        return text.replace('_unmelted', ' IsoBand')
-
-    def unmeltR(text):
-        return text.replace('_unmelted', ' Radar')
-%>  
+<%namespace name="util" module="utils" import="*"/>
 
 <%include file="tabs_header.html"/>
 
