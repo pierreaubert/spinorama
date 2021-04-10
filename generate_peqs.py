@@ -344,7 +344,7 @@ def queue_speakers(df_all_speakers, optim_config, be_verbose, is_smoke_test):
             default_eq = "eac_eq"
             default_origin = "ErinsAudioCorner"
         else:
-            # currently doing only ASR but should work for the others
+            # currently doing only ASR&EAC but should work for the others
             # Princeton start around 500hz
             continue
         if (
@@ -644,7 +644,7 @@ if __name__ == "__main__":
                 sys.exit(1)
         if (
             speaker_name in metadata.keys()
-            and "speaker_default_measurement" in metadata[speaker_name].keys()
+            and "default_measurement" in metadata[speaker_name].keys()
         ):
             speaker_default = metadata[speaker_name]["default_measurement"]
         df_speaker = None
