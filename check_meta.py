@@ -118,6 +118,7 @@ def sanity_check_measurement(name, speaker, version, measurement):
             "origin",
             "format",
             "review",
+            "reviews",
             "website",
             "misc",
             "symmetry",
@@ -148,6 +149,18 @@ def sanity_check_measurement(name, speaker, version, measurement):
         ]:
             logging.error("{0}: symmetry {1} is not known".format(name, v))
             status = 1
+        if k == "review" and type(v) is not str:
+            logging.error("{0}: review {1} is not a string".format(name, v))
+            status = 1
+        if k == "reviews":
+            if type(v) is not dict:
+                logging.error("{0}: review {1} is not a dict".format(name, v))
+                status = 1
+            for ik, iv in v.items():
+                if type(iv) is not str:
+                    logging.error("{0}: in reviews {1} review {2} is not a string".format(name, v, iv))
+                    status = 1
+                    
     return status
 
 
