@@ -1,5 +1,4 @@
 #!/bin/sh
-TARGET=$HOME/src/pierreaubert.github.io/spinorama
 echo "Update starts"
 export PYTHONPATH=src:.
 
@@ -22,13 +21,7 @@ rm -f docs/stats/*.json
 sh ./update_brands.sh
 ./generate_html.py
 # copy 
-echo "Sync"
-rsync -arv --exclude '*.png' --delete ./docs/* $TARGET
-rsync -arv --include '*.png' ./docs/pictures/* $TARGET/pictures
-rsync -arv --include '*.png' ./docs/logos/* $TARGET/logos
-# remove unneeded files
-# rm  $TARGET/(assets|compare|stats)/*\ 2.*
-rm  $TARGET/[A-Z]*/*/*/*.png
+./update_sync.sh
 # evaluate what's new and needs to be changed
 cd $TARGET && git status
 
