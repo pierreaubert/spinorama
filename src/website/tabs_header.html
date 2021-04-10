@@ -13,31 +13,6 @@
       <img align="center" src="${site}/logos/eac.png" alt="ErinsAudioCorner">
       % endif
     </p>
-<%
-    review = None
-    reviews = None
-    if "default_measurement" in meta[speaker]:
-        default =  meta[speaker]["default_measurement"]
-        if default in meta[speaker]["measurements"].keys():
-           compute = meta[speaker]["measurements"][default]
-           review = compute.get("review", None)
-           reviews = compute.get("reviews", None)
-%>
-% if review is not None:
-<a href="${review}">Original review</a>
-% endif
-% if reviews is not None:
-%   for pos, (key, review) in enumerate(reviews.items()):
-%     if pos == 0:
-Original Review: <a href="${review}">${key} review</a>.
-%     elif pos == 1:
-Other reviews: <a href="${review}">${key} review</a>
-%     else:
-, <a href="${review}">${key} review</a>
-%     endif
-%   endfor
-% endif
-
   </div>
 </section>
 

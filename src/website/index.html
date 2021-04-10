@@ -68,7 +68,16 @@
 	  </div>
 	  <footer class="card-footer">
 	    % for v, m in meta[speaker_name]["measurements"].items():
-	    <a class="card-footer-item" href="${speaker_name|space2url}/${m["origin"]|removeVendors}/index_${v}.html">${m["origin"]}</a>
+	    <a class="card-footer-item"
+	       href="${speaker_name|space2url}/${m["origin"]|removeVendors}/index_${v}.html">
+              ${m["origin"]}
+              % if "horizontal" in v:
+              (Horizontal orientation)
+              % endif
+              % if "vertical" in v:
+              (Vertical orientation)
+              % endif
+            </a>
 	    % endfor
 	  </footer>
 	</div>

@@ -1,4 +1,5 @@
 def space2url(context, text):
+    """basic url escaping"""
     return text.replace(" ", "%20").replace("&", "%26")
 
 
@@ -18,26 +19,24 @@ def removeVendors(context, text):
 
 def eq2text(context, eq):
     text = {
-        '0': 'LowPass',
-        '1': 'HighPass',
-        '2': 'BandPass',
-        '3': 'Peak',
-        '4': 'Notch',
-        '5': 'LowShelf',
-        '6': 'HighShelf',
+        "0": "LowPass",
+        "1": "HighPass",
+        "2": "BandPass",
+        "3": "Peak",
+        "4": "Notch",
+        "5": "LowShelf",
+        "6": "HighShelf",
     }
-    return text.get(eq, 'ERROR')
+    return text.get(eq, "ERROR")
 
 
 def unmeltC(context, text):
-    return text.replace('_unmelted', ' Contour')
+    return text.replace("_unmelted", " Contour")
 
 
 def unmeltI(context, text):
-    return text.replace('_unmelted', ' IsoBand')
+    return text.replace("_unmelted", " IsoBand")
 
 
 def unmeltR(context, text):
-    return text.replace('_unmelted', ' Radar')
-
-
+    return text.replace("_unmelted", " Radar")

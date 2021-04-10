@@ -5,6 +5,77 @@
 
 <%include file="tabs_header.html"/>
 
+<div class="section">
+  <div class="content">
+    <ul>
+      <li><b>${meta[speaker].get('brand')}
+          ${meta[speaker].get('model')}</b>
+        Type: <b>${meta[speaker].get('type')}</b> Shape: <b>${meta[speaker].get('shape')}</b> Cost: <b>&pm;${meta[speaker].get('price', '?')}CHF</b> (${meta[speaker].get('amount', '?')}).</li>      
+<%
+    estimates = None
+    pref_rating = None
+    default = meta[speaker].get('default_measurement')
+    if default is not None and default in meta[speaker]['measurements'].keys():
+        estimates = meta[speaker]['measurements'][default].get('estimates', None)
+        pref_rating = meta[speaker]['measurements'][default].get('pref_rating', None)
+%>
+% if estimates is not None:
+      <li><b>-3dB</b> (resp. -6db) point v.s. reference is at <b>${estimates.get('ref_3dB')}Hz</b> (resp. ${estimates.get('ref_6dB')}Hz).
+      Reference level is ${estimates.get('ref_level')}dB computed over [${estimates.get('ref_from')}Hz, ${estimates.get('ref_to')}Hz].
+      Frequency deviation is <b>${estimates.get('ref_band')}dB</b> over the same frequency range.
+      </li>
+% endif
+% if pref_rating is not None:
+      <li>Preference Score is <b>${pref_rating.get('pref_score')}</b>
+      and would be <b>${pref_rating.get('pref_score_wsub')}</b> with a
+      perfect subwoofer. Score
+      compononent details: NBD: ON ${pref_rating.get('nbd_on_axis')},
+      LW ${pref_rating.get('nbd_listening_window')}, SP
+      ${pref_rating.get('nbd_sound_power')}, PIR
+      ${pref_rating.get('nbd_pred_in_room')}; SM:
+      SP${pref_rating.get('sm_sound_power')},
+      PIR${pref_rating.get('sm_pred_in_room')}; LFQ ${pref_rating.get('lfq')}, LFX ${pref_rating.get('lfx_hz')}Hz
+      </li>
+% endif
+<%
+    review = None
+    reviews = None
+    h_or_v = None
+    if "default_measurement" in meta[speaker]:
+        default =  meta[speaker]["default_measurement"]
+        if default in meta[speaker]["measurements"].keys():
+           compute = meta[speaker]["measurements"][default]
+           review = compute.get("review", None)
+           reviews = compute.get("reviews", None)
+        if "horizontal" in default:
+           h_or_v = "Horizontal"
+        elif "vertical" in default:
+           h_or_v = "Vertical"
+%>
+% if h_or_v is not None:
+<li>${h_or_v} measurement</li>
+% endif
+% if review is not None:
+<li>Link to <a href="${review}">Original review</a>.</li>
+% endif
+% if reviews is not None:
+<li>
+%   for pos, (key, review) in enumerate(reviews.items()):
+%     if pos == 0:
+Link to original Review: <a href="${review}">${key} review</a>.
+%     elif pos == 1:
+Links to other reviews: <a href="${review}">${key} review</a>
+%     else:
+, <a href="${review}">${key} review</a>
+%     endif
+%   endfor
+.
+</li>
+% endif
+    </ul>
+  </div>
+</div>
+
 <!-- Mobile view: sequential-->
 <div class="tab-pane is-active" id="pane-1">
   <ul>

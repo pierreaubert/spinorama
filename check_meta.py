@@ -158,9 +158,13 @@ def sanity_check_measurement(name, speaker, version, measurement):
                 status = 1
             for ik, iv in v.items():
                 if type(iv) is not str:
-                    logging.error("{0}: in reviews {1} review {2} is not a string".format(name, v, iv))
+                    logging.error(
+                        "{0}: in reviews {1} review {2} is not a string".format(
+                            name, v, iv
+                        )
+                    )
                     status = 1
-                    
+
     return status
 
 
