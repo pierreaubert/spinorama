@@ -850,6 +850,37 @@ speakers_info = {
             },
         },
     },
+    "Focal Twin6 Be": {
+        "brand": "Focal",
+        "model": "Twin6 Be",
+        "type": "passive",
+        "price": "3400",
+        "shape": "center",
+        "amount": "pair",
+        "default_measurement": "eac-horizontal",
+        "measurements": {
+            "eac-horizontal": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/focal_twin6be/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/focal-twin6-be-studio-monitor-review.22254/",
+                    "sos": "https://www.soundonsound.com/reviews/focal-twin-6",
+                },
+                "review_published": "20210407",
+            },
+            "eac-vertical": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/focal_twin6be/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/focal-twin6-be-studio-monitor-review.22254/",
+                    "sos": "https://www.soundonsound.com/reviews/focal-twin-6",
+                },
+                "review_published": "20210407",
+            },
+        },
+    },
     "Fostex PM03": {
         "brand": "Fostex",
         "model": "PM03",
@@ -1669,6 +1700,22 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kali-lp-6-review-studio-monitor.17978/",
+            },
+        },
+    },
+    "Kanto Yu": {
+        "brand": "Kanto",
+        "model": "YU",
+        "type": "active",
+        "price": "280",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kanto-yu-review-pc-speaker.22329/",
             },
         },
     },
