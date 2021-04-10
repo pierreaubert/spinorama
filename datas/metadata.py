@@ -1747,9 +1747,14 @@ speakers_info = {
         "price": "700",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "asr",
+        "default_measurement": "asr-vertical",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-q350-speaker-review.13484/",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-q350-speaker-review.13484/",
