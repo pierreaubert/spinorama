@@ -29,11 +29,12 @@
 % if reviews is not None:
 %   for pos, (key, review) in enumerate(reviews.items()):
 %     if pos == 0:
-Reviews:
+Original Review: <a href="${review}">${key} review</a>.
+%     elif pos == 1:
+Other reviews: <a href="${review}">${key} review</a>
 %     else:
-,
+, <a href="${review}">${key} review</a>
 %     endif
-<a href="${review}">%{key} review</a> 
 %   endfor
 % endif
 
