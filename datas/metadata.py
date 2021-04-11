@@ -742,9 +742,9 @@ speakers_info = {
             },
         },
     },
-    "Emotiva Airmotive 6s": {
+    "Emotiva Airmotiv 6s": {
         "brand": "Emotiva",
-        "model": "Airmotive 6s",
+        "model": "Airmotiv 6s",
         "type": "passive",
         "price": "600",
         "shape": "bookshelves",
@@ -755,6 +755,22 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/emotiva-airmotiv-6s-powered-speaker-review.11185/",
+            },
+        },
+    },
+    "Emotiva Airmotiv B1+": {
+        "brand": "Emotiva",
+        "model": "Airmotiv B1+",
+        "type": "passive",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/emotiva-airmotiv-b1-review-bookshelf-speaker.22366/",
             },
         },
     },
