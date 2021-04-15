@@ -1692,6 +1692,26 @@ speakers_info = {
             },
         },
     },
+    "Kali IN-5": {
+        "brand": "Kali",
+        "model": "IN-5",
+        "type": "active",
+        "price": "700",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_in-5/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kali-in-5-studio-monitor-review.22487/",
+                },
+                "review_published": "20210415",
+            },
+        },
+    },
     "Kali IN-8": {
         "brand": "Kali",
         "model": "IN-8",
@@ -2597,12 +2617,22 @@ speakers_info = {
         "price": "16000",
         "shape": "floorstanders",
         "amount": "pair",
-        "default_measurement": "asr",
+        "default_measurement": "asr-v2-20210415",
         "measurements": {
-            "asr": {
+            "asr-v2-20210415": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr-v1": "https://www.audiosciencereview.com/forum/index.php?threads/revel-f328be-speaker-review.17443/",
+                    "asr-v2": "https://www.audiosciencereview.com/forum/index.php?threads/bass-response-correction-for-klippel-nfs-measurements.22493/",
+                },
+                "review_published": "20210415",
+            },
+            "asr-v1-20201110": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-f328be-speaker-review.17443/",
+                "review_published": "20201110",
             },
             "vendor": {
                 "origin": "Vendors-Revel",
@@ -2617,9 +2647,17 @@ speakers_info = {
         "price": "1600",
         "shape": "floorstanders",
         "amount": "pair",
-        "default_measurement": "asr",
+        "default_measurement": "asr-v2-20210415",
         "measurements": {
-            "asr": {
+            "asr-v2-20210415": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr-v1": "https://www.audiosciencereview.com/forum/index.php?threads/revel-f35-speaker-review.12053/",
+                    "asr-v2": "https://www.audiosciencereview.com/forum/index.php?threads/bass-response-correction-for-klippel-nfs-measurements.22493/",
+                    },
+            },
+            "asr-v1-20200315": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-f35-speaker-review.12053/",
