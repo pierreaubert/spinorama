@@ -2655,7 +2655,7 @@ speakers_info = {
                 "reviews": {
                     "asr-v1": "https://www.audiosciencereview.com/forum/index.php?threads/revel-f35-speaker-review.12053/",
                     "asr-v2": "https://www.audiosciencereview.com/forum/index.php?threads/bass-response-correction-for-klippel-nfs-measurements.22493/",
-                    },
+                },
             },
             "asr-v1-20200315": {
                 "origin": "ASR",
