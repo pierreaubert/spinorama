@@ -123,6 +123,7 @@ def sanity_check_measurement(name, speaker, version, measurement):
             "misc",
             "symmetry",
             "review_published",
+            "notes",
         ):
             logging.error(
                 "{0}: version {1} : {2} is not known".format(name, version, k)
