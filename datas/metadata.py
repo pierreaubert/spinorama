@@ -1293,6 +1293,23 @@ speakers_info = {
             },
         },
     },
+    "Infinity RS152": {
+        "brand": "Infinity",
+        "model": "RS152",
+        "type": "passive",
+        "amount": "each",
+        "shape": "surround",
+        "price": "450",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/infinity-rs152-review-surround-speaker.22531/",
+                "review_published": "20210416",
+            },
+        },
+    },
     "JansZen Loudspeaker zA1.1": {
         "brand": "JansZen Loudspeaker",
         "model": "zA1.1",
@@ -1554,9 +1571,19 @@ speakers_info = {
         "price": "5800",
         "shape": "floorstanders",
         "amount": "pair",
-        "default_measurement": "eac",
+        "default_measurement": "eac-v2-20210416",
         "measurements": {
-            "eac": {
+            "eac-v2-20210416": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_hdi-3800/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-hdi-3800-floorstanding-speaker-review.21738/page-8",
+                },
+                "review_published": "20210416",
+                "notes": "Second measurement with bass corrections",
+            },
+            "eac-v1-20210323": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/jbl_hdi-3800/",
@@ -2627,6 +2654,7 @@ speakers_info = {
                     "asr-v2": "https://www.audiosciencereview.com/forum/index.php?threads/bass-response-correction-for-klippel-nfs-measurements.22493/",
                 },
                 "review_published": "20210415",
+                "notes": "Second measurement with bass corrections",
             },
             "asr-v1-20201110": {
                 "origin": "ASR",
@@ -2656,6 +2684,7 @@ speakers_info = {
                     "asr-v1": "https://www.audiosciencereview.com/forum/index.php?threads/revel-f35-speaker-review.12053/",
                     "asr-v2": "https://www.audiosciencereview.com/forum/index.php?threads/bass-response-correction-for-klippel-nfs-measurements.22493/",
                 },
+                "notes": "Second measurement with bass corrections",
             },
             "asr-v1-20200315": {
                 "origin": "ASR",
