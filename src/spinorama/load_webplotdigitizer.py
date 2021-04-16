@@ -138,7 +138,7 @@ def parse_graphs_speaker_webplotdigitizer(
         spin = graph_melt(spin_even)
         if title != "CEA2034":
             logger.debug("title is {0}".format(title))
-            return spin
+            return None
 
         if spin is not None:
             # compute EIR
