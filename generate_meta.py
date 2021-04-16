@@ -98,90 +98,102 @@ def add_scores(dataframe):
         logger.info("Processing {0}".format(speaker_name))
         for _, measurements in speaker_data.items():
             for key, dfs in measurements.items():
-                if dfs is None or "CEA2034" not in dfs.keys():
+                try:
+                    if dfs is None or "CEA2034" not in dfs.keys():
+                        logger.debug(
+                            "skipping add_score no spinorama for {0}".format(
+                                speaker_name
+                            )
+                        )
+                        continue
+
+                    spin = dfs["CEA2034"]
+                    if spin is None or "Estimated In-Room Response" not in dfs.keys():
+                        continue
+
                     logger.debug(
-                        "skipping add_score no spinorama for {0}".format(speaker_name)
+                        "Compute score for speaker {0} key {1}".format(
+                            speaker_name, key
+                        )
                     )
-                    continue
-
-                spin = dfs["CEA2034"]
-                if spin is None or "Estimated In-Room Response" not in dfs.keys():
-                    continue
-
-                logger.debug(
-                    "Compute score for speaker {0} key {1}".format(speaker_name, key)
-                )
-                # basic math
-                onaxis = spin.loc[spin["Measurements"] == "On Axis"].reset_index(
-                    drop=True
-                )
-                est = estimates(onaxis)
-                logger.info("Computing estimated for {0}".format(speaker_name))
-                if est is None:
-                    logger.debug("estimated return None for {0}".format(speaker_name))
-                    continue
-                logger.info(
-                    "Adding -3dB {0}Hz -6dB {1}Hz +/-{2}dB".format(
-                        est.get("ref_3dB", "--"),
-                        est.get("ref_6dB", "--"),
-                        est.get("ref_band", "--"),
+                    # basic math
+                    onaxis = spin.loc[spin["Measurements"] == "On Axis"].reset_index(
+                        drop=True
                     )
-                )
-                if key[-3:] == "_eq":
-                    metadata.speakers_info[speaker_name]["measurements"][key[:-3]][
-                        "estimates_eq"
-                    ] = est
-                else:
-                    metadata.speakers_info[speaker_name]["measurements"][key][
-                        "estimates"
-                    ] = est
-
-                inroom = dfs["Estimated In-Room Response"]
-                if inroom is None:
-                    continue
-
-                logger.debug(
-                    "Compute score for speaker {0} key {1}".format(speaker_name, key)
-                )
-
-                pref_rating = speaker_pref_rating(spin, inroom)
-                if pref_rating is None:
-                    logger.warning(
-                        "pref_rating failed for {0} {1}".format(speaker_name, key)
+                    est = estimates(onaxis)
+                    logger.info("Computing estimated for {0}".format(speaker_name))
+                    if est is None:
+                        logger.debug(
+                            "estimated return None for {0}".format(speaker_name)
+                        )
+                        continue
+                    logger.info(
+                        "Adding -3dB {0}Hz -6dB {1}Hz +/-{2}dB".format(
+                            est.get("ref_3dB", "--"),
+                            est.get("ref_6dB", "--"),
+                            est.get("ref_band", "--"),
+                        )
                     )
-                    continue
-                logger.info("Adding {0}".format(pref_rating))
-                # compute min and max for each value
-                min_flatness = min(est["ref_band"], min_flatness)
-                max_flatness = max(est["ref_band"], max_flatness)
-                min_pref_score_wsub = min(
-                    min_pref_score_wsub, pref_rating["pref_score_wsub"]
-                )
-                max_pref_score_wsub = max(
-                    max_pref_score_wsub, pref_rating["pref_score_wsub"]
-                )
-                min_nbd_on = min(min_nbd_on, pref_rating["nbd_on_axis"])
-                max_nbd_on = max(max_nbd_on, pref_rating["nbd_on_axis"])
-                min_sm_sp = min(min_nbd_on, pref_rating["sm_sound_power"])
-                max_sm_sp = max(max_nbd_on, pref_rating["sm_sound_power"])
-                min_sm_pir = min(min_nbd_on, pref_rating["sm_pred_in_room"])
-                max_sm_pir = max(max_nbd_on, pref_rating["sm_pred_in_room"])
-                # if datas have low freq:
-                if "pref_score" in pref_rating:
-                    min_pref_score = min(min_pref_score, pref_rating["pref_score"])
-                    max_pref_score = max(max_pref_score, pref_rating["pref_score"])
-                if "lfx_hz" in pref_rating:
-                    min_lfx_hz = min(min_lfx_hz, pref_rating["lfx_hz"])
-                    max_lfx_hz = max(max_lfx_hz, pref_rating["lfx_hz"])
+                    if key[-3:] == "_eq":
+                        metadata.speakers_info[speaker_name]["measurements"][key[:-3]][
+                            "estimates_eq"
+                        ] = est
+                    else:
+                        metadata.speakers_info[speaker_name]["measurements"][key][
+                            "estimates"
+                        ] = est
 
-                if key[-3:] == "_eq":
-                    metadata.speakers_info[speaker_name]["measurements"][key[:-3]][
-                        "pref_rating_eq"
-                    ] = pref_rating
-                else:
-                    metadata.speakers_info[speaker_name]["measurements"][key][
-                        "pref_rating"
-                    ] = pref_rating
+                    inroom = dfs["Estimated In-Room Response"]
+                    if inroom is None:
+                        continue
+
+                    logger.debug(
+                        "Compute score for speaker {0} key {1}".format(
+                            speaker_name, key
+                        )
+                    )
+
+                    pref_rating = speaker_pref_rating(spin, inroom)
+                    if pref_rating is None:
+                        logger.warning(
+                            "pref_rating failed for {0} {1}".format(speaker_name, key)
+                        )
+                        continue
+                    logger.info("Adding {0}".format(pref_rating))
+                    # compute min and max for each value
+                    min_flatness = min(est["ref_band"], min_flatness)
+                    max_flatness = max(est["ref_band"], max_flatness)
+                    min_pref_score_wsub = min(
+                        min_pref_score_wsub, pref_rating["pref_score_wsub"]
+                    )
+                    max_pref_score_wsub = max(
+                        max_pref_score_wsub, pref_rating["pref_score_wsub"]
+                    )
+                    min_nbd_on = min(min_nbd_on, pref_rating["nbd_on_axis"])
+                    max_nbd_on = max(max_nbd_on, pref_rating["nbd_on_axis"])
+                    min_sm_sp = min(min_nbd_on, pref_rating["sm_sound_power"])
+                    max_sm_sp = max(max_nbd_on, pref_rating["sm_sound_power"])
+                    min_sm_pir = min(min_nbd_on, pref_rating["sm_pred_in_room"])
+                    max_sm_pir = max(max_nbd_on, pref_rating["sm_pred_in_room"])
+                    # if datas have low freq:
+                    if "pref_score" in pref_rating:
+                        min_pref_score = min(min_pref_score, pref_rating["pref_score"])
+                        max_pref_score = max(max_pref_score, pref_rating["pref_score"])
+                        if "lfx_hz" in pref_rating:
+                            min_lfx_hz = min(min_lfx_hz, pref_rating["lfx_hz"])
+                            max_lfx_hz = max(max_lfx_hz, pref_rating["lfx_hz"])
+
+                    if key[-3:] == "_eq":
+                        metadata.speakers_info[speaker_name]["measurements"][key[:-3]][
+                            "pref_rating_eq"
+                        ] = pref_rating
+                    else:
+                        metadata.speakers_info[speaker_name]["measurements"][key][
+                            "pref_rating"
+                        ] = pref_rating
+                except KeyError as ke:
+                    print("{} get {}".format(speaker_name, ke))
+                    continue
 
     # if we are looking only after 1 speaker, return
     if len(dataframe.items()) == 1:
@@ -193,6 +205,17 @@ def add_scores(dataframe):
         logger.info("Normalize data for {0}".format(speaker_name))
         for _, measurements in speaker_data.items():
             for version, measurement in measurements.items():
+                if (
+                    version
+                    not in metadata.speakers_info[speaker_name]["measurements"].keys()
+                ):
+                    logger.error(
+                        "Confusion in metadata, did you edit a speaker recently? {} should be in metadata for {}".format(
+                            version, speaker_name
+                        )
+                    )
+                    continue
+
                 if measurement is None or "CEA2034" not in measurement.keys():
                     logger.debug(
                         "skipping normalization no spinorama for {0}".format(
