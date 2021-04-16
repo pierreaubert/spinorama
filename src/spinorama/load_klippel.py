@@ -190,7 +190,7 @@ def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mver
         v_name = find_data_klippel(
             speaker_path, speaker_brand, speaker_name, mversion, "SPL Vertical"
         )
-        print(h_name, v_name)
+        # print(h_name, v_name)
         _, h_spl = parse_graph_freq_klippel(h_name)
         _, v_spl = parse_graph_freq_klippel(v_name)
         return filter_graphs(speaker_name, h_spl, v_spl)
