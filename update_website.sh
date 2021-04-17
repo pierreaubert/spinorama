@@ -2,6 +2,12 @@
 echo "Update starts"
 export PYTHONPATH=src:.
 
+# check meta
+./check_meta.py
+if ! test $?; then
+    echo "Failed after checking metadata!"
+    exit 1;
+fi
 # update logos and speakers picture
 ./update_pictures.sh
 # generate all graphs if some are missing
@@ -20,8 +26,15 @@ rm -f docs/stats/*.json
 # generate website
 sh ./update_brands.sh
 ./generate_html.py
+./check_html.py
+if ! test $?; then
+    echo "Failed after checking HTML!"
+    exit 1;
+fi
 # copy 
 ./update_sync.sh
 # evaluate what's new and needs to be changed
-cd $TARGET && git status
+TARGET=$HOME/src/pierreaubert.github.io/spinorama
+cd ${TARGET} && git status
+exit 0;
 
