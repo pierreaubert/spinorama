@@ -13,7 +13,7 @@ decision when buying a speaker instead of relying on commercial information or i
 
 # What is a spinorama set of graphs?
 
-It is a way to understand quickly a speaker properties.
+It is a way to understand quickly a speaker properties, how it will sound.
 
 Here is an example:
 
@@ -25,34 +25,39 @@ Here is an example:
 
 The speaker above is *very* good.
 
-Please read this [post](https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-and-control-1-pro-monitors-review.10811/) 
+Please read:
+
+- this [post on ASR](https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-and-control-1-pro-monitors-review.10811/) by [Amir Majidimehr](https://www.linkedin.com/in/amir-majidimehr-0014a75/).
 to get a better insight on how to analyse a spinorama.
+- or this [post on Audioholics](https://www.audioholics.com/loudspeaker-design/understanding-loudspeaker-measurements) by [James Larson](https://www.audioholics.com/authors/james-larson)
+- this [Objective Loudspeaker Measurements to Predict Subjective Preferences?](https://www.audioholics.com/loudspeaker-design/measure-loudspeaker-performance) from [Dr. Floyd Toole](https://www.linkedin.com/in/floydtoole/) and [Gene DellaSala](https://www.audioholics.com/authors/gene-dellasala) on Audioholics too.
 
 # Features
 
-## Import
+## Import capabilities
 
-The library support 4 kinds of data:
-1. ASR format provided by a [Klippel NFS](https://www.klippel.de/products/rd-system/modules/nfs-near-field-scanner.html): a set of CSV files
+The library support four different formats of data:
+1. [Klippel NFS](https://www.klippel.de/products/rd-system/modules/nfs-near-field-scanner.html) format: a set of CSV files.
 2. Princeton 3D3A files: they are IR data in [hdf5](https://www.hdfgroup.org/solutions/hdf5/) format
 3. Scanned data from a picture with [WebPlotDigitizer](https://automeris.io/WebPlotDigitizer/) (takes 10 minutes per picture)
 4. Export in text form from [REW](https://www.roomeqwizard.com/)
 
 ## Computations
 
-1. Generate CEA2034 data from horizontal and vertical SPL data
+1. Generate CEA2034 data from horizontal and vertical SPL data.
 2. Calculate contour plot, radar plot, isolines and isobands.
 3. Estimate basic data for a speaker (-3dB output, flatness over a range)
 4. Compute various parameters defined in a paper from Olive (ref. below).
-5. Can compute effect of an EQ (IIR) on the spinorama.
-6. Generate an EQ to optimise the speaker (and get a better preference score) based on anechoic data. Note: this is not yet a room correction software.
+5. It can compute the effect of an EQ (IIR) on the spinorama.
+6. It can generate an EQ to optimise the speaker (and get a better preference score) based on anechoic data. Note: this is not yet a room correction software.
 
-## Generation
+## Website generation
 
-1. Webpages digestable on mobile but also on very large 4k screens
-2. Graphs are interactive
-3. Comparison between speakers
-4. Some statistics
+1. Webpages digestable on mobile but also on very large 4k screens.
+2. Graphs are interactive.
+3. Comparison between speakers is possible.
+4. Some statistics.
+5. All EQs generated are easily accessible.
 
 
 # Other ways to look at the graphs in a more interactive way.
@@ -122,11 +127,12 @@ Before committing, please check that the various checks are fine:
 4. ```black .``` will take care of formatting all the python files.
 
 and also (but WIP):
+
 5. ```./check_404.sh``` : check we do not have missing links.
-6. ```./node_modules/.bin/pyright````should not report new type error.
+6. ```./node_modules/.bin/pyright``` : should not report new type error.
 7. Check that notebook are cleaned up before committing.
 
-Tests 1. to 4. should be in the presubmit.
+Tests 1. to 4. should be in the pre-submit.
 
 # How to add a speaker to the database.
 
@@ -138,7 +144,7 @@ We have a dedicated [tutorial](./tutorial/ADDSPEAKER.md).
 ASR is a fantastic source of speakers data thanks to [amirm@](https://www.audiosciencereview.com/forum/index.php?threads/a-bit-about-your-host.1906/). They also have a lot of data about DACs that you may found useful. There is little correlation between price and quality in the audio world and this data gives some objective criteria to decide what to buy. You can [support ASR](https://www.audiosciencereview.com/forum/index.php?threads/how-to-support-audio-science-review.8150/).
 
 ## [ErinsAudioCorner *aka* EAC](https://www.erinsaudiocorner.com/)
-Erin is a motivated person reviewing speakers. He is doing an outstanging jobs. He also has a [Youtube channel](https://youtube.com/c/ErinsAudioCorner). You can [support him](https://www.erinsaudiocorner.com/contribute/).
+Erin is a motivated person reviewing speakers. He is doing an outstanging jobs. He also has a [Youtube channel](https://youtube.com/c/ErinsAudioCorner). You can also [support him](https://www.erinsaudiocorner.com/contribute/).
 
 ## [3D3A](https://www.princeton.edu/3D3A/) is a research organisation at [Princeton](https://www.princeton.edu).
 
