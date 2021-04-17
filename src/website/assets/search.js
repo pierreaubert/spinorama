@@ -79,18 +79,26 @@ $(document).ready(function () {
 	
 	function is_filtered(item, filter) {
 	    let show = true;
-	    let default_measurement = item["default_measurement"];
-	    let origin = item["measurements"][default_measurement]["origin"];
 	    if (filter.reviewer !== "" ) {
 		if (filter.reviewer === 'Vendors' ) {
+	            let default_measurement = item["default_measurement"];
+	            let origin = item["measurements"][default_measurement]["origin"];
 		    if (origin.substr(0, 8) !== 'Vendors-' ) {
 			// console.log(origin.substr(0, 8));
 			show = false;
 		    }
 		} else {
-		    if (origin !== filter.reviewer) {
-			show = false;
-		    }
+                    let found = true;
+	            for (let measurement in item["measurements"]) {
+                        let origin = item["measurements"][measurement]["origin"];
+		        if (origin == filter.reviewer) {
+			    found = false;
+                            break;
+		        }
+                    }
+                    if(found) {
+                        show = false;
+                    }
 		}
 	    }
 	    if (filter.power !== "" && item.type !== filter.power) {
