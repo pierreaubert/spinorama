@@ -62,9 +62,6 @@ The library support four different formats of data:
 
 # Other ways to look at the graphs in a more interactive way.
 
-If you want to generate the graphs yourself or play with the data you need to install the software.
-We have a dedicated [section](./tutorial/INSTALL.md).
-
 ## Linux or Mac user
 
 First install a few packages:
