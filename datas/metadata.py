@@ -240,6 +240,12 @@ speakers_info = {
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/buchardt-s400-speaker-review.12844/",
                 "format": "klippel",
             },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_audio_s400_bookshelf/",
+                "format": "webplotdigitizer",
+                "review_published": "20200613",
+            },
             "vendor": {
                 "origin": "Vendors-Buchardt Audio",
                 "website": "https://www.buchardtaudio.com",
@@ -343,6 +349,20 @@ speakers_info = {
         "type": "passive",
         "shape": "floorstanders",
         "price": "",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Bowers & Wilkins",
+                "format": "webplotdigitizer",
+            },
+        },
+    },
+    "Bowers & Wilkins 803 D3": {
+        "brand": "Bowers & Wilkins",
+        "model": "803 D3",
+        "type": "passive",
+        "shape": "floorstanders",
+        "price": "9000",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -1275,6 +1295,11 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/infinity-r162-bookshelf-speaker-review.12333/",
             },
+            "vendor": {
+                "origin": "Vendors-Infinity",
+                "website": "www.infinityspeakers.com",
+                "format": "webplotdigitizer",
+            },
         },
     },
     "Infinity RC263": {
@@ -1293,6 +1318,21 @@ speakers_info = {
             },
         },
     },
+    "Infinity R263": {
+        "brand": "Infinity",
+        "model": "R263",
+        "type": "passive",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "price": "500",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Infinity",
+                "format": "webplotdigitizer",
+            },
+        },
+    },
     "Infinity RS152": {
         "brand": "Infinity",
         "model": "RS152",
@@ -1307,6 +1347,22 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/infinity-rs152-review-surround-speaker.22531/",
                 "review_published": "20210416",
+            },
+        },
+    },
+    "Jamo S807": {
+        "brand": "Jamo",
+        "model": "S807",
+        "type": "passive",
+        "price": "650",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "webplotdigitizer",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/jamo_s807/",
+                "review_published": "20200622",
             },
         },
     },
@@ -1500,6 +1556,22 @@ speakers_info = {
             },
         },
     },
+    "JBL 4312SE": {
+        "brand": "JBL",
+        "model": "4312SE",
+        "type": "passive",
+        "price": "3000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "website": "www.jbl.com",
+                "format": "webplotdigitizer",
+            },
+        },
+    },
     "JBL 4319": {
         "brand": "JBL",
         "model": "4319",
@@ -1605,6 +1677,38 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/jbl_hdi-4500/",
                 "review_published": "20210401",
+            },
+        },
+    },
+    "JBL L82 Classic": {
+        "brand": "JBL",
+        "model": "L82 Classic",
+        "type": "passive",
+        "price": "1250",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "website": "www.jbl.com",
+                "format": "webplotdigitizer",
+            },
+        },
+    },
+    "JBL LSR6332": {
+        "brand": "JBL",
+        "model": "LSR6332",
+        "type": "active",
+        "price": "3200",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "website": "www.jbl.com",
+                "format": "webplotdigitizer",
             },
         },
     },
@@ -1938,6 +2042,23 @@ speakers_info = {
             },
         },
     },
+    "Klipsch Heresy IV": {
+        "brand": "Klipsch",
+        "model": "Heresy IV",
+        "type": "passive",
+        "price": "2000",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "webplotdigitizer",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_heresy_iv/",
+                "review_published": "20201105",
+            },
+        },
+    },
     "Klipsch RP-600M": {
         "brand": "Klipsch",
         "model": "RP-600M",
@@ -2091,6 +2212,23 @@ speakers_info = {
             },
         },
     },
+    "Micca MB42X Mark III": {
+        "brand": "Micca",
+        "model": "MB42X Mark III",
+        "type": "passive",
+        "price": "80",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "webplotdigitizer",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/micca_mb42xiii/",
+                "review_published": "20200813",
+            },
+        },
+    },
     "Micca RB42": {
         "brand": "Micca",
         "model": "RB42",
@@ -2134,6 +2272,25 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh80-dsp-monitor-measurements-3.14637/",
             },
+            "vendor": {
+                "origin": "Vendors-Neumann",
+                "format": "webplotdigitizer",
+            },
+        },
+    },
+    "Neumann KH 120A": {
+        "brand": "Neumann",
+        "model": "KH 120A",
+        "type": "active",
+        "price": "2500",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Neumann",
+                "format": "webplotdigitizer",
+            },
         },
     },
     "Neumann KH 310A": {
@@ -2149,6 +2306,26 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-310a-review-powered-monitor.17723/",
+            },
+        },
+    },
+    "Neumi BS5P": {
+        "brand": "Neumi",
+        "model": "BS5P",
+        "type": "active",
+        "price": "150",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/neumi_bs5p/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/neumi-bs5p-powered-bookshelf-speaker-150-pair.22589/",
+                },
+                "review_published": "20210417",
             },
         },
     },
@@ -2248,6 +2425,23 @@ speakers_info = {
             },
         },
     },
+    "Paradigm Cinema 100": {
+        "brand": "Paradigm",
+        "model": "Cinema 100",
+        "type": "passive",
+        "price": "100",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/paradigm-cinema-100-review-home-theater-speakers.22597/",
+                "review_published": "20210418",
+            },
+        },
+    },
     "Paradigm Monitor SE Atom": {
         "brand": "Paradigm",
         "model": "Monitor SE Atom",
@@ -2261,6 +2455,22 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/paradigm-monitor-se-atom-speaker-review.17837/",
+            },
+        },
+    },
+    "Paradigm Persona 3F": {
+        "brand": "Paradigm",
+        "model": "Persona 3F",
+        "type": "passive",
+        "price": "6000",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            # TODO: data is truncated, should be artificially completed.
+            "vendor": {
+                "origin": "Vendors-Paradigm",
+                "format": "webplotdigitizer",
             },
         },
     },
@@ -3395,6 +3605,24 @@ origins_info = {
         "logo": "docs/metadata/mesanovic.png",
         "logo-small": "docs/metadata/mesanovic.png",
         "url": "https://www.mesanovicmicrophones.com",
+    },
+    "Vendors-Neumann": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "logo": "docs/metadata/neumann.png",
+        "logo-small": "docs/metadata/neumann.png",
+        "url": "https://www.neumann.com",
+    },
+    "Vendors-Paradigm": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "logo": "docs/metadata/paradigm.png",
+        "logo-small": "docs/metadata/paradigm.png",
+        "url": "https://www.paradigm.com",
     },
     "Vendors-Pioneer": {
         "min hz": 20,
