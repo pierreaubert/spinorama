@@ -2,11 +2,17 @@
 
 status=0
 for d in docs/*.html; do
-    msg=$(./node_modules/.bin/html-validator --file="$d");
-    if test "$msg" != "Page is valid"; then
-        status = 1;
-        echo "Linting $d (ERROR)";
-	./node_modules/.bin/html-validator --file="$d" --verbose;
+    sz=$(stat -c %s "$d")
+    if test $sz -eq 0; then
+        status=1;
+        echo "$d is empty (ERROR)";
+    else
+        msg=$(./node_modules/.bin/html-validator --file="$d");
+        if test "$msg" != "Page is valid"; then
+            status=1;
+            echo "Linting $d (ERROR)";
+    	    ./node_modules/.bin/html-validator --file="$d" --verbose;
+        fi
     fi
 done
 

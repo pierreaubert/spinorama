@@ -88,12 +88,12 @@ def filter_graphs(speaker_name, h_spl, v_spl):
         dfs["SPL Horizontal_unmelted"] = h_spl
         dfs["SPL Horizontal"] = graph_melt(h_spl)
     else:
-        logger.error("h_spl is None")
+        logger.warning("h_spl is None for speaker {}".format(speaker_name))
     if v_spl is not None:
         dfs["SPL Vertical_unmelted"] = v_spl
         dfs["SPL Vertical"] = graph_melt(v_spl)
     else:
-        logger.error("v_spl is None")
+        logger.warning("v_spl is None for speaker {}".format(speaker_name))
     # add computed graphs
     table = [
         ["Early Reflections", early_reflections],
@@ -127,19 +127,6 @@ def filter_graphs(speaker_name, h_spl, v_spl):
             if df is not None:
                 dfs[title + "_unmelted"] = df
                 dfs[title] = graph_melt(df)
-                # MAYBE ----------------------------------------------------------------------
-                # if title == 'CEA2034':
-                #    try:
-                #        for key in ('Early Reflections DI', 'Sound Power DI', 'DI offset'):
-                #            if key in df.keys():
-                #                dfs[key] = df[key]
-                #                # dfs[key+'_unmelted'] = graph_melt(df[key])
-                #            else:
-                #                logger.error('Key {} not in CEA2034'.format(key))
-                #    except KeyError as ike:
-                #        logger.warning('{0} computation failed with key:{1} for speaker{2:s}'.format(key, ike, speaker_name))
-                #
-                # MAYBE ----------------------------------------------------------------------
             else:
                 logger.info(
                     "{0} computation is None for speaker{1:s}".format(

@@ -17,7 +17,11 @@ logger = logging.getLogger("spinorama")
 
 
 def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, version):
-    filename = dirname + "/" + speaker_name
+    filename = None
+    if dirname[-1] == "/":
+        filename = dirname + speaker_name
+    else:
+        filename = dirname + "/" + speaker_name
     if version is not None and version not in ("vendor", "eac"):
         filename = "{0}/{1}/{2}".format(dirname, version, speaker_name)
 
@@ -29,7 +33,7 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
             with tarfile.open(tarfilename, "r|*") as tar:
                 info_json = None
                 for tarinfo in tar:
-                    # print(tarinfo.name)
+                    logging.debug('Tarinfo.name {}'.format(tarinfo.name))
                     if tarinfo.isreg() and tarinfo.name[-9:] == "info.json":
                         # note that files/directory with name tmp are in .gitignore
                         tar.extract(tarinfo, path=dirname + "/tmp", set_attrs=False)
@@ -48,13 +52,15 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
                             logger.debug("Extracting: {0}".format(tarinfo.name))
                             tar.extract(tarinfo, path=dirname + "/tmp", set_attrs=False)
         else:
-            logger.error('Tarfilename {} doesn\'t exist'.format(tarfilename))
-            return None
+            logger.debug("Tarfilename {} doesn't exist".format(tarfilename))
 
     except tarfile.ReadError as re:
         logger.error("Tarfile {0}: {1}".format(tarfilename, re))
     if jsonfilename is None:
         jsonfilename = filename + ".json"
+    if not os.path.exists(jsonfilename):
+        logger.warning("jsonfilename {} doesn't exist".format(jsonfilename))
+        return None
     logger.debug("Jsonfilename {0}".format(jsonfilename))
     return jsonfilename
 
@@ -116,18 +122,34 @@ def parse_graph_freq_webplotdigitizer(filename):
             # build dataframe
             def pretty(name):
                 newname = name
-                if newname.lower() in ('on axis', 'on-axis', 'on'):
-                    newname = 'On Axis'
-                if newname.lower() in ('listening window', 'lw'):
-                    newname = 'Listening Window'
-                if newname.lower() in ('early reflections', 'early reflection', 'early reflexion', 'er'):
-                    newname = 'Early Reflections'
-                if newname.lower() in ('early reflections di', 'early reflection di', 'early reflexiondi', 'erdi'):
-                    newname = 'Early Reflections DI'
-                if newname.lower() in ('sound power', 'sp'):
-                    newname = 'Sound Power'
-                if newname.lower() in ('sound power di', 'spdi'):
-                    newname = 'Sound Power DI'
+                if newname.lower() in ("on axis", "on-axis", "on", "onaxis"):
+                    newname = "On Axis"
+                if newname.lower() in ("listening window", "lw"):
+                    newname = "Listening Window"
+                if newname.lower() in (
+                    "early reflections",
+                    "early reflection",
+                    "early reflexion",
+                    "first reflections",
+                    "first reflection",
+                    "first reflexion",
+                    "er",
+                ):
+                    newname = "Early Reflections"
+                if newname.lower() in (
+                    "early reflections di",
+                    "early reflection di",
+                    "early reflexion di",
+                    "first reflections di",
+                    "first reflection di",
+                    "first reflexion di",
+                    "erdi",
+                ):
+                    newname = "Early Reflections DI"
+                if newname.lower() in ("sound power", "sp"):
+                    newname = "Sound Power"
+                if newname.lower() in ("sound power di", "spdi"):
+                    newname = "Sound Power DI"
                 return newname
 
             # print(res)
@@ -141,21 +163,54 @@ def parse_graph_freq_webplotdigitizer(filename):
         return None, None
 
 
+def parse_graph_freq_webplotdigitizer_check(speaker_name, df_spin):
+    status = True
+    spin_cols = set(df_spin.Measurements.values)
+    mandatory_cols = ("Listening Window", "On Axis", "Early Reflections", "Sound Power")
+    other_cols = ("Early Reflections DI", "Sound Power DI")
+    for col in mandatory_cols:
+        if col not in spin_cols:
+            logger.warning(
+                "{} measurement doesn't have a {} column".format(speaker_name, col)
+            )
+            status = False
+    for col in spin_cols:
+        if col not in mandatory_cols and col not in other_cols:
+            logger.warning(
+                "{} measurement have extra column {}".format(speaker_name, col)
+            )
+    return status
+
+
 def parse_graphs_speaker_webplotdigitizer(
-        speaker_path, speaker_brand, speaker_name, origin, version
+    speaker_path, speaker_brand, speaker_name, origin, version
 ):
     dfs = {}
     dirname = None
-    if origin in ('ASR', 'ErinsAudioCorner'):
+    if origin in ("ASR", "ErinsAudioCorner"):
         dirname = "{0}/{1}/{2}/".format(speaker_path, origin, speaker_name)
     else:
-        dirname = "{0}/Vendors/{1}/{2}/".format(speaker_path, speaker_brand, speaker_name)
+        dirname = "{0}/Vendors/{1}/{2}/".format(
+            speaker_path, speaker_brand, speaker_name
+        )
     jsonfilename = parse_webplotdigitizer_get_jsonfilename(
         dirname, speaker_name, origin, version
     )
 
+    if jsonfilename is None:
+        logging.warning(
+            "{} {} {} didn't find data file in {}".format(
+                speaker_name, origin, version, speaker_path
+            )
+        )
+        return None
+
     try:
         title, spin_uneven = parse_graph_freq_webplotdigitizer(jsonfilename)
+        if not parse_graph_freq_webplotdigitizer_check(speaker_name, spin_uneven):
+            logger.warning("title is {0}".format(title))
+            return None
+
         spin_even = unify_freq(spin_uneven)
         spin = graph_melt(spin_even)
         if title != "CEA2034":
