@@ -33,7 +33,7 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
             with tarfile.open(tarfilename, "r|*") as tar:
                 info_json = None
                 for tarinfo in tar:
-                    logging.debug('Tarinfo.name {}'.format(tarinfo.name))
+                    logging.debug("Tarinfo.name {}".format(tarinfo.name))
                     if tarinfo.isreg() and tarinfo.name[-9:] == "info.json":
                         # note that files/directory with name tmp are in .gitignore
                         tar.extract(tarinfo, path=dirname + "/tmp", set_attrs=False)
