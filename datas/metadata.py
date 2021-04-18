@@ -2316,9 +2316,18 @@ speakers_info = {
         "price": "150",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac",
+        "default_measurement": "eac-klippel",
         "measurements": {
-            "eac": {
+            "eac-klippel": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/neumi_bs5p/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/neumi-bs5p-powered-bookshelf-speaker-150-pair.22589/",
+                },
+                "review_published": "20210417",
+            },
+            "eac-quasi-anechoic": {
                 "origin": "ErinsAudioCorner",
                 "format": "webplotdigitizer",
                 "reviews": {
