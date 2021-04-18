@@ -16,9 +16,9 @@ pd.set_option("display.max_rows", 1000)
 logger = logging.getLogger("spinorama")
 
 
-def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, version):
+def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, version):
     filename = dirname + "/" + speaker_name
-    if version is not None and version not in ("vendor"):
+    if version is not None and version not in ("vendor", "eac"):
         filename = "{0}/{1}/{2}".format(dirname, version, speaker_name)
 
     tarfilename = filename + ".tar"
@@ -47,6 +47,9 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, version):
                         if tarinfo.isfile() and tarinfo.name in jsonfilename:
                             logger.debug("Extracting: {0}".format(tarinfo.name))
                             tar.extract(tarinfo, path=dirname + "/tmp", set_attrs=False)
+        else:
+            logger.error('Tarfilename {} doesn\'t exist'.format(tarfilename))
+            return None
 
     except tarfile.ReadError as re:
         logger.error("Tarfile {0}: {1}".format(tarfilename, re))
@@ -111,12 +114,27 @@ def parse_graph_freq_webplotdigitizer(filename):
                         break
 
             # build dataframe
+            def pretty(name):
+                newname = name
+                if newname.lower() in ('on axis', 'on-axis', 'on'):
+                    newname = 'On Axis'
+                if newname.lower() in ('listening window', 'lw'):
+                    newname = 'Listening Window'
+                if newname.lower() in ('early reflections', 'early reflection', 'early reflexion', 'er'):
+                    newname = 'Early Reflections'
+                if newname.lower() in ('early reflections di', 'early reflection di', 'early reflexiondi', 'erdi'):
+                    newname = 'Early Reflections DI'
+                if newname.lower() in ('sound power', 'sp'):
+                    newname = 'Sound Power'
+                if newname.lower() in ('sound power di', 'spdi'):
+                    newname = 'Sound Power DI'
+                return newname
+
             # print(res)
             freq = np.array([res[i][0] for i in range(0, len(res))]).astype(np.float)
             dB = np.array([res[i][1] for i in range(0, len(res))]).astype(np.float)
-            mrt = [res[i][2] for i in range(0, len(res))]
+            mrt = [pretty(res[i][2]) for i in range(0, len(res))]
             df = pd.DataFrame({"Freq": freq, "dB": dB, "Measurements": mrt})
-            # print(df)
             return "CEA2034", df
     except IOError as e:
         logger.error("Cannot not open: {0}".format(e))
@@ -124,12 +142,16 @@ def parse_graph_freq_webplotdigitizer(filename):
 
 
 def parse_graphs_speaker_webplotdigitizer(
-    speaker_path, speaker_brand, speaker_name, version
+        speaker_path, speaker_brand, speaker_name, origin, version
 ):
     dfs = {}
-    dirname = "{0}/Vendors/{1}/{2}/".format(speaker_path, speaker_brand, speaker_name)
+    dirname = None
+    if origin in ('ASR', 'ErinsAudioCorner'):
+        dirname = "{0}/{1}/{2}/".format(speaker_path, origin, speaker_name)
+    else:
+        dirname = "{0}/Vendors/{1}/{2}/".format(speaker_path, speaker_brand, speaker_name)
     jsonfilename = parse_webplotdigitizer_get_jsonfilename(
-        dirname, speaker_name, version
+        dirname, speaker_name, origin, version
     )
 
     try:

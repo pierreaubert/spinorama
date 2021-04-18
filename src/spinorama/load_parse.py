@@ -63,7 +63,7 @@ def parse_graphs_speaker(
         )
     elif mformat == "webplotdigitizer":
         df = parse_graphs_speaker_webplotdigitizer(
-            speaker_path, speaker_brand, speaker_name, mversion
+            speaker_path, speaker_brand, speaker_name, morigin, mversion
         )
     elif mformat == "princeton":
         df = parse_graphs_speaker_princeton(
