@@ -19,15 +19,16 @@ from .graph import (
     graph_regression,
     graph_isoband,
     isoband_params_default,
-    graph_summary,
-    graph_image,
 )
 from .graph_compare import (
     graph_compare_freq,
     graph_compare_cea2034,
     graph_compare_freq_regression,
 )
-
+from .graph_summary import (
+    graph_summary,
+    graph_image,
+)
 
 logger = logging.getLogger("spinorama")
 
@@ -377,7 +378,7 @@ def display_summary(df, params, speaker, origin, key):
                 speaker_summary += [
                     "• Reference level {0} dB".format(est["ref_level"]),
                     "(mean over {0}-{1}k Hz)".format(
-                        est["ref_from"], int(est["ref_to"]) / 1000
+                        int(est["ref_from"]), int(est["ref_to"]) / 1000
                     ),
                 ]
             else:

@@ -22,8 +22,11 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
         filename = dirname + speaker_name
     else:
         filename = dirname + "/" + speaker_name
-    if version is not None and version not in ("vendor", "eac"):
-        filename = "{0}/{1}/{2}".format(dirname, version, speaker_name)
+    if origin == "Misc":
+        filename = "{0}/{1}".format(dirname, speaker_name)
+    else:
+        if version is not None and version not in ("vendor", "eac"):
+            filename = "{0}/{1}/{2}".format(dirname, version, speaker_name)
 
     tarfilename = filename + ".tar"
     jsonfilename = None
@@ -33,7 +36,7 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
             with tarfile.open(tarfilename, "r|*") as tar:
                 info_json = None
                 for tarinfo in tar:
-                    logging.debug('Tarinfo.name {}'.format(tarinfo.name))
+                    logging.debug("Tarinfo.name {}".format(tarinfo.name))
                     if tarinfo.isreg() and tarinfo.name[-9:] == "info.json":
                         # note that files/directory with name tmp are in .gitignore
                         tar.extract(tarinfo, path=dirname + "/tmp", set_attrs=False)
@@ -189,10 +192,13 @@ def parse_graphs_speaker_webplotdigitizer(
     dirname = None
     if origin in ("ASR", "ErinsAudioCorner"):
         dirname = "{0}/{1}/{2}/".format(speaker_path, origin, speaker_name)
+    elif origin in ("Misc"):
+        dirname = "{0}/Misc/{1}/{2}/".format(speaker_path, speaker_brand, speaker_name)
     else:
         dirname = "{0}/Vendors/{1}/{2}/".format(
             speaker_path, speaker_brand, speaker_name
         )
+    logger.debug("dirname set to {}".format(dirname))
     jsonfilename = parse_webplotdigitizer_get_jsonfilename(
         dirname, speaker_name, origin, version
     )

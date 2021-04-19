@@ -180,7 +180,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         df_sound_power = cea2034.loc[lambda df: df.Measurements == "Sound Power"]
         skip_full = False
         for dfu in (df_on_axis, df_listening_window, df_sound_power):
-            if dfu.loc[(dfu.Freq >= 100) & (dfu.Freq <= 400)].shape[0] == 0:
+            if dfu.loc[(dfu.Freq >= 100) & (dfu.Freq <= 300)].shape[0] == 0:
                 skip_full = True
         nbd_on_axis = nbd(df_on_axis)
         nbd_listening_window = nbd(df_listening_window)

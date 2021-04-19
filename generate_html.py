@@ -225,33 +225,48 @@ if __name__ == "__main__":
     )
     meta_sorted = {k: meta[k] for k in keys_sorted}
 
-    with open("docs/index.html", "w") as f:
-        # by default sort by pref_rating decreasing
-        f.write(index_html.render(df=df, meta=meta_sorted, site=site))
-        f.close()
+    try:
+        with open("docs/index.html", "w") as f:
+            # by default sort by pref_rating decreasing
+            f.write(index_html.render(df=df, meta=meta_sorted, site=site))
+            f.close()
+    except KeyError as ke:
+        print("Generating index.htmlfailed with {}".format(ke))
+        sys.exit(1)
 
     # write eqs.html
     logger.info("Write eqs.html")
     eqs_html = mako_templates.get_template("eqs.html")
 
-    with open("docs/eqs.html", "w") as f:
-        # by default sort by pref_rating decreasing
-        f.write(eqs_html.render(df=df, meta=meta, site=site))
-        f.close()
+    try:
+        with open("docs/eqs.html", "w") as f:
+            # by default sort by pref_rating decreasing
+            f.write(eqs_html.render(df=df, meta=meta, site=site))
+            f.close()
+    except KeyError as ke:
+        print("Generating eqs.htmlfailed with {}".format(ke))
+        sys.exit(1)
 
     # write various html files
-    for item in ("help", "compare", "scores", "statistics"):
-        item_name = "{0}.html".format(item)
-        logger.info("Write {0}".format(item_name))
-        item_html = mako_templates.get_template(item_name)
-        with open("./docs/" + item_name, "w") as f:
-            f.write(item_html.render(df=df, meta=meta_sorted, site=site))
-            f.close()
+    try:
+        for item in ("help", "compare", "scores", "statistics"):
+            item_name = "{0}.html".format(item)
+            logger.info("Write {0}".format(item_name))
+            item_html = mako_templates.get_template(item_name)
+            with open("./docs/" + item_name, "w") as f:
+                f.write(item_html.render(df=df, meta=meta_sorted, site=site))
+                f.close()
+    except KeyError as ke:
+        print("Generating various html files failed with {}".format(ke))
+        sys.exit(1)
 
     # write a file per speaker
     logger.info("Write a file per speaker")
-    generate_speaker(mako_templates, df, meta=meta, site=site)
-    # generate_eqs(mako_templates, df, meta=meta, site=site)
+    try:
+        generate_speaker(mako_templates, df, meta=meta, site=site)
+    except KeyError as ke:
+        print("Generating a file per speaker failed with {}".format(ke))
+        sys.exit(1)
 
     # copy css/js files
     logger.info("Copy js/css files to docs")
