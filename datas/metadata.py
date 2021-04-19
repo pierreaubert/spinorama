@@ -2309,6 +2309,23 @@ speakers_info = {
             },
         },
     },
+    "Neumi BS5": {
+        "brand": "Neumi",
+        "model": "BS5",
+        "type": "active",
+        "price": "150",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "webplotdigitizer",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/neumi_bs5/",
+                "review_published": "20200620",
+            },
+        },
+    },
     "Neumi BS5P": {
         "brand": "Neumi",
         "model": "BS5P",
@@ -2316,20 +2333,11 @@ speakers_info = {
         "price": "150",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac-klippel",
+        "default_measurement": "eac",
         "measurements": {
-            "eac-klippel": {
+            "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/neumi_bs5p/",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/neumi-bs5p-powered-bookshelf-speaker-150-pair.22589/",
-                },
-                "review_published": "20210417",
-            },
-            "eac-quasi-anechoic": {
-                "origin": "ErinsAudioCorner",
-                "format": "webplotdigitizer",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/neumi_bs5p/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/neumi-bs5p-powered-bookshelf-speaker-150-pair.22589/",
