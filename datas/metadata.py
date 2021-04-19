@@ -180,8 +180,25 @@ speakers_info = {
             },
         },
     },
-    "Audioengine A5+ Powered": {
-        "brand": "Audioengine",
+    "Audio Engine A2": {
+        "brand": "Audio Engine",
+        "model": "A2",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "200",
+        "amount": "pair",
+        "default_measurement": "misc",
+        "measurements": {
+            "misc": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "review": "https://archimago.blogspot.com/2020/10/qspins-audioengine-a2-edifier-s2000-mk.html",
+                "review_published": "20201031",
+            },
+        },
+    },
+    "Audio Engine A5+ Powered": {
+        "brand": "Audio Engine",
         "model": "A5+ Powered",
         "type": "active",
         "shape": "bookshelves",
