@@ -187,9 +187,9 @@ speakers_info = {
         "shape": "bookshelves",
         "price": "200",
         "amount": "pair",
-        "default_measurement": "misc",
+        "default_measurement": "misc-archimago",
         "measurements": {
-            "misc": {
+            "misc-archimago": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "review": "https://archimago.blogspot.com/2020/10/qspins-audioengine-a2-edifier-s2000-mk.html",
@@ -987,9 +987,9 @@ speakers_info = {
         "price": "",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "misc",
+        "default_measurement": "misc-tomvg",
         "measurements": {
-            "misc": {
+            "misc-tomvg": {
                 "origin": "Misc",
                 "format": "rewstextdump",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-1032a-measurements-including-spinorama.17491/",
@@ -1103,9 +1103,9 @@ speakers_info = {
         "price": "",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "misc",
+        "default_measurement": "misc-tomvg",
         "measurements": {
-            "misc": {
+            "misc-tomvg": {
                 "origin": "Misc",
                 "format": "rewstextdump",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-g2-8020-measurements.18076/#post-588571",
