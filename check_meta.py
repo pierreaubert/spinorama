@@ -73,6 +73,7 @@ def sanity_check_type(name, speaker):
 
 
 def sanity_check_shape(name, speaker):
+    # update src/website/nav_search if you add a new shape
     valid_shapes = (
         "floorstanders",
         "bookshelves",
@@ -82,6 +83,7 @@ def sanity_check_shape(name, speaker):
         "cbt",
         "outdoor",
         "panel",
+        "atmos",
     )
     if "shape" not in speaker:
         logging.error("shape is not in {0}".format(name))

@@ -113,16 +113,35 @@ def unify_freq(dfs):
     return res2.dropna().reset_index(drop=True)
 
 
-def normalize_mean(df):
+def normalize_mean(idf):
     # this is messy: first version was using On Axis data from Spinorama but some
     # speaker don't have it.
     mean = None
-    if "dB" in df.keys():
-        on = df[df.Measurements == "On Axis"]
-        mean = np.mean(on.loc[(on.Freq > 500) & (on.Freq < 10000)].dB)
-    elif "On Axis" in df.columns:
-        on = df[["Freq", "On Axis"]]
-        mean = np.mean(on.loc[(on.Freq > 500) & (on.Freq < 10000)].dB)
+
+    # put all graphs on the same format
+    df = None
+    if "dB" in idf.keys():
+        df = idf
+    else:
+        df = graph_melt(idf)
+
+    on = df[df.Measurements == "On Axis"]
+    on_mean = np.mean(on.loc[(on.Freq > 500) & (on.Freq < 10000)].dB)
+
+    lw = df[df.Measurements == "Listening Window"]
+    lw_mean = np.mean(lw.loc[(lw.Freq > 500) & (lw.Freq < 10000)].dB)
+
+    # this is messy too: some graphs have LW but not ON
+    mean_delta = abs(on_mean - lw_mean)
+    if mean_delta > 30.0:
+        logger.warning(
+            "Dataframe has LW and ON with very different means {:.1f}".format(
+                mean_delta
+            )
+        )
+        mean = max(on_mean, lw_mean)
+    else:
+        mean = on_mean
 
     return mean
 
@@ -138,6 +157,14 @@ def normalize_cea2034(dfc, mean):
         "Early Reflections",
     ):
         if df.loc[df.Measurements == measurement, "dB"].shape[0] != 0:
+            logger.debug(
+                "removing {:.1f}dB from {}: min={:.1f} max={:.1f} ".format(
+                    mean,
+                    measurement,
+                    df.loc[df.Measurements == measurement, "dB"].min(),
+                    df.loc[df.Measurements == measurement, "dB"].max(),
+                )
+            )
             df.loc[df.Measurements == measurement, "dB"] -= mean
 
     # 3 different cases Princeton+ASR and Vendors

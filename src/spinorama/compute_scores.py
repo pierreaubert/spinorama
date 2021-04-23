@@ -135,7 +135,7 @@ def lfq(lw, sp, lfx_log) -> float:
             lfq_sum += abs(y_lw - y_sp)
             n += 1
     if n == 0:
-        logger.error("lfq is None")
+        logger.warning("lfq is None")
         return -1.0
     return lfq_sum / n
 
@@ -180,7 +180,8 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         df_sound_power = cea2034.loc[lambda df: df.Measurements == "Sound Power"]
         skip_full = False
         for dfu in (df_on_axis, df_listening_window, df_sound_power):
-            if dfu.loc[(dfu.Freq >= 100) & (dfu.Freq <= 300)].shape[0] == 0:
+            # need a better test
+            if dfu.loc[(dfu.Freq >= 100) & (dfu.Freq <= 200)].shape[0] == 0:
                 skip_full = True
         nbd_on_axis = nbd(df_on_axis)
         nbd_listening_window = nbd(df_listening_window)

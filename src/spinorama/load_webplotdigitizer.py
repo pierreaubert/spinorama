@@ -125,7 +125,7 @@ def parse_graph_freq_webplotdigitizer(filename):
             # build dataframe
             def pretty(name):
                 newname = name
-                if newname.lower() in ("on axis", "on-axis", "on", "onaxis"):
+                if newname.lower() in ("on axis", "on-axis", "oa", "onaxis"):
                     newname = "On Axis"
                 if newname.lower() in ("listening window", "lw"):
                     newname = "Listening Window"
@@ -147,11 +147,12 @@ def parse_graph_freq_webplotdigitizer(filename):
                     "first reflection di",
                     "first reflexion di",
                     "erdi",
+                    "erd",
                 ):
                     newname = "Early Reflections DI"
                 if newname.lower() in ("sound power", "sp"):
                     newname = "Sound Power"
-                if newname.lower() in ("sound power di", "spdi"):
+                if newname.lower() in ("sound power di", "spdi", "spd"):
                     newname = "Sound Power DI"
                 return newname
 
@@ -177,6 +178,17 @@ def parse_graph_freq_webplotdigitizer_check(speaker_name, df_spin):
                 "{} measurement doesn't have a {} column".format(speaker_name, col)
             )
             status = False
+        else:
+            logging.debug(
+                "Loading {:s} {:s} {:.1f}--{:.1f}Hz {:.1f}--{:.1f}dB".format(
+                    speaker_name,
+                    col,
+                    df_spin.loc[df_spin.Measurements == col].Freq.min(),
+                    df_spin.loc[df_spin.Measurements == col].Freq.max(),
+                    df_spin.loc[df_spin.Measurements == col].dB.min(),
+                    df_spin.loc[df_spin.Measurements == col].dB.max(),
+                )
+            )
     for col in spin_cols:
         if col not in mandatory_cols and col not in other_cols:
             logger.warning(
