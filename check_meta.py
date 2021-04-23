@@ -126,6 +126,7 @@ def sanity_check_measurement(name, speaker, version, measurement):
             "symmetry",
             "review_published",
             "notes",
+            "quality",
         ):
             logging.error(
                 "{0}: version {1} : {2} is not known".format(name, version, k)
@@ -167,7 +168,17 @@ def sanity_check_measurement(name, speaker, version, measurement):
                         )
                     )
                     status = 1
-
+        if k == "quality" and v not in ("quasi-anechoic", "anechoic"):
+            logging.error(
+                "{0}: in measurement {1} quality {2} is unknown".format(
+                    name, version, v, 
+                ))
+            status = 1                        
+            
+    if version[0:3] == "mis" and "quality" not in measurement.keys():
+        logging.error("{0}: in measurement {1} quality is required".format(
+                            name, version))
+        status = 1
     return status
 
 
