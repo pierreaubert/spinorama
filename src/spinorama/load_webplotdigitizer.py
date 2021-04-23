@@ -125,7 +125,7 @@ def parse_graph_freq_webplotdigitizer(filename):
             # build dataframe
             def pretty(name):
                 newname = name
-                if newname.lower() in ("on axis", "on-axis", "oa", "onaxis"):
+                if newname.lower() in ("on axis", "on-axis", "oa", "onaxis", "on"):
                     newname = "On Axis"
                 if newname.lower() in ("listening window", "lw"):
                     newname = "Listening Window"
