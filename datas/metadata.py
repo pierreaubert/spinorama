@@ -3333,7 +3333,7 @@ speakers_info = {
                 "format": "webplotdigitizer",
                 "review": "https://archimago.blogspot.com/2021/02/retro-measure-spendor-sa1-1976-monitor.html",
                 "quality": "quasi-anechoic",
-            }
+            },
         },
     },
     "SVS Ultra Bookshelf": {
