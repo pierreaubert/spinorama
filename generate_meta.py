@@ -209,11 +209,12 @@ def add_scores(dataframe):
                     version
                     not in metadata.speakers_info[speaker_name]["measurements"].keys()
                 ):
-                    logger.error(
-                        "Confusion in metadata, did you edit a speaker recently? {} should be in metadata for {}".format(
-                            version, speaker_name
+                    if len(version) > 4 and version[-3:] != "_eq":
+                        logger.error(
+                            "Confusion in metadata, did you edit a speaker recently? {} should be in metadata for {}".format(
+                                version, speaker_name
+                            )
                         )
-                    )
                     continue
 
                 if measurement is None or "CEA2034" not in measurement.keys():

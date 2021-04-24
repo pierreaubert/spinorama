@@ -5,7 +5,7 @@ import numpy as np
 from scipy import ndimage
 from astropy.convolution import Gaussian2DKernel
 
-from .load import graph_melt
+from .load_misc import graph_melt
 
 logger = logging.getLogger("spinorama")
 

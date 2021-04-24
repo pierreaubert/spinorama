@@ -5,7 +5,8 @@ import os
 import string
 
 import pandas as pd
-from .load import graph_melt, sort_angles, filter_graphs
+from .load_misc import graph_melt, sort_angles
+from .load import filter_graphs
 
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
@@ -45,63 +46,15 @@ def parse_graph_freq_klippel(filename):
 
 
 def find_data_klippel(speaker_path, speaker_brand, speaker_name, mversion_in, csvname):
-    nest = False
-    mdir = []
-    mversion = []
-    if mversion_in == None:
-        mversion.append("asr", "eac")
-        mdir.append["ASR", "ErinsAudioCorner"]
-    else:
-        if mversion_in[0:3] in ("asr", "eac"):
-            if mversion_in[0:3] == "asr":
-                mversion.append(mversion_in)
-                mdir.append("ASR")
-            elif mversion_in[0:3] == "eac":
-                mversion.append(mversion_in)
-                mdir.append("ErinsAudioCorner")
-            if len(mversion_in) > 3:
-                nest = True
 
-    csvfilenames = []
-    if nest is False:
-        for cdir in mdir:
-            csvfilenames.append(
-                "{0}/{3}/{1}/{2}.txt".format(speaker_path, speaker_name, csvname, cdir)
-            )
-    else:
-        for version in mversion:
-            for cdir in mdir:
-                csvfilenames.append(
-                    "{0}/{3}/{1}/{4}/{2}.txt".format(
-                        speaker_path, speaker_name, csvname, cdir, version
-                    )
-                )
-                csvfilenames.append(
-                    "{0}/{3}/{1}/{4}/{1} -- {2}.txt".format(
-                        speaker_path, speaker_name, csvname, cdir, version
-                    )
-                )
-                csvfilenames.append(
-                    "{0}/{3}/{1}/{4}/{5} -- {2}.txt".format(
-                        speaker_path,
-                        speaker_name,
-                        csvname,
-                        cdir,
-                        version,
-                        string.capwords(speaker_name),
-                    )
-                )
+    csvfilename = "{}/{}/{}/{}.txt".format(
+        speaker_path, speaker_name, mversion_in, csvname
+    )
 
-    # logger.warning("looking at {} option with #mdir {} #mversion {}".format(
-    #    len(csvfilenames), len(mdir), len(mversion)))
+    if os.path.exists(csvfilename):
+        return csvfilename
 
-    for match in csvfilenames:
-        if os.path.exists(match):
-            return match
-
-    for match in csvfilenames:
-        logger.debug("no match for {}".format(match))
-
+    logger.debug("no match for {}".format(csvfilename))
     return None
 
 
@@ -144,38 +97,18 @@ def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mver
             "Vertical Reflections",
         ]
         for csv in set(mandatory_csvfiles + csvfiles):
-            csvfilename = None
-            csvfilename2 = None
-            if mversion is None or mversion == "asr":
-                csvfilename = "{0}/ASR/{1}/{2}.txt".format(
-                    speaker_path, speaker_name, csv
-                )
-            elif mversion == "eac":
-                csvfilename = "{0}/ErinsAudioCorner/{1}/{2}.txt".format(
-                    speaker_path, speaker_name, csv
-                )
-                csvfilename2 = "{0}/ErinsAudioCorner/{1}/{1} -- {2}.txt".format(
-                    speaker_path, speaker_name, csv
-                )
-                csvfilename3 = "{0}/ErinsAudioCorner/{1}/{3} -- {2}.txt".format(
-                    speaker_path, speaker_name, csv, string.capwords(speaker_name)
-                )
-                if not os.path.exists(csvfilename):
-                    if csvfilename2 is not None and os.path.exists(csvfilename2):
-                        csvfilename = csvfilename2
-                    elif csvfilename3 is not None and os.path.exists(csvfilename3):
-                        csvfilename = csvfilename3
-                    else:
-                        csvfilename = "{0}/ASR/{1}/{3}/{2}.txt".format(
-                            speaker_path, speaker_name, csv, mversion
-                        )
+            csvfilename = find_data_klippel(
+                speaker_path, speaker_brand, speaker_name, mversion, csv
+            )
             try:
                 title, df = parse_graph_freq_klippel(csvfilename)
-                logger.debug(
-                    "Speaker: {0} (ASR)  Loaded: {1}".format(speaker_name, csvfilename)
-                )
                 dfs[title + "_unmelted"] = df
                 dfs[title] = graph_melt(df)
+                logger.debug(
+                    "Speaker: {0} (Klippel)  Loaded: {1}".format(
+                        speaker_name, csvfilename
+                    )
+                )
             except FileNotFoundError:
                 logger.info(
                     "Speaker: {} {} Not found: {}".format(
@@ -193,4 +126,5 @@ def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mver
         # print(h_name, v_name)
         _, h_spl = parse_graph_freq_klippel(h_name)
         _, v_spl = parse_graph_freq_klippel(v_name)
+        logger.debug("Speaker: {0} (Klippel) loaded".format(speaker_name))
         return filter_graphs(speaker_name, h_spl, v_spl)

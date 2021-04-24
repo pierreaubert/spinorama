@@ -3,7 +3,7 @@ import logging
 import numpy as np
 import pandas as pd
 from .compute_cea2034 import estimated_inroom
-from .load import graph_melt
+from .load_misc import graph_melt
 
 logger = logging.getLogger("spinorama")
 
@@ -24,16 +24,9 @@ def parse_graphs_speaker_rewstextdump(
             ("SP", "Sound Power"),
             # ('ERDI', 'Early Reflections DI'),
         ):
-            filename = "{0}/Vendors/{1}/{2}/{3}.txt".format(
-                speaker_path, speaker_brand, speaker_name, txt
+            filename = "{0}/{1}/{2}/{3}.txt".format(
+                speaker_path, speaker_name, version, txt
             )
-            if origin == "Misc":
-                filename = "{0}/Misc/{1}/{2}/{3}.txt".format(
-                    speaker_path, speaker_brand, speaker_name, txt
-                )
-            # TODO :
-            # if version is not None and version not in ('asr', 'princeton', 'vendor', 'rewstextdump'):
-            #
             with open(filename, "r") as f:
                 lines = f.readlines()
                 logger.debug("read f {} found {}".format(f, len(lines)))

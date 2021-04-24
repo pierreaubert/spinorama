@@ -8,7 +8,7 @@ from more_itertools import consecutive_groups
 from scipy.stats import linregress
 
 from .compute_cea2034 import estimated_inroom_HV
-from .load import graph_melt
+from .load_misc import graph_melt
 
 logger = logging.getLogger("spinorama")
 

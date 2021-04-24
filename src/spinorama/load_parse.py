@@ -42,7 +42,7 @@ def parse_eq_speaker(speaker_path: str, speaker_name: str, df_ref: dict) -> dict
             # original_mean = df_ref.get('CEA2034_original_mean', None)
             # return load_normalize(df_eq, original_mean)
             return df_eq
-    logger.debug("no EQ for {}/{}".format(speaker_path, speaker_name))
+    logger.debug("no EQ for {}/eq/{}".format(speaker_path, speaker_name))
     return None
 
 
@@ -57,25 +57,26 @@ def parse_graphs_speaker(
     msymmetry=None,
 ) -> dict:
     df = None
+    measurement_path = "{}".format(speaker_path)
     if mformat == "klippel":
         df = parse_graphs_speaker_klippel(
-            speaker_path, speaker_brand, speaker_name, mversion
+            measurement_path, speaker_brand, speaker_name, mversion
         )
     elif mformat == "webplotdigitizer":
         df = parse_graphs_speaker_webplotdigitizer(
-            speaker_path, speaker_brand, speaker_name, morigin, mversion
+            measurement_path, speaker_brand, speaker_name, morigin, mversion
         )
     elif mformat == "princeton":
         df = parse_graphs_speaker_princeton(
-            speaker_path, speaker_brand, speaker_name, mversion, msymmetry
+            measurement_path, speaker_brand, speaker_name, mversion, msymmetry
         )
     elif mformat == "splHVtxt":
         df = parse_graphs_speaker_splHVtxt(
-            speaker_path, speaker_brand, speaker_name, mversion
+            measurement_path, speaker_brand, speaker_name, mversion
         )
     elif mformat == "rewstextdump":
         df = parse_graphs_speaker_rewstextdump(
-            speaker_path, speaker_brand, speaker_name, morigin, mversion
+            measurement_path, speaker_brand, speaker_name, morigin, mversion
         )
     else:
         logger.fatal("Format {:s} is unkown".format(mformat))
@@ -83,16 +84,16 @@ def parse_graphs_speaker(
 
     if df is None:
         logger.warning(
-            "Parsing failed for {0}/{1}/{2}/{3}/{4}".format(
-                speaker_path, speaker_brand, speaker_name, mformat, mversion
+            "Parsing failed for {0}/{1}/{2}".format(
+                measurement_path, speaker_name, mversion
             )
         )
         return None
     df_normalized = load_normalize(df)
     if df_normalized is None:
         logger.warning(
-            "Normalisation failed for {0} {1} {2} {3} {4}".format(
-                speaker_path, speaker_brand, speaker_name, mformat, mversion
+            "Normalisation failed for {0} {1} {2}".format(
+                measurement_path, speaker_name, mversion
             )
         )
         return None

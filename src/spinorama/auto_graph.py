@@ -21,7 +21,7 @@
 import altair as alt
 import pandas as pd
 
-from spinorama.load import graph_melt
+from spinorama.load_misc import graph_melt
 from spinorama.filter_peq import peq_build  # peq_print
 from spinorama.graph import graph_spinorama, graph_freq, graph_regression
 

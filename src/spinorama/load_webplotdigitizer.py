@@ -8,7 +8,7 @@ import pandas as pd
 import tarfile
 from .compute_cea2034 import estimated_inroom
 from .compute_normalize import unify_freq
-from .load import graph_melt
+from .load_misc import graph_melt
 
 
 pd.set_option("display.max_rows", 1000)
@@ -18,16 +18,12 @@ logger = logging.getLogger("spinorama")
 
 def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, version):
     filename = None
+    clean_dir = dirname
     if dirname[-1] == "/":
-        filename = dirname + speaker_name
-    else:
-        filename = dirname + "/" + speaker_name
-    if origin == "Misc":
-        filename = "{0}/{1}".format(dirname, speaker_name)
-    else:
-        if version is not None and version not in ("vendor", "eac"):
-            filename = "{0}/{1}/{2}".format(dirname, version, speaker_name)
+        clean_dir = dirname[:-1]
 
+    filedir = "{0}/{1}/{2}".format(clean_dir, speaker_name, version)
+    filename = "{0}/{1}/{2}/{1}".format(clean_dir, speaker_name, version)
     tarfilename = filename + ".tar"
     jsonfilename = None
     try:
@@ -39,12 +35,12 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
                     logging.debug("Tarinfo.name {}".format(tarinfo.name))
                     if tarinfo.isreg() and tarinfo.name[-9:] == "info.json":
                         # note that files/directory with name tmp are in .gitignore
-                        tar.extract(tarinfo, path=dirname + "/tmp", set_attrs=False)
-                        info_json = dirname + "tmp/" + tarinfo.name
+                        tar.extract(tarinfo, path=filedir + "/tmp", set_attrs=False)
+                        info_json = filedir + "/tmp/" + tarinfo.name
                         with open(info_json, "r") as f:
                             info = json.load(f)
                             jsonfilename = (
-                                dirname + "tmp/" + tarinfo.name[:-9] + info["json"]
+                                filedir + "/tmp/" + tarinfo.name[:-9] + info["json"]
                             )
 
             # now extract the large json file
@@ -53,7 +49,7 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
                     for tarinfo in tar:
                         if tarinfo.isfile() and tarinfo.name in jsonfilename:
                             logger.debug("Extracting: {0}".format(tarinfo.name))
-                            tar.extract(tarinfo, path=dirname + "/tmp", set_attrs=False)
+                            tar.extract(tarinfo, path=filedir + "/tmp", set_attrs=False)
         else:
             logger.debug("Tarfilename {} doesn't exist".format(tarfilename))
 
@@ -62,7 +58,9 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
     if jsonfilename is None:
         jsonfilename = filename + ".json"
     if not os.path.exists(jsonfilename):
-        logger.warning("jsonfilename {} doesn't exist".format(jsonfilename))
+        logger.warning(
+            "Didn't find tar or json for {} {} {}".format(speaker_name, origin, version)
+        )
         return None
     logger.debug("Jsonfilename {0}".format(jsonfilename))
     return jsonfilename
@@ -201,18 +199,9 @@ def parse_graphs_speaker_webplotdigitizer(
     speaker_path, speaker_brand, speaker_name, origin, version
 ):
     dfs = {}
-    dirname = None
-    if origin in ("ASR", "ErinsAudioCorner"):
-        dirname = "{0}/{1}/{2}/".format(speaker_path, origin, speaker_name)
-    elif origin in ("Misc"):
-        dirname = "{0}/Misc/{1}/{2}/".format(speaker_path, speaker_brand, speaker_name)
-    else:
-        dirname = "{0}/Vendors/{1}/{2}/".format(
-            speaker_path, speaker_brand, speaker_name
-        )
-    logger.debug("dirname set to {}".format(dirname))
+    logger.debug("speaker_path set to {}".format(speaker_path))
     jsonfilename = parse_webplotdigitizer_get_jsonfilename(
-        dirname, speaker_name, origin, version
+        speaker_path, speaker_name, origin, version
     )
 
     if jsonfilename is None:
@@ -225,15 +214,17 @@ def parse_graphs_speaker_webplotdigitizer(
 
     try:
         title, spin_uneven = parse_graph_freq_webplotdigitizer(jsonfilename)
+
+        # some checks
+        if title != "CEA2034":
+            logger.debug("title is {0}".format(title))
+            return None
+
         if not parse_graph_freq_webplotdigitizer_check(speaker_name, spin_uneven):
-            logger.warning("title is {0}".format(title))
             return None
 
         spin_even = unify_freq(spin_uneven)
         spin = graph_melt(spin_even)
-        if title != "CEA2034":
-            logger.debug("title is {0}".format(title))
-            return None
 
         if spin is not None:
             # compute EIR

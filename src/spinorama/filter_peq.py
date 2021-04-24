@@ -7,7 +7,7 @@ import pandas as pd
 
 from .ltype import Vector, Peq
 from .filter_iir import Biquad
-from .load import graph_melt
+from .load_misc import graph_melt
 
 logger = logging.getLogger("spinorama")
 

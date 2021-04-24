@@ -3,7 +3,8 @@ import logging
 import os
 import glob
 import pandas as pd
-from .load import filter_graphs, sort_angles
+from .load_misc import sort_angles
+from .load import filter_graphs
 
 logger = logging.getLogger("spinorama")
 
@@ -15,6 +16,8 @@ def parse_graph_splHVtxt(dirpath, orientation):
     if len(files) == 0:
         filenames = "{0}/* _{1} *.txt".format(dirpath, orientation)
         files = glob.glob(filenames)
+
+    logger.debug("Found {} files in {}".format(len(files), dirpath))
 
     symmetry = True
     for file in files:
@@ -89,12 +92,7 @@ def parse_graph_splHVtxt(dirpath, orientation):
 
 def parse_graphs_speaker_splHVtxt(speaker_path, speaker_brand, speaker_name, version):
     """2 files per directory xxx_H_IR.mat and xxx_V_IR.mat"""
-    if version == "eac":
-        dirname = "{0}/ErinsAudioCorner/{1}".format(speaker_path, speaker_name)
-    else:
-        dirname = "{0}/ErinsAudioCorner/{1}/{2}".format(
-            speaker_path, speaker_name, version
-        )
+    dirname = "{0}/{1}/{2}".format(speaker_path, speaker_name, version)
 
     logger.debug("scanning path {}".format(dirname))
 

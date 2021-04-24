@@ -61,27 +61,23 @@ from src.spinorama.speaker_print import print_graphs
 from src.spinorama.graph import graph_params_default
 
 
-VERSION = 1.25
+VERSION = 1.26
 
 
 def get_speaker_list(speakerpath: str) -> List[str]:
     """return a list of speakers from data subdirectory"""
     speakers = []
-    asr = glob.glob(speakerpath + "/ASR/*")
-    vendors = glob.glob(speakerpath + "/Vendors/*/*")
-    misc = glob.glob(speakerpath + "/Misc/*/*")
-    princeton = glob.glob(speakerpath + "/Princeton/*")
-    ear = glob.glob(speakerpath + "/ErinsAudioCorner/*")
-    dirs = asr + vendors + princeton + ear + misc
+    dirs = glob.glob(speakerpath + "/*")
     for current_dir in dirs:
-        if os.path.isdir(current_dir) and current_dir not in (
+        shortname = os.path.basename(current_dir)
+        if os.path.isdir(current_dir) and shortname not in (
             "assets",
             "compare",
             "stats",
             "pictures",
-            "logos",
+            "tmp",
         ):
-            speakers.append(os.path.basename(current_dir))
+            speakers.append(shortname)
     return set(speakers)
 
 
@@ -90,7 +86,7 @@ def queue_measurement(
 ) -> Tuple[int, int, int, int]:
     """Add all measurements in the queue to be processed"""
     id_df = parse_graphs_speaker.remote(
-        "./datas", brand, speaker, mformat, morigin, mversion, msymmetry
+        "./datas/measurements", brand, speaker, mformat, morigin, mversion, msymmetry
     )
     id_eq = parse_eq_speaker.remote("./datas", speaker, id_df)
     force = False
@@ -133,6 +129,9 @@ def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict]) -> dict:
             logger.debug("skipping {}".format(speaker))
             continue
         ray_ids[speaker] = {}
+        if speaker not in metadata.speakers_info.keys():
+            logger.error("Metadata error: {}".format(speaker))
+            continue
         for mversion, measurement in metadata.speakers_info[speaker][
             "measurements"
         ].items():
@@ -299,7 +298,7 @@ if __name__ == "__main__":
     )
 
     # TODO remove it and replace by iterating over metadatas
-    speakerlist = get_speaker_list("./datas")
+    speakerlist = get_speaker_list("./datas/measurements")
 
     force = args["--force"]
     ptype = None

@@ -4,6 +4,7 @@ import logging
 import numpy as np
 import pandas as pd
 
+from .load_misc import graph_melt
 
 # pd.set_option('display.max_rows', None)
 logger = logging.getLogger("spinorama")

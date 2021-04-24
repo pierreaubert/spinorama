@@ -143,7 +143,7 @@ def generate_speaker(mako, dataframe, meta, site):
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="update_html.py version 1.21", options_first=True)
+    args = docopt(__doc__, version="update_html.py version 1.22", options_first=True)
 
     # check args section
     dev = args["--dev"]
