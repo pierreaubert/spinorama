@@ -2,6 +2,7 @@
 import logging
 import pandas as pd
 
+
 def graph_melt(df: pd.DataFrame) -> pd.DataFrame:
     return (
         df.reset_index()
@@ -22,5 +23,3 @@ def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:
     dfu = dfi.reindex(columns=sorted(dfi.columns, key=a2v))
     dfu = dfu.rename(columns={"On-Axis": "On Axis"})
     return dfu
-
-

@@ -344,8 +344,7 @@ if __name__ == "__main__":
     cache_name = "cache.parse_all_speakers.h5"
     if len(filters.keys()) == 0:
         with warnings.catch_warnings():
-            # warnings.simplefilter("ignore", tables.NaturalNameWarning)
-            print(df_new.keys())
+            warnings.simplefilter("ignore", tables.NaturalNameWarning)
             fl.save(path=cache_name, data=df_new)
     else:
         if os.path.exists(cache_name) and update_cache:

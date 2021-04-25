@@ -2257,6 +2257,12 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-one-series-104-powered-monitor-review.11076/",
             },
+            "misc-napilopez": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "quasi-anechoic",
+                "review": "https://thenextweb.com/news/these-3-studio-monitors-are-great-speakers-for-a-small-desk",
+            },
         },
     },
     "JBL 705i": {
@@ -2432,6 +2438,15 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-hdi-1600-speaker-review.12477/",
+            },
+            "misc-napilopez": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "quasi-anechoic",
+                "reviews": {
+                    "asr": "https://thenextweb.com/news/these-3-studio-monitors-are-great-speakers-for-a-small-desk",
+                    "tnw": "https://thenextweb.com/news/jbl-hdi-1600-review",
+                },
             },
         },
     },
@@ -3396,6 +3411,14 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh80-dsp-monitor-measurements-3.14637/",
+            },
+            "misc-napilopez": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "quasi-anechoic",
+                "reviews": {
+                    "tnw": "https://thenextweb.com/news/these-3-studio-monitors-are-great-speakers-for-a-small-desk",
+                },
             },
             "vendor": {
                 "origin": "Vendors-Neumann",

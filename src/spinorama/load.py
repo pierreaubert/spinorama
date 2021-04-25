@@ -68,12 +68,12 @@ def filter_graphs(speaker_name, h_spl, v_spl):
         dfs["SPL Horizontal_unmelted"] = h_spl
         dfs["SPL Horizontal"] = graph_melt(h_spl)
     else:
-        logger.warning("h_spl is None for speaker {}".format(speaker_name))
+        logger.info("h_spl is None for speaker {}".format(speaker_name))
     if v_spl is not None:
         dfs["SPL Vertical_unmelted"] = v_spl
         dfs["SPL Vertical"] = graph_melt(v_spl)
     else:
-        logger.warning("v_spl is None for speaker {}".format(speaker_name))
+        logger.info("v_spl is None for speaker {}".format(speaker_name))
     # add computed graphs
     table = [
         ["Early Reflections", early_reflections],

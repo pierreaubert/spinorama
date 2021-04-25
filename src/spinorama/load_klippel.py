@@ -72,14 +72,14 @@ def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mver
         ):
             found = found + 1
         else:
-            logger.warning(
+            logger.info(
                 "Didn't find this mandatory files {} for speaker {} {}".format(
                     csv, speaker_name, mversion
                 )
             )
 
     if found != len(mandatory_csvfiles):
-        logger.warning(
+        logger.info(
             "Didn't find all mandatory files for speaker {} {}".format(
                 speaker_name, mversion
             )

@@ -172,7 +172,7 @@ def parse_graph_freq_webplotdigitizer_check(speaker_name, df_spin):
     other_cols = ("Early Reflections DI", "Sound Power DI")
     for col in mandatory_cols:
         if col not in spin_cols:
-            logger.warning(
+            logger.info(
                 "{} measurement doesn't have a {} column".format(speaker_name, col)
             )
             status = False
