@@ -221,7 +221,8 @@ def parse_graphs_speaker_webplotdigitizer(
             return None
 
         if not parse_graph_freq_webplotdigitizer_check(speaker_name, spin_uneven):
-            return None
+            dfs[title] = spin_uneven
+            return dfs
 
         spin_even = unify_freq(spin_uneven)
         spin = graph_melt(spin_even)
