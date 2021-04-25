@@ -4,7 +4,7 @@ import math
 import numpy as np
 import pandas as pd
 
-from .load import sort_angles
+from .load_misc import sort_angles
 
 
 logger = logging.getLogger("spinorama")

@@ -31,7 +31,7 @@ pd.set_option("display.max_rows", 202)
 class SpinoramaEstimatesNV2Tests(unittest.TestCase):
     def setUp(self):
         self.title, self.df_unmelted = parse_graph_freq_klippel(
-            "datas/ASR/Neumann KH 80/asr-v2-20200208/CEA2034.txt"
+            "datas/measurements/Neumann KH 80/asr-v2-20200208/CEA2034.txt"
         )
         self.df = graph_melt(self.df_unmelted)
         self.onaxis = self.df.loc[self.df["Measurements"] == "On Axis"]
@@ -52,7 +52,7 @@ class SpinoramaEstimatesNV2Tests(unittest.TestCase):
 class SpinoramaEstimatesNV3Tests(unittest.TestCase):
     def setUp(self):
         self.title, self.df_unmelted = parse_graph_freq_klippel(
-            "datas/ASR/Neumann KH 80/asr-v3-20200711/CEA2034.txt"
+            "datas/measurements/Neumann KH 80/asr-v3-20200711/CEA2034.txt"
         )
         self.df = graph_melt(self.df_unmelted)
         self.onaxis = self.df.loc[self.df["Measurements"] == "On Axis"]
