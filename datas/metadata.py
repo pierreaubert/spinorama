@@ -1012,7 +1012,7 @@ speakers_info = {
         "model": "Debut 2.0 A4.2",
         "type": "passive",
         "price": "500",
-        "shape": "atmos",
+        "shape": "surround",
         "default_measurement": "misc-archimago",
         "measurements": {
             "misc-archimago": {
@@ -1305,7 +1305,7 @@ speakers_info = {
         "model": "Nathan",
         "type": "passive",
         "price": "",
-        "shape": "floorstanders",
+        "shape": "bookshelves",
         "default_measurement": "princeton",
         "measurements": {
             "princeton": {
@@ -1624,7 +1624,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -1641,7 +1641,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -1691,8 +1691,8 @@ speakers_info = {
         "model": "R253",
         "type": "passive",
         "price": "200",
-        "shape": "bookshelves",
-        "amount": "floorstanders",
+        "shape": "floorstanders",
+        "amount": "",
         "default_measurement": "asr-v2-20201202",
         "measurements": {
             "asr-v1-20201126": {
@@ -1773,7 +1773,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -1881,7 +1881,7 @@ speakers_info = {
         "model": "zA1.1",
         "type": "passive",
         "price": "",
-        "shape": "floorstanders",
+        "shape": "bookshelves",
         "default_measurement": "princeton",
         "measurements": {
             "princeton": {
@@ -1912,7 +1912,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {
@@ -1929,7 +1929,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {
@@ -1946,7 +1946,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {
@@ -2150,7 +2150,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {
@@ -2532,7 +2532,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {
@@ -2996,7 +2996,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {
@@ -3208,7 +3208,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "panel",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {
@@ -3225,7 +3225,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "panel",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {
@@ -3871,7 +3871,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {
@@ -4189,7 +4189,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "center",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -4253,13 +4253,13 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "anechoic",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-home.html",
             },
         },
@@ -4463,7 +4463,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -4480,7 +4480,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "center",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -4838,7 +4838,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "inwall",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {
@@ -4891,7 +4891,7 @@ speakers_info = {
         "model": "Definition DC6i",
         "type": "passive",
         "price": "",
-        "shape": "floorstanders",
+        "shape": "bookshelves",
         "default_measurement": "princeton",
         "measurements": {
             "princeton": {
@@ -4967,7 +4967,7 @@ speakers_info = {
         "model": "Esprit Antal Ez",
         "type": "passive",
         "price": "890",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
@@ -5226,7 +5226,7 @@ origins_info = {
         "logo-small": "docs/metadata/infinity-small.png",
         "url": "https://www.infinityspeakers.com",
     },
-    "Vendors-GGNTKT": {
+    "Vendors-GGNTTK": {
         "min hz": 20,
         "max hz": 20000,
         "min dB": -40,
