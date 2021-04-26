@@ -5226,7 +5226,7 @@ origins_info = {
         "logo-small": "docs/metadata/infinity-small.png",
         "url": "https://www.infinityspeakers.com",
     },
-    "Vendors-GGNTTK": {
+    "Vendors-GGNTKT": {
         "min hz": 20,
         "max hz": 20000,
         "min dB": -40,
