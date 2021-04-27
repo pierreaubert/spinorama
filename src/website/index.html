@@ -7,6 +7,7 @@
 
 <%include file="nav_menu.html"/>
 <%include file="nav_search.html"/>
+<%include file="banner.html"/>
 
 <%namespace name="util" module="utils" import="*"/>
 
@@ -70,7 +71,11 @@
 	    % for v, m in meta[speaker_name]["measurements"].items():
 	    <a class="card-footer-item"
 	       href="${speaker_name|space2url}/${m["origin"]|removeVendors}/index_${v}.html">
-              ${m["origin"]}
+              % if "Misc" in m["origin"] and "napilopez" in v:
+                Napilopez
+              % else:
+                ${m["origin"]}
+              % endif
               % if "horizontal" in v:
               (Horizontal orientation)
               % endif

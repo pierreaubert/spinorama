@@ -8,4 +8,11 @@ $(document).ready(function () {
       $(".navbar-menu").toggleClass("is-active");
 
   });
+
+  // Check for click events on the banner
+    $(".banner").click(function () {
+        
+        $(".banner").hide();
+        
+  });
 });

@@ -33,9 +33,9 @@ $(document).ready(function () {
 	
 	function selectDispatch(filter) {
 	    let keywords = $("#searchInput").val();
-	    // console.log("keywords: "+keywords);
+	    console.log("keywords: "+keywords);
 	    if (keywords === "") {
-		// console.log("display filter");
+		console.log("display filter");
 		display_filter(resultdiv, metadata, filter);
 	    } else {
 		// console.log("display search");
@@ -80,26 +80,19 @@ $(document).ready(function () {
 	function is_filtered(item, filter) {
 	    let show = true;
 	    if (filter.reviewer !== "" ) {
-		if (filter.reviewer === 'Vendors' ) {
-	            let default_measurement = item["default_measurement"];
-	            let origin = item["measurements"][default_measurement]["origin"];
-		    if (origin.substr(0, 8) !== 'Vendors-' ) {
-			// console.log(origin.substr(0, 8));
-			show = false;
-		    }
-		} else {
-                    let found = true;
-	            for (let measurement in item["measurements"]) {
-                        let origin = item["measurements"][measurement]["origin"];
-		        if (origin == filter.reviewer) {
-			    found = false;
-                            break;
-		        }
-                    }
-                    if(found) {
-                        show = false;
-                    }
-		}
+                let found = true;
+	        for (let [name, measurement] of Object.entries(item["measurements"])) {
+
+                    let origin = measurement["origin"].toLowerCase();
+                    console.log("debug: name="+name+" origin="+origin+" filter.reviewer="+filter.reviewer);
+                    if (name.toLowerCase().endsWith(filter.reviewer.toLowerCase()) || origin == filter.reviewer.toLowerCase()) {
+			found = false;
+                        break;
+                    } 
+                }
+                if(found) {
+                    show = false;
+                }
 	    }
 	    if (filter.power !== "" && item.type !== filter.power) {
 		show = false;
@@ -107,22 +100,22 @@ $(document).ready(function () {
 	    if (filter.shape !== "" && item.shape !== filter.shape) {
 		show = false;
 	    }
-	    if (filter.brand !== "" && item.brand !== filter.brand) {
+	    if (filter.brand !== "" && item.brand.toLowerCase() !== filter.brand.toLowerCase()) {
 		show = false;
 	    }
 	    return show;
 	}
 	    
 	function display_filter(resultdiv, meta, filter) {
-	    // console.log("display filter start #" + meta.length);
+	    console.log("display filter start #" + meta.length);
 	    for (const item in meta) {
 		let show = is_filtered(meta[item], filter);
 		const id = (meta[item].brand + "-" + meta[item].model).replace(/['.+& ]/g, "-");
 		if (show) {
-                    // // console.log(meta[item].brand + "-"+ meta[item].model + " is shown");
+                    console.log(meta[item].brand + "-"+ meta[item].model + " is shown");
 		    $("#" + id).show();
 		} else {
-                    // // console.log(meta[item].brand + "-"+ meta[item].model + " is filtered");
+                    console.log(meta[item].brand + "-"+ meta[item].model + " is filtered");
 		    $("#" + id).hide();
 		}
 	    }
