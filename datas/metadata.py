@@ -1,5 +1,22 @@
 # extra speaker info
 speakers_info = {
+    "Adam A5X": {
+        "brand": "Adam",
+        "model": "A5X",
+        "type": "active",
+        "price": "500",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/adam-a5x-review-powered-studio-monitor.22860/",
+                "review_published": "20210427",
+            },
+        },
+    },
     "Adam S2V": {
         "brand": "Adam",
         "model": "S2V",
