@@ -3047,9 +3047,9 @@ speakers_info = {
         "price": "2000",
         "shape": "floorstanders",
         "amount": "pair",
-        "default_measurement": "eac",
+        "default_measurement": "eac-v1-20201105",
         "measurements": {
-            "eac": {
+            "eac-v1-20201105": {
                 "origin": "ErinsAudioCorner",
                 "format": "webplotdigitizer",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_heresy_iv/",
@@ -3086,6 +3086,24 @@ speakers_info = {
                 "origin": "Vendors-Klipsch",
                 "format": "rewstextdump",
                 "review": "",
+            },
+        },
+    },
+    "Klipsch The Fives": {
+        "brand": "Klipsch",
+        "model": "The Fives",
+        "type": "active",
+        "price": "800",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac-v1-20210428",
+        "measurements": {
+            "eac-v1-20210428": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_the_fives/",
+                "review_published": "20210428",
+                "notes": "Bass cut mode",
             },
         },
     },
