@@ -74,7 +74,7 @@ def sanity_check(dataframe, meta):
         # check if downscale image exists (all jpg)
         if not os.path.exists("./docs/pictures/" + speaker_name + ".jpg"):
             logger.error("Image associated with >{0}< not found.".format(speaker_name))
-            logger.error("Please run: minimise_pictures.sh")
+            logger.error("Please run: update_pictures.sh")
     return 0
 
 
@@ -321,6 +321,48 @@ def add_scores(dataframe):
                 ] = scaled_pref_rating
 
 
+def add_quality():
+    """Compute quality of data and add it to metadata
+    Rules:
+    - Independant measurements from ASR or EAC : high quality
+    - Most measurements from Harmann group: medium quality
+    - Most measurements quasi anechoic: low quality
+    This can be overriden by setting the correct value in the metadata file
+    """
+    for speaker_name, speaker_data in metadata.speakers_info.items():
+        logger.info("Processing {0}".format(speaker_name))
+        for version, m_data in speaker_data["measurements"].items():
+            if "quality" not in m_data.keys():
+                quality = "unknown"
+                origin = m_data.get("origin")
+                format = m_data.get("format")
+                if format == "klippel":
+                    quality = "high"
+                elif origin == "Princeton":
+                    quality = "low"
+                elif origin == "Misc":
+                    if "napilopez" in version or "audioholics" in version:
+                        quality = "low"
+                elif "Vendor" in origin:
+                    brand = speaker_data["brand"]
+                    # Harman group provides spin from an anechoic room
+                    if brand in ("JBL", "Revel", "Infinity"):
+                        quality = "medium"
+
+                logger.debug(
+                    "Setting quality {} {} to {}".format(speaker_name, version, quality)
+                )
+                if (
+                    version
+                    in metadata.speakers_info[speaker_name]["measurements"].keys()
+                ):
+                    metadata.speakers_info[speaker_name]["measurements"][version][
+                        "quality"
+                    ] = quality
+                else:
+                    logger.info("Version {} is not in {}".format(version, speaker_name))
+
+
 def add_eq(speaker_path, dataframe):
     """ Compute some values per speaker and add them to metadata """
     for speaker_name in dataframe.keys():
@@ -413,6 +455,7 @@ if __name__ == "__main__":
 
     # add computed data to metadata
     logger.info("Compute scores per speaker")
+    add_quality()
     add_scores(df)
     add_eq("./datas", df)
 

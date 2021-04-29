@@ -40,3 +40,9 @@ def unmeltI(context, text):
 
 def unmeltR(context, text):
     return text.replace("_unmelted", " Radar")
+
+
+def float2str(context, f):
+    if "." not in f:
+        return f
+    return f.split(".")[0]

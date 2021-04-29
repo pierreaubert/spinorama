@@ -168,7 +168,7 @@ def sanity_check_measurement(name, speaker, version, measurement):
                         )
                     )
                     status = 1
-        if k == "quality" and v not in ("quasi-anechoic", "anechoic"):
+        if k == "quality" and v not in ("unknown", "low", "medium", "high"):
             logging.error(
                 "{0}: in measurement {1} quality {2} is unknown".format(
                     name,

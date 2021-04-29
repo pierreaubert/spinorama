@@ -61,7 +61,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/adam-audio-t7v/conclusion",
             },
         },
@@ -94,9 +94,9 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/amphion-argon1-quasi-anechoic-spinorama-and-measurements-updated.13025/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/amphion-argon1-low-spinorama-and-measurements-updated.13025/",
                 },
             },
         },
@@ -229,7 +229,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/12/ascend-acoustics-spinorama-data.html",
             },
         },
@@ -264,7 +264,7 @@ speakers_info = {
                 "format": "webplotdigitizer",
                 "review": "https://archimago.blogspot.com/2020/10/qspins-audioengine-a2-edifier-s2000-mk.html",
                 "review_published": "20201031",
-                "quality": "quasi-anechoic",
+                "quality": "low",
             },
         },
     },
@@ -327,7 +327,7 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/buchardt-a500-measurements-and-spinorama.15473/",
                     "tnw": "https://thenextweb.com/news/buchardt-a500-review-and-measurements-this-feels-like-the-future-of-hi-fi-speakers",
@@ -347,7 +347,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/04/Spinorama-data-Buchardt.html",
             },
         },
@@ -370,12 +370,12 @@ speakers_info = {
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_audio_s400_bookshelf/",
                 "format": "webplotdigitizer",
                 "review_published": "20200613",
-                "quality": "quasi-anechoic",
+                "quality": "low",
             },
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/buchardt-s400-on-and-off-axis-measurements-and-the-benefits-of-manufacturer-data.10075/page-2#post-366916",
                 },
@@ -489,7 +489,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2020/04/various-brands-spinorama-data-from.html",
             },
         },
@@ -661,7 +661,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/mk402-and-mk442-review/page-2",
             },
         },
@@ -678,7 +678,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/mk402-and-mk442-review/page-2",
             },
         },
@@ -695,7 +695,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/b452-air-speaker/conclusion",
             },
         },
@@ -712,7 +712,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/b452-air-speaker/conclusion",
             },
         },
@@ -745,9 +745,9 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/definitive-technology-d9-quasi-anechoic-spinorama-and-measurements.13159/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/definitive-technology-d9-low-spinorama-and-measurements.13159/",
                 },
             },
         },
@@ -817,7 +817,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/bmr-philharmonitor-1/conclusion",
             },
         },
@@ -850,7 +850,7 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/devialet-phantom-reactor-900-measurements-now-with-spinorama.9963/page-2#post-305596",
                     "tnw": "https://thenextweb.com/news/review-devialets-phantom-reactor-is-the-david-to-your-subwoofers-goliath",
@@ -878,9 +878,9 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/dutch-dutch-8c-quasi-anechoic-spinorama-and-measurements.12111/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/dutch-dutch-8c-low-spinorama-and-measurements.12111/",
                     "tnw": "https://thenextweb.com/news/dutch-dutch-8c-review-super-high-end-speakers-with-the-best-bass-ive-ever-heard",
                 },
             },
@@ -974,7 +974,7 @@ speakers_info = {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "review": "https://archimago.blogspot.com/2020/10/qspins-audioengine-a2-edifier-s2000-mk.html",
-                "quality": "quasi-anechoic",
+                "quality": "low",
             },
         },
     },
@@ -1036,7 +1036,7 @@ speakers_info = {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "review": "https://archimago.blogspot.com/2021/01/measurements-elac-debut-20-a42-atmos.html",
-                "quality": "quasi-anechoic",
+                "quality": "low",
             },
         },
     },
@@ -1104,7 +1104,7 @@ speakers_info = {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "review": "https://archimago.blogspot.com/2021/02/measurements-emotiva-airmotiv-b1.html",
-                "quality": "quasi-anechoic",
+                "quality": "low",
             },
         },
     },
@@ -1150,9 +1150,9 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/fluance-ai60-quasi-anechoic-measurements-and-spinorama.12027/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/fluance-ai60-low-measurements-and-spinorama.12027/",
                 },
             },
         },
@@ -1184,7 +1184,7 @@ speakers_info = {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "review": "https://archimago.blogspot.com/2020/11/measurements-fluance-reference-xl8s.html",
-                "quality": "quasi-anechoic",
+                "quality": "low",
             },
         },
     },
@@ -1231,7 +1231,7 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/new-focal-chora-806-on-and-off-axis-measurements.9613/page-2#post-360116",
                     "tnw": "https://thenextweb.com/news/review-focals-chora-806-is-a-luxury-speaker-at-a-heck-of-a-price",
@@ -1345,7 +1345,7 @@ speakers_info = {
                 "origin": "Misc",
                 "format": "rewstextdump",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-1032a-measurements-including-spinorama.17491/",
-                "quality": "quasi-anechoic",
+                "quality": "low",
             },
         },
     },
@@ -1462,7 +1462,7 @@ speakers_info = {
                 "origin": "Misc",
                 "format": "rewstextdump",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-g2-8020-measurements.18076/#post-588571",
-                "quality": "quasi-anechoic",
+                "quality": "low",
             },
         },
     },
@@ -1478,7 +1478,7 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/google-nest-audio-spinorama-and-measurements.16464/",
                     "tnw": "https://thenextweb.com/news/review-googles-nest-audio-is-a-legit-good-speaker-and-i-have-the-data-to-prove-it",
@@ -1498,11 +1498,13 @@ speakers_info = {
                 "origin": "Vendors-GGNTKT",
                 "format": "webplotdigitizer",
                 "website": "https://ggntkt.de/en/model-m1",
+                "quality": "high",
             },
             "vendor-v1-202008": {
                 "origin": "Vendors-GGNTKT",
                 "format": "webplotdigitizer",
                 "website": "https://ggntkt.de/en/model-m1",
+                "quality": "high",
             },
         },
     },
@@ -1579,7 +1581,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/ccb-8-bookshelf/measurements",
             },
         },
@@ -1596,9 +1598,9 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/iloud-micro-monitors-measurements-and-quasi-anechoic-spinorama.10988/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/iloud-micro-monitors-measurements-and-low-spinorama.10988/",
                     "tnw": "https://thenextweb.com/news/these-3-studio-monitors-are-great-speakers-for-a-small-desk",
                 },
             },
@@ -1647,7 +1649,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Infinity",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
                 "review": "https://speakerdata2034.blogspot.com/2019/06/harman-consumer-brands-spinorama-data.html",
             },
         },
@@ -1664,7 +1666,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Infinity",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
                 "review": "https://speakerdata2034.blogspot.com/2019/06/harman-consumer-brands-spinorama-data.html",
             },
         },
@@ -1682,7 +1684,7 @@ speakers_info = {
                 "origin": "Vendors-Infinity",
                 "website": "www.infinityspeakers.com",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
             },
         },
     },
@@ -1698,7 +1700,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Infinity",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
                 "review": "https://speakerdata2034.blogspot.com/2019/06/harman-consumer-brands-spinorama-data.html",
             },
         },
@@ -1725,7 +1727,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Infinity",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
                 "review": "https://speakerdata2034.blogspot.com/2019/06/harman-consumer-brands-spinorama-data.html",
             },
         },
@@ -1779,7 +1781,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Infinity",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/06/harman-consumer-brands-spinorama-data.html",
             },
         },
@@ -1796,7 +1798,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Infinity",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
                 "review": "https://speakerdata2034.blogspot.com/2019/06/harman-consumer-brands-spinorama-data.html",
             },
         },
@@ -1839,7 +1841,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Infinity",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-ultima.html",
             },
         },
@@ -1856,7 +1858,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Infinity",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
             },
         },
     },
@@ -1935,7 +1937,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
             },
         },
@@ -1952,7 +1954,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
             },
         },
@@ -1969,7 +1971,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
             },
         },
@@ -1986,7 +1988,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/06/harman-consumer-brands-spinorama-data.html",
             },
         },
@@ -2003,7 +2005,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-jbl-pro-studio.html",
             },
         },
@@ -2020,7 +2022,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-jbl-pro-studio.html",
             },
         },
@@ -2037,7 +2039,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-jbl-pro-studio.html",
             },
         },
@@ -2054,7 +2056,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-jbl-pro-studio.html",
             },
         },
@@ -2071,7 +2073,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
             },
         },
@@ -2088,7 +2090,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
             },
         },
@@ -2105,7 +2107,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
             },
         },
@@ -2122,7 +2124,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
             },
         },
@@ -2139,7 +2141,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
             },
         },
@@ -2156,7 +2158,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
             },
         },
@@ -2173,7 +2175,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
             },
         },
@@ -2190,7 +2192,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/06/harman-consumer-brands-spinorama-data.html",
             },
         },
@@ -2207,7 +2209,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/06/harman-consumer-brands-spinorama-data.html",
             },
         },
@@ -2277,7 +2279,7 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://thenextweb.com/news/these-3-studio-monitors-are-great-speakers-for-a-small-desk",
             },
         },
@@ -2459,7 +2461,7 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
                     "asr": "https://thenextweb.com/news/these-3-studio-monitors-are-great-speakers-for-a-small-desk",
                     "tnw": "https://thenextweb.com/news/jbl-hdi-1600-review",
@@ -2555,7 +2557,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/06/harman-consumer-brands-spinorama-data.html",
             },
         },
@@ -2675,15 +2677,20 @@ speakers_info = {
         "brand": "JTR",
         "model": "Noesis 212rt",
         "type": "passive",
-        "price": "5600",
+        "price": "10400",
         "shape": "floorstanders",
         "amount": "pair",
-        "default_measurement": "vendor",
+        "default_measurement": "misc-avnirvana",
         "measurements": {
-            "vendor": {
-                "origin": "Vendors-JTR",
+            "misc-avnirvana": {
+                "origin": "Misc",
                 "website": "https://www.jtrspeakers.com",
                 "format": "webplotdigitizer",
+                "quality": "low",
+                "reviews": {
+                    "avnirvana": "https://www.avnirvana.com/threads/jtr-noesis-212rt-review-and-measurements.6779/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jtr-noesis-212rt-measurements.12688/",
+                },
             },
         },
     },
@@ -2751,7 +2758,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/kali-audio-lp-8/conclusion",
             },
         },
@@ -2837,7 +2844,7 @@ speakers_info = {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "review": "https://archimago.blogspot.com/2020/10/pspinorama-measurements-kef-ls50.html",
-                "quality": "quasi-anechoic",
+                "quality": "low",
             },
         },
     },
@@ -2853,7 +2860,7 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-ls50-meta-spinorama-and-measurements.18353/#post-598793",
                     "tnw": "https://thenextweb.com/news/review-kefs-ls50-meta-upgrades-an-audiophile-fave-to-near-perfection",
@@ -2862,7 +2869,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-kef.html",
             },
         },
@@ -2879,7 +2886,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-kef.html",
             },
         },
@@ -2923,7 +2930,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-kef.html",
             },
         },
@@ -2940,7 +2947,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-kef.html",
             },
         },
@@ -2957,7 +2964,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-kef.html",
             },
         },
@@ -3019,7 +3026,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2020/04/various-brands-spinorama-data-from.html",
             },
         },
@@ -3187,7 +3194,7 @@ speakers_info = {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "review": "https://audioxpress.com/news/audioxpress-september-2020-speaker-focus-edition-is-now-available",
-                "quality": "quasi-anechoic",
+                "quality": "low",
             },
         },
     },
@@ -3217,7 +3224,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/martinlogan-motion-35xti/conclusion",
             },
         },
@@ -3249,7 +3256,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2020/04/various-brands-spinorama-data-from.html",
             },
         },
@@ -3266,7 +3273,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2020/04/various-brands-spinorama-data-from.html",
             },
         },
@@ -3330,7 +3337,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/tower-speaker-reviews/mp-t65rt/conclusion",
             },
         },
@@ -3347,7 +3354,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/monoprice-monolith-thx-365t-thx-365c/conclusion",
             },
         },
@@ -3364,7 +3371,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/monoprice-monolith-thx-365t-thx-365c/conclusion",
             },
         },
@@ -3381,7 +3388,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/monoprice-monolith/measurements",
             },
         },
@@ -3398,7 +3405,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/monolith-k-bs-1/measurements",
             },
         },
@@ -3415,7 +3422,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/mp-65rt/conclusion",
             },
         },
@@ -3450,7 +3457,7 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
                     "tnw": "https://thenextweb.com/news/these-3-studio-monitors-are-great-speakers-for-a-small-desk",
                 },
@@ -3637,7 +3644,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/outlaw-blsv2/conclusion",
             },
         },
@@ -3654,13 +3661,13 @@ speakers_info = {
             "misc-audioholics-vertical": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/outlaw-blsv2/conclusion",
             },
             "misc-audioholics-horizontal": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/outlaw-blsv2/conclusion",
             },
         },
@@ -3854,15 +3861,15 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/polk-l200-quasi-anechoic-spinorama-and-measurements.13191/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/polk-l200-low-spinorama-and-measurements.13191/",
                 },
             },
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/polk-l200-l400/conclusion",
             },
         },
@@ -3879,7 +3886,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/tower-speaker-reviews/polk-legend-l800/conclusion",
             },
         },
@@ -3912,7 +3919,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2020/04/various-brands-spinorama-data-from.html",
             },
         },
@@ -3993,7 +4000,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/presonus-eris-e8-xt/conclusion",
             },
         },
@@ -4042,9 +4049,9 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/q-acoustics-3030i-quasi-anechoic-spinorama-and-other-measurements.12500/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/q-acoustics-3030i-low-spinorama-and-other-measurements.12500/",
                     "tnw": "https://thenextweb.com/news/review-the-q-acoustics-3030i-takes-one-of-my-favorite-budget-speakers-and-adds-bass",
                 },
             },
@@ -4077,7 +4084,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/rbh-r-5/conclusion",
             },
         },
@@ -4094,7 +4101,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/sv-61r/measurements",
             },
         },
@@ -4111,7 +4118,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/rbh-pm-8-monitor/conclusion",
             },
         },
@@ -4128,7 +4135,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/rbh-r-5/conclusion",
             },
         },
@@ -4160,7 +4167,7 @@ speakers_info = {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "review": "https://archimago.blogspot.com/2021/01/retro-measure-radio-shack-realistic.html",
-                "quality": "quasi-anechoic",
+                "quality": "low",
             },
         },
     },
@@ -4176,7 +4183,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-home.html",
             },
         },
@@ -4198,7 +4205,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-home.html",
             },
         },
@@ -4230,7 +4237,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-home.html",
             },
         },
@@ -4277,7 +4284,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-home.html",
             },
         },
@@ -4294,7 +4301,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-home.html",
             },
         },
@@ -4367,7 +4374,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-home.html",
             },
         },
@@ -4415,7 +4422,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-home.html",
             },
         },
@@ -4433,7 +4440,7 @@ speakers_info = {
                 "origin": "Vendors-Revel",
                 "website": "www.revel.com",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
             },
         },
     },
@@ -4450,7 +4457,7 @@ speakers_info = {
                 "origin": "Vendors-Revel",
                 "website": "www.revel.com",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
             },
         },
     },
@@ -4466,7 +4473,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-ultima.html",
             },
         },
@@ -4504,7 +4511,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-ultima.html",
             },
         },
@@ -4521,7 +4528,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "quality": "anechoic",
+                "quality": "medium",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-ultima.html",
             },
         },
@@ -4543,7 +4550,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-home.html",
             },
         },
@@ -4565,7 +4572,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-home.html",
             },
         },
@@ -4582,7 +4589,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/revel-performa-m126be/conclusion",
             },
         },
@@ -4683,7 +4690,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/rsl-cg5-and-cg25/conclusion",
             },
         },
@@ -4700,7 +4707,7 @@ speakers_info = {
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/rsl-cg5-and-cg25/conclusion",
             },
         },
@@ -4825,7 +4832,7 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/sonos-move-on-and-off-axis-measurements-an-interesting-case-study.10625/#post-410956",
                     "tnw": "https://thenextweb.com/news/measured-how-the-sonos-move-balances-performance-and-durability-in-a-bluetooth-speaker?amp=1",
@@ -4845,7 +4852,7 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/sonus-faber-sonetto-ii-measurements-now-with-a-spinorama.10727/#post-305705",
                 },
@@ -4879,7 +4886,7 @@ speakers_info = {
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "quality": "quasi-anechoic",
+                "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2020/04/various-brands-spinorama-data-from.html",
             },
         },
@@ -4901,7 +4908,7 @@ speakers_info = {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "review": "https://archimago.blogspot.com/2021/02/retro-measure-spendor-sa1-1976-monitor.html",
-                "quality": "quasi-anechoic",
+                "quality": "low",
             },
         },
     },
@@ -4948,7 +4955,7 @@ speakers_info = {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "review": "https://archimago.blogspot.com/2020/12/measurements-tannoy-reveal-501a-powered.html",
-                "quality": "quasi-anechoic",
+                "quality": "low",
             },
         },
     },
