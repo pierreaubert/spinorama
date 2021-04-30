@@ -25,6 +25,7 @@ $(document).ready(function () {
 	    shape: "",
 	    power: "",
 	    brand: "",
+	    quality: "",
 	};
 
 	let sorter = {
@@ -46,6 +47,11 @@ $(document).ready(function () {
 	
 	$("#selectReviewer").on("change", function () {
 	    filter["reviewer"] = this.value;
+	    selectDispatch(filter);
+	});
+	
+	$("#selectQuality").on("change", function () {
+	    filter["quality"] = this.value;
 	    selectDispatch(filter);
 	});
 	
@@ -88,7 +94,22 @@ $(document).ready(function () {
                     if (name.toLowerCase().endsWith(filter.reviewer.toLowerCase()) || origin == filter.reviewer.toLowerCase()) {
 			found = false;
                         break;
-                    } 
+                    }
+                }
+                if(found) {
+                    show = false;
+                }
+	    }
+	    if (filter.quality !== "" ) {
+                let found = true;
+	        for (let [name, measurement] of Object.entries(item["measurements"])) {
+
+                    let quality = measurement["quality"].toLowerCase();
+                    console.log("filter.quality="+filter.quality+" quality="+quality);
+                    if (filter.quality !== "" && quality == filter.quality.toLowerCase()) {
+		        found = false;
+                        break;
+	            }
                 }
                 if(found) {
                     show = false;
