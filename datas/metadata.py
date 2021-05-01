@@ -1925,6 +1925,21 @@ speakers_info = {
             },
         },
     },
+    "Jeff Bagby Mandolin DIY": {
+        "brand": "Jeff Bagby",
+        "model": "Mandolin DIY",
+        "type": "passive",
+        "price": "300",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bagby-mandolin-diy-speaker-review.22981/",
+            },
+        },
+    },
     "JBL Synthesis Array 800": {
         "brand": "JBL",
         "model": "Synthesis Array 800",
