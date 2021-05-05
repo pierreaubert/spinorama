@@ -2530,6 +2530,13 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-hdi-3600-speaker-review.13027/",
             },
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "website": "www.jbl.com",
+                "format": "webplotdigitizer",
+                "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
+                "quality": "medium",
+            },
         },
     },
     "JBL HDI-3800": {
