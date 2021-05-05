@@ -2277,6 +2277,23 @@ speakers_info = {
             },
         },
     },
+    "JBL 100 Classic": {
+        "brand": "JBL",
+        "model": "100 Classic",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/jbl-l100/conclusion",
+                "quality": "low",
+            },
+        },
+    },
     "JBL 104": {
         "brand": "JBL",
         "model": "104",
@@ -2354,8 +2371,16 @@ speakers_info = {
         "price": "300",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_305pmk2/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-review-erin.22999/",
+                },
+            },
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
@@ -2551,8 +2576,17 @@ speakers_info = {
         "price": "1250",
         "shape": "floorstanders",
         "amount": "pair",
-        "default_measurement": "vendor",
+        "default_measurement": "misc-napilopez",
         "measurements": {
+            "misc-napilopez": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "tnw": "https://thenextweb.com/news/jbl-l82-classic-review-these-retro-speakers-offer-modern-acoustics",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-l82-classic-spinorama-and-measurements.15466/",
+                },
+                "quality": "low",
+            },
             "vendor": {
                 "origin": "Vendors-JBL",
                 "website": "www.jbl.com",
