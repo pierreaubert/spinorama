@@ -2032,10 +2032,10 @@ speakers_info = {
         "price": "",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "misc-speakerdata2034",
+        "default_measurement": "vendor",
         "measurements": {
-            "misc-speakerdata2034": {
-                "origin": "Misc",
+            "vendor": {
+                "origin": "Vendors-JBL",
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-jbl-pro-studio.html",
