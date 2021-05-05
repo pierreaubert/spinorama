@@ -4283,7 +4283,7 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Revel",
-                "website": "www.revel.com",
+                "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
             },
         },
@@ -4400,7 +4400,7 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-Revel",
-                "website": "www.revel.com",
+                "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
             },
         },
@@ -4485,8 +4485,15 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
+                "website": "www.revelspeakers.com",
                 "quality": "medium",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-home.html",
+            },
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/revel-performa-m126be/conclusion",
             },
         },
     },
@@ -4501,7 +4508,7 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Revel",
-                "website": "www.revel.com",
+                "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
                 "quality": "medium",
             },
@@ -4518,7 +4525,7 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Revel",
-                "website": "www.revel.com",
+                "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
                 "quality": "medium",
             },
@@ -4552,12 +4559,12 @@ speakers_info = {
         "measurements": {
             "harman-v1-2007": {
                 "origin": "Vendors-Revel",
-                "website": "www.revel.com",
+                "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
             },
             "harman-v2-2017": {
                 "origin": "Vendors-Revel",
-                "website": "www.revel.com",
+                "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
             },
         },
@@ -4640,23 +4647,6 @@ speakers_info = {
             },
         },
     },
-    "Revel M126Be": {
-        "brand": "Revel",
-        "model": "M126Be",
-        "type": "passive",
-        "price": "",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "misc-audioholics",
-        "measurements": {
-            "misc-audioholics": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "quality": "low",
-                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/revel-performa-m126be/conclusion",
-            },
-        },
-    },
     "Revel M16": {
         "brand": "Revel",
         "model": "M16",
@@ -4720,7 +4710,7 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Revel",
-                "website": "www.revel.com",
+                "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
             },
         },
@@ -5455,7 +5445,7 @@ origins_info = {
         "max dB": 10,
         "logo": "docs/metadata/revel.png",
         "logo-small": "docs/metadata/jbl-small.png",
-        "url": "http://www.revel.com",
+        "url": "http://www.revelspeakers.com",
     },
     "Vendors-Yamaha": {
         "min hz": 20,
