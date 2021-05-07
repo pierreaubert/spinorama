@@ -199,11 +199,11 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         if nbd_on_axis is None or nbd_pred_in_room is None or sm_pred_in_room is None:
             logger.info("One of the pref score components is None")
             return None
-        # 20hz see discussion
+        # 14.5hz or 20hz see discussion
         # https://www.audiosciencereview.com/forum/index.php?threads/master-preference-ratings-for-loudspeakers.11091/page-25#post-448733
         pref = None
         pref_wsub = pref_rating(
-            nbd_on_axis, nbd_pred_in_room, math.log10(20), sm_pred_in_room
+            nbd_on_axis, nbd_pred_in_room, math.log10(14.5), sm_pred_in_room
         )
         if not skip_full:
             pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)
