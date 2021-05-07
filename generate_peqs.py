@@ -98,7 +98,7 @@ def optim_save_peq(
     be_verbose,
     is_smoke_test,
 ):
-    """Compute and then save PEQ for this speaker """
+    """Compute and then save PEQ for this speaker"""
     eq_dir = "datas/eq/{}".format(current_speaker_name)
     pathlib.Path(eq_dir).mkdir(parents=True, exist_ok=True)
     eq_name = "{}/iir-autoeq.txt".format(eq_dir)
