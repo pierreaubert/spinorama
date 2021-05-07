@@ -1586,8 +1586,8 @@ speakers_info = {
             },
         },
     },
-    "Ik Multimedia iLoud Micro Monitor": {
-        "brand": "Ik Multimedia",
+    "IK Multimedia iLoud Micro Monitor": {
+        "brand": "IK Multimedia",
         "model": "iLoud Micro Monitor",
         "type": "passive",
         "price": "",
@@ -3528,6 +3528,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Neumann",
                 "format": "webplotdigitizer",
+                "quality": "medium",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-80-dsp-speaker-measurements-take-two.11323/page-22#post-425237%",
             },
         },
     },
@@ -3543,6 +3545,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Neumann",
                 "format": "webplotdigitizer",
+                "quality": "medium",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-80-dsp-speaker-measurements-take-two.11323/page-22#post-425237%",
             },
         },
     },
