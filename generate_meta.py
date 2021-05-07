@@ -41,14 +41,13 @@ import math
 import sys
 
 from docopt import docopt
-import flammkuchen as fl
 
 try:
     import ray
 except ModuleNotFoundError:
     import src.miniray as ray
 
-from generate_common import get_custom_logger, args2level, custom_ray_init
+from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
 
 from src.spinorama.compute_estimates import estimates
 from src.spinorama.compute_scores import speaker_pref_rating
@@ -445,7 +444,7 @@ if __name__ == "__main__":
         parse_max = args["--parse-max"]
         if parse_max is not None:
             parse_max = int(parse_max)
-        df = fl.load(path="cache.parse_all_speakers.h5")
+        df = cache_load()
         if df is None:
             logger.error("Load failed! Please run ./generate_graphs.py")
             sys.exit(1)

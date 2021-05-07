@@ -41,12 +41,9 @@ Options:
 import glob
 import os
 import sys
-import tables
 from typing import List, Mapping, Tuple
-import warnings
 
 from docopt import docopt
-import flammkuchen as fl
 
 try:
     import ray
@@ -54,7 +51,13 @@ except ModuleNotFoundError:
     import src.miniray as ray
 
 
-from generate_common import get_custom_logger, args2level, custom_ray_init
+from generate_common import (
+    get_custom_logger,
+    args2level,
+    custom_ray_init,
+    cache_save,
+    cache_update,
+)
 import datas.metadata as metadata
 from src.spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
 from src.spinorama.speaker_print import print_graphs
@@ -341,39 +344,10 @@ if __name__ == "__main__":
     ray_ids = queue_speakers(speakerlist, filters)
     df_new = compute(ray_ids)
 
-    cache_name = "cache.parse_all_speakers.h5"
     if len(filters.keys()) == 0:
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", tables.NaturalNameWarning)
-            fl.save(path=cache_name, data=df_new)
-    else:
-        if os.path.exists(cache_name) and update_cache:
-            print("Updating cache ", end=" ", flush=True)
-            df_tbu = fl.load(path=cache_name)
-            print("(loaded {}) ".format(len(df_tbu)), end=" ", flush=True)
-            count = 0
-            for new_speaker, new_datas in df_new.items():
-                for new_origin, new_measurements in new_datas.items():
-                    for new_measurement, new_data in new_measurements.items():
-                        if new_speaker not in df_tbu.keys():
-                            df_tbu[new_speaker] = {
-                                new_origin: {new_measurement: new_data}
-                            }
-                            count += 1
-                            continue
-                        if new_origin not in df_tbu[new_speaker].keys():
-                            df_tbu[new_speaker][new_origin] = {
-                                new_measurement: new_data
-                            }
-                            count += 1
-                            continue
-                        df_tbu[new_speaker][new_origin][new_measurement] = new_data
-                        count += 1
-            print("(updated +{}) ".format(count), end=" ", flush=True)
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore", tables.NaturalNameWarning)
-                fl.save(path=cache_name, data=df_tbu)
-            print("(saved).")
+        cache_save(df_new)
+    elif update_cache:
+        cache_update(df_new)
 
     ray.shutdown()
     sys.exit(0)

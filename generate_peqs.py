@@ -75,7 +75,7 @@ except ModuleNotFoundError:
     import src.miniray as ray
 
 
-from generate_common import get_custom_logger, args2level, custom_ray_init
+from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
 from datas.metadata import speakers_info as metadata
 from spinorama.load_rewseq import parse_eq_iir_rews
 from spinorama.filter_peq import peq_format_apo, peq_equal
@@ -335,33 +335,17 @@ def queue_speakers(df_all_speakers, optim_config, be_verbose, is_smoke_test):
         default = None
         default_eq = None
         default_origin = None
-        if "ASR" in df_all_speakers[current_speaker_name].keys():
-            default = "asr"
-            default_eq = "asr_eq"
-            default_origin = "ASR"
-        elif "ErinsAudioCorner" in df_all_speakers[current_speaker_name].keys():
-            default = "eac"
-            default_eq = "eac_eq"
-            default_origin = "ErinsAudioCorner"
-        else:
-            # currently doing only ASR&EAC but should work for the others
-            # Princeton start around 500hz
-            continue
         if (
             current_speaker_name in metadata.keys()
             and "default_measurement" in metadata[current_speaker_name].keys()
         ):
             default = metadata[current_speaker_name]["default_measurement"]
             default_eq = "{}_eq".format(default)
-        if (
-            "ASR" in df_all_speakers[current_speaker_name].keys()
-            and default not in df_all_speakers[current_speaker_name]["ASR"].keys()
-        ) and (
-            "ErinsAudioCorner" in df_all_speakers[current_speaker_name].keys()
-            and default
-            not in df_all_speakers[current_speaker_name]["ErinsAudioCorner"].keys()
-        ):
-            logger.error("no {} for {}".format(default, current_speaker_name))
+            default_origin = metadata[current_speaker_name]["measurements"][
+                default_measurement
+            ]["origin"]
+        else:
+            logger.error("no default_measurement for {}".format(current_speaker_name))
             continue
         df_speaker = df_all_speakers[current_speaker_name][default_origin][default]
         if (
@@ -590,18 +574,7 @@ if __name__ == "__main__":
     print("Reading cache ...", end=" ", flush=True)
     df_all_speakers = {}
     try:
-        if smoke_test is True:
-            df_all_speakers = fl.load(path="./cache.smoketest_speakers.h5")
-        else:
-            if speaker_name is None:
-                df_all_speakers = fl.load(path="./cache.parse_all_speakers.h5")
-            else:
-                df_speaker = fl.load(
-                    path="./cache.parse_all_speakers.h5",
-                    group="/{}".format(speaker_name),
-                )
-                df_all_speakers[speaker_name] = df_speaker
-        print("Done")
+        df_all_speakers = cache_load(smoke_test=smoke_test, filter=speaker_name)
     except ValueError as ve:
         if speaker_name is not None:
             print(
@@ -624,36 +597,17 @@ if __name__ == "__main__":
         if speaker_name not in df_all_speakers.keys():
             logger.error("{} is not known!".format(speaker_name))
             sys.exit(1)
-        speaker_default = "asr"
-        speaker_origin = "ASR"
-        if "ASR" not in df_all_speakers[speaker_name].keys():
-            keys = list(df_all_speakers[speaker_name].keys())
-            if len(keys) > 0 and keys[0][0:8] == "Vendors-":
-                speaker_default = "vendor"
-                speaker_origin = keys[0]
-            elif len(keys) > 0 and keys[0] == "ErinsAudioCorner":
-                speaker_default = "eac"
-                speaker_origin = keys[0]
-            else:
-                logger.debug("Speaker {} Keys are {}".format(speaker_name, keys[0]))
-                print(
-                    "Speaker {} measurements are not from ASR, EAC nor digitalized.".format(
-                        speaker_name
-                    )
-                )
-                sys.exit(1)
-        if (
-            speaker_name in metadata.keys()
-            and "default_measurement" in metadata[speaker_name].keys()
-        ):
-            speaker_default = metadata[speaker_name]["default_measurement"]
-        df_speaker = None
+        if speaker_name not in metadata.keys():
+            logger.error("{} is not in metadata!".format(speaker_name))
+            sys.exit(1)
+        speaker_default = metadata[speaker_name]["default_measurement"]
+        speaker_origin = metadata[speaker_name]["measurements"][speaker_default][
+            "origin"
+        ]
+        df_speaker = df_all_speakers[speaker_name][speaker_origin][speaker_default]
         # print(speaker_name, speaker_default, speaker_origin)
-        if speaker_origin in ("ASR", "ErinsAudioCorner"):
-            df_speaker = df_all_speakers[speaker_name][speaker_origin][speaker_default]
-        elif speaker_default == "vendor":
+        if speaker_default == "vendor":
             # print(speaker_name, speaker_origin, speaker_default, list(df_all_speakers[speaker_name][speaker_origin].keys()))
-            df_speaker = df_all_speakers[speaker_name][speaker_origin][speaker_default]
             if (
                 "CEA2034" not in df_speaker.keys()
                 or "Estimated In-Room Response" not in df_speaker.keys()
