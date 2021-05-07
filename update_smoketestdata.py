@@ -16,12 +16,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import tables
-import warnings
-import flammkuchen as fl
+from generate_common import cache_load, cache_save
 
 if __name__ == "__main__":
-    df = fl.load("cache.parse_all_speakers.h5")
+    df = cache_load()
     df_small = {}
     for speaker in (
         "Genelec 8030C",
@@ -32,6 +30,4 @@ if __name__ == "__main__":
         if speaker in df.keys():
             df_small[speaker] = df[speaker]
 
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", tables.NaturalNameWarning)
-        fl.save("cache.smoketest_speakers.h5", df_small)
+    cache_save(df_small, smoke_test=True)

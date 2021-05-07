@@ -134,11 +134,14 @@ def cache_unhash(df_all):
     return df
 
 
-def cache_save(df_all):
+def cache_save(df_all, smoke_test=False):
     df_hashed = cache_hash(df_all)
+    cache_name = CACHE_NAME
+    if smoke_test:
+        cache_name = SMOKE_CACHE_NAME
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", tables.NaturalNameWarning)
-        fl.save(path=CACHE_NAME, data=df_hashed)
+        fl.save(path=cache_name, data=df_hashed)
 
 
 def cache_load(filter=None, smoke_test=False):
