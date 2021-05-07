@@ -78,7 +78,7 @@ def sanity_check(dataframe, meta):
 
 
 def add_scores(dataframe):
-    """""Compute some values per speaker and add them to metadata """
+    """ ""Compute some values per speaker and add them to metadata"""
     min_pref_score = +100
     max_pref_score = -100
     min_pref_score_wsub = +100
@@ -363,7 +363,7 @@ def add_quality():
 
 
 def add_eq(speaker_path, dataframe):
-    """ Compute some values per speaker and add them to metadata """
+    """Compute some values per speaker and add them to metadata"""
     for speaker_name in dataframe.keys():
         logger.info("Processing {0}".format(speaker_name))
 
