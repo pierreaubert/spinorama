@@ -18,6 +18,8 @@
 </article>
 % endif
 
+
+% if not print_warning:
 <article class="message is-info">
   <div class="message-header">
     <p>
@@ -31,7 +33,7 @@
 %     if meta[speaker].get('amount', '?') != '?':
           for a ${meta[speaker].get('amount')}
 %     endif      
-% endif      
+%     endif      
 .
     </p>
   </div>
@@ -129,4 +131,5 @@ Links to other reviews: <a href="${review}">${key} review</a>
     </div>
   </div>
 </article>
+% endif
 

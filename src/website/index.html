@@ -71,16 +71,28 @@
 	    % for v, m in meta[speaker_name]["measurements"].items():
 	    <a class="card-footer-item"
 	       href="${speaker_name|space2url}/${m["origin"]|removeVendors}/index_${v}.html">
-              % if "Misc" in m["origin"] and "napilopez" in v:
-                Napilopez
+              % if "Misc" in m["origin"] and "misc-" in v:
+              <%
+                v2 = '{}'.format(v[5:].capitalize())
+                if '-horizontal' in v2:
+                    v2 = v2[:-11]
+                elif '-vertical' in v2:
+                    v2 = v2[:-9]
+              %>
+                ${v2}
               % else:
                 ${m["origin"]}
               % endif
               % if "horizontal" in v:
               (Horizontal orientation)
-              % endif
-              % if "vertical" in v:
+              % elif "vertical" in v:
               (Vertical orientation)
+              % elif "-v1-" in v:
+              (v1)
+              % elif "-v2-" in v:
+              (v2)
+              % elif "-v3-" in v:
+              (v3)
               % endif
             </a>
 	    % endfor

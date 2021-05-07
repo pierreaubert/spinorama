@@ -40,7 +40,8 @@ if ! test $?; then
     exit 1;
 fi
 # generate website
-sh ./update_brands.sh
+./update_brands.sh
+./update_reviewers.sh
 ./generate_html.py
 if ! test $?; then
     echo "Failed after generate HTML!"
