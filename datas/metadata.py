@@ -1589,8 +1589,8 @@ speakers_info = {
     "IK Multimedia iLoud Micro Monitor": {
         "brand": "IK Multimedia",
         "model": "iLoud Micro Monitor",
-        "type": "passive",
-        "price": "",
+        "type": "active",
+        "price": "300",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "misc-napilopez",
@@ -1609,8 +1609,8 @@ speakers_info = {
     "IK Multimedia iLoud MTM": {
         "brand": "IK Multimedia",
         "model": "iLoud MTM",
-        "type": "passive",
-        "price": "300",
+        "type": "active",
+        "price": "700",
         "shape": "bookshelves",
         "amount": "pair",
         "default_measurement": "asr",
