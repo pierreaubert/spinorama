@@ -341,9 +341,9 @@ def queue_speakers(df_all_speakers, optim_config, be_verbose, is_smoke_test):
         ):
             default = metadata[current_speaker_name]["default_measurement"]
             default_eq = "{}_eq".format(default)
-            default_origin = metadata[current_speaker_name]["measurements"][
-                default_measurement
-            ]["origin"]
+            default_origin = metadata[current_speaker_name]["measurements"][default][
+                "origin"
+            ]
         else:
             logger.error("no default_measurement for {}".format(current_speaker_name))
             continue
