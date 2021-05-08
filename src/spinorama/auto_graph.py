@@ -139,6 +139,7 @@ def graph_results(
     reg_min = optim_config["freq_reg_min"]
     reg_max = optim_config["freq_reg_max"]
     domain = [reg_min, reg_max]
+    print("debug {}".format(domain))
     # build a graph for each peq
     if manual_peq is not None:
         g_manual_eq = graph_eq(
@@ -201,9 +202,11 @@ def graph_results(
         g_spin_manual = graph_spinorama(spin_manual, g_params).properties(
             title="{} ASR + manual EQ".format(speaker_name)
         )
-    g_spin_auto = graph_spinorama(spin_auto, g_params).properties(
-        title="{} ASR + auto EQ".format(speaker_name)
-    )
+    g_spin_auto = None
+    if spin_auto is not None:
+        g_spin_auto = graph_spinorama(spin_auto, g_params).properties(
+            title="{} ASR + auto EQ".format(speaker_name)
+        )
 
     # show the 3 optimised curves
     # which_curve='Listening Window

@@ -79,7 +79,12 @@ from generate_common import get_custom_logger, args2level, custom_ray_init, cach
 from datas.metadata import speakers_info as metadata
 from spinorama.load_rewseq import parse_eq_iir_rews
 from spinorama.filter_peq import peq_format_apo, peq_equal
-from spinorama.filter_scores import scores_apply_filter, scores_print2, scores_print
+from spinorama.filter_scores import (
+    scores_apply_filter,
+    noscore_apply_filter,
+    scores_print2,
+    scores_print,
+)
 from spinorama.auto_target import get_freq, get_target
 from spinorama.auto_optim import optim_greedy
 from spinorama.auto_graph import graph_results as auto_graph_results
@@ -188,6 +193,8 @@ def optim_save_peq(
         scores = [score["pref_score"], score["pref_score"], score_auto["pref_score"]]
         if be_verbose:
             scores[1] = score_manual.get("pref_score", -5)
+    else:
+        spin_auto, pir_auto = noscore_apply_filter(df_speaker, auto_peq)
 
     # print peq
     comments = [
@@ -262,8 +269,11 @@ def optim_save_peq(
             )
 
         for i, graph in enumerate(graphs):
+            origin = current_speaker_origin
+            if 'Vendors-' in origin:
+                origin = origin[8:]
             graph_filename = "docs/{}/{}/filters{}".format(
-                current_speaker_name, current_speaker_origin, i
+                current_speaker_name, origin, i
             )
             if is_smoke_test:
                 graph_filename += "_smoketest"
@@ -528,10 +538,10 @@ if __name__ == "__main__":
         current_optim_config["maxiter"] = max_iter
     if args["--min-freq"] is not None:
         min_freq = int(args["--min-freq"])
-        current_optim_config["freq_req_min"] = min_freq
+        current_optim_config["freq_reg_min"] = min_freq
     if args["--max-freq"] is not None:
         max_freq = int(args["--max-freq"])
-        current_optim_config["freq_req_max"] = max_freq
+        current_optim_config["freq_reg_max"] = max_freq
 
     if args["--min-Q"] is not None:
         min_Q = float(args["--min-Q"])
@@ -594,6 +604,7 @@ if __name__ == "__main__":
         ids = queue_speakers(df_all_speakers, current_optim_config, verbose, smoke_test)
         compute_peqs(ids)
     else:
+        logger.debug("Prep speaker {}".format(speaker_name))
         if speaker_name not in df_all_speakers.keys():
             logger.error("{} is not known!".format(speaker_name))
             sys.exit(1)
@@ -620,7 +631,7 @@ if __name__ == "__main__":
                 sys.exit(1)
             keys = set(df_speaker["CEA2034"]["Measurements"].values)
             number_curves = len(current_optim_config["curve_names"])
-            print(current_optim_config["curve_names"], keys)
+            # print(current_optim_config["curve_names"], keys)
             intersection = keys.intersection(set(current_optim_config["curve_names"]))
             if len(intersection) == 0:
                 logger.warning(
@@ -641,6 +652,7 @@ if __name__ == "__main__":
         if key_eq in df_all_speakers[speaker_name][speaker_origin].keys():
             df_speaker_eq = df_all_speakers[speaker_name][speaker_origin][key_eq]
         # compute
+        logger.debug("{}[{}] {}".format(speaker_name, speaker_origin, speaker_default))
         current_id = optim_save_peq.remote(
             speaker_name,
             speaker_origin,
