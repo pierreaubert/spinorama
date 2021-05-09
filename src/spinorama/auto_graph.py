@@ -139,7 +139,6 @@ def graph_results(
     reg_min = optim_config["freq_reg_min"]
     reg_max = optim_config["freq_reg_max"]
     domain = [reg_min, reg_max]
-    print("debug {}".format(domain))
     # build a graph for each peq
     if manual_peq is not None:
         g_manual_eq = graph_eq(

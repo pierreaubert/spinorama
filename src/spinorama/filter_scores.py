@@ -34,13 +34,16 @@ def noscore_apply_filter(df_speaker, peq):
     pir_filtered = None
     if "CEA2034" in df_speaker.keys():
         spin = df_speaker["CEA2034"]
-        pivoted_spin = spin.pivot(*spin).rename_axis(columns=None).reset_index()
-        # modify all curve but should not touch DI
-        spin_filtered = peq_apply_measurements(pivoted_spin, peq)
-        # not modified
-        spin_filtered["Early Reflections DI"] = pivoted_spin["Early Reflections DI"]
-        spin_filtered["Sound Power DI"] = pivoted_spin["Sound Power DI"]
-        spin_filtered["DI offset"] = pivoted_spin["DI offset"]
+        try:
+            pivoted_spin = spin.pivot(*spin).rename_axis(columns=None).reset_index()
+            # modify all curve but should not touch DI
+            spin_filtered = peq_apply_measurements(pivoted_spin, peq)
+            # not modified
+            spin_filtered["Early Reflections DI"] = pivoted_spin["Early Reflections DI"]
+            spin_filtered["Sound Power DI"] = pivoted_spin["Sound Power DI"]
+            spin_filtered["DI offset"] = pivoted_spin["DI offset"]
+        except ValueError:
+            print("debug: {}".format(spin.keys()))
 
     if "Estimated In-Room Response" in df_speaker.keys():
         pir = df_speaker["Estimated In-Room Response"]

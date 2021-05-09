@@ -90,7 +90,7 @@ from spinorama.auto_optim import optim_greedy
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
-VERSION = 0.7
+VERSION = 0.8
 
 
 @ray.remote
@@ -143,6 +143,13 @@ def optim_save_peq(
     # compute an optimal PEQ
     curves = optim_config["curve_names"]
     data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
+    if data_frame is None or freq is None or auto_target is None:
+        logger.error(
+            "Cannot compute freq for {}".format(
+                current_speaker_name
+            )
+        )
+        return None, None, None
     auto_target_interp = []
     for curve in curves:
         auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
@@ -358,13 +365,17 @@ def queue_speakers(df_all_speakers, optim_config, be_verbose, is_smoke_test):
             logger.error("no default_measurement for {}".format(current_speaker_name))
             continue
         df_speaker = df_all_speakers[current_speaker_name][default_origin][default]
-        if (
-            "SPL Horizontal_unmelted" not in df_speaker.keys()
-            or "SPL Vertical_unmelted" not in df_speaker.keys()
+        if (not ((
+                    "SPL Horizontal_unmelted" in df_speaker.keys()
+                    and "SPL Vertical_unmelted" in df_speaker.keys())
+                or (
+                    "CEA2034" in df_speaker.keys()
+                    and "Estimated In-Room Response"in df_speaker.keys()
+                ))
         ):
-            logger.error(
-                "no Horizontal or Vertical measurement for {}".format(
-                    current_speaker_name
+            logger.info(
+                "not enough data for {} known measurements are {}".format(
+                    current_speaker_name, df_speaker.keys()
                 )
             )
             continue
@@ -437,10 +448,11 @@ def compute_peqs(ray_ids):
     s_manual = []
     s_auto = []
     for speaker, scores in aggregated_scores.items():
-        s_sn.append("{}".format(speaker))
-        s_ref.append(scores[0])
-        s_manual.append(scores[1])
-        s_auto.append(scores[2])
+        if scores is not None:
+            s_sn.append("{}".format(speaker))
+            s_ref.append(scores[0])
+            s_manual.append(scores[1])
+            s_auto.append(scores[2])
     df_scores = pd.DataFrame(
         {"speaker_name": s_sn, "reference": s_ref, "manual": s_manual, "auto": s_auto}
     )

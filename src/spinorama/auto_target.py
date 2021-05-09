@@ -45,8 +45,18 @@ def get_freq(df_speaker_data, optim_config):
         local_df = df_speaker_data["CEA2034_unmelted"].loc[:, columns]
     else:
         df_tmp = df_speaker_data["CEA2034"]
-        df_pivoted = df_tmp.pivot(*df_tmp).rename_axis(columns=None).reset_index()
-        local_df = df_pivoted.loc[:, columns]
+        try:
+            df_pivoted = df_tmp.pivot(*df_tmp).rename_axis(columns=None).reset_index()
+            local_df = df_pivoted.loc[:, columns]
+        except ValueError:
+            print("debug: {}".format(df_tmp.keys()))
+            print("debug: {}".format(df_tmp))
+            return None, None, None
+        except KeyError:
+            print("debug: columns {}".format(columns))
+            print("debug: {}".format(df_tmp.keys()))
+            print("debug: {}".format(df_tmp))
+            return None, None, None
     # sselector
     selector = get_selector(local_df, optim_config)
     # freq
