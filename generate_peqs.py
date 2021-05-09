@@ -103,7 +103,7 @@ def optim_save_peq(
     be_verbose,
     is_smoke_test,
 ):
-    """Compute and then save PEQ for this speaker """
+    """Compute and then save PEQ for this speaker"""
     eq_dir = "datas/eq/{}".format(current_speaker_name)
     pathlib.Path(eq_dir).mkdir(parents=True, exist_ok=True)
     eq_name = "{}/iir-autoeq.txt".format(eq_dir)
@@ -144,11 +144,7 @@ def optim_save_peq(
     curves = optim_config["curve_names"]
     data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
     if data_frame is None or freq is None or auto_target is None:
-        logger.error(
-            "Cannot compute freq for {}".format(
-                current_speaker_name
-            )
-        )
+        logger.error("Cannot compute freq for {}".format(current_speaker_name))
         return None, None, None
     auto_target_interp = []
     for curve in curves:
@@ -277,7 +273,7 @@ def optim_save_peq(
 
         for i, graph in enumerate(graphs):
             origin = current_speaker_origin
-            if 'Vendors-' in origin:
+            if "Vendors-" in origin:
                 origin = origin[8:]
             graph_filename = "docs/{}/{}/filters{}".format(
                 current_speaker_name, origin, i
@@ -365,13 +361,15 @@ def queue_speakers(df_all_speakers, optim_config, be_verbose, is_smoke_test):
             logger.error("no default_measurement for {}".format(current_speaker_name))
             continue
         df_speaker = df_all_speakers[current_speaker_name][default_origin][default]
-        if (not ((
-                    "SPL Horizontal_unmelted" in df_speaker.keys()
-                    and "SPL Vertical_unmelted" in df_speaker.keys())
-                or (
-                    "CEA2034" in df_speaker.keys()
-                    and "Estimated In-Room Response"in df_speaker.keys()
-                ))
+        if not (
+            (
+                "SPL Horizontal_unmelted" in df_speaker.keys()
+                and "SPL Vertical_unmelted" in df_speaker.keys()
+            )
+            or (
+                "CEA2034" in df_speaker.keys()
+                and "Estimated In-Room Response" in df_speaker.keys()
+            )
         ):
             logger.info(
                 "not enough data for {} known measurements are {}".format(
