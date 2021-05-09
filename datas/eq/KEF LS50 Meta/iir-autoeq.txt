@@ -1,0 +1,26 @@
+EQ for KEF LS50 Meta computed from ASR data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.7
+Dated: 2021-05-07-13:57:02
+
+Preamp: -1.5 dB
+
+Filter  1: ON PK Fc  5159 Hz Gain -1.57 dB Q 1.27
+Filter  2: ON PK Fc 11675 Hz Gain -1.16 dB Q 1.07
+Filter  3: ON PK Fc  2275 Hz Gain +1.52 dB Q 1.84
+Filter  4: ON PK Fc   825 Hz Gain +0.67 dB Q 12.00
+Filter  5: ON PK Fc   969 Hz Gain -0.76 dB Q 7.96
+Filter  6: ON PK Fc  4091 Hz Gain -0.87 dB Q 12.00
+Filter  7: ON PK Fc 11027 Hz Gain +0.73 dB Q 12.00
+Filter  8: ON PK Fc  4857 Hz Gain +0.51 dB Q 8.03
+Filter  9: ON PK Fc   710 Hz Gain -0.59 dB Q 12.00
+Filter 10: ON PK Fc  1375 Hz Gain -0.62 dB Q 11.65
+Filter 11: ON PK Fc  8474 Hz Gain -0.40 dB Q 2.57
+Filter 12: ON PK Fc   457 Hz Gain -0.66 dB Q 6.82
+Filter 13: ON PK Fc   564 Hz Gain +0.58 dB Q 11.75
+Filter 14: ON PK Fc   836 Hz Gain +0.41 dB Q 12.00
+Filter 15: ON PK Fc  1703 Hz Gain +0.68 dB Q 8.06
+Filter 16: ON PK Fc  5646 Hz Gain +0.26 dB Q 12.00
+Filter 17: ON PK Fc   352 Hz Gain -0.45 dB Q 6.89
+Filter 18: ON PK Fc  6951 Hz Gain -0.51 dB Q 12.00
+Filter 19: ON PK Fc  1111 Hz Gain +0.31 dB Q 12.00
+Filter 20: ON PK Fc  1466 Hz Gain -0.34 dB Q 12.00

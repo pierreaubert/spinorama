@@ -1,0 +1,26 @@
+EQ for JBL Synthesis SAM1HF + SAM2LF computed from ASR data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-05-09-07:16:39
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc  6797 Hz Gain +2.65 dB Q 1.32
+Filter  2: ON PK Fc  5955 Hz Gain -1.87 dB Q 7.44
+Filter  3: ON PK Fc  1169 Hz Gain +1.02 dB Q 1.88
+Filter  4: ON PK Fc  7369 Hz Gain -1.52 dB Q 12.00
+Filter  5: ON PK Fc  9306 Hz Gain -1.41 dB Q 12.00
+Filter  6: ON PK Fc 12298 Hz Gain +1.15 dB Q 2.62
+Filter  7: ON PK Fc  6599 Hz Gain +1.00 dB Q 12.00
+Filter  8: ON PK Fc  9944 Hz Gain -0.76 dB Q 12.00
+Filter  9: ON PK Fc  5149 Hz Gain -0.54 dB Q 12.00
+Filter 10: ON PK Fc  3599 Hz Gain +0.99 dB Q 8.46
+Filter 11: ON PK Fc   575 Hz Gain +0.41 dB Q 9.98
+Filter 12: ON PK Fc   775 Hz Gain -0.87 dB Q 12.00
+Filter 13: ON PK Fc  2325 Hz Gain -0.55 dB Q 12.00
+Filter 14: ON PK Fc  4571 Hz Gain +0.56 dB Q 12.00
+Filter 15: ON PK Fc  2661 Hz Gain +0.24 dB Q 12.00
+Filter 16: ON PK Fc  1240 Hz Gain -0.20 dB Q 12.00
+Filter 17: ON PK Fc  8098 Hz Gain +0.63 dB Q 12.00
+Filter 18: ON PK Fc   362 Hz Gain +0.42 dB Q 12.00
+Filter 19: ON PK Fc  1043 Hz Gain +0.38 dB Q 11.18
+Filter 20: ON PK Fc  6349 Hz Gain -0.24 dB Q 2.32

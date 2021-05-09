@@ -1,0 +1,26 @@
+EQ for Google Nest Audio computed from ASR data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-05-09-07:16:07
+
+Preamp: -2.5 dB
+
+Filter  1: ON PK Fc  4935 Hz Gain -2.16 dB Q 0.76
+Filter  2: ON PK Fc  2578 Hz Gain +1.42 dB Q 6.93
+Filter  3: ON PK Fc 12001 Hz Gain -2.88 dB Q 6.42
+Filter  4: ON PK Fc  9069 Hz Gain +3.45 dB Q 11.08
+Filter  5: ON PK Fc  1176 Hz Gain -0.90 dB Q 1.18
+Filter  6: ON PK Fc   992 Hz Gain +1.23 dB Q 12.00
+Filter  7: ON PK Fc 10205 Hz Gain -1.36 dB Q 12.00
+Filter  8: ON PK Fc  4051 Hz Gain -0.54 dB Q 12.00
+Filter  9: ON PK Fc  2334 Hz Gain +0.49 dB Q 5.97
+Filter 10: ON PK Fc  6182 Hz Gain -0.66 dB Q 12.00
+Filter 11: ON PK Fc  7481 Hz Gain -0.61 dB Q 12.00
+Filter 12: ON PK Fc  8277 Hz Gain +0.80 dB Q 12.00
+Filter 13: ON PK Fc  5312 Hz Gain +0.85 dB Q 8.31
+Filter 14: ON PK Fc  6787 Hz Gain +0.45 dB Q 12.00
+Filter 15: ON PK Fc  6155 Hz Gain -0.39 dB Q 10.22
+Filter 16: ON PK Fc  7572 Hz Gain -0.34 dB Q 12.00
+Filter 17: ON PK Fc   771 Hz Gain -0.42 dB Q 3.00
+Filter 18: ON PK Fc   331 Hz Gain -0.26 dB Q 12.00
+Filter 19: ON PK Fc 12674 Hz Gain -0.53 dB Q 12.00
+Filter 20: ON PK Fc 11228 Hz Gain -0.46 dB Q 12.00

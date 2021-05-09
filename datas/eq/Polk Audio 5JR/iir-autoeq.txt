@@ -1,0 +1,8 @@
+EQ for Polk Audio 5JR computed from ASR data
+Preference Score -10.0 with EQ -10.0
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-05-08-14:57:53
+
+Preamp: -4.2 dB
+
+Filter  1: ON PK Fc  1043 Hz Gain +3.97 dB Q 0.96
