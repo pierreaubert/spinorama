@@ -171,17 +171,13 @@ def spin_compute_di_eir(speaker_name, title, spin_uneven):
     if spin is None:
         logger.error("spin is None")
         return None
-    
+
     # compute EIR
     on = spin.loc[spin["Measurements"] == "On Axis"].reset_index(drop=True)
-    lw = spin.loc[spin["Measurements"] == "Listening Window"].reset_index(
-        drop=True
-    )
-    er = spin.loc[spin["Measurements"] == "Early Reflections"].reset_index(
-        drop=True
-    )
+    lw = spin.loc[spin["Measurements"] == "Listening Window"].reset_index(drop=True)
+    er = spin.loc[spin["Measurements"] == "Early Reflections"].reset_index(drop=True)
     sp = spin.loc[spin["Measurements"] == "Sound Power"].reset_index(drop=True)
-    
+
     # check DI index
     if 0 not in (lw.shape[0], sp.shape[0]):
         sp_di_computed = lw.dB - sp.dB
@@ -215,9 +211,9 @@ def spin_compute_di_eir(speaker_name, title, spin_uneven):
 
     if 0 not in (lw.shape[0], er.shape[0]):
         er_di_computed = lw.dB - er.dB
-        er_di = spin.loc[
-            spin["Measurements"] == "Early Reflections DI"
-        ].reset_index(drop=True)
+        er_di = spin.loc[spin["Measurements"] == "Early Reflections DI"].reset_index(
+            drop=True
+        )
         if er_di.shape[0] == 0:
             logger.debug("No Early Reflections DI curve!")
             df2 = pd.DataFrame(
@@ -230,12 +226,8 @@ def spin_compute_di_eir(speaker_name, title, spin_uneven):
             spin = spin.append(df2).reset_index(drop=True)
         else:
             delta = np.mean(er_di) - np.mean(er_di_computed)
-            logger.debug(
-                "Early Reflections DI curve: removing {0}".format(delta)
-            )
-            spin.loc[
-                spin["Measurements"] == "Early Reflections DI", "dB"
-            ] -= delta
+            logger.debug("Early Reflections DI curve: removing {0}".format(delta))
+            spin.loc[spin["Measurements"] == "Early Reflections DI", "dB"] -= delta
 
         # er_di = spin.loc[spin['Measurements'] == 'Early Reflections DI'].reset_index(drop=True)
         logger.debug(
@@ -247,16 +239,12 @@ def spin_compute_di_eir(speaker_name, title, spin_uneven):
     else:
         logger.debug("Shape LW={0} ER={1}".format(lw.shape, er.shape))
 
-    di_offset = spin.loc[spin["Measurements"] == "DI offset"].reset_index(
-        drop=True
-    )
+    di_offset = spin.loc[spin["Measurements"] == "DI offset"].reset_index(drop=True)
     if di_offset.shape[0] == 0:
         logger.debug("No DI offset curve!")
-        df2 = pd.DataFrame(
-            {"Freq": on.Freq, "dB": 0, "Measurements": "DI offset"}
-        )
+        df2 = pd.DataFrame({"Freq": on.Freq, "dB": 0, "Measurements": "DI offset"})
         spin = spin.append(df2).reset_index(drop=True)
-        
+
     logger.debug(
         "Shape ON {0} LW {1} ER {2} SP {3}".format(
             on.shape, lw.shape, er.shape, sp.shape
@@ -268,10 +256,8 @@ def spin_compute_di_eir(speaker_name, title, spin_uneven):
         # print(eir)
         dfs["Estimated In-Room Response"] = graph_melt(eir)
     else:
-        logger.debug(
-            "Shape LW={0} ER={1} SP={2}".format(lw.shape, er.shape, sp.shape)
-        )
-        
+        logger.debug("Shape LW={0} ER={1} SP={2}".format(lw.shape, er.shape, sp.shape))
+
     # add spin (at the end because we could have modified DI curves
     dfs[title] = spin
 
@@ -279,4 +265,3 @@ def spin_compute_di_eir(speaker_name, title, spin_uneven):
         logger.error("On Axis has NaN values")
 
     return dfs
-
