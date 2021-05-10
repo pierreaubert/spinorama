@@ -37,7 +37,7 @@ except ModuleNotFoundError:
 
 
 def get_custom_logger(duplicate=False):
-    """"define properties of our logger"""
+    """ "define properties of our logger"""
     custom = logging.getLogger("spinorama")
     custom_file_handler = logging.FileHandler("debug_optim.log")
     formatter = logging.Formatter(
@@ -53,7 +53,7 @@ def get_custom_logger(duplicate=False):
 
 
 def args2level(args):
-    """"transform an argument into a logger level"""
+    """ "transform an argument into a logger level"""
     level = logging.WARNING
     if args["--log-level"] is not None:
         check_level = args["--log-level"]
