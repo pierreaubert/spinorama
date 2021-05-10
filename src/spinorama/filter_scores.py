@@ -40,19 +40,22 @@ def noscore_apply_filter(df_speaker, peq):
             ).reset_index()
             # modify all curve but should not touch DI
             spin_filtered = peq_apply_measurements(pivoted_spin, peq)
-            # not modified
-            spin_filtered["Early Reflections DI"] = pivoted_spin["Early Reflections DI"]
-            spin_filtered["Sound Power DI"] = pivoted_spin["Sound Power DI"]
-            spin_filtered["DI offset"] = pivoted_spin["DI offset"]
+            # not modified by eq
+            for curve in ("Early Reflections DI", "Sound Power DI", "DI offset"):
+                if curve in pivoted_spin.keys():
+                    spin_filtered[curve] = pivoted_spin[curve]
         except ValueError:
             print("debug: {}".format(spin.keys()))
+            return None, None
 
     if "Estimated In-Room Response" in df_speaker.keys():
         pir = df_speaker["Estimated In-Room Response"]
         pivoted_pir = pir.pivot(*pir).rename_axis(columns=None).reset_index()
         pir_filtered = peq_apply_measurements(pivoted_pir, peq)
 
-    return graph_melt(spin_filtered), graph_melt(pir_filtered)
+    if spin_filtered is not None and pir_filtered is not None:
+        return graph_melt(spin_filtered), graph_melt(pir_filtered)
+    return None, None
 
 
 def scores_graph(spin, spin_filtered, params):

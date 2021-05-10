@@ -14,9 +14,10 @@ from .graph_contour import (
 from .graph_isobands import find_isobands
 from . import graph_radar as radar
 
+logger = logging.getLogger("spinorama")
+
 
 alt.data_transformers.disable_max_rows()
-logger = logging.getLogger("spinorama")
 
 nearest = alt.selection(
     type="single", nearest=True, on="mouseover", fields=["Freq"], empty="none"

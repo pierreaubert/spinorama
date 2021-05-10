@@ -41,7 +41,7 @@ def get_custom_logger(duplicate=False):
     custom = logging.getLogger("spinorama")
     custom_file_handler = logging.FileHandler("debug_optim.log")
     formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        "%(asctime)s - %(filename)s:%(funcName)s:%(lineno)d - %(levelname)s - %(message)s"
     )
     custom_file_handler.setFormatter(formatter)
     custom.addHandler(custom_file_handler)

@@ -18,5 +18,3 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
-
-logger = logging.getLogger("spinorama")

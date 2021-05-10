@@ -173,7 +173,7 @@ def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict]) -> dict:
     return ray_ids
 
 
-def compute(ray_ids: dict):
+def compute(speakerlist, ray_ids: dict):
     """Compute a series of measurements"""
     df = {}
     done_ids = {}
@@ -342,7 +342,7 @@ if __name__ == "__main__":
             filters[ifilter] = args[flag]
 
     ray_ids = queue_speakers(speakerlist, filters)
-    df_new = compute(ray_ids)
+    df_new = compute(speakerlist, ray_ids)
 
     if len(filters.keys()) == 0:
         cache_save(df_new)

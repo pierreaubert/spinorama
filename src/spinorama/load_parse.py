@@ -17,6 +17,7 @@ from .load_rewstextdump import parse_graphs_speaker_rewstextdump
 from .load_rewseq import parse_eq_iir_rews
 from .load_splHVtxt import parse_graphs_speaker_splHVtxt
 from .filter_peq import peq_apply_measurements
+from .filter_scores import noscore_apply_filter
 
 
 logger = logging.getLogger("spinorama")
@@ -42,6 +43,22 @@ def parse_eq_speaker(speaker_path: str, speaker_name: str, df_ref: dict) -> dict
             # original_mean = df_ref.get('CEA2034_original_mean', None)
             # return load_normalize(df_eq, original_mean)
             return df_eq
+        elif "CEA2034" in df_ref.keys():
+            spin_eq, eir_eq = noscore_apply_filter(df_ref, iir)
+            if spin_eq is None or eir_eq is None:
+                logger.debug(
+                    "Computation of spin and eir with EQ failed for {} {}".format(
+                        speaker_path, speaker_name
+                    )
+                )
+                return None
+
+            df_eq = {
+                "CEA2034": spin_eq,
+                "Estimated In-Room Response": eir_eq,
+            }
+            return df_eq
+
     logger.debug("no EQ for {}/eq/{}".format(speaker_path, speaker_name))
     return None
 
