@@ -666,6 +666,23 @@ speakers_info = {
             },
         },
     },
+    "Dayton Audio MK402X": {
+        "brand": "Dayton Audio",
+        "model": "MK402X",
+        "type": "passive",
+        "price": "70",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/dayton-mk402x-review-bookshelf-speaker.23249/",
+                "review_published": "20210510",
+            },
+        },
+    },
     "Dayton Audio MK442": {
         "brand": "Dayton Audio",
         "model": "MK442",
