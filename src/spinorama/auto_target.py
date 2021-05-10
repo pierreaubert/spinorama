@@ -46,8 +46,10 @@ def get_freq(df_speaker_data, optim_config):
     else:
         df_tmp = df_speaker_data["CEA2034"]
         try:
-            #df_pivoted = df_tmp.pivot(*df_tmp).rename_axis(columns=None).reset_index()
-            df_pivoted = df_tmp.pivot_table(index='Freq', columns='Measurements', values='dB', aggfunc=max).reset_index()
+            # df_pivoted = df_tmp.pivot(*df_tmp).rename_axis(columns=None).reset_index()
+            df_pivoted = df_tmp.pivot_table(
+                index="Freq", columns="Measurements", values="dB", aggfunc=max
+            ).reset_index()
             local_df = df_pivoted.loc[:, columns]
         except ValueError as ve:
             print("debug: {} {}".format(df_tmp.keys(), ve))

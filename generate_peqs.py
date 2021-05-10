@@ -458,7 +458,7 @@ def compute_peqs(ray_ids):
     )
     df_results.to_csv("results_iter.csv", index=False)
 
-    if scores is not None and len(scores)==3:
+    if scores is not None and len(scores) == 3:
         s_sn = []
         s_ref = []
         s_manual = []
@@ -469,7 +469,12 @@ def compute_peqs(ray_ids):
             s_manual.append(scores[1])
             s_auto.append(scores[2])
             df_scores = pd.DataFrame(
-                {"speaker_name": s_sn, "reference": s_ref, "manual": s_manual, "auto": s_auto}
+                {
+                    "speaker_name": s_sn,
+                    "reference": s_ref,
+                    "manual": s_manual,
+                    "auto": s_auto,
+                }
             )
             df_scores.to_csv("results_scores.csv", index=False)
 

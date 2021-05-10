@@ -47,7 +47,9 @@ def parse_graphs_speaker_rewstextdump(
         spin = pd.DataFrame({"Freq": freqs, "dB": spls, "Measurements": msrts})
         dfs = spin_compute_di_eir(speaker_name, "CEA2034", spin)
         spin_check = dfs["CEA2034"]
-        spin_pivot = spin_check.pivot(*spin_check).rename_axis(columns=None).reset_index()
+        spin_pivot = (
+            spin_check.pivot(*spin_check).rename_axis(columns=None).reset_index()
+        )
         dfs["CEA2034_unmelted"] = spin_pivot
     except FileNotFoundError:
         logger.error("Speaker: {0} Not found: {1}".format(speaker_brand, speaker_name))

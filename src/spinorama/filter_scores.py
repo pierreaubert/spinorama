@@ -35,7 +35,9 @@ def noscore_apply_filter(df_speaker, peq):
     if "CEA2034" in df_speaker.keys():
         spin = df_speaker["CEA2034"]
         try:
-            pivoted_spin = spin.pivot_table(index='Freq', columns='Measurements', values='dB', aggfunc=max).reset_index()
+            pivoted_spin = spin.pivot_table(
+                index="Freq", columns="Measurements", values="dB", aggfunc=max
+            ).reset_index()
             # modify all curve but should not touch DI
             spin_filtered = peq_apply_measurements(pivoted_spin, peq)
             # not modified
