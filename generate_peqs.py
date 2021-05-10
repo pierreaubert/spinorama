@@ -133,6 +133,12 @@ def optim_save_peq(
     ):
         use_score = False
 
+    if current_speaker_origin == "Princeton":
+        # we have SPL H and V but they are only above 500Hz so score computation fails.
+        use_score = False
+        # set EQ min to 500
+        optim_config["freq_reg_min"] = max(500, optim_config["freq_reg_min"])
+
     # compute pref score from speaker if possible
     score = None
     if use_score:
@@ -144,11 +150,7 @@ def optim_save_peq(
     curves = optim_config["curve_names"]
     data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
     if data_frame is None or freq is None or auto_target is None:
-        logger.error(
-            "Cannot compute freq for {}".format(
-                current_speaker_name
-            )
-        )
+        logger.error("Cannot compute freq for {}".format(current_speaker_name))
         return None, None, None
     auto_target_interp = []
     for curve in curves:
@@ -277,7 +279,7 @@ def optim_save_peq(
 
         for i, graph in enumerate(graphs):
             origin = current_speaker_origin
-            if 'Vendors-' in origin:
+            if "Vendors-" in origin:
                 origin = origin[8:]
             graph_filename = "docs/{}/{}/filters{}".format(
                 current_speaker_name, origin, i
@@ -317,38 +319,48 @@ def optim_save_peq(
                 current_speaker_name
             )
         )
-        if "nbd_on_axis" in score_manual:
-            logger.info(scores_print2(score, score_manual, score_auto))
-        else:
-            logger.info(scores_print(score, score_auto))
+        if score is not None:
+            if (
+                score_manual is not None
+                and score_auto is not None
+                and "nbd_on_axis" in score_manual
+            ):
+                logger.info(scores_print2(score, score_manual, score_auto))
+            elif score_auto is not None and "nbd_on_axis" in score_auto:
+                logger.info(scores_print(score, score_auto))
         logger.info(
             "----------------------------------------------------------------------"
         )
-        if "pref_score" in score_manual:
-            print(
-                "{:+2.2f} {:+2.2f} {:+2.2f} {:+2.2f} {:s}".format(
-                    score["pref_score"],
-                    score_manual["pref_score"],
-                    score_auto["pref_score"],
-                    score_manual["pref_score"] - score_auto["pref_score"],
-                    current_speaker_name,
+        if use_score:
+            if "pref_score" in score_manual:
+                print(
+                    "{:+2.2f} {:+2.2f} {:+2.2f} {:+2.2f} {:s}".format(
+                        score["pref_score"],
+                        score_manual["pref_score"],
+                        score_auto["pref_score"],
+                        score_manual["pref_score"] - score_auto["pref_score"],
+                        current_speaker_name,
+                    )
                 )
-            )
-        else:
-            print(
-                "{:+2.2f} {:+2.2f} {:s}".format(
-                    score["pref_score"],
-                    score_auto["pref_score"],
-                    current_speaker_name,
+            else:
+                print(
+                    "{:+2.2f} {:+2.2f} {:s}".format(
+                        score["pref_score"],
+                        score_auto["pref_score"],
+                        current_speaker_name,
+                    )
                 )
-            )
 
     return current_speaker_name, auto_results, scores
 
 
-def queue_speakers(df_all_speakers, optim_config, be_verbose, is_smoke_test):
+def queue_speakers(
+    df_all_speakers, optim_config, be_verbose, is_smoke_test, speaker_name
+):
     ray_ids = {}
     for current_speaker_name in df_all_speakers.keys():
+        if speaker_name is not None and current_speaker_name != speaker_name:
+            continue
         default = None
         default_eq = None
         default_origin = None
@@ -365,13 +377,15 @@ def queue_speakers(df_all_speakers, optim_config, be_verbose, is_smoke_test):
             logger.error("no default_measurement for {}".format(current_speaker_name))
             continue
         df_speaker = df_all_speakers[current_speaker_name][default_origin][default]
-        if (not ((
-                    "SPL Horizontal_unmelted" in df_speaker.keys()
-                    and "SPL Vertical_unmelted" in df_speaker.keys())
-                or (
-                    "CEA2034" in df_speaker.keys()
-                    and "Estimated In-Room Response"in df_speaker.keys()
-                ))
+        if not (
+            (
+                "SPL Horizontal_unmelted" in df_speaker.keys()
+                and "SPL Vertical_unmelted" in df_speaker.keys()
+            )
+            or (
+                "CEA2034" in df_speaker.keys()
+                and "Estimated In-Room Response" in df_speaker.keys()
+            )
         ):
             logger.info(
                 "not enough data for {} known measurements are {}".format(
@@ -404,6 +418,7 @@ def compute_peqs(ray_ids):
     done_ids = set()
     aggregated_results = {}
     aggregated_scores = {}
+    scores = None
     while 1:
         ids = [
             current_id for current_id in ray_ids.values() if current_id not in done_ids
@@ -443,20 +458,20 @@ def compute_peqs(ray_ids):
     )
     df_results.to_csv("results_iter.csv", index=False)
 
-    s_sn = []
-    s_ref = []
-    s_manual = []
-    s_auto = []
-    for speaker, scores in aggregated_scores.items():
-        if scores is not None:
+    if scores is not None and len(scores)==3:
+        s_sn = []
+        s_ref = []
+        s_manual = []
+        s_auto = []
+        for speaker, scores in aggregated_scores.items():
             s_sn.append("{}".format(speaker))
             s_ref.append(scores[0])
             s_manual.append(scores[1])
             s_auto.append(scores[2])
-    df_scores = pd.DataFrame(
-        {"speaker_name": s_sn, "reference": s_ref, "manual": s_manual, "auto": s_auto}
-    )
-    df_scores.to_csv("results_scores.csv", index=False)
+            df_scores = pd.DataFrame(
+                {"speaker_name": s_sn, "reference": s_ref, "manual": s_manual, "auto": s_auto}
+            )
+            df_scores.to_csv("results_scores.csv", index=False)
 
     return 0
 
@@ -611,75 +626,9 @@ if __name__ == "__main__":
     # start ray
     custom_ray_init(args)
 
-    # select all speakers
-    if speaker_name is None:
-        ids = queue_speakers(df_all_speakers, current_optim_config, verbose, smoke_test)
-        compute_peqs(ids)
-    else:
-        logger.debug("Prep speaker {}".format(speaker_name))
-        if speaker_name not in df_all_speakers.keys():
-            logger.error("{} is not known!".format(speaker_name))
-            sys.exit(1)
-        if speaker_name not in metadata.keys():
-            logger.error("{} is not in metadata!".format(speaker_name))
-            sys.exit(1)
-        speaker_default = metadata[speaker_name]["default_measurement"]
-        speaker_origin = metadata[speaker_name]["measurements"][speaker_default][
-            "origin"
-        ]
-        df_speaker = df_all_speakers[speaker_name][speaker_origin][speaker_default]
-        # print(speaker_name, speaker_default, speaker_origin)
-        if speaker_default == "vendor":
-            # print(speaker_name, speaker_origin, speaker_default, list(df_all_speakers[speaker_name][speaker_origin].keys()))
-            if (
-                "CEA2034" not in df_speaker.keys()
-                or "Estimated In-Room Response" not in df_speaker.keys()
-            ):
-                logger.warning(
-                    "Speaker {} doesn't have CEA2034 and PIR curves".format(
-                        speaker_name
-                    )
-                )
-                sys.exit(1)
-            keys = set(df_speaker["CEA2034"]["Measurements"].values)
-            number_curves = len(current_optim_config["curve_names"])
-            # print(current_optim_config["curve_names"], keys)
-            intersection = keys.intersection(set(current_optim_config["curve_names"]))
-            if len(intersection) == 0:
-                logger.warning(
-                    "Speaker {} doesn't have enough data matching targets".format(
-                        speaker_name
-                    )
-                )
-                sys.exit(1)
-            elif len(intersection) != number_curves:
-                logger.warning(
-                    "Speaker {} doesn't have some data {}; final targets are {}".format(
-                        speaker_name, "", intersection
-                    )
-                )
-                current_optim_config["curve_names"] = intersection
-        df_speaker_eq = None
-        key_eq = "{}_eq".format(speaker_default)
-        if key_eq in df_all_speakers[speaker_name][speaker_origin].keys():
-            df_speaker_eq = df_all_speakers[speaker_name][speaker_origin][key_eq]
-        # compute
-        logger.debug("{}[{}] {}".format(speaker_name, speaker_origin, speaker_default))
-        current_id = optim_save_peq.remote(
-            speaker_name,
-            speaker_origin,
-            df_speaker,
-            df_speaker_eq,
-            current_optim_config,
-            verbose,
-            smoke_test,
-        )
-        while 1:
-            ready_ids, remaining_ids = ray.wait([current_id], num_returns=1)
-            if len(ready_ids) == 1:
-                _, _, _ = ray.get(ready_ids[0])
-                break
-            if len(remaining_ids) == 0:
-                break
+    ids = queue_speakers(
+        df_all_speakers, current_optim_config, verbose, smoke_test, speaker_name
+    )
+    compute_peqs(ids)
 
     sys.exit(0)

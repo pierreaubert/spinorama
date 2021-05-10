@@ -48,14 +48,12 @@ def get_freq(df_speaker_data, optim_config):
         try:
             df_pivoted = df_tmp.pivot(*df_tmp).rename_axis(columns=None).reset_index()
             local_df = df_pivoted.loc[:, columns]
-        except ValueError:
-            print("debug: {}".format(df_tmp.keys()))
-            print("debug: {}".format(df_tmp))
+        except ValueError as ve:
+            print("debug: {} {}".format(df_tmp.keys(), ve))
             return None, None, None
-        except KeyError:
-            print("debug: columns {}".format(columns))
+        except KeyError as ke:
+            print("debug: columns {} {}".format(columns, ke))
             print("debug: {}".format(df_tmp.keys()))
-            print("debug: {}".format(df_tmp))
             return None, None, None
     # sselector
     selector = get_selector(local_df, optim_config)

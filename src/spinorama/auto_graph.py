@@ -135,6 +135,22 @@ def graph_results(
     optim_config,
 ):
 
+    # ~ default
+    g_params = {
+        "xmin": 20,
+        "xmax": 20000,
+        "ymin": -40,
+        "ymax": 10,
+        "width": 400,
+        "height": 250,
+    }
+    g_params["width"] = 800
+    g_params["height"] = 400
+
+    # generate an empty graph
+    empty_data = pd.DataFrame({"Freq": spin.Freq.values, "dB": 0, "Measurements": ""})
+    empty_graph = graph_freq(empty_data, g_params)
+
     # what's the min over freq?
     reg_min = optim_config["freq_reg_min"]
     reg_max = optim_config["freq_reg_max"]
@@ -184,16 +200,6 @@ def graph_results(
         )
 
     # show the 3 spinoramas
-    g_params = {
-        "xmin": 20,
-        "xmax": 20000,
-        "ymin": -40,
-        "ymax": 10,
-        "width": 400,
-        "height": 250,
-    }
-    g_params["width"] = 800
-    g_params["height"] = 400
     g_spin_asr = graph_spinorama(spin, g_params).properties(
         title="{} from ASR".format(speaker_name)
     )
@@ -201,7 +207,7 @@ def graph_results(
         g_spin_manual = graph_spinorama(spin_manual, g_params).properties(
             title="{} ASR + manual EQ".format(speaker_name)
         )
-    g_spin_auto = None
+    g_spin_auto = empty_graph
     if spin_auto is not None:
         g_spin_auto = graph_spinorama(spin_auto, g_params).properties(
             title="{} ASR + auto EQ".format(speaker_name)
@@ -221,9 +227,11 @@ def graph_results(
             data_manual = pir_manual
         data_auto = pir_auto
 
-    g_pir_reg = graph_regression(
-        data_auto.loc[(data_auto.Measurements == which_curve)], 100, reg_max
-    )
+    g_pir_reg = empty_graph
+    if data_auto is not None:
+        g_pir_reg = graph_regression(
+            data_auto.loc[(data_auto.Measurements == which_curve)], 100, reg_max
+        )
 
     g_pir_asr = (
         (graph_freq(data.loc[(data.Measurements == which_curve)], g_params) + g_pir_reg)
@@ -232,6 +240,7 @@ def graph_results(
         .resolve_legend(shape="independent")
     )
 
+    g_pir_manual = empty_graph
     if manual_peq is not None:
         g_pir_manual = (
             (
@@ -247,17 +256,21 @@ def graph_results(
             .resolve_legend(shape="independent")
         )
 
-    g_pir_auto = (
-        (
-            graph_freq(data_auto.loc[(data_auto.Measurements == which_curve)], g_params)
-            + g_pir_reg
+    g_pir_auto = empty_graph
+    if data_auto is not None:
+        g_pir_auto = (
+            (
+                graph_freq(
+                    data_auto.loc[(data_auto.Measurements == which_curve)], g_params
+                )
+                + g_pir_reg
+            )
+            .properties(
+                title="{} from ASR [{}] + auto EQ".format(speaker_name, which_curve)
+            )
+            .resolve_scale(color="independent")
+            .resolve_legend(shape="independent")
         )
-        .properties(
-            title="{} from ASR [{}] + auto EQ".format(speaker_name, which_curve)
-        )
-        .resolve_scale(color="independent")
-        .resolve_legend(shape="independent")
-    )
 
     # add all graphs and print it
     if manual_peq is not None:

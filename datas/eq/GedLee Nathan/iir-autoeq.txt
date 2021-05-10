@@ -1,8 +1,26 @@
 EQ for GedLee Nathan computed from ASR data
-Preference Score -10.0 with EQ -10.0
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.7
-Dated: 2021-05-08-14:53:33
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-05-10-08:04:00
 
-Preamp: -0.2 dB
+Preamp: -0.3 dB
 
 Filter  1: ON PK Fc 16000 Hz Gain -3.62 dB Q 0.10
+Filter  2: ON PK Fc 11953 Hz Gain +1.49 dB Q 0.89
+Filter  3: ON PK Fc 16000 Hz Gain -2.51 dB Q 6.44
+Filter  4: ON PK Fc 14290 Hz Gain -1.54 dB Q 12.00
+Filter  5: ON PK Fc 15059 Hz Gain +1.15 dB Q 12.00
+Filter  6: ON PK Fc   694 Hz Gain -3.03 dB Q 0.91
+Filter  7: ON PK Fc  9616 Hz Gain +2.23 dB Q 12.00
+Filter  8: ON PK Fc  2873 Hz Gain -1.21 dB Q 2.75
+Filter  9: ON PK Fc  5835 Hz Gain +1.58 dB Q 5.14
+Filter 10: ON PK Fc  3645 Hz Gain -0.90 dB Q 8.53
+Filter 11: ON PK Fc  8273 Hz Gain +1.29 dB Q 12.00
+Filter 12: ON PK Fc  9941 Hz Gain -0.89 dB Q 10.98
+Filter 13: ON PK Fc  1492 Hz Gain +1.51 dB Q 5.40
+Filter 14: ON PK Fc  7643 Hz Gain -0.70 dB Q 11.95
+Filter 15: ON PK Fc  9356 Hz Gain -0.69 dB Q 12.00
+Filter 16: ON PK Fc  9701 Hz Gain +1.14 dB Q 12.00
+Filter 17: ON PK Fc 14481 Hz Gain -0.76 dB Q 12.00
+Filter 18: ON PK Fc 12413 Hz Gain +0.63 dB Q 12.00
+Filter 19: ON PK Fc 14938 Hz Gain +0.55 dB Q 12.00
+Filter 20: ON PK Fc   674 Hz Gain +3.60 dB Q 12.00
