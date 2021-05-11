@@ -207,7 +207,7 @@ def optim_save_peq(
 
     # print peq
     comments = [
-        "EQ for {:s} computed from ASR data".format(current_speaker_name),
+        "EQ for {:s} computed from {} data".format(current_speaker_name, current_speaker_origin),
     ]
     if use_score:
         comments.append(
