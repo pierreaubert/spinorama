@@ -9,7 +9,7 @@
 This library provides an easy way to view, compare or analyse speakers data. This can help you take informed
 decision when buying a speaker instead of relying on commercial information or internet buzz.
 
-## Jump to the [gallery](https://pierreaubert.github.com/spinorama) of all (200+) speakers measurements.
+## Jump to the [gallery](https://pierreaubert.github.com/spinorama) of all (300+) speakers measurements.
 
 # What is a spinorama set of graphs?
 
@@ -31,6 +31,14 @@ Please read:
   to get a better insight on how to analyse a spinorama.
 - or this [post on Audioholics](https://www.audioholics.com/loudspeaker-design/understanding-loudspeaker-measurements) by [James Larson](https://www.audioholics.com/authors/james-larson)
 - this [Objective Loudspeaker Measurements to Predict Subjective Preferences?](https://www.audioholics.com/loudspeaker-design/measure-loudspeaker-performance) from [Dr. Floyd Toole](https://www.linkedin.com/in/floydtoole/) and [Gene DellaSala](https://www.audioholics.com/authors/gene-dellasala) on Audioholics too.
+
+Or if you prefer videos, there is a nice set from [ErinsAudioCorner](https://www.youtube.com/channel/UCW_IqM21u0J-zsKtCq4Gj2w):
+
+1. [What Is Frequency Response? || Understanding the Measurements Part 1](https://www.youtube.com/watch?v=dltza-EGtCg)
+2. [Off-Axis vs On-Axis Response || Understanding the Measurements Part 2](https://www.youtube.com/watch?v=j_-b6A1xJaw)
+3. [What the heck is SPINORAMA?! || Understanding the Measurements Part 3](https://www.youtube.com/watch?v=b3hYn02uBog)
+4. [Predicting Loudspeaker Performance In YOUR Room || Understanding the Measurements Part 4](https://www.youtube.com/watch?v=qmBit3GWSWE)
+5. [Loudspeaker Compression || Understanding the Measurements Part 5](https://www.youtube.com/watch?v=6YY71Wqv2u0&t=2s)
 
 # Features
 
