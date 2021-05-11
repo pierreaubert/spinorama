@@ -52,7 +52,7 @@ speakers_info = {
     "Adam T7V": {
         "brand": "Adam",
         "model": "T7V",
-        "type": "passive",
+        "type": "active",
         "price": "400",
         "amount": "pair",
         "shape": "bookshelves",
@@ -448,17 +448,26 @@ speakers_info = {
             "eac-noeq": {
                 "origin": "ErinsAudioCorner",
                 "format": "splHVtxt",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/bose_901_series_v/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/bose_901_series_v/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bose-901-series-v-speaker-review.14865/",
+                },
             },
             "eac-eq-neutral": {
                 "origin": "ErinsAudioCorner",
                 "format": "splHVtxt",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/bose_901_series_v/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/bose_901_series_v/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bose-901-series-v-speaker-review.14865/",
+                },
             },
             "eac-eq-v3": {
                 "origin": "ErinsAudioCorner",
                 "format": "splHVtxt",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/bose_901_series_v/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/bose_901_series_v/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bose-901-series-v-speaker-review.14865/",
+                },
             },
         },
     },
@@ -829,7 +838,10 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "splHVtxt",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/philharmonic_bmr/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/philharmonic_bmr/",
+                    "asr": " https://www.audiosciencereview.com/forum/index.php?threads/philharmonic-bmr-speaker-review.14781/",
+                },
             },
             "misc-audioholics": {
                 "origin": "Misc",
@@ -858,9 +870,9 @@ speakers_info = {
     "Devialet Phantom Reactor 900": {
         "brand": "Devialet",
         "model": "Phantom Reactor 900",
-        "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "type": "active",
+        "price": "1200",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-napilopez",
         "measurements": {
@@ -1158,8 +1170,8 @@ speakers_info = {
     "Fluance Ai60": {
         "brand": "Fluance",
         "model": "Ai60",
-        "type": "passive",
-        "price": "",
+        "type": "active",
+        "price": "300",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "misc-napilopez",
@@ -1486,8 +1498,8 @@ speakers_info = {
     "Google Nest Audio": {
         "brand": "Google",
         "model": "Nest Audio",
-        "type": "passive",
-        "price": "",
+        "type": "active",
+        "price": "90",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "misc-napilopez",
@@ -1508,7 +1520,8 @@ speakers_info = {
         "model": "M1",
         "shape": "bookshelves",
         "type": "active",
-        "price": "",
+        "price": "5900",
+        "amount": "pair",
         "default_measurement": "vendor-v2-202009-monopole",
         "measurements": {
             "vendor-v2-202009-monopole": {
@@ -1516,6 +1529,10 @@ speakers_info = {
                 "format": "webplotdigitizer",
                 "website": "https://ggntkt.de/en/model-m1",
                 "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ggntkt-model-m1.12959/",
+                    "ggntkt": "https://ggntkt.de/model-m1/technische-daten/",
+                },
             },
             "vendor-v1-202008": {
                 "origin": "Vendors-GGNTKT",
@@ -1907,7 +1924,10 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "webplotdigitizer",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/jamo_s807/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jamo_s807/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jamo-s807-floorstanding-speakers-review.14314/",
+                },
                 "review_published": "20200622",
             },
         },
@@ -2045,7 +2065,7 @@ speakers_info = {
     "JBL LSR308": {
         "brand": "JBL",
         "model": "LSR308",
-        "type": "passive",
+        "type": "active",
         "price": "",
         "amount": "pair",
         "shape": "bookshelves",
@@ -2062,7 +2082,7 @@ speakers_info = {
     "JBL LSR305": {
         "brand": "JBL",
         "model": "LSR305",
-        "type": "passive",
+        "type": "active",
         "price": "",
         "amount": "pair",
         "shape": "bookshelves",
@@ -2079,7 +2099,7 @@ speakers_info = {
     "JBL LSR6328P": {
         "brand": "JBL",
         "model": "LSR6328P",
-        "type": "passive",
+        "type": "active",
         "price": "",
         "amount": "pair",
         "shape": "bookshelves",
@@ -2314,7 +2334,7 @@ speakers_info = {
     "JBL 104": {
         "brand": "JBL",
         "model": "104",
-        "type": "passive",
+        "type": "active",
         "price": "130",
         "shape": "bookshelves",
         "amount": "pair",
@@ -2595,7 +2615,10 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/jbl_hdi-4500/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_hdi-4500/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-hdi-4500-center-channel-speaker-review.22025/",
+                },
                 "review_published": "20210401",
             },
         },
@@ -3139,7 +3162,10 @@ speakers_info = {
             "eac-v1-20201105": {
                 "origin": "ErinsAudioCorner",
                 "format": "webplotdigitizer",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_heresy_iv/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_heresy_iv/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/klipsch-heresy-iv-speaker-review.17853/",
+                },
                 "review_published": "20201105",
             },
         },
@@ -3188,7 +3214,10 @@ speakers_info = {
             "eac-v1-20210428": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_the_fives/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_the_fives/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/klipsch-the-fives-powered-bookshelf-speaker-review.22892/",
+                },
                 "review_published": "20210428",
                 "notes": "Bass cut mode",
             },
@@ -3401,7 +3430,10 @@ speakers_info = {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/micca-rb42-bookshelf-speaker-review.11267/",
+                "reviews": {
+                    "eac": "https://www.audiosciencereview.com/forum/index.php?threads/micca-rb42-bookshelf-speaker-review.11267/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/micca-mb42x-mark-iii-bookshelf-speaker-review.15307/",
+                },
             },
         },
     },
@@ -3586,7 +3618,7 @@ speakers_info = {
     "Neumi BS5": {
         "brand": "Neumi",
         "model": "BS5",
-        "type": "active",
+        "type": "passive",
         "price": "150",
         "shape": "bookshelves",
         "amount": "pair",
@@ -3595,7 +3627,10 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "webplotdigitizer",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/neumi_bs5/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/neumi_bs5/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/neumi-bs5-bookshelf-speaker-review.14404/",
+                },
                 "review_published": "20200620",
             },
         },
@@ -3655,7 +3690,7 @@ speakers_info = {
     "NHT SB2": {
         "brand": "NHT",
         "model": "SB2",
-        "type": "active",
+        "type": "passive",
         "price": "400",
         "shape": "bookshelves",
         "amount": "pair",
@@ -3703,7 +3738,7 @@ speakers_info = {
     "OSD Audio AP650": {
         "brand": "OSD Audio",
         "model": "AP650",
-        "type": "active",
+        "type": "passive",
         "price": "200",
         "shape": "outdoor",
         "amount": "pair",
@@ -4075,8 +4110,8 @@ speakers_info = {
     "Presonus Eris E8 XT": {
         "brand": "Presonus",
         "model": "Eris E8 XT",
-        "type": "passive",
-        "price": "",
+        "type": "active",
+        "price": "420",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "misc-audioholics",
@@ -4438,7 +4473,10 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "splHVtxt",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/revel_f226be/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/revel_f226be/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/revel-performabe-f226be-floorstanding-speaker-review.16702/",
+                },
             },
             "vendor": {
                 "origin": "Vendors-Revel",
@@ -4853,7 +4891,10 @@ speakers_info = {
             "eac-original": {
                 "origin": "ErinsAudioCorner",
                 "format": "splHVtxt",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/selah_audio_purezza/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/selah_audio_purezza/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/selah-audio-purezza-review.15850/",
+                },
             },
             "eac-eq": {
                 "origin": "ErinsAudioCorner",
@@ -4897,8 +4938,8 @@ speakers_info = {
     "Sonos Move": {
         "brand": "Sonos",
         "model": "Move",
-        "type": "passive",
-        "price": "",
+        "type": "active",
+        "price": "400",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "misc-napilopez",
@@ -5097,7 +5138,7 @@ speakers_info = {
     "Vanatoo Transparent Zero": {
         "brand": "Vanatoo",
         "model": "Transparent Zero",
-        "type": "passive",
+        "type": "active",
         "price": "350",
         "shape": "bookshelves",
         "amount": "pair",
