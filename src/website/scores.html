@@ -71,7 +71,7 @@
 %>
             <tr id="${speaker_name | space2dash}">
 	      <td>${speaker_name}</td>
-	      ${ligne(speaker_name, compute, default)}
+	      ${ligne(speaker_name, compute, default, True)}
             </tr>
         % for version, measurement in meta[speaker_name]['measurements'].items():
 <%
@@ -81,7 +81,7 @@
 %>
             <tr>
 	      <td></td>
-	      ${ligne(speaker_name, compute, version)}
+	      ${ligne(speaker_name, compute, version, False)}
             </tr>
        % endfor
       % endfor
@@ -92,7 +92,7 @@
 
 <%include file="footer.html"/>
 
-<%def name="ligne(speaker_name, compute, default)">
+<%def name="ligne(speaker_name, compute, default, print_eq)">
 <td>
   <a href="${speaker_name|space2url}/${compute['origin']|removeVendors}/index_${default}.html">${default}</a>
 </td>
@@ -111,7 +111,7 @@
 <td>${compute['pref_rating'].get('sm_pred_in_room', '')}</td>
 <th>${compute['pref_rating'].get('pref_score', '')}</th>
 <th>
-% if 'pref_rating_eq' in compute.keys():
+% if print_eq and 'pref_rating_eq' in compute.keys():
   ${compute['pref_rating_eq'].get('pref_score', '')}
   &nbsp;
   <a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${speaker_name|space2url}/iir-autoeq.txt">(eq)</a>
