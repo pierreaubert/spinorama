@@ -12,7 +12,7 @@ logger = logging.getLogger("spinorama")
 
 
 def parse_graph_freq_princeton_mat(mat, suffix):
-    """ Suffix can be either H or V """
+    """Suffix can be either H or V"""
     ir_name = "IR_{:1s}".format(suffix)
     fs_name = "fs_{:1s}".format(suffix)
     # compute Freq
