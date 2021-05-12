@@ -5,7 +5,7 @@
 # apt install -y python3 python3-pip imagemagick keychain npm wget
 # wget -O- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 
-export PYTHONPATH=./src
+export PYTHONPATH=./src:./src/website
 export NVM_DIR=$HOME/.nvm
 
 # CUDA stuff for tensorflow

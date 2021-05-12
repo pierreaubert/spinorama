@@ -1,0 +1,27 @@
+EQ for Paradigm Cinema 100 computed from ASR data
+Preference Score 1.0 with EQ 2.9
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.7
+Dated: 2021-04-18-13:24:53
+
+Preamp: -2.3 dB
+
+Filter  1: ON PK Fc  6597 Hz Gain -3.13 dB Q 0.36
+Filter  2: ON PK Fc   935 Hz Gain +2.11 dB Q 0.67
+Filter  3: ON PK Fc  1710 Hz Gain -1.36 dB Q 11.25
+Filter  4: ON PK Fc  4417 Hz Gain +2.23 dB Q 5.15
+Filter  5: ON PK Fc  2293 Hz Gain +1.62 dB Q 12.00
+Filter  6: ON PK Fc 15219 Hz Gain -5.96 dB Q 0.95
+Filter  7: ON PK Fc  5839 Hz Gain +1.21 dB Q 6.85
+Filter  8: ON PK Fc 10642 Hz Gain -0.65 dB Q 5.69
+Filter  9: ON PK Fc   791 Hz Gain +0.47 dB Q 12.00
+Filter 10: ON PK Fc  2068 Hz Gain -0.65 dB Q 12.00
+Filter 11: ON PK Fc  2505 Hz Gain -0.62 dB Q 12.00
+Filter 12: ON PK Fc 13518 Hz Gain +0.63 dB Q 9.38
+Filter 13: ON PK Fc  2720 Hz Gain +0.90 dB Q 12.00
+Filter 14: ON PK Fc  2280 Hz Gain +0.51 dB Q 12.00
+Filter 15: ON PK Fc  3488 Hz Gain +0.72 dB Q 12.00
+Filter 16: ON PK Fc  2967 Hz Gain -0.70 dB Q 12.00
+Filter 17: ON PK Fc  2522 Hz Gain -0.38 dB Q 12.00
+Filter 18: ON PK Fc  1151 Hz Gain +0.56 dB Q 12.00
+Filter 19: ON PK Fc   467 Hz Gain +0.55 dB Q 12.00
+Filter 20: ON PK Fc  7351 Hz Gain -0.46 dB Q 12.00

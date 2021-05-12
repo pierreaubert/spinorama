@@ -8,7 +8,7 @@ from more_itertools import consecutive_groups
 from scipy.stats import linregress
 
 from .compute_cea2034 import estimated_inroom_HV
-from .load import graph_melt
+from .load_misc import graph_melt
 
 logger = logging.getLogger("spinorama")
 
@@ -135,7 +135,7 @@ def lfq(lw, sp, lfx_log) -> float:
             lfq_sum += abs(y_lw - y_sp)
             n += 1
     if n == 0:
-        logger.error("lfq is None")
+        logger.warning("lfq is None")
         return -1.0
     return lfq_sum / n
 
@@ -180,7 +180,8 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         df_sound_power = cea2034.loc[lambda df: df.Measurements == "Sound Power"]
         skip_full = False
         for dfu in (df_on_axis, df_listening_window, df_sound_power):
-            if dfu.loc[(dfu.Freq >= 100) & (dfu.Freq <= 400)].shape[0] == 0:
+            # need a better test
+            if dfu.loc[(dfu.Freq >= 100) & (dfu.Freq <= 200)].shape[0] == 0:
                 skip_full = True
         nbd_on_axis = nbd(df_on_axis)
         nbd_listening_window = nbd(df_listening_window)
@@ -198,11 +199,11 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         if nbd_on_axis is None or nbd_pred_in_room is None or sm_pred_in_room is None:
             logger.info("One of the pref score components is None")
             return None
-        # 20hz see discussion
+        # 14.5hz or 20hz see discussion
         # https://www.audiosciencereview.com/forum/index.php?threads/master-preference-ratings-for-loudspeakers.11091/page-25#post-448733
         pref = None
         pref_wsub = pref_rating(
-            nbd_on_axis, nbd_pred_in_room, math.log10(20), sm_pred_in_room
+            nbd_on_axis, nbd_pred_in_room, math.log10(14.5), sm_pred_in_room
         )
         if not skip_full:
             pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)

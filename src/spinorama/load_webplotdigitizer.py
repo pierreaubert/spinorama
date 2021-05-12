@@ -6,9 +6,7 @@ import numpy as np
 import os
 import pandas as pd
 import tarfile
-from .compute_cea2034 import estimated_inroom
-from .compute_normalize import unify_freq
-from .load import graph_melt
+from .load import parse_graph_freq_check, spin_compute_di_eir
 
 
 pd.set_option("display.max_rows", 1000)
@@ -16,11 +14,14 @@ pd.set_option("display.max_rows", 1000)
 logger = logging.getLogger("spinorama")
 
 
-def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, version):
-    filename = dirname + "/" + speaker_name
-    if version is not None and version not in ("vendor"):
-        filename = "{0}/{1}/{2}".format(dirname, version, speaker_name)
+def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, version):
+    filename = None
+    clean_dir = dirname
+    if dirname[-1] == "/":
+        clean_dir = dirname[:-1]
 
+    filedir = "{0}/{1}/{2}".format(clean_dir, speaker_name, version)
+    filename = "{0}/{1}/{2}/{1}".format(clean_dir, speaker_name, version)
     tarfilename = filename + ".tar"
     jsonfilename = None
     try:
@@ -29,15 +30,15 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, version):
             with tarfile.open(tarfilename, "r|*") as tar:
                 info_json = None
                 for tarinfo in tar:
-                    # print(tarinfo.name)
+                    logging.debug("Tarinfo.name {}".format(tarinfo.name))
                     if tarinfo.isreg() and tarinfo.name[-9:] == "info.json":
                         # note that files/directory with name tmp are in .gitignore
-                        tar.extract(tarinfo, path=dirname + "/tmp", set_attrs=False)
-                        info_json = dirname + "tmp/" + tarinfo.name
+                        tar.extract(tarinfo, path=filedir + "/tmp", set_attrs=False)
+                        info_json = filedir + "/tmp/" + tarinfo.name
                         with open(info_json, "r") as f:
                             info = json.load(f)
                             jsonfilename = (
-                                dirname + "tmp/" + tarinfo.name[:-9] + info["json"]
+                                filedir + "/tmp/" + tarinfo.name[:-9] + info["json"]
                             )
 
             # now extract the large json file
@@ -46,12 +47,19 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, version):
                     for tarinfo in tar:
                         if tarinfo.isfile() and tarinfo.name in jsonfilename:
                             logger.debug("Extracting: {0}".format(tarinfo.name))
-                            tar.extract(tarinfo, path=dirname + "/tmp", set_attrs=False)
+                            tar.extract(tarinfo, path=filedir + "/tmp", set_attrs=False)
+        else:
+            logger.debug("Tarfilename {} doesn't exist".format(tarfilename))
 
     except tarfile.ReadError as re:
         logger.error("Tarfile {0}: {1}".format(tarfilename, re))
     if jsonfilename is None:
         jsonfilename = filename + ".json"
+    if not os.path.exists(jsonfilename):
+        logger.warning(
+            "Didn't find tar or json for {} {} {}".format(speaker_name, origin, version)
+        )
+        return None
     logger.debug("Jsonfilename {0}".format(jsonfilename))
     return jsonfilename
 
@@ -111,12 +119,44 @@ def parse_graph_freq_webplotdigitizer(filename):
                         break
 
             # build dataframe
+            def pretty(name):
+                newname = name
+                if newname.lower() in ("on axis", "on-axis", "oa", "onaxis", "on"):
+                    newname = "On Axis"
+                if newname.lower() in ("listening window", "lw"):
+                    newname = "Listening Window"
+                if newname.lower() in (
+                    "early reflections",
+                    "early reflection",
+                    "early reflexion",
+                    "first reflections",
+                    "first reflection",
+                    "first reflexion",
+                    "er",
+                ):
+                    newname = "Early Reflections"
+                if newname.lower() in (
+                    "early reflections di",
+                    "early reflection di",
+                    "early reflexion di",
+                    "first reflections di",
+                    "first reflection di",
+                    "first reflexion di",
+                    "erdi",
+                    "erd",
+                ):
+                    newname = "Early Reflections DI"
+                if newname.lower() in ("sound power", "sp"):
+                    newname = "Sound Power"
+                if newname.lower() in ("sound power di", "spdi", "spd"):
+                    newname = "Sound Power DI"
+                return newname
+
             # print(res)
             freq = np.array([res[i][0] for i in range(0, len(res))]).astype(np.float)
             dB = np.array([res[i][1] for i in range(0, len(res))]).astype(np.float)
-            mrt = [res[i][2] for i in range(0, len(res))]
+            mrt = [pretty(res[i][2]) for i in range(0, len(res))]
             df = pd.DataFrame({"Freq": freq, "dB": dB, "Measurements": mrt})
-            # print(df)
             return "CEA2034", df
     except IOError as e:
         logger.error("Cannot not open: {0}".format(e))
@@ -124,129 +164,25 @@ def parse_graph_freq_webplotdigitizer(filename):
 
 
 def parse_graphs_speaker_webplotdigitizer(
-    speaker_path, speaker_brand, speaker_name, version
+    speaker_path, speaker_brand, speaker_name, origin, version
 ):
     dfs = {}
-    dirname = "{0}/Vendors/{1}/{2}/".format(speaker_path, speaker_brand, speaker_name)
+    logger.debug("speaker_path set to {}".format(speaker_path))
     jsonfilename = parse_webplotdigitizer_get_jsonfilename(
-        dirname, speaker_name, version
+        speaker_path, speaker_name, origin, version
     )
+
+    if jsonfilename is None:
+        logging.warning(
+            "{} {} {} didn't find data file in {}".format(
+                speaker_name, origin, version, speaker_path
+            )
+        )
+        return None
 
     try:
         title, spin_uneven = parse_graph_freq_webplotdigitizer(jsonfilename)
-        spin_even = unify_freq(spin_uneven)
-        spin = graph_melt(spin_even)
-        if title != "CEA2034":
-            logger.debug("title is {0}".format(title))
-            return spin
-
-        if spin is not None:
-            # compute EIR
-            on = spin.loc[spin["Measurements"] == "On Axis"].reset_index(drop=True)
-            lw = spin.loc[spin["Measurements"] == "Listening Window"].reset_index(
-                drop=True
-            )
-            er = spin.loc[spin["Measurements"] == "Early Reflections"].reset_index(
-                drop=True
-            )
-            sp = spin.loc[spin["Measurements"] == "Sound Power"].reset_index(drop=True)
-
-            # check DI index
-            if 0 not in (lw.shape[0], sp.shape[0]):
-                sp_di_computed = lw.dB - sp.dB
-                sp_di = spin.loc[spin["Measurements"] == "Sound Power DI"].reset_index(
-                    drop=True
-                )
-                if sp_di.shape[0] == 0:
-                    logger.debug("No Sound Power DI curve, computing one!")
-                    df2 = pd.DataFrame(
-                        {
-                            "Freq": on.Freq,
-                            "dB": sp_di_computed,
-                            "Measurements": "Sound Power DI",
-                        }
-                    )
-                    spin = spin.append(df2).reset_index(drop=True)
-                else:
-                    delta = np.mean(sp_di) - np.mean(sp_di_computed)
-                    logger.debug("Sound Power DI curve: removing {0}".format(delta))
-                    spin.loc[spin["Measurements"] == "Sound Power DI", "dB"] -= delta
-
-                # sp_di = spin.loc[spin['Measurements'] == 'Sound Power DI'].reset_index(drop=True)
-                logger.debug(
-                    "Post treatment SP DI: shape={0} min={1} max={2}".format(
-                        sp_di.shape, sp_di_computed.min(), sp_di_computed.max()
-                    )
-                )
-                # print(sp_di)
-            else:
-                logger.debug("Shape LW={0} SP={1}".format(lw.shape, sp.shape))
-
-            if 0 not in (lw.shape[0], er.shape[0]):
-                er_di_computed = lw.dB - er.dB
-                er_di = spin.loc[
-                    spin["Measurements"] == "Early Reflections DI"
-                ].reset_index(drop=True)
-                if er_di.shape[0] == 0:
-                    logger.debug("No Early Reflections DI curve!")
-                    df2 = pd.DataFrame(
-                        {
-                            "Freq": on.Freq,
-                            "dB": er_di_computed,
-                            "Measurements": "Early Reflections DI",
-                        }
-                    )
-                    spin = spin.append(df2).reset_index(drop=True)
-                else:
-                    delta = np.mean(er_di) - np.mean(er_di_computed)
-                    logger.debug(
-                        "Early Reflections DI curve: removing {0}".format(delta)
-                    )
-                    spin.loc[
-                        spin["Measurements"] == "Early Reflections DI", "dB"
-                    ] -= delta
-
-                # er_di = spin.loc[spin['Measurements'] == 'Early Reflections DI'].reset_index(drop=True)
-                logger.debug(
-                    "Post treatment ER DI: shape={0} min={1} max={2}".format(
-                        er_di.shape, er_di_computed.min(), er_di_computed.max()
-                    )
-                )
-                # print(er_di)
-            else:
-                logger.debug("Shape LW={0} ER={1}".format(lw.shape, er.shape))
-
-            di_offset = spin.loc[spin["Measurements"] == "DI offset"].reset_index(
-                drop=True
-            )
-            if di_offset.shape[0] == 0:
-                logger.debug("No DI offset curve!")
-                df2 = pd.DataFrame(
-                    {"Freq": on.Freq, "dB": 0, "Measurements": "DI offset"}
-                )
-                spin = spin.append(df2).reset_index(drop=True)
-
-            logger.debug(
-                "Shape ON {0} LW {1} ER {2} SP {3}".format(
-                    on.shape, lw.shape, er.shape, sp.shape
-                )
-            )
-            if 0 not in (lw.shape[0], er.shape[0], sp.shape[0]):
-                eir = estimated_inroom(lw, er, sp)
-                logger.debug("eir {0}".format(eir.shape))
-                # print(eir)
-                dfs["Estimated In-Room Response"] = graph_melt(eir)
-            else:
-                logger.debug(
-                    "Shape LW={0} ER={1} SP={2}".format(lw.shape, er.shape, sp.shape)
-                )
-
-            # add spin (at the end because we could have modified DI curves
-            dfs[title] = spin
-
-            if on.isna().values.any():
-                logger.error("On Axis has NaN values")
-
+        dfs = spin_compute_di_eir(speaker_name, title, spin_uneven)
     except FileNotFoundError:
         logger.info("Speaker: {0} Not found: {1}".format(speaker_name, jsonfilename))
     return dfs

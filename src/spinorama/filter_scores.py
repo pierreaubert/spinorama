@@ -29,6 +29,35 @@ def scores_apply_filter(df_speaker, peq):
     return spin_filtered, pir_filtered, score_filtered
 
 
+def noscore_apply_filter(df_speaker, peq):
+    spin_filtered = None
+    pir_filtered = None
+    if "CEA2034" in df_speaker.keys():
+        spin = df_speaker["CEA2034"]
+        try:
+            pivoted_spin = spin.pivot_table(
+                index="Freq", columns="Measurements", values="dB", aggfunc=max
+            ).reset_index()
+            # modify all curve but should not touch DI
+            spin_filtered = peq_apply_measurements(pivoted_spin, peq)
+            # not modified by eq
+            for curve in ("Early Reflections DI", "Sound Power DI", "DI offset"):
+                if curve in pivoted_spin.keys():
+                    spin_filtered[curve] = pivoted_spin[curve]
+        except ValueError:
+            print("debug: {}".format(spin.keys()))
+            return None, None
+
+    if "Estimated In-Room Response" in df_speaker.keys():
+        pir = df_speaker["Estimated In-Room Response"]
+        pivoted_pir = pir.pivot(*pir).rename_axis(columns=None).reset_index()
+        pir_filtered = peq_apply_measurements(pivoted_pir, peq)
+
+    if spin_filtered is not None and pir_filtered is not None:
+        return graph_melt(spin_filtered), graph_melt(pir_filtered)
+    return None, None
+
+
 def scores_graph(spin, spin_filtered, params):
     return graph_spinorama(spin, params) | graph_spinorama(spin_filtered, params)
 

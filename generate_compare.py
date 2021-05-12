@@ -2,7 +2,7 @@
 #                                                  -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,14 +29,13 @@ Options:
 import sys
 
 from docopt import docopt
-import flammkuchen as fl
 
 try:
     import ray
 except ModuleNotFoundError:
     import src.miniray as ray
 
-from generate_common import get_custom_logger, args2level
+from generate_common import get_custom_logger, args2level, cache_load
 from src.spinorama.speaker_print import print_compare
 
 
@@ -53,11 +52,7 @@ if __name__ == "__main__":
     logger.setLevel(level)
 
     smoke_test = args.get("smoke-test", False)
-    df = None
-    if smoke_test:
-        df = fl.load("cache.smoketest_speakers.h5")
-    else:
-        df = fl.load("cache.parse_all_speakers.h5")
+    df = cache_load(smoke_test=smoke_test)
     if df is None:
         logger.error("Load failed! Please run ./generate_graphs.py")
         sys.exit(1)

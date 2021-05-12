@@ -20,7 +20,7 @@
 import unittest
 import numpy as np
 import pandas as pd
-from spinorama.load import sort_angles
+from spinorama.load_misc import sort_angles
 from spinorama.graph_contour import compute_contour, reshape, compute_contour_smoothed
 
 

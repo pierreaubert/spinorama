@@ -2,7 +2,7 @@
 #                                                  -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,5 +18,3 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
-
-logger = logging.getLogger("spinorama")

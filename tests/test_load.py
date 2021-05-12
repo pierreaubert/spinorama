@@ -19,7 +19,7 @@
 
 import unittest
 
-from spinorama.load import sort_angles
+from spinorama.load_misc import sort_angles
 from spinorama.load_klippel import parse_graph_freq_klippel
 from spinorama.load_princeton import parse_graph_princeton
 
@@ -27,7 +27,7 @@ from spinorama.load_princeton import parse_graph_princeton
 class SpinoramaLoadTests(unittest.TestCase):
     def setUp(self):
         self.title, self.df = parse_graph_freq_klippel(
-            "datas/ASR/Neumann KH 80/asr-v3-20200711/CEA2034.txt"
+            "datas/measurements/Neumann KH 80/asr-v3-20200711/CEA2034.txt"
         )
 
     def test_smoke1(self):
@@ -42,7 +42,7 @@ class SpinoramaLoadTests(unittest.TestCase):
 class SpinoramaSortAngleKlippelTests(unittest.TestCase):
     def setUp(self):
         self.title, self.df = parse_graph_freq_klippel(
-            "datas/ASR/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
+            "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
         )
 
     def test_sort_angles_klippel(self):
@@ -50,10 +50,10 @@ class SpinoramaSortAngleKlippelTests(unittest.TestCase):
         self.assertListEqual(list(df_sa.columns), list(self.df.columns))
 
 
-class SpinoramaSortAnglePrincetonTests(unittest.TestCase):
+class SpinoramaSortAnglePrincetonests(unittest.TestCase):
     def setUp(self):
         self.df = parse_graph_princeton(
-            "datas/Princeton/Genelec 8351A/Genelec8351A_V_IR.mat", "V"
+            "datas/measurements/Genelec 8351A/princeton/Genelec8351A_V_IR.mat", "V"
         )
 
     def test_sort_angles_princeton(self):
@@ -64,7 +64,7 @@ class SpinoramaSortAnglePrincetonTests(unittest.TestCase):
 class SpinoramaLoadSPLTests(unittest.TestCase):
     def setUp(self):
         self.title, self.df = parse_graph_freq_klippel(
-            "datas/ASR/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
+            "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
         )
 
     def test_smoke1(self):
@@ -81,7 +81,7 @@ class SpinoramaLoadSPLTests(unittest.TestCase):
 class SpinoramaLoadPrinceton(unittest.TestCase):
     def setUp(self):
         self.df = parse_graph_princeton(
-            "datas/Princeton/Genelec 8351A/Genelec8351A_V_IR.mat", "V"
+            "datas/measurements/Genelec 8351A/princeton/Genelec8351A_V_IR.mat", "V"
         )
 
     def test_smoke1(self):

@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+#                                                  -*- coding: utf-8 -*-
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-2021 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# import os
+import unittest
+import numpy as np
+import pandas as pd
+
+def generate_spl_angle(freq, angle, speaker_config):
+    gain = []
+    for hz in freq:
+        value = 0
+        gain.append(value)
+        
+
+def generate_spl(freq, speaker_config):
+    df = pd.DataFrame({})
+    len_freq = len(freq)
+    for angle in range(-170, 180, 10):
+        angle_key = None
+        if angle == 0:
+            angle_key = 'On Axis'
+        else:
+            angle_key = '{}'.format(angle)
+        df[angle_key] = generate_spl_angle(freq, angle)
+    return df
+
+
+class AutoEQTests(unittest.TestCase):
+    
+    def setUp(self):
+        #                       300 Hz           20000 Hz
+        self.freq = np.logspace(2+math.log10(3), 3+math.log10(2), 100)
+        self.speaker_config = {}
+        self.splH = generate_spl(self.freq, self.speaker_config)
+        self.splV = generate_spl(self.freq, self.speaker_config)
+        self.optim_config = {
+            "loss": "flat_loss",
+            "loss_weigths": [1.0],
+            "plus_and_minus": True,
+            "full_biquad_optim": False,
+            "elastic": 0.8,
+            "fs": 48000,
+            "freq_reg_min": 300,
+            "freq_reg_max": 20000,
+            "freq_mean_min": 100,
+            "freq_mean_max": 300,
+            "curve_names": ["Listening Window"],
+        }
+        
+    def test_flat(self):
+        
+
+

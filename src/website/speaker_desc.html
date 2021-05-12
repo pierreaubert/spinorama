@@ -1,0 +1,135 @@
+<%
+  print_warning = False
+  default = meta[speaker].get('default_measurement')
+  if default != g_key:
+      print_warning = True
+      default_origin = meta[speaker]['measurements'].get(default).get('origin')
+%>
+% if print_warning:
+<article class="message is-warning banner">
+  <div class="message-header">
+    <p>Warning</p>
+    <button class="delete" aria-label="delete"></button>
+  </div>
+  <div class="message-body">
+    This measurement is not the best for this speaker. Click
+    <a href="../${default_origin}/index_${default}.html">here</a> to see the highest quality one.
+  </div>
+</article>
+% endif
+
+
+% if not print_warning:
+<article class="message is-info">
+  <div class="message-header">
+    <p>
+      ${meta[speaker].get('brand')} ${meta[speaker].get('model')}
+      is a ${meta[speaker].get('type', '')} ${meta[speaker].get('shape')} speaker
+<%
+      price =meta[speaker].get('price', '?')
+%>
+%     if price not in ('?', ''):
+          that cost around ${meta[speaker].get('price', '?')}CHF
+%     if meta[speaker].get('amount', '?') != '?':
+          for a ${meta[speaker].get('amount')}
+%     endif      
+%     endif      
+.
+    </p>
+  </div>
+  <div class="message-body">
+    <div class="content">
+      <ul>
+<%
+    estimates = None
+    pref_rating = None
+    default = meta[speaker].get('default_measurement')
+    if default is not None and default in meta[speaker]['measurements'].keys():
+        estimates = meta[speaker]['measurements'][default].get('estimates', None)
+        pref_rating = meta[speaker]['measurements'][default].get('pref_rating', None)
+%>
+% if estimates is not None:
+%   if estimates.get('ref_3dB', '?') !=  '?':
+<li>
+  <b>-3dB</b> (resp. -6db) point v.s. reference is
+  at <b>${estimates.get('ref_3dB')}Hz</b>
+  (resp. ${estimates.get('ref_6dB')}Hz).
+</li>
+%   endif
+%   if estimates.get('ref_from', '?') !=  '?':
+<li>
+      Reference level is normalised to ${estimates.get('ref_level')}dB
+      computed over the frequency range [${estimates.get('ref_from')}Hz,
+      ${estimates.get('ref_to')}Hz].
+</li>
+%   endif
+%   if estimates.get('ref_band', '?') !=  '?':
+<li>
+      Frequency deviation is <b>${estimates.get('ref_band')}dB</b> over the same frequency range.
+</li>
+%   endif
+% endif
+% if pref_rating is not None:
+      <li>Preference Score is <b>${pref_rating.get('pref_score')}</b>
+      and would be <b>${pref_rating.get('pref_score_wsub')}</b> with a
+        perfect subwoofer.
+      </li>
+      <li>
+        Score
+        compononent details: NBD: ON ${pref_rating.get('nbd_on_axis')},
+        LW ${pref_rating.get('nbd_listening_window')}, SP
+        ${pref_rating.get('nbd_sound_power')}, PIR
+        ${pref_rating.get('nbd_pred_in_room')}; SM:
+        SP${pref_rating.get('sm_sound_power')},
+        PIR${pref_rating.get('sm_pred_in_room')}; LFQ ${pref_rating.get('lfq')}, LFX ${pref_rating.get('lfx_hz')}Hz
+      </li>
+% endif
+<%
+    review = None
+    reviews = None
+    h_or_v = None
+    if "default_measurement" in meta[speaker]:
+        default =  meta[speaker]["default_measurement"]
+        if default in meta[speaker]["measurements"].keys():
+           compute = meta[speaker]["measurements"][default]
+           review = compute.get("review", None)
+           reviews = compute.get("reviews", None)
+        if "horizontal" in default:
+           h_or_v = "Horizontal"
+        elif "vertical" in default:
+           h_or_v = "Vertical"
+%>
+% if h_or_v is not None:
+<li>${h_or_v} measurement</li>
+% endif
+% if review is not None:
+<li>Link to <a href="${review}">Original review</a>.</li>
+% endif
+% if reviews is not None:
+<li>
+%   for pos, (key, review) in enumerate(reviews.items()):
+%     if pos == 0:
+Link to original Review: <a href="${review}">${key} review</a>.
+%     elif pos == 1:
+Links to other reviews: <a href="${review}">${key} review</a>
+%     else:
+, <a href="${review}">${key} review</a>
+%     endif
+%   endfor
+.
+</li>
+<li>
+  Quality of the measurement data is
+  % if g_key in meta[speaker]["measurements"] and meta[speaker]["measurements"][g_key].get("quality", "?") != "?":
+  ${meta[speaker]["measurements"][g_key]["quality"]}.
+  % else:
+  unknown.
+  % endif
+</li>
+% endif
+      </ul>
+    </div>
+  </div>
+</article>
+% endif
+

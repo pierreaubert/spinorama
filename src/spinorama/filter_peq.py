@@ -7,7 +7,7 @@ import pandas as pd
 
 from .ltype import Vector, Peq
 from .filter_iir import Biquad
-from .load import graph_melt
+from .load_misc import graph_melt
 
 logger = logging.getLogger("spinorama")
 
@@ -49,8 +49,11 @@ def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
     if len(peq) == 0:
         return spl
     freq = spl["Freq"].to_numpy()
-    mean = np.mean(spl.loc[(spl.Freq > 500) & (spl.Freq < 10000)]["On Axis"])
-    curve_peq = peq_build(freq, peq) - mean
+    curve_peq = peq_build(freq, peq)
+    if "On Axis" in spl.columns:
+        mean = np.mean(spl.loc[(spl.Freq > 500) & (spl.Freq < 10000)]["On Axis"])
+        curve_peq = curve_peq - mean
+
     # create a new frame
     filtered = spl.loc[:, spl.columns != "Freq"].add(curve_peq, axis=0)
     filtered["Freq"] = freq

@@ -4,7 +4,8 @@ import glob
 import numpy as np
 import pandas as pd
 from scipy.io import loadmat
-from .load import filter_graphs, sort_angles
+from .load_misc import sort_angles
+from .load import filter_graphs
 
 
 logger = logging.getLogger("spinorama")
@@ -96,11 +97,7 @@ def parse_graphs_speaker_princeton(
     speaker_path, speaker_brand, speaker_name, version, symmetry
 ):
     # 2 files per directory xxx_H_IR.mat and xxx_V_IR.mat
-    matfilename = "{0}/Princeton/{1}".format(speaker_path, speaker_name)
-    if version is not None and version != "princeton":
-        matfilename = "{0}/Princeton/{1}/{2}".format(
-            speaker_path, speaker_name, version
-        )
+    matfilename = "{0}/{1}/{2}".format(speaker_path, speaker_name, version)
 
     dirpath = glob.glob(matfilename + "/*.mat")
     h_file = None

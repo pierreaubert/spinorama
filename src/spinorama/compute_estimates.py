@@ -58,7 +58,7 @@ def estimates(onaxis: pd.DataFrame):
             ].dB.min()
             band = max(abs(up - y_ref), abs(y_ref - down))
             est = {
-                "ref_from": freq_min,
+                "ref_from": round(freq_min, 0),
                 "ref_to": 10000,
             }
             if not math.isnan(y_ref):

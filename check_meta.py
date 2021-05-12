@@ -2,7 +2,7 @@
 #                                                  -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -73,6 +73,7 @@ def sanity_check_type(name, speaker):
 
 
 def sanity_check_shape(name, speaker):
+    # update src/website/nav_search if you add a new shape
     valid_shapes = (
         "floorstanders",
         "bookshelves",
@@ -82,6 +83,7 @@ def sanity_check_shape(name, speaker):
         "cbt",
         "outdoor",
         "panel",
+        "inwall",
     )
     if "shape" not in speaker:
         logging.error("shape is not in {0}".format(name))
@@ -118,10 +120,13 @@ def sanity_check_measurement(name, speaker, version, measurement):
             "origin",
             "format",
             "review",
+            "reviews",
             "website",
             "misc",
             "symmetry",
             "review_published",
+            "notes",
+            "quality",
         ):
             logging.error(
                 "{0}: version {1} : {2} is not known".format(name, version, k)
@@ -148,6 +153,36 @@ def sanity_check_measurement(name, speaker, version, measurement):
         ]:
             logging.error("{0}: symmetry {1} is not known".format(name, v))
             status = 1
+        if k == "review" and type(v) is not str:
+            logging.error("{0}: review {1} is not a string".format(name, v))
+            status = 1
+        if k == "reviews":
+            if type(v) is not dict:
+                logging.error("{0}: review {1} is not a dict".format(name, v))
+                status = 1
+            for ik, iv in v.items():
+                if type(iv) is not str:
+                    logging.error(
+                        "{0}: in reviews {1} review {2} is not a string".format(
+                            name, v, iv
+                        )
+                    )
+                    status = 1
+        if k == "quality" and v not in ("unknown", "low", "medium", "high"):
+            logging.error(
+                "{0}: in measurement {1} quality {2} is unknown".format(
+                    name,
+                    version,
+                    v,
+                )
+            )
+            status = 1
+
+    if version[0:3] == "mis" and "quality" not in measurement.keys():
+        logging.error(
+            "{0}: in measurement {1} quality is required".format(name, version)
+        )
+        status = 1
     return status
 
 

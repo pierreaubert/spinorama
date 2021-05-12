@@ -2,7 +2,7 @@
 #                                                  -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -143,7 +143,7 @@ def generate_speaker(mako, dataframe, meta, site):
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="update_html.py version 1.21", options_first=True)
+    args = docopt(__doc__, version="update_html.py version 1.22", options_first=True)
 
     # check args section
     dev = args["--dev"]
@@ -200,7 +200,7 @@ if __name__ == "__main__":
 
     # configure Mako
     mako_templates = TemplateLookup(
-        directories=["templates"], module_directory="/tmp/mako_modules"
+        directories=["src/website"], module_directory="/tmp/mako_modules"
     )
 
     # write index.html
@@ -225,33 +225,48 @@ if __name__ == "__main__":
     )
     meta_sorted = {k: meta[k] for k in keys_sorted}
 
-    with open("docs/index.html", "w") as f:
-        # by default sort by pref_rating decreasing
-        f.write(index_html.render(df=df, meta=meta_sorted, site=site))
-        f.close()
+    try:
+        with open("docs/index.html", "w") as f:
+            # by default sort by pref_rating decreasing
+            f.write(index_html.render(df=df, meta=meta_sorted, site=site))
+            f.close()
+    except KeyError as ke:
+        print("Generating index.htmlfailed with {}".format(ke))
+        sys.exit(1)
 
     # write eqs.html
     logger.info("Write eqs.html")
     eqs_html = mako_templates.get_template("eqs.html")
 
-    with open("docs/eqs.html", "w") as f:
-        # by default sort by pref_rating decreasing
-        f.write(eqs_html.render(df=df, meta=meta, site=site))
-        f.close()
+    try:
+        with open("docs/eqs.html", "w") as f:
+            # by default sort by pref_rating decreasing
+            f.write(eqs_html.render(df=df, meta=meta, site=site))
+            f.close()
+    except KeyError as ke:
+        print("Generating eqs.htmlfailed with {}".format(ke))
+        sys.exit(1)
 
     # write various html files
-    for item in ("help", "compare", "scores", "statistics"):
-        item_name = "{0}.html".format(item)
-        logger.info("Write {0}".format(item_name))
-        item_html = mako_templates.get_template(item_name)
-        with open("./docs/" + item_name, "w") as f:
-            f.write(item_html.render(df=df, meta=meta_sorted, site=site))
-            f.close()
+    try:
+        for item in ("help", "compare", "scores", "statistics"):
+            item_name = "{0}.html".format(item)
+            logger.info("Write {0}".format(item_name))
+            item_html = mako_templates.get_template(item_name)
+            with open("./docs/" + item_name, "w") as f:
+                f.write(item_html.render(df=df, meta=meta_sorted, site=site))
+                f.close()
+    except KeyError as ke:
+        print("Generating various html files failed with {}".format(ke))
+        sys.exit(1)
 
     # write a file per speaker
     logger.info("Write a file per speaker")
-    generate_speaker(mako_templates, df, meta=meta, site=site)
-    # generate_eqs(mako_templates, df, meta=meta, site=site)
+    try:
+        generate_speaker(mako_templates, df, meta=meta, site=site)
+    except KeyError as ke:
+        print("Generating a file per speaker failed with {}".format(ke))
+        sys.exit(1)
 
     # copy css/js files
     logger.info("Copy js/css files to docs")
@@ -264,14 +279,14 @@ if __name__ == "__main__":
         "graph.js",
         "zip.min.js",
     ]:
-        file_ext = Template(filename="templates/assets/" + f)
+        file_ext = Template(filename="src/website/assets/" + f)
         with open("./docs/assets/" + f, "w") as fd:
             fd.write(file_ext.render(site=site))
             fd.close()
 
     # copy favicon(s)
     for f in ["favicon.ico", "favicon-16x16.png", "downloadzip.js"]:
-        file_in = "./templates/assets/" + f
+        file_in = "./src/website/assets/" + f
         file_out = "./docs/assets/" + f
         shutil.copy(file_in, file_out)
 

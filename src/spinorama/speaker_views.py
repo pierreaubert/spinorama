@@ -3,6 +3,8 @@ import logging
 import math
 import copy
 import altair as alt
+
+# from altair_saver import save
 from .speaker_display import (
     display_spinorama,
     display_onaxis,
@@ -171,6 +173,9 @@ def template_compact(df, params, speaker, origin, key):
             visoband.properties(title="Vertical IsoBands"),
             vradar.properties(title="Vertical Radar"),
         ).resolve_scale(color="independent")
+
+    # can be usefull for debugging
+    # save(summary, "/tmp/summary.png")
 
     return (
         chart.configure_title(orient="top", anchor="middle", fontSize=30)

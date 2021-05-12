@@ -89,7 +89,11 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
             filename += "." + ext
             if ext == "json":
                 filename += ".zip"
-            if force or not os.path.exists(filename):
+            if (
+                force
+                or not os.path.exists(filename)
+                or (os.path.exists(filename) and os.path.getsize(filename) == 0)
+            ):
                 if fileext is None or (fileext is not None and fileext == ext):
                     try:
                         if ext == "json":
@@ -101,12 +105,17 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
                                 allowZip64=True,
                             ) as current_zip:
                                 current_zip.writestr("{0}.json".format(title), content)
-                                print("Saving {0} in {1}".format(title, filename))
+                                logger.info("Saving {0} in {1}".format(title, filename))
                                 updated += 1
                         else:
                             save(chart, filename)
-                            print("Saving {0} in {1}".format(title, filename))
-                            updated += 1
+                            if os.path.getsize(filename) == 0:
+                                logger.warning(
+                                    "Saving {0} in {1} failed!".format(title, filename)
+                                )
+                            else:
+                                logger.info("Saving {0} in {1}".format(title, filename))
+                                updated += 1
                     except Exception as e:
                         logger.error("Got unkown error {0} for {1}".format(e, filename))
     else:

@@ -1,0 +1,27 @@
+EQ for Jeff Bagby Mandolin DIY computed from ASR data
+Preference Score 5.4 with EQ 6.5
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.7
+Dated: 2021-05-07-16:46:41
+
+Preamp: -0.8 dB
+
+Filter  1: ON PK Fc  9700 Hz Gain -2.22 dB Q 0.10
+Filter  2: ON PK Fc   997 Hz Gain -1.60 dB Q 1.24
+Filter  3: ON PK Fc  8263 Hz Gain +0.97 dB Q 1.43
+Filter  4: ON PK Fc   344 Hz Gain +0.98 dB Q 5.31
+Filter  5: ON PK Fc  3262 Hz Gain +1.15 dB Q 6.60
+Filter  6: ON PK Fc  1373 Hz Gain -1.19 dB Q 12.00
+Filter  7: ON PK Fc  1155 Hz Gain +1.26 dB Q 12.00
+Filter  8: ON PK Fc  2113 Hz Gain -1.55 dB Q 12.00
+Filter  9: ON PK Fc  2782 Hz Gain +0.85 dB Q 12.00
+Filter 10: ON PK Fc  2494 Hz Gain -1.16 dB Q 12.00
+Filter 11: ON PK Fc   853 Hz Gain -0.53 dB Q 8.78
+Filter 12: ON PK Fc   576 Hz Gain -0.40 dB Q 12.00
+Filter 13: ON PK Fc  4923 Hz Gain -0.74 dB Q 7.74
+Filter 14: ON PK Fc  1560 Hz Gain +0.84 dB Q 12.00
+Filter 15: ON PK Fc  1736 Hz Gain -0.56 dB Q 12.00
+Filter 16: ON PK Fc  1323 Hz Gain -0.36 dB Q 12.00
+Filter 17: ON PK Fc  1433 Hz Gain -0.20 dB Q 12.00
+Filter 18: ON PK Fc  2305 Hz Gain +0.53 dB Q 12.00
+Filter 19: ON PK Fc  2728 Hz Gain +0.42 dB Q 12.00
+Filter 20: ON PK Fc  2489 Hz Gain -0.47 dB Q 12.00

@@ -22,7 +22,7 @@ fi
 ## python virtualenv
 ## ----------------------------------------------------------------------
 SPIN=$HOME/src/spinorama
-export PYTHONPATH=$SPIN/src
+export PYTHONPATH=$SPIN/src:$SPIN/src/website
 if ! test -d $SPIN/spinorama-venv; then
     python3 -m venv spinorama-venv
     rehash
