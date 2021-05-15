@@ -3271,6 +3271,24 @@ speakers_info = {
             },
         },
     },
+    "Mackie CR3-X": {
+        "brand": "Mackie",
+        "model": "CR3-X",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "100",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mackie_cr3x/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mackie-cr3-x-powered-monitor-review-100-pair.23389/",
+                },
+            },
+        },
+    },
     "Manger Sidekick": {
         "brand": "Manger",
         "model": "Sidekick",
@@ -4088,6 +4106,25 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/polk-t15-bookshelf-speaker-review.11720/",
+            },
+        },
+    },
+    "Presonus Eris E3.5": {
+        "brand": "Presonus",
+        "model": "Eris E3.5",
+        "type": "active",
+        "price": "110",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/presonus_eris_e3_5/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/presonus-eris-e3-5-powered-monitor-review-100-pair.23388/",
+                },
             },
         },
     },
