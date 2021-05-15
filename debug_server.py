@@ -18,7 +18,7 @@ from docopt import docopt
 
 
 class CORSRequestHandler(SimpleHTTPRequestHandler):
-    """ Generate CORS headers """
+    """Generate CORS headers"""
 
     def end_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
