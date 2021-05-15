@@ -1,0 +1,31 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 28-07-2020 16:05:32
+
+Notes:Harbeth Monitor 30 IIR v2
+
+Equaliser: Generic
+Harbeth Monitor 30 PIR.t
+Preamp:	-5.5 dB
+Filter  1: ON  PK       Fc     327 Hz  Gain  -0.6 dB  Q 9.000
+Filter  2: ON  PK       Fc     452 Hz  Gain   1.0 dB  Q 4.000
+Filter  3: ON  PK       Fc     546 Hz  Gain   2.5 dB  Q 5.000
+Filter  4: ON  PK       Fc     667 Hz  Gain   1.2 dB  Q 11.000
+Filter  5: ON  PK       Fc     761 Hz  Gain   0.7 dB  Q 11.000
+Filter  6: ON  PK       Fc     860 Hz  Gain   0.7 dB  Q 7.000
+Filter  7: ON  PK       Fc    1142 Hz  Gain   1.6 dB  Q 3.000
+Filter  8: ON  PK       Fc    1640 Hz  Gain   1.4 dB  Q 5.400
+Filter  9: ON  PK       Fc    1970 Hz  Gain   2.3 dB  Q 7.000
+Filter 10: ON  PK       Fc    2220 Hz  Gain   2.1 dB  Q 12.500
+Filter 11: ON  PK       Fc    3050 Hz  Gain   4.5 dB  Q 2.300
+Filter 12: ON  PK       Fc    3380 Hz  Gain  -0.5 dB  Q 5.000
+Filter 13: ON  PK       Fc    4280 Hz  Gain   1.1 dB  Q 4.500
+Filter 14: ON  PK       Fc    5730 Hz  Gain   2.1 dB  Q 4.700
+Filter 15: ON  PK       Fc    7920 Hz  Gain   2.5 dB  Q 7.000
+Filter 16: ON  PK       Fc    8750 Hz  Gain  -1.0 dB  Q 7.000
+Filter 17: ON  PK       Fc    9820 Hz  Gain   2.5 dB  Q 5.500
+Filter 18: ON  PK       Fc   11900 Hz  Gain   2.6 dB  Q 4.000
+Filter 19: ON  PK       Fc   14400 Hz  Gain   4.4 dB  Q 2.000
+Filter 20: ON  PK       Fc   16000 Hz  Gain   2.7 dB  Q 6.500
+

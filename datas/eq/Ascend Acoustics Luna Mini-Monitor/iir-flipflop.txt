@@ -1,0 +1,30 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 01-11-2020 12:48:17
+
+Notes:Ascend Sierra Luna IIR
+
+Equaliser: Generic
+Ascend Sierra Luna LW
+Filter  1: ON  PK       Fc     405 Hz  Gain   0.7 dB  Q 4.000
+Filter  2: ON  PK       Fc     524 Hz  Gain   3.0 dB  Q 7.000
+Filter  3: ON  PK       Fc     590 Hz  Gain  -5.6 dB  Q 8.500
+Filter  4: ON  PK       Fc     714 Hz  Gain  -0.9 dB  Q 5.000
+Filter  5: ON  PK       Fc    1019 Hz  Gain  -7.2 dB  Q 5.000
+Filter  6: ON  PK       Fc    1088 Hz  Gain  10.0 dB  Q 5.000
+Filter  7: ON  PK       Fc    1256 Hz  Gain  -4.9 dB  Q 5.000
+Filter  8: ON  PK       Fc    1455 Hz  Gain  10.0 dB  Q 4.999
+Filter  9: ON  PK       Fc    1536 Hz  Gain -12.3 dB  Q 5.000
+Filter 10: ON  PK       Fc    1682 Hz  Gain   3.3 dB  Q 4.998
+Filter 11: ON  PK       Fc    1835 Hz  Gain  -5.2 dB  Q 5.000
+Filter 12: ON  PK       Fc    1991 Hz  Gain   1.4 dB  Q 5.000
+Filter 13: ON  PK       Fc    2170 Hz  Gain  -0.8 dB  Q 17.000
+Filter 14: ON  PK       Fc    3124 Hz  Gain  -1.6 dB  Q 5.000
+Filter 15: ON  PK       Fc    5781 Hz  Gain  -1.4 dB  Q 1.012
+Filter 16: ON  PK       Fc    6153 Hz  Gain  -1.9 dB  Q 5.000
+Filter 17: ON  PK       Fc    9102 Hz  Gain  -3.2 dB  Q 1.856
+Filter 18: ON  PK       Fc   12266 Hz  Gain  -2.9 dB  Q 5.000
+Filter 19: ON  PK       Fc   13500 Hz  Gain  -0.9 dB  Q 7.000
+Filter 20: ON  PK       Fc   15181 Hz  Gain  -3.2 dB  Q 3.162
+

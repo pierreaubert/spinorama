@@ -1,0 +1,26 @@
+EQ for JBL LSR708i computed from ASR data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-05-09-07:15:01
+
+Preamp: -0.4 dB
+
+Filter  1: ON PK Fc  9996 Hz Gain -2.26 dB Q 0.13
+Filter  2: ON PK Fc  4468 Hz Gain +1.09 dB Q 5.86
+Filter  3: ON PK Fc 10763 Hz Gain +1.69 dB Q 11.68
+Filter  4: ON PK Fc  8889 Hz Gain -0.67 dB Q 5.13
+Filter  5: ON PK Fc   893 Hz Gain -1.34 dB Q 11.67
+Filter  6: ON PK Fc   486 Hz Gain -0.99 dB Q 12.00
+Filter  7: ON PK Fc   581 Hz Gain +1.45 dB Q 12.00
+Filter  8: ON PK Fc  1700 Hz Gain -0.78 dB Q 12.00
+Filter  9: ON PK Fc   378 Hz Gain -0.76 dB Q 9.43
+Filter 10: ON PK Fc  2259 Hz Gain +0.79 dB Q 11.68
+Filter 11: ON PK Fc   676 Hz Gain -1.00 dB Q 10.64
+Filter 12: ON PK Fc  1235 Hz Gain +0.84 dB Q 4.89
+Filter 13: ON PK Fc 13950 Hz Gain -0.83 dB Q 4.70
+Filter 14: ON PK Fc   780 Hz Gain +0.57 dB Q 12.00
+Filter 15: ON PK Fc  2744 Hz Gain -0.43 dB Q 4.97
+Filter 16: ON PK Fc   318 Hz Gain +0.37 dB Q 12.00
+Filter 17: ON PK Fc  5542 Hz Gain +0.36 dB Q 12.00
+Filter 18: ON PK Fc  6504 Hz Gain -0.22 dB Q 12.00
+Filter 19: ON PK Fc  1590 Hz Gain -0.33 dB Q 12.00
+Filter 20: ON PK Fc 10331 Hz Gain +0.50 dB Q 12.00

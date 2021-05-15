@@ -1,0 +1,31 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 05-07-2020 15:24:11
+
+Notes:Buchardt S400 IIR
+
+Equaliser: Generic
+Buchardt S400 LW.txt
+Preamp:	-3 dB
+Filter  1: ON  PK       Fc     343 Hz  Gain   0.6 dB  Q 16.000
+Filter  2: ON  PK       Fc     489 Hz  Gain   5.0 dB  Q 5.000
+Filter  3: ON  PK       Fc     516 Hz  Gain -11.0 dB  Q 5.000
+Filter  4: ON  PK       Fc     525 Hz  Gain   5.2 dB  Q 5.000
+Filter  5: ON  PK       Fc     573 Hz  Gain  -0.6 dB  Q 25.000
+Filter  6: ON  PK       Fc     616 Hz  Gain   3.7 dB  Q 5.000
+Filter  7: ON  PK       Fc     776 Hz  Gain  -0.8 dB  Q 1.000
+Filter  8: ON  PK       Fc     915 Hz  Gain  -0.4 dB  Q 10.000
+Filter  9: ON  PK       Fc    1146 Hz  Gain   1.5 dB  Q 5.000
+Filter 10: ON  PK       Fc    1425 Hz  Gain   0.7 dB  Q 18.000
+Filter 11: ON  PK       Fc    1940 Hz  Gain   1.4 dB  Q 15.000
+Filter 12: ON  PK       Fc    2210 Hz  Gain   1.0 dB  Q 15.000
+Filter 13: ON  PK       Fc    2324 Hz  Gain   1.7 dB  Q 5.000
+Filter 14: ON  PK       Fc    2540 Hz  Gain   1.3 dB  Q 7.000
+Filter 15: ON  PK       Fc    4720 Hz  Gain  -0.6 dB  Q 5.000
+Filter 16: ON  PK       Fc    5346 Hz  Gain   1.5 dB  Q 1.530
+Filter 17: ON  PK       Fc    6740 Hz  Gain  -0.5 dB  Q 10.000
+Filter 18: ON  PK       Fc    8470 Hz  Gain  -0.9 dB  Q 10.000
+Filter 19: ON  PK       Fc   10570 Hz  Gain  -0.4 dB  Q 14.000
+Filter 20: ON  PK       Fc   16000 Hz  Gain   2.8 dB  Q 1.250
+

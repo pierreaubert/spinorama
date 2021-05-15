@@ -1,0 +1,27 @@
+EQ for Philharmonic BMR computed from ASR data
+Preference Score 5.1 with EQ 6.7
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.6
+Dated: 2021-04-03-13:01:10
+
+Preamp: -0.2 dB
+
+Filter  1: ON PK Fc  7087 Hz Gain -2.39 dB Q 0.59
+Filter  2: ON PK Fc 11807 Hz Gain +0.92 dB Q 4.45
+Filter  3: ON PK Fc  8868 Hz Gain -0.89 dB Q 12.00
+Filter  4: ON PK Fc 14370 Hz Gain +0.72 dB Q 12.00
+Filter  5: ON PK Fc  2333 Hz Gain -1.38 dB Q 1.50
+Filter  6: ON PK Fc  6576 Hz Gain +0.49 dB Q 4.38
+Filter  7: ON PK Fc 12520 Hz Gain -0.32 dB Q 12.00
+Filter  8: ON PK Fc 13351 Hz Gain +0.36 dB Q 12.00
+Filter  9: ON PK Fc   539 Hz Gain -1.10 dB Q 1.33
+Filter 10: ON PK Fc  7291 Hz Gain +0.30 dB Q 12.00
+Filter 11: ON PK Fc  5381 Hz Gain -0.40 dB Q 12.00
+Filter 12: ON PK Fc  5823 Hz Gain +0.34 dB Q 12.00
+Filter 13: ON PK Fc  6729 Hz Gain -0.31 dB Q 12.00
+Filter 14: ON PK Fc 10674 Hz Gain +0.28 dB Q 12.00
+Filter 15: ON PK Fc 15151 Hz Gain -0.20 dB Q 12.00
+Filter 16: ON PK Fc 11254 Hz Gain -0.20 dB Q 12.00
+Filter 17: ON PK Fc 12687 Hz Gain -0.20 dB Q 12.00
+Filter 18: ON PK Fc 11914 Hz Gain +0.27 dB Q 12.00
+Filter 19: ON PK Fc   989 Hz Gain +1.24 dB Q 9.76
+Filter 20: ON PK Fc  7854 Hz Gain -0.30 dB Q 12.00

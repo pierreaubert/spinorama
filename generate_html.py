@@ -2,7 +2,7 @@
 #                                                  -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,185 +28,266 @@ Options:
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
 import json
-import logging
 import os
+import shutil
 import sys
 from glob import glob
 from mako.template import Template
 from mako.lookup import TemplateLookup
 from docopt import docopt
 
+from generate_common import get_custom_logger, args2level
 
-siteprod = 'https://pierreaubert.github.io/spinorama'
-sitedev = 'http://localhost:8000/docs'
-root = './'
+siteprod = "https://pierreaubert.github.io/spinorama"
+sitedev = "http://localhost:8000/docs"
+root = "./"
 
 
-def generate_speaker(mako, df, meta, site):
-    speaker_html = mako.get_template('speaker.html')
-    graph_html = mako.get_template('graph.html')
-    for speaker_name, origins in df.items():
+def generate_speaker(mako, dataframe, meta, site):
+    speaker_html = mako.get_template("speaker.html")
+    graph_html = mako.get_template("graph.html")
+    for speaker_name, origins in dataframe.items():
         for origin, measurements in origins.items():
-            for m, dfs in measurements.items():
+            for key, dfs in measurements.items():
+                logger.debug("generate {0} {1} {2}".format(speaker_name, origin, key))
                 # freq
                 freq_filter = [
                     "CEA2034",
                     "On Axis",
                     "Early Reflections",
                     "Estimated In-Room Response",
-                    "Horizontal Reflections", "Vertical Reflections",
-                    "SPL Horizontal", "SPL Vertical",
+                    "Horizontal Reflections",
+                    "Vertical Reflections",
+                    "SPL Horizontal",
+                    "SPL Vertical",
                 ]
-                freq = {key: dfs[key] for key in freq_filter if key in dfs}
+                freq = {k: dfs[k] for k in freq_filter if k in dfs}
                 # contour
                 contour_filter = [
                     "SPL Horizontal Contour",
                     "SPL Vertical Contour",
                 ]
-                contour = {key: dfs[key] for key in contour_filter if key in dfs}
+                contour = {k: dfs[k] for k in contour_filter if k in dfs}
+                # isoband
+                isoband_filter = [
+                    "SPL Horizontal IsoBand",
+                    "SPL Vertical IsoBand",
+                ]
+                isoband = {k: dfs[k] for k in isoband_filter if k in dfs}
                 # radar
                 radar_filter = [
                     "SPL Horizontal Radar",
                     "SPL Vertical Radar",
                 ]
-                radar = {key: dfs[key] for key in radar_filter if key in dfs}
-
+                radar = {k: dfs[k] for k in radar_filter if k in dfs}
                 # directivity
                 directivity_filter = [
                     "Directivity Matrix",
                 ]
-                directivity = {key: dfs[key] for key in directivity_filter if key in dfs}
-
+                directivity = {k: dfs[k] for k in directivity_filter if k in dfs}
+                # eq
+                eq = None
+                if key != "default_eq":
+                    eq_filter = [
+                        "ref_vs_eq",
+                    ]
+                    eq = {k: dfs[k] for k in eq_filter if k in dfs}
                 # get index.html filename
-                dirname = 'docs/' + speaker_name + '/'
-                if origin == 'ASR' or origin == 'Princeton':
+                dirname = "docs/" + speaker_name + "/"
+                if origin in ("ASR", "Princeton", "ErinsAudioCorner", "Misc"):
                     dirname += origin
                 else:
-                    dirname += meta[speaker_name]['brand']
-                indexname = dirname + '/index.html'
+                    dirname += meta[speaker_name]["brand"]
+                index_name = "{0}/index_{1}.html".format(dirname, key)
 
                 # write index.html
-                logging.info('Writing index.html for {:s}'.format(speaker_name))
-                with open(indexname, 'w') as f:
+                logger.info("Writing {0} for {1}".format(index_name, speaker_name))
+                with open(index_name, "w") as f_index:
                     # write all
-                    f.write(speaker_html.render(speaker=speaker_name,
-                                                g_freq=freq,
-                                                g_contour=contour,
-                                                g_radar=radar,
-                                                g_directivity=directivity,
-                                                meta=meta,
-                                                origin=origin,
-                                                site=site))
-                    f.close()
+                    f_index.write(
+                        speaker_html.render(
+                            speaker=speaker_name,
+                            g_freq=freq,
+                            g_contour=contour,
+                            g_isoband=isoband,
+                            g_radar=radar,
+                            g_directivity=directivity,
+                            g_key=key,
+                            g_eq=eq,
+                            meta=meta,
+                            origin=origin,
+                            site=site,
+                        )
+                    )
+                    f_index.close()
 
                 # write a small file per graph to render the json generated by Vega
-                for kind in [freq, contour, radar, directivity]:
+                for kind in [freq, contour, radar]:  # isoband, directivity]:
                     for graph_name in kind:
-                        graph_filename = dirname + '/default/' + graph_name + '.html'
-                        logging.info('Writing default/{0} for {1}'.format(graph_filename, speaker_name))
-                        with open(graph_filename, 'w') as f:
-                            f.write(graph_html.render(graph=graph_name, meta=meta, site=site))
-                            f.close()
+                        graph_filename = "{0}/{1}/{2}.html".format(
+                            dirname, key, graph_name
+                        )
+                        logger.info(
+                            "Writing {2}/{0} for {1}".format(
+                                graph_filename, speaker_name, key
+                            )
+                        )
+                        with open(graph_filename, "w") as f_graph:
+                            f_graph.write(
+                                graph_html.render(
+                                    graph=graph_name, meta=meta, site=site
+                                )
+                            )
+                            f_graph.close()
     return 0
 
 
-if __name__ == '__main__':
-    args = docopt(__doc__,
-                  version='update_html.py version 1.21',
-                  options_first=True)
+if __name__ == "__main__":
+    args = docopt(__doc__, version="update_html.py version 1.22", options_first=True)
 
     # check args section
-    dev = args['--dev']
+    dev = args["--dev"]
     site = siteprod
     if dev is True:
-        if args['--sitedev'] is not None:
-            sitedev = args['--sitedev']
-            if len(sitedev) < 4 or sitedev[0:4] != 'http':
-                print('sitedev %s does not start with http!'.format(sitedev))
-                exit(1)
+        if args["--sitedev"] is not None:
+            sitedev = args["--sitedev"]
+            if len(sitedev) < 4 or sitedev[0:4] != "http":
+                print("sitedev {} does not start with http!".format(sitedev))
+                sys.exit(1)
         site = sitedev
 
-    # logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-    #                    datefmt='%Y-%m-%d:%H:%M:%S')
-    if args['--log-level'] is not None:
-        level = args['--log-level']
-        if level in ['INFO', 'DEBUG', 'WARNING', 'ERROR']:
-            logging.basicConfig(level=level)
+    level = args2level(args)
+    logger = get_custom_logger(True)
+    logger.setLevel(level)
 
     # load all metadata from generated json file
-    json_filename = './docs/assets/metadata.json'
+    json_filename = "./docs/assets/metadata.json"
     if not os.path.exists(json_filename):
-        logging.fatal('Cannot find {0}'.format(json_filename))
+        logger.error("Cannot find {0}".format(json_filename))
         sys.exit(1)
 
     meta = None
-    with open(json_filename, 'r') as f:
+    with open(json_filename, "r") as f:
         meta = json.load(f)
 
     # only build a dictionnary will all graphs
     df = {}
-    speakers = glob('./docs/[A-Z]*')
+    speakers = glob("./docs/*")
     for speaker in speakers:
         if not os.path.isdir(speaker):
             continue
-        speaker_name = speaker.replace('./docs/', '')
+        # humm annoying
+        if speaker in ("score", "assets", "stats", "compare", "logos", "pictures"):
+            continue
+        speaker_name = speaker.replace("./docs/", "")
         df[speaker_name] = {}
-        origins = glob(speaker + '/*')
+        origins = glob(speaker + "/*")
         for origin in origins:
             if not os.path.isdir(origin):
                 continue
             origin_name = os.path.basename(origin)
             df[speaker_name][origin_name] = {}
-            defaults = glob(origin + '/*')
+            defaults = glob(origin + "/*")
             for default in defaults:
                 if not os.path.isdir(default):
                     continue
                 default_name = os.path.basename(default)
                 df[speaker_name][origin_name][default_name] = {}
-                graphs = glob(default + '/*_large.png')
+                graphs = glob(default + "/*_large.png")
                 for graph in graphs:
-                    g = os.path.basename(graph).replace('_large.png', '')
+                    g = os.path.basename(graph).replace("_large.png", "")
                     df[speaker_name][origin_name][default_name][g] = {}
 
     # configure Mako
-    mako_templates = TemplateLookup(directories=['templates'], module_directory='/tmp/mako_modules')
+    mako_templates = TemplateLookup(
+        directories=["src/website"], module_directory="/tmp/mako_modules"
+    )
 
     # write index.html
-    logging.info('Write index.html')
-    index_html = mako_templates.get_template('index.html')
+    logger.info("Write index.html")
+    index_html = mako_templates.get_template("index.html")
 
     def sort_meta(s):
-        if 'pref_rating' in s.keys():
-            return s['pref_rating']['pref_score']
+        if (
+            s is not None
+            and "pref_rating" in s.keys()
+            and "pref_score" in s["pref_rating"]
+        ):
+            return s["pref_rating"]["pref_score"]
         return -1
 
-    keys_sorted = sorted(meta, key=lambda a: sort_meta(meta[a]), reverse=True)
+    keys_sorted = sorted(
+        meta,
+        key=lambda a: sort_meta(
+            meta[a]["measurements"].get(meta[a].get("default_measurement"))
+        ),
+        reverse=True,
+    )
     meta_sorted = {k: meta[k] for k in keys_sorted}
 
-    with open('docs/index.html', 'w') as f:
-        # by default sort by pref_rating decreasing
-        f.write(index_html.render(df=df, meta=meta_sorted, site=site))
-        f.close()
+    try:
+        with open("docs/index.html", "w") as f:
+            # by default sort by pref_rating decreasing
+            f.write(index_html.render(df=df, meta=meta_sorted, site=site))
+            f.close()
+    except KeyError as ke:
+        print("Generating index.htmlfailed with {}".format(ke))
+        sys.exit(1)
+
+    # write eqs.html
+    logger.info("Write eqs.html")
+    eqs_html = mako_templates.get_template("eqs.html")
+
+    try:
+        with open("docs/eqs.html", "w") as f:
+            # by default sort by pref_rating decreasing
+            f.write(eqs_html.render(df=df, meta=meta, site=site))
+            f.close()
+    except KeyError as ke:
+        print("Generating eqs.htmlfailed with {}".format(ke))
+        sys.exit(1)
 
     # write various html files
-    for item in ('help', 'compare', 'scores', 'statistics'):
-        item_name = '{0}.html'.format(item)
-        logging.info('Write {0}'.format(item_name))
-        item_html = mako_templates.get_template(item_name)
-        with open('./docs/' + item_name, 'w') as f:
-            f.write(item_html.render(df=df, meta=meta_sorted, site=site))
-            f.close()
+    try:
+        for item in ("help", "compare", "scores", "statistics"):
+            item_name = "{0}.html".format(item)
+            logger.info("Write {0}".format(item_name))
+            item_html = mako_templates.get_template(item_name)
+            with open("./docs/" + item_name, "w") as f:
+                f.write(item_html.render(df=df, meta=meta_sorted, site=site))
+                f.close()
+    except KeyError as ke:
+        print("Generating various html files failed with {}".format(ke))
+        sys.exit(1)
 
     # write a file per speaker
-    logging.info('Write a file per speaker')
-    generate_speaker(mako_templates, df, meta=meta, site=site)
+    logger.info("Write a file per speaker")
+    try:
+        generate_speaker(mako_templates, df, meta=meta, site=site)
+    except KeyError as ke:
+        print("Generating a file per speaker failed with {}".format(ke))
+        sys.exit(1)
 
     # copy css/js files
-    logging.info('Copy js/css files to docs')
-    for f in ['search.js', 'bulma.js', 'compare.js', 'tabs.js', 'spinorama.css', 'graph.js']:
-        file_ext = Template(filename='templates/assets/'+f)
-        with open('./docs/assets/'+f, 'w') as fd:
+    logger.info("Copy js/css files to docs")
+    for f in [
+        "search.js",
+        "bulma.js",
+        "compare.js",
+        "tabs.js",
+        "spinorama.css",
+        "graph.js",
+        "zip.min.js",
+    ]:
+        file_ext = Template(filename="src/website/assets/" + f)
+        with open("./docs/assets/" + f, "w") as fd:
             fd.write(file_ext.render(site=site))
             fd.close()
+
+    # copy favicon(s)
+    for f in ["favicon.ico", "favicon-16x16.png", "downloadzip.js"]:
+        file_in = "./src/website/assets/" + f
+        file_out = "./docs/assets/" + f
+        shutil.copy(file_in, file_out)
 
     sys.exit(0)

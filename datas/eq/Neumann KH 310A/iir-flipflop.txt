@@ -1,0 +1,30 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 21-11-2020 14:01:22
+
+Notes:Neumann KH 310A IIR
+
+Equaliser: Generic
+Neumann KH 310A LW.t
+Filter  1: ON  PK       Fc     656 Hz  Gain   1.3 dB  Q 19.000
+Filter  2: ON  PK       Fc     795 Hz  Gain   1.0 dB  Q 10.000
+Filter  3: ON  PK       Fc     980 Hz  Gain  -0.7 dB  Q 4.000
+Filter  4: ON  PK       Fc    1300 Hz  Gain  -0.6 dB  Q 9.000
+Filter  5: ON  PK       Fc    1560 Hz  Gain   2.4 dB  Q 6.500
+Filter  6: ON  PK       Fc    1710 Hz  Gain  -1.3 dB  Q 9.000
+Filter  7: ON  PK       Fc    1915 Hz  Gain   1.2 dB  Q 12.000
+Filter  8: ON  PK       Fc    2130 Hz  Gain  -0.8 dB  Q 8.000
+Filter  9: ON  PK       Fc    2285 Hz  Gain   1.1 dB  Q 18.000
+Filter 10: ON  PK       Fc    2510 Hz  Gain  -1.5 dB  Q 9.200
+Filter 11: ON  PK       Fc    2740 Hz  Gain   1.0 dB  Q 17.000
+Filter 12: ON  PK       Fc    3020 Hz  Gain  -1.0 dB  Q 8.000
+Filter 13: ON  PK       Fc    3380 Hz  Gain   0.5 dB  Q 10.000
+Filter 14: ON  PK       Fc    4260 Hz  Gain  -1.2 dB  Q 8.500
+Filter 15: ON  PK       Fc    4870 Hz  Gain  -1.6 dB  Q 10.500
+Filter 16: ON  PK       Fc    5510 Hz  Gain  -0.5 dB  Q 10.000
+Filter 17: ON  PK       Fc    7290 Hz  Gain  -0.6 dB  Q 3.000
+Filter 18: ON  PK       Fc    9500 Hz  Gain  -0.4 dB  Q 2.000
+Filter 19: ON  PK       Fc   12500 Hz  Gain  -1.1 dB  Q 1.700
+Filter 20: ON  PK       Fc   16200 Hz  Gain  -1.5 dB  Q 3.200
+

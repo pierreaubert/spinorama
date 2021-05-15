@@ -1,0 +1,27 @@
+EQ for Adam S2V computed from ASR data
+Preference Score 5.5 with EQ 6.7
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.6
+Dated: 2021-02-28-11:48:38
+
+Preamp: -0.3 dB
+
+Filter  1: ON PK Fc  6155 Hz Gain -3.46 dB Q 0.11
+Filter  2: ON PK Fc  3816 Hz Gain +1.47 dB Q 4.18
+Filter  3: ON PK Fc 11095 Hz Gain -1.52 dB Q 1.42
+Filter  4: ON PK Fc  7100 Hz Gain -0.88 dB Q 12.00
+Filter  5: ON PK Fc  8730 Hz Gain -0.81 dB Q 12.00
+Filter  6: ON PK Fc  9715 Hz Gain +1.68 dB Q 12.00
+Filter  7: ON PK Fc   478 Hz Gain +1.66 dB Q 11.87
+Filter  8: ON PK Fc  5823 Hz Gain +1.48 dB Q 12.00
+Filter  9: ON PK Fc   598 Hz Gain -1.54 dB Q 6.98
+Filter 10: ON PK Fc 11931 Hz Gain +0.73 dB Q 12.00
+Filter 11: ON PK Fc   414 Hz Gain +0.58 dB Q 2.62
+Filter 12: ON PK Fc 13261 Hz Gain -0.99 dB Q 10.40
+Filter 13: ON PK Fc  4962 Hz Gain -0.47 dB Q 12.00
+Filter 14: ON PK Fc  7887 Hz Gain +0.92 dB Q 12.00
+Filter 15: ON PK Fc  8757 Hz Gain -0.72 dB Q 12.00
+Filter 16: ON PK Fc  1939 Hz Gain +1.66 dB Q 4.55
+Filter 17: ON PK Fc 10763 Hz Gain -0.43 dB Q 12.00
+Filter 18: ON PK Fc  2215 Hz Gain +1.14 dB Q 12.00
+Filter 19: ON PK Fc  1649 Hz Gain +0.74 dB Q 12.00
+Filter 20: ON PK Fc  2075 Hz Gain -0.96 dB Q 5.10

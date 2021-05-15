@@ -2,9 +2,12 @@ pytest
 pytest-cov
 flake8
 autopep8
-readline
+pylint
 ipython
 yapf
 importmagic
+pylinkvalidator
+black
+
 
 

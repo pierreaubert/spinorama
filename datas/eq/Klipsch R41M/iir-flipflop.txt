@@ -1,0 +1,31 @@
+Filter Settings file
+
+Room EQ V5.19
+Dated: 14-07-2020 15:02:06
+
+Notes:Klipsch R-41M IIR
+
+Equaliser: Generic
+Klipsch R-41M PIR.txt
+Preamp:	-3.6 dB
+Filter  1: ON  PK       Fc     445 Hz  Gain   1.1 dB  Q 5.000
+Filter  2: ON  PK       Fc     844 Hz  Gain   2.2 dB  Q 5.000
+Filter  3: ON  PK       Fc     971 Hz  Gain  -3.7 dB  Q 5.000
+Filter  4: ON  PK       Fc    1078 Hz  Gain  -1.0 dB  Q 1.000
+Filter  5: ON  PK       Fc    1736 Hz  Gain   6.3 dB  Q 1.143
+Filter  6: ON  PK       Fc    1800 Hz  Gain  -0.5 dB  Q 15.000
+Filter  7: ON  PK       Fc    1952 Hz  Gain   1.9 dB  Q 5.000
+Filter  8: ON  PK       Fc    2080 Hz  Gain  -0.9 dB  Q 20.000
+Filter  9: ON  PK       Fc    2112 Hz  Gain  -5.9 dB  Q 1.309
+Filter 10: ON  PK       Fc    2220 Hz  Gain   1.0 dB  Q 20.000
+Filter 11: ON  PK       Fc    3587 Hz  Gain   1.8 dB  Q 5.000
+Filter 12: ON  PK       Fc    5440 Hz  Gain  -4.0 dB  Q 1.686
+Filter 13: ON  PK       Fc    5812 Hz  Gain   3.2 dB  Q 5.000
+Filter 14: ON  PK       Fc    7989 Hz  Gain   4.8 dB  Q 5.000
+Filter 15: ON  PK       Fc    8885 Hz  Gain -10.0 dB  Q 2.227
+Filter 16: ON  PK       Fc    8893 Hz  Gain   2.9 dB  Q 5.000
+Filter 17: ON  PK       Fc    9600 Hz  Gain   5.1 dB  Q 5.000
+Filter 18: ON  PK       Fc   13048 Hz  Gain  -3.0 dB  Q 5.000
+Filter 19: ON  PK       Fc   15869 Hz  Gain   1.9 dB  Q 5.000
+Filter 20: ON  PK       Fc   16860 Hz  Gain   3.2 dB  Q 5.000
+

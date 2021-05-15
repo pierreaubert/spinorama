@@ -1,0 +1,19 @@
+<%include file="header.html"/>
+<%include file="nav_menu.html"/>
+
+<%!
+    def space2url(text):
+        return text.replace(' ', '%20')
+%>  
+
+<div id="visGraph"></div>
+
+<script>
+  const spec = downloadZip("${graph | space2url}.json.zip").then(
+    function(spec) {
+      displayGraph(JSON.parse(spec), visGraph);
+  });
+</script>
+
+<%include file="graph_help.html"/>
+<%include file="footer.html"/>

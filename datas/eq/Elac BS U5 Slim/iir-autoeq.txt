@@ -1,0 +1,27 @@
+EQ for Elac BS U5 Slim computed from ASR data
+Preference Score 5.0 with EQ 6.0
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.6
+Dated: 2021-02-28-11:49:26
+
+Preamp: -3.5 dB
+
+Filter  1: ON PK Fc  8006 Hz Gain +3.13 dB Q 4.69
+Filter  2: ON PK Fc  4882 Hz Gain +1.65 dB Q 5.08
+Filter  3: ON PK Fc  3416 Hz Gain +1.83 dB Q 7.56
+Filter  4: ON PK Fc  1649 Hz Gain -1.30 dB Q 1.16
+Filter  5: ON PK Fc  1143 Hz Gain +1.32 dB Q 12.00
+Filter  6: ON PK Fc 11479 Hz Gain -1.34 dB Q 10.95
+Filter  7: ON PK Fc  3051 Hz Gain +1.23 dB Q 11.27
+Filter  8: ON PK Fc  2106 Hz Gain -1.32 dB Q 5.69
+Filter  9: ON PK Fc   411 Hz Gain +0.98 dB Q 3.31
+Filter 10: ON PK Fc   742 Hz Gain -0.89 dB Q 4.04
+Filter 11: ON PK Fc  1558 Hz Gain -0.42 dB Q 12.00
+Filter 12: ON PK Fc  3778 Hz Gain +0.82 dB Q 12.00
+Filter 13: ON PK Fc  6377 Hz Gain -0.52 dB Q 7.88
+Filter 14: ON PK Fc  6829 Hz Gain +0.23 dB Q 0.15
+Filter 15: ON PK Fc  4349 Hz Gain -0.78 dB Q 7.93
+Filter 16: ON PK Fc  2417 Hz Gain -0.80 dB Q 12.00
+Filter 17: ON PK Fc   919 Hz Gain -0.55 dB Q 11.85
+Filter 18: ON PK Fc  1701 Hz Gain +0.54 dB Q 12.00
+Filter 19: ON PK Fc  1602 Hz Gain -0.58 dB Q 12.00
+Filter 20: ON PK Fc  1841 Hz Gain -0.49 dB Q 12.00
