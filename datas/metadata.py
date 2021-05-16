@@ -1478,6 +1478,27 @@ speakers_info = {
             },
         },
     },
+    "Genelec 8351B": {
+        "brand": "Genelec",
+        "model": "8351B",
+        "type": "active",
+        "price": "6000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr-vertical",
+        "measurements": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8351b-review-studio-monitor.23432/",
+            },
+            "asr-horizontal": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8351b-review-studio-monitor.23432/",
+            },
+        },
+    },
     "Genelec G2": {
         "brand": "Genelec",
         "model": "G2",
@@ -3286,6 +3307,7 @@ speakers_info = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/mackie_cr3x/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mackie-cr3-x-powered-monitor-review-100-pair.23389/",
                 },
+                "review_published": "20210514",
             },
         },
     },
@@ -4125,6 +4147,7 @@ speakers_info = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/presonus_eris_e3_5/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/presonus-eris-e3-5-powered-monitor-review-100-pair.23388/",
                 },
+                "review_published": "20210514",
             },
         },
     },
