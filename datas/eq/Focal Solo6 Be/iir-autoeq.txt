@@ -1,0 +1,26 @@
+EQ for Focal Solo6 Be computed from Misc data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-05-18-11:54:42
+
+Preamp: -2.9 dB
+
+Filter  1: ON PK Fc   559 Hz Gain +1.90 dB Q 5.47
+Filter  2: ON PK Fc  1652 Hz Gain +2.59 dB Q 2.33
+Filter  3: ON PK Fc  4870 Hz Gain -1.47 dB Q 2.65
+Filter  4: ON PK Fc  8764 Hz Gain +1.54 dB Q 7.87
+Filter  5: ON PK Fc  6131 Hz Gain -1.15 dB Q 12.00
+Filter  6: ON PK Fc  6959 Hz Gain +1.20 dB Q 12.00
+Filter  7: ON PK Fc   945 Hz Gain -1.02 dB Q 12.00
+Filter  8: ON PK Fc   822 Hz Gain +0.89 dB Q 12.00
+Filter  9: ON PK Fc  1416 Hz Gain +1.12 dB Q 12.00
+Filter 10: ON PK Fc 14814 Hz Gain +1.97 dB Q 2.17
+Filter 11: ON PK Fc 10328 Hz Gain -1.34 dB Q 12.00
+Filter 12: ON PK Fc  8000 Hz Gain -0.64 dB Q 12.00
+Filter 13: ON PK Fc  1558 Hz Gain -0.83 dB Q 12.00
+Filter 14: ON PK Fc  1864 Hz Gain +0.66 dB Q 12.00
+Filter 15: ON PK Fc   626 Hz Gain -0.50 dB Q 11.64
+Filter 16: ON PK Fc   353 Hz Gain -0.30 dB Q 6.50
+Filter 17: ON PK Fc  1261 Hz Gain -0.36 dB Q 12.00
+Filter 18: ON PK Fc  1122 Hz Gain +0.42 dB Q 12.00
+Filter 19: ON PK Fc  4822 Hz Gain +0.56 dB Q 12.00
+Filter 20: ON PK Fc   491 Hz Gain -0.29 dB Q 12.00

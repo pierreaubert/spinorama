@@ -1315,6 +1315,24 @@ speakers_info = {
             },
         },
     },
+    "Focal Solo6 Be": {
+        "brand": "Focal",
+        "model": "Solo6 Be",
+        "type": "passive",
+        "price": "1800",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-napilopez",
+        "measurements": {
+            "misc-napilopez": {
+                "origin": "Misc",
+                "format": "rewstextdump",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/focal-solo6-be-spinorama-and-measurements.23499/#post-785638",
+                "quality": "low",
+                "review_published": "20210517",
+            },
+        },
+    },
     "Fostex PM03": {
         "brand": "Fostex",
         "model": "PM03",
@@ -2506,7 +2524,7 @@ speakers_info = {
         "model": "4309",
         "type": "passive",
         "price": "2000",
-        "shape": "floorstanders",
+        "shape": "bookshelves",
         "amount": "pair",
         "default_measurement": "misc-napilopez",
         "measurements": {
