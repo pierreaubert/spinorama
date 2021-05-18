@@ -1476,6 +1476,13 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8341a-sam%E2%84%A2-studio-monitor-review.11652/#post-335087",
             },
+            "misc-napilopez": {
+                "origin": "Misc",
+                "format": "rewstextdump",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8341a-spinorama-and-measurements.23463/#post-785643",
+                "quality": "low",
+                "review_published": "20210518",
+            },
         },
     },
     "Genelec 8351B": {
