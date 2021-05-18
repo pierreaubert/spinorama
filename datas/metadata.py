@@ -2501,6 +2501,24 @@ speakers_info = {
             },
         },
     },
+    "JBL 4309": {
+        "brand": "JBL",
+        "model": "4309",
+        "type": "passive",
+        "price": "2000",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "misc-napilopez",
+        "measurements": {
+            "misc-napilopez": {
+                "origin": "Misc",
+                "format": "rewstextdump",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-4309-spinorama-and-measurements.23465/#post-784844",
+                "quality": "low",
+                "review_published": "20210517",
+            },
+        },
+    },
     "JBL 4319": {
         "brand": "JBL",
         "model": "4319",
