@@ -299,6 +299,23 @@ speakers_info = {
             },
         },
     },
+    "Barefoot Footprint 01": {
+        "brand": "Barefoot",
+        "model": "Footprint 01",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "4000",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/barefoot-footprint-01-review-studio-monitor.23524/",
+                "review_published": "20210519",
+            },
+        },
+    },
     "Behringer B2030p": {
         "brand": "Behringer",
         "model": "B2030p",
