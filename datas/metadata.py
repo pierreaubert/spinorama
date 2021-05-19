@@ -3725,9 +3725,19 @@ speakers_info = {
         "price": "150",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac",
+        "default_measurement": "eac-v2-20210519",
         "measurements": {
-            "eac": {
+            "eac-v2-20210519": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/neumi_bs5p_take2/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/revisited-neumi-bs5p-powered-bookshelf-speaker.23522/#post-786588",
+                },
+                "review_published": "20210519",
+                "notes": "Second measurement with a new internal EQ provided by Neumi and ports stuffed",
+            },
+            "eac-v1-20210417": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -3955,6 +3965,26 @@ speakers_info = {
             },
         },
     },
+    "Perlisten s7t": {
+        "brand": "Perlisten",
+        "model": "s7t",
+        "type": "passive",
+        "price": "16000",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "reviews": {
+                    "adh": "https://www.audioholics.com/tower-speaker-reviews/perlisten-s7t/conclusion",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/perlisten-speakers.19745/",
+                },
+            },
+        },
+    },
     "Pioneer S-DF3-K": {
         "brand": "Pioneer",
         "model": "S-DF3-K",
@@ -4090,6 +4120,24 @@ speakers_info = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/tower-speaker-reviews/polk-legend-l800/conclusion",
+            },
+        },
+    },
+    "Polk Audio R200": {
+        "brand": "Polk Audio",
+        "model": "R200",
+        "type": "passive",
+        "price": "700",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-napilopez",
+        "measurements": {
+            "misc-napilopez": {
+                "origin": "Misc",
+                "format": "rewstextdump",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/polk-reserve-r200-spinorama-and-measurements-a-really-nice-surprise.23502/#post-785637",
+                "quality": "low",
+                "review_published": "20210517",
             },
         },
     },
