@@ -137,7 +137,7 @@ def grid_text(radius, anglelist):
 
 
 def find_nearest_freq(dfu, hz, tolerance=0.05):
-    """ return the index of the nearest freq in dfu, return None if not found """
+    """return the index of the nearest freq in dfu, return None if not found"""
     ihz = None
     for i in dfu.index:
         f = dfu.loc[i]
