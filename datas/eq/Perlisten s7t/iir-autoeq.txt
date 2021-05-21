@@ -1,0 +1,26 @@
+EQ for Perlisten s7t computed from Misc data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-05-20-07:40:10
+
+Preamp: -0.2 dB
+
+Filter  1: ON PK Fc  1189 Hz Gain -1.48 dB Q 0.18
+Filter  2: ON PK Fc 10896 Hz Gain -1.70 dB Q 3.24
+Filter  3: ON PK Fc  1659 Hz Gain +0.90 dB Q 1.17
+Filter  4: ON PK Fc   504 Hz Gain +0.95 dB Q 7.24
+Filter  5: ON PK Fc  4141 Hz Gain +1.03 dB Q 12.00
+Filter  6: ON PK Fc  3002 Hz Gain -0.68 dB Q 5.15
+Filter  7: ON PK Fc   693 Hz Gain +0.69 dB Q 8.44
+Filter  8: ON PK Fc  5033 Hz Gain +0.65 dB Q 12.00
+Filter  9: ON PK Fc  7244 Hz Gain -0.80 dB Q 12.00
+Filter 10: ON PK Fc   419 Hz Gain -0.46 dB Q 12.00
+Filter 11: ON PK Fc   942 Hz Gain -0.76 dB Q 8.15
+Filter 12: ON PK Fc   770 Hz Gain +0.37 dB Q 12.00
+Filter 13: ON PK Fc  3526 Hz Gain -0.32 dB Q 12.00
+Filter 14: ON PK Fc   583 Hz Gain -0.30 dB Q 12.00
+Filter 15: ON PK Fc  1280 Hz Gain +0.27 dB Q 12.00
+Filter 16: ON PK Fc  1599 Hz Gain -0.44 dB Q 10.27
+Filter 17: ON PK Fc  6544 Hz Gain +0.31 dB Q 12.00
+Filter 18: ON PK Fc  3941 Hz Gain +0.22 dB Q 12.00
+Filter 19: ON PK Fc 14020 Hz Gain +0.29 dB Q 9.52
+Filter 20: ON PK Fc  2108 Hz Gain +0.30 dB Q 4.75
