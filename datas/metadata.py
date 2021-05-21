@@ -1410,6 +1410,8 @@ speakers_info = {
                 "format": "rewstextdump",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-1032a-measurements-including-spinorama.17491/",
                 "quality": "low",
+                "review_published": "20201112",
+                "notes": "data corrected in May 2021",
             },
         },
     },
@@ -3993,7 +3995,8 @@ speakers_info = {
         "measurements": {
             "misc-audioholics": {
                 "origin": "Misc",
-                "format": "webplotdigitizer",
+                "format": "rewstextdump",
+                # "format": "webplotdigitizer",
                 "quality": "low",
                 "reviews": {
                     "adh": "https://www.audioholics.com/tower-speaker-reviews/perlisten-s7t/conclusion",
