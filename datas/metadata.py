@@ -4618,9 +4618,14 @@ speakers_info = {
         "price": "5000",
         "shape": "floorstanders",
         "amount": "pair",
-        "default_measurement": "asr",
+        "default_measurement": "asr-v2-20210519",
         "measurements": {
-            "asr": {
+            "asr-v2-20210519": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-f208-tower-speaker-review.13192/",
+            },
+            "asr-v1-20200508": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-f208-tower-speaker-review.13192/",
