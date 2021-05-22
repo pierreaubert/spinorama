@@ -14,7 +14,7 @@ from .compute_cea2034 import (
     estimated_inroom_HV,
 )
 
-from .load_misc import graph_melt
+from .load_misc import graph_melt, sort_angles
 from .compute_normalize import unify_freq
 
 logger = logging.getLogger("spinorama")
@@ -266,3 +266,35 @@ def spin_compute_di_eir(speaker_name, title, spin_uneven):
         logger.error("On Axis has NaN values")
 
     return dfs
+
+
+def symmetrise_measurement(spl):
+    if spl is None:
+        return None
+
+    # look for min and max
+    cols = spl.columns
+    min_angle = 180
+    max_angle = -180
+    for col in cols:
+        if col != "Freq":
+            angle = None
+            if col == "On Axis":
+                angle = 0
+            else:
+                angle = int(col[:-1])
+            min_angle = min(min_angle, angle)
+            max_angle = max(max_angle, angle)
+    logger.debug("min {} max {}".format(min_angle, max_angle))
+
+    # extend 0-180 to -170 0 180
+    # extend 0-90  to -90 to 90
+    new_spl = spl.copy()
+    for col in cols:
+        if col not in ("Freq", "On Axis", "180°") and col[0] != "-":
+            mangle = "-{}".format(col)
+            if mangle not in spl.columns:
+                new_spl[mangle] = spl[col]
+    return sort_angles(new_spl)
+
+
