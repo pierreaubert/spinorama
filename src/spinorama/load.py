@@ -296,5 +296,3 @@ def symmetrise_measurement(spl):
             if mangle not in spl.columns:
                 new_spl[mangle] = spl[col]
     return sort_angles(new_spl)
-
-

@@ -58,7 +58,9 @@ def find_data_klippel(speaker_path, speaker_brand, speaker_name, mversion_in, cs
     return None
 
 
-def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mversion, symmetry):
+def parse_graphs_speaker_klippel(
+    speaker_path, speaker_brand, speaker_name, mversion, symmetry
+):
     dfs = {}
     mandatory_csvfiles = [
         "SPL Horizontal",
@@ -127,7 +129,7 @@ def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mver
         _, h_spl = parse_graph_freq_klippel(h_name)
         _, v_spl = parse_graph_freq_klippel(v_name)
         logger.debug("Speaker: {0} (Klippel) loaded".format(speaker_name))
-        
+
         if symmetry == "coaxial":
             h_spl2 = symmetrise_measurement(h_spl)
             if v_spl is None:
