@@ -3780,6 +3780,8 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/nht-pro-m-00-powered-monitor-review.10859/",
+                "symmetry": "horizontal",
+                "review_published": "20200605",
             },
         },
     },
