@@ -40,7 +40,7 @@ else
     echo "OK after generate meta!"
 fi
 rm -f docs/compare/*.json
-command=$(./generate_compare.py --dash-ip="IP")
+command=$(./generate_compare.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate compare!"
@@ -52,7 +52,7 @@ fi
 ./update_pictures.sh
 # generate stats
 rm -f docs/stats/*.json
-command=$(./generate_stats.py  --dash-ip="$IP")
+command=$(./generate_stats.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate statistics!"
