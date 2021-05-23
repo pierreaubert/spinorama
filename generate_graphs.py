@@ -19,7 +19,7 @@
 """Usage:
 generate_graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
   [--force] [--type=<ext>] [--log-level=<level>]\
-  [--origin=<origin>]  [--speaker=<speaker>] [--version=<version>] [--brand=<brand>]\
+  [--origin=<origin>]  [--speaker=<speaker>] [--mversion=<mversion>] [--brand=<brand>]\
   [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] [--update-cache]
 
 Options:
@@ -32,7 +32,7 @@ Options:
   --origin=<origin>   filter by origin
   --brand=<brand>     filter by brand
   --speaker=<speaker> filter by speaker
-  --version=<version> filter by measurement
+  --mversion=<mversion> filter by measurement
   --dash-ip=<ip>      ip of dashboard to track execution, default to localhost/127.0.0.1
   --dash-port=<port>  port for the dashbboard, default to 8265
   --ray-local         if present, ray will run locally, it is usefull for debugging
@@ -139,9 +139,9 @@ def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict]) -> dict:
             "measurements"
         ].items():
             # mversion looks like asr and asr_eq
-            if "version" in filters and not (
-                mversion == filters["version"]
-                or mversion != "{}_eq".format(filters["version"])
+            if "mversion" in filters and not (
+                mversion == filters["mversion"]
+                or mversion == "{}_eq".format(filters["mversion"])
             ):
                 logger.debug("skipping {}/{}".format(speaker, mversion))
                 continue
@@ -336,7 +336,7 @@ if __name__ == "__main__":
     custom_ray_init(args)
 
     filters = {}
-    for ifilter in ("speaker", "origin", "version"):
+    for ifilter in ("speaker", "origin", "mversion"):
         flag = "--{}".format(ifilter)
         if args[flag] is not None:
             filters[ifilter] = args[flag]
