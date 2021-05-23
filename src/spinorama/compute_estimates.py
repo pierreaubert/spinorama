@@ -4,13 +4,25 @@ import math
 import numpy as np
 import pandas as pd
 
+from .graph_contour import compute_directivity_deg, compute_contour
+
 pd.set_option("display.max_rows", 1000)
 
 logger = logging.getLogger("spinorama")
 
 
-def estimates(onaxis: pd.DataFrame):
+def estimates(spin: pd.DataFrame, splH: pd.DataFrame, splV: pd.DataFrame):
     try:
+        onaxis = None
+        if "Measurements" in spin.keys():
+            onaxis = spin.loc[spin["Measurements"] == "On Axis"].reset_index(drop=True)
+        else:
+            onaxis = spin.get("On Axis", None)
+
+        if onaxis is None:
+            logger.debug("On Axis measurement not found!")
+            return None
+
         freq_min = onaxis.Freq.min()
         logger.debug("Freq min: {0}".format(freq_min))
         if math.isnan(freq_min):
@@ -65,6 +77,17 @@ def estimates(onaxis: pd.DataFrame):
                 est["ref_level"] = round(y_ref, 0)
             if not math.isnan(band):
                 est["ref_band"] = round(band, 1)
+
+        for orientation in ("horizontal", "vertical"):
+            spl = splH
+            if orientation == "vertical":
+                spl = splV
+            if spl is not None:
+                af, am, az = compute_contour(spl)
+                dir_deg_p, dir_deg_m, dir_deg = compute_directivity_deg(af, am, az)
+                est["dir_{}_p".format(orientation)] = dir_deg_p
+                est["dir_{}_m".format(orientation)] = dir_deg_m
+                est["dir_{}".format(orientation)] = dir_deg
 
         logger.debug("Estimates: {0}".format(est))
         return est

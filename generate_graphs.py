@@ -232,9 +232,14 @@ def compute(speakerlist, filters, ray_ids: dict):
                     continue
 
                 if m_version not in ray_ids[speaker].keys():
-                    if "mversion" in filters and (m_version == filters["mversion"] or m_version == "{}_eq".format(filters["mversion"])):
+                    if "mversion" in filters and (
+                        m_version == filters["mversion"]
+                        or m_version == "{}_eq".format(filters["mversion"])
+                    ):
                         logger.error(
-                            "Speaker {} mversion {} not in keys".format(speaker, m_version)
+                            "Speaker {} mversion {} not in keys".format(
+                                speaker, m_version
+                            )
                         )
                     continue
 

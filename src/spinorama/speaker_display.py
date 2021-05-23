@@ -361,8 +361,9 @@ def display_summary(df, params, speaker, origin, key):
         if "CEA2034" not in df.keys():
             return None
         spin = df["CEA2034"]
-        onaxis = spin.loc[spin["Measurements"] == "On Axis"].reset_index(drop=True)
-        est = estimates(onaxis)
+        splH = df.get("SPL Horizontal_unmelted", None)
+        splV = df.get("SPL Vertical_unmelted", None)
+        est = estimates(spin, splH, splV)
 
         # 1
         speaker_summary = [
@@ -370,8 +371,8 @@ def display_summary(df, params, speaker, origin, key):
         ]
 
         if est is None:
-            #                    2   3   4   5   6
-            speaker_summary += ["", "", "", "", ""]
+            #                    2   3   4   5   6   7   8
+            speaker_summary += ["", "", "", "", "", "", ""]
         else:
             # 2, 3
             if "ref_level" in est.keys():
@@ -402,13 +403,33 @@ def display_summary(df, params, speaker, origin, key):
             else:
                 speaker_summary += [""]
 
+            # 7
+            if "dir_horizontal_p" in est.keys() and "dir_horizontal_m" in est.keys():
+                speaker_summary += [
+                    "• Horizontal directivity ({}°, {}°)".format(
+                        int(est["dir_horizontal_m"]), int(est["dir_horizontal_p"])
+                    )
+                ]
+            else:
+                speaker_summary += [""]
+
+            # 8
+            if "dir_vertical_p" in est.keys() and "dir_vertical_m" in est.keys():
+                speaker_summary += [
+                    "• Vertical directivity ({}°, {}°)".format(
+                        int(est["dir_vertical_m"]), int(est["dir_vertical_p"])
+                    )
+                ]
+            else:
+                speaker_summary += [""]
+
         pref_score = None
         if "Estimated In-Room Response" in df.keys():
             inroom = df["Estimated In-Room Response"]
             if inroom is not None:
                 pref_score = speaker_pref_rating(spin, inroom)
 
-        # 7-15
+        # 9-17
         if pref_score is not None:
             speaker_summary += [
                 "Preference score: {0}".format(pref_score.get("pref_score", "--")),
@@ -426,10 +447,10 @@ def display_summary(df, params, speaker, origin, key):
                 ),
             ]
         else:
-            #                    7   8   9  10  11  12, 13, 14, 15
+            #                    9  10  11  12, 13, 14, 15  16  17
             speaker_summary += ["", "", "", "", "", "", "", "", ""]
 
-        if len(speaker_summary) != 15:
+        if len(speaker_summary) != 17:
             logger.error(
                 "speaker summary lenght is incorrect {0}".format(speaker_summary)
             )

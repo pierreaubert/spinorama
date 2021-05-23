@@ -146,12 +146,12 @@ def compute_directivity_deg(af, am, az):
         # normˆ2 (z-(-6dB))
         return np.linalg.norm(zp + 6)
 
-    eval_count = 10
+    eval_count = 180
 
     space_p = np.linspace(int(len(am.T[0]) / 2), 1, eval_count)
     eval_p = [linear_eval(x) for x in space_p]
     # 1% tolerance
-    tol = 0.01
+    tol = 0.1
     min_p = np.min(eval_p) * (1.0 + tol)
     # all minimum in this 1% band from min
     pos_g = [i for i, v in enumerate(eval_p) if v < min_p]
@@ -174,4 +174,4 @@ def compute_directivity_deg(af, am, az):
     # translate in deg
     angle_m = -pos_m * 180 / eval_count
 
-    return angle_p, angle_m, (angle_p + angle_m) / 2
+    return angle_p, angle_m, (angle_p - angle_m) / 2

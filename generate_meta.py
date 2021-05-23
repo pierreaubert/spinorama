@@ -117,10 +117,9 @@ def add_scores(dataframe):
                         )
                     )
                     # basic math
-                    onaxis = spin.loc[spin["Measurements"] == "On Axis"].reset_index(
-                        drop=True
-                    )
-                    est = estimates(onaxis)
+                    splH = dfs.get("SPL Horizontal_unmelted", None)
+                    splV = dfs.get("SPL Vertical_unmelted", None)
+                    est = estimates(spin, splH, splV)
                     logger.info("Computing estimated for {0}".format(speaker_name))
                     if est is None:
                         logger.debug(
