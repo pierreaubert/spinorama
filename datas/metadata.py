@@ -63,6 +63,7 @@ speakers_info = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/adam-audio-t7v/conclusion",
+                "notes": "done by James Larson in free air",
             },
         },
     },
@@ -108,11 +109,13 @@ speakers_info = {
         "price": "500",
         "shape": "omnidirectional",
         "amount": "single",
-        "default_measurement": "vendor",
+        "default_measurement": "misc-sausalitoaudio",
         "measurements": {
-            "vendor": {
-                "origin": "Vendors-Apple",
+            "misc-sausalitoaudio": {
+                "origin": "Misc",
                 "format": "webplotdigitizer",
+                "review": "https://www.sausalitoaudio.com/data/",
+                "quality": "low",
             },
         },
     },
@@ -224,13 +227,16 @@ speakers_info = {
         "price": "3600",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "misc-speakerdata2034",
+        "default_measurement": "vendor",
         "measurements": {
-            "misc-speakerdata2034": {
-                "origin": "Misc",
+            "vendor": {
+                "origin": "Vendors-AscendAcoustics",
                 "format": "webplotdigitizer",
                 "quality": "low",
-                "review": "https://speakerdata2034.blogspot.com/2019/12/ascend-acoustics-spinorama-data.html",
+                "reviews": {
+                    "vendor": "http://www.ascendacoustics.com/pages/products/speakers/SRM2EX/srm2exmeas.html",
+                    "spd2034": "https://speakerdata2034.blogspot.com/2019/12/ascend-acoustics-spinorama-data.html",
+                },
             },
         },
     },
@@ -5506,6 +5512,13 @@ origins_info = {
         "logo": "docs/metadata/apple.png",
         "logo-small": "docs/metadata/apple.png",
         "url": "https://www.apple.com",
+    },
+    "Vendors-AscendAcoustics": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.ascendacoustics.com/",
     },
     "Vendors-BIC America": {
         "min hz": 20,
