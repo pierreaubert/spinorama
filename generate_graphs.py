@@ -173,7 +173,7 @@ def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict]) -> dict:
     return ray_ids
 
 
-def compute(speakerlist, ray_ids: dict):
+def compute(speakerlist, filters, ray_ids: dict):
     """Compute a series of measurements"""
     df = {}
     done_ids = {}
@@ -232,9 +232,10 @@ def compute(speakerlist, ray_ids: dict):
                     continue
 
                 if m_version not in ray_ids[speaker].keys():
-                    logger.error(
-                        "Speaker {} mversion {} not in keys".format(speaker, m_version)
-                    )
+                    if "mversion" in filters and (m_version == filters["mversion"] or m_version == "{}_eq".format(filters["mversion"])):
+                        logger.error(
+                            "Speaker {} mversion {} not in keys".format(speaker, m_version)
+                        )
                     continue
 
                 current_id = ray_ids[speaker][m_version][0]
@@ -342,7 +343,7 @@ if __name__ == "__main__":
             filters[ifilter] = args[flag]
 
     ray_ids = queue_speakers(speakerlist, filters)
-    df_new = compute(speakerlist, ray_ids)
+    df_new = compute(speakerlist, filters, ray_ids)
 
     if len(filters.keys()) == 0:
         cache_save(df_new)
