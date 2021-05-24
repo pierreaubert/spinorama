@@ -230,7 +230,7 @@ speakers_info = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-AscendAcoustics",
+                "origin": "Vendors-Ascend Acoustics",
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "reviews": {
@@ -846,6 +846,49 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/diapason-emera-italian-speaker-review.16193/",
+            },
+        },
+    },
+    "DIYSG HTM-12v1": {
+        "brand": "DIYSG",
+        "model": "HTM-12v1",
+        "type": "passive",
+        "price": "600",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/diysg_htm12v1/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/diysg-htm-12v1-speaker-review.23654/",
+                    "diysg": "https://www.diysoundgroup.com/htm-12-kit.html",
+                    "diy": "https://www.diyaudio.com/forums/multi-way/354523-build-diysg-htm-12-2020-build-log.html",
+                    "avf": "https://www.avforums.com/threads/htm-12-build-the-first-of-many.2211551/",
+                },
+                "review_published": "20210523",
+            },
+        },
+    },
+    "Donner Dyna 3": {
+        "brand": "Donner",
+        "model": "Dyna 3",
+        "type": "active",
+        "price": "90",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/donner_dyna3/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/donner-dyna-3-powered-bookshelf-speaker-89-monitors.23653/",
+                },
+                "review_published": "20210523",
             },
         },
     },
@@ -2463,12 +2506,22 @@ speakers_info = {
         "price": "3600",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-708p-review-professional-monitor.20006/",
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews":
+                {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_708p/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-professional-708p-bi-amplified-8-inch-master-reference-monitor.23655/",
+                },
+                "review_published": "20210523",
             },
         },
     },
@@ -4672,11 +4725,20 @@ speakers_info = {
         "brand": "Revel",
         "model": "F228Be",
         "type": "passive",
-        "price": "",
+        "price": "10000",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "vendor",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/revel-f228be-review-speaker.23659/",
+                    "stp": "https://www.stereophile.com/content/revel-performa-f228be-loudspeaker",
+                },
+                "review_published": "20210523",
+            },
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
