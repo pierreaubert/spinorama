@@ -2516,8 +2516,7 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "reviews":
-                {
+                "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_708p/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-professional-708p-bi-amplified-8-inch-master-reference-monitor.23655/",
                 },
