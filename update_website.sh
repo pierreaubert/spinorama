@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Update starts"
-export PYTHONPATH=src:.
+export PYTHONPATH=src:src/website:src/spinorama:.
 
 IP="127.0.0.1"
 if [ $HOSTNAME = "spin" ]; then

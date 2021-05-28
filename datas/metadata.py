@@ -2516,8 +2516,7 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "reviews":
-                {
+                "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_708p/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-professional-708p-bi-amplified-8-inch-master-reference-monitor.23655/",
                 },
@@ -5575,7 +5574,7 @@ origins_info = {
         "logo-small": "docs/metadata/apple.png",
         "url": "https://www.apple.com",
     },
-    "Vendors-AscendAcoustics": {
+    "Vendors-Ascend Acoustics": {
         "min hz": 20,
         "max hz": 20000,
         "min dB": -40,
