@@ -1527,6 +1527,23 @@ speakers_info = {
             },
         },
     },
+    "Genelec 8320A": {
+        "brand": "Genelec",
+        "model": "8320A",
+        "type": "active",
+        "price": "1250",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8320a-review-powered-monitor.23831/",
+                "review_published": "20210530",
+            },
+        },
+    },
     "Genelec 8351A": {
         "brand": "Genelec",
         "model": "8351A",
@@ -3364,6 +3381,23 @@ speakers_info = {
             },
         },
     },
+    "Klipsch The Three": {
+        "brand": "Klipsch",
+        "model": "The Three",
+        "type": "active",
+        "price": "399",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/klipsch-the-three-review-powered-speaker.23847/",
+                "review_published": "20210530",
+            },
+        },
+    },
     "KRK Systems Classic 5": {
         "brand": "KRK Systems",
         "model": "Classic 5",
@@ -3478,6 +3512,26 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Magico",
                 "format": "webplotdigitizer",
+            },
+        },
+    },
+    "Magico A5": {
+        "brand": "Magico",
+        "model": "A5",
+        "type": "passive",
+        "price": "24800",
+        "shape": "floorstanders",
+        "default_measurement": "misc-soundstageultra",
+        "measurements": {
+            "misc-soundstageultra": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review_published": "20210601",
+                "reviews": {
+                    "ssu": "https://www.soundstageultra.com/index.php/equipment-menu/1042-magico-a5-loudspeakers",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/magico-a5-spinorama-cea2034.23866/",
+                },
             },
         },
     },
