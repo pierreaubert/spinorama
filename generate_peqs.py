@@ -94,11 +94,11 @@ VERSION = 0.8
 
 
 def optim_find_peq(
-        current_speaker_name,
-        df_speaker,
-        optim_config,
-        use_score,
-):        
+    current_speaker_name,
+    df_speaker,
+    optim_config,
+    use_score,
+):
 
     # shortcut
     curves = optim_config["curve_names"]
@@ -125,8 +125,9 @@ def optim_find_peq(
     auto_score = None
     if use_score:
         _, _, auto_score = scores_apply_filter(df_speaker, auto_peq)
-        
+
     return auto_score, auto_results, auto_peq
+
 
 @ray.remote
 def optim_save_peq(
@@ -183,7 +184,9 @@ def optim_save_peq(
         score = -1.0
 
     # compute pref score from speaker if possible
-    auto_score, auto_results, auto_peq = optim_find_peq(current_speaker_name, df_speaker, optim_config, use_score)
+    auto_score, auto_results, auto_peq = optim_find_peq(
+        current_speaker_name, df_speaker, optim_config, use_score
+    )
 
     # do we have a manual peq?
     manual_score = {}
@@ -219,7 +222,11 @@ def optim_save_peq(
     if use_score:
         auto_spin, auto_pir, auto_score = scores_apply_filter(df_speaker, auto_peq)
         # store the 3 different scores
-        scores = [score.get("pref_score", -1), manual_score.get("pref_score", -1), auto_score["pref_score"]]
+        scores = [
+            score.get("pref_score", -1),
+            manual_score.get("pref_score", -1),
+            auto_score["pref_score"],
+        ]
         if be_verbose:
             scores[1] = manual_score.get("pref_score", -5)
     else:
@@ -269,7 +276,7 @@ def optim_save_peq(
         for curve in curves:
             auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
         # END TODO
-        
+
         graphs = None
         if len(manual_peq) > 0 and not peq_equal(manual_peq, auto_peq):
             graphs = auto_graph_results(
