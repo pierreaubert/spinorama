@@ -93,6 +93,41 @@ from spinorama.auto_graph import graph_results as auto_graph_results
 VERSION = 0.8
 
 
+def optim_find_peq(
+        current_speaker_name,
+        df_speaker,
+        optim_config,
+        use_score,
+):        
+
+    # shortcut
+    curves = optim_config["curve_names"]
+
+    # get freq and targets
+    data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
+    if data_frame is None or freq is None or auto_target is None:
+        logger.error("Cannot compute freq for {}".format(current_speaker_name))
+        return None, None, None
+
+    auto_target_interp = []
+    for curve in curves:
+        auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
+    auto_results, auto_peq = optim_greedy(
+        current_speaker_name,
+        df_speaker,
+        freq,
+        auto_target,
+        auto_target_interp,
+        optim_config,
+        use_score,
+    )
+
+    auto_score = None
+    if use_score:
+        _, _, auto_score = scores_apply_filter(df_speaker, auto_peq)
+        
+    return auto_score, auto_results, auto_peq
+
 @ray.remote
 def optim_save_peq(
     current_speaker_name,
@@ -139,34 +174,19 @@ def optim_save_peq(
         # set EQ min to 500
         optim_config["freq_reg_min"] = max(500, optim_config["freq_reg_min"])
 
-    # compute pref score from speaker if possible
+    curves = optim_config["curve_names"]
+
     score = None
     if use_score:
         _, _, score = scores_apply_filter(df_speaker, [])
     else:
         score = -1.0
 
-    # compute an optimal PEQ
-    curves = optim_config["curve_names"]
-    data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
-    if data_frame is None or freq is None or auto_target is None:
-        logger.error("Cannot compute freq for {}".format(current_speaker_name))
-        return None, None, None
-    auto_target_interp = []
-    for curve in curves:
-        auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
-    auto_results, auto_peq = optim_greedy(
-        current_speaker_name,
-        df_speaker,
-        freq,
-        auto_target,
-        auto_target_interp,
-        optim_config,
-        use_score,
-    )
+    # compute pref score from speaker if possible
+    auto_score, auto_results, auto_peq = optim_find_peq(current_speaker_name, df_speaker, optim_config, use_score)
 
     # do we have a manual peq?
-    score_manual = {}
+    manual_score = {}
     manual_peq = []
     manual_target = None
     manual_target_interp = None
@@ -178,7 +198,7 @@ def optim_save_peq(
             and os.readlink(manual_peq_name) != "iir-autoeq.txt"
         ):
             manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config["fs"])
-            manual_spin, manual_pir, score_manual = scores_apply_filter(
+            manual_spin, manual_pir, manual_score = scores_apply_filter(
                 df_speaker, manual_peq
             )
             if df_speaker_eq is not None:
@@ -192,18 +212,18 @@ def optim_save_peq(
                     )
 
     # compute new score with this PEQ
-    spin_auto = None
-    pir_auto = None
-    score_auto = None
+    auto_spin = None
+    auto_pir = None
+    auto_score = None
     scores = []
     if use_score:
-        spin_auto, pir_auto, score_auto = scores_apply_filter(df_speaker, auto_peq)
+        auto_spin, auto_pir, auto_score = scores_apply_filter(df_speaker, auto_peq)
         # store the 3 different scores
-        scores = [score["pref_score"], score["pref_score"], score_auto["pref_score"]]
+        scores = [score.get("pref_score", -1), manual_score.get("pref_score", -1), auto_score["pref_score"]]
         if be_verbose:
-            scores[1] = score_manual.get("pref_score", -5)
+            scores[1] = manual_score.get("pref_score", -5)
     else:
-        spin_auto, pir_auto = noscore_apply_filter(df_speaker, auto_peq)
+        auto_spin, auto_pir = noscore_apply_filter(df_speaker, auto_peq)
 
     # print peq
     comments = [
@@ -214,7 +234,7 @@ def optim_save_peq(
     if use_score:
         comments.append(
             "Preference Score {:2.1f} with EQ {:2.1f}".format(
-                score["pref_score"], score_auto["pref_score"]
+                score["pref_score"], auto_score["pref_score"]
             )
         )
 
@@ -241,6 +261,15 @@ def optim_save_peq(
 
     # print results
     if len(auto_peq) > 0:
+
+        # TODO: optim_config by best_config
+        data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
+
+        auto_target_interp = []
+        for curve in curves:
+            auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
+        # END TODO
+        
         graphs = None
         if len(manual_peq) > 0 and not peq_equal(manual_peq, auto_peq):
             graphs = auto_graph_results(
@@ -254,10 +283,10 @@ def optim_save_peq(
                 manual_target_interp,
                 df_speaker["CEA2034"],
                 manual_spin,
-                spin_auto,
+                auto_spin,
                 df_speaker["Estimated In-Room Response"],
                 manual_pir,
-                pir_auto,
+                auto_pir,
                 optim_config,
             )
         else:
@@ -272,10 +301,10 @@ def optim_save_peq(
                 None,
                 df_speaker["CEA2034"],
                 None,
-                spin_auto,
+                auto_spin,
                 df_speaker["Estimated In-Room Response"],
                 None,
-                pir_auto,
+                auto_pir,
                 optim_config,
             )
 
@@ -323,24 +352,24 @@ def optim_save_peq(
         )
         if score is not None:
             if (
-                score_manual is not None
-                and score_auto is not None
-                and "nbd_on_axis" in score_manual
+                manual_score is not None
+                and auto_score is not None
+                and "nbd_on_axis" in manual_score
             ):
-                logger.info(scores_print2(score, score_manual, score_auto))
-            elif score_auto is not None and "nbd_on_axis" in score_auto:
-                logger.info(scores_print(score, score_auto))
+                logger.info(scores_print2(score, manual_score, auto_score))
+            elif auto_score is not None and "nbd_on_axis" in auto_score:
+                logger.info(scores_print(score, auto_score))
         logger.info(
             "----------------------------------------------------------------------"
         )
         if use_score:
-            if "pref_score" in score_manual:
+            if "pref_score" in manual_score:
                 print(
                     "{:+2.2f} {:+2.2f} {:+2.2f} {:+2.2f} {:s}".format(
                         score["pref_score"],
-                        score_manual["pref_score"],
-                        score_auto["pref_score"],
-                        score_manual["pref_score"] - score_auto["pref_score"],
+                        manual_score["pref_score"],
+                        auto_score["pref_score"],
+                        manual_score["pref_score"] - auto_score["pref_score"],
                         current_speaker_name,
                     )
                 )
@@ -348,7 +377,7 @@ def optim_save_peq(
                 print(
                     "{:+2.2f} {:+2.2f} {:s}".format(
                         score["pref_score"],
-                        score_auto["pref_score"],
+                        auto_score["pref_score"],
                         current_speaker_name,
                     )
                 )
