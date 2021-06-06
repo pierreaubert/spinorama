@@ -64,7 +64,12 @@ def find_best_biquad(
     # can use differential_evolution basinhoppin dual_annealing
     res = {
         "success": False,
-        "x": [0.0, 0.0, 0.0, 0.0],
+        "x": [
+            3,
+            (bounds[1][0]+bounds[1][1])/2,
+            (bounds[2][0]+bounds[2][1])/2,
+            (bounds[3][0]+bounds[3][1])/2,
+        ],
         "fun": 0.0,
         "nit": -1,
         "message": "",
@@ -87,21 +92,14 @@ def find_best_biquad(
                 res["message"],
             )
         )
+        return res.success, int(res.x[0]), res.x[1], res.x[2], res.x[3], res.fun, res.nit
     except ValueError as ve:
         res["success"] = False
         logger.error("{} bounds {}".format(ve, bounds))
         for i in range(0, 4):
             if bounds[i][0] >= bounds[i][1]:
                 logger.error("on bound [{}]".format(i))
-                return (
-                    res["success"],
-                    int(res["x"][0]),
-                    res["x"][1],
-                    res["x"][2],
-                    res["x"][3],
-                    res["fun"],
-                    res["nit"],
-                )
+        return False, 0, -1, -1, -1, -1, -1
 
 
 def find_best_peak(
