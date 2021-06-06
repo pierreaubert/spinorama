@@ -109,8 +109,19 @@ speakers_info = {
         "price": "500",
         "shape": "omnidirectional",
         "amount": "single",
-        "default_measurement": "misc-sausalitoaudio",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/apple-homepod-review-smart-speaker.23882/",
+                    "ssa": "https://www.sausalitoaudio.com/data/",
+                },
+                "review_published": "20210602",
+                "notes": "...So what you see below is accurate to about 8 kHz. Above that, there is some error but on-axis response shows surprisingly good agreement so I think we are fine...",
+                "quality": "medium",
+            },
             "misc-sausalitoaudio": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
@@ -430,9 +441,9 @@ speakers_info = {
             },
         },
     },
-    "Bose 301 Series IV": {
+    "Bose 141": {
         "brand": "Bose",
-        "model": "301 Series IV",
+        "model": "141",
         "type": "passive",
         "shape": "bookshelves",
         "price": "",
@@ -445,9 +456,9 @@ speakers_info = {
             },
         },
     },
-    "Bose 141": {
+    "Bose 301 Series IV": {
         "brand": "Bose",
-        "model": "141",
+        "model": "301 Series IV",
         "type": "passive",
         "shape": "bookshelves",
         "price": "",
@@ -491,6 +502,25 @@ speakers_info = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/bose_901_series_v/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bose-901-series-v-speaker-review.14865/",
                 },
+            },
+        },
+    },
+    "Bose TV Speaker Soundbar": {
+        "brand": "Bose",
+        "model": "Bose TV Speaker Soundbar",
+        "type": "active",
+        "shape": "soundbar",
+        "price": "250",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/bose_tv_speaker_soundbar/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bose-tv-speaker-soundbar-review.23974/",
+                },
+                "review_published": "20210606",
             },
         },
     },
@@ -869,6 +899,47 @@ speakers_info = {
                     "avf": "https://www.avforums.com/threads/htm-12-build-the-first-of-many.2211551/",
                 },
                 "review_published": "20210523",
+            },
+        },
+    },
+    "DIYSG Volt-6": {
+        "brand": "DIYSG",
+        "model": "Volt-6",
+        "type": "passive",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/diysg_volt6/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/diy-sound-group-volt-6.23881/",
+                },
+                "review_published": "20210602",
+                "notes": "sloped baffle measurement (see review)",
+            },
+        },
+    },
+    "DIYSG Volt-8 v2": {
+        "brand": "DIYSG",
+        "model": "Volt-8 v2",
+        "type": "passive",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/diysg_volt8/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/diysg-volt-8-speaker-review.23907/#post-804491",
+                },
+                "review_published": "20210603",
             },
         },
     },
@@ -3395,6 +3466,8 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/klipsch-the-three-review-powered-speaker.23847/",
                 "review_published": "20210530",
+                "notes": "...performed over 700 measurement which resulted in error rate of less than 1% below about 7 kHz. Above that the error shot way up due to me setting the reference axis to the woofer center, not the tweeter. This severely disadvantaged the NFS system in computing the sound field as the tweeter took over more of the duty. I picked the woofer because I incorrectly assumed this was a mono speaker and dual tweeters were used for some kind of spatial effect...",
+                "quality": "medium",
             },
         },
     },
