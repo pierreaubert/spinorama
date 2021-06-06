@@ -84,6 +84,7 @@ def sanity_check_shape(name, speaker):
         "outdoor",
         "panel",
         "inwall",
+        "soundbar",
     )
     if "shape" not in speaker:
         logging.error("shape is not in {0}".format(name))
