@@ -507,7 +507,7 @@ speakers_info = {
     },
     "Bose TV Speaker Soundbar": {
         "brand": "Bose",
-        "model": "Bose TV Speaker Soundbar",
+        "model": "TV Speaker Soundbar",
         "type": "active",
         "shape": "soundbar",
         "price": "250",
@@ -876,6 +876,27 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/diapason-emera-italian-speaker-review.16193/",
+            },
+        },
+    },
+    "DIYSG Elusive 1099": {
+        "brand": "DIYSG",
+        "model": "Elusive 1099",
+        "type": "passive",
+        "price": "820",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/diysg_1099/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/diysg-1099-speaker-review-monday-jun-7-2021.24038/",
+                    "avs": "https://www.avsforum.com/threads/a-3-way-99db-multi-configurable-seos-design.1479331/",
+                },
+                "review_published": "20210607",
             },
         },
     },
