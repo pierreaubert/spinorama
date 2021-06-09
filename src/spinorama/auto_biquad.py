@@ -66,9 +66,9 @@ def find_best_biquad(
         "success": False,
         "x": [
             3,
-            (bounds[1][0]+bounds[1][1])/2,
-            (bounds[2][0]+bounds[2][1])/2,
-            (bounds[3][0]+bounds[3][1])/2,
+            (bounds[1][0] + bounds[1][1]) / 2,
+            (bounds[2][0] + bounds[2][1]) / 2,
+            (bounds[3][0] + bounds[3][1]) / 2,
         ],
         "fun": 0.0,
         "nit": -1,
@@ -92,7 +92,15 @@ def find_best_biquad(
                 res["message"],
             )
         )
-        return res.success, int(res.x[0]), res.x[1], res.x[2], res.x[3], res.fun, res.nit
+        return (
+            res.success,
+            int(res.x[0]),
+            res.x[1],
+            res.x[2],
+            res.x[3],
+            res.fun,
+            res.nit,
+        )
     except ValueError as ve:
         res["success"] = False
         logger.error("{} bounds {}".format(ve, bounds))

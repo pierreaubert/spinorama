@@ -459,6 +459,7 @@ def graph_isoband(df, isoband_params):
     )
 
     dir_deg_p, dir_deg_m, _ = compute_directivity_deg(af, am, az)
+    # print('debug {} {}'.format(dir_deg_p, dir_deg_m))
     lines = graph_directivity_lines(freq_min, dir_deg_p, dir_deg_m)
 
     def transform_log(x, y):
@@ -496,7 +497,7 @@ def graph_isoband(df, isoband_params):
     )
     axis = graph_empty(freq_min, freq_max, -180, 180)
     return (
-        (isobands + lines + axis)
+        alt.layer(isobands, axis, lines)
         .resolve_scale(x="independent", y="independent")
         .properties(width=graph_width, height=graph_height)
     )
