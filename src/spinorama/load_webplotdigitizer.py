@@ -83,9 +83,11 @@ def parse_graph_freq_webplotdigitizer(filename):
                     for d in range(0, len(data))
                 ]
                 sdata = sorted(udata, key=lambda a: a[0])
-                print(col["name"], len(sdata))
-                if len(sdata) > 0:
-                    print(sdata[0])
+                logger.debug(
+                    "reading col {} with {} data".format(col["name"], len(sdata))
+                )
+                # if len(sdata) > 0:
+                #    print(sdata[0])
                 # since sdata and freq_ref are both sorted, iterate over both
                 ref_p = 0
                 for di in range(0, len(sdata) - 1):
