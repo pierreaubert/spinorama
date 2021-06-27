@@ -614,9 +614,9 @@ speakers_info = {
             },
         },
     },
-    "Bowers & Wilkins WM7.5": {
+    "Bowers & Wilkins CWM7.5": {
         "brand": "Bowers & Wilkins",
-        "model": "WM7.5",
+        "model": "CWM7.5",
         "type": "passive",
         "price": "",
         "amount": "pair",
@@ -1530,7 +1530,7 @@ speakers_info = {
     "Focal Solo6 Be": {
         "brand": "Focal",
         "model": "Solo6 Be",
-        "type": "passive",
+        "type": "active",
         "price": "1800",
         "shape": "bookshelves",
         "amount": "pair",
@@ -1542,6 +1542,24 @@ speakers_info = {
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/focal-solo6-be-spinorama-and-measurements.23499/#post-785638",
                 "quality": "low",
                 "review_published": "20210517",
+            },
+        },
+    },
+    "Focal Sopra 1": {
+        "brand": "Focal",
+        "model": "Sopra 1",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/focal-sopra-nb01/focal-sopra-nb01-conclusion",
+                "quality": "low",
+                "review_published": "20210609",
             },
         },
     },

@@ -1,0 +1,26 @@
+EQ for Behringer B2031A computed from Misc data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-06-27-12:09:52
+
+Preamp: -2.8 dB
+
+Filter  1: ON PK Fc  2654 Hz Gain +2.44 dB Q 0.77
+Filter  2: ON PK Fc   771 Hz Gain -1.23 dB Q 5.70
+Filter  3: ON PK Fc  4881 Hz Gain +0.71 dB Q 1.94
+Filter  4: ON PK Fc 12736 Hz Gain +1.26 dB Q 7.72
+Filter  5: ON PK Fc   360 Hz Gain +1.24 dB Q 3.47
+Filter  6: ON PK Fc   450 Hz Gain +0.58 dB Q 12.00
+Filter  7: ON PK Fc   581 Hz Gain -0.79 dB Q 10.04
+Filter  8: ON PK Fc  2756 Hz Gain -0.49 dB Q 4.96
+Filter  9: ON PK Fc  1299 Hz Gain -0.72 dB Q 3.39
+Filter 10: ON PK Fc  2076 Hz Gain +0.63 dB Q 11.17
+Filter 11: ON PK Fc  3849 Hz Gain +0.50 dB Q 12.00
+Filter 12: ON PK Fc 13591 Hz Gain +0.36 dB Q 12.00
+Filter 13: ON PK Fc 13042 Hz Gain -0.43 dB Q 0.89
+Filter 14: ON PK Fc 12025 Hz Gain +0.64 dB Q 5.37
+Filter 15: ON PK Fc  8033 Hz Gain +0.50 dB Q 5.34
+Filter 16: ON PK Fc   678 Hz Gain +0.31 dB Q 12.00
+Filter 17: ON PK Fc   374 Hz Gain -0.45 dB Q 12.00
+Filter 18: ON PK Fc  6835 Hz Gain +0.35 dB Q 12.00
+Filter 19: ON PK Fc 13761 Hz Gain +0.49 dB Q 12.00
+Filter 20: ON PK Fc   479 Hz Gain +0.21 dB Q 10.32

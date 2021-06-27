@@ -1,0 +1,8 @@
+EQ for Monoprice Monolith THX-365IW computed from ASR data
+Preference Score 1.7 with EQ 0.5
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-06-27-12:10:05
+
+Preamp: -3.7 dB
+
+Filter  1: ON PK Fc  8444 Hz Gain +3.46 dB Q 0.10
