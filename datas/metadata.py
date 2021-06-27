@@ -349,6 +349,23 @@ speakers_info = {
             },
         },
     },
+    "Behringer B2031A": {
+        "brand": "Behringer",
+        "model": "B2031A",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "200",
+        "amount": "pair",
+        "default_measurement": "misc-avs",
+        "measurements": {
+            "misc-avs": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "review": "https://www.avsforum.com/threads/cambridge-audio-s30-or-infinity-primus-163.1489764/#post-23716707",
+                "quality": "low",
+            },
+        },
+    },
     "Buchardt Audio A500": {
         "brand": "Buchardt Audio",
         "model": "A500",
@@ -923,6 +940,26 @@ speakers_info = {
             },
         },
     },
+    "DIYSG HTM-12v2": {
+        "brand": "DIYSG",
+        "model": "HTM-12v2",
+        "type": "passive",
+        "price": "600",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/diysg_htm12v2/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/diysg-htm-12v2-review.24215/",
+                },
+                "review_published": "20210612",
+            },
+        },
+    },
     "DIYSG Volt-6": {
         "brand": "DIYSG",
         "model": "Volt-6",
@@ -1162,6 +1199,23 @@ speakers_info = {
                 "format": "webplotdigitizer",
                 "review": "https://archimago.blogspot.com/2020/10/qspins-audioengine-a2-edifier-s2000-mk.html",
                 "quality": "low",
+            },
+        },
+    },
+    "Edifier S2000 Pro": {
+        "brand": "Edifier",
+        "model": "S2000 Pro",
+        "type": "active",
+        "price": "400",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/edifier-s2000-pro-review-powered-monitor.24255/",
+                "review_published": "20210616",
             },
         },
     },
@@ -1522,6 +1576,40 @@ speakers_info = {
             },
         },
     },
+    "Gallo Acoustics A Diva Ti": {
+        "brand": "Gallo Acoustics",
+        "model": "A Diva Ti",
+        "type": "passive",
+        "price": "400",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "misc-archimago",
+        "measurements": {
+            "misc-archimago": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "review": "https://archimago.blogspot.com/2021/05/review-measurements-anthony-gallo.html",
+                "quality": "low",
+            },
+        },
+    },
+    "Gallo Acoustics Nucleus Micro": {
+        "brand": "Gallo Acoustics",
+        "model": "Nucleus Micro",
+        "type": "passive",
+        "price": "300",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "misc-archimago",
+        "measurements": {
+            "misc-archimago": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "review": "https://archimago.blogspot.com/2021/05/review-measurements-anthony-gallo.html",
+                "quality": "low",
+            },
+        },
+    },
     "GedLee Nathan": {
         "brand": "GedLee",
         "model": "Nathan",
@@ -1674,7 +1762,10 @@ speakers_info = {
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "rewstextdump",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8341a-spinorama-and-measurements.23463/#post-785643",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8341a-spinorama-and-measurements.23463/#post-785643",
+                    "tnw": "https://thenextweb.com/news/genelec-8341a-studio-monitor-review",
+                },
                 "quality": "low",
                 "review_published": "20210518",
             },
@@ -1840,6 +1931,22 @@ speakers_info = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/ccb-8-bookshelf/measurements",
+            },
+        },
+    },
+    "Hsu Research HB-1 MK2": {
+        "brand": "Hsu Research",
+        "model": "HB-1 MK2",
+        "type": "passive",
+        "price": "218",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/hsu-hb-1-mk2-review-horn-speaker.24445/",
             },
         },
     },
@@ -2309,8 +2416,15 @@ speakers_info = {
         "price": "",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "misc-speakerdata2034",
+        "default_measurement": "misc-dominikz",
         "measurements": {
+            "misc-dominikz": {
+                "origin": "Misc",
+                "format": "rewstextdump",
+                "quality": "low",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-lsr305-1st-gen-quasi-anechoic-measurements.24545/#post-828147",
+                "review_published": "20210626",
+            },
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
@@ -3081,6 +3195,15 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8-studio-monitor-review.10897/",
             },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_in-8v1/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8v1-3-way-studio-monitor-review.24241/#post-818243",
+                },
+                "review_published": "20210615",
+            },
         },
     },
     "Kali LP-6": {
@@ -3796,6 +3919,23 @@ speakers_info = {
             },
         },
     },
+    "Monoprice Monolith THX-365IW": {
+        "brand": "Monoprice",
+        "model": "Monolith THX-365IW",
+        "type": "passive",
+        "price": "400",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/monoprice-thx-365iw-review-in-wall-speaker.24500/",
+                "review_published": "20210625",
+            },
+        },
+    },
     "Monoprice Monolith Air Motion Cinema 5": {
         "brand": "Monoprice",
         "model": "Monolith Air Motion Cinema 5",
@@ -4213,6 +4353,26 @@ speakers_info = {
             },
         },
     },
+    "Pioneer DJ VM-50": {
+        "brand": "Pioneer",
+        "model": "DJ VM-50",
+        "type": "passive",
+        "price": "340",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/pioneer_djvm50/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/pioneer%E2%80%99s-new-dj-vm-50-powered-monitors-review.24216/",
+                },
+                "review_published": "20210614",
+            },
+        },
+    },
     "Pioneer S-DF3-K": {
         "brand": "Pioneer",
         "model": "S-DF3-K",
@@ -4348,6 +4508,23 @@ speakers_info = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/tower-speaker-reviews/polk-legend-l800/conclusion",
+            },
+        },
+    },
+    "Polk Audio Monitor 40 Series II": {
+        "brand": "Polk Audio",
+        "model": "Monitor 40 Series II",
+        "type": "passive",
+        "price": "200",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/polk-monitor-40-series-ii-review-speaker.24146/",
+                "review_published": "20210612",
             },
         },
     },
@@ -5344,6 +5521,26 @@ speakers_info = {
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/sonos-move-on-and-off-axis-measurements-an-interesting-case-study.10625/#post-410956",
                     "tnw": "https://thenextweb.com/news/measured-how-the-sonos-move-balances-performance-and-durability-in-a-bluetooth-speaker?amp=1",
+                },
+            },
+        },
+    },
+    "Sonos Roam": {
+        "brand": "Sonos",
+        "model": "Roam",
+        "type": "active",
+        "price": "179",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-napilopez",
+        "measurements": {
+            "misc-napilopez": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/sonos-roam-portable-speaker-spinorama-and-measurements-more-proof-mainstream-speakers-can-be-real-good.23433/",
+                    "tnw": "https://thenextweb.com/news/the-sonos-roam-is-an-excellent-bluetooth-speaker-and-weve-got-the-data-to-prove-it",
                 },
             },
         },
