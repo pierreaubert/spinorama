@@ -83,8 +83,8 @@ def parse_graph_freq_webplotdigitizer(filename):
                     for d in range(0, len(data))
                 ]
                 sdata = sorted(udata, key=lambda a: a[0])
-                print(col['name'], len(sdata))
-                if len(sdata)>0:
+                print(col["name"], len(sdata))
+                if len(sdata) > 0:
                     print(sdata[0])
                 # since sdata and freq_ref are both sorted, iterate over both
                 ref_p = 0
@@ -97,18 +97,22 @@ def parse_graph_freq_webplotdigitizer(filename):
                     dbn = dn[1]
                     # remove possible errors
                     if fr == frn:
-                        logger.debug('found points with equal frequency {}'.format(fr))
+                        logger.debug("found points with equal frequency {}".format(fr))
                         continue
                     # look for closest match
                     while ref_freq[ref_p] <= fr:
                         if ref_p >= len(ref_freq) - 1:
-                            logger.debug('closest match at {} {}'.format(ref_p, ref_freq))
+                            logger.debug(
+                                "closest match at {} {}".format(ref_p, ref_freq)
+                            )
                             break
                         ref_p += 1
                     # if ref_f is too large, skip
                     ref_f = ref_freq[ref_p]
                     if ref_f > frn:
-                        logger.debug('ref freq too large, skipping {} {}'.format(ref_f, frn))
+                        logger.debug(
+                            "ref freq too large, skipping {} {}".format(ref_f, frn)
+                        )
                         continue
                     # linear interpolation
                     ref_db = db + ((dbn - db) * (ref_f - fr)) / (frn - fr)
@@ -161,10 +165,11 @@ def parse_graph_freq_webplotdigitizer(filename):
             dB = np.array([res[i][1] for i in range(0, len(res))]).astype(np.float)
             mrt = [pretty(res[i][2]) for i in range(0, len(res))]
             df = pd.DataFrame({"Freq": freq, "dB": dB, "Measurements": mrt})
-            logger.debug("scan complete fr=[{}, {}], dB=[{}, {}]".format(
-                df.Freq.min(), df.Freq.max(),
-                df.dB.min(), df.dB.max()
-            ))
+            logger.debug(
+                "scan complete fr=[{}, {}], dB=[{}, {}]".format(
+                    df.Freq.min(), df.Freq.max(), df.dB.min(), df.dB.max()
+                )
+            )
             return "CEA2034", df
     except IOError as e:
         logger.error("Cannot not open: {0}".format(e))
