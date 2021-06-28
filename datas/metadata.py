@@ -1311,6 +1311,24 @@ speakers_info = {
             },
         },
     },
+    "Elac Uni-Fi Reference UBR62": {
+        "brand": "Elac",
+        "model": "Uni-Fi Reference UBR62",
+        "type": "passive",
+        "price": "1000",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_ubr62/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/elac-ubr62-speaker-review.24585/",
+                },
+            },
+        },
+    },
     "Emotiva Airmotiv 6s": {
         "brand": "Emotiva",
         "model": "Airmotiv 6s",
@@ -3219,6 +3237,26 @@ speakers_info = {
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_in-8v1/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8v1-3-way-studio-monitor-review.24241/#post-818243",
+                },
+                "review_published": "20210615",
+            },
+        },
+    },
+    "Kali IN-8v2": {
+        "brand": "Kali",
+        "model": "IN-8v2",
+        "type": "active",
+        "price": "760",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_in-8v2",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8v2-second-wave-3-way-studio-monitor-review.24586/",
                 },
                 "review_published": "20210615",
             },
