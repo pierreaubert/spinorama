@@ -130,6 +130,27 @@ speakers_info = {
             },
         },
     },
+    "Apple Homepod Mini": {
+        "brand": "Apple",
+        "model": "Homepod Mini",
+        "type": "active",
+        "price": "100",
+        "shape": "omnidirectional",
+        "amount": "single",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/apple_homepod_mini/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/apple-homepod-mini-review.24588/",
+                },
+                "review_published": "20210627",
+                "notes": "...Score formula is for monopole speaker...",
+            },
+        },
+    },
     "Ascend Acoustics CBM-170 SE": {
         "brand": "Ascend Acoustics",
         "model": "CBM-170 SE",
@@ -519,6 +540,44 @@ speakers_info = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/bose_901_series_v/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bose-901-series-v-speaker-review.14865/",
                 },
+            },
+        },
+    },
+    "Bose SoundLink Revolve": {
+        "brand": "Bose",
+        "model": "SoundLink Revolve",
+        "type": "active",
+        "shape": "omnidirectional",
+        "price": "180",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/bose_soundlink_comparison/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bose-soundlink-revolve-vs-revolve-bluetooth-speaker-review.24587/",
+                },
+                "review_published": "20210627",
+            },
+        },
+    },
+    "Bose SoundLink Revolve+": {
+        "brand": "Bose",
+        "model": "SoundLink Revolve+",
+        "type": "active",
+        "shape": "omnidirectional",
+        "price": "250",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/bose_soundlink_comparison/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bose-soundlink-revolve-vs-revolve-bluetooth-speaker-review.24587/",
+                },
+                "review_published": "20210627",
             },
         },
     },
@@ -4664,6 +4723,29 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/polk-audio-signature-s15-speaker-review.15437/",
+            },
+        },
+    },
+    "Polk Audio Signature S30": {
+        "brand": "Polk Audio",
+        "model": "Signature S30",
+        "type": "passive",
+        "price": "229",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "asr-vertical",
+        "measurements": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/polk-s30-center-speaker-review.24728/",
+                "review_published": "2021074",
+            },
+            "asr-horizontal": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/polk-s30-center-speaker-review.24728/",
+                "review_published": "2021074",
             },
         },
     },
