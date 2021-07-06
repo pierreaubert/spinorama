@@ -3463,6 +3463,13 @@ speakers_info = {
                 "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-kef.html",
             },
+            "misc-audioxpress": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "review": "https://audioxpress.com/article/fresh-from-the-bench-kef-ls50-meta-the-measurements",
+                "review_published": "20210701",
+            },
         },
     },
     "KEF R2c": {
