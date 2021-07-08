@@ -71,7 +71,7 @@ if [ $status -ne 0 ]; then
 else
     echo "OK after generate HTML!"
 fi
-command=$(./check_html.py)
+command=$(./check_html.sh)
 if [ $status -ne 0 ]; then
     echo "KO after checking HTML!"
     exit 1;
