@@ -2730,6 +2730,23 @@ speakers_info = {
             },
         },
     },
+    "JBL Control X": {
+        "brand": "JBL",
+        "model": "Control X",
+        "type": "active",
+        "price": "205",
+        "shape": "outdoor",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-control-x-review-indoor-outdoor-speaker.24852/",
+                "review_published": "20210710",
+            },
+        },
+    },
     "JBL Stage A130": {
         "brand": "JBL",
         "model": "Stage A130",
