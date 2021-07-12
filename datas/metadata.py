@@ -4812,6 +4812,23 @@ speakers_info = {
             },
         },
     },
+    "Polk Audio T50": {
+        "brand": "Polk Audio",
+        "model": "T50",
+        "type": "passive",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/polk-t50-review-floor-standing-speaker.24890/",
+                "review_published": "20210712",
+            },
+        },
+    },
     "Presonus Eris E3.5": {
         "brand": "Presonus",
         "model": "Eris E3.5",
