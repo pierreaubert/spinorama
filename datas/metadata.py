@@ -4088,9 +4088,15 @@ speakers_info = {
         "price": "400",
         "amount": "each",
         "shape": "inwall",
-        "default_measurement": "asr",
+        "default_measurement": "asr-v2-20210717",
         "measurements": {
-            "asr": {
+            "asr-v2-20210717": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/in-wall-speaker-measurements-monoprice-thx-365iw.25023/",
+                "review_published": "20210717",
+            },
+            "asr-v1-20210625": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/monoprice-thx-365iw-review-in-wall-speaker.24500/",
