@@ -787,6 +787,23 @@ speakers_info = {
             },
         },
     },
+    "Dali Spektor 1": {
+        "brand": "Dali",
+        "model": "Spektor 1",
+        "type": "passive",
+        "price": "250",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/dali-spektor-1-review-bookshelf-speaker.25063/",
+                "review_published": "20210719",
+            },
+        },
+    },
     "Dayton Audio MK402": {
         "brand": "Dayton Audio",
         "model": "MK402",
