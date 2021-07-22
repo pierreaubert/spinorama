@@ -1,0 +1,27 @@
+EQ for Ikea SYMFONISK Picture Frame computed from ASR data
+Preference Score 2.4 with EQ 4.7
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-07-22-07:35:07
+
+Preamp: -2.5 dB
+
+Filter  1: ON PK Fc  9370 Hz Gain -3.13 dB Q 0.15
+Filter  2: ON PK Fc  1045 Hz Gain +3.51 dB Q 8.43
+Filter  3: ON PK Fc  7760 Hz Gain +3.86 dB Q 4.27
+Filter  4: ON PK Fc   793 Hz Gain +1.71 dB Q 12.00
+Filter  5: ON PK Fc  3050 Hz Gain -2.42 dB Q 3.51
+Filter  6: ON PK Fc  1578 Hz Gain +2.02 dB Q 12.00
+Filter  7: ON PK Fc   509 Hz Gain -2.13 dB Q 2.57
+Filter  8: ON PK Fc  2862 Hz Gain +1.43 dB Q 12.00
+Filter  9: ON PK Fc  3301 Hz Gain +1.10 dB Q 12.00
+Filter 10: ON PK Fc  6499 Hz Gain +1.52 dB Q 11.53
+Filter 11: ON PK Fc  1369 Hz Gain -1.48 dB Q 12.00
+Filter 12: ON PK Fc  1792 Hz Gain -1.45 dB Q 12.00
+Filter 13: ON PK Fc   412 Hz Gain -0.86 dB Q 12.00
+Filter 14: ON PK Fc   912 Hz Gain -1.01 dB Q 12.00
+Filter 15: ON PK Fc  2605 Hz Gain -1.73 dB Q 12.00
+Filter 16: ON PK Fc  3634 Hz Gain -0.96 dB Q 12.00
+Filter 17: ON PK Fc  9004 Hz Gain -1.25 dB Q 12.00
+Filter 18: ON PK Fc 11502 Hz Gain -1.16 dB Q 12.00
+Filter 19: ON PK Fc   729 Hz Gain +1.46 dB Q 12.00
+Filter 20: ON PK Fc   613 Hz Gain -0.92 dB Q 12.00
