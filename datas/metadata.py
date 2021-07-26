@@ -4205,6 +4205,23 @@ speakers_info = {
             },
         },
     },
+    "Natural Sound NS17": {
+        "brand": "Natural Sound",
+        "model": "NS17",
+        "type": "passive",
+        "price": "2300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/natural-sound-ns17-review-speaker.25251/",
+                "review_published": "20210726",
+            },
+        },
+    },
     "Neumann KH 80": {
         "brand": "Neumann",
         "model": "KH 80",
