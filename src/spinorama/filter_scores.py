@@ -63,7 +63,7 @@ def scores_graph(spin, spin_filtered, params):
 
 
 def scores_print(score: dict, score_filtered: dict):
-    print("         SPK FLT")
+    print("         SPK auEQ")
     print("-----------------")
     print(
         "NBD  ON {0:0.2f} {1:0.2f}".format(

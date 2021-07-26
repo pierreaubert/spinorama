@@ -3,9 +3,16 @@ echo "Update starts"
 export PYTHONPATH=src:src/website:src/spinorama:.
 
 IP="127.0.0.1"
-if [ $HOSTNAME = "spin" ]; then
-    IP="192.168.1.36"
-fi
+case $HOSTNAME in
+
+    "spin")
+        IP="192.168.1.36"
+        ;;
+    "horn")
+        IP="192.168.1.115"
+        ;;
+esac
+#echo $IP
 
 # check meta
 command=$(./check_meta.py)
