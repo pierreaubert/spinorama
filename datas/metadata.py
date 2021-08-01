@@ -1644,8 +1644,14 @@ speakers_info = {
         "price": "1800",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "misc-napilopez",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/focal-solo6-be-review-studio-monitor.25407/",
+                "review_published": "20210801",
+            },
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "rewstextdump",
@@ -2452,57 +2458,6 @@ speakers_info = {
             },
         },
     },
-    "JBL Synthesis Array 800": {
-        "brand": "JBL",
-        "model": "Synthesis Array 800",
-        "type": "passive",
-        "price": "",
-        "amount": "pair",
-        "shape": "floorstanders",
-        "default_measurement": "misc-speakerdata2034",
-        "measurements": {
-            "misc-speakerdata2034": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "quality": "low",
-                "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
-            },
-        },
-    },
-    "JBL Synthesis Array 1400": {
-        "brand": "JBL",
-        "model": "Synthesis Array 1400",
-        "type": "passive",
-        "price": "",
-        "amount": "pair",
-        "shape": "floorstanders",
-        "default_measurement": "misc-speakerdata2034",
-        "measurements": {
-            "misc-speakerdata2034": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "quality": "low",
-                "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
-            },
-        },
-    },
-    "JBL Synthesis K2 S9800": {
-        "brand": "JBL",
-        "model": "Synthesis K2 S9800",
-        "type": "passive",
-        "price": "",
-        "amount": "pair",
-        "shape": "floorstanders",
-        "default_measurement": "misc-speakerdata2034",
-        "measurements": {
-            "misc-speakerdata2034": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "quality": "low",
-                "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
-            },
-        },
-    },
     "JBL Arena 120": {
         "brand": "JBL",
         "model": "Arena 120",
@@ -2595,6 +2550,57 @@ speakers_info = {
             },
         },
     },
+    "JBL SRX835P": {
+        "brand": "JBL",
+        "model": "SRX835P",
+        "type": "active",
+        "price": "3400",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-srx835p-reviewed-powered-monitor.25300/",
+                "review_published": "20210727",
+            },
+        },
+    },
+    "JBL Synthesis Array 800": {
+        "brand": "JBL",
+        "model": "Synthesis Array 800",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "misc-speakerdata2034",
+        "measurements": {
+            "misc-speakerdata2034": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
+            },
+        },
+    },
+    "JBL Synthesis Array 1400": {
+        "brand": "JBL",
+        "model": "Synthesis Array 1400",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "misc-speakerdata2034",
+        "measurements": {
+            "misc-speakerdata2034": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
+            },
+        },
+    },
     "JBL Synthesis 4429": {
         "brand": "JBL",
         "model": "Synthesis 4429",
@@ -2602,6 +2608,40 @@ speakers_info = {
         "price": "",
         "amount": "pair",
         "shape": "bookshelves",
+        "default_measurement": "misc-speakerdata2034",
+        "measurements": {
+            "misc-speakerdata2034": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
+            },
+        },
+    },
+    "JBL Synthesis K2 S5800": {
+        "brand": "JBL",
+        "model": "Synthesis K2 S5800",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "misc-speakerdata2034",
+        "measurements": {
+            "misc-speakerdata2034": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
+            },
+        },
+    },
+    "JBL Synthesis K2 S9800": {
+        "brand": "JBL",
+        "model": "Synthesis K2 S9800",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "floorstanders",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {
@@ -2687,23 +2727,6 @@ speakers_info = {
         "price": "",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "misc-speakerdata2034",
-        "measurements": {
-            "misc-speakerdata2034": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "quality": "low",
-                "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
-            },
-        },
-    },
-    "JBL Synthesis K2 S5800": {
-        "brand": "JBL",
-        "model": "Synthesis K2 S5800",
-        "type": "passive",
-        "price": "",
-        "amount": "pair",
-        "shape": "floorstanders",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {

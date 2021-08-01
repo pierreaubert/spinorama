@@ -1,0 +1,26 @@
+EQ for JBL SRX835P computed from ASR data
+Preference Score 2.5 with EQ 4.6
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-08-01-12:11:12
+
+Preamp: -6.6 dB
+
+Filter  1: ON PK Fc  2342 Hz Gain +4.01 dB Q 0.44
+Filter  2: ON PK Fc  4119 Hz Gain -3.13 dB Q 3.71
+Filter  3: ON PK Fc  2981 Hz Gain +1.97 dB Q 11.16
+Filter  4: ON PK Fc   682 Hz Gain +3.02 dB Q 3.28
+Filter  5: ON PK Fc  1930 Hz Gain -1.14 dB Q 2.24
+Filter  6: ON PK Fc  7390 Hz Gain +2.70 dB Q 12.00
+Filter  7: ON PK Fc 10574 Hz Gain +5.22 dB Q 12.00
+Filter  8: ON PK Fc 12745 Hz Gain -3.03 dB Q 1.24
+Filter  9: ON PK Fc 13222 Hz Gain +5.31 dB Q 12.00
+Filter 10: ON PK Fc 11931 Hz Gain -2.24 dB Q 12.00
+Filter 11: ON PK Fc  9999 Hz Gain -1.74 dB Q 12.00
+Filter 12: ON PK Fc  4328 Hz Gain +0.74 dB Q 12.00
+Filter 13: ON PK Fc   379 Hz Gain -1.72 dB Q 3.73
+Filter 14: ON PK Fc   376 Hz Gain +0.65 dB Q 12.00
+Filter 15: ON PK Fc 15009 Hz Gain -4.19 dB Q 9.45
+Filter 16: ON PK Fc  9132 Hz Gain +3.03 dB Q 10.94
+Filter 17: ON PK Fc  9886 Hz Gain -1.03 dB Q 12.00
+Filter 18: ON PK Fc 10572 Hz Gain +3.05 dB Q 12.00
+Filter 19: ON PK Fc 13235 Hz Gain +1.42 dB Q 12.00
