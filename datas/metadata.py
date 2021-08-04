@@ -3406,6 +3406,7 @@ speakers_info = {
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_in-8v2",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8v2-second-wave-3-way-studio-monitor-review.24586/",
+                    "yt": "https://www.youtube.com/watch?v=DNpkizYXbVM",
                 },
                 "review_published": "20210615",
             },
@@ -3619,7 +3620,10 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/kef_r3/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r3/",
+                    "yt": "https://www.youtube.com/watch?v=Gt96DBlQk8A",
+                },
                 "review_published": "20210314",
             },
             "vendor": {
@@ -4097,9 +4101,43 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "https://www.audiosciencereview.com/forum/index.php?threads/micca-rb42-bookshelf-speaker-review.11267/",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/micca-mb42x-mark-iii-bookshelf-speaker-review.15307/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/micca-rb42-bookshelf-speaker-review.11267/",
                 },
+            },
+        },
+    },
+    "Monoprice DT-3": {
+        "brand": "Monoprice",
+        "model": "DT-3",
+        "type": "active",
+        "price": "70",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_dt3/",
+                "review_published": "20210801",
+            },
+        },
+    },
+    "Monoprice MM-3": {
+        "brand": "Monoprice",
+        "model": "MM-3",
+        "type": "active",
+        "price": "160",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_mm3/",
+                "review_published": "20210801",
+                "notes": "port is stuffed for this set of measurements",
             },
         },
     },
