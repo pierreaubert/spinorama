@@ -89,7 +89,7 @@ def score_loss(df_spin, peq):
     return -score["pref_score"]
 
 
-def loss(freq, local_target, peq, iterations, optim_config):
+def loss(df_speaker, freq, local_target, peq, iterations, optim_config):
     which_loss = optim_config["loss"]
     if which_loss == "flat_loss":
         weigths = optim_config["loss_weigths"]
@@ -98,4 +98,11 @@ def loss(freq, local_target, peq, iterations, optim_config):
         return leastsquare_loss(freq, local_target, peq, iterations)
     if which_loss == "alternate_loss":
         return alternate_loss(freq, local_target, peq, iterations)
+    if which_loss == "score_loss":
+        return score_loss(df_speaker, peq)
+    if which_loss == "combine_loss":
+        weigths = optim_config["loss_weigths"]
+        return score_loss(df_speaker, peq) + flat_loss(
+            freq, local_target, peq, iterations, weigths
+        )
     logger.error("loss function is unkown")

@@ -88,9 +88,9 @@ def custom_ray_init(args):
 
     if "--dash-port" in args and args["--dash-port"] is not None:
         check_port = args["--dash-port"]
-        try: 
+        try:
             dashboard_port = int(check_port)
-            if dashboard_port < 0 or dashboard_port > 2**16-1:
+            if dashboard_port < 0 or dashboard_port > 2 ** 16 - 1:
                 print("--dash-port={} is out of bounds".format(check_port))
                 sys.exit(1)
         except ValueError:

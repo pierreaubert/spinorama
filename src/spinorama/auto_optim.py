@@ -90,7 +90,7 @@ def optim_greedy(
     current_auto_target = optim_compute_auto_target(
         freq, auto_target, auto_target_interp, auto_peq
     )
-    best_loss = loss(freq, auto_target, auto_peq, 0, optim_config)
+    best_loss = loss(df_speaker, freq, auto_target, auto_peq, 0, optim_config)
     pref_score = 1.0
     if use_score:
         pref_score = score_loss(df_speaker, auto_peq)
@@ -149,6 +149,7 @@ def optim_greedy(
                 current_loss,
                 current_nit,
             ) = find_best_biquad(
+                df_speaker,
                 freq,
                 current_auto_target,
                 init_freq_range,
@@ -168,6 +169,7 @@ def optim_greedy(
                 current_loss,
                 current_nit,
             ) = find_best_peak(
+                df_speaker,
                 freq,
                 current_auto_target,
                 init_freq_range,

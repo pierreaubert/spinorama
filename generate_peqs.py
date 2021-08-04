@@ -537,6 +537,8 @@ if __name__ == "__main__":
     current_optim_config = {
         # name of the loss function
         "loss": "flat_loss",
+        # "loss": "score_loss",
+        # "loss": "combine_loss",
         # if you have multiple loss functions, define the weigth for each
         "loss_weigths": [1.0, 1.0],
         # do you optimise only peaks or both peaks and valleys?
@@ -544,7 +546,8 @@ if __name__ == "__main__":
         # do you optimise for all kind of biquad or do you want only Peaks?
         "full_biquad_optim": False,
         # lookup around a value is [value*elastic, value/elastic]
-        "elastic": 0.8,
+        "elastic": 0.1,
+        # "elastic": 0.8,
         # cut frequency
         "fs": 48000,
         # optimise the curve above the Schroeder frequency (here default is
@@ -562,8 +565,10 @@ if __name__ == "__main__":
         # it will optimise for having a Listening Window as close as possible
         # the target and having a Sound Power as flat as possible (without a
         # target)
+        # 'curve_names': ['Listening Window'],
         # 'curve_names': ['Listening Window', 'Sound Power'],
         "curve_names": ["Listening Window", "Early Reflections"],
+        # "curve_names": ["Listening Window", "Early Reflections", "Sound Power"],
         # 'curve_names': ['Listening Window', 'On Axis', 'Early Reflections'],
         # 'curve_names': ['On Axis', 'Early Reflections'],
         # 'curve_names': ['Early Reflections', 'Sound Power'],
