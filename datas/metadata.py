@@ -3500,8 +3500,14 @@ speakers_info = {
         "price": "",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "misc-napilopez",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-ls50-meta-review-speaker.25574/",
+                "review_published": "20210807",
+            },
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
@@ -3593,8 +3599,17 @@ speakers_info = {
         "price": "",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "misc-speakerdata2034",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "",
+                },
+                "review_published": "20210810",
+            },
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
