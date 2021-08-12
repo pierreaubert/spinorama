@@ -1858,6 +1858,23 @@ speakers_info = {
             },
         },
     },
+    "Genelec 8330A": {
+        "brand": "Genelec",
+        "model": "8330A",
+        "type": "active",
+        "price": "1700",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8330a-review-studio-monitor.25704/",
+                "review_published": "20210812",
+            },
+        },
+    },
     "Genelec 8351A": {
         "brand": "Genelec",
         "model": "8351A",
@@ -3599,14 +3616,23 @@ speakers_info = {
         "price": "",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "eac",
+        "default_measurement": "eac-horizontal",
         "measurements": {
-            "eac": {
+            "eac-horizontal": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "",
-                    "yt": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r2c/",
+                    "yt": "https://youtu.be/TZTNcEV-TV0",
+                },
+                "review_published": "20210810",
+            },
+            "eac-vertical": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r2c/",
+                    "yt": "https://youtu.be/TZTNcEV-TV0",
                 },
                 "review_published": "20210810",
             },
