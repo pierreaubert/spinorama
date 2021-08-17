@@ -281,6 +281,7 @@ def optim_save_peq(
         if len(manual_peq) > 0 and not peq_equal(manual_peq, auto_peq):
             graphs = auto_graph_results(
                 current_speaker_name,
+                current_speaker_origin,
                 freq,
                 manual_peq,
                 auto_peq,
@@ -299,6 +300,7 @@ def optim_save_peq(
         else:
             graphs = auto_graph_results(
                 current_speaker_name,
+                current_speaker_origin,
                 freq,
                 None,
                 auto_peq,

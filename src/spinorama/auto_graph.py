@@ -52,7 +52,7 @@ def graph_eq(freq, peq, domain, title):
     return g_eq
 
 
-def graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name):
+def graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name, speaker_origin):
     if manual_peq is None:
         peq_df = pd.DataFrame(
             {
@@ -119,6 +119,7 @@ def graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name):
 
 def graph_results(
     speaker_name,
+    speaker_origin,
     freq,
     manual_peq,
     auto_peq,
@@ -163,7 +164,9 @@ def graph_results(
     g_auto_eq = graph_eq(freq, auto_peq, domain, "{} auto".format(speaker_name))
 
     # compare the 2 eqs
-    g_eq_full = graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name)
+    g_eq_full = graph_eq_compare(
+        freq, manual_peq, auto_peq, domain, speaker_name, speaker_origin
+    )
 
     # compare the 2 corrected curves
     df_optim = pd.DataFrame({"Freq": freq})
@@ -201,16 +204,16 @@ def graph_results(
 
     # show the 3 spinoramas
     g_spin_asr = graph_spinorama(spin, g_params).properties(
-        title="{} from ASR".format(speaker_name)
+        title="{} from {}".format(speaker_name, speaker_origin)
     )
     if manual_peq is not None:
         g_spin_manual = graph_spinorama(spin_manual, g_params).properties(
-            title="{} ASR + manual EQ".format(speaker_name)
+            title="{} from {} with manual EQ".format(speaker_name, speaker_origin)
         )
     g_spin_auto = empty_graph
     if spin_auto is not None:
         g_spin_auto = graph_spinorama(spin_auto, g_params).properties(
-            title="{} ASR + auto EQ".format(speaker_name)
+            title="{} from {} with auto EQ".format(speaker_name, speaker_origin)
         )
 
     # show the 3 optimised curves
@@ -235,7 +238,9 @@ def graph_results(
 
     g_pir_asr = (
         (graph_freq(data.loc[(data.Measurements == which_curve)], g_params) + g_pir_reg)
-        .properties(title="{} from ASR [{}]".format(speaker_name, which_curve))
+        .properties(
+            title="{} from {} [{}]".format(speaker_name, speaker_origin, which_curve)
+        )
         .resolve_scale(color="independent")
         .resolve_legend(shape="independent")
     )
@@ -250,7 +255,9 @@ def graph_results(
                 + g_pir_reg
             )
             .properties(
-                title="{} from ASR [{}] + manual EQ".format(speaker_name, which_curve)
+                title="{} from {} [{}] with manual EQ".format(
+                    speaker_name, speaker_origin, which_curve
+                )
             )
             .resolve_scale(color="independent")
             .resolve_legend(shape="independent")
@@ -266,7 +273,9 @@ def graph_results(
                 + g_pir_reg
             )
             .properties(
-                title="{} from ASR [{}] + auto EQ".format(speaker_name, which_curve)
+                title="{} from {} [{}] + auto EQ".format(
+                    speaker_name, speaker_origin, which_curve
+                )
             )
             .resolve_scale(color="independent")
             .resolve_legend(shape="independent")
