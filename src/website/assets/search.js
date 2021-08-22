@@ -34,9 +34,9 @@ $(document).ready(function () {
 	
 	function selectDispatch(filter) {
 	    let keywords = $("#searchInput").val();
-	    console.log("keywords: "+keywords);
+	    // console.log("keywords: "+keywords);
 	    if (keywords === "") {
-		console.log("display filter");
+		// console.log("display filter");
 		display_filter(resultdiv, metadata, filter);
 	    } else {
 		// console.log("display search");
@@ -90,7 +90,7 @@ $(document).ready(function () {
 	        for (let [name, measurement] of Object.entries(item["measurements"])) {
 
                     let origin = measurement["origin"].toLowerCase();
-                    console.log("debug: name="+name+" origin="+origin+" filter.reviewer="+filter.reviewer);
+                    // console.log("debug: name="+name+" origin="+origin+" filter.reviewer="+filter.reviewer);
                     if (name.toLowerCase().endsWith(filter.reviewer.toLowerCase()) || origin == filter.reviewer.toLowerCase()) {
 			found = false;
                         break;
@@ -105,7 +105,7 @@ $(document).ready(function () {
 	        for (let [name, measurement] of Object.entries(item["measurements"])) {
 
                     let quality = measurement["quality"].toLowerCase();
-                    console.log("filter.quality="+filter.quality+" quality="+quality);
+                    // console.log("filter.quality="+filter.quality+" quality="+quality);
                     if (filter.quality !== "" && quality == filter.quality.toLowerCase()) {
 		        found = false;
                         break;
@@ -128,15 +128,15 @@ $(document).ready(function () {
 	}
 	    
 	function display_filter(resultdiv, meta, filter) {
-	    console.log("display filter start #" + meta.length);
+	    // console.log("display filter start #" + meta.length);
 	    for (const item in meta) {
 		let show = is_filtered(meta[item], filter);
 		const id = (meta[item].brand + "-" + meta[item].model).replace(/['.+& ]/g, "-");
 		if (show) {
-                    console.log(meta[item].brand + "-"+ meta[item].model + " is shown");
+                    // console.log(meta[item].brand + "-"+ meta[item].model + " is shown");
 		    $("#" + id).show();
 		} else {
-                    console.log(meta[item].brand + "-"+ meta[item].model + " is filtered");
+                    // console.log(meta[item].brand + "-"+ meta[item].model + " is filtered");
 		    $("#" + id).hide();
 		}
 	    }
