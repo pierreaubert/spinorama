@@ -3272,15 +3272,15 @@ speakers_info = {
         "amount": "pair",
         "default_measurement": "vendor",
         "measurements": {
-#            "eac" : {
-#                "origin": "ErinsAudioCorner",
-#                "format": "klippel",
-#                "reviews": {
-#                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_m2/",
-#                    "yt": "",
-#                },
-#                "review_published": "20210821",
-#            },
+            #            "eac" : {
+            #                "origin": "ErinsAudioCorner",
+            #                "format": "klippel",
+            #                "reviews": {
+            #                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_m2/",
+            #                    "yt": "",
+            #                },
+            #                "review_published": "20210821",
+            #            },
             "vendor": {
                 "origin": "Vendors-JBL",
                 "website": "www.jbl.com",
