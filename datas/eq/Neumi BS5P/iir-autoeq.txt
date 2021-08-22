@@ -1,27 +1,14 @@
 EQ for Neumi BS5P computed from ErinsAudioCorner data
-Preference Score 4.2 with EQ 5.9
+Preference Score 4.2 with EQ 5.8
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-05-19-04:57:34
+Dated: 2021-08-22-08:46:47
 
 Preamp: -0.2 dB
 
-Filter  1: ON PK Fc  6394 Hz Gain -3.60 dB Q 0.10
-Filter  2: ON PK Fc   948 Hz Gain -2.28 dB Q 5.91
-Filter  3: ON PK Fc  1871 Hz Gain +1.39 dB Q 1.76
-Filter  4: ON PK Fc  1125 Hz Gain -1.24 dB Q 8.52
-Filter  5: ON PK Fc 12557 Hz Gain -1.03 dB Q 3.06
-Filter  6: ON PK Fc  1491 Hz Gain +0.89 dB Q 12.00
-Filter  7: ON PK Fc  7428 Hz Gain -0.96 dB Q 6.76
-Filter  8: ON PK Fc  5073 Hz Gain +0.81 dB Q 3.12
-Filter  9: ON PK Fc 14797 Hz Gain +1.44 dB Q 12.00
-Filter 10: ON PK Fc  6700 Hz Gain -0.73 dB Q 12.00
-Filter 11: ON PK Fc 15467 Hz Gain -0.35 dB Q 12.00
-Filter 12: ON PK Fc 15467 Hz Gain -0.34 dB Q 12.00
-Filter 13: ON PK Fc 15495 Hz Gain -0.32 dB Q 12.00
-Filter 14: ON PK Fc  5867 Hz Gain +0.47 dB Q 12.00
-Filter 15: ON PK Fc 15497 Hz Gain -0.31 dB Q 12.00
-Filter 16: ON PK Fc 15541 Hz Gain -0.30 dB Q 12.00
-Filter 17: ON PK Fc 13570 Hz Gain -0.27 dB Q 12.00
-Filter 18: ON PK Fc  9264 Hz Gain -0.37 dB Q 10.11
-Filter 19: ON PK Fc  1909 Hz Gain -0.72 dB Q 12.00
-Filter 20: ON PK Fc 14843 Hz Gain +0.69 dB Q 12.00
+Filter  1: ON PK Fc  4462 Hz Gain -4.02 dB Q 0.10
+Filter  2: ON PK Fc 12560 Hz Gain -1.12 dB Q 1.64
+Filter  3: ON PK Fc   951 Hz Gain -2.02 dB Q 6.00
+Filter  4: ON PK Fc  1834 Hz Gain +1.21 dB Q 1.64
+Filter  5: ON PK Fc   152 Hz Gain -0.89 dB Q 1.88
+Filter  6: ON PK Fc  1121 Hz Gain -0.94 dB Q 6.00
+Filter  7: ON PK Fc  5032 Hz Gain +0.71 dB Q 4.38

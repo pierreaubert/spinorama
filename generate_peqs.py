@@ -554,7 +554,7 @@ if __name__ == "__main__":
         "fs": 48000,
         # optimise the curve above the Schroeder frequency (here default is
         # 300hz)
-        "freq_reg_min": 300,
+        "freq_reg_min": 100,
         # do not try to optimise above:
         "freq_reg_max": 16000,
         # if an algorithm use a mean of frequency to find a reference level
@@ -592,19 +592,19 @@ if __name__ == "__main__":
         # max iterations (if algorithm is iterative)
         current_optim_config["maxiter"] = 20
     else:
-        current_optim_config["MAX_NUMBER_PEQ"] = 20
-        current_optim_config["MAX_STEPS_FREQ"] = 5
-        current_optim_config["MAX_STEPS_DBGAIN"] = 5
-        current_optim_config["MAX_STEPS_Q"] = 5
+        current_optim_config["MAX_NUMBER_PEQ"] = 8
+        current_optim_config["MAX_STEPS_FREQ"] = 10
+        current_optim_config["MAX_STEPS_DBGAIN"] = 10
+        current_optim_config["MAX_STEPS_Q"] = 10
         # max iterations (if algorithm is iterative)
-        current_optim_config["maxiter"] = 500
+        current_optim_config["maxiter"] = 2500
 
     # MIN or MAX_Q or MIN or MAX_DBGAIN control the shape of the biquad which
     # are admissible.
-    current_optim_config["MIN_DBGAIN"] = 0.2
-    current_optim_config["MAX_DBGAIN"] = 12
+    current_optim_config["MIN_DBGAIN"] = 0.5
+    current_optim_config["MAX_DBGAIN"] = 8
     current_optim_config["MIN_Q"] = 0.1
-    current_optim_config["MAX_Q"] = 12
+    current_optim_config["MAX_Q"] = 6
 
     # do we override optim default?
     if args["--max-peq"] is not None:

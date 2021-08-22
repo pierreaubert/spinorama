@@ -1,27 +1,15 @@
 EQ for Genelec 8030C computed from ASR data
-Preference Score 6.3 with EQ 6.8
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.6
-Dated: 2021-02-28-11:50:15
+Preference Score 6.3 with EQ 6.7
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-08-22-08:43:59
 
-Preamp: -0.7 dB
+Preamp: -1.5 dB
 
-Filter  1: ON PK Fc  5381 Hz Gain -1.40 dB Q 0.13
-Filter  2: ON PK Fc  9616 Hz Gain +0.99 dB Q 0.21
-Filter  3: ON PK Fc  7005 Hz Gain -1.27 dB Q 2.15
-Filter  4: ON PK Fc  1497 Hz Gain -1.05 dB Q 8.86
-Filter  5: ON PK Fc  2468 Hz Gain +1.41 dB Q 3.58
-Filter  6: ON PK Fc  4587 Hz Gain -0.63 dB Q 6.23
-Filter  7: ON PK Fc 11127 Hz Gain +0.50 dB Q 12.00
-Filter  8: ON PK Fc   760 Hz Gain -0.89 dB Q 3.10
-Filter  9: ON PK Fc  3190 Hz Gain +0.60 dB Q 8.80
-Filter 10: ON PK Fc  1022 Hz Gain -0.45 dB Q 12.00
-Filter 11: ON PK Fc  1766 Hz Gain -0.71 dB Q 12.00
-Filter 12: ON PK Fc   853 Hz Gain +0.38 dB Q 7.51
-Filter 13: ON PK Fc   582 Hz Gain -0.38 dB Q 12.00
-Filter 14: ON PK Fc  2102 Hz Gain +0.44 dB Q 12.00
-Filter 15: ON PK Fc  1666 Hz Gain +0.43 dB Q 12.00
-Filter 16: ON PK Fc  5736 Hz Gain +0.20 dB Q 12.00
-Filter 17: ON PK Fc   335 Hz Gain +0.32 dB Q 5.92
-Filter 18: ON PK Fc  2694 Hz Gain -0.46 dB Q 12.00
-Filter 19: ON PK Fc  2813 Hz Gain +0.43 dB Q 12.00
-Filter 20: ON PK Fc  2024 Hz Gain -0.43 dB Q 12.00
+Filter  1: ON PK Fc   902 Hz Gain -0.69 dB Q 1.66
+Filter  2: ON PK Fc  6859 Hz Gain -0.98 dB Q 4.45
+Filter  3: ON PK Fc  1501 Hz Gain -0.86 dB Q 6.00
+Filter  4: ON PK Fc  2497 Hz Gain +1.31 dB Q 3.21
+Filter  5: ON PK Fc 11242 Hz Gain +0.89 dB Q 4.72
+Filter  6: ON PK Fc   242 Hz Gain +0.83 dB Q 1.66
+Filter  7: ON PK Fc  4625 Hz Gain -0.58 dB Q 5.83
+Filter  8: ON PK Fc  3247 Hz Gain +0.50 dB Q 6.00

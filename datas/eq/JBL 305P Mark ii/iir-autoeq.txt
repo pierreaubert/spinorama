@@ -1,26 +1,15 @@
-EQ for JBL 305P Mark ii computed from ASR data
+EQ for JBL 305P Mark ii computed from ErinsAudioCorner data
 Preference Score 5.0 with EQ 6.4
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.7
-Dated: 2021-05-07-07:18:18
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-08-22-08:46:08
 
-Preamp: -1.2 dB
+Preamp: -1.4 dB
 
-Filter  1: ON PK Fc 10936 Hz Gain -2.52 dB Q 0.12
-Filter  2: ON PK Fc  1699 Hz Gain -2.85 dB Q 8.30
-Filter  3: ON PK Fc   507 Hz Gain +1.28 dB Q 3.32
-Filter  4: ON PK Fc  1229 Hz Gain +1.75 dB Q 10.38
-Filter  5: ON PK Fc  9690 Hz Gain -0.67 dB Q 12.00
-Filter  6: ON PK Fc 11598 Hz Gain +0.55 dB Q 6.97
-Filter  7: ON PK Fc  7046 Hz Gain +0.66 dB Q 4.10
-Filter  8: ON PK Fc  1456 Hz Gain -0.69 dB Q 12.00
-Filter  9: ON PK Fc   578 Hz Gain -0.69 dB Q 12.00
-Filter 10: ON PK Fc   683 Hz Gain +1.15 dB Q 11.35
-Filter 11: ON PK Fc  2525 Hz Gain +0.57 dB Q 12.00
-Filter 12: ON PK Fc  2281 Hz Gain +0.48 dB Q 12.00
-Filter 13: ON PK Fc   733 Hz Gain +0.89 dB Q 12.00
-Filter 14: ON PK Fc   703 Hz Gain -0.78 dB Q 12.00
-Filter 15: ON PK Fc  1007 Hz Gain +0.56 dB Q 12.00
-Filter 16: ON PK Fc  2130 Hz Gain -0.61 dB Q 12.00
-Filter 17: ON PK Fc   833 Hz Gain -0.52 dB Q 12.00
-Filter 18: ON PK Fc   515 Hz Gain +0.29 dB Q 12.00
-Filter 19: ON PK Fc   482 Hz Gain -0.55 dB Q 12.00
+Filter  1: ON PK Fc 15245 Hz Gain -2.64 dB Q 0.10
+Filter  2: ON PK Fc  1707 Hz Gain -2.45 dB Q 6.00
+Filter  3: ON PK Fc   514 Hz Gain +1.36 dB Q 0.80
+Filter  4: ON PK Fc 15387 Hz Gain -1.39 dB Q 6.00
+Filter  5: ON PK Fc  1664 Hz Gain -0.50 dB Q 6.00
+Filter  6: ON PK Fc  9741 Hz Gain -0.50 dB Q 6.00
+Filter  7: ON PK Fc  1229 Hz Gain +1.00 dB Q 6.00
+Filter  8: ON PK Fc   146 Hz Gain -0.50 dB Q 3.89

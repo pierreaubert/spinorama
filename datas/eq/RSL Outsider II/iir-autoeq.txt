@@ -1,27 +1,15 @@
 EQ for RSL Outsider II computed from ASR data
-Preference Score 2.1 with EQ 4.7
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.6
-Dated: 2021-02-28-11:53:23
+Preference Score 2.1 with EQ 4.4
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-08-22-08:47:18
 
 Preamp: -0.5 dB
 
-Filter  1: ON PK Fc 15688 Hz Gain -7.51 dB Q 0.21
-Filter  2: ON PK Fc 12770 Hz Gain -2.70 dB Q 9.62
-Filter  3: ON PK Fc   668 Hz Gain -2.32 dB Q 2.00
-Filter  4: ON PK Fc  2772 Hz Gain +2.14 dB Q 12.00
-Filter  5: ON PK Fc  3145 Hz Gain -1.56 dB Q 12.00
-Filter  6: ON PK Fc  2427 Hz Gain +1.28 dB Q 12.00
-Filter  7: ON PK Fc  9439 Hz Gain +1.33 dB Q 2.61
-Filter  8: ON PK Fc  5878 Hz Gain -1.03 dB Q 4.70
-Filter  9: ON PK Fc  7877 Hz Gain +1.24 dB Q 11.90
-Filter 10: ON PK Fc 12063 Hz Gain -1.04 dB Q 12.00
-Filter 11: ON PK Fc 10567 Hz Gain +0.80 dB Q 12.00
-Filter 12: ON PK Fc  9359 Hz Gain -0.58 dB Q 12.00
-Filter 13: ON PK Fc  1369 Hz Gain +1.14 dB Q 8.26
-Filter 14: ON PK Fc  1825 Hz Gain -1.02 dB Q 12.00
-Filter 15: ON PK Fc  2222 Hz Gain -0.99 dB Q 12.00
-Filter 16: ON PK Fc  2365 Hz Gain +0.58 dB Q 12.00
-Filter 17: ON PK Fc  1176 Hz Gain +1.01 dB Q 12.00
-Filter 18: ON PK Fc   838 Hz Gain -0.72 dB Q 11.37
-Filter 19: ON PK Fc   695 Hz Gain +0.40 dB Q 12.00
-Filter 20: ON PK Fc 13428 Hz Gain -0.76 dB Q 12.00
+Filter  1: ON PK Fc 13347 Hz Gain -6.22 dB Q 0.34
+Filter  2: ON PK Fc 12828 Hz Gain -2.42 dB Q 6.00
+Filter  3: ON PK Fc   140 Hz Gain -1.99 dB Q 2.20
+Filter  4: ON PK Fc  9867 Hz Gain +1.35 dB Q 3.14
+Filter  5: ON PK Fc  2674 Hz Gain +1.52 dB Q 6.00
+Filter  6: ON PK Fc   678 Hz Gain -1.85 dB Q 2.96
+Filter  7: ON PK Fc  5729 Hz Gain -1.16 dB Q 3.59
+Filter  8: ON PK Fc  3208 Hz Gain -0.92 dB Q 6.00

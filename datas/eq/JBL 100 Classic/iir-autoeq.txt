@@ -1,26 +1,14 @@
-EQ for JBL 100 Classic computed from ASR data
+EQ for JBL 100 Classic computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-05-09-07:16:09
+Dated: 2021-08-22-08:45:48
 
-Preamp: -3.8 dB
+Preamp: -2.4 dB
 
-Filter  1: ON PK Fc   810 Hz Gain +3.03 dB Q 1.16
-Filter  2: ON PK Fc  5051 Hz Gain -1.71 dB Q 5.19
-Filter  3: ON PK Fc  2256 Hz Gain -1.43 dB Q 9.15
-Filter  4: ON PK Fc  1712 Hz Gain +1.20 dB Q 7.92
-Filter  5: ON PK Fc  3303 Hz Gain +1.15 dB Q 5.13
-Filter  6: ON PK Fc   375 Hz Gain +1.15 dB Q 6.47
-Filter  7: ON PK Fc 15998 Hz Gain +0.74 dB Q 0.97
-Filter  8: ON PK Fc   577 Hz Gain -0.80 dB Q 7.06
-Filter  9: ON PK Fc  2478 Hz Gain -0.62 dB Q 9.58
-Filter 10: ON PK Fc 14515 Hz Gain -0.44 dB Q 10.04
-Filter 11: ON PK Fc 11583 Hz Gain -0.40 dB Q 12.00
-Filter 12: ON PK Fc  1100 Hz Gain -1.16 dB Q 10.67
-Filter 13: ON PK Fc  1333 Hz Gain +0.64 dB Q 12.00
-Filter 14: ON PK Fc  4449 Hz Gain -0.66 dB Q 12.00
-Filter 15: ON PK Fc  2070 Hz Gain -0.50 dB Q 12.00
-Filter 16: ON PK Fc  8361 Hz Gain +0.57 dB Q 5.96
-Filter 17: ON PK Fc 13089 Hz Gain +0.53 dB Q 12.00
-Filter 18: ON PK Fc   870 Hz Gain +0.89 dB Q 12.00
-Filter 19: ON PK Fc  1185 Hz Gain -0.32 dB Q 12.00
-Filter 20: ON PK Fc  1494 Hz Gain -0.26 dB Q 12.00
+Filter  1: ON PK Fc  5421 Hz Gain -1.98 dB Q 0.78
+Filter  2: ON PK Fc   269 Hz Gain -1.96 dB Q 4.36
+Filter  3: ON PK Fc  2255 Hz Gain -1.80 dB Q 6.00
+Filter  4: ON PK Fc   843 Hz Gain +2.46 dB Q 3.80
+Filter  5: ON PK Fc 11673 Hz Gain -0.86 dB Q 4.76
+Filter  6: ON PK Fc  4984 Hz Gain -0.65 dB Q 6.00
+Filter  7: ON PK Fc  3461 Hz Gain +1.09 dB Q 4.11
+Filter  8: ON PK Fc  1101 Hz Gain -0.50 dB Q 6.00

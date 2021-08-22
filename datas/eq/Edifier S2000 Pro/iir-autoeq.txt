@@ -1,27 +1,15 @@
 EQ for Edifier S2000 Pro computed from ASR data
-Preference Score 4.7 with EQ 6.4
+Preference Score 4.7 with EQ 5.8
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-06-27-12:10:06
+Dated: 2021-08-22-08:43:36
 
-Preamp: -2.8 dB
+Preamp: -3.7 dB
 
-Filter  1: ON PK Fc  8026 Hz Gain -2.40 dB Q 7.43
-Filter  2: ON PK Fc  1869 Hz Gain -2.30 dB Q 2.48
-Filter  3: ON PK Fc  4603 Hz Gain +2.72 dB Q 3.17
-Filter  4: ON PK Fc  1126 Hz Gain +1.58 dB Q 11.31
-Filter  5: ON PK Fc 10048 Hz Gain +2.57 dB Q 12.00
-Filter  6: ON PK Fc 12629 Hz Gain -1.70 dB Q 4.04
-Filter  7: ON PK Fc  2514 Hz Gain -1.88 dB Q 12.00
-Filter  8: ON PK Fc  1379 Hz Gain -1.77 dB Q 12.00
-Filter  9: ON PK Fc   694 Hz Gain +1.34 dB Q 12.00
-Filter 10: ON PK Fc   575 Hz Gain -1.98 dB Q 12.00
-Filter 11: ON PK Fc  8675 Hz Gain -1.03 dB Q 12.00
-Filter 12: ON PK Fc  7345 Hz Gain -0.82 dB Q 12.00
-Filter 13: ON PK Fc  3052 Hz Gain -0.67 dB Q 12.00
-Filter 14: ON PK Fc  1736 Hz Gain -0.50 dB Q 12.00
-Filter 15: ON PK Fc  1581 Hz Gain +1.02 dB Q 12.00
-Filter 16: ON PK Fc 10658 Hz Gain +1.13 dB Q 11.50
-Filter 17: ON PK Fc   364 Hz Gain +0.39 dB Q 2.55
-Filter 18: ON PK Fc  1936 Hz Gain +0.80 dB Q 12.00
-Filter 19: ON PK Fc  1214 Hz Gain +0.59 dB Q 12.00
-Filter 20: ON PK Fc  2125 Hz Gain -0.59 dB Q 12.00
+Filter  1: ON PK Fc  4662 Hz Gain +3.53 dB Q 2.47
+Filter  2: ON PK Fc   302 Hz Gain +0.97 dB Q 0.72
+Filter  3: ON PK Fc 10185 Hz Gain +2.79 dB Q 6.00
+Filter  4: ON PK Fc  1938 Hz Gain -1.51 dB Q 2.67
+Filter  5: ON PK Fc  8077 Hz Gain -1.74 dB Q 6.00
+Filter  6: ON PK Fc  1115 Hz Gain +1.77 dB Q 6.00
+Filter  7: ON PK Fc   696 Hz Gain +0.92 dB Q 6.00
+Filter  8: ON PK Fc   577 Hz Gain -1.14 dB Q 6.00

@@ -1,26 +1,14 @@
-EQ for Bose 141 computed from ASR data
+EQ for Bose 141 computed from Vendors-Bose data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-05-10-11:01:22
+Dated: 2021-08-22-08:43:37
 
-Preamp: -0.3 dB
+Preamp: -3.9 dB
 
-Filter  1: ON PK Fc 12799 Hz Gain -8.81 dB Q 0.12
-Filter  2: ON PK Fc  5381 Hz Gain +5.56 dB Q 1.09
-Filter  3: ON PK Fc   769 Hz Gain -4.48 dB Q 1.56
-Filter  4: ON PK Fc  5243 Hz Gain -3.70 dB Q 12.00
-Filter  5: ON PK Fc  3913 Hz Gain +3.31 dB Q 6.61
-Filter  6: ON PK Fc 11772 Hz Gain +6.99 dB Q 12.00
-Filter  7: ON PK Fc 10112 Hz Gain -4.44 dB Q 8.70
-Filter  8: ON PK Fc  1069 Hz Gain +4.05 dB Q 12.00
-Filter  9: ON PK Fc  7330 Hz Gain +3.74 dB Q 5.57
-Filter 10: ON PK Fc  1343 Hz Gain -4.97 dB Q 11.64
-Filter 11: ON PK Fc  2376 Hz Gain -2.24 dB Q 2.31
-Filter 12: ON PK Fc  1180 Hz Gain +2.34 dB Q 12.00
-Filter 13: ON PK Fc  3578 Hz Gain +1.62 dB Q 12.00
-Filter 14: ON PK Fc  9330 Hz Gain -1.68 dB Q 12.00
-Filter 15: ON PK Fc   865 Hz Gain -1.47 dB Q 10.55
-Filter 16: ON PK Fc  4361 Hz Gain +0.96 dB Q 12.00
-Filter 17: ON PK Fc  5578 Hz Gain -1.49 dB Q 12.00
-Filter 18: ON PK Fc   723 Hz Gain +1.19 dB Q 12.00
-Filter 19: ON PK Fc  3065 Hz Gain -1.31 dB Q 9.56
-Filter 20: ON PK Fc  7992 Hz Gain +1.00 dB Q 12.00
+Filter  1: ON PK Fc   378 Hz Gain +3.58 dB Q 1.28
+Filter  2: ON PK Fc  4056 Hz Gain +3.62 dB Q 6.00
+Filter  3: ON PK Fc 10044 Hz Gain -7.56 dB Q 4.91
+Filter  4: ON PK Fc  2297 Hz Gain -2.54 dB Q 1.88
+Filter  5: ON PK Fc 14180 Hz Gain -5.13 dB Q 6.00
+Filter  6: ON PK Fc   223 Hz Gain +2.73 dB Q 2.97
+Filter  7: ON PK Fc  7039 Hz Gain +3.25 dB Q 4.88
+Filter  8: ON PK Fc  1101 Hz Gain +1.96 dB Q 6.00

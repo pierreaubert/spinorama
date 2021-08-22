@@ -1,27 +1,15 @@
 EQ for KEF LS50 Meta computed from ASR data
-Preference Score 5.7 with EQ 6.6
+Preference Score 5.7 with EQ 6.3
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-08-07-14:02:03
+Dated: 2021-08-22-08:46:21
 
-Preamp: -2.7 dB
+Preamp: -0.6 dB
 
-Filter  1: ON PK Fc  1189 Hz Gain +2.47 dB Q 9.28
-Filter  2: ON PK Fc   613 Hz Gain -0.89 dB Q 1.34
-Filter  3: ON PK Fc  2749 Hz Gain +2.00 dB Q 7.69
-Filter  4: ON PK Fc  4975 Hz Gain -0.87 dB Q 1.85
-Filter  5: ON PK Fc   923 Hz Gain -1.22 dB Q 12.00
-Filter  6: ON PK Fc 14178 Hz Gain -0.41 dB Q 0.81
-Filter  7: ON PK Fc  2348 Hz Gain +1.63 dB Q 12.00
-Filter  8: ON PK Fc  1840 Hz Gain -0.90 dB Q 12.00
-Filter  9: ON PK Fc  1623 Hz Gain +1.36 dB Q 12.00
-Filter 10: ON PK Fc  1439 Hz Gain -0.67 dB Q 12.00
-Filter 11: ON PK Fc  1104 Hz Gain +0.98 dB Q 12.00
-Filter 12: ON PK Fc  5306 Hz Gain +0.45 dB Q 12.00
-Filter 13: ON PK Fc  3321 Hz Gain +0.42 dB Q 12.00
-Filter 14: ON PK Fc   332 Hz Gain +0.40 dB Q 10.05
-Filter 15: ON PK Fc  1268 Hz Gain +0.38 dB Q 12.00
-Filter 16: ON PK Fc  2578 Hz Gain -0.56 dB Q 12.00
-Filter 17: ON PK Fc 10675 Hz Gain +0.41 dB Q 12.00
-Filter 18: ON PK Fc   771 Hz Gain +0.34 dB Q 12.00
-Filter 19: ON PK Fc 13772 Hz Gain +0.43 dB Q 12.00
-Filter 20: ON PK Fc  2782 Hz Gain +0.27 dB Q 12.00
+Filter  1: ON PK Fc  1851 Hz Gain -1.44 dB Q 0.10
+Filter  2: ON PK Fc  2599 Hz Gain +1.73 dB Q 3.20
+Filter  3: ON PK Fc  1190 Hz Gain +2.09 dB Q 6.00
+Filter  4: ON PK Fc   591 Hz Gain -0.88 dB Q 1.09
+Filter  5: ON PK Fc  9331 Hz Gain -0.50 dB Q 0.43
+Filter  6: ON PK Fc   922 Hz Gain -0.60 dB Q 6.00
+Filter  7: ON PK Fc 15318 Hz Gain -0.80 dB Q 6.00
+Filter  8: ON PK Fc  4556 Hz Gain -0.50 dB Q 6.00

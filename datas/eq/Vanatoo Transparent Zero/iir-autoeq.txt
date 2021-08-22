@@ -1,27 +1,15 @@
 EQ for Vanatoo Transparent Zero computed from ASR data
-Preference Score 4.0 with EQ 5.8
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.6
-Dated: 2021-02-28-11:54:03
+Preference Score 4.0 with EQ 5.5
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
+Dated: 2021-08-22-08:48:56
 
-Preamp: -1.9 dB
+Preamp: -1.1 dB
 
-Filter  1: ON PK Fc  5751 Hz Gain -4.61 dB Q 1.08
-Filter  2: ON PK Fc 13292 Hz Gain +2.20 dB Q 8.18
-Filter  3: ON PK Fc 10599 Hz Gain -1.09 dB Q 5.01
-Filter  4: ON PK Fc  5927 Hz Gain +0.96 dB Q 12.00
-Filter  5: ON PK Fc   741 Hz Gain -1.96 dB Q 12.00
-Filter  6: ON PK Fc  2395 Hz Gain +1.11 dB Q 3.27
-Filter  7: ON PK Fc  2908 Hz Gain +0.44 dB Q 12.00
-Filter  8: ON PK Fc  1028 Hz Gain -1.56 dB Q 12.00
-Filter  9: ON PK Fc 14151 Hz Gain +0.77 dB Q 12.00
-Filter 10: ON PK Fc   455 Hz Gain -0.73 dB Q 8.66
-Filter 11: ON PK Fc  1468 Hz Gain +0.65 dB Q 12.00
-Filter 12: ON PK Fc   618 Hz Gain +0.73 dB Q 6.28
-Filter 13: ON PK Fc   505 Hz Gain -0.44 dB Q 12.00
-Filter 14: ON PK Fc  8428 Hz Gain +0.25 dB Q 12.00
-Filter 15: ON PK Fc  4229 Hz Gain -0.86 dB Q 3.66
-Filter 16: ON PK Fc 12752 Hz Gain +0.27 dB Q 12.00
-Filter 17: ON PK Fc  1137 Hz Gain +0.49 dB Q 12.00
-Filter 18: ON PK Fc  1273 Hz Gain -0.45 dB Q 12.00
-Filter 19: ON PK Fc  1047 Hz Gain -0.22 dB Q 12.00
-Filter 20: ON PK Fc  7780 Hz Gain -0.42 dB Q 9.94
+Filter  1: ON PK Fc  1391 Hz Gain -2.07 dB Q 0.10
+Filter  2: ON PK Fc   145 Hz Gain -1.98 dB Q 3.29
+Filter  3: ON PK Fc  5947 Hz Gain -3.40 dB Q 1.58
+Filter  4: ON PK Fc  1153 Hz Gain +1.31 dB Q 0.41
+Filter  5: ON PK Fc 13384 Hz Gain +1.79 dB Q 6.00
+Filter  6: ON PK Fc  2355 Hz Gain +1.15 dB Q 4.43
+Filter  7: ON PK Fc   327 Hz Gain +0.69 dB Q 4.97
+Filter  8: ON PK Fc  4345 Hz Gain -1.63 dB Q 3.62

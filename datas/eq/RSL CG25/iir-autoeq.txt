@@ -1,26 +1,14 @@
-EQ for RSL CG25 computed from ASR data
+EQ for RSL CG25 computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-05-09-07:20:27
+Dated: 2021-08-22-08:49:00
 
-Preamp: -7.7 dB
+Preamp: -6.8 dB
 
-Filter  1: ON PK Fc  1404 Hz Gain +5.21 dB Q 0.10
-Filter  2: ON PK Fc   784 Hz Gain -4.87 dB Q 2.35
-Filter  3: ON PK Fc  2595 Hz Gain -2.32 dB Q 4.07
-Filter  4: ON PK Fc  1176 Hz Gain +2.65 dB Q 6.67
-Filter  5: ON PK Fc 12003 Hz Gain +4.24 dB Q 0.97
-Filter  6: ON PK Fc  5138 Hz Gain -2.27 dB Q 3.64
-Filter  7: ON PK Fc   771 Hz Gain -0.92 dB Q 0.29
-Filter  8: ON PK Fc   573 Hz Gain +2.78 dB Q 7.82
-Filter  9: ON PK Fc   889 Hz Gain +0.76 dB Q 1.67
-Filter 10: ON PK Fc   925 Hz Gain -1.15 dB Q 12.00
-Filter 11: ON PK Fc  7846 Hz Gain +1.87 dB Q 12.00
-Filter 12: ON PK Fc  6778 Hz Gain -0.68 dB Q 12.00
-Filter 13: ON PK Fc 10986 Hz Gain -0.92 dB Q 11.74
-Filter 14: ON PK Fc  1534 Hz Gain +0.97 dB Q 2.21
-Filter 15: ON PK Fc  3571 Hz Gain +0.75 dB Q 6.03
-Filter 16: ON PK Fc   694 Hz Gain +0.38 dB Q 12.00
-Filter 17: ON PK Fc   330 Hz Gain -3.64 dB Q 2.54
-Filter 18: ON PK Fc   534 Hz Gain +0.78 dB Q 12.00
-Filter 19: ON PK Fc 11838 Hz Gain +0.45 dB Q 0.50
-Filter 20: ON PK Fc 10745 Hz Gain -0.62 dB Q 3.90
+Filter  1: ON PK Fc  7086 Hz Gain +5.15 dB Q 0.10
+Filter  2: ON PK Fc   820 Hz Gain -2.81 dB Q 6.00
+Filter  3: ON PK Fc   550 Hz Gain +3.63 dB Q 5.88
+Filter  4: ON PK Fc  5064 Hz Gain -2.29 dB Q 3.70
+Filter  5: ON PK Fc  1195 Hz Gain +3.13 dB Q 5.94
+Filter  6: ON PK Fc  2610 Hz Gain -2.16 dB Q 4.57
+Filter  7: ON PK Fc   286 Hz Gain -1.04 dB Q 2.69
+Filter  8: ON PK Fc   917 Hz Gain -1.21 dB Q 6.00
