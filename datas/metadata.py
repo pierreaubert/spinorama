@@ -821,6 +821,22 @@ speakers_info = {
             },
         },
     },
+    "Danley SH-50": {
+        "brand": "Danley",
+        "model": "SH-50",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "",
+            },
+        },
+    },
     "Dayton Audio MK402X": {
         "brand": "Dayton Audio",
         "model": "MK402X",
@@ -3256,6 +3272,15 @@ speakers_info = {
         "amount": "pair",
         "default_measurement": "vendor",
         "measurements": {
+#            "eac" : {
+#                "origin": "ErinsAudioCorner",
+#                "format": "klippel",
+#                "reviews": {
+#                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_m2/",
+#                    "yt": "",
+#                },
+#                "review_published": "20210821",
+#            },
             "vendor": {
                 "origin": "Vendors-JBL",
                 "website": "www.jbl.com",
@@ -5718,6 +5743,22 @@ speakers_info = {
                 "origin": "Vendors-Revel",
                 "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
+            },
+        },
+    },
+    "Revel W990": {
+        "brand": "Revel",
+        "model": "W990",
+        "type": "passive",
+        "price": "3500",
+        "shape": "inwall",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-w990-review-in-wall-speaker.25954/",
             },
         },
     },
