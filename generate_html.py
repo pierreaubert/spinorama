@@ -207,7 +207,7 @@ if __name__ == "__main__":
     logger.info("Write index.html")
     index_html = mako_templates.get_template("index.html")
 
-    def sort_meta(s):
+    def sort_meta_score(s):
         if (
             s is not None
             and "pref_rating" in s.keys()
@@ -216,9 +216,14 @@ if __name__ == "__main__":
             return s["pref_rating"]["pref_score"]
         return -1
 
+    def sort_meta_date(s):
+        if s is not None:
+            return s.get("review_published", "20170101")
+        return "20170101"
+
     keys_sorted = sorted(
         meta,
-        key=lambda a: sort_meta(
+        key=lambda a: sort_meta_date(
             meta[a]["measurements"].get(meta[a].get("default_measurement"))
         ),
         reverse=True,
