@@ -236,7 +236,7 @@ if __name__ == "__main__":
         reverse=True,
     )
     meta_sorted_score = {k: meta[k] for k in keys_sorted_score}
-    meta_sorted_date  = {k: meta[k] for k in keys_sorted_date}
+    meta_sorted_date = {k: meta[k] for k in keys_sorted_date}
 
     try:
         with open("docs/index.html", "w") as f:
