@@ -221,19 +221,27 @@ if __name__ == "__main__":
             return s.get("review_published", "20170101")
         return "20170101"
 
-    keys_sorted = sorted(
+    keys_sorted_date = sorted(
         meta,
         key=lambda a: sort_meta_date(
             meta[a]["measurements"].get(meta[a].get("default_measurement"))
         ),
         reverse=True,
     )
-    meta_sorted = {k: meta[k] for k in keys_sorted}
+    keys_sorted_score = sorted(
+        meta,
+        key=lambda a: sort_meta_score(
+            meta[a]["measurements"].get(meta[a].get("default_measurement"))
+        ),
+        reverse=True,
+    )
+    meta_sorted_score = {k: meta[k] for k in keys_sorted_score}
+    meta_sorted_date  = {k: meta[k] for k in keys_sorted_date}
 
     try:
         with open("docs/index.html", "w") as f:
             # by default sort by pref_rating decreasing
-            f.write(index_html.render(df=df, meta=meta_sorted, site=site))
+            f.write(index_html.render(df=df, meta=meta_sorted_date, site=site))
             f.close()
     except KeyError as ke:
         print("Generating index.htmlfailed with {}".format(ke))
@@ -246,7 +254,7 @@ if __name__ == "__main__":
     try:
         with open("docs/eqs.html", "w") as f:
             # by default sort by pref_rating decreasing
-            f.write(eqs_html.render(df=df, meta=meta, site=site))
+            f.write(eqs_html.render(df=df, meta=meta_sorted_date, site=site))
             f.close()
     except KeyError as ke:
         print("Generating eqs.htmlfailed with {}".format(ke))
@@ -259,7 +267,7 @@ if __name__ == "__main__":
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
             with open("./docs/" + item_name, "w") as f:
-                f.write(item_html.render(df=df, meta=meta_sorted, site=site))
+                f.write(item_html.render(df=df, meta=meta_sorted_score, site=site))
                 f.close()
     except KeyError as ke:
         print("Generating various html files failed with {}".format(ke))
