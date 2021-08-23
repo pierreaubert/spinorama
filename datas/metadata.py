@@ -3270,17 +3270,17 @@ speakers_info = {
         "price": "20000",
         "shape": "floorstanders",
         "amount": "pair",
-        "default_measurement": "vendor",
+        "default_measurement": "eac",
         "measurements": {
-#            "eac" : {
-#                "origin": "ErinsAudioCorner",
-#                "format": "klippel",
-#                "reviews": {
-#                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_m2/",
-#                    "yt": "",
-#                },
-#                "review_published": "20210821",
-#            },
+            "eac" : {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_m2/",
+                    "yt": "",
+                },
+                "review_published": "20210821",
+            },
             "vendor": {
                 "origin": "Vendors-JBL",
                 "website": "www.jbl.com",
