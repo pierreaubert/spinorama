@@ -219,7 +219,9 @@ def compute(speakerlist, filters, ray_ids: dict):
             if speaker not in df.keys():
                 df[speaker_key] = {}
             if speaker not in metadata.speakers_info:
-                logger.warning("Speaker {} in SpeakerList but not in Metadata".format(speaker))
+                logger.warning(
+                    "Speaker {} in SpeakerList but not in Metadata".format(speaker)
+                )
                 continue
             for m_version, measurement in metadata.speakers_info[speaker][
                 "measurements"
