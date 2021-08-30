@@ -773,6 +773,22 @@ speakers_info = {
             },
         },
     },
+    "Chane A1.5": {
+        "brand": "Chane",
+        "model": "A1.5",
+        "type": "passive",
+        "price": "329",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/chane-a1-5-review-bookshelf-speaker.26078/",
+                "review_published": "20210825",
+            },
+        },
+    },
     "CommonSense Audio 5.6": {
         "brand": "CommonSense Audio",
         "model": "5.6",
@@ -6114,6 +6130,22 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/tannoy-system-600-speaker-review.11919/",
+            },
+        },
+    },
+    "Teac S-300HR": {
+        "brand": "Teac",
+        "model": "S-300HR",
+        "type": "passive",
+        "price": "800",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/teac-s-300hr-review-speaker.26186/",
+                "review_published": "20210830",
             },
         },
     },
