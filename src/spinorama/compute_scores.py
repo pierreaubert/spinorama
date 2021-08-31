@@ -254,8 +254,28 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
 
 
 def scores(df_speaker):
-    spin = df_speaker["CEA2034_unmelted"]
-    splH = df_speaker["SPL Horizontal_unmelted"]
-    splV = df_speaker["SPL Vertical_unmelted"]
-    pir = estimated_inroom_HV(splH, splV)
-    return speaker_pref_rating(graph_melt(spin), graph_melt(pir))
+    pir = None
+    spin = None
+    if "CEA2034" in df_speaker:
+        spin = df_speaker["CEA2034"]
+        pir = spin.get("Estimated In-Room Response", None)
+        if pir is None:
+            logger.error("Don t find pir {} v1".format(df_speaker["CEA2034"].keys()))
+    elif "CEA2034_unmelted" in df_speaker:
+        spin = graph_melt(df_speaker["CEA2034_unmelted"])
+        if "Estimated In-Room Response" in df_speaker["CEA2034_unmelted"]:
+            pir = graph_melt(
+                df_speaker["CEA2034_unmelted"]["Estimated In-Room Response"]
+            )
+        else:
+            logger.error(
+                "Don t find pir {} v2".format(df_speaker["CEA2034_unmelted"].keys())
+            )
+
+    if pir is None:
+        logger.error("pir is None, recompute")
+        splH = df_speaker["SPL Horizontal_unmelted"]
+        splV = df_speaker["SPL Vertical_unmelted"]
+        pir = graph_melt(estimated_inroom_HV(splH, splV))
+
+    return speaker_pref_rating(cea2034=spin, df_pred_in_room=pir, rounded=False)

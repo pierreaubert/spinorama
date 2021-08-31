@@ -45,7 +45,7 @@ def leastsquare_loss(
     return float(np.sum([l2_loss(lt, freq, peq) for lt in local_target]))
 
 
-def flat_loss(
+def flat_loss_prev(
     freq: Vector, local_target: List[Vector], peq: Peq, iterations: int, weigths: Vector
 ) -> float:
     # make LW as close as target as possible and SP flat
@@ -54,11 +54,21 @@ def flat_loss(
     )
     # want sound power to be flat but not necessary aligned
     # with a target
-    _, _, r_value, _, _ = linregress(np.log10(freq), local_target[-1])
-    sp = 1 - r_value ** 2
+    sp = 1.0
+    if len(local_target) > 1:
+        _, _, r_value, _, _ = linregress(np.log10(freq), local_target[-1])
+        sp = 1 - r_value ** 2
     # * or +
     # return weigths[0]*lw+weigths[1]*sp
     return lw * sp
+
+
+def flat_loss(
+    freq: Vector, local_target: List[Vector], peq: Peq, iterations: int, weigths: Vector
+) -> float:
+    _, _, r_value, _, _ = linregress(np.log10(freq), local_target[0])
+    sp = 1 - r_value ** 2
+    return sp
 
 
 def swap_loss(

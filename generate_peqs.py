@@ -90,7 +90,7 @@ from spinorama.auto_optim import optim_greedy
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
-VERSION = 0.8
+VERSION = 0.9
 
 
 def optim_find_peq(
@@ -489,10 +489,11 @@ def compute_peqs(ray_ids):
     v_score = []
     for speaker, results in aggregated_results.items():
         for current_result in results:
-            v_sn.append("{}".format(speaker))
-            v_iter.append(current_result[0])
-            v_loss.append(current_result[1])
-            v_score.append(current_result[2])
+            if current_result is not None and len(current_result) > 2:
+                v_sn.append("{}".format(speaker))
+                v_iter.append(current_result[0])
+                v_loss.append(current_result[1])
+                v_score.append(current_result[2])
     df_results = pd.DataFrame(
         {"speaker_name": v_sn, "iter": v_iter, "loss": v_loss, "score": v_score}
     )
@@ -504,19 +505,20 @@ def compute_peqs(ray_ids):
         s_manual = []
         s_auto = []
         for speaker, scores in aggregated_scores.items():
-            s_sn.append("{}".format(speaker))
-            s_ref.append(scores[0])
-            s_manual.append(scores[1])
-            s_auto.append(scores[2])
-            df_scores = pd.DataFrame(
-                {
-                    "speaker_name": s_sn,
-                    "reference": s_ref,
-                    "manual": s_manual,
-                    "auto": s_auto,
-                }
-            )
-            df_scores.to_csv("results_scores.csv", index=False)
+            if scores is not None and len(scores) > 2:
+                s_sn.append("{}".format(speaker))
+                s_ref.append(scores[0])
+                s_manual.append(scores[1])
+                s_auto.append(scores[2])
+        df_scores = pd.DataFrame(
+            {
+                "speaker_name": s_sn,
+                "reference": s_ref,
+                "manual": s_manual,
+                "auto": s_auto,
+            }
+        )
+        df_scores.to_csv("results_scores.csv", index=False)
 
     return 0
 
@@ -538,17 +540,18 @@ if __name__ == "__main__":
     # read optimisation parameter
     current_optim_config = {
         # name of the loss function
-        "loss": "flat_loss",
+        # "loss": "flat_loss",
         # "loss": "score_loss",
         # "loss": "combine_loss",
+        "loss": "leastsquare_loss",
         # if you have multiple loss functions, define the weigth for each
-        "loss_weigths": [1.0, 1.0],
+        "loss_weigths": [100.0, 1.0],
         # do you optimise only peaks or both peaks and valleys?
         "plus_and_minus": True,
         # do you optimise for all kind of biquad or do you want only Peaks?
         "full_biquad_optim": False,
         # lookup around a value is [value*elastic, value/elastic]
-        "elastic": 0.1,
+        "elastic": 0.2,
         # "elastic": 0.8,
         # cut frequency
         "fs": 48000,
@@ -567,9 +570,10 @@ if __name__ == "__main__":
         # it will optimise for having a Listening Window as close as possible
         # the target and having a Sound Power as flat as possible (without a
         # target)
-        # 'curve_names': ['Listening Window'],
+        "curve_names": ["Listening Window"],
+        # 'curve_names': ['Early Reflections'],
         # 'curve_names': ['Listening Window', 'Sound Power'],
-        "curve_names": ["Listening Window", "Early Reflections"],
+        # "curve_names": ["Listening Window", "Early Reflections"],
         # "curve_names": ["Listening Window", "Early Reflections", "Sound Power"],
         # 'curve_names': ['Listening Window', 'On Axis', 'Early Reflections'],
         # 'curve_names': ['On Axis', 'Early Reflections'],
@@ -592,18 +596,18 @@ if __name__ == "__main__":
         # max iterations (if algorithm is iterative)
         current_optim_config["maxiter"] = 20
     else:
-        current_optim_config["MAX_NUMBER_PEQ"] = 8
-        current_optim_config["MAX_STEPS_FREQ"] = 10
-        current_optim_config["MAX_STEPS_DBGAIN"] = 10
-        current_optim_config["MAX_STEPS_Q"] = 10
+        current_optim_config["MAX_NUMBER_PEQ"] = 9
+        current_optim_config["MAX_STEPS_FREQ"] = 6
+        current_optim_config["MAX_STEPS_DBGAIN"] = 6
+        current_optim_config["MAX_STEPS_Q"] = 6
         # max iterations (if algorithm is iterative)
-        current_optim_config["maxiter"] = 2500
+        current_optim_config["maxiter"] = 500
 
     # MIN or MAX_Q or MIN or MAX_DBGAIN control the shape of the biquad which
     # are admissible.
     current_optim_config["MIN_DBGAIN"] = 0.5
     current_optim_config["MAX_DBGAIN"] = 8
-    current_optim_config["MIN_Q"] = 0.1
+    current_optim_config["MIN_Q"] = 0.05
     current_optim_config["MAX_Q"] = 6
 
     # do we override optim default?

@@ -95,7 +95,7 @@ def propose_range_freq(
     return (
         sign,
         init_freq,
-        np.linspace(
+        np.linspace(  # should that be logspace?
             init_freq_min, init_freq_max, optim_config["MAX_STEPS_FREQ"]
         ).tolist(),
     )
