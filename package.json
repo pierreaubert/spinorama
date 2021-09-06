@@ -4,7 +4,7 @@
     "canvas": "^2.8.0",
     "html-validator-cli": "^7.0.1",
     "npm": "^7.5.4",
-    "pyright": "^1.1.157",
+    "pyright": "^1.1.166",
     "standard": "^16.0.3",
     "typescript": "^4.3.2",
     "vega": "^5.17.1",

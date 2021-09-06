@@ -103,7 +103,7 @@ sp_weigths_hv = compute_weigths_hv(sp_weigths)
 def spl2pressure(spl: float) -> float:
     """Convert SPL to pressure"""
     try:
-        p = math.pow(10, (spl - 105.0) / 20.0)
+        p = pow(10, (spl - 105.0) / 20.0)
         return p
     except TypeError as type_error:
         print("spl2pressure: spl={0} e={1}".format(spl, type_error))
@@ -128,16 +128,16 @@ def column_trim(col: str) -> str:
 
 def column_valid(col: str) -> bool:
     """True is a column is valid false otherwise"""
-    if col[0] == "O":
+    if col[0] == "O": # On Axis
         return True
-    if col[0] == "F":
+    if col[0] == "F": # Freq
         return False
     if int(column_trim(col)[:-1]) % 10 == 0:
         return True
     return False
 
 
-def spatial_average(sp_window, func="rms") -> pd.DataFrame:
+def spatial_average(sp_window: pd.DataFrame, func="rms") -> pd.DataFrame:
     """Compute the spatial average of pressure with a function"""
     sp_cols = sp_window.columns
     if "Freq" not in sp_cols:

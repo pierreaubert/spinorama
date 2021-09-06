@@ -48,7 +48,7 @@ from docopt import docopt
 try:
     import ray
 except ModuleNotFoundError:
-    import src.miniray as ray
+    import miniray as ray
 
 
 from generate_common import (
@@ -59,9 +59,9 @@ from generate_common import (
     cache_update,
 )
 import datas.metadata as metadata
-from src.spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
-from src.spinorama.speaker_print import print_graphs
-from src.spinorama.graph import graph_params_default
+from spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
+from spinorama.speaker_print import print_graphs
+from spinorama.graph import graph_params_default
 
 
 VERSION = 1.26

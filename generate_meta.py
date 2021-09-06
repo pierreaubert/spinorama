@@ -49,11 +49,11 @@ except ModuleNotFoundError:
 
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
 
-from src.spinorama.compute_estimates import estimates
-from src.spinorama.compute_scores import speaker_pref_rating
-from src.spinorama.filter_peq import peq_preamp_gain
-from src.spinorama.load_parse import parse_graphs_speaker
-from src.spinorama.load_rewseq import parse_eq_iir_rews
+from spinorama.compute_estimates import estimates
+from spinorama.compute_scores import speaker_pref_rating
+from spinorama.filter_peq import peq_preamp_gain
+from spinorama.load_parse import parse_graphs_speaker
+from spinorama.load_rewseq import parse_eq_iir_rews
 
 
 import datas.metadata as metadata
