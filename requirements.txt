@@ -12,4 +12,4 @@ more_itertools
 ray[default]>=1.6.0
 ray[tune]
 jupyterlab
-flaml[blendsearch,ray]
+flaml[blendsearch,ray,tune]

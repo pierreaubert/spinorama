@@ -18,11 +18,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
-
 import numpy as np
 import pandas as pd
-
+import time
 from typing import Literal
+from ray import tune as raytune
+import flaml
+
+
 from .ltype import Peq, FloatVector1D
 from .filter_iir import Biquad
 from .filter_peq import peq_build  # peq_print
@@ -39,7 +42,10 @@ logger = logging.getLogger("spinorama")
 
 
 def optim_preflight(
-    freq: FloatVector1D, target: list[FloatVector1D], auto_target_interp: list[FloatVector1D], optim_config: dict
+    freq: FloatVector1D,
+    target: list[FloatVector1D],
+    auto_target_interp: list[FloatVector1D],
+    optim_config: dict,
 ) -> bool:
     """Some quick checks before optim runs."""
     sz = len(freq)
@@ -71,7 +77,10 @@ def optim_preflight(
 
 
 def optim_compute_auto_target(
-    freq: FloatVector1D, target: list[FloatVector1D], auto_target_interp: list[FloatVector1D], peq: Peq
+    freq: FloatVector1D,
+    target: list[FloatVector1D],
+    auto_target_interp: list[FloatVector1D],
+    peq: Peq,
 ):
     peq_freq = peq_build(freq, peq)
     return [target[i] - auto_target_interp[i] + peq_freq for i, _ in enumerate(target)]
@@ -237,17 +246,81 @@ def optim_greedy(
     return results, auto_peq
 
 
-def optim_flam(
-        speaker_name: str,
-        df_speaker: dict[str, pd.DataFrame],
-        freq: FloatVector1D,
-        auto_target: list[FloatVector1D],
-        auto_target_interp: list[FloatVector1D],
-        optim_config: dict,
-        use_score,
-        greedy_peq,
-) -> tuple[bool, list[tuple[int, float, float]], Peq]:
-    return False
+def optim_flaml(
+    speaker_name: str,
+    df_speaker: dict[str, pd.DataFrame],
+    optim_config: dict,
+    greedy_results,
+    greedy_peq,
+) -> tuple[list[tuple[int, float, float]], Peq]:
+
+    init_loss = greedy_results[-1][1]
+
+    low_cost_partial_config = {}
+    config = {}
+    for i, _ in enumerate(greedy_peq):
+        config["freq_{}".format(i)] = raytune.quniform(-100, 100, 1)
+        config["Q_{}".format(i)] = raytune.quniform(-1, 1, 0.1)
+        config["dbGain_{}".format(i)] = raytune.quniform(-4, 2, 0.2)
+        low_cost_partial_config["freq_{}".format(i)] = 0.0
+        low_cost_partial_config["Q_{}".format(i)] = 0.0
+        low_cost_partial_config["dbGain_{}".format(i)] = 0.0
+
+    def init_delta(config):
+        return [
+            (
+                c,
+                Biquad(
+                    p.typ,
+                    max(20, p.freq + config["freq_{}".format(i)]),
+                    p.srate,
+                    max(0.01, p.Q + config["Q_{}".format(i)]),
+                    min(p.dbGain + config["dbGain_{}".format(i)], 6),
+                ),
+            )
+            for i, (c, p) in enumerate(greedy_peq)
+        ]
+
+    def evaluate_config(config):
+        eval_peq = init_delta(config)
+        score = score_loss(df_speaker, eval_peq)
+        raytune.report(score=score)
+
+    time_budget_s = 300
+    num_samples = -1
+
+    # set up CFO and blendsearch
+    cfo = flaml.CFO(low_cost_partial_config=low_cost_partial_config)
+    blendsearch = flaml.BlendSearch(
+        metric="score",
+        mode="min",
+        space=config,
+        low_cost_partial_config=low_cost_partial_config)
+    blendsearch.set_search_properties(config={"time_budget_s": time_budget_s})
+
+    analysis = raytune.run(
+        evaluate_config,
+        config=config,
+        metric='score',    
+        mode='min',         
+        num_samples=num_samples,    
+        time_budget_s=time_budget_s, 
+        local_dir='logs/',  
+        search_alg=cfo,
+        # search_alg=blendsearch  # or cfo
+    )
+
+    print(analysis.best_trial.last_result)
+    print(analysis.best_config)
+
+    final_loss = -analysis.best_trial.last_result['score']
+    if final_loss > init_loss:
+        final_results = greedy_results
+        final_results.append([greedy_results[-1][0]+1, final_loss, final_loss])
+        final_peq = init_delta(analysis.best_config)
+        return final_results, final_peq
+    else:
+        return greedy_results, greedy_peq
 
 
 def optim_multi_steps(
@@ -273,17 +346,10 @@ def optim_multi_steps(
     if not use_score:
         return greedy_results, greedy_peq
 
-    check, optim_results, optim_peq = optim_flam(
+    return optim_flaml(
         speaker_name,
         df_speaker,
-        freq,
-        auto_target,
-        auto_target_interp,
         optim_config,
-        use_score,
-        greedy_peq)
-
-    if check:
-        return optim_results, optim_peq
-
-    return greedy_results, greedy_peq
+        greedy_results,
+        greedy_peq,
+    )
