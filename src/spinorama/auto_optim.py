@@ -295,17 +295,18 @@ def optim_flaml(
         metric="score",
         mode="min",
         space=config,
-        low_cost_partial_config=low_cost_partial_config)
+        low_cost_partial_config=low_cost_partial_config,
+    )
     blendsearch.set_search_properties(config={"time_budget_s": time_budget_s})
 
     analysis = raytune.run(
         evaluate_config,
         config=config,
-        metric='score',    
-        mode='min',         
-        num_samples=num_samples,    
-        time_budget_s=time_budget_s, 
-        local_dir='logs/',  
+        metric="score",
+        mode="min",
+        num_samples=num_samples,
+        time_budget_s=time_budget_s,
+        local_dir="logs/",
         search_alg=cfo,
         # search_alg=blendsearch  # or cfo
     )
@@ -313,10 +314,10 @@ def optim_flaml(
     print(analysis.best_trial.last_result)
     print(analysis.best_config)
 
-    final_loss = -analysis.best_trial.last_result['score']
+    final_loss = -analysis.best_trial.last_result["score"]
     if final_loss > init_loss:
         final_results = greedy_results
-        final_results.append([greedy_results[-1][0]+1, final_loss, final_loss])
+        final_results.append([greedy_results[-1][0] + 1, final_loss, final_loss])
         final_peq = init_delta(analysis.best_config)
         return final_results, final_peq
     else:
