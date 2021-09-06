@@ -21,7 +21,7 @@ def peq_equal(left: Peq, right: Peq) -> bool:
     return True
 
 
-def peq_build(freq: Vector, peq: Peq) -> Vector:
+def peq_build(freq: np.ndarray, peq: Peq) -> Vector:
     current_filter = [0.0]
     if len(peq) > 0:
         for w, iir in peq:
@@ -29,7 +29,7 @@ def peq_build(freq: Vector, peq: Peq) -> Vector:
     return current_filter
 
 
-def peq_freq(spl: Vector, peq: Peq) -> Vector:
+def peq_freq(spl: np.ndarray, peq: Peq) -> Vector:
     current_filter = [0.0]
     if len(peq) > 0:
         for w, iir in peq:

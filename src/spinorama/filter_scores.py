@@ -1,6 +1,7 @@
 #                                                  -*- coding: utf-8 -*-
 import logging
 
+from .ltype import DataSpeaker, Peq
 from .load import graph_melt
 from .compute_scores import speaker_pref_rating, nbd
 from .compute_cea2034 import compute_cea2034, estimated_inroom_HV, listening_window
@@ -11,7 +12,7 @@ from .graph import graph_spinorama
 logger = logging.getLogger("spinorama")
 
 
-def scores_apply_filter(df_speaker, peq):
+def scores_apply_filter(df_speaker: DataSpeaker, peq: Peq):
     # get SPL H & V
     splH = df_speaker["SPL Horizontal_unmelted"]
     splV = df_speaker["SPL Vertical_unmelted"]
@@ -29,7 +30,7 @@ def scores_apply_filter(df_speaker, peq):
     return spin_filtered, pir_filtered, score_filtered
 
 
-def noscore_apply_filter(df_speaker, peq):
+def noscore_apply_filter(df_speaker: DataSpeaker, peq: Peq):
     spin_filtered = None
     pir_filtered = None
     if "CEA2034" in df_speaker.keys():
@@ -58,7 +59,7 @@ def noscore_apply_filter(df_speaker, peq):
     return None, None
 
 
-def scores_graph(spin, spin_filtered, params):
+def scores_graph(spin: DataSpeaker, spin_filtered: DataSpeaker, params: dict):
     return graph_spinorama(spin, params) | graph_spinorama(spin_filtered, params)
 
 

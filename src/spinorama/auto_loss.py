@@ -45,7 +45,7 @@ def leastsquare_loss(
     return float(np.sum([l2_loss(lt, freq, peq) for lt in local_target]))
 
 
-def flat_loss_prev(
+def flat_loss(
     freq: Vector, local_target: List[Vector], peq: Peq, iterations: int, weigths: Vector
 ) -> float:
     # make LW as close as target as possible and SP flat
@@ -63,7 +63,7 @@ def flat_loss_prev(
     return lw * sp
 
 
-def flat_loss(
+def flat_loss_exp(
     freq: Vector, local_target: List[Vector], peq: Peq, iterations: int, weigths: Vector
 ) -> float:
     _, _, r_value, _, _ = linregress(np.log10(freq), local_target[0])

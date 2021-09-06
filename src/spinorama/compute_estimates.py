@@ -12,8 +12,9 @@ logger = logging.getLogger("spinorama")
 
 
 def estimates(spin: pd.DataFrame, splH: pd.DataFrame, splV: pd.DataFrame):
+    onaxis = None
+    est = {}
     try:
-        onaxis = None
         if "Measurements" in spin.keys():
             onaxis = spin.loc[spin["Measurements"] == "On Axis"].reset_index(drop=True)
         else:
@@ -93,7 +94,6 @@ def estimates(spin: pd.DataFrame, splH: pd.DataFrame, splV: pd.DataFrame):
         return est
     except TypeError as te:
         logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, te))
-        return None
     except ValueError as ve:
         logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, ve))
-        return None
+    return {}

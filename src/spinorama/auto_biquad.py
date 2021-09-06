@@ -21,6 +21,7 @@ import logging
 
 import scipy.optimize as opt
 
+from .ltype import DataSpeaker, Peq
 from .filter_iir import Biquad
 from .auto_loss import loss
 
@@ -29,7 +30,7 @@ logger = logging.getLogger("spinorama")
 
 
 def find_best_biquad(
-    df_speaker,
+    df_speaker: DataSpeaker,
     freq,
     auto_target,
     freq_range,
