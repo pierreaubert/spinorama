@@ -11,8 +11,10 @@ pd.set_option("display.max_rows", 1000)
 logger = logging.getLogger("spinorama")
 
 
-def estimates(spin: pd.DataFrame, splH: pd.DataFrame, splV: pd.DataFrame):
-    onaxis = None
+def estimates(
+    spin: pd.DataFrame, splH: pd.DataFrame, splV: pd.DataFrame
+) -> dict[str, float]:
+    onaxis = pd.DataFrame()
     est = {}
     try:
         if "Measurements" in spin.keys():
@@ -20,15 +22,15 @@ def estimates(spin: pd.DataFrame, splH: pd.DataFrame, splV: pd.DataFrame):
         else:
             onaxis = spin.get("On Axis", None)
 
-        if onaxis is None:
+        if onaxis.empty:
             logger.debug("On Axis measurement not found!")
-            return None
+            return {}
 
         freq_min = onaxis.Freq.min()
         logger.debug("Freq min: {0}".format(freq_min))
         if math.isnan(freq_min):
             logger.warning("Estimates failed for onaxis {0}".format(onaxis.shape))
-            return None
+            return {}
         if freq_min < 300:
             # mean over 300-10k
             y_ref = np.mean(
@@ -47,8 +49,8 @@ def estimates(spin: pd.DataFrame, splH: pd.DataFrame, splV: pd.DataFrame):
             ].dB.min()
             band = max(abs(up - y_ref), abs(y_ref - down))
             est = {
-                "ref_from": 300,
-                "ref_to": 10000,
+                "ref_from": 300.0,
+                "ref_to": 10000.0,
             }
             if not math.isnan(y_ref):
                 est["ref_level"] = round(y_ref, 0)
@@ -72,7 +74,7 @@ def estimates(spin: pd.DataFrame, splH: pd.DataFrame, splV: pd.DataFrame):
             band = max(abs(up - y_ref), abs(y_ref - down))
             est = {
                 "ref_from": round(freq_min, 0),
-                "ref_to": 10000,
+                "ref_to": 10000.0,
             }
             if not math.isnan(y_ref):
                 est["ref_level"] = round(y_ref, 0)
@@ -83,7 +85,7 @@ def estimates(spin: pd.DataFrame, splH: pd.DataFrame, splV: pd.DataFrame):
             spl = splH
             if orientation == "vertical":
                 spl = splV
-            if spl is not None:
+            if spl is not None and not spl.empty:
                 af, am, az = compute_contour(spl)
                 dir_deg_p, dir_deg_m, dir_deg = compute_directivity_deg(af, am, az)
                 est["dir_{}_p".format(orientation)] = dir_deg_p

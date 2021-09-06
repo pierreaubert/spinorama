@@ -131,12 +131,12 @@ def compute_contour_smoothed(dfu, nscale=5):
     return (rx, ry, rzs)
 
 
-def compute_directivity_deg(af, am, az):
+def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     """ "compute +/- angle where directivity is most constant between 1kHz and 10kz"""
 
     # kHz1 = 110
     # kHz10 = 180
-    def linear_eval(x):
+    def linear_eval(x: float) -> float:
         xp1 = int(x)
         xp2 = xp1 + 1
         zp1 = az[xp1][110:180]
@@ -174,4 +174,4 @@ def compute_directivity_deg(af, am, az):
     # translate in deg
     angle_m = -pos_m * 180 / eval_count
 
-    return angle_p, angle_m, (angle_p - angle_m) / 2
+    return float(angle_p), float(angle_m), float((angle_p - angle_m) / 2)

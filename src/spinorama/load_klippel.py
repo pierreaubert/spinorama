@@ -14,7 +14,7 @@ removequote = str.maketrans({'"': None, "\n": ""})
 logger = logging.getLogger("spinorama")
 
 
-def parse_graph_freq_klippel(filename: str):
+def parse_graph_freq_klippel(filename: str) -> tuple[str, pd.DataFrame]:
     """Parse a klippel generated file"""
     title = None
     columns = ["Freq"]
