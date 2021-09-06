@@ -22,7 +22,7 @@ import unittest
 import numpy as np
 import numpy.testing as npt
 from spinorama.compute_cea2034 import (
-    compute_areaQ,
+    compute_area_Q,
     compute_weigths,
 )
 
@@ -45,9 +45,9 @@ class WeigthsTests(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_areaQ(self):
+    def test_area_Q(self):
         # expect area of half sphere
-        self.assertAlmostEqual(compute_areaQ(90, 90), 2.0 * math.pi)
+        self.assertAlmostEqual(compute_area_Q(90, 90), 2.0 * math.pi)
 
     def test_weigths(self):
         weigths = np.array(compute_weigths())
