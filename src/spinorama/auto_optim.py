@@ -39,7 +39,10 @@ logger = logging.getLogger("spinorama")
 
 
 def optim_preflight(
-    freq: FloatVector1D, target: list[FloatVector1D], auto_target_interp: list[FloatVector1D], optim_config: dict
+    freq: FloatVector1D,
+    target: list[FloatVector1D],
+    auto_target_interp: list[FloatVector1D],
+    optim_config: dict,
 ) -> bool:
     """Some quick checks before optim runs."""
     sz = len(freq)
@@ -71,7 +74,10 @@ def optim_preflight(
 
 
 def optim_compute_auto_target(
-    freq: FloatVector1D, target: list[FloatVector1D], auto_target_interp: list[FloatVector1D], peq: Peq
+    freq: FloatVector1D,
+    target: list[FloatVector1D],
+    auto_target_interp: list[FloatVector1D],
+    peq: Peq,
 ):
     peq_freq = peq_build(freq, peq)
     return [target[i] - auto_target_interp[i] + peq_freq for i, _ in enumerate(target)]
@@ -238,14 +244,14 @@ def optim_greedy(
 
 
 def optim_flam(
-        speaker_name: str,
-        df_speaker: dict[str, pd.DataFrame],
-        freq: FloatVector1D,
-        auto_target: list[FloatVector1D],
-        auto_target_interp: list[FloatVector1D],
-        optim_config: dict,
-        use_score,
-        greedy_peq,
+    speaker_name: str,
+    df_speaker: dict[str, pd.DataFrame],
+    freq: FloatVector1D,
+    auto_target: list[FloatVector1D],
+    auto_target_interp: list[FloatVector1D],
+    optim_config: dict,
+    use_score,
+    greedy_peq,
 ) -> tuple[bool, list[tuple[int, float, float]], Peq]:
     return False
 
@@ -281,7 +287,8 @@ def optim_multi_steps(
         auto_target_interp,
         optim_config,
         use_score,
-        greedy_peq)
+        greedy_peq,
+    )
 
     if check:
         return optim_results, optim_peq
