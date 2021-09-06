@@ -128,9 +128,9 @@ def column_trim(col: str) -> str:
 
 def column_valid(col: str) -> bool:
     """True is a column is valid false otherwise"""
-    if col[0] == "O": # On Axis
+    if col[0] == "O":  # On Axis
         return True
-    if col[0] == "F": # Freq
+    if col[0] == "F":  # Freq
         return False
     if int(column_trim(col)[:-1]) % 10 == 0:
         return True
@@ -581,15 +581,15 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     if lw.empty or ter.empty:
         return spin.reset_index(drop=True)
 
-    erdi = pd.DataFrame({'dB': lw.dB - ter.dB})
+    erdi = pd.DataFrame({"dB": lw.dB - ter.dB})
     # add a di offset to mimic other systems
-    di_offset = pd.DataFrame({'dB': [0 for i in range(0, len(erdi))]})
+    di_offset = pd.DataFrame({"dB": [0 for i in range(0, len(erdi))]})
     # Sound Power Directivity Index (SPDI)
     # For the purposes of this standard the Sound Power Directivity Index is defined
     # as the difference between the listening window curve and the sound power curve.
     # An SPDI of 0 dB indicates omnidirectional radiation. The larger the SPDI, the
     # more directional the loudspeaker is in the direction of the reference axis.
-    spdi = pd.DataFrame({'dB': lw.dB - sp.dB})
+    spdi = pd.DataFrame({"dB": lw.dB - sp.dB})
     for (key, name) in [
         ("Early Reflections DI", erdi),
         ("Sound Power DI", spdi),
