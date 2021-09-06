@@ -1,6 +1,6 @@
 EQ for Sonus Faber Sonetto II computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-08-22-08:48:55
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.9
+Dated: 2021-08-31-21:06:45
 
 Preamp: -3.9 dB
 
@@ -9,6 +9,7 @@ Filter  2: ON PK Fc 16000 Hz Gain -3.62 dB Q 0.49
 Filter  3: ON PK Fc   728 Hz Gain -2.34 dB Q 6.00
 Filter  4: ON PK Fc  1052 Hz Gain +2.18 dB Q 6.00
 Filter  5: ON PK Fc  1218 Hz Gain -1.16 dB Q 6.00
-Filter  6: ON PK Fc  5449 Hz Gain +0.92 dB Q 6.00
+Filter  6: ON PK Fc  5388 Hz Gain +0.92 dB Q 6.00
 Filter  7: ON PK Fc  2115 Hz Gain +0.86 dB Q 6.00
-Filter  8: ON PK Fc  1073 Hz Gain +0.66 dB Q 6.00
+Filter  8: ON PK Fc   365 Hz Gain +0.57 dB Q 6.00
+Filter  9: ON PK Fc  1073 Hz Gain +0.65 dB Q 6.00

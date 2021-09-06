@@ -1,15 +1,16 @@
 EQ for KEF R2c computed from ErinsAudioCorner data
-Preference Score 4.2 with EQ 5.6
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-08-22-08:47:09
+Preference Score 4.2 with EQ 5.7
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.9
+Dated: 2021-08-31-21:06:36
 
-Preamp: -2.1 dB
+Preamp: -2.4 dB
 
-Filter  1: ON PK Fc 11424 Hz Gain -3.13 dB Q 0.26
-Filter  2: ON PK Fc  1917 Hz Gain +2.67 dB Q 6.00
+Filter  1: ON PK Fc 11660 Hz Gain -3.13 dB Q 0.25
+Filter  2: ON PK Fc  1917 Hz Gain +2.68 dB Q 6.00
 Filter  3: ON PK Fc   279 Hz Gain -1.55 dB Q 1.57
-Filter  4: ON PK Fc  1252 Hz Gain -0.50 dB Q 2.77
-Filter  5: ON PK Fc   132 Hz Gain -0.63 dB Q 5.27
-Filter  6: ON PK Fc   969 Hz Gain +0.78 dB Q 6.00
-Filter  7: ON PK Fc   525 Hz Gain +0.50 dB Q 6.00
-Filter  8: ON PK Fc   207 Hz Gain +0.50 dB Q 6.00
+Filter  4: ON PK Fc   132 Hz Gain -0.63 dB Q 5.22
+Filter  5: ON PK Fc   952 Hz Gain +0.50 dB Q 6.00
+Filter  6: ON PK Fc  2644 Hz Gain -1.76 dB Q 4.71
+Filter  7: ON PK Fc  1991 Hz Gain +0.56 dB Q 6.00
+Filter  8: ON PK Fc  1448 Hz Gain -0.91 dB Q 6.00
+Filter  9: ON PK Fc   641 Hz Gain -0.69 dB Q 6.00

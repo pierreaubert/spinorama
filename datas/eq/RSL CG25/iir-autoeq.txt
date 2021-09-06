@@ -1,14 +1,15 @@
 EQ for RSL CG25 computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-08-22-08:49:00
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.9
+Dated: 2021-08-31-21:06:44
 
 Preamp: -6.8 dB
 
-Filter  1: ON PK Fc  7086 Hz Gain +5.15 dB Q 0.10
-Filter  2: ON PK Fc   820 Hz Gain -2.81 dB Q 6.00
-Filter  3: ON PK Fc   550 Hz Gain +3.63 dB Q 5.88
-Filter  4: ON PK Fc  5064 Hz Gain -2.29 dB Q 3.70
-Filter  5: ON PK Fc  1195 Hz Gain +3.13 dB Q 5.94
-Filter  6: ON PK Fc  2610 Hz Gain -2.16 dB Q 4.57
-Filter  7: ON PK Fc   286 Hz Gain -1.04 dB Q 2.69
-Filter  8: ON PK Fc   917 Hz Gain -1.21 dB Q 6.00
+Filter  1: ON PK Fc  5616 Hz Gain +4.98 dB Q 0.11
+Filter  2: ON PK Fc   818 Hz Gain -3.51 dB Q 6.00
+Filter  3: ON PK Fc   551 Hz Gain +3.05 dB Q 6.00
+Filter  4: ON PK Fc  2640 Hz Gain -2.13 dB Q 4.11
+Filter  5: ON PK Fc  5117 Hz Gain -2.24 dB Q 5.36
+Filter  6: ON PK Fc  1200 Hz Gain +2.85 dB Q 5.78
+Filter  7: ON PK Fc   289 Hz Gain -1.26 dB Q 2.23
+Filter  8: ON PK Fc   929 Hz Gain -1.26 dB Q 6.00
+Filter  9: ON PK Fc 15804 Hz Gain +2.32 dB Q 0.60

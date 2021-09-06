@@ -1,14 +1,15 @@
 EQ for JBL LSR305 computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-08-22-08:46:07
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.9
+Dated: 2021-08-31-21:06:14
 
-Preamp: -0.9 dB
+Preamp: -0.4 dB
 
-Filter  1: ON PK Fc  2149 Hz Gain -2.59 dB Q 0.23
-Filter  2: ON PK Fc 13958 Hz Gain -1.81 dB Q 3.80
-Filter  3: ON PK Fc  1378 Hz Gain -1.61 dB Q 6.00
-Filter  4: ON PK Fc   514 Hz Gain +0.84 dB Q 3.28
-Filter  5: ON PK Fc 12244 Hz Gain +1.83 dB Q 6.00
-Filter  6: ON PK Fc   204 Hz Gain -0.79 dB Q 1.50
-Filter  7: ON PK Fc  4078 Hz Gain +0.76 dB Q 3.03
-Filter  8: ON PK Fc  1650 Hz Gain +0.65 dB Q 6.00
+Filter  1: ON PK Fc  2150 Hz Gain -2.59 dB Q 0.23
+Filter  2: ON PK Fc  1378 Hz Gain -1.61 dB Q 6.00
+Filter  3: ON PK Fc   514 Hz Gain +0.84 dB Q 3.29
+Filter  4: ON PK Fc   204 Hz Gain -0.79 dB Q 1.51
+Filter  5: ON PK Fc  4068 Hz Gain +0.76 dB Q 3.03
+Filter  6: ON PK Fc   938 Hz Gain +0.65 dB Q 6.00
+Filter  7: ON PK Fc  1652 Hz Gain +0.61 dB Q 6.00
+Filter  8: ON PK Fc   389 Hz Gain +0.59 dB Q 6.00
+Filter  9: ON PK Fc 11992 Hz Gain +0.90 dB Q 6.00
