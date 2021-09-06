@@ -20,9 +20,10 @@
 import logging
 
 import numpy as np
+import pandas as pd
 
-from typing import Literal, List, Tuple
-from .ltype import Vector
+from typing import Literal
+from .ltype import Peq, FloatVector1D
 from .filter_iir import Biquad
 from .filter_peq import peq_build  # peq_print
 from .auto_loss import loss, score_loss
@@ -37,7 +38,9 @@ from .auto_biquad import find_best_biquad, find_best_peak
 logger = logging.getLogger("spinorama")
 
 
-def optim_preflight(freq, target, auto_target_interp, optim_config):
+def optim_preflight(
+    freq: FloatVector1D, target: list[FloatVector1D], auto_target_interp: list[FloatVector1D], optim_config: dict
+) -> bool:
     """Some quick checks before optim runs."""
     sz = len(freq)
     nbt = len(target)
@@ -67,24 +70,26 @@ def optim_preflight(freq, target, auto_target_interp, optim_config):
     return status
 
 
-def optim_compute_auto_target(freq, target, auto_target_interp, peq):
+def optim_compute_auto_target(
+    freq: FloatVector1D, target: list[FloatVector1D], auto_target_interp: list[FloatVector1D], peq: Peq
+):
     peq_freq = peq_build(freq, peq)
     return [target[i] - auto_target_interp[i] + peq_freq for i, _ in enumerate(target)]
 
 
 def optim_greedy(
     speaker_name: str,
-    df_speaker: dict,
-    freq: Vector,
-    auto_target: List[Vector],
-    auto_target_interp: List[Vector],
+    df_speaker: dict[str, pd.DataFrame],
+    freq: FloatVector1D,
+    auto_target: list[FloatVector1D],
+    auto_target_interp: list[FloatVector1D],
     optim_config: dict,
     use_score,
-) -> List[Tuple[int, float, float]]:
+) -> tuple[list[tuple[int, float, float]], Peq]:
 
-    if optim_preflight(freq, auto_target, auto_target_interp, optim_config) is False:
+    if not optim_preflight(freq, auto_target, auto_target_interp, optim_config):
         logger.error("Preflight check failed!")
-        return None, None
+        return ([(0, 0, 0)], [])
 
     auto_peq = []
     current_auto_target = optim_compute_auto_target(
@@ -188,7 +193,7 @@ def optim_greedy(
             best_loss = current_loss
             if use_score:
                 pref_score = score_loss(df_speaker, auto_peq)
-            results.append((optim_iter + 1, best_loss, -pref_score))
+            results.append((int(optim_iter + 1), float(best_loss), float(-pref_score)))
             logger.info(
                 "Speaker {} Iter {:2d} Optim converged loss {:2.2f} pref score {:2.2f} biquad {:2s} F:{:5.0f}Hz Q:{:2.2f} G:{:+2.2f}dB in {} iterations".format(
                     speaker_name,
@@ -230,3 +235,55 @@ def optim_greedy(
         )
     )
     return results, auto_peq
+
+
+def optim_flam(
+        speaker_name: str,
+        df_speaker: dict[str, pd.DataFrame],
+        freq: FloatVector1D,
+        auto_target: list[FloatVector1D],
+        auto_target_interp: list[FloatVector1D],
+        optim_config: dict,
+        use_score,
+        greedy_peq,
+) -> tuple[bool, list[tuple[int, float, float]], Peq]:
+    return False
+
+
+def optim_multi_steps(
+    speaker_name: str,
+    df_speaker: dict,
+    freq: FloatVector1D,
+    auto_target: list[FloatVector1D],
+    auto_target_interp: list[FloatVector1D],
+    optim_config: dict,
+    use_score,
+) -> tuple[list[tuple[int, float, float]], Peq]:
+
+    greedy_results, greedy_peq = optim_greedy(
+        speaker_name,
+        df_speaker,
+        freq,
+        auto_target,
+        auto_target_interp,
+        optim_config,
+        use_score,
+    )
+
+    if not use_score:
+        return greedy_results, greedy_peq
+
+    check, optim_results, optim_peq = optim_flam(
+        speaker_name,
+        df_speaker,
+        freq,
+        auto_target,
+        auto_target_interp,
+        optim_config,
+        use_score,
+        greedy_peq)
+
+    if check:
+        return optim_results, optim_peq
+
+    return greedy_results, greedy_peq

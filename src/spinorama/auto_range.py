@@ -23,7 +23,7 @@ from typing import Literal, List, Tuple
 import scipy.signal as sig
 from scipy.interpolate import InterpolatedUnivariateSpline
 
-from spinorama.ltype import Vector
+from spinorama.ltype import FloatVector1D, Vector
 
 logger = logging.getLogger("spinorama")
 
@@ -34,7 +34,7 @@ logger = logging.getLogger("spinorama")
 
 
 def find_largest_area(
-    freq: Vector, curve: List[Vector], optim_config: dict
+    freq: FloatVector1D, curve: List[FloatVector1D], optim_config: dict
 ) -> Tuple[Literal[-1, 1], int, float]:
     def largest_area(positive_curve) -> Tuple[int, float]:
         logger.debug("freq {} positive_curve {}".format(freq, positive_curve))
@@ -78,7 +78,7 @@ def find_largest_area(
 
 
 def propose_range_freq(
-    freq: Vector, local_target: List[Vector], optim_config: dict
+    freq: FloatVector1D, local_target: List[FloatVector1D], optim_config: dict
 ) -> Tuple[Literal[-1, 1], float, Vector]:
     sign, _, init_freq = find_largest_area(freq, local_target, optim_config)
     scale = optim_config["elastic"]
@@ -102,10 +102,10 @@ def propose_range_freq(
 
 
 def propose_range_dbGain(
-    freq: Vector,
-    local_target: List[Vector],
+    freq: FloatVector1D,
+    local_target: List[FloatVector1D],
     sign: Literal[-1, 1],
-    init_freq: Vector,
+    init_freq: FloatVector1D,
     optim_config: dict,
 ) -> Vector:
     spline = InterpolatedUnivariateSpline(np.log10(freq), local_target, k=1)

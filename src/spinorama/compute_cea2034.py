@@ -605,8 +605,8 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     """Compute On Axis depending of which kind of data we have"""
     onaxis = pd.DataFrame()
-    if v_spl.empty:
-        if h_spl.empty:
+    if v_spl is None or v_spl.empty:
+        if h_spl is None or h_spl.empty:
             return pd.DataFrame()
         onaxis = spatial_average1(h_spl, ["Freq", "On Axis"])
     else:

@@ -86,7 +86,7 @@ from spinorama.filter_scores import (
     scores_print,
 )
 from spinorama.auto_target import get_freq, get_target
-from spinorama.auto_optim import optim_greedy
+from spinorama.auto_optim import optim_multi_steps
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
@@ -112,7 +112,7 @@ def optim_find_peq(
     auto_target_interp = []
     for curve in curves:
         auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
-    auto_results, auto_peq = optim_greedy(
+    auto_results, auto_peq = optim_multi_steps(
         current_speaker_name,
         df_speaker,
         freq,
