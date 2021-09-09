@@ -3594,6 +3594,26 @@ speakers_info = {
             },
         },
     },
+    "KEF LS50 Wireless II": {
+        "brand": "KEF",
+        "model": "LS50 Wireless II",
+        "type": "active",
+        "price": "2800",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_wireless_ii/",
+                    "yt": "https://www.youtube.com/watch?v=ryxm7pPyU9c",
+                },
+                "review_published": "20210907",
+            },
+        },
+    },
     "KEF LSX": {
         "brand": "KEF",
         "model": "LSX",
