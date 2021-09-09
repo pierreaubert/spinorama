@@ -3743,11 +3743,19 @@ speakers_info = {
         "brand": "KEF",
         "model": "R5",
         "type": "passive",
-        "price": "",
+        "price": "2600",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "misc-speakerdata2034",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r5/",
+                },
+                "review_published": "20210915",
+            },
             "misc-speakerdata2034": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
