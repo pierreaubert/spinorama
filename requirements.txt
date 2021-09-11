@@ -11,5 +11,6 @@ matplotlib
 more_itertools
 ray[default]>=1.6.0
 ray[tune]
+flaml[blendsearch]
+bayesian-optimization
 jupyterlab
-flaml[blendsearch,ray,tune]

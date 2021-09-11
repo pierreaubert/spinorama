@@ -260,7 +260,7 @@ def scores(df_speaker):
         spin = df_speaker["CEA2034"]
         pir = spin.get("Estimated In-Room Response", None)
         if pir is None:
-            logger.error("Don t find pir {} v1".format(df_speaker["CEA2034"].keys()))
+            logger.error("Don't find pir {} v1".format(df_speaker["CEA2034"].keys()))
     elif "CEA2034_unmelted" in df_speaker:
         spin = graph_melt(df_speaker["CEA2034_unmelted"])
         if "Estimated In-Room Response" in df_speaker["CEA2034_unmelted"]:
@@ -269,11 +269,11 @@ def scores(df_speaker):
             )
         else:
             logger.error(
-                "Don t find pir {} v2".format(df_speaker["CEA2034_unmelted"].keys())
+                "Don't find pir {} v2".format(df_speaker["CEA2034_unmelted"].keys())
             )
 
     if pir is None:
-        logger.error("pir is None, recompute")
+        logger.error("pir is None, computing it")
         splH = df_speaker["SPL Horizontal_unmelted"]
         splV = df_speaker["SPL Vertical_unmelted"]
         pir = graph_melt(estimated_inroom_HV(splH, splV))

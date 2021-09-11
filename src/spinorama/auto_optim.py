@@ -22,14 +22,21 @@ import numpy as np
 import pandas as pd
 import time
 from typing import Literal
-from ray import tune as raytune
-import flaml
-
+from ray import tune
+from ray.tune.schedulers import (
+    PopulationBasedTraining,
+    AsyncHyperBandScheduler,
+    ASHAScheduler,
+)
+from ray.tune.schedulers.pb2 import PB2
+from ray.tune.suggest import ConcurrencyLimiter
+from ray.tune.suggest.flaml import CFO, BlendSearch
+from ray.tune.suggest.bayesopt import BayesOptSearch
 
 from .ltype import Peq, FloatVector1D
 from .filter_iir import Biquad
-from .filter_peq import peq_build  # peq_print
-from .auto_loss import loss, score_loss
+from .filter_peq import peq_build, peq_print
+from .auto_loss import loss, score_loss, flat_loss, leastsquare_loss, flat_pir
 from .auto_range import (
     propose_range_freq,
     propose_range_Q,
@@ -246,60 +253,70 @@ def optim_greedy(
     return results, auto_peq
 
 
-def optim_flaml(
+def optim_flat(
     speaker_name: str,
     df_speaker: dict[str, pd.DataFrame],
+    freq: FloatVector1D,
+    auto_target: list[FloatVector1D],
+    auto_target_interp: list[FloatVector1D],
     optim_config: dict,
     greedy_results,
     greedy_peq,
 ) -> tuple[list[tuple[int, float, float]], Peq]:
 
-    init_loss = greedy_results[-1][1]
+    # loss from previous optim algo
+    init_loss = greedy_results[-1][2]
 
     low_cost_partial_config = {}
     config = {}
     for i, _ in enumerate(greedy_peq):
-        config["freq_{}".format(i)] = raytune.quniform(-100, 100, 1)
-        config["Q_{}".format(i)] = raytune.quniform(-1, 1, 0.1)
-        config["dbGain_{}".format(i)] = raytune.quniform(-4, 2, 0.2)
+        config["freq_{}".format(i)] = tune.qloguniform(100, 20000, 1)
+
+    for i, _ in enumerate(greedy_peq):
         low_cost_partial_config["freq_{}".format(i)] = 0.0
-        low_cost_partial_config["Q_{}".format(i)] = 0.0
-        low_cost_partial_config["dbGain_{}".format(i)] = 0.0
 
-    def init_delta(config):
-        return [
-            (
-                c,
-                Biquad(
-                    p.typ,
-                    max(20, p.freq + config["freq_{}".format(i)]),
-                    p.srate,
-                    max(0.01, p.Q + config["Q_{}".format(i)]),
-                    min(p.dbGain + config["dbGain_{}".format(i)], 6),
-                ),
-            )
-            for i, (c, p) in enumerate(greedy_peq)
-        ]
+    def evaluate_config(current_config, checkpoint_dir=None):
+        current_min = 1000.0
+        for Q in np.linspace(1, 6, 50):
+            for dB in np.linspace(-6, 6, 120):
+                eval_peq = [
+                    (1.0, Biquad(3, current_config["freq_{}".format(i)], 48000, Q, dB))
+                    for i, _ in enumerate(current_config)
+                ]
+                current_auto_target = optim_compute_auto_target(
+                    freq, auto_target, auto_target_interp, eval_peq
+                )
+                current_min = min(
+                    current_min,
+                    flat_loss(freq, current_auto_target, eval_peq, 0, [1, 1]),
+                )
 
-    def evaluate_config(config):
-        eval_peq = init_delta(config)
-        score = score_loss(df_speaker, eval_peq)
-        raytune.report(score=score)
+        tune.report(score=current_min)
 
-    time_budget_s = 300
-    num_samples = -1
+    time_budget_s = 30
+    num_samples = 750
 
-    # set up CFO and blendsearch
-    cfo = flaml.CFO(low_cost_partial_config=low_cost_partial_config)
-    blendsearch = flaml.BlendSearch(
-        metric="score",
-        mode="min",
-        space=config,
-        low_cost_partial_config=low_cost_partial_config,
+    # possible schedulers
+    pbt = PopulationBasedTraining(
+        time_attr="training_iteration",
+        perturbation_interval=10,
     )
-    blendsearch.set_search_properties(config={"time_budget_s": time_budget_s})
 
-    analysis = raytune.run(
+    asha = ASHAScheduler(
+        time_attr="training_iteration",
+        max_t=100,
+        grace_period=10,
+        reduction_factor=3,
+        brackets=1,
+    )
+
+    # possible search algos
+    algo_cfo = CFO(low_cost_partial_config=low_cost_partial_config)
+    algo_blendsearch = BlendSearch(low_cost_partial_config=low_cost_partial_config)
+    algo_bos = BayesOptSearch(utility_kwargs={"kind": "ucb", "kappa": 2.5, "xi": 0.0})
+    algo = ConcurrencyLimiter(algo_bos, max_concurrent=128)
+
+    analysis = tune.run(
         evaluate_config,
         config=config,
         metric="score",
@@ -307,14 +324,157 @@ def optim_flaml(
         num_samples=num_samples,
         time_budget_s=time_budget_s,
         local_dir="logs/",
-        search_alg=cfo,
-        # search_alg=blendsearch  # or cfo
+        # search_alg=algo, # bos working well
+        # scheduler=asha,
+        scheduler=pbt,
+        verbose=1,
+        stop={"training_iteration": 128, "score": init_loss * 0.98},
+    )
+
+    print(analysis.best_trial.last_result)
+    print(analysis.best_config)
+
+    final_loss = score_loss(df_speaker, analysis.best_config)
+    print(final_loss, init_loss)
+    if final_loss > init_loss:
+        final_results = greedy_results
+        final_results.append([greedy_results[-1][0] + 1, final_loss, final_loss])
+        final_peq = init_delta(analysis.best_config)
+        return final_results, final_peq
+    else:
+        return greedy_results, greedy_peq
+
+
+def optim_refine(
+    speaker_name: str,
+    df_speaker: dict[str, pd.DataFrame],
+    freq: FloatVector1D,
+    auto_target: list[FloatVector1D],
+    auto_target_interp: list[FloatVector1D],
+    optim_config: dict,
+    greedy_results,
+    greedy_peq,
+) -> tuple[list[tuple[int, float, float]], Peq]:
+
+    # loss from previous optim algo
+    init_loss = greedy_results[-1][2]
+
+    low_cost_partial_config = {}
+    config = {}
+    for i, (_, i_peq) in enumerate(greedy_peq):
+        f_i = int(i_peq.freq * 0.2)
+        config["freq_{}".format(i)] = tune.quniform(-f_i, f_i, 1)
+        q_i = int(i_peq.Q * 4) / 10
+        config["Q_{}".format(i)] = tune.quniform(-q_i, q_i, 0.1)
+        db_i = int(i_peq.dbGain * 4) / 10
+        config["dbGain_{}".format(i)] = tune.quniform(-db_i, db_i, 0.1)
+
+    for i, _ in enumerate(greedy_peq):
+        low_cost_partial_config["freq_{}".format(i)] = 0.0
+        low_cost_partial_config["Q_{}".format(i)] = 0.0
+        low_cost_partial_config["dbGain_{}".format(i)] = 0.0
+
+    def init_delta(current_config):
+        return [
+            (
+                c,
+                Biquad(
+                    # p.typ,
+                    p.typ,
+                    # p.freq,
+                    min(
+                        optim_config["freq_reg_max"],
+                        max(
+                            optim_config["freq_reg_min"],
+                            p.freq + current_config["freq_{}".format(i)],
+                        ),
+                    ),
+                    # p.srate,
+                    p.srate,
+                    # p.Q,
+                    min(
+                        optim_config["MAX_Q"],
+                        max(
+                            optim_config["MIN_Q"],
+                            p.Q + current_config["Q_{}".format(i)],
+                        ),
+                    ),
+                    # p.dbGain,
+                    min(
+                        optim_config["MAX_DBGAIN"],
+                        max(
+                            optim_config["MIN_DBGAIN"],
+                            p.dbGain + current_config["dbGain_{}".format(i)],
+                        ),
+                    ),
+                ),
+            )
+            for i, (c, p) in enumerate(greedy_peq)
+        ]
+
+    def evaluate_config(current_config, checkpoint_dir=None):
+        eval_peq = init_delta(current_config)
+        # score = flat_pir(freq, df_speaker, eval_peq)
+        score = score_loss(df_speaker, eval_peq)
+        tune.report(score=score) #, h_score=h_score)
+
+    time_budget_s = 300
+    num_samples = 10000
+
+    class CustomStopper(tune.Stopper):
+        def __init__(self):
+            self.should_stop = False
+
+        def __call__(self, trial_id, result):
+            max_iter = 5
+            return self.should_stop or result["training_iteration"] >= max_iter
+
+        def stop_all(self):
+            return self.should_stop
+
+    stopper = CustomStopper()
+
+    # possible schedulers
+    pbt = PopulationBasedTraining(
+        time_attr="training_iteration",
+        perturbation_interval=2,
+    )
+
+    asha = ASHAScheduler(
+        time_attr="training_iteration",
+        max_t=100,
+        grace_period=10,
+        reduction_factor=3,
+        brackets=1,
+    )
+
+    # possible search algos
+    algo_cfo = CFO(low_cost_partial_config=low_cost_partial_config)
+    algo_blendsearch = BlendSearch(low_cost_partial_config=low_cost_partial_config)
+    algo_bos = BayesOptSearch(utility_kwargs={"kind": "ucb", "kappa": 2.5, "xi": 0.0})
+    algo = ConcurrencyLimiter(algo_blendsearch, max_concurrent=128)
+
+    analysis = tune.run(
+        evaluate_config,
+        config=config,
+        metric="score",
+        mode="min",
+        num_samples=num_samples,
+        time_budget_s=time_budget_s,
+        local_dir="logs/",
+        # search_alg=algo, # bos working well
+        # scheduler=asha,
+        # stop=stopper,
+        fail_fast=True,
+        scheduler=pbt,
+        verbose=1,
     )
 
     print(analysis.best_trial.last_result)
     print(analysis.best_config)
 
     final_loss = -analysis.best_trial.last_result["score"]
+    print(final_loss, init_loss)
     if final_loss > init_loss:
         final_results = greedy_results
         final_results.append([greedy_results[-1][0] + 1, final_loss, final_loss])
@@ -344,12 +504,15 @@ def optim_multi_steps(
         use_score,
     )
 
-    if not use_score:
+    if not use_score or not optim_config["second_optimiser"]:
         return greedy_results, greedy_peq
 
-    return optim_flaml(
+    return optim_refine(
         speaker_name,
         df_speaker,
+        freq,
+        auto_target,
+        auto_target_interp,
         optim_config,
         greedy_results,
         greedy_peq,

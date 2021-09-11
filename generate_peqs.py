@@ -28,7 +28,9 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--slope-listening-window=<s_lw>] \
  [--slope-early-reflections=<s_er>] \
  [--slope-sound-power=<s_sp>] \
- [--loss=<pick>] [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local]
+ [--loss=<pick>] \
+ [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
+ [--second-optimiser=<sopt>]
 
 
 Options:
@@ -58,6 +60,7 @@ Options:
   --slope-listening-window=<s_lw> Slope of listening window, default is -2dB
   --slope-early-reflections=<s_er> Slope of early reflections, default is -5dB
   --slope-sound-power=<s_sp> Slope of sound power, default is -8dB
+  --second-optimiser=<sopt>
 """
 from datetime import datetime
 import os
@@ -570,10 +573,10 @@ if __name__ == "__main__":
         # it will optimise for having a Listening Window as close as possible
         # the target and having a Sound Power as flat as possible (without a
         # target)
-        "curve_names": ["Listening Window"],
+        # "curve_names": ["Listening Window"],
         # 'curve_names': ['Early Reflections'],
         # 'curve_names': ['Listening Window', 'Sound Power'],
-        # "curve_names": ["Listening Window", "Early Reflections"],
+        "curve_names": ["Listening Window", "Early Reflections"],
         # "curve_names": ["Listening Window", "Early Reflections", "Sound Power"],
         # 'curve_names': ['Listening Window', 'On Axis', 'Early Reflections'],
         # 'curve_names': ['On Axis', 'Early Reflections'],
@@ -655,6 +658,11 @@ if __name__ == "__main__":
             except ValueError:
                 print("{} is not a float".format(args[slope_name]))
                 sys.exit(1)
+
+    # do we run a second optimiser?
+    current_optim_config["second_optimiser"] = False
+    if args["--second-optimiser"] is not None:
+        current_optim_config["second_optimiser"] = True
 
     # name of speaker
     speaker_name = None
