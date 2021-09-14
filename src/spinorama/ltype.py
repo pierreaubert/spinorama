@@ -1,4 +1,4 @@
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # local types
 from typing import List, Tuple, Dict, Any
 import pandas as pd

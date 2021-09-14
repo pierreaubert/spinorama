@@ -1,5 +1,5 @@
-"Vertical Reflections"					
-"Floor Reflection"		"Ceiling Reflection"		"Total Vertical Reflection"	
+"Vertical Reflections"
+"Floor Reflection"		"Ceiling Reflection"		"Total Vertical Reflection"
 "Frequency [Hz]"	"Sound Pessure Level [dB]   [2.83V at 1m]"	"Frequency [Hz]"	"Sound Pessure Level [dB]   [2.83V at 1m]"	"Frequency [Hz]"	"Sound Pessure Level [dB]   [2.83V at 1m]"
 20.5078	61.5529	20.5078	60.7545	20.5078	61.172
 21.9727	59.4025	21.9727	58.0512	21.9727	58.7792

@@ -1,5 +1,5 @@
-"Estimated In-Room Response"	
-"Estimated In-Room Response"	
+"Estimated In-Room Response"
+"Estimated In-Room Response"
 "Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"
 20.5078	46.6367
 21.9727	47.8396

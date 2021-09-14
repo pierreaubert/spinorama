@@ -1,5 +1,5 @@
-"Early Reflections"											
-"Floor Bounce"		"Ceiling Bounce"		"Front Wall Bounce"		"Side Wall Bounce"		"Rear Wall Bounce (full horizontal rear)"		"Total Early Reflection"	
+"Early Reflections"
+"Floor Bounce"		"Ceiling Bounce"		"Front Wall Bounce"		"Side Wall Bounce"		"Rear Wall Bounce (full horizontal rear)"		"Total Early Reflection"
 "Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"	"Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"	"Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"	"Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"	"Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"	"Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"
 20.5078	48.2101	20.5078	45.5058	20.5078	47.055	20.5078	45.9849	20.5078	56.9423	20.5078	51.3783
 21.9727	48.0599	21.9727	47.765	21.9727	46.3518	21.9727	47.5035	21.9727	57.7924	21.9727	52.1732

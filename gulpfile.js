@@ -1,6 +1,6 @@
 const gulp = require('gulp');
 const minify = require('gulp-minify');
- 
+
 gulp.task('compress', function() {
   gulp.src('templates/assets/*.js')
     .pipe(minify({

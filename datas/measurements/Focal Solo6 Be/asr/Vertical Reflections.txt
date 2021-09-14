@@ -1,5 +1,5 @@
-"Vertical Reflections"					
-"Floor Reflection"		"Ceiling Reflection"		"Total Vertical Reflection"	
+"Vertical Reflections"
+"Floor Reflection"		"Ceiling Reflection"		"Total Vertical Reflection"
 "Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"	"Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"	"Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"
 20.5078	61.4768	20.5078	59.918	20.5078	60.7669
 21.9727	57.5435	21.9727	56.8864	21.9727	57.2273

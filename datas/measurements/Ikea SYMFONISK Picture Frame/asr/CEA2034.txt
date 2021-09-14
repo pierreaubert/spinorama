@@ -1,5 +1,5 @@
-"CEA2034"													
-"On Axis"		"Listening Window"		"Early Reflections"		"Sound Power"		"Sound Power DI"		"Early Reflections DI"		"DI offset"	
+"CEA2034"
+"On Axis"		"Listening Window"		"Early Reflections"		"Sound Power"		"Sound Power DI"		"Early Reflections DI"		"DI offset"
 "Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"	"Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"	"Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"	"Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"	"Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"	"Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"	"Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa/V)  [2.83  V @ 1. m]"
 20.1416	49.1495	20.1416	49.1281	20.1416	49.2638	20.1416	49.5309	20.1416	39.5972	20.1416	39.8642	20.1416	40
 20.5078	41.2469	20.5078	41.2304	20.5078	42.0846	20.5078	43.2647	20.5078	37.9657	20.5078	39.1458	20.5078	40

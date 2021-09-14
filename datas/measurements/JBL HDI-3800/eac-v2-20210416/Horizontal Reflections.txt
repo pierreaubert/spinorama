@@ -1,5 +1,5 @@
-"Horizontal Reflections"							
-"Front"		"Side"		"Rear"		"Total Horizontal Reflection"	
+"Horizontal Reflections"
+"Front"		"Side"		"Rear"		"Total Horizontal Reflection"
 "Frequency [Hz]"	"Sound Pessure Level [dB]   [2.83V at 1m]"	"Frequency [Hz]"	"Sound Pessure Level [dB]   [2.83V at 1m]"	"Frequency [Hz]"	"Sound Pessure Level [dB]   [2.83V at 1m]"	"Frequency [Hz]"	"Sound Pessure Level [dB]   [2.83V at 1m]"
 20.5078	68.8145	20.5078	71.2401	20.5078	78.8802	20.5078	76.6236
 21.9727	71.4942	21.9727	73.4438	21.9727	79.98	21.9727	77.8829

@@ -6,7 +6,7 @@ document.querySelectorAll('#nav li').forEach(function (navEl) {
 
 function toggleTab (selectedNav, targetId) {
     let navEls = document.querySelectorAll('#nav li')
-    
+
     navEls.forEach(function (navEl) {
 	if (navEl.id === selectedNav) {
 	    navEl.classList.add('is-active')
@@ -16,7 +16,7 @@ function toggleTab (selectedNav, targetId) {
 	    }
 	}
     })
-    
+
     let tabs = document.querySelectorAll('.tab-pane')
 
     tabs.forEach(function (tab) {

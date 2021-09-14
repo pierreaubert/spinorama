@@ -85,7 +85,7 @@ if [ $status -ne 0 ]; then
 else
     echo "OK after checking HTML!"
 fi
-# copy 
+# copy
 TARGET=$HOME/src/pierreaubert.github.io/spinorama
 command=$(./update_sync.sh)
 status=$?
@@ -98,4 +98,3 @@ fi
 # evaluate what's new and needs to be changed
 cd ${TARGET} && git status
 exit 0;
-

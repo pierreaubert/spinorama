@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 def space2url(context, text):
     """basic url escaping"""
     return text.replace(" ", "%20").replace("&", "%26")

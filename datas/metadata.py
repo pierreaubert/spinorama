@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # extra speaker info
 speakers_info = {
     "Adam A5X": {

@@ -1,5 +1,5 @@
-"SPL Vertical"																					
-"On-Axis"		"10°"		"-10°"		"20°"		"-20°"		"30°"		"-30°"		"40°"		"-40°"		"50°"		"-50°"	
+"SPL Vertical"
+"On-Axis"		"10°"		"-10°"		"20°"		"-20°"		"30°"		"-30°"		"40°"		"-40°"		"50°"		"-50°"
 "Frequency [Hz]"	"Sound Pessure Level [dB]  / [2.83V 1m] "	"Frequency [Hz]"	"Sound Pessure Level [dB]  / [2.83V 1m] "	"Frequency [Hz]"	"Sound Pessure Level [dB]  / [2.83V 1m] "	"Frequency [Hz]"	"Sound Pessure Level [dB]  / [2.83V 1m] "	"Frequency [Hz]"	"Sound Pessure Level [dB]  / [2.83V 1m] "	"Frequency [Hz]"	"Sound Pessure Level [dB]  / [2.83V 1m] "	"Frequency [Hz]"	"Sound Pessure Level [dB]  / [2.83V 1m] "	"Frequency [Hz]"	"Sound Pessure Level [dB]  / [2.83V 1m] "	"Frequency [Hz]"	"Sound Pessure Level [dB]  / [2.83V 1m] "	"Frequency [Hz]"	"Sound Pessure Level [dB]  / [2.83V 1m] "	"Frequency [Hz]"	"Sound Pessure Level [dB]  / [2.83V 1m] "
 20.5078	7.5683	20.5078	7.75975	20.5078	7.32302	20.5078	7.90041	20.5078	7.02164	20.5078	7.99302	20.5078	6.6642	20.5078	8.03948	20.5078	6.25513	20.5078	8.04053	20.5078	5.80582
 21.2402	14.8026	21.2402	14.7031	21.2402	14.899	21.2402	14.6059	21.2402	14.9876	21.2402	14.5168	21.2402	15.0648	21.2402	14.4417	21.2402	15.1273	21.2402	14.3868	21.2402	15.1736

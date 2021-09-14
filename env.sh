@@ -30,7 +30,7 @@ if ! test -d $SPIN/spinorama-venv; then
     pip3 install -r requirements.txt
     pip3 install -r requirements-tests.txt
     ray install ray-nightly
-fi    
+fi
 source $SPIN/spinorama-venv/bin/activate
 
 ## CUDA configuration

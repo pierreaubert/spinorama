@@ -1,4 +1,4 @@
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """Compute Harman/Olive score for speaker"""
 import logging
 import math

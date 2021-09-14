@@ -6,7 +6,7 @@ Dated: 24-07-2020 18:21:49
 Notes:Tannoy Revolution XT 6 IIR
 
 Equaliser: Generic
-Tannoy Revolution XT 6 
+Tannoy Revolution XT 6
 Preamp:	-3.6 dB
 Filter  1: ON  PK       Fc     432 Hz  Gain  -3.0 dB  Q 2.389
 Filter  2: ON  PK       Fc     511 Hz  Gain  11.9 dB  Q 3.125
@@ -28,4 +28,3 @@ Filter 17: ON  PK       Fc    6233 Hz  Gain  11.2 dB  Q 2.618
 Filter 18: ON  PK       Fc    6497 Hz  Gain -28.8 dB  Q 1.000
 Filter 19: ON  PK       Fc    6828 Hz  Gain  10.4 dB  Q 2.235
 Filter 20: ON  PK       Fc    8716 Hz  Gain   7.2 dB  Q 1.894
-

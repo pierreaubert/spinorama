@@ -1,5 +1,5 @@
-"CEA2034"													
-"On Axis"		"Listening Window"		"Early Reflections"		"Sound Power"		"Sound Power DI"		"Early Reflections DI"		"DI offset"	
+"CEA2034"
+"On Axis"		"Listening Window"		"Early Reflections"		"Sound Power"		"Sound Power DI"		"Early Reflections DI"		"DI offset"
 "Frequency [Hz]"	"Sound Pessure Level [dB] [0.3V at 1m]"	"Frequency [Hz]"	"Sound Pessure Level [dB] [0.3V at 1m]"	"Frequency [Hz]"	"Sound Pessure Level [dB] [0.3V at 1m]"	"Frequency [Hz]"	"Sound Pessure Level [dB] [0.3V at 1m]"	"Frequency [Hz]"	"Sound Pessure Level [dB] [0.3V at 1m]"	"Frequency [Hz]"	"Sound Pessure Level [dB] [0.3V at 1m]"	"Frequency [Hz]"	"Sound Pessure Level [dB] [0.3V at 1m]"
 20.5078	62.6345	20.5078	62.6482	20.5078	62.7698	20.5078	62.9604	20.5078	60.1945	20.5078	60.3851	20.5078	60.5067
 21.9727	55.9657	21.9727	55.932	21.9727	55.6128	21.9727	55.2818	21.9727	61.1569	21.9727	60.826	21.9727	60.5067

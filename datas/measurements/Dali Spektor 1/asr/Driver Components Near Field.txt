@@ -1,5 +1,5 @@
-"Fundamental + Harmonic distortion components"					
-"Woofer"		"Tweeter"		"Port"	
+"Fundamental + Harmonic distortion components"
+"Woofer"		"Tweeter"		"Port"
 "Frequency [Hz]"	"dB - [V]  (rms)"	"Frequency [Hz]"	"dB - [V]  (rms)"	"Frequency [Hz]"	"dB - [V]  (rms)"
 20.1416	89.4049	500.244	86.327	20.1416	94.1406
 20.5078	89.5295	500.61	86.3209	20.5078	94.2618

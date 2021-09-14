@@ -1,7 +1,7 @@
 Window.$ = window.jQuery;
 
 $(document).ready(function () {
-    
+
     window.$.getJSON("${site}/assets/metadata.json", function (response) {
 	// console.log("got json");
 	const metadata = Object.values(response);
@@ -17,9 +17,9 @@ $(document).ready(function () {
 	    includeScore: true,
 	    useExtendedSearch: true
 	});
-	
+
 	const resultdiv = $("div.searchresults");
-	
+
 	let filter = {
 	    reviewer: "",
 	    shape: "",
@@ -31,7 +31,7 @@ $(document).ready(function () {
 	let sorter = {
 	    by: "",
 	};
-	
+
 	function selectDispatch(filter) {
 	    let keywords = $("#searchInput").val();
 	    // console.log("keywords: "+keywords);
@@ -44,27 +44,27 @@ $(document).ready(function () {
 		display_search(resultdiv, results, filter);
 	    }
 	}
-	
+
 	$("#selectReviewer").on("change", function () {
 	    filter["reviewer"] = this.value;
 	    selectDispatch(filter);
 	});
-	
+
 	$("#selectQuality").on("change", function () {
 	    filter["quality"] = this.value;
 	    selectDispatch(filter);
 	});
-	
+
 	$("#selectShape").on("change", function () {
 	    filter["shape"] = this.value;
 	    selectDispatch(filter);
 	});
-	
+
 	$("#selectPower").on("change", function () {
 	    filter["power"] = this.value;
 	    selectDispatch(filter);
 	});
-	
+
 	$("#selectBrand").on("change", function () {
 	    filter["brand"] = this.value;
 	    selectDispatch(filter);
@@ -75,14 +75,14 @@ $(document).ready(function () {
 	    selectDispatch(filter);
 	    sortBy(sorter);
 	});
-	
+
 	$("#searchInput").on("keyup", function () {
 	    let keywords = $(this).val();
 	    // console.log("search start "+keywords);
 	    let results = fuse.search(keywords);
 	    display_search(resultdiv, results, filter);
 	});
-	
+
 	function is_filtered(item, filter) {
 	    let show = true;
 	    if (filter.reviewer !== "" ) {
@@ -126,7 +126,7 @@ $(document).ready(function () {
 	    }
 	    return show;
 	}
-	    
+
 	function display_filter(resultdiv, meta, filter) {
 	    // console.log("display filter start #" + meta.length);
 	    for (const item in meta) {
@@ -142,7 +142,7 @@ $(document).ready(function () {
 	    }
 	    resultdiv.show();
 	}
-	
+
 	function display_search(resultdiv, results, filter) {
 	    // console.log("---------- display search start ----------------");
 	    if (results.length === 0) {
@@ -184,7 +184,7 @@ $(document).ready(function () {
                         if (score > minScore*10) {
 		            // console.log("filtered out (score="+score+"minscore="+minScore+")");
 			    show = false;
-			} 
+			}
 		    }
 		}
 		const id = (meta.brand + "-" + meta.model).replace(/['.+& ]/g, "-");
@@ -195,7 +195,7 @@ $(document).ready(function () {
 		    // console.log("hide "+meta.brand+" "+meta.model+" "+score);
 		    $("#" + id).hide();
 		}
-		
+
 	    }
 	    resultdiv.show();
 	}
@@ -208,10 +208,9 @@ $(document).ready(function () {
 	    // }
 	    resultdiv.show();
 	}
-	
+
     }).fail(function (jqXHR, textStatus) {
 	// console.log("getJSON request failed! " + textStatus);
     });
-    
-});
 
+});

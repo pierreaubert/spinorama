@@ -27,4 +27,3 @@ Filter 17: ON  PK       Fc    9280 Hz  Gain  -0.4 dB  Q 7.000
 Filter 18: ON  PK       Fc   10483 Hz  Gain  -3.0 dB  Q 1.495
 Filter 19: ON  PK       Fc   12400 Hz  Gain  -1.0 dB  Q 5.800
 Filter 20: ON  HS       Fc   14400 Hz  Gain   1.7 dB
-

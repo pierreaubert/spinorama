@@ -73,7 +73,7 @@ On a Mac you can replace all `apt` calls by `brew`.
 ### Using python3, ipython and Jupyter-Lab
 
 ```
-pip3 install -r requirements.txt 
+pip3 install -r requirements.txt
 ```
 pip3 may also be pip depending on your system.
 
@@ -96,8 +96,8 @@ Start with launching that should install a lot of software:
 If it doesn't work out of the box which is likely, please go step by step:
 
 ```
-pip3 install -r requirements.txt 
-pip3 install -r requirements-tests.txt 
+pip3 install -r requirements.txt
+pip3 install -r requirements-tests.txt
 ```
 
 For saving picture, you need a set of nodejs packages:
@@ -181,7 +181,3 @@ Erin is a motivated person reviewing speakers. He is doing an outstanging jobs. 
   - Buscard Audio
   - KEF
   - JTR
-
-
-
-

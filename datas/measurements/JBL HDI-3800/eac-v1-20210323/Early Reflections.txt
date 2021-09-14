@@ -1,5 +1,5 @@
-"Early Reflections"											
-"Floor Bounce"		"Ceiling Bounce"		"Front Wall Bounce"		"Side Wall Bounce"		"Rear Wall Bounce"		"Total Early Reflection"	
+"Early Reflections"
+"Floor Bounce"		"Ceiling Bounce"		"Front Wall Bounce"		"Side Wall Bounce"		"Rear Wall Bounce"		"Total Early Reflection"
 "Frequency / Hz"	"Sound Pessure Level / dB   [2.83V at 1m]"	"Frequency / Hz"	"Sound Pessure Level / dB   [2.83V at 1m]"	"Frequency / Hz"	"Sound Pessure Level / dB   [2.83V at 1m]"	"Frequency / Hz"	"Sound Pessure Level / dB   [2.83V at 1m]"	"Frequency / Hz"	"Sound Pessure Level / dB   [2.83V at 1m]"	"Frequency / Hz"	"Sound Pessure Level / dB   [2.83V at 1m]"
 20.5078	70.9881	20.5078	67.5678	20.5078	69.9671	20.5078	68.5756	20.5078	65.7642	20.5078	68.9394
 21.9727	69.6848	21.9727	65.7569	21.9727	68.5844	21.9727	66.7899	21.9727	64.0907	21.9727	67.4229

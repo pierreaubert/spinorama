@@ -6,7 +6,7 @@ Dated: 08-10-2020 23:28:01
 Notes:Focal Chorus OD 706 V IIR
 
 Equaliser: Generic
-Focal Chorus OD 706 V 
+Focal Chorus OD 706 V
 Filter  1: ON  PK       Fc     415 Hz  Gain   0.6 dB  Q 5.000
 Filter  2: ON  PK       Fc     573 Hz  Gain  -1.1 dB  Q 18.000
 Filter  3: ON  PK       Fc     757 Hz  Gain  -1.0 dB  Q 2.400
@@ -27,4 +27,3 @@ Filter 17: ON  PK       Fc   10000 Hz  Gain   2.6 dB  Q 5.200
 Filter 18: ON  PK       Fc   12300 Hz  Gain  -2.1 dB  Q 3.400
 Filter 19: ON  PK       Fc   16300 Hz  Gain   2.9 dB  Q 2.000
 Filter 20: ON  LP       Fc   18800 Hz
-
