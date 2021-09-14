@@ -1,3 +1,4 @@
+pre-commit
 pytest
 pytest-cov
 flake8
@@ -8,6 +9,3 @@ yapf
 importmagic
 pylinkvalidator
 black
-
-
-
