@@ -83,6 +83,23 @@ speakers_info = {
             },
         },
     },
+    "Advent The New Advent Loudspeaker": {
+        "brand": "Advent",
+        "model": "The New Advent Loudspeaker",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/the-new-advent-loudspeaker-review-vintage-speaker.24993/",
+                "review_published": "20210715",
+            },
+        },
+    },
     "Amphion Argon1": {
         "brand": "Amphion",
         "model": "Argon1",
@@ -2134,6 +2151,23 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/hsu-hb-1-mk2-review-horn-speaker.24445/",
+            },
+        },
+    },
+    "HTD Level THREE": {
+        "brand": "HTD",
+        "model": "Level THREE",
+        "type": "passive",
+        "price": "429",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/htd-level-three-review-bookshelf-speaker.26566/",
+                "review_published": "20210912",
             },
         },
     },
