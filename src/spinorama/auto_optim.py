@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
@@ -253,96 +253,96 @@ def optim_greedy(
     return results, auto_peq
 
 
-def optim_flat(
-    speaker_name: str,
-    df_speaker: dict[str, pd.DataFrame],
-    freq: FloatVector1D,
-    auto_target: list[FloatVector1D],
-    auto_target_interp: list[FloatVector1D],
-    optim_config: dict,
-    greedy_results,
-    greedy_peq,
-) -> tuple[list[tuple[int, float, float]], Peq]:
-
-    # loss from previous optim algo
-    init_loss = greedy_results[-1][2]
-
-    low_cost_partial_config = {}
-    config = {}
-    for i, _ in enumerate(greedy_peq):
-        config["freq_{}".format(i)] = tune.qloguniform(100, 20000, 1)
-
-    for i, _ in enumerate(greedy_peq):
-        low_cost_partial_config["freq_{}".format(i)] = 0.0
-
-    def evaluate_config(current_config, checkpoint_dir=None):
-        current_min = 1000.0
-        for Q in np.linspace(1, 6, 50):
-            for dB in np.linspace(-6, 6, 120):
-                eval_peq = [
-                    (1.0, Biquad(3, current_config["freq_{}".format(i)], 48000, Q, dB))
-                    for i, _ in enumerate(current_config)
-                ]
-                current_auto_target = optim_compute_auto_target(
-                    freq, auto_target, auto_target_interp, eval_peq
-                )
-                current_min = min(
-                    current_min,
-                    flat_loss(freq, current_auto_target, eval_peq, 0, [1, 1]),
-                )
-
-        tune.report(score=current_min)
-
-    time_budget_s = 30
-    num_samples = 750
-
-    # possible schedulers
-    pbt = PopulationBasedTraining(
-        time_attr="training_iteration",
-        perturbation_interval=10,
-    )
-
-    asha = ASHAScheduler(
-        time_attr="training_iteration",
-        max_t=100,
-        grace_period=10,
-        reduction_factor=3,
-        brackets=1,
-    )
-
-    # possible search algos
-    algo_cfo = CFO(low_cost_partial_config=low_cost_partial_config)
-    algo_blendsearch = BlendSearch(low_cost_partial_config=low_cost_partial_config)
-    algo_bos = BayesOptSearch(utility_kwargs={"kind": "ucb", "kappa": 2.5, "xi": 0.0})
-    algo = ConcurrencyLimiter(algo_bos, max_concurrent=128)
-
-    analysis = tune.run(
-        evaluate_config,
-        config=config,
-        metric="score",
-        mode="min",
-        num_samples=num_samples,
-        time_budget_s=time_budget_s,
-        local_dir="logs/",
-        # search_alg=algo, # bos working well
-        # scheduler=asha,
-        scheduler=pbt,
-        verbose=1,
-        stop={"training_iteration": 128, "score": init_loss * 0.98},
-    )
-
-    print(analysis.best_trial.last_result)
-    print(analysis.best_config)
-
-    final_loss = score_loss(df_speaker, analysis.best_config)
-    print(final_loss, init_loss)
-    if final_loss > init_loss:
-        final_results = greedy_results
-        final_results.append([greedy_results[-1][0] + 1, final_loss, final_loss])
-        final_peq = init_delta(analysis.best_config)
-        return final_results, final_peq
-    else:
-        return greedy_results, greedy_peq
+# def optim_flat(
+#     speaker_name: str,
+#     df_speaker: dict[str, pd.DataFrame],
+#     freq: FloatVector1D,
+#     auto_target: list[FloatVector1D],
+#     auto_target_interp: list[FloatVector1D],
+#     optim_config: dict,
+#     greedy_results,
+#     greedy_peq,
+# ) -> tuple[list[tuple[int, float, float]], Peq]:
+#
+#     # loss from previous optim algo
+#     init_loss = greedy_results[-1][2]
+#
+#     low_cost_partial_config = {}
+#     config = {}
+#     for i, _ in enumerate(greedy_peq):
+#         config["freq_{}".format(i)] = tune.qloguniform(100, 20000, 1)
+#
+#     for i, _ in enumerate(greedy_peq):
+#         low_cost_partial_config["freq_{}".format(i)] = 0.0
+#
+#     def evaluate_config(current_config, checkpoint_dir=None):
+#         current_min = 1000.0
+#         for Q in np.linspace(1, 6, 50):
+#             for dB in np.linspace(-6, 6, 120):
+#                 eval_peq = [
+#                     (1.0, Biquad(3, current_config["freq_{}".format(i)], 48000, Q, dB))
+#                     for i, _ in enumerate(current_config)
+#                 ]
+#                 current_auto_target = optim_compute_auto_target(
+#                     freq, auto_target, auto_target_interp, eval_peq
+#                 )
+#                 current_min = min(
+#                     current_min,
+#                     flat_loss(freq, current_auto_target, eval_peq, 0, [1, 1]),
+#                 )
+#
+#         tune.report(score=current_min)
+#
+#     time_budget_s = 30
+#     num_samples = 750
+#
+#     # possible schedulers
+#     pbt = PopulationBasedTraining(
+#         time_attr="training_iteration",
+#         perturbation_interval=10,
+#     )
+#
+#     asha = ASHAScheduler(
+#         time_attr="training_iteration",
+#         max_t=100,
+#         grace_period=10,
+#         reduction_factor=3,
+#         brackets=1,
+#     )
+#
+#     # possible search algos
+#     algo_cfo = CFO(low_cost_partial_config=low_cost_partial_config)
+#     algo_blendsearch = BlendSearch(low_cost_partial_config=low_cost_partial_config)
+#     algo_bos = BayesOptSearch(utility_kwargs={"kind": "ucb", "kappa": 2.5, "xi": 0.0})
+#     algo = ConcurrencyLimiter(algo_bos, max_concurrent=128)
+#
+#     analysis = tune.run(
+#         evaluate_config,
+#         config=config,
+#         metric="score",
+#         mode="min",
+#         num_samples=num_samples,
+#         time_budget_s=time_budget_s,
+#         local_dir="logs/",
+#         # search_alg=algo, # bos working well
+#         # scheduler=asha,
+#         scheduler=pbt,
+#         verbose=1,
+#         stop={"training_iteration": 128, "score": init_loss * 0.98},
+#     )
+#
+#     print(analysis.best_trial.last_result)
+#     print(analysis.best_config)
+#
+#     final_loss = score_loss(df_speaker, analysis.best_config)
+#     print(final_loss, init_loss)
+#     if final_loss > init_loss:
+#         final_results = greedy_results
+#         final_results.append([greedy_results[-1][0] + 1, final_loss, final_loss])
+#         final_peq = init_delta(analysis.best_config)
+#         return final_results, final_peq
+#     else:
+#         return greedy_results, greedy_peq
 
 
 def optim_refine(
@@ -362,12 +362,12 @@ def optim_refine(
     low_cost_partial_config = {}
     config = {}
     for i, (_, i_peq) in enumerate(greedy_peq):
-        f_i = int(i_peq.freq * 0.2)
+        f_i = int(i_peq.freq * 0.3)
         config["freq_{}".format(i)] = tune.quniform(-f_i, f_i, 1)
-        q_i = int(i_peq.Q * 4) / 10
-        config["Q_{}".format(i)] = tune.quniform(-q_i, q_i, 0.1)
-        db_i = int(i_peq.dbGain * 4) / 10
-        config["dbGain_{}".format(i)] = tune.quniform(-db_i, db_i, 0.1)
+        q_i = int(i_peq.Q * 6) / 10
+        config["Q_{}".format(i)] = tune.quniform(-q_i, q_i, 0.01)
+        db_i = int(i_peq.dbGain * 6) / 10
+        config["dbGain_{}".format(i)] = tune.quniform(-db_i, db_i, 0.01)
 
     for i, _ in enumerate(greedy_peq):
         low_cost_partial_config["freq_{}".format(i)] = 0.0
@@ -416,7 +416,7 @@ def optim_refine(
         eval_peq = init_delta(current_config)
         # score = flat_pir(freq, df_speaker, eval_peq)
         score = score_loss(df_speaker, eval_peq)
-        tune.report(score=score) #, h_score=h_score)
+        tune.report(score=score)  # , h_score=h_score)
 
     time_budget_s = 300
     num_samples = 10000

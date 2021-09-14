@@ -8,4 +8,4 @@ ipython
 yapf
 importmagic
 pylinkvalidator
-black
+black[jupyter]
