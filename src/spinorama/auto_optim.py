@@ -416,7 +416,7 @@ def optim_refine(
         eval_peq = init_delta(current_config)
         # score = flat_pir(freq, df_speaker, eval_peq)
         score = score_loss(df_speaker, eval_peq)
-        tune.report(score=score) #, h_score=h_score)
+        tune.report(score=score)  # , h_score=h_score)
 
     time_budget_s = 300
     num_samples = 10000
