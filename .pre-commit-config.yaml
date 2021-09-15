@@ -18,3 +18,7 @@ repos:
     rev: 3.9.2
     hooks:
     -   id: flake8
+-   repo: https://github.com/pre-commit/mirrors-csslint
+    rev: v1.0.3
+    hooks:
+    -   id: csslint
