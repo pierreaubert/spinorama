@@ -1,81 +1,112 @@
-<div class="box has-background-info-dark">
-<div class="level">
-  <div class="level-item">
-    <div class="field has-addons">
+<div class="box has-background-info-dark py-1">
+  <div class="columns">
+    <div class="column is-three-quarters">
       <div class="control has-icons-left">
-        <input id="searchInput" class="input" type="text" placeholder="brand or model..." autofocus />
+        <input id="searchInput" class="input" type="text"
+               placeholder="brand or model ..." autofocus />
         <div class="icon is-left"><i class="fas fa-search"></i></div>
       </div>
     </div>
-  </div>
-  <div class="level-right">
-    <div class="level-item">
-      <div class="field-body">
-        <div class="field is-horizontal">
-	  <div class="control has-icons-left">
-	    <div class="select">
-	      <select id="selectQuality">
-	        <option value="">Quality</option>
-	        <option value="high">High</option>
-	        <option value="medium">Medium</option>
-	        <option value="low">Low</option>
-	        <option value="unknown">Unknown</option>
-	      </select>
-	    </div>
-            <div class="icon is-left"><i class="fas fa-chart-line"></i></div>
-	  </div>
-	  <div class="control has-icons-left">
-	    <div class="select">
-	      <select id="selectReviewer">
-	        <option value="">Reviewer</option>
-	        <option value="ASR">ASR</option>
-	        <option value="ErinsAudioCorner">ErinsAudioCorner</option>
-	        <option value="Princeton">Princeton</option>
-	        <%include file="reviewers.html"/>
-	      </select>
-	    </div>
-            <div class="icon is-left"><i class="fas fa-user-alt"></i></div>
-	  </div>
-	  <div class="control has-icons-left">
-	    <div class="select">
-	      <select id="selectShape">
-	        <option value="">Shape</option>
-	        <option value="bookshelves">Bookshelves</option>
-	        <option value="floorstanders">Floorstanders</option>
-	        <option value="center">Center</option>
-	        <option value="surround">Surround</option>
-	        <option value="omnidirectional">Omnidirectional</option>
-	        <option value="outdoor">Outdoor</option>
-	        <option value="cbt">CBT</option>
-	        <option value="panel">Panel</option>
-	        <option value="inwall">In Wall</option>
-	        <option value="soundbar">Soundbar</option>
-	      </select>
-	    </div>
-            <div class="icon is-left"><i class="fas fa-shapes"></i></div>
-	</div>
-	<div class="control has-icons-left">
-	  <div class="select">
-	    <select id="selectPower">
-	      <option value="">Powered?</option>
-	      <option value="active">Active</option>
-	      <option value="passive">Passive</option>
-	    </select>
-	  </div>
-          <div class="icon is-left"><i class="fas fa-plug"></i></div>
-	</div>
-	<div class="control has-icons-left">
-	  <div class="select">
-	    <select id="selectBrand">
-	      <option value="">Brand</option>
-	      <%include file="brands.html"/>
-	    </select>
-	  </div>
-          <div class="icon is-left"><i class="fas fa-copyright"></i></div>
-	</div>
-      </div>
+    <div class="column">
+      ${filters()}
     </div>
   </div>
+</div>
+
+<%def name="filters()">
+<div class="dropdown is-hoverable is-pulled-right">
+  <div class="dropdown-trigger">
+    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+      <span class="is-small">Filter by</span>
+      <span class="icon">
+        <i class="fas fa-angle-down" aria-hidden="true"></i>
+      </span>
+    </button>
+  </div>
+  <div class="dropdown-menu" id="filters-dropdown-menu" role="menu">
+    <div class="dropdown-content">
+      ${filterQuality()}
+      ${filterReviewer()}
+      ${filterShape()}
+      ${filterPower()}
+      ${filterBrand()}
+    </div>
   </div>
 </div>
+</%def>
+
+<%def name="filterQuality()">
+<div class="control has-icons-left">
+  <div class="select is-small">
+    <select id="selectQuality">
+      <option value="">Quality</option>
+      <option value="high">High</option>
+      <option value="medium">Medium</option>
+      <option value="low">Low</option>
+	  <option value="unknown">Unknown</option>
+    </select>
+  </div>
+  <div class="icon is-left"><i class="fas fa-chart-line"></i></div>
 </div>
+</%def>
+
+<%def name="filterReviewer()">
+<div class="control has-icons-left">
+  <div class="select is-small">
+    <select id="selectReviewer">
+      <option value="">Reviewer</option>
+      <option value="ASR">ASR</option>
+      <option value="ErinsAudioCorner">ErinsAudioCorner</option>
+	  <option value="Princeton">Princeton</option>
+	  <%include file="reviewers.html"/>
+    </select>
+  </div>
+  <div class="icon is-left"><i class="fas fa-user-alt"></i></div>
+</div>
+</%def>
+
+<%def name="filterShape()">
+<div class="control has-icons-left">
+  <div class="select is-small">
+    <select id="selectShape">
+      <option value="">Shape</option>
+      <option value="bookshelves">Bookshelves</option>
+      <option value="floorstanders">Floorstanders</option>
+      <option value="center">Center</option>
+      <option value="surround">Surround</option>
+      <option value="omnidirectional">Omnidirectional</option>
+      <option value="outdoor">Outdoor</option>
+      <option value="cbt">CBT</option>
+      <option value="panel">Panel</option>
+      <option value="inwall">In Wall</option>
+      <option value="soundbar">Soundbar</option>
+    </select>
+  </div>
+  <div class="icon is-left"><i class="fas fa-shapes"></i></div>
+</div>
+</%def>
+
+<%def name="filterPower()">
+<div class="control has-icons-left">
+  <div class="select is-small">
+    <select id="selectPower">
+      <option value="">Powered?</option>
+      <option value="active">Active</option>
+      <option value="passive">Passive</option>
+    </select>
+  </div>
+  <div class="icon is-left"><i class="fas fa-plug"></i></div>
+</div>
+</%def>
+
+<%def name="filterBrand()">
+<div class="control has-icons-left">
+  <div class="select is-small">
+    <select id="selectBrand">
+      <option value="">Brand</option>
+      <%include file="brands.html"/>
+    </select>
+  </div>
+  <div class="icon is-left"><i class="fas fa-copyright"></i></div>
+</div>
+</%def>
