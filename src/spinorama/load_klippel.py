@@ -22,6 +22,8 @@ def parse_graph_freq_klippel(filename: str) -> tuple[str, pd.DataFrame]:
     with open(filename) as csvfile:
         # first line is graph title
         title = csvfile.readline().split("\t")[0][1:-1]
+        if title[-1] == '"':
+            title = title[:-1]
         # second line is column titles
         csvcolumns = [c.translate(removequote) for c in csvfile.readline().split("\t")]
         # third line is column units
