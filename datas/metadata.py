@@ -3713,9 +3713,9 @@ speakers_info = {
         "brand": "KEF",
         "model": "R2c",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
-        "shape": "bookshelves",
+        "price": "1300",
+        "amount": "each",
+        "shape": "center",
         "default_measurement": "eac-horizontal",
         "measurements": {
             "eac-horizontal": {
