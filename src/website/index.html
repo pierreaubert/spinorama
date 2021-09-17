@@ -78,9 +78,21 @@
                 elif '-vertical' in v2:
                     v2 = v2[:-9]
               %>
-                ${v2}
+              %  if v2 in "Speakerdata2034":
+                    Speaker Data 2034
+              %  elif v2 in "Soundstageultra":
+                    Sound Stage Ultra
+              %  else:
+                    ${v2}
+              %  endif
               % else:
-                ${m["origin"]}
+              %  if m["origin"] in "ErinsAudioCorner":
+                    Erins Audio Corner
+              %  elif m["origin"][0:8] in "Vendors-":
+                    Vendors ${m["origin"][8:]}
+              %  else:
+                    ${m["origin"]}
+              %  endif
               % endif
               % if "horizontal" in v:
               (Horizontal orientation)
