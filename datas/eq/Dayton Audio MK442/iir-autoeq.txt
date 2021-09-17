@@ -1,15 +1,15 @@
 EQ for Dayton Audio MK442 computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.10
-Dated: 2021-09-07-07:29:33
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:34:26
 
-Preamp: -5.4 dB
+Preamp: -5.3 dB
 
-Filter  1: ON PK Fc  1831 Hz Gain +5.41 dB Q 1.77
-Filter  2: ON PK Fc 14396 Hz Gain -2.83 dB Q 0.26
-Filter  3: ON PK Fc   649 Hz Gain +2.49 dB Q 3.42
-Filter  4: ON PK Fc  2459 Hz Gain +2.27 dB Q 5.94
-Filter  5: ON PK Fc  3793 Hz Gain -2.87 dB Q 5.52
-Filter  6: ON PK Fc  9702 Hz Gain +2.54 dB Q 6.00
-Filter  7: ON PK Fc 12733 Hz Gain -1.81 dB Q 4.22
-Filter  8: ON PK Fc   358 Hz Gain +0.73 dB Q 6.00
-Filter  9: ON PK Fc   463 Hz Gain -0.86 dB Q 6.00
+Filter  1: ON PK Fc  1794 Hz Gain +5.36 dB Q 1.67
+Filter  2: ON PK Fc 10612 Hz Gain -2.81 dB Q 0.34
+Filter  3: ON PK Fc   673 Hz Gain +2.44 dB Q 2.18
+Filter  4: ON PK Fc  2400 Hz Gain +2.97 dB Q 5.72
+Filter  5: ON PK Fc  3756 Hz Gain -3.49 dB Q 4.50
+Filter  6: ON PK Fc  9763 Hz Gain +1.75 dB Q 6.00
+Filter  7: ON PK Fc   476 Hz Gain -0.60 dB Q 6.00
+Filter  8: ON PK Fc 12809 Hz Gain -1.36 dB Q 5.65
+Filter  9: ON PK Fc   367 Hz Gain +0.94 dB Q 6.00

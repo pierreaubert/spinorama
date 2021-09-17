@@ -62,11 +62,11 @@ def find_largest_area(
         minus_curve = -np.clip(curve, a_min=None, a_max=0)
         minus_index, minus_areas = largest_area(minus_curve)
 
-    logger.warning(
-        "minus a={} f={} plus a={} f={}".format(
-            minus_areas, freq[minus_index], plus_areas, freq[plus_index]
-        )
-    )
+    # logger.debug(
+    #    "minus a={} f={} plus a={} f={}".format(
+    #        minus_areas, freq[minus_index], plus_areas, freq[plus_index]
+    #    )
+    # )
 
     if minus_areas == -1 and plus_areas == -1:
         logger.error("No initial freq found")

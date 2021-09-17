@@ -1,15 +1,15 @@
 EQ for JBL LSR6328P computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.10
-Dated: 2021-09-07-10:16:55
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:35:07
 
 Preamp: -0.2 dB
 
-Filter  1: ON PK Fc  6503 Hz Gain -1.44 dB Q 0.05
-Filter  2: ON PK Fc   513 Hz Gain +0.97 dB Q 6.00
-Filter  3: ON PK Fc  5148 Hz Gain +0.87 dB Q 6.00
-Filter  4: ON PK Fc  1988 Hz Gain -0.58 dB Q 3.40
-Filter  5: ON PK Fc   160 Hz Gain -0.50 dB Q 2.70
-Filter  6: ON PK Fc   655 Hz Gain -0.52 dB Q 6.00
-Filter  7: ON PK Fc  1033 Hz Gain +0.79 dB Q 6.00
-Filter  8: ON PK Fc  3523 Hz Gain +0.51 dB Q 6.00
-Filter  9: ON PK Fc  4228 Hz Gain -0.50 dB Q 6.00
+Filter  1: ON PK Fc  2611 Hz Gain -1.15 dB Q 0.98
+Filter  2: ON PK Fc   142 Hz Gain -0.50 dB Q 2.77
+Filter  3: ON PK Fc   689 Hz Gain -0.55 dB Q 6.00
+Filter  4: ON PK Fc  4191 Hz Gain -0.50 dB Q 6.00
+Filter  5: ON PK Fc   861 Hz Gain -0.50 dB Q 6.00
+Filter  6: ON PK Fc   390 Hz Gain -0.50 dB Q 6.00
+Filter  7: ON PK Fc  1233 Hz Gain -0.50 dB Q 6.00
+Filter  8: ON PK Fc   170 Hz Gain -0.50 dB Q 6.00
+Filter  9: ON PK Fc   100 Hz Gain -0.50 dB Q 6.00

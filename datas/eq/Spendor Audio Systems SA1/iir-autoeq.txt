@@ -1,15 +1,15 @@
 EQ for Spendor Audio Systems SA1 computed from Princeton data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.10
-Dated: 2021-09-07-10:16:48
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:35:12
 
-Preamp: -3.2 dB
+Preamp: -2.8 dB
 
-Filter  1: ON PK Fc  7572 Hz Gain -2.69 dB Q 2.82
-Filter  2: ON PK Fc  4716 Hz Gain +2.95 dB Q 6.00
-Filter  3: ON PK Fc  3605 Hz Gain -2.04 dB Q 6.00
-Filter  4: ON PK Fc  4309 Hz Gain +0.82 dB Q 6.00
-Filter  5: ON PK Fc  6199 Hz Gain -1.01 dB Q 6.00
-Filter  6: ON PK Fc  1047 Hz Gain +0.61 dB Q 2.36
-Filter  7: ON PK Fc 12209 Hz Gain +0.50 dB Q 6.00
-Filter  8: ON PK Fc  5194 Hz Gain +0.50 dB Q 6.00
-Filter  9: ON PK Fc 14853 Hz Gain -0.60 dB Q 4.19
+Filter  1: ON PK Fc  7498 Hz Gain -3.65 dB Q 2.10
+Filter  2: ON PK Fc  4666 Hz Gain +2.82 dB Q 6.00
+Filter  3: ON PK Fc  3531 Hz Gain -1.89 dB Q 4.78
+Filter  4: ON PK Fc  4314 Hz Gain +0.84 dB Q 6.00
+Filter  5: ON PK Fc  7957 Hz Gain +0.50 dB Q 6.00
+Filter  6: ON PK Fc 12162 Hz Gain +0.50 dB Q 6.00
+Filter  7: ON PK Fc  5065 Hz Gain +0.50 dB Q 6.00
+Filter  8: ON PK Fc  1144 Hz Gain +0.90 dB Q 6.00
+Filter  9: ON PK Fc  1047 Hz Gain +0.50 dB Q 6.00

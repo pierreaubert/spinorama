@@ -1,15 +1,15 @@
 EQ for Ascend Acoustics Sierra-2EX computed from Vendors-Ascend Acoustics data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.10
-Dated: 2021-09-07-07:29:33
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:34:26
 
-Preamp: -0.4 dB
+Preamp: -1.3 dB
 
-Filter  1: ON PK Fc 10505 Hz Gain -1.12 dB Q 0.05
-Filter  2: ON PK Fc   260 Hz Gain +1.35 dB Q 4.72
-Filter  3: ON PK Fc  8520 Hz Gain -1.43 dB Q 4.13
-Filter  4: ON PK Fc   418 Hz Gain -1.18 dB Q 4.26
-Filter  5: ON PK Fc  3192 Hz Gain +0.93 dB Q 2.24
-Filter  6: ON PK Fc   691 Hz Gain -0.94 dB Q 6.00
-Filter  7: ON PK Fc  1054 Hz Gain +0.99 dB Q 6.00
-Filter  8: ON PK Fc  5202 Hz Gain +0.80 dB Q 6.00
-Filter  9: ON PK Fc 15996 Hz Gain -0.75 dB Q 1.53
+Filter  1: ON PK Fc  8340 Hz Gain -2.32 dB Q 0.74
+Filter  2: ON PK Fc   651 Hz Gain -1.00 dB Q 1.90
+Filter  3: ON PK Fc  3249 Hz Gain +0.89 dB Q 5.33
+Filter  4: ON PK Fc  1060 Hz Gain +0.89 dB Q 6.00
+Filter  5: ON PK Fc 10566 Hz Gain +0.82 dB Q 6.00
+Filter  6: ON PK Fc   270 Hz Gain +1.46 dB Q 4.36
+Filter  7: ON PK Fc  2801 Hz Gain +0.50 dB Q 6.00
+Filter  8: ON PK Fc 11016 Hz Gain +0.50 dB Q 6.00
+Filter  9: ON PK Fc  1096 Hz Gain +0.50 dB Q 6.00

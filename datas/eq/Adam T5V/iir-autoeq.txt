@@ -1,16 +1,16 @@
 EQ for Adam T5V computed from ASR data
-Preference Score 4.3 with EQ 6.3
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.10
-Dated: 2021-09-07-10:16:26
+Preference Score 4.3 with EQ 5.9
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:34:37
 
 Preamp: -0.2 dB
 
-Filter  1: ON PK Fc  6873 Hz Gain -4.80 dB Q 0.19
-Filter  2: ON PK Fc  3304 Hz Gain +2.90 dB Q 3.41
-Filter  3: ON PK Fc   828 Hz Gain -2.86 dB Q 4.88
-Filter  4: ON PK Fc  6933 Hz Gain -2.36 dB Q 0.49
-Filter  5: ON PK Fc  4475 Hz Gain +1.99 dB Q 6.00
-Filter  6: ON PK Fc  5321 Hz Gain -1.30 dB Q 6.00
-Filter  7: ON PK Fc  1315 Hz Gain -1.24 dB Q 6.00
-Filter  8: ON PK Fc  2288 Hz Gain +1.28 dB Q 6.00
-Filter  9: ON PK Fc  1036 Hz Gain +0.24 dB Q 6.00
+Filter  1: ON PK Fc  6833 Hz Gain -3.05 dB Q 0.26
+Filter  2: ON PK Fc  3315 Hz Gain +2.64 dB Q 3.86
+Filter  3: ON PK Fc   796 Hz Gain -1.72 dB Q 4.51
+Filter  4: ON PK Fc  5962 Hz Gain -1.43 dB Q 4.02
+Filter  5: ON PK Fc  1347 Hz Gain -1.20 dB Q 6.00
+Filter  6: ON PK Fc 13128 Hz Gain -0.72 dB Q 0.96
+Filter  7: ON PK Fc  8893 Hz Gain -0.52 dB Q 6.00
+Filter  8: ON PK Fc 14230 Hz Gain -0.50 dB Q 6.00
+Filter  9: ON PK Fc  3008 Hz Gain -0.50 dB Q 6.00

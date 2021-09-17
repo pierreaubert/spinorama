@@ -1,15 +1,15 @@
 EQ for JBL 4367 computed from Vendors-JBL data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.10
-Dated: 2021-09-07-10:16:54
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:35:07
 
-Preamp: -2.7 dB
+Preamp: -1.2 dB
 
-Filter  1: ON PK Fc  4393 Hz Gain -0.83 dB Q 1.19
-Filter  2: ON PK Fc  2118 Hz Gain -0.56 dB Q 4.90
-Filter  3: ON PK Fc   510 Hz Gain +1.39 dB Q 3.84
-Filter  4: ON PK Fc   146 Hz Gain +0.76 dB Q 2.88
-Filter  5: ON PK Fc 14982 Hz Gain +2.56 dB Q 6.00
-Filter  6: ON PK Fc 11817 Hz Gain +0.93 dB Q 6.00
-Filter  7: ON PK Fc  1195 Hz Gain +0.80 dB Q 4.30
-Filter  8: ON PK Fc   359 Hz Gain -0.66 dB Q 4.38
-Filter  9: ON PK Fc   239 Hz Gain +0.64 dB Q 6.00
+Filter  1: ON PK Fc  5236 Hz Gain -0.86 dB Q 5.91
+Filter  2: ON PK Fc   664 Hz Gain +1.04 dB Q 0.95
+Filter  3: ON PK Fc  2533 Hz Gain -0.50 dB Q 2.83
+Filter  4: ON PK Fc   355 Hz Gain -0.69 dB Q 5.48
+Filter  5: ON PK Fc   878 Hz Gain -0.50 dB Q 6.00
+Filter  6: ON PK Fc  3784 Hz Gain -0.50 dB Q 6.00
+Filter  7: ON PK Fc  2023 Hz Gain -0.50 dB Q 6.00
+Filter  8: ON PK Fc   313 Hz Gain -0.50 dB Q 6.00
+Filter  9: ON PK Fc  3135 Hz Gain -0.50 dB Q 6.00

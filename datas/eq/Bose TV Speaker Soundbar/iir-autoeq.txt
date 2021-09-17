@@ -1,12 +1,15 @@
 EQ for Bose TV Speaker Soundbar computed from ErinsAudioCorner data
-Preference Score 1.5 with EQ 3.9
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.10
-Dated: 2021-09-07-10:16:26
+Preference Score 1.5 with EQ 3.6
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:34:38
 
-Preamp: -6.1 dB
+Preamp: -3.9 dB
 
-Filter  1: ON PK Fc  5746 Hz Gain -5.53 dB Q 0.68
-Filter  2: ON PK Fc   332 Hz Gain +6.00 dB Q 0.80
-Filter  3: ON PK Fc 13873 Hz Gain -5.84 dB Q 1.77
-Filter  4: ON PK Fc  4401 Hz Gain +0.40 dB Q 6.00
-Filter  5: ON PK Fc  3098 Hz Gain +0.64 dB Q 3.12
+Filter  1: ON PK Fc  5497 Hz Gain -3.09 dB Q 1.63
+Filter  2: ON PK Fc   398 Hz Gain +3.72 dB Q 0.73
+Filter  3: ON PK Fc  1315 Hz Gain +2.46 dB Q 6.00
+Filter  4: ON PK Fc  9817 Hz Gain +1.16 dB Q 6.00
+Filter  5: ON PK Fc  3095 Hz Gain +0.72 dB Q 6.00
+Filter  6: ON PK Fc  1074 Hz Gain +0.62 dB Q 6.00
+Filter  7: ON PK Fc  5229 Hz Gain +0.62 dB Q 6.00
+Filter  8: ON PK Fc  9210 Hz Gain +0.61 dB Q 6.00

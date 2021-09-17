@@ -1,15 +1,15 @@
 EQ for Polk Audio 5JR computed from Princeton data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.10
-Dated: 2021-09-07-10:16:47
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:35:00
 
-Preamp: -4.7 dB
+Preamp: -5.0 dB
 
-Filter  1: ON PK Fc  4335 Hz Gain +1.19 dB Q 0.05
-Filter  2: ON PK Fc 10085 Hz Gain -3.91 dB Q 4.76
-Filter  3: ON PK Fc  1025 Hz Gain +2.78 dB Q 2.10
-Filter  4: ON PK Fc 15096 Hz Gain +3.42 dB Q 2.44
-Filter  5: ON PK Fc  6736 Hz Gain +0.59 dB Q 6.00
-Filter  6: ON PK Fc 13694 Hz Gain +0.50 dB Q 6.00
-Filter  7: ON PK Fc 11147 Hz Gain -1.48 dB Q 6.00
-Filter  8: ON PK Fc  4094 Hz Gain -0.88 dB Q 2.61
-Filter  9: ON PK Fc  2988 Hz Gain +0.76 dB Q 6.00
+Filter  1: ON PK Fc   992 Hz Gain +3.79 dB Q 1.50
+Filter  2: ON PK Fc 15070 Hz Gain +4.70 dB Q 2.95
+Filter  3: ON PK Fc 13645 Hz Gain +0.89 dB Q 6.00
+Filter  4: ON PK Fc 10292 Hz Gain -3.41 dB Q 3.70
+Filter  5: ON PK Fc 13211 Hz Gain +0.79 dB Q 6.00
+Filter  6: ON PK Fc  6827 Hz Gain +0.94 dB Q 6.00
+Filter  7: ON PK Fc  1374 Hz Gain +0.87 dB Q 6.00
+Filter  8: ON PK Fc   853 Hz Gain +0.71 dB Q 6.00
+Filter  9: ON PK Fc   649 Hz Gain +0.71 dB Q 6.00

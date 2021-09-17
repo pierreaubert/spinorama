@@ -1,16 +1,16 @@
 EQ for Infinity RC263 computed from ASR data
-Preference Score 4.7 with EQ 5.9
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.10
-Dated: 2021-09-07-10:16:38
+Preference Score 4.7 with EQ 5.5
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:34:52
 
-Preamp: -0.9 dB
+Preamp: -0.8 dB
 
-Filter  1: ON PK Fc  2422 Hz Gain -3.26 dB Q 5.34
-Filter  2: ON PK Fc  9822 Hz Gain -1.94 dB Q 0.39
-Filter  3: ON PK Fc   430 Hz Gain -1.96 dB Q 1.28
-Filter  4: ON PK Fc  1219 Hz Gain -1.25 dB Q 6.00
-Filter  5: ON PK Fc   128 Hz Gain -0.84 dB Q 2.20
-Filter  6: ON PK Fc  4708 Hz Gain -1.90 dB Q 6.00
-Filter  7: ON PK Fc 14503 Hz Gain +0.81 dB Q 5.13
-Filter  8: ON PK Fc  5658 Hz Gain +1.10 dB Q 6.00
-Filter  9: ON PK Fc   571 Hz Gain +1.75 dB Q 1.06
+Filter  1: ON PK Fc  2441 Hz Gain -2.72 dB Q 3.59
+Filter  2: ON PK Fc  9762 Hz Gain -1.33 dB Q 1.67
+Filter  3: ON PK Fc   333 Hz Gain -1.27 dB Q 3.93
+Filter  4: ON PK Fc  4676 Hz Gain -1.27 dB Q 6.00
+Filter  5: ON PK Fc  1230 Hz Gain -1.09 dB Q 6.00
+Filter  6: ON PK Fc  5726 Hz Gain +0.73 dB Q 6.00
+Filter  7: ON PK Fc 14347 Hz Gain +0.82 dB Q 5.56
+Filter  8: ON PK Fc 10959 Hz Gain -0.50 dB Q 6.00
+Filter  9: ON PK Fc  4875 Hz Gain -0.50 dB Q 6.00

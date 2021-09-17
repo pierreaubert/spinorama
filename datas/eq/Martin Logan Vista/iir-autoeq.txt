@@ -1,15 +1,15 @@
 EQ for Martin Logan Vista computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.10
-Dated: 2021-09-07-07:30:25
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:34:52
 
-Preamp: -0.3 dB
+Preamp: -0.2 dB
 
-Filter  1: ON PK Fc   857 Hz Gain -5.95 dB Q 0.38
-Filter  2: ON PK Fc  9619 Hz Gain -2.11 dB Q 6.00
-Filter  3: ON PK Fc  5523 Hz Gain -1.68 dB Q 6.00
-Filter  4: ON PK Fc   155 Hz Gain +1.75 dB Q 1.82
-Filter  5: ON PK Fc   887 Hz Gain +1.97 dB Q 6.00
-Filter  6: ON PK Fc  2666 Hz Gain +1.10 dB Q 6.00
-Filter  7: ON PK Fc  6527 Hz Gain +1.03 dB Q 6.00
-Filter  8: ON PK Fc  1926 Hz Gain +0.82 dB Q 6.00
-Filter  9: ON PK Fc   459 Hz Gain -1.80 dB Q 2.06
+Filter  1: ON PK Fc   705 Hz Gain -4.58 dB Q 0.53
+Filter  2: ON PK Fc  1417 Hz Gain -1.46 dB Q 4.19
+Filter  3: ON PK Fc  3532 Hz Gain -0.82 dB Q 6.00
+Filter  4: ON PK Fc  1634 Hz Gain -0.50 dB Q 6.00
+Filter  5: ON PK Fc   448 Hz Gain -1.50 dB Q 3.12
+Filter  6: ON PK Fc  5493 Hz Gain -0.50 dB Q 6.00
+Filter  7: ON PK Fc  1211 Hz Gain -0.50 dB Q 6.00
+Filter  8: ON PK Fc   532 Hz Gain -0.50 dB Q 6.00
+Filter  9: ON PK Fc  2228 Hz Gain -0.50 dB Q 6.00
