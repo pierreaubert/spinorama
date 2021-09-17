@@ -36,16 +36,16 @@ logger = logging.getLogger("spinorama")
 def find_largest_area(
     freq: FloatVector1D, curve: List[FloatVector1D], optim_config: dict
 ) -> Tuple[Literal[-1, 1], int, float]:
-    def largest_area(positive_curve) -> Tuple[int, float]:
-        logger.debug("freq {} positive_curve {}".format(freq, positive_curve))
-        found_peaks, _ = sig.find_peaks(positive_curve, distance=10)
+    def largest_area(current_curve) -> Tuple[int, float]:
+        logger.debug("freq {} current_curve {}".format(freq, current_curve))
+        found_peaks, _ = sig.find_peaks(current_curve, distance=20)
         if len(found_peaks) == 0:
             return -1, -1
         logger.debug("found peaks at {}".format(found_peaks))
-        found_widths = sig.peak_widths(positive_curve, found_peaks, rel_height=0.1)[0]
+        found_widths = sig.peak_widths(current_curve, found_peaks, rel_height=0.1)[0]
         logger.debug("computed width at {}".format(found_widths))
         areas = [
-            (i, positive_curve[found_peaks[i]] * found_widths[i])
+            (i, current_curve[found_peaks[i]] * found_widths[i])
             for i in range(0, len(found_peaks))
         ]
         logger.debug("areas {}".format(areas))
@@ -61,6 +61,12 @@ def find_largest_area(
     if optim_config["plus_and_minus"] is True:
         minus_curve = -np.clip(curve, a_min=None, a_max=0)
         minus_index, minus_areas = largest_area(minus_curve)
+
+    logger.warning(
+        "minus a={} f={} plus a={} f={}".format(
+            minus_areas, freq[minus_index], plus_areas, freq[plus_index]
+        )
+    )
 
     if minus_areas == -1 and plus_areas == -1:
         logger.error("No initial freq found")
