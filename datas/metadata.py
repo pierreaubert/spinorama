@@ -2896,7 +2896,7 @@ speakers_info = {
         "model": "Control 29AV-1",
         "type": "passive",
         "price": "820",
-        "shape": "outdoors",
+        "shape": "outdoor",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
