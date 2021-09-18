@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import copy
 
 import altair as alt
 import pandas as pd
@@ -148,6 +149,14 @@ def graph_results(
     g_params["width"] = 800
     g_params["height"] = 400
 
+    pir_params = copy.deepcopy(g_params)
+    pir_params["ymin"] = -10
+    pir_params["ymax"] = +4
+
+    lw_params = copy.deepcopy(g_params)
+    lw_params["ymin"] = -4
+    lw_params["ymax"] = +4
+
     # generate an empty graph
     empty_data = pd.DataFrame({"Freq": spin.Freq.values, "dB": 0, "Measurements": ""})
     empty_graph = graph_freq(empty_data, g_params)
@@ -217,45 +226,33 @@ def graph_results(
         )
 
     # show the 3 optimised curves
-    # which_curve='Listening Window
-    # which_curve='Sound Power'
-    which_curve = "Estimated In-Room Response"
-    data = spin
-    if manual_peq is not None:
-        data_manual = spin_manual
-    data_auto = spin_auto
-    if which_curve == "Estimated In-Room Response":
-        data = pir
+    g_curves = {}
+    for which_curve in ("On Axis", "Listening Window", "Estimated In-Room Response"):
+        data = spin
         if manual_peq is not None:
-            data_manual = pir_manual
-        data_auto = pir_auto
+            data_manual = spin_manual
+        data_auto = spin_auto
+        curve_params = lw_params
+        if which_curve == "Estimated In-Room Response":
+            data = pir
+            if manual_peq is not None:
+                data_manual = pir_manual
+            data_auto = pir_auto
+            curve_params = pir_params
 
-    g_pir_reg = empty_graph
-    if data_auto is not None:
-        g_pir_reg = graph_regression(
-            data_auto.loc[(data_auto.Measurements == which_curve)], 100, reg_max
-        )
+        g_curve_reg = empty_graph
+        if data_auto is not None:
+            g_curve_reg = graph_regression(
+                data_auto.loc[(data_auto.Measurements == which_curve)], 100, reg_max
+            )
 
-    g_pir_asr = (
-        (graph_freq(data.loc[(data.Measurements == which_curve)], g_params) + g_pir_reg)
-        .properties(
-            title="{} from {} [{}]".format(speaker_name, speaker_origin, which_curve)
-        )
-        .resolve_scale(color="independent")
-        .resolve_legend(shape="independent")
-    )
-
-    g_pir_manual = empty_graph
-    if manual_peq is not None:
-        g_pir_manual = (
+        g_curve_asr = (
             (
-                graph_freq(
-                    data_manual.loc[(data_manual.Measurements == which_curve)], g_params
-                )
-                + g_pir_reg
+                graph_freq(data.loc[(data.Measurements == which_curve)], curve_params)
+                + g_curve_reg
             )
             .properties(
-                title="{} from {} [{}] with manual EQ".format(
+                title="{} from {} [{}]".format(
                     speaker_name, speaker_origin, which_curve
                 )
             )
@@ -263,34 +260,82 @@ def graph_results(
             .resolve_legend(shape="independent")
         )
 
-    g_pir_auto = empty_graph
-    if data_auto is not None:
-        g_pir_auto = (
-            (
-                graph_freq(
-                    data_auto.loc[(data_auto.Measurements == which_curve)], g_params
+        g_curve_manual = empty_graph
+        if manual_peq is not None:
+            g_curve_manual = (
+                (
+                    graph_freq(
+                        data_manual.loc[(data_manual.Measurements == which_curve)],
+                        g_params,
+                    )
+                    + g_curve_reg
                 )
-                + g_pir_reg
-            )
-            .properties(
-                title="{} from {} [{}] + auto EQ".format(
-                    speaker_name, speaker_origin, which_curve
+                .properties(
+                    title="{} from {} [{}] with manual EQ".format(
+                        speaker_name, speaker_origin, which_curve
+                    )
                 )
+                .resolve_scale(color="independent")
+                .resolve_legend(shape="independent")
             )
-            .resolve_scale(color="independent")
-            .resolve_legend(shape="independent")
-        )
+
+        g_curve_auto = empty_graph
+        if data_auto is not None:
+            g_curve_auto = (
+                (
+                    graph_freq(
+                        data_auto.loc[(data_auto.Measurements == which_curve)],
+                        curve_params,
+                    )
+                    + g_curve_reg
+                )
+                .properties(
+                    title="{} from {} [{}] + auto EQ".format(
+                        speaker_name, speaker_origin, which_curve
+                    )
+                )
+                .resolve_scale(color="independent")
+                .resolve_legend(shape="independent")
+            )
+        g_curves[which_curve] = {
+            "asr": g_curve_asr,
+            "auto": g_curve_auto,
+            "manual": g_curve_manual,
+        }
 
     # add all graphs and print it
     if manual_peq is not None:
         return [
             (g_manual_eq | g_auto_eq) & (g_eq_full | g_optim),
             (g_spin_asr | g_spin_manual | g_spin_auto),
-            (g_pir_asr | g_pir_manual | g_pir_auto).resolve_scale(y="independent"),
+            (
+                g_curves["On Axis"]["asr"]
+                | g_curves["On Axis"]["auto"]
+                | g_curves["On Axis"]["manual"]
+            ).resolve_scale(y="independent"),
+            (
+                g_curves["Listening Window"]["asr"]
+                | g_curves["Listening Window"]["auto"]
+                | g_curves["Listening Window"]["manual"]
+            ).resolve_scale(y="independent"),
+            (
+                g_curves["Estimated In-Room Response"]["asr"]
+                | g_curves["Estimated In-Room Response"]["auto"]
+                | g_curves["Estimated In-Room Response"]["manual"]
+            ).resolve_scale(y="independent"),
         ]
 
     return [
         (g_auto_eq | g_eq_full),
         (g_spin_asr | g_spin_auto),
-        (g_pir_asr | g_pir_auto).resolve_scale(y="independent"),
+        (g_curves["On Axis"]["asr"] | g_curves["On Axis"]["auto"]).resolve_scale(
+            y="independent"
+        ),
+        (
+            g_curves["Listening Window"]["asr"] | g_curves["Listening Window"]["auto"]
+        ).resolve_scale(y="independent"),
+        (
+            g_curves["Estimated In-Room Response"]["asr"]
+            | g_curves["Estimated In-Room Response"]["auto"]
+        ).resolve_scale(y="independent"),
     ]
