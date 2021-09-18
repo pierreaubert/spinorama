@@ -586,6 +586,8 @@ if __name__ == "__main__":
         "slope_listening_window": -2,
         "slope_early_reflections": -5,
         "slope_sound_power": -8,
+        # do we want to smooth the targets?
+        "smooth_target": False,
     }
 
     # define other parameters for the optimisation algorithms
