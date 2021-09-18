@@ -2904,6 +2904,7 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-control-29av-1-review-pa-outdoor-speaker.26705/",
+                "review_published": "20210918",
             },
         },
     },

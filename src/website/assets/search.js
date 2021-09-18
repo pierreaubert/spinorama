@@ -244,17 +244,21 @@ $(document).ready(function () {
         function get_date(item) {
             if (item.id in indirect) {
                 let meta = metadata[indirect[item.id]];
+                let def  = meta.default_measurement;
+                let msr  = meta.measurements[def];
                 // comparing ints (works because 20210101 is bigger than 20201010)
-                let review_published  = parseInt(meta.review_published);
-                if (!isNaN(review_published)) {
-                    return review_published;
+                if ('review_published' in msr) {
+                    let review_published  = parseInt(msr.review_published);
+                    if (!isNaN(review_published)) {
+                        return review_published;
+                    }
                 }
             }
-            return "19700101";
+            return 19700101;
         }
 
 	function sort_metadata(current_sorter) {
-            console.log("starting sort + sort_by:"+current_sorter.by);
+            // console.log("starting sort + sort_by:"+current_sorter.by);
             // TODO build once
             let sorted = {};
             if (current_sorter.by === 'price') {
