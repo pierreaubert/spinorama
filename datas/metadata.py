@@ -2891,6 +2891,22 @@ speakers_info = {
             },
         },
     },
+    "JBL Control 29AV-1": {
+        "brand": "JBL",
+        "model": "Control 29AV-1",
+        "type": "passive",
+        "price": "820",
+        "shape": "outdoors",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-control-29av-1-review-pa-outdoor-speaker.26705/",
+            },
+        },
+    },
     "JBL Control X": {
         "brand": "JBL",
         "model": "Control X",
