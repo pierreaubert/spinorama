@@ -3833,6 +3833,25 @@ speakers_info = {
             },
         },
     },
+    "KEF R8a": {
+        "brand": "KEF",
+        "model": "R8a",
+        "type": "passive",
+        "price": "1400",
+        "amount": "pair",
+        "shape": "surround",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r8a/",
+                },
+                "review_published": "20210807",
+            },
+        },
+    },
     "KEF R11": {
         "brand": "KEF",
         "model": "R11",
@@ -6305,6 +6324,23 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/verdant-audio-bambusa-mg-1-speaker-review.12385/",
+            },
+        },
+    },
+    "Wharfedale Diamond 12.1": {
+        "brand": "Wharfedale",
+        "model": "Diamond 12.1",
+        "type": "passive",
+        "price": "800",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/wharfedale-diamond-12-1-review-speaker.26780/",
+                "review_published": "20210922",
             },
         },
     },
