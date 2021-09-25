@@ -1,16 +1,16 @@
 EQ for JBL M2 computed from ErinsAudioCorner data
-Preference Score 5.1 with EQ 6.7
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-18-11:31:09
+Preference Score 5.1 with EQ 6.6
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.12
+Dated: 2021-09-25-17:59:08
 
-Preamp: -1.6 dB
+Preamp: -2.9 dB
 
-Filter  1: ON PK Fc  6398 Hz Gain -2.14 dB Q 0.18
-Filter  2: ON PK Fc 12657 Hz Gain -2.00 dB Q 6.00
-Filter  3: ON PK Fc   472 Hz Gain +2.15 dB Q 6.00
-Filter  4: ON PK Fc 15784 Hz Gain +2.62 dB Q 5.70
-Filter  5: ON PK Fc  6398 Hz Gain +1.03 dB Q 6.00
-Filter  6: ON PK Fc  3539 Hz Gain +0.55 dB Q 5.51
-Filter  7: ON PK Fc  8340 Hz Gain -1.35 dB Q 6.00
-Filter  8: ON PK Fc  9865 Hz Gain +0.86 dB Q 6.00
-Filter  9: ON PK Fc   319 Hz Gain -1.18 dB Q 2.34
+Filter  1: ON PK Fc   470 Hz Gain +2.78 dB Q 6.00
+Filter  2: ON PK Fc  6534 Hz Gain -1.09 dB Q 0.41
+Filter  3: ON PK Fc   800 Hz Gain +1.02 dB Q 6.00
+Filter  4: ON PK Fc 12646 Hz Gain -1.53 dB Q 6.00
+Filter  5: ON PK Fc  8348 Hz Gain -0.96 dB Q 6.00
+Filter  6: ON PK Fc 15814 Hz Gain +3.14 dB Q 4.94
+Filter  7: ON PK Fc  6469 Hz Gain +1.11 dB Q 6.00
+Filter  8: ON PK Fc  9909 Hz Gain +0.90 dB Q 6.00
+Filter  9: ON PK Fc  2484 Hz Gain -0.62 dB Q 4.53

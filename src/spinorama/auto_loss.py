@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import math
 import numpy as np
 from scipy.stats import linregress
 
@@ -45,7 +46,8 @@ def leastsquare_loss(
     freq: Vector, local_target: List[Vector], peq: Peq, iterations: int
 ) -> float:
     # sum of L2 norms if we have multiple targets
-    return float(np.sum([l2_loss(lt, freq, peq) for lt in local_target]))
+    l = [l2_loss(lt, freq, peq) for lt in local_target]
+    return np.linalg.norm(l)
 
 
 def flat_loss(

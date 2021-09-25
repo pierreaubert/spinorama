@@ -20,6 +20,7 @@
 import logging
 import math
 import numpy as np
+import pandas as pd
 from scipy.stats import linregress
 
 logger = logging.getLogger("spinorama")
@@ -38,34 +39,54 @@ def get_selector(df, optim_config):
 def get_freq(df_speaker_data, optim_config):
     """extract freq and one curve"""
     curves = optim_config["curve_names"]
+    local_curves = curves
+    with_pir = False
+    if "Estimated In-Room Response" in curves:
+        local_curves = [c for c in curves if c != "Estimated In-Room Response"]
+        with_pir = True
+
     # extract LW
-    columns = {"Freq"}.union(curves)
     local_df = None
-    if "CEA2034_unmelted" in df_speaker_data.keys():
-        local_df = df_speaker_data["CEA2034_unmelted"].loc[:, columns]
-    else:
-        df_tmp = df_speaker_data["CEA2034"]
-        try:
-            # df_pivoted = df_tmp.pivot(*df_tmp).rename_axis(columns=None).reset_index()
-            df_pivoted = df_tmp.pivot_table(
-                index="Freq", columns="Measurements", values="dB", aggfunc=max
-            ).reset_index()
-            local_df = df_pivoted.loc[:, columns]
-        except ValueError as ve:
-            print("debug: {} {}".format(df_tmp.keys(), ve))
-            print("{}".format(df_tmp.index.duplicated()))
-            return None, None, None
-        except KeyError as ke:
-            print("debug: columns {} {}".format(columns, ke))
-            print("debug: {}".format(df_tmp.keys()))
-            return None, None, None
+    if len(local_curves) > 0:
+        columns = {"Freq"}.union(local_curves)
+        if "CEA2034_unmelted" in df_speaker_data.keys():
+            local_df = df_speaker_data["CEA2034_unmelted"].loc[:, columns]
+        else:
+            df_tmp = df_speaker_data["CEA2034"]
+            try:
+                # df_pivoted = df_tmp.pivot(*df_tmp).rename_axis(columns=None).reset_index()
+                df_pivoted = df_tmp.pivot_table(
+                    index="Freq", columns="Measurements", values="dB", aggfunc=max
+                ).reset_index()
+                local_df = df_pivoted.loc[:, columns]
+            except ValueError as ve:
+                print("debug: {} {}".format(df_tmp.keys(), ve))
+                print("{}".format(df_tmp.index.duplicated()))
+                return None, None, None
+            except KeyError as ke:
+                print("debug: columns {} {}".format(columns, ke))
+                print("debug: {}".format(df_tmp.keys()))
+                return None, None, None
+
+    if with_pir:
+        pir_source = df_speaker_data["Estimated In-Room Response"]
+        if local_df is None:
+            local_df = pd.DataFrame(
+                {"Freq": pir_source.Freq, "Estimated In-Room Response": pir_source.dB}
+            )
+        else:
+            local_df["Estimated In-Room Response"] = pir_source.dB.values
+
     # sselector
     selector = get_selector(local_df, optim_config)
-    # freq
     local_freq = local_df.loc[selector, "Freq"].values
+
+    # freq
     local_target = []
     for curve in curves:
         local_target.append(local_df.loc[selector, curve].values)
+
+    # print(local_df, local_freq, local_target)
     return local_df, local_freq, local_target
 
 
@@ -87,6 +108,8 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
         slope = optim_config["slope_early_reflections"]
     elif current_curve_name == "Sound Power":
         slope = optim_config["slope_sound_power"]
+    elif current_curve_name == "Estimated In-Room Response":
+        slope = optim_config["slope_estimated_inroom"]
     else:
         logger.error("No match for getTarget")
         return None

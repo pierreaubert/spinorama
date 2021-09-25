@@ -28,6 +28,7 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--slope-listening-window=<s_lw>] \
  [--slope-early-reflections=<s_er>] \
  [--slope-sound-power=<s_sp>] \
+ [--slope-estimated-inroom=<s_pir>] \
  [--loss=<pick>] \
  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
  [--second-optimiser=<sopt>]
@@ -57,9 +58,10 @@ Options:
   --dash-port=<dash-port>  Port for the ray dashbboard
   --ray-local              If present, ray will run locally, it is usefull for debugging
   --slope-on-axis=<s_on> Slope of the ideal target for On Axis, default is 0, as in flat anechoic
-  --slope-listening-window=<s_lw> Slope of listening window, default is -2dB
+  --slope-listening-window=<s_lw> Slope of listening window, default is -0.5dB
   --slope-early-reflections=<s_er> Slope of early reflections, default is -5dB
   --slope-sound-power=<s_sp> Slope of sound power, default is -8dB
+  --slope-estimated-inroom=<s_pir> Slope of estimated in-room response, default is -8dB
   --second-optimiser=<sopt>
 """
 from datetime import datetime
@@ -93,7 +95,7 @@ from spinorama.auto_optim import optim_multi_steps
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
-VERSION = "0.11"
+VERSION = "0.12"
 
 
 def optim_find_peq(
@@ -575,17 +577,21 @@ if __name__ == "__main__":
         # target)
         # "curve_names": ["Listening Window"],
         # 'curve_names': ['Early Reflections'],
-        # 'curve_names': ['Listening Window', 'Sound Power'],
-        "curve_names": ["Listening Window", "Early Reflections"],
+        # 'curve_names': ['Listening Window', 'Early Reflections'],
+        # "curve_names": ["On Axis", "Listening Window", "Early Reflections"],
+        # "curve_names": ["Listening Window", "Estimated In-Room Response"],
         # "curve_names": ["Listening Window", "Early Reflections", "Sound Power"],
         # 'curve_names': ['Listening Window', 'On Axis', 'Early Reflections'],
         # 'curve_names': ['On Axis', 'Early Reflections'],
         # 'curve_names': ['Early Reflections', 'Sound Power'],
+        # "curve_names": ["Estimated In-Room Response", "Listening Window"],
+        "curve_names": ["Estimated In-Room Response"],
         # slope of the target (in dB) for each curve
         "slope_on_axis": 0,
-        "slope_listening_window": -2,
+        "slope_listening_window": -0.5,
         "slope_early_reflections": -5,
         "slope_sound_power": -8,
+        "slope_estimated_inroom": -8,
         # do we want to smooth the targets?
         "smooth_target": False,
     }
@@ -652,6 +658,7 @@ if __name__ == "__main__":
         ("--slope-listening-window", "slope_listening_window"),
         ("--slope-early-reflections", "slope_early_reflections"),
         ("--slope-sound-power", "slope_sound_power"),
+        ("--slope-estimated-inroom", "slope_estimated_inroom"),
     ):
         if args[slope_name] is not None:
             try:
