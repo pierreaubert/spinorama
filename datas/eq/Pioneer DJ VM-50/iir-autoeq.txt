@@ -1,7 +1,7 @@
 EQ for Pioneer DJ VM-50 computed from ErinsAudioCorner data
 Preference Score 5.1 with EQ 6.2
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.12
-Dated: 2021-09-25-18:28:14
+Dated: 2021-09-25-18:36:58
 
 Preamp: -2.2 dB
 

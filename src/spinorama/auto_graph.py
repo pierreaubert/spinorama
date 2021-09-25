@@ -306,36 +306,55 @@ def graph_results(
     # add all graphs and print it
     if manual_peq is not None:
         return [
-            (g_manual_eq | g_auto_eq) & (g_eq_full | g_optim),
-            (g_spin_asr | g_spin_manual | g_spin_auto),
+            ("eq", (g_manual_eq | g_auto_eq) & (g_eq_full | g_optim)),
+            ("spin", (g_spin_asr | g_spin_manual | g_spin_auto)),
             (
-                g_curves["On Axis"]["asr"]
-                | g_curves["On Axis"]["auto"]
-                | g_curves["On Axis"]["manual"]
-            ).resolve_scale(y="independent"),
+                "on",
+                (
+                    g_curves["On Axis"]["asr"]
+                    | g_curves["On Axis"]["auto"]
+                    | g_curves["On Axis"]["manual"]
+                ).resolve_scale(y="independent"),
+            ),
             (
-                g_curves["Listening Window"]["asr"]
-                | g_curves["Listening Window"]["auto"]
-                | g_curves["Listening Window"]["manual"]
-            ).resolve_scale(y="independent"),
+                "lw",
+                (
+                    g_curves["Listening Window"]["asr"]
+                    | g_curves["Listening Window"]["auto"]
+                    | g_curves["Listening Window"]["manual"]
+                ).resolve_scale(y="independent"),
+            ),
             (
-                g_curves["Estimated In-Room Response"]["asr"]
-                | g_curves["Estimated In-Room Response"]["auto"]
-                | g_curves["Estimated In-Room Response"]["manual"]
-            ).resolve_scale(y="independent"),
+                "pir",
+                (
+                    g_curves["Estimated In-Room Response"]["asr"]
+                    | g_curves["Estimated In-Room Response"]["auto"]
+                    | g_curves["Estimated In-Room Response"]["manual"]
+                ).resolve_scale(y="independent"),
+            ),
         ]
 
     return [
-        (g_auto_eq | g_eq_full),
-        (g_spin_asr | g_spin_auto),
-        (g_curves["On Axis"]["asr"] | g_curves["On Axis"]["auto"]).resolve_scale(
-            y="independent"
+        ("eq", (g_auto_eq | g_eq_full)),
+        ("spin", (g_spin_asr | g_spin_auto)),
+        (
+            "on",
+            (g_curves["On Axis"]["asr"] | g_curves["On Axis"]["auto"]).resolve_scale(
+                y="independent"
+            ),
         ),
         (
-            g_curves["Listening Window"]["asr"] | g_curves["Listening Window"]["auto"]
-        ).resolve_scale(y="independent"),
+            "lw",
+            (
+                g_curves["Listening Window"]["asr"]
+                | g_curves["Listening Window"]["auto"]
+            ).resolve_scale(y="independent"),
+        ),
         (
-            g_curves["Estimated In-Room Response"]["asr"]
-            | g_curves["Estimated In-Room Response"]["auto"]
-        ).resolve_scale(y="independent"),
+            "pir",
+            (
+                g_curves["Estimated In-Room Response"]["asr"]
+                | g_curves["Estimated In-Room Response"]["auto"]
+            ).resolve_scale(y="independent"),
+        ),
     ]

@@ -322,12 +322,12 @@ def optim_save_peq(
                 optim_config,
             )
 
-        for i, graph in enumerate(graphs):
+        for i, (name, graph) in enumerate(graphs):
             origin = current_speaker_origin
             if "Vendors-" in origin:
                 origin = origin[8:]
-            graph_filename = "docs/{}/{}/filters{}".format(
-                current_speaker_name, origin, i
+            graph_filename = "docs/{}/{}/filters_{}".format(
+                current_speaker_name, origin, name
             )
             if is_smoke_test:
                 graph_filename += "_smoketest"
