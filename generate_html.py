@@ -36,6 +36,7 @@ from mako.template import Template
 from mako.lookup import TemplateLookup
 from docopt import docopt
 
+from datas.metadata import speakers_info as extradata
 from generate_common import get_custom_logger, args2level
 
 siteprod = "https://pierreaubert.github.io/spinorama"
@@ -47,6 +48,8 @@ def generate_speaker(mako, dataframe, meta, site):
     speaker_html = mako.get_template("speaker.html")
     graph_html = mako.get_template("graph.html")
     for speaker_name, origins in dataframe.items():
+        if extradata[speaker_name].get("skip", False):
+            continue
         for origin, measurements in origins.items():
             for key, dfs in measurements.items():
                 logger.debug("generate {0} {1} {2}".format(speaker_name, origin, key))
@@ -177,9 +180,9 @@ if __name__ == "__main__":
         if not os.path.isdir(speaker):
             continue
         # humm annoying
-        if speaker in ("score", "assets", "stats", "compare", "logos", "pictures"):
-            continue
         speaker_name = speaker.replace("./docs/", "")
+        if speaker_name in ("score", "assets", "stats", "compare", "logos", "pictures"):
+            continue
         df[speaker_name] = {}
         origins = glob(speaker + "/*")
         for origin in origins:

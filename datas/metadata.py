@@ -3914,6 +3914,24 @@ speakers_info = {
             },
         },
     },
+    "Klipsch Forte IV": {
+        "brand": "Klipsch",
+        "model": "Forte IV",
+        "type": "passive",
+        "price": "6780",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "",
+                "review_published": "20210926",
+            },
+        },
+        "skip": True,
+    },
     "Klipsch Icon KF-26": {
         "brand": "Klipsch",
         "model": "Icon KF-26",
@@ -3955,7 +3973,14 @@ speakers_info = {
         "shape": "floorstanders",
         "amount": "pair",
         "default_measurement": "eac-v1-20201105",
+        #        "default_measurement": "eac-v2-20210926",
         "measurements": {
+            #            "eac-v2-20210926": {
+            #                "origin": "ErinsAudioCorner",
+            #                "format": "klippel",
+            #                "review": "",
+            #                "review_published": "20210926",
+            #            },
             "eac-v1-20201105": {
                 "origin": "ErinsAudioCorner",
                 "format": "webplotdigitizer",
@@ -5847,6 +5872,23 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m55xc-outdoor-speaker-review.14881/",
+            },
+        },
+    },
+    "Revel M80XC": {
+        "brand": "Revel",
+        "model": "M80XC",
+        "type": "passive",
+        "price": "900",
+        "shape": "outdoor",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m80xc-review-outdoor-speaker.26878/",
+                "review_published": "20210926",
             },
         },
     },

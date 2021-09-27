@@ -402,8 +402,9 @@ def dump_metadata(meta):
     metafile = "{}/metadata.json".format(metadir)
     if not os.path.isdir(metadir):
         os.makedirs(metadir)
+    meta2 = {k: v for k, v in meta.items() if not v.get("skip", False)}
     with open(metafile, "w") as f:
-        js = json.dumps(meta)
+        js = json.dumps(meta2)
         f.write(js)
         f.close()
 

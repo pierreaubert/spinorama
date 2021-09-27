@@ -1,15 +1,16 @@
 EQ for Klipsch Heresy IV computed from ErinsAudioCorner data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-17-19:34:53
+Preference Score 1.4 with EQ 4.4
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.12
+Dated: 2021-09-26-07:34:27
 
-Preamp: -2.9 dB
+Preamp: -4.2 dB
 
-Filter  1: ON PK Fc   531 Hz Gain +4.25 dB Q 6.00
-Filter  2: ON PK Fc  7152 Hz Gain -2.02 dB Q 0.11
-Filter  3: ON PK Fc   229 Hz Gain +2.21 dB Q 1.80
-Filter  4: ON PK Fc  1792 Hz Gain -3.04 dB Q 4.39
-Filter  5: ON PK Fc  1215 Hz Gain -1.98 dB Q 6.00
-Filter  6: ON PK Fc  2881 Hz Gain +2.71 dB Q 4.52
-Filter  7: ON PK Fc  4080 Hz Gain -1.03 dB Q 6.00
-Filter  8: ON PK Fc   389 Hz Gain -1.05 dB Q 6.00
-Filter  9: ON PK Fc  2044 Hz Gain -0.50 dB Q 6.00
+Filter  1: ON PK Fc   223 Hz Gain +4.05 dB Q 1.34
+Filter  2: ON PK Fc 15888 Hz Gain -2.63 dB Q 0.07
+Filter  3: ON PK Fc   563 Hz Gain +3.75 dB Q 6.00
+Filter  4: ON PK Fc  2849 Hz Gain +3.19 dB Q 6.00
+Filter  5: ON PK Fc  1557 Hz Gain -1.97 dB Q 1.94
+Filter  6: ON PK Fc   875 Hz Gain +2.01 dB Q 6.00
+Filter  7: ON PK Fc  1181 Hz Gain -1.45 dB Q 6.00
+Filter  8: ON PK Fc 13949 Hz Gain -2.11 dB Q 3.01
+Filter  9: ON PK Fc  7580 Hz Gain +1.12 dB Q 4.02
