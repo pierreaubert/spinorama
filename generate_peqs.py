@@ -24,6 +24,7 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--min-dB=<mindB>] [--max-dB=<maxdB>] \
  [--min-freq=<minFreq>] [--max-freq=<maxFreq>] \
  [--max-iter=<maxiter>] [--use-all-biquad] [--curve-peak-only] \
+ [--target-min-freq=<tminf>] [--target-max-freq=<tmaxf>] \
  [--slope-on-axis=<s_on>] \
  [--slope-listening-window=<s_lw>] \
  [--slope-early-reflections=<s_er>] \
@@ -31,7 +32,7 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--slope-estimated-inroom=<s_pir>] \
  [--loss=<pick>] \
  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
- [--second-optimiser=<sopt>]
+ [--second-optimiser=<sopt>] \
 
 
 Options:
@@ -57,6 +58,8 @@ Options:
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
   --dash-port=<dash-port>  Port for the ray dashbboard
   --ray-local              If present, ray will run locally, it is usefull for debugging
+  --target-min-freq=<tminf> targets will be flat up to min freq
+  --target-max-freq=<tmaxf> targets will not be important after max freq
   --slope-on-axis=<s_on> Slope of the ideal target for On Axis, default is 0, as in flat anechoic
   --slope-listening-window=<s_lw> Slope of listening window, default is -0.5dB
   --slope-early-reflections=<s_er> Slope of early reflections, default is -5dB
@@ -95,7 +98,7 @@ from spinorama.auto_optim import optim_multi_steps
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
-VERSION = "0.12"
+VERSION = "0.13"
 
 
 def optim_find_peq(
@@ -586,6 +589,9 @@ if __name__ == "__main__":
         # 'curve_names': ['Early Reflections', 'Sound Power'],
         # "curve_names": ["Estimated In-Room Response", "Listening Window"],
         "curve_names": ["Estimated In-Room Response"],
+        # start and end freq for targets
+        "target_min_freq": 100,
+        "target_max_freq": 16000,
         # slope of the target (in dB) for each curve
         "slope_on_axis": 0,
         "slope_listening_window": -0.5,
@@ -652,6 +658,13 @@ if __name__ == "__main__":
         current_optim_config["full_biquad_optim"] = True
     if args["--curve-peak-only"] is not None and args["--curve-peak-only"] is True:
         current_optim_config["plus_and_minus"] = False
+
+    if args["--target-min-freq"] is not None:
+        target_min_freq = int(args["--target-min-freq"])
+        current_optim_config["target_min_freq"] = target_min_freq
+    if args["--target-max-freq"] is not None:
+        target_max_freq = int(args["--target-max-freq"])
+        current_optim_config["target_max_freq"] = target_max_freq
 
     for slope_name, slope_key in (
         ("--slope-on-axis", "slope_on_axis"),

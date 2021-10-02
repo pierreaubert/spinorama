@@ -44,7 +44,7 @@ def graph_eq(freq, peq, domain, title):
             alt.Y(
                 "dB:Q",
                 title="Sound Pressure (dB)",
-                scale=alt.Scale(zero=False, domain=[-5, 5]),
+                scale=alt.Scale(zero=False, domain=[-10, 5]),
             ),
             alt.Color("Measurements", type="nominal", sort=None),
         )
@@ -73,7 +73,7 @@ def graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name, speaker_o
                 alt.Y(
                     "dB:Q",
                     title="Sound Pressure (dB)",
-                    scale=alt.Scale(zero=False, domain=[-5, 5]),
+                    scale=alt.Scale(zero=False, domain=[-10, 5]),
                 ),
             )
             .properties(
@@ -105,7 +105,7 @@ def graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name, speaker_o
                 alt.Y(
                     "dB:Q",
                     title="Sound Pressure (dB)",
-                    scale=alt.Scale(zero=False, domain=[-5, 5]),
+                    scale=alt.Scale(zero=False, domain=[-10, 5]),
                 ),
                 alt.Color("Measurements", type="nominal", sort=None),
             )
@@ -150,11 +150,11 @@ def graph_results(
     g_params["height"] = 400
 
     pir_params = copy.deepcopy(g_params)
-    pir_params["ymin"] = -10
-    pir_params["ymax"] = +4
+    pir_params["ymin"] = -15
+    pir_params["ymax"] = +0
 
     lw_params = copy.deepcopy(g_params)
-    lw_params["ymin"] = -4
+    lw_params["ymin"] = -11
     lw_params["ymax"] = +4
 
     # generate an empty graph
@@ -198,7 +198,7 @@ def graph_results(
                 alt.Y(
                     "dB:Q",
                     title="Sound Pressure (dB)",
-                    scale=alt.Scale(zero=False, domain=[-5, 5]),
+                    scale=alt.Scale(zero=False, domain=[-15, 0]),
                 ),
                 alt.Color("Measurements", type="nominal", sort=None),
             )

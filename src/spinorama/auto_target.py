@@ -113,9 +113,26 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     else:
         logger.error("No match for getTarget")
         return None
-    slope /= math.log10(freq[-1]) - math.log10(freq[0])
-    intercept = current_curve[0] - slope * math.log10(freq[0])
-    line = [slope * math.log10(f) for f in freq] + intercept
+
+    # find target min and max
+    first_freq = 0
+    last_freq = -1
+
+    for i, f in enumerate(freq):
+        if f >= optim_config["target_min_freq"]:
+            first_freq = i
+            break
+    for i, f in enumerate(reversed(freq)):
+        if f <= optim_config["target_max_freq"]:
+            last_freq = -(i + 1)
+            break
+
+    slope /= math.log10(freq[last_freq]) - math.log10(freq[first_freq])
+    intercept = current_curve[first_freq] - slope * math.log10(freq[first_freq])
+    flat = slope * math.log10(freq[first_freq])
+    line = [
+        flat if i < first_freq else slope * math.log10(f) for i, f in enumerate(freq)
+    ] + intercept
     logger.debug(
         "Slope {} Intercept {} R {} P {} err {}".format(
             slope, intercept, r_value, p_value, std_err
@@ -123,7 +140,7 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     )
     logger.debug(
         "Target_interp from {:.1f}dB at {}Hz to {:.1f}dB at {}Hz".format(
-            line[0], freq[0], line[-1], freq[-1]
+            line[first_freq], freq[first_freq], line[last_freq], freq[last_freq]
         )
     )
     return line
