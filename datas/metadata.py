@@ -3972,15 +3972,16 @@ speakers_info = {
         "price": "2000",
         "shape": "floorstanders",
         "amount": "pair",
-        "default_measurement": "eac-v1-20201105",
-        #        "default_measurement": "eac-v2-20210926",
+        "default_measurement": "eac-v2-20210926",
         "measurements": {
-            #            "eac-v2-20210926": {
-            #                "origin": "ErinsAudioCorner",
-            #                "format": "klippel",
-            #                "review": "",
-            #                "review_published": "20210926",
-            #            },
+            "eac-v2-20210926": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_heresy_iv/",
+                },
+                "review_published": "20210926",
+            },
             "eac-v1-20201105": {
                 "origin": "ErinsAudioCorner",
                 "format": "webplotdigitizer",

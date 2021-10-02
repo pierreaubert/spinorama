@@ -5,6 +5,7 @@
     "handlebars": "^4.7.7",
     "html-validator-cli": "^7.0.1",
     "npm": "^7.5.4",
+    "parcel-bundler": "^1.12.5",
     "pyright": "^1.1.166",
     "standard": "^16.0.3",
     "typescript": "^4.3.2",

@@ -40,3 +40,4 @@ cache.*.h5
 *.out
 #generate_meta.py#
 .vscode
+.cache
