@@ -11,8 +11,8 @@ $(document).ready(function () {
 
   // Check for click events on the banner
     $(".banner").click(function () {
-        
+
         $(".banner").hide();
-        
+
   });
 });

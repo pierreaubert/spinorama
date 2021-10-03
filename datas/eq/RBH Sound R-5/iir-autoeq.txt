@@ -1,26 +1,15 @@
-EQ for RBH Sound R-5 computed from ASR data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-05-09-07:20:29
+EQ for RBH Sound R-5 computed from Misc data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:35:14
 
-Preamp: -1.3 dB
+Preamp: -0.2 dB
 
-Filter  1: ON PK Fc  2673 Hz Gain -4.60 dB Q 0.44
-Filter  2: ON PK Fc  1265 Hz Gain +2.07 dB Q 8.17
-Filter  3: ON PK Fc   917 Hz Gain -2.63 dB Q 5.61
-Filter  4: ON PK Fc   378 Hz Gain +1.75 dB Q 5.33
-Filter  5: ON PK Fc  8852 Hz Gain +1.34 dB Q 2.71
-Filter  6: ON PK Fc  4574 Hz Gain -2.08 dB Q 6.17
-Filter  7: ON PK Fc   714 Hz Gain -1.23 dB Q 8.08
-Filter  8: ON PK Fc  5973 Hz Gain -1.25 dB Q 11.07
-Filter  9: ON PK Fc  3244 Hz Gain +1.29 dB Q 8.78
-Filter 10: ON PK Fc 11562 Hz Gain +1.00 dB Q 6.33
-Filter 11: ON PK Fc  1154 Hz Gain +1.06 dB Q 9.66
-Filter 12: ON PK Fc  7266 Hz Gain +0.88 dB Q 9.88
-Filter 13: ON PK Fc  9249 Hz Gain -0.50 dB Q 12.00
-Filter 14: ON PK Fc  2578 Hz Gain -0.78 dB Q 8.63
-Filter 15: ON PK Fc   858 Hz Gain +0.34 dB Q 12.00
-Filter 16: ON PK Fc   512 Hz Gain -0.90 dB Q 11.56
-Filter 17: ON PK Fc 14683 Hz Gain -1.13 dB Q 4.38
-Filter 18: ON PK Fc 12339 Hz Gain +0.50 dB Q 12.00
-Filter 19: ON PK Fc  1634 Hz Gain +0.58 dB Q 4.20
-Filter 20: ON PK Fc   427 Hz Gain +0.41 dB Q 12.00
+Filter  1: ON PK Fc  2652 Hz Gain -5.74 dB Q 0.35
+Filter  2: ON PK Fc  1272 Hz Gain +2.29 dB Q 6.00
+Filter  3: ON PK Fc   859 Hz Gain -1.55 dB Q 2.98
+Filter  4: ON PK Fc  8538 Hz Gain +1.32 dB Q 3.62
+Filter  5: ON PK Fc   386 Hz Gain +1.06 dB Q 6.00
+Filter  6: ON PK Fc  4595 Hz Gain -2.02 dB Q 5.73
+Filter  7: ON PK Fc  3291 Hz Gain +1.08 dB Q 6.00
+Filter  8: ON PK Fc  2519 Hz Gain -1.05 dB Q 6.00
+Filter  9: ON PK Fc   512 Hz Gain -0.75 dB Q 6.00

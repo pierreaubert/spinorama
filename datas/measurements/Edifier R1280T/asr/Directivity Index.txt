@@ -1,5 +1,5 @@
-"Directivity Index"			
-"Sound Power DI"		"Early Reflections DI"	
+"Directivity Index"
+"Sound Power DI"		"Early Reflections DI"
 "Frequency [Hz]"	"[dB] Directivity Index "	"Frequency [Hz]"	"[dB] Directivity Index "
 20.5078	0.216523	20.5078	0.156263
 21.9727	0.9708	21.9727	0.497198

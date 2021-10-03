@@ -1,0 +1,16 @@
+EQ for KEF LS50 Wireless II computed from ErinsAudioCorner data
+Preference Score 5.8 with EQ 6.5
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.12
+Dated: 2021-09-25-18:15:46
+
+Preamp: -2.6 dB
+
+Filter  1: ON PK Fc  1606 Hz Gain +1.60 dB Q 0.59
+Filter  2: ON PK Fc  3003 Hz Gain +1.07 dB Q 5.89
+Filter  3: ON PK Fc  7316 Hz Gain -0.72 dB Q 0.34
+Filter  4: ON PK Fc  3047 Hz Gain +0.62 dB Q 1.63
+Filter  5: ON PK Fc  1467 Hz Gain -0.93 dB Q 6.00
+Filter  6: ON PK Fc  1057 Hz Gain +1.25 dB Q 6.00
+Filter  7: ON PK Fc 14806 Hz Gain -1.72 dB Q 1.64
+Filter  8: ON PK Fc 12762 Hz Gain -0.50 dB Q 6.00
+Filter  9: ON PK Fc   218 Hz Gain +0.50 dB Q 1.50

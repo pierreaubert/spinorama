@@ -20,7 +20,7 @@ Because WebPlotDigitizer 4.2 does not allow to change the image without resettin
 
 2. Re-define the axis by:
 
-	- select "XY" under "Axes", then press 
+	- select "XY" under "Axes", then press
 	- "Delete" (or "Tweak Calibration if you prefer to make adjustments")
 	- "Add Calibration"
 	- "2D (X-Y) Plot"
@@ -51,8 +51,8 @@ Now for each of the 5 Datasets:
 	- Try to place a point on each peak! (if there is a wavy curve, each local wave extreme should get at least one point). This is especially crucial for On-Axis and Listening Window curves.
 	- Try to remove points where data is unreliable (do not digitize data where it is known to be poorly measured)
 
-8. When done, "Save Project" as ".tar" archive where Project name is the name of the Speaker + any important details. 
+8. When done, "Save Project" as ".tar" archive where Project name is the name of the Speaker + any important details.
 
 Note, you can always save work-in-progress project and continue working on it later.
 
-When you have your .tar file, it can be imported into for example: https://github.com/pierreaubert/spinorama/ 
+When you have your .tar file, it can be imported into for example: https://github.com/pierreaubert/spinorama/

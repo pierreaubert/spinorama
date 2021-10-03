@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
@@ -49,17 +49,18 @@ except ModuleNotFoundError:
 
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
 
-from src.spinorama.compute_estimates import estimates
-from src.spinorama.compute_scores import speaker_pref_rating
-from src.spinorama.filter_peq import peq_preamp_gain
-from src.spinorama.load_parse import parse_graphs_speaker
-from src.spinorama.load_rewseq import parse_eq_iir_rews
+from spinorama.compute_estimates import estimates
+from spinorama.compute_scores import speaker_pref_rating
+from spinorama.filter_peq import peq_preamp_gain
+from spinorama.load_parse import parse_graphs_speaker
+from spinorama.load_rewseq import parse_eq_iir_rews
 
 
 import datas.metadata as metadata
 
 
 def sanity_check(dataframe, meta):
+    """Basic checks for pictures and metadata"""
     for speaker_name in dataframe.keys():
         # check if metadata exists
         if speaker_name not in meta:
@@ -78,7 +79,7 @@ def sanity_check(dataframe, meta):
 
 
 def add_scores(dataframe):
-    """""Compute some values per speaker and add them to metadata """
+    """Compute some values per speaker and add them to metadata"""
     min_pref_score = +100
     max_pref_score = -100
     min_pref_score_wsub = +100
@@ -116,10 +117,9 @@ def add_scores(dataframe):
                         )
                     )
                     # basic math
-                    onaxis = spin.loc[spin["Measurements"] == "On Axis"].reset_index(
-                        drop=True
-                    )
-                    est = estimates(onaxis)
+                    splH = dfs.get("SPL Horizontal_unmelted", None)
+                    splV = dfs.get("SPL Vertical_unmelted", None)
+                    est = estimates(spin, splH, splV)
                     logger.info("Computing estimated for {0}".format(speaker_name))
                     if est is None:
                         logger.debug(
@@ -363,7 +363,7 @@ def add_quality():
 
 
 def add_eq(speaker_path, dataframe):
-    """ Compute some values per speaker and add them to metadata """
+    """Compute some values per speaker and add them to metadata"""
     for speaker_name in dataframe.keys():
         logger.info("Processing {0}".format(speaker_name))
 
@@ -402,8 +402,9 @@ def dump_metadata(meta):
     metafile = "{}/metadata.json".format(metadir)
     if not os.path.isdir(metadir):
         os.makedirs(metadir)
+    meta2 = {k: v for k, v in meta.items() if not v.get("skip", False)}
     with open(metafile, "w") as f:
-        js = json.dumps(meta)
+        js = json.dumps(meta2)
         f.write(js)
         f.close()
 

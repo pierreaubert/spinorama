@@ -11,14 +11,14 @@ function displayGraph(spec, divName) {
                 tickWidth: 3,
             },
         };
-        
+
         function patch(spec) {
             let width = window.innerWidth - 250;
             spec.width = width;
             spec.height = width * 3 / 5;
             return spec;
         }
-        
+
         const result = await vegaEmbed(divName, spec, {
             config: config,
             tooltip: { theme: "dark" },
@@ -31,14 +31,14 @@ function displayGraph(spec, divName) {
                 return result;
             }
         );
-        
+
         // console.log(window.innerWidth);
     }
     run();
 }
 
 function displayStats(spec, divName) {
-    
+
     async function run () {
         const config = {
             // default view background color
@@ -50,14 +50,14 @@ function displayStats(spec, divName) {
                 tickWidth: 3,
             },
         };
-        
+
         function patch(spec) {
             let width = Math.min(window.innerWidth - 180, 800);
             spec.width = width;
             spec.height = width;
             return spec;
         }
-        
+
         const result = await vegaEmbed(divName, spec, {
             config: config,
             tooltip: { theme: "dark" },
@@ -70,7 +70,7 @@ function displayStats(spec, divName) {
                 return result;
             }
         );
-        
+
         // console.log(window.innerWidth);
     }
     run();

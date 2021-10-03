@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-2021 Pierre Aubert pierreaubert(at)yahoo(dot)fr
@@ -23,7 +23,7 @@ from typing import Literal, List, Tuple
 import scipy.signal as sig
 from scipy.interpolate import InterpolatedUnivariateSpline
 
-from spinorama.ltype import Vector
+from spinorama.ltype import FloatVector1D, Vector
 
 logger = logging.getLogger("spinorama")
 
@@ -34,18 +34,18 @@ logger = logging.getLogger("spinorama")
 
 
 def find_largest_area(
-    freq: Vector, curve: List[Vector], optim_config: dict
+    freq: FloatVector1D, curve: List[FloatVector1D], optim_config: dict
 ) -> Tuple[Literal[-1, 1], int, float]:
-    def largest_area(positive_curve) -> Tuple[int, float]:
-        logger.debug("freq {} positive_curve {}".format(freq, positive_curve))
-        found_peaks, _ = sig.find_peaks(positive_curve, distance=10)
+    def largest_area(current_curve) -> Tuple[int, float]:
+        logger.debug("freq {} current_curve {}".format(freq, current_curve))
+        found_peaks, _ = sig.find_peaks(current_curve, distance=20)
         if len(found_peaks) == 0:
             return -1, -1
         logger.debug("found peaks at {}".format(found_peaks))
-        found_widths = sig.peak_widths(positive_curve, found_peaks, rel_height=0.1)[0]
+        found_widths = sig.peak_widths(current_curve, found_peaks, rel_height=0.1)[0]
         logger.debug("computed width at {}".format(found_widths))
         areas = [
-            (i, positive_curve[found_peaks[i]] * found_widths[i])
+            (i, current_curve[found_peaks[i]] * found_widths[i])
             for i in range(0, len(found_peaks))
         ]
         logger.debug("areas {}".format(areas))
@@ -61,6 +61,12 @@ def find_largest_area(
     if optim_config["plus_and_minus"] is True:
         minus_curve = -np.clip(curve, a_min=None, a_max=0)
         minus_index, minus_areas = largest_area(minus_curve)
+
+    # logger.debug(
+    #    "minus a={} f={} plus a={} f={}".format(
+    #        minus_areas, freq[minus_index], plus_areas, freq[plus_index]
+    #    )
+    # )
 
     if minus_areas == -1 and plus_areas == -1:
         logger.error("No initial freq found")
@@ -78,7 +84,7 @@ def find_largest_area(
 
 
 def propose_range_freq(
-    freq: Vector, local_target: List[Vector], optim_config: dict
+    freq: FloatVector1D, local_target: List[FloatVector1D], optim_config: dict
 ) -> Tuple[Literal[-1, 1], float, Vector]:
     sign, _, init_freq = find_largest_area(freq, local_target, optim_config)
     scale = optim_config["elastic"]
@@ -95,17 +101,17 @@ def propose_range_freq(
     return (
         sign,
         init_freq,
-        np.linspace(
+        np.linspace(  # should that be logspace?
             init_freq_min, init_freq_max, optim_config["MAX_STEPS_FREQ"]
         ).tolist(),
     )
 
 
 def propose_range_dbGain(
-    freq: Vector,
-    local_target: List[Vector],
+    freq: FloatVector1D,
+    local_target: List[FloatVector1D],
     sign: Literal[-1, 1],
-    init_freq: Vector,
+    init_freq: FloatVector1D,
     optim_config: dict,
 ) -> Vector:
     spline = InterpolatedUnivariateSpline(np.log10(freq), local_target, k=1)

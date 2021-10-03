@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
@@ -36,7 +36,7 @@ except ModuleNotFoundError:
     import src.miniray as ray
 
 from generate_common import get_custom_logger, args2level, cache_load
-from src.spinorama.speaker_print import print_compare
+from spinorama.speaker_print import print_compare
 
 
 ray.init()

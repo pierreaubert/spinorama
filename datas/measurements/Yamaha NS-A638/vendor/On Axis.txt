@@ -5,7 +5,7 @@
 * REW Settings:
 *  C-weighting compensation: Off
 *  Target level: 75.0 dB
-* Note: ; Measurement imported from C:\Users\Napie\Music\REW\Top Speakers\New Folder\11-On Axis.txt Format: Comma/Tab/Space delimited data 623 values loaded, 5 Hz to 39,792 Hz log spaced 
+* Note: ; Measurement imported from C:\Users\Napie\Music\REW\Top Speakers\New Folder\11-On Axis.txt Format: Comma/Tab/Space delimited data 623 values loaded, 5 Hz to 39,792 Hz log spaced
 * Measurement: 11-On Axis
 * Smoothing: None
 * Frequency Step: 1/96 octave

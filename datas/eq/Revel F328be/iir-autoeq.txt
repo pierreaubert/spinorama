@@ -1,26 +1,16 @@
 EQ for Revel F328be computed from ASR data
-Preference Score 6.6 with EQ 7.0
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.7
-Dated: 2021-04-15-07:01:36
+Preference Score 6.6 with EQ 6.9
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:35:08
 
-Preamp: -1.4 dB
+Preamp: -0.2 dB
 
-Filter  1: ON PK Fc   761 Hz Gain -1.04 dB Q 6.08
-Filter  2: ON PK Fc   562 Hz Gain -0.99 dB Q 12.00
-Filter  3: ON PK Fc  4235 Hz Gain +1.19 dB Q 3.87
-Filter  4: ON PK Fc  7723 Hz Gain +0.97 dB Q 3.93
-Filter  5: ON PK Fc 11101 Hz Gain +0.58 dB Q 5.42
-Filter  6: ON PK Fc  1765 Hz Gain +0.82 dB Q 12.00
-Filter  7: ON PK Fc  5743 Hz Gain -0.93 dB Q 10.93
-Filter  8: ON PK Fc  2612 Hz Gain -0.88 dB Q 12.00
-Filter  9: ON PK Fc  2242 Hz Gain -0.61 dB Q 12.00
-Filter 10: ON PK Fc  7965 Hz Gain -0.21 dB Q 12.00
-Filter 11: ON PK Fc   327 Hz Gain +0.80 dB Q 10.06
-Filter 12: ON PK Fc  2438 Hz Gain +0.80 dB Q 12.00
-Filter 13: ON PK Fc 14131 Hz Gain +0.46 dB Q 10.03
-Filter 14: ON PK Fc  1083 Hz Gain +0.79 dB Q 12.00
-Filter 15: ON PK Fc  1008 Hz Gain -0.38 dB Q 12.00
-Filter 16: ON PK Fc  3063 Hz Gain -0.61 dB Q 12.00
-Filter 17: ON PK Fc  3472 Hz Gain +0.34 dB Q 12.00
-Filter 18: ON PK Fc   465 Hz Gain -0.66 dB Q 12.00
-Filter 19: ON PK Fc   359 Hz Gain -0.34 dB Q 12.00
+Filter  1: ON PK Fc  1186 Hz Gain -1.49 dB Q 0.07
+Filter  2: ON PK Fc   219 Hz Gain -1.19 dB Q 4.62
+Filter  3: ON PK Fc   675 Hz Gain -0.54 dB Q 3.05
+Filter  4: ON PK Fc   100 Hz Gain +0.77 dB Q 3.17
+Filter  5: ON PK Fc  4313 Hz Gain +1.01 dB Q 5.05
+Filter  6: ON PK Fc  3049 Hz Gain -0.54 dB Q 6.00
+Filter  7: ON PK Fc   560 Hz Gain -0.50 dB Q 6.00
+Filter  8: ON PK Fc   331 Hz Gain +0.69 dB Q 6.00
+Filter  9: ON PK Fc   261 Hz Gain -0.50 dB Q 6.00

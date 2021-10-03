@@ -13,6 +13,7 @@ TAGS
 *_large.png
 docs
 tmp
+logs
 asrbook.aux
 asrbook.bbl
 asrbook.blg
@@ -39,3 +40,4 @@ cache.*.h5
 *.out
 #generate_meta.py#
 .vscode
+.cache

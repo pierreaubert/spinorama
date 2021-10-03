@@ -1,26 +1,15 @@
-EQ for Cambridge Soundworks Model Six computed from ASR data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-05-10-11:04:09
+EQ for Cambridge Soundworks Model Six computed from Vendors-Cambridge Soundworks data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:34:27
 
-Preamp: -2.4 dB
+Preamp: -0.7 dB
 
-Filter  1: ON PK Fc 10428 Hz Gain -4.42 dB Q 0.75
-Filter  2: ON PK Fc   708 Hz Gain -1.42 dB Q 1.05
-Filter  3: ON PK Fc  4166 Hz Gain -2.17 dB Q 6.50
-Filter  4: ON PK Fc  1067 Hz Gain +3.01 dB Q 11.83
-Filter  5: ON PK Fc  2036 Hz Gain +2.36 dB Q 6.69
-Filter  6: ON PK Fc  3020 Hz Gain +2.48 dB Q 11.84
-Filter  7: ON PK Fc   478 Hz Gain -1.19 dB Q 2.79
-Filter  8: ON PK Fc 14460 Hz Gain +2.19 dB Q 11.77
-Filter  9: ON PK Fc   691 Hz Gain +1.53 dB Q 11.97
-Filter 10: ON PK Fc  7826 Hz Gain +1.27 dB Q 5.04
-Filter 11: ON PK Fc  3685 Hz Gain -0.70 dB Q 7.58
-Filter 12: ON PK Fc  2479 Hz Gain +0.85 dB Q 12.00
-Filter 13: ON PK Fc   574 Hz Gain -0.97 dB Q 12.00
-Filter 14: ON PK Fc 11843 Hz Gain +1.29 dB Q 12.00
-Filter 15: ON PK Fc 13126 Hz Gain -1.93 dB Q 12.00
-Filter 16: ON PK Fc 10674 Hz Gain -1.19 dB Q 12.00
-Filter 17: ON PK Fc  1678 Hz Gain -0.98 dB Q 5.93
-Filter 18: ON PK Fc  1932 Hz Gain +0.93 dB Q 12.00
-Filter 19: ON PK Fc   394 Hz Gain -0.62 dB Q 12.00
-Filter 20: ON PK Fc  8488 Hz Gain +0.43 dB Q 12.00
+Filter  1: ON PK Fc  4428 Hz Gain -2.22 dB Q 0.06
+Filter  2: ON PK Fc 10292 Hz Gain -2.29 dB Q 1.83
+Filter  3: ON PK Fc  2194 Hz Gain +2.85 dB Q 2.70
+Filter  4: ON PK Fc  4224 Hz Gain -2.22 dB Q 4.19
+Filter  5: ON PK Fc   503 Hz Gain -1.67 dB Q 3.38
+Filter  6: ON PK Fc   397 Hz Gain -0.62 dB Q 6.00
+Filter  7: ON PK Fc  1694 Hz Gain -0.55 dB Q 6.00
+Filter  8: ON PK Fc   572 Hz Gain -0.50 dB Q 6.00
+Filter  9: ON PK Fc  1067 Hz Gain +2.53 dB Q 6.00

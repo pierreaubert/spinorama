@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
@@ -84,6 +84,7 @@ def sanity_check_shape(name, speaker):
         "outdoor",
         "panel",
         "inwall",
+        "soundbar",
     )
     if "shape" not in speaker:
         logging.error("shape is not in {0}".format(name))

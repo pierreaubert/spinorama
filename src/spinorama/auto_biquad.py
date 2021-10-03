@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
@@ -21,6 +21,7 @@ import logging
 
 import scipy.optimize as opt
 
+from .ltype import DataSpeaker, Peq
 from .filter_iir import Biquad
 from .auto_loss import loss
 
@@ -29,6 +30,7 @@ logger = logging.getLogger("spinorama")
 
 
 def find_best_biquad(
+    df_speaker: DataSpeaker,
     freq,
     auto_target,
     freq_range,
@@ -40,7 +42,7 @@ def find_best_biquad(
 ):
     def opt_peq(x):
         peq = [(1.0, Biquad(int(x[0]), x[1], 48000, x[2], x[3]))]
-        return loss(freq, auto_target, peq, count, optim_config)
+        return loss(df_speaker, freq, auto_target, peq, count, optim_config)
 
     bounds = [
         (biquad_range[0], biquad_range[-1]),
@@ -64,7 +66,12 @@ def find_best_biquad(
     # can use differential_evolution basinhoppin dual_annealing
     res = {
         "success": False,
-        "x": [0.0, 0.0, 0.0, 0.0],
+        "x": [
+            3,
+            (bounds[1][0] + bounds[1][1]) / 2,
+            (bounds[2][0] + bounds[2][1]) / 2,
+            (bounds[3][0] + bounds[3][1]) / 2,
+        ],
         "fun": 0.0,
         "nit": -1,
         "message": "",
@@ -87,24 +94,26 @@ def find_best_biquad(
                 res["message"],
             )
         )
+        return (
+            res.success,
+            int(res.x[0]),
+            res.x[1],
+            res.x[2],
+            res.x[3],
+            res.fun,
+            res.nit,
+        )
     except ValueError as ve:
         res["success"] = False
         logger.error("{} bounds {}".format(ve, bounds))
         for i in range(0, 4):
             if bounds[i][0] >= bounds[i][1]:
                 logger.error("on bound [{}]".format(i))
-                return (
-                    res["success"],
-                    int(res["x"][0]),
-                    res["x"][1],
-                    res["x"][2],
-                    res["x"][3],
-                    res["fun"],
-                    res["nit"],
-                )
+        return False, 0, -1, -1, -1, -1, -1
 
 
 def find_best_peak(
+    df_speaker,
     freq,
     auto_target,
     freq_range,
@@ -119,7 +128,7 @@ def find_best_peak(
 
     def opt_peq(x):
         peq = [(1.0, Biquad(biquad_type, x[0], 48000, x[1], x[2]))]
-        return loss(freq, auto_target, peq, count, optim_config)
+        return loss(df_speaker, freq, auto_target, peq, count, optim_config)
 
     bounds = [
         (freq_range[0], freq_range[-1]),

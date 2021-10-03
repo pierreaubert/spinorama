@@ -1,21 +1,36 @@
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import logging
 import math
 import numpy as np
 import pandas as pd
+
+from .graph_contour import compute_directivity_deg, compute_contour
 
 pd.set_option("display.max_rows", 1000)
 
 logger = logging.getLogger("spinorama")
 
 
-def estimates(onaxis: pd.DataFrame):
+def estimates(
+    spin: pd.DataFrame, splH: pd.DataFrame, splV: pd.DataFrame
+) -> dict[str, float]:
+    onaxis = pd.DataFrame()
+    est = {}
     try:
+        if "Measurements" in spin.keys():
+            onaxis = spin.loc[spin["Measurements"] == "On Axis"].reset_index(drop=True)
+        else:
+            onaxis = spin.get("On Axis", None)
+
+        if onaxis.empty:
+            logger.debug("On Axis measurement not found!")
+            return {}
+
         freq_min = onaxis.Freq.min()
         logger.debug("Freq min: {0}".format(freq_min))
         if math.isnan(freq_min):
             logger.warning("Estimates failed for onaxis {0}".format(onaxis.shape))
-            return None
+            return {}
         if freq_min < 300:
             # mean over 300-10k
             y_ref = np.mean(
@@ -34,8 +49,8 @@ def estimates(onaxis: pd.DataFrame):
             ].dB.min()
             band = max(abs(up - y_ref), abs(y_ref - down))
             est = {
-                "ref_from": 300,
-                "ref_to": 10000,
+                "ref_from": 300.0,
+                "ref_to": 10000.0,
             }
             if not math.isnan(y_ref):
                 est["ref_level"] = round(y_ref, 0)
@@ -59,18 +74,28 @@ def estimates(onaxis: pd.DataFrame):
             band = max(abs(up - y_ref), abs(y_ref - down))
             est = {
                 "ref_from": round(freq_min, 0),
-                "ref_to": 10000,
+                "ref_to": 10000.0,
             }
             if not math.isnan(y_ref):
                 est["ref_level"] = round(y_ref, 0)
             if not math.isnan(band):
                 est["ref_band"] = round(band, 1)
 
+        for orientation in ("horizontal", "vertical"):
+            spl = splH
+            if orientation == "vertical":
+                spl = splV
+            if spl is not None and not spl.empty:
+                af, am, az = compute_contour(spl)
+                dir_deg_p, dir_deg_m, dir_deg = compute_directivity_deg(af, am, az)
+                est["dir_{}_p".format(orientation)] = dir_deg_p
+                est["dir_{}_m".format(orientation)] = dir_deg_m
+                est["dir_{}".format(orientation)] = dir_deg
+
         logger.debug("Estimates: {0}".format(est))
         return est
     except TypeError as te:
         logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, te))
-        return None
     except ValueError as ve:
         logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, ve))
-        return None
+    return {}

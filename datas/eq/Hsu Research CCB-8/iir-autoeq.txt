@@ -1,26 +1,15 @@
-EQ for Hsu Research CCB-8 computed from ASR data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-05-09-07:16:07
+EQ for Hsu Research CCB-8 computed from Misc data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:34:26
 
-Preamp: -1.2 dB
+Preamp: -4.1 dB
 
-Filter  1: ON PK Fc  2884 Hz Gain -2.72 dB Q 0.24
-Filter  2: ON PK Fc  1530 Hz Gain +3.64 dB Q 5.68
-Filter  3: ON PK Fc 13065 Hz Gain -5.42 dB Q 2.49
-Filter  4: ON PK Fc  5781 Hz Gain +2.49 dB Q 1.75
-Filter  5: ON PK Fc   382 Hz Gain +1.28 dB Q 1.94
-Filter  6: ON PK Fc  1130 Hz Gain -1.61 dB Q 10.93
-Filter  7: ON PK Fc 11028 Hz Gain -2.45 dB Q 10.26
-Filter  8: ON PK Fc   650 Hz Gain -0.96 dB Q 12.00
-Filter  9: ON PK Fc  8247 Hz Gain +1.17 dB Q 12.00
-Filter 10: ON PK Fc  2200 Hz Gain -1.12 dB Q 6.03
-Filter 11: ON PK Fc   845 Hz Gain +1.37 dB Q 5.95
-Filter 12: ON PK Fc  6579 Hz Gain +0.67 dB Q 12.00
-Filter 13: ON PK Fc 14145 Hz Gain +0.85 dB Q 12.00
-Filter 14: ON PK Fc  7308 Hz Gain -1.08 dB Q 12.00
-Filter 15: ON PK Fc 15370 Hz Gain -2.73 dB Q 9.38
-Filter 16: ON PK Fc  4962 Hz Gain -0.70 dB Q 12.00
-Filter 17: ON PK Fc  3587 Hz Gain +0.67 dB Q 3.44
-Filter 18: ON PK Fc   522 Hz Gain +0.47 dB Q 12.00
-Filter 19: ON PK Fc  3840 Hz Gain -0.41 dB Q 12.00
-Filter 20: ON PK Fc  4427 Hz Gain +0.54 dB Q 12.00
+Filter  1: ON PK Fc  1234 Hz Gain +2.08 dB Q 0.10
+Filter  2: ON PK Fc  2240 Hz Gain -2.89 dB Q 3.35
+Filter  3: ON PK Fc   119 Hz Gain -1.94 dB Q 4.65
+Filter  4: ON PK Fc  1123 Hz Gain -1.62 dB Q 6.00
+Filter  5: ON PK Fc 12879 Hz Gain -3.23 dB Q 3.71
+Filter  6: ON PK Fc  6224 Hz Gain +2.26 dB Q 2.25
+Filter  7: ON PK Fc   328 Hz Gain +1.34 dB Q 1.24
+Filter  8: ON PK Fc   652 Hz Gain -1.01 dB Q 6.00
+Filter  9: ON PK Fc  1510 Hz Gain +1.68 dB Q 6.00

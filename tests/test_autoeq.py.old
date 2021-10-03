@@ -27,7 +27,7 @@ def generate_spl_angle(freq, angle, speaker_config):
     for hz in freq:
         value = 0
         gain.append(value)
-        
+
 
 def generate_spl(freq, speaker_config):
     df = pd.DataFrame({})
@@ -43,7 +43,7 @@ def generate_spl(freq, speaker_config):
 
 
 class AutoEQTests(unittest.TestCase):
-    
+
     def setUp(self):
         #                       300 Hz           20000 Hz
         self.freq = np.logspace(2+math.log10(3), 3+math.log10(2), 100)
@@ -63,8 +63,5 @@ class AutoEQTests(unittest.TestCase):
             "freq_mean_max": 300,
             "curve_names": ["Listening Window"],
         }
-        
+
     def test_flat(self):
-        
-
-

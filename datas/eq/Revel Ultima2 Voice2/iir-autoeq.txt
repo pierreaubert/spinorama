@@ -1,26 +1,15 @@
-EQ for Revel Ultima2 Voice2 computed from ASR data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-05-09-07:16:06
+EQ for Revel Ultima2 Voice2 computed from Vendors-Revel data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:35:02
 
-Preamp: -0.7 dB
+Preamp: -0.8 dB
 
-Filter  1: ON PK Fc  3501 Hz Gain -1.33 dB Q 0.24
-Filter  2: ON PK Fc  1890 Hz Gain +1.74 dB Q 3.35
-Filter  3: ON PK Fc 14680 Hz Gain -1.87 dB Q 2.08
-Filter  4: ON PK Fc   359 Hz Gain +0.65 dB Q 4.36
-Filter  5: ON PK Fc   629 Hz Gain -0.42 dB Q 5.87
-Filter  6: ON PK Fc  7691 Hz Gain +1.19 dB Q 11.94
-Filter  7: ON PK Fc  5525 Hz Gain +0.83 dB Q 5.27
-Filter  8: ON PK Fc  3385 Hz Gain +0.50 dB Q 12.00
-Filter  9: ON PK Fc  2748 Hz Gain -0.63 dB Q 10.27
-Filter 10: ON PK Fc   881 Hz Gain +0.60 dB Q 6.75
-Filter 11: ON PK Fc   513 Hz Gain -0.34 dB Q 12.00
-Filter 12: ON PK Fc  9104 Hz Gain +0.37 dB Q 12.00
-Filter 13: ON PK Fc  6990 Hz Gain -0.55 dB Q 12.00
-Filter 14: ON PK Fc 10706 Hz Gain -0.33 dB Q 8.20
-Filter 15: ON PK Fc  1286 Hz Gain -0.29 dB Q 6.72
-Filter 16: ON PK Fc  4383 Hz Gain +0.25 dB Q 12.00
-Filter 17: ON PK Fc   593 Hz Gain +0.25 dB Q 12.00
-Filter 18: ON PK Fc  2290 Hz Gain +0.20 dB Q 12.00
-Filter 19: ON PK Fc   440 Hz Gain +0.25 dB Q 12.00
-Filter 20: ON PK Fc  1015 Hz Gain +0.33 dB Q 12.00
+Filter  1: ON PK Fc  1159 Hz Gain -1.15 dB Q 0.05
+Filter  2: ON PK Fc 14912 Hz Gain -0.94 dB Q 0.33
+Filter  3: ON PK Fc  1921 Hz Gain +1.91 dB Q 5.06
+Filter  4: ON PK Fc  1211 Hz Gain -0.62 dB Q 4.87
+Filter  5: ON PK Fc  4359 Hz Gain -0.50 dB Q 2.98
+Filter  6: ON PK Fc  6633 Hz Gain -0.50 dB Q 6.00
+Filter  7: ON PK Fc  2769 Hz Gain -0.50 dB Q 6.00
+Filter  8: ON PK Fc   372 Hz Gain +0.90 dB Q 2.79
+Filter  9: ON PK Fc   226 Hz Gain -0.50 dB Q 6.00

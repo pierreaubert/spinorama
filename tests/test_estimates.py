@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-2021 Pierre Aubert pierreaubert(at)yahoo(dot)fr
@@ -34,8 +34,7 @@ class SpinoramaEstimatesNV2Tests(unittest.TestCase):
             "datas/measurements/Neumann KH 80/asr-v2-20200208/CEA2034.txt"
         )
         self.df = graph_melt(self.df_unmelted)
-        self.onaxis = self.df.loc[self.df["Measurements"] == "On Axis"]
-        self.estimates = estimates(self.onaxis)
+        self.estimates = estimates(self.df, None, None)
 
     def test_estimates(self):
         self.assertNotEqual(-1, self.estimates["ref_level"])
@@ -51,12 +50,18 @@ class SpinoramaEstimatesNV2Tests(unittest.TestCase):
 
 class SpinoramaEstimatesNV3Tests(unittest.TestCase):
     def setUp(self):
-        self.title, self.df_unmelted = parse_graph_freq_klippel(
+        self.title, self.spin_unmelted = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/CEA2034.txt"
         )
-        self.df = graph_melt(self.df_unmelted)
-        self.onaxis = self.df.loc[self.df["Measurements"] == "On Axis"]
-        self.estimates = estimates(self.onaxis)
+        self.spin = graph_melt(self.spin_unmelted)
+        self.title, self.splH = parse_graph_freq_klippel(
+            "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
+        )
+        self.title, self.splV = parse_graph_freq_klippel(
+            "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt"
+        )
+        self.spin = graph_melt(self.spin_unmelted)
+        self.estimates = estimates(self.spin, self.splH, self.splV)
 
     def test_estimates(self):
         self.assertNotEqual(-1, self.estimates["ref_level"])
@@ -68,6 +73,12 @@ class SpinoramaEstimatesNV3Tests(unittest.TestCase):
         self.assertAlmostEqual(self.estimates["ref_3dB"], 56)  # Hz
         self.assertAlmostEqual(self.estimates["ref_6dB"], 51)  # Hz
         self.assertAlmostEqual(self.estimates["ref_band"], 1.4)  # deviation in dB
+
+    def test_directivity(self):
+        self.assertAlmostEqual(self.estimates["dir_horizontal_p"], 55)
+        self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -56)
+        self.assertAlmostEqual(self.estimates["dir_vertical_p"], 40)
+        self.assertAlmostEqual(self.estimates["dir_vertical_m"], -45)
 
 
 if __name__ == "__main__":

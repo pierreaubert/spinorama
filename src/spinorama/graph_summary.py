@@ -1,4 +1,4 @@
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import os
 import logging
 import altair as alt
@@ -21,12 +21,16 @@ def graph_summary(speaker_name, speaker_summary, params):
     # --------------------------
     pointsX = np.array(
         [
+            # first col
             0.0,
             0.0,
             0.05,
             0.0,
             0.0,
             0.0,
+            0.0,
+            0.0,
+            # second col
             0.5,
             0.5,
             0.55,
@@ -40,7 +44,27 @@ def graph_summary(speaker_name, speaker_summary, params):
     )
     pointsY = (
         np.array(
-            [1.9, 1.6, 1.4, 1.2, 1.0, 0.8, 1.9, 1.6, 1.4, 1.2, 1.0, 0.8, 0.6, 0.4, 0.2]
+            [
+                # first col
+                1.9,
+                1.6,
+                1.4,
+                1.2,
+                1.0,
+                0.8,
+                0.6,
+                0.4,
+                # second col
+                1.9,
+                1.6,
+                1.4,
+                1.2,
+                1.0,
+                0.8,
+                0.6,
+                0.4,
+                0.2,
+            ]
         )
         - 0.6
     )

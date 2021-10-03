@@ -1,4 +1,4 @@
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import logging
 import math
 import numpy as np
@@ -131,12 +131,12 @@ def compute_contour_smoothed(dfu, nscale=5):
     return (rx, ry, rzs)
 
 
-def compute_directivity_deg(af, am, az):
+def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     """ "compute +/- angle where directivity is most constant between 1kHz and 10kz"""
 
     # kHz1 = 110
     # kHz10 = 180
-    def linear_eval(x):
+    def linear_eval(x: float) -> float:
         xp1 = int(x)
         xp2 = xp1 + 1
         zp1 = az[xp1][110:180]
@@ -146,31 +146,32 @@ def compute_directivity_deg(af, am, az):
         # normˆ2 (z-(-6dB))
         return np.linalg.norm(zp + 6)
 
-    eval_count = 100
+    eval_count = 180
 
     space_p = np.linspace(int(len(am.T[0]) / 2), 1, eval_count)
     eval_p = [linear_eval(x) for x in space_p]
-    # 10% tolerance
-    min_p = np.min(eval_p) * 1.1
-    # all minimum in this 10% band from min
+    # 1% tolerance
+    tol = 0.1
+    min_p = np.min(eval_p) * (1.0 + tol)
+    # all minimum in this 1% band from min
     pos_g = [i for i, v in enumerate(eval_p) if v < min_p]
-    # be generous and take best one
+    # be generous and take best one (widest)
     if len(pos_g) > 1:
         pos_p = pos_g[-1]
-        # translate in deg
     else:
         pos_p = np.argmin(eval_p)
+    # translate in deg
     angle_p = pos_p * 180 / eval_count
 
     space_m = np.linspace(int(len(am.T[0]) / 2), len(am.T[0]) - 2, eval_count)
     eval_m = [linear_eval(x) for x in space_m]
-    min_m = np.min(eval_m) * 1.1
+    min_m = np.min(eval_m) * (1.0 + tol)
     pos_g = [i for i, v in enumerate(eval_m) if v < min_m]
     if len(pos_g) > 1:
         pos_m = pos_g[-1]
     else:
         pos_m = np.argmin(eval_m)
-
+    # translate in deg
     angle_m = -pos_m * 180 / eval_count
 
-    return angle_p, angle_m, (angle_p + angle_m) / 2
+    return float(angle_p), float(angle_m), float((angle_p - angle_m) / 2)

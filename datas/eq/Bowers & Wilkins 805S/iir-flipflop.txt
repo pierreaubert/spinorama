@@ -6,7 +6,7 @@ Dated: 07-10-2020 17:36:15
 Notes:Bowers & Wilkins 805S IIR
 
 Equaliser: Generic
-Bowers & Wilkins 805S 
+Bowers & Wilkins 805S
 Filter  1: ON  PK       Fc     415 Hz  Gain   0.4 dB  Q 5.000
 Filter  2: ON  PK       Fc     716 Hz  Gain  -1.4 dB  Q 2.668
 Filter  3: ON  PK       Fc     854 Hz  Gain  -1.4 dB  Q 5.000
@@ -27,4 +27,3 @@ Filter 17: ON  PK       Fc    3608 Hz  Gain  -4.8 dB  Q 2.691
 Filter 18: ON  PK       Fc   10315 Hz  Gain  -1.9 dB  Q 1.000
 Filter 19: ON  PK       Fc   10820 Hz  Gain   0.6 dB  Q 9.000
 Filter 20: ON  PK       Fc   15540 Hz  Gain  -0.4 dB  Q 4.000
-

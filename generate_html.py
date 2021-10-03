@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
@@ -36,6 +36,7 @@ from mako.template import Template
 from mako.lookup import TemplateLookup
 from docopt import docopt
 
+from datas.metadata import speakers_info as extradata
 from generate_common import get_custom_logger, args2level
 
 siteprod = "https://pierreaubert.github.io/spinorama"
@@ -47,6 +48,8 @@ def generate_speaker(mako, dataframe, meta, site):
     speaker_html = mako.get_template("speaker.html")
     graph_html = mako.get_template("graph.html")
     for speaker_name, origins in dataframe.items():
+        if extradata[speaker_name].get("skip", False):
+            continue
         for origin, measurements in origins.items():
             for key, dfs in measurements.items():
                 logger.debug("generate {0} {1} {2}".format(speaker_name, origin, key))
@@ -177,9 +180,9 @@ if __name__ == "__main__":
         if not os.path.isdir(speaker):
             continue
         # humm annoying
-        if speaker in ("score", "assets", "stats", "compare", "logos", "pictures"):
-            continue
         speaker_name = speaker.replace("./docs/", "")
+        if speaker_name in ("score", "assets", "stats", "compare", "logos", "pictures"):
+            continue
         df[speaker_name] = {}
         origins = glob(speaker + "/*")
         for origin in origins:
@@ -207,7 +210,7 @@ if __name__ == "__main__":
     logger.info("Write index.html")
     index_html = mako_templates.get_template("index.html")
 
-    def sort_meta(s):
+    def sort_meta_score(s):
         if (
             s is not None
             and "pref_rating" in s.keys()
@@ -216,19 +219,32 @@ if __name__ == "__main__":
             return s["pref_rating"]["pref_score"]
         return -1
 
-    keys_sorted = sorted(
+    def sort_meta_date(s):
+        if s is not None:
+            return s.get("review_published", "20170101")
+        return "20170101"
+
+    keys_sorted_date = sorted(
         meta,
-        key=lambda a: sort_meta(
+        key=lambda a: sort_meta_date(
             meta[a]["measurements"].get(meta[a].get("default_measurement"))
         ),
         reverse=True,
     )
-    meta_sorted = {k: meta[k] for k in keys_sorted}
+    keys_sorted_score = sorted(
+        meta,
+        key=lambda a: sort_meta_score(
+            meta[a]["measurements"].get(meta[a].get("default_measurement"))
+        ),
+        reverse=True,
+    )
+    meta_sorted_score = {k: meta[k] for k in keys_sorted_score}
+    meta_sorted_date = {k: meta[k] for k in keys_sorted_date}
 
     try:
         with open("docs/index.html", "w") as f:
             # by default sort by pref_rating decreasing
-            f.write(index_html.render(df=df, meta=meta_sorted, site=site))
+            f.write(index_html.render(df=df, meta=meta_sorted_date, site=site))
             f.close()
     except KeyError as ke:
         print("Generating index.htmlfailed with {}".format(ke))
@@ -241,7 +257,7 @@ if __name__ == "__main__":
     try:
         with open("docs/eqs.html", "w") as f:
             # by default sort by pref_rating decreasing
-            f.write(eqs_html.render(df=df, meta=meta, site=site))
+            f.write(eqs_html.render(df=df, meta=meta_sorted_date, site=site))
             f.close()
     except KeyError as ke:
         print("Generating eqs.htmlfailed with {}".format(ke))
@@ -254,7 +270,7 @@ if __name__ == "__main__":
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
             with open("./docs/" + item_name, "w") as f:
-                f.write(item_html.render(df=df, meta=meta_sorted, site=site))
+                f.write(item_html.render(df=df, meta=meta_sorted_score, site=site))
                 f.close()
     except KeyError as ke:
         print("Generating various html files failed with {}".format(ke))

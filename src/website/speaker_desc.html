@@ -32,8 +32,8 @@
           that cost around ${meta[speaker].get('price', '?')}CHF
 %     if meta[speaker].get('amount', '?') != '?':
           for a ${meta[speaker].get('amount')}
-%     endif      
-%     endif      
+%     endif
+%     endif
 .
     </p>
   </div>
@@ -66,6 +66,20 @@
 %   if estimates.get('ref_band', '?') !=  '?':
 <li>
       Frequency deviation is <b>${estimates.get('ref_band')}dB</b> over the same frequency range.
+</li>
+%   endif
+%   if estimates.get('dir_horizontal', '?') !=  '?':
+<li>
+      Horizontal directivity
+      is (<b>${estimates.get('dir_horizontal_m')}&deg;, ${estimates.get('dir_horizontal_p')}&deg;</b>)
+      between 1kHz and 10kHz. Angle computed for +/-6dB.
+</li>
+%   endif
+%   if estimates.get('dir_vertical', '?') !=  '?':
+<li>
+      Vertical directivity
+      is (<b>${estimates.get('dir_vertical_m')}&deg;, ${estimates.get('dir_vertical_p')}&deg;</b>)
+      between 1kHz and 10kHz. Angle computed for +/-6dB.
 </li>
 %   endif
 % endif
@@ -132,4 +146,3 @@ Links to other reviews: <a href="${review}">${key} review</a>
   </div>
 </article>
 % endif
-

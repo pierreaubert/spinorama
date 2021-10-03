@@ -1,4 +1,4 @@
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import altair as alt
 import logging
 import math
@@ -459,6 +459,7 @@ def graph_isoband(df, isoband_params):
     )
 
     dir_deg_p, dir_deg_m, _ = compute_directivity_deg(af, am, az)
+    # print('debug {} {}'.format(dir_deg_p, dir_deg_m))
     lines = graph_directivity_lines(freq_min, dir_deg_p, dir_deg_m)
 
     def transform_log(x, y):
@@ -496,7 +497,7 @@ def graph_isoband(df, isoband_params):
     )
     axis = graph_empty(freq_min, freq_max, -180, 180)
     return (
-        (isobands + lines + axis)
+        alt.layer(isobands, axis, lines)
         .resolve_scale(x="independent", y="independent")
         .properties(width=graph_width, height=graph_height)
     )
@@ -732,16 +733,16 @@ def graph_directivity_lines(freq_min, angle_p, angle_m, onlyZero=False):
     line_source = pd.DataFrame(
         {"Freq": [freq_min, 20000], "Angle": [0, 0], "dB": [0, 0]}
     )
-    line = (
+    line_0 = (
         alt.Chart(line_source)
         .mark_line()
         .encode(x=x_axis, y=y_axis, color=color, size=size)
     )
     if onlyZero:
-        return line
+        return line_0
 
     line_source_p = pd.DataFrame(
-        {"Freq": [freq_min, 20000], "Angle": [angle_p, angle_p], "dB": [-6, -6]}
+        {"Freq": [freq_min, 20000], "Angle": [angle_p, angle_p], "dB": [+6, +6]}
     )
     line_source_m = pd.DataFrame(
         {"Freq": [freq_min, 20000], "Angle": [angle_m, angle_m], "dB": [-6, -6]}
@@ -758,4 +759,4 @@ def graph_directivity_lines(freq_min, angle_p, angle_m, onlyZero=False):
         .encode(x=x_axis, y=y_axis, color=color, size=size)
     )
 
-    return line + line_p + line_m
+    return line_0 + line_p + line_m

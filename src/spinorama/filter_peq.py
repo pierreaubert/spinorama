@@ -1,11 +1,11 @@
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import logging
 import math
 import altair as alt
 import numpy as np
 import pandas as pd
 
-from .ltype import Vector, Peq
+from .ltype import Vector, Peq, FloatVector1D
 from .filter_iir import Biquad
 from .load_misc import graph_melt
 
@@ -21,7 +21,7 @@ def peq_equal(left: Peq, right: Peq) -> bool:
     return True
 
 
-def peq_build(freq: Vector, peq: Peq) -> Vector:
+def peq_build(freq: FloatVector1D, peq: Peq) -> Vector:
     current_filter = [0.0]
     if len(peq) > 0:
         for w, iir in peq:
@@ -29,7 +29,7 @@ def peq_build(freq: Vector, peq: Peq) -> Vector:
     return current_filter
 
 
-def peq_freq(spl: Vector, peq: Peq) -> Vector:
+def peq_freq(spl: FloatVector1D, peq: Peq) -> Vector:
     current_filter = [0.0]
     if len(peq) > 0:
         for w, iir in peq:

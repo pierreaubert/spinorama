@@ -1,5 +1,5 @@
-"Estimated In-Room Response"	
-"Estimated In-Room Response"	
+"Estimated In-Room Response"
+"Estimated In-Room Response"
 "Frequency [Hz]"	"Sound Pessure Level [dB]   /  [	0.13	V at 	1	m]"
 20.5078	48.8392
 21.2402	46.3064

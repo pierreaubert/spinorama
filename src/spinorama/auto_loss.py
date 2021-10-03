@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-2021 Pierre Aubert pierreaubert(at)yahoo(dot)fr
@@ -18,12 +18,16 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import math
 import numpy as np
 from scipy.stats import linregress
 
+from .load_misc import graph_melt
+from .compute_cea2034 import estimated_inroom_HV
 from spinorama.ltype import List, Vector, Peq
 from spinorama.filter_peq import peq_build
 from spinorama.filter_scores import scores_apply_filter
+from .filter_peq import peq_apply_measurements
 
 logger = logging.getLogger("spinorama")
 
@@ -42,7 +46,8 @@ def leastsquare_loss(
     freq: Vector, local_target: List[Vector], peq: Peq, iterations: int
 ) -> float:
     # sum of L2 norms if we have multiple targets
-    return float(np.sum([l2_loss(lt, freq, peq) for lt in local_target]))
+    l = [l2_loss(lt, freq, peq) for lt in local_target]
+    return np.linalg.norm(l)
 
 
 def flat_loss(
@@ -54,11 +59,21 @@ def flat_loss(
     )
     # want sound power to be flat but not necessary aligned
     # with a target
-    _, _, r_value, _, _ = linregress(np.log10(freq), local_target[-1])
-    sp = 1 - r_value ** 2
+    sp = 1.0
+    if len(local_target) > 1:
+        _, _, r_value, _, _ = linregress(np.log10(freq), local_target[-1])
+        sp = 1 - r_value ** 2
     # * or +
     # return weigths[0]*lw+weigths[1]*sp
     return lw * sp
+
+
+def flat_loss_exp(
+    freq: Vector, local_target: List[Vector], peq: Peq, iterations: int, weigths: Vector
+) -> float:
+    _, _, r_value, _, _ = linregress(np.log10(freq), local_target[0])
+    sp = 1 - r_value ** 2
+    return sp
 
 
 def swap_loss(
@@ -79,6 +94,18 @@ def alternate_loss(
     return l2_loss([local_target[1]], freq, peq)
 
 
+def flat_pir(freq, df_spin, peq):
+    splH = df_spin["SPL Horizontal_unmelted"]
+    splV = df_spin["SPL Vertical_unmelted"]
+    # apply EQ to all horizontal and vertical measurements
+    splH_filtered = peq_apply_measurements(splH, peq)
+    splV_filtered = peq_apply_measurements(splV, peq)
+    # compute pir
+    pir_filtered = graph_melt(estimated_inroom_HV(splH_filtered, splV_filtered))
+    _, _, r_value, _, _ = linregress(np.log10(pir_filtered.Freq), pir_filtered.dB)
+    return r_value ** 2
+
+
 def score_loss(df_spin, peq):
     """Compute the preference score for speaker
     local_target: unsued
@@ -89,7 +116,7 @@ def score_loss(df_spin, peq):
     return -score["pref_score"]
 
 
-def loss(freq, local_target, peq, iterations, optim_config):
+def loss(df_speaker, freq, local_target, peq, iterations, optim_config):
     which_loss = optim_config["loss"]
     if which_loss == "flat_loss":
         weigths = optim_config["loss_weigths"]
@@ -98,4 +125,13 @@ def loss(freq, local_target, peq, iterations, optim_config):
         return leastsquare_loss(freq, local_target, peq, iterations)
     if which_loss == "alternate_loss":
         return alternate_loss(freq, local_target, peq, iterations)
+    if which_loss == "flat_pir":
+        return flat_pir(freq, df_speaker, peq)
+    if which_loss == "score_loss":
+        return score_loss(df_speaker, peq)
+    if which_loss == "combine_loss":
+        weigths = optim_config["loss_weigths"]
+        return score_loss(df_speaker, peq) + flat_loss(
+            freq, local_target, peq, iterations, weigths
+        )
     logger.error("loss function is unkown")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
@@ -19,7 +19,7 @@
 """Usage:
 generate_graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
   [--force] [--type=<ext>] [--log-level=<level>]\
-  [--origin=<origin>]  [--speaker=<speaker>] [--version=<version>] [--brand=<brand>]\
+  [--origin=<origin>]  [--speaker=<speaker>] [--mversion=<mversion>] [--brand=<brand>]\
   [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] [--update-cache]
 
 Options:
@@ -32,7 +32,7 @@ Options:
   --origin=<origin>   filter by origin
   --brand=<brand>     filter by brand
   --speaker=<speaker> filter by speaker
-  --version=<version> filter by measurement
+  --mversion=<mversion> filter by measurement
   --dash-ip=<ip>      ip of dashboard to track execution, default to localhost/127.0.0.1
   --dash-port=<port>  port for the dashbboard, default to 8265
   --ray-local         if present, ray will run locally, it is usefull for debugging
@@ -48,7 +48,7 @@ from docopt import docopt
 try:
     import ray
 except ModuleNotFoundError:
-    import src.miniray as ray
+    import miniray as ray
 
 
 from generate_common import (
@@ -59,9 +59,9 @@ from generate_common import (
     cache_update,
 )
 import datas.metadata as metadata
-from src.spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
-from src.spinorama.speaker_print import print_graphs
-from src.spinorama.graph import graph_params_default
+from spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
+from spinorama.speaker_print import print_graphs
+from spinorama.graph import graph_params_default
 
 
 VERSION = 1.26
@@ -139,9 +139,9 @@ def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict]) -> dict:
             "measurements"
         ].items():
             # mversion looks like asr and asr_eq
-            if "version" in filters and not (
-                mversion == filters["version"]
-                or mversion != "{}_eq".format(filters["version"])
+            if "mversion" in filters and not (
+                mversion == filters["mversion"]
+                or mversion == "{}_eq".format(filters["mversion"])
             ):
                 logger.debug("skipping {}/{}".format(speaker, mversion))
                 continue
@@ -173,7 +173,7 @@ def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict]) -> dict:
     return ray_ids
 
 
-def compute(speakerlist, ray_ids: dict):
+def compute(speakerlist, filters, ray_ids: dict):
     """Compute a series of measurements"""
     df = {}
     done_ids = {}
@@ -218,6 +218,11 @@ def compute(speakerlist, ray_ids: dict):
             speaker_key = speaker  # .translate({ord(ch) : '_' for ch in '-.;/\' '})
             if speaker not in df.keys():
                 df[speaker_key] = {}
+            if speaker not in metadata.speakers_info:
+                logger.warning(
+                    "Speaker {} in SpeakerList but not in Metadata".format(speaker)
+                )
+                continue
             for m_version, measurement in metadata.speakers_info[speaker][
                 "measurements"
             ].items():
@@ -232,9 +237,15 @@ def compute(speakerlist, ray_ids: dict):
                     continue
 
                 if m_version not in ray_ids[speaker].keys():
-                    logger.error(
-                        "Speaker {} mversion {} not in keys".format(speaker, m_version)
-                    )
+                    if "mversion" in filters and (
+                        m_version == filters["mversion"]
+                        or m_version == "{}_eq".format(filters["mversion"])
+                    ):
+                        logger.error(
+                            "Speaker {} mversion {} not in keys".format(
+                                speaker, m_version
+                            )
+                        )
                     continue
 
                 current_id = ray_ids[speaker][m_version][0]
@@ -336,13 +347,13 @@ if __name__ == "__main__":
     custom_ray_init(args)
 
     filters = {}
-    for ifilter in ("speaker", "origin", "version"):
+    for ifilter in ("speaker", "origin", "mversion"):
         flag = "--{}".format(ifilter)
         if args[flag] is not None:
             filters[ifilter] = args[flag]
 
     ray_ids = queue_speakers(speakerlist, filters)
-    df_new = compute(speakerlist, ray_ids)
+    df_new = compute(speakerlist, filters, ray_ids)
 
     if len(filters.keys()) == 0:
         cache_save(df_new)

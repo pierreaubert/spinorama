@@ -1,65 +1,100 @@
-#!/bin/sh
+#!/bin/bash
 echo "Update starts"
-export PYTHONPATH=src:.
+export PYTHONPATH=src:src/website:src/spinorama:.
+
+IP="127.0.0.1"
+case $HOSTNAME in
+
+    "spin")
+        IP="192.168.1.36"
+        ;;
+    "horn")
+        IP="192.168.1.115"
+        ;;
+esac
+#echo $IP
 
 # check meta
-./check_meta.py
-if ! test $?; then
-    echo "Failed after checking metadata!"
+command=$(./check_meta.py)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO checking metadata ($status)";
     exit 1;
+else
+    echo "OK checking metadata"
 fi
+
 # update logos and speakers picture
 ./update_pictures.sh
 # generate all graphs if some are missing
 rm -fr /tmp/ray
-./generate_graphs.py
-if ! test $?; then
-    echo "Failed after generate graph!"
+command=$(./generate_graphs.py --dash-ip="$IP")
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate graph!"
     exit 1;
+else
+    echo "OK after generate graph!"
 fi
 # recompute metadata for all speakers
 rm -f docs/assets/metadata.json
-./generate_meta.py
-if ! test $?; then
-    echo "Failed after generate meta!"
+command=$(./generate_meta.py  --dash-ip="$IP")
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate meta!"
     exit 1;
+else
+    echo "OK after generate meta!"
 fi
 rm -f docs/compare/*.json
-./generate_compare.py
-if ! test $?; then
-    echo "Failed after generate compare!"
+command=$(./generate_compare.py)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate compare!"
     exit 1;
+else
+    echo "OK after generate compare!"
 fi
 # generate all jpg if some are missing
 ./update_pictures.sh
 # generate stats
 rm -f docs/stats/*.json
-./generate_stats.py
-if ! test $?; then
-    echo "Failed after generate statistics!"
+command=$(./generate_stats.py)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate statistics!"
     exit 1;
+else
+    echo "OK after generate statistics!"
 fi
 # generate website
 ./update_brands.sh
 ./update_reviewers.sh
-./generate_html.py
-if ! test $?; then
-    echo "Failed after generate HTML!"
+command=$(./generate_html.py)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate HTML!"
     exit 1;
+else
+    echo "OK after generate HTML!"
 fi
-./check_html.py
-if ! test $?; then
-    echo "Failed after checking HTML!"
+command=$(./check_html.sh)
+if [ $status -ne 0 ]; then
+    echo "KO after checking HTML!"
     exit 1;
+else
+    echo "OK after checking HTML!"
 fi
-# copy 
+# copy
 TARGET=$HOME/src/pierreaubert.github.io/spinorama
-./update_sync.sh
-if ! test $?; then
-    echo "Update $TARGET failed!"
+command=$(./update_sync.sh)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO Update $TARGET!"
     exit 1;
+else
+    echo "OK Update $TARGET!"
 fi
 # evaluate what's new and needs to be changed
 cd ${TARGET} && git status
 exit 0;
-

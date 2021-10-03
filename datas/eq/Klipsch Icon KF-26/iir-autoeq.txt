@@ -1,26 +1,15 @@
-EQ for Klipsch Icon KF-26 computed from ASR data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-05-09-07:15:33
+EQ for Klipsch Icon KF-26 computed from Misc data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:34:52
 
 Preamp: -0.2 dB
 
-Filter  1: ON PK Fc  3538 Hz Gain -3.57 dB Q 0.15
-Filter  2: ON PK Fc   618 Hz Gain -2.40 dB Q 6.10
-Filter  3: ON PK Fc   330 Hz Gain -1.65 dB Q 12.00
-Filter  4: ON PK Fc   419 Hz Gain +1.36 dB Q 4.53
-Filter  5: ON PK Fc  3536 Hz Gain -0.90 dB Q 8.46
-Filter  6: ON PK Fc  1165 Hz Gain +1.21 dB Q 2.39
-Filter  7: ON PK Fc   736 Hz Gain -0.79 dB Q 6.10
-Filter  8: ON PK Fc  7916 Hz Gain -0.89 dB Q 3.60
-Filter  9: ON PK Fc 12950 Hz Gain +1.31 dB Q 4.81
-Filter 10: ON PK Fc  1887 Hz Gain +0.88 dB Q 11.11
-Filter 11: ON PK Fc  2248 Hz Gain -0.50 dB Q 12.00
-Filter 12: ON PK Fc  2730 Hz Gain +0.55 dB Q 10.72
-Filter 13: ON PK Fc   946 Hz Gain +0.94 dB Q 12.00
-Filter 14: ON PK Fc  4464 Hz Gain -0.85 dB Q 12.00
-Filter 15: ON PK Fc  6423 Hz Gain -0.26 dB Q 10.08
-Filter 16: ON PK Fc   537 Hz Gain -0.88 dB Q 11.34
-Filter 17: ON PK Fc  1094 Hz Gain -0.34 dB Q 12.00
-Filter 18: ON PK Fc   463 Hz Gain +0.54 dB Q 12.00
-Filter 19: ON PK Fc  3983 Hz Gain +0.61 dB Q 12.00
-Filter 20: ON PK Fc   300 Hz Gain +0.57 dB Q 12.00
+Filter  1: ON PK Fc  2817 Hz Gain -2.38 dB Q 0.17
+Filter  2: ON PK Fc  7599 Hz Gain -1.15 dB Q 2.37
+Filter  3: ON PK Fc   607 Hz Gain -2.37 dB Q 5.27
+Filter  4: ON PK Fc  3683 Hz Gain -0.78 dB Q 2.14
+Filter  5: ON PK Fc   331 Hz Gain -0.90 dB Q 6.00
+Filter  6: ON PK Fc   708 Hz Gain -0.50 dB Q 6.00
+Filter  7: ON PK Fc  2355 Hz Gain -0.50 dB Q 6.00
+Filter  8: ON PK Fc  4532 Hz Gain -0.50 dB Q 6.00
+Filter  9: ON PK Fc  6345 Hz Gain -0.50 dB Q 6.00

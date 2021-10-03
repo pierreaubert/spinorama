@@ -1,4 +1,4 @@
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import logging
 import numpy as np
 import pandas as pd
@@ -14,13 +14,13 @@ from .compute_cea2034 import (
     estimated_inroom_HV,
 )
 
-from .load_misc import graph_melt
+from .load_misc import graph_melt, sort_angles
 from .compute_normalize import unify_freq
 
 logger = logging.getLogger("spinorama")
 
 
-def load_normalize(df, ref_mean=None):
+def load_normalize(df: pd.DataFrame, ref_mean=None) -> pd.DataFrame:
     # normalize all melted graphs
     dfc = {}
     mean = ref_mean
@@ -125,7 +125,7 @@ def filter_graphs(speaker_name, h_spl, v_spl):
     return dfs
 
 
-def parse_graph_freq_check(speaker_name, df_spin):
+def parse_graph_freq_check(speaker_name: str, df_spin: pd.DataFrame) -> bool:
     status = True
     spin_cols = set(df_spin.Measurements.values)
     mandatory_cols = ("Listening Window", "On Axis", "Early Reflections", "Sound Power")
@@ -155,12 +155,14 @@ def parse_graph_freq_check(speaker_name, df_spin):
     return status
 
 
-def spin_compute_di_eir(speaker_name, title, spin_uneven):
+def spin_compute_di_eir(
+    speaker_name: str, title: str, spin_uneven: pd.DataFrame
+) -> dict[str, pd.DataFrame]:
     dfs = {}
     # some checks
     if title != "CEA2034":
         logger.debug("title is {0}".format(title))
-        return None
+        return {}
 
     if not parse_graph_freq_check(speaker_name, spin_uneven):
         dfs[title] = spin_uneven
@@ -171,7 +173,7 @@ def spin_compute_di_eir(speaker_name, title, spin_uneven):
 
     if spin is None:
         logger.error("spin is None")
-        return None
+        return {}
 
     # compute EIR
     on = spin.loc[spin["Measurements"] == "On Axis"].reset_index(drop=True)
@@ -266,3 +268,33 @@ def spin_compute_di_eir(speaker_name, title, spin_uneven):
         logger.error("On Axis has NaN values")
 
     return dfs
+
+
+def symmetrise_measurement(spl: pd.DataFrame) -> pd.DataFrame:
+    if spl.empty:
+        return pd.DataFrame()
+
+    # look for min and max
+    cols = spl.columns
+    min_angle = 180
+    max_angle = -180
+    for col in cols:
+        if col != "Freq":
+            angle = None
+            if col == "On Axis":
+                angle = 0
+            else:
+                angle = int(col[:-1])
+            min_angle = min(min_angle, angle)
+            max_angle = max(max_angle, angle)
+    logger.debug("min {} max {}".format(min_angle, max_angle))
+
+    # extend 0-180 to -170 0 180
+    # extend 0-90  to -90 to 90
+    new_spl = spl.copy()
+    for col in cols:
+        if col not in ("Freq", "On Axis", "180°") and col[0] != "-":
+            mangle = "-{}".format(col)
+            if mangle not in spl.columns:
+                new_spl[mangle] = spl[col]
+    return sort_angles(new_spl)

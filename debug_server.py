@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 # https://gist.github.com/acdha/925e9ffc3d74ad59c3ea
 #
 """
@@ -18,7 +18,7 @@ from docopt import docopt
 
 
 class CORSRequestHandler(SimpleHTTPRequestHandler):
-    """ Generate CORS headers """
+    """Generate CORS headers"""
 
     def end_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")

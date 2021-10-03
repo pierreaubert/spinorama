@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
@@ -26,6 +26,7 @@ import warnings
 import flammkuchen as fl
 import tables
 
+MINIRAY = None
 try:
     import ray
 
@@ -37,7 +38,7 @@ except ModuleNotFoundError:
 
 
 def get_custom_logger(duplicate=False):
-    """"define properties of our logger"""
+    """Define properties of our logger"""
     custom = logging.getLogger("spinorama")
     custom_file_handler = logging.FileHandler("debug_optim.log")
     formatter = logging.Formatter(
@@ -53,7 +54,7 @@ def get_custom_logger(duplicate=False):
 
 
 def args2level(args):
-    """"transform an argument into a logger level"""
+    """Transform an argument into a logger level"""
     level = logging.WARNING
     if args["--log-level"] is not None:
         check_level = args["--log-level"]
@@ -87,7 +88,14 @@ def custom_ray_init(args):
 
     if "--dash-port" in args and args["--dash-port"] is not None:
         check_port = args["--dash-port"]
-        dashboard_port = check_port
+        try:
+            dashboard_port = int(check_port)
+            if dashboard_port < 0 or dashboard_port > 2 ** 16 - 1:
+                print("--dash-port={} is out of bounds".format(check_port))
+                sys.exit(1)
+        except ValueError:
+            print("--dash-port={} is not an integer".format(check_port))
+            sys.exit(1)
 
     # this start ray in single process mode
     ray_local_mode = False

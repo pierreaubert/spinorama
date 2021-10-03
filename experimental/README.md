@@ -86,5 +86,3 @@ Experimental means that they may not work (usually they do have bugs, they have 
 - **spinorama**: old code to compute and display spinorama graphs
 
 - **weights**: formula to compute the weigths from the CEA2034 standars
-
-

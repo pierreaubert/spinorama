@@ -7,7 +7,6 @@
 
 <%include file="nav_menu.html"/>
 <%include file="nav_search.html"/>
-<%include file="banner.html"/>
 
 <%namespace name="util" module="utils" import="*"/>
 
@@ -16,7 +15,7 @@
   <div class="searchresults">
     <div class="columns is-multiline is-1">
       % for speaker_name in meta:
-      <div class="column is-one-quarter" id="${speaker_name | space2dash}">
+      <div class="column is-2" id="${speaker_name | space2dash}">
 	<div class="card">
 	  <div class="card-image">
 	    <figure class="image is-3x4">
@@ -79,9 +78,21 @@
                 elif '-vertical' in v2:
                     v2 = v2[:-9]
               %>
-                ${v2}
+              %  if v2 in "Speakerdata2034":
+                    Speaker Data 2034
+              %  elif v2 in "Soundstageultra":
+                    Sound Stage Ultra
+              %  else:
+                    ${v2}
+              %  endif
               % else:
-                ${m["origin"]}
+              %  if m["origin"] in "ErinsAudioCorner":
+                    Erins Audio Corner
+              %  elif m["origin"][0:8] in "Vendors-":
+                    Vendors ${m["origin"][8:]}
+              %  else:
+                    ${m["origin"]}
+              %  endif
               % endif
               % if "horizontal" in v:
               (Horizontal orientation)

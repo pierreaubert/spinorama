@@ -2,7 +2,7 @@
 
 document.querySelectorAll(" #nav li" ).forEach(function (navEl) {
 	navEl.onclick = function () {
-		toggleCompare(this.id, this.dataset.target); 
+		toggleCompare(this.id, this.dataset.target);
 	};
 });
 

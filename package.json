@@ -1,14 +1,21 @@
 {
   "dependencies": {
     "altair": "^1.0.0",
-    "canvas": "^2.7.0",
+    "canvas": "^2.8.0",
+    "handlebars": "^4.7.7",
     "html-validator-cli": "^7.0.1",
     "npm": "^7.5.4",
-    "pyright": "^1.1.134",
+    "parcel-bundler": "^1.12.5",
+    "pyright": "^1.1.166",
     "standard": "^16.0.3",
-    "vega": "^5.17.3",
+    "typescript": "^4.3.2",
+    "vega": "^5.17.1",
     "vega-canvas": "^1.2.6",
     "vega-cli": "^5.20.2",
     "vega-lite": "^4.17.0"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.1.45",
+    "@swc/core": "^1.2.58"
   }
 }

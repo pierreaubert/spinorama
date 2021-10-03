@@ -1,4 +1,4 @@
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import os
 import logging
 import sys
@@ -77,7 +77,7 @@ def parse_graphs_speaker(
     measurement_path = "{}".format(speaker_path)
     if mformat == "klippel":
         df = parse_graphs_speaker_klippel(
-            measurement_path, speaker_brand, speaker_name, mversion
+            measurement_path, speaker_brand, speaker_name, mversion, msymmetry
         )
     elif mformat == "webplotdigitizer":
         df = parse_graphs_speaker_webplotdigitizer(

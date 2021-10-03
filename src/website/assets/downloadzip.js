@@ -16,6 +16,6 @@ function downloadZip(url) {
         }
         return "{}";
     };
-    
+
     return download(url);
 }

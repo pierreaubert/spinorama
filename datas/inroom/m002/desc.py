@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 testcase = {
     "config": "2.0",
     "speakers": ["Genelec 8361A+W371 GLM ON", "Genelec 8361A+W371 GLM ON"],

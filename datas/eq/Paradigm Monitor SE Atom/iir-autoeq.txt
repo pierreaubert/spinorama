@@ -1,27 +1,16 @@
 EQ for Paradigm Monitor SE Atom computed from ASR data
-Preference Score 3.9 with EQ 5.5
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.6
-Dated: 2021-02-28-11:52:40
+Preference Score 3.9 with EQ 5.0
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:35:05
 
-Preamp: -0.4 dB
+Preamp: -0.2 dB
 
-Filter  1: ON PK Fc   857 Hz Gain -3.28 dB Q 1.85
-Filter  2: ON PK Fc  9658 Hz Gain -4.88 dB Q 0.52
-Filter  3: ON PK Fc  3377 Hz Gain +1.64 dB Q 2.24
-Filter  4: ON PK Fc   360 Hz Gain -0.46 dB Q 12.00
-Filter  5: ON PK Fc 10262 Hz Gain +1.14 dB Q 6.71
-Filter  6: ON PK Fc  1553 Hz Gain +1.47 dB Q 12.00
-Filter  7: ON PK Fc  1171 Hz Gain +1.49 dB Q 12.00
-Filter  8: ON PK Fc   717 Hz Gain +0.61 dB Q 12.00
-Filter  9: ON PK Fc  9057 Hz Gain +0.47 dB Q 12.00
-Filter 10: ON PK Fc  1750 Hz Gain -1.44 dB Q 11.03
-Filter 11: ON PK Fc 11203 Hz Gain +0.36 dB Q 12.00
-Filter 12: ON PK Fc   411 Hz Gain +0.35 dB Q 3.55
-Filter 13: ON PK Fc  1585 Hz Gain +0.50 dB Q 12.00
-Filter 14: ON PK Fc  2066 Hz Gain -1.22 dB Q 12.00
-Filter 15: ON PK Fc  2277 Hz Gain +1.03 dB Q 12.00
-Filter 16: ON PK Fc  2720 Hz Gain +0.60 dB Q 12.00
-Filter 17: ON PK Fc  1249 Hz Gain -0.26 dB Q 1.12
-Filter 18: ON PK Fc   318 Hz Gain +0.29 dB Q 12.00
-Filter 19: ON PK Fc  2492 Hz Gain -0.77 dB Q 12.00
-Filter 20: ON PK Fc  1865 Hz Gain +0.30 dB Q 4.87
+Filter  1: ON PK Fc  4504 Hz Gain -2.62 dB Q 0.05
+Filter  2: ON PK Fc   158 Hz Gain -1.24 dB Q 2.96
+Filter  3: ON PK Fc  2213 Hz Gain +2.29 dB Q 1.15
+Filter  4: ON PK Fc  4504 Hz Gain -0.76 dB Q 0.13
+Filter  5: ON PK Fc  3289 Hz Gain +1.80 dB Q 2.50
+Filter  6: ON PK Fc   444 Hz Gain +1.49 dB Q 2.05
+Filter  7: ON PK Fc   835 Hz Gain -1.30 dB Q 6.00
+Filter  8: ON PK Fc  4826 Hz Gain -0.50 dB Q 0.14
+Filter  9: ON PK Fc  1382 Hz Gain +1.88 dB Q 1.89

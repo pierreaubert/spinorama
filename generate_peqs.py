@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#                                                  -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-2021 Pierre Aubert pierreaubert(at)yahoo(dot)fr
@@ -24,11 +24,15 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--min-dB=<mindB>] [--max-dB=<maxdB>] \
  [--min-freq=<minFreq>] [--max-freq=<maxFreq>] \
  [--max-iter=<maxiter>] [--use-all-biquad] [--curve-peak-only] \
+ [--target-min-freq=<tminf>] [--target-max-freq=<tmaxf>] \
  [--slope-on-axis=<s_on>] \
  [--slope-listening-window=<s_lw>] \
  [--slope-early-reflections=<s_er>] \
  [--slope-sound-power=<s_sp>] \
- [--loss=<pick>] [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local]
+ [--slope-estimated-inroom=<s_pir>] \
+ [--loss=<pick>] \
+ [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
+ [--second-optimiser=<sopt>] \
 
 
 Options:
@@ -54,10 +58,14 @@ Options:
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
   --dash-port=<dash-port>  Port for the ray dashbboard
   --ray-local              If present, ray will run locally, it is usefull for debugging
+  --target-min-freq=<tminf> targets will be flat up to min freq
+  --target-max-freq=<tmaxf> targets will not be important after max freq
   --slope-on-axis=<s_on> Slope of the ideal target for On Axis, default is 0, as in flat anechoic
-  --slope-listening-window=<s_lw> Slope of listening window, default is -2dB
+  --slope-listening-window=<s_lw> Slope of listening window, default is -0.5dB
   --slope-early-reflections=<s_er> Slope of early reflections, default is -5dB
   --slope-sound-power=<s_sp> Slope of sound power, default is -8dB
+  --slope-estimated-inroom=<s_pir> Slope of estimated in-room response, default is -8dB
+  --second-optimiser=<sopt>
 """
 from datetime import datetime
 import os
@@ -86,11 +94,47 @@ from spinorama.filter_scores import (
     scores_print,
 )
 from spinorama.auto_target import get_freq, get_target
-from spinorama.auto_optim import optim_greedy
+from spinorama.auto_optim import optim_multi_steps
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
-VERSION = 0.8
+VERSION = "0.13"
+
+
+def optim_find_peq(
+    current_speaker_name,
+    df_speaker,
+    optim_config,
+    use_score,
+):
+
+    # shortcut
+    curves = optim_config["curve_names"]
+
+    # get freq and targets
+    data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
+    if data_frame is None or freq is None or auto_target is None:
+        logger.error("Cannot compute freq for {}".format(current_speaker_name))
+        return None, None, None
+
+    auto_target_interp = []
+    for curve in curves:
+        auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
+    auto_results, auto_peq = optim_multi_steps(
+        current_speaker_name,
+        df_speaker,
+        freq,
+        auto_target,
+        auto_target_interp,
+        optim_config,
+        use_score,
+    )
+
+    auto_score = None
+    if use_score:
+        _, _, auto_score = scores_apply_filter(df_speaker, auto_peq)
+
+    return auto_score, auto_results, auto_peq
 
 
 @ray.remote
@@ -103,7 +147,7 @@ def optim_save_peq(
     be_verbose,
     is_smoke_test,
 ):
-    """Compute and then save PEQ for this speaker """
+    """Compute and then save PEQ for this speaker"""
     eq_dir = "datas/eq/{}".format(current_speaker_name)
     pathlib.Path(eq_dir).mkdir(parents=True, exist_ok=True)
     eq_name = "{}/iir-autoeq.txt".format(eq_dir)
@@ -139,34 +183,21 @@ def optim_save_peq(
         # set EQ min to 500
         optim_config["freq_reg_min"] = max(500, optim_config["freq_reg_min"])
 
-    # compute pref score from speaker if possible
+    curves = optim_config["curve_names"]
+
     score = None
     if use_score:
         _, _, score = scores_apply_filter(df_speaker, [])
     else:
         score = -1.0
 
-    # compute an optimal PEQ
-    curves = optim_config["curve_names"]
-    data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
-    if data_frame is None or freq is None or auto_target is None:
-        logger.error("Cannot compute freq for {}".format(current_speaker_name))
-        return None, None, None
-    auto_target_interp = []
-    for curve in curves:
-        auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
-    auto_results, auto_peq = optim_greedy(
-        current_speaker_name,
-        df_speaker,
-        freq,
-        auto_target,
-        auto_target_interp,
-        optim_config,
-        use_score,
+    # compute pref score from speaker if possible
+    auto_score, auto_results, auto_peq = optim_find_peq(
+        current_speaker_name, df_speaker, optim_config, use_score
     )
 
     # do we have a manual peq?
-    score_manual = {}
+    manual_score = {}
     manual_peq = []
     manual_target = None
     manual_target_interp = None
@@ -178,7 +209,7 @@ def optim_save_peq(
             and os.readlink(manual_peq_name) != "iir-autoeq.txt"
         ):
             manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config["fs"])
-            manual_spin, manual_pir, score_manual = scores_apply_filter(
+            manual_spin, manual_pir, manual_score = scores_apply_filter(
                 df_speaker, manual_peq
             )
             if df_speaker_eq is not None:
@@ -192,27 +223,33 @@ def optim_save_peq(
                     )
 
     # compute new score with this PEQ
-    spin_auto = None
-    pir_auto = None
-    score_auto = None
+    auto_spin = None
+    auto_pir = None
+    auto_score = None
     scores = []
     if use_score:
-        spin_auto, pir_auto, score_auto = scores_apply_filter(df_speaker, auto_peq)
+        auto_spin, auto_pir, auto_score = scores_apply_filter(df_speaker, auto_peq)
         # store the 3 different scores
-        scores = [score["pref_score"], score["pref_score"], score_auto["pref_score"]]
+        scores = [
+            score.get("pref_score", -1),
+            manual_score.get("pref_score", -1),
+            auto_score["pref_score"],
+        ]
         if be_verbose:
-            scores[1] = score_manual.get("pref_score", -5)
+            scores[1] = manual_score.get("pref_score", -5)
     else:
-        spin_auto, pir_auto = noscore_apply_filter(df_speaker, auto_peq)
+        auto_spin, auto_pir = noscore_apply_filter(df_speaker, auto_peq)
 
     # print peq
     comments = [
-        "EQ for {:s} computed from {} data".format(current_speaker_name, current_speaker_origin),
+        "EQ for {:s} computed from {} data".format(
+            current_speaker_name, current_speaker_origin
+        ),
     ]
     if use_score:
         comments.append(
             "Preference Score {:2.1f} with EQ {:2.1f}".format(
-                score["pref_score"], score_auto["pref_score"]
+                score["pref_score"], auto_score["pref_score"]
             )
         )
 
@@ -239,10 +276,20 @@ def optim_save_peq(
 
     # print results
     if len(auto_peq) > 0:
+
+        # TODO: optim_config by best_config
+        data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
+
+        auto_target_interp = []
+        for curve in curves:
+            auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
+        # END TODO
+
         graphs = None
         if len(manual_peq) > 0 and not peq_equal(manual_peq, auto_peq):
             graphs = auto_graph_results(
                 current_speaker_name,
+                current_speaker_origin,
                 freq,
                 manual_peq,
                 auto_peq,
@@ -252,15 +299,16 @@ def optim_save_peq(
                 manual_target_interp,
                 df_speaker["CEA2034"],
                 manual_spin,
-                spin_auto,
+                auto_spin,
                 df_speaker["Estimated In-Room Response"],
                 manual_pir,
-                pir_auto,
+                auto_pir,
                 optim_config,
             )
         else:
             graphs = auto_graph_results(
                 current_speaker_name,
+                current_speaker_origin,
                 freq,
                 None,
                 auto_peq,
@@ -270,19 +318,19 @@ def optim_save_peq(
                 None,
                 df_speaker["CEA2034"],
                 None,
-                spin_auto,
+                auto_spin,
                 df_speaker["Estimated In-Room Response"],
                 None,
-                pir_auto,
+                auto_pir,
                 optim_config,
             )
 
-        for i, graph in enumerate(graphs):
+        for i, (name, graph) in enumerate(graphs):
             origin = current_speaker_origin
             if "Vendors-" in origin:
                 origin = origin[8:]
-            graph_filename = "docs/{}/{}/filters{}".format(
-                current_speaker_name, origin, i
+            graph_filename = "docs/{}/{}/filters_{}".format(
+                current_speaker_name, origin, name
             )
             if is_smoke_test:
                 graph_filename += "_smoketest"
@@ -321,24 +369,24 @@ def optim_save_peq(
         )
         if score is not None:
             if (
-                score_manual is not None
-                and score_auto is not None
-                and "nbd_on_axis" in score_manual
+                manual_score is not None
+                and auto_score is not None
+                and "nbd_on_axis" in manual_score
             ):
-                logger.info(scores_print2(score, score_manual, score_auto))
-            elif score_auto is not None and "nbd_on_axis" in score_auto:
-                logger.info(scores_print(score, score_auto))
+                logger.info(scores_print2(score, manual_score, auto_score))
+            elif auto_score is not None and "nbd_on_axis" in auto_score:
+                logger.info(scores_print(score, auto_score))
         logger.info(
             "----------------------------------------------------------------------"
         )
         if use_score:
-            if "pref_score" in score_manual:
+            if "pref_score" in manual_score:
                 print(
                     "{:+2.2f} {:+2.2f} {:+2.2f} {:+2.2f} {:s}".format(
                         score["pref_score"],
-                        score_manual["pref_score"],
-                        score_auto["pref_score"],
-                        score_manual["pref_score"] - score_auto["pref_score"],
+                        manual_score["pref_score"],
+                        auto_score["pref_score"],
+                        manual_score["pref_score"] - auto_score["pref_score"],
                         current_speaker_name,
                     )
                 )
@@ -346,7 +394,7 @@ def optim_save_peq(
                 print(
                     "{:+2.2f} {:+2.2f} {:s}".format(
                         score["pref_score"],
-                        score_auto["pref_score"],
+                        auto_score["pref_score"],
                         current_speaker_name,
                     )
                 )
@@ -449,10 +497,11 @@ def compute_peqs(ray_ids):
     v_score = []
     for speaker, results in aggregated_results.items():
         for current_result in results:
-            v_sn.append("{}".format(speaker))
-            v_iter.append(current_result[0])
-            v_loss.append(current_result[1])
-            v_score.append(current_result[2])
+            if current_result is not None and len(current_result) > 2:
+                v_sn.append("{}".format(speaker))
+                v_iter.append(current_result[0])
+                v_loss.append(current_result[1])
+                v_score.append(current_result[2])
     df_results = pd.DataFrame(
         {"speaker_name": v_sn, "iter": v_iter, "loss": v_loss, "score": v_score}
     )
@@ -464,19 +513,20 @@ def compute_peqs(ray_ids):
         s_manual = []
         s_auto = []
         for speaker, scores in aggregated_scores.items():
-            s_sn.append("{}".format(speaker))
-            s_ref.append(scores[0])
-            s_manual.append(scores[1])
-            s_auto.append(scores[2])
-            df_scores = pd.DataFrame(
-                {
-                    "speaker_name": s_sn,
-                    "reference": s_ref,
-                    "manual": s_manual,
-                    "auto": s_auto,
-                }
-            )
-            df_scores.to_csv("results_scores.csv", index=False)
+            if scores is not None and len(scores) > 2:
+                s_sn.append("{}".format(speaker))
+                s_ref.append(scores[0])
+                s_manual.append(scores[1])
+                s_auto.append(scores[2])
+        df_scores = pd.DataFrame(
+            {
+                "speaker_name": s_sn,
+                "reference": s_ref,
+                "manual": s_manual,
+                "auto": s_auto,
+            }
+        )
+        df_scores.to_csv("results_scores.csv", index=False)
 
     return 0
 
@@ -498,20 +548,24 @@ if __name__ == "__main__":
     # read optimisation parameter
     current_optim_config = {
         # name of the loss function
-        "loss": "flat_loss",
+        # "loss": "flat_loss",
+        # "loss": "score_loss",
+        # "loss": "combine_loss",
+        "loss": "leastsquare_loss",
         # if you have multiple loss functions, define the weigth for each
-        "loss_weigths": [1.0, 1.0],
+        "loss_weigths": [100.0, 1.0],
         # do you optimise only peaks or both peaks and valleys?
         "plus_and_minus": True,
         # do you optimise for all kind of biquad or do you want only Peaks?
         "full_biquad_optim": False,
         # lookup around a value is [value*elastic, value/elastic]
-        "elastic": 0.8,
+        "elastic": 0.2,
+        # "elastic": 0.8,
         # cut frequency
         "fs": 48000,
         # optimise the curve above the Schroeder frequency (here default is
         # 300hz)
-        "freq_reg_min": 300,
+        "freq_reg_min": 100,
         # do not try to optimise above:
         "freq_reg_max": 16000,
         # if an algorithm use a mean of frequency to find a reference level
@@ -524,16 +578,28 @@ if __name__ == "__main__":
         # it will optimise for having a Listening Window as close as possible
         # the target and having a Sound Power as flat as possible (without a
         # target)
-        # 'curve_names': ['Listening Window', 'Sound Power'],
-        "curve_names": ["Listening Window", "Early Reflections"],
+        # "curve_names": ["Listening Window"],
+        # 'curve_names': ['Early Reflections'],
+        # 'curve_names': ['Listening Window', 'Early Reflections'],
+        # "curve_names": ["On Axis", "Listening Window", "Early Reflections"],
+        # "curve_names": ["Listening Window", "Estimated In-Room Response"],
+        # "curve_names": ["Listening Window", "Early Reflections", "Sound Power"],
         # 'curve_names': ['Listening Window', 'On Axis', 'Early Reflections'],
         # 'curve_names': ['On Axis', 'Early Reflections'],
         # 'curve_names': ['Early Reflections', 'Sound Power'],
+        # "curve_names": ["Estimated In-Room Response", "Listening Window"],
+        "curve_names": ["Estimated In-Room Response"],
+        # start and end freq for targets
+        "target_min_freq": 100,
+        "target_max_freq": 16000,
         # slope of the target (in dB) for each curve
         "slope_on_axis": 0,
-        "slope_listening_window": -2,
+        "slope_listening_window": -0.5,
         "slope_early_reflections": -5,
         "slope_sound_power": -8,
+        "slope_estimated_inroom": -8,
+        # do we want to smooth the targets?
+        "smooth_target": False,
     }
 
     # define other parameters for the optimisation algorithms
@@ -547,19 +613,19 @@ if __name__ == "__main__":
         # max iterations (if algorithm is iterative)
         current_optim_config["maxiter"] = 20
     else:
-        current_optim_config["MAX_NUMBER_PEQ"] = 20
-        current_optim_config["MAX_STEPS_FREQ"] = 5
-        current_optim_config["MAX_STEPS_DBGAIN"] = 5
-        current_optim_config["MAX_STEPS_Q"] = 5
+        current_optim_config["MAX_NUMBER_PEQ"] = 9
+        current_optim_config["MAX_STEPS_FREQ"] = 6
+        current_optim_config["MAX_STEPS_DBGAIN"] = 6
+        current_optim_config["MAX_STEPS_Q"] = 6
         # max iterations (if algorithm is iterative)
         current_optim_config["maxiter"] = 500
 
     # MIN or MAX_Q or MIN or MAX_DBGAIN control the shape of the biquad which
     # are admissible.
-    current_optim_config["MIN_DBGAIN"] = 0.2
-    current_optim_config["MAX_DBGAIN"] = 12
-    current_optim_config["MIN_Q"] = 0.1
-    current_optim_config["MAX_Q"] = 12
+    current_optim_config["MIN_DBGAIN"] = 0.5
+    current_optim_config["MAX_DBGAIN"] = 8
+    current_optim_config["MIN_Q"] = 0.05
+    current_optim_config["MAX_Q"] = 6
 
     # do we override optim default?
     if args["--max-peq"] is not None:
@@ -593,11 +659,19 @@ if __name__ == "__main__":
     if args["--curve-peak-only"] is not None and args["--curve-peak-only"] is True:
         current_optim_config["plus_and_minus"] = False
 
+    if args["--target-min-freq"] is not None:
+        target_min_freq = int(args["--target-min-freq"])
+        current_optim_config["target_min_freq"] = target_min_freq
+    if args["--target-max-freq"] is not None:
+        target_max_freq = int(args["--target-max-freq"])
+        current_optim_config["target_max_freq"] = target_max_freq
+
     for slope_name, slope_key in (
         ("--slope-on-axis", "slope_on_axis"),
         ("--slope-listening-window", "slope_listening_window"),
         ("--slope-early-reflections", "slope_early_reflections"),
         ("--slope-sound-power", "slope_sound_power"),
+        ("--slope-estimated-inroom", "slope_estimated_inroom"),
     ):
         if args[slope_name] is not None:
             try:
@@ -606,6 +680,11 @@ if __name__ == "__main__":
             except ValueError:
                 print("{} is not a float".format(args[slope_name]))
                 sys.exit(1)
+
+    # do we run a second optimiser?
+    current_optim_config["second_optimiser"] = False
+    if args["--second-optimiser"] is not None:
+        current_optim_config["second_optimiser"] = True
 
     # name of speaker
     speaker_name = None

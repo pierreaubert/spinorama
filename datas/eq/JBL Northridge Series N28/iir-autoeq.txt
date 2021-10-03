@@ -1,26 +1,15 @@
-EQ for JBL Northridge Series N28 computed from ASR data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.8
-Dated: 2021-05-10-11:04:10
+EQ for JBL Northridge Series N28 computed from Vendors-JBL data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:34:43
 
-Preamp: -3.8 dB
+Preamp: -1.2 dB
 
-Filter  1: ON PK Fc  1636 Hz Gain +2.12 dB Q 1.18
-Filter  2: ON PK Fc  4861 Hz Gain +3.15 dB Q 4.15
-Filter  3: ON PK Fc  2886 Hz Gain -5.39 dB Q 12.00
-Filter  4: ON PK Fc 13018 Hz Gain +3.72 dB Q 2.66
-Filter  5: ON PK Fc  7923 Hz Gain -2.59 dB Q 4.97
-Filter  6: ON PK Fc  4125 Hz Gain +2.91 dB Q 12.00
-Filter  7: ON PK Fc  3554 Hz Gain -2.52 dB Q 12.00
-Filter  8: ON PK Fc  1089 Hz Gain +1.69 dB Q 8.59
-Filter  9: ON PK Fc   606 Hz Gain -1.45 dB Q 3.01
-Filter 10: ON PK Fc  3191 Hz Gain +1.65 dB Q 12.00
-Filter 11: ON PK Fc  4658 Hz Gain -1.23 dB Q 12.00
-Filter 12: ON PK Fc  1539 Hz Gain -1.75 dB Q 8.40
-Filter 13: ON PK Fc 11433 Hz Gain +0.88 dB Q 5.61
-Filter 14: ON PK Fc  2164 Hz Gain +1.27 dB Q 6.03
-Filter 15: ON PK Fc  2969 Hz Gain -0.78 dB Q 12.00
-Filter 16: ON PK Fc 12843 Hz Gain -0.73 dB Q 12.00
-Filter 17: ON PK Fc   349 Hz Gain +0.48 dB Q 6.89
-Filter 18: ON PK Fc   845 Hz Gain -0.66 dB Q 12.00
-Filter 19: ON PK Fc   964 Hz Gain +0.85 dB Q 10.56
-Filter 20: ON PK Fc   711 Hz Gain +0.41 dB Q 12.00
+Filter  1: ON PK Fc  7966 Hz Gain -3.17 dB Q 5.38
+Filter  2: ON PK Fc   587 Hz Gain -1.96 dB Q 2.38
+Filter  3: ON PK Fc  2916 Hz Gain -2.33 dB Q 6.00
+Filter  4: ON PK Fc 12167 Hz Gain +1.00 dB Q 0.07
+Filter  5: ON PK Fc  7228 Hz Gain -1.67 dB Q 3.26
+Filter  6: ON PK Fc  2921 Hz Gain -1.52 dB Q 6.00
+Filter  7: ON PK Fc  9090 Hz Gain -1.10 dB Q 6.00
+Filter  8: ON PK Fc   808 Hz Gain -0.66 dB Q 6.00
+Filter  9: ON PK Fc  3482 Hz Gain -0.66 dB Q 6.00

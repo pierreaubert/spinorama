@@ -1,17 +1,17 @@
 .tabs {
-    margin-bottom: -1px !important;
+    margin-bottom: -1px;
 }
 
 .tab-content {
+    left: 0;
     top: 120px;
-    left: 0px
     width: 100%;
 }
 
 .tab-pane {
     display: none;
-    width: 100%;
     position: absolute;
+    width: 100%;
 }
 
 .tab-pane.is-active {
