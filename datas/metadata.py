@@ -3926,11 +3926,10 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": "",
-                "review_published": "20210926",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_forte_iv/",
+                "review_published": "20211002",
             },
         },
-        "skip": True,
     },
     "Klipsch Icon KF-26": {
         "brand": "Klipsch",
