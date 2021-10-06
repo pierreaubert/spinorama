@@ -290,6 +290,22 @@ speakers_info = {
             },
         },
     },
+    "ASR Directiva Open Source Speaker": {
+        "brand": "ASR",
+        "model": "Directiva Open Source Speaker",
+        "type": "active",
+        "price": "1400",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/asr-directiva-open-source-speaker-review.27094/",
+            },
+        },
+    },
     "ATC SCM19 v1": {
         "brand": "ATC",
         "model": "SCM19 v1",
@@ -5835,6 +5851,12 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-speaker-review.11884/",
+            },
+            "misc-dominikz": {
+                "origin": "Misc",
+                "format": "rewstextdump",
+                "quality": "low",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-quasi-anechoic-spinorama-and-misc-measurements.27076/#post-928962",
             },
             "vendor": {
                 "origin": "Vendors-Revel",
