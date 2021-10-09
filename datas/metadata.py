@@ -1496,7 +1496,7 @@ speakers_info = {
         "brand": "Elac",
         "model": "Uni-Fi Reference UCR52",
         "type": "passive",
-        "price": "1000",
+        "price": "700",
         "shape": "center",
         "default_measurement": "asr",
         "measurements": {
