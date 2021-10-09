@@ -303,6 +303,7 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/asr-directiva-open-source-speaker-review.27094/",
+                "review_published": "20211006",
             },
         },
     },
@@ -1488,6 +1489,22 @@ speakers_info = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_ubr62/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/elac-ubr62-speaker-review.24585/",
                 },
+            },
+        },
+    },
+    "Elac Uni-Fi Reference UCR52": {
+        "brand": "Elac",
+        "model": "Uni-Fi Reference UCR52",
+        "type": "passive",
+        "price": "1000",
+        "shape": "center",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/elac-reference-ucr52-review-center-speaker.27200/",
+                "review_published": "20211009",
             },
         },
     },
@@ -4561,6 +4578,13 @@ speakers_info = {
         "amount": "pair",
         "default_measurement": "vendor",
         "measurements": {
+            "misc-dominikz": {
+                "origin": "Misc",
+                "format": "rewstextdump",
+                "quality": "low",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-120a-spinorama-and-misc-measurements.26896/",
+                "review_published": "20210926",
+            },
             "vendor": {
                 "origin": "Vendors-Neumann",
                 "format": "webplotdigitizer",
@@ -5857,6 +5881,7 @@ speakers_info = {
                 "format": "rewstextdump",
                 "quality": "low",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-quasi-anechoic-spinorama-and-misc-measurements.27076/#post-928962",
+                "review_published": "20211002",
             },
             "vendor": {
                 "origin": "Vendors-Revel",

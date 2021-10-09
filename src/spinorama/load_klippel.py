@@ -19,21 +19,27 @@ def parse_graph_freq_klippel(filename: str) -> tuple[str, pd.DataFrame]:
     title = None
     columns = ["Freq"]
     usecols = [0]
-    with open(filename) as csvfile:
-        # first line is graph title
-        title = csvfile.readline().split("\t")[0][1:-1]
-        if title[-1] == '"':
-            title = title[:-1]
-        # second line is column titles
-        csvcolumns = [c.translate(removequote) for c in csvfile.readline().split("\t")]
-        # third line is column units
-        # units = [c.translate(removequote)
-        #         for c in csvfile.readline().split('\t')]
-        # print(units)
-        columns.extend([c for c in csvcolumns if len(c) > 0])
-        # print(columns)
-        usecols.extend([1 + i * 2 for i in range(len(columns) - 1)])
-        # print(usecols)
+    try:
+        with open(filename) as csvfile:
+            # first line is graph title
+            title = csvfile.readline().split("\t")[0][1:-1]
+            if title[-1] == '"':
+                title = title[:-1]
+            # second line is column titles
+            csvcolumns = [
+                c.translate(removequote) for c in csvfile.readline().split("\t")
+            ]
+            # third line is column units
+            # units = [c.translate(removequote)
+            #         for c in csvfile.readline().split('\t')]
+            # print(units)
+            columns.extend([c for c in csvcolumns if len(c) > 0])
+            # print(columns)
+            usecols.extend([1 + i * 2 for i in range(len(columns) - 1)])
+            # print(usecols)
+    except FileNotFoundError as e:
+        logger.error("File not found: {}".format(e))
+        raise e
 
     # read all columns, drop 0
     df = pd.read_csv(
@@ -56,9 +62,10 @@ def find_data_klippel(
     )
 
     if os.path.exists(csvfilename):
+        logger.debug("match for {}".format(csvfilename))
         return csvfilename
 
-    logger.debug("no match for {}".format(csvfilename))
+    logger.error("no match for {}".format(csvfilename))
     return ""
 
 

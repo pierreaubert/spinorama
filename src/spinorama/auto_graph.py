@@ -150,8 +150,8 @@ def graph_results(
     g_params["height"] = 400
 
     pir_params = copy.deepcopy(g_params)
-    pir_params["ymin"] = -15
-    pir_params["ymax"] = +0
+    pir_params["ymin"] = -11
+    pir_params["ymax"] = +4
 
     lw_params = copy.deepcopy(g_params)
     lw_params["ymin"] = -11

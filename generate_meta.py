@@ -409,6 +409,35 @@ def dump_metadata(meta):
         f.close()
 
 
+def dump_measurements(meta):
+    metadir = "./docs/assets/"
+    metafile = "{}/measurements.json".format(metadir)
+    if not os.path.isdir(metadir):
+        os.makedirs(metadir)
+
+    def trim_measurements(d):
+        if isinstance(d, dict):
+            return {
+                k: v for k, v in d.items() if isinstance(v, str) and v in ("origin")
+            }
+        return d
+
+    def trim_fields(d):
+        if isinstance(d, dict):
+            return {
+                k: trim_measurements(v)
+                for k, v in d.items()
+                if k in ("measurements", "default_measurement")
+            }
+        return d
+
+    meta2 = {k: trim_fields(v) for k, v in meta.items() if not v.get("skip", False)}
+    with open(metafile, "w") as f:
+        js = json.dumps(meta2)
+        f.write(js)
+        f.close()
+
+
 if __name__ == "__main__":
     args = docopt(__doc__, version="generate_meta.py version 1.3", options_first=True)
 
@@ -469,6 +498,8 @@ if __name__ == "__main__":
     # write metadata in a json file for easy search
     logger.info("Write metadata")
     dump_metadata(metadata.speakers_info)
+    # shorter version with only list of speaker measurements
+    dump_measurements(metadata.speakers_info)
 
     logger.info("Bye")
     sys.exit(0)

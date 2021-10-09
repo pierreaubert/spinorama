@@ -23,7 +23,9 @@
 	    </figure>
 	  </div>
 	  <header class="card-header">
-	    <p class="card-header-title">${meta[speaker_name]["brand"]}<br/>${meta[speaker_name]["model"]}</p>
+	    <p class="card-header-title">
+              ${meta[speaker_name]["brand"]}
+	      ${meta[speaker_name]["model"]}
 <%
   compute = None
   if "default_measurement" in meta[speaker_name]:
@@ -31,17 +33,13 @@
       if default in meta[speaker_name]["measurements"].keys():
          compute = meta[speaker_name]["measurements"][default]
 %>
-	  % if compute is not None and "pref_rating" in compute.keys():
-	    <p class="card-header-title">(${compute["pref_rating"].get("pref_score", "")})
-	      &nbsp;
-	      ${compute["scaled_pref_rating"].get("scaled_pref_score")}/100
-	    </p>
-	  % endif
 	  </header>
     	  <div class="card-content">
 	    <div class="content is-small">
               % if compute is not None:
 	      %   if "pref_rating" in compute.keys():
+                    <p>Score: <b>${compute["pref_rating"].get("pref_score", "")}</b></p>
+                    <progress class="progress is-small is-danger" value="${compute["scaled_pref_rating"]["scaled_pref_score"]}" max="100"></progress>
   	            <p>Bass extension: <b>${compute["pref_rating"].get("lfx_hz", "")}</b>Hz at -6dB</p>
                     % if "scaled_lfx_hz" in compute["scaled_pref_rating"]:
     	              <progress class="progress is-small is-info" value="${compute["scaled_pref_rating"]["scaled_lfx_hz"]}" max="100"></progress>
@@ -58,7 +56,7 @@
 	      %       if "ref_6dB" in compute["estimates"].keys():
 	                <p>${compute["estimates"]["ref_6dB"]}Hz at -6dB<br/></p>
 	      %       endif
-	      %       if "ref_band" in compute["estimates"].keys():
+              %       if "ref_band" in compute["estimates"].keys():
 	                <p>&plusmn;${compute["estimates"]["ref_band"]}dB ~ ${compute["estimates"]["ref_from"]}-${compute["estimates"]["ref_to"]}Hz</p>
 	      %       endif
 	      %     endif
