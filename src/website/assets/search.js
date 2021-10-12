@@ -8,8 +8,9 @@ $(document).ready(function () {
         // build a hash map
         let indirect = {};
         for (item in metadata) {
-            key = metadata[item].brand+'-'+metadata[item].model;
+            key = (metadata[item].brand+'-'+metadata[item].model).replace(/['.+& ]/g, "-");
             indirect[key] = item;
+            console.log('adding '+key);
         }
 	// console.log("got metadata");
 	let resultdiv = $("div.searchresults");
@@ -223,9 +224,11 @@ $(document).ready(function () {
                 let def  = meta.default_measurement;
                 let msr  = meta.measurements[def];
                 if ('pref_rating' in msr && 'pref_score' in msr.pref_rating) {
+                    console.log(item, meta.measurements[def].pref_rating.pref_score);
                     return meta.measurements[def].pref_rating.pref_score;
                 }
             }
+            console.log(item, -10);
             return -10.0;
         }
 
