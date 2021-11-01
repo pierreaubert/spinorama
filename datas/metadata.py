@@ -3204,8 +3204,8 @@ speakers_info = {
         "brand": "JBL",
         "model": "4319",
         "type": "passive",
-        "price": "8400",
-        "shape": "floorstanders",
+        "price": "2500",
+        "shape": "bookshelves",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
@@ -3221,7 +3221,7 @@ speakers_info = {
         "model": "4349",
         "type": "passive",
         "price": "7500",
-        "shape": "floorstanders",
+        "shape": "bookshelves",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
