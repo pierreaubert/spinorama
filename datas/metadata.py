@@ -1565,12 +1565,19 @@ speakers_info = {
         "price": "300",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/emotiva-airmotiv-b1-review-bookshelf-speaker.22366/",
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/emotiva_airmotiv_b1plus/",
+                },
             },
             "misc-archimago": {
                 "origin": "Misc",
@@ -2992,6 +2999,25 @@ speakers_info = {
             },
         },
     },
+    "JBL Stage A120": {
+        "brand": "JBL",
+        "model": "Stage A120",
+        "type": "passive",
+        "price": "200",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_stage_a120/",
+                },
+                "review_published": "20211025",
+            },
+        },
+    },
     "JBL Stage A130": {
         "brand": "JBL",
         "model": "Stage A130",
@@ -3612,6 +3638,26 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kali-lp-6-review-studio-monitor.17978/",
+            },
+        },
+    },
+    "Kali LP-6v2": {
+        "brand": "Kali",
+        "model": "LP-6v2",
+        "type": "active",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_lp-6v2/",
+                    "yt": "https://www.youtube.com/watch?v=Wj47W9EP4tQ&t=2s",
+                },
+                "review_published": "20211025",
             },
         },
     },
