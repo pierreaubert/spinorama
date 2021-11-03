@@ -6580,6 +6580,23 @@ speakers_info = {
             },
         },
     },
+    "Vandersteen VCC-5": {
+        "brand": "Vandersteen",
+        "model": "VCC-5",
+        "type": "passive",
+        "price": "2700",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/vandersteen-vcc-5-review-center-speaker.27776/",
+                "review_published": "20211103",
+            },
+        },
+    },
     "Verdant Audio Bambusa AL 1": {
         "brand": "Verdant Audio",
         "model": "Bambusa AL 1",
