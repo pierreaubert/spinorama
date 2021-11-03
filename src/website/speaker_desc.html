@@ -30,7 +30,7 @@
 %>
 %     if price not in ('?', ''):
           that cost around ${meta[speaker].get('price', '?')}CHF
-%     if meta[speaker].get('amount', '?') != '?':
+%     if meta[speaker].get('amount', '?') != '?' and meta[speaker].get('shape') != 'center':
           for a ${meta[speaker].get('amount')}
 %     endif
 %     endif
@@ -47,6 +47,7 @@
     if default is not None and default in meta[speaker]['measurements'].keys():
         estimates = meta[speaker]['measurements'][default].get('estimates', None)
         pref_rating = meta[speaker]['measurements'][default].get('pref_rating', None)
+        pref_rating_eq = meta[speaker]['measurements'][default].get('pref_rating_eq', None)
 %>
 % if estimates is not None:
 %   if estimates.get('ref_3dB', '?') !=  '?':
@@ -68,6 +69,10 @@
       Frequency deviation is <b>${estimates.get('ref_band')}dB</b> over the same frequency range.
 </li>
 %   endif
+%   if estimates.get('dir_horizontal', '?') !=  '?' or estimates.get('dir_vertical', '?') !=  '?':
+<li>Directivity
+<ul>
+%   endif
 %   if estimates.get('dir_horizontal', '?') !=  '?':
 <li>
       Horizontal directivity
@@ -82,22 +87,54 @@
       between 1kHz and 10kHz. Angle computed for +/-6dB.
 </li>
 %   endif
+%   if estimates.get('dir_horizontal', '?') !=  '?' or estimates.get('dir_vertical', '?') !=  '?':
+</ul>
+</li>
+%   endif
 % endif
+
+% if pref_rating is not None or pref_rating_eq is not None:
+<li>Preference Score
+<ul>
+% endif
+
 % if pref_rating is not None:
       <li>Preference Score is <b>${pref_rating.get('pref_score')}</b>
       and would be <b>${pref_rating.get('pref_score_wsub')}</b> with a
         perfect subwoofer.
-      </li>
-      <li>
-        Score
-        compononent details: NBD: ON ${pref_rating.get('nbd_on_axis')},
+      <ul>
+        <li>Details:
+        NBD: ON ${pref_rating.get('nbd_on_axis')},
         LW ${pref_rating.get('nbd_listening_window')}, SP
         ${pref_rating.get('nbd_sound_power')}, PIR
         ${pref_rating.get('nbd_pred_in_room')}; SM:
         SP${pref_rating.get('sm_sound_power')},
-        PIR${pref_rating.get('sm_pred_in_room')}; LFQ ${pref_rating.get('lfq')}, LFX ${pref_rating.get('lfx_hz')}Hz
+        PIR${pref_rating.get('sm_pred_in_room')}; LFQ
+        ${pref_rating.get('lfq')}, LFX ${pref_rating.get('lfx_hz')}Hz
+        </li>
+      </ul>
       </li>
 % endif
+% if pref_rating_eq is not None:
+      <li>Preference Score is <b>${pref_rating_eq.get('pref_score')}</b>
+      with an EQ and would be <b>${pref_rating_eq.get('pref_score_wsub')}</b> with a
+        perfect subwoofer and the same EQ.
+         <ul>
+            <li>Details:
+        NBD: ON ${pref_rating_eq.get('nbd_on_axis')},
+        LW ${pref_rating_eq.get('nbd_listening_window')}, SP
+        ${pref_rating_eq.get('nbd_sound_power')}, PIR
+        ${pref_rating_eq.get('nbd_pred_in_room')}; SM:
+        SP${pref_rating_eq.get('sm_sound_power')},
+        PIR${pref_rating_eq.get('sm_pred_in_room')}; LFQ ${pref_rating_eq.get('lfq')}, LFX ${pref_rating_eq.get('lfx_hz')}Hz
+        </li>
+          </ul>
+      </li>
+% endif
+% if pref_rating is not None or pref_rating_eq is not None:
+</ul>
+% endif
+
 <%
     review = None
     reviews = None

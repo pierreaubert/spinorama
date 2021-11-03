@@ -13,48 +13,55 @@
     % for freq in g_freq:
     <li>
       <div>
-	<a href="${g_key}/${freq | space2url}.html"><img class="graph" src="${g_key}/${freq | space2url}.jpg"/></a>
+	<a href="${g_key}/${freq | space2url}.html">
+          <img class="graph" alt="${freq}" src="${g_key}/${freq | space2url}.jpg"/>
+        </a>
       </div>
     </li>
-    <li>${freq}</li>
     % endfor
     % for contour in g_contour:
-    <li>${contour | unmeltC }</li>
-    <div>
-      <a href="${g_key}/${contour | unmeltC, space2url}.html">
-	<img class="graph" src="${g_key}/${contour | unmeltC, space2url}.jpg"/>
-      </a>
-    </div>
+    <li>
+      <div>
+        <a href="${g_key}/${contour | unmeltC, space2url}.html">
+	  <img class="graph" alt="${contour}" src="${g_key}/${contour | unmeltC, space2url}.jpg"/>
+        </a>
+      </div>
+    </li>
     % endfor
     % for radar in g_radar:
-    <div>
-      <a href="${g_key}/${radar | unmeltR, space2url}.html">
-	<img class="graph" src="${g_key}/${radar | unmeltR, space2url}.jpg"/>
-      </a>
-    </div>
-    <li>${radar | unmeltR }</li>
+    <li>
+      <div>
+        <a href="${g_key}/${radar | unmeltR, space2url}.html">
+	  <img class="graph" alt="${radar}" src="${g_key}/${radar | unmeltR, space2url}.jpg"/>
+        </a>
+      </div>
+    </li>
     % endfor
     % for isoband in g_isoband:
-    <div>
-      <img class="graph" src="${g_key}/${isoband | unmeltI, space2url}.jpg"/>
-    </div>
-    <li>${isoband | unmeltI }</li>
+    <li>
+      <div>
+        <img class="graph" alt="${isoband}" src="${g_key}/${isoband | unmeltI, space2url}.jpg"/>
+      </div>
+    </li>
     % endfor
     % for directivity in g_directivity:
-    <div>
-      <img class="graph" src="${g_key}/${directivity | unmeltR, space2url}.jpg"/>
-    </div>
-    <li>${directivity | unmeltR }</li>
+    <li>
+      <div>
+        <img class="graph" alt="${directivity}" src="${g_key}/${directivity | unmeltR, space2url}.jpg"/>
+      </div>
+    </li>
     % endfor
   </ul>
 </div>
+
 <!-- Laptop view: 2 cols-->
 <div class="tab-pane display:none" id="pane-2">
   <div id="vis2"></div>
   <figure class="image">
-    <img class="graph" src="${g_key}/2cols.jpg" alt="all graphs"/>
+    <img class="graph" alt="Single page view" src="${g_key}/2cols.jpg"/>
   </figure>
 </div>
+
 <!-- EQ view: sequential-->
 % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
 <div class="tab-pane" id="pane-3">
@@ -63,43 +70,52 @@
     % for freq in g_freq:
     <li>
       <div>
-	<a href="${g_key}_eq/${freq | space2url}.html"><img class="graph" src="${g_key}_eq/${freq | space2url}.jpg"/></a>
+	<a href="${g_key}_eq/${freq |space2url}.html">
+          <img class="graph"
+               alt="${freq} with EQ"
+               src="${g_key}_eq/${freq | space2url}.jpg"
+               />
+        </a>
       </div>
     </li>
-    <li>${freq}</li>
     % endfor
     % for contour in g_contour:
-    <li>${contour | unmeltC }</li>
-    <div>
-      <a href="${g_key}_eq/${contour | unmeltC, space2url}.html">
-	<img class="graph" src="${g_key}_eq/${contour | unmeltC, space2url}.jpg"/>
-      </a>
-    </div>
+    <li>
+      <div>
+        <a href="${g_key}_eq/${contour | unmeltC, space2url}.html">
+	  <img class="graph" alt="Contour with EQ" src="${g_key}_eq/${contour | unmeltC, space2url}.jpg"/>
+        </a>
+      </div>
+    </li>
     % endfor
     % for radar in g_radar:
-    <div>
-      <a href="${g_key}_eq/${radar | unmeltR, space2url}.html">
-	<img class="graph" src="${g_key}_eq/${radar | unmeltR, space2url}.jpg"/>
-      </a>
-    </div>
-    <li>${radar | unmeltR }</li>
+    <li>
+      <div>
+        <a href="${g_key}_eq/${radar | unmeltR, space2url}.html">
+	  <img class="graph" alt="Radar with EQ" src="${g_key}_eq/${radar | unmeltR, space2url}.jpg"/>
+        </a>
+      </div>
+    </li>
     % endfor
     % for isoband in g_isoband:
-    <div>
-      <img class="graph" src="${g_key}_eq/${isoband | unmeltI, space2url}.jpg"/>
-    </div>
-    <li>${isoband | unmeltI }</li>
+    <li>
+      <div>
+        <img class="graph" alt="Isoband with EQ" src="${g_key}_eq/${isoband | unmeltI, space2url}.jpg"/>
+      </div>
+    </li>
     % endfor
     % for directivity in g_directivity:
-    <div>
-      <img class="graph" src="${g_key}_eq/${directivity | unmeltR, space2url}.jpg"/>
-    </div>
-    <li>${directivity | unmeltR }</li>
+    <li>
+      <div>
+        <img class="graph" alt="Directivity with EQ" src="${g_key}_eq/${directivity | unmeltR, space2url}.jpg"/>
+      </div>
+    </li>
     % endfor
   </ul>
   % endif
 </div>
 % endif
+
 <!-- Desktop view: Ref vs. EQ views-->
 % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
 <div class="tab-pane display:none" id="pane-4">
@@ -107,14 +123,14 @@
   <table>
   % for freq in g_freq:
   <tr>
-    <td><img class="graph" src="${g_key}/${freq | space2url}.jpg"/></td>
-    <td><img class="graph" src="${g_key}_eq/${freq | space2url}.jpg"/></td>
+    <td><img class="graph" alt="Frequency" src="${g_key}/${freq | space2url}.jpg"/></td>
+    <td><img class="graph" alt="Frequency with EQ" src="${g_key}_eq/${freq | space2url}.jpg"/></td>
   </tr>
   % endfor
   % for isoband in g_isoband:
   <tr>
-      <td><img class="graph" src="${g_key}/${isoband | unmeltI, space2url}.jpg"/></td>
-      <td><img class="graph" src="${g_key}_eq/${isoband | unmeltI, space2url}.jpg"/></td>
+      <td><img class="graph" alt="Isoband" src="${g_key}/${isoband | unmeltI, space2url}.jpg"/></td>
+      <td><img class="graph" alt="Isoband with EQ" src="${g_key}_eq/${isoband | unmeltI, space2url}.jpg"/></td>
   </tr>
   % endfor
   </table>
