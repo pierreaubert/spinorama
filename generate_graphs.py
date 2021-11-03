@@ -229,6 +229,13 @@ def compute(speakerlist, filters, ray_ids: dict):
                 m_version_key = (
                     m_version  # .translate({ord(ch) : '_' for ch in '-.;/\' '})
                 )
+                # should not happen, usually it is an error in metadata that should be trapped by check_meta
+                if "origin" not in measurement.keys():
+                    logger.error(
+                        "measurement's data are incorrect: speaker={} m_version={} keys are {}".format(
+                            speaker, m_version, measurement.keys()
+                        )
+                    )
                 m_origin = measurement["origin"]
                 if m_origin not in df[speaker_key].keys():
                     df[speaker_key][m_origin] = {}
