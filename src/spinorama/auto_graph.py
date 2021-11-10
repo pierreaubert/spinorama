@@ -20,6 +20,7 @@
 import copy
 
 import altair as alt
+import numpy as np
 import pandas as pd
 
 from spinorama.load_misc import graph_melt
@@ -53,16 +54,19 @@ def graph_eq(freq, peq, domain, title):
     return g_eq
 
 
-def graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name, speaker_origin):
+def graph_eq_compare(
+    freq, manual_peq, auto_peq, domain, speaker_name, speaker_origin, target
+):
     if manual_peq is None:
         peq_df = pd.DataFrame(
             {
                 "Freq": freq,
-                "dB": peq_build(freq, auto_peq),
+                "autoEQ": peq_build(freq, auto_peq),
+                "target": target,
             }
         )
         chart = (
-            alt.Chart(peq_df)
+            alt.Chart(graph_melt(peq_df))
             .mark_line()
             .encode(
                 alt.X(
@@ -75,11 +79,12 @@ def graph_eq_compare(freq, manual_peq, auto_peq, domain, speaker_name, speaker_o
                     title="Sound Pressure (dB)",
                     scale=alt.Scale(zero=False, domain=[-10, 5]),
                 ),
+                alt.Color("Measurements", type="nominal", sort=None),
             )
             .properties(
                 width=800,
                 height=400,
-                title="{} auto EQ".format(speaker_name),
+                title="{} autoEQ v.s. target".format(speaker_name),
             )
         )
     else:
@@ -173,8 +178,10 @@ def graph_results(
     g_auto_eq = graph_eq(freq, auto_peq, domain, "{} auto".format(speaker_name))
 
     # compare the 2 eqs
+    target = -(auto_target[0] - auto_target_interp[0])
+    # print('target {} {}'.format(np.min(target), np.max(target)))
     g_eq_full = graph_eq_compare(
-        freq, manual_peq, auto_peq, domain, speaker_name, speaker_origin
+        freq, manual_peq, auto_peq, domain, speaker_name, speaker_origin, target
     )
 
     # compare the 2 corrected curves
@@ -335,7 +342,7 @@ def graph_results(
         ]
 
     return [
-        ("eq", (g_auto_eq | g_eq_full)),
+        ("eq", (g_auto_eq | g_eq_full).resolve_scale(y="independent")),
         ("spin", (g_spin_asr | g_spin_auto)),
         (
             "on",
