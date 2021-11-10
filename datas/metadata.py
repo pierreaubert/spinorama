@@ -4804,6 +4804,24 @@ speakers_info = {
             },
         },
     },
+    "Nexus Center DIY": {
+        "brand": "Nexus",
+        "model": "Center DIY",
+        "type": "passive",
+        "price": "",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "misc-mtg90",
+        "measurements": {
+            "misc-mtg90": {
+                "origin": "Misc",
+                "format": "rewstextdump",
+                "quality": "low",
+                "review": "http://www.hificircuit.com/community/threads/project-nexus-a-timbre-matched-family-of-hi-fi-ht-speakers.319/#post-3368",
+                "review_published": "20211107",
+            },
+        },
+    },
     "NHT Pro M-00": {
         "brand": "NHT",
         "model": "Pro M-00",
