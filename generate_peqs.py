@@ -32,6 +32,8 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--slope-estimated-inroom=<s_pir>] \
  [--loss=<pick>] \
  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
+ [--smooth-measurements=<window_size>] \
+ [--smooth-order=<order>] \
  [--second-optimiser=<sopt>] \
 
 
@@ -66,6 +68,8 @@ Options:
   --slope-sound-power=<s_sp> Slope of sound power, default is -8dB
   --slope-estimated-inroom=<s_pir> Slope of estimated in-room response, default is -8dB
   --second-optimiser=<sopt>
+  --smooth-measurements=<window_size> if present the measurements will be smoothed before optimisation, window_size is the size of the window use for smoothing
+  --smooth-order=<order> order of the interpolation, 3 by default for Savitzky-Golay filter.
 """
 from datetime import datetime
 import os
@@ -545,6 +549,8 @@ if __name__ == "__main__":
     logger = get_custom_logger(True)
     logger.setLevel(args2level(args))
 
+    parameter_error = False
+
     # read optimisation parameter
     current_optim_config = {
         # name of the loss function
@@ -599,7 +605,11 @@ if __name__ == "__main__":
         "slope_sound_power": -8,
         "slope_estimated_inroom": -8,
         # do we want to smooth the targets?
-        "smooth_target": False,
+        "smooth_measurements": False,
+        # size of the window to smooth (currently in number of data points but could be in octave)
+        "smooth_window_size": -1,
+        # order of interpolation (you can try 1 (linear), 2 (quadratic) etc)
+        "smooth_order": 3,
     }
 
     # define other parameters for the optimisation algorithms
@@ -631,15 +641,27 @@ if __name__ == "__main__":
     if args["--max-peq"] is not None:
         max_number_peq = int(args["--max-peq"])
         current_optim_config["MAX_NUMBER_PEQ"] = max_number_peq
+        if max_number_peq < 1:
+            print("max_number_peq is {} which is below 1".format(max_number_peq))
+            parameter_error = True
     if args["--max-iter"] is not None:
         max_iter = int(args["--max-iter"])
         current_optim_config["maxiter"] = max_iter
+        if max_iter < 1:
+            print("max_iter is {} which is below 1".format(max_iter))
+            parameter_error = True
     if args["--min-freq"] is not None:
         min_freq = int(args["--min-freq"])
         current_optim_config["freq_reg_min"] = min_freq
+        if min_freq < 20:
+            print("min_freq is {} which is below 20Hz".format(min_freq))
+            parameter_error = True
     if args["--max-freq"] is not None:
         max_freq = int(args["--max-freq"])
         current_optim_config["freq_reg_max"] = max_freq
+        if max_freq > 20000:
+            print("max_freq is {} which is above 20kHz".format(max_freq))
+            parameter_error = True
 
     if args["--min-Q"] is not None:
         min_Q = float(args["--min-Q"])
@@ -681,6 +703,21 @@ if __name__ == "__main__":
                 print("{} is not a float".format(args[slope_name]))
                 sys.exit(1)
 
+    if args["--smooth-measurements"] is not None:
+        window_size = int(args["--smooth-measurements"])
+        current_optim_config["smooth_measurements"] = True
+        current_optim_config["smooth_window_size"] = window_size
+        if window_size < 2:
+            print("window size is {} which is below 2".format(window_size))
+            parameter_error = True
+
+    if args["--smooth-order"] is not None:
+        order = int(args["--smooth-order"])
+        current_optim_config["smooth_order"] = order
+        if order < 1 or order > 5:
+            print("Polynomial order {} is not between  is 1 and 5".format(order))
+            parameter_error = True
+
     # do we run a second optimiser?
     current_optim_config["second_optimiser"] = False
     if args["--second-optimiser"] is not None:
@@ -690,6 +727,10 @@ if __name__ == "__main__":
     speaker_name = None
     if args["--speaker"] is not None:
         speaker_name = args["--speaker"]
+
+    # error in parameters
+    if parameter_error:
+        sys.exit(1)
 
     # load data
     print("Reading cache ...", end=" ", flush=True)

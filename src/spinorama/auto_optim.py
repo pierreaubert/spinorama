@@ -165,8 +165,10 @@ def optim_compute_auto_target(
 ):
     peq_freq = peq_build(freq, peq)
     delta = [target[i] - auto_target_interp[i] + peq_freq for i, _ in enumerate(target)]
-    if optim_config.get("smooth_target"):
-        smoothed = [savitzky_golay(d, 5, 3) for d in delta]
+    if optim_config.get("smooth_measurements"):
+        window_size = optim_config.get("smooth_window_size")
+        order = optim_config.get("smooth_order")
+        smoothed = [savitzky_golay(d, window_size, order) for d in delta]
         logger.warning(smoothed)
         return smoothed
     return delta
