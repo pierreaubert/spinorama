@@ -43,10 +43,10 @@ $(document).ready(function () {
 	            findAllMatches: true,
 	            minMatchCharLength: 2,
 	            keys: ["brand", "model"],
-	            treshhold: 0.1,
-	            distance: 2,
+	            treshhold: 0.5,
+	            distance: 4,
 	            includeScore: true,
-	            useExtendedSearch: true
+	            useExatendedSearch: true
 	        });
                 let results = fuse.search(keywords);
                 display_search(resultdiv, metadata, results, filter);
@@ -138,7 +138,7 @@ $(document).ready(function () {
         }
 
         function display_filter(resultdiv, sorted_meta, filter) {
-	    // console.log("display filter start #" + meta.length);
+	    // console.log("display filter start #" + sorted_meta.length);
 	    for (const item in sorted_meta) {
                 let show = is_filtered(sorted_meta[item], filter);
                 const id = (sorted_meta[item].brand + "-" + sorted_meta[item].model).replace(/['.+& ]/g, "-");
@@ -224,11 +224,11 @@ $(document).ready(function () {
                 let def  = meta.default_measurement;
                 let msr  = meta.measurements[def];
                 if ('pref_rating' in msr && 'pref_score' in msr.pref_rating) {
-                    console.log(item, meta.measurements[def].pref_rating.pref_score);
+                    // console.log(item, meta.measurements[def].pref_rating.pref_score);
                     return meta.measurements[def].pref_rating.pref_score;
                 }
             }
-            console.log(item, -10);
+            // console.log(item, -10);
             return -10.0;
         }
 
@@ -281,7 +281,7 @@ $(document).ready(function () {
                     return get_date(b)-get_date(a);
                 });
             } else {
-                console.log('Error sort method is unkown: '+current_sorter.by);
+                // console.log('Error sort method is unkown: '+current_sorter.by);
             }
 
             // overrides
