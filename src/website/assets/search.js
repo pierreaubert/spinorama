@@ -154,6 +154,7 @@ $(document).ready(function () {
 
         function display_search(resultdiv, sorted_meta, results, filter) {
 	    // console.log("---------- display search start ----------------");
+            let keywords = $("#searchInput").val();
 	    if (results.length === 0) {
                 display_filter(resultdiv, sorted_meta, filter);
                 return;
@@ -183,8 +184,9 @@ $(document).ready(function () {
                 }
                 if (show) {
 		    if (minScore < Math.pow(10, -15)) {
+                        let is_exact = item_meta.model.toLowerCase().includes(keywords.toLowerCase());
                         // we have an exact match, only show other exact matches
-                        if (score >= Math.pow(10, -15)) {
+                        if (score >= Math.pow(10, -15) && !is_exact) {
 		            // console.log("filtered out (minscore)" + score);
 			    show = false;
                         }
