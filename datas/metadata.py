@@ -172,6 +172,24 @@ speakers_info = {
             },
         },
     },
+    "Arendal Sound 1723 Monitor THX": {
+        "brand": "Arendal Sound",
+        "model": "1723 Monitor THX",
+        "type": "passive",
+        "price": "2300",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/arendal-1723/conclusion",
+                "review_published": "20210705",
+            },
+        },
+    },
     "Ascend Acoustics CBM-170 SE": {
         "brand": "Ascend Acoustics",
         "model": "CBM-170 SE",
