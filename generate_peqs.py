@@ -72,6 +72,7 @@ Options:
   --smooth-order=<order> order of the interpolation, 3 by default for Savitzky-Golay filter.
 """
 from datetime import datetime
+import json
 import os
 import pathlib
 import sys
@@ -277,6 +278,10 @@ def optim_save_peq(
                     os.symlink("iir-autoeq.txt", iir_name)
                 except OSError:
                     pass
+        eq_conf = "{}/conf-autoeq.json".format(eq_dir)
+        with open(eq_conf, "w") as fd:
+            conf_json = json.dumps(optim_config, indent=4)
+            fd.write(conf_json)
 
     # print results
     if len(auto_peq) > 0:
