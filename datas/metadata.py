@@ -4833,7 +4833,43 @@ speakers_info = {
         "measurements": {
             "misc-mtg90": {
                 "origin": "Misc",
-                "format": "rewstextdump",
+                "format": "splHVtxt",
+                "quality": "low",
+                "review": "http://www.hificircuit.com/community/threads/project-nexus-a-timbre-matched-family-of-hi-fi-ht-speakers.319/#post-3368",
+                "review_published": "20211107",
+            },
+        },
+    },
+    "Nexus MT DIY": {
+        "brand": "Nexus",
+        "model": "MT DIY",
+        "type": "passive",
+        "price": "",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "misc-mtg90",
+        "measurements": {
+            "misc-mtg90": {
+                "origin": "Misc",
+                "format": "splHVtxt",
+                "quality": "low",
+                "review": "http://www.hificircuit.com/community/threads/project-nexus-a-timbre-matched-family-of-hi-fi-ht-speakers.319/#post-3368",
+                "review_published": "20211107",
+            },
+        },
+    },
+    "Nexus MTM DIY": {
+        "brand": "Nexus",
+        "model": "MTM DIY",
+        "type": "passive",
+        "price": "",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "misc-mtg90",
+        "measurements": {
+            "misc-mtg90": {
+                "origin": "Misc",
+                "format": "splHVtxt",
                 "quality": "low",
                 "review": "http://www.hificircuit.com/community/threads/project-nexus-a-timbre-matched-family-of-hi-fi-ht-speakers.319/#post-3368",
                 "review_published": "20211107",
