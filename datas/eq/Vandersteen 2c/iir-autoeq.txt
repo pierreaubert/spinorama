@@ -1,0 +1,16 @@
+EQ for Vandersteen 2c computed from ErinsAudioCorner data
+Preference Score 4.0 with EQ 5.2
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.13
+Dated: 2021-11-14-19:21:41
+
+Preamp: -0.2 dB
+
+Filter  1: ON PK Fc  2270 Hz Gain -2.60 dB Q 0.06
+Filter  2: ON PK Fc  3319 Hz Gain +1.91 dB Q 3.00
+Filter  3: ON PK Fc  1196 Hz Gain -2.00 dB Q 3.00
+Filter  4: ON PK Fc   273 Hz Gain -1.39 dB Q 3.00
+Filter  5: ON PK Fc 11459 Hz Gain -0.78 dB Q 3.00
+Filter  6: ON PK Fc  2027 Hz Gain -0.57 dB Q 3.00
+Filter  7: ON PK Fc  8159 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc  5642 Hz Gain +0.85 dB Q 3.00
+Filter  9: ON PK Fc  4280 Hz Gain -0.62 dB Q 3.00

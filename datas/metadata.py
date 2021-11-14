@@ -6721,6 +6721,23 @@ speakers_info = {
             },
         },
     },
+    "Vandersteen 2c": {
+        "brand": "Vandersteen",
+        "model": "2c",
+        "type": "passive",
+        "price": "1200",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/vandersteen_model_2/",
+                "review_published": "20211111",
+            },
+        },
+    },
     "Verdant Audio Bambusa AL 1": {
         "brand": "Verdant Audio",
         "model": "Bambusa AL 1",
