@@ -2021,22 +2021,6 @@ speakers_info = {
             },
         },
     },
-    "Genelec 8351A": {
-        "brand": "Genelec",
-        "model": "8351A",
-        "type": "active",
-        "price": "5700",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "princeton",
-        "measurements": {
-            "princeton": {
-                "origin": "Princeton",
-                "format": "princeton",
-                "symmetry": "horizontal",
-            },
-        },
-    },
     "Genelec 8341A": {
         "brand": "Genelec",
         "model": "8341A",
@@ -2068,6 +2052,22 @@ speakers_info = {
             },
         },
     },
+    "Genelec 8351A": {
+        "brand": "Genelec",
+        "model": "8351A",
+        "type": "active",
+        "price": "5700",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "princeton",
+        "measurements": {
+            "princeton": {
+                "origin": "Princeton",
+                "format": "princeton",
+                "symmetry": "horizontal",
+            },
+        },
+    },
     "Genelec 8351B": {
         "brand": "Genelec",
         "model": "8351B",
@@ -2086,6 +2086,29 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8351b-review-studio-monitor.23432/",
+            },
+        },
+    },
+    "Genelec 8361A": {
+        "brand": "Genelec",
+        "model": "8361A",
+        "type": "active",
+        "price": "10000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr-vertical",
+        "measurements": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8361a-review-powered-monitor.28039/",
+                "review_published": "20211112",
+            },
+            "asr-horizontal": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8361a-review-powered-monitor.28039/",
+                "review_published": "20211112",
             },
         },
     },
@@ -3065,12 +3088,19 @@ speakers_info = {
         "price": "200",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-stage-a130-review-speaker.18260/",
+                "review_published": "20201210",
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/jbl_stage_a130/",
+                "review_published": "20211112",
             },
         },
     },
