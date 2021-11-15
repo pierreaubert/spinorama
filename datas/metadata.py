@@ -3748,6 +3748,25 @@ speakers_info = {
             },
         },
     },
+    "Kali LP-8v2": {
+        "brand": "Kali",
+        "model": "LP-8v2",
+        "type": "active",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_lp-8v2/",
+                },
+                "review_published": "20211114",
+            },
+        },
+    },
     "Kanto YU": {
         "brand": "Kanto",
         "model": "YU",
