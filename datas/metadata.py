@@ -5521,7 +5521,7 @@ speakers_info = {
         "model": "T50",
         "type": "passive",
         "price": "300",
-        "shape": "tower",
+        "shape": "floorstanders",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
