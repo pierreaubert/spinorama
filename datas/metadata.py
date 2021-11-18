@@ -4359,7 +4359,7 @@ speakers_info = {
     "LYX SPA8PAS": {
         "brand": "LYX",
         "model": "SPA8PAS",
-        "type": "passive",
+        "type": "active",
         "price": "100",
         "shape": "bookshelves",
         "amount": "pair",
@@ -4911,8 +4911,8 @@ speakers_info = {
         "model": "MT DIY",
         "type": "passive",
         "price": "",
-        "shape": "center",
-        "amount": "each",
+        "shape": "bookshelves",
+        "amount": "pair",
         "default_measurement": "misc-mtg90",
         "measurements": {
             "misc-mtg90": {
@@ -5521,7 +5521,7 @@ speakers_info = {
         "model": "T50",
         "type": "passive",
         "price": "300",
-        "shape": "bookshelves",
+        "shape": "tower",
         "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
@@ -6281,7 +6281,7 @@ speakers_info = {
         "brand": "Revel",
         "model": "W553L",
         "type": "passive",
-        "shape": "bookshelves",
+        "shape": "inwall",
         "price": "",
         "default_measurement": "vendor",
         "measurements": {
@@ -6762,7 +6762,7 @@ speakers_info = {
         "model": "2c",
         "type": "passive",
         "price": "1200",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "amount": "pair",
         "default_measurement": "eac",
         "measurements": {
