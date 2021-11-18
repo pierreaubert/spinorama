@@ -234,6 +234,20 @@ $(document).ready(function () {
             return -10.0;
         }
 
+        function get_score_wsub(item) {
+            if (item.id in indirect) {
+                let meta = metadata[indirect[item.id]];
+                let def  = meta.default_measurement;
+                let msr  = meta.measurements[def];
+                if ('pref_rating' in msr && 'pref_score_wsub' in msr.pref_rating) {
+                    // console.log(item, meta.measurements[def].pref_rating.pref_score);
+                    return meta.measurements[def].pref_rating.pref_score_wsub;
+                }
+            }
+            // console.log(item, -10);
+            return -10.0;
+        }
+
         function get_score_eq(item) {
             if (item.id in indirect) {
                 let meta = metadata[indirect[item.id]];
@@ -241,6 +255,18 @@ $(document).ready(function () {
                 let msr  = meta.measurements[def];
                 if ('pref_rating_eq' in msr && 'pref_score' in msr.pref_rating) {
                     return meta.measurements[def].pref_rating_eq.pref_score;
+                }
+            }
+            return -10.0;
+        }
+
+        function get_score_eq_wsub(item) {
+            if (item.id in indirect) {
+                let meta = metadata[indirect[item.id]];
+                let def  = meta.default_measurement;
+                let msr  = meta.measurements[def];
+                if ('pref_rating_eq' in msr && 'pref_score_wsub' in msr.pref_rating) {
+                    return meta.measurements[def].pref_rating_eq.pref_score_wsub;
                 }
             }
             return -10.0;
@@ -277,6 +303,14 @@ $(document).ready(function () {
             } else if (current_sorter.by === 'scoreEQ') {
                 sorted = $("div.searchresults > div > div").sort( function(a, b) {
                     return get_score_eq(b)-get_score_eq(a);
+                });
+            } else if (current_sorter.by === 'scoreWSUB') {
+                sorted = $("div.searchresults > div > div").sort( function(a, b) {
+                    return get_score_wsub(b)-get_score_wsub(a);
+                });
+            } else if (current_sorter.by === 'scoreEQWSUB') {
+                sorted = $("div.searchresults > div > div").sort( function(a, b) {
+                    return get_score_eq_wsub(b)-get_score_eq_wsub(a);
                 });
             } else if (current_sorter.by === 'date') {
                 sorted = $("div.searchresults > div > div").sort( function(a, b) {
