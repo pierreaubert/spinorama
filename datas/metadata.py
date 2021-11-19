@@ -4359,7 +4359,7 @@ speakers_info = {
     "LYX SPA8PAS": {
         "brand": "LYX",
         "model": "SPA8PAS",
-        "type": "active",
+        "type": "passive",
         "price": "100",
         "shape": "bookshelves",
         "amount": "pair",
