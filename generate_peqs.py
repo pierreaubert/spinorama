@@ -589,7 +589,7 @@ if __name__ == "__main__":
         # it will optimise for having a Listening Window as close as possible
         # the target and having a Sound Power as flat as possible (without a
         # target)
-        # "curve_names": ["Listening Window"],
+        "curve_names": ["Listening Window"],
         # 'curve_names': ['Early Reflections'],
         # 'curve_names': ['Listening Window', 'Early Reflections'],
         # "curve_names": ["On Axis", "Listening Window", "Early Reflections"],
@@ -599,7 +599,7 @@ if __name__ == "__main__":
         # 'curve_names': ['On Axis', 'Early Reflections'],
         # 'curve_names': ['Early Reflections', 'Sound Power'],
         # "curve_names": ["Estimated In-Room Response", "Listening Window"],
-        "curve_names": ["Estimated In-Room Response"],
+        # "curve_names": ["Estimated In-Room Response"],
         # start and end freq for targets
         "target_min_freq": 100,
         "target_max_freq": 16000,
