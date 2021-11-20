@@ -1717,6 +1717,26 @@ speakers_info = {
             },
         },
     },
+    "Focal Alpha 50 Evo": {
+        "brand": "Focal",
+        "model": "Alpha 50 Evo",
+        "type": "active",
+        "price": "700",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-nuyes",
+        "measurements": {
+            "misc-nuyes": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "reviews": {
+                    "dci": "https://gall.dcinside.com/mgallery/board/view/?id=speakers&no=195953",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/focal-alpha-evo-line-new-speakers.21773/post-902825",
+                },
+            },
+        },
+    },
     "Focal Aria 906": {
         "brand": "Focal",
         "model": "Aria 906",
@@ -2146,26 +2166,6 @@ speakers_info = {
             },
         },
     },
-    "Google Nest Audio": {
-        "brand": "Google",
-        "model": "Nest Audio",
-        "type": "active",
-        "price": "90",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "misc-napilopez",
-        "measurements": {
-            "misc-napilopez": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "quality": "low",
-                "reviews": {
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/google-nest-audio-spinorama-and-measurements.16464/",
-                    "tnw": "https://thenextweb.com/news/review-googles-nest-audio-is-a-legit-good-speaker-and-i-have-the-data-to-prove-it",
-                },
-            },
-        },
-    },
     "GGNTKT M1": {
         "brand": "GGNTKT",
         "model": "M1",
@@ -2190,6 +2190,26 @@ speakers_info = {
                 "format": "webplotdigitizer",
                 "website": "https://ggntkt.de/en/model-m1",
                 "quality": "high",
+            },
+        },
+    },
+    "Google Nest Audio": {
+        "brand": "Google",
+        "model": "Nest Audio",
+        "type": "active",
+        "price": "90",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-napilopez",
+        "measurements": {
+            "misc-napilopez": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/google-nest-audio-spinorama-and-measurements.16464/",
+                    "tnw": "https://thenextweb.com/news/review-googles-nest-audio-is-a-legit-good-speaker-and-i-have-the-data-to-prove-it",
+                },
             },
         },
     },
@@ -2219,6 +2239,42 @@ speakers_info = {
             "princeton": {
                 "origin": "Princeton",
                 "format": "princeton",
+            },
+        },
+    },
+    "Grimani Systems Alpha": {
+        "brand": "Grimani Systems",
+        "model": "Alpha",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "inwall",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.youtube.com/watch?v=xqsTFc8MdvA",
+                "review_published": "20211118",
+            },
+        },
+    },
+    "Grimani Systems Tau": {
+        "brand": "Grimani Systems",
+        "model": "Tau",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.youtube.com/watch?v=xqsTFc8MdvA",
+                "review_published": "20211118",
             },
         },
     },
@@ -4371,6 +4427,24 @@ speakers_info = {
                 "quality": "low",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/worst-measuring-loudspeaker.11394/page-8#post-945725",
                 "review_published": "20211019",
+            },
+        },
+    },
+    "Mackie HR824": {
+        "brand": "Mackie",
+        "model": "HR824",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "",
+        "default_measurement": "harman",
+        "measurements": {
+            "harman": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/adam-t8v-studio-monitor-review.17118/page-2#post-553606",
+                },
+                "review_published": "20201029",
             },
         },
     },
