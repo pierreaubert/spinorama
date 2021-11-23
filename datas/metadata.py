@@ -2178,6 +2178,24 @@ speakers_info = {
             },
         },
     },
+    "Genius SP-HF3000A": {
+        "brand": "Genius",
+        "model": "SP-HF3000A",
+        "type": "active",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-dominikz",
+        "measurements": {
+            "misc-dominikz": {
+                "origin": "Misc",
+                "format": "rewstextdump",
+                "quality": "low",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/genius-sp-hf3000a-discontinued-powered-pc-loudspeaker-measurements.28332/",
+                "review_published": "20211121",
+            },
+        },
+    },
     "GGNTKT M1": {
         "brand": "GGNTKT",
         "model": "M1",
