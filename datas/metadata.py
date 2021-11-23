@@ -2142,7 +2142,15 @@ speakers_info = {
             "asr-vertical": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8361a-review-powered-monitor.28039/",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8361a-review-powered-monitor.28039/",
+                    "sar": "https://www.soundonsound.com/reviews/genelec-8361a",
+                    "lbt": "https://www.lbtechreviews.com/test/speakers/genelec-8361a",
+                    "pte": "https://www.pro-tools-expert.com/production-expert-1/genelec-8361a-tested",
+                    "sos": "https://www.soundonsound.com/reviews/genelec-8361a",
+                    "dlm": "https://www.delamar.de/test/genelec-8361a-test/",
+                    "lbd": "https://www.lowbeats.de/test-genelec-8361a-und-subwoofer-w371a-aktiv-monitor-dreamteam/",
+                },
                 "review_published": "20211112",
             },
             "asr-horizontal": {
@@ -2194,6 +2202,29 @@ speakers_info = {
                 "format": "webplotdigitizer",
                 "website": "https://ggntkt.de/en/model-m1",
                 "quality": "high",
+            },
+        },
+    },
+    "GoldenEar BRX": {
+        "brand": "GoldenEar",
+        "model": "BRX",
+        "type": "passive",
+        "price": "1600",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/goldenear-brx-review-high-end-bookshelf-speaker.28371/",
+                    "sav": "https://www.soundandvision.com/content/goldenear-technology-brx-bookshelf-speakers-review",
+                    "ste": "https://www.stereophile.com/content/goldenear-brx-bookshelf-reference-x-loudspeaker",
+                    "tas": "https://www.theabsolutesound.com/articles/goldenear-brx",
+                    "ahc": "https://www.audioholics.com/bookshelf-speaker-reviews/goldenear-brx-bookshelf-speaker",
+                },
+                "review_published": "20211123",
             },
         },
     },
