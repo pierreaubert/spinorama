@@ -53,9 +53,7 @@ def parse_graph_freq_klippel(filename: str) -> tuple[str, pd.DataFrame]:
     return title, df
 
 
-def find_data_klippel(
-    speaker_path, speaker_brand, speaker_name, mversion_in, csvname
-) -> str:
+def find_data_klippel(speaker_path, speaker_brand, speaker_name, mversion_in, csvname):
     """return the expected filename for Klippel data"""
     csvfilename = "{}/{}/{}/{}.txt".format(
         speaker_path, speaker_name, mversion_in, csvname
@@ -66,7 +64,7 @@ def find_data_klippel(
         return csvfilename
 
     logger.error("no match for {}".format(csvfilename))
-    return ""
+    return None
 
 
 def parse_graphs_speaker_klippel(
