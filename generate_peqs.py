@@ -35,7 +35,7 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--smooth-measurements=<window_size>] \
  [--smooth-order=<order>] \
  [--second-optimiser=<sopt>] \
-
+ [--curves=<curve_name>]
 
 Options:
   --help                   Display usage()
@@ -68,8 +68,9 @@ Options:
   --slope-sound-power=<s_sp> Slope of sound power, default is -8dB
   --slope-estimated-inroom=<s_pir> Slope of estimated in-room response, default is -8dB
   --second-optimiser=<sopt>
-  --smooth-measurements=<window_size> if present the measurements will be smoothed before optimisation, window_size is the size of the window use for smoothing
-  --smooth-order=<order> order of the interpolation, 3 by default for Savitzky-Golay filter.
+  --smooth-measurements=<window_size> If present the measurements will be smoothed before optimisation, window_size is the size of the window use for smoothing
+  --smooth-order=<order>  Order of the interpolation, 3 by default for Savitzky-Golay filter.
+  --curves=<curve_name>   curve name must be one of "ON", "LW", "PIR", "ER" or "SP"
 """
 from datetime import datetime
 import json
@@ -589,7 +590,7 @@ if __name__ == "__main__":
         # it will optimise for having a Listening Window as close as possible
         # the target and having a Sound Power as flat as possible (without a
         # target)
-        "curve_names": ["Listening Window"],
+        # "curve_names": ["Listening Window"],
         # 'curve_names': ['Early Reflections'],
         # 'curve_names': ['Listening Window', 'Early Reflections'],
         # "curve_names": ["On Axis", "Listening Window", "Early Reflections"],
@@ -599,7 +600,7 @@ if __name__ == "__main__":
         # 'curve_names': ['On Axis', 'Early Reflections'],
         # 'curve_names': ['Early Reflections', 'Sound Power'],
         # "curve_names": ["Estimated In-Room Response", "Listening Window"],
-        # "curve_names": ["Estimated In-Room Response"],
+        "curve_names": ["Estimated In-Room Response"],
         # start and end freq for targets
         "target_min_freq": 100,
         "target_max_freq": 16000,
@@ -727,6 +728,28 @@ if __name__ == "__main__":
     current_optim_config["second_optimiser"] = False
     if args["--second-optimiser"] is not None:
         current_optim_config["second_optimiser"] = True
+
+    # which curve (measurement) to target?
+    if args["--curves"] is not None:
+        param_curve_name = args["--curves"]
+        param_curve_name_valid = {
+            "ON": "On Axis",
+            "LW": "Listening Window",
+            "ER": "Early Reflections",
+            "SP": "Sound Power",
+            "PIR": "Estimated In-Room Response",
+        }
+        if param_curve_name not in param_curve_name_valid.keys():
+            print(
+                "{} is not known, acceptable values are {}",
+                param_curve_name,
+                param_curve_name_valid.keys(),
+            )
+            parameter_error = True
+        else:
+            current_optim_config["curve_names"] = [
+                param_curve_name_valid[param_curve_name]
+            ]
 
     # name of speaker
     speaker_name = None
