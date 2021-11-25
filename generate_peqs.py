@@ -648,25 +648,25 @@ if __name__ == "__main__":
         max_number_peq = int(args["--max-peq"])
         current_optim_config["MAX_NUMBER_PEQ"] = max_number_peq
         if max_number_peq < 1:
-            print("max_number_peq is {} which is below 1".format(max_number_peq))
+            print("ERROR: max_number_peq is {} which is below 1".format(max_number_peq))
             parameter_error = True
     if args["--max-iter"] is not None:
         max_iter = int(args["--max-iter"])
         current_optim_config["maxiter"] = max_iter
         if max_iter < 1:
-            print("max_iter is {} which is below 1".format(max_iter))
+            print("ERROR: max_iter is {} which is below 1".format(max_iter))
             parameter_error = True
     if args["--min-freq"] is not None:
         min_freq = int(args["--min-freq"])
         current_optim_config["freq_reg_min"] = min_freq
         if min_freq < 20:
-            print("min_freq is {} which is below 20Hz".format(min_freq))
+            print("ERROR: min_freq is {} which is below 20Hz".format(min_freq))
             parameter_error = True
     if args["--max-freq"] is not None:
         max_freq = int(args["--max-freq"])
         current_optim_config["freq_reg_max"] = max_freq
         if max_freq > 20000:
-            print("max_freq is {} which is above 20kHz".format(max_freq))
+            print("ERROR: max_freq is {} which is above 20kHz".format(max_freq))
             parameter_error = True
 
     if args["--min-Q"] is not None:
@@ -714,14 +714,14 @@ if __name__ == "__main__":
         current_optim_config["smooth_measurements"] = True
         current_optim_config["smooth_window_size"] = window_size
         if window_size < 2:
-            print("window size is {} which is below 2".format(window_size))
+            print("ERROR: window size is {} which is below 2".format(window_size))
             parameter_error = True
 
     if args["--smooth-order"] is not None:
         order = int(args["--smooth-order"])
         current_optim_config["smooth_order"] = order
         if order < 1 or order > 5:
-            print("Polynomial order {} is not between  is 1 and 5".format(order))
+            print("ERROR: Polynomial order {} is not between  is 1 and 5".format(order))
             parameter_error = True
 
     # do we run a second optimiser?
@@ -741,7 +741,7 @@ if __name__ == "__main__":
         }
         if param_curve_name not in param_curve_name_valid.keys():
             print(
-                "{} is not known, acceptable values are {}",
+                "ERROR: {} is not known, acceptable values are {}",
                 param_curve_name,
                 param_curve_name_valid.keys(),
             )
@@ -758,6 +758,7 @@ if __name__ == "__main__":
 
     # error in parameters
     if parameter_error:
+        print("ERROR: please check for errors in parameters above!")
         sys.exit(1)
 
     # load data
@@ -768,7 +769,7 @@ if __name__ == "__main__":
     except ValueError as ve:
         if speaker_name is not None:
             print(
-                "Speaker {0} is not in the cache. Did you run ./generate_graphs.py --speaker='{0}' --update-cache ?".format(
+                "ERROR: Speaker {0} is not in the cache. Did you run ./generate_graphs.py --speaker='{0}' --update-cache ?".format(
                     speaker_name
                 )
             )
