@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import difflib
 import ipaddress
 import logging
 import os
@@ -25,6 +26,8 @@ import warnings
 
 import flammkuchen as fl
 import tables
+
+import datas.metadata as metadata
 
 MINIRAY = None
 try:
@@ -35,6 +38,10 @@ except ModuleNotFoundError:
     import src.miniray as ray
 
     MINIRAY = True
+
+
+def get_similar_names(speakername):
+    return difflib.get_close_matches(speakername, metadata.speakers_info.keys())
 
 
 def get_custom_logger(duplicate=False):
