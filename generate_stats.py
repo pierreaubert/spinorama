@@ -237,17 +237,29 @@ def generate_stats(meta):
 
     graphs = {}
     for g in ("lfx_hz", "nbd_pir", "nbd_on", "sm_pir"):
-        data = (
-            alt.Chart(source)
-            .mark_point()
-            .encode(
-                x=alt.X("{0}:Q".format(g)),
-                y=alt.Y("pref_score:Q", title="Preference Score"),
-                color=alt.Color("brand:N"),
-                tooltip=["speaker", g, "pref_score"],
-            )
+        base = alt.Chart(source)
+        data = base.mark_point().encode(
+            x=alt.X("{0}:Q".format(g)),
+            y=alt.Y("pref_score:Q", title="Preference Score"),
+            color=alt.Color("brand:N"),
+            tooltip=["speaker", g, "pref_score"],
         )
-        graphs[g] = data + data.transform_regression(g, "pref_score").mark_line()
+        reg = data.transform_regression(g, "pref_score").mark_line()
+        scale = alt.Scale(domain=(-4.0, 11.0))
+        # histo = (
+        #    base.mark_bar()
+        #    .encode(
+        #        alt.Y("count()", stack=None, title=""),
+        #        alt.X(
+        #            "pref_score:Q",
+        #            bin=alt.Bin(maxbins=20, extent=scale.domain),
+        #            stack=None,
+        #            title="",
+        #        ),
+        #    )
+        #    .properties(width=80)
+        # )
+        graphs[g] = data + reg
 
     # used in website
     filedir = "docs/stats"
