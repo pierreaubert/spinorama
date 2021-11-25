@@ -1622,6 +1622,25 @@ speakers_info = {
             },
         },
     },
+    "Emotiva Airmotiv T2+": {
+        "skip": True,
+        "brand": "Emotiva",
+        "model": "Airmotiv T2+",
+        "type": "passive",
+        "price": "999",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/emotiva_airmotiv_t2plus/",
+                },
+            },
+        },
+    },
     "Essence Electrostatic Model 1600": {
         "brand": "Essence Electrostatic",
         "model": "Model 1600",
