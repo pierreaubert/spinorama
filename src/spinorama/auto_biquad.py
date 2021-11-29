@@ -39,6 +39,7 @@ def find_best_biquad(
     biquad_range,
     count,
     optim_config,
+    prev_best,
 ):
     def opt_peq(x):
         peq = [(1.0, Biquad(int(x[0]), x[1], 48000, x[2], x[3]))]
@@ -94,6 +95,11 @@ def find_best_biquad(
                 res["message"],
             )
         )
+        if (
+            res.message[0] == "Maximum number of function call reached during annealing"
+            and res.fun < prev_best
+        ):
+            res.success = True
         return (
             res.success,
             int(res.x[0]),
@@ -122,6 +128,7 @@ def find_best_peak(
     biquad_range,
     count,
     optim_config,
+    prev_best,
 ):
 
     biquad_type = 3
@@ -149,20 +156,38 @@ def find_best_peak(
     # can use differential_evolution basinhoppin dual_annealing
     res = {
         "success": False,
-        "x": [0.0, 0.0, 0.0, 0.0],
-        "fun": 0.0,
+        "x": [0.0, 0.0, 0.0],
+        "fun": -1000.0,
         "nit": -1,
         "message": "",
     }
     try:
-        res = opt.dual_annealing(
-            opt_peq, bounds, maxiter=optim_config["maxiter"], initial_temp=10000
+        # res = opt.dual_annealing(
+        #    opt_peq,
+        #    bounds,
+        #    visit=2.9,
+        #    # maxfun=optim_config["maxiter"],
+        #    initial_temp=10000,
+        #    no_local_search=True,
+        # )
+        res = opt.differential_evolution(
+            opt_peq,
+            bounds,
+            # workers=100,
+            # maxiter=100,
+            atol=0.001,
+            polish=False,
         )
         logger.debug(
             "          optim loss {:2.2f} in {} iter type PK at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(
                 res.fun, res.nfev, res.x[0], res.x[1], res.x[2], res.message
             )
         )
+        if (
+            res.message[0] == "Maximum number of function call reached during annealing"
+            and res.fun < prev_best
+        ):
+            res.success = True
         return res.success, biquad_type, res.x[0], res.x[1], res.x[2], res.fun, res.nit
     except ValueError as ve:
         logger.error("{} bounds {}".format(ve, bounds))
