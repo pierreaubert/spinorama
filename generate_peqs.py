@@ -70,7 +70,7 @@ Options:
   --second-optimiser=<sopt>
   --smooth-measurements=<window_size> If present the measurements will be smoothed before optimisation, window_size is the size of the window use for smoothing
   --smooth-order=<order>  Order of the interpolation, 3 by default for Savitzky-Golay filter.
-  --curves=<curve_name>   curve name must be one of "ON", "LW", "PIR", "ER" or "SP"
+  --curves=<curve_name>   curve name must be one of "ON", "LW", "PIR", "ER" or "SP" or a combinaison separated by a ,. Ex: 'PIR,LW' is valid
 """
 from datetime import datetime
 import json
@@ -600,8 +600,8 @@ if __name__ == "__main__":
         # 'curve_names': ['Listening Window', 'On Axis', 'Early Reflections'],
         # 'curve_names': ['On Axis', 'Early Reflections'],
         # 'curve_names': ['Early Reflections', 'Sound Power'],
-        # "curve_names": ["Estimated In-Room Response", "Listening Window"],
-        "curve_names": ["Estimated In-Room Response"],
+        "curve_names": ["Estimated In-Room Response", "Listening Window"],
+        # "curve_names": ["Estimated In-Room Response"],
         # start and end freq for targets
         "target_min_freq": 100,
         "target_max_freq": 16000,
@@ -732,7 +732,7 @@ if __name__ == "__main__":
 
     # which curve (measurement) to target?
     if args["--curves"] is not None:
-        param_curve_name = args["--curves"]
+        param_curve_names = args["--curves"].replace(" ", "").split(",")
         param_curve_name_valid = {
             "ON": "On Axis",
             "LW": "Listening Window",
@@ -740,17 +740,19 @@ if __name__ == "__main__":
             "SP": "Sound Power",
             "PIR": "Estimated In-Room Response",
         }
-        if param_curve_name not in param_curve_name_valid.keys():
-            print(
-                "ERROR: {} is not known, acceptable values are {}",
-                param_curve_name,
-                param_curve_name_valid.keys(),
-            )
-            parameter_error = True
-        else:
-            current_optim_config["curve_names"] = [
-                param_curve_name_valid[param_curve_name]
-            ]
+        current_optim_config["curve_names"] = []
+        for current_curve_name in param_curve_names:
+            if current_curve_name not in param_curve_name_valid.keys():
+                print(
+                    "ERROR: {} is not known, acceptable values are {}",
+                    current_curve_name,
+                    param_curve_name_valid.keys(),
+                )
+                parameter_error = True
+            else:
+                current_optim_config["curve_names"].append(
+                    param_curve_name_valid[current_curve_name]
+                )
 
     # name of speaker
     speaker_name = None
