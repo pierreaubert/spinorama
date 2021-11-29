@@ -564,6 +564,7 @@ if __name__ == "__main__":
         # "loss": "score_loss",
         # "loss": "combine_loss",
         "loss": "leastsquare_loss",
+        # "loss": "flat_pir",
         # if you have multiple loss functions, define the weigth for each
         "loss_weigths": [100.0, 1.0],
         # do you optimise only peaks or both peaks and valleys?
@@ -571,8 +572,8 @@ if __name__ == "__main__":
         # do you optimise for all kind of biquad or do you want only Peaks?
         "full_biquad_optim": False,
         # lookup around a value is [value*elastic, value/elastic]
-        "elastic": 0.2,
-        # "elastic": 0.8,
+        # "elastic": 0.2,
+        "elastic": 0.8,
         # cut frequency
         "fs": 48000,
         # optimise the curve above the Schroeder frequency (here default is
@@ -607,9 +608,9 @@ if __name__ == "__main__":
         # slope of the target (in dB) for each curve
         "slope_on_axis": 0,
         "slope_listening_window": -0.5,
-        "slope_early_reflections": -5,
-        "slope_sound_power": -8,
-        "slope_estimated_inroom": -8,
+        "slope_early_reflections": -4,
+        "slope_sound_power": -9,
+        "slope_estimated_inroom": -5.5,
         # do we want to smooth the targets?
         "smooth_measurements": False,
         # size of the window to smooth (currently in number of data points but could be in octave)
