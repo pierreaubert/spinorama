@@ -95,14 +95,24 @@ def alternate_loss(
 
 
 def flat_pir(freq, df_spin, peq):
-    splH = df_spin["SPL Horizontal_unmelted"]
-    splV = df_spin["SPL Vertical_unmelted"]
-    # apply EQ to all horizontal and vertical measurements
-    splH_filtered = peq_apply_measurements(splH, peq)
-    splV_filtered = peq_apply_measurements(splV, peq)
-    # compute pir
-    pir_filtered = graph_melt(estimated_inroom_HV(splH_filtered, splV_filtered))
-    _, _, r_value, _, _ = linregress(np.log10(pir_filtered.Freq), pir_filtered.dB)
+    pir_filtered = df_spin.get("Estimated In-Room Response_unmelted", None)
+    if pir_filtered is None:
+        splH = df_spin["SPL Horizontal_unmelted"]
+        splV = df_spin["SPL Vertical_unmelted"]
+        # apply EQ to all horizontal and vertical measurements
+        splH_filtered = peq_apply_measurements(splH, peq)
+        splV_filtered = peq_apply_measurements(splV, peq)
+        # compute pir
+        pir_filtered = graph_melt(estimated_inroom_HV(splH_filtered, splV_filtered))
+    else:
+        if len(peq) > 0:
+            pir_filtered["Estimated In-Room Response"].add(
+                peq_build(pir_filtered.Freq.values, peq)
+            )
+        pir_filtered = graph_melt(pir_filtered)
+
+    data = pir_filtered.loc[(pir_filtered.Freq >= 100) & (pir_filtered.Freq <= 16000)]
+    _, _, r_value, _, _ = linregress(np.log10(data.Freq), data.dB)
     return r_value ** 2
 
 
@@ -113,6 +123,8 @@ def score_loss(df_spin, peq):
     return minus score (we want to maximise the score)
     """
     _, _, score = scores_apply_filter(df_spin, peq)
+    # if len(peq)>0:
+    #    print('{} {}'.format(score.get("pref_score", -1000), peq[0][1]))
     return -score["pref_score"]
 
 
