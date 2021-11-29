@@ -261,6 +261,7 @@ def optim_greedy(
                 biquad_range,
                 optim_iter,
                 optim_config,
+                current_loss,
             )
         else:
             (
@@ -281,6 +282,7 @@ def optim_greedy(
                 biquad_range,
                 optim_iter,
                 optim_config,
+                current_loss,
             )
         if state:
             biquad = (
@@ -317,10 +319,6 @@ def optim_greedy(
     current_auto_target = optim_compute_auto_target(
         freq, auto_target, auto_target_interp, auto_peq, optim_config
     )
-    # final_loss = loss(freq, current_auto_target, [], 0, optim_config)
-    # final_score = 1.0
-    # if use_score:
-    #    final_score = score_loss(df_speaker, auto_peq)
     if results[-1][1] < best_loss:
         results.append((optim_config["MAX_NUMBER_PEQ"] + 1, best_loss, -pref_score))
     if use_score:
