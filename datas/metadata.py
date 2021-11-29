@@ -1022,7 +1022,10 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/dayton_mk602x/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/dayton_mk602x/",
+                    "yt": "https://www.youtube.com/watch?v=-4QcUhlIuIM",
+                },
                 "review_published": "20211117",
             },
         },
@@ -1623,7 +1626,6 @@ speakers_info = {
         },
     },
     "Emotiva Airmotiv T2+": {
-        "skip": True,
         "brand": "Emotiva",
         "model": "Airmotiv T2+",
         "type": "passive",
@@ -1637,7 +1639,9 @@ speakers_info = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/emotiva_airmotiv_t2plus/",
+                    "yt": "https://www.youtube.com/watch?v=ulFplRqEd2U",
                 },
+                "review_published": "20211122",
             },
         },
     },
@@ -3249,6 +3253,23 @@ speakers_info = {
             },
         },
     },
+    "JBL Stage A135C": {
+        "brand": "JBL",
+        "model": "Stage A135C",
+        "type": "passive",
+        "price": "300",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-stage-135c-review-center-speaker.28536/",
+                "review_published": "20211129",
+            },
+        },
+    },
     "JBL 100 Classic": {
         "brand": "JBL",
         "model": "100 Classic",
@@ -4283,6 +4304,26 @@ speakers_info = {
                 "origin": "Vendors-KLH",
                 "website": "www.klh.com",
                 "format": "rewstextdump",
+            },
+        },
+    },
+    "Kii Audio Three": {
+        "skip": True,
+        "brand": "Kii Audio",
+        "model": "Three",
+        "type": "active",
+        "price": "13000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kii_audio-three",
+                },
+                "review_published": "20211200",
             },
         },
     },
@@ -6898,7 +6939,9 @@ speakers_info = {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/vandersteen-vcc-5-review-center-speaker.27776/",
+                "reviews": {
+                    "eac": "https://www.audiosciencereview.com/forum/index.php?threads/vandersteen-vcc-5-review-center-speaker.27776/",
+                },
                 "review_published": "20211103",
             },
         },
@@ -6915,7 +6958,10 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/vandersteen_model_2/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/vandersteen_model_2/",
+                    "yt": "https://www.youtube.com/watch?v=ErOR2yP6O_U",
+                },
                 "review_published": "20211111",
             },
         },
