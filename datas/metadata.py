@@ -3164,7 +3164,7 @@ speakers_info = {
     "JBL Control 1 Pro": {
         "brand": "JBL",
         "model": "Control 1 Pro",
-        "type": "active",
+        "type": "passive",
         "price": "164",
         "shape": "bookshelves",
         "amount": "pair",
@@ -3227,6 +3227,23 @@ speakers_info = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_stage_a120/",
                 },
                 "review_published": "20211025",
+            },
+        },
+    },
+    "JBL Stage A125C": {
+        "brand": "JBL",
+        "model": "Stage A125C",
+        "type": "passive",
+        "price": "120",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-stage-125c-review-center-speaker.28613/",
+                "review_published": "20211201",
             },
         },
     },
@@ -4308,7 +4325,6 @@ speakers_info = {
         },
     },
     "Kii Audio Three": {
-        "skip": True,
         "brand": "Kii Audio",
         "model": "Three",
         "type": "active",
@@ -4323,7 +4339,7 @@ speakers_info = {
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kii_audio-three",
                 },
-                "review_published": "20211200",
+                "review_published": "20211201",
             },
         },
     },
@@ -5392,7 +5408,7 @@ speakers_info = {
     "Pioneer DJ VM-50": {
         "brand": "Pioneer",
         "model": "DJ VM-50",
-        "type": "passive",
+        "type": "active",
         "price": "340",
         "shape": "bookshelves",
         "amount": "pair",
