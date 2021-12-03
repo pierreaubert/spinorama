@@ -135,7 +135,7 @@ def lfq(lw, sp, lfx_log) -> float:
             lfq_sum += abs(y_lw - y_sp)
             n += 1
     if n == 0:
-        logger.warning("lfq is None")
+        logger.warning("lfq is None: lfx={} octave(20): {}".format(val_lfx, octave(20)))
         return -1.0
     return lfq_sum / n
 
@@ -253,7 +253,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         return None
 
 
-def scores(df_speaker):
+def scores(df_speaker, rounded=False):
     pir = None
     spin = None
     if "CEA2034" in df_speaker:
@@ -278,4 +278,4 @@ def scores(df_speaker):
         splV = df_speaker["SPL Vertical_unmelted"]
         pir = graph_melt(estimated_inroom_HV(splH, splV))
 
-    return speaker_pref_rating(cea2034=spin, df_pred_in_room=pir, rounded=False)
+    return speaker_pref_rating(cea2034=spin, df_pred_in_room=pir, rounded=rounded)
