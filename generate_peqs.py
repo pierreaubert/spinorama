@@ -35,7 +35,8 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--smooth-measurements=<window_size>] \
  [--smooth-order=<order>] \
  [--second-optimiser=<sopt>] \
- [--curves=<curve_name>]
+ [--curves=<curve_name>] \
+ [--fitness=<function>]
 
 Options:
   --help                   Display usage()
@@ -70,7 +71,8 @@ Options:
   --second-optimiser=<sopt>
   --smooth-measurements=<window_size> If present the measurements will be smoothed before optimisation, window_size is the size of the window use for smoothing
   --smooth-order=<order>  Order of the interpolation, 3 by default for Savitzky-Golay filter.
-  --curves=<curve_name>   curve name must be one of "ON", "LW", "PIR", "ER" or "SP" or a combinaison separated by a ,. Ex: 'PIR,LW' is valid
+  --curves=<curve_name>   Curve name: must be one of "ON", "LW", "PIR", "ER" or "SP" or a combinaison separated by a ,. Ex: 'PIR,LW' is valid
+  --fitness=<function>    Fit function: must be one of "Flat", "Score", "LeastSquare", "FlatPir", "Combine".
 """
 from datetime import datetime
 import json
@@ -753,6 +755,28 @@ if __name__ == "__main__":
                 current_optim_config["curve_names"].append(
                     param_curve_name_valid[current_curve_name]
                 )
+
+    # which fitness function?
+    if args["--fitness"] is not None:
+        current_fitness_name = args["--fitness"]
+        param_fitness_name_valid = {
+            "Flat": "flat_loss",
+            "Score": "score_loss",
+            "Combine": "combine_loss",
+            "LeastSquare": "leastsquare_loss",
+            "FlatPir": "flat_pir",
+        }
+        if current_fitness_name not in param_fitness_name_valid.keys():
+            print(
+                "ERROR: {} is not known, acceptable values are {}",
+                current_fitness_name,
+                param_fitness_name_valid.keys(),
+            )
+            parameter_error = True
+        else:
+            current_optim_config["loss"] = param_fitness_name_valid[
+                current_fitness_name
+            ]
 
     # name of speaker
     speaker_name = None
