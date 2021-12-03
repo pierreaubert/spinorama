@@ -3,6 +3,7 @@ import logging
 import math
 import copy
 import altair as alt
+import warnings
 
 # from altair_saver import save
 from .speaker_display import (
@@ -98,91 +99,96 @@ def template_compact(df, params, speaker, origin, key):
     # vcontour = display_contour_smoothed_vertical(df, params2)
     visoband = display_isoband_vertical(df, params2)
     vradar = display_radar_vertical(df, params2v2)
-    # build the chart
-    # print('Status {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11}'.format(
-    #     spinorama is None, onaxis is None, inroom is None, ereflex is None, vreflex is None, hreflex is None,
-    #     hspl is None, vspl is None, hcontour is None, vcontour is None, hradar is None, vradar is None))
-    chart = alt.vconcat()
-    if spinorama is not None:
-        # title = None
-        # if key is not None and key != "default":
-        #    title = "{0} ({1})".format(speaker, key)
-        # else:
-        #    title = speaker
-        if summary is not None and pict is not None:
+
+    # remove warning from altair (it works fine)
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", "Conflicting (scale|property)")
+
+        # build the chart
+        # print('Status {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11}'.format(
+        #     spinorama is None, onaxis is None, inroom is None, ereflex is None, vreflex is None, hreflex is None,
+        #     hspl is None, vspl is None, hcontour is None, vcontour is None, hradar is None, vradar is None))
+        chart = alt.vconcat()
+        if spinorama is not None:
+            # title = None
+            # if key is not None and key != "default":
+            #    title = "{0} ({1})".format(speaker, key)
+            # else:
+            #    title = speaker
+            if summary is not None and pict is not None:
+                chart = alt.vconcat(
+                    chart,
+                    alt.hconcat(
+                        summary.properties(title=speaker),
+                        spinorama.properties(title="CEA2034"),
+                        pict,
+                    ),
+                ).resolve_scale(color="independent")
+            else:
+                chart &= alt.hconcat(spinorama.properties(title="CEA2034"))
+
+        if onaxis is not None:
+            if inroom is not None:
+                chart = alt.vconcat(
+                    chart,
+                    alt.hconcat(
+                        onaxis.properties(title="On Axis"),
+                        inroom.properties(title="In Room prediction"),
+                    ),
+                ).resolve_scale(color="independent")
+            else:
+                chart &= onaxis
+
+        if ereflex is not None and hreflex is not None and vreflex is not None:
             chart = alt.vconcat(
                 chart,
                 alt.hconcat(
-                    summary.properties(title=speaker),
-                    spinorama.properties(title="CEA2034"),
-                    pict,
-                ),
+                    ereflex.properties(title="Early Reflections"),
+                    hreflex.properties(title="Horizontal Reflections"),
+                    vreflex.properties(title="Vertical Reflections"),
+                ).resolve_scale(
+                    color="shared"
+                ),  # generates a warning
             ).resolve_scale(color="independent")
-        else:
-            chart &= alt.hconcat(spinorama.properties(title="CEA2034"))
 
-    if onaxis is not None:
-        if inroom is not None:
-            chart = alt.vconcat(
-                chart,
-                alt.hconcat(
-                    onaxis.properties(title="On Axis"),
-                    inroom.properties(title="In Room prediction"),
-                ),
+        if hspl is not None and vspl is not None:
+            chart &= alt.hconcat(
+                hspl.properties(title="Horizontal SPL"),
+                vspl.properties(title="Vertical SPL"),
+            )
+        else:
+            if hspl is not None:
+                chart &= hspl.properties(title="Horizontal SPL")
+            elif vspl is not None:
+                chart &= vspl.properties(title="Vertical SPL")
+
+        #    if hcontour is not None and hradar is not None:
+        #        chart &= alt.hconcat(hcontour.properties(title='Horizontal Contours'), hradar.properties(title='Horizontal Radar'))
+
+        #    if vcontour is not None and vradar is not None:
+        #        chart &= alt.hconcat(vcontour.properties(title='Vertical Contours'), vradar.properties(title='Vertical Radar'))
+
+        if hisoband is not None and hradar is not None:
+            chart &= alt.hconcat(
+                hisoband.properties(title="Horizontal IsoBands"),
+                hradar.properties(title="Horizontal Radar"),
             ).resolve_scale(color="independent")
-        else:
-            chart &= onaxis
 
-    if ereflex is not None and hreflex is not None and vreflex is not None:
-        chart = alt.vconcat(
-            chart,
-            alt.hconcat(
-                ereflex.properties(title="Early Reflections"),
-                hreflex.properties(title="Horizontal Reflections"),
-                vreflex.properties(title="Vertical Reflections"),
-            ).resolve_scale(
-                color="shared"
-            ),  # generates a warning
-        ).resolve_scale(color="independent")
+        if visoband is not None and vradar is not None:
+            chart &= alt.hconcat(
+                visoband.properties(title="Vertical IsoBands"),
+                vradar.properties(title="Vertical Radar"),
+            ).resolve_scale(color="independent")
 
-    if hspl is not None and vspl is not None:
-        chart &= alt.hconcat(
-            hspl.properties(title="Horizontal SPL"),
-            vspl.properties(title="Vertical SPL"),
+        # can be usefull for debugging
+        # save(summary, "/tmp/summary.png")
+
+        return (
+            chart.configure_title(orient="top", anchor="middle", fontSize=30)
+            .configure_text(fontSize=16)
+            .configure_view(strokeWidth=0, opacity=0)
+            # .configure_legend(orient='bottom')
         )
-    else:
-        if hspl is not None:
-            chart &= hspl.properties(title="Horizontal SPL")
-        elif vspl is not None:
-            chart &= vspl.properties(title="Vertical SPL")
-
-    #    if hcontour is not None and hradar is not None:
-    #        chart &= alt.hconcat(hcontour.properties(title='Horizontal Contours'), hradar.properties(title='Horizontal Radar'))
-
-    #    if vcontour is not None and vradar is not None:
-    #        chart &= alt.hconcat(vcontour.properties(title='Vertical Contours'), vradar.properties(title='Vertical Radar'))
-
-    if hisoband is not None and hradar is not None:
-        chart &= alt.hconcat(
-            hisoband.properties(title="Horizontal IsoBands"),
-            hradar.properties(title="Horizontal Radar"),
-        ).resolve_scale(color="independent")
-
-    if visoband is not None and vradar is not None:
-        chart &= alt.hconcat(
-            visoband.properties(title="Vertical IsoBands"),
-            vradar.properties(title="Vertical Radar"),
-        ).resolve_scale(color="independent")
-
-    # can be usefull for debugging
-    # save(summary, "/tmp/summary.png")
-
-    return (
-        chart.configure_title(orient="top", anchor="middle", fontSize=30)
-        .configure_text(fontSize=16)
-        .configure_view(strokeWidth=0, opacity=0)
-        # .configure_legend(orient='bottom')
-    )
 
 
 def template_panorama(df, params, speaker, origin, key):
