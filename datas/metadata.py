@@ -6056,7 +6056,8 @@ speakers_info = {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/mc-1000-best-speaker-in-the-world.11283/",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-c52-speaker-review-and-measurements.10934/",
+                "review_published": "20200117",
             },
         },
     },
@@ -7128,9 +7129,9 @@ speakers_info = {
             },
         },
     },
-    "Zaph Audio ZA5": {
+    "Zaph Audio ZA5.2": {
         "brand": "Zaph Audio",
-        "model": "ZA5",
+        "model": "ZA5.2",
         "type": "passive",
         "price": "350",
         "shape": "bookshelves",
@@ -7140,7 +7141,8 @@ speakers_info = {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/zaph-audio-za5-2-diy-kit-speaker-review.12086/",
+                "review_published": "20201317",
             },
         },
     },
