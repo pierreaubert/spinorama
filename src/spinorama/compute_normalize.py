@@ -127,10 +127,10 @@ def normalize_mean(idf):
         df = graph_melt(idf)
 
     on = df[df.Measurements == "On Axis"]
-    on_mean = np.mean(on.loc[(on.Freq > 500) & (on.Freq < 10000)].dB)
+    on_mean = np.mean(on.loc[(on.Freq > 30) & (on.Freq < 3000)].dB)
 
     lw = df[df.Measurements == "Listening Window"]
-    lw_mean = np.mean(lw.loc[(lw.Freq > 500) & (lw.Freq < 10000)].dB)
+    lw_mean = np.mean(lw.loc[(lw.Freq > 300) & (lw.Freq < 3000)].dB)
 
     # this is messy too: some graphs have LW but not ON
     mean_delta = abs(on_mean - lw_mean)

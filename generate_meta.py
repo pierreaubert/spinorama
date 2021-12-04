@@ -116,6 +116,16 @@ def add_scores(dataframe):
                             speaker_name, key
                         )
                     )
+                    # sensitivity
+                    sensitivity = dfs.get("sensibility")
+                    if (
+                        sensitivity is not None
+                        and metadata.speakers_info[speaker_name].get("type")
+                        == "passive"
+                    ):
+                        metadata.speakers_info[speaker_name][
+                            "sensitivity"
+                        ] = sensitivity
                     # basic math
                     splH = dfs.get("SPL Horizontal_unmelted", None)
                     splV = dfs.get("SPL Vertical_unmelted", None)

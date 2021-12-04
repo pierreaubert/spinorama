@@ -35,6 +35,7 @@ def load_normalize(df: pd.DataFrame, ref_mean=None) -> pd.DataFrame:
                 else:
                     dfc[graph] = normalize_graph(df[graph], mean)
         dfc["CEA2034"] = normalize_cea2034(df["CEA2034"], mean)
+        dfc["sensibility"] = mean
         logger.debug("mean for normalisation {0}".format(mean))
         return dfc
     if "On Axis" in df:
@@ -47,6 +48,7 @@ def load_normalize(df: pd.DataFrame, ref_mean=None) -> pd.DataFrame:
             else:
                 dfc[graph] = normalize_graph(df[graph], mean)
         logger.debug("mean for normalisation {0}".format(mean))
+        dfc["sensibility"] = mean
         return dfc
     if ref_mean is not None:
         for graph in df.keys():
@@ -55,6 +57,7 @@ def load_normalize(df: pd.DataFrame, ref_mean=None) -> pd.DataFrame:
             else:
                 dfc[graph] = normalize_graph(df[graph], mean)
         logger.debug("mean for normalisation {0}".format(mean))
+        dfc["sensibility"] = mean
         return dfc
 
     # do nothing

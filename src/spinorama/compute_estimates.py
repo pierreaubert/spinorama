@@ -81,6 +81,12 @@ def estimates(
             if not math.isnan(band):
                 est["ref_band"] = round(band, 1)
 
+        # estimate sensivity for passive speakers
+        if onaxis is not None:
+            est["sensitivity_delta"] = onaxis.loc[
+                (onaxis.Freq >= 300) & (onaxis.Freq <= 3000)
+            ].dB.mean()
+
         for orientation in ("horizontal", "vertical"):
             spl = splH
             if orientation == "vertical":
