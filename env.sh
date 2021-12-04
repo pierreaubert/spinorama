@@ -25,13 +25,22 @@ SPIN=$HOME/src/spinorama
 export PYTHONPATH=$SPIN/src:$SPIN/src/website
 if ! test -d $SPIN/spinorama-venv; then
     python3 -m venv spinorama-venv
+    source $SPIN/spinorama-venv/bin/activate
     rehash
     pip3 install -U pip
     pip3 install -r requirements.txt
     pip3 install -r requirements-tests.txt
-    ray install ray-nightly
+    # ray install ray-nightly
 fi
 source $SPIN/spinorama-venv/bin/activate
+
+## node install
+## ----------------------------------------------------------------------
+if ! test -d $SPIN/node_modules; then
+    npm install vega@5.17.1 vega-lite@4.17 canvas
+    npm install pyright html-validator-cli standard
+fi
+export PATH=$PATH:$SPIN/node_modules/.bin
 
 ## CUDA configuration
 ## ----------------------------------------------------------------------

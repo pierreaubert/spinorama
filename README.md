@@ -137,7 +137,7 @@ Please add tests and
 
 ```
 export PYTHONPATH=src
-pytest --cov=src
+python3 -m pytest --cov=src .
 ```
 
 Before committing, please check that the various checks are fine:
