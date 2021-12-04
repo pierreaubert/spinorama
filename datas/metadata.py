@@ -1583,7 +1583,7 @@ speakers_info = {
     "Emotiva Airmotiv 6s": {
         "brand": "Emotiva",
         "model": "Airmotiv 6s",
-        "type": "passive",
+        "type": "active",
         "price": "600",
         "shape": "bookshelves",
         "amount": "pair",
@@ -4737,7 +4737,7 @@ speakers_info = {
         "model": "RTM10",
         "type": "active",
         "price": "7500",
-        "shape": "floorstanders",
+        "shape": "bookshelves",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
