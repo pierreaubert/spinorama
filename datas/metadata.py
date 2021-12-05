@@ -4384,6 +4384,23 @@ speakers_info = {
             },
         },
     },
+    "KEF T301C": {
+        "brand": "KEF",
+        "model": "T301C",
+        "type": "passive",
+        "price": "300",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-t301c-review-ultra-thin-speaker.28743/",
+                "review_published": "20211205",
+            },
+        },
+    },
     "King's Audio KingSound KS 3001": {
         "brand": "King's Audio",
         "model": "KingSound KS 3001",
