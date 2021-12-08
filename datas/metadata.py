@@ -1850,6 +1850,26 @@ speakers_info = {
             },
         },
     },
+    "Focal Alpha 65 Evo": {
+        "brand": "Focal",
+        "model": "Alpha 65 Evo",
+        "type": "active",
+        "price": "900",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/focal-alpha-65-evo-review-studio-monitor.28832/",
+                    "sar": "https://www.soundandrecording.de/equipment/focal-alpha-65-evo-im-test/",
+                },
+                "review_published": "20211208",
+            },
+        },
+    },
     "Focal Aria 906": {
         "brand": "Focal",
         "model": "Aria 906",
