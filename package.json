@@ -6,10 +6,10 @@
     "html-validator-cli": "^7.0.1",
     "npm": "^7.5.4",
     "parcel-bundler": "^1.12.5",
-    "pyright": "^1.1.192",
+    "pyright": "^1.1.193",
     "standard": "^16.0.4",
     "typescript": "^4.3.2",
-    "vega": "^5.17.1",
+    "vega": "^5.21.0",
     "vega-canvas": "^1.2.6",
     "vega-cli": "^5.20.2",
     "vega-lite": "^4.17.0"

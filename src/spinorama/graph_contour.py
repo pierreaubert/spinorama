@@ -43,8 +43,7 @@ def compute_contour(dfu):
     nm = dfm.Measurements.nunique()
     nf = int(len(dfm.index) / nm)
     logger.debug("unique={:d} nf={:d}".format(nm, nf))
-    # index grid on a log scale log 2 ±= 0.3
-    hrange = np.logspace(1.0 + math.log10(2), 4.0 + math.log10(2), nf)
+    hrange = dfu.Freq.values
     # 3d mesh
     af, am = np.meshgrid(hrange, vrange)
     # since it is melted generate slices

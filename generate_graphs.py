@@ -67,6 +67,14 @@ from spinorama.graph import graph_params_default
 
 VERSION = 1.26
 
+activate_tracing = True
+
+
+def tracing(msg):
+    # debugging ray is sometimes painfull
+    if activate_tracing:
+        print("---- TRACING ---- {} ----".format(msg))
+
 
 def get_speaker_list(speakerpath: str) -> List[str]:
     """return a list of speakers from data subdirectory"""
@@ -97,6 +105,7 @@ def queue_measurement(
     ptype = None
     width = graph_params_default["width"]
     height = graph_params_default["height"]
+    tracing("calling print_graph remote for {}".format(speaker))
     id_g1 = print_graphs.remote(
         id_df,
         id_eq,
@@ -109,6 +118,7 @@ def queue_measurement(
         force,
         ptype,
     )
+    tracing("calling print_graph remote eq for {}".format(speaker))
     id_g2 = print_graphs.remote(
         id_eq,
         id_eq,
@@ -121,6 +131,7 @@ def queue_measurement(
         force,
         ptype,
     )
+    tracing("print_graph done")
     return (id_df, id_eq, id_g1, id_g2)
 
 

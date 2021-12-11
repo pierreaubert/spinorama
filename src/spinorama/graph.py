@@ -462,9 +462,11 @@ def graph_isoband(df, isoband_params):
     # print('debug {} {}'.format(dir_deg_p, dir_deg_m))
     lines = graph_directivity_lines(freq_min, dir_deg_p, dir_deg_m)
 
+    # TODO: this is not correct
     def transform_log(x, y):
         return np.log10(x) * graph_width / 172
 
+    # TODO: this is not correct
     def transform_radian(x, y):
         return y / 180 * math.pi * graph_height / 360
 
@@ -493,7 +495,9 @@ def graph_isoband(df, isoband_params):
                 legend=alt.Legend(title="Relative dB SPL"),
             )
         )
+        # TODO: buggy too, graph is upside down
         .project("identity")
+        # .project("identity", size=100, reflectX=False, reflectY=True)
     )
     axis = graph_empty(freq_min, freq_max, -180, 180)
     return (
