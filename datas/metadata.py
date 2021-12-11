@@ -6154,6 +6154,23 @@ speakers_info = {
             },
         },
     },
+    "Revel C10": {
+        "brand": "Revel",
+        "model": "C10",
+        "type": "passive",
+        "price": "",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-concerta-c10-review-center-speaker.28918/",
+                "review_published": "20211211",
+            },
+        },
+    },
     "Revel C205": {
         "brand": "Revel",
         "model": "C205",
@@ -6184,6 +6201,7 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-c208-review-center-speaker.21303/",
+                "review_published": "20210313",
             },
             "vendor": {
                 "origin": "Vendors-Revel",
@@ -6259,11 +6277,13 @@ speakers_info = {
                     "asr-v2": "https://www.audiosciencereview.com/forum/index.php?threads/bass-response-correction-for-klippel-nfs-measurements.22493/",
                 },
                 "notes": "Second measurement with bass corrections",
+                "review_published": "20200314",
             },
             "asr-v1-20200315": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-f35-speaker-review.12053/",
+                "review_published": "20200314",
             },
             "vendor": {
                 "origin": "Vendors-Revel",
@@ -6318,6 +6338,7 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-f208-tower-speaker-review.13192/",
+                "review_published": "20200508",
             },
             "asr-v1-20200508": {
                 "origin": "ASR",
@@ -6554,6 +6575,7 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m105-bookshelf-speaker-review.14745/",
+                "review_published": "20200716",
             },
             "vendor": {
                 "origin": "Vendors-Revel",
@@ -6576,6 +6598,7 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m106-bookshelf-speaker-review.14363/",
+                "review_published": "20200626",
             },
             "vendor": {
                 "origin": "Vendors-Revel",
@@ -6598,6 +6621,7 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-speaker-review.11884/",
+                "review_published": "20200305",
             },
             "misc-dominikz": {
                 "origin": "Misc",
@@ -6626,6 +6650,7 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m22-speaker-review.12279/",
+                "review_published": "20200328",
             },
         },
     },
@@ -6642,6 +6667,7 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m55xc-outdoor-speaker-review.14881/",
+                "review_published": "20200723",
             },
         },
     },
