@@ -97,37 +97,6 @@ def parse_graphs_speaker_klippel(
         )
         return dfs
 
-    use_all_files = False
-    if use_all_files:
-        csvfiles = [
-            "CEA2034",
-            "Early Reflections",
-            "Directivity Index",
-            "Estimated In-Room Response",
-            "Horizontal Reflections",
-            "Vertical Reflections",
-        ]
-        for csv in set(mandatory_csvfiles + csvfiles):
-            csvfilename = find_data_klippel(
-                speaker_path, speaker_brand, speaker_name, mversion, csv
-            )
-            try:
-                title, df = parse_graph_freq_klippel(csvfilename)
-                dfs[title + "_unmelted"] = df
-                dfs[title] = graph_melt(df)
-                logger.debug(
-                    "Speaker: {0} (Klippel)  Loaded: {1}".format(
-                        speaker_name, csvfilename
-                    )
-                )
-            except FileNotFoundError:
-                logger.info(
-                    "Speaker: {} {} Not found: {}".format(
-                        speaker_name, mversion, csvfilename
-                    )
-                )
-        return dfs
-
     h_name = find_data_klippel(
         speaker_path, speaker_brand, speaker_name, mversion, "SPL Horizontal"
     )

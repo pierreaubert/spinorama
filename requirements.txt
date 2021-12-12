@@ -6,12 +6,14 @@ docopt
 flaml[blendsearch]
 flammkuchen
 jupyterlab
+kaleido
 mako
 matplotlib
 more_itertools
 nptyping
 numpy
 pandas
+plotly
 pre_commit
 ray[default]>=1.6.0
 ray[tune]

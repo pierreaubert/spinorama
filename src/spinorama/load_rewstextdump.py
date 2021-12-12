@@ -51,6 +51,7 @@ def parse_graphs_speaker_rewstextdump(
             spin_check.pivot(*spin_check).rename_axis(columns=None).reset_index()
         )
         dfs["CEA2034_unmelted"] = spin_pivot
+        # need to normalize here
     except FileNotFoundError:
         logger.error("Speaker: {0} Not found: {1}".format(speaker_brand, speaker_name))
         return {}

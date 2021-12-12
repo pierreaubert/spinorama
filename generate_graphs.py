@@ -65,9 +65,9 @@ from spinorama.speaker_print import print_graphs
 from spinorama.graph import graph_params_default
 
 
-VERSION = 1.26
+VERSION = 1.27
 
-activate_tracing = True
+activate_tracing = False
 
 
 def tracing(msg):

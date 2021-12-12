@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
+import math
 import numpy as np
 import pandas as pd
 
@@ -114,89 +115,6 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
     return res2.dropna().reset_index(drop=True)
 
 
-def normalize_mean(idf):
-    # this is messy: first version was using On Axis data from Spinorama but some
-    # speaker don't have it.
-    mean = None
-
-    # put all graphs on the same format
-    df = None
-    if "dB" in idf.keys():
-        df = idf
-    else:
-        df = graph_melt(idf)
-
-    on = df[df.Measurements == "On Axis"]
-    on_mean = np.mean(on.loc[(on.Freq > 30) & (on.Freq < 3000)].dB)
-
-    lw = df[df.Measurements == "Listening Window"]
-    lw_mean = np.mean(lw.loc[(lw.Freq > 300) & (lw.Freq < 3000)].dB)
-
-    # this is messy too: some graphs have LW but not ON
-    mean_delta = abs(on_mean - lw_mean)
-    if mean_delta > 30.0:
-        logger.warning(
-            "Dataframe has LW and ON with very different means {:.1f}".format(
-                mean_delta
-            )
-        )
-        mean = max(on_mean, lw_mean)
-    else:
-        mean = on_mean
-
-    return mean
-
-
-def normalize_cea2034(dfc, mean):
-    # use a copy to be able to run it multiple times in one session
-    df = dfc.copy()
-
-    for measurement in (
-        "On Axis",
-        "Listening Window",
-        "Sound Power",
-        "Early Reflections",
-    ):
-        if df.loc[df.Measurements == measurement, "dB"].shape[0] != 0:
-            logger.debug(
-                "removing {:.1f}dB from {}: min={:.1f} max={:.1f} ".format(
-                    mean,
-                    measurement,
-                    df.loc[df.Measurements == measurement, "dB"].min(),
-                    df.loc[df.Measurements == measurement, "dB"].max(),
-                )
-            )
-            df.loc[df.Measurements == measurement, "dB"] -= mean
-
-    # 3 different cases Princeton+ASR and Vendors
-    offset = 0
-    if "DI offset" in df.Measurements.unique():
-        offset = np.mean(df[df.Measurements == "DI offset"].dB)
-
-    for measurement in ("Sound Power DI", "Early Reflections DI", "DI offset"):
-        if df.loc[df.Measurements == measurement, "dB"].shape[0] != 0:
-            df.loc[df.Measurements == measurement, "dB"] -= offset
-            s = df.loc[df.Measurements == measurement, "dB"]
-            logger.debug(
-                "{0} min={1} max={2}".format(measurement, np.min(s), np.max(s))
-            )
-
-    return df
-
-
-def normalize_graph(dfc: pd.DataFrame, mean: float) -> pd.DataFrame:
-    df = dfc.copy()
-    df.dB -= mean
-    return df
-
-
-def pprint(df: pd.DataFrame):
-    for m in df.Measurements.unique():
-        df_min = np.min(df[df.Measurements == m].dB)
-        df_max = np.max(df[df.Measurements == m].dB)
-        print("{0} {1} {2}".format(df_min, df_max, m))
-
-
 def resample(df: pd.DataFrame, target_size: int):
     len_freq = df.shape[0]
     if len_freq > 2 * target_size:
@@ -204,3 +122,131 @@ def resample(df: pd.DataFrame, target_size: int):
         sampled = df.loc[df.Freq.rolling(roll).max()[1::roll].index, :]
         return sampled
     return df
+
+
+def compute_contour(dfm, min_freq):
+
+    # get a list of columns
+    vrange = []
+    for c in dfm.columns:
+        if c not in ("Freq", "On Axis"):
+            angle = int(c[:-1])
+            vrange.append(angle)
+        if c == "On Axis":
+            vrange.append(0)
+
+    vrange = list(sorted(vrange))
+
+    dfm = graph_melt(dfm)
+    nm = dfm.Measurements.nunique()
+    nf = int(len(dfm.index) / nm)
+    # logger.debug("unique={:d} nf={:d}".format(nm, nf))
+    hrange = np.logspace(math.log10(min_freq), 4.0 + math.log10(2), nf)
+    af, am = np.meshgrid(hrange, vrange)
+    az = np.array([dfm.dB[nf * i : nf * (i + 1)] for i in range(0, nm)])
+    # if af.shape != am.shape or af.shape != az.shape:
+    #    print(
+    #        "Shape mismatch af={0} am={1} az={2}".format(af.shape, az.shape, am.shape)
+    #    )
+    return (af, am, az)
+
+
+def reshape(x, y, z, nscale):
+    nx, _ = x.shape
+    # expand x-axis and y-axis
+    lxi = [
+        np.linspace(x[0][i], x[0][i + 1], nscale, endpoint=False)
+        for i in range(0, len(x[0]) - 1)
+    ]
+    lx = [i for j in lxi for i in j] + [x[0][-1] for i in range(0, nscale)]
+    nly = (nx - 1) * nscale + 1
+    # keep order
+    ly = []
+    if y[0][0] > 0:
+        ly = np.linspace(np.max(y), np.min(y), nly)
+    else:
+        ly = np.linspace(np.min(y), np.max(y), nly)
+
+    # on this axis, cheat by 1% to generate round values that are better in legend
+    # round off values close to those in ykeep
+    xkeep = [
+        20,
+        30,
+        100,
+        200,
+        300,
+        400,
+        500,
+        1000,
+        2000,
+        3000,
+        4000,
+        5000,
+        10000,
+        20000,
+    ]
+
+    def close(x1, x2, xkeep):
+        for z in xkeep:
+            if abs((x1 - z) / z) < 0.01 and z < x2:
+                xkeep.remove(z)
+                return z
+        return x1
+
+    lx2 = [close(lx[i], lx[i + 1], xkeep) for i in range(0, len(lx) - 1)]
+    lx2 = np.append(lx2, lx[-1])
+    # build the mesh
+    rx, ry = np.meshgrid(lx2, ly)
+    # copy paste the values of z into rz
+    rzi = np.repeat(z[:-1], nscale, axis=0)
+    rzi_x, rzi_y = rzi.shape
+    rzi2 = np.append(rzi, z[-1]).reshape(rzi_x + 1, rzi_y)
+    rz = np.repeat(rzi2, nscale, axis=1)
+    # print(rx.shape, ry.shape, rz.shape)
+    return (rx, ry, rz)
+
+
+def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
+    """ "compute +/- angle where directivity is most constant between 1kHz and 10kz"""
+
+    # kHz1 = 110
+    # kHz10 = 180
+    def linear_eval(x: float) -> float:
+        xp1 = int(x)
+        xp2 = xp1 + 1
+        zp1 = az[xp1][110:180]
+        zp2 = az[xp2][110:180]
+        # linear interpolation
+        zp = zp1 + (x - xp1) * (zp2 - zp1)
+        # normˆ2 (z-(-6dB))
+        return np.linalg.norm(zp + 6)
+
+    eval_count = 180
+
+    space_p = np.linspace(int(len(am.T[0]) / 2), 1, eval_count)
+    eval_p = [linear_eval(x) for x in space_p]
+    # 1% tolerance
+    tol = 0.1
+    min_p = np.min(eval_p) * (1.0 + tol)
+    # all minimum in this 1% band from min
+    pos_g = [i for i, v in enumerate(eval_p) if v < min_p]
+    # be generous and take best one (widest)
+    if len(pos_g) > 1:
+        pos_p = pos_g[-1]
+    else:
+        pos_p = np.argmin(eval_p)
+    # translate in deg
+    angle_p = pos_p * 180 / eval_count
+
+    space_m = np.linspace(int(len(am.T[0]) / 2), len(am.T[0]) - 2, eval_count)
+    eval_m = [linear_eval(x) for x in space_m]
+    min_m = np.min(eval_m) * (1.0 + tol)
+    pos_g = [i for i, v in enumerate(eval_m) if v < min_m]
+    if len(pos_g) > 1:
+        pos_m = pos_g[-1]
+    else:
+        pos_m = np.argmin(eval_m)
+    # translate in deg
+    angle_m = -pos_m * 180 / eval_count
+
+    return float(angle_p), float(angle_m), float((angle_p - angle_m) / 2)

@@ -106,12 +106,5 @@ def parse_graphs_speaker(
             )
         )
         return None
-    df_normalized = load_normalize(df)
-    if df_normalized is None:
-        logger.warning(
-            "Normalisation failed for {0} {1} {2}".format(
-                measurement_path, speaker_name, mversion
-            )
-        )
-        return None
-    return df_normalized
+
+    return df

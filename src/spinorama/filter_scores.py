@@ -6,7 +6,7 @@ from .load import graph_melt
 from .compute_scores import speaker_pref_rating, nbd
 from .compute_cea2034 import compute_cea2034, estimated_inroom_HV, listening_window
 from .filter_peq import peq_apply_measurements
-from .graph import graph_spinorama
+from .plot import plot_spinorama
 
 
 logger = logging.getLogger("spinorama")
@@ -60,7 +60,7 @@ def noscore_apply_filter(df_speaker: DataSpeaker, peq: Peq):
 
 
 def scores_graph(spin: DataSpeaker, spin_filtered: DataSpeaker, params: dict):
-    return graph_spinorama(spin, params) | graph_spinorama(spin_filtered, params)
+    return plot_spinorama(spin, params) | plot_spinorama(spin_filtered, params)
 
 
 def scores_print(score: dict, score_filtered: dict):

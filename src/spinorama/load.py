@@ -3,7 +3,7 @@ import logging
 import numpy as np
 import pandas as pd
 
-from .compute_normalize import normalize_mean, normalize_cea2034, normalize_graph
+from .compute_misc import normalize_mean, normalize_cea2034, normalize_graph
 from .compute_cea2034 import (
     early_reflections,
     vertical_reflections,
@@ -15,7 +15,7 @@ from .compute_cea2034 import (
 )
 
 from .load_misc import graph_melt, sort_angles
-from .compute_normalize import unify_freq
+from .compute_misc import unify_freq
 
 logger = logging.getLogger("spinorama")
 
@@ -67,19 +67,56 @@ def load_normalize(df: pd.DataFrame, ref_mean=None) -> pd.DataFrame:
     return df
 
 
+def shift_spl(spl, mean):
+    # shift all measurement by means
+    df = pd.DataFrame()
+    for k in spl.keys():
+        if k == "Freq":
+            df[k] = spl[k]
+        else:
+            df[k] = spl[k] - mean
+        if k == "180°" and "-180°" not in df.keys():
+            df.insert(1, "-180°", spl["180°"] - mean)
+    return df
+
+
+def norm_spl(spl):
+    # nornalize v.s. on axis
+    df = pd.DataFrame({"Freq": spl.Freq})
+    for k in spl.keys():
+        if k != "Freq" and k != "On Axis":
+            df[k] = spl[k] - spl["On Axis"]
+    df["On Axis"] = 0
+    return df
+
+
 def filter_graphs(speaker_name, h_spl, v_spl):
     dfs = {}
     # add H and V SPL graphs
+    mean = None
+    sv_spl = None
+    sh_spl = None
     if h_spl is not None:
-        dfs["SPL Horizontal_unmelted"] = h_spl
-        dfs["SPL Horizontal"] = graph_melt(h_spl)
+        mean = np.mean(h_spl.loc[(h_spl.Freq > 300) & (h_spl.Freq < 3000)]["On Axis"])
+        sh_spl = shift_spl(h_spl, mean)
+        dfs["SPL Horizontal"] = graph_melt(sh_spl)
+        dfs["SPL Horizontal_unmelted"] = sh_spl
+        dfs["SPL Horizontal_normalized_unmelted"] = norm_spl(sh_spl)
     else:
         logger.info("h_spl is None for speaker {}".format(speaker_name))
+
     if v_spl is not None:
-        dfs["SPL Vertical_unmelted"] = v_spl
-        dfs["SPL Vertical"] = graph_melt(v_spl)
+        if mean is None:
+            mean = np.mean(
+                v_spl.loc[(v_spl.Freq > 300) & (v_spl.Freq < 3000)]["On Axis"]
+            )
+        sv_spl = shift_spl(v_spl, mean)
+        dfs["SPL Vertical"] = graph_melt(sv_spl)
+        dfs["SPL Vertical_unmelted"] = sv_spl
+        dfs["SPL Vertical_normalized_unmelted"] = norm_spl(sv_spl)
     else:
         logger.info("v_spl is None for speaker {}".format(speaker_name))
+
     # add computed graphs
     table = [
         ["Early Reflections", early_reflections],
@@ -89,19 +126,20 @@ def filter_graphs(speaker_name, h_spl, v_spl):
         ["On Axis", compute_onaxis],
         ["CEA2034", compute_cea2034],
     ]
-    if h_spl is None or v_spl is None:
+
+    if sh_spl is None or sv_spl is None:
         #
-        df = compute_onaxis(h_spl, v_spl)
+        df = compute_onaxis(sh_spl, sv_spl)
         dfs["On Axis_unmelted"] = df
         dfs["On Axis"] = graph_melt(df)
         # SPL H
-        if h_spl is not None:
-            df = horizontal_reflections(h_spl, v_spl)
+        if sh_spl is not None:
+            df = horizontal_reflections(sh_spl, sv_spl)
             dfs["Horizontal Reflections_unmelted"] = df
             dfs["Horizontal Reflections"] = graph_melt(df)
         # SPL V
-        if v_spl is not None:
-            df = vertical_reflections(h_spl, v_spl)
+        if sv_spl is not None:
+            df = vertical_reflections(sh_spl, sv_spl)
             dfs["Vectical Reflections_unmelted"] = df
             dfs["Vectical Reflections"] = graph_melt(df)
         # that's all folks
@@ -109,7 +147,7 @@ def filter_graphs(speaker_name, h_spl, v_spl):
 
     for title, functor in table:
         try:
-            df = functor(h_spl, v_spl)
+            df = functor(sh_spl, sv_spl)
             if df is not None:
                 dfs[title + "_unmelted"] = df
                 dfs[title] = graph_melt(df)
@@ -125,6 +163,13 @@ def filter_graphs(speaker_name, h_spl, v_spl):
                     title, ke, speaker_name
                 )
             )
+
+    # print(
+    #    "min {} max {}".format(
+    #        np.min(dfs["CEA2034_unmelted"]["On Axis"]),
+    #        np.max(dfs["CEA2034_unmelted"]["On Axis"]),
+    #    )
+    # )
     return dfs
 
 

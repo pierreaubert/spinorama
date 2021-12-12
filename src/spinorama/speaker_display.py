@@ -1,33 +1,25 @@
 # -*- coding: utf-8 -*-
 import logging
 import altair as alt
+import numpy as np
 import pandas as pd
 import datas.metadata as metadata
 from .compute_normalize import resample
 from .compute_estimates import estimates
 from .compute_scores import speaker_pref_rating
-from .graph import (
-    graph_freq,
-    graph_contour_smoothed,
-    graph_radar,
-    graph_spinorama,
-    graph_params_default,
+from .plot import (
+    plot_params_default,
     contour_params_default,
-    radar_params_default,
-    graph_contour,
-    graph_directivity_matrix,
-    graph_regression,
-    graph_isoband,
-    isoband_params_default,
-)
-from .graph_compare import (
-    graph_compare_freq,
-    graph_compare_cea2034,
-    graph_compare_freq_regression,
-)
-from .graph_summary import (
-    graph_summary,
-    graph_image,
+    plot_spinorama,
+    plot_graph,
+    plot_graph_regression,
+    plot_contour,
+    plot_radar,
+    plot_image,
+    plot_summary,
+    plot_compare_spinorama,
+    plot_compare_graph,
+    plot_compare_graph_regression,
 )
 
 logger = logging.getLogger("spinorama")
@@ -36,151 +28,35 @@ logger = logging.getLogger("spinorama")
 alt.data_transformers.disable_max_rows()
 
 
-def display_contour_horizontal(df, graph_params=None):
-    if graph_params is None:
-        graph_params = contour_params_default
-    try:
-        if "SPL Horizontal_unmelted" not in df.keys():
-            return None
-        dfs = df["SPL Horizontal_unmelted"]
-        dfs = resample(dfs, 400)
-        return graph_contour(dfs, graph_params)
-    except KeyError as ke:
-        logger.warning("Display Contour Horizontal failed with {0}".format(ke))
+def display_spinorama(df, graph_params=plot_params_default):
+    spin = df.get("CEA2034_unmelted")
+    if spin is None:
+        logger.info("Display CEA2034 not in dataframe {0}".format(df.keys()))
         return None
+    return plot_spinorama(spin, graph_params)
 
 
-def display_contour_vertical(df, graph_params=None):
-    if graph_params is None:
-        graph_params = contour_params_default
+def display_reflection_early(df, graph_params=plot_params_default):
     try:
-        if "SPL Vertical_unmelted" not in df.keys():
+        if "Early Reflections_unmelted" not in df.keys():
             return None
-        dfs = df["SPL Vertical_unmelted"]
-        dfs = resample(dfs, 400)
-        return graph_contour(dfs, graph_params)
-    except KeyError as ke:
-        logger.warning("Display Contour Vertical failed with {0}".format(ke))
-        return None
-
-
-def display_contour_smoothed_horizontal(df, graph_params=None):
-    if graph_params is None:
-        graph_params = contour_params_default
-    try:
-        if "SPL Horizontal_unmelted" not in df.keys():
-            return None
-        dfs = df["SPL Horizontal_unmelted"]
-        dfs = resample(dfs, 400)
-        return graph_contour_smoothed(dfs, graph_params)
-    except KeyError as ke:
-        logger.warning("Display Contour Horizontal failed with {0}".format(ke))
-        return None
-
-
-def display_contour_smoothed_vertical(df, graph_params=None):
-    if graph_params is None:
-        graph_params = contour_params_default
-    try:
-        if "SPL Vertical_unmelted" not in df.keys():
-            return None
-        dfs = df["SPL Vertical_unmelted"]
-        dfs = resample(dfs, 400)
-        return graph_contour_smoothed(dfs, graph_params)
-    except KeyError as ke:
-        logger.warning("Display Contour Vertical failed with {0}".format(ke))
-        return None
-
-
-def display_radar_horizontal(df, graph_params=None):
-    if graph_params is None:
-        graph_params = radar_params_default
-    try:
-        if "SPL Horizontal_unmelted" not in df.keys():
-            return None
-        dfs = df["SPL Horizontal_unmelted"]
-        return graph_radar(dfs, graph_params)
-    except (KeyError, IndexError, ValueError) as e:
-        logger.warning("Display Radar Horizontal failed with {0}".format(e))
-        return None
-
-
-def display_radar_vertical(df, graph_params=None):
-    if graph_params is None:
-        graph_params = radar_params_default
-    try:
-        if "SPL Vertical_unmelted" not in df.keys():
-            return None
-        dfs = df["SPL Vertical_unmelted"]
-        return graph_radar(dfs, graph_params)
-    except (KeyError, IndexError, ValueError) as e:
-        logger.warning("Display Radar Horizontal failed with {0}".format(e))
-        return None
-
-
-def display_contour_sidebyside(df, graph_params=None):
-    if graph_params is None:
-        graph_params = contour_params_default
-    try:
-        contourH = df["SPL Horizontal_unmelted"]
-        contourV = df["SPL Vertical_unmelted"]
-        return alt.hconcat(
-            graph_contour_smoothed(contourH, graph_params),
-            graph_contour_smoothed(contourV, graph_params),
-        )
-    except KeyError as ke:
-        logger.warning("Display Contour side by side failed with {0}".format(ke))
-        return None
-
-
-def display_spinorama(df, graph_params=None):
-    if graph_params is None:
-        graph_params = graph_params_default
-    try:
-        if "CEA2034" not in df.keys():
-            return None
-        spinorama = df["CEA2034"]
-        if spinorama is not None:
-            spinorama = spinorama.loc[spinorama["Measurements"] != "DI offset"]
-            return graph_spinorama(spinorama, graph_params)
-        logger.info("Display CEA2034 is empty")
-    except KeyError as ke:
-        logger.info("Display CEA2034 not in dataframe {0}".format(ke))
-    return None
-
-
-def display_reflection_early(df, graph_params=None):
-    if graph_params is None:
-        graph_params = graph_params_default
-    try:
-        if "Early Reflections" not in df.keys():
-            return None
-        return graph_freq(df["Early Reflections"], graph_params)
+        return plot_graph(df["Early Reflections_unmelted"], graph_params)
     except KeyError as ke:
         logger.warning("Display Early Reflections failed with {0}".format(ke))
         return None
 
 
-def display_onaxis(df, graph_params=None):
-    if graph_params is None:
-        graph_params = graph_params_default
+def display_onaxis(df, graph_params=plot_params_default):
     try:
         onaxis = None
-        if "CEA2034" in df.keys():
-            onaxis = df["CEA2034"]
-            onaxis = onaxis.loc[onaxis["Measurements"] == "On Axis"]
-        elif "On Axis" in df.keys():
-            onaxis = df["On Axis"]
+        if "CEA2034_unmelted" in df.keys():
+            return plot_graph_regression(
+                df["CEA2034_unmelted"], "On Axis", graph_params
+            )
+        elif "On Axis_unmelted" in df.keys():
+            return plot_graph_regression(df["On Axis"], "On Axis", graph_params)
         else:
             return None
-
-        onaxis_graph = graph_freq(onaxis, graph_params)
-        onaxis_reg = graph_regression(onaxis, 80, 10000)
-        return (
-            (onaxis_reg + onaxis_graph)
-            .resolve_scale(color="independent")
-            .resolve_legend(shape="independent")
-        )
     except KeyError as ke:
         logger.warning("Display On Axis failed with {0}".format(ke))
         return None
@@ -189,93 +65,116 @@ def display_onaxis(df, graph_params=None):
         return None
 
 
-def display_inroom(df, graph_params=None):
-    if graph_params is None:
-        graph_params = graph_params_default
+def display_inroom(df, graph_params=plot_params_default):
     try:
-        if "Estimated In-Room Response" not in df.keys():
+        if "Estimated In-Room Response_unmelted" not in df.keys():
             return None
-        inroom = df["Estimated In-Room Response"]
-        inroom_graph = graph_freq(inroom, graph_params)
-        inroom_reg = graph_regression(inroom, 80, 10000)
-        return (
-            alt.layer(inroom_reg, inroom_graph)
-            .resolve_scale(color="independent")
-            .resolve_legend(shape="independent")
+        return plot_graph_regression(
+            df["Estimated In-Room Response_unmelted"],
+            "Estimated In-Room Response",
+            graph_params,
         )
     except KeyError as ke:
         logger.warning("Display In Room failed with {0}".format(ke))
         return None
 
 
-def display_reflection_horizontal(df, graph_params=None):
-    if graph_params is None:
-        graph_params = graph_params_default
+def display_reflection_horizontal(df, graph_params=plot_params_default):
     try:
-        if "Horizontal Reflections" not in df.keys():
+        if "Horizontal Reflections_unmelted" not in df.keys():
             return None
-        return graph_freq(df["Horizontal Reflections"], graph_params)
+        return plot_graph(df["Horizontal Reflections_unmelted"], graph_params)
     except KeyError as ke:
         logger.warning("Display Horizontal Reflections failed with {0}".format(ke))
         return None
 
 
-def display_reflection_vertical(df, graph_params=None):
-    if graph_params is None:
-        graph_params = graph_params_default
+def display_reflection_vertical(df, graph_params=plot_params_default):
     try:
-        if "Vertical Reflections" not in df.keys():
+        if "Vertical Reflections_unmelted" not in df.keys():
             return None
-        return graph_freq(df["Vertical Reflections"], graph_params)
+        return plot_graph(df["Vertical Reflections_unmelted"], graph_params)
     except KeyError:
         return None
 
 
-def display_spl(df, axis, graph_params=None):
-    if graph_params is None:
-        graph_params = graph_params_default
+def display_spl(df, axis, graph_params=plot_params_default):
     try:
         if axis not in df.keys():
             return None
-        spl = df[axis]
-        mfilter = {
-            "Measurements": ["On Axis", "10°", "20°", "30°", "40°", "50°", "60°"]
-        }
-        mask = spl.isin(mfilter).any(1)
-        spl = spl[mask]
-        spl = resample(spl, 700)  # 100x number of graphs
-        return graph_freq(spl, graph_params)
+        spl = df[axis].loc[
+            :, {"Freq", "On Axis", "10°", "20°", "30°", "40°", "50°", "60°"}
+        ]
+        # print('spl {}'.format(spl.keys()))
+        return plot_graph(spl, graph_params)
     except KeyError as ke:
         logger.warning("Display SPL failed with {0}".format(ke))
         return None
 
 
-def display_spl_horizontal(df, graph_params=None):
-    if graph_params is None:
-        graph_params = graph_params_default
-    return display_spl(df, "SPL Horizontal", graph_params)
+def display_spl_horizontal(df, graph_params=plot_params_default):
+    return display_spl(df, "SPL Horizontal_unmelted", graph_params)
 
 
-def display_spl_vertical(df, graph_params=None):
-    if graph_params is None:
-        graph_params = graph_params_default
-    return display_spl(df, "SPL Vertical", graph_params)
+def display_spl_vertical(df, graph_params=plot_params_default):
+    return display_spl(df, "SPL Vertical_unmelted", graph_params)
 
 
-def display_directivity_matrix(df, graph_params=None):
-    if graph_params is None:
-        graph_params = graph_params_default
-    try:
-        return graph_directivity_matrix(df, graph_params)
-    except Exception as e:
-        logger.info("Display directivity matrix failed with {0}".format(e))
+def display_spl_horizontal_normalized(df, graph_params=plot_params_default):
+    return display_spl(df, "SPL Horizontal_normalized_unmelted", graph_params)
+
+
+def display_spl_vertical_normalized(df, graph_params=plot_params_default):
+    return display_spl(df, "SPL Vertical_normalized_unmelted", graph_params)
+
+
+def display_contour(df, direction, graph_params=contour_params_default):
+    # print('Display SPL: {} {}'.format(direction, df.keys()))
+    if direction not in df.keys():
         return None
+    return plot_contour(df[direction], graph_params)
 
 
-def display_compare(df, graph_filter, graph_params=None):
-    if graph_params is None:
-        graph_params = graph_params_default
+def display_contour_horizontal(df, graph_params=contour_params_default):
+    return display_contour(df, "SPL Horizontal_unmelted", graph_params)
 
+
+def display_contour_vertical(df, graph_params=contour_params_default):
+    return display_contour(df, "SPL Vertical_unmelted", graph_params)
+
+
+def display_contour_horizontal_normalized(df, graph_params=contour_params_default):
+    spl = df["SPL Horizontal_normalized_unmelted"]
+    # print('Display SPL: {}'.format(spl.keys()))
+    # for k in spl.keys():
+    #    if k != 'Freq':
+    #        print('{} min {} max {}'.format(
+    #            k,
+    #            np.min(spl[k]),
+    #            np.max(spl[k])))
+    return display_contour(df, "SPL Horizontal_normalized_unmelted", graph_params)
+
+
+def display_contour_vertical_normalized(df, graph_params=contour_params_default):
+    return display_contour(df, "SPL Vertical_normalized_unmelted", graph_params)
+
+
+def display_radar(df, direction, graph_params):
+    dfs = df.get(direction)
+    if dfs is None:
+        return None
+    return plot_radar(dfs, graph_params)
+
+
+def display_radar_horizontal(df, graph_params=plot_params_default):
+    return display_radar(df, "SPL Horizontal_unmelted", graph_params)
+
+
+def display_radar_vertical(df, graph_params=plot_params_default):
+    return display_radar(df, "SPL Vertical_unmelted", graph_params)
+
+
+def display_compare(df, graph_filter, graph_params=plot_params_default):
     def augment(dfa, name):
         # print(name)
         namearray = [name for i in range(0, len(dfa))]
@@ -306,47 +205,19 @@ def display_compare(df, graph_filter, graph_params=None):
         speaker2 = "KEF LS50 - Princeton - princeton"
 
         if graph_filter == "CEA2034":
-            graph = graph_compare_cea2034(source, graph_params, speaker1, speaker2)
+            graph = plot_compare_spinorama(source, graph_params, speaker1, speaker2)
         elif graph_filter in ("On Axis", "Estimated In-Room Response"):
-            graph = graph_compare_freq_regression(
+            graph = plot_compare_graph_regression(
                 source, graph_params, speaker1, speaker2
             )
         else:
-            graph = graph_compare_freq(source, graph_params, speaker1, speaker2)
+            graph = plot_compare_graph(source, graph_params, speaker1, speaker2)
         return graph
     except KeyError as e:
         logger.warning("failed for {0} with {1}".format(graph_filter, e))
         return None
     except ValueError as e:
         logger.warning("failed for {0} with {1}".format(graph_filter, e))
-        return None
-
-
-def display_isoband_horizontal(df, graph_params=None):
-    if graph_params is None:
-        graph_params = isoband_params_default
-    try:
-        if "SPL Horizontal_unmelted" not in df.keys():
-            return None
-        dfs = df["SPL Horizontal_unmelted"]
-        dfs = resample(dfs, 400)
-        return graph_isoband(dfs, graph_params)
-    except KeyError as ke:
-        logger.warning("Display Isoband Horizontal failed with {0}".format(ke))
-        return None
-
-
-def display_isoband_vertical(df, graph_params=None):
-    if graph_params is None:
-        graph_params = isoband_params_default
-    try:
-        if "SPL Vertical_unmelted" not in df.keys():
-            return None
-        dfs = df["SPL Vertical_unmelted"]
-        dfs = resample(dfs, 400)
-        return graph_isoband(dfs, graph_params)
-    except KeyError as ke:
-        logger.warning("Display Isoband Vertical failed with {0}".format(ke))
         return None
 
 
@@ -455,11 +326,11 @@ def display_summary(df, params, speaker, origin, key):
                 "speaker summary lenght is incorrect {0}".format(speaker_summary)
             )
 
-        return graph_summary(speaker, speaker_summary, params)
+        return plot_summary(speaker, speaker_summary, params)
     except KeyError as ke:
         logger.warning("Display Summary failed with {0}".format(ke))
         return None
 
 
 def display_pict(speaker, params):
-    return graph_image(speaker, params)
+    return plot_image(speaker, params)
