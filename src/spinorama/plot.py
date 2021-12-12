@@ -16,7 +16,6 @@ from .load_misc import sort_angles
 logger = logging.getLogger("spinorama")
 
 pio.templates.default = "plotly_white"
-width = 600
 
 plot_params_default = {
     "xmin": 20,
@@ -118,11 +117,11 @@ uniform_colors = {
 }
 
 
-def generate_xaxis(freq_min=20):
+def generate_xaxis(freq_min=20, freq_max=20000):
     return dict(
         title_text="Frequency (Hz)",
         type="log",
-        range=[math.log10(freq_min), math.log10(20000)],
+        range=[math.log10(freq_min), math.log10(freq_max)],
         tickvals=[
             20,
             30,
@@ -186,23 +185,29 @@ def generate_xaxis(freq_min=20):
     )
 
 
-def generate_yaxis_spl():
+def generate_yaxis_spl(range_min=-40, range_max=10, range_step=5):
     return dict(
         title_text="SPL (dB)",
-        range=[-40, 10],
+        range=[range_min, range_max],
         dtick=1,
-        tickvals=[i for i in range(-40, 10)],
-        ticktext=["{}".format(i) if not i % 5 else " " for i in range(-40, 10)],
+        tickvals=[i for i in range(range_min, range_max, range_step)],
+        ticktext=[
+            "{}".format(i) if not i % 5 else " "
+            for i in range(range_min, range_max, range_step)
+        ],
     )
 
 
-def generate_yaxis_angles():
+def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
     return dict(
         title_text="Angle",
-        range=[-180, 180],
-        dtick=30,
-        tickvals=[v for v in range(-180, 210, 30)],
-        ticktext=["{}°".format(v) for v in range(-180, 210, 30)],
+        range=[angle_min, angle_max],
+        dtick=angle_step,
+        tickvals=[v for v in range(angle_min, angle_max + angle_step, angle_step)],
+        ticktext=[
+            "{}°".format(v)
+            for v in range(angle_min, angle_max + angle_step, angle_step)
+        ],
     )
 
 
@@ -297,7 +302,8 @@ def plot_graph_regression(df, measurement, graph_params):
         ),
     )
 
-    current_restricted = df.loc[(df.Freq > 300) & (df.Freq < 3000)]
+    # some speakers start very high
+    current_restricted = df.loc[(df.Freq > 250) & (df.Freq < 10000)]
 
     slope, intercept, r, p, se = stats.linregress(
         x=current_restricted["Freq"], y=current_restricted[measurement]
@@ -339,8 +345,8 @@ def plot_graph_regression(df, measurement, graph_params):
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl())
     fig.update_layout(
-        width=600 * math.sqrt(2),
-        height=600,
+        width=height * math.sqrt(2),
+        height=height,
         legend=dict(orientation="v"),
     )
     # print("fig is {}".format(fig))
@@ -385,7 +391,7 @@ def plot_contour(spl, params):
     )
     fig.update_xaxes(generate_xaxis(min_freq))
     fig.update_yaxes(generate_yaxis_angles())
-    fig.update_layout(width=600 * 1.414, height=600)
+    fig.update_layout(width=600 * math.sqrt(2), height=600)
     return fig
 
 
@@ -475,8 +481,8 @@ def plot_radar(spl, params):
 
     fig.update_layout(
         # specs={"type": "polar"},
-        width=600 * 2,
-        height=800,
+        width=600 * math.sqrt(2),
+        height=600,
         polar=dict(
             radialaxis=dict(
                 range=[-45, 5],
@@ -504,7 +510,8 @@ def plot_summary(df):
     return None
 
 
-def plot_compare_spinorama():
+def plot_compare_spinorama(df, params, speaker1, speaker2):
+
     return None
 
 

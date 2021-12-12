@@ -21,10 +21,10 @@
 usage: generate_compare.py [--help] [--version] [--smoke-test] [--log-level=<level>]
 
 Options:
-  --help            display usage()
-  --version         script version number
-  --smoke-test             Test the optimiser with a small amount of variables
-  --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
+  --help              Display usage()
+  --version           Script version number
+  --smoke-test        Test the optimiser with a small amount of variables
+  --log-level=<level> Default is WARNING, options are DEBUG INFO ERROR.
 """
 import sys
 
@@ -44,7 +44,7 @@ ray.init()
 
 if __name__ == "__main__":
     args = docopt(
-        __doc__, version="generate_compare.py version 1.2", options_first=True
+        __doc__, version="generate_compare.py version 1.3", options_first=True
     )
 
     level = args2level(args)

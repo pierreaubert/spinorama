@@ -295,8 +295,12 @@ def add_scores(dataframe):
 
                 # normalize min and max
                 def percent(val, vmin, vmax):
+                    if math.isnan(val) or math.isnan(vmin) or math.isnan(vmax):
+                        logger.debug("data is NaN")
+                        return 0
                     if vmax == vmin:
                         logger.debug("max == min")
+                        return 0
                     p = math.floor(100 * (val - vmin) / (vmax - vmin))
                     return min(max(0, p), 100)
 

@@ -105,7 +105,7 @@ def print_graphs(
     origins_info,
     key="default",
     width=900,
-    height=500,
+    height=700,
     force_print=False,
     filter_file_ext=None,
 ):
@@ -170,7 +170,7 @@ def print_graphs(
                 title=dict(
                     text="{2} for {0} measured by {1}".format(speaker, origin, title),
                 ),
-                legend=dict(orientation="h"),
+                legend=dict(orientation="v"),
             )
 
     # 1080p to 2k screen

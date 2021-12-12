@@ -37,29 +37,7 @@
       </div>
     </li>
     % endfor
-    % for isoband in g_isoband:
-    <li>
-      <div>
-        <img class="graph" alt="${isoband}" src="${g_key}/${isoband | unmeltI, space2url}.jpg"/>
-      </div>
-    </li>
-    % endfor
-    % for directivity in g_directivity:
-    <li>
-      <div>
-        <img class="graph" alt="${directivity}" src="${g_key}/${directivity | unmeltR, space2url}.jpg"/>
-      </div>
-    </li>
-    % endfor
   </ul>
-</div>
-
-<!-- Laptop view: 2 cols-->
-<div class="tab-pane display:none" id="pane-2">
-  <div id="vis2"></div>
-  <figure class="image">
-    <img class="graph" alt="Single page view" src="${g_key}/2cols.jpg"/>
-  </figure>
 </div>
 
 <!-- EQ view: sequential-->
@@ -97,20 +75,6 @@
       </div>
     </li>
     % endfor
-    % for isoband in g_isoband:
-    <li>
-      <div>
-        <img class="graph" alt="Isoband with EQ" src="${g_key}_eq/${isoband | unmeltI, space2url}.jpg"/>
-      </div>
-    </li>
-    % endfor
-    % for directivity in g_directivity:
-    <li>
-      <div>
-        <img class="graph" alt="Directivity with EQ" src="${g_key}_eq/${directivity | unmeltR, space2url}.jpg"/>
-      </div>
-    </li>
-    % endfor
   </ul>
   % endif
 </div>
@@ -125,12 +89,6 @@
   <tr>
     <td><img class="graph" alt="Frequency" src="${g_key}/${freq | space2url}.jpg"/></td>
     <td><img class="graph" alt="Frequency with EQ" src="${g_key}_eq/${freq | space2url}.jpg"/></td>
-  </tr>
-  % endfor
-  % for isoband in g_isoband:
-  <tr>
-      <td><img class="graph" alt="Isoband" src="${g_key}/${isoband | unmeltI, space2url}.jpg"/></td>
-      <td><img class="graph" alt="Isoband with EQ" src="${g_key}_eq/${isoband | unmeltI, space2url}.jpg"/></td>
   </tr>
   % endfor
   </table>

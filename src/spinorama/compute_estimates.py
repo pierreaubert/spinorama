@@ -92,9 +92,7 @@ def estimates(
             if orientation == "vertical":
                 spl = splV
             if spl is not None and not spl.empty:
-                af, am, az = compute_contour(
-                    spl,
-                )
+                af, am, az = compute_contour(spl, 500)
                 dir_deg_p, dir_deg_m, dir_deg = compute_directivity_deg(af, am, az)
                 est["dir_{}_p".format(orientation)] = dir_deg_p
                 est["dir_{}_m".format(orientation)] = dir_deg_m
