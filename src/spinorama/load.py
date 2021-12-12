@@ -3,7 +3,6 @@ import logging
 import numpy as np
 import pandas as pd
 
-from .compute_misc import normalize_mean, normalize_cea2034, normalize_graph
 from .compute_cea2034 import (
     early_reflections,
     vertical_reflections,
@@ -20,53 +19,6 @@ from .compute_misc import unify_freq
 logger = logging.getLogger("spinorama")
 
 
-def load_normalize(df: pd.DataFrame, ref_mean=None) -> pd.DataFrame:
-    # normalize all melted graphs
-    dfc = {}
-    mean = ref_mean
-    if "CEA2034" in df:
-        if ref_mean is None:
-            mean = normalize_mean(df["CEA2034"])
-            dfc["CEA2034_original_mean"] = mean
-        for graph in df.keys():
-            if graph != "CEA2034":
-                if graph.replace("_unmelted", "") != graph:
-                    dfc[graph] = df[graph]
-                else:
-                    dfc[graph] = normalize_graph(df[graph], mean)
-        dfc["CEA2034"] = normalize_cea2034(df["CEA2034"], mean)
-        dfc["sensibility"] = mean
-        logger.debug("mean for normalisation {0}".format(mean))
-        return dfc
-    if "On Axis" in df:
-        if ref_mean is None:
-            mean = normalize_mean(df["On Axis"])
-            dfc["On Axis_original_mean"] = mean
-        for graph in df.keys():
-            if graph.replace("_unmelted", "") != graph:
-                dfc[graph] = df[graph]
-            else:
-                dfc[graph] = normalize_graph(df[graph], mean)
-        logger.debug("mean for normalisation {0}".format(mean))
-        dfc["sensibility"] = mean
-        return dfc
-    if ref_mean is not None:
-        for graph in df.keys():
-            if graph.replace("_unmelted", "") != graph:
-                dfc[graph] = df[graph]
-            else:
-                dfc[graph] = normalize_graph(df[graph], mean)
-        logger.debug("mean for normalisation {0}".format(mean))
-        dfc["sensibility"] = mean
-        return dfc
-
-    # do nothing
-    logger.debug(
-        "CEA2034 and On Axis are not in df knows keys are {0}".format(df.keys())
-    )
-    return df
-
-
 def shift_spl(spl, mean):
     # shift all measurement by means
     df = pd.DataFrame()
@@ -78,6 +30,24 @@ def shift_spl(spl, mean):
         if k == "180°" and "-180°" not in df.keys():
             df.insert(1, "-180°", spl["180°"] - mean)
     return df
+
+
+def shift_spl_melted(spl, mean):
+    # shift all measurement by means
+    df = spl.copy()
+    df.dB -= mean
+    return df
+
+
+def shift_spl_melted_cea2034(spl, mean):
+    # shift all measurement by means
+    df = pd.DataFrame({"Freq": spl.Freq})
+    for col in set(spl.Measurements):
+        if "DI" in col:
+            df[col] = spl.loc[spl.Measurements == col].dB
+        else:
+            df[col] = spl.loc[spl.Measurements == col].dB - mean
+    return graph_melt(df)
 
 
 def norm_spl(spl):
@@ -170,6 +140,41 @@ def filter_graphs(speaker_name, h_spl, v_spl):
     #        np.max(dfs["CEA2034_unmelted"]["On Axis"]),
     #    )
     # )
+    return dfs
+
+
+def filter_graphs_partial(df):
+    dfs = {}
+    # normalize first
+    mean = None
+    on = None
+    if "CEA2034" in df:
+        on = df["CEA2034"]
+    if on is None and "On Axis" in df and "On Axis" in df["On Axis"]:
+        on = df["On Axis"]
+    if on is not None:
+        mean = np.mean(
+            on.loc[
+                (on.Freq > 300) & (on.Freq < 3000) & (on.Measurements == "On Axis")
+            ].dB
+        )
+        for k in df.keys():
+            if k == "CEA2034":
+                dfs[k] = shift_spl_melted_cea2034(df[k], mean)
+            else:
+                dfs[k] = shift_spl_melted(df[k], mean)
+    else:
+        for k in df.keys():
+            dfs[k] = df[k]
+
+    for k in df.keys():
+        # print('Trying {}'.format(k))
+        current = dfs[k]
+        # print('Current {}'.format(current.keys()))
+        dfs["{}_unmelted".format(k)] = current.pivot_table(
+            index="Freq", columns="Measurements", values="dB", aggfunc=max
+        ).reset_index()
+    # print('filter in: keys={} out: mean={} keys={}'.format(df.keys(), mean, dfs.keys()))
     return dfs
 
 

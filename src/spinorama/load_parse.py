@@ -9,13 +9,18 @@ except ModuleNotFoundError:
     import src.miniray as ray
 
 
-from .load import filter_graphs, load_normalize
 from .load_klippel import parse_graphs_speaker_klippel
 from .load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
 from .load_princeton import parse_graphs_speaker_princeton
 from .load_rewstextdump import parse_graphs_speaker_rewstextdump
 from .load_rewseq import parse_eq_iir_rews
 from .load_splHVtxt import parse_graphs_speaker_splHVtxt
+from .load import (
+    filter_graphs,
+    filter_graphs_partial,
+    symmetrise_measurement,
+    spin_compute_di_eir,
+)
 from .filter_peq import peq_apply_measurements
 from .filter_scores import noscore_apply_filter
 
@@ -75,26 +80,46 @@ def parse_graphs_speaker(
 ) -> dict:
     df = None
     measurement_path = "{}".format(speaker_path)
-    if mformat == "klippel":
-        df = parse_graphs_speaker_klippel(
-            measurement_path, speaker_brand, speaker_name, mversion, msymmetry
-        )
-    elif mformat == "webplotdigitizer":
-        df = parse_graphs_speaker_webplotdigitizer(
-            measurement_path, speaker_brand, speaker_name, morigin, mversion
-        )
-    elif mformat == "princeton":
-        df = parse_graphs_speaker_princeton(
-            measurement_path, speaker_brand, speaker_name, mversion, msymmetry
-        )
-    elif mformat == "splHVtxt":
-        df = parse_graphs_speaker_splHVtxt(
-            measurement_path, speaker_brand, speaker_name, mversion
-        )
-    elif mformat == "rewstextdump":
-        df = parse_graphs_speaker_rewstextdump(
-            measurement_path, speaker_brand, speaker_name, morigin, mversion
-        )
+
+    if mformat in ("klippel", "princeton", "splHVtxt"):
+        if mformat == "klippel":
+            h_spl, v_spl = parse_graphs_speaker_klippel(
+                measurement_path, speaker_brand, speaker_name, mversion, msymmetry
+            )
+        elif mformat == "princeton":
+            h_spl, v_spl = parse_graphs_speaker_princeton(
+                measurement_path, speaker_brand, speaker_name, mversion, msymmetry
+            )
+        elif mformat == "splHVtxt":
+            h_spl, v_spl = parse_graphs_speaker_splHVtxt(
+                measurement_path, speaker_brand, speaker_name, mversion
+            )
+
+        df = None
+        if msymmetry == "coaxial":
+            h_spl2 = symmetrise_measurement(h_spl)
+            if v_spl is None:
+                v_spl2 = h_spl2.copy()
+            else:
+                v_spl2 = symmetrise_measurement(v_spl)
+            df = filter_graphs(speaker_name, h_spl2, v_spl2)
+        elif msymmetry == "horizontal":
+            h_spl2 = symmetrise_measurement(h_spl)
+            df = filter_graphs(speaker_name, h_spl2, v_spl)
+        else:
+            df = filter_graphs(speaker_name, h_spl, v_spl)
+    elif mformat in ("webplotdigitizer", "rewstextdump"):
+        title = None
+        df_uneven = None
+        if mformat == "webplotdigitizer":
+            title, df_uneven = parse_graphs_speaker_webplotdigitizer(
+                measurement_path, speaker_brand, speaker_name, morigin, mversion
+            )
+        elif mformat == "rewstextdump":
+            title, df_uneven = parse_graphs_speaker_rewstextdump(
+                measurement_path, speaker_brand, speaker_name, morigin, mversion
+            )
+        df = filter_graphs_partial(spin_compute_di_eir(speaker_name, title, df_uneven))
     else:
         logger.fatal("Format {:s} is unkown".format(mformat))
         sys.exit(1)

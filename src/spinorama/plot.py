@@ -214,6 +214,8 @@ def plot_spinorama(spin, graph_params):
         "Early Reflections",
         "Sound Power",
     ):
+        if measurement not in spin.keys():
+            continue
         fig.add_trace(
             go.Scatter(
                 x=spin.Freq,
@@ -226,6 +228,8 @@ def plot_spinorama(spin, graph_params):
             secondary_y=False,
         )
     for measurement in ("Early Reflections DI", "Sound Power DI"):
+        if measurement not in spin.keys():
+            continue
         fig.add_trace(
             go.Scatter(
                 x=spin.Freq,

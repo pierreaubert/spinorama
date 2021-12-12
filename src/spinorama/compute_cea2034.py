@@ -51,6 +51,7 @@ std_weigths = compute_weigths()
 sp_weigths = {
     "On Axis": std_weigths[0],
     "180°": std_weigths[0],
+    "-180°": std_weigths[0],
     #
     "10°": std_weigths[1],
     "170°": std_weigths[1],

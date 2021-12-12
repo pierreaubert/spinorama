@@ -63,31 +63,24 @@ def generate_speaker(mako, dataframe, meta, site):
                     "Vertical Reflections",
                     "SPL Horizontal",
                     "SPL Vertical",
+                    "SPL Horizontal Normalized",
+                    "SPL Vertical Normalized",
                 ]
                 freq = {k: dfs[k] for k in freq_filter if k in dfs}
                 # contour
                 contour_filter = [
                     "SPL Horizontal Contour",
                     "SPL Vertical Contour",
+                    "SPL Horizontal Contour Normalized",
+                    "SPL Vertical Contour Normalized",
                 ]
                 contour = {k: dfs[k] for k in contour_filter if k in dfs}
-                # isoband
-                isoband_filter = [
-                    "SPL Horizontal IsoBand",
-                    "SPL Vertical IsoBand",
-                ]
-                isoband = {k: dfs[k] for k in isoband_filter if k in dfs}
                 # radar
                 radar_filter = [
                     "SPL Horizontal Radar",
                     "SPL Vertical Radar",
                 ]
                 radar = {k: dfs[k] for k in radar_filter if k in dfs}
-                # directivity
-                directivity_filter = [
-                    "Directivity Matrix",
-                ]
-                directivity = {k: dfs[k] for k in directivity_filter if k in dfs}
                 # eq
                 eq = None
                 if key != "default_eq":
@@ -112,9 +105,7 @@ def generate_speaker(mako, dataframe, meta, site):
                             speaker=speaker_name,
                             g_freq=freq,
                             g_contour=contour,
-                            g_isoband=isoband,
                             g_radar=radar,
-                            g_directivity=directivity,
                             g_key=key,
                             g_eq=eq,
                             meta=meta,

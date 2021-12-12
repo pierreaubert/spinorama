@@ -196,8 +196,7 @@ def parse_graphs_speaker_webplotdigitizer(
         return None
 
     try:
-        title, spin_uneven = parse_graph_freq_webplotdigitizer(jsonfilename)
-        dfs = spin_compute_di_eir(speaker_name, title, spin_uneven)
+        return parse_graph_freq_webplotdigitizer(jsonfilename)
     except FileNotFoundError:
         logger.info("Speaker: {0} Not found: {1}".format(speaker_name, jsonfilename))
     return dfs

@@ -5,7 +5,6 @@ import numpy as np
 import pandas as pd
 from scipy.io import loadmat
 from .load_misc import sort_angles
-from .load import filter_graphs, symmetrise_measurement
 
 
 logger = logging.getLogger("spinorama")
@@ -48,7 +47,8 @@ def parse_graph_freq_princeton_mat(mat, suffix):
         label = "{:d}°".format(ilabel)
         if ilabel == 0:
             label = "On Axis"
-        df[label] = ys
+        if ilabel % 10 == 0:
+            df[label] = ys
     # check empty case
     if "On Axis" not in df.keys():
         return None
@@ -91,16 +91,4 @@ def parse_graphs_speaker_princeton(
     h_spl = parse_graph_princeton(h_file, "H")
     v_spl = parse_graph_princeton(v_file, "V")
 
-    if symmetry == "coaxial":
-        h_spl2 = symmetrise_measurement(h_spl)
-        if v_spl is None:
-            v_spl2 = h_spl2.copy()
-        else:
-            v_spl2 = symmetrise_measurement(v_spl)
-        return filter_graphs(speaker_name, h_spl2, v_spl2)
-
-    if symmetry == "horizontal":
-        h_spl2 = symmetrise_measurement(h_spl)
-        return filter_graphs(speaker_name, h_spl2, v_spl)
-
-    return filter_graphs(speaker_name, h_spl, v_spl)
+    return h_spl, v_spl

@@ -4,7 +4,7 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import datas.metadata as metadata
-from .compute_normalize import resample
+from .compute_misc import resample
 from .compute_estimates import estimates
 from .compute_scores import speaker_pref_rating
 from .plot import (
@@ -47,22 +47,21 @@ def display_reflection_early(df, graph_params=plot_params_default):
 
 
 def display_onaxis(df, graph_params=plot_params_default):
-    try:
-        onaxis = None
-        if "CEA2034_unmelted" in df.keys():
-            return plot_graph_regression(
-                df["CEA2034_unmelted"], "On Axis", graph_params
-            )
-        elif "On Axis_unmelted" in df.keys():
-            return plot_graph_regression(df["On Axis"], "On Axis", graph_params)
-        else:
-            return None
-    except KeyError as ke:
-        logger.warning("Display On Axis failed with {0}".format(ke))
+    onaxis = df.get("CEA2034_unmelted")
+    if onaxis is None:
+        onaxis = df.get("On Axis_unmelted")
+
+    if onaxis is None:
+        logger.debug("Display On Axis failed")
         return None
-    except AttributeError as ae:
-        logger.warning("Display On Axis failed with {0}".format(ae))
+
+    if "On Axis" not in onaxis.keys():
+        logger.warning(
+            "Display On Axis failed, known keys are {}".format(onaxis.keys())
+        )
         return None
+
+    return plot_graph_regression(onaxis, "On Axis", graph_params)
 
 
 def display_inroom(df, graph_params=plot_params_default):
@@ -102,11 +101,15 @@ def display_spl(df, axis, graph_params=plot_params_default):
     try:
         if axis not in df.keys():
             return None
-        spl = df[axis].loc[
-            :, {"Freq", "On Axis", "10°", "20°", "30°", "40°", "50°", "60°"}
-        ]
-        # print('spl {}'.format(spl.keys()))
-        return plot_graph(spl, graph_params)
+        keep = {"Freq"}
+        for k in ("On Axis", "10°", "20°", "30°", "40°", "50°", "60°"):
+            if k in df[axis].keys():
+                keep.add(k)
+        if len(keep) > 1:
+            spl = df[axis].loc[:, keep]
+            # print('spl {}'.format(spl.keys()))
+            return plot_graph(spl, graph_params)
+        return None
     except KeyError as ke:
         logger.warning("Display SPL failed with {0}".format(ke))
         return None
@@ -144,14 +147,6 @@ def display_contour_vertical(df, graph_params=contour_params_default):
 
 
 def display_contour_horizontal_normalized(df, graph_params=contour_params_default):
-    spl = df["SPL Horizontal_normalized_unmelted"]
-    # print('Display SPL: {}'.format(spl.keys()))
-    # for k in spl.keys():
-    #    if k != 'Freq':
-    #        print('{} min {} max {}'.format(
-    #            k,
-    #            np.min(spl[k]),
-    #            np.max(spl[k])))
     return display_contour(df, "SPL Horizontal_normalized_unmelted", graph_params)
 
 

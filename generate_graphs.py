@@ -62,10 +62,10 @@ from generate_common import (
 import datas.metadata as metadata
 from spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
 from spinorama.speaker_print import print_graphs
-from spinorama.graph import graph_params_default
+from spinorama.plot import plot_params_default
 
 
-VERSION = 1.27
+VERSION = "2.00alpha1"
 
 activate_tracing = False
 
@@ -103,8 +103,8 @@ def queue_measurement(
     id_eq = parse_eq_speaker.remote("./datas", speaker, id_df)
     force = False
     ptype = None
-    width = graph_params_default["width"]
-    height = graph_params_default["height"]
+    width = plot_params_default["width"]
+    height = plot_params_default["height"]
     tracing("calling print_graph remote for {}".format(speaker))
     id_g1 = print_graphs.remote(
         id_df,
@@ -338,11 +338,11 @@ if __name__ == "__main__":
 
     if args["--width"] is not None:
         opt_width = int(args["--width"])
-        graph_params_default["width"] = opt_width
+        plot_params_default["width"] = opt_width
 
     if args["--height"] is not None:
         opt_height = int(args["--height"])
-        graph_params_default["height"] = opt_height
+        plot_params_default["height"] = opt_height
 
     if args["--type"] is not None:
         ptype = args["--type"]

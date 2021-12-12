@@ -33,7 +33,7 @@ from .speaker_display import (
     display_compare,
 )
 from .speaker_views import template_compact
-from .graph import graph_params_default, contour_params_default, radar_params_default
+from .plot import plot_params_default, contour_params_default, radar_params_default
 
 
 logger = logging.getLogger("spinorama")
@@ -113,7 +113,7 @@ def print_graphs(
     if df is None:
         return 0
 
-    params = copy.deepcopy(graph_params_default)
+    params = copy.deepcopy(plot_params_default)
     params["width"] = width
     params["height"] = height
     params["xmin"] = origins_info[origin]["min hz"]
@@ -175,7 +175,7 @@ def print_graphs(
 
     # 1080p to 2k screen
     # -----------
-    params = copy.deepcopy(graph_params_default)
+    params = copy.deepcopy(plot_params_default)
     params["width"] = 2160
     # ratio for A4 is 21cm / 29.7cm, TODO for letter
     params["height"] = 400

@@ -1,6 +1,5 @@
 altair==4.2.0rc1
 altair-saver
-astropy
 bayesian-optimization
 docopt
 flaml[blendsearch]

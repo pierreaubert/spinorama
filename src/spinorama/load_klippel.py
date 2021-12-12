@@ -5,7 +5,6 @@ import os
 
 import pandas as pd
 from .load_misc import graph_melt, sort_angles
-from .load import filter_graphs, symmetrise_measurement
 
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
@@ -108,16 +107,4 @@ def parse_graphs_speaker_klippel(
     _, v_spl = parse_graph_freq_klippel(v_name)
     logger.debug("Speaker: {0} (Klippel) loaded".format(speaker_name))
 
-    if symmetry == "coaxial":
-        h_spl2 = symmetrise_measurement(h_spl)
-        if v_spl is None:
-            v_spl2 = h_spl2.copy()
-        else:
-            v_spl2 = symmetrise_measurement(v_spl)
-        return filter_graphs(speaker_name, h_spl2, v_spl2)
-
-    if symmetry == "horizontal":
-        h_spl2 = symmetrise_measurement(h_spl)
-        return filter_graphs(speaker_name, h_spl2, v_spl)
-
-    return filter_graphs(speaker_name, h_spl, v_spl)
+    return h_spl, v_spl
