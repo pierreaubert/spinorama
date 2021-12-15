@@ -1714,6 +1714,26 @@ speakers_info = {
             },
         },
     },
+    "Emotiva Airmotiv C2+": {
+        "brand": "Emotiva",
+        "model": "Airmotiv C2+",
+        "type": "passive",
+        "price": "399",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/emotiva_airmotiv_c2plus/",
+                    "yt": "",
+                },
+                "review_published": "2021212",
+            },
+        },
+    },
     "Emotiva Airmotiv T2+": {
         "brand": "Emotiva",
         "model": "Airmotiv T2+",
@@ -4925,6 +4945,23 @@ speakers_info = {
             },
         },
     },
+    "Monoprice Encore B6": {
+        "brand": "Monoprice",
+        "model": "Encore B6",
+        "type": "passive",
+        "price": "360",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_b6/",
+                "review_published": "20211206",
+            },
+        },
+    },
     "Monoprice MM-3": {
         "brand": "Monoprice",
         "model": "MM-3",
@@ -5283,9 +5320,17 @@ speakers_info = {
         "price": "150",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac",
+        "default_measurement": "eac-20211212",
         "measurements": {
-            "eac": {
+            "eac-20211212": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/neumi_bs5_nfs/",
+                },
+                "review_published": "20211212",
+            },
+            "eac-20200620": {
                 "origin": "ErinsAudioCorner",
                 "format": "webplotdigitizer",
                 "reviews": {
@@ -5761,9 +5806,27 @@ speakers_info = {
             },
         },
     },
-    "Polk Audio R200": {
+    "Polk Audio Reserve R100": {
         "brand": "Polk Audio",
-        "model": "R200",
+        "model": "Reserve R100",
+        "type": "passive",
+        "price": "650",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/polk_r100/",
+                "quality": "low",
+                "review_published": "20211209",
+            },
+        },
+    },
+    "Polk Audio Reserve R200": {
+        "brand": "Polk Audio",
+        "model": "Reserve R200",
         "type": "passive",
         "price": "700",
         "shape": "bookshelves",
@@ -5779,9 +5842,9 @@ speakers_info = {
             },
         },
     },
-    "Polk Audio R350": {
+    "Polk Audio Reserve R350": {
         "brand": "Polk Audio",
-        "model": "R350",
+        "model": "Reserve R350",
         "type": "passive",
         "price": "600",
         "shape": "center",
@@ -6964,12 +7027,19 @@ speakers_info = {
         "type": "passive",
         "price": "150",
         "shape": "bookshelves",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/sony_sscs5/",
+                "review_published": "20200523",
+            },
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/sony-ss-cs5-3-way-speaker-review.13562/",
+                "review_published": "20200523",
             },
         },
     },
