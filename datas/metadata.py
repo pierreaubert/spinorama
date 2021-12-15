@@ -422,7 +422,7 @@ speakers_info = {
     "Behringer B2030p": {
         "brand": "Behringer",
         "model": "B2030p",
-        "type": "active",
+        "type": "passive",
         "shape": "bookshelves",
         "price": "200",
         "amount": "pair",
@@ -3804,7 +3804,7 @@ speakers_info = {
     "JBL LSR6332": {
         "brand": "JBL",
         "model": "LSR6332",
-        "type": "active",
+        "type": "passive",
         "price": "3200",
         "shape": "bookshelves",
         "amount": "pair",
@@ -4813,8 +4813,8 @@ speakers_info = {
             },
         },
     },
-    "Martin Logan Motion 35XTi": {
-        "brand": "Martin Logan",
+    "MartinLogan Motion 35XTi": {
+        "brand": "MartinLogan",
         "model": "Motion 35XTi",
         "type": "passive",
         "price": "",
@@ -4845,8 +4845,8 @@ speakers_info = {
             },
         },
     },
-    "Martin Logan Prodigy": {
-        "brand": "Martin Logan",
+    "MartinLogan Prodigy": {
+        "brand": "MartinLogan",
         "model": "Prodigy",
         "type": "passive",
         "price": "",
@@ -4862,8 +4862,8 @@ speakers_info = {
             },
         },
     },
-    "Martin Logan Vista": {
-        "brand": "Martin Logan",
+    "MartinLogan Vista": {
+        "brand": "MartinLogan",
         "model": "Vista",
         "type": "passive",
         "price": "",
