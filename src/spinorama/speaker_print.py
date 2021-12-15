@@ -30,7 +30,6 @@ from .speaker_display import (
     display_contour_vertical_normalized,
     display_radar_horizontal,
     display_radar_vertical,
-    display_compare,
 )
 from .speaker_views import template_compact
 from .plot import plot_params_default, contour_params_default, radar_params_default
@@ -192,43 +191,3 @@ def print_graphs(
                 speaker, origin, key, title, graph, force_print, filter_file_ext
             )
     return updated
-
-
-@ray.remote
-def print_compare_graph(df, graph_filter, filedir):
-    graph = display_compare(df, graph_filter)
-    if graph is not None:
-        graph = graph.configure_title(orient="top", anchor="middle", fontSize=16)
-        filename = "{0}/{1}.json".format(filedir, graph_filter)
-        try:
-            content = graph.to_json()
-            with zipfile.ZipFile(
-                filename + ".zip",
-                "w",
-                compression=zipfile.ZIP_DEFLATED,
-                allowZip64=True,
-            ) as current_zip:
-                current_zip.writestr("{0}.json".format(graph_filter), content)
-        except Exception as e:
-            logger.error("Got unkown error {0} for {1}".format(e, filename))
-
-
-def print_compare(df, force_print=False, filter_file_ext=None):
-    filedir = "docs/compare"
-    pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
-
-    ids = []
-    for graph_filter in (
-        "CEA2034",
-        "Estimated In-Room Response",
-        "Early Reflections",
-        "Horizontal Reflections",
-        "Vertical Reflections",
-        # large and hard to see
-        # "SPL Horizontal",
-        # "SPL Vertical",
-    ):
-        ids.append(print_compare_graph.remote(df, graph_filter, filedir))
-
-    for id in ids:
-        ray.get(id)

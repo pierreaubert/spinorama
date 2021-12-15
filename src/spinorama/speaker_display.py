@@ -17,9 +17,6 @@ from .plot import (
     plot_radar,
     plot_image,
     plot_summary,
-    plot_compare_spinorama,
-    plot_compare_graph,
-    plot_compare_graph_regression,
 )
 
 logger = logging.getLogger("spinorama")
@@ -167,53 +164,6 @@ def display_radar_horizontal(df, graph_params=plot_params_default):
 
 def display_radar_vertical(df, graph_params=plot_params_default):
     return display_radar(df, "SPL Vertical_unmelted", graph_params)
-
-
-def display_compare(df, graph_filter, graph_params=plot_params_default):
-    def augment(dfa, name):
-        # print(name)
-        namearray = [name for i in range(0, len(dfa))]
-        dfa["Speaker"] = namearray
-        return dfa
-
-    try:
-        source = pd.concat(
-            [
-                augment(
-                    resample(
-                        df[speaker][origin][key][graph_filter], 1000
-                    ),  # max 1000 Freq points to minimise space
-                    "{0} - {1} - {2}".format(speaker, origin, key),
-                )
-                for speaker in df.keys()
-                for origin in df[speaker].keys()
-                for key in df[speaker][origin].keys()
-                if df is not None
-                and df[speaker] is not None
-                and df[speaker][origin] is not None
-                and df[speaker][origin][key] is not None
-                and graph_filter in df[speaker][origin][key]
-            ]
-        )
-
-        speaker1 = "KEF LS50 - ASR - asr"
-        speaker2 = "KEF LS50 - Princeton - princeton"
-
-        if graph_filter == "CEA2034":
-            graph = plot_compare_spinorama(source, graph_params, speaker1, speaker2)
-        elif graph_filter in ("On Axis", "Estimated In-Room Response"):
-            graph = plot_compare_graph_regression(
-                source, graph_params, speaker1, speaker2
-            )
-        else:
-            graph = plot_compare_graph(source, graph_params, speaker1, speaker2)
-        return graph
-    except KeyError as e:
-        logger.warning("failed for {0} with {1}".format(graph_filter, e))
-        return None
-    except ValueError as e:
-        logger.warning("failed for {0} with {1}".format(graph_filter, e))
-        return None
 
 
 def display_summary(df, params, speaker, origin, key):

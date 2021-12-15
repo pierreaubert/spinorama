@@ -40,14 +40,6 @@ contour_params_default = {
     # 'colormap': 'blues',
 }
 
-isoband_params_default = {
-    "xmin": 100,
-    "xmax": 20000,
-    "width": 600,
-    "height": 360,
-    "bands": [-72, -18, -15, -12, -9, -6, -3, +3],
-}
-
 radar_params_default = {
     "xmin": 400,
     "xmax": 20000,
@@ -189,12 +181,22 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=5):
     return dict(
         title_text="SPL (dB)",
         range=[range_min, range_max],
-        dtick=1,
+        dtick=range_step,
         tickvals=[i for i in range(range_min, range_max, range_step)],
         ticktext=[
             "{}".format(i) if not i % 5 else " "
             for i in range(range_min, range_max, range_step)
         ],
+    )
+
+
+def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
+    return dict(
+        title_text="DI (dB)                                                    &nbsp;",
+        range=[range_min, range_max],
+        dtick=range_step,
+        tickvals=[-5, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45],
+        ticktext=["-5", "0", "5", "10", "15", " ", " ", " ", " ", " ", " "],
     )
 
 
@@ -248,14 +250,7 @@ def plot_spinorama(spin, graph_params):
         )
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl())
-    fig.update_yaxes(
-        title_text="DI (dB)                                                    &nbsp;",
-        secondary_y=True,
-        range=[-5, 45],
-        dtick=5,
-        tickvals=[-5, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45],
-        ticktext=["-5", "0", "5", "10", "15", " ", " ", " ", " ", " ", " "],
-    )
+    fig.update_yaxes(generate_yaxis_di(), secondary_y=True)
     fig.update_layout(
         width=600 * math.sqrt(2),
         height=600,
@@ -308,6 +303,7 @@ def plot_graph_regression(df, measurement, graph_params):
     slope, intercept, r, p, se = stats.linregress(
         x=current_restricted["Freq"], y=current_restricted[measurement]
     )
+    line = [slope * math.log10(f) + intercept for f in df.Freq]
 
     # print("step {} {}".format(slope, intercept))
 
@@ -317,7 +313,7 @@ def plot_graph_regression(df, measurement, graph_params):
     fig.add_trace(
         go.Scatter(
             x=df.Freq,
-            y=[slope * math.log10(f) + intercept for f in df.Freq],
+            y=line,
             line=dict(width=2, color="black"),
             opacity=1,
             name="Linear regression",
@@ -326,7 +322,7 @@ def plot_graph_regression(df, measurement, graph_params):
     fig.add_trace(
         go.Scatter(
             x=df.Freq,
-            y=[slope * math.log10(f) + intercept for f in df.Freq],
+            y=line,
             line=dict(width=3 * one_db, color="gray"),
             opacity=0.15,
             name="Band ±1.5dB",
@@ -335,7 +331,7 @@ def plot_graph_regression(df, measurement, graph_params):
     fig.add_trace(
         go.Scatter(
             x=df.Freq,
-            y=[slope * math.log10(f) + intercept for f in df.Freq],
+            y=line,
             line=dict(width=6 * one_db, color="gray"),
             opacity=0.1,
             name="Band ±3dB",
@@ -510,14 +506,65 @@ def plot_summary(df):
     return None
 
 
-def plot_compare_spinorama(df, params, speaker1, speaker2):
+def plot_compare_spinorama(spin, params, speaker1, speaker2):
+    print("COMPARE {}".format(spin.keys()))
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    speakers = set(spin.Speaker)
+    for speaker in speakers:
+        for measurement in (
+            "On Axis",
+            "Listening Window",
+            "Early Reflections",
+            "Sound Power",
+        ):
+            print(speaker, measurement)
+            data = spin.loc[
+                (spin.Speaker == speaker) & (spin.Measurements == measurement)
+            ].Measurements
+            if data.size == 0:
+                print("no data for {} {}".format(speaker, measurement))
+                continue
+            print(data.head())
+            fig.add_trace(
+                go.Scatter(
+                    x=spin.Freq,
+                    y=data,
+                    name=measurement,
+                    legendgroup="measurements",
+                    legendgrouptitle_text="Measurements",
+                    marker_color=uniform_colors.get(measurement, "black"),
+                ),
+                secondary_y=False,
+            )
+            # for measurement in ("Early Reflections DI", "Sound Power DI"):
+            #    if measurement not in spin.keys():
+            #        continue
+            #    fig.add_trace(
+            #        go.Scatter(
+            #            x=spin.Freq,
+            #            y=spin[measurement],
+            #            name=measurement,
+            #            legendgroup="DI",
+            #            legendgrouptitle_text="Directivity",
+            #            marker_color=uniform_colors.get(measurement, "black"),
+            #        ),
+            #        secondary_y=True,
+            #    )
 
+    fig.update_xaxes(generate_xaxis())
+    fig.update_yaxes(generate_yaxis_spl())
+    fig.update_yaxes(generate_yaxis_di(), secondary_y=True)
+    fig.update_layout(
+        width=600 * math.sqrt(2),
+        height=600,
+        legend=dict(orientation="v"),
+    )
+    return fig
+
+
+def plot_compare_graph(source, params, spk1, spk2):
     return None
 
 
-def plot_compare_graph():
-    return None
-
-
-def plot_compare_graph_regression():
+def plot_compare_graph_regression(source, params, spk1, spk2):
     return None

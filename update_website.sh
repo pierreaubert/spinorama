@@ -49,15 +49,6 @@ if [ $status -ne 0 ]; then
 else
     echo "OK after generate meta!"
 fi
-rm -f docs/compare/*.json
-command=$(./generate_compare.py)
-status=$?
-if [ $status -ne 0 ]; then
-    echo "KO after generate compare!"
-    exit 1;
-else
-    echo "OK after generate compare!"
-fi
 # generate all jpg if some are missing
 ./update_pictures.sh
 # generate stats
