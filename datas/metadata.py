@@ -3194,8 +3194,8 @@ speakers_info = {
         "model": "Synthesis SAM3HA",
         "type": "passive",
         "price": "",
-        "amount": "pair",
-        "shape": "floorstanders",
+        "amount": "each",
+        "shape": "center",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {
