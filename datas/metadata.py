@@ -4813,8 +4813,8 @@ speakers_info = {
             },
         },
     },
-    "Martin Logan Motion 35XTi": {
-        "brand": "Martin Logan",
+    "MartinLogan Motion 35XTi": {
+        "brand": "MartinLogan",
         "model": "Motion 35XTi",
         "type": "passive",
         "price": "",
@@ -4845,8 +4845,8 @@ speakers_info = {
             },
         },
     },
-    "Martin Logan Prodigy": {
-        "brand": "Martin Logan",
+    "MartinLogan Prodigy": {
+        "brand": "MartinLogan",
         "model": "Prodigy",
         "type": "passive",
         "price": "",
@@ -4862,8 +4862,8 @@ speakers_info = {
             },
         },
     },
-    "Martin Logan Vista": {
-        "brand": "Martin Logan",
+    "MartinLogan Vista": {
+        "brand": "MartinLogan",
         "model": "Vista",
         "type": "passive",
         "price": "",
