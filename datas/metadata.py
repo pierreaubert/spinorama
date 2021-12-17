@@ -1492,6 +1492,23 @@ speakers_info = {
             },
         },
     },
+    "Edifier MR4": {
+        "brand": "Edifier",
+        "model": "MR4",
+        "type": "active",
+        "price": "130",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/edifier-mr4-review-budget-monitor.29068/",
+                "review_published": "20211216",
+            },
+        },
+    },
     "Edifier R1280T": {
         "brand": "Edifier",
         "model": "R1280T",
