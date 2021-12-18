@@ -103,7 +103,8 @@ from spinorama.filter_scores import (
 )
 from spinorama.auto_target import get_freq, get_target
 from spinorama.auto_optim import optim_multi_steps
-from spinorama.auto_graph import graph_results as auto_graph_results
+
+# from spinorama.auto_graph import graph_results as auto_graph_results
 
 
 VERSION = "0.14"
@@ -298,56 +299,56 @@ def optim_save_peq(
         # END TODO
 
         graphs = None
-        if len(manual_peq) > 0 and not peq_equal(manual_peq, auto_peq):
-            graphs = auto_graph_results(
-                current_speaker_name,
-                current_speaker_origin,
-                freq,
-                manual_peq,
-                auto_peq,
-                auto_target,
-                auto_target_interp,
-                manual_target,
-                manual_target_interp,
-                df_speaker["CEA2034"],
-                manual_spin,
-                auto_spin,
-                df_speaker["Estimated In-Room Response"],
-                manual_pir,
-                auto_pir,
-                optim_config,
-            )
-        else:
-            graphs = auto_graph_results(
-                current_speaker_name,
-                current_speaker_origin,
-                freq,
-                None,
-                auto_peq,
-                auto_target,
-                auto_target_interp,
-                None,
-                None,
-                df_speaker["CEA2034"],
-                None,
-                auto_spin,
-                df_speaker["Estimated In-Room Response"],
-                None,
-                auto_pir,
-                optim_config,
-            )
-
-        for i, (name, graph) in enumerate(graphs):
-            origin = current_speaker_origin
-            if "Vendors-" in origin:
-                origin = origin[8:]
-            graph_filename = "docs/{}/{}/filters_{}".format(
-                current_speaker_name, origin, name
-            )
-            if is_smoke_test:
-                graph_filename += "_smoketest"
-            graph_filename += ".png"
-            graph.save(graph_filename)
+    #        if len(manual_peq) > 0 and not peq_equal(manual_peq, auto_peq):
+    #            graphs = auto_graph_results(
+    #                current_speaker_name,
+    #                current_speaker_origin,
+    #                freq,
+    #                manual_peq,
+    #                auto_peq,
+    #                auto_target,
+    #                auto_target_interp,
+    #                manual_target,
+    #                manual_target_interp,
+    #                df_speaker["CEA2034"],
+    #                manual_spin,
+    #                auto_spin,
+    #                df_speaker["Estimated In-Room Response"],
+    #                manual_pir,
+    #                auto_pir,
+    #                optim_config,
+    #            )
+    #        else:
+    #            graphs = auto_graph_results(
+    #                current_speaker_name,
+    #                current_speaker_origin,
+    #                freq,
+    #                None,
+    #                auto_peq,
+    #                auto_target,
+    #                auto_target_interp,
+    #                None,
+    #                None,
+    #                df_speaker["CEA2034"],
+    #                None,
+    #                auto_spin,
+    #                df_speaker["Estimated In-Room Response"],
+    #                None,
+    #                auto_pir,
+    #                optim_config,
+    #            )
+    #
+    #        for i, (name, graph) in enumerate(graphs):
+    #            origin = current_speaker_origin
+    #            if "Vendors-" in origin:
+    #                origin = origin[8:]
+    #            graph_filename = "docs/{}/{}/filters_{}".format(
+    #                current_speaker_name, origin, name
+    #            )
+    #            if is_smoke_test:
+    #                graph_filename += "_smoketest"
+    #            graph_filename += ".png"
+    #            graph.save(graph_filename)
 
     # print a compact table of results
     if be_verbose and use_score:
