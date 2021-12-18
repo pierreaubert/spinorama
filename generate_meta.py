@@ -168,11 +168,11 @@ def add_scores(dataframe):
                             "pref_rating failed for {0} {1}".format(speaker_name, key)
                         )
                         continue
-                    print(
-                        "sm pir {} for {}".format(
-                            pref_rating["sm_sound_power"], speaker_name
-                        )
-                    )
+                    # print(
+                    #    "sm pir {} for {}".format(
+                    #        pref_rating["sm_sound_power"], speaker_name
+                    #    )
+                    # )
                     logger.info("Adding {0}".format(pref_rating))
                     # compute min and max for each value
                     min_flatness = min(est["ref_band"], min_flatness)
