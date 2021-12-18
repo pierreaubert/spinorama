@@ -1,0 +1,15 @@
+EQ for Focal Alpha 50 Evo computed from Misc data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
+Dated: 2021-12-18-17:15:37
+
+Preamp: -4.4 dB
+
+Filter  1: ON PK Fc   843 Hz Gain +3.75 dB Q 0.62
+Filter  2: ON PK Fc  1832 Hz Gain +1.56 dB Q 5.71
+Filter  3: ON PK Fc 13800 Hz Gain +1.64 dB Q 0.64
+Filter  4: ON PK Fc  4618 Hz Gain -1.38 dB Q 5.95
+Filter  5: ON PK Fc  1309 Hz Gain -1.96 dB Q 3.75
+Filter  6: ON PK Fc   683 Hz Gain +0.98 dB Q 5.94
+Filter  7: ON PK Fc  6934 Hz Gain -1.19 dB Q 5.90
+Filter  8: ON PK Fc 13114 Hz Gain -1.96 dB Q 5.95
+Filter  9: ON PK Fc  2473 Hz Gain +1.15 dB Q 5.97
