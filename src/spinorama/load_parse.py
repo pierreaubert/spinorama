@@ -3,6 +3,9 @@ import os
 import logging
 import sys
 
+import numpy as np
+import pandas as pd
+
 try:
     import ray
 except ModuleNotFoundError:
@@ -26,6 +29,22 @@ from .filter_scores import noscore_apply_filter
 
 
 logger = logging.getLogger("spinorama")
+
+
+def checkNaN(df):
+    for k in df.keys():
+        for j in df[k].keys():
+            if isinstance(df[k], pd.DataFrame):
+                count = df[k][j].isna().sum()
+                if count > 0:
+                    logger.error("{} {} {}".format(k, j, count))
+    return np.sum(
+        [
+            df[frame].isna().sum().sum()
+            for frame in df.keys()
+            if isinstance(df[frame], pd.DataFrame)
+        ]
+    )
 
 
 @ray.remote(num_cpus=1)
@@ -119,7 +138,22 @@ def parse_graphs_speaker(
             title, df_uneven = parse_graphs_speaker_rewstextdump(
                 measurement_path, speaker_brand, speaker_name, morigin, mversion
             )
-        df = filter_graphs_partial(spin_compute_di_eir(speaker_name, title, df_uneven))
+        nan_count = checkNaN(df_uneven)
+        if nan_count > 0:
+            logger.error("df_uneven {} has {} NaNs".format(speaker_name, nan_count))
+        extent_spin = spin_compute_di_eir(speaker_name, title, df_uneven)
+        nan_count = checkNaN(extent_spin)
+        if nan_count > 0:
+            logger.error("extent_spin {} has {} NaNs".format(speaker_name, nan_count))
+
+        df = filter_graphs_partial(extent_spin)
+        nan_count = checkNaN(df)
+        if nan_count > 0:
+            logger.error("df {} has {} NaNs".format(speaker_name, nan_count))
+            for k in df.keys():
+                print("------------ {} -----------".format(k))
+                print(df[k].head())
+
     else:
         logger.fatal("Format {:s} is unkown".format(mformat))
         sys.exit(1)

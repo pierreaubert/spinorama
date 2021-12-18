@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from scipy.io import loadmat
 from .load_misc import sort_angles
-
+from .compute_misc import resample
 
 logger = logging.getLogger("spinorama")
 
@@ -55,7 +55,7 @@ def parse_graph_freq_princeton_mat(mat, suffix):
     # sort datas
     df_sa = sort_angles(df)
     # precision of measurement is ok above 500
-    return df_sa[df_sa.Freq >= 500]
+    return resample(df_sa[df_sa.Freq >= 500], 200)
 
 
 def parse_graph_princeton(filename, orient):

@@ -74,10 +74,10 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
     # expect all the same
     logger.debug(
         "Shapes ON {0} LW {1} ER {2} SP {3}".format(
-            all_on[0].shape if all_on is not None else "--",
-            all_lw[1].shape if all_lw is not None else "--",
-            all_er[1].shape if all_er is not None else "--",
-            all_sp[1].shape if all_sp is not None else "--",
+            all_on[0].shape if all_on is not None and len(all_on) > 0 else "--",
+            all_lw[1].shape if all_lw is not None and len(all_lw) > 1 else "--",
+            all_er[1].shape if all_er is not None and len(all_er) > 1 else "--",
+            all_sp[1].shape if all_sp is not None and len(all_sp) > 1 else "--",
         )
     )
     # extract right parts and interpolate
@@ -101,13 +101,14 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
     )
     # remove NaN numbers
     data = {}
-    data["Freq"] = a_lw.index
-    data["On Axis"] = a_on.ON
-    if a_lw is not None:
+    data["Freq"] = a_on.index
+    if a_on is not None and "ON" in a_on.keys() and len(a_on.ON) == len(a_on.index):
+        data["On Axis"] = a_on.ON
+    if a_lw is not None and "LW" in a_lw.keys() and len(a_lw.LW) == len(a_on.index):
         data["Listening Window"] = a_lw.LW
-    if a_er is not None:
+    if a_er is not None and "ER" in a_er.keys() and len(a_er.ER) == len(a_on.index):
         data["Early Reflections"] = a_er.ER
-    if a_sp is not None:
+    if a_sp is not None and "SP" in a_sp.keys() and len(a_sp.SP) == len(a_on.index):
         data["Sound Power"] = a_sp.SP
 
     res2 = pd.DataFrame(data)

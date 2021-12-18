@@ -168,6 +168,11 @@ def add_scores(dataframe):
                             "pref_rating failed for {0} {1}".format(speaker_name, key)
                         )
                         continue
+                    print(
+                        "sm pir {} for {}".format(
+                            pref_rating["sm_sound_power"], speaker_name
+                        )
+                    )
                     logger.info("Adding {0}".format(pref_rating))
                     # compute min and max for each value
                     min_flatness = min(est["ref_band"], min_flatness)
@@ -467,23 +472,8 @@ if __name__ == "__main__":
     speaker = args["--speaker"]
     origin = args["--origin"]
     mversion = args["--mversion"]
-    if speaker is not None and origin is not None:
-        if mversion is None:
-            mversion = metadata.speakers_info[speaker]["default_measurement"]
-        mformat = metadata.speakers_info[speaker]["measurements"][mversion]["format"]
-        brand = metadata.speakers_info[speaker]["brand"]
-        df = {}
-        df[speaker] = {}
-        df[speaker][origin] = {}
-        df[speaker][origin][mversion] = {}
-        ray_id = parse_graphs_speaker.remote(
-            "./datas", brand, speaker, mformat, mversion
-        )
-        while 1:
-            ready_ids, remaining_ids = ray.wait([ray_id], num_returns=1)
-            if ray_id in ready_ids:
-                df[speaker][origin][mversion] = ray.get(ray_id)
-                break
+    if speaker is not None:
+        df = cache_load(filter=speaker)
     else:
         parse_max = args["--parse-max"]
         if parse_max is not None:

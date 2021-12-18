@@ -2,6 +2,7 @@
 import logging
 import numpy as np
 import pandas as pd
+from .compute_misc import unify_freq
 from .compute_cea2034 import estimated_inroom
 from .load_misc import graph_melt
 from .load import spin_compute_di_eir

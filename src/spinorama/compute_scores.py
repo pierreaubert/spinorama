@@ -161,6 +161,10 @@ def sm(dfu):
     data = dfu.loc[(dfu.Freq >= 100) & (dfu.Freq <= 16000)]
     log_freq = np.log(data.Freq)
     _, _, r_value, _, _ = linregress(log_freq, data.dB)
+    # if math.isnan(r_value):
+    #    print('data shape={} keys={}'.format(data.shape, dfu.keys()))
+    #    print(log_freq)
+    #    print(data.dB)
     return r_value ** 2
 
 

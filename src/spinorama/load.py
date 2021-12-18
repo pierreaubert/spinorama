@@ -40,13 +40,24 @@ def shift_spl_melted(spl, mean):
 
 
 def shift_spl_melted_cea2034(spl, mean):
+    # spl
+    # print(spl.head())
+    # for k in spl.keys():
+    #    count = spl[k].isna().sum().sum()
+    #    print('{} {}'.format(k, count))
     # shift all measurement by means
-    df = pd.DataFrame({"Freq": spl.Freq})
+    df = pd.DataFrame({"Freq": spl.loc[spl.Measurements == "On Axis"].Freq})
     for col in set(spl.Measurements):
+        # print(spl.loc[spl.Measurements == col].dB)
         if "DI" in col:
-            df[col] = spl.loc[spl.Measurements == col].dB
+            df[col] = spl.loc[spl.Measurements == col].dB.values
         else:
-            df[col] = spl.loc[spl.Measurements == col].dB - mean
+            df[col] = spl.loc[spl.Measurements == col].dB.values - mean
+    # print('melted_cea {} {}'.format(mean, df.keys()))
+    # print(df.head())
+    # for k in df.keys():
+    #    count = df[k].isna().sum().sum()
+    #    print('{} {}'.format(k, count))
     return graph_melt(df)
 
 
@@ -160,7 +171,8 @@ def filter_graphs_partial(df):
         )
         for k in df.keys():
             if k == "CEA2034":
-                dfs[k] = shift_spl_melted_cea2034(df[k], mean)
+                aligned = graph_melt(unify_freq(df[k]))
+                dfs[k] = shift_spl_melted_cea2034(aligned, mean)
             else:
                 dfs[k] = shift_spl_melted(df[k], mean)
     else:
@@ -168,12 +180,11 @@ def filter_graphs_partial(df):
             dfs[k] = df[k]
 
     for k in df.keys():
-        # print('Trying {}'.format(k))
-        current = dfs[k]
-        # print('Current {}'.format(current.keys()))
-        dfs["{}_unmelted".format(k)] = current.pivot_table(
-            index="Freq", columns="Measurements", values="dB", aggfunc=max
-        ).reset_index()
+        dfs["{}_unmelted".format(k)] = (
+            dfs[k]
+            .pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max)
+            .reset_index()
+        )
     # print('filter in: keys={} out: mean={} keys={}'.format(df.keys(), mean, dfs.keys()))
     return dfs
 
