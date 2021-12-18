@@ -256,7 +256,7 @@ if __name__ == "__main__":
 
     # write various html files
     try:
-        for item in ("help", "compare", "scores", "statistics"):
+        for item in ("help", "compare", "compare2", "scores", "statistics"):
             item_name = "{0}.html".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
@@ -281,6 +281,7 @@ if __name__ == "__main__":
         "search.js",
         "bulma.js",
         "compare.js",
+        "compare2.js",
         "tabs.js",
         "spinorama.css",
         "graph.js",

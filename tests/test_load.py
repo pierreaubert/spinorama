@@ -91,7 +91,8 @@ class SpinoramaLoadPrinceton(unittest.TestCase):
         self.assertIn("Freq", self.df.columns)
         self.assertIn("On Axis", self.df.columns)
         self.assertNotIn("On-Axis", self.df.columns)
-        self.assertEqual(self.df.shape, (3328, 2 * 36 + 1))
+        print(self.df.shape, self.df.keys())
+        self.assertEqual(self.df.shape, (3328, 2 * 18 + 1))
         self.assertLess(500, self.df.Freq.min())
 
 

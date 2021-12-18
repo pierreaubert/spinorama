@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
+import bisect
 import math
 import numpy as np
 import pandas as pd
@@ -209,24 +210,31 @@ def reshape(x, y, z, nscale):
 def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     """ "compute +/- angle where directivity is most constant between 1kHz and 10kz"""
 
-    # kHz1 = 110
-    # kHz10 = 180
+    # print('debug af {} am {} az {}'.format(af.shape, am.shape, az.shape))
+    # print('debug af {}'.format(af))
+    # print('debug am {}'.format(am[17]))
+    # print('debug az {}'.format(az))
+    deg0 = bisect.bisect(am.T[0], 0) - 1
+    kHz1 = bisect.bisect(af[0], 1000)
+    kHz10 = bisect.bisect(af[0], 10000)
+    zero = az[deg0][kHz1:kHz10]
+    # print('debug {} {} {}'.format(kHz1, kHz10, deg0))
     def linear_eval(x: float) -> float:
         xp1 = int(x)
         xp2 = xp1 + 1
-        zp1 = az[xp1][110:180]
-        zp2 = az[xp2][110:180]
+        zp1 = az[xp1][kHz1:kHz10]
+        zp2 = az[xp2][kHz1:kHz10]
         # linear interpolation
         zp = zp1 + (x - xp1) * (zp2 - zp1)
         # normˆ2 (z-(-6dB))
-        return np.linalg.norm(zp + 6)
+        return np.linalg.norm(zp - zero + 6)
 
     eval_count = 180
 
-    space_p = np.linspace(int(len(am.T[0]) / 2), 1, eval_count)
+    space_p = np.linspace(int(len(am.T[0]) / 2), len(am.T[0]) - 2, eval_count)
     eval_p = [linear_eval(x) for x in space_p]
     # 1% tolerance
-    tol = 0.1
+    tol = 0.01
     min_p = np.min(eval_p) * (1.0 + tol)
     # all minimum in this 1% band from min
     pos_g = [i for i, v in enumerate(eval_p) if v < min_p]
@@ -237,8 +245,12 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
         pos_p = np.argmin(eval_p)
     # translate in deg
     angle_p = pos_p * 180 / eval_count
+    # print('debug space_p: {}'.format(space_p))
+    # print('debug eval_p: {}'.format(eval_p))
+    # print('debug pos_g: {}'.format(pos_g))
+    # print('debug: min_p {} angle_p {}'.format(min_p, angle_p))
 
-    space_m = np.linspace(int(len(am.T[0]) / 2), len(am.T[0]) - 2, eval_count)
+    space_m = np.linspace(0, int(len(am.T[0]) / 2) - 1, eval_count)
     eval_m = [linear_eval(x) for x in space_m]
     min_m = np.min(eval_m) * (1.0 + tol)
     pos_g = [i for i, v in enumerate(eval_m) if v < min_m]
@@ -247,7 +259,11 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     else:
         pos_m = np.argmin(eval_m)
     # translate in deg
-    angle_m = -pos_m * 180 / eval_count
+    angle_m = -180 + pos_m * 180 / eval_count
+    # print('debug space_m: {}'.format(space_m))
+    # print('debug eval_m: {}'.format(eval_m))
+    # print('debug pos_g: {}'.format(pos_g))
+    # print('debug: min_m {} angle_m {}'.format(min_m, angle_m))
 
     return float(angle_p), float(angle_m), float((angle_p - angle_m) / 2)
 
