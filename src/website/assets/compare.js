@@ -244,6 +244,8 @@ fetch(urlSite+'assets/metadata.json').then(
 		    'b': 0,
 		};
 
+                layout.legend.orientation = 'v';
+
 		plotSingleContainer.style.display = "block";
 		Plotly.newPlot('plotSingle', datas, layout);
 
@@ -266,7 +268,9 @@ fetch(urlSite+'assets/metadata.json').then(
 				"legendgrouptitle": {
 				    "text": 'Differences',
 				},
-				"color": uniformColors[name0],
+				// "marker": {
+                                //    "color": uniformColors[name0],
+                                // },
 			    });
 			}
 		    }

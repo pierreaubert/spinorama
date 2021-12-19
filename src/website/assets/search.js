@@ -15,6 +15,14 @@ const toggle = (elem) => {
     elem.classList.toggle('hidden');
 }
 
+// sort children
+const sortChildren = ({ container, getScore }) => {
+  const items = [...container.children];
+  items
+    .sort((a, b) => getScore(b) - getScore(a))
+    .forEach(item => container.appendChild(item));
+};
+
 fetch(urlSite+'assets/metadata.json').then(
     function(response) {
 	return response.text();
@@ -106,7 +114,7 @@ fetch(urlSite+'assets/metadata.json').then(
         });
 
         function is_filtered(item, filter) {
-	    let show = true;
+	    let shouldShow = true;
 	    if (filter.reviewer !== "" ) {
                 let found = true;
 	        for (let [name, measurement] of Object.entries(item["measurements"])) {
@@ -119,10 +127,10 @@ fetch(urlSite+'assets/metadata.json').then(
                     }
                 }
                 if(found) {
-                    show = false;
+                    shouldShow = false;
                 }
 	    }
-            // console.log("debug: name="+name+" post filter reviewer "+show)
+            // console.log("debug: name="+name+" post filter reviewer "+shouldShow)
 	    if (filter.quality !== "" ) {
                 let found = true;
 	        for (let [name, measurement] of Object.entries(item["measurements"])) {
@@ -135,32 +143,32 @@ fetch(urlSite+'assets/metadata.json').then(
 	            }
                 }
                 if(found) {
-                    show = false;
+                    shouldShow = false;
                 }
 	    }
-            // console.log("debug: name="+name+" post quality "+show)
+            // console.log("debug: name="+name+" post quality "+shouldShow)
 	    if (filter.power !== "" && item.type !== filter.power) {
-                show = false;
+                shouldShow = false;
 	    }
-            // console.log("debug: name="+name+" post power "+show)
+            // console.log("debug: name="+name+" post power "+shouldShow)
 	    if (filter.shape !== "" && item.shape !== filter.shape) {
-                show = false;
+                shouldShow = false;
 	    }
-            // console.log("debug: name="+name+" post shape "+show)
+            // console.log("debug: name="+name+" post shape "+shouldShow)
 	    if (filter.brand !== "" && item.brand.toLowerCase() !== filter.brand.toLowerCase()) {
-                show = false;
+                shouldShow = false;
 	    }
-            // console.log("debug: name="+name+" post brand "+show)
-	    return show;
+            // console.log("debug: name="+name+" post brand "+shouldShow)
+	    return shouldShow;
         }
 
         function display_filter(resultdiv, sorted_meta, filter) {
 	    // console.log("display filter start #" + sorted_meta.length);
 	    for (const item in sorted_meta) {
-                let show = is_filtered(sorted_meta[item], filter);
+                let shouldShow = is_filtered(sorted_meta[item], filter);
                 const id = (sorted_meta[item].brand + "-" + sorted_meta[item].model).replace(/['.+& ]/g, "-");
-                if (show) {
-                    // console.log(sorted_meta[item].brand + "-"+ sorted_meta[item].model + " is shown");
+                if (shouldShow) {
+                    // console.log(sorted_meta[item].brand + "-"+ sorted_meta[item].model + " is shouldShown");
 		    show(document.querySelector("#" + id));
                 } else {
                     // console.log(sorted_meta[item].brand + "-"+ sorted_meta[item].model + " is filtered");
@@ -308,38 +316,50 @@ fetch(urlSite+'assets/metadata.json').then(
         function sort_metadata(current_sorter) {
             // console.log("starting sort + sort_by:"+current_sorter.by);
             // TODO build once
-            let sorted = {};
             if (current_sorter.by === 'price') {
-                sorted = document.querySelector("div.searchresults > div > div").sort( function(a, b) {
-                    return get_price(b)-get_price(a);
+                sortChildren({
+                    container: document.querySelector("div.searchresults > div"),
+                    getScore: item => {
+                        return get_price(item);
+                    }
                 });
             } else if (current_sorter.by === 'score') {
-                sorted = document.querySelector("div.searchresults > div > div").sort( function(a, b) {
-                    return get_score(b)-get_score(a);
+                sortChildren({
+                    container: document.querySelector("div.searchresults > div"),
+                    getScore: item => {
+                        return get_score(item);
+                    }
                 });
             } else if (current_sorter.by === 'scoreEQ') {
-                sorted = document.querySelector("div.searchresults > div > div").sort( function(a, b) {
-                    return get_score_eq(b)-get_score_eq(a);
+                sortChildren({
+                    container: document.querySelector("div.searchresults > div"),
+                    getScore: item => {
+                        return get_score_eq(item);
+                    }
                 });
             } else if (current_sorter.by === 'scoreWSUB') {
-                sorted = document.querySelector("div.searchresults > div > div").sort( function(a, b) {
-                    return get_score_wsub(b)-get_score_wsub(a);
+                sortChildren({
+                    container: document.querySelector("div.searchresults > div"),
+                    getScore: item => {
+                        return get_score_wsub(item);
+                    }
                 });
             } else if (current_sorter.by === 'scoreEQWSUB') {
-                sorted = document.querySelector("div.searchresults > div > div").sort( function(a, b) {
-                    return get_score_eq_wsub(b)-get_score_eq_wsub(a);
+                sortChildren({
+                    container: document.querySelector("div.searchresults > div"),
+                    getScore: item => {
+                        return get_score_eq_wsub(item);
+                    }
                 });
             } else if (current_sorter.by === 'date') {
-                sorted = document.querySelector("div.searchresults > div > div").sort( function(a, b) {
-                    return get_date(b)-get_date(a);
+                sortChildren({
+                    container: document.querySelector("div.searchresults > div"),
+                    getScore: item => {
+                        return get_date(item);
+                    }
                 });
             } else {
                 // console.log('Error sort method is unkown: '+current_sorter.by);
-            }
-
-            // overrides
-            if ( sorted.length > 1 ) {
-	        document.querySelector("div.searchresults > div").html(sorted);
             }
         }
 
