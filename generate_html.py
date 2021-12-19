@@ -256,7 +256,7 @@ if __name__ == "__main__":
 
     # write various html files
     try:
-        for item in ("help", "compare", "compare2", "scores", "statistics"):
+        for item in ("help", "compare", "scores", "statistics"):
             item_name = "{0}.html".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
@@ -277,23 +277,28 @@ if __name__ == "__main__":
 
     # copy css/js files
     logger.info("Copy js/css files to docs")
+    try:
+        for item in ("compare", "search"):
+            item_name = "assets/{0}.js".format(item)
+            logger.info("Write {0}".format(item_name))
+            item_html = mako_templates.get_template(item_name)
+            with open("./docs/" + item_name, "w") as f:
+                f.write(item_html.render(df=df, meta=meta_sorted_score, site=site))
+                f.close()
+    except KeyError as ke:
+        print("Generating various html files failed with {}".format(ke))
+        sys.exit(1)
+    # copy favicon(s)
     for f in [
-        "search.js",
+        "favicon.ico",
+        "favicon-16x16.png",
         "bulma.js",
-        "compare.js",
-        "compare2.js",
         "tabs.js",
         "spinorama.css",
         "graph.js",
         "zip.min.js",
+        "downloadzip.js",
     ]:
-        file_ext = Template(filename="src/website/assets/" + f)
-        with open("./docs/assets/" + f, "w") as fd:
-            fd.write(file_ext.render(site=site))
-            fd.close()
-
-    # copy favicon(s)
-    for f in ["favicon.ico", "favicon-16x16.png", "downloadzip.js"]:
         file_in = "./src/website/assets/" + f
         file_out = "./docs/assets/" + f
         shutil.copy(file_in, file_out)
