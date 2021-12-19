@@ -22,6 +22,10 @@
     display: initial;
 }
 
+.hidden {
+    display: none;
+}
+
 .graph {
     width: 100%;
 }

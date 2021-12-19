@@ -1,18 +1,18 @@
-$(document).ready(function () {
+window.onload = () => {
 
-  // Check for click events on the navbar burger icon
-  $(".navbar-burger").click(function () {
+    var navbarBurger = document.querySelector('.navbar-burger');
+    var navbarMenu = document.querySelector('.navbar-menu');
 
-      // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-      $(".navbar-burger").toggleClass("is-active");
-      $(".navbar-menu").toggleClass("is-active");
+    navbarBurger.addEventListener('click', (e) => {
+        navbarBurger.classList.toggle("is-active");
+        navbarMenu.classList.toggle("is-active");
+    });
 
-  });
+    var banner = document.querySelector('.banner');
+    if (banner != null ) {
+        banner.addEventListener('click', (e) => {
+            banner.classList.toggle("visible");
+        });
+    }
 
-  // Check for click events on the banner
-    $(".banner").click(function () {
-
-        $(".banner").hide();
-
-  });
-});
+}
