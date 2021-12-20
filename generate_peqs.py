@@ -104,7 +104,7 @@ from spinorama.filter_scores import (
 from spinorama.auto_target import get_freq, get_target
 from spinorama.auto_optim import optim_multi_steps
 
-# from spinorama.auto_graph import graph_results as auto_graph_results
+from spinorama.auto_graph import graph_results as auto_graph_results
 
 
 VERSION = "0.14"
@@ -205,32 +205,6 @@ def optim_save_peq(
         current_speaker_name, df_speaker, optim_config, use_score
     )
 
-    # do we have a manual peq?
-    manual_score = {}
-    manual_peq = []
-    manual_target = None
-    manual_target_interp = None
-    manual_spin, manual_pir = None, None
-    if be_verbose and use_score:
-        manual_peq_name = "./datas/eq/{}/iir.txt".format(current_speaker_name)
-        if (
-            os.path.exists(manual_peq_name)
-            and os.readlink(manual_peq_name) != "iir-autoeq.txt"
-        ):
-            manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config["fs"])
-            manual_spin, manual_pir, manual_score = scores_apply_filter(
-                df_speaker, manual_peq
-            )
-            if df_speaker_eq is not None:
-                manual_df, manual_freq, manual_target = get_freq(
-                    df_speaker_eq, optim_config
-                )
-                manual_target_interp = []
-                for curve in curves:
-                    manual_target_interp.append(
-                        get_target(manual_df, manual_freq, curve, optim_config)
-                    )
-
     # compute new score with this PEQ
     auto_spin = None
     auto_pir = None
@@ -241,11 +215,8 @@ def optim_save_peq(
         # store the 3 different scores
         scores = [
             score.get("pref_score", -1),
-            manual_score.get("pref_score", -1),
             auto_score["pref_score"],
         ]
-        if be_verbose:
-            scores[1] = manual_score.get("pref_score", -5)
     else:
         auto_spin, auto_pir = noscore_apply_filter(df_speaker, auto_peq)
 
@@ -298,57 +269,31 @@ def optim_save_peq(
             auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
         # END TODO
 
-        graphs = None
-    #        if len(manual_peq) > 0 and not peq_equal(manual_peq, auto_peq):
-    #            graphs = auto_graph_results(
-    #                current_speaker_name,
-    #                current_speaker_origin,
-    #                freq,
-    #                manual_peq,
-    #                auto_peq,
-    #                auto_target,
-    #                auto_target_interp,
-    #                manual_target,
-    #                manual_target_interp,
-    #                df_speaker["CEA2034"],
-    #                manual_spin,
-    #                auto_spin,
-    #                df_speaker["Estimated In-Room Response"],
-    #                manual_pir,
-    #                auto_pir,
-    #                optim_config,
-    #            )
-    #        else:
-    #            graphs = auto_graph_results(
-    #                current_speaker_name,
-    #                current_speaker_origin,
-    #                freq,
-    #                None,
-    #                auto_peq,
-    #                auto_target,
-    #                auto_target_interp,
-    #                None,
-    #                None,
-    #                df_speaker["CEA2034"],
-    #                None,
-    #                auto_spin,
-    #                df_speaker["Estimated In-Room Response"],
-    #                None,
-    #                auto_pir,
-    #                optim_config,
-    #            )
-    #
-    #        for i, (name, graph) in enumerate(graphs):
-    #            origin = current_speaker_origin
-    #            if "Vendors-" in origin:
-    #                origin = origin[8:]
-    #            graph_filename = "docs/{}/{}/filters_{}".format(
-    #                current_speaker_name, origin, name
-    #            )
-    #            if is_smoke_test:
-    #                graph_filename += "_smoketest"
-    #            graph_filename += ".png"
-    #            graph.save(graph_filename)
+        graphs = auto_graph_results(
+            current_speaker_name,
+            current_speaker_origin,
+            freq,
+            auto_peq,
+            auto_target,
+            auto_target_interp,
+            df_speaker["CEA2034"],
+            auto_spin,
+            df_speaker["Estimated In-Room Response"],
+            auto_pir,
+            optim_config,
+        )
+
+        for i, (name, graph) in enumerate(graphs):
+            origin = current_speaker_origin
+            if "Vendors-" in origin:
+                origin = origin[8:]
+            graph_filename = "docs/{}/{}/filters_{}".format(
+                current_speaker_name, origin, name
+            )
+            if is_smoke_test:
+                graph_filename += "_smoketest"
+            graph_filename += ".png"
+            graph.write_image(graph_filename)
 
     # print a compact table of results
     if be_verbose and use_score:
@@ -380,37 +325,19 @@ def optim_save_peq(
                 current_speaker_name
             )
         )
-        if score is not None:
-            if (
-                manual_score is not None
-                and auto_score is not None
-                and "nbd_on_axis" in manual_score
-            ):
-                logger.info(scores_print2(score, manual_score, auto_score))
-            elif auto_score is not None and "nbd_on_axis" in auto_score:
-                logger.info(scores_print(score, auto_score))
+        if score is not None and auto_score is not None and "nbd_on_axis" in auto_score:
+            logger.info(scores_print(score, auto_score))
         logger.info(
             "----------------------------------------------------------------------"
         )
         if use_score:
-            if "pref_score" in manual_score:
-                print(
-                    "{:+2.2f} {:+2.2f} {:+2.2f} {:+2.2f} {:s}".format(
-                        score["pref_score"],
-                        manual_score["pref_score"],
-                        auto_score["pref_score"],
-                        manual_score["pref_score"] - auto_score["pref_score"],
-                        current_speaker_name,
-                    )
+            print(
+                "{:+2.2f} {:+2.2f} {:s}".format(
+                    score["pref_score"],
+                    auto_score["pref_score"],
+                    current_speaker_name,
                 )
-            else:
-                print(
-                    "{:+2.2f} {:+2.2f} {:s}".format(
-                        score["pref_score"],
-                        auto_score["pref_score"],
-                        current_speaker_name,
-                    )
-                )
+            )
 
     return current_speaker_name, auto_results, scores
 
