@@ -422,7 +422,7 @@ speakers_info = {
     "Behringer B2030p": {
         "brand": "Behringer",
         "model": "B2030p",
-        "type": "active",
+        "type": "passive",
         "shape": "bookshelves",
         "price": "200",
         "amount": "pair",
@@ -3821,7 +3821,7 @@ speakers_info = {
     "JBL LSR6332": {
         "brand": "JBL",
         "model": "LSR6332",
-        "type": "active",
+        "type": "passive",
         "price": "3200",
         "shape": "bookshelves",
         "amount": "pair",
@@ -4942,6 +4942,25 @@ speakers_info = {
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/micca-rb42-bookshelf-speaker-review.11267/",
                 },
+            },
+        },
+    },
+    "Monitor Audio Silver 100": {
+        "brand": "Monitor Audio",
+        "model": "Silver 100",
+        "type": "passive",
+        "price": "800",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/monitor-audio-silver-100-review-speaker.29190/#post-1018993",
+                },
+                "review_published": "20211220",
             },
         },
     },
