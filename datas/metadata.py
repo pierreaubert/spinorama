@@ -6271,7 +6271,7 @@ speakers_info = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-ReflectorAudio",
+                "origin": "Vendors-Reflector Audio",
                 "format": "webplotdigitizer",
                 "quality": "medium",
                 "reviews": {
@@ -7735,7 +7735,7 @@ origins_info = {
         "logo-small": "docs/metadata/polkaudio.png",
         "url": "https://www.polkaudio.com",
     },
-    "Vendors-ReflectorAudio": {
+    "Vendors-Reflector Audio": {
         "min hz": 20,
         "max hz": 20000,
         "min dB": -40,
