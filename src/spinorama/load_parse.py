@@ -11,13 +11,14 @@ try:
 except ModuleNotFoundError:
     import src.miniray as ray
 
-
+from .compute_misc import unify_freq
 from .load_klippel import parse_graphs_speaker_klippel
 from .load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
 from .load_princeton import parse_graphs_speaker_princeton
 from .load_rewstextdump import parse_graphs_speaker_rewstextdump
 from .load_rewseq import parse_eq_iir_rews
 from .load_splHVtxt import parse_graphs_speaker_splHVtxt
+from .load_misc import graph_melt
 from .load import (
     filter_graphs,
     filter_graphs_partial,
@@ -134,6 +135,8 @@ def parse_graphs_speaker(
             title, df_uneven = parse_graphs_speaker_webplotdigitizer(
                 measurement_path, speaker_brand, speaker_name, morigin, mversion
             )
+            # necessary to do first (most digitalize graphs are uneven in frequency)
+            df_uneven = graph_melt(unify_freq(df_uneven))
         elif mformat == "rewstextdump":
             title, df_uneven = parse_graphs_speaker_rewstextdump(
                 measurement_path, speaker_brand, speaker_name, morigin, mversion
@@ -142,18 +145,42 @@ def parse_graphs_speaker(
         if nan_count > 0:
             logger.error("df_uneven {} has {} NaNs".format(speaker_name, nan_count))
 
-        df_full = spin_compute_di_eir(speaker_name, title, df_uneven)
-        nan_count = checkNaN(df_full)
-        if nan_count > 0:
-            logger.error("extent_spin {} has {} NaNs".format(speaker_name, nan_count))
+        logger.debug("DEBUG title: {}".format(title))
+        logger.debug("DEBUG df_uneven keys {}".format(df_uneven.keys()))
+        logger.debug(
+            "DEBUG df_uneven measurements {}".format(set(df_uneven.Measurements))
+        )
+        try:
+            if title == "CEA2034":
+                df_full = spin_compute_di_eir(speaker_name, title, df_uneven)
+            else:
+                df_full = {title: unify_freq(graph_melt(df_uneven))}
+            nan_count = checkNaN(df_full)
+            if nan_count > 0:
+                logger.error("df_full {} has {} NaNs".format(speaker_name, nan_count))
+                for k in df_full.keys():
+                    logger.error("------------ {} -----------".format(k))
+                    logger.error(df_full[k].head())
 
-        df = filter_graphs_partial(df_full)
-        nan_count = checkNaN(df)
-        if nan_count > 0:
-            logger.error("df {} has {} NaNs".format(speaker_name, nan_count))
+            for k in df_full.keys():
+                logger.debug("-- DF FULL ---------- {} -----------".format(k))
+                logger.debug(df_full[k].head())
+
+            df = filter_graphs_partial(df_full)
+            nan_count = checkNaN(df)
+            if nan_count > 0:
+                logger.error("df {} has {} NaNs".format(speaker_name, nan_count))
+                for k in df.keys():
+                    logger.error("------------ {} -----------".format(k))
+                    logger.error(df[k].head())
+
             for k in df.keys():
-                print("------------ {} -----------".format(k))
-                print(df[k].head())
+                logger.debug("-- DF ---------- {} -----------".format(k))
+                logger.debug(df[k].head())
+        except ValueError as ve:
+            logger.error("ValueError for speaker {}: {}".format(speaker_name, ve))
+            raise ve
+            # return None
 
     else:
         logger.fatal("Format {:s} is unkown".format(mformat))

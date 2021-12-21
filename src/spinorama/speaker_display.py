@@ -28,8 +28,14 @@ alt.data_transformers.disable_max_rows()
 def display_spinorama(df, graph_params=plot_params_default):
     spin = df.get("CEA2034_unmelted")
     if spin is None:
-        logger.info("Display CEA2034 not in dataframe {0}".format(df.keys()))
-        return None
+        spin_melted = df.get("CEA2034")
+        if spin_melted is not None:
+            spin = spin_melted.pivot_table(
+                index="Freq", columns="Measurements", values="dB", aggfunc=max
+            ).reset_index()
+        if spin is None:
+            logger.info("Display CEA2034 not in dataframe {0}".format(df.keys()))
+            return None
     return plot_spinorama(spin, graph_params)
 
 

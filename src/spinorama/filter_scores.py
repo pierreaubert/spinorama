@@ -105,7 +105,8 @@ def scores_print(score: dict, score_filtered: dict):
     )
     print(
         "w/sub    {0:0.1f}  {1:0.1f}".format(
-            score["pref_score_wsub"], score_filtered["pref_score_wsub"]
+            score.get("pref_score_wsub", 0.0),
+            score_filtered.get("pref_score_wsub", 0.0),
         )
     )
     print("-----------------")

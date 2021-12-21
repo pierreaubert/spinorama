@@ -6273,7 +6273,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-ReflectorAudio",
                 "format": "webplotdigitizer",
-                "qualily": "medium",
+                "quality": "medium",
                 "reviews": {
                     "sar": "https://www.soundandrecording.de/equipment/reflector-audio-koaxialer-hochleistungs-midfield-monitor-im-test/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/detailed-measurements-and-spinorama-of-reflector-audio-square-two-2-way-coaxial-horn-monitor-with-4x-5-woofers.29072/",
