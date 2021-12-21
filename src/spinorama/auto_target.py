@@ -117,10 +117,20 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     # find target min and max
     first_freq = 0
     last_freq = -1
+    freq_1k5 = 0
+    freq_4k = 0
 
     for i, f in enumerate(freq):
         if f >= optim_config["target_min_freq"]:
             first_freq = i
+            break
+    for i, f in enumerate(freq):
+        if f >= 1500:
+            freq_1k5 = i
+            break
+    for i, f in enumerate(freq):
+        if f >= 4000:
+            freq_4k = i
             break
     for i, f in enumerate(reversed(freq)):
         if f <= optim_config["target_max_freq"]:
@@ -135,6 +145,12 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
             flat if i < first_freq else slope * math.log10(f)
             for i, f in enumerate(freq)
         ] + intercept
+        # if current_curve_name == 'Listening Window':
+        #    line = [flat for f in freq[:freq_1k5]] + \
+        #        [slope*math.log10(f)-0.25 for f in freq[freq_1k5, freq_4k]] + \
+        #        [slope*math.log10(f)-1 for f in freq[freq_4k:]]
+        #    line += intercept
+
         logger.debug(
             "Slope {} Intercept {} R {} P {} err {}".format(
                 slope, intercept, r_value, p_value, std_err

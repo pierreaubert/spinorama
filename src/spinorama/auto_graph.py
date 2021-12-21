@@ -261,9 +261,10 @@ def graph_results(
     fig.update_yaxes(generate_yaxis_spl(-10, 5, 1), row=4)
 
     fig.update_layout(
-        width=1600,
+        width=1400,
         height=1600,
         legend=dict(orientation="v"),
+        title="{} from {}".format(speaker_name, speaker_origin),
     )
 
     # add all graphs and print it
