@@ -164,15 +164,18 @@ def filter_graphs_partial(df):
     if on is None and "On Axis" in df and "On Axis" in df["On Axis"]:
         on = df["On Axis"]
     if on is not None:
+        # print('DEBUG: found ON')
         mean = np.mean(
             on.loc[
                 (on.Freq > 300) & (on.Freq < 3000) & (on.Measurements == "On Axis")
             ].dB
         )
+        # print('DEBUG: mean {}'.format(mean))
         for k in df.keys():
             if k == "CEA2034":
-                aligned = graph_melt(unify_freq(df[k]))
-                dfs[k] = shift_spl_melted_cea2034(aligned, mean)
+                # print('DEBUG {} pre shift cols={}'.format(k, set(df[k].Measurements)))
+                dfs[k] = shift_spl_melted_cea2034(df[k], mean)
+                # print('DEBUG {} post shift cols={}'.format(k, set(dfs[k].Measurements)))
             else:
                 dfs[k] = shift_spl_melted(df[k], mean)
     else:
@@ -228,11 +231,15 @@ def spin_compute_di_eir(
         logger.debug("title is {0}".format(title))
         return {}
 
-    if not parse_graph_freq_check(speaker_name, spin_uneven):
-        dfs[title] = spin_uneven
+    spin_melted = spin_uneven
+    if "Measurements" not in spin_uneven.keys():
+        spin_melted = graph_melt(spin_uneven)
+
+    if not parse_graph_freq_check(speaker_name, spin_melted):
+        dfs[title] = spin_melted
         return dfs
 
-    spin_even = unify_freq(spin_uneven)
+    spin_even = unify_freq(spin_melted)
     spin = graph_melt(spin_even)
 
     if spin is None:

@@ -141,12 +141,13 @@ def parse_graphs_speaker(
         nan_count = checkNaN(df_uneven)
         if nan_count > 0:
             logger.error("df_uneven {} has {} NaNs".format(speaker_name, nan_count))
-        extent_spin = spin_compute_di_eir(speaker_name, title, df_uneven)
-        nan_count = checkNaN(extent_spin)
+
+        df_full = spin_compute_di_eir(speaker_name, title, df_uneven)
+        nan_count = checkNaN(df_full)
         if nan_count > 0:
             logger.error("extent_spin {} has {} NaNs".format(speaker_name, nan_count))
 
-        df = filter_graphs_partial(extent_spin)
+        df = filter_graphs_partial(df_full)
         nan_count = checkNaN(df)
         if nan_count > 0:
             logger.error("df {} has {} NaNs".format(speaker_name, nan_count))

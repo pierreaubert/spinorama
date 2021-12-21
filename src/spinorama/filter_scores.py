@@ -103,6 +103,11 @@ def scores_print(score: dict, score_filtered: dict):
             score["pref_score"], score_filtered["pref_score"]
         )
     )
+    print(
+        "w/sub    {0:0.1f}  {1:0.1f}".format(
+            score["pref_score_wsub"], score_filtered["pref_score_wsub"]
+        )
+    )
     print("-----------------")
 
 

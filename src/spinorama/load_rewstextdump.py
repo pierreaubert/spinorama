@@ -25,7 +25,7 @@ def parse_graphs_speaker_rewstextdump(
             ("LW", "Listening Window"),
             ("SP", "Sound Power"),
             # ('ERDI', 'Early Reflections DI'),
-            # ('DI', 'Sound Power DI'),
+            # ('PSDI', 'Sound Power DI'),
         ):
             filename = "{0}/{1}/{2}/{3}.txt".format(
                 speaker_path, speaker_name, version, txt

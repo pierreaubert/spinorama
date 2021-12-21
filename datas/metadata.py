@@ -1747,7 +1747,7 @@ speakers_info = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/emotiva_airmotiv_c2plus/",
                     "yt": "",
                 },
-                "review_published": "2021212",
+                "review_published": "20211212",
             },
         },
     },
@@ -6261,6 +6261,27 @@ speakers_info = {
             },
         },
     },
+    "Reflector Audio Square Two": {
+        "brand": "Reflector Audio",
+        "model": "Square Two",
+        "type": "active",
+        "price": "4000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-ReflectorAudio",
+                "format": "webplotdigitizer",
+                "qualily": "medium",
+                "reviews": {
+                    "sar": "https://www.soundandrecording.de/equipment/reflector-audio-koaxialer-hochleistungs-midfield-monitor-im-test/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/detailed-measurements-and-spinorama-of-reflector-audio-square-two-2-way-coaxial-horn-monitor-with-4x-5-woofers.29072/",
+                },
+                "review_published": "20211217",
+            },
+        },
+    },
     "Revel C10": {
         "brand": "Revel",
         "model": "C10",
@@ -7714,6 +7735,15 @@ origins_info = {
         "logo-small": "docs/metadata/polkaudio.png",
         "url": "https://www.polkaudio.com",
     },
+    "Vendors-ReflectorAudio": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "logo": "",
+        "logo-small": "",
+        "url": "https://http://www.reflector.audio/",
+    },
     "Vendors-Revel": {
         "min hz": 20,
         "max hz": 20000,
@@ -7721,7 +7751,7 @@ origins_info = {
         "max dB": 10,
         "logo": "docs/metadata/revel.png",
         "logo-small": "docs/metadata/jbl-small.png",
-        "url": "http://www.revelspeakers.com",
+        "url": "https://www.revelspeakers.com",
     },
     "Vendors-Yamaha": {
         "min hz": 20,
@@ -7730,6 +7760,6 @@ origins_info = {
         "max dB": 10,
         "logo": "docs/metadata/yamaha.png",
         "logo-small": "docs/metadata/yamaha-small.png",
-        "url": "http://www.yamaha.com",
+        "url": "https://www.yamaha.com",
     },
 }
