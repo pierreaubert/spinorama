@@ -7386,6 +7386,23 @@ speakers_info = {
             },
         },
     },
+    "Wilson Audio TuneTot": {
+        "brand": "Wilson Audio",
+        "model": "TuneTot",
+        "type": "passive",
+        "price": "10000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/wilson-audio-tunetot-review-high-end-bookshelf-speaker.29219/",
+                "review_published": "20211221",
+            },
+        },
+    },
     "Yamaha HS5": {
         "brand": "Yamaha",
         "model": "HS5",

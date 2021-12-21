@@ -292,9 +292,9 @@ def plot_spinorama_traces(spin, graph_params):
             trace.name = label_short.get(measurement, measurement)
         else:
             trace.name = measurement
-            trace.legendgroup = "measurements"
-            trace.legendgrouptitle = {"text": "Measurements"}
-        traces.append(trace)
+            trace.legendgroup = "directivity"
+            trace.legendgrouptitle = {"text": "Directivity"}
+        traces_di.append(trace)
     return traces, traces_di
 
 
