@@ -35,8 +35,6 @@ import zipfile
 
 from docopt import docopt
 import pandas as pd
-import altair as alt
-
 
 from generate_common import get_custom_logger, args2level
 
@@ -157,153 +155,6 @@ def print_eq(speakers, txt_format):
             )
 
 
-def generate_stats(meta):
-    df = meta2df(meta)
-
-    pref_score = df.loc[(df.param == "pref_score")].reset_index()
-    pref_score_wsub = df.loc[(df.param == "pref_score_wsub")].reset_index()
-    brand = df.loc[(df.param == "brand")].reset_index()
-    lfx_hz = df.loc[(df.param == "lfx_hz")].reset_index()
-    nbd_on = df.loc[(df.param == "nbd_on_axis")].reset_index()
-    nbd_pir = df.loc[(df.param == "nbd_pred_in_room")].reset_index()
-    sm_pir = df.loc[(df.param == "sm_pred_in_room")].reset_index()
-
-    spread_score = (
-        alt.Chart(pref_score)
-        .mark_circle(size=100)
-        .encode(
-            x=alt.X("value", title="Preference Score"),
-            y=alt.Y("speaker", sort="y", axis=None),
-            color=alt.Color("ref"),
-            tooltip=["speaker", "origin", "value", "ref"],
-        )
-        .properties(
-            width=1024,
-            height=300,
-        )
-    )
-
-    spread_score_wsub = (
-        alt.Chart(pref_score_wsub)
-        .mark_circle(size=100)
-        .encode(
-            x=alt.X("value", title="Preference Score w/Sub"),
-            y=alt.Y("speaker", sort="y", axis=None),
-            color=alt.Color("ref"),
-            tooltip=["speaker", "origin", "value", "ref"],
-        )
-        .properties(
-            width=1024,
-            height=300,
-        )
-    )
-
-    distribution_score = (
-        alt.Chart(pref_score)
-        .mark_bar()
-        .encode(
-            x=alt.X("value:Q", bin=True, title="Preference Score"),
-            y=alt.Y("count()", title="Count"),
-        )
-        .properties(width=450, height=300)
-    )
-
-    distribution_score_wsub = (
-        alt.Chart(pref_score_wsub)
-        .mark_bar()
-        .encode(
-            x=alt.X("value:Q", bin=True, title="Preference Score w/Sub"),
-            y=alt.Y("count()", title="Count"),
-        )
-        .properties(
-            width=450,
-            height=300,
-        )
-    )
-
-    source = pd.DataFrame(
-        {
-            "speaker": pref_score.speaker,
-            "pref_score": pref_score.value,
-            "lfx_hz": lfx_hz.value,
-            "nbd_on": nbd_on.value,
-            "nbd_pir": nbd_pir.value,
-            "sm_pir": sm_pir.value,
-            "brand": brand.value,
-        }
-    )
-
-    logger.debug(source)
-
-    graphs = {}
-    for g in ("lfx_hz", "nbd_pir", "nbd_on", "sm_pir"):
-        base = alt.Chart(source)
-        data = base.mark_point().encode(
-            x=alt.X("{0}:Q".format(g)),
-            y=alt.Y("pref_score:Q", title="Preference Score"),
-            color=alt.Color("brand:N"),
-            tooltip=["speaker", g, "pref_score"],
-        )
-        reg = data.transform_regression(g, "pref_score").mark_line()
-        scale = alt.Scale(domain=(-4.0, 11.0))
-        # histo = (
-        #    base.mark_bar()
-        #    .encode(
-        #        alt.Y("count()", stack=None, title=""),
-        #        alt.X(
-        #            "pref_score:Q",
-        #            bin=alt.Bin(maxbins=20, extent=scale.domain),
-        #            stack=None,
-        #            title="",
-        #        ),
-        #    )
-        #    .properties(width=80)
-        # )
-        graphs[g] = data + reg
-
-    # used in website
-    filedir = "docs/stats"
-    pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
-
-    for graph, name in (
-        (spread_score, "spread_score"),
-        (spread_score_wsub, "spread_score_wsub"),
-        (distribution_score, "distribution_score"),
-        (distribution_score_wsub, "distribution_score_wsub"),
-        (spread_score, "spread_score"),
-        (spread_score_wsub, "spread_score_wsub"),
-        (graphs["lfx_hz"], "distribution_lfx_hz"),
-        (graphs["nbd_on"], "distribution_nbd_on"),
-        (graphs["nbd_pir"], "distribution_nbd_pir"),
-        (graphs["sm_pir"], "distribution_sm_pir"),
-    ):
-        filename = "{0}/{1}.json.zip".format(filedir, name)
-        content = graph.to_json()
-        with zipfile.ZipFile(
-            filename, "w", compression=zipfile.ZIP_DEFLATED, allowZip64=True
-        ) as current_zip:
-            current_zip.writestr("{0}.json".format(name), content)
-
-    # used in book
-    filedir = "book/stats"
-    pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
-
-    for graph, name in (
-        (distribution_score, "distribution_score"),
-        (distribution_score_wsub, "distribution_score_wsub"),
-        (spread_score, "spread_score"),
-        (spread_score_wsub, "spread_score_wsub"),
-        (graphs["lfx_hz"], "distribution_lfx_hz"),
-        (graphs["nbd_on"], "distribution_nbd_on"),
-        (graphs["nbd_pir"], "distribution_nbd_pir"),
-        (graphs["sm_pir"], "distribution_sm_pir"),
-    ):
-        filename = "{0}/{1}.png".format(filedir, name)
-        graph.save(filename)
-
-    return 0
-
-
 if __name__ == "__main__":
     args = docopt(
         __doc__,
@@ -338,7 +189,5 @@ if __name__ == "__main__":
             print_eq(jsmeta, "csv")
         else:
             logger.error('unkown print type either "eq_txt" or "eq_csv"')
-    else:
-        generate_stats(jsmeta)
 
     sys.exit(0)

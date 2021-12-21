@@ -108,6 +108,39 @@ uniform_colors = {
     "15000 Hz": colors[5],
 }
 
+label_short = {
+    # regression
+    "Linear Regression": "Reg",
+    "Band ±1.5dB": "±1.5dB",
+    "Band ±3dB": "±3dB",
+    # PIR
+    "Estimated In-Room Response": "PIR",
+    # spin
+    "On Axis": "ON",
+    "Listening Window": "LW",
+    "Early Reflections": "ER",
+    "Sound Power": "SP",
+    "Early Reflections DI": "ERDI",
+    "Sound Power DI": "SPDI",
+    # reflections
+    "Ceiling Bounce": "CB",
+    "Floor Bounce": "FB",
+    "Front Wall Bounce": "FWB",
+    "Rear Wall Bounce": "RWB",
+    "Side Wall Bounce": "SWB",
+    #
+    "Ceiling Reflection": "CR",
+    "Floor Reflection": "FR",
+    #
+    "Front": "F",
+    "Rear": "R",
+    "Side": "S",
+    #
+    "Total Early Reflection": "TER",
+    "Total Horizontal Reflection": "THR",
+    "Total Vertical Reflection": "TVR",
+}
+
 
 def generate_xaxis(freq_min=20, freq_max=20000):
     return dict(
@@ -223,6 +256,7 @@ def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
 
 
 def plot_spinorama_traces(spin, graph_params):
+    layout = graph_params.get("layout", "")
     traces = []
     for measurement in (
         "On Axis",
@@ -232,30 +266,35 @@ def plot_spinorama_traces(spin, graph_params):
     ):
         if measurement not in spin.keys():
             continue
-        traces.append(
-            go.Scatter(
-                x=spin.Freq,
-                y=spin[measurement],
-                name=measurement,
-                legendgroup="measurements",
-                legendgrouptitle_text="Measurements",
-                marker_color=uniform_colors.get(measurement, "black"),
-            )
+        trace = go.Scatter(
+            x=spin.Freq,
+            y=spin[measurement],
+            marker_color=uniform_colors.get(measurement, "black"),
         )
+        if layout == "compact":
+            trace.name = label_short.get(measurement, measurement)
+        else:
+            trace.name = measurement
+            trace.legendgroup = "measurements"
+            trace.legendgrouptitle = {"text": "Measurements"}
+        traces.append(trace)
+
     traces_di = []
     for measurement in ("Early Reflections DI", "Sound Power DI"):
         if measurement not in spin.keys():
             continue
-        traces_di.append(
-            go.Scatter(
-                x=spin.Freq,
-                y=spin[measurement],
-                name=measurement,
-                legendgroup="DI",
-                legendgrouptitle_text="Directivity",
-                marker_color=uniform_colors.get(measurement, "black"),
-            )
+        trace = go.Scatter(
+            x=spin.Freq,
+            y=spin[measurement],
+            marker_color=uniform_colors.get(measurement, "black"),
         )
+        if layout == "compact":
+            trace.name = label_short.get(measurement, measurement)
+        else:
+            trace.name = measurement
+            trace.legendgroup = "measurements"
+            trace.legendgrouptitle = {"text": "Measurements"}
+        traces.append(trace)
     return traces, traces_di
 
 

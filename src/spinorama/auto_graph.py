@@ -110,14 +110,6 @@ def graph_results(
     g_params["width"] = 800
     g_params["height"] = 400
 
-    pir_params = copy.deepcopy(g_params)
-    pir_params["ymin"] = -11
-    pir_params["ymax"] = +4
-
-    lw_params = copy.deepcopy(g_params)
-    lw_params["ymin"] = -11
-    lw_params["ymax"] = +4
-
     # what's the min over freq?
     reg_min = optim_config["freq_reg_min"]
     reg_max = optim_config["freq_reg_max"]
@@ -157,7 +149,6 @@ def graph_results(
     for which_curve in ("On Axis", "Listening Window", "Estimated In-Room Response"):
         data = unmelted_spin
         data_auto = unmelted_spin_auto
-        curve_params = lw_params
         if which_curve == "Estimated In-Room Response":
             data = pir.pivot_table(
                 index="Freq", columns="Measurements", values="dB", aggfunc=max
@@ -165,15 +156,14 @@ def graph_results(
             data_auto = pir_auto.pivot_table(
                 index="Freq", columns="Measurements", values="dB", aggfunc=max
             ).reset_index()
-            curve_params = pir_params
 
         # print(data.keys())
-        g_curve_noeq = plot_graph_regression_traces(data, which_curve, curve_params)
+        g_curve_noeq = plot_graph_regression_traces(data, which_curve, g_params)
 
         g_curve_auto = None
         if data_auto is not None:
             g_curve_auto = plot_graph_regression_traces(
-                data_auto, which_curve, curve_params
+                data_auto, which_curve, g_params
             )
         g_curves[which_curve] = {
             "noeq": g_curve_noeq,
