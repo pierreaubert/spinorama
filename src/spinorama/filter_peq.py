@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
 import math
-import altair as alt
 import numpy as np
 import pandas as pd
 
@@ -63,33 +62,6 @@ def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
         logger.warning("Some filtered values post EQ are NaN")
         return filtered.dropna()
     return filtered
-
-
-def peq_graph_measurements(spin: pd.DataFrame, measurement: str, peq: Peq):
-    spin_freq = spin["Freq"].to_numpy()
-    mean = np.mean(spin.loc[(spin.Freq > 500) & (spin.Freq < 10000)]["On Axis"])
-    curve = spin[measurement] - mean
-    current_filter = peq_build(spin_freq, peq)
-    curve_filtered = peq_apply_measurements(curve, peq)
-    dff = pd.DataFrame(
-        {
-            "Freq": spin_freq,
-            measurement: curve,
-            "{0} Filtered".format(measurement): curve_filtered,
-            "Filter": current_filter,
-        }
-    )
-    return (
-        alt.Chart(graph_melt(dff))
-        .mark_line(clip=True)
-        .encode(
-            x=alt.X(
-                "Freq:Q", scale=alt.Scale(type="log", nice=False, domain=[20, 20000])
-            ),
-            y=alt.Y("dB:Q", scale=alt.Scale(domain=[-25, 5])),
-            color=alt.Color("Measurements"),
-        )
-    )
 
 
 def peq_print(peq: Peq) -> None:

@@ -23,29 +23,21 @@ plot_params_default = {
     "ymin": -40,
     "ymax": 10,
     "width": 600,
-    "height": 360,
+    "height": 600,
 }
 
 contour_params_default = {
     "xmin": 100,
     "xmax": 20000,
-    "width": 400,
-    "height": 360,
-    # 'contour_scale': [-12, -9, -8, -7, -6, -5, -4, -3, -2.5, -2, -1.5, -1, -0.5, 0],
-    "contour_scale": [-30, 0],
-    # 'contour_scale': [-30, -25, -20, -15, -10, -5, 0],
-    "colormap": "spectral",
-    # 'colormap': 'redyellowblue',
-    # 'colormap': 'blueorange',
-    # 'colormap': 'blues',
+    "width": 600,
+    "height": 600,
 }
 
 radar_params_default = {
     "xmin": 400,
     "xmax": 20000,
-    "width": 180,
-    "height": 180,
-    "contour_scale": [-12, -9, -8, -7, -6, -5, -4, -3, -2.5, -2, -1.5, -1, -0.5, 0],
+    "width": 600,
+    "height": 800,
 }
 
 colors = [
@@ -147,66 +139,66 @@ def generate_xaxis(freq_min=20, freq_max=20000):
         title_text="Frequency (Hz)",
         type="log",
         range=[math.log10(freq_min), math.log10(freq_max)],
-        tickvals=[
-            20,
-            30,
-            40,
-            50,
-            60,
-            70,
-            80,
-            90,
-            100,
-            200,
-            300,
-            400,
-            500,
-            600,
-            700,
-            800,
-            900,
-            1000,
-            2000,
-            3000,
-            4000,
-            5000,
-            6000,
-            7000,
-            8000,
-            9000,
-            10000,
-            20000,
-        ],
-        ticktext=[
-            "20",
-            " ",
-            " ",
-            "50",
-            " ",
-            " ",
-            "  ",
-            " ",
-            "100",
-            "200",
-            " ",
-            " ",
-            "500",
-            " ",
-            " ",
-            "  ",
-            " ",
-            "1k",
-            "2k",
-            " ",
-            " ",
-            "5k",
-            " ",
-            " ",
-            "  ",
-            " ",
-            "10k",
-            "20k",
-        ],
+        #        tickvals=[
+        #            20,
+        #            30,
+        #            40,
+        #            50,
+        #            60,
+        #            70,
+        #            80,
+        #            90,
+        #            100,
+        #            200,
+        #            300,
+        #            400,
+        #            500,
+        #            600,
+        #            700,
+        #            800,
+        #            900,
+        #            1000,
+        #            2000,
+        #            3000,
+        #            4000,
+        #            5000,
+        #            6000,
+        #            7000,
+        #            8000,
+        #            9000,
+        #            10000,
+        #            20000,
+        #        ],
+        #        ticktext=[
+        #            "20",
+        #            " ",
+        #            " ",
+        #            "50",
+        #            " ",
+        #            " ",
+        #            "  ",
+        #            " ",
+        #            "100",
+        #            "200",
+        #            " ",
+        #            " ",
+        #            "500",
+        #            " ",
+        #            " ",
+        #            "  ",
+        #            " ",
+        #            "1k",
+        #            "2k",
+        #            " ",
+        #            " ",
+        #            "5k",
+        #            " ",
+        #            " ",
+        #            "  ",
+        #            " ",
+        #            "10k",
+        #            "20k",
+        #        ],
         ticks="inside",
         ticklen=8,
         tickwidth=1,
@@ -255,8 +247,32 @@ def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
     )
 
 
-def plot_spinorama_traces(spin, graph_params):
-    layout = graph_params.get("layout", "")
+def common_layout(params):
+    orientation = "v"
+    if params.get("layout", "") == "compact":
+        orientation = "h"
+
+    return dict(
+        width=params["width"],
+        height=params["height"],
+        legend=dict(x=0, y=1, orientation=orientation),
+        title=dict(
+            x=0,
+            y=0.98,
+            xanchor="left",
+            yanchor="top",
+        ),
+        margin={
+            "t": 30,
+            "b": 0,
+            "l": 0,
+            "r": 0,
+        },
+    )
+
+
+def plot_spinorama_traces(spin, params):
+    layout = params.get("layout", "")
     traces = []
     for measurement in (
         "On Axis",
@@ -298,59 +314,62 @@ def plot_spinorama_traces(spin, graph_params):
     return traces, traces_di
 
 
-def plot_spinorama(spin, graph_params):
+def plot_spinorama(spin, params):
     fig = make_subplots(specs=[[{"secondary_y": True}]])
-    traces, traces_di = plot_spinorama_traces(spin, graph_params)
+    traces, traces_di = plot_spinorama_traces(spin, params)
     for t in traces:
         fig.add_trace(t, secondary_y=False)
     for t in traces_di:
         fig.add_trace(t, secondary_y=True)
+
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl())
     fig.update_yaxes(generate_yaxis_di(), secondary_y=True)
-    fig.update_layout(
-        width=600 * math.sqrt(2),
-        height=600,
-        legend=dict(orientation="v"),
-    )
+
+    fig.update_layout(common_layout(params))
     return fig
 
 
-def plot_graph(df, graph_params):
+def plot_graph(df, params):
+    layout = params.get("layout", "")
     fig = go.Figure()
     for measurement in df.keys():
         if measurement != "Freq":
-            fig.add_trace(
-                go.Scatter(
-                    x=df.Freq,
-                    y=df[measurement],
-                    name=measurement,
-                    legendgroup="measurements",
-                    legendgrouptitle_text="Measurements",
-                    marker_color=uniform_colors.get(measurement, "black"),
-                ),
+            trace = go.Scatter(
+                x=df.Freq,
+                y=df[measurement],
+                marker_color=uniform_colors.get(measurement, "black"),
             )
+            if layout == "compact":
+                trace.name = label_short.get(measurement, measurement)
+            else:
+                trace.name = measurement
+                trace.legendgroup = "measurements"
+                trace.legendgrouptitle = {"text": "Measurements"}
+            fig.add_trace(trace)
+
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl())
-    fig.update_layout(
-        width=600 * math.sqrt(2),
-        height=600,
-        legend=dict(orientation="v"),
-    )
+    fig.update_layout(common_layout(params))
     return fig
 
 
-def plot_graph_regression_traces(df, measurement, graph_params):
-    traces = [
-        go.Scatter(
-            x=df.Freq,
-            y=df[measurement],
-            name=measurement,
-            legendgroup="measurements",
-            legendgrouptitle_text="Measurements",
-            marker_color=uniform_colors.get(measurement, "black"),
-        )
-    ]
+def plot_graph_regression_traces(df, measurement, params):
+    layout = params.get("layout", "")
+    traces = []
+    trace = go.Scatter(
+        x=df.Freq,
+        y=df[measurement],
+        marker_color=uniform_colors.get(measurement, "black"),
+    )
+    if layout == "compact":
+        trace.name = label_short.get(measurement, measurement)
+    else:
+        trace.name = measurement
+        trace.legendgroup = "measurements"
+        trace.legendgrouptitle = {"text": "Measurements"}
+    traces.append(trace)
+
     # some speakers start very high
     current_restricted = df.loc[(df.Freq > 250) & (df.Freq < 10000)]
 
@@ -362,17 +381,20 @@ def plot_graph_regression_traces(df, measurement, graph_params):
     # print("step {} {}".format(slope, intercept))
 
     # 600 px = 50 dB
-    height = graph_params["height"]
+    height = params["height"]
     one_db = height / 50
-    traces.append(
-        go.Scatter(
-            x=df.Freq,
-            y=line,
-            line=dict(width=2, color="black"),
-            opacity=1,
-            name="Linear regression",
-        )
+    trace = go.Scatter(
+        x=df.Freq,
+        y=line,
+        line=dict(width=2, color="black"),
+        opacity=1,
+        name="Linear regression",
     )
+    if layout == "compact":
+        trace.name = label_short.get("Linear regression")
+    else:
+        trace.name = "Linear regression"
+
     traces.append(
         go.Scatter(
             x=df.Freq,
@@ -394,65 +416,76 @@ def plot_graph_regression_traces(df, measurement, graph_params):
     return traces
 
 
-def plot_graph_regression(df, measurement, graph_params):
+def plot_graph_regression(df, measurement, params):
+    layout = params.get("layout", "")
     # print("{} {}".format(measurement, df.keys()))
     fig = go.Figure()
-    traces = plot_graph_regression_traces(df, measurement, graph_params)
+    traces = plot_graph_regression_traces(df, measurement, params)
     for t in traces:
         fig.add_trace(t)
 
-    height = graph_params["height"]
-
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl())
-    fig.update_layout(
-        width=height * math.sqrt(2),
-        height=height,
-        legend=dict(orientation="v"),
-    )
-    # print("fig is {}".format(fig))
+
+    fig.update_layout(common_layout(params))
     return fig
 
 
 def plot_contour(spl, params):
-    min_freq = 200
-    contour_start = -72
+    layout = params.get("layout", "")
+    min_freq = params.get("contour_min_freq", 100)
+
+    contour_start = -30
     contour_end = 3
-    contour_range = contour_end - contour_start
-    contour_bands = [-72, -18, -15, -12, -9, -6, -3, +3]
-    contour_colors = [
-        "black",
-        "blue",
-        "steelblue",
-        "green",
-        "yellow",
-        "orange",
-        "red",
-        "white",
-    ]
 
     contour_colorscale = [
-        [1 + (scale - contour_end) / contour_range, color]
-        for scale, color in zip(contour_bands, contour_colors)
+        [0, "rgb(0,0,168)"],
+        [0.1, "rgb(0,0,200)"],
+        [0.2, "rgb(0,74,255)"],
+        [0.3, "rgb(0,152,255)"],
+        [0.4, "rgb(74,255,161)"],
+        [0.5, "rgb(161,255,74)"],
+        [0.6, "rgb(255,255,0)"],
+        [0.7, "rgb(234,159,0)"],
+        [0.8, "rgb(255,74,0)"],
+        [0.9, "rgb(222,74,0)"],
+        [1, "rgb(253,14,13)"],
     ]
 
     fig = go.Figure()
 
     af, am, az = compute_contour(spl.loc[spl.Freq > min_freq], min_freq)
+    az = np.clip(az, contour_start, contour_end)
     fig.add_trace(
         go.Contour(
             x=af[0],
             y=am.T[0],
             z=az,
             contours=dict(
-                start=contour_start, end=contour_end, size=3, showlabels=True
+                coloring="fill",
+                start=contour_start,
+                end=contour_end,
+                size=3,
+                showlines=False,
             ),
+            colorbar=dict(
+                dtick=3,
+                len=1.0,
+                lenmode="fraction",
+            ),
+            autocolorscale=False,
             colorscale=contour_colorscale,
         )
     )
+
     fig.update_xaxes(generate_xaxis(min_freq))
     fig.update_yaxes(generate_yaxis_angles())
-    fig.update_layout(width=600 * math.sqrt(2), height=600)
+    fig.update_yaxes(
+        zeroline=True,
+        zerolinecolor="#000000",
+        zerolinewidth=3,
+    )
+    fig.update_layout(common_layout(params))
     return fig
 
 
@@ -469,6 +502,7 @@ def find_nearest_freq(dfu, hz, tolerance=0.05):
 
 
 def plot_radar(spl, params):
+    layout = params.get("layout", "")
 
     anglelist = [a for a in range(-180, 180, 10)]
 
@@ -527,23 +561,21 @@ def plot_radar(spl, params):
 
     for freq in np.unique(dbs_df["Freq"].values):
         slice = dbs_df.loc[dbs_df.Freq == freq]
-        fig.add_trace(
-            go.Scatterpolar(
-                r=slice.R,
-                theta=slice.Theta,
-                dtheta=30,
-                name=freq,
-                marker_color=uniform_colors.get(freq, "black"),
-                legendgroup="measurements",
-                legendgrouptitle_text="Frequencies",
-                legendrank=int(freq[:-3]),
-            ),
+        trace = go.Scatterpolar(
+            r=slice.R,
+            theta=slice.Theta,
+            dtheta=30,
+            name=freq,
+            marker_color=uniform_colors.get(freq, "black"),
+            legendrank=int(freq[:-3]),
         )
+        if layout != "compact":
+            legendgroup = ("measurements",)
+            legendgrouptitle_text = ("Frequencies",)
+        fig.add_trace(trace)
 
+    fig.update_layout(common_layout(params))
     fig.update_layout(
-        # specs={"type": "polar"},
-        width=600 * math.sqrt(2),
-        height=600,
         polar=dict(
             radialaxis=dict(
                 range=[-45, 5],

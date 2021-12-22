@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import altair as alt
 import numpy as np
 import pandas as pd
 import datas.metadata as metadata
@@ -20,9 +19,6 @@ from .plot import (
 )
 
 logger = logging.getLogger("spinorama")
-
-
-alt.data_transformers.disable_max_rows()
 
 
 def display_spinorama(df, graph_params=plot_params_default):

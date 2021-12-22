@@ -100,6 +100,9 @@ fetch(urlSite+'assets/metadata.json').then(
 	var formContainer = plotContainer.querySelector('.plotForm');
 	var graphsSelector = formContainer.querySelector('.graph');
 
+        let windowWidth = window.innerWidth;
+        let windowHeight = window.innerHeight;
+
 	function getAllSpeakers() {
 	    let speakers = [];
 	    speakerDatabase.forEach( function(value, key) {
@@ -177,8 +180,8 @@ fetch(urlSite+'assets/metadata.json').then(
 		datas = spin[1].data;
 	    }
 	    if (layout != null && datas != null ) {
-		layout.width = 800*1.41;
-		layout.height = 600;
+		layout.width = windowWidth;
+		layout.height = windowHeight;
 		layout.title = null;
 		layout.margin = {
 		    'l': 0,
@@ -189,7 +192,7 @@ fetch(urlSite+'assets/metadata.json').then(
 		plotSingleContainer.style.display = "block";
 		plotDouble0Container.style.display = "none";
 		plotDouble1Container.style.display = "none";
-		Plotly.newPlot('plotSingle', datas, layout);
+		Plotly.newPlot('plotSingle', datas, layout, {responsive: true});
 	    } else {
 		// should be a pop up
 		console.log('No graph available');
@@ -247,7 +250,7 @@ fetch(urlSite+'assets/metadata.json').then(
                 layout.legend.orientation = 'v';
 
 		plotSingleContainer.style.display = "block";
-		Plotly.newPlot('plotSingle', datas, layout);
+		Plotly.newPlot('plotSingle', datas, layout, {responsive: true});
 
 		var deltas = [];
 		for (var g0 in speaker_graphs[0].data ) {
@@ -295,7 +298,7 @@ fetch(urlSite+'assets/metadata.json').then(
 		    itemclick: "toggleitem",
 		};
 		plotDouble0Container.style.display = "block";
-		Plotly.newPlot('plotDouble0', deltas, layout2);
+		Plotly.newPlot('plotDouble0', deltas, layout2, {responsive: true});
 		plotDouble1Container.style.display = "none";
 	    } else {
 		setLayoutAndDataPrimary(speaker_graphs);
@@ -331,7 +334,7 @@ fetch(urlSite+'assets/metadata.json').then(
 		    }
 		    var datas = speaker_graphs[i].data;
 		    var layout = speaker_graphs[i].layout;
-		    Plotly.newPlot('plotDouble'+i, datas, layout);
+		    Plotly.newPlot('plotDouble'+i, datas, layout, {responsive: true});
 		}
 	    }
 	}

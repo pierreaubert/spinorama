@@ -5,7 +5,6 @@ import pathlib
 import copy
 import zipfile
 import pandas as pd
-from altair_saver import save
 
 try:
     import ray
@@ -31,7 +30,6 @@ from .speaker_display import (
     display_radar_horizontal,
     display_radar_vertical,
 )
-from .speaker_views import template_compact
 from .plot import plot_params_default, contour_params_default, radar_params_default
 
 
@@ -115,6 +113,7 @@ def print_graphs(
     params = copy.deepcopy(plot_params_default)
     params["width"] = width
     params["height"] = height
+    params["layout"] = "compact"
     params["xmin"] = origins_info[origin]["min hz"]
     params["xmax"] = origins_info[origin]["max hz"]
     params["ymin"] = origins_info[origin]["min dB"]
@@ -137,6 +136,7 @@ def print_graphs(
     params = copy.deepcopy(contour_params_default)
     params["width"] = width
     params["height"] = height
+    params["layout"] = "compact"
     params["xmin"] = origins_info[origin]["min hz"]
     params["xmax"] = origins_info[origin]["max hz"]
 
@@ -151,9 +151,10 @@ def print_graphs(
 
     # better square
     params = copy.deepcopy(radar_params_default)
-    size = min(width, height)
-    params["width"] = size
-    params["height"] = size
+    size = max(width, height)
+    params["width"] = height
+    params["height"] = width
+    params["layout"] = "compact"
     params["xmin"] = origins_info[origin]["min hz"]
     params["xmax"] = origins_info[origin]["max hz"]
 
@@ -169,20 +170,7 @@ def print_graphs(
                 title=dict(
                     text="{2} for {0} measured by {1}".format(speaker, origin, title),
                 ),
-                legend=dict(orientation="v"),
             )
-
-    # 1080p to 2k screen
-    # -----------
-    params = copy.deepcopy(plot_params_default)
-    params["width"] = 2160
-    # ratio for A4 is 21cm / 29.7cm, TODO for letter
-    params["height"] = 400
-    params["xmin"] = origins_info[origin]["min hz"]
-    params["xmax"] = origins_info[origin]["max hz"]
-    params["ymin"] = origins_info[origin]["min dB"]
-    params["ymax"] = origins_info[origin]["max dB"]
-    # graphs["2cols"] = template_compact(df, params, speaker, origin, key)
 
     updated = 0
     for (title, graph) in graphs.items():
