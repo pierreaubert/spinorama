@@ -38,7 +38,7 @@ source $SPIN/spinorama-venv/bin/activate
 ## node install
 ## ----------------------------------------------------------------------
 if ! test -d $SPIN/node_modules; then
-    npm install vega@5.17.1 vega-lite@4.17 canvas
+    npm install plotly
     npm install pyright html-validator-cli standard
 fi
 export PATH=$PATH:$SPIN/node_modules/.bin

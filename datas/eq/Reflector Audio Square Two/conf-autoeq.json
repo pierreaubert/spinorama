@@ -13,15 +13,15 @@
     "freq_mean_min": 100,
     "freq_mean_max": 300,
     "curve_names": [
-        "Estimated In-Room Response"
+        "Listening Window"
     ],
     "target_min_freq": 100,
     "target_max_freq": 16000,
     "slope_on_axis": 0,
-    "slope_listening_window": -0.5,
+    "slope_listening_window": -2.0,
     "slope_early_reflections": -4,
     "slope_sound_power": -9,
-    "slope_estimated_inroom": -7.0,
+    "slope_estimated_inroom": -5.5,
     "smooth_measurements": false,
     "smooth_window_size": -1,
     "smooth_order": 3,
@@ -33,6 +33,6 @@
     "MIN_DBGAIN": 0.5,
     "MAX_DBGAIN": 8,
     "MIN_Q": 0.05,
-    "MAX_Q": 4.0,
+    "MAX_Q": 6,
     "second_optimiser": false
 }

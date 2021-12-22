@@ -101,8 +101,8 @@ def print_graphs(
     origin,
     origins_info,
     key="default",
-    width=900,
-    height=700,
+    width=600,
+    height=500,
     force_print=False,
     filter_file_ext=None,
 ):

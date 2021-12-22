@@ -69,19 +69,26 @@ def parse_eq_speaker(speaker_path: str, speaker_name: str, df_ref: dict) -> dict
             # return load_normalize(df_eq, original_mean)
             return df_eq
         elif "CEA2034" in df_ref.keys():
-            spin_eq, eir_eq = noscore_apply_filter(df_ref, iir)
-            if spin_eq is None or eir_eq is None:
-                logger.debug(
-                    "Computation of spin and eir with EQ failed for {} {}".format(
-                        speaker_path, speaker_name
-                    )
-                )
-                return None
+            spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir)
+            df_eq = {}
+            if spin_eq is not None:
+                df_eq["CEA2034"] = spin_eq
+                df_eq["CEA2034_unmelted"] = spin_eq.pivot_table(
+                    index="Freq", columns="Measurements", values="dB", aggfunc=max
+                ).reset_index()
 
-            df_eq = {
-                "CEA2034": spin_eq,
-                "Estimated In-Room Response": eir_eq,
-            }
+            if eir_eq is not None:
+                df_eq["Estimated In-Room Response"] = eir_eq
+                df_eq["Estimated In-Room Response_unmelted"] = eir_eq.pivot_table(
+                    index="Freq", columns="Measurements", values="dB", aggfunc=max
+                ).reset_index()
+
+            if on_eq is not None:
+                df_eq["On Axis"] = on_eq
+                df_eq["On Axis_unmelted"] = on_eq.pivot_table(
+                    index="Freq", columns="Measurements", values="dB", aggfunc=max
+                ).reset_index()
+
             return df_eq
 
     logger.debug("no EQ for {}/eq/{}".format(speaker_path, speaker_name))
