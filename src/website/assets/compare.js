@@ -181,7 +181,7 @@ fetch(urlSite+'assets/metadata.json').then(
 	    }
 	    if (layout != null && datas != null ) {
 		layout.width = windowWidth;
-		layout.height = windowHeight;
+		layout.height = Math.min(windowHeight, windowWidth*0.7+140);
 		layout.title = null;
 		layout.margin = {
 		    'l': 0,
@@ -189,6 +189,12 @@ fetch(urlSite+'assets/metadata.json').then(
 		    't': 30,
 		    'b': 0,
 		};
+                layout.legend = {
+                    'orientation': 'h',
+                    'y': 1.1,
+                    'x': 0,
+                    'yanchor': 'left',
+                };
 		plotSingleContainer.style.display = "block";
 		plotDouble0Container.style.display = "none";
 		plotDouble1Container.style.display = "none";
@@ -206,7 +212,7 @@ fetch(urlSite+'assets/metadata.json').then(
 		    // console.log('adding graph '+ i);
 		    for (var trace in speaker_graphs[i].data) {
 			speaker_graphs[i].data[trace]["legendgroup"] = "speaker"+i;
-			speaker_graphs[i].data[trace]["legendgrouptitle"]["text"] = speaker_names[i];
+                        speaker_graphs[i].data[trace]["legendgrouptitle"] = {"text": speaker_names[i]};
 			if ( i % 2 == 1 ) {
 			    speaker_graphs[i].data[trace].line = {"dash": "dashdot"};
 			}
@@ -223,7 +229,7 @@ fetch(urlSite+'assets/metadata.json').then(
 		    // console.log('adding graph '+ i);
 		    for (var trace in speaker_graphs[i].data) {
 			speaker_graphs[i].data[trace]["legendgroup"] = "speaker"+i;
-			speaker_graphs[i].data[trace]["legendgrouptitle"]["text"] = speaker_names[i];
+			speaker_graphs[i].data[trace]["legendgrouptitle"] = {"text": speaker_names[i]};
 			if ( i % 2 == 1 ) {
 			    speaker_graphs[i].data[trace].line = {"dash": "dashdot"};
 			}

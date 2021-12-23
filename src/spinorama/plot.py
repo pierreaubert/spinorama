@@ -30,7 +30,7 @@ contour_params_default = {
     "xmin": 100,
     "xmax": 20000,
     "width": 600,
-    "height": 600,
+    "height": 400,
 }
 
 radar_params_default = {
@@ -100,38 +100,40 @@ uniform_colors = {
     "15000 Hz": colors[5],
 }
 
-label_short = {
-    # regression
-    "Linear Regression": "Reg",
-    "Band ±1.5dB": "±1.5dB",
-    "Band ±3dB": "±3dB",
-    # PIR
-    "Estimated In-Room Response": "PIR",
-    # spin
-    "On Axis": "ON",
-    "Listening Window": "LW",
-    "Early Reflections": "ER",
-    "Sound Power": "SP",
-    "Early Reflections DI": "ERDI",
-    "Sound Power DI": "SPDI",
-    # reflections
-    "Ceiling Bounce": "CB",
-    "Floor Bounce": "FB",
-    "Front Wall Bounce": "FWB",
-    "Rear Wall Bounce": "RWB",
-    "Side Wall Bounce": "SWB",
-    #
-    "Ceiling Reflection": "CR",
-    "Floor Reflection": "FR",
-    #
-    "Front": "F",
-    "Rear": "R",
-    "Side": "S",
-    #
-    "Total Early Reflection": "TER",
-    "Total Horizontal Reflection": "THR",
-    "Total Vertical Reflection": "TVR",
-}
+label_short = {}
+
+# label_short = {
+#     # regression
+#     "Linear Regression": "Reg",
+#     "Band ±1.5dB": "±1.5dB",
+#     "Band ±3dB": "±3dB",
+#     # PIR
+#     "Estimated In-Room Response": "PIR",
+#     # spin
+#     "On Axis": "ON",
+#     "Listening Window": "LW",
+#     "Early Reflections": "ER",
+#     "Sound Power": "SP",
+#     "Early Reflections DI": "ERDI",
+#     "Sound Power DI": "SPDI",
+#     # reflections
+#     "Ceiling Bounce": "CB",
+#     "Floor Bounce": "FB",
+#     "Front Wall Bounce": "FWB",
+#     "Rear Wall Bounce": "RWB",
+#     "Side Wall Bounce": "SWB",
+#     #
+#     "Ceiling Reflection": "CR",
+#     "Floor Reflection": "FR",
+#     #
+#     "Front": "F",
+#     "Rear": "R",
+#     "Side": "S",
+#     #
+#     "Total Early Reflection": "TER",
+#     "Total Horizontal Reflection": "THR",
+#     "Total Vertical Reflection": "TVR",
+# }
 
 
 def generate_xaxis(freq_min=20, freq_max=20000):
@@ -394,6 +396,7 @@ def plot_graph_regression_traces(df, measurement, params):
         trace.name = label_short.get("Linear regression")
     else:
         trace.name = "Linear regression"
+    traces.append(trace)
 
     traces.append(
         go.Scatter(

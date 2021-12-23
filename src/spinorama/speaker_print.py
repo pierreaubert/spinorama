@@ -135,7 +135,7 @@ def print_graphs(
     # change params for contour
     params = copy.deepcopy(contour_params_default)
     params["width"] = width
-    params["height"] = height
+    params["height"] = height * 0.6
     params["layout"] = "compact"
     params["xmin"] = origins_info[origin]["min hz"]
     params["xmax"] = origins_info[origin]["max hz"]
@@ -151,9 +151,8 @@ def print_graphs(
 
     # better square
     params = copy.deepcopy(radar_params_default)
-    size = max(width, height)
-    params["width"] = height
-    params["height"] = width
+    params["width"] = width
+    params["height"] = width * 1.4
     params["layout"] = "compact"
     params["xmin"] = origins_info[origin]["min hz"]
     params["xmax"] = origins_info[origin]["max hz"]
