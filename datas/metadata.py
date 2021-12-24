@@ -104,6 +104,23 @@ speakers_info = {
             },
         },
     },
+    "Amazon Basic R60BTUS": {
+        "brand": "Amazon",
+        "model": "R60BTUS R60BTUS",
+        "type": "active",
+        "price": "50",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/amazon-basics-80w-review-bookshelf-speaker.29304/",
+                "review_published": "20211224",
+            },
+        },
+    },
     "Amphion Argon1": {
         "brand": "Amphion",
         "model": "Argon1",
