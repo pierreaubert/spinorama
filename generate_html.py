@@ -278,7 +278,7 @@ if __name__ == "__main__":
     # copy css/js files
     logger.info("Copy js/css files to docs")
     try:
-        for item in ("compare", "search"):
+        for item in ("compare", "search", "index"):
             item_name = "assets/{0}.js".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
@@ -298,6 +298,7 @@ if __name__ == "__main__":
         "graph.js",
         "zip.min.js",
         "downloadzip.js",
+        "brotli.js",
     ]:
         file_in = "./src/website/assets/" + f
         file_out = "./docs/assets/" + f

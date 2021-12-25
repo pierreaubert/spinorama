@@ -134,8 +134,8 @@ def print_graphs(
 
     # change params for contour
     params = copy.deepcopy(contour_params_default)
-    params["width"] = width
-    params["height"] = height * 0.6
+    params["width"] = width * 1.4
+    params["height"] = height
     params["layout"] = "compact"
     params["xmin"] = origins_info[origin]["min hz"]
     params["xmax"] = origins_info[origin]["max hz"]

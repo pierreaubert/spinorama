@@ -81,9 +81,12 @@ const uniformColors = {
 const urlSite = '${site}'+'/';
 const urlCompare = urlSite + 'compare.html?';
 
+// var brotli = require('brotli');
+
 fetch(urlSite+'assets/metadata.json').then(
     function(response) {
 	return response.text();
+        // return brotli.BrotliDecompressBuffer(response.blob());
     }).then( (datajs) => {
 
 	const speakerDatabase = Object.values(JSON.parse(datajs));

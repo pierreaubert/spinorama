@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "browserify": "^17.0.0",
     "plotly": "^1.0.6"
   },
   "devDependencies": {}

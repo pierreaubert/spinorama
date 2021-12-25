@@ -266,9 +266,9 @@ def common_layout(params):
         ),
         margin={
             "t": 30,
-            "b": 0,
-            "l": 0,
-            "r": 0,
+            "b": 5,
+            "l": 5,
+            "r": 5,
         },
     )
 
@@ -288,6 +288,9 @@ def plot_spinorama_traces(spin, params):
             x=spin.Freq,
             y=spin[measurement],
             marker_color=uniform_colors.get(measurement, "black"),
+            hovertemplate="$%{name}:<br>"
+            + "Freq: $%(x:.0f)Hz<br>"
+            + "SPL: $%(y:.1f)dB<br>",
         )
         if layout == "compact":
             trace.name = label_short.get(measurement, measurement)
