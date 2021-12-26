@@ -11,7 +11,7 @@ for d in "${sourcedir}/pictures"; do
         for t in "jpg" "webp" "avif"; do
 	    smallert=${smaller%.png}.${t}
 	    if ! test -f "$smallert"; then
-	        echo convert "$pict" -define jpeg:size=300x500  -thumbnail '200x300>' -gravity center -extent 200x300 "$smallert";
+	        convert "$pict" -define jpeg:size=300x500  -thumbnail '200x300>' -gravity center -extent 200x300 "$smallert";
 	    fi
         done
     done
@@ -27,17 +27,3 @@ for d in "${sourcedir}/pictures"; do
 done
 # copy logs
 cp datas/logos/* docs/logos
-
-# reduce size of large image
-find docs  -type f -name '*_large.png' -print | while read pict; do
-    for t in "jpg" "webp" "avif"; do
-        target="${pict%_large.png}.${t}"
-        if ! test -f "${target}"; then
-            if [ "$t" = "jpg" ]; then
-	        convert "$pict" -quality 75 "${target}"
-            else
-	        convert "$pict" "${target}"
-            fi
-        fi
-    done
-done

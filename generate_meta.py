@@ -59,26 +59,7 @@ from spinorama.load_rewseq import parse_eq_iir_rews
 import datas.metadata as metadata
 
 
-def sanity_check(dataframe, meta):
-    """Basic checks for pictures and metadata"""
-    for speaker_name in dataframe.keys():
-        # check if metadata exists
-        if speaker_name not in meta:
-            logger.error("Metadata not found for >{0}<".format(speaker_name))
-            return 1
-        # check if image exists (jpg or png)
-        if not os.path.exists(
-            "./datas/pictures/" + speaker_name + ".jpg"
-        ) and not os.path.exists("./datas/pictures/" + speaker_name + ".png"):
-            logger.error("Image associated with >{0}< not found.".format(speaker_name))
-        # check if downscale image exists (all jpg)
-        if not os.path.exists("./docs/pictures/" + speaker_name + ".jpg"):
-            logger.error("Image associated with >{0}< not found.".format(speaker_name))
-            logger.error("Please run: update_pictures.sh")
-    return 0
-
-
-def add_scores(dataframe):
+def add_scores(dataframe, parse_max):
     """Compute some values per speaker and add them to metadata"""
     min_pref_score = +100
     max_pref_score = -100
@@ -94,7 +75,11 @@ def add_scores(dataframe):
     max_sm_sp = 0
     min_sm_pir = 1
     max_sm_pir = 0
+    parsed = 0
     for speaker_name, speaker_data in dataframe.items():
+        if parse_max is not None and parsed > parse_max:
+            break
+        parsed = parsed + 1
         logger.info("Processing {0}".format(speaker_name))
         for _, measurements in speaker_data.items():
             for key, dfs in measurements.items():
@@ -164,9 +149,20 @@ def add_scores(dataframe):
 
                     pref_rating = speaker_pref_rating(spin, inroom)
                     if pref_rating is None:
-                        logger.warning(
-                            "pref_rating failed for {0} {1}".format(speaker_name, key)
-                        )
+                        if metadata.speakers_info[speaker_name]["measurements"][
+                            origin
+                        ] in ("ASR", "ErinsAudioCorner"):
+                            logger.error(
+                                "pref_rating failed for {0} {1}".format(
+                                    speaker_name, key
+                                )
+                            )
+                        else:
+                            logger.debug(
+                                "pref_rating failed for {0} {1}".format(
+                                    speaker_name, key
+                                )
+                            )
                         continue
                     # print(
                     #    "sm pir {} for {}".format(
@@ -215,7 +211,11 @@ def add_scores(dataframe):
         return
 
     # add normalized value to metadata
+    parsed = 0
     for speaker_name, speaker_data in dataframe.items():
+        if parse_max is not None and parsed > parse_max:
+            break
+        parsed = parsed + 1
         logger.info("Normalize data for {0}".format(speaker_name))
         for _, measurements in speaker_data.items():
             for version, measurement in measurements.items():
@@ -339,7 +339,7 @@ def add_scores(dataframe):
                 ] = scaled_pref_rating
 
 
-def add_quality():
+def add_quality(parse_max: int):
     """Compute quality of data and add it to metadata
     Rules:
     - Independant measurements from ASR or EAC : high quality
@@ -347,7 +347,11 @@ def add_quality():
     - Most measurements quasi anechoic: low quality
     This can be overriden by setting the correct value in the metadata file
     """
+    parsed = 0
     for speaker_name, speaker_data in metadata.speakers_info.items():
+        if parse_max is not None and parsed > parse_max:
+            break
+        parsed = parsed + 1
         logger.info("Processing {0}".format(speaker_name))
         for version, m_data in speaker_data["measurements"].items():
             if "quality" not in m_data.keys():
@@ -381,9 +385,13 @@ def add_quality():
                     logger.info("Version {} is not in {}".format(version, speaker_name))
 
 
-def add_eq(speaker_path, dataframe):
+def add_eq(speaker_path, dataframe, parse_max):
     """Compute some values per speaker and add them to metadata"""
+    parsed = 0
     for speaker_name in dataframe.keys():
+        if parse_max is not None and parsed > parse_max:
+            break
+        parsed = parsed + 1
         logger.info("Processing {0}".format(speaker_name))
 
         for suffix in ("", "-autoeq", "-amirm", "-maiky76", "-flipflop"):
@@ -422,35 +430,7 @@ def dump_metadata(meta):
     if not os.path.isdir(metadir):
         os.makedirs(metadir)
     meta2 = {k: v for k, v in meta.items() if not v.get("skip", False)}
-    with open(metafile, "w") as f:
-        js = json.dumps(meta2)
-        f.write(js)
-        f.close()
 
-
-def dump_measurements(meta):
-    metadir = "./docs/assets/"
-    metafile = "{}/measurements.json".format(metadir)
-    if not os.path.isdir(metadir):
-        os.makedirs(metadir)
-
-    def trim_measurements(d):
-        if isinstance(d, dict):
-            return {
-                k: v for k, v in d.items() if isinstance(v, str) and v in ("origin")
-            }
-        return d
-
-    def trim_fields(d):
-        if isinstance(d, dict):
-            return {
-                k: trim_measurements(v)
-                for k, v in d.items()
-                if k in ("measurements", "default_measurement")
-            }
-        return d
-
-    meta2 = {k: trim_fields(v) for k, v in meta.items() if not v.get("skip", False)}
     with open(metafile, "w") as f:
         js = json.dumps(meta2)
         f.write(js)
@@ -458,7 +438,7 @@ def dump_measurements(meta):
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="generate_meta.py version 1.3", options_first=True)
+    args = docopt(__doc__, version="generate_meta.py version 1.4", options_first=True)
 
     # check args section
     level = args2level(args)
@@ -472,25 +452,24 @@ if __name__ == "__main__":
     speaker = args["--speaker"]
     origin = args["--origin"]
     mversion = args["--mversion"]
+    parse_max = args["--parse-max"]
+    if parse_max is not None:
+        parse_max = int(parse_max)
+
     if speaker is not None:
         df = cache_load(filter=speaker)
     else:
-        parse_max = args["--parse-max"]
-        if parse_max is not None:
-            parse_max = int(parse_max)
         df = cache_load()
-        if df is None:
-            logger.error("Load failed! Please run ./generate_graphs.py")
-            sys.exit(1)
-        if sanity_check(df, metadata.speakers_info) != 0:
-            logger.error("Sanity checks failed!")
-            sys.exit(1)
+
+    if df is None:
+        logger.error("Load failed! Please run ./generate_graphs.py")
+        sys.exit(1)
 
     # add computed data to metadata
     logger.info("Compute scores per speaker")
-    add_quality()
-    add_scores(df)
-    add_eq("./datas", df)
+    add_quality(parse_max)
+    add_scores(df, parse_max)
+    add_eq("./datas", df, parse_max)
 
     # check that json is valid
     # try:
@@ -502,8 +481,6 @@ if __name__ == "__main__":
     # write metadata in a json file for easy search
     logger.info("Write metadata")
     dump_metadata(metadata.speakers_info)
-    # shorter version with only list of speaker measurements
-    dump_measurements(metadata.speakers_info)
 
     logger.info("Bye")
     sys.exit(0)
