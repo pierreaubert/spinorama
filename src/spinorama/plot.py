@@ -23,21 +23,21 @@ plot_params_default = {
     "ymin": -40,
     "ymax": 10,
     "width": 600,
-    "height": 600,
+    "height": 400,
 }
 
 contour_params_default = {
     "xmin": 100,
     "xmax": 20000,
     "width": 600,
-    "height": 400,
+    "height": 300,
 }
 
 radar_params_default = {
     "xmin": 400,
     "xmax": 20000,
     "width": 600,
-    "height": 800,
+    "height": 400,
 }
 
 colors = [
@@ -257,7 +257,7 @@ def common_layout(params):
     return dict(
         width=params["width"],
         height=params["height"],
-        legend=dict(x=0, y=1, orientation=orientation),
+        legend=dict(x=0, y=1.1, orientation=orientation),
         title=dict(
             x=0,
             y=0.98,
@@ -265,10 +265,34 @@ def common_layout(params):
             yanchor="top",
         ),
         margin={
-            "t": 30,
+            "t": 70,
             "b": 5,
             "l": 5,
             "r": 5,
+        },
+    )
+
+
+def radar_layout(params):
+    orientation = "v"
+    if params.get("layout", "") == "compact":
+        orientation = "h"
+
+    return dict(
+        width=params["width"],
+        height=params["height"],
+        legend=dict(x=0, y=0.95, orientation=orientation),
+        title=dict(
+            x=0,
+            y=0.98,
+            xanchor="left",
+            yanchor="top",
+        ),
+        margin={
+            "t": 5,
+            "b": 5,
+            "l": 20,
+            "r": 20,
         },
     )
 
@@ -580,7 +604,7 @@ def plot_radar(spl, params):
             legendgrouptitle_text = ("Frequencies",)
         fig.add_trace(trace)
 
-    fig.update_layout(common_layout(params))
+    fig.update_layout(radar_layout(params))
     fig.update_layout(
         polar=dict(
             radialaxis=dict(

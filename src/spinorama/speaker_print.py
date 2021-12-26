@@ -5,6 +5,7 @@ import pathlib
 import copy
 import zipfile
 import pandas as pd
+from wand.image import Image as wim
 
 try:
     import ray
@@ -84,6 +85,13 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
                             else:
                                 logger.info("Saving {0} in {1}".format(title, filename))
                                 updated += 1
+                                pict = wim(filename=filename)
+                                pict.convert("webp").save(
+                                    filename="{}.webp".format(filename[:-4])
+                                )
+                                pict.convert("avif").save(
+                                    filename="{}.avif".format(filename[:-4])
+                                )
                     except Exception as e:
                         logger.error("Got unkown error {0} for {1}".format(e, filename))
     else:
@@ -152,7 +160,7 @@ def print_graphs(
     # better square
     params = copy.deepcopy(radar_params_default)
     params["width"] = width
-    params["height"] = width * 1.4
+    params["height"] = width * 1.25
     params["layout"] = "compact"
     params["xmin"] = origins_info[origin]["min hz"]
     params["xmax"] = origins_info[origin]["max hz"]
