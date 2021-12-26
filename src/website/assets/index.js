@@ -2,11 +2,11 @@
 
 fetch(urlSite+'assets/metadata.json').then(
     function(response) {
-	return response.text();
+	return response.json();
     }).then( (datajs) => {
 
 	var speakerContainer = document.querySelector('[data-num="0"');
-	const speakerDatabase = Object.values(JSON.parse(datajs));
+	const speakerDatabase = Object.values(datajs);
 
         function getPicture(brand, model, suffix) {
             return encodeURI('pictures/' + brand + ' ' + model + '.' + suffix);
@@ -102,7 +102,7 @@ fetch(urlSite+'assets/metadata.json').then(
         }
 
         function getContext(key, value) {
-            console.log(getReviews(value));
+            // console.log(getReviews(value));
             return {
                 id: getID(value.brand,value.model),
                 brand: value.brand,

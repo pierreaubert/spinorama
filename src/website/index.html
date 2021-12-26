@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <%include file="head.html"/>
+    <script src="${site}/assets/zip.min.js"></script>
   </head>
 <body>
 
@@ -17,7 +18,8 @@
           <source srcset="{{img.avif}}" type="image/avif"></source>
           <source srcset="{{img.webp}}" type="image/webp"></source>
 	  <img src="{{img.jpg}}" loading="{{img.loading}}"
-	  decoding="{{img.decoding}}" alt="{{brand}} {{model}}"/>
+	  decoding="{{img.decoding}}" alt="{{brand}} {{model}}
+	  width="200" height="300"/>
         </figure>
       </div>
       <header class="card-header">
