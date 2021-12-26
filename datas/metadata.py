@@ -105,8 +105,8 @@ speakers_info = {
         },
     },
     "Amazon Basic R60BTUS": {
-        "brand": "Amazon",
-        "model": "R60BTUS R60BTUS",
+        "brand": "Amazon Basic",
+        "model": "R60BTUS",
         "type": "active",
         "price": "50",
         "shape": "bookshelves",
