@@ -4,19 +4,43 @@
 <%namespace name="util" module="website.utils" import="*"/>
 
 <div id="cea2034plots" data-num="0">
-  <div class="plotSingle" id="plotSingle"></div>
-  <div class="plotDouble0" id="plotDouble0"></div>
-  <div class="plotDouble1" id="plotDouble1"></div>
   <div class="plotForm">
-    Graph: <select class="graph"></select></br>
-    <b>A</b>
-    Speaker: <select class="speaker0"></select>
-    Origin: <select class="origin0"></select>
-    Version: <select class="version0"></select></br>
-    <b>B</b>
-    Speaker: <select class="speaker1"></select>
-    Origin <select class="origin1"></select>
-    Version: <select class="version1"></select>
+    <nav class="level has-background-info-dark mb-0">
+      <div class="level-left">
+        <div class="level-item has-text-centered">
+          <p class="has-text-white">Graph:</p> <select class="graph"></select>
+        </div>
+      </div>
+    </nav>
+    <nav class="level mb-0 mt-0">
+      <div class="level-left">
+        <div class="level-item">
+          <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
+            <ul>
+              <li>Speaker <b>A</b>: <select class="speaker0"></select></li>
+              <li>Origin: <select class="origin0"></select>
+              <li>Version: <select class="version0"></select>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </nav>
+    <nav class="level mb-0 mt-0">
+      <div class="level-left">
+        <div class="level-item">
+          <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
+            <ul>
+              <li>Speaker <b>B</b>: <select class="speaker1"></select></li>
+              <li>Origin: <select class="origin1"></select>
+              <li>Version: <select class="version1"></select>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </nav>
+    <div class="plotSingle" id="plotSingle"></div>
+    <div class="plotDouble0" id="plotDouble0"></div>
+    <div class="plotDouble1" id="plotDouble1"></div>
   </div>
 </div>
 

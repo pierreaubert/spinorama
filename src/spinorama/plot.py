@@ -312,13 +312,10 @@ def plot_spinorama_traces(spin, params):
             x=spin.Freq,
             y=spin[measurement],
             marker_color=uniform_colors.get(measurement, "black"),
-            hovertemplate="$%{name}:<br>"
-            + "Freq: $%(x:.0f)Hz<br>"
-            + "SPL: $%(y:.1f)dB<br>",
+            name=label_short.get(measurement, measurement),
+            hovertemplate="%{name}:<br>Freq: %(x:.0f)Hz<br>SPL: %(y:.1f)dB<br>",
         )
-        if layout == "compact":
-            trace.name = label_short.get(measurement, measurement)
-        else:
+        if layout != "compact":
             trace.name = measurement
             trace.legendgroup = "measurements"
             trace.legendgrouptitle = {"text": "Measurements"}

@@ -1,13 +1,6 @@
-// const urlSite = 'https://spinorama.internet-box.ch'+'/';
-
 fetch(urlSite+'assets/metadata.json').then(
     function(response) {
 	return response.json();
-    }).then( (datajs) => {
-        const sorter = {
-            by: "date";
-        };
-        sort_metadata(sorter);
     }).then( (datajs) => {
 
 	var speakerContainer = document.querySelector('[data-num="0"');
@@ -90,6 +83,15 @@ fetch(urlSite+'assets/metadata.json').then(
                     origin = version.replace("misc-", "");
                 } else {
                     origin = origin.replace("Vendors-", "");
+                }
+                if (origin == 'ErinsAudioCorner') {
+                    origin = 'EAC';
+                } else if ( origin == 'Princeton' ) {
+                    origin = '3D3A';
+                } else if ( origin == 'Napilopez') {
+                    origin = 'NPZ';
+                } else if ( origin == 'Speakerdata2034') {
+                    origin = 'SPD';
                 }
                 origin = origin.charAt(0).toUpperCase() + origin.slice(1);
                 reviews.push({

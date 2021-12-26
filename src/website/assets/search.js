@@ -1,5 +1,3 @@
-const urlSite = '${site}'+'/';
-
 // hide an element
 const hide = (elem) => {
     elem.classList.add('hidden');
@@ -22,13 +20,6 @@ fetch(urlSite+'assets/metadata.json').then(
 
         // console.log("got json");
         let metadata = Object.values(JSON.parse(datajs));
-        // build a hash map
-        let indirect = {};
-        for (let item in metadata) {
-            var key = (metadata[item].brand+'-'+metadata[item].model).replace(/['.+& ]/g, "-");
-            indirect[key] = item;
-            // console.log('adding '+key);
-        }
         // console.log("got metadata");
         let resultdiv = document.querySelector("div.searchresults");
 
@@ -41,13 +32,13 @@ fetch(urlSite+'assets/metadata.json').then(
         };
 
         let sorter = {
-	    by: "",
+	    by: "date", // default sort
         };
 
         function selectDispatch() {
 	    let keywords = document.querySelector("#searchInput").value;
 	    // console.log("keywords: "+keywords);
-            sort_metadata(sorter);
+            metadata = sort_metadata(metadata, sorter);
 
 	    if (keywords === "") {
                 // console.log("display filter");

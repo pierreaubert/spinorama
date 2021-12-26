@@ -81,12 +81,9 @@ const uniformColors = {
 const urlSite = '${site}'+'/';
 const urlCompare = urlSite + 'compare.html?';
 
-// var brotli = require('brotli');
-
 fetch(urlSite+'assets/metadata.json').then(
     function(response) {
 	return response.text();
-        // return brotli.BrotliDecompressBuffer(response.blob());
     }).then( (datajs) => {
 
 	const speakerDatabase = Object.values(JSON.parse(datajs));
@@ -113,7 +110,7 @@ fetch(urlSite+'assets/metadata.json').then(
 		speakers.push(speaker);
 		metadata[speaker] = value;
 	    });
-	    return speakers;
+	    return speakers.sort();
 	}
 
 	function processOrigin(origin) {
@@ -187,15 +184,16 @@ fetch(urlSite+'assets/metadata.json').then(
 		layout.height = Math.min(windowHeight, windowWidth*0.7+140);
 		layout.title = null;
 		layout.margin = {
-		    'l': 0,
-		    'r': 0,
+		    'l': 15,
+		    'r': 15,
 		    't': 30,
-		    'b': 0,
+		    'b': 50,
 		};
                 layout.legend = {
                     'orientation': 'h',
-                    'y': 1.1,
+                    'y': -0.2,
                     'x': 0,
+                    'xanchor': 'bottom',
                     'yanchor': 'left',
                 };
 		plotSingleContainer.style.display = "block";
@@ -214,8 +212,8 @@ fetch(urlSite+'assets/metadata.json').then(
 		if (speaker_graphs[i] != null ) {
 		    // console.log('adding graph '+ i);
 		    for (var trace in speaker_graphs[i].data) {
-			speaker_graphs[i].data[trace]["legendgroup"] = "speaker"+i;
-                        speaker_graphs[i].data[trace]["legendgrouptitle"] = {"text": speaker_names[i]};
+			// speaker_graphs[i].data[trace]["legendgroup"] = "speaker"+i;
+                        // speaker_graphs[i].data[trace]["legendgrouptitle"] = {"text": speaker_names[i]};
 			if ( i % 2 == 1 ) {
 			    speaker_graphs[i].data[trace].line = {"dash": "dashdot"};
 			}
@@ -253,10 +251,16 @@ fetch(urlSite+'assets/metadata.json').then(
 		    'l': 0,
 		    'r': 0,
 		    't': 30,
-		    'b': 0,
+		    'b': 50,
 		};
-
-                layout.legend.orientation = 'v';
+                layout.legend = {
+                    'orientation': 'h',
+                    'y': -0.2,
+                    'x': 0,
+                    'xanchor': 'bottom',
+                    'yanchor': 'left',
+		    'itemclick': "toggleothers",
+                };
 
 		plotSingleContainer.style.display = "block";
 		Plotly.newPlot('plotSingle', datas, layout, {responsive: true});
@@ -276,13 +280,13 @@ fetch(urlSite+'assets/metadata.json').then(
 				"y": deltas_y,
 				"type": 'scatter',
 				"name": name0,
-				"legendgroup": "differences",
-				"legendgrouptitle": {
-				    "text": 'Differences',
-				},
-				// "marker": {
-                                //    "color": uniformColors[name0],
-                                // },
+				//"legendgroup": "differences",
+				//"legendgrouptitle": {
+				//    "text": 'Differences',
+				//},
+				"marker": {
+                                    "color": uniformColors[name0],
+                                },
 			    });
 			}
 		    }
@@ -291,21 +295,15 @@ fetch(urlSite+'assets/metadata.json').then(
 		// deltas.forEach( (data) => console.log(data.name) );
 
 		layout2 = JSON.parse(JSON.stringify(layout));
-		layout2.height = 240;
+		layout2.height = 340;
 		layout2.yaxis = {
 		    "title": "Delta SPL (dB)",
 		    "range": [-5, 5],
 		    "dtick": 1,
 		};
 		layout2.showlegend = true;
-		layout2.legend= {
-		    x: 1,
-		    y: 0.5,
-		    orientation: "v",
-		    // itemsizing: "constant",
-		    groupclick: "toggleitem",
-		    itemclick: "toggleitem",
-		};
+		layout2.legend= layout.legend;
+		layout2.margin= layout.margin;
 		plotDouble0Container.style.display = "block";
 		Plotly.newPlot('plotDouble0', deltas, layout2, {responsive: true});
 		plotDouble1Container.style.display = "none";
