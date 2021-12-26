@@ -13,3 +13,4 @@ plotly
 pre_commit
 ray[default]>=1.6.0
 ray[tune]
+wand

@@ -85,13 +85,17 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
                             else:
                                 logger.info("Saving {0} in {1}".format(title, filename))
                                 updated += 1
-                                pict = wim(filename=filename)
-                                pict.convert("webp").save(
-                                    filename="{}.webp".format(filename[:-4])
-                                )
-                                pict.convert("avif").save(
-                                    filename="{}.avif".format(filename[:-4])
-                                )
+                                with wim(filename=filename) as pict:
+                                    pict.convert("webp").save(
+                                        filename="{}.webp".format(filename[:-10])
+                                    )
+                                    pict.convert("avif").save(
+                                        filename="{}.avif".format(filename[:-10])
+                                    )
+                                    pict.compression_quality = 75
+                                    pict.convert("jpg").save(
+                                        filename="{}.jpg".format(filename[:-10])
+                                    )
                     except Exception as e:
                         logger.error("Got unkown error {0} for {1}".format(e, filename))
     else:

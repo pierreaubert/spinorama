@@ -212,10 +212,10 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=5):
         title_text="SPL (dB)",
         range=[range_min, range_max],
         dtick=range_step,
-        tickvals=[i for i in range(range_min, range_max, range_step)],
+        tickvals=[i for i in range(range_min, range_max + range_step, range_step)],
         ticktext=[
             "{}".format(i) if not i % 5 else " "
-            for i in range(range_min, range_max, range_step)
+            for i in range(range_min, range_max + range_step, range_step)
         ],
         ticks="inside",
         ticklen=8,
@@ -257,11 +257,11 @@ def common_layout(params):
     return dict(
         width=params["width"],
         height=params["height"],
-        legend=dict(x=0, y=1.1, orientation=orientation),
+        legend=dict(x=0.5, y=1.18, xanchor="center", orientation=orientation),
         title=dict(
-            x=0,
+            x=0.5,
             y=0.98,
-            xanchor="left",
+            xanchor="center",
             yanchor="top",
         ),
         margin={
@@ -281,11 +281,11 @@ def radar_layout(params):
     return dict(
         width=params["width"],
         height=params["height"],
-        legend=dict(x=0, y=0.95, orientation=orientation),
+        legend=dict(x=0.5, y=0.95, xanchor="center", orientation=orientation),
         title=dict(
-            x=0,
+            x=0.5,
             y=0.98,
-            xanchor="left",
+            xanchor="center",
             yanchor="top",
         ),
         margin={

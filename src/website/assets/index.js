@@ -4,6 +4,11 @@ fetch(urlSite+'assets/metadata.json').then(
     function(response) {
 	return response.json();
     }).then( (datajs) => {
+        const sorter = {
+            by: "date";
+        };
+        sort_metadata(sorter);
+    }).then( (datajs) => {
 
 	var speakerContainer = document.querySelector('[data-num="0"');
 	const speakerDatabase = Object.values(datajs);
