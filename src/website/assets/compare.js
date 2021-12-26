@@ -244,8 +244,8 @@ fetch(urlSite+'assets/metadata.json').then(
 		layout = speaker_graphs[0].layout;
 		datas = speaker_graphs[0].data.concat(speaker_graphs[1].data);
 
-		layout.width = 800*1.41;
-		layout.height = 600;
+		layout.width = windowWidth;
+		layout.height = Math.min(windowHeight, windowWidth*0.7-240);
 		layout.title = null;
 		layout.margin = {
 		    'l': 0,
