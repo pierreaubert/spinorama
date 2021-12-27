@@ -1,150 +1,113 @@
-<%include file="header.html"/>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%include file="head.html"/>
+  </head>
+<body>
+
 <%include file="nav_menu.html"/>
+<%include file="nav_search.html"/>
 
 <%namespace name="util" module="website.utils" import="*"/>
 
+<script id="scores" type="text/x-handlebars-template">
+    <div class="card">
+      <header class="card-header">
+	<p class="card-header-title">
+          <span>[{{scores.pref_score}}]</span> &dash; {{brand}} {{model}}
+        </p>
+        <button class="card-header-icon" aria-label="more options">
+          <span class="icon">
+            <i class="fas fa-angle-down" aria-hidden="true"></i>
+          </span>
+        </button>
+      </header>
+      <div class="card-content">
+	<div class="content is-small">
+          <div class="table-container">
+            <table class="table is-striped is-narrow">
+              <thead>
+                <th class="has-text-right">
+                  <td>Estimates
+                  </td>
+                  <td>Def.
+                  </td>
+                  <td>w/EQ
+                  </td>
+                  <td>Score components
+                  </td>
+                  <td>Def.
+                  </td>
+                  <td>w/EQ
+                  </td>
+                </th>
+              </thead>
+              <tbody>
+                <tr class="has-text-right">
+                  <td>-3dB v.s. reference:</td>
+                  <td>{{estimates.ref_3dB}}Hz</td>
+                  <td>{{estimates_eq.ref_3dB}}Hz</td>
+                  <td>NBD ON:</td>
+                  <td>{{scores.nbd_on_axis}}</td>
+                  <td>{{scores_eq.nbd_on_axis}}</td>
+                </tr>
+                <tr class="has-text-right">
+                  <td>-6dB v.s. reference:</td>
+                  <td>{{estimates.ref_6dB}}Hz</td>
+                  <td>{{estimates_eq.ref_6dB}}Hz</td>
+                  <td>NBD LW:</td>
+                  <td>{{scores.nbd_listening_window}}</td>
+                  <td>{{scores_eq.nbd_listening_window}}</td>
+                </tr>
+                <tr class="has-text-right">
+                  <td>Horizontal Directivity between 1kHz and 10kHz</td>
+                  <td>[{{estimates.dir_horizontal_m}}°, {{estimates.dir_horizontal_p}}°]</td>
+                  <td></td>
+                  <td>LFX:</td>
+                  <td>{{scores.lfx_hz}}Hz</td>
+                  <td>{{scores_eq.lfx_hz}}Hz</td>
+                </tr>
+                <tr class="has-text-right">
+                  <td>Vertical Directivity between 1kHz and 10kHz</td>
+                  <td>[{{estimates.dir_vertical_m}}°, {{estimates.dir_vertical_p}}°]</td>
+                  <td>--</td>
+                  <td>SM PIR:</td>
+                  <td>{{scores.sm_pred_in_room}}</td>
+                  <td>{{scores_eq.sm_pred_in_room}}</td>
+                </tr>
+                <tr class="has-text-right">
+                  <td>Deviation between {{estimates.ref_from}}Hz to {{estimates.ref_to}}Hz</td>
+                  <td>&pm;{{estimates.ref_band}}dB</td>
+                  <td>&pm;{{estimates_eq.ref_band}}dB</td>
+                  <td>SM SP:</td>
+                  <td>{{scores.sm_sound_power}}</td>
+                  <td>{{scores_eq.sm_sound_power}}</td>
+                </tr>
+                <tr class="has-text-right">
+                  <td>Sensitivity:</td>
+                  <td>{{sensitity}}dB</td>
+                  <td></td>
+                  <td>Score with subwoofer</td>
+                  <td>{{scores.pref_score_wsub}}</td>
+                  <td>{{scores_eq.pref_score_wsub}}</td>
+                </tr>
+              </tbody>
+            </table>
+	  </div>
+        </div>
+      </div>
+    </div>
+</script>
+
 <div class="section">
-  <div class="table-container">
-    <table class="table is-bordered is-hoverable">
-      <thead>
-	<tr>
-	  <th>Speaker</th>
-	  <th>Origin</th>
-	  <th colspan="7" class="has-text-right">Standard Measurements</th>
-	  <th colspan="6" class="has-text-right">Preference Scores from Harman</th>
-	  <th colspan="3" class="has-text-right">Scores (modified)</th>
-	</tr>
-	<tr>
-	  <th></th>
-	  <th></th>
-
-	  <th>
-	    <abbr title="Low Freq -3dB  w.r.t reference (mean over freq between 400Hz and 10kHz)">-3dB (Hz)</abbr>
-	  </th>
-	  <th>
-	    <abbr title="Low Freq -6dB w.r.t reference (mean over freq between 400Hz and 10kHz)">-6dB (Hz)</abbr>
-	  </th>
-	  <th>
-	    <abbr title="Deviation (dB) +/- w.r.t reference (mean over freq between 400Hz and 10kHz)">Dev (dB)</abbr>
-	  </th>
-	  <th>
-	    <abbr title="Directivity angle -6dB Horizontal">Dir H-</abbr>
-	  </th>
-	  <th>
-	    <abbr title="Directivity angle +6dB Horizontal">Dir H+</abbr>
-	  </th>
-	  <th>
-	    <abbr title="Directivity angle -6dB Vertical">Dir V-</abbr>
-	  </th>
-	  <th>
-	    <abbr title="Directivity angle +6dB Vertical">Dir V+</abbr>
-	  </th>
-
-	  <th>
-	    <abbr title="Low Freq Ext">LFX (Hz)</abbr>
-	  </th>
-	  <th>
-	    <abbr title="Low Freq Quality">LFQ</abbr>
-	  </th>
-	  <th>
-	    <abbr title="Narrow Bandwidth On Axis">NBD ON</abbr>
-	  </th>
-	  <th>
-	    <abbr title="Narrow Bandwidth In Room">NBD PIR</abbr>
-	  </th>
-	  <th>
-	    <abbr title="Smoothness In Room">SM PIR</abbr>
-	  </th>
-	  <th>
-	    <abbr title="Preference Score as defined by Harmann. See reference papers in help section">Score</abbr>
-	  </th>
-
-	  <th>
-	    <abbr title="Preference Score with a perfect subwoofer">Score w/Sub</abbr>
-	  </th>
-	  <th>
-	    <abbr title="Preference Score with a simple parametric EQ">Score w/EQ</abbr>
-	  </th>
-	  <th>
-	    <abbr title="Preference Score with a simple parametric EQ
-	    and a perfect subwoofer">Score w/EQ+Sub</abbr>
-	  </th>
-	</tr>
-      </thead>
-      % for speaker_name in meta:
-<%
-        if 'default_measurement' in meta[speaker_name]:
-            default =  meta[speaker_name]['default_measurement']
-            if default not in meta[speaker_name]['measurements'].keys():
-                continue
-            compute = meta[speaker_name]['measurements'][default]
-%>
-            <tr id="${speaker_name | space2dash}">
-	      <td>${speaker_name}</td>
-	      ${ligne(speaker_name, compute, default, True)}
-            </tr>
-        % for version, measurement in meta[speaker_name]['measurements'].items():
-<%
-            if version == default or version not in meta[speaker_name]['measurements'].keys():
-                continue
-            compute = meta[speaker_name]['measurements'][version]
-%>
-            <tr>
-	      <td></td>
-	      ${ligne(speaker_name, compute, version, False)}
-            </tr>
-       % endfor
-      % endfor
-    </table>
+  <!-- Speakers -->
+  <div class="searchresults">
+    <div class="columns is-multiline is-1" id="scores" data-num="0">
+      <script src='assets/scores.js'></script>
+    </div>
   </div>
 </div>
 
+<script src="assets/search.js"></script>
 
 <%include file="footer.html"/>
-
-<%def name="ligne(speaker_name, compute, default, print_eq)">
-<td>
-  <a href="${speaker_name|space2url}/${compute['origin']|removeVendors}/index_${default}.html">${default}</a>
-</td>
-% if 'estimates' in compute.keys():
-<td>${compute['estimates'].get('ref_3dB', '')}</td>
-<td>${compute['estimates'].get('ref_6dB', '')}</td>
-<td>&plusmn;${compute['estimates'].get('ref_band', '')}</td>
-<td>${compute['estimates'].get('dir_horizontal_m', '')}</td>
-<td>${compute['estimates'].get('dir_horizontal_p', '')}</td>
-<td>${compute['estimates'].get('dir_vertical_m', '')}</td>
-<td>${compute['estimates'].get('dir_vertical_p', '')}</td>
-% else:
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-% endif
-% if 'pref_rating' in compute.keys():
-<td>${compute['pref_rating'].get('lfx_hz', '')}</td>
-<td>${compute['pref_rating'].get('lfq', '')}</td>
-<td>${compute['pref_rating'].get('nbd_on_axis', '')}</td>
-<td>${compute['pref_rating'].get('nbd_pred_in_room', '')}</td>
-<td>${compute['pref_rating'].get('sm_pred_in_room', '')}</td>
-<th>${compute['pref_rating'].get('pref_score', '')}</th>
-<th>${compute['pref_rating'].get('pref_score_wsub', '')}</th>
-<th>
-% if print_eq and 'pref_rating_eq' in compute.keys():
-  ${compute['pref_rating_eq'].get('pref_score', '')}
-  &nbsp;
-  <a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${speaker_name|space2url}/iir-autoeq.txt">(eq)</a>
-% endif
-</th>
-<th>
-% if print_eq and 'pref_rating_eq' in compute.keys():
-  ${compute['pref_rating_eq'].get('pref_score_wsub', '')}
-% endif
-</th>
-% else:
-<td></td><td></td><td></td><td></td><td></td>
-<td></td><td></td><td></td><td></td>
-% endif
-</%def>
