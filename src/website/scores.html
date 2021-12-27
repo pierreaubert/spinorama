@@ -14,12 +14,10 @@
     <div class="card">
       <header class="card-header">
 	<p class="card-header-title">
-          <span>[{{scores.pref_score}}]</span> &dash; {{brand}} {{model}}
+          {{brand}} {{model}}
         </p>
         <button class="card-header-icon" aria-label="more options">
-          <span class="icon">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
-          </span>
+          Score: <b>{{scores.pref_score}}</b>
         </button>
       </header>
       <div class="card-content">
@@ -27,7 +25,7 @@
           <div class="table-container">
             <table class="table is-striped is-narrow">
               <thead>
-                <th class="has-text-right">
+                <tr class="has-text-right">
                   <td>Estimates
                   </td>
                   <td>Def.
@@ -40,7 +38,7 @@
                   </td>
                   <td>w/EQ
                   </td>
-                </th>
+                </tr>
               </thead>
               <tbody>
                 <tr class="has-text-right">
@@ -77,8 +75,8 @@
                 </tr>
                 <tr class="has-text-right">
                   <td>Deviation between {{estimates.ref_from}}Hz to {{estimates.ref_to}}Hz</td>
-                  <td>&pm;{{estimates.ref_band}}dB</td>
-                  <td>&pm;{{estimates_eq.ref_band}}dB</td>
+                  <td>&plusmn;<b>{{estimates.ref_band}}</b>dB</td>
+                  <td>&plusmn;<b>{{estimates_eq.ref_band}}</b>dB</td>
                   <td>SM SP:</td>
                   <td>{{scores.sm_sound_power}}</td>
                   <td>{{scores_eq.sm_sound_power}}</td>
@@ -87,9 +85,17 @@
                   <td>Sensitivity:</td>
                   <td>{{sensitity}}dB</td>
                   <td></td>
+                  <td>Score</td>
+                  <td><b>{{scores.pref_score}}</b></td>
+                  <td><b>{{scores_eq.pref_score}}</b></td>
+                </tr>
+                <tr class="has-text-right">
+                  <td></td>
+                  <td></td>
+                  <td></td>
                   <td>Score with subwoofer</td>
-                  <td>{{scores.pref_score_wsub}}</td>
-                  <td>{{scores_eq.pref_score_wsub}}</td>
+                  <td><b>{{scores.pref_score_wsub}}</b></td>
+                  <td><b>{{scores_eq.pref_score_wsub}}</b></td>
                 </tr>
               </tbody>
             </table>
