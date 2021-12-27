@@ -38,7 +38,10 @@ fetch(urlSite+'assets/metadata.json').then(
         function selectDispatch() {
 	    let keywords = document.querySelector("#searchInput").value;
 	    // console.log("keywords: "+keywords);
-            metadata = sort_metadata(metadata, sorter);
+            sort_metadata(
+                metadata,
+                document.querySelector("div.searchresults > div"),
+                sorter);
 
 	    if (keywords === "") {
                 // console.log("display filter");

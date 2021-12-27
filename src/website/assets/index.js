@@ -88,9 +88,9 @@ fetch(urlSite+'assets/metadata.json').then(
                     origin = 'EAC';
                 } else if ( origin == 'Princeton' ) {
                     origin = '3D3A';
-                } else if ( origin == 'Napilopez') {
+                } else if ( origin == 'napilopez') {
                     origin = 'NPZ';
-                } else if ( origin == 'Speakerdata2034') {
+                } else if ( origin == 'speakerdata2034') {
                     origin = 'SPD';
                 }
                 origin = origin.charAt(0).toUpperCase() + origin.slice(1);
@@ -139,9 +139,12 @@ fetch(urlSite+'assets/metadata.json').then(
         }
 
         function display () {
+            var fragment1 = new DocumentFragment();
 	    speakerDatabase.forEach( function(value, key) {
-                speakerContainer.appendChild(printSpeaker(key, value));
+                fragment1.appendChild(printSpeaker(key, value));
 	    });
+            sort_metadata(speakerDatabase, fragment1, {by: "date"});
+            speakerContainer.appendChild(fragment1);
         }
 
         display();

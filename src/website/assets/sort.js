@@ -1,6 +1,6 @@
 const urlSite = '${site}'+'/';
 
-function sort_metadata(currentMetadata, current_sorter) {
+function sort_metadata(currentMetadata, currentContainer, current_sorter) {
     // console.log("starting sort + sort_by:"+current_sorter.by);
     // TODO build once
     // build a hash map
@@ -97,42 +97,42 @@ function sort_metadata(currentMetadata, current_sorter) {
 
     if (current_sorter.by === 'price') {
         sortChildren({
-            container: document.querySelector("div.searchresults > div"),
+            container: currentContainer,
             getScore: item => {
                 return get_price(item);
             }
         });
     } else if (current_sorter.by === 'score') {
         sortChildren({
-            container: document.querySelector("div.searchresults > div"),
+            container: currentContainer,
             getScore: item => {
                 return get_score(item);
             }
         });
     } else if (current_sorter.by === 'scoreEQ') {
         sortChildren({
-            container: document.querySelector("div.searchresults > div"),
+            container: currentContainer,
             getScore: item => {
                 return get_score_eq(item);
             }
         });
     } else if (current_sorter.by === 'scoreWSUB') {
         sortChildren({
-            container: document.querySelector("div.searchresults > div"),
+            container: currentContainer,
             getScore: item => {
                 return get_score_wsub(item);
             }
         });
     } else if (current_sorter.by === 'scoreEQWSUB') {
         sortChildren({
-            container: document.querySelector("div.searchresults > div"),
+            container: currentContainer,
             getScore: item => {
                 return get_score_eq_wsub(item);
             }
         });
     } else if (current_sorter.by === 'date') {
         sortChildren({
-            container: document.querySelector("div.searchresults > div"),
+            container: currentContainer,
             getScore: item => {
                 return get_date(item);
             }
