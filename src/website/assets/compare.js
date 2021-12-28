@@ -18,6 +18,10 @@ const knownMeasurements = [
     'SPL Horizontal 3D Normalized',
     'SPL Vertical 3D',
     'SPL Vertical 3D Normalized',
+//    'SPL Horizontal Globe',
+//    'SPL Horizontal Globe Normalized',
+//    'SPL Vertical Globe',
+//    'SPL Vertical Globe Normalized',
     'SPL Horizontal Radar',
     'SPL Vertical Radar',
 ];
@@ -129,6 +133,8 @@ fetch(urlSite+'assets/metadata.json').then(
 		return 'CEA2034';
 	    } else if (name.includes('3D')) {
 		return name.replace('3D', 'Contour');
+	    } else if (name.includes('Globe')) {
+		return name.replace('Globe', 'Contour');
 	    }
 	    return name;
 	}
@@ -355,6 +361,28 @@ fetch(urlSite+'assets/metadata.json').then(
 	    }
 	}
 
+	function setGlobe(speaker_names, speaker_graphs) {
+	    plotSingleContainer.style.display = "none";
+	    plotDouble0Container.style.display = "block";
+	    plotDouble1Container.style.display = "block";
+	    for (let i = 0 ; i<speaker_graphs.length ; i++ ) {
+		if (speaker_graphs[i] != null ) {
+		    for (let j in speaker_graphs[i].data) {
+			speaker_graphs[i].data[j].type = "scatterpolargl";
+                        speaker_graphs[i].data[j].r = speaker_graphs[i].data[j].x;
+                        speaker_graphs[i].data[j].theta = speaker_graphs[i].data[j].y;
+                        // speaker_graphs[i].data[j].theta = speaker_graphs[i].data[j].z;
+			speaker_graphs[i].data[j].legendgroup = "speaker"+i;
+			speaker_graphs[i].data[j].legendgrouptitle = {"text": speaker_names[i]};
+		    }
+		    var datas = speaker_graphs[i].data;
+		    var layout = speaker_graphs[i].layout;
+
+		    Plotly.newPlot('plotDouble'+i, datas, layout, {responsive: true});
+		}
+	    }
+	}
+
 	function setSurface(speaker_names, speaker_graphs) {
 	    plotSingleContainer.style.display = "none";
 	    plotDouble0Container.style.display = "block";
@@ -415,6 +443,11 @@ fetch(urlSite+'assets/metadata.json').then(
 			       measurement === 'SPL Horizontal 3D Normalized' ||
 			       measurement === 'SPL Vertical 3D Normalized' ) {
 			return setSurface(speakers_name, graphs);
+		    } else if( measurement === 'SPL Horizontal Globe' ||
+			       measurement === 'SPL Vertical Globe' ||
+			       measurement === 'SPL Horizontal Globe Normalized' ||
+			       measurement === 'SPL Vertical Globe Normalized' ) {
+			return setGlobe(speakers_name, graphs);
 		    } // todo add multi view
 		    return null;
 		});
