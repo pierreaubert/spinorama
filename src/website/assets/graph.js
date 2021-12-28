@@ -1,13 +1,15 @@
 function displayGraph(spec, divName) {
 
     async function run() {
+        var displayModeBar = true;
         w = window.innerWidth;
         h = window.innerHeight;
         console.log('IN w='+w+' h='+h);
         if (w < h) {
             h =	Math.min(w/1.414+200, h);
         } else {
-            w = h/1.414;
+            w = h*1.414;
+            h -= 100;
         }
         console.log('OUT w='+w+' h='+h);
         spec.layout.width = w;
@@ -54,25 +56,32 @@ function displayGraph(spec, divName) {
                     'yanchor': 'left',
                 };
             } else {
-                spec.layout.xaxis.visible = false;
 	        spec.layout.margin = {
 	            'l': 0,
 	            'r': 0,
 	            't': 0,
 	            'b': 0,
 	        };
+                spec.layout.width = Math.min(window.innerWidth, w+250);
+                spec.layout.height = window.innerHeight-40;
                 spec.layout.legend = {
                     'orientation': 'v',
                 };
                 var title = spec.layout.title.text;
-                var pos = title.indexOf('measured');
-                spec.layout.title = {
-                    'text': title.slice(0, pos),
-                    'orientation': 'v',
-                };
+                spec.layout.title.text = '';
+                var pos1 = title.indexOf('for');
+                var pos2 = title.indexOf('measured');
+                var shortTitle = title.slice(pos1+4, pos2);
+                spec.data.forEach( (val) => {
+                    val['legendgroup'] = 'speaker';
+                    val['legendgrouptitle'] = {
+                        'text': shortTitle,
+                    };
+                });
             }
+            displayModeBar = false;
         }
-        Plotly.newPlot(divName, spec.data, spec.layout);
+        Plotly.newPlot(divName, spec.data, spec.layout, {displayModeBar: displayModeBar});
     }
     run();
 }
