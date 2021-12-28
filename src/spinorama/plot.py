@@ -141,69 +141,7 @@ def generate_xaxis(freq_min=20, freq_max=20000):
         title_text="Frequency (Hz)",
         type="log",
         range=[math.log10(freq_min), math.log10(freq_max)],
-        #        tickvals=[
-        #            20,
-        #            30,
-        #            40,
-        #            50,
-        #            60,
-        #            70,
-        #            80,
-        #            90,
-        #            100,
-        #            200,
-        #            300,
-        #            400,
-        #            500,
-        #            600,
-        #            700,
-        #            800,
-        #            900,
-        #            1000,
-        #            2000,
-        #            3000,
-        #            4000,
-        #            5000,
-        #            6000,
-        #            7000,
-        #            8000,
-        #            9000,
-        #            10000,
-        #            20000,
-        #        ],
-        #        ticktext=[
-        #            "20",
-        #            " ",
-        #            " ",
-        #            "50",
-        #            " ",
-        #            " ",
-        #            "  ",
-        #            " ",
-        #            "100",
-        #            "200",
-        #            " ",
-        #            " ",
-        #            "500",
-        #            " ",
-        #            " ",
-        #            "  ",
-        #            " ",
-        #            "1k",
-        #            "2k",
-        #            " ",
-        #            " ",
-        #            "5k",
-        #            " ",
-        #            " ",
-        #            "  ",
-        #            " ",
-        #            "10k",
-        #            "20k",
-        #        ],
-        ticks="inside",
-        ticklen=8,
-        tickwidth=1,
+        showline=True,
     )
 
 
@@ -217,9 +155,7 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=5):
             "{}".format(i) if not i % 5 else " "
             for i in range(range_min, range_max + range_step, range_step)
         ],
-        ticks="inside",
-        ticklen=8,
-        tickwidth=1,
+        showline=True,
     )
 
 
@@ -230,9 +166,7 @@ def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
         dtick=range_step,
         tickvals=[-5, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45],
         ticktext=["-5", "0", "5", "10", "15", " ", " ", " ", " ", " ", " "],
-        ticks="inside",
-        ticklen=8,
-        tickwidth=1,
+        showline=True,
     )
 
 
@@ -246,6 +180,7 @@ def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
             "{}°".format(v)
             for v in range(angle_min, angle_max + angle_step, angle_step)
         ],
+        showline=True,
     )
 
 

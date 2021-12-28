@@ -196,6 +196,7 @@ fetch(urlSite+'assets/metadata.json').then(
                     'xanchor': 'bottom',
                     'yanchor': 'left',
                 };
+                layout.xaxis.autotick = false;
 		plotSingleContainer.style.display = "block";
 		plotDouble0Container.style.display = "none";
 		plotDouble1Container.style.display = "none";
