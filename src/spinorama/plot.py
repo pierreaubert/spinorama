@@ -142,10 +142,11 @@ def generate_xaxis(freq_min=20, freq_max=20000):
         type="log",
         range=[math.log10(freq_min), math.log10(freq_max)],
         showline=True,
+        dtick="D1",
     )
 
 
-def generate_yaxis_spl(range_min=-40, range_max=10, range_step=5):
+def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
     return dict(
         title_text="SPL (dB)",
         range=[range_min, range_max],
@@ -248,7 +249,7 @@ def plot_spinorama_traces(spin, params):
             y=spin[measurement],
             marker_color=uniform_colors.get(measurement, "black"),
             name=label_short.get(measurement, measurement),
-            hovertemplate="%{name}:<br>Freq: %(x:.0f)Hz<br>SPL: %(y:.1f)dB<br>",
+            hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
         if layout != "compact":
             trace.name = measurement
@@ -300,6 +301,7 @@ def plot_graph(df, params):
                 x=df.Freq,
                 y=df[measurement],
                 marker_color=uniform_colors.get(measurement, "black"),
+                hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
             )
             if layout == "compact":
                 trace.name = label_short.get(measurement, measurement)
@@ -322,6 +324,7 @@ def plot_graph_regression_traces(df, measurement, params):
         x=df.Freq,
         y=df[measurement],
         marker_color=uniform_colors.get(measurement, "black"),
+        hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
     )
     if layout == "compact":
         trace.name = label_short.get(measurement, measurement)
