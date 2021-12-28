@@ -362,18 +362,19 @@ fetch(urlSite+'assets/metadata.json').then(
 	    for (let i = 0 ; i<speaker_graphs.length ; i++ ) {
 		if (speaker_graphs[i] != null ) {
 		    for (let j in speaker_graphs[i].data) {
-			speaker_graphs[i].data[j].y = speaker_graphs[i].data[j].y.slice(8, -8);
-			speaker_graphs[i].data[j].z = speaker_graphs[i].data[j].z.slice(8, -8);
+			speaker_graphs[i].data[j].y = speaker_graphs[i].data[j].y.slice(10, -10);
+			speaker_graphs[i].data[j].z = speaker_graphs[i].data[j].z.slice(10, -10);
 			speaker_graphs[i].data[j].type = "surface";
 			speaker_graphs[i].data[j].legendgroup = "speaker"+i;
 			speaker_graphs[i].data[j].legendgrouptitle = {"text": speaker_names[i]};
 		    }
 		    var datas = speaker_graphs[i].data;
 		    var layout = speaker_graphs[i].layout;
+                    layout.autosize = false;
                     layout.width = windowWidth;
                     layout.height = (windowHeight-100)/2;
                     layout.yaxis = {
-                        range: [-90, 90],
+                        range: [-60, 60],
                     };
                     layout.zaxis = {
                         range: [-20, 5],
