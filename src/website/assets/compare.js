@@ -18,10 +18,10 @@ const knownMeasurements = [
     'SPL Horizontal 3D Normalized',
     'SPL Vertical 3D',
     'SPL Vertical 3D Normalized',
-//    'SPL Horizontal Globe',
-//    'SPL Horizontal Globe Normalized',
-//    'SPL Vertical Globe',
-//    'SPL Vertical Globe Normalized',
+    'SPL Horizontal Globe',
+    'SPL Horizontal Globe Normalized',
+    'SPL Vertical Globe',
+    'SPL Vertical Globe Normalized',
     'SPL Horizontal Radar',
     'SPL Vertical Radar',
 ];
@@ -368,16 +368,49 @@ fetch(urlSite+'assets/metadata.json').then(
 	    for (let i = 0 ; i<speaker_graphs.length ; i++ ) {
 		if (speaker_graphs[i] != null ) {
 		    for (let j in speaker_graphs[i].data) {
-			speaker_graphs[i].data[j].type = "scatterpolargl";
-                        speaker_graphs[i].data[j].r = speaker_graphs[i].data[j].x;
-                        speaker_graphs[i].data[j].theta = speaker_graphs[i].data[j].y;
-                        // speaker_graphs[i].data[j].theta = speaker_graphs[i].data[j].z;
+                        var x = speaker_graphs[i].data[j].x;
+                        var y = speaker_graphs[i].data[j].y;
+                        var z = speaker_graphs[i].data[j].z;
+                        var r = [];
+                        // r is x (len of y times)
+                        for (let k1=0 ; k1<x.length; k1++) {
+                            for (let k2=0 ; k2<y.length; k2++) {
+                                r.push(x[k1]);
+                            }
+                        }
+                        // theta is y (len of x times)
+                        var theta = [];
+                        for (let k=0 ; k<x.length; k++) {
+                            theta.push(y);
+                        }
+                        theta = theta.flat();
+                        // color is z unravelled
+                        var color = [];
+                        for (let k1=0 ; k1<x.length; k1++) {
+                            for (let k2=0 ; k2<y.length; k2++) {
+                                color.push(z[k2][k1]);
+                            }
+                        }
+			speaker_graphs[i].data[j].type = "barpolar";
+                        speaker_graphs[i].data[j].r = r;
+                        speaker_graphs[i].data[j].theta = theta;
+                        speaker_graphs[i].data[j].marker = {
+                            'color': color,
+                            'showscale': false,
+                            'line': {
+                                'color': null,
+                                'width': 0,
+                            },
+                        };
 			speaker_graphs[i].data[j].legendgroup = "speaker"+i;
 			speaker_graphs[i].data[j].legendgrouptitle = {"text": speaker_names[i]};
 		    }
 		    var datas = speaker_graphs[i].data;
 		    var layout = speaker_graphs[i].layout;
-
+                    layout.polar = {
+                        'bargap': 0,
+                        'hole': 0.05,
+                    };
 		    Plotly.newPlot('plotDouble'+i, datas, layout, {responsive: true});
 		}
 	    }
