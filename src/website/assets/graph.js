@@ -4,14 +4,17 @@ function displayGraph(spec, divName) {
         var displayModeBar = true;
         w = window.innerWidth;
         h = window.innerHeight;
-        console.log('IN w='+w+' h='+h);
+        var title = spec.layout.title.text;
+        var ratio = 1.414;
         if (w < h) {
-            h =	Math.min(w/1.414+200, h);
+            h =	Math.min(w/ratio+200, h);
         } else {
-            w = h*1.414;
+            w = Math.min(h*ratio, w);
             h -= 100;
         }
-        console.log('OUT w='+w+' h='+h);
+        if (title.indexOf('Contour') != -1) {
+            h = w/3; // change ratio
+        }
         spec.layout.width = w;
         spec.layout.height = h;
         if (w > 640) {
@@ -29,7 +32,9 @@ function displayGraph(spec, divName) {
                 'yanchor': 'left',
             };
         } else {
+            // small screen
             if (w<h) {
+                // vertical
                 spec.layout.yaxis.visible = false;
                 spec.layout.yaxis2.visible = false;
 	        spec.layout.margin = {
@@ -45,7 +50,6 @@ function displayGraph(spec, divName) {
                     'xanchor': 'center',
                     'yanchor': 'left',
                 };
-                var title = spec.layout.title.text;
                 var pos = title.indexOf('measured');
                 spec.layout.title = {
                     'text': title.slice(0, pos),
@@ -56,6 +60,7 @@ function displayGraph(spec, divName) {
                     'yanchor': 'left',
                 };
             } else {
+                // landscape
 	        spec.layout.margin = {
 	            'l': 0,
 	            'r': 0,
@@ -67,7 +72,6 @@ function displayGraph(spec, divName) {
                 spec.layout.legend = {
                     'orientation': 'v',
                 };
-                var title = spec.layout.title.text;
                 spec.layout.title.text = '';
                 var pos1 = title.indexOf('for');
                 var pos2 = title.indexOf('measured');
