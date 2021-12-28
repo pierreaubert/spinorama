@@ -14,6 +14,10 @@ const knownMeasurements = [
     'SPL Horizontal Contour Normalized',
     'SPL Vertical Contour',
     'SPL Vertical Contour Normalized',
+    'SPL Horizontal 3D',
+    'SPL Horizontal 3D Normalized',
+    'SPL Vertical 3D',
+    'SPL Vertical 3D Normalized',
     'SPL Horizontal Radar',
     'SPL Vertical Radar',
 ];
@@ -123,6 +127,8 @@ fetch(urlSite+'assets/metadata.json').then(
 	function processGraph(name) {
 	    if (name.includes('CEA2034')) {
 		return 'CEA2034';
+	    } else if (name.includes('3D')) {
+		return name.replace('3D', 'Contour');
 	    }
 	    return name;
 	}
@@ -180,8 +186,8 @@ fetch(urlSite+'assets/metadata.json').then(
 		datas = spin[1].data;
 	    }
 	    if (layout != null && datas != null ) {
-		layout.width = windowWidth;
-		layout.height = Math.min(windowHeight, windowWidth*0.7+140);
+		layout.width = windowWidth-40;
+		layout.height = Math.min(windowHeight-40, windowWidth*0.7+140);
 		layout.title = null;
 		layout.margin = {
 		    'l': 15,
@@ -197,6 +203,7 @@ fetch(urlSite+'assets/metadata.json').then(
                     'yanchor': 'left',
                 };
                 layout.xaxis.autotick = false;
+                layout.yaxis.dtick = 1;
 		plotSingleContainer.style.display = "block";
 		plotDouble0Container.style.display = "none";
 		plotDouble1Container.style.display = "none";
@@ -342,6 +349,35 @@ fetch(urlSite+'assets/metadata.json').then(
 		    }
 		    var datas = speaker_graphs[i].data;
 		    var layout = speaker_graphs[i].layout;
+
+		    Plotly.newPlot('plotDouble'+i, datas, layout, {responsive: true});
+		}
+	    }
+	}
+
+	function setSurface(speaker_names, speaker_graphs) {
+	    plotSingleContainer.style.display = "none";
+	    plotDouble0Container.style.display = "block";
+	    plotDouble1Container.style.display = "block";
+	    for (let i = 0 ; i<speaker_graphs.length ; i++ ) {
+		if (speaker_graphs[i] != null ) {
+		    for (let j in speaker_graphs[i].data) {
+			speaker_graphs[i].data[j].y = speaker_graphs[i].data[j].y.slice(8, -8);
+			speaker_graphs[i].data[j].z = speaker_graphs[i].data[j].z.slice(8, -8);
+			speaker_graphs[i].data[j].type = "surface";
+			speaker_graphs[i].data[j].legendgroup = "speaker"+i;
+			speaker_graphs[i].data[j].legendgrouptitle = {"text": speaker_names[i]};
+		    }
+		    var datas = speaker_graphs[i].data;
+		    var layout = speaker_graphs[i].layout;
+                    layout.width = windowWidth;
+                    layout.height = (windowHeight-100)/2;
+                    layout.yaxis = {
+                        range: [-90, 90],
+                    };
+                    layout.zaxis = {
+                        range: [-20, 5],
+                    };
 		    Plotly.newPlot('plotDouble'+i, datas, layout, {responsive: true});
 		}
 	    }
@@ -373,6 +409,11 @@ fetch(urlSite+'assets/metadata.json').then(
 			       measurement === 'SPL Horizontal Contour Normalized' ||
 			       measurement === 'SPL Vertical Contour Normalized' ) {
 			return setContour(speakers_name, graphs);
+		    } else if( measurement === 'SPL Horizontal 3D' ||
+			       measurement === 'SPL Vertical 3D' ||
+			       measurement === 'SPL Horizontal 3D Normalized' ||
+			       measurement === 'SPL Vertical 3D Normalized' ) {
+			return setSurface(speakers_name, graphs);
 		    } // todo add multi view
 		    return null;
 		});
