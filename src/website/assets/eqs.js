@@ -78,7 +78,7 @@ fetch(urlSite+'assets/metadata.json').then(
                     fragment1.appendChild(printEQ(key, value));
                 }
 	    });
-            sort_metadata(speakerDatabase, fragment1, {by: "date"});
+            sort_metadata(speakerDatabase, fragment1, {by: "score"});
             speakerContainer.appendChild(fragment1);
         }
 

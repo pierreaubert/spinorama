@@ -8,8 +8,17 @@ window.onload = () => {
         navbarMenu.classList.toggle("is-active");
     });
 
+    var smallSearch = document.querySelector('#smallSearch');
+    var searchBar = document.querySelector('#search-bar');
+
+    if (smallSearch && searchBar) {
+        smallSearch.addEventListener('click', (e) => {
+            searchBar.classList.toggle("is-hidden-mobile");
+        });
+    }
+
     var banner = document.querySelector('.banner');
-    if (banner != null ) {
+    if (banner) {
         banner.addEventListener('click', (e) => {
             banner.classList.toggle("visible");
         });

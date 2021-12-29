@@ -36,7 +36,9 @@ function displayGraph(spec, divName) {
             if (w<h) {
                 // vertical
                 spec.layout.yaxis.visible = false;
-                spec.layout.yaxis2.visible = false;
+                if (spec.layout.yaxis2) {
+                    spec.layout.yaxis2.visible = false;
+                }
 	        spec.layout.margin = {
 	            'l': 0,
 	            'r': 0,

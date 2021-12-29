@@ -44,7 +44,7 @@ sitedev = "http://localhost:8000/docs"
 root = "./"
 
 
-def generate_speaker(mako, dataframe, meta, site):
+def generate_speaker(mako, dataframe, meta, site, useSearch):
     speaker_html = mako.get_template("speaker.html")
     graph_html = mako.get_template("graph.html")
     for speaker_name, origins in dataframe.items():
@@ -111,6 +111,7 @@ def generate_speaker(mako, dataframe, meta, site):
                             meta=meta,
                             origin=origin,
                             site=site,
+                            useSearch=useSearch,
                         )
                     )
                     f_index.close()
@@ -235,7 +236,11 @@ if __name__ == "__main__":
     try:
         with open("docs/index.html", "w") as f:
             # by default sort by pref_rating decreasing
-            f.write(index_html.render(df=df, meta=meta_sorted_date, site=site))
+            f.write(
+                index_html.render(
+                    df=df, meta=meta_sorted_date, site=site, useSearch=True
+                )
+            )
             f.close()
     except KeyError as ke:
         print("Generating index.htmlfailed with {}".format(ke))
@@ -248,7 +253,9 @@ if __name__ == "__main__":
     try:
         with open("docs/eqs.html", "w") as f:
             # by default sort by pref_rating decreasing
-            f.write(eqs_html.render(df=df, meta=meta_sorted_date, site=site))
+            f.write(
+                eqs_html.render(df=df, meta=meta_sorted_date, site=site, useSearch=True)
+            )
             f.close()
     except KeyError as ke:
         print("Generating eqs.htmlfailed with {}".format(ke))
@@ -256,12 +263,27 @@ if __name__ == "__main__":
 
     # write various html files
     try:
-        for item in ("help", "compare", "scores", "statistics"):
+        for item in ("scores",):
             item_name = "{0}.html".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
             with open("./docs/" + item_name, "w") as f:
-                f.write(item_html.render(df=df, meta=meta_sorted_score, site=site))
+                f.write(
+                    item_html.render(
+                        df=df, meta=meta_sorted_score, site=site, useSearch=True
+                    )
+                )
+                f.close()
+        for item in ("help", "compare", "statistics"):
+            item_name = "{0}.html".format(item)
+            logger.info("Write {0}".format(item_name))
+            item_html = mako_templates.get_template(item_name)
+            with open("./docs/" + item_name, "w") as f:
+                f.write(
+                    item_html.render(
+                        df=df, meta=meta_sorted_score, site=site, useSearch=False
+                    )
+                )
                 f.close()
     except KeyError as ke:
         print("Generating various html files failed with {}".format(ke))
@@ -270,7 +292,7 @@ if __name__ == "__main__":
     # write a file per speaker
     logger.info("Write a file per speaker")
     try:
-        generate_speaker(mako_templates, df, meta=meta, site=site)
+        generate_speaker(mako_templates, df, meta=meta, site=site, useSearch=False)
     except KeyError as ke:
         print("Generating a file per speaker failed with {}".format(ke))
         sys.exit(1)
