@@ -60,7 +60,7 @@ fetch(urlSite+'assets/metadata.json').then(
         }
 
         function printEQ(key, value) {
-            const source = document.querySelector('#eqs').innerHTML;
+            const source = document.querySelector('#eqsht').innerHTML;
             var template = Handlebars.compile(source);
             var context = getContext(key, value);
             var html = template(context);

@@ -115,13 +115,7 @@ pip3 install -r requirements.txt
 pip3 install -r requirements-tests.txt
 ```
 
-For saving picture, you need a set of nodejs packages:
-
-```
-npm install vega@5.17.1 vega-lite@4.17 canvas
-```
-
-and for linting the python, html and javascript code:
+For linting the python, html and javascript code:
 
 ```
 npm install pyright html-validator-cli standard

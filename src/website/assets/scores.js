@@ -47,7 +47,7 @@ fetch(urlSite+'assets/metadata.json').then(
         }
 
         function printScore(key, value) {
-            const source = document.querySelector('#scores').innerHTML;
+            const source = document.querySelector('#scoresht').innerHTML;
             var template = Handlebars.compile(source);
             var context = getContext(key, value);
             var html = template(context);
