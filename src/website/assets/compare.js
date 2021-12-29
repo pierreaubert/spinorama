@@ -86,6 +86,40 @@ const uniformColors = {
     "15000 Hz": colors[5],
 };
 
+label_short = {
+    // regression
+    "Linear Regression": "Reg",
+    "Band ±1.5dB": "±1.5dB",
+    "Band ±3dB": "±3dB",
+    // PIR
+    "Estimated In-Room Response": "PIR",
+    // spin
+    "On Axis": "ON",
+    "Listening Window": "LW",
+    "Early Reflections": "ER",
+    "Sound Power": "SP",
+    "Early Reflections DI": "ERDI",
+    "Sound Power DI": "SPDI",
+    // reflections
+    "Ceiling Bounce": "CB",
+    "Floor Bounce": "FB",
+    "Front Wall Bounce": "FWB",
+    "Rear Wall Bounce": "RWB",
+    "Side Wall Bounce": "SWB",
+    //
+    "Ceiling Reflection": "CR",
+    "Floor Reflection": "FR",
+    //
+    "Front": "F",
+    "Rear": "R",
+    "Side": "S",
+    //
+    "Total Early Reflection": "TER",
+    "Total Horizontal Reflection": "THR",
+    "Total Vertical Reflection": "TVR",
+};
+
+
 const urlSite = '${site}'+'/';
 const urlCompare = urlSite + 'compare.html?';
 
@@ -192,22 +226,45 @@ fetch(urlSite+'assets/metadata.json').then(
 		datas = spin[1].data;
 	    }
 	    if (layout != null && datas != null ) {
-		layout.width = windowWidth-40;
-		layout.height = Math.min(windowHeight-40, windowWidth*0.7+140);
+                if (windowWidth < 400 || windowHeight < 400) {
+		    layout.width = windowWidth;
+		    layout.height = Math.max(360, Math.min(windowHeight, windowWidth*0.7+100));
+		    layout.margin = {
+		        'l': 0,
+		        'r': 0,
+		        't': 40,
+		        'b': 20,
+		    };
+                    layout.legend = {
+                        'orientation': 'h',
+                        'y': -0.4,
+                        'x': 0,
+                        'xanchor': 'bottom',
+                        'yanchor': 'left',
+                    };
+                    for (var k=0; k<datas.length ; k++ ) {
+                        if (datas[k].name && label_short[datas[k].name]) {
+                            datas[k].name = label_short[datas[k].name];
+                        }
+                    }
+                } else {
+		    layout.width = windowWidth-40;
+		    layout.height = Math.min(windowHeight-40, windowWidth*0.7+140);
+		    layout.margin = {
+		        'l': 15,
+		        'r': 15,
+		        't': 30,
+		        'b': 50,
+		    };
+                    layout.legend = {
+                        'orientation': 'h',
+                        'y': -0.2,
+                        'x': 0,
+                        'xanchor': 'bottom',
+                        'yanchor': 'left',
+                    };
+                }
 		layout.title = null;
-		layout.margin = {
-		    'l': 15,
-		    'r': 15,
-		    't': 30,
-		    'b': 50,
-		};
-                layout.legend = {
-                    'orientation': 'h',
-                    'y': -0.2,
-                    'x': 0,
-                    'xanchor': 'bottom',
-                    'yanchor': 'left',
-                };
                 layout.xaxis.autotick = false;
                 layout.yaxis.dtick = 1;
 		plotSingleContainer.style.display = "block";
