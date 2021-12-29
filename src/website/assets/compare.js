@@ -431,20 +431,22 @@ fetch(urlSite+'assets/metadata.json').then(
                         var r = [];
                         // r is x (len of y times)
                         for (let k1=0 ; k1<x.length; k1++) {
-                            for (let k2=0 ; k2<y.length; k2++) {
-                                r.push(x[k1]);
+                            for (let k2=0 ; k2<y.length-1; k2++) {
+                                r.push(Math.log10(x[k1]));
                             }
                         }
                         // theta is y (len of x times)
                         var theta = [];
                         for (let k=0 ; k<x.length; k++) {
-                            theta.push(y);
+                            for (let k2=0 ; k2<y.length-1; k2++) {
+                                theta.push(y[k2]);
+                            }
                         }
                         theta = theta.flat();
                         // color is z unravelled
                         var color = [];
                         for (let k1=0 ; k1<x.length; k1++) {
-                            for (let k2=0 ; k2<y.length; k2++) {
+                            for (let k2=0 ; k2<y.length-1; k2++) {
                                 color.push(z[k2][k1]);
                             }
                         }
