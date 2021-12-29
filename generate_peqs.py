@@ -218,7 +218,7 @@ def optim_save_peq(
             auto_score["pref_score"],
         ]
     else:
-        auto_spin, auto_pir = noscore_apply_filter(df_speaker, auto_peq)
+        auto_spin, auto_pir, _ = noscore_apply_filter(df_speaker, auto_peq)
 
     # print peq
     comments = [

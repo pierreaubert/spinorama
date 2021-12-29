@@ -1,0 +1,15 @@
+EQ for M-Audio BX5 D3 computed from Misc data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
+Dated: 2021-12-29-13:50:40
+
+Preamp: -7.6 dB
+
+Filter  1: ON PK Fc  3089 Hz Gain +5.88 dB Q 0.17
+Filter  2: ON PK Fc   454 Hz Gain +3.13 dB Q 5.04
+Filter  3: ON PK Fc  2885 Hz Gain +1.18 dB Q 5.73
+Filter  4: ON PK Fc  1054 Hz Gain -0.97 dB Q 0.28
+Filter  5: ON PK Fc  1210 Hz Gain +1.91 dB Q 5.93
+Filter  6: ON PK Fc  2818 Hz Gain +1.05 dB Q 5.92
+Filter  7: ON PK Fc   407 Hz Gain +1.67 dB Q 3.33
+Filter  8: ON PK Fc   136 Hz Gain -1.20 dB Q 2.90
+Filter  9: ON PK Fc  3888 Hz Gain +0.60 dB Q 5.96

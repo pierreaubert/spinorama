@@ -48,7 +48,7 @@ def noscore_apply_filter(df_speaker: DataSpeaker, peq: Peq):
                     spin_filtered[curve] = pivoted_spin[curve]
         except ValueError:
             print("debug: {}".format(spin.keys()))
-            return None, None
+            return None, None, None
 
     if "Estimated In-Room Response" in df_speaker.keys():
         pir = df_speaker["Estimated In-Room Response"]
