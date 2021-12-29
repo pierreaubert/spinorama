@@ -4758,6 +4758,25 @@ speakers_info = {
             },
         },
     },
+    "M-Audio BX5 D3": {
+        "brand": "M-Audio",
+        "model": "BX5 D3",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "300",
+        "default_measurement": "misc-weeblabs",
+        "measurements": {
+            "misc-weeblabs": {
+                "origin": "Misc",
+                "format": "rewstextdump",
+                "quality": "medium",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/m-audio-bx5-d3-active-monitor-measurements-teardown-subjective-impressions.29425/",
+                },
+                "review_published": "20211229",
+            },
+        },
+    },
     "Mackie CR3-X": {
         "brand": "Mackie",
         "model": "CR3-X",
@@ -4774,6 +4793,25 @@ speakers_info = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mackie-cr3-x-powered-monitor-review-100-pair.23389/",
                 },
                 "review_published": "20210514",
+            },
+        },
+    },
+    "Mackie MR524": {
+        "brand": "Mackie",
+        "model": "MR524",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "200",
+        "default_measurement": "misc-weeblabs",
+        "measurements": {
+            "misc-weeblabs": {
+                "origin": "Misc",
+                "format": "rewstextdump",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mackie-mr524-studio-monitor-measurements-subjective-impressions.28890/",
+                },
+                "review_published": "20211210",
             },
         },
     },
