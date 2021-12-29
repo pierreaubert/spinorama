@@ -1,9 +1,12 @@
 window.onload = () => {
 
-    screen.addEventListener("orientationchange", function () {
-        console.log("The orientation of the screen is: " + screen.orientation);
-        Plotly.restyle('visGraph');
-    });
+    if (window.screen) {
+        var screen = window.screen;
+        screen.orientation.addEventListener("change", function () {
+            console.log("The orientation of the screen is: " + screen.orientation);
+            Plotly.restyle('visGraph');
+        });
+    }
 };
 
 function displayGraph(spec, divName) {
