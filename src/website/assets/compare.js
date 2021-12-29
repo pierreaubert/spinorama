@@ -265,8 +265,12 @@ fetch(urlSite+'assets/metadata.json').then(
                     };
                 }
 		layout.title = null;
-                layout.xaxis.autotick = false;
-                layout.yaxis.dtick = 1;
+                if (layout.xaxis) {
+                    layout.xaxis.autotick = false;
+                }
+                if (layout.yaxis) {
+                    layout.yaxis.dtick = 1;
+                }
 		plotSingleContainer.style.display = "block";
 		plotDouble0Container.style.display = "none";
 		plotDouble1Container.style.display = "none";
