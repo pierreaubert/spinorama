@@ -6,45 +6,6 @@ fetch(urlSite+'assets/metadata.json').then(
 	var speakerContainer = document.querySelector('[data-num="0"');
 	const speakerDatabase = Object.values(datajs);
 
-        function getPicture(brand, model, suffix) {
-            return encodeURI('pictures/' + brand + ' ' + model + '.' + suffix);
-        }
-
-        function removeVendors(str) {
-            return str.replace("Vendors-", "");
-        }
-
-        function getID(brand, model) {
-            return (brand + ' ' + model).replace(/['.+& ]/g, "-");
-        }
-
-        function getEQType(type) {
-            var val='unknown';
-            switch(type) {
-            case 0: val = 'LP'; break;
-            case 1: val = 'HP'; break;
-            case 2: val = 'BP'; break;
-            case 3: val = 'PK'; break;
-            case 4: val = 'NO'; break;
-            case 5: val = 'LS'; break;
-            case 6: val = 'HS'; break;
-            }
-            return val;
-        }
-
-        function getPeq(peq) {
-            var peqPrint = [];
-            peq.forEach( (eq) => {
-                peqPrint.push({
-                    freq: eq.freq,
-                    dbGain: eq.dbGain,
-                    Q: eq.Q,
-                    type: getEQType(eq.type),
-                });
-            });
-            return peqPrint;
-        }
-
         function getContext(key, value) {
             // console.log(getReviews(value));
             return {

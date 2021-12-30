@@ -13,13 +13,18 @@
     <div class="card">
       <header class="card-header">
 	<p class="card-header-title">
-          {{brand}} {{model}}
+          {{brand}} {{model}} &nbsp;
+          <span class="has-text-left">
+            {{#each reviews.reviews}}
+	    <a href="{{this.url}}">{{this.origin}}</a>
+            {{/each}}
+          </span>
         </p>
-        <button class="card-header-icon" aria-label="more options">
+        <button class="card-header-icon" aria-label="more options" onclick="toggleId('#{{id}}-details');">
           Score: <b>{{scores.pref_score}}</b>
         </button>
       </header>
-      <div class="card-content">
+      <div class="card-content hidden" id="{{id}}-details">
 	<div class="content is-small">
           <div class="table-container">
             <table class="table is-striped is-narrow">

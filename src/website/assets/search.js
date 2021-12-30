@@ -1,18 +1,3 @@
-// hide an element
-const hide = (elem) => {
-    elem.classList.add('hidden');
-}
-
-// show an element
-const show = (elem) => {
-    elem.classList.remove('hidden');
-}
-
-// toggle the element visibility
-const toggle = (elem) => {
-    elem.classList.toggle('hidden');
-}
-
 fetch(urlSite+'assets/metadata.json').then(
     function(response) {
 	return response.text();

@@ -6,32 +6,6 @@ fetch(urlSite+'assets/metadata.json').then(
 	var speakerContainer = document.querySelector('[data-num="0"');
 	const speakerDatabase = Object.values(datajs);
 
-        function getPicture(brand, model, suffix) {
-            return encodeURI('pictures/' + brand + ' ' + model + '.' + suffix);
-        }
-
-        function removeVendors(str) {
-            return str.replace("Vendors-", "");
-        }
-
-        function getID(brand, model) {
-            return (brand + ' ' + model).replace(/['.+& ]/g, "-");
-        }
-
-        function getField(value, field) {
-            var fields = {};
-            if (value.default_measurement) {
-                var current = value.default_measurement;
-                if (value.measurements && value.measurements[current]) {
-                    var measurement = value.measurements[current];
-                    if (measurement.hasOwnProperty(field)) {
-                        fields = measurement[field];
-                    }
-                }
-            }
-            return fields;
-        }
-
         function getContext(key, value) {
             // console.log(getReviews(value));
             return {
@@ -43,6 +17,7 @@ fetch(urlSite+'assets/metadata.json').then(
                 estimates_eq: getField(value, 'estimates_eq'),
                 scores: getField(value, 'pref_rating'),
                 scores_eq: getField(value, 'pref_rating_eq'),
+                reviews: getReviews(value),
             };
         }
 
