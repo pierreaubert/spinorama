@@ -308,6 +308,7 @@ if __name__ == "__main__":
             "eqs",
             "scores",
             "statistics",
+            "misc",
         ):
             item_name = "assets/{0}.js".format(item)
             logger.info("Write {0}".format(item_name))
@@ -323,7 +324,7 @@ if __name__ == "__main__":
         "favicon.ico",
         "favicon-16x16.png",
         "spinorama.css",
-        "bulma.js",
+        "onload.js",
         "tabs.js",
         "graph.js",
         "zip.min.js",

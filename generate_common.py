@@ -160,21 +160,21 @@ def cache_save(df_all, smoke_test=False):
         fl.save(path=cache_name, data=df_hashed)
 
 
-def cache_load(filter=None, smoke_test=False):
+def cache_load(simple_filter=None, smoke_test=False):
     df_all = None
     cache_name = CACHE_NAME
     if smoke_test:
         cache_name = SMOKE_CACHE_NAME
-    if filter is None:
+    if simple_filter is None:
         df_all = fl.load(path=cache_name)
     else:
         df_read = fl.load(
             path=cache_name,
-            group="/{}/{}".format(cache_key(filter), filter),
+            group="/{}/{}".format(cache_key(simple_filter), simple_filter),
         )
         df_all = {
-            cache_key(filter): {
-                filter: df_read,
+            cache_key(simple_filter): {
+                simple_filter: df_read,
             },
         }
     return cache_unhash(df_all)

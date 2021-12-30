@@ -357,8 +357,8 @@ def add_quality(parse_max: int):
             if "quality" not in m_data.keys():
                 quality = "unknown"
                 origin = m_data.get("origin")
-                format = m_data.get("format")
-                if format == "klippel":
+                measurement_format = m_data.get("format")
+                if measurement_format == "klippel":
                     quality = "high"
                 elif origin == "Princeton":
                     quality = "low"

@@ -526,10 +526,10 @@ def plot_radar(spl, params):
     _, dbs_df = plot_radar_freq(anglelist, spl)
 
     for freq in np.unique(dbs_df["Freq"].values):
-        slice = dbs_df.loc[dbs_df.Freq == freq]
+        mslice = dbs_df.loc[dbs_df.Freq == freq]
         trace = go.Scatterpolar(
-            r=slice.R,
-            theta=slice.Theta,
+            r=mslice.R,
+            theta=mslice.Theta,
             dtheta=30,
             name=freq,
             marker_color=uniform_colors.get(freq, "black"),
