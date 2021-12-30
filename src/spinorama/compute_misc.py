@@ -6,7 +6,7 @@ import math
 import numpy as np
 import pandas as pd
 
-from .load_misc import graph_melt
+from .load_misc import graph_melt, sort_angles
 
 # pd.set_option('display.max_rows', None)
 logger = logging.getLogger("spinorama")
@@ -126,7 +126,15 @@ def resample(df: pd.DataFrame, target_size: int):
     return df
 
 
-def compute_contour(dfm, min_freq):
+def compute_contour(dfm_in, min_freq):
+
+    dfm = sort_angles(dfm_in)
+    # check if we have -180
+    if "180°" in dfm.keys() and "-180°" not in dfm.keys():
+        dfm.insert(1, "-180°", dfm_in["180°"])
+
+    # print('debug -- 180 -- min {} max {}'.format(np.min(dfm_in["180°"]), np.max(dfm_in["180°"])))
+    # print(dfm.keys())
 
     # get a list of columns
     vrange = []
@@ -142,7 +150,7 @@ def compute_contour(dfm, min_freq):
     dfm = graph_melt(dfm)
     nm = dfm.Measurements.nunique()
     nf = int(len(dfm.index) / nm)
-    # logger.debug("unique={:d} nf={:d}".format(nm, nf))
+    # print("unique={:d} nf={:d} vrange={}".format(nm, nf, vrange))
     hrange = np.logspace(math.log10(min_freq), 4.0 + math.log10(2), nf)
     af, am = np.meshgrid(hrange, vrange)
     az = np.array([dfm.dB[nf * i : nf * (i + 1)] for i in range(0, nm)])

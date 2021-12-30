@@ -27,8 +27,9 @@ def shift_spl(spl, mean):
             df[k] = spl[k]
         else:
             df[k] = spl[k] - mean
-        if k == "180°" and "-180°" not in df.keys():
-            df.insert(1, "-180°", spl["180°"] - mean)
+        # too many side effects
+        # if k == "180°" and "-180°" not in df.keys():
+        #     df.insert(1, "-180°", spl["180°"] - mean)
     return df
 
 
@@ -75,12 +76,15 @@ def shift_spl_melted_cea2034(spl, mean):
 
 
 def norm_spl(spl):
+    # check
+    if "dB" in spl.keys():
+        raise KeyError
     # nornalize v.s. on axis
     df = pd.DataFrame({"Freq": spl.Freq})
+    on = spl["On Axis"].values
     for k in spl.keys():
-        if k != "Freq" and k != "On Axis":
-            df[k] = spl[k] - spl["On Axis"]
-    df["On Axis"] = 0
+        if k != "Freq":
+            df[k] = spl[k] - on
     return df
 
 

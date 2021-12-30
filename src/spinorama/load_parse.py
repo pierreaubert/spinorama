@@ -18,7 +18,7 @@ from .load_princeton import parse_graphs_speaker_princeton
 from .load_rewstextdump import parse_graphs_speaker_rewstextdump
 from .load_rewseq import parse_eq_iir_rews
 from .load_splHVtxt import parse_graphs_speaker_splHVtxt
-from .load_misc import graph_melt
+from .load_misc import graph_melt, check_nan
 from .load import (
     filter_graphs,
     filter_graphs_partial,
@@ -30,22 +30,6 @@ from .filter_scores import noscore_apply_filter
 
 
 logger = logging.getLogger("spinorama")
-
-
-def checkNaN(df):
-    for k in df.keys():
-        for j in df[k].keys():
-            if isinstance(df[k], pd.DataFrame):
-                count = df[k][j].isna().sum()
-                if count > 0:
-                    logger.error("{} {} {}".format(k, j, count))
-    return np.sum(
-        [
-            df[frame].isna().sum().sum()
-            for frame in df.keys()
-            if isinstance(df[frame], pd.DataFrame)
-        ]
-    )
 
 
 @ray.remote(num_cpus=1)
@@ -148,7 +132,7 @@ def parse_graphs_speaker(
             title, df_uneven = parse_graphs_speaker_rewstextdump(
                 measurement_path, speaker_brand, speaker_name, morigin, mversion
             )
-        nan_count = checkNaN(df_uneven)
+        nan_count = check_nan(df_uneven)
         if nan_count > 0:
             logger.error("df_uneven {} has {} NaNs".format(speaker_name, nan_count))
 
@@ -162,7 +146,7 @@ def parse_graphs_speaker(
                 df_full = spin_compute_di_eir(speaker_name, title, df_uneven)
             else:
                 df_full = {title: unify_freq(graph_melt(df_uneven))}
-            nan_count = checkNaN(df_full)
+            nan_count = check_nan(df_full)
             if nan_count > 0:
                 logger.error("df_full {} has {} NaNs".format(speaker_name, nan_count))
                 for k in df_full.keys():
@@ -174,7 +158,7 @@ def parse_graphs_speaker(
                 logger.debug(df_full[k].head())
 
             df = filter_graphs_partial(df_full)
-            nan_count = checkNaN(df)
+            nan_count = check_nan(df)
             if nan_count > 0:
                 logger.error("df {} has {} NaNs".format(speaker_name, nan_count))
                 for k in df.keys():

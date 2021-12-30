@@ -397,6 +397,7 @@ def plot_graph_regression(df, measurement, params):
 
 
 def plot_contour(spl, params):
+    df = spl.copy()
     layout = params.get("layout", "")
     min_freq = params.get("contour_min_freq", 100)
 
@@ -419,7 +420,7 @@ def plot_contour(spl, params):
 
     fig = go.Figure()
 
-    af, am, az = compute_contour(spl.loc[spl.Freq > min_freq], min_freq)
+    af, am, az = compute_contour(df.loc[df.Freq > min_freq], min_freq)
     az = np.clip(az, contour_start, contour_end)
     fig.add_trace(
         go.Contour(
