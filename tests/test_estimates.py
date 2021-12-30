@@ -74,10 +74,10 @@ class SpinoramaEstimatesNV3Tests(unittest.TestCase):
         self.assertAlmostEqual(self.estimates["ref_band"], 1.4)  # deviation in dB
 
     def test_directivity(self):
-        self.assertAlmostEqual(self.estimates["dir_horizontal_p"], 65)
-        self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -64)
-        self.assertAlmostEqual(self.estimates["dir_vertical_p"], 46)
-        self.assertAlmostEqual(self.estimates["dir_vertical_m"], -42)
+        self.assertAlmostEqual(self.estimates["dir_horizontal_p"], 72)
+        self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -54)
+        self.assertAlmostEqual(self.estimates["dir_vertical_p"], 54)
+        self.assertAlmostEqual(self.estimates["dir_vertical_m"], -32)
 
 
 if __name__ == "__main__":
