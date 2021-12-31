@@ -1,7 +1,11 @@
 {
   "dependencies": {
     "browserify": "^17.0.0",
-    "plotly": "^1.0.6"
+    "html-validator": "^6.0.0",
+    "html-validator-cli": "^7.0.1",
+    "plotly": "^1.0.6",
+    "pyright": "^1.1.201",
+    "standard": "^16.0.4"
   },
   "devDependencies": {}
 }
