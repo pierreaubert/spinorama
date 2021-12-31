@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <%include file="head.html"/>
+    <%include file="head_vega.html"/>
   </head>
 <body>
 
@@ -10,103 +11,130 @@
 <%namespace name="util" module="website.utils" import="*"/>
 
 <script id="scoresht" type="text/x-handlebars-template">
-    <div class="card">
-      <header class="card-header">
-	<p class="card-header-title">
-          {{brand}} {{model}} &nbsp;
-          <span class="has-text-left">
-            {{#each reviews.reviews}}
-	    <a href="{{this.url}}">{{this.origin}}</a>
-            {{/each}}
-          </span>
-        </p>
-        <button class="card-header-icon" aria-label="more options" onclick="toggleId('#{{id}}-details');">
-          Score: <b>{{scores.pref_score}}</b>
-        </button>
-      </header>
-      <div class="card-content hidden" id="{{id}}-details">
-	<div class="content is-small">
-          <div class="table-container">
-            <table class="table is-striped is-narrow">
-              <thead>
-                <tr class="has-text-right">
-                  <td>Estimates
-                  </td>
-                  <td>Def.
-                  </td>
-                  <td>w/EQ
-                  </td>
-                  <td>Score components
-                  </td>
-                  <td>Def.
-                  </td>
-                  <td>w/EQ
-                  </td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="has-text-right">
-                  <td>-3dB v.s. reference:</td>
-                  <td>{{estimates.ref_3dB}}Hz</td>
-                  <td>{{estimates_eq.ref_3dB}}Hz</td>
-                  <td>NBD ON:</td>
-                  <td>{{scores.nbd_on_axis}}</td>
-                  <td>{{scores_eq.nbd_on_axis}}</td>
-                </tr>
-                <tr class="has-text-right">
-                  <td>-6dB v.s. reference:</td>
-                  <td>{{estimates.ref_6dB}}Hz</td>
-                  <td>{{estimates_eq.ref_6dB}}Hz</td>
-                  <td>NBD LW:</td>
-                  <td>{{scores.nbd_listening_window}}</td>
-                  <td>{{scores_eq.nbd_listening_window}}</td>
-                </tr>
-                <tr class="has-text-right">
-                  <td>Horizontal Directivity between 1kHz and 10kHz</td>
-                  <td>[{{estimates.dir_horizontal_m}}°, {{estimates.dir_horizontal_p}}°]</td>
-                  <td></td>
-                  <td>LFX:</td>
-                  <td>{{scores.lfx_hz}}Hz</td>
-                  <td>{{scores_eq.lfx_hz}}Hz</td>
-                </tr>
-                <tr class="has-text-right">
-                  <td>Vertical Directivity between 1kHz and 10kHz</td>
-                  <td>[{{estimates.dir_vertical_m}}°, {{estimates.dir_vertical_p}}°]</td>
-                  <td>--</td>
-                  <td>SM PIR:</td>
-                  <td>{{scores.sm_pred_in_room}}</td>
-                  <td>{{scores_eq.sm_pred_in_room}}</td>
-                </tr>
-                <tr class="has-text-right">
-                  <td>Deviation between {{estimates.ref_from}}Hz to {{estimates.ref_to}}Hz</td>
-                  <td>&plusmn;<b>{{estimates.ref_band}}</b>dB</td>
-                  <td>&plusmn;<b>{{estimates_eq.ref_band}}</b>dB</td>
-                  <td>SM SP:</td>
-                  <td>{{scores.sm_sound_power}}</td>
-                  <td>{{scores_eq.sm_sound_power}}</td>
-                </tr>
-                <tr class="has-text-right">
-                  <td>Sensitivity:</td>
-                  <td>{{sensitity}}dB</td>
-                  <td></td>
-                  <td>Score</td>
-                  <td><b>{{scores.pref_score}}</b></td>
-                  <td><b>{{scores_eq.pref_score}}</b></td>
-                </tr>
-                <tr class="has-text-right">
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td>Score with subwoofer</td>
-                  <td><b>{{scores.pref_score_wsub}}</b></td>
-                  <td><b>{{scores_eq.pref_score_wsub}}</b></td>
-                </tr>
-              </tbody>
-            </table>
-	  </div>
-        </div>
+  <div class="tile is-ancestor">
+    <div class="tile is-parent is-3">
+      <div class="content">
+        {{brand}} {{model}}
       </div>
     </div>
+    <div class="tile is-parent is-2">
+      <div class="content">
+        <span class="has-text-left">
+          |{{#each reviews.reviews}}
+	  <a href="{{this.url}}">{{this.origin}}</a>|
+          {{/each}}
+        </span>
+      </div>
+    </div>
+    <div class="tile is-parent is-3">
+      <div class="content">
+        -3dB: <b>{{estimates.ref_3dB}}</b>Hz&nbsp;
+        Dev: &plusmn;<b>{{estimates.ref_band}}</b>dB
+      </div>
+    </div>
+    <div class="tile is-parent is-4">
+      <span class="has-text-right">
+        Score: <b>{{scores.pref_score}}</b>&nbsp;
+        w/sub: <b>{{scores.pref_score_wsub}}</b>&nbsp;
+        w/eq: <b>{{scores_eq.pref_score}}</b>&nbsp;
+        w/both: <b>{{scores_eq.pref_score_wsub}}</b>&nbsp;
+      </span>
+      <button class="is-small is-info" aria-label="more options" onclick="toggleId('#{{id}}-details');">
+        <i class="fas fa-angle-down"></i>
+      </button>
+    </div>
+  </div>
+  <div id="{{id}}-details" class="hidden">
+  <div class="tile is-ancestor">
+    <div class="tile is-parent is-2">
+      <img src="{{img.jpg}}" />
+    </div>
+    <div class="tile is-parent is-8">
+      <div class="table-container">
+        <table class="table is-striped is-narrow">
+          <thead>
+            <tr class="has-text-right">
+              <td>Estimates
+              </td>
+              <td>Def.
+              </td>
+              <td>w/EQ
+              </td>
+              <td>Score components
+              </td>
+              <td>Def.
+              </td>
+              <td>w/EQ
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="has-text-right">
+              <td>-3dB v.s. reference:</td>
+              <td>{{estimates.ref_3dB}}Hz</td>
+              <td>{{estimates_eq.ref_3dB}}Hz</td>
+              <td>NBD ON:</td>
+              <td>{{scores.nbd_on_axis}}</td>
+              <td>{{scores_eq.nbd_on_axis}}</td>
+            </tr>
+            <tr class="has-text-right">
+              <td>-6dB v.s. reference:</td>
+              <td>{{estimates.ref_6dB}}Hz</td>
+              <td>{{estimates_eq.ref_6dB}}Hz</td>
+              <td>NBD LW:</td>
+              <td>{{scores.nbd_listening_window}}</td>
+              <td>{{scores_eq.nbd_listening_window}}</td>
+            </tr>
+            <tr class="has-text-right">
+              <td>Horizontal Directivity between 1kHz and 10kHz</td>
+              <td>[{{estimates.dir_horizontal_m}}°, {{estimates.dir_horizontal_p}}°]</td>
+              <td></td>
+              <td>LFX:</td>
+              <td>{{scores.lfx_hz}}Hz</td>
+              <td>{{scores_eq.lfx_hz}}Hz</td>
+            </tr>
+            <tr class="has-text-right">
+              <td>Vertical Directivity between 1kHz and 10kHz</td>
+              <td>[{{estimates.dir_vertical_m}}°, {{estimates.dir_vertical_p}}°]</td>
+              <td>--</td>
+              <td>SM PIR:</td>
+              <td>{{scores.sm_pred_in_room}}</td>
+              <td>{{scores_eq.sm_pred_in_room}}</td>
+            </tr>
+            <tr class="has-text-right">
+              <td>Deviation between {{estimates.ref_from}}Hz to {{estimates.ref_to}}Hz</td>
+              <td>&plusmn;<b>{{estimates.ref_band}}</b>dB</td>
+              <td>&plusmn;<b>{{estimates_eq.ref_band}}</b>dB</td>
+              <td>SM SP:</td>
+              <td>{{scores.sm_sound_power}}</td>
+              <td>{{scores_eq.sm_sound_power}}</td>
+            </tr>
+            <tr class="has-text-right">
+              <td>Sensitivity:</td>
+              <td>{{sensitity}}dB</td>
+              <td></td>
+              <td>Score</td>
+              <td><b>{{scores.pref_score}}</b></td>
+              <td><b>{{scores_eq.pref_score}}</b></td>
+            </tr>
+            <tr class="has-text-right">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Score with subwoofer</td>
+              <td><b>{{scores.pref_score_wsub}}</b></td>
+              <td><b>{{scores_eq.pref_score_wsub}}</b></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tile is-parent is-2">
+      <div id="{{id}}-plot">nice plot</div>
+    </div>
+  </div>
+  </div>
+</div>
 </script>
 
 <div class="section">

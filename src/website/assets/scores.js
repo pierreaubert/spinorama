@@ -18,7 +18,35 @@ fetch(urlSite+'assets/metadata.json').then(
                 scores: getField(value, 'pref_rating'),
                 scores_eq: getField(value, 'pref_rating_eq'),
                 reviews: getReviews(value),
+                img: {
+                    avif: getPicture(value.brand, value.model, "avif"),
+                    webp: getPicture(value.brand, value.model, "webp"),
+                    jpg: getPicture(value.brand, value.model, "jpg"),
+                    loading: getLoading(key),
+                    decoding: getDecoding(key),
+                },
             };
+        }
+
+        function plotRadar(key, value, id) {
+            const data = [{
+                type: 'scatterpolar',
+                r: [39, 28, 8, 7, 28, 39],
+                theta: ['A','B','C', 'D', 'E', 'A'],
+                fill: 'toself'
+            }];
+
+            const layout = {
+                polar: {
+                    radialaxis: {
+                        visible: true,
+                        range: [0, 50]
+                    }
+                },
+                showlegend: false
+            };
+
+            Plotly.newPlot(id+'-plot', data, layout);
         }
 
         function printScore(key, value) {
@@ -26,11 +54,11 @@ fetch(urlSite+'assets/metadata.json').then(
             var template = Handlebars.compile(source);
             var context = getContext(key, value);
             var html = template(context);
-            var divEQ = document.createElement('div');
-            divEQ.setAttribute("class", "column is-12 is-vertical");
-            divEQ.setAttribute("id", context.id);
-            divEQ.innerHTML = html;
-            return divEQ;
+            var divScore = document.createElement('div');
+            divScore.setAttribute("id", context.id);
+            divScore.setAttribute("class", "column is-12 is-vertical");
+            divScore.innerHTML = html;
+            return divScore;
         }
 
         function display () {
@@ -40,6 +68,11 @@ fetch(urlSite+'assets/metadata.json').then(
 	    });
             sort_metadata(speakerDatabase, fragment1, {by: "score"});
             speakerContainer.appendChild(fragment1);
+
+	    //speakerDatabase.forEach( function(value, key) {
+            //    context = getContext(key,value);
+            //    plotRadar(key, value, context.id);
+            //});
         }
 
         display();
