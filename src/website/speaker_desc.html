@@ -4,6 +4,7 @@
   if default != g_key:
       print_warning = True
       default_origin = meta[speaker]['measurements'].get(default).get('origin')
+      default_origin = default_origin.replace('Vendors-', '')
 %>
 % if print_warning:
 <article class="message is-warning banner">
