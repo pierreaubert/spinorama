@@ -10,13 +10,13 @@
 <%namespace name="util" module="website.utils" import="*"/>
 
 <script id="speaker" type="text/x-handlebars-template">
-    <div class="card">
+  <div class="card">
       <div class="card-image">
-	<figure class="image is-2by3">
+	<picture class="image is-2by3">
           <source srcset="{{img.webp}}" type="image/webp"></source>
 	  <img src="{{img.jpg}}" loading="{{img.loading}}"
 	  decoding="{{img.decoding}}" alt="{{brand}} {{model}}" width="200" height="300"/>
-        </figure>
+        </picture>
       </div>
       <header class="card-header">
 	<p class="card-header-title">{{brand}} {{model}}</p>
