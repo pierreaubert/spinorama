@@ -6399,9 +6399,15 @@ speakers_info = {
         "model": "C25",
         "type": "passive",
         "shape": "center",
-        "price": "",
-        "default_measurement": "vendor",
+        "price": "825",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-concerta2-c25-review-center-speaker.29499/",
+                "review_published": "20211231",
+            },
             "vendor": {
                 "origin": "Vendors-Revel",
                 "website": "www.revelspeakers.com",
