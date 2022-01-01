@@ -137,11 +137,11 @@ function getScore(value) {
         flatnessScaled = prefScaled.scaled_flatness;
     }
     return {
-        score: score,
-        lfx: lfx,
-        flatness: flatness,
-        smoothness: smoothness,
-        scoreScaled : scoreScaled,
+        score: parseFloat(score).toFixed(1),
+        lfx: lfx.toFixed(0),
+        flatness: flatness.toFixed(1),
+        smoothness: smoothness.toFixed(1),
+        scoreScaled : scoreScaled.toFixed(1),
         lfxScaled: lfxScaled,
         flatnessScaled: flatnessScaled,
         smoothnessScaled: smoothnessScaled,

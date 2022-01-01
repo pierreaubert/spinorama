@@ -108,7 +108,6 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
 @ray.remote
 def print_graphs(
     df: pd.DataFrame,
-    df_eq: pd.DataFrame,
     speaker,
     origin,
     origins_info,

@@ -108,7 +108,6 @@ def queue_measurement(
     tracing("calling print_graph remote for {}".format(speaker))
     id_g1 = print_graphs.remote(
         id_df,
-        id_eq,
         speaker,
         morigin,
         metadata.origins_info,
@@ -120,7 +119,6 @@ def queue_measurement(
     )
     tracing("calling print_graph remote eq for {}".format(speaker))
     id_g2 = print_graphs.remote(
-        id_eq,
         id_eq,
         speaker,
         morigin,

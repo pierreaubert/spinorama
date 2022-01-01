@@ -51,7 +51,17 @@ else
 fi
 # generate all jpg if some are missing
 ./update_pictures.sh
-# generate stats
+# generate radar
+# rm -f docs/*/spider*
+command=$(./generate_radar.py)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate radar!"
+    exit 1;
+else
+    echo "OK after generate radar!"
+fi
+# generate status
 rm -f docs/stats/*.json
 command=$(./generate_stats.py)
 status=$?
