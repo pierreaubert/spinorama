@@ -720,7 +720,7 @@ if __name__ == "__main__":
     print("Reading cache ...", end=" ", flush=True)
     df_all_speakers = {}
     try:
-        df_all_speakers = cache_load(smoke_test=smoke_test, filter=speaker_name)
+        df_all_speakers = cache_load(smoke_test=smoke_test, simple_filter=speaker_name)
     except ValueError as ve:
         if speaker_name is not None:
             print(
