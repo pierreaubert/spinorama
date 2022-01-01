@@ -7,6 +7,38 @@
 
 <%include file="nav_menu.html"/>
 
+<div class="column py-0 is-12 is-vertical">
+  <div class="tile py-0 is-ancestor">
+    <div class="tile py-0 is-parent is-3">
+      <div class="content mx-0 mt-0 mb-0">
+        Brand Model
+      </div>
+    </div>
+    <div class="tile py-0 is-parent is-2">
+      <div class="content mx-0 mt-0 mb-0">
+        <span class="has-text-left">
+          Reviews
+        </span>
+      </div>
+    </div>
+    <div class="tile py-0 is-parent is-3">
+      <div class="content mt-0 mb-0 mx-0">
+        -3dB (Hz) &nbsp;
+        Deviation
+      </div>
+    </div>
+    <div class="tile py-0 is-parent is-4">
+      <span class="has-text-right mt-0 mb-0 mx-0 is-family-monospace">
+        <b>Scores</b>&nbsp;
+        <b>w/sub</b>&nbsp;
+        <b>w/eq</b>&nbsp;
+        <b>w/both</b>&nbsp;
+      </span>
+    </div>
+  </div>
+</div>
+
+
 <%namespace name="util" module="website.utils" import="*"/>
 
 <script id="scoresht" type="text/x-handlebars-template">
@@ -27,16 +59,16 @@
     </div>
     <div class="tile py-0 is-parent is-3">
       <div class="content mt-0 mb-0 mx-0">
-        -3dB: <b>{{estimates.ref_3dB}}</b>Hz&nbsp;
-        Dev: &plusmn;<b>{{estimates.ref_band}}</b>dB
+        <b>{{estimates.ref_3dB}}</b>Hz&nbsp;
+        &plusmn;<b>{{estimates.ref_band}}</b>dB
       </div>
     </div>
     <div class="tile py-0 is-parent is-4">
       <span class="has-text-right mt-0 mb-0 mx-0 is-family-monospace">
-        Score: <b>{{scores.pref_score}}</b>&nbsp;
-        w/sub: <b>{{scores.pref_score_wsub}}</b>&nbsp;
-        w/eq: <b>{{scores_eq.pref_score}}</b>&nbsp;
-        w/both: <b>{{scores_eq.pref_score_wsub}}</b>&nbsp;
+        <b>{{scores.pref_score}}</b>&nbsp;
+        - <b>{{scores.pref_score_wsub}}</b>&nbsp;
+        - <b>{{scoresEQ.pref_score}}</b>&nbsp;
+        - <b>{{scoresEQ.pref_score_wsub}}</b>&nbsp;
       </span>
       <button class="is-small is-info" aria-label="more options" onclick="toggleId('#{{id}}-details');">
         <i class="fas fa-angle-down"></i>
