@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging
 import pandas as pd
+import numpy as np
+
+logger = logging.getLogger("spinorama")
 
 
 def graph_melt(df: pd.DataFrame) -> pd.DataFrame:
@@ -23,3 +26,19 @@ def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:
     dfu = dfi.reindex(columns=sorted(dfi.columns, key=a2v))
     dfu = dfu.rename(columns={"On-Axis": "On Axis"})
     return dfu
+
+
+def check_nan(df):
+    for k in df.keys():
+        for j in df[k].keys():
+            if isinstance(df[k], pd.DataFrame):
+                count = df[k][j].isna().sum()
+                if count > 0:
+                    logger.error("{} {} {}".format(k, j, count))
+    return np.sum(
+        [
+            df[frame].isna().sum().sum()
+            for frame in df.keys()
+            if isinstance(df[frame], pd.DataFrame)
+        ]
+    )

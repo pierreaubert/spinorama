@@ -1,18 +1,151 @@
 <%include file="header.html"/>
 <%include file="nav_menu.html"/>
 
-<div class="banner">
-  <h1>
-    Spinorama for speakers measured at <a href="https://audiosciencereview.com">AudioScienceReview</a>
-  </h1>
-  <div class="content">
-    <ol>
-      <li>What is a speaker <i>spinorama</i>? Read this well illustrated <a href="https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-and-control-1-pro-monitors-review.10811/">explanation</a>. I advise to read <em>Sound Reproduction: The Acoustics and Psychoacoustics of Loudspeakers and Rooms</em> book by <em>Floyd Toole</em>.</li>
-      <li>Click on a graph to look at all graphs for one speaker, then click again to get an interactive graph.</li>
-      <li>This website is generated from <a href="https://github.com/pierreaubert/spinorama">this code</a> and datas from <a href="https://audiosciencereview.com">ASR</a> website.</li>
-      <li>You can provide feedback on <a href="https://github.com/pierreaubert/spinorama/issues">github</a> or in this <a href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/">thread</a> at ASR.</li>
-    </ol>
-  </div>
-</div>
+<section class="content">
+  <h1 class="title">Measurements</h1>
+  <h2 class="subtitle">What is a spinorama set of graphs?</h2>
+  <p>
+    It is a way to understand quickly a speaker properties, how it will sound.
+
+    Here is an example:
+  </p>
+  <img src="Genelec%208341A/ASR/asr-vertical/CEA2034.jpg" alt="spinorama from a Genelec 8341A"/>
+  <p>
+    The spinorama gives you a few graphs:
+  </p>
+  <ul>
+    <li><b>On Axis:</b> this the frequency response. You expect it to
+      be as flat as possible after 100Hz.</li>
+    <li><b>Listening Window:</b> an average of various measurements around on axis. Expected to be close to the previous one.</li>
+    <li><b>Early reflections:</b> expected to be a smooth, slowy goind
+      down line.</li>
+    <li><b>Sound power DI:</b> expected to be a smooth, slowy growing line.</li>
+  </ul>
+  <p>The speaker above is <i>very</i> good. You can compare with
+    another one:</p>
+  <img src="Tannoy%20Revolution%20XT6/ASR/asr/CEA2034.jpg"
+       alt="spinorama for a Tannoy XT6"/>
+  <p>which is not flat at all. Remember that &plusmn;3dB means that the
+  volume doubles/halves at the corresponding frequency. If you look at
+    the on axis measurement below, you see that it going up, the
+    speaker will likely be bright and emphasis high frequency.</p>
+  <img src="Tannoy%20Revolution%20XT6/ASR/asr/On%20Axis.jpg"  alt="On
+    Axis for a Tannoy XT6"/>
+</section>
+
+
+<section class="content">
+  <h1 class="title">Please tell me more:</h1>
+  If you like to read:
+  <ul>
+    <li>This <a href="https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-and-control-1-pro-monitors-review.10811/">post
+        on ASR</a>
+      by <a href="https://www.linkedin.com/in/amir-majidimehr-0014a75/">Amir
+        Majidimehr</a> gives good insights on how to analyse a spinorama
+      (20 min. read).</li>
+    <li>Another option is this <a href="https://www.audioholics.com/loudspeaker-design/understanding-loudspeaker-measurements">post
+        on Audioholics</a> by <a href="https://www.audioholics.com/authors/james-larson">James Larson</a></li>
+    <li>A reference article
+      is <a href="https://www.audioholics.com/loudspeaker-design/measure-loudspeaker-performance">Objective
+        Loudspeaker Measurements to Predict Subjective
+        Preferences?</a> written
+      by <a href="https://www.linkedin.com/in/floydtoole/">Dr. Floyd E.
+        Toole</a>
+      and <a href="https://www.audioholics.com/authors/gene-dellasala">Gene
+        DellaSala</a> on Audioholics.
+    </li>
+    <li><a href="https://www.harman.com/documents/AudioScience_0.pdf">Audio-Science
+        in the service of Art</a> from Floyd E. Toole is a good, easy
+        to read summary.
+  </ul>
+  If you prefer to watch:
+  There is a fine set of videos
+  from <a href="https://www.youtube.com/channel/UCW_IqM21u0J-zsKtCq4Gj2w">ErinsAudioCorner</a>
+  on Youtube:
+  <ol>
+    <li><a href="https://www.youtube.com/watch?v=dltza-EGtCg">What Is Frequency Response? || Understanding the Measurements Part 1</a></li>
+    <li><a href="https://www.youtube.com/watch?v=j_-b6A1xJaw">Off-Axis vs On-Axis Response || Understanding the Measurements Part 2</a></li>
+    <li><a href="https://www.youtube.com/watch?v=b3hYn02uBog">What the heck is SPINORAMA?! || Understanding the Measurements Part 3</a></li>
+    <li><a href="https://www.youtube.com/watch?v=qmBit3GWSWE">Predicting Loudspeaker Performance In YOUR Room || Understanding the Measurements Part 4</a></li>
+    <li><a href="https://www.youtube.com/watch?v=6YY71Wqv2u0&t=2s">Loudspeaker Compression || Understanding the Measurements Part 5</a></li>
+  </ol>
+</section>
+
+<section class="content">
+  <h1 class="title">How can I help?</h1>
+  <ol>
+    <li>This website is generated
+      from <a href="https://github.com/pierreaubert/spinorama">this
+        code</a> and datas
+      from <a href="https://audiosciencereview.com">ASR</a>
+      website.</li>
+    <li>You can provide feedback or add more datas
+      on <a href="https://github.com/pierreaubert/spinorama/issues">github</a>
+      or in
+      this <a href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/">thread</a>
+      at ASR.</li>
+  </ol>
+</section>
+
+<section class="content">
+  <h1 class="title">Source of data and citations</h1>
+  <ol>
+    <li><a href="https://www.audiosciencereview.com">AudioScienceReview</a> <i>aka</i>
+  ASR: it is a fantastic source of speakers data thanks
+  to <a href="https://www.audiosciencereview.com/forum/index.php?threads/a-bit-about-your-host.1906/">amirm@</a>. They
+  also have a lot of data about DACs that you may found useful. There is
+  little correlation between price and quality in the audio world and
+  this data gives some objective criteria to decide what to buy. You can
+  <a href="https://www.audiosciencereview.com/forum/index.php?threads/how-to-support-audio-science-review.8150/">support
+    ASR</a>.
+    </li>
+    <li><a href="https://www.erinsaudiocorner.com/">ErinsAudioCorner</a> <i>aka</i> EAC:
+      Hardis is a motivated person reviewing speakers. He is doing an
+      outstanging jobs. He also has
+      a <a href="https://youtube.com/c/ErinsAudioCorner">Youtube
+        channel</a>. You can
+      also <a href="https://www.erinsaudiocorner.com/contribute/">support
+        him</a>.
+    </li>
+    <li><a href="https://www.princeton.edu/3D3A/">3D3A</a> is a research
+      organisation at <a href="https://www.princeton.edu">Princeton</a>:
+      <ul>
+        <li>They provide a database of speaker measurements
+          (<a href="https://www.princeton.edu/3D3A/Manuals/3D3A_Directivity_Database.pdf">manual</a>)</li>
+        <li>Some scientific papers I have used:
+          <ul>
+            <li>Metrics for Constant Directivity (<a href="https://www.princeton.edu/3D3A/Publications/Sridhar_AES140_CDMetrics.html">abstract</a>,
+              <a href="https://www.princeton.edu/3D3A/Publications/Sridhar_AES140_CDMetrics.pdf">paper</a>, <a href="https://www.princeton.edu/3D3A/Publications/Sridhar_AES140_CDMetrics-poster.pdf">poster</a>)
+              Authors: Sridhar, R., Tylka, J. G., Choueiri, E. Y.;
+              Publication: 140th Convention of the Audio Engineering
+              Society (AES 140) ; Date: May 26, 2016</li>
+            <li>A Database of Loudspeaker Polar Radiation Measurements (<a href="https://www.princeton.edu/3D3A/Publications/Tylka_AES139_3D3ADirectivity.html">abstract</a>, )</li>
+            <li>On the Calculation of Full and Partial Directivity Indices
+              (<a href="https://www.princeton.edu/3D3A/Publications/Tylka_3D3A_DICalculation.html">abstract</a>);
+              Authors: Tylka, J. G., Choueiri, E. Y.; Publication: 3D3A Lab
+              Technical Report #1; Date: November 16, 2014</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ol>
+</section>
+
+<section class="content">
+  <h1 class="title">Books and research papers</h1>
+  <ul>
+    <li><a href="https://books.google.ch/books/about/Sound_Reproduction.html?id=tJ0uDwAAQBAJ&printsec=frontcover&source=kp_read_button&redir_esc=y#v=onepage&q&f=false">Sound Reproduction: The Acoustics and Psychoacoustics of Loudspeakers and Rooms</a> By Floyd E. Toole</li>
+    <li>Standard Method of Measurement for In-Home Loudspeakers is
+      available for free at <a href="https://www.cta.tech">CTA</a></li>
+    <li>A Multiple Regression Model for Predicting Loudspeaker Preference
+      Using Objective Measurements: Part II - Development of the Model
+      by Sean E. Olive, AES Fellow. Convention paper 6190 from the <a href="https://www.aes.org">AES</a>.</li>
+    <li>Fast Template Matching. J.P.Lewis <a href="http://scribblethink.org/Work/nvisionInterface/vi95_lewis.pdf">pdf</a></li>
+    <li>Farina, A. “Simultaneous Measurement of Impulse Response and Distortion with a Swept-Sine Technique,” Presented at the AES 108th Convention, Feb. 2000.</li>
+    <li>Hatziantoniou, P. D. and Mourjopoulos, J. N. “Generalized
+      Fractional-Octave Smoothing of Audio and Acoustic Responses,”
+      J. Audio Eng. Soc., 48(4):259–280, 2000.</li>
+  </ul>
+</section>
 
 <%include file="footer.html"/>

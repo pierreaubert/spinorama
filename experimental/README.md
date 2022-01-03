@@ -73,7 +73,7 @@ Experimental means that they may not work (usually they do have bugs, they have 
 
 - **polar**: how to make polar plots with Altair
 
-- **polygons**: algorithm to compute polygons intersection. Unfinished, bugs with holes ... not to far from a proper result.
+- **polygons**: algorithm to compute polygons intersection. Unfinished, bugs with holes ... not too far from a proper result.
 
 - **presentation**: Altair test to write a table of text on 2 columns
 

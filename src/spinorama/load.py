@@ -3,7 +3,6 @@ import logging
 import numpy as np
 import pandas as pd
 
-from .compute_normalize import normalize_mean, normalize_cea2034, normalize_graph
 from .compute_cea2034 import (
     early_reflections,
     vertical_reflections,
@@ -15,68 +14,107 @@ from .compute_cea2034 import (
 )
 
 from .load_misc import graph_melt, sort_angles
-from .compute_normalize import unify_freq
+from .compute_misc import unify_freq
 
 logger = logging.getLogger("spinorama")
 
 
-def load_normalize(df: pd.DataFrame, ref_mean=None) -> pd.DataFrame:
-    # normalize all melted graphs
-    dfc = {}
-    mean = ref_mean
-    if "CEA2034" in df:
-        if ref_mean is None:
-            mean = normalize_mean(df["CEA2034"])
-            dfc["CEA2034_original_mean"] = mean
-        for graph in df.keys():
-            if graph != "CEA2034":
-                if graph.replace("_unmelted", "") != graph:
-                    dfc[graph] = df[graph]
-                else:
-                    dfc[graph] = normalize_graph(df[graph], mean)
-        dfc["CEA2034"] = normalize_cea2034(df["CEA2034"], mean)
-        logger.debug("mean for normalisation {0}".format(mean))
-        return dfc
-    if "On Axis" in df:
-        if ref_mean is None:
-            mean = normalize_mean(df["On Axis"])
-            dfc["On Axis_original_mean"] = mean
-        for graph in df.keys():
-            if graph.replace("_unmelted", "") != graph:
-                dfc[graph] = df[graph]
-            else:
-                dfc[graph] = normalize_graph(df[graph], mean)
-        logger.debug("mean for normalisation {0}".format(mean))
-        return dfc
-    if ref_mean is not None:
-        for graph in df.keys():
-            if graph.replace("_unmelted", "") != graph:
-                dfc[graph] = df[graph]
-            else:
-                dfc[graph] = normalize_graph(df[graph], mean)
-        logger.debug("mean for normalisation {0}".format(mean))
-        return dfc
+def shift_spl(spl, mean):
+    # shift all measurement by means
+    df = pd.DataFrame()
+    for k in spl.keys():
+        if k == "Freq":
+            df[k] = spl[k]
+        else:
+            df[k] = spl[k] - mean
+        # too many side effects
+        # if k == "180°" and "-180°" not in df.keys():
+        #     df.insert(1, "-180°", spl["180°"] - mean)
+    return df
 
-    # do nothing
-    logger.debug(
-        "CEA2034 and On Axis are not in df knows keys are {0}".format(df.keys())
-    )
+
+def shift_spl_melted(spl, mean):
+    # shift all measurement by means
+    df = spl.copy()
+    df.dB -= mean
+    return df
+
+
+def shift_spl_melted_cea2034(spl, mean):
+    # spl
+    logger.debug("DEBUG shift_spl_melted_cea2034")
+    logger.debug(spl.head())
+    # shift all measurement by means
+    df = None
+    # for the rare case we do not have ON curve
+    for curve in ("On Axis", "Listening Window"):
+        if curve not in set(spl.Measurements):
+            continue
+        df = pd.DataFrame(
+            {"Freq": spl.loc[spl.Measurements == curve].Freq}
+        ).reset_index()
+    if df is None:
+        logger.error(
+            "CEA2034 is empty: known columns are {}".format(set(spl.Measurements))
+        )
+        return spl
+
+    for col in set(spl.Measurements):
+        logger.debug("shifting col {}".format(col))
+        logger.debug(spl.loc[spl.Measurements == col].dB[0:10])
+        if "DI" in col:
+            df[col] = spl.loc[spl.Measurements == col].dB.values
+        else:
+            df[col] = spl.loc[spl.Measurements == col].dB.values - mean
+    logger.debug("melted_cea {} {}".format(mean, df.keys()))
+    logger.debug(df.head())
+    for k in df.keys():
+        count = df[k].isna().sum().sum()
+        logger.debug("{} {}".format(k, count))
+    logger.debug("DEBUG END shift_spl_melted_cea2034")
+    return graph_melt(df)
+
+
+def norm_spl(spl):
+    # check
+    if "dB" in spl.keys():
+        raise KeyError
+    # nornalize v.s. on axis
+    df = pd.DataFrame({"Freq": spl.Freq})
+    on = spl["On Axis"].values
+    for k in spl.keys():
+        if k != "Freq":
+            df[k] = spl[k] - on
     return df
 
 
 def filter_graphs(speaker_name, h_spl, v_spl):
     dfs = {}
     # add H and V SPL graphs
+    mean = None
+    sv_spl = None
+    sh_spl = None
     if h_spl is not None:
-        dfs["SPL Horizontal_unmelted"] = h_spl
-        dfs["SPL Horizontal"] = graph_melt(h_spl)
+        mean = np.mean(h_spl.loc[(h_spl.Freq > 300) & (h_spl.Freq < 3000)]["On Axis"])
+        sh_spl = shift_spl(h_spl, mean)
+        dfs["SPL Horizontal"] = graph_melt(sh_spl)
+        dfs["SPL Horizontal_unmelted"] = sh_spl
+        dfs["SPL Horizontal_normalized_unmelted"] = norm_spl(sh_spl)
     else:
         logger.info("h_spl is None for speaker {}".format(speaker_name))
+
     if v_spl is not None:
-        dfs["SPL Vertical_unmelted"] = v_spl
-        dfs["SPL Vertical"] = graph_melt(v_spl)
+        if mean is None:
+            mean = np.mean(
+                v_spl.loc[(v_spl.Freq > 300) & (v_spl.Freq < 3000)]["On Axis"]
+            )
+        sv_spl = shift_spl(v_spl, mean)
+        dfs["SPL Vertical"] = graph_melt(sv_spl)
+        dfs["SPL Vertical_unmelted"] = sv_spl
+        dfs["SPL Vertical_normalized_unmelted"] = norm_spl(sv_spl)
     else:
         logger.info("v_spl is None for speaker {}".format(speaker_name))
+
     # add computed graphs
     table = [
         ["Early Reflections", early_reflections],
@@ -86,19 +124,20 @@ def filter_graphs(speaker_name, h_spl, v_spl):
         ["On Axis", compute_onaxis],
         ["CEA2034", compute_cea2034],
     ]
-    if h_spl is None or v_spl is None:
+
+    if sh_spl is None or sv_spl is None:
         #
-        df = compute_onaxis(h_spl, v_spl)
+        df = compute_onaxis(sh_spl, sv_spl)
         dfs["On Axis_unmelted"] = df
         dfs["On Axis"] = graph_melt(df)
         # SPL H
-        if h_spl is not None:
-            df = horizontal_reflections(h_spl, v_spl)
+        if sh_spl is not None:
+            df = horizontal_reflections(sh_spl, sv_spl)
             dfs["Horizontal Reflections_unmelted"] = df
             dfs["Horizontal Reflections"] = graph_melt(df)
         # SPL V
-        if v_spl is not None:
-            df = vertical_reflections(h_spl, v_spl)
+        if sv_spl is not None:
+            df = vertical_reflections(sh_spl, sv_spl)
             dfs["Vectical Reflections_unmelted"] = df
             dfs["Vectical Reflections"] = graph_melt(df)
         # that's all folks
@@ -106,7 +145,7 @@ def filter_graphs(speaker_name, h_spl, v_spl):
 
     for title, functor in table:
         try:
-            df = functor(h_spl, v_spl)
+            df = functor(sh_spl, sv_spl)
             if df is not None:
                 dfs[title + "_unmelted"] = df
                 dfs[title] = graph_melt(df)
@@ -122,6 +161,70 @@ def filter_graphs(speaker_name, h_spl, v_spl):
                     title, ke, speaker_name
                 )
             )
+
+    # print(
+    #    "min {} max {}".format(
+    #        np.min(dfs["CEA2034_unmelted"]["On Axis"]),
+    #        np.max(dfs["CEA2034_unmelted"]["On Axis"]),
+    #    )
+    # )
+    return dfs
+
+
+def filter_graphs_partial(df):
+    dfs = {}
+    # normalize first
+    mean = None
+    on = None
+    if "CEA2034" in df:
+        on = df["CEA2034"]
+        if "Measurements" not in on:
+            on = graph_melt(on)
+    if on is None and "On Axis" in df and "On Axis" in df["On Axis"]:
+        on = df["On Axis"]
+    if on is not None:
+        if "Measurements" not in on:
+            on = graph_melt(on)
+        logger.debug("DEBUG: filter_graph_partial")
+        for curve in ("On Axis", "Listening Window"):
+            if curve not in set(on.Measurements):
+                continue
+            mean = np.mean(
+                on.loc[
+                    (on.Freq > 300) & (on.Freq < 3000) & (on.Measurements == curve)
+                ].dB
+            )
+    if mean is not None:
+        logger.debug("DEBUG: mean {}".format(mean))
+        for k in df.keys():
+            if k == "CEA2034":
+                logger.debug(
+                    "DEBUG {} pre shift cols={}".format(k, set(df[k].Measurements))
+                )
+                dfs[k] = shift_spl_melted_cea2034(df[k], mean)
+                logger.debug(
+                    "DEBUG {} post shift cols={}".format(k, set(dfs[k].Measurements))
+                )
+            else:
+                dfs[k] = shift_spl_melted(df[k], mean)
+    else:
+        for k in df.keys():
+            dfs[k] = df[k]
+
+    for k in df.keys():
+        dfs["{}_unmelted".format(k)] = (
+            dfs[k]
+            .pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max)
+            .reset_index()
+        )
+
+    logger.debug("DEBUG  filter_graphs partial {}".format(dfs.keys()))
+    for k in dfs.keys():
+        logger.debug(dfs[k].head())
+    logger.debug(
+        "filter in: keys={} out: mean={} keys={}".format(df.keys(), mean, dfs.keys())
+    )
+    logger.debug("DEBUG END of filter_graphs_partial")
     return dfs
 
 
@@ -164,12 +267,19 @@ def spin_compute_di_eir(
         logger.debug("title is {0}".format(title))
         return {}
 
-    if not parse_graph_freq_check(speaker_name, spin_uneven):
-        dfs[title] = spin_uneven
+    spin_melted = spin_uneven
+    if "Measurements" not in spin_uneven.keys():
+        spin_melted = graph_melt(spin_uneven)
+
+    if not parse_graph_freq_check(speaker_name, spin_melted):
+        dfs[title] = spin_melted
         return dfs
 
-    spin_even = unify_freq(spin_uneven)
+    logger.debug("DEBUG before unify: spin_melted {}".format(spin_melted.keys()))
+    spin_even = unify_freq(spin_melted)
+    logger.debug("DEBUG before melt: spin_even {}".format(spin_even.keys()))
     spin = graph_melt(spin_even)
+    logger.debug("DEBUG after melt: spin {}".format(spin.keys()))
 
     if spin is None:
         logger.error("spin is None")
@@ -208,7 +318,7 @@ def spin_compute_di_eir(
                 sp_di.shape, sp_di_computed.min(), sp_di_computed.max()
             )
         )
-        # print(sp_di)
+        # logger.debug(sp_di)
     else:
         logger.debug("Shape LW={0} SP={1}".format(lw.shape, sp.shape))
 
@@ -238,7 +348,7 @@ def spin_compute_di_eir(
                 er_di.shape, er_di_computed.min(), er_di_computed.max()
             )
         )
-        # print(er_di)
+        # logger.debug(er_di)
     else:
         logger.debug("Shape LW={0} ER={1}".format(lw.shape, er.shape))
 
@@ -256,7 +366,7 @@ def spin_compute_di_eir(
     if 0 not in (lw.shape[0], er.shape[0], sp.shape[0]):
         eir = estimated_inroom(lw, er, sp)
         logger.debug("eir {0}".format(eir.shape))
-        # print(eir)
+        # logger.debug(eir)
         dfs["Estimated In-Room Response"] = graph_melt(eir)
     else:
         logger.debug("Shape LW={0} ER={1} SP={2}".format(lw.shape, er.shape, sp.shape))

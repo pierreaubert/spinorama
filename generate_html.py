@@ -44,7 +44,7 @@ sitedev = "http://localhost:8000/docs"
 root = "./"
 
 
-def generate_speaker(mako, dataframe, meta, site):
+def generate_speaker(mako, dataframe, meta, site, useSearch):
     speaker_html = mako.get_template("speaker.html")
     graph_html = mako.get_template("graph.html")
     for speaker_name, origins in dataframe.items():
@@ -63,31 +63,24 @@ def generate_speaker(mako, dataframe, meta, site):
                     "Vertical Reflections",
                     "SPL Horizontal",
                     "SPL Vertical",
+                    "SPL Horizontal Normalized",
+                    "SPL Vertical Normalized",
                 ]
                 freq = {k: dfs[k] for k in freq_filter if k in dfs}
                 # contour
                 contour_filter = [
                     "SPL Horizontal Contour",
                     "SPL Vertical Contour",
+                    "SPL Horizontal Contour Normalized",
+                    "SPL Vertical Contour Normalized",
                 ]
                 contour = {k: dfs[k] for k in contour_filter if k in dfs}
-                # isoband
-                isoband_filter = [
-                    "SPL Horizontal IsoBand",
-                    "SPL Vertical IsoBand",
-                ]
-                isoband = {k: dfs[k] for k in isoband_filter if k in dfs}
                 # radar
                 radar_filter = [
                     "SPL Horizontal Radar",
                     "SPL Vertical Radar",
                 ]
                 radar = {k: dfs[k] for k in radar_filter if k in dfs}
-                # directivity
-                directivity_filter = [
-                    "Directivity Matrix",
-                ]
-                directivity = {k: dfs[k] for k in directivity_filter if k in dfs}
                 # eq
                 eq = None
                 if key != "default_eq":
@@ -112,14 +105,13 @@ def generate_speaker(mako, dataframe, meta, site):
                             speaker=speaker_name,
                             g_freq=freq,
                             g_contour=contour,
-                            g_isoband=isoband,
                             g_radar=radar,
-                            g_directivity=directivity,
                             g_key=key,
                             g_eq=eq,
                             meta=meta,
                             origin=origin,
                             site=site,
+                            useSearch=useSearch,
                         )
                     )
                     f_index.close()
@@ -244,7 +236,11 @@ if __name__ == "__main__":
     try:
         with open("docs/index.html", "w") as f:
             # by default sort by pref_rating decreasing
-            f.write(index_html.render(df=df, meta=meta_sorted_date, site=site))
+            f.write(
+                index_html.render(
+                    df=df, meta=meta_sorted_date, site=site, useSearch=True
+                )
+            )
             f.close()
     except KeyError as ke:
         print("Generating index.htmlfailed with {}".format(ke))
@@ -257,7 +253,9 @@ if __name__ == "__main__":
     try:
         with open("docs/eqs.html", "w") as f:
             # by default sort by pref_rating decreasing
-            f.write(eqs_html.render(df=df, meta=meta_sorted_date, site=site))
+            f.write(
+                eqs_html.render(df=df, meta=meta_sorted_date, site=site, useSearch=True)
+            )
             f.close()
     except KeyError as ke:
         print("Generating eqs.htmlfailed with {}".format(ke))
@@ -265,12 +263,27 @@ if __name__ == "__main__":
 
     # write various html files
     try:
-        for item in ("help", "compare", "scores", "statistics"):
+        for item in ("scores",):
             item_name = "{0}.html".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
             with open("./docs/" + item_name, "w") as f:
-                f.write(item_html.render(df=df, meta=meta_sorted_score, site=site))
+                f.write(
+                    item_html.render(
+                        df=df, meta=meta_sorted_score, site=site, useSearch=True
+                    )
+                )
+                f.close()
+        for item in ("help", "compare", "statistics"):
+            item_name = "{0}.html".format(item)
+            logger.info("Write {0}".format(item_name))
+            item_html = mako_templates.get_template(item_name)
+            with open("./docs/" + item_name, "w") as f:
+                f.write(
+                    item_html.render(
+                        df=df, meta=meta_sorted_score, site=site, useSearch=False
+                    )
+                )
                 f.close()
     except KeyError as ke:
         print("Generating various html files failed with {}".format(ke))
@@ -279,29 +292,44 @@ if __name__ == "__main__":
     # write a file per speaker
     logger.info("Write a file per speaker")
     try:
-        generate_speaker(mako_templates, df, meta=meta, site=site)
+        generate_speaker(mako_templates, df, meta=meta, site=site, useSearch=False)
     except KeyError as ke:
         print("Generating a file per speaker failed with {}".format(ke))
         sys.exit(1)
 
     # copy css/js files
     logger.info("Copy js/css files to docs")
+    try:
+        for item in (
+            "compare",
+            "search",
+            "index",
+            "sort",
+            "eqs",
+            "scores",
+            "statistics",
+            "misc",
+        ):
+            item_name = "assets/{0}.js".format(item)
+            logger.info("Write {0}".format(item_name))
+            item_html = mako_templates.get_template(item_name)
+            with open("./docs/" + item_name, "w") as f:
+                f.write(item_html.render(df=df, meta=meta_sorted_score, site=site))
+                f.close()
+    except KeyError as ke:
+        print("Generating various html files failed with {}".format(ke))
+        sys.exit(1)
+    # copy favicon(s)
     for f in [
-        "search.js",
-        "bulma.js",
-        "compare.js",
-        "tabs.js",
+        "favicon.ico",
+        "favicon-16x16.png",
         "spinorama.css",
+        "onload.js",
+        "tabs.js",
         "graph.js",
         "zip.min.js",
+        "downloadzip.js",
     ]:
-        file_ext = Template(filename="src/website/assets/" + f)
-        with open("./docs/assets/" + f, "w") as fd:
-            fd.write(file_ext.render(site=site))
-            fd.close()
-
-    # copy favicon(s)
-    for f in ["favicon.ico", "favicon-16x16.png", "downloadzip.js"]:
         file_in = "./src/website/assets/" + f
         file_out = "./docs/assets/" + f
         shutil.copy(file_in, file_out)

@@ -1,4 +1,11 @@
-<%include file="header.html"/>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%include file="head.html"/>
+    <%include file="head_vega.html"/>
+    <script type="module" src="${site}/assets/graph.js"></script>
+  </head>
+<body>
 <%include file="nav_menu.html"/>
 
 <%!
@@ -8,12 +15,13 @@
 
 <div id="visGraph"></div>
 
-<script>
+<script type="module">
+  import { downloadZip } from '${site}/assets/downloadzip.js'
+  import { displayGraph } from '${site}/assets/graph.js'
   const spec = downloadZip("${graph | space2url}.json.zip").then(
     function(spec) {
       displayGraph(JSON.parse(spec), visGraph);
   });
 </script>
 
-<%include file="graph_help.html"/>
 <%include file="footer.html"/>

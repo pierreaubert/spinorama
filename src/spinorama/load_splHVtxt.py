@@ -99,4 +99,4 @@ def parse_graphs_speaker_splHVtxt(speaker_path, speaker_brand, speaker_name, ver
     h_spl = parse_graph_splHVtxt(dirname, "H")
     v_spl = parse_graph_splHVtxt(dirname, "V")
 
-    return filter_graphs(speaker_name, h_spl, v_spl)
+    return h_spl, v_spl

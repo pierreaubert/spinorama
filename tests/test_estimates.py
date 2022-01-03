@@ -54,13 +54,12 @@ class SpinoramaEstimatesNV3Tests(unittest.TestCase):
             "datas/measurements/Neumann KH 80/asr-v3-20200711/CEA2034.txt"
         )
         self.spin = graph_melt(self.spin_unmelted)
-        self.title, self.splH = parse_graph_freq_klippel(
+        _, self.splH = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
         )
-        self.title, self.splV = parse_graph_freq_klippel(
+        _, self.splV = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt"
         )
-        self.spin = graph_melt(self.spin_unmelted)
         self.estimates = estimates(self.spin, self.splH, self.splV)
 
     def test_estimates(self):
@@ -75,10 +74,10 @@ class SpinoramaEstimatesNV3Tests(unittest.TestCase):
         self.assertAlmostEqual(self.estimates["ref_band"], 1.4)  # deviation in dB
 
     def test_directivity(self):
-        self.assertAlmostEqual(self.estimates["dir_horizontal_p"], 55)
-        self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -56)
-        self.assertAlmostEqual(self.estimates["dir_vertical_p"], 40)
-        self.assertAlmostEqual(self.estimates["dir_vertical_m"], -45)
+        self.assertAlmostEqual(self.estimates["dir_horizontal_p"], 72)
+        self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -54)
+        self.assertAlmostEqual(self.estimates["dir_vertical_p"], 54)
+        self.assertAlmostEqual(self.estimates["dir_vertical_m"], -32)
 
 
 if __name__ == "__main__":

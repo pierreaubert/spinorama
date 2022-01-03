@@ -67,7 +67,7 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
 def parse_graph_freq_webplotdigitizer(filename):
     """ """
     # from 20Hz to 20kHz, log(2)~0.3
-    ref_freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), 500)
+    ref_freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), 1000)
     #
     try:
         with open(filename, "r") as f:
@@ -87,7 +87,7 @@ def parse_graph_freq_webplotdigitizer(filename):
                     "reading col {} with {} data".format(col["name"], len(sdata))
                 )
                 # if len(sdata) > 0:
-                #    print(sdata[0])
+                #   print(sdata)
                 # since sdata and freq_ref are both sorted, iterate over both
                 ref_p = 0
                 for di in range(0, len(sdata) - 1):
@@ -196,8 +196,7 @@ def parse_graphs_speaker_webplotdigitizer(
         return None
 
     try:
-        title, spin_uneven = parse_graph_freq_webplotdigitizer(jsonfilename)
-        dfs = spin_compute_di_eir(speaker_name, title, spin_uneven)
+        return parse_graph_freq_webplotdigitizer(jsonfilename)
     except FileNotFoundError:
         logger.info("Speaker: {0} Not found: {1}".format(speaker_name, jsonfilename))
     return dfs

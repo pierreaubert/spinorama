@@ -6,7 +6,7 @@ from .load import graph_melt
 from .compute_scores import speaker_pref_rating, nbd
 from .compute_cea2034 import compute_cea2034, estimated_inroom_HV, listening_window
 from .filter_peq import peq_apply_measurements
-from .graph import graph_spinorama
+from .plot import plot_spinorama
 
 
 logger = logging.getLogger("spinorama")
@@ -33,6 +33,7 @@ def scores_apply_filter(df_speaker: DataSpeaker, peq: Peq):
 def noscore_apply_filter(df_speaker: DataSpeaker, peq: Peq):
     spin_filtered = None
     pir_filtered = None
+    on_filtered = None
     if "CEA2034" in df_speaker.keys():
         spin = df_speaker["CEA2034"]
         try:
@@ -47,20 +48,35 @@ def noscore_apply_filter(df_speaker: DataSpeaker, peq: Peq):
                     spin_filtered[curve] = pivoted_spin[curve]
         except ValueError:
             print("debug: {}".format(spin.keys()))
-            return None, None
+            return None, None, None
 
     if "Estimated In-Room Response" in df_speaker.keys():
         pir = df_speaker["Estimated In-Room Response"]
         pivoted_pir = pir.pivot(*pir).rename_axis(columns=None).reset_index()
         pir_filtered = peq_apply_measurements(pivoted_pir, peq)
 
-    if spin_filtered is not None and pir_filtered is not None:
-        return graph_melt(spin_filtered), graph_melt(pir_filtered)
-    return None, None
+    if "On Axis" in df_speaker.keys():
+        on = df_speaker["On Axis"]
+        pivoted_on = on.pivot(*on).rename_axis(columns=None).reset_index()
+        on_filtered = peq_apply_measurements(pivoted_on, peq)
+
+    spin_melted = None
+    if spin_filtered is not None:
+        spin_melted = graph_melt(spin_filtered)
+
+    pir_melted = None
+    if pir_filtered is not None:
+        pir_melted = graph_melt(pir_filtered)
+
+    on_melted = None
+    if on_filtered is not None:
+        on_melted = graph_melt(on_filtered)
+
+    return spin_melted, pir_melted, on_melted
 
 
 def scores_graph(spin: DataSpeaker, spin_filtered: DataSpeaker, params: dict):
-    return graph_spinorama(spin, params) | graph_spinorama(spin_filtered, params)
+    return plot_spinorama(spin, params) | plot_spinorama(spin_filtered, params)
 
 
 def scores_print(score: dict, score_filtered: dict):
@@ -101,6 +117,12 @@ def scores_print(score: dict, score_filtered: dict):
     print(
         "Score    {0:0.1f}  {1:0.1f}".format(
             score["pref_score"], score_filtered["pref_score"]
+        )
+    )
+    print(
+        "w/sub    {0:0.1f}  {1:0.1f}".format(
+            score.get("pref_score_wsub", 0.0),
+            score_filtered.get("pref_score_wsub", 0.0),
         )
     )
     print("-----------------")

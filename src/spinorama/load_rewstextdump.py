@@ -2,6 +2,7 @@
 import logging
 import numpy as np
 import pandas as pd
+from .compute_misc import unify_freq
 from .compute_cea2034 import estimated_inroom
 from .load_misc import graph_melt
 from .load import spin_compute_di_eir
@@ -24,7 +25,7 @@ def parse_graphs_speaker_rewstextdump(
             ("LW", "Listening Window"),
             ("SP", "Sound Power"),
             # ('ERDI', 'Early Reflections DI'),
-            # ('DI', 'Sound Power DI'),
+            # ('PSDI', 'Sound Power DI'),
         ):
             filename = "{0}/{1}/{2}/{3}.txt".format(
                 speaker_path, speaker_name, version, txt
@@ -44,13 +45,9 @@ def parse_graphs_speaker_rewstextdump(
                     spls.append(spl)
                     msrts.append(msrt)
 
-        spin = pd.DataFrame({"Freq": freqs, "dB": spls, "Measurements": msrts})
-        dfs = spin_compute_di_eir(speaker_name, "CEA2034", spin)
-        spin_check = dfs["CEA2034"]
-        spin_pivot = (
-            spin_check.pivot(*spin_check).rename_axis(columns=None).reset_index()
+        return "CEA2034", pd.DataFrame(
+            {"Freq": freqs, "dB": spls, "Measurements": msrts}
         )
-        dfs["CEA2034_unmelted"] = spin_pivot
     except FileNotFoundError:
         logger.error("Speaker: {0} Not found: {1}".format(speaker_brand, speaker_name))
         return {}

@@ -6,10 +6,13 @@ IP="127.0.0.1"
 case $HOSTNAME in
 
     "spin")
-        IP="192.168.1.36"
+        IP="192.168.88.190"
+        ;;
+    "7pi")
+        IP="192.168.88.191"
         ;;
     "horn")
-        IP="192.168.1.115"
+        IP="192.168.88.183"
         ;;
 esac
 #echo $IP
@@ -46,18 +49,19 @@ if [ $status -ne 0 ]; then
 else
     echo "OK after generate meta!"
 fi
-rm -f docs/compare/*.json
-command=$(./generate_compare.py)
-status=$?
-if [ $status -ne 0 ]; then
-    echo "KO after generate compare!"
-    exit 1;
-else
-    echo "OK after generate compare!"
-fi
 # generate all jpg if some are missing
 ./update_pictures.sh
-# generate stats
+# generate radar
+# rm -f docs/*/spider*
+command=$(./generate_radar.py)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate radar!"
+    exit 1;
+else
+    echo "OK after generate radar!"
+fi
+# generate status
 rm -f docs/stats/*.json
 command=$(./generate_stats.py)
 status=$?

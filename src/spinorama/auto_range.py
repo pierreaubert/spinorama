@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import math
 import numpy as np
 from typing import Literal, List, Tuple
 import scipy.signal as sig
@@ -102,7 +103,13 @@ def propose_range_freq(
         sign,
         init_freq,
         np.linspace(  # should that be logspace?
-            init_freq_min, init_freq_max, optim_config["MAX_STEPS_FREQ"]
+            init_freq_min,
+            init_freq_max,
+            optim_config["MAX_STEPS_FREQ"]
+            # np.logspace(
+            #    math.log10(init_freq_min),
+            #    math.log10(init_freq_max),
+            #    optim_config["MAX_STEPS_FREQ"]
         ).tolist(),
     )
 
@@ -133,7 +140,10 @@ def propose_range_dbGain(
             init_dbGain_min, init_dbGain_max, optim_config["MAX_STEPS_DBGAIN"]
         ).tolist()
     return np.linspace(
-        -init_dbGain_max, -init_dbGain_min, optim_config["MAX_STEPS_DBGAIN"]
+        # no real minimim for negative values
+        -init_dbGain_max * 2,
+        -init_dbGain_min,
+        optim_config["MAX_STEPS_DBGAIN"],
     ).tolist()
 
 

@@ -1,0 +1,15 @@
+EQ for Mackie HR824 computed from Misc data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
+Dated: 2021-11-20-09:53:09
+
+Preamp: -1.5 dB
+
+Filter  1: ON PK Fc  2071 Hz Gain +1.04 dB Q 0.67
+Filter  2: ON PK Fc   164 Hz Gain -0.79 dB Q 0.52
+Filter  3: ON PK Fc  1038 Hz Gain +0.87 dB Q 4.00
+Filter  4: ON PK Fc  8973 Hz Gain -1.07 dB Q 3.93
+Filter  5: ON PK Fc   607 Hz Gain -0.90 dB Q 4.00
+Filter  6: ON PK Fc  2480 Hz Gain -0.50 dB Q 4.00
+Filter  7: ON PK Fc  3991 Hz Gain +0.80 dB Q 3.32
+Filter  8: ON PK Fc 11489 Hz Gain +0.50 dB Q 4.00
+Filter  9: ON PK Fc   323 Hz Gain +0.50 dB Q 4.00

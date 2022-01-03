@@ -3,18 +3,19 @@
 exclude: '^docs'
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v4.0.1
     hooks:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
     -   id: check-json
+#    -   id: pretty-format-json
+#        args: ['--no-sort-keys']
     -   id: check-merge-conflict
     -   id: detect-private-key
     -   id: fix-encoding-pragma
-    -   id: pretty-format-json
     -   id: requirements-txt-fixer
 -   repo: https://github.com/psf/black
-    rev: 21.9b0
+    rev: 21.11b1
     hooks:
     -   id: black
 -   repo: https://gitlab.com/PyCQA/flake8
@@ -22,6 +23,6 @@ repos:
     hooks:
     -   id: flake8
 -   repo: https://github.com/pre-commit/mirrors-csslint
-    rev: v1.0.3
+    rev: v1.0.5
     hooks:
     -   id: csslint

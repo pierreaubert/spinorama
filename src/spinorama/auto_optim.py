@@ -164,11 +164,14 @@ def optim_compute_auto_target(
     optim_config: dict,
 ):
     peq_freq = peq_build(freq, peq)
-    delta = [target[i] - auto_target_interp[i] + peq_freq for i, _ in enumerate(target)]
-    if optim_config.get("smooth_target"):
-        smoothed = [savitzky_golay(d, 5, 3) for d in delta]
+    diff = [target[i] - auto_target_interp[i] for i, _ in enumerate(target)]
+    if optim_config.get("smooth_measurements"):
+        window_size = optim_config.get("smooth_window_size")
+        order = optim_config.get("smooth_order")
+        smoothed = [savitzky_golay(d, window_size, order) for d in diff]
         logger.warning(smoothed)
-        return smoothed
+        diff = smoothed
+    delta = [diff[i] + peq_freq for i, _ in enumerate(target)]
     return delta
 
 
@@ -258,6 +261,7 @@ def optim_greedy(
                 biquad_range,
                 optim_iter,
                 optim_config,
+                current_loss,
             )
         else:
             (
@@ -278,6 +282,7 @@ def optim_greedy(
                 biquad_range,
                 optim_iter,
                 optim_config,
+                current_loss,
             )
         if state:
             biquad = (
@@ -314,10 +319,6 @@ def optim_greedy(
     current_auto_target = optim_compute_auto_target(
         freq, auto_target, auto_target_interp, auto_peq, optim_config
     )
-    # final_loss = loss(freq, current_auto_target, [], 0, optim_config)
-    # final_score = 1.0
-    # if use_score:
-    #    final_score = score_loss(df_speaker, auto_peq)
     if results[-1][1] < best_loss:
         results.append((optim_config["MAX_NUMBER_PEQ"] + 1, best_loss, -pref_score))
     if use_score:

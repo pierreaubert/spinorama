@@ -116,6 +116,13 @@ def sanity_check_measurement(name, speaker, version, measurement):
     if version[0:3] not in ("asr", "pri", "ven", "har", "eac", "mis"):
         logging.error("{0}: key {1} doesn't look correct".format(name, version))
         status = 1
+    for k in ("origin", "format"):
+        if k not in measurement.keys():
+            logging.error(
+                "{0}: measurement {1} lack a {2} key".format(name, version, k)
+            )
+            status = 1
+
     for k, v in measurement.items():
         if k not in (
             "origin",

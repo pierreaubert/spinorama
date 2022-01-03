@@ -2,103 +2,29 @@
 <%include file="nav_menu.html"/>
 
 <div class="section">
-  <div class="content">
-    <h1>Distribution of scores v.s. speakers</h1>
+  <div class="box">
+    <div id="visScoreDistribution"></div>
   </div>
   <div class="box">
-    <div id="visDistributionScore"></div>
-    <script>
-      const specDS = downloadZip("stats/distribution_score.json.zip").then( function(specDS) { displayStats(JSON.parse(specDS), '#visDistributionScore'); });
-    </script>
-  </div>
-  <div class="content">
-    <h1>Distribution of scores v.s. speakers if we also have a perfect subwoofer</h1>
-  </div>
-  <div id="visDistributionScoreWsub"></div>
-  <div class="box">
-    <script>
-    const specDSW = downloadZip("stats/distribution_score_wsub.json.zip").then( function(specDSW) { displayStats(JSON.parse(specDSW), '#visDistributionScoreWsub'); });
-    </script>
+    <div id="visScoreDistributionWsub"></div>
   </div>
 </div>
 
 <div class="section">
-  <div class="content">
-    <h1>Score per speaker.</h1>
-    <ul>
-      <li>Orange points are as measured, Blue points are with an extra EQ</li>
-      <li>You can over a point to get more information.</li>
-    </ul>
-  </div>
-  <div class="box">
-    <div id="visSpreadScore"></div>
-    <script>
-      const specSC = downloadZip("stats/spread_score.json.zip").then( function(specSC) { displayStats(JSON.parse(specSC), '#visSpreadScore'); });
-    </script>
-  </div>
-  <div class="content">
-    <h1>Score per speaker with an extra perfect subwoofer.</h1>
-    <ul>
-      <li>Orange points are as measured, Blue points are with an extra EQ</li>
-      <li>You can over a point to get more information.</li>
-    </ul>
-  </div>
-  <div class="box">
-    <div id="visSpreadScoreWsub"></div>
-    <script>
-      const specSCW = downloadZip("stats/spread_score_wsub.json.zip").then( function(specSCW) { displayStats(JSON.parse(specSCW), '#visSpreadScoreWsub'); });
-    </script>
-  </div>
-</div>
-
-<div class="section">
-  <div class="content">
-    <h1>How does the score correlate with one of the parameter that
-      define the score?</h1>
-  </div>
-</div>
-
-<div class="section">
-  <div class="content">
-    <h2>Correlation with LFX</h2>
-    aka Low  Frequency Extension
-  </div>
   <div class="box">
     <div id="visDistributionLfxHz"></div>
-    <script>
-      const specLfxHz = downloadZip("stats/distribution_lfx_hz.json.zip").then( function(specLfxHz) { displayStats(JSON.parse(specLfxHz), '#visDistributionLfxHz'); });
-    </script>
-  </div>
-  <div class="content">
-    <h2>Correlation with NBD ON</h2>
-    aka Narrow Bandwidth Deviation for On Axis frequency response
   </div>
   <div class="box">
     <div id="visDistributionNbdOn"></div>
-    <script>
-      const specNbdOn = downloadZip("stats/distribution_nbd_on.json.zip").then( function(specNbdOn) { displayStats(JSON.parse(specNbdOn), '#visDistributionNbdOn'); });
-    </script>
-  </div>
-  <div class="content">
-    <h2>Correlation with NBD PIR</h2>
-    aka Narrow Bandwidth Deviation for  Predicted In Room frequency response
   </div>
   <div class="box">
     <div id="visDistributionNbdPir"></div>
-    <script>
-      const specNbdPir = downloadZip("stats/distribution_nbd_pir.json.zip").then( function(specNbdPir) { displayStats(JSON.parse(specNbdPir), '#visDistributionNbdPir'); });
-    </script>
-  </div>
-  <div class="content">
-    <h2>Correlation with SM PIR</h2>
-    aka Predicted In Room frequency response
   </div>
   <div class="box">
     <div id="visDistributionSmPir"></div>
-    <script>
-      const specSmPir = downloadZip("stats/distribution_sm_pir.json.zip").then( function(specSmPir) { displayStats(JSON.parse(specSmPir), '#visDistributionSmPir'); });
-    </script>
   </div>
 </div>
+
+<script type="module" src="./assets/statistics.js"></script>
 
 <%include file="footer.html"/>

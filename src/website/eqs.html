@@ -1,73 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-<%include file="head.html"/>
+    <%include file="head.html"/>
   </head>
 <body>
 
 <%include file="nav_menu.html"/>
-<%include file="nav_search.html"/>
 
-<%namespace name="util" module="utils" import="*"/>
+<%namespace name="util" module="website.utils" import="*"/>
+
+<script id="eqsht" type="text/x-handlebars-template">
+  <table class="table is-striped">
+    <tr>
+      <th>
+        {{brand}} {{model}} (<a href="{{autoeq}}">automaticEQ</a>)
+      </th>
+    </tr>
+    <tr>
+      <td>
+        Set preamp gain to: {{preamp_gain}}dB.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table class="table is-striped">
+	  <thead>
+	    <tr>
+	      <th>Type</th>
+	      <th>Freq</th>
+	      <th>Q</th>
+	      <th>Gain</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+            {{#each peq}}
+	    <tr>
+	      <td>{{this.type}}</td>
+	      <td>{{this.freq}}</td>
+	      <td>{{this.Q}}</td>
+	      <td>{{this.dbGain}}</td>
+	    </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </table>
+</script>
 
 <div class="section">
-
+  <!-- Speakers -->
   <div class="searchresults">
-    <div class="columns is-multiline is-1">
-      % for speaker_name in meta:
-      %  if 'eq' in meta[speaker_name]:
-      <div class="column is-one-third" id="${speaker_name | space2dash}">
-	<table class="table is-striped">
-	  <tr>
-	    <th>
-	      ${meta[speaker_name]['brand']} ${meta[speaker_name]['model']}(
-              % if 'eq_autoeq' in meta[speaker_name]:
-	      <a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${meta[speaker_name]['brand']|space2url}%20${meta[speaker_name]['model']|space2url}/iir-autoeq.txt">automaticEQ</a>
-              % endif
-              % if 'eq_flipflop' in meta[speaker_name]:
-	      , <a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${meta[speaker_name]['brand']|space2url}%20${meta[speaker_name]['model']|space2url}/iir-flipflop.txt">flipflopEQ</a>
-              % endif
-              % if 'eq_maiky76' in meta[speaker_name]:
-	      , <a href="https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/${meta[speaker_name]['brand']|space2url}%20${meta[speaker_name]['model']|space2url}/iir-maiky76.txt">maiky76EQ</a>
-              % endif
-              )
-	    </th>
-	  </tr>
-	  <tr>
-	    <td>
-	      Set preamp gain to: ${meta[speaker_name]['eq']['preamp_gain']} dB.
-	    </td>
-	  </tr>
-	  <tr>
-	    <td>
-	      <table class="table is-striped">
-		<thead>
-		  <tr>
-		    <th>Type</th>
-		    <th>Freq</th>
-		    <th>Q</th>
-		    <th>Gain</th>
-		  </tr>
-		</thead>
-		<tbody>
-		  % for pek in meta[speaker_name]['eq'][meta[speaker_name]['eq']['type']]:
-		  <tr>
-		    <td>${pek['type'] | eq2text}</td>
-		    <td>${pek['freq']}</td>
-		    <td>${pek['Q']}</td>
-		    <td>${pek['dbGain']}</td>
-		  </tr>
-		  % endfor
-		</tbody>
-	      </table>
-	    </td>
-	  </tr>
-	</table>
-      </div>
-      %  endif
-      % endfor
+    <div class="columns is-multiline is-1" id="eqs" data-num="0">
+      <script type="module" src='./assets/eqs.js'></script>
     </div>
   </div>
 </div>
+
+<script type="module" src="./assets/search.js"></script>
 
 <%include file="footer.html"/>

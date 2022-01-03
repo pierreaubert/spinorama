@@ -52,19 +52,28 @@ except ModuleNotFoundError:
 
 
 from generate_common import (
-    get_custom_logger,
     args2level,
-    custom_ray_init,
     cache_save,
     cache_update,
+    custom_ray_init,
+    get_custom_logger,
+    get_similar_names,
 )
 import datas.metadata as metadata
 from spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
 from spinorama.speaker_print import print_graphs
-from spinorama.graph import graph_params_default
+from spinorama.plot import plot_params_default
 
 
-VERSION = 1.26
+VERSION = "2.00alpha1"
+
+activate_tracing = False
+
+
+def tracing(msg):
+    # debugging ray is sometimes painfull
+    if activate_tracing:
+        print("---- TRACING ---- {} ----".format(msg))
 
 
 def get_speaker_list(speakerpath: str) -> List[str]:
@@ -94,11 +103,11 @@ def queue_measurement(
     id_eq = parse_eq_speaker.remote("./datas", speaker, id_df)
     force = False
     ptype = None
-    width = graph_params_default["width"]
-    height = graph_params_default["height"]
+    width = plot_params_default["width"]
+    height = plot_params_default["height"]
+    tracing("calling print_graph remote for {}".format(speaker))
     id_g1 = print_graphs.remote(
         id_df,
-        id_eq,
         speaker,
         morigin,
         metadata.origins_info,
@@ -108,8 +117,8 @@ def queue_measurement(
         force,
         ptype,
     )
+    tracing("calling print_graph remote eq for {}".format(speaker))
     id_g2 = print_graphs.remote(
-        id_eq,
         id_eq,
         speaker,
         morigin,
@@ -120,6 +129,7 @@ def queue_measurement(
         force,
         ptype,
     )
+    tracing("print_graph done")
     return (id_df, id_eq, id_g1, id_g2)
 
 
@@ -229,6 +239,13 @@ def compute(speakerlist, filters, ray_ids: dict):
                 m_version_key = (
                     m_version  # .translate({ord(ch) : '_' for ch in '-.;/\' '})
                 )
+                # should not happen, usually it is an error in metadata that should be trapped by check_meta
+                if "origin" not in measurement.keys():
+                    logger.error(
+                        "measurement's data are incorrect: speaker={} m_version={} keys are {}".format(
+                            speaker, m_version, measurement.keys()
+                        )
+                    )
                 m_origin = measurement["origin"]
                 if m_origin not in df[speaker_key].keys():
                     df[speaker_key][m_origin] = {}
@@ -319,11 +336,11 @@ if __name__ == "__main__":
 
     if args["--width"] is not None:
         opt_width = int(args["--width"])
-        graph_params_default["width"] = opt_width
+        plot_params_default["width"] = opt_width
 
     if args["--height"] is not None:
         opt_height = int(args["--height"])
-        graph_params_default["height"] = opt_height
+        plot_params_default["height"] = opt_height
 
     if args["--type"] is not None:
         ptype = args["--type"]

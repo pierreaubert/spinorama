@@ -1,0 +1,569 @@
+# -*- coding: utf-8 -*-
+import logging
+import math
+
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import plotly.io as pio
+from scipy import stats
+
+from .compute_misc import compute_contour
+from .load_misc import sort_angles
+
+logger = logging.getLogger("spinorama")
+
+pio.templates.default = "plotly_white"
+
+plot_params_default = {
+    "xmin": 20,
+    "xmax": 20000,
+    "ymin": -40,
+    "ymax": 10,
+    "width": 600,
+    "height": 400,
+}
+
+contour_params_default = {
+    "xmin": 100,
+    "xmax": 20000,
+    "width": 600,
+    "height": 300,
+}
+
+radar_params_default = {
+    "xmin": 400,
+    "xmax": 20000,
+    "width": 600,
+    "height": 400,
+}
+
+colors = [
+    "#5c77a5",
+    "#dc842a",
+    "#c85857",
+    "#89b5b1",
+    "#71a152",
+    "#bab0ac",
+    "#e15759",
+    "#b07aa1",
+    "#76b7b2",
+    "#ff9da7",
+]
+
+uniform_colors = {
+    # regression
+    "Linear Regression": colors[0],
+    "Band ±1.5dB": colors[1],
+    "Band ±3dB": colors[1],
+    # PIR
+    "Estimated In-Room Response": colors[0],
+    # spin
+    "On Axis": colors[0],
+    "Listening Window": colors[1],
+    "Early Reflections": colors[2],
+    "Sound Power": colors[3],
+    "Early Reflections DI": colors[4],
+    "Sound Power DI": colors[5],
+    # reflections
+    "Ceiling Bounce": colors[1],
+    "Floor Bounce": colors[2],
+    "Front Wall Bounce": colors[3],
+    "Rear Wall Bounce": colors[4],
+    "Side Wall Bounce": colors[5],
+    #
+    "Ceiling Reflection": colors[1],
+    "Floor Reflection": colors[2],
+    #
+    "Front": colors[1],
+    "Rear": colors[2],
+    "Side": colors[3],
+    #
+    "Total Early Reflection": colors[7],
+    "Total Horizontal Reflection": colors[8],
+    "Total Vertical Reflection": colors[9],
+    # SPL
+    "10°": colors[1],
+    "20°": colors[2],
+    "30°": colors[3],
+    "40°": colors[4],
+    "50°": colors[5],
+    "60°": colors[6],
+    "70°": colors[7],
+    #
+    "500 Hz": colors[1],
+    "1000 Hz": colors[2],
+    "2000 Hz": colors[3],
+    "10000 Hz": colors[4],
+    "15000 Hz": colors[5],
+}
+
+label_short = {}
+
+# label_short = {
+#     # regression
+#     "Linear Regression": "Reg",
+#     "Band ±1.5dB": "±1.5dB",
+#     "Band ±3dB": "±3dB",
+#     # PIR
+#     "Estimated In-Room Response": "PIR",
+#     # spin
+#     "On Axis": "ON",
+#     "Listening Window": "LW",
+#     "Early Reflections": "ER",
+#     "Sound Power": "SP",
+#     "Early Reflections DI": "ERDI",
+#     "Sound Power DI": "SPDI",
+#     # reflections
+#     "Ceiling Bounce": "CB",
+#     "Floor Bounce": "FB",
+#     "Front Wall Bounce": "FWB",
+#     "Rear Wall Bounce": "RWB",
+#     "Side Wall Bounce": "SWB",
+#     #
+#     "Ceiling Reflection": "CR",
+#     "Floor Reflection": "FR",
+#     #
+#     "Front": "F",
+#     "Rear": "R",
+#     "Side": "S",
+#     #
+#     "Total Early Reflection": "TER",
+#     "Total Horizontal Reflection": "THR",
+#     "Total Vertical Reflection": "TVR",
+# }
+
+
+def generate_xaxis(freq_min=20, freq_max=20000):
+    return dict(
+        title_text="Frequency (Hz)",
+        type="log",
+        range=[math.log10(freq_min), math.log10(freq_max)],
+        showline=True,
+        dtick="D1",
+    )
+
+
+def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
+    return dict(
+        title_text="SPL (dB)",
+        range=[range_min, range_max],
+        dtick=range_step,
+        tickvals=[i for i in range(range_min, range_max + range_step, range_step)],
+        ticktext=[
+            "{}".format(i) if not i % 5 else " "
+            for i in range(range_min, range_max + range_step, range_step)
+        ],
+        showline=True,
+    )
+
+
+def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
+    return dict(
+        title_text="DI (dB)                                                    &nbsp;",
+        range=[range_min, range_max],
+        dtick=range_step,
+        tickvals=[-5, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45],
+        ticktext=["-5", "0", "5", "10", "15", " ", " ", " ", " ", " ", " "],
+        showline=True,
+    )
+
+
+def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
+    return dict(
+        title_text="Angle",
+        range=[angle_min, angle_max],
+        dtick=angle_step,
+        tickvals=[v for v in range(angle_min, angle_max + angle_step, angle_step)],
+        ticktext=[
+            "{}°".format(v)
+            for v in range(angle_min, angle_max + angle_step, angle_step)
+        ],
+        showline=True,
+    )
+
+
+def common_layout(params):
+    orientation = "v"
+    if params.get("layout", "") == "compact":
+        orientation = "h"
+
+    return dict(
+        width=params["width"],
+        height=params["height"],
+        legend=dict(x=0.5, y=1.18, xanchor="center", orientation=orientation),
+        title=dict(
+            x=0.5,
+            y=0.98,
+            xanchor="center",
+            yanchor="top",
+        ),
+        margin={
+            "t": 70,
+            "b": 5,
+            "l": 5,
+            "r": 5,
+        },
+    )
+
+
+def radar_layout(params):
+    orientation = "v"
+    if params.get("layout", "") == "compact":
+        orientation = "h"
+
+    return dict(
+        width=params["width"],
+        height=params["height"],
+        legend=dict(x=0.5, y=0.95, xanchor="center", orientation=orientation),
+        title=dict(
+            x=0.5,
+            y=0.98,
+            xanchor="center",
+            yanchor="top",
+        ),
+        margin={
+            "t": 5,
+            "b": 5,
+            "l": 20,
+            "r": 20,
+        },
+    )
+
+
+def plot_spinorama_traces(spin, params):
+    layout = params.get("layout", "")
+    traces = []
+    for measurement in (
+        "On Axis",
+        "Listening Window",
+        "Early Reflections",
+        "Sound Power",
+    ):
+        if measurement not in spin.keys():
+            continue
+        trace = go.Scatter(
+            x=spin.Freq,
+            y=spin[measurement],
+            marker_color=uniform_colors.get(measurement, "black"),
+            name=label_short.get(measurement, measurement),
+            hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
+        )
+        if layout != "compact":
+            trace.name = measurement
+            trace.legendgroup = "measurements"
+            trace.legendgrouptitle = {"text": "Measurements"}
+        traces.append(trace)
+
+    traces_di = []
+    for measurement in ("Early Reflections DI", "Sound Power DI"):
+        if measurement not in spin.keys():
+            continue
+        trace = go.Scatter(
+            x=spin.Freq,
+            y=spin[measurement],
+            marker_color=uniform_colors.get(measurement, "black"),
+        )
+        if layout == "compact":
+            trace.name = label_short.get(measurement, measurement)
+        else:
+            trace.name = measurement
+            trace.legendgroup = "directivity"
+            trace.legendgrouptitle = {"text": "Directivity"}
+        traces_di.append(trace)
+    return traces, traces_di
+
+
+def plot_spinorama(spin, params):
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    traces, traces_di = plot_spinorama_traces(spin, params)
+    for t in traces:
+        fig.add_trace(t, secondary_y=False)
+    for t in traces_di:
+        fig.add_trace(t, secondary_y=True)
+
+    fig.update_xaxes(generate_xaxis())
+    fig.update_yaxes(generate_yaxis_spl())
+    fig.update_yaxes(generate_yaxis_di(), secondary_y=True)
+
+    fig.update_layout(common_layout(params))
+    return fig
+
+
+def plot_graph(df, params):
+    layout = params.get("layout", "")
+    fig = go.Figure()
+    for measurement in df.keys():
+        if measurement != "Freq":
+            trace = go.Scatter(
+                x=df.Freq,
+                y=df[measurement],
+                marker_color=uniform_colors.get(measurement, "black"),
+                hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
+            )
+            if layout == "compact":
+                trace.name = label_short.get(measurement, measurement)
+            else:
+                trace.name = measurement
+                trace.legendgroup = "measurements"
+                trace.legendgrouptitle = {"text": "Measurements"}
+            fig.add_trace(trace)
+
+    fig.update_xaxes(generate_xaxis())
+    fig.update_yaxes(generate_yaxis_spl())
+    fig.update_layout(common_layout(params))
+    return fig
+
+
+def plot_graph_regression_traces(df, measurement, params):
+    layout = params.get("layout", "")
+    traces = []
+    trace = go.Scatter(
+        x=df.Freq,
+        y=df[measurement],
+        marker_color=uniform_colors.get(measurement, "black"),
+        hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
+    )
+    if layout == "compact":
+        trace.name = label_short.get(measurement, measurement)
+    else:
+        trace.name = measurement
+        trace.legendgroup = "measurements"
+        trace.legendgrouptitle = {"text": "Measurements"}
+    traces.append(trace)
+
+    # some speakers start very high
+    current_restricted = df.loc[(df.Freq > 250) & (df.Freq < 10000)]
+
+    slope, intercept, r, p, se = stats.linregress(
+        x=np.log10(current_restricted["Freq"]), y=current_restricted[measurement]
+    )
+    line = [slope * math.log10(f) + intercept for f in df.Freq]
+
+    # print("step {} {}".format(slope, intercept))
+
+    # 600 px = 50 dB
+    height = params["height"]
+    one_db = height / 50
+    trace = go.Scatter(
+        x=df.Freq,
+        y=line,
+        line=dict(width=2, color="black"),
+        opacity=1,
+        name="Linear regression",
+    )
+    if layout == "compact":
+        trace.name = label_short.get("Linear regression")
+    else:
+        trace.name = "Linear regression"
+    traces.append(trace)
+
+    traces.append(
+        go.Scatter(
+            x=df.Freq,
+            y=line,
+            line=dict(width=3 * one_db, color="gray"),
+            opacity=0.15,
+            name="Band ±1.5dB",
+        )
+    )
+    traces.append(
+        go.Scatter(
+            x=df.Freq,
+            y=line,
+            line=dict(width=6 * one_db, color="gray"),
+            opacity=0.1,
+            name="Band ±3dB",
+        )
+    )
+    return traces
+
+
+def plot_graph_regression(df, measurement, params):
+    layout = params.get("layout", "")
+    # print("{} {}".format(measurement, df.keys()))
+    fig = go.Figure()
+    traces = plot_graph_regression_traces(df, measurement, params)
+    for t in traces:
+        fig.add_trace(t)
+
+    fig.update_xaxes(generate_xaxis())
+    fig.update_yaxes(generate_yaxis_spl())
+
+    fig.update_layout(common_layout(params))
+    return fig
+
+
+def plot_contour(spl, params):
+    df = spl.copy()
+    layout = params.get("layout", "")
+    min_freq = params.get("contour_min_freq", 100)
+
+    contour_start = -30
+    contour_end = 3
+
+    contour_colorscale = [
+        [0, "rgb(0,0,168)"],
+        [0.1, "rgb(0,0,200)"],
+        [0.2, "rgb(0,74,255)"],
+        [0.3, "rgb(0,152,255)"],
+        [0.4, "rgb(74,255,161)"],
+        [0.5, "rgb(161,255,74)"],
+        [0.6, "rgb(255,255,0)"],
+        [0.7, "rgb(234,159,0)"],
+        [0.8, "rgb(255,74,0)"],
+        [0.9, "rgb(222,74,0)"],
+        [1, "rgb(253,14,13)"],
+    ]
+
+    fig = go.Figure()
+
+    af, am, az = compute_contour(df.loc[df.Freq > min_freq], min_freq)
+    az = np.clip(az, contour_start, contour_end)
+    fig.add_trace(
+        go.Contour(
+            x=af[0],
+            y=am.T[0],
+            z=az,
+            contours=dict(
+                coloring="fill",
+                start=contour_start,
+                end=contour_end,
+                size=3,
+                showlines=False,
+            ),
+            colorbar=dict(
+                dtick=3,
+                len=1.0,
+                lenmode="fraction",
+            ),
+            autocolorscale=False,
+            colorscale=contour_colorscale,
+        )
+    )
+
+    fig.update_xaxes(generate_xaxis(min_freq))
+    fig.update_yaxes(generate_yaxis_angles())
+    fig.update_yaxes(
+        zeroline=True,
+        zerolinecolor="#000000",
+        zerolinewidth=3,
+    )
+    fig.update_layout(common_layout(params))
+    return fig
+
+
+def find_nearest_freq(dfu, hz, tolerance=0.05):
+    """return the index of the nearest freq in dfu, return None if not found"""
+    ihz = None
+    for i in dfu.index:
+        f = dfu.loc[i]
+        if abs(f - hz) < hz * tolerance:
+            ihz = i
+            break
+    logger.debug("nearest: {0} hz at loc {1}".format(hz, ihz))
+    return ihz
+
+
+def plot_radar(spl, params):
+    layout = params.get("layout", "")
+
+    anglelist = [a for a in range(-180, 180, 10)]
+
+    def projection(anglelist, gridZ, hz):
+        dbsR = [db for a, db in zip(anglelist, gridZ)]
+        dbsTheta = [a for a, db in zip(anglelist, gridZ)]
+        dbsR.append(dbsR[0])
+        dbsTheta.append(dbsTheta[0])
+        return dbsR, dbsTheta, [hz for i in range(0, len(dbsR))]
+
+    def label(i):
+        return "{:d} Hz".format(i)
+
+    def plot_radar_freq(anglelist, df):
+        dfu = sort_angles(df)
+        db_mean = np.mean(
+            dfu.loc[(dfu.Freq > 900) & (dfu.Freq < 1100)]["On Axis"].values
+        )
+        freq = dfu.Freq
+        dfu = dfu.drop("Freq", axis=1)
+        db_min = np.min(dfu.min(axis=0).values)
+        db_max = np.max(dfu.max(axis=0).values)
+        db_scale = max(abs(db_max), abs(db_min))
+        # if df is normalized then 0 will be at the center of the radar which is not what
+        # we want. Let's shift the whole graph up.
+        # if db_mean < 45:
+        #    dfu += db_scale
+        # print(db_min, db_max, db_mean, db_scale)
+        # build 3 plots
+        dbX = []
+        dbY = []
+        hzZ = []
+        for hz in [500, 1000, 2000, 10000, 15000]:
+            ihz = find_nearest_freq(freq, hz)
+            if ihz is None:
+                continue
+            X, Y, Z = projection(anglelist, dfu.loc[ihz][dfu.columns != "Freq"], hz)
+            # add to global variable
+            dbX.append(X)
+            dbY.append(Y)
+            hzZ.append(Z)
+
+        # normalise
+        dbX = [v2 for v1 in dbX for v2 in v1]
+        dbY = [v2 for v1 in dbY for v2 in v1]
+        # print("dbX min={} max={}".format(np.array(dbX).min(), np.array(dbX).max()))
+        # print("dbY min={} max={}".format(np.array(dbY).min(), np.array(dbY).max()))
+
+        hzZ = [label(i2) for i1 in hzZ for i2 in i1]
+
+        return db_mean, pd.DataFrame({"R": dbX, "Theta": dbY, "Freq": hzZ})
+
+    fig = go.Figure()
+
+    _, dbs_df = plot_radar_freq(anglelist, spl)
+
+    for freq in np.unique(dbs_df["Freq"].values):
+        mslice = dbs_df.loc[dbs_df.Freq == freq]
+        trace = go.Scatterpolar(
+            r=mslice.R,
+            theta=mslice.Theta,
+            dtheta=30,
+            name=freq,
+            marker_color=uniform_colors.get(freq, "black"),
+            legendrank=int(freq[:-3]),
+        )
+        if layout != "compact":
+            legendgroup = ("measurements",)
+            legendgrouptitle_text = ("Frequencies",)
+        fig.add_trace(trace)
+
+    fig.update_layout(radar_layout(params))
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                range=[-45, 5],
+                dtick=5,
+            ),
+            angularaxis=dict(
+                dtick=10,
+                tickvals=list(range(0, 360, 10)),
+                ticktext=[
+                    "{}°".format(x) if abs(x) < 60 or not x % 30 else " "
+                    for x in (list(range(0, 190, 10)) + list(range(-170, 0, 10)))
+                ],
+            ),
+        ),
+    )
+
+    return fig
+
+
+def plot_image(df):
+    return None
+
+
+def plot_summary(df):
+    return None

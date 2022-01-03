@@ -32,8 +32,11 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--slope-estimated-inroom=<s_pir>] \
  [--loss=<pick>] \
  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
+ [--smooth-measurements=<window_size>] \
+ [--smooth-order=<order>] \
  [--second-optimiser=<sopt>] \
-
+ [--curves=<curve_name>] \
+ [--fitness=<function>]
 
 Options:
   --help                   Display usage()
@@ -66,8 +69,13 @@ Options:
   --slope-sound-power=<s_sp> Slope of sound power, default is -8dB
   --slope-estimated-inroom=<s_pir> Slope of estimated in-room response, default is -8dB
   --second-optimiser=<sopt>
+  --smooth-measurements=<window_size> If present the measurements will be smoothed before optimisation, window_size is the size of the window use for smoothing
+  --smooth-order=<order>  Order of the interpolation, 3 by default for Savitzky-Golay filter.
+  --curves=<curve_name>   Curve name: must be one of "ON", "LW", "PIR", "ER" or "SP" or a combinaison separated by a ,. Ex: 'PIR,LW' is valid
+  --fitness=<function>    Fit function: must be one of "Flat", "Score", "LeastSquare", "FlatPir", "Combine".
 """
 from datetime import datetime
+import json
 import os
 import pathlib
 import sys
@@ -95,10 +103,11 @@ from spinorama.filter_scores import (
 )
 from spinorama.auto_target import get_freq, get_target
 from spinorama.auto_optim import optim_multi_steps
+
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
-VERSION = "0.13"
+VERSION = "0.14"
 
 
 def optim_find_peq(
@@ -196,32 +205,6 @@ def optim_save_peq(
         current_speaker_name, df_speaker, optim_config, use_score
     )
 
-    # do we have a manual peq?
-    manual_score = {}
-    manual_peq = []
-    manual_target = None
-    manual_target_interp = None
-    manual_spin, manual_pir = None, None
-    if be_verbose and use_score:
-        manual_peq_name = "./datas/eq/{}/iir.txt".format(current_speaker_name)
-        if (
-            os.path.exists(manual_peq_name)
-            and os.readlink(manual_peq_name) != "iir-autoeq.txt"
-        ):
-            manual_peq = parse_eq_iir_rews(manual_peq_name, optim_config["fs"])
-            manual_spin, manual_pir, manual_score = scores_apply_filter(
-                df_speaker, manual_peq
-            )
-            if df_speaker_eq is not None:
-                manual_df, manual_freq, manual_target = get_freq(
-                    df_speaker_eq, optim_config
-                )
-                manual_target_interp = []
-                for curve in curves:
-                    manual_target_interp.append(
-                        get_target(manual_df, manual_freq, curve, optim_config)
-                    )
-
     # compute new score with this PEQ
     auto_spin = None
     auto_pir = None
@@ -232,13 +215,10 @@ def optim_save_peq(
         # store the 3 different scores
         scores = [
             score.get("pref_score", -1),
-            manual_score.get("pref_score", -1),
             auto_score["pref_score"],
         ]
-        if be_verbose:
-            scores[1] = manual_score.get("pref_score", -5)
     else:
-        auto_spin, auto_pir = noscore_apply_filter(df_speaker, auto_peq)
+        auto_spin, auto_pir, _ = noscore_apply_filter(df_speaker, auto_peq)
 
     # print peq
     comments = [
@@ -273,6 +253,10 @@ def optim_save_peq(
                     os.symlink("iir-autoeq.txt", iir_name)
                 except OSError:
                     pass
+        eq_conf = "{}/conf-autoeq.json".format(eq_dir)
+        with open(eq_conf, "w") as fd:
+            conf_json = json.dumps(optim_config, indent=4)
+            fd.write(conf_json)
 
     # print results
     if len(auto_peq) > 0:
@@ -285,45 +269,19 @@ def optim_save_peq(
             auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
         # END TODO
 
-        graphs = None
-        if len(manual_peq) > 0 and not peq_equal(manual_peq, auto_peq):
-            graphs = auto_graph_results(
-                current_speaker_name,
-                current_speaker_origin,
-                freq,
-                manual_peq,
-                auto_peq,
-                auto_target,
-                auto_target_interp,
-                manual_target,
-                manual_target_interp,
-                df_speaker["CEA2034"],
-                manual_spin,
-                auto_spin,
-                df_speaker["Estimated In-Room Response"],
-                manual_pir,
-                auto_pir,
-                optim_config,
-            )
-        else:
-            graphs = auto_graph_results(
-                current_speaker_name,
-                current_speaker_origin,
-                freq,
-                None,
-                auto_peq,
-                auto_target,
-                auto_target_interp,
-                None,
-                None,
-                df_speaker["CEA2034"],
-                None,
-                auto_spin,
-                df_speaker["Estimated In-Room Response"],
-                None,
-                auto_pir,
-                optim_config,
-            )
+        graphs = auto_graph_results(
+            current_speaker_name,
+            current_speaker_origin,
+            freq,
+            auto_peq,
+            auto_target,
+            auto_target_interp,
+            df_speaker["CEA2034"],
+            auto_spin,
+            df_speaker["Estimated In-Room Response"],
+            auto_pir,
+            optim_config,
+        )
 
         for i, (name, graph) in enumerate(graphs):
             origin = current_speaker_origin
@@ -335,7 +293,7 @@ def optim_save_peq(
             if is_smoke_test:
                 graph_filename += "_smoketest"
             graph_filename += ".png"
-            graph.save(graph_filename)
+            graph.write_image(graph_filename)
 
     # print a compact table of results
     if be_verbose and use_score:
@@ -367,37 +325,19 @@ def optim_save_peq(
                 current_speaker_name
             )
         )
-        if score is not None:
-            if (
-                manual_score is not None
-                and auto_score is not None
-                and "nbd_on_axis" in manual_score
-            ):
-                logger.info(scores_print2(score, manual_score, auto_score))
-            elif auto_score is not None and "nbd_on_axis" in auto_score:
-                logger.info(scores_print(score, auto_score))
+        if score is not None and auto_score is not None and "nbd_on_axis" in auto_score:
+            logger.info(scores_print(score, auto_score))
         logger.info(
             "----------------------------------------------------------------------"
         )
         if use_score:
-            if "pref_score" in manual_score:
-                print(
-                    "{:+2.2f} {:+2.2f} {:+2.2f} {:+2.2f} {:s}".format(
-                        score["pref_score"],
-                        manual_score["pref_score"],
-                        auto_score["pref_score"],
-                        manual_score["pref_score"] - auto_score["pref_score"],
-                        current_speaker_name,
-                    )
+            print(
+                "{:+2.2f} {:+2.2f} {:s}".format(
+                    score["pref_score"],
+                    auto_score["pref_score"],
+                    current_speaker_name,
                 )
-            else:
-                print(
-                    "{:+2.2f} {:+2.2f} {:s}".format(
-                        score["pref_score"],
-                        auto_score["pref_score"],
-                        current_speaker_name,
-                    )
-                )
+            )
 
     return current_speaker_name, auto_results, scores
 
@@ -545,6 +485,8 @@ if __name__ == "__main__":
     logger = get_custom_logger(True)
     logger.setLevel(args2level(args))
 
+    parameter_error = False
+
     # read optimisation parameter
     current_optim_config = {
         # name of the loss function
@@ -552,6 +494,7 @@ if __name__ == "__main__":
         # "loss": "score_loss",
         # "loss": "combine_loss",
         "loss": "leastsquare_loss",
+        # "loss": "flat_pir",
         # if you have multiple loss functions, define the weigth for each
         "loss_weigths": [100.0, 1.0],
         # do you optimise only peaks or both peaks and valleys?
@@ -559,8 +502,8 @@ if __name__ == "__main__":
         # do you optimise for all kind of biquad or do you want only Peaks?
         "full_biquad_optim": False,
         # lookup around a value is [value*elastic, value/elastic]
-        "elastic": 0.2,
-        # "elastic": 0.8,
+        # "elastic": 0.2,
+        "elastic": 0.8,
         # cut frequency
         "fs": 48000,
         # optimise the curve above the Schroeder frequency (here default is
@@ -587,19 +530,23 @@ if __name__ == "__main__":
         # 'curve_names': ['Listening Window', 'On Axis', 'Early Reflections'],
         # 'curve_names': ['On Axis', 'Early Reflections'],
         # 'curve_names': ['Early Reflections', 'Sound Power'],
-        # "curve_names": ["Estimated In-Room Response", "Listening Window"],
-        "curve_names": ["Estimated In-Room Response"],
+        "curve_names": ["Estimated In-Room Response", "Listening Window"],
+        # "curve_names": ["Estimated In-Room Response"],
         # start and end freq for targets
         "target_min_freq": 100,
         "target_max_freq": 16000,
         # slope of the target (in dB) for each curve
         "slope_on_axis": 0,
         "slope_listening_window": -0.5,
-        "slope_early_reflections": -5,
-        "slope_sound_power": -8,
-        "slope_estimated_inroom": -8,
+        "slope_early_reflections": -4,
+        "slope_sound_power": -9,
+        "slope_estimated_inroom": -5.5,
         # do we want to smooth the targets?
-        "smooth_target": False,
+        "smooth_measurements": False,
+        # size of the window to smooth (currently in number of data points but could be in octave)
+        "smooth_window_size": -1,
+        # order of interpolation (you can try 1 (linear), 2 (quadratic) etc)
+        "smooth_order": 3,
     }
 
     # define other parameters for the optimisation algorithms
@@ -631,15 +578,27 @@ if __name__ == "__main__":
     if args["--max-peq"] is not None:
         max_number_peq = int(args["--max-peq"])
         current_optim_config["MAX_NUMBER_PEQ"] = max_number_peq
+        if max_number_peq < 1:
+            print("ERROR: max_number_peq is {} which is below 1".format(max_number_peq))
+            parameter_error = True
     if args["--max-iter"] is not None:
         max_iter = int(args["--max-iter"])
         current_optim_config["maxiter"] = max_iter
+        if max_iter < 1:
+            print("ERROR: max_iter is {} which is below 1".format(max_iter))
+            parameter_error = True
     if args["--min-freq"] is not None:
         min_freq = int(args["--min-freq"])
         current_optim_config["freq_reg_min"] = min_freq
+        if min_freq < 20:
+            print("ERROR: min_freq is {} which is below 20Hz".format(min_freq))
+            parameter_error = True
     if args["--max-freq"] is not None:
         max_freq = int(args["--max-freq"])
         current_optim_config["freq_reg_max"] = max_freq
+        if max_freq > 20000:
+            print("ERROR: max_freq is {} which is above 20kHz".format(max_freq))
+            parameter_error = True
 
     if args["--min-Q"] is not None:
         min_Q = float(args["--min-Q"])
@@ -681,25 +640,91 @@ if __name__ == "__main__":
                 print("{} is not a float".format(args[slope_name]))
                 sys.exit(1)
 
+    if args["--smooth-measurements"] is not None:
+        window_size = int(args["--smooth-measurements"])
+        current_optim_config["smooth_measurements"] = True
+        current_optim_config["smooth_window_size"] = window_size
+        if window_size < 2:
+            print("ERROR: window size is {} which is below 2".format(window_size))
+            parameter_error = True
+
+    if args["--smooth-order"] is not None:
+        order = int(args["--smooth-order"])
+        current_optim_config["smooth_order"] = order
+        if order < 1 or order > 5:
+            print("ERROR: Polynomial order {} is not between  is 1 and 5".format(order))
+            parameter_error = True
+
     # do we run a second optimiser?
     current_optim_config["second_optimiser"] = False
     if args["--second-optimiser"] is not None:
         current_optim_config["second_optimiser"] = True
+
+    # which curve (measurement) to target?
+    if args["--curves"] is not None:
+        param_curve_names = args["--curves"].replace(" ", "").split(",")
+        param_curve_name_valid = {
+            "ON": "On Axis",
+            "LW": "Listening Window",
+            "ER": "Early Reflections",
+            "SP": "Sound Power",
+            "PIR": "Estimated In-Room Response",
+        }
+        current_optim_config["curve_names"] = []
+        for current_curve_name in param_curve_names:
+            if current_curve_name not in param_curve_name_valid.keys():
+                print(
+                    "ERROR: {} is not known, acceptable values are {}",
+                    current_curve_name,
+                    param_curve_name_valid.keys(),
+                )
+                parameter_error = True
+            else:
+                current_optim_config["curve_names"].append(
+                    param_curve_name_valid[current_curve_name]
+                )
+
+    # which fitness function?
+    if args["--fitness"] is not None:
+        current_fitness_name = args["--fitness"]
+        param_fitness_name_valid = {
+            "Flat": "flat_loss",
+            "Score": "score_loss",
+            "Combine": "combine_loss",
+            "LeastSquare": "leastsquare_loss",
+            "FlatPir": "flat_pir",
+        }
+        if current_fitness_name not in param_fitness_name_valid.keys():
+            print(
+                "ERROR: {} is not known, acceptable values are {}",
+                current_fitness_name,
+                param_fitness_name_valid.keys(),
+            )
+            parameter_error = True
+        else:
+            current_optim_config["loss"] = param_fitness_name_valid[
+                current_fitness_name
+            ]
 
     # name of speaker
     speaker_name = None
     if args["--speaker"] is not None:
         speaker_name = args["--speaker"]
 
+    # error in parameters
+    if parameter_error:
+        print("ERROR: please check for errors in parameters above!")
+        sys.exit(1)
+
     # load data
     print("Reading cache ...", end=" ", flush=True)
     df_all_speakers = {}
     try:
-        df_all_speakers = cache_load(smoke_test=smoke_test, filter=speaker_name)
+        df_all_speakers = cache_load(smoke_test=smoke_test, simple_filter=speaker_name)
     except ValueError as ve:
         if speaker_name is not None:
             print(
-                "Speaker {0} is not in the cache. Did you run ./generate_graphs.py --speaker='{0}' --update-cache ?".format(
+                "ERROR: Speaker {0} is not in the cache. Did you run ./generate_graphs.py --speaker='{0}' --update-cache ?".format(
                     speaker_name
                 )
             )

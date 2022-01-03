@@ -5,7 +5,6 @@ import os
 
 import pandas as pd
 from .load_misc import graph_melt, sort_angles
-from .load import filter_graphs, symmetrise_measurement
 
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
@@ -19,21 +18,27 @@ def parse_graph_freq_klippel(filename: str) -> tuple[str, pd.DataFrame]:
     title = None
     columns = ["Freq"]
     usecols = [0]
-    with open(filename) as csvfile:
-        # first line is graph title
-        title = csvfile.readline().split("\t")[0][1:-1]
-        if title[-1] == '"':
-            title = title[:-1]
-        # second line is column titles
-        csvcolumns = [c.translate(removequote) for c in csvfile.readline().split("\t")]
-        # third line is column units
-        # units = [c.translate(removequote)
-        #         for c in csvfile.readline().split('\t')]
-        # print(units)
-        columns.extend([c for c in csvcolumns if len(c) > 0])
-        # print(columns)
-        usecols.extend([1 + i * 2 for i in range(len(columns) - 1)])
-        # print(usecols)
+    try:
+        with open(filename) as csvfile:
+            # first line is graph title
+            title = csvfile.readline().split("\t")[0][1:-1]
+            if title[-1] == '"':
+                title = title[:-1]
+            # second line is column titles
+            csvcolumns = [
+                c.translate(removequote) for c in csvfile.readline().split("\t")
+            ]
+            # third line is column units
+            # units = [c.translate(removequote)
+            #         for c in csvfile.readline().split('\t')]
+            # print(units)
+            columns.extend([c for c in csvcolumns if len(c) > 0])
+            # print(columns)
+            usecols.extend([1 + i * 2 for i in range(len(columns) - 1)])
+            # print(usecols)
+    except FileNotFoundError as e:
+        logger.error("File not found: {}".format(e))
+        raise e
 
     # read all columns, drop 0
     df = pd.read_csv(
@@ -47,19 +52,18 @@ def parse_graph_freq_klippel(filename: str) -> tuple[str, pd.DataFrame]:
     return title, df
 
 
-def find_data_klippel(
-    speaker_path, speaker_brand, speaker_name, mversion_in, csvname
-) -> str:
+def find_data_klippel(speaker_path, speaker_brand, speaker_name, mversion_in, csvname):
     """return the expected filename for Klippel data"""
     csvfilename = "{}/{}/{}/{}.txt".format(
         speaker_path, speaker_name, mversion_in, csvname
     )
 
     if os.path.exists(csvfilename):
+        logger.debug("match for {}".format(csvfilename))
         return csvfilename
 
-    logger.debug("no match for {}".format(csvfilename))
-    return ""
+    logger.error("no match for {}".format(csvfilename))
+    return None
 
 
 def parse_graphs_speaker_klippel(
@@ -92,37 +96,6 @@ def parse_graphs_speaker_klippel(
         )
         return dfs
 
-    use_all_files = False
-    if use_all_files:
-        csvfiles = [
-            "CEA2034",
-            "Early Reflections",
-            "Directivity Index",
-            "Estimated In-Room Response",
-            "Horizontal Reflections",
-            "Vertical Reflections",
-        ]
-        for csv in set(mandatory_csvfiles + csvfiles):
-            csvfilename = find_data_klippel(
-                speaker_path, speaker_brand, speaker_name, mversion, csv
-            )
-            try:
-                title, df = parse_graph_freq_klippel(csvfilename)
-                dfs[title + "_unmelted"] = df
-                dfs[title] = graph_melt(df)
-                logger.debug(
-                    "Speaker: {0} (Klippel)  Loaded: {1}".format(
-                        speaker_name, csvfilename
-                    )
-                )
-            except FileNotFoundError:
-                logger.info(
-                    "Speaker: {} {} Not found: {}".format(
-                        speaker_name, mversion, csvfilename
-                    )
-                )
-        return dfs
-
     h_name = find_data_klippel(
         speaker_path, speaker_brand, speaker_name, mversion, "SPL Horizontal"
     )
@@ -134,16 +107,4 @@ def parse_graphs_speaker_klippel(
     _, v_spl = parse_graph_freq_klippel(v_name)
     logger.debug("Speaker: {0} (Klippel) loaded".format(speaker_name))
 
-    if symmetry == "coaxial":
-        h_spl2 = symmetrise_measurement(h_spl)
-        if v_spl is None:
-            v_spl2 = h_spl2.copy()
-        else:
-            v_spl2 = symmetrise_measurement(v_spl)
-        return filter_graphs(speaker_name, h_spl2, v_spl2)
-
-    if symmetry == "horizontal":
-        h_spl2 = symmetrise_measurement(h_spl)
-        return filter_graphs(speaker_name, h_spl2, v_spl)
-
-    return filter_graphs(speaker_name, h_spl, v_spl)
+    return h_spl, v_spl
