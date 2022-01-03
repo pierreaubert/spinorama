@@ -4458,6 +4458,23 @@ speakers_info = {
             },
         },
     },
+    "KEF T101": {
+        "brand": "KEF",
+        "model": "T101",
+        "type": "passive",
+        "price": "650",
+        "shape": "surround",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-t101-review-thin-speaker.29574/",
+                "review_published": "20220103",
+            },
+        },
+    },
     "KEF T301C": {
         "brand": "KEF",
         "model": "T301C",
