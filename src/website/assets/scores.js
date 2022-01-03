@@ -18,18 +18,18 @@ fetch(urlSite + 'assets/metadata.json').then(
     const scores = getField(value, 'pref_rating', value.default_measurement)
     scores.pref_score = parseFloat(scores.pref_score).toFixed(1)
     scores.pref_score_wsub = parseFloat(scores.pref_score_wsub).toFixed(1)
-    const scoresEQ = getField(value, 'pref_rating_eq', value.default_measurement)
-    scoresEQ.pref_score = parseFloat(scoresEQ.pref_score).toFixed(1)
-    scoresEQ.pref_score_wsub = parseFloat(scoresEQ.pref_score_wsub).toFixed(1)
+    const scoresEq = getField(value, 'pref_rating_eq', value.default_measurement)
+    scoresEq.pref_score = parseFloat(scoresEq.pref_score).toFixed(1)
+    scoresEq.pref_score_wsub = parseFloat(scoresEq.pref_score_wsub).toFixed(1)
     return {
       id: getID(value.brand, value.model),
       brand: value.brand,
       model: value.model,
       sensitivity: value.sensitivity,
       estimates: getField(value, 'estimates', value.default_measurement),
-      estimates_eq: getField(value, 'estimates_eq', value.default_measurement),
+      estimatesEq: getField(value, 'estimates_eq', value.default_measurement),
       scores: scores,
-      scoresEQ: scoresEQ,
+      scoresEq: scoresEq,
       reviews: getReviews(value),
       img: {
         // avif: getPicture(value.brand, value.model, "avif"),

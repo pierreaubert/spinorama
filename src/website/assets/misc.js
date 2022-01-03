@@ -89,7 +89,6 @@ export function getField (value, field, version) {
 export function getReviews (value) {
   const reviews = []
   for (const version in value.measurements) {
-    console.log('Version is: ' + version)
     const measurement = value.measurements[version]
     let origin = measurement.origin
     const url = value.brand + ' ' + value.model + '/' + removeVendors(origin) + '/index_' + version + '.html'
@@ -113,9 +112,9 @@ export function getReviews (value) {
       origin: origin,
       version: version,
       scores: getField(value, 'pref_rating', version),
-      scoresEQ: getField(value, 'pref_rating_eq', version),
+      scoresEq: getField(value, 'pref_rating_eq', version),
       estimates: getField(value, 'estimates', version),
-      estimatesEQ: getField(value, 'estimates_eq', version)
+      estimatesEq: getField(value, 'estimates_eq', version)
     })
   }
   return {

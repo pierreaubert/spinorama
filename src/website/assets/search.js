@@ -32,7 +32,7 @@ fetch(urlSite + 'assets/metadata.json').then(
 
     if (keywords === '') {
       // console.log("display filter");
-      display_filter(resultdiv, metadata, filter)
+      displayFilter(resultdiv, metadata, filter)
     } else {
       // console.log("display search");
       const fuse = new Fuse(metadata, {
@@ -47,7 +47,7 @@ fetch(urlSite + 'assets/metadata.json').then(
         useExatendedSearch: true
       })
       const results = fuse.search(keywords)
-      display_search(resultdiv, metadata, results, filter)
+      displaySearch(resultdiv, metadata, results, filter)
     }
     show(resultdiv)
   }
@@ -93,7 +93,7 @@ fetch(urlSite + 'assets/metadata.json').then(
       for (const [name, measurement] of Object.entries(item.measurements)) {
         const origin = measurement.origin.toLowerCase()
         // console.log("debug: name="+name+" origin="+origin+" filter.reviewer="+filter.reviewer);
-        if (name.toLowerCase().endsWith(filter.reviewer.toLowerCase()) || origin == filter.reviewer.toLowerCase()) {
+        if (name.toLowerCase().endsWith(filter.reviewer.toLowerCase()) || origin === filter.reviewer.toLowerCase()) {
           found = false
           break
         }
@@ -108,7 +108,7 @@ fetch(urlSite + 'assets/metadata.json').then(
       for (const [name, measurement] of Object.entries(item.measurements)) {
         const quality = measurement.quality.toLowerCase()
         // console.log("filter.quality="+filter.quality+" quality="+quality);
-        if (filter.quality !== '' && quality == filter.quality.toLowerCase()) {
+        if (filter.quality !== '' && quality === filter.quality.toLowerCase()) {
           found = false
           break
         }
@@ -133,31 +133,31 @@ fetch(urlSite + 'assets/metadata.json').then(
     return shouldShow
   }
 
-  function display_filter (resultdiv, sorted_meta, filter) {
-    // console.log("display filter start #" + sorted_meta.length);
-    for (const item in sorted_meta) {
-      const shouldShow = isFiltered(sorted_meta[item], filter)
-      const id = (sorted_meta[item].brand + '-' + sorted_meta[item].model).replace(/['.+& ]/g, '-')
+  function displayFilter (resultdiv, smeta, filter) {
+    // console.log("display filter start #" + smeta.length);
+    for (const item in smeta) {
+      const shouldShow = isFiltered(smeta[item], filter)
+      const id = (smeta[item].brand + '-' + smeta[item].model).replace(/['.+& ]/g, '-')
       if (shouldShow) {
-        // console.log(sorted_meta[item].brand + "-"+ sorted_meta[item].model + " is shouldShown");
+        // console.log(smeta[item].brand + "-"+ smeta[item].model + " is shouldShown");
         show(document.querySelector('#' + id))
       } else {
-        // console.log(sorted_meta[item].brand + "-"+ sorted_meta[item].model + " is filtered");
+        // console.log(smeta[item].brand + "-"+ smeta[item].model + " is filtered");
         hide(document.querySelector('#' + id))
       }
     }
   }
 
-  function display_search (resultdiv, sorted_meta, results, filter) {
+  function displaySearch (resultdiv, smeta, results, filter) {
     // console.log("---------- display search start ----------------");
     const keywords = document.querySelector('#searchInput').value
     if (results.length === 0) {
-      display_filter(resultdiv, sorted_meta, filter)
+      displayFilter(resultdiv, smeta, filter)
       return
     }
     // hide all
-    for (const item in sorted_meta) {
-      const id = (sorted_meta[item].brand + '-' + sorted_meta[item].model).replace(/['.+& ]/g, '-')
+    for (const item in smeta) {
+      const id = (smeta[item].brand + '-' + smeta[item].model).replace(/['.+& ]/g, '-')
       hide(document.querySelector('#' + id))
     }
     // minScore
@@ -171,18 +171,18 @@ fetch(urlSite + 'assets/metadata.json').then(
     for (const item in results) {
       let shouldShow = true
       const result = results[item]
-      const item_meta = result.item
+      const imeta = result.item
       const score = result.score
-      // console.log("evaluating "+item_meta.brand+" "+item_meta.model+" "+score);
-      if (!isFiltered(item_meta, filter)) {
+      // console.log("evaluating "+imeta.brand+" "+imeta.model+" "+score);
+      if (!isFiltered(imeta, filter)) {
         // console.log("filtered out (filter)");
         shouldShow = false
       }
       if (shouldShow) {
         if (minScore < Math.pow(10, -15)) {
-          const is_exact = item_meta.model.toLowerCase().includes(keywords.toLowerCase())
+          const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase())
           // we have an exact match, only shouldShow other exact matches
-          if (score >= Math.pow(10, -15) && !is_exact) {
+          if (score >= Math.pow(10, -15) && !isExact) {
             // console.log("filtered out (minscore)" + score);
             shouldShow = false
           }
@@ -194,12 +194,12 @@ fetch(urlSite + 'assets/metadata.json').then(
           }
         }
       }
-      const id = (item_meta.brand + '-' + item_meta.model).replace(/['.+& ]/g, '-')
+      const id = (imeta.brand + '-' + imeta.model).replace(/['.+& ]/g, '-')
       if (shouldShow) {
-        // console.log("show "+item_meta.brand+" "+item_meta.model+" "+score);
+        // console.log("show "+imeta.brand+" "+imeta.model+" "+score);
         show(document.querySelector('#' + id))
       } else {
-        // console.log("hide "+item_meta.brand+" "+item_meta.model+" "+score);
+        // console.log("hide "+imeta.brand+" "+imeta.model+" "+score);
         hide(document.querySelector('#' + id))
       }
     }

@@ -68,8 +68,8 @@
         {{#unless (isNaN scores.pref_score)}}
         <b>{{scores.pref_score}}</b>&nbsp;&dash;
         <b>{{scores.pref_score_wsub}}</b>&nbsp;&dash;
-        <b>{{scoresEQ.pref_score}}</b>&nbsp;&dash;
-        <b>{{scoresEQ.pref_score_wsub}}</b>
+        <b>{{scoresEq.pref_score}}</b>&nbsp;&dash;
+        <b>{{scoresEq.pref_score_wsub}}</b>
         {{/unless}}
       </span>
       <button class="is-small is-info" aria-label="more options" id="{{id}}-button">
@@ -92,14 +92,14 @@
                 </td>
                 <td>Def.
                 </td>
-                <td>w/EQ
+                <td>w/Eq
                 </td>
                 {{#unless (isNaN scores.pref_score)}}
                 <td>Score components
                 </td>
                 <td>Def.
                 </td>
-                <td>w/EQ
+                <td>w/Eq
                 </td>
                 {{/unless}}
               </tr>
@@ -112,7 +112,7 @@
                 {{#unless (isNaN scores.pref_score)}}
                 <td>NBD ON:</td>
                 <td>{{this.scores.nbd_on_axis}}</td>
-                <td>{{this.scoresEQ.nbd_on_axis}}</td>
+                <td>{{this.scoresEq.nbd_on_axis}}</td>
                 {{/unless}}
               </tr>
               <tr class="has-text-right">
@@ -122,7 +122,7 @@
                 {{#unless (isNaN scores.pref_score)}}
                 <td>NBD LW:</td>
                 <td>{{this.scores.nbd_listening_window}}</td>
-                <td>{{this.scoresEQ.nbd_listening_window}}</td>
+                <td>{{this.scoresEq.nbd_listening_window}}</td>
                 {{/unless}}
               </tr>
               <tr class="has-text-right">
@@ -132,7 +132,7 @@
                 {{#unless (isNaN scores.pref_score)}}
                 <td>LFX (Hz):</td>
                 <td>{{this.this.scores.lfx_hz}}</td>
-                <td>{{this.scoresEQ.lfx_hz}}</td>
+                <td>{{this.scoresEq.lfx_hz}}</td>
                 {{/unless}}
               </tr>
               <tr class="has-text-right">
@@ -142,7 +142,7 @@
                 {{#unless (isNaN scores.pref_score)}}
                 <td>SM PIR:</td>
                 <td>{{this.scores.sm_pred_in_room}}</td>
-                <td>{{this.scoresEQ.sm_pred_in_room}}</td>
+                <td>{{this.scoresEq.sm_pred_in_room}}</td>
                 {{/unless}}
               </tr>
               <tr class="has-text-right">
@@ -152,7 +152,7 @@
                 {{#unless (isNaN scores.pref_score)}}
                 <td>SM SP:</td>
                 <td>{{this.scores.sm_sound_power}}</td>
-                <td>{{this.scoresEQ.sm_sound_power}}</td>
+                <td>{{this.scoresEq.sm_sound_power}}</td>
                 {{/unless}}
               </tr>
               <tr class="has-text-right">
@@ -162,7 +162,7 @@
                 {{#unless (isNaN scores.pref_score)}}
                 <td>Score</td>
                 <td><b>{{this.scores.pref_score}}</b></td>
-                <td><b>{{this.scoresEQ.pref_score}}</b></td>
+                <td><b>{{this.scoresEq.pref_score}}</b></td>
                 {{/unless}}
               </tr>
               <tr class="has-text-right">
@@ -172,7 +172,7 @@
                 {{#unless (isNaN scores.pref_score)}}
                 <td>Score with subwoofer</td>
                 <td><b>{{this.scores.pref_score_wsub}}</b></td>
-                <td><b>{{this.scoresEQ.pref_score_wsub}}</b></td>
+                <td><b>{{this.scoresEq.pref_score_wsub}}</b></td>
                 {{/unless}}
               </tr>
               {{/each}}
