@@ -1,5 +1,5 @@
-// import { urlSite, getID, getPicture, getLoading, getDecoding, getScore, getReviews } from 'misc.js'
-// import { sortMetadata } from 'sort.js'
+import { urlSite, getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc.js'
+import { sortMetadata } from './sort.js'
 
 fetch(urlSite + 'assets/metadata.json').then(
   function (response) {
@@ -21,14 +21,15 @@ fetch(urlSite + 'assets/metadata.json').then(
         loading: getLoading(key),
         decoding: getDecoding(key)
       },
-      score: getScore(value),
+      score: getScore(value, value.default_measurement),
       reviews: getReviews(value)
     }
   }
 
+  const source = document.querySelector('#speaker').innerHTML
+  const template = Handlebars.compile(source)
+
   function printSpeaker (key, value) {
-    const source = document.querySelector('#speaker').innerHTML
-    const template = Handlebars.compile(source)
     const context = getContext(key, value)
     const html = template(context)
     const divSpeaker = document.createElement('div')

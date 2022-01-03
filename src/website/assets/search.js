@@ -1,5 +1,5 @@
-// import { urlSite, show, hide } from 'misc.js'
-// import { sortMetadata } from 'sort.js'
+import { urlSite, show, hide } from './misc.js'
+import { sortMetadata } from './sort.js'
 
 fetch(urlSite + 'assets/metadata.json').then(
   function (response) {

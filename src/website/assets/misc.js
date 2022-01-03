@@ -1,21 +1,22 @@
-const urlSite = '${site}' + '/'
+export const urlSite = '${site}' + '/'
 
 // hide an element
-const hide = (elem) => {
+export const hide = (elem) => {
   elem.classList.add('hidden')
 }
 
 // show an element
-const show = (elem) => {
+export const show = (elem) => {
   elem.classList.remove('hidden')
 }
 
 // toggle the element visibility
-const toggle = (elem) => {
+export const toggle = (elem) => {
   elem.classList.toggle('hidden')
 }
-const toggleId = (id) => {
-  elem = document.querySelector(id)
+
+export function toggleId (id) {
+  const elem = document.querySelector(id)
   if (elem && elem.classList) {
     elem.classList.toggle('hidden')
   }
@@ -49,7 +50,7 @@ function getEQType (type) {
   return val
 }
 
-function getPeq (peq) {
+export function getPeq (peq) {
   const peqPrint = []
   peq.forEach((eq) => {
     peqPrint.push({
@@ -62,35 +63,33 @@ function getPeq (peq) {
   return peqPrint
 }
 
-function getPicture (brand, model, suffix) {
+export function getPicture (brand, model, suffix) {
   return encodeURI('pictures/' + brand + ' ' + model + '.' + suffix)
 }
 
-function removeVendors (str) {
+export function removeVendors (str) {
   return str.replace('Vendors-', '')
 }
 
-function getID (brand, model) {
+export function getID (brand, model) {
   return (brand + ' ' + model).replace(/['.+& ]/g, '-')
 }
 
-function getField (value, field) {
+export function getField (value, field, version) {
   let fields = {}
-  if (value.default_measurement) {
-    const current = value.default_measurement
-    if (value.measurements && value.measurements[current]) {
-      const measurement = value.measurements[current]
-      if (measurement.hasOwnProperty(field)) {
-        fields = measurement[field]
-      }
+  if (value.measurements && value.measurements[version]) {
+    const measurement = value.measurements[version]
+    if (measurement.hasOwnProperty(field)) {
+      fields = measurement[field]
     }
   }
   return fields
 }
 
-function getReviews (value) {
+export function getReviews (value) {
   const reviews = []
   for (const version in value.measurements) {
+    console.log('Version is: ' + version)
     const measurement = value.measurements[version]
     let origin = measurement.origin
     const url = value.brand + ' ' + value.model + '/' + removeVendors(origin) + '/index_' + version + '.html'
@@ -111,7 +110,12 @@ function getReviews (value) {
     origin = origin.charAt(0).toUpperCase() + origin.slice(1)
     reviews.push({
       url: encodeURI(url),
-      origin: origin
+      origin: origin,
+      version: version,
+      scores: getField(value, 'pref_rating', version),
+      scoresEQ: getField(value, 'pref_rating_eq', version),
+      estimates: getField(value, 'estimates', version),
+      estimatesEQ: getField(value, 'estimates_eq', version)
     })
   }
   return {
@@ -119,8 +123,10 @@ function getReviews (value) {
   }
 }
 
-function getScore (value) {
-  const def = value.default_measurement
+export function getScore (value, def) {
+  if (def) {
+    def = value.default_measurement
+  }
   let score = 0.0
   let lfx = 0.0
   let flatness = 0.0
@@ -163,14 +169,14 @@ function getScore (value) {
   }
 }
 
-function getLoading (key) {
+export function getLoading (key) {
   if (key < 12) {
     return 'eager'
   }
   return 'lazy'
 }
 
-function getDecoding (key) {
+export function getDecoding (key) {
   if (key < 12) {
     return 'sync'
   }

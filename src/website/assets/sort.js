@@ -1,4 +1,4 @@
-function sortMetadata (currentMetadata, currentContainer, current_sorter) {
+export function sortMetadata (currentMetadata, currentContainer, current_sorter) {
   // console.log("starting sort + sort_by:"+current_sorter.by);
   // TODO build once
   // build a hash map

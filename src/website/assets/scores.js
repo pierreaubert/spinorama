@@ -1,5 +1,5 @@
-// import { urlSite, getID, getPicture, getLoading, getDecoding, getField, getReviews } from 'misc.js'
-// import { sortMetadata } from 'sort.js'
+import { urlSite, toggleId, getID, getPicture, getLoading, getDecoding, getField, getReviews } from './misc.js'
+import { sortMetadata } from './sort.js'
 
 fetch(urlSite + 'assets/metadata.json').then(
   function (response) {
@@ -15,10 +15,10 @@ fetch(urlSite + 'assets/metadata.json').then(
 
   function getContext (key, value) {
     // console.log(getReviews(value));
-    const scores = getField(value, 'pref_rating')
+    const scores = getField(value, 'pref_rating', value.default_measurement)
     scores.pref_score = parseFloat(scores.pref_score).toFixed(1)
     scores.pref_score_wsub = parseFloat(scores.pref_score_wsub).toFixed(1)
-    const scoresEQ = getField(value, 'pref_rating_eq')
+    const scoresEQ = getField(value, 'pref_rating_eq', value.default_measurement)
     scoresEQ.pref_score = parseFloat(scoresEQ.pref_score).toFixed(1)
     scoresEQ.pref_score_wsub = parseFloat(scoresEQ.pref_score_wsub).toFixed(1)
     return {
@@ -26,8 +26,8 @@ fetch(urlSite + 'assets/metadata.json').then(
       brand: value.brand,
       model: value.model,
       sensitivity: value.sensitivity,
-      estimates: getField(value, 'estimates'),
-      estimates_eq: getField(value, 'estimates_eq'),
+      estimates: getField(value, 'estimates', value.default_measurement),
+      estimates_eq: getField(value, 'estimates_eq', value.default_measurement),
       scores: scores,
       scoresEQ: scoresEQ,
       reviews: getReviews(value),
@@ -42,15 +42,22 @@ fetch(urlSite + 'assets/metadata.json').then(
     }
   }
 
+  Handlebars.registerHelper('isNaN', function (value) {
+    return isNaN(value)
+  })
+
+  const source = document.querySelector('#scoresht').innerHTML
+  const template = Handlebars.compile(source)
+
   function printScore (key, value) {
-    const source = document.querySelector('#scoresht').innerHTML
-    const template = Handlebars.compile(source)
     const context = getContext(key, value)
     const html = template(context)
     const divScore = document.createElement('div')
     divScore.setAttribute('id', context.id)
     divScore.setAttribute('class', 'column py-0 is-12 is-vertical')
     divScore.innerHTML = html
+    const button = divScore.querySelector('#' + context.id + '-button')
+    button.addEventListener('click', e => toggleId('#' + context.id + '-details'))
     return divScore
   }
 

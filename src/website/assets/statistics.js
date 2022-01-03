@@ -1,3 +1,5 @@
+import { urlSite } from './misc.js'
+
 fetch(urlSite + 'assets/metadata.json').then(
   function (response) {
     return response.text()

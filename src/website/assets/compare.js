@@ -1,5 +1,5 @@
-// import urlSite from 'misc.js'
-// import downloadZip from 'downloadZip.js'
+import { urlSite } from './misc.js'
+import { downloadZip } from './downloadzip.js'
 
 const knownMeasurements = [
   'CEA2034',

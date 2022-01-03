@@ -1,5 +1,5 @@
 window.onload = () => {
-  const navbarBurger = document.querySelector('.navbar-burger')
+  const navbarBurger = document.querySelector('#navbar-burger')
   const navbarMenu = document.querySelector('.navbar-menu')
 
   navbarBurger.addEventListener('click', (e) => {

@@ -1,4 +1,4 @@
-function downloadZip (url) {
+export function downloadZip (url) {
   async function get (entry) {
     return entry.getData(new zip.TextWriter())
   };

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <%include file="head.html"/>
-    <script src="${site}/assets/graph.js"></script>
+    <script typ="module" src="./assets/graph.js"></script>
     <%include file="head_vega.html"/>
   </head>
 <body>
@@ -15,7 +15,7 @@
 
 <div id="visGraph"></div>
 
-<script>
+<script type="module">
   const spec = downloadZip("${graph | space2url}.json.zip").then(
     function(spec) {
       displayGraph(JSON.parse(spec), visGraph);

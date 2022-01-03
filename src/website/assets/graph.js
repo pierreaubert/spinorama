@@ -1,4 +1,4 @@
-//window.onload = () => {
+// window.onload = () => {
 //  if (window.screen) {
 //    const screen = window.screen
 //      if (screen.orientation) {
@@ -8,9 +8,9 @@
 //          })
 //      }
 //  }
-//}
+// }
 
-function displayGraph (spec, divName) {
+export function displayGraph (spec, divName) {
   async function run () {
     let displayModeBar = true
     let w = window.innerWidth
