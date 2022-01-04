@@ -45,11 +45,13 @@
   <!-- Speakers -->
   <div class="searchresults">
     <div class="columns is-multiline is-1" id="speakers" data-num="0">
-      <script type="module" src='./assets/index.js'></script>
+      <script type="module">
+        import {display} from './assets/index.js'
+        display()
+      </script>
     </div>
   </div>
 </div>
 
-<script type="module" src="./assets/search.js"></script>
-
+<%include file="search.html"/>
 <%include file="footer.html"/>

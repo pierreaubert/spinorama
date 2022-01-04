@@ -274,7 +274,7 @@ if __name__ == "__main__":
                     )
                 )
                 f.close()
-        for item in ("help", "compare", "statistics"):
+        for item in ("help", "compare", "statistics", "search"):
             item_name = "{0}.html".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
@@ -309,6 +309,7 @@ if __name__ == "__main__":
             "scores",
             "statistics",
             "misc",
+            "metadata",
         ):
             item_name = "assets/{0}.js".format(item)
             logger.info("Write {0}".format(item_name))

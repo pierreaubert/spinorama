@@ -196,7 +196,10 @@
   <!-- Speakers -->
   <div class="searchresults">
     <div class="columns is-multiline is-1" id="scores" data-num="0">
-      <script type="module" src='./assets/scores.js'></script>
+      <script type="module">
+        import { display } from './assets/scores.js'
+        display()
+      </script>
     </div>
   </div>
 </div>
