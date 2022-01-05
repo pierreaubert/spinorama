@@ -46,8 +46,11 @@
   <div class="searchresults">
     <div class="columns is-multiline is-1" id="speakers" data-num="0">
       <script type="module">
-        import {display} from './assets/index.js'
-        display()
+        import('./assets/index.js').then(
+          mod => mod.display()
+        ).catch( err =>
+          console.log(err.message)
+        )
       </script>
     </div>
   </div>

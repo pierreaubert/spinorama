@@ -70,7 +70,7 @@ function getScoreEqWsub2 (key) {
   return -10.0
 }
 
-function sortMetadata2 (metadata, sorter) {
+export function sortMetadata2 (metadata, sorter) {
   if (sorter.by === 'date') {
     return sortChildren2({ container: metadata, score: k => getDate2(k) })
   } else if (sorter.by === 'score') {

@@ -1,4 +1,7 @@
 <script type="module">
-  import { search } from './assets/search.js'
-  search()
+  import('./assets/search.js').then(
+    mod => mod.search()
+  ).catch(
+    err => console.log(err)
+  )
 </script>

@@ -1,6 +1,6 @@
 import { getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc.js'
 import metadata from './metadata.js'
-import { byDate } from './sort.js'
+import { sortMetadata2 } from './sort.js'
 
 function getContext (key, value) {
   // console.log(getReviews(value));
@@ -36,7 +36,7 @@ function printSpeaker (key, value) {
 export function display () {
   const speakerContainer = document.querySelector('[data-num="0"')
   const fragment = new DocumentFragment()
-  byDate.forEach(function (value, key) {
+  sortMetadata2(metadata, { by: 'date' }).forEach(function (value, key) {
     const speaker = metadata[value]
     fragment.appendChild(printSpeaker(key, speaker))
   })

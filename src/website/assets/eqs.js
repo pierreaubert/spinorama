@@ -1,5 +1,5 @@
 import metadata from './metadata.js'
-import { byDate } from './sort.js'
+import { sortMetadata2 } from './sort.js'
 import { getPeq, getID } from './misc.js'
 
 function getContext (key, value) {
@@ -31,7 +31,7 @@ function printEQ (key, value) {
 export function display () {
   const speakerContainer = document.querySelector('[data-num="0"')
   const fragment1 = new DocumentFragment()
-  byDate.forEach(function (value, key) {
+  sortMetadata2(metadata, { by: 'date' }).forEach(function (value, key) {
     const speaker = metadata[value]
     if ('eq_autoeq' in speaker) {
       fragment1.appendChild(printEQ(value, speaker))

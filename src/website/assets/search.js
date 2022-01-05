@@ -1,5 +1,5 @@
 import metadata from './metadata.js'
-import { sortBy, sortMetadata } from './sort.js'
+import { sortMetadata } from './sort.js'
 import { show, hide } from './misc.js'
 
 let fuse = null
@@ -79,7 +79,7 @@ function displayFilter (resultdiv, smeta, filter) {
 }
 
 function displaySearch (resultdiv, smeta, results, filter) {
-  console.log('---------- display search start ----------------')
+  // console.log('---------- display search start ----------------')
   const keywords = document.querySelector('#searchInput').value
   if (results.length === 0) {
     displayFilter(resultdiv, smeta, filter)
@@ -99,14 +99,14 @@ function displaySearch (resultdiv, smeta, results, filter) {
       minScore = results[spk].score
     }
   }
-  console.log('minScore is ' + minScore)
+  // console.log('minScore is ' + minScore)
   for (const spk in results) {
     let shouldShow = true
     const result = results[spk]
     const imeta = result.item
     const score = result.score
     if (!isFiltered(imeta, filter)) {
-      console.log('filtered out (filter)')
+      // console.log('filtered out (filter)')
       shouldShow = false
     }
     if (shouldShow) {
@@ -114,23 +114,23 @@ function displaySearch (resultdiv, smeta, results, filter) {
         const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase())
         // we have an exact match, only shouldShow other exact matches
         if (score >= Math.pow(10, -15) && !isExact) {
-          console.log('filtered out (minscore)' + score)
+          // console.log('filtered out (minscore)' + score)
           shouldShow = false
         }
       } else {
         // only partial match
         if (score > minScore * 10) {
-          console.log('filtered out (score=' + score + 'minscore=' + minScore + ')')
+          // console.log('filtered out (score=' + score + 'minscore=' + minScore + ')')
           shouldShow = false
         }
       }
     }
     const id = (imeta.brand + '-' + imeta.model).replace(/['.+& ]/g, '-')
     if (shouldShow) {
-      console.log('show ' + imeta.brand + ' ' + imeta.model + ' ' + score)
+      // console.log('show ' + imeta.brand + ' ' + imeta.model + ' ' + score)
       show(document.querySelector('#' + id))
     } else {
-      console.log('hide ' + imeta.brand + ' ' + imeta.model + ' ' + score)
+      // console.log('hide ' + imeta.brand + ' ' + imeta.model + ' ' + score)
       hide(document.querySelector('#' + id))
     }
   }
@@ -139,7 +139,7 @@ function displaySearch (resultdiv, smeta, results, filter) {
 function selectDispatch () {
   const resultdiv = document.querySelector('div.searchresults')
   const keywords = document.querySelector('#searchInput').value
-  console.log('keywords: ' + keywords)
+  // console.log('keywords: ' + keywords)
 
   // need to sort here
   sortMetadata(
@@ -149,10 +149,10 @@ function selectDispatch () {
 
   //
   if (keywords === '') {
-    console.log('display filter')
+    // console.log('display filter')
     displayFilter(resultdiv, metadata, filter)
   } else {
-    console.log('display search')
+    // console.log('display search')
     const results = fuse.search(keywords)
     displaySearch(resultdiv, metadata, results, filter)
   }

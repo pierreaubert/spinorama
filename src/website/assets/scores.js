@@ -1,5 +1,5 @@
 import metadata from './metadata.js'
-import { byScore } from './sort.js'
+import { sortMetadata2 } from './sort.js'
 import { toggleId, getID, getPicture, getLoading, getDecoding, getField, getReviews } from './misc.js'
 
 function getSpider (brand, model) {
@@ -59,7 +59,7 @@ export function display () {
   const speakerContainer = document.querySelector('[data-num="0"')
   const fragment1 = new DocumentFragment()
 
-  byScore.forEach(function (value, key) {
+  sortMetadata2(metadata, { by: 'score' }).forEach(function (value, key) {
     const speaker = metadata[value]
     fragment1.appendChild(printScore(value, speaker))
   })

@@ -53,13 +53,15 @@
   <div class="searchresults">
     <div class="columns is-multiline is-1" id="eqs" data-num="0">
       <script type="module">
-        import { display} from './assets/eqs.js'
-        display()
+        import('./assets/eqs.js').then(
+          mod => mod.display()
+        ).catch( err =>
+          console.log(err.message)
+        )
       </script>
     </div>
   </div>
 </div>
 
-<script type="module" src="./assets/search.js"></script>
-
+<%include file="search.html"/>
 <%include file="footer.html"/>
