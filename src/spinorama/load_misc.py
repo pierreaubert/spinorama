@@ -30,6 +30,8 @@ def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:
 
 def check_nan(df):
     for k in df.keys():
+        if not isinstance(df[k], pd.DataFrame):
+            continue
         for j in df[k].keys():
             if isinstance(df[k], pd.DataFrame):
                 count = df[k][j].isna().sum()

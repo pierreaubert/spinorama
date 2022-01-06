@@ -115,6 +115,9 @@ def filter_graphs(speaker_name, h_spl, v_spl):
     else:
         logger.info("v_spl is None for speaker {}".format(speaker_name))
 
+    if mean is not None:
+        dfs["sensitivity"] = mean
+
     # add computed graphs
     table = [
         ["Early Reflections", early_reflections],
@@ -196,6 +199,7 @@ def filter_graphs_partial(df):
             )
     if mean is not None:
         logger.debug("DEBUG: mean {}".format(mean))
+        dfs["sensitivity"] = mean
         for k in df.keys():
             if k == "CEA2034":
                 logger.debug(
@@ -220,7 +224,8 @@ def filter_graphs_partial(df):
 
     logger.debug("DEBUG  filter_graphs partial {}".format(dfs.keys()))
     for k in dfs.keys():
-        logger.debug(dfs[k].head())
+        if k != "sensitivity":
+            logger.debug(dfs[k].head())
     logger.debug(
         "filter in: keys={} out: mean={} keys={}".format(df.keys(), mean, dfs.keys())
     )
