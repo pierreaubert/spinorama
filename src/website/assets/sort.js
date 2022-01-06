@@ -1,76 +1,73 @@
-import metadata from './metadata.js'
-
-// sort children
-const sortChildren2 = ({ container, score }) => {
-  const items = [...Array(container.length).keys()]
-  items.sort((a, b) => score(b) - score(a))
-  return items
-}
-
-function getDate2 (key) {
-  const spk = metadata[key]
-  const def = spk.default_measurement
-  const msr = spk.measurements[def]
-  // comparing ints (works because 20210101 is bigger than 20201010)
-  if ('review_published' in msr) {
-    const reviewPublished = parseInt(msr.review_published)
-    if (!isNaN(reviewPublished)) {
-      return reviewPublished
-    }
-  }
-  return 19700101
-}
-
-function getPrice2 (key) {
-  const spk = metadata[key]
-  const price = parseInt(spk.price)
-  if (!isNaN(price)) {
-    return price
-  }
-  return -1
-}
-
-function getScore2 (key) {
-  const spk = metadata[key]
-  const def = spk.default_measurement
-  const msr = spk.measurements[def]
-  if ('pref_rating' in msr && 'pref_score' in msr.pref_rating) {
-    return spk.measurements[def].pref_rating.pref_score
-  }
-  return -10.0
-}
-
-function getScoreWsub2 (key) {
-  const spk = metadata[key]
-  const def = spk.default_measurement
-  const msr = spk.measurements[def]
-  if ('pref_rating' in msr && 'pref_score_wsub' in msr.pref_rating) {
-    return spk.measurements[def].pref_rating.pref_score_wsub
-  }
-  return -10.0
-}
-
-function getScoreEq2 (key) {
-  const spk = metadata[key]
-  const def = spk.default_measurement
-  const msr = spk.measurements[def]
-  if ('pref_rating_eq' in msr && 'pref_score' in msr.pref_rating_eq) {
-    return spk.measurements[def].pref_rating_eq.pref_score
-  }
-  return -10.0
-}
-
-function getScoreEqWsub2 (key) {
-  const spk = metadata[key]
-  const def = spk.default_measurement
-  const msr = spk.measurements[def]
-  if ('pref_rating_eq' in msr && 'pref_score_wsub' in msr.pref_rating_eq) {
-    return spk.measurements[def].pref_rating_eq.pref_score_wsub
-  }
-  return -10.0
-}
-
 export function sortMetadata2 (metadata, sorter) {
+  const sortChildren2 = ({ container, score }) => {
+    const items = [...Array(container.length).keys()]
+    items.sort((a, b) => score(b) - score(a))
+    return items
+  }
+
+  function getDate2 (key) {
+    const spk = metadata[key]
+    const def = spk.default_measurement
+    const msr = spk.measurements[def]
+    // comparing ints (works because 20210101 is bigger than 20201010)
+    if ('review_published' in msr) {
+      const reviewPublished = parseInt(msr.review_published)
+      if (!isNaN(reviewPublished)) {
+        return reviewPublished
+      }
+    }
+    return 19700101
+  }
+
+  function getPrice2 (key) {
+    const spk = metadata[key]
+    const price = parseInt(spk.price)
+    if (!isNaN(price)) {
+      return price
+    }
+    return -1
+  }
+
+  function getScore2 (key) {
+    const spk = metadata[key]
+    const def = spk.default_measurement
+    const msr = spk.measurements[def]
+    if ('pref_rating' in msr && 'pref_score' in msr.pref_rating) {
+      return spk.measurements[def].pref_rating.pref_score
+    }
+    return -10.0
+  }
+
+  function getScoreWsub2 (key) {
+    const spk = metadata[key]
+    const def = spk.default_measurement
+    const msr = spk.measurements[def]
+    if ('pref_rating' in msr && 'pref_score_wsub' in msr.pref_rating) {
+      return spk.measurements[def].pref_rating.pref_score_wsub
+    }
+    return -10.0
+  }
+
+  function getScoreEq2 (key) {
+    const spk = metadata[key]
+    const def = spk.default_measurement
+    const msr = spk.measurements[def]
+    if ('pref_rating_eq' in msr && 'pref_score' in msr.pref_rating_eq) {
+      return spk.measurements[def].pref_rating_eq.pref_score
+    }
+    return -10.0
+  }
+
+  function getScoreEqWsub2 (key) {
+    const spk = metadata[key]
+    const def = spk.default_measurement
+    const msr = spk.measurements[def]
+    if ('pref_rating_eq' in msr && 'pref_score_wsub' in msr.pref_rating_eq) {
+      return spk.measurements[def].pref_rating_eq.pref_score_wsub
+    }
+    return -10.0
+  }
+
   if (sorter.by === 'date') {
     return sortChildren2({ container: metadata, score: k => getDate2(k) })
   } else if (sorter.by === 'score') {
@@ -85,29 +82,6 @@ export function sortMetadata2 (metadata, sorter) {
     return sortChildren2({ container: metadata, score: k => getPrice2(k) })
   } else {
     console.log('ERROR: unknown sorter ' + sorter.by)
-  }
-}
-
-export const byDate = sortMetadata2(metadata, { by: 'date' })
-export const byScore = sortMetadata2(metadata, { by: 'score' })
-export const byScoreEq = sortMetadata2(metadata, { by: 'scoreEQ' })
-export const byScoreWsub = sortMetadata2(metadata, { by: 'scoreWSUB' })
-export const byScoreEqWsub = sortMetadata2(metadata, { by: 'scoreEQWSUB' })
-export const byPrice = sortMetadata2(metadata, { by: 'price' })
-
-export function sortBy (metadata, sorter) {
-  if (sorter.by === 'date') {
-    return byDate
-  } else if (sorter.by === 'score') {
-    return byScore
-  } else if (sorter.by === 'scoreEq') {
-    return byScoreEq
-  } else if (sorter.by === 'scoreWSub') {
-    return byScoreWsub
-  } else if (sorter.by === 'scoreEqWsub') {
-    return byScoreEqWsub
-  } else if (sorter.by === 'price') {
-    return byPrice
   }
 }
 
