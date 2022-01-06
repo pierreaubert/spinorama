@@ -309,7 +309,6 @@ if __name__ == "__main__":
             "scores",
             "statistics",
             "misc",
-            "metadata",
         ):
             item_name = "assets/{0}.js".format(item)
             logger.info("Write {0}".format(item_name))
