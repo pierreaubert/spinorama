@@ -115,7 +115,9 @@ def filter_graphs(speaker_name, h_spl, v_spl):
     else:
         logger.info("v_spl is None for speaker {}".format(speaker_name))
 
-    if mean is not None:
+    # horrible hack for EQ speakers which are already normalized
+    if mean is not None and mean > 20:
+        # print('{} sensitivity {}'.format(speaker_name, mean))
         dfs["sensitivity"] = mean
 
     # add computed graphs
@@ -199,7 +201,8 @@ def filter_graphs_partial(df):
             )
     if mean is not None:
         logger.debug("DEBUG: mean {}".format(mean))
-        dfs["sensitivity"] = mean
+        if mean > 20:
+            dfs["sensitivity"] = mean
         for k in df.keys():
             if k == "CEA2034":
                 logger.debug(

@@ -48,9 +48,6 @@ def parse_eq_speaker(speaker_path: str, speaker_name: str, df_ref: dict) -> dict
             eq_h_spl = peq_apply_measurements(h_spl, iir)
             eq_v_spl = peq_apply_measurements(v_spl, iir)
             df_eq = filter_graphs(speaker_name, eq_h_spl, eq_v_spl)
-            # normalize wrt to original measurement to make comparison easier
-            # original_mean = df_ref.get('CEA2034_original_mean', None)
-            # return load_normalize(df_eq, original_mean)
             return df_eq
         elif "CEA2034" in df_ref.keys():
             spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir)

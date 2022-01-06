@@ -274,7 +274,7 @@ if __name__ == "__main__":
                     )
                 )
                 f.close()
-        for item in ("help", "compare", "statistics", "search"):
+        for item in ("help", "compare", "statistics"):
             item_name = "{0}.html".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
@@ -300,16 +300,7 @@ if __name__ == "__main__":
     # copy css/js files
     logger.info("Copy js/css files to docs")
     try:
-        for item in (
-            "compare",
-            "search",
-            "index",
-            "sort",
-            "eqs",
-            "scores",
-            "statistics",
-            "misc",
-        ):
+        for item in ("misc",):
             item_name = "assets/{0}.js".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
@@ -324,6 +315,13 @@ if __name__ == "__main__":
         "favicon.ico",
         "favicon-16x16.png",
         "spinorama.css",
+        "compare.js",
+        "search.js",
+        "index.js",
+        "sort.js",
+        "eqs.js",
+        "scores.js",
+        "statistics.js",
         "onload.js",
         "tabs.js",
         "graph.js",

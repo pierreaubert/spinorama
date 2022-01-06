@@ -43,10 +43,18 @@ fetch(urlSite + 'assets/metadata.json').then(
     const fragment = new DocumentFragment()
     sortMetadata2(metadata, { by: 'date' }).forEach(function (value, key) {
       const speaker = metadata[value]
-      console.log(speaker)
       fragment.appendChild(printSpeaker(key, speaker))
     })
     speakerContainer.appendChild(fragment)
+  }
+
+  function display2 () {
+    sortMetadata2(metadata, { by: 'date' }).forEach(function (value, key) {
+      if (key < 12) {
+        const speaker = metadata[value]
+        speakerContainer.appendChild(printSpeaker(key, speaker))
+      }
+    })
   }
 
   display()

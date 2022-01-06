@@ -45,31 +45,24 @@
     estimates = None
     pref_rating = None
     sensitivity = meta[speaker].get('sensitivity', None)
-    sensitivity_delta = None
+    sdb = None
     default = meta[speaker].get('default_measurement')
     if default is not None and default in meta[speaker]['measurements'].keys():
         estimates = meta[speaker]['measurements'][default].get('estimates', None)
         pref_rating = meta[speaker]['measurements'][default].get('pref_rating', None)
         pref_rating_eq = meta[speaker]['measurements'][default].get('pref_rating_eq', None)
-        if estimates is not None:
-            sensitivity_delta = estimates.get('sensitivity_delta', None)
-    sdb = None
     if sensitivity is not None:
         sdb = float(sensitivity)
-        if sensitivity_delta is not None:
-            sdb += float(sensitivity_delta)
 %>
 % if sdb is not None:
 <li>
-  Sensitivity: ${'{0:.1f}'.format(sdb)}dB (300Hz-3kHz)
+  Sensitivity: <b>${'{0:.1f}'.format(sdb)}</b>dB (300Hz-3kHz)
 </li>
 % endif
 % if estimates is not None:
 %   if estimates.get('ref_3dB', '?') !=  '?':
 <li>
-  <b>-3dB</b> (resp. -6db) point v.s. reference is
-  at <b>${estimates.get('ref_3dB')}Hz</b>
-  (resp. ${estimates.get('ref_6dB')}Hz).
+  <b>-3dB</b> (resp. -6db) point v.s. reference is at <b>${estimates.get('ref_3dB')}Hz</b> (resp. ${estimates.get('ref_6dB')}Hz).
 </li>
 %   endif
 %   if estimates.get('ref_from', '?') !=  '?':

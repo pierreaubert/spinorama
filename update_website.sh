@@ -12,7 +12,7 @@ case $HOSTNAME in
         IP="192.168.88.191"
         ;;
     "horn")
-        IP="192.168.88.183"
+        IP="192.168.1.36"
         ;;
 esac
 #echo $IP
