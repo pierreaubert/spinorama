@@ -1,11 +1,25 @@
 {
   "dependencies": {
-    "browserify": "^17.0.0",
-    "html-validator": "^6.0.0",
-    "html-validator-cli": "^7.0.1",
-    "plotly": "^1.0.6",
-    "pyright": "^1.1.201",
-    "standard": "^16.0.4"
+    "bulma": "^0.9.3",
+    "fuse": "^0.4.0",
+    "handlebars": "^4.7.7",
+    "plotly": "^1.0.6"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "browserify": "^17.0.0",
+    "html-validator-cli": "^7.0.1",
+    "husky": "^7.0.0",
+    "pyright": "^1.1.201",
+    "standard": "^16.0.4",
+    "webpack": "^5.65.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "standard"
+    }
+  },
+  "scripts": {
+    "standard": "npx standard --fix",
+    "prepare": "husky install"
+  }
 }

@@ -717,5 +717,4 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   plot(cea2034, initSpeakers, initDatas)
-
 }).catch(err => console.log(err.message))
