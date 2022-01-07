@@ -118,6 +118,7 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
 
 
 def resample(df: pd.DataFrame, target_size: int):
+    # resample dataframe to minimize size
     len_freq = df.shape[0]
     if len_freq > 2 * target_size:
         roll = int(len_freq / target_size)
@@ -127,7 +128,7 @@ def resample(df: pd.DataFrame, target_size: int):
 
 
 def compute_contour(dfm_in, min_freq):
-
+    # generate 3 arrays x, y, z suitable for computing equilevels
     dfm = sort_angles(dfm_in)
     # check if we have -180
     if "180°" in dfm.keys() and "-180°" not in dfm.keys():
@@ -162,6 +163,7 @@ def compute_contour(dfm_in, min_freq):
 
 
 def reshape(x, y, z, nscale):
+    # change the shape and rescale it by nscale
     nx, _ = x.shape
     # expand x-axis and y-axis
     lxi = [
@@ -218,16 +220,15 @@ def reshape(x, y, z, nscale):
 
 def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     """ "compute +/- angle where directivity is most constant between 1kHz and 10kz"""
-
-    # print('debug af {} am {} az {}'.format(af.shape, am.shape, az.shape))
-    # print('debug af {}'.format(af))
-    # print('debug am {}'.format(am[17]))
-    # print('debug az {}'.format(az))
     deg0 = bisect.bisect(am.T[0], 0) - 1
     kHz1 = bisect.bisect(af[0], 1000)
     kHz10 = bisect.bisect(af[0], 10000)
     zero = az[deg0][kHz1:kHz10]
-    # print('debug {} {} {}'.format(kHz1, kHz10, deg0))
+    # print('debug af {} am {} az {}'.format(af.shape, am.shape, az.shape))
+    # print('debug af {}'.format(af))
+    # print('debug am {}'.format(am.T[deg0]))
+    # print('debug az {}'.format(az))
+    # print('debug 1kHz at pos{} 10kHz at pos {} def0 at pos {}'.format(kHz1, kHz10, deg0))
     def linear_eval(x: float) -> float:
         xp1 = int(x)
         xp2 = xp1 + 1
@@ -240,10 +241,10 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
 
     eval_count = 180
 
-    space_p = np.linspace(int(len(am.T[0]) / 2), len(am.T[0]) - 2, eval_count)
+    space_p = np.linspace(deg0, len(am.T[0]) - 2, eval_count)
     eval_p = [linear_eval(x) for x in space_p]
     # 1% tolerance
-    tol = 0.01
+    tol = 0.1
     min_p = np.min(eval_p) * (1.0 + tol)
     # all minimum in this 1% band from min
     pos_g = [i for i, v in enumerate(eval_p) if v < min_p]
@@ -264,11 +265,11 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     min_m = np.min(eval_m) * (1.0 + tol)
     pos_g = [i for i, v in enumerate(eval_m) if v < min_m]
     if len(pos_g) > 1:
-        pos_m = pos_g[-1]
+        pos_m = pos_g[0]
     else:
         pos_m = np.argmin(eval_m)
     # translate in deg
-    angle_m = -180 + pos_m * 180 / eval_count
+    angle_m = pos_m * 180 / eval_count - 180
     # print('debug space_m: {}'.format(space_m))
     # print('debug eval_m: {}'.format(eval_m))
     # print('debug pos_g: {}'.format(pos_g))

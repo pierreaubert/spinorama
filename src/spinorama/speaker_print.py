@@ -89,9 +89,9 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
                                     pict.convert("webp").save(
                                         filename="{}.webp".format(filename[:-10])
                                     )
-                                    pict.convert("avif").save(
-                                        filename="{}.avif".format(filename[:-10])
-                                    )
+                                    # pict.convert("avif").save(
+                                    #    filename="{}.avif".format(filename[:-10])
+                                    # )
                                     pict.compression_quality = 75
                                     pict.convert("jpg").save(
                                         filename="{}.jpg".format(filename[:-10])

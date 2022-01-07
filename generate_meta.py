@@ -102,7 +102,7 @@ def add_scores(dataframe, parse_max):
                         )
                     )
                     # sensitivity
-                    sensitivity = dfs.get("sensibility")
+                    sensitivity = dfs.get("sensitivity")
                     if (
                         sensitivity is not None
                         and metadata.speakers_info[speaker_name].get("type")

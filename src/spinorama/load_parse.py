@@ -48,9 +48,6 @@ def parse_eq_speaker(speaker_path: str, speaker_name: str, df_ref: dict) -> dict
             eq_h_spl = peq_apply_measurements(h_spl, iir)
             eq_v_spl = peq_apply_measurements(v_spl, iir)
             df_eq = filter_graphs(speaker_name, eq_h_spl, eq_v_spl)
-            # normalize wrt to original measurement to make comparison easier
-            # original_mean = df_ref.get('CEA2034_original_mean', None)
-            # return load_normalize(df_eq, original_mean)
             return df_eq
         elif "CEA2034" in df_ref.keys():
             spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir)
@@ -150,24 +147,28 @@ def parse_graphs_speaker(
             if nan_count > 0:
                 logger.error("df_full {} has {} NaNs".format(speaker_name, nan_count))
                 for k in df_full.keys():
-                    logger.error("------------ {} -----------".format(k))
-                    logger.error(df_full[k].head())
+                    if isinstance(df_full[k], pd.DataFrame):
+                        logger.error("------------ {} -----------".format(k))
+                        logger.error(df_full[k].head())
 
             for k in df_full.keys():
                 logger.debug("-- DF FULL ---------- {} -----------".format(k))
-                logger.debug(df_full[k].head())
+                if isinstance(df_full[k], pd.DataFrame):
+                    logger.debug(df_full[k].head())
 
             df = filter_graphs_partial(df_full)
             nan_count = check_nan(df)
             if nan_count > 0:
                 logger.error("df {} has {} NaNs".format(speaker_name, nan_count))
                 for k in df.keys():
-                    logger.error("------------ {} -----------".format(k))
-                    logger.error(df[k].head())
+                    if isinstance(df[k], pd.DataFrame):
+                        logger.error("------------ {} -----------".format(k))
+                        logger.error(df[k].head())
 
             for k in df.keys():
-                logger.debug("-- DF ---------- {} -----------".format(k))
-                logger.debug(df[k].head())
+                if isinstance(df[k], pd.DataFrame):
+                    logger.debug("-- DF ---------- {} -----------".format(k))
+                    logger.debug(df[k].head())
         except ValueError as ve:
             logger.error("ValueError for speaker {}: {}".format(speaker_name, ve))
             raise ve

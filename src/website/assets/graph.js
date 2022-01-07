@@ -102,13 +102,3 @@ export function displayGraph (spec, divName) {
   }
   run()
 }
-
-// function displayStats(spec, divName) {
-//
-//    async function run() {
-//        spec.layout.width = window.innerWidth;
-//        spec.layout.height = window.innerHeight;
-//        Plotly.newPlot(divName, spec.data, spec.layout);
-//    }
-//    run();
-// }

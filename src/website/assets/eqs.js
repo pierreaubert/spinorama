@@ -1,15 +1,14 @@
+import { sortMetadata2 } from './sort.js'
 import { urlSite, getPeq, getID } from './misc.js'
-import { sortMetadata } from './sort.js'
 
 fetch(urlSite + 'assets/metadata.json').then(
   function (response) {
     return response.json()
-  }).then((datajs) => {
-  const speakerContainer = document.querySelector('[data-num="0"')
-  const speakerDatabase = Object.values(datajs)
+  }).then((dataJson) => {
+  const metadata = Object.values(dataJson)
 
   function getContext (key, value) {
-    // console.log(getReviews(value));
+  // console.log(getReviews(value));
     return {
       id: getID(value.brand, value.model),
       brand: value.brand,
@@ -35,15 +34,16 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function display () {
+    const speakerContainer = document.querySelector('[data-num="0"')
     const fragment1 = new DocumentFragment()
-    speakerDatabase.forEach(function (value, key) {
-      if ('eq_autoeq' in value) {
-        fragment1.appendChild(printEQ(key, value))
+    sortMetadata2(metadata, { by: 'date' }).forEach(function (value, key) {
+      const speaker = metadata[value]
+      if ('eq_autoeq' in speaker) {
+        fragment1.appendChild(printEQ(value, speaker))
       }
     })
-    sortMetadata(speakerDatabase, fragment1, { by: 'score' })
     speakerContainer.appendChild(fragment1)
   }
 
   display()
-})
+}).catch(err => console.log(err))

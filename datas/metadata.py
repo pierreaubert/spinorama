@@ -4458,6 +4458,23 @@ speakers_info = {
             },
         },
     },
+    "KEF T101": {
+        "brand": "KEF",
+        "model": "T101",
+        "type": "passive",
+        "price": "650",
+        "shape": "surround",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-t101-review-thin-speaker.29574/",
+                "review_published": "20220103",
+            },
+        },
+    },
     "KEF T301C": {
         "brand": "KEF",
         "model": "T301C",
@@ -4882,6 +4899,24 @@ speakers_info = {
                     "ssu": "https://www.soundstageultra.com/index.php/equipment-menu/1042-magico-a5-loudspeakers",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/magico-a5-spinorama-cea2034.23866/",
                 },
+            },
+        },
+    },
+    "March Audio Sointuva": {
+        "brand": "March Audio",
+        "model": "Sointuva",
+        "type": "passive",
+        "price": "7000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/march_audio_sointuva/",
+                "review_published": "20220106",
+                "notes": "picture from Erins web site. There are multiple versions of these speaker. The measured one is with SB Acoustics Satori TW29BNWG-4 Beryllium Dome Tweeter and a wave guide",
             },
         },
     },

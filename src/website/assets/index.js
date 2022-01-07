@@ -1,12 +1,11 @@
 import { urlSite, getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc.js'
-import { sortMetadata } from './sort.js'
+import { sortMetadata2 } from './sort.js'
 
 fetch(urlSite + 'assets/metadata.json').then(
   function (response) {
     return response.json()
-  }).then((datajs) => {
-  const speakerContainer = document.querySelector('[data-num="0"')
-  const speakerDatabase = Object.values(datajs)
+  }).then((dataJson) => {
+  const metadata = Object.values(dataJson)
 
   function getContext (key, value) {
     // console.log(getReviews(value));
@@ -28,6 +27,7 @@ fetch(urlSite + 'assets/metadata.json').then(
 
   const source = document.querySelector('#speaker').innerHTML
   const template = Handlebars.compile(source)
+  const speakerContainer = document.querySelector('[data-num="0"')
 
   function printSpeaker (key, value) {
     const context = getContext(key, value)
@@ -40,13 +40,24 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function display () {
-    const fragment1 = new DocumentFragment()
-    speakerDatabase.forEach(function (value, key) {
-      fragment1.appendChild(printSpeaker(key, value))
+    const fragment = new DocumentFragment()
+    sortMetadata2(metadata, { by: 'date' }).forEach(function (value, key) {
+      const speaker = metadata[value]
+      fragment.appendChild(printSpeaker(key, speaker))
     })
-    sortMetadata(speakerDatabase, fragment1, { by: 'date' })
-    speakerContainer.appendChild(fragment1)
+    speakerContainer.appendChild(fragment)
+  }
+
+  function display2 () {
+    sortMetadata2(metadata, { by: 'date' }).forEach(function (value, key) {
+      if (key < 12) {
+        const speaker = metadata[value]
+        speakerContainer.appendChild(printSpeaker(key, speaker))
+      }
+    })
   }
 
   display()
-})
+}).catch(
+  err => console.log('index.js: ' + err.message)
+)

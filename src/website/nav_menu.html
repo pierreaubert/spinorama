@@ -1,5 +1,10 @@
-<nav class="navbar is-transparent">
+<nav class="navbar">
   <div class="navbar-brand">
+    <div class="navbar-item is-hidden-desktop" id="navbar-burger">
+      <button class="button">
+        Menu
+      </button>
+    </div>
     <a class="navbar-item is-size-4" href="${site}"><b>SPIN</b>orama</a>
     <div class="navbar-item is-hidden-tablet" id="smallSearch">
       % if useSearch:
@@ -10,14 +15,11 @@
       </button>
       % endif
     </div>
-    <div class="navbar-item is-hidden-desktop" id="navbar-burger">
-      <button class="button is-rounded">
-        Menu
-      </button>
-    </div>
   </div>
-  <div class="navbar-end">
-    <div class="navbar-menu">
+  <div class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
       <a class="navbar-item" href="${site}/index.html">Search</a>
       <a class="navbar-item" href="${site}/eqs.html">EQs</a>
       <a class="navbar-item" href="${site}/compare.html">Compare</a>
@@ -29,8 +31,6 @@
 </nav>
 
 % if useSearch:
-<script type="module" src="./assets/sort.js"></script>
-
 <div class="level has-background-info-dark is-hidden-mobile" id="search-bar">
   <div class="level-item">
     <div class="dropdown is-hoverable">

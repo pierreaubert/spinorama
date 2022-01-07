@@ -1,20 +1,19 @@
 import { urlSite, toggleId, getID, getPicture, getLoading, getDecoding, getField, getReviews } from './misc.js'
-import { sortMetadata } from './sort.js'
+import { sortMetadata2 } from './sort.js'
 
 fetch(urlSite + 'assets/metadata.json').then(
   function (response) {
     return response.json()
-  }).then((datajs) => {
-  const speakerContainer = document.querySelector('[data-num="0"')
-  const speakerDatabase = Object.values(datajs)
+  }).then((dataJson) => {
+  const metadata = Object.values(dataJson)
 
   function getSpider (brand, model) {
-    // console.log(brand + model);
+  // console.log(brand + model);
     return encodeURI(brand + ' ' + model + '/spider.jpg')
   }
 
   function getContext (key, value) {
-    // console.log(getReviews(value));
+  // console.log(getReviews(value));
     const scores = getField(value, 'pref_rating', value.default_measurement)
     scores.pref_score = parseFloat(scores.pref_score).toFixed(1)
     scores.pref_score_wsub = parseFloat(scores.pref_score_wsub).toFixed(1)
@@ -32,7 +31,7 @@ fetch(urlSite + 'assets/metadata.json').then(
       scoresEq: scoresEq,
       reviews: getReviews(value),
       img: {
-        // avif: getPicture(value.brand, value.model, "avif"),
+      // avif: getPicture(value.brand, value.model, "avif"),
         webp: getPicture(value.brand, value.model, 'webp'),
         jpg: getPicture(value.brand, value.model, 'jpg'),
         loading: getLoading(key),
@@ -62,13 +61,15 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function display () {
+    const speakerContainer = document.querySelector('[data-num="0"')
     const fragment1 = new DocumentFragment()
-    speakerDatabase.forEach(function (value, key) {
-      fragment1.appendChild(printScore(key, value))
+
+    sortMetadata2(metadata, { by: 'score' }).forEach(function (value, key) {
+      const speaker = metadata[value]
+      fragment1.appendChild(printScore(value, speaker))
     })
-    sortMetadata(speakerDatabase, fragment1, { by: 'score' })
     speakerContainer.appendChild(fragment1)
   }
 
   display()
-})
+}).catch(err => console.log(err))

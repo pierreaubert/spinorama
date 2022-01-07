@@ -25,6 +25,12 @@
   </div>
 </div>
 
-<script type="module" src="./assets/statistics.js"></script>
+<script type="module">
+  import('./assets/statistics.js').then(
+    mod => mod.stats()
+  ).catch( err =>
+    console.log(err.message)
+  )
+</script>
 
 <%include file="footer.html"/>

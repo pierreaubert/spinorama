@@ -2,10 +2,9 @@ import { urlSite } from './misc.js'
 
 fetch(urlSite + 'assets/metadata.json').then(
   function (response) {
-    return response.text()
-  }).then((datajs) => {
-  const speakerDatabase = Object.values(JSON.parse(datajs))
-
+    return response.json()
+  }).then((dataJson) => {
+  const metadata = Object.values(dataJson)
   const windowWidth = window.innerWidth
 
   function plotScoreDistribution (scores, scoresEQ) {
@@ -121,11 +120,11 @@ fetch(urlSite + 'assets/metadata.json').then(
     const nbdPIR = []
     const smPIR = []
     const names = []
-    speakerDatabase.forEach((value, key) => {
+    metadata.forEach((value, key) => {
       if (value.measurements &&
                     value.measurements[value.default_measurement].pref_rating &&
                     value.measurements[value.default_measurement].pref_rating.pref_score) {
-        // gather various scores
+      // gather various scores
         scores.push(value.measurements[value.default_measurement].pref_rating.pref_score)
         scoresEQ.push(value.measurements[value.default_measurement].pref_rating_eq.pref_score)
         scoresWsub.push(value.measurements[value.default_measurement].pref_rating.pref_score_wsub)
@@ -149,4 +148,4 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   stats()
-})
+}).catch(err => console.log(err.message))
