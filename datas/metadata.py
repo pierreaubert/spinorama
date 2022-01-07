@@ -4902,6 +4902,24 @@ speakers_info = {
             },
         },
     },
+    "March Audio Sointuva": {
+        "brand": "March Audio",
+        "model": "Sointuva",
+        "type": "passive",
+        "price": "7000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/march_audio_sointuva/",
+                "review_published": "20220106",
+                "notes": "picture from Erins web site. There are multiple versions of these speaker. The measured one is with SB Acoustics Satori TW29BNWG-4 Beryllium Dome Tweeter and a wave guide",
+            },
+        },
+    },
     "MartinLogan Motion 35XTi": {
         "brand": "MartinLogan",
         "model": "Motion 35XTi",
