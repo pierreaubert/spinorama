@@ -136,6 +136,29 @@ label_short = {}
 # }
 
 
+legend_rank = {
+    'On Axis': 0,
+    '10°': 10,
+    '20°': 20,
+    '30°': 30,
+    '40°': 40,
+    '50°': 50,
+    '60°': 60,
+    '70°': 70,
+    '80°': 80,
+    '90°': 90,
+    '-10°': -10,
+    '-20°': -20,
+    '-30°': -30,
+    '-40°': -40,
+    '-50°': -50,
+    '-60°': -60,
+    '-70°': -70,
+    '-80°': -80,
+    '-90°': -90,
+}
+
+
 def generate_xaxis(freq_min=20, freq_max=20000):
     return dict(
         title_text="Frequency (Hz)",
@@ -300,7 +323,6 @@ def plot_graph(df, params):
             trace = go.Scatter(
                 x=df.Freq,
                 y=df[measurement],
-                marker_color=uniform_colors.get(measurement, "black"),
                 hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
             )
             if layout == "compact":
@@ -309,10 +331,14 @@ def plot_graph(df, params):
                 trace.name = measurement
                 trace.legendgroup = "measurements"
                 trace.legendgrouptitle = {"text": "Measurements"}
+            if measurement in uniform_colors.keys():
+                trace.marker = {"color": uniform_colors[measurement]}
+            if measurement in legend_rank.keys():
+                trace.legendrank = legend_rank[measurement]
             fig.add_trace(trace)
 
     fig.update_xaxes(generate_xaxis())
-    fig.update_yaxes(generate_yaxis_spl())
+    fig.update_yaxes(generate_yaxis_spl(params['ymin'], params['ymax']))
     fig.update_layout(common_layout(params))
     return fig
 
@@ -390,7 +416,7 @@ def plot_graph_regression(df, measurement, params):
         fig.add_trace(t)
 
     fig.update_xaxes(generate_xaxis())
-    fig.update_yaxes(generate_yaxis_spl())
+    fig.update_yaxes(generate_yaxis_spl(params['ymin'], params['ymax']))
 
     fig.update_layout(common_layout(params))
     return fig
