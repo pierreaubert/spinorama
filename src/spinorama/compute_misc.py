@@ -221,8 +221,13 @@ def reshape(x, y, z, nscale):
 def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     """ "compute +/- angle where directivity is most constant between 1kHz and 10kz"""
     deg0 = bisect.bisect(am.T[0], 0) - 1
+    # parameters
     kHz1 = bisect.bisect(af[0], 1000)
     kHz10 = bisect.bisect(af[0], 10000)
+    dbLess = -6
+    # 2% tolerance
+    tol = 0.02
+    # 
     zero = az[deg0][kHz1:kHz10]
     # print('debug af {} am {} az {}'.format(af.shape, am.shape, az.shape))
     # print('debug af {}'.format(af))
@@ -237,14 +242,12 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
         # linear interpolation
         zp = zp1 + (x - xp1) * (zp2 - zp1)
         # normˆ2 (z-(-6dB))
-        return np.linalg.norm(zp - zero + 6)
+        return np.linalg.norm(zp - zero - dbLess)
 
     eval_count = 180
 
     space_p = np.linspace(deg0, len(am.T[0]) - 2, eval_count)
     eval_p = [linear_eval(x) for x in space_p]
-    # 1% tolerance
-    tol = 0.1
     min_p = np.min(eval_p) * (1.0 + tol)
     # all minimum in this 1% band from min
     pos_g = [i for i, v in enumerate(eval_p) if v < min_p]
