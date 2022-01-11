@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 
 from .load_misc import graph_melt, sort_angles
+from .compute_scores import octave
 
 # pd.set_option('display.max_rows', None)
 logger = logging.getLogger("spinorama")
@@ -226,8 +227,8 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     kHz10 = bisect.bisect(af[0], 10000)
     dbLess = -6
     # 2% tolerance
-    tol = 0.02
-    # 
+    tol = 0.0002
+    #
     zero = az[deg0][kHz1:kHz10]
     # print('debug af {} am {} az {}'.format(af.shape, am.shape, az.shape))
     # print('debug af {}'.format(af))
@@ -244,10 +245,30 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
         # normˆ2 (z-(-6dB))
         return np.linalg.norm(zp - zero - dbLess)
 
+    def linear_eval_octave(x: float) -> float:
+        xp1 = int(x)
+        xp2 = xp1 + 1
+        per_octave = []
+        for (bmin, bcenter, bmax) in octave(20):
+            # 100hz to 16k hz
+            if bmin < 1000 or bmax > 10000:
+                continue
+            kmin = bisect.bisect(af[0], bmin)
+            kmax = bisect.bisect(af[0], bmax)
+            kzero = az[deg0][kmin:kmax]
+            zp1 = az[xp1][kmin:kmax]
+            zp2 = az[xp2][kmin:kmax]
+            # linear interpolation
+            zp = zp1 + (x - xp1) * (zp2 - zp1)
+            # normˆ2 (z-(-6dB))
+            per_octave.append(np.linalg.norm(zp - dbLess))
+        # print('x={} per_octave={}'.format(x, per_octave))
+        return np.max(per_octave)
+
     eval_count = 180
 
     space_p = np.linspace(deg0, len(am.T[0]) - 2, eval_count)
-    eval_p = [linear_eval(x) for x in space_p]
+    eval_p = [linear_eval_octave(x) for x in space_p]
     min_p = np.min(eval_p) * (1.0 + tol)
     # all minimum in this 1% band from min
     pos_g = [i for i, v in enumerate(eval_p) if v < min_p]
@@ -264,7 +285,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     # print('debug: min_p {} angle_p {}'.format(min_p, angle_p))
 
     space_m = np.linspace(0, int(len(am.T[0]) / 2) - 1, eval_count)
-    eval_m = [linear_eval(x) for x in space_m]
+    eval_m = [linear_eval_octave(x) for x in space_m]
     min_m = np.min(eval_m) * (1.0 + tol)
     pos_g = [i for i, v in enumerate(eval_m) if v < min_m]
     if len(pos_g) > 1:
