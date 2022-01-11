@@ -9,6 +9,7 @@ from .compute_scores import speaker_pref_rating
 from .plot import (
     plot_params_default,
     contour_params_default,
+    radar_params_default,
     plot_spinorama,
     plot_graph,
     plot_graph_regression,
@@ -160,11 +161,11 @@ def display_radar(df, direction, graph_params):
     return plot_radar(dfs, graph_params)
 
 
-def display_radar_horizontal(df, graph_params=plot_params_default):
+def display_radar_horizontal(df, graph_params=radar_params_default):
     return display_radar(df, "SPL Horizontal_unmelted", graph_params)
 
 
-def display_radar_vertical(df, graph_params=plot_params_default):
+def display_radar_vertical(df, graph_params=radar_params_default):
     return display_radar(df, "SPL Vertical_unmelted", graph_params)
 
 

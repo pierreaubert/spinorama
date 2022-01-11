@@ -17,27 +17,30 @@ logger = logging.getLogger("spinorama")
 
 pio.templates.default = "plotly_white"
 
+# ratio is 4x3
 plot_params_default = {
     "xmin": 20,
     "xmax": 20000,
     "ymin": -40,
     "ymax": 10,
-    "width": 600,
-    "height": 400,
+    "width": 1200,
+    "height": 800,
 }
 
+# ratio is 2x1
 contour_params_default = {
     "xmin": 100,
     "xmax": 20000,
-    "width": 600,
-    "height": 300,
+    "width": 1200,
+    "height": 600,
 }
 
+# ratio is 4x5
 radar_params_default = {
     "xmin": 400,
     "xmax": 20000,
-    "width": 600,
-    "height": 400,
+    "width": 1000,
+    "height": 800,
 }
 
 colors = [
@@ -137,25 +140,25 @@ label_short = {}
 
 
 legend_rank = {
-    'On Axis': 0,
-    '10°': 10,
-    '20°': 20,
-    '30°': 30,
-    '40°': 40,
-    '50°': 50,
-    '60°': 60,
-    '70°': 70,
-    '80°': 80,
-    '90°': 90,
-    '-10°': -10,
-    '-20°': -20,
-    '-30°': -30,
-    '-40°': -40,
-    '-50°': -50,
-    '-60°': -60,
-    '-70°': -70,
-    '-80°': -80,
-    '-90°': -90,
+    "On Axis": 0,
+    "10°": 10,
+    "20°": 20,
+    "30°": 30,
+    "40°": 40,
+    "50°": 50,
+    "60°": 60,
+    "70°": 70,
+    "80°": 80,
+    "90°": 90,
+    "-10°": -10,
+    "-20°": -20,
+    "-30°": -30,
+    "-40°": -40,
+    "-50°": -50,
+    "-60°": -60,
+    "-70°": -70,
+    "-80°": -80,
+    "-90°": -90,
 }
 
 
@@ -216,18 +219,24 @@ def common_layout(params):
     return dict(
         width=params["width"],
         height=params["height"],
-        legend=dict(x=0.5, y=1.18, xanchor="center", orientation=orientation),
         title=dict(
             x=0.5,
-            y=0.98,
+            y=0.99,
             xanchor="center",
             yanchor="top",
         ),
+        legend=dict(
+            x=0.5,
+            y=1.12,  # TODO understand why it needs to be larger than 1
+            xanchor="center",
+            yanchor="top",
+            orientation=orientation,
+        ),
         margin={
-            "t": 70,
-            "b": 5,
-            "l": 5,
-            "r": 5,
+            "t": 100,
+            "b": 10,
+            "l": 10,
+            "r": 10,
         },
     )
 
@@ -240,7 +249,12 @@ def radar_layout(params):
     return dict(
         width=params["width"],
         height=params["height"],
-        legend=dict(x=0.5, y=0.95, xanchor="center", orientation=orientation),
+        legend=dict(
+            x=0.5,
+            y=0.95,
+            xanchor="center",
+            orientation=orientation
+        ),
         title=dict(
             x=0.5,
             y=0.98,
@@ -248,8 +262,8 @@ def radar_layout(params):
             yanchor="top",
         ),
         margin={
-            "t": 5,
-            "b": 5,
+            "t": 10,
+            "b": 10,
             "l": 20,
             "r": 20,
         },
@@ -338,7 +352,7 @@ def plot_graph(df, params):
             fig.add_trace(trace)
 
     fig.update_xaxes(generate_xaxis())
-    fig.update_yaxes(generate_yaxis_spl(params['ymin'], params['ymax']))
+    fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
     fig.update_layout(common_layout(params))
     return fig
 
@@ -416,7 +430,7 @@ def plot_graph_regression(df, measurement, params):
         fig.add_trace(t)
 
     fig.update_xaxes(generate_xaxis())
-    fig.update_yaxes(generate_yaxis_spl(params['ymin'], params['ymax']))
+    fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
 
     fig.update_layout(common_layout(params))
     return fig

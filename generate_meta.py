@@ -79,7 +79,7 @@ def add_scores(dataframe, parse_max):
         parsed = parsed + 1
         logger.info("Processing {0}".format(speaker_name))
         for _, measurements in speaker_data.items():
-            default_key = metadata.speakers_info[speaker_name]['default_measurement']
+            default_key = metadata.speakers_info[speaker_name]["default_measurement"]
             for key, dfs in measurements.items():
                 try:
                     if dfs is None or "CEA2034" not in dfs.keys():
@@ -107,7 +107,9 @@ def add_scores(dataframe, parse_max):
                         == "passive"
                         and key == default_key
                     ):
-                        logger.debug("{} sensitivity is {}".format(speaker_name, sensitivity))
+                        logger.debug(
+                            "{} sensitivity is {}".format(speaker_name, sensitivity)
+                        )
                         metadata.speakers_info[speaker_name][
                             "sensitivity"
                         ] = sensitivity

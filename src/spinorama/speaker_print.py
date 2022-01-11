@@ -112,8 +112,8 @@ def print_graphs(
     origin,
     origins_info,
     key="default",
-    width=600,
-    height=500,
+    width=1200,
+    height=800,
     force_print=False,
     filter_file_ext=None,
 ):
@@ -121,55 +121,62 @@ def print_graphs(
     if df is None:
         return 0
 
-    params = copy.deepcopy(plot_params_default)
-    params["width"] = width
-    params["height"] = height
-    params["layout"] = "compact"
-    params["xmin"] = origins_info[origin]["min hz"]
-    params["xmax"] = origins_info[origin]["max hz"]
-    params["ymin"] = origins_info[origin]["min dB"]
-    params["ymax"] = origins_info[origin]["max dB"]
-    logger.debug("Graph configured with {0}".format(params))
+    graph_params = copy.deepcopy(plot_params_default)
+    if width // height != 4 // 3:
+        logger.error("ratio width / height must be 4/3")
+        height = int(width * 3 / 4)
+    graph_params["width"] = width
+    graph_params["height"] = height
+    graph_params["layout"] = "compact"
+    graph_params["xmin"] = origins_info[origin]["min hz"]
+    graph_params["xmax"] = origins_info[origin]["max hz"]
+    graph_params["ymin"] = origins_info[origin]["min dB"]
+    graph_params["ymax"] = origins_info[origin]["max dB"]
+    logger.debug("Graph configured with {0}".format(graph_params))
 
     graphs = {}
-    graphs["CEA2034"] = display_spinorama(df, params)
-    graphs["On Axis"] = display_onaxis(df, params)
-    graphs["Estimated In-Room Response"] = display_inroom(df, params)
-    graphs["Early Reflections"] = display_reflection_early(df, params)
-    graphs["Horizontal Reflections"] = display_reflection_horizontal(df, params)
-    graphs["Vertical Reflections"] = display_reflection_vertical(df, params)
-    graphs["SPL Horizontal"] = display_spl_horizontal(df, params)
-    graphs["SPL Vertical"] = display_spl_vertical(df, params)
-    graphs["SPL Horizontal Normalized"] = display_spl_horizontal_normalized(df, params)
-    graphs["SPL Vertical Normalized"] = display_spl_vertical_normalized(df, params)
+    graphs["CEA2034"] = display_spinorama(df, graph_params)
+    graphs["On Axis"] = display_onaxis(df, graph_params)
+    graphs["Estimated In-Room Response"] = display_inroom(df, graph_params)
+    graphs["Early Reflections"] = display_reflection_early(df, graph_params)
+    graphs["Horizontal Reflections"] = display_reflection_horizontal(df, graph_params)
+    graphs["Vertical Reflections"] = display_reflection_vertical(df, graph_params)
+    graphs["SPL Horizontal"] = display_spl_horizontal(df, graph_params)
+    graphs["SPL Vertical"] = display_spl_vertical(df, graph_params)
+    graphs["SPL Horizontal Normalized"] = display_spl_horizontal_normalized(
+        df, graph_params
+    )
+    graphs["SPL Vertical Normalized"] = display_spl_vertical_normalized(
+        df, graph_params
+    )
 
     # change params for contour
-    params = copy.deepcopy(contour_params_default)
-    params["width"] = width * 1.4
-    params["height"] = height
-    params["layout"] = "compact"
-    params["xmin"] = origins_info[origin]["min hz"]
-    params["xmax"] = origins_info[origin]["max hz"]
+    contour_params = copy.deepcopy(contour_params_default)
+    contour_params["width"] = width
+    contour_params["height"] = width // 2
+    contour_params["layout"] = "compact"
+    contour_params["xmin"] = origins_info[origin]["min hz"]
+    contour_params["xmax"] = origins_info[origin]["max hz"]
 
-    graphs["SPL Horizontal Contour"] = display_contour_horizontal(df, params)
-    graphs["SPL Vertical Contour"] = display_contour_vertical(df, params)
+    graphs["SPL Horizontal Contour"] = display_contour_horizontal(df, contour_params)
+    graphs["SPL Vertical Contour"] = display_contour_vertical(df, contour_params)
     graphs["SPL Horizontal Contour Normalized"] = display_contour_horizontal_normalized(
-        df, params
+        df, contour_params
     )
     graphs["SPL Vertical Contour Normalized"] = display_contour_vertical_normalized(
-        df, params
+        df, contour_params
     )
 
     # better square
-    params = copy.deepcopy(radar_params_default)
-    params["width"] = width
-    params["height"] = width * 1.25
-    params["layout"] = "compact"
-    params["xmin"] = origins_info[origin]["min hz"]
-    params["xmax"] = origins_info[origin]["max hz"]
+    radar_params = copy.deepcopy(radar_params_default)
+    radar_params["width"] = int(height * 4 / 5)
+    radar_params["height"] = height
+    radar_params["layout"] = "compact"
+    radar_params["xmin"] = origins_info[origin]["min hz"]
+    radar_params["xmax"] = origins_info[origin]["max hz"]
 
-    graphs["SPL Horizontal Radar"] = display_radar_horizontal(df, params)
-    graphs["SPL Vertical Radar"] = display_radar_vertical(df, params)
+    graphs["SPL Horizontal Radar"] = display_radar_horizontal(df, radar_params)
+    graphs["SPL Vertical Radar"] = display_radar_vertical(df, radar_params)
 
     # add a title and setup legend
     for k in graphs:
@@ -179,6 +186,12 @@ def print_graphs(
             graphs[k].update_layout(
                 title=dict(
                     text="{2} for {0} measured by {1}".format(speaker, origin, title),
+                    font=dict(
+                        size=24,
+                    ),
+                ),
+                font=dict(
+                    size=22,
                 ),
             )
 
