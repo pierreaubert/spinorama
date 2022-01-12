@@ -1520,7 +1520,7 @@ speakers_info = {
         "price": "130",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
             "asr": {
                 "origin": "ASR",
@@ -1679,9 +1679,9 @@ speakers_info = {
             },
         },
     },
-    "Elac Uni-Fi 2.0 UB52 Center": {
+    "Elac Uni-Fi 2.0 UC52 Center": {
         "brand": "Elac",
-        "model": "Uni-Fi 2.0 UB52 Center",
+        "model": "Uni-Fi 2.0 UC52 Center",
         "type": "passive",
         "price": "319",
         "shape": "center",
