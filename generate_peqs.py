@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2021 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2022 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -91,6 +91,7 @@ except ModuleNotFoundError:
     import src.miniray as ray
 
 
+from spinorama.constant_paths import CPATH_DOCS
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
 from datas.metadata import speakers_info as metadata
 from spinorama.load_rewseq import parse_eq_iir_rews
@@ -287,8 +288,8 @@ def optim_save_peq(
             origin = current_speaker_origin
             if "Vendors-" in origin:
                 origin = origin[8:]
-            graph_filename = "docs/{}/{}/filters_{}".format(
-                current_speaker_name, origin, name
+            graph_filename = "{}/{}/{}/filters_{}".format(
+                CPATH_DOCS, current_speaker_name, origin, name
             )
             if is_smoke_test:
                 graph_filename += "_smoketest"

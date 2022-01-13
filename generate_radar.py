@@ -37,6 +37,7 @@ from docopt import docopt
 import pandas as pd
 import plotly.graph_objects as go
 
+from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DOC
 from generate_common import get_custom_logger, args2level
 
 
@@ -88,7 +89,7 @@ def print_radar(speaker, data, scale):
     measurement = data["measurements"][def_measurement]
     if "pref_rating" not in measurement.keys() or "estimates" not in measurement.keys():
         return
-    filename = "docs/{} {}/spider.jpg".format(data["brand"], data["model"])
+    filename = "{}/{} {}/spider.jpg".format(CPATH_DOC, data["brand"], data["model"])
     if pathlib.Path(filename).is_file():
         return
     graph_data = []
@@ -172,7 +173,7 @@ if __name__ == "__main__":
     logger.setLevel(level)
 
     # load all metadata from generated json file
-    json_filename = "./docs/assets/metadata.json"
+    json_filename = CPATH_METADATA_JSON
     if not os.path.exists(json_filename):
         logger.error("Cannot find {0}".format(json_filename))
         sys.exit(1)
