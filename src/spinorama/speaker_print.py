@@ -43,6 +43,7 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
     if chart is not None:
         filedir = (
             CPATH_DOCS_SPEAKERS
+            + "/"
             + speaker
             + "/"
             + origin.replace("Vendors-", "")

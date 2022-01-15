@@ -387,12 +387,12 @@ def plot_graph_regression_traces(df, measurement, params):
         y=line,
         line=dict(width=2, color="black"),
         opacity=1,
-        name="Linear regression",
+        name="Linear Regression",
     )
     if layout == "compact":
-        trace.name = label_short.get("Linear regression")
+        trace.name = label_short.get("Linear Regression")
     else:
-        trace.name = "Linear regression"
+        trace.name = "Linear Regression"
     traces.append(trace)
 
     traces.append(

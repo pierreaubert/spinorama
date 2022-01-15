@@ -60,7 +60,6 @@ from generate_common import (
     get_similar_names,
 )
 import datas.metadata as metadata
-import spinorama.constant_paths as cpaths
 from spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
 from spinorama.speaker_print import print_graphs
 from spinorama.plot import plot_params_default
