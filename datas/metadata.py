@@ -3661,7 +3661,7 @@ speakers_info = {
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-4305p.29623/",
                 },
-                "review_data": "20220104",
+                "review_published": "20220104",
             },
         },
     },
@@ -5744,7 +5744,7 @@ speakers_info = {
             },
         },
     },
-    "Paradigm Funder 70LCR": {
+    "Paradigm Founder 70LCR": {
         "brand": "Paradigm",
         "model": "Founder 70LCR",
         "type": "passive",
@@ -5761,6 +5761,7 @@ speakers_info = {
                     "adh": "https://www.audioholics.com/tower-speaker-reviews/paradigm-founder-100f-70lcr/conclusion",
                     "paradigm": "https://www.paradigm.com/en/center/founder-70lcr",
                 },
+                "review_published": "20220109",
             },
         },
     },

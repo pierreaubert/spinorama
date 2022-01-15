@@ -49,7 +49,7 @@ except ModuleNotFoundError:
 
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
 import datas.metadata as metadata
-import spinorama.constant_cpaths as cpaths
+import spinorama.constant_paths as cpaths
 from spinorama.compute_estimates import estimates
 from spinorama.compute_scores import speaker_pref_rating
 from spinorama.filter_peq import peq_preamp_gain
@@ -428,7 +428,7 @@ def add_eq(speaker_path, dataframe, parse_max):
 
 
 def dump_metadata(meta):
-    metadir = cpaths.CPATH_ASSETS
+    metadir = cpaths.CPATH_DOCS_ASSETS
     metafile = cpaths.CPATH_METADATA_JSON
     if not os.path.isdir(metadir):
         os.makedirs(metadir)
