@@ -89,7 +89,9 @@ def print_radar(speaker, data, scale):
     measurement = data["measurements"][def_measurement]
     if "pref_rating" not in measurement.keys() or "estimates" not in measurement.keys():
         return
-    filename = "{}/{} {}/spider.jpg".format(CPATH_DOCS_SPEAKERS, data["brand"], data["model"])
+    filename = "{}/{} {}/spider.jpg".format(
+        CPATH_DOCS_SPEAKERS, data["brand"], data["model"]
+    )
     if pathlib.Path(filename).is_file():
         return
     graph_data = []
