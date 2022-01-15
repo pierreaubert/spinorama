@@ -91,7 +91,7 @@ except ModuleNotFoundError:
     import src.miniray as ray
 
 
-from spinorama.constant_paths import CPATH_DOCS
+from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
 from datas.metadata import speakers_info as metadata
 from spinorama.load_rewseq import parse_eq_iir_rews
@@ -289,7 +289,7 @@ def optim_save_peq(
             if "Vendors-" in origin:
                 origin = origin[8:]
             graph_filename = "{}/{}/{}/filters_{}".format(
-                CPATH_DOCS, current_speaker_name, origin, name
+                CPATH_DOCS_SPEAKERS, current_speaker_name, origin, name
             )
             if is_smoke_test:
                 graph_filename += "_smoketest"
