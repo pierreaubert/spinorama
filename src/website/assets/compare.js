@@ -195,7 +195,8 @@ fetch(urlSite + 'assets/metadata.json').then(
   function getSpeakerData (graph, speaker, origin, version) {
   // console.log('getSpeakerData ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version='+version);
     const url =
-            urlSite +
+          urlSite +
+          'speakers/' +
             speaker + '/' +
             getOrigin(speaker, origin, version) + '/' +
             getVersion(speaker, origin, version) + '/' +

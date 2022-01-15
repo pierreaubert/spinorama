@@ -17,15 +17,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# where the code for the website is
 CPATH = "."
 CPATH_SRC = "{}/{}".format(CPATH, "src")
 CPATH_PYTHON = "{}/{}".format(CPATH_SRC, "spinorama")
 CPATH_WEBSITE = "{}/{}".format(CPATH_SRC, "website")
+CPATH_WEBSITE_ASSETS = "{}/{}".format(CPATH_WEBSITE, "assets")
+CPATH_WEBSITE_ASSETS_CSS = "{}/{}".format(CPATH_WEBSITE_ASSETS, "")
+CPATH_WEBSITE_ASSETS_JS = "{}/{}".format(CPATH_WEBSITE_ASSETS, "")
 
+# where the metadata around the speakers are
+CPATH_DATAS = "{}/{}".format(CPATH, "datas")
+CPATH_DATAS_LOGOS = "{}/{}".format(CPATH_DATAS, "logos")
+CPATH_DATAS_PICTURES = "{}/{}".format(CPATH_DATAS, "pictures")
+CPATH_DATAS_SPEAKERS = "{}/{}".format(CPATH_DATAS, "measurements")
+
+# where the generated files go
 CPATH_DOCS = "{}/{}".format(CPATH, "docs")
-CPATH_ASSETS = "{}/{}".format(CPATH_DOCS, "")
-CPATH_ASSETS_JS = "{}/{}".format(CPATH_ASSETS, "")
-CPATH_ASSETS_CSS = "{}/{}".format(CPATH_ASSETS, "")
-CPATH_METADATA_JSON = "{}/{}".format(CPATH_ASSETS, "metadata.json")
-CPATH_SPEAKERS = "{}/{}".format(CPATH_DOCS, "speakers")
-CPATH_PICTURES = "{}/{}".format(CPATH_DOCS, "pictures")
+CPATH_DOCS_ASSETS = "{}/{}".format(CPATH_DOCS, "assets")
+CPATH_DOCS_ASSETS_JS = "{}/{}".format(CPATH_DOCS_ASSETS, "")
+CPATH_DOCS_ASSETS_CSS = "{}/{}".format(CPATH_DOCS_ASSETS, "")
+CPATH_METADATA_JSON = "{}/{}".format(CPATH_DOCS_ASSETS, "metadata.json")
+CPATH_DOCS_SPEAKERS = "{}/{}".format(CPATH_DOCS, "speakers")
+CPATH_DOCS_PICTURES = "{}/{}".format(CPATH_DOCS, "pictures")

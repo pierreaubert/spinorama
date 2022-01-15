@@ -37,7 +37,7 @@ from docopt import docopt
 import pandas as pd
 import plotly.graph_objects as go
 
-from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DOC
+from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DOCS_SPEAKERS
 from generate_common import get_custom_logger, args2level
 
 
@@ -89,7 +89,7 @@ def print_radar(speaker, data, scale):
     measurement = data["measurements"][def_measurement]
     if "pref_rating" not in measurement.keys() or "estimates" not in measurement.keys():
         return
-    filename = "{}/{} {}/spider.jpg".format(CPATH_DOC, data["brand"], data["model"])
+    filename = "{}/{} {}/spider.jpg".format(CPATH_DOCS_SPEAKERS, data["brand"], data["model"])
     if pathlib.Path(filename).is_file():
         return
     graph_data = []

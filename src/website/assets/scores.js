@@ -9,7 +9,7 @@ fetch(urlSite + 'assets/metadata.json').then(
 
   function getSpider (brand, model) {
   // console.log(brand + model);
-    return encodeURI(brand + ' ' + model + '/spider.jpg')
+    return encodeURI('speakers/' + brand + ' ' + model + '/spider.jpg')
   }
 
   function getContext (key, value) {

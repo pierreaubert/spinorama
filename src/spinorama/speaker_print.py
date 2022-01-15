@@ -12,7 +12,7 @@ try:
 except ModuleNotFoundError:
     import src.miniray as ray
 
-from .constant_paths import CPATH_SPEAKERS    
+from .constant_paths import CPATH_DOCS_SPEAKERS
 
 from .speaker_display import (
     display_spinorama,
@@ -42,7 +42,7 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
     updated = 0
     if chart is not None:
         filedir = (
-            CPATH_SPEAKERS
+            CPATH_DOCS_SPEAKERS
             + speaker
             + "/"
             + origin.replace("Vendors-", "")

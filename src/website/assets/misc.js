@@ -91,7 +91,7 @@ export function getReviews (value) {
   for (const version in value.measurements) {
     const measurement = value.measurements[version]
     let origin = measurement.origin
-    const url = value.brand + ' ' + value.model + '/' + removeVendors(origin) + '/index_' + version + '.html'
+    const url = 'speakers/' + value.brand + ' ' + value.model + '/' + removeVendors(origin) + '/index_' + version + '.html'
     if (origin === 'Misc') {
       origin = version.replace('misc-', '')
     } else {

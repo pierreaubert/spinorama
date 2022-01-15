@@ -91,7 +91,7 @@ def generate_speaker(mako, dataframe, meta, site, useSearch):
                     ]
                     eq = {k: dfs[k] for k in eq_filter if k in dfs}
                 # get index.html filename
-                dirname = cpaths.CPATH_SPEAKERS + speaker_name + "/"
+                dirname = cpaths.CPATH_DOCS_SPEAKERS + "/" + speaker_name + "/"
                 if origin in ("ASR", "Princeton", "ErinsAudioCorner", "Misc"):
                     dirname += origin
                 else:
@@ -169,12 +169,12 @@ if __name__ == "__main__":
 
     # only build a dictionnary will all graphs
     df = {}
-    speakers = glob("{}/*".format(cpaths.CPATH_METADATA_JSON))
+    speakers = glob("{}/*".format(cpaths.CPATH_DOCS_SPEAKERS))
     for speaker in speakers:
         if not os.path.isdir(speaker):
             continue
         # humm annoying
-        speaker_name = speaker.replace(cpaths.CPATH_SPEAKERS, "")
+        speaker_name = speaker.replace(cpaths.CPATH_DOCS_SPEAKERS + "/", "")
         if speaker_name in ("score", "assets", "stats", "compare", "logos", "pictures"):
             continue
         df[speaker_name] = {}
@@ -236,7 +236,7 @@ if __name__ == "__main__":
     meta_sorted_date = {k: meta[k] for k in keys_sorted_date}
 
     try:
-        with open("{}/{}".format(cpaths.CPATH_DOC, "index.html"), "w") as f:
+        with open("{}/{}".format(cpaths.CPATH_DOCS, "index.html"), "w") as f:
             # by default sort by pref_rating decreasing
             f.write(
                 index_html.render(
@@ -253,7 +253,7 @@ if __name__ == "__main__":
     eqs_html = mako_templates.get_template("eqs.html")
 
     try:
-        with open("{}/{}".format(cpaths.CPATH_DO, "eqs.html"), "w") as f:
+        with open("{}/{}".format(cpaths.CPATH_DOCS, "eqs.html"), "w") as f:
             # by default sort by pref_rating decreasing
             f.write(
                 eqs_html.render(df=df, meta=meta_sorted_date, site=site, useSearch=True)
@@ -269,7 +269,7 @@ if __name__ == "__main__":
             item_name = "{0}.html".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
-            with open(cpaths.CPATH_DOCS + item_name, "w") as f:
+            with open(cpaths.CPATH_DOCS + "/" + item_name, "w") as f:
                 f.write(
                     item_html.render(
                         df=df, meta=meta_sorted_score, site=site, useSearch=True
@@ -280,7 +280,7 @@ if __name__ == "__main__":
             item_name = "{0}.html".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
-            with open(cpaths.CPATH_DOCS + item_name, "w") as f:
+            with open(cpaths.CPATH_DOCS + "/" + item_name, "w") as f:
                 f.write(
                     item_html.render(
                         df=df, meta=meta_sorted_score, site=site, useSearch=False
@@ -306,7 +306,7 @@ if __name__ == "__main__":
             item_name = "assets/{0}.js".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
-            with open(cpaths.CPATH_DOCS + item_name, "w") as f:
+            with open(cpaths.CPATH_DOCS + "/" + item_name, "w") as f:
                 f.write(item_html.render(df=df, meta=meta_sorted_score, site=site))
                 f.close()
     except KeyError as ke:
@@ -316,7 +316,19 @@ if __name__ == "__main__":
     for f in [
         "favicon.ico",
         "favicon-16x16.png",
+    ]:
+        file_in = cpaths.CPATH_DATAS_LOGOS + "/" + f
+        file_out = cpaths.CPATH_DOCS_PICTURES + "/" + f
+        shutil.copy(file_in, file_out)
+
+    for f in [
         "spinorama.css",
+    ]:
+        file_in = cpaths.CPATH_WEBSITE_ASSETS_CSS + "/" + f
+        file_out = cpaths.CPATH_DOCS_ASSETS_CSS + "/" + f
+        shutil.copy(file_in, file_out)
+
+    for f in [
         "compare.js",
         "search.js",
         "index.js",
@@ -330,8 +342,8 @@ if __name__ == "__main__":
         "zip.min.js",
         "downloadzip.js",
     ]:
-        file_in = cpaths.CPATH_WEBSITE + f
-        file_out = cpaths.CPATH_DOCS + f
+        file_in = cpaths.CPATH_WEBSITE_ASSETS_JS + "/" + f
+        file_out = cpaths.CPATH_DOCS_ASSETS_JS + "/" + f
         shutil.copy(file_in, file_out)
 
     sys.exit(0)
