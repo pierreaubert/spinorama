@@ -227,7 +227,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     kHz10 = bisect.bisect(af[0], 10000)
     dbLess = -6
     # 2% tolerance
-    tol = 0.0002
+    tol = 0.0001
     #
     zero = az[deg0][kHz1:kHz10]
     # print('debug af {} am {} az {}'.format(af.shape, am.shape, az.shape))
@@ -249,26 +249,27 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
         xp1 = int(x)
         xp2 = xp1 + 1
         per_octave = []
-        for (bmin, bcenter, bmax) in octave(20):
+        for (bmin, bcenter, bmax) in octave(2):
             # 100hz to 16k hz
             if bmin < 1000 or bmax > 10000:
                 continue
             kmin = bisect.bisect(af[0], bmin)
             kmax = bisect.bisect(af[0], bmax)
-            kzero = az[deg0][kmin:kmax]
             zp1 = az[xp1][kmin:kmax]
             zp2 = az[xp2][kmin:kmax]
             # linear interpolation
             zp = zp1 + (x - xp1) * (zp2 - zp1)
             # normˆ2 (z-(-6dB))
+            print(bmin, kmin, bmax, kmax, zp)
             per_octave.append(np.linalg.norm(zp - dbLess))
-        # print('x={} per_octave={}'.format(x, per_octave))
-        return np.max(per_octave)
+        # print('x={} min= {} per_octave={}'.format(x, np.min(per_octave), per_octave))
+        print("x={} min= {}".format(x, np.min(per_octave)))
+        return np.min(per_octave)
 
-    eval_count = 180
+    eval_count = 180  # 180
 
     space_p = np.linspace(deg0, len(am.T[0]) - 2, eval_count)
-    eval_p = [linear_eval_octave(x) for x in space_p]
+    eval_p = [linear_eval(x) for x in space_p]
     min_p = np.min(eval_p) * (1.0 + tol)
     # all minimum in this 1% band from min
     pos_g = [i for i, v in enumerate(eval_p) if v < min_p]
@@ -279,21 +280,23 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
         pos_p = np.argmin(eval_p)
     # translate in deg
     angle_p = pos_p * 180 / eval_count
+    # print('debug: space_p boundaries [{}, {}] steps {}'.format(deg0, len(am.T[0])-2, eval_count))
     # print('debug space_p: {}'.format(space_p))
     # print('debug eval_p: {}'.format(eval_p))
     # print('debug pos_g: {}'.format(pos_g))
     # print('debug: min_p {} angle_p {}'.format(min_p, angle_p))
 
-    space_m = np.linspace(0, int(len(am.T[0]) / 2) - 1, eval_count)
-    eval_m = [linear_eval_octave(x) for x in space_m]
+    space_m = np.linspace(0, deg0 - 1, eval_count)
+    eval_m = [linear_eval(x) for x in space_m]
     min_m = np.min(eval_m) * (1.0 + tol)
     pos_g = [i for i, v in enumerate(eval_m) if v < min_m]
     if len(pos_g) > 1:
-        pos_m = pos_g[0]
+        pos_m = pos_g[-1]
     else:
         pos_m = np.argmin(eval_m)
     # translate in deg
     angle_m = pos_m * 180 / eval_count - 180
+    # print('debug: space_m boundaries [{}, {}] steps {}'.format(0, deg0-1, eval_count))
     # print('debug space_m: {}'.format(space_m))
     # print('debug eval_m: {}'.format(eval_m))
     # print('debug pos_g: {}'.format(pos_g))
@@ -325,5 +328,5 @@ def directivity_matrix(splH, splV):
     # not completly sure why it is possible to get negative values
     zD[zD < 0] = 0.0
     z = zU / np.sqrt(zD) - 1.0
-    # print('min {} max {}'.format(np.min(np.min(z)), np.max(np.max(z))))
+    # print('max {} max {}'.format(np.max(np.max(z)), np.max(np.max(z))))
     return (x, y, z)
