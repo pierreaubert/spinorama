@@ -4,7 +4,7 @@ import math
 import numpy as np
 import pandas as pd
 
-from .compute_misc import compute_contour, compute_directivity_deg
+from .compute_misc import compute_contour, compute_directivity_deg, compute_directivity_deg_v2
 
 pd.set_option("display.max_rows", 1000)
 
@@ -92,8 +92,9 @@ def estimates(
             if orientation == "vertical":
                 spl = splV
             if spl is not None and not spl.empty:
-                af, am, az = compute_contour(spl, 500)
-                dir_deg_p, dir_deg_m, dir_deg = compute_directivity_deg(af, am, az)
+                #af, am, az = compute_contour(spl, 500)
+                #dir_deg_p, dir_deg_m, dir_deg = compute_directivity_deg(af, am, az)
+                dir_deg_p, dir_deg_m, dir_deg = compute_directivity_deg_v2(spl)
                 est["dir_{}_p".format(orientation)] = dir_deg_p
                 est["dir_{}_m".format(orientation)] = dir_deg_m
                 est["dir_{}".format(orientation)] = dir_deg

@@ -255,15 +255,16 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
                 continue
             kmin = bisect.bisect(af[0], bmin)
             kmax = bisect.bisect(af[0], bmax)
+            kzero = az[deg0][kmin:kmax]
             zp1 = az[xp1][kmin:kmax]
             zp2 = az[xp2][kmin:kmax]
             # linear interpolation
             zp = zp1 + (x - xp1) * (zp2 - zp1)
             # normˆ2 (z-(-6dB))
-            print(bmin, kmin, bmax, kmax, zp)
-            per_octave.append(np.linalg.norm(zp - dbLess))
+            # print('{}hz {} {}hz {} {}'.format(bmin, kmin, bmax, kmax, zp))
+            per_octave.append(np.linalg.norm(zp - kzero - dbLess))
         # print('x={} min= {} per_octave={}'.format(x, np.min(per_octave), per_octave))
-        print("x={} min= {}".format(x, np.min(per_octave)))
+        # print("x={} min= {}".format(x, np.min(per_octave)))
         return np.min(per_octave)
 
     eval_count = 180  # 180
@@ -275,7 +276,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     pos_g = [i for i, v in enumerate(eval_p) if v < min_p]
     # be generous and take best one (widest)
     if len(pos_g) > 1:
-        pos_p = pos_g[-1]
+        pos_p = pos_g[0]
     else:
         pos_p = np.argmin(eval_p)
     # translate in deg
@@ -287,7 +288,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     # print('debug: min_p {} angle_p {}'.format(min_p, angle_p))
 
     space_m = np.linspace(0, deg0 - 1, eval_count)
-    eval_m = [linear_eval(x) for x in space_m]
+    eval_m = [linear_eval_octave(x) for x in space_m]
     min_m = np.min(eval_m) * (1.0 + tol)
     pos_g = [i for i, v in enumerate(eval_m) if v < min_m]
     if len(pos_g) > 1:
@@ -330,3 +331,29 @@ def directivity_matrix(splH, splV):
     z = zU / np.sqrt(zD) - 1.0
     # print('max {} max {}'.format(np.max(np.max(z)), np.max(np.max(z))))
     return (x, y, z)
+
+
+def compute_directivity_deg_v2(spl) -> tuple[float, float, float]:
+    dir_p = 0
+    dir_m = 0
+    mean = spl[((spl.Freq>1000) & (spl.Freq<10000))]['On Axis'].mean()
+    for k in range(10, 180, 10):
+        key = '{}°'.format(k)
+        db = spl[((spl.Freq>1000) & (spl.Freq<6000))][key] - mean
+        pos = db.min()
+        # print('key {}  pos {} {}'.format(key, pos, db.values))
+        if pos < -6:
+            dir_p = k
+            break
+
+    for k in range(-10, -180, -10):
+        key = '{}°'.format(k)
+        db = spl[((spl.Freq>1000) & (spl.Freq<6000))][key] - mean
+        pos = db.min()
+        # print('key {}  pos {} {}'.format(key, pos, db.values))
+        if pos < -6:
+            dir_m = k
+            break
+
+    # print('dir_p {}'.format(dir_p))
+    return float(dir_p), float(dir_m), float((dir_p+dir_m)/2)

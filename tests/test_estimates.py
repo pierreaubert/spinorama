@@ -74,10 +74,42 @@ class SpinoramaEstimatesNV3Tests(unittest.TestCase):
         self.assertAlmostEqual(self.estimates["ref_band"], 1.4)  # deviation in dB
 
     def test_directivity(self):
-        self.assertAlmostEqual(self.estimates["dir_horizontal_p"], 68)
-        self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -58)
-        self.assertAlmostEqual(self.estimates["dir_vertical_p"], 50)
-        self.assertAlmostEqual(self.estimates["dir_vertical_m"], -37)
+        self.assertAlmostEqual(self.estimates["dir_horizontal_p"], 50)
+        self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -50)
+        self.assertAlmostEqual(self.estimates["dir_vertical_p"], 40)
+        self.assertAlmostEqual(self.estimates["dir_vertical_m"], -40)
+
+
+class SpinoramaEstimatesNV4Tests(unittest.TestCase):
+    def setUp(self):
+        self.title, self.spin_unmelted = parse_graph_freq_klippel(
+            "datas/measurements/Revel C52/asr/CEA2034.txt"
+        )
+        self.spin = graph_melt(self.spin_unmelted)
+        _, self.splH = parse_graph_freq_klippel(
+            "datas/measurements/Revel C52/asr/SPL Horizontal.txt"
+        )
+        _, self.splV = parse_graph_freq_klippel(
+            "datas/measurements/Revel C52/asr/SPL Vertical.txt"
+        )
+        self.estimates = estimates(self.spin, self.splH, self.splV)
+
+    def test_estimates(self):
+        self.assertNotEqual(-1, self.estimates["ref_level"])
+        self.assertNotEqual(-1, self.estimates["ref_3dB"])
+        self.assertNotEqual(-1, self.estimates["ref_6dB"])
+        self.assertNotEqual(-1, self.estimates["ref_band"])
+        #
+        self.assertAlmostEqual(self.estimates["ref_level"], 89)
+        self.assertAlmostEqual(self.estimates["ref_3dB"], 72)  # Hz
+        self.assertAlmostEqual(self.estimates["ref_6dB"], 62)  # Hz
+        self.assertAlmostEqual(self.estimates["ref_band"], 3.1)  # deviation in dB
+
+    def test_directivity(self):
+        self.assertAlmostEqual(self.estimates["dir_horizontal_p"], 60)
+        self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -70)
+        self.assertAlmostEqual(self.estimates["dir_vertical_p"], 30)
+        self.assertAlmostEqual(self.estimates["dir_vertical_m"], -20)
 
 
 if __name__ == "__main__":
