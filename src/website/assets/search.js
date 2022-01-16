@@ -94,11 +94,11 @@ fetch(urlSite + 'assets/metadata.json').then(
     for (const key in smeta) {
       const spk = metadata[key]
       const id = (spk.brand + '-' + spk.model).replace(/['.+& ]/g, '-')
-        console.log('generated id is '+id)
-const elem = document.querySelector('#' + id)
-        if (elem) {
-            hide(elem)
-        }
+      console.log('generated id is ' + id)
+      const elem = document.querySelector('#' + id)
+      if (elem) {
+        hide(elem)
+      }
     }
     // minScore
     let minScore = 1
@@ -137,14 +137,14 @@ const elem = document.querySelector('#' + id)
       const elem = document.querySelector('#' + id)
       if (shouldShow) {
       // console.log('show ' + imeta.brand + ' ' + imeta.model + ' ' + score)
-          if (elem) {
-              show(elem)
-          }
+        if (elem) {
+          show(elem)
+        }
       } else {
-          // console.log('hide ' + imeta.brand + ' ' + imeta.model + ' ' + score)
-          if (elem) {
-              hide(elem)
-          }
+        // console.log('hide ' + imeta.brand + ' ' + imeta.model + ' ' + score)
+        if (elem) {
+          hide(elem)
+        }
       }
     }
   }
