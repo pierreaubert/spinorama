@@ -94,8 +94,11 @@ fetch(urlSite + 'assets/metadata.json').then(
     for (const key in smeta) {
       const spk = metadata[key]
       const id = (spk.brand + '-' + spk.model).replace(/['.+& ]/g, '-')
-      // console.log('generated id is '+id)
-      hide(document.querySelector('#' + id))
+        console.log('generated id is '+id)
+const elem = document.querySelector('#' + id)
+        if (elem) {
+            hide(elem)
+        }
     }
     // minScore
     let minScore = 1
@@ -131,12 +134,17 @@ fetch(urlSite + 'assets/metadata.json').then(
         }
       }
       const id = (imeta.brand + '-' + imeta.model).replace(/['.+& ]/g, '-')
+      const elem = document.querySelector('#' + id)
       if (shouldShow) {
       // console.log('show ' + imeta.brand + ' ' + imeta.model + ' ' + score)
-        show(document.querySelector('#' + id))
+          if (elem) {
+              show(elem)
+          }
       } else {
-      // console.log('hide ' + imeta.brand + ' ' + imeta.model + ' ' + score)
-        hide(document.querySelector('#' + id))
+          // console.log('hide ' + imeta.brand + ' ' + imeta.model + ' ' + score)
+          if (elem) {
+              hide(elem)
+          }
       }
     }
   }

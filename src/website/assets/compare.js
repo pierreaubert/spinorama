@@ -266,7 +266,7 @@ fetch(urlSite + 'assets/metadata.json').then(
         }
       }
       layout.title = null
-      layout.font = {size: 16}
+      layout.font = { size: 16 }
       if (layout.xaxis) {
         layout.xaxis.autotick = false
       }
@@ -321,10 +321,10 @@ fetch(urlSite + 'assets/metadata.json').then(
       layout = speakerGraphs[0].layout
       datas = speakerGraphs[0].data.concat(speakerGraphs[1].data)
 
-      layout.width = windowWidth-40
+      layout.width = windowWidth - 40
       layout.height = Math.max(360, Math.min(windowHeight, windowWidth * 0.7 + 140))
       layout.title = null
-      layout.font = {size: 16}
+      layout.font = { size: 16 }
       layout.margin = {
         l: 15,
         r: 15,
@@ -427,20 +427,20 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   const contourMin = -30
-      const contourMax = 3
-      const contourColorscale =  [
-        [0, "rgb(0,0,168)"],
-        [0.1, "rgb(0,0,200)"],
-        [0.2, "rgb(0,74,255)"],
-        [0.3, "rgb(0,152,255)"],
-        [0.4, "rgb(74,255,161)"],
-        [0.5, "rgb(161,255,74)"],
-        [0.6, "rgb(255,255,0)"],
-        [0.7, "rgb(234,159,0)"],
-        [0.8, "rgb(255,74,0)"],
-        [0.9, "rgb(222,74,0)"],
-        [1, "rgb(253,14,13)"],
-    ]
+  const contourMax = 3
+  const contourColorscale = [
+    [0, 'rgb(0,0,168)'],
+    [0.1, 'rgb(0,0,200)'],
+    [0.2, 'rgb(0,74,255)'],
+    [0.3, 'rgb(0,152,255)'],
+    [0.4, 'rgb(74,255,161)'],
+    [0.5, 'rgb(161,255,74)'],
+    [0.6, 'rgb(255,255,0)'],
+    [0.7, 'rgb(234,159,0)'],
+    [0.8, 'rgb(255,74,0)'],
+    [0.9, 'rgb(222,74,0)'],
+    [1, 'rgb(253,14,13)']
+  ]
 
   function setGlobe (speakerNames, speakerGraphs) {
     plotSingleContainer.style.display = 'none'
@@ -470,11 +470,11 @@ fetch(urlSite + 'assets/metadata.json').then(
           // color is z unravelled
           const color = []
           for (let k1 = 0; k1 < x.length; k1++) {
-              for (let k2 = 0; k2 < y.length - 1; k2++) {
-                  let val = z[k2][k1]
-                  val = Math.max(contourMin, val)
-                  val = Math.min(contourMax, val)
-                  color.push(val)
+            for (let k2 = 0; k2 < y.length - 1; k2++) {
+              let val = z[k2][k1]
+              val = Math.max(contourMin, val)
+              val = Math.min(contourMax, val)
+              color.push(val)
             }
           }
           speakerGraphs[i].data[j].type = 'barpolar'
@@ -484,10 +484,10 @@ fetch(urlSite + 'assets/metadata.json').then(
             autocolorscale: false,
             colorscale: contourColorscale,
             color: color,
-              colorbar: {
-                  title: {
-                      text: "dB (SPL)",
-                  },
+            colorbar: {
+              title: {
+                text: 'dB (SPL)'
+              }
             },
             showscale: true,
             line: {
