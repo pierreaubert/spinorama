@@ -238,7 +238,7 @@ fetch(urlSite + 'assets/metadata.json').then(
         }
         layout.legend = {
           orientation: 'h',
-          y: -0.4,
+          y: -0.5,
           x: 0,
           xanchor: 'bottom',
           yanchor: 'left'
@@ -250,7 +250,7 @@ fetch(urlSite + 'assets/metadata.json').then(
         }
       } else {
         layout.width = windowWidth - 40
-        layout.height = Math.min(windowHeight - 40, windowWidth * 0.7 + 140)
+        layout.height = Math.max(800, Math.min(windowHeight - 40, windowWidth * 0.7 + 140))
         layout.margin = {
           l: 15,
           r: 15,
@@ -259,13 +259,14 @@ fetch(urlSite + 'assets/metadata.json').then(
         }
         layout.legend = {
           orientation: 'h',
-          y: -0.2,
+          y: -0.1,
           x: 0,
           xanchor: 'bottom',
           yanchor: 'left'
         }
       }
       layout.title = null
+      layout.font = {size: 16}
       if (layout.xaxis) {
         layout.xaxis.autotick = false
       }
@@ -288,8 +289,8 @@ fetch(urlSite + 'assets/metadata.json').then(
       if (speakerGraphs[i] != null) {
       // console.log('adding graph '+ i);
         for (const trace in speakerGraphs[i].data) {
-        // speakerGraphs[i].data[trace]["legendgroup"] = "speaker"+i;
-        // speakerGraphs[i].data[trace]["legendgrouptitle"] = {"text": speakerNames[i]};
+          speakerGraphs[i].data[trace].legendgroup = 'speaker' + i
+          speakerGraphs[i].data[trace].legendgrouptitle = { text: speakerNames[i] }
           if (i % 2 === 1) {
             speakerGraphs[i].data[trace].line = { dash: 'dashdot' }
           }
@@ -320,18 +321,19 @@ fetch(urlSite + 'assets/metadata.json').then(
       layout = speakerGraphs[0].layout
       datas = speakerGraphs[0].data.concat(speakerGraphs[1].data)
 
-      layout.width = windowWidth
-      layout.height = Math.min(windowHeight, windowWidth * 0.7 - 240)
+      layout.width = windowWidth-40
+      layout.height = Math.max(360, Math.min(windowHeight, windowWidth * 0.7 + 140))
       layout.title = null
+      layout.font = {size: 16}
       layout.margin = {
-        l: 0,
-        r: 0,
+        l: 15,
+        r: 15,
         t: 30,
-        b: 50
+        b: 30
       }
       layout.legend = {
         orientation: 'h',
-        y: -0.2,
+        y: -0.1,
         x: 0,
         xanchor: 'bottom',
         yanchor: 'left',
@@ -371,7 +373,7 @@ fetch(urlSite + 'assets/metadata.json').then(
       // deltas.forEach( (data) => console.log(data.name) );
 
       const layout2 = JSON.parse(JSON.stringify(layout))
-      layout2.height = 340
+      layout2.height = 440
       layout2.yaxis = {
         title: 'Delta SPL (dB)',
         range: [-5, 5],
@@ -379,6 +381,7 @@ fetch(urlSite + 'assets/metadata.json').then(
       }
       layout2.showlegend = true
       layout2.legend = layout.legend
+      layout2.legend.y = -0.3
       layout2.margin = layout.margin
       plotDouble0Container.style.display = 'block'
       Plotly.newPlot('plotDouble0', deltas, layout2, { responsive: true })
@@ -423,6 +426,22 @@ fetch(urlSite + 'assets/metadata.json').then(
     }
   }
 
+  const contourMin = -30
+      const contourMax = 3
+      const contourColorscale =  [
+        [0, "rgb(0,0,168)"],
+        [0.1, "rgb(0,0,200)"],
+        [0.2, "rgb(0,74,255)"],
+        [0.3, "rgb(0,152,255)"],
+        [0.4, "rgb(74,255,161)"],
+        [0.5, "rgb(161,255,74)"],
+        [0.6, "rgb(255,255,0)"],
+        [0.7, "rgb(234,159,0)"],
+        [0.8, "rgb(255,74,0)"],
+        [0.9, "rgb(222,74,0)"],
+        [1, "rgb(253,14,13)"],
+    ]
+
   function setGlobe (speakerNames, speakerGraphs) {
     plotSingleContainer.style.display = 'none'
     plotDouble0Container.style.display = 'block'
@@ -451,16 +470,26 @@ fetch(urlSite + 'assets/metadata.json').then(
           // color is z unravelled
           const color = []
           for (let k1 = 0; k1 < x.length; k1++) {
-            for (let k2 = 0; k2 < y.length - 1; k2++) {
-              color.push(z[k2][k1])
+              for (let k2 = 0; k2 < y.length - 1; k2++) {
+                  let val = z[k2][k1]
+                  val = Math.max(contourMin, val)
+                  val = Math.min(contourMax, val)
+                  color.push(val)
             }
           }
           speakerGraphs[i].data[j].type = 'barpolar'
           speakerGraphs[i].data[j].r = r
           speakerGraphs[i].data[j].theta = theta
           speakerGraphs[i].data[j].marker = {
+            autocolorscale: false,
+            colorscale: contourColorscale,
             color: color,
-            showscale: false,
+              colorbar: {
+                  title: {
+                      text: "dB (SPL)",
+                  },
+            },
+            showscale: true,
             line: {
               color: null,
               width: 0
