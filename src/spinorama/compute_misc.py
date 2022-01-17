@@ -333,27 +333,33 @@ def directivity_matrix(splH, splV):
     return (x, y, z)
 
 
-def compute_directivity_deg_v2(spl) -> tuple[float, float, float]:
-    dir_p = 0
-    dir_m = 0
-    mean = spl[((spl.Freq>1000) & (spl.Freq<10000))]['On Axis'].mean()
-    for k in range(10, 180, 10):
-        key = '{}°'.format(k)
-        db = spl[((spl.Freq>1000) & (spl.Freq<6000))][key] - mean
-        pos = db.min()
-        # print('key {}  pos {} {}'.format(key, pos, db.values))
-        if pos < -6:
-            dir_p = k
-            break
+def compute_directivity_deg_v2(df) -> tuple[float, float, float]:
 
-    for k in range(-10, -180, -10):
-        key = '{}°'.format(k)
-        db = spl[((spl.Freq>1000) & (spl.Freq<6000))][key] - mean
-        pos = db.min()
-        # print('key {}  pos {} {}'.format(key, pos, db.values))
-        if pos < -6:
-            dir_m = k
-            break
+    # def compute(spl, r):
+    #     mean = spl[((spl.Freq>1000) & (spl.Freq<10000))]['On Axis'].mean()
+    #     for k in r:
+    #         key = '{}°'.format(k)
+    #         db = spl[((spl.Freq>1000) & (spl.Freq<6000))][key] - mean
+    #         pos = db.min()
+    #         # print('key {}  pos {} {}'.format(key, pos, db.values))
+    #         if pos < -6:
+    #             return k
+    #     return 0
+    
+    def compute(spl, r):
+        mean = spl[((spl.Freq>1000) & (spl.Freq<10000))]['On Axis'].mean()
+        for k in r:
+            key = '{}°'.format(k)
+            db = spl[((spl.Freq>1000) & (spl.Freq<6000))][key] - mean
+            # smooth on 5 points
+            pos = db.ewm(span=10).mean().min()
+            # print('key {}  pos {} {}'.format(key, pos, db.values))
+            if pos < -6:
+                return k
+        return 0
+    
+    dir_p = compute(df, range(10, 180, 10))
+    dir_m = compute(df, range(-10, -180, -10))
 
     # print('dir_p {}'.format(dir_p))
     return float(dir_p), float(dir_m), float((dir_p+dir_m)/2)

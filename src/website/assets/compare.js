@@ -1,3 +1,4 @@
+// import { Plotly } from '../../../node_modules/plotly/index.js'
 import { urlSite } from './misc.js'
 import { downloadZip } from './downloadzip.js'
 
@@ -147,7 +148,7 @@ fetch(urlSite + 'assets/metadata.json').then(
 
   function getAllSpeakers () {
     const speakers = []
-    metadata.forEach(function (value, key) {
+    metadata.forEach(function (value) {
       const speaker = value.brand + ' ' + value.model
       speakers.push(speaker)
       metaSpeakers[speaker] = value
@@ -173,8 +174,8 @@ fetch(urlSite + 'assets/metadata.json').then(
     return name
   }
 
-  function getOrigin (speaker, origin, version) {
-  // console.log('getOrigin ' + speaker + ' origin=' + origin + ' version='+version);
+  function getOrigin (speaker, origin) {
+    // console.log('getOrigin ' + speaker + ' origin=' + origin + ' version='+version);
     if (origin == null || origin === '') {
       const defaultMeasurement = metaSpeakers[speaker].default_measurement
       const defaultOrigin = metaSpeakers[speaker].measurements[defaultMeasurement].origin
@@ -193,12 +194,12 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function getSpeakerData (graph, speaker, origin, version) {
-  // console.log('getSpeakerData ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version='+version);
+    // console.log('getSpeakerData ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version='+version);
     const url =
           urlSite +
           'speakers/' +
             speaker + '/' +
-            getOrigin(speaker, origin, version) + '/' +
+            getOrigin(speaker, origin) + '/' +
             getVersion(speaker, origin, version) + '/' +
             processGraph(graph) + '.json.zip'
     // console.log('fetching url='+url);
@@ -741,9 +742,9 @@ fetch(urlSite + 'assets/metadata.json').then(
   graphsSelector.addEventListener('change', updateSpeakers, false)
 
   for (let pos = 0; pos < nbSpeakers; pos++) {
-    speakersSelector[pos].addEventListener('change', (event) => { return updateSpeakerPos(pos) }, false)
-    originsSelector[pos].addEventListener('change', (event) => { return updateOriginPos(pos) }, false)
-    versionsSelector[pos].addEventListener('change', (event) => { return updateVersionPos(pos) }, false)
+    speakersSelector[pos].addEventListener('change', () => { return updateSpeakerPos(pos) }, false)
+    originsSelector[pos].addEventListener('change', () => { return updateOriginPos(pos) }, false)
+    versionsSelector[pos].addEventListener('change', () => { return updateVersionPos(pos) }, false)
   }
 
   plot(cea2034, initSpeakers, initDatas)

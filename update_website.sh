@@ -52,7 +52,7 @@ fi
 # generate all jpg if some are missing
 ./update_pictures.sh
 # generate radar
-# rm -f docs/*/spider*
+# rm -f docs/speakers/*/spider*
 command=$(./generate_radar.py)
 status=$?
 if [ $status -ne 0 ]; then
