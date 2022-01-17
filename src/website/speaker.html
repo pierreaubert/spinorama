@@ -11,155 +11,167 @@
 
 <!-- Mobile view: sequential-->
 <div class="tab-pane is-active" id="pane-2">
-  <ul>
+  <table>
     % for freq in g_freq:
-    <li>
-      <div class="image is-4by3">
-	<a href="${g_key}/${freq | space2url}.html">
-          <picture>
-            <source
-              srcset="${g_key}/${freq | space2url}.webp"
-              width="1200"
-              heigth="800"
-              type="image/webp">
-            </source>
-            <img
-              class="graph"
-              alt="${freq}"
-              src="${g_key}/${freq | space2url}.jpg"
-              width="1200"
-              heigth="800"
-              type="image/jpg"
-              />
-          </picture>
-        </a>
-      </div>
-    </li>
+    <tr>
+      <td>
+        <div class="box has-background-link-light">
+	  <a href="${g_key}/${freq | space2url}.html">
+            <picture>
+              <source
+                srcset="${g_key}/${freq | space2url}.webp"
+                width="1200"
+                heigth="800"
+                type="image/webp">
+              </source>
+              <img
+                class="graph"
+                alt="${freq}"
+                src="${g_key}/${freq | space2url}.jpg"
+                width="1200"
+                heigth="800"
+                type="image/jpg"
+                />
+            </picture>
+          </a>
+        </div>
+      </td>
+    </tr>
     % endfor
     % for contour in g_contour:
-    <li>
-      <div class="image is-2by1">
-        <a href="${g_key}/${contour | unmeltC, space2url}.html">
-          <picture>
-            <source
-              srcset="${g_key}/${contour | unmeltC, space2url}.webp"
-              width="1200"
-              heigth="600"
-              type="image/webp">
-            </source>
-	    <img
-              class="graph" alt="${contour}"
-              width="1200"
-              heigth="600"
-              src="${g_key}/${contour | unmeltC, space2url}.jpg"
-              />
-          </picture>
-        </a>
-      </div>
-    </li>
+    <tr>
+      <td>
+        <div class="box has-background-link-light">
+          <a href="${g_key}/${contour | unmeltC, space2url}.html">
+            <picture>
+              <source
+                srcset="${g_key}/${contour | unmeltC, space2url}.webp"
+                width="1200"
+                heigth="600"
+                type="image/webp">
+              </source>
+	      <img
+                class="graph" alt="${contour}"
+                width="1200"
+                heigth="600"
+                src="${g_key}/${contour | unmeltC, space2url}.jpg"
+                />
+            </picture>
+          </a>
+        </div>
+      </td>
+    </tr>
     % endfor
     % for radar in g_radar:
-    <li>
-      <div class="image is-4by5">
-        <a href="${g_key}/${radar | unmeltR, space2url}.html">
-          <picture>
-            <source
-              srcset="${g_key}/${radar | unmeltR, space2url}.webp"
-              width="640"
-              heigth="800"
-              type="image/webp">
-            </source>
-	    <img
-              class="graph"
-              alt="${radar}"
-              src="${g_key}/${radar | unmeltR, space2url}.jpg"
-              width="640"
-              heigth="800"
-              />
-          </picture>
-        </a>
-      </div>
-    </li>
+    <tr>
+      <td>
+        <div class="box has-background-link-light">
+          <a href="${g_key}/${radar | unmeltR, space2url}.html">
+            <picture>
+              <source
+                srcset="${g_key}/${radar | unmeltR, space2url}.webp"
+                width="1000"
+                heigth="800"
+                type="image/webp">
+              </source>
+	      <img
+                class="graph"
+                alt="${radar}"
+                src="${g_key}/${radar | unmeltR, space2url}.jpg"
+                width="1000"
+                heigth="800"
+                />
+            </picture>
+          </a>
+        </div>
+      </td>
+    </tr>
     % endfor
-  </ul>
+  </table>
 </div>
 
 <!-- EQ view: sequential-->
 % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
 <div class="tab-pane" id="pane-3">
-  % if g_eq is not None:
-  <ul>
+  <table>
+    % if g_eq is not None:
     % for freq in g_freq:
-    <li>
-      <div class="image is-4by3">
-	<a href="${g_key}_eq/${freq | space2url}.html">
-          <picture>
-            <source
-              srcset="${g_key}_eq/${freq | space2url}.webp"
-              width="1200"
-              heigth="800"
-              type="image/webp">
-            </source>
-            <img
-              class="graph"
-              alt="${freq}"
-              src="${g_key}_eq/${freq | space2url}.jpg"
-              width="1200"
-              heigth="800"
-              type="image/jpg"
-              />
-          </picture>
-        </a>
-      </div>
-    </li>
+    <tr>
+      <td>
+        <div class="box has-background-link-light">
+	  <a href="${g_key}_eq/${freq | space2url}.html">
+            <picture>
+              <source
+                srcset="${g_key}_eq/${freq | space2url}.webp"
+                width="1200"
+                heigth="800"
+                type="image/webp">
+              </source>
+              <img
+                class="graph"
+                alt="${freq}"
+                src="${g_key}_eq/${freq | space2url}.jpg"
+                width="1200"
+                heigth="800"
+                type="image/jpg"
+                />
+            </picture>
+          </a>
+        </div>
+      </td>
+    </tr>
     % endfor
     % for contour in g_contour:
-    <li>
-      <div class="image is-2by1">
-        <a href="${g_key}_eq/${contour | unmeltC, space2url}.html">
-          <picture>
-            <source
-              srcset="${g_key}_eq/${contour | unmeltC, space2url}.webp"
-              width="1200"
-              heigth="600"
-              type="image/webp">
-            </source>
-	    <img
-              class="graph" alt="${contour}"
-              width="1200"
-              heigth="600"
-              src="${g_key}_eq/${contour | unmeltC, space2url}.jpg"
-              />
-          </picture>
-        </a>
-      </div>
-    </li>
+    <tr>
+      <td>
+        <div class="box has-background-link-light">
+          <a href="${g_key}_eq/${contour | unmeltC, space2url}.html">
+            <picture>
+              <source
+                srcset="${g_key}_eq/${contour | unmeltC, space2url}.webp"
+                width="1200"
+                heigth="600"
+                type="image/webp">
+              </source>
+	      <img
+                class="graph" alt="${contour}"
+                width="1200"
+                heigth="600"
+                src="${g_key}_eq/${contour | unmeltC, space2url}.jpg"
+                />
+            </picture>
+          </a>
+        </div>
+      </td>
+    </tr>
     % endfor
     % for radar in g_radar:
-    <li>
-      <div class="image is-4by5">
-        <a href="${g_key}_eq/${radar | unmeltR, space2url}.html">
-          <picture>
-            <source
-              srcset="${g_key}_eq/${radar | unmeltR, space2url}.webp"
-              width="640"
-              heigth="800"
-              type="image/webp">
-            </source>
-	    <img
-              class="graph"
-              alt="${radar}"
-              src="${g_key}_eq/${radar | unmeltR, space2url}.jpg"
-              width="640"
-              heigth="800"
-              />
-          </picture>
-        </a>
-      </div>
-    </li>
+    <tr>
+      <td>
+        <div class="box has-background-link-light">
+          <a href="${g_key}_eq/${radar | unmeltR, space2url}.html">
+            <picture>
+              <source
+                srcset="${g_key}_eq/${radar | unmeltR, space2url}.webp"
+                width="1000"
+                heigth="800"
+                type="image/webp">
+              </source>
+	      <img
+                class="graph"
+                alt="${radar}"
+                src="${g_key}_eq/${radar | unmeltR, space2url}.jpg"
+                width="1000"
+                heigth="800"
+                />
+            </picture>
+          </a>
+        </div>
+      </td>
+    </tr>
     % endfor
-  </ul>
-  % endif
+    % endif
+  </table>
 </div>
 % endif
 
@@ -187,10 +199,18 @@
       </picture>
     </td>
     <td>
-      <img
-        class="graph"
-        alt="Frequency with EQ"
-        src="${g_key}_eq/${freq | space2url}.jpg"/>
+      <picture>
+        <source
+          srcset="${g_key}_eq/${freq | space2url}.webp"
+          width="1200"
+          heigth="800"
+          type="image/webp">
+        </source>
+        <img
+          class="graph"
+          alt="Frequency with EQ"
+          src="${g_key}_eq/${freq | space2url}.jpg"/>
+      </picture>
     </td>
   </tr>
   % endfor
