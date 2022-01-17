@@ -7,7 +7,7 @@
       default_origin = default_origin.replace('Vendors-', '')
 %>
 % if print_warning:
-<article class="message is-warning graph">
+<article class="message is-warning">
   <div class="message-header">
     <p>Warning</p>
     <button class="delete" aria-label="delete"></button>
@@ -21,7 +21,7 @@
 
 
 % if not print_warning:
-<article class="message is-info graph">
+<article class="message is-info">
   <div class="message-header">
     <p>
       ${meta[speaker].get('brand')} ${meta[speaker].get('model')}
