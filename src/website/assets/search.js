@@ -73,12 +73,14 @@ fetch(urlSite + 'assets/metadata.json').then(
       const spk = metadata[key]
       const shouldShow = isFiltered(spk, filter)
       const id = (spk.brand + '-' + spk.model).replace(/['.+& ]/g, '-')
+      const elem = document.querySelector('#' + id)
       if (shouldShow) {
       // console.log(spk.brand + '-' + spk.model + ' is shouldShown')
-        show(document.querySelector('#' + id))
+        if (elem) {
+          show(elem)
+        }
       } else {
       // console.log(spk.brand + '-' + spk.model + ' is filtered')
-        const elem = document.querySelector('#' + id)
         if (elem) {
           hide(elem)
         }
