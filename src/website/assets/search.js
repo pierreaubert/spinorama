@@ -78,7 +78,10 @@ fetch(urlSite + 'assets/metadata.json').then(
         show(document.querySelector('#' + id))
       } else {
       // console.log(spk.brand + '-' + spk.model + ' is filtered')
-        hide(document.querySelector('#' + id))
+        const elem = document.querySelector('#' + id)
+        if (elem) {
+          hide(elem)
+        }
       }
     }
   }
