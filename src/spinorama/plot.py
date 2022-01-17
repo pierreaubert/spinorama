@@ -249,7 +249,7 @@ def radar_layout(params):
     return dict(
         width=params["width"],
         height=params["height"],
-        legend=dict(x=0.5, y=0.95, xanchor="center", orientation=orientation),
+        legend=dict(x=0.5, y=1.05, xanchor="center", orientation=orientation),
         title=dict(
             x=0.5,
             y=0.98,
@@ -257,10 +257,10 @@ def radar_layout(params):
             yanchor="top",
         ),
         margin={
-            "t": 10,
-            "b": 10,
-            "l": 20,
-            "r": 20,
+            "t": 100,
+            "b": 0,
+            "l": 50,
+            "r": 50,
         },
     )
 
