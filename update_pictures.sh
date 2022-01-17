@@ -11,7 +11,7 @@ for d in "${sourcedir}/pictures"; do
         for t in "jpg" "webp"; do
 	    smallert=${smaller%.png}.${t}
 	    if ! test -f "$smallert"; then
-	        convert "$pict" -define jpeg:size=300x500  -thumbnail '200x300>' -gravity center -extent 200x300 "$smallert";
+	        convert "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallert";
 	    fi
         done
     done
@@ -20,13 +20,13 @@ for d in "${sourcedir}/pictures"; do
         for t in "jpg" ; do
 	    smallert=${smaller%.jpg}.${t}
 	    if ! test -f "$smallert"; then
-	        convert "$pict" -define jpeg:size=300x500  -thumbnail '200x300>' -gravity center -extent 200x300 "$smallert";
+	        convert "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallert";
 	    fi
         done
         for t in "webp"; do
 	    smallerw=${smaller%.jpg}.${t}
 	    if ! test -f "$smallerw"; then
-	        convert "$pict" -define jpeg:size=300x500  -thumbnail '200x300>' -gravity center -extent 200x300 "$smallerw";
+	        convert "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallerw";
 	    fi
         done
     done
