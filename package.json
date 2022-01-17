@@ -7,6 +7,7 @@
   },
   "devDependencies": {
     "browserify": "^17.0.0",
+    "eslint": "^8.7.0",
     "html-validator-cli": "^7.0.1",
     "husky": "^7.0.0",
     "pyright": "^1.1.201",
