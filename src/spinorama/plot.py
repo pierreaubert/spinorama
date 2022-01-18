@@ -32,7 +32,7 @@ contour_params_default = {
     "xmin": 100,
     "xmax": 20000,
     "width": 1200,
-    "height": 600,
+    "height": 800,
 }
 
 # ratio is 4x5
@@ -234,6 +234,29 @@ def common_layout(params):
         ),
         margin={
             "t": 100,
+            "b": 10,
+            "l": 10,
+            "r": 10,
+        },
+    )
+
+
+def contour_layout(params):
+    orientation = "v"
+    if params.get("layout", "") == "compact":
+        orientation = "h"
+
+    return dict(
+        width=params["width"],
+        height=params["height"],
+        title=dict(
+            x=0.5,
+            y=0.99,
+            xanchor="center",
+            yanchor="top",
+        ),
+        margin={
+            "t": 40,
             "b": 10,
             "l": 10,
             "r": 10,
@@ -479,6 +502,39 @@ def plot_contour(spl, params):
         )
     )
 
+    def add_lines(x, y):
+        fig.add_trace(
+            go.Scatter(
+                x=x,
+                y=y,
+                opacity=0.5,
+                marker_color="white",
+                line_width=1,
+                showlegend=False,
+            )
+        )
+
+    def compute_horizontal_lines(x_min, x_max, y_data):
+        x = np.tile([x_min, x_max, None], len(y_data))
+        y = np.ndarray.flatten(np.array([[a, a, None] for a in y_data]))
+        return x, y
+
+    def compute_vertical_lines(y_min, y_max, x_data):
+        y = np.tile([y_min, y_max, None], len(x_data))
+        x = np.ndarray.flatten(np.array([[a, a, None] for a in x_data]))
+        return x, y
+
+    hx, hy = compute_horizontal_lines(min_freq, 20000, range(-150, 180, 30))
+    vrange = (
+        [100 * i for i in range(2, 9)]
+        + [1000 * i for i in range(1, 10)]
+        + [10000 + 1000 * i for i in range(1, 9)]
+    )
+    vx, vy = compute_vertical_lines(-180, 180, vrange)
+
+    add_lines(hx, hy)
+    add_lines(vx, vy)
+
     fig.update_xaxes(generate_xaxis(min_freq))
     fig.update_yaxes(generate_yaxis_angles())
     fig.update_yaxes(
@@ -486,7 +542,7 @@ def plot_contour(spl, params):
         zerolinecolor="#000000",
         zerolinewidth=3,
     )
-    fig.update_layout(common_layout(params))
+    fig.update_layout(contour_layout(params))
     return fig
 
 
