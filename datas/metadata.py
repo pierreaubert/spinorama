@@ -5490,7 +5490,7 @@ speakers_info = {
         "shape": "bookshelves",
         "amount": "pair",
         "default_measurement": "asr",
-        "measurements": {  
+        "measurements": {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
@@ -5987,7 +5987,7 @@ speakers_info = {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/pioneer-sp-bs22-lr-bookshelf-speaker-review.11303/",  
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/pioneer-sp-bs22-lr-bookshelf-speaker-review.11303/",
                 "review_published": "20200207",
             },
         },
