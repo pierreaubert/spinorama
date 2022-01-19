@@ -208,6 +208,25 @@ speakers_info = {
             },
         },
     },
+    "Arendal Sound 1961 Bookshelf": {
+        "brand": "Arendal Sound",
+        "model": "1961 Bookshelf",
+        "type": "passive",
+        "price": "700",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1961_bookshelf/",
+                },
+                "review_published": "20220118",
+            },
+        },
+    },
     "Ascend Acoustics CBM-170 SE": {
         "brand": "Ascend Acoustics",
         "model": "CBM-170 SE",
