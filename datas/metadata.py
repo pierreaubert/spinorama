@@ -7671,6 +7671,22 @@ speakers_info = {
             },
         },
     },
+    "Technics SB-C700": {
+        "brand": "Technics",
+        "model": "SB-C700",
+        "type": "passive",
+        "price": "1700",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/technics-sb-c700-review-coaxial-bookshelf.30607/",
+                "review_published": "20220206",
+            },
+        },
+    },
     "Triangle Borea BR03": {
         "brand": "Triangle",
         "model": "Borea BR03",
