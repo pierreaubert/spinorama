@@ -5490,7 +5490,7 @@ speakers_info = {
         "shape": "bookshelves",
         "amount": "pair",
         "default_measurement": "asr",
-        "measurements": {  
+        "measurements": {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
@@ -5916,6 +5916,70 @@ speakers_info = {
                 },
                 "review_published": "20211024",
             },
+            "vendor": {
+                "origin": "Vendors-Perlisten",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "vendor": "https://www.perlistenaudio.com/downloads/",
+                },
+                "notes": "Warning: measurements provided by vendor (Perlisten) are smoothed and diverge significantly from Erin's measurements",
+                "review_published": "20220208",
+                "quality": "low",
+            },
+        },
+    },
+    "Perlisten s4s": {
+        "brand": "Perlisten",
+        "model": "s4s",
+        "type": "passive",
+        "price": "7600",
+        "shape": "surround",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Perlisten",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "vendor": "https://www.perlistenaudio.com/downloads/",
+                },
+                "notes": "Warning: measurements provided by vendor (Perlisten) are smoothed",
+                "review_published": "20220208",
+                "quality": "low",
+            },
+        },
+    },
+    "Perlisten s5m": {
+        "brand": "Perlisten",
+        "model": "s5m",
+        "type": "passive",
+        "price": "14000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "vendor-vented",
+        "measurements": {
+            "vendor-vented": {
+                "origin": "Vendors-Perlisten",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "vendor": "https://www.perlistenaudio.com/downloads/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/perlisten-speakers.19745/",
+                },
+                "review_published": "20220208",
+                "notes": "Vented measurements provided by Perlisten, note that smoothing is heavy and score will be overestimated",
+                "quality": "low",
+            },
+            "vendor-sealed": {
+                "origin": "Vendors-Perlisten",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "vendor": "https://www.perlistenaudio.com/downloads/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/perlisten-speakers.19745/",
+                },
+                "notes": "Sealed measurements provided by Perlisten, note that smoothing is heavy and score will be overestimated",
+                "review_published": "20220208",
+                "quality": "low",
+            },
         },
     },
     "Perlisten s7t": {
@@ -5925,12 +5989,21 @@ speakers_info = {
         "price": "16000",
         "shape": "floorstanders",
         "amount": "pair",
-        "default_measurement": "misc-audioholics",
+        "default_measurement": "vendor",
         "measurements": {
+            "vendor": {
+                "origin": "Vendors-Perlisten",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "vendor": "https://www.perlistenaudio.com/downloads/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/perlisten-speakers.19745/",
+                },
+                "review_published": "20220208",
+                "quality": "low",
+            },
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "rewstextdump",
-                # "format": "webplotdigitizer",
                 "quality": "low",
                 "reviews": {
                     "adh": "https://www.audioholics.com/tower-speaker-reviews/perlisten-s7t/conclusion",
@@ -5987,7 +6060,7 @@ speakers_info = {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/pioneer-sp-bs22-lr-bookshelf-speaker-review.11303/",  
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/pioneer-sp-bs22-lr-bookshelf-speaker-review.11303/",
                 "review_published": "20200207",
             },
         },
@@ -8170,6 +8243,15 @@ origins_info = {
         "logo": "docs/metadata/pioneer.png",
         "logo-small": "docs/metadata/pioneer.png",
         "url": "https://www.pioneer.com",
+    },
+    "Vendors-Perlisten": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "logo": "docs/metadata/perlisten.png",
+        "logo-small": "docs/metadata/perlisten.png",
+        "url": "https://www.perlistenaudio.com",
     },
     "Vendors-PMC": {
         "min hz": 20,

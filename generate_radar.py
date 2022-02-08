@@ -98,7 +98,7 @@ def print_radar(speaker, data, scale):
     for key in ("pref_rating", "pref_rating_eq"):
         if key not in measurement.keys():
             continue
-        
+
         pref_rating = measurement[key]
         r = []
         graph_data.append(
@@ -135,7 +135,7 @@ def print_radar(speaker, data, scale):
         )
 
     graph_data[0]["name"] = "Default"
-    if len(graph_data)>1:
+    if len(graph_data) > 1:
         graph_data[1]["name"] = "With EQ"
 
     layout = {
@@ -162,7 +162,7 @@ def print_radar(speaker, data, scale):
     }
     fig = go.Figure()
     fig.add_trace(go.Scatterpolar(graph_data[0]))
-    if len(graph_data)>1:
+    if len(graph_data) > 1:
         fig.add_trace(go.Scatterpolar(graph_data[1]))
     fig.update_layout(layout)
     fig.write_image(filename)
