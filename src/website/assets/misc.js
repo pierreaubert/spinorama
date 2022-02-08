@@ -107,6 +107,22 @@ export function getReviews (value) {
       origin = 'SPD'
     }
     origin = origin.charAt(0).toUpperCase() + origin.slice(1)
+    if (version.search("sealed") != -1 ) {
+      origin = origin + " (Sealed)"
+    } else if  (version.search("vented") != -1 ) {
+      origin = origin + " (Vented)"
+    } else if  (version.search("ported") != -1 ) {
+      origin = origin + " (Ported)"
+    } else if  (version.search("horizontal") != -1 ) {
+      origin = origin + " (Horizontal)"
+    } else if  (version.search("vertical") != -1 ) {
+      origin = origin + " (Vertical)"
+    } else {
+      let pos = version.search(/-v[123456]-/)
+      if (pos != -1 ) {
+        origin = origin + " (v" + version[pos+2] + ")"
+      }
+    }
     reviews.push({
       url: encodeURI(url),
       origin: origin,

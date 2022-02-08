@@ -5591,9 +5591,9 @@ speakers_info = {
         "price": "150",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac-20211212-ported",
+        "default_measurement": "eac-v2-20211212-ported",
         "measurements": {
-            "eac-20211212-ported": {
+            "eac-v2-20211212-ported": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -5601,7 +5601,7 @@ speakers_info = {
                 },
                 "review_published": "20211212",
             },
-            "eac-20211212-sealed": {
+            "eac-v2-20211212-sealed": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -5609,7 +5609,7 @@ speakers_info = {
                 },
                 "review_published": "20211212",
             },
-            "eac-20200620": {
+            "eac-v1-20200620": {
                 "origin": "ErinsAudioCorner",
                 "format": "webplotdigitizer",
                 "reviews": {
