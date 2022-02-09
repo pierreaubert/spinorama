@@ -5982,6 +5982,27 @@ speakers_info = {
             },
         },
     },
+    "Perlisten s7c": {
+        "brand": "Perlisten",
+        "model": "s7c",
+        "type": "passive",
+        "price": "7500",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Perlisten",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "vendor": "https://www.perlistenaudio.com/downloads/",
+                },
+                "notes": "Warning: measurements provided by vendor (Perlisten) are smoothed",
+                "review_published": "20220208",
+                "quality": "low",
+            },
+        },
+    },
     "Perlisten s7t": {
         "brand": "Perlisten",
         "model": "s7t",
