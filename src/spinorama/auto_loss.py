@@ -62,7 +62,7 @@ def flat_loss(
     sp = 1.0
     if len(local_target) > 1:
         _, _, r_value, _, _ = linregress(np.log10(freq), local_target[-1])
-        sp = 1 - r_value ** 2
+        sp = 1 - r_value**2
     # * or +
     # return weigths[0]*lw+weigths[1]*sp
     return lw * sp
@@ -72,7 +72,7 @@ def flat_loss_exp(
     freq: Vector, local_target: List[Vector], peq: Peq, iterations: int, weigths: Vector
 ) -> float:
     _, _, r_value, _, _ = linregress(np.log10(freq), local_target[0])
-    sp = 1 - r_value ** 2
+    sp = 1 - r_value**2
     return sp
 
 
@@ -113,7 +113,7 @@ def flat_pir(freq, df_spin, peq):
 
     data = pir_filtered.loc[(pir_filtered.Freq >= 100) & (pir_filtered.Freq <= 16000)]
     _, _, r_value, _, _ = linregress(np.log10(data.Freq), data.dB)
-    return r_value ** 2
+    return r_value**2
 
 
 def score_loss(df_spin, peq):

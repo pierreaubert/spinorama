@@ -314,7 +314,7 @@ def spin_compute_di_eir(
                     "Measurements": "Sound Power DI",
                 }
             )
-            spin = spin.append(df2).reset_index(drop=True)
+            spin = pd.concat([spin, df2]).reset_index(drop=True)
         else:
             delta = np.mean(sp_di) - np.mean(sp_di_computed)
             logger.debug("Sound Power DI curve: removing {0}".format(delta))
@@ -344,7 +344,7 @@ def spin_compute_di_eir(
                     "Measurements": "Early Reflections DI",
                 }
             )
-            spin = spin.append(df2).reset_index(drop=True)
+            spin = pd.concat([spin, df2]).reset_index(drop=True)
         else:
             delta = np.mean(er_di) - np.mean(er_di_computed)
             logger.debug("Early Reflections DI curve: removing {0}".format(delta))
@@ -364,7 +364,7 @@ def spin_compute_di_eir(
     if di_offset.shape[0] == 0:
         logger.debug("No DI offset curve!")
         df2 = pd.DataFrame({"Freq": on.Freq, "dB": 0, "Measurements": "DI offset"})
-        spin = spin.append(df2).reset_index(drop=True)
+        spin = pd.concat([spin, df2]).reset_index(drop=True)
 
     logger.debug(
         "Shape ON {0} LW {1} ER {2} SP {3}".format(

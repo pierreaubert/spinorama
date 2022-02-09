@@ -106,7 +106,7 @@ def display_spl(df, axis, graph_params=plot_params_default):
             if k in df[axis].keys():
                 keep.add(k)
         if len(keep) > 1:
-            spl = df[axis].loc[:, keep]
+            spl = df[axis].loc[:, list(keep)]
             # print('spl {}'.format(spl.keys()))
             return plot_graph(spl, graph_params)
         return None
