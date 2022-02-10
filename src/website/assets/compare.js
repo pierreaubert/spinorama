@@ -529,6 +529,7 @@ fetch(urlSite + 'assets/metadata.json').then(
     plotDouble1Container.style.display = 'block'
     for (const i in speakerGraphs) {
       if (speakerGraphs[i]) {
+        let surfaceData = []
         for (const j in speakerGraphs[i].data) {
           // console.log('debug: speakerGraphs[' + i + '].data[' + j + '].x ' + speakerGraphs[i].data[j].x.length)
           // console.log('debug: speakerGraphs[' + i + '].data[' + j + '].y ' + speakerGraphs[i].data[j].y.length)
@@ -539,12 +540,16 @@ fetch(urlSite + 'assets/metadata.json').then(
           }
           // console.log('debug: speakerGraphs[' + i + '].data[' + j + '].z ' + speakerGraphs[i].data[j].z.length)
           // TODO: debug that we get the right angles
-          speakerGraphs[i].data[j].z = speakerGraphs[i].data[j].z.slice(10, -10)
-          speakerGraphs[i].data[j].type = 'surface'
-          speakerGraphs[i].data[j].legendgroup = 'speaker' + i
-          speakerGraphs[i].data[j].legendgrouptitle = { text: speakerNames[i] }
+          let currentSurfaceData = {}
+          currentSurfaceData.x = speakerGraphs[i].data[j].x
+          currentSurfaceData.y = speakerGraphs[i].data[j].y
+          currentSurfaceData.z = speakerGraphs[i].data[j].z.slice(10, -10)
+          currentSurfaceData.type = 'surface'
+          currentSurfaceData.legendgroup = 'speaker' + i
+          currentSurfaceData.legendgrouptitle = { text: speakerNames[i] }
+
+          surfaceData.push(currentSurfaceData)
         }
-        const datas = speakerGraphs[i].data
         const layout = speakerGraphs[i].layout
         layout.autosize = false
         layout.width = windowWidth
@@ -555,7 +560,7 @@ fetch(urlSite + 'assets/metadata.json').then(
         layout.zaxis = {
           range: [-20, 5]
         }
-        Plotly.newPlot('plotDouble' + i, datas, layout, { responsive: true })
+        Plotly.newPlot('plotDouble' + i, surfaceData, layout, { responsive: true })
       }
     }
   }
