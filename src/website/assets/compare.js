@@ -175,11 +175,11 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function getOrigin (speaker, origin) {
-    // console.log('getOrigin ' + speaker + ' origin=' + origin + ' version='+version);
+    // console.log('getOrigin ' + speaker + ' origin=' + origin)
     if (origin == null || origin === '') {
       const defaultMeasurement = metaSpeakers[speaker].default_measurement
       const defaultOrigin = metaSpeakers[speaker].measurements[defaultMeasurement].origin
-      // console.log('getOrigin default=' + defaultOrigin );
+      // console.log('getOrigin default=' + defaultOrigin)
       return processOrigin(defaultOrigin)
     }
     return processOrigin(origin)
@@ -194,7 +194,7 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function getSpeakerData (graph, speaker, origin, version) {
-    // console.log('getSpeakerData ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version='+version);
+    // console.log('getSpeakerData ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version=' + version)
     const url =
           urlSite +
           'speakers/' +
@@ -202,12 +202,13 @@ fetch(urlSite + 'assets/metadata.json').then(
             getOrigin(speaker, origin) + '/' +
             getVersion(speaker, origin, version) + '/' +
             processGraph(graph) + '.json.zip'
-    // console.log('fetching url='+url);
+    // console.log('fetching url=' + url)
     const spec = downloadZip(url).then(function (spec) {
-    // console.log('parsing url='+url);
-      return JSON.parse(spec)
+      // console.log('parsing url=' + url)
+      const js = JSON.parse(spec)
+      return js
     }).catch((error) => {
-      console.log('getSpeaker data 404 ' + error)
+      console.log('ERROR getSpeaker data 404 ' + error)
       return null
     })
     return spec
@@ -216,7 +217,7 @@ fetch(urlSite + 'assets/metadata.json').then(
   function setLayoutAndDataPrimary (spin) {
     let layout = null
     let datas = null
-    // console.log('layout and data: '+spin.length);
+    // console.log('layout and data: ' + spin.length)
     if (spin[0] != null && spin[1] != null) {
       layout = spin[0].layout
       datas = spin[0].data.concat(spin[1].data)
@@ -280,15 +281,15 @@ fetch(urlSite + 'assets/metadata.json').then(
       Plotly.newPlot('plotSingle', datas, layout, { responsive: true })
     } else {
     // should be a pop up
-      console.log('No graph available')
+      // console.log('No graph available')
     }
   }
 
   function setCEA2034 (speakerNames, speakerGraphs) {
-  // console.log('got ' + speakerGraphs.length +' graphs');
+    // console.log('setCEA2034 got ' + speakerGraphs.length + ' graphs')
     for (let i = 0; i < speakerGraphs.length; i++) {
       if (speakerGraphs[i] != null) {
-      // console.log('adding graph '+ i);
+        // console.log('adding graph ' + i)
         for (const trace in speakerGraphs[i].data) {
           speakerGraphs[i].data[trace].legendgroup = 'speaker' + i
           speakerGraphs[i].data[trace].legendgrouptitle = { text: speakerNames[i] }
@@ -302,10 +303,10 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function setCEA2034Split (speakerNames, speakerGraphs) {
-  // console.log('got ' + speakerGraphs.length +' graphs');
+    // console.log('setCEA2034Split got ' + speakerGraphs.length + ' graphs')
     for (let i = 0; i < speakerGraphs.length; i++) {
       if (speakerGraphs[i] != null) {
-      // console.log('adding graph '+ i);
+        // console.log('adding graph ' + i)
         for (const trace in speakerGraphs[i].data) {
           speakerGraphs[i].data[trace].legendgroup = 'speaker' + i
           speakerGraphs[i].data[trace].legendgrouptitle = { text: speakerNames[i] }
@@ -370,7 +371,7 @@ fetch(urlSite + 'assets/metadata.json').then(
           }
         }
       }
-      // console.log(deltas.length);
+      // console.log(deltas.length)
       // deltas.forEach( (data) => console.log(data.name) );
 
       const layout2 = JSON.parse(JSON.stringify(layout))
@@ -393,10 +394,10 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function setGraph (speakerNames, speakerGraphs) {
-  // console.log('got ' + speakerNames.length + ' names and '+ speakerGraphs.length +' graphs');
-    for (let i = 0; i < speakerGraphs.length; i++) {
+    // console.log('setGraph got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
+    for (const i in speakerGraphs) {
       if (speakerGraphs[i] != null) {
-      // console.log('adding graph '+ i);
+        // console.log('adding graph ' + i)
         for (const trace in speakerGraphs[i].data) {
           speakerGraphs[i].data[trace].legendgroup = 'speaker' + i
           speakerGraphs[i].data[trace].legendgrouptitle = { text: speakerNames[i] }
@@ -410,11 +411,12 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function setContour (speakerNames, speakerGraphs) {
+    // console.log('setContour got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     plotSingleContainer.style.display = 'none'
     plotDouble0Container.style.display = 'block'
     plotDouble1Container.style.display = 'block'
-    for (let i = 0; i < speakerGraphs.length; i++) {
-      if (speakerGraphs[i] != null) {
+    for (const i in speakerGraphs) {
+      if (speakerGraphs[i]) {
         for (const j in speakerGraphs[i].data) {
           speakerGraphs[i].data[j].legendgroup = 'speaker' + i
           speakerGraphs[i].data[j].legendgrouptitle = { text: speakerNames[i] }
@@ -444,15 +446,20 @@ fetch(urlSite + 'assets/metadata.json').then(
   ]
 
   function setGlobe (speakerNames, speakerGraphs) {
+    // console.log('setGlobe ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     plotSingleContainer.style.display = 'none'
     plotDouble0Container.style.display = 'block'
     plotDouble1Container.style.display = 'block'
-    for (let i = 0; i < speakerGraphs.length; i++) {
-      if (speakerGraphs[i] != null) {
+    for (const i in speakerGraphs) {
+      if (speakerGraphs[i]) {
+        let polarData = []
         for (const j in speakerGraphs[i].data) {
           const x = speakerGraphs[i].data[j].x
           const y = speakerGraphs[i].data[j].y
           const z = speakerGraphs[i].data[j].z
+          if (!z) {
+            continue
+          }
           const r = []
           // r is x (len of y times)
           for (let k1 = 0; k1 < x.length; k1++) {
@@ -469,6 +476,9 @@ fetch(urlSite + 'assets/metadata.json').then(
           }
           theta = theta.flat()
           // color is z unravelled
+          // console.log('debug: len(speakerGraphs[' + i + '].data[' + j + '].x=' + x.length)
+          // console.log('debug: len(speakerGraphs[' + i + '].data[' + j + '].y=' + y.length)
+          // console.log('debug: len(speakerGraphs[' + i + '].data[' + j + '].z=' + z.length)
           const color = []
           for (let k1 = 0; k1 < x.length; k1++) {
             for (let k2 = 0; k2 < y.length - 1; k2++) {
@@ -478,10 +488,11 @@ fetch(urlSite + 'assets/metadata.json').then(
               color.push(val)
             }
           }
-          speakerGraphs[i].data[j].type = 'barpolar'
-          speakerGraphs[i].data[j].r = r
-          speakerGraphs[i].data[j].theta = theta
-          speakerGraphs[i].data[j].marker = {
+          let currentPolarData = {}
+          currentPolarData.type = 'barpolar'
+          currentPolarData.r = r
+          currentPolarData.theta = theta
+          currentPolarData.marker = {
             autocolorscale: false,
             colorscale: contourColorscale,
             color: color,
@@ -496,28 +507,38 @@ fetch(urlSite + 'assets/metadata.json').then(
               width: 0
             }
           }
-          speakerGraphs[i].data[j].legendgroup = 'speaker' + i
-          speakerGraphs[i].data[j].legendgrouptitle = { text: speakerNames[i] }
+          currentPolarData.legendgroup = 'speaker' + i
+          currentPolarData.legendgrouptitle = { text: speakerNames[i] }
+
+          polarData.push(currentPolarData)
         }
-        const datas = speakerGraphs[i].data
         const layout = speakerGraphs[i].layout
         layout.polar = {
           bargap: 0,
           hole: 0.05
         }
-        Plotly.newPlot('plotDouble' + i, datas, layout, { responsive: true })
+        Plotly.newPlot('plotDouble' + i, polarData, layout, { responsive: true })
       }
     }
   }
 
   function setSurface (speakerNames, speakerGraphs) {
+    // console.log('setSurface ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     plotSingleContainer.style.display = 'none'
     plotDouble0Container.style.display = 'block'
     plotDouble1Container.style.display = 'block'
-    for (let i = 0; i < speakerGraphs.length; i++) {
-      if (speakerGraphs[i] != null) {
+    for (const i in speakerGraphs) {
+      if (speakerGraphs[i]) {
         for (const j in speakerGraphs[i].data) {
+          // console.log('debug: speakerGraphs[' + i + '].data[' + j + '].x ' + speakerGraphs[i].data[j].x.length)
+          // console.log('debug: speakerGraphs[' + i + '].data[' + j + '].y ' + speakerGraphs[i].data[j].y.length)
+          // TODO: debug that we get the right angles
           speakerGraphs[i].data[j].y = speakerGraphs[i].data[j].y.slice(10, -10)
+          if (!speakerGraphs[i].data[j].z) {
+            continue
+          }
+          // console.log('debug: speakerGraphs[' + i + '].data[' + j + '].z ' + speakerGraphs[i].data[j].z.length)
+          // TODO: debug that we get the right angles
           speakerGraphs[i].data[j].z = speakerGraphs[i].data[j].z.slice(10, -10)
           speakerGraphs[i].data[j].type = 'surface'
           speakerGraphs[i].data[j].legendgroup = 'speaker' + i
@@ -540,10 +561,10 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function plot (measurement, speakersName, speakersGraph) {
-  // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs');
+    // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs')
     async function run () {
       Promise.all(speakersGraph).then((graphs) => {
-      // console.log('plot: resolved ' + graphs.length + ' graphs');
+        // console.log('plot: resolved ' + graphs.length + ' graphs')
         if (measurement === 'CEA2034') {
           return setCEA2034(speakersName, graphs)
         } else if (measurement === 'CEA2034 with splitted views') {
@@ -583,8 +604,8 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function assignOptions (textArray, selector, textSelected) {
-  // console.log('assignOptions: selected = '+textSelected);
-  // textArray.forEach( item => console.log('assignOptions: '+item));
+    // console.log('assignOptions: selected = ' + textSelected)
+    // textArray.forEach( item => // console.log('assignOptions: '+item));
     while (selector.firstChild) {
       selector.firstChild.remove()
     }
@@ -628,8 +649,8 @@ fetch(urlSite + 'assets/metadata.json').then(
   assignOptions(knownMeasurements, graphsSelector, knownMeasurements[0])
 
   function updateVersion (speaker, selector, origin, value) {
-  // update possible version(s) for matching speaker and origin
-  // console.log('update version for '+speaker+' origin='+origin);
+    // update possible version(s) for matching speaker and origin
+    // console.log('update version for ' + speaker + ' origin=' + origin + ' value=' + value)
     const versions = Object.keys(metaSpeakers[speaker].measurements)
     let matches = []
     versions.forEach((val) => {
@@ -653,15 +674,15 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function updateOrigin (speaker, originSelector, versionSelector, origin, version) {
-  // console.log('updateOrigin for '+speaker+' with origin '+origin);
+    // console.log('updateOrigin for ' + speaker + ' with origin ' + origin + ' version=' + version)
     const measurements = Object.keys(metaSpeakers[speaker].measurements)
     const origins = new Set()
     for (const key in measurements) {
       origins.add(metaSpeakers[speaker].measurements[measurements[key]].origin)
     }
     const [first] = origins
-    // console.log('updateOrigin found this possible origins: '+origins.size+' first='+first);
-    // origins.forEach(item => console.log('updateOrigin: ' + item));
+    // console.log('updateOrigin found this possible origins: ' + origins.size + ' first=' + first)
+    // origins.forEach(item => console.log('updateOrigin: ' + item))
     if (origin != null) {
       assignOptions(Array.from(origins), originSelector, origin)
     } else {
@@ -686,7 +707,7 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function updateSpeakerPos (pos) {
-  // console.log('updateSpeakerPos('+pos+')');
+    // console.log('updateSpeakerPos(' + pos + ')')
     updateOrigin(speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos])
     urlParams.set('speaker' + pos, speakersSelector[pos].value)
     history.pushState({ page: 1 },
@@ -697,7 +718,7 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function updateVersionPos (pos) {
-  // console.log('updateVersionsPos('+pos+')');
+    // console.log('updateVersionsPos(' + pos + ')')
     updateVersion(
       speakersSelector[pos].value,
       versionsSelector[pos],
@@ -713,7 +734,7 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function updateOriginPos (pos) {
-  // console.log('updateOriginPos('+pos+')');
+    // console.log('updateOriginPos(' + pos + ')')
     updateOrigin(speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos], originsSelector[pos].value)
     urlParams.set('origin' + pos, originsSelector[pos].value)
     history.pushState({ page: 1 },
@@ -734,7 +755,8 @@ fetch(urlSite + 'assets/metadata.json').then(
       urlParams.get('origin' + pos),
       urlParams.get('version' + pos)
     )
-    // console.log('DEBUG: '+originsSelector[pos].options[0])
+    updateOriginPos(pos)
+    // console.log('DEBUG: ' + originsSelector[pos].options[0])
     initDatas[pos] = getSpeakerData(cea2034, initSpeakers[pos], null, null)
   }
 
