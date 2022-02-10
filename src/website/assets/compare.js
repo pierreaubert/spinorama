@@ -280,8 +280,8 @@ fetch(urlSite + 'assets/metadata.json').then(
       plotDouble1Container.style.display = 'none'
       Plotly.newPlot('plotSingle', datas, layout, { responsive: true })
     } else {
-    // should be a pop up
-      // console.log('No graph available')
+      // should be a pop up
+      console.log('Error: No graph available')
     }
   }
 
@@ -635,9 +635,20 @@ fetch(urlSite + 'assets/metadata.json').then(
     return list
   }
 
+  function buildInitMeasurement () {
+    if (urlParams.has('measurement')) {
+      const m = urlParams.get('measurement')
+      if (knownMeasurements.includes(m)) {
+        return m
+      }
+    }
+    return knownMeasurements[0]
+  }
+
   const speakers = getAllSpeakers()
   const initSpeakers = buildInitSpeakers(speakers, nbSpeakers)
-
+  const initMeasurement = buildInitMeasurement()
+    
   const speakersSelector = []
   const originsSelector = []
   const versionsSelector = []
@@ -651,7 +662,7 @@ fetch(urlSite + 'assets/metadata.json').then(
   for (let pos = 0; pos < nbSpeakers; pos++) {
     assignOptions(speakers, speakersSelector[pos], initSpeakers[pos])
   }
-  assignOptions(knownMeasurements, graphsSelector, knownMeasurements[0])
+  assignOptions(knownMeasurements, graphsSelector, initMeasurement)
 
   function updateVersion (speaker, selector, origin, value) {
     // update possible version(s) for matching speaker and origin
@@ -708,6 +719,11 @@ fetch(urlSite + 'assets/metadata.json').then(
       )
       names[i] = speakersSelector[i].value
     }
+    urlParams.set('measurement', graphsSelector.value)
+    history.pushState({ page: 1 },
+      'Change measurement',
+      urlCompare + urlParams.toString()
+    )
     plot(graphsSelector.value, names, graphs)
   }
 
@@ -750,7 +766,6 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   // initial setup
-  const cea2034 = knownMeasurements[0]
   const initDatas = []
   for (let pos = 0; pos < nbSpeakers; pos++) {
     updateOrigin(
@@ -762,7 +777,7 @@ fetch(urlSite + 'assets/metadata.json').then(
     )
     updateOriginPos(pos)
     // console.log('DEBUG: ' + originsSelector[pos].options[0])
-    initDatas[pos] = getSpeakerData(cea2034, initSpeakers[pos], null, null)
+    initDatas[pos] = getSpeakerData(initMeasurement, initSpeakers[pos], null, null)
   }
 
   // add listeners
@@ -774,5 +789,5 @@ fetch(urlSite + 'assets/metadata.json').then(
     versionsSelector[pos].addEventListener('change', () => { return updateVersionPos(pos) }, false)
   }
 
-  plot(cea2034, initSpeakers, initDatas)
+  plot(initMeasurement, initSpeakers, initDatas)
 }).catch(err => console.log(err.message))
