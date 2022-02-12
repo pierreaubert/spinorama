@@ -50,7 +50,7 @@ def get_freq(df_speaker_data, optim_config):
     if len(local_curves) > 0:
         columns = {"Freq"}.union(local_curves)
         if "CEA2034_unmelted" in df_speaker_data.keys():
-            local_df = df_speaker_data["CEA2034_unmelted"].loc[:, columns]
+            local_df = df_speaker_data["CEA2034_unmelted"].loc[:, list(columns)]
         else:
             df_tmp = df_speaker_data["CEA2034"]
             try:
