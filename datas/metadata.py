@@ -227,6 +227,25 @@ speakers_info = {
             },
         },
     },
+#    "Arendal Sound 1961 Tower": {
+#        "brand": "Arendal Sound",
+#        "model": "1961 Tower",
+#        "type": "passive",
+#        "price": "1700",
+#        "amount": "pair",
+#        "shape": "floorstanders",
+#        "default_measurement": "eac",
+#        "measurements": {
+#            "eac": {
+#                "origin": "ErinsAudioCorner",
+#                "format": "klippel",
+#                "reviews": {
+#                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1961_tower/",
+#                },
+#                "review_published": "20220122",
+#            },
+#        },
+#    },
     "Ascend Acoustics CBM-170 SE": {
         "brand": "Ascend Acoustics",
         "model": "CBM-170 SE",
@@ -2721,6 +2740,23 @@ speakers_info = {
             },
         },
     },
+#    "Ikea SYMFONISK Lamp": {
+#        "brand": "Ikea",
+#        "model": "SYMFONISK Lamp",
+#        "type": "active",
+#        "price": "150",
+#        "shape": "omni",
+#        "amount": "each",
+#        "default_measurement": "eac",
+#        "measurements": {
+#            "eac": {
+#                "origin": "ErinsAudioCorner",
+#                "format": "klippel",
+#                "review": "https://www.erinsaudiocorner.com/loudspeakers/ikea_symfonisk_lamp/",
+#                "review_published": "20220124",
+#            },
+#        },
+#    },
     "Ikea SYMFONISK Picture Frame": {
         "brand": "Ikea",
         "model": "SYMFONISK Picture Frame",
@@ -4004,6 +4040,23 @@ speakers_info = {
             },
         },
     },
+#    "JBL Studio 520C": {
+#        "brand": "JBL",
+#        "model": "Studio 520C",
+#        "type": "passive",
+#        "price": "",
+#        "shape": "center",
+#        "amount": "each",
+#        "default_measurement": "eac",
+#        "measurements": {
+#            "eac": {
+#                "origin": "ErinsAudioCorner",
+#                "format": "klippel",
+#                "review": "https://www.erinsaudiocorner.com/loudspeakers/jbl_520c_center/",
+#                "review_published": "20220111",
+#            },
+#        },
+#    },
     "JBL Studio 530": {
         "brand": "JBL",
         "model": "Studio 530",
@@ -4398,6 +4451,29 @@ speakers_info = {
             },
         },
     },
+#    "KEF Q650C": {
+#        "brand": "KEF",
+#        "model": "Q650C",
+#        "type": "passive",
+#        "price": "750",
+#        "shape": "center",
+#        "amount": "each",
+#        "default_measurement": "eac-horizontal",
+#        "measurements": {
+#            "eac-vertical": {
+#                "origin": "ErinsAudioCorner",
+#                "format": "klippel",
+#                "review": "https://www.erinsaudiocorner.com/loudspeakers/kef_q650c_center/",
+#                "review_published": "20220126",
+#            },
+#            "eac-horizontal": {
+#                "origin": "ErinsAudioCorner",
+#                "format": "klippel",
+#                "review": "https://www.erinsaudiocorner.com/loudspeakers/kef_q650c_center/",
+#                "review_published": "20220126",
+#            },
+#        },
+#    },
     "KEF R2c": {
         "brand": "KEF",
         "model": "R2c",
@@ -5178,6 +5254,23 @@ speakers_info = {
             },
         },
     },
+#    "Miller & Kreisel S150": {
+#        "brand": "Miller & Kreisel",
+#        "model": "S150",
+#        "type": "passive",
+#        "price": "10000",
+#        "shape": "bookshelves",
+#        "amount": "pair",
+#        "default_measurement": "eac",
+#        "measurements": {
+#            "eac": {
+#                "origin": "ErinsAudioCorner",
+#                "format": "klippel",
+#                "review": "https://www.erinsaudiocorner.com/loudspeakers/m_and_k_s150/",
+#                "review_published": "20220126",
+#            },
+#        },
+#    },
     "Monitor Audio Silver 100": {
         "brand": "Monitor Audio",
         "model": "Silver 100",
