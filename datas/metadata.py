@@ -5991,6 +5991,27 @@ speakers_info = {
             },
         },
     },
+    "Perlisten r4b": {
+        "brand": "Perlisten",
+        "model": "r4b",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Perlisten",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "vendor": "https://www.perlistenaudio.com/downloads/",
+                },
+                "notes": "Warning: measurements provided by vendor (Perlisten) are smoothed",
+                "review_published": "20220208",
+                "quality": "low",
+            },
+        },
+    },
     "Perlisten r5t": {
         "brand": "Perlisten",
         "model": "r5t",
@@ -6007,6 +6028,39 @@ speakers_info = {
                     "vendor": "https://www.perlistenaudio.com/downloads/",
                 },
                 "notes": "Warning: measurements provided by vendor (Perlisten) are smoothed",
+                "review_published": "20220208",
+                "quality": "low",
+            },
+        },
+    },
+    "Perlisten r7t": {
+        "brand": "Perlisten",
+        "model": "r7t",
+        "type": "passive",
+        "price": "",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "vendor-vented",
+        "measurements": {
+            "vendor-vented": {
+                "origin": "Vendors-Perlisten",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "vendor": "https://www.perlistenaudio.com/downloads/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/perlisten-speakers.19745/",
+                },
+                "review_published": "20220208",
+                "notes": "Vented measurements provided by Perlisten, note that smoothing is heavy and score will be overestimated",
+                "quality": "low",
+            },
+            "vendor-sealed": {
+                "origin": "Vendors-Perlisten",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "vendor": "https://www.perlistenaudio.com/downloads/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/perlisten-speakers.19745/",
+                },
+                "notes": "Sealed measurements provided by Perlisten, note that smoothing is heavy and score will be overestimated",
                 "review_published": "20220208",
                 "quality": "low",
             },
