@@ -4474,6 +4474,22 @@ speakers_info = {
             },
         },
     },
+    "KEF Blade 1 Meta": {
+        "brand": "KEF",
+        "model": "Blade 1 Meta",
+        "type": "passive",
+        "price": "35000",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "website": "www.kef.com",
+                "format": "webplotdigitizer",
+                "review_published": "20220217",
+            },
+        },
+    },
     "KEF R2c": {
         "brand": "KEF",
         "model": "R2c",
@@ -4630,6 +4646,22 @@ speakers_info = {
                 "origin": "Vendors-KEF",
                 "website": "www.kef.com",
                 "format": "webplotdigitizer",
+            },
+        },
+    },
+    "KEF Reference 5 Meta": {
+        "brand": "KEF",
+        "model": "Reference 5 Meta",
+        "type": "passive",
+        "price": "22000",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "website": "www.kef.com",
+                "format": "webplotdigitizer",
+                "review_published": "20220217",
             },
         },
     },
