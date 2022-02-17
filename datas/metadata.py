@@ -4298,6 +4298,38 @@ speakers_info = {
             },
         },
     },
+    "KEF Blade 1 Meta": {
+        "brand": "KEF",
+        "model": "Blade 1 Meta",
+        "type": "passive",
+        "price": "35000",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "website": "www.kef.com",
+                "format": "webplotdigitizer",
+                "review_published": "20220217",
+            },
+        },
+    },
+    "KEF Blade 2 Meta": {
+        "brand": "KEF",
+        "model": "Blade 2 Meta",
+        "type": "passive",
+        "price": "25000",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "website": "www.kef.com",
+                "format": "webplotdigitizer",
+                "review_published": "20220217",
+            },
+        },
+    },
     "KEF LS50": {
         "brand": "KEF",
         "model": "LS50",
@@ -4471,22 +4503,6 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/kef_q650c_center/",
                 "review_published": "20220126",
-            },
-        },
-    },
-    "KEF Blade 1 Meta": {
-        "brand": "KEF",
-        "model": "Blade 1 Meta",
-        "type": "passive",
-        "price": "35000",
-        "shape": "floorstanders",
-        "default_measurement": "vendor",
-        "measurements": {
-            "vendor": {
-                "origin": "Vendors-KEF",
-                "website": "www.kef.com",
-                "format": "webplotdigitizer",
-                "review_published": "20220217",
             },
         },
     },
