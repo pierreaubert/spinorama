@@ -4311,6 +4311,9 @@ speakers_info = {
                 "website": "www.kef.com",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
+                "reviews": {
+                    "kef": "https://www.shop.us.kef.com/pub/media/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                },
             },
         },
     },
@@ -4327,6 +4330,9 @@ speakers_info = {
                 "website": "www.kef.com",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
+                "reviews": {
+                    "kef": "https://www.shop.us.kef.com/pub/media/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                },
             },
         },
     },
@@ -4650,6 +4656,83 @@ speakers_info = {
             },
         },
     },
+    "KEF Reference 1 Meta": {
+        "brand": "KEF",
+        "model": "Reference 1 Meta",
+        "type": "passive",
+        "price": "9000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "website": "www.kef.com",
+                "format": "webplotdigitizer",
+                "review_published": "20220217",
+                "reviews": {
+                    "kef": "https://www.shop.us.kef.com/pub/media/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                },
+            },
+        },
+    },
+    "KEF Reference 2C Meta": {
+        "brand": "KEF",
+        "model": "Reference 2C Meta",
+        "type": "passive",
+        "price": "8000",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "website": "www.kef.com",
+                "format": "webplotdigitizer",
+                "review_published": "20220217",
+                "reviews": {
+                    "kef": "https://www.shop.us.kef.com/pub/media/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                },
+            },
+        },
+    },
+    "KEF Reference 4C": {
+        "brand": "KEF",
+        "model": "Reference 4C",
+        "type": "passive",
+        "price": "7500",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-reference-4c-review-center-speaker.30048/",
+                "review_published": "20220118",
+            },
+        },
+    },
+    "KEF Reference 4C Meta": {
+        "brand": "KEF",
+        "model": "Reference 4C Meta",
+        "type": "passive",
+        "price": "8000",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "website": "www.kef.com",
+                "format": "webplotdigitizer",
+                "review_published": "20220217",
+                "reviews": {
+                    "kef": "https://www.shop.us.kef.com/pub/media/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                },
+            },
+        },
+    },
     "KEF Reference 5": {
         "brand": "KEF",
         "model": "Reference 5",
@@ -4678,23 +4761,9 @@ speakers_info = {
                 "website": "www.kef.com",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
-            },
-        },
-    },
-    "KEF Reference 4C": {
-        "brand": "KEF",
-        "model": "Reference 4C",
-        "type": "passive",
-        "price": "7500",
-        "shape": "center",
-        "amount": "each",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-reference-4c-review-center-speaker.30048/",
-                "review_published": "20220118",
+                "reviews": {
+                    "kef": "https://www.shop.us.kef.com/pub/media/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                },
             },
         },
     },
