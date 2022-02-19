@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2021 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2022 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ def get_freq(df_speaker_data, optim_config):
     if len(local_curves) > 0:
         columns = {"Freq"}.union(local_curves)
         if "CEA2034_unmelted" in df_speaker_data.keys():
-            local_df = df_speaker_data["CEA2034_unmelted"].loc[:, columns]
+            local_df = df_speaker_data["CEA2034_unmelted"].loc[:, list(columns)]
         else:
             df_tmp = df_speaker_data["CEA2034"]
             try:

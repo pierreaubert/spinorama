@@ -84,35 +84,3 @@ def graph_summary(speaker_name, speaker_summary, params):
         )
         .properties(width=params["width"], height=params["height"])
     )
-
-
-# import urllib
-# import os
-def graph_image(speaker_name, params):
-    # url = 'https://pierreaubert.github.io/spinorama/pictures/{0}.jpg'.format(urllib.parse.quote(speaker_name))
-    # url = "file://{1}/docs/pictures/{0}.jpg".format(urllib.parse.quote(speaker_name), os.getcwd())
-    url = None
-    pict_path = "./docs/pictures/{0}.jpg".format(speaker_name)
-    default_path = "./docs/pictures/speaker-default.jpg"
-    if os.path.exists(pict_path):
-        url = "file://docs/pictures/{0}.jpg".format(speaker_name)
-    else:
-        url = "file://docs/pictures/speaker-default.jpg"
-
-    source = pd.DataFrame.from_records([{"x": 0, "y": 0.0, "img": url}])
-    return (
-        alt.Chart(source)
-        .mark_image(
-            width=params["width"] - 40,
-            height=params["height"] - 40,
-        )
-        .encode(
-            x=alt.X("x", axis=None),
-            y=alt.Y("y", axis=None),
-            url="img",
-        )
-        .properties(
-            width=params["width"],
-            height=params["height"],
-        )
-    )

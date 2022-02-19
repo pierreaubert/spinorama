@@ -48,15 +48,13 @@ except ModuleNotFoundError:
     import src.miniray as ray
 
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
-
+import datas.metadata as metadata
+import spinorama.constant_paths as cpaths
 from spinorama.compute_estimates import estimates
 from spinorama.compute_scores import speaker_pref_rating
 from spinorama.filter_peq import peq_preamp_gain
 from spinorama.load_parse import parse_graphs_speaker
 from spinorama.load_rewseq import parse_eq_iir_rews
-
-
-import datas.metadata as metadata
 
 
 def add_scores(dataframe, parse_max):
@@ -82,6 +80,7 @@ def add_scores(dataframe, parse_max):
         parsed = parsed + 1
         logger.info("Processing {0}".format(speaker_name))
         for _, measurements in speaker_data.items():
+            default_key = metadata.speakers_info[speaker_name]["default_measurement"]
             for key, dfs in measurements.items():
                 try:
                     if dfs is None or "CEA2034" not in dfs.keys():
@@ -107,7 +106,11 @@ def add_scores(dataframe, parse_max):
                         sensitivity is not None
                         and metadata.speakers_info[speaker_name].get("type")
                         == "passive"
+                        and key == default_key
                     ):
+                        logger.debug(
+                            "{} sensitivity is {}".format(speaker_name, sensitivity)
+                        )
                         metadata.speakers_info[speaker_name][
                             "sensitivity"
                         ] = sensitivity
@@ -425,8 +428,8 @@ def add_eq(speaker_path, dataframe, parse_max):
 
 
 def dump_metadata(meta):
-    metadir = "./docs/assets/"
-    metafile = "{}/metadata.json".format(metadir)
+    metadir = cpaths.CPATH_DOCS_ASSETS
+    metafile = cpaths.CPATH_METADATA_JSON
     if not os.path.isdir(metadir):
         os.makedirs(metadir)
     meta2 = {k: v for k, v in meta.items() if not v.get("skip", False)}
@@ -457,7 +460,7 @@ if __name__ == "__main__":
         parse_max = int(parse_max)
 
     if speaker is not None:
-        df = cache_load(filter=speaker)
+        df = cache_load(simple_filter=speaker)
     else:
         df = cache_load()
 

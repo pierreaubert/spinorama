@@ -1,17 +1,17 @@
 .tabs {
-    margin-bottom: -1px;
+    margin-bottom: 0px;
 }
 
 .tab-content {
     left: 0;
     top: 120px;
-    width: 100%;
+    width: max(400px, 100%);
 }
 
 .tab-pane {
     display: none;
     position: absolute;
-    width: 100%;
+    width: max(400px, 100%);
 }
 
 .tab-pane.is-active {
@@ -27,5 +27,5 @@
 }
 
 .graph {
-    width: 100%;
+    width: max(400px, 100%);
 }

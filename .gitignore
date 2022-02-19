@@ -41,3 +41,4 @@ cache.*.h5
 #generate_meta.py#
 .vscode
 .cache
+.sass-cache

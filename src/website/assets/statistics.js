@@ -1,3 +1,4 @@
+// import { Plotly } from '../../../node_modules/plotly/index.js'
 import { urlSite } from './misc.js'
 
 fetch(urlSite + 'assets/metadata.json').then(

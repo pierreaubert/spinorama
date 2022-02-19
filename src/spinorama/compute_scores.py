@@ -25,9 +25,9 @@ def octave(N: int) -> List[Tuple[float, float, float]]:
     p_band = pow(2, 1 / (2 * N))
     o_iter = int((N * 10 + 1) / 2)
     center = (
-        [reference / p ** i for i in range(o_iter, 0, -1)]
+        [reference / p**i for i in range(o_iter, 0, -1)]
         + [reference]
-        + [reference * p ** i for i in range(1, o_iter + 1, 1)]
+        + [reference * p**i for i in range(1, o_iter + 1, 1)]
     )
     return [(c / p_band, c, c * p_band) for c in center]
 
@@ -165,7 +165,7 @@ def sm(dfu):
     #    print('data shape={} keys={}'.format(data.shape, dfu.keys()))
     #    print(log_freq)
     #    print(data.dB)
-    return r_value ** 2
+    return r_value**2
 
 
 def pref_rating(nbd_on, nbd_pir, lf_x, sm_pir):

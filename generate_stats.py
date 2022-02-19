@@ -36,6 +36,7 @@ import zipfile
 from docopt import docopt
 import pandas as pd
 
+from spinorama.constant_paths import CPATH_METADATA_JSON
 from generate_common import get_custom_logger, args2level
 
 
@@ -171,7 +172,7 @@ if __name__ == "__main__":
     logger.setLevel(level)
 
     # load all metadata from generated json file
-    json_filename = "./docs/assets/metadata.json"
+    json_filename = CPATH_METADATA_JSON
     if not os.path.exists(json_filename):
         logger.error("Cannot find {0}".format(json_filename))
         sys.exit(1)

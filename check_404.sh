@@ -1,2 +1,9 @@
-#!/bin/sh
-pylinkvalidate.py -P http://192.168.1.37:3457/docs
+#!/bin/bash
+
+pylinkvalidate.py -P http://spinorama.internet-box.ch
+
+for f in docs/speakers/*/*/*/*.html; do
+    name=${f#docs/}
+    u=${name// /%20}
+    pylinkvalidate.py -P "http://spinorama.internet-box.ch/$u"
+done

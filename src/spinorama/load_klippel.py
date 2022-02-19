@@ -94,7 +94,7 @@ def parse_graphs_speaker_klippel(
                 speaker_name, mversion
             )
         )
-        return dfs
+        return None, None
 
     h_name = find_data_klippel(
         speaker_path, speaker_brand, speaker_name, mversion, "SPL Horizontal"

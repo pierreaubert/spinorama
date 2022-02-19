@@ -17,7 +17,7 @@ def parse_graph_freq_princeton_mat(mat, suffix):
     # compute Freq
     timestep = 1.0 / mat[fs_name]
     # hummm
-    freq = np.fft.fftfreq(2 ** 14, d=timestep)
+    freq = np.fft.fftfreq(2**14, d=timestep)
     # reduce spectrum to 0 to 24kHz
     # lg = 2**14
     # 24k is lgs = int(lg/4)

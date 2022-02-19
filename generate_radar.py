@@ -37,6 +37,7 @@ from docopt import docopt
 import pandas as pd
 import plotly.graph_objects as go
 
+from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DOCS_SPEAKERS
 from generate_common import get_custom_logger, args2level
 
 
@@ -88,11 +89,16 @@ def print_radar(speaker, data, scale):
     measurement = data["measurements"][def_measurement]
     if "pref_rating" not in measurement.keys() or "estimates" not in measurement.keys():
         return
-    filename = "docs/{} {}/spider.jpg".format(data["brand"], data["model"])
+    filename = "{}/{} {}/spider.jpg".format(
+        CPATH_DOCS_SPEAKERS, data["brand"], data["model"]
+    )
     if pathlib.Path(filename).is_file():
         return
     graph_data = []
     for key in ("pref_rating", "pref_rating_eq"):
+        if key not in measurement.keys():
+            continue
+
         pref_rating = measurement[key]
         r = []
         graph_data.append(
@@ -129,7 +135,8 @@ def print_radar(speaker, data, scale):
         )
 
     graph_data[0]["name"] = "Default"
-    graph_data[1]["name"] = "With EQ"
+    if len(graph_data) > 1:
+        graph_data[1]["name"] = "With EQ"
 
     layout = {
         "width": 400,
@@ -155,7 +162,8 @@ def print_radar(speaker, data, scale):
     }
     fig = go.Figure()
     fig.add_trace(go.Scatterpolar(graph_data[0]))
-    fig.add_trace(go.Scatterpolar(graph_data[1]))
+    if len(graph_data) > 1:
+        fig.add_trace(go.Scatterpolar(graph_data[1]))
     fig.update_layout(layout)
     fig.write_image(filename)
 
@@ -172,7 +180,7 @@ if __name__ == "__main__":
     logger.setLevel(level)
 
     # load all metadata from generated json file
-    json_filename = "./docs/assets/metadata.json"
+    json_filename = CPATH_METADATA_JSON
     if not os.path.exists(json_filename):
         logger.error("Cannot find {0}".format(json_filename))
         sys.exit(1)
