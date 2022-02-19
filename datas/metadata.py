@@ -4696,6 +4696,26 @@ speakers_info = {
             },
         },
     },
+    "KEF Reference 3 Meta": {
+        "brand": "KEF",
+        "model": "Reference 3 Meta",
+        "type": "passive",
+        "price": "12000",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "website": "www.kef.com",
+                "format": "webplotdigitizer",
+                "review_published": "20220217",
+                "reviews": {
+                    "kef": "https://www.shop.us.kef.com/pub/media/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                },
+            },
+        },
+    },
     "KEF Reference 4C": {
         "brand": "KEF",
         "model": "Reference 4C",
