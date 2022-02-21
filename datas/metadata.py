@@ -4121,7 +4121,7 @@ speakers_info = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jtr_2022_noesis_210ht/",
                     "yt": "https://youtu.be/pjMjcWramAw",
                 },
-                "review_published": "20210415",
+                "review_published": "20220221",
             },
         },
     },
