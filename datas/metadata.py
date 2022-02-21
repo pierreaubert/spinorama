@@ -4105,6 +4105,26 @@ speakers_info = {
             },
         },
     },
+    "JTR Noesis 210ht": {
+        "brand": "JTR",
+        "model": "Noesis 210ht",
+        "type": "passive",
+        "price": "4000",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jtr_2022_noesis_210ht/",
+                    "yt": "https://youtu.be/pjMjcWramAw",
+                },
+                "review_published": "20210415",
+            },
+        },
+    },
     "JTR Noesis 212rt": {
         "brand": "JTR",
         "model": "Noesis 212rt",
