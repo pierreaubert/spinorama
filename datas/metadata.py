@@ -1842,6 +1842,26 @@ speakers_info = {
             },
         },
     },
+    "Emotiva Airmotiv C1+": {
+        "brand": "Emotiva",
+        "model": "Airmotiv C1+",
+        "type": "passive",
+        "price": "300",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/emotiva_airmotiv_c1plus/",
+                    "yt": "",
+                },
+                "review_published": "20220217",
+            },
+        },
+    },
     "Emotiva Airmotiv T2+": {
         "brand": "Emotiva",
         "model": "Airmotiv T2+",
@@ -4485,6 +4505,26 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-q100-speaker-review.11987/",
+            },
+        },
+    },
+    "KEF Q150": {
+        "brand": "KEF",
+        "model": "Q150",
+        "type": "passive",
+        "price": "500",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q150/",
+                    "yt": "https://www.youtube.com/watch?v=SiGslBHnK9c&t=3s",
+                },
+                "review_published": "20220225",
             },
         },
     },
