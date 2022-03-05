@@ -519,8 +519,14 @@ speakers_info = {
         "price": "4100",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "misc-napilopez",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a500/",
+                "review_published": "20220303",
+            },
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
@@ -2349,6 +2355,23 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8330a-review-studio-monitor.25704/",
                 "review_published": "20210812",
+            },
+        },
+    },
+    "Genelec 8331A": {
+        "brand": "Genelec",
+        "model": "8331A",
+        "type": "active",
+        "price": "4500",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/genelec_8331a/",
+                "review_published": "20220303",
             },
         },
     },
@@ -5306,9 +5329,16 @@ speakers_info = {
         "price": "7000",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "eac",
+        "default_measurement": "eac-v2-20220305",
         "measurements": {
-            "eac": {
+            "eac-v2-20220305": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/march_audio_sointuva/",
+                "review_published": "20220305",
+                "notes": "picture is from Erins web site. This is a same version as v1 with a different crossover.",
+            },
+            "eac-v1-20220106": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/march_audio_sointuva/",
