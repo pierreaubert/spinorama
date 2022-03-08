@@ -5192,6 +5192,25 @@ speakers_info = {
             },
         },
     },
+    "M-Audio BX4 D3": {
+        "brand": "M-Audio",
+        "model": "BX4 D3",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "120",
+        "default_measurement": "misc-weeblabs",
+        "measurements": {
+            "misc-weeblabs": {
+                "origin": "Misc",
+                "format": "rewstextdump",
+                "quality": "medium",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/m-audio-bx4-d3-active-monitor-measurements-teardown-subjective-impressions.31423/",
+                },
+                "review_published": "20220210",
+            },
+        },
+    },
     "M-Audio BX5 D3": {
         "brand": "M-Audio",
         "model": "BX5 D3",
