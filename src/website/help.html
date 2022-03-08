@@ -1,6 +1,11 @@
 <%include file="header.html"/>
 <%include file="nav_menu.html"/>
 
+<div class="level has-background-info-dark is-hidden-mobile">
+...
+</div>
+
+<div class="container">
 <section class="content">
   <h1 class="title">Measurements</h1>
   <h2 class="subtitle">What is a spinorama set of graphs?</h2>
@@ -9,34 +14,36 @@
 
     Here is an example:
   </p>
-  <img src="speakers/Genelec%208341A/ASR/asr-vertical/CEA2034.jpg" alt="spinorama from a Genelec 8341A"/>
+  <img src="speakers/Genelec%208341A/ASR/asr-vertical/CEA2034.jpg"
+       width="600px"
+       alt="spinorama from a Genelec 8341A"/>
   <p>
     The spinorama gives you a few graphs:
   </p>
   <ul>
     <li><b>On Axis:</b> this the frequency response. You expect it to
-      be as flat as possible after 100Hz.</li>
+      be as flat as possible above 100Hz.</li>
     <li><b>Listening Window:</b> an average of various measurements around on axis. Expected to be close to the previous one.</li>
-    <li><b>Early reflections:</b> expected to be a smooth, slowy goind
+    <li><b>Early reflections:</b> expected to be a smooth, slowy going
       down line.</li>
-    <li><b>Sound power DI:</b> expected to be a smooth, slowy growing line.</li>
+    <li><b>Sound power DI:</b> expected to be a smooth, slowy going
+    down line (slope is greater than Early Reflections).</li>
   </ul>
   <p>The speaker above is <i>very</i> good. You can compare with
     another one:</p>
   <img src="speakers/Tannoy%20Revolution%20XT6/ASR/asr/CEA2034.jpg"
+       width="600px"
        alt="spinorama for a Tannoy XT6"/>
   <p>which is not flat at all. Remember that &plusmn;3dB means that the
   volume doubles/halves at the corresponding frequency. If you look at
     the on axis measurement below, you see that it going up, the
     speaker will likely be bright and emphasis high frequency.</p>
-  <img src="speakers/Tannoy%20Revolution%20XT6/ASR/asr/On%20Axis.jpg"  alt="On
-    Axis for a Tannoy XT6"/>
-</section>
+  <img src="speakers/Tannoy%20Revolution%20XT6/ASR/asr/On%20Axis.jpg"
+       width="600px"
+       alt="On Axis for a Tannoy XT6"/>
 
-
-<section class="content">
-  <h1 class="title">Please tell me more:</h1>
-  If you like to read:
+  <h2 class="title">Please tell me more:</h2>
+  If you like to <i>read</i>:
   <ul>
     <li>This <a href="https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-and-control-1-pro-monitors-review.10811/">post
         on ASR</a>
@@ -58,7 +65,7 @@
         in the service of Art</a> from Floyd E. Toole is a good, easy
         to read summary.
   </ul>
-  If you prefer to watch:
+  If you prefer to <i>watch</i>:
   There is a fine set of videos
   from <a href="https://www.youtube.com/channel/UCW_IqM21u0J-zsKtCq4Gj2w">ErinsAudioCorner</a>
   on Youtube:
@@ -72,19 +79,182 @@
 </section>
 
 <section class="content">
-  <h1 class="title">How can I help?</h1>
+  <h1 class="title">FAQ</h1>
+
+  <h2 class="title">Can I trust the data?</h2>
+  The measurements are collected on the internet. Some are of very
+  high quality and done by independant reviewers, some are of medium
+  or low quality or provided by vendors.
+
+  You can filter the results by clicking the wheel on the website near
+  the search bar.
+
+  <h2 class="title">How precise are the measurement data?</h2>
+  <ul>
+    <li>High quality data: provided by a Klippel NFS or measured in a large
+      anechoic chamber. Data precision is around 1%.
+    </li>
+    <li>Medium quality data: medium size anechoc chamber, data
+      precision decreases <500 Hz. By how much is unknown.
+    </li>
+    <li>Low quality data:
+      <ul>
+        <li>measured without an anechoic chamber but
+          using windowing for high frequency and plane ground method for low
+          frequency. Precision can be as good as a Klippel
+          measurements.
+        </li>
+        <li>provided by vendors: usually smoothed data (less
+        measurement points, or data is smoothed, or quality is just
+          unknown).
+        </li>
+      </ul>
+    </li>
+  </ul>
+    
+  <h2 class="title">How precise are the computed data?</h2>
+  <ul>
+    <li>Generally precision depends on the quality of the input
+    data. If you want to compare 2 measurements, you should select
+      them from the same category.
+    </li>
+    <li>Score computations
+      <ul>
+        <li>The score is not significant &pm;0.5. It means that 2
+        speakers which have a difference in score less than 1 are in
+          the same broad bucket. No point to look at the decimals.
+        </li>
+      </ul>
+    <li>Anechoic EQ computations
+      <ul>
+        <li>EQ is for one measurement. Since there are variations
+        speaker to speaker, you should not look at very sharp or very
+        precise EQ. How much variation between speakers? This is very
+        brand/model dependant. Some manufactures provide tolerance
+          like Neumann or Genelec.
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <h2 class="title">Can I use this data to decide which speaker to buy</h2>
+  See dedicated section.
+  
+  <h2 class="title">Should I use room EQ?</h2>
+  Absolutly! Dirac, REW, Audyssey etc will provide audible
+  improvement to the sound, in general making it flatter (so more
+  tonally correct).
+  
+  <h2 class="title">Focus or broad radiation pattern?</h2>
+  Speakers do not radiate uniformly. Some speakers are designed to be
+  very focus: they minimise the reflections but the sweet spot is very
+  tiny. Some speakers are designed to diffuse sound, research proved
+  it is something that people usually like.
+
+  If you are near field, for example on a desk, low directivity works
+  well. The farther from the speaker you are, the more good
+  directivity becomes important. If the room is reflective, this is
+  especially important.
+
+
+  <h2 class="title">How can I help?</h2>
   <ol>
     <li>This website is generated
       from <a href="https://github.com/pierreaubert/spinorama">this
-        code</a> and datas
-      from <a href="https://audiosciencereview.com">ASR</a>
-      website.</li>
+        code</a> and data from various websites (see below).
+    </li>
     <li>You can provide feedback or add more datas
-      on <a href="https://github.com/pierreaubert/spinorama/issues">github</a>
+      at <a href="https://github.com/pierreaubert/spinorama/issues">github</a>
       or in
       this <a href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/">thread</a>
       at ASR.</li>
   </ol>
+</section>
+
+<section class="content">
+  <h1>How to select your speaker?</h1>
+  That is a polemic section, I know, I know.
+
+
+  <h2>Criteria</h2>
+  I believe there are 5 criteria in whatever order you want:
+  <ul>
+    <li>Price:
+      <p>Price is not linked to quality (sadly) and is a factor where
+      you are the only judge of the worthiness.</p>
+    </li>
+    <li>Design:
+      <p>Design is to each is own. Some like monkey coffins, some like
+        studio monitors, some like big horns, it is up to you</p>
+    </li>
+    <li>Tonality:
+      <p>Here we have more concensus, a lot of people like the same
+      thing. To be HIFI, you want to have a speaker with a high
+      tonality score. This score takes into account flatness,
+      directivity and how much bass you will get.
+      </p>
+    </li>
+    <li>SPL aka Sound Power level:
+      <p>How loud do you want your speaker to be? It depends a lot of
+        your room and at which level you want to listen.</p>
+      Some examples:
+      <ul>
+        <li>Bedroom 3m x 4m, listening distance &lt;2m, 73dB reference
+        level, +20 dB for peak: 93dB at 1 meter. Around 90dB per
+                                                     speaker.
+        </li>
+        <li>Living room 6m x 8m, listening distance &lt;3m, 73dB reference
+        level, +20 dB for peak: 93dB at 1 meter. Around 96dB per speaker.
+        </li>
+        <li>Large room or studio 7m x 12m, listening distance &lt;5m, 73dB reference
+        level, +20 dB for peak: 93dB at 1 meter. Around 116dB per speaker.
+        </li>
+      </ul>
+    </li>
+    <li>Bass extension:
+      <p>Small speakers dont have much bass. You need a subwoofer or a
+      large speaker if you want both deep bass and high volume. New
+      speakers with DSP can produce a lot of bass while being small
+      but not at high volume. If you listen to music only and do not
+      like electronic music, you dont need subwoofers with large speakers.
+      </p>
+      Some examples:
+      <ul>
+        <li>Bedroom 3m x 4m, one 10 inch subwoofer. </li>
+        <li>Living room 6m x 8m, one 15 inch subwoofer or two 12 inch subwoofers</li>
+        <li>Large room or studio 7m x 12m, two 15 inch subwoofers, may
+          be more</li>
+      </ul>
+      You can choose floorstanders or bookshelves with
+      subwoofers. Integration is not very easy but very doable
+      especially if you use an AVR. Most people like bass, your
+      neighbourgh may not like <i>your</i> bass.
+    </li>
+  </ul>
+
+  <h2>How good is your room?</h2>
+
+  <ul>
+    <li>Is the room dedicated to music?</li>
+    <li>Is the room symmetrical?</li>
+    <li>Does the room have some absorption?</li>
+    <li>Did you add panels to control reflections?</li>
+    <li>Did you have multiple subwoofers to control bass linearity?</li>
+    <li>Did you measured your speakers in your room?</li>
+  </ul>
+
+  If you did not answer yes each times, then you do not need the best
+  speakers in the world and obsessing over scores, SPL etc will not
+  make it the best room in the world.
+
+  At the same time, I understand very well the attraction of having a
+  great pair of speakers.
+
+  Speakers with a high tonality score will be easier to EQ and will
+  adapt well to your room. Define the SPL you want (at 1% distorsion)
+  and now you have reasonable choices.
+  
+
 </section>
 
 <section class="content">
@@ -128,6 +298,10 @@
         </li>
       </ul>
     </li>
+    <li><a href="https://speakerdata2034.blogspot.com/">speakerdata2034</a>
+    is a blog with a collection of spinorama from various
+      sources. Index of measurements is <a href="https://speakerdata2034.blogspot.com/2019/03/all-spinorama-data-index.html">available</a>.
+    </li>
   </ol>
 </section>
 
@@ -147,5 +321,6 @@
       J. Audio Eng. Soc., 48(4):259–280, 2000.</li>
   </ul>
 </section>
+</div>
 
 <%include file="footer.html"/>
