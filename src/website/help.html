@@ -15,7 +15,7 @@
     Here is an example:
   </p>
   <img src="speakers/Genelec%208341A/ASR/asr-vertical/CEA2034.jpg"
-       width="600px"
+       width="600"
        alt="spinorama from a Genelec 8341A"/>
   <p>
     The spinorama gives you a few graphs:
@@ -32,14 +32,14 @@
   <p>The speaker above is <i>very</i> good. You can compare with
     another one:</p>
   <img src="speakers/Tannoy%20Revolution%20XT6/ASR/asr/CEA2034.jpg"
-       width="600px"
+       width="600"
        alt="spinorama for a Tannoy XT6"/>
   <p>which is not flat at all. Remember that &plusmn;3dB means that the
   volume doubles/halves at the corresponding frequency. If you look at
     the on axis measurement below, you see that it going up, the
     speaker will likely be bright and emphasis high frequency.</p>
   <img src="speakers/Tannoy%20Revolution%20XT6/ASR/asr/On%20Axis.jpg"
-       width="600px"
+       width="600"
        alt="On Axis for a Tannoy XT6"/>
 
   <h2 class="title">Please tell me more:</h2>
@@ -86,18 +86,29 @@
   high quality and done by independant reviewers, some are of medium
   or low quality or provided by vendors.
 
-  You can filter the results by clicking the wheel on the website near
-  the search bar.
+  <p>You can filter the results by clicking the wheel on the website near
+    the search bar.</p>
+
+  <picture>
+    <source
+      srcset="help_pictures/help_select_high_quality.webp"
+      alt="How to filter on high quality measurements"
+      type="image/webp"/>
+    <img
+      src="help_pictures/help_select_high_quality.jpg"
+      alt="How to filter on high quality measurements"
+      type="image/jpg"/>
+  </picture>
 
   <h2 class="title">How precise are the measurement data?</h2>
   <ul>
-    <li>High quality data: provided by a Klippel NFS or measured in a large
+    <li><i>High quality</i> data: provided by a Klippel NFS or measured in a large
       anechoic chamber. Data precision is around 1%.
     </li>
-    <li>Medium quality data: medium size anechoc chamber, data
-      precision decreases <500 Hz. By how much is unknown.
+    <li><i>Medium quality</i> data: medium size anechoc chamber, data
+      precision decreases &lt;500Hz. By how much is unknown.
     </li>
-    <li>Low quality data:
+    <li><i>Low quality</i> data:
       <ul>
         <li>measured without an anechoic chamber but
           using windowing for high frequency and plane ground method for low
@@ -105,8 +116,14 @@
           measurements.
         </li>
         <li>provided by vendors: usually smoothed data (less
-        measurement points, or data is smoothed, or quality is just
-          unknown).
+          measurement points, or data is smoothed, or quality is just
+          unknown). Smoothed
+          measurements <a href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/page-5#post-742037">usually
+          generate</a> a score 
+          which higher by 0.7 on average over a score computed raw
+          data. Note that the 0.7 can change depending on the amount
+          of smoothing and other factors. 
+          
         </li>
       </ul>
     </li>
@@ -133,6 +150,12 @@
         brand/model dependant. Some manufactures provide tolerance
           like Neumann or Genelec.
         </li>
+        <li>IIR eq (aka PEQs) are not working if the phase is varying
+        a lot over some frequency range. Group delay (phase
+        derivative) must be relatively flat. That may explain why EQing
+        around the crossover frequency does not necessary give
+        excellent results. On this other side, we are less sensitive
+        to phase anomaly than frequency anomaly.
       </ul>
     </li>
   </ul>
@@ -177,7 +200,7 @@
 
 
   <h2>Criteria</h2>
-  I believe there are 5 criteria in whatever order you want:
+  I believe there are a few criteria in whatever order you want:
   <ul>
     <li>Price:
       <p>Price is not linked to quality (sadly) and is a factor where
@@ -186,6 +209,16 @@
     <li>Design:
       <p>Design is to each is own. Some like monkey coffins, some like
         studio monitors, some like big horns, it is up to you</p>
+    </li>
+    <li>Build quality:
+      <p>Some brands built to high standars some don't. Do some due
+        diligence.</p>
+    </li>
+    <li>Support quality:
+      <p>Who can or will repair your speaker if you have an issue?
+      How long do they store parts? How long is the guarantee? What
+      is covered. It is worth a close look if you buy once in a
+      lifetime expensive speakers.</p>
     </li>
     <li>Tonality:
       <p>Here we have more concensus, a lot of people like the same
@@ -308,17 +341,33 @@
 <section class="content">
   <h1 class="title">Books and research papers</h1>
   <ul>
-    <li><a href="https://books.google.ch/books/about/Sound_Reproduction.html?id=tJ0uDwAAQBAJ&printsec=frontcover&source=kp_read_button&redir_esc=y#v=onepage&q&f=false">Sound Reproduction: The Acoustics and Psychoacoustics of Loudspeakers and Rooms</a> By Floyd E. Toole</li>
+    <li><a href="https://books.google.ch/books/about/Sound_Reproduction.html?id=tJ0uDwAAQBAJ&printsec=frontcover&source=kp_read_button&redir_esc=y#v=onepage&q&f=false">Sound
+    Reproduction: The Acoustics and Psychoacoustics of Loudspeakers
+    and Rooms</a> By Floyd E. Toole</li> 
     <li>Standard Method of Measurement for In-Home Loudspeakers is
       available for free at <a href="https://www.cta.tech">CTA</a></li>
     <li>A Multiple Regression Model for Predicting Loudspeaker Preference
       Using Objective Measurements: Part II - Development of the Model
       by Sean E. Olive, AES Fellow. Convention paper 6190 from the <a href="https://www.aes.org">AES</a>.</li>
     <li>Fast Template Matching. J.P.Lewis <a href="http://scribblethink.org/Work/nvisionInterface/vi95_lewis.pdf">pdf</a></li>
-    <li>Farina, A. “Simultaneous Measurement of Impulse Response and Distortion with a Swept-Sine Technique,” Presented at the AES 108th Convention, Feb. 2000.</li>
+    <li>Farina, A. “Simultaneous Measurement of Impulse Response and
+    Distortion with a Swept-Sine Technique,” Presented at the AES
+    108th Convention, Feb. 2000.</li> 
     <li>Hatziantoniou, P. D. and Mourjopoulos, J. N. “Generalized
       Fractional-Octave Smoothing of Audio and Acoustic Responses,”
-      J. Audio Eng. Soc., 48(4):259–280, 2000.</li>
+      J. Audio Eng. Soc., 48(4):259&dash;280, 2000.</li>
+    <li>A. Mouchtaris, P. Reveliotis and C. Kyriakakis, "Inverse
+    filter design for immersive audio rendering over loudspeakers," in
+    IEEE Transactions on Multimedia, vol. 2, no. 2, pp. 77-87, June
+    2000, doi: 10.1109/6046.845012.</li>
+    <li>M. A. Poletti and P. D. Teal, "A Superfast Toeplitz Matrix
+    Inversion Method for Single- and Multi-Channel Inverse Filters and
+    Its Application to Room Equalization," in IEEE/ACM Transactions on
+    Audio, Speech, and Language Processing, vol. 29, pp. 3144-3157,
+      2021, doi: 10.1109/TASLP.2021.3120650.</li>
+    <li>Cecchi, Stefania &amp; Carini, Alberto &amp; Spors,
+    Sascha. (2017). Room Response Equalization—A Review. Applied
+    Sciences. 8. 16. 10.3390/app8010016.</li> 
   </ul>
 </section>
 </div>

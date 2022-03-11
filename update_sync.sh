@@ -12,5 +12,6 @@ fi
 echo "Sync"
 rsync -arv --exclude '*.png' --delete ./docs/* $TARGET
 rsync -arv --include '*.png' --delete ./docs/pictures/* $TARGET/pictures
+rsync -arv --include '*.png' --delete ./docs/help_pictures/* $TARGET/help_pictures
 # 
 rm  -f $TARGET/speakers/*/*/*/*.png
