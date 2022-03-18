@@ -7129,9 +7129,9 @@ speakers_info = {
         },
     },
     "RCF Ayra Pro5": {
-        "brand": "RFC",
+        "brand": "RCF",
         "model": "Ayra Pro5",
-        "type": "powered",
+        "type": "active",
         "price": "300",
         "amount": "pair",
         "shape": "bookshelves",
