@@ -7128,6 +7128,23 @@ speakers_info = {
             },
         },
     },
+    "RCF Ayra Pro5": {
+        "brand": "RFC",
+        "model": "Ayra Pro5",
+        "type": "powered",
+        "price": "300",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/rcf-ayra-pro5-review-powered-monitor.31777/",
+                "review_published": "20220317",
+            },
+        },
+    },
     "Realistic MC-1000": {
         "brand": "Realistic",
         "model": "MC-1000",
