@@ -241,6 +241,7 @@ speakers_info = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1961_tower/",
+                    "yt": "https://www.youtube.com/watch?v=Ba7aFNyNYZo",
                 },
                 "review_published": "20220122",
             },
@@ -524,7 +525,10 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a500/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a500/",
+                    "yt": "https://www.youtube.com/watch?v=VBVxEnKGuME",
+                },
                 "review_published": "20220303",
             },
             "misc-napilopez": {
@@ -2370,7 +2374,10 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/genelec_8331a/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/genelec_8331a/",
+                    "yt": "https://www.youtube.com/watch?v=Ui1Gh_s_sX0",
+                },
                 "review_published": "20220303",
             },
         },
@@ -4229,6 +4236,7 @@ speakers_info = {
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_in-8v1/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8v1-3-way-studio-monitor-review.24241/#post-818243",
+                    "yt": "https://www.youtube.com/watch?v=DNpkizYXbVM",
                 },
                 "review_published": "20210615",
             },
@@ -5353,7 +5361,10 @@ speakers_info = {
             "eac-v2-20220305": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/march_audio_sointuva/",
+                "reviews": { 
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/march_audio_sointuva/",
+                    "yt": "https://www.youtube.com/watch?v=bTkaxd2H7-o",
+                },
                 "review_published": "20220305",
                 "notes": "picture is from Erins web site. This is a same version as v1 with a different crossover.",
             },
@@ -5626,11 +5637,20 @@ speakers_info = {
         "brand": "Monoprice",
         "model": "Monolith THX-365C",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "500",
+        "amount": "each",
         "shape": "center",
-        "default_measurement": "misc-audioholics",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_thx_center/",
+                    "yt": "https://www.youtube.com/watch?v=JxPI7jJ62ek",
+                },
+                "review_published": "20220317",
+            },
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
@@ -5937,6 +5957,7 @@ speakers_info = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/neumi_bs5_nfs/",
+                    "yt": "https://www.youtube.com/watch?v=NnGbd9hxZe8",
                 },
                 "review_published": "20211212",
             },
@@ -5945,6 +5966,7 @@ speakers_info = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/neumi_bs5_nfs/",
+                    "yt": "https://www.youtube.com/watch?v=NnGbd9hxZe8",
                 },
                 "review_published": "20211212",
             },
