@@ -5361,7 +5361,7 @@ speakers_info = {
             "eac-v2-20220305": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "reviews": { 
+                "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/march_audio_sointuva/",
                     "yt": "https://www.youtube.com/watch?v=bTkaxd2H7-o",
                 },
