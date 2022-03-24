@@ -390,9 +390,9 @@ speakers_info = {
                 "format": "splHVtxt",
                 "quality": "high",
                 "reviews": {
-                    "vendor": "http://www.ascendacoustics.com/pages/products/speakers/SRM2EX/srm2exmeas.html",
-                    "spd2034": "https://speakerdata2034.blogspot.com/2019/12/ascend-acoustics-spinorama-data.html",
+                    "vendor": "http://forum.ascendacoustics.com/showthread.php?7588-Introducing-the-Sierra-LX!!!",
                 },
+                "review_published": "20220324",
             },
         },
     },
