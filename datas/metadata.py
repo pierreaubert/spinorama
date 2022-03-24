@@ -5361,7 +5361,7 @@ speakers_info = {
             "eac-v2-20220305": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "reviews": { 
+                "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/march_audio_sointuva/",
                     "yt": "https://www.youtube.com/watch?v=bTkaxd2H7-o",
                 },
@@ -7765,9 +7765,16 @@ speakers_info = {
         "model": "W553L",
         "type": "passive",
         "shape": "inwall",
-        "price": "",
-        "default_measurement": "vendor",
+        "price": "495",
+        "amount": "each",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-w553l-measurements-in-wall-speaker.32072/",
+                "review_published": "20220323",
+            },
             "vendor": {
                 "origin": "Vendors-Revel",
                 "website": "www.revelspeakers.com",
