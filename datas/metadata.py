@@ -376,6 +376,26 @@ speakers_info = {
             },
         },
     },
+    "Ascend Acoustics Sierra-LX": {
+        "brand": "Ascend Acoustics",
+        "model": "Sierra-LX",
+        "type": "passive",
+        "price": "1400",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Ascend Acoustics",
+                "format": "splHVtxt",
+                "quality": "high",
+                "reviews": {
+                    "vendor": "http://www.ascendacoustics.com/pages/products/speakers/SRM2EX/srm2exmeas.html",
+                    "spd2034": "https://speakerdata2034.blogspot.com/2019/12/ascend-acoustics-spinorama-data.html",
+                },
+            },
+        },
+    },
     "ASR Directiva Open Source Speaker": {
         "brand": "ASR",
         "model": "Directiva Open Source Speaker",
@@ -3296,6 +3316,47 @@ speakers_info = {
                     "stereophile": "https://www.stereophile.com/floorloudspeakers/jbl_synthesis_1400_array_bg_loudspeaker/index.html",
                 },
                 "review_published": "20060826",
+            },
+        },
+    },
+    "JBL Synthesis SCL-6": {
+        "brand": "JBL",
+        "model": "Synthesis SCL-6",
+        "type": "passive",
+        "price": "1650",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "eac-v1-farfield-without-grille",
+        "measurements": {
+            "eac-v1-farfield-without-grille": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_scl-6/",
+                    "yt": "https://www.youtube.com/watch?v=nZAokQVOFlo",
+                },
+                "review_published": "20220319",
+                "notes": "Measured far field without grille",
+            },
+            "eac-v2-farfield-with-grille": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_scl-6/",
+                    "yt": "https://www.youtube.com/watch?v=nZAokQVOFlo",
+                },
+                "review_published": "20220319",
+                "notes": "Measured far field with grille",
+            },
+            "eac-v3-nearfield-without-grille": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_scl-6/",
+                    "yt": "https://www.youtube.com/watch?v=nZAokQVOFlo",
+                },
+                "review_published": "20220319",
+                "notes": "Measured near field without grille",
             },
         },
     },
