@@ -4854,7 +4854,7 @@ speakers_info = {
         "type": "passive",
         "price": "12000",
         "amount": "each",
-        "shape": "center",
+        "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
