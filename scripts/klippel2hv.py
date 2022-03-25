@@ -22,49 +22,48 @@ import re
 import shutil
 import sys
 
+
 def process(speakername, filename):
-    numbers = re.compile(r'\d+')
+    numbers = re.compile(r"\d+")
     phi, theta = numbers.findall(filename)
-    if phi == '0':
-        orient = '_V'
-    elif phi == '90':
-        orient = '_H'
+    if phi == "0":
+        orient = "_V"
+    elif phi == "90":
+        orient = "_H"
     else:
-        print('phi is unknown {}'.format(phi))
+        print("phi is unknown {}".format(phi))
         return
 
     itheta = int(theta)
     if itheta == 360:
         return
     elif itheta > 180:
-        itheta = itheta-360
+        itheta = itheta - 360
 
-    newname = '{} {} {}.txt'.format(speakername, orient, itheta)
+    newname = "{} {} {}.txt".format(speakername, orient, itheta)
 
     with open(filename) as fin:
         lines = fin.readlines()
         istart = -1
         for i in range(0, len(lines)):
-            if lines[i][0:7] == 'Curve=[':
+            if lines[i][0:7] == "Curve=[":
                 istart = i
                 break
-        with open(newname, 'w') as fout:
-            fout.write('Freq[Hz]     dBSPL  Phase[Deg]\n')
+        with open(newname, "w") as fout:
+            fout.write("Freq[Hz]     dBSPL  Phase[Deg]\n")
             # start after curve, stop before ];
-            for l in lines[istart+1:-1]:
+            for l in lines[istart + 1 : -1]:
                 fout.write(l)
 
     if itheta == 180:
         itheta = -180
-        negname = '{} {} {}.txt'.format(speakername, orient, itheta)
+        negname = "{} {} {}.txt".format(speakername, orient, itheta)
         shutil.copy(newname, negname)
-        
-        
-                
+
 
 if __name__ == "__main__":
     speakername = sys.argv[1]
-    files = glob.glob('Phi*.txt')
+    files = glob.glob("Phi*.txt")
     for filename in files:
         process(speakername, filename)
     sys.exit(0)
