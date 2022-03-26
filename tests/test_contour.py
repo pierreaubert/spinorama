@@ -33,7 +33,7 @@ class SpinoramaContourSizeTests(unittest.TestCase):
         self.df = pd.DataFrame({"Freq": freq, "On Axis": onaxis, "10°": d10})
 
     def test_smoke1(self):
-        af, am, az = compute_contour(self.df, 10)
+        af, am, az = compute_contour(self.df.loc[self.df.Freq >= 10])
         self.assertEqual(af.size, am.size)
         self.assertEqual(af.size, az.size)
 
@@ -67,27 +67,27 @@ class SpinoramaContourTests(unittest.TestCase):
         )
 
     def test_smoke_size(self):
-        af, am, az = compute_contour(self.df, 10)
+        af, am, az = compute_contour(self.df.loc[self.df.Freq >= 10])
         self.assertEqual(af.size, am.size)
         self.assertEqual(af.size, az.size)
 
     def test_smoke_freq(self):
-        af, _, _ = compute_contour(self.df, 200)
-        self.assertAlmostEqual(np.min(af), 200)
+        af, _, _ = compute_contour(self.df.loc[self.df.Freq >= 100])
+        self.assertAlmostEqual(np.min(af), 100)
         self.assertAlmostEqual(np.max(af), 20000)
 
     def test_smoke_angle(self):
-        _, am, _ = compute_contour(self.df, 10)
+        _, am, _ = compute_contour(self.df.loc[self.df.Freq >= 10])
         self.assertEqual(np.min(am), -30)
         self.assertEqual(np.max(am), 30)
 
     def test_smoke_db_normalized(self):
-        _, _, az = compute_contour(self.df, 10)
+        _, _, az = compute_contour(self.df.loc[self.df.Freq >= 10])
         self.assertEqual(np.min(az), 0)
         self.assertEqual(np.max(az), 10)
 
     def test_smoke_preserve_angle(self):
-        _, am, _ = compute_contour(self.df, 10)
+        _, am, _ = compute_contour(self.df.loc[self.df.Freq >= 10])
         # check that value is constant
         self.assertTrue(all(a == am[0][0] for a in am[0]))
         # extract all angles in order
@@ -122,7 +122,7 @@ class SpinoramaReshapeTests(unittest.TestCase):
                 }
             )
         )
-        self.af, self.am, self.az = compute_contour(self.df, 20)
+        self.af, self.am, self.az = compute_contour(self.df.loc[self.df.Freq >= 20])
 
     def test_smoke_size(self):
         for scale in range(2, 10):

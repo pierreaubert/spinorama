@@ -516,19 +516,22 @@ def plot_contour(spl, params):
 
     fig = go.Figure()
 
-    af, am, az = compute_contour(df.loc[df.Freq > min_freq], min_freq)
+    af, am, az = compute_contour(df.loc[df.Freq > min_freq])
     az = np.clip(az, contour_start, contour_end)
     fig.add_trace(
         go.Contour(
             x=af[0],
             y=am.T[0],
             z=az,
+            zmin=contour_start,
+            zmax=contour_end,
             contours=dict(
                 coloring="fill",
-                start=contour_start,
-                end=contour_end,
+                start=contour_start + 0,
+                end=contour_end - 0,
                 size=3,
-                showlines=False,
+                showlines=True,
+                # showlabels=True,
             ),
             colorbar=dict(
                 dtick=3,
