@@ -430,6 +430,44 @@ speakers_info = {
             },
         },
     },
+    "Atlantic Technology 8600eLR Tower": {
+        "brand": "Atlantic Technology",
+        "model": "8600eLR Tower",
+        "type": "passive",
+        "price": "5600",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "avs": "https://www.avsforum.com/threads/atlantic-technology-8600elr-and-8600ec-tower-and-center-channel-objective-based-review.3240929/#post-61549716",
+                },
+                "review_published": "20220328",
+            },
+        },
+    },
+    "Atlantic Technology 8600eC Center": {
+        "brand": "Atlantic Technology",
+        "model": "8600eC Center",
+        "type": "passive",
+        "price": "1750",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "avs": "https://www.avsforum.com/threads/atlantic-technology-8600elr-and-8600ec-tower-and-center-channel-objective-based-review.3240929/#post-61549716",
+                },
+                "review_published": "20220328",
+            },
+        },
+    },
     "Audio Engine A2": {
         "brand": "Audio Engine",
         "model": "A2",
