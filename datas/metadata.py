@@ -8372,6 +8372,23 @@ speakers_info = {
             },
         },
     },
+    "Vanatoo Transparent One Encore": {
+        "brand": "Vanatoo",
+        "model": "Transparent One Encore",
+        "type": "active",
+        "price": "600",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/vanatoo-transparent-one-encore-powered-speaker.32421/",
+                "review_published": "20220330",
+            },
+        },
+    },
     "Vanatoo Transparent Zero": {
         "brand": "Vanatoo",
         "model": "Transparent Zero",
