@@ -7249,6 +7249,24 @@ speakers_info = {
             },
         },
     },
+    "RCF ART 945-A": {
+        "brand": "RCF",
+        "model": "ART 945-A",
+        "type": "active",
+        "price": "3600",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-pp",
+        "measurements": {
+            "misc-pp": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "review": "https://www.production-partner.de/test/test-rcf-art-945-a/",
+                "review_published": "20211215",
+            },
+        },
+    },
     "RCF Ayra Pro5": {
         "brand": "RCF",
         "model": "Ayra Pro5",
