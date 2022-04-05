@@ -3398,6 +3398,26 @@ speakers_info = {
             },
         },
     },
+    "JBL Synthesis SCL-7": {
+        "brand": "JBL",
+        "model": "Synthesis SCL-7",
+        "type": "passive",
+        "price": "1100",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-scl-7-review-in-wall-speaker.32602/",
+                },
+                "review_published": "20220404",
+                "notes": "Measured far field without grille",
+            },
+        },
+    },
     "JBL Synthesis 4429": {
         "brand": "JBL",
         "model": "Synthesis 4429",
