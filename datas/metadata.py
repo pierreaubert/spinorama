@@ -3984,7 +3984,7 @@ speakers_info = {
         "amount": "pair",
         "default_measurement": "eac",
         "measurements": {
-            "eac" : {
+            "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
