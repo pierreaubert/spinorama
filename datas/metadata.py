@@ -3982,8 +3982,17 @@ speakers_info = {
         "price": "8500",
         "shape": "floorstanders",
         "amount": "pair",
-        "default_measurement": "vendor",
+        "default_measurement": "eac",
         "measurements": {
+            "eac" : {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_4367/",
+                    "yt": "https://www.youtube.com/watch?v=eJnOrG3BHaw",
+                },
+                "review_published": "20220403",
+            },
             "vendor": {
                 "origin": "Vendors-JBL",
                 "website": "www.jbl.com",
@@ -4675,6 +4684,26 @@ speakers_info = {
                     "yt": "https://www.youtube.com/watch?v=SiGslBHnK9c&t=3s",
                 },
                 "review_published": "20220225",
+            },
+        },
+    },
+    "KEF Q250": {
+        "brand": "KEF",
+        "model": "Q250",
+        "type": "passive",
+        "price": "600",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q250/",
+                    "yt": "",
+                },
+                "review_published": "20220317",
             },
         },
     },
@@ -5739,11 +5768,20 @@ speakers_info = {
         "brand": "Monoprice",
         "model": "Monolith THX-365T",
         "type": "passive",
-        "price": "",
+        "price": "900",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "misc-audioholics",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_thx_365T/",
+                    "yt": "https://youtu.be/LrsE8wQQhtg",
+                },
+                "review_published": "20220408",
+            },
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
@@ -8375,6 +8413,22 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/technics-sb-c700-review-coaxial-bookshelf.30607/",
                 "review_published": "20220206",
+            },
+        },
+    },
+    "Technics SB-F1": {
+        "brand": "Technics",
+        "model": "SB-F1",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/technics-sb-f1-review-vintage-speaker.32975/",
+                "review_published": "20220413",
             },
         },
     },
