@@ -1,0 +1,13 @@
+Infinity R152 APO EQ Score 96000Hz
+December112020-134007
+
+Preamp: -1.8 dB
+
+Filter 1: ON HPQ Fc 54.6 Hz Gain 0 dB Q 1.16
+Filter 2: ON PK Fc 120 Hz Gain -2 dB Q 1.6
+Filter 3: ON PK Fc 962 Hz Gain -1.48 dB Q 6
+Filter 4: ON PK Fc 1343 Hz Gain -2.1 dB Q 5.2
+Filter 5: ON PK Fc 1830 Hz Gain -1.55 dB Q 3.11
+Filter 6: ON PK Fc 2608 Hz Gain 2.17 dB Q 1.14
+Filter 7: ON PK Fc 4552 Hz Gain -1 dB Q 1
+Filter 8: ON PK Fc 14244 Hz Gain -1.66 dB Q 0.97
