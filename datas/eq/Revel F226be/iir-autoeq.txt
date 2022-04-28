@@ -1,16 +1,16 @@
 EQ for Revel F226be computed from ErinsAudioCorner data
 Preference Score 6.0 with EQ 6.6
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-17-19:37:03
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
+Dated: 2022-04-27-09:27:21
 
-Preamp: -0.2 dB
+Preamp: -0.4 dB
 
-Filter  1: ON PK Fc  6486 Hz Gain -1.81 dB Q 0.19
-Filter  2: ON PK Fc  2198 Hz Gain +0.59 dB Q 3.10
-Filter  3: ON PK Fc 14565 Hz Gain +0.50 dB Q 6.00
-Filter  4: ON PK Fc  4745 Hz Gain +0.50 dB Q 6.00
-Filter  5: ON PK Fc  1852 Hz Gain +0.50 dB Q 6.00
-Filter  6: ON PK Fc  7053 Hz Gain +0.50 dB Q 6.00
-Filter  7: ON PK Fc  3015 Hz Gain +0.50 dB Q 6.00
-Filter  8: ON PK Fc 16000 Hz Gain +0.50 dB Q 6.00
-Filter  9: ON PK Fc  8827 Hz Gain +0.50 dB Q 6.00
+Filter  1: ON PK Fc  7893 Hz Gain -1.76 dB Q 0.97
+Filter  2: ON PK Fc  3611 Hz Gain -1.16 dB Q 2.96
+Filter  3: ON PK Fc 12526 Hz Gain -0.82 dB Q 2.97
+Filter  4: ON PK Fc 13810 Hz Gain -0.50 dB Q 2.94
+Filter  5: ON PK Fc  3547 Hz Gain -0.64 dB Q 2.91
+Filter  6: ON PK Fc  4189 Hz Gain +0.68 dB Q 0.17
+Filter  7: ON PK Fc 10462 Hz Gain -0.97 dB Q 3.00
+Filter  8: ON PK Fc  4695 Hz Gain -1.01 dB Q 2.95
+Filter  9: ON PK Fc  1355 Hz Gain -1.59 dB Q 2.45

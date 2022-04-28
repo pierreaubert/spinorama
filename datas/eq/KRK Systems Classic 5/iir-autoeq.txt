@@ -1,16 +1,16 @@
 EQ for KRK Systems Classic 5 computed from ASR data
-Preference Score 2.8 with EQ 5.5
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-17-19:35:04
+Preference Score 2.8 with EQ 5.2
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
+Dated: 2022-04-27-09:04:55
 
-Preamp: -2.8 dB
+Preamp: -2.9 dB
 
-Filter  1: ON PK Fc  6991 Hz Gain -4.12 dB Q 0.66
-Filter  2: ON PK Fc  1082 Hz Gain +3.09 dB Q 6.00
-Filter  3: ON PK Fc  2172 Hz Gain +2.71 dB Q 6.00
-Filter  4: ON PK Fc  4660 Hz Gain -1.37 dB Q 4.51
-Filter  5: ON PK Fc   567 Hz Gain -1.27 dB Q 6.00
-Filter  6: ON PK Fc  1359 Hz Gain -1.00 dB Q 6.00
-Filter  7: ON PK Fc   935 Hz Gain -0.72 dB Q 6.00
-Filter  8: ON PK Fc 12312 Hz Gain -0.62 dB Q 3.12
-Filter  9: ON PK Fc  2487 Hz Gain -0.50 dB Q 6.00
+Filter  1: ON PK Fc  6124 Hz Gain -3.51 dB Q 1.15
+Filter  2: ON PK Fc  2025 Hz Gain +3.07 dB Q 2.96
+Filter  3: ON PK Fc  1082 Hz Gain +3.16 dB Q 3.00
+Filter  4: ON PK Fc  4432 Hz Gain -1.41 dB Q 2.78
+Filter  5: ON PK Fc  1196 Hz Gain -1.50 dB Q 2.00
+Filter  6: ON PK Fc  5934 Hz Gain +0.79 dB Q 2.81
+Filter  7: ON PK Fc  1109 Hz Gain +1.64 dB Q 2.98
+Filter  8: ON PK Fc   964 Hz Gain -1.62 dB Q 2.98
+Filter  9: ON PK Fc 15889 Hz Gain -1.64 dB Q 1.14

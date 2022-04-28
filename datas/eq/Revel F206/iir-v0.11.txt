@@ -1,0 +1,15 @@
+EQ for Revel F206 computed from Vendors-Revel data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:35:15
+
+Preamp: -0.9 dB
+
+Filter  1: ON PK Fc  9374 Hz Gain -1.86 dB Q 0.58
+Filter  2: ON PK Fc   825 Hz Gain -0.72 dB Q 3.78
+Filter  3: ON PK Fc  1833 Hz Gain -0.89 dB Q 6.00
+Filter  4: ON PK Fc  3487 Hz Gain +0.64 dB Q 6.00
+Filter  5: ON PK Fc  8502 Hz Gain +0.50 dB Q 6.00
+Filter  6: ON PK Fc   371 Hz Gain +0.90 dB Q 3.93
+Filter  7: ON PK Fc  1326 Hz Gain +0.76 dB Q 6.00
+Filter  8: ON PK Fc 16000 Hz Gain +0.50 dB Q 6.00
+Filter  9: ON PK Fc  5394 Hz Gain +0.50 dB Q 6.00

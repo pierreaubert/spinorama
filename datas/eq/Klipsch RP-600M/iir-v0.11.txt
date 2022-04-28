@@ -1,0 +1,16 @@
+EQ for Klipsch RP-600M computed from ASR data
+Preference Score 4.1 with EQ 6.3
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:35:03
+
+Preamp: -4.7 dB
+
+Filter  1: ON PK Fc 12229 Hz Gain -3.13 dB Q 0.47
+Filter  2: ON PK Fc   727 Hz Gain -3.49 dB Q 2.39
+Filter  3: ON PK Fc   167 Hz Gain -1.35 dB Q 1.26
+Filter  4: ON PK Fc  1791 Hz Gain +5.07 dB Q 2.58
+Filter  5: ON PK Fc  4703 Hz Gain -1.39 dB Q 2.48
+Filter  6: ON PK Fc  2876 Hz Gain -0.70 dB Q 6.00
+Filter  7: ON PK Fc 13449 Hz Gain -0.71 dB Q 6.00
+Filter  8: ON PK Fc  6468 Hz Gain -0.50 dB Q 6.00
+Filter  9: ON PK Fc   937 Hz Gain -1.81 dB Q 5.87

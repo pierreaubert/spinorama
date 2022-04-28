@@ -1,16 +1,14 @@
 EQ for NHT SB2 computed from ASR data
-Preference Score 3.6 with EQ 5.1
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-17-19:35:04
+Preference Score 3.6 with EQ 4.2
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
+Dated: 2022-04-27-07:41:14
 
-Preamp: -7.0 dB
+Preamp: -6.4 dB
 
-Filter  1: ON PK Fc  1306 Hz Gain +2.93 dB Q 0.11
-Filter  2: ON PK Fc  3195 Hz Gain +4.11 dB Q 4.58
-Filter  3: ON PK Fc   847 Hz Gain -4.20 dB Q 4.17
-Filter  4: ON PK Fc  8594 Hz Gain -1.90 dB Q 2.94
-Filter  5: ON PK Fc 14378 Hz Gain +2.42 dB Q 2.51
-Filter  6: ON PK Fc 10569 Hz Gain -1.04 dB Q 6.00
-Filter  7: ON PK Fc  4546 Hz Gain -0.68 dB Q 6.00
-Filter  8: ON PK Fc   633 Hz Gain -0.50 dB Q 5.09
-Filter  9: ON PK Fc   484 Hz Gain -0.50 dB Q 6.00
+Filter  1: ON PK Fc  2881 Hz Gain +6.59 dB Q 0.49
+Filter  2: ON PK Fc   271 Hz Gain +3.59 dB Q 1.01
+Filter  3: ON PK Fc   874 Hz Gain -2.70 dB Q 2.98
+Filter  4: ON PK Fc 14332 Hz Gain +4.00 dB Q 2.23
+Filter  5: ON PK Fc  7145 Hz Gain -0.96 dB Q 0.66
+Filter  6: ON PK Fc  1078 Hz Gain +2.32 dB Q 3.00
+Filter  7: ON PK Fc  1205 Hz Gain -1.71 dB Q 1.64

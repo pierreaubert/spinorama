@@ -1,15 +1,15 @@
 EQ for JBL LS 80 computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-17-19:34:42
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
+Dated: 2022-04-27-08:52:43
 
-Preamp: -1.0 dB
+Preamp: -3.0 dB
 
-Filter  1: ON PK Fc   572 Hz Gain -1.87 dB Q 5.10
-Filter  2: ON PK Fc 12222 Hz Gain -2.52 dB Q 2.20
-Filter  3: ON PK Fc  9312 Hz Gain -2.05 dB Q 6.00
-Filter  4: ON PK Fc   670 Hz Gain -0.79 dB Q 6.00
-Filter  5: ON PK Fc  2812 Hz Gain +0.84 dB Q 0.12
-Filter  6: ON PK Fc  4049 Hz Gain -2.19 dB Q 5.36
-Filter  7: ON PK Fc   516 Hz Gain -1.10 dB Q 6.00
-Filter  8: ON PK Fc   320 Hz Gain -0.71 dB Q 6.00
-Filter  9: ON PK Fc   696 Hz Gain -0.66 dB Q 6.00
+Filter  1: ON PK Fc  1882 Hz Gain +2.81 dB Q 0.92
+Filter  2: ON PK Fc  5848 Hz Gain +2.45 dB Q 3.00
+Filter  3: ON PK Fc   934 Hz Gain +1.75 dB Q 2.96
+Filter  4: ON PK Fc   362 Hz Gain +1.53 dB Q 2.89
+Filter  5: ON PK Fc   219 Hz Gain +1.10 dB Q 2.77
+Filter  6: ON PK Fc  9843 Hz Gain -1.58 dB Q 2.64
+Filter  7: ON PK Fc  7720 Hz Gain +1.26 dB Q 2.97
+Filter  8: ON PK Fc   620 Hz Gain -1.05 dB Q 0.30
+Filter  9: ON PK Fc   414 Hz Gain +1.85 dB Q 2.98

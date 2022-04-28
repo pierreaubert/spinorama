@@ -1,0 +1,15 @@
+EQ for Infinity RC252 computed from Vendors-Infinity data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:34:41
+
+Preamp: -0.2 dB
+
+Filter  1: ON PK Fc 10345 Hz Gain -1.73 dB Q 0.06
+Filter  2: ON PK Fc  1009 Hz Gain -0.78 dB Q 6.00
+Filter  3: ON PK Fc  5274 Hz Gain -0.60 dB Q 6.00
+Filter  4: ON PK Fc  2151 Hz Gain -0.50 dB Q 6.00
+Filter  5: ON PK Fc   687 Hz Gain -0.50 dB Q 6.00
+Filter  6: ON PK Fc  9908 Hz Gain -0.50 dB Q 6.00
+Filter  7: ON PK Fc   418 Hz Gain -0.50 dB Q 6.00
+Filter  8: ON PK Fc  4679 Hz Gain -0.50 dB Q 6.00
+Filter  9: ON PK Fc  1187 Hz Gain -0.50 dB Q 6.00

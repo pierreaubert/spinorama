@@ -1,15 +1,15 @@
 EQ for GedLee Nathan computed from Princeton data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-17-19:34:33
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
+Dated: 2022-04-27-08:39:16
 
-Preamp: -0.2 dB
+Preamp: -0.8 dB
 
-Filter  1: ON PK Fc 12998 Hz Gain -2.78 dB Q 0.05
-Filter  2: ON PK Fc 16000 Hz Gain -2.69 dB Q 6.00
-Filter  3: ON PK Fc  9386 Hz Gain +0.87 dB Q 3.67
-Filter  4: ON PK Fc  3583 Hz Gain -1.03 dB Q 6.00
-Filter  5: ON PK Fc 14245 Hz Gain -0.72 dB Q 6.00
-Filter  6: ON PK Fc  5765 Hz Gain +1.05 dB Q 6.00
-Filter  7: ON PK Fc 12475 Hz Gain +0.70 dB Q 6.00
-Filter  8: ON PK Fc 15163 Hz Gain +0.50 dB Q 6.00
-Filter  9: ON PK Fc 14274 Hz Gain -0.51 dB Q 6.00
+Filter  1: ON PK Fc  5920 Hz Gain -3.04 dB Q 0.28
+Filter  2: ON PK Fc  7786 Hz Gain +1.35 dB Q 0.98
+Filter  3: ON PK Fc  7409 Hz Gain -1.77 dB Q 3.00
+Filter  4: ON PK Fc 11461 Hz Gain -0.61 dB Q 2.96
+Filter  5: ON PK Fc 12694 Hz Gain -0.81 dB Q 2.91
+Filter  6: ON PK Fc  1833 Hz Gain +0.93 dB Q 0.12
+Filter  7: ON PK Fc 12690 Hz Gain -1.22 dB Q 2.77
+Filter  8: ON PK Fc 12064 Hz Gain +1.63 dB Q 2.98
+Filter  9: ON PK Fc 10885 Hz Gain -1.33 dB Q 2.99

@@ -1,15 +1,15 @@
 EQ for Adam T7V computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-17-19:34:26
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
+Dated: 2022-04-27-08:16:39
 
-Preamp: -0.4 dB
+Preamp: -0.2 dB
 
-Filter  1: ON PK Fc  5388 Hz Gain -2.84 dB Q 0.19
-Filter  2: ON PK Fc  4050 Hz Gain +2.21 dB Q 6.00
-Filter  3: ON PK Fc  1850 Hz Gain -1.65 dB Q 5.10
-Filter  4: ON PK Fc  6254 Hz Gain -1.43 dB Q 4.56
-Filter  5: ON PK Fc   513 Hz Gain -0.52 dB Q 6.00
-Filter  6: ON PK Fc   238 Hz Gain -0.50 dB Q 6.00
-Filter  7: ON PK Fc   781 Hz Gain -0.50 dB Q 6.00
-Filter  8: ON PK Fc   643 Hz Gain +1.47 dB Q 6.00
-Filter  9: ON PK Fc   762 Hz Gain -0.51 dB Q 6.00
+Filter  1: ON PK Fc  4861 Hz Gain -2.72 dB Q 0.39
+Filter  2: ON PK Fc  4110 Hz Gain +2.50 dB Q 2.98
+Filter  3: ON PK Fc  1749 Hz Gain -1.38 dB Q 2.89
+Filter  4: ON PK Fc  2503 Hz Gain +1.19 dB Q 2.99
+Filter  5: ON PK Fc 12095 Hz Gain +1.06 dB Q 2.87
+Filter  6: ON PK Fc  6180 Hz Gain -0.92 dB Q 2.96
+Filter  7: ON PK Fc   512 Hz Gain -1.00 dB Q 3.00
+Filter  8: ON PK Fc   606 Hz Gain +1.26 dB Q 2.97
+Filter  9: ON PK Fc   763 Hz Gain -1.40 dB Q 2.99

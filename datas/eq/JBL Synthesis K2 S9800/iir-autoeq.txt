@@ -1,15 +1,15 @@
 EQ for JBL Synthesis K2 S9800 computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-17-19:35:08
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
+Dated: 2022-04-27-08:56:21
 
-Preamp: -1.6 dB
+Preamp: -3.1 dB
 
-Filter  1: ON PK Fc   365 Hz Gain -2.25 dB Q 1.25
-Filter  2: ON PK Fc 14398 Hz Gain -2.63 dB Q 6.00
-Filter  3: ON PK Fc  6072 Hz Gain -1.25 dB Q 6.00
-Filter  4: ON PK Fc  3110 Hz Gain -1.18 dB Q 6.00
-Filter  5: ON PK Fc   585 Hz Gain -1.28 dB Q 6.00
-Filter  6: ON PK Fc  9866 Hz Gain +1.93 dB Q 1.41
-Filter  7: ON PK Fc 15581 Hz Gain -2.58 dB Q 6.00
-Filter  8: ON PK Fc  6267 Hz Gain -1.08 dB Q 6.00
-Filter  9: ON PK Fc 10024 Hz Gain -0.81 dB Q 6.00
+Filter  1: ON PK Fc  1217 Hz Gain +1.88 dB Q 1.92
+Filter  2: ON PK Fc  9571 Hz Gain +2.98 dB Q 1.55
+Filter  3: ON PK Fc   370 Hz Gain -1.68 dB Q 1.29
+Filter  4: ON PK Fc   848 Hz Gain +1.73 dB Q 2.97
+Filter  5: ON PK Fc  2373 Hz Gain +1.64 dB Q 2.88
+Filter  6: ON PK Fc  6207 Hz Gain -1.12 dB Q 2.93
+Filter  7: ON PK Fc  4570 Hz Gain +1.52 dB Q 2.99
+Filter  8: ON PK Fc   125 Hz Gain +0.89 dB Q 2.97
+Filter  9: ON PK Fc  1673 Hz Gain +0.81 dB Q 2.90

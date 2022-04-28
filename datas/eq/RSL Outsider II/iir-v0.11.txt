@@ -1,0 +1,16 @@
+EQ for RSL Outsider II computed from ASR data
+Preference Score 2.1 with EQ 4.7
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:35:06
+
+Preamp: -1.2 dB
+
+Filter  1: ON PK Fc 11683 Hz Gain -5.68 dB Q 0.35
+Filter  2: ON PK Fc 12871 Hz Gain -2.46 dB Q 6.00
+Filter  3: ON PK Fc   142 Hz Gain -2.07 dB Q 2.22
+Filter  4: ON PK Fc  1372 Hz Gain +1.59 dB Q 3.70
+Filter  5: ON PK Fc  9801 Hz Gain +1.36 dB Q 3.09
+Filter  6: ON PK Fc  2656 Hz Gain +1.33 dB Q 6.00
+Filter  7: ON PK Fc   683 Hz Gain -1.77 dB Q 2.93
+Filter  8: ON PK Fc  4527 Hz Gain -0.99 dB Q 1.98
+Filter  9: ON PK Fc 12244 Hz Gain -0.51 dB Q 6.00
