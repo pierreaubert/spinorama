@@ -1,16 +1,16 @@
 EQ for Nexus MT DIY computed from Misc data
 Preference Score 5.4 with EQ 6.3
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
-Dated: 2022-04-27-09:11:52
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-04-28-17:26:59
 
 Preamp: -1.1 dB
 
-Filter  1: ON PK Fc  4015 Hz Gain -2.75 dB Q 0.74
-Filter  2: ON PK Fc   258 Hz Gain -1.47 dB Q 0.30
-Filter  3: ON PK Fc  2145 Hz Gain +1.58 dB Q 2.99
-Filter  4: ON PK Fc 12587 Hz Gain +1.28 dB Q 3.00
-Filter  5: ON PK Fc  8533 Hz Gain -0.83 dB Q 2.93
-Filter  6: ON PK Fc  1867 Hz Gain +0.73 dB Q 3.00
-Filter  7: ON PK Fc  1237 Hz Gain -0.89 dB Q 1.14
-Filter  8: ON PK Fc  1558 Hz Gain +0.89 dB Q 2.97
-Filter  9: ON PK Fc  6704 Hz Gain -0.62 dB Q 2.99
+Filter  1: ON PK Fc  3937 Hz Gain -2.76 dB Q 0.70
+Filter  2: ON PK Fc   259 Hz Gain -1.47 dB Q 0.31
+Filter  3: ON PK Fc  2141 Hz Gain +1.68 dB Q 2.90
+Filter  4: ON PK Fc 12599 Hz Gain +1.32 dB Q 2.98
+Filter  5: ON PK Fc  8509 Hz Gain -0.82 dB Q 2.96
+Filter  6: ON PK Fc  1868 Hz Gain +0.77 dB Q 2.96
+Filter  7: ON PK Fc  1247 Hz Gain -0.83 dB Q 1.09
+Filter  8: ON PK Fc  1557 Hz Gain +0.88 dB Q 3.00
+Filter  9: ON PK Fc  6629 Hz Gain -0.64 dB Q 2.85

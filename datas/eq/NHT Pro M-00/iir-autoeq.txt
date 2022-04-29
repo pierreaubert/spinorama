@@ -1,16 +1,16 @@
 EQ for NHT Pro M-00 computed from ASR data
-Preference Score 2.7 with EQ 4.4
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
-Dated: 2022-04-27-09:12:25
+Preference Score 2.7 with EQ 5.0
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-04-28-17:27:30
 
-Preamp: -1.7 dB
+Preamp: -1.8 dB
 
-Filter  1: ON PK Fc   426 Hz Gain +1.84 dB Q 2.12
-Filter  2: ON PK Fc   139 Hz Gain -2.10 dB Q 2.51
-Filter  3: ON PK Fc  3526 Hz Gain -2.31 dB Q 0.30
-Filter  4: ON PK Fc 11891 Hz Gain -1.73 dB Q 1.82
-Filter  5: ON PK Fc  3950 Hz Gain +0.91 dB Q 2.90
-Filter  6: ON PK Fc  5028 Hz Gain -0.87 dB Q 2.96
-Filter  7: ON PK Fc 15231 Hz Gain -1.13 dB Q 2.92
-Filter  8: ON PK Fc  9720 Hz Gain -1.04 dB Q 3.00
-Filter  9: ON PK Fc  8678 Hz Gain +1.06 dB Q 0.73
+Filter  1: ON PK Fc   138 Hz Gain -2.05 dB Q 2.97
+Filter  2: ON PK Fc  1204 Hz Gain -2.02 dB Q 1.37
+Filter  3: ON PK Fc  9861 Hz Gain -2.80 dB Q 0.36
+Filter  4: ON PK Fc  2646 Hz Gain -1.57 dB Q 2.99
+Filter  5: ON PK Fc   152 Hz Gain -0.61 dB Q 2.97
+Filter  6: ON PK Fc   698 Hz Gain +1.73 dB Q 0.57
+Filter  7: ON PK Fc  1011 Hz Gain -1.96 dB Q 2.99
+Filter  8: ON PK Fc   182 Hz Gain -0.51 dB Q 2.83
+Filter  9: ON PK Fc   348 Hz Gain +0.86 dB Q 1.68

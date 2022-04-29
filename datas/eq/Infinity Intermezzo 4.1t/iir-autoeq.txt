@@ -1,15 +1,15 @@
 EQ for Infinity Intermezzo 4.1t computed from Vendors-Infinity data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
-Dated: 2022-04-27-08:45:07
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-04-28-16:59:38
 
-Preamp: -2.2 dB
+Preamp: -2.9 dB
 
-Filter  1: ON PK Fc   393 Hz Gain +2.29 dB Q 0.74
-Filter  2: ON PK Fc  2528 Hz Gain +1.42 dB Q 2.25
-Filter  3: ON PK Fc  1301 Hz Gain +0.89 dB Q 2.94
-Filter  4: ON PK Fc   845 Hz Gain -0.70 dB Q 0.95
-Filter  5: ON PK Fc   661 Hz Gain +1.21 dB Q 2.92
-Filter  6: ON PK Fc  3914 Hz Gain -0.83 dB Q 2.98
-Filter  7: ON PK Fc  8955 Hz Gain +1.43 dB Q 0.49
-Filter  8: ON PK Fc  5070 Hz Gain -1.08 dB Q 2.90
-Filter  9: ON PK Fc   652 Hz Gain -0.89 dB Q 1.54
+Filter  1: ON PK Fc   400 Hz Gain +2.29 dB Q 0.73
+Filter  2: ON PK Fc  2601 Hz Gain +1.48 dB Q 2.49
+Filter  3: ON PK Fc  1261 Hz Gain +0.93 dB Q 2.98
+Filter  4: ON PK Fc   849 Hz Gain -0.79 dB Q 1.29
+Filter  5: ON PK Fc   671 Hz Gain +1.17 dB Q 2.98
+Filter  6: ON PK Fc  3947 Hz Gain -0.85 dB Q 2.92
+Filter  7: ON PK Fc   653 Hz Gain -0.89 dB Q 1.65
+Filter  8: ON PK Fc   638 Hz Gain +0.97 dB Q 2.99
+Filter  9: ON PK Fc   365 Hz Gain +0.63 dB Q 2.96

@@ -1,16 +1,16 @@
 EQ for Presonus Eris E5 XT computed from ASR data
-Preference Score 3.7 with EQ 4.8
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
-Dated: 2022-04-27-09:21:56
+Preference Score 3.7 with EQ 4.9
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-04-28-17:37:01
 
-Preamp: -5.8 dB
+Preamp: -6.3 dB
 
-Filter  1: ON PK Fc  2788 Hz Gain +5.04 dB Q 0.31
-Filter  2: ON PK Fc   256 Hz Gain +3.11 dB Q 0.89
-Filter  3: ON PK Fc  3545 Hz Gain +1.12 dB Q 2.98
-Filter  4: ON PK Fc  1950 Hz Gain -2.00 dB Q 1.45
-Filter  5: ON PK Fc  1011 Hz Gain +2.04 dB Q 3.00
-Filter  6: ON PK Fc  1113 Hz Gain -1.12 dB Q 1.87
-Filter  7: ON PK Fc  1073 Hz Gain +1.27 dB Q 2.91
-Filter  8: ON PK Fc  1045 Hz Gain -1.10 dB Q 2.17
-Filter  9: ON PK Fc  1423 Hz Gain +1.30 dB Q 2.96
+Filter  1: ON PK Fc  2692 Hz Gain +5.04 dB Q 0.28
+Filter  2: ON PK Fc   242 Hz Gain +3.19 dB Q 1.05
+Filter  3: ON PK Fc  1839 Hz Gain -2.16 dB Q 1.84
+Filter  4: ON PK Fc  3436 Hz Gain +1.33 dB Q 3.00
+Filter  5: ON PK Fc   691 Hz Gain -1.00 dB Q 2.98
+Filter  6: ON PK Fc  5543 Hz Gain -0.93 dB Q 0.28
+Filter  7: ON PK Fc  3453 Hz Gain +0.97 dB Q 2.60
+Filter  8: ON PK Fc  5374 Hz Gain +0.76 dB Q 2.99
+Filter  9: ON PK Fc  1000 Hz Gain +2.51 dB Q 2.99

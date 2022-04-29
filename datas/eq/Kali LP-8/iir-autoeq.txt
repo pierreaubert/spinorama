@@ -1,15 +1,15 @@
 EQ for Kali LP-8 computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
-Dated: 2022-04-27-08:59:35
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-04-28-17:14:07
 
 Preamp: -1.8 dB
 
-Filter  1: ON PK Fc  1862 Hz Gain +1.69 dB Q 0.55
-Filter  2: ON PK Fc   483 Hz Gain -1.43 dB Q 2.95
-Filter  3: ON PK Fc   769 Hz Gain +1.85 dB Q 3.00
-Filter  4: ON PK Fc   681 Hz Gain -2.13 dB Q 2.97
-Filter  5: ON PK Fc  1176 Hz Gain -0.83 dB Q 2.90
-Filter  6: ON PK Fc   730 Hz Gain +1.51 dB Q 2.99
-Filter  7: ON PK Fc   843 Hz Gain -1.37 dB Q 2.93
-Filter  8: ON PK Fc   796 Hz Gain +1.37 dB Q 2.98
-Filter  9: ON PK Fc   825 Hz Gain -1.53 dB Q 2.97
+Filter  1: ON PK Fc  1848 Hz Gain +1.69 dB Q 0.56
+Filter  2: ON PK Fc   482 Hz Gain -1.43 dB Q 2.98
+Filter  3: ON PK Fc   766 Hz Gain +1.86 dB Q 3.00
+Filter  4: ON PK Fc   678 Hz Gain -2.16 dB Q 2.99
+Filter  5: ON PK Fc  1198 Hz Gain -0.79 dB Q 2.85
+Filter  6: ON PK Fc   734 Hz Gain +1.49 dB Q 2.99
+Filter  7: ON PK Fc   849 Hz Gain -1.35 dB Q 2.95
+Filter  8: ON PK Fc   788 Hz Gain +1.30 dB Q 2.99
+Filter  9: ON PK Fc   715 Hz Gain -1.54 dB Q 2.98

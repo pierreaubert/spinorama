@@ -1,15 +1,15 @@
 EQ for Bose 301 Series IV computed from Vendors-Bose data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
-Dated: 2022-04-27-08:22:16
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-04-28-16:36:36
 
 Preamp: -3.6 dB
 
-Filter  1: ON PK Fc   541 Hz Gain +3.62 dB Q 0.13
-Filter  2: ON PK Fc  4873 Hz Gain -1.56 dB Q 2.90
-Filter  3: ON PK Fc  1038 Hz Gain -2.88 dB Q 2.95
-Filter  4: ON PK Fc   119 Hz Gain -3.60 dB Q 1.14
-Filter  5: ON PK Fc 14753 Hz Gain -2.19 dB Q 2.97
-Filter  6: ON PK Fc 14591 Hz Gain -1.94 dB Q 2.88
-Filter  7: ON PK Fc 14788 Hz Gain +2.84 dB Q 0.18
-Filter  8: ON PK Fc 11635 Hz Gain -3.90 dB Q 3.00
-Filter  9: ON PK Fc  5173 Hz Gain -1.93 dB Q 2.98
+Filter  1: ON PK Fc   539 Hz Gain +3.62 dB Q 0.13
+Filter  2: ON PK Fc  4919 Hz Gain -1.64 dB Q 3.00
+Filter  3: ON PK Fc  1036 Hz Gain -2.84 dB Q 2.94
+Filter  4: ON PK Fc   124 Hz Gain -3.66 dB Q 1.23
+Filter  5: ON PK Fc 14668 Hz Gain -2.22 dB Q 2.99
+Filter  6: ON PK Fc 14629 Hz Gain -2.01 dB Q 2.86
+Filter  7: ON PK Fc 15719 Hz Gain +2.86 dB Q 0.17
+Filter  8: ON PK Fc 11673 Hz Gain -3.88 dB Q 3.00
+Filter  9: ON PK Fc  4221 Hz Gain -1.85 dB Q 2.99

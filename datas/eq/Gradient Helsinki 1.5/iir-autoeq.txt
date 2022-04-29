@@ -1,15 +1,15 @@
 EQ for Gradient Helsinki 1.5 computed from Princeton data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
-Dated: 2022-04-27-08:42:00
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-04-28-16:56:33
 
-Preamp: -3.7 dB
+Preamp: -4.4 dB
 
-Filter  1: ON PK Fc   872 Hz Gain +2.92 dB Q 1.86
-Filter  2: ON PK Fc  4872 Hz Gain -2.07 dB Q 2.55
-Filter  3: ON PK Fc  7283 Hz Gain -1.75 dB Q 3.00
-Filter  4: ON PK Fc  2455 Hz Gain -1.66 dB Q 2.96
-Filter  5: ON PK Fc  2684 Hz Gain -0.88 dB Q 2.97
-Filter  6: ON PK Fc  3061 Hz Gain +1.36 dB Q 0.31
-Filter  7: ON PK Fc  3448 Hz Gain -1.79 dB Q 2.94
-Filter  8: ON PK Fc  5403 Hz Gain -1.49 dB Q 2.98
-Filter  9: ON PK Fc 10088 Hz Gain -1.47 dB Q 2.97
+Filter  1: ON PK Fc   840 Hz Gain +3.01 dB Q 1.69
+Filter  2: ON PK Fc  6262 Hz Gain -1.94 dB Q 2.85
+Filter  3: ON PK Fc  3831 Hz Gain -1.76 dB Q 2.99
+Filter  4: ON PK Fc  2276 Hz Gain -1.54 dB Q 2.93
+Filter  5: ON PK Fc  8320 Hz Gain -1.16 dB Q 2.98
+Filter  6: ON PK Fc 12933 Hz Gain -0.93 dB Q 2.99
+Filter  7: ON PK Fc  9742 Hz Gain -0.78 dB Q 2.98
+Filter  8: ON PK Fc  2243 Hz Gain -0.92 dB Q 2.91
+Filter  9: ON PK Fc  3067 Hz Gain +1.36 dB Q 0.07

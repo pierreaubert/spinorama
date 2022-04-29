@@ -1,16 +1,14 @@
 EQ for Klipsch Forte IV computed from ErinsAudioCorner data
 Preference Score 3.7 with EQ 5.0
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
-Dated: 2022-04-27-09:02:55
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-04-28-17:17:42
 
-Preamp: -1.4 dB
+Preamp: -1.9 dB
 
-Filter  1: ON PK Fc  1269 Hz Gain -2.69 dB Q 1.99
-Filter  2: ON PK Fc  6277 Hz Gain -3.75 dB Q 2.96
-Filter  3: ON PK Fc  2143 Hz Gain +1.38 dB Q 2.93
-Filter  4: ON PK Fc   521 Hz Gain +1.39 dB Q 2.99
-Filter  5: ON PK Fc  1573 Hz Gain -1.11 dB Q 0.09
-Filter  6: ON PK Fc  1012 Hz Gain +1.44 dB Q 0.90
-Filter  7: ON PK Fc  5056 Hz Gain +1.62 dB Q 2.10
-Filter  8: ON PK Fc  2411 Hz Gain +1.34 dB Q 2.91
-Filter  9: ON PK Fc  1387 Hz Gain -1.10 dB Q 2.14
+Filter  1: ON PK Fc  1275 Hz Gain -2.83 dB Q 2.15
+Filter  2: ON PK Fc  6244 Hz Gain -3.77 dB Q 2.95
+Filter  3: ON PK Fc  2181 Hz Gain +1.45 dB Q 2.94
+Filter  4: ON PK Fc  1485 Hz Gain -1.00 dB Q 2.98
+Filter  5: ON PK Fc 13914 Hz Gain -2.55 dB Q 1.54
+Filter  6: ON PK Fc  3344 Hz Gain -0.90 dB Q 2.93
+Filter  7: ON PK Fc  2448 Hz Gain +1.12 dB Q 2.24
