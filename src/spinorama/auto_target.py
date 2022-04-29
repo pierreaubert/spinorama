@@ -39,7 +39,8 @@ def get_selector(df, optim_config):
 def get_freq(df_speaker_data, optim_config):
     """extract freq and one curve"""
     curves = optim_config["curve_names"]
-    local_curves = curves
+    if "Listening Window" not in set(curves):
+        curves.append("Listening Window")
     with_pir = False
     if "Estimated In-Room Response" in curves:
         local_curves = [c for c in curves if c != "Estimated In-Room Response"]
@@ -94,10 +95,18 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     # freq
     selector = get_selector(df_speaker_data, optim_config)
     current_curve = df_speaker_data.loc[selector, current_curve_name].values
-    # compute linear reg on lw
+    # compute linear reg on current_curve
     slope, intercept, r_value, p_value, std_err = linregress(
         np.log10(freq), current_curve
     )
+    # possible correction to have a LW not too bright
+    if current_curve_name == "Estimated In-Room Response":
+        lw_curve = df_speaker_data.loc[selector, "Listening Window"].values
+        slope_lw, _, _, _, _r = linregress(np.log10(freq), lw_curve)
+        if slope_lw > -0.5:
+            # print('slope correction on LW by -{}'.format((slope_lw+0.5)))
+            slope -= slope_lw + 0.5
+
     # normalise to have a flat target (primarly for bright speakers)
     if current_curve_name == "On Axis":
         slope = optim_config["slope_on_axis"]
