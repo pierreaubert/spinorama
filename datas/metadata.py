@@ -104,6 +104,26 @@ speakers_info = {
             },
         },
     },
+    "AIA Cinema CCRM10-P": {
+        "brand": "AIA Cinema",
+        "model": "CCRM10-P",
+        "type": "passive",
+        "price": "2500",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-AIA Cinema",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "reviews": {
+                    "vendor": "https://www.aia-cinema.com/passive-speakers/ccrm10-p.html",
+                },
+                "review_published": "20220501",
+            },
+        },
+    },
     "Amazon Basic R60BTUS": {
         "brand": "Amazon Basic",
         "model": "R60BTUS",
@@ -8832,6 +8852,15 @@ origins_info = {
         "logo": "",
         "logo-small": "",
         "url": "",
+    },
+    "Vendors-AIA Cinema": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "logo": "docs/metadata/apple.png",
+        "logo-small": "docs/metadata/apple.png",
+        "url": "https://www.aia-cinema.com",
     },
     "Vendors-Apple": {
         "min hz": 20,
