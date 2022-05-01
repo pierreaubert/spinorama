@@ -39,16 +39,19 @@ def get_selector(df, optim_config):
 def get_freq(df_speaker_data, optim_config):
     """extract freq and one curve"""
     curves = optim_config["curve_names"]
-    if "Listening Window" not in set(curves):
-        curves.append("Listening Window")
     with_pir = False
+    local_curves = []
     if "Estimated In-Room Response" in curves:
         local_curves = [c for c in curves if c != "Estimated In-Room Response"]
+        if "Listening Window" not in set(local_curves):
+            local_curves.append("Listening Window")
         with_pir = True
+    else:
+        local_curves = curves
 
     # extract LW
     local_df = None
-    if len(local_curves) > 0:
+    if len(curves) > 0:
         columns = {"Freq"}.union(local_curves)
         if "CEA2034_unmelted" in df_speaker_data.keys():
             local_df = df_speaker_data["CEA2034_unmelted"].loc[:, list(columns)]
