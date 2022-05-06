@@ -91,12 +91,18 @@ def norm_spl(spl):
 def filter_graphs(speaker_name, h_spl, v_spl):
     dfs = {}
     # add H and V SPL graphs
-    mean = None
+    mean_300_3000 = None
+    mean_100_1000 = None
     sv_spl = None
     sh_spl = None
     if h_spl is not None:
-        mean = np.mean(h_spl.loc[(h_spl.Freq > 300) & (h_spl.Freq < 3000)]["On Axis"])
-        sh_spl = shift_spl(h_spl, mean)
+        mean_300_3000 = np.mean(
+            h_spl.loc[(h_spl.Freq > 300) & (h_spl.Freq < 3000)]["On Axis"]
+        )
+        mean_100_1000 = np.mean(
+            h_spl.loc[(h_spl.Freq > 100) & (h_spl.Freq < 1000)]["On Axis"]
+        )
+        sh_spl = shift_spl(h_spl, mean_300_3000)
         dfs["SPL Horizontal"] = graph_melt(sh_spl)
         dfs["SPL Horizontal_unmelted"] = sh_spl
         dfs["SPL Horizontal_normalized_unmelted"] = norm_spl(sh_spl)
@@ -104,11 +110,15 @@ def filter_graphs(speaker_name, h_spl, v_spl):
         logger.info("h_spl is None for speaker {}".format(speaker_name))
 
     if v_spl is not None:
-        if mean is None:
-            mean = np.mean(
+        if mean_300_3000 is None:
+            mean_300_3000 = np.mean(
                 v_spl.loc[(v_spl.Freq > 300) & (v_spl.Freq < 3000)]["On Axis"]
             )
-        sv_spl = shift_spl(v_spl, mean)
+        if mean_100_1000 is None:
+            mean_100_1000 = np.mean(
+                v_spl.loc[(v_spl.Freq > 100) & (v_spl.Freq < 1000)]["On Axis"]
+            )
+        sv_spl = shift_spl(v_spl, mean_300_3000)
         dfs["SPL Vertical"] = graph_melt(sv_spl)
         dfs["SPL Vertical_unmelted"] = sv_spl
         dfs["SPL Vertical_normalized_unmelted"] = norm_spl(sv_spl)
@@ -116,9 +126,9 @@ def filter_graphs(speaker_name, h_spl, v_spl):
         logger.info("v_spl is None for speaker {}".format(speaker_name))
 
     # horrible hack for EQ speakers which are already normalized
-    if mean is not None and mean > 20:
+    if mean_100_1000 is not None and mean_100_1000 > 20:
         # print('{} sensitivity {}'.format(speaker_name, mean))
-        dfs["sensitivity"] = mean
+        dfs["sensitivity"] = mean_100_1000
 
     # add computed graphs
     table = [
@@ -179,7 +189,8 @@ def filter_graphs(speaker_name, h_spl, v_spl):
 def filter_graphs_partial(df):
     dfs = {}
     # normalize first
-    mean = None
+    mean_300_3000 = None
+    mean_100_1000 = None
     on = None
     if "CEA2034" in df:
         on = df["CEA2034"]
@@ -194,26 +205,31 @@ def filter_graphs_partial(df):
         for curve in ("On Axis", "Listening Window"):
             if curve not in set(on.Measurements):
                 continue
-            mean = np.mean(
+            mean_300_3000 = np.mean(
                 on.loc[
                     (on.Freq > 300) & (on.Freq < 3000) & (on.Measurements == curve)
                 ].dB
             )
-    if mean is not None:
-        logger.debug("DEBUG: mean {}".format(mean))
-        if mean > 20:
-            dfs["sensitivity"] = mean
+            mean_100_1000 = np.mean(
+                on.loc[
+                    (on.Freq > 100) & (on.Freq < 1000) & (on.Measurements == curve)
+                ].dB
+            )
+    if mean_300_3000 is not None:
+        logger.debug("DEBUG: mean {}".format(mean_300_3000))
+        if mean_100_1000 > 20:
+            dfs["sensitivity"] = mean_100_1000
         for k in df.keys():
             if k == "CEA2034":
                 logger.debug(
                     "DEBUG {} pre shift cols={}".format(k, set(df[k].Measurements))
                 )
-                dfs[k] = shift_spl_melted_cea2034(df[k], mean)
+                dfs[k] = shift_spl_melted_cea2034(df[k], mean_300_3000)
                 logger.debug(
                     "DEBUG {} post shift cols={}".format(k, set(dfs[k].Measurements))
                 )
             else:
-                dfs[k] = shift_spl_melted(df[k], mean)
+                dfs[k] = shift_spl_melted(df[k], mean_300_3000)
     else:
         for k in df.keys():
             dfs[k] = df[k]
@@ -230,7 +246,9 @@ def filter_graphs_partial(df):
         if k != "sensitivity":
             logger.debug(dfs[k].head())
     logger.debug(
-        "filter in: keys={} out: mean={} keys={}".format(df.keys(), mean, dfs.keys())
+        "filter in: keys={} out: mean={} keys={}".format(
+            df.keys(), mean_300_3000, dfs.keys()
+        )
     )
     logger.debug("DEBUG END of filter_graphs_partial")
     return dfs
