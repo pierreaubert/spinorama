@@ -33,6 +33,6 @@
     "MIN_DBGAIN": 0.5,
     "MAX_DBGAIN": 8,
     "MIN_Q": 0.01,
-    "MAX_Q": 6,
+    "MAX_Q": 3.0,
     "second_optimiser": false
 }

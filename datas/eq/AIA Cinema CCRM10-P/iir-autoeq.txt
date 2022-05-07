@@ -1,15 +1,15 @@
 EQ for AIA Cinema CCRM10-P computed from Vendors-AIA Cinema data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-05-01-12:59:34
+Dated: 2022-05-06-09:16:05
 
-Preamp: -0.8 dB
+Preamp: -0.6 dB
 
-Filter  1: ON PK Fc  5871 Hz Gain -2.65 dB Q 0.96
-Filter  2: ON PK Fc   836 Hz Gain -1.37 dB Q 1.55
-Filter  3: ON PK Fc 13870 Hz Gain -1.78 dB Q 4.77
-Filter  4: ON PK Fc  2110 Hz Gain +1.23 dB Q 5.97
-Filter  5: ON PK Fc  7954 Hz Gain +1.43 dB Q 5.95
-Filter  6: ON PK Fc  9789 Hz Gain -1.20 dB Q 5.96
-Filter  7: ON PK Fc  4060 Hz Gain +1.01 dB Q 5.92
-Filter  8: ON PK Fc  2738 Hz Gain -1.32 dB Q 5.95
-Filter  9: ON PK Fc  5415 Hz Gain -0.65 dB Q 5.95
+Filter  1: ON PK Fc  5946 Hz Gain -2.67 dB Q 0.91
+Filter  2: ON PK Fc   836 Hz Gain -1.37 dB Q 1.60
+Filter  3: ON PK Fc 13897 Hz Gain -1.40 dB Q 2.91
+Filter  4: ON PK Fc  2066 Hz Gain +1.23 dB Q 2.98
+Filter  5: ON PK Fc  2615 Hz Gain -1.09 dB Q 2.99
+Filter  6: ON PK Fc  3954 Hz Gain +1.07 dB Q 3.00
+Filter  7: ON PK Fc  5320 Hz Gain -0.72 dB Q 2.97
+Filter  8: ON PK Fc  7832 Hz Gain +1.53 dB Q 2.98
+Filter  9: ON PK Fc  9637 Hz Gain -1.24 dB Q 2.99

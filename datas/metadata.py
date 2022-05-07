@@ -4939,8 +4939,18 @@ speakers_info = {
         "price": "9000",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "vendor",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20220501",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_reference_1_meta/",
+                    "yt": "https://youtu.be/4hyKx9GiB8o",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-reference-1-meta-bookshelf-speaker-review-by-erins-audio-corner.33666/",
+                },
+            },
             "vendor": {
                 "origin": "Vendors-KEF",
                 "website": "www.kef.com",
@@ -6730,6 +6740,23 @@ speakers_info = {
                 "origin": "Vendors-Pioneer",
                 "format": "rewstextdump",
                 "review": "",
+            },
+        },
+    },
+    "Pioneer SP-C22": {
+        "brand": "Pioneer",
+        "model": "SP-C22",
+        "type": "passive",
+        "price": "75",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/pioneer-sp-c22-review-center-speaker.33717/",
+                "review_published": "20220505",
             },
         },
     },
