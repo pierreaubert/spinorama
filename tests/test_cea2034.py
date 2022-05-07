@@ -195,11 +195,7 @@ class SpinoramaHorizontalReflectionsTests(unittest.TestCase):
         self.assertEqual(self.reference.shape, self.computed.shape)
 
     def test_validate_vertical_reflections(self):
-        for measurement in [
-                "Rear",
-                "Side",
-                "Front"
-        ]:
+        for measurement in ["Rear", "Side", "Front"]:
             # key check
             self.assertIn(measurement, self.computed_unmelted.keys())
             self.assertIn(measurement, self.reference_unmelted.keys())
@@ -240,7 +236,8 @@ class SpinoramaEstimatedInRoomTests(unittest.TestCase):
         self.assertEqual(self.reference_unmelted.shape, self.computed_unmelted.shape)
         self.assertEqual(self.reference.shape, self.computed.shape)
 
-# See above. We diverge from the std (since it has a but for rear which impact ER and PIR)        
+
+# See above. We diverge from the std (since it has a but for rear which impact ER and PIR)
 #    def test_validate_estimated_inroom(self):
 #        # key check
 #        self.assertIn("Estimated In-Room Response", self.computed_unmelted.keys())
