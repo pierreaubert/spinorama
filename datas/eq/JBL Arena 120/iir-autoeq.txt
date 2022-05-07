@@ -1,15 +1,15 @@
 EQ for JBL Arena 120 computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-04-28-17:04:46
+Dated: 2022-05-07-13:39:05
 
 Preamp: -0.2 dB
 
-Filter  1: ON PK Fc  4880 Hz Gain -2.54 dB Q 0.05
-Filter  2: ON PK Fc  1987 Hz Gain +1.96 dB Q 2.88
-Filter  3: ON PK Fc   293 Hz Gain -1.08 dB Q 0.69
-Filter  4: ON PK Fc 12469 Hz Gain +1.95 dB Q 2.97
-Filter  5: ON PK Fc  1724 Hz Gain +0.94 dB Q 2.98
-Filter  6: ON PK Fc  2982 Hz Gain +0.52 dB Q 2.96
-Filter  7: ON PK Fc  7220 Hz Gain -0.59 dB Q 0.16
-Filter  8: ON PK Fc  3013 Hz Gain +0.61 dB Q 2.95
-Filter  9: ON PK Fc  5009 Hz Gain +0.54 dB Q 2.88
+Filter  1: ON PK Fc  4875 Hz Gain -2.53 dB Q 0.05
+Filter  2: ON PK Fc  1896 Hz Gain +2.48 dB Q 2.23
+Filter  3: ON PK Fc   271 Hz Gain -1.24 dB Q 1.07
+Filter  4: ON PK Fc 12723 Hz Gain +2.18 dB Q 3.00
+Filter  5: ON PK Fc  7351 Hz Gain -0.62 dB Q 1.61
+Filter  6: ON PK Fc  2604 Hz Gain +0.50 dB Q 2.98
+Filter  7: ON PK Fc  3485 Hz Gain -0.50 dB Q 2.99
+Filter  8: ON PK Fc   629 Hz Gain -0.55 dB Q 2.96
+Filter  9: ON PK Fc  9018 Hz Gain -0.50 dB Q 2.99

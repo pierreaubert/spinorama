@@ -1,16 +1,16 @@
 EQ for Neumann KH 420G computed from ASR data
-Preference Score 7.2 with EQ 7.3
+Preference Score 7.2 with EQ 7.4
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-05-06-09:19:17
+Dated: 2022-05-07-15:09:29
 
-Preamp: -0.2 dB
+Preamp: -1.1 dB
 
-Filter  1: ON PK Fc   282 Hz Gain -1.80 dB Q 0.82
-Filter  2: ON PK Fc  4496 Hz Gain -1.26 dB Q 0.33
-Filter  3: ON PK Fc    60 Hz Gain +0.67 dB Q 2.99
-Filter  4: ON PK Fc   456 Hz Gain +0.87 dB Q 2.93
-Filter  5: ON PK Fc   118 Hz Gain -0.50 dB Q 2.97
-Filter  6: ON PK Fc  2582 Hz Gain +0.84 dB Q 3.00
-Filter  7: ON PK Fc   309 Hz Gain +0.54 dB Q 2.98
-Filter  8: ON PK Fc   146 Hz Gain +0.50 dB Q 2.97
-Filter  9: ON PK Fc  9064 Hz Gain -0.51 dB Q 2.98
+Filter  1: ON PK Fc   241 Hz Gain -1.65 dB Q 2.06
+Filter  2: ON PK Fc   123 Hz Gain -0.62 dB Q 4.91
+Filter  3: ON PK Fc    59 Hz Gain +0.67 dB Q 5.60
+Filter  4: ON PK Fc   482 Hz Gain +0.71 dB Q 5.93
+Filter  5: ON PK Fc 13112 Hz Gain +0.74 dB Q 1.84
+Filter  6: ON PK Fc   361 Hz Gain -0.54 dB Q 5.92
+Filter  7: ON PK Fc  2362 Hz Gain +0.87 dB Q 5.19
+Filter  8: ON PK Fc   295 Hz Gain +0.50 dB Q 5.95
+Filter  9: ON PK Fc   191 Hz Gain +0.50 dB Q 5.96

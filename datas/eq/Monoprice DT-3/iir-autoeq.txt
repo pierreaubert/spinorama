@@ -1,16 +1,16 @@
 EQ for Monoprice DT-3 computed from ErinsAudioCorner data
-Preference Score -0.2 with EQ 4.6
+Preference Score -0.2 with EQ 4.4
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-04-28-17:23:22
+Dated: 2022-05-07-13:59:52
 
-Preamp: -9.8 dB
+Preamp: -10.2 dB
 
-Filter  1: ON PK Fc   522 Hz Gain +7.99 dB Q 0.41
-Filter  2: ON PK Fc   123 Hz Gain -4.68 dB Q 2.98
-Filter  3: ON PK Fc  1430 Hz Gain -3.83 dB Q 2.97
-Filter  4: ON PK Fc  2320 Hz Gain +4.98 dB Q 2.40
-Filter  5: ON PK Fc   310 Hz Gain +2.67 dB Q 0.98
-Filter  6: ON PK Fc   131 Hz Gain -1.17 dB Q 2.94
-Filter  7: ON PK Fc 13725 Hz Gain -2.56 dB Q 1.10
-Filter  8: ON PK Fc  4504 Hz Gain -1.27 dB Q 2.94
-Filter  9: ON PK Fc  1507 Hz Gain -2.06 dB Q 2.98
+Filter  1: ON PK Fc   524 Hz Gain +7.98 dB Q 0.37
+Filter  2: ON PK Fc   123 Hz Gain -5.18 dB Q 3.00
+Filter  3: ON PK Fc  2479 Hz Gain +4.20 dB Q 3.00
+Filter  4: ON PK Fc  1484 Hz Gain -3.89 dB Q 2.98
+Filter  5: ON PK Fc   408 Hz Gain +2.30 dB Q 0.62
+Filter  6: ON PK Fc  2010 Hz Gain +1.66 dB Q 3.00
+Filter  7: ON PK Fc   138 Hz Gain -1.19 dB Q 2.93
+Filter  8: ON PK Fc 13731 Hz Gain -1.93 dB Q 2.91
+Filter  9: ON PK Fc  3189 Hz Gain +0.91 dB Q 2.97

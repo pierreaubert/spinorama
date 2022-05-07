@@ -1,15 +1,15 @@
 EQ for Outlaw Audio BLSv2 computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-04-28-17:28:30
+Dated: 2022-05-07-14:05:44
 
-Preamp: -1.7 dB
+Preamp: -2.8 dB
 
-Filter  1: ON PK Fc  2917 Hz Gain -2.09 dB Q 2.99
-Filter  2: ON PK Fc   805 Hz Gain -1.60 dB Q 2.93
-Filter  3: ON PK Fc  1493 Hz Gain +1.07 dB Q 0.05
-Filter  4: ON PK Fc  3135 Hz Gain -1.94 dB Q 2.74
-Filter  5: ON PK Fc  4426 Hz Gain -1.39 dB Q 2.96
-Filter  6: ON PK Fc   817 Hz Gain -1.31 dB Q 2.88
-Filter  7: ON PK Fc   486 Hz Gain -0.83 dB Q 2.89
-Filter  8: ON PK Fc  3973 Hz Gain +0.77 dB Q 0.22
-Filter  9: ON PK Fc  1940 Hz Gain -1.73 dB Q 2.76
+Filter  1: ON PK Fc  2977 Hz Gain -2.49 dB Q 2.87
+Filter  2: ON PK Fc   805 Hz Gain -1.58 dB Q 2.96
+Filter  3: ON PK Fc  1209 Hz Gain +1.30 dB Q 2.73
+Filter  4: ON PK Fc 12088 Hz Gain +2.56 dB Q 0.76
+Filter  5: ON PK Fc  4111 Hz Gain -1.26 dB Q 3.00
+Filter  6: ON PK Fc   383 Hz Gain +0.97 dB Q 3.00
+Filter  7: ON PK Fc  6832 Hz Gain +0.64 dB Q 2.72
+Filter  8: ON PK Fc   876 Hz Gain -0.72 dB Q 2.99
+Filter  9: ON PK Fc   707 Hz Gain +0.72 dB Q 2.95

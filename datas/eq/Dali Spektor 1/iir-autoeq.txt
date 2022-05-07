@@ -1,14 +1,16 @@
 EQ for Dali Spektor 1 computed from ASR data
-Preference Score 3.2 with EQ 4.8
+Preference Score 3.5 with EQ 5.1
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-04-28-16:41:18
+Dated: 2022-05-07-13:12:45
 
-Preamp: -1.8 dB
+Preamp: -1.6 dB
 
-Filter  1: ON PK Fc   129 Hz Gain -0.63 dB Q 2.75
-Filter  2: ON PK Fc  1409 Hz Gain -2.70 dB Q 2.20
-Filter  3: ON PK Fc  2527 Hz Gain +1.60 dB Q 2.91
-Filter  4: ON PK Fc 15697 Hz Gain -4.34 dB Q 0.33
-Filter  5: ON PK Fc   365 Hz Gain +1.56 dB Q 2.98
-Filter  6: ON PK Fc  2042 Hz Gain -0.78 dB Q 2.99
-Filter  7: ON PK Fc  2851 Hz Gain +1.24 dB Q 2.96
+Filter  1: ON PK Fc   136 Hz Gain -0.88 dB Q 2.92
+Filter  2: ON PK Fc  2588 Hz Gain +1.90 dB Q 2.96
+Filter  3: ON PK Fc  1194 Hz Gain -2.69 dB Q 2.94
+Filter  4: ON PK Fc 14767 Hz Gain -3.53 dB Q 0.43
+Filter  5: ON PK Fc   373 Hz Gain +1.45 dB Q 2.33
+Filter  6: ON PK Fc  1861 Hz Gain -1.12 dB Q 3.00
+Filter  7: ON PK Fc  3569 Hz Gain +1.15 dB Q 2.49
+Filter  8: ON PK Fc 10845 Hz Gain +0.51 dB Q 2.98
+Filter  9: ON PK Fc  3292 Hz Gain -0.74 dB Q 2.97

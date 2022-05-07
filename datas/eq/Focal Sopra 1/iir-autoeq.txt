@@ -1,15 +1,15 @@
 EQ for Focal Sopra 1 computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-04-28-16:52:42
+Dated: 2022-05-07-13:25:39
 
-Preamp: -2.1 dB
+Preamp: -2.2 dB
 
-Filter  1: ON PK Fc  1753 Hz Gain +1.73 dB Q 0.33
-Filter  2: ON PK Fc  8925 Hz Gain -1.46 dB Q 2.89
-Filter  3: ON PK Fc  4339 Hz Gain -1.26 dB Q 2.99
-Filter  4: ON PK Fc   367 Hz Gain +1.05 dB Q 2.90
-Filter  5: ON PK Fc  6107 Hz Gain -0.86 dB Q 2.98
-Filter  6: ON PK Fc  1530 Hz Gain -0.65 dB Q 2.99
-Filter  7: ON PK Fc  2690 Hz Gain +0.52 dB Q 0.23
-Filter  8: ON PK Fc  2924 Hz Gain -0.79 dB Q 2.94
-Filter  9: ON PK Fc  9161 Hz Gain -0.80 dB Q 2.81
+Filter  1: ON PK Fc  1750 Hz Gain +1.76 dB Q 0.53
+Filter  2: ON PK Fc   461 Hz Gain +1.14 dB Q 1.11
+Filter  3: ON PK Fc  6768 Hz Gain -1.27 dB Q 0.89
+Filter  4: ON PK Fc  1557 Hz Gain -0.50 dB Q 2.99
+Filter  5: ON PK Fc  2190 Hz Gain +0.58 dB Q 2.97
+Filter  6: ON PK Fc  9583 Hz Gain -0.60 dB Q 2.97
+Filter  7: ON PK Fc  6674 Hz Gain +0.55 dB Q 2.80
+Filter  8: ON PK Fc   959 Hz Gain +0.51 dB Q 2.96
+Filter  9: ON PK Fc  4185 Hz Gain -0.50 dB Q 2.40

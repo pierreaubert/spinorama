@@ -21,7 +21,7 @@
     "slope_listening_window": -0.5,
     "slope_early_reflections": -4,
     "slope_sound_power": -9,
-    "slope_estimated_inroom": -5.9,
+    "slope_estimated_inroom": -5.4,
     "smooth_measurements": true,
     "smooth_window_size": 7,
     "smooth_order": 3,
@@ -32,7 +32,7 @@
     "maxiter": 500,
     "MIN_DBGAIN": 0.5,
     "MAX_DBGAIN": 8,
-    "MIN_Q": 0.01,
-    "MAX_Q": 3.0,
+    "MIN_Q": 0.05,
+    "MAX_Q": 6.0,
     "second_optimiser": false
 }

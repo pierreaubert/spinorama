@@ -1,15 +1,15 @@
 EQ for Revel F36 computed from Vendors-Revel data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-04-28-17:43:29
+Dated: 2022-05-07-14:23:28
 
-Preamp: -2.5 dB
+Preamp: -2.9 dB
 
-Filter  1: ON PK Fc  1423 Hz Gain +2.29 dB Q 1.51
-Filter  2: ON PK Fc   379 Hz Gain +2.00 dB Q 2.15
-Filter  3: ON PK Fc 13374 Hz Gain +2.22 dB Q 1.78
-Filter  4: ON PK Fc   736 Hz Gain +0.82 dB Q 2.99
-Filter  5: ON PK Fc  2726 Hz Gain -0.50 dB Q 0.30
-Filter  6: ON PK Fc  2433 Hz Gain +1.17 dB Q 2.88
-Filter  7: ON PK Fc   195 Hz Gain +0.97 dB Q 2.79
-Filter  8: ON PK Fc   123 Hz Gain +0.52 dB Q 2.90
-Filter  9: ON PK Fc  1758 Hz Gain +0.66 dB Q 2.90
+Filter  1: ON PK Fc  1151 Hz Gain +2.29 dB Q 0.50
+Filter  2: ON PK Fc  3559 Hz Gain -1.19 dB Q 1.76
+Filter  3: ON PK Fc   330 Hz Gain +1.33 dB Q 1.50
+Filter  4: ON PK Fc 13346 Hz Gain +1.85 dB Q 2.31
+Filter  5: ON PK Fc   174 Hz Gain +0.74 dB Q 2.71
+Filter  6: ON PK Fc   307 Hz Gain -0.79 dB Q 2.94
+Filter  7: ON PK Fc   994 Hz Gain -1.09 dB Q 2.96
+Filter  8: ON PK Fc   132 Hz Gain +0.50 dB Q 2.97
+Filter  9: ON PK Fc  1546 Hz Gain +0.75 dB Q 3.00

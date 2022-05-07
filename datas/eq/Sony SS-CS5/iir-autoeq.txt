@@ -1,13 +1,16 @@
 EQ for Sony SS-CS5 computed from ErinsAudioCorner data
-Preference Score 4.1 with EQ 5.2
+Preference Score 4.3 with EQ 5.3
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-04-28-17:49:45
+Dated: 2022-05-07-14:30:23
 
-Preamp: -1.8 dB
+Preamp: -1.9 dB
 
-Filter  1: ON PK Fc  1123 Hz Gain -1.89 dB Q 2.99
-Filter  2: ON PK Fc 13844 Hz Gain -1.99 dB Q 1.01
-Filter  3: ON PK Fc   325 Hz Gain +1.65 dB Q 1.32
-Filter  4: ON PK Fc   130 Hz Gain -0.90 dB Q 2.95
-Filter  5: ON PK Fc  5253 Hz Gain -0.97 dB Q 2.99
-Filter  6: ON PK Fc  2248 Hz Gain +1.19 dB Q 1.71
+Filter  1: ON PK Fc   394 Hz Gain +1.80 dB Q 0.99
+Filter  2: ON PK Fc  1070 Hz Gain -1.23 dB Q 2.99
+Filter  3: ON PK Fc  2249 Hz Gain +1.74 dB Q 1.17
+Filter  4: ON PK Fc   131 Hz Gain -0.94 dB Q 2.92
+Filter  5: ON PK Fc 13801 Hz Gain -0.88 dB Q 1.79
+Filter  6: ON PK Fc  7713 Hz Gain +0.53 dB Q 2.98
+Filter  7: ON PK Fc  5139 Hz Gain -0.66 dB Q 2.99
+Filter  8: ON PK Fc   249 Hz Gain +0.57 dB Q 2.98
+Filter  9: ON PK Fc   538 Hz Gain -0.72 dB Q 2.98

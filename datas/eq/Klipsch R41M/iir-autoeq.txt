@@ -1,16 +1,16 @@
 EQ for Klipsch R41M computed from ASR data
-Preference Score 2.9 with EQ 4.2
+Preference Score 3.1 with EQ 4.3
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-04-28-17:18:41
+Dated: 2022-05-07-13:54:42
 
-Preamp: -2.3 dB
+Preamp: -3.6 dB
 
-Filter  1: ON PK Fc  5942 Hz Gain -2.50 dB Q 0.94
-Filter  2: ON PK Fc  1008 Hz Gain -2.10 dB Q 3.00
-Filter  3: ON PK Fc  1038 Hz Gain +1.54 dB Q 0.99
-Filter  4: ON PK Fc   992 Hz Gain -1.73 dB Q 2.95
-Filter  5: ON PK Fc   128 Hz Gain +0.63 dB Q 2.98
-Filter  6: ON PK Fc   869 Hz Gain +1.20 dB Q 2.93
-Filter  7: ON PK Fc  5944 Hz Gain +1.24 dB Q 2.99
-Filter  8: ON PK Fc  1560 Hz Gain +2.04 dB Q 2.98
-Filter  9: ON PK Fc  1029 Hz Gain -1.33 dB Q 2.98
+Filter  1: ON PK Fc   964 Hz Gain -2.10 dB Q 2.98
+Filter  2: ON PK Fc  1050 Hz Gain +2.02 dB Q 0.67
+Filter  3: ON PK Fc   986 Hz Gain -2.02 dB Q 3.00
+Filter  4: ON PK Fc  5040 Hz Gain -1.71 dB Q 2.99
+Filter  5: ON PK Fc  1049 Hz Gain +1.40 dB Q 1.11
+Filter  6: ON PK Fc   999 Hz Gain -1.51 dB Q 2.99
+Filter  7: ON PK Fc   127 Hz Gain +0.58 dB Q 2.88
+Filter  8: ON PK Fc   852 Hz Gain +1.09 dB Q 2.93
+Filter  9: ON PK Fc  1691 Hz Gain +1.74 dB Q 2.94

@@ -1,15 +1,15 @@
 EQ for Genelec G2 computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-04-28-16:55:57
+Dated: 2022-05-07-13:29:16
 
-Preamp: -2.1 dB
+Preamp: -2.3 dB
 
-Filter  1: ON PK Fc  1933 Hz Gain +1.86 dB Q 0.64
-Filter  2: ON PK Fc   523 Hz Gain -0.53 dB Q 2.96
-Filter  3: ON PK Fc   698 Hz Gain +0.78 dB Q 1.59
-Filter  4: ON PK Fc   868 Hz Gain -0.75 dB Q 2.96
-Filter  5: ON PK Fc  1005 Hz Gain +0.72 dB Q 2.71
-Filter  6: ON PK Fc   974 Hz Gain -0.50 dB Q 2.97
-Filter  7: ON PK Fc   560 Hz Gain -0.52 dB Q 2.97
-Filter  8: ON PK Fc   523 Hz Gain +0.55 dB Q 1.21
-Filter  9: ON PK Fc   535 Hz Gain -0.50 dB Q 2.87
+Filter  1: ON PK Fc  1936 Hz Gain +1.99 dB Q 0.67
+Filter  2: ON PK Fc   516 Hz Gain -0.53 dB Q 2.99
+Filter  3: ON PK Fc   435 Hz Gain +0.51 dB Q 2.96
+Filter  4: ON PK Fc   679 Hz Gain +0.57 dB Q 3.00
+Filter  5: ON PK Fc   439 Hz Gain -0.50 dB Q 0.53
+Filter  6: ON PK Fc  1069 Hz Gain +0.64 dB Q 2.98
+Filter  7: ON PK Fc  3438 Hz Gain -0.84 dB Q 3.00
+Filter  8: ON PK Fc  3024 Hz Gain +0.55 dB Q 1.66
+Filter  9: ON PK Fc   896 Hz Gain -0.50 dB Q 2.96

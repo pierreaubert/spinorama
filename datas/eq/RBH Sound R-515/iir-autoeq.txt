@@ -1,15 +1,15 @@
 EQ for RBH Sound R-515 computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-04-28-17:38:43
+Dated: 2022-05-07-14:17:39
 
-Preamp: -1.4 dB
+Preamp: -1.5 dB
 
-Filter  1: ON PK Fc 10941 Hz Gain -4.24 dB Q 0.62
-Filter  2: ON PK Fc  2391 Hz Gain -3.43 dB Q 3.00
-Filter  3: ON PK Fc  2301 Hz Gain -1.16 dB Q 3.00
-Filter  4: ON PK Fc  9359 Hz Gain -0.96 dB Q 2.97
-Filter  5: ON PK Fc   641 Hz Gain +1.28 dB Q 2.97
-Filter  6: ON PK Fc  1388 Hz Gain +1.84 dB Q 2.64
-Filter  7: ON PK Fc   918 Hz Gain -1.68 dB Q 2.95
-Filter  8: ON PK Fc  1049 Hz Gain +1.35 dB Q 2.97
-Filter  9: ON PK Fc  1005 Hz Gain -1.41 dB Q 2.99
+Filter  1: ON PK Fc 10172 Hz Gain -4.09 dB Q 0.25
+Filter  2: ON PK Fc  2450 Hz Gain -2.27 dB Q 2.98
+Filter  3: ON PK Fc  1311 Hz Gain +1.93 dB Q 2.95
+Filter  4: ON PK Fc  4435 Hz Gain +1.76 dB Q 2.49
+Filter  5: ON PK Fc   605 Hz Gain +1.24 dB Q 2.99
+Filter  6: ON PK Fc  9503 Hz Gain -0.96 dB Q 2.89
+Filter  7: ON PK Fc   994 Hz Gain -1.44 dB Q 2.98
+Filter  8: ON PK Fc  1157 Hz Gain +0.83 dB Q 2.91
+Filter  9: ON PK Fc   295 Hz Gain -0.86 dB Q 2.99

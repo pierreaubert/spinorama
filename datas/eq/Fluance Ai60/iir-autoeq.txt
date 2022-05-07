@@ -1,15 +1,15 @@
 EQ for Fluance Ai60 computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-04-28-16:50:46
+Dated: 2022-05-07-13:23:27
 
-Preamp: -2.6 dB
+Preamp: -1.9 dB
 
-Filter  1: ON PK Fc  9214 Hz Gain -3.94 dB Q 3.00
-Filter  2: ON PK Fc   704 Hz Gain +1.15 dB Q 0.78
-Filter  3: ON PK Fc  3342 Hz Gain -2.32 dB Q 2.99
-Filter  4: ON PK Fc   363 Hz Gain +0.93 dB Q 2.81
-Filter  5: ON PK Fc  1616 Hz Gain +1.58 dB Q 2.99
-Filter  6: ON PK Fc  1043 Hz Gain -1.82 dB Q 2.99
-Filter  7: ON PK Fc  4054 Hz Gain -1.39 dB Q 2.96
-Filter  8: ON PK Fc  1331 Hz Gain +1.69 dB Q 2.94
-Filter  9: ON PK Fc   717 Hz Gain -1.10 dB Q 2.95
+Filter  1: ON PK Fc  9264 Hz Gain -3.94 dB Q 2.99
+Filter  2: ON PK Fc   733 Hz Gain +1.14 dB Q 0.60
+Filter  3: ON PK Fc  3574 Hz Gain -2.88 dB Q 2.33
+Filter  4: ON PK Fc  1571 Hz Gain +1.53 dB Q 2.95
+Filter  5: ON PK Fc  1037 Hz Gain -1.35 dB Q 3.00
+Filter  6: ON PK Fc   371 Hz Gain +0.85 dB Q 2.92
+Filter  7: ON PK Fc   679 Hz Gain -1.04 dB Q 2.95
+Filter  8: ON PK Fc   587 Hz Gain +1.55 dB Q 2.91
+Filter  9: ON PK Fc   458 Hz Gain -1.08 dB Q 2.96

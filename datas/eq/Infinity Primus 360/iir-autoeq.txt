@@ -1,15 +1,15 @@
 EQ for Infinity Primus 360 computed from Vendors-Infinity data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-04-28-17:00:02
+Dated: 2022-05-07-13:33:47
 
-Preamp: -3.4 dB
+Preamp: -3.7 dB
 
-Filter  1: ON PK Fc   580 Hz Gain +2.80 dB Q 0.05
-Filter  2: ON PK Fc   280 Hz Gain -1.51 dB Q 0.37
-Filter  3: ON PK Fc   478 Hz Gain +1.61 dB Q 3.00
-Filter  4: ON PK Fc   201 Hz Gain +1.14 dB Q 2.96
-Filter  5: ON PK Fc  1710 Hz Gain +0.70 dB Q 2.91
-Filter  6: ON PK Fc  2664 Hz Gain -1.05 dB Q 2.58
-Filter  7: ON PK Fc  2310 Hz Gain +0.76 dB Q 2.99
-Filter  8: ON PK Fc   252 Hz Gain +0.51 dB Q 2.96
-Filter  9: ON PK Fc   351 Hz Gain -0.95 dB Q 2.91
+Filter  1: ON PK Fc   579 Hz Gain +2.80 dB Q 0.05
+Filter  2: ON PK Fc   336 Hz Gain -1.53 dB Q 2.93
+Filter  3: ON PK Fc   475 Hz Gain +0.83 dB Q 2.92
+Filter  4: ON PK Fc  3283 Hz Gain -0.64 dB Q 2.31
+Filter  5: ON PK Fc   693 Hz Gain -0.66 dB Q 1.33
+Filter  6: ON PK Fc  1859 Hz Gain +0.68 dB Q 2.92
+Filter  7: ON PK Fc  2526 Hz Gain -0.52 dB Q 2.83
+Filter  8: ON PK Fc  6155 Hz Gain +0.51 dB Q 0.18
+Filter  9: ON PK Fc  6674 Hz Gain -0.78 dB Q 2.25
