@@ -105,8 +105,9 @@ class SpinoramaEarlyReflectionsTests(unittest.TestCase):
             "Ceiling Bounce",
             "Front Wall Bounce",
             "Side Wall Bounce",
-            "Rear Wall Bounce",
-            "Total Early Reflection",
+            # this is not tested since Klippel follows the standars (with its bug)
+            # "Rear Wall Bounce",
+            # "Total Early Reflection",
         ]:
             # key check
             self.assertIn(measurement, self.computed_unmelted.keys())
@@ -194,7 +195,11 @@ class SpinoramaHorizontalReflectionsTests(unittest.TestCase):
         self.assertEqual(self.reference.shape, self.computed.shape)
 
     def test_validate_vertical_reflections(self):
-        for measurement in ["Rear", "Side", "Front"]:
+        for measurement in [
+                "Rear",
+                "Side",
+                "Front"
+        ]:
             # key check
             self.assertIn(measurement, self.computed_unmelted.keys())
             self.assertIn(measurement, self.reference_unmelted.keys())
@@ -235,20 +240,21 @@ class SpinoramaEstimatedInRoomTests(unittest.TestCase):
         self.assertEqual(self.reference_unmelted.shape, self.computed_unmelted.shape)
         self.assertEqual(self.reference.shape, self.computed.shape)
 
-    def test_validate_estimated_inroom(self):
-        # key check
-        self.assertIn("Estimated In-Room Response", self.computed_unmelted.keys())
-        self.assertIn("Estimated In-Room Response", self.reference_unmelted.keys())
-        # from klippel
-        reference = self.reference.loc[
-            self.reference["Measurements"] == "Estimated In-Room Response"
-        ]
-        # computed
-        computed = self.computed.loc[
-            self.computed["Measurements"] == "Estimated In-Room Response"
-        ]
-        # should have the same Freq
-        self.assertEqual(computed.Freq.size, reference.Freq.size)
-        # self.assertTrue(computed.Freq.eq(reference.Freq).all())
-        # and should be equal or close in dB
-        self.assertLess(abs(reference.dB.abs().max() - computed.dB.abs().max()), 0.005)
+# See above. We diverge from the std (since it has a but for rear which impact ER and PIR)        
+#    def test_validate_estimated_inroom(self):
+#        # key check
+#        self.assertIn("Estimated In-Room Response", self.computed_unmelted.keys())
+#        self.assertIn("Estimated In-Room Response", self.reference_unmelted.keys())
+#        # from klippel
+#        reference = self.reference.loc[
+#            self.reference["Measurements"] == "Estimated In-Room Response"
+#        ]
+#        # computed
+#        computed = self.computed.loc[
+#            self.computed["Measurements"] == "Estimated In-Room Response"
+#        ]
+#        # should have the same Freq
+#        self.assertEqual(computed.Freq.size, reference.Freq.size)
+#        # self.assertTrue(computed.Freq.eq(reference.Freq).all())
+#        # and should be equal or close in dB
+#        self.assertLess(abs(reference.dB.abs().max() - computed.dB.abs().max()), 0.005)
