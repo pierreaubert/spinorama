@@ -99,7 +99,7 @@ fetch(urlSite + 'assets/metadata.json').then(
     for (const key in smeta) {
       const spk = metadata[key]
       const id = (spk.brand + '-' + spk.model).replace(/['.+& ]/g, '-')
-      console.log('generated id is ' + id)
+      // console.log('generated id is ' + id)
       const elem = document.querySelector('#' + id)
       if (elem) {
         hide(elem)
