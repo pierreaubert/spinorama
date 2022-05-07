@@ -266,6 +266,14 @@ def total_early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Data
             "70°",
             "80°",
             "90°",
+            "100°",
+            "110°",
+            "120°",
+            "130°",
+            "140°",
+            "150°",
+            "160°",
+            "170°",
             "-10°",
             "-20°",
             "-30°",
@@ -275,7 +283,15 @@ def total_early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.Data
             "-70°",
             "-80°",
             "-90°",
-            "180°",
+            "-100°",
+            "-110°",
+            "-120°",
+            "-130°",
+            "-140°",
+            "-150°",
+            "-160°",
+            "-170°",
+            "-180°",
         ],
         v_spl,
         ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"],
@@ -309,7 +325,33 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
         ],
     )
 
-    rear_wall_bounce = spatial_average1(h_spl, ["Freq", "-90°", "90°", "180°"])
+    # CEA2034 error
+    # rear_wall_bounce = spatial_average1(h_spl, ["Freq", "-90°", "90°", "180°"])
+    rear_wall_bounce = spatial_average1(
+        h_spl,
+        [
+            "Freq",
+            "-170°",
+            "-160°",
+            "-150°",
+            "-140°",
+            "-130°",
+            "-120°",
+            "-110°",
+            "-100°",
+            "-90°",
+            "90°",
+            "100°",
+            "110°",
+            "120°",
+            "130°",
+            "140°",
+            "150°",
+            "160°",
+            "170°",
+            "180°",
+        ],
+    )
 
     total_early_reflection = total_early_reflections(h_spl, v_spl)
 
