@@ -24,7 +24,7 @@
     "slope_estimated_inroom": -6.0,
     "smooth_measurements": true,
     "smooth_window_size": 7,
-    "smooth_order": 3,
+    "smooth_order": 5,
     "MAX_NUMBER_PEQ": 9,
     "MAX_STEPS_FREQ": 6,
     "MAX_STEPS_DBGAIN": 6,
@@ -33,6 +33,6 @@
     "MIN_DBGAIN": 0.5,
     "MAX_DBGAIN": 8,
     "MIN_Q": 0.05,
-    "MAX_Q": 6,
+    "MAX_Q": 5.0,
     "second_optimiser": false
 }
