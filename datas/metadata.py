@@ -4939,9 +4939,19 @@ speakers_info = {
         "price": "9000",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac",
+        "default_measurement": "eac-v1-short-port",
         "measurements": {
-            "eac": {
+            "eac-v1-short-port": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20220501",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_reference_1_meta/",
+                    "yt": "https://youtu.be/4hyKx9GiB8o",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-reference-1-meta-bookshelf-speaker-review-by-erins-audio-corner.33666/",
+                },
+            },
+            "eac-v1-long-port": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review_published": "20220501",
@@ -5776,16 +5786,23 @@ speakers_info = {
             },
         },
     },
-    "Monoprice Encore B6": {
+    "Monoprice Monolith Encore B6": {
         "brand": "Monoprice",
-        "model": "Encore B6",
+        "model": "Monolith Encore B6",
         "type": "passive",
         "price": "360",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "eac",
+        "default_measurement": "eac-v1-20211206",
+        #        "default_measurement": "eac-v2-20220507",
         "measurements": {
-            "eac": {
+            #            "eac-v2-2022057": {
+            #                "origin": "ErinsAudioCorner",
+            #                "format": "klippel",
+            #                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_b6/",
+            #                "review_published": "20220507",
+            #            },
+            "eac-v1-20211206": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_b6/",
@@ -5793,6 +5810,40 @@ speakers_info = {
             },
         },
     },
+    #    "Monoprice Monolith Encore C6": {
+    #        "brand": "Monoprice",
+    #        "model": "Monolith Encore C6",
+    #        "type": "passive",
+    #        "price": "250",
+    #        "amount": "each",
+    #        "shape": "center",
+    #        "default_measurement": "eac",
+    #        "measurements": {
+    #            "eac": {
+    #                "origin": "ErinsAudioCorner",
+    #                "format": "klippel",
+    #                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_c6/",
+    #                "review_published": "20220507",
+    #            },
+    #        },
+    #    },
+    #    "Monoprice Monolith Encore T6": {
+    #        "brand": "Monoprice",
+    #        "model": "Monolith Encore T6",
+    #        "type": "passive",
+    #        "price": "800",
+    #        "amount": "both",
+    #        "shape": "floorstanders",
+    #        "default_measurement": "eac",
+    #        "measurements": {
+    #            "eac": {
+    #                "origin": "ErinsAudioCorner",
+    #                "format": "klippel",
+    #                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_t6/",
+    #                "review_published": "20220507",
+    #            },
+    #        },
+    #    },
     "Monoprice MM-3": {
         "brand": "Monoprice",
         "model": "MM-3",
@@ -7004,6 +7055,23 @@ speakers_info = {
                 "format": "princeton",
                 "review": "https://www.princeton.edu/3D3A/Directivity.html",
                 "review_published": "20151001",
+            },
+        },
+    },
+    "Polk Audio Signature Elite ES20": {
+        "brand": "Polk Audio",
+        "model": "Signature Elite ES20",
+        "type": "passive",
+        "price": "349",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/polk-signature-elite-es20-review-bookshelf-speaker.33834/",
+                "review_published": "20220510",
             },
         },
     },

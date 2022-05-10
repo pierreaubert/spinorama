@@ -1,0 +1,13 @@
+Polk ES200 APO EQ Score 96000Hz
+May102022-182432
+
+Preamp: -2.7 dB
+
+Filter 1: ON HPQ Fc 46.64,    0.00,    1.32
+Filter 2: ON PK Fc 104.14,    -1.17,    0.95
+Filter 3: ON PK Fc 637.31,    -3.23,    4.89
+Filter 4: ON PK Fc 1012.22,    -1.88,    4.85
+Filter 5: ON PK Fc 2155.62,    1.81,    0.67
+Filter 6: ON PK Fc 3534.42,    -1.79,    4.99
+Filter 7: ON PK Fc 6251.80,    -1.61,    0.75
+Filter 8: ON PK Fc 8464.23,    2.20,    4.41
