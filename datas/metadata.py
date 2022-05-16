@@ -928,6 +928,23 @@ speakers_info = {
             },
         },
     },
+    "Bowers & Wilkins Formation Flex": {
+        "brand": "Bowers & Wilkins",
+        "model": "Formation Flex",
+        "type": "active",
+        "price": "500",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-formation-flex-review-speaker.33995/",
+                "review_published": "20220516",
+            },
+        },
+    },
     "Cambridge Soundworks Model Six": {
         "brand": "Cambridge Soundworks",
         "model": "Model Six",
