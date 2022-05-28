@@ -3963,14 +3963,14 @@ speakers_info = {
         "amount": "pair",
         "default_measurement": "vendor",
         "measurements": {
-#            "eac": {
-#                "origin": "ErinsAudioCorner",
-#                "format": "klippel",
-#                "reviews": {
-#                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_4305p/",
-#                },
-#                "review_published": "20220506",
-#            },
+            #            "eac": {
+            #                "origin": "ErinsAudioCorner",
+            #                "format": "klippel",
+            #                "reviews": {
+            #                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_4305p/",
+            #                },
+            #                "review_published": "20220506",
+            #            },
             "vendor": {
                 "origin": "Vendors-JBL",
                 "website": "www.jbl.com",
