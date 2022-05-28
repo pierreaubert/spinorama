@@ -350,10 +350,18 @@ def total_early_reflections2(
     if method == "corrected":
         # 3+3+10+19+7 = 42
         # spl = 105.0 + 20.0 * np.log10((3*floor+3*ceiling+10*side+19*rear+7*front)/42.0)
-        spl = 105.0 + 20.0 * np.log10(np.sqrt((floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0))
+        spl = 105.0 + 20.0 * np.log10(
+            np.sqrt(
+                (floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0
+            )
+        )
     elif method == "standard":
         # 3+3+10+3+7 = 26
-        spl = 105.0 + 20.0 * np.log10(np.sqrt((floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0))
+        spl = 105.0 + 20.0 * np.log10(
+            np.sqrt(
+                (floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0
+            )
+        )
     else:
         logger.fatal("method is unknown {}".format(method))
     return pd.DataFrame({"dB": spl})
@@ -435,7 +443,8 @@ def early_reflections(
         front_wall_bounce=front_wall_bounce,
         side_wall_bounce=side_wall_bounce,
         rear_wall_bounce=rear_wall_bounce,
-        method=method)
+        method=method,
+    )
     # total_early_reflection = total_early_reflections(h_spl, v_spl, method=method)
 
     early_reflection = pd.DataFrame(

@@ -49,16 +49,18 @@ class SpinoramaSpinoramaTests(unittest.TestCase):
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt"
         )
         # computed graphs
-        self.computed_spin_unmelted = compute_cea2034(self.splH, self.splV, method='standard')
+        self.computed_spin_unmelted = compute_cea2034(
+            self.splH, self.splV, method="standard"
+        )
         self.computed_spin = graph_melt(self.computed_spin_unmelted)
-        
 
     def test_validate_cea2034(self):
         for measurement in [
             "On Axis",
             "Listening Window",
             "Sound Power",
-            'Early Reflections']:
+            "Early Reflections",
+        ]:
             # from klippel
             reference = self.spin.loc[
                 self.spin["Measurements"] == measurement
@@ -76,7 +78,7 @@ class SpinoramaSpinoramaTests(unittest.TestCase):
             # print(computed.dB - reference.dB, delta)
             # TODO(pierreaubert): that's a bit too high
             tolerance = 0.0001
-            if measurement == 'Early Reflections':
+            if measurement == "Early Reflections":
                 # see here for explanations
                 # https://www.audiosciencereview.com/forum/index.php?threads/spinorama-also-known-as-cta-cea-2034-but-that-sounds-dull-apparently.10862/
                 tolerance = 1.0
@@ -131,11 +133,9 @@ class SpinoramaEarlyReflectionsTests(unittest.TestCase):
             # and should be equal or close in dB
             # TODO(pierreaubert): that's too high
             tolerance = 0.01
-            if measurement == 'Total Early Reflection':
+            if measurement == "Total Early Reflection":
                 tolerance = 1
-            self.assertLess(
-                (reference.dB-computed.dB).abs().max(), tolerance
-            )
+            self.assertLess((reference.dB - computed.dB).abs().max(), tolerance)
 
 
 class SpinoramaVerticalReflectionsTests(unittest.TestCase):
