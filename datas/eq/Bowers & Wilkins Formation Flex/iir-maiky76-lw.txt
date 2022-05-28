@@ -1,0 +1,13 @@
+B&W Formation Flex APO EQ LW 96000Hz
+May162022-103930
+
+Preamp: -3 dB
+
+Filter 1: ON HPQ Fc 56.46,    0.00,    1.35
+Filter 2: ON PK Fc 118.83,    -1.26,    1.64
+Filter 3: ON PK Fc 625.50,    -1.82,    1.42
+Filter 4: ON PK Fc 1298.24,    -1.20,    4.89
+Filter 5: ON PK Fc 2102.22,    3.24,    3.93
+Filter 6: ON PK Fc 3860.80,    -2.46,    1.62
+Filter 7: ON PK Fc 6314.20,    -2.66,    3.59
+Filter 8: ON PK Fc 13434.58,    -2.85,    4.27

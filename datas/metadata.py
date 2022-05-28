@@ -1828,6 +1828,23 @@ speakers_info = {
             },
         },
     },
+    "Elac Carina BS243.4": {
+        "brand": "Elac",
+        "model": "Carina BS243.4",
+        "type": "passive",
+        "price": "1000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/elac-carina-bs243-4-review-bookshelf-speaker.34398/",
+                "review_published": "20220528",
+            },
+        },
+    },
     "Elac Uni-Fi 2.0 UB52": {
         "brand": "Elac",
         "model": "Uni-Fi 2.0 UB52",
@@ -3946,6 +3963,14 @@ speakers_info = {
         "amount": "pair",
         "default_measurement": "vendor",
         "measurements": {
+#            "eac": {
+#                "origin": "ErinsAudioCorner",
+#                "format": "klippel",
+#                "reviews": {
+#                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_4305p/",
+#                },
+#                "review_published": "20220506",
+#            },
             "vendor": {
                 "origin": "Vendors-JBL",
                 "website": "www.jbl.com",
