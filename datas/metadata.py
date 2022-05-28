@@ -928,6 +928,23 @@ speakers_info = {
             },
         },
     },
+    "Bowers & Wilkins CWM7.3 S2": {
+        "brand": "Bowers & Wilkins",
+        "model": "CWM7.3 S2",
+        "type": "passive",
+        "price": "2100",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/bw_cwm73s2/",
+                "review_published": "20220514",
+            },
+        },
+    },
     "Bowers & Wilkins Formation Flex": {
         "brand": "Bowers & Wilkins",
         "model": "Formation Flex",
@@ -2117,6 +2134,23 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/fluid-audio-fx50-review-active-speaker.19881/",
+            },
+        },
+    },
+    "Focal 1000 IWLCR6": {
+        "brand": "Focal",
+        "model": "1000 IWLCR6",
+        "type": "passive",
+        "price": "2700",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/focal_1000_iwlcr6/",
+                "review_published": "20220514",
             },
         },
     },
@@ -3963,14 +3997,14 @@ speakers_info = {
         "amount": "pair",
         "default_measurement": "vendor",
         "measurements": {
-#            "eac": {
-#                "origin": "ErinsAudioCorner",
-#                "format": "klippel",
-#                "reviews": {
-#                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_4305p/",
-#                },
-#                "review_published": "20220506",
-#            },
+            #            "eac": {
+            #                "origin": "ErinsAudioCorner",
+            #                "format": "klippel",
+            #                "reviews": {
+            #                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_4305p/",
+            #                },
+            #                "review_published": "20220506",
+            #            },
             "vendor": {
                 "origin": "Vendors-JBL",
                 "website": "www.jbl.com",
@@ -4611,6 +4645,23 @@ speakers_info = {
                 "reviews": {
                     "kef": "https://www.shop.us.kef.com/pub/media/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
                 },
+            },
+        },
+    },
+    "KEF Ci3160RL-THX": {
+        "brand": "KEF",
+        "model": "Ci3160RL-THX",
+        "type": "passive",
+        "price": "1400",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/kef_ci3160rl-thx/",
+                "review_published": "20220514",
             },
         },
     },
@@ -5301,6 +5352,30 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/klipsch-rp-600m-speaker-review.12138/",
+                "review_published": "20200519",
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_600m_i/",
+                "review_published": "20220522",
+            },
+        },
+    },
+    "Klipsch RP-600M II": {
+        "brand": "Klipsch",
+        "model": "RP-600M II",
+        "type": "passive",
+        "price": "670",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_600m_ii/",
+                "review_published": "20220522",
             },
         },
     },
@@ -5624,6 +5699,23 @@ speakers_info = {
             },
         },
     },
+    "Martin Logan 5XW": {
+        "brand": "Martin Logan",
+        "model": "5XW",
+        "type": "passive",
+        "price": "3000",
+        "shape": "inwall",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/martin_logan_5xw-/",
+                "review_published": "20220514",
+            },
+        },
+    },
     "MartinLogan Motion 35XTi": {
         "brand": "MartinLogan",
         "model": "Motion 35XTi",
@@ -5772,6 +5864,23 @@ speakers_info = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/micca-rb42-bookshelf-speaker-review.11267/",
                 },
                 "review_published": "20200204",
+            },
+        },
+    },
+    "Miller & Kreisel IW150": {
+        "brand": "Miller & Kreisel",
+        "model": "IW150",
+        "type": "passive",
+        "price": "2000",
+        "shape": "inwall",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/m_and_k_s150/",
+                "review_published": "20220514",
             },
         },
     },
@@ -8176,10 +8285,33 @@ speakers_info = {
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-w553l-measurements-in-wall-speaker.32072/",
                 "review_published": "20220323",
             },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/revel_w553l/",
+                "review_published": "20220323",
+            },
             "vendor": {
                 "origin": "Vendors-Revel",
                 "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
+            },
+        },
+    },
+    "Revel W893": {
+        "brand": "Revel",
+        "model": "W893",
+        "type": "passive",
+        "shape": "inwall",
+        "price": "1100",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/revel_w893/",
+                "review_published": "20220514",
             },
         },
     },

@@ -1,16 +1,16 @@
 EQ for Elac Carina BS243.4 computed from ASR data
-Preference Score 5.3 with EQ 6.0
+Preference Score 5.2 with EQ 6.0
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-05-28-20:38:14
+Dated: 2022-05-29-00:22:05
 
-Preamp: -4.7 dB
+Preamp: -4.4 dB
 
-Filter  1: ON PK Fc  2201 Hz Gain +4.25 dB Q 1.02
-Filter  2: ON PK Fc  3620 Hz Gain -3.04 dB Q 5.78
-Filter  3: ON PK Fc   436 Hz Gain +1.55 dB Q 1.38
-Filter  4: ON PK Fc  1934 Hz Gain -2.76 dB Q 4.80
-Filter  5: ON PK Fc 12950 Hz Gain +3.56 dB Q 0.90
-Filter  6: ON PK Fc   135 Hz Gain -0.82 dB Q 2.06
-Filter  7: ON PK Fc  2808 Hz Gain +1.71 dB Q 5.99
-Filter  8: ON PK Fc  1144 Hz Gain +1.24 dB Q 5.93
-Filter  9: ON PK Fc  2316 Hz Gain -1.05 dB Q 4.26
+Filter  1: ON PK Fc  2489 Hz Gain +4.09 dB Q 2.03
+Filter  2: ON PK Fc  3644 Hz Gain -2.35 dB Q 5.99
+Filter  3: ON PK Fc   507 Hz Gain +1.58 dB Q 0.70
+Filter  4: ON PK Fc 12395 Hz Gain +2.91 dB Q 1.00
+Filter  5: ON PK Fc  2223 Hz Gain -1.67 dB Q 5.96
+Filter  6: ON PK Fc  2822 Hz Gain +1.49 dB Q 5.91
+Filter  7: ON PK Fc  1195 Hz Gain +1.75 dB Q 5.28
+Filter  8: ON PK Fc   143 Hz Gain -0.90 dB Q 1.31
+Filter  9: ON PK Fc  2512 Hz Gain -1.12 dB Q 5.95
