@@ -18,12 +18,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Usage:
 generate_graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
-  [--force] [--type=<ext>] [--log-level=<level>]\
+  [--force] [--smoke-test=<algo>] [--type=<ext>] [--log-level=<level>]\
   [--origin=<origin>]  [--speaker=<speaker>] [--mversion=<mversion>] [--brand=<brand>]\
   [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] [--update-cache]
 
 Options:
   -h|--help           display usage()
+  --smoke-test=<algo> run a few speakers only (choice are random or default)
   --width=<width>     width size in pixel
   --height=<height>   height size in pixel
   --force             force regeneration of all graphs, by default only generate new ones
@@ -40,6 +41,7 @@ Options:
 """
 import glob
 import os
+import random
 import sys
 from typing import List, Mapping, Tuple
 
@@ -330,6 +332,19 @@ if __name__ == "__main__":
 
     # TODO remove it and replace by iterating over metadatas
     speakerlist = get_speaker_list("./datas/measurements")
+    if args["--smoke-test"] is not None:
+        if args["--smoke-test"] == "random":
+            speakerlist = set(random.sample(list(speakerlist), 15))
+        else:
+            speakerlist = set(
+                [
+                    "Genelec 8030C",
+                    "KEF LS50",
+                    "KRK Systems Classic 5",
+                    "Verdant Audio Bambusa MG 1",
+                ]
+            )
+        print(speakerlist)
 
     force = args["--force"]
     ptype = None
