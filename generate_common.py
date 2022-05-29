@@ -133,7 +133,7 @@ CACHE_DIR = ".cache"
 
 def cache_key(name):
     # 256 partitions, use hashlib for stable hash
-    return "{:2s}".format(md5(name.encode('utf-8')).hexdigest()[0:2])
+    return "{:2s}".format(md5(name.encode("utf-8")).hexdigest()[0:2])
 
 
 def cache_match(key, name):

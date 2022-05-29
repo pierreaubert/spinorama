@@ -153,16 +153,20 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
         slope /= math.log10(freq[last_freq]) - math.log10(freq[first_freq])
         intercept = current_curve[first_freq] - slope * math.log10(freq[first_freq])
         flat = slope * math.log10(freq[first_freq])
-        line = [
-            flat if i < first_freq else slope * math.log10(f)
-            for i, f in enumerate(freq)
-        ] + intercept
+        line = np.array(
+            [
+                flat if i < first_freq else slope * math.log10(f)
+                for i, f in enumerate(freq)
+            ]
+            + intercept
+        )
+        avg = np.mean(line)
+        line -= avg
         # if current_curve_name == 'Listening Window':
         #    line = [flat for f in freq[:freq_1k5]] + \
         #        [slope*math.log10(f)-0.25 for f in freq[freq_1k5, freq_4k]] + \
         #        [slope*math.log10(f)-1 for f in freq[freq_4k:]]
         #    line += intercept
-
         logger.debug(
             "Slope {} Intercept {} R {} P {} err {}".format(
                 slope, intercept, r_value, p_value, std_err
