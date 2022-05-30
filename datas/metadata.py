@@ -217,13 +217,20 @@ speakers_info = {
         "price": "1500",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac",
+        "default_measurement": "eac-v2-20220526",
         "measurements": {
-            "eac": {
+            "eac-v1-20220430": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1723_thx_s/",
                 "review_published": "20220430",
+                "notes": "This version had a bad tweeter.",
+            },
+            "eac-v2-20220526": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1723_thx_s/",
+                "review_published": "20220526",
             },
         },
     },
@@ -3995,16 +4002,16 @@ speakers_info = {
         "price": "2200",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "vendor",
+        "default_measurement": "eac",
         "measurements": {
-            #            "eac": {
-            #                "origin": "ErinsAudioCorner",
-            #                "format": "klippel",
-            #                "reviews": {
-            #                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_4305p/",
-            #                },
-            #                "review_published": "20220506",
-            #            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_4305p/",
+                },
+                "review_published": "20220506",
+            },
             "vendor": {
                 "origin": "Vendors-JBL",
                 "website": "www.jbl.com",
@@ -5369,13 +5376,21 @@ speakers_info = {
         "price": "670",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac",
+        "default_measurement": "eac-v1-nogrille",
         "measurements": {
-            "eac": {
+            "eac-v1-nogrille": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_600m_ii/",
                 "review_published": "20220522",
+                "notes": "This measurement is without a grille",
+            },
+            "eac-v1-grilleon": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_600m_ii/",
+                "review_published": "20220522",
+                "notes": "This measurement is with grille on",
             },
         },
     },
@@ -5944,15 +5959,14 @@ speakers_info = {
         "price": "360",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "eac-v1-20211206",
-        #        "default_measurement": "eac-v2-20220507",
+        "default_measurement": "eac-v2-20220507",
         "measurements": {
-            #            "eac-v2-2022057": {
-            #                "origin": "ErinsAudioCorner",
-            #                "format": "klippel",
-            #                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_b6/",
-            #                "review_published": "20220507",
-            #            },
+            "eac-v2-20220507": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_b6/",
+                "review_published": "20220507",
+            },
             "eac-v1-20211206": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
@@ -5961,40 +5975,40 @@ speakers_info = {
             },
         },
     },
-    #    "Monoprice Monolith Encore C6": {
-    #        "brand": "Monoprice",
-    #        "model": "Monolith Encore C6",
-    #        "type": "passive",
-    #        "price": "250",
-    #        "amount": "each",
-    #        "shape": "center",
-    #        "default_measurement": "eac",
-    #        "measurements": {
-    #            "eac": {
-    #                "origin": "ErinsAudioCorner",
-    #                "format": "klippel",
-    #                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_c6/",
-    #                "review_published": "20220507",
-    #            },
-    #        },
-    #    },
-    #    "Monoprice Monolith Encore T6": {
-    #        "brand": "Monoprice",
-    #        "model": "Monolith Encore T6",
-    #        "type": "passive",
-    #        "price": "800",
-    #        "amount": "both",
-    #        "shape": "floorstanders",
-    #        "default_measurement": "eac",
-    #        "measurements": {
-    #            "eac": {
-    #                "origin": "ErinsAudioCorner",
-    #                "format": "klippel",
-    #                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_t6/",
-    #                "review_published": "20220507",
-    #            },
-    #        },
-    #    },
+    "Monoprice Monolith Encore C6": {
+        "brand": "Monoprice",
+        "model": "Monolith Encore C6",
+        "type": "passive",
+        "price": "250",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_c6/",
+                "review_published": "20220507",
+            },
+        },
+    },
+    "Monoprice Monolith Encore T6": {
+        "brand": "Monoprice",
+        "model": "Monolith Encore T6",
+        "type": "passive",
+        "price": "800",
+        "amount": "both",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_t6/",
+                "review_published": "20220507",
+            },
+        },
+    },
     "Monoprice MM-3": {
         "brand": "Monoprice",
         "model": "MM-3",

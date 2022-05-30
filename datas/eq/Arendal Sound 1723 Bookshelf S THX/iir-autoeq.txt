@@ -1,15 +1,16 @@
 EQ for Arendal Sound 1723 Bookshelf S THX computed from ErinsAudioCorner data
-Preference Score 3.9 with EQ 5.2
+Preference Score 4.8 with EQ 5.9
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-05-01-08:52:52
+Dated: 2022-05-29-22:55:46
 
-Preamp: -1.1 dB
+Preamp: -0.2 dB
 
-Filter  1: ON PK Fc   155 Hz Gain -2.12 dB Q 1.45
-Filter  2: ON PK Fc 11485 Hz Gain -3.87 dB Q 0.77
-Filter  3: ON PK Fc  6928 Hz Gain +1.37 dB Q 2.92
-Filter  4: ON PK Fc 10784 Hz Gain +0.87 dB Q 3.00
-Filter  5: ON PK Fc 10274 Hz Gain -0.59 dB Q 0.35
-Filter  6: ON PK Fc 10417 Hz Gain +0.67 dB Q 2.98
-Filter  7: ON PK Fc  1616 Hz Gain +1.08 dB Q 2.65
-Filter  8: ON PK Fc  5986 Hz Gain +0.63 dB Q 3.00
+Filter  1: ON PK Fc 12685 Hz Gain -3.13 dB Q 0.26
+Filter  2: ON PK Fc   162 Hz Gain -1.79 dB Q 1.28
+Filter  3: ON PK Fc 10159 Hz Gain -0.62 dB Q 5.95
+Filter  4: ON PK Fc 12193 Hz Gain +0.90 dB Q 5.98
+Filter  5: ON PK Fc  4699 Hz Gain +0.65 dB Q 3.87
+Filter  6: ON PK Fc   128 Hz Gain -0.52 dB Q 5.65
+Filter  7: ON PK Fc   160 Hz Gain +0.50 dB Q 5.91
+Filter  8: ON PK Fc  5798 Hz Gain +0.52 dB Q 5.80
+Filter  9: ON PK Fc  7590 Hz Gain -0.50 dB Q 3.88

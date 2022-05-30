@@ -8,7 +8,7 @@
     "full_biquad_optim": false,
     "elastic": 0.8,
     "fs": 48000,
-    "freq_reg_min": 100,
+    "freq_reg_min": 40,
     "freq_reg_max": 16000,
     "freq_mean_min": 100,
     "freq_mean_max": 300,
@@ -31,8 +31,8 @@
     "MAX_STEPS_Q": 6,
     "maxiter": 500,
     "MIN_DBGAIN": 0.5,
-    "MAX_DBGAIN": 8,
+    "MAX_DBGAIN": 4.0,
     "MIN_Q": 0.05,
-    "MAX_Q": 6,
+    "MAX_Q": 3.0,
     "second_optimiser": false
 }
