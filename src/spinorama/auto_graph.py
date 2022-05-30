@@ -59,17 +59,19 @@ def graph_eq(freq, peq, domain, title):
     return traces
 
 
-def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target):
+def graph_eq_compare(
+    freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target
+):
     df = pd.DataFrame(
         {
             "Freq": freq,
             "autoEQ": peq_build(freq, auto_peq),
-            "target": target-np.mean(target),
+            "target": target - np.mean(target),
         }
     )
     for i, ati in enumerate(auto_target_interp):
-        df['line{}'.format(i)] = ati
-        
+        df["line{}".format(i)] = ati
+
     traces = []
     for i, key in enumerate(df.keys()):
         if key != "Freq":
