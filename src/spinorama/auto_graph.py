@@ -59,14 +59,17 @@ def graph_eq(freq, peq, domain, title):
     return traces
 
 
-def graph_eq_compare(freq, auto_peq, domain, speaker_name, speaker_origin, target):
+def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target):
     df = pd.DataFrame(
         {
             "Freq": freq,
             "autoEQ": peq_build(freq, auto_peq),
-            "target": target,
+            "target": target-np.mean(target),
         }
     )
+    for i, ati in enumerate(auto_target_interp):
+        df['line{}'.format(i)] = ati
+        
     traces = []
     for i, key in enumerate(df.keys()):
         if key != "Freq":
@@ -120,7 +123,7 @@ def graph_results(
     target = -(auto_target[0] - auto_target_interp[0])
     # print('target {} {}'.format(np.min(target), np.max(target)))
     g_eq_full = graph_eq_compare(
-        freq, auto_peq, domain, speaker_name, speaker_origin, target
+        freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target
     )
 
     # compare the 2 corrected curves

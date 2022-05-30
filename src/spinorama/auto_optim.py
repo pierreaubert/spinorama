@@ -171,6 +171,10 @@ def optim_compute_auto_target(
         smoothed = [savitzky_golay(d, window_size, order) for d in diff]
         logger.warning(smoothed)
         diff = smoothed
+    avg = 0.0
+    for i, curve in enumerate(optim_config.get("curve_names")):
+        avg = np.mean(diff[i])
+        diff[i] -= avg
     delta = [diff[i] + peq_freq for i, _ in enumerate(target)]
     return delta
 

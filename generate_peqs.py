@@ -108,7 +108,7 @@ from spinorama.auto_optim import optim_multi_steps
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
-VERSION = "0.15"
+VERSION = "0.16"
 
 
 def optim_find_peq(

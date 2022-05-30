@@ -88,7 +88,8 @@ def get_freq(df_speaker_data, optim_config):
     # freq
     local_target = []
     for curve in curves:
-        local_target.append(local_df.loc[selector, curve].values)
+        data = local_df.loc[selector, curve].values
+        local_target.append(data)
 
     # print(local_df, local_freq, local_target)
     return local_df, local_freq, local_target
@@ -160,8 +161,6 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
             ]
             + intercept
         )
-        avg = np.mean(line)
-        line -= avg
         # if current_curve_name == 'Listening Window':
         #    line = [flat for f in freq[:freq_1k5]] + \
         #        [slope*math.log10(f)-0.25 for f in freq[freq_1k5, freq_4k]] + \
