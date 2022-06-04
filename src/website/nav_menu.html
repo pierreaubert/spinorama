@@ -75,6 +75,7 @@
   ${filterShape()}
   ${filterPower()}
   ${filterBrand()}
+  ${filterPrice()}
 </%def>
 
 <%def name="filterQuality()">
@@ -82,7 +83,7 @@
   <div class="control has-icons-left">
     <div class="select">
       <select id="selectQuality">
-        <option value="">Quality</option>
+        <option value="">Measurements Quality</option>
         <option value="high">High</option>
         <option value="medium">Medium</option>
         <option value="low">Low</option>
@@ -159,6 +160,28 @@
       </select>
     </div>
     <div class="icon is-left"><i class="fas fa-copyright"></i></div>
+  </div>
+</div>
+</%def>
+
+<%def name="filterPrice()">
+<div class="dropdown-item">
+  <div class="control has-icons-left">
+    <div class="select">
+      <select id="selectPrice">
+        <option value="">Price (each)</option>
+        <option value="p100">&lt;100$</option>
+        <option value="p200">100$-200$</option>
+        <option value="p200">200$-300$</option>
+        <option value="p300">200$-300$</option>
+        <option value="p500">300$-500$</option>
+        <option value="p1000">500$-1000$</option>
+        <option value="p2000">1000$-2000$</option>
+        <option value="p5000">2000$-5000$</option>
+        <option value="p5000p">&gt;5000$</option>
+      </select>
+    </div>
+    <div class="icon is-left"><i class="fas fa-dollar-sign"></i></div>
   </div>
 </div>
 </%def>
