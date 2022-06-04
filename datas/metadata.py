@@ -2129,6 +2129,23 @@ speakers_info = {
             },
         },
     },
+    "Fluid Audio Image 2": {
+        "brand": "Fluid Audio",
+        "model": "Image 2",
+        "type": "active",
+        "price": "3800",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/fluid-audio-image-2-review-monitor-speaker.34616/",
+                "review_published": "20220604",
+            },
+        },
+    },
     "Fluid Audio FX50": {
         "brand": "Fluid Audio",
         "model": "FX50",
