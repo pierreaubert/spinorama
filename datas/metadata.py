@@ -2158,6 +2158,7 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/fluid-audio-fx50-review-active-speaker.19881/",
+                "review_published": "20210128",
             },
         },
     },

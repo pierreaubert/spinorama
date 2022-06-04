@@ -3,7 +3,8 @@
     "bulma": "^0.9.3",
     "fuse": "^0.4.0",
     "handlebars": "^4.7.7",
-    "plotly": "^1.0.6"
+    "plotly": "^1.0.6",
+    "selenium-webdriver": "^4.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",

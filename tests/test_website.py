@@ -1,4 +1,4 @@
-# 
+#
 import platform
 import os
 import sys
@@ -10,22 +10,26 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 
-PROD="https://https://pierreaubert.github.io/spinorama"
-DEV="https://spinorama.internet-box.ch"
-COMPARE="/compare.html?origin0=Vendors-Neumann&measurement=CEA2034&origin1=ErinsAudioCorner&speaker1=Focal+Solo6+Be"
+PROD = "https://https://pierreaubert.github.io/spinorama"
+DEV = "https://spinorama.internet-box.ch"
+COMPARE = "/compare.html?origin0=Vendors-Neumann&measurement=CEA2034&origin1=ErinsAudioCorner&speaker1=Focal+Solo6+Be"
+
 
 def systemcheck():
-    current_os = os.getenv('OSTYPE')
-    current_display = os.getenv('DISPLAY')
+    current_os = os.getenv("OSTYPE")
+    current_display = os.getenv("DISPLAY")
 
-    if (platform.system() == 'Linux' or (current_os is not None and current_os == 'linux-gnu')) and (current_display is None or len(current_display) == 0):
+    if (
+        platform.system() == "Linux"
+        or (current_os is not None and current_os == "linux-gnu")
+    ) and (current_display is None or len(current_display) == 0):
         return False
 
     return True
-    
-@pytest.mark.skipif(not systemcheck(), reason='headless')
-class SpinoramaWebsiteTests(unittest.TestCase):
 
+
+@pytest.mark.skipif(not systemcheck(), reason="headless")
+class SpinoramaWebsiteTests(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome()
 
@@ -37,7 +41,6 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         title = self.driver.title
         assert "collection" in title
 
-    
     def test_index_search(self):
         self.driver.get(DEV)
         self.driver.implicitly_wait(2)
@@ -55,7 +58,7 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         assert gene is not None
         is_hidden = "hidden" in gene.get_attribute("class")
         assert is_hidden
-        
+
         search_box.clear()
         search_box.send_keys("8361A")
         gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
@@ -67,6 +70,7 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
         assert gene is not None
         assert not "hidden" in gene.get_attribute("class")
+
 
 if __name__ == "__main__":
     if systemcheck():
