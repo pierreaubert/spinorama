@@ -1,76 +1,73 @@
+# 
+import platform
+import os
+import sys
+import unittest
+
+import pytest
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
+
 PROD="https://https://pierreaubert.github.io/spinorama"
 DEV="https://spinorama.internet-box.ch"
+COMPARE="/compare.html?origin0=Vendors-Neumann&measurement=CEA2034&origin1=ErinsAudioCorner&speaker1=Focal+Solo6+Be"
 
+def systemcheck():
+    current_os = os.getenv('OSTYPE')
+    current_display = os.getenv('DISPLAY')
 
-def test_spinorama_index_smoke(driver, env):
+    if (platform.system() == 'Linux' or (current_os is not None and current_os == 'linux-gnu')) and (current_display is None or len(current_display) == 0):
+        return False
 
-    if env == "prod":
-        driver.get(PROD)
-    else:
-        driver.get(DEV)
+    return True
+    
+@pytest.mark.skipif(not systemcheck(), reason='headless')
+class SpinoramaWebsiteTests(unittest.TestCase):
 
-    title = driver.title
-    assert "collection" in title
+    def setUp(self):
+        self.driver = webdriver.Chrome()
 
-    driver.implicitly_wait(0.5)
+    def tearDown(self):
+        self.driver.quit()
+
+    def test_index_smoke(self):
+        self.driver.get(DEV)
+        title = self.driver.title
+        assert "collection" in title
 
     
-def test_spinorama_index_search(driver, env):
+    def test_index_search(self):
+        self.driver.get(DEV)
+        self.driver.implicitly_wait(2)
 
-    if env == "prod":
-        driver.get(PROD)
-    else:
-        driver.get(DEV)
+        search_box = self.driver.find_element(by=By.ID, value="searchInput")
 
-    driver.implicitly_wait(2)
-
-    search_box = driver.find_element(by=By.ID, value="searchInput")
-
-    search_box.clear()
-    search_box.send_keys("elac")
-    elac = driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
-    assert elac is not None
-    assert elac.is_displayed()
-    is_hidden = "hidden" in elac.get_attribute("class")
-    assert not is_hidden
-    gene = driver.find_element(by=By.ID, value="Genelec-8361A")
-    assert gene is not None
-    is_hidden = "hidden" in gene.get_attribute("class")
-    assert is_hidden
+        search_box.clear()
+        search_box.send_keys("elac")
+        elac = self.driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
+        assert elac is not None
+        assert elac.is_displayed()
+        is_hidden = "hidden" in elac.get_attribute("class")
+        assert not is_hidden
+        gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
+        assert gene is not None
+        is_hidden = "hidden" in gene.get_attribute("class")
+        assert is_hidden
         
-    search_box.clear()
-    search_box.send_keys("8361A")
-    gene = driver.find_element(by=By.ID, value="Genelec-8361A")
-    assert gene is not None
-    assert not "hidden" in gene.get_attribute("class")
+        search_box.clear()
+        search_box.send_keys("8361A")
+        gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
+        assert gene is not None
+        assert not "hidden" in gene.get_attribute("class")
 
-    search_box.clear()
-    search_box.send_keys("8361")
-    gene = driver.find_element(by=By.ID, value="Genelec-8361A")
-    assert gene is not None
-    assert not "hidden" in gene.get_attribute("class")
-
-
-def test_spinorama_compare_two(driver, env):
-
-    COMPARE="/compare.html?origin0=Vendors-Neumann&measurement=CEA2034&origin1=ErinsAudioCorner&speaker1=Focal+Solo6+Be"
-    
-    if env == "prod":
-        driver.get(PROD+COMPARE)
-    else:
-        driver.get(DEV+COMPARE)
-
-    driver.implicitly_wait(2)
-    
-
-    
+        search_box.clear()
+        search_box.send_keys("8361")
+        gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
+        assert gene is not None
+        assert not "hidden" in gene.get_attribute("class")
 
 if __name__ == "__main__":
-    driver = webdriver.Chrome()
-    test_spinorama_index_smoke(driver, env='dev')
-    test_spinorama_index_search(driver, env='dev')
-    test_spinorama_compare_two(driver, env='dev')
-    driver.quit()
+    if systemcheck():
+        unittest.main()
