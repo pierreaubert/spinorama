@@ -1,0 +1,494 @@
+{
+  "id": "76be403e-f0e7-4640-bb57-172127cd09ac",
+  "version": "2.0",
+  "name": "Spin1",
+  "url": "https://spinorama.internet-box.ch",
+  "tests": [{
+    "id": "e2dd5ed7-9acc-4452-9bed-195ff861dcb8",
+    "name": "test1",
+    "commands": [{
+      "id": "3587c7b9-683a-4bc6-b038-974734a169fd",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "8853face-60c3-456e-8c82-184f72b2d154",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1024x1280",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "78c7b280-a641-4c43-8569-eb1687285c89",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=ASR",
+      "targets": [
+        ["linkText=ASR", "linkText"],
+        ["css=#Fluid-Audio-Image-2 .card-footer-item", "css:finder"],
+        ["xpath=//a[contains(text(),'ASR')]", "xpath:link"],
+        ["xpath=//div[@id='Fluid-Audio-Image-2']/div/footer/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, 'speakers/Fluid%20Audio%20Image%202/ASR/index_asr.html')]", "xpath:href"],
+        ["xpath=//footer/a", "xpath:position"],
+        ["xpath=//a[contains(.,'ASR')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "3ce14b2f-3357-4e0d-8b78-9bbe06018d01",
+      "comment": "",
+      "command": "click",
+      "target": "css=#Elac-Carina-BS243-4 .card-footer-item",
+      "targets": [
+        ["css=#Elac-Carina-BS243-4 .card-footer-item", "css:finder"],
+        ["xpath=(//a[contains(text(),'ASR')])[2]", "xpath:link"],
+        ["xpath=//div[@id='Elac-Carina-BS243-4']/div/footer/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, 'speakers/Elac%20Carina%20BS243.4/ASR/index_asr.html')]", "xpath:href"],
+        ["xpath=//div[2]/div/footer/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "0afdcca4-4c5a-440f-ae67-2e96704a0192",
+      "comment": "",
+      "command": "click",
+      "target": "css=#Klipsch-RP-600M-II .card-footer-item:nth-child(1)",
+      "targets": [
+        ["css=#Klipsch-RP-600M-II .card-footer-item:nth-child(1)", "css:finder"],
+        ["xpath=(//a[contains(text(),'EAC (v1)')])[2]", "xpath:link"],
+        ["xpath=//div[@id='Klipsch-RP-600M-II']/div/footer/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, 'speakers/Klipsch%20RP-600M%20II/ErinsAudioCorner/index_eac-v1-nogrille.html')]", "xpath:href"],
+        ["xpath=//div[4]/div/footer/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c8147d50-cdcc-42ab-9eeb-81e6590d3415",
+      "comment": "",
+      "command": "select",
+      "target": "id=selectQuality",
+      "targets": [],
+      "value": "label=High"
+    }, {
+      "id": "43451dc3-ccd5-44a8-9bf0-3341498d4493",
+      "comment": "",
+      "command": "click",
+      "target": "css=#selectQuality > option:nth-child(2)",
+      "targets": [
+        ["css=#selectQuality > option:nth-child(2)", "css:finder"],
+        ["xpath=//option[@value='high']", "xpath:attributes"],
+        ["xpath=//select[@id='selectQuality']/option[2]", "xpath:idRelative"],
+        ["xpath=//option[2]", "xpath:position"],
+        ["xpath=//option[contains(.,'High')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "c78a34a0-b742-442d-807d-f6bc1a5ca61e",
+      "comment": "",
+      "command": "mouseDown",
+      "target": "id=sortBy",
+      "targets": [
+        ["id=sortBy", "id"],
+        ["css=#sortBy", "css:finder"],
+        ["xpath=//select[@id='sortBy']", "xpath:attributes"],
+        ["xpath=//div[@id='filters-dropdown-menu']/div/div[9]/div/div/select", "xpath:idRelative"],
+        ["xpath=//div[9]/div/div/select", "xpath:position"],
+        ["xpath=//select[contains(.,'\n        Score\n        Score with Subwoofer\n        Score with EQ\n        Score with EQ and Subwoofer\n        Date\n        Price ($$$)\n        F3 (Hz)\n        F6 (Hz)\n        Flatness (dB)\n        Sensitivity (dB)\n      ')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "5d3471cb-5d11-4b0b-9871-6e874fdb1239",
+      "comment": "",
+      "command": "mouseUp",
+      "target": "css=#Arendal-Sound-1723-Bookshelf-S-THX .card-content p:nth-child(1)",
+      "targets": [
+        ["css=#Arendal-Sound-1723-Bookshelf-S-THX .card-content p:nth-child(1)", "css:finder"],
+        ["xpath=//div[@id='Arendal-Sound-1723-Bookshelf-S-THX']/div/div[2]/div/p", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div[2]/div/p", "xpath:position"],
+        ["xpath=//p[contains(.,'Tonality: 4.8')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "32a53ad6-1b33-4a55-b075-fe95ed040ec5",
+      "comment": "",
+      "command": "click",
+      "target": "css=.fa-cog",
+      "targets": [
+        ["css=.fa-cog", "css:finder"],
+        ["xpath=//div[@id='search-bar']/div/div/div/button/span/i", "xpath:idRelative"],
+        ["xpath=//div/div/div/button/span/i", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "10e4fd72-2e85-4d96-acb1-7dadc6a13036",
+      "comment": "",
+      "command": "mouseDown",
+      "target": "id=sortBy",
+      "targets": [
+        ["id=sortBy", "id"],
+        ["css=#sortBy", "css:finder"],
+        ["xpath=//select[@id='sortBy']", "xpath:attributes"],
+        ["xpath=//div[@id='filters-dropdown-menu']/div/div[9]/div/div/select", "xpath:idRelative"],
+        ["xpath=//div[9]/div/div/select", "xpath:position"],
+        ["xpath=//select[contains(.,'\n        Score\n        Score with Subwoofer\n        Score with EQ\n        Score with EQ and Subwoofer\n        Date\n        Price ($$$)\n        F3 (Hz)\n        F6 (Hz)\n        Flatness (dB)\n        Sensitivity (dB)\n      ')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "c7db4da9-3101-4552-bf48-5de52591f8ee",
+      "comment": "",
+      "command": "mouseUp",
+      "target": "css=#Arendal-Sound-1723-Bookshelf-S-THX .content",
+      "targets": [
+        ["css=#Arendal-Sound-1723-Bookshelf-S-THX .content", "css:finder"],
+        ["xpath=//div[@id='Arendal-Sound-1723-Bookshelf-S-THX']/div/div[2]/div", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div[2]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "43d2766b-dcdc-4702-bf0d-4a9a69836d54",
+      "comment": "",
+      "command": "click",
+      "target": "css=.fa-cog",
+      "targets": [
+        ["css=.fa-cog", "css:finder"],
+        ["xpath=//div[@id='search-bar']/div/div/div/button/span/i", "xpath:idRelative"],
+        ["xpath=//div/div/div/button/span/i", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "4bed269a-701b-4a6e-bc9e-730657a54b00",
+      "comment": "",
+      "command": "mouseDown",
+      "target": "id=sortBy",
+      "targets": [
+        ["id=sortBy", "id"],
+        ["css=#sortBy", "css:finder"],
+        ["xpath=//select[@id='sortBy']", "xpath:attributes"],
+        ["xpath=//div[@id='filters-dropdown-menu']/div/div[9]/div/div/select", "xpath:idRelative"],
+        ["xpath=//div[9]/div/div/select", "xpath:position"],
+        ["xpath=//select[contains(.,'\n        Score\n        Score with Subwoofer\n        Score with EQ\n        Score with EQ and Subwoofer\n        Date\n        Price ($$$)\n        F3 (Hz)\n        F6 (Hz)\n        Flatness (dB)\n        Sensitivity (dB)\n      ')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "a7443ed9-3a6f-4808-a249-d26b79981c58",
+      "comment": "",
+      "command": "mouseUp",
+      "target": "css=#Arendal-Sound-1723-Bookshelf-S-THX .card-content p:nth-child(1)",
+      "targets": [
+        ["css=#Arendal-Sound-1723-Bookshelf-S-THX .card-content p:nth-child(1)", "css:finder"],
+        ["xpath=//div[@id='Arendal-Sound-1723-Bookshelf-S-THX']/div/div[2]/div/p", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div[2]/div/p", "xpath:position"],
+        ["xpath=//p[contains(.,'Tonality: 4.8')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "82df9796-194a-416b-8982-80c18ddc6a18",
+      "comment": "",
+      "command": "mouseDown",
+      "target": "id=selectBrand",
+      "targets": [
+        ["id=selectBrand", "id"],
+        ["css=#selectBrand", "css:finder"],
+        ["xpath=//select[@id='selectBrand']", "xpath:attributes"],
+        ["xpath=//div[@id='filters-dropdown-menu']/div/div[6]/div/div/select", "xpath:idRelative"],
+        ["xpath=//div[6]/div/div/select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "550b7099-c7b5-4e1c-b7ea-3f0f2583ba43",
+      "comment": "",
+      "command": "mouseUp",
+      "target": "id=Klipsch-RP-600M-II",
+      "targets": [
+        ["id=Klipsch-RP-600M-II", "id"],
+        ["css=#Klipsch-RP-600M-II", "css:finder"],
+        ["xpath=//div[@id='Klipsch-RP-600M-II']", "xpath:attributes"],
+        ["xpath=//div[@id='speakers']/div[4]", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div/div[4]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "76b3566d-13d1-419c-9c5c-92e4cd97f5ca",
+      "comment": "",
+      "command": "mouseDown",
+      "target": "id=selectQuality",
+      "targets": [
+        ["id=selectQuality", "id"],
+        ["css=#selectQuality", "css:finder"],
+        ["xpath=//select[@id='selectQuality']", "xpath:attributes"],
+        ["xpath=//div[@id='filters-dropdown-menu']/div/div[2]/div/div/select", "xpath:idRelative"],
+        ["xpath=//select", "xpath:position"],
+        ["xpath=//select[contains(.,'\n        Measurements Quality\n        High\n        Medium\n        Low\n\tUnknown\n      ')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "61a272bc-aeea-4955-a99b-36a7017c1a60",
+      "comment": "",
+      "command": "mouseUp",
+      "target": "css=#Arendal-Sound-1723-Bookshelf-S-THX img",
+      "targets": [
+        ["css=#Arendal-Sound-1723-Bookshelf-S-THX img", "css:finder"],
+        ["xpath=//img[@alt='Arendal Sound 1723 Bookshelf S THX']", "xpath:img"],
+        ["xpath=//div[@id='Arendal-Sound-1723-Bookshelf-S-THX']/div/div/picture/img", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div/picture/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "af9ad7f5-997c-4e57-8b5d-14d7fce3cd31",
+      "comment": "",
+      "command": "mouseDown",
+      "target": "id=selectReviewer",
+      "targets": [
+        ["id=selectReviewer", "id"],
+        ["css=#selectReviewer", "css:finder"],
+        ["xpath=//select[@id='selectReviewer']", "xpath:attributes"],
+        ["xpath=//div[@id='filters-dropdown-menu']/div/div[3]/div/div/select", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div/select", "xpath:position"],
+        ["xpath=//select[contains(.,'\n        Reviewer\n        ASR\n        ErinsAudioCorner\n\tPrinceton\n\t  Archimago\nAudioholics\nAudioxpress\nAvnirvana\nAvs\nDominikz\nMtg90\nNapilopez\nNuyes\nPp\nSausalitoaudio\nSoundstageultra\nSpeakerdata2034\nSr\nTomvg\nWeeblabs\n\n      ')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "6a0167c2-a821-45dc-9082-54554213c558",
+      "comment": "",
+      "command": "mouseUp",
+      "target": "css=#Arendal-Sound-1723-Bookshelf-S-THX img",
+      "targets": [
+        ["css=#Arendal-Sound-1723-Bookshelf-S-THX img", "css:finder"],
+        ["xpath=//img[@alt='Arendal Sound 1723 Bookshelf S THX']", "xpath:img"],
+        ["xpath=//div[@id='Arendal-Sound-1723-Bookshelf-S-THX']/div/div/picture/img", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div/picture/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "bc66ab08-d7eb-4c8f-b29d-34ab79ae1bfc",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Compare",
+      "targets": [
+        ["linkText=Compare", "linkText"],
+        ["css=.navbar-end > .navbar-item:nth-child(3)", "css:finder"],
+        ["xpath=//a[contains(text(),'Compare')]", "xpath:link"],
+        ["xpath=//a[contains(@href, 'https://spinorama.internet-box.ch/compare.html')]", "xpath:href"],
+        ["xpath=//a[3]", "xpath:position"],
+        ["xpath=//a[contains(.,'Compare')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "6cc881ca-e59f-4544-b96b-e3ef7f458973",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "linkText=Compare",
+      "targets": [
+        ["linkText=Compare", "linkText"],
+        ["css=.navbar-end > .navbar-item:nth-child(3)", "css:finder"],
+        ["xpath=//a[contains(text(),'Compare')]", "xpath:link"],
+        ["xpath=//a[contains(@href, 'https://spinorama.internet-box.ch/compare.html')]", "xpath:href"],
+        ["xpath=//a[3]", "xpath:position"],
+        ["xpath=//a[contains(.,'Compare')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "9550779c-3410-47af-b35e-0cb6aa0f86af",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "linkText=Compare",
+      "targets": [
+        ["linkText=Compare", "linkText"],
+        ["css=.navbar-end > .navbar-item:nth-child(3)", "css:finder"],
+        ["xpath=//a[contains(text(),'Compare')]", "xpath:link"],
+        ["xpath=//a[contains(@href, 'https://spinorama.internet-box.ch/compare.html')]", "xpath:href"],
+        ["xpath=//a[3]", "xpath:position"],
+        ["xpath=//a[contains(.,'Compare')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "64398031-1e48-4e87-a46a-d9a3b57608ac",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Ranking",
+      "targets": [
+        ["linkText=Ranking", "linkText"],
+        ["css=.navbar-item:nth-child(4)", "css:finder"],
+        ["xpath=//a[contains(text(),'Ranking')]", "xpath:link"],
+        ["xpath=//a[contains(@href, 'https://spinorama.internet-box.ch/scores.html')]", "xpath:href"],
+        ["xpath=//a[4]", "xpath:position"],
+        ["xpath=//a[contains(.,'Ranking')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "f2b12d4f-5c99-488a-8510-14f160d24d0f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.delete",
+      "targets": [
+        ["css=.delete", "css:finder"],
+        ["xpath=//article/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "f7902f2e-f42b-4d84-9255-738f2b47c572",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Statistics",
+      "targets": [
+        ["linkText=Statistics", "linkText"],
+        ["css=.navbar-item:nth-child(5)", "css:finder"],
+        ["xpath=//a[contains(text(),'Statistics')]", "xpath:link"],
+        ["xpath=//a[contains(@href, 'https://spinorama.internet-box.ch/statistics.html')]", "xpath:href"],
+        ["xpath=//a[5]", "xpath:position"],
+        ["xpath=//a[contains(.,'Statistics')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "c6ad8e64-0803-41a6-b094-80d91a108951",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Help",
+      "targets": [
+        ["linkText=Help", "linkText"],
+        ["css=.navbar-item:nth-child(6)", "css:finder"],
+        ["xpath=//a[contains(text(),'Help')]", "xpath:link"],
+        ["xpath=//a[contains(@href, 'https://spinorama.internet-box.ch/help.html')]", "xpath:href"],
+        ["xpath=//a[6]", "xpath:position"],
+        ["xpath=//a[contains(.,'Help')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "75e1867c-c5da-4bad-b407-26f66d35351d",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Search",
+      "targets": [
+        ["linkText=Search", "linkText"],
+        ["css=.navbar-end > .navbar-item:nth-child(1)", "css:finder"],
+        ["xpath=//a[contains(text(),'Search')]", "xpath:link"],
+        ["xpath=//a[contains(@href, 'https://spinorama.internet-box.ch/index.html')]", "xpath:href"],
+        ["xpath=//div[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Search')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "690e061b-d0ba-4363-bfc1-737533708ab3",
+    "name": "test2",
+    "commands": [{
+      "id": "89ca4f2a-d4af-4cfe-b520-7be2add9f5ea",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "d80e98a0-84d6-41af-bc10-54a364ef5910",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1024x1280",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9a29f6e8-f2d0-40ab-8254-ba9fa007e3f5",
+      "comment": "",
+      "command": "click",
+      "target": "id=searchInput",
+      "targets": [
+        ["id=searchInput", "id"],
+        ["css=#searchInput", "css:finder"],
+        ["xpath=//input[@id='searchInput']", "xpath:attributes"],
+        ["xpath=//div[@id='search-bar']/div/div[2]/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "06ddf552-0da5-4caf-802a-b62a6522e41b",
+      "comment": "",
+      "command": "type",
+      "target": "id=searchInput",
+      "targets": [
+        ["id=searchInput", "id"],
+        ["css=#searchInput", "css:finder"],
+        ["xpath=//input[@id='searchInput']", "xpath:attributes"],
+        ["xpath=//div[@id='search-bar']/div/div[2]/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "elac"
+    }, {
+      "id": "67e11ca6-e668-4391-8ba3-7bd44b9cf598",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=ASR",
+      "targets": [
+        ["linkText=ASR", "linkText"],
+        ["css=#Elac-Carina-BS243-4 .card-footer-item", "css:finder"],
+        ["xpath=(//a[contains(text(),'ASR')])[2]", "xpath:link"],
+        ["xpath=//div[@id='Elac-Carina-BS243-4']/div/footer/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, 'speakers/Elac%20Carina%20BS243.4/ASR/index_asr.html')]", "xpath:href"],
+        ["xpath=//div[2]/div/footer/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "066017e4-8ceb-4ef2-8b32-e6a3d7bf950b",
+      "comment": "",
+      "command": "click",
+      "target": "css=#pane-2 tr:nth-child(1) .graph",
+      "targets": [
+        ["css=#pane-2 tr:nth-child(1) .graph", "css:finder"],
+        ["xpath=//img[@alt='CEA2034']", "xpath:img"],
+        ["xpath=//img[@type='image/jpg']", "xpath:attributes"],
+        ["xpath=//div[@id='pane-2']/table/tbody/tr/td/div/a/picture/img", "xpath:idRelative"],
+        ["xpath=//img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "bbc936d7-1dc4-4519-916c-1f22211e4ee2",
+      "comment": "",
+      "command": "click",
+      "target": "css=.traces:nth-child(3) > .legendtoggle",
+      "targets": [
+        ["css=.traces:nth-child(3) > .legendtoggle", "css:finder"]
+      ],
+      "value": ""
+    }, {
+      "id": "a1ee8b95-416b-46ef-af87-bad15c0395ac",
+      "comment": "",
+      "command": "click",
+      "target": "css=.is-size-4",
+      "targets": [
+        ["css=.is-size-4", "css:finder"],
+        ["xpath=//a[contains(@href, 'https://spinorama.internet-box.ch')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "0507c028-4ec0-4950-98f8-87c2b9205151",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.is-size-4",
+      "targets": [
+        ["css=.is-size-4", "css:finder"],
+        ["xpath=//a[contains(@href, 'https://spinorama.internet-box.ch')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d328bc0f-e87a-4e92-92a4-56bb4e90ad6e",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "css=.is-size-4",
+      "targets": [
+        ["css=.is-size-4", "css:finder"],
+        ["xpath=//a[contains(@href, 'https://spinorama.internet-box.ch')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "cca23bf9-58e1-4aca-9e73-edc122cebb57",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["e2dd5ed7-9acc-4452-9bed-195ff861dcb8"]
+  }],
+  "urls": ["https://spinorama.internet-box.ch/"],
+  "plugins": []
+}

@@ -1,29 +1,76 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
+PROD="https://https://pierreaubert.github.io/spinorama"
+DEV="https://spinorama.internet-box.ch"
 
-def test_eight_components():
-    driver = webdriver.Chrome()
 
-    driver.get("https://spinorama.internet-box.ch")
+def test_spinorama_index_smoke(driver, env):
+
+    if env == "prod":
+        driver.get(PROD)
+    else:
+        driver.get(DEV)
 
     title = driver.title
-    assert title == "Spinorama"
+    assert "collection" in title
 
     driver.implicitly_wait(0.5)
 
-    search_box = driver.find_element(by=By.NAME, value="q")
-    search_button = driver.find_element(by=By.NAME, value="btnK")
+    
+def test_spinorama_index_search(driver, env):
 
-    search_box.send_keys("Selenium")
-    search_button.click()
+    if env == "prod":
+        driver.get(PROD)
+    else:
+        driver.get(DEV)
 
-    search_box = driver.find_element(by=By.NAME, value="q")
-    value = search_box.get_attribute("value")
-    assert value == "Selenium"
+    driver.implicitly_wait(2)
 
-    driver.quit()
+    search_box = driver.find_element(by=By.ID, value="searchInput")
+
+    search_box.clear()
+    search_box.send_keys("elac")
+    elac = driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
+    assert elac is not None
+    assert elac.is_displayed()
+    is_hidden = "hidden" in elac.get_attribute("class")
+    assert not is_hidden
+    gene = driver.find_element(by=By.ID, value="Genelec-8361A")
+    assert gene is not None
+    is_hidden = "hidden" in gene.get_attribute("class")
+    assert is_hidden
+        
+    search_box.clear()
+    search_box.send_keys("8361A")
+    gene = driver.find_element(by=By.ID, value="Genelec-8361A")
+    assert gene is not None
+    assert not "hidden" in gene.get_attribute("class")
+
+    search_box.clear()
+    search_box.send_keys("8361")
+    gene = driver.find_element(by=By.ID, value="Genelec-8361A")
+    assert gene is not None
+    assert not "hidden" in gene.get_attribute("class")
+
+
+def test_spinorama_compare_two(driver, env):
+
+    COMPARE="/compare.html?origin0=Vendors-Neumann&measurement=CEA2034&origin1=ErinsAudioCorner&speaker1=Focal+Solo6+Be"
+    
+    if env == "prod":
+        driver.get(PROD+COMPARE)
+    else:
+        driver.get(DEV+COMPARE)
+
+    driver.implicitly_wait(2)
+    
 
     
+
 if __name__ == "__main__":
-    test_eight_components()
+    driver = webdriver.Chrome()
+    test_spinorama_index_smoke(driver, env='dev')
+    test_spinorama_index_search(driver, env='dev')
+    test_spinorama_compare_two(driver, env='dev')
+    driver.quit()
