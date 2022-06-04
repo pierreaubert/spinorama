@@ -188,19 +188,21 @@ def cache_load(simple_filter=None, smoke_test=False):
     return df_all
 
 
-def cache_update(df_new):
+def cache_update(df_new, filters):
     if not os.path.exists(CACHE_DIR) or len(df_new) == 0:
         return
 
     print("Updating cache ", end=" ", flush=True)
     count = 0
     for new_speaker, new_datas in df_new.items():
+        if filters is not None and new_speaker != filters.get("speaker", ""):
+            continue
         df_old = cache_load(new_speaker)
         for new_origin, new_measurements in new_datas.items():
             for new_measurement, new_data in new_measurements.items():
                 if new_speaker not in df_old.keys():
                     df_old[new_speaker] = {new_origin: {new_measurement: new_data}}
-                elif new_origin not in df_tbu[new_speaker].keys():
+                elif new_origin not in df_old[new_speaker].keys():
                     df_old[new_speaker][new_origin] = {new_measurement: new_data}
                 else:
                     df_old[new_speaker][new_origin][new_measurement] = new_data

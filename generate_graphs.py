@@ -390,7 +390,7 @@ if __name__ == "__main__":
     if len(filters.keys()) == 0:
         cache_save(df_new)
     elif update_cache:
-        cache_update(df_new)
+        cache_update(df_new, filters)
 
     ray.shutdown()
     sys.exit(0)
