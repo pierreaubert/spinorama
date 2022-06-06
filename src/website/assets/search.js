@@ -23,11 +23,11 @@ fetch(urlSite + 'assets/metadata.json').then(
 
   function isFiltered (item, filter) {
     let shouldShow = true
-    if (filter.reviewer !== '') {
+    if (filter.reviewer !== undefined && filter.reviewer !== '') {
       let found = true
       for (const [name, measurement] of Object.entries(item.measurements)) {
         const origin = measurement.origin.toLowerCase()
-        // console.log('debug: name=' + name + ' origin=' + origin + ' filter.reviewer=' + filter.reviewer)
+          // console.log('debug: name=' + name + ' origin=' + origin + ' filter.reviewer=' + filter.reviewer)
         if (name.toLowerCase().endsWith(filter.reviewer.toLowerCase()) || origin === filter.reviewer.toLowerCase()) {
           found = false
           break
@@ -37,11 +37,11 @@ fetch(urlSite + 'assets/metadata.json').then(
         shouldShow = false
       }
     }
-    if (filter.quality !== '') {
+    if (filter.quality !== undefined && filter.quality !== '') {
       let found = true
       for (const [name, measurement] of Object.entries(item.measurements)) {
         const quality = measurement.quality.toLowerCase()
-        // console.log('filter.quality=' + filter.quality + ' quality=' + quality)
+          // console.log('filter.quality=' + filter.quality + ' quality=' + quality)
         if (filter.quality !== '' && quality === filter.quality.toLowerCase()) {
           found = false
           break
@@ -51,21 +51,21 @@ fetch(urlSite + 'assets/metadata.json').then(
         shouldShow = false
       }
     }
-    // console.log('debug: post quality ' + shouldShow)
-    if (filter.power !== '' && item.type !== filter.power) {
+      // console.log('debug: post quality ' + shouldShow)
+    if (filter.power !== undefined && filter.power !== '' && item.type !== filter.power) {
       shouldShow = false
     }
-    // console.log('debug: post power ' + shouldShow)
-    if (filter.shape !== '' && item.shape !== filter.shape) {
+      // console.log('debug: post power ' + shouldShow)
+    if (filter.shape !== undefined && filter.shape !== '' && item.shape !== filter.shape) {
       shouldShow = false
     }
-    // console.log('debug: post shape ' + shouldShow)
-    if (filter.brand !== '' && item.brand.toLowerCase() !== filter.brand.toLowerCase()) {
+      // console.log('debug: post shape ' + shouldShow)
+    if (filter.brand !== undefined && filter.brand !== '' && item.brand.toLowerCase() !== filter.brand.toLowerCase()) {
       shouldShow = false
     }
-    // console.log('debug: post brand ' + shouldShow)
-    if (filter.price !== '') {
-      // console.log('debug: pre price ' + filter.price)
+      // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.price+'<<<')
+    if (filter.price !== undefined && filter.price !== '') {
+        // console.log('debug: pre price ' + filter.price)
       if (item.price !== '') {
         let price = parseInt(item.price)
         if (item.amount === "pair") {
@@ -117,25 +117,25 @@ fetch(urlSite + 'assets/metadata.json').then(
         // no known price
         shouldShow = false
       }
-      // console.log('debug: post price ' + shouldShow)
+        // console.log('debug: post price ' + shouldShow)
     }
     return shouldShow
   }
 
   function displayFilter (resultdiv, smeta, filter) {
-  // console.log('display filter start #' + smeta.length)
+    // console.log('display filter start #' + smeta.length)
     for (const key in smeta) {
       const spk = metadata[key]
       const shouldShow = isFiltered(spk, filter)
       const id = (spk.brand + '-' + spk.model).replace(/['.+& ]/g, '-')
       const elem = document.querySelector('#' + id)
       if (shouldShow) {
-      // console.log(spk.brand + '-' + spk.model + ' is shouldShown')
+        // console.log(spk.brand + '-' + spk.model + ' is shouldShown')
         if (elem) {
           show(elem)
         }
       } else {
-      // console.log(spk.brand + '-' + spk.model + ' is filtered')
+        // console.log(spk.brand + '-' + spk.model + ' is filtered')
         if (elem) {
           hide(elem)
         }
@@ -144,7 +144,7 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function displaySearch (resultdiv, smeta, results, filter) {
-  // console.log('---------- display search start ----------------')
+    // console.log('---------- display search start ----------------')
     const keywords = document.querySelector('#searchInput').value
     if (results.length === 0) {
       displayFilter(resultdiv, smeta, filter)
@@ -154,7 +154,7 @@ fetch(urlSite + 'assets/metadata.json').then(
     for (const key in smeta) {
       const spk = metadata[key]
       const id = (spk.brand + '-' + spk.model).replace(/['.+& ]/g, '-')
-      // console.log('generated id is ' + id)
+        // console.log('generated id is ' + id)
       const elem = document.querySelector('#' + id)
       if (elem) {
         hide(elem)
@@ -167,28 +167,29 @@ fetch(urlSite + 'assets/metadata.json').then(
         minScore = results[spk].score
       }
     }
-    // console.log('minScore is ' + minScore)
+      // console.log('minScore is ' + minScore)
     for (const spk in results) {
       let shouldShow = true
       const result = results[spk]
       const imeta = result.item
       const score = result.score
       if (!isFiltered(imeta, filter)) {
-      // console.log('filtered out (filter)')
+        // console.log('filtered out (filter)')
         shouldShow = false
       }
       if (shouldShow) {
         if (minScore < Math.pow(10, -15)) {
           const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase())
+            // console.log('isExact '+isExact+' model'+imeta.model.toLowerCase()+' keywords '+keywords.toLowerCase())
           // we have an exact match, only shouldShow other exact matches
           if (score >= Math.pow(10, -15) && !isExact) {
-          // console.log('filtered out (minscore)' + score)
+            // console.log('filtered out (minscore)' + score)
             shouldShow = false
           }
         } else {
         // only partial match
           if (score > minScore * 10) {
-          // console.log('filtered out (score=' + score + 'minscore=' + minScore + ')')
+            // console.log('filtered out (score=' + score + 'minscore=' + minScore + ')')
             shouldShow = false
           }
         }
@@ -196,12 +197,12 @@ fetch(urlSite + 'assets/metadata.json').then(
       const id = (imeta.brand + '-' + imeta.model).replace(/['.+& ]/g, '-')
       const elem = document.querySelector('#' + id)
       if (shouldShow) {
-      // console.log('show ' + imeta.brand + ' ' + imeta.model + ' ' + score)
+        // console.log('show ' + imeta.brand + ' ' + imeta.model + ' ' + score)
         if (elem) {
           show(elem)
         }
       } else {
-        // console.log('hide ' + imeta.brand + ' ' + imeta.model + ' ' + score)
+          // console.log('hide ' + imeta.brand + ' ' + imeta.model + ' ' + score)
         if (elem) {
           hide(elem)
         }
@@ -212,7 +213,7 @@ fetch(urlSite + 'assets/metadata.json').then(
   function selectDispatch () {
     const resultdiv = document.querySelector('div.searchresults')
     const keywords = document.querySelector('#searchInput').value
-    // console.log('keywords: ' + keywords)
+      // console.log('keywords: ' + keywords)
 
     // need to sort here
     sortMetadata(
@@ -222,10 +223,10 @@ fetch(urlSite + 'assets/metadata.json').then(
 
     //
     if (keywords === '') {
-    // console.log('display filter')
+      // console.log('display filter')
       displayFilter(resultdiv, metadata, filter)
     } else {
-    // console.log('display search')
+      // console.log('display search')
       const results = fuse.search(keywords)
       displaySearch(resultdiv, metadata, results, filter)
     }

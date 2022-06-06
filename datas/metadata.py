@@ -4728,7 +4728,7 @@ speakers_info = {
         "brand": "KEF",
         "model": "LS50 Meta",
         "type": "passive",
-        "price": "",
+        "price": "2800",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "asr",
