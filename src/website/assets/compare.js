@@ -776,6 +776,7 @@ fetch(urlSite + 'assets/metadata.json').then(
       urlParams.get('version' + pos)
     )
     updateOriginPos(pos)
+    updateSpeakerPos(pos)
     // console.log('DEBUG: ' + originsSelector[pos].options[0])
     initDatas[pos] = getSpeakerData(initMeasurement, initSpeakers[pos], null, null)
   }
