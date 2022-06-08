@@ -697,5 +697,5 @@ def plot_image(df):
     return None
 
 
-def plot_summary(df):
+def plot_summary(df, params):
     return None

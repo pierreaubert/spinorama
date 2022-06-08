@@ -80,7 +80,7 @@ def move_data(speaker_name, speaker_data):
                 exec_git('git mv "{}" "{}"'.format(json_name, measurement_dir))
                 continue
 
-            txt_name = glob.glob("{}/*.txt".format(from_dir, speaker_name))
+            txt_name = glob.glob("{}/*.txt".format(from_dir))
             if len(txt_name) > 0:
                 for txt in txt_name:
                     if os.path.exists(txt):

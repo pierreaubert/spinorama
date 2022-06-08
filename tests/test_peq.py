@@ -28,12 +28,14 @@ from spinorama.filter_peq import peq_butterworth_q, peq_linkwitzriley_q
 
 
 class SpinoramaFilterPeqTests(unittest.TestCase):
-    def test_butterworth(self):
+    @staticmethod
+    def test_butterworth():
         npt.assert_almost_equal(peq_butterworth_q(2), [0.707], 3)
         npt.assert_almost_equal(peq_butterworth_q(5), [1.618, 0.618, -1.0], 3)
         npt.assert_almost_equal(peq_butterworth_q(8), [2.563, 0.9, 0.601, 0.51], 3)
 
-    def test_linkwitzriley(self):
+    @staticmethod
+    def test_linkwitzriley():
         # lr4
         npt.assert_almost_equal(peq_linkwitzriley_q(4), [0.707, 0.707], 3)
         # lr6

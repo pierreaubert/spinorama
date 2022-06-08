@@ -39,7 +39,7 @@ class SpinoramaWebsiteTests(unittest.TestCase):
     def test_index_smoke(self):
         self.driver.get(DEV)
         title = self.driver.title
-        assert "collection" in title
+        self.assertIn("collection", title)
 
     def test_index_search(self):
         self.driver.get(DEV)
@@ -50,26 +50,26 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         search_box.clear()
         search_box.send_keys("elac")
         elac = self.driver.find_element(by=By.ID, value="Elac-Carina-BS243-4")
-        assert elac is not None
-        assert elac.is_displayed()
+        self.assertIsNotNone(elac)
+        self.assertTrue(elac.is_displayed())
         is_hidden = "hidden" in elac.get_attribute("class")
         assert not is_hidden
         gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
-        assert gene is not None
+        self.assertIsNotNone(gene)
         is_hidden = "hidden" in gene.get_attribute("class")
-        assert is_hidden
+        self.assertTrue(is_hidden)
 
         search_box.clear()
         search_box.send_keys("8361A")
         gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
-        assert gene is not None
-        assert not "hidden" in gene.get_attribute("class")
+        self.assertIsNotNone(gene)
+        self.assertNotIn("hidden", gene.get_attribute("class"))
 
         search_box.clear()
         search_box.send_keys("8361")
         gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
-        assert gene is not None
-        assert not "hidden" in gene.get_attribute("class")
+        self.assertIsNotNone(gene)
+        self.assertNotIn("hidden", gene.get_attribute("class"))
 
 
 if __name__ == "__main__":
