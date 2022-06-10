@@ -125,6 +125,14 @@ export function getReviews (value) {
       origin = origin + " (Hor.)"
     } else if  (version.search("vertical") != -1 ) {
       origin = origin + " (Ver.)"
+    } else if  (version.search("grille-on") != -1 ) {
+      origin = origin + " (Grille on)"
+    } else if  (version.search("no-grille") != -1 ) {
+      origin = origin + " (Grille off)"
+    } else if  (version.search("short-port") != -1 ) {
+      origin = origin + " (Short Port)"
+    } else if  (version.search("long-port") != -1 ) {
+      origin = origin + " (Long Port)"
     } else {
       let pos = version.search(/-v[123456]-/)
       if (pos != -1 ) {

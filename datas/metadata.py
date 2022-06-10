@@ -5057,9 +5057,9 @@ speakers_info = {
         "price": "9000",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac-v1-short-port",
+        "default_measurement": "eac-short-port",
         "measurements": {
-            "eac-v1-short-port": {
+            "eac-short-port": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review_published": "20220501",
@@ -5069,7 +5069,7 @@ speakers_info = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-reference-1-meta-bookshelf-speaker-review-by-erins-audio-corner.33666/",
                 },
             },
-            "eac-v1-long-port": {
+            "eac-long-port": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review_published": "20220501",
@@ -5394,16 +5394,16 @@ speakers_info = {
         "price": "670",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac-v1-nogrille",
+        "default_measurement": "eac-no-grille",
         "measurements": {
-            "eac-v1-nogrille": {
+            "eac-no-grille": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_600m_ii/",
                 "review_published": "20220522",
                 "notes": "This measurement is without a grille",
             },
-            "eac-v1-grilleon": {
+            "eac-grille-on": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_600m_ii/",
