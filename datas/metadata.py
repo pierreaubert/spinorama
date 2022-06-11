@@ -2776,6 +2776,22 @@ speakers_info = {
             },
         },
     },
+    "GR Research LGK 2.0": {
+        "brand": "GR Research",
+        "model": "LGK 2.0",
+        "shape": "bookshelves",
+        "type": "passive",
+        "price": "1000",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/gr-research-lgk-2-0-speaker-review-a-joke.34783/",
+                "review_published": "20220607",
+            },
+        },
+    },
     "GR Research X-LS Encore Kit": {
         "brand": "GR Research",
         "model": "X-LS Encore Kit",
@@ -3345,7 +3361,7 @@ speakers_info = {
         "type": "passive",
         "price": "400",
         "amount": "pair",
-        "shape": "floorstander",
+        "shape": "floorstanders",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
