@@ -80,7 +80,12 @@ def add_scores(dataframe, parse_max):
         parsed = parsed + 1
         logger.info("Processing {0}".format(speaker_name))
         for _, measurements in speaker_data.items():
-            default_key = metadata.speakers_info[speaker_name]["default_measurement"]
+            default_key = None
+            try:
+                default_key = metadata.speakers_info[speaker_name]["default_measurement"]
+            except KeyError:
+                logger.error('Got an key error exception for speaker_name {} default measurement'.format(speaker_name))
+                continue
             for key, dfs in measurements.items():
                 try:
                     if dfs is None or "CEA2034" not in dfs.keys():
