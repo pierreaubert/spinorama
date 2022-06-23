@@ -2787,7 +2787,10 @@ speakers_info = {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/gr-research-lgk-2-0-speaker-review-a-joke.34783/",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/gr-research-lgk-2-0-speaker-review-a-joke.34783/",
+                    "yt": "https://youtu.be/IikqAg38FPs",
+                },
                 "review_published": "20220607",
             },
         },
@@ -2838,6 +2841,23 @@ speakers_info = {
                 "quality": "low",
                 "review": "https://www.youtube.com/watch?v=xqsTFc8MdvA",
                 "review_published": "20211118",
+            },
+        },
+    },
+    "Grimani Systems Rixos-L": {
+        "brand": "Grimani Systems",
+        "model": "Rixos-L",
+        "type": "active",
+        "price": "8200",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/grimani-systems-rixos-l-review-active-dsp-speaker.35171/",
+                "review_published": "20220623",
             },
         },
     },
@@ -7805,7 +7825,10 @@ speakers_info = {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/rcf-ayra-pro5-review-powered-monitor.31777/",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/rcf-ayra-pro5-review-powered-monitor.31777/",
+                    "yt": "https://youtu.be/-igZ8X81h-k",
+                },
                 "review_published": "20220317",
             },
         },
@@ -8415,7 +8438,10 @@ speakers_info = {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-w553l-measurements-in-wall-speaker.32072/",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/revel-w553l-measurements-in-wall-speaker.32072/",
+                    "yt": "https://youtu.be/6lK55MF5MMA",
+                },
                 "review_published": "20220323",
             },
             "eac": {
@@ -8967,7 +8993,10 @@ speakers_info = {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/vanatoo-transparent-one-encore-powered-speaker.32421/",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/vanatoo-transparent-one-encore-powered-speaker.32421/",
+                    "yt": "https://youtu.be/tMOp66XdjNo",
+                },
                 "review_published": "20220330",
             },
         },
