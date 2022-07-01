@@ -1,0 +1,16 @@
+EQ for Part Express DIY Copperhead computed from ErinsAudioCorner data
+Preference Score 2.4 with EQ 3.7
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.16
+Dated: 2022-07-01-13:32:26
+
+Preamp: -2.8 dB
+
+Filter  1: ON PK Fc 14190 Hz Gain -9.11 dB Q 5.99
+Filter  2: ON PK Fc 11296 Hz Gain +2.85 dB Q 3.77
+Filter  3: ON PK Fc   747 Hz Gain +1.34 dB Q 1.05
+Filter  4: ON PK Fc   171 Hz Gain -2.34 dB Q 3.52
+Filter  5: ON PK Fc  5978 Hz Gain +2.03 dB Q 5.99
+Filter  6: ON PK Fc  9531 Hz Gain +1.76 dB Q 5.99
+Filter  7: ON PK Fc  2691 Hz Gain +2.16 dB Q 6.00
+Filter  8: ON PK Fc  2233 Hz Gain -3.01 dB Q 5.82
+Filter  9: ON PK Fc  3934 Hz Gain -2.07 dB Q 2.62

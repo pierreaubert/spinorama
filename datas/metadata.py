@@ -219,18 +219,18 @@ speakers_info = {
         "amount": "pair",
         "default_measurement": "eac-v2-20220526",
         "measurements": {
+            "eac-v2-20220526": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1723_thx_s/",
+                "review_published": "20220526",
+            },
             "eac-v1-20220430": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1723_thx_s/",
                 "review_published": "20220430",
                 "notes": "This version had a bad tweeter.",
-            },
-            "eac-v2-20220526": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1723_thx_s/",
-                "review_published": "20220526",
             },
         },
     },
@@ -1525,21 +1525,31 @@ speakers_info = {
         "price": "2400",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac",
+        "default_measurement": "eac-v2-20220518",
         "measurements": {
-            "eac": {
+            "eac-v2-20220518": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/philharmonic_bmr_v2/",
+                },
+                "review_published": "20220518",
+            },
+            "eac-v1-20211121": {
                 "origin": "ErinsAudioCorner",
                 "format": "splHVtxt",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/philharmonic_bmr/",
                     "asr": " https://www.audiosciencereview.com/forum/index.php?threads/philharmonic-bmr-speaker-review.14781/",
                 },
+                "review_published": "20211121",
             },
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/bmr-philharmonitor-1/conclusion",
+                "review_published": "20211121",
             },
         },
     },
@@ -2776,6 +2786,25 @@ speakers_info = {
             },
         },
     },
+    "GR Research Klipsch RP-600M Upgrade": {
+        "brand": "GR Research",
+        "model": "Klipsch RP-600M Upgrade",
+        "shape": "bookshelves",
+        "type": "passive",
+        "price": "600",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/gr-research-klipsch-rp-600m-upgrade-review-speaker.35326/",
+                    "yt": "https://youtu.be/-eWnYAgiMwQ",
+                },
+                "review_published": "20220628",
+            },
+        },
+    },
     "GR Research LGK 2.0": {
         "brand": "GR Research",
         "model": "LGK 2.0",
@@ -2908,6 +2937,23 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/hivi-3-1a-diy-speaker-with-sehlin-mod-review.15802/",
+            },
+        },
+    },
+    "Hivi Swan X3": {
+        "brand": "Hivi",
+        "model": "Swan X3",
+        "type": "active",
+        "price": "250",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/swan-hivi-x3-review-active-monitors.35376/",
+                "review_published": "20220701",
             },
         },
     },
@@ -5606,6 +5652,24 @@ speakers_info = {
             },
         },
     },
+    "LCM Nearfield Monitor 3-D Printed DIY": {
+        "skip": True,
+        "brand": "LCM",
+        "model": "Nearfield Monitor 3-D Printed DIY",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/lcm_nearfield_monitor/",
+                "review_published": "20220623",
+            },
+        },
+    },
     "LYX SPA8PAS": {
         "brand": "LYX",
         "model": "SPA8PAS",
@@ -6815,6 +6879,23 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/parts-express-diy-c-note-speaker-review.12693/",
                 "review_published": "20200419",
+            },
+        },
+    },
+    "Part Express DIY Copperhead": {
+        "brand": "Part Express",
+        "model": "DIY Copperhead",
+        "type": "passive",
+        "price": "100",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/parts_express_copperhead/",
+                "review_published": "20220625",
             },
         },
     },
