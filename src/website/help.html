@@ -1,43 +1,66 @@
 <%include file="header.html"/>
 <%include file="nav_menu.html"/>
 
+<div class="level has-background-info-dark is-hidden-mobile">
+...
+</div>
+
+<div class="container">
 <section class="content">
   <h1 class="title">Measurements</h1>
   <h2 class="subtitle">What is a spinorama set of graphs?</h2>
   <p>
-    It is a way to understand quickly a speaker properties, how it will sound.
+    It is a way to understand quickly a speaker properties, how it
+    will sound. It is defined
+    in <a href="https://shop.cta.tech/products/standard-method-of-measurement-for-in-home-loudspeakers">this
+    standard</a> from the USA CTA.
 
     Here is an example:
   </p>
-  <img src="speakers/Genelec%208341A/ASR/asr-vertical/CEA2034.jpg" alt="spinorama from a Genelec 8341A"/>
+  <img src="speakers/Genelec%208341A/ASR/asr-vertical/CEA2034.jpg"
+       width="600"
+       alt="spinorama from a Genelec 8341A"/>
   <p>
     The spinorama gives you a few graphs:
   </p>
   <ul>
-    <li><b>On Axis:</b> this the frequency response. You expect it to
-      be as flat as possible after 100Hz.</li>
-    <li><b>Listening Window:</b> an average of various measurements around on axis. Expected to be close to the previous one.</li>
-    <li><b>Early reflections:</b> expected to be a smooth, slowy goind
+    <li><b>On Axis:</b> this the frequency response of the speaker on axis. You expect it to
+      be as flat as possible above 100Hz.</li>
+    <li><b>Listening Window:</b> this an average of various
+    measurements around on axis. The idea is that it is closer to real
+    life since your head is always moving a bit in practice and you
+    are not staying frozen in front on the speakers. It is expected to
+    be close to the previous one, slighlty going down.</li>
+    <li><b>Early reflections:</b> expected to be a smooth, slowy going
       down line.</li>
-    <li><b>Sound power DI:</b> expected to be a smooth, slowy growing line.</li>
+    <li><b>Sound power:</b> expected to be a smooth, slowy going
+    down line (slope is greater than Early Reflections).</li>
+    <li><b>ERDI and SPDI:</b> are the difference between the Early
+    Reflection curve and the Listening Window (resp. Sound Power and
+    Listening Window). This should be as straight as possible above
+    100 Hz. If the DI curves are flat, you will be able to correct the
+    frequency aberations of your speaker easily. It is important to
+    understand that a bad directivy cannot be corrected with a IIR eq.
   </ul>
   <p>The speaker above is <i>very</i> good. You can compare with
     another one:</p>
   <img src="speakers/Tannoy%20Revolution%20XT6/ASR/asr/CEA2034.jpg"
+       width="600"
        alt="spinorama for a Tannoy XT6"/>
   <p>which is not flat at all. Remember that &plusmn;3dB means that the
   volume doubles/halves at the corresponding frequency. If you look at
     the on axis measurement below, you see that it going up, the
     speaker will likely be bright and emphasis high frequency.</p>
-  <img src="speakers/Tannoy%20Revolution%20XT6/ASR/asr/On%20Axis.jpg"  alt="On
-    Axis for a Tannoy XT6"/>
-</section>
+  <img src="speakers/Tannoy%20Revolution%20XT6/ASR/asr/On%20Axis.jpg"
+       width="600"
+       alt="On Axis for a Tannoy XT6"/>
 
-
-<section class="content">
-  <h1 class="title">Please tell me more:</h1>
-  If you like to read:
+  <h2 class="title">Please tell me more:</h2>
+  If you like to <i>read</i>:
   <ul>
+    <li>You can go to the source
+    (<a href="https://shop.cta.tech/products/standard-method-of-measurement-for-in-home-loudspeakers">the
+    standard document</a>) and starting page 56, you have a good and compact explanation of each curve.
     <li>This <a href="https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-and-control-1-pro-monitors-review.10811/">post
         on ASR</a>
       by <a href="https://www.linkedin.com/in/amir-majidimehr-0014a75/">Amir
@@ -58,7 +81,7 @@
         in the service of Art</a> from Floyd E. Toole is a good, easy
         to read summary.
   </ul>
-  If you prefer to watch:
+  If you prefer to <i>watch</i>:
   There is a fine set of videos
   from <a href="https://www.youtube.com/channel/UCW_IqM21u0J-zsKtCq4Gj2w">ErinsAudioCorner</a>
   on Youtube:
@@ -72,19 +95,213 @@
 </section>
 
 <section class="content">
-  <h1 class="title">How can I help?</h1>
+  <h1 class="title">FAQ</h1>
+
+  <h2 class="title">Can I trust the data?</h2>
+  The measurements are collected on the internet. Some are of very
+  high quality and done by independant reviewers, some are of medium
+  or low quality or provided by vendors.
+
+  <p>You can filter the results by clicking the wheel on the website near
+    the search bar.</p>
+
+  <picture>
+    <source
+      srcset="help_pictures/help_select_high_quality.webp"
+      type="image/webp"/>
+    <img
+      src="help_pictures/help_select_high_quality.jpg"
+      alt="How to filter on high quality measurements"/>
+  </picture>
+
+  <h2 class="title">How precise are the measurement data?</h2>
+  <ul>
+    <li><i>High quality</i> data: provided by a Klippel NFS or measured in a large
+      anechoic chamber. Data precision is around 1%.
+    </li>
+    <li><i>Medium quality</i> data: medium size anechoc chamber, data
+      precision decreases &lt;500Hz. By how much is unknown.
+    </li>
+    <li><i>Low quality</i> data:
+      <ul>
+        <li>measured without an anechoic chamber but
+          using windowing for high frequency and plane ground method for low
+          frequency. Precision can be as good as a Klippel
+          measurements.
+        </li>
+        <li>provided by vendors: usually smoothed data (less
+          measurement points, or data is smoothed, or quality is just
+          unknown). Smoothed
+          measurements <a href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/page-5#post-742037">usually
+          generate</a> a score 
+          which higher by 0.7 on average over a score computed raw
+          data. Note that the 0.7 can change depending on the amount
+          of smoothing and other factors. 
+          
+        </li>
+      </ul>
+    </li>
+  </ul>
+    
+  <h2 class="title">How precise are the computed data?</h2>
+  <ul>
+    <li>Generally precision depends on the quality of the input
+    data. If you want to compare 2 measurements, you should select
+      them from the same category.
+    </li>
+    <li>Score computations
+      <ul>
+        <li>The score is not significant &pm;0.5. It means that 2
+        speakers which have a difference in score less than 1 are in
+          the same broad bucket. No point to look at the decimals.
+        </li>
+      </ul>
+    <li>Anechoic EQ computations
+      <ul>
+        <li>EQ is for one measurement. Since there are variations
+        speaker to speaker, you should not look at very sharp or very
+        precise EQ. How much variation between speakers? This is very
+        brand/model dependant. Some manufactures provide tolerance
+          like Neumann or Genelec.
+        </li>
+        <li>IIR eq (aka PEQs) are not working if the phase is varying
+        a lot over some frequency range. Group delay (phase
+        derivative) must be relatively flat. That may explain why EQing
+        around the crossover frequency does not necessary give
+        excellent results. On this other side, we are less sensitive
+        to phase anomaly than frequency anomaly.
+      </ul>
+    </li>
+  </ul>
+
+  <h2 class="title">Can I use this data to decide which speaker to buy</h2>
+  See dedicated section.
+  
+  <h2 class="title">Should I use room EQ?</h2>
+  Absolutly! Dirac, REW, Audyssey etc will provide audible
+  improvement to the sound, in general making it flatter (so more
+  tonally correct).
+  
+  <h2 class="title">Focus or broad radiation pattern?</h2>
+  Speakers do not radiate uniformly. Some speakers are designed to be
+  very focus: they minimise the reflections but the sweet spot is very
+  tiny. Some speakers are designed to diffuse sound, research proved
+  it is something that people usually like.
+
+  If you are near field, for example on a desk, low directivity works
+  well. The farther from the speaker you are, the more good
+  directivity becomes important. If the room is reflective, this is
+  especially important.
+
+
+  <h2 class="title">How can I help?</h2>
   <ol>
     <li>This website is generated
       from <a href="https://github.com/pierreaubert/spinorama">this
-        code</a> and datas
-      from <a href="https://audiosciencereview.com">ASR</a>
-      website.</li>
+        code</a> and data from various websites (see below).
+    </li>
     <li>You can provide feedback or add more datas
-      on <a href="https://github.com/pierreaubert/spinorama/issues">github</a>
+      at <a href="https://github.com/pierreaubert/spinorama/issues">github</a>
       or in
       this <a href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/">thread</a>
       at ASR.</li>
   </ol>
+</section>
+
+<section class="content">
+  <h1>How to select your speaker?</h1>
+  That is a polemic section, I know, I know.
+
+
+  <h2>Criteria</h2>
+  I believe there are a few criteria in whatever order you want:
+  <ul>
+    <li>Price:
+      <p>Price is not linked to quality (sadly) and is a factor where
+      you are the only judge of the worthiness.</p>
+    </li>
+    <li>Design:
+      <p>Design is to each is own. Some like monkey coffins, some like
+        studio monitors, some like big horns, it is up to you</p>
+    </li>
+    <li>Build quality:
+      <p>Some brands built to high standars some don't. Do some due
+        diligence.</p>
+    </li>
+    <li>Support quality:
+      <p>Who can or will repair your speaker if you have an issue?
+      How long do they store parts? How long is the guarantee? What
+      is covered. It is worth a close look if you buy once in a
+      lifetime expensive speakers.</p>
+    </li>
+    <li>Tonality:
+      <p>Here we have more concensus, a lot of people like the same
+      thing. To be HIFI, you want to have a speaker with a high
+      tonality score. This score takes into account flatness,
+      directivity and how much bass you will get.
+      </p>
+    </li>
+    <li>SPL aka Sound Power level:
+      <p>How loud do you want your speaker to be? It depends a lot of
+        your room and at which level you want to listen.</p>
+      Some examples:
+      <ul>
+        <li>Bedroom 3m x 4m, listening distance &lt;2m, 73dB reference
+        level, +20 dB for peak: 93dB at 1 meter. Around 90dB per
+                                                     speaker.
+        </li>
+        <li>Living room 6m x 8m, listening distance &lt;3m, 73dB reference
+        level, +20 dB for peak: 93dB at 1 meter. Around 96dB per speaker.
+        </li>
+        <li>Large room or studio 7m x 12m, listening distance &lt;5m, 73dB reference
+        level, +20 dB for peak: 93dB at 1 meter. Around 116dB per speaker.
+        </li>
+      </ul>
+    </li>
+    <li>Bass extension:
+      <p>Small speakers dont have much bass. You need a subwoofer or a
+      large speaker if you want both deep bass and high volume. New
+      speakers with DSP can produce a lot of bass while being small
+      but not at high volume. If you listen to music only and do not
+      like electronic music, you dont need subwoofers with large speakers.
+      </p>
+      Some examples:
+      <ul>
+        <li>Bedroom 3m x 4m, one 10 inch subwoofer. </li>
+        <li>Living room 6m x 8m, one 15 inch subwoofer or two 12 inch subwoofers</li>
+        <li>Large room or studio 7m x 12m, two 15 inch subwoofers, may
+          be more</li>
+      </ul>
+      You can choose floorstanders or bookshelves with
+      subwoofers. Integration is not very easy but very doable
+      especially if you use an AVR. Most people like bass, your
+      neighbourgh may not like <i>your</i> bass.
+    </li>
+  </ul>
+
+  <h2>How good is your room?</h2>
+
+  <ul>
+    <li>Is the room dedicated to music?</li>
+    <li>Is the room symmetrical?</li>
+    <li>Does the room have some absorption?</li>
+    <li>Did you add panels to control reflections?</li>
+    <li>Did you have multiple subwoofers to control bass linearity?</li>
+    <li>Did you measured your speakers in your room?</li>
+  </ul>
+
+  If you did not answer yes each times, then you do not need the best
+  speakers in the world and obsessing over scores, SPL etc will not
+  make it the best room in the world.
+
+  At the same time, I understand very well the attraction of having a
+  great pair of speakers.
+
+  Speakers with a high tonality score will be easier to EQ and will
+  adapt well to your room. Define the SPL you want (at 1% distorsion)
+  and now you have reasonable choices.
+  
+
 </section>
 
 <section class="content">
@@ -128,24 +345,47 @@
         </li>
       </ul>
     </li>
+    <li><a href="https://speakerdata2034.blogspot.com/">speakerdata2034</a>
+    is a blog with a collection of spinorama from various
+      sources. Index of measurements is <a href="https://speakerdata2034.blogspot.com/2019/03/all-spinorama-data-index.html">available</a>.
+    </li>
   </ol>
 </section>
 
 <section class="content">
   <h1 class="title">Books and research papers</h1>
   <ul>
-    <li><a href="https://books.google.ch/books/about/Sound_Reproduction.html?id=tJ0uDwAAQBAJ&printsec=frontcover&source=kp_read_button&redir_esc=y#v=onepage&q&f=false">Sound Reproduction: The Acoustics and Psychoacoustics of Loudspeakers and Rooms</a> By Floyd E. Toole</li>
+    <li><a href="https://shop.cta.tech/products/standard-method-of-measurement-for-in-home-loudspeakers">ANSI/CTA-2034-A Standard Method of Measurement
+        for In-Home Loudspeakers</a>.
+    <li><a href="https://books.google.ch/books/about/Sound_Reproduction.html?id=tJ0uDwAAQBAJ&printsec=frontcover&source=kp_read_button&redir_esc=y#v=onepage&q&f=false">Sound
+    Reproduction: The Acoustics and Psychoacoustics of Loudspeakers
+    and Rooms</a> By Floyd E. Toole</li> 
     <li>Standard Method of Measurement for In-Home Loudspeakers is
       available for free at <a href="https://www.cta.tech">CTA</a></li>
     <li>A Multiple Regression Model for Predicting Loudspeaker Preference
       Using Objective Measurements: Part II - Development of the Model
       by Sean E. Olive, AES Fellow. Convention paper 6190 from the <a href="https://www.aes.org">AES</a>.</li>
     <li>Fast Template Matching. J.P.Lewis <a href="http://scribblethink.org/Work/nvisionInterface/vi95_lewis.pdf">pdf</a></li>
-    <li>Farina, A. “Simultaneous Measurement of Impulse Response and Distortion with a Swept-Sine Technique,” Presented at the AES 108th Convention, Feb. 2000.</li>
+    <li>Farina, A. “Simultaneous Measurement of Impulse Response and
+    Distortion with a Swept-Sine Technique,” Presented at the AES
+    108th Convention, Feb. 2000.</li> 
     <li>Hatziantoniou, P. D. and Mourjopoulos, J. N. “Generalized
       Fractional-Octave Smoothing of Audio and Acoustic Responses,”
-      J. Audio Eng. Soc., 48(4):259–280, 2000.</li>
+      J. Audio Eng. Soc., 48(4):259&dash;280, 2000.</li>
+    <li>A. Mouchtaris, P. Reveliotis and C. Kyriakakis, "Inverse
+    filter design for immersive audio rendering over loudspeakers," in
+    IEEE Transactions on Multimedia, vol. 2, no. 2, pp. 77-87, June
+    2000, doi: 10.1109/6046.845012.</li>
+    <li>M. A. Poletti and P. D. Teal, "A Superfast Toeplitz Matrix
+    Inversion Method for Single- and Multi-Channel Inverse Filters and
+    Its Application to Room Equalization," in IEEE/ACM Transactions on
+    Audio, Speech, and Language Processing, vol. 29, pp. 3144-3157,
+      2021, doi: 10.1109/TASLP.2021.3120650.</li>
+    <li>Cecchi, Stefania &amp; Carini, Alberto &amp; Spors,
+    Sascha. (2017). Room Response Equalization—A Review. Applied
+    Sciences. 8. 16. 10.3390/app8010016.</li> 
   </ul>
 </section>
+</div>
 
 <%include file="footer.html"/>

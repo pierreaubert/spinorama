@@ -1,16 +1,16 @@
 EQ for Wharfedale Diamond 220 computed from ASR data
-Preference Score 3.7 with EQ 5.4
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-17-19:35:15
+Preference Score 3.8 with EQ 5.0
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-14:34:35
 
 Preamp: -0.2 dB
 
-Filter  1: ON PK Fc  2205 Hz Gain -4.54 dB Q 0.05
-Filter  2: ON PK Fc   917 Hz Gain -2.19 dB Q 4.96
-Filter  3: ON PK Fc   221 Hz Gain -0.88 dB Q 3.07
-Filter  4: ON PK Fc   519 Hz Gain -0.71 dB Q 4.64
-Filter  5: ON PK Fc  1116 Hz Gain -0.50 dB Q 6.00
-Filter  6: ON PK Fc  2100 Hz Gain +2.30 dB Q 2.30
-Filter  7: ON PK Fc  9428 Hz Gain -0.91 dB Q 3.55
-Filter  8: ON PK Fc  3612 Hz Gain -0.79 dB Q 6.00
-Filter  9: ON PK Fc 11686 Hz Gain -0.50 dB Q 6.00
+Filter  1: ON PK Fc   778 Hz Gain -4.38 dB Q 0.13
+Filter  2: ON PK Fc  1997 Hz Gain +3.91 dB Q 1.94
+Filter  3: ON PK Fc 10532 Hz Gain -2.22 dB Q 1.06
+Filter  4: ON PK Fc  2382 Hz Gain +1.51 dB Q 2.92
+Filter  5: ON PK Fc  2175 Hz Gain -1.56 dB Q 2.98
+Filter  6: ON PK Fc   198 Hz Gain -0.95 dB Q 2.96
+Filter  7: ON PK Fc  8387 Hz Gain -0.68 dB Q 2.97
+Filter  8: ON PK Fc  1409 Hz Gain +1.37 dB Q 3.00
+Filter  9: ON PK Fc   986 Hz Gain -1.24 dB Q 2.95

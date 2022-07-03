@@ -49,7 +49,9 @@ class SpinoramaSpinoramaTests(unittest.TestCase):
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt"
         )
         # computed graphs
-        self.computed_spin_unmelted = compute_cea2034(self.splH, self.splV)
+        self.computed_spin_unmelted = compute_cea2034(
+            self.splH, self.splV, method="standard"
+        )
         self.computed_spin = graph_melt(self.computed_spin_unmelted)
 
     def test_validate_cea2034(self):
@@ -57,7 +59,8 @@ class SpinoramaSpinoramaTests(unittest.TestCase):
             "On Axis",
             "Listening Window",
             "Sound Power",
-        ]:  # , 'Early Reflections']:
+            "Early Reflections",
+        ]:
             # from klippel
             reference = self.spin.loc[
                 self.spin["Measurements"] == measurement
@@ -72,9 +75,14 @@ class SpinoramaSpinoramaTests(unittest.TestCase):
             self.assertTrue(computed.Freq.eq(reference.Freq).all())
             # and should be equal or close in dB
             delta = (computed.dB - reference.dB).abs().max()
-            print(computed.dB - reference.dB, delta)
+            # print(computed.dB - reference.dB, delta)
             # TODO(pierreaubert): that's a bit too high
-            self.assertLess(delta, 0.0001)
+            tolerance = 0.0001
+            if measurement == "Early Reflections":
+                # see here for explanations
+                # https://www.audiosciencereview.com/forum/index.php?threads/spinorama-also-known-as-cta-cea-2034-but-that-sounds-dull-apparently.10862/
+                tolerance = 1.0
+            self.assertLess(delta, tolerance)
 
 
 class SpinoramaEarlyReflectionsTests(unittest.TestCase):
@@ -91,8 +99,10 @@ class SpinoramaEarlyReflectionsTests(unittest.TestCase):
         self.titleV, self.splV = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt"
         )
-        # computed graphs
-        self.computed_unmelted = early_reflections(self.splH, self.splV)
+        # computed graphs: use method == standard since it is an old klippel measurement
+        self.computed_unmelted = early_reflections(
+            self.splH, self.splV, method="standard"
+        )
         self.computed = graph_melt(self.computed_unmelted)
 
     def test_smoke(self):
@@ -119,12 +129,13 @@ class SpinoramaEarlyReflectionsTests(unittest.TestCase):
             computed = self.computed.loc[self.computed["Measurements"] == measurement]
             # should have the same Freq
             self.assertEqual(computed.Freq.size, reference.Freq.size)
-            # self.assertTrue(computed.Freq.eq(reference.Freq).all())
+            self.assertTrue(computed.Freq.eq(reference.Freq).all())
             # and should be equal or close in dB
             # TODO(pierreaubert): that's too high
-            self.assertLess(
-                abs(reference.dB.abs().max() - computed.dB.abs().max()), 0.02
-            )
+            tolerance = 0.01
+            if measurement == "Total Early Reflection":
+                tolerance = 1
+            self.assertLess((reference.dB - computed.dB).abs().max(), tolerance)
 
 
 class SpinoramaVerticalReflectionsTests(unittest.TestCase):
@@ -228,13 +239,14 @@ class SpinoramaEstimatedInRoomTests(unittest.TestCase):
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt"
         )
         # computed graphs
-        self.computed_unmelted = estimated_inroom_HV(self.splH, self.splV)
+        self.computed_unmelted = estimated_inroom_HV(self.splH, self.splV, "standard")
         self.computed = graph_melt(self.computed_unmelted)
 
     def test_smoke(self):
         self.assertEqual(self.reference_unmelted.shape, self.computed_unmelted.shape)
         self.assertEqual(self.reference.shape, self.computed.shape)
 
+    # See above. We diverge from the std (since it has a but for rear which impact ER and PIR)
     def test_validate_estimated_inroom(self):
         # key check
         self.assertIn("Estimated In-Room Response", self.computed_unmelted.keys())
@@ -249,6 +261,6 @@ class SpinoramaEstimatedInRoomTests(unittest.TestCase):
         ]
         # should have the same Freq
         self.assertEqual(computed.Freq.size, reference.Freq.size)
-        # self.assertTrue(computed.Freq.eq(reference.Freq).all())
+        self.assertTrue(computed.Freq.eq(reference.Freq).all())
         # and should be equal or close in dB
-        self.assertLess(abs(reference.dB.abs().max() - computed.dB.abs().max()), 0.005)
+        self.assertLess(abs(reference.dB.abs().max() - computed.dB.abs().max()), 0.02)

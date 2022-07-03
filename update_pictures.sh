@@ -5,6 +5,7 @@ sourcedir=datas
 targetdir=docs
 mkdir -p ${targetdir}/logos
 mkdir -p ${targetdir}/pictures
+mkdir -p ${targetdir}/help_pictures
 for d in "${sourcedir}/pictures"; do
     find $d -type f -name '*.png'| while read pict; do
 	smaller=$targetdir${pict#$sourcedir}
@@ -33,3 +34,13 @@ for d in "${sourcedir}/pictures"; do
 done
 # copy logs
 cp datas/logos/* docs/logos
+# copy help pictures
+find ./src/website/help_pictures -type f -name '*.png'| while read pict; do
+    smaller=$targetdir/help_pictures/`basename $pict`
+    for t in "jpg" "webp"; do
+	smallert=${smaller%.png}.${t}
+	if ! test -f "$smallert"; then
+	    convert "$pict" "$smallert";
+	fi
+    done
+done

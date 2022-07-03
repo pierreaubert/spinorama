@@ -1,16 +1,16 @@
 EQ for Emotiva Airmotiv B1+ computed from ErinsAudioCorner data
-Preference Score 5.2 with EQ 6.1
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.13
-Dated: 2021-11-01-22:10:21
+Preference Score 5.3 with EQ 5.9
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-13:23:02
 
-Preamp: -0.2 dB
+Preamp: -1.4 dB
 
-Filter  1: ON PK Fc  5947 Hz Gain -3.05 dB Q 0.15
-Filter  2: ON PK Fc  1958 Hz Gain +1.71 dB Q 3.99
-Filter  3: ON PK Fc  1195 Hz Gain -1.12 dB Q 5.70
-Filter  4: ON PK Fc  4666 Hz Gain +1.20 dB Q 3.58
-Filter  5: ON PK Fc   133 Hz Gain -0.50 dB Q 5.45
-Filter  6: ON PK Fc 13711 Hz Gain -1.99 dB Q 0.91
-Filter  7: ON PK Fc  8571 Hz Gain -0.56 dB Q 6.00
-Filter  8: ON PK Fc  6304 Hz Gain +0.54 dB Q 2.07
-Filter  9: ON PK Fc 10378 Hz Gain -0.54 dB Q 6.00
+Filter  1: ON PK Fc  1908 Hz Gain +1.13 dB Q 2.98
+Filter  2: ON PK Fc 12024 Hz Gain -1.31 dB Q 1.28
+Filter  3: ON PK Fc  1269 Hz Gain -0.93 dB Q 2.97
+Filter  4: ON PK Fc   461 Hz Gain +1.25 dB Q 1.07
+Filter  5: ON PK Fc  4909 Hz Gain +0.95 dB Q 2.89
+Filter  6: ON PK Fc  8859 Hz Gain -0.78 dB Q 2.99
+Filter  7: ON PK Fc   128 Hz Gain -0.50 dB Q 2.85
+Filter  8: ON PK Fc  7175 Hz Gain +0.77 dB Q 2.96
+Filter  9: ON PK Fc  7769 Hz Gain -0.51 dB Q 3.00

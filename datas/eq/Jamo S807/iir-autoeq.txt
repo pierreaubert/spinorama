@@ -1,15 +1,15 @@
 EQ for Jamo S807 computed from ErinsAudioCorner data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-17-19:34:52
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-13:35:20
 
-Preamp: -4.3 dB
+Preamp: -4.8 dB
 
-Filter  1: ON PK Fc  9664 Hz Gain -4.76 dB Q 0.57
-Filter  2: ON PK Fc   552 Hz Gain +2.84 dB Q 0.35
-Filter  3: ON PK Fc  3894 Hz Gain -1.59 dB Q 1.77
-Filter  4: ON PK Fc  2665 Hz Gain -0.94 dB Q 6.00
-Filter  5: ON PK Fc 12774 Hz Gain -1.10 dB Q 6.00
-Filter  6: ON PK Fc   418 Hz Gain -1.18 dB Q 6.00
-Filter  7: ON PK Fc   865 Hz Gain -0.67 dB Q 6.00
-Filter  8: ON PK Fc  1460 Hz Gain +2.69 dB Q 3.86
-Filter  9: ON PK Fc   941 Hz Gain -0.50 dB Q 6.00
+Filter  1: ON PK Fc  1150 Hz Gain +4.45 dB Q 0.89
+Filter  2: ON PK Fc  9805 Hz Gain -3.55 dB Q 0.34
+Filter  3: ON PK Fc   430 Hz Gain +1.92 dB Q 0.57
+Filter  4: ON PK Fc   933 Hz Gain -1.90 dB Q 2.95
+Filter  5: ON PK Fc  3937 Hz Gain -1.06 dB Q 2.65
+Filter  6: ON PK Fc  1557 Hz Gain +1.50 dB Q 2.97
+Filter  7: ON PK Fc   220 Hz Gain +1.03 dB Q 1.57
+Filter  8: ON PK Fc  1107 Hz Gain -0.78 dB Q 2.94
+Filter  9: ON PK Fc   435 Hz Gain -1.07 dB Q 2.98

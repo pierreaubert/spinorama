@@ -1,0 +1,15 @@
+EQ for JBL LSR6332 computed from Vendors-JBL data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:34:42
+
+Preamp: -1.3 dB
+
+Filter  1: ON PK Fc  1661 Hz Gain +0.57 dB Q 0.05
+Filter  2: ON PK Fc  3977 Hz Gain -0.98 dB Q 2.55
+Filter  3: ON PK Fc   624 Hz Gain -0.75 dB Q 3.90
+Filter  4: ON PK Fc  1351 Hz Gain -0.50 dB Q 6.00
+Filter  5: ON PK Fc  5774 Hz Gain +0.50 dB Q 0.21
+Filter  6: ON PK Fc  3167 Hz Gain -0.62 dB Q 0.92
+Filter  7: ON PK Fc  4757 Hz Gain -0.50 dB Q 6.00
+Filter  8: ON PK Fc   923 Hz Gain -0.50 dB Q 6.00
+Filter  9: ON PK Fc   338 Hz Gain +0.63 dB Q 6.00

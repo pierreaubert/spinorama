@@ -250,39 +250,126 @@ def listening_window(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def total_early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+def total_early_reflections(
+    h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
+) -> pd.DataFrame:
     """Compute the Total Early Reflections from the SPL horizontal and vertical"""
-    return spatial_average2(
-        h_spl,
-        [
-            "Freq",
-            "On Axis",
-            "10°",
-            "20°",
-            "30°",
-            "40°",
-            "50°",
-            "60°",
-            "70°",
-            "80°",
-            "90°",
-            "-10°",
-            "-20°",
-            "-30°",
-            "-40°",
-            "-50°",
-            "-60°",
-            "-70°",
-            "-80°",
-            "-90°",
-            "180°",
-        ],
-        v_spl,
-        ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"],
-    )
+    if method == "corrected":
+        return spatial_average2(
+            h_spl,
+            [
+                "Freq",
+                "On Axis",
+                "10°",
+                "20°",
+                "30°",
+                "40°",
+                "50°",
+                "60°",
+                "70°",
+                "80°",
+                "90°",
+                "-10°",
+                "-20°",
+                "-30°",
+                "-40°",
+                "-50°",
+                "-60°",
+                "-70°",
+                "-80°",
+                "-90°",
+                "-170°",
+                "-160°",
+                "-150°",
+                "-140°",
+                "-130°",
+                "-120°",
+                "-110°",
+                "-100°",
+                "100°",
+                "110°",
+                "120°",
+                "130°",
+                "140°",
+                "150°",
+                "160°",
+                "170°",
+                "180°",
+            ],
+            v_spl,
+            ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"],
+        )
+    elif method == "standard":
+        return spatial_average2(
+            h_spl,
+            [
+                "Freq",
+                "On Axis",
+                "10°",
+                "20°",
+                "30°",
+                "40°",
+                "50°",
+                "60°",
+                "70°",
+                "80°",
+                "90°",
+                "-10°",
+                "-20°",
+                "-30°",
+                "-40°",
+                "-50°",
+                "-60°",
+                "-70°",
+                "-80°",
+                "-90°",
+                "180°",
+            ],
+            v_spl,
+            ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"],
+        )
+    else:
+        logger.fatal("method is unknown {}".format(method))
+        return None
 
 
-def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+def total_early_reflections2(
+    floor_bounce,
+    ceiling_bounce,
+    front_wall_bounce,
+    side_wall_bounce,
+    rear_wall_bounce,
+    method="corrected",
+):
+    floor = np.power(10, (floor_bounce.dB - 105.0) / 20.0)
+    ceiling = np.power(10, (ceiling_bounce.dB - 105.0) / 20.0)
+    side = np.power(10, (side_wall_bounce.dB - 105.0) / 20.0)
+    rear = np.power(10, (rear_wall_bounce.dB - 105.0) / 20.0)
+    front = np.power(10, (front_wall_bounce.dB - 105.0) / 20.0)
+
+    if method == "corrected":
+        # 3+3+10+19+7 = 42
+        # spl = 105.0 + 20.0 * np.log10((3*floor+3*ceiling+10*side+19*rear+7*front)/42.0)
+        spl = 105.0 + 20.0 * np.log10(
+            np.sqrt(
+                (floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0
+            )
+        )
+    elif method == "standard":
+        # 3+3+10+3+7 = 26
+        spl = 105.0 + 20.0 * np.log10(
+            np.sqrt(
+                (floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0
+            )
+        )
+    else:
+        logger.fatal("method is unknown {}".format(method))
+    return pd.DataFrame({"dB": spl})
+
+
+def early_reflections(
+    h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
+) -> pd.DataFrame:
     """Compute the Early Reflections from the SPL horizontal and vertical"""
     floor_bounce = spatial_average1(v_spl, ["Freq", "-20°", "-30°", "-40°"])
 
@@ -309,9 +396,56 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
         ],
     )
 
-    rear_wall_bounce = spatial_average1(h_spl, ["Freq", "-90°", "90°", "180°"])
+    # CEA2034 error
+    if method == "corrected":
+        rear_wall_bounce = spatial_average1(
+            h_spl,
+            [
+                "Freq",
+                "-170°",
+                "-160°",
+                "-150°",
+                "-140°",
+                "-130°",
+                "-120°",
+                "-110°",
+                "-100°",
+                "-90°",
+                "90°",
+                "100°",
+                "110°",
+                "120°",
+                "130°",
+                "140°",
+                "150°",
+                "160°",
+                "170°",
+                "180°",
+            ],
+        )
+    elif method == "standard":
+        rear_wall_bounce = spatial_average1(
+            h_spl,
+            [
+                "Freq",
+                "-90°",
+                "90°",
+                "180°",
+            ],
+        )
+    else:
+        logger.fatal("method is unknown {}".format(method))
 
-    total_early_reflection = total_early_reflections(h_spl, v_spl)
+    # total_early_reflection = total_early_reflections(h_spl, v_spl)
+    total_early_reflection = total_early_reflections2(
+        floor_bounce=floor_bounce,
+        ceiling_bounce=ceiling_bounce,
+        front_wall_bounce=front_wall_bounce,
+        side_wall_bounce=side_wall_bounce,
+        rear_wall_bounce=rear_wall_bounce,
+        method=method,
+    )
+    # total_early_reflection = total_early_reflections(h_spl, v_spl, method=method)
 
     early_reflection = pd.DataFrame(
         {
@@ -541,17 +675,21 @@ def estimated_inroom(
         return pd.DataFrame()
 
 
-def estimated_inroom_HV(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+def estimated_inroom_HV(
+    h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
+) -> pd.DataFrame:
     """Compute the PIR from the SPL horizontal and vertical"""
     if v_spl.empty or h_spl.empty:
         return pd.DataFrame()
     lw = listening_window(h_spl, v_spl)
-    er = early_reflections(h_spl, v_spl)
+    er = early_reflections(h_spl, v_spl, method)
     sp = sound_power(h_spl, v_spl)
     return estimated_inroom(lw, er, sp)
 
 
-def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+def compute_cea2034(
+    h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
+) -> pd.DataFrame:
     """Compute all the graphs from CEA2034 from the SPL horizontal and vertical"""
     if v_spl.empty or h_spl.empty:
         return pd.DataFrame()
@@ -565,24 +703,20 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     ).reset_index(drop=True)
     lw = listening_window(h_spl, v_spl)
     sp = sound_power(h_spl, v_spl)
-    # Early Reflections Directivity Index (ERDI)
-    # The Early Reflections Directivity Index is defined as the difference
-    # between the listening window curve and the early reflections curve.
-    ter = total_early_reflections(h_spl, v_spl)
-    for (key, name) in [
-        ("Listening Window", lw),
-        ("Sound Power", sp),
-        ("Early Reflections", ter),
-    ]:
-        if not name.empty:
-            spin[key] = name.dB
-        else:
-            logger.debug("{0} is empty".format(key))
+    ter = early_reflections(h_spl, v_spl, method)
+    if not lw.empty:
+        spin["Listening Window"] = lw.dB
 
-    if lw.empty or ter.empty:
+    if not sp.empty:
+        spin["Sound Power"] = sp.dB
+
+    if "Total Early Reflection" in ter.keys():
+        spin["Early Reflections"] = ter["Total Early Reflection"]
+
+    if lw.empty or sp.empty or ter.empty:
         return spin.reset_index(drop=True)
 
-    erdi = pd.DataFrame({"dB": lw.dB - ter.dB})
+    erdi = pd.DataFrame({"dB": lw.dB - ter["Total Early Reflection"]})
     # add a di offset to mimic other systems
     di_offset = pd.DataFrame({"dB": [0 for i in range(0, len(erdi))]})
     # Sound Power Directivity Index (SPDI)

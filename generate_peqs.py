@@ -108,7 +108,7 @@ from spinorama.auto_optim import optim_multi_steps
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
-VERSION = "0.14"
+VERSION = "0.16"
 
 
 def optim_find_peq(
@@ -541,7 +541,7 @@ if __name__ == "__main__":
         "slope_listening_window": -0.5,
         "slope_early_reflections": -4,
         "slope_sound_power": -9,
-        "slope_estimated_inroom": -5.5,
+        "slope_estimated_inroom": -6.5,
         # do we want to smooth the targets?
         "smooth_measurements": False,
         # size of the window to smooth (currently in number of data points but could be in octave)

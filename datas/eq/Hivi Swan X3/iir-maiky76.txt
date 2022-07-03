@@ -1,0 +1,11 @@
+Swan HIVI X3 APO EQ Score 96000Hz
+July012022-173726
+
+Preamp: -2.5 dB
+
+Filter 1: ON PK Fc 218.09,    2.47,    2.30
+Filter 2: ON PK Fc 1281.48,    1.60,    1.40
+Filter 3: ON PK Fc 2030.31,    -1.43,    2.58
+Filter 4: ON PK Fc 3944.93,    -3.31,    2.22
+Filter 5: ON PK Fc 6913.64,    -1.67,    1.80
+Filter 6: ON PK Fc 18222.95,    1.40,    1.63

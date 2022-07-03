@@ -68,6 +68,44 @@ export function sortMetadata2 (metadata, sorter) {
     return -10.0
   }
 
+  function getF3v2 (key) {
+    const spk = metadata[key]
+    const def = spk.default_measurement
+    const msr = spk.measurements[def]
+    if ('estimates' in msr && 'ref_3dB' in msr.estimates) {
+      return -spk.measurements[def].estimates.ref_3dB
+    }
+    return -1000
+  }
+
+  function getF6v2 (key) {
+    const spk = metadata[key]
+    const def = spk.default_measurement
+    const msr = spk.measurements[def]
+    if ('estimates' in msr && 'ref_6dB' in msr.estimates) {
+      return -spk.measurements[def].estimates.ref_6dB
+    }
+    return -1000
+  }
+
+  function getFlatnessv2 (key) {
+    const spk = metadata[key]
+    const def = spk.default_measurement
+    const msr = spk.measurements[def]
+    if ('estimates' in msr && 'ref_band' in msr.estimates) {
+      return -spk.measurements[def].estimates.ref_band
+    }
+    return -1000
+  }
+
+  function getSensitivityv2 (key) {
+    const spk = metadata[key]
+    if ('sensitivity' in spk) {
+      return spk.sensitivity
+    }
+    return 0.0
+  }
+
   if (sorter.by === 'date') {
     return sortChildren2({ container: metadata, score: k => getDate2(k) })
   } else if (sorter.by === 'score') {
@@ -80,9 +118,18 @@ export function sortMetadata2 (metadata, sorter) {
     return sortChildren2({ container: metadata, score: k => getScoreEqWsub2(k) })
   } else if (sorter.by === 'price') {
     return sortChildren2({ container: metadata, score: k => getPrice2(k) })
+  } else if (sorter.by === 'f3') {
+    return sortChildren2({ container: metadata, score: k => getF3v2(k) })
+  } else if (sorter.by === 'f6') {
+    return sortChildren2({ container: metadata, score: k => getF6v2(k) })
+  } else if (sorter.by === 'flatness') {
+    return sortChildren2({ container: metadata, score: k => getFlatnessv2(k) })
+  } else if (sorter.by === 'sensitivity') {
+    return sortChildren2({ container: metadata, score: k => getSensitivityv2(k) })
   } else {
     console.log('ERROR: unknown sorter ' + sorter.by)
   }
+  
 }
 
 export function sortMetadata (currentMetadata, currentContainer, current_sorter) {
@@ -180,6 +227,61 @@ export function sortMetadata (currentMetadata, currentContainer, current_sorter)
     return 19700101
   }
 
+  function get_f3 (item) {
+    if (item.id in indirectMetadata) {
+      const meta = currentMetadata[indirectMetadata[item.id]]
+      const def = meta.default_measurement
+      const msr = meta.measurements[def]
+      if ('estimates' in msr && 'ref_3dB' in msr.estimates) {
+        const f3 = parseFloat(msr.estimates.ref_3dB)
+        if (!isNaN(f3)) {
+          return -f3
+        }
+      }
+    }
+    return -1000
+  }
+
+  function get_f6 (item) {
+    if (item.id in indirectMetadata) {
+      const meta = currentMetadata[indirectMetadata[item.id]]
+      const def = meta.default_measurement
+      const msr = meta.measurements[def]
+      if ('estimates' in msr && 'ref_6dB' in msr.estimates) {
+        const f6 = parseFloat(msr.estimates.ref_6dB)
+        if (!isNaN(f6)) {
+          return -f6
+        }
+      }
+    }
+    return -1000
+  }
+
+  function get_flatness (item) {
+    if (item.id in indirectMetadata) {
+      const meta = currentMetadata[indirectMetadata[item.id]]
+      const def = meta.default_measurement
+      const msr = meta.measurements[def]
+      if ('estimates' in msr && 'ref_band' in msr.estimates) {
+        const band = parseFloat(msr.estimates.ref_band)
+        if (!isNaN(band)) {
+          return -band
+        }
+      }
+    }
+    return -1000
+  }
+
+  function get_sensitivity (item) {
+    if (item.id in indirectMetadata) {
+      const sensitivity = parseFloat(currentMetadata[indirectMetadata[item.id]].sensitivity)
+      if (!isNaN(sensitivity)) {
+        return sensitivity
+      }
+    }
+    return 50
+  }
+
   if (current_sorter.by === 'price') {
     sortChildren({
       container: currentContainer,
@@ -220,6 +322,34 @@ export function sortMetadata (currentMetadata, currentContainer, current_sorter)
       container: currentContainer,
       getScore: item => {
         return get_date(item)
+      }
+    })
+  } else if (current_sorter.by === 'f3') {
+    sortChildren({
+      container: currentContainer,
+      getScore: item => {
+        return get_f3(item)
+      }
+    })
+  } else if (current_sorter.by === 'f6') {
+    sortChildren({
+      container: currentContainer,
+      getScore: item => {
+        return get_f6(item)
+      }
+    })
+  } else if (current_sorter.by === 'flatness') {
+    sortChildren({
+      container: currentContainer,
+      getScore: item => {
+        return get_flatness(item)
+      }
+    })
+  } else if (current_sorter.by === 'sensitivity') {
+    sortChildren({
+      container: currentContainer,
+      getScore: item => {
+        return get_sensitivity(item)
       }
     })
   } else {

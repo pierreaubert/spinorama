@@ -100,11 +100,19 @@ export function getReviews (value) {
     if (origin === 'ErinsAudioCorner') {
       origin = 'EAC'
     } else if (origin === 'Princeton') {
-      origin = '3D3A'
+      origin = 'PCT'
     } else if (origin === 'napilopez') {
       origin = 'NPZ'
     } else if (origin === 'speakerdata2034') {
-      origin = 'SPD'
+      origin = 'SPK'
+    } else if (origin === 'archimago') {
+      origin = 'AMG'
+    } else if (origin === 'audioxpress') {
+      origin = 'AXP'
+    } else if (origin === 'audioholics') {
+      origin = 'AHL'
+    } else if (origin === 'soundstageultra') {
+      origin = 'SSU'
     }
     origin = origin.charAt(0).toUpperCase() + origin.slice(1)
     if (version.search("sealed") != -1 ) {
@@ -114,9 +122,17 @@ export function getReviews (value) {
     } else if  (version.search("ported") != -1 ) {
       origin = origin + " (Ported)"
     } else if  (version.search("horizontal") != -1 ) {
-      origin = origin + " (Horizontal)"
+      origin = origin + " (Hor.)"
     } else if  (version.search("vertical") != -1 ) {
-      origin = origin + " (Vertical)"
+      origin = origin + " (Ver.)"
+    } else if  (version.search("grille-on") != -1 ) {
+      origin = origin + " (Grille on)"
+    } else if  (version.search("no-grille") != -1 ) {
+      origin = origin + " (Grille off)"
+    } else if  (version.search("short-port") != -1 ) {
+      origin = origin + " (Short Port)"
+    } else if  (version.search("long-port") != -1 ) {
+      origin = origin + " (Long Port)"
     } else {
       let pos = version.search(/-v[123456]-/)
       if (pos != -1 ) {

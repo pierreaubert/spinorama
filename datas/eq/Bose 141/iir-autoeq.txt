@@ -1,15 +1,15 @@
 EQ for Bose 141 computed from Vendors-Bose data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-17-19:34:28
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-13:07:12
 
-Preamp: -5.0 dB
+Preamp: -5.2 dB
 
-Filter  1: ON PK Fc  4275 Hz Gain +4.45 dB Q 4.82
-Filter  2: ON PK Fc 10159 Hz Gain -7.05 dB Q 5.34
-Filter  3: ON PK Fc   283 Hz Gain +4.32 dB Q 1.34
-Filter  4: ON PK Fc  2834 Hz Gain -2.01 dB Q 2.79
-Filter  5: ON PK Fc 14090 Hz Gain -3.42 dB Q 6.00
-Filter  6: ON PK Fc  5304 Hz Gain +1.16 dB Q 1.08
-Filter  7: ON PK Fc  2144 Hz Gain -1.76 dB Q 4.07
-Filter  8: ON PK Fc  1352 Hz Gain -1.80 dB Q 6.00
-Filter  9: ON PK Fc  5043 Hz Gain -1.22 dB Q 6.00
+Filter  1: ON PK Fc  4497 Hz Gain +4.91 dB Q 2.32
+Filter  2: ON PK Fc 10308 Hz Gain -4.56 dB Q 2.98
+Filter  3: ON PK Fc  7003 Hz Gain +3.17 dB Q 2.98
+Filter  4: ON PK Fc   293 Hz Gain +4.33 dB Q 1.15
+Filter  5: ON PK Fc  1096 Hz Gain +3.35 dB Q 3.00
+Filter  6: ON PK Fc  1313 Hz Gain -4.01 dB Q 2.99
+Filter  7: ON PK Fc  2741 Hz Gain -1.55 dB Q 2.97
+Filter  8: ON PK Fc  1455 Hz Gain +2.53 dB Q 2.94
+Filter  9: ON PK Fc   818 Hz Gain -2.45 dB Q 2.99

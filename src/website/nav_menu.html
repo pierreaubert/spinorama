@@ -28,7 +28,7 @@
       <a class="navbar-item" href="${site}/index.html">Search</a>
       <a class="navbar-item" href="${site}/eqs.html">EQs</a>
       <a class="navbar-item" href="${site}/compare.html">Compare</a>
-      <a class="navbar-item" href="${site}/scores.html">Scores</a>
+      <a class="navbar-item" href="${site}/scores.html">Ranking</a>
       <a class="navbar-item" href="${site}/statistics.html">Statistics</a>
       <a class="navbar-item" href="${site}/help.html">Help</a>
     </div>
@@ -75,6 +75,7 @@
   ${filterShape()}
   ${filterPower()}
   ${filterBrand()}
+  ${filterPrice()}
 </%def>
 
 <%def name="filterQuality()">
@@ -82,7 +83,7 @@
   <div class="control has-icons-left">
     <div class="select">
       <select id="selectQuality">
-        <option value="">Quality</option>
+        <option value="">Measurements Quality</option>
         <option value="high">High</option>
         <option value="medium">Medium</option>
         <option value="low">Low</option>
@@ -163,6 +164,28 @@
 </div>
 </%def>
 
+<%def name="filterPrice()">
+<div class="dropdown-item">
+  <div class="control has-icons-left">
+    <div class="select">
+      <select id="selectPrice">
+        <option value="">Price (each)</option>
+        <option value="p100">&lt;100$</option>
+        <option value="p200">100$-200$</option>
+        <option value="p200">200$-300$</option>
+        <option value="p300">200$-300$</option>
+        <option value="p500">300$-500$</option>
+        <option value="p1000">500$-1000$</option>
+        <option value="p2000">1000$-2000$</option>
+        <option value="p5000">2000$-5000$</option>
+        <option value="p5000p">&gt;5000$</option>
+      </select>
+    </div>
+    <div class="icon is-left"><i class="fas fa-dollar-sign"></i></div>
+  </div>
+</div>
+</%def>
+
 <%def name="sortBy()">
 <div class="dropdown-item">
   <div class="control has-icons-left">
@@ -173,7 +196,11 @@
         <option value="scoreEQ">Score with EQ</option>
         <option value="scoreEQWSUB">Score with EQ and Subwoofer</option>
         <option value="date" selected>Date</option>
-        <option value="price">Price</option>
+        <option value="price">Price ($$$)</option>
+        <option value="f3">F3 (Hz)</option>
+        <option value="f6">F6 (Hz)</option>
+        <option value="flatness">Flatness (dB)</option>
+        <option value="sensitivity">Sensitivity (dB)</option>
       </select>
     </div>
     <div class="icon is-left"><i class="fas fa-sort"></i></div>

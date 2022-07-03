@@ -1,0 +1,15 @@
+EQ for Manger Sidekick computed from Princeton data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
+Dated: 2021-09-17-19:34:59
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc 13102 Hz Gain +1.88 dB Q 0.47
+Filter  2: ON PK Fc 10324 Hz Gain +1.02 dB Q 6.00
+Filter  3: ON PK Fc 15565 Hz Gain +1.05 dB Q 6.00
+Filter  4: ON PK Fc   770 Hz Gain +3.06 dB Q 6.00
+Filter  5: ON PK Fc  1775 Hz Gain +1.82 dB Q 6.00
+Filter  6: ON PK Fc  2661 Hz Gain -2.99 dB Q 4.52
+Filter  7: ON PK Fc   976 Hz Gain -3.06 dB Q 6.00
+Filter  8: ON PK Fc  8237 Hz Gain +0.93 dB Q 6.00
+Filter  9: ON PK Fc  3557 Hz Gain +0.55 dB Q 6.00

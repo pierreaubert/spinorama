@@ -19,7 +19,8 @@ window.onload = () => {
   const banner = document.querySelector('.banner')
   if (banner) {
     banner.addEventListener('click', (e) => {
-      banner.classList.toggle('visible')
+      banner.classList.toggle('hidden')
     })
   }
+
 }

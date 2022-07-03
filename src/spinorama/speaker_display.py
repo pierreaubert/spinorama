@@ -12,6 +12,7 @@ from .plot import (
     radar_params_default,
     plot_spinorama,
     plot_graph,
+    plot_graph_spl,
     plot_graph_regression,
     plot_contour,
     plot_radar,
@@ -101,15 +102,7 @@ def display_spl(df, axis, graph_params=plot_params_default):
     try:
         if axis not in df.keys():
             return None
-        keep = {"Freq"}
-        for k in ("On Axis", "10°", "20°", "30°", "40°", "50°", "60°"):
-            if k in df[axis].keys():
-                keep.add(k)
-        if len(keep) > 1:
-            spl = df[axis].loc[:, list(keep)]
-            # print('spl {}'.format(spl.keys()))
-            return plot_graph(spl, graph_params)
-        return None
+        return plot_graph_spl(df[axis], graph_params)
     except KeyError as ke:
         logger.warning("Display SPL failed with {0}".format(ke))
         return None

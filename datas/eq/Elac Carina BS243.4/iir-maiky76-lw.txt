@@ -1,0 +1,14 @@
+Elac Carina BS243.4 APO EQ LW 96000Hz
+May302022-115156
+
+Preamp: -3 dB
+
+Filter 1: ON HPQ Fc 55.92,    0.00,    1.40
+Filter 2: ON PK Fc 100.95,    -2.88,    0.89
+Filter 3: ON PK Fc 370.80,    1.17,    2.70
+Filter 4: ON PK Fc 1422.38,    0.84,    1.63
+Filter 5: ON PK Fc 2043.64,    -1.71,    4.46
+Filter 6: ON PK Fc 2823.57,    3.54,    1.92
+Filter 7: ON PK Fc 3592.12,    -3.33,    4.47
+Filter 8: ON PK Fc 10695.84,    2.46,    1.71
+

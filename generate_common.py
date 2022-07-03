@@ -17,10 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from collections import defaultdict
 import difflib
+from glob import glob
+from hashlib import md5
 import ipaddress
 import logging
 import os
+import pathlib
 import sys
 import warnings
 
@@ -124,17 +128,25 @@ def custom_ray_init(args):
     )
 
 
-CACHE_NAME = "cache.parse_all_speakers.h5"
-SMOKE_CACHE_NAME = "cache.smoketest_speakers.h5"
+CACHE_DIR = ".cache"
 
 
 def cache_key(name):
-    return name[0]
+    # 256 partitions, use hashlib for stable hash
+    return "{:2s}".format(
+        md5(name.encode("utf-8"), usedforsecurity=False).hexdigest()[0:2]
+    )
+
+
+def cache_match(key, name):
+    return key == cache_key(name)
 
 
 def cache_hash(df_all):
     df = {}
     for k, v in df_all.items():
+        if k is None or len(k) == 0:
+            continue
         h = cache_key(k)
         if h not in df.keys():
             df[h] = {}
@@ -142,62 +154,61 @@ def cache_hash(df_all):
     return df
 
 
-def cache_unhash(df_all):
-    df = {}
-    for _, v in df_all.items():
-        for k2, v2 in v.items():
-            df[k2] = v2
-    return df
+def cache_save_key(key, data):
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", tables.NaturalNameWarning)
+        # print('{} {}'.format(key, data.keys()))
+        cache_name = "{}/{}.h5".format(CACHE_DIR, key)
+        # print(cache_name)
+        fl.save(path=cache_name, data=data)
 
 
 def cache_save(df_all, smoke_test=False):
+    pathlib.Path(CACHE_DIR).mkdir(parents=True, exist_ok=True)
     df_hashed = cache_hash(df_all)
-    cache_name = CACHE_NAME
-    if smoke_test:
-        cache_name = SMOKE_CACHE_NAME
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", tables.NaturalNameWarning)
-        fl.save(path=cache_name, data=df_hashed)
+    for key, data in df_hashed.items():
+        cache_save_key(key, data)
+    print("(saved {} speakers)".format(len(df_all)))
 
 
 def cache_load(simple_filter=None, smoke_test=False):
-    df_all = None
-    cache_name = CACHE_NAME
-    if smoke_test:
-        cache_name = SMOKE_CACHE_NAME
-    if simple_filter is None:
-        df_all = fl.load(path=cache_name)
-    else:
-        df_read = fl.load(
-            path=cache_name,
-            group="/{}/{}".format(cache_key(simple_filter), simple_filter),
-        )
-        df_all = {
-            cache_key(simple_filter): {
-                simple_filter: df_read,
-            },
-        }
-    return cache_unhash(df_all)
+    df_all = defaultdict()
+    cache_files = glob("{}/*.h5".format(CACHE_DIR))
+    for cache in cache_files:
+        if simple_filter is not None and cache[-5:-3] != cache_key(simple_filter):
+            continue
+        df_read = fl.load(path=cache)
+        # print('reading file {} found {} entries'.format(cache, len(df_read)))
+        for speaker, data in df_read.items():
+            if speaker in df_all.keys():
+                print("error in cache: {} is already in keys".format(speaker))
+            if simple_filter is not None and speaker != simple_filter:
+                # print(speaker, simple_filter)
+                continue
+            df_all[speaker] = data
+    print("(loaded {} speakers)".format(len(df_all)))
+    return df_all
 
 
-def cache_update(df_new):
-    if not os.path.exists(CACHE_NAME) or len(df_new) == 0:
+def cache_update(df_new, filters):
+    if not os.path.exists(CACHE_DIR) or len(df_new) == 0:
         return
 
     print("Updating cache ", end=" ", flush=True)
-    df_tbu = cache_unhash(fl.load(path=CACHE_NAME))
-    print("(loaded {}) ".format(len(df_tbu)), end=" ", flush=True)
     count = 0
     for new_speaker, new_datas in df_new.items():
+        if filters is not None and new_speaker != filters.get("speaker", ""):
+            continue
+        df_old = cache_load(new_speaker)
         for new_origin, new_measurements in new_datas.items():
             for new_measurement, new_data in new_measurements.items():
-                if new_speaker not in df_tbu.keys():
-                    df_tbu[new_speaker] = {new_origin: {new_measurement: new_data}}
-                elif new_origin not in df_tbu[new_speaker].keys():
-                    df_tbu[new_speaker][new_origin] = {new_measurement: new_data}
+                if new_speaker not in df_old.keys():
+                    df_old[new_speaker] = {new_origin: {new_measurement: new_data}}
+                elif new_origin not in df_old[new_speaker].keys():
+                    df_old[new_speaker][new_origin] = {new_measurement: new_data}
                 else:
-                    df_tbu[new_speaker][new_origin][new_measurement] = new_data
+                    df_old[new_speaker][new_origin][new_measurement] = new_data
                 count += 1
+        cache_save_key(cache_key(new_speaker), df_old)
     print("(updated +{}) ".format(count), end=" ", flush=True)
-    cache_save(df_tbu)
     print("(saved).")

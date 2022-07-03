@@ -1,15 +1,15 @@
 EQ for KRK Systems RoKit 6 G2 computed from Princeton data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-17-19:34:59
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-13:56:40
 
-Preamp: -3.7 dB
+Preamp: -4.0 dB
 
-Filter  1: ON PK Fc  1539 Hz Gain +3.30 dB Q 2.37
-Filter  2: ON PK Fc  9336 Hz Gain +1.01 dB Q 4.26
-Filter  3: ON PK Fc  3161 Hz Gain +1.83 dB Q 6.00
-Filter  4: ON PK Fc 10559 Hz Gain +0.50 dB Q 6.00
-Filter  5: ON PK Fc  1493 Hz Gain +0.50 dB Q 6.00
-Filter  6: ON PK Fc  3105 Hz Gain +0.50 dB Q 6.00
-Filter  7: ON PK Fc  6098 Hz Gain +0.50 dB Q 6.00
-Filter  8: ON PK Fc 16000 Hz Gain -1.71 dB Q 3.20
-Filter  9: ON PK Fc  2827 Hz Gain -0.50 dB Q 0.69
+Filter  1: ON PK Fc  1524 Hz Gain +3.99 dB Q 2.99
+Filter  2: ON PK Fc   703 Hz Gain +2.06 dB Q 2.98
+Filter  3: ON PK Fc  2938 Hz Gain +1.15 dB Q 2.99
+Filter  4: ON PK Fc  3205 Hz Gain -1.32 dB Q 1.06
+Filter  5: ON PK Fc  3148 Hz Gain +1.52 dB Q 2.99
+Filter  6: ON PK Fc 15977 Hz Gain -1.23 dB Q 2.99
+Filter  7: ON PK Fc  9941 Hz Gain +0.88 dB Q 2.98
+Filter  8: ON PK Fc  4039 Hz Gain -1.32 dB Q 2.99
+Filter  9: ON PK Fc  3986 Hz Gain +1.02 dB Q 2.93

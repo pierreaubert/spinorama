@@ -128,7 +128,7 @@ def resample(df: pd.DataFrame, target_size: int):
     return df
 
 
-def compute_contour(dfm_in, min_freq):
+def compute_contour(dfm_in):
     # generate 3 arrays x, y, z suitable for computing equilevels
     dfm = sort_angles(dfm_in)
     # check if we have -180
@@ -149,17 +149,15 @@ def compute_contour(dfm_in, min_freq):
 
     vrange = list(sorted(vrange))
 
-    dfm = graph_melt(dfm)
-    nm = dfm.Measurements.nunique()
-    nf = int(len(dfm.index) / nm)
-    # print("unique={:d} nf={:d} vrange={}".format(nm, nf, vrange))
-    hrange = np.logspace(math.log10(min_freq), 4.0 + math.log10(2), nf)
+    # print("nf={:d} vrange={}".format(len(vrange), vrange))
+    hrange = dfm_in.Freq
     af, am = np.meshgrid(hrange, vrange)
-    az = np.array([dfm.dB[nf * i : nf * (i + 1)] for i in range(0, nm)])
+    dfm.drop("Freq", axis=1, inplace=True)
+    az = dfm.T.to_numpy()
     # if af.shape != am.shape or af.shape != az.shape:
-    #    print(
-    #        "Shape mismatch af={0} am={1} az={2}".format(af.shape, az.shape, am.shape)
-    #    )
+    #   print(
+    #       "Shape mismatch af={0} am={1} az={2}".format(af.shape, az.shape, am.shape)
+    #   )
     return (af, am, az)
 
 

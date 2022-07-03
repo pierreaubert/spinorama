@@ -1,16 +1,8 @@
 EQ for Magnepan LRS computed from ASR data
-Preference Score -0.4 with EQ 4.8
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-17-19:35:04
+Preference Score -0.2 with EQ -0.5
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-13:57:54
 
-Preamp: -6.5 dB
+Preamp: -0.2 dB
 
-Filter  1: ON PK Fc  1606 Hz Gain -8.00 dB Q 0.11
-Filter  2: ON PK Fc   340 Hz Gain -3.87 dB Q 3.67
-Filter  3: ON PK Fc   102 Hz Gain +2.20 dB Q 1.11
-Filter  4: ON PK Fc  2513 Hz Gain +1.71 dB Q 4.02
-Filter  5: ON PK Fc 15608 Hz Gain +7.32 dB Q 6.00
-Filter  6: ON PK Fc 13778 Hz Gain -3.23 dB Q 6.00
-Filter  7: ON PK Fc 15605 Hz Gain +1.50 dB Q 6.00
-Filter  8: ON PK Fc  3332 Hz Gain +0.52 dB Q 6.00
-Filter  9: ON PK Fc 12029 Hz Gain +0.60 dB Q 6.00
+Filter  1: ON PK Fc   438 Hz Gain -7.98 dB Q 0.05

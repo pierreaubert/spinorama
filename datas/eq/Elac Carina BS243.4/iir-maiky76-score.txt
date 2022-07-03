@@ -1,0 +1,14 @@
+Elac Carina BS243.4 APO EQ Score 96000Hz
+May302022-114626
+
+Preamp: -3 dB
+
+Filter 1: ON HPQ Fc 55.92,    0.00,    1.40
+Filter 2: ON PK Fc 102.45,    -2.90,    0.89
+Filter 3: ON PK Fc 377.80,    1.17,    3.43
+Filter 4: ON PK Fc 1181.11,    0.87,    4.64
+Filter 5: ON PK Fc 2110.76,    -1.43,    3.28
+Filter 6: ON PK Fc 2781.53,    4.20,    2.53
+Filter 7: ON PK Fc 3570.41,    -3.33,    4.47
+Filter 8: ON PK Fc 5496.79,    -0.62,    0.57
+Filter 9: ON PK Fc 10694.84,    1.66,    2.50

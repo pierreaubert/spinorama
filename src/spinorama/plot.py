@@ -375,6 +375,44 @@ def plot_graph(df, params):
     return fig
 
 
+def plot_graph_spl(df, params):
+    layout = params.get("layout", "")
+    fig = go.Figure()
+    for measurement in df.keys():
+        if measurement != "Freq":
+            visible = None
+            if measurement in ("On Axis", "10°", "20°", "30°", "40°", "50°", "60°"):
+                visible = True
+            elif measurement in ("-10°", "-20°", "-30°", "-40°", "-50°", "-60°"):
+                visible = "legendonly"
+            else:
+                continue
+            trace = go.Scatter(
+                x=df.Freq,
+                y=df[measurement],
+                hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
+                visible=visible,
+                showlegend=True,
+                legendrank=legend_rank[measurement],
+            )
+            if layout == "compact":
+                trace.name = label_short.get(measurement, measurement)
+            else:
+                trace.name = measurement
+                trace.legendgroup = "measurements"
+                trace.legendgrouptitle = {"text": "Measurements"}
+            if measurement in uniform_colors.keys():
+                trace.marker = {"color": uniform_colors[measurement]}
+            if measurement in legend_rank.keys():
+                trace.legendrank = legend_rank[measurement]
+            fig.add_trace(trace)
+
+    fig.update_xaxes(generate_xaxis())
+    fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
+    fig.update_layout(common_layout(params))
+    return fig
+
+
 def plot_graph_regression_traces(df, measurement, params):
     layout = params.get("layout", "")
     traces = []
@@ -478,19 +516,22 @@ def plot_contour(spl, params):
 
     fig = go.Figure()
 
-    af, am, az = compute_contour(df.loc[df.Freq > min_freq], min_freq)
+    af, am, az = compute_contour(df.loc[df.Freq > min_freq])
     az = np.clip(az, contour_start, contour_end)
     fig.add_trace(
         go.Contour(
             x=af[0],
             y=am.T[0],
             z=az,
+            zmin=contour_start,
+            zmax=contour_end,
             contours=dict(
                 coloring="fill",
-                start=contour_start,
-                end=contour_end,
+                start=contour_start + 0,
+                end=contour_end - 0,
                 size=3,
-                showlines=False,
+                showlines=True,
+                # showlabels=True,
             ),
             colorbar=dict(
                 dtick=3,
@@ -656,5 +697,5 @@ def plot_image(df):
     return None
 
 
-def plot_summary(df):
+def plot_summary(df, params):
     return None

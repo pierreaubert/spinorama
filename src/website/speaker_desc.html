@@ -30,10 +30,14 @@
       price =meta[speaker].get('price', '?')
 %>
 %     if price not in ('?', ''):
-          that cost around ${meta[speaker].get('price', '?')}CHF
-%     if meta[speaker].get('amount', '?') != '?' and meta[speaker].get('shape') != 'center':
-          for a ${meta[speaker].get('amount')}
-%     endif
+          that cost around ${meta[speaker].get('price', '?')}USD
+%         if meta[speaker].get('amount', '?') != '?' and meta[speaker].get('shape') != 'center':
+%             if meta[speaker].get('amount') == 'pair':
+                  for a pair
+%             else:
+                  each
+%             endif
+%         endif
 %     endif
 .
     </p>
@@ -56,7 +60,8 @@
 %>
 % if sdb is not None:
 <li>
-  Sensitivity: <b>${'{0:.1f}'.format(sdb)}</b>dB (300Hz-3kHz)
+  Sensitivity: <b>${'{0:.1f}'.format(sdb)}</b>dB (avg. 100Hz-1kHz for
+  2.83V measured at 1m)
 </li>
 % endif
 % if estimates is not None:
@@ -102,12 +107,12 @@
 % endif
 
 % if pref_rating is not None or pref_rating_eq is not None:
-<li>Preference Score
+<li>Tonality (Preference) Score
 <ul>
 % endif
 
 % if pref_rating is not None:
-      <li>Preference Score is <b>${pref_rating.get('pref_score')}</b>
+      <li>Tonality (Preference) Score is <b>${pref_rating.get('pref_score')}</b>
       and would be <b>${pref_rating.get('pref_score_wsub')}</b> with a
         perfect subwoofer.
       <ul>
@@ -124,7 +129,7 @@
       </li>
 % endif
 % if pref_rating_eq is not None:
-      <li>Preference Score is <b>${pref_rating_eq.get('pref_score')}</b>
+      <li>Tonality (Preference) Score is <b>${pref_rating_eq.get('pref_score')}</b>
       with an EQ and would be <b>${pref_rating_eq.get('pref_score_wsub')}</b> with a
         perfect subwoofer and the same EQ.
          <ul>
