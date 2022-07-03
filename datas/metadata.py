@@ -5653,7 +5653,6 @@ speakers_info = {
         },
     },
     "LCM Nearfield Monitor 3-D Printed DIY": {
-        "skip": True,
         "brand": "LCM",
         "model": "Nearfield Monitor 3-D Printed DIY",
         "type": "passive",
