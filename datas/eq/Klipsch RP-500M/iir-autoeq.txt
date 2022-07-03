@@ -1,15 +1,15 @@
 EQ for Klipsch RP-500M computed from ErinsAudioCorner data
-Preference Score 4.7 with EQ 6.0
+Preference Score 4.7 with EQ 5.9
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.16
-Dated: 2022-07-01-13:32:27
+Dated: 2022-07-03-13:02:17
 
-Preamp: -4.2 dB
+Preamp: -5.2 dB
 
-Filter  1: ON PK Fc  1701 Hz Gain +3.84 dB Q 2.78
-Filter  2: ON PK Fc 15882 Hz Gain -2.62 dB Q 0.49
-Filter  3: ON PK Fc   125 Hz Gain -1.35 dB Q 2.74
-Filter  4: ON PK Fc   332 Hz Gain +1.35 dB Q 2.26
-Filter  5: ON PK Fc  3726 Hz Gain -0.77 dB Q 5.62
-Filter  6: ON PK Fc   917 Hz Gain -2.04 dB Q 4.54
-Filter  7: ON PK Fc  1431 Hz Gain +1.00 dB Q 5.98
-Filter  8: ON PK Fc  2436 Hz Gain +0.94 dB Q 5.63
+Filter  1: ON PK Fc  1726 Hz Gain +4.68 dB Q 2.97
+Filter  2: ON PK Fc   337 Hz Gain +1.56 dB Q 2.24
+Filter  3: ON PK Fc  4506 Hz Gain -0.96 dB Q 0.12
+Filter  4: ON PK Fc  1815 Hz Gain +1.26 dB Q 1.39
+Filter  5: ON PK Fc 14360 Hz Gain -2.61 dB Q 1.10
+Filter  6: ON PK Fc   133 Hz Gain -0.77 dB Q 2.99
+Filter  7: ON PK Fc   960 Hz Gain -0.97 dB Q 3.00
+Filter  8: ON PK Fc   547 Hz Gain +1.04 dB Q 1.71
