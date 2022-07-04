@@ -9137,6 +9137,25 @@ speakers_info = {
             },
         },
     },
+    "Vandersteen VLR": {
+        "brand": "Vandersteen",
+        "model": "VLR",
+        "type": "passive",
+        "price": "3800",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.audiosciencereview.com/forum/index.php?threads/vandersteen-vlr-speaker-review.35444/",
+                },
+                "review_published": "20220704",
+            },
+        },
+    },
     "Verdant Audio Bambusa AL 1": {
         "brand": "Verdant Audio",
         "model": "Bambusa AL 1",
