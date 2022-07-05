@@ -9241,6 +9241,26 @@ speakers_info = {
             },
         },
     },
+    "Wharfedale Linton 85th Anniversary": {
+        "brand": "Wharfedale",
+        "model": "Linton 85th Anniversary",
+        "type": "passive",
+        "price": "1000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/wharfedale_linton_85/",
+                    "yt": "https://youtu.be/CaxknyOrf3I",
+                },
+                "review_published": "20220704",
+            },
+        },
+    },
     "Wilson Audio TuneTot": {
         "brand": "Wilson Audio",
         "model": "TuneTot",
