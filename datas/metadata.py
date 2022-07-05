@@ -9256,6 +9256,9 @@ speakers_info = {
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/wharfedale_linton_85/",
                     "yt": "https://youtu.be/CaxknyOrf3I",
+                    "tnr": "https://topnewreview.com/wharfedale-linton-85th-anniversary-review/#measured-performance",
+                    "tas": "https://www.theabsolutesound.com/articles/wharfedale-linton-85th-anniversary-loudspeaker",
+                    "whf": "https://www.whathifi.com/reviews/wharfedale-linton",
                 },
                 "review_published": "20220704",
             },
