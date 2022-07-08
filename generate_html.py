@@ -266,7 +266,7 @@ if __name__ == "__main__":
 
     # write various html files
     try:
-        for item in ("scores", ):
+        for item in ("scores",):
             item_name = "{0}.html".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
@@ -277,7 +277,12 @@ if __name__ == "__main__":
                     )
                 )
                 f.close()
-        for item in ("help", "compare", "statistics", "similar", ):
+        for item in (
+            "help",
+            "compare",
+            "statistics",
+            "similar",
+        ):
             item_name = "{0}.html".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
@@ -323,13 +328,19 @@ if __name__ == "__main__":
         file_out = cpaths.CPATH_DOCS_ASSETS_JS + "/" + f
         shutil.copy(file_in, file_out)
 
-    flow_bin = 'flow-remove-types'
-    flow_param = '--pretty --sourcemaps'
+    flow_bin = "flow-remove-types"
+    flow_param = "--pretty --sourcemaps"
 
-    flow_command = '{} {} {} {} {}'.format(flow_bin, flow_param, cpaths.CPATH_WEBSITE_ASSETS_JS, '--out-dir', cpaths.CPATH_DOCS_ASSETS_JS)
+    flow_command = "{} {} {} {} {}".format(
+        flow_bin,
+        flow_param,
+        cpaths.CPATH_WEBSITE_ASSETS_JS,
+        "--out-dir",
+        cpaths.CPATH_DOCS_ASSETS_JS,
+    )
     status = subprocess.run([flow_command], shell=True, check=True, capture_output=True)
     if status.returncode != 0:
-        print('flow failed')
+        print("flow failed")
 
     # copy css/js files
     logger.info("Copy js/css files to {}".format(cpaths.CPATH_DOCS))
