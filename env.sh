@@ -39,7 +39,7 @@ source $SPIN/spinorama-venv/bin/activate
 ## ----------------------------------------------------------------------
 if ! test -d $SPIN/node_modules; then
     npm install plotly
-    npm install pyright html-validator-cli standard
+    npm install pyright html-validator-cli standard flow-remove-types
 fi
 export PATH=$PATH:$SPIN/node_modules/.bin
 

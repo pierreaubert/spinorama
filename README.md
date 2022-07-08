@@ -11,7 +11,7 @@
 This library provides an easy way to view, compare or analyse speakers data. This can help you take informed
 decision when buying a speaker instead of relying on commercial information or internet buzz.
 
-## Jump to the [gallery](https://pierreaubert.github.io/spinorama) of all (300+) speakers measurements.
+## Jump to the [gallery](https://pierreaubert.github.io/spinorama) of all (500+) speakers measurements.
 
 # What is a spinorama set of graphs?
 
@@ -120,7 +120,7 @@ pip3 install -r requirements-tests.txt
 For linting the python, html and javascript code:
 
 ```
-npm install pyright html-validator-cli standard
+npm install pyright html-validator-cli standard flow flow-remove-types
 ```
 
 You may have to update your npm version above 12.0:
