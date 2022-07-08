@@ -40,6 +40,8 @@ import json
 import math
 import sys
 
+import numpy as np
+
 from docopt import docopt
 
 try:
@@ -438,6 +440,67 @@ def add_eq(speaker_path, dataframe, parse_max):
                         )
 
 
+def compute_near(flw1, flw2):
+    freq1, lw1 = flw1
+    freq2, lw2 = flw2
+    lw = lw1 - lw2
+    return np.sum(np.abs(lw))
+
+
+def get_lw(speaker_name, speaker_data):
+    for _, measurements in speaker_data.items():
+        default_key = None
+        try:
+            default_key = metadata.speakers_info[speaker_name]["default_measurement"]
+        except KeyError:
+            return None
+
+        if default_key not in measurements.keys():
+            print("error: {} not in {}".format(default_key, measurements.keys()))
+            return None
+
+        dfs = measurements[default_key]
+        if dfs is None or "CEA2034" not in dfs.keys():
+            return None
+
+        spin = dfs["CEA2034_unmelted"]
+        if spin is None or "Listening Window" not in spin.keys():
+            return None
+
+        return spin["Freq"], spin["Listening Window"]
+
+
+def add_near(dataframe, parse_max):
+    """Compute nearest speaker"""
+    parsed = 0
+    for speaker_name1, speaker_data1 in dataframe.items():
+        if parse_max is not None and parsed > parse_max:
+            break
+        parsed = parsed + 1
+        logger.info("Processing {0}".format(speaker_name1))
+        deltas = []
+        lw1 = get_lw(speaker_name1, speaker_data1)
+        if lw1 is None:
+            continue
+
+        for speaker_name2, speaker_data2 in dataframe.items():
+
+            if speaker_name1 == speaker_name2:
+                continue
+
+            lw2 = get_lw(speaker_name2, speaker_data2)
+            if lw2 is None:
+                continue
+
+            delta = compute_near(lw1, lw2)
+            # print('delta {} between {} and {}'.format(delta, speaker_name1, speaker_name2))
+            deltas.append((delta, speaker_name2))
+
+        closest = sorted(deltas, key=lambda x: x[0])[:3]
+        # print('{} closest are {}'.format(speaker_name1, closest))
+        metadata.speakers_info[speaker_name1]["nearest"] = closest
+
+
 def dump_metadata(meta):
     metadir = cpaths.CPATH_DOCS_ASSETS
     metafile = cpaths.CPATH_METADATA_JSON
@@ -475,6 +538,8 @@ if __name__ == "__main__":
     else:
         df = cache_load()
 
+    df = cache_load(None, True)
+
     if df is None:
         logger.error("Load failed! Please run ./generate_graphs.py")
         sys.exit(1)
@@ -484,6 +549,7 @@ if __name__ == "__main__":
     add_quality(parse_max)
     add_scores(df, parse_max)
     add_eq("./datas", df, parse_max)
+    add_near(df, parse_max)
 
     # check that json is valid
     # try:

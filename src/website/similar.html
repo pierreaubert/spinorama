@@ -1,0 +1,37 @@
+<%include file="header.html"/>
+<%include file="nav_menu.html"/>
+
+<%namespace name="util" module="website.utils" import="*"/>
+
+<div id="cea2034plots" data-num="0">
+  <div class="plotForm">
+    <nav class="level has-background-info-dark mb-0">
+      <div class="level-left">
+        <div class="level-item has-text-centered">
+          <p class="has-text-white">Graph:</p> <select class="graph"></select>
+        </div>
+      </div>
+    </nav>
+    Choose a speaker, it will give you 3 close speakers in terms of tonality.
+    <nav class="level mb-0 mt-0">
+      <div class="level-left">
+        <div class="level-item">
+          <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
+            <ul>
+              <li>Speaker : <select class="speaker0"></select></li>
+              <li>Origin: <select class="origin0"></select>
+              <li>Version: <select class="version0"></select>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </nav>
+    <div class="plotDouble0" id="plotDouble0"></div>
+    <div class="plotDouble1" id="plotDouble1"></div>
+    <div class="plotDouble2" id="plotDouble2"></div>
+  </div>
+</div>
+
+<script type="module" src='./assets/similar.js'></script>
+
+<%include file="footer.html"/>

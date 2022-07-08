@@ -3,6 +3,13 @@
   <head>
     <%include file="head.html"/>
   </head>
+  <script>
+    Handlebars.registerHelper('ifSplitReviews', function (index, arr, options) {
+      if(index>2){
+        return options.fn(this);
+      } 
+    });
+  </script>
 <body>
 
 <%include file="nav_menu.html"/>
@@ -34,7 +41,10 @@
       </div>
       <footer class="card-footer">
         {{#each reviews.reviews}}
-	<a class="card-footer-item" href="{{this.url}}">{{this.origin}}</a>
+	<a class="card-footer-item"
+	   href="{{this.url}}">{{this.origin}}</a>
+        {{#ifSplitReviews index reviews.reviews.length}}
+        {{/ifSplitReviews}}
         {{/each}}
       </footer>
     </div>

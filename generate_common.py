@@ -186,6 +186,7 @@ def cache_load(simple_filter=None, smoke_test=False):
                 # print(speaker, simple_filter)
                 continue
             df_all[speaker] = data
+
     print("(loaded {} speakers)".format(len(df_all)))
     return df_all
 
