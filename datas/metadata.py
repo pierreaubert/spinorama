@@ -3912,17 +3912,17 @@ speakers_info = {
         "amount": "pair",
         "default_measurement": "eac",
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-stage-a130-review-speaker.18260/",
-                "review_published": "20201210",
-            },
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/jbl_stage_a130/",
                 "review_published": "20211112",
+            },
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-stage-a130-review-speaker.18260/",
+                "review_published": "20201210",
             },
         },
     },
@@ -5463,6 +5463,24 @@ speakers_info = {
             },
         },
     },
+    "Klipsch RP-404C II": {
+        "skip": True,
+        "brand": "Klipsch",
+        "model": "RP-404C II",
+        "type": "passive",
+        "price": "600",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_404cii/",
+                "review_published": "20220702",
+            },
+        },
+    },
     "Klipsch RP-500M": {
         "brand": "Klipsch",
         "model": "RP-500M",
@@ -5480,6 +5498,24 @@ speakers_info = {
             },
         },
     },
+    "Klipsch RP-500C II": {
+        "skip": True,
+        "brand": "Klipsch",
+        "model": "RP-500C II",
+        "type": "passive",
+        "price": "500",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_500cii/",
+                "review_published": "20220702",
+            },
+        },
+    },
     "Klipsch RP-500M II": {
         "brand": "Klipsch",
         "model": "RP-500M II",
@@ -5494,6 +5530,24 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_500m_ii/",
                 "review_published": "20220610",
+            },
+        },
+    },
+    "Klipsch RP-504C II": {
+        "skip": True,
+        "brand": "Klipsch",
+        "model": "RP-504C II",
+        "type": "passive",
+        "price": "800",
+        "shape": "center",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_504cii/",
+                "review_published": "20220702",
             },
         },
     },
