@@ -168,17 +168,7 @@ def print_radar(speaker, data, scale):
     fig.write_image(filename)
 
 
-if __name__ == "__main__":
-    args = docopt(
-        __doc__,
-        version="generate_radar.py version {:1.1f}".format(VERSION),
-        options_first=True,
-    )
-
-    level = args2level(args)
-    logger = get_custom_logger(True)
-    logger.setLevel(level)
-
+def main():
     # load all metadata from generated json file
     json_filename = CPATH_METADATA_JSON
     if not os.path.exists(json_filename):
@@ -197,3 +187,17 @@ if __name__ == "__main__":
         print_radar(speaker[0], speaker[1], scale)
 
     sys.exit(0)
+
+
+if __name__ == "__main__":
+    args = docopt(
+        __doc__,
+        version="generate_radar.py version {:1.1f}".format(VERSION),
+        options_first=True,
+    )
+
+    level = args2level(args)
+    logger = get_custom_logger(True)
+    logger.setLevel(level)
+
+    main()

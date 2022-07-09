@@ -472,19 +472,10 @@ def compute_peqs(ray_ids):
     return 0
 
 
-if __name__ == "__main__":
-    args = docopt(
-        __doc__,
-        version="generate_peqs.py version {}".format(VERSION),
-        options_first=True,
-    )
-
+def main():
     force = args["--force"]
     verbose = args["--verbose"]
     smoke_test = args["--smoke-test"]
-
-    logger = get_custom_logger(True)
-    logger.setLevel(args2level(args))
 
     parameter_error = False
 
@@ -742,3 +733,16 @@ if __name__ == "__main__":
     compute_peqs(ids)
 
     sys.exit(0)
+
+
+if __name__ == "__main__":
+    args = docopt(
+        __doc__,
+        version="generate_peqs.py version {}".format(VERSION),
+        options_first=True,
+    )
+
+    logger = get_custom_logger(True)
+    logger.setLevel(args2level(args))
+
+    main()

@@ -150,7 +150,7 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
             last_freq = -(i + 1)
             break
 
-    if current_curve_name != None:  # "Estimated In-Room Response":
+    if current_curve_name is not None:  # "Estimated In-Room Response":
         slope /= math.log10(freq[last_freq]) - math.log10(freq[first_freq])
         intercept = current_curve[first_freq] - slope * math.log10(freq[first_freq])
         flat = slope * math.log10(freq[first_freq])

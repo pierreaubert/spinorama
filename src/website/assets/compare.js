@@ -81,7 +81,7 @@ fetch(urlSite + 'assets/metadata.json').then(
           plotDouble0Container.style.display = 'none'
           plotDouble1Container.style.display = 'none'
           const [datas, layout] = datasAndLayouts[0]
-          if (datas != null && layout != null ) {
+          if (datas !== null && layout !== null ) {
             Plotly.newPlot('plotSingle', datas, layout, { responsive: true })
           }
         } else if (datasAndLayouts.length === 2 ) {
@@ -90,7 +90,7 @@ fetch(urlSite + 'assets/metadata.json').then(
           plotDouble1Container.style.display = 'block'
           for( let i = 0 ; i<datasAndLayouts.length ; i++) {
             let [datas, layout] = datasAndLayouts[i]
-            if (datas != null && layout != null ) {
+            if (datas !== null && layout !== null ) {
               Plotly.newPlot('plotDouble' + i, datas, layout, { responsive: true })
             }
           }

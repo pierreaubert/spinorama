@@ -174,6 +174,7 @@ def cache_save(df_all, smoke_test=False):
 def cache_load(simple_filter=None, smoke_test=False):
     df_all = defaultdict()
     cache_files = glob("{}/*.h5".format(CACHE_DIR))
+    count = 0
     for cache in cache_files:
         if simple_filter is not None and cache[-5:-3] != cache_key(simple_filter):
             continue
@@ -186,6 +187,9 @@ def cache_load(simple_filter=None, smoke_test=False):
                 # print(speaker, simple_filter)
                 continue
             df_all[speaker] = data
+            count += 1
+        if smoke_test and count > 10:
+            break
 
     print("(loaded {} speakers)".format(len(df_all)))
     return df_all

@@ -2,8 +2,9 @@
   "dependencies": {
     "bulma": "^0.9.3",
     "flow-remove-types": "^2.182.0",
-    "fuse": "^0.4.0",
+    "fuse": "^0.0.8",
     "handlebars": "^4.7.7",
+    "html-validate": "^7.1.2",
     "plotly": "^1.0.6",
     "selenium-webdriver": "^4.2.0"
   },
@@ -13,7 +14,6 @@
     "@babel/eslint-parser": "^7.16.5",
     "@babel/preset-env": "^7.16.8",
     "eslint": "^8.7.0",
-    "html-validator-cli": "^7.0.1",
     "husky": "^7.0.0",
     "pyright": "^1.1.201",
     "standard": "^16.0.4"

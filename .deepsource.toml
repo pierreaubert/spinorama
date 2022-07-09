@@ -25,6 +25,3 @@ enabled = true
 name = "shell"
 enabled = true
 
-[[transformers]]
-name = "black"
-enabled = true

@@ -2,7 +2,6 @@ import { urlSite } from './misc.js'
 import {
   assignOptions,
   knownMeasurements,
-  getAllSpeakers,
   getSpeakerData,
   setContour,
   setGlobe,
@@ -27,9 +26,6 @@ fetch(urlSite + 'assets/metadata.json').then(
   const urlParams = new URLSearchParams(queryString)
 
   const plotContainer = document.querySelector('[data-num="0"')
-  const plotDouble0Container = plotContainer.querySelector('.plotDouble0')
-  const plotDouble1Container = plotContainer.querySelector('.plotDouble1')
-  const plotDouble2Container = plotContainer.querySelector('.plotDouble2')
   const formContainer = plotContainer.querySelector('.plotForm')
   const graphsSelector = formContainer.querySelector('.graph')
 
@@ -76,11 +72,10 @@ fetch(urlSite + 'assets/metadata.json').then(
                      measurement === 'SPL Horizontal Globe Normalized' ||
                      measurement === 'SPL Vertical Globe Normalized') {
             datasAndLayouts = setGlobe(currentNames, currentGraphs, windowWidth, windowHeight)
-          } // todo add multi view
-          console.log('datas and layouts length='+datasAndLayouts.length)
-          if (datasAndLayouts.length === 1 ) {
+          }
+          if (datasAndLayouts !== null && datasAndLayouts.length === 1 ) {
             let [datas, layout] = datasAndLayouts[0]
-            if (datas != null && layout != null ) {
+            if (datas !== null && layout !== null ) {
               Plotly.newPlot('plotDouble' + i, datas, layout, { responsive: true })
             }
           }
@@ -125,18 +120,20 @@ fetch(urlSite + 'assets/metadata.json').then(
         versionsSelector[0].value
       ))
       names[0] = speakersSelector[0].value
-    let similars = metaSpeakers[names[0]].nearest
-    for( let i=0 ; i < similars.length ; i++ ) {
-      console.log('adding '+similars[i][1])
-      names.push(similars[i][1])
-      graphs.push(
-        getSpeakerData(
-          metaSpeakers,
-          graphsSelector.value,
-          similars[i][1],
-          null,
-          null)
-      )
+    if (metaSpeakers[names[0]].nearest !== null ) {
+      let similars = metaSpeakers[names[0]].nearest
+      for( let i=0 ; i < similars.length ; i++ ) {
+        console.log('adding '+similars[i][1])
+        names.push(similars[i][1])
+        graphs.push(
+          getSpeakerData(
+            metaSpeakers,
+            graphsSelector.value,
+            similars[i][1],
+            null,
+            null)
+        )
+      }
     }
     urlParams.set('measurement', graphsSelector.value)
     history.pushState({ page: 1 },
@@ -185,7 +182,20 @@ fetch(urlSite + 'assets/metadata.json').then(
     updateSpeakers()
   }
   
-  const [metaSpeakers, speakers] = getAllSpeakers(metadata);
+  function getNearSpeakers (metadata) {
+    const metaSpeakers = {}
+    const speakers = []
+    metadata.forEach(function (value) {
+      const speaker = value.brand + ' ' + value.model
+      if (value.nearest !== null) {
+        speakers.push(speaker)
+        metaSpeakers[speaker] = value
+      }
+    })
+    return [metaSpeakers, speakers.sort()]
+  }
+
+  const [metaSpeakers, speakers] = getNearSpeakers(metadata);
   const initSpeakers = buildInitSpeakers(speakers, nbSpeakers)
   const initMeasurement = buildInitMeasurement()
     
