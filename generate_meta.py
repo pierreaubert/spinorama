@@ -667,9 +667,9 @@ def main():
 
     # add computed data to metadata
     logger.info("Compute scores per speaker")
-    # add_quality(parse_max)
-    # add_scores(df, parse_max)
-    # add_eq("./datas", df, parse_max)
+    add_quality(parse_max)
+    add_scores(df, parse_max)
+    add_eq("./datas", df, parse_max)
     add_near(df, parse_max)
 
     # check that json is valid
