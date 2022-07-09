@@ -9,8 +9,6 @@ import {
   setCEA2034,
   setCEA2034Split,
   setSurface,
-  updateOrigin,
-  updateVersion,
 } from './common.js'
 
 fetch(urlSite + 'assets/metadata.json').then(
@@ -20,23 +18,23 @@ fetch(urlSite + 'assets/metadata.json').then(
   const metadata = Object.values(dataJson)
 
   const urlSimilar = urlSite + 'similar.html?'
-  const nbSpeakers = 1
 
   const queryString = window.location.search
   const urlParams = new URLSearchParams(queryString)
 
   const plotContainer = document.querySelector('[data-num="0"')
   const formContainer = plotContainer.querySelector('.plotForm')
-  const graphsSelector = formContainer.querySelector('.graph')
+  const graphSelector = formContainer.querySelector('.graph')
+  const speakerSelector = formContainer.querySelector('.speaker0')
 
   const windowWidth = window.innerWidth
   const windowHeight = window.innerHeight
 
   function plot (measurement, speakersName, speakersGraph) {
-    console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs')
+    // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs')
     async function run () {
       Promise.all(speakersGraph).then((graphs) => {
-        console.log('plot: resolved ' + graphs.length + ' graphs')
+        // console.log('plot: resolved ' + graphs.length + ' graphs')
         for( let i=0 ; i<graphs.length-1; i++ ) {
           let datasAndLayouts = []
           let currentGraphs = [graphs[0], graphs[i+1]]
@@ -86,108 +84,12 @@ fetch(urlSite + 'assets/metadata.json').then(
     run()
   }
 
-  function buildInitSpeakers (speakers, count) {
-    const list = []
-    for (let pos = 0; pos < count; pos++) {
-      if (urlParams.has('speaker' + pos)) {
-        list[pos] = urlParams.get('speaker' + pos)
-        continue
-      }
-      list[pos] = speakers[Math.floor(Math.random() * speakers.length)]
-    }
-    return list
-  }
-
-  function buildInitMeasurement () {
-    if (urlParams.has('measurement')) {
-      const m = urlParams.get('measurement')
-      if (knownMeasurements.includes(m)) {
-        return m
-      }
-    }
-    return knownMeasurements[3] // PIR
-  }
-
-  function updateSpeakers () {
-    const names = []
-    const graphs = []
-    graphs.push(
-      getSpeakerData(
-        metaSpeakers,
-        graphsSelector.value,
-        speakersSelector[0].value,
-        originsSelector[0].value,
-        versionsSelector[0].value
-      ))
-      names[0] = speakersSelector[0].value
-    if (metaSpeakers[names[0]].nearest !== null ) {
-      let similars = metaSpeakers[names[0]].nearest
-      for( let i=0 ; i < similars.length ; i++ ) {
-        console.log('adding '+similars[i][1])
-        names.push(similars[i][1])
-        graphs.push(
-          getSpeakerData(
-            metaSpeakers,
-            graphsSelector.value,
-            similars[i][1],
-            null,
-            null)
-        )
-      }
-    }
-    urlParams.set('measurement', graphsSelector.value)
-    history.pushState({ page: 1 },
-                      'Change measurement',
-                      urlSimilar + urlParams.toString()
-                     )
-    plot(graphsSelector.value, names, graphs)
-  }
-  
-  function updateSpeakerPos (pos) {
-    // console.log('updateSpeakerPos(' + pos + ')')
-    updateOrigin(metaSpeakers, speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos])
-    urlParams.set('speaker' + pos, speakersSelector[pos].value)
-    history.pushState({ page: 1 },
-                      'Similar speakers',
-                      urlSimilar + urlParams.toString()
-                     )
-    updateSpeakers()
-  }
-  
-  function updateVersionPos (pos) {
-    // console.log('updateVersionsPos(' + pos + ')')
-    updateVersion(
-      metaSpeakers,
-      speakersSelector[pos].value,
-      versionsSelector[pos],
-      originsSelector[pos].value,
-      versionsSelector[pos].value
-    )
-    updateSpeakers()
-    urlParams.set('version' + pos, versionsSelector[pos].value)
-    history.pushState({ page: 1 },
-                      'Similar speakers',
-                      urlSimilar + urlParams.toString()
-                     )
-  }
-  
-  function updateOriginPos (pos) {
-    // console.log('updateOriginPos(' + pos + ')')
-    updateOrigin(metaSpeakers, speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos], originsSelector[pos].value)
-    urlParams.set('origin' + pos, originsSelector[pos].value)
-    history.pushState({ page: 1 },
-                      'Similar speakers',
-                      urlSimilar + urlParams.toString()
-                     )
-    updateSpeakers()
-  }
-  
   function getNearSpeakers (metadata) {
     const metaSpeakers = {}
     const speakers = []
     metadata.forEach(function (value) {
       const speaker = value.brand + ' ' + value.model
-      if (value.nearest !== null) {
+      if (value.nearest && value.nearest.length > 0) {
         speakers.push(speaker)
         metaSpeakers[speaker] = value
       }
@@ -195,56 +97,65 @@ fetch(urlSite + 'assets/metadata.json').then(
     return [metaSpeakers, speakers.sort()]
   }
 
+  function buildInitSpeakers (speakers) {
+    if (urlParams.has('speaker0')) {
+      const speaker0 = urlParams.get('speaker0')
+      if (speaker0.length>3) {
+        return speaker0
+      }
+    }
+    return speakers[Math.floor(Math.random() * speakers.length)]
+  }
+
+  function updatePlots () {
+    let speakerName = speakerSelector.value
+    let graphName = graphSelector.value
+    const names = []
+    const graphs = []
+    console.log('speaker >'+speakerName+'< graph >'+graphName+'<')
+    graphs.push(
+      getSpeakerData(
+        metaSpeakers,
+        graphName,
+        speakerName,
+        null,
+        null
+      ))
+    names[0] = speakerName
+    if (metaSpeakers[names[0]].nearest !== null ) {
+      let similars = metaSpeakers[names[0]].nearest
+      for( let i=0 ; i < similars.length ; i++ ) {
+        // console.log('adding '+similars[i][1])
+        names.push(similars[i][1])
+        graphs.push(
+          getSpeakerData(
+            metaSpeakers,
+            graphName,
+            similars[i][1],
+            null,
+            null)
+        )
+      }
+    }
+    urlParams.set('measurement', graphName)
+    urlParams.set('speaker0', speakerName)
+    history.pushState(
+      { page: 1 },
+      'Change measurement',
+      urlSimilar + urlParams.toString()
+    )
+    plot(graphName, names, graphs)
+  }
+  
   const [metaSpeakers, speakers] = getNearSpeakers(metadata);
-  const initSpeakers = buildInitSpeakers(speakers, nbSpeakers)
-  const initMeasurement = buildInitMeasurement()
-    
-  const speakersSelector = []
-  const originsSelector = []
-  const versionsSelector = []
-  for (let pos = 0; pos < nbSpeakers; pos++) {
-    const tpos = pos.toString()
-    speakersSelector[pos] = formContainer.querySelector('.speaker' + tpos)
-    originsSelector[pos] = formContainer.querySelector('.origin' + tpos)
-    versionsSelector[pos] = formContainer.querySelector('.version' + tpos)
-  }
 
-  for (let pos = 0; pos < nbSpeakers; pos++) {
-    assignOptions(speakers, speakersSelector[pos], initSpeakers[pos])
-  }
-  assignOptions(knownMeasurements, graphsSelector, initMeasurement)
-
-  // initial setup
-  const initDatas = []
-  updateOrigin(
-    metaSpeakers,
-    initSpeakers[0],
-    originsSelector[0],
-    versionsSelector[0],
-    urlParams.get('origin' + 0),
-    urlParams.get('version' + 0)
-  )
-  updateOriginPos(0)
-  updateSpeakerPos(0)
-  // console.log('DEBUG: ' + originsSelector[pos].options[0])
-  initDatas[0] = getSpeakerData(metaSpeakers, initMeasurement, initSpeakers[0], null, null)
-  // lookup if we have similar speakers
-  let similars = metaSpeakers[initSpeakers[0]].nearest
-  console.log(similars)
-  for( let i=0 ; i < similars.length ; i++ ) {
-    console.log('adding '+similars[i][1])
-    initSpeakers.push(similars[i][1])
-    initDatas.push(getSpeakerData(metaSpeakers, initMeasurement, similars[i][1], null, null))
-  }
+  assignOptions(speakers, speakerSelector, buildInitSpeakers(speakers))
+  assignOptions(knownMeasurements, graphSelector, knownMeasurements[0])
 
   // add listeners
-  graphsSelector.addEventListener('change', updateSpeakers, false)
+  graphSelector.addEventListener('change', updatePlots, false)
+  speakerSelector.addEventListener('change', updatePlots, false)
 
-  for (let pos = 0; pos < nbSpeakers; pos++) {
-    speakersSelector[pos].addEventListener('change', () => { return updateSpeakerPos(pos) }, false)
-    originsSelector[pos].addEventListener('change', () => { return updateOriginPos(pos) }, false)
-    versionsSelector[pos].addEventListener('change', () => { return updateVersionPos(pos) }, false)
-  }
+  updatePlots()
 
-  plot(initMeasurement, initSpeakers, initDatas)
 }).catch(err => console.log(err.message))
