@@ -441,21 +441,50 @@ def add_eq(speaker_path, dataframe, parse_max):
                         )
 
 
-def interpolate(freq, freq1, data1):
+def interpolate(speaker_name, freq, freq1, data1):
     data = []
+    len1 = len(freq1)
+    i = 0
     for f in freq:
-        i = 0
         try:
-            while freq1[i] < f:
+            # print('debug: i={} f={}'.format(i, f))
+            while freq1[i] < f and i < len1:
                 i += 1
+            # print('debug: i={} f={} f1={}'.format(i, f, freq1[i]))
+
+            if i >= len1:
+                data.append(0.0)
+                # print('append 0')
                 continue
-            data.append(
-                (data1[i + 1] - data1[i])
-                / (math.log10(freq1[i + 1]) - math.log10(freq1[i]))
+
+            if freq1[i] >= f:
+                if i == 0:
+                    data.append(0.0)
+                    # print('append 0')
+                    continue
+                else:
+                    i = i - 1
+                    # print('decrease i')
+
+            # print('debug: i={} f={} f1={}'.format(i, f, freq1[i]))
+            j = i
+            while freq1[j] < f and j < len1:
+                j += 1
+            if j >= len1:
+                data.append(data1[i])
+                continue
+
+            # print('debug: i={} j={} f={} f1[i]={} f1[j]={}'.format(i, j, f, freq1[i], freq1[j]))
+            interp = data1[i] + (data1[j] - data1[i]) * (f - freq1[i]) / (
+                freq1[j] - freq1[i]
             )
+            # print('interp={}'.format(interp))
+            data.append(interp)
         except IndexError as ie:
-            print("{} for f={}".format(ie, f))
-            return None
+            print("{}: {} for f={}".format(speaker_name, ie, f))
+            data.append(0.0)
+
+    # print(data)
     return np.array(data)
 
 
@@ -467,13 +496,12 @@ def compute_near(fspin1, fspin2):
     er = er1 - er2
     sp = sp1 - sp2
 
-    near = np.linalg.norm(lw, 2) + np.linalg.norm(sp, 2) + np.linalg.norm(er, 2)
+    near = np.max([np.linalg.norm(lw), np.linalg.norm(sp), np.linalg.norm(er, 2)])
     if math.isnan(near):
         print("get a NaN")
         print(lw.head(), sp.head())
         return 1000000.0
-
-    # print('near lengths {} {} {} near {}'.format(len(lw), len(er), len(sp), near))
+    print("near lengths {} {} {} near {}".format(len(lw), len(er), len(sp), near))
     return near
 
 
@@ -534,9 +562,11 @@ def get_spin_data(freq, speaker_name, speaker_data):
                 # )
                 return None
 
-            lw = interpolate(freq, spin["Freq"], spin["Listening Window"])
-            er = interpolate(freq, spin["Freq"], spin["Early Reflections"])
-            sp = interpolate(freq, spin["Freq"], spin["Sound Power"])
+            lw = interpolate(speaker_name, freq, spin["Freq"], spin["Listening Window"])
+            er = interpolate(
+                speaker_name, freq, spin["Freq"], spin["Early Reflections"]
+            )
+            sp = interpolate(speaker_name, freq, spin["Freq"], spin["Sound Power"])
 
             return lw, er, sp
 
@@ -550,7 +580,7 @@ def add_near(dataframe, parse_max):
     distribution = []
     normalized = {}
     distances = {}
-    freq = np.logspace(np.log10(40), np.log10(16000), 100)
+    freq = np.logspace(np.log10(25), np.log10(16000), 100)
     for speaker_name, speaker_data in dataframe.items():
         curves = get_spin_data(freq, speaker_name, speaker_data)
         if curves is not None:
@@ -561,20 +591,22 @@ def add_near(dataframe, parse_max):
         if parse_max is not None and parsed > parse_max:
             break
         parsed = parsed + 1
-        logger.info("Processing {0}".format(speaker_name1))
         deltas = []
 
         for speaker_name2, speaker_data2 in normalized.items():
             if speaker_name1 == speaker_name2:
                 continue
-            if distances[speaker_name2].get(speaker_name1) is None:
+            prev_delta = distances[speaker_name2].get(speaker_name1)
+            delta = prev_delta
+            if prev_delta is None:
                 delta = compute_near(speaker_data1, speaker_data2)
                 distances[speaker_name2][speaker_name1] = delta
                 distances[speaker_name1][speaker_name2] = delta
             deltas.append((delta, speaker_name2))
             distribution.append(delta)
-            if delta < 1.0:
-                print("{} {} {}".format(speaker_name1, speaker_name2, delta))
+
+        if speaker_name1 == "Dutch Dutch 8C":
+            print(sorted(deltas, key=lambda x: x[0]))
 
         closest = sorted(deltas, key=lambda x: x[0])[:3]
         metadata.speakers_info[speaker_name1]["nearest"] = closest
