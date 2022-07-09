@@ -4,7 +4,7 @@ touch env.log
 
 ## SSH AGENT
 ## ----------------------------------------------------------------------
-ssh-agent -k 2>&1 >> env.log
+ssh-agent -k >> env.log 2>&1
 eval `ssh-agent`
 echo $SSH_AGENT_SOCK
 if ! test -f ~/.ssh/id_rsa_github; then
@@ -15,7 +15,7 @@ fi
 ## ----------------------------------------------------------------------
 github=$(ssh-add -l | grep github | cut -d ' ' -f 3)
 if test -z $github; then
-    ssh-add ~/.ssh/id_rsa_github 2>&1 >> env.log
+    ssh-add ~/.ssh/id_rsa_github >> env.log 2>&1
     github=$(ssh-add -l 2>&1 | grep github | cut -d ' ' -f 3)
 fi
 
@@ -55,11 +55,11 @@ fi
 
 ## summary
 ## ----------------------------------------------------------------------
-echo 'SPIN          ' $SPIN
-echo '  '$(python3 --version) $(which python3)
-echo '  '$(pip3 -V)
-echo '  jupyter-lab ' $(jupyter-lab --version) $(which jupyter-lab)
-echo '  PYTHONPATH  ' $PYTHONPATH
-echo '  github key  ' $github
-echo '  GPU         ' $GPU
-echo '  RAY         ' $(ray --version)
+echo 'SPIN          ' "$SPIN"
+echo ' ' "$(python3 --version) $(which python3)"
+echo ' ' "$(pip3 -V)"
+echo '  jupyter-lab ' "$(jupyter-lab --version) $(which jupyter-lab)"
+echo '  PYTHONPATH  ' "$PYTHONPATH"
+echo '  github key  ' "$github"
+echo '  GPU         ' "$GPU"
+echo '  RAY         ' "$(ray --version)"

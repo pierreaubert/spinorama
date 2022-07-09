@@ -24,9 +24,8 @@ pip3 install -r requirements.txt
 
 # node section
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-nvm install lts/fermium
-npm install vega-lite vega-cli canvas
-npm install pyright html-validator-cli standard
+# nvm install lts/fermium
+npm install pyright html-validate standard
 
 # lint
 flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spinorama-venv
