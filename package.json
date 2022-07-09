@@ -5,6 +5,7 @@
     "fuse": "^0.0.8",
     "handlebars": "^4.7.7",
     "html-validate": "^7.1.2",
+    "html-validator-cli": "^7.0.1",
     "plotly": "^1.0.6",
     "selenium-webdriver": "^4.2.0"
   },
@@ -15,7 +16,7 @@
     "@babel/preset-env": "^7.16.8",
     "eslint": "^8.7.0",
     "husky": "^7.0.0",
-    "pyright": "^1.1.201",
+    "pyright": "^1.1.258",
     "standard": "^16.0.4"
   },
   "husky": {
