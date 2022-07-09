@@ -1,14 +1,14 @@
 <nav class="navbar">
   <div class="navbar-brand">
     <div class="navbar-item is-hidden-desktop" id="navbar-burger">
-      <button type="button" class="button" value="Menu">
+      <button type="button" class="button" value="Menu" aria-label="Menu">
         Menu
       </button>
     </div>
     <a class="navbar-item is-size-4" href="${site}" alt="SPIN"><b>SPIN</b>orama</a>
     <div class="navbar-item is-hidden-tablet" id="smallSearch">
       % if useSearch:
-      <button type="button" class="button is-rounded" value="search">
+      <button type="button" class="button is-rounded" value="Search" aria-label="Search">
         <span class="icon is-left">
           <i class="fas fa-search"></i>
         </span>
@@ -18,10 +18,9 @@
   </div>
   <div class="navbar-menu">
     <div class="navbar-start">
-      <a class="navbar-item" href="https://github.com/pierreaubert/spinorama">
-        <span class="icon" style="color: var(--github);">
-          <i class="fab fa-lg fa-github-alt"></i>
-        </span>
+      <a class="navbar-item"
+         href="https://github.com/pierreaubert/spinorama">
+        <span class="icon"><i class="fab fa-lg fa-github-alt" alt="GitHub"></i></span>
       </a>
     </div>
     <div class="navbar-end">
@@ -41,7 +40,8 @@
   <div class="level-item">
     <div class="dropdown is-hoverable">
       <div class="dropdown-trigger">
-        <button type="button" class="button" aria-haspopup="true" aria-controls="filters-dropdown-menu" value="cog">
+        <button type="button" class="button" aria-haspopup="true"
+                aria-controls="filters-dropdown-menu" value="cog" aria-label="cog">
           <span class="icon">
             <i class="fas fa-cog" aria-hidden="true"></i>
           </span>

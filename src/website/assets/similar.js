@@ -1,15 +1,15 @@
-import { urlSite } from './misc.js'
 import {
   assignOptions,
-  knownMeasurements,
   getSpeakerData,
-  setContour,
-  setGlobe,
-  setGraph,
+  knownMeasurements,
   setCEA2034,
   setCEA2034Split,
+  setContour,
+  setGraph,
+  setGlobe,
   setSurface,
 } from './common.js'
+import { urlSite } from './misc.js'
 
 fetch(urlSite + 'assets/metadata.json').then(
   function (response) {
@@ -108,8 +108,8 @@ fetch(urlSite + 'assets/metadata.json').then(
   }
 
   function updatePlots () {
-    let speakerName = speakerSelector.value
-    let graphName = graphSelector.value
+    const speakerName = speakerSelector.value
+    const graphName = graphSelector.value
     const names = []
     const graphs = []
     console.log('speaker >'+speakerName+'< graph >'+graphName+'<')
