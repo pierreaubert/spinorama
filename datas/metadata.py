@@ -8567,8 +8567,17 @@ speakers_info = {
         "shape": "inwall",
         "price": "495",
         "amount": "each",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/revel_w553l/",
+                    "yt": "https://www.youtube.com/watch?v=dPCZJmivufs",
+                },
+                "review_published": "20220514",
+            },
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
@@ -8576,12 +8585,6 @@ speakers_info = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/revel-w553l-measurements-in-wall-speaker.32072/",
                     "yt": "https://youtu.be/6lK55MF5MMA",
                 },
-                "review_published": "20220323",
-            },
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/revel_w553l/",
                 "review_published": "20220323",
             },
             "vendor": {
