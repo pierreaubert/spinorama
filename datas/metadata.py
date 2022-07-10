@@ -6830,6 +6830,24 @@ speakers_info = {
             },
         },
     },
+    "Palmer Studimon 5": {
+        "brand": "Palmer",
+        "model": "Studimon 5",
+        "type": "active",
+        "price": "500",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-sr",
+        "measurements": {
+            "misc-sr": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.soundandrecording.de/equipment/palmer-studimon-5-preiswerter-2-wege-nahfeldmonitor-im-test/",
+                "review_published": "20220710",
+            },
+        },
+    },
     "Paradigm Cinema 100": {
         "brand": "Paradigm",
         "model": "Cinema 100",
