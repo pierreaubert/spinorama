@@ -41,11 +41,11 @@ fetch(urlSite + 'assets/metadata.json').then(
     async function run () {
       Promise.all(speakersGraph).then((graphs) => {
         // console.log('plot: resolved ' + graphs.length + ' graphs')
-        let datasAndLayouts = []
+        let graphsConfigs = []
         if (measurement === 'CEA2034') {
-          datasAndLayouts = setCEA2034(speakersName, graphs, windowWidth, windowHeight)
+          graphsConfigs = setCEA2034(speakersName, graphs, windowWidth, windowHeight)
         } else if (measurement === 'CEA2034 with splitted views') {
-          datasAndLayouts = setCEA2034Split(speakersName, graphs, windowWidth, windowHeight)
+          graphsConfigs = setCEA2034Split(speakersName, graphs, windowWidth, windowHeight)
         } else if (measurement === 'On Axis' ||
                     measurement === 'Estimated In-Room Response' ||
                     measurement === 'Early Reflections' ||
@@ -57,41 +57,41 @@ fetch(urlSite + 'assets/metadata.json').then(
                     measurement === 'Vertical Reflections' ||
                     measurement === 'SPL Horizontal Radar' ||
                    measurement === 'SPL Vertical Radar') {
-          datasAndLayouts = setGraph(speakersName, graphs, windowWidth, windowHeight)
+          graphsConfigs = setGraph(speakersName, graphs, windowWidth, windowHeight)
         } else if (measurement === 'SPL Horizontal Contour' ||
                    measurement === 'SPL Vertical Contour' ||
                    measurement === 'SPL Horizontal Contour Normalized' ||
                    measurement === 'SPL Vertical Contour Normalized') {
-          datasAndLayouts = setContour(speakersName, graphs, windowWidth, windowHeight)
+          graphsConfigs = setContour(speakersName, graphs, windowWidth, windowHeight)
         } else if (measurement === 'SPL Horizontal 3D' ||
                     measurement === 'SPL Vertical 3D' ||
                     measurement === 'SPL Horizontal 3D Normalized' ||
                     measurement === 'SPL Vertical 3D Normalized') {
-          datasAndLayouts = setSurface(speakersName, graphs, windowWidth, windowHeight)
+          graphsConfigs = setSurface(speakersName, graphs, windowWidth, windowHeight)
         } else if (measurement === 'SPL Horizontal Globe' ||
                     measurement === 'SPL Vertical Globe' ||
                     measurement === 'SPL Horizontal Globe Normalized' ||
                     measurement === 'SPL Vertical Globe Normalized') {
-          datasAndLayouts = setGlobe(speakersName, graphs, windowWidth, windowHeight)
+          graphsConfigs = setGlobe(speakersName, graphs, windowWidth, windowHeight)
         } // todo add multi view
 
-        // console.log('datas and layouts length='+datasAndLayouts.length)
-        if ( datasAndLayouts.length === 1 ) {
+        // console.log('datas and layouts length='+graphsConfigs.length)
+        if ( graphsConfigs.length === 1 ) {
           plotSingleContainer.style.display = 'block'
           plotDouble0Container.style.display = 'none'
           plotDouble1Container.style.display = 'none'
-          const [datas, layout] = datasAndLayouts[0]
-          if (datas !== null && layout !== null ) {
-            Plotly.newPlot('plotSingle', datas, layout, { responsive: true })
+          const config = graphsConfigs[0]
+          if (config) {
+            Plotly.newPlot('plotSingle', config)
           }
-        } else if (datasAndLayouts.length === 2 ) {
+        } else if (graphsConfigs.length === 2 ) {
           plotSingleContainer.style.display = 'none'
           plotDouble0Container.style.display = 'block'
           plotDouble1Container.style.display = 'block'
-          for( let i = 0 ; i<datasAndLayouts.length ; i++) {
-            let [datas, layout] = datasAndLayouts[i]
-            if (datas !== null && layout !== null ) {
-              Plotly.newPlot('plotDouble' + i, datas, layout, { responsive: true })
+          for( let i = 0 ; i<graphsConfigs.length ; i++) {
+            let config = graphsConfigs[i]
+            if (config) {
+              Plotly.newPlot('plotDouble' + i, config)
             }
           }
         }

@@ -36,13 +36,13 @@ fetch(urlSite + 'assets/metadata.json').then(
       Promise.all(speakersGraph).then((graphs) => {
         // console.log('plot: resolved ' + graphs.length + ' graphs')
         for( let i=0 ; i<graphs.length-1; i++ ) {
-          let datasAndLayouts = []
+          let graphOptions = [null]
           let currentGraphs = [graphs[0], graphs[i+1]]
           let currentNames = [speakersName[0], speakersName[i+1]]
           if (measurement === 'CEA2034') {
-            datasAndLayouts = setCEA2034(currentNames, currentGraphs, windowWidth, windowHeight)
+            graphOptions = setCEA2034(currentNames, currentGraphs, windowWidth, windowHeight)
           } else if (measurement === 'CEA2034 with splitted views') {
-            datasAndLayouts = setCEA2034Split(currentNames, currentGraphs, windowWidth, windowHeight)
+            graphOptions = setCEA2034Split(currentNames, currentGraphs, windowWidth, windowHeight)
           } else if (measurement === 'On Axis' ||
                      measurement === 'Estimated In-Room Response' ||
                      measurement === 'Early Reflections' ||
@@ -54,28 +54,25 @@ fetch(urlSite + 'assets/metadata.json').then(
                      measurement === 'Vertical Reflections' ||
                      measurement === 'SPL Horizontal Radar' ||
                      measurement === 'SPL Vertical Radar') {
-            datasAndLayouts = setGraph(currentNames, currentGraphs, windowWidth, windowHeight)
+            graphOptions = setGraph(currentNames, currentGraphs, windowWidth, windowHeight)
           } else if (measurement === 'SPL Horizontal Contour' ||
                      measurement === 'SPL Vertical Contour' ||
                      measurement === 'SPL Horizontal Contour Normalized' ||
                      measurement === 'SPL Vertical Contour Normalized') {
-            datasAndLayouts = setContour(currentNames, currentGraphs, windowWidth, windowHeight)
+            graphOptions = setContour(currentNames, currentGraphs, windowWidth, windowHeight)
           } else if (measurement === 'SPL Horizontal 3D' ||
                      measurement === 'SPL Vertical 3D' ||
                      measurement === 'SPL Horizontal 3D Normalized' ||
                      measurement === 'SPL Vertical 3D Normalized') {
-            datasAndLayouts = setSurface(currentNames, currentGraphs, windowWidth, windowHeight)
+            graphOptions = setSurface(currentNames, currentGraphs, windowWidth, windowHeight)
           } else if (measurement === 'SPL Horizontal Globe' ||
                      measurement === 'SPL Vertical Globe' ||
                      measurement === 'SPL Horizontal Globe Normalized' ||
                      measurement === 'SPL Vertical Globe Normalized') {
-            datasAndLayouts = setGlobe(currentNames, currentGraphs, windowWidth, windowHeight)
+            graphOptions = setGlobe(currentNames, currentGraphs, windowWidth, windowHeight)
           }
-          if (datasAndLayouts !== null && datasAndLayouts.length === 1 ) {
-            let [datas, layout] = datasAndLayouts[0]
-            if (datas !== null && layout !== null ) {
-              Plotly.newPlot('plotDouble' + i, datas, layout, { responsive: true })
-            }
+          if (graphOptions !== null && graphOptions.length === 1) {
+            Plotly.newPlot('plotDouble' + i, graphOptions[0])
           }
         }
         return null

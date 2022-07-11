@@ -96,7 +96,6 @@ export function displayGraph (spec, divName) {
           }
         })
       }
-      displayModeBar = false
     }
     Plotly.newPlot(divName, spec.data, spec.layout, { displayModeBar: displayModeBar })
   }

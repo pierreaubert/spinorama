@@ -263,9 +263,10 @@ type Graph = ?{
 
 type Graphs = Array<Graph>
 
-function setLayoutAndDataPrimary (spin: Graphs, windowWidth: number, windowHeight: number) : Graphs {
+function setGraphOptions (spin: Graphs, windowWidth: number, windowHeight: number) : Graphs {
   let datas = null
   let layout = null
+  let config = null
   // console.log('layout and data: ' + spin.length + ' w='+windowWidth+' h='+windowHeight)
   if (spin.length === 1) {
     layout = spin[0].layout
@@ -284,27 +285,73 @@ function setLayoutAndDataPrimary (spin: Graphs, windowWidth: number, windowHeigh
   }
   if (layout != null && datas != null) {
     if (windowWidth < 400 || windowHeight < 400) {
-      layout.width = windowWidth
-      layout.height = Math.max(360, Math.min(windowHeight, windowWidth * 0.7 + 100))
-      layout.margin = {
-        l: 0,
-        r: 0,
-        t: 40,
-        b: 20
+      if (windowWidth < windowHeight ) {
+        // portraint
+        layout.width = windowWidth
+        layout.height = Math.min(windowHeight, windowWidth * 0.7 + 100)
+        // hide axis to recover some space on mobile
+        layout.yaxis.visible = false
+        if (layout.yaxis2) {
+          layout.yaxis2.visible = false
+        }
+        layout.xaxis.title = 'SPL (dB) v.s. Frequency (Hz)'
+      } else {
+        // landscape
+        layout.height = windowHeight + 100
+        layout.width = Math.min(windowWidth, windowHeight*1.4+100)
       }
+      // get legend horizontal below the graph
+      layout.margin = {
+        l: 5,
+        r: 0,
+        t: 30,
+        b: 40,
+      } 
       layout.legend = {
         orientation: 'h',
-        y: -0.5,
+        y: -0.25,
         x: 0,
         xanchor: 'bottom',
         yanchor: 'left'
       }
+      // add a legend title to replace the legend group
+      if( datas[0].legendgrouptitle ) {
+        let title = datas[0].legendgrouptitle.text
+        if (title) {
+          for (let k = 1; k < datas.length; k++) {
+            if (datas[k-1].legendgrouptitle.text != datas[k].legendgrouptitle.text ) {
+              title += ' v.s.' + datas[k].legendgrouptitle.text
+            }
+          }
+        }
+        layout.title = {
+          text: title,
+          font: {
+            size: 16,
+            color: '#000',
+          },
+          xref: 'paper',
+          x: 0.05
+        }
+      }
+      // shorten labels
       for (let k = 0; k < datas.length; k++) {
+        // remove group
+        datas[k].legendgroup = null
+        datas[k].legendgrouptitle = null
         if (datas[k].name && labelShort[datas[k].name]) {
+          // shorten labels
           datas[k].name = labelShort[datas[k].name]
         }
       }
+      // remove mod bar
+      config = {
+        responsive: true,
+        displayModeBar: false,
+      }
+      layout.font = { size: 11 }
     } else {
+      // larger screen
       layout.width = windowWidth - 40
       layout.height = Math.max(800, Math.min(windowHeight - 40, windowWidth * 0.7 + 140))
       layout.margin = {
@@ -320,9 +367,13 @@ function setLayoutAndDataPrimary (spin: Graphs, windowWidth: number, windowHeigh
         xanchor: 'bottom',
         yanchor: 'left'
       }
+      config = {
+        responsive: true,
+        displayModeBar: true,
+      }
+      layout.title = null
+      layout.font = { size: 11+windowWidth/300 }
     }
-    layout.title = null
-    layout.font = { size: 16 }
     if (layout.xaxis) {
       layout.xaxis.autotick = false
     }
@@ -333,7 +384,7 @@ function setLayoutAndDataPrimary (spin: Graphs, windowWidth: number, windowHeigh
     // should be a pop up
     console.log('Error: No graph available')
   }
-  return [datas, layout]
+  return {'data': datas, 'layout': layout, 'config': config}
 }
 
 export function setCEA2034 (speakerNames: Array<string>, speakerGraphs: Graphs, width: number, height: number) : Array<LayoutData> {
@@ -350,7 +401,7 @@ export function setCEA2034 (speakerNames: Array<string>, speakerGraphs: Graphs, 
       }
     }
   }
-  return [setLayoutAndDataPrimary(speakerGraphs, width, height)]
+  return [setGraphOptions(speakerGraphs, width, height)]
 }
 
 export function setGraph (speakerNames: Array<string>, speakerGraphs: Graphs, width: number, height:number) : Array<LayoutData> {
@@ -367,28 +418,40 @@ export function setGraph (speakerNames: Array<string>, speakerGraphs: Graphs, wi
       }
     }
   }
-  return [setLayoutAndDataPrimary(speakerGraphs, width, height)]
+  return [setGraphOptions(speakerGraphs, width, height)]
 }
 
 export function setContour (speakerNames: Array<string>, speakerGraphs: Graphs, width: number, height:number)  : Array<LayoutData> {
   // console.log('setContour got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
-  const datasAndLayouts = []
+  const graphsConfigs = []
+  const config = {
+    responsive: true,
+    displayModeBar: true,
+  }
   for (const i in speakerGraphs) {
     if (speakerGraphs[i]) {
       for (const j in speakerGraphs[i].data) {
         speakerGraphs[i].data[j].legendgroup = 'speaker' + i
         speakerGraphs[i].data[j].legendgrouptitle = { text: speakerNames[i] }
       }
-      datasAndLayouts.push( [speakerGraphs[i].data, speakerGraphs[i].layout])
+      graphsConfigs.push({
+        'data': speakerGraphs[i].data,
+        'layout': speakerGraphs[i].layout,
+        'config': config,
+      })
     }
   }
-  return datasAndLayouts
+  return graphsConfigs
 }
 
 
 export  function setGlobe (speakerNames: Array<string>, speakerGraphs: Graphs, width: number, height: number)  : Array<LayoutData> {
   // console.log('setGlobe ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
-  const datasAndLayouts = []
+  const graphsConfigs = []
+  const config = {
+    responsive: true,
+    displayModeBar: true,
+  }
   for (const i in speakerGraphs) {
     if (speakerGraphs[i]) {
       let polarData = []
@@ -456,15 +519,23 @@ export  function setGlobe (speakerNames: Array<string>, speakerGraphs: Graphs, w
         bargap: 0,
         hole: 0.05
       }
-      datasAndLayouts.push([polarData, layout])
+      graphsConfigs.push({
+        'data': polarData,
+        'layout': layout,
+        'config': config,
+      })
     }
   }
-  return datasAndLayouts
+  return graphsConfigs
 }
 
 export function setSurface (speakerNames: Array<string>, speakerGraphs: Graphs, width: number, height: number)  : Array<LayoutData> {
   // console.log('setSurface ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
-  const datasAndLayouts = []
+  const graphsConfigs = []
+  const config = {
+    responsive: true,
+    displayModeBar: true,
+  }
   for (const i in speakerGraphs) {
     if (speakerGraphs[i]) {
       let surfaceData = []
@@ -498,15 +569,19 @@ export function setSurface (speakerNames: Array<string>, speakerGraphs: Graphs, 
       layout.zaxis = {
         range: [-20, 5]
       }
-      datasAndLayouts.push([surfaceData, layout])
+      graphsConfigs.push({
+        'data': surfaceData,
+        'layout': layout,
+        'config': config,
+      })
     }
   }
-  return datasAndLayouts
+  return graphsConfigs
 }
 
 export function setCEA2034Split (speakerNames: Array<string>, speakerGraphs: Graphs, windowWidth: number, windowHeight: number)  : Array<LayoutData> {
   // console.log('setCEA2034Split got ' + speakerGraphs.length + ' graphs')
-  const datasAndLayouts = []
+  const graphsConfigs = []
   for (let i = 0; i < speakerGraphs.length; i++) {
     if (speakerGraphs[i] != null) {
       // console.log('adding graph ' + i)
@@ -529,7 +604,7 @@ export function setCEA2034Split (speakerNames: Array<string>, speakerGraphs: Gra
     layout.width = windowWidth - 40
     layout.height = Math.max(360, Math.min(windowHeight, windowWidth * 0.7 + 140))
     layout.title = null
-    layout.font = { size: 16 }
+    layout.font = { size: 12 }
     layout.margin = {
       l: 15,
       r: 15,
@@ -545,7 +620,11 @@ export function setCEA2034Split (speakerNames: Array<string>, speakerGraphs: Gra
       itemclick: 'toggleothers'
     }
     
-    datasAndLayouts.push([datas, layout])
+    graphsConfigs.push({
+      'data': datas,
+      'layout': layout,
+      'config': config,
+    })
 
     const deltas = []
     for (const g0 in speakerGraphs[0].data) {
@@ -588,11 +667,15 @@ export function setCEA2034Split (speakerNames: Array<string>, speakerGraphs: Gra
     layout2.legend.y = -0.3
     layout2.margin = layout.margin
 
-    datasAndLayouts.push([datas, layout2])
+    graphsConfigs.push({
+      'data': datas,
+      'layout': layout2,
+      'config': config,
+    })
   } else {
-    datasAndLayouts.push(setLayoutAndDataPrimary(speakerGraphs, windowWidth, windowHeight))
+    graphsConfigs.push(setGraphOptions(speakerGraphs, windowWidth, windowHeight))
   }
-  return datasAndLayouts
+  return graphsConfigs
 }
 
 export function assignOptions (textArray: Array<string>, selector, textSelected: string) : null {
