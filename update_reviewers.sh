@@ -6,4 +6,4 @@ json_pp < docs/assets/metadata.json  | \
     sed -e s'/[ \t"":{"]//g' | \
     sed -e 's/misc-//' -e 's/-horizontal//g' -e 's/-vertical//g' | \
     sort -s -f -u | \
-    awk '{printf("<option value=\"%s\">%s%s</option>\n", $0, toupper(substr($0,1,1)), substr($0,2));}' > src/website/reviewers.html
+    awk '{val=toupper(substr($0,1,1)); name=substr($0,2); if (length($0) < 4 ) { val=""; name=toupper($0); } printf("<option value=\"%s\">%s%s</option>\n", $0, val, name);}' > src/website/reviewers.html
