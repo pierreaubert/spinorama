@@ -8917,6 +8917,22 @@ speakers_info = {
             },
         },
     },
+    "Soundkraft Enigma BT": {
+        "brand": "Soundkraft",
+        "model": "Enigma BT",
+        "type": "active",
+        "price": "500",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/soundkraft-enigma-bt-speaker-review.35641/",
+                "review_published": "20220711",
+            },
+        },
+    },
     "Speakercraft AIM8 One": {
         "brand": "Speakercraft",
         "model": "AIM8 One",
