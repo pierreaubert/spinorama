@@ -312,7 +312,7 @@ def main():
         shutil.copy(file_in, file_out)
 
     flow_bin = "flow-remove-types"
-    flow_param = "--pretty --sourcemaps"
+    flow_param = ""  # "--pretty --sourcemaps"
 
     flow_command = "{} {} {} {} {}".format(
         flow_bin,
