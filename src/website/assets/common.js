@@ -264,9 +264,19 @@ type Graph = ?{
 type Graphs = Array<Graph>
 
 function setGraphOptions (spin: Graphs, windowWidth: number, windowHeight: number) : Graphs {
+
+  const graphSmall = 400
+  const graphRatio = 1.414
+  const graphMarginTop = 30
+  const graphMarginBottom = 40
+  const graphTitle = 30
+  const graphSpacer = graphMarginTop + graphMarginBottom+graphTitle
+  const graphExtraPadding = 40
+
   let datas = null
   let layout = null
   let config = null
+  let countDifferent = 0
   // console.log('layout and data: ' + spin.length + ' w='+windowWidth+' h='+windowHeight)
   if (spin.length === 1) {
     layout = spin[0].layout
@@ -284,11 +294,11 @@ function setGraphOptions (spin: Graphs, windowWidth: number, windowHeight: numbe
     }
   }
   if (layout != null && datas != null) {
-    if (windowWidth < 400 || windowHeight < 400) {
+    if (windowWidth < graphSmall || windowHeight < graphSmall) {
       if (windowWidth < windowHeight ) {
         // portraint
         layout.width = windowWidth
-        layout.height = Math.min(windowHeight, windowWidth * 0.7 + 100)
+        layout.height = Math.min(windowHeight, windowWidth / graphRatio + graphSpacer)
         // hide axis to recover some space on mobile
         layout.yaxis.visible = false
         if (layout.yaxis2) {
@@ -297,15 +307,15 @@ function setGraphOptions (spin: Graphs, windowWidth: number, windowHeight: numbe
         layout.xaxis.title = 'SPL (dB) v.s. Frequency (Hz)'
       } else {
         // landscape
-        layout.height = windowHeight + 100
-        layout.width = Math.min(windowWidth, windowHeight*1.4+100)
+        layout.height = windowHeight + graphSpacer
+        layout.width = Math.min(windowWidth, windowHeight*graphRatio+graphSpacer)
       }
       // get legend horizontal below the graph
       layout.margin = {
         l: 5,
         r: 0,
-        t: 30,
-        b: 40,
+        t: graphMarginTop,
+        b: graphMarginBottom,
       } 
       layout.legend = {
         orientation: 'h',
@@ -321,6 +331,7 @@ function setGraphOptions (spin: Graphs, windowWidth: number, windowHeight: numbe
           for (let k = 1; k < datas.length; k++) {
             if (datas[k-1].legendgrouptitle.text != datas[k].legendgrouptitle.text ) {
               title += ' v.s.' + datas[k].legendgrouptitle.text
+              countDifferent++
             }
           }
         }
@@ -352,13 +363,18 @@ function setGraphOptions (spin: Graphs, windowWidth: number, windowHeight: numbe
       layout.font = { size: 11 }
     } else {
       // larger screen
-      layout.width = windowWidth - 40
-      layout.height = Math.max(800, Math.min(windowHeight - 40, windowWidth * 0.7 + 140))
+      layout.width = windowWidth - graphExtraPadding
+      layout.height = Math.max(
+        800,
+        Math.min(
+          windowHeight - graphExtraPadding,
+          windowWidth / graphRatio + graphExtraPadding + graphSpacer)
+      )
       layout.margin = {
         l: 15,
         r: 15,
-        t: 30,
-        b: 50
+        t: graphMarginTop*2,
+        b: graphMarginBottom,
       }
       layout.legend = {
         orientation: 'h',
@@ -371,7 +387,29 @@ function setGraphOptions (spin: Graphs, windowWidth: number, windowHeight: numbe
         responsive: true,
         displayModeBar: true,
       }
-      layout.title = null
+      if( datas[0].legendgrouptitle ) {
+        let title = datas[0].legendgrouptitle.text
+        if (title) {
+          for (let k = 1; k < datas.length; k++) {
+            if (datas[k-1].legendgrouptitle.text != datas[k].legendgrouptitle.text ) {
+              title += ' v.s.' + datas[k].legendgrouptitle.text
+              countDifferent++
+            }
+          }
+        }
+        layout.title = {
+          text: title,
+          font: {
+            size: 18+windowWidth/300,
+            color: '#000',
+          },
+          xref: 'paper',
+          // title start sligthly on the right
+          x: 0.05,
+          // keep title below modBar if title is long
+          y: 0.975,
+        }
+      }
       layout.font = { size: 11+windowWidth/300 }
     }
     if (layout.xaxis) {
@@ -379,6 +417,12 @@ function setGraphOptions (spin: Graphs, windowWidth: number, windowHeight: numbe
     }
     if (layout.yaxis) {
       layout.yaxis.dtick = 1
+    }
+    if (countDifferent === 0) {
+      for (let k = 0; k < datas.length; k++) {
+        datas[k].legendgroup = null
+        datas[k].legendgrouptitle = null
+      }
     }
   } else {
     // should be a pop up
