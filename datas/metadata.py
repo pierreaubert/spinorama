@@ -5366,6 +5366,26 @@ speakers_info = {
             },
         },
     },
+    "KLH Model Five": {
+        "skip": True,
+        "brand": "KLH",
+        "model": "Model Five",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac-v1-grilleon",
+        "measurements": {
+            "eac-v1-grilleon": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                },
+                "review_published": "20220730",
+            },
+        },
+    },
     "Kii Audio Three": {
         "brand": "Kii Audio",
         "model": "Three",
@@ -5464,7 +5484,6 @@ speakers_info = {
         },
     },
     "Klipsch RP-404C II": {
-        "skip": True,
         "brand": "Klipsch",
         "model": "RP-404C II",
         "type": "passive",
@@ -5499,7 +5518,6 @@ speakers_info = {
         },
     },
     "Klipsch RP-500C II": {
-        "skip": True,
         "brand": "Klipsch",
         "model": "RP-500C II",
         "type": "passive",
@@ -5534,7 +5552,6 @@ speakers_info = {
         },
     },
     "Klipsch RP-504C II": {
-        "skip": True,
         "brand": "Klipsch",
         "model": "RP-504C II",
         "type": "passive",
@@ -5596,6 +5613,57 @@ speakers_info = {
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_600m_ii/",
                 "review_published": "20220522",
                 "notes": "This measurement is with grille on",
+            },
+        },
+    },
+    "Klipsch RP-5000F II": {
+        "brand": "Klipsch",
+        "model": "RP-5000F II",
+        "type": "passive",
+        "price": "1200",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_5000f_ii/",
+                "review_published": "20220711",
+            },
+        },
+    },
+    "Klipsch RP-6000F II": {
+        "brand": "Klipsch",
+        "model": "RP-6000F II",
+        "type": "passive",
+        "price": "1500",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_6000f_ii/",
+                "review_published": "20220711",
+            },
+        },
+    },
+    "Klipsch RP-8000F II": {
+        "brand": "Klipsch",
+        "model": "RP-8000F II",
+        "type": "passive",
+        "price": "1800",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_8000f_ii/",
+                "review_published": "20220711",
             },
         },
     },
