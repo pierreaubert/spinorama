@@ -8,7 +8,7 @@
     "full_biquad_optim": false,
     "elastic": 0.8,
     "fs": 48000,
-    "freq_reg_min": 100,
+    "freq_reg_min": 40,
     "freq_reg_max": 16000,
     "freq_mean_min": 100,
     "freq_mean_max": 300,
