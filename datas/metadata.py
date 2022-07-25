@@ -5399,7 +5399,7 @@ speakers_info = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kii_audio-three",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kii_three/",
                 },
                 "review_published": "20211201",
             },
@@ -5628,7 +5628,10 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_5000f_ii/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_5000f_ii/",
+                    "yt": "https://youtu.be/vmGTy5o5Xgc",
+                },
                 "review_published": "20220711",
             },
         },
@@ -5645,7 +5648,10 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_6000f_ii/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_6000f_ii/",
+                    "yt": "https://youtu.be/vmGTy5o5Xgc",
+                },
                 "review_published": "20220711",
             },
         },
@@ -5662,7 +5668,10 @@ speakers_info = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_8000f_ii/",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_8000f_ii/",
+                    "yt": "https://youtu.be/vmGTy5o5Xgc",
+                },
                 "review_published": "20220711",
             },
         },

@@ -26,7 +26,7 @@ export PYTHONPATH=$SPIN/src:$SPIN/src/website
 if ! test -d $SPIN/spinorama-venv; then
     python3 -m venv spinorama-venv
     source $SPIN/spinorama-venv/bin/activate
-    rehash
+    # rehash
     pip3 install -U pip
     pip3 install -r requirements.txt
     pip3 install -r requirements-tests.txt
