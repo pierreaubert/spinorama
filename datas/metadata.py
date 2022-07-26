@@ -5367,7 +5367,6 @@ speakers_info = {
         },
     },
     "KLH Model Five": {
-        "skip": True,
         "brand": "KLH",
         "model": "Model Five",
         "type": "passive",
@@ -5383,6 +5382,7 @@ speakers_info = {
                     "eac": "",
                 },
                 "review_published": "20220730",
+                "notes": "Measured with MID setting and with grille on",
             },
         },
     },
