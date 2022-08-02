@@ -2681,6 +2681,27 @@ speakers_info = {
             },
         },
     },
+    "Genelec S360": {
+        "brand": "Genelec",
+        "model": "S360",
+        "type": "active",
+        "price": "6800",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-s360-review-studio-monitor.36187/",
+                    "sr": "https://www.soundandrecording.de/equipment/genelec-s360a-high-spl-monitor-im-test/",
+                    "sos": "https://www.soundonsound.com/reviews/genelec-s360",
+                },
+                "review_published": "20220801",
+            },
+        },
+    },
     "Genelec G2": {
         "brand": "Genelec",
         "model": "G2",
