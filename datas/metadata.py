@@ -1995,6 +1995,26 @@ speakers_info = {
             },
         },
     },
+    "Emotiva Airmotiv B2+": {
+        "skip": True,
+        "brand": "Emotiva",
+        "model": "Airmotiv B2+",
+        "type": "passive",
+        "price": "450",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/emotiva_airmotiv_b2plus/",
+                },
+                "review_published": "20220806",
+            },
+        },
+    },
     "Emotiva Airmotiv C2+": {
         "brand": "Emotiva",
         "model": "Airmotiv C2+",
@@ -3354,6 +3374,44 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/infinity-rs152-review-surround-speaker.22531/",
                 "review_published": "20210416",
+            },
+        },
+    },
+    "Jamo C93 II": {
+        "skip": True,
+        "brand": "Jamo",
+        "model": "C93 II",
+        "type": "passive",
+        "price": "300",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jamo_c93_ii/",
+                },
+                "review_published": "20220809",
+            },
+        },
+    },
+    "Jamo S803": {
+        "skip": True,
+        "brand": "Jamo",
+        "model": "S803",
+        "type": "passive",
+        "price": "150",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jamo_s803/",
+                },
+                "review_published": "20220809",
             },
         },
     },
@@ -5801,6 +5859,27 @@ speakers_info = {
                 "symmetry": "horizontal",
                 "review": "https://www.princeton.edu/3D3A/Directivity.html",
                 "review_published": "20151001",
+            },
+        },
+    },
+    "Linkwitz LXmini DIY": {
+        "skip": True,
+        "brand": "Linkwitz",
+        "model": "LXmini DIY",
+        "type": "active",
+        "price": "800",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/linkwitz_lx_mini/",
+                    "yt": "https://youtu.be/x29dab0p_XE",
+                },
+                "review_published": "20220801",
             },
         },
     },
