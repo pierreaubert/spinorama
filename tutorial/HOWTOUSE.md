@@ -203,11 +203,14 @@ Filter  9: ON PK Fc  2168 Hz Gain +0.76 dB Q 2.97
 
 This time the LW is flatter, we still have a bump for the low frequency, and by default autoEQ does not touch frequencies below 120Hz since they will be changed too much by your room.
 We also see some small fluctuations of the EQ and it could benefit from some smoothing.
+```
 rm -f docs/speakers/"$SPEAKER"/*/filters_eq.png
 ./generate_peqs.py --speaker="$SPEAKER" --force --verbose --curves=LW --smooth-order=3 --smooth-measurements=11 --max-Q=3 --slope-listening-window=-0.5 --min-freq=40
 ```
 This time the bump at low frequency is gone, EQ is smoother.
+
 ![image](https://github.com/pierreaubert/spinorama/blob/develop/tutorial/picts/autoEQ/genelec_s360_v3.png)
+
 and the new EQ v3
 ```
 EQ for Genelec S360 computed from ASR data
@@ -230,8 +233,11 @@ Filter  9: ON PK Fc  8293 Hz Gain +0.50 dB Q 2.97
 Next step is to see if we can decrease the max Q for the speaker. The lower it is the more likely it will be usefull and less dependant on the speaker itself. Remember that there is fair amount of difference between 2 speakers from the same series. Sometimes manufacturers provide tolerance between 2 speakers but most don't. You do not want to optimise for a speaker which is far from yours. Adding smoothing and lowering the Q should improve the results.
 
 Here are the results with max Q=2:
+
 ![image](https://github.com/pierreaubert/spinorama/blob/develop/tutorial/picts/autoEQ/genelec_s360_v4.png)
+
 and EQ v4
+
 ```
 EQ for Genelec S360 computed from ASR data
 Preference Score 6.3 with EQ 6.6
@@ -249,8 +255,8 @@ Filter  6: ON PK Fc  6753 Hz Gain -0.70 dB Q 1.98
 Filter  7: ON PK Fc   155 Hz Gain +0.50 dB Q 1.98
 Filter  8: ON PK Fc  1327 Hz Gain +0.57 dB Q 1.98
 Filter  9: ON PK Fc  8258 Hz Gain +0.59 dB Q 1.95
-
 ```
+
 If you decrease the max Q to 1, then the score doesn't improve. In this case, 2 or 3 looks like to be the correct value. Listening to the various EQ is the best way to see which one your prefer.
 
 
