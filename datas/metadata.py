@@ -2250,6 +2250,24 @@ speakers_info = {
             },
         },
     },
+    "Focal Alpha Twin Evo": {
+        "brand": "Focal",
+        "model": "Alpha Twin Evo",
+        "type": "active",
+        "price": "480",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "misc-sr",
+        "measurements": {
+            "misc-sr": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.soundandrecording.de/equipment/focal-alpha-twin-evo-2-1-2-wege-nearfield-monitor-im-test/",
+                "review_published": "20220812",
+            },
+        },
+    },
     "Focal Aria 906": {
         "brand": "Focal",
         "model": "Aria 906",
