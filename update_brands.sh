@@ -6,4 +6,4 @@ json_pp < docs/assets/metadata.json  | \
     cut -b 2- | \
     sed -e 's/[,"]//g' | \
     sort -s -V -f -u | \
-    awk '{printf("<option value=\"%s\">%s</option>\n", $0, $0);}' > src/website/brands.html
+    awk '{brand=$0; gsub("&", "&amp;", $0) ; printf("<option value=\"%s\">%s</option>\n", brand, $0);}' > src/website/brands.html

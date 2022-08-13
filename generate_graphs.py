@@ -325,11 +325,7 @@ def compute(speakerlist, filters, ray_ids: dict):
     return df
 
 
-if __name__ == "__main__":
-    args = docopt(
-        __doc__, version="generate_graphs.py v{}".format(VERSION), options_first=True
-    )
-
+def main():
     # TODO remove it and replace by iterating over metadatas
     speakerlist = get_speaker_list("./datas/measurements")
     if args["--smoke-test"] is not None:
@@ -372,9 +368,6 @@ if __name__ == "__main__":
     if args["--update-cache"] is True:
         update_cache = True
 
-    logger = get_custom_logger(True)
-    logger.setLevel(args2level(args))
-
     # start ray
     custom_ray_init(args)
 
@@ -394,3 +387,14 @@ if __name__ == "__main__":
 
     ray.shutdown()
     sys.exit(0)
+
+
+if __name__ == "__main__":
+    args = docopt(
+        __doc__, version="generate_graphs.py v{}".format(VERSION), options_first=True
+    )
+
+    logger = get_custom_logger(True)
+    logger.setLevel(args2level(args))
+
+    main()

@@ -1995,6 +1995,26 @@ speakers_info = {
             },
         },
     },
+    "Emotiva Airmotiv B2+": {
+        "skip": True,
+        "brand": "Emotiva",
+        "model": "Airmotiv B2+",
+        "type": "passive",
+        "price": "450",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/emotiva_airmotiv_b2plus/",
+                },
+                "review_published": "20220806",
+            },
+        },
+    },
     "Emotiva Airmotiv C2+": {
         "brand": "Emotiva",
         "model": "Airmotiv C2+",
@@ -2681,6 +2701,27 @@ speakers_info = {
             },
         },
     },
+    "Genelec S360": {
+        "brand": "Genelec",
+        "model": "S360",
+        "type": "active",
+        "price": "6800",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-s360-review-studio-monitor.36187/",
+                    "sr": "https://www.soundandrecording.de/equipment/genelec-s360a-high-spl-monitor-im-test/",
+                    "sos": "https://www.soundonsound.com/reviews/genelec-s360",
+                },
+                "review_published": "20220801",
+            },
+        },
+    },
     "Genelec G2": {
         "brand": "Genelec",
         "model": "G2",
@@ -3336,6 +3377,44 @@ speakers_info = {
             },
         },
     },
+    "Jamo C93 II": {
+        "skip": True,
+        "brand": "Jamo",
+        "model": "C93 II",
+        "type": "passive",
+        "price": "300",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jamo_c93_ii/",
+                },
+                "review_published": "20220809",
+            },
+        },
+    },
+    "Jamo S803": {
+        "skip": True,
+        "brand": "Jamo",
+        "model": "S803",
+        "type": "passive",
+        "price": "150",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jamo_s803/",
+                },
+                "review_published": "20220809",
+            },
+        },
+    },
     "Jamo S807": {
         "brand": "Jamo",
         "model": "S807",
@@ -3912,17 +3991,17 @@ speakers_info = {
         "amount": "pair",
         "default_measurement": "eac",
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-stage-a130-review-speaker.18260/",
-                "review_published": "20201210",
-            },
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/jbl_stage_a130/",
                 "review_published": "20211112",
+            },
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-stage-a130-review-speaker.18260/",
+                "review_published": "20201210",
             },
         },
     },
@@ -5366,6 +5445,26 @@ speakers_info = {
             },
         },
     },
+    "KLH Model Five": {
+        "brand": "KLH",
+        "model": "Model Five",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac-v1-grilleon",
+        "measurements": {
+            "eac-v1-grilleon": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                },
+                "review_published": "20220730",
+                "notes": "Measured with MID setting and with grille on",
+            },
+        },
+    },
     "Kii Audio Three": {
         "brand": "Kii Audio",
         "model": "Three",
@@ -5379,7 +5478,7 @@ speakers_info = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kii_audio-three",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kii_three/",
                 },
                 "review_published": "20211201",
             },
@@ -5463,6 +5562,23 @@ speakers_info = {
             },
         },
     },
+    "Klipsch RP-404C II": {
+        "brand": "Klipsch",
+        "model": "RP-404C II",
+        "type": "passive",
+        "price": "600",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_404cii/",
+                "review_published": "20220702",
+            },
+        },
+    },
     "Klipsch RP-500M": {
         "brand": "Klipsch",
         "model": "RP-500M",
@@ -5480,6 +5596,23 @@ speakers_info = {
             },
         },
     },
+    "Klipsch RP-500C II": {
+        "brand": "Klipsch",
+        "model": "RP-500C II",
+        "type": "passive",
+        "price": "500",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_500cii/",
+                "review_published": "20220702",
+            },
+        },
+    },
     "Klipsch RP-500M II": {
         "brand": "Klipsch",
         "model": "RP-500M II",
@@ -5494,6 +5627,23 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_500m_ii/",
                 "review_published": "20220610",
+            },
+        },
+    },
+    "Klipsch RP-504C II": {
+        "brand": "Klipsch",
+        "model": "RP-504C II",
+        "type": "passive",
+        "price": "800",
+        "shape": "center",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_504cii/",
+                "review_published": "20220702",
             },
         },
     },
@@ -5542,6 +5692,66 @@ speakers_info = {
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_600m_ii/",
                 "review_published": "20220522",
                 "notes": "This measurement is with grille on",
+            },
+        },
+    },
+    "Klipsch RP-5000F II": {
+        "brand": "Klipsch",
+        "model": "RP-5000F II",
+        "type": "passive",
+        "price": "1200",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_5000f_ii/",
+                    "yt": "https://youtu.be/vmGTy5o5Xgc",
+                },
+                "review_published": "20220711",
+            },
+        },
+    },
+    "Klipsch RP-6000F II": {
+        "brand": "Klipsch",
+        "model": "RP-6000F II",
+        "type": "passive",
+        "price": "1500",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_6000f_ii/",
+                    "yt": "https://youtu.be/vmGTy5o5Xgc",
+                },
+                "review_published": "20220711",
+            },
+        },
+    },
+    "Klipsch RP-8000F II": {
+        "brand": "Klipsch",
+        "model": "RP-8000F II",
+        "type": "passive",
+        "price": "1800",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_8000f_ii/",
+                    "yt": "https://youtu.be/vmGTy5o5Xgc",
+                },
+                "review_published": "20220711",
             },
         },
     },
@@ -5652,8 +5862,28 @@ speakers_info = {
             },
         },
     },
-    "LCM Nearfield Monitor 3-D Printed DIY": {
+    "Linkwitz LXmini DIY": {
         "skip": True,
+        "brand": "Linkwitz",
+        "model": "LXmini DIY",
+        "type": "active",
+        "price": "800",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/linkwitz_lx_mini/",
+                    "yt": "https://youtu.be/x29dab0p_XE",
+                },
+                "review_published": "20220801",
+            },
+        },
+    },
+    "LCM Nearfield Monitor 3-D Printed DIY": {
         "brand": "LCM",
         "model": "Nearfield Monitor 3-D Printed DIY",
         "type": "passive",
@@ -6774,6 +7004,24 @@ speakers_info = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/outlaw-blsv2/conclusion",
+            },
+        },
+    },
+    "Palmer Studimon 5": {
+        "brand": "Palmer",
+        "model": "Studimon 5",
+        "type": "active",
+        "price": "500",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-sr",
+        "measurements": {
+            "misc-sr": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.soundandrecording.de/equipment/palmer-studimon-5-preiswerter-2-wege-nahfeldmonitor-im-test/",
+                "review_published": "20220710",
             },
         },
     },
@@ -8514,8 +8762,17 @@ speakers_info = {
         "shape": "inwall",
         "price": "495",
         "amount": "each",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/revel_w553l/",
+                    "yt": "https://www.youtube.com/watch?v=dPCZJmivufs",
+                },
+                "review_published": "20220514",
+            },
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
@@ -8523,12 +8780,6 @@ speakers_info = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/revel-w553l-measurements-in-wall-speaker.32072/",
                     "yt": "https://youtu.be/6lK55MF5MMA",
                 },
-                "review_published": "20220323",
-            },
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/revel_w553l/",
                 "review_published": "20220323",
             },
             "vendor": {
@@ -8843,6 +9094,22 @@ speakers_info = {
             },
         },
     },
+    "Soundkraft Enigma BT": {
+        "brand": "Soundkraft",
+        "model": "Enigma BT",
+        "type": "active",
+        "price": "500",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/soundkraft-enigma-bt-speaker-review.35641/",
+                "review_published": "20220711",
+            },
+        },
+    },
     "Speakercraft AIM8 One": {
         "brand": "Speakercraft",
         "model": "AIM8 One",
@@ -9138,6 +9405,25 @@ speakers_info = {
             },
         },
     },
+    "Vandersteen VLR": {
+        "brand": "Vandersteen",
+        "model": "VLR",
+        "type": "passive",
+        "price": "3800",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.audiosciencereview.com/forum/index.php?threads/vandersteen-vlr-speaker-review.35444/",
+                },
+                "review_published": "20220704",
+            },
+        },
+    },
     "Verdant Audio Bambusa AL 1": {
         "brand": "Verdant Audio",
         "model": "Bambusa AL 1",
@@ -9220,6 +9506,29 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/wharfedale-diamond-220-budget-speaker-review.16752/",
                 "review_published": "20201014",
+            },
+        },
+    },
+    "Wharfedale Linton 85th Anniversary": {
+        "brand": "Wharfedale",
+        "model": "Linton 85th Anniversary",
+        "type": "passive",
+        "price": "1000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/wharfedale_linton_85/",
+                    "yt": "https://youtu.be/CaxknyOrf3I",
+                    "tnr": "https://topnewreview.com/wharfedale-linton-85th-anniversary-review/#measured-performance",
+                    "tas": "https://www.theabsolutesound.com/articles/wharfedale-linton-85th-anniversary-loudspeaker",
+                    "whf": "https://www.whathifi.com/reviews/wharfedale-linton",
+                },
+                "review_published": "20220704",
             },
         },
     },

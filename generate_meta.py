@@ -21,13 +21,15 @@
 usage: generate_meta.py [--help] [--version] [--log-level=<level>]\
     [--metadata=<metadata>] [--parse-max=<max>] [--use-cache=<cache>]\
     [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>]\
-    [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local]
+    [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
+    [--smoke-test=<algo>]
 
 Options:
   --help            display usage()
   --version         script version number
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
   --metadata=<metadata> metadata file to use (default is ./datas/metadata.py)
+  --smoke-test=<algo> run a few speakers only (choice are random or default)
   --parse-max=<max> for debugging, set a max number of speakers to look at
   --origin=<origin> restrict to a specific origin, usefull for debugging
   --speaker=<speaker> restrict to a specific speaker, usefull for debugging
@@ -40,12 +42,14 @@ import json
 import math
 import sys
 
+import numpy as np
+
 from docopt import docopt
 
-try:
-    import ray
-except ModuleNotFoundError:
-    import src.miniray as ray
+# try:
+#    import ray
+# except ModuleNotFoundError:
+#    import src.miniray as ray
 
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
 import datas.metadata as metadata
@@ -163,9 +167,8 @@ def add_scores(dataframe, parse_max):
 
                     pref_rating = speaker_pref_rating(spin, inroom)
                     if pref_rating is None:
-                        if metadata.speakers_info[speaker_name]["measurements"][
-                            origin
-                        ] in ("ASR", "ErinsAudioCorner"):
+                        origin = "test"
+                        if origin in ("ASR", "ErinsAudioCorner"):
                             logger.error(
                                 "pref_rating failed for {0} {1}".format(
                                     speaker_name, key
@@ -438,6 +441,193 @@ def add_eq(speaker_path, dataframe, parse_max):
                         )
 
 
+def interpolate(speaker_name, freq, freq1, data1):
+    data = []
+    len1 = len(freq1)
+    i = 0
+    for f in freq:
+        try:
+            # print('debug: i={} f={}'.format(i, f))
+            while freq1[i] < f and i < len1:
+                i += 1
+            # print('debug: i={} f={} f1={}'.format(i, f, freq1[i]))
+
+            if i >= len1:
+                data.append(0.0)
+                # print('append 0')
+                continue
+
+            if freq1[i] >= f:
+                if i == 0:
+                    data.append(0.0)
+                    # print('append 0')
+                    continue
+                else:
+                    i = i - 1
+                    # print('decrease i')
+
+            # print('debug: i={} f={} f1={}'.format(i, f, freq1[i]))
+            j = i
+            while freq1[j] < f and j < len1:
+                j += 1
+            if j >= len1:
+                data.append(data1[i])
+                continue
+
+            # print('debug: i={} j={} f={} f1[i]={} f1[j]={}'.format(i, j, f, freq1[i], freq1[j]))
+            interp = data1[i] + (data1[j] - data1[i]) * (f - freq1[i]) / (
+                freq1[j] - freq1[i]
+            )
+            # print('interp={}'.format(interp))
+            data.append(interp)
+        except IndexError as ie:
+            print("{}: {} for f={}".format(speaker_name, ie, f))
+            data.append(0.0)
+
+    # print(data)
+    return np.array(data)
+
+
+def compute_near(fspin1, fspin2):
+    lw1, er1, sp1 = fspin1
+    lw2, er2, sp2 = fspin2
+
+    lw = lw1 - lw2
+    er = er1 - er2
+    sp = sp1 - sp2
+
+    near = np.max([np.linalg.norm(lw), np.linalg.norm(sp), np.linalg.norm(er, 2)])
+    if math.isnan(near):
+        print("get a NaN")
+        print(lw.head(), sp.head())
+        return 1000000.0
+    print("near lengths {} {} {} near {}".format(len(lw), len(er), len(sp), near))
+    return near
+
+
+def get_spin_data(freq, speaker_name, speaker_data):
+    default_key = None
+    try:
+        default_key = metadata.speakers_info[speaker_name]["default_measurement"]
+        default_origin = metadata.speakers_info[speaker_name]["measurements"][
+            default_key
+        ]["origin"]
+    except KeyError:
+        return None
+
+    default_format = metadata.speakers_info[speaker_name]["measurements"][default_key][
+        "format"
+    ]
+    if default_format != "klippel":
+        return None
+
+    for reviewer, measurements in speaker_data.items():
+        if "asr" in default_key and reviewer != "ASR":
+            # print(
+            #     "skipping {} with {} and {}".format(speaker_name, reviewer, default_key)
+            # )
+            continue
+        if "eac" in default_key and reviewer != "ErinsAudioCorner":
+            # print(
+            #    "skipping {} with {} and {}".format(speaker_name, reviewer, default_key)
+            # )
+            continue
+        for key, dfs in measurements.items():
+            if "_eq" in key:
+                #     print(
+                #    "skipping {} with {} and {} : key {} match _eq".format(
+                #        speaker_name, reviewer, default_key, key
+                #    )
+                # )
+                continue
+            if dfs is None or "CEA2034" not in dfs.keys():
+                # print(
+                #    "skipping {} with {} and {} : key {} no SPIN".format(
+                #        speaker_name, reviewer, default_key, key
+                #    )
+                # )
+                return None
+
+            spin = dfs["CEA2034_unmelted"]
+            if (
+                spin is None
+                or "Listening Window" not in spin.keys()
+                or "Sound Power" not in spin.keys()
+            ):
+                # print(
+                #    "skipping {} with {} and {} : key {} no LW or no SP".format(
+                #        speaker_name, reviewer, default_key, key
+                #    )
+                #
+                # )
+                return None
+
+            lw = interpolate(speaker_name, freq, spin["Freq"], spin["Listening Window"])
+            er = interpolate(
+                speaker_name, freq, spin["Freq"], spin["Early Reflections"]
+            )
+            sp = interpolate(speaker_name, freq, spin["Freq"], spin["Sound Power"])
+
+            return lw, er, sp
+
+        print("skipping {} no match".format(speaker_name))
+    return None
+
+
+def add_near(dataframe, parse_max):
+    """Compute nearest speaker"""
+    parsed = 0
+    distribution = []
+    normalized = {}
+    distances = {}
+    freq = np.logspace(np.log10(25), np.log10(16000), 100)
+    for speaker_name, speaker_data in dataframe.items():
+        curves = get_spin_data(freq, speaker_name, speaker_data)
+        if curves is not None:
+            normalized[speaker_name] = curves
+            distances[speaker_name] = {}
+
+    for speaker_name1, speaker_data1 in normalized.items():
+        if parse_max is not None and parsed > parse_max:
+            break
+        parsed = parsed + 1
+        deltas = []
+
+        for speaker_name2, speaker_data2 in normalized.items():
+            if speaker_name1 == speaker_name2:
+                continue
+            prev_delta = distances[speaker_name2].get(speaker_name1)
+            delta = prev_delta
+            if prev_delta is None:
+                delta = compute_near(speaker_data1, speaker_data2)
+                distances[speaker_name2][speaker_name1] = delta
+                distances[speaker_name1][speaker_name2] = delta
+            deltas.append((delta, speaker_name2))
+            distribution.append(delta)
+
+        if speaker_name1 == "Dutch Dutch 8C":
+            print(sorted(deltas, key=lambda x: x[0]))
+
+        closest = sorted(deltas, key=lambda x: x[0])[:3]
+        metadata.speakers_info[speaker_name1]["nearest"] = closest
+
+    # print some stats
+    height = 20
+    bins = 80
+    h = np.histogram(distribution, bins=bins)
+    hmin = np.min(h[0])
+    hmax = np.max(h[0])
+    print("distances [{}, {}]".format(hmin, hmax))
+    val = [int(i * height / hmax) for i in h[0]]
+
+    def lign(v):
+        return ["." if i < v else " " for i in range(height)]
+
+    table = [lign(v) for v in val]
+    ttable = ["".join(row) for row in np.array(table).T]
+    print("\n".join(ttable))
+
+
 def dump_metadata(meta):
     metadir = cpaths.CPATH_DOCS_ASSETS
     metafile = cpaths.CPATH_METADATA_JSON
@@ -451,16 +641,9 @@ def dump_metadata(meta):
         f.close()
 
 
-if __name__ == "__main__":
-    args = docopt(__doc__, version="generate_meta.py version 1.4", options_first=True)
-
-    # check args section
-    level = args2level(args)
-    logger = get_custom_logger(True)
-    logger.setLevel(level)
-
+def main():
     # start ray
-    custom_ray_init(args)
+    # custom_ray_init(args)
 
     df = None
     speaker = args["--speaker"]
@@ -469,11 +652,14 @@ if __name__ == "__main__":
     parse_max = args["--parse-max"]
     if parse_max is not None:
         parse_max = int(parse_max)
+    smoke_test = False
+    if args["--smoke-test"] is not None:
+        smoke_test = True
 
     if speaker is not None:
-        df = cache_load(simple_filter=speaker)
+        df = cache_load(simple_filter=speaker, smoke_test=smoke_test)
     else:
-        df = cache_load()
+        df = cache_load(smoke_test=smoke_test)
 
     if df is None:
         logger.error("Load failed! Please run ./generate_graphs.py")
@@ -484,6 +670,7 @@ if __name__ == "__main__":
     add_quality(parse_max)
     add_scores(df, parse_max)
     add_eq("./datas", df, parse_max)
+    add_near(df, parse_max)
 
     # check that json is valid
     # try:
@@ -498,3 +685,14 @@ if __name__ == "__main__":
 
     logger.info("Bye")
     sys.exit(0)
+
+
+if __name__ == "__main__":
+    args = docopt(__doc__, version="generate_meta.py version 1.4", options_first=True)
+
+    # check args section
+    level = args2level(args)
+    logger = get_custom_logger(True)
+    logger.setLevel(level)
+
+    main()

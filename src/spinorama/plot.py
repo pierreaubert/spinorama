@@ -693,9 +693,9 @@ def plot_radar(spl, params):
     return fig
 
 
-def plot_image(df):
+def plot_image(df, params):
     return None
 
 
-def plot_summary(df, params):
+def plot_summary(df, summary, params):
     return None

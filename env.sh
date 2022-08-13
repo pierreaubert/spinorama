@@ -4,7 +4,7 @@ touch env.log
 
 ## SSH AGENT
 ## ----------------------------------------------------------------------
-ssh-agent -k 2>&1 >> env.log
+ssh-agent -k >> env.log 2>&1
 eval `ssh-agent`
 echo $SSH_AGENT_SOCK
 if ! test -f ~/.ssh/id_rsa_github; then
@@ -15,7 +15,7 @@ fi
 ## ----------------------------------------------------------------------
 github=$(ssh-add -l | grep github | cut -d ' ' -f 3)
 if test -z $github; then
-    ssh-add ~/.ssh/id_rsa_github 2>&1 >> env.log
+    ssh-add ~/.ssh/id_rsa_github >> env.log 2>&1
     github=$(ssh-add -l 2>&1 | grep github | cut -d ' ' -f 3)
 fi
 
@@ -26,7 +26,7 @@ export PYTHONPATH=$SPIN/src:$SPIN/src/website
 if ! test -d $SPIN/spinorama-venv; then
     python3 -m venv spinorama-venv
     source $SPIN/spinorama-venv/bin/activate
-    rehash
+    # rehash
     pip3 install -U pip
     pip3 install -r requirements.txt
     pip3 install -r requirements-tests.txt
@@ -39,7 +39,7 @@ source $SPIN/spinorama-venv/bin/activate
 ## ----------------------------------------------------------------------
 if ! test -d $SPIN/node_modules; then
     npm install plotly
-    npm install pyright html-validator-cli standard
+    npm install pyright html-validator-cli standard flow-remove-types
 fi
 export PATH=$PATH:$SPIN/node_modules/.bin
 
@@ -55,11 +55,11 @@ fi
 
 ## summary
 ## ----------------------------------------------------------------------
-echo 'SPIN          ' $SPIN
-echo '  '$(python3 --version) $(which python3)
-echo '  '$(pip3 -V)
-echo '  jupyter-lab ' $(jupyter-lab --version) $(which jupyter-lab)
-echo '  PYTHONPATH  ' $PYTHONPATH
-echo '  github key  ' $github
-echo '  GPU         ' $GPU
-echo '  RAY         ' $(ray --version)
+echo 'SPIN          ' "$SPIN"
+echo ' ' "$(python3 --version) $(which python3)"
+echo ' ' "$(pip3 -V)"
+echo '  jupyter-lab ' "$(jupyter-lab --version) $(which jupyter-lab)"
+echo '  PYTHONPATH  ' "$PYTHONPATH"
+echo '  github key  ' "$github"
+echo '  GPU         ' "$GPU"
+echo '  RAY         ' "$(ray --version)"

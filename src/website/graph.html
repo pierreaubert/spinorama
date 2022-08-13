@@ -20,7 +20,7 @@
   import { displayGraph } from '${site}/assets/graph.js'
   const spec = downloadZip("${graph | space2url}.json.zip").then(
     function(spec) {
-      displayGraph(JSON.parse(spec), visGraph);
+      displayGraph(visGraph, JSON.parse(spec));
   });
 </script>
 

@@ -1,0 +1,11 @@
+Vandersteen VLR APO EQ Score 96000Hz
+July042022-104656
+
+Preamp: -2 dB
+
+Filter 1: ON HPQ Fc 76.17,    0.00,    1.13
+Filter 2: ON PK Fc 729.61,    -2.26,    1.91
+Filter 3: ON PK Fc 1128.44,    2.14,    5.63
+Filter 4: ON PK Fc 3810.42,    -1.93,    0.90
+Filter 5: ON PK Fc 4296.09,    -3.55,    6.96
+Filter 6: ON PK Fc 10773.96,    -2.74,    0.78

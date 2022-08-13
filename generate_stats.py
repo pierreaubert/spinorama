@@ -156,20 +156,10 @@ def print_eq(speakers, txt_format):
             )
 
 
-if __name__ == "__main__":
-    args = docopt(
-        __doc__,
-        version="generate_stats.py version {:1.1f}".format(VERSION),
-        options_first=True,
-    )
-
+def main():
     print_what = None
     if args["--print"] is not None:
         print_what = args["--print"]
-
-    level = args2level(args)
-    logger = get_custom_logger(True)
-    logger.setLevel(level)
 
     # load all metadata from generated json file
     json_filename = CPATH_METADATA_JSON
@@ -192,3 +182,17 @@ if __name__ == "__main__":
             logger.error('unkown print type either "eq_txt" or "eq_csv"')
 
     sys.exit(0)
+
+
+if __name__ == "__main__":
+    args = docopt(
+        __doc__,
+        version="generate_stats.py version {:1.1f}".format(VERSION),
+        options_first=True,
+    )
+
+    level = args2level(args)
+    logger = get_custom_logger(True)
+    logger.setLevel(level)
+
+    main()

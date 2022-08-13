@@ -1,0 +1,26 @@
+<%include file="header.html"/>
+<%include file="nav_menu.html"/>
+
+<%namespace name="util" module="website.utils" import="*"/>
+
+<div id="cea2034plots" data-num="0">
+  <div class="plotForm">
+    <nav class="level has-background-info-dark mb-0">
+      <div class="level-left">
+        <div class="level-item has-text-centered">
+          <p class="has-text-white">Graph:</p> <select class="graph"></select>
+        </div>
+      </div>
+    </nav>
+    <div>
+      Choose a speaker: <select class="speaker0"></select>: it will show you 3 speakers with a close tonality.
+    </div>
+    <div class="plotDouble0" id="plotDouble0"></div>
+    <div class="plotDouble1" id="plotDouble1"></div>
+    <div class="plotDouble2" id="plotDouble2"></div>
+  </div>
+</div>
+
+<script type="module" src="./assets/similar.js"></script>
+
+<%include file="footer.html"/>

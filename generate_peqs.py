@@ -154,15 +154,13 @@ def optim_save_peq(
     df_speaker,
     df_speaker_eq,
     optim_config,
-    be_verbose,
-    is_smoke_test,
 ):
     """Compute and then save PEQ for this speaker"""
     eq_dir = "datas/eq/{}".format(current_speaker_name)
     pathlib.Path(eq_dir).mkdir(parents=True, exist_ok=True)
     eq_name = "{}/iir-autoeq.txt".format(eq_dir)
     if not force and os.path.exists(eq_name):
-        if be_verbose:
+        if verbose:
             logger.info(f"eq {eq_name} already exist!")
         return None, None, None
 
@@ -244,7 +242,7 @@ def optim_save_peq(
     eq_apo = peq_format_apo("\n".join(comments), auto_peq)
 
     # print eq
-    if not is_smoke_test:
+    if not smoke_test:
         with open(eq_name, "w") as fd:
             fd.write(eq_apo)
             iir_txt = "iir.txt"
@@ -291,13 +289,13 @@ def optim_save_peq(
             graph_filename = "{}/{}/{}/filters_{}".format(
                 CPATH_DOCS_SPEAKERS, current_speaker_name, origin, name
             )
-            if is_smoke_test:
+            if smoke_test:
                 graph_filename += "_smoketest"
             graph_filename += ".png"
             graph.write_image(graph_filename)
 
     # print a compact table of results
-    if be_verbose and use_score:
+    if verbose and use_score:
         logger.info(
             "{:30s} ---------------------------------------".format(
                 current_speaker_name
@@ -343,9 +341,7 @@ def optim_save_peq(
     return current_speaker_name, auto_results, scores
 
 
-def queue_speakers(
-    df_all_speakers, optim_config, be_verbose, is_smoke_test, speaker_name
-):
+def queue_speakers(df_all_speakers, optim_config, speaker_name):
     ray_ids = {}
     for current_speaker_name in df_all_speakers.keys():
         if speaker_name is not None and current_speaker_name != speaker_name:
@@ -394,8 +390,6 @@ def queue_speakers(
             df_speaker,
             df_speaker_eq,
             optim_config,
-            be_verbose,
-            is_smoke_test,
         )
         ray_ids[current_speaker_name] = current_id
 
@@ -472,20 +466,7 @@ def compute_peqs(ray_ids):
     return 0
 
 
-if __name__ == "__main__":
-    args = docopt(
-        __doc__,
-        version="generate_peqs.py version {}".format(VERSION),
-        options_first=True,
-    )
-
-    force = args["--force"]
-    verbose = args["--verbose"]
-    smoke_test = args["--smoke-test"]
-
-    logger = get_custom_logger(True)
-    logger.setLevel(args2level(args))
-
+def main():
     parameter_error = False
 
     # read optimisation parameter
@@ -736,9 +717,24 @@ if __name__ == "__main__":
     # start ray
     custom_ray_init(args)
 
-    ids = queue_speakers(
-        df_all_speakers, current_optim_config, verbose, smoke_test, speaker_name
-    )
+    ids = queue_speakers(df_all_speakers, current_optim_config, speaker_name)
     compute_peqs(ids)
 
     sys.exit(0)
+
+
+if __name__ == "__main__":
+    args = docopt(
+        __doc__,
+        version="generate_peqs.py version {}".format(VERSION),
+        options_first=True,
+    )
+
+    logger = get_custom_logger(True)
+    logger.setLevel(args2level(args))
+
+    force = args["--force"]
+    verbose = args["--verbose"]
+    smoke_test = args["--smoke-test"]
+
+    main()

@@ -1,0 +1,11 @@
+Vandersteen VLR APO EQ LW 96000Hz
+July042022-104759
+
+Preamp: -1.5 dB
+
+Filter 1: ON HPQ Fc 72.01,    0.00,    1.04
+Filter 2: ON PK Fc 724.61,    -2.33,    1.91
+Filter 3: ON PK Fc 1137.24,    1.92,    3.90
+Filter 4: ON PK Fc 3811.42,    -2.58,    1.19
+Filter 5: ON PK Fc 4300.09,    -3.35,    6.96
+Filter 6: ON PK Fc 11691.68,    -1.83,    1.11

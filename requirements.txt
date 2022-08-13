@@ -1,6 +1,4 @@
-bayesian-optimization
 docopt
-flaml[blendsearch]
 flammkuchen
 jupyterlab
 kaleido
@@ -14,3 +12,5 @@ pre_commit
 ray[default]>=1.6.0
 ray[tune]
 wand
+# bayesian-optimization
+# flaml[blendsearch]

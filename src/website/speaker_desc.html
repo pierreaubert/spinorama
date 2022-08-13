@@ -50,11 +50,13 @@
     pref_rating = None
     sensitivity = meta[speaker].get('sensitivity', None)
     sdb = None
+    notes = None
     default = meta[speaker].get('default_measurement')
     if default is not None and default in meta[speaker]['measurements'].keys():
         estimates = meta[speaker]['measurements'][default].get('estimates', None)
         pref_rating = meta[speaker]['measurements'][default].get('pref_rating', None)
         pref_rating_eq = meta[speaker]['measurements'][default].get('pref_rating_eq', None)
+        notes = meta[speaker]['measurements'][default].get('notes', None)
     if sensitivity is not None:
         sdb = float(sensitivity)
 %>
@@ -185,10 +187,15 @@ Links to other reviews: <a href="${review}">${key} review</a>
 <li>
   Quality of the measurement data is
   % if g_key in meta[speaker]["measurements"] and meta[speaker]["measurements"][g_key].get("quality", "?") != "?":
-  ${meta[speaker]["measurements"][g_key]["quality"]}.
+  <b>${meta[speaker]["measurements"][g_key]["quality"]}</b>.
   % else:
-  unknown.
+  <b>unknown</b>.
   % endif
+</li>
+% endif
+% if notes is not None:
+<li>
+  <b>Note</b>: ${notes}
 </li>
 % endif
       </ul>

@@ -113,6 +113,8 @@ export function getReviews (value) {
       origin = 'AHL'
     } else if (origin === 'soundstageultra') {
       origin = 'SSU'
+    } else if (origin === 'sr') {
+      origin = 'S&R'
     }
     origin = origin.charAt(0).toUpperCase() + origin.slice(1)
     if (version.search("sealed") != -1 ) {
@@ -213,3 +215,4 @@ export function getDecoding (key) {
   }
   return 'async'
 }
+

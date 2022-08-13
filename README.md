@@ -11,7 +11,7 @@
 This library provides an easy way to view, compare or analyse speakers data. This can help you take informed
 decision when buying a speaker instead of relying on commercial information or internet buzz.
 
-## Jump to the [gallery](https://pierreaubert.github.io/spinorama) of all (300+) speakers measurements.
+## Jump to the [gallery](https://pierreaubert.github.io/spinorama) of all (500+) speakers measurements.
 
 # What is a spinorama set of graphs?
 
@@ -57,10 +57,10 @@ The library support four different formats of data:
 
 1. Generate CEA2034 data from horizontal and vertical SPL data.
 2. Calculate contour plot, radar plot, isolines and isobands.
-3. Estimate basic data for a speaker (-3dB output, flatness over a range)
+3. Estimate basic data for a speaker (-3dB output, flatness over a range, etc)
 4. Compute various parameters defined in a paper from Olive (ref. below).
-5. It can compute the effect of an EQ (IIR) on the spinorama.
-6. It can generate an EQ to optimise the speaker (and get a better preference score) based on anechoic data. Note: this is not yet a room correction software.
+5. It can generate an EQ to optimise the speaker (and get a better preference score) based on anechoic data. Note: this is not yet a room correction software.
+6. It can compute the effect of an EQ (IIR) on the spinorama.
 
 ## Website generation
 
@@ -69,91 +69,20 @@ The library support four different formats of data:
 3. Comparison between speakers is possible.
 4. Some statistics.
 5. All EQs generated are easily accessible.
+6. You can find similar speakers at a lower price point.
 
 # Other ways to look at the graphs in a more interactive way.
 
 If you want to generate the graphs yourself or play with the data you need to install the software.
-We have a dedicated [section](./tutorial/INSTALL.md).
-
-## Linux or Mac user
-
-First install a few packages:
-
-```
-apt install imagemagick npm
-```
-
-On a Mac you can replace all `apt` calls by `brew`.
-
-### Using python3, ipython and Jupyter-Lab
-
-```
-pip3 install -r requirements.txt
-```
-
-pip3 may also be pip depending on your system.
-
-```
-export PYTHONPATH=src:src/website
-jupiter-lab &
-```
-
-Your browser will open, go to _experiments_ directitory and click on _spinorama.ipynb_ and play around.
-
-## Linux or Mac developer
-
-You are very welcome to submit pull requests. Note that the license is GPLv3.
-
-Start with launching that should install a lot of software:
-
-```
-./setup.sh
-```
-
-If it doesn't work out of the box which is likely, please go step by step:
-
-```
-pip3 install -r requirements.txt
-pip3 install -r requirements-tests.txt
-```
-
-For linting the python, html and javascript code:
-
-```
-npm install pyright html-validator-cli standard
-```
-
-You may have to update your npm version above 12.0:
-
-```
-nvm install lts/fermium
-```
-
-Please add tests and
-
-```
-export PYTHONPATH=src
-python3 -m pytest --cov=src .
-```
-
-Before committing, please check that the various checks are fine:
-
-1. `./check_html.sh` : check that HTML generated files are conforming.
-2. `./check_meta.py` : check that the metadata file looks sane.
-3. `flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spinorama-venv` should report 0
-4. `black .` will take care of formatting all the python files.
-
-and also (but WIP):
-
-5. `./check_404.sh` : check we do not have missing links.
-6. `./node_modules/.bin/pyright` : should not report new type error.
-7. Check that notebook are cleaned up before committing.
-
-Tests 1. to 4. should be in the pre-submit.
+We have a dedicated [INSTALL section](./tutorial/INSTALL.md).
 
 # How to add a speaker to the database.
 
 We have a dedicated [tutorial](./tutorial/ADDSPEAKER.md).
+
+# How to use the software.
+
+We have a dedicated [manual](./tutorial/HOWTOUSE.md).
 
 # Source of data and citations
 

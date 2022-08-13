@@ -30,6 +30,7 @@ Options:
 import json
 import os
 import shutil
+import subprocess
 import sys
 from glob import glob
 from mako.template import Template
@@ -139,24 +140,7 @@ def generate_speaker(mako, dataframe, meta, site, useSearch):
     return 0
 
 
-if __name__ == "__main__":
-    args = docopt(__doc__, version="update_html.py version 1.22", options_first=True)
-
-    # check args section
-    dev = args["--dev"]
-    site = siteprod
-    if dev is True:
-        if args["--sitedev"] is not None:
-            sitedev = args["--sitedev"]
-            if len(sitedev) < 4 or sitedev[0:4] != "http":
-                print("sitedev {} does not start with http!".format(sitedev))
-                sys.exit(1)
-        site = sitedev
-
-    level = args2level(args)
-    logger = get_custom_logger(True)
-    logger.setLevel(level)
-
+def main():
     # load all metadata from generated json file
     json_filename = cpaths.CPATH_METADATA_JSON
     if not os.path.exists(json_filename):
@@ -276,7 +260,12 @@ if __name__ == "__main__":
                     )
                 )
                 f.close()
-        for item in ("help", "compare", "statistics"):
+        for item in (
+            "help",
+            "compare",
+            "statistics",
+            "similar",
+        ):
             item_name = "{0}.html".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
@@ -299,19 +288,6 @@ if __name__ == "__main__":
         print("Generating a file per speaker failed with {}".format(ke))
         sys.exit(1)
 
-    # copy css/js files
-    logger.info("Copy js/css files to {}".format(cpaths.CPATH_DOCS))
-    try:
-        for item in ("misc",):
-            item_name = "assets/{0}.js".format(item)
-            logger.info("Write {0}".format(item_name))
-            item_html = mako_templates.get_template(item_name)
-            with open(cpaths.CPATH_DOCS + "/" + item_name, "w") as f:
-                f.write(item_html.render(df=df, meta=meta_sorted_score, site=site))
-                f.close()
-    except KeyError as ke:
-        print("Generating various html files failed with {}".format(ke))
-        sys.exit(1)
     # copy favicon(s)
     for f in [
         "favicon.ico",
@@ -329,21 +305,59 @@ if __name__ == "__main__":
         shutil.copy(file_in, file_out)
 
     for f in [
-        "compare.js",
-        "search.js",
-        "index.js",
-        "sort.js",
-        "eqs.js",
-        "scores.js",
-        "statistics.js",
-        "onload.js",
-        "tabs.js",
-        "graph.js",
         "zip.min.js",
-        "downloadzip.js",
     ]:
         file_in = cpaths.CPATH_WEBSITE_ASSETS_JS + "/" + f
         file_out = cpaths.CPATH_DOCS_ASSETS_JS + "/" + f
         shutil.copy(file_in, file_out)
 
+    flow_bin = "flow-remove-types"
+    flow_param = ""  # "--pretty --sourcemaps"
+
+    flow_command = "{} {} {} {} {}".format(
+        flow_bin,
+        flow_param,
+        cpaths.CPATH_WEBSITE_ASSETS_JS,
+        "--out-dir",
+        cpaths.CPATH_DOCS_ASSETS_JS,
+    )
+    status = subprocess.run([flow_command], shell=True, check=True, capture_output=True)
+    if status.returncode != 0:
+        print("flow failed")
+
+    # copy css/js files
+    logger.info("Copy js/css files to {}".format(cpaths.CPATH_DOCS))
+    try:
+        for item in ("misc",):
+            item_name = "assets/{0}.js".format(item)
+            logger.info("Write {0}".format(item_name))
+            item_html = mako_templates.get_template(item_name)
+            with open(cpaths.CPATH_DOCS + "/" + item_name, "w") as f:
+                f.write(item_html.render(df=df, meta=meta_sorted_score, site=site))
+                f.close()
+    except KeyError as ke:
+        print("Generating various html files failed with {}".format(ke))
+        sys.exit(1)
+
     sys.exit(0)
+
+
+if __name__ == "__main__":
+    args = docopt(__doc__, version="update_html.py version 1.23", options_first=True)
+
+    # check args section
+    dev = args["--dev"]
+    site = siteprod
+    if dev is True:
+        if args["--sitedev"] is not None:
+            sitedev = args["--sitedev"]
+            if len(sitedev) < 4 or sitedev[0:4] != "http":
+                print("sitedev {} does not start with http!".format(sitedev))
+                sys.exit(1)
+        site = sitedev
+
+    level = args2level(args)
+    logger = get_custom_logger(True)
+    logger.setLevel(level)
+
+    main()
