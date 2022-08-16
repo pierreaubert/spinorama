@@ -117,6 +117,11 @@ Erin is a motivated person reviewing speakers. He is doing an outstanging jobs. 
 - Farina, A. “Simultaneous Measurement of Impulse Response and Distortion with a Swept-Sine Technique,” Presented at the AES 108th Convention, Feb. 2000.
 - Hatziantoniou, P. D. and Mourjopoulos, J. N. “Generalized Fractional-Octave Smoothing of Audio and Acoustic Responses,” J. Audio Eng. Soc., 48(4):259–280, 2000.
 
+Some papers related to finding the optimal IIR filters: I used a different algorithm but that's interesting to read.
+- Ramos, G., and Lopez, J. (2006). “Filter design method for loudspeaker equalization based on IIR parametric filters,” J. Audio Eng. Soc. 54(12), 1162–1178.
+- Vairetti, Giacomo & Sena, Enzo & Catrysse, Michael & Jensen, Søren & Moonen, Marc & Waterschoot, Toon. (2018). An Automatic Design Procedure for Low-order IIR Parametric Equalizers. Journal of the Audio Engineering Society. 66. 935-952. 10.17743/jaes.2018.0049.
+- Equalization of loudspeaker response using balanced model truncation, Xiansheng Li, Zhibo Cai, Chengshi Zheng, et al.
+
 ## Speakers manufacturers.
 
 - If you are a manufacturer of speakers, it would be great if you could provide spinorama datas.
