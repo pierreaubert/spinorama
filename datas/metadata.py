@@ -1,6 +1,23 @@
 # -*- coding: utf-8 -*-
 # extra speaker info
 speakers_info = {
+    "Adam A4V": {
+        "brand": "Adam",
+        "model": "A4V",
+        "type": "active",
+        "price": "766",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/adam-a4v-monitor-review.36704/",
+                "review_published": "20220822",
+            },
+        },
+    },
     "Adam A5X": {
         "brand": "Adam",
         "model": "A5X",
@@ -1829,6 +1846,15 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/elac-debut-2-0-b6-2-speaker-review.14272/",
             },
+#            "eac": {
+#                "origin": "ErinsAudioCorner",
+#                "format": "klippel",
+#                "reviews": {
+#                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_db62/",
+#                    "yt": "https://youtu.be/FeicGL2UWzw",
+#                 },
+#                "review_published": "20220813",
+#            },
         },
     },
     "Elac Debut 2.0 A4.2": {
@@ -1985,6 +2011,7 @@ speakers_info = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/emotiva_airmotiv_b1plus/",
+                    "yt": "https://youtu.be/YmKpCb3d7Vk",
                 },
             },
             "misc-archimago": {
@@ -9525,6 +9552,12 @@ speakers_info = {
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/wharfedale-diamond-12-1-review-speaker.26780/",
                 "review_published": "20210922",
             },
+#            "eac": {
+#                "origin": "ErinsAudioCorner",
+#                "format": "klippel",
+#                "review": "https://www.erinsaudiocorner.com/loudspeakers/wharfedale_12_1/",
+#                "review_published": "20220814",
+#            },
         },
     },
     "Wharfedale Diamond 220": {
