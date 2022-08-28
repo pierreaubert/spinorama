@@ -1846,15 +1846,15 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/elac-debut-2-0-b6-2-speaker-review.14272/",
             },
-#            "eac": {
-#                "origin": "ErinsAudioCorner",
-#                "format": "klippel",
-#                "reviews": {
-#                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_db62/",
-#                    "yt": "https://youtu.be/FeicGL2UWzw",
-#                 },
-#                "review_published": "20220813",
-#            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_db62/",
+                    "yt": "https://youtu.be/FeicGL2UWzw",
+                },
+                "review_published": "20220813",
+            },
         },
     },
     "Elac Debut 2.0 A4.2": {
@@ -2023,7 +2023,6 @@ speakers_info = {
         },
     },
     "Emotiva Airmotiv B2+": {
-        "skip": True,
         "brand": "Emotiva",
         "model": "Airmotiv B2+",
         "type": "passive",
@@ -3440,7 +3439,6 @@ speakers_info = {
         },
     },
     "Jamo C93 II": {
-        "skip": True,
         "brand": "Jamo",
         "model": "C93 II",
         "type": "passive",
@@ -3450,7 +3448,7 @@ speakers_info = {
         "measurements": {
             "eac": {
                 "origin": "ErinsAudioCorner",
-                "format": "webplotdigitizer",
+                "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jamo_c93_ii/",
                 },
@@ -3459,7 +3457,6 @@ speakers_info = {
         },
     },
     "Jamo S803": {
-        "skip": True,
         "brand": "Jamo",
         "model": "S803",
         "type": "passive",
@@ -3469,7 +3466,7 @@ speakers_info = {
         "measurements": {
             "eac": {
                 "origin": "ErinsAudioCorner",
-                "format": "webplotdigitizer",
+                "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jamo_s803/",
                 },
@@ -5941,10 +5938,9 @@ speakers_info = {
             },
         },
     },
-    "Linkwitz LXmini DIY": {
-        "skip": True,
+    "Linkwitz LXMini DIY": {
         "brand": "Linkwitz",
-        "model": "LXmini DIY",
+        "model": "LXMini DIY",
         "type": "active",
         "price": "800",
         "shape": "floorstanders",
@@ -9569,12 +9565,12 @@ speakers_info = {
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/wharfedale-diamond-12-1-review-speaker.26780/",
                 "review_published": "20210922",
             },
-#            "eac": {
-#                "origin": "ErinsAudioCorner",
-#                "format": "klippel",
-#                "review": "https://www.erinsaudiocorner.com/loudspeakers/wharfedale_12_1/",
-#                "review_published": "20220814",
-#            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/wharfedale_12_1/",
+                "review_published": "20220814",
+            },
         },
     },
     "Wharfedale Diamond 220": {
