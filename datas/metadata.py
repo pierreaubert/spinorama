@@ -4378,6 +4378,23 @@ speakers_info = {
             },
         },
     },
+    "JBL 4429": {
+        "brand": "JBL",
+        "model": "4429",
+        "type": "passive",
+        "price": "6000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "website": "www.jbl.com",
+                "format": "webplotdigitizer",
+                "review_published": "20140101",
+            },
+        },
+    },
     "JBL HDI-1600": {
         "brand": "JBL",
         "model": "HDI-1600",
