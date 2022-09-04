@@ -1857,6 +1857,24 @@ speakers_info = {
             },
         },
     },
+    "Elac Debut 2.0 B5.2": {
+        "skip": True,
+        "brand": "Elac",
+        "model": "Debut 2.0 B5.2",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "default_measurement": "misc-nuyes",
+        "measurements": {
+            "misc-nuyes": {
+                "origin": "Misc",
+                "format": "splHVtxt",
+                "quality": "low",
+                "notes": "Data valid above 200Hz and smoothed 1/24th of octave",
+                "review_published": "20220901",
+            },
+        },
+    },
     "Elac Debut 2.0 A4.2": {
         "brand": "Elac",
         "model": "Debut 2.0 A4.2",

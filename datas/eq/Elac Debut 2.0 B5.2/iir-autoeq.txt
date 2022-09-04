@@ -1,0 +1,15 @@
+EQ for Elac Debut 2.0 B5.2 computed from Misc data
+Preference Score 2.3 with EQ 6.3
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.16
+Dated: 2022-09-04-09:22:22
+
+Preamp: -4.2 dB
+
+Filter  1: ON PK Fc  4187 Hz Gain -3.99 dB Q 0.66
+Filter  2: ON LS Fc   848 Hz Gain +2.50 dB
+Filter  3: ON PK Fc   445 Hz Gain -2.82 dB Q 1.32
+Filter  4: ON LS Fc   872 Hz Gain +1.53 dB
+Filter  5: ON PK Fc   291 Hz Gain -2.43 dB Q 1.19
+Filter  6: ON PK Fc   664 Hz Gain -1.59 dB Q 3.00
+Filter  7: ON PK Fc  1145 Hz Gain +1.81 dB Q 3.00
+Filter  8: ON PK Fc  2122 Hz Gain -0.97 dB Q 2.86
