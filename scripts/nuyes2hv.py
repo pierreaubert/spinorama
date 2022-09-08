@@ -3,18 +3,18 @@ import math
 import sys
 
 # Kef ls50 w II
-#FIXED = 150 # Hz
-#CUTOFF = 300  # Hz
-#SPLDELTA = 81.83-98.41
-#CUTOFF = 200  # Hz
-#SPLDELTA = 81.83-96.69
+# FIXED = 150 # Hz
+# CUTOFF = 300  # Hz
+# SPLDELTA = 81.83-98.41
+# CUTOFF = 200  # Hz
+# SPLDELTA = 81.83-96.69
 
 # Elac
-FIXED = 150 # Hz
+FIXED = 150  # Hz
 CUTOFF = 300  # Hz
 SPLDELTA = 84.77 - 68.36
-#CUTOFF = 200  # Hz
-#SPLDELTA = 85.6 - 66.6
+# CUTOFF = 200  # Hz
+# SPLDELTA = 85.6 - 66.6
 # CUTOFF = 125  # Hz
 # SPLDELTA = 87.146 - 64.61
 
@@ -297,8 +297,8 @@ def process_hv(speaker, direction, onaxis):
             fspl = float(spl.replace(",", "")) + SPLDELTA
             if ffreq >= CUTOFF:
                 files[angle].write("{} {} 0.0\n".format(ffreq, fspl))
-            #elif ffreq >= FIXED:
-            #    computed = 
+            # elif ffreq >= FIXED:
+            #    computed =
             #    files[angle].write("{} {} 0.0\n".format(ffreq, computed))
 
 

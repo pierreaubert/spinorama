@@ -5060,7 +5060,7 @@ speakers_info = {
                 "format": "splHVtxt",
                 "quality": "low",
                 "reviews": {
-                    "dci": "https://gall.dcinside.com/mgallery/board/view/?id=speakers&no=265278&s_type=search_name&s_keyword=Nuyes&page=2", 
+                    "dci": "https://gall.dcinside.com/mgallery/board/view/?id=speakers&no=265278&s_type=search_name&s_keyword=Nuyes&page=2",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-ls50w-ii-measurements.36932/",
                 },
                 "notes": "Data gated at 5ms so valid above 200Hz/300Hz and smoothed 1/24th of octave",
