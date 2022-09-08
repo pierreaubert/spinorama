@@ -1858,7 +1858,6 @@ speakers_info = {
         },
     },
     "Elac Debut 2.0 B5.2": {
-        "skip": True,
         "brand": "Elac",
         "model": "Debut 2.0 B5.2",
         "type": "passive",
@@ -1870,7 +1869,10 @@ speakers_info = {
                 "origin": "Misc",
                 "format": "splHVtxt",
                 "quality": "low",
-                "notes": "Data valid above 200Hz and smoothed 1/24th of octave",
+                "reviews": {
+                    "dci": "https://gall.dcinside.com/mgallery/board/view/?id=speakers&no=265694",
+                },
+                "notes": "Data gated at 5ms so valid above 200Hz/300Hz and smoothed 1/24th of octave",
                 "review_published": "20220901",
             },
         },
@@ -5052,6 +5054,17 @@ speakers_info = {
                     "yt": "https://www.youtube.com/watch?v=ryxm7pPyU9c",
                 },
                 "review_published": "20210907",
+            },
+            "misc-nuyes": {
+                "origin": "Misc",
+                "format": "splHVtxt",
+                "quality": "low",
+                "reviews": {
+                    "dci": "https://gall.dcinside.com/mgallery/board/view/?id=speakers&no=265278&s_type=search_name&s_keyword=Nuyes&page=2", 
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-ls50w-ii-measurements.36932/",
+                },
+                "notes": "Data gated at 5ms so valid above 200Hz/300Hz and smoothed 1/24th of octave",
+                "review_published": "20220831",
             },
         },
     },
