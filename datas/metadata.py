@@ -5080,8 +5080,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
-                "reviews": {
-                },
+                "reviews": {},
                 "review_published": "20220909",
             },
         },
