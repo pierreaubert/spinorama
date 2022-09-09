@@ -5068,6 +5068,24 @@ speakers_info = {
             },
         },
     },
+    "KEF LS60 Wireless": {
+        "brand": "KEF",
+        "model": "LS60 Wireless",
+        "type": "active",
+        "price": "7000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "webplotdigitizer",
+                "reviews": {
+                },
+                "review_published": "20220909",
+            },
+        },
+    },
     "KEF LSX": {
         "brand": "KEF",
         "model": "LSX",

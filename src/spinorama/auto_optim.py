@@ -30,9 +30,9 @@ from ray.tune.schedulers import (
     ASHAScheduler,
 )
 from ray.tune.schedulers.pb2 import PB2
-from ray.tune.suggest import ConcurrencyLimiter
-from ray.tune.suggest.flaml import CFO, BlendSearch
-from ray.tune.suggest.bayesopt import BayesOptSearch
+from ray.tune.search import ConcurrencyLimiter
+from ray.tune.search.flaml import CFO, BlendSearch
+from ray.tune.search.bayesopt import BayesOptSearch
 
 from .ltype import Peq, FloatVector1D
 from .filter_iir import Biquad
