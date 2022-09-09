@@ -119,12 +119,17 @@ def custom_ray_init(args):
         worker_logger = get_custom_logger(False)
         worker_logger.setLevel(level)
 
-    ray.worker.global_worker.run_function_on_all_workers(ray_setup_logger)
+    # doesn't work in 2.0
+    # ray.worker.global_worker.run_function_on_all_workers(ray_setup_logger)
     # address is the one from the ray server<
     ray.init(
+        include_dashboard=True,
         dashboard_host=dashboard_ip,
         dashboard_port=dashboard_port,
         local_mode=ray_local_mode,
+        configure_logging=True,
+        logging_level=level,
+        log_to_driver=True,
     )
 
 

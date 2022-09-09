@@ -9,7 +9,7 @@ numpy
 pandas
 plotly
 pre_commit
-ray[default]>=1.6.0
+ray[default]>=2.0.0
 ray[tune]
 wand
 # bayesian-optimization
