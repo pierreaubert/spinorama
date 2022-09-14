@@ -1865,6 +1865,12 @@ speakers_info = {
         "shape": "bookshelves",
         "default_measurement": "misc-nuyes",
         "measurements": {
+#            "eac": {
+#                "origin": "ErinsAudioCorner",
+#                "format": "klippel",
+#                "review": "https://www.erinsaudiocorner.com/loudspeakers/elac_db52/",
+#                "review_published": "20220904",
+#            },
             "misc-nuyes": {
                 "origin": "Misc",
                 "format": "splHVtxt",
@@ -9270,6 +9276,24 @@ speakers_info = {
                 "format": "webplotdigitizer",
                 "review": "https://archimago.blogspot.com/2021/02/retro-measure-spendor-sa1-1976-monitor.html",
                 "quality": "low",
+            },
+        },
+    },
+    "SVS Prime Bookshelf": {
+        "skip": True,
+        "brand": "SVS",
+        "model": "Prime Bookshelf",
+        "type": "passive",
+        "price": "600",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/svs_prime_bookshelf/",
+                "review_published": "20220903",
             },
         },
     },
