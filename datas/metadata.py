@@ -2127,6 +2127,26 @@ speakers_info = {
             },
         },
     },
+#    "Endow Audio Bravura 7": {
+#        "brand": "Endow Audio",
+#        "model": "Bravura 7",
+#        "type": "passive",
+#        "price": "6500",
+#        "shape": "omnidirectional",
+#        "amount": "pair",
+#        "default_measurement": "eac",
+#        "measurements": {
+#            "eac": {
+#                "origin": "ErinsAudioCorner",
+#                "format": "klippel",
+#                "reviews": {
+#                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/endow_bravura_7/",
+#                    "yt": "https://youtu.be/tPW8Y4f4sPs",
+#                },
+#                "review_published": "20220905",
+#            },
+#        },
+#    },
     "Essence Electrostatic Model 1600": {
         "brand": "Essence Electrostatic",
         "model": "Model 1600",
@@ -6357,6 +6377,97 @@ speakers_info = {
             },
         },
     },
+    "Meyer Sound Acheron 80": {
+        "brand": "Meyer Sound",
+        "model": "Acheron 80",
+        "type": "active",
+        "price": "",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "splHVtxt",
+                "review_published": "20220915",
+            },
+        },
+    },
+    "Meyer Sound Acheron 100": {
+        "brand": "Meyer Sound",
+        "model": "Acheron 100",
+        "type": "active",
+        "price": "",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "splHVtxt",
+                "review_published": "20220915",
+            },
+        },
+    },
+    "Meyer Sound Acheron LF": {
+        "skip": True,
+        "brand": "Meyer Sound",
+        "model": "Acheron LF",
+        "type": "active",
+        "price": "",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "splHVtxt",
+                "review_published": "20220915",
+            },
+        },
+    },
+    "Meyer Sound Ultra 22": {
+        "brand": "Meyer Sound",
+        "model": "Ultra 22",
+        "type": "active",
+        "price": "",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "splHVtxt",
+                "review_published": "20220915",
+            },
+        },
+    },
+    "Meyer Sound Ultra X22": {
+        "brand": "Meyer Sound",
+        "model": "Ultra X22",
+        "type": "active",
+        "price": "",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "splHVtxt",
+                "review_published": "20220915",
+            },
+        },
+    },
+    "Meyer Sound Ultra X40": {
+        "brand": "Meyer Sound",
+        "model": "Ultra X40",
+        "type": "active",
+        "price": "",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "splHVtxt",
+                "review_published": "20220915",
+            },
+        },
+    },
     "Micca MB42X Mark III": {
         "brand": "Micca",
         "model": "MB42X Mark III",
@@ -6922,6 +7033,11 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh420-review-studio-monitor.33529/",
                 "review_published": "20220501",
+            },
+            "vendor": {
+                "origin": "Vendors-Neumann",
+                "format": "splHVtxt",
+                "review_published": "20220917",
             },
         },
     },
@@ -9279,24 +9395,24 @@ speakers_info = {
             },
         },
     },
-    "SVS Prime Bookshelf": {
-        "skip": True,
-        "brand": "SVS",
-        "model": "Prime Bookshelf",
-        "type": "passive",
-        "price": "600",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/svs_prime_bookshelf/",
-                "review_published": "20220903",
-            },
-        },
-    },
+#    "SVS Prime Bookshelf": {
+#        "skip": True,
+#        "brand": "SVS",
+#        "model": "Prime Bookshelf",
+#        "type": "passive",
+#        "price": "600",
+#        "amount": "pair",
+#        "shape": "bookshelves",
+#        "default_measurement": "eac",
+#        "measurements": {
+#            "eac": {
+#                "origin": "ErinsAudioCorner",
+#                "format": "klippel",
+#                "review": "https://www.erinsaudiocorner.com/loudspeakers/svs_prime_bookshelf/",
+#                "review_published": "20220903",
+#            },
+#        },
+#    },
     "SVS Prime Center": {
         "brand": "SVS",
         "model": "Prime Center",
@@ -9977,6 +10093,15 @@ origins_info = {
         "logo": "docs/metadata/mesanovic.png",
         "logo-small": "docs/metadata/mesanovic.png",
         "url": "https://www.mesanovicmicrophones.com",
+    },
+    "Vendors-Meyer Sound": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "logo": "docs/metadata/meyersound.png",
+        "logo-small": "docs/metadata/meyersound.png",
+        "url": "https://www.meyersound.com",
     },
     "Vendors-Neumann": {
         "min hz": 20,
