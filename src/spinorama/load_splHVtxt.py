@@ -65,7 +65,7 @@ def parse_graph_splHVtxt(dirpath, orientation):
 
                 # freq db phase
                 words = l.split()
-                if len(words) == 3:
+                if len(words) == 2 or len(words) == 3:
                     freq = words[0]
                     db = words[1]
                     # skip first line
