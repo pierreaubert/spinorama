@@ -640,6 +640,10 @@ export function setCEA2034Split (speakerNames: Array<string>, speakerGraphs: Gra
   }
   let layout = null
   let datas = null
+  const config = {
+    responsive: true,
+    displayModeBar: true,
+  }
   
   if (speakerGraphs[0] != null && speakerGraphs[1] != null) {
     layout = speakerGraphs[0].layout
