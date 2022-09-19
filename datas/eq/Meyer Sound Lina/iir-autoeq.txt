@@ -1,0 +1,15 @@
+EQ for Meyer Sound Lina computed from Vendors-Meyer Sound data
+Preference Score -0.5 with EQ -0.4
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.16
+Dated: 2022-09-19-09:53:31
+
+Preamp: -6.6 dB
+
+Filter  1: ON PK Fc   103 Hz Gain -6.76 dB Q 1.04
+Filter  2: ON PK Fc  1646 Hz Gain +4.78 dB Q 0.56
+Filter  3: ON PK Fc   214 Hz Gain -2.76 dB Q 2.12
+Filter  4: ON PK Fc  5983 Hz Gain +3.66 dB Q 2.87
+Filter  5: ON PK Fc  2708 Hz Gain -2.34 dB Q 2.96
+Filter  6: ON PK Fc  2403 Hz Gain +5.19 dB Q 3.00
+Filter  7: ON PK Fc  2035 Hz Gain -3.75 dB Q 2.99
+Filter  8: ON PK Fc  3548 Hz Gain +3.56 dB Q 2.94
