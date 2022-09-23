@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # common notes for some loudspeakers
-note_genelec_gll = "Data provided by Genelec is with 1/3rd octave smoothing and 5 degrees resolution"
+note_genelec_gll = (
+    "Data provided by Genelec is with 1/3rd octave smoothing and 5 degrees resolution"
+)
 note_jbl_gll = "Data provided by JBL is highly variable, beware. It ranges from excellent to surprising"
 note_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz"
 note_qsc_gll = "Data provided by QSC is of good quality by highly smoothed"
@@ -3699,6 +3701,118 @@ speakers_info = {
             },
         },
     },
+    "JBL 3733": {
+        "brand": "JBL",
+        "model": "3733",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "splHVtxt",
+                "review_published": "20220915",
+                "quality": "low",
+                "notes": "{}".format(note_jbl_gll),
+            },
+        },
+    },
+    "JBL 9310": {
+        "brand": "JBL",
+        "model": "9310",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "splHVtxt",
+                "review_published": "20220915",
+                "quality": "low",
+                "notes": "{}".format(note_jbl_gll),
+            },
+        },
+    },
+    "JBL CFR2": {
+        "skip": True,
+        "brand": "JBL",
+        "model": "CFR2",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "splHVtxt",
+                "review_published": "20220915",
+                "quality": "low",
+                "notes": "{}".format(note_jbl_gll),
+            },
+        },
+    },
+    "JBL Control 24CT": {
+        "brand": "JBL",
+        "model": "Control 24CT",
+        "type": "passive",
+        "price": "150",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "splHVtxt",
+                "review_published": "20220915",
+                "quality": "low",
+                "notes": "{}".format(note_jbl_gll),
+                "reviews": {
+                    "jbl": "https://jblpro.com/products/control-24ct",
+                },
+            },
+        },
+    },
+    "JBL Control 25T": {
+        "brand": "JBL",
+        "model": "Control 25T",
+        "type": "passive",
+        "price": "350",
+        "amount": "pair",
+        "shape": "outdoor",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "splHVtxt",
+                "review_published": "20220915",
+                "quality": "low",
+                "notes": "{}".format(note_jbl_gll),
+            },
+        },
+    },
+    "JBL Control HST V2": {
+        "brand": "JBL",
+        "model": "Control HST V2",
+        "type": "passive",
+        "price": "400",
+        "amount": "each",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "splHVtxt",
+                "review_published": "20220915",
+                "quality": "low",
+                "notes": "{}".format(note_jbl_gll),
+            },
+        },
+    },
     "JBL Arena 120": {
         "brand": "JBL",
         "model": "Arena 120",
@@ -4142,6 +4256,13 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-cbt-70j-1-review-constant-beam-transducer.21469/",
+            },
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "splHVtxt",
+                "review_published": "20220918",
+                "quality": "low",
+                "notes": "{}".format(note_jbl_gll),
             },
         },
     },
@@ -6588,6 +6709,10 @@ speakers_info = {
                 "review_published": "20220919",
                 "quality": "medium",
                 "notes": "{}".format(note_meyersound_gll),
+                "parameters": {
+                    "mean_min": 90,
+                    "mean_max": 1000,
+                },
             },
         },
     },
@@ -6605,6 +6730,10 @@ speakers_info = {
                 "review_published": "20220919",
                 "quality": "medium",
                 "notes": "{}".format(note_meyersound_gll),
+                "parameters": {
+                    "mean_min": 90,
+                    "mean_max": 1000,
+                },
             },
         },
     },

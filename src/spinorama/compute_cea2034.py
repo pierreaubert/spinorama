@@ -107,7 +107,7 @@ def spl2pressure(spl: float) -> float:
         p = pow(10, (spl - 105.0) / 20.0)
         return p
     except TypeError as type_error:
-        print("spl2pressure: spl={0} e={1}".format(spl, type_error))
+        # print("spl2pressure: spl={0} e={1}".format(spl, type_error))
         logger.error("spl2pressure spl={0} e={1}".format(spl, type_error))
         return 0.0
 
@@ -115,7 +115,7 @@ def spl2pressure(spl: float) -> float:
 def pressure2spl(p: float) -> float:
     """Convert pressure to SPL"""
     if p < 0.0:
-        print("pressure is negative p={0}".format(p))
+        # print("pressure is negative p={0}".format(p))
         logger.error("pressure is negative p={0}".format(p))
     return 105.0 + 20.0 * math.log10(p)
 

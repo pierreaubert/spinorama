@@ -47,7 +47,7 @@ def parse_eq_speaker(speaker_path: str, speaker_name: str, df_ref: dict) -> dict
             v_spl = df_ref["SPL Vertical_unmelted"]
             eq_h_spl = peq_apply_measurements(h_spl, iir)
             eq_v_spl = peq_apply_measurements(v_spl, iir)
-            df_eq = filter_graphs(speaker_name, eq_h_spl, eq_v_spl)
+            df_eq = filter_graphs(speaker_name, eq_h_spl, eq_v_spl, 300, 3000)
             return df_eq
         elif "CEA2034" in df_ref.keys():
             spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir)
@@ -85,9 +85,16 @@ def parse_graphs_speaker(
     morigin="ASR",
     mversion="default",
     msymmetry=None,
+    mparameters=None,
 ) -> dict:
     df = None
     measurement_path = "{}".format(speaker_path)
+
+    mean_min = 300
+    mean_max = 3000
+    if mparameters is not None:
+        mean_min = mparameters.get("mean_min", mean_min)
+        mean_max = mparameters.get("mean_max", mean_max)
 
     if mformat in ("klippel", "princeton", "splHVtxt"):
         if mformat == "klippel":
@@ -110,12 +117,12 @@ def parse_graphs_speaker(
                 v_spl2 = h_spl2.copy()
             else:
                 v_spl2 = symmetrise_measurement(v_spl)
-            df = filter_graphs(speaker_name, h_spl2, v_spl2)
+            df = filter_graphs(speaker_name, h_spl2, v_spl2, mean_min, mean_max)
         elif msymmetry == "horizontal":
             h_spl2 = symmetrise_measurement(h_spl)
-            df = filter_graphs(speaker_name, h_spl2, v_spl)
+            df = filter_graphs(speaker_name, h_spl2, v_spl, mean_min, mean_max)
         else:
-            df = filter_graphs(speaker_name, h_spl, v_spl)
+            df = filter_graphs(speaker_name, h_spl, v_spl, mean_min, mean_max)
     elif mformat in ("webplotdigitizer", "rewstextdump"):
         title = None
         df_uneven = None

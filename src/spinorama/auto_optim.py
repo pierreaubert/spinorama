@@ -554,11 +554,11 @@ def optim_refine(
         verbose=1,
     )
 
-    print(analysis.best_trial.last_result)
-    print(analysis.best_config)
+    # print(analysis.best_trial.last_result)
+    # print(analysis.best_config)
 
     final_loss = -analysis.best_trial.last_result["score"]
-    print(final_loss, init_loss)
+    # print(final_loss, init_loss)
     if final_loss > init_loss:
         final_results = greedy_results
         final_results.append([greedy_results[-1][0] + 1, final_loss, final_loss])

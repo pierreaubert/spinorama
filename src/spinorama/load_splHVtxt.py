@@ -4,7 +4,6 @@ import os
 import glob
 import pandas as pd
 from .load_misc import sort_angles
-from .load import filter_graphs
 
 logger = logging.getLogger("spinorama")
 

@@ -64,12 +64,12 @@ def get_freq(df_speaker_data, optim_config):
                 ).reset_index()
                 local_df = df_pivoted.loc[:, columns]
             except ValueError as ve:
-                print("debug: {} {}".format(df_tmp.keys(), ve))
-                print("{}".format(df_tmp.index.duplicated()))
+                # print("debug: {} {}".format(df_tmp.keys(), ve))
+                # print("{}".format(df_tmp.index.duplicated()))
                 return None, None, None
             except KeyError as ke:
-                print("debug: columns {} {}".format(columns, ke))
-                print("debug: {}".format(df_tmp.keys()))
+                # print("debug: columns {} {}".format(columns, ke))
+                # print("debug: {}".format(df_tmp.keys()))
                 return None, None, None
 
     if with_pir:

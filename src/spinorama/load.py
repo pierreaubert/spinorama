@@ -88,21 +88,22 @@ def norm_spl(spl):
     return df
 
 
-def filter_graphs(speaker_name, h_spl, v_spl):
+def filter_graphs(speaker_name, h_spl, v_spl, mean_min=300, mean_max=3000):
     dfs = {}
     # add H and V SPL graphs
-    mean_300_3000 = None
+    mean_min_max = None
     mean_100_1000 = None
     sv_spl = None
     sh_spl = None
+
     if h_spl is not None:
-        mean_300_3000 = np.mean(
-            h_spl.loc[(h_spl.Freq > 300) & (h_spl.Freq < 3000)]["On Axis"]
+        mean_min_max = np.mean(
+            h_spl.loc[(h_spl.Freq > mean_min) & (h_spl.Freq < mean_max)]["On Axis"]
         )
         mean_100_1000 = np.mean(
             h_spl.loc[(h_spl.Freq > 100) & (h_spl.Freq < 1000)]["On Axis"]
         )
-        sh_spl = shift_spl(h_spl, mean_300_3000)
+        sh_spl = shift_spl(h_spl, mean_min_max)
         dfs["SPL Horizontal"] = graph_melt(sh_spl)
         dfs["SPL Horizontal_unmelted"] = sh_spl
         dfs["SPL Horizontal_normalized_unmelted"] = norm_spl(sh_spl)
@@ -110,15 +111,15 @@ def filter_graphs(speaker_name, h_spl, v_spl):
         logger.info("h_spl is None for speaker {}".format(speaker_name))
 
     if v_spl is not None:
-        if mean_300_3000 is None:
-            mean_300_3000 = np.mean(
-                v_spl.loc[(v_spl.Freq > 300) & (v_spl.Freq < 3000)]["On Axis"]
+        if mean_min_max is None:
+            mean_min_max = np.mean(
+                v_spl.loc[(v_spl.Freq > mean_min) & (v_spl.Freq < mean_max)]["On Axis"]
             )
         if mean_100_1000 is None:
             mean_100_1000 = np.mean(
                 v_spl.loc[(v_spl.Freq > 100) & (v_spl.Freq < 1000)]["On Axis"]
             )
-        sv_spl = shift_spl(v_spl, mean_300_3000)
+        sv_spl = shift_spl(v_spl, mean_min_max)
         dfs["SPL Vertical"] = graph_melt(sv_spl)
         dfs["SPL Vertical_unmelted"] = sv_spl
         dfs["SPL Vertical_normalized_unmelted"] = norm_spl(sv_spl)
