@@ -96,11 +96,24 @@ def get_speaker_list(speakerpath: str) -> List[str]:
 
 
 def queue_measurement(
-    brand: str, speaker: str, mformat: str, morigin: str, mversion: str, msymmetry: str
+    brand: str,
+    speaker: str,
+    mformat: str,
+    morigin: str,
+    mversion: str,
+    msymmetry: str,
+    mparameters: dict,
 ) -> Tuple[int, int, int, int]:
     """Add all measurements in the queue to be processed"""
     id_df = parse_graphs_speaker.remote(
-        "./datas/measurements", brand, speaker, mformat, morigin, mversion, msymmetry
+        "./datas/measurements",
+        brand,
+        speaker,
+        mformat,
+        morigin,
+        mversion,
+        msymmetry,
+        mparameters,
     )
     id_eq = parse_eq_speaker.remote("./datas", speaker, id_df)
     force = False
@@ -174,11 +187,11 @@ def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict]) -> dict:
             logger.debug(
                 "queing {}/{}/{}/{}".format(speaker, morigin, mformat, mversion)
             )
-            msymmetry = None
-            if "symmetry" in measurement:
-                msymmetry = measurement["symmetry"]
+            msymmetry = measurement.get("symmetry", None)
+            mparameters = measurement.get("parameters", None)
+
             ray_ids[speaker][mversion] = queue_measurement(
-                brand, speaker, mformat, morigin, mversion, msymmetry
+                brand, speaker, mformat, morigin, mversion, msymmetry, mparameters
             )
             count += 1
     print("Queued {0} speakers {1} measurements".format(len(speakerlist), count))

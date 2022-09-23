@@ -44,6 +44,7 @@ def estimates(
             # print(onaxis)
             y_3 = onaxis.loc[(onaxis.Freq < 150) & (onaxis.dB <= y_ref - 3)].Freq.max()
             y_6 = onaxis.loc[(onaxis.Freq < 150) & (onaxis.dB <= y_ref - 6)].Freq.max()
+            logger.debug("-3 and -6: {}Hz and {}Hz".format(y_3, y_6))
             # search band up/down
             up: float = onaxis.loc[
                 (onaxis.Freq >= 100) & (onaxis.Freq <= 10000)
@@ -52,6 +53,7 @@ def estimates(
                 (onaxis.Freq >= 100) & (onaxis.Freq <= 10000)
             ].dB.min()
             band = max(abs(up - y_ref), abs(y_ref - down))
+            logger.debug("band {}".format(band))
             est = {
                 "ref_from": 300.0,
                 "ref_to": 10000.0,
@@ -85,11 +87,15 @@ def estimates(
             if not math.isnan(band):
                 est["ref_band"] = round(band, 1)
 
+        logger.debug("est v1 {}".format(est))
+
         # estimate sensivity for passive speakers
         if onaxis is not None:
             est["sensitivity_delta"] = onaxis.loc[
                 (onaxis.Freq >= 300) & (onaxis.Freq <= 3000)
             ].dB.mean()
+
+        logger.debug("est v2 {}".format(est))
 
         for orientation in ("horizontal", "vertical"):
             spl = splH
@@ -98,12 +104,15 @@ def estimates(
             if spl is not None and not spl.empty:
                 # af, am, az = compute_contour(spl, 500)
                 # dir_deg_p, dir_deg_m, dir_deg = compute_directivity_deg(af, am, az)
-                dir_deg_p, dir_deg_m, dir_deg = compute_directivity_deg_v2(spl)
-                est["dir_{}_p".format(orientation)] = dir_deg_p
-                est["dir_{}_m".format(orientation)] = dir_deg_m
-                est["dir_{}".format(orientation)] = dir_deg
+                try:
+                    dir_deg_p, dir_deg_m, dir_deg = compute_directivity_deg_v2(spl)
+                    est["dir_{}_p".format(orientation)] = dir_deg_p
+                    est["dir_{}_m".format(orientation)] = dir_deg_m
+                    est["dir_{}".format(orientation)] = dir_deg
+                except e:
+                    logger.warning("Computing directivity failed! {}".format(e))
 
-        logger.debug("Estimates: {0}".format(est))
+        logger.debug("Estimates v3: {0}".format(est))
         return est
     except TypeError as te:
         logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, te))

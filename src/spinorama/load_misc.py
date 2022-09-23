@@ -23,7 +23,7 @@ def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:
             return 0
         return int(angle[:-1])
 
-    dfu = dfi.reindex(columns=sorted(dfi.columns, key=a2v))
+    dfu = dfi.reindex(columns=sorted(set(dfi.columns), key=a2v))
     dfu = dfu.rename(columns={"On-Axis": "On Axis"})
     return dfu
 

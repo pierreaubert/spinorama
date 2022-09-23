@@ -57,7 +57,6 @@ import spinorama.constant_paths as cpaths
 from spinorama.compute_estimates import estimates
 from spinorama.compute_scores import speaker_pref_rating
 from spinorama.filter_peq import peq_preamp_gain
-from spinorama.load_parse import parse_graphs_speaker
 from spinorama.load_rewseq import parse_eq_iir_rews
 
 
@@ -618,7 +617,7 @@ def add_near(dataframe, parse_max):
     hmin = np.min(h[0])
     hmax = np.max(h[0])
     print("distances [{}, {}]".format(hmin, hmax))
-    val = [int(i * height / hmax) for i in h[0]]
+    val = [int(i * height / hmax) for i in h[0] if hmax != 0]
 
     def lign(v):
         return ["." if i < v else " " for i in range(height)]
