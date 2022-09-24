@@ -2172,6 +2172,22 @@ speakers_info = {
             },
         },
     },
+    "Eve Audio SC305": {
+        "brand": "Eve Audio",
+        "model": "SC305",
+        "type": "active",
+        "price": "655",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/eve-audio-sc305-studio-monitor-review.37752/",
+                "review_published": "20220924",
+            },
+        },
+    },
     "Fisher STE-720": {
         "brand": "Fisher",
         "model": "STE-720",
