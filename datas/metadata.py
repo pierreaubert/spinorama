@@ -6358,6 +6358,57 @@ speakers_info = {
             },
         },
     },
+    "L Acoustics X8": {
+        "brand": "L Acoustics",
+        "model": "X8",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-L Acoustics",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20220924",
+            },
+        },
+    },
+    "L Acoustics X12": {
+        "brand": "L Acoustics",
+        "model": "X12",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-L Acoustics",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20220924",
+            },
+        },
+    },
+    "L Acoustics X15 HiQ": {
+        "brand": "L Acoustics",
+        "model": "X15 HiQ",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-L Acoustics",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20220924",
+            },
+        },
+    },
     "Linkwitz LXMini DIY": {
         "brand": "Linkwitz",
         "model": "LXMini DIY",
