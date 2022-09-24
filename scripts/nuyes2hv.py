@@ -17,7 +17,7 @@ import sys
 # Elac BS
 FIXED = 300  # Hz
 CUTOFF = 400  # Hz
-SPLDELTA = -2 # 70.69 - 68.80
+SPLDELTA = -2  # 70.69 - 68.80
 
 
 # CUTOFF = 200  # Hz
