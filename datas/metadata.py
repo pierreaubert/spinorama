@@ -1826,6 +1826,36 @@ speakers_info = {
             },
         },
     },
+    "Elac BS 314": {
+        "brand": "Elac",
+        "model": "BS 314",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "default_measurement": "misc-nuyes-sealed",
+        "measurements": {
+            "misc-nuyes-sealed": {
+                "origin": "Misc",
+                "format": "splHVtxt",
+                "quality": "low",
+                "reviews": {
+                    "dci": "",
+                },
+                "notes": "Data gated at 5ms so valid above 200Hz/300Hz and smoothed 1/24th of octave. Sealed measurement",
+                "review_published": "20220925",
+            },
+            "misc-nuyes-ported": {
+                "origin": "Misc",
+                "format": "splHVtxt",
+                "quality": "low",
+                "reviews": {
+                    "dci": "",
+                },
+                "notes": "Data gated at 5ms so valid above 200Hz/300Hz and smoothed 1/24th of octave. Ported measurement",
+                "review_published": "20220925",
+            },
+        },
+    },
     "Elac Debut Reference DBR-62": {
         "brand": "Elac",
         "model": "Debut Reference DBR-62",

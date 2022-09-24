@@ -9,10 +9,17 @@ import sys
 # CUTOFF = 200  # Hz
 # SPLDELTA = 81.83-96.69
 
-# Elac
-FIXED = 150  # Hz
-CUTOFF = 300  # Hz
-SPLDELTA = 84.77 - 68.36
+# Elac Debut
+# FIXED = 150  # Hz
+# CUTOFF = 300  # Hz
+# SPLDELTA = 84.77 - 68.36
+
+# Elac BS
+FIXED = 300  # Hz
+CUTOFF = 400  # Hz
+SPLDELTA = -2 # 70.69 - 68.80
+
+
 # CUTOFF = 200  # Hz
 # SPLDELTA = 85.6 - 66.6
 # CUTOFF = 125  # Hz
@@ -294,8 +301,9 @@ def process_hv(speaker, direction, onaxis):
                 continue
 
             ffreq = float(freq.replace(",", ""))
-            fspl = float(spl.replace(",", "")) + SPLDELTA
+            fspl = float(spl.replace(",", ""))
             if ffreq >= CUTOFF:
+                fspl += SPLDELTA
                 files[angle].write("{} {} 0.0\n".format(ffreq, fspl))
             # elif ffreq >= FIXED:
             #    computed =
