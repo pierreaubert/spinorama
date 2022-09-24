@@ -6294,6 +6294,40 @@ speakers_info = {
             },
         },
     },
+    "L Acoustics 108P": {
+        "brand": "L Acoustics",
+        "model": "108P",
+        "type": "active",
+        "price": "7400",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-L Acoustics",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20220924",
+            },
+        },
+    },
+    "L Acoustics 112P": {
+        "brand": "L Acoustics",
+        "model": "112P",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-L Acoustics",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20220924",
+            },
+        },
+    },
     "Linkwitz LXMini DIY": {
         "brand": "Linkwitz",
         "model": "LXMini DIY",
@@ -10510,6 +10544,13 @@ origins_info = {
         "logo": "docs/metadata/klipsch.png",
         "logo-small": "docs/metadata/klipsch.png",
         "url": "https://www.klipsch.com",
+    },
+    "Vendors-L Acoustics": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.l-acoustics.com/",
     },
     "Vendors-Magico": {
         "min hz": 20,
