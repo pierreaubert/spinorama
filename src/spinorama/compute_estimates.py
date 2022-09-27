@@ -109,7 +109,7 @@ def estimates(
                     est["dir_{}_p".format(orientation)] = dir_deg_p
                     est["dir_{}_m".format(orientation)] = dir_deg_m
                     est["dir_{}".format(orientation)] = dir_deg
-                except e:
+                except Exception as e:
                     logger.warning("Computing directivity failed! {}".format(e))
 
         logger.debug("Estimates v3: {0}".format(est))
