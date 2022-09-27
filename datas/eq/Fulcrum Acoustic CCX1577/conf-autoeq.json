@@ -9,7 +9,7 @@
     "elastic": 0.8,
     "fs": 48000,
     "freq_reg_min": 100,
-    "freq_reg_max": 16000,
+    "freq_reg_max": 12000,
     "freq_mean_min": 100,
     "freq_mean_max": 300,
     "curve_names": [
@@ -21,7 +21,7 @@
     "slope_listening_window": -0.5,
     "slope_early_reflections": -4,
     "slope_sound_power": -9,
-    "slope_estimated_inroom": -6.5,
+    "slope_estimated_inroom": -8.0,
     "smooth_measurements": true,
     "smooth_window_size": 11,
     "smooth_order": 3,

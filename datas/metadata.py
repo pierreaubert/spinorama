@@ -426,6 +426,8 @@ speakers_info = {
         },
     },
     "Ascend Acoustics Sierra-2EX": {
+        # removed since Dave (owner of Ascend Acoustics) asked for it. He will provide new more complete data.
+        "skip": True,
         "brand": "Ascend Acoustics",
         "model": "Sierra-2EX",
         "type": "passive",
