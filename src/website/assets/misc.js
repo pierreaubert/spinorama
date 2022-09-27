@@ -115,6 +115,8 @@ export function getReviews (value) {
       origin = 'SSU'
     } else if (origin === 'sr') {
       origin = 'S&R'
+    } else if (origin.search('nuyes') != -1 ) {
+      origin = "NYS"
     }
     origin = origin.charAt(0).toUpperCase() + origin.slice(1)
     if (version.search("sealed") != -1 ) {
