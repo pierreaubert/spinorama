@@ -60,13 +60,45 @@ fetch(urlSite + 'assets/metadata.json').then(
     return divScore
   }
 
+  function hasQuality(meta, quality) {
+    let status = false
+
+    for (const [key, measurement] of Object.entries(meta)) {
+      const mFormat = measurement['format'].toLowerCase()
+      const mQuality = measurement['quality'].toLowerCase()
+
+      if (mQuality && mQuality === quality) {
+        status = true
+        break
+      }
+
+      if (mFormat === 'klippel' && quality === 'high' ) {
+        status = true
+        break
+      }
+    }
+    return status
+  }
+    
+
   function display () {
     const speakerContainer = document.querySelector('[data-num="0"')
     const fragment1 = new DocumentFragment()
+    const queryString = window.location.search
+    const urlParams = new URLSearchParams(queryString)
+    let quality = 'High' 
+
+    if (urlParams.get('quality')) {
+      quality = urlParams.get('quality')
+    }
+
+    console.log('Quality='+quality)
 
     sortMetadata2(metadata, { by: 'score' }).forEach(function (value, key) {
       const speaker = metadata[value]
-      fragment1.appendChild(printScore(value, speaker))
+      if ( quality === 'High' && hasQuality(speaker['measurements'], quality.toLowerCase()) ) {
+        fragment1.appendChild(printScore(value, speaker))
+      }
     })
     speakerContainer.appendChild(fragment1)
   }
