@@ -28,8 +28,8 @@ fetch(urlSite + 'assets/metadata.json').then(
       for (const [name, measurement] of Object.entries(item.measurements)) {
         const origin = measurement.origin.toLowerCase()
         let name2 = name.toLowerCase()
-        name2 = name2.replace('misc-', '')
-        console.log('debug: name2=' + name2 + ' origin=' + origin + ' filter.reviewer=' + filter.reviewer)
+        name2 = name2.replace('misc-', '').replace('-sealed', '').replace('-ported', '')
+        // console.log('debug: name2=' + name2 + ' origin=' + origin + ' filter.reviewer=' + filter.reviewer)
         if (name2 === filter.reviewer.toLowerCase() || origin === filter.reviewer.toLowerCase()) {
           found = false
           break

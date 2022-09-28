@@ -111,6 +111,26 @@ def sanity_check_default_measurement(name, speaker):
     return 0
 
 
+def sanity_check_version(name, speaker, version):
+    # update src/website/assets/search.js is you add a new modifier
+    valid_modifiers = (
+        "sealed",
+        "ported",
+        "vertical",
+        "horizontal",
+        "grilleon",
+        "grilleoff",
+    )
+    status = 0
+    lversion = version.lower()
+    if lversion[0:4] == "misc":
+        smisc = lversion.split('-')
+        if len(smisc) == 3 and smisc[2] not in valid_modifiers:
+            logging.error("{}: modifier {} not in {}".format(lversion, smisc[2], valid_modifiers))
+            status = 1
+    return status
+
+
 def sanity_check_measurement(name, speaker, version, measurement):
     status = 0
     if version[0:3] not in ("asr", "pri", "ven", "har", "eac", "mis"):
@@ -202,6 +222,8 @@ def sanity_check_measurements(name, speaker):
         status = 1
     else:
         for version, measurement in speaker["measurements"].items():
+            if sanity_check_version(name, speaker, version) != 0:
+                status = 1
             if sanity_check_measurement(name, speaker, version, measurement) != 0:
                 status = 1
     return status
