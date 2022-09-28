@@ -123,19 +123,27 @@ fetch(urlSite + 'assets/metadata.json').then(
     const names = []
     metadata.forEach((value, key) => {
       if (value.measurements &&
-                    value.measurements[value.default_measurement].pref_rating &&
-                    value.measurements[value.default_measurement].pref_rating.pref_score) {
-      // gather various scores
+          value.measurements[value.default_measurement] &&
+          value.measurements[value.default_measurement].pref_rating &&
+          value.measurements[value.default_measurement].pref_rating.pref_score) {
+        // gather various scores
         scores.push(value.measurements[value.default_measurement].pref_rating.pref_score)
-        scoresEQ.push(value.measurements[value.default_measurement].pref_rating_eq.pref_score)
         scoresWsub.push(value.measurements[value.default_measurement].pref_rating.pref_score_wsub)
-        scoresWsubEQ.push(value.measurements[value.default_measurement].pref_rating_eq.pref_score_wsub)
         // components of the score
         lfx.push(value.measurements[value.default_measurement].pref_rating.lfx_hz)
         nbdON.push(value.measurements[value.default_measurement].pref_rating.nbd_on_axis)
         nbdPIR.push(value.measurements[value.default_measurement].pref_rating.nbd_pred_in_room)
         smPIR.push(value.measurements[value.default_measurement].pref_rating.sm_pred_in_room)
         //
+        names.push(value.brand + ' ' + value.model)
+      }
+      if (value.measurements &&
+          value.measurements[value.default_measurement] &&
+          value.measurements[value.default_measurement].pref_rating_eq &&
+          value.measurements[value.default_measurement].pref_rating_eq.pref_score) {
+        // gather various scores
+        scoresEQ.push(value.measurements[value.default_measurement].pref_rating_eq.pref_score)
+        scoresWsubEQ.push(value.measurements[value.default_measurement].pref_rating_eq.pref_score_wsub)
         names.push(value.brand + ' ' + value.model)
       }
     })
