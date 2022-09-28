@@ -447,6 +447,26 @@ speakers_info = {
             },
         },
     },
+    "Ascend Acoustics Sierra-2EX V2": {
+        "brand": "Ascend Acoustics",
+        "model": "Sierra-2EX V2",
+        "type": "passive",
+        "price": "3600",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Ascend Acoustics",
+                "format": "splHVtxt",
+                "quality": "high",
+                "reviews": {
+                    "vendor": "https://ascendacoustics.com/collections/sierra-series-pairs/products/sierra-2ex-v2-pair?variant=40390917750838",
+                },
+                "review_published": "20220928",
+            },
+        },
+    },
     "Ascend Acoustics Sierra-LX": {
         "brand": "Ascend Acoustics",
         "model": "Sierra-LX",
