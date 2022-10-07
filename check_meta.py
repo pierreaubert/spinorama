@@ -124,9 +124,11 @@ def sanity_check_version(name, speaker, version):
     status = 0
     lversion = version.lower()
     if lversion[0:4] == "misc":
-        smisc = lversion.split('-')
+        smisc = lversion.split("-")
         if len(smisc) == 3 and smisc[2] not in valid_modifiers:
-            logging.error("{}: modifier {} not in {}".format(lversion, smisc[2], valid_modifiers))
+            logging.error(
+                "{}: modifier {} not in {}".format(lversion, smisc[2], valid_modifiers)
+            )
             status = 1
     return status
 

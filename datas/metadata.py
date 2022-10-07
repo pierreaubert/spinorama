@@ -451,7 +451,7 @@ speakers_info = {
         "brand": "Ascend Acoustics",
         "model": "Sierra-2EX V2",
         "type": "passive",
-        "price": "3600",
+        "price": "3700",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "vendor",
@@ -2828,6 +2828,7 @@ speakers_info = {
         },
     },
     "Genelec 4010A": {
+        "skip": True,  # quality is too low, bass data is clearly not correct
         "brand": "Genelec",
         "model": "4010A",
         "type": "active",
@@ -2846,6 +2847,7 @@ speakers_info = {
         },
     },
     "Genelec 4020C": {
+        "skip": True,  # quality is too low, bass data is clearly not correct
         "brand": "Genelec",
         "model": "4020C",
         "type": "active",
@@ -2864,6 +2866,7 @@ speakers_info = {
         },
     },
     "Genelec 4030C": {
+        "skip": True,  # quality is too low, bass data is clearly not correct
         "brand": "Genelec",
         "model": "4030C",
         "type": "active",
@@ -2882,6 +2885,7 @@ speakers_info = {
         },
     },
     "Genelec 4040A": {
+        "skip": True,  # quality is too low, bass data is clearly not correct
         "brand": "Genelec",
         "model": "4040A",
         "type": "active",
