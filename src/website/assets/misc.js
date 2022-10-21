@@ -91,11 +91,20 @@ export function getReviews (value) {
   for (const version in value.measurements) {
     const measurement = value.measurements[version]
     let origin = measurement.origin
+    let originLong = measurement.origin
     const url = 'speakers/' + value.brand + ' ' + value.model + '/' + removeVendors(origin) + '/index_' + version + '.html'
     if (origin === 'Misc') {
       origin = version.replace('misc-', '')
+      originLong = version.replace('misc-', '')
     } else {
       origin = origin.replace('Vendors-', '')
+      originLong = origin.replace('Vendors-', '')
+      if (origin === 'Kling Freitag') {
+        origin = 'K&F'
+      }
+      else if (origin === 'Alcons Audio') {
+        origin = 'Alcons'
+      }
     }
     if (origin === 'ErinsAudioCorner') {
       origin = 'EAC'
@@ -118,34 +127,87 @@ export function getReviews (value) {
     } else if (origin.search('nuyes') != -1 ) {
       origin = "NYS"
     }
+
     origin = origin.charAt(0).toUpperCase() + origin.slice(1)
+    originLong = originLong.charAt(0).toUpperCase() + origin.slice(1)
     if (version.search("sealed") != -1 ) {
       origin = origin + " (Sealed)"
+      originLong = originLong + " (Sealed)"
     } else if  (version.search("vented") != -1 ) {
       origin = origin + " (Vented)"
+      originLong = originLong + " (Vented)"
     } else if  (version.search("ported") != -1 ) {
       origin = origin + " (Ported)"
-    } else if  (version.search("horizontal") != -1 ) {
-      origin = origin + " (Hor.)"
-    } else if  (version.search("vertical") != -1 ) {
-      origin = origin + " (Ver.)"
-    } else if  (version.search("grille-on") != -1 ) {
+      originLong = originLong + " (Ported)"
+    }
+
+    if (version.search("grille-on") != -1 ) {
       origin = origin + " (Grille on)"
+      originLong = originLong + " (Grille on)"
     } else if  (version.search("no-grille") != -1 ) {
       origin = origin + " (Grille off)"
-    } else if  (version.search("short-port") != -1 ) {
+      originLong = originLong + " (Grille off)"
+    }
+
+    if (version.search("short-port") != -1 ) {
       origin = origin + " (Short Port)"
+      originLong = originLong + " (Short Port)"
     } else if  (version.search("long-port") != -1 ) {
       origin = origin + " (Long Port)"
-    } else {
-      let pos = version.search(/-v[123456]-/)
-      if (pos != -1 ) {
-        origin = origin + " (v" + version[pos+2] + ")"
-      }
+      originLong = originLong + " (Long Port)"
     }
+
+    if (version.search("bassreflex") != -1 ) {
+      origin = origin + " (BR)"
+      originLong = originLong + " (Bass Reflex)"
+    } else if  (version.search("cardioid") != -1 ) {
+      origin = origin + " (C)"
+      originLong = originLong + " (Cardiod)"
+    }     
+
+    if (version.search("horizontal") != -1 ) {
+      origin = origin + " (Hor.)"
+      originLong = originLong + " (Horizontal)"
+    } else if  (version.search("vertical") != -1 ) {
+      origin = origin + " (Ver.)"
+      originLong = originLong + " (Vertical)"
+    }
+
+    if (version.search("gll") != -1 ) {
+      origin = origin + " (gll)"
+      originLong = originLong + " (gll)"
+    } else if  (version.search("klippel") != -1 ) {
+      origin = origin + " (klippel)"
+      originLong = originLong + " (klippel)"
+    }
+
+    if (version.search("wide") != -1 ) {
+      origin = origin.slice(0, origin.length-1) + "/W)"
+      originLong = originLong.slice(0, originLong.length-1) + "/Wide)"
+    } else if  (version.search("narrow") != -1 ) {
+      origin = origin.slice(0, origin.length-1) + "/N)"
+      originLong = originLong.slice(0, originLong.length-1) + "/Narrow)"
+    } else if  (version.search("medium") != -1 ) {
+      origin = origin.slice(0, origin.length-1) + "/M)"
+      originLong = originLong.slice(0, originLong.length-1) + "/Medium)"
+    }
+
+    const ipattern = version.search("pattern")
+    if (ipattern != -1 ) {
+      origin = origin + ' '+ version.slice(ipattern+8) + "º"
+      originLong = originLong + ' '+ version.slice(ipattern+8) + "º"
+    } 
+
+    let pos = version.search(/-v[123456]-/)
+    if (pos != -1 ) {
+      origin = origin + " (v" + version[pos+2] + ")"
+      originLong = originLong + " (v" + version[pos+2] + ")"
+    }
+
     reviews.push({
       url: encodeURI(url),
       origin: origin,
+      originLong: originLong,
       version: version,
       scores: getField(value, 'pref_rating', version),
       scoresEq: getField(value, 'pref_rating_eq', version),

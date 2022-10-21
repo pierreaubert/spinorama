@@ -38,7 +38,7 @@ from .plot import plot_params_default, contour_params_default, radar_params_defa
 logger = logging.getLogger("spinorama")
 
 
-def print_graph(speaker, origin, key, title, chart, force, fileext):
+def print_graph(speaker, version, origin, key, title, chart, force, fileext):
     updated = 0
     if chart is not None:
         filedir = (
@@ -47,6 +47,8 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
             + speaker
             + "/"
             + origin.replace("Vendors-", "")
+            #            + "-"
+            #            + version.replace("version-", "")
             + "/"
             + key
         )
@@ -118,6 +120,7 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
 def print_graphs(
     df: pd.DataFrame,
     speaker,
+    version,
     origin,
     origins_info,
     key="default",
@@ -194,7 +197,9 @@ def print_graphs(
         if graphs[k] is not None:
             graphs[k].update_layout(
                 title=dict(
-                    text="{2} for {0} measured by {1}".format(speaker, origin, title),
+                    text="{2} for {0} measured by {1}".format(
+                        speaker, origin.replace("Vendors-", ""), title
+                    ),
                     font=dict(
                         size=24,
                     ),
@@ -208,6 +213,13 @@ def print_graphs(
     for (title, graph) in graphs.items():
         if graph is not None:
             updated = print_graph(
-                speaker, origin, key, title, graph, force_print, filter_file_ext
+                speaker,
+                version,
+                origin,
+                key,
+                title,
+                graph,
+                force_print,
+                filter_file_ext,
             )
     return updated

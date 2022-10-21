@@ -9,6 +9,12 @@
 
 <%namespace name="util" module="website.utils" import="*"/>
 
+<script>
+  Handlebars.registerHelper('isShort', function (value) {
+     return (value.length < 3)
+  });
+</script>
+
 <script id="speaker" type="text/x-handlebars-template">
   <div class="card">
       <div class="card-image">
@@ -33,11 +39,35 @@
 	</div>
       </div>
       <footer class="card-footer">
+        {{#if (isShort reviews.reviews)}}
         {{#each reviews.reviews}}
 	<a alt="{{this.origin}}" class="card-footer-item" href="{{this.url}}">{{this.origin}}</a>
         {{/each}}
+        {{else}}
+        <div class="card-footer-item">
+          <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+              <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+                <span>Measurements</span>
+                <span class="icon is-small">
+                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+              <div class="dropdown-content">
+                {{#each reviews.reviews}}
+                <div class="dropdown-item">
+	          <a alt="{{this.origin}}" href="{{this.url}}">{{this.originLong}}</a>
+                </div>
+                {{/each}}
+              </div>
+            </div>
+          </div>
+          {{/if}}
+          </div>
       </footer>
-    </div>
+  </div>
 </script>
 
 <div class="section">
