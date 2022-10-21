@@ -5,7 +5,7 @@ note_genelec_gll = (
 )
 note_jbl_gll = "Data provided by JBL is highly variable, beware. It ranges from excellent to surprising"
 note_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz"
-note_qsc_gll = "Data provided by QSC is of good quality by highly smoothed"
+note_qsc_gll = "Data provided by QSC is of good quality but highly smoothed"
 
 # extra speaker info
 speakers_info = {
@@ -146,6 +146,57 @@ speakers_info = {
                     "vendor": "https://www.aia-cinema.com/passive-speakers/ccrm10-p.html",
                 },
                 "review_published": "20220501",
+            },
+        },
+    },
+    "Alcons Audio VR5 V1": {
+        "brand": "Alcons Audio",
+        "model": "VR5 V1",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Alcons Audio",
+                "format": "splHVtxt",
+                "quality": "high",
+                "reviews": {
+                    "axp": "https://audioxpress.com/news/alcons-introduce-vr5-mini-versatile-monitor-with-patent-pending-waveguide-technology",
+                },
+                "review_published": "20221020",
+            },
+        },
+    },
+    "Alcons Audio QRP20": {
+        "brand": "Alcons Audio",
+        "model": "QRP20",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-pattern-90",
+        "measurements": {
+            "vendor-pattern-90": {
+                "origin": "Vendors-Alcons Audio",
+                "format": "splHVtxt",
+                "quality": "high",
+                "reviews": {
+                    "psw": "https://www.prosoundweb.com/alcons-introduces-qrp20-pro-ribbon-point-source-column/",
+                    "axp": "https://audioxpress.com/news/alcons-audio-introduces-qrp20-pro-ribbon-column-array",
+                },
+                "review_published": "20221020",
+            },
+            "vendor-pattern-120": {
+                "origin": "Vendors-Alcons Audio",
+                "format": "splHVtxt",
+                "quality": "high",
+                "reviews": {
+                    "psw": "https://www.prosoundweb.com/alcons-introduces-qrp20-pro-ribbon-point-source-column/",
+                    "axp": "https://audioxpress.com/news/alcons-audio-introduces-qrp20-pro-ribbon-column-array",
+                },
+                "review_published": "20221020",
             },
         },
     },
@@ -6169,6 +6220,59 @@ speakers_info = {
             },
         },
     },
+    "Kling Freitag PIA M": {
+        "brand": "Kling Freitag",
+        "model": "PIA M",
+        "type": "active",
+        "price": "6780",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor-bassreflex-narrow",
+        "measurements": {
+            "vendor-bassreflex-narrow": {
+                "origin": "Vendors-Kling Freitag",
+                "format": "splHVtxt",
+                "review_published": "20221018",
+                "quality": "medium",
+                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, bass reflex with narrow mode on",
+            },
+            "vendor-bassreflex-medium": {
+                "origin": "Vendors-Kling Freitag",
+                "format": "splHVtxt",
+                "review_published": "20221018",
+                "quality": "medium",
+                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, bass reflex with medium mode on",
+            },
+            "vendor-bassreflex-wide": {
+                "origin": "Vendors-Kling Freitag",
+                "format": "splHVtxt",
+                "review_published": "20221018",
+                "quality": "medium",
+                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, bass reflex with wide mode on",
+            },
+            "vendor-cardioid-wide": {
+                "origin": "Vendors-Kling Freitag",
+                "format": "splHVtxt",
+                "review_published": "20221018",
+                "quality": "medium",
+                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, cardiod with wide mode on",
+            },
+            "vendor-cardioid-medium": {
+                "origin": "Vendors-Kling Freitag",
+                "format": "splHVtxt",
+                "review_published": "20221018",
+                "quality": "medium",
+                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, cardiod with medium mode on",
+            },
+            "vendor-cardioid-narrow": {
+                "origin": "Vendors-Kling Freitag",
+                "format": "splHVtxt",
+                "review_published": "20221018",
+                "quality": "medium",
+                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, cardiod with narrow mode on",
+            },
+        },
+    },
     "Klipsch Icon KF-26": {
         "brand": "Klipsch",
         "model": "Icon KF-26",
@@ -7670,7 +7774,7 @@ speakers_info = {
                 "origin": "Vendors-Neumann",
                 "format": "webplotdigitizer",
                 "quality": "medium",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-80-dsp-speaker-measurements-take-two.11323/page-22#post-425237%",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-80-dsp-speaker-measurements-take-two.11323/page-22#post-425237",
             },
         },
     },
@@ -7681,7 +7785,7 @@ speakers_info = {
         "price": "2500",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "vendor",
+        "default_measurement": "vendor-gll",
         "measurements": {
             "misc-dominikz": {
                 "origin": "Misc",
@@ -7690,11 +7794,17 @@ speakers_info = {
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-120a-spinorama-and-misc-measurements.26896/",
                 "review_published": "20210926",
             },
-            "vendor": {
+            "vendor-klippel": {
                 "origin": "Vendors-Neumann",
                 "format": "webplotdigitizer",
                 "quality": "medium",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-80-dsp-speaker-measurements-take-two.11323/page-22#post-425237%",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-80-dsp-speaker-measurements-take-two.11323/page-22#post-425238",
+            },
+            "vendor-gll": {
+                "origin": "Vendors-Neumann",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "notes": "data from GLL file: computed at 2m with pink noise broadband",
             },
         },
     },
@@ -10699,6 +10809,15 @@ origins_info = {
         "logo-small": "docs/metadata/apple.png",
         "url": "https://www.aia-cinema.com",
     },
+    "Vendors-Alcons Audio": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "logo": "docs/metadata/apple.png",
+        "logo-small": "docs/metadata/apple.png",
+        "url": "https://www.alconsaudio.com/",
+    },
     "Vendors-Apple": {
         "min hz": 20,
         "max hz": 20000,
@@ -10831,6 +10950,15 @@ origins_info = {
         "logo": "docs/metadata/kef.png",
         "logo-small": "docs/metadata/kef.png",
         "url": "https://www.kef.com",
+    },
+    "Vendors-Kling Freitag": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "logo": "docs/metadata/kling-freitag.png",
+        "logo-small": "docs/metadata/kling-freitag.png",
+        "url": "https://www.kling-freitag.de",
     },
     "Vendors-Klipsch": {
         "min hz": 20,
