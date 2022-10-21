@@ -149,13 +149,13 @@ speakers_info = {
             },
         },
     },
-    "Alcons Audio VR5 V1": {
+    "Alcons Audio LR7+LRB": {
         "brand": "Alcons Audio",
-        "model": "VR5 V1",
+        "model": "LR7+LRB",
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -163,9 +163,9 @@ speakers_info = {
                 "format": "splHVtxt",
                 "quality": "high",
                 "reviews": {
-                    "axp": "https://audioxpress.com/news/alcons-introduce-vr5-mini-versatile-monitor-with-patent-pending-waveguide-technology",
                 },
                 "review_published": "20221020",
+                "notes": "data compute at 5 meters. Configuration with 2 LR7 and 1 LRB",
             },
         },
     },
@@ -175,7 +175,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "columns",
         "default_measurement": "vendor-pattern-90",
         "measurements": {
             "vendor-pattern-90": {
@@ -195,6 +195,26 @@ speakers_info = {
                 "reviews": {
                     "psw": "https://www.prosoundweb.com/alcons-introduces-qrp20-pro-ribbon-point-source-column/",
                     "axp": "https://audioxpress.com/news/alcons-audio-introduces-qrp20-pro-ribbon-column-array",
+                },
+                "review_published": "20221020",
+            },
+        },
+    },
+    "Alcons Audio VR5 V1": {
+        "brand": "Alcons Audio",
+        "model": "VR5 V1",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Alcons Audio",
+                "format": "splHVtxt",
+                "quality": "high",
+                "reviews": {
+                    "axp": "https://audioxpress.com/news/alcons-introduce-vr5-mini-versatile-monitor-with-patent-pending-waveguide-technology",
                 },
                 "review_published": "20221020",
             },
@@ -6226,7 +6246,7 @@ speakers_info = {
         "type": "active",
         "price": "6780",
         "amount": "pair",
-        "shape": "floorstanders",
+        "shape": "columns",
         "default_measurement": "vendor-bassreflex-narrow",
         "measurements": {
             "vendor-bassreflex-narrow": {
@@ -7141,7 +7161,7 @@ speakers_info = {
         "model": "Leopard",
         "type": "active",
         "price": "",
-        "shape": "bookshelves",
+        "shape": "linearray",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -7162,7 +7182,7 @@ speakers_info = {
         "model": "Lina",
         "type": "active",
         "price": "",
-        "shape": "bookshelves",
+        "shape": "linearray",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
