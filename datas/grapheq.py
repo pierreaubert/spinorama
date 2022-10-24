@@ -1,5 +1,7 @@
 #
 
+import math
+
 vendor_info = {
     "DBX 321S": {
         "gain": 12,  # dB
