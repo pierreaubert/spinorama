@@ -1,0 +1,8 @@
+EQ for Alcons Audio QR24 computed from Vendors-Alcons Audio data
+Preference Score 3.5 with EQ 3.3
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.16
+Dated: 2022-10-24-20:11:38
+
+Preamp: -0.2 dB
+
+Filter  1: ON PK Fc   332 Hz Gain -6.30 dB Q 0.62
