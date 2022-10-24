@@ -86,17 +86,19 @@ fetch(urlSite + 'assets/metadata.json').then(
     const fragment1 = new DocumentFragment()
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
-    let quality = 'High' 
+    let quality = undefined
 
     if (urlParams.get('quality')) {
       quality = urlParams.get('quality')
     }
 
+    // todo check filter
+
     console.log('Quality='+quality)
 
     sortMetadata2(metadata, { by: 'score' }).forEach(function (value, key) {
       const speaker = metadata[value]
-      if ( quality === 'High' && hasQuality(speaker['measurements'], quality.toLowerCase()) ) {
+      if ( !quality || hasQuality(speaker['measurements'], quality.toLowerCase()) ) {
         fragment1.appendChild(printScore(value, speaker))
       }
     })

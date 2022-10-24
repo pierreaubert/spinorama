@@ -103,7 +103,7 @@ export function getReviews (value) {
         origin = 'K&F'
       }
       else if (origin === 'Alcons Audio') {
-        origin = 'Alcons'
+        origin = 'AA'
       }
     }
     if (origin === 'ErinsAudioCorner') {
@@ -194,8 +194,11 @@ export function getReviews (value) {
 
     const ipattern = version.search("pattern")
     if (ipattern != -1 ) {
-      origin = origin + ' '+ version.slice(ipattern+8) + "º"
-      originLong = originLong + ' '+ version.slice(ipattern+8) + "º"
+      const sversion = version.slice(ipattern+8)
+      if (sversion.search(/[0-9]*/) != -1) {
+        origin = origin + ' '+ sversion + "º"
+        originLong = originLong + ' ' + sversion + "º"
+      }
     } 
 
     let pos = version.search(/-v[123456]-/)
