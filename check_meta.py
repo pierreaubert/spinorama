@@ -113,15 +113,54 @@ def sanity_check_default_measurement(name, speaker):
     return 0
 
 
+def sanity_check_version_version(term):
+    if len(term) >= 2 and (term[0] != "v" or not term[1].isdecimal()):
+        return False
+    return True
+
+
+def sanity_check_version_date(term):
+    return term.isdecimal()
+
+
+def sanity_check_version_pattern(term):
+    sterm = term.split("x")
+    if len(sterm) == 1 and term.isdecimal():
+        return True
+    # 90x60
+    if len(sterm) == 2 and sterm[0].isdecimal() and sterm[1].isdecimal:
+        return True
+    # h90xv60
+    if len(sterm) == 2 and sterm[0][1:].isdecimal() and sterm[1][1:].isdecimal:
+        return True
+    return False
+
+
 def sanity_check_version(name, speaker, version):
     # update src/website/assets/search.js is you add a new modifier
     valid_modifiers = (
+        # kind
+        "vented",
         "sealed",
         "ported",
-        "vertical",
-        "horizontal",
+        "pattern",
+        "cardioid",
+        "bassreflex",
+        "monopole",
+        "dipole",
+        # sources
+        "klippel",
+        "gll",
+        # dispersion
+        "narrow",
+        "medium",
+        "wide",
+        # grille
         "grilleon",
         "grilleoff",
+        # orientation
+        "vertical",
+        "horizontal",
     )
     status = 0
     lversion = version.lower()
@@ -132,6 +171,21 @@ def sanity_check_version(name, speaker, version):
                 "{}: modifier {} not in {}".format(lversion, smisc[2], valid_modifiers)
             )
             status = 1
+    elif lversion[0:6] == "vendor":
+        smisc = lversion.split("-")
+        for i in range(1, len(smisc)):
+            if (
+                smisc[i] not in valid_modifiers
+                and not sanity_check_version_version(smisc[i])
+                and not sanity_check_version_date(smisc[i])
+                and not sanity_check_version_pattern(smisc[i])
+            ):
+                logging.error(
+                    "{}: modifier {} not in {}".format(
+                        lversion, smisc[i], valid_modifiers
+                    )
+                )
+                status = 1
     return status
 
 
