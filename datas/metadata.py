@@ -11192,6 +11192,29 @@ speakers_info = {
             },
         },
     },
+    "Yamaha VXL1-24": {
+        "brand": "Yamaha",
+        "model": "VXL1-24",
+        "type": "active",
+        "price": "1340",
+        "shape": "columns",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-170x40",
+        "measurements": {
+            "vendor-pattern-170x40": {
+                "origin": "Vendors-Yamaha",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221025",
+            },
+#            "vendor-pattern-170x20": {
+#                "origin": "Vendors-Yamaha",
+#                "format": "splHVtxt",
+#                "quality": "medium",
+#                "review_published": "20221025",
+#            },
+        },
+    },
     "Zaph Audio ZA5.2": {
         "brand": "Zaph Audio",
         "model": "ZA5.2",
