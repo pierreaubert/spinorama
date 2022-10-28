@@ -50,7 +50,7 @@ def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
     freq = spl["Freq"].to_numpy()
     curve_peq = peq_build(freq, peq)
     # TODO: doesn't work all the time
-    #if "On Axis" in spl.columns:
+    # if "On Axis" in spl.columns:
     #    mean = np.mean(spl.loc[(spl.Freq > 500) & (spl.Freq < 10000)]["On Axis"])
     #    curve_peq = curve_peq - mean
 
