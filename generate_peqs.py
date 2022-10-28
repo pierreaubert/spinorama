@@ -129,7 +129,10 @@ def optim_find_peq(
 
     auto_target_interp = []
     for curve in curves:
-        auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
+        target = get_target(data_frame, freq, curve, optim_config)
+        # target -= target.max()
+        auto_target_interp.append(target)
+        
     auto_results, auto_peq = optim_multi_steps(
         current_speaker_name,
         df_speaker,

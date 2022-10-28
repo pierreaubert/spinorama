@@ -108,11 +108,9 @@ def graph_results(
         "xmax": 20000,
         "ymin": -40,
         "ymax": 10,
-        "width": 400,
-        "height": 250,
+        "width": 800,
+        "height": 400,
     }
-    g_params["width"] = 800
-    g_params["height"] = 400
 
     # what's the min over freq?
     reg_min = optim_config["freq_reg_min"]
@@ -133,7 +131,7 @@ def graph_results(
     df_optim["Auto"] = (
         auto_target[0] - auto_target_interp[0] + peq_build(freq, auto_peq)
     )
-    # show the 3 spinoramas
+    # show the 2 spinoramas
     unmelted_spin = spin.pivot_table(
         index="Freq", columns="Measurements", values="dB", aggfunc=max
     ).reset_index()
@@ -235,24 +233,56 @@ def graph_results(
     fig.update_yaxes(generate_yaxis_di(), row=2, secondary_y=True)
 
     # add LW and PIR
+    lw_min = -10
+    lw_max = 5
     for t in g_curves["Listening Window"]["noeq"]:
         fig.add_trace(t, row=3, col=1)
+        lw_min = min(lw_min, np.min(t.y))
+        lw_max = max(lw_max, np.max(t.y))
+
     for t in g_curves["Listening Window"]["auto"]:
         t["showlegend"] = False
         fig.add_trace(t, row=3, col=2)
+        lw_min = min(lw_min, np.min(t.y))
+        lw_max = max(lw_max, np.max(t.y))
 
     fig.update_xaxes(generate_xaxis(), row=3)
-    fig.update_yaxes(generate_yaxis_spl(-10, 5, 1), row=3)
 
+    if lw_min < -5:
+        lw_min = -5*round(-lw_min/5)
+    else:
+        lw_min = -5
+    if lw_max > 10:
+        lw_max = 5*(round(lw_max/5)+1)
+    else:
+        lw_max = 10
+    fig.update_yaxes(generate_yaxis_spl(lw_min, lw_max, 1), row=3)
+
+    pir_min = -10
+    pir_max = 5
     for t in g_curves["Estimated In-Room Response"]["noeq"]:
         t["showlegend"] = False
         fig.add_trace(t, row=4, col=1)
+        pir_min = min(pir_min, np.min(t.y))
+        pir_max = max(pir_max, np.max(t.y))
+
     for t in g_curves["Estimated In-Room Response"]["auto"]:
         t["showlegend"] = False
         fig.add_trace(t, row=4, col=2)
+        pir_min = min(pir_min, np.min(t.y))
+        pir_max = max(pir_max, np.max(t.y))
+
+    if pir_min < -5:
+        pir_min = -5*round(-pir_min/5)
+    else:
+        pir_min = -5
+    if pir_max > 10:
+        pir_max = 5*(round(pir_max/5)+1)
+    else:
+        pir_max = 10
 
     fig.update_xaxes(generate_xaxis(), row=4)
-    fig.update_yaxes(generate_yaxis_spl(-10, 5, 1), row=4)
+    fig.update_yaxes(generate_yaxis_spl(pir_min, pir_max, 1), row=4)
 
     fig.update_layout(
         width=1400,
