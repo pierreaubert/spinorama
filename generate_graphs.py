@@ -67,7 +67,7 @@ from spinorama.speaker_print import print_graphs
 from spinorama.plot import plot_params_default
 
 
-VERSION = "2.00alpha1"
+VERSION = "2.01"
 
 activate_tracing = False
 
@@ -115,7 +115,7 @@ def queue_measurement(
         msymmetry,
         mparameters,
     )
-    id_eq = parse_eq_speaker.remote("./datas", speaker, id_df)
+    id_eq = parse_eq_speaker.remote("./datas", speaker, id_df, mparameters)
     force = False
     ptype = None
     width = plot_params_default["width"]

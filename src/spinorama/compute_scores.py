@@ -58,6 +58,12 @@ def aad(dfu: pd.DataFrame) -> float:
     return aad_value
 
 
+def mad(df: pd.Series) -> float:
+    # mad has been deprecated in pandas
+    # I replace it with the equivalent (df - df.mean()).abs().mean()
+    return (df - df.mean()).abs().mean()
+
+
 def nbd(dfu: pd.DataFrame) -> float:
     """nbd Narrow Band
 
@@ -74,7 +80,7 @@ def nbd(dfu: pd.DataFrame) -> float:
     #                if bcenter >=100 and bcenter <=12000])
     return np.nanmean(
         [
-            dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB.mad()
+            mad(dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB)
             for (bmin, bcenter, bmax) in octave(2)
             if 100 <= bcenter <= 12000
         ]
@@ -102,7 +108,7 @@ def lfx(lw, sp) -> float:
         # happens with D&D 8C when we do not have a point low enough to get the -6
         lfx_hz = sp.Freq.values[0]
     else:
-        lfx_grouped = consecutive_groups(lfx_range.iteritems(), lambda x: x[0])
+        lfx_grouped = consecutive_groups(lfx_range.items(), lambda x: x[0])
         # logger.debug('lfx_grouped {}'.format(lfx_grouped))
         try:
             lfx_hz = list(next(lfx_grouped))[-1][1]

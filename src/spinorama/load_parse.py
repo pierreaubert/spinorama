@@ -32,9 +32,23 @@ from .filter_scores import noscore_apply_filter
 logger = logging.getLogger("spinorama")
 
 
+def get_mean_min_max(mparameters):
+    # default works well for flatish speakers but not at all for line arrays for ex
+    # where the mean is flat but usually high bass and low high
+    mean_min = 300
+    mean_max = 3000
+    if mparameters is not None:
+        mean_min = mparameters.get("mean_min", mean_min)
+        mean_max = mparameters.get("mean_max", mean_max)
+    return mean_min, mean_max
+
+
 @ray.remote(num_cpus=1)
-def parse_eq_speaker(speaker_path: str, speaker_name: str, df_ref: dict) -> dict:
+def parse_eq_speaker(
+    speaker_path: str, speaker_name: str, df_ref: dict, mparameters: dict
+) -> dict:
     iirname = "{0}/eq/{1}/iir.txt".format(speaker_path, speaker_name)
+    mean_min, mean_max = get_mean_min_max(mparameters)
     if df_ref is not None and isinstance(df_ref, dict) and os.path.isfile(iirname):
         srate = 48000
         logger.debug("found IIR eq {0}: applying to {1}".format(iirname, speaker_name))
@@ -47,7 +61,7 @@ def parse_eq_speaker(speaker_path: str, speaker_name: str, df_ref: dict) -> dict
             v_spl = df_ref["SPL Vertical_unmelted"]
             eq_h_spl = peq_apply_measurements(h_spl, iir)
             eq_v_spl = peq_apply_measurements(v_spl, iir)
-            df_eq = filter_graphs(speaker_name, eq_h_spl, eq_v_spl, 300, 3000)
+            df_eq = filter_graphs(speaker_name, eq_h_spl, eq_v_spl, mean_min, mean_max)
             return df_eq
         elif "CEA2034" in df_ref.keys():
             spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir)
@@ -89,12 +103,7 @@ def parse_graphs_speaker(
 ) -> dict:
     df = None
     measurement_path = "{}".format(speaker_path)
-
-    mean_min = 300
-    mean_max = 3000
-    if mparameters is not None:
-        mean_min = mparameters.get("mean_min", mean_min)
-        mean_max = mparameters.get("mean_max", mean_max)
+    mean_min, mean_max = get_mean_min_max(mparameters)
 
     if mformat in ("klippel", "princeton", "splHVtxt"):
         if mformat == "klippel":

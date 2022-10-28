@@ -123,7 +123,8 @@ def resample(df: pd.DataFrame, target_size: int):
     len_freq = df.shape[0]
     if len_freq > 2 * target_size:
         roll = int(len_freq / target_size)
-        sampled = df.loc[df.Freq.rolling(roll).max()[1::roll].index, :]
+        # sampled = df.loc[df.Freq.rolling(roll).max()[1::roll].index, :]
+        sampled = df.loc[df.Freq.rolling(roll).max().iloc[1::roll].index, :]
         return sampled
     return df
 

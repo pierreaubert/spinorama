@@ -61,7 +61,7 @@ def shift_spl_melted_cea2034(spl, mean):
 
     for col in set(spl.Measurements):
         logger.debug("shifting col {}".format(col))
-        logger.debug(spl.loc[spl.Measurements == col].dB[0:10])
+        logger.debug(spl.loc[spl.Measurements == col].dB.iloc[0:10])
         if "DI" in col:
             df[col] = spl.loc[spl.Measurements == col].dB.values
         else:

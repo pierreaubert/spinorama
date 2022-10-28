@@ -52,12 +52,26 @@ def noscore_apply_filter(df_speaker: DataSpeaker, peq: Peq):
 
     if "Estimated In-Room Response" in df_speaker.keys():
         pir = df_speaker["Estimated In-Room Response"]
-        pivoted_pir = pir.pivot(*pir).rename_axis(columns=None).reset_index()
+        # pivoted_pir = pir.pivot(*pir).rename_axis(columns=None).reset_index()
+        pivoted_pir = (
+            pir.pivot_table(
+                index="Freq", columns="Measurements", values="dB", aggfunc=max
+            )
+            .rename_axis(columns=None)
+            .reset_index()
+        )
         pir_filtered = peq_apply_measurements(pivoted_pir, peq)
 
     if "On Axis" in df_speaker.keys():
         on = df_speaker["On Axis"]
-        pivoted_on = on.pivot(*on).rename_axis(columns=None).reset_index()
+        # pivoted_on = on.pivot(*on).rename_axis(columns=None).reset_index()
+        pivoted_on = (
+            on.pivot_table(
+                index="Freq", columns="Measurements", values="dB", aggfunc=max
+            )
+            .rename_axis(columns=None)
+            .reset_index()
+        )
         on_filtered = peq_apply_measurements(pivoted_on, peq)
 
     spin_melted = None
