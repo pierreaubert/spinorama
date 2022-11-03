@@ -1,0 +1,16 @@
+EQ for JBL PRX908 computed from Vendors-JBL data
+Preference Score 3.5 with EQ 4.5
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.16
+Dated: 2022-11-03-09:15:17
+
+Preamp: -4.4 dB
+
+Filter  1: ON PK Fc    87 Hz Gain -4.92 dB Q 4.40
+Filter  2: ON PK Fc  1958 Hz Gain +4.08 dB Q 3.63
+Filter  3: ON PK Fc   927 Hz Gain -2.80 dB Q 1.92
+Filter  4: ON PK Fc  4923 Hz Gain +2.57 dB Q 5.88
+Filter  5: ON PK Fc    80 Hz Gain -1.40 dB Q 5.70
+Filter  6: ON PK Fc  1629 Hz Gain +1.77 dB Q 5.49
+Filter  7: ON PK Fc 13172 Hz Gain +4.29 dB Q 5.70
+Filter  8: ON PK Fc 11761 Hz Gain -4.34 dB Q 5.87
+Filter  9: ON PK Fc  7760 Hz Gain -2.57 dB Q 5.93

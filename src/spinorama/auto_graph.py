@@ -249,11 +249,11 @@ def graph_results(
     fig.update_xaxes(generate_xaxis(), row=3)
 
     if lw_min < -5:
-        lw_min = -5 * round(-lw_min / 5)
+        lw_min = max(-40, -5 * round(-lw_min / 5))
     else:
         lw_min = -5
     if lw_max > 10:
-        lw_max = 5 * (round(lw_max / 5) + 1)
+        lw_max = min(20, 5 * (round(lw_max / 5) + 1))
     else:
         lw_max = 10
     fig.update_yaxes(generate_yaxis_spl(lw_min, lw_max, 1), row=3)
@@ -273,11 +273,11 @@ def graph_results(
         pir_max = max(pir_max, np.max(t.y))
 
     if pir_min < -5:
-        pir_min = -5 * round(-pir_min / 5)
+        pir_min = max(-40, -5 * round(-pir_min / 5))
     else:
         pir_min = -5
     if pir_max > 10:
-        pir_max = 5 * (round(pir_max / 5) + 1)
+        pir_max = min(20, 5 * (round(pir_max / 5) + 1))
     else:
         pir_max = 10
 
