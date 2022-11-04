@@ -344,6 +344,23 @@ speakers_info = {
             },
         },
     },
+    "Aperion N5T": {
+        "brand": "Aperion",
+        "model": "N5T",
+        "type": "passive",
+        "price": "1400",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/aperion-n5t-speaker-review.38821/",
+                "review_published": "20221104",
+            },
+        },
+    },
     "Apple Homepod Mini": {
         "brand": "Apple",
         "model": "Homepod Mini",
@@ -470,9 +487,9 @@ speakers_info = {
             },
         },
     },
-    "Ascend Acoustics CMT-340": {
+    "Ascend Acoustics CMT-340 Center": {
         "brand": "Ascend Acoustics",
-        "model": "CMT-340",
+        "model": "CMT-340 Center",
         "type": "passive",
         "shape": "center",
         "price": "300",
@@ -581,7 +598,7 @@ speakers_info = {
         "brand": "Ascend Acoustics",
         "model": "Sierra-2EX V2",
         "type": "passive",
-        "price": "3700",
+        "price": "1648",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "vendor",
