@@ -504,6 +504,23 @@ speakers_info = {
             },
         },
     },
+    "Ascend Acoustics CMT-340 SE2": {
+        "brand": "Ascend Acoustics",
+        "model": "CMT-340 SE2",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "350",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Ascend Acoustics",
+                "format": "splHVtxt",
+                "quality": "high",
+                "review_published": "20221108",
+            },
+        },
+    },
     "Ascend Acoustics Horizon Center": {
         "brand": "Ascend Acoustics",
         "model": "Horizon Center",
