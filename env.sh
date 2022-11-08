@@ -45,9 +45,19 @@ export PATH=$PATH:$SPIN/node_modules/.bin
 
 ## CUDA configuration
 ## ----------------------------------------------------------------------
-GPU=""
+CUDA=""
 if test -x /usr/bin/nvidia-smi; then
-    GPU=$(nvidia-smi  -L)
+    CUDA=$(nvidia-smi  -L)
+fi
+if test -d /usr/local/cuda/extras/CUPTI/lib64; then
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
+fi
+
+## ROCM/HIP configuration
+## ----------------------------------------------------------------------
+ROCM=""
+if test -x /usr/bin/rocminfo; then
+    ROCM=$(rocminfo  | grep 'Marketing Name' | grep Radeon | cut -d: -f 2 | sed -e 's/  //g')
 fi
 if test -d /usr/local/cuda/extras/CUPTI/lib64; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
@@ -55,11 +65,12 @@ fi
 
 ## summary
 ## ----------------------------------------------------------------------
-echo 'SPIN          ' "$SPIN"
+echo 'SPIN           ' "$SPIN"
 echo ' ' "$(python3 --version) $(which python3)"
-echo ' ' "$(pip3 -V)"
-echo '  jupyter-lab ' "$(jupyter-lab --version) $(which jupyter-lab)"
-echo '  PYTHONPATH  ' "$PYTHONPATH"
-echo '  github key  ' "$github"
-echo '  GPU         ' "$GPU"
-echo '  RAY         ' "$(ray --version)"
+echo ' ' "$(pip3 -V) "
+echo '  jupyter-lab  ' "$(jupyter-lab --version) $(which jupyter-lab)"
+echo '  PYTHONPATH   ' "$PYTHONPATH"
+echo '  github key   ' "$github"
+echo '  CUDA (Nvidia)' "$CUDA"
+echo '  ROCM (AMD)   ' "$ROCM"
+echo '  RAY          ' "$(ray --version)"

@@ -757,3 +757,65 @@ def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
         }
     )
     return df
+
+
+# class CEA2034(object):
+# 
+#     def __init__(self, splH, splV):
+#         self.splH = splH
+#         self.splV = splV
+#         if not self.checkSpl(splH) or not self.checSpl(splV):
+#             raise 'Hell'
+#         self.pre_compute()
+# 
+#     def checkSpl(spl):
+#         if spl.empty:
+#             return False
+#         for angle in [
+#                 "Freq",
+#                 "On Axis",
+#                 "10°",
+#                 "20°",
+#                 "30°",
+#                 "40°",
+#                 "50°",
+#                 "60°",
+#                 "70°",
+#                 "80°",
+#                 "90°",
+#                 "100°",
+#                 "110°",
+#                 "120°",
+#                 "130°",
+#                 "140°",
+#                 "150°",
+#                 "160°",
+#                 "170°",
+#                 "180°",
+#                 "-10°",
+#                 "-20°",
+#                 "-30°",
+#                 "-40°",
+#                 "-50°",
+#                 "-60°",
+#                 "-70°",
+#                 "-80°",
+#                 "-90°",
+#                 "-100°",
+#                 "-110°",
+#                 "-120°",
+#                 "-130°",
+#                 "-140°",
+#                 "-150°",
+#                 "-160°",
+#                 "-170°",
+#             ],
+#             if angle not in spl.keys():
+#                 return False
+#         return True
+# 
+#     def self.pre_compute():
+#         self.
+# 
+#             
+# 

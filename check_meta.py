@@ -73,7 +73,7 @@ def sanity_check_type(name, speaker):
 
 
 def sanity_check_shape(name, speaker):
-    # update src/website/nav_search if you add a new shape
+    # update src/website/nav_menu if you add a new shape
     valid_shapes = (
         "floorstanders",
         "bookshelves",
@@ -86,7 +86,9 @@ def sanity_check_shape(name, speaker):
         "panel",
         "inwall",
         "soundbar",
-        "linearray",
+        "liveportable",
+        "toursound",
+        "cinema",
     )
     if "shape" not in speaker:
         logging.error("shape is not in {0}".format(name))
@@ -148,6 +150,11 @@ def sanity_check_version(name, speaker, version):
         "bassreflex",
         "monopole",
         "dipole",
+        "fullrange",
+        "lowcut",
+        # power
+        "action",
+        "passive",
         # sources
         "klippel",
         "gll",

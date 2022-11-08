@@ -4937,7 +4937,7 @@ speakers_info = {
         "model": "C211",
         "type": "passive",
         "price": "",
-        "shape": "bookshelves",
+        "shape": "cinema",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -11102,23 +11102,6 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/svs-ultra-bookshelf-speaker-review.15055/",
                 "review_published": "20200801",
-            },
-        },
-    },
-    "TAD Evolution 2": {
-        "brand": "TAD",
-        "model": "Evolution 2",
-        "type": "passive",
-        "price": "20000",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/tad-evolution-2-speaker-review.38949/",
-                "review_published": "20221108",
             },
         },
     },
