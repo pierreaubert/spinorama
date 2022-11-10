@@ -165,6 +165,22 @@ export function getReviews (value) {
       originLong = originLong + " (Cardiod)"
     }     
 
+    if (version.search("fullrange") != -1 ) {
+      origin = origin + " (FR)"
+      originLong = originLong + " (Full Range)"
+    } else if  (version.search("lowcut") != -1 ) {
+      origin = origin + " (LC)"
+      originLong = originLong + " (Low Cut)"
+    }     
+
+    if (version.search("active") != -1 ) {
+      origin = origin + " (Act.)"
+      originLong = originLong + " (Active)"
+    } else if  (version.search("passive") != -1 ) {
+      origin = origin + " (Pas.)"
+      originLong = originLong + " (Passive)"
+    }     
+
     if (version.search("horizontal") != -1 ) {
       origin = origin + " (Hor.)"
       originLong = originLong + " (Horizontal)"
@@ -196,15 +212,30 @@ export function getReviews (value) {
     if (ipattern != -1 ) {
       const sversion = version.slice(ipattern+8)
       if (sversion.search(/[0-9]*/) != -1) {
-        origin = origin + ' '+ sversion + "º"
-        originLong = originLong + ' ' + sversion + "º"
+        const sversionTimes = sversion.indexOf('x')
+        let sversionDeg = sversion
+        if (sversionTimes != -1) {
+          sversionDeg = ' ' + sversion.slice(0, sversionTimes) + "º" + sversion.slice(sversionTimes) + "º"
+        } else {
+          sversionDeg = ' ' + sversion + "º"
+        }
+        origin = origin + sversionDeg
+        originLong = originLong + sversionDeg
       }
     } 
 
-    let pos = version.search(/-v[123456]-/)
-    if (pos != -1 ) {
-      origin = origin + " (v" + version[pos+2] + ")"
-      originLong = originLong + " (v" + version[pos+2] + ")"
+    // version
+    const posVersion = version.search(/-v[123456]-/)
+    if (posVersion != -1 ) {
+      origin = origin + " (v" + version[posVersion+2] + ")"
+      originLong = originLong + " (v" + version[posVersion+2] + ")"
+    }
+
+    // counter
+    const posCounter = version.search(/-v[123456]x/)
+    if (posCounter != -1 ) {
+      origin = origin + " (" + version[posCounter+2] + "x)"
+      originLong = originLong + " (" + version[posCounter+2] + "x)"
     }
 
     reviews.push({
