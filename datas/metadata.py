@@ -242,6 +242,38 @@ speakers_info = {
             },
         },
     },
+    "Alcons Audio RR12": {
+        "brand": "Alcons Audio",
+        "model": "RR12",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor-v1x",
+        "measurements": {
+            "vendor-v1x": {
+                "origin": "Vendors-Alcons Audio",
+                "format": "splHVtxt",
+                "quality": "high",
+                "review_published": "20221110",
+                "notes": "measured at 2 meters with broadband pinknoise. This is for 1 RR12 in a vertical orientation.",
+            },
+            "vendor-v3x": {
+                "origin": "Vendors-Alcons Audio",
+                "format": "splHVtxt",
+                "quality": "high",
+                "review_published": "20221110",
+                "notes": "measured at 2 meters with broadband pinknoise. This is for 3 RR12 in a vertical orientation.",
+            },
+            "vendor-v6x": {
+                "origin": "Vendors-Alcons Audio",
+                "format": "splHVtxt",
+                "quality": "high",
+                "review_published": "20221110",
+                "notes": "measured at 2 meters with broadband pinknoise. This is for 6 RR12 in a vertical orientation.",
+            },
+        },
+    },
     "Alcons Audio SR9": {
         "brand": "Alcons Audio",
         "model": "SR9",
@@ -7242,7 +7274,7 @@ speakers_info = {
         "type": "active",
         "price": "7400",
         "amount": "pair",
-        "shape": "livesound",
+        "shape": "liveportable",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -7259,7 +7291,7 @@ speakers_info = {
         "type": "active",
         "price": "",
         "amount": "pair",
-        "shape": "livesound",
+        "shape": "liveportable",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -7276,7 +7308,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "livesound",
+        "shape": "liveportable",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -7293,7 +7325,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "livesound",
+        "shape": "liveportable",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -7310,7 +7342,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "livesound",
+        "shape": "liveportable",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -9751,7 +9783,7 @@ speakers_info = {
         "model": "K8.2",
         "type": "active",
         "price": "740",
-        "shape": "livesound",
+        "shape": "liveportable",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -9768,7 +9800,7 @@ speakers_info = {
         "model": "K10.2",
         "type": "active",
         "price": "775",
-        "shape": "livesound",
+        "shape": "liveportable",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -9785,7 +9817,7 @@ speakers_info = {
         "model": "K12.2",
         "type": "active",
         "price": "870",
-        "shape": "livesound",
+        "shape": "liveportable",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
