@@ -8511,6 +8511,13 @@ speakers_info = {
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-310a-review-powered-monitor.17723/",
                 "review_published": "20201120",
             },
+            "vendor-gll": {
+                "origin": "Vendors-Neumann",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "notes": "data from GLL file: computed at 2m with pink noise broadband",
+                "review_published": "20221110",
+            },
         },
     },
     "Neumann KH 420G": {
