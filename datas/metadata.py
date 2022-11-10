@@ -1318,7 +1318,7 @@ speakers_info = {
         "type": "passive",
         "price": "8000",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "toursound",
         "default_measurement": "eac",
         "measurements": {
             "eac": {
@@ -3053,7 +3053,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "each",
-        "shape": "bookshelves",
+        "shape": "toursound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -3071,7 +3071,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "each",
-        "shape": "bookshelves",
+        "shape": "toursound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -3089,7 +3089,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "each",
-        "shape": "bookshelves",
+        "shape": "toursound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -3107,7 +3107,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "each",
-        "shape": "bookshelves",
+        "shape": "toursound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -3125,7 +3125,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "each",
-        "shape": "bookshelves",
+        "shape": "toursound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -3143,7 +3143,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "each",
-        "shape": "bookshelves",
+        "shape": "toursound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -3161,7 +3161,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "each",
-        "shape": "bookshelves",
+        "shape": "toursound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -3179,7 +3179,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "each",
-        "shape": "bookshelves",
+        "shape": "toursound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -3197,7 +3197,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "each",
-        "shape": "bookshelves",
+        "shape": "toursound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -3215,7 +3215,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "each",
-        "shape": "bookshelves",
+        "shape": "toursound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -4447,7 +4447,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "floorstanders",
+        "shape": "cinema",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -4465,7 +4465,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "floorstanders",
+        "shape": "cinema",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -4541,7 +4541,7 @@ speakers_info = {
         "type": "passive",
         "price": "400",
         "amount": "each",
-        "shape": "floorstanders",
+        "shape": "bookshelves",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -4668,7 +4668,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "floorstanders",
+        "shape": "cinema",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {
@@ -4703,7 +4703,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "floorstanders",
+        "shape": "cinema",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
             "misc-speakerdata2034": {
@@ -4937,7 +4937,7 @@ speakers_info = {
         "model": "C211",
         "type": "passive",
         "price": "",
-        "shape": "bookshelves",
+        "shape": "cinema",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -4954,7 +4954,7 @@ speakers_info = {
         "model": "C222",
         "type": "passive",
         "price": "",
-        "shape": "bookshelves",
+        "shape": "cinema",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -5810,7 +5810,7 @@ speakers_info = {
         "model": "Noesis 210ht",
         "type": "passive",
         "price": "4000",
-        "shape": "floorstanders",
+        "shape": "cinema",
         "amount": "pair",
         "default_measurement": "eac",
         "measurements": {
@@ -6695,7 +6695,7 @@ speakers_info = {
         "model": "Model Five",
         "type": "passive",
         "price": "",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "amount": "pair",
         "default_measurement": "eac-v1-grilleon",
         "measurements": {
@@ -7242,7 +7242,7 @@ speakers_info = {
         "type": "active",
         "price": "7400",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "livesound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -7259,7 +7259,7 @@ speakers_info = {
         "type": "active",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "livesound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -7276,7 +7276,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "livesound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -7293,7 +7293,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "livesound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -7310,7 +7310,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "livesound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -7691,7 +7691,7 @@ speakers_info = {
         "model": "Acheron 80",
         "type": "active",
         "price": "",
-        "shape": "bookshelves",
+        "shape": "cinema",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -7708,7 +7708,7 @@ speakers_info = {
         "model": "Acheron 100",
         "type": "active",
         "price": "",
-        "shape": "bookshelves",
+        "shape": "cinema",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -7945,7 +7945,7 @@ speakers_info = {
         "model": "S150",
         "type": "passive",
         "price": "10000",
-        "shape": "bookshelves",
+        "shape": "cinema",
         "amount": "pair",
         "default_measurement": "eac",
         "measurements": {
@@ -9268,7 +9268,7 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "floorstanders",
+        "shape": "cinema",
         "default_measurement": "misc-audioholics",
         "measurements": {
             "misc-audioholics": {
@@ -9751,7 +9751,7 @@ speakers_info = {
         "model": "K8.2",
         "type": "active",
         "price": "740",
-        "shape": "bookshelves",
+        "shape": "livesound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -9768,7 +9768,7 @@ speakers_info = {
         "model": "K10.2",
         "type": "active",
         "price": "775",
-        "shape": "bookshelves",
+        "shape": "livesound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -9785,7 +9785,7 @@ speakers_info = {
         "model": "K12.2",
         "type": "active",
         "price": "870",
-        "shape": "bookshelves",
+        "shape": "livesound",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -11111,7 +11111,7 @@ speakers_info = {
         "type": "passive",
         "price": "20000",
         "amount": "pair",
-        "shape": "bookshelves",
+        "shape": "floorstanders",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
