@@ -5,9 +5,7 @@ on: [push]
 jobs:
   build:
 
-    runs:
-    - using: 'node16'
-    - on: ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
