@@ -168,6 +168,8 @@ def sanity_check_version(name, speaker, version):
         # orientation
         "vertical",
         "horizontal",
+        # configuration
+        "configuration",
     )
     status = 0
     lversion = version.lower()
@@ -193,6 +195,9 @@ def sanity_check_version(name, speaker, version):
                     )
                 )
                 status = 1
+            if smisc[i] == 'configuration':
+                # skip all after configuration
+                break
     return status
 
 

@@ -238,6 +238,13 @@ export function getReviews (value) {
       originLong = originLong + " (" + version[posCounter+2] + "x)"
     }
 
+    // configuration
+    const posConfiguration = version.search(/-configuration-/)
+    if (posConfiguration != -1 ) {
+      origin = origin + " (" + version.slice(posConfiguration+14).replace('-', ' ') + ")"
+      originLong = originLong + " (" + version.slice(posConfiguration+14).replace('-', ' ')  + ")"
+    }
+    
     reviews.push({
       url: encodeURI(url),
       origin: origin,
