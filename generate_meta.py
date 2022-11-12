@@ -334,9 +334,90 @@ def add_scores(dataframe, parse_max):
                     )
                     scaled_lfx_hz = 100 - percent(lfx_hz, min_lfx_hz, max_lfx_hz)
                 scaled_nbd_on = 100 - percent(nbd_on, min_nbd_on, max_nbd_on)
-                scaled_flatness = 100 - percent(flatness, min_flatness, max_flatness)
                 scaled_sm_sp = percent(sm_sp, min_sm_sp, max_sm_sp)
                 scaled_sm_pir = percent(sm_pir, min_sm_pir, max_sm_pir)
+                scaled_flatness = 100 - percent(flatness, min_flatness, max_flatness)
+                # bucket score instead of a linear scale
+                if scaled_pref_score is not None:
+                    if pref_score > 7:
+                        scaled_pref_score = 100
+                    elif pref_score > 6.5:
+                        scaled_pref_score = 90
+                    elif pref_score > 6:
+                        scaled_pref_score = 80
+                    elif pref_score > 5.5:
+                        scaled_pref_score = 70
+                    elif pref_score > 5:
+                        scaled_pref_score = 60
+                    elif pref_score > 4.5:
+                        scaled_pref_score = 50
+                    elif pref_score > 4.0:
+                        scaled_pref_score = 40
+                    elif pref_score > 3.0:
+                        scaled_pref_score = 30
+                    elif pref_score > 3.0:
+                        scaled_pref_score = 30
+                    elif pref_score > 1.0:
+                        scaled_pref_score = 10
+                    else:
+                        scaled_pref_score = 0
+                # bucket flatness instead of a linear scale
+                if flatness < 2.0:
+                    scaled_flatness = 100
+                elif flatness < 2.25:
+                    scaled_flatness = 90
+                elif flatness < 2.5:
+                    scaled_flatness = 80
+                elif flatness < 3:
+                    scaled_flatness = 70
+                elif flatness < 4:
+                    scaled_flatness = 50
+                elif flatness < 5:
+                    scaled_flatness = 30
+                elif flatness < 6:
+                    scaled_flatness = 10
+                else:
+                    scaled_flatness = 0
+                # bucked lfx too
+                if scaled_lfx_hz is not None:
+                    if lfx_hz < 25:
+                        scaled_lfx_hz = 100
+                    elif lfx_hz < 30:
+                        scaled_lfx_hz = 90
+                    elif lfx_hz < 35:
+                        scaled_lfx_hz = 80
+                    elif lfx_hz < 40:
+                        scaled_lfx_hz = 70
+                    elif lfx_hz < 50:
+                        scaled_lfx_hz = 60
+                    elif lfx_hz < 60:
+                        scaled_lfx_hz = 50
+                    elif lfx_hz < 70:
+                        scaled_lfx_hz = 40
+                    elif lfx_hz < 80:
+                        scaled_lfx_hz = 30
+                    elif lfx_hz < 100:
+                        scaled_lfx_hz = 10
+                    else:
+                        scaled_lfx_hz = 0
+                # bucket sm_pir too
+                if sm_pir > 0.95:
+                    scaled_sm_pir = 100
+                elif sm_pir > 0.9:
+                    scaled_sm_pir = 90
+                elif sm_pir > 0.85:
+                    scaled_sm_pir = 80
+                elif sm_pir > 0.8:
+                    scaled_sm_pir = 70
+                elif sm_pir > 0.7:
+                    scaled_sm_pir = 60
+                elif sm_pir > 0.6:
+                    scaled_sm_pir = 50
+                elif sm_pir > 0.5:
+                    scaled_sm_pir = 25
+                else:
+                    scaled_sm_pir = 0
+
                 # add normalized values
                 scaled_pref_rating = {
                     "scaled_pref_score_wsub": scaled_pref_score_wsub,

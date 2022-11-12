@@ -195,7 +195,7 @@ def sanity_check_version(name, speaker, version):
                     )
                 )
                 status = 1
-            if smisc[i] == 'configuration':
+            if smisc[i] == "configuration":
                 # skip all after configuration
                 break
     return status
