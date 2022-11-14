@@ -82,7 +82,6 @@ import sys
 
 
 from docopt import docopt
-import flammkuchen as fl
 import pandas as pd
 
 try:
@@ -94,8 +93,7 @@ except ModuleNotFoundError:
 from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
 from datas.metadata import speakers_info as metadata
-from spinorama.load_rewseq import parse_eq_iir_rews
-from spinorama.filter_peq import peq_format_apo, peq_equal
+from spinorama.filter_peq import peq_format_apo
 from spinorama.filter_scores import (
     scores_apply_filter,
     noscore_apply_filter,
@@ -224,9 +222,7 @@ def optim_save_peq(
 
     # print peq
     comments = [
-        "EQ for {:s} computed from {} data".format(
-            current_speaker_name, current_speaker_origin
-        ),
+        f"EQ for {current_speaker_name} computed from {current_speaker_origin} data"
     ]
     if use_score:
         comments.append(
@@ -236,9 +232,7 @@ def optim_save_peq(
         )
 
     comments += [
-        "Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v{}".format(
-            VERSION
-        ),
+        f"Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v{VERSION}"
         "Dated: {}".format(datetime.today().strftime("%Y-%m-%d-%H:%M:%S")),
         "",
     ]
@@ -246,22 +240,22 @@ def optim_save_peq(
 
     # print eq
     if not smoke_test:
-        with open(eq_name, "w") as fd:
+        with open(eq_name, "w", encoding="ascii") as fd:
             fd.write(eq_apo)
             iir_txt = "iir.txt"
-            iir_name = "{}/{}".format(eq_dir, iir_txt)
+            iir_name = f"{eq_dir}/{iir_txt}"
             if not os.path.exists(iir_name):
                 try:
                     os.symlink("iir-autoeq.txt", iir_name)
                 except OSError:
                     pass
-        eq_conf = "{}/conf-autoeq.json".format(eq_dir)
-        with open(eq_conf, "w") as fd:
+        eq_conf = f"{eq_dir}/conf-autoeq.json"
+        with open(eq_conf, "w", encoding="ascii") as fd:
             conf_json = json.dumps(optim_config, indent=4)
             fd.write(conf_json)
 
     # print results
-    if len(auto_peq) > 0:
+    if auto_peq is not None and len(auto_peq) > 0:
 
         # TODO: optim_config by best_config
         data_frame, freq, auto_target = get_freq(df_speaker, optim_config)

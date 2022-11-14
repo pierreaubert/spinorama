@@ -47,16 +47,17 @@ siteprod = "https://pierreaubert.github.io/spinorama"
 sitedev = "http://spinorama.internet-box.ch"
 root = cpaths.CPATH
 
+
 def write_if_different(new_content, filename):
     identical = False
     path = pathlib.Path(filename)
     if path.exists():
-        old_content = path.read_text(encoding='utf-8')
+        old_content = path.read_text(encoding="utf-8")
         if old_content == new_content:
             identical = True
 
     if not identical:
-        path.write_text(new_content, encoding='utf-8')
+        path.write_text(new_content, encoding="utf-8")
 
 
 def generate_speaker(mako, dataframe, meta, site, useSearch):
@@ -239,7 +240,9 @@ def main():
     eqs_html = mako_templates.get_template("eqs.html")
 
     try:
-        eqs_content = eqs_html.render(df=df, meta=meta_sorted_date, site=site, useSearch=True)
+        eqs_content = eqs_html.render(
+            df=df, meta=meta_sorted_date, site=site, useSearch=True
+        )
         eqs_filename = f"{cpaths.CPATH_DOCS}/eqs.html"
         write_if_different(eqs_content, eqs_filename)
     except KeyError as ke:
@@ -257,7 +260,7 @@ def main():
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename)
-            
+
         for item in (
             "help",
             "compare",
