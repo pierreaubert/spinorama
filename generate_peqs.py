@@ -706,7 +706,7 @@ def main():
     df_all_speakers = {}
     try:
         df_all_speakers = cache_load(smoke_test=smoke_test, simple_filter=speaker_name)
-    except ValueError as ve:
+    except ValueError as v_e:
         if speaker_name is not None:
             print(
                 "ERROR: Speaker {0} is not in the cache. Did you run ./generate_graphs.py --speaker='{0}' --update-cache ?".format(
@@ -714,7 +714,7 @@ def main():
                 )
             )
         else:
-            print(f"{ve}")
+            print(f"{v_e}")
         sys.exit(1)
 
     # start ray

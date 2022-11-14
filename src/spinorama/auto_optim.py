@@ -163,18 +163,20 @@ def optim_compute_auto_target(
     peq: Peq,
     optim_config: dict,
 ):
+    """Define the target for the optimiser with potentially some smoothing"""
     peq_freq = peq_build(freq, peq)
     diff = [target[i] - auto_target_interp[i] for i, _ in enumerate(target)]
     if optim_config.get("smooth_measurements"):
         window_size = optim_config.get("smooth_window_size")
         order = optim_config.get("smooth_order")
         smoothed = [savitzky_golay(d, window_size, order) for d in diff]
-        logger.warning(smoothed)
+        # logger.debug(smoothed)
         diff = smoothed
     avg = 0.0
-    for i, curve in enumerate(optim_config.get("curve_names")):
-        avg = np.mean(diff[i])
-        diff[i] -= avg
+    if "curve_names" in optim_config.keys():
+        for i, _ in enumerate(optim_config["curve_names"]):
+            avg = np.mean(diff[i])
+            diff[i] -= avg
     delta = [diff[i] + peq_freq for i, _ in enumerate(target)]
     return delta
 
@@ -188,6 +190,7 @@ def optim_greedy(
     optim_config: dict,
     use_score,
 ) -> tuple[list[tuple[int, float, float]], Peq]:
+    """Main optimiser: follow a greedy strategy"""
 
     if not optim_preflight(freq, auto_target, auto_target_interp, optim_config):
         logger.error("Preflight check failed!")
@@ -204,20 +207,19 @@ def optim_greedy(
 
     results = [(0, best_loss, -pref_score)]
     logger.info(
-        "OPTIM {} START {} #PEQ {:d} Freq #{:d} Gain #{:d} +/-[{}, {}] Q #{} [{}, {}] Loss {:2.2f} Score {:2.2f}".format(
-            speaker_name,
-            optim_config["curve_names"],
-            optim_config["MAX_NUMBER_PEQ"],
-            optim_config["MAX_STEPS_FREQ"],
-            optim_config["MAX_STEPS_DBGAIN"],
-            optim_config["MIN_DBGAIN"],
-            optim_config["MAX_DBGAIN"],
-            optim_config["MAX_STEPS_Q"],
-            optim_config["MIN_Q"],
-            optim_config["MAX_Q"],
-            best_loss,
-            -pref_score,
-        )
+        "OPTIM {} START {} #PEQ {:d} Freq #{:d} Gain #{:d} +/-[{}, {}] Q #{} [{}, {}] Loss {:2.2f} Score {:2.2f}",
+        speaker_name,
+        optim_config["curve_names"],
+        optim_config["MAX_NUMBER_PEQ"],
+        optim_config["MAX_STEPS_FREQ"],
+        optim_config["MAX_STEPS_DBGAIN"],
+        optim_config["MIN_DBGAIN"],
+        optim_config["MAX_DBGAIN"],
+        optim_config["MAX_STEPS_Q"],
+        optim_config["MIN_Q"],
+        optim_config["MAX_Q"],
+        best_loss,
+        -pref_score,
     )
 
     for optim_iter in range(0, optim_config["MAX_NUMBER_PEQ"]):
@@ -470,7 +472,7 @@ def optim_refine(
                         optim_config["freq_reg_max"],
                         max(
                             optim_config["freq_reg_min"],
-                            p.freq + current_config["freq_{}".format(i)],
+                            p.freq + current_config[f"freq_{i}"],
                         ),
                     ),
                     # p.srate,
@@ -480,7 +482,7 @@ def optim_refine(
                         optim_config["MAX_Q"],
                         max(
                             optim_config["MIN_Q"],
-                            p.Q + current_config["Q_{}".format(i)],
+                            p.Q + current_config[f"Q_{i}"],
                         ),
                     ),
                     # p.dbGain,
@@ -488,7 +490,7 @@ def optim_refine(
                         optim_config["MAX_DBGAIN"],
                         max(
                             optim_config["MIN_DBGAIN"],
-                            p.dbGain + current_config["dbGain_{}".format(i)],
+                            p.dbGain + current_config[f"dbGain_{i}"],
                         ),
                     ),
                 ),

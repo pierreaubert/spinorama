@@ -39,10 +39,11 @@ def compute_weigths() -> list[float]:
 
 
 def compute_weigths_hv(weigths: dict[str, float]) -> dict[str, float]:
+    """copy weigths to both horizontal and vertical"""
     return (
         {k: v for k, v in weigths.items()}
-        | {"{0}_v".format(k): v for k, v in weigths.items()}
-        | {"{0}_h".format(k): v for k, v in weigths.items()}
+        | {f"{k}_v": v for k, v in weigths.items()}
+        | {f"{k}_h": v for k, v in weigths.items()}
     )
 
 
@@ -363,7 +364,7 @@ def total_early_reflections2(
             )
         )
     else:
-        logger.fatal("method is unknown {}".format(method))
+        logger.fatal("method is unknown {}", method)
     return pd.DataFrame({"dB": spl})
 
 
@@ -397,6 +398,7 @@ def early_reflections(
     )
 
     # CEA2034 error
+    rear_wall_bounce = None
     if method == "corrected":
         rear_wall_bounce = spatial_average1(
             h_spl,
@@ -464,7 +466,7 @@ def early_reflections(
         if not name.empty:
             early_reflection[key] = name.dB
         else:
-            logger.debug("{0} is empty".format(key))
+            logger.debug("{0} is empty", key)
     return early_reflection.reset_index(drop=True)
 
 
@@ -489,7 +491,7 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
 
     total_vertical_reflection = total_vertical_reflections(h_spl, v_spl)
 
-    vr = pd.DataFrame({"Freq": v_spl.Freq}).reset_index(drop=True)
+    v_r = pd.DataFrame({"Freq": v_spl.Freq}).reset_index(drop=True)
 
     # print(vr.shape, onaxis.shape, floor_reflection.shape)
     for (key, name) in [
@@ -498,11 +500,11 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
         ("Total Vertical Reflection", total_vertical_reflection),
     ]:
         if not name.empty:
-            vr[key] = name.dB
+            v_r[key] = name.dB
         else:
-            logger.debug("{0} is empty".format(key))
+            logger.debug("{0} is empty", key)
 
-    return vr.reset_index(drop=True)
+    return v_r.reset_index(drop=True)
 
 
 def total_horizontal_reflections(
@@ -615,7 +617,7 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
 
     total_horizontal_reflection = total_horizontal_reflections(h_spl, v_spl)
 
-    hr = pd.DataFrame(
+    h_r = pd.DataFrame(
         {
             "Freq": h_spl.Freq,
         }
@@ -627,10 +629,10 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
         ("Total Horizontal Reflection", total_horizontal_reflection),
     ]:
         if not name.empty:
-            hr[key] = name.dB
+            h_r[key] = name.dB
         else:
-            logger.debug("{0} is empty".format(key))
-    return hr.reset_index(drop=True)
+            logger.debug("{0} is empty", key)
+    return h_r.reset_index(drop=True)
 
 
 def estimated_inroom(
@@ -750,24 +752,23 @@ def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     if onaxis.empty:
         return onaxis
 
-    df = pd.DataFrame(
+    return pd.DataFrame(
         {
             "Freq": onaxis.Freq,
             "On Axis": onaxis.dB,
         }
     )
-    return df
 
 
 # class CEA2034(object):
-# 
+#
 #     def __init__(self, splH, splV):
 #         self.splH = splH
 #         self.splV = splV
 #         if not self.checkSpl(splH) or not self.checSpl(splV):
 #             raise 'Hell'
 #         self.pre_compute()
-# 
+#
 #     def checkSpl(spl):
 #         if spl.empty:
 #             return False
@@ -813,9 +814,9 @@ def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 #             if angle not in spl.keys():
 #                 return False
 #         return True
-# 
+#
 #     def self.pre_compute():
 #         self.
-# 
-#             
-# 
+#
+#
+#

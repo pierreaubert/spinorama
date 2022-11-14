@@ -51,7 +51,7 @@ from docopt import docopt
 # except ModuleNotFoundError:
 #    import src.miniray as ray
 
-from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
+from generate_common import get_custom_logger, args2level, cache_load
 import datas.metadata as metadata
 import spinorama.constant_paths as cpaths
 from spinorama.compute_estimates import estimates
@@ -81,7 +81,7 @@ def add_scores(dataframe, parse_max):
         if parse_max is not None and parsed > parse_max:
             break
         parsed = parsed + 1
-        logger.info("Processing {0}".format(speaker_name))
+        logger.info("Processing {speaker_name}", speaker_name)
         for _, measurements in speaker_data.items():
             default_key = None
             try:
@@ -90,18 +90,15 @@ def add_scores(dataframe, parse_max):
                 ]
             except KeyError:
                 logger.error(
-                    "Got an key error exception for speaker_name {} default measurement".format(
-                        speaker_name
-                    )
+                    "Got an key error exception for speaker_name {} default measurement",
+                    speaker_name,
                 )
                 continue
             for key, dfs in measurements.items():
                 try:
                     if dfs is None or "CEA2034" not in dfs.keys():
                         logger.debug(
-                            "skipping add_score no spinorama for {0}".format(
-                                speaker_name
-                            )
+                            "skipping add_score no spinorama for {}", speaker_name
                         )
                         continue
 
@@ -110,9 +107,7 @@ def add_scores(dataframe, parse_max):
                         continue
 
                     logger.debug(
-                        "Compute score for speaker {0} key {1}".format(
-                            speaker_name, key
-                        )
+                        "Compute score for speaker {0} key {1}", speaker_name, key
                     )
                     # sensitivity
                     sensitivity = dfs.get("sensitivity")
@@ -139,11 +134,10 @@ def add_scores(dataframe, parse_max):
                         )
                         continue
                     logger.info(
-                        "Adding -3dB {0}Hz -6dB {1}Hz +/-{2}dB".format(
-                            est.get("ref_3dB", "--"),
-                            est.get("ref_6dB", "--"),
-                            est.get("ref_band", "--"),
-                        )
+                        "Adding -3dB {0}Hz -6dB {1}Hz +/-{2}dB",
+                        est.get("ref_3dB", "--"),
+                        est.get("ref_6dB", "--"),
+                        est.get("ref_band", "--"),
                     )
                     if key[-3:] == "_eq":
                         metadata.speakers_info[speaker_name]["measurements"][key[:-3]][
@@ -217,8 +211,8 @@ def add_scores(dataframe, parse_max):
                         metadata.speakers_info[speaker_name]["measurements"][key][
                             "pref_rating"
                         ] = pref_rating
-                except KeyError as ke:
-                    print("{} get {}".format(speaker_name, ke))
+                except KeyError as current_error:
+                    print("{} get {}".format(speaker_name, current_error))
                     continue
 
     # if we are looking only after 1 speaker, return
@@ -232,7 +226,7 @@ def add_scores(dataframe, parse_max):
         if parse_max is not None and parsed > parse_max:
             break
         parsed = parsed + 1
-        logger.info("Normalize data for {0}".format(speaker_name))
+        logger.info("Normalize data for {0}", speaker_name)
         for _, measurements in speaker_data.items():
             for version, measurement in measurements.items():
                 if (
@@ -241,32 +235,26 @@ def add_scores(dataframe, parse_max):
                 ):
                     if len(version) > 4 and version[-3:] != "_eq":
                         logger.error(
-                            "Confusion in metadata, did you edit a speaker recently? {} should be in metadata for {}".format(
-                                version, speaker_name
-                            )
+                            "Confusion in metadata, did you edit a speaker recently? {} should be in metadata for {}",
+                            version,
+                            speaker_name,
                         )
                     continue
 
                 if measurement is None or "CEA2034" not in measurement.keys():
                     logger.debug(
-                        "skipping normalization no spinorama for {0}".format(
-                            speaker_name
-                        )
+                        "skipping normalization no spinorama for {0}", speaker_name
                     )
                     continue
 
                 spin = measurement["CEA2034"]
                 if spin is None:
                     logger.debug(
-                        "skipping normalization no spinorama for {0}".format(
-                            speaker_name
-                        )
+                        "skipping normalization no spinorama for {0}", speaker_name
                     )
                     continue
                 if version[-3:] == "_eq":
-                    logger.debug(
-                        "skipping normalization for eq for {0}".format(speaker_name)
-                    )
+                    logger.debug("skipping normalization for eq for {0}", speaker_name)
                     continue
                 if (
                     "estimates"
@@ -275,9 +263,9 @@ def add_scores(dataframe, parse_max):
                     ].keys()
                 ):
                     logger.debug(
-                        "skipping normalization no estimates in {0} for {1}".format(
-                            version, speaker_name
-                        )
+                        "skipping normalization no estimates in {0} for {1}",
+                        version,
+                        speaker_name,
                     )
                     continue
                 if (
@@ -287,15 +275,13 @@ def add_scores(dataframe, parse_max):
                     ].keys()
                 ):
                     logger.debug(
-                        "skipping normalization no pref_rating in {0} for {1}".format(
-                            version, speaker_name
-                        )
+                        "skipping normalization no pref_rating in {0} for {1}",
+                        version,
+                        speaker_name,
                     )
                     continue
 
-                logger.debug(
-                    "Compute relative score for speaker {0}".format(speaker_name)
-                )
+                logger.debug("Compute relative score for speaker {0}", speaker_name)
                 # get values
                 pref_rating = metadata.speakers_info[speaker_name]["measurements"][
                     version
@@ -325,9 +311,11 @@ def add_scores(dataframe, parse_max):
                     p = math.floor(100 * (val - vmin) / (vmax - vmin))
                     return min(max(0, p), 100)
 
+                scaled_pref_score = None
                 scaled_pref_score_wsub = percent(
                     pref_score_wsub, min_pref_score_wsub, max_pref_score_wsub
                 )
+                scaled_pref_score = None
                 if "pref_score" in pref_rating:
                     scaled_pref_score = percent(
                         pref_score, min_pref_score, max_pref_score
@@ -576,10 +564,10 @@ def compute_near(fspin1, fspin2):
     er = er1 - er2
     sp = sp1 - sp2
 
-    near = np.max([np.linalg.norm(lw), np.linalg.norm(sp), np.linalg.norm(er, 2)])
+    near = np.mean([np.linalg.norm(lw), np.linalg.norm(sp), np.linalg.norm(er, 2)])
     if math.isnan(near):
-        print("get a NaN")
-        print(lw.head(), sp.head())
+        # print("get a NaN")
+        # print(lw.head(), sp.head())
         return 1000000.0
     print("near lengths {} {} {} near {}".format(len(lw), len(er), len(sp), near))
     return near
