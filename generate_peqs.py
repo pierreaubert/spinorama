@@ -232,7 +232,7 @@ def optim_save_peq(
         )
 
     comments += [
-        f"Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v{VERSION}"
+        f"Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v{VERSION}",
         "Dated: {}".format(datetime.today().strftime("%Y-%m-%d-%H:%M:%S")),
         "",
     ]
