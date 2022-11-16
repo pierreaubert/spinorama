@@ -2486,26 +2486,26 @@ speakers_info = {
             },
         },
     },
-    #    "Endow Audio Bravura 7": {
-    #        "brand": "Endow Audio",
-    #        "model": "Bravura 7",
-    #        "type": "passive",
-    #        "price": "6500",
-    #        "shape": "omnidirectional",
-    #        "amount": "pair",
-    #        "default_measurement": "eac",
-    #        "measurements": {
-    #            "eac": {
-    #                "origin": "ErinsAudioCorner",
-    #                "format": "klippel",
-    #                "reviews": {
-    #                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/endow_bravura_7/",
-    #                    "yt": "https://youtu.be/tPW8Y4f4sPs",
-    #                },
-    #                "review_published": "20220905",
-    #            },
-    #        },
-    #    },
+    "Endow Audio Bravura 7": {
+        "brand": "Endow Audio",
+        "model": "Bravura 7",
+        "type": "passive",
+        "price": "6500",
+        "shape": "omnidirectional",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/endow_bravura_7/",
+                    "yt": "https://youtu.be/tPW8Y4f4sPs",
+                },
+                "review_published": "20221116",
+            },
+        },
+    },
     "Essence Electrostatic Model 1600": {
         "brand": "Essence Electrostatic",
         "model": "Model 1600",
