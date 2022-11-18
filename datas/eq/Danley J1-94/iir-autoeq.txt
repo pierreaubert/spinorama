@@ -1,0 +1,10 @@
+EQ for Danley J1-94 computed from Vendors-Danley data
+Preference Score 2.0 with EQ 2.7
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.16
+Dated: 2022-11-18-06:58:48
+
+Preamp: -4.6 dB
+
+Filter  1: ON PK Fc  1902 Hz Gain -3.66 dB Q 2.94
+Filter  2: ON PK Fc   417 Hz Gain +5.36 dB Q 2.98
+Filter  3: ON PK Fc   188 Hz Gain -1.32 dB Q 0.38
