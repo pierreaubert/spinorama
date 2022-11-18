@@ -251,17 +251,8 @@ def main():
 
     # write various html files
     try:
-        for item in ("scores",):
-            item_name = "{0}.html".format(item)
-            logger.info("Write {0}".format(item_name))
-            item_html = mako_templates.get_template(item_name)
-            item_content = item_html.render(
-                df=df, meta=meta_sorted_score, site=site, useSearch=True
-            )
-            item_filename = cpaths.CPATH_DOCS + "/" + item_name
-            write_if_different(item_content, item_filename)
-
         for item in (
+            "scores",
             "help",
             "compare",
             "statistics",
@@ -270,10 +261,13 @@ def main():
             item_name = "{0}.html".format(item)
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
+            use_search = False
+            if item == 'scores':
+                use_search = True
             item_content = item_html.render(
-                df=df, meta=meta_sorted_score, site=site, useSearch=False
+                df=df, meta=meta_sorted_score, site=site, useSearch=use_search
             )
-            iten_filename = cpaths.CPATH_DOCS + "/" + item_name
+            item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename)
 
     except KeyError as ke:
