@@ -257,6 +257,9 @@ speakers_info = {
                 "quality": "high",
                 "review_published": "20221110",
                 "notes": "measured at 2 meters with broadband pinknoise. This is for 6 RR12 in a vertical orientation.",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/spinorama-of-alcons-audio-rr12-with-beamforming-examples.39117/", 
+                },
             },
             "vendor-v1x": {
                 "origin": "Vendors-Alcons Audio",
@@ -6042,7 +6045,7 @@ speakers_info = {
                 "origin": "Vendors-JBL",
                 "format": "splHVtxt",
                 "quality": "high",
-                "review": "",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/spinorama-for-the-brand-new-jbl-prx900-serie.38843/",
                 "review_published": "20221103",
             },
         },
