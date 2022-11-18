@@ -41,7 +41,7 @@
       <footer class="card-footer">
         {{#if (isShort reviews.reviews)}}
         {{#each reviews.reviews}}
-	<a alt="{{this.origin}}" class="card-footer-item" href="{{this.url}}">{{this.origin}}</a>
+	<a class="card-footer-item" href="{{this.url}}">{{this.origin}}</a>
         {{/each}}
         {{else}}
         <div class="card-footer-item">
@@ -58,7 +58,7 @@
               <div class="dropdown-content">
                 {{#each reviews.reviews}}
                 <div class="dropdown-item">
-	          <a alt="{{this.origin}}" href="{{this.url}}">{{this.originLong}}</a>
+	          <a href="{{this.url}}">{{this.originLong}}</a>
                 </div>
                 {{/each}}
               </div>
