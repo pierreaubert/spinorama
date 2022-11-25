@@ -13,14 +13,15 @@
     <button class="delete" aria-label="delete"></button>
   </div>
   <div class="message-body">
-    This measurement is not the best for this speaker. Click
-    <a href="../${default_origin}/index_${default}.html">here</a> to see the highest quality one.
+    We have multiple measurements for this speaker. Click
+    <a href="../${default_origin}/index_${default}.html">here</a> to
+    see the default one (which is higher quality if we have one
+    measurement better than the others).
   </div>
 </article>
 % endif
 
 
-% if not print_warning:
 <article class="message is-info">
   <div class="message-header">
     <p>
@@ -202,4 +203,4 @@ Links to other reviews: <a href="${review}">${key} review</a>
     </div>
   </div>
 </article>
-% endif
+
