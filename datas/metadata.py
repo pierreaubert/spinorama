@@ -10251,6 +10251,77 @@ speakers_info = {
             },
         },
     },
+    "Presonus CDL12": {
+        "brand": "Presonus",
+        "model": "CDL12",
+        "type": "active",
+        "price": "1000",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-v1x",
+        "measurements": {
+            "vendor-v1x": {
+                "origin": "Vendors-Presonus",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221125",
+                "parameters": {
+                    "mean_min": 50,
+                    "mean_max": 500,
+                },
+            },
+            "vendor-v2x": {
+                "origin": "Vendors-Presonus",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221125",
+                "parameters": {
+                    "mean_min": 50,
+                    "mean_max": 500,
+                },
+            },
+            "vendor-v3x": {
+                "origin": "Vendors-Presonus",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221125",
+                "parameters": {
+                    "mean_min": 50,
+                    "mean_max": 500,
+                },
+            },
+            "vendor-v4x": {
+                "origin": "Vendors-Presonus",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221125",
+                "parameters": {
+                    "mean_min": 50,
+                    "mean_max": 500,
+                },
+            },
+            "vendor-v5x": {
+                "origin": "Vendors-Presonus",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221125",
+                "parameters": {
+                    "mean_min": 50,
+                    "mean_max": 500,
+                },
+            },
+            "vendor-v6x": {
+                "origin": "Vendors-Presonus",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221125",
+                "parameters": {
+                    "mean_min": 30,
+                    "mean_max": 100,
+                },
+            },
+        },
+    },
     "Presonus Eris E3.5": {
         "brand": "Presonus",
         "model": "Eris E3.5",
