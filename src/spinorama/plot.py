@@ -187,12 +187,15 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
 
 
 def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
+    tickvals=[di for di in range(range_min, range_max, range_step)]
+    ticktext=[f"{di}" if pos<5 else "" for pos, di in enumerate(range(range_min, range_max, range_step))]
+    # print('DEBUG {} {}'.format(tickvals, ticktext))
     return dict(
         title_text="DI (dB)                                                    &nbsp;",
         range=[range_min, range_max],
         dtick=range_step,
-        tickvals=[-5, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45],
-        ticktext=["-5", "0", "5", "10", "15", " ", " ", " ", " ", " ", " "],
+        tickvals=tickvals,
+        ticktext=ticktext,
         showline=True,
     )
 
@@ -333,15 +336,28 @@ def plot_spinorama_traces(spin, params):
 
 def plot_spinorama(spin, params):
     fig = make_subplots(specs=[[{"secondary_y": True}]])
+    t_max = 0
     traces, traces_di = plot_spinorama_traces(spin, params)
     for t in traces:
+        t_max = max(t_max, np.max(t.y))
         fig.add_trace(t, secondary_y=False)
+
+    t_max = 5+int(t_max/5)*5
+    t_min = t_max-50
+    # print('T min={} max={}'.format(t_min, t_max))
+
+    di_max = 0
     for t in traces_di:
+        di_max = max(di_max, np.max(t.y))
         fig.add_trace(t, secondary_y=True)
 
+    di_max = 35+int(di_max/5)*5
+    di_min = di_max-50
+    # print('DI min={} max={}'.format(di_min, di_max))
+
     fig.update_xaxes(generate_xaxis())
-    fig.update_yaxes(generate_yaxis_spl())
-    fig.update_yaxes(generate_yaxis_di(), secondary_y=True)
+    fig.update_yaxes(generate_yaxis_spl(t_min, t_max, 5))
+    fig.update_yaxes(generate_yaxis_di(di_min, di_max, 5), secondary_y=True)
 
     fig.update_layout(common_layout(params))
     return fig
