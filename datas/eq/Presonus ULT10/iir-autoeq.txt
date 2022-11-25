@@ -1,0 +1,16 @@
+EQ for Presonus ULT10 computed from Vendors-Presonus data
+Preference Score 0.7 with EQ 2.7
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.16
+Dated: 2022-11-25-09:42:07
+
+Preamp: -2.8 dB
+
+Filter  1: ON PK Fc   261 Hz Gain +3.22 dB Q 3.00
+Filter  2: ON PK Fc  1195 Hz Gain +2.64 dB Q 2.76
+Filter  3: ON PK Fc  8666 Hz Gain -3.73 dB Q 2.94
+Filter  4: ON PK Fc  4543 Hz Gain -2.00 dB Q 2.92
+Filter  5: ON PK Fc 10271 Hz Gain +2.47 dB Q 3.00
+Filter  6: ON PK Fc  2642 Hz Gain +1.66 dB Q 3.00
+Filter  7: ON PK Fc  2134 Hz Gain -1.43 dB Q 2.98
+Filter  8: ON PK Fc  3545 Hz Gain -1.10 dB Q 2.98
+Filter  9: ON PK Fc  6171 Hz Gain +1.46 dB Q 2.92

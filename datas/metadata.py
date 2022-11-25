@@ -10288,6 +10288,40 @@ speakers_info = {
             },
         },
     },
+    "Presonus ULT10": {
+        "brand": "Presonus",
+        "model": "ULT10",
+        "type": "active",
+        "price": "830",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-110x50",
+        "measurements": {
+            "vendor-pattern-110x50": {
+                "origin": "Vendors-Presonus",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221125",
+            },
+        },
+    },
+    "Presonus ULT12": {
+        "brand": "Presonus",
+        "model": "ULT12",
+        "type": "active",
+        "price": "1000",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-110x50",
+        "measurements": {
+            "vendor-pattern-110x50": {
+                "origin": "Vendors-Presonus",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221125",
+            },
+        },
+    },
     "Presonus Eris E8 XT": {
         "brand": "Presonus",
         "model": "Eris E8 XT",
@@ -12837,6 +12871,15 @@ origins_info = {
         "logo": "docs/metadata/polkaudio.png",
         "logo-small": "docs/metadata/polkaudio.png",
         "url": "https://www.polkaudio.com",
+    },
+    "Vendors-Presonus": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "logo": "docs/metadata/presonus.png",
+        "logo-small": "docs/metadata/presonus.png",
+        "url": "https://www.presonus.com",
     },
     "Vendors-QSC": {
         "min hz": 20,
