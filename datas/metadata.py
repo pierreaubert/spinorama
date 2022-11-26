@@ -1314,6 +1314,33 @@ speakers_info = {
             },
         },
     },
+    "Coda Audio CoRay4": {
+        "brand": "Coda Audio",
+        "model": "CoRay4",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "columns",
+        "default_measurement": "vendor-pattern-120x12",
+        "measurements": {
+            "vendor-pattern-120x12": {
+                "origin": "Vendors-Coda Audio",
+                "format": "splHVtxt",
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20221126",
+                "notes": "data computed at 2 meters. 120x12 configuration",
+            },
+            "vendor-pattern-60x12": {
+                "origin": "Vendors-Coda Audio",
+                "format": "splHVtxt",
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20221126",
+                "notes": "data computed at 2 meters. 60x12 configuration.",
+            },
+        },
+    },
     "Coda Audio HOPS5": {
         "brand": "Coda Audio",
         "model": "HOPS5",
