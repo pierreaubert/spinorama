@@ -59,8 +59,10 @@ def parse_graph_splHVtxt(dirpath, orientation):
                 # freq, db
                 words = l[:-1].split(",")
                 if len(words) == 2:
-                    freqs.append(float(words[0]))
-                    dbs.append(float(words[1]))
+                    current_freq = float(words[0])
+                    if current_freq < 20000:
+                        freqs.append(current_freq)
+                        dbs.append(float(words[1]))
                     continue
 
                 # freq db phase
@@ -69,7 +71,7 @@ def parse_graph_splHVtxt(dirpath, orientation):
                     freq = words[0]
                     db = words[1]
                     # skip first line
-                    if freq[0] != "F":
+                    if freq[0] != "F" and float(freq) < 20000:
                         freqs.append(float(freq))
                         dbs.append(float(db))
                     continue
