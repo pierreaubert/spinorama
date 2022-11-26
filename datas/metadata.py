@@ -2147,6 +2147,48 @@ speakers_info = {
             },
         },
     },
+    "DB Audiotechnik V7P": {
+        "brand": "DB Audiotechnik",
+        "model": "V7P",
+        "type": "passive",
+        "price": "5600",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-75x40",
+        "measurements": {
+            "vendor-pattern-75x40": {
+                "origin": "Vendors-DB Audiotechnik",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "reviews": {
+                    "pp": "https://www.production-partner.de/test/db-audiotechnik-v7p-v10p-v-gsub-test/",
+                },
+                "review_published": "20221126",
+                "notes": "data computed at 2 meters.",
+            },
+        },
+    },
+    "DB Audiotechnik V10P": {
+        "brand": "DB Audiotechnik",
+        "model": "V10P",
+        "type": "passive",
+        "price": "5600",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-110x45",
+        "measurements": {
+            "vendor-pattern-110x45": {
+                "origin": "Vendors-DB Audiotechnik",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "reviews": {
+                    "pp": "https://www.production-partner.de/test/db-audiotechnik-v7p-v10p-v-gsub-test/",
+                },
+                "review_published": "20221126",
+                "notes": "data computed at 2 meters.",
+            },
+        },
+    },
     "Definitive Technology D9": {
         "brand": "Definitive Technology",
         "model": "D9",
