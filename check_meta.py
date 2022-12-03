@@ -201,6 +201,12 @@ def sanity_check_version(name, speaker, version):
     return status
 
 
+def sanity_check_vendor(vendor):
+    if vendor in metadata.origins_info.keys():
+        return True
+    return False
+
+
 def sanity_check_measurement(name, speaker, version, measurement):
     status = 0
     if version[0:3] not in ("asr", "pri", "ven", "har", "eac", "mis"):
@@ -237,6 +243,11 @@ def sanity_check_measurement(name, speaker, version, measurement):
         ):
             logging.error("{0}: origin {1} is not known".format(name, v))
             status = 1
+        if k == "origin" and v[0:8] == "Vendors-" and not sanity_check_vendor(v):
+            logging.error(
+                "{}: origin {} is known but vendor {} is not!".format(name, v, v[8:])
+            )
+            status = 1
         if k == "format" and v not in [
             "klippel",
             "princeton",
@@ -246,7 +257,7 @@ def sanity_check_measurement(name, speaker, version, measurement):
         ]:
             logging.error("{0}: format {1} is not known".format(name, v))
             status = 1
-        if k == "symmeetry" and v not in [
+        if k == "symmetry" and v not in [
             "coaxial",
             "horizontal",
         ]:
