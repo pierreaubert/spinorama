@@ -97,8 +97,9 @@ def propose_range_freq(
             init_freq_min, init_freq, init_freq_max
         )
     )
-    if optim_config["MAX_STEPS_FREQ"] == 1:
-        return sign, init_freq, [init_freq]
+    # TODO: not sure about this
+    # if optim_config["MAX_STEPS_FREQ"] == 1:
+    #    return sign, init_freq, [init_freq]
     return (
         sign,
         init_freq,

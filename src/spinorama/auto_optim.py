@@ -229,15 +229,32 @@ def optim_greedy(
             freq, auto_target, auto_target_interp, auto_peq, optim_config
         )
 
-        # greedy strategy: look for lowest & highest peak
-        sign, init_freq, init_freq_range = propose_range_freq(
-            freq, current_auto_target[0], optim_config
+        if optim_iter == 0:
+            # greedy strategy: look for lowest & highest peak
+            sign, init_freq, init_freq_range = (
+                1,
+                optim_config["freq_reg_min"],
+                [optim_config["freq_reg_min"], optim_config["target_min_freq"] * 2],
+            )
+            init_dbGain_range = range()[-3, -2, -1, 0, 1, 2, 3]
+            init_Q_range = [0, 1, 2, 3]
+            biquad_range = [0, 3]  # LP, PK
+        else:
+            # greedy strategy: look for lowest & highest peak
+            sign, init_freq, init_freq_range = propose_range_freq(
+                freq, current_auto_target[0], optim_config
+            )
+            init_dbGain_range = propose_range_dbGain(
+                freq, current_auto_target[0], sign, init_freq, optim_config
+            )
+            init_Q_range = propose_range_Q(optim_config)
+            biquad_range = propose_range_biquad(optim_config)
+
+        print(
+            "sign {} init_freq {} init_freq_range {} init_q_range {} biquad_range {}".format(
+                sign, init_freq, init_freq_range, init_Q_range, biquad_range
+            )
         )
-        init_dbGain_range = propose_range_dbGain(
-            freq, current_auto_target[0], sign, init_freq, optim_config
-        )
-        init_Q_range = propose_range_Q(optim_config)
-        biquad_range = propose_range_biquad(optim_config)
 
         (
             state,
