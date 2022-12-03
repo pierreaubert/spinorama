@@ -230,14 +230,14 @@ def optim_greedy(
         )
 
         if optim_iter == 0:
-            # greedy strategy: look for lowest & highest peak
+            # see if a LP can help get some flatness of bass
             sign, init_freq, init_freq_range = (
                 1,
                 optim_config["freq_reg_min"],
                 [optim_config["freq_reg_min"], optim_config["target_min_freq"] * 2],
             )
-            init_dbGain_range = range()[-3, -2, -1, 0, 1, 2, 3]
-            init_Q_range = [0, 1, 2, 3]
+            init_dbGain_range = [-3, -2, -1, 0, 1, 2, 3]
+            init_Q_range = [0.1, 0.2, 1, 2, 3]
             biquad_range = [0, 3]  # LP, PK
         else:
             # greedy strategy: look for lowest & highest peak
@@ -250,11 +250,11 @@ def optim_greedy(
             init_Q_range = propose_range_Q(optim_config)
             biquad_range = propose_range_biquad(optim_config)
 
-        print(
-            "sign {} init_freq {} init_freq_range {} init_q_range {} biquad_range {}".format(
-                sign, init_freq, init_freq_range, init_Q_range, biquad_range
-            )
-        )
+        # print(
+        #    "sign {} init_freq {} init_freq_range {} init_q_range {} biquad_range {}".format(
+        #        sign, init_freq, init_freq_range, init_Q_range, biquad_range
+        #    )
+        # )
 
         (
             state,
