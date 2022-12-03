@@ -2356,6 +2356,78 @@ speakers_info = {
             },
         },
     },
+    "DB Audiotechnik AL60": {
+        "brand": "DB Audiotechnik",
+        "model": "AL60",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-60x30-v3x+2sub",
+        "measurements": {
+            "vendor-pattern-60x30-v1x": {
+                "origin": "Vendors-DB Audiotechnik",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221203",
+                "reviews": {
+                    "pp": "https://www.production-partner.de/test/die-a-serie-von-db-im-test/",
+                },
+                "notes": "data computed at 2 meters.",
+            },
+            "vendor-pattern-60x30-v3x": {
+                "origin": "Vendors-DB Audiotechnik",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221203",
+                "reviews": {
+                    "pp": "https://www.production-partner.de/test/die-a-serie-von-db-im-test/",
+                },
+                "notes": "data computed at 2 meters.",
+            },
+            "vendor-pattern-60x30-v3x+2sub": {
+                "origin": "Vendors-DB Audiotechnik",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221203",
+                "reviews": {
+                    "pp": "https://www.production-partner.de/test/die-a-serie-von-db-im-test/",
+                },
+                "notes": "data computed at 2 meters. 3 AL60 with 2 ",
+            },
+        },
+    },
+    "DB Audiotechnik AL90": {
+        "brand": "DB Audiotechnik",
+        "model": "AL90",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-90x30-v1x",
+        "measurements": {
+            "vendor-pattern-90x30-v1x": {
+                "origin": "Vendors-DB Audiotechnik",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "reviews": {
+                    "pp": "https://www.production-partner.de/test/die-a-serie-von-db-im-test/",
+                },
+                "review_published": "20221203",
+                "notes": "data computed at 2 meters.",
+            },
+            "vendor-pattern-90x30-v3x": {
+                "origin": "Vendors-DB Audiotechnik",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "reviews": {
+                    "pp": "https://www.production-partner.de/test/die-a-serie-von-db-im-test/",
+                },
+                "review_published": "20221203",
+                "notes": "data computed at 2 meters.",
+            },
+        },
+    },
     "DB Audiotechnik V7P": {
         "brand": "DB Audiotechnik",
         "model": "V7P",
