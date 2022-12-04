@@ -207,6 +207,162 @@ def sanity_check_vendor(vendor):
     return False
 
 
+def sanity_check_specifications(name, version, specs):
+    status = 0
+    VALID_SPECIFICATIONS = (
+        "dispersion",
+        "sensitivity",
+        "impedance",
+        "SPL",
+        "size",
+        "weight",
+    )
+    VALID_DIMS = ("height", "width", "depth")
+
+    for k, v in specs.items():
+        if k not in VALID_SPECIFICATIONS:
+            logging.error(
+                "{0}: measurement {1} key {2} is not in {3}".format(
+                    name, version, k, VALID_SPECIFICATIONS
+                )
+            )
+            status = 1
+
+        if k == "dispersion":
+            for direction, angle in v.items():
+                if direction not in ("horizontal", "vertical"):
+                    logging.error(
+                        "{0}: measurement {1} direction {2} is not in {3}".format(
+                            name, version, direction, ("horizontal", "vertical")
+                        )
+                    )
+                    status = 1
+                try:
+                    fangle = float(angle)
+                    if fangle < 0 or fangle >= 180:
+                        logging.error(
+                            "{0}: measurement {1} angle {2} is not in ]0, 180]".format(
+                                name, version, angle
+                            )
+                        )
+                        status = 1
+                except ValueError:
+                    logging.error(
+                        "{0}: measurement {1} angle {2} is not an int or a float".format(
+                            name, version, angle
+                        )
+                    )
+                    status = 1
+
+        if k == "sensitivity":
+            try:
+                fsensitivity = float(v)
+                if fsensitivity < 20 or fsensitivity >= 150:
+                    logging.error(
+                        "{0}: measurement {1} sensitivity {2} is not in ]20, 150]".format(
+                            name, version, sensitivity
+                        )
+                    )
+                    status = 1
+            except ValueError:
+                logging.error(
+                    "{0}: measurement {1} sensitivity {2} is not an int or a float".format(
+                        name, version, sensitivity
+                    )
+                )
+                status = 1
+
+        if k == "impedance":
+            try:
+                fimpedance = float(v)
+                if fimpedance <= 0 or fimpedance >= 50:
+                    logging.error(
+                        "{0}: measurement {1} impedance {2} is not in ]0, 50]".format(
+                            name, version, impedance
+                        )
+                    )
+                    status = 1
+            except ValueError:
+                logging.error(
+                    "{0}: measurement {1} impedance {2} is not an int or a float".format(
+                        name, version, impedance
+                    )
+                )
+                status = 1
+
+        if k == "SPL":
+            for state, spl in v.items():
+                if state not in ("max", "peak"):
+                    logging.error(
+                        "{0}: measurement {1} SPL parameter {2} is not in {3}".format(
+                            name, version, direction, ("mean", "peak")
+                        )
+                    )
+                    status = 1
+                try:
+                    fspl = float(spl)
+                    if fspl < 0 or fspl >= 160:  # for Danley's :)
+                        logging.error(
+                            "{0}: measurement {1} spl {2} is not in ]0, 160]".format(
+                                name, version, spl
+                            )
+                        )
+                        status = 1
+                except ValueError:
+                    logging.error(
+                        "{0}: measurement {1} spl {2} is not an int or a float".format(
+                            name, version, spl
+                        )
+                    )
+                    status = 1
+
+        if k == "size":
+            for dim, mm in v.items():
+                if dim not in VALID_DIMS:
+                    logging.error(
+                        "{0}: measurement {1} SPL parameter {2} is not in {3}".format(
+                            name, version, dim, VALID_DIMS
+                        )
+                    )
+                    status = 1
+                try:
+                    fmm = float(mm)
+                    if fmm < 0 or fmm >= 1600:  # for Danley's :)
+                        logging.error(
+                            "{0}: measurement {1} mm {2} is not in ]0, 160]".format(
+                                name, version, mm
+                            )
+                        )
+                        status = 1
+                except ValueError:
+                    logging.error(
+                        "{0}: measurement {1} mm {2} is not an int or a float".format(
+                            name, version, mm
+                        )
+                    )
+                    status = 1
+
+        if k == "weight":
+            try:
+                fweight = float(v)
+                if fweight <= 0 or fweight >= 500:  # there are some very large beast
+                    logging.error(
+                        "{0}: measurement {1} weight {2} is not in ]0, 50]".format(
+                            name, version, weight
+                        )
+                    )
+                    status = 1
+            except ValueError:
+                logging.error(
+                    "{0}: measurement {1} weight {2} is not an int or a float".format(
+                        name, version, weight
+                    )
+                )
+                status = 1
+
+    return status
+
+
 def sanity_check_measurement(name, speaker, version, measurement):
     status = 0
     if version[0:3] not in ("asr", "pri", "ven", "har", "eac", "mis"):
@@ -232,6 +388,7 @@ def sanity_check_measurement(name, speaker, version, measurement):
             "notes",
             "quality",
             "parameters",
+            "specifications",
         ):
             logging.error(
                 "{0}: version {1} : {2} is not known".format(name, version, k)
@@ -281,6 +438,16 @@ def sanity_check_measurement(name, speaker, version, measurement):
         if k == "quality" and v not in ("unknown", "low", "medium", "high"):
             logging.error(
                 "{0}: in measurement {1} quality {2} is unknown".format(
+                    name,
+                    version,
+                    v,
+                )
+            )
+            status = 1
+
+        if k == "specifications" and sanity_check_specifications(name, version, v) != 0:
+            logging.error(
+                "{0}: in measurement {1} specifications {2} is incorrect".format(
                     name,
                     version,
                     v,

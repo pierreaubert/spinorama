@@ -195,9 +195,9 @@ speakers_info = {
         "price": "",
         "amount": "pair",
         "shape": "columns",
-        "default_measurement": "vendor-pattern-90",
+        "default_measurement": "vendor-pattern-90x15",
         "measurements": {
-            "vendor-pattern-90": {
+            "vendor-pattern-90x15": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "splHVtxt",
                 "quality": "high",
@@ -206,8 +206,25 @@ speakers_info = {
                     "axp": "https://audioxpress.com/news/alcons-audio-introduces-qrp20-pro-ribbon-column-array",
                 },
                 "review_published": "20221020",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 15,
+                    },
+                    "sensitivity": 99,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 742,
+                        "width": 150,
+                        "depth": 150,
+                    },
+                    "weight": 12,
+                },
             },
-            "vendor-pattern-120": {
+            "vendor-pattern-120x15": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "splHVtxt",
                 "quality": "high",
@@ -216,6 +233,23 @@ speakers_info = {
                     "axp": "https://audioxpress.com/news/alcons-audio-introduces-qrp20-pro-ribbon-column-array",
                 },
                 "review_published": "20221020",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 15,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 742,
+                        "width": 150,
+                        "depth": 150,
+                    },
+                    "weight": 12,
+                },
             },
         },
     },
@@ -226,19 +260,53 @@ speakers_info = {
         "price": "",
         "amount": "pair",
         "shape": "columns",
-        "default_measurement": "vendor-pattern-110",
+        "default_measurement": "vendor-pattern-110x4",
         "measurements": {
-            "vendor-pattern-110": {
+            "vendor-pattern-110x4": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "splHVtxt",
                 "quality": "high",
                 "review_published": "20221024",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 3.6,
+                    },
+                    "sensitivity": 108,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 140,
+                    },
+                    "size": {
+                        "height": 658,
+                        "width": 248,
+                        "depth": 336,
+                    },
+                    "weight": 22,
+                },
             },
-            "vendor-pattern-80": {
+            "vendor-pattern-80x4": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "splHVtxt",
                 "quality": "high",
                 "review_published": "20221024",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 3.6,
+                    },
+                    "sensitivity": 109,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 141,
+                    },
+                    "size": {
+                        "height": 658,
+                        "width": 248,
+                        "depth": 336,
+                    },
+                    "weight": 22,
+                },
             },
         },
     },
