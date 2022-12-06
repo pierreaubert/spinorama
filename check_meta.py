@@ -292,10 +292,10 @@ def sanity_check_specifications(name, version, specs):
 
         if k == "SPL":
             for state, spl in v.items():
-                if state not in ("max", "peak"):
+                if state not in ("max", "continuous", "peak"):
                     logging.error(
                         "{0}: measurement {1} SPL parameter {2} is not in {3}".format(
-                            name, version, direction, ("mean", "peak")
+                            name, version, direction, ("mean", "continous", "peak")
                         )
                     )
                     status = 1
