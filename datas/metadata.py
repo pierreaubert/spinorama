@@ -11480,6 +11480,7 @@ speakers_info = {
                     },
                     "weight": 22.0,
                 },
+                "notes": "TODO: add exact config",
             },
         },
     },
