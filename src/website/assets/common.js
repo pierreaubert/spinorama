@@ -227,12 +227,31 @@ export function getSpeakerData (metaSpeakers: MetaSpeakers, graph: string, speak
 export function getAllSpeakers (metadata: Metadata) : Array<MetaSpeakers|Array<string>> {
   const metaSpeakers: MetaSpeakers = {}
   const speakers = []
-  metadata.forEach(function (value) {
+  metadata.forEach( (value) => {
     const speaker = value.brand + ' ' + value.model
     speakers.push(speaker)
     metaSpeakers[speaker] = value
   })
   return [metaSpeakers, speakers.sort()]
+}
+
+
+export function getMetadata () {
+  const url = urlSite+'assets/metadata.json.zip'
+  // console.log('fetching url=' + url)
+  const spec = downloadZip(url).then( function(zipped) {
+    // convert to JSON
+    // console.log('parsing url=' + url)
+    const js = JSON.parse(zipped)
+    // convert to object
+    const metadata = Object.values(js)
+    // console.log('metadata '+metadata.length)
+    return metadata
+  }).catch( (error) => {
+    console.log('ERROR getMetadata data 404 ' + error)
+    return null
+  })
+  return spec
 }
 
 type GraphLayout = ?{

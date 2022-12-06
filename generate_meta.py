@@ -41,6 +41,7 @@ import os
 import json
 import math
 import sys
+import zipfile
 
 import numpy as np
 
@@ -707,6 +708,14 @@ def dump_metadata(meta):
         js = json.dumps(meta2)
         f.write(js)
         f.close()
+
+        with zipfile.ZipFile(
+            metafile + ".zip",
+            "w",
+            compression=zipfile.ZIP_DEFLATED,
+            allowZip64=True,
+        ) as current_zip:
+            current_zip.writestr("metadata.json", js)
 
 
 def main():

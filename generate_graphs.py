@@ -51,7 +51,9 @@ try:
     import ray
 except ModuleNotFoundError:
     import miniray as ray
-
+except ModuleNotFoundError:
+    print("Did you run env.sh?")
+    sys.exit(-1)
 
 from generate_common import (
     args2level,

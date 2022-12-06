@@ -1,13 +1,10 @@
-import { urlSite, show, hide } from './misc.js'
+import { getMetadata } from './common.js'
+import { show, hide } from './misc.js'
 import { sortMetadata } from './sort.js'
 
 let fuse = null
 
-fetch(urlSite + 'assets/metadata.json').then(
-  function (response) {
-    return response.json()
-  }).then((dataJson) => {
-  const metadata = Object.values(dataJson)
+getMetadata().then( (metadata) => {
 
   const filter = {
     reviewer: '',

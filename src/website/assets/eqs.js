@@ -1,11 +1,9 @@
+import { getMetadata } from './common.js'
 import { sortMetadata2 } from './sort.js'
-import { urlSite, getPeq, getID } from './misc.js'
+import { getPeq, getID } from './misc.js'
 
-fetch(urlSite + 'assets/metadata.json').then(
-  function (response) {
-    return response.json()
-  }).then((dataJson) => {
-  const metadata = Object.values(dataJson)
+
+getMetadata().then( (metadata) => {
 
   function getContext (key, value) {
   // console.log(getReviews(value));

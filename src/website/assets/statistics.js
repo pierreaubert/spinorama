@@ -1,11 +1,7 @@
-// import { Plotly } from '../../../node_modules/plotly/index.js'
-import { urlSite } from './misc.js'
+import { getMetadata } from './common.js'
 
-fetch(urlSite + 'assets/metadata.json').then(
-  function (response) {
-    return response.json()
-  }).then((dataJson) => {
-  const metadata = Object.values(dataJson)
+getMetadata().then( (metadata) => {
+  
   const windowWidth = window.innerWidth
 
   function plotScoreDistribution (scores, scoresEQ) {

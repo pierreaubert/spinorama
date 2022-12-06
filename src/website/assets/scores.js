@@ -1,11 +1,8 @@
-import { urlSite, toggleId, getID, getPicture, getLoading, getDecoding, getField, getReviews } from './misc.js'
+import { getMetadata } from './common.js'
+import { toggleId, getID, getPicture, getLoading, getDecoding, getField, getReviews } from './misc.js'
 import { sortMetadata2 } from './sort.js'
 
-fetch(urlSite + 'assets/metadata.json').then(
-  function (response) {
-    return response.json()
-  }).then((dataJson) => {
-  const metadata = Object.values(dataJson)
+getMetadata().then( (metadata) => {
 
   function getSpider (brand, model) {
   // console.log(brand + model);

@@ -1,4 +1,5 @@
 import { urlSite } from './misc.js'
+import { getMetadata } from './common.js'
 import {
   assignOptions,
   knownMeasurements,
@@ -14,11 +15,7 @@ import {
   updateVersion,
 } from './common.js'
 
-fetch(urlSite + 'assets/metadata.json').then(
-  function (response) {
-    return response.json()
-}).then((dataJson) => {
-  const metadata = Object.values(dataJson)
+getMetadata().then( (metadata) => {
 
   const urlCompare = urlSite + 'compare.html?'
   const nbSpeakers = 2

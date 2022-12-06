@@ -1,3 +1,4 @@
+import { getMetadata } from './common.js'
 import {
   assignOptions,
   getSpeakerData,
@@ -11,11 +12,7 @@ import {
 } from './common.js'
 import { urlSite } from './misc.js'
 
-fetch(urlSite + 'assets/metadata.json').then(
-  function (response) {
-    return response.json()
-}).then((dataJson) => {
-  const metadata = Object.values(dataJson)
+getMetadata().then( (metadata) => {
 
   const urlSimilar = urlSite + 'similar.html?'
 
