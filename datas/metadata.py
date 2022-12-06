@@ -11189,6 +11189,300 @@ speakers_info = {
             },
         },
     },
+    "Turbosound NuQ62": {
+        "brand": "Turbosound",
+        "model": "NuQ62",
+        "type": "passive",
+        "price": "329",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Turbosound",
+                "format": "splHVtxt",
+                "quality": "low",
+                "review_published": "20221205",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 88,
+                    "impedance": 16,
+                    "SPL": {
+                        "peak": 116,
+                    },
+                    "size": {
+                        "height": 350,
+                        "width": 190,
+                        "depth": 210,
+                    },
+                    "weight": 6.3,
+                },
+            },
+        },
+    },
+    "Turbosound NuQ82": {
+        "brand": "Turbosound",
+        "model": "NuQ82",
+        "type": "passive",
+        "price": "500",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Turbosound",
+                "format": "splHVtxt",
+                "quality": "low",
+                "review_published": "20221205",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 93,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 123,
+                    },
+                    "size": {
+                        "height": 464,
+                        "width": 274,
+                        "depth": 220,
+                    },
+                    "weight": 10.2,
+                },
+            },
+        },
+    },
+    "Turbosound NuQ102": {
+        "brand": "Turbosound",
+        "model": "NuQ102",
+        "type": "passive",
+        "price": "530",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Turbosound",
+                "format": "splHVtxt",
+                "quality": "low",
+                "review_published": "20221205",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 93,
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 124,
+                    },
+                    "size": {
+                        "height": 525,
+                        "width": 318,
+                        "depth": 258,
+                    },
+                    "weight": 12.7,
+                },
+            },
+        },
+    },
+    "Turbosound NuQ122": {
+        "brand": "Turbosound",
+        "model": "NuQ122",
+        "type": "passive",
+        "price": "800",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Turbosound",
+                "format": "splHVtxt",
+                "quality": "low",
+                "review_published": "20221205",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 70,
+                        "vertical": 70,
+                    },
+                    "sensitivity": 96,
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 128,
+                    },
+                    "size": {
+                        "height": 655,
+                        "width": 374,
+                        "depth": 340,
+                    },
+                    "weight": 19.6,
+                },
+            },
+        },
+    },
+    "Turbosound NuQ152": {
+        "brand": "Turbosound",
+        "model": "NuQ152",
+        "type": "passive",
+        "price": "950",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Turbosound",
+                "format": "splHVtxt",
+                "quality": "low",
+                "review_published": "20221205",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 70,
+                        "vertical": 70,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 712,
+                        "width": 430,
+                        "depth": 385,
+                    },
+                    "weight": 24.4,
+                },
+            },
+        },
+    },
+    "Turbosound TCS62": {
+        "brand": "Turbosound",
+        "model": "TCS62",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Turbosound",
+                "format": "splHVtxt",
+                "quality": "low",
+                "review_published": "20221205",
+            },
+        },
+    },
+    "Turbosound TCS122": {
+        "brand": "Turbosound",
+        "model": "TCS122",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x40",
+        "measurements": {
+            "vendor-pattern-90x40": {
+                "origin": "Vendors-Turbosound",
+                "format": "splHVtxt",
+                "quality": "low",
+                "review_published": "20221205",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 96,
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 834,
+                        "width": 399,
+                        "depth": 425,
+                    },
+                    "weight": 26.5,
+                },
+            },
+        },
+    },
+    "Turbosound TCS152": {
+        "brand": "Turbosound",
+        "model": "TCS152",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x40",
+        "measurements": {
+            "vendor-pattern-90x40": {
+                "origin": "Vendors-Turbosound",
+                "format": "splHVtxt",
+                "quality": "low",
+                "review_published": "20221205",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 834,
+                        "width": 473,
+                        "depth": 451,
+                    },
+                    "weight": 28.9,
+                },
+            },
+        },
+    },
+    "Turbosound TBV123": {
+        "brand": "Turbosound",
+        "model": "TBV123",
+        "type": "passive",
+        "price": "2600",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Turbosound",
+                "format": "splHVtxt",
+                "quality": "low",
+                "review_published": "20221205",
+                "parameters": {
+                    "mean_min": 50,
+                    "mean_max": 500,
+                },
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 15,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 6,
+                    "SPL": {
+                        "continuous": 125,
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 344,
+                        "width": 598,
+                        "depth": 399,
+                    },
+                    "weight": 22.0,
+                },
+            },
+        },
+    },
     "QSC K8.2": {
         "brand": "QSC",
         "model": "K8.2",
@@ -13683,6 +13977,15 @@ origins_info = {
         "logo": "docs/metadata/qsc.png",
         "logo-small": "docs/metadata/qsc.png",
         "url": "https://www.qsc.com",
+    },
+    "Vendors-Turbosound": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "logo": "docs/metadata/turbosound.png",
+        "logo-small": "docs/metadata/turbosound.png",
+        "url": "https://www.turbosound.com",
     },
     "Vendors-Reflector Audio": {
         "min hz": 20,
