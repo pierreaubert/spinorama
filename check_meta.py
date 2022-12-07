@@ -260,14 +260,14 @@ def sanity_check_specifications(name, version, specs):
                 if fsensitivity < 20 or fsensitivity >= 150:
                     logging.error(
                         "{0}: measurement {1} sensitivity {2} is not in ]20, 150]".format(
-                            name, version, sensitivity
+                            name, version, fsensitivity
                         )
                     )
                     status = 1
             except ValueError:
                 logging.error(
                     "{0}: measurement {1} sensitivity {2} is not an int or a float".format(
-                        name, version, sensitivity
+                        name, version, fsensitivity
                     )
                 )
                 status = 1
@@ -278,14 +278,14 @@ def sanity_check_specifications(name, version, specs):
                 if fimpedance <= 0 or fimpedance >= 50:
                     logging.error(
                         "{0}: measurement {1} impedance {2} is not in ]0, 50]".format(
-                            name, version, impedance
+                            name, version, fimpedance
                         )
                     )
                     status = 1
             except ValueError:
                 logging.error(
                     "{0}: measurement {1} impedance {2} is not an int or a float".format(
-                        name, version, impedance
+                        name, version, fimpedance
                     )
                 )
                 status = 1
@@ -348,14 +348,14 @@ def sanity_check_specifications(name, version, specs):
                 if fweight <= 0 or fweight >= 500:  # there are some very large beast
                     logging.error(
                         "{0}: measurement {1} weight {2} is not in ]0, 50]".format(
-                            name, version, weight
+                            name, version, fweight
                         )
                     )
                     status = 1
             except ValueError:
                 logging.error(
                     "{0}: measurement {1} weight {2} is not an int or a float".format(
-                        name, version, weight
+                        name, version, fweight
                     )
                 )
                 status = 1
