@@ -26,17 +26,24 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--max-iter=<maxiter>] [--use-all-biquad] [--curve-peak-only] \
  [--target-min-freq=<tminf>] [--target-max-freq=<tmaxf>] \
  [--slope-on-axis=<s_on>] \
+ [--slope-on=<s_on>] \
  [--slope-listening-window=<s_lw>] \
+ [--slope-lw=<s_lw>] \
  [--slope-early-reflections=<s_er>] \
+ [--slope-er=<s_lw>] \
  [--slope-sound-power=<s_sp>] \
+ [--slope-sp=<s_sp>] \
  [--slope-estimated-inroom=<s_pir>] \
+ [--slope-pir=<s_pir>] \
  [--loss=<pick>] \
  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
  [--smooth-measurements=<window_size>] \
  [--smooth-order=<order>] \
  [--second-optimiser=<sopt>] \
  [--curves=<curve_name>] \
- [--fitness=<function>]
+ [--fitness=<function>] \
+ [--graphic_eq=<eq_name>] \
+ [--graphic_eq_list]
 
 Options:
   --help                   Display usage()
@@ -63,16 +70,23 @@ Options:
   --ray-local              If present, ray will run locally, it is usefull for debugging
   --target-min-freq=<tminf> targets will be flat up to min freq
   --target-max-freq=<tmaxf> targets will not be important after max freq
-  --slope-on-axis=<s_on> Slope of the ideal target for On Axis, default is 0, as in flat anechoic
+  --slope-on-axis=<s_on>   Slope of the ideal target for On Axis, default is 0, as in flat anechoic
+  --slope-on=<s_lw>        Same as above (shortcut)
   --slope-listening-window=<s_lw> Slope of listening window, default is -0.5dB
+  --slope-lw=<s_lw>        Same as above (shortcut)
   --slope-early-reflections=<s_er> Slope of early reflections, default is -5dB
+  --slopw-er=<s_er>        Same as above (shortcut)
   --slope-sound-power=<s_sp> Slope of sound power, default is -8dB
+  --slope-sp=<s_sp>        Same as above (shortcut)
   --slope-estimated-inroom=<s_pir> Slope of estimated in-room response, default is -8dB
+  --slope-pir=<s_pir>      Same as above (shortcut)
   --second-optimiser=<sopt>
   --smooth-measurements=<window_size> If present the measurements will be smoothed before optimisation, window_size is the size of the window use for smoothing
-  --smooth-order=<order>  Order of the interpolation, 3 by default for Savitzky-Golay filter.
-  --curves=<curve_name>   Curve name: must be one of "ON", "LW", "PIR", "ER" or "SP" or a combinaison separated by a ,. Ex: 'PIR,LW' is valid
-  --fitness=<function>    Fit function: must be one of "Flat", "Score", "LeastSquare", "FlatPir", "Combine".
+  --smooth-order=<order>   Order of the interpolation, 3 by default for Savitzky-Golay filter.
+  --curves=<curve_name>    Curve name: must be one of "ON", "LW", "PIR", "ER" or "SP" or a combinaison separated by a ,. Ex: 'PIR,LW' is valid
+  --fitness=<function>     Fit function: must be one of "Flat", "Score", "LeastSquare", "FlatPir", "Combine".
+  --graphic_eq=<eq_name>   Result is tailored for graphic_eq "name". 
+  --graphic_eq_list        List the known graphic eq and exit
 """
 from datetime import datetime
 import json
@@ -90,9 +104,11 @@ except ModuleNotFoundError:
     import src.miniray as ray
 
 
+from datas.metadata import speakers_info as metadata
+from datas.grapheq import vendor_info as grapheq_info
+
 from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
-from datas.metadata import speakers_info as metadata
 from spinorama.filter_peq import peq_format_apo
 from spinorama.filter_scores import (
     scores_apply_filter,
@@ -160,6 +176,10 @@ def optim_save_peq(
     eq_dir = "datas/eq/{}".format(current_speaker_name)
     pathlib.Path(eq_dir).mkdir(parents=True, exist_ok=True)
     eq_name = "{}/iir-autoeq.txt".format(eq_dir)
+    if optim_config["use_grapheq"]:
+        grapheq_name = optim_config["grapheq_name"]
+        short_name = grapheq_name.lower().replace(" ", "-")
+        eq_name = "{}/iir-autoeq-{}.txt".format(eq_dir, short_name)
     if not force and os.path.exists(eq_name):
         if verbose:
             logger.info(f"eq {eq_name} already exist!")
@@ -479,7 +499,7 @@ def main():
         # do you optimise only peaks or both peaks and valleys?
         "plus_and_minus": True,
         # do you optimise for all kind of biquad or do you want only Peaks?
-        "full_biquad_optim": False,
+        "full_biquad_optim": True,
         # lookup around a value is [value*elastic, value/elastic]
         # "elastic": 0.2,
         "elastic": 0.8,
@@ -515,17 +535,20 @@ def main():
         "target_min_freq": 100,
         "target_max_freq": 16000,
         # slope of the target (in dB) for each curve
-        "slope_on_axis": 0,
-        "slope_listening_window": -0.5,
+        "slope_on_axis": 0,  # flat on axis
+        "slope_listening_window": -0.5,  # slighly lower if not on is too hot
         "slope_early_reflections": -4,
-        "slope_sound_power": -9,
         "slope_estimated_inroom": -6.5,
+        "slope_sound_power": -9,  # good for long distance, too dark for near field
         # do we want to smooth the targets?
         "smooth_measurements": False,
         # size of the window to smooth (currently in number of data points but could be in octave)
         "smooth_window_size": -1,
         # order of interpolation (you can try 1 (linear), 2 (quadratic) etc)
         "smooth_order": 3,
+        # graph eq?
+        "use_grapheq": False,
+        "grapheq_name": None,
     }
 
     # define other parameters for the optimisation algorithms
@@ -610,6 +633,11 @@ def main():
         ("--slope-early-reflections", "slope_early_reflections"),
         ("--slope-sound-power", "slope_sound_power"),
         ("--slope-estimated-inroom", "slope_estimated_inroom"),
+        ("--slope-on", "slope_on_axis"),
+        ("--slope-lw", "slope_listening_window"),
+        ("--slope-er", "slope_early_reflections"),
+        ("--slope-sp", "slope_sound_power"),
+        ("--slope-pir", "slope_estimated_inroom"),
     ):
         if args[slope_name] is not None:
             try:
@@ -685,6 +713,19 @@ def main():
                 current_fitness_name
             ]
 
+    # do we build EQ for a HW graphic one?
+    if args["--graphic_eq"] is not None:
+        grapheq_name = args["--graphic_eq"]
+        if grapheq_name not in grapheq_info.keys():
+            print(
+                "ERROR: EQ name {} is not known. Please select on in {}".format(
+                    grapheq_name, grapheq_info.keys()
+                )
+            )
+            sys.exit(1)
+        current_optim_config["use_grapheq"] = True
+        current_optim_config["grapheq_name"] = grapheq_name
+
     # name of speaker
     speaker_name = None
     if args["--speaker"] is not None:
@@ -733,5 +774,9 @@ if __name__ == "__main__":
     force = args["--force"]
     verbose = args["--verbose"]
     smoke_test = args["--smoke-test"]
+
+    if args["--graphic_eq_list"]:
+        print("INFO: The list of know graphical EQ is: {}".format(grapheq_info.keys()))
+        sys.exit(0)
 
     main()

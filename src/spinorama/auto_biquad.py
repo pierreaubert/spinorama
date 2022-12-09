@@ -18,11 +18,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import math
 
+import numpy as np
 import scipy.optimize as opt
 
 from .ltype import DataSpeaker, Peq
 from .filter_iir import Biquad
+from .filter_peq import peq_print
 from .auto_loss import loss
 
 
@@ -84,6 +87,7 @@ def find_best_biquad(
             maxiter=optim_config["maxiter"],
             # initial_temp=10000
         )
+
         logger.debug(
             "          optim loss {:2.2f} in {} iter type {:d} at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(
                 res["fun"],
