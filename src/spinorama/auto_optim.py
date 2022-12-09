@@ -327,8 +327,7 @@ def optim_greedy(
             if use_score:
                 pref_score = score_loss(df_speaker, auto_peq)
             results.append((int(optim_iter + 1), float(best_loss), float(-pref_score)))
-            # logger.info(
-            print(
+            logger.info(
                 "Speaker {} Iter {:2d} Optim converged loss {:2.2f} pref score {:2.2f} biquad {:2s} F:{:5.0f}Hz Q:{:2.2f} G:{:+2.2f}dB in {} iterations".format(
                     speaker_name,
                     optim_iter,
