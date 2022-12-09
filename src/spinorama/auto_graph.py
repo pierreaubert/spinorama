@@ -63,18 +63,18 @@ def graph_eq(freq, peq, domain, title):
 def graph_eq_compare(
     freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target
 ):
-    manual_peq = [
-        (1.0, Biquad(3, 400, 48000, 4.32, -2)),
-        (1.0, Biquad(3, 1600, 48000, 4.32, -1)),
-        (1.0, Biquad(3, 2000, 48000, 4.32, 1.5)),
-        (1.0, Biquad(3, 2500, 48000, 4.32, 3)),
-        (1.0, Biquad(3, 3150, 48000, 4.32, 3)),
-    ]
+    # manual_peq = [
+    #    (1.0, Biquad(3, 400, 48000, 4.32, -2)),
+    #    (1.0, Biquad(3, 1600, 48000, 4.32, -1)),
+    #    (1.0, Biquad(3, 2000, 48000, 4.32, 1.5)),
+    #    (1.0, Biquad(3, 2500, 48000, 4.32, 3)),
+    #    (1.0, Biquad(3, 3150, 48000, 4.32, 3)),
+    # ]
     df = pd.DataFrame(
         {
             "Freq": freq,
             "autoEQ": peq_build(freq, auto_peq),
-            "manualEQ": peq_build(freq, manual_peq),
+            #        "manualEQ": peq_build(freq, manual_peq),
             "target": target - np.mean(target),
         }
     )

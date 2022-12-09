@@ -461,14 +461,14 @@ def optim_grapheq(
 
     # print('debug auto_freq {}'.format(auto_freq))
     # print('debug current auto_target {} ')
-    #with open("target.txt", "w") as fd:
+    # with open("target.txt", "w") as fd:
     #    for f, db in zip(freq, current_auto_target[0]):
     #        fd.write("{} {}\n".format(f, db))
     #    fd.close()
 
     # debug
-    #test_peq  = fit(1)
-    #peq_print(test_peq)
+    # test_peq  = fit(1)
+    # peq_print(test_peq)
 
     opt_param = find_best_param()
     # print("opt_param {}".format(opt_param))
