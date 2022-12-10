@@ -1,10 +1,16 @@
 EQ for KEF Q150 computed from ErinsAudioCorner data
-Preference Score 4.8 with EQ 5.7
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
-Dated: 2022-03-01-14:06:26
+Preference Score 4.9 with EQ 5.8
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.17
+Dated: 2022-12-09-21:25:24
 
-Preamp: -0.2 dB
+Preamp: -1.6 dB
 
-Filter  1: ON PK Fc 13243 Hz Gain -4.37 dB Q 0.49
-Filter  2: ON PK Fc   165 Hz Gain -1.30 dB Q 1.40
-Filter  3: ON PK Fc   951 Hz Gain -1.63 dB Q 2.29
+Filter  1: ON HP Fc    50 Hz
+Filter  2: ON PK Fc   417 Hz Gain +1.32 dB Q 1.81
+Filter  3: ON PK Fc 12947 Hz Gain -4.47 dB Q 0.66
+Filter  4: ON LS Fc    50 Hz Gain -0.55 dB
+Filter  5: ON PK Fc   951 Hz Gain -1.27 dB Q 3.00
+Filter  6: ON PK Fc  1030 Hz Gain +1.79 dB Q 3.00
+Filter  7: ON PK Fc  1144 Hz Gain -1.73 dB Q 3.00
+Filter  8: ON PK Fc  1340 Hz Gain +1.63 dB Q 2.85
+Filter  9: ON PK Fc  1255 Hz Gain -1.30 dB Q 3.00

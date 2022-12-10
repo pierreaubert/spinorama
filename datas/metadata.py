@@ -9795,6 +9795,23 @@ speakers_info = {
             },
         },
     },
+    "Neumann KH 150": {
+        "brand": "Neumann",
+        "model": "KH 150",
+        "type": "active",
+        "price": "3500",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?attachments/neumann-kh150-zip.248926/",
+                "review_published": "20221210",
+            },
+        },
+    },
     "Neumann KH 310A": {
         "brand": "Neumann",
         "model": "KH 310A",
