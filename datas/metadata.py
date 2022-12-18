@@ -853,6 +853,23 @@ speakers_info = {
             },
         },
     },
+    "AV123 X-CS Center": {
+        "brand": "AV123",
+        "model": "X-CS Center",
+        "type": "passive",
+        "shape": "center",
+        "price": "199",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/av123-x-cs-center-speaker-review.40156/",
+                "review_published": "20221218",
+            },
+        },
+    },
     "Avantgarde Acoustic Solo": {
         "brand": "Avantgarde Acoustic",
         "model": "Solo",
@@ -5690,6 +5707,63 @@ speakers_info = {
                     "stereophile": "https://www.stereophile.com/floorloudspeakers/jbl_synthesis_1400_array_bg_loudspeaker/index.html",
                 },
                 "review_published": "20060826",
+            },
+        },
+    },
+    "JBL Synthesis SCL-1": {
+        "brand": "JBL",
+        "model": "Synthesis SCL-1",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "avs": "https://www.avsforum.com/threads/official-jbl-synthesis-pro-revel-home-theater-thread.2515137/",
+                },
+                "review_published": "20221218",
+            },
+        },
+    },
+    "JBL Synthesis SCL-3": {
+        "brand": "JBL",
+        "model": "Synthesis SCL-3",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "avs": "https://www.avsforum.com/threads/official-jbl-synthesis-pro-revel-home-theater-thread.2515137/",
+                },
+                "review_published": "20221218",
+            },
+        },
+    },
+    "JBL Synthesis SCL-4": {
+        "brand": "JBL",
+        "model": "Synthesis SCL-4",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "avs": "https://www.avsforum.com/threads/official-jbl-synthesis-pro-revel-home-theater-thread.2515137/",
+                },
+                "review_published": "20221218",
             },
         },
     },

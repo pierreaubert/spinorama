@@ -1,0 +1,15 @@
+EQ for JBL Synthesis SCL-3 computed from Vendors-JBL data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.17
+Dated: 2022-12-18-11:00:02
+
+Preamp: -3.3 dB
+
+Filter  1: ON HP Fc    50 Hz
+Filter  2: ON PK Fc  9989 Hz Gain -4.61 dB Q 0.65
+Filter  3: ON PK Fc   159 Hz Gain -1.96 dB Q 1.53
+Filter  4: ON PK Fc  1926 Hz Gain +3.37 dB Q 1.56
+Filter  5: ON PK Fc  5139 Hz Gain -1.97 dB Q 2.56
+Filter  6: ON PK Fc   427 Hz Gain +1.25 dB Q 3.00
+Filter  7: ON PK Fc  2887 Hz Gain +0.98 dB Q 3.00
+Filter  8: ON PK Fc  1232 Hz Gain -1.38 dB Q 3.00
+Filter  9: ON PK Fc  1006 Hz Gain +1.10 dB Q 3.00
