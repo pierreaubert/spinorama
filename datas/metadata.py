@@ -13,7 +13,7 @@ speakers_info = {
         "brand": "Adam",
         "model": "A4V",
         "type": "active",
-        "price": "766",
+        "price": "422",
         "shape": "bookshelves",
         "amount": "pair",
         "default_measurement": "asr",
@@ -64,9 +64,9 @@ speakers_info = {
         "brand": "Adam",
         "model": "T5V",
         "type": "active",
-        "price": "400",
+        "price": "169",
         "shape": "bookshelves",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
@@ -81,8 +81,8 @@ speakers_info = {
         "brand": "Adam",
         "model": "T7V",
         "type": "active",
-        "price": "400",
-        "amount": "pair",
+        "price": "190",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "misc-audioholics",
         "measurements": {
@@ -99,7 +99,7 @@ speakers_info = {
         "brand": "Adam",
         "model": "T8V",
         "type": "active",
-        "price": "600",
+        "price": "480",
         "shape": "bookshelves",
         "amount": "pair",
         "default_measurement": "asr",
@@ -2502,6 +2502,74 @@ speakers_info = {
                 },
                 "review_published": "20221203",
                 "notes": "data computed at 2 meters.",
+            },
+        },
+    },
+    "DB Audiotechnik Q7": {
+        "brand": "DB Audiotechnik",
+        "model": "Q7",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-DB Audiotechnik",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "reviews": {},
+                "review_published": "20221217",
+                "notes": "data computed at 2 meters.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 75,
+                        "vertical": 40,
+                    },
+                    "SPL": {
+                        "peak": 134,
+                    },
+                    "size": {
+                        "height": 580,
+                        "width": 308,
+                        "depth": 410,
+                    },
+                    "weight": 22.0,
+                },
+            },
+        },
+    },
+    "DB Audiotechnik Q10": {
+        "brand": "DB Audiotechnik",
+        "model": "Q10",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-DB Audiotechnik",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "reviews": {},
+                "review_published": "20221217",
+                "notes": "data computed at 2 meters.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 40,
+                    },
+                    "SPL": {
+                        "peak": 137,
+                    },
+                    "size": {
+                        "height": 580,
+                        "width": 308,
+                        "depth": 410,
+                    },
+                    "weight": 22.0,
+                },
             },
         },
     },
@@ -5714,7 +5782,7 @@ speakers_info = {
         "brand": "JBL",
         "model": "Synthesis SCL-1",
         "type": "passive",
-        "price": "",
+        "price": "15000",
         "amount": "each",
         "shape": "inwall",
         "default_measurement": "vendor",
@@ -5726,6 +5794,23 @@ speakers_info = {
                     "avs": "https://www.avsforum.com/threads/official-jbl-synthesis-pro-revel-home-theater-thread.2515137/",
                 },
                 "review_published": "20221218",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 100,
+                    },
+                    "sensitivity": 94,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 1218,
+                        "width": 482,
+                        "depth": 368,
+                    },
+                    "weight": 80.5,
+                },
             },
         },
     },
@@ -5733,7 +5818,7 @@ speakers_info = {
         "brand": "JBL",
         "model": "Synthesis SCL-3",
         "type": "passive",
-        "price": "",
+        "price": "3300",
         "amount": "each",
         "shape": "inwall",
         "default_measurement": "vendor",
@@ -5745,6 +5830,20 @@ speakers_info = {
                     "avs": "https://www.avsforum.com/threads/official-jbl-synthesis-pro-revel-home-theater-thread.2515137/",
                 },
                 "review_published": "20221218",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 91,
+                    "impedance": 6,
+                    "size": {
+                        "height": 418,
+                        "width": 418,
+                        "depth": 153,
+                    },
+                    "weight": 11.2,
+                },
             },
         },
     },
@@ -5752,7 +5851,7 @@ speakers_info = {
         "brand": "JBL",
         "model": "Synthesis SCL-4",
         "type": "passive",
-        "price": "",
+        "price": "3990",
         "amount": "each",
         "shape": "inwall",
         "default_measurement": "vendor",
@@ -5764,6 +5863,20 @@ speakers_info = {
                     "avs": "https://www.avsforum.com/threads/official-jbl-synthesis-pro-revel-home-theater-thread.2515137/",
                 },
                 "review_published": "20221218",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 100,
+                    },
+                    "sensitivity": 91,
+                    "impedance": 6,
+                    "size": {
+                        "height": 636,
+                        "width": 409,
+                        "depth": 93,
+                    },
+                    "weight": 12.51,
+                },
             },
         },
     },
@@ -5785,6 +5898,20 @@ speakers_info = {
                 },
                 "review_published": "20220319",
                 "notes": "Measured far field without grille",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 80,
+                    },
+                    "sensitivity": 91,
+                    "impedance": 4,
+                    "size": {
+                        "height": 185,
+                        "width": 796,
+                        "depth": 97,
+                    },
+                    "weight": 11.61,
+                },
             },
             "eac-v2-farfield-with-grille": {
                 "origin": "ErinsAudioCorner",
@@ -5825,6 +5952,20 @@ speakers_info = {
                 },
                 "review_published": "20220404",
                 "notes": "Measured far field without grille",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 88,
+                    "impedance": 4,
+                    "size": {
+                        "height": 186,
+                        "width": 486,
+                        "depth": 99,
+                    },
+                    "weight": 6.62,
+                },
             },
         },
     },
@@ -5832,7 +5973,7 @@ speakers_info = {
         "brand": "JBL",
         "model": "Synthesis 4429",
         "type": "passive",
-        "price": "",
+        "price": "6000",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "misc-speakerdata2034",
@@ -8607,6 +8748,171 @@ speakers_info = {
             },
         },
     },
+    "LD Systems Stinger 28-A-G3": {
+        "brand": "LD Systems",
+        "model": "Stinger 28-A-G3",
+        "type": "active",
+        "price": "770",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-LD Systems",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221217",
+                "notes": "measured with broadband noise at 2m.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 756,
+                        "width": 270,
+                        "depth": 290,
+                    },
+                    "weight": 20.5,
+                },
+            },
+        },
+    },
+    "LD Systems Stinger 8-A-G3": {
+        "brand": "LD Systems",
+        "model": "Stinger 8-A-G3",
+        "type": "active",
+        "price": "459",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-LD Systems",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221217",
+                "notes": "measured with broadband noise at 2m.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "peak": 125,
+                    },
+                    "size": {
+                        "height": 457,
+                        "width": 270,
+                        "depth": 290,
+                    },
+                    "weight": 10.5,
+                },
+            },
+        },
+    },
+    "LD Systems Stinger 10-A-G3": {
+        "brand": "LD Systems",
+        "model": "Stinger 10-A-G3",
+        "type": "active",
+        "price": "500",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-LD Systems",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221217",
+                "notes": "measured with broadband noise at 2m.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "peak": 127,
+                    },
+                    "size": {
+                        "height": 527,
+                        "width": 325,
+                        "depth": 318,
+                    },
+                    "weight": 12.7,
+                },
+            },
+        },
+    },
+    "LD Systems Stinger 12-A-G3": {
+        "brand": "LD Systems",
+        "model": "Stinger 12-A-G3",
+        "type": "active",
+        "price": "745",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-LD Systems",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221217",
+                "notes": "measured with broadband noise at 2m.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 627,
+                        "width": 390,
+                        "depth": 377,
+                    },
+                    "weight": 20.1,
+                },
+            },
+        },
+    },
+    "LD Systems Stinger 15-A-G3": {
+        "brand": "LD Systems",
+        "model": "Stinger 15-A-G3",
+        "type": "active",
+        "price": "839",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-LD Systems",
+                "format": "splHVtxt",
+                "quality": "medium",
+                "review_published": "20221217",
+                "notes": "measured with broadband noise at 2m.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 737,
+                        "width": 480,
+                        "depth": 455,
+                    },
+                    "weight": 26.8,
+                },
+            },
+        },
+    },
     "Linkwitz LXMini DIY": {
         "brand": "Linkwitz",
         "model": "LXMini DIY",
@@ -9051,6 +9357,38 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/mcintosh_xr50/",
                 "review_published": "20220408",
+            },
+        },
+    },
+    "Mesanovic CDM65": {
+        "skip": True,
+        "brand": "Mesanovic",
+        "model": "CDM65",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mesanovic_cdm65/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/new-mesanovic-cdm65-monitors.40172/",
+                },
+                "specifications": {
+                    "SPL": {
+                        "peak": 103,
+                    },
+                    "size": {
+                        "height": 381,
+                        "width": 203,
+                        "depth": 355,
+                    },
+                    "weight": 16,
+                },
+                "review_published": "20221219",
             },
         },
     },
@@ -9883,6 +10221,17 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?attachments/neumann-kh150-zip.248926/",
                 "review_published": "20221210",
+                "specifications": {
+                    "SPL": {
+                        "peak": 118,
+                    },
+                    "size": {
+                        "height": 345,
+                        "width": 225,
+                        "depth": 273,
+                    },
+                    "weight": 8.0,
+                },
             },
         },
     },
