@@ -1,7 +1,6 @@
 import { getMetadata } from './common.js'
 
-getMetadata().then( (metadata) => {
-  
+getMetadata().then((metadata) => {
   const windowWidth = window.innerWidth
 
   function plotScoreDistribution (scores, scoresEQ) {

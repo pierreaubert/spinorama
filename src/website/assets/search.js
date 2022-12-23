@@ -4,8 +4,7 @@ import { sortMetadata } from './sort.js'
 
 let fuse = null
 
-getMetadata().then( (metadata) => {
-
+getMetadata().then((metadata) => {
   const filter = {
     reviewer: '',
     shape: '',
@@ -41,7 +40,7 @@ getMetadata().then( (metadata) => {
       let found = true
       for (const [name, measurement] of Object.entries(item.measurements)) {
         const quality = measurement.quality.toLowerCase()
-          // console.log('filter.quality=' + filter.quality + ' quality=' + quality)
+        // console.log('filter.quality=' + filter.quality + ' quality=' + quality)
         if (filter.quality !== '' && quality === filter.quality.toLowerCase()) {
           found = false
           break
@@ -51,73 +50,73 @@ getMetadata().then( (metadata) => {
         shouldShow = false
       }
     }
-      // console.log('debug: post quality ' + shouldShow)
+    // console.log('debug: post quality ' + shouldShow)
     if (filter.power !== undefined && filter.power !== '' && item.type !== filter.power) {
       shouldShow = false
     }
-      // console.log('debug: post power ' + shouldShow)
+    // console.log('debug: post power ' + shouldShow)
     if (filter.shape !== undefined && filter.shape !== '' && item.shape !== filter.shape) {
       shouldShow = false
     }
-      // console.log('debug: post shape ' + shouldShow)
+    // console.log('debug: post shape ' + shouldShow)
     if (filter.brand !== undefined && filter.brand !== '' && item.brand.toLowerCase() !== filter.brand.toLowerCase()) {
       shouldShow = false
     }
-      // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.price+'<<<')
+    // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.price+'<<<')
     if (filter.price !== undefined && filter.price !== '') {
-        // console.log('debug: pre price ' + filter.price)
+      // console.log('debug: pre price ' + filter.price)
       if (item.price !== '') {
         let price = parseInt(item.price)
-        if (item.amount === "pair") {
+        if (item.amount === 'pair') {
           price /= 2.0
         }
-        switch(filter.price) {
-        case "p100":
-          if (price>=100) {
-            shouldShow = false
-          }
-          break
-        case "p200":
-          if (price>=200 || price<=100) {
-            shouldShow = false
-          }
-          break
-        case "p300":
-          if (price>=300 || price<=200) {
-            shouldShow = false
-          }
-          break
-        case "p500":
-          if (price>=500 || price<=300) {
-            shouldShow = false
-          }
-          break
-        case "p1000":
-          if (price>=1000 || price<=500) {
-            shouldShow = false
-          }
-          break
-        case "p2000":
-          if (price>=2000 || price<=1000) {
-            shouldShow = false
-          }
-          break
-        case "p5000":
-          if (price>=5000 || price<=2000) {
-            shouldShow = false
-          }
-          break
-        case "p5000p":
-          if (price<=5000) {
-            shouldShow = false
-          }
-          break
+        switch (filter.price) {
+          case 'p100':
+            if (price >= 100) {
+              shouldShow = false
+            }
+            break
+          case 'p200':
+            if (price >= 200 || price <= 100) {
+              shouldShow = false
+            }
+            break
+          case 'p300':
+            if (price >= 300 || price <= 200) {
+              shouldShow = false
+            }
+            break
+          case 'p500':
+            if (price >= 500 || price <= 300) {
+              shouldShow = false
+            }
+            break
+          case 'p1000':
+            if (price >= 1000 || price <= 500) {
+              shouldShow = false
+            }
+            break
+          case 'p2000':
+            if (price >= 2000 || price <= 1000) {
+              shouldShow = false
+            }
+            break
+          case 'p5000':
+            if (price >= 5000 || price <= 2000) {
+              shouldShow = false
+            }
+            break
+          case 'p5000p':
+            if (price <= 5000) {
+              shouldShow = false
+            }
+            break
         }
       } else {
         // no known price
         shouldShow = false
       }
-        // console.log('debug: post price ' + shouldShow)
+      // console.log('debug: post price ' + shouldShow)
     }
     return shouldShow
   }
@@ -154,7 +153,7 @@ getMetadata().then( (metadata) => {
     for (const key in smeta) {
       const spk = metadata[key]
       const id = (spk.brand + '-' + spk.model).replace(/['.+& ]/g, '-')
-        // console.log('generated id is ' + id)
+      // console.log('generated id is ' + id)
       const elem = document.querySelector('#' + id)
       if (elem) {
         hide(elem)
@@ -167,7 +166,7 @@ getMetadata().then( (metadata) => {
         minScore = results[spk].score
       }
     }
-      // console.log('minScore is ' + minScore)
+    // console.log('minScore is ' + minScore)
     for (const spk in results) {
       let shouldShow = true
       const result = results[spk]
@@ -180,7 +179,7 @@ getMetadata().then( (metadata) => {
       if (shouldShow) {
         if (minScore < Math.pow(10, -15)) {
           const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase())
-            // console.log('isExact '+isExact+' model'+imeta.model.toLowerCase()+' keywords '+keywords.toLowerCase())
+          // console.log('isExact '+isExact+' model'+imeta.model.toLowerCase()+' keywords '+keywords.toLowerCase())
           // we have an exact match, only shouldShow other exact matches
           if (score >= Math.pow(10, -15) && !isExact) {
             // console.log('filtered out (minscore)' + score)
@@ -202,7 +201,7 @@ getMetadata().then( (metadata) => {
           show(elem)
         }
       } else {
-          // console.log('hide ' + imeta.brand + ' ' + imeta.model + ' ' + score)
+        // console.log('hide ' + imeta.brand + ' ' + imeta.model + ' ' + score)
         if (elem) {
           hide(elem)
         }
@@ -213,7 +212,7 @@ getMetadata().then( (metadata) => {
   function selectDispatch () {
     const resultdiv = document.querySelector('div.searchresults')
     const keywords = document.querySelector('#searchInput').value
-      // console.log('keywords: ' + keywords)
+    // console.log('keywords: ' + keywords)
 
     // need to sort here
     sortMetadata(

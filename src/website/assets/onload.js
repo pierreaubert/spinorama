@@ -22,5 +22,4 @@ window.onload = () => {
       banner.classList.toggle('hidden')
     })
   }
-
 }

@@ -101,8 +101,7 @@ export function getReviews (value) {
       originLong = origin.replace('Vendors-', '')
       if (origin === 'Kling Freitag') {
         origin = 'K&F'
-      }
-      else if (origin === 'Alcons Audio') {
+      } else if (origin === 'Alcons Audio') {
         origin = 'AA'
       }
     }
@@ -124,127 +123,127 @@ export function getReviews (value) {
       origin = 'SSU'
     } else if (origin === 'sr') {
       origin = 'S&R'
-    } else if (origin.search('nuyes') != -1 ) {
-      origin = "NYS"
+    } else if (origin.search('nuyes') !== -1) {
+      origin = 'NYS'
     }
 
     origin = origin.charAt(0).toUpperCase() + origin.slice(1)
     originLong = originLong.charAt(0).toUpperCase() + origin.slice(1)
-    if (version.search("sealed") != -1 ) {
-      origin = origin + " (Sealed)"
-      originLong = originLong + " (Sealed)"
-    } else if  (version.search("vented") != -1 ) {
-      origin = origin + " (Vented)"
-      originLong = originLong + " (Vented)"
-    } else if  (version.search("ported") != -1 ) {
-      origin = origin + " (Ported)"
-      originLong = originLong + " (Ported)"
+    if (version.search('sealed') !== -1) {
+      origin = origin + ' (Sealed)'
+      originLong = originLong + ' (Sealed)'
+    } else if (version.search('vented') !== -1) {
+      origin = origin + ' (Vented)'
+      originLong = originLong + ' (Vented)'
+    } else if (version.search('ported') !== -1) {
+      origin = origin + ' (Ported)'
+      originLong = originLong + ' (Ported)'
     }
 
-    if (version.search("grille-on") != -1 ) {
-      origin = origin + " (Grille on)"
-      originLong = originLong + " (Grille on)"
-    } else if  (version.search("no-grille") != -1 ) {
-      origin = origin + " (Grille off)"
-      originLong = originLong + " (Grille off)"
+    if (version.search('grille-on') !== -1) {
+      origin = origin + ' (Grille on)'
+      originLong = originLong + ' (Grille on)'
+    } else if (version.search('no-grille') !== -1) {
+      origin = origin + ' (Grille off)'
+      originLong = originLong + ' (Grille off)'
     }
 
-    if (version.search("short-port") != -1 ) {
-      origin = origin + " (Short Port)"
-      originLong = originLong + " (Short Port)"
-    } else if  (version.search("long-port") != -1 ) {
-      origin = origin + " (Long Port)"
-      originLong = originLong + " (Long Port)"
+    if (version.search('short-port') !== -1) {
+      origin = origin + ' (Short Port)'
+      originLong = originLong + ' (Short Port)'
+    } else if (version.search('long-port') !== -1) {
+      origin = origin + ' (Long Port)'
+      originLong = originLong + ' (Long Port)'
     }
 
-    if (version.search("bassreflex") != -1 ) {
-      origin = origin + " (BR)"
-      originLong = originLong + " (Bass Reflex)"
-    } else if  (version.search("cardioid") != -1 ) {
-      origin = origin + " (C)"
-      originLong = originLong + " (Cardiod)"
-    }     
-
-    if (version.search("fullrange") != -1 ) {
-      origin = origin + " (FR)"
-      originLong = originLong + " (Full Range)"
-    } else if  (version.search("lowcut") != -1 ) {
-      origin = origin + " (LC)"
-      originLong = originLong + " (Low Cut)"
-    }     
-
-    if (version.search("active") != -1 ) {
-      origin = origin + " (Act.)"
-      originLong = originLong + " (Active)"
-    } else if  (version.search("passive") != -1 ) {
-      origin = origin + " (Pas.)"
-      originLong = originLong + " (Passive)"
-    }     
-
-    if (version.search("horizontal") != -1 ) {
-      origin = origin + " (Hor.)"
-      originLong = originLong + " (Horizontal)"
-    } else if  (version.search("vertical") != -1 ) {
-      origin = origin + " (Ver.)"
-      originLong = originLong + " (Vertical)"
+    if (version.search('bassreflex') !== -1) {
+      origin = origin + ' (BR)'
+      originLong = originLong + ' (Bass Reflex)'
+    } else if (version.search('cardioid') !== -1) {
+      origin = origin + ' (C)'
+      originLong = originLong + ' (Cardiod)'
     }
 
-    if (version.search("gll") != -1 ) {
-      origin = origin + " (gll)"
-      originLong = originLong + " (gll)"
-    } else if  (version.search("klippel") != -1 ) {
-      origin = origin + " (klippel)"
-      originLong = originLong + " (klippel)"
+    if (version.search('fullrange') !== -1) {
+      origin = origin + ' (FR)'
+      originLong = originLong + ' (Full Range)'
+    } else if (version.search('lowcut') !== -1) {
+      origin = origin + ' (LC)'
+      originLong = originLong + ' (Low Cut)'
     }
 
-    if (version.search("wide") != -1 ) {
-      origin = origin.slice(0, origin.length-1) + "/W)"
-      originLong = originLong.slice(0, originLong.length-1) + "/Wide)"
-    } else if  (version.search("narrow") != -1 ) {
-      origin = origin.slice(0, origin.length-1) + "/N)"
-      originLong = originLong.slice(0, originLong.length-1) + "/Narrow)"
-    } else if  (version.search("medium") != -1 ) {
-      origin = origin.slice(0, origin.length-1) + "/M)"
-      originLong = originLong.slice(0, originLong.length-1) + "/Medium)"
+    if (version.search('active') !== -1) {
+      origin = origin + ' (Act.)'
+      originLong = originLong + ' (Active)'
+    } else if (version.search('passive') !== -1) {
+      origin = origin + ' (Pas.)'
+      originLong = originLong + ' (Passive)'
     }
 
-    const ipattern = version.search("pattern")
-    if (ipattern != -1 ) {
-      const sversion = version.slice(ipattern+8)
-      if (sversion.search(/[0-9]*/) != -1) {
+    if (version.search('horizontal') !== -1) {
+      origin = origin + ' (Hor.)'
+      originLong = originLong + ' (Horizontal)'
+    } else if (version.search('vertical') !== -1) {
+      origin = origin + ' (Ver.)'
+      originLong = originLong + ' (Vertical)'
+    }
+
+    if (version.search('gll') !== -1) {
+      origin = origin + ' (gll)'
+      originLong = originLong + ' (gll)'
+    } else if (version.search('klippel') !== -1) {
+      origin = origin + ' (klippel)'
+      originLong = originLong + ' (klippel)'
+    }
+
+    if (version.search('wide') !== -1) {
+      origin = origin.slice(0, origin.length - 1) + '/W)'
+      originLong = originLong.slice(0, originLong.length - 1) + '/Wide)'
+    } else if (version.search('narrow') !== -1) {
+      origin = origin.slice(0, origin.length - 1) + '/N)'
+      originLong = originLong.slice(0, originLong.length - 1) + '/Narrow)'
+    } else if (version.search('medium') !== -1) {
+      origin = origin.slice(0, origin.length - 1) + '/M)'
+      originLong = originLong.slice(0, originLong.length - 1) + '/Medium)'
+    }
+
+    const ipattern = version.search('pattern')
+    if (ipattern !== -1) {
+      const sversion = version.slice(ipattern + 8)
+      if (sversion.search(/[0-9]*/) !== -1) {
         const sversionTimes = sversion.indexOf('x')
         let sversionDeg = sversion
-        if (sversionTimes != -1) {
-          sversionDeg = ' ' + sversion.slice(0, sversionTimes) + "º" + sversion.slice(sversionTimes) + "º"
+        if (sversionTimes !== -1) {
+          sversionDeg = ' ' + sversion.slice(0, sversionTimes) + 'º' + sversion.slice(sversionTimes) + 'º'
         } else {
-          sversionDeg = ' ' + sversion + "º"
+          sversionDeg = ' ' + sversion + 'º'
         }
         origin = origin + sversionDeg
         originLong = originLong + sversionDeg
       }
-    } 
+    }
 
     // version
     const posVersion = version.search(/-v[123456]-/)
-    if (posVersion != -1 ) {
-      origin = origin + " (v" + version[posVersion+2] + ")"
-      originLong = originLong + " (v" + version[posVersion+2] + ")"
+    if (posVersion !== -1) {
+      origin = origin + ' (v' + version[posVersion + 2] + ')'
+      originLong = originLong + ' (v' + version[posVersion + 2] + ')'
     }
 
     // counter
     const posCounter = version.search(/-v[123456]x/)
-    if (posCounter != -1 ) {
-      origin = origin + " (" + version[posCounter+2] + "x)"
-      originLong = originLong + " (" + version[posCounter+2] + "x)"
+    if (posCounter !== -1) {
+      origin = origin + ' (' + version[posCounter + 2] + 'x)'
+      originLong = originLong + ' (' + version[posCounter + 2] + 'x)'
     }
 
     // configuration
     const posConfiguration = version.search(/-configuration-/)
-    if (posConfiguration != -1 ) {
-      origin = origin + " (" + version.slice(posConfiguration+14).replace('-', ' ') + ")"
-      originLong = originLong + " (" + version.slice(posConfiguration+14).replace('-', ' ')  + ")"
+    if (posConfiguration !== -1) {
+      origin = origin + ' (' + version.slice(posConfiguration + 14).replace('-', ' ') + ')'
+      originLong = originLong + ' (' + version.slice(posConfiguration + 14).replace('-', ' ') + ')'
     }
-    
+
     reviews.push({
       url: encodeURI(url),
       origin: origin,
@@ -320,4 +319,3 @@ export function getDecoding (key) {
   }
   return 'async'
 }
-

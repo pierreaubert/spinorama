@@ -2,8 +2,7 @@ import { getMetadata } from './common.js'
 import { getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc.js'
 import { sortMetadata2 } from './sort.js'
 
-getMetadata().then( (metadata) => {
-
+getMetadata().then((metadata) => {
   function getContext (key, value) {
     // console.log(getReviews(value));
     return {
@@ -46,7 +45,6 @@ getMetadata().then( (metadata) => {
   const speakerContainer = document.querySelector('[data-num="0"')
 
   display(metadata)
-
-}).catch( (error) => {
+}).catch((error) => {
   console.log(error)
 })

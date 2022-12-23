@@ -2,9 +2,7 @@ import { getMetadata } from './common.js'
 import { sortMetadata2 } from './sort.js'
 import { getPeq, getID } from './misc.js'
 
-
-getMetadata().then( (metadata) => {
-
+getMetadata().then((metadata) => {
   function getContext (key, value) {
   // console.log(getReviews(value));
     return {

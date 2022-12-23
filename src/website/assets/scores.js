@@ -2,8 +2,7 @@ import { getMetadata } from './common.js'
 import { toggleId, getID, getPicture, getLoading, getDecoding, getField, getReviews } from './misc.js'
 import { sortMetadata2 } from './sort.js'
 
-getMetadata().then( (metadata) => {
-
+getMetadata().then((metadata) => {
   function getSpider (brand, model) {
   // console.log(brand + model);
     return encodeURI('speakers/' + brand + ' ' + model + '/spider.jpg')
@@ -57,33 +56,32 @@ getMetadata().then( (metadata) => {
     return divScore
   }
 
-  function hasQuality(meta, quality) {
+  function hasQuality (meta, quality) {
     let status = false
 
     for (const [key, measurement] of Object.entries(meta)) {
-      const mFormat = measurement['format'].toLowerCase()
-      const mQuality = measurement['quality'].toLowerCase()
+      const mFormat = measurement.format.toLowerCase()
+      const mQuality = measurement.quality.toLowerCase()
 
       if (mQuality && mQuality === quality) {
         status = true
         break
       }
 
-      if (mFormat === 'klippel' && quality === 'high' ) {
+      if (mFormat === 'klippel' && quality === 'high') {
         status = true
         break
       }
     }
     return status
   }
-    
 
   function display () {
     const speakerContainer = document.querySelector('[data-num="0"')
     const fragment1 = new DocumentFragment()
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
-    let quality = undefined
+    let quality
 
     if (urlParams.get('quality')) {
       quality = urlParams.get('quality')
@@ -91,11 +89,11 @@ getMetadata().then( (metadata) => {
 
     // todo check filter
 
-    console.log('Quality='+quality)
+    console.log('Quality=' + quality)
 
     sortMetadata2(metadata, { by: 'score' }).forEach(function (value, key) {
       const speaker = metadata[value]
-      if ( !quality || hasQuality(speaker['measurements'], quality.toLowerCase()) ) {
+      if (!quality || hasQuality(speaker.measurements, quality.toLowerCase())) {
         fragment1.appendChild(printScore(value, speaker))
       }
     })

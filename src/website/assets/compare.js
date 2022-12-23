@@ -1,6 +1,6 @@
 import { urlSite } from './misc.js'
-import { getMetadata } from './common.js'
 import {
+  getMetadata,
   assignOptions,
   knownMeasurements,
   getAllSpeakers,
@@ -12,11 +12,10 @@ import {
   setCEA2034Split,
   setSurface,
   updateOrigin,
-  updateVersion,
+  updateVersion
 } from './common.js'
 
-getMetadata().then( (metadata) => {
-
+getMetadata().then((metadata) => {
   const urlCompare = urlSite + 'compare.html?'
   const nbSpeakers = 2
 
@@ -73,7 +72,7 @@ getMetadata().then( (metadata) => {
         } // todo add multi view
 
         // console.log('datas and layouts length='+graphsConfigs.length)
-        if ( graphsConfigs.length === 1 ) {
+        if (graphsConfigs.length === 1) {
           plotSingleContainer.style.display = 'block'
           plotDouble0Container.style.display = 'none'
           plotDouble1Container.style.display = 'none'
@@ -81,12 +80,12 @@ getMetadata().then( (metadata) => {
           if (config) {
             Plotly.newPlot('plotSingle', config)
           }
-        } else if (graphsConfigs.length === 2 ) {
+        } else if (graphsConfigs.length === 2) {
           plotSingleContainer.style.display = 'none'
           plotDouble0Container.style.display = 'block'
           plotDouble1Container.style.display = 'block'
-          for( let i = 0 ; i<graphsConfigs.length ; i++) {
-            let config = graphsConfigs[i]
+          for (let i = 0; i < graphsConfigs.length; i++) {
+            const config = graphsConfigs[i]
             if (config) {
               Plotly.newPlot('plotDouble' + i, config)
             }
@@ -135,23 +134,23 @@ getMetadata().then( (metadata) => {
     }
     urlParams.set('measurement', graphsSelector.value)
     history.pushState({ page: 1 },
-                      'Change measurement',
-                      urlCompare + urlParams.toString()
-                     )
+      'Change measurement',
+      urlCompare + urlParams.toString()
+    )
     plot(graphsSelector.value, names, graphs)
   }
-  
+
   function updateSpeakerPos (pos) {
     // console.log('updateSpeakerPos(' + pos + ')')
     updateOrigin(metaSpeakers, speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos])
     urlParams.set('speaker' + pos, speakersSelector[pos].value)
     history.pushState({ page: 1 },
-                      'Compare speakers',
-                      urlCompare + urlParams.toString()
-                     )
+      'Compare speakers',
+      urlCompare + urlParams.toString()
+    )
     updateSpeakers()
   }
-  
+
   function updateVersionPos (pos) {
     // console.log('updateVersionsPos(' + pos + ')')
     updateVersion(
@@ -164,26 +163,26 @@ getMetadata().then( (metadata) => {
     updateSpeakers()
     urlParams.set('version' + pos, versionsSelector[pos].value)
     history.pushState({ page: 1 },
-                      'Compare speakers',
-                      urlCompare + urlParams.toString()
-                     )
+      'Compare speakers',
+      urlCompare + urlParams.toString()
+    )
   }
-  
+
   function updateOriginPos (pos) {
     // console.log('updateOriginPos(' + pos + ')')
     updateOrigin(metaSpeakers, speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos], originsSelector[pos].value)
     urlParams.set('origin' + pos, originsSelector[pos].value)
     history.pushState({ page: 1 },
-                      'Compare speakers',
-                      urlCompare + urlParams.toString()
-                     )
+      'Compare speakers',
+      urlCompare + urlParams.toString()
+    )
     updateSpeakers()
   }
-  
-  const [metaSpeakers, speakers] = getAllSpeakers(metadata);
+
+  const [metaSpeakers, speakers] = getAllSpeakers(metadata)
   const initSpeakers = buildInitSpeakers(speakers, nbSpeakers)
   const initMeasurement = buildInitMeasurement()
-    
+
   const speakersSelector = []
   const originsSelector = []
   const versionsSelector = []
