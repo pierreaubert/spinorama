@@ -122,6 +122,10 @@ def custom_ray_init(args):
     # doesn't work in 2.0
     # ray.worker.global_worker.run_function_on_all_workers(ray_setup_logger)
     # address is the one from the ray server<
+
+    if ray.is_initialized:
+        ray.shutdown()
+
     ray.init(
         include_dashboard=True,
         dashboard_host=dashboard_ip,
@@ -176,7 +180,7 @@ def cache_save(df_all, smoke_test=False):
     print("(saved {} speakers)".format(len(df_all)))
 
 
-def cache_load(simple_filter=None, smoke_test=False):
+def cache_load_seq(simple_filter=None, smoke_test=False):
     df_all = defaultdict()
     cache_files = glob("{}/*.h5".format(CACHE_DIR))
     count = 0
@@ -198,6 +202,63 @@ def cache_load(simple_filter=None, smoke_test=False):
 
     print("(loaded {} speakers)".format(len(df_all)))
     return df_all
+
+
+@ray.remote(num_cpus=1)
+def cache_fetch(cachepath):
+    return fl.load(path=cachepath)
+
+
+def cache_load_distributed_map(simple_filter=None, smoke_test=False):
+    cache_files = glob("{}/*.h5".format(CACHE_DIR))
+    ids = []
+    # mapper read the cache and start 1 worker per file
+    for cache in cache_files:
+        if simple_filter is not None and cache[-5:-3] != cache_key(simple_filter):
+            continue
+        ids.append(cache_fetch.remote(cache))
+
+    print("(queued {} files)".format(len(cache_files)))
+    return ids
+
+
+def cache_load_distributed_reduce(simple_filter, smoke_test, ids1):
+    df_all = defaultdict()
+    count = 0
+    ids = ids1
+    while 1:
+
+        done_ids, remaining_ids = ray.wait(ids, num_returns=min(len(ids), 64))
+        for id in done_ids:
+            df_read = ray.get(id)
+            for speaker, data in df_read.items():
+                if speaker in df_all.keys():
+                    print("error in cache: {} is already in keys".format(speaker))
+                if simple_filter is not None and speaker != simple_filter:
+                    continue
+                df_all[speaker] = data
+                count += 1
+                if smoke_test and count > 10:
+                    break
+
+        if len(remaining_ids) == 0:
+            break
+
+        ids = remaining_ids
+
+    print("(loaded {} speakers)".format(len(df_all)))
+    return df_all
+
+
+def cache_load_distributed(simple_filter=None, smoke_test=False):
+    ids = cache_load_distributed_map(simple_filter, smoke_test)
+    return cache_load_distributed_reduce(simple_filter, smoke_test, ids)
+
+
+def cache_load(simple_filter=None, smoke_test=False):
+    if ray.is_initialized:
+        return cache_load_distributed(simple_filter, smoke_test)
+    return cache_load_seq(simple_filter, smoke_test)
 
 
 def cache_update(df_new, filters):

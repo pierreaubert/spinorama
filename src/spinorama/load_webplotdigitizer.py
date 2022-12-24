@@ -163,8 +163,8 @@ def parse_graph_freq_webplotdigitizer(filename):
                 return newname
 
             # print(res)
-            freq = np.array([res[i][0] for i in range(0, len(res))]).astype(np.float)
-            dB = np.array([res[i][1] for i in range(0, len(res))]).astype(np.float)
+            freq = np.array([res[i][0] for i in range(0, len(res))]).astype(float)
+            dB = np.array([res[i][1] for i in range(0, len(res))]).astype(float)
             mrt = [pretty(res[i][2]) for i in range(0, len(res))]
             df = pd.DataFrame({"Freq": freq, "dB": dB, "Measurements": mrt})
             logger.debug(

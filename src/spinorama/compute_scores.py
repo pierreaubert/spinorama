@@ -141,7 +141,7 @@ def lfq(lw, sp, lfx_log) -> float:
             lfq_sum += abs(y_lw - y_sp)
             n += 1
     if n == 0:
-        logger.warning("lfq is None: lfx={} octave(20): {}".format(val_lfx, octave(20)))
+        logger.warning("lfq is None: lfx={}".format(val_lfx))
         return -1.0
     return lfq_sum / n
 
