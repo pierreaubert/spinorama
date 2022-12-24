@@ -49,10 +49,7 @@ def compute_scale(speakers):
     for speaker in speakers.values():
         def_measurement = speaker["default_measurement"]
         measurement = speaker["measurements"][def_measurement]
-        if (
-            "pref_rating" not in measurement.keys()
-            or "estimates" not in measurement.keys()
-        ):
+        if "pref_rating" not in measurement.keys() or "estimates" not in measurement.keys():
             continue
         for key_score in ("pref_rating", "pref_rating_eq"):
             if key_score not in measurement.keys():
@@ -89,9 +86,7 @@ def print_radar(speaker, data, scale):
     measurement = data["measurements"][def_measurement]
     if "pref_rating" not in measurement.keys() or "estimates" not in measurement.keys():
         return
-    filename = "{}/{} {}/spider.jpg".format(
-        CPATH_DOCS_SPEAKERS, data["brand"], data["model"]
-    )
+    filename = "{}/{} {}/spider.jpg".format(CPATH_DOCS_SPEAKERS, data["brand"], data["model"])
     if pathlib.Path(filename).is_file():
         return
     graph_data = []
@@ -105,22 +100,12 @@ def print_radar(speaker, data, scale):
             {
                 "type": "scatterpolar",
                 "r": [
-                    scale_higher_is_better(
-                        "pref_score", pref_rating["pref_score"], scale
-                    ),
-                    scale_higher_is_better(
-                        "pref_score_wsub", pref_rating["pref_score_wsub"], scale
-                    ),
+                    scale_higher_is_better("pref_score", pref_rating["pref_score"], scale),
+                    scale_higher_is_better("pref_score_wsub", pref_rating["pref_score_wsub"], scale),
                     scale_lower_is_better("lfx_hz", pref_rating["lfx_hz"], scale),
-                    scale_lower_is_better(
-                        "nbd_on_axis", pref_rating["nbd_on_axis"], scale
-                    ),
-                    scale_lower_is_better(
-                        "nbd_pred_in_room", pref_rating["nbd_pred_in_room"], scale
-                    ),
-                    scale_higher_is_better(
-                        "sm_pred_in_room", pref_rating["sm_pred_in_room"], scale
-                    ),
+                    scale_lower_is_better("nbd_on_axis", pref_rating["nbd_on_axis"], scale),
+                    scale_lower_is_better("nbd_pred_in_room", pref_rating["nbd_pred_in_room"], scale),
+                    scale_higher_is_better("sm_pred_in_room", pref_rating["sm_pred_in_room"], scale),
                 ],
                 "theta": [
                     "Score",

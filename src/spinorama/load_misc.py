@@ -37,10 +37,4 @@ def check_nan(df):
                 count = df[k][j].isna().sum()
                 if count > 0:
                     logger.error("{} {} {}".format(k, j, count))
-    return np.sum(
-        [
-            df[frame].isna().sum().sum()
-            for frame in df.keys()
-            if isinstance(df[frame], pd.DataFrame)
-        ]
-    )
+    return np.sum([df[frame].isna().sum().sum() for frame in df.keys() if isinstance(df[frame], pd.DataFrame)])

@@ -52,9 +52,7 @@ def get_custom_logger(duplicate=False):
     """Define properties of our logger"""
     custom = logging.getLogger("spinorama")
     custom_file_handler = logging.FileHandler("debug_optim.log")
-    formatter = logging.Formatter(
-        "%(asctime)s - %(filename)s:%(funcName)s:%(lineno)d - %(levelname)s - %(message)s"
-    )
+    formatter = logging.Formatter("%(asctime)s - %(filename)s:%(funcName)s:%(lineno)d - %(levelname)s - %(message)s")
     custom_file_handler.setFormatter(formatter)
     custom.addHandler(custom_file_handler)
     if duplicate is True:
@@ -142,9 +140,7 @@ CACHE_DIR = ".cache"
 
 def cache_key(name):
     # 256 partitions, use hashlib for stable hash
-    return "{:2s}".format(
-        md5(name.encode("utf-8"), usedforsecurity=False).hexdigest()[0:2]
-    )
+    return "{:2s}".format(md5(name.encode("utf-8"), usedforsecurity=False).hexdigest()[0:2])
 
 
 def cache_match(key, name):

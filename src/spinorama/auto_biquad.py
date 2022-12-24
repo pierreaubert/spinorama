@@ -99,10 +99,7 @@ def find_best_biquad(
                 res["message"],
             )
         )
-        if (
-            res.message[0] == "Maximum number of function call reached during annealing"
-            and res.fun < prev_best
-        ):
+        if res.message[0] == "Maximum number of function call reached during annealing" and res.fun < prev_best:
             res.success = True
         return (
             res.success,
@@ -187,10 +184,7 @@ def find_best_peak(
                 res.fun, res.nfev, res.x[0], res.x[1], res.x[2], res.message
             )
         )
-        if (
-            res.message[0] == "Maximum number of function call reached during annealing"
-            and res.fun < prev_best
-        ):
+        if res.message[0] == "Maximum number of function call reached during annealing" and res.fun < prev_best:
             res.success = True
         return res.success, biquad_type, res.x[0], res.x[1], res.x[2], res.fun, res.nit
     except ValueError as ve:

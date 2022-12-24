@@ -25,30 +25,12 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
 
     dfs: a spinorama stored into a panda DataFrame
     """
-    on = (
-        dfs[dfs.Measurements == "On Axis"]
-        .rename(columns={"dB": "ON"})
-        .set_index("Freq")
-    )
-    lw = (
-        dfs[dfs.Measurements == "Listening Window"]
-        .rename(columns={"dB": "LW"})
-        .set_index("Freq")
-    )
-    er = (
-        dfs[dfs.Measurements == "Early Reflections"]
-        .rename(columns={"dB": "ER"})
-        .set_index("Freq")
-    )
-    sp = (
-        dfs[dfs.Measurements == "Sound Power"]
-        .rename(columns={"dB": "SP"})
-        .set_index("Freq")
-    )
+    on = dfs[dfs.Measurements == "On Axis"].rename(columns={"dB": "ON"}).set_index("Freq")
+    lw = dfs[dfs.Measurements == "Listening Window"].rename(columns={"dB": "LW"}).set_index("Freq")
+    er = dfs[dfs.Measurements == "Early Reflections"].rename(columns={"dB": "ER"}).set_index("Freq")
+    sp = dfs[dfs.Measurements == "Sound Power"].rename(columns={"dB": "SP"}).set_index("Freq")
     logger.debug(
-        "unify_freq: on.shape={0} lw.shape={1} er.shape={2} sp.shape={3}".format(
-            on.shape, lw.shape, er.shape, sp.shape
-        )
+        "unify_freq: on.shape={0} lw.shape={1} er.shape={2} sp.shape={3}".format(on.shape, lw.shape, er.shape, sp.shape)
     )
 
     # align 2 by 2
@@ -166,10 +148,7 @@ def reshape(x, y, z, nscale):
     # change the shape and rescale it by nscale
     nx, _ = x.shape
     # expand x-axis and y-axis
-    lxi = [
-        np.linspace(x[0][i], x[0][i + 1], nscale, endpoint=False)
-        for i in range(0, len(x[0]) - 1)
-    ]
+    lxi = [np.linspace(x[0][i], x[0][i + 1], nscale, endpoint=False) for i in range(0, len(x[0]) - 1)]
     lx = [i for j in lxi for i in j] + [x[0][-1] for i in range(0, nscale)]
     nly = (nx - 1) * nscale + 1
     # keep order

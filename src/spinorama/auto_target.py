@@ -31,9 +31,7 @@ logger = logging.getLogger("spinorama")
 
 
 def get_selector(df, optim_config):
-    return (df["Freq"] > optim_config["freq_reg_min"]) & (
-        df["Freq"] < optim_config["freq_reg_max"]
-    )
+    return (df["Freq"] > optim_config["freq_reg_min"]) & (df["Freq"] < optim_config["freq_reg_max"])
 
 
 def get_freq(df_speaker_data, optim_config):
@@ -59,9 +57,7 @@ def get_freq(df_speaker_data, optim_config):
             df_tmp = df_speaker_data["CEA2034"]
             try:
                 # df_pivoted = df_tmp.pivot(*df_tmp).rename_axis(columns=None).reset_index()
-                df_pivoted = df_tmp.pivot_table(
-                    index="Freq", columns="Measurements", values="dB", aggfunc=max
-                ).reset_index()
+                df_pivoted = df_tmp.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
                 local_df = df_pivoted.loc[:, columns]
             except ValueError as ve:
                 # print("debug: {} {}".format(df_tmp.keys(), ve))
@@ -75,9 +71,7 @@ def get_freq(df_speaker_data, optim_config):
     if with_pir:
         pir_source = df_speaker_data["Estimated In-Room Response"]
         if local_df is None:
-            local_df = pd.DataFrame(
-                {"Freq": pir_source.Freq, "Estimated In-Room Response": pir_source.dB}
-            )
+            local_df = pd.DataFrame({"Freq": pir_source.Freq, "Estimated In-Room Response": pir_source.dB})
         else:
             local_df["Estimated In-Room Response"] = pir_source.dB.values
 
@@ -100,9 +94,7 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     selector = get_selector(df_speaker_data, optim_config)
     current_curve = df_speaker_data.loc[selector, current_curve_name].values
     # compute linear reg on current_curve
-    slope, intercept, r_value, p_value, std_err = linregress(
-        np.log10(freq), current_curve
-    )
+    slope, intercept, r_value, p_value, std_err = linregress(np.log10(freq), current_curve)
     # possible correction to have a LW not too bright
     if current_curve_name == "Estimated In-Room Response":
         lw_curve = df_speaker_data.loc[selector, "Listening Window"].values
@@ -154,23 +146,13 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
         slope /= math.log10(freq[last_freq]) - math.log10(freq[first_freq])
         intercept = current_curve[first_freq] - slope * math.log10(freq[first_freq])
         flat = slope * math.log10(freq[first_freq])
-        line = np.array(
-            [
-                flat if i < first_freq else slope * math.log10(f)
-                for i, f in enumerate(freq)
-            ]
-            + intercept
-        )
+        line = np.array([flat if i < first_freq else slope * math.log10(f) for i, f in enumerate(freq)] + intercept)
         # if current_curve_name == 'Listening Window':
         #    line = [flat for f in freq[:freq_1k5]] + \
         #        [slope*math.log10(f)-0.25 for f in freq[freq_1k5, freq_4k]] + \
         #        [slope*math.log10(f)-1 for f in freq[freq_4k:]]
         #    line += intercept
-        logger.debug(
-            "Slope {} Intercept {} R {} P {} err {}".format(
-                slope, intercept, r_value, p_value, std_err
-            )
-        )
+        logger.debug("Slope {} Intercept {} R {} P {} err {}".format(slope, intercept, r_value, p_value, std_err))
         logger.debug(
             "Target_interp from {:.1f}dB at {}Hz to {:.1f}dB at {}Hz".format(
                 line[first_freq], freq[first_freq], line[last_freq], freq[last_freq]

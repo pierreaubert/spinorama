@@ -76,31 +76,21 @@ def parse_graph_splHVtxt(dirpath, orientation):
                         dbs.append(float(db))
                     continue
 
-                logger.warning(
-                    "unkown file format len words {} for line {}".format(len(words), l)
-                )
+                logger.warning("unkown file format len words {} for line {}".format(len(words), l))
 
         if angle == "On Axis":
             if angle not in already_loaded:
                 dfs.append(pd.DataFrame({"Freq": freqs, angle: dbs}))
                 already_loaded.add(angle)
             else:
-                print(
-                    "Warning: angle {} already loaded (dirpath={})".format(
-                        angle, dirpath
-                    )
-                )
+                print("Warning: angle {} already loaded (dirpath={})".format(angle, dirpath))
         else:
             if angle != "-180°":
                 if angle not in already_loaded:
                     dfs.append(pd.DataFrame({angle: dbs}))
                     already_loaded.add(angle)
                 else:
-                    print(
-                        "Warning: angle {} already loaded (dirpath={})".format(
-                            angle, dirpath
-                        )
-                    )
+                    print("Warning: angle {} already loaded (dirpath={})".format(angle, dirpath))
             if symmetry and orientation == "H" and angle != "180°":
                 mangle = "-{0}".format(angle)
                 dfs.append(pd.DataFrame({mangle: dbs}))

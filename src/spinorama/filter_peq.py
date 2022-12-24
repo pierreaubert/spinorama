@@ -84,16 +84,10 @@ def peq_format_apo(comment: str, peq: Peq) -> str:
                 )
             )
         elif iir.typ in (Biquad.LOWPASS, Biquad.HIGHPASS):
-            res.append(
-                "Filter {:2d}: ON {:2s} Fc {:5d} Hz".format(
-                    i + 1, iir.type2str(), int(iir.freq)
-                )
-            )
+            res.append("Filter {:2d}: ON {:2s} Fc {:5d} Hz".format(i + 1, iir.type2str(), int(iir.freq)))
         elif iir.typ in (Biquad.LOWSHELF, Biquad.HIGHSHELF):
             res.append(
-                "Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB".format(
-                    i + 1, iir.type2str(), int(iir.freq), iir.dbGain
-                )
+                "Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB".format(i + 1, iir.type2str(), int(iir.freq), iir.dbGain)
             )
         else:
             logger.error("kind {} is unkown".format(iir.typ))

@@ -72,9 +72,7 @@ if __name__ == "__main__":
         speakers[speaker_name] = {"image": speaker_name, "title": speaker_title}
 
     # configure Mako
-    mako_templates = TemplateLookup(
-        directories=["."], module_directory="/tmp/mako_modules"
-    )
+    mako_templates = TemplateLookup(directories=["."], module_directory="/tmp/mako_modules")
 
     # write index.html
     for template in ("asrbook",):

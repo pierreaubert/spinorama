@@ -25,9 +25,7 @@ def octave(N: int) -> List[Tuple[float, float, float]]:
     p_band = pow(2, 1 / (2 * N))
     o_iter = int((N * 10 + 1) / 2)
     center = (
-        [reference / p**i for i in range(o_iter, 0, -1)]
-        + [reference]
-        + [reference * p**i for i in range(1, o_iter + 1, 1)]
+        [reference / p**i for i in range(o_iter, 0, -1)] + [reference] + [reference * p**i for i in range(1, o_iter + 1, 1)]
     )
     return [(c / p_band, c, c * p_band) for c in center]
 
@@ -184,9 +182,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
             logger.info("PIR is empty")
             return None
         df_on_axis = cea2034.loc[lambda df: df.Measurements == "On Axis"]
-        df_listening_window = cea2034.loc[
-            lambda df: df.Measurements == "Listening Window"
-        ]
+        df_listening_window = cea2034.loc[lambda df: df.Measurements == "Listening Window"]
         df_sound_power = cea2034.loc[lambda df: df.Measurements == "Sound Power"]
         skip_full = False
         for dfu in (df_on_axis, df_listening_window, df_sound_power):
@@ -212,9 +208,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         # 14.5hz or 20hz see discussion
         # https://www.audiosciencereview.com/forum/index.php?threads/master-preference-ratings-for-loudspeakers.11091/page-25#post-448733
         pref = None
-        pref_wsub = pref_rating(
-            nbd_on_axis, nbd_pred_in_room, math.log10(14.5), sm_pred_in_room
-        )
+        pref_wsub = pref_rating(nbd_on_axis, nbd_pred_in_room, math.log10(14.5), sm_pred_in_room)
         if not skip_full:
             pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)
         if pref is None or pref_wsub is None:
@@ -274,13 +268,9 @@ def scores(df_speaker, rounded=False):
     elif "CEA2034_unmelted" in df_speaker:
         spin = graph_melt(df_speaker["CEA2034_unmelted"])
         if "Estimated In-Room Response" in df_speaker["CEA2034_unmelted"]:
-            pir = graph_melt(
-                df_speaker["CEA2034_unmelted"]["Estimated In-Room Response"]
-            )
+            pir = graph_melt(df_speaker["CEA2034_unmelted"]["Estimated In-Room Response"])
         else:
-            logger.error(
-                "Don't find pir {} v2".format(df_speaker["CEA2034_unmelted"].keys())
-            )
+            logger.error("Don't find pir {} v2".format(df_speaker["CEA2034_unmelted"].keys()))
 
     if pir is None:
         logger.error("pir is None, computing it")

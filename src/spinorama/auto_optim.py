@@ -72,9 +72,7 @@ def optim_preflight(
         status = False
 
     if nbt != nbi:
-        logger.error(
-            "Size mismatch #target {} != #auto_target_interp {}".format(nbt, nbi)
-        )
+        logger.error("Size mismatch #target {} != #auto_target_interp {}".format(nbt, nbi))
         status = False
 
     for i in range(0, min(nbt, nbi)):
@@ -149,9 +147,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
     order_range = range(order + 1)
     half_window = (window_size - 1) // 2
     # precompute coefficients
-    b = np.mat(
-        [[k**i for i in order_range] for k in range(-half_window, half_window + 1)]
-    )
+    b = np.mat([[k**i for i in order_range] for k in range(-half_window, half_window + 1)])
     m = np.linalg.pinv(b).A[deriv] * rate**deriv * math.factorial(deriv)
     # pad the signal at the extremes with
     # values taken from the signal itself
@@ -204,9 +200,7 @@ def optim_greedy(
         return ([(0, 0, 0)], [])
 
     auto_peq = []
-    current_auto_target = optim_compute_auto_target(
-        freq, auto_target, auto_target_interp, auto_peq, optim_config
-    )
+    current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq, optim_config)
     best_loss = loss(df_speaker, freq, auto_target, auto_peq, 0, optim_config)
     pref_score = 1.0
     if use_score:
@@ -243,9 +237,7 @@ def optim_greedy(
     for optim_iter in range(0, nb_iter):
 
         # we are optimizing above my_freq_reg_min hz on anechoic data
-        current_auto_target = optim_compute_auto_target(
-            freq, auto_target, auto_target_interp, auto_peq, optim_config
-        )
+        current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq, optim_config)
 
         if optim_iter == 0 and optim_config["full_biquad_optim"] is True:
             # see if a LP can help get some flatness of bass
@@ -259,12 +251,8 @@ def optim_greedy(
             biquad_range = [0, 3]  # LP, PK
         else:
             # greedy strategy: look for lowest & highest peak
-            sign, init_freq, init_freq_range = propose_range_freq(
-                freq, current_auto_target[0], optim_config
-            )
-            init_dbGain_range = propose_range_dbGain(
-                freq, current_auto_target[0], sign, init_freq, optim_config
-            )
+            sign, init_freq, init_freq_range = propose_range_freq(freq, current_auto_target[0], optim_config)
+            init_dbGain_range = propose_range_dbGain(freq, current_auto_target[0], sign, init_freq, optim_config)
             init_Q_range = propose_range_Q(optim_config)
             biquad_range = propose_range_biquad(optim_config)
 
@@ -275,15 +263,7 @@ def optim_greedy(
         # )
 
         if optim_config["full_biquad_optim"] is True:
-            (
-                state,
-                current_type,
-                current_freq,
-                current_Q,
-                current_dbGain,
-                current_loss,
-                current_nit,
-            ) = find_best_biquad(
+            (state, current_type, current_freq, current_Q, current_dbGain, current_loss, current_nit,) = find_best_biquad(
                 df_speaker,
                 freq,
                 current_auto_target,
@@ -296,15 +276,7 @@ def optim_greedy(
                 current_loss,
             )
         else:
-            (
-                state,
-                current_type,
-                current_freq,
-                current_Q,
-                current_dbGain,
-                current_loss,
-                current_nit,
-            ) = find_best_peak(
+            (state, current_type, current_freq, current_Q, current_dbGain, current_loss, current_nit,) = find_best_peak(
                 df_speaker,
                 freq,
                 current_auto_target,
@@ -342,16 +314,12 @@ def optim_greedy(
             )
         else:
             logger.error(
-                "Speaker {} Skip failed optim for best {:2.2f} current {:2.2f}".format(
-                    speaker_name, best_loss, current_loss
-                )
+                "Speaker {} Skip failed optim for best {:2.2f} current {:2.2f}".format(speaker_name, best_loss, current_loss)
             )
             break
 
     # recompute auto_target with the full auto_peq
-    current_auto_target = optim_compute_auto_target(
-        freq, auto_target, auto_target_interp, auto_peq, optim_config
-    )
+    current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq, optim_config)
     if results[-1][1] < best_loss:
         results.append((nb_iter + 1, best_loss, -pref_score))
     if use_score:
@@ -399,15 +367,10 @@ def optim_grapheq(
 
     # db is the only unknown, start with 0
     auto_db = np.zeros(len(auto_freq))
-    auto_peq = [
-        (1.0, Biquad(auto_type, float(f), 48000, auto_q, float(db)))
-        for f, db in zip(auto_freq, auto_db)
-    ]
+    auto_peq = [(1.0, Biquad(auto_type, float(f), 48000, auto_q, float(db))) for f, db in zip(auto_freq, auto_db)]
 
     # compute initial target
-    current_auto_target = optim_compute_auto_target(
-        freq, auto_target, auto_target_interp, auto_peq, optim_config
-    )
+    current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq, optim_config)
     best_loss = loss(df_speaker, freq, auto_target, auto_peq, 0, optim_config)
     pref_score = 1.0
     if use_score:
@@ -430,10 +393,7 @@ def optim_grapheq(
                 db = max(auto_min, db)
                 db = min(auto_max, db)
             guess_db.append(db)
-        return [
-            (1.0, Biquad(auto_type, float(f), 48000, auto_q, float(db)))
-            for f, db in zip(auto_freq, guess_db)
-        ]
+        return [(1.0, Biquad(auto_type, float(f), 48000, auto_q, float(db))) for f, db in zip(auto_freq, guess_db)]
 
     def compute_delta(param, shift):
         current_peq = fit(param, shift)

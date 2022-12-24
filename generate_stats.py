@@ -68,17 +68,13 @@ def meta2df(meta):
             if "pref_rating" in measurement:
                 ref = "Origin"
                 for k, v in measurement["pref_rating"].items():
-                    logger.debug(
-                        "{} {} {} {} {} {}".format(i, k, v, ref, origin, brand)
-                    )
+                    logger.debug("{} {} {} {} {} {}".format(i, k, v, ref, origin, brand))
                     df.loc[count] = [i, k, v, ref, origin, brand]
                     count += 1
             if "pref_rating_eq" in measurement:
                 ref = "EQ"
                 for k, v in measurement["pref_rating_eq"].items():
-                    logger.debug(
-                        "{} {} {} {} {} {}".format(i, k, v, ref, origin, brand)
-                    )
+                    logger.debug("{} {} {} {} {} {}".format(i, k, v, ref, origin, brand))
                     df.loc[count] = [i, k, v, ref, origin, brand]
                     count += 1
     logger.info("meta2df {0} generated data".format(count))
@@ -130,12 +126,8 @@ def print_eq(speakers, txt_format):
                 )
             )
     elif txt_format == "csv":
-        print(
-            '"Speaker", "NBD", "NBD", "LFX", "SM", "SCR", "NBD", "NBD", "LFX", "SM", "SCR", "SCR", "PRE"'
-        )
-        print(
-            '"Speaker", "ON", "PIR", "Hz", "PIR", "ASR", "ON", "PIR", "Hz", "PIR", "EQ", "DIFF", "dB"'
-        )
+        print('"Speaker", "NBD", "NBD", "LFX", "SM", "SCR", "NBD", "NBD", "LFX", "SM", "SCR", "SCR", "PRE"')
+        print('"Speaker", "ON", "PIR", "Hz", "PIR", "ASR", "ON", "PIR", "Hz", "PIR", "EQ", "DIFF", "dB"')
         for i, pref, pref_eq, eq in sorted(results, key=lambda a: -a[2]["pref_score"]):
             print(
                 '"{0}", {1:0.2f}, {2:0.2f}, {3:3.0f}, {4:0.2f}, {5:+1.1f}, {6:0.2f}, {7:0.2f}, {8:3.0f}, {9:0.2f}, {10:+1.1f}, {11:+1.1f}, {12:+1.1f}'.format(

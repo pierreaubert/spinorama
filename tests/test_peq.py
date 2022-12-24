@@ -39,9 +39,7 @@ class SpinoramaFilterPeqTests(unittest.TestCase):
         # lr4
         npt.assert_almost_equal(peq_linkwitzriley_q(4), [0.707, 0.707], 3)
         # lr6
-        npt.assert_almost_equal(
-            peq_linkwitzriley_q(10), [1.618, 0.618, 1.618, 0.618, 0.5], 3
-        )
+        npt.assert_almost_equal(peq_linkwitzriley_q(10), [1.618, 0.618, 1.618, 0.618, 0.5], 3)
 
 
 if __name__ == "__main__":

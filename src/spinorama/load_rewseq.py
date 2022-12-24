@@ -56,9 +56,7 @@ def parse_eq_line(line, srate):
     if freq:
         ifreq = int(float(freq))
         if ifreq < 0 or ifreq > srate / 2:
-            logger.debug(
-                "IIR peq freq {0}Hz out of bounds (srate={1}".format(freq, srate)
-            )
+            logger.debug("IIR peq freq {0}Hz out of bounds (srate={1}".format(freq, srate))
             return None, None
 
     if gain:
@@ -75,25 +73,13 @@ def parse_eq_line(line, srate):
 
     if kind in ("PK", "PEQ", "Modal"):
         iir = Biquad(Biquad.PEAK, ifreq, srate, rq, rgain)
-        logger.debug(
-            "add IIR peq PEAK freq {0}Hz srate {1} Q {2} Gain {3}".format(
-                ifreq, srate, rq, rgain
-            )
-        )
+        logger.debug("add IIR peq PEAK freq {0}Hz srate {1} Q {2} Gain {3}".format(ifreq, srate, rq, rgain))
     elif kind == "NO":
         iir = Biquad(Biquad.NOTCH, ifreq, srate, rq, rgain)
-        logger.debug(
-            "add IIR peq NOTCH freq {0}Hz srate {1} Q {2} Gain {3}".format(
-                ifreq, srate, rq, rgain
-            )
-        )
+        logger.debug("add IIR peq NOTCH freq {0}Hz srate {1} Q {2} Gain {3}".format(ifreq, srate, rq, rgain))
     elif kind == "BP":
         iir = Biquad(Biquad.BANDPASS, ifreq, srate, rq, rgain)
-        logger.debug(
-            "add IIR peq BANDPASS freq {0}Hz srate {1} Q {2} Gain {3}".format(
-                ifreq, srate, rq, rgain
-            )
-        )
+        logger.debug("add IIR peq BANDPASS freq {0}Hz srate {1} Q {2} Gain {3}".format(ifreq, srate, rq, rgain))
     elif kind in ("HP", "HPQ"):
         iir = Biquad(Biquad.HIGHPASS, ifreq, srate, 1.0 / math.sqrt(2.0), 1.0)
         logger.debug("add IIR peq LOWPASS freq {0}Hz srate {1}".format(ifreq, srate))
@@ -102,18 +88,10 @@ def parse_eq_line(line, srate):
         logger.debug("add IIR peq LOWPASS freq {0}Hz srate {1}".format(ifreq, srate))
     elif kind in ("LS", "LSC"):
         iir = Biquad(Biquad.LOWSHELF, ifreq, srate, 1.0, rgain)
-        logger.debug(
-            "add IIR peq LOWSHELF freq {0}Hz srate {1} Gain {2}".format(
-                ifreq, srate, rgain
-            )
-        )
+        logger.debug("add IIR peq LOWSHELF freq {0}Hz srate {1} Gain {2}".format(ifreq, srate, rgain))
     elif kind in ("HS", "HSC"):
         iir = Biquad(Biquad.HIGHSHELF, ifreq, srate, 1.0, rgain)
-        logger.debug(
-            "add IIR peq HIGHSHELF freq {0}Hz srate {1} Gain {2}".format(
-                ifreq, srate, rgain
-            )
-        )
+        logger.debug("add IIR peq HIGHSHELF freq {0}Hz srate {1} Gain {2}".format(ifreq, srate, rgain))
     else:
         logger.warning("kind {0} is unknown".format(kind))
         return None, None

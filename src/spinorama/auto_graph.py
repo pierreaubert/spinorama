@@ -60,9 +60,7 @@ def graph_eq(freq, peq, domain, title):
     return traces
 
 
-def graph_eq_compare(
-    freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target
-):
+def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target):
     # manual_peq = [
     #    (1.0, Biquad(3, 400, 48000, 4.32, -2)),
     #    (1.0, Biquad(3, 1600, 48000, 4.32, -1)),
@@ -136,29 +134,19 @@ def graph_results(
         fd.close()
 
     # print('target {} {}'.format(np.min(target), np.max(target)))
-    g_eq_full = graph_eq_compare(
-        freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target
-    )
+    g_eq_full = graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target)
 
     # compare the 2 corrected curves
     df_optim = pd.DataFrame({"Freq": freq})
-    df_optim["Auto"] = (
-        auto_target[0] - auto_target_interp[0] + peq_build(freq, auto_peq)
-    )
+    df_optim["Auto"] = auto_target[0] - auto_target_interp[0] + peq_build(freq, auto_peq)
     # show the 2 spinoramas
-    unmelted_spin = spin.pivot_table(
-        index="Freq", columns="Measurements", values="dB", aggfunc=max
-    ).reset_index()
+    unmelted_spin = spin.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
 
     g_spin_noeq, g_spin_noeq_di = plot_spinorama_traces(unmelted_spin, g_params)
     g_spin_auto, g_spin_auto_di, unmelted_spin_auto = None, None, None
     if spin_auto is not None:
-        unmelted_spin_auto = spin_auto.pivot_table(
-            index="Freq", columns="Measurements", values="dB", aggfunc=max
-        ).reset_index()
-        g_spin_auto, g_spin_auto_di = plot_spinorama_traces(
-            unmelted_spin_auto, g_params
-        )
+        unmelted_spin_auto = spin_auto.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
+        g_spin_auto, g_spin_auto_di = plot_spinorama_traces(unmelted_spin_auto, g_params)
 
     # show the 3 optimised curves
     g_curves = {}
@@ -166,21 +154,15 @@ def graph_results(
         data = unmelted_spin
         data_auto = unmelted_spin_auto
         if which_curve == "Estimated In-Room Response":
-            data = pir.pivot_table(
-                index="Freq", columns="Measurements", values="dB", aggfunc=max
-            ).reset_index()
-            data_auto = pir_auto.pivot_table(
-                index="Freq", columns="Measurements", values="dB", aggfunc=max
-            ).reset_index()
+            data = pir.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
+            data_auto = pir_auto.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
 
         # print(data.keys())
         g_curve_noeq = plot_graph_regression_traces(data, which_curve, g_params)
 
         g_curve_auto = None
         if data_auto is not None:
-            g_curve_auto = plot_graph_regression_traces(
-                data_auto, which_curve, g_params
-            )
+            g_curve_auto = plot_graph_regression_traces(data_auto, which_curve, g_params)
         g_curves[which_curve] = {
             "noeq": g_curve_noeq,
             "auto": g_curve_auto,

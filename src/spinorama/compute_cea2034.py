@@ -17,9 +17,7 @@ def compute_area_Q(alpha_d: float, beta_d: float) -> float:
     gamma = math.acos(math.cos(alpha) * math.cos(beta))
     A = math.atan(math.sin(beta) / math.tan(alpha))
     B = math.atan(math.sin(alpha) / math.tan(beta))
-    C = math.acos(
-        -math.cos(A) * math.cos(B) + math.sin(A) * math.sin(B) * math.cos(gamma)
-    )
+    C = math.acos(-math.cos(A) * math.cos(B) + math.sin(A) * math.sin(B) * math.cos(gamma))
     S = 4 * C - 2 * math.pi
     # print('gamma {} A {} B {} C {} S {}'.format(
     #    gamma*360/2/math.pi, A*360/2/math.pi, B*360/2/math.pi, C*360/2/math.pi, S))
@@ -31,9 +29,7 @@ def compute_weigths() -> list[float]:
     angles = [i * 10 + 5 for i in range(0, 9)] + [90]
     weigth_angles = [compute_area_Q(i, i) for i in angles]
     # weigths are the delta between 2 consecutive areas
-    weigths = [weigth_angles[0]] + [
-        weigth_angles[i] - weigth_angles[i - 1] for i in range(1, len(weigth_angles))
-    ]
+    weigths = [weigth_angles[0]] + [weigth_angles[i] - weigth_angles[i - 1] for i in range(1, len(weigth_angles))]
     weigths[9] *= 2.0
     return weigths
 
@@ -170,19 +166,9 @@ def spatial_average(sp_window: pd.DataFrame, func="rms") -> pd.DataFrame:
         return r
 
     if func == "rms":
-        result["dB"] = (
-            sp_window.drop(columns=["Freq"])
-            .apply(spl2pressure)
-            .apply(rms, axis=1)
-            .apply(pressure2spl)
-        )
+        result["dB"] = sp_window.drop(columns=["Freq"]).apply(spl2pressure).apply(rms, axis=1).apply(pressure2spl)
     elif func == "weighted_rms":
-        result["dB"] = (
-            sp_window.drop(columns=["Freq"])
-            .apply(spl2pressure)
-            .apply(weighted_rms, axis=1)
-            .apply(pressure2spl)
-        )
+        result["dB"] = sp_window.drop(columns=["Freq"]).apply(spl2pressure).apply(weighted_rms, axis=1).apply(pressure2spl)
 
     return result.reset_index(drop=True)
 
@@ -214,9 +200,7 @@ def spatial_average2(
         return spatial_average1(v_spl, v_sel, func)
     h_spl_sel = h_spl[[c for c in h_spl.columns if c in h_sel]]
     v_spl_sel = v_spl[[c for c in v_spl.columns if c in v_sel]]
-    sp_window = h_spl_sel.merge(
-        v_spl_sel, left_on="Freq", right_on="Freq", suffixes=("_h", "_v")
-    )
+    sp_window = h_spl_sel.merge(v_spl_sel, left_on="Freq", right_on="Freq", suffixes=("_h", "_v"))
     return spatial_average(sp_window, func)
 
 
@@ -251,9 +235,7 @@ def listening_window(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def total_early_reflections(
-    h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
-) -> pd.DataFrame:
+def total_early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected") -> pd.DataFrame:
     """Compute the Total Early Reflections from the SPL horizontal and vertical"""
     if method == "corrected":
         return spatial_average2(
@@ -351,34 +333,22 @@ def total_early_reflections2(
     if method == "corrected":
         # 3+3+10+19+7 = 42
         # spl = 105.0 + 20.0 * np.log10((3*floor+3*ceiling+10*side+19*rear+7*front)/42.0)
-        spl = 105.0 + 20.0 * np.log10(
-            np.sqrt(
-                (floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0
-            )
-        )
+        spl = 105.0 + 20.0 * np.log10(np.sqrt((floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0))
     elif method == "standard":
         # 3+3+10+3+7 = 26
-        spl = 105.0 + 20.0 * np.log10(
-            np.sqrt(
-                (floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0
-            )
-        )
+        spl = 105.0 + 20.0 * np.log10(np.sqrt((floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0))
     else:
         logger.fatal("method is unknown {}", method)
     return pd.DataFrame({"dB": spl})
 
 
-def early_reflections(
-    h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
-) -> pd.DataFrame:
+def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected") -> pd.DataFrame:
     """Compute the Early Reflections from the SPL horizontal and vertical"""
     floor_bounce = spatial_average1(v_spl, ["Freq", "-20°", "-30°", "-40°"])
 
     ceiling_bounce = spatial_average1(v_spl, ["Freq", "40°", "50°", "60°"])
 
-    front_wall_bounce = spatial_average1(
-        h_spl, ["Freq", "On Axis", "10°", "20°", "30°", "-10°", "-20°", "-30°"]
-    )
+    front_wall_bounce = spatial_average1(h_spl, ["Freq", "On Axis", "10°", "20°", "30°", "-10°", "-20°", "-30°"])
 
     side_wall_bounce = spatial_average1(
         h_spl,
@@ -470,13 +440,9 @@ def early_reflections(
     return early_reflection.reset_index(drop=True)
 
 
-def total_vertical_reflections(
-    h_spl: pd.DataFrame, v_spl: pd.DataFrame
-) -> pd.DataFrame:
+def total_vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     """Compute the Total Vertical Reflections from the SPL horizontal and vertical"""
-    return spatial_average1(
-        v_spl, ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"]
-    )
+    return spatial_average1(v_spl, ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"])
 
 
 def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
@@ -507,9 +473,7 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
     return v_r.reset_index(drop=True)
 
 
-def total_horizontal_reflections(
-    h_spl: pd.DataFrame, v_spl: pd.DataFrame
-) -> pd.DataFrame:
+def total_horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     """Compute the Total Horizontal Reflections from the SPL horizontal and vertical"""
     return spatial_average1(
         h_spl,
@@ -568,9 +532,7 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
     # Side: ± 40°, ± 50°, ± 60°, ± 70°, ± 80° horizontal
     # Rear: ± 90°, ± 100°, ± 110°, ± 120°, ± 130°, ± 140°, ± 150°, ± 160°, ± 170°, 180°
     # horizontal, (i.e.: the horizontal part of the rear hemisphere).
-    front = spatial_average1(
-        h_spl, ["Freq", "On Axis", "10°", "20°", "30°", "-10°", "-20°", "-30°"]
-    )
+    front = spatial_average1(h_spl, ["Freq", "On Axis", "10°", "20°", "30°", "-10°", "-20°", "-30°"])
 
     side = spatial_average1(
         h_spl,
@@ -635,9 +597,7 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
     return h_r.reset_index(drop=True)
 
 
-def estimated_inroom(
-    lw: pd.DataFrame, er: pd.DataFrame, sp: pd.DataFrame
-) -> pd.DataFrame:
+def estimated_inroom(lw: pd.DataFrame, er: pd.DataFrame, sp: pd.DataFrame) -> pd.DataFrame:
     """Compute the Estimated In-Room Response (PIR) from the SPL horizontal and vertical"""
     if lw.empty or er.empty or sp.empty:
         return pd.DataFrame()
@@ -661,25 +621,17 @@ def estimated_inroom(
         # print(er[key].apply(spl2pressure))
         # print(sp.dB.apply(spl2pressure))
 
-        eir = (
-            0.12 * lw.dB.apply(spl2pressure)
-            + 0.44 * er[key].apply(spl2pressure)
-            + 0.44 * sp.dB.apply(spl2pressure)
-        )
+        eir = 0.12 * lw.dB.apply(spl2pressure) + 0.44 * er[key].apply(spl2pressure) + 0.44 * sp.dB.apply(spl2pressure)
 
         # print(eir)
 
-        return pd.DataFrame(
-            {"Freq": lw.Freq, "Estimated In-Room Response": eir.apply(pressure2spl)}
-        ).reset_index(drop=True)
+        return pd.DataFrame({"Freq": lw.Freq, "Estimated In-Room Response": eir.apply(pressure2spl)}).reset_index(drop=True)
     except TypeError as e:
         logger.error(e)
         return pd.DataFrame()
 
 
-def estimated_inroom_HV(
-    h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
-) -> pd.DataFrame:
+def estimated_inroom_HV(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected") -> pd.DataFrame:
     """Compute the PIR from the SPL horizontal and vertical"""
     if v_spl.empty or h_spl.empty:
         return pd.DataFrame()
@@ -689,9 +641,7 @@ def estimated_inroom_HV(
     return estimated_inroom(lw, er, sp)
 
 
-def compute_cea2034(
-    h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
-) -> pd.DataFrame:
+def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected") -> pd.DataFrame:
     """Compute all the graphs from CEA2034 from the SPL horizontal and vertical"""
     if v_spl.empty or h_spl.empty:
         return pd.DataFrame()

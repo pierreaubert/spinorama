@@ -30,9 +30,7 @@ pd.set_option("display.max_rows", 202)
 
 class SpinoramaEstimatesNV2Tests(unittest.TestCase):
     def setUp(self):
-        self.title, self.df_unmelted = parse_graph_freq_klippel(
-            "datas/measurements/Neumann KH 80/asr-v2-20200208/CEA2034.txt"
-        )
+        self.title, self.df_unmelted = parse_graph_freq_klippel("datas/measurements/Neumann KH 80/asr-v2-20200208/CEA2034.txt")
         self.df = graph_melt(self.df_unmelted)
         self.estimates = estimates(self.df, None, None)
 
@@ -54,12 +52,8 @@ class SpinoramaEstimatesNV3Tests(unittest.TestCase):
             "datas/measurements/Neumann KH 80/asr-v3-20200711/CEA2034.txt"
         )
         self.spin = graph_melt(self.spin_unmelted)
-        _, self.splH = parse_graph_freq_klippel(
-            "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
-        )
-        _, self.splV = parse_graph_freq_klippel(
-            "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt"
-        )
+        _, self.splH = parse_graph_freq_klippel("datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt")
+        _, self.splV = parse_graph_freq_klippel("datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt")
         self.estimates = estimates(self.spin, self.splH, self.splV)
 
     def test_estimates(self):
@@ -82,16 +76,10 @@ class SpinoramaEstimatesNV3Tests(unittest.TestCase):
 
 class SpinoramaEstimatesNV4Tests(unittest.TestCase):
     def setUp(self):
-        self.title, self.spin_unmelted = parse_graph_freq_klippel(
-            "datas/measurements/Revel C52/asr/CEA2034.txt"
-        )
+        self.title, self.spin_unmelted = parse_graph_freq_klippel("datas/measurements/Revel C52/asr/CEA2034.txt")
         self.spin = graph_melt(self.spin_unmelted)
-        _, self.splH = parse_graph_freq_klippel(
-            "datas/measurements/Revel C52/asr/SPL Horizontal.txt"
-        )
-        _, self.splV = parse_graph_freq_klippel(
-            "datas/measurements/Revel C52/asr/SPL Vertical.txt"
-        )
+        _, self.splH = parse_graph_freq_klippel("datas/measurements/Revel C52/asr/SPL Horizontal.txt")
+        _, self.splV = parse_graph_freq_klippel("datas/measurements/Revel C52/asr/SPL Vertical.txt")
         self.estimates = estimates(self.spin, self.splH, self.splV)
 
     def test_estimates(self):

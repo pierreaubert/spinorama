@@ -271,9 +271,7 @@ def interpolate(onaxis, freq):
 def process_hv(speaker, direction, onaxis):
     files = {}
     for angle in range(-180, 190, 10):
-        files["{}".format(angle)] = open(
-            "{} _{} {}.txt".format(speaker, direction[0], angle), "w"
-        )
+        files["{}".format(angle)] = open("{} _{} {}.txt".format(speaker, direction[0], angle), "w")
         files["{}".format(angle)].write("Freq Spl Phase\n")
         for freq in refFreq:
             if freq >= FIXED:

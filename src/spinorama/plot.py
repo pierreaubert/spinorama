@@ -178,20 +178,14 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
         range=[range_min, range_max],
         dtick=range_step,
         tickvals=[i for i in range(range_min, range_max + range_step, range_step)],
-        ticktext=[
-            "{}".format(i) if not i % 5 else " "
-            for i in range(range_min, range_max + range_step, range_step)
-        ],
+        ticktext=["{}".format(i) if not i % 5 else " " for i in range(range_min, range_max + range_step, range_step)],
         showline=True,
     )
 
 
 def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
     tickvals = [di for di in range(range_min, range_max, range_step)]
-    ticktext = [
-        f"{di}" if pos < 5 else ""
-        for pos, di in enumerate(range(range_min, range_max, range_step))
-    ]
+    ticktext = [f"{di}" if pos < 5 else "" for pos, di in enumerate(range(range_min, range_max, range_step))]
     # print('DEBUG {} {}'.format(tickvals, ticktext))
     return dict(
         title_text="DI (dB)                                                    &nbsp;",
@@ -209,10 +203,7 @@ def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
         range=[angle_min, angle_max],
         dtick=angle_step,
         tickvals=[v for v in range(angle_min, angle_max + angle_step, angle_step)],
-        ticktext=[
-            "{}°".format(v)
-            for v in range(angle_min, angle_max + angle_step, angle_step)
-        ],
+        ticktext=["{}°".format(v) for v in range(angle_min, angle_max + angle_step, angle_step)],
         showline=True,
     )
 
@@ -452,9 +443,7 @@ def plot_graph_regression_traces(df, measurement, params):
     # some speakers start very high
     current_restricted = df.loc[(df.Freq > 250) & (df.Freq < 10000)]
 
-    slope, intercept, r, p, se = stats.linregress(
-        x=np.log10(current_restricted["Freq"]), y=current_restricted[measurement]
-    )
+    slope, intercept, r, p, se = stats.linregress(x=np.log10(current_restricted["Freq"]), y=current_restricted[measurement])
     line = [slope * math.log10(f) + intercept for f in df.Freq]
 
     # print("step {} {}".format(slope, intercept))
@@ -585,11 +574,7 @@ def plot_contour(spl, params):
         return x, y
 
     hx, hy = compute_horizontal_lines(min_freq, 20000, range(-150, 180, 30))
-    vrange = (
-        [100 * i for i in range(2, 9)]
-        + [1000 * i for i in range(1, 10)]
-        + [10000 + 1000 * i for i in range(1, 9)]
-    )
+    vrange = [100 * i for i in range(2, 9)] + [1000 * i for i in range(1, 10)] + [10000 + 1000 * i for i in range(1, 9)]
     vx, vy = compute_vertical_lines(-180, 180, vrange)
 
     add_lines(hx, hy)
@@ -635,9 +620,7 @@ def plot_radar(spl, params):
 
     def plot_radar_freq(anglelist, df):
         dfu = sort_angles(df)
-        db_mean = np.mean(
-            dfu.loc[(dfu.Freq > 900) & (dfu.Freq < 1100)]["On Axis"].values
-        )
+        db_mean = np.mean(dfu.loc[(dfu.Freq > 900) & (dfu.Freq < 1100)]["On Axis"].values)
         freq = dfu.Freq
         dfu = dfu.drop("Freq", axis=1)
         db_min = np.min(dfu.min(axis=0).values)

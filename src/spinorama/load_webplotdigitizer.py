@@ -37,9 +37,7 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
                         info_json = filedir + "/tmp/" + tarinfo.name
                         with open(info_json, "r") as f:
                             info = json.load(f)
-                            jsonfilename = (
-                                filedir + "/tmp/" + tarinfo.name[:-9] + info["json"]
-                            )
+                            jsonfilename = filedir + "/tmp/" + tarinfo.name[:-9] + info["json"]
 
             # now extract the large json file
             if jsonfilename is not None:
@@ -56,9 +54,7 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
     if jsonfilename is None:
         jsonfilename = filename + ".json"
     if not os.path.exists(jsonfilename):
-        logger.warning(
-            "Didn't find tar or json for {} {} {}".format(speaker_name, origin, version)
-        )
+        logger.warning("Didn't find tar or json for {} {} {}".format(speaker_name, origin, version))
         return None
     logger.debug("Jsonfilename {0}".format(jsonfilename))
     return jsonfilename
@@ -78,14 +74,9 @@ def parse_graph_freq_webplotdigitizer(filename):
             for col in speaker_data["datasetColl"]:
                 data = col["data"]
                 # sort data
-                udata = [
-                    (data[d]["value"][0], data[d]["value"][1])
-                    for d in range(0, len(data))
-                ]
+                udata = [(data[d]["value"][0], data[d]["value"][1]) for d in range(0, len(data))]
                 sdata = sorted(udata, key=lambda a: a[0])
-                logger.debug(
-                    "reading col {} with {} data".format(col["name"], len(sdata))
-                )
+                logger.debug("reading col {} with {} data".format(col["name"], len(sdata)))
                 # if len(sdata) > 0:
                 #   print(sdata)
                 # since sdata and freq_ref are both sorted, iterate over both
@@ -104,17 +95,13 @@ def parse_graph_freq_webplotdigitizer(filename):
                     # look for closest match
                     while ref_freq[ref_p] <= fr:
                         if ref_p >= len(ref_freq) - 1:
-                            logger.debug(
-                                "closest match at {} {}".format(ref_p, ref_freq)
-                            )
+                            logger.debug("closest match at {} {}".format(ref_p, ref_freq))
                             break
                         ref_p += 1
                     # if ref_f is too large, skip
                     ref_f = ref_freq[ref_p]
                     if ref_f > frn:
-                        logger.debug(
-                            "ref freq too large, skipping {} {}".format(ref_f, frn)
-                        )
+                        logger.debug("ref freq too large, skipping {} {}".format(ref_f, frn))
                         continue
                     # linear interpolation
                     ref_db = db + ((dbn - db) * (ref_f - fr)) / (frn - fr)
@@ -168,9 +155,7 @@ def parse_graph_freq_webplotdigitizer(filename):
             mrt = [pretty(res[i][2]) for i in range(0, len(res))]
             df = pd.DataFrame({"Freq": freq, "dB": dB, "Measurements": mrt})
             logger.debug(
-                "scan complete fr=[{}, {}], dB=[{}, {}]".format(
-                    df.Freq.min(), df.Freq.max(), df.dB.min(), df.dB.max()
-                )
+                "scan complete fr=[{}, {}], dB=[{}, {}]".format(df.Freq.min(), df.Freq.max(), df.dB.min(), df.dB.max())
             )
             return "CEA2034", df
     except IOError as e:
@@ -178,21 +163,13 @@ def parse_graph_freq_webplotdigitizer(filename):
         return None, None
 
 
-def parse_graphs_speaker_webplotdigitizer(
-    speaker_path, speaker_brand, speaker_name, origin, version
-):
+def parse_graphs_speaker_webplotdigitizer(speaker_path, speaker_brand, speaker_name, origin, version):
     dfs = {}
     logger.debug("speaker_path set to {}".format(speaker_path))
-    jsonfilename = parse_webplotdigitizer_get_jsonfilename(
-        speaker_path, speaker_name, origin, version
-    )
+    jsonfilename = parse_webplotdigitizer_get_jsonfilename(speaker_path, speaker_name, origin, version)
 
     if jsonfilename is None:
-        logging.warning(
-            "{} {} {} didn't find data file in {}".format(
-                speaker_name, origin, version, speaker_path
-            )
-        )
+        logging.warning("{} {} {} didn't find data file in {}".format(speaker_name, origin, version, speaker_path))
         return None
 
     try:
