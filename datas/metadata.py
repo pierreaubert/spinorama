@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # common notes for some loudspeakers
-note_genelec_gll = "Data provided by Genelec is with 1/3rd octave smoothing and 5 degrees resolution"
+note_genelec_gll = (
+    "Data provided by Genelec is with 1/3rd octave smoothing and 5 degrees resolution"
+)
 note_jbl_gll = "Data provided by JBL is highly variable, beware. It ranges from excellent to surprising"
 note_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz"
 note_qsc_gll = "Data provided by QSC is of good quality but highly smoothed"
@@ -6796,7 +6798,7 @@ speakers_info = {
         "brand": "JBL",
         "model": "M2",
         "type": "active",
-        "price": "20000",
+        "price": "12000",
         "shape": "floorstanders",
         "amount": "pair",
         "default_measurement": "eac",
@@ -7248,6 +7250,7 @@ speakers_info = {
         "model": "Blade 1 Meta",
         "type": "passive",
         "price": "35000",
+        "amount": "pair",
         "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {
@@ -7267,6 +7270,7 @@ speakers_info = {
         "model": "Blade 2 Meta",
         "type": "passive",
         "price": "25000",
+        "amount": "pair",
         "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {
@@ -9589,6 +9593,24 @@ speakers_info = {
                 "review_published": "20220915",
                 "quality": "medium",
                 "notes": "{}".format(note_meyersound_gll),
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "peak": 138,
+                        "m-noise": 132.5,
+                        "pink-noise": 130,
+                        "b-noise": 131,
+                    },
+                    "size": {
+                        "height": 567,
+                        "width": 318,
+                        "depth": 391,
+                    },
+                    "weight": 23.6,
+                },
             },
         },
     },
@@ -10431,6 +10453,43 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/ocean-way-hr5-studio-monitor-review.13925",
                 "review_published": "20200608",
+            },
+        },
+    },
+    "OS Acoustics DBS8": {
+        "brand": "OS Acoustics",
+        "model": "DBS8",
+        "type": "active",
+        "price": "2800",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "misc-sr",
+        "measurements": {
+            "misc-sr": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "reviews": {
+                    "sr": "https://www.soundandrecording.de/equipment/o-s-acoustics-dbs8-2-wege-monitor-im-test/",
+                    "sos": "https://www.soundonsound.com/reviews/os-acoustics-dbs8",
+                },
+                "review_published": "20221228",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 140,
+                        "vertical": 95,
+                    },
+                    "SPL": {
+                        "max": 108,
+                        "peak": 121,
+                    },
+                    "size": {
+                        "height": 502,
+                        "width": 222,
+                        "depth": 437,
+                    },
+                    "weight": 15.8,
+                },
             },
         },
     },
@@ -11570,6 +11629,40 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/psb-alpha-p5-speaker-review.15161/",
                 "review_published": "20200806",
+            },
+        },
+    },
+    "PSI Audio A21-M": {
+        "brand": "PSI Audio",
+        "model": "A21-M",
+        "type": "active",
+        "price": "3100",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "misc-sr",
+        "measurements": {
+            "misc-sr": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.soundandrecording.de/equipment/psi-a21-m-grosser-nahfeldmonitor-im-test/",
+                "review_published": "20221228",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 30,
+                    },
+                    "SPL": {
+                        "max": 106,
+                        "peak": 121,
+                    },
+                    "size": {
+                        "height": 400,
+                        "width": 250,
+                        "depth": 300,
+                    },
+                    "weight": 12.8,
+                },
             },
         },
     },
@@ -14407,6 +14500,13 @@ origins_info = {
         "logo": "docs/metadata/presonus.png",
         "logo-small": "docs/metadata/presonus.png",
         "url": "https://www.presonus.com",
+    },
+    "Vendors-PSI Audio": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.psiaudio.swis",
     },
     "Vendors-QSC": {
         "min hz": 20,
