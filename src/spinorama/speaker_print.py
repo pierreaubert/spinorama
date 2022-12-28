@@ -175,15 +175,26 @@ def print_graphs(
         title = k.replace("_smoothed", "")
         # optimised for small screens / vertical orientation
         if graphs[k] is not None:
+            whom = origin
+            if origin[0:7] == "Vendors-":
+                whom = origin.replace("Vendors-", "")
+            elif origin == "Misc":
+                if version[-3:] == "-sr":
+                    whom = "Sound & Recording (data scanned)"
+                elif version[-3:] == "-pp":
+                    whom = "Production Partners (data scanned)"
+            elif origin == "ASR":
+                whom = "Audio Science Review"
+            text = "{2} for {0} measured by {1}".format(speaker, whom, title)
             graphs[k].update_layout(
                 title=dict(
-                    text="{2} for {0} measured by {1}".format(speaker, origin.replace("Vendors-", ""), title),
+                    text=text,
                     font=dict(
-                        size=24,
+                        size=20,
                     ),
                 ),
                 font=dict(
-                    size=22,
+                    size=20,
                 ),
             )
 
