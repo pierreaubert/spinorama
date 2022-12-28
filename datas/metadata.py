@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # common notes for some loudspeakers
-note_genelec_gll = (
-    "Data provided by Genelec is with 1/3rd octave smoothing and 5 degrees resolution"
-)
+note_genelec_gll = "Data provided by Genelec is with 1/3rd octave smoothing and 5 degrees resolution"
 note_jbl_gll = "Data provided by JBL is highly variable, beware. It ranges from excellent to surprising"
 note_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz"
 note_qsc_gll = "Data provided by QSC is of good quality but highly smoothed"
