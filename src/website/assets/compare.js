@@ -119,6 +119,17 @@ getMetadata().then((metadata) => {
     return knownMeasurements[0]
   }
 
+  function updateTitle () {
+    let title = 'Spinorama: compare ' + graphsSelector.value + ' graphs for speakers '
+    for (let i = 0; i < nbSpeakers; i++) {
+      title += speakersSelector[i].value + ' (' + originsSelector[i].value + ') '
+      if (i<nbSpeakers-1) {
+        title += ' v.s. '
+      }
+    }
+    document.title = title
+  }
+
   function updateSpeakers () {
     const names = []
     const graphs = []
@@ -133,6 +144,7 @@ getMetadata().then((metadata) => {
       names[i] = speakersSelector[i].value
     }
     urlParams.set('measurement', graphsSelector.value)
+    updateTitle()
     history.pushState({ page: 1 },
       'Change measurement',
       urlCompare + urlParams.toString()
@@ -144,6 +156,7 @@ getMetadata().then((metadata) => {
     // console.log('updateSpeakerPos(' + pos + ')')
     updateOrigin(metaSpeakers, speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos])
     urlParams.set('speaker' + pos, speakersSelector[pos].value)
+    updateTitle()
     history.pushState({ page: 1 },
       'Compare speakers',
       urlCompare + urlParams.toString()
@@ -162,6 +175,7 @@ getMetadata().then((metadata) => {
     )
     updateSpeakers()
     urlParams.set('version' + pos, versionsSelector[pos].value)
+    updateTitle()
     history.pushState({ page: 1 },
       'Compare speakers',
       urlCompare + urlParams.toString()
@@ -172,6 +186,7 @@ getMetadata().then((metadata) => {
     // console.log('updateOriginPos(' + pos + ')')
     updateOrigin(metaSpeakers, speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos], originsSelector[pos].value)
     urlParams.set('origin' + pos, originsSelector[pos].value)
+    updateTitle()
     history.pushState({ page: 1 },
       'Compare speakers',
       urlCompare + urlParams.toString()
