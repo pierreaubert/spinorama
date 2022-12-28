@@ -75,6 +75,18 @@ export function getID (brand, model) {
   return (brand + ' ' + model).replace(/['.+& ]/g, '-')
 }
 
+export function getPrice (price, amount) {
+  const val = parseFloat(price)
+  if (isNaN(val)) {
+    return ""
+  }
+  if (amount === "each") {
+    return "(" + price + " USD)"
+  }
+  // default is per pair
+  return "( " + (val/2.0).toString()+" USD)"
+}
+
 export function getField (value, field, version) {
   let fields = {}
   if (value.measurements && value.measurements[version]) {
@@ -294,6 +306,10 @@ export function getScore (value, def) {
     }
     flatnessScaled = prefScaled.scaled_flatness
   }
+  let specifications = {}
+  if (value.measurements && value.measurements[def].specifications) {
+    specifications = value.measurements[def].specifications
+  }
   return {
     score: parseFloat(score).toFixed(1),
     lfx: lfx.toFixed(0),
@@ -302,7 +318,8 @@ export function getScore (value, def) {
     scoreScaled: scoreScaled.toFixed(1),
     lfxScaled: lfxScaled,
     flatnessScaled: flatnessScaled,
-    smoothnessScaled: smoothnessScaled
+    smoothnessScaled: smoothnessScaled,
+    specifications: specifications
   }
 }
 

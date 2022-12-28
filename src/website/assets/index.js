@@ -1,5 +1,5 @@
 import { getMetadata } from './common.js'
-import { getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc.js'
+import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc.js'
 import { sortMetadata2 } from './sort.js'
 
 getMetadata().then((metadata) => {
@@ -9,6 +9,7 @@ getMetadata().then((metadata) => {
       id: getID(value.brand, value.model),
       brand: value.brand,
       model: value.model,
+      price: getPrice(value.price, value.amount),
       img: {
         avif: getPicture(value.brand, value.model, 'avif'),
         webp: getPicture(value.brand, value.model, 'webp'),
