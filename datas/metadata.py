@@ -5299,6 +5299,10 @@ speakers_info = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/06/harman-consumer-brands-spinorama-data.html",
+                "extras": {
+                    "is_equed": True,
+                    "score_penalty": -1.2,
+                },
             },
         },
     },

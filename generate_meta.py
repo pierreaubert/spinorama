@@ -118,6 +118,13 @@ def queue_score(speaker_name, speaker_data):
                 inroom = dfs["Estimated In-Room Response"]
                 if inroom is not None:
                     pref_rating = speaker_pref_rating(spin, inroom)
+                    score_penalty = 0.0
+                    current = metadata.speakers_info[speaker_name]["measurements"].get(key)
+                    if current is not None and current.get("extras") is not None:
+                        score_penalty = current["extras"].get("score_penalty", 0.0)
+                        pref_rating["pref_score"] += score_penalty
+                        pref_rating["pref_score_wsub"] += score_penalty
+                    
                     if pref_rating is not None:
                         if key[-3:] == "_eq":
                             result["pref_rating_eq"] = pref_rating
@@ -211,23 +218,23 @@ def add_scores(dataframe, parse_max):
                 # pref lfx_hz
                 pref_lfx_hz = pref_rating.get("pref_lfx_hz")
                 if pref_lfx_hz is not None and not math.isnan(pref_lfx_hz):
-                    min_pref_lfx_hz = min(min_pref_lfx_hz, pref_lfx_hz)
-                    max_pref_lfx_hz = max(max_pref_lfx_hz, pref_lfx_hz)
+                    min_lfx_hz = min(min_lfx_hz, pref_lfx_hz)
+                    max_lfx_hz = max(max_lfx_hz, pref_lfx_hz)
                 # pref nbd_on
                 pref_nbd_on = pref_rating.get("pref_nbd_on")
                 if pref_nbd_on is not None and not math.isnan(pref_nbd_on):
-                    min_pref_nbd_on = min(min_pref_nbd_on, pref_nbd_on)
-                    max_pref_nbd_on = max(max_pref_nbd_on, pref_nbd_on)
+                    min_nbd_on = min(min_nbd_on, pref_nbd_on)
+                    max_nbd_on = max(max_nbd_on, pref_nbd_on)
                 # pref sm_pir
                 pref_sm_pir = pref_rating.get("pref_sm_pir")
                 if pref_sm_pir is not None and not math.isnan(pref_sm_pir):
-                    min_pref_sm_pir = min(min_pref_sm_pir, pref_sm_pir)
-                    max_pref_sm_pir = max(max_pref_sm_pir, pref_sm_pir)
+                    min_sm_pir = min(min_sm_pir, pref_sm_pir)
+                    max_sm_pir = max(max_sm_pir, pref_sm_pir)
                 # pref sm_sp
                 pref_sm_sp = pref_rating.get("pref_sm_sp")
                 if pref_sm_sp is not None and not math.isnan(pref_sm_sp):
-                    min_pref_sm_sp = min(min_pref_sm_sp, pref_sm_sp)
-                    max_pref_sm_sp = max(max_pref_sm_sp, pref_sm_sp)
+                    min_sm_sp = min(min_sm_sp, pref_sm_sp)
+                    max_sm_sp = max(max_sm_sp, pref_sm_sp)
                 # pref score w/sub
                 pref_score_wsub = pref_rating.get("pref_score_wsub")
                 if pref_score_wsub is not None and not math.isnan(pref_score_wsub):
