@@ -1621,6 +1621,33 @@ speakers_info = {
             },
         },
     },
+    "Canton Vento 826.2": {
+        "brand": "Canton",
+        "model": "Vento 826.2",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "780",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/canton-vento-826-2-speaker-review.40475/",
+                "review_published": "20221229",
+                "specifications" : {
+                    "sensitivity": 85,
+                    "impedance": 4,
+                    "size": {
+                        "height": 300,
+                        "width": 195,
+                        "depth": 270,
+                    },
+                    "weight": 6,
+                },
+            },
+        },
+    },
     "Carmody S2000 DIY Speaker Kit": {
         "brand": "Carmody",
         "model": "S2000 DIY Speaker Kit",
