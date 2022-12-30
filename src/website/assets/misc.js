@@ -264,6 +264,8 @@ export function getReviews (value) {
       scores: getField(value, 'pref_rating', version),
       scoresEq: getField(value, 'pref_rating_eq', version),
       estimates: getField(value, 'estimates', version),
+      extras: getField(value, 'extras', version),
+      specifications: getField(value, 'specifications', version),
       estimatesEq: getField(value, 'estimates_eq', version)
     })
   }
