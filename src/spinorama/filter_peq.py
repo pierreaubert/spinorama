@@ -40,8 +40,13 @@ def peq_preamp_gain(peq: Peq) -> float:
     # add 0.2 dB to have a margin for clipping
     # this assume that the DSP is operating at more that 16 or 24 bits
     # and that max gain of each PK is not generating clipping by itself
-    freq = np.logspace(10 + math.log10(2), 4 + math.log10(2), 500)
-    return -(np.max(peq_build(freq, peq)) + 0.2)
+    freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), 500)
+    spl = np.array(peq_build(freq, peq)) + 0.2
+    # print('debug spl')
+    # print(spl)
+    gain = -np.max(spl)
+    # print('debug preamp gain: {}'.format(gain))
+    return gain
 
 
 def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:

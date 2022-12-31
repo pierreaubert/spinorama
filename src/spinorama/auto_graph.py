@@ -205,7 +205,7 @@ def graph_results(
         fig.add_trace(t, row=1, col=2)
     auto_eq_max = int(auto_eq_max) + 1
     auto_eq_min = int(auto_eq_min) - 2
-    auto_eq_max = min(auto_eq_max, 5)
+    # auto_eq_max = min(auto_eq_max, 5)
 
     fig.update_xaxes(generate_xaxis(), row=1)
     fig.update_yaxes(generate_yaxis_spl(auto_eq_min, auto_eq_max, 1), row=1)

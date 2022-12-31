@@ -144,7 +144,6 @@ def optim_find_peq(
     auto_target_interp = []
     for curve in curves:
         target = get_target(data_frame, freq, curve, optim_config)
-        # target -= target.max()
         auto_target_interp.append(target)
 
     auto_results, auto_peq = optim_multi_steps(
@@ -431,17 +430,15 @@ def main():
         # do you optimise only peaks or both peaks and valleys?
         "plus_and_minus": True,
         # do you optimise for all kind of biquad or do you want only Peaks?
-        "full_biquad_optim": True,
+        "full_biquad_optim": False,
         # lookup around a value is [value*elastic, value/elastic]
         # "elastic": 0.2,
         "elastic": 0.8,
         # cut frequency
         "fs": 48000,
-        # optimise the curve above the Schroeder frequency (here default is
-        # 300hz)
-        "freq_reg_min": 100,
-        # do not try to optimise above:
-        "freq_reg_max": 16000,
+        # freq range for EQ
+        "freq_reg_min": 20,
+        "freq_reg_max": 20000,
         # if an algorithm use a mean of frequency to find a reference level
         # compute it over [min, max]hz
         "freq_mean_min": 100,
@@ -463,7 +460,7 @@ def main():
         # 'curve_names': ['Early Reflections', 'Sound Power'],
         "curve_names": ["Estimated In-Room Response", "Listening Window"],
         # "curve_names": ["Estimated In-Room Response"],
-        # start and end freq for targets
+        # start and end freq for targets and optimise in this range
         "target_min_freq": 100,
         "target_max_freq": 16000,
         # slope of the target (in dB) for each curve
@@ -524,13 +521,13 @@ def main():
     if args["--min-freq"] is not None:
         min_freq = int(args["--min-freq"])
         current_optim_config["freq_reg_min"] = min_freq
-        if min_freq < 20:
+        if min_freq <= 20:
             print("ERROR: min_freq is {} which is below 20Hz".format(min_freq))
             parameter_error = True
     if args["--max-freq"] is not None:
         max_freq = int(args["--max-freq"])
         current_optim_config["freq_reg_max"] = max_freq
-        if max_freq > 20000:
+        if max_freq >= 20000:
             print("ERROR: max_freq is {} which is above 20kHz".format(max_freq))
             parameter_error = True
 

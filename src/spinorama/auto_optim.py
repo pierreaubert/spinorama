@@ -173,11 +173,12 @@ def optim_compute_auto_target(
         smoothed = [savitzky_golay(d, window_size, order) for d in diff]
         # logger.debug(smoothed)
         diff = smoothed
-    avg = 0.0
-    if "curve_names" in optim_config.keys():
-        for i, _ in enumerate(optim_config["curve_names"]):
-            avg = np.mean(diff[i])
-            diff[i] -= avg
+    # TODO what's that for?
+    # avg = 0.0
+    # if "curve_names" in optim_config.keys():
+    #    for i, _ in enumerate(optim_config["curve_names"]):
+    #        avg = np.mean(diff[i])
+    #        diff[i] -= avg
     delta = [diff[i] + peq_freq for i, _ in enumerate(target)]
     return delta
 
@@ -236,7 +237,7 @@ def optim_greedy(
 
     for optim_iter in range(0, nb_iter):
 
-        # we are optimizing above my_freq_reg_min hz on anechoic data
+        # we are optimizing above target_min_hz on anechoic data
         current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq, optim_config)
 
         if optim_iter == 0 and optim_config["full_biquad_optim"] is True:
@@ -244,14 +245,14 @@ def optim_greedy(
             sign, init_freq, init_freq_range = (
                 1,
                 optim_config["freq_reg_min"],
-                [optim_config["freq_reg_min"], optim_config["target_min_freq"] * 2],
+                [optim_config["target_min_freq"], optim_config["target_min_freq"] * 2],
             )
             init_dbGain_range = [-3, -2, -1, 0, 1, 2, 3]
-            init_Q_range = [0.1, 0.2, 1, 2, 3]
-            biquad_range = [0, 3]  # LP, PK
+            init_Q_range = [0.5, 1, 2, 3]
+            biquad_range = [0, 1, 3, 5]  # LP, PK
         else:
             # greedy strategy: look for lowest & highest peak
-            sign, init_freq, init_freq_range = propose_range_freq(freq, current_auto_target[0], optim_config)
+            sign, init_freq, init_freq_range = propose_range_freq(freq, current_auto_target[0], optim_config, optim_iter)
             init_dbGain_range = propose_range_dbGain(freq, current_auto_target[0], sign, init_freq, optim_config)
             init_Q_range = propose_range_Q(optim_config)
             biquad_range = propose_range_biquad(optim_config)

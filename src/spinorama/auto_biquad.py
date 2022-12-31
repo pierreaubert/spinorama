@@ -167,7 +167,7 @@ def find_best_peak(
         #    opt_peq,
         #    bounds,
         #    visit=2.9,
-        #    # maxfun=optim_config["maxiter"],
+        #    maxfun=optim_config["maxiter"],
         #    initial_temp=10000,
         #    no_local_search=True,
         # )
@@ -179,7 +179,7 @@ def find_best_peak(
             atol=0.001,
             polish=False,
         )
-        logger.debug(
+        logger.info(
             "          optim loss {:2.2f} in {} iter type PK at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(
                 res.fun, res.nfev, res.x[0], res.x[1], res.x[2], res.message
             )
