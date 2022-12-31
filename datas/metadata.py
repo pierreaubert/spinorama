@@ -1635,7 +1635,7 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/canton-vento-826-2-speaker-review.40475/",
                 "review_published": "20221229",
-                "specifications" : {
+                "specifications": {
                     "sensitivity": 85,
                     "impedance": 4,
                     "size": {
