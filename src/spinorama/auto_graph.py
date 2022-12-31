@@ -42,7 +42,7 @@ from spinorama.plot import (
 def graph_eq(freq, peq, domain, title):
     df = pd.DataFrame({"Freq": freq})
     for i, (pos, eq) in enumerate(peq):
-        df["EQ {}".format(i)] = peq_build(freq, [(pos, eq)])
+        df["{} {}".format(eq.type2str(True), i)] = peq_build(freq, [(pos, eq)])
 
     traces = []
     for i, key in enumerate(df.keys()):
@@ -73,7 +73,7 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, s
             "Freq": freq,
             "autoEQ": peq_build(freq, auto_peq),
             #        "manualEQ": peq_build(freq, manual_peq),
-            "target": target - np.mean(target),
+            "target": target,
         }
     )
     for i, ati in enumerate(auto_target_interp):
@@ -205,6 +205,7 @@ def graph_results(
         fig.add_trace(t, row=1, col=2)
     auto_eq_max = int(auto_eq_max) + 1
     auto_eq_min = int(auto_eq_min) - 2
+    auto_eq_max = min(auto_eq_max, 5)
 
     fig.update_xaxes(generate_xaxis(), row=1)
     fig.update_yaxes(generate_yaxis_spl(auto_eq_min, auto_eq_max, 1), row=1)
