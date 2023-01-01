@@ -28,7 +28,7 @@ from plotly.subplots import make_subplots
 
 from spinorama.load_misc import graph_melt
 from spinorama.filter_iir import Biquad
-from spinorama.filter_peq import peq_build  # peq_print
+from spinorama.filter_peq import peq_build, peq_preamp_gain
 from spinorama.plot import (
     colors,
     plot_spinorama_traces,
@@ -107,6 +107,8 @@ def graph_results(
     pir,
     pir_auto,
     optim_config,
+    score,
+    auto_score,
 ):
 
     # ~ default
@@ -172,10 +174,18 @@ def graph_results(
         rows=4,
         cols=2,
         subplot_titles=(
-            "PEQ details",
+            "PEQ details (N={} Gain={:0.1f})".format(len(auto_peq), peq_preamp_gain(auto_peq)),
             "PEQ v.s. Target",
-            "Spinorama",
-            "Spinorama with EQ",
+            "Spinorama (score={:0.1f} lfx={:.0f}Hz sm_pir={:0.2f})".format(
+                score.get("pref_score", -100),
+                score.get("lfx_hz", -1),
+                score.get("sm_pred_in_room", 0),
+            ),
+            "Spinorama with EQ (score={:-0.1f} lfx={.0f}Hz) sm_pir={:0.2f}".format(
+                auto_score.get("pref_score", -100),
+                auto_score.get("lfx_hz", -1),
+                score.get("sm_pred_in_room", 0),
+            ),
             "Listening Window",
             "Listening Window with EQ",
             "Estimate In-Room Response",
@@ -285,7 +295,12 @@ def graph_results(
         width=1400,
         height=1600,
         legend=dict(orientation="v"),
-        title="{} from {}".format(speaker_name, speaker_origin),
+        title="{} from {}. Config: curves={} targe_min_freq={}".format(
+            speaker_name,
+            speaker_origin,
+            optim_config["curve_names"],
+            optim_config["target_min_freq"],
+        ),
     )
 
     # add all graphs and print it
