@@ -96,6 +96,7 @@ import sys
 
 
 from docopt import docopt
+import numpy as np
 import pandas as pd
 
 try:
@@ -122,7 +123,21 @@ from spinorama.auto_optim import optim_multi_steps
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
-VERSION = "0.17"
+VERSION = "0.18"
+
+
+def get3db(spin):
+    onaxis = pd.DataFrame()
+    if "Measurements" in spin.keys():
+        onaxis = spin.loc[spin["Measurements"] == "On Axis"].reset_index(drop=True)
+    else:
+        onaxis = spin.get("On Axis", None)
+    if onaxis is None or onaxis.empty:
+        return 80
+
+    y_ref = np.mean(onaxis.loc[(onaxis.Freq >= 300) & (onaxis.Freq <= 10000)].dB)
+    y_3 = onaxis.loc[(onaxis.Freq < 150) & (onaxis.dB <= y_ref - 3)].Freq.max()
+    return y_3
 
 
 def optim_find_peq(
@@ -135,6 +150,12 @@ def optim_find_peq(
     # shortcut
     curves = optim_config["curve_names"]
 
+    # do we use -3dB point for target?
+    if optim_config["target_min_freq"] is None:
+        spl = get3db(df_speaker)
+        optim_config["target_min_freq"] = spl
+
+    print("set target_min_freq to {}".format(optim_config["target_min_freq"]))
     # get freq and targets
     data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
     if data_frame is None or freq is None or auto_target is None:
@@ -278,6 +299,8 @@ def optim_save_peq(
             df_speaker["Estimated In-Room Response"],
             auto_pir,
             optim_config,
+            score,
+            auto_score,
         )
 
         for i, (name, graph) in enumerate(graphs):
@@ -328,6 +351,12 @@ def queue_speakers(df_all_speakers, optim_config, speaker_name):
             default_origin = metadata[current_speaker_name]["measurements"][default]["origin"]
         else:
             logger.error("no default_measurement for {}".format(current_speaker_name))
+            continue
+        if default_origin not in df_all_speakers[current_speaker_name].keys():
+            print("error: default origin {} not in {}".format(default_origin, current_speaker_name))
+            continue
+        if default not in df_all_speakers[current_speaker_name][default_origin].keys():
+            print("error: default {} not in default origin {} for {}".format(default, default_origin, current_speaker_name))
             continue
         df_speaker = df_all_speakers[current_speaker_name][default_origin][default]
         if not (
@@ -461,7 +490,7 @@ def main():
         "curve_names": ["Estimated In-Room Response", "Listening Window"],
         # "curve_names": ["Estimated In-Room Response"],
         # start and end freq for targets and optimise in this range
-        "target_min_freq": 100,
+        "target_min_freq": None,  # by default it will be set to -3dB point if not given on the command line
         "target_max_freq": 16000,
         # slope of the target (in dB) for each curve
         "slope_on_axis": 0,  # flat on axis
@@ -478,6 +507,8 @@ def main():
         # graph eq?
         "use_grapheq": False,
         "grapheq_name": None,
+        # use -3dB point as a starting point for target
+        "use_3dB_target": True,
     }
 
     # define other parameters for the optimisation algorithms
@@ -496,14 +527,14 @@ def main():
         current_optim_config["MAX_STEPS_DBGAIN"] = 6
         current_optim_config["MAX_STEPS_Q"] = 6
         # max iterations (if algorithm is iterative)
-        current_optim_config["maxiter"] = 500
+        current_optim_config["maxiter"] = 1500
 
     # MIN or MAX_Q or MIN or MAX_DBGAIN control the shape of the biquad which
     # are admissible.
     current_optim_config["MIN_DBGAIN"] = 0.5
-    current_optim_config["MAX_DBGAIN"] = 8
+    current_optim_config["MAX_DBGAIN"] = 3
     current_optim_config["MIN_Q"] = 0.05
-    current_optim_config["MAX_Q"] = 6
+    current_optim_config["MAX_Q"] = 3
 
     # do we override optim default?
     if args["--max-peq"] is not None:
