@@ -6,6 +6,7 @@ mako
 more_itertools
 nptyping
 numpy
+scipy>=1.9.0
 pandas
 plotly
 pre_commit

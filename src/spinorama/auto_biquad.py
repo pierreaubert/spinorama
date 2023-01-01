@@ -81,13 +81,21 @@ def find_best_biquad(
         "message": "",
     }
     try:
-        res = opt.dual_annealing(
+        #res = opt.dual_annealing(
+        #    opt_peq,
+        #    bounds,
+        #    maxiter=optim_config["maxiter"],
+        #    # initial_temp=10000
+        #)
+        res = opt.differential_evolution(
             opt_peq,
             bounds,
+            # workers=100,
             maxiter=optim_config["maxiter"],
-            # initial_temp=10000
+            atol=0.01,
+            polish=False,
+            integrality=[True, False, False, False],
         )
-
         logger.debug(
             "          optim loss {:2.2f} in {} iter type {:d} at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(
                 res["fun"],
@@ -170,21 +178,22 @@ def find_best_peak(
         "message": "",
     }
     try:
-        # res = opt.dual_annealing(
-        #    opt_peq,
-        #    bounds,
-        #    visit=2.9,
-        #    maxfun=optim_config["maxiter"],
-        #    initial_temp=10000,
-        #    no_local_search=True,
-        # )
+        #res = opt.dual_annealing(
+        #   opt_peq,
+        #   bounds,
+        #   visit=2.9,
+        #   maxfun=optim_config["maxiter"],
+        #   initial_temp=10000,
+        #   no_local_search=True,
+        #)
         res = opt.differential_evolution(
             opt_peq,
             bounds,
             # workers=100,
-            # maxiter=100,
-            atol=0.001,
+            maxiter=optim_config["maxiter"],
+            atol=0.01,
             polish=False,
+            integrality=[True, False, False],
         )
         logger.info(
             "          optim loss {:2.2f} in {} iter type PK at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(

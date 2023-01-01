@@ -288,8 +288,7 @@ def optim_save_peq(
         use_score = False
         # set EQ min to 500
         optim_config["freq_reg_min"] = max(500, optim_config["freq_reg_min"])
-
-    curves = optim_config["curve_names"]
+        optim_config["target_min_freq"] = max(500, optim_config["target_min_freq"])
 
     score = None
     if use_score:
@@ -348,6 +347,7 @@ def optim_save_peq(
             fd.write(conf_json)
 
     # print results
+    curves = optim_config["curve_names"]
     if auto_peq is not None and len(auto_peq) > 0:
 
         # TODO: optim_config by best_config
