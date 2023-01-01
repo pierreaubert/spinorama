@@ -6409,6 +6409,7 @@ speakers_info = {
         },
     },
     "JBL 705i": {
+        "skip": True,
         "brand": "JBL",
         "model": "705i",
         "type": "passive",
