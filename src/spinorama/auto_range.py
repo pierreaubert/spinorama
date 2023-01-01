@@ -46,7 +46,7 @@ def find_largest_area(
         logger.debug("freq {} current_curve {}".format(freq, current_curve))
         found_peaks, _ = sig.find_peaks(current_curve, distance=20)
         if len(found_peaks) == 0:
-            return -1, -1, -1
+            return -1, -1
         logger.debug("found peaks at {}".format(found_peaks))
         found_widths = sig.peak_widths(current_curve, found_peaks, rel_height=0.1)[0]
         logger.debug("computed width at {}".format(found_widths))
@@ -63,7 +63,7 @@ def find_largest_area(
                 break
             i += 1
         if ipeaks == -1:
-            return -1, -1, -1
+            return -1, -1
         return found_peaks[ipeaks], area
 
     min_freq = optim_config["target_min_freq"] + count * OFFSET_FREQ
