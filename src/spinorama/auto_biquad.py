@@ -144,6 +144,12 @@ def find_best_peak(
         (dbGain_range[0], dbGain_range[-1]),
     ]
 
+    x_init = [
+        (bounds[0][0] + bounds[0][1]) / 2,
+        (bounds[1][0] + bounds[1][1]) / 2,
+        (bounds[2][0] + bounds[2][1]) / 2,
+    ]
+
     logger.debug(
         "range is [{}, {}], [{}, {}], [{}, {}]".format(
             bounds[0][0],
@@ -154,10 +160,11 @@ def find_best_peak(
             bounds[2][1],
         )
     )
+
     # can use differential_evolution basinhoppin dual_annealing
     res = {
         "success": False,
-        "x": [0.0, 0.0, 0.0],
+        "x": x_init,
         "fun": -1000.0,
         "nit": -1,
         "message": "",
