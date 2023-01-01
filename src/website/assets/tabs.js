@@ -1,3 +1,4 @@
+// -*- coding: utf-8 -*-
 // https://github.com/BulmaTemplates/bulma-templates/blob/master/js/tabs.js
 
 document.querySelectorAll('#nav li').forEach(function (navEl) {

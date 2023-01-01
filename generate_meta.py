@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -124,7 +124,7 @@ def queue_score(speaker_name, speaker_data):
                         score_penalty = current["extras"].get("score_penalty", 0.0)
                         pref_rating["pref_score"] += score_penalty
                         pref_rating["pref_score_wsub"] += score_penalty
-                    
+
                     if pref_rating is not None:
                         if key[-3:] == "_eq":
                             result["pref_rating_eq"] = pref_rating
