@@ -1,16 +1,16 @@
 EQ for KEF LSX computed from ASR data
 Preference Score 4.6 with EQ 5.0
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-14:54:38
+Dated: 2023-01-01-22:23:41
 
-Preamp: -3.6 dB
+Preamp: -2.8 dB
 
-Filter  1: ON PK Fc    60 Hz Gain +3.00 dB Q 0.79
-Filter  2: ON PK Fc  1420 Hz Gain +1.36 dB Q 3.00
-Filter  3: ON PK Fc  9370 Hz Gain +1.34 dB Q 0.24
-Filter  4: ON PK Fc  3466 Hz Gain -1.27 dB Q 1.22
-Filter  5: ON PK Fc   413 Hz Gain -1.01 dB Q 0.41
-Filter  6: ON PK Fc   791 Hz Gain +0.88 dB Q 2.71
-Filter  7: ON LS Fc   292 Hz Gain +0.50 dB
-Filter  8: ON PK Fc  7430 Hz Gain -0.70 dB Q 3.00
-Filter  9: ON PK Fc  8444 Hz Gain +0.63 dB Q 0.12
+Filter  1: ON PK Fc    60 Hz Gain +2.92 dB Q 1.24
+Filter  2: ON LS Fc  2342 Hz Gain -0.64 dB
+Filter  3: ON PK Fc  1396 Hz Gain +1.86 dB Q 3.00
+Filter  4: ON PK Fc 15993 Hz Gain +2.51 dB Q 0.86
+Filter  5: ON PK Fc   413 Hz Gain -0.91 dB Q 0.50
+Filter  6: ON PK Fc  3290 Hz Gain -0.73 dB Q 3.00
+Filter  7: ON LS Fc  4078 Hz Gain +0.50 dB
+Filter  8: ON PK Fc  2185 Hz Gain -0.53 dB Q 0.06
+Filter  9: ON PK Fc  5167 Hz Gain +1.05 dB Q 2.81

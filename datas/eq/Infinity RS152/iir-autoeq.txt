@@ -1,16 +1,16 @@
 EQ for Infinity RS152 computed from ASR data
-Preference Score -0.1 with EQ 1.0
+Preference Score -0.1 with EQ 1.4
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-14:54:25
+Dated: 2023-01-01-22:23:51
 
-Preamp: -1.0 dB
+Preamp: -0.2 dB
 
-Filter  1: ON PK Fc   215 Hz Gain -3.00 dB Q 2.62
-Filter  2: ON PK Fc  5757 Hz Gain -6.00 dB Q 0.44
-Filter  3: ON PK Fc  4078 Hz Gain -3.59 dB Q 1.11
-Filter  4: ON PK Fc  2488 Hz Gain -2.07 dB Q 3.00
-Filter  5: ON PK Fc  7477 Hz Gain -1.65 dB Q 3.00
-Filter  6: ON PK Fc  3430 Hz Gain +1.44 dB Q 0.07
-Filter  7: ON PK Fc  2458 Hz Gain -2.27 dB Q 3.00
-Filter  8: ON PK Fc 10396 Hz Gain -1.43 dB Q 0.47
-Filter  9: ON PK Fc  3304 Hz Gain -1.27 dB Q 3.00
+Filter  1: ON PK Fc   208 Hz Gain -3.00 dB Q 0.97
+Filter  2: ON PK Fc  9024 Hz Gain -6.00 dB Q 0.09
+Filter  3: ON PK Fc  4339 Hz Gain -5.23 dB Q 0.66
+Filter  4: ON PK Fc 14043 Hz Gain +1.74 dB Q 2.00
+Filter  5: ON PK Fc  2627 Hz Gain -1.08 dB Q 3.00
+Filter  6: ON PK Fc  7758 Hz Gain -1.29 dB Q 3.00
+Filter  7: ON PK Fc  3600 Hz Gain +0.86 dB Q 0.06
+Filter  8: ON PK Fc  2754 Hz Gain -1.06 dB Q 1.27
+Filter  9: ON PK Fc  8867 Hz Gain -0.95 dB Q 1.22

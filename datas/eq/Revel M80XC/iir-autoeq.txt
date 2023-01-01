@@ -1,15 +1,16 @@
 EQ for Revel M80XC computed from ASR data
-Preference Score 3.8 with EQ 4.4
+Preference Score 3.8 with EQ 5.0
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-14:56:17
+Dated: 2023-01-01-22:25:39
 
-Preamp: -4.0 dB
+Preamp: -2.2 dB
 
-Filter  1: ON PK Fc    79 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc 15728 Hz Gain +3.00 dB Q 1.11
-Filter  3: ON PK Fc  2053 Hz Gain -1.72 dB Q 3.00
-Filter  4: ON PK Fc  1246 Hz Gain +1.44 dB Q 3.00
-Filter  5: ON PK Fc 15361 Hz Gain +0.90 dB Q 2.27
-Filter  6: ON PK Fc  9389 Hz Gain -0.54 dB Q 2.10
-Filter  7: ON LS Fc   619 Hz Gain +0.56 dB
-Filter  8: ON PK Fc  1822 Hz Gain -0.58 dB Q 3.00
+Filter  1: ON PK Fc  6561 Hz Gain -1.27 dB Q 1.80
+Filter  2: ON PK Fc  1021 Hz Gain +1.84 dB Q 0.05
+Filter  3: ON PK Fc  3405 Hz Gain -2.04 dB Q 0.40
+Filter  4: ON PK Fc  9962 Hz Gain -1.06 dB Q 2.64
+Filter  5: ON PK Fc  1332 Hz Gain +1.44 dB Q 2.96
+Filter  6: ON PK Fc   513 Hz Gain -0.71 dB Q 2.80
+Filter  7: ON PK Fc 15779 Hz Gain +1.09 dB Q 2.81
+Filter  8: ON PK Fc  2080 Hz Gain -0.79 dB Q 2.92
+Filter  9: ON PK Fc  3044 Hz Gain +0.61 dB Q 2.75
