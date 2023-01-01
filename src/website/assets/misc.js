@@ -244,7 +244,13 @@ export function getReviews (value) {
         const sversionTimes = sversion.indexOf('x')
         let sversionDeg = sversion
         if (sversionTimes !== -1) {
-          sversionDeg = ' ' + sversion.slice(0, sversionTimes) + 'º' + sversion.slice(sversionTimes) + 'º'
+          const verticalAngle = sversion.slice(sversionTimes)
+          const dashPos = verticalAngle.indexOf('-')
+          if (dashPos === -1) {
+            sversionDeg = ' ' + sversion.slice(0, sversionTimes) + 'º' + sversion.slice(sversionTimes) + 'º'
+          } else {
+            sversionDeg = ' ' + sversion.slice(0, sversionTimes) + 'º' + verticalAngle.slice(0, dashPos) + 'º'
+          }
         } else {
           sversionDeg = ' ' + sversion + 'º'
         }
