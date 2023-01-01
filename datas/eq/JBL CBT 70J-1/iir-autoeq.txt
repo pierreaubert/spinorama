@@ -1,16 +1,16 @@
 EQ for JBL CBT 70J-1 computed from ASR data
-Preference Score 3.1 with EQ 4.4
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-05-07-13:39:24
+Preference Score 3.1 with EQ 3.8
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
+Dated: 2023-01-01-14:55:19
 
-Preamp: -0.2 dB
+Preamp: -5.0 dB
 
-Filter  1: ON PK Fc  1163 Hz Gain -3.79 dB Q 0.11
-Filter  2: ON PK Fc   174 Hz Gain -1.14 dB Q 2.93
-Filter  3: ON PK Fc   411 Hz Gain +2.11 dB Q 1.21
-Filter  4: ON PK Fc  1475 Hz Gain +2.64 dB Q 2.59
-Filter  5: ON PK Fc  5294 Hz Gain -1.36 dB Q 2.04
-Filter  6: ON PK Fc   798 Hz Gain -1.37 dB Q 2.96
-Filter  7: ON PK Fc   548 Hz Gain +1.05 dB Q 2.97
-Filter  8: ON PK Fc   415 Hz Gain -0.90 dB Q 2.88
-Filter  9: ON PK Fc   211 Hz Gain -0.84 dB Q 3.00
+Filter  1: ON PK Fc   120 Hz Gain +2.75 dB Q 0.50
+Filter  2: ON PK Fc  1915 Hz Gain +1.12 dB Q 3.00
+Filter  3: ON PK Fc  4881 Hz Gain -0.70 dB Q 3.00
+Filter  4: ON PK Fc 16000 Hz Gain +3.00 dB Q 0.42
+Filter  5: ON PK Fc  5919 Hz Gain -1.31 dB Q 2.66
+Filter  6: ON PK Fc 16000 Hz Gain +2.06 dB Q 0.77
+Filter  7: ON PK Fc  1585 Hz Gain +0.50 dB Q 3.00
+Filter  8: ON PK Fc  2510 Hz Gain -0.51 dB Q 0.10
+Filter  9: ON LS Fc  4078 Hz Gain +0.50 dB

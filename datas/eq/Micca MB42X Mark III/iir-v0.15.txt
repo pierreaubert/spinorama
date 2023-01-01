@@ -1,0 +1,15 @@
+EQ for Micca MB42X Mark III computed from ErinsAudioCorner data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-13:59:15
+
+Preamp: -2.3 dB
+
+Filter  1: ON PK Fc  3678 Hz Gain -5.02 dB Q 0.26
+Filter  2: ON PK Fc   303 Hz Gain +2.65 dB Q 2.46
+Filter  3: ON PK Fc  1312 Hz Gain -1.60 dB Q 2.98
+Filter  4: ON PK Fc   121 Hz Gain -0.95 dB Q 2.96
+Filter  5: ON PK Fc  2280 Hz Gain +1.74 dB Q 3.00
+Filter  6: ON PK Fc   205 Hz Gain +0.58 dB Q 2.99
+Filter  7: ON PK Fc 11807 Hz Gain +0.90 dB Q 3.00
+Filter  8: ON PK Fc   642 Hz Gain -0.84 dB Q 2.97
+Filter  9: ON PK Fc  1482 Hz Gain -0.66 dB Q 2.99

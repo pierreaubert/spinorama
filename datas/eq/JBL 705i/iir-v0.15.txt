@@ -1,0 +1,15 @@
+EQ for JBL 705i computed from Vendors-JBL data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-13:38:14
+
+Preamp: -3.4 dB
+
+Filter  1: ON PK Fc  1690 Hz Gain +2.52 dB Q 0.34
+Filter  2: ON PK Fc  3614 Hz Gain -0.82 dB Q 3.00
+Filter  3: ON PK Fc   855 Hz Gain -0.85 dB Q 3.00
+Filter  4: ON PK Fc   778 Hz Gain +1.99 dB Q 2.99
+Filter  5: ON PK Fc   727 Hz Gain -1.79 dB Q 2.70
+Filter  6: ON PK Fc   613 Hz Gain +1.75 dB Q 2.99
+Filter  7: ON PK Fc   621 Hz Gain -1.35 dB Q 3.00
+Filter  8: ON PK Fc  5049 Hz Gain +0.97 dB Q 2.98
+Filter  9: ON PK Fc   730 Hz Gain +1.66 dB Q 2.99

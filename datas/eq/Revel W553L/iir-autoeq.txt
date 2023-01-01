@@ -1,16 +1,16 @@
 EQ for Revel W553L computed from ErinsAudioCorner data
-Preference Score 5.6 with EQ 6.4
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.16
-Dated: 2022-07-09-22:46:20
+Preference Score 5.6 with EQ 6.2
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
+Dated: 2023-01-01-14:55:55
 
-Preamp: -1.9 dB
+Preamp: -3.5 dB
 
-Filter  1: ON PK Fc   186 Hz Gain -1.90 dB Q 0.78
-Filter  2: ON PK Fc  2678 Hz Gain +1.80 dB Q 0.77
-Filter  3: ON PK Fc  1019 Hz Gain +1.08 dB Q 5.60
-Filter  4: ON PK Fc  7200 Hz Gain -0.80 dB Q 5.68
-Filter  5: ON PK Fc   419 Hz Gain -0.99 dB Q 5.47
-Filter  6: ON PK Fc 10393 Hz Gain -0.87 dB Q 5.72
-Filter  7: ON PK Fc   656 Hz Gain +1.04 dB Q 5.89
-Filter  8: ON PK Fc  5862 Hz Gain +0.92 dB Q 5.85
-Filter  9: ON PK Fc  1723 Hz Gain -0.83 dB Q 2.87
+Filter  1: ON PK Fc    62 Hz Gain +3.00 dB Q 1.52
+Filter  2: ON PK Fc  3867 Hz Gain +1.79 dB Q 1.18
+Filter  3: ON PK Fc  1030 Hz Gain +0.57 dB Q 3.00
+Filter  4: ON PK Fc  9584 Hz Gain -0.50 dB Q 3.00
+Filter  5: ON PK Fc  1212 Hz Gain -0.50 dB Q 0.07
+Filter  6: ON PK Fc   155 Hz Gain -2.25 dB Q 1.31
+Filter  7: ON LS Fc  1019 Hz Gain +0.77 dB
+Filter  8: ON PK Fc   282 Hz Gain -1.24 dB Q 0.85
+Filter  9: ON PK Fc  1019 Hz Gain +0.53 dB Q 0.46

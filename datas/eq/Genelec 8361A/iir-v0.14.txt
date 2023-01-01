@@ -1,0 +1,16 @@
+EQ for Genelec 8361A computed from ASR data
+Preference Score 6.8 with EQ 7.3
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
+Dated: 2021-12-01-08:25:48
+
+Preamp: -1.1 dB
+
+Filter  1: ON PK Fc 13413 Hz Gain -1.91 dB Q 0.48
+Filter  2: ON PK Fc   230 Hz Gain +0.82 dB Q 4.00
+Filter  3: ON PK Fc   134 Hz Gain -0.79 dB Q 2.08
+Filter  4: ON PK Fc  2642 Hz Gain -0.86 dB Q 4.00
+Filter  5: ON PK Fc  1801 Hz Gain -0.59 dB Q 4.00
+Filter  6: ON PK Fc   772 Hz Gain +0.57 dB Q 4.00
+Filter  7: ON PK Fc  1336 Hz Gain -0.50 dB Q 4.00
+Filter  8: ON PK Fc   332 Hz Gain -0.59 dB Q 4.00
+Filter  9: ON PK Fc   226 Hz Gain +0.50 dB Q 3.79

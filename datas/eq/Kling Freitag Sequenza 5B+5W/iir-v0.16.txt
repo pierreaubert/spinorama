@@ -1,0 +1,8 @@
+EQ for Kling Freitag Sequenza 5B+5W computed from Vendors-Kling Freitag data
+Preference Score 0.2 with EQ -0.3
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.16
+Dated: 2022-10-28-22:29:43
+
+Preamp: -0.2 dB
+
+Filter  1: ON PK Fc    99 Hz Gain -9.75 dB Q 1.03

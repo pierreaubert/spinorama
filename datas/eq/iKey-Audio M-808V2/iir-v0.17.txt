@@ -1,0 +1,15 @@
+EQ for iKey-Audio M-808V2 computed from Princeton data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.17
+Dated: 2023-01-01-13:46:26
+
+Preamp: -3.5 dB
+
+Filter  1: ON PK Fc 12387 Hz Gain +1.88 dB Q 1.44
+Filter  2: ON PK Fc 15951 Hz Gain +0.63 dB Q 2.80
+Filter  3: ON PK Fc 11439 Hz Gain +0.51 dB Q 2.87
+Filter  4: ON PK Fc  1172 Hz Gain +2.95 dB Q 1.61
+Filter  5: ON PK Fc  1607 Hz Gain +1.28 dB Q 2.95
+Filter  6: ON PK Fc  2466 Hz Gain +0.51 dB Q 2.99
+Filter  7: ON PK Fc  1484 Hz Gain +0.50 dB Q 2.95
+Filter  8: ON PK Fc  2108 Hz Gain +0.51 dB Q 2.80
+Filter  9: ON PK Fc  5244 Hz Gain -0.69 dB Q 0.31

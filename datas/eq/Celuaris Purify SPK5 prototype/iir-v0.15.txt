@@ -1,0 +1,16 @@
+EQ for Celuaris Purify SPK5 prototype computed from ASR data
+Preference Score 5.8 with EQ 6.3
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-13:12:07
+
+Preamp: -2.7 dB
+
+Filter  1: ON PK Fc  2712 Hz Gain +2.30 dB Q 2.31
+Filter  2: ON PK Fc   279 Hz Gain -1.38 dB Q 0.53
+Filter  3: ON PK Fc  4527 Hz Gain +1.30 dB Q 2.81
+Filter  4: ON PK Fc  3719 Hz Gain -1.41 dB Q 2.98
+Filter  5: ON PK Fc   337 Hz Gain +0.99 dB Q 2.99
+Filter  6: ON PK Fc  7654 Hz Gain -1.68 dB Q 2.98
+Filter  7: ON PK Fc  5435 Hz Gain -0.95 dB Q 2.99
+Filter  8: ON PK Fc  8692 Hz Gain +2.14 dB Q 0.55
+Filter  9: ON PK Fc  7979 Hz Gain -1.90 dB Q 2.97

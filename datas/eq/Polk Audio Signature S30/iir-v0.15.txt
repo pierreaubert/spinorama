@@ -1,0 +1,16 @@
+EQ for Polk Audio Signature S30 computed from ASR data
+Preference Score 3.8 with EQ 3.9
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-14:14:37
+
+Preamp: -4.1 dB
+
+Filter  1: ON PK Fc  1761 Hz Gain +3.72 dB Q 0.41
+Filter  2: ON PK Fc   916 Hz Gain -4.30 dB Q 2.99
+Filter  3: ON PK Fc 12260 Hz Gain +1.48 dB Q 1.13
+Filter  4: ON PK Fc  4737 Hz Gain -1.30 dB Q 2.76
+Filter  5: ON PK Fc   650 Hz Gain +2.30 dB Q 0.69
+Filter  6: ON PK Fc   697 Hz Gain -2.57 dB Q 2.27
+Filter  7: ON PK Fc   955 Hz Gain -1.55 dB Q 3.00
+Filter  8: ON PK Fc   761 Hz Gain +2.64 dB Q 2.99
+Filter  9: ON PK Fc   832 Hz Gain -1.89 dB Q 2.99

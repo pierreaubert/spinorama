@@ -1,0 +1,15 @@
+EQ for Monoprice Monolith Air Motion Cinema 5 computed from Misc data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-14:00:23
+
+Preamp: -3.5 dB
+
+Filter  1: ON PK Fc  3688 Hz Gain +2.99 dB Q 2.96
+Filter  2: ON PK Fc   388 Hz Gain +1.77 dB Q 2.95
+Filter  3: ON PK Fc   123 Hz Gain -1.04 dB Q 2.93
+Filter  4: ON PK Fc  1195 Hz Gain -1.80 dB Q 1.52
+Filter  5: ON PK Fc   214 Hz Gain +0.94 dB Q 2.21
+Filter  6: ON PK Fc  6188 Hz Gain -1.72 dB Q 2.93
+Filter  7: ON PK Fc   706 Hz Gain -0.70 dB Q 2.80
+Filter  8: ON PK Fc  4494 Hz Gain +1.16 dB Q 2.60
+Filter  9: ON PK Fc   583 Hz Gain +0.64 dB Q 2.99

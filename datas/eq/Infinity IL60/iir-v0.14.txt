@@ -1,0 +1,13 @@
+EQ for Infinity IL60 computed from Vendors-Infinity data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
+Dated: 2021-11-27-12:35:24
+
+Preamp: -0.9 dB
+
+Filter  1: ON PK Fc  6449 Hz Gain -1.42 dB Q 0.28
+Filter  2: ON PK Fc 15459 Hz Gain +1.58 dB Q 4.00
+Filter  3: ON PK Fc  3436 Hz Gain +0.75 dB Q 3.60
+Filter  4: ON PK Fc 10594 Hz Gain -1.11 dB Q 3.08
+Filter  5: ON PK Fc  1903 Hz Gain -0.65 dB Q 3.36
+Filter  6: ON PK Fc   887 Hz Gain +0.50 dB Q 4.00
+Filter  7: ON PK Fc   263 Hz Gain -0.70 dB Q 2.78

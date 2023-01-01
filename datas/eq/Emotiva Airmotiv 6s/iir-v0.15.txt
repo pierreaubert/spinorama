@@ -1,0 +1,15 @@
+EQ for Emotiva Airmotiv 6s computed from ASR data
+Preference Score 5.0 with EQ 5.8
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-13:22:44
+
+Preamp: -3.5 dB
+
+Filter  1: ON PK Fc   509 Hz Gain +2.80 dB Q 0.52
+Filter  2: ON PK Fc 13731 Hz Gain +4.11 dB Q 0.90
+Filter  3: ON PK Fc  4905 Hz Gain -1.44 dB Q 2.96
+Filter  4: ON PK Fc  2302 Hz Gain +1.80 dB Q 2.45
+Filter  5: ON PK Fc   132 Hz Gain -0.59 dB Q 0.17
+Filter  6: ON PK Fc   695 Hz Gain -1.82 dB Q 2.99
+Filter  7: ON PK Fc   373 Hz Gain +1.19 dB Q 1.43
+Filter  8: ON PK Fc 13508 Hz Gain -1.08 dB Q 2.98

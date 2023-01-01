@@ -15,7 +15,7 @@
     "curve_names": [
         "Listening Window"
     ],
-    "target_min_freq": 60,
+    "target_min_freq": 87.5,
     "target_max_freq": 16000,
     "slope_on_axis": 0,
     "slope_listening_window": -0.5,
@@ -23,18 +23,19 @@
     "slope_estimated_inroom": -6.5,
     "slope_sound_power": -9,
     "smooth_measurements": true,
-    "smooth_window_size": 9,
+    "smooth_window_size": 21,
     "smooth_order": 3,
     "use_grapheq": false,
     "grapheq_name": null,
+    "use_3dB_target": true,
     "MAX_NUMBER_PEQ": 9,
     "MAX_STEPS_FREQ": 6,
     "MAX_STEPS_DBGAIN": 6,
     "MAX_STEPS_Q": 6,
-    "maxiter": 500,
+    "maxiter": 1500,
     "MIN_DBGAIN": 0.5,
     "MAX_DBGAIN": 3.0,
-    "MIN_Q": 0.5,
+    "MIN_Q": 0.05,
     "MAX_Q": 3.0,
     "second_optimiser": false
 }

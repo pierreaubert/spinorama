@@ -1,0 +1,15 @@
+EQ for JBL 4312SE computed from Vendors-JBL data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-13:37:25
+
+Preamp: -3.7 dB
+
+Filter  1: ON PK Fc   238 Hz Gain +2.76 dB Q 0.10
+Filter  2: ON PK Fc  4251 Hz Gain +1.89 dB Q 2.90
+Filter  3: ON PK Fc   389 Hz Gain -1.39 dB Q 2.32
+Filter  4: ON PK Fc  2074 Hz Gain -1.83 dB Q 2.90
+Filter  5: ON PK Fc   211 Hz Gain +0.65 dB Q 2.98
+Filter  6: ON PK Fc   853 Hz Gain +1.22 dB Q 2.98
+Filter  7: ON PK Fc   105 Hz Gain -2.75 dB Q 2.97
+Filter  8: ON PK Fc   567 Hz Gain -0.50 dB Q 2.78
+Filter  9: ON PK Fc  3893 Hz Gain +0.50 dB Q 2.66

@@ -1,0 +1,13 @@
+EQ for DB Audiotechnik Q10 computed from Vendors-DB Audiotechnik data
+Preference Score 2.8 with EQ 3.2
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.17
+Dated: 2022-12-31-16:54:11
+
+Preamp: -5.1 dB
+
+Filter  1: ON PK Fc    60 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON PK Fc 16000 Hz Gain +3.00 dB Q 0.54
+Filter  3: ON PK Fc  8683 Hz Gain -2.44 dB Q 3.00
+Filter  4: ON PK Fc 15569 Hz Gain -2.38 dB Q 3.00
+Filter  5: ON LS Fc  5520 Hz Gain +1.87 dB
+Filter  6: ON PK Fc  1920 Hz Gain -2.22 dB Q 0.50

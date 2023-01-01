@@ -6425,23 +6425,40 @@ speakers_info = {
             },
         },
     },
-    "JBL 705i": {
+    "JBL 705P": {
         "brand": "JBL",
-        "model": "705i",
-        "type": "passive",
-        "price": "",
+        "model": "705P",
+        "type": "active",
+        "price": "2000",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "asr-v1-20221231",
+        "default_measurement": "asr",
         "measurements": {
-            "asr-v1-20221231": {
+            "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-708i-monitor-review-passive-part-1.40530/",
-                "review_published": "20221231",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-705p-studio-monitor-review.11944/",
+                "review_published": "20200309",
             },
         },
     },
+    #    "JBL 708i": {
+    #        "brand": "JBL",
+    #        "model": "708i",
+    #        "type": "passive",
+    #        "price": "",
+    #        "shape": "bookshelves",
+    #        "amount": "pair",
+    #        "default_measurement": "asr-v1-20221231",
+    #        "measurements": {
+    #            "asr-v1-20221231": {
+    #                "origin": "ASR",
+    #                "format": "klippel",
+    #                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-708i-monitor-review-passive-part-1.40530/",
+    #               "review_published": "20221231",
+    #           },
+    #       },
+    #   },
     "JBL 708P": {
         "brand": "JBL",
         "model": "708P",
@@ -6455,31 +6472,7 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-708p-review-professional-monitor.20006/",
-            },
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_708p/",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-professional-708p-bi-amplified-8-inch-master-reference-monitor.23655/",
-                },
-                "review_published": "20210523",
-            },
-        },
-    },
-    "JBL 708P": {
-        "brand": "JBL",
-        "model": "708P",
-        "type": "active",
-        "price": "3600",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-708p-review-professional-monitor.20006/",
+                "review_published": "20210201",
             },
             "eac": {
                 "origin": "ErinsAudioCorner",

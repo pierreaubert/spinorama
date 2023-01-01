@@ -1,14 +1,16 @@
 EQ for DIYSG HT-8 computed from Misc data
-Preference Score 2.6 with EQ 5.3
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
-Dated: 2021-12-05-15:07:03
+Preference Score 2.7 with EQ 4.6
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
+Dated: 2023-01-01-14:54:52
 
-Preamp: -3.8 dB
+Preamp: -4.0 dB
 
-Filter  1: ON PK Fc  1307 Hz Gain -6.05 dB Q 0.09
-Filter  2: ON PK Fc  3540 Hz Gain +2.85 dB Q 1.58
-Filter  3: ON PK Fc   239 Hz Gain -2.92 dB Q 1.81
-Filter  4: ON LS Fc   105 Hz Gain +4.03 dB
-Filter  5: ON PK Fc   179 Hz Gain -1.73 dB Q 4.00
-Filter  6: ON PK Fc 13796 Hz Gain -4.57 dB Q 1.30
-Filter  7: ON PK Fc  7042 Hz Gain +1.49 dB Q 3.60
+Filter  1: ON PK Fc   134 Hz Gain +2.80 dB Q 0.50
+Filter  2: ON PK Fc   264 Hz Gain -3.03 dB Q 1.44
+Filter  3: ON PK Fc  3837 Hz Gain +2.65 dB Q 0.79
+Filter  4: ON PK Fc  1011 Hz Gain -1.44 dB Q 3.00
+Filter  5: ON PK Fc   198 Hz Gain -1.14 dB Q 3.00
+Filter  6: ON LS Fc  6049 Hz Gain +0.90 dB
+Filter  7: ON PK Fc   660 Hz Gain -1.45 dB Q 0.59
+Filter  8: ON PK Fc  4796 Hz Gain -1.29 dB Q 2.87
+Filter  9: ON LS Fc  6049 Hz Gain +0.74 dB

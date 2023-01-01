@@ -1,0 +1,16 @@
+EQ for Selah Audio Purezza computed from ErinsAudioCorner data
+Preference Score 5.7 with EQ 6.9
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-14:29:08
+
+Preamp: -0.2 dB
+
+Filter  1: ON PK Fc  1609 Hz Gain -2.70 dB Q 0.15
+Filter  2: ON PK Fc   365 Hz Gain -0.69 dB Q 2.49
+Filter  3: ON PK Fc   966 Hz Gain +0.68 dB Q 2.99
+Filter  4: ON PK Fc  8242 Hz Gain +1.29 dB Q 3.00
+Filter  5: ON PK Fc 12960 Hz Gain -1.18 dB Q 1.44
+Filter  6: ON PK Fc   139 Hz Gain +0.75 dB Q 1.77
+Filter  7: ON PK Fc  1448 Hz Gain -0.62 dB Q 2.97
+Filter  8: ON PK Fc  2522 Hz Gain +0.55 dB Q 3.00
+Filter  9: ON PK Fc  3580 Hz Gain -0.66 dB Q 2.98

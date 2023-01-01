@@ -1,16 +1,15 @@
 EQ for Realistic MC-1000 computed from ASR data
-Preference Score -0.4 with EQ -0.3
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-05-07-14:18:10
+Preference Score -0.4 with EQ -0.1
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
+Dated: 2023-01-01-14:53:39
 
-Preamp: -0.2 dB
+Preamp: -6.8 dB
 
-Filter  1: ON PK Fc   213 Hz Gain -9.61 dB Q 0.05
-Filter  2: ON PK Fc 13501 Hz Gain -7.71 dB Q 1.08
-Filter  3: ON PK Fc   178 Hz Gain -2.89 dB Q 2.97
-Filter  4: ON PK Fc  4699 Hz Gain -3.80 dB Q 2.99
-Filter  5: ON PK Fc  1308 Hz Gain +3.14 dB Q 2.95
-Filter  6: ON PK Fc 13542 Hz Gain -1.50 dB Q 2.91
-Filter  7: ON PK Fc   171 Hz Gain -1.02 dB Q 2.98
-Filter  8: ON PK Fc  2637 Hz Gain -2.35 dB Q 2.65
-Filter  9: ON PK Fc  2683 Hz Gain +3.20 dB Q 2.97
+Filter  1: ON PK Fc   120 Hz Gain +2.43 dB Q 0.50
+Filter  2: ON PK Fc 12364 Hz Gain +3.00 dB Q 0.14
+Filter  3: ON PK Fc  8135 Hz Gain +2.98 dB Q 3.00
+Filter  4: ON PK Fc  1445 Hz Gain +2.06 dB Q 3.00
+Filter  5: ON PK Fc 13125 Hz Gain -2.89 dB Q 3.00
+Filter  6: ON PK Fc  1775 Hz Gain -2.11 dB Q 0.28
+Filter  7: ON PK Fc  1462 Hz Gain +3.00 dB Q 2.33
+Filter  8: ON PK Fc 10763 Hz Gain +1.55 dB Q 0.17

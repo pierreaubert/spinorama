@@ -1,0 +1,16 @@
+EQ for Martin Audio CDD15 computed from Vendors-Martin Audio data
+Preference Score 2.3 with EQ 3.7
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.16
+Dated: 2022-11-12-13:38:28
+
+Preamp: -4.2 dB
+
+Filter  1: ON PK Fc  1657 Hz Gain +4.38 dB Q 2.99
+Filter  2: ON PK Fc   494 Hz Gain -2.26 dB Q 2.77
+Filter  3: ON PK Fc   618 Hz Gain +1.69 dB Q 2.96
+Filter  4: ON PK Fc  9382 Hz Gain -4.26 dB Q 0.84
+Filter  5: ON PK Fc  2455 Hz Gain -2.39 dB Q 2.97
+Filter  6: ON PK Fc   193 Hz Gain +1.66 dB Q 0.35
+Filter  7: ON PK Fc   508 Hz Gain -1.92 dB Q 1.37
+Filter  8: ON PK Fc   581 Hz Gain +0.89 dB Q 2.93
+Filter  9: ON PK Fc   321 Hz Gain -0.83 dB Q 2.95
