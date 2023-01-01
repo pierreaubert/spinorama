@@ -30,7 +30,7 @@ logger = logging.getLogger("spinorama")
 # ------------------------------------------------------------------------------
 
 
-def zero_before_freq(freq, curve, min_freq):
+def limit_before_freq(freq, curve, min_freq):
     i_min = 0
     while i_min < len(freq) and freq[i_min] < min_freq:
         i_min += 1
@@ -90,7 +90,7 @@ def get_freq(df_speaker_data, optim_config):
     local_target = []
     for curve in curves:
         data = local_df.loc[selector, curve].values
-        data = zero_before_freq(local_freq, data, optim_config["target_min_freq"])
+        data = limit_before_freq(local_freq, data, optim_config["target_min_freq"])
         local_target.append(data)
 
     # print(local_df, local_freq, local_target)

@@ -29,6 +29,7 @@ from plotly.subplots import make_subplots
 from spinorama.load_misc import graph_melt
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import peq_build, peq_preamp_gain
+from spinorama.auto_optim import savitzky_golay
 from spinorama.plot import (
     colors,
     plot_spinorama_traces,
@@ -60,7 +61,7 @@ def graph_eq(freq, peq, domain, title):
     return traces
 
 
-def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target):
+def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target, optim_config):
     # manual_peq = [
     #    (1.0, Biquad(3, 400, 48000, 4.32, -2)),
     #    (1.0, Biquad(3, 1600, 48000, 4.32, -1)),
@@ -68,16 +69,37 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, s
     #    (1.0, Biquad(3, 2500, 48000, 4.32, 3)),
     #    (1.0, Biquad(3, 3150, 48000, 4.32, 3)),
     # ]
+    curve_names = []
+    for name in optim_config["curve_names"]:
+        if name == "Listening Window":
+            curve_names.append("LW")
+        elif name == "Estimated In-Room Response":
+            curve_names.append("PIR")
+        elif name == "On Axis":
+            curve_names.append("ON")
+        else:
+            curve_names.append(name)
+
+    target_name = "error {}".format(curve_names[0], 0)
     df = pd.DataFrame(
         {
             "Freq": freq,
             "autoEQ": peq_build(freq, auto_peq),
             #        "manualEQ": peq_build(freq, manual_peq),
-            "target": target,
+            target_name: target,
         }
     )
-    for i, ati in enumerate(auto_target_interp):
-        df["line{}".format(i)] = ati
+    # for i, ati in enumerate(auto_target_interp):
+    #    if i<len(curve_names):
+    #        df["ideal {}".format(curve_names[i])] = ati
+    #    else:
+    #        df["ideal {}".format(i)] = ati
+
+    if optim_config.get("smooth_measurements"):
+        window_size = optim_config.get("smooth_window_size")
+        order = optim_config.get("smooth_order")
+        smoothed = savitzky_golay(target, window_size, order)
+        df["smoothed {}".format(curve_names[0])] = smoothed
 
     traces = []
     for i, key in enumerate(df.keys()):
@@ -136,7 +158,7 @@ def graph_results(
         fd.close()
 
     # print('target {} {}'.format(np.min(target), np.max(target)))
-    g_eq_full = graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target)
+    g_eq_full = graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target, optim_config)
 
     # compare the 2 corrected curves
     df_optim = pd.DataFrame({"Freq": freq})
@@ -170,22 +192,30 @@ def graph_results(
             "auto": g_curve_auto,
         }
 
+    spin_title = "Spinorama"
+    if score is not None and isinstance(score, dict):
+        spin_title = "Spinorama (score={:0.1f} lfx={:.0f}Hz sm_pir={:0.2f})".format(
+            score.get("pref_score", -100),
+            score.get("lfx_hz", -1),
+            score.get("sm_pred_in_room", 0),
+        )
+
+    auto_spin_title = "Spinorama with EQ"
+    if auto_score is not None and isinstance(auto_score, dict):
+        auto_spin_title = "Spinorama (score={:0.1f} lfx={:.0f}Hz sm_pir={:0.2f})".format(
+            auto_score.get("pref_score", -100),
+            auto_score.get("lfx_hz", -1),
+            auto_score.get("sm_pred_in_room", 0),
+        )
+
     fig = make_subplots(
         rows=4,
         cols=2,
         subplot_titles=(
             "PEQ details (N={} Gain={:0.1f})".format(len(auto_peq), peq_preamp_gain(auto_peq)),
             "PEQ v.s. Target",
-            "Spinorama (score={:0.1f} lfx={:.0f}Hz sm_pir={:0.2f})".format(
-                score.get("pref_score", -100),
-                score.get("lfx_hz", -1),
-                score.get("sm_pred_in_room", 0),
-            ),
-            "Spinorama with EQ (score={:-0.1f} lfx={.0f}Hz) sm_pir={:0.2f}".format(
-                auto_score.get("pref_score", -100),
-                auto_score.get("lfx_hz", -1),
-                score.get("sm_pred_in_room", 0),
-            ),
+            spin_title,
+            auto_spin_title,
             "Listening Window",
             "Listening Window with EQ",
             "Estimate In-Room Response",
@@ -263,6 +293,7 @@ def graph_results(
         lw_max = min(20, 5 * (round(lw_max / 5) + 1))
     else:
         lw_max = 10
+    lw_min = max(-10, lw_min)
     fig.update_yaxes(generate_yaxis_spl(lw_min, lw_max, 1), row=3)
 
     pir_min = -10
@@ -287,6 +318,7 @@ def graph_results(
         pir_max = min(20, 5 * (round(pir_max / 5) + 1))
     else:
         pir_max = 10
+    pir_min = max(-20, pir_min)
 
     fig.update_xaxes(generate_xaxis(), row=4)
     fig.update_yaxes(generate_yaxis_spl(pir_min, pir_max, 1), row=4)
@@ -295,10 +327,10 @@ def graph_results(
         width=1400,
         height=1600,
         legend=dict(orientation="v"),
-        title="{} from {}. Config: curves={} targe_min_freq={}".format(
+        title="{} from {}. Config: curves={} target_min_freq={:.0f}Hz".format(
             speaker_name,
             speaker_origin,
-            optim_config["curve_names"],
+            ", ".join(optim_config["curve_names"]),
             optim_config["target_min_freq"],
         ),
     )

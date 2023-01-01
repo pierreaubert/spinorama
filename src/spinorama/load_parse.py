@@ -21,6 +21,7 @@ from .load_splHVtxt import parse_graphs_speaker_splHVtxt
 from .load_misc import graph_melt, check_nan
 from .load import (
     filter_graphs,
+    filter_graphs_eq,
     filter_graphs_partial,
     symmetrise_measurement,
     spin_compute_di_eir,
@@ -56,7 +57,7 @@ def parse_eq_speaker(speaker_path: str, speaker_name: str, df_ref: dict, mparame
             v_spl = df_ref["SPL Vertical_unmelted"]
             eq_h_spl = peq_apply_measurements(h_spl, iir)
             eq_v_spl = peq_apply_measurements(v_spl, iir)
-            df_eq = filter_graphs(speaker_name, eq_h_spl, eq_v_spl, mean_min, mean_max)
+            df_eq = filter_graphs_eq(speaker_name, h_spl, v_spl, eq_h_spl, eq_v_spl, mean_min, mean_max)
             return df_eq
         elif "CEA2034" in df_ref.keys():
             spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir)

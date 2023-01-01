@@ -167,6 +167,89 @@ def filter_graphs(speaker_name, h_spl, v_spl, mean_min=300, mean_max=3000):
     return dfs
 
 
+def filter_graphs_eq(speaker_name, h_spl, v_spl, h_eq_spl, v_eq_spl, mean_min=300, mean_max=3000):
+    dfs = {}
+    # add H and V SPL graphs
+    mean_min_max = None
+    mean_100_1000 = None
+    sv_spl = None
+    sh_spl = None
+
+    if h_spl is not None:
+        mean_min_max = np.mean(h_spl.loc[(h_spl.Freq > mean_min) & (h_spl.Freq < mean_max)]["On Axis"])
+        mean_100_1000 = np.mean(h_spl.loc[(h_spl.Freq > 100) & (h_spl.Freq < 1000)]["On Axis"])
+        sh_spl = shift_spl(h_eq_spl, mean_min_max)
+        dfs["SPL Horizontal"] = graph_melt(sh_spl)
+        dfs["SPL Horizontal_unmelted"] = sh_spl
+        dfs["SPL Horizontal_normalized_unmelted"] = norm_spl(sh_spl)
+    else:
+        logger.info("h_spl is None for speaker {}".format(speaker_name))
+
+    if v_spl is not None:
+        if mean_min_max is None:
+            mean_min_max = np.mean(v_spl.loc[(v_spl.Freq > mean_min) & (v_spl.Freq < mean_max)]["On Axis"])
+        if mean_100_1000 is None:
+            mean_100_1000 = np.mean(v_spl.loc[(v_spl.Freq > 100) & (v_spl.Freq < 1000)]["On Axis"])
+        sv_spl = shift_spl(v_eq_spl, mean_min_max)
+        dfs["SPL Vertical"] = graph_melt(sv_spl)
+        dfs["SPL Vertical_unmelted"] = sv_spl
+        dfs["SPL Vertical_normalized_unmelted"] = norm_spl(sv_spl)
+    else:
+        logger.info("v_spl is None for speaker {}".format(speaker_name))
+
+    # horrible hack for EQ speakers which are already normalized
+    if mean_100_1000 is not None and mean_100_1000 > 20:
+        # print('{} sensitivity {}'.format(speaker_name, mean))
+        dfs["sensitivity"] = mean_100_1000
+
+    # add computed graphs
+    table = [
+        ["Early Reflections", early_reflections],
+        ["Horizontal Reflections", horizontal_reflections],
+        ["Vertical Reflections", vertical_reflections],
+        ["Estimated In-Room Response", estimated_inroom_HV],
+        ["On Axis", compute_onaxis],
+        ["CEA2034", compute_cea2034],
+    ]
+
+    if sh_spl is None or sv_spl is None:
+        #
+        df = compute_onaxis(sh_spl, sv_spl)
+        dfs["On Axis_unmelted"] = df
+        dfs["On Axis"] = graph_melt(df)
+        # SPL H
+        if sh_spl is not None:
+            df = horizontal_reflections(sh_spl, sv_spl)
+            dfs["Horizontal Reflections_unmelted"] = df
+            dfs["Horizontal Reflections"] = graph_melt(df)
+        # SPL V
+        if sv_spl is not None:
+            df = vertical_reflections(sh_spl, sv_spl)
+            dfs["Vectical Reflections_unmelted"] = df
+            dfs["Vectical Reflections"] = graph_melt(df)
+        # that's all folks
+        return dfs
+
+    for title, functor in table:
+        try:
+            df = functor(sh_spl, sv_spl)
+            if df is not None:
+                dfs[title + "_unmelted"] = df
+                dfs[title] = graph_melt(df)
+            else:
+                logger.info("{0} computation is None for speaker{1:s}".format(title, speaker_name))
+        except KeyError as ke:
+            logger.warning("{0} computation failed with key:{1} for speaker{2:s}".format(title, ke, speaker_name))
+
+    # print(
+    #    "min {} max {}".format(
+    #        np.min(dfs["CEA2034_unmelted"]["On Axis"]),
+    #        np.max(dfs["CEA2034_unmelted"]["On Axis"]),
+    #    )
+    # )
+    return dfs
+
+
 def filter_graphs_partial(df):
     dfs = {}
     # normalize first

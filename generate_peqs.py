@@ -89,6 +89,7 @@ Options:
   --graphic_eq_list        List the known graphic eq and exit
 """
 from datetime import datetime
+from copy import deepcopy
 import json
 import os
 import pathlib
@@ -146,16 +147,9 @@ def optim_find_peq(
     optim_config,
     use_score,
 ):
-
     # shortcut
     curves = optim_config["curve_names"]
 
-    # do we use -3dB point for target?
-    if optim_config["target_min_freq"] is None:
-        spl = get3db(df_speaker)
-        optim_config["target_min_freq"] = spl
-
-    print("set target_min_freq to {}".format(optim_config["target_min_freq"]))
     # get freq and targets
     data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
     if data_frame is None or freq is None or auto_target is None:
@@ -182,6 +176,79 @@ def optim_find_peq(
         _, _, auto_score = scores_apply_filter(df_speaker, auto_peq)
 
     return auto_score, auto_results, auto_peq
+
+
+def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
+    # do we use -3dB point for target?
+    if optim_config["target_min_freq"] is None:
+        spl = get3db(df_speaker)
+        optim_config["target_min_freq"] = spl
+
+    # print("set target_min_freq to {}".format(optim_config["target_min_freq"]))
+
+    # create a few options for controling the optimiser
+    configs = []
+    configs.append(
+        {
+            "curve_names": ["Listening Window"],
+            "full_biquad_optim": False,
+            "smooth_measurements": True,
+            "smooth_window_size": 21,
+            "smooth_order": 3,
+        }
+    )
+    configs.append(
+        {
+            "curve_names": ["Listening Window"],
+            "full_biquad_optim": True,
+            "smooth_measurements": True,
+            "smooth_window_size": 21,
+            "smooth_order": 3,
+        }
+    )
+    configs.append(
+        {
+            "curve_names": ["Estimated In-Room Response"],
+            "full_biquad_optim": False,
+            "smooth_measurements": True,
+            "smooth_window_size": 21,
+            "smooth_order": 3,
+        }
+    )
+    configs.append(
+        {
+            "curve_names": ["Estimated In-Room Response"],
+            "full_biquad_optim": True,
+            "smooth_measurements": True,
+            "smooth_window_size": 21,
+            "smooth_order": 3,
+        }
+    )
+
+    # run optimiser for each config
+    best_i = -1
+    best_score = -1.0
+    results = []
+    for i, config in enumerate(configs):
+        current_optim_config = deepcopy(optim_config)
+        for k, v in config.items():
+            current_optim_config[k] = v
+        auto_score, auto_results, auto_peq = optim_find_peq(current_speaker_name, df_speaker, current_optim_config, use_score)
+        if auto_score is not None:
+            pref_score = auto_score.get("pref_score", -1)
+            if pref_score > best_score:
+                best_score = pref_score
+                best_i = i
+        else:
+            loss_score = auto_results[-1][1]
+            if loss_score > best_score:
+                best_score = loss_score
+                best_i = i
+        results.append((auto_score, auto_results, auto_peq, current_optim_config))
+
+    if best_i >= 0:
+        return results[best_i]
+    return None, None, None, None
 
 
 @ray.remote
@@ -231,7 +298,11 @@ def optim_save_peq(
         score = -1.0
 
     # compute pref score from speaker if possible
-    auto_score, auto_results, auto_peq = optim_find_peq(current_speaker_name, df_speaker, optim_config, use_score)
+    auto_score, auto_results, auto_peq, auto_config = optim_strategy(current_speaker_name, df_speaker, optim_config, use_score)
+    if auto_peq is None:
+        print("EQ generation failed for {}".format(current_speaker_name))
+        return
+    optim_config = deepcopy(auto_config)
 
     # compute new score with this PEQ
     auto_spin = None
@@ -393,7 +464,10 @@ def compute_peqs(ray_ids):
         ready_ids, remaining_ids = ray.wait(ids, num_returns=num_returns)
 
         for current_id in ready_ids:
-            current_speaker_name, results_iter, scores = ray.get(current_id)
+            get_results = ray.get(current_id)
+            if get_results is None:
+                continue
+            current_speaker_name, results_iter, scores = get_results
             if results_iter is not None:
                 aggregated_results[current_speaker_name] = results_iter
             if scores is not None:
@@ -478,7 +552,7 @@ def main():
         # it will optimise for having a Listening Window as close as possible
         # the target and having a Sound Power as flat as possible (without a
         # target)
-        # "curve_names": ["Listening Window"],
+        "curve_names": ["Listening Window"],
         # 'curve_names': ['Early Reflections'],
         # 'curve_names': ['Listening Window', 'Early Reflections'],
         # "curve_names": ["On Axis", "Listening Window", "Early Reflections"],
@@ -487,7 +561,7 @@ def main():
         # 'curve_names': ['Listening Window', 'On Axis', 'Early Reflections'],
         # 'curve_names': ['On Axis', 'Early Reflections'],
         # 'curve_names': ['Early Reflections', 'Sound Power'],
-        "curve_names": ["Estimated In-Room Response", "Listening Window"],
+        # "curve_names": ["Estimated In-Room Response", "Listening Window"],
         # "curve_names": ["Estimated In-Room Response"],
         # start and end freq for targets and optimise in this range
         "target_min_freq": None,  # by default it will be set to -3dB point if not given on the command line
@@ -527,7 +601,7 @@ def main():
         current_optim_config["MAX_STEPS_DBGAIN"] = 6
         current_optim_config["MAX_STEPS_Q"] = 6
         # max iterations (if algorithm is iterative)
-        current_optim_config["maxiter"] = 1500
+        current_optim_config["maxiter"] = 150
 
     # MIN or MAX_Q or MIN or MAX_DBGAIN control the shape of the biquad which
     # are admissible.

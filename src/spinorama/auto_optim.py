@@ -249,7 +249,7 @@ def optim_greedy(
             )
             init_dbGain_range = [-3, -2, -1, 0, 1, 2, 3]
             init_Q_range = [0.5, 1, 2, 3]
-            biquad_range = [0, 1, 3, 5]  # LP, PK
+            biquad_range = [0, 3]  # LP, PK
         else:
             # greedy strategy: look for lowest & highest peak
             sign, init_freq, init_freq_range = propose_range_freq(freq, current_auto_target[0], optim_config, optim_iter)
@@ -258,9 +258,9 @@ def optim_greedy(
             biquad_range = propose_range_biquad(optim_config)
 
         # print(
-        #    "sign {} init_freq {} init_freq_range {} init_q_range {} biquad_range {}".format(
-        #        sign, init_freq, init_freq_range, init_Q_range, biquad_range
-        #    )
+        #     "sign {} init_freq {} init_freq_range {} init_q_range {} biquad_range {}".format(
+        #         sign, init_freq, init_freq_range, init_Q_range, biquad_range
+        #     )
         # )
 
         if optim_config["full_biquad_optim"] is True:

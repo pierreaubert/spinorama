@@ -117,8 +117,10 @@ def print_graphs(
     force_print=False,
     filter_file_ext=None,
 ):
-    # may happens at development time
+    # may happens at development time or for partial measurements
     if df is None:
+        if origin != "Misc" and origin != "Princeton":
+            print("error: df is None for {} {} {}".format(speaker, version, origin))
         return 0
 
     graph_params = copy.deepcopy(plot_params_default)
