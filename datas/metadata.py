@@ -6442,23 +6442,23 @@ speakers_info = {
             },
         },
     },
-    #    "JBL 708i": {
-    #        "brand": "JBL",
-    #        "model": "708i",
-    #        "type": "passive",
-    #        "price": "",
-    #        "shape": "bookshelves",
-    #        "amount": "pair",
-    #        "default_measurement": "asr-v1-20221231",
-    #        "measurements": {
-    #            "asr-v1-20221231": {
-    #                "origin": "ASR",
-    #                "format": "klippel",
-    #                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-708i-monitor-review-passive-part-1.40530/",
-    #               "review_published": "20221231",
-    #           },
-    #       },
-    #   },
+    "JBL 708i": {
+        "brand": "JBL",
+        "model": "708i",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr-v1-20221231",
+        "measurements": {
+            "asr-v1-20221231": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-708i-monitor-review-passive-part-1.40530/",
+                "review_published": "20221231",
+            },
+        },
+    },
     "JBL 708P": {
         "brand": "JBL",
         "model": "708P",

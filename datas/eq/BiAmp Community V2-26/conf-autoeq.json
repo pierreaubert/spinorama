@@ -13,7 +13,7 @@
     "freq_mean_min": 100,
     "freq_mean_max": 300,
     "curve_names": [
-        "Estimated In-Room Response"
+        "Listening Window"
     ],
     "target_min_freq": 97.5,
     "target_max_freq": 16000,
@@ -25,8 +25,8 @@
     "smooth_measurements": true,
     "smooth_window_size": 21,
     "smooth_order": 3,
-    "use_grapheq": true,
-    "grapheq_name": "DBX 1231",
+    "use_grapheq": false,
+    "grapheq_name": null,
     "use_3dB_target": true,
     "MAX_NUMBER_PEQ": 9,
     "MAX_STEPS_FREQ": 6,

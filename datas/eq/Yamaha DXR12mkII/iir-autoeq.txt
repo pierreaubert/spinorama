@@ -1,16 +1,16 @@
 EQ for Yamaha DXR12mkII computed from Vendors-Yamaha data
-Preference Score 3.5 with EQ 4.0
+Preference Score 3.5 with EQ 3.5
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-22:24:27
+Dated: 2023-01-01-23:38:29
 
-Preamp: -2.4 dB
+Preamp: -2.0 dB
 
-Filter  1: ON PK Fc   108 Hz Gain -3.00 dB Q 2.45
-Filter  2: ON PK Fc  3274 Hz Gain +1.94 dB Q 0.51
-Filter  3: ON PK Fc   353 Hz Gain -1.50 dB Q 1.87
-Filter  4: ON PK Fc   147 Hz Gain -0.88 dB Q 3.00
-Filter  5: ON LS Fc   164 Hz Gain +1.03 dB
-Filter  6: ON LS Fc  1648 Hz Gain +0.72 dB
-Filter  7: ON PK Fc  1287 Hz Gain -1.12 dB Q 2.18
-Filter  8: ON PK Fc  1993 Hz Gain +0.71 dB Q 3.00
-Filter  9: ON PK Fc  6215 Hz Gain -0.74 dB Q 3.00
+Filter  1: ON PK Fc  3285 Hz Gain +2.09 dB Q 0.67
+Filter  2: ON PK Fc   310 Hz Gain -1.23 dB Q 0.59
+Filter  3: ON PK Fc   192 Hz Gain +1.01 dB Q 0.16
+Filter  4: ON PK Fc   307 Hz Gain -1.16 dB Q 0.49
+Filter  5: ON PK Fc   226 Hz Gain +0.98 dB Q 2.77
+Filter  6: ON PK Fc   800 Hz Gain +0.79 dB Q 2.96
+Filter  7: ON PK Fc  1895 Hz Gain +0.70 dB Q 2.72
+Filter  8: ON PK Fc  2782 Hz Gain -0.76 dB Q 2.23
+Filter  9: ON PK Fc  1409 Hz Gain -0.84 dB Q 2.87

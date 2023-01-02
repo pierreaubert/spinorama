@@ -1,15 +1,15 @@
 EQ for Vanatoo Transparent One Encore computed from ASR data
 Preference Score 4.7 with EQ 6.1
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-22:25:51
+Dated: 2023-01-01-23:39:41
 
-Preamp: -4.9 dB
+Preamp: -4.5 dB
 
-Filter  1: ON PK Fc    71 Hz Gain +3.00 dB Q 0.62
-Filter  2: ON PK Fc 14229 Hz Gain +3.00 dB Q 0.88
-Filter  3: ON PK Fc  5950 Hz Gain -1.99 dB Q 2.30
-Filter  4: ON PK Fc  2076 Hz Gain +2.43 dB Q 2.68
-Filter  5: ON PK Fc 12178 Hz Gain +1.91 dB Q 2.49
-Filter  6: ON PK Fc  7873 Hz Gain -0.80 dB Q 3.00
-Filter  7: ON PK Fc  4128 Hz Gain -0.65 dB Q 3.00
-Filter  8: ON PK Fc 15916 Hz Gain +0.55 dB Q 0.48
+Filter  1: ON PK Fc    40 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON PK Fc 14315 Hz Gain +3.00 dB Q 0.84
+Filter  3: ON PK Fc  5880 Hz Gain -1.92 dB Q 2.19
+Filter  4: ON PK Fc  2084 Hz Gain +2.41 dB Q 2.73
+Filter  5: ON PK Fc 12074 Hz Gain +1.97 dB Q 2.65
+Filter  6: ON PK Fc  7765 Hz Gain -0.87 dB Q 2.94
+Filter  7: ON PK Fc  4107 Hz Gain -0.55 dB Q 2.99
+Filter  8: ON PK Fc  2549 Hz Gain +0.50 dB Q 2.94

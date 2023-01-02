@@ -1,16 +1,16 @@
 EQ for Fulcrum Acoustic CCX1526 computed from Vendors-Fulcrum Acoustic data
-Preference Score 3.0 with EQ 3.9
+Preference Score 3.0 with EQ 4.0
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-22:26:43
+Dated: 2023-01-01-23:40:19
 
-Preamp: -4.1 dB
+Preamp: -5.7 dB
 
-Filter  1: ON PK Fc    80 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc  1547 Hz Gain +2.74 dB Q 0.76
-Filter  3: ON LS Fc  7200 Hz Gain +0.85 dB
-Filter  4: ON PK Fc  1840 Hz Gain -1.59 dB Q 0.49
-Filter  5: ON PK Fc  1769 Hz Gain +1.25 dB Q 3.00
-Filter  6: ON PK Fc 14400 Hz Gain +1.32 dB Q 0.34
-Filter  7: ON PK Fc 12589 Hz Gain -2.01 dB Q 3.00
-Filter  8: ON PK Fc  4404 Hz Gain -1.12 dB Q 3.00
-Filter  9: ON PK Fc  3240 Hz Gain +0.92 dB Q 3.00
+Filter  1: ON PK Fc    45 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON LS Fc  2680 Hz Gain +2.76 dB
+Filter  3: ON PK Fc   214 Hz Gain -3.39 dB Q 0.77
+Filter  4: ON PK Fc   876 Hz Gain -1.26 dB Q 2.65
+Filter  5: ON HS Fc 12395 Hz Gain +1.46 dB
+Filter  6: ON HS Fc  2797 Hz Gain +1.03 dB
+Filter  7: ON PK Fc 12905 Hz Gain -2.94 dB Q 2.92
+Filter  8: ON PK Fc  4302 Hz Gain -1.38 dB Q 2.89
+Filter  9: ON PK Fc  1700 Hz Gain +0.97 dB Q 2.95

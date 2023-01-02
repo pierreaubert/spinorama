@@ -1,16 +1,15 @@
 EQ for BIC America Venturi DV62si computed from ASR data
-Preference Score 1.6 with EQ 3.9
+Preference Score 1.6 with EQ 3.5
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-22:26:33
+Dated: 2023-01-01-23:39:09
 
-Preamp: -2.8 dB
+Preamp: -2.9 dB
 
-Filter  1: ON PK Fc    79 Hz Gain +2.08 dB Q 0.50
-Filter  2: ON PK Fc 10162 Hz Gain -6.00 dB Q 0.72
-Filter  3: ON PK Fc  2916 Hz Gain +2.80 dB Q 3.00
-Filter  4: ON PK Fc 12958 Hz Gain -2.66 dB Q 3.00
-Filter  5: ON PK Fc  1444 Hz Gain -1.45 dB Q 1.35
-Filter  6: ON PK Fc  6114 Hz Gain -1.54 dB Q 3.00
-Filter  7: ON PK Fc  2713 Hz Gain +0.91 dB Q 3.00
-Filter  8: ON PK Fc  1862 Hz Gain -0.62 dB Q 3.00
-Filter  9: ON LS Fc  1130 Hz Gain +0.52 dB
+Filter  1: ON PK Fc    42 Hz Gain +2.67 dB Q 0.52
+Filter  2: ON PK Fc 10237 Hz Gain -5.97 dB Q 0.73
+Filter  3: ON PK Fc  2881 Hz Gain +2.68 dB Q 2.99
+Filter  4: ON PK Fc 12938 Hz Gain -2.56 dB Q 2.95
+Filter  5: ON PK Fc  6046 Hz Gain -1.79 dB Q 2.91
+Filter  6: ON PK Fc  1532 Hz Gain -1.51 dB Q 1.78
+Filter  7: ON PK Fc   917 Hz Gain -0.62 dB Q 2.99
+Filter  8: ON HS Fc  3949 Hz Gain +0.83 dB

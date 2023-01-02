@@ -1,12 +1,13 @@
 EQ for Definitive Technology ProMonitor 1000 computed from ASR data
 Preference Score 3.0 with EQ 4.2
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-22:24:43
+Dated: 2023-01-01-23:39:51
 
-Preamp: -3.0 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc   112 Hz Gain +2.84 dB Q 0.50
-Filter  2: ON PK Fc  8246 Hz Gain -2.41 dB Q 1.85
-Filter  3: ON PK Fc  2235 Hz Gain +1.68 dB Q 2.03
-Filter  4: ON PK Fc 13221 Hz Gain -1.40 dB Q 3.00
-Filter  5: ON PK Fc  4350 Hz Gain +0.50 dB Q 3.00
+Filter  1: ON PK Fc    56 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON PK Fc  8252 Hz Gain -2.52 dB Q 1.98
+Filter  3: ON PK Fc  2234 Hz Gain +1.65 dB Q 1.79
+Filter  4: ON PK Fc 13068 Hz Gain -1.42 dB Q 2.96
+Filter  5: ON PK Fc  6542 Hz Gain -0.52 dB Q 2.96
+Filter  6: ON HS Fc  7571 Hz Gain +0.58 dB

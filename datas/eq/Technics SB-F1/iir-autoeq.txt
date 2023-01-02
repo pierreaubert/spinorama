@@ -1,12 +1,16 @@
 EQ for Technics SB-F1 computed from ASR data
-Preference Score 1.4 with EQ 2.5
+Preference Score 1.4 with EQ 2.9
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-22:25:39
+Dated: 2023-01-01-23:39:24
 
-Preamp: -3.2 dB
+Preamp: -3.6 dB
 
-Filter  1: ON PK Fc   147 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc 10766 Hz Gain -2.37 dB Q 1.90
-Filter  3: ON PK Fc 13132 Hz Gain -1.71 dB Q 3.00
-Filter  4: ON PK Fc  7870 Hz Gain -1.07 dB Q 3.00
-Filter  5: ON PK Fc  8742 Hz Gain +1.19 dB Q 0.13
+Filter  1: ON PK Fc    75 Hz Gain +2.98 dB Q 0.51
+Filter  2: ON PK Fc 12291 Hz Gain -2.58 dB Q 2.91
+Filter  3: ON HS Fc  8689 Hz Gain +1.10 dB
+Filter  4: ON PK Fc 13047 Hz Gain -2.18 dB Q 2.81
+Filter  5: ON PK Fc  8243 Hz Gain -1.70 dB Q 3.00
+Filter  6: ON HS Fc  8705 Hz Gain +1.23 dB
+Filter  7: ON PK Fc 13533 Hz Gain -1.83 dB Q 2.99
+Filter  8: ON PK Fc  9166 Hz Gain -0.86 dB Q 2.99
+Filter  9: ON HS Fc  8570 Hz Gain +1.17 dB

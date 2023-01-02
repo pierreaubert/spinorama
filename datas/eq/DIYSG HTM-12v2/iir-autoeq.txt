@@ -1,16 +1,15 @@
 EQ for DIYSG HTM-12v2 computed from ErinsAudioCorner data
-Preference Score 3.4 with EQ 4.0
+Preference Score 3.4 with EQ 4.1
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-22:26:21
+Dated: 2023-01-01-23:39:57
 
-Preamp: -3.9 dB
+Preamp: -3.8 dB
 
-Filter  1: ON PK Fc    64 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc  3805 Hz Gain +2.37 dB Q 0.63
-Filter  3: ON PK Fc   486 Hz Gain +3.00 dB Q 3.00
-Filter  4: ON PK Fc 11648 Hz Gain -1.56 dB Q 2.22
-Filter  5: ON PK Fc  1429 Hz Gain +0.63 dB Q 3.00
-Filter  6: ON PK Fc   882 Hz Gain -0.64 dB Q 3.00
-Filter  7: ON PK Fc   310 Hz Gain -0.68 dB Q 3.00
-Filter  8: ON PK Fc 14290 Hz Gain -0.76 dB Q 3.00
-Filter  9: ON LS Fc  1019 Hz Gain +0.50 dB
+Filter  1: ON PK Fc    38 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON PK Fc  3833 Hz Gain +2.33 dB Q 0.62
+Filter  3: ON PK Fc   483 Hz Gain +2.99 dB Q 2.53
+Filter  4: ON PK Fc 11559 Hz Gain -1.57 dB Q 2.53
+Filter  5: ON LS Fc  1139 Hz Gain +0.64 dB
+Filter  6: ON PK Fc   718 Hz Gain -1.02 dB Q 1.31
+Filter  7: ON PK Fc  1415 Hz Gain +0.73 dB Q 2.94
+Filter  8: ON PK Fc   323 Hz Gain -1.01 dB Q 3.00

@@ -1,16 +1,15 @@
 EQ for DIYSG Volt-6 computed from ErinsAudioCorner data
-Preference Score 0.4 with EQ 1.9
+Preference Score 0.4 with EQ 2.1
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-22:26:45
+Dated: 2023-01-01-23:40:24
 
-Preamp: -4.3 dB
+Preamp: -4.4 dB
 
-Filter  1: ON PK Fc   117 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc  2968 Hz Gain +3.00 dB Q 2.45
-Filter  3: ON PK Fc  1727 Hz Gain -2.32 dB Q 3.00
-Filter  4: ON LS Fc  2039 Hz Gain +1.20 dB
-Filter  5: ON PK Fc 12363 Hz Gain +1.99 dB Q 0.26
-Filter  6: ON PK Fc 10486 Hz Gain -2.83 dB Q 3.00
-Filter  7: ON PK Fc  5741 Hz Gain -1.84 dB Q 3.00
-Filter  8: ON PK Fc  1492 Hz Gain -1.31 dB Q 0.24
-Filter  9: ON PK Fc  4078 Hz Gain +1.50 dB Q 0.69
+Filter  1: ON PK Fc    60 Hz Gain +3.00 dB Q 0.51
+Filter  2: ON HS Fc  3151 Hz Gain +2.83 dB
+Filter  3: ON PK Fc 10069 Hz Gain -3.16 dB Q 1.62
+Filter  4: ON PK Fc  2775 Hz Gain +2.07 dB Q 3.00
+Filter  5: ON PK Fc  1778 Hz Gain -2.47 dB Q 3.00
+Filter  6: ON PK Fc  5662 Hz Gain -2.56 dB Q 2.95
+Filter  7: ON LS Fc  1971 Hz Gain +1.13 dB
+Filter  8: ON HS Fc 12377 Hz Gain +1.41 dB

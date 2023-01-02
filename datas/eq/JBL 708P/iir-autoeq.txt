@@ -1,16 +1,16 @@
 EQ for JBL 708P computed from ErinsAudioCorner data
-Preference Score 5.0 with EQ 6.2
+Preference Score 5.0 with EQ 6.1
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-22:25:03
+Dated: 2023-01-01-23:38:57
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    42 Hz Gain +3.00 dB Q 1.89
-Filter  2: ON PK Fc  1588 Hz Gain +2.06 dB Q 2.74
-Filter  3: ON PK Fc 10762 Hz Gain -1.68 dB Q 0.43
-Filter  4: ON PK Fc  2191 Hz Gain +0.65 dB Q 3.00
-Filter  5: ON PK Fc  9848 Hz Gain +0.89 dB Q 3.00
-Filter  6: ON PK Fc 14562 Hz Gain -1.72 dB Q 3.00
-Filter  7: ON PK Fc   556 Hz Gain +0.87 dB Q 3.00
-Filter  8: ON PK Fc   914 Hz Gain -0.82 dB Q 3.00
-Filter  9: ON PK Fc  6563 Hz Gain -0.51 dB Q 3.00
+Filter  1: ON PK Fc    28 Hz Gain +2.99 dB Q 1.20
+Filter  2: ON PK Fc 10337 Hz Gain -1.28 dB Q 0.42
+Filter  3: ON PK Fc  1398 Hz Gain +1.28 dB Q 2.94
+Filter  4: ON PK Fc  9878 Hz Gain +0.87 dB Q 2.99
+Filter  5: ON PK Fc 14513 Hz Gain -1.53 dB Q 2.97
+Filter  6: ON PK Fc   512 Hz Gain +1.09 dB Q 3.00
+Filter  7: ON PK Fc   864 Hz Gain -1.02 dB Q 2.99
+Filter  8: ON PK Fc  6586 Hz Gain -0.50 dB Q 2.95
+Filter  9: ON PK Fc   623 Hz Gain +0.51 dB Q 2.98
