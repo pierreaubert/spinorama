@@ -13,7 +13,7 @@
     "freq_mean_min": 100,
     "freq_mean_max": 300,
     "curve_names": [
-        "Estimated In-Room Response"
+        "Listening Window"
     ],
     "target_min_freq": 84.9609,
     "target_max_freq": 16000,
@@ -28,7 +28,7 @@
     "use_grapheq": false,
     "grapheq_name": null,
     "use_3dB_target": true,
-    "MAX_NUMBER_PEQ": 9,
+    "MAX_NUMBER_PEQ": 16,
     "MAX_STEPS_FREQ": 6,
     "MAX_STEPS_DBGAIN": 6,
     "MAX_STEPS_Q": 6,

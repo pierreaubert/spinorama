@@ -6422,6 +6422,18 @@ speakers_info = {
                 "origin": "Vendors-JBL",
                 "format": "webplotdigitizer",
                 "review": "",
+                "specifications": {
+                    "SPL": {
+                        "max": 101,
+                        "peak": 107,
+                    },
+                    "size": {
+                        "height": 267,
+                        "width": 149,
+                        "depth": 206,
+                    },
+                    "weight": 4.08,
+                },
             },
         },
     },
@@ -6439,6 +6451,18 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-705p-studio-monitor-review.11944/",
                 "review_published": "20200309",
+                "specifications": {
+                    "SPL": {
+                        "max": 101,
+                        "peak": 107,
+                    },
+                    "size": {
+                        "height": 268,
+                        "width": 151,
+                        "depth": 274,
+                    },
+                    "weight": 5.68,
+                },
             },
         },
     },
@@ -6456,6 +6480,18 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-708i-monitor-review-passive-part-1.40530/",
                 "review_published": "20221231",
+                "specifications": {
+                    "SPL": {
+                        "max": 108,
+                        "peak": 114,
+                    },
+                    "size": {
+                        "height": 438,
+                        "width": 248,
+                        "depth": 292,
+                    },
+                    "weight": 11.5,
+                },
             },
         },
     },
@@ -6473,6 +6509,18 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-708p-review-professional-monitor.20006/",
                 "review_published": "20210201",
+                "specifications": {
+                    "SPL": {
+                        "max": 108,
+                        "peak": 114,
+                    },
+                    "size": {
+                        "height": 441,
+                        "width": 250,
+                        "depth": 419,
+                    },
+                    "weight": 18.1,
+                },
             },
             "eac": {
                 "origin": "ErinsAudioCorner",
@@ -6482,6 +6530,18 @@ speakers_info = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-professional-708p-bi-amplified-8-inch-master-reference-monitor.23655/",
                 },
                 "review_published": "20210523",
+                "specifications": {
+                    "SPL": {
+                        "max": 108,
+                        "peak": 114,
+                    },
+                    "size": {
+                        "height": 441,
+                        "width": 250,
+                        "depth": 419,
+                    },
+                    "weight": 18.1,
+                },
             },
         },
     },
@@ -6499,8 +6559,25 @@ speakers_info = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_305pmk2/",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-review-erin.22999/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-review-erin.22999/", 
                 },
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 92,
+                    "SPL": {
+                        "max": 94,
+                        "peak": 108,
+                    },
+                    "size": {
+                        "height": 298,
+                        "width": 185,
+                        "depth": 231,
+                    },
+                    "weight": 4.73,
+               },
             },
             "asr": {
                 "origin": "ASR",
@@ -6522,6 +6599,23 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-306p-mk-ii-review-studio-monitor.18505/",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 92,
+                    "SPL": {
+                        "max": 92,
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 361,
+                        "width": 224,
+                        "depth": 282,
+                    },
+                    "weight": 6.1,
+               },
             },
         },
     },
@@ -6538,6 +6632,23 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-308p-mkii-studio-monitor-review.17338/",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 92,
+                    "SPL": {
+                        "max": 102,
+                        "peak": 112,
+                    },
+                    "size": {
+                        "height": 419,
+                        "width": 254,
+                        "depth": 308,
+                    },
+                    "weight": 8.1,
+               },
             },
         },
     },
@@ -6860,6 +6971,23 @@ speakers_info = {
                     "yt": "",
                 },
                 "review_published": "20210821",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 100,
+                    },
+                    "sensitivity": 92,
+                    "SPL": {
+                        "max": 117,
+                        "peak": 123,
+                    },
+                    "size": {
+                        "height": 1256,
+                        "width": 508,
+                        "depth": 355,
+                    },
+                    "weight": 58.5,
+                },
             },
             "vendor": {
                 "origin": "Vendors-JBL",
