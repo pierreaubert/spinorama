@@ -29,7 +29,7 @@ from plotly.subplots import make_subplots
 from spinorama.load_misc import graph_melt
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import peq_build, peq_preamp_gain
-from spinorama.auto_optim import savitzky_golay
+from spinorama.compute_misc import savitzky_golay, compute_statistics
 from spinorama.plot import (
     colors,
     plot_spinorama_traces,
@@ -38,6 +38,16 @@ from spinorama.plot import (
     generate_yaxis_spl,
     generate_yaxis_di,
 )
+
+
+def short_name(name):
+    if name == "Listening Window":
+        return "LW"
+    elif name == "Estimated In-Room Response":
+        return "PIR"
+    elif name == "On Axis":
+        return "ON"
+    return name
 
 
 def graph_eq(freq, peq, domain, title):
@@ -71,14 +81,7 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, s
     # ]
     curve_names = []
     for name in optim_config["curve_names"]:
-        if name == "Listening Window":
-            curve_names.append("LW")
-        elif name == "Estimated In-Room Response":
-            curve_names.append("PIR")
-        elif name == "On Axis":
-            curve_names.append("ON")
-        else:
-            curve_names.append(name)
+        curve_names.append(short_name(name))
 
     target_name = "error {}".format(curve_names[0], 0)
     df = pd.DataFrame(
@@ -187,22 +190,27 @@ def graph_results(
         g_curve_auto = None
         if data_auto is not None:
             g_curve_auto = plot_graph_regression_traces(data_auto, which_curve, g_params)
-        g_curves[which_curve] = {
-            "noeq": g_curve_noeq,
-            "auto": g_curve_auto,
-        }
 
-    spin_title = "Spinorama"
+        # gather stats
+        short_curve = short_name(which_curve)
+        noeq_slope, noeq_hist, noeq_max = compute_statistics(data, which_curve, 250, 10000)
+        noeq_title = f"{short_curve} slope {noeq_slope:0.1f}dB/Octave error max={noeq_max:.1f}dB"
+        auto_slope, auto_hist, auto_max = compute_statistics(data_auto, which_curve, 250, 10000)
+        auto_title = f"{short_curve} with EQ slope {auto_slope:0.1f}dB/Octave error max={auto_max:.1f}dB"
+
+        g_curves[which_curve] = {"noeq": g_curve_noeq, "auto": g_curve_auto, "noeq_title": noeq_title, "auto_title": auto_title}
+
+    spin_title = "Spin"
     if score is not None and isinstance(score, dict):
-        spin_title = "Spinorama (score={:0.1f} lfx={:.0f}Hz sm_pir={:0.2f})".format(
+        spin_title = "Spin (score={:0.1f} lfx={:.0f}Hz sm_pir={:0.2f})".format(
             score.get("pref_score", -100),
             score.get("lfx_hz", -1),
             score.get("sm_pred_in_room", 0),
         )
 
-    auto_spin_title = "Spinorama with EQ"
+    auto_spin_title = "Spin with EQ"
     if auto_score is not None and isinstance(auto_score, dict):
-        auto_spin_title = "Spinorama (score={:0.1f} lfx={:.0f}Hz sm_pir={:0.2f})".format(
+        auto_spin_title = "Spin (score={:0.1f} lfx={:.0f}Hz sm_pir={:0.2f})".format(
             auto_score.get("pref_score", -100),
             auto_score.get("lfx_hz", -1),
             auto_score.get("sm_pred_in_room", 0),
@@ -216,10 +224,10 @@ def graph_results(
             "PEQ v.s. Target",
             spin_title,
             auto_spin_title,
-            "Listening Window",
-            "Listening Window with EQ",
-            "Estimate In-Room Response",
-            "Estimate In-Room Response with EQ",
+            g_curves["Listening Window"]["noeq_title"],
+            g_curves["Listening Window"]["auto_title"],
+            g_curves["Estimated In-Room Response"]["noeq_title"],
+            g_curves["Estimated In-Room Response"]["auto_title"],
         ),
         horizontal_spacing=0.075,
         vertical_spacing=0.075,
@@ -289,10 +297,10 @@ def graph_results(
         lw_min = max(-40, -5 * round(-lw_min / 5))
     else:
         lw_min = -5
-    if lw_max > 10:
+    if lw_max > 5:
         lw_max = min(20, 5 * (round(lw_max / 5) + 1))
     else:
-        lw_max = 10
+        lw_max = 5
     lw_min = max(-10, lw_min)
     fig.update_yaxes(generate_yaxis_spl(lw_min, lw_max, 1), row=3)
 
@@ -314,10 +322,10 @@ def graph_results(
         pir_min = max(-40, -5 * round(-pir_min / 5))
     else:
         pir_min = -5
-    if pir_max > 10:
+    if pir_max > 5:
         pir_max = min(20, 5 * (round(pir_max / 5) + 1))
     else:
-        pir_max = 10
+        pir_max = 5
     pir_min = max(-20, pir_min)
 
     fig.update_xaxes(generate_xaxis(), row=4)
