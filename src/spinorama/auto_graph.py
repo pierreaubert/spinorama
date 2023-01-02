@@ -89,7 +89,7 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, s
             target_name: target,
         }
     )
-    #for i, ati in enumerate(auto_target_interp):
+    # for i, ati in enumerate(auto_target_interp):
     #    if i<len(curve_names):
     #        df["ideal {}".format(curve_names[i])] = ati
     #    else:

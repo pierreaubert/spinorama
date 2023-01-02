@@ -81,12 +81,12 @@ def find_best_biquad(
         "message": "",
     }
     try:
-        #res = opt.dual_annealing(
+        # res = opt.dual_annealing(
         #    opt_peq,
         #    bounds,
         #    maxiter=optim_config["maxiter"],
         #    # initial_temp=10000
-        #)
+        # )
         res = opt.differential_evolution(
             opt_peq,
             bounds,
@@ -178,14 +178,14 @@ def find_best_peak(
         "message": "",
     }
     try:
-        #res = opt.dual_annealing(
+        # res = opt.dual_annealing(
         #   opt_peq,
         #   bounds,
         #   visit=2.9,
         #   maxfun=optim_config["maxiter"],
         #   initial_temp=10000,
         #   no_local_search=True,
-        #)
+        # )
         res = opt.differential_evolution(
             opt_peq,
             bounds,

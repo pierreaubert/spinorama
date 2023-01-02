@@ -204,6 +204,10 @@ def add_scores(dataframe, parse_max):
     for speaker_name, speaker_data in dataframe.items():
         for _, measurements in speaker_data.items():
             for version, measurement in measurements.items():
+                if speaker_name not in metadata.speakers_info.keys():
+                    # should not happen. If you mess up with names of speakers
+                    # and change them, then you can have inconsistent data.
+                    continue
                 if version[-3:] == "_eq":
                     continue
                 current = metadata.speakers_info[speaker_name]["measurements"][version]
@@ -258,6 +262,10 @@ def add_scores(dataframe, parse_max):
             break
         parsed = parsed + 1
         logger.info("Normalize data for {0}", speaker_name)
+        if speaker_name not in metadata.speakers_info.keys():
+            # should not happen. If you mess up with names of speakers
+            # and change them, then you can have inconsistent data.
+            continue
         for _, measurements in speaker_data.items():
             for version, measurement in measurements.items():
                 if version not in metadata.speakers_info[speaker_name]["measurements"].keys():

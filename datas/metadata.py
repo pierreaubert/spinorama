@@ -5659,23 +5659,6 @@ speakers_info = {
             },
         },
     },
-    "JBL LSR708i": {
-        "brand": "JBL",
-        "model": "LSR708i",
-        "type": "passive",
-        "price": "",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "misc-speakerdata2034",
-        "measurements": {
-            "misc-speakerdata2034": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "quality": "low",
-                "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-jbl-pro-studio.html",
-            },
-        },
-    },
     "JBL LSR308": {
         "brand": "JBL",
         "model": "LSR308",
@@ -6493,6 +6476,12 @@ speakers_info = {
                     "weight": 11.5,
                 },
             },
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "webplotdigitizer",
+                "quality": "high",
+                "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-jbl-pro-studio.html",
+            },
         },
     },
     "JBL 708P": {
@@ -6559,8 +6548,9 @@ speakers_info = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_305pmk2/",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-review-erin.22999/", 
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-review-erin.22999/",
                 },
+                "review_published": "20201001",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 120,
@@ -6577,7 +6567,7 @@ speakers_info = {
                         "depth": 231,
                     },
                     "weight": 4.73,
-               },
+                },
             },
             "asr": {
                 "origin": "ASR",
@@ -6599,6 +6589,7 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-306p-mk-ii-review-studio-monitor.18505/",
+                "review_published": "20201217",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 120,
@@ -6615,7 +6606,7 @@ speakers_info = {
                         "depth": 282,
                     },
                     "weight": 6.1,
-               },
+                },
             },
         },
     },
@@ -6632,6 +6623,7 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-308p-mkii-studio-monitor-review.17338/",
+                "review_published": "20201106",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 120,
@@ -6648,7 +6640,7 @@ speakers_info = {
                         "depth": 308,
                     },
                     "weight": 8.1,
-               },
+                },
             },
         },
     },
@@ -6749,6 +6741,7 @@ speakers_info = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-4349-review-studio-monitor-speaker.22686/",
+                "review_published": "20210420",
             },
         },
     },
@@ -7044,6 +7037,21 @@ speakers_info = {
                 "quality": "high",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/spinorama-for-the-brand-new-jbl-prx900-serie.38843/",
                 "review_published": "20221103",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 105,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "max": 126,
+                    },
+                    "size": {
+                        "height": 479,
+                        "width": 312,
+                        "depth": 285,
+                    },
+                    "weight": 13.7,
+               },
             },
         },
     },
@@ -7062,6 +7070,21 @@ speakers_info = {
                 "quality": "high",
                 "review": "",
                 "review_published": "20221103",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "max": 132,
+                    },
+                    "size": {
+                        "height": 636,
+                        "width": 394,
+                        "depth": 332,
+                    },
+                    "weight": 19.5,
+               },
             },
         },
     },
@@ -7080,6 +7103,21 @@ speakers_info = {
                 "quality": "high",
                 "review": "",
                 "review_published": "20221103",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "max": 133,
+                    },
+                    "size": {
+                        "height": 717,
+                        "width": 465,
+                        "depth": 383,
+                    },
+                    "weight": 24.1,
+               },
             },
         },
     },
