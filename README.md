@@ -59,7 +59,7 @@ The library support four different formats of data:
 2. Calculate contour plot, radar plot, isolines and isobands.
 3. Estimate basic data for a speaker (-3dB output, flatness over a range, etc)
 4. Compute various parameters defined in a paper from Olive (ref. below).
-5. It can generate an EQ to optimise the speaker (and get a better preference score) based on anechoic data. Note: this is not yet a room correction software.
+5. It can generate an EQ to optimise the speaker (and get a better preference score) based on anechoic data. Note: this is not yet a room correction software. EQ can be PEQ based but it also can generate a solution for a hardware graphical EQ.
 6. It can compute the effect of an EQ (IIR) on the spinorama.
 
 ## Website generation
@@ -68,7 +68,7 @@ The library support four different formats of data:
 2. Graphs are interactive.
 3. Comparison between speakers is possible.
 4. Some statistics.
-5. All EQs generated are easily accessible.
+5. All generated EQs are easily accessible.
 6. You can find similar speakers at a lower price point.
 
 # Other ways to look at the graphs in a more interactive way.

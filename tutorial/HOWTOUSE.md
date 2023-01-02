@@ -34,7 +34,7 @@ Takes all the pictures of speakers, resizes them and generates multiple formats 
 ```
 will show you a lot of options. If you start with:
 ```
-./generate_graphs.py --help
+./generate_graphs.py
 ```
 The script will generate all the graphs for all speakers in parallel. It will use all your CPU for some time (5 min on a large machine, 30 min on a laptop).
 
