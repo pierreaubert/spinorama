@@ -232,7 +232,14 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
     for i, config in enumerate(configs):
         current_optim_config = deepcopy(optim_config)
         for k, v in config.items():
+            # do not override if
+            if k == "curve_names" and optim_config[k] is not None:
+                continue
+            # override config
             current_optim_config[k] = v
+        # don't compute configs that do not match
+        if set(optim_config["curve_names"]) != set(config["curve_names"]):
+            continue
         auto_score, auto_results, auto_peq = optim_find_peq(current_speaker_name, df_speaker, current_optim_config, use_score)
         if auto_score is not None:
             pref_score = auto_score.get("pref_score", -1)
@@ -288,7 +295,7 @@ def optim_save_peq(
         use_score = False
         # set EQ min to 500
         optim_config["freq_reg_min"] = max(500, optim_config["freq_reg_min"])
-        optim_config["target_min_freq"] = max(500, optim_config["target_min_freq"])
+        # optim_config["target_min_freq"] = max(500, optim_config["target_min_freq"])
 
     score = None
     if use_score:
@@ -350,13 +357,10 @@ def optim_save_peq(
     curves = optim_config["curve_names"]
     if auto_peq is not None and len(auto_peq) > 0:
 
-        # TODO: optim_config by best_config
         data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
-
         auto_target_interp = []
         for curve in curves:
             auto_target_interp.append(get_target(data_frame, freq, curve, optim_config))
-        # END TODO
 
         graphs = auto_graph_results(
             current_speaker_name,
@@ -552,7 +556,8 @@ def main():
         # it will optimise for having a Listening Window as close as possible
         # the target and having a Sound Power as flat as possible (without a
         # target)
-        "curve_names": ["Listening Window"],
+        "curve_names": None,
+        # "curve_names": ["Listening Window"],
         # 'curve_names': ['Early Reflections'],
         # 'curve_names': ['Listening Window', 'Early Reflections'],
         # "curve_names": ["On Axis", "Listening Window", "Early Reflections"],
