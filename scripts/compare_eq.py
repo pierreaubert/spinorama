@@ -43,26 +43,26 @@ def plot_eq(peqs):
     traces = []
     for name, peq in peqs.items():
         traces.append(go.Scatter(x=freqs, y=peq_build(freqs, peq), name=name))
-        fig = go.Figure(data=traces)
-        fig.update_xaxes(
-            dict(
-                title_text="Frequency (Hz)",
-                type="log",
-                range=[math.log10(20), math.log10(20000)],
-                showline=True,
-                dtick="D1",
-            ),
-        )
-        fig.update_yaxes(
-            dict(
-                title_text="SPL (dB)",
-                range=[-5, 5],
-                showline=True,
-                dtick="D1",
-            ),
-        )
-        fig.update_layout(title="EQs")
-
+    fig = go.Figure(data=traces)
+    fig.update_xaxes(
+        dict(
+            title_text="Frequency (Hz)",
+            type="log",
+            range=[math.log10(20), math.log10(20000)],
+            showline=True,
+            dtick="D1",
+        ),
+    )
+    fig.update_yaxes(
+        dict(
+            title_text="SPL (dB)",
+            range=[-5, 5],
+            showline=True,
+            dtick="D1",
+        ),
+    )
+    fig.update_layout(title="EQs")
+    
     return fig
 
 
