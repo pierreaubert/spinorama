@@ -1,0 +1,20 @@
+EQ for JBL 708i from JBL
+Dated: 2023-01-03-16:19:45
+
+Filter  1: ON PK Fc    42 Hz Gain +3.00 dB Q 1.41
+Filter  2: ON PK Fc    50 Hz Gain +2.00 dB Q 0.51
+Filter  3: ON PK Fc    71 Hz Gain -1.22 dB Q 1.19
+Filter  4: ON PK Fc   197 Hz Gain +1.08 dB Q 4.97
+Filter  5: ON PK Fc   393 Hz Gain -0.80 dB Q 5.76
+Filter  6: ON HS Fc   450 Hz Gain -1.00 dB
+Filter  7: ON PK Fc   580 Hz Gain +2.82 dB Q 14.42
+Filter  8: ON PK Fc   700 Hz Gain -0.50 dB Q 1.41
+Filter  9: ON PK Fc   740 Hz Gain -4.19 dB Q 2.87
+Filter 10: ON PK Fc  1000 Hz Gain +0.00 dB Q 1.41
+Filter 11: ON PK Fc  1720 Hz Gain +2.33 dB Q 2.43
+Filter 12: ON PK Fc  2180 Hz Gain +2.00 dB Q 9.61
+Filter 13: ON PK Fc  3250 Hz Gain -1.75 dB Q 5.76
+Filter 14: ON PK Fc  5220 Hz Gain +2.24 dB Q 3.42
+Filter 15: ON PK Fc  9750 Hz Gain +1.14 dB Q 6.86
+Filter 16: ON PK Fc 16700 Hz Gain -1.81 dB Q 5.76
+
