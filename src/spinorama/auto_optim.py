@@ -173,16 +173,22 @@ def optim_greedy(
 
         if optim_iter == 0 and optim_config["full_biquad_optim"] is True:
             # see if a LP can help get some flatness of bass
-            init_freq_range = [optim_config["target_min_freq"] / 2, 16000] # optim_config["target_min_freq"] * 2]
+            init_freq_range = [optim_config["target_min_freq"] / 2, 16000]  # optim_config["target_min_freq"] * 2]
             init_dbGain_range = [-3, -2, -1, 0, 1, 2, 3]
             init_Q_range = [0.5, 1, 2, 3]
             biquad_range = [0, 1, 5, 6]  # LP, HP, LS, HS
         else:
             # greedy strategy: look for lowest & highest peak
-            sign, init_freq, init_freq_range = propose_range_freq(freq, current_auto_target[0], optim_config, optim_iter)
-            init_dbGain_range = propose_range_dbGain(freq, current_auto_target[0], sign, init_freq, optim_config)
-            init_Q_range = propose_range_Q(optim_config)
-            biquad_range = propose_range_biquad(optim_config)
+            if optim_iter == 0:
+                init_freq_range = [optim_config["target_min_freq"] / 2, optim_config["target_min_freq"] * 2]
+                init_dbGain_range = [-3, -2, -1, 0, 1, 2, 3]
+                init_Q_range = [0.5, 1, 2, 3]
+                biquad_range = [3]  # PK
+            else:
+                sign, init_freq, init_freq_range = propose_range_freq(freq, current_auto_target[0], optim_config, optim_iter)
+                init_dbGain_range = propose_range_dbGain(freq, current_auto_target[0], sign, init_freq, optim_config)
+                init_Q_range = propose_range_Q(optim_config)
+                biquad_range = propose_range_biquad(optim_config)
 
         # print(
         #     "sign {} init_freq {} init_freq_range {} init_q_range {} biquad_range {}".format(
