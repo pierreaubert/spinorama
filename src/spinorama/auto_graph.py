@@ -40,7 +40,7 @@ from spinorama.plot import (
 )
 
 
-def short_name(name):
+def short_curve_name(name):
     if name == "Listening Window":
         return "LW"
     elif name == "Estimated In-Room Response":
@@ -81,7 +81,7 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, s
     # ]
     curve_names = []
     for name in optim_config["curve_names"]:
-        curve_names.append(short_name(name))
+        curve_names.append(short_curve_name(name))
 
     target_name = "error {}".format(curve_names[0], 0)
     df = pd.DataFrame(
@@ -93,7 +93,7 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, s
         }
     )
     for i, ati in enumerate(auto_target_interp):
-        if i<len(curve_names):
+        if i < len(curve_names):
             df["ideal {}".format(curve_names[i])] = ati
         else:
             df["ideal {}".format(i)] = ati
@@ -155,10 +155,10 @@ def graph_results(
 
     # compare the 2 eqs
     target = -(auto_target[0] - auto_target_interp[0])
-    with open("debug_target.txt", "w") as fd:
-        for f, a in zip(freq, target):
-            fd.write("{} {}\n".format(f, a))
-        fd.close()
+    # with open("debug_target.txt", "w") as fd:
+    #    for f, a in zip(freq, target):
+    #        fd.write("{} {}\n".format(f, a))
+    #    fd.close()
 
     # print('target {} {}'.format(np.min(target), np.max(target)))
     g_eq_full = graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target, optim_config)
@@ -192,9 +192,9 @@ def graph_results(
             g_curve_auto = plot_graph_regression_traces(data_auto, which_curve, g_params)
 
         # gather stats
-        short_curve = short_name(which_curve)
-        noeq_slope, noeq_hist, noeq_max = compute_statistics(data, which_curve, 250, 10000)
-        auto_slope, auto_hist, auto_max = compute_statistics(data_auto, which_curve, 250, 10000)
+        short_curve = short_curve_name(which_curve)
+        noeq_slope, noeq_hist, noeq_max = compute_statistics(data, which_curve, 250, 10000, 80, 16000)
+        auto_slope, auto_hist, auto_max = compute_statistics(data_auto, which_curve, 250, 10000, 80, 16000)
 
         # generate title
         noeq_title = f"{short_curve} slope {noeq_slope:0.1f}dB/Octave error max={noeq_max:.1f}dB"
@@ -202,11 +202,14 @@ def graph_results(
 
         # generate histogram of deviation
         noeq_counts, noeq_bins = noeq_hist
+        auto_counts, auto_bins = noeq_hist
+        bins = sorted([s for s in set(noeq_bins).union(auto_bins)])
+        bins = ["{:0.1f}-{:0.1f}".format(noeq_bins[i], noeq_bins[i + 1]) for i in range(0, len(noeq_bins) - 1)]
+        bins.append("{:0.1f}+".format(noeq_bins[-1]))
         auto_counts, _ = auto_hist
-        bins = 0.5 * (noeq_bins[:-1]+noeq_bins[1:])
-        noeq_hist_plot = [
+        hist_plot = [
             go.Bar(
-                x=noeq_bins,
+                x=bins,
                 y=noeq_counts,
                 marker_color=colors[0],
                 legendgroup="Errors",
@@ -214,7 +217,34 @@ def graph_results(
                 name="noEQ",
             ),
             go.Bar(
-                x=noeq_bins,
+                x=bins,
+                y=auto_counts,
+                marker_color=colors[1],
+                legendgroup="Errors",
+                legendgrouptitle_text="Errors",
+                name="autoEQ",
+            ),
+        ]
+
+        # recompute over midrange only
+        noeq_slope, noeq_hist, noeq_max = compute_statistics(data, which_curve, 250, 10000, 300, 5000)
+        auto_slope, auto_hist, auto_max = compute_statistics(data_auto, which_curve, 250, 10000, 300, 5000)
+        noeq_counts, noeq_bins = noeq_hist
+        auto_counts, auto_bins = auto_hist
+        bins = sorted([s for s in set(noeq_bins).union(auto_bins)])
+        bins = ["{:0.1f}-{:0.1f}".format(noeq_bins[i], noeq_bins[i + 1]) for i in range(0, len(noeq_bins) - 1)]
+        bins.append("{:0.1f}+".format(noeq_bins[-1]))
+        hist_plot_midrange = [
+            go.Bar(
+                x=bins,
+                y=noeq_counts,
+                marker_color=colors[0],
+                legendgroup="Errors",
+                legendgrouptitle_text="Errors",
+                name="noEQ",
+            ),
+            go.Bar(
+                x=bins,
                 y=auto_counts,
                 marker_color=colors[1],
                 legendgroup="Errors",
@@ -228,7 +258,8 @@ def graph_results(
             "auto": g_curve_auto,
             "noeq_title": noeq_title,
             "auto_title": auto_title,
-            "noeq_hist": noeq_hist_plot,
+            "hist": hist_plot,
+            "hist_midrange": hist_plot_midrange,
         }
 
     spin_title = "Spin"
@@ -248,26 +279,29 @@ def graph_results(
         )
 
     fig = make_subplots(
-        rows=5,
+        rows=6,
         cols=2,
         subplot_titles=(
             "PEQ details (N={} Gain={:0.1f})".format(len(auto_peq), peq_preamp_gain(auto_peq)),
             "PEQ v.s. Target",
             spin_title,
             auto_spin_title,
+            g_curves["On Axis"]["noeq_title"],
+            g_curves["On Axis"]["auto_title"],
             g_curves["Listening Window"]["noeq_title"],
             g_curves["Listening Window"]["auto_title"],
             g_curves["Estimated In-Room Response"]["noeq_title"],
             g_curves["Estimated In-Room Response"]["auto_title"],
-            "Distribution of errors w.r.t. to linear regression of {}".format(optim_config["curve_names"][0]),
-            "Tonal balance",
+            "Distribution of errors of {}".format(short_curve_name(optim_config["curve_names"][0])),
+            "Distribution of errors of {} (300Hz-5kHz)".format(short_curve_name(optim_config["curve_names"][0])),
         ),
-        row_heights=[0.20, 0.30, 0.20, 0.20, 0.10],
+        row_heights=[0.15, 0.25, 0.15, 0.15, 0.15, 0.15],
         horizontal_spacing=0.075,
         vertical_spacing=0.075,
         specs=[
             [{}, {}],
             [{"secondary_y": True}, {"secondary_y": True}],
+            [{}, {}],
             [{}, {}],
             [{}, {}],
             [{}, {}],
@@ -312,21 +346,47 @@ def graph_results(
     fig.update_yaxes(generate_yaxis_spl(), row=2)
     fig.update_yaxes(generate_yaxis_di(), row=2, secondary_y=True)
 
-    # add LW and PIR
+    # add ON, LW and PIR
+    on_min = -10
+    on_max = 5
+    for t in g_curves["On Axis"]["noeq"]:
+        fig.add_trace(t, row=3, col=1)
+        on_min = min(on_min, np.min(t.y))
+        on_max = max(on_max, np.max(t.y))
+
+    for t in g_curves["On Axis"]["auto"]:
+        t["showlegend"] = False
+        fig.add_trace(t, row=3, col=2)
+        on_min = min(on_min, np.min(t.y))
+        on_max = max(on_max, np.max(t.y))
+
+    fig.update_xaxes(generate_xaxis(), row=3)
+
+    if on_min < -5:
+        on_min = max(-40, -5 * round(-on_min / 5))
+    else:
+        on_min = -5
+    if on_max > 5:
+        on_max = min(20, 5 * (round(on_max / 5) + 1))
+    else:
+        on_max = 5
+    on_min = max(-5, on_min)
+    fig.update_yaxes(generate_yaxis_spl(on_min, on_max, 1), row=4)
+
     lw_min = -10
     lw_max = 5
     for t in g_curves["Listening Window"]["noeq"]:
-        fig.add_trace(t, row=3, col=1)
+        fig.add_trace(t, row=4, col=1)
         lw_min = min(lw_min, np.min(t.y))
         lw_max = max(lw_max, np.max(t.y))
 
     for t in g_curves["Listening Window"]["auto"]:
         t["showlegend"] = False
-        fig.add_trace(t, row=3, col=2)
+        fig.add_trace(t, row=4, col=2)
         lw_min = min(lw_min, np.min(t.y))
         lw_max = max(lw_max, np.max(t.y))
 
-    fig.update_xaxes(generate_xaxis(), row=3)
+    fig.update_xaxes(generate_xaxis(), row=4)
 
     if lw_min < -5:
         lw_min = max(-40, -5 * round(-lw_min / 5))
@@ -343,13 +403,13 @@ def graph_results(
     pir_max = 5
     for t in g_curves["Estimated In-Room Response"]["noeq"]:
         t["showlegend"] = False
-        fig.add_trace(t, row=4, col=1)
+        fig.add_trace(t, row=5, col=1)
         pir_min = min(pir_min, np.min(t.y))
         pir_max = max(pir_max, np.max(t.y))
 
     for t in g_curves["Estimated In-Room Response"]["auto"]:
         t["showlegend"] = False
-        fig.add_trace(t, row=4, col=2)
+        fig.add_trace(t, row=5, col=2)
         pir_min = min(pir_min, np.min(t.y))
         pir_max = max(pir_max, np.max(t.y))
 
@@ -363,18 +423,26 @@ def graph_results(
         pir_max = 5
     pir_min = max(-10, pir_min)
 
-    fig.update_xaxes(generate_xaxis(), row=4)
+    fig.update_xaxes(generate_xaxis(), row=5)
     fig.update_yaxes(generate_yaxis_spl(pir_min, pir_max, 1), row=4)
 
-    for t in g_curves["Listening Window"]["noeq_hist"]:
-        fig.add_trace(t, row=5, col=1)
-    fig.update_xaxes(title="Error (dB)", row=5, col=1)
-    fig.update_yaxes(title="Count", row=5, col=1)
+    # add error distribution
+    for t in g_curves["Listening Window"]["hist"]:
+        fig.add_trace(t, row=6, col=1)
+    fig.update_xaxes(title="Error (dB)", row=6, col=1)
+    fig.update_yaxes(title="Count", row=6, col=1)
+    for t in g_curves["Listening Window"]["hist_midrange"]:
+        fig.add_trace(t, row=6, col=2)
+    fig.update_xaxes(title="Error (dB)", row=6, col=2)
+    fig.update_yaxes(title="Count", row=6, col=2)
 
+    # add tonal balance
+
+    # almost done
     fig.update_layout(
         width=1400,
         # height=1400*29.7/21, # a4 is a bit squeezed
-        height=1800,
+        height=2000,
         legend=dict(orientation="v"),
         title="{} from {}. Config: curves={} target_min_freq={:.0f}Hz".format(
             speaker_name,
