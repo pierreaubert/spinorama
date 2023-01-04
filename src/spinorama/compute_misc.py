@@ -418,17 +418,20 @@ def dist_point_line(x, y, A, B, C):
     return abs(A * x + B * y + C) / math.sqrt(A * A + B * B)
 
 
-def compute_statistics(df, measurement, min_freq, max_freq):
-    restricted = df.loc[(df.Freq > min_freq) & (df.Freq < max_freq)]
-    spl = restricted[measurement]
-    slope, intercept, r, p, se = stats.linregress(x=np.log10(restricted["Freq"]), y=spl)
+def compute_statistics(df, measurement, min_freq, max_freq, hist_min_freq, hist_max_freq):
+    restricted_minmax = df.loc[(df.Freq > min_freq) & (df.Freq < max_freq)]
+    restricted_spl = restricted_minmax[measurement]
     # regression line
+    slope, intercept, _, _, _ = stats.linregress(x=np.log10(restricted_minmax["Freq"]), y=restricted_spl)
     line = [slope * math.log10(f) + intercept for f in df.Freq]
-    # distance between each point and the regression line
-    dist = [dist_point_line(math.log10(f), db, slope, -1, intercept) for f, db in zip(df.Freq,spl)]
+    #
+    hist_minmax = df.loc[(df.Freq > hist_min_freq) & (df.Freq < hist_max_freq)]
+    hist_spl = hist_minmax[measurement]
+    hist_dist = [dist_point_line(math.log10(f), db, slope, -1, intercept) for f, db in zip(hist_minmax.Freq, hist_spl)]
     # build an histogram to see where the deviation is above each treshhole
-    hist = np.histogram(dist, bins=[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4.0, 4.5, 5.0])
+    hist = np.histogram(hist_dist, bins=[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4.0, 4.5, 5.0], density=False)
     # 3 = math.log10(20000)-math.log10(20)
     # 11 octaves between 20Hz and 20kHz
     db_per_octave = slope * 3 / 11
-    return db_per_octave, hist, np.max(dist)
+    hist_spl, _ = hist
+    return db_per_octave, hist, np.max(hist_dist)
