@@ -34,7 +34,7 @@ def limit_before_freq(freq, curve, min_freq):
     i_min = 0
     while i_min < len(freq) and freq[i_min] < min_freq:
         i_min += 1
-    return [curve[i] if i > i_min else curve[i_min] for i in range(0, len(curve))]
+    return [curve[i] if i > i_min else curve[i_min] + 1 for i in range(0, len(curve))]
 
 
 def get_selector(df, optim_config):
