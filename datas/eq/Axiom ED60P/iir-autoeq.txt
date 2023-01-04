@@ -1,16 +1,16 @@
 EQ for Axiom ED60P computed from Vendors-Axiom data
-Preference Score 4.2 with EQ 5.2
+Preference Score 4.2 with EQ 5.3
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-23:38:10
+Dated: 2023-01-03-23:25:20
 
-Preamp: -4.5 dB
+Preamp: -3.2 dB
 
-Filter  1: ON HP Fc    21 Hz
-Filter  2: ON HS Fc  1200 Hz Gain +2.06 dB
-Filter  3: ON PK Fc  1359 Hz Gain +2.93 dB Q 2.73
-Filter  4: ON PK Fc  3870 Hz Gain -2.46 dB Q 1.87
-Filter  5: ON PK Fc   483 Hz Gain -2.63 dB Q 2.99
-Filter  6: ON PK Fc   911 Hz Gain +1.57 dB Q 3.00
-Filter  7: ON PK Fc   177 Hz Gain -1.73 dB Q 2.96
-Filter  8: ON PK Fc   111 Hz Gain +1.01 dB Q 2.99
-Filter  9: ON PK Fc 11199 Hz Gain -0.97 dB Q 2.99
+Filter  1: ON HS Fc 12273 Hz Gain +3.00 dB
+Filter  2: ON PK Fc  1487 Hz Gain +2.99 dB Q 2.17
+Filter  3: ON PK Fc   455 Hz Gain -2.32 dB Q 2.32
+Filter  4: ON PK Fc  7439 Hz Gain +1.64 dB Q 2.91
+Filter  5: ON PK Fc   181 Hz Gain -2.26 dB Q 2.82
+Filter  6: ON PK Fc  3934 Hz Gain -1.45 dB Q 2.99
+Filter  7: ON LS Fc    89 Hz Gain +1.73 dB
+Filter  8: ON PK Fc   910 Hz Gain +0.89 dB Q 2.36
+Filter  9: ON PK Fc 12258 Hz Gain -1.22 dB Q 2.97

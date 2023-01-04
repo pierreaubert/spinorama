@@ -1,15 +1,16 @@
 EQ for Danley J6-42 computed from Vendors-Danley data
-Preference Score 3.8 with EQ 4.1
+Preference Score 3.8 with EQ 3.9
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-23:37:13
+Dated: 2023-01-03-23:24:03
 
-Preamp: -1.8 dB
+Preamp: -6.4 dB
 
-Filter  1: ON PK Fc    92 Hz Gain -5.97 dB Q 0.77
-Filter  2: ON PK Fc   230 Hz Gain -4.19 dB Q 0.80
-Filter  3: ON PK Fc   942 Hz Gain +2.81 dB Q 2.97
-Filter  4: ON PK Fc  5978 Hz Gain -2.54 dB Q 0.50
-Filter  5: ON PK Fc   543 Hz Gain -2.07 dB Q 1.85
-Filter  6: ON PK Fc 11457 Hz Gain -3.40 dB Q 2.80
-Filter  7: ON PK Fc   335 Hz Gain +1.05 dB Q 0.07
-Filter  8: ON PK Fc  1266 Hz Gain -2.28 dB Q 1.72
+Filter  1: ON HS Fc   578 Hz Gain -2.26 dB
+Filter  2: ON PK Fc    89 Hz Gain -5.26 dB Q 0.74
+Filter  3: ON PK Fc   236 Hz Gain -5.16 dB Q 0.62
+Filter  4: ON LS Fc   887 Hz Gain +2.92 dB
+Filter  5: ON PK Fc   512 Hz Gain -1.79 dB Q 0.16
+Filter  6: ON LS Fc   740 Hz Gain +2.84 dB
+Filter  7: ON PK Fc   562 Hz Gain -1.92 dB Q 0.07
+Filter  8: ON LS Fc  1518 Hz Gain +1.56 dB
+Filter  9: ON PK Fc  1487 Hz Gain +2.67 dB Q 1.54

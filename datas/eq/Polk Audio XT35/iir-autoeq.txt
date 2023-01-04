@@ -1,14 +1,15 @@
 EQ for Polk Audio XT35 computed from ErinsAudioCorner data
-Preference Score 4.1 with EQ 5.5
+Preference Score 4.1 with EQ 5.4
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-23:38:19
+Dated: 2023-01-03-23:23:24
 
-Preamp: -3.2 dB
+Preamp: -2.9 dB
 
-Filter  1: ON PK Fc    42 Hz Gain +2.98 dB Q 0.57
-Filter  2: ON PK Fc  9788 Hz Gain -3.17 dB Q 0.79
-Filter  3: ON PK Fc   911 Hz Gain +1.87 dB Q 1.11
-Filter  4: ON PK Fc  5064 Hz Gain -0.91 dB Q 2.92
-Filter  5: ON PK Fc  2387 Hz Gain +1.42 dB Q 2.99
-Filter  6: ON PK Fc 12918 Hz Gain -0.53 dB Q 2.98
-Filter  7: ON PK Fc  3797 Hz Gain -0.52 dB Q 3.00
+Filter  1: ON HS Fc  5440 Hz Gain -2.54 dB
+Filter  2: ON LS Fc  1490 Hz Gain +2.03 dB
+Filter  3: ON PK Fc  2404 Hz Gain +1.68 dB Q 2.98
+Filter  4: ON PK Fc 11286 Hz Gain -1.70 dB Q 2.53
+Filter  5: ON PK Fc  1042 Hz Gain +0.61 dB Q 2.96
+Filter  6: ON PK Fc   429 Hz Gain -1.77 dB Q 0.39
+Filter  7: ON PK Fc   932 Hz Gain +1.61 dB Q 2.13
+Filter  8: ON HS Fc  3189 Hz Gain +0.50 dB

@@ -1,16 +1,16 @@
 EQ for Wharfedale Diamond 12.1 computed from ASR data
-Preference Score 5.4 with EQ 5.7
+Preference Score 5.4 with EQ 5.8
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-23:40:04
+Dated: 2023-01-03-23:27:10
 
-Preamp: -3.1 dB
+Preamp: -2.2 dB
 
-Filter  1: ON PK Fc    34 Hz Gain +3.00 dB Q 0.89
-Filter  2: ON PK Fc  5311 Hz Gain -1.87 dB Q 2.06
-Filter  3: ON PK Fc  1884 Hz Gain +2.81 dB Q 2.66
-Filter  4: ON PK Fc   388 Hz Gain -1.44 dB Q 0.42
-Filter  5: ON PK Fc  1436 Hz Gain +1.01 dB Q 2.51
-Filter  6: ON PK Fc  3822 Hz Gain -0.79 dB Q 2.96
-Filter  7: ON HS Fc  3933 Hz Gain +0.70 dB
-Filter  8: ON PK Fc  7703 Hz Gain -1.01 dB Q 1.55
-Filter  9: ON HS Fc  3926 Hz Gain +0.59 dB
+Filter  1: ON PK Fc  5623 Hz Gain -2.78 dB Q 1.14
+Filter  2: ON PK Fc   387 Hz Gain -2.02 dB Q 0.73
+Filter  3: ON PK Fc  1860 Hz Gain +2.44 dB Q 2.59
+Filter  4: ON PK Fc  3713 Hz Gain -0.89 dB Q 3.00
+Filter  5: ON LS Fc   266 Hz Gain +0.55 dB
+Filter  6: ON PK Fc 11261 Hz Gain -0.62 dB Q 2.84
+Filter  7: ON HS Fc  9351 Hz Gain +0.75 dB
+Filter  8: ON PK Fc 13303 Hz Gain -1.06 dB Q 2.61
+Filter  9: ON PK Fc  9551 Hz Gain -0.50 dB Q 2.90
