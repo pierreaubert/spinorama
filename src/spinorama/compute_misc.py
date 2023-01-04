@@ -423,7 +423,6 @@ def compute_statistics(df, measurement, min_freq, max_freq, hist_min_freq, hist_
     restricted_spl = restricted_minmax[measurement]
     # regression line
     slope, intercept, _, _, _ = stats.linregress(x=np.log10(restricted_minmax["Freq"]), y=restricted_spl)
-    line = [slope * math.log10(f) + intercept for f in df.Freq]
     #
     hist_minmax = df.loc[(df.Freq > hist_min_freq) & (df.Freq < hist_max_freq)]
     hist_spl = hist_minmax[measurement]
@@ -433,5 +432,4 @@ def compute_statistics(df, measurement, min_freq, max_freq, hist_min_freq, hist_
     # 3 = math.log10(20000)-math.log10(20)
     # 11 octaves between 20Hz and 20kHz
     db_per_octave = slope * 3 / 11
-    hist_spl, _ = hist
     return db_per_octave, hist, np.max(hist_dist)

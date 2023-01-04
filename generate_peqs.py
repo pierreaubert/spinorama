@@ -93,6 +93,7 @@ from copy import deepcopy
 import json
 import os
 import pathlib
+import re
 import sys
 
 
@@ -111,6 +112,7 @@ from datas.grapheq import vendor_info as grapheq_info
 
 from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
+from spinorama.load_rewseq import parse_eq_iir_rews
 from spinorama.compute_misc import compute_statistics
 from spinorama.filter_peq import peq_format_apo
 from spinorama.filter_scores import (
@@ -128,17 +130,19 @@ from spinorama.auto_graph import graph_results as auto_graph_results
 VERSION = "0.18"
 
 
-def get3db(spin):
+def get3db(spin, db_point):
     onaxis = pd.DataFrame()
     if "Measurements" in spin.keys():
         onaxis = spin.loc[spin["Measurements"] == "On Axis"].reset_index(drop=True)
     else:
         onaxis = spin.get("On Axis", None)
     if onaxis is None or onaxis.empty:
-        return 80
+        return None
+    if onaxis.Freq.to_numpy()[0] > 150:
+        return None
 
     y_ref = np.mean(onaxis.loc[(onaxis.Freq >= 300) & (onaxis.Freq <= 10000)].dB)
-    y_3 = onaxis.loc[(onaxis.Freq < 150) & (onaxis.dB <= y_ref - 3)].Freq.max()
+    y_3 = onaxis.loc[(onaxis.Freq < 150) & (onaxis.dB <= y_ref - db_point)].Freq.max()
     return y_3
 
 
@@ -185,7 +189,9 @@ def optim_find_peq(
 def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
     # do we use -3dB point for target?
     if optim_config["target_min_freq"] is None:
-        spl = get3db(df_speaker)
+        spl = get3db(df_speaker, 6.0)
+        if spl is None:
+            return None, None, None, None
         optim_config["target_min_freq"] = spl
 
     # print("set target_min_freq to {}".format(optim_config["target_min_freq"]))
@@ -249,11 +255,11 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
             current_speaker_name, df_speaker, current_optim_config, use_score
         )
         if "CEA2034_unmelted" in df_speaker.keys() and auto_slope_lw is not None:
-            loop = 0
-            while loop < 5:
+            for loop in range(1, 6):
                 # slope 20Hz-20kHz
                 auto_slope_lw = auto_slope_lw * 11 / 3
-                if auto_slope_lw > -1 and auto_slope_lw < 0.1:
+                if auto_slope_lw > -1 and auto_slope_lw < -0.2:
+                    # admissible range 0 means that On Axis will be (usually too hot)
                     break
                 # name should be consistent but they are not
                 slope_name = None
@@ -275,21 +281,25 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
                         and auto_slope_lw >= 0
                         or auto_slope_lw > -1
                     ):
-                        delta = optim_config[slope_name] + np.sign(auto_slope_lw) * 0.5 * loop
+                        delta = optim_config[slope_name] - np.sign(auto_slope_lw) * 0.5 * loop
                     if (
                         current_optim_config["curve_names"][0] == "Estimated In-Room Response"
                         and auto_slope_lw >= 0
                         or auto_slope_lw < -1
                     ):
-                        delta = optim_config[slope_name] + np.sign(auto_slope_lw) * 0.5 * loop
+                        delta = optim_config[slope_name] - np.sign(auto_slope_lw) * 0.5 * loop
                     if delta != 0.0:
                         current_optim_config[slope_name] = delta
                         auto_score, auto_results, auto_peq, auto_slope_lw = optim_find_peq(
                             current_speaker_name, df_speaker, current_optim_config, use_score
                         )
                         print(
-                            "init slope {} init target {} corrected target is {} loop={} score={}".format(
-                                auto_slope_lw, optim_config["slope_listening_window"], delta, loop, auto_score["pref_score"]
+                            "new slope {} init target {} corrected target is {} loop={} score={}".format(
+                                auto_slope_lw * 11 / 3,
+                                optim_config["slope_listening_window"],
+                                delta,
+                                loop,
+                                auto_score["pref_score"],
                             )
                         )
                 loop += 1
@@ -348,7 +358,6 @@ def optim_save_peq(
         use_score = False
         # set EQ min to 500
         optim_config["freq_reg_min"] = max(500, optim_config["freq_reg_min"])
-        # optim_config["target_min_freq"] = max(500, optim_config["target_min_freq"])
 
     score = None
     if use_score:
@@ -381,7 +390,7 @@ def optim_save_peq(
     # print peq
     comments = [f"EQ for {current_speaker_name} computed from {current_speaker_origin} data"]
     if use_score:
-        comments.append("Preference Score {:2.1f} with EQ {:2.1f}".format(score["pref_score"], auto_score["pref_score"]))
+        comments.append("Preference Score {:2.2f} with EQ {:2.2f}".format(score["pref_score"], auto_score["pref_score"]))
 
     comments += [
         f"Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v{VERSION}",
@@ -392,19 +401,37 @@ def optim_save_peq(
 
     # print eq
     if not smoke_test:
-        with open(eq_name, "w", encoding="ascii") as fd:
-            fd.write(eq_apo)
-            iir_txt = "iir.txt"
-            iir_name = f"{eq_dir}/{iir_txt}"
-            if not os.path.exists(iir_name):
-                try:
-                    os.symlink("iir-autoeq.txt", iir_name)
-                except OSError:
-                    pass
-        eq_conf = f"{eq_dir}/conf-autoeq.json"
-        with open(eq_conf, "w", encoding="ascii") as fd:
-            conf_json = json.dumps(optim_config, indent=4)
-            fd.write(conf_json)
+        previous_score = None
+        with open(eq_name, "r", encoding="ascii") as read_fd:
+            lines = read_fd.readlines()
+            if len(lines) > 1:
+                line_pref = lines[1]
+                parsed = re.findall(r"[-+]?\d+(?:\.\d+)?", line_pref)
+                if len(parsed) > 1:
+                    previous_score = float(parsed[1])
+
+        skip = False
+        if use_score and previous_score is not None and previous_score > auto_score["pref_score"]:
+            skip = True
+
+        # print('EQ prev_score {:0.2f} > {:0.2f}'.format(previous_score, auto_score["pref_score"]))
+
+        if not skip:
+            with open(eq_name, "w", encoding="ascii") as write_fd:
+                iir_txt = "iir.txt"
+                iir_name = f"{eq_dir}/{iir_txt}"
+                write_fd.write(eq_apo)
+                if not os.path.exists(iir_name):
+                    try:
+                        os.symlink("iir-autoeq.txt", iir_name)
+                    except OSError:
+                        pass
+            eq_conf = f"{eq_dir}/conf-autoeq.json"
+            with open(eq_conf, "w", encoding="ascii") as write_fd:
+                conf_json = json.dumps(optim_config, indent=4)
+                write_fd.write(conf_json)
+        else:
+            print("skipping writing EQ prev_score {:0.2f} > {:0.2f}".format(previous_score, auto_score["pref_score"]))
 
     # print results
     curves = optim_config["curve_names"]

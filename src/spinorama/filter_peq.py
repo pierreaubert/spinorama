@@ -41,7 +41,7 @@ def peq_preamp_gain(peq: Peq) -> float:
     freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), 1000)
     spl = np.array(peq_build(freq, peq))
     individual = 0.0
-    if len(peq) > 0:
+    if len(peq) == 0:
         return 0.0
     for w, iir in peq:
         individual = max(individual, np.max(peq_build(freq, [(1.0, iir)])))

@@ -197,8 +197,8 @@ def graph_results(
         auto_slope, auto_hist, auto_max = compute_statistics(data_auto, which_curve, 250, 10000, 250, 10000)
 
         # generate title
-        noeq_title = f"{short_curve} slope {noeq_slope:0.1f}dB/Octave error max={noeq_max:.1f}dB"
-        auto_title = f"{short_curve} with EQ slope {auto_slope:0.1f}dB/Octave error max={auto_max:.1f}dB"
+        noeq_title = f"{short_curve} slope {noeq_slope:+0.2f}dB/Octave error max={noeq_max:.1f}dB"
+        auto_title = f"{short_curve} with EQ slope {auto_slope:+0.2f}dB/Octave error max={auto_max:.1f}dB"
 
         # generate histogram of deviation
         noeq_counts, noeq_bins = noeq_hist

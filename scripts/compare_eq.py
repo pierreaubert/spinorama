@@ -62,7 +62,7 @@ def plot_eq(peqs):
         ),
     )
     fig.update_layout(title="EQs")
-    
+
     return fig
 
 
