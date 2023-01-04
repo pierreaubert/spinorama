@@ -173,10 +173,13 @@ def optim_find_peq(
     )
 
     auto_score = None
+    auto_slope_lw = None
     if use_score:
-        _, _, auto_score = scores_apply_filter(df_speaker, auto_peq)
+        auto_spin, _, auto_score = scores_apply_filter(df_speaker, auto_peq)
+        unmelted_auto_spin = auto_spin.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
+        auto_slope_lw, _, _ = compute_statistics(unmelted_auto_spin, "Listening Window", 250, 10000, 300, 5000)
 
-    return auto_score, auto_results, auto_peq
+    return auto_score, auto_results, auto_peq, auto_slope_lw
 
 
 def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
@@ -242,34 +245,54 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
         if optim_config["curve_names"] is not None and set(optim_config["curve_names"]) != set(config["curve_names"]):
             continue
         # compute
-        auto_score, auto_results, auto_peq = optim_find_peq(current_speaker_name, df_speaker, current_optim_config, use_score)
-        # correct LW if too hot
-        if "CEA2034_unmelted" in df_speaker.keys():
-            slope, _, _ = compute_statistics(df_speaker["CEA2034_unmelted"], "Listening Window", 250, 10000)
-            slope = slope * 11 / 3
-            slope_name = None
-            if current_optim_config["curve_names"][0] == 'Listening Window':
-                slope_name = "slope_listening_window"
-            elif current_optim_config["curve_names"][0] == 'Estimated In-Room Response':
-                slope_name = "slope_estimated_inroom"
-            elif current_optim_config["curve_names"][0] == 'On Axis':
-                slope_name = "slope_onaxis"
-            elif current_optim_config["curve_names"][0] == 'Sound Power':
-                slope_name = "slope_sound_power"
-            elif current_optim_config["curve_names"][0] == 'Early Reflections':
-                slope_name = "slope_early_reflections"
-            if slope_name is not None:
-                delta = 0.0
-                if current_optim_config["curve_names"][0] == 'Listening Window':
-                    if slope >= 0:
-                        delta = -0.5 - slope
-                    elif slope > -1:
-                        delta = - slope - 0.5
-                if current_optim_config["curve_names"][0] == 'Estimated In-Room Response' and slope >= -6.5 or slope < -9:
-                    delta = -6.5 + slope 
-                if delta != 0.0:
-                    current_optim_config[slope_name] = delta
-                    auto_score, auto_results, auto_peq = optim_find_peq(current_speaker_name, df_speaker, current_optim_config, use_score)
+        auto_score, auto_results, auto_peq, auto_slope_lw = optim_find_peq(
+            current_speaker_name, df_speaker, current_optim_config, use_score
+        )
+        if "CEA2034_unmelted" in df_speaker.keys() and auto_slope_lw is not None:
+            loop = 0
+            while loop < 5:
+                # slope 20Hz-20kHz
+                auto_slope_lw = auto_slope_lw * 11 / 3
+                if auto_slope_lw > -1 and auto_slope_lw < 0.1:
+                    break
+                # name should be consistent but they are not
+                slope_name = None
+                if current_optim_config["curve_names"][0] == "Listening Window":
+                    slope_name = "slope_listening_window"
+                elif current_optim_config["curve_names"][0] == "Estimated In-Room Response":
+                    slope_name = "slope_estimated_inroom"
+                elif current_optim_config["curve_names"][0] == "On Axis":
+                    slope_name = "slope_onaxis"
+                elif current_optim_config["curve_names"][0] == "Sound Power":
+                    slope_name = "slope_sound_power"
+                elif current_optim_config["curve_names"][0] == "Early Reflections":
+                    slope_name = "slope_early_reflections"
+
+                if slope_name is not None:
+                    delta = 0.0
+                    if (
+                        current_optim_config["curve_names"][0] == "Listening Window"
+                        and auto_slope_lw >= 0
+                        or auto_slope_lw > -1
+                    ):
+                        delta = optim_config[slope_name] + np.sign(auto_slope_lw) * 0.5 * loop
+                    if (
+                        current_optim_config["curve_names"][0] == "Estimated In-Room Response"
+                        and auto_slope_lw >= 0
+                        or auto_slope_lw < -1
+                    ):
+                        delta = optim_config[slope_name] + np.sign(auto_slope_lw) * 0.5 * loop
+                    if delta != 0.0:
+                        current_optim_config[slope_name] = delta
+                        auto_score, auto_results, auto_peq, auto_slope_lw = optim_find_peq(
+                            current_speaker_name, df_speaker, current_optim_config, use_score
+                        )
+                        print(
+                            "init slope {} init target {} corrected target is {} loop={} score={}".format(
+                                auto_slope_lw, optim_config["slope_listening_window"], delta, loop, auto_score["pref_score"]
+                            )
+                        )
+                loop += 1
         # store score
         if auto_score is not None:
             pref_score = auto_score.get("pref_score", -1)
