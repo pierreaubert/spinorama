@@ -193,8 +193,8 @@ def graph_results(
 
         # gather stats
         short_curve = short_curve_name(which_curve)
-        noeq_slope, noeq_hist, noeq_max = compute_statistics(data, which_curve, 250, 10000, 80, 16000)
-        auto_slope, auto_hist, auto_max = compute_statistics(data_auto, which_curve, 250, 10000, 80, 16000)
+        noeq_slope, noeq_hist, noeq_max = compute_statistics(data, which_curve, 250, 10000, 250, 10000)
+        auto_slope, auto_hist, auto_max = compute_statistics(data_auto, which_curve, 250, 10000, 250, 10000)
 
         # generate title
         noeq_title = f"{short_curve} slope {noeq_slope:0.1f}dB/Octave error max={noeq_max:.1f}dB"
@@ -226,7 +226,7 @@ def graph_results(
             ),
         ]
 
-        # recompute over midrange only
+        # recompute over midrange only (300Hz--5kHz)
         noeq_slope, noeq_hist, noeq_max = compute_statistics(data, which_curve, 250, 10000, 300, 5000)
         auto_slope, auto_hist, auto_max = compute_statistics(data_auto, which_curve, 250, 10000, 300, 5000)
         noeq_counts, noeq_bins = noeq_hist
@@ -272,7 +272,7 @@ def graph_results(
 
     auto_spin_title = "Spin with EQ"
     if auto_score is not None and isinstance(auto_score, dict):
-        auto_spin_title = "Spin (score={:0.1f} lfx={:.0f}Hz sm_pir={:0.2f})".format(
+        auto_spin_title = "Spin w/autoEQ (score={:0.1f} lfx={:.0f}Hz sm_pir={:0.2f})".format(
             auto_score.get("pref_score", -100),
             auto_score.get("lfx_hz", -1),
             auto_score.get("sm_pred_in_room", 0),
