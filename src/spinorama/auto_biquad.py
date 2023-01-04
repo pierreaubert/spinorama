@@ -90,7 +90,10 @@ def find_best_biquad(
         res = opt.differential_evolution(
             opt_peq,
             bounds,
-            # workers=100,
+            # workers=64,
+            # updating='deferred',
+            # mutation=(0.5, 1.5),
+            # recombination=1.9,
             maxiter=optim_config["maxiter"],
             atol=0.01,
             polish=False,
@@ -189,7 +192,10 @@ def find_best_peak(
         res = opt.differential_evolution(
             opt_peq,
             bounds,
-            # workers=100,
+            # workers=64,
+            # updating='deferred',
+            # mutation=(0.5, 1.5),
+            # recombination=1.9,
             maxiter=optim_config["maxiter"],
             atol=0.01,
             polish=False,
