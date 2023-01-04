@@ -425,9 +425,9 @@ def compute_statistics(df, measurement, min_freq, max_freq):
     # regression line
     line = [slope * math.log10(f) + intercept for f in df.Freq]
     # distance between each point and the regression line
-    dist = [dist_point_line(math.log10(f), spl, slope, -1, intercept) for f in df.Freq]
+    dist = [dist_point_line(math.log10(f), db, slope, -1, intercept) for f, db in zip(df.Freq,spl)]
     # build an histogram to see where the deviation is above each treshhole
-    hist = np.histogram(dist, bins=[0, 0.5, 1, 1.5, 3])
+    hist = np.histogram(dist, bins=[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4.0, 4.5, 5.0])
     # 3 = math.log10(20000)-math.log10(20)
     # 11 octaves between 20Hz and 20kHz
     db_per_octave = slope * 3 / 11

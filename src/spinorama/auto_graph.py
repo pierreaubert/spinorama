@@ -92,11 +92,11 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, s
             target_name: target,
         }
     )
-    # for i, ati in enumerate(auto_target_interp):
-    #    if i<len(curve_names):
-    #        df["ideal {}".format(curve_names[i])] = ati
-    #    else:
-    #        df["ideal {}".format(i)] = ati
+    for i, ati in enumerate(auto_target_interp):
+        if i<len(curve_names):
+            df["ideal {}".format(curve_names[i])] = ati
+        else:
+            df["ideal {}".format(i)] = ati
 
     if optim_config.get("smooth_measurements"):
         window_size = optim_config.get("smooth_window_size")
@@ -194,11 +194,42 @@ def graph_results(
         # gather stats
         short_curve = short_name(which_curve)
         noeq_slope, noeq_hist, noeq_max = compute_statistics(data, which_curve, 250, 10000)
-        noeq_title = f"{short_curve} slope {noeq_slope:0.1f}dB/Octave error max={noeq_max:.1f}dB"
         auto_slope, auto_hist, auto_max = compute_statistics(data_auto, which_curve, 250, 10000)
+
+        # generate title
+        noeq_title = f"{short_curve} slope {noeq_slope:0.1f}dB/Octave error max={noeq_max:.1f}dB"
         auto_title = f"{short_curve} with EQ slope {auto_slope:0.1f}dB/Octave error max={auto_max:.1f}dB"
 
-        g_curves[which_curve] = {"noeq": g_curve_noeq, "auto": g_curve_auto, "noeq_title": noeq_title, "auto_title": auto_title}
+        # generate histogram of deviation
+        noeq_counts, noeq_bins = noeq_hist
+        auto_counts, _ = auto_hist
+        bins = 0.5 * (noeq_bins[:-1]+noeq_bins[1:])
+        noeq_hist_plot = [
+            go.Bar(
+                x=noeq_bins,
+                y=noeq_counts,
+                marker_color=colors[0],
+                legendgroup="Errors",
+                legendgrouptitle_text="Errors",
+                name="noEQ",
+            ),
+            go.Bar(
+                x=noeq_bins,
+                y=auto_counts,
+                marker_color=colors[1],
+                legendgroup="Errors",
+                legendgrouptitle_text="Errors",
+                name="autoEQ",
+            ),
+        ]
+
+        g_curves[which_curve] = {
+            "noeq": g_curve_noeq,
+            "auto": g_curve_auto,
+            "noeq_title": noeq_title,
+            "auto_title": auto_title,
+            "noeq_hist": noeq_hist_plot,
+        }
 
     spin_title = "Spin"
     if score is not None and isinstance(score, dict):
@@ -217,7 +248,7 @@ def graph_results(
         )
 
     fig = make_subplots(
-        rows=4,
+        rows=5,
         cols=2,
         subplot_titles=(
             "PEQ details (N={} Gain={:0.1f})".format(len(auto_peq), peq_preamp_gain(auto_peq)),
@@ -228,12 +259,16 @@ def graph_results(
             g_curves["Listening Window"]["auto_title"],
             g_curves["Estimated In-Room Response"]["noeq_title"],
             g_curves["Estimated In-Room Response"]["auto_title"],
+            "Distribution of errors w.r.t. to linear regression of {}".format(optim_config["curve_names"][0]),
+            "Tonal balance",
         ),
+        row_heights=[0.20, 0.30, 0.20, 0.20, 0.10],
         horizontal_spacing=0.075,
         vertical_spacing=0.075,
         specs=[
             [{}, {}],
             [{"secondary_y": True}, {"secondary_y": True}],
+            [{}, {}],
             [{}, {}],
             [{}, {}],
         ],
@@ -326,14 +361,20 @@ def graph_results(
         pir_max = min(20, 5 * (round(pir_max / 5) + 1))
     else:
         pir_max = 5
-    pir_min = max(-20, pir_min)
+    pir_min = max(-10, pir_min)
 
     fig.update_xaxes(generate_xaxis(), row=4)
     fig.update_yaxes(generate_yaxis_spl(pir_min, pir_max, 1), row=4)
 
+    for t in g_curves["Listening Window"]["noeq_hist"]:
+        fig.add_trace(t, row=5, col=1)
+    fig.update_xaxes(title="Error (dB)", row=5, col=1)
+    fig.update_yaxes(title="Count", row=5, col=1)
+
     fig.update_layout(
         width=1400,
-        height=1600,
+        # height=1400*29.7/21, # a4 is a bit squeezed
+        height=1800,
         legend=dict(orientation="v"),
         title="{} from {}. Config: curves={} target_min_freq={:.0f}Hz".format(
             speaker_name,

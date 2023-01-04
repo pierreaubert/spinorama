@@ -111,6 +111,7 @@ from datas.grapheq import vendor_info as grapheq_info
 
 from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
+from spinorama.compute_misc import compute_statistics
 from spinorama.filter_peq import peq_format_apo
 from spinorama.filter_scores import (
     scores_apply_filter,
@@ -238,19 +239,48 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
             # override config
             current_optim_config[k] = v
         # don't compute configs that do not match
-        if set(optim_config["curve_names"]) != set(config["curve_names"]):
+        if optim_config["curve_names"] is not None and set(optim_config["curve_names"]) != set(config["curve_names"]):
             continue
+        # compute
         auto_score, auto_results, auto_peq = optim_find_peq(current_speaker_name, df_speaker, current_optim_config, use_score)
+        # correct LW if too hot
+        if "CEA2034_unmelted" in df_speaker.keys():
+            slope, _, _ = compute_statistics(df_speaker["CEA2034_unmelted"], "Listening Window", 250, 10000)
+            slope = slope * 11 / 3
+            slope_name = None
+            if current_optim_config["curve_names"][0] == 'Listening Window':
+                slope_name = "slope_listening_window"
+            elif current_optim_config["curve_names"][0] == 'Estimated In-Room Response':
+                slope_name = "slope_estimated_inroom"
+            elif current_optim_config["curve_names"][0] == 'On Axis':
+                slope_name = "slope_onaxis"
+            elif current_optim_config["curve_names"][0] == 'Sound Power':
+                slope_name = "slope_sound_power"
+            elif current_optim_config["curve_names"][0] == 'Early Reflections':
+                slope_name = "slope_early_reflections"
+            if slope_name is not None:
+                delta = 0.0
+                if current_optim_config["curve_names"][0] == 'Listening Window':
+                    if slope >= 0:
+                        delta = -0.5 - slope
+                    elif slope > -1:
+                        delta = - slope - 0.5
+                if current_optim_config["curve_names"][0] == 'Estimated In-Room Response' and slope >= -6.5 or slope < -9:
+                    delta = -6.5 + slope 
+                if delta != 0.0:
+                    current_optim_config[slope_name] = delta
+                    auto_score, auto_results, auto_peq = optim_find_peq(current_speaker_name, df_speaker, current_optim_config, use_score)
+        # store score
         if auto_score is not None:
             pref_score = auto_score.get("pref_score", -1)
             if pref_score > best_score:
                 best_score = pref_score
-                best_i = i
+                best_i = len(results)
         else:
             loss_score = auto_results[-1][1]
             if loss_score > best_score:
                 best_score = loss_score
-                best_i = i
+                best_i = len(results)
         results.append((auto_score, auto_results, auto_peq, current_optim_config))
 
     if best_i >= 0:
