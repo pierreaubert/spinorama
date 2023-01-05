@@ -16,9 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-TARGET=$HOME/src/pierreaubert.github.io/spinorama
+# TARGET=$HOME/src/pierreaubert.github.io/spinorama
+TARGET=/var/html/spinorama
 # check
-command=$(grep internet-box docs/*.html | wc -l)
+command=$(grep dev.spinorama.org docs/*.html | wc -l)
 if [ $command -ne 0 ]; then
     echo "KO found dev url in prod site"
     exit 1;

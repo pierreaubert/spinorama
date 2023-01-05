@@ -290,19 +290,24 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
                         delta = optim_config[slope_name] - np.sign(auto_slope_lw) * 0.5 * loop
                     if delta != 0.0:
                         current_optim_config[slope_name] = delta
-                        auto_score, auto_results, auto_peq, auto_slope_lw = optim_find_peq(
+                        auto_score2, auto_results2, auto_peq2, auto_slope_lw2 = optim_find_peq(
                             current_speaker_name, df_speaker, current_optim_config, use_score
                         )
-                        print(
-                            "new slope {} init target {} corrected target is {} loop={} score={}".format(
-                                auto_slope_lw * 11 / 3,
-                                optim_config["slope_listening_window"],
-                                delta,
-                                loop,
-                                auto_score["pref_score"],
+                        if auto_slope_lw2 * 11 / 3 > -1 and auto_slope_lw2 * 11 / 3 < -0.2:
+                            auto_score = auto_score2
+                            auto_result = auto_results2
+                            auto_peq = auto_peq2
+                            auto_slope_lw = auto_slope_lw2
+                            print(
+                                "new slope {} init target {} corrected target is {} loop={} score={}".format(
+                                    auto_slope_lw * 11 / 3,
+                                    optim_config["slope_listening_window"],
+                                    delta,
+                                    loop,
+                                    auto_score["pref_score"],
+                                )
                             )
-                        )
-                loop += 1
+
         # store score
         if auto_score is not None:
             pref_score = auto_score.get("pref_score", -1)
