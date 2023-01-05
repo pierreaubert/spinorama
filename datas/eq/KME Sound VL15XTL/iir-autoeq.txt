@@ -1,15 +1,16 @@
 EQ for KME Sound VL15XTL computed from Vendors-KME Sound data
-Preference Score 2.3 with EQ 2.6
+Preference Score 2.28 with EQ 2.66
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-03-23:22:41
+Dated: 2023-01-04-22:13:55
 
-Preamp: -3.7 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc   365 Hz Gain +2.36 dB Q 0.05
-Filter  2: ON PK Fc  2848 Hz Gain -1.63 dB Q 0.68
-Filter  3: ON PK Fc 15927 Hz Gain +2.99 dB Q 0.51
-Filter  4: ON PK Fc  1255 Hz Gain -1.88 dB Q 2.84
-Filter  5: ON PK Fc   624 Hz Gain -1.56 dB Q 2.96
-Filter  6: ON PK Fc  8463 Hz Gain -1.23 dB Q 2.92
-Filter  7: ON PK Fc  1947 Hz Gain +1.04 dB Q 2.96
-Filter  8: ON PK Fc  8628 Hz Gain +0.82 dB Q 0.44
+Filter  1: ON PK Fc    42 Hz Gain +2.99 dB Q 0.51
+Filter  2: ON PK Fc   421 Hz Gain +2.02 dB Q 2.68
+Filter  3: ON PK Fc  8575 Hz Gain +2.42 dB Q 0.19
+Filter  4: ON PK Fc  3302 Hz Gain -1.79 dB Q 0.71
+Filter  5: ON PK Fc  1264 Hz Gain -1.94 dB Q 2.98
+Filter  6: ON PK Fc   245 Hz Gain +1.67 dB Q 2.85
+Filter  7: ON PK Fc  2028 Hz Gain +1.48 dB Q 2.73
+Filter  8: ON PK Fc  8031 Hz Gain -0.79 dB Q 2.88
+Filter  9: ON PK Fc   329 Hz Gain -1.23 dB Q 2.22

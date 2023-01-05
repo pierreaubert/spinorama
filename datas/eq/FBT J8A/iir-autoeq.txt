@@ -1,16 +1,11 @@
 EQ for FBT J8A computed from Vendors-FBT data
-Preference Score 3.0 with EQ 3.3
+Preference Score 2.96 with EQ 3.31
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-03-23:21:57
+Dated: 2023-01-04-22:20:24
 
-Preamp: -2.4 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc  3477 Hz Gain +1.68 dB Q 1.61
-Filter  2: ON PK Fc   365 Hz Gain +1.45 dB Q 2.70
-Filter  3: ON PK Fc   746 Hz Gain -1.30 dB Q 2.97
-Filter  4: ON PK Fc  1166 Hz Gain +0.87 dB Q 2.94
-Filter  5: ON PK Fc  1634 Hz Gain -0.92 dB Q 2.76
-Filter  6: ON PK Fc  2373 Hz Gain +0.96 dB Q 2.63
-Filter  7: ON PK Fc  2901 Hz Gain -1.10 dB Q 2.96
-Filter  8: ON PK Fc  9750 Hz Gain -0.68 dB Q 2.66
-Filter  9: ON PK Fc  3976 Hz Gain +0.87 dB Q 0.06
+Filter  1: ON PK Fc    31 Hz Gain +3.00 dB Q 0.64
+Filter  2: ON PK Fc  9714 Hz Gain -2.56 dB Q 1.92
+Filter  3: ON PK Fc   758 Hz Gain -2.20 dB Q 2.84
+Filter  4: ON PK Fc  1629 Hz Gain -1.44 dB Q 2.91

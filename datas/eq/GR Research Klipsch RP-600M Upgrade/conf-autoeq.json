@@ -5,7 +5,7 @@
         1.0
     ],
     "plus_and_minus": true,
-    "full_biquad_optim": true,
+    "full_biquad_optim": false,
     "elastic": 0.8,
     "fs": 48000,
     "freq_reg_min": 20,
@@ -15,12 +15,12 @@
     "curve_names": [
         "Estimated In-Room Response"
     ],
-    "target_min_freq": 64.4531,
+    "target_min_freq": 45.4102,
     "target_max_freq": 16000,
     "slope_on_axis": 0,
     "slope_listening_window": -0.5,
     "slope_early_reflections": -4,
-    "slope_estimated_inroom": -7.836229267359587,
+    "slope_estimated_inroom": -9.0,
     "slope_sound_power": -9,
     "smooth_measurements": true,
     "smooth_window_size": 21,

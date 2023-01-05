@@ -1,16 +1,16 @@
 EQ for Triangle Borea BR03 computed from ASR data
-Preference Score 4.4 with EQ 5.4
+Preference Score 4.40 with EQ 5.51
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-03-23:26:58
+Dated: 2023-01-04-22:16:09
 
 Preamp: -3.2 dB
 
-Filter  1: ON LS Fc    64 Hz Gain +3.00 dB
-Filter  2: ON PK Fc   780 Hz Gain -1.98 dB Q 2.99
-Filter  3: ON PK Fc 11123 Hz Gain -2.68 dB Q 1.55
-Filter  4: ON PK Fc   377 Hz Gain +1.26 dB Q 1.97
-Filter  5: ON PK Fc  1208 Hz Gain +0.81 dB Q 2.95
-Filter  6: ON PK Fc  6524 Hz Gain -0.51 dB Q 2.74
-Filter  7: ON PK Fc  3251 Hz Gain +0.65 dB Q 2.98
-Filter  8: ON PK Fc  1846 Hz Gain -0.56 dB Q 2.80
-Filter  9: ON PK Fc  1294 Hz Gain +0.50 dB Q 2.97
+Filter  1: ON LS Fc    69 Hz Gain +3.00 dB
+Filter  2: ON PK Fc  9445 Hz Gain -2.30 dB Q 1.05
+Filter  3: ON PK Fc  2931 Hz Gain +1.61 dB Q 2.72
+Filter  4: ON PK Fc   767 Hz Gain -1.34 dB Q 2.98
+Filter  5: ON PK Fc   414 Hz Gain +0.99 dB Q 2.61
+Filter  6: ON PK Fc  5602 Hz Gain -1.06 dB Q 2.78
+Filter  7: ON HS Fc 14201 Hz Gain +0.71 dB
+Filter  8: ON PK Fc 13047 Hz Gain -0.76 dB Q 3.00
+Filter  9: ON HS Fc 13945 Hz Gain +0.74 dB
