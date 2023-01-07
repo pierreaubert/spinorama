@@ -258,11 +258,3 @@ Filter  9: ON PK Fc  8258 Hz Gain +0.59 dB Q 1.95
 ```
 
 If you decrease the max Q to 1, then the score doesn't improve. In this case, 2 or 3 looks like to be the correct value. Listening to the various EQ is the best way to see which one your prefer.
-
-
-
-
-
-
-
-

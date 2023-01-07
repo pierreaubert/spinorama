@@ -85,7 +85,7 @@ Options:
   --smooth-order=<order>   Order of the interpolation, 3 by default for Savitzky-Golay filter.
   --curves=<curve_name>    Curve name: must be one of "ON", "LW", "PIR", "ER" or "SP" or a combinaison separated by a ,. Ex: 'PIR,LW' is valid
   --fitness=<function>     Fit function: must be one of "Flat", "Score", "LeastSquare", "FlatPir", "Combine".
-  --graphic_eq=<eq_name>   Result is tailored for graphic_eq "name". 
+  --graphic_eq=<eq_name>   Result is tailored for graphic_eq "name".
   --graphic_eq_list        List the known graphic eq and exit
 """
 from datetime import datetime

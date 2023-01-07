@@ -1,7 +1,7 @@
 Frequency Spectrum for Input Signal
 
 Data Shown:    V2-3594 (Community)
-Display Parameters:   Frequency: 1000Hz (1/24th Octave)   Mer: 180°  Par: 10°  
+Display Parameters:   Frequency: 1000Hz (1/24th Octave)   Mer: 180°  Par: 10°
 
 Freq [Hz]	Signal Level [dBSPL]
 22.4	72.6

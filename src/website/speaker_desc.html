@@ -253,19 +253,19 @@ Links to other reviews: <a href="${review}">${key} review</a>
        width = size.get('width')
        depth = size.get('depth')
    weight = specifications.get('weight')
-%>   
+%>
 % if specifications is not None:
 <li>
   <b>Vendor specifications</b>:
   <ul>
 %     if dispersion is not None:
-    <li>Dispersion: ${horizontal}&deg; horizontal and ${vertical}&deg; vertical.</li>    
+    <li>Dispersion: ${horizontal}&deg; horizontal and ${vertical}&deg; vertical.</li>
 %     endif
 %     if sensitivity is not None:
-    <li>Sensitivity ${sensitivity} dB</li>    
+    <li>Sensitivity ${sensitivity} dB</li>
 %     endif
 %     if impedance is not None:
-    <li>Impedance ${impedance} Ohm</li>    
+    <li>Impedance ${impedance} Ohm</li>
 %     endif
 %     if spl is not None:
     <li>SPL
@@ -274,7 +274,7 @@ Links to other reviews: <a href="${review}">${key} review</a>
        <li>${k}: ${spl[k]} dB</li>
 % endfor
   </ul>
-</li>    
+</li>
 %     endif
 %     if size is not None:
 <li>Size
@@ -286,7 +286,7 @@ Links to other reviews: <a href="${review}">${key} review</a>
 </li>
 %     endif
 %     if weight is not None:
-    <li>Weight ${weight} kg</li>    
+    <li>Weight ${weight} kg</li>
 %     endif
   </ul>
 </li>
@@ -295,4 +295,3 @@ Links to other reviews: <a href="${review}">${key} review</a>
     </div>
   </div>
 </article>
-

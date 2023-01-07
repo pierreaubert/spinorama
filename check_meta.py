@@ -329,6 +329,7 @@ def sanity_check_measurement(name, speaker, version, measurement):
             "parameters",
             "specifications",
             "extras",
+            "data acquisition",
         ):
             logging.error("{0}: version {1} : {2} is not known".format(name, version, k))
             status = 1

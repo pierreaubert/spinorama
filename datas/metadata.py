@@ -3,6 +3,7 @@
 note_genelec_gll = "Data provided by Genelec is with 1/3rd octave smoothing and 5 degrees resolution"
 note_jbl_gll = "Data provided by JBL is highly variable, beware. It ranges from excellent to surprising"
 note_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz"
+note2_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz. Data comes from a GLL file provided by Meyer: configuration is measured at 10m, resolution is 2.5 degrees, signal is aes broadband 20Hz-20kHz, air attenuation is disabled"
 note_qsc_gll = "Data provided by QSC is of good quality but highly smoothed"
 
 # extra speaker info
@@ -9831,8 +9832,40 @@ speakers_info = {
         "price": "5950",
         "amount": "each",
         "shape": "liveportable",
-        "default_measurement": "vendor",
+        "default_measurement": "vendor-v2-20230107",
         "measurements": {
+            "vendor-v2-20230107": {
+                "origin": "Vendors-Meyer Sound",
+                "format": "splHVtxt",
+                "review_published": "20230107",
+                "quality": "medium",
+                "notes": "{}".format(note2_meyersound_gll),
+                "data acquisition": {
+                    "from": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "air absorbtion": False,
+                    "resolution": 2.5,
+                },
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "peak": 138,
+                        "m-noise": 132.5,
+                        "pink-noise": 130,
+                        "b-noise": 131,
+                    },
+                    "size": {
+                        "height": 567,
+                        "width": 318,
+                        "depth": 391,
+                    },
+                    "weight": 23.6,
+                },
+            },
             "vendor": {
                 "origin": "Vendors-Meyer Sound",
                 "format": "splHVtxt",

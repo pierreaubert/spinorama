@@ -353,7 +353,7 @@ function setGraphOptions (spin: Graphs, windowWidth: number, windowHeight: numbe
         r: 0,
         t: graphMarginTop,
         b: graphMarginBottom,
-      } 
+      }
       layout.legend = {
         orientation: 'h',
         y: -0.25,
@@ -592,7 +592,7 @@ export  function setGlobe (speakerNames: Array<string>, speakerGraphs: Graphs, w
         }
         currentPolarData.legendgroup = 'speaker' + i
         currentPolarData.legendgrouptitle = { text: speakerNames[i] }
-        
+
         polarData.push(currentPolarData)
       }
       let layout = speakerGraphs[i].layout
@@ -637,7 +637,7 @@ export function setSurface (speakerNames: Array<string>, speakerGraphs: Graphs, 
         currentSurfaceData.type = 'surface'
         currentSurfaceData.legendgroup = 'speaker' + i
         currentSurfaceData.legendgrouptitle = { text: speakerNames[i] }
-        
+
         surfaceData.push(currentSurfaceData)
       }
       const layout = speakerGraphs[i].layout
@@ -681,11 +681,11 @@ export function setCEA2034Split (speakerNames: Array<string>, speakerGraphs: Gra
     responsive: true,
     displayModeBar: true,
   }
-  
+
   if (speakerGraphs[0] != null && speakerGraphs[1] != null) {
     layout = speakerGraphs[0].layout
     datas = speakerGraphs[0].data.concat(speakerGraphs[1].data)
-    
+
     layout.width = windowWidth - 40
     layout.height = Math.max(360, Math.min(windowHeight, windowWidth * 0.7 + 140))
     layout.title = null
@@ -704,7 +704,7 @@ export function setCEA2034Split (speakerNames: Array<string>, speakerGraphs: Gra
       yanchor: 'left',
       itemclick: 'toggleothers'
     }
-    
+
     graphsConfigs.push({
       'data': datas,
       'layout': layout,
@@ -739,7 +739,7 @@ export function setCEA2034Split (speakerNames: Array<string>, speakerGraphs: Gra
     }
     // console.log(deltas.length)
     // deltas.forEach( (data) => console.log(data.name) );
-    
+
     const layout2 = JSON.parse(JSON.stringify(layout))
     layout2.height = 440
     layout2.yaxis = {
@@ -820,5 +820,3 @@ export function updateOrigin (metaSpeakers: MetaSpeakers, speaker, originSelecto
   }
   updateVersion(metaSpeakers, speaker, versionSelector, originSelector.value, version)
 }
-
-

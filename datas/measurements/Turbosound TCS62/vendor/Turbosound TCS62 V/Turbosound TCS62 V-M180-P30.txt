@@ -1,7 +1,7 @@
 Frequency Spectrum for Input Signal
 
 Data Shown:    TCS62_Vertical (Turbosound)
-Display Parameters:   Frequency: 1000Hz (1/24th Octave)   Mer: 180°  Par: 30°  
+Display Parameters:   Frequency: 1000Hz (1/24th Octave)   Mer: 180°  Par: 30°
 
 Freq [Hz]	Signal Level [dBSPL]
 22.4	58.1

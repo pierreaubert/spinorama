@@ -1,7 +1,7 @@
 Frequency Spectrum for Input Signal
 
 Data Shown:    VXL1-24 + VXL1-24 Wide Mode (YAMAHA)
-Display Parameters:   Frequency: 1000Hz (1/24th Octave)   Mer: 0°  Par: 100°  
+Display Parameters:   Frequency: 1000Hz (1/24th Octave)   Mer: 0°  Par: 100°
 
 Freq [Hz]	Signal Level [dBSPL]
 22.4	41.5

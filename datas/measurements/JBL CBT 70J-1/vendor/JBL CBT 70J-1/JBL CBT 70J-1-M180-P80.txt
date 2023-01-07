@@ -1,7 +1,7 @@
 Frequency Spectrum for Input Signal
 
 Data Shown:    CBT 70J (JBL Professional)
-Display Parameters:   Frequency: 1000Hz (1/24th Octave)   Mer: 180°  Par: 80°  
+Display Parameters:   Frequency: 1000Hz (1/24th Octave)   Mer: 180°  Par: 80°
 
 Freq [Hz]	Signal Level [dBSPL]
 22.4	59.6

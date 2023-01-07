@@ -8,5 +8,5 @@ pylinkvalidator
 pylint
 pytest
 pytest-cov
-yapf
 selenium
+yapf

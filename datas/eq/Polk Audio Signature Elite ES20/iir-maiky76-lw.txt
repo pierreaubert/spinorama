@@ -7,4 +7,3 @@ Filter 4: ON PK Fc 1017.79,    -1.16,    4.85
 Filter 5: ON PK Fc 2156.62,    1.81,    0.77
 Filter 6: ON PK Fc 3535.42,    -1.47,    4.99
 Filter 7: ON PK Fc 8574.03,    1.88,    4.87
-

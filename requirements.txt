@@ -6,12 +6,12 @@ mako
 more_itertools
 nptyping
 numpy
-scipy>=1.9.0
 pandas
 plotly
 pre_commit
 ray[default]>=2.0.0
 ray[tune]
+scipy>=1.9.0
 wand
 # bayesian-optimization
 # flaml[blendsearch]

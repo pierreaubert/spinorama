@@ -1,7 +1,7 @@
 Frequency Spectrum for Input Signal
 
 Data Shown:    DZR15 H90°xV50° (YAMAHA)
-Display Parameters:   Frequency: 1000Hz (1/24th Octave)   Mer: 180°  Par: 40°  
+Display Parameters:   Frequency: 1000Hz (1/24th Octave)   Mer: 180°  Par: 40°
 
 Freq [Hz]	Signal Level [dBSPL]
 22.4	70.9

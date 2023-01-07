@@ -1,5 +1,5 @@
-"Contour Plot"		
-""		
+"Contour Plot"
+""
 "Frequency / Hz"	"Sound Pressure Level / dB (re 20 µPa)"	"Theta / deg"
 23.6	72.3128	-180
 24.3	72.5065	-180

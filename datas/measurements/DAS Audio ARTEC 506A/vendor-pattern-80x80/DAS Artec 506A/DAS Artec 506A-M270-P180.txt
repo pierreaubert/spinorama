@@ -1,7 +1,7 @@
 Frequency Spectrum for Input Signal
 
 Data Shown:    Artec500A v3-1 (D.A.S. Audio)
-Display Parameters:   Frequency: 1000Hz (1/24th Octave)   Mer: 270°  Par: 180°  
+Display Parameters:   Frequency: 1000Hz (1/24th Octave)   Mer: 270°  Par: 180°
 
 Freq [Hz]	Signal Level [dBSPL]
 22.4	10.9
