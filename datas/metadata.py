@@ -9836,7 +9836,7 @@ speakers_info = {
         "measurements": {
             "vendor-v2-20230107": {
                 "origin": "Vendors-Meyer Sound",
-                "format": "splHVtxt",
+                "format": "gllHVtxt",
                 "review_published": "20230107",
                 "quality": "medium",
                 "notes": "{}".format(note2_meyersound_gll),

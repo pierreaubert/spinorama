@@ -18,6 +18,7 @@ from .load_princeton import parse_graphs_speaker_princeton
 from .load_rewstextdump import parse_graphs_speaker_rewstextdump
 from .load_rewseq import parse_eq_iir_rews
 from .load_splHVtxt import parse_graphs_speaker_splHVtxt
+from .load_gllHVtxt import parse_graphs_speaker_gllHVtxt
 from .load_misc import graph_melt, check_nan
 from .load import (
     filter_graphs,
@@ -101,13 +102,15 @@ def parse_graphs_speaker(
     measurement_path = "{}".format(speaker_path)
     mean_min, mean_max = get_mean_min_max(mparameters)
 
-    if mformat in ("klippel", "princeton", "splHVtxt"):
+    if mformat in ("klippel", "princeton", "splHVtxt", "gllHVtxt"):
         if mformat == "klippel":
             h_spl, v_spl = parse_graphs_speaker_klippel(measurement_path, speaker_brand, speaker_name, mversion, msymmetry)
         elif mformat == "princeton":
             h_spl, v_spl = parse_graphs_speaker_princeton(measurement_path, speaker_brand, speaker_name, mversion, msymmetry)
         elif mformat == "splHVtxt":
             h_spl, v_spl = parse_graphs_speaker_splHVtxt(measurement_path, speaker_brand, speaker_name, mversion)
+        elif mformat == "gllHVtxt":
+            h_spl, v_spl = parse_graphs_speaker_gllHVtxt(measurement_path, speaker_brand, speaker_name, mversion)
 
         df = None
         if msymmetry == "coaxial":

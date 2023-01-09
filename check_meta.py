@@ -345,6 +345,7 @@ def sanity_check_measurement(name, speaker, version, measurement):
             "webplotdigitizer",
             "rewstextdump",
             "splHVtxt",
+            "gllHVtxt",
         ]:
             logging.error("{0}: format {1} is not known".format(name, v))
             status = 1
