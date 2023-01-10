@@ -143,7 +143,7 @@ fetch(urlSite + 'assets/metadata.json').then(
                      )
     plot(graphsSelector.value, names, graphs)
   }
-  
+
   function updateSpeakerPos (pos) {
     // console.log('updateSpeakerPos(' + pos + ')')
     updateOrigin(metaSpeakers, speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos])
@@ -154,7 +154,7 @@ fetch(urlSite + 'assets/metadata.json').then(
                      )
     updateSpeakers()
   }
-  
+
   function updateVersionPos (pos) {
     // console.log('updateVersionsPos(' + pos + ')')
     updateVersion(
@@ -171,7 +171,7 @@ fetch(urlSite + 'assets/metadata.json').then(
                       urlCompare + urlParams.toString()
                      )
   }
-  
+
   function updateOriginPos (pos) {
     // console.log('updateOriginPos(' + pos + ')')
     updateOrigin(metaSpeakers, speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos], originsSelector[pos].value)
@@ -182,11 +182,11 @@ fetch(urlSite + 'assets/metadata.json').then(
                      )
     updateSpeakers()
   }
-  
+
   const [metaSpeakers, speakers] = getAllSpeakers(metadata);
   const initSpeakers = buildInitSpeakers(speakers, nbSpeakers)
   const initMeasurement = buildInitMeasurement()
-    
+
   const speakersSelector = []
   const originsSelector = []
   const versionsSelector = []

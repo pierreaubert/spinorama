@@ -73,4 +73,3 @@ and also (but WIP):
 7. Check that notebook are cleaned up before committing.
 
 Tests 1. to 4. should be in the pre-submit.
-

@@ -143,7 +143,7 @@ fetch(urlSite + 'assets/metadata.json').then(
     )
     plot(graphName, names, graphs)
   }
-  
+
   const [metaSpeakers, speakers] = getNearSpeakers(metadata);
 
   assignOptions(speakers, speakerSelector, buildInitSpeakers(speakers))

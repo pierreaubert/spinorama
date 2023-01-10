@@ -215,4 +215,3 @@ export function getDecoding (key) {
   }
   return 'async'
 }
-

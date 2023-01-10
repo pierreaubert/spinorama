@@ -24,4 +24,3 @@ enabled = true
 [[analyzers]]
 name = "shell"
 enabled = true
-

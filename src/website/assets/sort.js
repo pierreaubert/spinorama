@@ -129,7 +129,7 @@ export function sortMetadata2 (metadata, sorter) {
   } else {
     console.log('ERROR: unknown sorter ' + sorter.by)
   }
-  
+
 }
 
 export function sortMetadata (currentMetadata, currentContainer, current_sorter) {

@@ -10,7 +10,7 @@ for d in datas/eq/*; do
         if test -f "$current"; then
            cp "$current" "$d/iir-$version.txt";
         fi
-        rm -f docs/speakers/"$speaker"/*.png ; 
+        rm -f docs/speakers/"$speaker"/*.png ;
         ./generate_peqs.py --speaker="$speaker" --force --verbose --smooth-measurements=5 --max-Q=3
     fi
 done

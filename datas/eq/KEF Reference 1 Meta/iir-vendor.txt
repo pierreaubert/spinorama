@@ -3,7 +3,7 @@ Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
 Dated: 2022-02-18-21:20:43
 
 Preamp: -2.7 dB
- 
+
 Filter  1: ON PK Fc  2363 Hz Gain +1.94 dB Q 0.13
 Filter  2: ON PK Fc 12885 Hz Gain +1.34 dB Q 0.94
 Filter  3: ON PK Fc  1240 Hz Gain -0.86 dB Q 2.47
