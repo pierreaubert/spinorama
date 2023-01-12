@@ -1,0 +1,16 @@
+EQ for Turbosound NuQ82 computed from Vendors-Turbosound data
+Preference Score 4.2 with EQ 5.7
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.17
+Dated: 2022-12-06-05:55:08
+
+Preamp: -4.0 dB
+
+Filter  1: ON HP Fc    50 Hz
+Filter  2: ON PK Fc   183 Hz Gain -3.52 dB Q 0.75
+Filter  3: ON PK Fc  2729 Hz Gain +3.88 dB Q 2.14
+Filter  4: ON PK Fc   499 Hz Gain -1.77 dB Q 3.00
+Filter  5: ON PK Fc 11919 Hz Gain -2.25 dB Q 1.42
+Filter  6: ON PK Fc  1742 Hz Gain -0.86 dB Q 3.00
+Filter  7: ON PK Fc   820 Hz Gain +1.43 dB Q 3.00
+Filter  8: ON PK Fc  5713 Hz Gain +1.80 dB Q 3.00
+Filter  9: ON PK Fc   281 Hz Gain +0.88 dB Q 3.00

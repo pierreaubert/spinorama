@@ -28,9 +28,7 @@ def display_spinorama(df, graph_params=plot_params_default):
     if spin is None:
         spin_melted = df.get("CEA2034")
         if spin_melted is not None:
-            spin = spin_melted.pivot_table(
-                index="Freq", columns="Measurements", values="dB", aggfunc=max
-            ).reset_index()
+            spin = spin_melted.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
         if spin is None:
             logger.info("Display CEA2034 not in dataframe {0}".format(df.keys()))
             return None
@@ -57,9 +55,7 @@ def display_onaxis(df, graph_params=plot_params_default):
         return None
 
     if "On Axis" not in onaxis.keys():
-        logger.warning(
-            "Display On Axis failed, known keys are {}".format(onaxis.keys())
-        )
+        logger.warning("Display On Axis failed, known keys are {}".format(onaxis.keys()))
         return None
 
     return plot_graph_regression(onaxis, "On Axis", graph_params)
@@ -178,9 +174,7 @@ def display_summary(df, params, speaker, origin, key):
         est = estimates(spin, splH, splV)
 
         # 1
-        speaker_summary = [
-            "{0} {1}".format(speaker_shape.capitalize(), speaker_type.capitalize())
-        ]
+        speaker_summary = ["{0} {1}".format(speaker_shape.capitalize(), speaker_type.capitalize())]
 
         if est is None:
             #                    2   3   4   5   6   7   8
@@ -190,9 +184,7 @@ def display_summary(df, params, speaker, origin, key):
             if "ref_level" in est.keys():
                 speaker_summary += [
                     "• Reference level {0} dB".format(est["ref_level"]),
-                    "(mean over {0}-{1}k Hz)".format(
-                        int(est["ref_from"]), int(est["ref_to"]) / 1000
-                    ),
+                    "(mean over {0}-{1}k Hz)".format(int(est["ref_from"]), int(est["ref_to"]) / 1000),
                 ]
             else:
                 speaker_summary += ["", ""]
@@ -218,9 +210,7 @@ def display_summary(df, params, speaker, origin, key):
             # 7
             if "dir_horizontal_p" in est.keys() and "dir_horizontal_m" in est.keys():
                 speaker_summary += [
-                    "• Horizontal directivity ({}°, {}°)".format(
-                        int(est["dir_horizontal_m"]), int(est["dir_horizontal_p"])
-                    )
+                    "• Horizontal directivity ({}°, {}°)".format(int(est["dir_horizontal_m"]), int(est["dir_horizontal_p"]))
                 ]
             else:
                 speaker_summary += [""]
@@ -228,9 +218,7 @@ def display_summary(df, params, speaker, origin, key):
             # 8
             if "dir_vertical_p" in est.keys() and "dir_vertical_m" in est.keys():
                 speaker_summary += [
-                    "• Vertical directivity ({}°, {}°)".format(
-                        int(est["dir_vertical_m"]), int(est["dir_vertical_p"])
-                    )
+                    "• Vertical directivity ({}°, {}°)".format(int(est["dir_vertical_m"]), int(est["dir_vertical_p"]))
                 ]
             else:
                 speaker_summary += [""]
@@ -250,22 +238,16 @@ def display_summary(df, params, speaker, origin, key):
                 "  • Quality : {0}".format(pref_score.get("lfq", "--")),
                 "• Narrow Bandwidth Deviation",
                 "  • On Axis: {0}".format(pref_score.get("nbd_on_axis", "--")),
-                "  • Predicted In-Room: {0}".format(
-                    pref_score.get("nbd_pred_in_room", "--")
-                ),
+                "  • Predicted In-Room: {0}".format(pref_score.get("nbd_pred_in_room", "--")),
                 "• SM Deviation:",
-                "  • Predicted In-Room: {0}".format(
-                    pref_score.get("sm_pred_in_room", "--")
-                ),
+                "  • Predicted In-Room: {0}".format(pref_score.get("sm_pred_in_room", "--")),
             ]
         else:
             #                    9  10  11  12, 13, 14, 15  16  17
             speaker_summary += ["", "", "", "", "", "", "", "", ""]
 
         if len(speaker_summary) != 17:
-            logger.error(
-                "speaker summary lenght is incorrect {0}".format(speaker_summary)
-            )
+            logger.error("speaker summary lenght is incorrect {0}".format(speaker_summary))
 
         return plot_summary(speaker, speaker_summary, params)
     except KeyError as ke:

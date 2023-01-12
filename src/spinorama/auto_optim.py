@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,11 +18,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
-import numpy as np
 import math
-import pandas as pd
 import time
 from typing import Literal
+
+import numpy as np
+import scipy.optimize as opt
+import pandas as pd
+
 from ray import tune
 from ray.tune.schedulers import (
     PopulationBasedTraining,
@@ -30,13 +33,16 @@ from ray.tune.schedulers import (
     ASHAScheduler,
 )
 from ray.tune.schedulers.pb2 import PB2
-from ray.tune.suggest import ConcurrencyLimiter
-from ray.tune.suggest.flaml import CFO, BlendSearch
-from ray.tune.suggest.bayesopt import BayesOptSearch
+from ray.tune.search import ConcurrencyLimiter
+from ray.tune.search.flaml import CFO, BlendSearch
+from ray.tune.search.bayesopt import BayesOptSearch
+
+from datas.grapheq import vendor_info as grapheq_db
 
 from .ltype import Peq, FloatVector1D
 from .filter_iir import Biquad
 from .filter_peq import peq_build, peq_print
+from .compute_misc import savitzky_golay
 from .auto_loss import loss, score_loss, flat_loss, leastsquare_loss, flat_pir
 from .auto_range import (
     propose_range_freq,
@@ -67,9 +73,7 @@ def optim_preflight(
         status = False
 
     if nbt != nbi:
-        logger.error(
-            "Size mismatch #target {} != #auto_target_interp {}".format(nbt, nbi)
-        )
+        logger.error("Size mismatch #target {} != #auto_target_interp {}".format(nbt, nbi))
         status = False
 
     for i in range(0, min(nbt, nbi)):
@@ -84,78 +88,6 @@ def optim_preflight(
     return status
 
 
-def savitzky_golay(y, window_size, order, deriv=0, rate=1):
-    r"""Smooth (and optionally differentiate) data with a Savitzky-Golay filter.
-    The Savitzky-Golay filter removes high frequency noise from data.
-    It has the advantage of preserving the original shape and
-    features of the signal better than other types of filtering
-    approaches, such as moving averages techniques.
-    Parameters
-    ----------
-    y : array_like, shape (N,)
-        the values of the time history of the signal.
-    window_size : int
-        the length of the window. Must be an odd integer number.
-    order : int
-        the order of the polynomial used in the filtering.
-        Must be less then `window_size` - 1.
-    deriv: int
-        the order of the derivative to compute (default = 0 means only smoothing)
-    Returns
-    -------
-    ys : ndarray, shape (N)
-        the smoothed signal (or it's n-th derivative).
-    Notes
-    -----
-    The Savitzky-Golay is a type of low-pass filter, particularly
-    suited for smoothing noisy data. The main idea behind this
-    approach is to make for each point a least-square fit with a
-    polynomial of high order over a odd-sized window centered at
-    the point.
-    Examples
-    --------
-    t = np.linspace(-4, 4, 500)
-    y = np.exp( -t**2 ) + np.random.normal(0, 0.05, t.shape)
-    ysg = savitzky_golay(y, window_size=31, order=4)
-    import matplotlib.pyplot as plt
-    plt.plot(t, y, label='Noisy signal')
-    plt.plot(t, np.exp(-t**2), 'k', lw=1.5, label='Original signal')
-    plt.plot(t, ysg, 'r', label='Filtered signal')
-    plt.legend()
-    plt.show()
-    References
-    ----------
-    .. [1] A. Savitzky, M. J. E. Golay, Smoothing and Differentiation of
-       Data by Simplified Least Squares Procedures. Analytical
-       Chemistry, 1964, 36 (8), pp 1627-1639.
-    .. [2] Numerical Recipes 3rd Edition: The Art of Scientific Computing
-       W.H. Press, S.A. Teukolsky, W.T. Vetterling, B.P. Flannery
-       Cambridge University Press ISBN-13: 9780521880688
-    """
-    try:
-        window_size = np.abs(np.int(window_size))
-        order = np.abs(np.int(order))
-    except ValueError as msg:
-        raise ValueError("window_size and order have to be of type int")
-    if window_size % 2 != 1 or window_size < 1:
-        raise TypeError("window_size size must be a positive odd number")
-    if window_size < order + 2:
-        raise TypeError("window_size is too small for the polynomials order")
-    order_range = range(order + 1)
-    half_window = (window_size - 1) // 2
-    # precompute coefficients
-    b = np.mat(
-        [[k**i for i in order_range] for k in range(-half_window, half_window + 1)]
-    )
-    m = np.linalg.pinv(b).A[deriv] * rate**deriv * math.factorial(deriv)
-    # pad the signal at the extremes with
-    # values taken from the signal itself
-    firstvals = y[0] - np.abs(y[1 : half_window + 1][::-1] - y[0])
-    lastvals = y[-1] + np.abs(y[-half_window - 1 : -1][::-1] - y[-1])
-    y = np.concatenate((firstvals, y, lastvals))
-    return np.convolve(m[::-1], y, mode="valid")
-
-
 def optim_compute_auto_target(
     freq: FloatVector1D,
     target: list[FloatVector1D],
@@ -163,18 +95,21 @@ def optim_compute_auto_target(
     peq: Peq,
     optim_config: dict,
 ):
+    """Define the target for the optimiser with potentially some smoothing"""
     peq_freq = peq_build(freq, peq)
     diff = [target[i] - auto_target_interp[i] for i, _ in enumerate(target)]
     if optim_config.get("smooth_measurements"):
         window_size = optim_config.get("smooth_window_size")
         order = optim_config.get("smooth_order")
         smoothed = [savitzky_golay(d, window_size, order) for d in diff]
-        logger.warning(smoothed)
+        # logger.debug(smoothed)
         diff = smoothed
-    avg = 0.0
-    for i, curve in enumerate(optim_config.get("curve_names")):
-        avg = np.mean(diff[i])
-        diff[i] -= avg
+    # TODO what's that for?
+    # avg = 0.0
+    # if "curve_names" in optim_config.keys():
+    #    for i, _ in enumerate(optim_config["curve_names"]):
+    #        avg = np.mean(diff[i])
+    #        diff[i] -= avg
     delta = [diff[i] + peq_freq for i, _ in enumerate(target)]
     return delta
 
@@ -188,15 +123,16 @@ def optim_greedy(
     optim_config: dict,
     use_score,
 ) -> tuple[list[tuple[int, float, float]], Peq]:
+    """Main optimiser: follow a greedy strategy"""
+
+    assert optim_config["use_grapheq"] is not True
 
     if not optim_preflight(freq, auto_target, auto_target_interp, optim_config):
         logger.error("Preflight check failed!")
         return ([(0, 0, 0)], [])
 
     auto_peq = []
-    current_auto_target = optim_compute_auto_target(
-        freq, auto_target, auto_target_interp, auto_peq, optim_config
-    )
+    current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq, optim_config)
     best_loss = loss(df_speaker, freq, auto_target, auto_peq, 0, optim_config)
     pref_score = 1.0
     if use_score:
@@ -204,58 +140,64 @@ def optim_greedy(
 
     results = [(0, best_loss, -pref_score)]
     logger.info(
-        "OPTIM {} START {} #PEQ {:d} Freq #{:d} Gain #{:d} +/-[{}, {}] Q #{} [{}, {}] Loss {:2.2f} Score {:2.2f}".format(
-            speaker_name,
-            optim_config["curve_names"],
-            optim_config["MAX_NUMBER_PEQ"],
-            optim_config["MAX_STEPS_FREQ"],
-            optim_config["MAX_STEPS_DBGAIN"],
-            optim_config["MIN_DBGAIN"],
-            optim_config["MAX_DBGAIN"],
-            optim_config["MAX_STEPS_Q"],
-            optim_config["MIN_Q"],
-            optim_config["MAX_Q"],
-            best_loss,
-            -pref_score,
-        )
+        "OPTIM {} START {} #PEQ {:d} Freq #{:d} Gain #{:d} +/-[{}, {}] Q #{} [{}, {}] Loss {:2.2f} Score {:2.2f}",
+        speaker_name,
+        optim_config["curve_names"],
+        optim_config["MAX_NUMBER_PEQ"],
+        optim_config["MAX_STEPS_FREQ"],
+        optim_config["MAX_STEPS_DBGAIN"],
+        optim_config["MIN_DBGAIN"],
+        optim_config["MAX_DBGAIN"],
+        optim_config["MAX_STEPS_Q"],
+        optim_config["MIN_Q"],
+        optim_config["MAX_Q"],
+        best_loss,
+        -pref_score,
     )
 
-    for optim_iter in range(0, optim_config["MAX_NUMBER_PEQ"]):
+    nb_iter = optim_config["MAX_NUMBER_PEQ"]
+    (
+        state,
+        current_type,
+        current_freq,
+        current_Q,
+        current_dbGain,
+        current_loss,
+        current_nit,
+    ) = (False, -1, -1, -1, -1, -1, -1)
 
-        # we are optimizing above my_freq_reg_min hz on anechoic data
-        current_auto_target = optim_compute_auto_target(
-            freq, auto_target, auto_target_interp, auto_peq, optim_config
-        )
+    for optim_iter in range(0, nb_iter):
 
-        # greedy strategy: look for lowest & highest peak
-        sign, init_freq, init_freq_range = propose_range_freq(
-            freq, current_auto_target[0], optim_config
-        )
-        init_dbGain_range = propose_range_dbGain(
-            freq, current_auto_target[0], sign, init_freq, optim_config
-        )
-        init_Q_range = propose_range_Q(optim_config)
-        biquad_range = propose_range_biquad(optim_config)
+        # we are optimizing above target_min_hz on anechoic data
+        current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq, optim_config)
 
-        (
-            state,
-            current_type,
-            current_freq,
-            current_Q,
-            current_dbGain,
-            current_loss,
-            current_nit,
-        ) = (False, -1, -1, -1, -1, -1, -1)
+        if optim_iter == 0 and optim_config["full_biquad_optim"] is True:
+            # see if a LP can help get some flatness of bass
+            init_freq_range = [optim_config["target_min_freq"] / 2, 16000]  # optim_config["target_min_freq"] * 2]
+            init_dbGain_range = [-3, -2, -1, 0, 1, 2, 3]
+            init_Q_range = [0.5, 1, 2, 3]
+            biquad_range = [0, 1, 5, 6]  # LP, HP, LS, HS
+        else:
+            # greedy strategy: look for lowest & highest peak
+            if optim_iter == 0:
+                init_freq_range = [optim_config["target_min_freq"] / 2, optim_config["target_min_freq"] * 2]
+                init_dbGain_range = [-3, -2, -1, 0, 1, 2, 3]
+                init_Q_range = [0.5, 1, 2, 3]
+                biquad_range = [3]  # PK
+            else:
+                sign, init_freq, init_freq_range = propose_range_freq(freq, current_auto_target[0], optim_config, optim_iter)
+                init_dbGain_range = propose_range_dbGain(freq, current_auto_target[0], sign, init_freq, optim_config)
+                init_Q_range = propose_range_Q(optim_config)
+                biquad_range = propose_range_biquad(optim_config)
+
+        # print(
+        #     "sign {} init_freq {} init_freq_range {} init_q_range {} biquad_range {}".format(
+        #         sign, init_freq, init_freq_range, init_Q_range, biquad_range
+        #     )
+        # )
+
         if optim_config["full_biquad_optim"] is True:
-            (
-                state,
-                current_type,
-                current_freq,
-                current_Q,
-                current_dbGain,
-                current_loss,
-                current_nit,
-            ) = find_best_biquad(
+            (state, current_type, current_freq, current_Q, current_dbGain, current_loss, current_nit,) = find_best_biquad(
                 df_speaker,
                 freq,
                 current_auto_target,
@@ -268,15 +210,7 @@ def optim_greedy(
                 current_loss,
             )
         else:
-            (
-                state,
-                current_type,
-                current_freq,
-                current_Q,
-                current_dbGain,
-                current_loss,
-                current_nit,
-            ) = find_best_peak(
+            (state, current_type, current_freq, current_Q, current_dbGain, current_loss, current_nit,) = find_best_peak(
                 df_speaker,
                 freq,
                 current_auto_target,
@@ -288,6 +222,7 @@ def optim_greedy(
                 optim_config,
                 current_loss,
             )
+
         if state:
             biquad = (
                 1.0,
@@ -313,18 +248,14 @@ def optim_greedy(
             )
         else:
             logger.error(
-                "Speaker {} Skip failed optim for best {:2.2f} current {:2.2f}".format(
-                    speaker_name, best_loss, current_loss
-                )
+                "Speaker {} Skip failed optim for best {:2.2f} current {:2.2f}".format(speaker_name, best_loss, current_loss)
             )
             break
 
     # recompute auto_target with the full auto_peq
-    current_auto_target = optim_compute_auto_target(
-        freq, auto_target, auto_target_interp, auto_peq, optim_config
-    )
+    current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq, optim_config)
     if results[-1][1] < best_loss:
-        results.append((optim_config["MAX_NUMBER_PEQ"] + 1, best_loss, -pref_score))
+        results.append((nb_iter + 1, best_loss, -pref_score))
     if use_score:
         idx_max = np.argmax((np.array(results).T)[-1])
         results = results[0 : idx_max + 1]
@@ -334,6 +265,113 @@ def optim_greedy(
             speaker_name, results[-1][1], results[-1][2], len(auto_peq)
         )
     )
+    return results, auto_peq
+
+
+def optim_grapheq(
+    speaker_name: str,
+    df_speaker: dict[str, pd.DataFrame],
+    freq: FloatVector1D,
+    auto_target: list[FloatVector1D],
+    auto_target_interp: list[FloatVector1D],
+    optim_config: dict,
+    use_score,
+) -> tuple[list[tuple[int, float, float]], Peq]:
+    """Main optimiser for graphical EQ"""
+
+    assert optim_config["use_grapheq"] is True
+
+    if not optim_preflight(freq, auto_target, auto_target_interp, optim_config):
+        logger.error("Preflight check failed!")
+        return ([(0, 0, 0)], [])
+
+    # get current EQ
+    grapheq = grapheq_db[optim_config.get("grapheq_name")]
+
+    # PK
+    auto_type = 3
+    # freq is given as a list but cannot move, that's the center of the PK
+    auto_freq = np.array(grapheq["bands"])
+    # Q is fixed too
+    auto_q = grapheq["fixed_q"]
+    # dB are in a range with steps
+    auto_max = grapheq["gain_p"]
+    auto_min = grapheq["gain_m"]
+    auto_step = grapheq.get("steps", 1)
+
+    # db is the only unknown, start with 0
+    auto_db = np.zeros(len(auto_freq))
+    auto_peq = [(1.0, Biquad(auto_type, float(f), 48000, auto_q, float(db))) for f, db in zip(auto_freq, auto_db)]
+
+    # compute initial target
+    current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq, optim_config)
+    best_loss = loss(df_speaker, freq, auto_target, auto_peq, 0, optim_config)
+    pref_score = 1.0
+    if use_score:
+        pref_score = score_loss(df_speaker, auto_peq)
+    # array of results
+    results = [(0, best_loss, -pref_score)]
+
+    #
+    def fit(param, shift=None):
+        guess_db = []
+        for i, f in enumerate(auto_freq):
+            if f < freq[0] or f > freq[-1]:
+                db = 0.0
+            else:
+                db = np.interp(f, freq, -current_auto_target[0]) * param
+                if shift is not None:
+                    db += shift[i][1]
+                # db = round(db/auto_step)*auto_step
+                db = round(db * 4) / 4
+                db = max(auto_min, db)
+                db = min(auto_max, db)
+            guess_db.append(db)
+        return [(1.0, Biquad(auto_type, float(f), 48000, auto_q, float(db))) for f, db in zip(auto_freq, guess_db)]
+
+    def compute_delta(param, shift):
+        current_peq = fit(param, shift)
+        peq_values = peq_build(auto_freq, current_peq)
+        peq_expend = [np.interp(f, auto_freq, peq_values) for f in freq]
+        delta = np.array(peq_expend) - np.array(-current_auto_target[0])
+        return delta
+
+    def compute_error(param, shift=None):
+        delta = compute_delta(param, shift)
+        error = np.linalg.norm(delta)
+        return error
+
+    def find_best_param():
+        params = np.linspace(0.1, 1.4, 100)
+        errors = [compute_error(p, None) for p in params]
+        res = opt.minimize(
+            fun=lambda x: compute_error(x[0]),
+            x0=0.2,
+            bounds=[(0.1, 1.4)],
+            method="Powell",
+        )
+        return res.x[0]
+
+    # print('debug auto_freq {}'.format(auto_freq))
+    # print('debug current auto_target {} ')
+    # with open("target.txt", "w") as fd:
+    #    for f, db in zip(freq, current_auto_target[0]):
+    #        fd.write("{} {}\n".format(f, db))
+    #    fd.close()
+
+    # debug
+    # test_peq  = fit(1)
+    # peq_print(test_peq)
+
+    opt_param = find_best_param()
+    # print("opt_param {}".format(opt_param))
+    auto_peq = fit(opt_param)
+    opt_error = compute_error(opt_param)
+
+    if use_score:
+        pref_score = score_loss(df_speaker, auto_peq)
+
+    results.append((1, opt_error, -pref_score))
     return results, auto_peq
 
 
@@ -470,7 +508,7 @@ def optim_refine(
                         optim_config["freq_reg_max"],
                         max(
                             optim_config["freq_reg_min"],
-                            p.freq + current_config["freq_{}".format(i)],
+                            p.freq + current_config[f"freq_{i}"],
                         ),
                     ),
                     # p.srate,
@@ -480,7 +518,7 @@ def optim_refine(
                         optim_config["MAX_Q"],
                         max(
                             optim_config["MIN_Q"],
-                            p.Q + current_config["Q_{}".format(i)],
+                            p.Q + current_config[f"Q_{i}"],
                         ),
                     ),
                     # p.dbGain,
@@ -488,7 +526,7 @@ def optim_refine(
                         optim_config["MAX_DBGAIN"],
                         max(
                             optim_config["MIN_DBGAIN"],
-                            p.dbGain + current_config["dbGain_{}".format(i)],
+                            p.dbGain + current_config[f"dbGain_{i}"],
                         ),
                     ),
                 ),
@@ -554,11 +592,11 @@ def optim_refine(
         verbose=1,
     )
 
-    print(analysis.best_trial.last_result)
-    print(analysis.best_config)
+    # print(analysis.best_trial.last_result)
+    # print(analysis.best_config)
 
     final_loss = -analysis.best_trial.last_result["score"]
-    print(final_loss, init_loss)
+    # print(final_loss, init_loss)
     if final_loss > init_loss:
         final_results = greedy_results
         final_results.append([greedy_results[-1][0] + 1, final_loss, final_loss])
@@ -577,6 +615,17 @@ def optim_multi_steps(
     optim_config: dict,
     use_score,
 ) -> tuple[list[tuple[int, float, float]], Peq]:
+
+    if optim_config["use_grapheq"] is True:
+        return optim_grapheq(
+            speaker_name,
+            df_speaker,
+            freq,
+            auto_target,
+            auto_target_interp,
+            optim_config,
+            use_score,
+        )
 
     greedy_results, greedy_peq = optim_greedy(
         speaker_name,

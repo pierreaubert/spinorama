@@ -4,7 +4,6 @@ import os
 import glob
 import pandas as pd
 from .load_misc import sort_angles
-from .load import filter_graphs
 
 logger = logging.getLogger("spinorama")
 
@@ -33,6 +32,7 @@ def parse_graph_splHVtxt(dirpath, orientation):
     logger.info("Symmetrie is {}".format(symmetry))
 
     dfs = []
+    already_loaded = set()
     for file in files:
         freqs = []
         dbs = []
@@ -59,30 +59,38 @@ def parse_graph_splHVtxt(dirpath, orientation):
                 # freq, db
                 words = l[:-1].split(",")
                 if len(words) == 2:
-                    freqs.append(float(words[0]))
-                    dbs.append(float(words[1]))
+                    current_freq = float(words[0])
+                    if current_freq < 20000:
+                        freqs.append(current_freq)
+                        dbs.append(float(words[1]))
                     continue
 
                 # freq db phase
                 words = l.split()
-                if len(words) == 3:
+                if len(words) == 2 or len(words) == 3:
                     freq = words[0]
                     db = words[1]
                     # skip first line
-                    if freq[0] != "F":
+                    if freq[0] != "F" and float(freq) < 20000:
                         freqs.append(float(freq))
                         dbs.append(float(db))
                     continue
 
-                logger.warning(
-                    "unkown file format len words {} for line {}".format(len(words), l)
-                )
+                logger.warning("unkown file format len words {} for line {}".format(len(words), l))
 
         if angle == "On Axis":
-            dfs.append(pd.DataFrame({"Freq": freqs, angle: dbs}))
+            if angle not in already_loaded:
+                dfs.append(pd.DataFrame({"Freq": freqs, angle: dbs}))
+                already_loaded.add(angle)
+            else:
+                print("Warning: angle {} already loaded (dirpath={})".format(angle, dirpath))
         else:
             if angle != "-180°":
-                dfs.append(pd.DataFrame({angle: dbs}))
+                if angle not in already_loaded:
+                    dfs.append(pd.DataFrame({angle: dbs}))
+                    already_loaded.add(angle)
+                else:
+                    print("Warning: angle {} already loaded (dirpath={})".format(angle, dirpath))
             if symmetry and orientation == "H" and angle != "180°":
                 mangle = "-{0}".format(angle)
                 dfs.append(pd.DataFrame({mangle: dbs}))

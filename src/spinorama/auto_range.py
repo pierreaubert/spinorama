@@ -33,11 +33,16 @@ logger = logging.getLogger("spinorama")
 # find initial values for biquads
 # ------------------------------------------------------------------------------
 
+# a bit of black magic, force the interval to not be exactly the same.
+# if not, the optimiser will try to boost the bass over and over
+# currently black magic is removed
+OFFSET_FREQ = 0
+
 
 def find_largest_area(
-    freq: FloatVector1D, curve: List[FloatVector1D], optim_config: dict
+    freq: FloatVector1D, curve: List[FloatVector1D], optim_config: dict, count
 ) -> Tuple[Literal[-1, 1], int, float]:
-    def largest_area(current_curve) -> Tuple[int, float]:
+    def largest_area(current_curve, min_freq) -> Tuple[int, float]:
         logger.debug("freq {} current_curve {}".format(freq, current_curve))
         found_peaks, _ = sig.find_peaks(current_curve, distance=20)
         if len(found_peaks) == 0:
@@ -45,23 +50,30 @@ def find_largest_area(
         logger.debug("found peaks at {}".format(found_peaks))
         found_widths = sig.peak_widths(current_curve, found_peaks, rel_height=0.1)[0]
         logger.debug("computed width at {}".format(found_widths))
-        areas = [
-            (i, current_curve[found_peaks[i]] * found_widths[i])
-            for i in range(0, len(found_peaks))
-        ]
+        areas = [(i, current_curve[found_peaks[i]] * found_widths[i]) for i in range(0, len(found_peaks))]
         logger.debug("areas {}".format(areas))
         sorted_areas = sorted(areas, key=lambda a: -a[1])
         logger.debug("sorted {}".format(sorted_areas))
-        ipeaks, area = sorted_areas[0]
+        i = 0
+        ipeaks = -1
+        while i < len(sorted_areas):
+            ipeaks, area = sorted_areas[i]
+            # print('found peak at {} min is {}'.format(found_peaks[ipeaks], min_freq))
+            if found_peaks[ipeaks] >= min_freq:
+                break
+            i += 1
+        if ipeaks == -1:
+            return -1, -1
         return found_peaks[ipeaks], area
 
+    min_freq = optim_config["target_min_freq"] + count * OFFSET_FREQ
     plus_curve = np.clip(curve, a_min=0, a_max=None)
-    plus_index, plus_areas = largest_area(plus_curve)
+    plus_index, plus_areas = largest_area(plus_curve, min_freq)
 
     minus_index, minus_areas = -1, -1.0
     if optim_config["plus_and_minus"] is True:
         minus_curve = -np.clip(curve, a_min=None, a_max=0)
-        minus_index, minus_areas = largest_area(minus_curve)
+        minus_index, minus_areas = largest_area(minus_curve, min_freq)
 
     # logger.debug(
     #    "minus a={} f={} plus a={} f={}".format(
@@ -81,36 +93,25 @@ def find_largest_area(
 
     if minus_areas > plus_areas:
         return -1, minus_index, freq[minus_index]
+
     return +1, plus_index, freq[plus_index]
 
 
 def propose_range_freq(
-    freq: FloatVector1D, local_target: List[FloatVector1D], optim_config: dict
+    freq: FloatVector1D, local_target: List[FloatVector1D], optim_config: dict, count: int
 ) -> Tuple[Literal[-1, 1], float, Vector]:
-    sign, _, init_freq = find_largest_area(freq, local_target, optim_config)
+    sign, _, init_freq = find_largest_area(freq, local_target, optim_config, count)
     scale = optim_config["elastic"]
     logger.debug("Scale={} init_freq {}".format(scale, init_freq))
-    init_freq_min = max(init_freq * scale, optim_config["freq_reg_min"])
-    init_freq_max = min(init_freq / scale, optim_config["freq_reg_max"])
-    logger.debug(
-        "freq min {}Hz peak {}Hz max {}Hz".format(
-            init_freq_min, init_freq, init_freq_max
-        )
+    init_freq_min = max(init_freq * scale, optim_config["target_min_freq"] + OFFSET_FREQ * count)
+    init_freq_max = min(
+        max(init_freq_min + OFFSET_FREQ * count, (init_freq_min + OFFSET_FREQ * count) * 2), optim_config["target_max_freq"]
     )
-    if optim_config["MAX_STEPS_FREQ"] == 1:
-        return sign, init_freq, [init_freq]
+    logger.debug("Freq min {}Hz peak {}Hz max {}Hz".format(init_freq_min, init_freq, init_freq_max))
     return (
         sign,
         init_freq,
-        np.linspace(  # should that be logspace?
-            init_freq_min,
-            init_freq_max,
-            optim_config["MAX_STEPS_FREQ"]
-            # np.logspace(
-            #    math.log10(init_freq_min),
-            #    math.log10(init_freq_max),
-            #    optim_config["MAX_STEPS_FREQ"]
-        ).tolist(),
+        np.linspace(init_freq_min, init_freq_max, optim_config["MAX_STEPS_FREQ"]).tolist(),
     )
 
 
@@ -129,16 +130,10 @@ def propose_range_dbGain(
     if init_dbGain_max <= init_dbGain_min:
         init_dbGain_min = optim_config["MIN_DBGAIN"]
         init_dbGain_max = optim_config["MAX_DBGAIN"]
-    logger.debug(
-        "gain min {}dB peak {}dB max {}dB".format(
-            init_dbGain_min, init_dbGain, init_dbGain_max
-        )
-    )
+    logger.debug("gain min {}dB peak {}dB max {}dB".format(init_dbGain_min, init_dbGain, init_dbGain_max))
 
     if sign < 0:
-        return np.linspace(
-            init_dbGain_min, init_dbGain_max, optim_config["MAX_STEPS_DBGAIN"]
-        ).tolist()
+        return np.linspace(init_dbGain_min, init_dbGain_max, optim_config["MAX_STEPS_DBGAIN"]).tolist()
     return np.linspace(
         # no real minimim for negative values
         -init_dbGain_max * 2,

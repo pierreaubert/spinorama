@@ -1,7 +1,7 @@
 Grimani Systems Rixos-L APO EQ Score 96000Hz
 June232022-143508
 
-Preamp: --0.1 dB 
+Preamp: --0.1 dB
 
 Filter 1: ON PK Fc 0.10,    0.00,    1.12
 Filter 2: ON PK Fc 147.92,    -3.21,    1.68

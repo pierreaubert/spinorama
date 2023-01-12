@@ -1,0 +1,16 @@
+EQ for Yamaha DZR12 computed from Vendors-Yamaha data
+Preference Score 3.3 with EQ 4.5
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.16
+Dated: 2022-10-22-21:13:01
+
+Preamp: -10.1 dB
+
+Filter  1: ON PK Fc    87 Hz Gain -4.67 dB Q 2.81
+Filter  2: ON PK Fc 13351 Hz Gain +7.99 dB Q 2.35
+Filter  3: ON PK Fc   334 Hz Gain -2.51 dB Q 2.98
+Filter  4: ON PK Fc  6639 Hz Gain -1.81 dB Q 1.65
+Filter  5: ON PK Fc  9575 Hz Gain -1.33 dB Q 2.99
+Filter  6: ON PK Fc   223 Hz Gain +2.51 dB Q 2.98
+Filter  7: ON PK Fc 12742 Hz Gain +2.40 dB Q 2.43
+Filter  8: ON PK Fc  2020 Hz Gain +1.19 dB Q 2.92
+Filter  9: ON PK Fc   268 Hz Gain -1.39 dB Q 2.25

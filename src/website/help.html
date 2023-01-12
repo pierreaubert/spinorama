@@ -13,7 +13,7 @@
     It is a way to understand quickly a speaker properties, how it
     will sound. It is defined
     in <a href="https://shop.cta.tech/products/standard-method-of-measurement-for-in-home-loudspeakers">this
-    standard</a> from the USA CTA.
+      standard</a> from the US <a href="https://cta.tech">CTA</a>.
 
     Here is an example:
   </p>
@@ -34,13 +34,18 @@
     <li><b>Early reflections:</b> expected to be a smooth, slowy going
       down line.</li>
     <li><b>Sound power:</b> expected to be a smooth, slowy going
-    down line (slope is greater than Early Reflections).</li>
+    down line (slope is greater than Early Reflections for classical speakers).</li>
     <li><b>ERDI and SPDI:</b> are the difference between the Early
     Reflection curve and the Listening Window (resp. Sound Power and
     Listening Window). This should be as straight as possible above
-    100 Hz. If the DI curves are flat, you will be able to correct the
+    100 Hz. If the DI curves are linear, you will be able to correct the
     frequency aberations of your speaker easily. It is important to
-    understand that a bad directivy cannot be corrected with a IIR eq.
+    understand that a bad directivy cannot be corrected with an IIR
+      eq. The slope of the line gives a good idea of the speaker
+      properties. Note that you will not get a flat line except for
+    speakers designed for this (and they are usually large): they are
+    usually labelled as constant directivity speakers.
+
   </ul>
   <p>The speaker above is <i>very</i> good. You can compare with
     another one:</p>
@@ -133,16 +138,16 @@
           measurement points, or data is smoothed, or quality is just
           unknown). Smoothed
           measurements <a href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/page-5#post-742037">usually
-          generate</a> a score 
+          generate</a> a score
           which higher by 0.7 on average over a score computed raw
           data. Note that the 0.7 can change depending on the amount
-          of smoothing and other factors. 
-          
+          of smoothing and other factors. Personally I never compare a
+          score computed with high quality data with something else.
         </li>
       </ul>
     </li>
   </ul>
-    
+
   <h2 class="title">How precise are the computed data?</h2>
   <ul>
     <li>Generally precision depends on the quality of the input
@@ -175,13 +180,14 @@
   </ul>
 
   <h2 class="title">Can I use this data to decide which speaker to buy</h2>
-  See dedicated section.
-  
+  See dedicated section below.
+
   <h2 class="title">Should I use room EQ?</h2>
   Absolutly! Dirac, REW, Audyssey etc will provide audible
   improvement to the sound, in general making it flatter (so more
-  tonally correct).
-  
+  tonally correct). Almost all AVR have one built-in. All computers
+  and most phones can do it with a built-in or free application.
+
   <h2 class="title">Focus or broad radiation pattern?</h2>
   Speakers do not radiate uniformly. Some speakers are designed to be
   very focus: they minimise the reflections but the sweet spot is very
@@ -191,16 +197,19 @@
   If you are near field, for example on a desk, low directivity works
   well. The farther from the speaker you are, the more good
   directivity becomes important. If the room is reflective, this is
-  especially important.
+  especially important. If you live in a modern flat with hard walls
+  and floor to ceiling windows, looking for speakers with a narrow
+  directivity can be a very good way to solve room issues.
 
 
   <h2 class="title">How can I help?</h2>
   <ol>
     <li>This website is generated
       from <a href="https://github.com/pierreaubert/spinorama">this
-        code</a> and data from various websites (see below).
+        code</a> and data from various websites (see below). You are
+      very welcome to contribute.
     </li>
-    <li>You can provide feedback or add more datas
+    <li>You can provide feedback (esp. on bugs, UX, data errors) or add more datas
       at <a href="https://github.com/pierreaubert/spinorama/issues">github</a>
       or in
       this <a href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/">thread</a>
@@ -273,7 +282,7 @@
           be more</li>
       </ul>
       You can choose floorstanders or bookshelves with
-      subwoofers. Integration is not very easy but very doable
+      subwoofers. Integration is not easy but very doable
       especially if you use an AVR. Most people like bass, your
       neighbourgh may not like <i>your</i> bass.
     </li>
@@ -300,7 +309,7 @@
   Speakers with a high tonality score will be easier to EQ and will
   adapt well to your room. Define the SPL you want (at 1% distorsion)
   and now you have reasonable choices.
-  
+
 
 </section>
 
@@ -349,6 +358,46 @@
     is a blog with a collection of spinorama from various
       sources. Index of measurements is <a href="https://speakerdata2034.blogspot.com/2019/03/all-spinorama-data-index.html">available</a>.
     </li>
+    <li>A number of companies provides data usually in the form of a
+    GLL file which is format developped by
+    <a href="https://www.afmg.eu/en/gll-loudspeaker-file-format">AFMG</a>. This
+    format is very often used for live sound or tour speakers. Here is
+    a partial list of vendors providing data:
+    <ul>
+      <li>Alcons Audio</li>
+      <li>Axiom</li>
+      <li>BiAmp</li>
+      <li>Coda</li>
+      <li>D&amp;B Technik</li>
+      <li>DAS</li>
+      <li>Danley</li>
+      <li>FBT</li>
+      <li>Fulcrum Acoustics</li>
+      <li>Genelec</li>
+      <li>Highlite</li>
+      <li>Idea</li>
+      <li>JBL</li>
+      <li>K-Array</li>
+      <li>KME Sound</li>
+      <li>KV2 Audio</li>
+      <li>Kling Freitag</li>
+      <li>LD Systems</li>
+      <li>Martin Audio</li>
+      <li>Meyer Sound</li>
+      <li>Neumann</li>
+      <li>Nexo</li>
+      <li>Presonus</li>
+      <li>QSC</li>
+      <li>RCF</li>
+      <li>SE Audiotechnik</li>
+      <li>Seeburg</li>
+      <li>Soundvision</li>
+      <li>Turbosound</li>
+      <li>Wharfedale Pro</li>
+      <li>Yamaha</li>
+      <li>dB Technogies</li>
+    </ul>
+    </li>
   </ol>
 </section>
 
@@ -359,7 +408,7 @@
         for In-Home Loudspeakers</a>.
     <li><a href="https://books.google.ch/books/about/Sound_Reproduction.html?id=tJ0uDwAAQBAJ&printsec=frontcover&source=kp_read_button&redir_esc=y#v=onepage&q&f=false">Sound
     Reproduction: The Acoustics and Psychoacoustics of Loudspeakers
-    and Rooms</a> By Floyd E. Toole</li> 
+    and Rooms</a> By Floyd E. Toole</li>
     <li>Standard Method of Measurement for In-Home Loudspeakers is
       available for free at <a href="https://www.cta.tech">CTA</a></li>
     <li>A Multiple Regression Model for Predicting Loudspeaker Preference
@@ -368,7 +417,7 @@
     <li>Fast Template Matching. J.P.Lewis <a href="http://scribblethink.org/Work/nvisionInterface/vi95_lewis.pdf">pdf</a></li>
     <li>Farina, A. “Simultaneous Measurement of Impulse Response and
     Distortion with a Swept-Sine Technique,” Presented at the AES
-    108th Convention, Feb. 2000.</li> 
+    108th Convention, Feb. 2000.</li>
     <li>Hatziantoniou, P. D. and Mourjopoulos, J. N. “Generalized
       Fractional-Octave Smoothing of Audio and Acoustic Responses,”
       J. Audio Eng. Soc., 48(4):259&dash;280, 2000.</li>
@@ -383,7 +432,7 @@
       2021, doi: 10.1109/TASLP.2021.3120650.</li>
     <li>Cecchi, Stefania &amp; Carini, Alberto &amp; Spors,
     Sascha. (2017). Room Response Equalization—A Review. Applied
-    Sciences. 8. 16. 10.3390/app8010016.</li> 
+    Sciences. 8. 16. 10.3390/app8010016.</li>
   </ul>
 </section>
 </div>

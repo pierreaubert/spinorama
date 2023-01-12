@@ -63,9 +63,7 @@ def parse_graph_princeton(filename, orient):
     return parse_graph_freq_princeton_mat(matfile, orient)
 
 
-def parse_graphs_speaker_princeton(
-    speaker_path, speaker_brand, speaker_name, version, symmetry
-):
+def parse_graphs_speaker_princeton(speaker_path, speaker_brand, speaker_name, version, symmetry):
     # 2 files per directory xxx_H_IR.mat and xxx_V_IR.mat
     matfilename = "{0}/{1}/{2}".format(speaker_path, speaker_name, version)
 
@@ -78,11 +76,7 @@ def parse_graphs_speaker_princeton(
         elif d[-9:] == "_V_IR.mat":
             v_file = d
     if h_file is None or v_file is None:
-        logger.info(
-            "Couldn't find Horizontal and Vertical IR files for speaker {:s}".format(
-                speaker_name
-            )
-        )
+        logger.info("Couldn't find Horizontal and Vertical IR files for speaker {:s}".format(speaker_name))
         logger.info("Looking in directory {:s}".format(matfilename))
         for d in dirpath:
             logger.info("Found file {:s}".format(d))

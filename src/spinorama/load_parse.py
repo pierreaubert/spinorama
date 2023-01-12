@@ -18,9 +18,11 @@ from .load_princeton import parse_graphs_speaker_princeton
 from .load_rewstextdump import parse_graphs_speaker_rewstextdump
 from .load_rewseq import parse_eq_iir_rews
 from .load_splHVtxt import parse_graphs_speaker_splHVtxt
+from .load_gllHVtxt import parse_graphs_speaker_gllHVtxt
 from .load_misc import graph_melt, check_nan
 from .load import (
     filter_graphs,
+    filter_graphs_eq,
     filter_graphs_partial,
     symmetrise_measurement,
     spin_compute_di_eir,
@@ -32,22 +34,31 @@ from .filter_scores import noscore_apply_filter
 logger = logging.getLogger("spinorama")
 
 
+def get_mean_min_max(mparameters):
+    # default works well for flatish speakers but not at all for line arrays for ex
+    # where the mean is flat but usually high bass and low high
+    mean_min = 300
+    mean_max = 3000
+    if mparameters is not None:
+        mean_min = mparameters.get("mean_min", mean_min)
+        mean_max = mparameters.get("mean_max", mean_max)
+    return mean_min, mean_max
+
+
 @ray.remote(num_cpus=1)
-def parse_eq_speaker(speaker_path: str, speaker_name: str, df_ref: dict) -> dict:
+def parse_eq_speaker(speaker_path: str, speaker_name: str, df_ref: dict, mparameters: dict) -> dict:
     iirname = "{0}/eq/{1}/iir.txt".format(speaker_path, speaker_name)
+    mean_min, mean_max = get_mean_min_max(mparameters)
     if df_ref is not None and isinstance(df_ref, dict) and os.path.isfile(iirname):
         srate = 48000
         logger.debug("found IIR eq {0}: applying to {1}".format(iirname, speaker_name))
         iir = parse_eq_iir_rews(iirname, srate)
-        if (
-            "SPL Horizontal_unmelted" in df_ref.keys()
-            and "SPL Vertical_unmelted" in df_ref.keys()
-        ):
+        if "SPL Horizontal_unmelted" in df_ref.keys() and "SPL Vertical_unmelted" in df_ref.keys():
             h_spl = df_ref["SPL Horizontal_unmelted"]
             v_spl = df_ref["SPL Vertical_unmelted"]
             eq_h_spl = peq_apply_measurements(h_spl, iir)
             eq_v_spl = peq_apply_measurements(v_spl, iir)
-            df_eq = filter_graphs(speaker_name, eq_h_spl, eq_v_spl)
+            df_eq = filter_graphs_eq(speaker_name, h_spl, v_spl, eq_h_spl, eq_v_spl, mean_min, mean_max)
             return df_eq
         elif "CEA2034" in df_ref.keys():
             spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir)
@@ -85,23 +96,21 @@ def parse_graphs_speaker(
     morigin="ASR",
     mversion="default",
     msymmetry=None,
+    mparameters=None,
 ) -> dict:
     df = None
     measurement_path = "{}".format(speaker_path)
+    mean_min, mean_max = get_mean_min_max(mparameters)
 
-    if mformat in ("klippel", "princeton", "splHVtxt"):
+    if mformat in ("klippel", "princeton", "splHVtxt", "gllHVtxt"):
         if mformat == "klippel":
-            h_spl, v_spl = parse_graphs_speaker_klippel(
-                measurement_path, speaker_brand, speaker_name, mversion, msymmetry
-            )
+            h_spl, v_spl = parse_graphs_speaker_klippel(measurement_path, speaker_brand, speaker_name, mversion, msymmetry)
         elif mformat == "princeton":
-            h_spl, v_spl = parse_graphs_speaker_princeton(
-                measurement_path, speaker_brand, speaker_name, mversion, msymmetry
-            )
+            h_spl, v_spl = parse_graphs_speaker_princeton(measurement_path, speaker_brand, speaker_name, mversion, msymmetry)
         elif mformat == "splHVtxt":
-            h_spl, v_spl = parse_graphs_speaker_splHVtxt(
-                measurement_path, speaker_brand, speaker_name, mversion
-            )
+            h_spl, v_spl = parse_graphs_speaker_splHVtxt(measurement_path, speaker_brand, speaker_name, mversion)
+        elif mformat == "gllHVtxt":
+            h_spl, v_spl = parse_graphs_speaker_gllHVtxt(measurement_path, speaker_brand, speaker_name, mversion)
 
         df = None
         if msymmetry == "coaxial":
@@ -110,12 +119,12 @@ def parse_graphs_speaker(
                 v_spl2 = h_spl2.copy()
             else:
                 v_spl2 = symmetrise_measurement(v_spl)
-            df = filter_graphs(speaker_name, h_spl2, v_spl2)
+            df = filter_graphs(speaker_name, h_spl2, v_spl2, mean_min, mean_max)
         elif msymmetry == "horizontal":
             h_spl2 = symmetrise_measurement(h_spl)
-            df = filter_graphs(speaker_name, h_spl2, v_spl)
+            df = filter_graphs(speaker_name, h_spl2, v_spl, mean_min, mean_max)
         else:
-            df = filter_graphs(speaker_name, h_spl, v_spl)
+            df = filter_graphs(speaker_name, h_spl, v_spl, mean_min, mean_max)
     elif mformat in ("webplotdigitizer", "rewstextdump"):
         title = None
         df_uneven = None
@@ -135,9 +144,7 @@ def parse_graphs_speaker(
 
         logger.debug("DEBUG title: {}".format(title))
         logger.debug("DEBUG df_uneven keys {}".format(df_uneven.keys()))
-        logger.debug(
-            "DEBUG df_uneven measurements {}".format(set(df_uneven.Measurements))
-        )
+        logger.debug("DEBUG df_uneven measurements {}".format(set(df_uneven.Measurements)))
         try:
             if title == "CEA2034":
                 df_full = spin_compute_di_eir(speaker_name, title, df_uneven)
@@ -179,11 +186,7 @@ def parse_graphs_speaker(
         sys.exit(1)
 
     if df is None:
-        logger.warning(
-            "Parsing failed for {0}/{1}/{2}".format(
-                measurement_path, speaker_name, mversion
-            )
-        )
+        logger.warning("Parsing failed for {0}/{1}/{2}".format(measurement_path, speaker_name, mversion))
         return None
 
     return df

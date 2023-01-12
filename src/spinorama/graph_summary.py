@@ -68,11 +68,7 @@ def graph_summary(speaker_name, speaker_summary, params):
         )
         - 0.6
     )
-    logger.debug(
-        "sizes X={0} Y={1} summary={2}".format(
-            len(pointsX), len(pointsY), len(speaker_summary)
-        )
-    )
+    logger.debug("sizes X={0} Y={1} summary={2}".format(len(pointsX), len(pointsY), len(speaker_summary)))
     source = pd.DataFrame({"x": pointsX, "y": pointsY, "summary": speaker_summary})
     return (
         alt.Chart(source)

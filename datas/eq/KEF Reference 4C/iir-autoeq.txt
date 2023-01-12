@@ -1,16 +1,16 @@
 EQ for KEF Reference 4C computed from ASR data
-Preference Score 6.0 with EQ 6.6
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.14
-Dated: 2022-01-18-08:44:52
+Preference Score 6.07 with EQ 6.66
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
+Dated: 2023-01-04-22:18:40
 
-Preamp: -2.5 dB
+Preamp: -3.8 dB
 
-Filter  1: ON PK Fc  1045 Hz Gain +1.00 dB Q 1.96
-Filter  2: ON PK Fc  1761 Hz Gain -1.11 dB Q 0.46
-Filter  3: ON PK Fc  1093 Hz Gain +1.04 dB Q 1.91
-Filter  4: ON PK Fc 13699 Hz Gain +2.36 dB Q 1.71
-Filter  5: ON PK Fc   344 Hz Gain +0.95 dB Q 2.00
-Filter  6: ON PK Fc   151 Hz Gain -0.58 dB Q 0.19
-Filter  7: ON PK Fc  5217 Hz Gain -0.93 dB Q 1.96
-Filter  8: ON PK Fc  8556 Hz Gain +0.50 dB Q 1.99
-Filter  9: ON PK Fc   340 Hz Gain +0.71 dB Q 1.99
+Filter  1: ON LS Fc    79 Hz Gain +3.00 dB
+Filter  2: ON PK Fc  3918 Hz Gain -1.22 dB Q 1.33
+Filter  3: ON HS Fc  1712 Hz Gain +0.74 dB
+Filter  4: ON PK Fc  5069 Hz Gain -0.95 dB Q 0.83
+Filter  5: ON LS Fc   277 Hz Gain +0.61 dB
+Filter  6: ON PK Fc  1045 Hz Gain +0.72 dB Q 3.00
+Filter  7: ON PK Fc  1733 Hz Gain -0.84 dB Q 2.68
+Filter  8: ON PK Fc   373 Hz Gain +0.50 dB Q 2.96
+Filter  9: ON HS Fc  7350 Hz Gain +0.70 dB

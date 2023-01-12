@@ -1,0 +1,15 @@
+EQ for Quad Electroacoustics ESL-57 computed from Princeton data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-14:17:03
+
+Preamp: -4.1 dB
+
+Filter  1: ON PK Fc 12184 Hz Gain -2.83 dB Q 2.92
+Filter  2: ON PK Fc  3861 Hz Gain +3.97 dB Q 1.53
+Filter  3: ON PK Fc 15994 Hz Gain -2.51 dB Q 2.97
+Filter  4: ON PK Fc 15995 Hz Gain +2.59 dB Q 3.00
+Filter  5: ON PK Fc 15964 Hz Gain -2.53 dB Q 2.75
+Filter  6: ON PK Fc 15979 Hz Gain +2.65 dB Q 2.99
+Filter  7: ON PK Fc 15993 Hz Gain -2.50 dB Q 2.96
+Filter  8: ON PK Fc 15970 Hz Gain +2.55 dB Q 3.00
+Filter  9: ON PK Fc 15997 Hz Gain -2.51 dB Q 2.97

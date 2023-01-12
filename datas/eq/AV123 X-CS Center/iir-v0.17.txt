@@ -1,0 +1,16 @@
+EQ for AV123 X-CS Center computed from ASR data
+Preference Score 3.9 with EQ 5.3
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.17
+Dated: 2022-12-18-09:48:01
+
+Preamp: -2.1 dB
+
+Filter  1: ON HP Fc    50 Hz
+Filter  2: ON PK Fc   111 Hz Gain -3.81 dB Q 1.82
+Filter  3: ON PK Fc  1560 Hz Gain +2.21 dB Q 3.00
+Filter  4: ON PK Fc  4267 Hz Gain -1.95 dB Q 1.00
+Filter  5: ON PK Fc   361 Hz Gain +2.02 dB Q 3.00
+Filter  6: ON PK Fc  7623 Hz Gain -0.96 dB Q 3.00
+Filter  7: ON PK Fc   467 Hz Gain -1.77 dB Q 3.00
+Filter  8: ON PK Fc   714 Hz Gain +1.34 dB Q 2.43
+Filter  9: ON PK Fc    86 Hz Gain -0.83 dB Q 3.00

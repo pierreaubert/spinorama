@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -51,7 +51,9 @@ try:
     import ray
 except ModuleNotFoundError:
     import miniray as ray
-
+except ModuleNotFoundError:
+    print("Did you run env.sh?")
+    sys.exit(-1)
 
 from generate_common import (
     args2level,
@@ -67,7 +69,7 @@ from spinorama.speaker_print import print_graphs
 from spinorama.plot import plot_params_default
 
 
-VERSION = "2.00alpha1"
+VERSION = "2.01"
 
 activate_tracing = False
 
@@ -96,13 +98,26 @@ def get_speaker_list(speakerpath: str) -> List[str]:
 
 
 def queue_measurement(
-    brand: str, speaker: str, mformat: str, morigin: str, mversion: str, msymmetry: str
+    brand: str,
+    speaker: str,
+    mformat: str,
+    morigin: str,
+    mversion: str,
+    msymmetry: str,
+    mparameters: dict,
 ) -> Tuple[int, int, int, int]:
     """Add all measurements in the queue to be processed"""
     id_df = parse_graphs_speaker.remote(
-        "./datas/measurements", brand, speaker, mformat, morigin, mversion, msymmetry
+        "./datas/measurements",
+        brand,
+        speaker,
+        mformat,
+        morigin,
+        mversion,
+        msymmetry,
+        mparameters,
     )
-    id_eq = parse_eq_speaker.remote("./datas", speaker, id_df)
+    id_eq = parse_eq_speaker.remote("./datas", speaker, id_df, mparameters)
     force = False
     ptype = None
     width = plot_params_default["width"]
@@ -111,6 +126,7 @@ def queue_measurement(
     id_g1 = print_graphs.remote(
         id_df,
         speaker,
+        mversion,
         morigin,
         metadata.origins_info,
         mversion,
@@ -123,6 +139,7 @@ def queue_measurement(
     id_g2 = print_graphs.remote(
         id_eq,
         speaker,
+        mversion,
         morigin,
         metadata.origins_info,
         mversion + "_eq",
@@ -147,13 +164,10 @@ def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict]) -> dict:
         if speaker not in metadata.speakers_info.keys():
             logger.error("Metadata error: {}".format(speaker))
             continue
-        for mversion, measurement in metadata.speakers_info[speaker][
-            "measurements"
-        ].items():
+        for mversion, measurement in metadata.speakers_info[speaker]["measurements"].items():
             # mversion looks like asr and asr_eq
             if "mversion" in filters and not (
-                mversion == filters["mversion"]
-                or mversion == "{}_eq".format(filters["mversion"])
+                mversion == filters["mversion"] or mversion == "{}_eq".format(filters["mversion"])
             ):
                 logger.debug("skipping {}/{}".format(speaker, mversion))
                 continue
@@ -165,21 +179,15 @@ def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict]) -> dict:
             # filter on origin (ASR, princeton, ...)
             morigin = measurement["origin"]
             if "origin" in filters and morigin != filters["origin"]:
-                logger.debug(
-                    "skipping {}/{}/{}/{}".format(speaker, morigin, mformat, mversion)
-                )
+                logger.debug("skipping {}/{}/{}/{}".format(speaker, morigin, mformat, mversion))
                 continue
             # TODO(add filter on brand)
             brand = metadata.speakers_info[speaker]["brand"]
-            logger.debug(
-                "queing {}/{}/{}/{}".format(speaker, morigin, mformat, mversion)
-            )
-            msymmetry = None
-            if "symmetry" in measurement:
-                msymmetry = measurement["symmetry"]
-            ray_ids[speaker][mversion] = queue_measurement(
-                brand, speaker, mformat, morigin, mversion, msymmetry
-            )
+            logger.debug("queing {}/{}/{}/{}".format(speaker, morigin, mformat, mversion))
+            msymmetry = measurement.get("symmetry", None)
+            mparameters = measurement.get("parameters", None)
+
+            ray_ids[speaker][mversion] = queue_measurement(brand, speaker, mformat, morigin, mversion, msymmetry, mparameters)
             count += 1
     print("Queued {0} speakers {1} measurements".format(len(speakerlist), count))
     return ray_ids
@@ -191,28 +199,16 @@ def compute(speakerlist, filters, ray_ids: dict):
     done_ids = {}
     while 1:
         df_ids = [
-            ray_ids[s][v][0]
-            for s in ray_ids.keys()
-            for v in ray_ids[s].keys()
-            if ray_ids[s][v][0] not in done_ids.keys()
+            ray_ids[s][v][0] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][0] not in done_ids.keys()
         ]
         eq_ids = [
-            ray_ids[s][v][1]
-            for s in ray_ids.keys()
-            for v in ray_ids[s].keys()
-            if ray_ids[s][v][1] not in done_ids.keys()
+            ray_ids[s][v][1] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][1] not in done_ids.keys()
         ]
         g1_ids = [
-            ray_ids[s][v][2]
-            for s in ray_ids.keys()
-            for v in ray_ids[s].keys()
-            if ray_ids[s][v][2] not in done_ids.keys()
+            ray_ids[s][v][2] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][2] not in done_ids.keys()
         ]
         g2_ids = [
-            ray_ids[s][v][3]
-            for s in ray_ids.keys()
-            for v in ray_ids[s].keys()
-            if ray_ids[s][v][3] not in done_ids.keys()
+            ray_ids[s][v][3] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][3] not in done_ids.keys()
         ]
         ids = df_ids + eq_ids + g1_ids + g2_ids
         if len(ids) == 0:
@@ -231,16 +227,10 @@ def compute(speakerlist, filters, ray_ids: dict):
             if speaker not in df.keys():
                 df[speaker_key] = {}
             if speaker not in metadata.speakers_info:
-                logger.warning(
-                    "Speaker {} in SpeakerList but not in Metadata".format(speaker)
-                )
+                logger.warning("Speaker {} in SpeakerList but not in Metadata".format(speaker))
                 continue
-            for m_version, measurement in metadata.speakers_info[speaker][
-                "measurements"
-            ].items():
-                m_version_key = (
-                    m_version  # .translate({ord(ch) : '_' for ch in '-.;/\' '})
-                )
+            for m_version, measurement in metadata.speakers_info[speaker]["measurements"].items():
+                m_version_key = m_version  # .translate({ord(ch) : '_' for ch in '-.;/\' '})
                 # should not happen, usually it is an error in metadata that should be trapped by check_meta
                 if "origin" not in measurement.keys():
                     logger.error(
@@ -257,65 +247,38 @@ def compute(speakerlist, filters, ray_ids: dict):
 
                 if m_version not in ray_ids[speaker].keys():
                     if "mversion" in filters and (
-                        m_version == filters["mversion"]
-                        or m_version == "{}_eq".format(filters["mversion"])
+                        m_version == filters["mversion"] or m_version == "{}_eq".format(filters["mversion"])
                     ):
-                        logger.error(
-                            "Speaker {} mversion {} not in keys".format(
-                                speaker, m_version
-                            )
-                        )
+                        logger.error("Speaker {} mversion {} not in keys".format(speaker, m_version))
                     continue
 
                 current_id = ray_ids[speaker][m_version][0]
                 if current_id in ready_ids:
                     df[speaker_key][m_origin][m_version_key] = ray.get(current_id)
-                    logger.debug(
-                        "Getting df done for {0} / {1} / {2}".format(
-                            speaker, m_origin, m_version
-                        )
-                    )
+                    logger.debug("Getting df done for {0} / {1} / {2}".format(speaker, m_origin, m_version))
                     done_ids[current_id] = True
 
                 m_version_eq = "{0}_eq".format(m_version_key)
                 current_id = ray_ids[speaker][m_version][1]
                 if current_id in eq_ids:
-                    logger.debug(
-                        "Getting eq done for {0} / {1} / {2}".format(
-                            speaker, m_version_eq, m_version
-                        )
-                    )
+                    logger.debug("Getting eq done for {0} / {1} / {2}".format(speaker, m_version_eq, m_version))
                     eq = ray.get(current_id)
                     if eq is not None:
                         df[speaker_key][m_origin][m_version_eq] = eq
-                        logger.debug(
-                            "Getting preamp eq done for {0} / {1} / {2}".format(
-                                speaker, m_version_eq, m_version
-                            )
-                        )
+                        logger.debug("Getting preamp eq done for {0} / {1} / {2}".format(speaker, m_version_eq, m_version))
                         if "preamp_gain" in eq:
-                            df[speaker_key][m_origin][m_version_eq]["preamp_gain"] = eq[
-                                "preamp_gain"
-                            ]
+                            df[speaker_key][m_origin][m_version_eq]["preamp_gain"] = eq["preamp_gain"]
                     done_ids[current_id] = True
 
                 current_id = ray_ids[speaker][m_version][2]
                 if current_id in g1_ids:
-                    logger.debug(
-                        "Getting graph done for {0} / {1} / {2}".format(
-                            speaker, m_version, m_origin
-                        )
-                    )
+                    logger.debug("Getting graph done for {0} / {1} / {2}".format(speaker, m_version, m_origin))
                     ray.get(current_id)
                     done_ids[current_id] = True
 
                 current_id = ray_ids[speaker][m_version][3]
                 if current_id in g2_ids:
-                    logger.debug(
-                        "Getting graph done for {0} / {1} / {2}".format(
-                            speaker, m_version_eq, m_origin
-                        )
-                    )
+                    logger.debug("Getting graph done for {0} / {1} / {2}".format(speaker, m_version_eq, m_origin))
                     ray.get(current_id)
                     done_ids[current_id] = True
 
@@ -357,11 +320,7 @@ def main():
         ptype = args["--type"]
         picture_suffixes = ("png", "html", "svg", "json")
         if ptype not in picture_suffixes:
-            print(
-                "Picture type {} is not recognize! Allowed list is {}".format(
-                    ptype, picture_suffixes
-                )
-            )
+            print("Picture type {} is not recognize! Allowed list is {}".format(ptype, picture_suffixes))
         sys.exit(1)
 
     update_cache = False
@@ -390,9 +349,7 @@ def main():
 
 
 if __name__ == "__main__":
-    args = docopt(
-        __doc__, version="generate_graphs.py v{}".format(VERSION), options_first=True
-    )
+    args = docopt(__doc__, version="generate_graphs.py v{}".format(VERSION), options_first=True)
 
     logger = get_custom_logger(True)
     logger.setLevel(args2level(args))

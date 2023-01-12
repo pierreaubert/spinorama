@@ -1,0 +1,16 @@
+EQ for JBL PRX912 computed from Vendors-JBL data
+Preference Score 3.9 with EQ 4.7
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.16
+Dated: 2022-11-03-09:21:27
+
+Preamp: -1.6 dB
+
+Filter  1: ON PK Fc    95 Hz Gain -4.21 dB Q 4.91
+Filter  2: ON PK Fc    82 Hz Gain -1.57 dB Q 6.00
+Filter  3: ON PK Fc   189 Hz Gain +1.24 dB Q 3.07
+Filter  4: ON PK Fc  1737 Hz Gain +2.21 dB Q 2.74
+Filter  5: ON PK Fc   383 Hz Gain -1.38 dB Q 1.40
+Filter  6: ON PK Fc   231 Hz Gain +1.37 dB Q 4.95
+Filter  7: ON PK Fc  9603 Hz Gain -2.83 dB Q 4.96
+Filter  8: ON PK Fc  1713 Hz Gain -1.56 dB Q 5.98
+Filter  9: ON PK Fc  3441 Hz Gain +1.38 dB Q 2.79

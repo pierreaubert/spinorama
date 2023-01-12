@@ -178,21 +178,21 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
         range=[range_min, range_max],
         dtick=range_step,
         tickvals=[i for i in range(range_min, range_max + range_step, range_step)],
-        ticktext=[
-            "{}".format(i) if not i % 5 else " "
-            for i in range(range_min, range_max + range_step, range_step)
-        ],
+        ticktext=["{}".format(i) if not i % 5 else " " for i in range(range_min, range_max + range_step, range_step)],
         showline=True,
     )
 
 
 def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
+    tickvals = [di for di in range(range_min, range_max, range_step)]
+    ticktext = [f"{di}" if pos < 5 else "" for pos, di in enumerate(range(range_min, range_max, range_step))]
+    # print('DEBUG {} {}'.format(tickvals, ticktext))
     return dict(
         title_text="DI (dB)                                                    &nbsp;",
         range=[range_min, range_max],
         dtick=range_step,
-        tickvals=[-5, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45],
-        ticktext=["-5", "0", "5", "10", "15", " ", " ", " ", " ", " ", " "],
+        tickvals=tickvals,
+        ticktext=ticktext,
         showline=True,
     )
 
@@ -203,10 +203,7 @@ def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
         range=[angle_min, angle_max],
         dtick=angle_step,
         tickvals=[v for v in range(angle_min, angle_max + angle_step, angle_step)],
-        ticktext=[
-            "{}°".format(v)
-            for v in range(angle_min, angle_max + angle_step, angle_step)
-        ],
+        ticktext=["{}°".format(v) for v in range(angle_min, angle_max + angle_step, angle_step)],
         showline=True,
     )
 
@@ -333,15 +330,28 @@ def plot_spinorama_traces(spin, params):
 
 def plot_spinorama(spin, params):
     fig = make_subplots(specs=[[{"secondary_y": True}]])
+    t_max = 0
     traces, traces_di = plot_spinorama_traces(spin, params)
     for t in traces:
+        t_max = max(t_max, np.max(t.y[np.where(t.x < 20000)]))
         fig.add_trace(t, secondary_y=False)
+
+    t_max = 5 + int(t_max / 5) * 5
+    t_min = t_max - 50
+    # print('T min={} max={}'.format(t_min, t_max))
+
+    di_max = 0
     for t in traces_di:
+        di_max = max(di_max, np.max(t.y[np.where(t.x < 20000)]))
         fig.add_trace(t, secondary_y=True)
 
+    di_max = 35 + int(di_max / 5) * 5
+    di_min = di_max - 50
+    # print('DI min={} max={}'.format(di_min, di_max))
+
     fig.update_xaxes(generate_xaxis())
-    fig.update_yaxes(generate_yaxis_spl())
-    fig.update_yaxes(generate_yaxis_di(), secondary_y=True)
+    fig.update_yaxes(generate_yaxis_spl(t_min, t_max, 5))
+    fig.update_yaxes(generate_yaxis_di(di_min, di_max, 5), secondary_y=True)
 
     fig.update_layout(common_layout(params))
     return fig
@@ -433,9 +443,7 @@ def plot_graph_regression_traces(df, measurement, params):
     # some speakers start very high
     current_restricted = df.loc[(df.Freq > 250) & (df.Freq < 10000)]
 
-    slope, intercept, r, p, se = stats.linregress(
-        x=np.log10(current_restricted["Freq"]), y=current_restricted[measurement]
-    )
+    slope, intercept, r, p, se = stats.linregress(x=np.log10(current_restricted["Freq"]), y=current_restricted[measurement])
     line = [slope * math.log10(f) + intercept for f in df.Freq]
 
     # print("step {} {}".format(slope, intercept))
@@ -566,11 +574,7 @@ def plot_contour(spl, params):
         return x, y
 
     hx, hy = compute_horizontal_lines(min_freq, 20000, range(-150, 180, 30))
-    vrange = (
-        [100 * i for i in range(2, 9)]
-        + [1000 * i for i in range(1, 10)]
-        + [10000 + 1000 * i for i in range(1, 9)]
-    )
+    vrange = [100 * i for i in range(2, 9)] + [1000 * i for i in range(1, 10)] + [10000 + 1000 * i for i in range(1, 9)]
     vx, vy = compute_vertical_lines(-180, 180, vrange)
 
     add_lines(hx, hy)
@@ -616,9 +620,7 @@ def plot_radar(spl, params):
 
     def plot_radar_freq(anglelist, df):
         dfu = sort_angles(df)
-        db_mean = np.mean(
-            dfu.loc[(dfu.Freq > 900) & (dfu.Freq < 1100)]["On Axis"].values
-        )
+        db_mean = np.mean(dfu.loc[(dfu.Freq > 900) & (dfu.Freq < 1100)]["On Axis"].values)
         freq = dfu.Freq
         dfu = dfu.drop("Freq", axis=1)
         db_min = np.min(dfu.min(axis=0).values)

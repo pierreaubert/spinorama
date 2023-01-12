@@ -1,15 +1,15 @@
 EQ for Devialet Phantom Reactor 900 computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-05-07-13:15:52
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
+Dated: 2023-01-04-15:39:08
 
-Preamp: -1.7 dB
+Preamp: 0.0 dB
 
-Filter  1: ON PK Fc   562 Hz Gain +2.07 dB Q 3.00
-Filter  2: ON PK Fc   256 Hz Gain -1.10 dB Q 2.98
-Filter  3: ON PK Fc   367 Hz Gain +1.24 dB Q 3.00
-Filter  4: ON PK Fc   485 Hz Gain -0.89 dB Q 2.93
-Filter  5: ON PK Fc   968 Hz Gain -0.95 dB Q 2.95
-Filter  6: ON PK Fc  8074 Hz Gain +0.96 dB Q 0.54
-Filter  7: ON PK Fc  5973 Hz Gain -0.87 dB Q 2.98
-Filter  8: ON PK Fc   271 Hz Gain -0.50 dB Q 2.90
-Filter  9: ON PK Fc   391 Hz Gain +0.64 dB Q 2.93
+Filter  1: ON LS Fc 15998 Hz Gain -1.60 dB
+Filter  2: ON PK Fc   550 Hz Gain +2.03 dB Q 2.99
+Filter  3: ON PK Fc   384 Hz Gain +1.09 dB Q 3.00
+Filter  4: ON LS Fc   448 Hz Gain -1.06 dB
+Filter  5: ON PK Fc   367 Hz Gain +0.87 dB Q 2.83
+Filter  6: ON PK Fc   453 Hz Gain -0.91 dB Q 2.75
+Filter  7: ON PK Fc  1076 Hz Gain -1.05 dB Q 2.91
+Filter  8: ON PK Fc   549 Hz Gain +0.78 dB Q 2.89
+Filter  9: ON PK Fc   533 Hz Gain -0.67 dB Q 2.85

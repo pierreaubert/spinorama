@@ -1,16 +1,15 @@
 EQ for Genelec 8320A computed from ASR data
-Preference Score 5.7 with EQ 5.9
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-05-07-13:28:34
+Preference Score 5.66 with EQ 5.97
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
+Dated: 2023-01-04-22:17:00
 
-Preamp: -2.1 dB
+Preamp: -3.4 dB
 
-Filter  1: ON PK Fc  3122 Hz Gain +1.88 dB Q 2.36
-Filter  2: ON PK Fc   346 Hz Gain -1.41 dB Q 0.83
-Filter  3: ON PK Fc  1645 Hz Gain +0.95 dB Q 2.96
-Filter  4: ON PK Fc   853 Hz Gain -0.70 dB Q 3.00
-Filter  5: ON PK Fc  1090 Hz Gain +0.75 dB Q 2.99
-Filter  6: ON PK Fc  1416 Hz Gain -0.79 dB Q 2.99
-Filter  7: ON PK Fc   908 Hz Gain -0.50 dB Q 3.00
-Filter  8: ON PK Fc 13531 Hz Gain -0.58 dB Q 2.98
-Filter  9: ON PK Fc  1900 Hz Gain +0.81 dB Q 2.97
+Filter  1: ON PK Fc    33 Hz Gain +2.99 dB Q 0.52
+Filter  2: ON PK Fc   531 Hz Gain -1.87 dB Q 0.39
+Filter  3: ON PK Fc  7859 Hz Gain -1.39 dB Q 0.31
+Filter  4: ON PK Fc  2988 Hz Gain +1.64 dB Q 2.49
+Filter  5: ON PK Fc  1174 Hz Gain +0.68 dB Q 2.22
+Filter  6: ON PK Fc  7337 Hz Gain -0.50 dB Q 0.27
+Filter  7: ON PK Fc   597 Hz Gain +0.58 dB Q 0.05
+Filter  8: ON PK Fc  1027 Hz Gain -0.57 dB Q 0.17

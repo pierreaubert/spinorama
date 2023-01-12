@@ -4,14 +4,13 @@
 [![DeepSource](https://deepsource.io/gh/pierreaubert/spinorama.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/pierreaubert/spinorama/?ref=repository-badge)
 [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://gitHub.com/pierreaubert/spinorama/graphs/commit-activity)
-[![Website pierreaubert.github.io/spinorama](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://pierreaubert.github.io/spinorama/)
+[![Website www.spinorama.org](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://www.spinorama.org/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-
 
 This library provides an easy way to view, compare or analyse speakers data. This can help you take informed
 decision when buying a speaker instead of relying on commercial information or internet buzz.
 
-## Jump to the [gallery](https://pierreaubert.github.io/spinorama) of all (500+) speakers measurements.
+## Jump to the [gallery](https://www.spinorama.org) of all (500+) speakers measurements.
 
 # What is a spinorama set of graphs?
 
@@ -59,7 +58,7 @@ The library support four different formats of data:
 2. Calculate contour plot, radar plot, isolines and isobands.
 3. Estimate basic data for a speaker (-3dB output, flatness over a range, etc)
 4. Compute various parameters defined in a paper from Olive (ref. below).
-5. It can generate an EQ to optimise the speaker (and get a better preference score) based on anechoic data. Note: this is not yet a room correction software.
+5. It can generate an EQ to optimise the speaker (and get a better preference score) based on anechoic data. Note: this is not yet a room correction software. EQ can be PEQ based but it also can generate a solution for a hardware graphical EQ.
 6. It can compute the effect of an EQ (IIR) on the spinorama.
 
 ## Website generation
@@ -68,7 +67,7 @@ The library support four different formats of data:
 2. Graphs are interactive.
 3. Comparison between speakers is possible.
 4. Some statistics.
-5. All EQs generated are easily accessible.
+5. All generated EQs are easily accessible.
 6. You can find similar speakers at a lower price point.
 
 # Other ways to look at the graphs in a more interactive way.

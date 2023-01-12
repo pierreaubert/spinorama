@@ -25,9 +25,7 @@ class RemoteFunction:
     def __init__(self, function):
         self._function = function
         self._function_name = self._function.__module__ + "." + self._function.__name__
-        self._function_signature = list(
-            inspect.signature(self._function).parameters.values()
-        )
+        self._function_signature = list(inspect.signature(self._function).parameters.values())
 
         @wraps(function)
         def _remote_proxy(*args, **kwargs):
@@ -49,10 +47,7 @@ class RemoteFunction:
         # list_args = flatten_args(self._function_signature, args, kwargs)
 
         def invocation(function, args, kwargs):
-            ref = "".join(
-                random.SystemRandom().choice(string.ascii_uppercase + string.digits)
-                for _ in range(16)
-            )
+            ref = "".join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(16))
 
             global_worker["queue"][ref] = (self._function, args, kwargs)
             return ref

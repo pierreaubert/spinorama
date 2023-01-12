@@ -1,16 +1,16 @@
 EQ for Part Express DIY Samba MT computed from ErinsAudioCorner data
-Preference Score 4.8 with EQ 6.0
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.16
-Dated: 2022-07-01-13:32:27
+Preference Score 4.8 with EQ 5.7
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
+Dated: 2023-01-03-23:26:41
 
-Preamp: -2.6 dB
+Preamp: -0.1 dB
 
-Filter  1: ON PK Fc  2957 Hz Gain +2.20 dB Q 1.48
-Filter  2: ON PK Fc  6741 Hz Gain -1.59 dB Q 2.20
-Filter  3: ON PK Fc  1548 Hz Gain +2.66 dB Q 5.95
-Filter  4: ON PK Fc 14190 Hz Gain -1.84 dB Q 5.00
-Filter  5: ON PK Fc  5656 Hz Gain -0.80 dB Q 5.98
-Filter  6: ON PK Fc  8741 Hz Gain -0.57 dB Q 5.63
-Filter  7: ON PK Fc  2203 Hz Gain -0.95 dB Q 5.90
-Filter  8: ON PK Fc   543 Hz Gain +1.31 dB Q 5.88
-Filter  9: ON PK Fc   772 Hz Gain -1.47 dB Q 1.75
+Filter  1: ON LS Fc 15255 Hz Gain -1.46 dB
+Filter  2: ON PK Fc  7409 Hz Gain -2.07 dB Q 1.64
+Filter  3: ON PK Fc  3083 Hz Gain +1.39 dB Q 2.48
+Filter  4: ON PK Fc   849 Hz Gain -1.41 dB Q 2.78
+Filter  5: ON PK Fc  1654 Hz Gain +0.89 dB Q 2.97
+Filter  6: ON PK Fc 12906 Hz Gain -1.17 dB Q 2.93
+Filter  7: ON PK Fc  5422 Hz Gain -0.54 dB Q 2.96
+Filter  8: ON PK Fc  1080 Hz Gain -0.74 dB Q 2.96
+Filter  9: ON LS Fc   400 Hz Gain +0.56 dB

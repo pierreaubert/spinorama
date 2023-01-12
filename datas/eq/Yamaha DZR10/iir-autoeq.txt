@@ -1,0 +1,16 @@
+EQ for Yamaha DZR10 computed from Vendors-Yamaha data
+Preference Score 2.69 with EQ 3.79
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
+Dated: 2023-01-12-18:03:22
+
+Preamp: -3.5 dB
+
+Filter  1: ON PK Fc    31 Hz Gain +3.00 dB Q 0.58
+Filter  2: ON PK Fc  4412 Hz Gain +2.85 dB Q 0.11
+Filter  3: ON PK Fc  1795 Hz Gain -2.94 dB Q 1.42
+Filter  4: ON PK Fc  5521 Hz Gain -2.76 dB Q 2.16
+Filter  5: ON PK Fc   376 Hz Gain -2.29 dB Q 2.91
+Filter  6: ON PK Fc   242 Hz Gain +1.97 dB Q 2.81
+Filter  7: ON PK Fc  2854 Hz Gain +1.71 dB Q 2.85
+Filter  8: ON PK Fc   701 Hz Gain -1.52 dB Q 2.78
+Filter  9: ON PK Fc   544 Hz Gain +1.37 dB Q 2.81

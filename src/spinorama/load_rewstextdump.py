@@ -10,9 +10,7 @@ from .load import spin_compute_di_eir
 logger = logging.getLogger("spinorama")
 
 
-def parse_graphs_speaker_rewstextdump(
-    speaker_path, speaker_brand, speaker_name, origin, version
-):
+def parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name, origin, version):
     dfs = {}
     try:
         spin = None
@@ -27,9 +25,7 @@ def parse_graphs_speaker_rewstextdump(
             # ('ERDI', 'Early Reflections DI'),
             # ('PSDI', 'Sound Power DI'),
         ):
-            filename = "{0}/{1}/{2}/{3}.txt".format(
-                speaker_path, speaker_name, version, txt
-            )
+            filename = "{0}/{1}/{2}/{3}.txt".format(speaker_path, speaker_name, version, txt)
             with open(filename, "r") as f:
                 lines = f.readlines()
                 logger.debug("read f {} found {}".format(f, len(lines)))
@@ -45,9 +41,7 @@ def parse_graphs_speaker_rewstextdump(
                     spls.append(spl)
                     msrts.append(msrt)
 
-        return "CEA2034", pd.DataFrame(
-            {"Freq": freqs, "dB": spls, "Measurements": msrts}
-        )
+        return "CEA2034", pd.DataFrame({"Freq": freqs, "dB": spls, "Measurements": msrts})
     except FileNotFoundError:
         logger.error("Speaker: {0} Not found: {1}".format(speaker_brand, speaker_name))
         return {}

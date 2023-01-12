@@ -1,16 +1,16 @@
 EQ for Infinity Interlude IL10 computed from ASR data
-Preference Score 5.3 with EQ 5.8
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-05-07-13:33:11
+Preference Score 5.27 with EQ 5.82
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
+Dated: 2023-01-04-22:17:01
 
-Preamp: -3.5 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc  1752 Hz Gain +2.94 dB Q 0.21
-Filter  2: ON PK Fc   844 Hz Gain -1.52 dB Q 1.76
-Filter  3: ON PK Fc  4718 Hz Gain -1.48 dB Q 3.00
-Filter  4: ON PK Fc   861 Hz Gain +0.90 dB Q 3.00
-Filter  5: ON PK Fc  1227 Hz Gain -1.12 dB Q 2.97
-Filter  6: ON PK Fc   710 Hz Gain -0.92 dB Q 2.97
-Filter  7: ON PK Fc  6202 Hz Gain +0.65 dB Q 0.05
-Filter  8: ON PK Fc 11208 Hz Gain -0.81 dB Q 2.35
-Filter  9: ON PK Fc  4557 Hz Gain -0.82 dB Q 2.72
+Filter  1: ON PK Fc    33 Hz Gain +3.00 dB Q 0.69
+Filter  2: ON PK Fc  2255 Hz Gain +1.84 dB Q 2.16
+Filter  3: ON PK Fc 11072 Hz Gain -1.19 dB Q 1.86
+Filter  4: ON PK Fc  5282 Hz Gain -0.62 dB Q 2.66
+Filter  5: ON PK Fc   431 Hz Gain +0.56 dB Q 2.96
+Filter  6: ON PK Fc  1138 Hz Gain -0.52 dB Q 2.35
+Filter  7: ON PK Fc  3387 Hz Gain +0.63 dB Q 2.66
+Filter  8: ON PK Fc   693 Hz Gain -0.52 dB Q 2.88
+Filter  9: ON PK Fc   557 Hz Gain +0.55 dB Q 2.52

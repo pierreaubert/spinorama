@@ -46,10 +46,6 @@ def scale_params(params, factor):
             logger.error("scale_param {0} is not a key".format(check))
     if new_params["xmin"] == new_params["xmax"]:
         logger.error("scale_param x-range is empty")
-    if (
-        "ymin" in new_params.keys()
-        and "ymax" in new_params.keys()
-        and new_params["ymin"] == new_params["ymax"]
-    ):
+    if "ymin" in new_params.keys() and "ymax" in new_params.keys() and new_params["ymin"] == new_params["ymax"]:
         logger.error("scale_param y-range is empty")
     return new_params

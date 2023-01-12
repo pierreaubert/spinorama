@@ -38,7 +38,7 @@ from .plot import plot_params_default, contour_params_default, radar_params_defa
 logger = logging.getLogger("spinorama")
 
 
-def print_graph(speaker, origin, key, title, chart, force, fileext):
+def print_graph(speaker, version, origin, key, title, chart, force, fileext):
     updated = 0
     if chart is not None:
         filedir = (
@@ -47,6 +47,8 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
             + speaker
             + "/"
             + origin.replace("Vendors-", "")
+            #            + "-"
+            #            + version.replace("version-", "")
             + "/"
             + key
         )
@@ -67,11 +69,7 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
             filename += "." + ext
             if ext == "json":
                 filename += ".zip"
-            if (
-                force
-                or not os.path.exists(filename)
-                or (os.path.exists(filename) and os.path.getsize(filename) == 0)
-            ):
+            if force or not os.path.exists(filename) or (os.path.exists(filename) and os.path.getsize(filename) == 0):
                 if fileext is None or (fileext is not None and fileext == ext):
                     try:
                         if ext == "json":
@@ -88,29 +86,21 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
                         else:
                             chart.write_image(filename)
                             if os.path.getsize(filename) == 0:
-                                logger.warning(
-                                    "Saving {0} in {1} failed!".format(title, filename)
-                                )
+                                logger.warning("Saving {0} in {1} failed!".format(title, filename))
                             else:
                                 logger.info("Saving {0} in {1}".format(title, filename))
                                 updated += 1
                                 with wim(filename=filename) as pict:
-                                    pict.convert("webp").save(
-                                        filename="{}.webp".format(filename[:-10])
-                                    )
+                                    pict.convert("webp").save(filename="{}.webp".format(filename[:-10]))
                                     # pict.convert("avif").save(
                                     #    filename="{}.avif".format(filename[:-10])
                                     # )
                                     pict.compression_quality = 75
-                                    pict.convert("jpg").save(
-                                        filename="{}.jpg".format(filename[:-10])
-                                    )
+                                    pict.convert("jpg").save(filename="{}.jpg".format(filename[:-10]))
                     except Exception as e:
                         logger.error("Got unkown error {0} for {1}".format(e, filename))
     else:
-        logger.debug(
-            "Chart is None for {:s} {:s} {:s} {:s}".format(speaker, origin, key, title)
-        )
+        logger.debug("Chart is None for {:s} {:s} {:s} {:s}".format(speaker, origin, key, title))
     return updated
 
 
@@ -118,6 +108,7 @@ def print_graph(speaker, origin, key, title, chart, force, fileext):
 def print_graphs(
     df: pd.DataFrame,
     speaker,
+    version,
     origin,
     origins_info,
     key="default",
@@ -126,8 +117,10 @@ def print_graphs(
     force_print=False,
     filter_file_ext=None,
 ):
-    # may happens at development time
+    # may happens at development time or for partial measurements
     if df is None:
+        if origin != "Misc" and origin != "Princeton":
+            print("error: df is None for {} {} {}".format(speaker, version, origin))
         return 0
 
     graph_params = copy.deepcopy(plot_params_default)
@@ -152,12 +145,8 @@ def print_graphs(
     graphs["Vertical Reflections"] = display_reflection_vertical(df, graph_params)
     graphs["SPL Horizontal"] = display_spl_horizontal(df, graph_params)
     graphs["SPL Vertical"] = display_spl_vertical(df, graph_params)
-    graphs["SPL Horizontal Normalized"] = display_spl_horizontal_normalized(
-        df, graph_params
-    )
-    graphs["SPL Vertical Normalized"] = display_spl_vertical_normalized(
-        df, graph_params
-    )
+    graphs["SPL Horizontal Normalized"] = display_spl_horizontal_normalized(df, graph_params)
+    graphs["SPL Vertical Normalized"] = display_spl_vertical_normalized(df, graph_params)
 
     # change params for contour
     contour_params = copy.deepcopy(contour_params_default)
@@ -169,12 +158,8 @@ def print_graphs(
 
     graphs["SPL Horizontal Contour"] = display_contour_horizontal(df, contour_params)
     graphs["SPL Vertical Contour"] = display_contour_vertical(df, contour_params)
-    graphs["SPL Horizontal Contour Normalized"] = display_contour_horizontal_normalized(
-        df, contour_params
-    )
-    graphs["SPL Vertical Contour Normalized"] = display_contour_vertical_normalized(
-        df, contour_params
-    )
+    graphs["SPL Horizontal Contour Normalized"] = display_contour_horizontal_normalized(df, contour_params)
+    graphs["SPL Vertical Contour Normalized"] = display_contour_vertical_normalized(df, contour_params)
 
     # better square
     radar_params = copy.deepcopy(radar_params_default)
@@ -192,15 +177,26 @@ def print_graphs(
         title = k.replace("_smoothed", "")
         # optimised for small screens / vertical orientation
         if graphs[k] is not None:
+            whom = origin
+            if origin[0:7] == "Vendors-":
+                whom = origin.replace("Vendors-", "")
+            elif origin == "Misc":
+                if version[-3:] == "-sr":
+                    whom = "Sound & Recording (data scanned)"
+                elif version[-3:] == "-pp":
+                    whom = "Production Partners (data scanned)"
+            elif origin == "ASR":
+                whom = "Audio Science Review"
+            text = "{2} for {0} measured by {1}".format(speaker, whom, title)
             graphs[k].update_layout(
                 title=dict(
-                    text="{2} for {0} measured by {1}".format(speaker, origin, title),
+                    text=text,
                     font=dict(
-                        size=24,
+                        size=20,
                     ),
                 ),
                 font=dict(
-                    size=22,
+                    size=20,
                 ),
             )
 
@@ -208,6 +204,13 @@ def print_graphs(
     for (title, graph) in graphs.items():
         if graph is not None:
             updated = print_graph(
-                speaker, origin, key, title, graph, force_print, filter_file_ext
+                speaker,
+                version,
+                origin,
+                key,
+                title,
+                graph,
+                force_print,
+                filter_file_ext,
             )
     return updated

@@ -15,39 +15,27 @@ def config2peq(config):
     current_peq = [
         (
             1.0,
-            Biquad(
-                Biquad.PEAK, config["1_freq"], 48000, config["1_Q"], config["1_dbGain"]
-            ),
+            Biquad(Biquad.PEAK, config["1_freq"], 48000, config["1_Q"], config["1_dbGain"]),
         ),
         (
             1.0,
-            Biquad(
-                Biquad.PEAK, config["2_freq"], 48000, config["2_Q"], config["2_dbGain"]
-            ),
+            Biquad(Biquad.PEAK, config["2_freq"], 48000, config["2_Q"], config["2_dbGain"]),
         ),
         (
             1.0,
-            Biquad(
-                Biquad.PEAK, config["3_freq"], 48000, config["3_Q"], config["3_dbGain"]
-            ),
+            Biquad(Biquad.PEAK, config["3_freq"], 48000, config["3_Q"], config["3_dbGain"]),
         ),
         (
             1.0,
-            Biquad(
-                Biquad.PEAK, config["4_freq"], 48000, config["4_Q"], config["4_dbGain"]
-            ),
+            Biquad(Biquad.PEAK, config["4_freq"], 48000, config["4_Q"], config["4_dbGain"]),
         ),
         (
             1.0,
-            Biquad(
-                Biquad.PEAK, config["5_freq"], 48000, config["5_Q"], config["5_dbGain"]
-            ),
+            Biquad(Biquad.PEAK, config["5_freq"], 48000, config["5_Q"], config["5_dbGain"]),
         ),
         (
             1.0,
-            Biquad(
-                Biquad.PEAK, config["6_freq"], 48000, config["6_Q"], config["6_dbGain"]
-            ),
+            Biquad(Biquad.PEAK, config["6_freq"], 48000, config["6_Q"], config["6_dbGain"]),
         ),
         #        (1.0, Biquad(Biquad.PEAK, config['7_freq'], 48000, config['7_Q'], config['7_dbGain'])),
         #        (1.0, Biquad(Biquad.PEAK, config['8_freq'], 48000, config['8_Q'], config['8_dbGain'])),

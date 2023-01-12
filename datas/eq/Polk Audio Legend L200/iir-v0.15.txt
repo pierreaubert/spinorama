@@ -1,0 +1,15 @@
+EQ for Polk Audio Legend L200 computed from Misc data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-14:12:47
+
+Preamp: -2.7 dB
+
+Filter  1: ON PK Fc   865 Hz Gain +2.47 dB Q 3.00
+Filter  2: ON PK Fc   275 Hz Gain +1.13 dB Q 2.99
+Filter  3: ON PK Fc  3953 Hz Gain -1.40 dB Q 2.98
+Filter  4: ON PK Fc  1760 Hz Gain +1.41 dB Q 3.00
+Filter  5: ON PK Fc   631 Hz Gain -0.91 dB Q 2.98
+Filter  6: ON PK Fc  9081 Hz Gain +1.18 dB Q 2.73
+Filter  7: ON PK Fc  5223 Hz Gain -0.64 dB Q 2.99
+Filter  8: ON PK Fc   790 Hz Gain +0.75 dB Q 2.98
+Filter  9: ON PK Fc  1056 Hz Gain -0.77 dB Q 3.00

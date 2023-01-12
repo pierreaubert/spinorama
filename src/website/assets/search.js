@@ -1,14 +1,28 @@
-import { urlSite, show, hide } from './misc.js'
+// -*- coding: utf-8 -*-
+// A library to display spinorama charts
+//
+// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+import { getMetadata } from './common.js'
+import { show, hide } from './misc.js'
 import { sortMetadata } from './sort.js'
 
 let fuse = null
 
-fetch(urlSite + 'assets/metadata.json').then(
-  function (response) {
-    return response.json()
-  }).then((dataJson) => {
-  const metadata = Object.values(dataJson)
-
+getMetadata().then((metadata) => {
   const filter = {
     reviewer: '',
     shape: '',
@@ -28,8 +42,9 @@ fetch(urlSite + 'assets/metadata.json').then(
       for (const [name, measurement] of Object.entries(item.measurements)) {
         const origin = measurement.origin.toLowerCase()
         let name2 = name.toLowerCase()
-        name2 = name2.replace('misc-', '')
-        console.log('debug: name2=' + name2 + ' origin=' + origin + ' filter.reviewer=' + filter.reviewer)
+        // not ideal
+        name2 = name2.replace('misc-', '').replace('-sealed', '').replace('-ported', '').replace('-vertical').replace('-horizontal')
+        // console.log('debug: name2=' + name2 + ' origin=' + origin + ' filter.reviewer=' + filter.reviewer)
         if (name2 === filter.reviewer.toLowerCase() || origin === filter.reviewer.toLowerCase()) {
           found = false
           break
@@ -43,7 +58,7 @@ fetch(urlSite + 'assets/metadata.json').then(
       let found = true
       for (const [name, measurement] of Object.entries(item.measurements)) {
         const quality = measurement.quality.toLowerCase()
-          // console.log('filter.quality=' + filter.quality + ' quality=' + quality)
+        // console.log('filter.quality=' + filter.quality + ' quality=' + quality)
         if (filter.quality !== '' && quality === filter.quality.toLowerCase()) {
           found = false
           break
@@ -53,73 +68,73 @@ fetch(urlSite + 'assets/metadata.json').then(
         shouldShow = false
       }
     }
-      // console.log('debug: post quality ' + shouldShow)
+    // console.log('debug: post quality ' + shouldShow)
     if (filter.power !== undefined && filter.power !== '' && item.type !== filter.power) {
       shouldShow = false
     }
-      // console.log('debug: post power ' + shouldShow)
+    // console.log('debug: post power ' + shouldShow)
     if (filter.shape !== undefined && filter.shape !== '' && item.shape !== filter.shape) {
       shouldShow = false
     }
-      // console.log('debug: post shape ' + shouldShow)
+    // console.log('debug: post shape ' + shouldShow)
     if (filter.brand !== undefined && filter.brand !== '' && item.brand.toLowerCase() !== filter.brand.toLowerCase()) {
       shouldShow = false
     }
-      // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.price+'<<<')
+    // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.price+'<<<')
     if (filter.price !== undefined && filter.price !== '') {
-        // console.log('debug: pre price ' + filter.price)
+      // console.log('debug: pre price ' + filter.price)
       if (item.price !== '') {
         let price = parseInt(item.price)
-        if (item.amount === "pair") {
+        if (item.amount === 'pair') {
           price /= 2.0
         }
-        switch(filter.price) {
-        case "p100":
-          if (price>=100) {
-            shouldShow = false
-          }
-          break
-        case "p200":
-          if (price>=200 || price<=100) {
-            shouldShow = false
-          }
-          break
-        case "p300":
-          if (price>=300 || price<=200) {
-            shouldShow = false
-          }
-          break
-        case "p500":
-          if (price>=500 || price<=300) {
-            shouldShow = false
-          }
-          break
-        case "p1000":
-          if (price>=1000 || price<=500) {
-            shouldShow = false
-          }
-          break
-        case "p2000":
-          if (price>=2000 || price<=1000) {
-            shouldShow = false
-          }
-          break
-        case "p5000":
-          if (price>=5000 || price<=2000) {
-            shouldShow = false
-          }
-          break
-        case "p5000p":
-          if (price<=5000) {
-            shouldShow = false
-          }
-          break
+        switch (filter.price) {
+          case 'p100':
+            if (price >= 100) {
+              shouldShow = false
+            }
+            break
+          case 'p200':
+            if (price >= 200 || price <= 100) {
+              shouldShow = false
+            }
+            break
+          case 'p300':
+            if (price >= 300 || price <= 200) {
+              shouldShow = false
+            }
+            break
+          case 'p500':
+            if (price >= 500 || price <= 300) {
+              shouldShow = false
+            }
+            break
+          case 'p1000':
+            if (price >= 1000 || price <= 500) {
+              shouldShow = false
+            }
+            break
+          case 'p2000':
+            if (price >= 2000 || price <= 1000) {
+              shouldShow = false
+            }
+            break
+          case 'p5000':
+            if (price >= 5000 || price <= 2000) {
+              shouldShow = false
+            }
+            break
+          case 'p5000p':
+            if (price <= 5000) {
+              shouldShow = false
+            }
+            break
         }
       } else {
         // no known price
         shouldShow = false
       }
-        // console.log('debug: post price ' + shouldShow)
+      // console.log('debug: post price ' + shouldShow)
     }
     return shouldShow
   }
@@ -156,7 +171,7 @@ fetch(urlSite + 'assets/metadata.json').then(
     for (const key in smeta) {
       const spk = metadata[key]
       const id = (spk.brand + '-' + spk.model).replace(/['.+& ]/g, '-')
-        // console.log('generated id is ' + id)
+      // console.log('generated id is ' + id)
       const elem = document.querySelector('#' + id)
       if (elem) {
         hide(elem)
@@ -169,7 +184,7 @@ fetch(urlSite + 'assets/metadata.json').then(
         minScore = results[spk].score
       }
     }
-      // console.log('minScore is ' + minScore)
+    // console.log('minScore is ' + minScore)
     for (const spk in results) {
       let shouldShow = true
       const result = results[spk]
@@ -182,7 +197,7 @@ fetch(urlSite + 'assets/metadata.json').then(
       if (shouldShow) {
         if (minScore < Math.pow(10, -15)) {
           const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase())
-            // console.log('isExact '+isExact+' model'+imeta.model.toLowerCase()+' keywords '+keywords.toLowerCase())
+          // console.log('isExact '+isExact+' model'+imeta.model.toLowerCase()+' keywords '+keywords.toLowerCase())
           // we have an exact match, only shouldShow other exact matches
           if (score >= Math.pow(10, -15) && !isExact) {
             // console.log('filtered out (minscore)' + score)
@@ -204,7 +219,7 @@ fetch(urlSite + 'assets/metadata.json').then(
           show(elem)
         }
       } else {
-          // console.log('hide ' + imeta.brand + ' ' + imeta.model + ' ' + score)
+        // console.log('hide ' + imeta.brand + ' ' + imeta.model + ' ' + score)
         if (elem) {
           hide(elem)
         }
@@ -215,7 +230,7 @@ fetch(urlSite + 'assets/metadata.json').then(
   function selectDispatch () {
     const resultdiv = document.querySelector('div.searchresults')
     const keywords = document.querySelector('#searchInput').value
-      // console.log('keywords: ' + keywords)
+    // console.log('keywords: ' + keywords)
 
     // need to sort here
     sortMetadata(

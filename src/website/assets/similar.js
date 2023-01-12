@@ -1,4 +1,23 @@
+// -*- coding: utf-8 -*-
+// A library to display spinorama charts
+//
+// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import {
+  getMetadata,
   assignOptions,
   getSpeakerData,
   knownMeasurements,
@@ -7,16 +26,11 @@ import {
   setContour,
   setGraph,
   setGlobe,
-  setSurface,
+  setSurface
 } from './common.js'
 import { urlSite } from './misc.js'
 
-fetch(urlSite + 'assets/metadata.json').then(
-  function (response) {
-    return response.json()
-}).then((dataJson) => {
-  const metadata = Object.values(dataJson)
-
+getMetadata().then((metadata) => {
   const urlSimilar = urlSite + 'similar.html?'
 
   const queryString = window.location.search
@@ -35,10 +49,10 @@ fetch(urlSite + 'assets/metadata.json').then(
     async function run () {
       Promise.all(speakersGraph).then((graphs) => {
         // console.log('plot: resolved ' + graphs.length + ' graphs')
-        for( let i=0 ; i<graphs.length-1; i++ ) {
+        for (let i = 0; i < graphs.length - 1; i++) {
           let graphOptions = [null]
-          let currentGraphs = [graphs[0], graphs[i+1]]
-          let currentNames = [speakersName[0], speakersName[i+1]]
+          const currentGraphs = [graphs[0], graphs[i + 1]]
+          const currentNames = [speakersName[0], speakersName[i + 1]]
           if (measurement === 'CEA2034') {
             graphOptions = setCEA2034(currentNames, currentGraphs, windowWidth, windowHeight)
           } else if (measurement === 'CEA2034 with splitted views') {
@@ -97,7 +111,7 @@ fetch(urlSite + 'assets/metadata.json').then(
   function buildInitSpeakers (speakers) {
     if (urlParams.has('speaker0')) {
       const speaker0 = urlParams.get('speaker0')
-      if (speaker0.length>3) {
+      if (speaker0.length > 3) {
         return speaker0
       }
     }
@@ -109,7 +123,7 @@ fetch(urlSite + 'assets/metadata.json').then(
     const graphName = graphSelector.value
     const names = []
     const graphs = []
-    console.log('speaker >'+speakerName+'< graph >'+graphName+'<')
+    console.log('speaker >' + speakerName + '< graph >' + graphName + '<')
     graphs.push(
       getSpeakerData(
         metaSpeakers,
@@ -119,9 +133,9 @@ fetch(urlSite + 'assets/metadata.json').then(
         null
       ))
     names[0] = speakerName
-    if (metaSpeakers[names[0]].nearest !== null ) {
-      let similars = metaSpeakers[names[0]].nearest
-      for( let i=0 ; i < similars.length ; i++ ) {
+    if (metaSpeakers[names[0]].nearest !== null) {
+      const similars = metaSpeakers[names[0]].nearest
+      for (let i = 0; i < similars.length; i++) {
         // console.log('adding '+similars[i][1])
         names.push(similars[i][1])
         graphs.push(
@@ -143,8 +157,8 @@ fetch(urlSite + 'assets/metadata.json').then(
     )
     plot(graphName, names, graphs)
   }
-  
-  const [metaSpeakers, speakers] = getNearSpeakers(metadata);
+
+  const [metaSpeakers, speakers] = getNearSpeakers(metadata)
 
   assignOptions(speakers, speakerSelector, buildInitSpeakers(speakers))
   assignOptions(knownMeasurements, graphSelector, knownMeasurements[0])
@@ -154,5 +168,4 @@ fetch(urlSite + 'assets/metadata.json').then(
   speakerSelector.addEventListener('change', updatePlots, false)
 
   updatePlots()
-
 }).catch(err => console.log(err.message))

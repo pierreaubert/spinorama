@@ -2,12 +2,19 @@
 <html lang="en">
   <head>
     <%include file="head.html"/>
+    <%include file="head_vega.html"/>
   </head>
 <body>
 
 <%include file="nav_menu.html"/>
 
 <%namespace name="util" module="website.utils" import="*"/>
+
+<script>
+  Handlebars.registerHelper('isShort', function (value) {
+     return (value.length < 3)
+  });
+</script>
 
 <script id="speaker" type="text/x-handlebars-template">
   <div class="card">
@@ -19,12 +26,13 @@
       </div>
       <header class="card-header">
 	<p class="card-header-title">{{brand}} {{model}}</p>
+	<p class="card-header-title is-pulled-right">{{price}}</p>
       </header>
       <div class="card-content">
 	<div class="content is-small">
           <p>Tonality: <b>{{score.score}}</b></p>
           <progress class="progress is-small is-danger" value="{{score.scoreScaled}}" max="100"></progress>
-  	  <p>Bass extension: <b>{{score.lfx}}</b>Hz at -6dB</p>
+  	  <p>Bass extension: <b>{{score.lfx}}</b>Hz</p>
     	  <progress class="progress is-small is-info" value="{{score.lfxScaled}}" max="100"></progress>
 	  <p>Flatness: <b>&plusmn;{{score.flatness}}</b>dB ~300-10kHz</p>
 	  <progress class="progress is-small is-success" value="{{score.flatnessScaled}}" max="100"></progress>
@@ -33,11 +41,35 @@
 	</div>
       </div>
       <footer class="card-footer">
+        {{#if (isShort reviews.reviews)}}
         {{#each reviews.reviews}}
-	<a alt="{{this.origin}}" class="card-footer-item" href="{{this.url}}">{{this.origin}}</a>
+	<a class="card-footer-item" href="{{this.url}}">{{this.origin}}</a>
         {{/each}}
+        {{else}}
+        <div class="card-footer-item">
+          <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+              <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+                <span>Measurements</span>
+                <span class="icon is-small">
+                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+              <div class="dropdown-content">
+                {{#each reviews.reviews}}
+                <div class="dropdown-item">
+	          <a href="{{this.url}}">{{this.originLong}}</a>
+                </div>
+                {{/each}}
+              </div>
+            </div>
+          </div>
+          {{/if}}
+          </div>
       </footer>
-    </div>
+  </div>
 </script>
 
 <div class="section">

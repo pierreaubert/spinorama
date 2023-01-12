@@ -1,0 +1,15 @@
+EQ for Monoprice MP-T65RT computed from Misc data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-14:01:20
+
+Preamp: -1.0 dB
+
+Filter  1: ON PK Fc  4111 Hz Gain -4.20 dB Q 0.14
+Filter  2: ON PK Fc   445 Hz Gain +2.48 dB Q 2.88
+Filter  3: ON PK Fc  5924 Hz Gain +2.24 dB Q 2.44
+Filter  4: ON PK Fc   895 Hz Gain -1.31 dB Q 2.95
+Filter  5: ON PK Fc 14084 Hz Gain -4.73 dB Q 1.81
+Filter  6: ON PK Fc  1246 Hz Gain +1.79 dB Q 2.98
+Filter  7: ON PK Fc  7999 Hz Gain +1.16 dB Q 2.99
+Filter  8: ON PK Fc  3353 Hz Gain -1.02 dB Q 2.97
+Filter  9: ON PK Fc  4324 Hz Gain +0.92 dB Q 2.97

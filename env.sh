@@ -1,4 +1,21 @@
 #!/bin/sh
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 
 touch env.log
 
@@ -22,7 +39,7 @@ fi
 ## python virtualenv
 ## ----------------------------------------------------------------------
 SPIN=$PWD
-export PYTHONPATH=$SPIN/src:$SPIN/src/website
+export PYTHONPATH=$SPIN/src:$SPIN/src/website:$SPIN
 if ! test -d $SPIN/spinorama-venv; then
     python3 -m venv spinorama-venv
     source $SPIN/spinorama-venv/bin/activate
@@ -45,9 +62,19 @@ export PATH=$PATH:$SPIN/node_modules/.bin
 
 ## CUDA configuration
 ## ----------------------------------------------------------------------
-GPU=""
+CUDA=""
 if test -x /usr/bin/nvidia-smi; then
-    GPU=$(nvidia-smi  -L)
+    CUDA=$(nvidia-smi  -L)
+fi
+if test -d /usr/local/cuda/extras/CUPTI/lib64; then
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
+fi
+
+## ROCM/HIP configuration
+## ----------------------------------------------------------------------
+ROCM=""
+if test -x /usr/bin/rocminfo; then
+    ROCM=$(rocminfo  | grep 'Marketing Name' | grep Radeon | cut -d: -f 2 | sed -e 's/  //g')
 fi
 if test -d /usr/local/cuda/extras/CUPTI/lib64; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
@@ -55,11 +82,12 @@ fi
 
 ## summary
 ## ----------------------------------------------------------------------
-echo 'SPIN          ' "$SPIN"
+echo 'SPIN           ' "$SPIN"
 echo ' ' "$(python3 --version) $(which python3)"
-echo ' ' "$(pip3 -V)"
-echo '  jupyter-lab ' "$(jupyter-lab --version) $(which jupyter-lab)"
-echo '  PYTHONPATH  ' "$PYTHONPATH"
-echo '  github key  ' "$github"
-echo '  GPU         ' "$GPU"
-echo '  RAY         ' "$(ray --version)"
+echo ' ' "$(pip3 -V) "
+echo '  jupyter-lab  ' "$(jupyter-lab --version) $(which jupyter-lab)"
+echo '  PYTHONPATH   ' "$PYTHONPATH"
+echo '  github key   ' "$github"
+echo '  CUDA (Nvidia)' "$CUDA"
+echo '  ROCM (AMD)   ' "$ROCM"
+echo '  RAY          ' "$(ray --version)"

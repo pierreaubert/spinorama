@@ -1,5 +1,24 @@
+// -*- coding: utf-8 -*-
+// A library to display spinorama charts
+//
+// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import { urlSite } from './misc.js'
 import {
+  getMetadata,
   assignOptions,
   knownMeasurements,
   getAllSpeakers,
@@ -11,15 +30,10 @@ import {
   setCEA2034Split,
   setSurface,
   updateOrigin,
-  updateVersion,
+  updateVersion
 } from './common.js'
 
-fetch(urlSite + 'assets/metadata.json').then(
-  function (response) {
-    return response.json()
-}).then((dataJson) => {
-  const metadata = Object.values(dataJson)
-
+getMetadata().then((metadata) => {
   const urlCompare = urlSite + 'compare.html?'
   const nbSpeakers = 2
 
@@ -76,7 +90,7 @@ fetch(urlSite + 'assets/metadata.json').then(
         } // todo add multi view
 
         // console.log('datas and layouts length='+graphsConfigs.length)
-        if ( graphsConfigs.length === 1 ) {
+        if (graphsConfigs.length === 1) {
           plotSingleContainer.style.display = 'block'
           plotDouble0Container.style.display = 'none'
           plotDouble1Container.style.display = 'none'
@@ -84,12 +98,12 @@ fetch(urlSite + 'assets/metadata.json').then(
           if (config) {
             Plotly.newPlot('plotSingle', config)
           }
-        } else if (graphsConfigs.length === 2 ) {
+        } else if (graphsConfigs.length === 2) {
           plotSingleContainer.style.display = 'none'
           plotDouble0Container.style.display = 'block'
           plotDouble1Container.style.display = 'block'
-          for( let i = 0 ; i<graphsConfigs.length ; i++) {
-            let config = graphsConfigs[i]
+          for (let i = 0; i < graphsConfigs.length; i++) {
+            const config = graphsConfigs[i]
             if (config) {
               Plotly.newPlot('plotDouble' + i, config)
             }
@@ -123,6 +137,17 @@ fetch(urlSite + 'assets/metadata.json').then(
     return knownMeasurements[0]
   }
 
+  function updateTitle () {
+    let title = 'Spinorama: compare ' + graphsSelector.value + ' graphs for speakers '
+    for (let i = 0; i < nbSpeakers; i++) {
+      title += speakersSelector[i].value + ' (' + originsSelector[i].value + ') '
+      if (i<nbSpeakers-1) {
+        title += ' v.s. '
+      }
+    }
+    document.title = title
+  }
+
   function updateSpeakers () {
     const names = []
     const graphs = []
@@ -137,24 +162,26 @@ fetch(urlSite + 'assets/metadata.json').then(
       names[i] = speakersSelector[i].value
     }
     urlParams.set('measurement', graphsSelector.value)
+    updateTitle()
     history.pushState({ page: 1 },
-                      'Change measurement',
-                      urlCompare + urlParams.toString()
-                     )
+      'Change measurement',
+      urlCompare + urlParams.toString()
+    )
     plot(graphsSelector.value, names, graphs)
   }
-  
+
   function updateSpeakerPos (pos) {
     // console.log('updateSpeakerPos(' + pos + ')')
     updateOrigin(metaSpeakers, speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos])
     urlParams.set('speaker' + pos, speakersSelector[pos].value)
+    updateTitle()
     history.pushState({ page: 1 },
-                      'Compare speakers',
-                      urlCompare + urlParams.toString()
-                     )
+      'Compare speakers',
+      urlCompare + urlParams.toString()
+    )
     updateSpeakers()
   }
-  
+
   function updateVersionPos (pos) {
     // console.log('updateVersionsPos(' + pos + ')')
     updateVersion(
@@ -166,27 +193,29 @@ fetch(urlSite + 'assets/metadata.json').then(
     )
     updateSpeakers()
     urlParams.set('version' + pos, versionsSelector[pos].value)
+    updateTitle()
     history.pushState({ page: 1 },
-                      'Compare speakers',
-                      urlCompare + urlParams.toString()
-                     )
+      'Compare speakers',
+      urlCompare + urlParams.toString()
+    )
   }
-  
+
   function updateOriginPos (pos) {
     // console.log('updateOriginPos(' + pos + ')')
     updateOrigin(metaSpeakers, speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos], originsSelector[pos].value)
     urlParams.set('origin' + pos, originsSelector[pos].value)
+    updateTitle()
     history.pushState({ page: 1 },
-                      'Compare speakers',
-                      urlCompare + urlParams.toString()
-                     )
+      'Compare speakers',
+      urlCompare + urlParams.toString()
+    )
     updateSpeakers()
   }
-  
-  const [metaSpeakers, speakers] = getAllSpeakers(metadata);
+
+  const [metaSpeakers, speakers] = getAllSpeakers(metadata)
   const initSpeakers = buildInitSpeakers(speakers, nbSpeakers)
   const initMeasurement = buildInitMeasurement()
-    
+
   const speakersSelector = []
   const originsSelector = []
   const versionsSelector = []

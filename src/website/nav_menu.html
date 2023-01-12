@@ -5,7 +5,7 @@
         Menu
       </button>
     </div>
-    <a class="navbar-item is-size-4" href="${site}" alt="SPIN"><b>SPIN</b>orama</a>
+    <a class="navbar-item is-size-4" href="${site}"><b>SPIN</b>orama</a>
     <div class="navbar-item is-hidden-tablet" id="smallSearch">
       % if useSearch:
       <button type="button" class="button is-rounded" value="Search" aria-label="Search">
@@ -20,17 +20,17 @@
     <div class="navbar-start">
       <a class="navbar-item"
          href="https://github.com/pierreaubert/spinorama">
-        <span class="icon"><i class="fab fa-lg fa-github-alt" alt="GitHub"></i></span>
+        <span class="icon"><i class="fab fa-lg fa-github-alt"></i></span>
       </a>
     </div>
     <div class="navbar-end">
-      <a alt="Search" class="navbar-item" href="${site}/index.html">Search</a>
-      <a alt="EQ" class="navbar-item" href="${site}/eqs.html">EQs</a>
-      <a alt="Compare" class="navbar-item" href="${site}/compare.html">Compare</a>
-      <a alt="Similar" class="navbar-item" href="${site}/similar.html">Similar<sup>&alpha;</sup></a>
-      <a alt="Ranking" class="navbar-item" href="${site}/scores.html">Ranking</a>
-      <a alt="Statistics" class="navbar-item" href="${site}/statistics.html">Statistics</a>
-      <a alt="Help" class="navbar-item" href="${site}/help.html">Help</a>
+      <a class="navbar-item" href="${site}/index.html">Search</a>
+      <a class="navbar-item" href="${site}/eqs.html">EQs</a>
+      <a class="navbar-item" href="${site}/compare.html">Compare</a>
+      <a class="navbar-item" href="${site}/similar.html">Similar<sup>&alpha;</sup></a>
+      <a class="navbar-item" href="${site}/scores.html?quality=High">Ranking</a>
+      <a class="navbar-item" href="${site}/statistics.html">Statistics</a>
+      <a class="navbar-item" href="${site}/help.html">Help</a>
     </div>
   </div>
 </nav>
@@ -124,10 +124,14 @@
         <option value="surround">Surround</option>
         <option value="omnidirectional">Omnidirectional</option>
         <option value="outdoor">Outdoor</option>
+        <option value="columns">Columns</option>
         <option value="cbt">CBT</option>
         <option value="panel">Panel</option>
         <option value="inwall">In Wall</option>
         <option value="soundbar">Soundbar</option>
+        <option value="cinema">Cinema</option>
+        <option value="liveportable">Live Portable</option>
+        <option value="toursound">Tour Sound</option>
       </select>
     </div>
     <div class="icon is-left"><i class="fas fa-shapes"></i></div>

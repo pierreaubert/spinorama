@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-21 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,11 +18,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import math
 
+import numpy as np
 import scipy.optimize as opt
 
 from .ltype import DataSpeaker, Peq
 from .filter_iir import Biquad
+from .filter_peq import peq_print
 from .auto_loss import loss
 
 
@@ -78,11 +81,23 @@ def find_best_biquad(
         "message": "",
     }
     try:
-        res = opt.dual_annealing(
+        # res = opt.dual_annealing(
+        #    opt_peq,
+        #    bounds,
+        #    maxiter=optim_config["maxiter"],
+        #    # initial_temp=10000
+        # )
+        res = opt.differential_evolution(
             opt_peq,
             bounds,
+            # workers=64,
+            # updating='deferred',
+            # mutation=(0.5, 1.5),
+            # recombination=1.9,
             maxiter=optim_config["maxiter"],
-            # initial_temp=10000
+            atol=0.01,
+            polish=False,
+            integrality=[True, False, False, False],
         )
         logger.debug(
             "          optim loss {:2.2f} in {} iter type {:d} at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(
@@ -95,10 +110,7 @@ def find_best_biquad(
                 res["message"],
             )
         )
-        if (
-            res.message[0] == "Maximum number of function call reached during annealing"
-            and res.fun < prev_best
-        ):
+        if res.message[0] == "Maximum number of function call reached during annealing" and res.fun < prev_best:
             res.success = True
         return (
             res.success,
@@ -113,8 +125,13 @@ def find_best_biquad(
         res["success"] = False
         logger.error("{} bounds {}".format(ve, bounds))
         for i in range(0, 4):
-            if bounds[i][0] >= bounds[i][1]:
-                logger.error("on bound [{}]".format(i))
+            try:
+                if bounds[i][0] >= bounds[i][1]:
+                    logger.error("on bound [{}]".format(i))
+            except ValueError:
+                pass
+            except IndexError:
+                pass
         return False, 0, -1, -1, -1, -1, -1
 
 
@@ -143,6 +160,12 @@ def find_best_peak(
         (dbGain_range[0], dbGain_range[-1]),
     ]
 
+    x_init = [
+        (bounds[0][0] + bounds[0][1]) / 2,
+        (bounds[1][0] + bounds[1][1]) / 2,
+        (bounds[2][0] + bounds[2][1]) / 2,
+    ]
+
     logger.debug(
         "range is [{}, {}], [{}, {}], [{}, {}]".format(
             bounds[0][0],
@@ -153,45 +176,52 @@ def find_best_peak(
             bounds[2][1],
         )
     )
+
     # can use differential_evolution basinhoppin dual_annealing
     res = {
         "success": False,
-        "x": [0.0, 0.0, 0.0],
+        "x": x_init,
         "fun": -1000.0,
         "nit": -1,
         "message": "",
     }
     try:
         # res = opt.dual_annealing(
-        #    opt_peq,
-        #    bounds,
-        #    visit=2.9,
-        #    # maxfun=optim_config["maxiter"],
-        #    initial_temp=10000,
-        #    no_local_search=True,
+        #   opt_peq,
+        #   bounds,
+        #   visit=2.9,
+        #   maxfun=optim_config["maxiter"],
+        #   initial_temp=10000,
+        #   no_local_search=True,
         # )
         res = opt.differential_evolution(
             opt_peq,
             bounds,
-            # workers=100,
-            # maxiter=100,
-            atol=0.001,
+            # workers=64,
+            # updating='deferred',
+            # mutation=(0.5, 1.5),
+            # recombination=1.9,
+            maxiter=optim_config["maxiter"],
+            atol=0.01,
             polish=False,
+            integrality=[True, False, False],
         )
-        logger.debug(
+        logger.info(
             "          optim loss {:2.2f} in {} iter type PK at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(
                 res.fun, res.nfev, res.x[0], res.x[1], res.x[2], res.message
             )
         )
-        if (
-            res.message[0] == "Maximum number of function call reached during annealing"
-            and res.fun < prev_best
-        ):
+        if res.message[0] == "Maximum number of function call reached during annealing" and res.fun < prev_best:
             res.success = True
         return res.success, biquad_type, res.x[0], res.x[1], res.x[2], res.fun, res.nit
     except ValueError as ve:
         logger.error("{} bounds {}".format(ve, bounds))
         for i in range(0, 4):
-            if bounds[i][0] >= bounds[i][1]:
-                logger.error("on bound [{}]".format(i))
+            try:
+                if bounds[i][0] >= bounds[i][1]:
+                    logger.error("on bound [{}]".format(i))
+            except ValueError:
+                pass
+            except IndexError:
+                pass
         return False, 0, -1, -1, -1, -1, -1

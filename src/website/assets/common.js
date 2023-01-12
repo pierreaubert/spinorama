@@ -1,3 +1,21 @@
+// -*- coding: utf-8 -*-
+// A library to display spinorama charts
+//
+// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 //@flow
 
 import { urlSite } from './misc.js'
@@ -227,12 +245,31 @@ export function getSpeakerData (metaSpeakers: MetaSpeakers, graph: string, speak
 export function getAllSpeakers (metadata: Metadata) : Array<MetaSpeakers|Array<string>> {
   const metaSpeakers: MetaSpeakers = {}
   const speakers = []
-  metadata.forEach(function (value) {
+  metadata.forEach( (value) => {
     const speaker = value.brand + ' ' + value.model
     speakers.push(speaker)
     metaSpeakers[speaker] = value
   })
   return [metaSpeakers, speakers.sort()]
+}
+
+
+export function getMetadata () {
+  const url = urlSite+'assets/metadata.json.zip'
+  // console.log('fetching url=' + url)
+  const spec = downloadZip(url).then( function(zipped) {
+    // convert to JSON
+    // console.log('parsing url=' + url)
+    const js = JSON.parse(zipped)
+    // convert to object
+    const metadata = Object.values(js)
+    // console.log('metadata '+metadata.length)
+    return metadata
+  }).catch( (error) => {
+    console.log('ERROR getMetadata data 404 ' + error)
+    return null
+  })
+  return spec
 }
 
 type GraphLayout = ?{
@@ -316,7 +353,7 @@ function setGraphOptions (spin: Graphs, windowWidth: number, windowHeight: numbe
         r: 0,
         t: graphMarginTop,
         b: graphMarginBottom,
-      } 
+      }
       layout.legend = {
         orientation: 'h',
         y: -0.25,
@@ -555,7 +592,7 @@ export  function setGlobe (speakerNames: Array<string>, speakerGraphs: Graphs, w
         }
         currentPolarData.legendgroup = 'speaker' + i
         currentPolarData.legendgrouptitle = { text: speakerNames[i] }
-        
+
         polarData.push(currentPolarData)
       }
       let layout = speakerGraphs[i].layout
@@ -600,7 +637,7 @@ export function setSurface (speakerNames: Array<string>, speakerGraphs: Graphs, 
         currentSurfaceData.type = 'surface'
         currentSurfaceData.legendgroup = 'speaker' + i
         currentSurfaceData.legendgrouptitle = { text: speakerNames[i] }
-        
+
         surfaceData.push(currentSurfaceData)
       }
       const layout = speakerGraphs[i].layout
@@ -640,11 +677,15 @@ export function setCEA2034Split (speakerNames: Array<string>, speakerGraphs: Gra
   }
   let layout = null
   let datas = null
-  
+  const config = {
+    responsive: true,
+    displayModeBar: true,
+  }
+
   if (speakerGraphs[0] != null && speakerGraphs[1] != null) {
     layout = speakerGraphs[0].layout
     datas = speakerGraphs[0].data.concat(speakerGraphs[1].data)
-    
+
     layout.width = windowWidth - 40
     layout.height = Math.max(360, Math.min(windowHeight, windowWidth * 0.7 + 140))
     layout.title = null
@@ -663,7 +704,7 @@ export function setCEA2034Split (speakerNames: Array<string>, speakerGraphs: Gra
       yanchor: 'left',
       itemclick: 'toggleothers'
     }
-    
+
     graphsConfigs.push({
       'data': datas,
       'layout': layout,
@@ -698,7 +739,7 @@ export function setCEA2034Split (speakerNames: Array<string>, speakerGraphs: Gra
     }
     // console.log(deltas.length)
     // deltas.forEach( (data) => console.log(data.name) );
-    
+
     const layout2 = JSON.parse(JSON.stringify(layout))
     layout2.height = 440
     layout2.yaxis = {
@@ -779,5 +820,3 @@ export function updateOrigin (metaSpeakers: MetaSpeakers, speaker, originSelecto
   }
   updateVersion(metaSpeakers, speaker, versionSelector, originSelector.value, version)
 }
-
-

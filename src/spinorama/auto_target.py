@@ -30,10 +30,15 @@ logger = logging.getLogger("spinorama")
 # ------------------------------------------------------------------------------
 
 
+def limit_before_freq(freq, curve, min_freq):
+    i_min = 0
+    while i_min < len(freq) and freq[i_min] < min_freq:
+        i_min += 1
+    return [curve[i] if i > i_min else curve[i_min] + 1 for i in range(0, len(curve))]
+
+
 def get_selector(df, optim_config):
-    return (df["Freq"] > optim_config["freq_reg_min"]) & (
-        df["Freq"] < optim_config["freq_reg_max"]
-    )
+    return (df["Freq"] > optim_config["freq_reg_min"]) & (df["Freq"] < optim_config["freq_reg_max"])
 
 
 def get_freq(df_speaker_data, optim_config):
@@ -59,25 +64,21 @@ def get_freq(df_speaker_data, optim_config):
             df_tmp = df_speaker_data["CEA2034"]
             try:
                 # df_pivoted = df_tmp.pivot(*df_tmp).rename_axis(columns=None).reset_index()
-                df_pivoted = df_tmp.pivot_table(
-                    index="Freq", columns="Measurements", values="dB", aggfunc=max
-                ).reset_index()
+                df_pivoted = df_tmp.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
                 local_df = df_pivoted.loc[:, columns]
             except ValueError as ve:
-                print("debug: {} {}".format(df_tmp.keys(), ve))
-                print("{}".format(df_tmp.index.duplicated()))
+                # print("debug: {} {}".format(df_tmp.keys(), ve))
+                # print("{}".format(df_tmp.index.duplicated()))
                 return None, None, None
             except KeyError as ke:
-                print("debug: columns {} {}".format(columns, ke))
-                print("debug: {}".format(df_tmp.keys()))
+                # print("debug: columns {} {}".format(columns, ke))
+                # print("debug: {}".format(df_tmp.keys()))
                 return None, None, None
 
     if with_pir:
         pir_source = df_speaker_data["Estimated In-Room Response"]
         if local_df is None:
-            local_df = pd.DataFrame(
-                {"Freq": pir_source.Freq, "Estimated In-Room Response": pir_source.dB}
-            )
+            local_df = pd.DataFrame({"Freq": pir_source.Freq, "Estimated In-Room Response": pir_source.dB})
         else:
             local_df["Estimated In-Room Response"] = pir_source.dB.values
 
@@ -89,6 +90,7 @@ def get_freq(df_speaker_data, optim_config):
     local_target = []
     for curve in curves:
         data = local_df.loc[selector, curve].values
+        data = limit_before_freq(local_freq, data, optim_config["target_min_freq"])
         local_target.append(data)
 
     # print(local_df, local_freq, local_target)
@@ -100,9 +102,7 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     selector = get_selector(df_speaker_data, optim_config)
     current_curve = df_speaker_data.loc[selector, current_curve_name].values
     # compute linear reg on current_curve
-    slope, intercept, r_value, p_value, std_err = linregress(
-        np.log10(freq), current_curve
-    )
+    slope, intercept, r_value, p_value, std_err = linregress(np.log10(freq), current_curve)
     # possible correction to have a LW not too bright
     if current_curve_name == "Estimated In-Room Response":
         lw_curve = df_speaker_data.loc[selector, "Listening Window"].values
@@ -150,84 +150,22 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
             last_freq = -(i + 1)
             break
 
-    if current_curve_name is not None:  # "Estimated In-Room Response":
-        slope /= math.log10(freq[last_freq]) - math.log10(freq[first_freq])
-        intercept = current_curve[first_freq] - slope * math.log10(freq[first_freq])
-        flat = slope * math.log10(freq[first_freq])
-        line = np.array(
-            [
-                flat if i < first_freq else slope * math.log10(f)
-                for i, f in enumerate(freq)
-            ]
-            + intercept
-        )
-        # if current_curve_name == 'Listening Window':
-        #    line = [flat for f in freq[:freq_1k5]] + \
-        #        [slope*math.log10(f)-0.25 for f in freq[freq_1k5, freq_4k]] + \
-        #        [slope*math.log10(f)-1 for f in freq[freq_4k:]]
-        #    line += intercept
-        logger.debug(
-            "Slope {} Intercept {} R {} P {} err {}".format(
-                slope, intercept, r_value, p_value, std_err
-            )
-        )
-        logger.debug(
-            "Target_interp from {:.1f}dB at {}Hz to {:.1f}dB at {}Hz".format(
-                line[first_freq], freq[first_freq], line[last_freq], freq[last_freq]
-            )
-        )
-        return line
+    if current_curve_name is None:
+        return None
 
-    # experiment to see if another target for PIR would help
-    # PIR data from https://www.audiosciencereview.com/forum/index.php?threads/erin-posted-the-emotiva-airmotiv-t2-tower-speaker-review.28360/page-3#post-990830
-    pir_data = [
-        (100.7, -0.0),
-        (115.8, -0.3),
-        (133.0, -0.6),
-        (152.9, -0.9),
-        (175.7, -1.2),
-        (201.9, -1.5),
-        (232.1, -1.7),
-        (266.7, -2.0),
-        (306.5, -2.2),
-        (352.3, -2.4),
-        (404.8, -2.6),
-        (465.3, -2.7),
-        (534.7, -2.9),
-        (614.5, -3.0),
-        (706.2, -3.2),
-        (811.6, -3.3),
-        (932.8, -3.4),
-        (1072.0, -3.6),
-        (1232.0, -3.7),
-        (1415.8, -3.8),
-        (1627.1, -3.9),
-        (1870.0, -4.0),
-        (2149.1, -4.0),
-        (2469.9, -4.1),
-        (2838.5, -4.2),
-        (3262.1, -4.3),
-        (3749.0, -4.4),
-        (4308.6, -4.4),
-        (4951.6, -4.5),
-        (5690.7, -4.6),
-        (6540.0, -4.6),
-        (7516.1, -4.7),
-        (8637.9, -4.7),
-        (9927.1, -4.8),
-        (11408.7, -4.8),
-        (13111.5, -4.9),
-        (15068.4, -5.0),
-        (17317.4, -5.0),
-        (18801.1, -5.0),
-    ]
-
-    target = np.interp(
-        x=freq,
-        xp=[p[0] for p in pir_data],
-        fp=[p[1] for p in pir_data],
-        left=0,
-        right=-5.0,
-    )
-    # print(target)
-    return target
+    # print('first freq[{}]={} last freq[{}]={}'.format(first_freq, freq[first_freq], last_freq, freq[last_freq]))
+    slope /= math.log10(freq[last_freq]) - math.log10(freq[first_freq])
+    # print('current curve {}'.format(current_curve[first_freq]))
+    # intercept = current_curve[first_freq] - slope * math.log10(freq[first_freq])
+    intercept = -slope * math.log10(freq[first_freq])
+    # print("Slope {} Intercept {} R {} P {} err {}".format(slope, intercept, r_value, p_value, std_err))
+    flat = slope * math.log10(freq[first_freq])
+    # print('Flat {}'.format(flat))
+    line = np.array([flat if i < first_freq else slope * math.log10(f) for i, f in enumerate(freq)]) + intercept
+    # print('Line {}'.format(line))
+    # print(
+    #    "Target_interp from {:.1f}dB at {}Hz to {:.1f}dB at {}Hz".format(
+    #        line[first_freq], freq[first_freq], line[last_freq], freq[last_freq]
+    #    )
+    # )
+    return line

@@ -1,0 +1,15 @@
+EQ for Realistic Tandy Minimus 7 computed from Misc data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
+Dated: 2022-05-07-14:18:23
+
+Preamp: -1.4 dB
+
+Filter  1: ON PK Fc  5024 Hz Gain -5.87 dB Q 0.96
+Filter  2: ON PK Fc  1028 Hz Gain -2.23 dB Q 1.88
+Filter  3: ON PK Fc  2754 Hz Gain +3.49 dB Q 2.98
+Filter  4: ON PK Fc  1503 Hz Gain -1.17 dB Q 2.96
+Filter  5: ON PK Fc  4064 Hz Gain -2.10 dB Q 3.00
+Filter  6: ON PK Fc  3287 Hz Gain +1.57 dB Q 2.83
+Filter  7: ON PK Fc  4851 Hz Gain +2.04 dB Q 2.99
+Filter  8: ON PK Fc  4922 Hz Gain -1.64 dB Q 1.16
+Filter  9: ON PK Fc   513 Hz Gain +0.76 dB Q 3.00

@@ -1,4 +1,21 @@
 #!/bin/bash
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 echo "Update starts"
 export PYTHONPATH=src:src/website:src/spinorama:.
 
@@ -6,10 +23,10 @@ IP="127.0.0.1"
 case $HOSTNAME in
 
     "spin")
-        IP="192.168.88.190"
+        IP="192.168.88.20"
         ;;
     "7pi")
-        IP="192.168.88.191"
+        IP="192.168.88.17"
         ;;
     "horn")
         IP="192.168.1.36"
@@ -74,7 +91,7 @@ fi
 # generate website
 ./update_brands.sh
 ./update_reviewers.sh
-command=$(./generate_html.py)
+command=$(./generate_html.py --dev --sitedev=https://dev.spinorama.org)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate HTML!"
@@ -90,7 +107,8 @@ else
     echo "OK after checking HTML!"
 fi
 # copy
-TARGET=$HOME/src/pierreaubert.github.io/spinorama
+# TARGET=$HOME/src/pierreaubert.github.io/spinorama
+TARGET=/var/www/html/spinorama-dev
 command=$(./update_sync.sh)
 status=$?
 if [ $status -ne 0 ]; then
@@ -99,6 +117,6 @@ if [ $status -ne 0 ]; then
 else
     echo "OK Update $TARGET!"
 fi
-# evaluate what's new and needs to be changed
-cd ${TARGET} && git status
+ evaluate what's new and needs to be changed
+# cd ${TARGET} && git status
 exit 0;

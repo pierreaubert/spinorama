@@ -1,16 +1,15 @@
 EQ for SVS Ultra Bookshelf computed from ASR data
-Preference Score 5.8 with EQ 6.2
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-05-07-14:31:07
+Preference Score 5.7 with EQ 6.3
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
+Dated: 2023-01-03-23:21:30
 
-Preamp: -1.3 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc   162 Hz Gain -1.33 dB Q 1.68
-Filter  2: ON PK Fc   391 Hz Gain +0.89 dB Q 2.99
-Filter  3: ON PK Fc  1716 Hz Gain +1.01 dB Q 2.74
-Filter  4: ON PK Fc   786 Hz Gain -1.22 dB Q 3.00
-Filter  5: ON PK Fc 15688 Hz Gain -0.62 dB Q 1.53
-Filter  6: ON PK Fc  1231 Hz Gain +0.51 dB Q 2.99
-Filter  7: ON PK Fc   722 Hz Gain +0.50 dB Q 2.99
-Filter  8: ON PK Fc   372 Hz Gain +0.50 dB Q 3.00
-Filter  9: ON PK Fc   431 Hz Gain -0.82 dB Q 1.31
+Filter  1: ON LS Fc    81 Hz Gain +3.00 dB
+Filter  2: ON HS Fc  1343 Hz Gain -1.03 dB
+Filter  3: ON PK Fc  1972 Hz Gain +1.40 dB Q 2.25
+Filter  4: ON PK Fc   774 Hz Gain -1.22 dB Q 2.60
+Filter  5: ON PK Fc   398 Hz Gain +0.51 dB Q 3.00
+Filter  6: ON PK Fc  1394 Hz Gain +0.51 dB Q 2.85
+Filter  7: ON PK Fc 15970 Hz Gain -0.84 dB Q 0.62
+Filter  8: ON PK Fc   908 Hz Gain -0.50 dB Q 2.94

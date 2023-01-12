@@ -38,10 +38,17 @@ def peq_freq(spl: FloatVector1D, peq: Peq) -> Vector:
 
 def peq_preamp_gain(peq: Peq) -> float:
     # add 0.2 dB to have a margin for clipping
-    # this assume that the DSP is operating at more that 16 or 24 bits
-    # and that max gain of each PK is not generating clipping by itself
-    freq = np.logspace(10 + math.log10(2), 4 + math.log10(2), 500)
-    return -(np.max(peq_build(freq, peq)) + 0.2)
+    freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), 1000)
+    spl = np.array(peq_build(freq, peq))
+    individual = 0.0
+    if len(peq) == 0:
+        return 0.0
+    for w, iir in peq:
+        individual = max(individual, np.max(peq_build(freq, [(1.0, iir)])))
+    overall = np.max(np.clip(spl, 0, None))
+    gain = -(max(individual, overall) + 0.2)
+    # print('debug preamp gain: {}'.format(gain))
+    return gain
 
 
 def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
@@ -49,9 +56,10 @@ def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
         return spl
     freq = spl["Freq"].to_numpy()
     curve_peq = peq_build(freq, peq)
-    if "On Axis" in spl.columns:
-        mean = np.mean(spl.loc[(spl.Freq > 500) & (spl.Freq < 10000)]["On Axis"])
-        curve_peq = curve_peq - mean
+    # TODO: doesn't work all the time
+    # if "On Axis" in spl.columns:
+    #    mean = np.mean(spl.loc[(spl.Freq > 500) & (spl.Freq < 10000)]["On Axis"])
+    #    curve_peq = curve_peq - mean
 
     # create a new frame
     filtered = spl.loc[:, spl.columns != "Freq"].add(curve_peq, axis=0)
@@ -83,16 +91,10 @@ def peq_format_apo(comment: str, peq: Peq) -> str:
                 )
             )
         elif iir.typ in (Biquad.LOWPASS, Biquad.HIGHPASS):
-            res.append(
-                "Filter {:2d}: ON {:2s} Fc {:5d} Hz".format(
-                    i + 1, iir.type2str(), int(iir.freq)
-                )
-            )
+            res.append("Filter {:2d}: ON {:2s} Fc {:5d} Hz".format(i + 1, iir.type2str(), int(iir.freq)))
         elif iir.typ in (Biquad.LOWSHELF, Biquad.HIGHSHELF):
             res.append(
-                "Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB".format(
-                    i + 1, iir.type2str(), int(iir.freq), iir.dbGain
-                )
+                "Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB".format(i + 1, iir.type2str(), int(iir.freq), iir.dbGain)
             )
         else:
             logger.error("kind {} is unkown".format(iir.typ))

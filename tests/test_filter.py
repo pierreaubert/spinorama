@@ -32,9 +32,7 @@ class SpinoramaFilterIIRTests(unittest.TestCase):
         self.peak = Biquad(3, 1000, 48000, 1, 3)
 
     def test_smoke1(self):
-        peq_slow = np.array(
-            [20.0 * math.log10(self.peak.resultSlow(f)) for f in self.freq]
-        )
+        peq_slow = np.array([20.0 * math.log10(self.peak.resultSlow(f)) for f in self.freq])
         peq_fast = np.array([20.0 * math.log10(self.peak.result(f)) for f in self.freq])
         peq_vec = self.peak.np_log_result(self.freq)
         with self.assertRaises(AssertionError):

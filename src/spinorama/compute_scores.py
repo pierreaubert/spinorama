@@ -25,9 +25,7 @@ def octave(N: int) -> List[Tuple[float, float, float]]:
     p_band = pow(2, 1 / (2 * N))
     o_iter = int((N * 10 + 1) / 2)
     center = (
-        [reference / p**i for i in range(o_iter, 0, -1)]
-        + [reference]
-        + [reference * p**i for i in range(1, o_iter + 1, 1)]
+        [reference / p**i for i in range(o_iter, 0, -1)] + [reference] + [reference * p**i for i in range(1, o_iter + 1, 1)]
     )
     return [(c / p_band, c, c * p_band) for c in center]
 
@@ -58,6 +56,12 @@ def aad(dfu: pd.DataFrame) -> float:
     return aad_value
 
 
+def mad(df: pd.Series) -> float:
+    # mad has been deprecated in pandas
+    # I replace it with the equivalent (df - df.mean()).abs().mean()
+    return (df - df.mean()).abs().mean()
+
+
 def nbd(dfu: pd.DataFrame) -> float:
     """nbd Narrow Band
 
@@ -74,7 +78,7 @@ def nbd(dfu: pd.DataFrame) -> float:
     #                if bcenter >=100 and bcenter <=12000])
     return np.nanmean(
         [
-            dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB.mad()
+            mad(dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB)
             for (bmin, bcenter, bmax) in octave(2)
             if 100 <= bcenter <= 12000
         ]
@@ -102,7 +106,7 @@ def lfx(lw, sp) -> float:
         # happens with D&D 8C when we do not have a point low enough to get the -6
         lfx_hz = sp.Freq.values[0]
     else:
-        lfx_grouped = consecutive_groups(lfx_range.iteritems(), lambda x: x[0])
+        lfx_grouped = consecutive_groups(lfx_range.items(), lambda x: x[0])
         # logger.debug('lfx_grouped {}'.format(lfx_grouped))
         try:
             lfx_hz = list(next(lfx_grouped))[-1][1]
@@ -135,7 +139,7 @@ def lfq(lw, sp, lfx_log) -> float:
             lfq_sum += abs(y_lw - y_sp)
             n += 1
     if n == 0:
-        logger.warning("lfq is None: lfx={} octave(20): {}".format(val_lfx, octave(20)))
+        logger.warning("lfq is None: lfx={}".format(val_lfx))
         return -1.0
     return lfq_sum / n
 
@@ -178,9 +182,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
             logger.info("PIR is empty")
             return None
         df_on_axis = cea2034.loc[lambda df: df.Measurements == "On Axis"]
-        df_listening_window = cea2034.loc[
-            lambda df: df.Measurements == "Listening Window"
-        ]
+        df_listening_window = cea2034.loc[lambda df: df.Measurements == "Listening Window"]
         df_sound_power = cea2034.loc[lambda df: df.Measurements == "Sound Power"]
         skip_full = False
         for dfu in (df_on_axis, df_listening_window, df_sound_power):
@@ -206,9 +208,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         # 14.5hz or 20hz see discussion
         # https://www.audiosciencereview.com/forum/index.php?threads/master-preference-ratings-for-loudspeakers.11091/page-25#post-448733
         pref = None
-        pref_wsub = pref_rating(
-            nbd_on_axis, nbd_pred_in_room, math.log10(14.5), sm_pred_in_room
-        )
+        pref_wsub = pref_rating(nbd_on_axis, nbd_pred_in_room, math.log10(14.5), sm_pred_in_room)
         if not skip_full:
             pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)
         if pref is None or pref_wsub is None:
@@ -268,13 +268,9 @@ def scores(df_speaker, rounded=False):
     elif "CEA2034_unmelted" in df_speaker:
         spin = graph_melt(df_speaker["CEA2034_unmelted"])
         if "Estimated In-Room Response" in df_speaker["CEA2034_unmelted"]:
-            pir = graph_melt(
-                df_speaker["CEA2034_unmelted"]["Estimated In-Room Response"]
-            )
+            pir = graph_melt(df_speaker["CEA2034_unmelted"]["Estimated In-Room Response"])
         else:
-            logger.error(
-                "Don't find pir {} v2".format(df_speaker["CEA2034_unmelted"].keys())
-            )
+            logger.error("Don't find pir {} v2".format(df_speaker["CEA2034_unmelted"].keys()))
 
     if pir is None:
         logger.error("pir is None, computing it")
