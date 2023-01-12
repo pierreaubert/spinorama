@@ -2046,6 +2046,42 @@ speakers_info = {
             },
         },
     },
+    "Danley SH-Mini": {
+        "brand": "Danley",
+        "model": "SH-Mini",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-100x100",
+        "measurements": {
+            "vendor-pattern-100x100": {
+                "origin": "Vendors-Danley",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230112",
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 100,
+                    },
+                    "sensitivity": 88,
+                    "impedance": 8,
+                    "SPL": {
+                        "continuous": 111,
+                        "peak": 117,
+                    },
+                    "size": {
+                        "height": 254,
+                        "width": 254,
+                        "depth": 267,
+                    },
+                    "weight": 12,
+                },
+            },
+        },
+    },
     "Danley SH-Mini-180": {
         "brand": "Danley",
         "model": "SH-Mini-180",
@@ -9067,9 +9103,9 @@ speakers_info = {
             },
         },
     },
-    "LD Systems DDQ12 Sub": {
+    "LD Systems DDQ12+Sub": {
         "brand": "LD Systems",
-        "model": "DDQ12 Sub",
+        "model": "DDQ12+Sub",
         "type": "active",
         "price": "3000",
         "amount": "each",
@@ -13918,6 +13954,23 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/technics-sb-f1-review-vintage-speaker.32975/",
                 "review_published": "20220413",
+            },
+        },
+    },
+    "Totem Acoustics Rainmaker": {
+        "brand": "Totem Acoustics",
+        "model": "Rainmaker",
+        "type": "passive",
+        "price": "500",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/totem-acoustics-rainmaker-speaker-review.40906/",
+                "review_published": "20230112",
             },
         },
     },
