@@ -15,12 +15,12 @@
     "curve_names": [
         "Estimated In-Room Response"
     ],
-    "target_min_freq": 58.0,
+    "target_min_freq": 53.0,
     "target_max_freq": 16000,
     "slope_on_axis": 0,
     "slope_listening_window": -0.5,
     "slope_early_reflections": -4,
-    "slope_estimated_inroom": -8.482601805246892,
+    "slope_estimated_inroom": -4.5,
     "slope_sound_power": -9,
     "smooth_measurements": true,
     "smooth_window_size": 21,

@@ -19,7 +19,7 @@
 """
 usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--force] [--smoke-test] [-v|--verbose] [--origin=<origin>] \
- [--speaker=<speaker>] [--mversion=<mversion>] \
+ [--speaker=<speaker>] [--mversion=<mversion>] [--mformat=<mformat>]\
  [--max-peq=<count>] [--min-Q=<minQ>] [--max-Q=<maxQ>] \
  [--min-dB=<mindB>] [--max-dB=<maxdB>] \
  [--min-freq=<minFreq>] [--max-freq=<maxFreq>] \
@@ -55,6 +55,7 @@ Options:
   --origin=<origin>        Restrict to a specific origin
   --speaker=<speaker>      Restrict to a specific speaker, if not specified it will optimise all speakers
   --mversion=<mversion>    Restrict to a specific mversion (for a given origin you can have multiple measurements)
+  --mformat=<mformat>      Restrict to a specifig format (klippel, splHVtxt, gllHVtxt, webplotdigitizer, ...)
   --max-peq=<count>        Maximum allowed number of Biquad
   --min-Q=<minQ>           Minumum value for Q
   --max-Q=<maxQ>           Maximum value for Q
@@ -407,16 +408,17 @@ def optim_save_peq(
     # print eq
     if not smoke_test:
         previous_score = None
-        with open(eq_name, "r", encoding="ascii") as read_fd:
-            lines = read_fd.readlines()
-            if len(lines) > 1:
-                line_pref = lines[1]
-                parsed = re.findall(r"[-+]?\d+(?:\.\d+)?", line_pref)
-                if len(parsed) > 1:
-                    previous_score = float(parsed[1])
+        if os.path.exists(eq_name):
+            with open(eq_name, "r", encoding="ascii") as read_fd:
+                lines = read_fd.readlines()
+                if len(lines) > 1:
+                    line_pref = lines[1]
+                    parsed = re.findall(r"[-+]?\d+(?:\.\d+)?", line_pref)
+                    if len(parsed) > 1:
+                        previous_score = float(parsed[1])
 
         skip = False
-        if use_score and previous_score is not None and previous_score > auto_score["pref_score"]:
+        if force is False and use_score and previous_score is not None and previous_score > auto_score["pref_score"]:
             skip = True
 
         # print('EQ prev_score {:0.2f} > {:0.2f}'.format(previous_score, auto_score["pref_score"]))
@@ -847,6 +849,18 @@ def main():
     if args["--speaker"] is not None:
         speaker_name = args["--speaker"]
 
+    origin = None
+    if args["--origin"] is not None:
+        origin = args["--origin"]
+
+    mversion = None
+    if args["--mversion"] is not None:
+        mversion = args["--mversion"]
+
+    mformat = None
+    if args["--mformat"] is not None:
+        mformat = args["--mformat"]
+
     # error in parameters
     if parameter_error:
         print("ERROR: please check for errors in parameters above!")
@@ -856,7 +870,13 @@ def main():
     print("Reading cache ...", end=" ", flush=True)
     df_all_speakers = {}
     try:
-        df_all_speakers = cache_load(smoke_test=smoke_test, simple_filter=speaker_name)
+        filters = {
+            "speaker_name": speaker_name,
+            "format": mformat,
+            "origin": origin,
+            "version": mversion,
+        }
+        df_all_speakers = cache_load(filters=filters, smoke_test=smoke_test)
     except ValueError as v_e:
         if speaker_name is not None:
             print(

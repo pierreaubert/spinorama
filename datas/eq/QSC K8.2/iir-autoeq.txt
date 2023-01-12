@@ -1,16 +1,16 @@
 EQ for QSC K8.2 computed from Vendors-QSC data
-Preference Score 5.92 with EQ 6.26
+Preference Score 5.92 with EQ 6.39
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-04-22:19:40
+Dated: 2023-01-12-18:03:51
 
-Preamp: -3.8 dB
+Preamp: -3.2 dB
 
-Filter  1: ON LS Fc    59 Hz Gain +3.00 dB
-Filter  2: ON PK Fc  8153 Hz Gain -3.01 dB Q 1.68
-Filter  3: ON PK Fc   217 Hz Gain -3.38 dB Q 0.57
-Filter  4: ON HS Fc  1794 Hz Gain +0.85 dB
-Filter  5: ON PK Fc  6861 Hz Gain -1.27 dB Q 1.12
-Filter  6: ON PK Fc 11394 Hz Gain -1.04 dB Q 2.96
-Filter  7: ON LS Fc   537 Hz Gain +0.69 dB
-Filter  8: ON HS Fc  2865 Hz Gain +0.74 dB
-Filter  9: ON PK Fc  5352 Hz Gain -1.14 dB Q 1.95
+Filter  1: ON PK Fc    32 Hz Gain +3.00 dB Q 0.90
+Filter  2: ON PK Fc   154 Hz Gain -4.13 dB Q 0.78
+Filter  3: ON PK Fc  8130 Hz Gain -2.86 dB Q 1.61
+Filter  4: ON PK Fc  2505 Hz Gain +0.99 dB Q 1.68
+Filter  5: ON PK Fc   350 Hz Gain -1.18 dB Q 2.95
+Filter  6: ON PK Fc   181 Hz Gain +1.18 dB Q 2.74
+Filter  7: ON PK Fc   919 Hz Gain -0.72 dB Q 2.00
+Filter  8: ON PK Fc  5839 Hz Gain -0.55 dB Q 2.98
+Filter  9: ON PK Fc  1712 Hz Gain +0.59 dB Q 2.74

@@ -9899,24 +9899,24 @@ speakers_info = {
             },
         },
     },
-    "Meyer Sound Ultra 22": {
-        "skip": True,
-        "brand": "Meyer Sound",
-        "model": "Ultra 22",
-        "type": "active",
-        "price": "",
-        "shape": "liveportable",
-        "default_measurement": "vendor",
-        "measurements": {
-            "vendor": {
-                "origin": "Vendors-Meyer Sound",
-                "format": "gllHVtxt",
-                "review_published": "20220915",
-                "quality": "medium",
-                "notes": "{}".format(note_meyersound_gll),
-            },
-        },
-    },
+    #    "Meyer Sound Ultra 22": {
+    #        "skip": True,
+    #        "brand": "Meyer Sound",
+    #        "model": "Ultra 22",
+    #        "type": "active",
+    #        "price": "",
+    #        "shape": "liveportable",
+    #        "default_measurement": "vendor",
+    #        "measurements": {
+    #            "vendor": {
+    #                "origin": "Vendors-Meyer Sound",
+    #                "format": "gllHVtxt",
+    #                "review_published": "20220915",
+    #                "quality": "medium",
+    #                "notes": "{}".format(note_meyersound_gll),
+    #            },
+    #        },
+    #    },
     "Meyer Sound Ultra X20": {
         "brand": "Meyer Sound",
         "model": "Ultra X20",
@@ -10011,7 +10011,7 @@ speakers_info = {
                 "format": "gllHVtxt",
                 "review_published": "20220915",
                 "quality": "medium",
-                "notes": "{}".format(note_meyersound_gll),
+                "notes": "measured at 2m with air absorbsion on, resolution is 10 degrees",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 110,
@@ -10477,8 +10477,7 @@ speakers_info = {
         "measurements": {
             "vendor-pattern-100x55": {
                 "origin": "Vendors-Nexo",
-                "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "format": "splHVtxt",
                 "quality": "low",
                 "review_published": "20221106",
             },
@@ -10496,8 +10495,7 @@ speakers_info = {
         "measurements": {
             "vendor-pattern-100x55": {
                 "origin": "Vendors-Nexo",
-                "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "format": "splHVtxt",
                 "quality": "low",
                 "review_published": "20221106",
             },
@@ -10515,8 +10513,7 @@ speakers_info = {
         "measurements": {
             "vendor-pattern-100x55": {
                 "origin": "Vendors-Nexo",
-                "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "format": "splHVtxt",
                 "quality": "low",
                 "review_published": "20221106",
             },

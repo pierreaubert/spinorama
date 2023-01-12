@@ -39,7 +39,7 @@ fi
 ## python virtualenv
 ## ----------------------------------------------------------------------
 SPIN=$PWD
-export PYTHONPATH=$SPIN/src:$SPIN/src/website
+export PYTHONPATH=$SPIN/src:$SPIN/src/website:$SPIN
 if ! test -d $SPIN/spinorama-venv; then
     python3 -m venv spinorama-venv
     source $SPIN/spinorama-venv/bin/activate

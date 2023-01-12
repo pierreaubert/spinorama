@@ -12,10 +12,11 @@ logger = logging.getLogger("spinorama")
 
 def parse_graph_gllHVtxt(dirpath):
     """Parse text files with meridian and parallel data"""
-    filenames = "{0}/*.txt".format(dirpath)
+    filepath = "{}/tmp/*".format(dirpath)
+    filenames = "{}/*.txt".format(filepath)
     files = glob.glob(filenames)
 
-    logger.debug("Found {} files in {}".format(len(files), dirpath))
+    logger.debug("Found {} files in {}".format(len(files), filepath))
 
     spl_h = []
     spl_v = []
@@ -100,13 +101,20 @@ def parse_graphs_speaker_gllHVtxt(speaker_path, speaker_brand, speaker_name, ver
     zipname = "{}/{}.zip".format(dirname, speaker_name)
 
     if not os.path.exists(zipname):
-        logger.error("{} does not exist".format(zipname))
-        return None, None
+
+        # maybe the name is close but not exactly the name of the speaker
+        guesses = glob.glob(f"{dirname}/*.zip")
+        if len(guesses) == 1:
+            zipname = guesses[0]
+        elif len(guesses) > 1:
+            logger.error("Multiple zip files in {}".format(dirname))
+            return None, None
+        else:
+            logger.error("{} does not exist".format(zipname))
+            return None, None
 
     tmp_dirname = "{}/tmp".format(dirname)
     with zipfile.ZipFile(zipname, "r") as gll:
         gll.extractall(tmp_dirname)
 
-    txt_dirname = "{}/tmp/{}".format(dirname, speaker_name)
-
-    return parse_graph_gllHVtxt(txt_dirname)
+    return parse_graph_gllHVtxt(dirname)

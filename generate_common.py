@@ -176,20 +176,45 @@ def cache_save(df_all, smoke_test=False):
     print("(saved {} speakers)".format(len(df_all)))
 
 
-def cache_load_seq(simple_filter=None, smoke_test=False):
+def is_filtered(speaker, data, filters):
+
+    if filters.get("speaker_name") is not None and filters.get("speaker_name") != speaker:
+        return True
+
+    current = None
+    if speaker in metadata.speakers_info.keys():
+        if "default_measurement" not in metadata.speakers_info[speaker].keys():
+            print("error no default measurement for {}".format(speaker))
+            return True
+        first = metadata.speakers_info[speaker]["default_measurement"]
+        current = metadata.speakers_info[speaker]["measurements"][first]
+
+    if filters.get("origin") is not None and current is not None:
+        if current["origin"] != filters.get("origin"):
+            return True
+
+    if filters.get("format") is not None and current is not None:
+        if current["format"] != filters.get("format"):
+            return True
+
+    return False
+
+
+def cache_load_seq(filters, smoke_test):
     df_all = defaultdict()
     cache_files = glob("{}/*.h5".format(CACHE_DIR))
     count = 0
     for cache in cache_files:
-        if simple_filter is not None and cache[-5:-3] != cache_key(simple_filter):
+        if filters.get("speaker_name") is not None and cache[-5:-3] != cache_key(filters.get("speaker_name")):
             continue
         df_read = fl.load(path=cache)
         # print('reading file {} found {} entries'.format(cache, len(df_read)))
         for speaker, data in df_read.items():
             if speaker in df_all.keys():
                 print("error in cache: {} is already in keys".format(speaker))
-            if simple_filter is not None and speaker != simple_filter:
-                # print(speaker, simple_filter)
+                continue
+            if is_filtered(speaker, data, filters):
+                print(speaker, filters["speaker_name"])
                 continue
             df_all[speaker] = data
             count += 1
@@ -205,12 +230,12 @@ def cache_fetch(cachepath):
     return fl.load(path=cachepath)
 
 
-def cache_load_distributed_map(simple_filter=None, smoke_test=False):
+def cache_load_distributed_map(filters, smoke_test):
     cache_files = glob("{}/*.h5".format(CACHE_DIR))
     ids = []
     # mapper read the cache and start 1 worker per file
     for cache in cache_files:
-        if simple_filter is not None and cache[-5:-3] != cache_key(simple_filter):
+        if filters.get("speaker_name") is not None and cache[-5:-3] != cache_key(filters.get("speaker_name")):
             continue
         ids.append(cache_fetch.remote(cache))
 
@@ -218,7 +243,7 @@ def cache_load_distributed_map(simple_filter=None, smoke_test=False):
     return ids
 
 
-def cache_load_distributed_reduce(simple_filter, smoke_test, ids1):
+def cache_load_distributed_reduce(filters, smoke_test, ids1):
     df_all = defaultdict()
     count = 0
     ids = ids1
@@ -230,7 +255,7 @@ def cache_load_distributed_reduce(simple_filter, smoke_test, ids1):
             for speaker, data in df_read.items():
                 if speaker in df_all.keys():
                     print("error in cache: {} is already in keys".format(speaker))
-                if simple_filter is not None and speaker != simple_filter:
+                if is_filtered(speaker, data, filters):
                     continue
                 df_all[speaker] = data
                 count += 1
@@ -246,15 +271,15 @@ def cache_load_distributed_reduce(simple_filter, smoke_test, ids1):
     return df_all
 
 
-def cache_load_distributed(simple_filter=None, smoke_test=False):
-    ids = cache_load_distributed_map(simple_filter, smoke_test)
-    return cache_load_distributed_reduce(simple_filter, smoke_test, ids)
+def cache_load_distributed(filters, smoke_test):
+    ids = cache_load_distributed_map(filters, smoke_test)
+    return cache_load_distributed_reduce(filters, smoke_test, ids)
 
 
-def cache_load(simple_filter=None, smoke_test=False):
+def cache_load(filters, smoke_test):
     if ray.is_initialized:
-        return cache_load_distributed(simple_filter, smoke_test)
-    return cache_load_seq(simple_filter, smoke_test)
+        return cache_load_distributed(filters, smoke_test)
+    return cache_load_seq(filters, smoke_test)
 
 
 def cache_update(df_new, filters):
@@ -266,7 +291,7 @@ def cache_update(df_new, filters):
     for new_speaker, new_datas in df_new.items():
         if filters is not None and new_speaker != filters.get("speaker", ""):
             continue
-        df_old = cache_load(new_speaker)
+        df_old = cache_load({"speaker_name": new_speaker}, False)
         for new_origin, new_measurements in new_datas.items():
             for new_measurement, new_data in new_measurements.items():
                 if new_speaker not in df_old.keys():

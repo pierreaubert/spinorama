@@ -1,16 +1,16 @@
 EQ for FBT Promaxx 110A computed from Vendors-FBT data
-Preference Score 3.52 with EQ 4.88
+Preference Score 3.52 with EQ 4.89
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-04-22:19:40
+Dated: 2023-01-12-18:03:48
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    39 Hz Gain +2.99 dB Q 0.78
-Filter  2: ON PK Fc 11619 Hz Gain -2.05 dB Q 0.68
-Filter  3: ON PK Fc  3353 Hz Gain +1.55 dB Q 2.99
-Filter  4: ON PK Fc  1124 Hz Gain -2.31 dB Q 3.00
-Filter  5: ON PK Fc  1518 Hz Gain +1.90 dB Q 2.99
-Filter  6: ON PK Fc   261 Hz Gain -2.11 dB Q 0.84
-Filter  7: ON PK Fc  2168 Hz Gain -1.53 dB Q 2.89
-Filter  8: ON PK Fc   776 Hz Gain +1.74 dB Q 2.94
-Filter  9: ON PK Fc  5783 Hz Gain -0.85 dB Q 2.94
+Filter  1: ON PK Fc    39 Hz Gain +2.99 dB Q 0.77
+Filter  2: ON PK Fc  3291 Hz Gain +1.77 dB Q 2.99
+Filter  3: ON PK Fc 11389 Hz Gain -1.70 dB Q 0.60
+Filter  4: ON PK Fc  1119 Hz Gain -2.16 dB Q 2.94
+Filter  5: ON PK Fc  1505 Hz Gain +2.09 dB Q 2.97
+Filter  6: ON PK Fc   252 Hz Gain -2.09 dB Q 0.85
+Filter  7: ON PK Fc   758 Hz Gain +1.86 dB Q 2.91
+Filter  8: ON PK Fc  2150 Hz Gain -1.39 dB Q 2.93
+Filter  9: ON PK Fc  1158 Hz Gain -0.97 dB Q 2.96

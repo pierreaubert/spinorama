@@ -125,8 +125,13 @@ def find_best_biquad(
         res["success"] = False
         logger.error("{} bounds {}".format(ve, bounds))
         for i in range(0, 4):
-            if bounds[i][0] >= bounds[i][1]:
-                logger.error("on bound [{}]".format(i))
+            try:
+                if bounds[i][0] >= bounds[i][1]:
+                    logger.error("on bound [{}]".format(i))
+            except ValueError:
+                pass
+            except IndexError:
+                pass
         return False, 0, -1, -1, -1, -1, -1
 
 
@@ -212,6 +217,11 @@ def find_best_peak(
     except ValueError as ve:
         logger.error("{} bounds {}".format(ve, bounds))
         for i in range(0, 4):
-            if bounds[i][0] >= bounds[i][1]:
-                logger.error("on bound [{}]".format(i))
+            try:
+                if bounds[i][0] >= bounds[i][1]:
+                    logger.error("on bound [{}]".format(i))
+            except ValueError:
+                pass
+            except IndexError:
+                pass
         return False, 0, -1, -1, -1, -1, -1
