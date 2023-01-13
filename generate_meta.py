@@ -20,7 +20,7 @@
 """
 usage: generate_meta.py [--help] [--version] [--log-level=<level>]\
     [--metadata=<metadata>] [--parse-max=<max>] [--use-cache=<cache>]\
-    [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>]\
+    [--morigin=<morigin>] [--speaker=<speaker>] [--mversion=<mversion>]\
     [--mformat=<mformat>]\
     [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
     [--smoke-test=<algo>]
@@ -32,8 +32,8 @@ Options:
   --metadata=<metadata> metadata file to use (default is ./datas/metadata.py)
   --smoke-test=<algo> run a few speakers only (choice are random or default)
   --parse-max=<max> for debugging, set a max number of speakers to look at
-  --origin=<origin> restrict to a specific origin, usefull for debugging
   --speaker=<speaker> restrict to a specific speaker, usefull for debugging
+  --morigin=<morigin> restrict to a specific origin, usefull for debugging
   --mversion=<mversion> restrict to a specific mversion (for a given origin you can have multiple measurements)
   --mformat=<mformat> restrict to a specific format (klippel, webplotdigitizer, etc)
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
@@ -672,7 +672,6 @@ def dump_metadata(meta):
 def main():
     df = None
     speaker = args["--speaker"]
-    origin = args["--origin"]
     mversion = args["--mversion"]
     morigin = args["--morigin"]
     mformat = args["--mformat"]
@@ -688,15 +687,12 @@ def main():
     custom_ray_init(args)
     steps.append(("ray init", time.perf_counter()))
 
-    if speaker is not None:
-        filters = {
-            "speaker_name": speaker,
-            "origin": morigin,
-            "format": mformat,
-        }
-        df = cache_load(filters=filters, smoke_test=smoke_test)
-    else:
-        df = cache_load(smoke_test=smoke_test)
+    filters = {
+        "speaker_name": speaker,
+        "origin": morigin,
+        "format": mformat,
+    }
+    df = cache_load(filters=filters, smoke_test=smoke_test)
     steps.append(("loaded", time.perf_counter()))
 
     if df is None:

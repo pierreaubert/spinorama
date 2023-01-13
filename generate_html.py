@@ -43,8 +43,8 @@ from generate_common import get_custom_logger, args2level
 
 import spinorama.constant_paths as cpaths
 
-siteprod = "https://pierreaubert.github.io/spinorama"
-sitedev = "http://spinorama.internet-box.ch"
+siteprod = "https://www.spinorama.org"
+sitedev = "https://dev.spinorama.org"
 root = cpaths.CPATH
 
 
