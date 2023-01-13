@@ -73,7 +73,8 @@
   %   else:
     <b>unknown</b>
   %   endif
-  .</li>
+.
+  </li>
   %   if meta[speaker]["measurements"][g_key].get("origin", "?") != "?":
   <li>
   %     if g_key == "misc-sr":
@@ -83,7 +84,7 @@
   %     else:
   Origin of the data is ${meta[speaker]["measurements"][g_key]["origin"]}
   %     endif
-  .</li>
+.</li>
   %   endif
   %   if meta[speaker]["measurements"][g_key].get("format", "?") != "?":
   <li>
@@ -96,8 +97,10 @@
   an ascii file
   %     elif meta[speaker]["measurements"][g_key]["format"] == 'splHVtxt':
   a set of 36 horizontal and 36 vertical measurements
+  %     elif meta[speaker]["measurements"][g_key]["format"] == 'gllHVtxt':
+  a GLL file
   %     endif
-  .</li>
+.</li>
   %   endif
   %   if meta[speaker]["measurements"][g_key].get("extras", "?") != "?":
   <li>
