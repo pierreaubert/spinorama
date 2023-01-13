@@ -12700,6 +12700,72 @@ speakers_info = {
             },
         },
     },
+    "RCF ART 932-A": {
+        "brand": "RCF",
+        "model": "ART 932-A",
+        "type": "active",
+        "price": "1800",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 642,
+                        "width": 370,
+                        "depth": 363,
+                    },
+                    "weight": 18.8,
+                },
+            },
+        },
+    },
+    "RCF ART 935-A": {
+        "brand": "RCF",
+        "model": "ART 935-A",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 717,
+                        "width": 415,
+                        "depth": 410,
+                    },
+                    "weight": 24.2,
+                },
+            },
+        },
+    },
     "RCF ART 945-A": {
         "brand": "RCF",
         "model": "ART 945-A",
@@ -12762,6 +12828,154 @@ speakers_info = {
                 "data acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221107",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 136,
+                    },
+                    "size": {
+                        "height": 890,
+                        "width": 520,
+                        "depth": 632,
+                    },
+                    "weight": 51.0,
+                },
+            },
+        },
+    },
+    "RCF NX 910-A": {
+        "brand": "RCF",
+        "model": "NX 910-A",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 510,
+                        "width": 295,
+                        "depth": 333,
+                    },
+                    "weight": 16.4,
+                },
+            },
+        },
+    },
+    "RCF NX 912-A": {
+        "brand": "RCF",
+        "model": "NX 912-A",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 620,
+                        "width": 362,
+                        "depth": 405,
+                    },
+                    "weight": 20.8,
+                },
+            },
+        },
+    },
+    "RCF NX 915-A": {
+        "brand": "RCF",
+        "model": "NX 915-A",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 705,
+                        "width": 420,
+                        "depth": 451,
+                    },
+                    "weight": 24.1,
+                },
+            },
+        },
+    },
+    "RCF NX 985-A": {
+        "brand": "RCF",
+        "model": "NX 985-A",
+        "type": "active",
+        "price": "1840",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 138,
+                    },
+                    "size": {
+                        "height": 1075,
+                        "width": 461,
+                        "depth": 475,
+                    },
+                    "weight": 45.0,
+                },
             },
         },
     },
