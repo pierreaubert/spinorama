@@ -177,19 +177,47 @@ speakers_info = {
             },
         },
     },
-    "Alcons Audio QRP20": {
+    "Alcons Audio QRP20 90x15": {
         "brand": "Alcons Audio",
-        "model": "QRP20",
+        "model": "QRP20 90x15",
         "type": "passive",
         "price": "",
         "amount": "pair",
         "shape": "columns",
-        "default_measurement": "vendor-pattern-90x15",
+        "default_measurement": "vendor-v2-20230112",
         "measurements": {
-            "vendor-pattern-90x15": {
+            "vendor-v2-20230112": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
                 "data acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {
+                    "psw": "https://www.prosoundweb.com/alcons-introduces-qrp20-pro-ribbon-point-source-column/",
+                    "axp": "https://audioxpress.com/news/alcons-audio-introduces-qrp20-pro-ribbon-column-array",
+                },
+                "review_published": "20230112",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 15,
+                    },
+                    "sensitivity": 99,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 742,
+                        "width": 150,
+                        "depth": 150,
+                    },
+                    "weight": 12,
+                },
+                "data acquisition": gll_data_acquisition_std,
+            },
+            "vendor-v1-20221020": {
+                "origin": "Vendors-Alcons Audio",
+                "format": "splHVtxt",
                 "quality": "high",
                 "reviews": {
                     "psw": "https://www.prosoundweb.com/alcons-introduces-qrp20-pro-ribbon-point-source-column/",
@@ -213,11 +241,56 @@ speakers_info = {
                     },
                     "weight": 12,
                 },
-                "data acquisition": gll_data_acquisition_std,
+                "data acquisition": {
+                    "from": "gll",
+                    "distance": 2,
+                    "signal": "aes 20Hz-20kHz",
+                    "air absorbtion": True,
+                    "resolution": 10,
+                },
             },
-            "vendor-pattern-120x15": {
+        },
+    },
+    "Alcons Audio QRP20 120x15": {
+        "brand": "Alcons Audio",
+        "model": "QRP20 120x15",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "columns",
+        "default_measurement": "vendor-v2-20230112",
+        "measurements": {
+            "vendor-v2-20230112": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
+                "quality": "high",
+                "reviews": {
+                    "psw": "https://www.prosoundweb.com/alcons-introduces-qrp20-pro-ribbon-point-source-column/",
+                    "axp": "https://audioxpress.com/news/alcons-audio-introduces-qrp20-pro-ribbon-column-array",
+                },
+                "review_published": "20230112",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 15,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 742,
+                        "width": 150,
+                        "depth": 150,
+                    },
+                    "weight": 12,
+                },
+                "data acquisition": gll_data_acquisition_std,
+            },
+            "vendor-v1-20221020": {
+                "origin": "Vendors-Alcons Audio",
+                "format": "splHVtxt",
                 "quality": "high",
                 "reviews": {
                     "psw": "https://www.prosoundweb.com/alcons-introduces-qrp20-pro-ribbon-point-source-column/",
@@ -241,7 +314,13 @@ speakers_info = {
                     },
                     "weight": 12,
                 },
-                "data acquisition": gll_data_acquisition_std,
+                "data acquisition": {
+                    "from": "gll",
+                    "distance": 2,
+                    "signal": "aes 20Hz-20kHz",
+                    "air absorbtion": True,
+                    "resolution": 10,
+                },
             },
         },
     },
@@ -2047,6 +2126,7 @@ speakers_info = {
         },
     },
     "Danley SH-Mini": {
+        "skip": True,
         "brand": "Danley",
         "model": "SH-Mini",
         "type": "passive",
@@ -2304,6 +2384,7 @@ speakers_info = {
         },
     },
     "DAS Audio Vantec 20A": {
+        "skip": True,
         "brand": "DAS Audio",
         "model": "Vantec 20A",
         "type": "active",
@@ -10008,7 +10089,7 @@ speakers_info = {
             },
             "vendor-v1-20220915": {
                 "origin": "Vendors-Meyer Sound",
-                "format": "gllHVtxt",
+                "format": "splHVtxt",
                 "review_published": "20220915",
                 "quality": "medium",
                 "notes": "measured at 2m with air absorbsion on, resolution is 10 degrees",
@@ -10029,6 +10110,13 @@ speakers_info = {
                         "depth": 391,
                     },
                     "weight": 23.6,
+                },
+                "data acquisition": {
+                    "from": "gll",
+                    "distance": 2,
+                    "signal": "aes 20Hz-20kHz",
+                    "air absorbtion": True,
+                    "resolution": 10,
                 },
             },
         },
