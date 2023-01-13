@@ -424,7 +424,7 @@ def graph_results(
     pir_min = max(-10, pir_min)
 
     fig.update_xaxes(generate_xaxis(), row=5)
-    fig.update_yaxes(generate_yaxis_spl(pir_min, pir_max, 1), row=4)
+    fig.update_yaxes(generate_yaxis_spl(pir_min, pir_max, 1), row=5)
 
     # add error distribution
     for t in g_curves["Listening Window"]["hist"]:
