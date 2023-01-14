@@ -12682,6 +12682,105 @@ speakers_info = {
             },
         },
     },
+    "RCF ART 708-A MK4": {
+        "brand": "RCF",
+        "model": "ART 708-A MK4",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x70",
+        "measurements": {
+            "vendor-pattern-90x70": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 70,
+                    },
+                    "SPL": {
+                        "peak": 127,
+                    },
+                    "size": {
+                        "height": 480,
+                        "width": 291,
+                        "depth": 276,
+                    },
+                    "weight": 10.4,
+                },
+            },
+        },
+    },
+    "RCF ART 710-A MK4": {
+        "brand": "RCF",
+        "model": "ART 710-A MK4",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x70",
+        "measurements": {
+            "vendor-pattern-90x70": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 70,
+                    },
+                    "SPL": {
+                        "peak": 129,
+                    },
+                    "size": {
+                        "height": 548,
+                        "width": 340,
+                        "depth": 305,
+                    },
+                    "weight": 14.2,
+                },
+            },
+        },
+    },
+    "RCF ART 712-A MK4": {
+        "brand": "RCF",
+        "model": "ART 712-A MK4",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 129,
+                    },
+                    "size": {
+                        "height": 637,
+                        "width": 387,
+                        "depth": 363,
+                    },
+                    "weight": 17.8,
+                },
+            },
+        },
+    },
     "RCF ART 715-A MK4": {
         "brand": "RCF",
         "model": "ART 715-A MK4",
@@ -12697,6 +12796,219 @@ speakers_info = {
                 "data acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221107",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 708,
+                        "width": 437,
+                        "depth": 389,
+                    },
+                    "weight": 19.6,
+                },
+            },
+        },
+    },
+    "RCF ART 725-A MK4": {
+        "brand": "RCF",
+        "model": "ART 725-A MK4",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 708,
+                        "width": 437,
+                        "depth": 389,
+                    },
+                    "weight": 19.6,
+                },
+            },
+        },
+    },
+    "RCF ART 732-A MK4": {
+        "brand": "RCF",
+        "model": "ART 732-A MK4",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 637,
+                        "width": 384,
+                        "depth": 363,
+                    },
+                    "weight": 17.8,
+                },
+            },
+        },
+    },
+    "RCF ART 735-A MK4": {
+        "brand": "RCF",
+        "model": "ART 735-A MK4",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 708,
+                        "width": 437,
+                        "depth": 389,
+                    },
+                    "weight": 21.4,
+                },
+            },
+        },
+    },
+    "RCF ART 745-A MK4": {
+        "brand": "RCF",
+        "model": "ART 745-A MK4",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 708,
+                        "width": 437,
+                        "depth": 389,
+                    },
+                    "weight": 18.8,
+                },
+            },
+        },
+    },
+    "RCF ART 910-A": {
+        "brand": "RCF",
+        "model": "ART 910-A",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 572,
+                        "width": 330,
+                        "depth": 310,
+                    },
+                    "weight": 15.8,
+                },
+            },
+        },
+    },
+    "RCF ART 912-A": {
+        "brand": "RCF",
+        "model": "ART 912-A",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 642,
+                        "width": 370,
+                        "depth": 363,
+                    },
+                    "weight": 19.0,
+                },
             },
         },
     },
@@ -12721,7 +13033,7 @@ speakers_info = {
                         "vertical": 60,
                     },
                     "SPL": {
-                        "peak": 132,
+                        "peak": 131,
                     },
                     "size": {
                         "height": 642,
@@ -12737,7 +13049,7 @@ speakers_info = {
         "brand": "RCF",
         "model": "ART 935-A",
         "type": "active",
-        "price": "",
+        "price": "2030",
         "amount": "pair",
         "shape": "liveportable",
         "default_measurement": "vendor-pattern-100x60",
@@ -12884,7 +13196,7 @@ speakers_info = {
         "brand": "RCF",
         "model": "NX 912-A",
         "type": "active",
-        "price": "",
+        "price": "899",
         "amount": "each",
         "shape": "liveportable",
         "default_measurement": "vendor-pattern-100x60",
@@ -14256,6 +14568,40 @@ speakers_info = {
             },
         },
     },
+    "Theory Audio SB25": {
+        "brand": "Theory Audio",
+        "model": "SB25",
+        "type": "active",
+        "price": "",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-pattern-120x120",
+        "measurements": {
+            "vendor-pattern-120x120": {
+                "origin": "Vendors-Theory Audio",
+                "format": "gllHVtxt",
+                "quality": "high",
+                "review_published": "20230115",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 120,
+                    },
+                    "sensitivity": 94,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 117,
+                    },
+                    "size": {
+                        "height": 546,
+                        "width": 243,
+                        "depth": 96,
+                    },
+                    "weight": 11,
+                },
+                "data acquisition": gll_data_acquisition_std,
+            },
+        },
+    },
     "Totem Acoustics Rainmaker": {
         "brand": "Totem Acoustics",
         "model": "Rainmaker",
@@ -15335,6 +15681,13 @@ origins_info = {
         "logo": "docs/metadata/seeburg.png",
         "logo-small": "docs/metadata/seeburg.png",
         "url": "https://www.seeburg.net",
+    },
+    "Vendors-Theory Audio": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.theoryprofessional.com",
     },
     "Vendors-Wharfedale Pro": {
         "min hz": 20,
