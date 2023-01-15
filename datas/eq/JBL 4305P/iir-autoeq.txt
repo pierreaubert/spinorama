@@ -1,16 +1,16 @@
 EQ for JBL 4305P computed from ErinsAudioCorner data
-Preference Score 5.57 with EQ 6.19
+Preference Score 5.57 with EQ 6.22
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:05:14
+Dated: 2023-01-15-09:25:00
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    29 Hz Gain +2.97 dB Q 1.23
-Filter  2: ON PK Fc  2962 Hz Gain -1.49 dB Q 0.05
-Filter  3: ON PK Fc  2091 Hz Gain +0.70 dB Q 1.38
-Filter  4: ON PK Fc 15857 Hz Gain -1.48 dB Q 0.40
-Filter  5: ON PK Fc  2141 Hz Gain +0.69 dB Q 1.83
-Filter  6: ON PK Fc    89 Hz Gain -1.38 dB Q 2.00
-Filter  7: ON PK Fc 10448 Hz Gain -0.53 dB Q 2.83
-Filter  8: ON PK Fc  1265 Hz Gain -1.15 dB Q 3.00
-Filter  9: ON PK Fc   587 Hz Gain +0.96 dB Q 1.35
+Filter  1: ON PK Fc    29 Hz Gain +2.99 dB Q 1.45
+Filter  2: ON PK Fc  4282 Hz Gain -1.90 dB Q 0.05
+Filter  3: ON PK Fc  2134 Hz Gain +0.95 dB Q 1.69
+Filter  4: ON PK Fc 15551 Hz Gain -1.47 dB Q 0.43
+Filter  5: ON PK Fc   619 Hz Gain +0.91 dB Q 1.86
+Filter  6: ON PK Fc  2103 Hz Gain +0.95 dB Q 2.96
+Filter  7: ON PK Fc 10405 Hz Gain -0.69 dB Q 2.73
+Filter  8: ON PK Fc   105 Hz Gain -1.29 dB Q 1.26
+Filter  9: ON PK Fc  1263 Hz Gain -1.16 dB Q 3.00

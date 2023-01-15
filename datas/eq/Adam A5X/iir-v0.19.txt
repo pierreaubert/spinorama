@@ -1,0 +1,15 @@
+EQ for Adam A5X computed from ASR data
+Preference Score 4.34 with EQ 4.93
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:03:59
+
+Preamp: -3.1 dB
+
+Filter  1: ON LS Fc    53 Hz Gain +3.00 dB
+Filter  2: ON PK Fc   111 Hz Gain -3.08 dB Q 1.67
+Filter  3: ON PK Fc  6054 Hz Gain -1.78 dB Q 1.03
+Filter  4: ON PK Fc  2084 Hz Gain +1.40 dB Q 2.94
+Filter  5: ON PK Fc   656 Hz Gain -0.97 dB Q 1.66
+Filter  6: ON PK Fc  3598 Hz Gain -0.51 dB Q 2.87
+Filter  7: ON PK Fc 10599 Hz Gain -0.50 dB Q 2.41
+Filter  8: ON PK Fc 15934 Hz Gain +0.74 dB Q 0.52

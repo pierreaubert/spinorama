@@ -1,16 +1,16 @@
 EQ for RCF ART 932-A computed from Vendors-RCF data
-Preference Score 3.22 with EQ 4.20
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-14-21:04:17
+Preference Score 3.22 with EQ 3.99
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:30:15
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    32 Hz Gain +2.99 dB Q 1.30
-Filter  2: ON PK Fc 11692 Hz Gain -3.64 dB Q 1.24
-Filter  3: ON PK Fc  2423 Hz Gain +1.71 dB Q 1.41
-Filter  4: ON PK Fc   810 Hz Gain +1.88 dB Q 2.98
-Filter  5: ON PK Fc   101 Hz Gain -3.74 dB Q 1.63
-Filter  6: ON PK Fc   267 Hz Gain -1.82 dB Q 2.46
-Filter  7: ON PK Fc  7750 Hz Gain -0.98 dB Q 2.46
-Filter  8: ON PK Fc 13884 Hz Gain -1.31 dB Q 2.95
-Filter  9: ON PK Fc  1037 Hz Gain -0.51 dB Q 2.75
+Filter  1: ON PK Fc    33 Hz Gain +2.98 dB Q 1.41
+Filter  2: ON PK Fc  9409 Hz Gain -3.21 dB Q 1.27
+Filter  3: ON PK Fc   100 Hz Gain -3.92 dB Q 1.48
+Filter  4: ON PK Fc 13931 Hz Gain -1.07 dB Q 2.98
+Filter  5: ON PK Fc   270 Hz Gain -2.21 dB Q 2.49
+Filter  6: ON PK Fc 15987 Hz Gain +1.53 dB Q 0.74
+Filter  7: ON PK Fc  2420 Hz Gain +0.53 dB Q 1.70
+Filter  8: ON PK Fc   718 Hz Gain +0.54 dB Q 2.85
+Filter  9: ON PK Fc 13761 Hz Gain -2.13 dB Q 2.85

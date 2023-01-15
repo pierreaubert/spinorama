@@ -1,16 +1,16 @@
 EQ for Dutch Dutch 8C computed from ErinsAudioCorner data
 Preference Score 7.29 with EQ 7.87
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:04:09
+Dated: 2023-01-15-09:23:45
 
-Preamp: -1.9 dB
+Preamp: -1.8 dB
 
-Filter  1: ON PK Fc    41 Hz Gain -2.41 dB Q 1.08
-Filter  2: ON PK Fc  1493 Hz Gain +1.71 dB Q 1.24
-Filter  3: ON PK Fc 11713 Hz Gain -1.09 dB Q 0.93
-Filter  4: ON PK Fc   365 Hz Gain -0.83 dB Q 2.62
-Filter  5: ON PK Fc  6673 Hz Gain -0.57 dB Q 2.93
-Filter  6: ON PK Fc 14860 Hz Gain -0.51 dB Q 2.90
-Filter  7: ON PK Fc 14313 Hz Gain -0.51 dB Q 2.97
-Filter  8: ON PK Fc   789 Hz Gain -0.54 dB Q 2.82
-Filter  9: ON PK Fc  7118 Hz Gain -0.50 dB Q 2.51
+Filter  1: ON PK Fc    41 Hz Gain -2.46 dB Q 1.10
+Filter  2: ON PK Fc  1514 Hz Gain +1.62 dB Q 1.12
+Filter  3: ON PK Fc 11299 Hz Gain -1.01 dB Q 0.84
+Filter  4: ON PK Fc   409 Hz Gain -0.78 dB Q 2.96
+Filter  5: ON PK Fc 14232 Hz Gain -0.54 dB Q 2.96
+Filter  6: ON PK Fc  6925 Hz Gain -0.53 dB Q 2.99
+Filter  7: ON PK Fc 14444 Hz Gain -0.51 dB Q 2.80
+Filter  8: ON PK Fc    82 Hz Gain -0.92 dB Q 2.89
+Filter  9: ON PK Fc 15713 Hz Gain +0.50 dB Q 0.18

@@ -1,12 +1,12 @@
 EQ for Ikea SYMFONISK Speaker Lamp computed from ErinsAudioCorner data
-Preference Score -0.68 with EQ -0.55
+Preference Score -0.68 with EQ -0.56
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:07:41
+Dated: 2023-01-15-09:28:12
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    39 Hz Gain +2.99 dB Q 1.21
-Filter  2: ON PK Fc   300 Hz Gain -4.48 dB Q 0.35
-Filter  3: ON PK Fc  2014 Hz Gain -3.35 dB Q 2.80
-Filter  4: ON PK Fc  3781 Hz Gain -0.62 dB Q 2.94
-Filter  5: ON PK Fc   127 Hz Gain -3.19 dB Q 2.60
+Filter  1: ON PK Fc    39 Hz Gain +3.00 dB Q 1.26
+Filter  2: ON PK Fc   305 Hz Gain -4.41 dB Q 0.34
+Filter  3: ON PK Fc  2016 Hz Gain -3.37 dB Q 2.67
+Filter  4: ON PK Fc  3402 Hz Gain -0.68 dB Q 2.61
+Filter  5: ON PK Fc   132 Hz Gain -3.26 dB Q 2.72

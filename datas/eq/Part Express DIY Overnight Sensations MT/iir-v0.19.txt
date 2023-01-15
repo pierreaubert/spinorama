@@ -1,0 +1,16 @@
+EQ for Part Express DIY Overnight Sensations MT computed from ErinsAudioCorner data
+Preference Score 3.48 with EQ 5.34
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:04:11
+
+Preamp: -3.2 dB
+
+Filter  1: ON PK Fc    33 Hz Gain +2.96 dB Q 0.80
+Filter  2: ON PK Fc  1925 Hz Gain -2.01 dB Q 1.13
+Filter  3: ON PK Fc   339 Hz Gain +2.23 dB Q 1.25
+Filter  4: ON PK Fc  7883 Hz Gain +1.59 dB Q 1.58
+Filter  5: ON PK Fc    97 Hz Gain -2.08 dB Q 2.95
+Filter  6: ON PK Fc  2078 Hz Gain -1.87 dB Q 2.58
+Filter  7: ON PK Fc  3672 Hz Gain +1.49 dB Q 2.94
+Filter  8: ON PK Fc  1111 Hz Gain -1.02 dB Q 2.97
+Filter  9: ON PK Fc   624 Hz Gain +0.77 dB Q 2.72

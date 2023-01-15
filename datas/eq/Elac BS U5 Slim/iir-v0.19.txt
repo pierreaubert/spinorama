@@ -1,0 +1,16 @@
+EQ for Elac BS U5 Slim computed from ASR data
+Preference Score 5.07 with EQ 5.66
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:05:20
+
+Preamp: -3.2 dB
+
+Filter  1: ON PK Fc    49 Hz Gain +2.97 dB Q 0.51
+Filter  2: ON PK Fc 14412 Hz Gain +1.54 dB Q 0.13
+Filter  3: ON PK Fc  1830 Hz Gain -1.60 dB Q 2.90
+Filter  4: ON PK Fc 15874 Hz Gain +1.40 dB Q 0.14
+Filter  5: ON PK Fc   175 Hz Gain +1.33 dB Q 2.60
+Filter  6: ON PK Fc   484 Hz Gain +0.51 dB Q 2.92
+Filter  7: ON PK Fc 11232 Hz Gain -1.50 dB Q 3.00
+Filter  8: ON PK Fc   785 Hz Gain -0.69 dB Q 2.82
+Filter  9: ON PK Fc  2227 Hz Gain -0.73 dB Q 2.99

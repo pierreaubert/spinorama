@@ -1,0 +1,16 @@
+EQ for KEF Ci3160RL-THX computed from ErinsAudioCorner data
+Preference Score 5.69 with EQ 6.49
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:06:39
+
+Preamp: -3.2 dB
+
+Filter  1: ON PK Fc    35 Hz Gain +3.00 dB Q 1.61
+Filter  2: ON PK Fc 15835 Hz Gain +0.92 dB Q 1.52
+Filter  3: ON PK Fc 12617 Hz Gain -1.78 dB Q 2.36
+Filter  4: ON PK Fc 15649 Hz Gain +0.91 dB Q 0.91
+Filter  5: ON PK Fc  6408 Hz Gain +0.57 dB Q 2.66
+Filter  6: ON PK Fc   569 Hz Gain +0.98 dB Q 2.48
+Filter  7: ON PK Fc 14361 Hz Gain -2.12 dB Q 2.74
+Filter  8: ON PK Fc    90 Hz Gain -4.66 dB Q 1.95
+Filter  9: ON PK Fc  1651 Hz Gain -0.99 dB Q 2.42

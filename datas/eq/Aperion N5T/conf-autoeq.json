@@ -20,7 +20,7 @@
     "slope_on_axis": 0,
     "slope_listening_window": -0.5,
     "slope_early_reflections": -4,
-    "slope_estimated_inroom": -6.0,
+    "slope_estimated_inroom": -5.5,
     "slope_sound_power": -9,
     "smooth_measurements": true,
     "smooth_window_size": 21,

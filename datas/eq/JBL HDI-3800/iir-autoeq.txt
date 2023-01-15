@@ -1,16 +1,16 @@
 EQ for JBL HDI-3800 computed from ErinsAudioCorner data
-Preference Score 5.94 with EQ 6.36
+Preference Score 5.94 with EQ 6.34
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:06:06
+Dated: 2023-01-15-09:25:54
 
-Preamp: -3.1 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    29 Hz Gain +2.95 dB Q 1.62
-Filter  2: ON PK Fc   104 Hz Gain -2.31 dB Q 1.01
-Filter  3: ON PK Fc 15994 Hz Gain -2.41 dB Q 1.06
-Filter  4: ON PK Fc   706 Hz Gain -1.05 dB Q 2.65
-Filter  5: ON PK Fc 10671 Hz Gain +2.10 dB Q 2.48
-Filter  6: ON PK Fc  1509 Hz Gain +1.19 dB Q 2.97
-Filter  7: ON PK Fc  4560 Hz Gain +0.53 dB Q 2.42
-Filter  8: ON PK Fc 15986 Hz Gain -0.82 dB Q 0.36
-Filter  9: ON PK Fc 13494 Hz Gain +1.08 dB Q 1.90
+Filter  1: ON PK Fc    30 Hz Gain +2.95 dB Q 1.77
+Filter  2: ON PK Fc 15991 Hz Gain -2.53 dB Q 1.26
+Filter  3: ON PK Fc   101 Hz Gain -2.27 dB Q 0.98
+Filter  4: ON PK Fc   708 Hz Gain -1.02 dB Q 2.52
+Filter  5: ON PK Fc 10765 Hz Gain +1.93 dB Q 2.39
+Filter  6: ON PK Fc  1502 Hz Gain +1.21 dB Q 2.97
+Filter  7: ON PK Fc  4616 Hz Gain +0.50 dB Q 2.82
+Filter  8: ON PK Fc 15985 Hz Gain -0.69 dB Q 0.33
+Filter  9: ON PK Fc 13893 Hz Gain +1.07 dB Q 2.24

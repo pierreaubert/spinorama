@@ -1,16 +1,16 @@
 EQ for Klipsch RP-6000F II computed from ErinsAudioCorner data
-Preference Score 5.25 with EQ 6.80
+Preference Score 5.25 with EQ 6.77
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:04:47
+Dated: 2023-01-15-09:24:35
 
-Preamp: -3.2 dB
+Preamp: -2.9 dB
 
-Filter  1: ON LS Fc   292 Hz Gain +3.00 dB
-Filter  2: ON PK Fc  1374 Hz Gain +0.67 dB Q 1.67
-Filter  3: ON PK Fc  4396 Hz Gain -1.02 dB Q 2.14
-Filter  4: ON PK Fc  1421 Hz Gain +0.67 dB Q 2.45
-Filter  5: ON PK Fc  1330 Hz Gain +0.72 dB Q 2.85
-Filter  6: ON PK Fc   222 Hz Gain +0.94 dB Q 2.99
-Filter  7: ON PK Fc   495 Hz Gain -0.66 dB Q 0.82
-Filter  8: ON PK Fc 13099 Hz Gain -1.19 dB Q 2.96
-Filter  9: ON PK Fc 11673 Hz Gain -0.50 dB Q 2.77
+Filter  1: ON LS Fc   250 Hz Gain +2.66 dB
+Filter  2: ON PK Fc  1394 Hz Gain +1.13 dB Q 1.89
+Filter  3: ON PK Fc  7763 Hz Gain -0.99 dB Q 0.44
+Filter  4: ON PK Fc  1504 Hz Gain +1.05 dB Q 1.96
+Filter  5: ON PK Fc 13157 Hz Gain -1.57 dB Q 2.98
+Filter  6: ON PK Fc   439 Hz Gain -1.02 dB Q 1.78
+Filter  7: ON PK Fc 15996 Hz Gain +0.76 dB Q 0.32
+Filter  8: ON PK Fc  4015 Hz Gain -1.00 dB Q 2.05
+Filter  9: ON PK Fc   230 Hz Gain +1.07 dB Q 3.00

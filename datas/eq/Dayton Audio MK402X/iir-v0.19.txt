@@ -1,0 +1,16 @@
+EQ for Dayton Audio MK402X computed from ASR data
+Preference Score 3.89 with EQ 5.57
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:05:48
+
+Preamp: -3.2 dB
+
+Filter  1: ON PK Fc    36 Hz Gain +2.97 dB Q 0.82
+Filter  2: ON PK Fc 11562 Hz Gain -2.25 dB Q 0.25
+Filter  3: ON PK Fc   165 Hz Gain -2.49 dB Q 1.61
+Filter  4: ON PK Fc  4968 Hz Gain -0.97 dB Q 2.92
+Filter  5: ON PK Fc  1769 Hz Gain +1.04 dB Q 1.75
+Filter  6: ON PK Fc  8402 Hz Gain +0.52 dB Q 2.91
+Filter  7: ON PK Fc   737 Hz Gain +0.82 dB Q 2.98
+Filter  8: ON PK Fc   363 Hz Gain +0.51 dB Q 2.88
+Filter  9: ON PK Fc   526 Hz Gain -0.58 dB Q 2.74

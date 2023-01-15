@@ -1,0 +1,13 @@
+EQ for Miller & Kreisel S150 computed from ErinsAudioCorner data
+Preference Score 3.58 with EQ 5.52
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:06:23
+
+Preamp: -3.8 dB
+
+Filter  1: ON PK Fc    67 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON PK Fc  1785 Hz Gain +2.90 dB Q 1.40
+Filter  3: ON PK Fc  7563 Hz Gain -2.03 dB Q 1.04
+Filter  4: ON PK Fc    81 Hz Gain +0.63 dB Q 0.16
+Filter  5: ON PK Fc   651 Hz Gain -0.81 dB Q 2.89
+Filter  6: ON PK Fc 15932 Hz Gain +0.81 dB Q 0.45

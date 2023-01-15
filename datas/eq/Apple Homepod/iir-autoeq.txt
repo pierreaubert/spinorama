@@ -1,8 +1,8 @@
 EQ for Apple Homepod computed from ASR data
-Preference Score 4.95 with EQ 4.95
+Preference Score 4.95 with EQ 4.65
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:07:57
+Dated: 2023-01-15-09:27:25
 
 Preamp: -0.2 dB
 
-Filter  1: ON PK Fc    36 Hz Gain -1.60 dB Q 0.84
+Filter  1: ON LS Fc  9559 Hz Gain -3.00 dB

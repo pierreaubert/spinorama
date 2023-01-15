@@ -1,0 +1,15 @@
+EQ for Mcintosh XR50 computed from ErinsAudioCorner data
+Preference Score 4.82 with EQ 6.37
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:03:56
+
+Preamp: -3.2 dB
+
+Filter  1: ON PK Fc    30 Hz Gain +2.96 dB Q 1.59
+Filter  2: ON PK Fc  9929 Hz Gain -3.04 dB Q 0.73
+Filter  3: ON PK Fc    85 Hz Gain -2.96 dB Q 1.65
+Filter  4: ON PK Fc   379 Hz Gain -1.04 dB Q 2.22
+Filter  5: ON PK Fc  2238 Hz Gain +1.22 dB Q 2.33
+Filter  6: ON PK Fc  6647 Hz Gain -0.98 dB Q 2.95
+Filter  7: ON PK Fc  4145 Hz Gain +1.18 dB Q 2.96
+Filter  8: ON PK Fc 10285 Hz Gain +0.81 dB Q 2.88

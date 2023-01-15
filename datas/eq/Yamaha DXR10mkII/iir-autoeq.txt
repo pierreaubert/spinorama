@@ -1,16 +1,16 @@
 EQ for Yamaha DXR10mkII computed from Vendors-Yamaha data
-Preference Score 3.04 with EQ 3.64
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-14-21:07:23
+Preference Score 3.04 with EQ 3.68
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:33:31
 
-Preamp: -2.9 dB
+Preamp: -3.2 dB
 
-Filter  1: ON HS Fc  1739 Hz Gain +1.75 dB
-Filter  2: ON PK Fc   125 Hz Gain -4.07 dB Q 2.95
-Filter  3: ON PK Fc  9712 Hz Gain -1.22 dB Q 2.96
-Filter  4: ON PK Fc  1429 Hz Gain -1.30 dB Q 2.89
-Filter  5: ON PK Fc  2275 Hz Gain +1.10 dB Q 2.83
-Filter  6: ON PK Fc   560 Hz Gain +1.16 dB Q 1.81
-Filter  7: ON PK Fc 15311 Hz Gain +1.02 dB Q 1.79
-Filter  8: ON PK Fc  2311 Hz Gain +0.90 dB Q 2.36
-Filter  9: ON PK Fc  3128 Hz Gain -2.96 dB Q 2.98
+Filter  1: ON PK Fc    35 Hz Gain +2.99 dB Q 0.86
+Filter  2: ON PK Fc 12991 Hz Gain +2.01 dB Q 0.21
+Filter  3: ON PK Fc  2241 Hz Gain +2.41 dB Q 2.98
+Filter  4: ON PK Fc   124 Hz Gain -4.71 dB Q 2.49
+Filter  5: ON PK Fc  1391 Hz Gain -2.09 dB Q 2.66
+Filter  6: ON PK Fc  9997 Hz Gain -1.74 dB Q 1.90
+Filter  7: ON PK Fc    65 Hz Gain +0.71 dB Q 1.60
+Filter  8: ON PK Fc   584 Hz Gain +0.88 dB Q 1.75
+Filter  9: ON PK Fc   186 Hz Gain -1.73 dB Q 2.93
