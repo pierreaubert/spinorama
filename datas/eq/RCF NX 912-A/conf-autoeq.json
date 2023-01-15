@@ -13,7 +13,7 @@
     "freq_mean_min": 100,
     "freq_mean_max": 300,
     "curve_names": [
-        "Estimated In-Room Response"
+        "Listening Window"
     ],
     "target_min_freq": 51.5,
     "target_max_freq": 16000,
@@ -36,6 +36,6 @@
     "MIN_DBGAIN": 0.5,
     "MAX_DBGAIN": 3,
     "MIN_Q": 0.05,
-    "MAX_Q": 3.0,
+    "MAX_Q": 3,
     "second_optimiser": false
 }

@@ -1,16 +1,16 @@
 EQ for Alcons Audio SR9 computed from Vendors-Alcons Audio data
-Preference Score 2.56 with EQ 4.20
+Preference Score 2.37 with EQ 4.43
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-12-18:03:21
+Dated: 2023-01-14-21:02:22
 
 Preamp: -4.5 dB
 
-Filter  1: ON LS Fc   159 Hz Gain +3.00 dB
-Filter  2: ON PK Fc  4659 Hz Gain -2.24 dB Q 2.94
-Filter  3: ON PK Fc  2474 Hz Gain +2.32 dB Q 2.96
-Filter  4: ON PK Fc 10064 Hz Gain -1.66 dB Q 2.82
-Filter  5: ON PK Fc  1540 Hz Gain -0.56 dB Q 2.97
-Filter  6: ON LS Fc   804 Hz Gain +0.73 dB
-Filter  7: ON PK Fc   570 Hz Gain -0.85 dB Q 0.38
-Filter  8: ON PK Fc   981 Hz Gain +1.35 dB Q 2.97
-Filter  9: ON LS Fc   400 Hz Gain +0.59 dB
+Filter  1: ON LS Fc   153 Hz Gain +2.99 dB
+Filter  2: ON PK Fc 10054 Hz Gain -1.86 dB Q 0.61
+Filter  3: ON PK Fc  2479 Hz Gain +2.17 dB Q 2.95
+Filter  4: ON PK Fc   221 Hz Gain -2.18 dB Q 2.95
+Filter  5: ON PK Fc  4369 Hz Gain -1.47 dB Q 2.89
+Filter  6: ON PK Fc  4325 Hz Gain -0.82 dB Q 2.91
+Filter  7: ON PK Fc  6733 Hz Gain +0.70 dB Q 2.05
+Filter  8: ON PK Fc  1524 Hz Gain -0.83 dB Q 2.65
+Filter  9: ON PK Fc   120 Hz Gain +2.28 dB Q 2.97

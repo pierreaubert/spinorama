@@ -1,6 +1,6 @@
 EQ for JBL Control HST V2 computed from Vendors-JBL data
-Preference Score 7.40 with EQ 7.40
+Preference Score 7.33 with EQ 7.33
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-12-18:02:10
+Dated: 2023-01-14-21:04:39
 
 Preamp: 0.0 dB

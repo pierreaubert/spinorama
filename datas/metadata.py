@@ -12716,6 +12716,7 @@ speakers_info = {
         },
     },
     "RCF ART 710-A MK4": {
+        "skip": True,  # missing gll file on website
         "brand": "RCF",
         "model": "ART 710-A MK4",
         "type": "active",

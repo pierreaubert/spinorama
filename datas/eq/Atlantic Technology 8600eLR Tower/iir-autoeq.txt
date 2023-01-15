@@ -1,16 +1,16 @@
 EQ for Atlantic Technology 8600eLR Tower computed from ErinsAudioCorner data
-Preference Score 3.0 with EQ 4.8
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-03-23:25:17
+Preference Score 3.00 with EQ 4.49
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:07:51
 
-Preamp: -3.4 dB
+Preamp: -4.0 dB
 
-Filter  1: ON PK Fc  5507 Hz Gain -2.99 dB Q 1.22
-Filter  2: ON PK Fc  1433 Hz Gain +2.99 dB Q 2.52
-Filter  3: ON PK Fc   387 Hz Gain -1.72 dB Q 1.95
-Filter  4: ON PK Fc  4774 Hz Gain -1.92 dB Q 2.90
-Filter  5: ON LS Fc  2513 Hz Gain +1.14 dB
-Filter  6: ON PK Fc   633 Hz Gain -1.72 dB Q 0.59
-Filter  7: ON PK Fc  3168 Hz Gain +1.07 dB Q 2.99
-Filter  8: ON PK Fc  9147 Hz Gain -0.88 dB Q 2.96
-Filter  9: ON LS Fc   936 Hz Gain +0.72 dB
+Filter  1: ON PK Fc    37 Hz Gain +2.97 dB Q 0.68
+Filter  2: ON PK Fc  1461 Hz Gain +1.88 dB Q 1.13
+Filter  3: ON PK Fc  5052 Hz Gain -2.31 dB Q 2.28
+Filter  4: ON PK Fc 15947 Hz Gain +1.89 dB Q 0.68
+Filter  5: ON PK Fc  1414 Hz Gain +1.88 dB Q 2.38
+Filter  6: ON PK Fc  5338 Hz Gain -1.19 dB Q 2.24
+Filter  7: ON PK Fc   116 Hz Gain -1.83 dB Q 2.68
+Filter  8: ON PK Fc   383 Hz Gain -1.48 dB Q 2.87
+Filter  9: ON PK Fc  3019 Hz Gain +1.44 dB Q 3.00

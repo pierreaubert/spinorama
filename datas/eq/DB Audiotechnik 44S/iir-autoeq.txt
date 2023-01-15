@@ -1,16 +1,9 @@
 EQ for DB Audiotechnik 44S computed from Vendors-DB Audiotechnik data
-Preference Score 3.46 with EQ 4.19
+Preference Score 3.44 with EQ 3.88
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-12-18:03:57
+Dated: 2023-01-14-21:04:17
 
-Preamp: -4.8 dB
+Preamp: -3.2 dB
 
-Filter  1: ON LS Fc   169 Hz Gain +3.00 dB
-Filter  2: ON HS Fc  6799 Hz Gain +2.88 dB
-Filter  3: ON PK Fc 10008 Hz Gain -3.88 dB Q 1.99
-Filter  4: ON HS Fc  6788 Hz Gain +1.86 dB
-Filter  5: ON PK Fc 12009 Hz Gain -3.58 dB Q 2.71
-Filter  6: ON PK Fc  3888 Hz Gain +2.13 dB Q 2.97
-Filter  7: ON PK Fc  7777 Hz Gain -2.04 dB Q 2.99
-Filter  8: ON LS Fc   538 Hz Gain +0.64 dB
-Filter  9: ON PK Fc   274 Hz Gain -0.99 dB Q 1.31
+Filter  1: ON LS Fc   164 Hz Gain +3.00 dB
+Filter  2: ON PK Fc 12085 Hz Gain +0.85 dB Q 0.05

@@ -1,14 +1,14 @@
 EQ for ASR Directiva Open Source Speaker computed from ASR data
-Preference Score 6.53 with EQ 6.92
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-04-22:12:20
+Preference Score 6.53 with EQ 6.91
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:05:39
 
-Preamp: -6.7 dB
+Preamp: -3.2 dB
 
-Filter  1: ON HP Fc    21 Hz
-Filter  2: ON PK Fc   164 Hz Gain -1.11 dB Q 0.40
-Filter  3: ON PK Fc  2568 Hz Gain +2.13 dB Q 2.52
-Filter  4: ON PK Fc 12599 Hz Gain -1.46 dB Q 2.15
-Filter  5: ON PK Fc   974 Hz Gain -0.68 dB Q 1.85
-Filter  6: ON PK Fc   379 Hz Gain +0.50 dB Q 2.97
-Filter  7: ON PK Fc  2080 Hz Gain +0.50 dB Q 2.89
+Filter  1: ON PK Fc    27 Hz Gain +2.98 dB Q 1.36
+Filter  2: ON PK Fc 12774 Hz Gain -1.56 dB Q 2.44
+Filter  3: ON PK Fc   202 Hz Gain -1.06 dB Q 0.57
+Filter  4: ON PK Fc  2563 Hz Gain +2.10 dB Q 2.47
+Filter  5: ON PK Fc   970 Hz Gain -0.71 dB Q 1.83
+Filter  6: ON PK Fc 10008 Hz Gain -0.50 dB Q 2.92
+Filter  7: ON PK Fc 15946 Hz Gain +0.50 dB Q 0.32
