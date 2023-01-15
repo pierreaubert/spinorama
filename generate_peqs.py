@@ -128,7 +128,7 @@ from spinorama.auto_optim import optim_multi_steps
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
-VERSION = "0.18"
+VERSION = "0.19"
 
 
 def get3db(spin, db_point):

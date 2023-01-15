@@ -40,74 +40,71 @@ OFFSET_FREQ = 0
 
 
 def find_largest_area(
-    freq: FloatVector1D, curve: List[FloatVector1D], optim_config: dict, count
+    freq: FloatVector1D, curve: List[FloatVector1D], optim_config: dict, count, min_freq
 ) -> Tuple[Literal[-1, 1], int, float]:
-    def largest_area(current_curve, min_freq) -> Tuple[int, float]:
+    def largest_area(current_curve) -> Tuple[int, float]:
         logger.debug("freq {} current_curve {}".format(freq, current_curve))
         found_peaks, _ = sig.find_peaks(current_curve, distance=20)
         if len(found_peaks) == 0:
             return -1, -1
-        logger.debug("found peaks at {}".format(found_peaks))
+        # print("found peaks at {}".format(found_peaks))
         found_widths = sig.peak_widths(current_curve, found_peaks, rel_height=0.1)[0]
-        logger.debug("computed width at {}".format(found_widths))
+        # print("computed width at {}".format(found_widths))
         areas = [(i, current_curve[found_peaks[i]] * found_widths[i]) for i in range(0, len(found_peaks))]
-        logger.debug("areas {}".format(areas))
+        # print("areas {}".format(areas))
         sorted_areas = sorted(areas, key=lambda a: -a[1])
-        logger.debug("sorted {}".format(sorted_areas))
+        # print("sorted {}".format(sorted_areas))
         i = 0
         ipeaks = -1
         while i < len(sorted_areas):
             ipeaks, area = sorted_areas[i]
-            # print('found peak at {} min is {}'.format(found_peaks[ipeaks], min_freq))
             if found_peaks[ipeaks] >= min_freq:
-                break
+                # print('found peak at {} min freq is {} a is {}'.format(found_peaks[ipeaks], min_freq, area))
+                return found_peaks[ipeaks], area
             i += 1
-        if ipeaks == -1:
-            return -1, -1
-        return found_peaks[ipeaks], area
+        return -1, -1
 
-    min_freq = optim_config["target_min_freq"] + count * OFFSET_FREQ
     plus_curve = np.clip(curve, a_min=0, a_max=None)
-    plus_index, plus_areas = largest_area(plus_curve, min_freq)
+    plus_freq, plus_areas = largest_area(plus_curve)
 
-    minus_index, minus_areas = -1, -1.0
+    minus_freq, minus_areas = -1, -1.0
     if optim_config["plus_and_minus"] is True:
         minus_curve = -np.clip(curve, a_min=None, a_max=0)
-        minus_index, minus_areas = largest_area(minus_curve, min_freq)
+        minus_freq, minus_areas = largest_area(minus_curve)
 
-    # logger.debug(
+    # print(
     #    "minus a={} f={} plus a={} f={}".format(
-    #        minus_areas, freq[minus_index], plus_areas, freq[plus_index]
+    #        minus_areas, minus_freq, plus_areas, plus_freq
     #    )
     # )
 
     if minus_areas == -1 and plus_areas == -1:
-        logger.error("No initial freq found")
-        return +1, -1, -1.0
+        logger.warning("No initial freq found")
+        return +1, min_freq * 2
 
     if plus_areas == -1:
-        return -1, minus_index, freq[minus_index]
+        return -1, minus_freq
 
     if minus_areas == -1:
-        return +1, plus_index, freq[plus_index]
+        return +1, plus_freq
 
     if minus_areas > plus_areas:
-        return -1, minus_index, freq[minus_index]
+        return -1, minus_freq
 
-    return +1, plus_index, freq[plus_index]
+    return +1, plus_freq
 
 
 def propose_range_freq(
-    freq: FloatVector1D, local_target: List[FloatVector1D], optim_config: dict, count: int
+    freq: FloatVector1D, local_target: List[FloatVector1D], optim_config: dict, count: int, min_freq: float
 ) -> Tuple[Literal[-1, 1], float, Vector]:
-    sign, _, init_freq = find_largest_area(freq, local_target, optim_config, count)
+    sign, init_freq = find_largest_area(freq, local_target, optim_config, count, min_freq)
     scale = optim_config["elastic"]
     logger.debug("Scale={} init_freq {}".format(scale, init_freq))
     init_freq_min = max(init_freq * scale, optim_config["target_min_freq"] + OFFSET_FREQ * count)
     init_freq_max = min(
         max(init_freq_min + OFFSET_FREQ * count, (init_freq_min + OFFSET_FREQ * count) * 2), optim_config["target_max_freq"]
     )
-    logger.debug("Freq min {}Hz peak {}Hz max {}Hz".format(init_freq_min, init_freq, init_freq_max))
+    # print("Freq min {}Hz peak {}Hz max {}Hz sign={}".format(init_freq_min, init_freq, init_freq_max, sign))
     return (
         sign,
         init_freq,

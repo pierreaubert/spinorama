@@ -171,29 +171,40 @@ def optim_greedy(
         # we are optimizing above target_min_hz on anechoic data
         current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq, optim_config)
 
-        if optim_iter == 0 and optim_config["full_biquad_optim"] is True:
-            # see if a LP can help get some flatness of bass
-            init_freq_range = [optim_config["target_min_freq"] / 2, 16000]  # optim_config["target_min_freq"] * 2]
-            init_dbGain_range = [-3, -2, -1, 0, 1, 2, 3]
-            init_Q_range = [0.5, 1, 2, 3]
-            biquad_range = [0, 1, 5, 6]  # LP, HP, LS, HS
-        else:
-            # greedy strategy: look for lowest & highest peak
-            if optim_iter == 0:
+        sign = None
+        init_freq = None
+        init_freq_range = None
+        init_dbGain_range = None
+        biquad_range = None
+        if optim_iter == 0:
+            if optim_config["full_biquad_optim"] is True:
+                # see if a LP can help get some flatness of bass
+                init_freq_range = [optim_config["target_min_freq"] / 2, 16000]  # optim_config["target_min_freq"] * 2]
+                init_dbGain_range = [-3, -2, -1, 0, 1, 2, 3]
+                init_Q_range = [0.5, 1, 2, 3]
+                biquad_range = [0, 1, 3, 5, 6]  # LP, HP, LS, HS
+            else:
+                # greedy strategy: look for lowest & highest peak
                 init_freq_range = [optim_config["target_min_freq"] / 2, optim_config["target_min_freq"] * 2]
                 init_dbGain_range = [-3, -2, -1, 0, 1, 2, 3]
                 init_Q_range = [0.5, 1, 2, 3]
                 biquad_range = [3]  # PK
-            else:
-                sign, init_freq, init_freq_range = propose_range_freq(freq, current_auto_target[0], optim_config, optim_iter)
-                init_dbGain_range = propose_range_dbGain(freq, current_auto_target[0], sign, init_freq, optim_config)
-                init_Q_range = propose_range_Q(optim_config)
-                biquad_range = propose_range_biquad(optim_config)
+        else:
+            min_freq = optim_config["target_min_freq"]
+            sign, init_freq, init_freq_range = propose_range_freq(
+                freq, current_auto_target[0], optim_config, optim_iter, min_freq
+            )
+            # don't use the pre computed range
+            init_freq_range = [optim_config["target_min_freq"], optim_config["target_max_freq"]]
+            init_dbGain_range = propose_range_dbGain(freq, current_auto_target[0], sign, init_freq, optim_config)
+            init_Q_range = propose_range_Q(optim_config)
+            biquad_range = propose_range_biquad(optim_config)
+            biquad_range = [3]
 
         # print(
-        #     "sign {} init_freq {} init_freq_range {} init_q_range {} biquad_range {}".format(
-        #         sign, init_freq, init_freq_range, init_Q_range, biquad_range
-        #     )
+        #    "sign {} init_freq {} init_freq_range {} init_q_range {} biquad_range {}".format(
+        #        sign, init_freq, init_freq_range, init_Q_range, biquad_range
+        #    )
         # )
 
         if optim_config["full_biquad_optim"] is True:

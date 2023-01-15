@@ -50,6 +50,15 @@ def short_curve_name(name):
     return name
 
 
+def print_freq(f):
+    if f < 1000:
+        return "{}Hz".format(int(f))
+    elif int(f) % 1000 == 0:
+        return "{}kHz".format(f // 1000)
+    else:
+        return "{:0.1f}kHz".format(f / 1000)
+
+
 def graph_eq(freq, peq, domain, title):
     df = pd.DataFrame({"Freq": freq})
     for i, (pos, eq) in enumerate(peq):
@@ -227,8 +236,16 @@ def graph_results(
         ]
 
         # recompute over midrange only (300Hz--5kHz)
-        noeq_slope, noeq_hist, noeq_max = compute_statistics(data, which_curve, 250, 10000, 300, 5000)
-        auto_slope, auto_hist, auto_max = compute_statistics(data_auto, which_curve, 250, 10000, 300, 5000)
+        target_min_freq = optim_config["target_min_freq"]
+        target_max_freq = optim_config["target_max_freq"]
+        midrange_min_freq = 300
+        midrange_max_freq = 5000
+        noeq_slope, noeq_hist, noeq_max = compute_statistics(
+            data, which_curve, target_min_freq, target_max_freq, midrange_min_freq, midrange_max_freq
+        )
+        auto_slope, auto_hist, auto_max = compute_statistics(
+            data_auto, which_curve, target_min_freq, target_max_freq, midrange_min_freq, midrange_max_freq
+        )
         noeq_counts, noeq_bins = noeq_hist
         auto_counts, auto_bins = auto_hist
         bins = sorted([s for s in set(noeq_bins).union(auto_bins)])
@@ -292,8 +309,12 @@ def graph_results(
             g_curves["Listening Window"]["auto_title"],
             g_curves["Estimated In-Room Response"]["noeq_title"],
             g_curves["Estimated In-Room Response"]["auto_title"],
-            "Distribution of errors of {}".format(short_curve_name(optim_config["curve_names"][0])),
-            "Distribution of errors of {} (300Hz-5kHz)".format(short_curve_name(optim_config["curve_names"][0])),
+            "Distribution of errors of {} ({}-{})".format(
+                short_curve_name(optim_config["curve_names"][0]), print_freq(target_min_freq), print_freq(target_max_freq)
+            ),
+            "Distribution of errors of {} ({}-{})".format(
+                short_curve_name(optim_config["curve_names"][0]), print_freq(midrange_min_freq), print_freq(midrange_max_freq)
+            ),
         ),
         row_heights=[0.15, 0.25, 0.15, 0.15, 0.15, 0.15],
         horizontal_spacing=0.075,
