@@ -846,6 +846,26 @@ speakers_info = {
             },
         },
     },
+    "Ascend Acoustics Sierra Titan": {
+        "brand": "Ascend Acoustics",
+        "model": "Sierra Titan",
+        "type": "passive",
+        "price": "3000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor-dome-tweeter",
+        "measurements": {
+            "vendor-dome-tweeter": {
+                "origin": "Vendors-Ascend Acoustics",
+                "format": "splHVtxt",
+                "quality": "high",
+                "reviews": {
+                    "vendor": "https://ascendacoustics.com/collections/sierra-series-pairs/products/sierra-tower-v2-pair?variant=40596422754358",
+                },
+                "review_published": "20230118",
+            },
+        },
+    },
     "ASR Directiva Open Source Speaker": {
         "brand": "ASR",
         "model": "Directiva Open Source Speaker",
@@ -3801,6 +3821,332 @@ speakers_info = {
                 "symmetry": "horizontal",
                 "review": "https://www.princeton.edu/3D3A/Directivity.html",
                 "review_published": "20151001",
+            },
+        },
+    },
+    "EV EVC-1082": {
+        "brand": "EV",
+        "model": "EVC-1082",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230117",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 91,
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 120,
+                    },
+                    "size": {
+                        "height": 492,
+                        "width": 248,
+                        "depth": 277,
+                    },
+                    "weight": 11.2,
+                },
+            },
+        },
+    },
+    "EV EVC-1122": {
+        "brand": "EV",
+        "model": "EVC-1122",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x55",
+        "measurements": {
+            "vendor-pattern-90x55": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230118",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 55,
+                    },
+                    "sensitivity": 95,
+                    "impedance": 7,
+                    "SPL": {
+                        "peak": 126,
+                    },
+                    "size": {
+                        "height": 616,
+                        "width": 395,
+                        "depth": 401,
+                    },
+                    "weight": 20.3,
+                },
+            },
+        },
+    },
+    "EV EVC-1152": {
+        "brand": "EV",
+        "model": "EVC-1152",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x55",
+        "measurements": {
+            "vendor-pattern-90x55": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230118",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 55,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 7,
+                    "SPL": {
+                        "peak": 129,
+                    },
+                    "size": {
+                        "height": 684,
+                        "width": 433,
+                        "depth": 451,
+                    },
+                    "weight": 27.7,
+                },
+            },
+        },
+    },
+    "EV MFX-12MC": {
+        "brand": "EV",
+        "model": "MFX-12MC",
+        "type": "active",
+        "price": "6000",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {  # FOH FR Biamp
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230115",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 500,
+                        "width": 420,
+                        "depth": 298,
+                    },
+                    "weight": 19,
+                },
+            },
+            "vendor-pattern-40x60": {  # MON FR Biamp
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230115",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 40,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 500,
+                        "width": 420,
+                        "depth": 298,
+                    },
+                    "weight": 19,
+                },
+            },
+        },
+    },
+    "EV MFX-15MC": {
+        "brand": "EV",
+        "model": "MFX-15MC",
+        "type": "active",
+        "price": "6000",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {  # FOH FR BiAmp
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230115",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 600,
+                        "width": 500,
+                        "depth": 339,
+                    },
+                    "weight": 23,
+                },
+            },
+            "vendor-pattern-40x60": {  # MON FR BiAmp
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230115",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 40,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 600,
+                        "width": 500,
+                        "depth": 339,
+                    },
+                    "weight": 23,
+                },
+            },
+        },
+    },
+    "EV MTS-4153": {
+        "brand": "EV",
+        "model": "MTS-4153",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230118",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 151,
+                    },
+                    "size": {
+                        "height": 1092,
+                        "width": 1092,
+                        "depth": 1096,
+                    },
+                    "weight": 160,
+                },
+            },
+            "vendor-pattern-40x30": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230118",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 40,
+                        "vertical": 30,
+                    },
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 151,
+                    },
+                    "size": {
+                        "height": 1092,
+                        "width": 1092,
+                        "depth": 1491,
+                    },
+                    "weight": 196,
+                },
+            },
+        },
+    },
+    "EV MTS-6154": {
+        "brand": "EV",
+        "model": "MTS-6154",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230118",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 151,
+                    },
+                    "size": {
+                        "height": 1092,
+                        "width": 1092,
+                        "depth": 1096,
+                    },
+                    "weight": 160,
+                },
+            },
+            "vendor-pattern-40x30": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230118",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 40,
+                        "vertical": 30,
+                    },
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 151,
+                    },
+                    "size": {
+                        "height": 1092,
+                        "width": 1092,
+                        "depth": 1494,
+                    },
+                    "weight": 213,
+                },
             },
         },
     },
@@ -12720,7 +13066,7 @@ speakers_info = {
         "brand": "RCF",
         "model": "ART 710-A MK4",
         "type": "active",
-        "price": "",
+        "price": "469",
         "amount": "each",
         "shape": "liveportable",
         "default_measurement": "vendor-pattern-90x70",
@@ -12753,7 +13099,7 @@ speakers_info = {
         "brand": "RCF",
         "model": "ART 712-A MK4",
         "type": "active",
-        "price": "",
+        "price": "509",
         "amount": "each",
         "shape": "liveportable",
         "default_measurement": "vendor-pattern-90x60",
@@ -12885,7 +13231,7 @@ speakers_info = {
         "brand": "RCF",
         "model": "ART 735-A MK4",
         "type": "active",
-        "price": "",
+        "price": "888",
         "amount": "each",
         "shape": "liveportable",
         "default_measurement": "vendor-pattern-90x60",
@@ -12918,7 +13264,7 @@ speakers_info = {
         "brand": "RCF",
         "model": "ART 745-A MK4",
         "type": "active",
-        "price": "",
+        "price": "1245",
         "amount": "each",
         "shape": "liveportable",
         "default_measurement": "vendor-pattern-90x60",
@@ -12984,8 +13330,8 @@ speakers_info = {
         "brand": "RCF",
         "model": "ART 912-A",
         "type": "active",
-        "price": "",
-        "amount": "pair",
+        "price": "599",
+        "amount": "each",
         "shape": "liveportable",
         "default_measurement": "vendor-pattern-100x60",
         "measurements": {
@@ -13160,11 +13506,77 @@ speakers_info = {
             },
         },
     },
+    "RCF HD 10-A MK5": {
+        "brand": "RCF",
+        "model": "HD 10-A MK5",
+        "type": "active",
+        "price": "469",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230115",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 128,
+                    },
+                    "size": {
+                        "height": 572,
+                        "width": 303,
+                        "depth": 303,
+                    },
+                    "weight": 11.8,
+                },
+            },
+        },
+    },
+    "RCF HD 12-A MK5": {
+        "brand": "RCF",
+        "model": "HD 12-A MK5",
+        "type": "active",
+        "price": "600",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230115",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 647,
+                        "width": 380,
+                        "depth": 380,
+                    },
+                    "weight": 18.3,
+                },
+            },
+        },
+    },
     "RCF NX 910-A": {
         "brand": "RCF",
         "model": "NX 910-A",
         "type": "active",
-        "price": "",
+        "price": "533",
         "amount": "each",
         "shape": "liveportable",
         "default_measurement": "vendor-pattern-100x60",
@@ -14575,9 +14987,9 @@ speakers_info = {
         "type": "active",
         "price": "",
         "shape": "bookshelves",
-        "default_measurement": "vendor-pattern-120x120",
+        "default_measurement": "vendor-pattern-120x40",
         "measurements": {
-            "vendor-pattern-120x120": {
+            "vendor-pattern-120x40": {
                 "origin": "Vendors-Theory Audio",
                 "format": "gllHVtxt",
                 "quality": "high",
@@ -14585,7 +14997,7 @@ speakers_info = {
                 "specifications": {
                     "dispersion": {
                         "horizontal": 120,
-                        "vertical": 120,
+                        "vertical": 40,
                     },
                     "sensitivity": 94,
                     "impedance": 4,
@@ -15373,6 +15785,13 @@ origins_info = {
         "logo": "docs/metadata/dbaudio.png",
         "logo-small": "docs/metadata/dbaudio.png",
         "url": "https://www.dbaudio.com",
+    },
+    "Vendors-EV": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.electrovoice.com",
     },
     "Vendors-Infinity": {
         "min hz": 20,
