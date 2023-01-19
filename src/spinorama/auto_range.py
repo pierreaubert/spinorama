@@ -69,32 +69,41 @@ def find_largest_area(
     zones = compute_non_admissible_freq(peq, min_freq, max_freq)
 
     def largest_area(current_curve) -> Tuple[int, float]:
-        # print('[{}]'.format(', '.join([str(f) for f in current_curve])))
+        print("[{}]".format(", ".join([str(f) for f in current_curve])))
         peaks, _ = sig.find_peaks(current_curve, distance=4)
         if len(peaks) == 0:
-            # print("fla: failed no peaks")
+            print("fla: failed no peaks")
             return -1, -1
-        # print("fla: found peaks at {}".format(peaks))
+        print("fla: found peaks at {}".format(peaks))
         widths = sig.peak_widths(current_curve, peaks)[0]
-        # print("fla: computed width at {}".format(widths))
+        print("fla: computed width at {}".format(widths))
         areas = [
-            (i, np.trapz(current_curve[min(0, peaks[i] - int(widths[i])) : peaks[i] + int(widths[i])]))
+            (
+                i,
+                np.trapz(
+                    current_curve[
+                        max(0, peaks[i] - int(widths[i] // 2)) : min(len(current_curve), peaks[i] + int(widths[i] // 2))
+                    ]
+                ),
+            )
             for i in range(0, len(peaks))
         ]
-        # print("fla: areas {}".format(areas))
+        print("fla: areas {}".format(areas))
         sorted_areas = sorted(areas, key=lambda a: -a[1])
-        # print("fla: sorted areas {}".format(sorted_areas))
+        print("fla: sorted areas {}".format(sorted_areas))
         i = 0
         ipeaks = -1
         while i < len(sorted_areas):
             ipeaks, area = sorted_areas[i]
             f = freq[peaks[ipeaks]]
             if not_in_zones(zones, f) and f < max_freq and f > min_freq:
-                # print("fla: accepted peak at {}hz area {}".format(freq[peaks[ipeaks]], area))
+                print("fla: accepted peak at {}hz area {}".format(freq[peaks[ipeaks]], area))
                 return f, area
+            else:
+                print("fla: rejected peak at {}hz area {}".format(freq[peaks[ipeaks]], area))
             i += 1
-        # print("fla: failed! sorted areas are {}".format(sorted_areas))
-        # print("fla: failed! freqs are {}".format([freq[i] for i in peaks]))
+        print("fla: failed! sorted areas are {}".format(sorted_areas))
+        print("fla: failed! freqs are {}".format([freq[i] for i in peaks]))
         return -1, -1
 
     plus_curve = np.clip(curve, a_min=0, a_max=None)
@@ -105,25 +114,25 @@ def find_largest_area(
         minus_curve = -np.clip(curve, a_min=None, a_max=0)
         minus_freq, minus_areas = largest_area(minus_curve)
 
-    # print("fla: minus a={} f={} plus a={} f={}".format(minus_areas, minus_freq, plus_areas, plus_freq))
+    print("fla: minus a={} f={} plus a={} f={}".format(minus_areas, minus_freq, plus_areas, plus_freq))
 
     if minus_areas == -1 and plus_areas == -1:
-        # print("fla: both plus and minus missed")
+        print("fla: both plus and minus missed")
         return +1, -1
 
     if plus_areas == -1:
-        # print("fla: using minus freq")
+        print("fla: using minus freq")
         return -1, minus_freq
 
     if minus_areas == -1:
-        # print("fla: using plus freq")
+        print("fla: using plus freq")
         return +1, plus_freq
 
     if minus_areas > plus_areas:
-        # print("fla: using min freq")
+        print("fla: using min freq")
         return -1, minus_freq
 
-    # print("fla: using plus freq")
+    print("fla: using plus freq")
     return +1, plus_freq
 
 
