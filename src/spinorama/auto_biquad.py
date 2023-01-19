@@ -202,9 +202,9 @@ def find_best_peak(
             # mutation=(0.5, 1.5),
             # recombination=1.9,
             maxiter=optim_config["maxiter"],
-            atol=0.01,
-            polish=False,
-            integrality=[True, False, False],
+            atol=0.001,
+            polish=True,
+            integrality=[False, False, False],
         )
         logger.info(
             "          optim loss {:2.2f} in {} iter type PK at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(

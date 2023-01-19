@@ -40,3 +40,8 @@ CPATH_DOCS_ASSETS_CSS = "{}/{}".format(CPATH_DOCS_ASSETS, "")
 CPATH_METADATA_JSON = "{}/{}".format(CPATH_DOCS_ASSETS, "metadata.json")
 CPATH_DOCS_SPEAKERS = "{}/{}".format(CPATH_DOCS, "speakers")
 CPATH_DOCS_PICTURES = "{}/{}".format(CPATH_DOCS, "pictures")
+
+# midrange defintion
+MIDRANGE_MIN_FREQ = 300
+MIDRANGE_MAX_FREQ = 5000
+MIDRANGE_FREQ = [MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ]

@@ -438,24 +438,24 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     height = params["height"]
     one_db = (height - 150) / 50
 
-    # add 1.5 dBs zone
-    traces.append(
-        go.Scatter(
-            x=df.Freq,
-            y=line,
-            line=dict(width=3 * one_db, color="#E4FC5B"),
-            opacity=1.0,
-            name="Band ±1.5dB",
-        )
-    )
     # add 3 dBs zone
     traces.append(
         go.Scatter(
             x=df.Freq,
             y=line,
             line=dict(width=6 * one_db, color="#E4FC5B"),
-            opacity=0.8,
+            opacity=0.4,
             name="Band ±3dB",
+        )
+    )
+    # add 1.5 dBs zone
+    traces.append(
+        go.Scatter(
+            x=df.Freq,
+            y=line,
+            line=dict(width=3 * one_db, color="#E4FC5B"),
+            opacity=0.7,
+            name="Band ±1.5dB",
         )
     )
     # add line
