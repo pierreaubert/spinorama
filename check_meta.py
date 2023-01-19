@@ -144,6 +144,10 @@ def sanity_check_version(name, speaker, version):
         "dipole",
         "fullrange",
         "lowcut",
+        # speaker
+        "dome",
+        "ribbon",
+        "tweeter",
         # power
         "action",
         "passive",
