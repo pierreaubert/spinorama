@@ -1,16 +1,16 @@
 EQ for Wharfedale Linton 85th Anniversary computed from ErinsAudioCorner data
-Preference Score 6.03 with EQ 6.50
+Preference Score 6.03 with EQ 6.72
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:25:25
+Dated: 2023-01-18-22:27:02
 
-Preamp: -3.7 dB
+Preamp: -3.3 dB
 
-Filter  1: ON LS Fc 15991 Hz Gain +1.36 dB
-Filter  2: ON PK Fc   130 Hz Gain -1.75 dB Q 1.40
-Filter  3: ON PK Fc  5874 Hz Gain -1.15 dB Q 1.68
-Filter  4: ON PK Fc 15998 Hz Gain +2.95 dB Q 0.70
-Filter  5: ON PK Fc   971 Hz Gain +1.73 dB Q 2.86
-Filter  6: ON PK Fc 10596 Hz Gain -1.63 dB Q 1.42
-Filter  7: ON PK Fc   366 Hz Gain -1.03 dB Q 1.56
-Filter  8: ON PK Fc    39 Hz Gain +2.29 dB Q 1.37
-Filter  9: ON PK Fc    87 Hz Gain -0.50 dB Q 1.23
+Filter  1: ON PK Fc    32 Hz Gain +3.00 dB Q 0.75
+Filter  2: ON PK Fc  6566 Hz Gain -1.57 dB Q 1.39
+Filter  3: ON PK Fc 15157 Hz Gain +1.26 dB Q 0.46
+Filter  4: ON PK Fc   949 Hz Gain +2.22 dB Q 2.40
+Filter  5: ON PK Fc  3104 Hz Gain -0.50 dB Q 0.27
+Filter  6: ON PK Fc   327 Hz Gain -0.50 dB Q 3.00
+Filter  7: ON PK Fc   109 Hz Gain -0.95 dB Q 3.00
+Filter  8: ON PK Fc    53 Hz Gain +0.68 dB Q 3.00
+Filter  9: ON PK Fc 11630 Hz Gain -1.11 dB Q 2.22

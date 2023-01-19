@@ -15,7 +15,7 @@
     "curve_names": [
         "Listening Window"
     ],
-    "target_min_freq": 58.5938,
+    "target_min_freq": 62.2559,
     "target_max_freq": 16000,
     "slope_on_axis": 0,
     "slope_listening_window": -0.5,

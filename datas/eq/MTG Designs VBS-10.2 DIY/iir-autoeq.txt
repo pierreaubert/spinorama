@@ -1,16 +1,16 @@
 EQ for MTG Designs VBS-10.2 DIY computed from Misc data
-Preference Score 5.16 with EQ 5.82
+Preference Score 5.16 with EQ 5.67
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:33:25
+Dated: 2023-01-18-22:29:12
 
-Preamp: -4.5 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    40 Hz Gain +2.98 dB Q 0.50
-Filter  2: ON PK Fc 15879 Hz Gain -2.47 dB Q 2.99
-Filter  3: ON PK Fc 10375 Hz Gain -1.49 dB Q 2.93
-Filter  4: ON PK Fc   131 Hz Gain -1.91 dB Q 2.95
-Filter  5: ON PK Fc 12487 Hz Gain +0.96 dB Q 0.05
-Filter  6: ON PK Fc    72 Hz Gain +0.99 dB Q 2.29
-Filter  7: ON PK Fc    69 Hz Gain +1.21 dB Q 2.90
-Filter  8: ON PK Fc  7408 Hz Gain -0.87 dB Q 1.52
-Filter  9: ON PK Fc 15941 Hz Gain -1.54 dB Q 2.95
+Filter  1: ON PK Fc    40 Hz Gain +3.00 dB Q 0.55
+Filter  2: ON PK Fc 14708 Hz Gain +1.38 dB Q 0.10
+Filter  3: ON PK Fc  2944 Hz Gain +0.50 dB Q 3.00
+Filter  4: ON PK Fc  1217 Hz Gain +0.50 dB Q 2.58
+Filter  5: ON PK Fc   380 Hz Gain -0.50 dB Q 3.00
+Filter  6: ON PK Fc   592 Hz Gain +0.50 dB Q 3.00
+Filter  7: ON PK Fc   130 Hz Gain -1.56 dB Q 3.00
+Filter  8: ON PK Fc  6730 Hz Gain -0.68 dB Q 0.47
+Filter  9: ON PK Fc 16000 Hz Gain -2.15 dB Q 3.00

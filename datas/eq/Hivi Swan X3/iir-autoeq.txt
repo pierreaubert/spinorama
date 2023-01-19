@@ -1,16 +1,16 @@
 EQ for Hivi Swan X3 computed from ASR data
-Preference Score 3.67 with EQ 5.35
+Preference Score 3.67 with EQ 5.18
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:24:35
+Dated: 2023-01-18-22:27:00
 
-Preamp: -3.2 dB
+Preamp: -1.0 dB
 
-Filter  1: ON LS Fc    82 Hz Gain +3.00 dB
-Filter  2: ON PK Fc  4228 Hz Gain -3.65 dB Q 1.06
-Filter  3: ON PK Fc  1093 Hz Gain +1.66 dB Q 2.09
-Filter  4: ON PK Fc   108 Hz Gain -1.09 dB Q 3.00
-Filter  5: ON PK Fc  8404 Hz Gain -0.82 dB Q 2.95
-Filter  6: ON PK Fc  1911 Hz Gain -0.82 dB Q 2.96
-Filter  7: ON PK Fc   221 Hz Gain +2.02 dB Q 2.93
-Filter  8: ON PK Fc 15992 Hz Gain +0.66 dB Q 0.68
-Filter  9: ON PK Fc    71 Hz Gain +0.87 dB Q 3.00
+Filter  1: ON PK Fc  4850 Hz Gain -2.99 dB Q 0.50
+Filter  2: ON PK Fc  1272 Hz Gain +0.60 dB Q 2.99
+Filter  3: ON PK Fc  8345 Hz Gain -0.54 dB Q 0.06
+Filter  4: ON PK Fc   209 Hz Gain +0.82 dB Q 2.93
+Filter  5: ON PK Fc   410 Hz Gain -1.06 dB Q 1.69
+Filter  6: ON PK Fc   626 Hz Gain -0.51 dB Q 2.86
+Filter  7: ON PK Fc   126 Hz Gain -0.92 dB Q 3.00
+Filter  8: ON PK Fc  4107 Hz Gain -0.65 dB Q 2.96
+Filter  9: ON PK Fc  3943 Hz Gain -0.50 dB Q 2.90

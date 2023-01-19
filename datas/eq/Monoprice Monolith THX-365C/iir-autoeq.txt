@@ -1,16 +1,15 @@
 EQ for Monoprice Monolith THX-365C computed from ErinsAudioCorner data
-Preference Score 4.55 with EQ 5.33
+Preference Score 4.55 with EQ 5.49
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:24:36
+Dated: 2023-01-18-22:27:24
 
-Preamp: -3.5 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    39 Hz Gain +2.99 dB Q 0.59
-Filter  2: ON PK Fc   135 Hz Gain -2.98 dB Q 2.99
-Filter  3: ON PK Fc  1113 Hz Gain -0.79 dB Q 2.02
-Filter  4: ON PK Fc  3319 Hz Gain -0.96 dB Q 2.91
-Filter  5: ON PK Fc 15997 Hz Gain +2.44 dB Q 0.65
-Filter  6: ON PK Fc 10887 Hz Gain -0.65 dB Q 1.49
-Filter  7: ON PK Fc  1943 Hz Gain +0.64 dB Q 2.98
-Filter  8: ON PK Fc    69 Hz Gain +1.30 dB Q 1.91
-Filter  9: ON PK Fc 15988 Hz Gain +0.63 dB Q 0.59
+Filter  1: ON PK Fc    39 Hz Gain +3.00 dB Q 0.69
+Filter  2: ON PK Fc  6912 Hz Gain -0.76 dB Q 0.43
+Filter  3: ON PK Fc  1164 Hz Gain -1.28 dB Q 1.81
+Filter  4: ON PK Fc   255 Hz Gain -0.55 dB Q 0.58
+Filter  5: ON PK Fc   485 Hz Gain +0.66 dB Q 2.01
+Filter  6: ON PK Fc   133 Hz Gain -2.13 dB Q 3.00
+Filter  7: ON PK Fc  3278 Hz Gain -1.12 dB Q 3.00
+Filter  8: ON PK Fc  3182 Hz Gain -0.50 dB Q 3.00

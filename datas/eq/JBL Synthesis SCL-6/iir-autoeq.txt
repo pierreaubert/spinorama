@@ -1,16 +1,16 @@
 EQ for JBL Synthesis SCL-6 computed from ErinsAudioCorner data
-Preference Score 4.54 with EQ 5.72
+Preference Score 4.54 with EQ 5.56
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:24:44
+Dated: 2023-01-18-22:30:12
 
-Preamp: -3.4 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    36 Hz Gain +2.93 dB Q 1.03
-Filter  2: ON PK Fc 15959 Hz Gain -2.77 dB Q 0.15
-Filter  3: ON PK Fc   157 Hz Gain -3.82 dB Q 1.11
-Filter  4: ON PK Fc  1063 Hz Gain -1.28 dB Q 2.06
-Filter  5: ON PK Fc  2658 Hz Gain +0.86 dB Q 2.69
-Filter  6: ON PK Fc  7383 Hz Gain -1.39 dB Q 2.93
-Filter  7: ON PK Fc  7448 Hz Gain +0.69 dB Q 0.93
-Filter  8: ON PK Fc   317 Hz Gain -1.37 dB Q 2.89
-Filter  9: ON PK Fc    58 Hz Gain +1.96 dB Q 2.08
+Filter  1: ON PK Fc    33 Hz Gain +3.00 dB Q 1.04
+Filter  2: ON PK Fc 14932 Hz Gain -2.75 dB Q 0.19
+Filter  3: ON PK Fc   887 Hz Gain -0.85 dB Q 0.09
+Filter  4: ON PK Fc  2916 Hz Gain +1.32 dB Q 0.86
+Filter  5: ON PK Fc   143 Hz Gain -3.13 dB Q 1.72
+Filter  6: ON PK Fc  1332 Hz Gain -0.55 dB Q 2.60
+Filter  7: ON PK Fc  7354 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc 14697 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc   249 Hz Gain -0.60 dB Q 3.00

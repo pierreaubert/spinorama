@@ -1,16 +1,15 @@
 EQ for LD Systems DDQ12 computed from Vendors-LD Systems data
 Preference Score 4.19 with EQ 4.36
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:29:52
+Dated: 2023-01-18-22:27:18
 
-Preamp: -5.2 dB
+Preamp: -5.1 dB
 
-Filter  1: ON HS Fc   992 Hz Gain +1.69 dB
-Filter  2: ON PK Fc    71 Hz Gain +0.67 dB Q 0.62
-Filter  3: ON PK Fc 15916 Hz Gain +0.98 dB Q 1.15
-Filter  4: ON PK Fc  6605 Hz Gain -2.47 dB Q 2.09
-Filter  5: ON PK Fc 15604 Hz Gain +0.96 dB Q 0.96
-Filter  6: ON PK Fc  1552 Hz Gain +0.89 dB Q 2.10
-Filter  7: ON PK Fc 15926 Hz Gain +0.95 dB Q 1.80
-Filter  8: ON PK Fc 14778 Hz Gain +0.68 dB Q 2.95
-Filter  9: ON PK Fc  1436 Hz Gain +0.81 dB Q 2.94
+Filter  1: ON HS Fc   726 Hz Gain +2.80 dB
+Filter  2: ON PK Fc 13607 Hz Gain +2.34 dB Q 2.96
+Filter  3: ON PK Fc  1343 Hz Gain +1.33 dB Q 2.87
+Filter  4: ON PK Fc   160 Hz Gain +0.65 dB Q 0.10
+Filter  5: ON PK Fc  6865 Hz Gain -2.48 dB Q 1.80
+Filter  6: ON PK Fc  2575 Hz Gain -0.51 dB Q 0.21
+Filter  7: ON PK Fc   108 Hz Gain -1.75 dB Q 2.92
+Filter  8: ON PK Fc   240 Hz Gain +0.50 dB Q 0.05

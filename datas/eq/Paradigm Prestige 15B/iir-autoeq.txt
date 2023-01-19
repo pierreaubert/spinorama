@@ -1,16 +1,16 @@
 EQ for Paradigm Prestige 15B computed from ASR data
-Preference Score 4.68 with EQ 6.39
+Preference Score 4.68 with EQ 6.18
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:26:20
+Dated: 2023-01-18-22:27:14
 
-Preamp: -3.2 dB
+Preamp: -3.0 dB
 
-Filter  1: ON PK Fc    37 Hz Gain +2.97 dB Q 0.67
-Filter  2: ON PK Fc 10796 Hz Gain -4.41 dB Q 0.70
-Filter  3: ON PK Fc   192 Hz Gain -1.94 dB Q 1.52
-Filter  4: ON PK Fc   879 Hz Gain -2.11 dB Q 2.67
-Filter  5: ON PK Fc  1991 Hz Gain +1.97 dB Q 2.71
-Filter  6: ON PK Fc  1175 Hz Gain -0.55 dB Q 2.98
-Filter  7: ON PK Fc  6178 Hz Gain -0.50 dB Q 2.89
-Filter  8: ON PK Fc 15964 Hz Gain -0.51 dB Q 2.87
-Filter  9: ON PK Fc   156 Hz Gain -0.59 dB Q 2.77
+Filter  1: ON PK Fc    39 Hz Gain +2.74 dB Q 0.60
+Filter  2: ON PK Fc 10574 Hz Gain -3.72 dB Q 1.08
+Filter  3: ON PK Fc  2048 Hz Gain +2.57 dB Q 2.21
+Filter  4: ON PK Fc   905 Hz Gain -1.39 dB Q 2.71
+Filter  5: ON PK Fc   183 Hz Gain -1.48 dB Q 2.46
+Filter  6: ON PK Fc   442 Hz Gain +0.65 dB Q 2.65
+Filter  7: ON PK Fc    80 Hz Gain +0.91 dB Q 3.00
+Filter  8: ON PK Fc  6647 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc 14707 Hz Gain -0.50 dB Q 3.00

@@ -1,16 +1,16 @@
 EQ for Turbosound NuQ62 computed from Vendors-Turbosound data
-Preference Score 3.89 with EQ 5.19
+Preference Score 3.89 with EQ 5.15
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:27:44
+Dated: 2023-01-18-22:29:27
 
-Preamp: -3.3 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    35 Hz Gain +2.98 dB Q 0.81
-Filter  2: ON PK Fc  9788 Hz Gain -4.05 dB Q 1.03
-Filter  3: ON PK Fc   169 Hz Gain -3.18 dB Q 1.22
-Filter  4: ON PK Fc  2622 Hz Gain +2.99 dB Q 2.37
-Filter  5: ON PK Fc   374 Hz Gain -2.06 dB Q 2.86
-Filter  6: ON PK Fc  1034 Hz Gain +0.67 dB Q 1.63
-Filter  7: ON PK Fc 15970 Hz Gain +1.19 dB Q 2.87
-Filter  8: ON PK Fc    64 Hz Gain +1.83 dB Q 2.18
-Filter  9: ON PK Fc  5800 Hz Gain -1.04 dB Q 2.20
+Filter  1: ON PK Fc   146 Hz Gain -3.00 dB Q 1.33
+Filter  2: ON PK Fc  9958 Hz Gain -4.33 dB Q 0.85
+Filter  3: ON PK Fc  2443 Hz Gain +3.00 dB Q 2.44
+Filter  4: ON PK Fc   968 Hz Gain +0.50 dB Q 3.00
+Filter  5: ON PK Fc   364 Hz Gain -2.82 dB Q 1.62
+Filter  6: ON PK Fc  5768 Hz Gain -1.19 dB Q 2.24
+Filter  7: ON PK Fc 12282 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc  5860 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc  4276 Hz Gain -0.50 dB Q 3.00

@@ -1,16 +1,16 @@
 EQ for Q Acoustics 3020i computed from ASR data
-Preference Score 4.04 with EQ 5.30
+Preference Score 4.04 with EQ 5.21
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:25:55
+Dated: 2023-01-18-22:28:19
 
-Preamp: -3.3 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    38 Hz Gain +2.99 dB Q 0.66
-Filter  2: ON PK Fc  6064 Hz Gain -2.94 dB Q 1.45
-Filter  3: ON PK Fc  2228 Hz Gain +1.81 dB Q 2.03
-Filter  4: ON PK Fc   215 Hz Gain -2.51 dB Q 1.13
-Filter  5: ON PK Fc 11101 Hz Gain -1.29 dB Q 2.54
-Filter  6: ON PK Fc    66 Hz Gain +0.52 dB Q 1.13
-Filter  7: ON PK Fc  2145 Hz Gain +0.71 dB Q 2.16
-Filter  8: ON PK Fc  1122 Hz Gain -1.19 dB Q 2.99
-Filter  9: ON PK Fc  4556 Hz Gain -0.95 dB Q 2.97
+Filter  1: ON LS Fc    94 Hz Gain +3.00 dB
+Filter  2: ON PK Fc  9738 Hz Gain -0.99 dB Q 1.07
+Filter  3: ON PK Fc  1094 Hz Gain -1.21 dB Q 2.91
+Filter  4: ON PK Fc  2326 Hz Gain +1.94 dB Q 2.57
+Filter  5: ON PK Fc   201 Hz Gain -1.31 dB Q 1.75
+Filter  6: ON PK Fc   574 Hz Gain +1.14 dB Q 2.96
+Filter  7: ON PK Fc  4768 Hz Gain -1.25 dB Q 2.87
+Filter  8: ON PK Fc   860 Hz Gain -0.67 dB Q 2.84
+Filter  9: ON PK Fc 12686 Hz Gain -0.51 dB Q 2.84

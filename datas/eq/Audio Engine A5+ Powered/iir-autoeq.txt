@@ -1,16 +1,16 @@
 EQ for Audio Engine A5+ Powered computed from ASR data
-Preference Score 4.98 with EQ 5.73
+Preference Score 4.98 with EQ 5.71
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:26:29
+Dated: 2023-01-18-22:28:31
 
-Preamp: -3.5 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    34 Hz Gain +2.99 dB Q 0.84
-Filter  2: ON PK Fc   116 Hz Gain -3.53 dB Q 2.74
-Filter  3: ON PK Fc 15969 Hz Gain +1.64 dB Q 0.74
-Filter  4: ON PK Fc    58 Hz Gain +1.81 dB Q 2.88
-Filter  5: ON PK Fc   296 Hz Gain +0.67 dB Q 1.96
-Filter  6: ON PK Fc   839 Hz Gain -1.56 dB Q 2.32
-Filter  7: ON PK Fc   317 Hz Gain +0.67 dB Q 1.97
-Filter  8: ON PK Fc  4670 Hz Gain -0.69 dB Q 2.69
-Filter  9: ON PK Fc 10622 Hz Gain -0.52 dB Q 2.67
+Filter  1: ON PK Fc    33 Hz Gain +3.00 dB Q 0.84
+Filter  2: ON PK Fc  7759 Hz Gain +0.72 dB Q 0.15
+Filter  3: ON PK Fc  1255 Hz Gain -0.63 dB Q 0.90
+Filter  4: ON PK Fc   309 Hz Gain +1.67 dB Q 2.86
+Filter  5: ON PK Fc   115 Hz Gain -3.32 dB Q 2.78
+Filter  6: ON PK Fc  4755 Hz Gain -0.83 dB Q 3.00
+Filter  7: ON PK Fc   797 Hz Gain -0.93 dB Q 3.00
+Filter  8: ON PK Fc  8931 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc  4655 Hz Gain -0.50 dB Q 3.00

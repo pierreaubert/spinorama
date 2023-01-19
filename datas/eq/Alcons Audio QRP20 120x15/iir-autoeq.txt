@@ -1,16 +1,16 @@
 EQ for Alcons Audio QRP20 120x15 computed from Vendors-Alcons Audio data
-Preference Score 3.63 with EQ 4.01
+Preference Score 3.63 with EQ 4.08
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:29:08
+Dated: 2023-01-18-22:29:59
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    41 Hz Gain +3.00 dB Q 0.70
-Filter  2: ON PK Fc  4736 Hz Gain +0.78 dB Q 0.05
-Filter  3: ON PK Fc  5894 Hz Gain +1.05 dB Q 0.05
-Filter  4: ON PK Fc  1508 Hz Gain -2.52 dB Q 2.91
-Filter  5: ON PK Fc  4509 Hz Gain +0.89 dB Q 1.88
-Filter  6: ON PK Fc   370 Hz Gain +0.71 dB Q 1.31
-Filter  7: ON PK Fc   125 Hz Gain -4.80 dB Q 2.83
-Filter  8: ON PK Fc 12771 Hz Gain -1.36 dB Q 2.88
-Filter  9: ON PK Fc    83 Hz Gain +1.65 dB Q 3.00
+Filter  1: ON PK Fc    42 Hz Gain +3.00 dB Q 0.80
+Filter  2: ON PK Fc  7000 Hz Gain +1.91 dB Q 0.05
+Filter  3: ON PK Fc 12903 Hz Gain -1.51 dB Q 2.99
+Filter  4: ON PK Fc  1510 Hz Gain -2.67 dB Q 2.94
+Filter  5: ON PK Fc   640 Hz Gain +0.55 dB Q 0.78
+Filter  6: ON PK Fc   123 Hz Gain -4.52 dB Q 3.00
+Filter  7: ON PK Fc  1107 Hz Gain -0.70 dB Q 3.00
+Filter  8: ON PK Fc 14790 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc 11549 Hz Gain -0.50 dB Q 3.00

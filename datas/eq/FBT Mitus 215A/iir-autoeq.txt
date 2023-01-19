@@ -1,14 +1,15 @@
 EQ for FBT Mitus 215A computed from Vendors-FBT data
-Preference Score 0.31 with EQ 1.98
+Preference Score 0.31 with EQ 1.89
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:26:52
+Dated: 2023-01-18-22:30:39
 
-Preamp: -5.4 dB
+Preamp: -5.3 dB
 
-Filter  1: ON PK Fc  1964 Hz Gain +3.00 dB Q 1.13
-Filter  2: ON PK Fc 12565 Hz Gain -1.76 dB Q 0.49
-Filter  3: ON PK Fc 13114 Hz Gain -3.61 dB Q 1.36
-Filter  4: ON PK Fc   442 Hz Gain -2.65 dB Q 2.23
-Filter  5: ON PK Fc  1836 Hz Gain +2.39 dB Q 1.23
-Filter  6: ON PK Fc  8869 Hz Gain -2.57 dB Q 2.98
-Filter  7: ON PK Fc    68 Hz Gain -2.94 dB Q 3.00
+Filter  1: ON LS Fc  5546 Hz Gain +2.35 dB
+Filter  2: ON PK Fc 13859 Hz Gain -5.00 dB Q 1.27
+Filter  3: ON PK Fc  1974 Hz Gain +3.00 dB Q 1.11
+Filter  4: ON PK Fc   340 Hz Gain -1.95 dB Q 0.54
+Filter  5: ON PK Fc    68 Hz Gain -3.27 dB Q 2.98
+Filter  6: ON PK Fc  8803 Hz Gain -1.47 dB Q 2.86
+Filter  7: ON PK Fc  8835 Hz Gain -0.54 dB Q 2.93
+Filter  8: ON PK Fc 15581 Hz Gain -0.54 dB Q 2.96

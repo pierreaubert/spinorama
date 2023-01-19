@@ -1,12 +1,11 @@
 EQ for JBL HDI-1600 computed from ASR data
-Preference Score 5.78 with EQ 6.36
+Preference Score 5.78 with EQ 6.24
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:27:25
+Dated: 2023-01-18-22:30:42
 
-Preamp: -3.0 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    30 Hz Gain +2.79 dB Q 1.17
-Filter  2: ON PK Fc   136 Hz Gain -3.13 dB Q 1.49
-Filter  3: ON PK Fc 13349 Hz Gain -1.23 dB Q 0.05
-Filter  4: ON PK Fc  1114 Hz Gain -1.06 dB Q 2.97
-Filter  5: ON PK Fc 12295 Hz Gain +1.59 dB Q 2.35
+Filter  1: ON PK Fc    31 Hz Gain +3.00 dB Q 1.19
+Filter  2: ON PK Fc  7415 Hz Gain -0.65 dB Q 3.00
+Filter  3: ON PK Fc  1140 Hz Gain -1.42 dB Q 3.00
+Filter  4: ON PK Fc   131 Hz Gain -2.83 dB Q 1.88

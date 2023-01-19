@@ -13,14 +13,14 @@
     "freq_mean_min": 100,
     "freq_mean_max": 300,
     "curve_names": [
-        "Estimated In-Room Response"
+        "Listening Window"
     ],
-    "target_min_freq": 24.9023,
+    "target_min_freq": 26.3672,
     "target_max_freq": 16000,
     "slope_on_axis": 0,
     "slope_listening_window": -0.5,
     "slope_early_reflections": -4,
-    "slope_estimated_inroom": -7.0,
+    "slope_estimated_inroom": -6.5,
     "slope_sound_power": -9,
     "smooth_measurements": true,
     "smooth_window_size": 21,

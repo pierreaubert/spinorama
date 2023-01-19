@@ -1,6 +1,16 @@
 EQ for JBL Control 24CT computed from Vendors-JBL data
-Preference Score 7.22 with EQ 7.22
+Preference Score 7.22 with EQ 8.60
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:29:43
+Dated: 2023-01-18-22:27:48
 
-Preamp: 0.0 dB
+Preamp: -3.2 dB
+
+Filter  1: ON LS Fc   113 Hz Gain +3.00 dB
+Filter  2: ON PK Fc  4438 Hz Gain -0.86 dB Q 1.27
+Filter  3: ON PK Fc 10791 Hz Gain -0.51 dB Q 2.89
+Filter  4: ON PK Fc   357 Hz Gain -1.91 dB Q 1.12
+Filter  5: ON PK Fc   693 Hz Gain -0.50 dB Q 2.99
+Filter  6: ON PK Fc    57 Hz Gain -0.50 dB Q 3.00
+Filter  7: ON PK Fc   287 Hz Gain -0.59 dB Q 2.72
+Filter  8: ON PK Fc  3528 Hz Gain -0.50 dB Q 2.98
+Filter  9: ON PK Fc  7799 Hz Gain -0.53 dB Q 3.00

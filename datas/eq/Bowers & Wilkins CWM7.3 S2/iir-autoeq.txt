@@ -1,16 +1,16 @@
 EQ for Bowers & Wilkins CWM7.3 S2 computed from ErinsAudioCorner data
-Preference Score 3.49 with EQ 5.08
+Preference Score 3.49 with EQ 4.66
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:26:20
+Dated: 2023-01-18-22:28:56
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc   111 Hz Gain -2.97 dB Q 0.55
-Filter  2: ON PK Fc  2395 Hz Gain -3.67 dB Q 0.05
-Filter  3: ON PK Fc 10050 Hz Gain -2.68 dB Q 1.40
-Filter  4: ON PK Fc  2995 Hz Gain +2.97 dB Q 2.09
-Filter  5: ON PK Fc   127 Hz Gain -4.62 dB Q 2.99
-Filter  6: ON PK Fc  7223 Hz Gain -1.64 dB Q 2.66
-Filter  7: ON PK Fc  3964 Hz Gain +0.96 dB Q 1.72
-Filter  8: ON PK Fc   145 Hz Gain +0.86 dB Q 0.69
-Filter  9: ON PK Fc   171 Hz Gain -1.61 dB Q 2.24
+Filter  1: ON LS Fc 15962 Hz Gain -2.62 dB
+Filter  2: ON PK Fc  9346 Hz Gain -2.68 dB Q 1.43
+Filter  3: ON PK Fc  2968 Hz Gain +3.00 dB Q 2.14
+Filter  4: ON PK Fc   745 Hz Gain -0.80 dB Q 0.15
+Filter  5: ON PK Fc   130 Hz Gain -5.94 dB Q 2.75
+Filter  6: ON PK Fc 13466 Hz Gain -0.75 dB Q 2.88
+Filter  7: ON PK Fc   181 Hz Gain -0.92 dB Q 2.34
+Filter  8: ON PK Fc  7046 Hz Gain -0.85 dB Q 2.94
+Filter  9: ON PK Fc 12820 Hz Gain -0.55 dB Q 2.98
