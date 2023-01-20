@@ -12,6 +12,7 @@ from plotly.subplots import make_subplots
 import plotly.io as pio
 
 from .constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+from .filter_peq import peq_build
 from .compute_misc import compute_contour
 from .load_misc import sort_angles
 
@@ -760,3 +761,27 @@ def plot_image(df, params):
 
 def plot_summary(df, summary, params):
     return None
+
+
+def plot_eqs(freq, peqs):
+    traces = [go.Scatter(x=freq, y=peq_build(freq, peq)) for peq in peqs]
+    fig = go.Figure(data=traces)
+    fig.update_xaxes(
+        dict(
+            title_text="Frequency (Hz)",
+            type="log",
+            range=[math.log10(20), math.log10(20000)],
+            showline=True,
+            dtick="D1",
+        ),
+    )
+    fig.update_yaxes(
+        dict(
+            title_text="SPL (dB)",
+            range=[-5, 5],
+            showline=True,
+            dtick="D1",
+        ),
+    )
+    fig.update_layout(title="EQs")
+    return fig
