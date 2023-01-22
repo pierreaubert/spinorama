@@ -244,7 +244,7 @@ def find_best_peak(
             atol=0.01,
             # polish=True,
             integrality=[False, False, False],
-            callback=display,
+            # callback=display,
         )
         logger.info(
             "          optim loss {:2.2f} in {} iter type PK at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(

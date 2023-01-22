@@ -111,9 +111,10 @@ except ModuleNotFoundError:
 from datas.metadata import speakers_info as metadata
 from datas.grapheq import vendor_info as grapheq_info
 
-from spinorama.constant_paths import CPATH_DOCS_SPEAKERS, MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
+from spinorama.constant_paths import CPATH_DOCS_SPEAKERS, MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
 from spinorama.load_rewseq import parse_eq_iir_rews
+from spinorama.compute_estimates import estimates_spin
 from spinorama.compute_misc import compute_statistics
 from spinorama.filter_peq import peq_format_apo
 from spinorama.filter_scores import (
@@ -132,26 +133,12 @@ VERSION = "0.19"
 
 
 def get3db(spin, db_point):
-    onaxis = pd.DataFrame()
-    if "CEA2034_unmelted" in spin.keys() and "On Axis" in spin["CEA2034_unmelted"].keys():
-        cea2034 = spin["CEA2034_unmelted"]
-        onaxis["Freq"] = cea2034["Freq"]
-        onaxis["dB"] = cea2034["On Axis"]
+    est = {}
+    if "CEA2034_unmelted" in spin.keys():
+        est = estimates_spin(spin["CEA2034_unmelted"])
     elif "CEA2034" in spin.keys() and "Measurements" in spin.keys():
-        cea2034 = spin["CEA2034"]
-        onaxis = cea2034.loc[cea2034["Measurements"] == "On Axis"].reset_index(drop=True)
-    else:
-        onaxis = spin.get("On Axis", None)
-    if onaxis is None or onaxis.empty:
-        print("error On Axis is None or Empty")
-        return None
-    if onaxis.Freq.to_numpy()[0] > MIDRANGE_MIN_FREQ:
-        print("error first frequency is too high")
-        return None
-
-    y_ref = np.mean(onaxis.loc[(onaxis.Freq >= MIDRANGE_MIN_FREQ) & (onaxis.Freq <= MIDRANGE_MAX_FREQ)].dB)
-    y_3 = onaxis.loc[(onaxis.Freq < MIDRANGE_MIN_FREQ) & (onaxis.dB <= y_ref - db_point)].Freq.max()
-    return y_3
+        est = estimates_spin(spin["CEA2034"])
+    return est.get("ref_3dB", None)
 
 
 def print_items(aggregated_results):
@@ -227,14 +214,17 @@ def optim_find_peq(
     if use_score:
         auto_spin, _, auto_score = scores_apply_filter(df_speaker, auto_peq)
         unmelted_auto_spin = auto_spin.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
-        auto_slope_lw, _, _ = compute_statistics(
-            unmelted_auto_spin,
-            "Listening Window",
-            optim_config["target_min_freq"],
-            optim_config["target_max_freq"],
-            MIDRANGE_MIN_FREQ,
-            MIDRANGE_MAX_FREQ,
-        )
+        try:
+            auto_slope_lw, _, _ = compute_statistics(
+                unmelted_auto_spin,
+                "Listening Window",
+                optim_config["target_min_freq"],
+                optim_config["target_max_freq"],
+                MIDRANGE_MIN_FREQ,
+                MIDRANGE_MAX_FREQ,
+            )
+        except ValueError as ve:
+            print("error:{}  {}".format(current_speaker_name, ve))
 
     return auto_score, auto_results, auto_peq, auto_slope_lw
 
