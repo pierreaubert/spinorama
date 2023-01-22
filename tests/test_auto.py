@@ -43,40 +43,65 @@ class BiquadRangeTests(unittest.TestCase):
         }
 
     def test_one_peak(self):
-        empty_peq = []
-        test_peq = [
-            (1.0, Biquad(typ=Biquad.PEAK, freq=1000, srate=48000, Q=1, dbGain=3)),
+        cases = [
+            (1000, 1, 3),
+            (1000, 1.2, 2.5),
+            (1000, 0.8, 3.2),
+            (1000, 1, -3),
+            (1000, 1.2, -2.5),
+            (1000, 0.8, -3.2),
+            (100, 1, 3),
+            (100, 1.2, 2.5),
+            (100, 0.8, 3.2),
+            (100, 1, -3),
+            (100, 1.2, -2.5),
+            (100, 0.8, -3.2),
+            (10000, 1, 3),
+            (10000, 1.2, 2.5),
+            (10000, 0.8, 3.2),
+            (10000, 1, -3),
+            (10000, 1.2, -2.5),
+            (10000, 0.8, -3.2),
         ]
-        auto_target = peq_build(self.freq, test_peq)
+        for freq, Q, dbGain in cases:
+            empty_peq = []
+            test_peq = [
+                (1.0, Biquad(typ=Biquad.PEAK, freq=freq, srate=48000, Q=Q, dbGain=dbGain)),
+            ]
+            auto_target = peq_build(self.freq, test_peq)
 
-        init_fun = loss(None, self.freq, [auto_target], [], 0, self.config)
+            init_fun = loss(None, self.freq, [auto_target], [], 0, self.config)
 
-        # super guess
-        freq_range = [test_peq[0][1].freq * 0.5, test_peq[0][1].freq / 0.5]
-        Q_range = [0.5, 3]
-        dbGain_range = [-4, 4]
+            # super guess
+            freq_range = [test_peq[0][1].freq * 0.5, test_peq[0][1].freq / 0.5]
+            Q_range = [0.5, 3]
+            dbGain_range = [-4, 4]
 
-        (auto_success, auto_biquad_type, auto_freq, auto_Q, auto_dB, auto_fun, auto_iter) = find_best_peak(
-            df_speaker=None,
-            freq=self.freq,
-            auto_target=[auto_target],
-            freq_range=freq_range,
-            Q_range=Q_range,
-            dbGain_range=dbGain_range,
-            biquad_range=[3],
-            count=0,
-            optim_config=self.config,
-            prev_best=init_fun,
-        )
-
-        last_peq = [(1.0, Biquad(3, auto_freq, 48000, auto_Q, auto_dB))]
-        last_fun = loss(None, self.freq, [auto_target], last_peq, 0, self.config)
-
-        print(
-            "{} {} {}Hz {:0.2f}Q {:0.2f}dB func=[init {:0.3f} algo {:0.3f} end {:0.3f}] iter={}".format(
-                auto_success, auto_biquad_type, auto_freq, auto_Q, auto_dB, init_fun, auto_fun, last_fun, auto_iter
+            (auto_success, auto_biquad_type, auto_freq, auto_Q, auto_dB, auto_fun, auto_iter) = find_best_peak(
+                df_speaker=None,
+                freq=self.freq,
+                auto_target=[auto_target],
+                freq_range=freq_range,
+                Q_range=Q_range,
+                dbGain_range=dbGain_range,
+                biquad_range=[3],
+                count=0,
+                optim_config=self.config,
+                prev_best=init_fun,
             )
-        )
+
+            last_peq = [(1.0, Biquad(3, auto_freq, 48000, auto_Q, auto_dB))]
+            last_fun = loss(None, self.freq, [auto_target], last_peq, 0, self.config)
+
+            # print(
+            #     "{} {} {}Hz {:0.2f}Q {:0.2f}dB func=[init {:0.3f} algo {:0.3f} end {:0.3f}] iter={}".format(
+            #         auto_success, auto_biquad_type, auto_freq, auto_Q, auto_dB, init_fun, auto_fun, last_fun, auto_iter
+            #     )
+            # )
+
+            self.assertAlmostEqual(abs(auto_freq - freq) / freq, 0.0, places=2)
+            self.assertAlmostEqual(abs(auto_Q - Q), 0, places=1)
+            self.assertAlmostEqual(abs(auto_dB + dbGain), 0, places=1)
 
 
 if __name__ == "__main__":
