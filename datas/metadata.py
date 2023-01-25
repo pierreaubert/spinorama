@@ -863,6 +863,16 @@ speakers_info = {
                     "vendor": "https://ascendacoustics.com/collections/sierra-series-pairs/products/sierra-tower-v2-pair?variant=40596422754358",
                 },
                 "review_published": "20230118",
+                "specifications": {
+                    "sensitivity": 91,
+                    "impedance": 8,
+                    "size": {
+                        "height": 1092,
+                        "width": 190,
+                        "depth": 267,
+                    },
+                    "weight": 20.4,
+                },
             },
         },
     },

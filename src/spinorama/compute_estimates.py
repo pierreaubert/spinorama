@@ -4,7 +4,12 @@ import math
 import numpy as np
 import pandas as pd
 
-from .constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+from .constant_paths import (
+    MIDRANGE_MIN_FREQ,
+    MIDRANGE_MAX_FREQ,
+    SENSITIVITY_MIN_FREQ,
+    SENSITIVITY_MAX_FREQ,
+)
 from .compute_misc import (
     compute_contour,
     compute_directivity_deg,
@@ -79,7 +84,7 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
         # estimate sensivity for passive speakers
         if onaxis is not None:
             est["sensitivity_delta"] = onaxis.loc[
-                (onaxis.Freq >= MIDRANGE_MIN_FREQ) & (onaxis.Freq <= MIDRANGE_MAX_FREQ)
+                (onaxis.Freq >= SENSITIVITY_MIN_FREQ) & (onaxis.Freq <= SENSITIVITY_MAX_FREQ)
             ].dB.mean()
 
         print("est v2 {}".format(est))
