@@ -1,16 +1,13 @@
 EQ for Vandersteen VLR computed from ASR data
-Preference Score 1.64 with EQ 4.26
+Preference Score 1.64 with EQ 4.00
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:26:15
+Dated: 2023-01-22-13:05:26
 
-Preamp: -4.1 dB
+Preamp: -3.2 dB
 
-Filter  1: ON LS Fc   155 Hz Gain +3.00 dB
-Filter  2: ON PK Fc 11778 Hz Gain -3.07 dB Q 0.25
-Filter  3: ON PK Fc  4912 Hz Gain -0.95 dB Q 3.00
-Filter  4: ON PK Fc   668 Hz Gain -1.49 dB Q 2.99
-Filter  5: ON PK Fc  1162 Hz Gain +1.27 dB Q 2.99
-Filter  6: ON PK Fc    83 Hz Gain +1.16 dB Q 2.96
-Filter  7: ON PK Fc  2957 Hz Gain +0.56 dB Q 2.65
-Filter  8: ON PK Fc   776 Hz Gain -0.51 dB Q 2.98
-Filter  9: ON PK Fc  4778 Hz Gain -0.50 dB Q 2.99
+Filter  1: ON PK Fc    65 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON PK Fc  6372 Hz Gain -2.50 dB Q 0.58
+Filter  3: ON PK Fc  1199 Hz Gain +1.78 dB Q 2.99
+Filter  4: ON PK Fc   263 Hz Gain +0.63 dB Q 1.67
+Filter  5: ON PK Fc 15945 Hz Gain -1.93 dB Q 0.81
+Filter  6: ON PK Fc   690 Hz Gain -1.00 dB Q 3.00

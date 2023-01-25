@@ -1,16 +1,15 @@
 EQ for JBL Control X computed from ASR data
-Preference Score 2.34 with EQ 4.66
+Preference Score 2.34 with EQ 4.18
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:26:06
+Dated: 2023-01-22-13:09:21
 
-Preamp: -3.8 dB
+Preamp: -2.5 dB
 
-Filter  1: ON PK Fc    45 Hz Gain +2.98 dB Q 0.61
-Filter  2: ON PK Fc  7272 Hz Gain -3.92 dB Q 0.57
-Filter  3: ON PK Fc   183 Hz Gain -2.71 dB Q 2.12
-Filter  4: ON PK Fc  1051 Hz Gain -1.30 dB Q 3.00
-Filter  5: ON PK Fc    90 Hz Gain +2.30 dB Q 2.98
-Filter  6: ON PK Fc   489 Hz Gain +1.40 dB Q 2.29
-Filter  7: ON PK Fc  1951 Hz Gain +0.59 dB Q 2.91
-Filter  8: ON PK Fc   167 Hz Gain -1.26 dB Q 2.08
-Filter  9: ON PK Fc   983 Hz Gain -0.61 dB Q 2.70
+Filter  1: ON PK Fc    54 Hz Gain +2.32 dB Q 0.74
+Filter  2: ON PK Fc  7669 Hz Gain -2.64 dB Q 0.74
+Filter  3: ON PK Fc   443 Hz Gain +2.09 dB Q 2.26
+Filter  4: ON PK Fc   177 Hz Gain -2.96 dB Q 3.00
+Filter  5: ON PK Fc  1435 Hz Gain -0.72 dB Q 0.91
+Filter  6: ON PK Fc  2832 Hz Gain -1.01 dB Q 3.00
+Filter  7: ON PK Fc 10118 Hz Gain -0.67 dB Q 3.00
+Filter  8: ON PK Fc 10298 Hz Gain -0.50 dB Q 3.00

@@ -15,7 +15,7 @@
     "curve_names": [
         "Estimated In-Room Response"
     ],
-    "target_min_freq": 79.1016,
+    "target_min_freq": 68.8,
     "target_max_freq": 16000,
     "slope_on_axis": 0,
     "slope_listening_window": -0.5,

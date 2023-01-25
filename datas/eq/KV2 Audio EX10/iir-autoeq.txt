@@ -1,16 +1,14 @@
 EQ for KV2 Audio EX10 computed from Vendors-KV2 Audio data
-Preference Score 3.00 with EQ 4.08
+Preference Score 3.00 with EQ 4.45
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-18-22:30:22
+Dated: 2023-01-22-13:09:42
 
-Preamp: -3.4 dB
+Preamp: -2.0 dB
 
-Filter  1: ON PK Fc   106 Hz Gain -3.00 dB Q 1.28
-Filter  2: ON PK Fc  7199 Hz Gain +1.18 dB Q 0.07
-Filter  3: ON PK Fc  1529 Hz Gain +2.33 dB Q 2.91
-Filter  4: ON PK Fc   460 Hz Gain +0.74 dB Q 3.00
-Filter  5: ON PK Fc   729 Hz Gain -2.35 dB Q 3.00
-Filter  6: ON PK Fc   188 Hz Gain -3.02 dB Q 2.01
-Filter  7: ON PK Fc  8800 Hz Gain -1.89 dB Q 1.55
-Filter  8: ON PK Fc  3335 Hz Gain -1.91 dB Q 2.69
-Filter  9: ON PK Fc  9122 Hz Gain -1.36 dB Q 3.00
+Filter  1: ON PK Fc   109 Hz Gain -3.00 dB Q 0.93
+Filter  2: ON PK Fc   184 Hz Gain -2.51 dB Q 1.84
+Filter  3: ON PK Fc  1327 Hz Gain +1.79 dB Q 2.04
+Filter  4: ON PK Fc  8595 Hz Gain -3.32 dB Q 3.00
+Filter  5: ON PK Fc  3303 Hz Gain -2.78 dB Q 3.00
+Filter  6: ON PK Fc   432 Hz Gain +1.08 dB Q 3.00
+Filter  7: ON PK Fc   709 Hz Gain -1.49 dB Q 3.00

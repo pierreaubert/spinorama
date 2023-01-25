@@ -1,14 +1,14 @@
 EQ for KEF R8a computed from ErinsAudioCorner data
-Preference Score 1.83 with EQ 4.46
+Preference Score 1.83 with EQ 4.45
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-18-22:27:02
+Dated: 2023-01-22-13:10:20
 
-Preamp: -3.2 dB
+Preamp: -3.1 dB
 
-Filter  1: ON PK Fc    67 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc  7743 Hz Gain -2.96 dB Q 0.93
-Filter  3: ON PK Fc  1048 Hz Gain +2.32 dB Q 2.85
-Filter  4: ON PK Fc   448 Hz Gain +0.84 dB Q 3.00
-Filter  5: ON PK Fc   197 Hz Gain -0.65 dB Q 2.94
-Filter  6: ON PK Fc  2480 Hz Gain -1.40 dB Q 2.14
-Filter  7: ON PK Fc  9942 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON LS Fc   168 Hz Gain +2.89 dB
+Filter  2: ON PK Fc  7802 Hz Gain -2.91 dB Q 0.91
+Filter  3: ON PK Fc  1039 Hz Gain +2.36 dB Q 2.62
+Filter  4: ON PK Fc   432 Hz Gain +1.06 dB Q 2.58
+Filter  5: ON PK Fc  2441 Hz Gain -1.45 dB Q 2.17
+Filter  6: ON PK Fc   190 Hz Gain -0.61 dB Q 2.63
+Filter  7: ON PK Fc  9649 Hz Gain -0.52 dB Q 2.97

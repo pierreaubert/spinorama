@@ -1,8 +1,8 @@
 EQ for Neumann KH 420G computed from ASR data
 Preference Score 7.20 with EQ 7.25
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-18-22:30:51
+Dated: 2023-01-22-13:05:50
 
-Preamp: -1.9 dB
+Preamp: -2.0 dB
 
-Filter  1: ON PK Fc    48 Hz Gain +1.74 dB Q 0.50
+Filter  1: ON PK Fc    55 Hz Gain +1.84 dB Q 0.65

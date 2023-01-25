@@ -1,16 +1,10 @@
 EQ for RCF ART 910-A computed from Vendors-RCF data
-Preference Score 2.26 with EQ 3.76
+Preference Score 2.26 with EQ 3.75
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-18-22:27:28
+Dated: 2023-01-22-13:09:21
 
 Preamp: -3.2 dB
 
 Filter  1: ON PK Fc    33 Hz Gain +3.00 dB Q 0.97
-Filter  2: ON PK Fc 11001 Hz Gain -4.05 dB Q 1.04
-Filter  3: ON PK Fc  1250 Hz Gain +3.00 dB Q 1.06
-Filter  4: ON PK Fc   240 Hz Gain -0.58 dB Q 0.41
-Filter  5: ON PK Fc  2064 Hz Gain +0.50 dB Q 2.34
-Filter  6: ON PK Fc  5765 Hz Gain -1.55 dB Q 2.86
-Filter  7: ON PK Fc    90 Hz Gain -2.50 dB Q 3.00
-Filter  8: ON PK Fc  3261 Hz Gain -0.81 dB Q 3.00
-Filter  9: ON PK Fc 14071 Hz Gain -0.97 dB Q 3.00
+Filter  2: ON PK Fc 11023 Hz Gain -4.05 dB Q 1.04
+Filter  3: ON PK Fc  1255 Hz Gain +3.00 dB Q 1.06

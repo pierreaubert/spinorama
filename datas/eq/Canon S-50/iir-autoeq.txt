@@ -1,16 +1,15 @@
 EQ for Canon S-50 computed from ASR data
-Preference Score -0.00 with EQ 1.35
+Preference Score -0.00 with EQ 1.31
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-18-22:27:55
+Dated: 2023-01-22-13:07:13
 
 Preamp: -3.2 dB
 
-Filter  1: ON HS Fc 11497 Hz Gain +3.00 dB
-Filter  2: ON PK Fc  3020 Hz Gain +3.00 dB Q 2.76
-Filter  3: ON PK Fc  1535 Hz Gain -2.79 dB Q 2.91
-Filter  4: ON PK Fc   482 Hz Gain +0.55 dB Q 2.81
-Filter  5: ON PK Fc   772 Hz Gain -1.58 dB Q 2.86
-Filter  6: ON PK Fc   118 Hz Gain -2.38 dB Q 1.97
-Filter  7: ON PK Fc   213 Hz Gain -1.91 dB Q 2.88
-Filter  8: ON PK Fc  6404 Hz Gain -4.60 dB Q 3.00
-Filter  9: ON PK Fc  6500 Hz Gain -0.53 dB Q 2.97
+Filter  1: ON HS Fc 11437 Hz Gain +2.99 dB
+Filter  2: ON PK Fc   119 Hz Gain -2.45 dB Q 1.69
+Filter  3: ON PK Fc  3040 Hz Gain +3.00 dB Q 2.75
+Filter  4: ON PK Fc  1568 Hz Gain -2.70 dB Q 2.97
+Filter  5: ON PK Fc   219 Hz Gain -1.90 dB Q 2.80
+Filter  6: ON PK Fc   801 Hz Gain -1.43 dB Q 2.93
+Filter  7: ON PK Fc   298 Hz Gain +0.64 dB Q 0.12
+Filter  8: ON PK Fc  6340 Hz Gain -4.62 dB Q 3.00

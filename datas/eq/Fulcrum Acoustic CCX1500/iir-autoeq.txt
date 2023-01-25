@@ -1,16 +1,16 @@
 EQ for Fulcrum Acoustic CCX1500 computed from Vendors-Fulcrum Acoustic data
-Preference Score 2.69 with EQ 3.45
+Preference Score 2.69 with EQ 3.20
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-18-22:30:16
+Dated: 2023-01-22-13:12:27
 
-Preamp: -3.7 dB
+Preamp: -4.2 dB
 
-Filter  1: ON PK Fc    71 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc  9760 Hz Gain +3.00 dB Q 0.05
-Filter  3: ON PK Fc  1600 Hz Gain +1.07 dB Q 0.80
-Filter  4: ON PK Fc   188 Hz Gain +0.50 dB Q 0.13
-Filter  5: ON PK Fc  8295 Hz Gain -1.09 dB Q 1.01
-Filter  6: ON PK Fc  1469 Hz Gain -1.06 dB Q 2.73
-Filter  7: ON PK Fc  9443 Hz Gain -1.17 dB Q 3.00
-Filter  8: ON PK Fc   165 Hz Gain -1.05 dB Q 2.40
-Filter  9: ON PK Fc  1495 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON LS Fc 15970 Hz Gain +2.92 dB
+Filter  2: ON PK Fc   224 Hz Gain -1.42 dB Q 1.26
+Filter  3: ON PK Fc  2434 Hz Gain +1.31 dB Q 1.33
+Filter  4: ON PK Fc   660 Hz Gain +0.60 dB Q 2.97
+Filter  5: ON PK Fc  5012 Hz Gain -0.51 dB Q 0.83
+Filter  6: ON PK Fc  8974 Hz Gain -1.13 dB Q 2.93
+Filter  7: ON PK Fc   338 Hz Gain -0.55 dB Q 1.67
+Filter  8: ON PK Fc  9387 Hz Gain -0.56 dB Q 2.92
+Filter  9: ON PK Fc   159 Hz Gain -0.51 dB Q 2.89

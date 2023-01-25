@@ -1,16 +1,15 @@
 EQ for Arendal Sound 1961 Bookshelf computed from ErinsAudioCorner data
-Preference Score 4.43 with EQ 5.24
+Preference Score 4.43 with EQ 5.35
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-18-22:30:50
+Dated: 2023-01-22-13:07:56
 
 Preamp: -3.2 dB
 
-Filter  1: ON LS Fc   136 Hz Gain +3.00 dB
-Filter  2: ON PK Fc 14639 Hz Gain +1.92 dB Q 0.33
-Filter  3: ON PK Fc  4173 Hz Gain -1.14 dB Q 2.89
-Filter  4: ON PK Fc  1655 Hz Gain +0.73 dB Q 2.87
-Filter  5: ON PK Fc   817 Hz Gain +0.55 dB Q 2.96
-Filter  6: ON PK Fc   274 Hz Gain +0.50 dB Q 3.00
-Filter  7: ON PK Fc   384 Hz Gain -0.51 dB Q 0.97
-Filter  8: ON PK Fc 13697 Hz Gain -0.67 dB Q 2.73
-Filter  9: ON PK Fc  9598 Hz Gain -0.52 dB Q 3.00
+Filter  1: ON LS Fc   136 Hz Gain +2.96 dB
+Filter  2: ON PK Fc  1670 Hz Gain +2.25 dB Q 1.23
+Filter  3: ON PK Fc  8119 Hz Gain +0.93 dB Q 0.16
+Filter  4: ON PK Fc   698 Hz Gain -0.55 dB Q 0.20
+Filter  5: ON PK Fc  3896 Hz Gain -1.26 dB Q 2.96
+Filter  6: ON PK Fc  2011 Hz Gain -0.52 dB Q 2.95
+Filter  7: ON PK Fc  8793 Hz Gain -0.50 dB Q 2.94
+Filter  8: ON PK Fc  4704 Hz Gain -0.50 dB Q 2.66

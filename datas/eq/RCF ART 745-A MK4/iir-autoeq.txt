@@ -1,16 +1,16 @@
 EQ for RCF ART 745-A MK4 computed from Vendors-RCF data
-Preference Score 3.65 with EQ 4.63
+Preference Score 3.65 with EQ 4.64
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-18-22:28:42
+Dated: 2023-01-22-13:08:35
 
-Preamp: -3.7 dB
+Preamp: -3.9 dB
 
-Filter  1: ON PK Fc    46 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc  5708 Hz Gain +1.56 dB Q 0.05
-Filter  3: ON PK Fc 10776 Hz Gain -4.13 dB Q 2.83
-Filter  4: ON PK Fc   764 Hz Gain +2.09 dB Q 1.72
-Filter  5: ON PK Fc   208 Hz Gain +0.50 dB Q 3.00
-Filter  6: ON PK Fc   112 Hz Gain -0.63 dB Q 1.81
-Filter  7: ON PK Fc  8664 Hz Gain -0.53 dB Q 3.00
-Filter  8: ON PK Fc   236 Hz Gain -0.82 dB Q 2.82
-Filter  9: ON PK Fc 12487 Hz Gain -0.52 dB Q 3.00
+Filter  1: ON LS Fc  5864 Hz Gain +2.22 dB
+Filter  2: ON PK Fc   231 Hz Gain -1.36 dB Q 0.96
+Filter  3: ON PK Fc 10846 Hz Gain -1.73 dB Q 2.95
+Filter  4: ON PK Fc   762 Hz Gain +1.37 dB Q 2.94
+Filter  5: ON PK Fc  1191 Hz Gain -0.87 dB Q 2.77
+Filter  6: ON PK Fc  2440 Hz Gain +0.59 dB Q 0.05
+Filter  7: ON PK Fc   338 Hz Gain -0.96 dB Q 1.14
+Filter  8: ON PK Fc 10174 Hz Gain -1.08 dB Q 2.97
+Filter  9: ON PK Fc  4120 Hz Gain -0.69 dB Q 2.47

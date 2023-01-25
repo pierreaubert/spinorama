@@ -1,13 +1,16 @@
 EQ for Polk Audio Reserve R100 computed from ErinsAudioCorner data
-Preference Score 5.62 with EQ 6.06
+Preference Score 5.62 with EQ 6.07
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-18-22:30:04
+Dated: 2023-01-22-13:11:23
 
-Preamp: -3.2 dB
+Preamp: -3.0 dB
 
-Filter  1: ON LS Fc    77 Hz Gain +3.00 dB
-Filter  2: ON PK Fc 11910 Hz Gain -1.69 dB Q 1.68
-Filter  3: ON PK Fc  4379 Hz Gain -0.60 dB Q 2.91
-Filter  4: ON PK Fc  2272 Hz Gain +1.21 dB Q 2.98
-Filter  5: ON PK Fc   524 Hz Gain -0.51 dB Q 2.91
-Filter  6: ON PK Fc   323 Hz Gain +0.51 dB Q 2.95
+Filter  1: ON LS Fc    67 Hz Gain +2.81 dB
+Filter  2: ON PK Fc  5170 Hz Gain -2.36 dB Q 1.28
+Filter  3: ON PK Fc   145 Hz Gain -1.17 dB Q 1.06
+Filter  4: ON PK Fc   500 Hz Gain -0.96 dB Q 1.96
+Filter  5: ON PK Fc 11276 Hz Gain -0.97 dB Q 2.08
+Filter  6: ON PK Fc  1220 Hz Gain -0.50 dB Q 2.98
+Filter  7: ON PK Fc  3850 Hz Gain -0.51 dB Q 2.86
+Filter  8: ON PK Fc 12811 Hz Gain -0.53 dB Q 2.98
+Filter  9: ON PK Fc  8792 Hz Gain -0.56 dB Q 2.94

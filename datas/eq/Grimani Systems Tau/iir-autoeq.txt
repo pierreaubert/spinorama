@@ -1,15 +1,15 @@
 EQ for Grimani Systems Tau computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-19-09:56:41
+Dated: 2023-01-22-13:08:26
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    65 Hz Gain +2.98 dB Q 0.69
-Filter  2: ON PK Fc 13377 Hz Gain -4.62 dB Q 1.14
-Filter  3: ON PK Fc  4196 Hz Gain +0.64 dB Q 3.00
-Filter  4: ON PK Fc  1864 Hz Gain +0.50 dB Q 3.00
-Filter  5: ON PK Fc   768 Hz Gain -0.50 dB Q 0.14
-Filter  6: ON PK Fc   187 Hz Gain -2.30 dB Q 3.00
-Filter  7: ON PK Fc 16000 Hz Gain -2.41 dB Q 3.00
-Filter  8: ON PK Fc  6264 Hz Gain -2.41 dB Q 3.00
-Filter  9: ON PK Fc 12582 Hz Gain -2.41 dB Q 3.00
+Filter  1: ON LS Fc    94 Hz Gain +3.00 dB
+Filter  2: ON PK Fc   184 Hz Gain -2.29 dB Q 2.66
+Filter  3: ON PK Fc  4391 Hz Gain +0.97 dB Q 2.92
+Filter  4: ON PK Fc 12085 Hz Gain -1.12 dB Q 2.96
+Filter  5: ON PK Fc   413 Hz Gain -1.68 dB Q 2.94
+Filter  6: ON PK Fc  1155 Hz Gain +0.54 dB Q 2.97
+Filter  7: ON PK Fc  5715 Hz Gain -0.50 dB Q 2.91
+Filter  8: ON PK Fc  2820 Hz Gain -0.52 dB Q 2.82
+Filter  9: ON PK Fc   497 Hz Gain +0.62 dB Q 2.78

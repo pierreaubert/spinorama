@@ -1,15 +1,15 @@
 EQ for Revel Ultima Studio computed from Vendors-Revel data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-03-23:25:16
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-22-13:09:04
 
-Preamp: -2.6 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc  3694 Hz Gain +2.70 dB Q 2.03
-Filter  2: ON PK Fc   456 Hz Gain -1.68 dB Q 1.53
-Filter  3: ON PK Fc   169 Hz Gain -0.53 dB Q 2.88
-Filter  4: ON PK Fc   868 Hz Gain +0.71 dB Q 2.76
-Filter  5: ON PK Fc  2329 Hz Gain +0.71 dB Q 2.91
-Filter  6: ON PK Fc  1157 Hz Gain -0.51 dB Q 2.15
-Filter  7: ON PK Fc  4786 Hz Gain -0.51 dB Q 2.46
-Filter  8: ON PK Fc  8698 Hz Gain +0.65 dB Q 0.13
-Filter  9: ON PK Fc  2961 Hz Gain -1.00 dB Q 1.25
+Filter  1: ON HS Fc 12510 Hz Gain +3.00 dB
+Filter  2: ON PK Fc   434 Hz Gain -1.66 dB Q 1.60
+Filter  3: ON PK Fc   172 Hz Gain -0.53 dB Q 2.97
+Filter  4: ON PK Fc  2814 Hz Gain +1.48 dB Q 0.88
+Filter  5: ON PK Fc    65 Hz Gain +0.71 dB Q 0.21
+Filter  6: ON PK Fc   669 Hz Gain -0.54 dB Q 0.43
+Filter  7: ON PK Fc 11419 Hz Gain -0.74 dB Q 2.93
+Filter  8: ON PK Fc   144 Hz Gain -0.93 dB Q 2.39
+Filter  9: ON PK Fc 10024 Hz Gain -0.53 dB Q 2.89

@@ -1,16 +1,16 @@
 EQ for Carmody S2000 DIY Speaker Kit computed from ASR data
 Preference Score 4.93 with EQ 5.78
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:24:50
+Dated: 2023-01-22-13:08:23
 
-Preamp: -3.9 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    36 Hz Gain +3.00 dB Q 0.73
-Filter  2: ON PK Fc   210 Hz Gain -2.40 dB Q 1.35
-Filter  3: ON PK Fc 15947 Hz Gain +3.00 dB Q 0.21
-Filter  4: ON PK Fc  3032 Hz Gain -1.46 dB Q 2.83
-Filter  5: ON PK Fc 15864 Hz Gain +0.66 dB Q 0.19
-Filter  6: ON PK Fc 12744 Hz Gain -1.20 dB Q 2.93
-Filter  7: ON PK Fc  1067 Hz Gain -0.82 dB Q 2.97
-Filter  8: ON PK Fc  8308 Hz Gain +0.57 dB Q 2.86
-Filter  9: ON PK Fc    58 Hz Gain +1.78 dB Q 2.86
+Filter  1: ON PK Fc    35 Hz Gain +2.76 dB Q 0.78
+Filter  2: ON PK Fc   208 Hz Gain -2.15 dB Q 1.50
+Filter  3: ON PK Fc 11096 Hz Gain +3.00 dB Q 0.34
+Filter  4: ON PK Fc  3151 Hz Gain -1.86 dB Q 2.92
+Filter  5: ON PK Fc    67 Hz Gain +0.98 dB Q 2.79
+Filter  6: ON PK Fc  1075 Hz Gain -0.67 dB Q 3.00
+Filter  7: ON PK Fc   146 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc    36 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc 12175 Hz Gain -0.50 dB Q 3.00

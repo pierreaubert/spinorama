@@ -1,13 +1,10 @@
 EQ for Meyer Sound Leopard computed from Vendors-Meyer Sound data
-Preference Score 0.91 with EQ 0.99
+Preference Score 0.91 with EQ 1.00
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:33:09
+Dated: 2023-01-22-13:11:20
 
-Preamp: -5.0 dB
+Preamp: -6.1 dB
 
-Filter  1: ON PK Fc    31 Hz Gain +2.88 dB Q 0.87
-Filter  2: ON PK Fc  4707 Hz Gain +0.81 dB Q 0.06
-Filter  3: ON PK Fc  5078 Hz Gain +1.07 dB Q 0.05
-Filter  4: ON PK Fc  8920 Hz Gain +1.46 dB Q 0.05
-Filter  5: ON PK Fc 11132 Hz Gain -5.10 dB Q 2.63
-Filter  6: ON PK Fc  8908 Hz Gain +1.61 dB Q 0.05
+Filter  1: ON HS Fc   263 Hz Gain +3.00 dB
+Filter  2: ON PK Fc  3660 Hz Gain +2.98 dB Q 0.11
+Filter  3: ON PK Fc 11164 Hz Gain -5.42 dB Q 2.62

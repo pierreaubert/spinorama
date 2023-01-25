@@ -1,12 +1,14 @@
 EQ for Soundkraft Enigma BT computed from ASR data
-Preference Score 3.24 with EQ 4.25
+Preference Score 3.24 with EQ 4.11
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:27:13
+Dated: 2023-01-22-13:11:58
 
-Preamp: -3.1 dB
+Preamp: -2.9 dB
 
-Filter  1: ON HS Fc   595 Hz Gain -1.74 dB
-Filter  2: ON PK Fc  8597 Hz Gain +2.94 dB Q 2.90
-Filter  3: ON PK Fc 15409 Hz Gain -1.43 dB Q 1.64
-Filter  4: ON PK Fc  3479 Hz Gain -1.22 dB Q 2.71
-Filter  5: ON PK Fc  5429 Hz Gain +0.53 dB Q 2.66
+Filter  1: ON PK Fc    34 Hz Gain +2.68 dB Q 0.68
+Filter  2: ON PK Fc  3331 Hz Gain -2.37 dB Q 2.56
+Filter  3: ON PK Fc  8587 Hz Gain +2.54 dB Q 3.00
+Filter  4: ON PK Fc   289 Hz Gain +0.81 dB Q 2.56
+Filter  5: ON PK Fc  1505 Hz Gain -1.00 dB Q 1.83
+Filter  6: ON PK Fc   110 Hz Gain -1.06 dB Q 3.00
+Filter  7: ON PK Fc 14952 Hz Gain -2.64 dB Q 2.07

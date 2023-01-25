@@ -1,16 +1,15 @@
 EQ for Adam A4V computed from ASR data
 Preference Score 4.06 with EQ 4.89
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:25:57
+Dated: 2023-01-22-13:08:59
 
-Preamp: -3.3 dB
+Preamp: -3.0 dB
 
-Filter  1: ON PK Fc    37 Hz Gain +2.96 dB Q 0.95
-Filter  2: ON PK Fc  2864 Hz Gain -2.12 dB Q 0.06
-Filter  3: ON PK Fc  1013 Hz Gain +0.78 dB Q 1.62
-Filter  4: ON PK Fc  4809 Hz Gain -1.16 dB Q 1.41
-Filter  5: ON PK Fc  1029 Hz Gain +0.78 dB Q 2.40
-Filter  6: ON PK Fc 10239 Hz Gain +0.77 dB Q 2.74
-Filter  7: ON PK Fc    52 Hz Gain +0.79 dB Q 2.35
-Filter  8: ON PK Fc  1010 Hz Gain +0.84 dB Q 2.93
-Filter  9: ON PK Fc  4795 Hz Gain -0.84 dB Q 1.78
+Filter  1: ON PK Fc    33 Hz Gain +2.75 dB Q 0.93
+Filter  2: ON PK Fc  4556 Hz Gain -2.97 dB Q 0.75
+Filter  3: ON PK Fc   566 Hz Gain -1.50 dB Q 1.48
+Filter  4: ON PK Fc   167 Hz Gain -0.95 dB Q 1.06
+Filter  5: ON PK Fc   999 Hz Gain +1.78 dB Q 3.00
+Filter  6: ON PK Fc 14531 Hz Gain -0.78 dB Q 3.00
+Filter  7: ON PK Fc  1548 Hz Gain -1.06 dB Q 3.00
+Filter  8: ON PK Fc   701 Hz Gain -0.50 dB Q 3.00

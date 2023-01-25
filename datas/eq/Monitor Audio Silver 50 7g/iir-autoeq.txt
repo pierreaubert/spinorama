@@ -1,16 +1,16 @@
 EQ for Monitor Audio Silver 50 7g computed from ErinsAudioCorner data
-Preference Score 5.24 with EQ 6.23
+Preference Score 5.24 with EQ 6.21
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:24:22
+Dated: 2023-01-22-13:05:59
 
-Preamp: -3.4 dB
+Preamp: -2.7 dB
 
-Filter  1: ON PK Fc    38 Hz Gain +2.99 dB Q 0.58
-Filter  2: ON PK Fc  7432 Hz Gain -2.57 dB Q 0.40
-Filter  3: ON PK Fc    69 Hz Gain +1.31 dB Q 2.94
-Filter  4: ON PK Fc  2349 Hz Gain +0.96 dB Q 3.00
-Filter  5: ON PK Fc   189 Hz Gain -1.60 dB Q 1.32
-Filter  6: ON PK Fc  3835 Hz Gain -1.09 dB Q 2.99
-Filter  7: ON PK Fc  7024 Hz Gain +0.84 dB Q 2.79
-Filter  8: ON PK Fc 12756 Hz Gain -1.00 dB Q 2.89
-Filter  9: ON PK Fc  1440 Hz Gain -0.53 dB Q 2.99
+Filter  1: ON PK Fc    43 Hz Gain +2.45 dB Q 0.60
+Filter  2: ON PK Fc  5000 Hz Gain -2.07 dB Q 0.74
+Filter  3: ON PK Fc 12229 Hz Gain -2.19 dB Q 2.12
+Filter  4: ON PK Fc   188 Hz Gain -1.03 dB Q 2.16
+Filter  5: ON PK Fc  1148 Hz Gain +0.70 dB Q 0.44
+Filter  6: ON PK Fc  1379 Hz Gain -0.86 dB Q 3.00
+Filter  7: ON PK Fc  3922 Hz Gain -0.60 dB Q 3.00
+Filter  8: ON PK Fc 14173 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc   271 Hz Gain -0.50 dB Q 3.00

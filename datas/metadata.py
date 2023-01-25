@@ -3824,6 +3824,150 @@ speakers_info = {
             },
         },
     },
+    "EV EVID-S4.2": {
+        "brand": "EV",
+        "model": "EVID-S4.2",
+        "type": "passive",
+        "price": "240",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230117",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 110,
+                    },
+                    "sensitivity": 87,
+                    "impedance": 6,
+                    "SPL": {
+                        "continuous": 103,
+                        "peak": 109,
+                    },
+                    "size": {
+                        "height": 193,
+                        "width": 140,
+                        "depth": 118,
+                    },
+                    "weight": 1.5,
+                },
+            },
+        },
+    },
+    "EV EVID-S5.2": {
+        "brand": "EV",
+        "model": "EVID-S5.2",
+        "type": "passive",
+        "price": "390",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "quality": "medium",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230117",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 90,
+                    "impedance": 6,
+                    "SPL": {
+                        "continuous": 103,
+                        "peak": 109,
+                    },
+                    "size": {
+                        "height": 255,
+                        "width": 180,
+                        "depth": 151,
+                    },
+                    "weight": 2.7,
+                },
+            },
+        },
+    },
+    "EV EVID-S5.2X": {
+        "brand": "EV",
+        "model": "EVID-S5.2X",
+        "type": "passive",
+        "price": "420",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230117",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 90,
+                    "impedance": 6,
+                    "SPL": {
+                        "continuous": 109,
+                        "peak": 115,
+                    },
+                    "size": {
+                        "height": 255,
+                        "width": 180,
+                        "depth": 151,
+                    },
+                    "weight": 2.7,
+                },
+            },
+        },
+    },
+    "EV EVID-S8.2": {
+        "brand": "EV",
+        "model": "EVID-S8.2",
+        "type": "passive",
+        "price": "560",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230117",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 90,
+                    "impedance": 6,
+                    "SPL": {
+                        "continuous": 110,
+                        "peak": 116,
+                    },
+                    "size": {
+                        "height": 390,
+                        "width": 223,
+                        "depth": 151,
+                    },
+                    "weight": 5.1,
+                },
+            },
+        },
+    },
     "EV EVC-1082": {
         "brand": "EV",
         "model": "EVC-1082",
@@ -3838,6 +3982,7 @@ speakers_info = {
                 "format": "gllHVtxt",
                 "data acquisition": gll_data_acquisition_std,
                 "review_published": "20230117",
+                "quality": "medium",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 90,
@@ -3871,6 +4016,7 @@ speakers_info = {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
                 "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
                 "review_published": "20230118",
                 "specifications": {
                     "dispersion": {
@@ -3906,6 +4052,7 @@ speakers_info = {
                 "format": "gllHVtxt",
                 "data acquisition": gll_data_acquisition_std,
                 "review_published": "20230118",
+                "quality": "medium",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 90,
@@ -3940,6 +4087,7 @@ speakers_info = {
                 "format": "gllHVtxt",
                 "data acquisition": gll_data_acquisition_std,
                 "review_published": "20230115",
+                "quality": "medium",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 60,
@@ -3963,6 +4111,7 @@ speakers_info = {
                 "format": "gllHVtxt",
                 "data acquisition": gll_data_acquisition_std,
                 "review_published": "20230115",
+                "quality": "medium",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 40,
@@ -3996,6 +4145,7 @@ speakers_info = {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
                 "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
                 "review_published": "20230115",
                 "specifications": {
                     "dispersion": {
@@ -4020,6 +4170,7 @@ speakers_info = {
                 "format": "gllHVtxt",
                 "data acquisition": gll_data_acquisition_std,
                 "review_published": "20230115",
+                "quality": "medium",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 40,
@@ -4052,6 +4203,7 @@ speakers_info = {
             "vendor-pattern-60x40": {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
+                "quality": "medium",
                 "data acquisition": gll_data_acquisition_std,
                 "review_published": "20230118",
                 "specifications": {
@@ -4075,6 +4227,7 @@ speakers_info = {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
                 "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
                 "review_published": "20230118",
                 "specifications": {
                     "dispersion": {
@@ -4108,6 +4261,7 @@ speakers_info = {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
                 "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
                 "review_published": "20230118",
                 "specifications": {
                     "dispersion": {
@@ -4131,6 +4285,7 @@ speakers_info = {
                 "format": "gllHVtxt",
                 "data acquisition": gll_data_acquisition_std,
                 "review_published": "20230118",
+                "quality": "medium",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 40,

@@ -1,16 +1,16 @@
 EQ for EV MTS-4153 computed from Vendors-EV data
-Preference Score 1.83 with EQ 2.40
+Preference Score 1.83 with EQ 2.45
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-19-09:10:01
+Dated: 2023-01-22-13:07:58
 
-Preamp: -3.2 dB
+Preamp: -5.9 dB
 
-Filter  1: ON PK Fc    32 Hz Gain +3.00 dB Q 0.75
-Filter  2: ON PK Fc 12024 Hz Gain +2.08 dB Q 0.05
-Filter  3: ON PK Fc  1975 Hz Gain +0.50 dB Q 3.00
-Filter  4: ON PK Fc   927 Hz Gain +0.76 dB Q 3.00
-Filter  5: ON PK Fc  2819 Hz Gain -1.03 dB Q 3.00
-Filter  6: ON PK Fc   341 Hz Gain +1.28 dB Q 3.00
-Filter  7: ON PK Fc   145 Hz Gain -1.51 dB Q 3.00
-Filter  8: ON PK Fc  6129 Hz Gain -3.00 dB Q 2.87
-Filter  9: ON PK Fc  9615 Hz Gain -1.22 dB Q 3.00
+Filter  1: ON PK Fc   134 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON PK Fc  4803 Hz Gain +3.00 dB Q 0.05
+Filter  3: ON PK Fc  1357 Hz Gain +2.21 dB Q 0.56
+Filter  4: ON PK Fc 15276 Hz Gain +3.00 dB Q 1.97
+Filter  5: ON PK Fc   365 Hz Gain +0.96 dB Q 3.00
+Filter  6: ON PK Fc   148 Hz Gain -3.12 dB Q 2.50
+Filter  7: ON PK Fc  7750 Hz Gain -1.83 dB Q 1.38
+Filter  8: ON PK Fc 10429 Hz Gain -0.77 dB Q 3.00
+Filter  9: ON PK Fc    86 Hz Gain -0.90 dB Q 3.00

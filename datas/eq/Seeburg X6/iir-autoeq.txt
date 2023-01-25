@@ -1,16 +1,16 @@
 EQ for Seeburg X6 computed from Vendors-Seeburg data
-Preference Score 3.26 with EQ 4.35
+Preference Score 3.26 with EQ 4.38
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-18-22:28:16
+Dated: 2023-01-22-13:05:26
 
 Preamp: -4.2 dB
 
-Filter  1: ON LS Fc  7319 Hz Gain +2.41 dB
-Filter  2: ON PK Fc  2220 Hz Gain +1.77 dB Q 2.99
-Filter  3: ON PK Fc   253 Hz Gain -1.65 dB Q 1.22
-Filter  4: ON PK Fc   718 Hz Gain +1.70 dB Q 2.99
-Filter  5: ON PK Fc  1299 Hz Gain -1.13 dB Q 2.61
-Filter  6: ON PK Fc  9585 Hz Gain -0.63 dB Q 2.99
-Filter  7: ON PK Fc   470 Hz Gain -0.89 dB Q 2.90
-Filter  8: ON PK Fc  3761 Hz Gain -0.54 dB Q 2.95
-Filter  9: ON PK Fc  9767 Hz Gain -0.50 dB Q 2.99
+Filter  1: ON LS Fc  7391 Hz Gain +2.39 dB
+Filter  2: ON PK Fc   249 Hz Gain -1.68 dB Q 1.30
+Filter  3: ON PK Fc  2198 Hz Gain +1.78 dB Q 2.97
+Filter  4: ON PK Fc   719 Hz Gain +1.60 dB Q 2.99
+Filter  5: ON PK Fc    80 Hz Gain +0.89 dB Q 1.65
+Filter  6: ON PK Fc  3656 Hz Gain -0.76 dB Q 2.98
+Filter  7: ON PK Fc  1281 Hz Gain -1.19 dB Q 2.64
+Filter  8: ON PK Fc  9528 Hz Gain -0.52 dB Q 2.98
+Filter  9: ON PK Fc   460 Hz Gain -1.13 dB Q 2.97

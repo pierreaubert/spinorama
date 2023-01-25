@@ -1,15 +1,15 @@
 EQ for Revel Ultima2 Salon2 computed from Vendors-Revel data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-19-09:56:40
+Dated: 2023-01-22-13:06:32
 
-Preamp: -1.4 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc  6615 Hz Gain -2.44 dB Q 1.29
-Filter  2: ON PK Fc 15028 Hz Gain +0.58 dB Q 1.34
-Filter  3: ON PK Fc  2296 Hz Gain +1.18 dB Q 2.93
-Filter  4: ON PK Fc   489 Hz Gain +0.75 dB Q 2.98
-Filter  5: ON PK Fc   731 Hz Gain -0.88 dB Q 0.18
-Filter  6: ON PK Fc   146 Hz Gain -1.92 dB Q 2.01
-Filter  7: ON PK Fc 14437 Hz Gain -0.59 dB Q 2.83
-Filter  8: ON PK Fc   305 Hz Gain -0.75 dB Q 2.23
-Filter  9: ON PK Fc 13749 Hz Gain -0.51 dB Q 2.89
+Filter  1: ON PK Fc    29 Hz Gain +3.00 dB Q 1.09
+Filter  2: ON PK Fc   151 Hz Gain -2.82 dB Q 0.82
+Filter  3: ON PK Fc  6450 Hz Gain -2.45 dB Q 1.17
+Filter  4: ON PK Fc  1319 Hz Gain -1.44 dB Q 3.00
+Filter  5: ON PK Fc   343 Hz Gain -0.92 dB Q 3.00
+Filter  6: ON PK Fc   645 Hz Gain -0.71 dB Q 3.00
+Filter  7: ON PK Fc 13179 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc  3510 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc   106 Hz Gain -0.50 dB Q 3.00

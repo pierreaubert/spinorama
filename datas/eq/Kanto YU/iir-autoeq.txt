@@ -1,16 +1,16 @@
 EQ for Kanto YU computed from ASR data
-Preference Score 3.61 with EQ 5.12
+Preference Score 3.61 with EQ 4.85
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:27:15
+Dated: 2023-01-22-13:09:19
 
-Preamp: -4.1 dB
+Preamp: -2.8 dB
 
-Filter  1: ON PK Fc    37 Hz Gain +3.00 dB Q 0.55
-Filter  2: ON PK Fc  3758 Hz Gain -2.02 dB Q 0.53
-Filter  3: ON PK Fc   416 Hz Gain +1.78 dB Q 1.57
-Filter  4: ON PK Fc   127 Hz Gain -2.76 dB Q 2.98
-Filter  5: ON PK Fc  1090 Hz Gain -1.86 dB Q 2.99
-Filter  6: ON PK Fc    71 Hz Gain +2.12 dB Q 3.00
-Filter  7: ON PK Fc   449 Hz Gain +0.53 dB Q 0.79
-Filter  8: ON PK Fc 13896 Hz Gain -1.16 dB Q 2.29
-Filter  9: ON PK Fc  1891 Hz Gain +0.58 dB Q 2.94
+Filter  1: ON PK Fc    42 Hz Gain +2.10 dB Q 0.77
+Filter  2: ON PK Fc   390 Hz Gain +2.61 dB Q 1.72
+Filter  3: ON PK Fc  3187 Hz Gain -1.58 dB Q 0.45
+Filter  4: ON PK Fc   127 Hz Gain -2.32 dB Q 3.00
+Filter  5: ON PK Fc   622 Hz Gain +1.14 dB Q 3.00
+Filter  6: ON PK Fc  8336 Hz Gain +0.67 dB Q 3.00
+Filter  7: ON PK Fc 13360 Hz Gain -0.82 dB Q 3.00
+Filter  8: ON PK Fc  1090 Hz Gain -1.77 dB Q 3.00
+Filter  9: ON PK Fc  5533 Hz Gain -0.50 dB Q 3.00

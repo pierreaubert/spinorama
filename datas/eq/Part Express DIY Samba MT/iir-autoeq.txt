@@ -1,11 +1,11 @@
 EQ for Part Express DIY Samba MT computed from ErinsAudioCorner data
-Preference Score 4.85 with EQ 5.45
+Preference Score 4.85 with EQ 5.50
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-18-22:29:42
+Dated: 2023-01-22-13:08:19
 
 Preamp: -0.2 dB
 
 Filter  1: ON PK Fc    90 Hz Gain -3.00 dB Q 1.29
-Filter  2: ON PK Fc  6925 Hz Gain -2.45 dB Q 1.27
-Filter  3: ON PK Fc 12614 Hz Gain -0.98 dB Q 3.00
-Filter  4: ON PK Fc  1776 Hz Gain -0.55 dB Q 0.11
+Filter  2: ON PK Fc  7214 Hz Gain -2.44 dB Q 1.23
+Filter  3: ON PK Fc   291 Hz Gain -1.27 dB Q 0.40
+Filter  4: ON PK Fc   916 Hz Gain -1.68 dB Q 2.54

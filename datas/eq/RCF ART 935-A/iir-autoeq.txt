@@ -1,12 +1,16 @@
 EQ for RCF ART 935-A computed from Vendors-RCF data
-Preference Score 3.88 with EQ 4.87
+Preference Score 3.88 with EQ 5.06
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:27:56
+Dated: 2023-01-22-13:06:29
 
-Preamp: -3.8 dB
+Preamp: -3.9 dB
 
-Filter  1: ON LS Fc  5765 Hz Gain +1.24 dB
-Filter  2: ON PK Fc 12747 Hz Gain -4.92 dB Q 2.63
-Filter  3: ON PK Fc  2365 Hz Gain +1.91 dB Q 1.45
-Filter  4: ON PK Fc   779 Hz Gain +2.26 dB Q 2.99
-Filter  5: ON PK Fc   107 Hz Gain -3.71 dB Q 1.40
+Filter  1: ON LS Fc  5945 Hz Gain +1.24 dB
+Filter  2: ON PK Fc   103 Hz Gain -3.76 dB Q 1.61
+Filter  3: ON PK Fc  2336 Hz Gain +2.43 dB Q 1.81
+Filter  4: ON PK Fc 12752 Hz Gain -4.65 dB Q 2.40
+Filter  5: ON PK Fc   260 Hz Gain -2.08 dB Q 2.86
+Filter  6: ON PK Fc   792 Hz Gain +2.56 dB Q 3.00
+Filter  7: ON PK Fc  1232 Hz Gain -0.60 dB Q 2.43
+Filter  8: ON PK Fc 14437 Hz Gain -0.57 dB Q 2.99
+Filter  9: ON PK Fc  6593 Hz Gain -0.59 dB Q 2.45

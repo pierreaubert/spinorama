@@ -1,11 +1,16 @@
 EQ for KEF R5 computed from ErinsAudioCorner data
-Preference Score 5.92 with EQ 6.35
+Preference Score 5.92 with EQ 6.54
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-09:26:09
+Dated: 2023-01-22-13:09:03
 
-Preamp: -3.2 dB
+Preamp: -3.1 dB
 
-Filter  1: ON PK Fc    37 Hz Gain +3.00 dB Q 0.51
-Filter  2: ON PK Fc  3971 Hz Gain +1.75 dB Q 2.13
-Filter  3: ON PK Fc   301 Hz Gain -1.79 dB Q 2.97
-Filter  4: ON PK Fc 11343 Hz Gain -0.86 dB Q 2.81
+Filter  1: ON LS Fc   103 Hz Gain +2.89 dB
+Filter  2: ON PK Fc  3983 Hz Gain +1.83 dB Q 1.68
+Filter  3: ON PK Fc   183 Hz Gain +1.08 dB Q 3.00
+Filter  4: ON PK Fc   295 Hz Gain -1.07 dB Q 2.97
+Filter  5: ON PK Fc  1648 Hz Gain +0.77 dB Q 2.71
+Filter  6: ON PK Fc 10601 Hz Gain -0.51 dB Q 2.77
+Filter  7: ON PK Fc   918 Hz Gain +0.52 dB Q 2.96
+Filter  8: ON PK Fc   438 Hz Gain +0.51 dB Q 2.96
+Filter  9: ON PK Fc  2612 Hz Gain -0.55 dB Q 2.89

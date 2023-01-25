@@ -1,16 +1,12 @@
 EQ for Aperion N5T computed from ASR data
-Preference Score 5.27 with EQ 5.65
+Preference Score 5.27 with EQ 6.19
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-18-22:29:33
+Dated: 2023-01-22-13:09:17
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    31 Hz Gain +3.00 dB Q 1.02
-Filter  2: ON PK Fc 11495 Hz Gain +0.79 dB Q 0.05
-Filter  3: ON PK Fc  3328 Hz Gain -2.22 dB Q 3.00
-Filter  4: ON PK Fc   857 Hz Gain -0.50 dB Q 3.00
-Filter  5: ON PK Fc   292 Hz Gain -1.34 dB Q 0.96
-Filter  6: ON PK Fc   104 Hz Gain -1.13 dB Q 1.85
-Filter  7: ON PK Fc  7146 Hz Gain -0.77 dB Q 1.69
-Filter  8: ON PK Fc 11664 Hz Gain -0.53 dB Q 3.00
-Filter  9: ON PK Fc 10615 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON PK Fc    31 Hz Gain +3.00 dB Q 1.04
+Filter  2: ON PK Fc  1778 Hz Gain +3.00 dB Q 2.23
+Filter  3: ON PK Fc   135 Hz Gain -1.34 dB Q 0.87
+Filter  4: ON PK Fc  3117 Hz Gain -1.73 dB Q 3.00
+Filter  5: ON PK Fc   359 Hz Gain -1.06 dB Q 3.00
