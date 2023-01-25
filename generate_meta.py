@@ -83,6 +83,7 @@ def queue_score(speaker_name, speaker_data):
             continue
 
         for key, dfs in measurements.items():
+            print("debug key={}".format(key))
             result = {
                 "speaker": speaker_name,
                 "version": key,
@@ -112,10 +113,7 @@ def queue_score(speaker_name, speaker_data):
                 splV = dfs.get("SPL Vertical_unmelted", None)
                 est = estimates(spin, splH, splV)
                 if est is not None:
-                    if key[-3:] == "_eq":
-                        result["estimates_eq"] = est
-                    else:
-                        result["estimates"] = est
+                    result["estimates"] = est
 
                 inroom = dfs["Estimated In-Room Response"]
                 if inroom is not None:
@@ -128,10 +126,7 @@ def queue_score(speaker_name, speaker_data):
                         pref_rating["pref_score_wsub"] += score_penalty
 
                     if pref_rating is not None:
-                        if key[-3:] == "_eq":
-                            result["pref_rating_eq"] = pref_rating
-                        else:
-                            result["pref_rating"] = pref_rating
+                        result["pref_rating"] = pref_rating
 
             except KeyError as current_error:
                 print("{} get {}".format(speaker_name, current_error))
@@ -167,21 +162,21 @@ def add_scores(dataframe, parse_max):
                 sensitivity = result.get("sensitivity")
                 estimates = result.get("estimates")
                 pref_rating = result.get("pref_rating")
-                pref_rating_eq = result.get("pref_rating_eq")
                 is_eq = version[-3:] == "_eq"
-                version_eq = version[:-3]
 
-                if estimates is not None:
-                    if is_eq:
-                        metadata.speakers_info[speaker_name]["measurements"][version_eq]["estimates_eq"] = estimates
-                    else:
+                if not is_eq:
+                    if estimates is not None:
                         metadata.speakers_info[speaker_name]["measurements"][version]["estimates"] = estimates
-                if sensitivity is not None and not is_eq and metadata.speakers_info[speaker_name].get("type") == "passive":
-                    metadata.speakers_info[speaker_name]["sensitivity"] = sensitivity
-                if pref_rating is not None and not is_eq:
-                    metadata.speakers_info[speaker_name]["measurements"][version]["pref_rating"] = pref_rating
-                if pref_rating_eq is not None and is_eq:
-                    metadata.speakers_info[speaker_name]["measurements"][version_eq]["pref_rating_eq"] = pref_rating_eq
+                        if sensitivity is not None and metadata.speakers_info[speaker_name].get("type") == "passive":
+                            metadata.speakers_info[speaker_name]["sensitivity"] = sensitivity
+                        if pref_rating is not None:
+                            metadata.speakers_info[speaker_name]["measurements"][version]["pref_rating"] = pref_rating
+                else:
+                    version_eq = version[:-3]
+                    if estimates is not None:
+                        metadata.speakers_info[speaker_name]["measurements"][version_eq]["estimates_eq"] = estimates
+                    if pref_rating is not None:
+                        metadata.speakers_info[speaker_name]["measurements"][version_eq]["pref_rating_eq"] = pref_rating
 
         if len(remain_refs) == 0:
             break

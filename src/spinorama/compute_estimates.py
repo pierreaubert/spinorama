@@ -41,14 +41,20 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
         y_ref = np.mean(
             onaxis.loc[(onaxis.Freq >= max(freq_min, MIDRANGE_MIN_FREQ)) & (onaxis.Freq <= min(freq_max, MIDRANGE_MAX_FREQ))].dB
         )
+        y_3 = None
+        y_6 = None
         print("mean over {}-{} Hz = {}".format(MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ, y_ref))
         restricted_onaxis = onaxis.loc[(onaxis.Freq < MIDRANGE_MIN_FREQ)]
         # note that this is not necessary the max
-        y_3_idx = np.argmin(restricted_onaxis.dB < y_ref - 3)
-        y_3 = restricted_onaxis.Freq[y_3_idx]
+        restricted_onaxis_3 = restricted_onaxis.dB < (y_ref - 3)
+        if len(restricted_onaxis_3) > 0:
+            y_3_idx = np.argmin(restricted_onaxis_3)
+            y_3 = restricted_onaxis.Freq[y_3_idx]
         # note that this is not necessary the max
-        y_6_idx = np.argmin(restricted_onaxis.dB < y_ref - 6)
-        y_6 = restricted_onaxis.Freq[y_6_idx]
+        restricted_onaxis_6 = restricted_onaxis.dB < (y_ref - 6)
+        if len(restricted_onaxis_6) > 0:
+            y_6_idx = np.argmin(restricted_onaxis_6)
+            y_6 = restricted_onaxis.Freq[y_6_idx]
         print("-3 and -6: {}Hz and {}Hz".format(y_3, y_6))
         #
         up: float = onaxis.loc[(onaxis.Freq >= MIDRANGE_MIN_FREQ) & (onaxis.Freq <= MIDRANGE_MAX_FREQ)].dB.max()
@@ -61,9 +67,9 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
         }
         if not math.isnan(y_ref):
             est["ref_level"] = round(y_ref, 1)
-        if not math.isnan(y_3):
+        if y_3 is not None and not math.isnan(y_3):
             est["ref_3dB"] = round(y_3, 1)
-        if not math.isnan(y_6):
+        if y_6 is not None and not math.isnan(y_6):
             est["ref_6dB"] = round(y_6, 1)
         if not math.isnan(band):
             est["ref_band"] = round(band, 1)
@@ -80,9 +86,9 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
 
         return est
     except TypeError as te:
-        logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, te))
+        print("Estimates failed for {0} with {1}".format(onaxis.shape, te))
     except ValueError as ve:
-        logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, ve))
+        print("Estimates failed for {0} with {1}".format(onaxis.shape, ve))
     return {}
 
 
