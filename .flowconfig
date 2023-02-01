@@ -1,10 +1,16 @@
 [ignore]
+./node_modules/.*
 
 [include]
+./src/website/.*
+./src/website/assets/.*
 
 [libs]
 
 [lints]
+all=warn
+untyped-type-import=error
+sketchy-null-bool=off
 
 [options]
 

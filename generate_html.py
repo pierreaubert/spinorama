@@ -240,7 +240,7 @@ def main():
             logger.info("Write {0}".format(item_name))
             item_html = mako_templates.get_template(item_name)
             use_search = False
-            if item == "scores":
+            if item in ("scores", "similar"):
                 use_search = True
             item_content = item_html.render(df=df, meta=meta_sorted_score, site=site, useSearch=use_search)
             item_filename = cpaths.CPATH_DOCS + "/" + item_name

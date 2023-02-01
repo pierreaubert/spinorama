@@ -16,107 +16,163 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { getMetadata } from './common.js'
-import { toggleId, getID, getPicture, getLoading, getDecoding, getField, getReviews } from './misc.js'
-import { sortMetadata2 } from './sort.js'
+import { urlSite, toggleId, getID, getPicture, getLoading, getDecoding, getField, getReviews } from './misc.js';
+import { getMetadata } from './common.js';
+import { sortMetadata2 } from './sort.js';
 
-getMetadata().then((metadata) => {
-  function getSpider (brand, model) {
-  // console.log(brand + model);
-    return encodeURI('speakers/' + brand + ' ' + model + '/spider.jpg')
-  }
+getMetadata()
+    .then((metadata) => {
 
-  function getContext (key, value) {
-  // console.log(getReviews(value));
-    const scores = getField(value, 'pref_rating', value.default_measurement)
-    scores.pref_score = parseFloat(scores.pref_score).toFixed(1)
-    scores.pref_score_wsub = parseFloat(scores.pref_score_wsub).toFixed(1)
-    const scoresEq = getField(value, 'pref_rating_eq', value.default_measurement)
-    scoresEq.pref_score = parseFloat(scoresEq.pref_score).toFixed(1)
-    scoresEq.pref_score_wsub = parseFloat(scoresEq.pref_score_wsub).toFixed(1)
-    return {
-      id: getID(value.brand, value.model),
-      brand: value.brand,
-      model: value.model,
-      sensitivity: value.sensitivity,
-      estimates: getField(value, 'estimates', value.default_measurement),
-      estimatesEq: getField(value, 'estimates_eq', value.default_measurement),
-      scores: scores,
-      scoresEq: scoresEq,
-      reviews: getReviews(value),
-      img: {
-      // avif: getPicture(value.brand, value.model, "avif"),
-        webp: getPicture(value.brand, value.model, 'webp'),
-        jpg: getPicture(value.brand, value.model, 'jpg'),
-        loading: getLoading(key),
-        decoding: getDecoding(key)
-      },
-      spider: getSpider(value.brand, value.model)
-    }
-  }
+        function getSpider(brand, model) {
+            // console.log(brand + model);
+            return encodeURI('speakers/' + brand + ' ' + model + '/spider.jpg');
+        }
 
-  Handlebars.registerHelper('isNaN', function (value) {
-    return isNaN(value)
-  })
+        function getContext(key, index, value) {
+            // console.log(getReviews(value));
+            const scores = getField(value, 'pref_rating', value.default_measurement);
+            scores.pref_score = parseFloat(scores.pref_score).toFixed(1);
+            scores.pref_score_wsub = parseFloat(scores.pref_score_wsub).toFixed(1);
+            const scoresEq = getField(value, 'pref_rating_eq', value.default_measurement);
+            scoresEq.pref_score = parseFloat(scoresEq.pref_score).toFixed(1);
+            scoresEq.pref_score_wsub = parseFloat(scoresEq.pref_score_wsub).toFixed(1);
+            return {
+                brand: value.brand,
+                estimates: getField(value, 'estimates', value.default_measurement),
+                estimatesEq: getField(value, 'estimates_eq', value.default_measurement),
+                model: value.model,
+                id: getID(value.brand, value.model),
+                img: {
+                    // avif: getPicture(value.brand, value.model, "avif"),
+                    webp: getPicture(value.brand, value.model, 'webp'),
+                    jpg: getPicture(value.brand, value.model, 'jpg'),
+                    loading: getLoading(key),
+                    decoding: getDecoding(key),
+                },
+                price: value.price,
+                reviews: getReviews(value),
+                scores: scores,
+                scoresEq: scoresEq,
+                sensitivity: value.sensitivity,
+                spider: getSpider(value.brand, value.model),
+            };
+        }
 
-  const source = document.querySelector('#scoresht').innerHTML
-  const template = Handlebars.compile(source)
+        Handlebars.registerHelper('isNaN', function (value) {
+            return isNaN(value);
+        });
 
-  function printScore (key, value) {
-    const context = getContext(key, value)
-    const html = template(context)
-    const divScore = document.createElement('div')
-    divScore.setAttribute('id', context.id)
-    divScore.setAttribute('class', 'column py-0 is-12 is-vertical')
-    divScore.innerHTML = html
-    const button = divScore.querySelector('#' + context.id + '-button')
-    button.addEventListener('click', e => toggleId('#' + context.id + '-details'))
-    return divScore
-  }
+        Handlebars.registerHelper('isDefined', function (value) {
+            return value !== undefined;
+        });
+        Handlebars.registerHelper('roundFloat', function (value) {
+            const f = parseFloat(value);
+            // console.log('debug '+f)
+            return Math.round(f);
+        });
+        Handlebars.registerHelper('floorFloat', function (value) {
+            return Math.floor(parseFloat(value));
+        });
 
-  function hasQuality (meta, quality) {
-    let status = false
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const urlScores = urlSite + 'scores.html?';
 
-    for (const [key, measurement] of Object.entries(meta)) {
-      const mFormat = measurement.format.toLowerCase()
-      const mQuality = measurement.quality.toLowerCase()
+        const buttons = [
+            'brand',
+            // 'date',
+            'price',
+            'f3',
+            // 'f6',
+            'flatness',
+            'score',
+            'scoreEQ',
+            'scoreWSUB',
+            'scoreEQWSUB',
+        ];
+        buttons.forEach(function (b) {
+            const sortButton = document.querySelector('#sort-' + b + '-button');
+            sortButton.addEventListener('click', (e) => {
+                urlParams.set('by', b);
+                if (urlParams.has('reverse')) {
+                    const current = urlParams.get('reverse');
+                    urlParams.set('reverse', !current);
+                } else {
+                    urlParams.set('reverse', false);
+                }
+                history.pushState({ page: 1 }, 'Sort by ' + b, urlScores + urlParams.toString());
+                display();
+            });
+        });
 
-      if (mQuality && mQuality === quality) {
-        status = true
-        break
-      }
+        const sourceSpeaker = document.querySelector('#templateScores').innerHTML;
+        const templateSpeaker = Handlebars.compile(sourceSpeaker);
+        const speakerContainer = document.querySelector('[data-num="0"');
 
-      if (mFormat === 'klippel' && quality === 'high') {
-        status = true
-        break
-      }
-    }
-    return status
-  }
+        function printScore(key, index, value) {
+            const context = getContext(key, index, value);
+            const htmlSpeaker = templateSpeaker(context);
+            const divScore = document.createElement('div');
+            divScore.setAttribute('id', context.id);
+            divScore.setAttribute('class', 'column py-2 is-12 is-vertical');
+            divScore.innerHTML = htmlSpeaker;
+            const button = divScore.querySelector('#' + context.id + '-button');
+            button.addEventListener('click', (e) => toggleId('#' + context.id + '-details'));
+            return divScore;
+        }
 
-  function display () {
-    const speakerContainer = document.querySelector('[data-num="0"')
-    const fragment1 = new DocumentFragment()
-    const queryString = window.location.search
-    const urlParams = new URLSearchParams(queryString)
-    let quality
+        function hasQuality(meta, quality) {
+            let status = false;
 
-    if (urlParams.get('quality')) {
-      quality = urlParams.get('quality')
-    }
+            for (const [key, measurement] of Object.entries(meta)) {
+                const mFormat = measurement.format.toLowerCase();
+                const mQuality = measurement.quality.toLowerCase();
 
-    // todo check filter
+                if (mQuality && mQuality === quality) {
+                    status = true;
+                    break;
+                }
 
-    console.log('Quality=' + quality)
+                if (mFormat === 'klippel' && quality === 'high') {
+                    status = true;
+                    break;
+                }
+            }
+            return status;
+        }
 
-    sortMetadata2(metadata, { by: 'score' }).forEach(function (value, key) {
-      const speaker = metadata[value]
-      if (!quality || hasQuality(speaker.measurements, quality.toLowerCase())) {
-        fragment1.appendChild(printScore(value, speaker))
-      }
+        function display() {
+            const fragment1 = new DocumentFragment();
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            let by_key = 'score';
+            let reverse = false;
+            let quality;
+
+            if (urlParams.get('quality')) {
+                quality = urlParams.get('quality');
+            }
+
+            if (urlParams.get('by')) {
+                by_key = urlParams.get('by');
+            }
+
+            if (urlParams.has('reverse')) {
+                reverse = urlParams.get('by');
+            }
+
+            // todo check filter
+            // console.log('Quality=' + quality + ' Key=' + by_key + ' Reverse=' + reverse);
+
+            sortMetadata2(metadata, { by: by_key }, reverse).forEach(function (key, index) {
+                const speaker = metadata.get(key);
+                if (!quality || hasQuality(speaker.measurements, quality.toLowerCase())) {
+                    fragment1.appendChild(printScore(key, index, speaker));
+                }
+            });
+            speakerContainer.appendChild(fragment1);
+        }
+
+        display();
     })
-    speakerContainer.appendChild(fragment1)
-  }
-
-  display()
-}).catch(err => console.log(err))
+    .catch((err) => console.log(err));

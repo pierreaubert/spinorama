@@ -1,31 +1,31 @@
 .tabs {
-    margin-bottom: 0px;
+  margin-bottom: 0px;
 }
 
 .tab-content {
-    left: 0;
-    top: 120px;
-    width: max(400px, 100%);
+  left: 0;
+  top: 120px;
+  width: max(400px, 100%);
 }
 
 .tab-pane {
-    display: none;
-    position: absolute;
-    width: max(400px, 100%);
+  display: none;
+  position: absolute;
+  width: max(400px, 100%);
 }
 
 .tab-pane.is-active {
-    display: block;
+  display: block;
 }
 
 .is-active {
-    display: initial;
+  display: initial;
 }
 
 .hidden {
-    display: none;
+  display: none;
 }
 
 .graph {
-    width: max(400px, 100%);
+  width: max(400px, 100%);
 }

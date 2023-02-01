@@ -1,85 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <%include file="head.html"/>
-    <%include file="head_vega.html"/>
+    <%include file="head.html"/> <%include file="head_vega.html"/>
   </head>
-<body>
+  <body>
+    <%include file="nav_menu.html"/> <%namespace name="util"
+    module="website.utils" import="*"/>
 
-<%include file="nav_menu.html"/>
+    <script>
+      Handlebars.registerHelper("isShort", function (value) {
+        return value.length < 3;
+      });
+    </script>
 
-<%namespace name="util" module="website.utils" import="*"/>
-
-<script>
-  Handlebars.registerHelper('isShort', function (value) {
-     return (value.length < 3)
-  });
-</script>
-
-<script id="speaker" type="text/x-handlebars-template">
-  <div class="card">
-      <div class="card-image">
-	<picture class="image is-2by3">
-          <source srcset="{{img.webp}}" type="image/webp" width="400" height="600"></source>
-	  <img src="{{img.jpg}}" loading="{{img.loading}}" decoding="{{img.decoding}}" alt="{{brand}} {{model}}" width="400" height="600"/>
-        </picture>
+    <script id="templateSpeaker" type="text/x-handlebars-template">
+       <div class="card">
+           <div class="card-image">
+      <picture class="image is-2by3">
+               <source srcset="{{img.webp}}" type="image/webp" width="400" height="600"></source>
+        <img src="{{img.jpg}}" loading="{{img.loading}}" decoding="{{img.decoding}}" alt="{{brand}} {{model}}" width="400" height="600"/>
+             </picture>
+           </div>
+           <header class="card-header">
+      <p class="card-header-title">{{brand}} {{model}}</p>
+      <p class="card-header-title is-pulled-right">{{price}}</p>
+           </header>
+           <div class="card-content">
+      <div class="content is-small">
+               <p>Tonality: <b>{{score.score}}</b></p>
+               <progress class="progress is-small is-danger" value="{{score.scoreScaled}}" max="100"></progress>
+       	  <p>Bass extension: <b>{{score.lfx}}</b>Hz</p>
+         	  <progress class="progress is-small is-info" value="{{score.lfxScaled}}" max="100"></progress>
+        <p>Flatness: <b>&plusmn;{{score.flatness}}</b>dB ~300-10kHz</p>
+        <progress class="progress is-small is-success" value="{{score.flatnessScaled}}" max="100"></progress>
+        <p>Smoothness (PIR): <b>{{score.smoothness}}</b></p>
+        <progress class="progress is-small is-warning" value="{{score.smoothnessScaled}}" max="100"></progress>
       </div>
-      <header class="card-header">
-	<p class="card-header-title">{{brand}} {{model}}</p>
-	<p class="card-header-title is-pulled-right">{{price}}</p>
-      </header>
-      <div class="card-content">
-	<div class="content is-small">
-          <p>Tonality: <b>{{score.score}}</b></p>
-          <progress class="progress is-small is-danger" value="{{score.scoreScaled}}" max="100"></progress>
-  	  <p>Bass extension: <b>{{score.lfx}}</b>Hz</p>
-    	  <progress class="progress is-small is-info" value="{{score.lfxScaled}}" max="100"></progress>
-	  <p>Flatness: <b>&plusmn;{{score.flatness}}</b>dB ~300-10kHz</p>
-	  <progress class="progress is-small is-success" value="{{score.flatnessScaled}}" max="100"></progress>
-	  <p>Smoothness (PIR): <b>{{score.smoothness}}</b></p>
-	  <progress class="progress is-small is-warning" value="{{score.smoothnessScaled}}" max="100"></progress>
-	</div>
-      </div>
-      <footer class="card-footer">
-        {{#if (isShort reviews.reviews)}}
-        {{#each reviews.reviews}}
-	<a class="card-footer-item" href="{{this.url}}">{{this.origin}}</a>
-        {{/each}}
-        {{else}}
-        <div class="card-footer-item">
-          <div class="dropdown is-hoverable">
-            <div class="dropdown-trigger">
-              <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
-                <span>Measurements</span>
-                <span class="icon is-small">
-                  <i class="fas fa-angle-down" aria-hidden="true"></i>
-                </span>
-              </button>
-            </div>
-            <div class="dropdown-menu" id="dropdown-menu4" role="menu">
-              <div class="dropdown-content">
-                {{#each reviews.reviews}}
-                <div class="dropdown-item">
-	          <a href="{{this.url}}">{{this.originLong}}</a>
-                </div>
-                {{/each}}
-              </div>
-            </div>
-          </div>
-          {{/if}}
-          </div>
-      </footer>
-  </div>
-</script>
+           </div>
+           <footer class="card-footer">
+             {{#if (isShort reviews.reviews)}}
+             {{#each reviews.reviews}}
+      <a class="card-footer-item" href="{{this.url}}">{{this.origin}}</a>
+             {{/each}}
+             {{else}}
+             <div class="card-footer-item">
+               <div class="dropdown is-hoverable">
+                 <div class="dropdown-trigger">
+                   <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+                     <span>Measurements</span>
+                     <span class="icon is-small">
+                       <i class="fas fa-angle-down" aria-hidden="true"></i>
+                     </span>
+                   </button>
+                 </div>
+                 <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+                   <div class="dropdown-content">
+                     {{#each reviews.reviews}}
+                     <div class="dropdown-item">
+                <a href="{{this.url}}">{{this.originLong}}</a>
+                     </div>
+                     {{/each}}
+                   </div>
+                 </div>
+               </div>
+               {{/if}}
+               </div>
+           </footer>
+       </div>
+    </script>
 
-<div class="section">
-  <!-- Speakers -->
-  <div class="searchresults">
-    <div class="columns is-multiline is-1" id="speakers" data-num="0">
-      <script type="module" src="./assets/index.js"></script>
+    <div class="section">
+      <div class="searchresults">
+        <div class="columns is-multiline is-1" id="speakers" data-num="0">
+          <script type="module" src="./assets/index.js"></script>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<%include file="search.html"/>
-<%include file="footer.html"/>
+    <%include file="search.html"/> <%include file="footer.html"/>
+  </body>
+</html>

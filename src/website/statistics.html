@@ -1,31 +1,37 @@
-<%include file="header.html"/>
-<%include file="nav_menu.html"/>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%include file="head.html"/> <%include file="head_vega.html"/>
+  </head>
+  <body>
+    <%include file="nav_menu.html"/>
 
-<div class="section">
-  <div class="box">
-    <div id="visScoreDistribution"></div>
-  </div>
-  <div class="box">
-    <div id="visScoreDistributionWsub"></div>
-  </div>
-</div>
+    <div class="section">
+      <div class="box">
+        <div id="visScoreDistribution"></div>
+      </div>
+      <div class="box">
+        <div id="visScoreDistributionWsub"></div>
+      </div>
+    </div>
 
-<div class="section">
-  <div class="box">
-    <div id="visDistributionLfxHz"></div>
-  </div>
-  <div class="box">
-    <div id="visDistributionNbdOn"></div>
-  </div>
-  <div class="box">
-    <div id="visDistributionNbdPir"></div>
-  </div>
-  <div class="box">
-    <div id="visDistributionSmPir"></div>
-  </div>
-</div>
+    <div class="section">
+      <div class="box">
+        <div id="visDistributionLfxHz"></div>
+      </div>
+      <div class="box">
+        <div id="visDistributionNbdOn"></div>
+      </div>
+      <div class="box">
+        <div id="visDistributionNbdPir"></div>
+      </div>
+      <div class="box">
+        <div id="visDistributionSmPir"></div>
+      </div>
+    </div>
 
-<script type="module" src="./assets/statistics.js">
-</script>
+    <script type="module" src="./assets/statistics.js"></script>
 
-<%include file="footer.html"/>
+    <%include file="footer.html"/>
+  </body>
+</html>
