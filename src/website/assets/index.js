@@ -49,7 +49,7 @@ getMetadata()
             const context = getContext(key, index, value);
             const html = template(context);
             const divSpeaker = document.createElement('div');
-            divSpeaker.setAttribute('class', 'column is-2 searchable');
+            divSpeaker.setAttribute('class', 'column is-narrow searchable');
             divSpeaker.setAttribute('id', context.id);
             divSpeaker.innerHTML = html;
             return divSpeaker;

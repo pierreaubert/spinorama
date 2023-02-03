@@ -180,25 +180,23 @@ getMetadata()
         function readUrl() {
             if (url.searchParams.has('sort')) {
                 const sortParams = url.searchParams.get('sort');
-                const sortItems = sortParams.split(':');
-                if (sortItems.length == 1) {
-                    sorter.by = sortItems[0];
-                } else if (sortItems.length == 2 && sortItems[1] === 'r') {
-                    sorter.by = sortItems[0];
+            }
+            if (url.searchParams.has('reverse')) {
+                const sortOrder = url.searchParams.get('reverse');
+                if (sortOrder === 'true' ) {
                     sorter.reverse = true;
                 } else {
-                    console.log('error: params ' + sortParams + ' has too many fields');
+                    sorter.reverse = false;
                 }
+            } else {
+                sorter.reverse = false;
             }
         }
 
         function updateUrl() {
             // update URL
-            let sortParam = sorter.by;
-            if (sorter.reverse) {
-                sortParam = sortParam + ':r';
-            }
-            url.searchParams.set('sort', sortParam);
+            url.searchParams.set('sort', sorter.by);
+            url.searchParams.set('reverse', sorter.reverse);
             if (keywords !== '') {
                 url.searchParams.set('search', keywords);
             }
@@ -252,9 +250,6 @@ getMetadata()
             show(resultdiv);
         }
 
-        const events = [
-            ['#selectReviewer', filter.reviewer],
-        ];
         document.querySelector('#selectReviewer').addEventListener('change', function () {
             filter.reviewer = this.value;
             updateUrl(url, keywords);
@@ -292,9 +287,49 @@ getMetadata()
         });
 
         document.querySelector('#sortBy').addEventListener('change', function () {
+            // swap reverse if it exists and if we keep the same ordering
+            sorter.reverse = false;
+            if (url.searchParams.has('reverse') && sorter.by === this.value ) {
+                const sortOrder = url.searchParams.get('reverse');
+                if (sortOrder === 'false' ) {
+                    sorter.reverse = true;
+                }
+            }
             sorter.by = this.value;
             updateUrl(url, keywords);
             selectDispatch();
+        });
+
+        const buttons = [
+            'brand',
+            // 'date',
+            'price',
+            'f3',
+            // 'f6',
+            'flatness',
+            'score',
+            'scoreEQ',
+            'scoreWSUB',
+            'scoreEQWSUB',
+        ];
+        buttons.forEach(  b => {
+            const sortButton = document.querySelector('#sort-' + b + '-button');
+            if (sortButton !== null ) {
+                sortButton.addEventListener('click', (e) => {
+                    // update sort by
+                    sorter.by = b;
+                    // swap reverse if it exists
+                    sorter.reverse = false;
+                    if (url.searchParams.has('reverse')) {
+                        const sortOrder = url.searchParams.get('reverse');
+                        if (sortOrder === 'false' ) {
+                            sorter.reverse = true;
+                        }
+                    }
+                    updateUrl(url, keywords);
+                    selectDispatch();
+                });
+            }
         });
 
         document.querySelector('#searchInput').addEventListener('keyup', function () {

@@ -44,7 +44,7 @@ getMetadata()
             const context = getContext(key, index, value);
             const html = template(context);
             const divEQ = document.createElement('div');
-            divEQ.setAttribute('class', 'column is-2 searchable');
+            divEQ.setAttribute('class', 'column is-narrow searchable');
             divEQ.setAttribute('id', context.id);
             divEQ.innerHTML = html;
             return divEQ;

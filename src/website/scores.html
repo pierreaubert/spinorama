@@ -24,10 +24,10 @@
 
     <%namespace name="util" module="website.utils" import="*"/>
 
-    <div class="column py-0 is-12 is-vertical">
-      <div class="tile py-0 is-ancestor">
-        <div class="tile py-0 is-parent is-2">
-          <div class="content mx-0 mt-0 mb-0">
+    <div class="column py-0 is-12 is-mobile p-0 m-0">
+      <div class="tile py-0 is-ancestor p-0 m-0">
+        <div class="tile py-0 is-parent is-2 p-0 m-0">
+          <div class="content p-0 m-0">
             Brand Model
             <button
               class="is-small"
@@ -39,7 +39,7 @@
           </div>
         </div>
         <div class="tile py-0 is-parent is-1">
-          <div class="content mx-0 mt-0 mb-0">
+          <div class="content p-0 m-0">
             <span class="has-text-right">
               USD
               <button
@@ -53,12 +53,12 @@
           </div>
         </div>
         <div class="tile py-0 is-parent is-2">
-          <div class="content mx-0 mt-0 mb-0">
+          <div class="content p-0 m-0">
             <span class="has-text-right"> Reviews </span>
           </div>
         </div>
         <div class="tile py-0 is-parent is-1">
-          <div class="content mt-0 mb-0 mx-0">
+          <div class="content p-0 m-0">
             -3dB
             <button
               class="is-small"
@@ -70,7 +70,7 @@
           </div>
         </div>
         <div class="tile py-0 is-parent is-1">
-          <div class="content mt-0 mb-0 mx-0">
+          <div class="content p-0 m-0">
             Flat.
             <button
               class="is-small"
@@ -82,7 +82,7 @@
           </div>
         </div>
         <div class="tile py-0 is-parent is-1">
-          <div class="content mt-0 mb-0 mx-0">
+          <div class="content p-0 m-0">
             <b>Tone</b>
             <button
               class="is-small"
@@ -94,7 +94,7 @@
           </div>
         </div>
         <div class="tile py-0 is-parent is-1">
-          <div class="content mt-0 mb-0 mx-0">
+          <div class="content p-0 m-0">
             <b>w/eq</b>
             <button
               class="is-small"
@@ -106,7 +106,7 @@
           </div>
         </div>
         <div class="tile py-0 is-parent is-1">
-          <div class="content mt-0 mb-0 mx-0">
+          <div class="content p-0 m-0">
             <b>w/sub</b>
             <button
               class="is-small"
@@ -118,7 +118,7 @@
           </div>
         </div>
         <div class="tile py-0 is-parent is-1">
-          <div class="content mt-0 mb-0 mx-0">
+          <div class="content p-0 m-0">
             <b>w/both</b>
             <button
               class="is-small"
@@ -130,90 +130,75 @@
           </div>
         </div>
         <div class="tile py-0 is-parent is-1">
-          <div class="content mt-0 mb-0 mx-0">
-            <b>Details</b>
+          <div class="content p-0 m-0">
           </div>
         </div>
       </div>
     </div>
 
     <script id="templateScores" type="text/x-handlebars-template">
-      <div class="tile py-1 is-ancestor">
-        <div class="tile py-1 is-parent is-2">
-          <div class="content mx-0 mt-0 mb-0">
-            {{brand}}
-            {{model}}
-          </div>
+      <div class="tile py-1 is-ancestor p-0 m-0">
+        <div class="tile py-1 is-parent is-2 p-0 m-0">
+          {{brand}}
+          {{model}}
         </div>
         <div class="tile py-1 is-parent is-1">
-          <div class="content mx-0 mt-0 mb-0">
-            <span class="has-text-right">
-              {{price}}
-            </span>
-          </div>
+          <span class="has-text-right">
+            {{price}}
+          </span>
         </div>
         <div class="tile py-1 is-parent is-2">
-          <div class="content mx-0 mt-0 mb-0">
-            <span class="has-text-right">
-              {{#each reviews.reviews}}
-                <a href="{{this.url}}">{{this.origin}}</a>
-              {{/each}}
-            </span>
-          </div>
+          <span class="has-text-right">
+            {{#each reviews.reviews}}
+            <a href="{{this.url}}">{{this.origin}}</a>
+            {{/each}}
+          </span>
         </div>
         <div class="tile py-1 is-parent is-1">
-          <div class="content mt-0 mb-0 mx-0">
-            {{estimates.ref_3dB}}Hz
-          </div>
+          {{estimates.ref_3dB}}Hz
         </div>
         <div class="tile py-1 is-parent is-1">
-          <div class="content mt-0 mb-0 mx-0">
-            &plusmn;{{estimates.ref_band}}dB
-          </div>
+          &plusmn;{{estimates.ref_band}}dB
         </div>
         <div class="tile py-1 is-parent is-1">
-          <div class="content mt-0 mb-0 mx-0">
-            {{#unless (isNaN scores.pref_score)}}
-              <b>{{scores.pref_score}}</b>
-            {{/unless}}
-          </div>
+          {{#unless (isNaN scores.pref_score)}}
+          <b>{{scores.pref_score}}</b>
+          {{/unless}}
         </div>
         <div class="tile py-1 is-parent is-1">
-          <div class="content mt-0 mb-0 mx-0">
-            {{#unless (isNaN scores.pref_score)}}
-              {{scoresEq.pref_score}}
-            {{/unless}}
-          </div>
+          {{#unless (isNaN scores.pref_score)}}
+          {{scoresEq.pref_score}}
+          {{/unless}}
         </div>
         <div class="tile py-1 is-parent is-1">
-          <div class="content mt-0 mb-0 mx-0">
-            {{#unless (isNaN scores.pref_score)}}
-              {{scores.pref_score_wsub}}
-            {{/unless}}
-          </div>
+          {{#unless (isNaN scores.pref_score)}}
+          {{scores.pref_score_wsub}}
+          {{/unless}}
         </div>
         <div class="tile py-1 is-parent is-1">
-          <div class="content mt-0 mb-0 mx-0">
-            {{#unless (isNaN scores.pref_score)}}
-              {{scoresEq.pref_score_wsub}}
-            {{/unless}}
-          </div>
+          {{#unless (isNaN scores.pref_score)}}
+          {{scoresEq.pref_score_wsub}}
+          {{/unless}}
         </div>
-        <div class="tile py-1 is-parent is-1">
-          <div class="content mt-0 mb-0 mx-0">
-            <button
-              class="is-small is-info"
-              aria-label="more options"
-              id="{{id}}-button"
+        <div class="tile py-1 is-parent is-1 p-0 m-0">
+          <button
+            id="{{id}}-button"
+            class="button"
+            aria-label="more options"
+            data-target="{{id}}-modal"
             >
-              <i class="fas fa-angle-down"></i>
-            </button>
-          </div>
+            <i class="fas fa-circle-info"></i>
+          </button>
         </div>
       </div>
-      <div id="{{id}}-details" class="box hidden">
-        <div class="tile is-ancestor">
-          <div class="tile is-parent is-8">
+      <div id="{{id}}-modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">{{brand}} {{model}}</p>
+            <button class="delete" aria-label="close"></button>
+          </header>
+          <section class="modal-card-body">
             <div class="table-container">
               {{#each reviews.reviews}}
                 <table class="table is-striped is-narrow">
@@ -398,29 +383,24 @@
                     {{/if}}
                   </tbody>
                 </table>
-              {{/each}}
-            </div>
-          </div>
-          <div class="tile is-parent is-4">
-            {{#unless (isNaN scores.pref_score)}}
-              <figure>
-                <img src="{{spider}}" />
-              </figure>
-            {{/unless}}
-          </div>
+                {{/each}}
+                {{#unless (isNaN scores.pref_score)}}
+                <figure>
+                  <img src="{{spider}}" />
+                </figure>
+                {{/unless}}
+          </section>
         </div>
       </div>
     </script>
 
-    <div class="section">
-      <!-- Speakers -->
-      <div class="searchresults">
-        <div class="columns is-multiline is-1" id="eqs" data-num="0">
-          <script type="module" src="./assets/scores.js"></script>
-        </div>
+    <div class="searchresults">
+      <div class="columns is-multiline p-0 m-0" id="speakers" data-num="0">
+        <script type="module" src="./assets/scores.js"></script>
       </div>
     </div>
 
-    <%include file="search.html"/> <%include file="footer.html"/>
+    <%include file="search.html"/>
+    <%include file="footer.html"/>
   </body>
 </html>

@@ -20,6 +20,9 @@ import { urlSite, toggleId, getID, getPicture, getLoading, getDecoding, getField
 import { getMetadata } from './common.js';
 import { sortMetadata2 } from './sort.js';
 
+function openModal(el) { el.classList.add('is-active');  }
+function closeModal(el) { el.classList.remove('is-active'); }
+
 getMetadata()
     .then((metadata) => {
 
@@ -78,46 +81,32 @@ getMetadata()
         const urlParams = new URLSearchParams(queryString);
         const urlScores = urlSite + 'scores.html?';
 
-        const buttons = [
-            'brand',
-            // 'date',
-            'price',
-            'f3',
-            // 'f6',
-            'flatness',
-            'score',
-            'scoreEQ',
-            'scoreWSUB',
-            'scoreEQWSUB',
-        ];
-        buttons.forEach(function (b) {
-            const sortButton = document.querySelector('#sort-' + b + '-button');
-            sortButton.addEventListener('click', (e) => {
-                urlParams.set('by', b);
-                if (urlParams.has('reverse')) {
-                    const current = urlParams.get('reverse');
-                    urlParams.set('reverse', !current);
-                } else {
-                    urlParams.set('reverse', false);
-                }
-                history.pushState({ page: 1 }, 'Sort by ' + b, urlScores + urlParams.toString());
-                display();
-            });
-        });
-
         const sourceSpeaker = document.querySelector('#templateScores').innerHTML;
         const templateSpeaker = Handlebars.compile(sourceSpeaker);
         const speakerContainer = document.querySelector('[data-num="0"');
 
-        function printScore(key, index, value) {
+        function printScore(key, index, value, isStripe) {
             const context = getContext(key, index, value);
             const htmlSpeaker = templateSpeaker(context);
             const divScore = document.createElement('div');
             divScore.setAttribute('id', context.id);
-            divScore.setAttribute('class', 'column py-2 is-12 is-vertical');
+            let attributes = 'searchable column py-2 is-12 is-vertical p-0 m-0';
+            if (isStripe) {
+                attributes = attributes + ' has-background-light';
+            }
+            divScore.setAttribute('class', attributes);
             divScore.innerHTML = htmlSpeaker;
             const button = divScore.querySelector('#' + context.id + '-button');
-            button.addEventListener('click', (e) => toggleId('#' + context.id + '-details'));
+            const target = button.dataset.target;
+            const modal = divScore.querySelector('#'+target);
+            button.addEventListener('click', () => {
+                return openModal(modal);
+            });
+            const childs = modal.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button');
+            childs.forEach( closeable => {
+                const target = closeable.closest('.modal');
+                closeable.addEventListener('click', () => closeModal(target));
+            });
             return divScore;
         }
 
@@ -129,7 +118,7 @@ getMetadata()
                 const mQuality = measurement.quality.toLowerCase();
 
                 if (mQuality && mQuality === quality) {
-                    status = true;
+                   status = true;
                     break;
                 }
 
@@ -153,26 +142,37 @@ getMetadata()
                 quality = urlParams.get('quality');
             }
 
-            if (urlParams.get('by')) {
-                by_key = urlParams.get('by');
+            if (urlParams.get('sort')) {
+                by_key = urlParams.get('sort');
             }
 
             if (urlParams.has('reverse')) {
-                reverse = urlParams.get('by');
+                if (urlParams.get('reverse') === 'true') {
+                    reverse = true;
+                }
             }
 
             // todo check filter
             // console.log('Quality=' + quality + ' Key=' + by_key + ' Reverse=' + reverse);
 
+            let count = 0;
             sortMetadata2(metadata, { by: by_key }, reverse).forEach(function (key, index) {
                 const speaker = metadata.get(key);
                 if (!quality || hasQuality(speaker.measurements, quality.toLowerCase())) {
-                    fragment1.appendChild(printScore(key, index, speaker));
+                    fragment1.appendChild(printScore(key, index, speaker, count %2 == 0));
+                    count += 1;
                 }
             });
             speakerContainer.appendChild(fragment1);
         }
 
         display();
+
+        document.addEventListener('keydown', (event) => {
+            const e = event || window.event;
+            if (e.keyCode === 27) { // Escape key
+                document.querySelectorAll('.modal').forEach( modal => closeModal(modal));
+            }
+        });
     })
     .catch((err) => console.log(err));
