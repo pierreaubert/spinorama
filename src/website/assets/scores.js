@@ -16,7 +16,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { urlSite, toggleId, getID, getPicture, getLoading, getDecoding, getField, getReviews } from './misc.js';
+import {
+    urlSite,
+    getID,
+    getPicture,
+    getLoading,
+    getDecoding,
+    getField,
+    getReviews,
+    getPrice
+} from './misc.js';
 import { getMetadata } from './common.js';
 import { sortMetadata2 } from './sort.js';
 
@@ -52,7 +61,7 @@ getMetadata()
                     loading: getLoading(key),
                     decoding: getDecoding(key),
                 },
-                price: value.price,
+                price: getPrice(value.price, value.amount),
                 reviews: getReviews(value),
                 scores: scores,
                 scoresEq: scoresEq,

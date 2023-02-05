@@ -103,11 +103,11 @@ export function getPrice(price, amount) {
     }
     if (amount && amount === 'each') {
         // console.log('price each '+price)
-        return '(' + price + ' USD)';
+        return price + '$';
     }
     // default is per pair
     // console.log('price pair '+price)
-    return '( ' + (val / 2.0).toString() + ' USD)';
+    return (val / 2.0).toString() + '$';
 }
 
 export function getField(value, field, version) {
