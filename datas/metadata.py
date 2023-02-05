@@ -5749,6 +5749,29 @@ speakers_info = {
             },
         },
     },
+    "Hedd Type 20 MK2": {
+        "brand": "Hedd",
+        "model": "Type 20 MK2",
+        "type": "active",
+        "price": "2400",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr-ported",
+        "measurements": {
+            "asr-ported": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/hedd-type-20-mk2-monitor-review.41455/",
+                "review_published": "20230129",
+            },
+            "asr-sealed": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/hedd-type-20-mk2-monitor-review.41455/",
+                "review_published": "20230129",
+            },
+        },
+    },
     "Hivi 3.1A DIY": {
         "brand": "Hivi",
         "model": "3.1A DIY",
@@ -5799,22 +5822,6 @@ speakers_info = {
             },
         },
     },
-    "Hsu Research HB-1 MK2": {
-        "brand": "Hsu Research",
-        "model": "HB-1 MK2",
-        "type": "passive",
-        "price": "218",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/hsu-hb-1-mk2-review-horn-speaker.24445/",
-            },
-        },
-    },
     "HTD Level THREE": {
         "brand": "HTD",
         "model": "Level THREE",
@@ -5829,6 +5836,22 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/htd-level-three-review-bookshelf-speaker.26566/",
                 "review_published": "20210912",
+            },
+        },
+    },
+    "Hsu Research HB-1 MK2": {
+        "brand": "Hsu Research",
+        "model": "HB-1 MK2",
+        "type": "passive",
+        "price": "218",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/hsu-hb-1-mk2-review-horn-speaker.24445/",
             },
         },
     },
