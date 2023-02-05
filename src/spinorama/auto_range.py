@@ -115,7 +115,7 @@ def find_largest_area(
         minus_curve = -np.clip(curve, a_min=None, a_max=0)
         minus_freq, minus_areas = largest_area(minus_curve)
 
-    print("fla: minus a={} f={} plus a={} f={}".format(minus_areas, minus_freq, plus_areas, plus_freq))
+    # print("fla: minus a={} f={} plus a={} f={}".format(minus_areas, minus_freq, plus_areas, plus_freq))
 
     if minus_areas == -1 and plus_areas == -1:
         # print("fla: both plus and minus missed")
@@ -150,7 +150,7 @@ def propose_range_freq(
     scale = optim_config["elastic"]
     init_freq_min = max(init_freq * scale, optim_config["target_min_freq"])
     init_freq_max = min(init_freq / scale, optim_config["target_max_freq"])
-    print("prf: sign={} init_freq={} range=[{}, {}]".format(sign, init_freq, init_freq_min, init_freq_max))
+    # print("prf: sign={} init_freq={} range=[{}, {}]".format(sign, init_freq, init_freq_min, init_freq_max))
     return (
         sign,
         init_freq,

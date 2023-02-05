@@ -225,7 +225,8 @@ def find_best_peak(
         # )
 
         def display(xk, convergence):
-            print(xk, convergence)
+            # print(xk, convergence)
+            pass
 
         res = opt.differential_evolution(
             opt_peq,
