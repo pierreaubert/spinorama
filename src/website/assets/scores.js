@@ -90,7 +90,7 @@ getMetadata()
             const htmlSpeaker = templateSpeaker(context);
             const divScore = document.createElement('div');
             divScore.setAttribute('id', context.id);
-            let attributes = 'searchable column py-2 is-12 is-vertical p-0 m-0';
+            let attributes = 'searchable column py-2 is-12 is-vertical py-0 my-0';
             if (isStripe) {
                 attributes = attributes + ' has-background-light';
             }
