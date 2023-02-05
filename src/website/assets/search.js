@@ -231,6 +231,7 @@ getMetadata()
             }
 
             // use the sorted index to re-generate the divs.
+            let stripeCounter = 0
             sortedIndex.forEach((key, index) => {
                 const speaker = metadata.get(key);
                 const filterTest = isFiltered(speaker, filter);
@@ -238,7 +239,11 @@ getMetadata()
                 if (speakerMap.has(key)) {
                     // console.log('key='+key+' map='+speakerMap.get(key));
                     if (filterTest && searchTest) {
-                        show(fragment.appendChild(speakerMap.get(key)));
+                        let child = speakerMap.get(key);
+                        child.classList.remove('has-background-light');
+                        child.classList.toggle('has-background-light', stripeCounter %2 == 0 );
+                        show(fragment.appendChild(child));
+                        stripeCounter = stripeCounter + 1;
                     } else {
                         hide(fragment.appendChild(speakerMap.get(key)));
                     }
