@@ -135,8 +135,12 @@ function isSearch(key, results, minScore, keywords) {
         return shouldShow;
     }
 
-    const result = results[key];
-    const imeta = result.item;
+    if (!results.has(key)) {
+        return false;
+    }
+
+    const result = results.get(key);
+    const imeta = result.item.speaker;
     const score = result.score;
 
     if (minScore < Math.pow(10, -15)) {
@@ -161,7 +165,7 @@ getMetadata()
     .then((metadata) => {
         const url = new URL(window.location);
         const resultdiv = document.querySelector('div.searchresults');
-        const keywords = document.querySelector('#searchInput').value;
+        let keywords = document.querySelector('#searchInput').value;
 
         const filter = {
             brand: '',
@@ -178,8 +182,10 @@ getMetadata()
         };
 
         function readUrl() {
+            // read sort type
             if (url.searchParams.has('sort')) {
                 const sortParams = url.searchParams.get('sort');
+                sorter.by = sortParams;
             }
             if (url.searchParams.has('reverse')) {
                 const sortOrder = url.searchParams.get('reverse');
@@ -191,15 +197,50 @@ getMetadata()
             } else {
                 sorter.reverse = false;
             }
+            // read filter type
+            for( const filterName of Object.keys(filter) ) {
+                if (url.searchParams.has(filterName) ) {
+                    filter[filterName] = url.searchParams.get(filterName);
+                }
+            }
+            // read search type
+            if (url.searchParams.has('search')) {
+                keywords = url.searchParams.get('search');
+            }
         }
 
         function updateUrl() {
-            // update URL
-            url.searchParams.set('sort', sorter.by);
-            url.searchParams.set('reverse', sorter.reverse);
+            // update sort
+            if (sorter.by !== '') {
+                url.searchParams.set('sort', sorter.by);
+            } else {
+                url.searchParams.delete('sort');
+            }
+            if (sorter.reverse !== '') {
+                url.searchParams.set('reverse', sorter.reverse);
+            } else {
+                url.searchParams.delete('reverse');
+            }
             if (keywords !== '') {
                 url.searchParams.set('search', keywords);
+            } else {
+                url.searchParams.delete('search');
             }
+            // update filters
+            for( const [filterName, filterValue] of Object.entries(filter) ) {
+                if (filterValue !== '' ) {
+                    url.searchParams.set(filterName, filterValue);
+                } else {
+                    url.searchParams.delete(filterName);
+                }
+            }
+            // keywords
+            if (keywords !== '') {
+                url.searchParams.set('search', keywords);
+            } else {
+                url.searchParams.delete('search');
+            }
+            // push
             window.history.pushState({}, '', url);
         }
 
@@ -228,6 +269,7 @@ getMetadata()
                         }
                     }
                 }
+                results = new Map(results.map( obj => [obj.item.key, obj]));
             }
 
             // use the sorted index to re-generate the divs.
@@ -338,21 +380,26 @@ getMetadata()
         });
 
         document.querySelector('#searchInput').addEventListener('keyup', function () {
+            keywords = document.querySelector('#searchInput').value;
             updateUrl(url, keywords);
             selectDispatch();
         });
 
-        const fuse = new Fuse(metadata, {
-            isCaseSensitive: false,
-            matchAllTokens: true,
-            findAllMatches: true,
-            minMatchCharLength: 2,
-            keys: ['brand', 'model'],
-            treshhold: 0.5,
-            distance: 4,
-            includeScore: true,
-            useExatendedSearch: true,
-        });
+        const fuse = new Fuse(
+            // Fuse take a list not a map
+            [...metadata].map( item => ({key: item[0], speaker: item[1]})),
+            {
+                isCaseSensitive: false,
+                matchAllTokens: true,
+                findAllMatches: true,
+                minMatchCharLength: 2,
+                keys: ['speaker.brand', 'speaker.model'],
+                treshhold: 0.5,
+                distance: 4,
+                includeScore: true,
+                useExatendedSearch: true,
+            })
+        ;
 
         // if we have a parameter to start with we need to resort
         if (url.searchParams.has('sort')) {
