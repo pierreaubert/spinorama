@@ -32,14 +32,14 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
             onaxis["dB"] = spin["On Axis"]
 
         if onaxis.empty:
-            print("On Axis measurement not found!")
+            logger.error("On Axis measurement not found!")
             return {}
 
         freq_min = onaxis.Freq.min()
         freq_max = onaxis.Freq.max()
-        print("Freq min: {0}".format(freq_min))
+        logger.debug("Freq min: {0}".format(freq_min))
         if math.isnan(freq_min) or math.isnan(freq_max):
-            print("Estimates failed for onaxis {0}".format(onaxis.shape))
+            logger.error("Estimates failed for onaxis {0}".format(onaxis.shape))
             return {}
 
         # mean over 300-10k
@@ -48,7 +48,7 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
         )
         y_3 = None
         y_6 = None
-        print("mean over {}-{} Hz = {}".format(MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ, y_ref))
+        logger.debug("mean over {}-{} Hz = {}".format(MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ, y_ref))
         restricted_onaxis = onaxis.loc[(onaxis.Freq < MIDRANGE_MIN_FREQ)]
         # note that this is not necessary the max
         restricted_onaxis_3 = restricted_onaxis.dB < (y_ref - 3)
@@ -60,12 +60,12 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
         if len(restricted_onaxis_6) > 0:
             y_6_idx = np.argmin(restricted_onaxis_6)
             y_6 = restricted_onaxis.Freq[y_6_idx]
-        print("-3 and -6: {}Hz and {}Hz".format(y_3, y_6))
+        logger.debug("-3 and -6: {}Hz and {}Hz".format(y_3, y_6))
         #
         up: float = onaxis.loc[(onaxis.Freq >= MIDRANGE_MIN_FREQ) & (onaxis.Freq <= MIDRANGE_MAX_FREQ)].dB.max()
         down: float = onaxis.loc[(onaxis.Freq >= 100) & (onaxis.Freq <= 10000)].dB.min()
         band = max(abs(up - y_ref), abs(y_ref - down))
-        print("band {}".format(band))
+        logger.debug("band {}".format(band))
         est = {
             "ref_from": MIDRANGE_MIN_FREQ,
             "ref_to": MIDRANGE_MAX_FREQ,
@@ -79,7 +79,7 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
         if not math.isnan(band):
             est["ref_band"] = round(band, 1)
 
-        print("est v1 {}".format(est))
+        logger.debug("est v1 {}".format(est))
 
         # estimate sensivity for passive speakers
         if onaxis is not None:
@@ -87,13 +87,13 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
                 (onaxis.Freq >= SENSITIVITY_MIN_FREQ) & (onaxis.Freq <= SENSITIVITY_MAX_FREQ)
             ].dB.mean()
 
-        print("est v2 {}".format(est))
+        logger.debug("est v2 {}".format(est))
 
         return est
     except TypeError as te:
-        print("Estimates failed for {0} with {1}".format(onaxis.shape, te))
+        logger.error("Estimates failed for {0} with {1}".format(onaxis.shape, te))
     except ValueError as ve:
-        print("Estimates failed for {0} with {1}".format(onaxis.shape, ve))
+        logger.error("Estimates failed for {0} with {1}".format(onaxis.shape, ve))
     return {}
 
 
