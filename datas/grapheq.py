@@ -137,6 +137,30 @@ vendor_info = {
         # 1/3 octave
         "fixed_q": bandwidth2Q(1 / 3),
     },
+    "DBX 1215": {
+        "gain_p": 6,  # dB
+        "gain_m": -6,  # dB
+        "steps": 1,  # dB
+        "bands": [
+            25,
+            40,
+            63,
+            100,
+            160,
+            250,
+            400,
+            630,
+            1000,
+            1600,
+            2500,
+            4000,
+            6300,
+            10000,
+            16000,
+        ],
+        # 2/3 octave
+        "fixed_q": bandwidth2Q(2 / 3),
+    },
     "DBX 1231": {
         "gain_p": 6,  # dB can do more up to +/- 15dB
         "gain_m": -6,  # dB
