@@ -443,7 +443,6 @@ def optim_save_peq(
     # print results
     curves = optim_config["curve_names"]
     if auto_peq is not None and len(auto_peq) > 0:
-
         data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
         auto_target_interp = []
         for curve in curves:

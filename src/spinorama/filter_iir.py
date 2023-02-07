@@ -6,7 +6,6 @@ import numpy as np
 
 
 class Biquad:
-
     # pretend enumeration
     LOWPASS, HIGHPASS, BANDPASS, PEAK, NOTCH, LOWSHELF, HIGHSHELF = range(7)
 

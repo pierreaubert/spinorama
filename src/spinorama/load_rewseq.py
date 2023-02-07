@@ -10,7 +10,6 @@ logger = logging.getLogger("spinorama")
 
 
 def parse_eq_line(line, srate):
-
     status = None
     iir = None
     kind = None

@@ -167,7 +167,6 @@ def optim_greedy(
     ) = (False, -1, -1, -1, -1, -1, -1)
 
     for optim_iter in range(0, nb_iter):
-
         # we are optimizing above target_min_hz on anechoic data
         current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq, optim_config)
 
@@ -197,7 +196,15 @@ def optim_greedy(
         # )
 
         if optim_config["full_biquad_optim"] is True:
-            (state, current_type, current_freq, current_Q, current_dbGain, current_loss, current_nit,) = find_best_biquad(
+            (
+                state,
+                current_type,
+                current_freq,
+                current_Q,
+                current_dbGain,
+                current_loss,
+                current_nit,
+            ) = find_best_biquad(
                 df_speaker,
                 freq,
                 current_auto_target,
@@ -210,7 +217,15 @@ def optim_greedy(
                 current_loss,
             )
         else:
-            (state, current_type, current_freq, current_Q, current_dbGain, current_loss, current_nit,) = find_best_peak(
+            (
+                state,
+                current_type,
+                current_freq,
+                current_Q,
+                current_dbGain,
+                current_loss,
+                current_nit,
+            ) = find_best_peak(
                 df_speaker,
                 freq,
                 current_auto_target,
@@ -477,7 +492,6 @@ def optim_refine(
     greedy_results,
     greedy_peq,
 ) -> tuple[list[tuple[int, float, float]], Peq]:
-
     # loss from previous optim algo
     init_loss = greedy_results[-1][2]
 
@@ -615,7 +629,6 @@ def optim_multi_steps(
     optim_config: dict,
     use_score,
 ) -> tuple[list[tuple[int, float, float]], Peq]:
-
     if optim_config["use_grapheq"] is True:
         return optim_grapheq(
             speaker_name,

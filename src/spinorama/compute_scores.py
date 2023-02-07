@@ -38,7 +38,7 @@ def aad(dfu: pd.DataFrame) -> float:
     aad_sum = 0
     n = 0
     # 1/20 octave
-    for (bmin, bcenter, bmax) in octave(20):
+    for bmin, bcenter, bmax in octave(20):
         # 100hz to 16k hz
         if bcenter < 100 or bmax > 16000:
             continue

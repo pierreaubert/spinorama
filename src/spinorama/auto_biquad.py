@@ -147,7 +147,6 @@ def find_best_peak(
     optim_config,
     prev_best,
 ):
-
     biquad_type = 3
 
     def opt_peq(x):

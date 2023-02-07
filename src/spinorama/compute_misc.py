@@ -209,6 +209,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     tol = 0.0001
     #
     zero = az[deg0][kHz1:kHz10]
+
     # print('debug af {} am {} az {}'.format(af.shape, am.shape, az.shape))
     # print('debug af {}'.format(af))
     # print('debug am {}'.format(am.T[deg0]))
@@ -228,7 +229,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
         xp1 = int(x)
         xp2 = xp1 + 1
         per_octave = []
-        for (bmin, bcenter, bmax) in octave(2):
+        for bmin, bcenter, bmax in octave(2):
             # 100hz to 16k hz
             if bmin < 1000 or bmax > 10000:
                 continue
@@ -313,7 +314,6 @@ def directivity_matrix(splH, splV):
 
 
 def compute_directivity_deg_v2(df) -> tuple[float, float, float]:
-
     # def compute(spl, r):
     #     mean = spl[((spl.Freq>1000) & (spl.Freq<10000))]['On Axis'].mean()
     #     for k in r:

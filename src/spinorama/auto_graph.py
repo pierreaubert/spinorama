@@ -135,7 +135,6 @@ def graph_results(
     score,
     auto_score,
 ):
-
     # ~ default
     g_params = {
         "xmin": 20,

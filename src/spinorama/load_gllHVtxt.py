@@ -23,7 +23,6 @@ def parse_graph_gllHVtxt(dirpath):
     already_loaded_h = set()
     already_loaded_v = set()
     for file in files:
-
         base = os.path.basename(file)
         file_format = base[:-4].split("-")
         meridian = int(file_format[-2][1:])
@@ -101,7 +100,6 @@ def parse_graphs_speaker_gllHVtxt(speaker_path, speaker_brand, speaker_name, ver
     zipname = "{}/{}.zip".format(dirname, speaker_name)
 
     if not os.path.exists(zipname):
-
         # maybe the name is close but not exactly the name of the speaker
         guesses = glob.glob(f"{dirname}/*.zip")
         if len(guesses) == 1:

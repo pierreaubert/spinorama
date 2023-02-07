@@ -58,7 +58,6 @@ def autoEQ_score(config, checkpoint_dir=None):
 
 
 if __name__ == "__main__":
-
     df = fl.load("./cache.parse_all_speakers.h5")
     df_speaker = df["Adam S2V"]["ASR"]["asr"]
     df_speaker.keys()

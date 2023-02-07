@@ -28,7 +28,6 @@ class CORSRequestHandler(SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-
     args = docopt(__doc__, version="debug_servers.py version 1.1", options_first=True)
 
     ip = "127.0.0.1"

@@ -425,7 +425,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
         }
     ).reset_index(drop=True)
 
-    for (key, name) in [
+    for key, name in [
         ("Floor Bounce", floor_bounce),
         ("Ceiling Bounce", ceiling_bounce),
         ("Front Wall Bounce", front_wall_bounce),
@@ -460,7 +460,7 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
     v_r = pd.DataFrame({"Freq": v_spl.Freq}).reset_index(drop=True)
 
     # print(vr.shape, onaxis.shape, floor_reflection.shape)
-    for (key, name) in [
+    for key, name in [
         ("Floor Reflection", floor_reflection),
         ("Ceiling Reflection", ceiling_reflection),
         ("Total Vertical Reflection", total_vertical_reflection),
@@ -584,7 +584,7 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
             "Freq": h_spl.Freq,
         }
     ).reset_index(drop=True)
-    for (key, name) in [
+    for key, name in [
         ("Front", front),
         ("Side", side),
         ("Rear", rear),
@@ -677,7 +677,7 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
     # An SPDI of 0 dB indicates omnidirectional radiation. The larger the SPDI, the
     # more directional the loudspeaker is in the direction of the reference axis.
     spdi = pd.DataFrame({"dB": lw.dB - sp.dB})
-    for (key, name) in [
+    for key, name in [
         ("Early Reflections DI", erdi),
         ("Sound Power DI", spdi),
         ("DI offset", di_offset),
