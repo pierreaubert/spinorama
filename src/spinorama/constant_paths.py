@@ -31,6 +31,7 @@ CPATH_DATAS = "{}/{}".format(CPATH, "datas")
 CPATH_DATAS_LOGOS = "{}/{}".format(CPATH_DATAS, "logos")
 CPATH_DATAS_PICTURES = "{}/{}".format(CPATH_DATAS, "pictures")
 CPATH_DATAS_SPEAKERS = "{}/{}".format(CPATH_DATAS, "measurements")
+CPATH_DATAS_EQ = "{}/{}".format(CPATH_DATAS, "eq")
 
 # where the generated files go
 CPATH_DOCS = "{}/{}".format(CPATH, "docs")

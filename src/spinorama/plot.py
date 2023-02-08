@@ -205,7 +205,7 @@ def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
         title_text="Angle",
         range=[angle_min, angle_max],
         dtick=angle_step,
-        tickvals=[v for v in range(angle_min, angle_max + angle_step, angle_step)],
+        tickvals=list(range(angle_min, angle_max + angle_step, angle_step)),
         ticktext=["{}°".format(v) for v in range(angle_min, angle_max + angle_step, angle_step)],
         showline=True,
     )
@@ -249,6 +249,7 @@ def contour_layout(params):
     return dict(
         width=params["width"],
         height=params["height"],
+        legend=dict(x=0.5, y=1.05, xanchor="center", orientation=orientation),
         title=dict(
             x=0.5,
             y=0.99,
@@ -763,8 +764,20 @@ def plot_summary(df, summary, params):
     return None
 
 
-def plot_eqs(freq, peqs):
-    traces = [go.Scatter(x=freq, y=peq_build(freq, peq)) for peq in peqs]
+def plot_eqs(freq, peqs, names=None):
+    traces = None
+    if names is None:
+        traces = [go.Scatter(x=freq, y=peq_build(freq, peq)) for peq in peqs]
+    else:
+        traces = [
+            go.Scatter(
+                x=freq,
+                y=peq_build(freq, peq),
+                name=name,
+                hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
+            )
+            for peq, name in zip(peqs, names)
+        ]
     fig = go.Figure(data=traces)
     fig.update_xaxes(
         dict(
