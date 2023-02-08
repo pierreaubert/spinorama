@@ -18,13 +18,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-usage: generate_stats.py [--help] [--version] [--dev] [--print=<what>]\
- [--sitedev=<http>]  [--log-level=<level>]
+usage: generate_stats.py [--help] [--version] [--dev] [--force]\
+ [--log-level=<level>]
 
 Options:
   --help            display usage()
   --version         script version number
-  --print=<what>    print information. Options are 'eq_txt' or 'eq_csv'
+  --force           regenerate pictures even if they already exist.
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
 import json
@@ -47,7 +47,7 @@ from spinorama.load_rewseq import parse_eq_iir_rews
 VERSION = 0.1
 
 
-def print_eq_compare(data):
+def print_eq_compare(data, force):
     brand = data["brand"]
     model = data["model"]
     filename = "{}/{} {}/eq_compare.png".format(CPATH_DOCS_SPEAKERS, brand, model)
@@ -57,19 +57,19 @@ def print_eq_compare(data):
     names = [os.path.basename(eq) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     fig = plot_eqs(freq, peqs, names)
     fig.update_layout(title=f"EQs for {brand} {model}")
-    if not pathlib.Path(filename).is_file():
+    if not pathlib.Path(filename).is_file() or force:
         fig.write_image(filename)
     with wim(filename=filename) as pict:
         webp = "{}.webp".format(filename[:-4])
-        if not pathlib.Path(webp).is_file():
+        if not pathlib.Path(webp).is_file() or force:
             pict.convert("webp").save(filename=webp)
         pict.compression_quality = 75
         jpg = "{}.jpg".format(filename[:-4])
-        if not pathlib.Path(jpg).is_file():
+        if not pathlib.Path(jpg).is_file() or force:
             pict.convert("jpg").save(filename=jpg)
 
 
-def main():
+def main(force):
     # load all metadata from generated json file
     json_filename = CPATH_METADATA_JSON
     if not os.path.exists(json_filename):
@@ -83,8 +83,7 @@ def main():
     logger.warning("Data {0} loaded ({1} speakers)!".format(json_filename, len(jsmeta)))
 
     for speaker_name, speaker_data in jsmeta.items():
-        print(speaker_name)
-        print_eq_compare(speaker_data)
+        print_eq_compare(speaker_data, force)
 
     sys.exit(0)
 
@@ -100,4 +99,6 @@ if __name__ == "__main__":
     logger = get_custom_logger(True)
     logger.setLevel(level)
 
-    main()
+    force = args["--force"]
+
+    main(force)
