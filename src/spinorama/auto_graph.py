@@ -351,6 +351,10 @@ def graph_results(
         ],
     )
 
+    # separated figures for mobile rendering
+    fig_auto_eq = go.Figure()
+    fig_eq_full = go.Figure()
+
     # use an index to be able to move plots around
     current_row = 1
 
@@ -361,39 +365,61 @@ def graph_results(
         auto_eq_min = min(auto_eq_min, np.min(t.y))
         auto_eq_max = max(auto_eq_max, np.max(t.y))
         fig.add_trace(t, row=current_row, col=1)
+        fig_auto_eq.add_trace(t)
 
     for t in g_eq_full:
         auto_eq_min = min(auto_eq_min, np.min(t.y))
         auto_eq_max = max(auto_eq_max, np.max(t.y))
         fig.add_trace(t, row=current_row, col=2)
+        fig_eq_full.add_trace(t)
     auto_eq_max = int(auto_eq_max) + 1
     auto_eq_min = int(auto_eq_min) - 2
     # auto_eq_max = min(auto_eq_max, 5)
 
-    fig.update_xaxes(generate_xaxis(), row=current_row)
-    fig.update_yaxes(generate_yaxis_spl(auto_eq_min, auto_eq_max, 1), row=current_row)
+    xaxis = generate_xaxis()
+    yaxis = generate_yaxis_spl(auto_eq_min, auto_eq_max, 1)
+    fig.update_xaxes(xaxis, row=current_row)
+    fig.update_yaxes(yaxis, row=current_row)
+    fig_auto_eq.update_xaxes(xaxis)
+    fig_auto_eq.update_yaxes(yaxis)
+    fig_eq_full.update_xaxes(xaxis)
+    fig_eq_full.update_yaxes(yaxis)
 
     # add 2 spins
-
     current_row += 1
+    fig_spin_noeq = make_subplots(specs=[[{"secondary_y": True}]])
+    fig_spin_auto = make_subplots(specs=[[{"secondary_y": True}]])
 
     for t in g_spin_noeq:
         fig.add_trace(t, row=current_row, col=1, secondary_y=False)
+        fig_spin_noeq.add_trace(t, secondary_y=False)
 
     for t in g_spin_noeq_di:
         fig.add_trace(t, row=current_row, col=1, secondary_y=True)
+        fig_spin_noeq.add_trace(t, secondary_y=True)
 
     for t in g_spin_auto:
         t["showlegend"] = False
         fig.add_trace(t, row=current_row, col=2, secondary_y=False)
+        fig_spin_auto.add_trace(t, secondary_y=False)
 
     for t in g_spin_auto_di:
         t["showlegend"] = False
         fig.add_trace(t, row=current_row, col=2, secondary_y=True)
+        fig_spin_auto.add_trace(t, secondary_y=True)
 
-    fig.update_xaxes(generate_xaxis(), row=current_row)
-    fig.update_yaxes(generate_yaxis_spl(), row=current_row)
-    fig.update_yaxes(generate_yaxis_di(), row=current_row, secondary_y=True)
+    xaxis = generate_xaxis()
+    yaxis = generate_yaxis_spl()
+    yaxis_di = generate_yaxis_di()
+    fig.update_xaxes(xaxis, row=current_row)
+    fig.update_yaxes(yaxis, row=current_row)
+    fig.update_yaxes(yaxis_di, row=current_row, secondary_y=True)
+    fig_spin_noeq.update_xaxes(xaxis)
+    fig_spin_noeq.update_yaxes(yaxis)
+    fig_spin_noeq.update_yaxes(yaxis_di, secondary_y=True)
+    fig_spin_auto.update_xaxes(xaxis)
+    fig_spin_auto.update_yaxes(yaxis)
+    fig_spin_auto.update_yaxes(yaxis_di, secondary_y=True)
 
     # add ON, LW and PIR
 
@@ -516,4 +542,8 @@ def graph_results(
     # add all graphs and print it
     return [
         ("eq", fig),
+        ("auto_eq", fig_auto_eq),
+        ("eq_full", fig_eq_full),
+        ("spin_noeq", fig_spin_noeq),
+        ("spin_auto", fig_spin_auto),
     ]

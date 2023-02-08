@@ -36,10 +36,10 @@ import math
 
 from docopt import docopt
 import numpy as np
-from wand.image import Image as wim
 
 from generate_common import get_custom_logger, args2level
 from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DOCS_SPEAKERS, CPATH_DATAS_EQ
+from spinorama.plots import write_multiformat
 from spinorama.plot import plot_eqs
 from spinorama.load_rewseq import parse_eq_iir_rews
 
@@ -57,16 +57,7 @@ def print_eq_compare(data, force):
     names = [os.path.basename(eq) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     fig = plot_eqs(freq, peqs, names)
     fig.update_layout(title=f"EQs for {brand} {model}")
-    if not pathlib.Path(filename).is_file() or force:
-        fig.write_image(filename)
-    with wim(filename=filename) as pict:
-        webp = "{}.webp".format(filename[:-4])
-        if not pathlib.Path(webp).is_file() or force:
-            pict.convert("webp").save(filename=webp)
-        pict.compression_quality = 75
-        jpg = "{}.jpg".format(filename[:-4])
-        if not pathlib.Path(jpg).is_file() or force:
-            pict.convert("jpg").save(filename=jpg)
+    write_multiformat(fig, filename, force)
 
 
 def main(force):

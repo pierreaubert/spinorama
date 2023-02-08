@@ -30,6 +30,10 @@ function getPictureEqCompare(brand, model, suffix) {
     return encodeURI('speakers/' + brand + ' ' + model + '/eq_compare.' + suffix);
 }
 
+function getPictureEqDetails(brand, model, version) {
+    return encodeURI('speakers/' + brand + ' ' + model + '/' + version + '/filters')
+}
+
 getMetadata()
     .then((metadata) => {
         const source = document.querySelector('#templateEQ').innerHTML;
@@ -51,16 +55,17 @@ getMetadata()
                     };
                 }
             }
+            const origin = pValue.measurements[pValue.default_measurement].origin.replace('Vendors-', '');
             return {
                 id: getID(pValue.brand, pValue.model),
                 brand: pValue.brand,
                 model: pValue.model,
                 name: pValue.eqs.autoeq.display_name,
                 img_eq_compare: {
-                    avif: getPictureEqCompare(pValue.brand, pValue.model, 'avif'),
                     webp: getPictureEqCompare(pValue.brand, pValue.model, 'webp'),
                     jpg: getPictureEqCompare(pValue.brand, pValue.model, 'jpg')
                 },
+                img_eq_details: getPictureEqDetails(pValue.brand, pValue.model, origin),
                 autoeq: {
                     key: 'autoeq',
                     name: pValue.eqs.autoeq.display_name,
@@ -105,8 +110,8 @@ getMetadata()
             }
         }
 
-        function addModalEvents(divEQ, context) {
-            const click = divEQ.querySelector('#eq-button-compare-'+context.id);
+        function addModalEventsTag(divEQ, context, tag) {
+            const click = divEQ.querySelector('#' + tag + '-' + context.id);
             if (click !== null ) {
                 const target = click.dataset.target;
                 const modal = divEQ.querySelector('#'+target);
@@ -121,6 +126,11 @@ getMetadata()
                     });
                 }
             }
+        }
+
+        function addModalEvents(divEQ, context) {
+            addModalEventsTag(divEQ, context, 'eq-button-compare');
+            addModalEventsTag(divEQ, context, 'eq-button-details-autoeq');
         }
 
         function printEQ(key, index, pValue) {

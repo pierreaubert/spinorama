@@ -113,6 +113,7 @@ from datas.grapheq import vendor_info as grapheq_info
 
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
 from spinorama.constant_paths import CPATH_DOCS_SPEAKERS, MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+from spinorama.pict import write_multiformat
 from spinorama.load_rewseq import parse_eq_iir_rews
 from spinorama.compute_estimates import estimates_spin
 from spinorama.compute_misc import compute_statistics
@@ -530,10 +531,14 @@ def optim_save_peq(
             if "Vendors-" in origin:
                 origin = origin[8:]
             graph_filename = "{}/{}/{}/filters_{}".format(CPATH_DOCS_SPEAKERS, current_speaker_name, origin, name)
+            if optim_config["use_grapheq"]:
+                grapheq_name = optim_config["grapheq_name"]
+                short_name = grapheq_name.lower().replace(" ", "-")
+                graph_filename += short_name
             if smoke_test:
                 graph_filename += "_smoketest"
             graph_filename += ".png"
-            graph.write_image(graph_filename)
+            write_multiformat(graph, graph_filename, True)
 
     # print a compact table of results
     if verbose and use_score:
