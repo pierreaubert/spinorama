@@ -82,197 +82,195 @@
           <section class="modal-card-body">
             <div class="table-container">
               {{#each reviews.reviews}}
-                <table class="table is-striped is-narrow">
-                  <thead>
-                    <tr>
-                      <th colspan="100%">
-                        <a href={{this.url}}>Review</a>
-                        from
-                        {{this.origin}}
-                        ({{this.version}})
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="has-text-right">
-                      <th>Estimates</th>
-                      <th>Def.</th>
-                      <th>w/Eq</th>
-                    </tr>
-                    <tr class="has-text-right">
-                      <td>-3dB v.s. reference:</td>
-                      <td>{{floorFloat this.estimates.ref_3dB}}Hz</td>
-                      <td>{{floorFloat this.estimatesEq.ref_3dB}}Hz</td>
-                    </tr>
-                    <tr class="has-text-right">
-                      <td>-6dB v.s. reference:</td>
-                      <td>{{floorFloat this.estimates.ref_6dB}}Hz</td>
-                      <td>{{floorFloat this.estimatesEq.ref_6dB}}Hz</td>
-                    </tr>
-                    <tr class="has-text-right">
-                      <td>Horizontal Directivity between 1kHz and 10kHz</td>
-                      <td>[{{this.estimates.dir_horizontal_m}}°,
-                        {{this.estimates.dir_horizontal_p}}°]</td>
-                      <td>--</td>
-                    </tr>
-                    <tr class="has-text-right">
-                      <td>Vertical Directivity between 1kHz and 10kHz</td>
-                      <td>[{{this.estimates.dir_vertical_m}}°,
-                        {{this.estimates.dir_vertical_p}}°]</td>
-                      <td>--</td>
-                    </tr>
-                    <tr class="has-text-right">
-                      <td>Deviation between
-                        {{this.estimates.ref_from}}Hz to
-                        {{this.estimates.ref_to}}Hz</td>
-                      <td>&plusmn;{{this.estimates.ref_band}}dB</td>
-                      <td>&plusmn;{{this.estimatesEq.ref_band}}dB</td>
-                    </tr>
-                    {{#if (isDefined this.sensitivity)}}
-                      <tr class="has-text-right">
-                        <td>Sensitivity:</td>
-                        <td>{{roundFloat this.sensitivity}}dB</td>
-                        <td></td>
-                      </tr>
-                    {{/if}}
-                    {{#unless (isNaN scores.pref_score)}}
-                      <tr class="has-text-right">
-                        <th>Score components</th>
-                        <th>Def.</th>
-                        <th>w/Eq</th>
-                      </tr>
-                      <tr class="has-text-right">
-                        <td>NBD ON:</td>
-                        <td>{{this.scores.nbd_on_axis}}</td>
-                        <td>{{this.scoresEq.nbd_on_axis}}</td>
-                      </tr>
-                      <tr class="has-text-right">
-                        <td>NBD LW:</td>
-                        <td>{{this.scores.nbd_listening_window}}</td>
-                        <td>{{this.scoresEq.nbd_listening_window}}</td>
-                      </tr>
-                      <tr class="has-text-right">
-                        <td>LFX (Hz):</td>
-                        <td>{{this.this.scores.lfx_hz}}</td>
-                        <td>{{this.scoresEq.lfx_hz}}</td>
-                      </tr>
-                      <tr class="has-text-right">
-                        <td>SM PIR:</td>
-                        <td>{{this.scores.sm_pred_in_room}}</td>
-                        <td>{{this.scoresEq.sm_pred_in_room}}</td>
-                      </tr>
-                      <tr class="has-text-right">
-                        <td>SM SP:</td>
-                        <td>{{this.scores.sm_sound_power}}</td>
-                        <td>{{this.scoresEq.sm_sound_power}}</td>
-                      </tr>
-                      <tr class="has-text-right">
-                        <td>Score</td>
-                        <td><b>{{this.scores.pref_score}}</b></td>
-                        <td>{{this.scoresEq.pref_score}}</td>
-                      </tr>
-                      <tr class="has-text-right">
-                        <td>Score with subwoofer</td>
-                        <td>{{this.scores.pref_score_wsub}}</td>
-                        <td>{{this.scoresEq.pref_score_wsub}}</td>
-                      </tr>
-                    {{/unless}}
-                    {{#if (isDefined specifications)}}
-                      <tr class="has-text-right">
-                        <th>Vendor specifications</th>
-                        <th></th>
-                        <th></th>
-                      </tr>
-                      {{#if (isDefined specifications.dispersion)}}
-                        {{#if (isDefined specifications.dispersion.horizontal)}}
-                          <tr class="has-text-right">
-                            <td>Dispersion Horizontal</td>
-                            <td
-                            >{{this.specifications.dispersion.horizontal}}°</td>
-                            <td></td>
-                          </tr>
-                        {{/if}}
-                        {{#if (isDefined specifications.dispersion.vertical)}}
-                          <tr class="has-text-right">
-                            <td>Dispersion Vertical</td>
-                            <td
-                            >{{this.specifications.dispersion.vertical}}°</td>
-                            <td></td>
-                          </tr>
-                        {{/if}}
-                      {{/if}}
-                      {{#if (isDefined specifications.sensitivity)}}
-                        <tr class="has-text-right">
-                          <td>Sensitivity</td>
-                          <td>{{this.specifications.sensitivity}}dB</td>
-                          <td></td>
-                        </tr>
-                      {{/if}}
-                      {{#if (isDefined specifications.impedance)}}
-                        <tr class="has-text-right">
-                          <td>Impedance</td>
-                          <td>{{this.specifications.impedance}}&#8486;</td>
-                          <td></td>
-                        </tr>
-                      {{/if}}
-                      {{#if (isDefined specifications.SPL)}}
-                        {{#if (isDefined specifications.SPL.peak)}}
-                          <tr class="has-text-right">
-                            <td>SPL Peak</td>
-                            <td>{{this.specifications.SPL.peak}}dB</td>
-                            <td></td>
-                          </tr>
-                        {{/if}}
-                        {{#if (isDefined specifications.SPL.continuous)}}
-                          <tr class="has-text-right">
-                            <td>SPL continuous</td>
-                            <td>{{this.specifications.SPL.continuous}}dB</td>
-                            <td></td>
-                          </tr>
-                        {{/if}}
-                      {{/if}}
-                      {{#if (isDefined specifications.size)}}
-                        {{#if (isDefined specifications.size.width)}}
-                          <tr class="has-text-right">
-                            <td>Width</td>
-                            <td>{{this.specifications.size.width}}mm</td>
-                            <td></td>
-                          </tr>
-                        {{/if}}
-                        {{#if (isDefined specifications.size.height)}}
-                          <tr class="has-text-right">
-                            <td>Height</td>
-                            <td>{{this.specifications.size.height}}mm</td>
-                            <td></td>
-                          </tr>
-                        {{/if}}
-                        {{#if (isDefined specifications.size.depth)}}
-                          <tr class="has-text-right">
-                            <td>Depth</td>
-                            <td>{{this.specifications.size.depth}}mm</td>
-                            <td></td>
-                          </tr>
-                        {{/if}}
-                      {{/if}}
-                      {{#if (isDefined specifications.weight)}}
-                        <tr class="has-text-right">
-                          <td>Weight</td>
-                          <td>{{this.specifications.weight}}kg</td>
-                          <td></td>
-                        </tr>
-                      {{/if}}
-                    {{/if}}
-                  </tbody>
-                </table>
-                {{/each}}
-                {{#unless (isNaN scores.pref_score)}}
-                <figure>
-                  <img src="{{spider}}" />
-                </figure>
-                {{/unless}}
+              <table class="table is-striped is-narrow">
+                <thead>
+                  <tr>
+                    <th colspan="100%">
+                      <a href={{this.url}}>Review</a>
+                      from
+                      {{this.origin}}
+                      ({{this.version}})
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="has-text-right">
+                    <th>Estimates</th>
+                    <th>Def.</th>
+                    <th>w/Eq</th>
+                  </tr>
+                  <tr class="has-text-right">
+                    <td>-3dB v.s. reference:</td>
+                    <td>{{floorFloat this.estimates.ref_3dB}}Hz</td>
+                    <td>{{floorFloat this.estimatesEq.ref_3dB}}Hz</td>
+                  </tr>
+                  <tr class="has-text-right">
+                    <td>-6dB v.s. reference:</td>
+                    <td>{{floorFloat this.estimates.ref_6dB}}Hz</td>
+                    <td>{{floorFloat this.estimatesEq.ref_6dB}}Hz</td>
+                  </tr>
+                  <tr class="has-text-right">
+                    <td>Horizontal Directivity between 1kHz and 10kHz</td>
+                    <td>[{{this.estimates.dir_horizontal_m}}°,
+                      {{this.estimates.dir_horizontal_p}}°]</td>
+                    <td>--</td>
+                  </tr>
+                  <tr class="has-text-right">
+                    <td>Vertical Directivity between 1kHz and 10kHz</td>
+                    <td>[{{this.estimates.dir_vertical_m}}°,
+                      {{this.estimates.dir_vertical_p}}°]</td>
+                    <td>--</td>
+                  </tr>
+                  <tr class="has-text-right">
+                    <td>Deviation between
+                      {{this.estimates.ref_from}}Hz to
+                      {{this.estimates.ref_to}}Hz</td>
+                    <td>&plusmn;{{this.estimates.ref_band}}dB</td>
+                    <td>&plusmn;{{this.estimatesEq.ref_band}}dB</td>
+                  </tr>
+                  {{#if (isDefined this.sensitivity)}}
+                  <tr class="has-text-right">
+                    <td>Sensitivity:</td>
+                    <td>{{roundFloat this.sensitivity}}dB</td>
+                    <td></td>
+                  </tr>
+                  {{/if}}
+                  {{#unless (isNaN scores.pref_score)}}
+                  <tr class="has-text-right">
+                    <th>Score components</th>
+                    <th>Def.</th>
+                    <th>w/Eq</th>
+                  </tr>
+                  <tr class="has-text-right">
+                    <td>NBD ON:</td>
+                    <td>{{this.scores.nbd_on_axis}}</td>
+                    <td>{{this.scoresEq.nbd_on_axis}}</td>
+                  </tr>
+                  <tr class="has-text-right">
+                    <td>NBD LW:</td>
+                    <td>{{this.scores.nbd_listening_window}}</td>
+                    <td>{{this.scoresEq.nbd_listening_window}}</td>
+                  </tr>
+                  <tr class="has-text-right">
+                    <td>LFX (Hz):</td>
+                    <td>{{this.this.scores.lfx_hz}}</td>
+                    <td>{{this.scoresEq.lfx_hz}}</td>
+                  </tr>
+                  <tr class="has-text-right">
+                    <td>SM PIR:</td>
+                    <td>{{this.scores.sm_pred_in_room}}</td>
+                    <td>{{this.scoresEq.sm_pred_in_room}}</td>
+                  </tr>
+                  <tr class="has-text-right">
+                    <td>SM SP:</td>
+                    <td>{{this.scores.sm_sound_power}}</td>
+                    <td>{{this.scoresEq.sm_sound_power}}</td>
+                  </tr>
+                  <tr class="has-text-right">
+                    <td>Score</td>
+                    <td><b>{{this.scores.pref_score}}</b></td>
+                    <td>{{this.scoresEq.pref_score}}</td>
+                  </tr>
+                  <tr class="has-text-right">
+                    <td>Score with subwoofer</td>
+                    <td>{{this.scores.pref_score_wsub}}</td>
+                    <td>{{this.scoresEq.pref_score_wsub}}</td>
+                  </tr>
+                  {{/unless}}
+                  {{#if (isDefined specifications)}}
+                  <tr class="has-text-right">
+                    <th>Vendor specifications</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                  {{#if (isDefined specifications.dispersion)}}
+                  {{#if (isDefined specifications.dispersion.horizontal)}}
+                  <tr class="has-text-right">
+                    <td>Dispersion Horizontal</td>
+                    <td>{{this.specifications.dispersion.horizontal}}°</td>
+                    <td></td>
+                  </tr>
+                  {{/if}}
+                  {{#if (isDefined specifications.dispersion.vertical)}}
+                  <tr class="has-text-right">
+                    <td>Dispersion Vertical</td>
+                    <td>{{this.specifications.dispersion.vertical}}°</td>
+                    <td></td>
+                  </tr>
+                  {{/if}}
+                  {{/if}}
+                  {{#if (isDefined specifications.sensitivity)}}
+                  <tr class="has-text-right">
+                    <td>Sensitivity</td>
+                    <td>{{this.specifications.sensitivity}}dB</td>
+                    <td></td>
+                  </tr>
+                  {{/if}}
+                  {{#if (isDefined specifications.impedance)}}
+                  <tr class="has-text-right">
+                    <td>Impedance</td>
+                    <td>{{this.specifications.impedance}}&#8486;</td>
+                    <td></td>
+                  </tr>
+                  {{/if}}
+                  {{#if (isDefined specifications.SPL)}}
+                  {{#if (isDefined specifications.SPL.peak)}}
+                  <tr class="has-text-right">
+                    <td>SPL Peak</td>
+                    <td>{{this.specifications.SPL.peak}}dB</td>
+                    <td></td>
+                  </tr>
+                  {{/if}}
+                  {{#if (isDefined specifications.SPL.continuous)}}
+                  <tr class="has-text-right">
+                    <td>SPL continuous</td>
+                    <td>{{this.specifications.SPL.continuous}}dB</td>
+                    <td></td>
+                  </tr>
+                  {{/if}}
+                  {{/if}}
+                  {{#if (isDefined specifications.size)}}
+                  {{#if (isDefined specifications.size.width)}}
+                  <tr class="has-text-right">
+                    <td>Width</td>
+                    <td>{{this.specifications.size.width}}mm</td>
+                    <td></td>
+                  </tr>
+                  {{/if}}
+                  {{#if (isDefined specifications.size.height)}}
+                  <tr class="has-text-right">
+                    <td>Height</td>
+                    <td>{{this.specifications.size.height}}mm</td>
+                    <td></td>
+                  </tr>
+                  {{/if}}
+                  {{#if (isDefined specifications.size.depth)}}
+                  <tr class="has-text-right">
+                    <td>Depth</td>
+                    <td>{{this.specifications.size.depth}}mm</td>
+                    <td></td>
+                  </tr>
+                  {{/if}}
+                  {{/if}}
+                  {{#if (isDefined specifications.weight)}}
+                  <tr class="has-text-right">
+                    <td>Weight</td>
+                    <td>{{this.specifications.weight}}kg</td>
+                    <td></td>
+                  </tr>
+                  {{/if}}
+                  {{/if}}
+                </tbody>
+              </table>
+              {{/each}}
+              {{#unless (isNaN scores.pref_score)}}
+              <figure>
+                <img src="{{spider}}" />
+              </figure>
+              {{/unless}}
           </section>
+          </div>
         </div>
-      </div>
     </script>
 
     <div class="section">

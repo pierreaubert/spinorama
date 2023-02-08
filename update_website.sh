@@ -78,6 +78,16 @@ if [ $status -ne 0 ]; then
 else
     echo "OK after generate radar!"
 fi
+# generate eq_compare
+# rm -f docs/speakers/*/eq_compare*
+command=$(./generate_eq_compare.py)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate EQ compare!"
+    exit 1;
+else
+    echo "OK after generate EQ compare!"
+fi
 # generate status
 rm -f docs/stats/*.json
 command=$(./generate_stats.py)

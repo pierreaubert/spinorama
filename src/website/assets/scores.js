@@ -17,6 +17,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import {
+    openModal,
+    closeModal,
     urlSite,
     getID,
     getPicture,
@@ -28,9 +30,6 @@ import {
 } from './misc.js';
 import { getMetadata } from './common.js';
 import { sortMetadata2 } from './sort.js';
-
-function openModal(el) { el.classList.add('is-active');  }
-function closeModal(el) { el.classList.remove('is-active'); }
 
 getMetadata()
     .then((metadata) => {

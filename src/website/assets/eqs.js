@@ -18,7 +18,17 @@
 
 import { getMetadata } from './common.js';
 import { sortMetadata2 } from './sort.js';
-import { getPeq, getID } from './misc.js';
+import {
+    openModal,
+    closeModal,
+    getPeq,
+    getID
+}
+from './misc.js';
+
+function getPictureEqCompare(brand, model, suffix) {
+    return encodeURI('speakers/' + brand + ' ' + model + '/eq_compare.' + suffix);
+}
 
 getMetadata()
     .then((metadata) => {
@@ -46,6 +56,11 @@ getMetadata()
                 brand: pValue.brand,
                 model: pValue.model,
                 name: pValue.eqs.autoeq.display_name,
+                img_eq_compare: {
+                    avif: getPictureEqCompare(pValue.brand, pValue.model, 'avif'),
+                    webp: getPictureEqCompare(pValue.brand, pValue.model, 'webp'),
+                    jpg: getPictureEqCompare(pValue.brand, pValue.model, 'jpg')
+                },
                 autoeq: {
                     key: 'autoeq',
                     name: pValue.eqs.autoeq.display_name,
@@ -81,7 +96,7 @@ getMetadata()
             }
         }
 
-        function addEvents(divEQ, context) {
+        function addChangeEvents(divEQ, context) {
             const selectEQ = divEQ.querySelector('#eq-select-'+context.id);
             if (selectEQ !== null) {
                 selectEQ.addEventListener('change', function () {
@@ -90,14 +105,35 @@ getMetadata()
             }
         }
 
-        function printEQ(key, index, value) {
-            const context = getContext(key, index, value);
+        function addModalEvents(divEQ, context) {
+            const click = divEQ.querySelector('#eq-button-compare-'+context.id);
+            if (click !== null ) {
+                const target = click.dataset.target;
+                const modal = divEQ.querySelector('#'+target);
+                if (modal !== null) {
+                    click.addEventListener('click', () => {
+                        return openModal(modal);
+                    });
+                    const childs = modal.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button');
+                    childs.forEach( closeable => {
+                        const target = closeable.closest('.modal');
+                        closeable.addEventListener('click', () => closeModal(target));
+                    });
+                }
+            }
+        }
+
+        function printEQ(key, index, pValue) {
+            const context = getContext(key, index, pValue);
             const html = template(context);
             const divEQ = document.createElement('div');
+            // populate
             divEQ.setAttribute('class', 'column is-narrow searchable');
             divEQ.setAttribute('id', context.id);
             divEQ.innerHTML = html;
-            addEvents(divEQ, context);
+            // add events
+            addChangeEvents(divEQ, context);
+            addModalEvents(divEQ, context);
             return divEQ;
         }
 
@@ -111,6 +147,12 @@ getMetadata()
                 }
             });
             speakerContainer.appendChild(fragment1);
+            speakerContainer.addEventListener('keydown', (event) => {
+                const e = event || window.event;
+                if (e.keyCode === 27) { // Escape key
+                    document.querySelectorAll('.modal').forEach( modal => closeModal(modal));
+                }
+            });
         }
 
         display();

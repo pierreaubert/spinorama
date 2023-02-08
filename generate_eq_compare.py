@@ -36,6 +36,7 @@ import math
 
 from docopt import docopt
 import numpy as np
+from wand.image import Image as wim
 
 from generate_common import get_custom_logger, args2level
 from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DOCS_SPEAKERS, CPATH_DATAS_EQ
@@ -49,17 +50,23 @@ VERSION = 0.1
 def print_eq_compare(data):
     brand = data["brand"]
     model = data["model"]
-    filename = "{}/{} {}/eq_compare.jpg".format(CPATH_DOCS_SPEAKERS, brand, model)
-    if pathlib.Path(filename).is_file():
-        return
+    filename = "{}/{} {}/eq_compare.png".format(CPATH_DOCS_SPEAKERS, brand, model)
     freq = np.logspace(math.log10(2) + 1, math.log10(2) + 4, 200)
-
     eqs = glob.glob("{}/{} {}/*.txt".format(CPATH_DATAS_EQ, brand, model))
     peqs = [parse_eq_iir_rews(eq, 48000) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     names = [os.path.basename(eq) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     fig = plot_eqs(freq, peqs, names)
     fig.update_layout(title=f"EQs for {brand} {model}")
-    fig.write_image(filename)
+    if not pathlib.Path(filename).is_file():
+        fig.write_image(filename)
+    with wim(filename=filename) as pict:
+        webp = "{}.webp".format(filename[:-4])
+        if not pathlib.Path(webp).is_file():
+            pict.convert("webp").save(filename=webp)
+        pict.compression_quality = 75
+        jpg = "{}.jpg".format(filename[:-4])
+        if not pathlib.Path(jpg).is_file():
+            pict.convert("jpg").save(filename=jpg)
 
 
 def main():
