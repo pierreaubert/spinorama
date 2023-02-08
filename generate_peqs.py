@@ -133,6 +133,7 @@ VERSION = "0.19"
 
 
 def get3db(spin, db_point):
+    """Get -3dB point"""
     est = {}
     if "CEA2034_unmelted" in spin.keys():
         est = estimates_spin(spin["CEA2034_unmelted"])
@@ -142,6 +143,7 @@ def get3db(spin, db_point):
 
 
 def print_items(aggregated_results):
+    """Print all results of optimisation in a csv file"""
     v_sn = []
     v_iter = []
     v_loss = []
@@ -158,6 +160,7 @@ def print_items(aggregated_results):
 
 
 def print_scores(aggregated_scores):
+    """Print all scores in a csv file"""
     s_sn = []
     s_ref = []
     s_manual = []
@@ -185,6 +188,7 @@ def optim_find_peq(
     optim_config,
     use_score,
 ):
+    """Find the best EQ for this speaker"""
     # shortcut
     curves = optim_config["curve_names"]
 
@@ -223,8 +227,8 @@ def optim_find_peq(
                 MIDRANGE_MIN_FREQ,
                 MIDRANGE_MAX_FREQ,
             )
-        except ValueError as ve:
-            print("error:{}  {}".format(current_speaker_name, ve))
+        except ValueError as value_error:
+            print("error:{}  {}".format(current_speaker_name, value_error))
 
     return auto_score, auto_results, auto_peq, auto_slope_lw
 
@@ -456,7 +460,7 @@ def optim_save_peq(
 
     comments += [
         f"Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v{VERSION}",
-        "Dated: {}".format(datetime.today().strftime("%Y-%m-%d-%H:%M:%S")),
+        f"Dated: {datetime.today().strftime('%Y-%m-%d-%H:%M:%S')}",
         "",
     ]
     eq_apo = peq_format_apo("\n".join(comments), auto_peq)
@@ -556,6 +560,7 @@ def optim_save_peq(
 
 
 def queue_speakers(df_all_speakers, optim_config, speaker_name):
+    """Add all speakers to the queue"""
     ray_ids = {}
     for current_speaker_name in df_all_speakers.keys():
         if speaker_name is not None and current_speaker_name != speaker_name:
@@ -601,6 +606,7 @@ def queue_speakers(df_all_speakers, optim_config, speaker_name):
 
 
 def compute_peqs(ray_ids):
+    """Process EQ when it is available from the queue"""
     done_ids = set()
     aggregated_results = {}
     aggregated_scores = {}

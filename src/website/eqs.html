@@ -7,26 +7,45 @@
     <%include file="nav_menu.html"/> <%namespace name="util"
     module="website.utils" import="*"/>
 
+    <script>
+      Handlebars.registerHelper("isNotEmpty", function (value) {
+        return Object.keys(value).length > 0;
+      });
+    </script>
+
     <script id="templateEQ" type="text/x-handlebars-template">
-      <table class="table is-striped">
+      <table class="table">
         <tr>
           <th>
             {{brand}}
             {{model}}
-            (<a href="{{autoeq}}">automaticEQ</a>)
           </th>
         </tr>
+        {{#if (isNotEmpty othereq)}}
         <tr>
-          <td>
-            Set preamp gain to:
-            {{preamp_gain}}
-            dB.
+          <td class="has-text-centered">
+            <div class="control">
+              <div class="select">
+                <select id="eq-select-{{id}}">
+                  <option value="{{autoeq.key}}">{{autoeq.name}}</option>
+                  {{#each othereq}}
+                  <option value="{{key}}">{{name}}</option>
+                  {{/each}}
+                </select>
+              </div>
+            </div>
           </td>
         </tr>
-        <tr>
+        {{/if}}
+        <tr id="eq-{{id}}-autoeq">
           <td>
             <table class="table is-striped">
               <thead>
+                <tr>
+                  <td colspan="4" class="has-text-centered">
+                    Set preamp gain to: <b>{{autoeq.preamp_gain}}dB</b>.
+                  </td>
+                </tr>
                 <tr>
                   <th>Type</th>
                   <th>Freq</th>
@@ -35,18 +54,63 @@
                 </tr>
               </thead>
               <tbody>
-                {{#each peq}}
-                  <tr>
+                {{#each autoeq.peq}}
+                <tr>
                     <td>{{this.type}}</td>
                     <td>{{this.freq}}</td>
                     <td>{{this.Q}}</td>
                     <td>{{this.dbGain}}</td>
                   </tr>
                 {{/each}}
+                <tr>
+                  <td colspan="4" class="has-text-centered">
+                    <button class="button is-info is-light" id="modal-eq-{{id}}">Details</button>
+                    <a class="button is-link is-light" href="{{autoeq.url}}">Download</a>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </td>
         </tr>
+        {{#if (isNotEmpty othereq)}}
+        {{#each othereq}}
+        <tr class="hidden" id="eq-{{../id}}-{{this.key}}">
+          <td>
+            <table class="table is-striped">
+              <thead>
+                <tr>
+                  <td colspan="4" class="has-text-centered">
+                    Set preamp gain to: <b>{{this.preamp_gain}}dB</b>.
+                  </td>
+                </tr>
+                <tr>
+                  <th>Type</th>
+                  <th>Freq</th>
+                  <th>Q</th>
+                  <th>Gain</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each this.peq}}
+                <tr>
+                    <td>{{this.type}}</td>
+                    <td>{{this.freq}}</td>
+                    <td>{{this.Q}}</td>
+                    <td>{{this.dbGain}}</td>
+                  </tr>
+                {{/each}}
+                <tr>
+                  <td class="has-text-centered" colspan="4">
+                    <button class="button is-info is-light" id="modal-eq-{{../id}}">Details</button>
+                    <a class="button is-link is-light" href="{{this.url}}">Download</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        {{/each}}
+        {{/if}}
       </table>
     </script>
 

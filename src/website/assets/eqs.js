@@ -25,19 +25,69 @@ getMetadata()
         const source = document.querySelector('#templateEQ').innerHTML;
         const template = Handlebars.compile(source);
 
-        function getContext(key, index, value) {
-            // console.log(getReviews(value));
+        function getContext(pKey, pIndex, pValue) {
+            const defaultEQ = pValue.default_eq;
+            let otherEQ = {};
+            for (const eqType in pValue.eqs) {
+                if (eqType !== defaultEQ) {
+                    otherEQ[eqType] = {
+                        key: eqType,
+                        name: pValue.eqs[eqType].display_name,
+                        url:
+                        'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/' +
+                            encodeURI(pValue.eqs[eqType].filename),
+                        preamp_gain: pValue.eqs[eqType].preamp_gain,
+                        peq: getPeq(pValue.eqs[eqType].peq),
+                    };
+                }
+            }
             return {
-                id: getID(value.brand, value.model),
-                brand: value.brand,
-                model: value.model,
-                autoeq:
-                    'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/' +
-                    encodeURI(value.brand + ' ' + value.model) +
-                    '/iir-autoeq.txt',
-                preamp_gain: value.eq_autoeq.preamp_gain,
-                peq: getPeq(value.eq_autoeq.peq),
+                id: getID(pValue.brand, pValue.model),
+                brand: pValue.brand,
+                model: pValue.model,
+                name: pValue.eqs.autoeq.display_name,
+                autoeq: {
+                    key: 'autoeq',
+                    name: pValue.eqs.autoeq.display_name,
+                    url: 'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/' +
+                        encodeURI(pValue.eqs.autoeq.filename),
+                    preamp_gain: pValue.eqs.autoeq.preamp_gain,
+                    peq: getPeq(pValue.eqs.autoeq.peq)
+                },
+                othereq: otherEQ,
             };
+        }
+
+        function switchVisible(divEQ, context, current) {
+            if ( current === 'autoeq' ) {
+                let autoeq = divEQ.querySelector('#eq-'+context.id+'-autoeq');
+                autoeq.classList.remove('hidden');
+                for (const oeq in context.othereq) {
+                    let eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
+                    eq.classList.add('hidden');
+                }
+            } else {
+                let autoeq = divEQ.querySelector('#eq-'+context.id+'-autoeq');
+                autoeq.classList.add('hidden');
+                for (const oeq in context.othereq) {
+                    if (oeq === current) {
+                        let eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
+                        eq.classList.remove('hidden');
+                    } else {
+                        let eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
+                        eq.classList.add('hidden');
+                    }
+                }
+            }
+        }
+
+        function addEvents(divEQ, context) {
+            const selectEQ = divEQ.querySelector('#eq-select-'+context.id);
+            if (selectEQ !== null) {
+                selectEQ.addEventListener('change', function () {
+                    switchVisible(divEQ, context, this.value);
+                });
+            }
         }
 
         function printEQ(key, index, value) {
@@ -47,6 +97,7 @@ getMetadata()
             divEQ.setAttribute('class', 'column is-narrow searchable');
             divEQ.setAttribute('id', context.id);
             divEQ.innerHTML = html;
+            addEvents(divEQ, context);
             return divEQ;
         }
 
@@ -55,7 +106,7 @@ getMetadata()
             const fragment1 = new DocumentFragment();
             sortMetadata2(metadata, { by: 'date' }).forEach(function (key, index) {
                 const speaker = metadata.get(key);
-                if ('eq_autoeq' in speaker) {
+                if ('eqs' in speaker && 'default_eq' in speaker) {
                     fragment1.appendChild(printEQ(key, index, speaker));
                 }
             });
