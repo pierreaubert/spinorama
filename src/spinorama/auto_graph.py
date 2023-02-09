@@ -17,9 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import copy
-import math
-
 import numpy as np
 import pandas as pd
 
@@ -27,8 +24,6 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
-from spinorama.load_misc import graph_melt
-from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import peq_build, peq_preamp_gain
 from spinorama.compute_misc import savitzky_golay, compute_statistics
 from spinorama.plot import (
@@ -43,6 +38,7 @@ from spinorama.plot import (
 
 
 def short_curve_name(name):
+    """Return an abbrev for curve name"""
     if name == "Listening Window":
         return "LW"
     elif name == "Estimated In-Room Response":
@@ -62,17 +58,17 @@ def print_freq(f):
 
 
 def graph_eq(freq, peq, domain, title):
-    df = pd.DataFrame({"Freq": freq})
+    dataFrame = pd.DataFrame({"Freq": freq})
     for i, (pos, eq) in enumerate(peq):
-        df["{} {}".format(eq.type2str(True), i)] = peq_build(freq, [(pos, eq)])
+        dataFrame["{} {}".format(eq.type2str(True), i)] = peq_build(freq, [(pos, eq)])
 
     traces = []
-    for i, key in enumerate(df.keys()):
+    for i, key in enumerate(dataFrame.keys()):
         if key != "Freq":
             traces.append(
                 go.Scatter(
-                    x=df.Freq,
-                    y=df[key],
+                    x=dataFrame.Freq,
+                    y=dataFrame[key],
                     name=key,
                     legendgroup="PEQ",
                     legendgrouptitle_text="EQ",
@@ -365,12 +361,14 @@ def graph_results(
         auto_eq_min = min(auto_eq_min, np.min(t.y))
         auto_eq_max = max(auto_eq_max, np.max(t.y))
         fig.add_trace(t, row=current_row, col=1)
+        t["legendgroup"] = None
         fig_auto_eq.add_trace(t)
 
     for t in g_eq_full:
         auto_eq_min = min(auto_eq_min, np.min(t.y))
         auto_eq_max = max(auto_eq_max, np.max(t.y))
         fig.add_trace(t, row=current_row, col=2)
+        t["legendgroup"] = None
         fig_eq_full.add_trace(t)
     auto_eq_max = int(auto_eq_max) + 1
     auto_eq_min = int(auto_eq_min) - 2
@@ -392,20 +390,26 @@ def graph_results(
 
     for t in g_spin_noeq:
         fig.add_trace(t, row=current_row, col=1, secondary_y=False)
+        t["legendgroup"] = None
         fig_spin_noeq.add_trace(t, secondary_y=False)
 
     for t in g_spin_noeq_di:
         fig.add_trace(t, row=current_row, col=1, secondary_y=True)
+        t["legendgroup"] = None
         fig_spin_noeq.add_trace(t, secondary_y=True)
 
     for t in g_spin_auto:
         t["showlegend"] = False
         fig.add_trace(t, row=current_row, col=2, secondary_y=False)
+        t["showlegend"] = True
+        t["legendgroup"] = None
         fig_spin_auto.add_trace(t, secondary_y=False)
 
     for t in g_spin_auto_di:
         t["showlegend"] = False
         fig.add_trace(t, row=current_row, col=2, secondary_y=True)
+        t["showlegend"] = True
+        t["legendgroup"] = None
         fig_spin_auto.add_trace(t, secondary_y=True)
 
     xaxis = generate_xaxis()
@@ -423,22 +427,38 @@ def graph_results(
 
     # add ON, LW and PIR
 
-    current_row += 1
+    fig_on_noeq = go.Figure()
+    fig_lw_noeq = go.Figure()
+    fig_pir_noeq = go.Figure()
+    fig_on_auto = go.Figure()
+    fig_lw_auto = go.Figure()
+    fig_pir_auto = go.Figure()
 
+    current_row += 1
     on_min = -10
     on_max = 5
     for t in g_curves["On Axis"]["noeq"]:
         fig.add_trace(t, row=current_row, col=1)
+        t["legendgroup"] = None
+        t["legendgrouptitle"] = None
+        fig_on_noeq.add_trace(t)
         on_min = min(on_min, np.min(t.y))
         on_max = max(on_max, np.max(t.y))
 
     for t in g_curves["On Axis"]["auto"]:
         t["showlegend"] = False
         fig.add_trace(t, row=current_row, col=2)
+        t["legendgroup"] = None
+        t["legendgrouptitle"] = None
+        t["showlegend"] = True
+        fig_on_auto.add_trace(t)
         on_min = min(on_min, np.min(t.y))
         on_max = max(on_max, np.max(t.y))
 
-    fig.update_xaxes(generate_xaxis(), row=current_row)
+    xaxis = generate_xaxis()
+    fig.update_xaxes(xaxis, row=current_row)
+    fig_on_noeq.update_xaxes(xaxis)
+    fig_on_auto.update_xaxes(xaxis)
 
     if on_min < -5:
         on_min = max(-40, -5 * round(-on_min / 5))
@@ -449,9 +469,12 @@ def graph_results(
     else:
         on_max = 5
     on_min = max(-15, on_min)
-    fig.update_yaxes(generate_yaxis_spl(on_min, on_max, 1), row=current_row)
+    yaxis = generate_yaxis_spl(on_min, on_max, 1)
+    fig.update_yaxes(yaxis, row=current_row)
+    fig_on_noeq.update_yaxes(yaxis)
+    fig_on_auto.update_yaxes(yaxis)
 
-    # PIR
+    # LW
 
     current_row += 2
 
@@ -459,16 +482,26 @@ def graph_results(
     lw_max = 5
     for t in g_curves["Listening Window"]["noeq"]:
         fig.add_trace(t, row=current_row, col=1)
+        t["legendgroup"] = None
+        t["legendgrouptitle"] = None
+        fig_lw_noeq.add_trace(t)
         lw_min = min(lw_min, np.min(t.y))
         lw_max = max(lw_max, np.max(t.y))
 
     for t in g_curves["Listening Window"]["auto"]:
         t["showlegend"] = False
         fig.add_trace(t, row=current_row, col=2)
+        t["legendgroup"] = None
+        t["legendgrouptitle"] = None
+        t["showlegend"] = True
+        fig_lw_auto.add_trace(t)
         lw_min = min(lw_min, np.min(t.y))
         lw_max = max(lw_max, np.max(t.y))
 
-    fig.update_xaxes(generate_xaxis(), row=current_row)
+    xaxis = generate_xaxis()
+    fig.update_xaxes(xaxis, row=current_row)
+    fig_lw_noeq.update_xaxes(xaxis)
+    fig_lw_auto.update_xaxes(xaxis)
 
     if lw_min < -5:
         lw_min = max(-40, -5 * round(-lw_min / 5))
@@ -479,7 +512,11 @@ def graph_results(
     else:
         lw_max = 5
     lw_min = max(-15, lw_min)
-    fig.update_yaxes(generate_yaxis_spl(lw_min, lw_max, 1), row=current_row)
+
+    yaxis = generate_yaxis_spl(lw_min, lw_max, 1)
+    fig.update_yaxes(yaxis, row=current_row)
+    fig_lw_noeq.update_yaxes(yaxis)
+    fig_lw_auto.update_yaxes(yaxis)
 
     # PIR
 
@@ -488,14 +525,20 @@ def graph_results(
     pir_min = -10
     pir_max = 5
     for t in g_curves["Estimated In-Room Response"]["noeq"]:
-        t["showlegend"] = False
         fig.add_trace(t, row=current_row, col=1)
+        t["legendgroup"] = None
+        t["legendgrouptitle"] = None
+        fig_pir_noeq.add_trace(t)
         pir_min = min(pir_min, np.min(t.y))
         pir_max = max(pir_max, np.max(t.y))
 
     for t in g_curves["Estimated In-Room Response"]["auto"]:
         t["showlegend"] = False
         fig.add_trace(t, row=current_row, col=2)
+        t["legendgroup"] = None
+        t["legendgrouptitle"] = None
+        t["showlegend"] = True
+        fig_pir_auto.add_trace(t)
         pir_min = min(pir_min, np.min(t.y))
         pir_max = max(pir_max, np.max(t.y))
 
@@ -509,19 +552,39 @@ def graph_results(
         pir_max = 5
     pir_min = max(-15, pir_min)
 
-    fig.update_xaxes(generate_xaxis(), row=current_row)
-    fig.update_yaxes(generate_yaxis_spl(pir_min, pir_max, 1), row=current_row)
+    xaxis = generate_xaxis()
+    fig.update_xaxes(xaxis, row=current_row)
+    fig_pir_noeq.update_xaxes(xaxis)
+    fig_pir_auto.update_xaxes(xaxis)
+
+    yaxis = generate_yaxis_spl(pir_min, pir_max, 1)
+    fig.update_yaxes(yaxis, row=current_row)
+    fig_pir_auto.update_yaxes(yaxis)
+    fig_pir_noeq.update_yaxes(yaxis)
 
     # add error distribution
+    fig_hist_fullrange = {}
+    fig_hist_midrange = {}
     for i, curve in enumerate(["On Axis", "Listening Window", "Estimated In-Room Response"]):
+        current_hist_fr = go.Figure()
         for t in g_curves[curve]["hist"]:
             fig.add_trace(t, row=4 + 2 * i, col=1)
-            # fig.update_xaxes(title="Error (dB)", row=4+2*i, col=1)
             fig.update_yaxes(title="Count", row=4 + 2 * i, col=1)
+            t["legendgroup"] = None
+            t["legendgrouptitle"] = None
+            current_hist_fr.add_trace(t)
+            current_hist_fr.update_yaxes(title="Count")
+        fig_hist_fullrange[curve] = current_hist_fr
+
+        current_hist_mr = go.Figure()
         for t in g_curves[curve]["hist_midrange"]:
             fig.add_trace(t, row=4 + 2 * i, col=2)
-            # fig.update_xaxes(title="Error (dB)", row=4+2*i, col=2)
             fig.update_yaxes(title="Count", row=4 + 2 * i, col=2)
+            t["legendgroup"] = None
+            t["legendgrouptitle"] = None
+            current_hist_mr.add_trace(t)
+            current_hist_mr.update_yaxes(title="Count")
+        fig_hist_midrange[curve] = current_hist_mr
 
     # add tonal balance
 
@@ -539,11 +602,71 @@ def graph_results(
         ),
     )
 
+    for f in (
+        fig_auto_eq,
+        fig_eq_full,
+        fig_spin_noeq,
+        fig_spin_auto,
+        fig_on_noeq,
+        fig_on_auto,
+        fig_lw_noeq,
+        fig_lw_auto,
+        fig_pir_noeq,
+        fig_pir_auto,
+    ):
+        f.update_layout(
+            width=600,
+            height=450,
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                xanchor="left",
+                y=1.02,
+                x=0.02,
+                title=None,
+                font=dict(size=12),
+            ),
+        )
+
+    for c in ["On Axis", "Listening Window", "Estimated In-Room Response"]:
+        for f in (fig_hist_fullrange[c], fig_hist_midrange[c]):
+            f.update_layout(
+                width=600,
+                height=300,
+                legend=dict(
+                    orientation="h",
+                    yanchor="bottom",
+                    xanchor="left",
+                    y=1.02,
+                    x=0.02,
+                    title=None,
+                    font=dict(size=12),
+                ),
+            )
+
     # add all graphs and print it
     return [
+        # all together
         ("eq", fig),
+        # eq
         ("auto_eq", fig_auto_eq),
         ("eq_full", fig_eq_full),
+        # spin
         ("spin_noeq", fig_spin_noeq),
         ("spin_auto", fig_spin_auto),
+        # on
+        ("on_noeq", fig_on_noeq),
+        ("on_auto", fig_on_auto),
+        ("on_hist_fullrange", fig_hist_fullrange["On Axis"]),
+        ("on_hist_midrange", fig_hist_midrange["On Axis"]),
+        # lw
+        ("lw_noeq", fig_lw_noeq),
+        ("lw_auto", fig_lw_auto),
+        ("lw_hist_fullrange", fig_hist_fullrange["Listening Window"]),
+        ("lw_hist_midrange", fig_hist_midrange["Listening Window"]),
+        # pir
+        ("pir_noeq", fig_pir_noeq),
+        ("pir_auto", fig_pir_auto),
+        ("pir_hist_fullrange", fig_hist_fullrange["Estimated In-Room Response"]),
+        ("pir_hist_midrange", fig_hist_midrange["Estimated In-Room Response"]),
     ]

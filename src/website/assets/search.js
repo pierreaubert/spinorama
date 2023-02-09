@@ -393,7 +393,7 @@ getMetadata()
                 matchAllTokens: true,
                 findAllMatches: true,
                 minMatchCharLength: 2,
-                keys: ['speaker.brand', 'speaker.model'],
+                keys: ['speaker.brand', 'speaker.model', 'speaker.type', 'speaker.shape'],
                 treshhold: 0.5,
                 distance: 4,
                 includeScore: true,

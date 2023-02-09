@@ -158,22 +158,137 @@
             <button class="delete" aria-label="close"></button>
           </header>
           <section class="modal-card-body">
-             <picture class="image">
-               <source srcset="{{img_eq_details}}_auto_eq.webp" type="image/webp"></source>
-               <img src="{{img_eq_details}}_auto_eq.jpg" alt="{{brand}} {{model}}"/>
-             </picture>
-             <picture class="image">
-               <source srcset="{{img_eq_details}}_eq_full.webp" type="image/webp"></source>
-               <img src="{{img_eq_details}}_eq_full.jpg" alt="{{brand}} {{model}}"/>
-             </picture>
-             <picture class="image">
-               <source srcset="{{img_eq_details}}_spin_noeq.webp" type="image/webp"></source>
-               <img src="{{img_eq_details}}_spin_noeq.jpg" alt="{{brand}} {{model}}"/>
-             </picture>
-             <picture class="image">
-               <source srcset="{{img_eq_details}}_spin_auto.webp" type="image/webp"></source>
-               <img src="{{img_eq_details}}_spin_auto.jpg" alt="{{brand}} {{model}}"/>
-             </picture>
+             <!-- EQ -->
+             <div class="box">
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_auto_eq.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_auto_eq.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Automatic EQ
+               </div>
+             </div>
+             <div class="box">
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_eq_full.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_eq_full.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Target <i>v.s.</i> EQ
+               </div>
+             </div>
+             <!-- SPIN -->
+             <div class="box">
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_spin_noeq.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_spin_noeq.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Spinorama without EQ
+               </div>
+             </div>
+             <div class="box">
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_spin_auto.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_spin_auto.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Spinorama with EQ
+               </div>
+             </div>
+             <!-- ON -->
+             <div class="box">
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_on_noeq.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_on_noeq.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 On Axis without EQ
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_on_auto.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_on_auto.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 On Axis with EQ
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_on_hist_fullrange.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_on_hist_fullrange.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Histogram of deviation from flat (full range)
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_on_hist_midrange.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_on_hist_midrange.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Histogram of deviation from flat (mid range)
+               </div>
+             </div>
+             <!-- LW -->
+             <div class="box">
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_lw_noeq.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_lw_noeq.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Listening Window without EQ
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_lw_auto.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_lw_auto.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Listening Window with EQ
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_lw_hist_fullrange.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_lw_hist_fullrange.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Histogram of deviation from flat (full range)
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_lw_hist_midrange.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_lw_hist_midrange.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Histogram of deviation from flat (mid range)
+               </div>
+             </div>
+             <!-- PIR -->
+             <div class="box">
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_pir_noeq.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_pir_noeq.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Estimated In-Room Response (PIR) without EQ
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_pir_auto.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_pir_auto.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Estimated In-Room Response (PIR) with EQ
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_pir_hist_fullrange.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_pir_hist_fullrange.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Histogram of deviation from flat (full range)
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_pir_hist_midrange.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_pir_hist_midrange.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Histogram of deviation from flat (mid range)
+               </div>
+             </div>
           </section>
         </div>
       </div>
