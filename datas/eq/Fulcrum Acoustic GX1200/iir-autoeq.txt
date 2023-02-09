@@ -1,16 +1,16 @@
 EQ for Fulcrum Acoustic GX1200 computed from Vendors-Fulcrum Acoustic data
-Preference Score 4.21 with EQ 4.85
+Preference Score 4.21 with EQ 4.82
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:11:24
+Dated: 2023-02-09-10:49:46
 
 Preamp: -3.2 dB
 
 Filter  1: ON PK Fc    33 Hz Gain +3.00 dB Q 0.63
-Filter  2: ON PK Fc  2000 Hz Gain +2.64 dB Q 0.29
-Filter  3: ON PK Fc   107 Hz Gain -1.51 dB Q 3.00
-Filter  4: ON PK Fc  8827 Hz Gain -1.62 dB Q 3.00
+Filter  2: ON PK Fc  2006 Hz Gain +2.64 dB Q 0.29
+Filter  3: ON PK Fc   108 Hz Gain -1.50 dB Q 2.97
+Filter  4: ON PK Fc  8823 Hz Gain -1.63 dB Q 3.00
 Filter  5: ON PK Fc  4837 Hz Gain +0.50 dB Q 0.05
-Filter  6: ON PK Fc   322 Hz Gain -0.50 dB Q 0.79
-Filter  7: ON PK Fc 16000 Hz Gain +0.81 dB Q 0.56
-Filter  8: ON PK Fc  1820 Hz Gain -1.30 dB Q 2.48
-Filter  9: ON PK Fc  8919 Hz Gain -1.13 dB Q 2.15
+Filter  6: ON PK Fc   322 Hz Gain -0.50 dB Q 0.86
+Filter  7: ON PK Fc 15981 Hz Gain +0.81 dB Q 0.56
+Filter  8: ON PK Fc  3241 Hz Gain -0.61 dB Q 0.40
+Filter  9: ON PK Fc  9367 Hz Gain -0.85 dB Q 3.00

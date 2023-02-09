@@ -1,15 +1,15 @@
 EQ for JBL Synthesis SAM3HA computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:08:36
+Dated: 2023-02-09-10:44:23
 
-Preamp: -2.9 dB
+Preamp: -2.6 dB
 
-Filter  1: ON PK Fc  4794 Hz Gain +2.68 dB Q 1.44
-Filter  2: ON PK Fc   144 Hz Gain -3.06 dB Q 2.22
-Filter  3: ON PK Fc   287 Hz Gain -1.35 dB Q 2.58
-Filter  4: ON PK Fc   728 Hz Gain +0.90 dB Q 2.99
-Filter  5: ON PK Fc  1612 Hz Gain -0.89 dB Q 1.22
-Filter  6: ON PK Fc 11334 Hz Gain -0.82 dB Q 2.61
-Filter  7: ON PK Fc 15995 Hz Gain -1.52 dB Q 2.00
-Filter  8: ON PK Fc  2262 Hz Gain -0.63 dB Q 2.90
-Filter  9: ON PK Fc 15930 Hz Gain -0.59 dB Q 2.00
+Filter  1: ON PK Fc  4703 Hz Gain +2.42 dB Q 1.82
+Filter  2: ON PK Fc   143 Hz Gain -3.29 dB Q 1.83
+Filter  3: ON PK Fc   307 Hz Gain -1.59 dB Q 2.02
+Filter  4: ON PK Fc  1659 Hz Gain -1.06 dB Q 1.22
+Filter  5: ON PK Fc 11428 Hz Gain -1.04 dB Q 1.91
+Filter  6: ON PK Fc   410 Hz Gain -0.51 dB Q 2.83
+Filter  7: ON PK Fc 15994 Hz Gain -1.58 dB Q 2.07
+Filter  8: ON PK Fc 15934 Hz Gain -0.61 dB Q 2.58
+Filter  9: ON PK Fc  2243 Hz Gain -1.16 dB Q 2.94

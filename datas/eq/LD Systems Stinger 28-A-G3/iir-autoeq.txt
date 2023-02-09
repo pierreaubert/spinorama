@@ -1,16 +1,16 @@
 EQ for LD Systems Stinger 28-A-G3 computed from Vendors-LD Systems data
-Preference Score 1.70 with EQ 3.42
+Preference Score 1.70 with EQ 3.45
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:08:58
+Dated: 2023-02-09-10:44:36
 
 Preamp: -2.3 dB
 
-Filter  1: ON PK Fc    84 Hz Gain -3.00 dB Q 2.58
+Filter  1: ON PK Fc    83 Hz Gain -3.00 dB Q 2.59
 Filter  2: ON PK Fc  7687 Hz Gain -2.37 dB Q 0.81
 Filter  3: ON PK Fc  1418 Hz Gain +2.07 dB Q 1.96
-Filter  4: ON PK Fc   214 Hz Gain +2.09 dB Q 2.69
-Filter  5: ON PK Fc   334 Hz Gain +1.11 dB Q 3.00
-Filter  6: ON PK Fc   514 Hz Gain +1.10 dB Q 3.00
-Filter  7: ON PK Fc 14764 Hz Gain -1.43 dB Q 2.24
-Filter  8: ON PK Fc   737 Hz Gain -2.03 dB Q 3.00
-Filter  9: ON PK Fc    80 Hz Gain -1.60 dB Q 3.00
+Filter  4: ON PK Fc   213 Hz Gain +2.11 dB Q 2.76
+Filter  5: ON PK Fc   344 Hz Gain +1.12 dB Q 3.00
+Filter  6: ON PK Fc   518 Hz Gain +1.09 dB Q 3.00
+Filter  7: ON PK Fc 14656 Hz Gain -1.44 dB Q 2.30
+Filter  8: ON PK Fc   737 Hz Gain -2.05 dB Q 3.00
+Filter  9: ON PK Fc    86 Hz Gain -1.60 dB Q 2.99

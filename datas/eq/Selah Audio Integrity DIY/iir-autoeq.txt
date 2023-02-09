@@ -1,14 +1,16 @@
 EQ for Selah Audio Integrity DIY computed from ASR data
-Preference Score 5.90 with EQ 6.68
+Preference Score 5.90 with EQ 6.77
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:09:22
+Dated: 2023-02-09-10:49:17
 
 Preamp: -2.5 dB
 
-Filter  1: ON PK Fc    29 Hz Gain +2.34 dB Q 1.33
-Filter  2: ON PK Fc  6708 Hz Gain -2.16 dB Q 0.82
+Filter  1: ON PK Fc    29 Hz Gain +2.34 dB Q 1.35
+Filter  2: ON PK Fc  6724 Hz Gain -2.16 dB Q 0.82
 Filter  3: ON PK Fc   140 Hz Gain -0.60 dB Q 0.49
 Filter  4: ON PK Fc  1449 Hz Gain +0.89 dB Q 3.00
-Filter  5: ON PK Fc   629 Hz Gain -0.50 dB Q 1.43
+Filter  5: ON PK Fc   638 Hz Gain -0.50 dB Q 1.48
 Filter  6: ON PK Fc 12553 Hz Gain -0.50 dB Q 3.00
-Filter  7: ON PK Fc  2113 Hz Gain -0.50 dB Q 3.00
+Filter  7: ON PK Fc  2115 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc   368 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc  4597 Hz Gain -0.50 dB Q 3.00

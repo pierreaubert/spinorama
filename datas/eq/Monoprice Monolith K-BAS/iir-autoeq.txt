@@ -1,15 +1,15 @@
 EQ for Monoprice Monolith K-BAS computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:04:38
+Dated: 2023-02-09-10:42:14
 
-Preamp: -2.5 dB
+Preamp: -1.9 dB
 
-Filter  1: ON PK Fc    71 Hz Gain +2.31 dB Q 3.00
-Filter  2: ON PK Fc  5381 Hz Gain +1.95 dB Q 0.71
-Filter  3: ON PK Fc   659 Hz Gain -2.82 dB Q 3.00
-Filter  4: ON PK Fc   234 Hz Gain -1.42 dB Q 3.00
-Filter  5: ON PK Fc 13459 Hz Gain -0.86 dB Q 3.00
-Filter  6: ON PK Fc  1064 Hz Gain +0.50 dB Q 2.68
-Filter  7: ON PK Fc   120 Hz Gain -0.50 dB Q 3.00
-Filter  8: ON PK Fc  1706 Hz Gain -0.90 dB Q 3.00
-Filter  9: ON PK Fc  6293 Hz Gain -0.66 dB Q 3.00
+Filter  1: ON PK Fc    71 Hz Gain +1.68 dB Q 3.00
+Filter  2: ON PK Fc  4743 Hz Gain +1.73 dB Q 1.22
+Filter  3: ON PK Fc   658 Hz Gain -3.27 dB Q 3.00
+Filter  4: ON PK Fc   227 Hz Gain -1.76 dB Q 1.96
+Filter  5: ON PK Fc  9307 Hz Gain +1.15 dB Q 3.00
+Filter  6: ON PK Fc 13382 Hz Gain -1.22 dB Q 3.00
+Filter  7: ON PK Fc  1332 Hz Gain -0.78 dB Q 1.93
+Filter  8: ON PK Fc  1804 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc   120 Hz Gain -0.50 dB Q 3.00

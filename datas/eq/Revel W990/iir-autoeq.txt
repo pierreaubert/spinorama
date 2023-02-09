@@ -1,16 +1,16 @@
 EQ for Revel W990 computed from ASR data
 Preference Score 3.70 with EQ 5.56
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:11:53
+Dated: 2023-02-09-10:50:08
 
 Preamp: -0.7 dB
 
 Filter  1: ON PK Fc    64 Hz Gain -2.02 dB Q 1.51
-Filter  2: ON PK Fc  2987 Hz Gain -3.56 dB Q 0.18
-Filter  3: ON PK Fc   406 Hz Gain -2.72 dB Q 1.55
-Filter  4: ON PK Fc  8179 Hz Gain -2.00 dB Q 3.00
-Filter  5: ON PK Fc   157 Hz Gain +0.50 dB Q 0.05
-Filter  6: ON PK Fc  3942 Hz Gain -1.02 dB Q 3.00
-Filter  7: ON PK Fc   609 Hz Gain -1.04 dB Q 2.33
-Filter  8: ON PK Fc   101 Hz Gain -0.77 dB Q 1.50
-Filter  9: ON PK Fc  5843 Hz Gain -0.50 dB Q 3.00
+Filter  2: ON PK Fc  2985 Hz Gain -3.56 dB Q 0.18
+Filter  3: ON PK Fc   408 Hz Gain -2.72 dB Q 1.55
+Filter  4: ON PK Fc  8320 Hz Gain -2.01 dB Q 3.00
+Filter  5: ON PK Fc   150 Hz Gain +0.50 dB Q 0.05
+Filter  6: ON PK Fc  3947 Hz Gain -1.04 dB Q 3.00
+Filter  7: ON PK Fc   610 Hz Gain -1.06 dB Q 2.40
+Filter  8: ON PK Fc   106 Hz Gain -0.75 dB Q 1.43
+Filter  9: ON PK Fc  5604 Hz Gain -0.50 dB Q 3.00

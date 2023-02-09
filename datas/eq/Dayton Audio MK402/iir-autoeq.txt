@@ -1,15 +1,15 @@
 EQ for Dayton Audio MK402 computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:07:24
+Dated: 2023-02-09-10:43:22
 
-Preamp: -1.4 dB
+Preamp: -0.2 dB
 
-Filter  1: ON PK Fc   177 Hz Gain -2.98 dB Q 1.19
-Filter  2: ON PK Fc 11264 Hz Gain -5.56 dB Q 0.71
-Filter  3: ON PK Fc  1134 Hz Gain -1.04 dB Q 3.00
-Filter  4: ON PK Fc   495 Hz Gain -0.68 dB Q 3.00
-Filter  5: ON PK Fc  2074 Hz Gain +1.17 dB Q 0.58
-Filter  6: ON PK Fc  7484 Hz Gain -1.91 dB Q 3.00
-Filter  7: ON PK Fc  1330 Hz Gain -1.32 dB Q 2.72
-Filter  8: ON PK Fc 16000 Hz Gain -1.02 dB Q 2.93
-Filter  9: ON PK Fc    20 Hz Gain -0.51 dB Q 3.00
+Filter  1: ON HS Fc  3447 Hz Gain -3.00 dB
+Filter  2: ON PK Fc  8340 Hz Gain -5.36 dB Q 1.48
+Filter  3: ON PK Fc   281 Hz Gain -1.36 dB Q 2.88
+Filter  4: ON PK Fc  1153 Hz Gain -0.68 dB Q 2.92
+Filter  5: ON PK Fc 14271 Hz Gain -1.02 dB Q 2.98
+Filter  6: ON PK Fc   516 Hz Gain -0.52 dB Q 2.88
+Filter  7: ON PK Fc  1861 Hz Gain -0.54 dB Q 2.97
+Filter  8: ON PK Fc    24 Hz Gain -0.52 dB Q 2.66
+Filter  9: ON PK Fc    27 Hz Gain -0.69 dB Q 2.75

@@ -1,13 +1,16 @@
 EQ for JBL C222 computed from Vendors-JBL data
-Preference Score 1.44 with EQ 1.68
+Preference Score 1.44 with EQ 2.24
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:11:45
+Dated: 2023-02-09-10:49:09
 
-Preamp: -3.2 dB
+Preamp: -3.3 dB
 
-Filter  1: ON PK Fc   138 Hz Gain -3.00 dB Q 1.26
-Filter  2: ON PK Fc  6910 Hz Gain +3.00 dB Q 0.70
-Filter  3: ON PK Fc   371 Hz Gain +2.12 dB Q 3.00
-Filter  4: ON PK Fc  1120 Hz Gain -1.54 dB Q 1.90
-Filter  5: ON PK Fc   196 Hz Gain -2.07 dB Q 2.88
-Filter  6: ON PK Fc 12328 Hz Gain -2.05 dB Q 3.00
+Filter  1: ON PK Fc    35 Hz Gain +3.00 dB Q 0.62
+Filter  2: ON PK Fc  9091 Hz Gain +2.91 dB Q 0.12
+Filter  3: ON PK Fc   357 Hz Gain +3.00 dB Q 3.00
+Filter  4: ON PK Fc   144 Hz Gain -2.20 dB Q 1.91
+Filter  5: ON PK Fc   655 Hz Gain -1.83 dB Q 3.00
+Filter  6: ON PK Fc  1315 Hz Gain -0.98 dB Q 3.00
+Filter  7: ON PK Fc  1947 Hz Gain +1.37 dB Q 3.00
+Filter  8: ON PK Fc 12542 Hz Gain -4.29 dB Q 3.00
+Filter  9: ON PK Fc  2635 Hz Gain -1.00 dB Q 3.00

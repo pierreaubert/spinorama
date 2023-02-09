@@ -1,16 +1,16 @@
 EQ for JBL VTX F35 computed from Vendors-JBL data
-Preference Score 6.18 with EQ 6.71
+Preference Score 6.18 with EQ 6.72
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:09:59
+Dated: 2023-02-09-10:45:25
 
-Preamp: -3.2 dB
+Preamp: -3.3 dB
 
-Filter  1: ON LS Fc 15935 Hz Gain +1.77 dB
-Filter  2: ON PK Fc  5456 Hz Gain -1.12 dB Q 1.43
-Filter  3: ON PK Fc   104 Hz Gain -1.67 dB Q 2.98
-Filter  4: ON PK Fc  1905 Hz Gain +1.48 dB Q 2.99
-Filter  5: ON PK Fc   262 Hz Gain +1.32 dB Q 2.97
-Filter  6: ON PK Fc   812 Hz Gain -0.81 dB Q 1.06
-Filter  7: ON PK Fc  3330 Hz Gain -0.57 dB Q 2.92
-Filter  8: ON PK Fc  8867 Hz Gain -0.51 dB Q 2.95
-Filter  9: ON PK Fc 10718 Hz Gain -0.51 dB Q 3.00
+Filter  1: ON LS Fc 15993 Hz Gain +1.77 dB
+Filter  2: ON PK Fc  5571 Hz Gain -1.10 dB Q 1.32
+Filter  3: ON PK Fc   106 Hz Gain -1.67 dB Q 2.96
+Filter  4: ON PK Fc  1918 Hz Gain +1.58 dB Q 2.92
+Filter  5: ON PK Fc   268 Hz Gain +1.35 dB Q 2.98
+Filter  6: ON PK Fc   824 Hz Gain -0.82 dB Q 1.34
+Filter  7: ON PK Fc  3153 Hz Gain -0.55 dB Q 2.97
+Filter  8: ON PK Fc   501 Hz Gain -0.57 dB Q 2.81
+Filter  9: ON PK Fc  9272 Hz Gain -0.53 dB Q 3.00

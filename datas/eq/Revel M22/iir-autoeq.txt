@@ -1,16 +1,16 @@
 EQ for Revel M22 computed from ASR data
-Preference Score 5.52 with EQ 6.62
+Preference Score 5.52 with EQ 6.63
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:11:06
+Dated: 2023-02-09-10:46:56
 
 Preamp: -2.8 dB
 
-Filter  1: ON PK Fc    33 Hz Gain +1.92 dB Q 1.34
-Filter  2: ON PK Fc  6592 Hz Gain -2.75 dB Q 0.82
-Filter  3: ON PK Fc   192 Hz Gain -2.64 dB Q 1.13
-Filter  4: ON PK Fc  1822 Hz Gain +2.62 dB Q 2.99
-Filter  5: ON PK Fc   545 Hz Gain -0.50 dB Q 0.83
+Filter  1: ON PK Fc    32 Hz Gain +1.92 dB Q 1.30
+Filter  2: ON PK Fc  6586 Hz Gain -2.75 dB Q 0.82
+Filter  3: ON PK Fc   192 Hz Gain -2.63 dB Q 1.12
+Filter  4: ON PK Fc  1826 Hz Gain +2.62 dB Q 2.98
+Filter  5: ON PK Fc   545 Hz Gain -0.50 dB Q 0.84
 Filter  6: ON PK Fc 16000 Hz Gain -0.74 dB Q 0.44
-Filter  7: ON PK Fc  3917 Hz Gain -0.68 dB Q 3.00
-Filter  8: ON PK Fc   966 Hz Gain -0.53 dB Q 3.00
-Filter  9: ON PK Fc   132 Hz Gain -0.50 dB Q 3.00
+Filter  7: ON PK Fc  3974 Hz Gain -0.68 dB Q 3.00
+Filter  8: ON PK Fc   975 Hz Gain -0.53 dB Q 3.00
+Filter  9: ON PK Fc   133 Hz Gain -0.50 dB Q 3.00

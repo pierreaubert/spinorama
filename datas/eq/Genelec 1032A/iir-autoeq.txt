@@ -1,15 +1,15 @@
 EQ for Genelec 1032A computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:09:35
+Dated: 2023-02-09-10:47:52
 
-Preamp: -2.3 dB
+Preamp: -2.4 dB
 
-Filter  1: ON HS Fc 15535 Hz Gain +2.20 dB
-Filter  2: ON PK Fc    52 Hz Gain -1.23 dB Q 2.93
-Filter  3: ON PK Fc   150 Hz Gain -0.73 dB Q 0.89
-Filter  4: ON PK Fc  1157 Hz Gain -1.14 dB Q 2.90
-Filter  5: ON PK Fc  2099 Hz Gain +1.01 dB Q 2.99
-Filter  6: ON PK Fc   460 Hz Gain -0.59 dB Q 1.32
-Filter  7: ON PK Fc  4455 Hz Gain -0.51 dB Q 2.38
-Filter  8: ON PK Fc 10235 Hz Gain -0.56 dB Q 2.99
-Filter  9: ON PK Fc  6442 Hz Gain -0.54 dB Q 2.97
+Filter  1: ON PK Fc  1782 Hz Gain +2.25 dB Q 2.70
+Filter  2: ON PK Fc   130 Hz Gain -0.77 dB Q 1.37
+Filter  3: ON PK Fc  6481 Hz Gain -1.26 dB Q 1.47
+Filter  4: ON PK Fc   600 Hz Gain +0.50 dB Q 2.92
+Filter  5: ON PK Fc    52 Hz Gain -0.50 dB Q 2.83
+Filter  6: ON PK Fc   206 Hz Gain +0.55 dB Q 0.06
+Filter  7: ON PK Fc 15969 Hz Gain +0.75 dB Q 0.72
+Filter  8: ON PK Fc   565 Hz Gain -0.73 dB Q 0.23
+Filter  9: ON PK Fc 11160 Hz Gain -0.57 dB Q 1.76

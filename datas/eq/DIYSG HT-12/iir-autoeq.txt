@@ -1,16 +1,16 @@
 EQ for DIYSG HT-12 computed from Misc data
 Preference Score 4.30 with EQ 5.16
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:10:15
+Dated: 2023-02-09-10:48:14
 
 Preamp: -3.2 dB
 
 Filter  1: ON PK Fc    37 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc  4263 Hz Gain +3.00 dB Q 0.22
+Filter  2: ON PK Fc  4262 Hz Gain +3.00 dB Q 0.22
 Filter  3: ON PK Fc   116 Hz Gain -1.56 dB Q 3.00
 Filter  4: ON PK Fc   815 Hz Gain -1.68 dB Q 3.00
 Filter  5: ON PK Fc   182 Hz Gain +1.13 dB Q 3.00
-Filter  6: ON PK Fc 11032 Hz Gain -1.12 dB Q 3.00
-Filter  7: ON PK Fc   347 Hz Gain +0.83 dB Q 3.00
-Filter  8: ON PK Fc   255 Hz Gain -0.79 dB Q 3.00
-Filter  9: ON PK Fc   462 Hz Gain -0.50 dB Q 3.00
+Filter  6: ON PK Fc 10905 Hz Gain -1.12 dB Q 3.00
+Filter  7: ON PK Fc   346 Hz Gain +0.83 dB Q 3.00
+Filter  8: ON PK Fc   256 Hz Gain -0.78 dB Q 3.00
+Filter  9: ON PK Fc   462 Hz Gain -0.50 dB Q 2.98

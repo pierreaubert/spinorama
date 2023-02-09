@@ -1,15 +1,15 @@
 EQ for Yamaha NS-A638 computed from Vendors-Yamaha data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:04:39
+Dated: 2023-02-09-10:42:16
 
-Preamp: -3.4 dB
+Preamp: -3.5 dB
 
-Filter  1: ON PK Fc   104 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc   327 Hz Gain +2.05 dB Q 0.87
-Filter  3: ON PK Fc  1903 Hz Gain +1.77 dB Q 2.25
-Filter  4: ON PK Fc 14253 Hz Gain +3.00 dB Q 0.50
-Filter  5: ON PK Fc  4078 Hz Gain -2.07 dB Q 2.24
-Filter  6: ON PK Fc   726 Hz Gain -1.51 dB Q 3.00
-Filter  7: ON PK Fc   107 Hz Gain -0.50 dB Q 3.00
-Filter  8: ON PK Fc 13239 Hz Gain -0.50 dB Q 3.00
-Filter  9: ON PK Fc  3008 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON PK Fc   108 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON PK Fc   343 Hz Gain +2.15 dB Q 0.75
+Filter  3: ON PK Fc  1922 Hz Gain +1.91 dB Q 2.12
+Filter  4: ON PK Fc 14264 Hz Gain +3.00 dB Q 0.46
+Filter  5: ON PK Fc  3750 Hz Gain -2.02 dB Q 2.29
+Filter  6: ON PK Fc   717 Hz Gain -1.61 dB Q 3.00
+Filter  7: ON PK Fc  5051 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc   151 Hz Gain -0.52 dB Q 3.00
+Filter  9: ON PK Fc   106 Hz Gain -0.50 dB Q 3.00

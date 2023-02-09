@@ -1,16 +1,14 @@
 EQ for Genelec 4030C computed from Vendors-Genelec data
-Preference Score 7.95 with EQ 8.35
+Preference Score 7.95 with EQ 8.37
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:07:54
+Dated: 2023-02-09-10:47:02
 
-Preamp: -3.0 dB
+Preamp: -2.5 dB
 
-Filter  1: ON PK Fc    23 Hz Gain +2.75 dB Q 1.97
-Filter  2: ON PK Fc   218 Hz Gain -1.44 dB Q 0.67
-Filter  3: ON PK Fc 10389 Hz Gain -1.21 dB Q 1.66
-Filter  4: ON PK Fc  3819 Hz Gain +1.47 dB Q 2.96
-Filter  5: ON PK Fc   719 Hz Gain -0.50 dB Q 2.17
-Filter  6: ON PK Fc    38 Hz Gain +0.50 dB Q 3.00
-Filter  7: ON PK Fc    65 Hz Gain +0.50 dB Q 3.00
-Filter  8: ON PK Fc  2063 Hz Gain -0.64 dB Q 3.00
-Filter  9: ON PK Fc    66 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON LS Fc    42 Hz Gain +2.40 dB
+Filter  2: ON PK Fc    90 Hz Gain +0.62 dB Q 2.08
+Filter  3: ON PK Fc  2272 Hz Gain -0.79 dB Q 2.98
+Filter  4: ON PK Fc  4002 Hz Gain +0.91 dB Q 2.96
+Filter  5: ON PK Fc   359 Hz Gain +0.50 dB Q 2.93
+Filter  6: ON PK Fc  7631 Hz Gain -0.52 dB Q 2.98
+Filter  7: ON PK Fc   820 Hz Gain -0.51 dB Q 2.91

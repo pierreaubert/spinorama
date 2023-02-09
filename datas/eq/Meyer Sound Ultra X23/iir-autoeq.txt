@@ -1,16 +1,16 @@
 EQ for Meyer Sound Ultra X23 computed from Vendors-Meyer Sound data
-Preference Score 1.42 with EQ 3.00
+Preference Score 1.42 with EQ 2.98
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:07:19
+Dated: 2023-02-09-10:45:16
 
 Preamp: -2.8 dB
 
 Filter  1: ON PK Fc    35 Hz Gain +2.09 dB Q 1.13
-Filter  2: ON PK Fc  9544 Hz Gain -3.34 dB Q 1.30
-Filter  3: ON PK Fc   815 Hz Gain +2.63 dB Q 1.31
-Filter  4: ON PK Fc   108 Hz Gain -1.98 dB Q 2.23
-Filter  5: ON PK Fc  2372 Hz Gain +1.65 dB Q 3.00
-Filter  6: ON PK Fc   249 Hz Gain +0.60 dB Q 3.00
-Filter  7: ON PK Fc  4698 Hz Gain -1.18 dB Q 1.92
-Filter  8: ON PK Fc  1428 Hz Gain -0.91 dB Q 3.00
-Filter  9: ON PK Fc  5140 Hz Gain -0.55 dB Q 3.00
+Filter  2: ON PK Fc  9751 Hz Gain -3.40 dB Q 1.34
+Filter  3: ON PK Fc   815 Hz Gain +2.63 dB Q 1.32
+Filter  4: ON PK Fc   108 Hz Gain -2.00 dB Q 2.26
+Filter  5: ON PK Fc  2369 Hz Gain +1.63 dB Q 3.00
+Filter  6: ON PK Fc   242 Hz Gain +0.60 dB Q 3.00
+Filter  7: ON PK Fc  4889 Hz Gain -1.19 dB Q 1.91
+Filter  8: ON PK Fc  5003 Hz Gain -0.63 dB Q 3.00
+Filter  9: ON PK Fc  1423 Hz Gain -0.88 dB Q 3.00

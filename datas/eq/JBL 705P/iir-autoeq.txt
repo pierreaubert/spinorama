@@ -1,16 +1,16 @@
 EQ for JBL 705P computed from ASR data
-Preference Score 4.84 with EQ 5.66
+Preference Score 4.84 with EQ 5.64
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:08:41
+Dated: 2023-02-09-10:46:15
 
 Preamp: -3.2 dB
 
-Filter  1: ON LS Fc   102 Hz Gain +2.97 dB
-Filter  2: ON PK Fc   671 Hz Gain +1.84 dB Q 3.00
-Filter  3: ON PK Fc  1167 Hz Gain -2.26 dB Q 2.94
-Filter  4: ON PK Fc  3115 Hz Gain +0.74 dB Q 0.90
-Filter  5: ON PK Fc   241 Hz Gain -0.50 dB Q 2.35
-Filter  6: ON PK Fc  6338 Hz Gain -0.64 dB Q 2.94
-Filter  7: ON PK Fc  1315 Hz Gain -0.50 dB Q 2.91
-Filter  8: ON PK Fc  2802 Hz Gain -0.51 dB Q 2.90
-Filter  9: ON PK Fc  6865 Hz Gain -0.51 dB Q 2.95
+Filter  1: ON PK Fc    32 Hz Gain +3.00 dB Q 0.52
+Filter  2: ON PK Fc   254 Hz Gain -1.41 dB Q 1.16
+Filter  3: ON PK Fc  1171 Hz Gain -1.89 dB Q 3.00
+Filter  4: ON PK Fc  2045 Hz Gain +1.80 dB Q 3.00
+Filter  5: ON PK Fc    74 Hz Gain +0.85 dB Q 1.99
+Filter  6: ON PK Fc  7441 Hz Gain -1.34 dB Q 2.05
+Filter  7: ON PK Fc 12476 Hz Gain -0.95 dB Q 3.00
+Filter  8: ON PK Fc   647 Hz Gain +0.97 dB Q 3.00
+Filter  9: ON PK Fc  4061 Hz Gain +0.50 dB Q 3.00

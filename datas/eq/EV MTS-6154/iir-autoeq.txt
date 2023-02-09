@@ -1,14 +1,16 @@
 EQ for EV MTS-6154 computed from Vendors-EV data
-Preference Score 1.65 with EQ 2.44
+Preference Score 1.65 with EQ 2.54
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:05:53
+Dated: 2023-02-09-10:43:33
 
-Preamp: -5.9 dB
+Preamp: -6.1 dB
 
-Filter  1: ON PK Fc   126 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc  4837 Hz Gain +3.00 dB Q 0.05
-Filter  3: ON PK Fc  1367 Hz Gain +2.20 dB Q 0.57
-Filter  4: ON PK Fc 15134 Hz Gain +3.00 dB Q 2.03
-Filter  5: ON PK Fc   368 Hz Gain +1.05 dB Q 3.00
-Filter  6: ON PK Fc    90 Hz Gain -5.02 dB Q 2.70
-Filter  7: ON PK Fc  7774 Hz Gain -1.85 dB Q 1.37
+Filter  1: ON HS Fc   129 Hz Gain +3.00 dB
+Filter  2: ON PK Fc  1564 Hz Gain +2.24 dB Q 0.39
+Filter  3: ON PK Fc 15097 Hz Gain +3.00 dB Q 1.66
+Filter  4: ON PK Fc  6326 Hz Gain -2.29 dB Q 2.42
+Filter  5: ON PK Fc   360 Hz Gain +1.43 dB Q 2.85
+Filter  6: ON PK Fc  2808 Hz Gain -0.79 dB Q 2.93
+Filter  7: ON PK Fc 10243 Hz Gain -1.42 dB Q 2.99
+Filter  8: ON PK Fc  9548 Hz Gain -0.50 dB Q 2.93
+Filter  9: ON PK Fc  9390 Hz Gain -0.50 dB Q 3.00

@@ -1,15 +1,15 @@
 EQ for GGNTKT M1 computed from Vendors-GGNTKT data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:04:39
+Dated: 2023-02-09-10:42:13
 
-Preamp: -1.1 dB
+Preamp: -0.2 dB
 
-Filter  1: ON PK Fc   166 Hz Gain -3.00 dB Q 0.50
-Filter  2: ON PK Fc   251 Hz Gain -1.31 dB Q 1.69
-Filter  3: ON PK Fc   875 Hz Gain +0.86 dB Q 2.10
-Filter  4: ON PK Fc  2776 Hz Gain +0.73 dB Q 3.00
-Filter  5: ON PK Fc 11339 Hz Gain -0.54 dB Q 2.90
-Filter  6: ON PK Fc  4133 Hz Gain -0.66 dB Q 2.90
-Filter  7: ON PK Fc   402 Hz Gain +0.50 dB Q 3.00
-Filter  8: ON PK Fc    59 Hz Gain -2.62 dB Q 2.97
-Filter  9: ON PK Fc   327 Hz Gain -0.75 dB Q 2.50
+Filter  1: ON LS Fc   710 Hz Gain -1.68 dB
+Filter  2: ON PK Fc    70 Hz Gain -2.45 dB Q 2.46
+Filter  3: ON PK Fc  4865 Hz Gain -0.66 dB Q 1.65
+Filter  4: ON PK Fc  1579 Hz Gain -0.54 dB Q 2.60
+Filter  5: ON PK Fc 11317 Hz Gain -0.60 dB Q 2.89
+Filter  6: ON PK Fc   202 Hz Gain -2.44 dB Q 1.29
+Filter  7: ON PK Fc 11906 Hz Gain -0.70 dB Q 2.63
+Filter  8: ON PK Fc   312 Hz Gain -0.77 dB Q 1.68
+Filter  9: ON PK Fc  6363 Hz Gain -0.60 dB Q 2.66

@@ -1,16 +1,16 @@
 EQ for Bose SoundLink Revolve computed from ErinsAudioCorner data
-Preference Score -0.29 with EQ 1.01
+Preference Score -0.29 with EQ 1.82
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:11:31
+Dated: 2023-02-09-10:47:44
 
 Preamp: -3.2 dB
 
-Filter  1: ON LS Fc 15997 Hz Gain -2.99 dB
-Filter  2: ON PK Fc  7819 Hz Gain -4.07 dB Q 0.29
-Filter  3: ON PK Fc   265 Hz Gain -3.02 dB Q 2.76
-Filter  4: ON PK Fc  1399 Hz Gain +2.99 dB Q 2.14
-Filter  5: ON PK Fc    84 Hz Gain +2.95 dB Q 0.55
-Filter  6: ON PK Fc   361 Hz Gain -1.48 dB Q 1.11
-Filter  7: ON PK Fc 14791 Hz Gain -1.01 dB Q 1.57
-Filter  8: ON PK Fc 14917 Hz Gain -1.02 dB Q 1.68
-Filter  9: ON PK Fc 14598 Hz Gain -1.02 dB Q 2.42
+Filter  1: ON HS Fc   126 Hz Gain -3.00 dB
+Filter  2: ON PK Fc  7818 Hz Gain -3.75 dB Q 0.31
+Filter  3: ON PK Fc   253 Hz Gain -3.01 dB Q 1.92
+Filter  4: ON PK Fc  1373 Hz Gain +2.99 dB Q 2.39
+Filter  5: ON PK Fc 14557 Hz Gain -5.97 dB Q 2.96
+Filter  6: ON PK Fc   447 Hz Gain -1.05 dB Q 2.98
+Filter  7: ON PK Fc  2449 Hz Gain -2.78 dB Q 2.99
+Filter  8: ON PK Fc 15509 Hz Gain -0.55 dB Q 2.99
+Filter  9: ON PK Fc  6187 Hz Gain -0.53 dB Q 2.99

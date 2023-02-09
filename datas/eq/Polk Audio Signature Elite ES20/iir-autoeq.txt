@@ -1,16 +1,16 @@
 EQ for Polk Audio Signature Elite ES20 computed from ASR data
-Preference Score 4.81 with EQ 5.49
+Preference Score 4.81 with EQ 5.50
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:07:24
+Dated: 2023-02-09-10:42:56
 
 Preamp: -2.8 dB
 
 Filter  1: ON PK Fc    33 Hz Gain +2.54 dB Q 0.89
-Filter  2: ON PK Fc  1882 Hz Gain +2.44 dB Q 2.62
-Filter  3: ON PK Fc  4925 Hz Gain -1.98 dB Q 1.77
+Filter  2: ON PK Fc  1881 Hz Gain +2.44 dB Q 2.62
+Filter  3: ON PK Fc  4906 Hz Gain -1.98 dB Q 1.77
 Filter  4: ON PK Fc   179 Hz Gain -0.82 dB Q 0.43
-Filter  5: ON PK Fc   607 Hz Gain -1.73 dB Q 3.00
-Filter  6: ON PK Fc   317 Hz Gain +0.64 dB Q 2.25
-Filter  7: ON PK Fc 10712 Hz Gain +0.57 dB Q 0.11
-Filter  8: ON PK Fc  5867 Hz Gain -0.78 dB Q 1.06
-Filter  9: ON PK Fc  3680 Hz Gain -0.50 dB Q 3.00
+Filter  5: ON PK Fc   609 Hz Gain -1.73 dB Q 3.00
+Filter  6: ON PK Fc   313 Hz Gain +0.64 dB Q 2.24
+Filter  7: ON PK Fc 10717 Hz Gain +0.57 dB Q 0.10
+Filter  8: ON PK Fc  6019 Hz Gain -0.80 dB Q 1.10
+Filter  9: ON PK Fc  3682 Hz Gain -0.50 dB Q 3.00

@@ -1,15 +1,16 @@
 EQ for EV EVID-S4.2 computed from Vendors-EV data
-Preference Score -0.75 with EQ 1.69
+Preference Score -0.75 with EQ 1.80
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:06:07
+Dated: 2023-02-09-10:43:29
 
 Preamp: -2.8 dB
 
 Filter  1: ON PK Fc    61 Hz Gain +2.62 dB Q 0.73
-Filter  2: ON PK Fc  8696 Hz Gain -6.00 dB Q 0.82
-Filter  3: ON PK Fc   189 Hz Gain -3.40 dB Q 3.00
-Filter  4: ON PK Fc   593 Hz Gain +1.34 dB Q 1.03
-Filter  5: ON PK Fc 16000 Hz Gain +2.24 dB Q 2.61
-Filter  6: ON PK Fc  1019 Hz Gain +0.88 dB Q 3.00
-Filter  7: ON PK Fc  1625 Hz Gain -0.75 dB Q 3.00
-Filter  8: ON PK Fc 10553 Hz Gain -1.91 dB Q 3.00
+Filter  2: ON PK Fc  8622 Hz Gain -6.00 dB Q 0.82
+Filter  3: ON PK Fc   189 Hz Gain -3.41 dB Q 3.00
+Filter  4: ON PK Fc   593 Hz Gain +1.34 dB Q 1.02
+Filter  5: ON PK Fc 16000 Hz Gain +2.20 dB Q 2.68
+Filter  6: ON PK Fc  1018 Hz Gain +0.88 dB Q 3.00
+Filter  7: ON PK Fc  1615 Hz Gain -0.74 dB Q 3.00
+Filter  8: ON PK Fc 10610 Hz Gain -1.97 dB Q 3.00
+Filter  9: ON PK Fc  5780 Hz Gain -0.73 dB Q 3.00

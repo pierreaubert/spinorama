@@ -1,14 +1,15 @@
 EQ for Elac Uni-Fi Reference UBR62 computed from ErinsAudioCorner data
-Preference Score 5.60 with EQ 6.03
+Preference Score 5.60 with EQ 6.04
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:08:48
+Dated: 2023-02-09-10:48:35
 
 Preamp: -3.1 dB
 
-Filter  1: ON PK Fc    32 Hz Gain +2.88 dB Q 1.16
-Filter  2: ON PK Fc    93 Hz Gain -2.14 dB Q 2.95
+Filter  1: ON PK Fc    32 Hz Gain +2.85 dB Q 1.12
+Filter  2: ON PK Fc    93 Hz Gain -2.15 dB Q 2.93
 Filter  3: ON PK Fc   335 Hz Gain -1.20 dB Q 0.91
-Filter  4: ON PK Fc  4366 Hz Gain -0.77 dB Q 1.00
-Filter  5: ON PK Fc   658 Hz Gain -0.66 dB Q 3.00
-Filter  6: ON PK Fc  9988 Hz Gain -0.50 dB Q 3.00
-Filter  7: ON PK Fc  1127 Hz Gain -0.50 dB Q 3.00
+Filter  4: ON PK Fc  4457 Hz Gain -0.78 dB Q 1.02
+Filter  5: ON PK Fc   658 Hz Gain -0.67 dB Q 3.00
+Filter  6: ON PK Fc  9767 Hz Gain -0.50 dB Q 3.00
+Filter  7: ON PK Fc  1152 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc 11186 Hz Gain -0.50 dB Q 3.00

@@ -1,12 +1,12 @@
 EQ for Meyer Sound Ultra X40 computed from Vendors-Meyer Sound data
 Preference Score 2.83 with EQ 3.50
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:08:18
+Dated: 2023-02-09-10:44:16
 
-Preamp: -3.2 dB
+Preamp: -2.9 dB
 
-Filter  1: ON PK Fc    34 Hz Gain +3.00 dB Q 0.57
-Filter  2: ON PK Fc   700 Hz Gain +2.44 dB Q 0.65
-Filter  3: ON PK Fc  1884 Hz Gain +1.72 dB Q 2.37
-Filter  4: ON PK Fc   140 Hz Gain -0.96 dB Q 1.03
-Filter  5: ON PK Fc  8531 Hz Gain -1.37 dB Q 3.00
+Filter  1: ON LS Fc  3328 Hz Gain +1.59 dB
+Filter  2: ON PK Fc   147 Hz Gain -1.90 dB Q 1.32
+Filter  3: ON PK Fc   591 Hz Gain +1.35 dB Q 2.94
+Filter  4: ON PK Fc  8400 Hz Gain -1.41 dB Q 3.00
+Filter  5: ON PK Fc   901 Hz Gain -0.89 dB Q 2.98

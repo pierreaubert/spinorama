@@ -1,16 +1,16 @@
 EQ for Yamaha DZR15 computed from Vendors-Yamaha data
-Preference Score 3.96 with EQ 4.90
+Preference Score 3.96 with EQ 4.89
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:05:39
+Dated: 2023-02-09-10:43:21
 
-Preamp: -3.2 dB
+Preamp: -3.5 dB
 
-Filter  1: ON HS Fc  9401 Hz Gain +2.99 dB
-Filter  2: ON PK Fc    83 Hz Gain -4.38 dB Q 2.85
-Filter  3: ON PK Fc  2041 Hz Gain +2.39 dB Q 1.78
-Filter  4: ON PK Fc   212 Hz Gain +2.25 dB Q 2.98
-Filter  5: ON PK Fc   318 Hz Gain -1.44 dB Q 2.99
-Filter  6: ON PK Fc   467 Hz Gain +1.41 dB Q 2.95
-Filter  7: ON PK Fc   730 Hz Gain -0.95 dB Q 2.61
-Filter  8: ON PK Fc  3519 Hz Gain -0.51 dB Q 2.95
-Filter  9: ON PK Fc  8925 Hz Gain -1.64 dB Q 2.94
+Filter  1: ON HS Fc 10024 Hz Gain +3.00 dB
+Filter  2: ON PK Fc    82 Hz Gain -4.06 dB Q 2.80
+Filter  3: ON PK Fc  2066 Hz Gain +2.69 dB Q 1.89
+Filter  4: ON PK Fc   210 Hz Gain +2.01 dB Q 2.84
+Filter  5: ON PK Fc   321 Hz Gain -1.52 dB Q 2.81
+Filter  6: ON PK Fc   467 Hz Gain +1.58 dB Q 2.99
+Filter  7: ON PK Fc   709 Hz Gain -1.17 dB Q 2.64
+Filter  8: ON PK Fc  4629 Hz Gain +0.50 dB Q 0.09
+Filter  9: ON PK Fc  8865 Hz Gain -2.37 dB Q 3.00

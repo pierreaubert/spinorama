@@ -1,16 +1,16 @@
 EQ for Revel M55XC computed from ASR data
 Preference Score 2.44 with EQ 4.78
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:11:06
+Dated: 2023-02-09-10:49:25
 
 Preamp: -2.9 dB
 
 Filter  1: ON PK Fc    66 Hz Gain +2.32 dB Q 0.50
 Filter  2: ON PK Fc  6464 Hz Gain -2.56 dB Q 0.56
 Filter  3: ON PK Fc   437 Hz Gain +2.59 dB Q 1.25
-Filter  4: ON PK Fc  1114 Hz Gain -0.72 dB Q 3.00
+Filter  4: ON PK Fc  1117 Hz Gain -0.72 dB Q 3.00
 Filter  5: ON PK Fc  1624 Hz Gain +0.74 dB Q 3.00
-Filter  6: ON PK Fc 13916 Hz Gain +0.50 dB Q 3.00
-Filter  7: ON PK Fc   154 Hz Gain -1.40 dB Q 3.00
-Filter  8: ON PK Fc 16000 Hz Gain -0.59 dB Q 0.48
-Filter  9: ON PK Fc  2415 Hz Gain -0.50 dB Q 3.00
+Filter  6: ON PK Fc 14209 Hz Gain +0.50 dB Q 3.00
+Filter  7: ON PK Fc   154 Hz Gain -1.39 dB Q 3.00
+Filter  8: ON PK Fc 16000 Hz Gain -0.59 dB Q 0.50
+Filter  9: ON PK Fc  2423 Hz Gain -0.50 dB Q 3.00

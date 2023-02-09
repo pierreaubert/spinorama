@@ -1,14 +1,14 @@
 EQ for Axiom ED80P computed from Vendors-Axiom data
-Preference Score 4.13 with EQ 4.62
+Preference Score 4.13 with EQ 4.63
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:07:11
+Dated: 2023-02-09-10:46:12
 
 Preamp: -2.7 dB
 
-Filter  1: ON PK Fc    66 Hz Gain -3.00 dB Q 2.03
-Filter  2: ON PK Fc  6425 Hz Gain +2.46 dB Q 0.12
-Filter  3: ON PK Fc   389 Hz Gain -2.22 dB Q 1.08
-Filter  4: ON PK Fc   777 Hz Gain +1.94 dB Q 3.00
-Filter  5: ON PK Fc  1430 Hz Gain +0.87 dB Q 3.00
-Filter  6: ON PK Fc  9891 Hz Gain -2.36 dB Q 1.71
-Filter  7: ON PK Fc  2575 Hz Gain -3.26 dB Q 2.74
+Filter  1: ON PK Fc    65 Hz Gain -3.00 dB Q 2.06
+Filter  2: ON PK Fc  6403 Hz Gain +2.46 dB Q 0.12
+Filter  3: ON PK Fc   389 Hz Gain -2.22 dB Q 1.07
+Filter  4: ON PK Fc   775 Hz Gain +1.95 dB Q 3.00
+Filter  5: ON PK Fc  1441 Hz Gain +0.87 dB Q 3.00
+Filter  6: ON PK Fc  9808 Hz Gain -2.34 dB Q 1.69
+Filter  7: ON PK Fc  2566 Hz Gain -3.26 dB Q 2.74

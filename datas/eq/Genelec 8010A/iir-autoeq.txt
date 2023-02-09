@@ -1,11 +1,16 @@
 EQ for Genelec 8010A computed from ASR data
-Preference Score 5.14 with EQ 5.40
+Preference Score 5.14 with EQ 5.39
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-22-13:11:33
+Dated: 2023-02-09-10:47:44
 
-Preamp: -2.5 dB
+Preamp: -0.2 dB
 
-Filter  1: ON LS Fc    66 Hz Gain +2.35 dB
-Filter  2: ON PK Fc   157 Hz Gain -1.96 dB Q 1.57
-Filter  3: ON PK Fc   939 Hz Gain +0.81 dB Q 2.89
-Filter  4: ON PK Fc   517 Hz Gain -0.51 dB Q 2.87
+Filter  1: ON PK Fc   155 Hz Gain -2.79 dB Q 1.39
+Filter  2: ON PK Fc   465 Hz Gain -1.37 dB Q 0.85
+Filter  3: ON PK Fc  9570 Hz Gain -1.17 dB Q 1.00
+Filter  4: ON PK Fc  1323 Hz Gain -0.70 dB Q 3.00
+Filter  5: ON PK Fc 14157 Hz Gain -0.50 dB Q 3.00
+Filter  6: ON PK Fc   289 Hz Gain -0.50 dB Q 3.00
+Filter  7: ON PK Fc  7202 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc 15193 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc  1746 Hz Gain -0.50 dB Q 3.00
