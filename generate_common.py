@@ -177,7 +177,6 @@ def cache_save(df_all, smoke_test=False):
 
 
 def is_filtered(speaker, data, filters):
-
     if filters.get("speaker_name") is not None and filters.get("speaker_name") != speaker:
         return True
 
@@ -251,7 +250,6 @@ def cache_load_distributed_reduce(filters, smoke_test, ids1):
     count = 0
     ids = ids1
     while 1:
-
         done_ids, remaining_ids = ray.wait(ids, num_returns=min(len(ids), 64))
         for id in done_ids:
             df_read = ray.get(id)

@@ -30,6 +30,19 @@ import {
 } from './common.js';
 import { urlSite } from './misc.js';
 
+function getNearSpeakers(metadata) {
+    const metaSpeakers = {};
+    const speakers = [];
+    metadata.forEach(function (value) {
+        const speaker = value.brand + ' ' + value.model;
+        if (value.nearest && value.nearest.length > 0) {
+            speakers.push(speaker);
+            metaSpeakers[speaker] = value;
+        }
+    });
+    return [metaSpeakers, speakers.sort()];
+}
+
 getMetadata()
     .then((metadata) => {
         const urlSimilar = urlSite + 'similar.html?';
@@ -44,6 +57,8 @@ getMetadata()
 
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
+
+        const [metaSpeakers, speakers] = getNearSpeakers(metadata);
 
         function plot(measurement, speakersName, speakersGraph) {
             // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs')
@@ -104,19 +119,6 @@ getMetadata()
             run();
         }
 
-        function getNearSpeakers(metadata) {
-            const metaSpeakers = {};
-            const speakers = [];
-            metadata.forEach(function (value) {
-                const speaker = value.brand + ' ' + value.model;
-                if (value.nearest && value.nearest.length > 0) {
-                    speakers.push(speaker);
-                    metaSpeakers[speaker] = value;
-                }
-            });
-            return [metaSpeakers, speakers.sort()];
-        }
-
         function buildInitSpeakers(speakers) {
             if (urlParams.has('speaker0')) {
                 const speaker0 = urlParams.get('speaker0');
@@ -148,8 +150,6 @@ getMetadata()
             history.pushState({ page: 1 }, 'Change measurement', urlSimilar + urlParams.toString());
             plot(graphName, names, graphs);
         }
-
-        const [metaSpeakers, speakers] = getNearSpeakers(metadata);
 
         assignOptions(speakers, speakerSelector, buildInitSpeakers(speakers));
         assignOptions(knownMeasurements, graphSelector, knownMeasurements[0]);

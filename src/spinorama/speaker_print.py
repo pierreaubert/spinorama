@@ -179,7 +179,7 @@ def print_graphs(
             )
 
     updated = 0
-    for (title, graph) in graphs.items():
+    for title, graph in graphs.items():
         if graph is not None:
             updated = print_graph(
                 speaker,

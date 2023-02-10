@@ -180,14 +180,14 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
         title_text="SPL (dB)",
         range=[range_min, range_max],
         dtick=range_step,
-        tickvals=[i for i in range(range_min, range_max + range_step, range_step)],
+        tickvals=list((range_min, range_max + range_step, range_step)),
         ticktext=["{}".format(i) if not i % 5 else " " for i in range(range_min, range_max + range_step, range_step)],
         showline=True,
     )
 
 
 def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
-    tickvals = [di for di in range(range_min, range_max, range_step)]
+    tickvals = list(range(range_min, range_max, range_step))
     ticktext = [f"{di}" if pos < 5 else "" for pos, di in enumerate(range(range_min, range_max, range_step))]
     # print('DEBUG {} {}'.format(tickvals, ticktext))
     return dict(
@@ -515,7 +515,6 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
 
 
 def plot_graph_flat_traces(df, measurement, params):
-
     restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
     slope = 0
     intercept = np.mean(restricted_freq[measurement])
@@ -524,7 +523,6 @@ def plot_graph_flat_traces(df, measurement, params):
 
 
 def plot_graph_regression_traces(df, measurement, params):
-
     restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
     slope, intercept, r, p, se = stats.linregress(x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement])
 
@@ -667,7 +665,7 @@ def find_nearest_freq(dfu, hz, tolerance=0.05):
 def plot_radar(spl, params):
     layout = params.get("layout", "")
 
-    anglelist = [a for a in range(-180, 180, 10)]
+    anglelist = list(range(-180, 180, 10))
 
     def projection(anglelist, gridZ, hz):
         dbsR = [db for a, db in zip(anglelist, gridZ)]
@@ -731,8 +729,8 @@ def plot_radar(spl, params):
             legendrank=int(freq[:-3]),
         )
         if layout != "compact":
-            legendgroup = ("measurements",)
-            legendgrouptitle_text = ("Frequencies",)
+            trace.legendgroup = ("measurements",)
+            trace.legendgrouptitle_text = ("Frequencies",)
         fig.add_trace(trace)
 
     fig.update_layout(radar_layout(params))
@@ -746,8 +744,7 @@ def plot_radar(spl, params):
                 dtick=10,
                 tickvals=list(range(0, 360, 10)),
                 ticktext=[
-                    "{}°".format(x) if abs(x) < 60 or not x % 30 else " "
-                    for x in (list(range(0, 190, 10)) + list(range(-170, 0, 10)))
+                    f"{x}°" if abs(x) < 60 or not x % 30 else " " for x in (list(range(0, 190, 10)) + list(range(-170, 0, 10)))
                 ],
             ),
         ),

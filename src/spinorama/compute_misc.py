@@ -209,6 +209,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     tol = 0.0001
     #
     zero = az[deg0][kHz1:kHz10]
+
     # print('debug af {} am {} az {}'.format(af.shape, am.shape, az.shape))
     # print('debug af {}'.format(af))
     # print('debug am {}'.format(am.T[deg0]))
@@ -228,7 +229,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
         xp1 = int(x)
         xp2 = xp1 + 1
         per_octave = []
-        for (bmin, bcenter, bmax) in octave(2):
+        for bmin, bcenter, bmax in octave(2):
             # 100hz to 16k hz
             if bmin < 1000 or bmax > 10000:
                 continue
@@ -313,7 +314,6 @@ def directivity_matrix(splH, splV):
 
 
 def compute_directivity_deg_v2(df) -> tuple[float, float, float]:
-
     # def compute(spl, r):
     #     mean = spl[((spl.Freq>1000) & (spl.Freq<10000))]['On Axis'].mean()
     #     for k in r:
@@ -418,13 +418,13 @@ def dist_point_line(x, y, A, B, C):
     return abs(A * x + B * y + C) / math.sqrt(A * A + B * B)
 
 
-def compute_statistics(df, measurement, min_freq, max_freq, hist_min_freq, hist_max_freq):
-    restricted_minmax = df.loc[(df.Freq > min_freq) & (df.Freq < max_freq)]
+def compute_statistics(data_frame, measurement, min_freq, max_freq, hist_min_freq, hist_max_freq):
+    restricted_minmax = data_frame.loc[(data_frame.Freq > min_freq) & (data_frame.Freq < max_freq)]
     restricted_spl = restricted_minmax[measurement]
     # regression line
     slope, intercept, _, _, _ = stats.linregress(x=np.log10(restricted_minmax["Freq"]), y=restricted_spl)
     #
-    hist_minmax = df.loc[(df.Freq > hist_min_freq) & (df.Freq < hist_max_freq)]
+    hist_minmax = data_frame.loc[(data_frame.Freq > hist_min_freq) & (data_frame.Freq < hist_max_freq)]
     hist_spl = hist_minmax[measurement]
     # hist_dist = [dist_point_line(math.log10(f), db, slope, -1, intercept) for f, db in zip(hist_minmax.Freq, hist_spl)]
     hist_dist = [abs(db - (slope * math.log10(f) + intercept)) for f, db in zip(hist_minmax.Freq, hist_spl)]

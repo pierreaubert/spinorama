@@ -26,7 +26,6 @@ from spinorama.compute_misc import compute_contour, reshape
 
 class SpinoramaContourSizeTests(unittest.TestCase):
     def setUp(self):
-
         freq = [20, 200, 2000, 20000]
         onaxis = [10, 10, 10, 10]
         d10 = [8, 7, 6, 5]
@@ -40,7 +39,6 @@ class SpinoramaContourSizeTests(unittest.TestCase):
 
 class SpinoramaContourTests(unittest.TestCase):
     def setUp(self):
-
         freq = [20, 100, 200, 1000, 2000, 10000, 20000]
         onaxis = [10, 10, 10, 10, 10, 10, 10]
         #
@@ -98,7 +96,6 @@ class SpinoramaContourTests(unittest.TestCase):
 
 class SpinoramaReshapeTests(unittest.TestCase):
     def setUp(self):
-
         freq = [20, 100, 200, 1000, 2000, 10000, 20000]
         onaxis = [10, 10, 10, 10, 10, 10, 10]
         d10p = [10, 10, 9, 9, 8, 8, 7]

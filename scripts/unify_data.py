@@ -19,7 +19,6 @@ def exec_git(command):
 
 
 def move_data(speaker_name, speaker_data):
-
     brand = speaker_data["brand"]
     model = speaker_data["model"]
 
@@ -91,7 +90,6 @@ def move_data(speaker_name, speaker_data):
 
 
 if __name__ == "__main__":
-
     for speaker_name, speaker_data in metadata.speakers_info.items():
         # print("DEBUG {}".format(speaker_name))
         move_data(speaker_name, speaker_data)

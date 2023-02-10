@@ -160,7 +160,6 @@ def optim_greedy(
     ) = (False, -1, -1, -1, -1, -1, -1)
 
     for optim_iter in range(0, nb_iter):
-
         # we are optimizing above target_min_hz on anechoic data
         current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq, optim_config)
 
@@ -482,7 +481,6 @@ def optim_refine(
     greedy_results,
     greedy_peq,
 ) -> tuple[list[tuple[int, float, float]], Peq]:
-
     # loss from previous optim algo
     init_loss = greedy_results[-1][2]
 
@@ -620,7 +618,6 @@ def optim_multi_steps(
     optim_config: dict,
     use_score,
 ) -> tuple[list[tuple[int, float, float]], Peq]:
-
     if optim_config["use_grapheq"] is True:
         return optim_grapheq(
             speaker_name,

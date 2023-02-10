@@ -16,6 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+/*global Handlebars*/
+/*eslint no-undef: "error"*/
+
 import { getMetadata } from './common.js';
 import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc.js';
 import { sortMetadata2 } from './sort.js';

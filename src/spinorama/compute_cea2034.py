@@ -2,15 +2,15 @@
 """Compute Harman/Olive score for speaker"""
 import logging
 import math
+
 import numpy as np
 import pandas as pd
-from typing import DefaultDict
 
 
 logger = logging.getLogger("spinorama")
 
 
-def compute_area_Q(alpha_d: float, beta_d: float) -> float:
+def compute_area_q(alpha_d: float, beta_d: float) -> float:
     """Compute the area of the sphere between 4 lines at alpha and beta angles"""
     alpha = alpha_d * 2 * math.pi / 360
     beta = beta_d * 2 * math.pi / 360
@@ -27,7 +27,7 @@ def compute_area_Q(alpha_d: float, beta_d: float) -> float:
 def compute_weigths() -> list[float]:
     """Compute the weigths from the CEA2034 standards"""
     angles = [i * 10 + 5 for i in range(0, 9)] + [90]
-    weigth_angles = [compute_area_Q(i, i) for i in angles]
+    weigth_angles = [compute_area_q(i, i) for i in angles]
     # weigths are the delta between 2 consecutive areas
     weigths = [weigth_angles[0]] + [weigth_angles[i] - weigth_angles[i - 1] for i in range(1, len(weigth_angles))]
     weigths[9] *= 2.0
@@ -101,20 +101,18 @@ sp_weigths_hv = compute_weigths_hv(sp_weigths)
 def spl2pressure(spl: float) -> float:
     """Convert SPL to pressure"""
     try:
-        p = pow(10, (spl - 105.0) / 20.0)
-        return p
+        pressure = pow(10, (spl - 105.0) / 20.0)
+        return pressure
     except TypeError as type_error:
-        # print("spl2pressure: spl={0} e={1}".format(spl, type_error))
         logger.error("spl2pressure spl={0} e={1}".format(spl, type_error))
         return 0.0
 
 
-def pressure2spl(p: float) -> float:
+def pressure2spl(pressure: float) -> float:
     """Convert pressure to SPL"""
-    if p < 0.0:
-        # print("pressure is negative p={0}".format(p))
-        logger.error("pressure is negative p={0}".format(p))
-    return 105.0 + 20.0 * math.log10(p)
+    if pressure < 0.0:
+        logger.error("pressure is negative p={0}".format(pressure))
+    return 105.0 + 20.0 * math.log10(pressure)
 
 
 def column_trim(col: str) -> str:
@@ -162,8 +160,7 @@ def spatial_average(sp_window: pd.DataFrame, func="rms") -> pd.DataFrame:
         # hack
         if n_avg == 0:
             return 0.000000001
-        r = np.sqrt(np.sum(avg) / n_avg)
-        return r
+        return np.sqrt(np.sum(avg) / n_avg)
 
     if func == "rms":
         result["dB"] = sp_window.drop(columns=["Freq"]).apply(spl2pressure).apply(rms, axis=1).apply(pressure2spl)
@@ -425,7 +422,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
         }
     ).reset_index(drop=True)
 
-    for (key, name) in [
+    for key, name in [
         ("Floor Bounce", floor_bounce),
         ("Ceiling Bounce", ceiling_bounce),
         ("Front Wall Bounce", front_wall_bounce),
@@ -460,7 +457,7 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
     v_r = pd.DataFrame({"Freq": v_spl.Freq}).reset_index(drop=True)
 
     # print(vr.shape, onaxis.shape, floor_reflection.shape)
-    for (key, name) in [
+    for key, name in [
         ("Floor Reflection", floor_reflection),
         ("Ceiling Reflection", ceiling_reflection),
         ("Total Vertical Reflection", total_vertical_reflection),
@@ -584,7 +581,7 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
             "Freq": h_spl.Freq,
         }
     ).reset_index(drop=True)
-    for (key, name) in [
+    for key, name in [
         ("Front", front),
         ("Side", side),
         ("Rear", rear),
@@ -597,9 +594,9 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
     return h_r.reset_index(drop=True)
 
 
-def estimated_inroom(lw: pd.DataFrame, er: pd.DataFrame, sp: pd.DataFrame) -> pd.DataFrame:
+def estimated_inroom(l_w: pd.DataFrame, e_r: pd.DataFrame, s_p: pd.DataFrame) -> pd.DataFrame:
     """Compute the Estimated In-Room Response (PIR) from the SPL horizontal and vertical"""
-    if lw.empty or er.empty or sp.empty:
+    if l_w.empty or e_r.empty or s_p.empty:
         return pd.DataFrame()
     # The Estimated In-Room Response shall be calculated using the directivity
     # data acquired in Section 5 or Section 6.
@@ -612,33 +609,33 @@ def estimated_inroom(lw: pd.DataFrame, er: pd.DataFrame, sp: pd.DataFrame) -> pd
     # applied and the squared pressure values summed they shall be converted
     # back to sound pressure levels.
     key = "Total Early Reflection"
-    if key not in er.keys():
+    if key not in e_r.keys():
         key = "dB"
 
     try:
-        # print(lw.dB.shape, er[key].shape, sp.dB.shape)
-        # print(lw.dB.apply(spl2pressure))
-        # print(er[key].apply(spl2pressure))
-        # print(sp.dB.apply(spl2pressure))
+        # print(l_w.dB.shape, e_r[key].shape, s_p.dB.shape)
+        # print(l_w.dB.apply(spl2pressure))
+        # print(e_r[key].apply(spl2pressure))
+        # print(s_p.dB.apply(spl2pressure))
 
-        eir = 0.12 * lw.dB.apply(spl2pressure) + 0.44 * er[key].apply(spl2pressure) + 0.44 * sp.dB.apply(spl2pressure)
+        eir = 0.12 * l_w.dB.apply(spl2pressure) + 0.44 * e_r[key].apply(spl2pressure) + 0.44 * s_p.dB.apply(spl2pressure)
 
         # print(eir)
 
-        return pd.DataFrame({"Freq": lw.Freq, "Estimated In-Room Response": eir.apply(pressure2spl)}).reset_index(drop=True)
-    except TypeError as e:
-        logger.error(e)
+        return pd.DataFrame({"Freq": l_w.Freq, "Estimated In-Room Response": eir.apply(pressure2spl)}).reset_index(drop=True)
+    except TypeError as type_error:
+        logger.error(type_error)
         return pd.DataFrame()
 
 
-def estimated_inroom_HV(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected") -> pd.DataFrame:
+def estimated_inroom_hv(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected") -> pd.DataFrame:
     """Compute the PIR from the SPL horizontal and vertical"""
     if v_spl.empty or h_spl.empty:
         return pd.DataFrame()
-    lw = listening_window(h_spl, v_spl)
-    er = early_reflections(h_spl, v_spl, method)
-    sp = sound_power(h_spl, v_spl)
-    return estimated_inroom(lw, er, sp)
+    l_w = listening_window(h_spl, v_spl)
+    e_r = early_reflections(h_spl, v_spl, method)
+    s_p = sound_power(h_spl, v_spl)
+    return estimated_inroom(l_w, e_r, s_p)
 
 
 def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected") -> pd.DataFrame:
@@ -653,22 +650,22 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
             "On Axis": onaxis.dB,
         }
     ).reset_index(drop=True)
-    lw = listening_window(h_spl, v_spl)
-    sp = sound_power(h_spl, v_spl)
+    l_w = listening_window(h_spl, v_spl)
+    s_p = sound_power(h_spl, v_spl)
     ter = early_reflections(h_spl, v_spl, method)
-    if not lw.empty:
-        spin["Listening Window"] = lw.dB
+    if not l_w.empty:
+        spin["Listening Window"] = l_w.dB
 
-    if not sp.empty:
-        spin["Sound Power"] = sp.dB
+    if not s_p.empty:
+        spin["Sound Power"] = s_p.dB
 
     if "Total Early Reflection" in ter.keys():
         spin["Early Reflections"] = ter["Total Early Reflection"]
 
-    if lw.empty or sp.empty or ter.empty:
+    if l_w.empty or s_p.empty or ter.empty:
         return spin.reset_index(drop=True)
 
-    erdi = pd.DataFrame({"dB": lw.dB - ter["Total Early Reflection"]})
+    erdi = pd.DataFrame({"dB": l_w.dB - ter["Total Early Reflection"]})
     # add a di offset to mimic other systems
     di_offset = pd.DataFrame({"dB": [0 for i in range(0, len(erdi))]})
     # Sound Power Directivity Index (SPDI)
@@ -676,8 +673,8 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
     # as the difference between the listening window curve and the sound power curve.
     # An SPDI of 0 dB indicates omnidirectional radiation. The larger the SPDI, the
     # more directional the loudspeaker is in the direction of the reference axis.
-    spdi = pd.DataFrame({"dB": lw.dB - sp.dB})
-    for (key, name) in [
+    spdi = pd.DataFrame({"dB": l_w.dB - s_p.dB})
+    for key, name in [
         ("Early Reflections DI", erdi),
         ("Sound Power DI", spdi),
         ("DI offset", di_offset),
@@ -685,7 +682,7 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
         if not name.empty:
             spin[key] = name.dB
         else:
-            logger.debug("{0} is empty".format(key))
+            logger.debug("%s is empty".format(key))
     return spin.reset_index(drop=True)
 
 
@@ -708,65 +705,3 @@ def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
             "On Axis": onaxis.dB,
         }
     )
-
-
-# class CEA2034(object):
-#
-#     def __init__(self, splH, splV):
-#         self.splH = splH
-#         self.splV = splV
-#         if not self.checkSpl(splH) or not self.checSpl(splV):
-#             raise 'Hell'
-#         self.pre_compute()
-#
-#     def checkSpl(spl):
-#         if spl.empty:
-#             return False
-#         for angle in [
-#                 "Freq",
-#                 "On Axis",
-#                 "10°",
-#                 "20°",
-#                 "30°",
-#                 "40°",
-#                 "50°",
-#                 "60°",
-#                 "70°",
-#                 "80°",
-#                 "90°",
-#                 "100°",
-#                 "110°",
-#                 "120°",
-#                 "130°",
-#                 "140°",
-#                 "150°",
-#                 "160°",
-#                 "170°",
-#                 "180°",
-#                 "-10°",
-#                 "-20°",
-#                 "-30°",
-#                 "-40°",
-#                 "-50°",
-#                 "-60°",
-#                 "-70°",
-#                 "-80°",
-#                 "-90°",
-#                 "-100°",
-#                 "-110°",
-#                 "-120°",
-#                 "-130°",
-#                 "-140°",
-#                 "-150°",
-#                 "-160°",
-#                 "-170°",
-#             ],
-#             if angle not in spl.keys():
-#                 return False
-#         return True
-#
-#     def self.pre_compute():
-#         self.
-#
-#
-#

@@ -16,6 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+/*global Handlebars*/
+/*eslint no-undef: "error"*/
+
 import { getMetadata } from './common.js';
 import { sortMetadata2 } from './sort.js';
 import {
@@ -80,21 +83,21 @@ getMetadata()
 
         function switchVisible(divEQ, context, current) {
             if ( current === 'autoeq' ) {
-                let autoeq = divEQ.querySelector('#eq-'+context.id+'-autoeq');
+                const autoeq = divEQ.querySelector('#eq-'+context.id+'-autoeq');
                 autoeq.classList.remove('hidden');
                 for (const oeq in context.othereq) {
-                    let eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
+                    const eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
                     eq.classList.add('hidden');
                 }
             } else {
-                let autoeq = divEQ.querySelector('#eq-'+context.id+'-autoeq');
+                const autoeq = divEQ.querySelector('#eq-'+context.id+'-autoeq');
                 autoeq.classList.add('hidden');
                 for (const oeq in context.othereq) {
                     if (oeq === current) {
-                        let eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
+                        const eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
                         eq.classList.remove('hidden');
                     } else {
-                        let eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
+                        const eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
                         eq.classList.add('hidden');
                     }
                 }

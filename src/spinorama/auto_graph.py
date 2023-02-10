@@ -142,7 +142,6 @@ def graph_results(
     score,
     auto_score,
 ):
-
     # ~ default
     g_params = {
         "xmin": 20,
@@ -224,9 +223,9 @@ def graph_results(
         # generate histogram of deviation
         noeq_counts, noeq_bins = noeq_hist
         auto_counts, auto_bins = auto_hist
-        bins = sorted([s for s in set(noeq_bins).union(auto_bins)])
-        bins = ["{:0.1f}-{:0.1f}".format(noeq_bins[i], noeq_bins[i + 1]) for i in range(0, len(noeq_bins) - 1)]
-        bins.append("{:0.1f}+".format(noeq_bins[-1]))
+        bins = sorted(list(set(noeq_bins).union(auto_bins)))
+        bins = [f"{noeq_bins[i]:0.1f}-{noeq_bins[i+1]:0.1f}" for i in range(0, len(noeq_bins) - 1)]
+        bins.append(f"{noeq_bins[-1]:0.1f}+")
         hist_plot = [
             go.Bar(
                 x=bins,
@@ -255,9 +254,9 @@ def graph_results(
         )
         noeq_counts, noeq_bins = noeq_hist
         auto_counts, auto_bins = auto_hist
-        bins = sorted([s for s in set(noeq_bins).union(auto_bins)])
-        bins = ["{:0.1f}-{:0.1f}".format(noeq_bins[i], noeq_bins[i + 1]) for i in range(0, len(noeq_bins) - 1)]
-        bins.append("{:0.1f}+".format(noeq_bins[-1]))
+        bins = sorted(list(set(noeq_bins).union(auto_bins)))
+        bins = [f"{noeq_bins[i]:0.1f}-{noeq_bins[i+1]:0.1f}" for i in range(0, len(noeq_bins) - 1)]
+        bins.append(f"{noeq_bins[-1]:0.1f}+")
         hist_plot_midrange = [
             go.Bar(
                 x=bins,
@@ -306,7 +305,7 @@ def graph_results(
         rows=8,
         cols=2,
         subplot_titles=(
-            "PEQ details (N={} Gain={:0.1f})".format(len(auto_peq), peq_preamp_gain(auto_peq)),
+            f"PEQ details (N={len(auto_peq)} Gain={peq_preamp_gain(auto_peq):0.1f})",
             "PEQ v.s. Target",
             spin_title,
             auto_spin_title,

@@ -47,7 +47,7 @@ export const knownMeasurements = [
     'SPL Vertical Globe',
     'SPL Vertical Globe Normalized',
     'SPL Horizontal Radar',
-    'SPL Vertical Radar',
+    'SPL Vertical Radar'
 ];
 
 const colors = ['#5c77a5', '#dc842a', '#c85857', '#89b5b1', '#71a152', '#bab0ac', '#e15759', '#b07aa1', '#76b7b2', '#ff9da7'];

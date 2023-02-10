@@ -90,10 +90,10 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
         logger.debug("est v2 {}".format(est))
 
         return est
-    except TypeError as te:
-        logger.error("Estimates failed for {0} with {1}".format(onaxis.shape, te))
-    except ValueError as ve:
-        logger.error("Estimates failed for {0} with {1}".format(onaxis.shape, ve))
+    except TypeError as type_error:
+        logger.error("Estimates failed for {0} with {1}".format(onaxis.shape, type_error))
+    except ValueError as value_error:
+        logger.error("Estimates failed for {0} with {1}".format(onaxis.shape, value_error))
     return {}
 
 
@@ -111,13 +111,13 @@ def estimates(spin: pd.DataFrame, splH: pd.DataFrame, splV: pd.DataFrame) -> dic
                     est["dir_{}_p".format(orientation)] = dir_deg_p
                     est["dir_{}_m".format(orientation)] = dir_deg_m
                     est["dir_{}".format(orientation)] = dir_deg
-                except Exception as e:
-                    logger.warning("Computing directivity failed! {}".format(e))
+                except Exception as error:
+                    logger.warning("Computing directivity failed! {}".format(error))
 
         logger.debug("Estimates v3: {0}".format(est))
         return est
-    except TypeError as te:
-        logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, te))
-    except ValueError as ve:
-        logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, ve))
+    except TypeError as type_error:
+        logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, type_error))
+    except ValueError as value_error:
+        logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, value_error))
     return {}

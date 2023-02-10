@@ -238,7 +238,6 @@ def scan_speaker(reviewer, speakerdir):
 
 
 if __name__ == "__main__":
-
     reviewdir = sys.argv[1]
 
     if not os.path.isdir(reviewdir):

@@ -121,9 +121,9 @@ def find_best_biquad(
             res.fun,
             res.nit,
         )
-    except ValueError as ve:
+    except ValueError as value_error:
         res["success"] = False
-        logger.error("{} bounds {}".format(ve, bounds))
+        logger.error("{} bounds {}".format(value_error, bounds))
         for i in range(0, 4):
             try:
                 if bounds[i][0] >= bounds[i][1]:
@@ -147,7 +147,6 @@ def find_best_peak(
     optim_config,
     prev_best,
 ):
-
     biquad_type = 3
 
     def opt_peq(x):
@@ -255,8 +254,8 @@ def find_best_peak(
         if res.message[0] == "Maximum number of function call reached during annealing" and res.fun < prev_best:
             res.success = True
         return res.success, biquad_type, res.x[0], res.x[1], res.x[2], res.fun, res.nit
-    except ValueError as ve:
-        logger.error("{} bounds {}".format(ve, bounds))
+    except ValueError as value_error:
+        logger.error("{} bounds {}".format(value_error, bounds))
         for i in range(0, 4):
             try:
                 if bounds[i][0] >= bounds[i][1]:

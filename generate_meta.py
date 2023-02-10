@@ -498,7 +498,7 @@ def add_eq(speaker_path, dataframe, parse_max):
                 metadata.speakers_info[speaker_name]["eqs"][eq_key]["preamp_gain"] = round(peq_preamp_gain(iir), 1)
                 metadata.speakers_info[speaker_name]["eqs"][eq_key]["type"] = "peq"
                 metadata.speakers_info[speaker_name]["eqs"][eq_key]["peq"] = []
-                for (iir_weigth, iir_filter) in iir:
+                for iir_weigth, iir_filter in iir:
                     if iir_weigth != 0.0:
                         metadata.speakers_info[speaker_name]["eqs"][eq_key]["peq"].append(
                             {

@@ -83,15 +83,16 @@ def alternate_loss(freq: Vector, local_target: List[Vector], peq: Peq, iteration
 
 
 def flat_pir(freq, df_spin, peq):
+    """Flatten the PIR"""
     pir_filtered = df_spin.get("Estimated In-Room Response_unmelted", None)
     if pir_filtered is None:
-        splH = df_spin["SPL Horizontal_unmelted"]
-        splV = df_spin["SPL Vertical_unmelted"]
+        spl_h = df_spin["SPL Horizontal_unmelted"]
+        spl_v = df_spin["SPL Vertical_unmelted"]
         # apply EQ to all horizontal and vertical measurements
-        splH_filtered = peq_apply_measurements(splH, peq)
-        splV_filtered = peq_apply_measurements(splV, peq)
+        spl_h_filtered = peq_apply_measurements(spl_h, peq)
+        spl_v_filtered = peq_apply_measurements(spl_v, peq)
         # compute pir
-        pir_filtered = graph_melt(estimated_inroom_HV(splH_filtered, splV_filtered))
+        pir_filtered = graph_melt(estimated_inroom_HV(spl_h_filtered, spl_v_filtered))
     else:
         if len(peq) > 0:
             pir_filtered["Estimated In-Room Response"].add(peq_build(pir_filtered.Freq.values, peq))
@@ -115,6 +116,7 @@ def score_loss(df_spin, peq):
 
 
 def loss(df_speaker, freq, local_target, peq, iterations, optim_config):
+    """Compute the loss and switch to the one defined in the config"""
     which_loss = optim_config["loss"]
     if which_loss == "flat_loss":
         weigths = optim_config["loss_weigths"]

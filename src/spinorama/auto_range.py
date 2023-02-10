@@ -48,7 +48,7 @@ def compute_non_admissible_freq(peq, min_freq, max_freq):
         w = f * (n_2 - 1) / (n_2 + 1)
         f1 = f - w
         f2 = f + w
-        # print("zones f={} f1={} f2={} q={}".format(int(f), int(f1), int(f2), q))
+        logger.debug("zones f={} f1={} f2={} q={}".format(int(f), int(f1), int(f2), q))
         zones.append((f1, f2))
     return zones
 
@@ -63,7 +63,6 @@ def not_in_zones(zones, f):
 def find_largest_area(
     freq: FloatVector1D, curve: List[FloatVector1D], optim_config: dict, peq
 ) -> Tuple[Literal[-1, 1], int, float]:
-
     min_freq = optim_config["target_min_freq"]
     max_freq = optim_config["target_max_freq"]
     zones = compute_non_admissible_freq(peq, min_freq, max_freq)
@@ -167,20 +166,20 @@ def propose_range_dbGain(
 ) -> Vector:
     spline = InterpolatedUnivariateSpline(np.log10(freq), local_target, k=1)
     scale = optim_config["elastic"]
-    init_dbGain = abs(spline(np.log10(init_freq)))
-    init_dbGain_min = max(init_dbGain * scale, optim_config["MIN_DBGAIN"])
-    init_dbGain_max = min(init_dbGain / scale, optim_config["MAX_DBGAIN"])
-    if init_dbGain_max <= init_dbGain_min:
-        init_dbGain_min = optim_config["MIN_DBGAIN"]
-        init_dbGain_max = optim_config["MAX_DBGAIN"]
-    logger.debug("gain min {}dB peak {}dB max {}dB".format(init_dbGain_min, init_dbGain, init_dbGain_max))
+    init_dbgain = abs(spline(np.log10(init_freq)))
+    init_dbgain_min = max(init_dbgain * scale, optim_config["MIN_DBGAIN"])
+    init_dbgain_max = min(init_dbgain / scale, optim_config["MAX_DBGAIN"])
+    if init_dbgain_max <= init_dbgain_min:
+        init_dbgain_min = optim_config["MIN_DBGAIN"]
+        init_dbgain_max = optim_config["MAX_DBGAIN"]
+    logger.debug("gain min {}dB peak {}dB max {}dB".format(init_dbgain_min, init_dbgain, init_dbgain_max))
 
     if sign < 0:
-        return np.linspace(init_dbGain_min, init_dbGain_max, optim_config["MAX_STEPS_DBGAIN"]).tolist()
+        return np.linspace(init_dbgain_min, init_dbgain_max, optim_config["MAX_STEPS_DBGAIN"]).tolist()
     return np.linspace(
         # no real minimim for negative values
-        -init_dbGain_max * 2,
-        -init_dbGain_min,
+        -init_dbgain_max * 2,
+        -init_dbgain_min,
         optim_config["MAX_STEPS_DBGAIN"],
     ).tolist()
 

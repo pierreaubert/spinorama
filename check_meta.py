@@ -26,7 +26,7 @@ Options:
 """
 import logging
 import sys
-import datas.metadata as metadata
+from datas import metadata
 
 
 def sanity_check_brand(name, speaker):
