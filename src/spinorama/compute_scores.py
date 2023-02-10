@@ -7,7 +7,7 @@ import pandas as pd
 from more_itertools import consecutive_groups
 from scipy.stats import linregress
 
-from .compute_cea2034 import estimated_inroom_HV
+from .compute_cea2034 import estimated_inroom_hv
 from .load_misc import graph_melt
 
 logger = logging.getLogger("spinorama")
@@ -276,6 +276,6 @@ def scores(df_speaker, rounded=False):
         logger.error("pir is None, computing it")
         splH = df_speaker["SPL Horizontal_unmelted"]
         splV = df_speaker["SPL Vertical_unmelted"]
-        pir = graph_melt(estimated_inroom_HV(splH, splV))
+        pir = graph_melt(estimated_inroom_hv(splH, splV))
 
     return speaker_pref_rating(cea2034=spin, df_pred_in_room=pir, rounded=rounded)

@@ -23,7 +23,7 @@ import numpy as np
 from scipy.stats import linregress
 
 from .load_misc import graph_melt
-from .compute_cea2034 import estimated_inroom_HV
+from .compute_cea2034 import estimated_inroom_hv
 from spinorama.ltype import List, Vector, Peq
 from spinorama.filter_peq import peq_build
 from spinorama.filter_scores import scores_apply_filter
@@ -92,7 +92,7 @@ def flat_pir(freq, df_spin, peq):
         spl_h_filtered = peq_apply_measurements(spl_h, peq)
         spl_v_filtered = peq_apply_measurements(spl_v, peq)
         # compute pir
-        pir_filtered = graph_melt(estimated_inroom_HV(spl_h_filtered, spl_v_filtered))
+        pir_filtered = graph_melt(estimated_inroom_hv(spl_h_filtered, spl_v_filtered))
     else:
         if len(peq) > 0:
             pir_filtered["Estimated In-Room Response"].add(peq_build(pir_filtered.Freq.values, peq))

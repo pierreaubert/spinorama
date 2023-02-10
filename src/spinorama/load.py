@@ -16,7 +16,7 @@ from .compute_cea2034 import (
     compute_cea2034,
     compute_onaxis,
     estimated_inroom,
-    estimated_inroom_HV,
+    estimated_inroom_hv,
 )
 
 from .load_misc import graph_melt, sort_angles
@@ -134,7 +134,7 @@ def filter_graphs(speaker_name, h_spl, v_spl, mean_min=MIDRANGE_MIN_FREQ, mean_m
         ["Early Reflections", early_reflections],
         ["Horizontal Reflections", horizontal_reflections],
         ["Vertical Reflections", vertical_reflections],
-        ["Estimated In-Room Response", estimated_inroom_HV],
+        ["Estimated In-Room Response", estimated_inroom_hv],
         ["On Axis", compute_onaxis],
         ["CEA2034", compute_cea2034],
     ]
@@ -221,7 +221,7 @@ def filter_graphs_eq(speaker_name, h_spl, v_spl, h_eq_spl, v_eq_spl, mean_min=MI
         ["Early Reflections", early_reflections],
         ["Horizontal Reflections", horizontal_reflections],
         ["Vertical Reflections", vertical_reflections],
-        ["Estimated In-Room Response", estimated_inroom_HV],
+        ["Estimated In-Room Response", estimated_inroom_hv],
         ["On Axis", compute_onaxis],
         ["CEA2034", compute_cea2034],
     ]

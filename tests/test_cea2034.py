@@ -27,7 +27,7 @@ from spinorama.compute_cea2034 import (
     early_reflections,
     vertical_reflections,
     horizontal_reflections,
-    estimated_inroom_HV,
+    estimated_inroom_hv,
 )
 
 
@@ -201,7 +201,7 @@ class SpinoramaEstimatedInRoomTests(unittest.TestCase):
         self.titleH, self.splH = parse_graph_freq_klippel("datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt")
         self.titleV, self.splV = parse_graph_freq_klippel("datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt")
         # computed graphs
-        self.computed_unmelted = estimated_inroom_HV(self.splH, self.splV, "standard")
+        self.computed_unmelted = estimated_inroom_hv(self.splH, self.splV, "standard")
         self.computed = graph_melt(self.computed_unmelted)
 
     def test_smoke(self):

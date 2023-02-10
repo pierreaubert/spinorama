@@ -4,7 +4,7 @@ import logging
 from .ltype import DataSpeaker, Peq
 from .load import graph_melt
 from .compute_scores import speaker_pref_rating, nbd
-from .compute_cea2034 import compute_cea2034, estimated_inroom_HV, listening_window
+from .compute_cea2034 import compute_cea2034, estimated_inroom_hv, listening_window
 from .filter_peq import peq_apply_measurements
 from .plot import plot_spinorama
 
@@ -21,7 +21,7 @@ def scores_apply_filter(df_speaker: DataSpeaker, peq: Peq):
     splV_filtered = peq_apply_measurements(splV, peq)
     # compute filtered score
     spin_filtered = graph_melt(compute_cea2034(splH_filtered, splV_filtered))
-    pir_filtered = graph_melt(estimated_inroom_HV(splH_filtered, splV_filtered))
+    pir_filtered = graph_melt(estimated_inroom_hv(splH_filtered, splV_filtered))
     score_filtered = speaker_pref_rating(spin_filtered, pir_filtered, rounded=False)
     if score_filtered is None:
         logger.info("computing pref score for eq failed")
