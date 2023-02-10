@@ -1,16 +1,16 @@
 EQ for FBT Mitus 215A computed from Vendors-FBT data
-Preference Score 0.44 with EQ 2.22
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-12-18:03:53
+Preference Score 0.31 with EQ 1.74
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-02-09-10:43:37
 
-Preamp: -8.4 dB
+Preamp: -5.6 dB
 
-Filter  1: ON LS Fc  5630 Hz Gain +2.91 dB
-Filter  2: ON PK Fc  1990 Hz Gain +2.95 dB Q 1.41
-Filter  3: ON PK Fc   219 Hz Gain -3.13 dB Q 0.50
-Filter  4: ON PK Fc 14107 Hz Gain -3.59 dB Q 1.46
-Filter  5: ON PK Fc  1863 Hz Gain +2.60 dB Q 2.18
-Filter  6: ON PK Fc   881 Hz Gain -1.39 dB Q 2.93
-Filter  7: ON PK Fc  8519 Hz Gain -1.81 dB Q 2.99
-Filter  8: ON PK Fc  3906 Hz Gain +1.41 dB Q 2.99
-Filter  9: ON LS Fc   252 Hz Gain +1.25 dB
+Filter  1: ON PK Fc    29 Hz Gain +3.00 dB Q 0.85
+Filter  2: ON PK Fc  1771 Hz Gain +3.00 dB Q 0.42
+Filter  3: ON PK Fc 13852 Hz Gain -4.97 dB Q 1.14
+Filter  4: ON PK Fc    66 Hz Gain -1.84 dB Q 3.00
+Filter  5: ON PK Fc   110 Hz Gain +1.96 dB Q 3.00
+Filter  6: ON PK Fc  2840 Hz Gain +2.87 dB Q 0.75
+Filter  7: ON PK Fc   298 Hz Gain +0.94 dB Q 3.00
+Filter  8: ON PK Fc   446 Hz Gain -0.86 dB Q 3.00
+Filter  9: ON PK Fc  8046 Hz Gain -2.00 dB Q 1.67

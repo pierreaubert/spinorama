@@ -1,0 +1,12 @@
+EQ for Emotiva Airmotiv B1+ computed from ErinsAudioCorner data
+Preference Score 5.30 with EQ 5.98
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:04:34
+
+Preamp: -3.2 dB
+
+Filter  1: ON LS Fc    79 Hz Gain +3.00 dB
+Filter  2: ON PK Fc 10913 Hz Gain -2.07 dB Q 1.08
+Filter  3: ON PK Fc  1242 Hz Gain -1.61 dB Q 2.99
+Filter  4: ON PK Fc   398 Hz Gain +0.64 dB Q 1.33
+Filter  5: ON PK Fc  5232 Hz Gain +0.62 dB Q 2.99

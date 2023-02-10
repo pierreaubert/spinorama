@@ -1,0 +1,16 @@
+EQ for DIYSG Elusive 1099 computed from ErinsAudioCorner data
+Preference Score 2.56 with EQ 4.65
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:05:10
+
+Preamp: -4.0 dB
+
+Filter  1: ON PK Fc    66 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON PK Fc   478 Hz Gain +0.78 dB Q 0.05
+Filter  3: ON PK Fc  1576 Hz Gain +1.71 dB Q 0.78
+Filter  4: ON PK Fc 15954 Hz Gain +1.71 dB Q 1.53
+Filter  5: ON PK Fc   299 Hz Gain +1.72 dB Q 2.66
+Filter  6: ON PK Fc  7832 Hz Gain -1.53 dB Q 1.35
+Filter  7: ON PK Fc  1680 Hz Gain +1.42 dB Q 2.61
+Filter  8: ON PK Fc   145 Hz Gain -1.92 dB Q 2.97
+Filter  9: ON PK Fc   557 Hz Gain -1.21 dB Q 2.94

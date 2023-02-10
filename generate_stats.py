@@ -122,7 +122,7 @@ def print_eq(speakers, txt_format):
                     pref_eq["sm_pred_in_room"],
                     pref_eq["pref_score"],
                     pref_eq["pref_score"] - pref["pref_score"],
-                    eq["preamp_gain"],
+                    pref_eq.get("preamp_gain", 0.0),
                 )
             )
     elif txt_format == "csv":
@@ -143,7 +143,7 @@ def print_eq(speakers, txt_format):
                     pref_eq["sm_pred_in_room"],
                     pref_eq["pref_score"],
                     pref_eq["pref_score"] - pref["pref_score"],
-                    eq["preamp_gain"],
+                    pref_eq.get("preamp_gain", 0.0),
                 )
             )
 

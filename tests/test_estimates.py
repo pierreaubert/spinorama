@@ -40,10 +40,10 @@ class SpinoramaEstimatesNV2Tests(unittest.TestCase):
         self.assertNotEqual(-1, self.estimates["ref_6dB"])
         self.assertNotEqual(-1, self.estimates["ref_band"])
         #
-        self.assertAlmostEqual(self.estimates["ref_level"], 106)
-        self.assertAlmostEqual(self.estimates["ref_3dB"], 59)  # Hz
-        self.assertAlmostEqual(self.estimates["ref_6dB"], 53)  # Hz
-        self.assertAlmostEqual(self.estimates["ref_band"], 2.0)  # deviation in dB
+        self.assertAlmostEqual(self.estimates["ref_level"], 105.9)
+        self.assertAlmostEqual(self.estimates["ref_3dB"], 58.6)  # Hz
+        self.assertAlmostEqual(self.estimates["ref_6dB"], 54.2)  # Hz
+        self.assertAlmostEqual(self.estimates["ref_band"], 1.9)  # deviation in dB
 
 
 class SpinoramaEstimatesNV3Tests(unittest.TestCase):
@@ -62,9 +62,9 @@ class SpinoramaEstimatesNV3Tests(unittest.TestCase):
         self.assertNotEqual(-1, self.estimates["ref_6dB"])
         self.assertNotEqual(-1, self.estimates["ref_band"])
         #
-        self.assertAlmostEqual(self.estimates["ref_level"], 81)
-        self.assertAlmostEqual(self.estimates["ref_3dB"], 56)  # Hz
-        self.assertAlmostEqual(self.estimates["ref_6dB"], 51)  # Hz
+        self.assertAlmostEqual(self.estimates["ref_level"], 80.8)
+        self.assertAlmostEqual(self.estimates["ref_3dB"], 58.6)  # Hz
+        self.assertAlmostEqual(self.estimates["ref_6dB"], 52.7)  # Hz
         self.assertAlmostEqual(self.estimates["ref_band"], 1.4)  # deviation in dB
 
     def test_directivity(self):
@@ -88,10 +88,10 @@ class SpinoramaEstimatesNV4Tests(unittest.TestCase):
         self.assertNotEqual(-1, self.estimates["ref_6dB"])
         self.assertNotEqual(-1, self.estimates["ref_band"])
         #
-        self.assertAlmostEqual(self.estimates["ref_level"], 89)
-        self.assertAlmostEqual(self.estimates["ref_3dB"], 72)  # Hz
-        self.assertAlmostEqual(self.estimates["ref_6dB"], 62)  # Hz
-        self.assertAlmostEqual(self.estimates["ref_band"], 3.1)  # deviation in dB
+        self.assertAlmostEqual(self.estimates["ref_level"], 88.9)
+        self.assertAlmostEqual(self.estimates["ref_3dB"], 76.9)  # Hz
+        self.assertAlmostEqual(self.estimates["ref_6dB"], 62.3)  # Hz
+        self.assertAlmostEqual(self.estimates["ref_band"], 3.0)  # deviation in dB
 
     def test_directivity(self):
         self.assertAlmostEqual(self.estimates["dir_horizontal_p"], 70)

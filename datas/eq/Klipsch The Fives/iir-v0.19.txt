@@ -1,0 +1,16 @@
+EQ for Klipsch The Fives computed from ErinsAudioCorner data
+Preference Score 5.60 with EQ 6.47
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:07:43
+
+Preamp: -3.2 dB
+
+Filter  1: ON LS Fc    79 Hz Gain +3.00 dB
+Filter  2: ON PK Fc 11030 Hz Gain -1.58 dB Q 0.48
+Filter  3: ON PK Fc   778 Hz Gain +1.04 dB Q 2.85
+Filter  4: ON PK Fc 13858 Hz Gain -1.33 dB Q 2.92
+Filter  5: ON PK Fc  3727 Hz Gain -0.79 dB Q 2.83
+Filter  6: ON PK Fc   207 Hz Gain +0.72 dB Q 1.82
+Filter  7: ON PK Fc  1523 Hz Gain +0.66 dB Q 2.94
+Filter  8: ON PK Fc   504 Hz Gain -0.67 dB Q 2.96
+Filter  9: ON PK Fc 15997 Hz Gain +0.50 dB Q 0.35

@@ -1,0 +1,15 @@
+EQ for JBL C211 computed from Vendors-JBL data
+Preference Score 1.35 with EQ 3.50
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
+Dated: 2023-01-14-21:06:19
+
+Preamp: -3.7 dB
+
+Filter  1: ON LS Fc   144 Hz Gain +3.00 dB
+Filter  2: ON PK Fc 15934 Hz Gain +2.99 dB Q 0.89
+Filter  3: ON PK Fc   631 Hz Gain +2.96 dB Q 2.62
+Filter  4: ON PK Fc  1984 Hz Gain -1.67 dB Q 2.94
+Filter  5: ON PK Fc  4755 Hz Gain -1.80 dB Q 2.71
+Filter  6: ON PK Fc 12305 Hz Gain -1.87 dB Q 2.93
+Filter  7: ON PK Fc  1991 Hz Gain -1.33 dB Q 2.90
+Filter  8: ON PK Fc 15855 Hz Gain +0.71 dB Q 0.28

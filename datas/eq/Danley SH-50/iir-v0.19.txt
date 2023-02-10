@@ -1,0 +1,16 @@
+EQ for Danley SH-50 computed from ErinsAudioCorner data
+Preference Score 0.08 with EQ 1.31
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:07:11
+
+Preamp: -3.7 dB
+
+Filter  1: ON PK Fc    31 Hz Gain +2.99 dB Q 1.07
+Filter  2: ON PK Fc    96 Hz Gain -3.91 dB Q 2.49
+Filter  3: ON PK Fc 14378 Hz Gain -1.38 dB Q 0.94
+Filter  4: ON PK Fc   237 Hz Gain -3.64 dB Q 2.98
+Filter  5: ON PK Fc   327 Hz Gain +0.73 dB Q 0.05
+Filter  6: ON PK Fc  1216 Hz Gain -1.66 dB Q 2.91
+Filter  7: ON PK Fc   653 Hz Gain +1.25 dB Q 1.73
+Filter  8: ON PK Fc  2579 Hz Gain +1.47 dB Q 2.42
+Filter  9: ON PK Fc  9165 Hz Gain -0.95 dB Q 2.62

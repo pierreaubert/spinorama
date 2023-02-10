@@ -31,6 +31,7 @@ CPATH_DATAS = "{}/{}".format(CPATH, "datas")
 CPATH_DATAS_LOGOS = "{}/{}".format(CPATH_DATAS, "logos")
 CPATH_DATAS_PICTURES = "{}/{}".format(CPATH_DATAS, "pictures")
 CPATH_DATAS_SPEAKERS = "{}/{}".format(CPATH_DATAS, "measurements")
+CPATH_DATAS_EQ = "{}/{}".format(CPATH_DATAS, "eq")
 
 # where the generated files go
 CPATH_DOCS = "{}/{}".format(CPATH, "docs")
@@ -40,3 +41,12 @@ CPATH_DOCS_ASSETS_CSS = "{}/{}".format(CPATH_DOCS_ASSETS, "")
 CPATH_METADATA_JSON = "{}/{}".format(CPATH_DOCS_ASSETS, "metadata.json")
 CPATH_DOCS_SPEAKERS = "{}/{}".format(CPATH_DOCS, "speakers")
 CPATH_DOCS_PICTURES = "{}/{}".format(CPATH_DOCS, "pictures")
+
+# midrange defintion
+MIDRANGE_MIN_FREQ = 300
+MIDRANGE_MAX_FREQ = 5000
+MIDRANGE_FREQ = [MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ]
+
+# sensitivity defintion (no agreement here)
+SENSITIVITY_MIN_FREQ = 100
+SENSITIVITY_MAX_FREQ = 1000

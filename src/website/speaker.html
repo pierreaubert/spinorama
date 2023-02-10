@@ -1,234 +1,236 @@
-<%include file="header.html"/>
-<%include file="nav_menu.html"/>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%include file="head.html"/> <%include file="head_vega.html"/>
+  </head>
+  <body>
+    <%include file="nav_menu.html"/> <%namespace name="util"
+    module="website.utils" import="*"/> <%include file="tabs_header.html"/>
 
-<%namespace name="util" module="website.utils" import="*"/>
+    <div class="tab-pane" id="pane-1">
+      <div class="box is-centered">
+        <table>
+          <tr>
+            <td><%include file="speaker_desc.html"/></td>
+          </tr>
+        </table>
+      </div>
+    </div>
 
-<%include file="tabs_header.html"/>
+    <!-- Mobile view: sequential-->
+    <div class="tab-pane is-active" id="pane-2">
+      <table>
+        % for freq in g_freq:
+        <tr>
+          <td>
+            <div class="box has-background-link-light">
+              <a href="${g_key}/${freq | space2url}.html">
+                <picture>
+                  <source
+                    srcset="${g_key}/${freq | space2url}.webp"
+                    width="1200"
+                    heigth="800"
+                    type="image/webp"
+                  />
+                  <img
+                    class="graph"
+                    alt="${freq}"
+                    src="${g_key}/${freq | space2url}.jpg"
+                    width="1200"
+                    heigth="800"
+                    type="image/jpg"
+                  />
+                </picture>
+              </a>
+            </div>
+          </td>
+        </tr>
+        % endfor
+        % for contour in g_contour:
+        <tr>
+          <td>
+            <div class="box has-background-link-light">
+              <a href="${g_key}/${contour | unmeltC, space2url}.html">
+                <picture>
+                  <source
+                    srcset="${g_key}/${contour | unmeltC, space2url}.webp"
+                    width="1200"
+                    heigth="800"
+                    type="image/webp"
+                  />
+                  <img
+                    class="graph"
+                    alt="${contour}"
+                    width="1200"
+                    heigth="800"
+                    src="${g_key}/${contour | unmeltC, space2url}.jpg"
+                  />
+                </picture>
+              </a>
+            </div>
+          </td>
+        </tr>
+        % endfor
+        % for radar in g_radar:
+        <tr>
+          <td>
+            <div class="box has-background-link-light">
+              <a href="${g_key}/${radar | unmeltR, space2url}.html">
+                <picture>
+                  <source
+                    srcset="${g_key}/${radar | unmeltR, space2url}.webp"
+                    width="1000"
+                    heigth="800"
+                    type="image/webp"
+                  />
+                  <img
+                    class="graph"
+                    alt="${radar}"
+                    src="${g_key}/${radar | unmeltR, space2url}.jpg"
+                    width="1000"
+                    heigth="800"
+                  />
+                </picture>
+              </a>
+            </div>
+          </td>
+        </tr>
+        % endfor
+      </table>
+    </div>
 
-<div class="tab-pane" id="pane-1">
-  <div class="box is-centered">
-    <table>
-      <tr>
-        <td>
-          <%include file="speaker_desc.html"/>
-        </td>
-      </tr>
-    </table>
-  </div>
-</div>
+    <!-- EQ view: sequential-->
+    % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
+    <div class="tab-pane" id="pane-3">
+      <table>
+        % if g_eq is not None:
+        % for freq in g_freq:
+        <tr>
+          <td>
+            <div class="box has-background-link-light">
+              <a href="${g_key}_eq/${freq | space2url}.html">
+                <picture>
+                  <source
+                    srcset="${g_key}_eq/${freq | space2url}.webp"
+                    width="1200"
+                    heigth="800"
+                    type="image/webp"
+                  />
+                  <img
+                    class="graph"
+                    alt="${freq}"
+                    src="${g_key}_eq/${freq | space2url}.jpg"
+                    width="1200"
+                    heigth="800"
+                    type="image/jpg"
+                  />
+                </picture>
+              </a>
+            </div>
+          </td>
+        </tr>
+        % endfor
+        % for contour in g_contour:
+        <tr>
+          <td>
+            <div class="box has-background-link-light">
+              <a href="${g_key}_eq/${contour | unmeltC, space2url}.html">
+                <picture>
+                  <source
+                    srcset="${g_key}_eq/${contour | unmeltC, space2url}.webp"
+                    width="1200"
+                    heigth="800"
+                    type="image/webp"
+                  />
+                  <img
+                    class="graph"
+                    alt="${contour}"
+                    width="1200"
+                    heigth="800"
+                    src="${g_key}_eq/${contour | unmeltC, space2url}.jpg"
+                  />
+                </picture>
+              </a>
+            </div>
+          </td>
+        </tr>
+        % endfor
+        % for radar in g_radar:
+        <tr>
+          <td>
+            <div class="box has-background-link-light">
+              <a href="${g_key}_eq/${radar | unmeltR, space2url}.html">
+                <picture>
+                  <source
+                    srcset="${g_key}_eq/${radar | unmeltR, space2url}.webp"
+                    width="1000"
+                    heigth="800"
+                    type="image/webp"
+                  />
+                  <img
+                    class="graph"
+                    alt="${radar}"
+                    src="${g_key}_eq/${radar | unmeltR, space2url}.jpg"
+                    width="1000"
+                    heigth="800"
+                  />
+                </picture>
+              </a>
+            </div>
+          </td>
+        </tr>
+        % endfor
+        % endif
+      </table>
+    </div>
+    % endif
 
-<!-- Mobile view: sequential-->
-<div class="tab-pane is-active" id="pane-2">
-  <table>
-    % for freq in g_freq:
-    <tr>
-      <td>
-        <div class="box has-background-link-light">
-	  <a href="${g_key}/${freq | space2url}.html">
+    <!-- Desktop view: Ref vs. EQ views-->
+    % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
+    <div class="tab-pane display:none" id="pane-4">
+      <div id="vis4"></div>
+      <table>
+        % for freq in g_freq:
+        <tr>
+          <td>
             <picture>
               <source
                 srcset="${g_key}/${freq | space2url}.webp"
                 width="1200"
                 heigth="800"
                 type="image/webp"
-              </source>
+              />
               <img
                 class="graph"
-                alt="${freq}"
-                src="${g_key}/${freq | space2url}.jpg"
+                alt="Frequency"
                 width="1200"
                 heigth="800"
-                type="image/jpg"
-                />
+                src="${g_key}_eq/${freq | space2url}.jpg"
+              />
             </picture>
-          </a>
-        </div>
-      </td>
-    </tr>
-    % endfor
-    % for contour in g_contour:
-    <tr>
-      <td>
-        <div class="box has-background-link-light">
-          <a href="${g_key}/${contour | unmeltC, space2url}.html">
-            <picture>
-              <source
-                srcset="${g_key}/${contour | unmeltC, space2url}.webp"
-                width="1200"
-                heigth="800"
-                type="image/webp"
-              </source>
-	      <img
-                class="graph" alt="${contour}"
-                width="1200"
-                heigth="800"
-                src="${g_key}/${contour | unmeltC, space2url}.jpg"
-                />
-            </picture>
-          </a>
-        </div>
-      </td>
-    </tr>
-    % endfor
-    % for radar in g_radar:
-    <tr>
-      <td>
-        <div class="box has-background-link-light">
-          <a href="${g_key}/${radar | unmeltR, space2url}.html">
-            <picture>
-              <source
-                srcset="${g_key}/${radar | unmeltR, space2url}.webp"
-                width="1000"
-                heigth="800"
-                type="image/webp"
-              </source>
-	      <img
-                class="graph"
-                alt="${radar}"
-                src="${g_key}/${radar | unmeltR, space2url}.jpg"
-                width="1000"
-                heigth="800"
-                />
-            </picture>
-          </a>
-        </div>
-      </td>
-    </tr>
-    % endfor
-  </table>
-</div>
-
-<!-- EQ view: sequential-->
-% if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
-<div class="tab-pane" id="pane-3">
-  <table>
-    % if g_eq is not None:
-    % for freq in g_freq:
-    <tr>
-      <td>
-        <div class="box has-background-link-light">
-	  <a href="${g_key}_eq/${freq | space2url}.html">
+          </td>
+          <td>
             <picture>
               <source
                 srcset="${g_key}_eq/${freq | space2url}.webp"
                 width="1200"
                 heigth="800"
-                type="image/webp">
-              </source>
+                type="image/webp"
+              />
               <img
                 class="graph"
-                alt="${freq}"
+                alt="Frequency with EQ"
                 src="${g_key}_eq/${freq | space2url}.jpg"
-                width="1200"
-                heigth="800"
-                type="image/jpg"
-                />
+              />
             </picture>
-          </a>
-        </div>
-      </td>
-    </tr>
-    % endfor
-    % for contour in g_contour:
-    <tr>
-      <td>
-        <div class="box has-background-link-light">
-          <a href="${g_key}_eq/${contour | unmeltC, space2url}.html">
-            <picture>
-              <source
-                srcset="${g_key}_eq/${contour | unmeltC, space2url}.webp"
-                width="1200"
-                heigth="800"
-                type="image/webp">
-              </source>
-	      <img
-                class="graph" alt="${contour}"
-                width="1200"
-                heigth="800"
-                src="${g_key}_eq/${contour | unmeltC, space2url}.jpg"
-                />
-            </picture>
-          </a>
-        </div>
-      </td>
-    </tr>
-    % endfor
-    % for radar in g_radar:
-    <tr>
-      <td>
-        <div class="box has-background-link-light">
-          <a href="${g_key}_eq/${radar | unmeltR, space2url}.html">
-            <picture>
-              <source
-                srcset="${g_key}_eq/${radar | unmeltR, space2url}.webp"
-                width="1000"
-                heigth="800"
-                type="image/webp">
-              </source>
-	      <img
-                class="graph"
-                alt="${radar}"
-                src="${g_key}_eq/${radar | unmeltR, space2url}.jpg"
-                width="1000"
-                heigth="800"
-                />
-            </picture>
-          </a>
-        </div>
-      </td>
-    </tr>
-    % endfor
+          </td>
+        </tr>
+        % endfor
+      </table>
+    </div>
     % endif
-  </table>
-</div>
-% endif
 
-<!-- Desktop view: Ref vs. EQ views-->
-% if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
-<div class="tab-pane display:none" id="pane-4">
-  <div id="vis4"></div>
-  <table>
-  % for freq in g_freq:
-  <tr>
-    <td>
-      <picture>
-        <source
-          srcset="${g_key}/${freq | space2url}.webp"
-          width="1200"
-          heigth="800"
-          type="image/webp">
-        </source>
-        <img
-          class="graph" alt="Frequency"
-          width="1200"
-          heigth="800"
-          src="${g_key}_eq/${freq | space2url}.jpg"
-          />
-      </picture>
-    </td>
-    <td>
-      <picture>
-        <source
-          srcset="${g_key}_eq/${freq | space2url}.webp"
-          width="1200"
-          heigth="800"
-          type="image/webp">
-        </source>
-        <img
-          class="graph"
-          alt="Frequency with EQ"
-          src="${g_key}_eq/${freq | space2url}.jpg"/>
-      </picture>
-    </td>
-  </tr>
-  % endfor
-  </table>
-</div>
-% endif
+    <%include file="tabs_footer.html"/>
 
-
-
-<%include file="tabs_footer.html"/>
-
-</body>
+  </body>
 </html>

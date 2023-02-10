@@ -20,7 +20,7 @@
 """
 usage: generate_meta.py [--help] [--version] [--log-level=<level>]\
     [--metadata=<metadata>] [--parse-max=<max>] [--use-cache=<cache>]\
-    [--origin=<origin>] [--speaker=<speaker>] [--mversion=<mversion>]\
+    [--morigin=<morigin>] [--speaker=<speaker>] [--mversion=<mversion>]\
     [--mformat=<mformat>]\
     [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
     [--smoke-test=<algo>]
@@ -32,8 +32,8 @@ Options:
   --metadata=<metadata> metadata file to use (default is ./datas/metadata.py)
   --smoke-test=<algo> run a few speakers only (choice are random or default)
   --parse-max=<max> for debugging, set a max number of speakers to look at
-  --origin=<origin> restrict to a specific origin, usefull for debugging
   --speaker=<speaker> restrict to a specific speaker, usefull for debugging
+  --morigin=<morigin> restrict to a specific origin, usefull for debugging
   --mversion=<mversion> restrict to a specific mversion (for a given origin you can have multiple measurements)
   --mformat=<mformat> restrict to a specific format (klippel, webplotdigitizer, etc)
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
@@ -83,6 +83,7 @@ def queue_score(speaker_name, speaker_data):
             continue
 
         for key, dfs in measurements.items():
+            logger.debug("debug key={}".format(key))
             result = {
                 "speaker": speaker_name,
                 "version": key,
@@ -112,10 +113,7 @@ def queue_score(speaker_name, speaker_data):
                 splV = dfs.get("SPL Vertical_unmelted", None)
                 est = estimates(spin, splH, splV)
                 if est is not None:
-                    if key[-3:] == "_eq":
-                        result["estimates_eq"] = est
-                    else:
-                        result["estimates"] = est
+                    result["estimates"] = est
 
                 inroom = dfs["Estimated In-Room Response"]
                 if inroom is not None:
@@ -128,13 +126,10 @@ def queue_score(speaker_name, speaker_data):
                         pref_rating["pref_score_wsub"] += score_penalty
 
                     if pref_rating is not None:
-                        if key[-3:] == "_eq":
-                            result["pref_rating_eq"] = pref_rating
-                        else:
-                            result["pref_rating"] = pref_rating
+                        result["pref_rating"] = pref_rating
 
             except KeyError as current_error:
-                print("{} get {}".format(speaker_name, current_error))
+                logger.error("{} get {}".format(speaker_name, current_error))
 
             results.append(result)
     return results
@@ -167,21 +162,21 @@ def add_scores(dataframe, parse_max):
                 sensitivity = result.get("sensitivity")
                 estimates = result.get("estimates")
                 pref_rating = result.get("pref_rating")
-                pref_rating_eq = result.get("pref_rating_eq")
                 is_eq = version[-3:] == "_eq"
-                version_eq = version[:-3]
 
-                if estimates is not None:
-                    if is_eq:
-                        metadata.speakers_info[speaker_name]["measurements"][version_eq]["estimates_eq"] = estimates
-                    else:
+                if not is_eq:
+                    if estimates is not None:
                         metadata.speakers_info[speaker_name]["measurements"][version]["estimates"] = estimates
-                if sensitivity is not None and not is_eq and metadata.speakers_info[speaker_name].get("type") == "passive":
-                    metadata.speakers_info[speaker_name]["sensitivity"] = sensitivity
-                if pref_rating is not None and not is_eq:
-                    metadata.speakers_info[speaker_name]["measurements"][version]["pref_rating"] = pref_rating
-                if pref_rating_eq is not None and is_eq:
-                    metadata.speakers_info[speaker_name]["measurements"][version_eq]["pref_rating_eq"] = pref_rating_eq
+                        if sensitivity is not None and metadata.speakers_info[speaker_name].get("type") == "passive":
+                            metadata.speakers_info[speaker_name]["sensitivity"] = sensitivity
+                        if pref_rating is not None:
+                            metadata.speakers_info[speaker_name]["measurements"][version]["pref_rating"] = pref_rating
+                else:
+                    version_eq = version[:-3]
+                    if estimates is not None:
+                        metadata.speakers_info[speaker_name]["measurements"][version_eq]["estimates_eq"] = estimates
+                    if pref_rating is not None:
+                        metadata.speakers_info[speaker_name]["measurements"][version_eq]["pref_rating_eq"] = pref_rating
 
         if len(remain_refs) == 0:
             break
@@ -469,12 +464,8 @@ def add_quality(parse_max: int):
                     # Harman group provides spin from an anechoic room
                     if brand in ("JBL", "Revel", "Infinity"):
                         quality = "medium"
-
-                        logger.debug("Setting quality {} {} to {}".format(speaker_name, version, quality))
-                if version in metadata.speakers_info[speaker_name]["measurements"].keys():
-                    metadata.speakers_info[speaker_name]["measurements"][version]["quality"] = quality
-                else:
-                    logger.info("Version {} is not in {}".format(version, speaker_name))
+                logger.debug("Setting quality {} {} to {}".format(speaker_name, version, quality))
+            metadata.speakers_info[speaker_name]["measurements"][version]["quality"] = quality
 
 
 def add_eq(speaker_path, dataframe, parse_max):
@@ -486,17 +477,30 @@ def add_eq(speaker_path, dataframe, parse_max):
         parsed = parsed + 1
         logger.info("Processing {0}".format(speaker_name))
 
-        for suffix in ("", "-autoeq", "-amirm", "-maiky76", "-flipflop"):
-            iir = parse_eq_iir_rews("{}/eq/{}/iir{}.txt".format(speaker_path, speaker_name, suffix), 48000)
+        metadata.speakers_info[speaker_name]["eqs"] = {}
+        for suffix, display in (
+            ("autoeq", "AutomaticEQ (IIR)"),
+            ("amirm", "amirm@ASR (IIR)"),
+            ("maiky76", "maiky76@ASR (IIR)"),
+            ("flipflop", "flipflop@ASR (IIR)"),
+            ("autoeq-dbx-1215", "Graphic EQ 15 bands"),
+            ("autoeq-dbx-1231", "Graphic EQ 31 bands"),
+        ):
+            eq_filename = "{}/eq/{}/iir-{}.txt".format(speaker_path, speaker_name, suffix)
+            iir = parse_eq_iir_rews(eq_filename, 48000)
             if iir is not None and len(iir) > 0:
-                eq_key = "eq{}".format(suffix.replace("-", "_"))
-                metadata.speakers_info[speaker_name][eq_key] = {}
-                metadata.speakers_info[speaker_name][eq_key]["preamp_gain"] = round(peq_preamp_gain(iir), 1)
-                metadata.speakers_info[speaker_name][eq_key]["type"] = "peq"
-                metadata.speakers_info[speaker_name][eq_key]["peq"] = []
-                for i, (iir_weigth, iir_filter) in enumerate(iir):
+                if suffix == "autoeq":
+                    metadata.speakers_info[speaker_name]["default_eq"] = "autoeq"
+                eq_key = f"{suffix}".replace("-", "_")
+                metadata.speakers_info[speaker_name]["eqs"][eq_key] = {}
+                metadata.speakers_info[speaker_name]["eqs"][eq_key]["display_name"] = display
+                metadata.speakers_info[speaker_name]["eqs"][eq_key]["filename"] = eq_filename
+                metadata.speakers_info[speaker_name]["eqs"][eq_key]["preamp_gain"] = round(peq_preamp_gain(iir), 1)
+                metadata.speakers_info[speaker_name]["eqs"][eq_key]["type"] = "peq"
+                metadata.speakers_info[speaker_name]["eqs"][eq_key]["peq"] = []
+                for (iir_weigth, iir_filter) in iir:
                     if iir_weigth != 0.0:
-                        metadata.speakers_info[speaker_name][eq_key]["peq"].append(
+                        metadata.speakers_info[speaker_name]["eqs"][eq_key]["peq"].append(
                             {
                                 "type": iir_filter.typ,
                                 "freq": iir_filter.freq,
@@ -505,7 +509,7 @@ def add_eq(speaker_path, dataframe, parse_max):
                                 "dbGain": iir_filter.dbGain,
                             }
                         )
-                        logger.debug("adding eq: {}".format(metadata.speakers_info[speaker_name][eq_key]))
+                        logger.debug("adding eq: {}".format(metadata.speakers_info[speaker_name]["eqs"][eq_key]))
 
 
 def interpolate(speaker_name, freq, freq1, data1):
@@ -538,7 +542,7 @@ def interpolate(speaker_name, freq, freq1, data1):
             interp = data1[i] + (data1[j] - data1[i]) * (f - freq1[i]) / (freq1[j] - freq1[i])
             data.append(interp)
         except IndexError as ie:
-            print("{}: {} for f={}".format(speaker_name, ie, f))
+            logger.error("{}: {} for f={}".format(speaker_name, ie, f))
             data.append(0.0)
 
     return np.array(data)
@@ -591,7 +595,7 @@ def get_spin_data(freq, speaker_name, speaker_data):
 
             return lw, er, sp
 
-        print("skipping {} no match".format(speaker_name))
+        logger.warning("skipping {} no match".format(speaker_name))
     return None
 
 
@@ -672,7 +676,6 @@ def dump_metadata(meta):
 def main():
     df = None
     speaker = args["--speaker"]
-    origin = args["--origin"]
     mversion = args["--mversion"]
     morigin = args["--morigin"]
     mformat = args["--mformat"]
@@ -688,15 +691,12 @@ def main():
     custom_ray_init(args)
     steps.append(("ray init", time.perf_counter()))
 
-    if speaker is not None:
-        filters = {
-            "speaker_name": speaker,
-            "origin": morigin,
-            "format": mformat,
-        }
-        df = cache_load(filters=filters, smoke_test=smoke_test)
-    else:
-        df = cache_load(smoke_test=smoke_test)
+    filters = {
+        "speaker_name": speaker,
+        "origin": morigin,
+        "format": mformat,
+    }
+    df = cache_load(filters=filters, smoke_test=smoke_test)
     steps.append(("loaded", time.perf_counter()))
 
     if df is None:

@@ -1,0 +1,16 @@
+EQ for SVS Prime Center computed from ErinsAudioCorner data
+Preference Score 2.32 with EQ 5.35
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:07:19
+
+Preamp: -4.0 dB
+
+Filter  1: ON PK Fc    33 Hz Gain +2.98 dB Q 0.56
+Filter  2: ON PK Fc  5633 Hz Gain -2.03 dB Q 0.74
+Filter  3: ON PK Fc   215 Hz Gain +2.99 dB Q 2.58
+Filter  4: ON PK Fc  1306 Hz Gain +2.54 dB Q 2.99
+Filter  5: ON PK Fc 15716 Hz Gain -2.46 dB Q 2.96
+Filter  6: ON PK Fc   106 Hz Gain -3.26 dB Q 2.99
+Filter  7: ON PK Fc   699 Hz Gain -1.24 dB Q 2.61
+Filter  8: ON PK Fc  3404 Hz Gain -0.91 dB Q 2.98
+Filter  9: ON PK Fc   195 Hz Gain +0.77 dB Q 1.63

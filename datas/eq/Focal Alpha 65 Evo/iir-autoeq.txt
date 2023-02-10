@@ -1,16 +1,16 @@
 EQ for Focal Alpha 65 Evo computed from ASR data
-Preference Score 4.26 with EQ 5.78
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-04-22:19:23
+Preference Score 4.26 with EQ 5.72
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-02-09-10:42:57
 
-Preamp: -3.2 dB
+Preamp: -2.0 dB
 
-Filter  1: ON PK Fc    27 Hz Gain +2.99 dB Q 0.89
-Filter  2: ON PK Fc  5850 Hz Gain -2.86 dB Q 0.82
-Filter  3: ON PK Fc   127 Hz Gain -1.56 dB Q 1.27
-Filter  4: ON PK Fc  1527 Hz Gain +1.91 dB Q 2.50
-Filter  5: ON PK Fc 13622 Hz Gain -1.80 dB Q 2.97
-Filter  6: ON PK Fc   530 Hz Gain +0.76 dB Q 2.96
-Filter  7: ON PK Fc  9311 Hz Gain +0.54 dB Q 2.86
-Filter  8: ON PK Fc   304 Hz Gain -0.57 dB Q 2.39
-Filter  9: ON PK Fc  3592 Hz Gain -0.51 dB Q 2.03
+Filter  1: ON PK Fc    32 Hz Gain +0.91 dB Q 1.37
+Filter  2: ON PK Fc  6590 Hz Gain -3.04 dB Q 0.58
+Filter  3: ON PK Fc   137 Hz Gain -1.39 dB Q 1.34
+Filter  4: ON PK Fc  1551 Hz Gain +1.76 dB Q 2.73
+Filter  5: ON PK Fc 14053 Hz Gain -1.70 dB Q 3.00
+Filter  6: ON PK Fc   292 Hz Gain -0.50 dB Q 3.00
+Filter  7: ON PK Fc   520 Hz Gain +0.68 dB Q 3.00
+Filter  8: ON PK Fc   855 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc  4155 Hz Gain -0.66 dB Q 2.71

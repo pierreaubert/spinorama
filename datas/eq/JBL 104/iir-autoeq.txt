@@ -1,16 +1,15 @@
 EQ for JBL 104 computed from ASR data
-Preference Score 1.87 with EQ 3.55
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-04-22:12:29
+Preference Score 1.87 with EQ 3.27
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-02-09-10:44:29
 
-Preamp: -3.2 dB
+Preamp: -2.7 dB
 
-Filter  1: ON PK Fc    32 Hz Gain +3.00 dB Q 0.53
-Filter  2: ON PK Fc  7263 Hz Gain -2.01 dB Q 0.23
-Filter  3: ON PK Fc 14964 Hz Gain -4.31 dB Q 2.81
-Filter  4: ON PK Fc  9810 Hz Gain +2.55 dB Q 2.86
-Filter  5: ON PK Fc   411 Hz Gain +1.50 dB Q 2.97
-Filter  6: ON PK Fc  3211 Hz Gain +1.63 dB Q 2.87
-Filter  7: ON PK Fc  1440 Hz Gain +0.97 dB Q 2.04
-Filter  8: ON PK Fc   729 Hz Gain +0.55 dB Q 2.98
-Filter  9: ON PK Fc  5006 Hz Gain -1.09 dB Q 2.61
+Filter  1: ON HS Fc  3631 Hz Gain -2.24 dB
+Filter  2: ON PK Fc   156 Hz Gain -2.71 dB Q 2.21
+Filter  3: ON PK Fc  9733 Hz Gain +2.53 dB Q 2.96
+Filter  4: ON PK Fc 14613 Hz Gain -3.68 dB Q 2.71
+Filter  5: ON PK Fc   396 Hz Gain +1.66 dB Q 2.76
+Filter  6: ON PK Fc   757 Hz Gain +0.55 dB Q 2.98
+Filter  7: ON PK Fc  1085 Hz Gain -0.51 dB Q 2.95
+Filter  8: ON PK Fc  1356 Hz Gain +0.60 dB Q 2.83

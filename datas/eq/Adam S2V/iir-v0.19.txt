@@ -1,0 +1,16 @@
+EQ for Adam S2V computed from ASR data
+Preference Score 5.72 with EQ 6.34
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:07:15
+
+Preamp: -3.2 dB
+
+Filter  1: ON LS Fc    73 Hz Gain +3.00 dB
+Filter  2: ON PK Fc  7699 Hz Gain -1.82 dB Q 0.69
+Filter  3: ON PK Fc   301 Hz Gain +0.89 dB Q 2.18
+Filter  4: ON PK Fc  2059 Hz Gain +0.68 dB Q 3.00
+Filter  5: ON PK Fc   967 Hz Gain -0.75 dB Q 1.18
+Filter  6: ON PK Fc  1989 Hz Gain +0.50 dB Q 2.99
+Filter  7: ON PK Fc  3000 Hz Gain -0.51 dB Q 2.88
+Filter  8: ON PK Fc 13713 Hz Gain -0.51 dB Q 2.98
+Filter  9: ON PK Fc  1304 Hz Gain -0.52 dB Q 2.99

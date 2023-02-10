@@ -187,6 +187,9 @@ def is_filtered(speaker, data, filters):
             print("error no default measurement for {}".format(speaker))
             return True
         first = metadata.speakers_info[speaker]["default_measurement"]
+        if first not in metadata.speakers_info[speaker]["measurements"].keys():
+            # only happens when you change the metadata
+            return False
         current = metadata.speakers_info[speaker]["measurements"][first]
 
     if filters.get("origin") is not None and current is not None:

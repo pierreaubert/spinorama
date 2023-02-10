@@ -1,15 +1,16 @@
 EQ for Revel F228Be computed from ASR data
-Preference Score 6.2 with EQ 6.8
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-03-23:23:47
+Preference Score 6.22 with EQ 6.92
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-02-09-10:47:50
 
-Preamp: -3.0 dB
+Preamp: -3.2 dB
 
-Filter  1: ON HS Fc 15481 Hz Gain +3.00 dB
-Filter  2: ON PK Fc  4304 Hz Gain -1.21 dB Q 0.34
-Filter  3: ON LS Fc   327 Hz Gain +1.08 dB
-Filter  4: ON PK Fc   684 Hz Gain -0.50 dB Q 0.14
-Filter  5: ON PK Fc   425 Hz Gain +0.89 dB Q 2.97
-Filter  6: ON PK Fc  2140 Hz Gain +0.87 dB Q 1.38
-Filter  7: ON PK Fc 11457 Hz Gain -0.52 dB Q 2.96
-Filter  8: ON LS Fc   305 Hz Gain +0.50 dB
+Filter  1: ON PK Fc    33 Hz Gain +3.00 dB Q 0.89
+Filter  2: ON PK Fc   113 Hz Gain -1.66 dB Q 2.23
+Filter  3: ON PK Fc  4924 Hz Gain -0.81 dB Q 1.51
+Filter  4: ON PK Fc   398 Hz Gain +1.20 dB Q 3.00
+Filter  5: ON PK Fc   854 Hz Gain -0.50 dB Q 2.00
+Filter  6: ON PK Fc  1866 Hz Gain +0.50 dB Q 3.00
+Filter  7: ON PK Fc   168 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc  7101 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc  2163 Hz Gain -0.50 dB Q 3.00

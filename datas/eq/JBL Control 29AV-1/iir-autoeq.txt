@@ -1,15 +1,11 @@
 EQ for JBL Control 29AV-1 computed from ASR data
-Preference Score 2.43 with EQ 4.11
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-04-22:14:17
+Preference Score 2.43 with EQ 3.99
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-02-09-10:44:03
 
-Preamp: -5.3 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    30 Hz Gain +2.93 dB Q 0.68
-Filter  2: ON PK Fc  2806 Hz Gain +2.98 dB Q 2.66
-Filter  3: ON PK Fc  6444 Hz Gain -3.60 dB Q 2.88
-Filter  4: ON PK Fc  1134 Hz Gain -3.44 dB Q 2.68
-Filter  5: ON PK Fc  3103 Hz Gain +1.18 dB Q 0.05
-Filter  6: ON PK Fc    47 Hz Gain +2.97 dB Q 2.83
-Filter  7: ON PK Fc  6423 Hz Gain -1.93 dB Q 0.92
-Filter  8: ON PK Fc   896 Hz Gain -1.21 dB Q 0.46
+Filter  1: ON PK Fc    32 Hz Gain +2.78 dB Q 1.05
+Filter  2: ON PK Fc  6721 Hz Gain -3.56 dB Q 3.00
+Filter  3: ON PK Fc  2928 Hz Gain +3.00 dB Q 2.63
+Filter  4: ON PK Fc  1132 Hz Gain -3.35 dB Q 3.00

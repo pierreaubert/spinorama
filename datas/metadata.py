@@ -177,19 +177,47 @@ speakers_info = {
             },
         },
     },
-    "Alcons Audio QRP20": {
+    "Alcons Audio QRP20 90x15": {
         "brand": "Alcons Audio",
-        "model": "QRP20",
+        "model": "QRP20 90x15",
         "type": "passive",
         "price": "",
         "amount": "pair",
         "shape": "columns",
-        "default_measurement": "vendor-pattern-90x15",
+        "default_measurement": "vendor-v2-20230112",
         "measurements": {
-            "vendor-pattern-90x15": {
+            "vendor-v2-20230112": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
                 "data acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {
+                    "psw": "https://www.prosoundweb.com/alcons-introduces-qrp20-pro-ribbon-point-source-column/",
+                    "axp": "https://audioxpress.com/news/alcons-audio-introduces-qrp20-pro-ribbon-column-array",
+                },
+                "review_published": "20230112",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 15,
+                    },
+                    "sensitivity": 99,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 742,
+                        "width": 150,
+                        "depth": 150,
+                    },
+                    "weight": 12,
+                },
+                "data acquisition": gll_data_acquisition_std,
+            },
+            "vendor-v1-20221020": {
+                "origin": "Vendors-Alcons Audio",
+                "format": "splHVtxt",
                 "quality": "high",
                 "reviews": {
                     "psw": "https://www.prosoundweb.com/alcons-introduces-qrp20-pro-ribbon-point-source-column/",
@@ -213,11 +241,56 @@ speakers_info = {
                     },
                     "weight": 12,
                 },
-                "data acquisition": gll_data_acquisition_std,
+                "data acquisition": {
+                    "from": "gll",
+                    "distance": 2,
+                    "signal": "aes 20Hz-20kHz",
+                    "air absorbtion": True,
+                    "resolution": 10,
+                },
             },
-            "vendor-pattern-120x15": {
+        },
+    },
+    "Alcons Audio QRP20 120x15": {
+        "brand": "Alcons Audio",
+        "model": "QRP20 120x15",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "columns",
+        "default_measurement": "vendor-v2-20230112",
+        "measurements": {
+            "vendor-v2-20230112": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
+                "quality": "high",
+                "reviews": {
+                    "psw": "https://www.prosoundweb.com/alcons-introduces-qrp20-pro-ribbon-point-source-column/",
+                    "axp": "https://audioxpress.com/news/alcons-audio-introduces-qrp20-pro-ribbon-column-array",
+                },
+                "review_published": "20230112",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 15,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 742,
+                        "width": 150,
+                        "depth": 150,
+                    },
+                    "weight": 12,
+                },
+                "data acquisition": gll_data_acquisition_std,
+            },
+            "vendor-v1-20221020": {
+                "origin": "Vendors-Alcons Audio",
+                "format": "splHVtxt",
                 "quality": "high",
                 "reviews": {
                     "psw": "https://www.prosoundweb.com/alcons-introduces-qrp20-pro-ribbon-point-source-column/",
@@ -241,7 +314,13 @@ speakers_info = {
                     },
                     "weight": 12,
                 },
-                "data acquisition": gll_data_acquisition_std,
+                "data acquisition": {
+                    "from": "gll",
+                    "distance": 2,
+                    "signal": "aes 20Hz-20kHz",
+                    "air absorbtion": True,
+                    "resolution": 10,
+                },
             },
         },
     },
@@ -764,6 +843,36 @@ speakers_info = {
                     "vendor": "http://forum.ascendacoustics.com/showthread.php?7588-Introducing-the-Sierra-LX!!!",
                 },
                 "review_published": "20220324",
+            },
+        },
+    },
+    "Ascend Acoustics Sierra Titan": {
+        "brand": "Ascend Acoustics",
+        "model": "Sierra Titan",
+        "type": "passive",
+        "price": "3000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor-dome-tweeter",
+        "measurements": {
+            "vendor-dome-tweeter": {
+                "origin": "Vendors-Ascend Acoustics",
+                "format": "splHVtxt",
+                "quality": "high",
+                "reviews": {
+                    "vendor": "https://ascendacoustics.com/collections/sierra-series-pairs/products/sierra-tower-v2-pair?variant=40596422754358",
+                },
+                "review_published": "20230118",
+                "specifications": {
+                    "sensitivity": 91,
+                    "impedance": 8,
+                    "size": {
+                        "height": 1092,
+                        "width": 190,
+                        "depth": 267,
+                    },
+                    "weight": 20.4,
+                },
             },
         },
     },
@@ -2047,6 +2156,7 @@ speakers_info = {
         },
     },
     "Danley SH-Mini": {
+        "skip": True,
         "brand": "Danley",
         "model": "SH-Mini",
         "type": "passive",
@@ -2304,6 +2414,7 @@ speakers_info = {
         },
     },
     "DAS Audio Vantec 20A": {
+        "skip": True,
         "brand": "DAS Audio",
         "model": "Vantec 20A",
         "type": "active",
@@ -3720,6 +3831,487 @@ speakers_info = {
                 "symmetry": "horizontal",
                 "review": "https://www.princeton.edu/3D3A/Directivity.html",
                 "review_published": "20151001",
+            },
+        },
+    },
+    "EV EVID-S4.2": {
+        "brand": "EV",
+        "model": "EVID-S4.2",
+        "type": "passive",
+        "price": "240",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230117",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 110,
+                    },
+                    "sensitivity": 87,
+                    "impedance": 6,
+                    "SPL": {
+                        "continuous": 103,
+                        "peak": 109,
+                    },
+                    "size": {
+                        "height": 193,
+                        "width": 140,
+                        "depth": 118,
+                    },
+                    "weight": 1.5,
+                },
+            },
+        },
+    },
+    "EV EVID-S5.2": {
+        "brand": "EV",
+        "model": "EVID-S5.2",
+        "type": "passive",
+        "price": "390",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "quality": "medium",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230117",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 90,
+                    "impedance": 6,
+                    "SPL": {
+                        "continuous": 103,
+                        "peak": 109,
+                    },
+                    "size": {
+                        "height": 255,
+                        "width": 180,
+                        "depth": 151,
+                    },
+                    "weight": 2.7,
+                },
+            },
+        },
+    },
+    "EV EVID-S5.2X": {
+        "brand": "EV",
+        "model": "EVID-S5.2X",
+        "type": "passive",
+        "price": "420",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230117",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 90,
+                    "impedance": 6,
+                    "SPL": {
+                        "continuous": 109,
+                        "peak": 115,
+                    },
+                    "size": {
+                        "height": 255,
+                        "width": 180,
+                        "depth": 151,
+                    },
+                    "weight": 2.7,
+                },
+            },
+        },
+    },
+    "EV EVID-S8.2": {
+        "brand": "EV",
+        "model": "EVID-S8.2",
+        "type": "passive",
+        "price": "560",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230117",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 90,
+                    "impedance": 6,
+                    "SPL": {
+                        "continuous": 110,
+                        "peak": 116,
+                    },
+                    "size": {
+                        "height": 390,
+                        "width": 223,
+                        "depth": 151,
+                    },
+                    "weight": 5.1,
+                },
+            },
+        },
+    },
+    "EV EVC-1082": {
+        "brand": "EV",
+        "model": "EVC-1082",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230117",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 91,
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 120,
+                    },
+                    "size": {
+                        "height": 492,
+                        "width": 248,
+                        "depth": 277,
+                    },
+                    "weight": 11.2,
+                },
+            },
+        },
+    },
+    "EV EVC-1122": {
+        "brand": "EV",
+        "model": "EVC-1122",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x55",
+        "measurements": {
+            "vendor-pattern-90x55": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230118",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 55,
+                    },
+                    "sensitivity": 95,
+                    "impedance": 7,
+                    "SPL": {
+                        "peak": 126,
+                    },
+                    "size": {
+                        "height": 616,
+                        "width": 395,
+                        "depth": 401,
+                    },
+                    "weight": 20.3,
+                },
+            },
+        },
+    },
+    "EV EVC-1152": {
+        "brand": "EV",
+        "model": "EVC-1152",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x55",
+        "measurements": {
+            "vendor-pattern-90x55": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230118",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 55,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 7,
+                    "SPL": {
+                        "peak": 129,
+                    },
+                    "size": {
+                        "height": 684,
+                        "width": 433,
+                        "depth": 451,
+                    },
+                    "weight": 27.7,
+                },
+            },
+        },
+    },
+    "EV MFX-12MC": {
+        "brand": "EV",
+        "model": "MFX-12MC",
+        "type": "active",
+        "price": "6000",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {  # FOH FR Biamp
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230115",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 500,
+                        "width": 420,
+                        "depth": 298,
+                    },
+                    "weight": 19,
+                },
+            },
+            "vendor-pattern-40x60": {  # MON FR Biamp
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230115",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 40,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 500,
+                        "width": 420,
+                        "depth": 298,
+                    },
+                    "weight": 19,
+                },
+            },
+        },
+    },
+    "EV MFX-15MC": {
+        "brand": "EV",
+        "model": "MFX-15MC",
+        "type": "active",
+        "price": "6000",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {  # FOH FR BiAmp
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230115",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 600,
+                        "width": 500,
+                        "depth": 339,
+                    },
+                    "weight": 23,
+                },
+            },
+            "vendor-pattern-40x60": {  # MON FR BiAmp
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230115",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 40,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 600,
+                        "width": 500,
+                        "depth": 339,
+                    },
+                    "weight": 23,
+                },
+            },
+        },
+    },
+    "EV MTS-4153": {
+        "brand": "EV",
+        "model": "MTS-4153",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "quality": "medium",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230118",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 151,
+                    },
+                    "size": {
+                        "height": 1092,
+                        "width": 1092,
+                        "depth": 1096,
+                    },
+                    "weight": 160,
+                },
+            },
+            "vendor-pattern-40x30": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230118",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 40,
+                        "vertical": 30,
+                    },
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 151,
+                    },
+                    "size": {
+                        "height": 1092,
+                        "width": 1092,
+                        "depth": 1491,
+                    },
+                    "weight": 196,
+                },
+            },
+        },
+    },
+    "EV MTS-6154": {
+        "brand": "EV",
+        "model": "MTS-6154",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230118",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 151,
+                    },
+                    "size": {
+                        "height": 1092,
+                        "width": 1092,
+                        "depth": 1096,
+                    },
+                    "weight": 160,
+                },
+            },
+            "vendor-pattern-40x30": {
+                "origin": "Vendors-EV",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "review_published": "20230118",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 40,
+                        "vertical": 30,
+                    },
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 151,
+                    },
+                    "size": {
+                        "height": 1092,
+                        "width": 1092,
+                        "depth": 1494,
+                    },
+                    "weight": 213,
+                },
             },
         },
     },
@@ -5157,6 +5749,29 @@ speakers_info = {
             },
         },
     },
+    "Hedd Type 20 MK2": {
+        "brand": "Hedd",
+        "model": "Type 20 MK2",
+        "type": "active",
+        "price": "2400",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr-ported",
+        "measurements": {
+            "asr-ported": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/hedd-type-20-mk2-monitor-review.41455/",
+                "review_published": "20230129",
+            },
+            "asr-sealed": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/hedd-type-20-mk2-monitor-review.41455/",
+                "review_published": "20230129",
+            },
+        },
+    },
     "Hivi 3.1A DIY": {
         "brand": "Hivi",
         "model": "3.1A DIY",
@@ -5207,22 +5822,6 @@ speakers_info = {
             },
         },
     },
-    "Hsu Research HB-1 MK2": {
-        "brand": "Hsu Research",
-        "model": "HB-1 MK2",
-        "type": "passive",
-        "price": "218",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/hsu-hb-1-mk2-review-horn-speaker.24445/",
-            },
-        },
-    },
     "HTD Level THREE": {
         "brand": "HTD",
         "model": "Level THREE",
@@ -5237,6 +5836,22 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/htd-level-three-review-bookshelf-speaker.26566/",
                 "review_published": "20210912",
+            },
+        },
+    },
+    "Hsu Research HB-1 MK2": {
+        "brand": "Hsu Research",
+        "model": "HB-1 MK2",
+        "type": "passive",
+        "price": "218",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/hsu-hb-1-mk2-review-horn-speaker.24445/",
             },
         },
     },
@@ -6035,6 +6650,37 @@ speakers_info = {
                         "depth": 93,
                     },
                     "weight": 12.51,
+                },
+            },
+        },
+    },
+    "JBL Synthesis SCL-5": {
+        "brand": "JBL",
+        "model": "Synthesis SCL-5",
+        "type": "passive",
+        "price": "2200",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-scl-5-in-ceiling-speaker-review.41763/",
+                "review_published": "20230209",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 86,
+                    "impedance": 6,
+                    "size": {
+                        "height": 318,
+                        "width": 318,
+                        "depth": 152,
+                    },
+                    "weight": 3.9,
                 },
             },
         },
@@ -10008,7 +10654,7 @@ speakers_info = {
             },
             "vendor-v1-20220915": {
                 "origin": "Vendors-Meyer Sound",
-                "format": "gllHVtxt",
+                "format": "splHVtxt",
                 "review_published": "20220915",
                 "quality": "medium",
                 "notes": "measured at 2m with air absorbsion on, resolution is 10 degrees",
@@ -10029,6 +10675,13 @@ speakers_info = {
                         "depth": 391,
                     },
                     "weight": 23.6,
+                },
+                "data acquisition": {
+                    "from": "gll",
+                    "distance": 2,
+                    "signal": "aes 20Hz-20kHz",
+                    "air absorbtion": True,
+                    "resolution": 10,
                 },
             },
         },
@@ -12594,6 +13247,106 @@ speakers_info = {
             },
         },
     },
+    "RCF ART 708-A MK4": {
+        "brand": "RCF",
+        "model": "ART 708-A MK4",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x70",
+        "measurements": {
+            "vendor-pattern-90x70": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 70,
+                    },
+                    "SPL": {
+                        "peak": 127,
+                    },
+                    "size": {
+                        "height": 480,
+                        "width": 291,
+                        "depth": 276,
+                    },
+                    "weight": 10.4,
+                },
+            },
+        },
+    },
+    "RCF ART 710-A MK4": {
+        "skip": True,  # missing gll file on website
+        "brand": "RCF",
+        "model": "ART 710-A MK4",
+        "type": "active",
+        "price": "469",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x70",
+        "measurements": {
+            "vendor-pattern-90x70": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 70,
+                    },
+                    "SPL": {
+                        "peak": 129,
+                    },
+                    "size": {
+                        "height": 548,
+                        "width": 340,
+                        "depth": 305,
+                    },
+                    "weight": 14.2,
+                },
+            },
+        },
+    },
+    "RCF ART 712-A MK4": {
+        "brand": "RCF",
+        "model": "ART 712-A MK4",
+        "type": "active",
+        "price": "509",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 129,
+                    },
+                    "size": {
+                        "height": 637,
+                        "width": 387,
+                        "depth": 363,
+                    },
+                    "weight": 17.8,
+                },
+            },
+        },
+    },
     "RCF ART 715-A MK4": {
         "brand": "RCF",
         "model": "ART 715-A MK4",
@@ -12609,6 +13362,285 @@ speakers_info = {
                 "data acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221107",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 708,
+                        "width": 437,
+                        "depth": 389,
+                    },
+                    "weight": 19.6,
+                },
+            },
+        },
+    },
+    "RCF ART 725-A MK4": {
+        "brand": "RCF",
+        "model": "ART 725-A MK4",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 708,
+                        "width": 437,
+                        "depth": 389,
+                    },
+                    "weight": 19.6,
+                },
+            },
+        },
+    },
+    "RCF ART 732-A MK4": {
+        "brand": "RCF",
+        "model": "ART 732-A MK4",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 637,
+                        "width": 384,
+                        "depth": 363,
+                    },
+                    "weight": 17.8,
+                },
+            },
+        },
+    },
+    "RCF ART 735-A MK4": {
+        "brand": "RCF",
+        "model": "ART 735-A MK4",
+        "type": "active",
+        "price": "888",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 708,
+                        "width": 437,
+                        "depth": 389,
+                    },
+                    "weight": 21.4,
+                },
+            },
+        },
+    },
+    "RCF ART 745-A MK4": {
+        "brand": "RCF",
+        "model": "ART 745-A MK4",
+        "type": "active",
+        "price": "1245",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230114",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 708,
+                        "width": 437,
+                        "depth": 389,
+                    },
+                    "weight": 18.8,
+                },
+            },
+        },
+    },
+    "RCF ART 910-A": {
+        "brand": "RCF",
+        "model": "ART 910-A",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 572,
+                        "width": 330,
+                        "depth": 310,
+                    },
+                    "weight": 15.8,
+                },
+            },
+        },
+    },
+    "RCF ART 912-A": {
+        "brand": "RCF",
+        "model": "ART 912-A",
+        "type": "active",
+        "price": "599",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 642,
+                        "width": 370,
+                        "depth": 363,
+                    },
+                    "weight": 19.0,
+                },
+            },
+        },
+    },
+    "RCF ART 932-A": {
+        "brand": "RCF",
+        "model": "ART 932-A",
+        "type": "active",
+        "price": "1800",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 642,
+                        "width": 370,
+                        "depth": 363,
+                    },
+                    "weight": 18.8,
+                },
+            },
+        },
+    },
+    "RCF ART 935-A": {
+        "brand": "RCF",
+        "model": "ART 935-A",
+        "type": "active",
+        "price": "2030",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 717,
+                        "width": 415,
+                        "depth": 410,
+                    },
+                    "weight": 24.2,
+                },
             },
         },
     },
@@ -12674,6 +13706,220 @@ speakers_info = {
                 "data acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221107",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 136,
+                    },
+                    "size": {
+                        "height": 890,
+                        "width": 520,
+                        "depth": 632,
+                    },
+                    "weight": 51.0,
+                },
+            },
+        },
+    },
+    "RCF HD 10-A MK5": {
+        "brand": "RCF",
+        "model": "HD 10-A MK5",
+        "type": "active",
+        "price": "469",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230115",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 128,
+                    },
+                    "size": {
+                        "height": 572,
+                        "width": 303,
+                        "depth": 303,
+                    },
+                    "weight": 11.8,
+                },
+            },
+        },
+    },
+    "RCF HD 12-A MK5": {
+        "brand": "RCF",
+        "model": "HD 12-A MK5",
+        "type": "active",
+        "price": "600",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230115",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 647,
+                        "width": 380,
+                        "depth": 380,
+                    },
+                    "weight": 18.3,
+                },
+            },
+        },
+    },
+    "RCF NX 910-A": {
+        "brand": "RCF",
+        "model": "NX 910-A",
+        "type": "active",
+        "price": "533",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 510,
+                        "width": 295,
+                        "depth": 333,
+                    },
+                    "weight": 16.4,
+                },
+            },
+        },
+    },
+    "RCF NX 912-A": {
+        "brand": "RCF",
+        "model": "NX 912-A",
+        "type": "active",
+        "price": "899",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 620,
+                        "width": 362,
+                        "depth": 405,
+                    },
+                    "weight": 20.8,
+                },
+            },
+        },
+    },
+    "RCF NX 915-A": {
+        "brand": "RCF",
+        "model": "NX 915-A",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 705,
+                        "width": 420,
+                        "depth": 451,
+                    },
+                    "weight": 24.1,
+                },
+            },
+        },
+    },
+    "RCF NX 985-A": {
+        "brand": "RCF",
+        "model": "NX 985-A",
+        "type": "active",
+        "price": "1840",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x60",
+        "measurements": {
+            "vendor-pattern-100x60": {
+                "origin": "Vendors-RCF",
+                "format": "gllHVtxt",
+                "data acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230113",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 138,
+                    },
+                    "size": {
+                        "height": 1075,
+                        "width": 461,
+                        "depth": 475,
+                    },
+                    "weight": 45.0,
+                },
             },
         },
     },
@@ -13954,6 +15200,40 @@ speakers_info = {
             },
         },
     },
+    "Theory Audio SB25": {
+        "brand": "Theory Audio",
+        "model": "SB25",
+        "type": "active",
+        "price": "",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-pattern-120x40",
+        "measurements": {
+            "vendor-pattern-120x40": {
+                "origin": "Vendors-Theory Audio",
+                "format": "gllHVtxt",
+                "quality": "high",
+                "review_published": "20230115",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 94,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 117,
+                    },
+                    "size": {
+                        "height": 546,
+                        "width": 243,
+                        "depth": 96,
+                    },
+                    "weight": 11,
+                },
+                "data acquisition": gll_data_acquisition_std,
+            },
+        },
+    },
     "Totem Acoustics Rainmaker": {
         "brand": "Totem Acoustics",
         "model": "Rainmaker",
@@ -14725,6 +16005,13 @@ origins_info = {
         "logo-small": "docs/metadata/dbaudio.png",
         "url": "https://www.dbaudio.com",
     },
+    "Vendors-EV": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.electrovoice.com",
+    },
     "Vendors-Infinity": {
         "min hz": 20,
         "max hz": 20000,
@@ -15033,6 +16320,13 @@ origins_info = {
         "logo": "docs/metadata/seeburg.png",
         "logo-small": "docs/metadata/seeburg.png",
         "url": "https://www.seeburg.net",
+    },
+    "Vendors-Theory Audio": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.theoryprofessional.com",
     },
     "Vendors-Wharfedale Pro": {
         "min hz": 20,

@@ -1,0 +1,16 @@
+EQ for RCF ART 712-A MK4 computed from Vendors-RCF data
+Preference Score 5.32 with EQ 5.80
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-02-09-10:45:40
+
+Preamp: -3.2 dB
+
+Filter  1: ON PK Fc    33 Hz Gain +3.00 dB Q 0.78
+Filter  2: ON PK Fc  3354 Hz Gain +2.76 dB Q 0.10
+Filter  3: ON PK Fc   103 Hz Gain -2.70 dB Q 2.70
+Filter  4: ON PK Fc 10902 Hz Gain -2.04 dB Q 1.70
+Filter  5: ON PK Fc   785 Hz Gain -1.28 dB Q 3.00
+Filter  6: ON PK Fc   299 Hz Gain -0.50 dB Q 2.57
+Filter  7: ON PK Fc  5462 Hz Gain -1.13 dB Q 2.44
+Filter  8: ON PK Fc 13077 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc   135 Hz Gain -0.50 dB Q 3.00

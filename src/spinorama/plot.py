@@ -4,12 +4,15 @@ import math
 
 import numpy as np
 import pandas as pd
+from scipy import stats
+
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.io as pio
-from scipy import stats
 
+from .constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+from .filter_peq import peq_build
 from .compute_misc import compute_contour
 from .load_misc import sort_angles
 
@@ -202,7 +205,7 @@ def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
         title_text="Angle",
         range=[angle_min, angle_max],
         dtick=angle_step,
-        tickvals=[v for v in range(angle_min, angle_max + angle_step, angle_step)],
+        tickvals=list(range(angle_min, angle_max + angle_step, angle_step)),
         ticktext=["{}°".format(v) for v in range(angle_min, angle_max + angle_step, angle_step)],
         showline=True,
     )
@@ -246,6 +249,7 @@ def contour_layout(params):
     return dict(
         width=params["width"],
         height=params["height"],
+        legend=dict(x=0.5, y=1.05, xanchor="center", orientation=orientation),
         title=dict(
             x=0.5,
             y=0.99,
@@ -423,13 +427,80 @@ def plot_graph_spl(df, params):
     return fig
 
 
-def plot_graph_regression_traces(df, measurement, params):
+def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     layout = params.get("layout", "")
     traces = []
+    # some speakers start very high
+    restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
+
+    restricted_line = [slope * math.log10(f) + intercept for f in restricted_freq.Freq]
+    line = [slope * math.log10(f) + intercept for f in df.Freq]
+
+    # 600 px = 50 dB
+    height = params["height"]
+    one_db = (height - 150) / 50
+
+    # add 3 dBs zone
+    traces.append(
+        go.Scatter(
+            x=df.Freq,
+            y=line,
+            line=dict(width=6 * one_db, color="#E4FC5B"),
+            opacity=0.4,
+            name="Band ±3dB",
+        )
+    )
+    # add 1.5 dBs zone
+    traces.append(
+        go.Scatter(
+            x=df.Freq,
+            y=line,
+            line=dict(width=3 * one_db, color="#E4FC5B"),
+            opacity=0.7,
+            name="Band ±1.5dB",
+        )
+    )
+    # add line
+    showlegend = True
+    if line_title is None:
+        showlegend = False
+    traces.append(
+        go.Scatter(
+            x=df.Freq,
+            y=line,
+            line=dict(width=2, color="black", dash="dot"),
+            opacity=1,
+            showlegend=showlegend,
+            name=line_title,
+        )
+    )
+
+    # add -3/+3 lines
+    offset = 3  # math.sqrt(3*3+slope*slope)
+    traces.append(
+        go.Scatter(
+            x=restricted_freq.Freq,
+            y=np.array(restricted_line) + offset,
+            line=dict(width=2, color="black", dash="dash"),
+            opacity=1,
+            showlegend=False,
+        )
+    )
+    traces.append(
+        go.Scatter(
+            x=restricted_freq.Freq,
+            y=np.array(restricted_line) - offset,
+            line=dict(width=2, color="black", dash="dash"),
+            opacity=1,
+            showlegend=False,
+        )
+    )
+
     trace = go.Scatter(
         x=df.Freq,
         y=df[measurement],
         marker_color=uniform_colors.get(measurement, "black"),
+        opacity=1,
         hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
     )
     if layout == "compact":
@@ -440,49 +511,39 @@ def plot_graph_regression_traces(df, measurement, params):
         trace.legendgrouptitle = {"text": "Measurements"}
     traces.append(trace)
 
-    # some speakers start very high
-    current_restricted = df.loc[(df.Freq > 250) & (df.Freq < 10000)]
-
-    slope, intercept, r, p, se = stats.linregress(x=np.log10(current_restricted["Freq"]), y=current_restricted[measurement])
-    line = [slope * math.log10(f) + intercept for f in df.Freq]
-
-    # print("step {} {}".format(slope, intercept))
-
-    # 600 px = 50 dB
-    height = params["height"]
-    one_db = height / 50
-    trace = go.Scatter(
-        x=df.Freq,
-        y=line,
-        line=dict(width=2, color="black"),
-        opacity=1,
-        name="Linear Regression",
-    )
-    if layout == "compact":
-        trace.name = label_short.get("Linear Regression")
-    else:
-        trace.name = "Linear Regression"
-    traces.append(trace)
-
-    traces.append(
-        go.Scatter(
-            x=df.Freq,
-            y=line,
-            line=dict(width=3 * one_db, color="gray"),
-            opacity=0.15,
-            name="Band ±1.5dB",
-        )
-    )
-    traces.append(
-        go.Scatter(
-            x=df.Freq,
-            y=line,
-            line=dict(width=6 * one_db, color="gray"),
-            opacity=0.1,
-            name="Band ±3dB",
-        )
-    )
     return traces
+
+
+def plot_graph_flat_traces(df, measurement, params):
+
+    restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
+    slope = 0
+    intercept = np.mean(restricted_freq[measurement])
+
+    return plot_graph_traces(df, measurement, params, slope, intercept, None)
+
+
+def plot_graph_regression_traces(df, measurement, params):
+
+    restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
+    slope, intercept, r, p, se = stats.linregress(x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement])
+
+    return plot_graph_traces(df, measurement, params, slope, intercept, "Linear Regression (midrange)")
+
+
+def plot_graph_flat(df, measurement, params):
+    layout = params.get("layout", "")
+    # print("{} {}".format(measurement, df.keys()))
+    fig = go.Figure()
+    traces = plot_graph_flat_traces(df, measurement, params)
+    for t in traces:
+        fig.add_trace(t)
+
+    fig.update_xaxes(generate_xaxis())
+    fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
+
+    fig.update_layout(common_layout(params))
+    return fig
 
 
 def plot_graph_regression(df, measurement, params):
@@ -701,3 +762,39 @@ def plot_image(df, params):
 
 def plot_summary(df, summary, params):
     return None
+
+
+def plot_eqs(freq, peqs, names=None):
+    traces = None
+    if names is None:
+        traces = [go.Scatter(x=freq, y=peq_build(freq, peq)) for peq in peqs]
+    else:
+        traces = [
+            go.Scatter(
+                x=freq,
+                y=peq_build(freq, peq),
+                name=name,
+                hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
+            )
+            for peq, name in zip(peqs, names)
+        ]
+    fig = go.Figure(data=traces)
+    fig.update_xaxes(
+        dict(
+            title_text="Frequency (Hz)",
+            type="log",
+            range=[math.log10(20), math.log10(20000)],
+            showline=True,
+            dtick="D1",
+        ),
+    )
+    fig.update_yaxes(
+        dict(
+            title_text="SPL (dB)",
+            range=[-5, 5],
+            showline=True,
+            dtick="D1",
+        ),
+    )
+    fig.update_layout(title="EQs")
+    return fig

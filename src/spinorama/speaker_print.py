@@ -5,7 +5,6 @@ import pathlib
 import copy
 import zipfile
 import pandas as pd
-from wand.image import Image as wim
 
 try:
     import ray
@@ -14,6 +13,7 @@ except ModuleNotFoundError:
 
 from .constant_paths import CPATH_DOCS_SPEAKERS
 
+from .pict import write_multiformat
 from .speaker_display import (
     display_spinorama,
     display_onaxis,
@@ -41,17 +41,7 @@ logger = logging.getLogger("spinorama")
 def print_graph(speaker, version, origin, key, title, chart, force, fileext):
     updated = 0
     if chart is not None:
-        filedir = (
-            CPATH_DOCS_SPEAKERS
-            + "/"
-            + speaker
-            + "/"
-            + origin.replace("Vendors-", "")
-            #            + "-"
-            #            + version.replace("version-", "")
-            + "/"
-            + key
-        )
+        filedir = CPATH_DOCS_SPEAKERS + "/" + speaker + "/" + origin.replace("Vendors-", "") + "/" + key
         pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
         for ext in ["json", "png"]:  # svg and html skipped to keep size small
             # skip the 2cols.json and 3cols.json as they are really large
@@ -84,19 +74,7 @@ def print_graph(speaker, version, origin, key, title, chart, force, fileext):
                                 logger.info("Saving {0} in {1}".format(title, filename))
                                 updated += 1
                         else:
-                            chart.write_image(filename)
-                            if os.path.getsize(filename) == 0:
-                                logger.warning("Saving {0} in {1} failed!".format(title, filename))
-                            else:
-                                logger.info("Saving {0} in {1}".format(title, filename))
-                                updated += 1
-                                with wim(filename=filename) as pict:
-                                    pict.convert("webp").save(filename="{}.webp".format(filename[:-10]))
-                                    # pict.convert("avif").save(
-                                    #    filename="{}.avif".format(filename[:-10])
-                                    # )
-                                    pict.compression_quality = 75
-                                    pict.convert("jpg").save(filename="{}.jpg".format(filename[:-10]))
+                            write_multiformat(chart, filename, force)
                     except Exception as e:
                         logger.error("Got unkown error {0} for {1}".format(e, filename))
     else:

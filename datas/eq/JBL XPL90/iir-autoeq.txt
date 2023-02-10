@@ -1,16 +1,16 @@
 EQ for JBL XPL90 computed from ASR data
-Preference Score 4.0 with EQ 5.8
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-03-23:23:10
+Preference Score 3.96 with EQ 5.84
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-02-09-10:44:38
 
 Preamp: -3.2 dB
 
-Filter  1: ON LS Fc    92 Hz Gain +3.00 dB
-Filter  2: ON PK Fc  6747 Hz Gain -3.25 dB Q 2.03
-Filter  3: ON PK Fc  3413 Hz Gain +1.93 dB Q 3.00
-Filter  4: ON PK Fc 13204 Hz Gain -1.90 dB Q 1.93
-Filter  5: ON PK Fc   858 Hz Gain -1.58 dB Q 1.32
-Filter  6: ON PK Fc  1653 Hz Gain +1.15 dB Q 3.00
-Filter  7: ON PK Fc   497 Hz Gain -0.64 dB Q 2.97
-Filter  8: ON PK Fc  1152 Hz Gain -0.81 dB Q 2.99
-Filter  9: ON PK Fc   820 Hz Gain +0.73 dB Q 2.99
+Filter  1: ON PK Fc    38 Hz Gain +3.00 dB Q 0.52
+Filter  2: ON PK Fc  3274 Hz Gain +2.72 dB Q 3.00
+Filter  3: ON PK Fc  6362 Hz Gain -2.55 dB Q 2.87
+Filter  4: ON PK Fc   133 Hz Gain -1.06 dB Q 3.00
+Filter  5: ON PK Fc  1703 Hz Gain +1.32 dB Q 3.00
+Filter  6: ON PK Fc   693 Hz Gain -0.83 dB Q 1.03
+Filter  7: ON PK Fc 12918 Hz Gain -0.82 dB Q 3.00
+Filter  8: ON PK Fc  1099 Hz Gain -0.70 dB Q 3.00
+Filter  9: ON PK Fc 13757 Hz Gain -0.50 dB Q 3.00

@@ -1,16 +1,15 @@
 EQ for Elac BS 314 computed from Misc data
-Preference Score 2.74 with EQ 5.02
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-04-22:16:13
+Preference Score 2.74 with EQ 4.51
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-02-09-10:46:19
 
-Preamp: -3.2 dB
+Preamp: -3.1 dB
 
-Filter  1: ON PK Fc    54 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc  6098 Hz Gain -2.73 dB Q 1.25
-Filter  3: ON PK Fc  1870 Hz Gain +2.41 dB Q 2.64
-Filter  4: ON PK Fc  3103 Hz Gain +1.38 dB Q 2.79
-Filter  5: ON PK Fc  4334 Hz Gain -1.66 dB Q 2.99
-Filter  6: ON PK Fc  6122 Hz Gain +1.00 dB Q 2.98
-Filter  7: ON PK Fc 12362 Hz Gain -0.93 dB Q 1.29
-Filter  8: ON PK Fc  2403 Hz Gain -0.74 dB Q 2.92
-Filter  9: ON PK Fc  3270 Hz Gain +0.80 dB Q 2.83
+Filter  1: ON PK Fc    65 Hz Gain +2.90 dB Q 0.50
+Filter  2: ON PK Fc  4693 Hz Gain -2.06 dB Q 3.00
+Filter  3: ON PK Fc 13584 Hz Gain -1.53 dB Q 1.08
+Filter  4: ON PK Fc   320 Hz Gain +1.12 dB Q 1.90
+Filter  5: ON PK Fc  2396 Hz Gain -1.11 dB Q 3.00
+Filter  6: ON PK Fc   689 Hz Gain -0.65 dB Q 3.00
+Filter  7: ON PK Fc 15300 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc  8326 Hz Gain -0.50 dB Q 3.00

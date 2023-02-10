@@ -16,48 +16,155 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { getMetadata } from './common.js'
-import { sortMetadata2 } from './sort.js'
-import { getPeq, getID } from './misc.js'
+import { getMetadata } from './common.js';
+import { sortMetadata2 } from './sort.js';
+import {
+    openModal,
+    closeModal,
+    getPeq,
+    getID
+}
+from './misc.js';
 
-getMetadata().then((metadata) => {
-  function getContext (key, value) {
-  // console.log(getReviews(value));
-    return {
-      id: getID(value.brand, value.model),
-      brand: value.brand,
-      model: value.model,
-      autoeq: 'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq/' +
-                encodeURI(value.brand + ' ' + value.model) +
-                '/iir-autoeq.txt',
-      preamp_gain: value.eq_autoeq.preamp_gain,
-      peq: getPeq(value.eq_autoeq.peq)
-    }
-  }
+function getPictureEqCompare(brand, model, suffix) {
+    return encodeURI('speakers/' + brand + ' ' + model + '/eq_compare.' + suffix);
+}
 
-  function printEQ (key, value) {
-    const source = document.querySelector('#eqsht').innerHTML
-    const template = Handlebars.compile(source)
-    const context = getContext(key, value)
-    const html = template(context)
-    const divEQ = document.createElement('div')
-    divEQ.setAttribute('class', 'column is-one-third')
-    divEQ.setAttribute('id', context.id)
-    divEQ.innerHTML = html
-    return divEQ
-  }
+function getPictureEqDetails(brand, model, version) {
+    return encodeURI('speakers/' + brand + ' ' + model + '/' + version + '/filters')
+}
 
-  function display () {
-    const speakerContainer = document.querySelector('[data-num="0"')
-    const fragment1 = new DocumentFragment()
-    sortMetadata2(metadata, { by: 'date' }).forEach(function (value, key) {
-      const speaker = metadata[value]
-      if ('eq_autoeq' in speaker) {
-        fragment1.appendChild(printEQ(value, speaker))
-      }
+getMetadata()
+    .then((metadata) => {
+        const source = document.querySelector('#templateEQ').innerHTML;
+        const template = Handlebars.compile(source);
+
+        function getContext(pKey, pIndex, pValue) {
+            const defaultEQ = pValue.default_eq;
+            let otherEQ = {};
+            for (const eqType in pValue.eqs) {
+                if (eqType !== defaultEQ) {
+                    otherEQ[eqType] = {
+                        key: eqType,
+                        name: pValue.eqs[eqType].display_name,
+                        url:
+                        'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/' +
+                            encodeURI(pValue.eqs[eqType].filename),
+                        preamp_gain: pValue.eqs[eqType].preamp_gain,
+                        peq: getPeq(pValue.eqs[eqType].peq),
+                    };
+                }
+            }
+            const origin = pValue.measurements[pValue.default_measurement].origin.replace('Vendors-', '');
+            return {
+                id: getID(pValue.brand, pValue.model),
+                brand: pValue.brand,
+                model: pValue.model,
+                name: pValue.eqs.autoeq.display_name,
+                img_eq_compare: {
+                    webp: getPictureEqCompare(pValue.brand, pValue.model, 'webp'),
+                    jpg: getPictureEqCompare(pValue.brand, pValue.model, 'jpg')
+                },
+                img_eq_details: getPictureEqDetails(pValue.brand, pValue.model, origin),
+                autoeq: {
+                    key: 'autoeq',
+                    name: pValue.eqs.autoeq.display_name,
+                    url: 'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/' +
+                        encodeURI(pValue.eqs.autoeq.filename),
+                    preamp_gain: pValue.eqs.autoeq.preamp_gain,
+                    peq: getPeq(pValue.eqs.autoeq.peq)
+                },
+                othereq: otherEQ,
+            };
+        }
+
+        function switchVisible(divEQ, context, current) {
+            if ( current === 'autoeq' ) {
+                let autoeq = divEQ.querySelector('#eq-'+context.id+'-autoeq');
+                autoeq.classList.remove('hidden');
+                for (const oeq in context.othereq) {
+                    let eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
+                    eq.classList.add('hidden');
+                }
+            } else {
+                let autoeq = divEQ.querySelector('#eq-'+context.id+'-autoeq');
+                autoeq.classList.add('hidden');
+                for (const oeq in context.othereq) {
+                    if (oeq === current) {
+                        let eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
+                        eq.classList.remove('hidden');
+                    } else {
+                        let eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
+                        eq.classList.add('hidden');
+                    }
+                }
+            }
+        }
+
+        function addChangeEvents(divEQ, context) {
+            const selectEQ = divEQ.querySelector('#eq-select-'+context.id);
+            if (selectEQ !== null) {
+                selectEQ.addEventListener('change', function () {
+                    switchVisible(divEQ, context, this.value);
+                });
+            }
+        }
+
+        function addModalEventsTag(divEQ, context, tag) {
+            const click = divEQ.querySelector('#' + tag + '-' + context.id);
+            if (click !== null ) {
+                const target = click.dataset.target;
+                const modal = divEQ.querySelector('#'+target);
+                if (modal !== null) {
+                    click.addEventListener('click', () => {
+                        return openModal(modal);
+                    });
+                    const childs = modal.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button');
+                    childs.forEach( closeable => {
+                        const target = closeable.closest('.modal');
+                        closeable.addEventListener('click', () => closeModal(target));
+                    });
+                }
+            }
+        }
+
+        function addModalEvents(divEQ, context) {
+            addModalEventsTag(divEQ, context, 'eq-button-compare');
+            addModalEventsTag(divEQ, context, 'eq-button-details-autoeq');
+        }
+
+        function printEQ(key, index, pValue) {
+            const context = getContext(key, index, pValue);
+            const html = template(context);
+            const divEQ = document.createElement('div');
+            // populate
+            divEQ.setAttribute('class', 'column is-narrow searchable');
+            divEQ.setAttribute('id', context.id);
+            divEQ.innerHTML = html;
+            // add events
+            addChangeEvents(divEQ, context);
+            addModalEvents(divEQ, context);
+            return divEQ;
+        }
+
+        function display() {
+            const speakerContainer = document.querySelector('[data-num="0"');
+            const fragment1 = new DocumentFragment();
+            sortMetadata2(metadata, { by: 'date' }).forEach(function (key, index) {
+                const speaker = metadata.get(key);
+                if ('eqs' in speaker && 'default_eq' in speaker) {
+                    fragment1.appendChild(printEQ(key, index, speaker));
+                }
+            });
+            speakerContainer.appendChild(fragment1);
+            speakerContainer.addEventListener('keydown', (event) => {
+                const e = event || window.event;
+                if (e.keyCode === 27) { // Escape key
+                    document.querySelectorAll('.modal').forEach( modal => closeModal(modal));
+                }
+            });
+        }
+
+        display();
     })
-    speakerContainer.appendChild(fragment1)
-  }
-
-  display()
-}).catch(err => console.log(err))
+    .catch((err) => console.log(err));

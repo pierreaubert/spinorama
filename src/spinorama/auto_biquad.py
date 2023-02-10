@@ -160,11 +160,40 @@ def find_best_peak(
         (dbGain_range[0], dbGain_range[-1]),
     ]
 
+    # print('Bounds: {}'.format(bounds))
+
     x_init = [
-        (bounds[0][0] + bounds[0][1]) / 2,
-        (bounds[1][0] + bounds[1][1]) / 2,
-        (bounds[2][0] + bounds[2][1]) / 2,
+        (bounds[0][0] + bounds[0][-1]) / 2,
+        (bounds[1][0] + bounds[1][-1]) / 2,
+        (bounds[2][0] + bounds[2][-1]) / 2,
     ]
+
+    v_init = np.array(
+        [
+            np.logspace(math.log10(bounds[0][0]), math.log10(bounds[0][-1]), 5),
+            np.linspace(bounds[1][0], bounds[1][-1], 5),
+            np.linspace(bounds[2][0], bounds[2][-1], 5),
+        ]
+    ).T
+
+    # print(v_init)
+
+    z_init = [
+        [v_init[i][0], v_init[j][1], v_init[k][2]]
+        for i in range(0, len(v_init))
+        for j in range(0, len(v_init))
+        for k in range(0, len(v_init))
+    ]
+
+    # z_init.append([1000, 1, -3])
+    # print(z_init)
+
+    # grid_search = sorted(
+    #     [(opt_peq(z),z) for z in z_init],
+    #     key=lambda x: x[0])
+    # for g in grid_search:
+    #     print("{:3.3f} {:.0f}Hz {:.2f}Q {:.2f}dB".format(g[0], g[1][0], g[1][1], g[1][2]))
+    # print('grid search top 2: {}'.format(grid_search[0:2]))
 
     logger.debug(
         "range is [{}, {}], [{}, {}], [{}, {}]".format(
@@ -187,13 +216,18 @@ def find_best_peak(
     }
     try:
         # res = opt.dual_annealing(
-        #   opt_peq,
-        #   bounds,
-        #   visit=2.9,
-        #   maxfun=optim_config["maxiter"],
-        #   initial_temp=10000,
-        #   no_local_search=True,
+        #    opt_peq,
+        #    bounds,
+        #    visit=2.9,
+        #    maxfun=optim_config["maxiter"],
+        #    initial_temp=10000,
+        #    no_local_search=True,
         # )
+
+        def display(xk, convergence):
+            # print(xk, convergence)
+            pass
+
         res = opt.differential_evolution(
             opt_peq,
             bounds,
@@ -201,10 +235,17 @@ def find_best_peak(
             # updating='deferred',
             # mutation=(0.5, 1.5),
             # recombination=1.9,
+            # strategy='best2bin',
+            # init='sobol',
+            init=z_init,
+            # x0 = x_init,
+            # popsize=175,
             maxiter=optim_config["maxiter"],
+            # disp=True,
             atol=0.01,
-            polish=False,
-            integrality=[True, False, False],
+            # polish=True,
+            integrality=[False, False, False],
+            # callback=display,
         )
         logger.info(
             "          optim loss {:2.2f} in {} iter type PK at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(

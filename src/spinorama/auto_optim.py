@@ -102,14 +102,7 @@ def optim_compute_auto_target(
         window_size = optim_config.get("smooth_window_size")
         order = optim_config.get("smooth_order")
         smoothed = [savitzky_golay(d, window_size, order) for d in diff]
-        # logger.debug(smoothed)
         diff = smoothed
-    # TODO what's that for?
-    # avg = 0.0
-    # if "curve_names" in optim_config.keys():
-    #    for i, _ in enumerate(optim_config["curve_names"]):
-    #        avg = np.mean(diff[i])
-    #        diff[i] -= avg
     delta = [diff[i] + peq_freq for i, _ in enumerate(target)]
     return delta
 
@@ -171,29 +164,38 @@ def optim_greedy(
         # we are optimizing above target_min_hz on anechoic data
         current_auto_target = optim_compute_auto_target(freq, auto_target, auto_target_interp, auto_peq, optim_config)
 
-        if optim_iter == 0 and optim_config["full_biquad_optim"] is True:
-            # see if a LP can help get some flatness of bass
-            init_freq_range = [optim_config["target_min_freq"] / 2, 16000]  # optim_config["target_min_freq"] * 2]
-            init_dbGain_range = [-3, -2, -1, 0, 1, 2, 3]
-            init_Q_range = [0.5, 1, 2, 3]
-            biquad_range = [0, 1, 5, 6]  # LP, HP, LS, HS
-        else:
-            # greedy strategy: look for lowest & highest peak
-            if optim_iter == 0:
+        sign = None
+        init_freq = None
+        init_freq_range = None
+        init_dbGain_range = None
+        biquad_range = None
+        if optim_iter == 0:
+            if optim_config["full_biquad_optim"] is True:
+                # see if a LP can help get some flatness of bass
+                init_freq_range = [optim_config["target_min_freq"] / 2, 16000]  # optim_config["target_min_freq"] * 2]
+                init_dbGain_range = [-3, -2, -1, 0, 1, 2, 3]
+                init_Q_range = [0.5, 1, 2, 3]
+                biquad_range = [0, 1, 3, 5, 6]  # LP, HP, LS, HS
+            else:
+                # greedy strategy: look for lowest & highest peak
                 init_freq_range = [optim_config["target_min_freq"] / 2, optim_config["target_min_freq"] * 2]
                 init_dbGain_range = [-3, -2, -1, 0, 1, 2, 3]
                 init_Q_range = [0.5, 1, 2, 3]
                 biquad_range = [3]  # PK
-            else:
-                sign, init_freq, init_freq_range = propose_range_freq(freq, current_auto_target[0], optim_config, optim_iter)
-                init_dbGain_range = propose_range_dbGain(freq, current_auto_target[0], sign, init_freq, optim_config)
-                init_Q_range = propose_range_Q(optim_config)
-                biquad_range = propose_range_biquad(optim_config)
+        else:
+            min_freq = optim_config["target_min_freq"]
+            sign, init_freq, init_freq_range = propose_range_freq(freq, current_auto_target[0], optim_config, auto_peq)
+            # don't use the pre computed range
+            # init_freq_range = [optim_config["target_min_freq"], optim_config["target_max_freq"]]
+            init_dbGain_range = propose_range_dbGain(freq, current_auto_target[0], sign, init_freq, optim_config)
+            init_Q_range = propose_range_Q(optim_config)
+            biquad_range = propose_range_biquad(optim_config)
+            biquad_range = [3]
 
         # print(
-        #     "sign {} init_freq {} init_freq_range {} init_q_range {} biquad_range {}".format(
-        #         sign, init_freq, init_freq_range, init_Q_range, biquad_range
-        #     )
+        #    "sign {} init_freq {} init_freq_range {} init_q_range {} biquad_range {}".format(
+        #        sign, init_freq, init_freq_range, init_Q_range, biquad_range
+        #    )
         # )
 
         if optim_config["full_biquad_optim"] is True:
@@ -258,13 +260,16 @@ def optim_greedy(
         results.append((nb_iter + 1, best_loss, -pref_score))
     if use_score:
         idx_max = np.argmax((np.array(results).T)[-1])
-        results = results[0 : idx_max + 1]
-        auto_peq = auto_peq[0 : idx_max + 1]
-    logger.info(
-        "OPTIM END {}: best loss {:2.2f} final score {:2.2f} with {:2d} PEQs".format(
-            speaker_name, results[-1][1], results[-1][2], len(auto_peq)
+        results = results[0:idx_max]
+        auto_peq = auto_peq[0:idx_max]
+    if len(results) > 0:
+        logger.info(
+            "OPTIM END {}: best loss {:2.2f} final score {:2.2f} with {:2d} PEQs".format(
+                speaker_name, results[-1][1], results[-1][2], len(auto_peq)
+            )
         )
-    )
+    else:
+        logger.info("OPTIM END {}: 0 PEQ".format(speaker_name))
     return results, auto_peq
 
 

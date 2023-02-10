@@ -1,0 +1,10 @@
+EQ for March Audio Sointuva computed from ErinsAudioCorner data
+Preference Score 6.98 with EQ 7.18
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:06:19
+
+Preamp: -3.2 dB
+
+Filter  1: ON LS Fc    57 Hz Gain +3.00 dB
+Filter  2: ON PK Fc   110 Hz Gain -0.83 dB Q 1.25
+Filter  3: ON PK Fc  8360 Hz Gain -0.65 dB Q 1.59

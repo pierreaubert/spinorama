@@ -426,9 +426,13 @@ def compute_statistics(df, measurement, min_freq, max_freq, hist_min_freq, hist_
     #
     hist_minmax = df.loc[(df.Freq > hist_min_freq) & (df.Freq < hist_max_freq)]
     hist_spl = hist_minmax[measurement]
-    hist_dist = [dist_point_line(math.log10(f), db, slope, -1, intercept) for f, db in zip(hist_minmax.Freq, hist_spl)]
+    # hist_dist = [dist_point_line(math.log10(f), db, slope, -1, intercept) for f, db in zip(hist_minmax.Freq, hist_spl)]
+    hist_dist = [abs(db - (slope * math.log10(f) + intercept)) for f, db in zip(hist_minmax.Freq, hist_spl)]
+    # for i, (f, db) in enumerate(zip(hist_minmax.Freq, hist_spl)):
+    #    print('{:4f}hz {:0.2f} db {:2.1f} dist={:0.2f}'.format(f, math.log10(f), db, hist_dist[i]))
     # build an histogram to see where the deviation is above each treshhole
-    hist = np.histogram(hist_dist, bins=[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4.0, 4.5, 5.0], density=False)
+    # hist = np.histogram(hist_dist, bins=[0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3], density=False)
+    hist = np.histogram(hist_dist, bins=[0, 0.5, 1, 1.5, 2, 2.5, 3, 5], density=False)
     # 3 = math.log10(20000)-math.log10(20)
     # 11 octaves between 20Hz and 20kHz
     db_per_octave = slope * 3 / 11

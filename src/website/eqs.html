@@ -3,59 +3,308 @@
   <head>
     <%include file="head.html"/>
   </head>
-<body>
+  <body>
+    <%include file="nav_menu.html"/> <%namespace name="util"
+    module="website.utils" import="*"/>
 
-<%include file="nav_menu.html"/>
+    <script>
+      Handlebars.registerHelper("isNotEmpty", function (value) {
+        return Object.keys(value).length > 0;
+      });
+    </script>
 
-<%namespace name="util" module="website.utils" import="*"/>
+    <script id="templateEQ" type="text/x-handlebars-template">
+      <table class="table">
+        <tr>
+          <th>
+            {{brand}}
+            {{model}}
+          </th>
+        </tr>
+        {{#if (isNotEmpty othereq)}}
+        <tr>
+          <td class="has-text-centered">
+            <nav class="level">
+              <div class="level-left">
+                <div class="control">
+                  <div class="select is-small">
+                    <select id="eq-select-{{id}}">
+                      <option value="{{autoeq.key}}">{{autoeq.name}}</option>
+                      {{#each othereq}}
+                      <option value="{{key}}">{{name}}</option>
+                      {{/each}}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="level-item">
+                <button
+                  class="button is-info is-light is-small"
+                  id="eq-button-compare-{{id}}"
+                  arial-label="compare EQs visually"
+                  data-target="eq-modal-compare-{{id}}"
+                  >
+                  <span class="icon">
+                    <i class="fa-solid fa-image"></i>
+                  </span>
+                </button>
+              </div>
+            </nav>
+          </td>
+        </tr>
+        {{/if}}
+        <tr id="eq-{{id}}-autoeq">
+          <td>
+            <table class="table is-striped">
+              <thead>
+                <tr>
+                  <td colspan="4" class="has-text-centered">
+                    Set preamp gain to: <b>{{autoeq.preamp_gain}}dB</b>.
+                  </td>
+                </tr>
+                <tr>
+                  <th>Type</th>
+                  <th>Freq</th>
+                  <th>Q</th>
+                  <th>Gain</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each autoeq.peq}}
+                <tr>
+                    <td>{{this.type}}</td>
+                    <td>{{this.freq}}</td>
+                    <td>{{this.Q}}</td>
+                    <td>{{this.dbGain}}</td>
+                  </tr>
+                {{/each}}
+                <tr>
+                  <td colspan="4" class="has-text-centered">
+                    <button
+                      class="button is-info is-light"
+                      id="eq-button-details-autoeq-{{id}}"
+                      aria-label="details on eq {{id}}"
+                      data-target="eq-modal-details-autoeq-{{id}}">
+                      Details
+                    </button>
+                    <a class="button is-link is-light" href="{{autoeq.url}}">Download</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        {{#if (isNotEmpty othereq)}}
+        {{#each othereq}}
+        <tr class="hidden" id="eq-{{../id}}-{{this.key}}">
+          <td>
+            <table class="table is-striped">
+              <thead>
+                <tr>
+                  <td colspan="4" class="has-text-centered">
+                    Set preamp gain to: <b>{{this.preamp_gain}}dB</b>.
+                  </td>
+                </tr>
+                <tr>
+                  <th>Type</th>
+                  <th>Freq</th>
+                  <th>Q</th>
+                  <th>Gain</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each this.peq}}
+                <tr>
+                    <td>{{this.type}}</td>
+                    <td>{{this.freq}}</td>
+                    <td>{{this.Q}}</td>
+                    <td>{{this.dbGain}}</td>
+                  </tr>
+                {{/each}}
+                <tr>
+                  <td class="has-text-centered" colspan="4">
+                    <a class="button is-link is-light" href="{{this.url}}">Download</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        {{/each}}
+        {{/if}}
+      </table>
+      {{#if (isNotEmpty othereq)}}
+      <div id="eq-modal-compare-{{id}}" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">{{brand}} {{model}}</p>
+            <button class="delete" aria-label="close"></button>
+          </header>
+          <section class="modal-card-body">
+             <picture class="image">
+               <source srcset="{{img_eq_compare.webp}}" type="image/webp"></source>
+               <img src="{{img_eq_compare.jpg}}" alt="{{brand}} {{model}}"/>
+             </picture>
+          </section>
+        </div>
+      </div>
+      {{/if}}
+      <div id="eq-modal-details-autoeq-{{id}}" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">{{brand}} {{model}}</p>
+            <button class="delete" aria-label="close"></button>
+          </header>
+          <section class="modal-card-body">
+             <!-- EQ -->
+             <div class="box">
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_auto_eq.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_auto_eq.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Automatic EQ
+               </div>
+             </div>
+             <div class="box">
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_eq_full.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_eq_full.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Target <i>v.s.</i> EQ
+               </div>
+             </div>
+             <!-- SPIN -->
+             <div class="box">
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_spin_noeq.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_spin_noeq.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Spinorama without EQ
+               </div>
+             </div>
+             <div class="box">
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_spin_auto.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_spin_auto.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Spinorama with EQ
+               </div>
+             </div>
+             <!-- ON -->
+             <div class="box">
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_on_noeq.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_on_noeq.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 On Axis without EQ
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_on_auto.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_on_auto.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 On Axis with EQ
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_on_hist_fullrange.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_on_hist_fullrange.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Histogram of deviation from flat (full range)
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_on_hist_midrange.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_on_hist_midrange.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Histogram of deviation from flat (mid range)
+               </div>
+             </div>
+             <!-- LW -->
+             <div class="box">
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_lw_noeq.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_lw_noeq.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Listening Window without EQ
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_lw_auto.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_lw_auto.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Listening Window with EQ
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_lw_hist_fullrange.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_lw_hist_fullrange.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Histogram of deviation from flat (full range)
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_lw_hist_midrange.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_lw_hist_midrange.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Histogram of deviation from flat (mid range)
+               </div>
+             </div>
+             <!-- PIR -->
+             <div class="box">
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_pir_noeq.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_pir_noeq.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Estimated In-Room Response (PIR) without EQ
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_pir_auto.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_pir_auto.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Estimated In-Room Response (PIR) with EQ
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_pir_hist_fullrange.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_pir_hist_fullrange.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Histogram of deviation from flat (full range)
+               </div>
+               <picture class="image">
+                 <source srcset="{{img_eq_details}}_pir_hist_midrange.webp" type="image/webp"></source>
+                 <img src="{{img_eq_details}}_pir_hist_midrange.jpg" alt="{{brand}} {{model}}"/>
+               </picture>
+               <div class="title is-4">
+                 Histogram of deviation from flat (mid range)
+               </div>
+             </div>
+          </section>
+        </div>
+      </div>
+    </script>
 
-<script id="eqsht" type="text/x-handlebars-template">
-  <table class="table is-striped">
-    <tr>
-      <th>
-        {{brand}} {{model}} (<a href="{{autoeq}}">automaticEQ</a>)
-      </th>
-    </tr>
-    <tr>
-      <td>
-        Set preamp gain to: {{preamp_gain}} dB.
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <table class="table is-striped">
-	  <thead>
-	    <tr>
-	      <th>Type</th>
-	      <th>Freq</th>
-	      <th>Q</th>
-	      <th>Gain</th>
-	    </tr>
-	  </thead>
-	  <tbody>
-            {{#each peq}}
-	    <tr>
-	      <td>{{this.type}}</td>
-	      <td>{{this.freq}}</td>
-	      <td>{{this.Q}}</td>
-	      <td>{{this.dbGain}}</td>
-	    </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      </td>
-    </tr>
-  </table>
-</script>
-
-<div class="section">
-  <!-- Speakers -->
-  <div class="searchresults">
-    <div class="columns is-multiline is-1" id="eqs" data-num="0">
-      <script type="module" src='./assets/eqs.js'></script>
+    <div class="section">
+      <!-- Speakers -->
+      <div class="searchresults">
+        <div class="columns is-multiline is-mobile is-centered is-variable" id="speakers" data-num="0">
+          <script type="module" src="./assets/eqs.js"></script>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<%include file="search.html"/>
-<%include file="footer.html"/>
+    <%include file="search.html"/>
+    <%include file="footer.html"/>
+
+  </body>
+</html>

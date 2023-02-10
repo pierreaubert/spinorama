@@ -5,23 +5,22 @@
     <%include file="head_vega.html"/>
     <script type="module" src="${site}/assets/graph.js"></script>
   </head>
-<body>
-<%include file="nav_menu.html"/>
+  <body>
+    <%include file="nav_menu.html"/>
+    <%! def space2url(text): return text.replace(' ', '%20') %>
 
-<%!
-    def space2url(text):
-        return text.replace(' ', '%20')
-%>
+    <div id="visGraph" class="graph"></div>
 
-<div id="visGraph" class="graph"></div>
+    <script type="module">
+      import { downloadZip } from "${site}/assets/downloadzip.js";
+      import { displayGraph } from "${site}/assets/graph.js";
+      const spec = downloadZip("${graph | space2url}.json.zip").then(function (
+        spec
+      ) {
+        displayGraph(visGraph, JSON.parse(spec));
+      });
+    </script>
 
-<script type="module">
-  import { downloadZip } from '${site}/assets/downloadzip.js'
-  import { displayGraph } from '${site}/assets/graph.js'
-  const spec = downloadZip("${graph | space2url}.json.zip").then(
-    function(spec) {
-      displayGraph(visGraph, JSON.parse(spec));
-  });
-</script>
-
-<%include file="footer.html"/>
+    <%include file="footer.html"/>
+  </body>
+</html>

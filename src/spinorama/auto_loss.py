@@ -45,7 +45,7 @@ def l2_loss(local_target: Vector, freq: Vector, peq: Peq) -> float:
 def leastsquare_loss(freq: Vector, local_target: List[Vector], peq: Peq, iterations: int) -> float:
     # sum of L2 norms if we have multiple targets
     l = [l2_loss(lt, freq, peq) for lt in local_target]
-    return np.linalg.norm(l)
+    return math.sqrt(np.square(l).sum())
 
 
 def flat_loss(freq: Vector, local_target: List[Vector], peq: Peq, iterations: int, weigths: Vector) -> float:

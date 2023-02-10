@@ -3,6 +3,12 @@ import logging
 import numpy as np
 import pandas as pd
 
+from .constant_paths import (
+    MIDRANGE_MIN_FREQ,
+    MIDRANGE_MAX_FREQ,
+    SENSITIVITY_MIN_FREQ,
+    SENSITIVITY_MAX_FREQ,
+)
 from .compute_cea2034 import (
     early_reflections,
     vertical_reflections,
@@ -84,17 +90,19 @@ def norm_spl(spl):
     return df
 
 
-def filter_graphs(speaker_name, h_spl, v_spl, mean_min=300, mean_max=3000):
+def filter_graphs(speaker_name, h_spl, v_spl, mean_min=MIDRANGE_MIN_FREQ, mean_max=MIDRANGE_MAX_FREQ):
     dfs = {}
     # add H and V SPL graphs
     mean_min_max = None
-    mean_100_1000 = None
+    mean_sensitivity = None
     sv_spl = None
     sh_spl = None
 
     if h_spl is not None:
         mean_min_max = np.mean(h_spl.loc[(h_spl.Freq > mean_min) & (h_spl.Freq < mean_max)]["On Axis"])
-        mean_100_1000 = np.mean(h_spl.loc[(h_spl.Freq > 100) & (h_spl.Freq < 1000)]["On Axis"])
+        mean_sensitivity = np.mean(
+            h_spl.loc[(h_spl.Freq > SENSITIVITY_MIN_FREQ) & (h_spl.Freq < SENSITIVITY_MAX_FREQ)]["On Axis"]
+        )
         sh_spl = shift_spl(h_spl, mean_min_max)
         dfs["SPL Horizontal"] = graph_melt(sh_spl)
         dfs["SPL Horizontal_unmelted"] = sh_spl
@@ -105,8 +113,10 @@ def filter_graphs(speaker_name, h_spl, v_spl, mean_min=300, mean_max=3000):
     if v_spl is not None:
         if mean_min_max is None:
             mean_min_max = np.mean(v_spl.loc[(v_spl.Freq > mean_min) & (v_spl.Freq < mean_max)]["On Axis"])
-        if mean_100_1000 is None:
-            mean_100_1000 = np.mean(v_spl.loc[(v_spl.Freq > 100) & (v_spl.Freq < 1000)]["On Axis"])
+        if mean_sensitivity is None:
+            mean_sensitivity = np.mean(
+                v_spl.loc[(v_spl.Freq > SENSITIVITY_MIN_FREQ) & (v_spl.Freq < SENSITIVITY_MAX_FREQ)]["On Axis"]
+            )
         sv_spl = shift_spl(v_spl, mean_min_max)
         dfs["SPL Vertical"] = graph_melt(sv_spl)
         dfs["SPL Vertical_unmelted"] = sv_spl
@@ -115,9 +125,9 @@ def filter_graphs(speaker_name, h_spl, v_spl, mean_min=300, mean_max=3000):
         logger.info("v_spl is None for speaker {}".format(speaker_name))
 
     # horrible hack for EQ speakers which are already normalized
-    if mean_100_1000 is not None and mean_100_1000 > 20:
+    if mean_sensitivity is not None and mean_sensitivity > 20:
         # print('{} sensitivity {}'.format(speaker_name, mean))
-        dfs["sensitivity"] = mean_100_1000
+        dfs["sensitivity"] = mean_sensitivity
 
     # add computed graphs
     table = [
@@ -167,17 +177,19 @@ def filter_graphs(speaker_name, h_spl, v_spl, mean_min=300, mean_max=3000):
     return dfs
 
 
-def filter_graphs_eq(speaker_name, h_spl, v_spl, h_eq_spl, v_eq_spl, mean_min=300, mean_max=3000):
+def filter_graphs_eq(speaker_name, h_spl, v_spl, h_eq_spl, v_eq_spl, mean_min=MIDRANGE_MIN_FREQ, mean_max=MIDRANGE_MAX_FREQ):
     dfs = {}
     # add H and V SPL graphs
     mean_min_max = None
-    mean_100_1000 = None
+    mean_sensitivity = None
     sv_spl = None
     sh_spl = None
 
     if h_spl is not None:
         mean_min_max = np.mean(h_spl.loc[(h_spl.Freq > mean_min) & (h_spl.Freq < mean_max)]["On Axis"])
-        mean_100_1000 = np.mean(h_spl.loc[(h_spl.Freq > 100) & (h_spl.Freq < 1000)]["On Axis"])
+        mean_sensitivity = np.mean(
+            h_spl.loc[(h_spl.Freq > SENSITIVITY_MIN_FREQ) & (h_spl.Freq < SENSITIVITY_MAX_FREQ)]["On Axis"]
+        )
         sh_spl = shift_spl(h_eq_spl, mean_min_max)
         dfs["SPL Horizontal"] = graph_melt(sh_spl)
         dfs["SPL Horizontal_unmelted"] = sh_spl
@@ -188,8 +200,10 @@ def filter_graphs_eq(speaker_name, h_spl, v_spl, h_eq_spl, v_eq_spl, mean_min=30
     if v_spl is not None:
         if mean_min_max is None:
             mean_min_max = np.mean(v_spl.loc[(v_spl.Freq > mean_min) & (v_spl.Freq < mean_max)]["On Axis"])
-        if mean_100_1000 is None:
-            mean_100_1000 = np.mean(v_spl.loc[(v_spl.Freq > 100) & (v_spl.Freq < 1000)]["On Axis"])
+        if mean_sensitivity is None:
+            mean_sensitivity = np.mean(
+                v_spl.loc[(v_spl.Freq > SENSITIVITY_MIN_FREQ) & (v_spl.Freq < SENSITIVITY_MAX_FREQ)]["On Axis"]
+            )
         sv_spl = shift_spl(v_eq_spl, mean_min_max)
         dfs["SPL Vertical"] = graph_melt(sv_spl)
         dfs["SPL Vertical_unmelted"] = sv_spl
@@ -198,9 +212,9 @@ def filter_graphs_eq(speaker_name, h_spl, v_spl, h_eq_spl, v_eq_spl, mean_min=30
         logger.info("v_spl is None for speaker {}".format(speaker_name))
 
     # horrible hack for EQ speakers which are already normalized
-    if mean_100_1000 is not None and mean_100_1000 > 20:
+    if mean_sensitivity is not None and mean_sensitivity > 20:
         # print('{} sensitivity {}'.format(speaker_name, mean))
-        dfs["sensitivity"] = mean_100_1000
+        dfs["sensitivity"] = mean_sensitivity
 
     # add computed graphs
     table = [
@@ -253,8 +267,8 @@ def filter_graphs_eq(speaker_name, h_spl, v_spl, h_eq_spl, v_eq_spl, mean_min=30
 def filter_graphs_partial(df):
     dfs = {}
     # normalize first
-    mean_300_3000 = None
-    mean_100_1000 = None
+    mean_midrange = None
+    mean_sensitivity = None
     on = None
     if "CEA2034" in df:
         on = df["CEA2034"]
@@ -269,19 +283,23 @@ def filter_graphs_partial(df):
         for curve in ("On Axis", "Listening Window"):
             if curve not in set(on.Measurements):
                 continue
-            mean_300_3000 = np.mean(on.loc[(on.Freq > 300) & (on.Freq < 3000) & (on.Measurements == curve)].dB)
-            mean_100_1000 = np.mean(on.loc[(on.Freq > 100) & (on.Freq < 1000) & (on.Measurements == curve)].dB)
-    if mean_300_3000 is not None:
-        logger.debug("DEBUG: mean {}".format(mean_300_3000))
-        if mean_100_1000 > 20:
-            dfs["sensitivity"] = mean_100_1000
+            mean_midrange = np.mean(
+                on.loc[(on.Freq > MIDRANGE_MIN_FREQ) & (on.Freq < MIDRANGE_MAX_FREQ) & (on.Measurements == curve)].dB
+            )
+            mean_sensitivity = np.mean(
+                on.loc[(on.Freq > SENSITIVITY_MIN_FREQ) & (on.Freq < SENSITIVITY_MAX_FREQ) & (on.Measurements == curve)].dB
+            )
+    if mean_midrange is not None:
+        logger.debug("DEBUG: mean {}".format(mean_midrange))
+        if mean_sensitivity > 20:
+            dfs["sensitivity"] = mean_sensitivity
         for k in df.keys():
             if k == "CEA2034":
                 logger.debug("DEBUG {} pre shift cols={}".format(k, set(df[k].Measurements)))
-                dfs[k] = shift_spl_melted_cea2034(df[k], mean_300_3000)
+                dfs[k] = shift_spl_melted_cea2034(df[k], mean_midrange)
                 logger.debug("DEBUG {} post shift cols={}".format(k, set(dfs[k].Measurements)))
             else:
-                dfs[k] = shift_spl_melted(df[k], mean_300_3000)
+                dfs[k] = shift_spl_melted(df[k], mean_midrange)
     else:
         for k in df.keys():
             dfs[k] = df[k]
@@ -295,7 +313,7 @@ def filter_graphs_partial(df):
     for k in dfs.keys():
         if k != "sensitivity":
             logger.debug(dfs[k].head())
-    logger.debug("filter in: keys={} out: mean={} keys={}".format(df.keys(), mean_300_3000, dfs.keys()))
+    logger.debug("filter in: keys={} out: mean={} keys={}".format(df.keys(), mean_midrange, dfs.keys()))
     logger.debug("DEBUG END of filter_graphs_partial")
     return dfs
 

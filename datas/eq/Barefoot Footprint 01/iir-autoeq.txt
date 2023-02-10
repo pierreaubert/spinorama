@@ -1,16 +1,16 @@
 EQ for Barefoot Footprint 01 computed from ASR data
-Preference Score 6.0 with EQ 7.0
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-03-23:21:54
+Preference Score 6.00 with EQ 6.77
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-02-09-10:44:06
 
-Preamp: -1.4 dB
+Preamp: -3.0 dB
 
-Filter  1: ON PK Fc   111 Hz Gain -3.13 dB Q 0.89
-Filter  2: ON PK Fc  1810 Hz Gain -2.96 dB Q 0.75
-Filter  3: ON PK Fc   369 Hz Gain +1.67 dB Q 2.83
-Filter  4: ON PK Fc 15650 Hz Gain +1.19 dB Q 0.36
-Filter  5: ON PK Fc  2911 Hz Gain -1.16 dB Q 2.96
-Filter  6: ON PK Fc  1947 Hz Gain +1.04 dB Q 2.98
-Filter  7: ON PK Fc   673 Hz Gain -1.04 dB Q 2.85
-Filter  8: ON PK Fc   180 Hz Gain -0.58 dB Q 2.33
-Filter  9: ON PK Fc  1441 Hz Gain -0.94 dB Q 2.87
+Filter  1: ON LS Fc  4008 Hz Gain -1.05 dB
+Filter  2: ON PK Fc    97 Hz Gain -1.72 dB Q 1.66
+Filter  3: ON PK Fc   373 Hz Gain +2.79 dB Q 2.32
+Filter  4: ON PK Fc  1438 Hz Gain -1.82 dB Q 2.83
+Filter  5: ON PK Fc 14114 Hz Gain +2.14 dB Q 0.45
+Filter  6: ON PK Fc   161 Hz Gain -0.97 dB Q 2.85
+Filter  7: ON PK Fc   674 Hz Gain -0.51 dB Q 2.76
+Filter  8: ON PK Fc  2736 Hz Gain -1.63 dB Q 2.98
+Filter  9: ON PK Fc 14517 Hz Gain -0.69 dB Q 2.92

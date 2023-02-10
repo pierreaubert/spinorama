@@ -114,7 +114,11 @@ def parse_graphs_speaker_gllHVtxt(speaker_path, speaker_brand, speaker_name, ver
             return None, None
 
     tmp_dirname = "{}/tmp".format(dirname)
-    with zipfile.ZipFile(zipname, "r") as gll:
-        gll.extractall(tmp_dirname)
+    try:
+        with zipfile.ZipFile(zipname, "r") as gll:
+            gll.extractall(tmp_dirname)
+            return parse_graph_gllHVtxt(dirname)
+    except zipfile.BadZipFile as bf:
+        logger.error("{} is a bad zipfile".format(zipname))
 
-    return parse_graph_gllHVtxt(dirname)
+    return None, None

@@ -78,6 +78,16 @@ if [ $status -ne 0 ]; then
 else
     echo "OK after generate radar!"
 fi
+# generate eq_compare
+# rm -f docs/speakers/*/eq_compare*
+command=$(./generate_eq_compare.py)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate EQ compare!"
+    exit 1;
+else
+    echo "OK after generate EQ compare!"
+fi
 # generate status
 rm -f docs/stats/*.json
 command=$(./generate_stats.py)
@@ -107,9 +117,7 @@ else
     echo "OK after checking HTML!"
 fi
 # copy
-# TARGET=$HOME/src/pierreaubert.github.io/spinorama
-TARGET=/var/www/html/spinorama-dev
-command=$(./update_sync.sh)
+command=$(./update_dev.sh)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO Update $TARGET!"
@@ -117,6 +125,4 @@ if [ $status -ne 0 ]; then
 else
     echo "OK Update $TARGET!"
 fi
- evaluate what's new and needs to be changed
-# cd ${TARGET} && git status
 exit 0;

@@ -15,10 +15,10 @@
     "curve_names": [
         "Listening Window"
     ],
-    "target_min_freq": 66.6504,
+    "target_min_freq": 74.0,
     "target_max_freq": 16000,
     "slope_on_axis": 0,
-    "slope_listening_window": -1.5,
+    "slope_listening_window": -0.5,
     "slope_early_reflections": -4,
     "slope_estimated_inroom": -6.5,
     "slope_sound_power": -9,

@@ -111,9 +111,11 @@ except ModuleNotFoundError:
 from datas.metadata import speakers_info as metadata
 from datas.grapheq import vendor_info as grapheq_info
 
-from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
+from spinorama.constant_paths import CPATH_DOCS_SPEAKERS, MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+from spinorama.pict import write_multiformat
 from spinorama.load_rewseq import parse_eq_iir_rews
+from spinorama.compute_estimates import estimates_spin
 from spinorama.compute_misc import compute_statistics
 from spinorama.filter_peq import peq_format_apo
 from spinorama.filter_scores import (
@@ -128,23 +130,57 @@ from spinorama.auto_optim import optim_multi_steps
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
-VERSION = "0.18"
+VERSION = "0.19"
 
 
 def get3db(spin, db_point):
-    onaxis = pd.DataFrame()
-    if "Measurements" in spin.keys():
-        onaxis = spin.loc[spin["Measurements"] == "On Axis"].reset_index(drop=True)
-    else:
-        onaxis = spin.get("On Axis", None)
-    if onaxis is None or onaxis.empty:
-        return None
-    if onaxis.Freq.to_numpy()[0] > 150:
-        return None
+    """Get -3dB point"""
+    est = {}
+    if "CEA2034_unmelted" in spin.keys():
+        est = estimates_spin(spin["CEA2034_unmelted"])
+    elif "CEA2034" in spin.keys() and "Measurements" in spin.keys():
+        est = estimates_spin(spin["CEA2034"])
+    return est.get("ref_3dB", None)
 
-    y_ref = np.mean(onaxis.loc[(onaxis.Freq >= 300) & (onaxis.Freq <= 10000)].dB)
-    y_3 = onaxis.loc[(onaxis.Freq < 150) & (onaxis.dB <= y_ref - db_point)].Freq.max()
-    return y_3
+
+def print_items(aggregated_results):
+    """Print all results of optimisation in a csv file"""
+    v_sn = []
+    v_iter = []
+    v_loss = []
+    v_score = []
+    for speaker, results in aggregated_results.items():
+        for current_result in results:
+            if current_result is not None and len(current_result) > 2:
+                v_sn.append("{}".format(speaker))
+                v_iter.append(current_result[0])
+                v_loss.append(current_result[1])
+                v_score.append(current_result[2])
+    df_results = pd.DataFrame({"speaker_name": v_sn, "iter": v_iter, "loss": v_loss, "score": v_score})
+    df_results.to_csv("results_iter.csv", index=False)
+
+
+def print_scores(aggregated_scores):
+    """Print all scores in a csv file"""
+    s_sn = []
+    s_ref = []
+    s_manual = []
+    s_auto = []
+    for speaker, scores in aggregated_scores.items():
+        if scores is not None and len(scores) > 2:
+            s_sn.append("{}".format(speaker))
+            s_ref.append(scores[0])
+            s_manual.append(scores[1])
+            s_auto.append(scores[2])
+    df_scores = pd.DataFrame(
+        {
+            "speaker_name": s_sn,
+            "reference": s_ref,
+            "manual": s_manual,
+            "auto": s_auto,
+        }
+    )
+    df_scores.to_csv("results_scores.csv", index=False)
 
 
 def optim_find_peq(
@@ -153,6 +189,7 @@ def optim_find_peq(
     optim_config,
     use_score,
 ):
+    """Find the best EQ for this speaker"""
     # shortcut
     curves = optim_config["curve_names"]
 
@@ -182,7 +219,17 @@ def optim_find_peq(
     if use_score:
         auto_spin, _, auto_score = scores_apply_filter(df_speaker, auto_peq)
         unmelted_auto_spin = auto_spin.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
-        auto_slope_lw, _, _ = compute_statistics(unmelted_auto_spin, "Listening Window", 250, 10000, 300, 5000)
+        try:
+            auto_slope_lw, _, _ = compute_statistics(
+                unmelted_auto_spin,
+                "Listening Window",
+                optim_config["target_min_freq"],
+                optim_config["target_max_freq"],
+                MIDRANGE_MIN_FREQ,
+                MIDRANGE_MAX_FREQ,
+            )
+        except ValueError as value_error:
+            print("error:{}  {}".format(current_speaker_name, value_error))
 
     return auto_score, auto_results, auto_peq, auto_slope_lw
 
@@ -190,8 +237,9 @@ def optim_find_peq(
 def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
     # do we use -3dB point for target?
     if optim_config["target_min_freq"] is None:
-        spl = get3db(df_speaker, 6.0)
+        spl = get3db(df_speaker, 3.0)
         if spl is None:
+            print("error: cannot get -3dB point for {}".format(current_speaker_name))
             return None, None, None, None
         optim_config["target_min_freq"] = spl
 
@@ -199,6 +247,7 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
 
     # create a few options for controling the optimiser
     configs = []
+    # add a default config
     configs.append(
         {
             "curve_names": ["Listening Window"],
@@ -208,33 +257,46 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
             "smooth_order": 3,
         }
     )
-    configs.append(
-        {
-            "curve_names": ["Listening Window"],
-            "full_biquad_optim": True,
-            "smooth_measurements": True,
-            "smooth_window_size": 21,
-            "smooth_order": 3,
-        }
-    )
-    configs.append(
-        {
-            "curve_names": ["Estimated In-Room Response"],
-            "full_biquad_optim": False,
-            "smooth_measurements": True,
-            "smooth_window_size": 21,
-            "smooth_order": 3,
-        }
-    )
-    configs.append(
-        {
-            "curve_names": ["Estimated In-Room Response"],
-            "full_biquad_optim": True,
-            "smooth_measurements": True,
-            "smooth_window_size": 21,
-            "smooth_order": 3,
-        }
-    )
+
+    constraint_optim = False
+    if (
+        optim_config["curve_names"] is not None
+        or optim_config["full_biquad_optim"] is not None
+        or optim_config["smooth_measurements"] is not None
+        or optim_config["smooth_window_size"] is not None
+        or optim_config["smooth_order"] is not None
+    ):
+        constraint_optim = True
+
+    # add a few possible configs
+    if constraint_optim is False:
+        configs.append(
+            {
+                "curve_names": ["Listening Window"],
+                "full_biquad_optim": True,
+                "smooth_measurements": True,
+                "smooth_window_size": 21,
+                "smooth_order": 3,
+            }
+        )
+        configs.append(
+            {
+                "curve_names": ["Estimated In-Room Response"],
+                "full_biquad_optim": False,
+                "smooth_measurements": True,
+                "smooth_window_size": 21,
+                "smooth_order": 3,
+            }
+        )
+        configs.append(
+            {
+                "curve_names": ["Estimated In-Room Response"],
+                "full_biquad_optim": True,
+                "smooth_measurements": True,
+                "smooth_window_size": 21,
+                "smooth_order": 3,
+            }
+        )
 
     # run optimiser for each config
     best_i = -1
@@ -243,10 +305,6 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
     for i, config in enumerate(configs):
         current_optim_config = deepcopy(optim_config)
         for k, v in config.items():
-            # do not override if
-            if k == "curve_names" and optim_config[k] is not None:
-                continue
-            # override config
             current_optim_config[k] = v
         # don't compute configs that do not match
         if optim_config["curve_names"] is not None and set(optim_config["curve_names"]) != set(config["curve_names"]):
@@ -255,6 +313,9 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
         auto_score, auto_results, auto_peq, auto_slope_lw = optim_find_peq(
             current_speaker_name, df_speaker, current_optim_config, use_score
         )
+        if auto_peq is None or len(auto_peq) == 0:
+            print("optim_find_peq failed for {} with {}".format(current_speaker_name, current_optim_config))
+            continue
         if "CEA2034_unmelted" in df_speaker.keys() and auto_slope_lw is not None:
             for loop in range(1, 6):
                 # slope 20Hz-20kHz
@@ -400,7 +461,7 @@ def optim_save_peq(
 
     comments += [
         f"Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v{VERSION}",
-        "Dated: {}".format(datetime.today().strftime("%Y-%m-%d-%H:%M:%S")),
+        f"Dated: {datetime.today().strftime('%Y-%m-%d-%H:%M:%S')}",
         "",
     ]
     eq_apo = peq_format_apo("\n".join(comments), auto_peq)
@@ -470,10 +531,14 @@ def optim_save_peq(
             if "Vendors-" in origin:
                 origin = origin[8:]
             graph_filename = "{}/{}/{}/filters_{}".format(CPATH_DOCS_SPEAKERS, current_speaker_name, origin, name)
+            if optim_config["use_grapheq"]:
+                grapheq_name = optim_config["grapheq_name"]
+                short_name = grapheq_name.lower().replace(" ", "-")
+                graph_filename += short_name
             if smoke_test:
                 graph_filename += "_smoketest"
             graph_filename += ".png"
-            graph.write_image(graph_filename)
+            write_multiformat(graph, graph_filename, True)
 
     # print a compact table of results
     if verbose and use_score:
@@ -500,6 +565,7 @@ def optim_save_peq(
 
 
 def queue_speakers(df_all_speakers, optim_config, speaker_name):
+    """Add all speakers to the queue"""
     ray_ids = {}
     for current_speaker_name in df_all_speakers.keys():
         if speaker_name is not None and current_speaker_name != speaker_name:
@@ -545,6 +611,7 @@ def queue_speakers(df_all_speakers, optim_config, speaker_name):
 
 
 def compute_peqs(ray_ids):
+    """Process EQ when it is available from the queue"""
     done_ids = set()
     aggregated_results = {}
     aggregated_scores = {}
@@ -570,40 +637,8 @@ def compute_peqs(ray_ids):
 
         logger.info("State: {0} ready IDs {1} remainings IDs ".format(len(ready_ids), len(remaining_ids)))
 
-    v_sn = []
-    v_iter = []
-    v_loss = []
-    v_score = []
-    for speaker, results in aggregated_results.items():
-        for current_result in results:
-            if current_result is not None and len(current_result) > 2:
-                v_sn.append("{}".format(speaker))
-                v_iter.append(current_result[0])
-                v_loss.append(current_result[1])
-                v_score.append(current_result[2])
-    df_results = pd.DataFrame({"speaker_name": v_sn, "iter": v_iter, "loss": v_loss, "score": v_score})
-    df_results.to_csv("results_iter.csv", index=False)
-
-    if scores is not None and len(scores) == 3:
-        s_sn = []
-        s_ref = []
-        s_manual = []
-        s_auto = []
-        for speaker, scores in aggregated_scores.items():
-            if scores is not None and len(scores) > 2:
-                s_sn.append("{}".format(speaker))
-                s_ref.append(scores[0])
-                s_manual.append(scores[1])
-                s_auto.append(scores[2])
-        df_scores = pd.DataFrame(
-            {
-                "speaker_name": s_sn,
-                "reference": s_ref,
-                "manual": s_manual,
-                "auto": s_auto,
-            }
-        )
-        df_scores.to_csv("results_scores.csv", index=False)
+    print_items(aggregated_results)
+    print_scores(aggregated_scores)
 
     return 0
 
@@ -624,7 +659,7 @@ def main():
         # do you optimise only peaks or both peaks and valleys?
         "plus_and_minus": True,
         # do you optimise for all kind of biquad or do you want only Peaks?
-        "full_biquad_optim": False,
+        "full_biquad_optim": None,
         # lookup around a value is [value*elastic, value/elastic]
         # "elastic": 0.2,
         "elastic": 0.8,
@@ -665,11 +700,11 @@ def main():
         "slope_estimated_inroom": -6.5,
         "slope_sound_power": -9,  # good for long distance, too dark for near field
         # do we want to smooth the targets?
-        "smooth_measurements": False,
+        "smooth_measurements": None,
         # size of the window to smooth (currently in number of data points but could be in octave)
-        "smooth_window_size": -1,
+        "smooth_window_size": None,
         # order of interpolation (you can try 1 (linear), 2 (quadratic) etc)
-        "smooth_order": 3,
+        "smooth_order": None,
         # graph eq?
         "use_grapheq": False,
         "grapheq_name": None,

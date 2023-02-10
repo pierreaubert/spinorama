@@ -1,0 +1,16 @@
+EQ for Yamaha NS-6490 computed from ASR data
+Preference Score 1.83 with EQ 3.59
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-01-15-08:06:15
+
+Preamp: -3.4 dB
+
+Filter  1: ON LS Fc   522 Hz Gain +3.00 dB
+Filter  2: ON PK Fc 15988 Hz Gain +2.95 dB Q 0.46
+Filter  3: ON PK Fc 12636 Hz Gain -3.29 dB Q 2.96
+Filter  4: ON PK Fc  5171 Hz Gain -1.93 dB Q 2.99
+Filter  5: ON PK Fc 14960 Hz Gain +0.69 dB Q 0.05
+Filter  6: ON PK Fc  2113 Hz Gain +0.70 dB Q 2.52
+Filter  7: ON PK Fc  4328 Hz Gain -1.23 dB Q 2.41
+Filter  8: ON PK Fc 13669 Hz Gain -1.25 dB Q 2.96
+Filter  9: ON PK Fc   797 Hz Gain -0.86 dB Q 2.56

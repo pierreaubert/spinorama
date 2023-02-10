@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 import glob
@@ -27,6 +28,17 @@ manual_exceptions_table = {
     "Kling Freitag Spectral LS FR.zip": ("Kling Freitag Spectra", "vendor-narrow"),
     "Kling Freitag Spectral PS FR.zip": ("Kling Freitag Spectra", "vendor-wide"),
     "Meyer Sound Ultra X40.zip": ("Meyer Sound Ultra X40", "vendor-v2-20230107"),
+    "EV MFX-15MC FR FOH.zip": ("EV MFX-15MC", "vendor-pattern-60x40"),
+    "EV MFX-15MC FR MON.zip": ("EV MFX-15MC", "vendor-pattern-40x60"),
+    "EV MFX-12MC FR FOH.zip": ("EV MFX-12MC", "vendor-pattern-60x40"),
+    "EV MFX-12MC FR MON.zip": ("EV MFX-12MC", "vendor-pattern-40x60"),
+    "EV EVC 1082 90x60.zip": ("EV EVC-1082", "vendor-pattern-90x60"),
+    "EV EVC 1122 90x55.zip": ("EV EVC-1122", "vendor-pattern-90x55"),
+    "EV EVC 1152 90x55.zip": ("EV EVC-1152", "vendor-pattern-90x55"),
+    "EV MTS 4153 60x40.zip": ("EV MTS-4153", "vendor-pattern-60x40"),
+    "EV MTS 4153 40x30.zip": ("EV MTS-4153", "vendor-pattern-40x30"),
+    "EV MTS 6154 60x40.zip": ("EV MTS-6154", "vendor-pattern-60x40"),
+    "EV MTS 6154 40x30.zip": ("EV MTS-6154", "vendor-pattern-40x30"),
 }
 
 
