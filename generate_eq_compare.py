@@ -39,7 +39,7 @@ import numpy as np
 
 from generate_common import get_custom_logger, args2level
 from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DOCS_SPEAKERS, CPATH_DATAS_EQ
-from spinorama.plots import write_multiformat
+from spinorama.pict import write_multiformat
 from spinorama.plot import plot_eqs
 from spinorama.load_rewseq import parse_eq_iir_rews
 

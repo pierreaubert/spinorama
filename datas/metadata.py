@@ -6654,6 +6654,37 @@ speakers_info = {
             },
         },
     },
+    "JBL Synthesis SCL-5": {
+        "brand": "JBL",
+        "model": "Synthesis SCL-5",
+        "type": "passive",
+        "price": "2200",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-scl-5-in-ceiling-speaker-review.41763/",
+                "review_published": "20230209",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 86,
+                    "impedance": 6,
+                    "size": {
+                        "height": 318,
+                        "width": 318,
+                        "depth": 152,
+                    },
+                    "weight": 3.9,
+                },
+            },
+        },
+    },
     "JBL Synthesis SCL-6": {
         "brand": "JBL",
         "model": "Synthesis SCL-6",
