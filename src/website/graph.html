@@ -12,12 +12,11 @@
     <div id="visGraph" class="graph"></div>
 
     <script type="module">
-      import { downloadZip } from "${site}/assets/downloadzip.js";
       import { displayGraph } from "${site}/assets/graph.js";
-      const spec = downloadZip("${graph | space2url}.json.zip").then(function (
-        spec
-      ) {
-        displayGraph(visGraph, JSON.parse(spec));
+      const spec = fetch("${graph | space2url}.json")
+      .then( (response) => response.json() )
+      .then( (spec) => {
+        displayGraph(visGraph, spec);
       });
     </script>
 

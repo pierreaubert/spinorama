@@ -213,7 +213,6 @@ speakers_info = {
                     },
                     "weight": 12,
                 },
-                "data acquisition": gll_data_acquisition_std,
             },
             "vendor-v1-20221020": {
                 "origin": "Vendors-Alcons Audio",

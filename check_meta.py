@@ -268,7 +268,7 @@ def sanity_check_specifications(name, version, specs):
                 ):
                     logging.error(
                         "{0}: measurement {1} SPL parameter {2} is not in {3}".format(
-                            name, version, direction, ("mean", "continous", "peak")
+                            name, version, ("mean", "continous", "peak")
                         )
                     )
                     status = 1
@@ -282,17 +282,17 @@ def sanity_check_specifications(name, version, specs):
                     status = 1
 
         if k == "size":
-            for dim, mm in v.items():
+            for dim, m_m in v.items():
                 if dim not in VALID_DIMS:
                     logging.error("{0}: measurement {1} SPL parameter {2} is not in {3}".format(name, version, dim, VALID_DIMS))
                     status = 1
                 try:
-                    fmm = float(mm)
-                    if fmm < 0 or fmm >= 1600:  # for Danley's :)
-                        logging.error("{0}: measurement {1} mm {2} is not in ]0, 160]".format(name, version, mm))
+                    fm_m = float(m_m)
+                    if fm_m < 0 or fm_m >= 1600:  # for Danley's :)
+                        logging.error("{0}: measurement {1} m_m {2} is not in ]0, 160]".format(name, version, m_m))
                         status = 1
                 except ValueError:
-                    logging.error("{0}: measurement {1} mm {2} is not an int or a float".format(name, version, mm))
+                    logging.error("{0}: measurement {1} m_m {2} is not an int or a float".format(name, version, m_m))
                     status = 1
 
         if k == "weight":

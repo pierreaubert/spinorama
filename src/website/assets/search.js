@@ -49,7 +49,7 @@ function isFiltered(item, filter) {
     }
     if (filter.quality !== undefined && filter.quality !== '') {
         let found = true;
-        for (const [name, measurement] of Object.entries(item.measurements)) {
+        for (const [, measurement] of Object.entries(item.measurements)) {
             const quality = measurement.quality.toLowerCase();
             // console.log('filter.quality=' + filter.quality + ' quality=' + quality)
             if (filter.quality !== '' && quality === filter.quality.toLowerCase()) {
@@ -381,7 +381,7 @@ getMetadata()
         buttons.forEach(  b => {
             const sortButton = document.querySelector('#sort-' + b + '-button');
             if (sortButton !== null ) {
-                sortButton.addEventListener('click', (e) => {
+                sortButton.addEventListener('click', () => {
                     // update sort by
                     sorter.by = b;
                     // swap reverse if it exists

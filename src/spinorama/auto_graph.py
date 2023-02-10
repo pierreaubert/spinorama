@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/Usr/bin/env python3
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
@@ -90,7 +90,7 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, s
     for name in optim_config["curve_names"]:
         curve_names.append(short_curve_name(name))
 
-    target_name = "error {}".format(curve_names[0], 0)
+    target_name = f"error {curve_names[0]}"
     df = pd.DataFrame(
         {
             "Freq": freq,

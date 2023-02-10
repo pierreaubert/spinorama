@@ -22,7 +22,6 @@
 import {
     openModal,
     closeModal,
-    urlSite,
     getID,
     getPicture,
     getLoading,
@@ -87,10 +86,6 @@ getMetadata()
         Handlebars.registerHelper('floorFloat', function (value) {
             return Math.floor(parseFloat(value));
         });
-
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const urlScores = urlSite + 'scores.html?';
 
         const sourceSpeaker = document.querySelector('#templateScores').innerHTML;
         const templateSpeaker = Handlebars.compile(sourceSpeaker);

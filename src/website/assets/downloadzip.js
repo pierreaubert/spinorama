@@ -41,3 +41,51 @@ export function downloadZip(url) {
 
     return download(url);
 }
+
+export function getMetadataZip() {
+    const url = urlSite + 'assets/metadata.json.zip';
+    // console.log('fetching url=' + url)
+    const spec = downloadZip(url)
+        .then(function (zipped) {
+            // convert to JSON
+            // console.log('parsing url=' + url)
+            const js = JSON.parse(zipped);
+            // convert to object
+            const metadata = Object.values(js);
+            // console.log('metadata '+metadata.length)
+            return new Map(
+                metadata.map((speaker) => {
+                    const key = getID(speaker.brand, speaker.model);
+                    return [key, speaker];
+                })
+            );
+        })
+        .catch((error) => {
+            console.log('ERROR getMetadata data 404 ' + error);
+            return null;
+        });
+    return spec;
+}
+
+export function getSpeakerDataZip(
+    metaSpeakers: MetaSpeakers,
+    graph: string,
+    speaker: string,
+    origin: string,
+    version: string
+): any | null {
+    // console.log('getSpeakerData ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version=' + version)
+    const url = getSpeakerUrl(metaSpeakers, graph, speaker, origin, version);
+    // console.log('fetching url=' + url)
+    const spec = downloadZip(url)
+        .then(function (spec) {
+            // console.log('parsing url=' + url)
+            const js = JSON.parse(spec);
+            return js;
+        })
+        .catch((error) => {
+            console.log('ERROR getSpeaker data 404 ' + error);
+            return null;
+        });
+    return spec;
+}

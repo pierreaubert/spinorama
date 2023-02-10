@@ -53,13 +53,14 @@ from docopt import docopt
 try:
     import ray
 except ModuleNotFoundError:
-    import miniray as ray
-except ModuleNotFoundError:
-    print("Did you run env.sh?")
-    sys.exit(-1)
+    try:
+        import miniray as ray
+    except ModuleNotFoundError:
+        print("Did you run env.sh?")
+        sys.exit(-1)
 
 from generate_common import get_custom_logger, args2level, cache_load, custom_ray_init
-import datas.metadata as metadata
+from datas import metadata
 import spinorama.constant_paths as cpaths
 from spinorama.compute_estimates import estimates
 from spinorama.compute_scores import speaker_pref_rating
@@ -686,8 +687,7 @@ def main():
     if args["--smoke-test"] is not None:
         smoke_test = True
 
-    steps = []
-    steps.append(("start", time.perf_counter()))
+    steps = [("start", time.perf_counter())]
     custom_ray_init(args)
     steps.append(("ray init", time.perf_counter()))
 

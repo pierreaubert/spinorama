@@ -50,10 +50,11 @@ from docopt import docopt
 try:
     import ray
 except ModuleNotFoundError:
-    import miniray as ray
-except ModuleNotFoundError:
-    print("Did you run env.sh?")
-    sys.exit(-1)
+    try:
+        import miniray as ray
+    except ModuleNotFoundError:
+        print("Did you run env.sh?")
+        sys.exit(-1)
 
 from generate_common import (
     args2level,
@@ -61,9 +62,8 @@ from generate_common import (
     cache_update,
     custom_ray_init,
     get_custom_logger,
-    get_similar_names,
 )
-import datas.metadata as metadata
+from datas import metadata
 from spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
 from spinorama.speaker_print import print_graphs
 from spinorama.plot import plot_params_default
@@ -71,13 +71,13 @@ from spinorama.plot import plot_params_default
 
 VERSION = "2.01"
 
-activate_tracing = True
+ACTIVATE_TRACING = False
 
 
 def tracing(msg):
-    # debugging ray is sometimes painfull
-    if activate_tracing:
-        print("---- TRACING ---- {} ----".format(msg))
+    """debugging ray is sometimes painfull"""
+    if ACTIVATE_TRACING:
+        print(f"---- TRACING ---- {msg} ----")
 
 
 def get_speaker_list(speakerpath: str) -> List[str]:
@@ -161,7 +161,7 @@ def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict]) -> dict:
             logger.debug("skipping {}".format(speaker))
             continue
         ray_ids[speaker] = {}
-        if speaker not in metadata.speakers_info.keys():
+        if speaker not in metadata.speakers_info:
             logger.error("Metadata error: {}".format(speaker))
             continue
         for mversion, measurement in metadata.speakers_info[speaker]["measurements"].items():
@@ -195,21 +195,13 @@ def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict]) -> dict:
 
 def compute(speakerlist, filters, ray_ids: dict):
     """Compute a series of measurements"""
-    df = {}
+    data_frame = {}
     done_ids = {}
     while 1:
-        df_ids = [
-            ray_ids[s][v][0] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][0] not in done_ids.keys()
-        ]
-        eq_ids = [
-            ray_ids[s][v][1] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][1] not in done_ids.keys()
-        ]
-        g1_ids = [
-            ray_ids[s][v][2] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][2] not in done_ids.keys()
-        ]
-        g2_ids = [
-            ray_ids[s][v][3] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][3] not in done_ids.keys()
-        ]
+        df_ids = [ray_ids[s][v][0] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][0] not in done_ids]
+        eq_ids = [ray_ids[s][v][1] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][1] not in done_ids]
+        g1_ids = [ray_ids[s][v][2] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][2] not in done_ids]
+        g2_ids = [ray_ids[s][v][3] for s in ray_ids.keys() for v in ray_ids[s].keys() if ray_ids[s][v][3] not in done_ids]
         ids = df_ids + eq_ids + g1_ids + g2_ids
         if len(ids) == 0:
             break
@@ -224,8 +216,8 @@ def compute(speakerlist, filters, ray_ids: dict):
 
         for speaker in speakerlist:
             speaker_key = speaker  # .translate({ord(ch) : '_' for ch in '-.;/\' '})
-            if speaker not in df.keys():
-                df[speaker_key] = {}
+            if speaker not in data_frame:
+                data_frame[speaker_key] = {}
             if speaker not in metadata.speakers_info:
                 logger.warning("Speaker {} in SpeakerList but not in Metadata".format(speaker))
                 continue
@@ -239,8 +231,8 @@ def compute(speakerlist, filters, ray_ids: dict):
                         )
                     )
                 m_origin = measurement["origin"]
-                if m_origin not in df[speaker_key].keys():
-                    df[speaker_key][m_origin] = {}
+                if m_origin not in data_frame[speaker_key].keys():
+                    data_frame[speaker_key][m_origin] = {}
 
                 if speaker not in ray_ids:
                     continue
@@ -254,7 +246,7 @@ def compute(speakerlist, filters, ray_ids: dict):
 
                 current_id = ray_ids[speaker][m_version][0]
                 if current_id in ready_ids:
-                    df[speaker_key][m_origin][m_version_key] = ray.get(current_id)
+                    data_frame[speaker_key][m_origin][m_version_key] = ray.get(current_id)
                     logger.debug("Getting df done for {0} / {1} / {2}".format(speaker, m_origin, m_version))
                     done_ids[current_id] = True
 
@@ -262,12 +254,12 @@ def compute(speakerlist, filters, ray_ids: dict):
                 current_id = ray_ids[speaker][m_version][1]
                 if current_id in eq_ids:
                     logger.debug("Getting eq done for {0} / {1} / {2}".format(speaker, m_version_eq, m_version))
-                    eq = ray.get(current_id)
-                    if eq is not None:
-                        df[speaker_key][m_origin][m_version_eq] = eq
+                    computed_eq = ray.get(current_id)
+                    if computed_eq is not None:
+                        data_frame[speaker_key][m_origin][m_version_eq] = computed_eq
                         logger.debug("Getting preamp eq done for {0} / {1} / {2}".format(speaker, m_version_eq, m_version))
-                        if "preamp_gain" in eq:
-                            df[speaker_key][m_origin][m_version_eq]["preamp_gain"] = eq["preamp_gain"]
+                        if "preamp_gain" in computed_eq:
+                            data_frame[speaker_key][m_origin][m_version_eq]["preamp_gain"] = computed_eq["preamp_gain"]
                     done_ids[current_id] = True
 
                 current_id = ray_ids[speaker][m_version][2]
@@ -285,11 +277,11 @@ def compute(speakerlist, filters, ray_ids: dict):
         if len(remaining_ids) == 0:
             break
 
-    return df
+    return data_frame
 
 
 def main():
-    # TODO remove it and replace by iterating over metadatas
+    """Send all speakers in the queue to be processed"""
     speakerlist = get_speaker_list("./datas/measurements")
     if args["--smoke-test"] is not None:
         if args["--smoke-test"] == "random":

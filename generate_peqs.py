@@ -105,8 +105,11 @@ import pandas as pd
 try:
     import ray
 except ModuleNotFoundError:
-    import src.miniray as ray
-
+    try:
+        import src.miniray as ray
+    except ModuleNotFoundError:
+        print("Did you run env.sh?")
+        sys.exit(-1)
 
 from datas.metadata import speakers_info as metadata
 from datas.grapheq import vendor_info as grapheq_info
@@ -114,14 +117,12 @@ from datas.grapheq import vendor_info as grapheq_info
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
 from spinorama.constant_paths import CPATH_DOCS_SPEAKERS, MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
 from spinorama.pict import write_multiformat
-from spinorama.load_rewseq import parse_eq_iir_rews
 from spinorama.compute_estimates import estimates_spin
 from spinorama.compute_misc import compute_statistics
 from spinorama.filter_peq import peq_format_apo
 from spinorama.filter_scores import (
     scores_apply_filter,
     noscore_apply_filter,
-    scores_print2,
     scores_print,
 )
 from spinorama.auto_target import get_freq, get_target
@@ -197,7 +198,7 @@ def optim_find_peq(
     data_frame, freq, auto_target = get_freq(df_speaker, optim_config)
     if data_frame is None or freq is None or auto_target is None:
         logger.error("Cannot compute freq for {}".format(current_speaker_name))
-        return None, None, None
+        return None, None, None, None
 
     auto_target_interp = []
     for curve in curves:
@@ -357,7 +358,7 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
                         )
                         if auto_slope_lw2 * 11 / 3 > -1 and auto_slope_lw2 * 11 / 3 < -0.2:
                             auto_score = auto_score2
-                            auto_result = auto_results2
+                            auto_results = auto_results2
                             auto_peq = auto_peq2
                             auto_slope_lw = auto_slope_lw2
                             print(

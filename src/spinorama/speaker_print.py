@@ -57,12 +57,22 @@ def print_graph(speaker, version, origin, key, title, chart, force, fileext):
                 # before uploading
                 filename += "_large"
             filename += "." + ext
-            if ext == "json":
-                filename += ".zip"
             if force or not os.path.exists(filename) or (os.path.exists(filename) and os.path.getsize(filename) == 0):
                 if fileext is None or (fileext is not None and fileext == ext):
                     try:
                         if ext == "json":
+                            content = chart.to_json()
+                            with open(filename, "w") as f_d:
+                                f_d.write(content)
+                        else:
+                            write_multiformat(chart, filename, force)
+                    except Exception as e:
+                        logger.error("Got unkown error {0} for {1}".format(e, filename))
+            if ext == "json":
+                filename += ".zip"
+                if force or not os.path.exists(filename) or (os.path.exists(filename) and os.path.getsize(filename) == 0):
+                    if fileext is None or (fileext is not None and fileext == ext):
+                        try:
                             content = chart.to_json()
                             with zipfile.ZipFile(
                                 filename,
@@ -73,10 +83,8 @@ def print_graph(speaker, version, origin, key, title, chart, force, fileext):
                                 current_zip.writestr("{0}.json".format(title), content)
                                 logger.info("Saving {0} in {1}".format(title, filename))
                                 updated += 1
-                        else:
-                            write_multiformat(chart, filename, force)
-                    except Exception as e:
-                        logger.error("Got unkown error {0} for {1}".format(e, filename))
+                        except Exception as e:
+                            logger.error("Got unkown error {0} for {1}".format(e, filename))
     else:
         logger.debug("Chart is None for {:s} {:s} {:s} {:s}".format(speaker, origin, key, title))
     return updated
