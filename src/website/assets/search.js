@@ -395,9 +395,9 @@ getMetadata()
                 minMatchCharLength: 2,
                 keys: ['speaker.brand', 'speaker.model', 'speaker.type', 'speaker.shape'],
                 treshhold: 0.5,
-                distance: 4,
+                distance: 60,
                 includeScore: true,
-                useExatendedSearch: true,
+                useExtendedSearch: true,
             })
         ;
 
