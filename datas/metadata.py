@@ -1951,6 +1951,23 @@ speakers_info = {
             },
         },
     },
+    "CSS Criton 1TD-X DIY": {
+        "brand": "CSS",
+        "model": "Criton 1TD-X DIY",
+        "type": "passive",
+        "price": "770",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/css-criton-1td-x-kit-speaker-review.41923/",
+                "review_published": "20230211",
+            },
+        },
+    },
     "Dali Spektor 1": {
         "brand": "Dali",
         "model": "Spektor 1",
