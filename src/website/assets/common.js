@@ -352,7 +352,7 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
                 l: 5,
                 r: 0,
                 t: graphMarginTop,
-                b: graphMarginBottom,
+                b: graphMarginBottom
             };
             layout.legend = {
                 orientation: 'h',
@@ -360,6 +360,7 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
                 x: 0,
                 xanchor: 'bottom',
                 yanchor: 'left',
+                groupclick: 'toggleitem'
             };
             // add a legend title to replace the legend group
             if (datas[0].legendgrouptitle) {
@@ -409,7 +410,7 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
                 l: 15,
                 r: 15,
                 t: graphMarginTop * 2,
-                b: graphMarginBottom,
+                b: graphMarginBottom
             };
             layout.legend = {
                 orientation: 'h',
@@ -417,10 +418,11 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
                 x: 0,
                 xanchor: 'bottom',
                 yanchor: 'left',
+                groupclick: 'toggleitem'
             };
             config = {
                 responsive: true,
-                displayModeBar: true,
+                displayModeBar: true
             };
             if (datas[0].legendgrouptitle) {
                 let title = datas[0].legendgrouptitle.text;
@@ -436,13 +438,13 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
                     text: title,
                     font: {
                         size: 18 + windowWidth / 300,
-                        color: '#000',
+                        color: '#000'
                     },
                     xref: 'paper',
                     // title start sligthly on the right
                     x: 0.05,
                     // keep title below modBar if title is long
-                    y: 0.975,
+                    y: 0.975
                 };
             }
             layout.font = { size: 11 + windowWidth / 300 };
