@@ -180,7 +180,7 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
         title_text="SPL (dB)",
         range=[range_min, range_max],
         dtick=range_step,
-        tickvals=list((range_min, range_max + range_step, range_step)),
+        tickvals=list(range(range_min, range_max + range_step, range_step)),
         ticktext=["{}".format(i) if not i % 5 else " " for i in range(range_min, range_max + range_step, range_step)],
         showline=True,
     )
