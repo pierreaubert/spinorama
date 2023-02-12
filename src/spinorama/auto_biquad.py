@@ -56,16 +56,15 @@ def find_best_biquad(
     ]
 
     logger.debug(
-        "range is [{}, {}], [{}, {}], [{}, {}], [{}, {}]".format(
-            bounds[0][0],
-            bounds[0][1],
-            bounds[1][0],
-            bounds[1][1],
-            bounds[2][0],
-            bounds[2][1],
-            bounds[3][0],
-            bounds[3][1],
-        )
+        "range is [%f, %f], [%f, %f], [%f, %f], [%f, %f]",
+        bounds[0][0],
+        bounds[0][1],
+        bounds[1][0],
+        bounds[1][1],
+        bounds[2][0],
+        bounds[2][1],
+        bounds[3][0],
+        bounds[3][1],
     )
     # can use differential_evolution basinhoppin dual_annealing
     res = {
@@ -127,7 +126,7 @@ def find_best_biquad(
         for i in range(0, 4):
             try:
                 if bounds[i][0] >= bounds[i][1]:
-                    logger.error("on bound [{}]".format(i))
+                    logger.error("on bound [%i]", i)
             except ValueError:
                 pass
             except IndexError:

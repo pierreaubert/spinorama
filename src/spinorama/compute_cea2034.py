@@ -36,11 +36,7 @@ def compute_weigths() -> list[float]:
 
 def compute_weigths_hv(weigths: dict[str, float]) -> dict[str, float]:
     """copy weigths to both horizontal and vertical"""
-    return (
-        {k: v for k, v in weigths.items()}
-        | {f"{k}_v": v for k, v in weigths.items()}
-        | {f"{k}_h": v for k, v in weigths.items()}
-    )
+    return dict(weigths) | {f"{k}_v": v for k, v in weigths.items()} | {f"{k}_h": v for k, v in weigths.items()}
 
 
 std_weigths = compute_weigths()

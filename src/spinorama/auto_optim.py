@@ -118,8 +118,6 @@ def optim_greedy(
 ) -> tuple[list[tuple[int, float, float]], Peq]:
     """Main optimiser: follow a greedy strategy"""
 
-    assert optim_config["use_grapheq"] is not True
-
     if not optim_preflight(freq, auto_target, auto_target_interp, optim_config):
         logger.error("Preflight check failed!")
         return ([(0, 0, 0)], [])
@@ -282,8 +280,6 @@ def optim_grapheq(
     use_score,
 ) -> tuple[list[tuple[int, float, float]], Peq]:
     """Main optimiser for graphical EQ"""
-
-    assert optim_config["use_grapheq"] is True
 
     if not optim_preflight(freq, auto_target, auto_target_interp, optim_config):
         logger.error("Preflight check failed!")

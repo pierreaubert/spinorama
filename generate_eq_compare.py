@@ -71,7 +71,7 @@ def main(force):
     with open(json_filename, "r") as f:
         jsmeta = json.load(f)
 
-    logger.warning("Data {0} loaded ({1} speakers)!".format(json_filename, len(jsmeta)))
+    logger.info("Data {0} loaded ({1} speakers)!".format(json_filename, len(jsmeta)))
 
     for speaker_name, speaker_data in jsmeta.items():
         print_eq_compare(speaker_data, force)
