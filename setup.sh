@@ -42,7 +42,7 @@ pip3 install -r requirements.txt
 # node section
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 # nvm install lts/fermium
-npm install pyright html-validate standard
+npm install --save-dev pyright w3c-html-validator standard flow flow-remove-types
 
 # lint
 flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spinorama-venv
