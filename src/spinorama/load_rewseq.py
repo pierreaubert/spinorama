@@ -55,44 +55,46 @@ def parse_eq_line(line, srate):
     if freq:
         ifreq = int(float(freq))
         if ifreq < 0 or ifreq > srate / 2:
-            logger.debug("IIR peq freq {0}Hz out of bounds (srate={1}".format(freq, srate))
+            logger.debug("IIR peq freq %sHz out of bounds (srate=%d)", freq, srate)
             return None, None
 
     if gain:
         rgain = float(gain)
         if rgain < -10 or rgain > 30:
-            logger.debug("IIR peq gain {0} is large!".format(rgain))
+            logger.debug("IIR peq gain %f is large!", rgain)
             return None, None
 
     if q:
         rq = float(q)
         if rq < 0 or rq > 20:
-            logger.debug("IIR peq Q {0} is out of bounds!".format(rq))
+            logger.debug("IIR peq Q %f is out of bounds!", rq)
             return None, None
 
     if kind in ("PK", "PEQ", "Modal"):
         iir = Biquad(Biquad.PEAK, ifreq, srate, rq, rgain)
-        logger.debug("add IIR peq PEAK freq {0}Hz srate {1} Q {2} Gain {3}".format(ifreq, srate, rq, rgain))
+        logger.debug("add IIR peq PEAK freq %dHz srate %d Q %f Gain %f", ifreq, srate, rq, rgain)
     elif kind == "NO":
         iir = Biquad(Biquad.NOTCH, ifreq, srate, rq, rgain)
-        logger.debug("add IIR peq NOTCH freq {0}Hz srate {1} Q {2} Gain {3}".format(ifreq, srate, rq, rgain))
+        logger.debug("add IIR peq NOTCH freq %dHz srate %d Q %f Gain %f", ifreq, srate, rq, rgain)
     elif kind == "BP":
         iir = Biquad(Biquad.BANDPASS, ifreq, srate, rq, rgain)
-        logger.debug("add IIR peq BANDPASS freq {0}Hz srate {1} Q {2} Gain {3}".format(ifreq, srate, rq, rgain))
+        logger.debug(
+            "add IIR peq BANDPASS freq %dHz srate %d Q %d Gain %f", ifreq, srate, rq, rgain
+        )
     elif kind in ("HP", "HPQ"):
         iir = Biquad(Biquad.HIGHPASS, ifreq, srate, 1.0 / math.sqrt(2.0), 1.0)
-        logger.debug("add IIR peq LOWPASS freq {0}Hz srate {1}".format(ifreq, srate))
+        logger.debug("add IIR peq LOWPASS freq %dHz srate %d", ifreq, srate)
     elif kind in ("LP", "LPQ"):
         iir = Biquad(Biquad.LOWPASS, ifreq, srate, 1.0 / math.sqrt(2.0), 1.0)
-        logger.debug("add IIR peq LOWPASS freq {0}Hz srate {1}".format(ifreq, srate))
+        logger.debug("add IIR peq LOWPASS freq %dHz srate %d", ifreq, srate)
     elif kind in ("LS", "LSC"):
         iir = Biquad(Biquad.LOWSHELF, ifreq, srate, 1.0, rgain)
-        logger.debug("add IIR peq LOWSHELF freq {0}Hz srate {1} Gain {2}".format(ifreq, srate, rgain))
+        logger.debug("add IIR peq LOWSHELF freq %dHz srate %d Gain %f", ifreq, srate, rgain)
     elif kind in ("HS", "HSC"):
         iir = Biquad(Biquad.HIGHSHELF, ifreq, srate, 1.0, rgain)
-        logger.debug("add IIR peq HIGHSHELF freq {0}Hz srate {1} Gain {2}".format(ifreq, srate, rgain))
+        logger.debug("add IIR peq HIGHSHELF freq %dHz srate %d Gain %f", ifreq, srate, rgain)
     else:
-        logger.warning("kind {0} is unknown".format(kind))
+        logger.warning("kind %s is unknown", kind)
         return None, None
 
     return status, iir
@@ -108,5 +110,5 @@ def parse_eq_iir_rews(filename, srate):
                 if status is not None and iir is not None:
                     peq.append((status, iir))
     except FileNotFoundError:
-        logger.info("Loading filter: eq file {0} not found".format(filename))
+        logger.info("Loading filter: eq file %s not found", filename)
     return peq

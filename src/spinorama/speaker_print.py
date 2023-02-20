@@ -41,7 +41,9 @@ logger = logging.getLogger("spinorama")
 def print_graph(speaker, version, origin, key, title, chart, force, fileext):
     updated = 0
     if chart is not None:
-        filedir = CPATH_DOCS_SPEAKERS + "/" + speaker + "/" + origin.replace("Vendors-", "") + "/" + key
+        filedir = (
+            CPATH_DOCS_SPEAKERS + "/" + speaker + "/" + origin.replace("Vendors-", "") + "/" + key
+        )
         pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
         for ext in ["json", "png"]:  # svg and html skipped to keep size small
             # skip the 2cols.json and 3cols.json as they are really large
@@ -57,7 +59,11 @@ def print_graph(speaker, version, origin, key, title, chart, force, fileext):
                 # before uploading
                 filename += "_large"
             filename += "." + ext
-            if force or not os.path.exists(filename) or (os.path.exists(filename) and os.path.getsize(filename) == 0):
+            if (
+                force
+                or not os.path.exists(filename)
+                or (os.path.exists(filename) and os.path.getsize(filename) == 0)
+            ):
                 if fileext is None or (fileext is not None and fileext == ext):
                     try:
                         if ext == "json":
@@ -67,10 +73,14 @@ def print_graph(speaker, version, origin, key, title, chart, force, fileext):
                         else:
                             write_multiformat(chart, filename, force)
                     except Exception as e:
-                        logger.error("Got unkown error {0} for {1}".format(e, filename))
+                        logger.error("Got unkown error %s for %s", e, filename)
             if ext == "json":
                 filename += ".zip"
-                if force or not os.path.exists(filename) or (os.path.exists(filename) and os.path.getsize(filename) == 0):
+                if (
+                    force
+                    or not os.path.exists(filename)
+                    or (os.path.exists(filename) and os.path.getsize(filename) == 0)
+                ):
                     if fileext is None or (fileext is not None and fileext == ext):
                         try:
                             content = chart.to_json()
@@ -80,13 +90,13 @@ def print_graph(speaker, version, origin, key, title, chart, force, fileext):
                                 compression=zipfile.ZIP_DEFLATED,
                                 allowZip64=True,
                             ) as current_zip:
-                                current_zip.writestr("{0}.json".format(title), content)
-                                logger.info("Saving {0} in {1}".format(title, filename))
+                                current_zip.writestr("{0}.json", title), content
+                                logger.info("Saving %s in %s", title, filename)
                                 updated += 1
                         except Exception as e:
-                            logger.error("Got unkown error {0} for {1}".format(e, filename))
+                            logger.error("Got unkown error %s for %s", e, filename)
     else:
-        logger.debug("Chart is None for {:s} {:s} {:s} {:s}".format(speaker, origin, key, title))
+        logger.debug("Chart is None for %s %s %s %s", speaker, origin, key, title)
     return updated
 
 
@@ -104,9 +114,9 @@ def print_graphs(
     filter_file_ext=None,
 ):
     # may happens at development time or for partial measurements
+    # or when the cache is confused (typically when you change the metadata)
     if df is None:
-        if origin != "Misc" and origin != "Princeton":
-            print("error: df is None for {} {} {}".format(speaker, version, origin))
+        logger.debug("df is None for %s %s %s", speaker, version, origin)
         return 0
 
     graph_params = copy.deepcopy(plot_params_default)
@@ -120,7 +130,6 @@ def print_graphs(
     graph_params["xmax"] = origins_info[origin]["max hz"]
     graph_params["ymin"] = origins_info[origin]["min dB"]
     graph_params["ymax"] = origins_info[origin]["max dB"]
-    logger.debug("Graph configured with {0}".format(graph_params))
 
     graphs = {}
     graphs["CEA2034"] = display_spinorama(df, graph_params)
@@ -144,8 +153,12 @@ def print_graphs(
 
     graphs["SPL Horizontal Contour"] = display_contour_horizontal(df, contour_params)
     graphs["SPL Vertical Contour"] = display_contour_vertical(df, contour_params)
-    graphs["SPL Horizontal Contour Normalized"] = display_contour_horizontal_normalized(df, contour_params)
-    graphs["SPL Vertical Contour Normalized"] = display_contour_vertical_normalized(df, contour_params)
+    graphs["SPL Horizontal Contour Normalized"] = display_contour_horizontal_normalized(
+        df, contour_params
+    )
+    graphs["SPL Vertical Contour Normalized"] = display_contour_vertical_normalized(
+        df, contour_params
+    )
 
     # better square
     radar_params = copy.deepcopy(radar_params_default)

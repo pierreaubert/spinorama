@@ -25,7 +25,9 @@ def octave(N: int) -> List[Tuple[float, float, float]]:
     p_band = pow(2, 1 / (2 * N))
     o_iter = int((N * 10 + 1) / 2)
     center = (
-        [reference / p**i for i in range(o_iter, 0, -1)] + [reference] + [reference * p**i for i in range(1, o_iter + 1, 1)]
+        [reference / p**i for i in range(o_iter, 0, -1)]
+        + [reference]
+        + [reference * p**i for i in range(1, o_iter + 1, 1)]
     )
     return [(c / p_band, c, c * p_band) for c in center]
 
@@ -99,7 +101,6 @@ def lfx(lw, sp) -> float:
     the loudspeaker, particularly speakers that have rear-firing ports.
     """
     lw_ref = np.mean(lw.loc[(lw.Freq >= 300) & (lw.Freq <= 10000)].dB) - 6
-    logger.debug("lw_ref {}".format(lw_ref))
     # find first freq such that y[freq]<y_ref-6dB
     lfx_range = sp.loc[(sp.Freq < 300) & (sp.dB <= lw_ref)].Freq
     if len(lfx_range.values) == 0:
@@ -107,13 +108,10 @@ def lfx(lw, sp) -> float:
         lfx_hz = sp.Freq.values[0]
     else:
         lfx_grouped = consecutive_groups(lfx_range.items(), lambda x: x[0])
-        # logger.debug('lfx_grouped {}'.format(lfx_grouped))
         try:
             lfx_hz = list(next(lfx_grouped))[-1][1]
         except Exception:
             lfx_hz = -1.0
-            logger.error("lfx: selecting max {0}".format(lfx_hz))
-    logger.debug("lfx_hz {}".format(lfx_hz))
     return math.log10(lfx_hz)
 
 
@@ -139,7 +137,7 @@ def lfq(lw, sp, lfx_log) -> float:
             lfq_sum += abs(y_lw - y_sp)
             n += 1
     if n == 0:
-        logger.warning("lfq is None: lfx={}".format(val_lfx))
+        logger.warning("lfq is None: lfx=%f", val_lfx)
         return -1.0
     return lfq_sum / n
 
@@ -250,10 +248,10 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
                 if lfq_db is not None:
                     ratings["lfq"] = lfq_db
                 ratings["pref_score"] = pref
-        logger.info("Ratings: {0}".format(ratings))
+        logger.info("Ratings: {0}", ratings)
         return ratings
-    except ValueError as e:
-        logger.error("{0}".format(e))
+    except ValueError as value_error:
+        logger.error(value_error)
         return None
 
 
@@ -264,13 +262,13 @@ def scores(df_speaker, rounded=False):
         spin = df_speaker["CEA2034"]
         pir = spin.get("Estimated In-Room Response", None)
         if pir is None:
-            logger.error("Don't find pir {} v1".format(df_speaker["CEA2034"].keys()))
+            logger.error("Don't find pir (%s) v1", ", ".join(df_speaker["CEA2034"].keys()))
     elif "CEA2034_unmelted" in df_speaker:
         spin = graph_melt(df_speaker["CEA2034_unmelted"])
         if "Estimated In-Room Response" in df_speaker["CEA2034_unmelted"]:
             pir = graph_melt(df_speaker["CEA2034_unmelted"]["Estimated In-Room Response"])
         else:
-            logger.error("Don't find pir {} v2".format(df_speaker["CEA2034_unmelted"].keys()))
+            logger.error("Don't find pir (%s) v2", ", ".join(df_speaker["CEA2034_unmelted"].keys()))
 
     if pir is None:
         logger.error("pir is None, computing it")

@@ -64,14 +64,14 @@ def main(force):
     # load all metadata from generated json file
     json_filename = CPATH_METADATA_JSON
     if not os.path.exists(json_filename):
-        logger.error("Cannot find {0}".format(json_filename))
+        logger.error("Cannot find %s", json_filename)
         sys.exit(1)
 
     jsmeta = None
     with open(json_filename, "r") as f:
         jsmeta = json.load(f)
 
-    logger.info("Data {0} loaded ({1} speakers)!".format(json_filename, len(jsmeta)))
+    logger.info("Data %s loaded (%d speakers!", json_filename, len(jsmeta))
 
     for speaker_name, speaker_data in jsmeta.items():
         print_eq_compare(speaker_data, force)
@@ -82,7 +82,7 @@ def main(force):
 if __name__ == "__main__":
     args = docopt(
         __doc__,
-        version="generate_radar.py version {:1.1f}".format(VERSION),
+        version=f"generate_radar.py version {VERSION:1.1f}",
         options_first=True,
     )
 

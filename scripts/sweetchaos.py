@@ -79,7 +79,9 @@ def guess_brand_model(speaker_name):
 
     if chunk[0].lower() in known_brands:
         return chunk[0].capitalize(), " ".join(chunk[1:])
-    elif chunk[0].lower() in change_brands.keys() and change_brands[chunk[0].lower()] in known_brands:
+    elif (
+        chunk[0].lower() in change_brands.keys() and change_brands[chunk[0].lower()] in known_brands
+    ):
         brand = " ".join([s.capitalize() for s in change_brands[chunk[0].lower()].split(" ")])
         return brand, " ".join(chunk[1:])
     elif len(chunk) > 1 and "{} {}".format(chunk[0].lower(), chunk[1].lower()) in known_brands:
@@ -231,7 +233,9 @@ def scan_speaker(reviewer, speakerdir):
         pathlib.Path(target_dir).mkdir(parents=True, exist_ok=True)
 
     if review_tar is not None:
-        target_file = "{d}/{b} {m}.tar".format(d=target_dir, b=brand_cleanup(speaker_brand), m=speaker_model)
+        target_file = "{d}/{b} {m}.tar".format(
+            d=target_dir, b=brand_cleanup(speaker_brand), m=speaker_model
+        )
         if not os.path.exists(target_file):
             print("copying {} to {}".format(review_tar, target_file))
             shutil.copy(review_tar, target_file)

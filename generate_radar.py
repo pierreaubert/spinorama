@@ -101,11 +101,17 @@ def print_radar(speaker, data, scale):
                 "type": "scatterpolar",
                 "r": [
                     scale_higher_is_better("pref_score", pref_rating["pref_score"], scale),
-                    scale_higher_is_better("pref_score_wsub", pref_rating["pref_score_wsub"], scale),
+                    scale_higher_is_better(
+                        "pref_score_wsub", pref_rating["pref_score_wsub"], scale
+                    ),
                     scale_lower_is_better("lfx_hz", pref_rating["lfx_hz"], scale),
                     scale_lower_is_better("nbd_on_axis", pref_rating["nbd_on_axis"], scale),
-                    scale_lower_is_better("nbd_pred_in_room", pref_rating["nbd_pred_in_room"], scale),
-                    scale_higher_is_better("sm_pred_in_room", pref_rating["sm_pred_in_room"], scale),
+                    scale_lower_is_better(
+                        "nbd_pred_in_room", pref_rating["nbd_pred_in_room"], scale
+                    ),
+                    scale_higher_is_better(
+                        "sm_pred_in_room", pref_rating["sm_pred_in_room"], scale
+                    ),
                 ],
                 "theta": [
                     "Score",
@@ -157,14 +163,14 @@ def main():
     # load all metadata from generated json file
     json_filename = CPATH_METADATA_JSON
     if not os.path.exists(json_filename):
-        logger.error("Cannot find {0}".format(json_filename))
+        logger.error("Cannot find %s", json_filename)
         sys.exit(1)
 
     jsmeta = None
     with open(json_filename, "r") as f:
         jsmeta = json.load(f)
 
-    logger.warning("Data {0} loaded ({1} speakers)!".format(json_filename, len(jsmeta)))
+    logger.warning("Data %s loaded (%d speakers)!", json_filename, len(jsmeta))
 
     scale = compute_scale(jsmeta)
 

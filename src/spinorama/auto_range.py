@@ -48,7 +48,7 @@ def compute_non_admissible_freq(peq, min_freq, max_freq):
         w = f * (n_2 - 1) / (n_2 + 1)
         f1 = f - w
         f2 = f + w
-        logger.debug("zones f={} f1={} f2={} q={}".format(int(f), int(f1), int(f2), q))
+        logger.debug("zones f=%d f1=%d f2=%d q=%f", int(f), int(f1), int(f2), q)
         zones.append((f1, f2))
     return zones
 
@@ -81,7 +81,9 @@ def find_largest_area(
                 i,
                 np.trapz(
                     current_curve[
-                        max(0, peaks[i] - int(widths[i] // 2)) : min(len(current_curve), peaks[i] + int(widths[i] // 2))
+                        max(0, peaks[i] - int(widths[i] // 2)) : min(
+                            len(current_curve), peaks[i] + int(widths[i] // 2)
+                        )
                     ]
                 ),
             )
@@ -157,7 +159,7 @@ def propose_range_freq(
     )
 
 
-def propose_range_dbGain(
+def propose_range_db_gain(
     freq: FloatVector1D,
     local_target: List[FloatVector1D],
     sign: Literal[-1, 1],
@@ -172,10 +174,12 @@ def propose_range_dbGain(
     if init_dbgain_max <= init_dbgain_min:
         init_dbgain_min = optim_config["MIN_DBGAIN"]
         init_dbgain_max = optim_config["MAX_DBGAIN"]
-    logger.debug("gain min {}dB peak {}dB max {}dB".format(init_dbgain_min, init_dbgain, init_dbgain_max))
+    logger.debug("gain min %fdB peak %fdB max %fdB", init_dbgain_min, init_dbgain, init_dbgain_max)
 
     if sign < 0:
-        return np.linspace(init_dbgain_min, init_dbgain_max, optim_config["MAX_STEPS_DBGAIN"]).tolist()
+        return np.linspace(
+            init_dbgain_min, init_dbgain_max, optim_config["MAX_STEPS_DBGAIN"]
+        ).tolist()
     return np.linspace(
         # no real minimim for negative values
         -init_dbgain_max * 2,
@@ -184,7 +188,7 @@ def propose_range_dbGain(
     ).tolist()
 
 
-def propose_range_Q(optim_config):
+def propose_range_q(optim_config):
     return np.concatenate(
         (
             np.linspace(optim_config["MIN_Q"], 1.0, optim_config["MAX_STEPS_Q"]),

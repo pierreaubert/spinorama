@@ -64,21 +64,25 @@ def get_freq(df_speaker_data, optim_config):
         else:
             df_tmp = df_speaker_data["CEA2034"]
             try:
-                df_pivoted = df_tmp.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
+                df_pivoted = df_tmp.pivot_table(
+                    index="Freq", columns="Measurements", values="dB", aggfunc=max
+                ).reset_index()
                 local_df = df_pivoted.loc[:, columns]
             except ValueError as value_error:
-                logger.debug("{} {}".format(df_tmp.keys(), value_error))
+                logger.debug("%s %s", df_tmp.keys(), value_error)
                 # print("{}".format(df_tmp.index.duplicated()))
                 return None, None, None
             except KeyError as key_error:
-                logger.debug("columns {} {}".format(columns, key_error))
+                logger.debug("columns %s %s", columns, key_error)
                 # print("debug: {}".format(df_tmp.keys()))
                 return None, None, None
 
     if with_pir:
         pir_source = df_speaker_data["Estimated In-Room Response"]
         if local_df is None:
-            local_df = pd.DataFrame({"Freq": pir_source.Freq, "Estimated In-Room Response": pir_source.dB})
+            local_df = pd.DataFrame(
+                {"Freq": pir_source.Freq, "Estimated In-Room Response": pir_source.dB}
+            )
         else:
             local_df["Estimated In-Room Response"] = pir_source.dB.values
 
@@ -161,7 +165,10 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     # print("Slope {} Intercept {} R {} P {} err {}".format(slope, intercept, r_value, p_value, std_err))
     flat = slope * math.log10(freq[first_freq])
     # print('Flat {}'.format(flat))
-    line = np.array([flat if i < first_freq else slope * math.log10(f) for i, f in enumerate(freq)]) + intercept
+    line = (
+        np.array([flat if i < first_freq else slope * math.log10(f) for i, f in enumerate(freq)])
+        + intercept
+    )
     # print('Line {}'.format(line))
     # print(
     #    "Target_interp from {:.1f}dB at {}Hz to {:.1f}dB at {}Hz".format(

@@ -121,7 +121,13 @@ class Biquad:
 
     # perform filtering function
     def __call__(self, x):
-        y = self.b0 * x + self.b1 * self.x1 + self.b2 * self.x2 - self.a1 * self.y1 - self.a2 * self.y2
+        y = (
+            self.b0 * x
+            + self.b1 * self.x1
+            + self.b2 * self.x2
+            - self.a1 * self.y1
+            - self.a2 * self.y2
+        )
         self.x2 = self.x1
         self.x1 = x
         self.y2 = self.y1
@@ -135,14 +141,20 @@ class Biquad:
             (self.b0 + self.b1 + self.b2) ** 2
             - 4 * (self.b0 * self.b1 + 4 * self.b0 * self.b2 + self.b1 * self.b2) * phi
             + 16 * self.b0 * self.b2 * phi * phi
-        ) / ((1 + self.a1 + self.a2) ** 2 - 4 * (self.a1 + 4 * self.a2 + self.a1 * self.a2) * phi + 16 * self.a2 * phi * phi)
+        ) / (
+            (1 + self.a1 + self.a2) ** 2
+            - 4 * (self.a1 + 4 * self.a2 + self.a1 * self.a2) * phi
+            + 16 * self.a2 * phi * phi
+        )
         r = max(0, r)
         return r ** (0.5)
 
     def result(self, f):
         phi = (math.sin(math.pi * f * 2 / (2 * self.srate))) ** 2
         phi2 = phi * phi
-        r = (self.r_up0 + self.r_up1 * phi + self.r_up2 * phi2) / (self.r_dw0 + self.r_dw1 * phi + self.r_dw2 * phi2)
+        r = (self.r_up0 + self.r_up1 * phi + self.r_up2 * phi2) / (
+            self.r_dw0 + self.r_dw1 * phi + self.r_dw2 * phi2
+        )
         r = max(0, r)
         return r ** (0.5)
 
@@ -176,5 +188,7 @@ class Biquad:
     def np_log_result(self, freq):
         phi = np.sin(math.pi * freq * 2 / (2 * self.srate)) ** 2
         phi2 = phi**2
-        r = (self.r_up0 + self.r_up1 * phi + self.r_up2 * phi2) / (self.r_dw0 + self.r_dw1 * phi + self.r_dw2 * phi2)
+        r = (self.r_up0 + self.r_up1 * phi + self.r_up2 * phi2) / (
+            self.r_dw0 + self.r_dw1 * phi + self.r_dw2 * phi2
+        )
         return np.where(r <= 0.0, -200, 20.0 * np.log10(np.sqrt(r)))

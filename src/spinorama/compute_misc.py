@@ -31,24 +31,28 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
     er = dfs[dfs.Measurements == "Early Reflections"].rename(columns={"dB": "ER"}).set_index("Freq")
     sp = dfs[dfs.Measurements == "Sound Power"].rename(columns={"dB": "SP"}).set_index("Freq")
     logger.debug(
-        "unify_freq: on.shape={0} lw.shape={1} er.shape={2} sp.shape={3}".format(on.shape, lw.shape, er.shape, sp.shape)
+        "unify_freq: on.shape={0} lw.shape={1} er.shape={2} sp.shape={3}",
+        on.shape,
+        lw.shape,
+        er.shape,
+        sp.shape,
     )
 
     # align 2 by 2
     align = on.align(lw, axis=0)
-    logger.debug("on+lw shape: {0}".format(align[0].shape))
+    logger.debug("on+lw shape: {0}", align[0].shape)
     if er.shape[0] != 0:
         align = align[0].align(er, axis=0)
-        logger.debug("+er shape: {0}".format(align[0].shape))
+        logger.debug("+er shape: {0}", align[0].shape)
     else:
         logger.debug("skipping ER")
     all_on = align[0].align(sp, axis=0)
-    logger.debug("+sp shape: {0}".format(all_on[0].shape))
+    logger.debug("+sp shape: {0}", all_on[0].shape)
     # realigned with the largest frame
     all_lw = pd.DataFrame()
     if lw.shape[0] != 0:
         all_lw = all_on[0].align(lw, axis=0)
-        logger.debug("Before call: {0} and {1}".format(er.shape, all_on[0].shape))
+        logger.debug("Before call: {0} and {1}", er.shape, all_on[0].shape)
     all_er = pd.DataFrame()
     if er.shape[0] != 0:
         all_er = all_on[0].align(er, axis=0)
@@ -57,12 +61,11 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
         all_sp = all_on[0].align(sp, axis=0)
     # expect all the same
     logger.debug(
-        "Shapes ON {0} LW {1} ER {2} SP {3}".format(
-            all_on[0].shape if all_on is not None and len(all_on) > 0 else "--",
-            all_lw[1].shape if all_lw is not None and len(all_lw) > 1 else "--",
-            all_er[1].shape if all_er is not None and len(all_er) > 1 else "--",
-            all_sp[1].shape if all_sp is not None and len(all_sp) > 1 else "--",
-        )
+        "Shapes ON {0} LW {1} ER {2} SP {3}",
+        all_on[0].shape if all_on is not None and len(all_on) > 0 else "--",
+        all_lw[1].shape if all_lw is not None and len(all_lw) > 1 else "--",
+        all_er[1].shape if all_er is not None and len(all_er) > 1 else "--",
+        all_sp[1].shape if all_sp is not None and len(all_sp) > 1 else "--",
     )
     # extract right parts and interpolate
     a_on = all_on[0].drop("Measurements", axis=1).interpolate()
@@ -77,11 +80,10 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
         a_sp = all_sp[1].drop("Measurements", axis=1).interpolate()
     # expect all the same
     logger.debug(
-        "Shapes: {0} {1} {2}".format(
-            a_lw.shape if not a_lw.empty else "--",
-            a_er.shape if not a_er.empty else "--",
-            a_sp.shape if not a_sp.empty else "--",
-        )
+        "Shapes: {0} {1} {2}",
+        a_lw.shape if not a_lw.empty else "--",
+        a_er.shape if not a_er.empty else "--",
+        a_sp.shape if not a_sp.empty else "--",
     )
     # remove NaN numbers
     data = {}
@@ -149,7 +151,9 @@ def reshape(x, y, z, nscale):
     # change the shape and rescale it by nscale
     nx, _ = x.shape
     # expand x-axis and y-axis
-    lxi = [np.linspace(x[0][i], x[0][i + 1], nscale, endpoint=False) for i in range(0, len(x[0]) - 1)]
+    lxi = [
+        np.linspace(x[0][i], x[0][i + 1], nscale, endpoint=False) for i in range(0, len(x[0]) - 1)
+    ]
     lx = [i for j in lxi for i in j] + [x[0][-1] for i in range(0, nscale)]
     nly = (nx - 1) * nscale + 1
     # keep order
@@ -422,12 +426,18 @@ def compute_statistics(data_frame, measurement, min_freq, max_freq, hist_min_fre
     restricted_minmax = data_frame.loc[(data_frame.Freq > min_freq) & (data_frame.Freq < max_freq)]
     restricted_spl = restricted_minmax[measurement]
     # regression line
-    slope, intercept, _, _, _ = stats.linregress(x=np.log10(restricted_minmax["Freq"]), y=restricted_spl)
+    slope, intercept, _, _, _ = stats.linregress(
+        x=np.log10(restricted_minmax["Freq"]), y=restricted_spl
+    )
     #
-    hist_minmax = data_frame.loc[(data_frame.Freq > hist_min_freq) & (data_frame.Freq < hist_max_freq)]
+    hist_minmax = data_frame.loc[
+        (data_frame.Freq > hist_min_freq) & (data_frame.Freq < hist_max_freq)
+    ]
     hist_spl = hist_minmax[measurement]
     # hist_dist = [dist_point_line(math.log10(f), db, slope, -1, intercept) for f, db in zip(hist_minmax.Freq, hist_spl)]
-    hist_dist = [abs(db - (slope * math.log10(f) + intercept)) for f, db in zip(hist_minmax.Freq, hist_spl)]
+    hist_dist = [
+        abs(db - (slope * math.log10(f) + intercept)) for f, db in zip(hist_minmax.Freq, hist_spl)
+    ]
     # for i, (f, db) in enumerate(zip(hist_minmax.Freq, hist_spl)):
     #    print('{:4f}hz {:0.2f} db {:2.1f} dist={:0.2f}'.format(f, math.log10(f), db, hist_dist[i]))
     # build an histogram to see where the deviation is above each treshhole

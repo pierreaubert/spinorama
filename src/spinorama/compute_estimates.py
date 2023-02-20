@@ -37,18 +37,21 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
 
         freq_min = onaxis.Freq.min()
         freq_max = onaxis.Freq.max()
-        logger.debug("Freq min: {0}".format(freq_min))
+        logger.debug("Freq min: %f", freq_min)
         if math.isnan(freq_min) or math.isnan(freq_max):
-            logger.error("Estimates failed for onaxis {0}".format(onaxis.shape))
+            logger.error("Estimates failed for onaxis %s", onaxis.shape)
             return {}
 
         # mean over 300-10k
         y_ref = np.mean(
-            onaxis.loc[(onaxis.Freq >= max(freq_min, MIDRANGE_MIN_FREQ)) & (onaxis.Freq <= min(freq_max, MIDRANGE_MAX_FREQ))].dB
+            onaxis.loc[
+                (onaxis.Freq >= max(freq_min, MIDRANGE_MIN_FREQ))
+                & (onaxis.Freq <= min(freq_max, MIDRANGE_MAX_FREQ))
+            ].dB
         )
         y_3 = None
         y_6 = None
-        logger.debug("mean over {}-{} Hz = {}".format(MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ, y_ref))
+        logger.debug("mean over %f-%f Hz = %f", MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ, y_ref)
         restricted_onaxis = onaxis.loc[(onaxis.Freq < MIDRANGE_MIN_FREQ)]
         # note that this is not necessary the max
         restricted_onaxis_3 = restricted_onaxis.dB < (y_ref - 3)
@@ -60,12 +63,14 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
         if len(restricted_onaxis_6) > 0:
             y_6_idx = np.argmin(restricted_onaxis_6)
             y_6 = restricted_onaxis.Freq[y_6_idx]
-        logger.debug("-3 and -6: {}Hz and {}Hz".format(y_3, y_6))
+        logger.debug("-3 and -6: %fHz and %fHz", y_3, y_6)
         #
-        up: float = onaxis.loc[(onaxis.Freq >= MIDRANGE_MIN_FREQ) & (onaxis.Freq <= MIDRANGE_MAX_FREQ)].dB.max()
+        up: float = onaxis.loc[
+            (onaxis.Freq >= MIDRANGE_MIN_FREQ) & (onaxis.Freq <= MIDRANGE_MAX_FREQ)
+        ].dB.max()
         down: float = onaxis.loc[(onaxis.Freq >= 100) & (onaxis.Freq <= 10000)].dB.min()
         band = max(abs(up - y_ref), abs(y_ref - down))
-        logger.debug("band {}".format(band))
+        logger.debug("band [%s]", band)
         est = {
             "ref_from": MIDRANGE_MIN_FREQ,
             "ref_to": MIDRANGE_MAX_FREQ,
@@ -79,7 +84,7 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
         if not math.isnan(band):
             est["ref_band"] = round(band, 1)
 
-        logger.debug("est v1 {}".format(est))
+        logger.debug("est v1 %s", est)
 
         # estimate sensivity for passive speakers
         if onaxis is not None:
@@ -87,13 +92,13 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
                 (onaxis.Freq >= SENSITIVITY_MIN_FREQ) & (onaxis.Freq <= SENSITIVITY_MAX_FREQ)
             ].dB.mean()
 
-        logger.debug("est v2 {}".format(est))
+        logger.debug("est v2 %s", est)
 
         return est
     except TypeError as type_error:
-        logger.error("Estimates failed for {0} with {1}".format(onaxis.shape, type_error))
+        logger.error("Estimates failed for %s with %s", onaxis.shape, type_error)
     except ValueError as value_error:
-        logger.error("Estimates failed for {0} with {1}".format(onaxis.shape, value_error))
+        logger.error("Estimates failed for %s with %s", onaxis.shape, value_error)
     return {}
 
 
@@ -112,12 +117,12 @@ def estimates(spin: pd.DataFrame, splH: pd.DataFrame, splV: pd.DataFrame) -> dic
                     est["dir_{}_m".format(orientation)] = dir_deg_m
                     est["dir_{}".format(orientation)] = dir_deg
                 except Exception as error:
-                    logger.warning("Computing directivity failed! {}".format(error))
+                    logger.warning("Computing directivity failed! %s", error)
 
-        logger.debug("Estimates v3: {0}".format(est))
+        logger.debug("Estimates v3: %s", est)
         return est
     except TypeError as type_error:
-        logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, type_error))
+        logger.warning("Estimates failed for %s with %s", onaxis.shape, type_error)
     except ValueError as value_error:
-        logger.warning("Estimates failed for {0} with {1}".format(onaxis.shape, value_error))
+        logger.warning("Estimates failed for %s with %s", onaxis.shape, value_error)
     return {}

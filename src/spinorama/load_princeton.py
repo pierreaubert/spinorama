@@ -76,10 +76,10 @@ def parse_graphs_speaker_princeton(speaker_path, speaker_brand, speaker_name, ve
         elif d[-9:] == "_V_IR.mat":
             v_file = d
     if h_file is None or v_file is None:
-        logger.info("Couldn't find Horizontal and Vertical IR files for speaker {:s}".format(speaker_name))
-        logger.info("Looking in directory {:s}".format(matfilename))
+        logger.info("Couldn't find Horizontal and Vertical IR files for speaker {:s}", speaker_name)
+        logger.info("Looking in directory {:s}", matfilename)
         for d in dirpath:
-            logger.info("Found file {:s}".format(d))
+            logger.info("Found file {:s}", d)
         return None
 
     h_spl = parse_graph_princeton(h_file, "H")

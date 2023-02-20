@@ -77,13 +77,21 @@ class BiquadRangeTests(unittest.TestCase):
             Q_range = [0.5, 3]
             dbGain_range = [-4, 4]
 
-            (auto_success, auto_biquad_type, auto_freq, auto_Q, auto_dB, auto_fun, auto_iter) = find_best_peak(
+            (
+                auto_success,
+                auto_biquad_type,
+                auto_freq,
+                auto_Q,
+                auto_dB,
+                auto_fun,
+                auto_iter,
+            ) = find_best_peak(
                 df_speaker=None,
                 freq=self.freq,
                 auto_target=[auto_target],
                 freq_range=freq_range,
-                Q_range=Q_range,
-                dbGain_range=dbGain_range,
+                q_range=Q_range,
+                db_gain_range=dbGain_range,
                 biquad_range=[3],
                 count=0,
                 optim_config=self.config,

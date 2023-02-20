@@ -181,14 +181,19 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
         range=[range_min, range_max],
         dtick=range_step,
         tickvals=list(range(range_min, range_max + range_step, range_step)),
-        ticktext=["{}".format(i) if not i % 5 else " " for i in range(range_min, range_max + range_step, range_step)],
+        ticktext=[
+            "{}".format(i) if not i % 5 else " "
+            for i in range(range_min, range_max + range_step, range_step)
+        ],
         showline=True,
     )
 
 
 def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
     tickvals = list(range(range_min, range_max, range_step))
-    ticktext = [f"{di}" if pos < 5 else "" for pos, di in enumerate(range(range_min, range_max, range_step))]
+    ticktext = [
+        f"{di}" if pos < 5 else "" for pos, di in enumerate(range(range_min, range_max, range_step))
+    ]
     # print('DEBUG {} {}'.format(tickvals, ticktext))
     return dict(
         title_text="DI (dB)                                                    &nbsp;",
@@ -524,9 +529,13 @@ def plot_graph_flat_traces(df, measurement, params):
 
 def plot_graph_regression_traces(df, measurement, params):
     restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
-    slope, intercept, r, p, se = stats.linregress(x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement])
+    slope, intercept, r, p, se = stats.linregress(
+        x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement]
+    )
 
-    return plot_graph_traces(df, measurement, params, slope, intercept, "Linear Regression (midrange)")
+    return plot_graph_traces(
+        df, measurement, params, slope, intercept, "Linear Regression (midrange)"
+    )
 
 
 def plot_graph_flat(df, measurement, params):
@@ -633,7 +642,11 @@ def plot_contour(spl, params):
         return x, y
 
     hx, hy = compute_horizontal_lines(min_freq, 20000, range(-150, 180, 30))
-    vrange = [100 * i for i in range(2, 9)] + [1000 * i for i in range(1, 10)] + [10000 + 1000 * i for i in range(1, 9)]
+    vrange = (
+        [100 * i for i in range(2, 9)]
+        + [1000 * i for i in range(1, 10)]
+        + [10000 + 1000 * i for i in range(1, 9)]
+    )
     vx, vy = compute_vertical_lines(-180, 180, vrange)
 
     add_lines(hx, hy)
@@ -658,7 +671,7 @@ def find_nearest_freq(dfu, hz, tolerance=0.05):
         if abs(f - hz) < hz * tolerance:
             ihz = i
             break
-    logger.debug("nearest: {0} hz at loc {1}".format(hz, ihz))
+    logger.debug("nearest: {0} hz at loc {1}", hz, ihz)
     return ihz
 
 
@@ -744,7 +757,8 @@ def plot_radar(spl, params):
                 dtick=10,
                 tickvals=list(range(0, 360, 10)),
                 ticktext=[
-                    f"{x}°" if abs(x) < 60 or not x % 30 else " " for x in (list(range(0, 190, 10)) + list(range(-170, 0, 10)))
+                    f"{x}°" if abs(x) < 60 or not x % 30 else " "
+                    for x in (list(range(0, 190, 10)) + list(range(-170, 0, 10)))
                 ],
             ),
         ),

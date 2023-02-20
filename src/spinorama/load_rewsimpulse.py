@@ -22,5 +22,5 @@ def parse_impulse_rews(filename, srate):
                     impulse.append((freq, spl, phase))
 
     except FileNotFoundError:
-        logger.error("Loading filter failed file {0} not found".format(filename))
+        logger.error("Loading filter failed file {0} not found", filename)
     return impulse

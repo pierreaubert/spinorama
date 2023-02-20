@@ -48,27 +48,30 @@ def short_curve_name(name):
     return name
 
 
-def print_freq(f):
-    if f < 1000:
-        return "{}Hz".format(int(f))
-    elif int(f) % 1000 == 0:
-        return "{}kHz".format(f // 1000)
-    else:
-        return "{:0.1f}kHz".format(f / 1000)
+def print_freq(freq):
+    """Pretty print frequency"""
+    if freq < 1000:
+        return f"{int(freq)}Hz"
+
+    if int(freq) % 1000 == 0:
+        return f"{freq // 1000}kHz"
+
+    return f"{freq / 1000:0.1f}kHz"
 
 
-def graph_eq(freq, peq, domain, title):
-    dataFrame = pd.DataFrame({"Freq": freq})
-    for i, (pos, eq) in enumerate(peq):
-        dataFrame["{} {}".format(eq.type2str(True), i)] = peq_build(freq, [(pos, eq)])
+def graph_eq(freq, peq):
+    """take a PEQ and return traces (for plotly) with frequency data"""
+    data_frame = pd.DataFrame({"Freq": freq})
+    for i, (pos, biquad) in enumerate(peq):
+        data_frame[f"{biquad.type2str(True)} {i}"] = peq_build(freq, [(pos, biquad)])
 
     traces = []
-    for i, key in enumerate(dataFrame.keys()):
+    for i, key in enumerate(data_frame.keys()):
         if key != "Freq":
             traces.append(
                 go.Scatter(
-                    x=dataFrame.Freq,
-                    y=dataFrame[key],
+                    x=data_frame.Freq,
+                    y=data_frame[key],
                     name=key,
                     legendgroup="PEQ",
                     legendgrouptitle_text="EQ",
@@ -78,7 +81,8 @@ def graph_eq(freq, peq, domain, title):
     return traces
 
 
-def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target, optim_config):
+def graph_eq_compare(freq, auto_peq, auto_target_interp, target, optim_config):
+    """ "return traces with eq v.s. target"""
     # manual_peq = [
     #    (1.0, Biquad(3, 400, 48000, 4.32, -2)),
     #    (1.0, Biquad(3, 1600, 48000, 4.32, -1)),
@@ -101,9 +105,9 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, s
     )
     for i, ati in enumerate(auto_target_interp):
         if i < len(curve_names):
-            df["ideal {}".format(curve_names[i])] = ati
+            df[f"ideal {curve_names[i]}"] = ati
         else:
-            df["ideal {}".format(i)] = ati
+            df[f"ideal {i}"] = ati
 
     if optim_config.get("smooth_measurements"):
         window_size = optim_config.get("smooth_window_size")
@@ -157,7 +161,7 @@ def graph_results(
     reg_max = optim_config["freq_reg_max"]
     domain = [reg_min, reg_max]
     # build a graph for each peq
-    g_auto_eq = graph_eq(freq, auto_peq, domain, "{} auto".format(speaker_name))
+    g_auto_eq = graph_eq(freq, auto_peq)
 
     # compare the 2 eqs
     target = -(auto_target[0] - auto_target_interp[0])
@@ -167,18 +171,28 @@ def graph_results(
     #    fd.close()
 
     # print('target {} {}'.format(np.min(target), np.max(target)))
-    g_eq_full = graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target, optim_config)
+    g_eq_full = graph_eq_compare(
+        freq,
+        auto_peq,
+        auto_target_interp,
+        target,
+        optim_config,
+    )
 
     # compare the 2 corrected curves
     df_optim = pd.DataFrame({"Freq": freq})
     df_optim["Auto"] = auto_target[0] - auto_target_interp[0] + peq_build(freq, auto_peq)
     # show the 2 spinoramas
-    unmelted_spin = spin.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
+    unmelted_spin = spin.pivot_table(
+        index="Freq", columns="Measurements", values="dB", aggfunc=max
+    ).reset_index()
 
     g_spin_noeq, g_spin_noeq_di = plot_spinorama_traces(unmelted_spin, g_params)
     g_spin_auto, g_spin_auto_di, unmelted_spin_auto = None, None, None
     if spin_auto is not None:
-        unmelted_spin_auto = spin_auto.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
+        unmelted_spin_auto = spin_auto.pivot_table(
+            index="Freq", columns="Measurements", values="dB", aggfunc=max
+        ).reset_index()
         g_spin_auto, g_spin_auto_di = plot_spinorama_traces(unmelted_spin_auto, g_params)
 
     # show the 3 optimised curves
@@ -187,8 +201,12 @@ def graph_results(
         data = unmelted_spin
         data_auto = unmelted_spin_auto
         if which_curve == "Estimated In-Room Response":
-            data = pir.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
-            data_auto = pir_auto.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
+            data = pir.pivot_table(
+                index="Freq", columns="Measurements", values="dB", aggfunc=max
+            ).reset_index()
+            data_auto = pir_auto.pivot_table(
+                index="Freq", columns="Measurements", values="dB", aggfunc=max
+            ).reset_index()
 
         # print(data.keys())
         if which_curve == "Estimated In-Room Response":
@@ -213,12 +231,19 @@ def graph_results(
             data, which_curve, target_min_freq, target_max_freq, target_min_freq, target_max_freq
         )
         auto_slope, auto_hist, auto_max = compute_statistics(
-            data_auto, which_curve, target_min_freq, target_max_freq, target_min_freq, target_max_freq
+            data_auto,
+            which_curve,
+            target_min_freq,
+            target_max_freq,
+            target_min_freq,
+            target_max_freq,
         )
 
         # generate title
         noeq_title = f"{short_curve} slope {noeq_slope:+0.2f}dB/Octave error max={noeq_max:.1f}dB"
-        auto_title = f"{short_curve} with EQ slope {auto_slope:+0.2f}dB/Octave error max={auto_max:.1f}dB"
+        auto_title = (
+            f"{short_curve} with EQ slope {auto_slope:+0.2f}dB/Octave error max={auto_max:.1f}dB"
+        )
 
         # generate histogram of deviation
         noeq_counts, noeq_bins = noeq_hist
@@ -247,10 +272,20 @@ def graph_results(
 
         # recompute over midrange only (300Hz--5kHz)
         noeq_slope, noeq_hist, noeq_max = compute_statistics(
-            data, which_curve, target_min_freq, target_max_freq, MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+            data,
+            which_curve,
+            target_min_freq,
+            target_max_freq,
+            MIDRANGE_MIN_FREQ,
+            MIDRANGE_MAX_FREQ,
         )
         auto_slope, auto_hist, auto_max = compute_statistics(
-            data_auto, which_curve, target_min_freq, target_max_freq, MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+            data_auto,
+            which_curve,
+            target_min_freq,
+            target_max_freq,
+            MIDRANGE_MIN_FREQ,
+            MIDRANGE_MAX_FREQ,
         )
         noeq_counts, noeq_bins = noeq_hist
         auto_counts, auto_bins = auto_hist

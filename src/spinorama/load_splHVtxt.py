@@ -8,7 +8,7 @@ from .load_misc import sort_angles
 logger = logging.getLogger("spinorama")
 
 
-def parse_graph_splHVtxt(dirpath, orientation):
+def parse_graph_splHVtxt(dirpath: str, orientation: str) -> pd.DataFrame:
     """Parse text files with Horizontal and Vertical data"""
     filenames = "{0}/*_{1}.txt".format(dirpath, orientation)
     files = glob.glob(filenames)
@@ -16,7 +16,7 @@ def parse_graph_splHVtxt(dirpath, orientation):
         filenames = "{0}/* _{1} *.txt".format(dirpath, orientation)
         files = glob.glob(filenames)
 
-    logger.debug("Found {} files in {}".format(len(files), dirpath))
+    logger.debug("Found %d files in %s", len(files), dirpath)
 
     symmetry = True
     for file in files:
@@ -29,7 +29,7 @@ def parse_graph_splHVtxt(dirpath, orientation):
         if int(angle) < 0:
             symmetry = False
 
-    logger.info("Symmetrie is {}".format(symmetry))
+    logger.info("Symmetrie is %s", symmetry)
 
     dfs = []
     already_loaded = set()
@@ -51,7 +51,7 @@ def parse_graph_splHVtxt(dirpath, orientation):
         else:
             angle += "°"
 
-        logger.debug('read file "{}" for angle "{}"'.format(file, angle))
+        logger.debug('read file "%s" for angle "%s"', file, angle)
         with open(file, "r") as fd:
             lines = fd.readlines()
             for l in lines:
@@ -76,33 +76,35 @@ def parse_graph_splHVtxt(dirpath, orientation):
                         dbs.append(float(db))
                     continue
 
-                logger.warning("unkown file format len words {} for line {}".format(len(words), l))
+                logger.warning("unkown file format len words %d for line %s", len(words), l)
 
         if angle == "On Axis":
             if angle not in already_loaded:
                 dfs.append(pd.DataFrame({"Freq": freqs, angle: dbs}))
                 already_loaded.add(angle)
             else:
-                print("Warning: angle {} already loaded (dirpath={})".format(angle, dirpath))
+                logger.warning("angle %s already loaded (dirpath=%s)", angle, dirpath)
         else:
             if angle != "-180°":
                 if angle not in already_loaded:
                     dfs.append(pd.DataFrame({angle: dbs}))
                     already_loaded.add(angle)
                 else:
-                    print("Warning: angle {} already loaded (dirpath={})".format(angle, dirpath))
+                    logger.warning("angle %s already loaded (dirpath=%s)", angle, dirpath)
             if symmetry and orientation == "H" and angle != "180°":
-                mangle = "-{0}".format(angle)
+                mangle = f"-{angle}"
                 dfs.append(pd.DataFrame({mangle: dbs}))
 
     return sort_angles(pd.concat(dfs, axis=1))
 
 
-def parse_graphs_speaker_splHVtxt(speaker_path, speaker_brand, speaker_name, version):
+def parse_graphs_speaker_splHVtxt(
+    speaker_path: str, speaker_brand: str, speaker_name: str, version: str
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """2 files per directory xxx_H_IR.mat and xxx_V_IR.mat"""
     dirname = "{0}/{1}/{2}".format(speaker_path, speaker_name, version)
 
-    logger.debug("scanning path {}".format(dirname))
+    logger.debug("scanning path %s", dirname)
 
     h_spl = parse_graph_splHVtxt(dirname, "H")
     v_spl = parse_graph_splHVtxt(dirname, "V")

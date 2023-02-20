@@ -47,7 +47,10 @@ class RemoteFunction:
         # list_args = flatten_args(self._function_signature, args, kwargs)
 
         def invocation(function, args, kwargs):
-            ref = "".join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(16))
+            ref = "".join(
+                random.SystemRandom().choice(string.ascii_uppercase + string.digits)
+                for _ in range(16)
+            )
 
             global_worker["queue"][ref] = (self._function, args, kwargs)
             return ref

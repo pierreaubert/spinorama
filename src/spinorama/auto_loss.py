@@ -22,12 +22,12 @@ import math
 import numpy as np
 from scipy.stats import linregress
 
-from .load_misc import graph_melt
-from .compute_cea2034 import estimated_inroom_hv
-from spinorama.ltype import List, Vector, Peq
+from spinorama.load_misc import graph_melt
+from spinorama.compute_cea2034 import estimated_inroom_hv
+from spinorama.ltype import Vector, Peq
 from spinorama.filter_peq import peq_build
 from spinorama.filter_scores import scores_apply_filter
-from .filter_peq import peq_apply_measurements
+from spinorama.filter_peq import peq_apply_measurements
 
 logger = logging.getLogger("spinorama")
 
@@ -42,13 +42,15 @@ def l2_loss(local_target: Vector, freq: Vector, peq: Peq) -> float:
     return np.linalg.norm(local_target + peq_build(freq, peq), 2)
 
 
-def leastsquare_loss(freq: Vector, local_target: List[Vector], peq: Peq, iterations: int) -> float:
+def leastsquare_loss(freq: Vector, local_target: list[Vector], peq: Peq, iterations: int) -> float:
     # sum of L2 norms if we have multiple targets
     l = [l2_loss(lt, freq, peq) for lt in local_target]
     return math.sqrt(np.square(l).sum())
 
 
-def flat_loss(freq: Vector, local_target: List[Vector], peq: Peq, iterations: int, weigths: Vector) -> float:
+def flat_loss(
+    freq: Vector, local_target: list[Vector], peq: Peq, iterations: int, weigths: Vector
+) -> float:
     # make LW as close as target as possible and SP flat
     lw = np.sum([l2_loss(local_target[i], freq, peq) for i in range(0, len(local_target) - 1)])
     # want sound power to be flat but not necessary aligned
@@ -62,20 +64,22 @@ def flat_loss(freq: Vector, local_target: List[Vector], peq: Peq, iterations: in
     return lw * sp
 
 
-def flat_loss_exp(freq: Vector, local_target: List[Vector], peq: Peq, iterations: int, weigths: Vector) -> float:
+def flat_loss_exp(
+    freq: Vector, local_target: list[Vector], peq: Peq, iterations: int, weigths: Vector
+) -> float:
     _, _, r_value, _, _ = linregress(np.log10(freq), local_target[0])
     sp = 1 - r_value**2
     return sp
 
 
-def swap_loss(freq: Vector, local_target: List[Vector], peq: Peq, iteration: int) -> float:
+def swap_loss(freq: Vector, local_target: list[Vector], peq: Peq, iteration: int) -> float:
     # try to alternate, optimise for 1 objective then the second one
     if len(local_target) == 0 or iteration < 10:
         return l2_loss([local_target[0]], freq, peq)
     return l2_loss([local_target[1]], freq, peq)
 
 
-def alternate_loss(freq: Vector, local_target: List[Vector], peq: Peq, iteration: int) -> float:
+def alternate_loss(freq: Vector, local_target: list[Vector], peq: Peq, iteration: int) -> float:
     # optimise for 2 objectives 1 each time
     if 0 in (len(local_target), iteration % 2):
         return l2_loss([local_target[0]], freq, peq)

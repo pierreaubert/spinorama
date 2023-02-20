@@ -17,7 +17,10 @@ models = {}
 manual_exceptions_table = {
     "Alcons Audio 2xQR24+2QM24.zip": ("Alcons Audio QR24", "vendor-v2QR24+2QM24"),
     "Alcons Audio 3xQR24+1xQM24.zip": ("Alcons Audio QR24", "vendor-v3QR24+1QM24"),
-    "DB Audiotechnik AL60 x3 + 2 sub.zip": ("DB Audiotechnik AL60", "vendor-pattern-60x30-v3x+2sub"),
+    "DB Audiotechnik AL60 x3 + 2 sub.zip": (
+        "DB Audiotechnik AL60",
+        "vendor-pattern-60x30-v3x+2sub",
+    ),
     "DB Audiotechnik AL60 x3.zip": ("DB Audiotechnik AL60", "vendor-pattern-60x30-v3x"),
     "DB Audiotechnik AL60.zip": ("DB Audiotechnik AL60", "vendor-pattern-60x30-v1x"),
     "DB Audiotechnik AL90 x3.zip": ("DB Audiotechnik AL90", "vendor-pattern-90x30-v3x"),
@@ -139,7 +142,12 @@ def match(version, name):
     """Implement some basic matching between the name in Windows and the name in the metadata file"""
     if version in name:
         return True
-    if version[0] == "x" and len(version) > 1 and version[1].isdigit() and "v{}".format(version[1:]) in name:
+    if (
+        version[0] == "x"
+        and len(version) > 1
+        and version[1].isdigit()
+        and "v{}".format(version[1:]) in name
+    ):
         return True
     if version[0] == "[" and version[-1] == "]":
         parts = version[1:-1].split()
@@ -280,7 +288,9 @@ def find_speaker(zipfile):
     if speaker in metadata.keys() and version is not None:
         measurements = metadata[speaker]
         if len(measurements["measurements"].keys()) == 1:
-            destination = "datas/measurements/{}/{}".format(speaker, measurements["default_measurement"])
+            destination = "datas/measurements/{}/{}".format(
+                speaker, measurements["default_measurement"]
+            )
             # print("goal {} goes to {}".format(zipfile, destination))
             process(zipfile, speaker, destination)
             return 0

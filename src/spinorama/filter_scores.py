@@ -37,7 +37,9 @@ def noscore_apply_filter(df_speaker: DataSpeaker, peq: Peq):
     if "CEA2034" in df_speaker.keys():
         spin = df_speaker["CEA2034"]
         try:
-            pivoted_spin = spin.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
+            pivoted_spin = spin.pivot_table(
+                index="Freq", columns="Measurements", values="dB", aggfunc=max
+            ).reset_index()
             # modify all curve but should not touch DI
             spin_filtered = peq_apply_measurements(pivoted_spin, peq)
             # not modified by eq
@@ -91,10 +93,26 @@ def scores_print(score: dict, score_filtered: dict):
     print("         SPK auEQ")
     print("-----------------")
     print("NBD  ON {0:0.2f} {1:0.2f}".format(score["nbd_on_axis"], score_filtered["nbd_on_axis"]))
-    print("NBD  LW {0:0.2f} {1:0.2f}".format(score["nbd_listening_window"], score_filtered["nbd_listening_window"]))
-    print("NBD PIR {0:0.2f} {1:0.2f}".format(score["nbd_pred_in_room"], score_filtered["nbd_pred_in_room"]))
-    print("SM  PIR {0:0.2f} {1:0.2f}".format(score["sm_pred_in_room"], score_filtered["sm_pred_in_room"]))
-    print("SM   SP {0:0.2f} {1:0.2f}".format(score["sm_sound_power"], score_filtered["sm_sound_power"]))
+    print(
+        "NBD  LW {0:0.2f} {1:0.2f}".format(
+            score["nbd_listening_window"], score_filtered["nbd_listening_window"]
+        )
+    )
+    print(
+        "NBD PIR {0:0.2f} {1:0.2f}".format(
+            score["nbd_pred_in_room"], score_filtered["nbd_pred_in_room"]
+        )
+    )
+    print(
+        "SM  PIR {0:0.2f} {1:0.2f}".format(
+            score["sm_pred_in_room"], score_filtered["sm_pred_in_room"]
+        )
+    )
+    print(
+        "SM   SP {0:0.2f} {1:0.2f}".format(
+            score["sm_sound_power"], score_filtered["sm_sound_power"]
+        )
+    )
     print("LFX       {0:0.0f}   {1:0.0f}".format(score["lfx_hz"], score_filtered["lfx_hz"]))
     print("LFQ     {0:0.2f} {1:0.2f}".format(score["lfq"], score_filtered["lfq"]))
     print("-----------------")
@@ -112,7 +130,11 @@ def scores_print2(score: dict, score1: dict, score2: dict):
     res = []
     res.append("         SPK   S1   S2")
     res.append("----------------------")
-    res.append("NBD  ON {0:0.2f} {1:0.2f} {2:0.2f}".format(score["nbd_on_axis"], score1["nbd_on_axis"], score2["nbd_on_axis"]))
+    res.append(
+        "NBD  ON {0:0.2f} {1:0.2f} {2:0.2f}".format(
+            score["nbd_on_axis"], score1["nbd_on_axis"], score2["nbd_on_axis"]
+        )
+    )
     res.append(
         "NBD  LW {0:0.2f} {1:0.2f} {2:0.2f}".format(
             score["nbd_listening_window"],
@@ -135,12 +157,24 @@ def scores_print2(score: dict, score1: dict, score2: dict):
         )
     )
     res.append(
-        "SM   SP {0:0.2f} {1:0.2f} {2:0.2f}".format(score["sm_sound_power"], score1["sm_sound_power"], score2["sm_sound_power"])
+        "SM   SP {0:0.2f} {1:0.2f} {2:0.2f}".format(
+            score["sm_sound_power"], score1["sm_sound_power"], score2["sm_sound_power"]
+        )
     )
-    res.append("LFX       {0:0.0f}   {1:0.0f}   {2:0.0f}".format(score["lfx_hz"], score1["lfx_hz"], score2["lfx_hz"]))
-    res.append("LFQ     {0:0.2f} {1:0.2f} {2:0.2f}".format(score["lfq"], score1["lfq"], score2["lfq"]))
+    res.append(
+        "LFX       {0:0.0f}   {1:0.0f}   {2:0.0f}".format(
+            score["lfx_hz"], score1["lfx_hz"], score2["lfx_hz"]
+        )
+    )
+    res.append(
+        "LFQ     {0:0.2f} {1:0.2f} {2:0.2f}".format(score["lfq"], score1["lfq"], score2["lfq"])
+    )
     res.append("----------------------")
-    res.append("Score    {0:0.1f}  {1:0.1f}  {2:0.1f}".format(score["pref_score"], score1["pref_score"], score2["pref_score"]))
+    res.append(
+        "Score    {0:0.1f}  {1:0.1f}  {2:0.1f}".format(
+            score["pref_score"], score1["pref_score"], score2["pref_score"]
+        )
+    )
     res.append("----------------------")
     return "\n".join(res)
 

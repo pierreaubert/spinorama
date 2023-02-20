@@ -24,7 +24,7 @@
 
 
 <article class="message is-info">
-  <h4>Information</h4>
+  <h4>What we know about the measurement:</h4>
   <div class="message-header">
     <p>
       ${meta[speaker].get('brand')} ${meta[speaker].get('model')}
@@ -66,19 +66,16 @@
     if sensitivity is not None:
         sdb = float(sensitivity)
 %>
-<li>What we know about the measurement:
 % if g_key in meta[speaker]["measurements"]:
-  <ul>
-    <li>Quality of the measurement data is
+<li>Quality of the measurement data is
 %   if  meta[speaker]["measurements"][g_key].get("quality", "?") != "?":
     <b>${meta[speaker]["measurements"][g_key]["quality"]}</b>
 %   else:
     <b>unknown</b>
 %   endif
-.
-    </li>
+.</li>
 %   if meta[speaker]["measurements"][g_key].get("origin", "?") != "?":
-    <li>
+<li>
 %     if g_key == "misc-sr":
   Data is from Sound and Recording
 %     elif g_key == "misc-pp":
@@ -86,10 +83,10 @@
 %     else:
   Origin of the data is ${meta[speaker]["measurements"][g_key]["origin"]}
 %     endif
-.    </li>
+.</li>
 %   endif
 %   if meta[speaker]["measurements"][g_key].get("format", "?") != "?":
-     <li>
+<li>
   Format of the data is
 %     if meta[speaker]["measurements"][g_key]["format"] == 'webplotdigitizer':
   a scanned image
@@ -102,18 +99,16 @@
 %     elif meta[speaker]["measurements"][g_key]["format"] == 'gllHVtxt':
   a GLL file
 %     endif
-.    </li>
+.</li>
 %   endif
 %   if meta[speaker]["measurements"][g_key].get("extras", "?") != "?":
-     <li>
+<li>
 %     if meta[speaker]["measurements"][g_key]["extras"].get("is_equed"):
   Warning: this measurement was already process with an equalizer
 %     endif
-.    </li>
+.</li>
 %   endif
-  </ul>
 % endif
-</li>
 % if sdb is not None:
 %   if g_key in meta[speaker]["measurements"]:
 %     if meta[speaker]["measurements"][g_key].get("format", "?") != "gllHVTxt":

@@ -28,7 +28,7 @@ def parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name,
             filename = "{0}/{1}/{2}/{3}.txt".format(speaker_path, speaker_name, version, txt)
             with open(filename, "r") as f:
                 lines = f.readlines()
-                logger.debug("read f {} found {}".format(f, len(lines)))
+                logger.debug("read f %s found %d", f, len(lines))
                 for l in lines:
                     if len(l) > 0 and l[0] == "*":
                         continue
@@ -43,6 +43,6 @@ def parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name,
 
         return "CEA2034", pd.DataFrame({"Freq": freqs, "dB": spls, "Measurements": msrts})
     except FileNotFoundError:
-        logger.error("Speaker: {0} Not found: {1}".format(speaker_brand, speaker_name))
+        logger.error("Speaker: %s Not found: %s", speaker_brand, speaker_name)
         return {}
     return dfs

@@ -23,9 +23,8 @@ import math
 import numpy as np
 import scipy.optimize as opt
 
-from .ltype import DataSpeaker, Peq
+from .ltype import DataSpeaker
 from .filter_iir import Biquad
-from .filter_peq import peq_print
 from .auto_loss import loss
 
 
@@ -37,13 +36,15 @@ def find_best_biquad(
     freq,
     auto_target,
     freq_range,
-    Q_range,
-    dbGain_range,
+    q_range,
+    db_gain_range,
     biquad_range,
     count,
     optim_config,
     prev_best,
 ):
+    """Find the best possible biquad that minimise the loss function"""
+
     def opt_peq(x):
         peq = [(1.0, Biquad(int(x[0]), x[1], 48000, x[2], x[3]))]
         return loss(df_speaker, freq, auto_target, peq, count, optim_config)
@@ -51,8 +52,8 @@ def find_best_biquad(
     bounds = [
         (biquad_range[0], biquad_range[-1]),
         (freq_range[0], freq_range[-1]),
-        (Q_range[0], Q_range[-1]),
-        (dbGain_range[0], dbGain_range[-1]),
+        (q_range[0], q_range[-1]),
+        (db_gain_range[0], db_gain_range[-1]),
     ]
 
     logger.debug(
@@ -99,17 +100,19 @@ def find_best_biquad(
             integrality=[True, False, False, False],
         )
         logger.debug(
-            "          optim loss {:2.2f} in {} iter type {:d} at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(
-                res["fun"],
-                res["nfev"],
-                int(res["x"][0]),
-                res["x"][1],
-                res["x"][2],
-                res["x"][3],
-                res["message"],
-            )
+            "          optim loss %2.2f in %s iter type %d at F %.0f Hz Q %2.2f db_gain %2.2f %s",
+            res["fun"],
+            res["nfev"],
+            int(res["x"][0]),
+            res["x"][1],
+            res["x"][2],
+            res["x"][3],
+            res["message"],
         )
-        if res.message[0] == "Maximum number of function call reached during annealing" and res.fun < prev_best:
+        if (
+            res.message[0] == "Maximum number of function call reached during annealing"
+            and res.fun < prev_best
+        ):
             res.success = True
         return (
             res.success,
@@ -122,11 +125,11 @@ def find_best_biquad(
         )
     except ValueError as value_error:
         res["success"] = False
-        logger.error("{} bounds {}".format(value_error, bounds))
+        logger.error("%s bounds %s", value_error, bounds)
         for i in range(0, 4):
             try:
                 if bounds[i][0] >= bounds[i][1]:
-                    logger.error("on bound [%i]", i)
+                    logger.error("on bound [%d]", i)
             except ValueError:
                 pass
             except IndexError:
@@ -139,13 +142,14 @@ def find_best_peak(
     freq,
     auto_target,
     freq_range,
-    Q_range,
-    dbGain_range,
+    q_range,
+    db_gain_range,
     biquad_range,
     count,
     optim_config,
     prev_best,
 ):
+    """Find the best possible peak biquad that minimise the loss function"""
     biquad_type = 3
 
     def opt_peq(x):
@@ -154,11 +158,9 @@ def find_best_peak(
 
     bounds = [
         (freq_range[0], freq_range[-1]),
-        (Q_range[0], Q_range[-1]),
-        (dbGain_range[0], dbGain_range[-1]),
+        (q_range[0], q_range[-1]),
+        (db_gain_range[0], db_gain_range[-1]),
     ]
-
-    # print('Bounds: {}'.format(bounds))
 
     x_init = [
         (bounds[0][0] + bounds[0][-1]) / 2,
@@ -194,14 +196,13 @@ def find_best_peak(
     # print('grid search top 2: {}'.format(grid_search[0:2]))
 
     logger.debug(
-        "range is [{}, {}], [{}, {}], [{}, {}]".format(
-            bounds[0][0],
-            bounds[0][1],
-            bounds[1][0],
-            bounds[1][1],
-            bounds[2][0],
-            bounds[2][1],
-        )
+        "range is [%f, %f], [%f, %f], [%f, %f]",
+        bounds[0][0],
+        bounds[0][1],
+        bounds[1][0],
+        bounds[1][1],
+        bounds[2][0],
+        bounds[2][1],
     )
 
     # can use differential_evolution basinhoppin dual_annealing
@@ -246,19 +247,26 @@ def find_best_peak(
             # callback=display,
         )
         logger.info(
-            "          optim loss {:2.2f} in {} iter type PK at F {:.0f} Hz Q {:2.2f} dbGain {:2.2f} {}".format(
-                res.fun, res.nfev, res.x[0], res.x[1], res.x[2], res.message
-            )
+            "          optim loss %2.2f in %s iter type PK at F %.0f Hz Q %2.2f dbGain %2.2f %s",
+            res.fun,
+            res.nfev,
+            res.x[0],
+            res.x[1],
+            res.x[2],
+            res.message,
         )
-        if res.message[0] == "Maximum number of function call reached during annealing" and res.fun < prev_best:
+        if (
+            res.message[0] == "Maximum number of function call reached during annealing"
+            and res.fun < prev_best
+        ):
             res.success = True
         return res.success, biquad_type, res.x[0], res.x[1], res.x[2], res.fun, res.nit
     except ValueError as value_error:
-        logger.error("{} bounds {}".format(value_error, bounds))
+        logger.error("%s bounds %s", value_error, bounds)
         for i in range(0, 4):
             try:
                 if bounds[i][0] >= bounds[i][1]:
-                    logger.error("on bound [{}]".format(i))
+                    logger.error("on bound [%d]", i)
             except ValueError:
                 pass
             except IndexError:

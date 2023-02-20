@@ -12,9 +12,9 @@ def write_multiformat(chart, filename, force):
     if not pathlib.Path(filename).is_file() or force:
         chart.write_image(filename)
     if os.path.getsize(filename) == 0:
-        logger.warning("Saving {} failed!".format(filename))
+        logger.warning("Saving %s failed!", filename)
         return
-    logger.info("Saving {}".format(filename))
+    logger.info("Saving %s", filename)
 
     with wim(filename=filename) as pict:
         filename = filename.replace("_large", "")

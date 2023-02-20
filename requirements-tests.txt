@@ -7,5 +7,6 @@ pylinkvalidator
 pylint
 pytest
 pytest-cov
+ruff
 selenium
 yapf

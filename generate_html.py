@@ -68,7 +68,7 @@ def generate_speaker(mako, dataframe, meta, site, useSearch):
             continue
         for origin, measurements in origins.items():
             for key, dfs in measurements.items():
-                logger.debug("generate {0} {1} {2}".format(speaker_name, origin, key))
+                logger.debug("generate {0} {1} {2}", speaker_name, origin, key)
                 # freq
                 freq_filter = [
                     "CEA2034",
@@ -113,7 +113,7 @@ def generate_speaker(mako, dataframe, meta, site, useSearch):
                 index_name = "{0}/index_{1}.html".format(dirname, key)
 
                 # write index.html
-                logger.info("Writing {0} for {1}".format(index_name, speaker_name))
+                logger.info("Writing {0} for {1}", index_name, speaker_name)
                 speaker_content = speaker_html.render(
                     speaker=speaker_name,
                     g_freq=freq,
@@ -132,7 +132,7 @@ def generate_speaker(mako, dataframe, meta, site, useSearch):
                 for kind in [freq, contour, radar]:  # isoband, directivity]:
                     for graph_name in kind:
                         graph_filename = "{0}/{1}/{2}.html".format(dirname, key, graph_name)
-                        logger.info("Writing {2}/{0} for {1}".format(graph_filename, speaker_name, key))
+                        logger.info("Writing {2}/{0} for {1}", graph_filename, speaker_name, key)
                         graph_content = graph_html.render(graph=graph_name, meta=meta, site=site)
                         write_if_different(graph_content, graph_filename)
     return 0
@@ -178,7 +178,9 @@ def main():
                     df[speaker_name][origin_name][default_name][g] = {}
 
     # configure Mako
-    mako_templates = TemplateLookup(directories=["src/website"], module_directory="/tmp/mako_modules")
+    mako_templates = TemplateLookup(
+        directories=["src/website"], module_directory="/tmp/mako_modules"
+    )
 
     # write index.html
     logger.info("Write index.html")
@@ -196,12 +198,16 @@ def main():
 
     keys_sorted_date = sorted(
         meta,
-        key=lambda a: sort_meta_date(meta[a]["measurements"].get(meta[a].get("default_measurement"))),
+        key=lambda a: sort_meta_date(
+            meta[a]["measurements"].get(meta[a].get("default_measurement"))
+        ),
         reverse=True,
     )
     keys_sorted_score = sorted(
         meta,
-        key=lambda a: sort_meta_score(meta[a]["measurements"].get(meta[a].get("default_measurement"))),
+        key=lambda a: sort_meta_score(
+            meta[a]["measurements"].get(meta[a].get("default_measurement"))
+        ),
         reverse=True,
     )
     meta_sorted_score = {k: meta[k] for k in keys_sorted_score}
@@ -237,12 +243,14 @@ def main():
             "similar",
         ):
             item_name = "{0}.html".format(item)
-            logger.info("Write {0}".format(item_name))
+            logger.info("Write {0}", item_name)
             item_html = mako_templates.get_template(item_name)
             use_search = False
             if item in ("scores", "similar"):
                 use_search = True
-            item_content = item_html.render(df=df, meta=meta_sorted_score, site=site, useSearch=use_search)
+            item_content = item_html.render(
+                df=df, meta=meta_sorted_score, site=site, useSearch=use_search
+            )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename)
 
@@ -296,11 +304,11 @@ def main():
         print("flow failed")
 
     # copy css/js files
-    logger.info("Copy js/css files to {}".format(cpaths.CPATH_DOCS))
+    logger.info("Copy js/css files to %s", cpaths.CPATH_DOCS)
     try:
         for item in ("misc",):
             item_name = "assets/{0}.js".format(item)
-            logger.info("Write {0}".format(item_name))
+            logger.info("Write {0}", item_name)
             item_html = mako_templates.get_template(item_name)
             item_content = item_html.render(df=df, meta=meta_sorted_score, site=site)
             item_filename = cpaths.CPATH_DOCS + "/" + item_name

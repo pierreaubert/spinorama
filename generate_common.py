@@ -52,7 +52,9 @@ def get_custom_logger(duplicate=False):
     """Define properties of our logger"""
     custom = logging.getLogger("spinorama")
     custom_file_handler = logging.FileHandler("debug_optim.log")
-    formatter = logging.Formatter("%(asctime)s - %(filename)s:%(funcName)s:%(lineno)d - %(levelname)s - %(message)s")
+    formatter = logging.Formatter(
+        "%(asctime)s - %(filename)s:%(funcName)s:%(lineno)d - %(levelname)s - %(message)s"
+    )
     custom_file_handler.setFormatter(formatter)
     custom.addHandler(custom_file_handler)
     if duplicate is True:
@@ -207,7 +209,9 @@ def cache_load_seq(filters, smoke_test):
     cache_files = glob("{}/*.h5".format(CACHE_DIR))
     count = 0
     for cache in cache_files:
-        if filters.get("speaker_name") is not None and cache[-5:-3] != cache_key(filters.get("speaker_name")):
+        if filters.get("speaker_name") is not None and cache[-5:-3] != cache_key(
+            filters.get("speaker_name")
+        ):
             continue
         df_read = fl.load(path=cache)
         # print('reading file {} found {} entries'.format(cache, len(df_read)))
@@ -237,7 +241,9 @@ def cache_load_distributed_map(filters, smoke_test):
     ids = []
     # mapper read the cache and start 1 worker per file
     for cache in cache_files:
-        if filters.get("speaker_name") is not None and cache[-5:-3] != cache_key(filters.get("speaker_name")):
+        if filters.get("speaker_name") is not None and cache[-5:-3] != cache_key(
+            filters.get("speaker_name")
+        ):
             continue
         ids.append(cache_fetch.remote(cache))
 
