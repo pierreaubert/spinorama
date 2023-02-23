@@ -85,9 +85,7 @@ if __name__ == "__main__":
         options_first=True,
     )
 
-    LEVEL = args2level(args)
-    logger = get_custom_logger(duplicate=True)
-    logger.setLevel(LEVEL)
+    logger = get_custom_logger(level=args2level(args), duplicate=True)
 
     FORCE = args["--force"]
 
