@@ -5,8 +5,12 @@
 from typing import TypedDict, Literal
 
 # common notes for some loudspeakers
-note_genelec_gll = "Data provided by Genelec is with 1/3rd octave smoothing and 5 degrees resolution"
-note_jbl_gll = "Data provided by JBL is highly variable, beware. It ranges from excellent to surprising"
+note_genelec_gll = (
+    "Data provided by Genelec is with 1/3rd octave smoothing and 5 degrees resolution"
+)
+note_jbl_gll = (
+    "Data provided by JBL is highly variable, beware. It ranges from excellent to surprising"
+)
 note_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz"
 note2_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz. Data comes from a GLL file provided by Meyer: configuration is measured at 10m, resolution is 2.5 degrees, signal is aes broadband 20Hz-20kHz, air attenuation is disabled"
 note_qsc_gll = "Data provided by QSC is of good quality but highly smoothed"
@@ -47,9 +51,14 @@ class Extras(TypedDict, total=False):
     score_penalty: float
 
 
+MeasurementFormat = Literal[
+    "klippel", "webplotdigitizer", "splHVtxt", "gllHVtxt", "princeton", "rewstextdump"
+]
+
+
 class MeasurementRequired(TypedDict):
     origin: str
-    format: str
+    format: MeasurementFormat
 
 
 class DataAcquisition(TypedDict, total=False):
@@ -6679,6 +6688,103 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "JBL CV5012": {
+        "brand": "JBL",
+        "model": "CV5012",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-JBL",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20230223",
+                "quality": "medium",
+                "notes": "This is an installation speaker that you can use indoor or outdoor.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 630,
+                        "width": 394,
+                        "depth": 429,
+                    },
+                    "weight": 25.0,
+                },
+            },
+        },
+    },
+    "JBL CV5015": {
+        "brand": "JBL",
+        "model": "CV5015",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-JBL",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20230223",
+                "quality": "medium",
+                "notes": "This is an installation speaker that you can use indoor or outdoor.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 700,
+                        "width": 431,
+                        "depth": 520,
+                    },
+                    "weight": 33.0,
+                },
+            },
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-JBL",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20230223",
+                "quality": "medium",
+                "notes": "This is an installation speaker that you can use indoor or outdoor.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 700,
+                        "width": 431,
+                        "depth": 520,
+                    },
+                    "weight": 33.0,
+                },
+            },
+        },
+    },
     "JBL Arena 120": {
         "brand": "JBL",
         "model": "Arena 120",
@@ -6751,6 +6857,76 @@ speakers_info: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-jbl-pro-studio.html",
+            },
+        },
+    },
+    "JBL SLP12": {
+        "brand": "JBL",
+        "model": "SLP12",
+        "type": "passive",
+        "price": "200",
+        "amount": "each",
+        "shape": "surround",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20230223",
+                "quality": "medium",
+                "notes": "This is a speaker designed to be mounted on a wall.",
+                "specifications": {
+                    "sensitivity": 84,
+                    "impedance": 8,
+                    "SPL": {
+                        "continuous": 100,
+                        "peak": 106,
+                    },
+                    "size": {
+                        "height": 248,
+                        "width": 230,
+                        "depth": 100,
+                    },
+                    "weight": 1.9,
+                },
+            },
+        },
+    },
+    "JBL SLP14": {
+        "brand": "JBL",
+        "model": "SLP14",
+        "type": "passive",
+        "price": "280",
+        "amount": "each",
+        "shape": "surround",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20230223",
+                "quality": "medium",
+                "notes": "This is a speaker designed to be mounted on a wall.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 140,
+                        "vertical": 120,
+                    },
+                    "sensitivity": 85,
+                    "impedance": 8,
+                    "SPL": {
+                        "continuous": 102,
+                        "peak": 108,
+                    },
+                    "size": {
+                        "height": 286,
+                        "width": 263,
+                        "depth": 100,
+                    },
+                    "weight": 2.8,
+                },
             },
         },
     },
@@ -13203,6 +13379,24 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Sigberg Audio SBS.1": {
+        "skip": True,  # preliminary data
+        "brand": "Sigberg Audio",
+        "model": "SBS.1",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Sigberg Audio",
+                "format": "rewstextdump",
+                "quality": "low",
+                "review_published": "20230223",
+            },
+        },
+    },
     "Turbosound NuQ62": {
         "brand": "Turbosound",
         "model": "NuQ62",
@@ -16691,6 +16885,13 @@ origins_info = {
         "logo": "docs/metadata/turbosound.png",
         "logo-small": "docs/metadata/turbosound.png",
         "url": "https://www.turbosound.com",
+    },
+    "Vendors-Sigberg Audio": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.sigbergaudio.no",
     },
     "Vendors-Reflector Audio": {
         "min hz": 20,

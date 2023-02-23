@@ -1,0 +1,16 @@
+EQ for JBL CV5012 computed from Vendors-JBL data
+Preference Score 1.88 with EQ 3.05
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
+Dated: 2023-02-23-14:48:54
+
+Preamp: -3.5 dB
+
+Filter  1: ON PK Fc    46 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON PK Fc  2600 Hz Gain +2.85 dB Q 0.28
+Filter  3: ON PK Fc 11315 Hz Gain -3.12 dB Q 3.00
+Filter  4: ON PK Fc   140 Hz Gain -2.00 dB Q 3.00
+Filter  5: ON PK Fc   385 Hz Gain +1.36 dB Q 2.87
+Filter  6: ON PK Fc   629 Hz Gain -0.52 dB Q 3.00
+Filter  7: ON PK Fc  4967 Hz Gain +1.02 dB Q 1.87
+Filter  8: ON PK Fc  2293 Hz Gain -1.12 dB Q 3.00
+Filter  9: ON PK Fc  2291 Hz Gain -1.19 dB Q 3.00
