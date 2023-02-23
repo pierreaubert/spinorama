@@ -1,12 +1,30 @@
 # -*- coding: utf-8 -*-
-import logging
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import numpy as np
 import pandas as pd
 import datas.metadata as metadata
-from .compute_misc import resample
-from .compute_estimates import estimates
-from .compute_scores import speaker_pref_rating
-from .plot import (
+
+from spinorama import logger
+from spinorama.compute_misc import resample
+from spinorama.compute_estimates import estimates
+from spinorama.compute_scores import speaker_pref_rating
+from spinorama.plot import (
     plot_params_default,
     contour_params_default,
     radar_params_default,
@@ -21,8 +39,6 @@ from .plot import (
     plot_summary,
 )
 
-logger = logging.getLogger("spinorama")
-
 
 def display_spinorama(df, graph_params=plot_params_default):
     spin = df.get("CEA2034_unmelted")
@@ -33,7 +49,7 @@ def display_spinorama(df, graph_params=plot_params_default):
                 index="Freq", columns="Measurements", values="dB", aggfunc=max
             ).reset_index()
         if spin is None:
-            logger.info("Display CEA2034 not in dataframe {0}", df.keys())
+            logger.info("Display CEA2034 not in dataframe (%s)", ", ".join(df.keys()))
             return None
     return plot_spinorama(spin, graph_params)
 
@@ -44,7 +60,7 @@ def display_reflection_early(df, graph_params=plot_params_default):
             return None
         return plot_graph(df["Early Reflections_unmelted"], graph_params)
     except KeyError as ke:
-        logger.warning("Display Early Reflections failed with {0}", ke)
+        logger.warning("Display Early Reflections failed with %s", ke)
         return None
 
 
@@ -74,7 +90,7 @@ def display_inroom(df, graph_params=plot_params_default):
             graph_params,
         )
     except KeyError as ke:
-        logger.warning("Display In Room failed with {0}", ke)
+        logger.warning("Display In Room failed with %s", ke)
         return None
 
 
@@ -84,7 +100,7 @@ def display_reflection_horizontal(df, graph_params=plot_params_default):
             return None
         return plot_graph(df["Horizontal Reflections_unmelted"], graph_params)
     except KeyError as ke:
-        logger.warning("Display Horizontal Reflections failed with {0}", ke)
+        logger.warning("Display Horizontal Reflections failed with %s", ke)
         return None
 
 
@@ -103,7 +119,7 @@ def display_spl(df, axis, graph_params=plot_params_default):
             return None
         return plot_graph_spl(df[axis], graph_params)
     except KeyError as ke:
-        logger.warning("Display SPL failed with {0}", ke)
+        logger.warning("Display SPL failed with %s", ke)
         return None
 
 
@@ -165,7 +181,7 @@ def display_summary(df, params, speaker, origin, key):
     try:
         speaker_type = ""
         speaker_shape = ""
-        if speaker in metadata.speakers_info.keys():
+        if speaker in metadata.speakers_info:
             speaker_type = metadata.speakers_info[speaker].get("type", "")
             speaker_shape = metadata.speakers_info[speaker].get("shape", "")
 
@@ -177,14 +193,14 @@ def display_summary(df, params, speaker, origin, key):
         est = estimates(spin, splH, splV)
 
         # 1
-        speaker_summary = ["{0} {1}".format(speaker_shape.capitalize(), speaker_type.capitalize())]
+        speaker_summary = [f"{speaker_shape.capitalize()} {speaker_type.capitalize()}"]
 
         if est is None:
             #                    2   3   4   5   6   7   8
             speaker_summary += ["", "", "", "", "", "", ""]
         else:
             # 2, 3
-            if "ref_level" in est.keys():
+            if "ref_level" in est:
                 speaker_summary += [
                     "• Reference level {0} dB".format(est["ref_level"]),
                     "(mean over {0}-{1}k Hz)".format(

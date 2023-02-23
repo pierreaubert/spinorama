@@ -1,5 +1,21 @@
 # -*- coding: utf-8 -*-
-import logging
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import math
 from typing import List, Tuple
 import numpy as np
@@ -7,10 +23,9 @@ import pandas as pd
 from more_itertools import consecutive_groups
 from scipy.stats import linregress
 
-from .compute_cea2034 import estimated_inroom_hv
-from .load_misc import graph_melt
-
-logger = logging.getLogger("spinorama")
+from spinorama import logger
+from spinorama.compute_cea2034 import estimated_inroom_hv
+from spinorama.load_misc import graph_melt
 
 
 # https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
@@ -248,7 +263,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
                 if lfq_db is not None:
                     ratings["lfq"] = lfq_db
                 ratings["pref_score"] = pref
-        logger.info("Ratings: {0}", ratings)
+        logger.info("Ratings: %s", ratings)
         return ratings
     except ValueError as value_error:
         logger.error(value_error)

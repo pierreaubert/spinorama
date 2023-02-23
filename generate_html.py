@@ -33,9 +33,10 @@ import shutil
 import subprocess
 import pathlib
 import sys
-from docopt import docopt
 from glob import glob
-from mako.template import Template
+
+from docopt import docopt
+
 from mako.lookup import TemplateLookup
 
 from datas.metadata import speakers_info as extradata
@@ -43,12 +44,14 @@ from generate_common import get_custom_logger, args2level
 
 import spinorama.constant_paths as cpaths
 
-siteprod = "https://www.spinorama.org"
-sitedev = "https://dev.spinorama.org"
-root = cpaths.CPATH
+SITEPROD = "https://www.spinorama.org"
+SITEDEV = "https://dev.spinorama.org"
 
 
 def write_if_different(new_content, filename):
+    """Write the new content to disk only if it is different from the current one.
+    The unchanged html files are then untouched and http cache effect is better.
+    """
     identical = False
     path = pathlib.Path(filename)
     if path.exists():
@@ -61,6 +64,7 @@ def write_if_different(new_content, filename):
 
 
 def generate_speaker(mako, dataframe, meta, site, useSearch):
+    """For each speaker, generates a set of HTML files driven by templates"""
     speaker_html = mako.get_template("speaker.html")
     graph_html = mako.get_template("graph.html")
     for speaker_name, origins in dataframe.items():
@@ -68,7 +72,7 @@ def generate_speaker(mako, dataframe, meta, site, useSearch):
             continue
         for origin, measurements in origins.items():
             for key, dfs in measurements.items():
-                logger.debug("generate {0} {1} {2}", speaker_name, origin, key)
+                logger.debug("generate %s %s %s", speaker_name, origin, key)
                 # freq
                 freq_filter = [
                     "CEA2034",
@@ -113,7 +117,7 @@ def generate_speaker(mako, dataframe, meta, site, useSearch):
                 index_name = "{0}/index_{1}.html".format(dirname, key)
 
                 # write index.html
-                logger.info("Writing {0} for {1}", index_name, speaker_name)
+                logger.info("Writing %s for %s", index_name, speaker_name)
                 speaker_content = speaker_html.render(
                     speaker=speaker_name,
                     g_freq=freq,
@@ -132,7 +136,7 @@ def generate_speaker(mako, dataframe, meta, site, useSearch):
                 for kind in [freq, contour, radar]:  # isoband, directivity]:
                     for graph_name in kind:
                         graph_filename = "{0}/{1}/{2}.html".format(dirname, key, graph_name)
-                        logger.info("Writing {2}/{0} for {1}", graph_filename, speaker_name, key)
+                        logger.info("Writing %s/%s for %s", key, graph_filename, speaker_name)
                         graph_content = graph_html.render(graph=graph_name, meta=meta, site=site)
                         write_if_different(graph_content, graph_filename)
     return 0
@@ -142,7 +146,7 @@ def main():
     # load all metadata from generated json file
     json_filename = cpaths.CPATH_METADATA_JSON
     if not os.path.exists(json_filename):
-        logger.error("Cannot find {0}".format(json_filename))
+        logger.error("Cannot find %s".format(json_filename))
         sys.exit(1)
 
     meta = None
@@ -217,8 +221,8 @@ def main():
         html_content = index_html.render(df=df, meta=meta_sorted_date, site=site, useSearch=True)
         html_filename = f"{cpaths.CPATH_DOCS}/index.html"
         write_if_different(html_content, html_filename)
-    except KeyError as ke:
-        print("Generating index.html failed with {}".format(ke))
+    except KeyError as key_error:
+        print("Generating index.html failed with {}".format(key_error))
         sys.exit(1)
 
     # write eqs.html
@@ -229,8 +233,8 @@ def main():
         eqs_content = eqs_html.render(df=df, meta=meta_sorted_date, site=site, useSearch=True)
         eqs_filename = f"{cpaths.CPATH_DOCS}/eqs.html"
         write_if_different(eqs_content, eqs_filename)
-    except KeyError as ke:
-        print("Generating eqs.htmlfailed with {}".format(ke))
+    except KeyError as key_error:
+        print("Generating eqs.htmlfailed with {}".format(key_error))
         sys.exit(1)
 
     # write various html files
@@ -243,7 +247,7 @@ def main():
             "similar",
         ):
             item_name = "{0}.html".format(item)
-            logger.info("Write {0}", item_name)
+            logger.info("Write %s", item_name)
             item_html = mako_templates.get_template(item_name)
             use_search = False
             if item in ("scores", "similar"):
@@ -254,16 +258,16 @@ def main():
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename)
 
-    except KeyError as ke:
-        print("Generating various html files failed with {}".format(ke))
+    except KeyError as key_error:
+        print("Generating various html files failed with {}".format(key_error))
         sys.exit(1)
 
     # write a file per speaker
     logger.info("Write a file per speaker")
     try:
         generate_speaker(mako_templates, df, meta=meta, site=site, useSearch=False)
-    except KeyError as ke:
-        print("Generating a file per speaker failed with {}".format(ke))
+    except KeyError as key_error:
+        print("Generating a file per speaker failed with {}".format(key_error))
         sys.exit(1)
 
     # copy favicon(s)
@@ -308,13 +312,13 @@ def main():
     try:
         for item in ("misc",):
             item_name = "assets/{0}.js".format(item)
-            logger.info("Write {0}", item_name)
+            logger.info("Write %s", item_name)
             item_html = mako_templates.get_template(item_name)
             item_content = item_html.render(df=df, meta=meta_sorted_score, site=site)
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename)
-    except KeyError as ke:
-        print("Generating various html files failed with {}".format(ke))
+    except KeyError as key_error:
+        print("Generating various html files failed with {}".format(key_error))
         sys.exit(1)
 
     sys.exit(0)
@@ -322,20 +326,15 @@ def main():
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="update_html.py version 1.23", options_first=True)
-
-    # check args section
     dev = args["--dev"]
-    site = siteprod
+    site = SITEPROD
     if dev is True:
+        site = SITEDEV
         if args["--sitedev"] is not None:
-            sitedev = args["--sitedev"]
-            if len(sitedev) < 4 or sitedev[0:4] != "http":
-                print("sitedev {} does not start with http!".format(sitedev))
+            site = args["--sitedev"]
+            if len(site) < 4 or site[0:4] != "http":
+                print("sitedev {} does not start with http!".format(site))
                 sys.exit(1)
-        site = sitedev
 
-    level = args2level(args)
-    logger = get_custom_logger(True)
-    logger.setLevel(level)
-
+    logger = get_custom_logger(level=args2level(args), duplicate=True)
     main()

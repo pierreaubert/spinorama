@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
@@ -48,7 +47,7 @@ def get_similar_names(speakername):
     return difflib.get_close_matches(speakername, metadata.speakers_info.keys())
 
 
-def get_custom_logger(duplicate=False):
+def get_custom_logger(level, duplicate):
     """Define properties of our logger"""
     custom = logging.getLogger("spinorama")
     custom_file_handler = logging.FileHandler("debug_optim.log")
@@ -61,6 +60,7 @@ def get_custom_logger(duplicate=False):
         custom_stream_handler = logging.StreamHandler(sys.stdout)
         custom_stream_handler.setFormatter(formatter)
         custom.addHandler(custom_stream_handler)
+    custom.setLevel(level)
     return custom
 
 
@@ -68,7 +68,7 @@ def args2level(args):
     """Transform an argument into a logger level"""
     level = logging.WARNING
     if args["--log-level"] is not None:
-        check_level = args["--log-level"]
+        check_level = args["--log-level"].upper()
         if check_level in ("INFO", "DEBUG", "WARNING", "ERROR"):
             if check_level == "INFO":
                 level = logging.INFO
@@ -142,7 +142,9 @@ CACHE_DIR = ".cache"
 
 def cache_key(name):
     # 256 partitions, use hashlib for stable hash
-    return "{:2s}".format(md5(name.encode("utf-8"), usedforsecurity=False).hexdigest()[0:2])
+    key = md5(name.encode("utf-8"), usedforsecurity=False).hexdigest()
+    short_key = key[0:2]
+    return f"{short_key:2s}"
 
 
 def cache_match(key, name):
@@ -183,7 +185,7 @@ def is_filtered(speaker, data, filters):
         return True
 
     current = None
-    if speaker in metadata.speakers_info.keys():
+    if speaker in metadata.speakers_info:
         if "default_measurement" not in metadata.speakers_info[speaker].keys():
             print("error no default measurement for {}".format(speaker))
             return True
@@ -309,5 +311,5 @@ def cache_update(df_new, filters):
                     df_old[new_speaker][new_origin][new_measurement] = new_data
                 count += 1
         cache_save_key(cache_key(new_speaker), df_old)
-    print("(updated +{}) ".format(count), end=" ", flush=True)
+    print(f"(updated +{count}) ", end=" ", flush=True)
     print("(saved).")

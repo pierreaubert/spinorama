@@ -1,15 +1,32 @@
 # -*- coding: utf-8 -*-
-import logging
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import numpy as np
 import pandas as pd
 
-from .constant_paths import (
+from spinorama import logger
+from spinorama.constant_paths import (
     MIDRANGE_MIN_FREQ,
     MIDRANGE_MAX_FREQ,
     SENSITIVITY_MIN_FREQ,
     SENSITIVITY_MAX_FREQ,
 )
-from .compute_cea2034 import (
+from spinorama.compute_cea2034 import (
     early_reflections,
     vertical_reflections,
     horizontal_reflections,
@@ -18,15 +35,12 @@ from .compute_cea2034 import (
     estimated_inroom,
     estimated_inroom_hv,
 )
-
-from .load_misc import graph_melt, sort_angles
-from .compute_misc import unify_freq
-
-logger = logging.getLogger("spinorama")
+from spinorama.load_misc import graph_melt, sort_angles
+from spinorama.compute_misc import unify_freq
 
 
 def shift_spl(spl, mean):
-    # shift all measurement by means
+    """Shift all measurement by means"""
     df = pd.DataFrame()
     for k in spl.keys():
         if k == "Freq":
@@ -40,14 +54,14 @@ def shift_spl(spl, mean):
 
 
 def shift_spl_melted(spl, mean):
-    # shift all measurement by means
-    df = spl.copy()
-    df.dB -= mean
-    return df
+    """Shift one measurement by means"""
+    df_copy = spl.copy()
+    df_copy.dB -= mean
+    return df_copy
 
 
 def shift_spl_melted_cea2034(spl, mean):
-    # spl
+    """Shift all measurements by means"""
     logger.debug("DEBUG shift_spl_melted_cea2034")
     # logger.debug(spl.head())
     # shift all measurement by means
@@ -78,6 +92,7 @@ def shift_spl_melted_cea2034(spl, mean):
 
 
 def norm_spl(spl):
+    """Normalize SPL for a set of measurements"""
     # check
     if "dB" in spl.keys():
         raise KeyError
@@ -93,6 +108,11 @@ def norm_spl(spl):
 def filter_graphs(
     speaker_name, h_spl, v_spl, mean_min=MIDRANGE_MIN_FREQ, mean_max=MIDRANGE_MAX_FREQ
 ):
+    """Filter a set of graphs defined by h_spl and v_spl.
+
+    mean_min and max_min denote the range of frequencies on which you compute the mean SPL.
+    This mean SPL is then substracted from all measurements
+    """
     dfs = {}
     # add H and V SPL graphs
     mean_min_max = None
@@ -151,19 +171,19 @@ def filter_graphs(
 
     if sh_spl is None or sv_spl is None:
         #
-        df = compute_onaxis(sh_spl, sv_spl)
-        dfs["On Axis_unmelted"] = df
-        dfs["On Axis"] = graph_melt(df)
+        df_on_axis = compute_onaxis(sh_spl, sv_spl)
+        dfs["On Axis_unmelted"] = df_on_axis
+        dfs["On Axis"] = graph_melt(df_on_axis)
         # SPL H
         if sh_spl is not None:
-            df = horizontal_reflections(sh_spl, sv_spl)
-            dfs["Horizontal Reflections_unmelted"] = df
-            dfs["Horizontal Reflections"] = graph_melt(df)
+            df_horizontals = horizontal_reflections(sh_spl, sv_spl)
+            dfs["Horizontal Reflections_unmelted"] = df_horizontals
+            dfs["Horizontal Reflections"] = graph_melt(df_horizontals)
         # SPL V
         if sv_spl is not None:
-            df = vertical_reflections(sh_spl, sv_spl)
-            dfs["Vectical Reflections_unmelted"] = df
-            dfs["Vectical Reflections"] = graph_melt(df)
+            df_verticals = vertical_reflections(sh_spl, sv_spl)
+            dfs["Vectical Reflections_unmelted"] = df_verticals
+            dfs["Vectical Reflections"] = graph_melt(df_verticals)
         # that's all folks
         return dfs
 
@@ -175,9 +195,9 @@ def filter_graphs(
                 dfs[title] = graph_melt(df)
             else:
                 logger.info("%s computation is None for speaker %s", title, speaker_name)
-        except KeyError as ke:
+        except KeyError as key_error:
             logger.warning(
-                "%s computation failed with key:%s for speaker %s", title, ke, speaker_name
+                "%s computation failed with key:%s for speaker %s", title, key_error, speaker_name
             )
 
     return dfs
@@ -192,6 +212,11 @@ def filter_graphs_eq(
     mean_min=MIDRANGE_MIN_FREQ,
     mean_max=MIDRANGE_MAX_FREQ,
 ):
+    """Filter a set of graphs defined by h_spl and v_spl.
+
+    mean_min and max_min denote the range of frequencies on which you compute the mean SPL.
+    This mean SPL is then substracted from all measurements
+    """
     dfs = {}
     # add H and V SPL graphs
     mean_min_max = None
@@ -361,8 +386,8 @@ def parse_graph_freq_check(speaker_name: str, df_spin: pd.DataFrame) -> bool:
             logger.info("%s measurement doesn't have a %s column", speaker_name, col)
             status = False
         else:
-            logging.debug(
-                "Loading %s $s %.1f--%.1fHz %1f--%.1fdB",
+            logger.debug(
+                "Loading %s %s %.1f--%.1fHz %.1f--%.1fdB",
                 speaker_name,
                 col,
                 df_spin.loc[df_spin.Measurements == col].Freq.min(),
@@ -435,8 +460,8 @@ def spin_compute_di_eir(
         #    sp_di_computed.min(),
         #    sp_di_computed.max(),
         # )
-    # else:
-    #    logger.debug("Shape LW={0} SP={1}", lw.shape, sp.shape)
+    else:
+        logger.debug("Shape LW=%s SP=%s", lw.shape, sp.shape)
 
     if 0 not in (lw.shape[0], er.shape[0]):
         er_di_computed = lw.dB - er.dB
@@ -463,8 +488,8 @@ def spin_compute_di_eir(
         #    er_di_computed.min(),
         #    er_di_computed.max(),
         # )
-    # else:
-    #    logger.debug("Shape LW={0} ER={1}", lw.shape, er.shape)
+    else:
+        logger.debug("Shape LW=%s ER=%s", lw.shape, er.shape)
 
     di_offset = spin.loc[spin["Measurements"] == "DI offset"].reset_index(drop=True)
     if di_offset.shape[0] == 0:
@@ -472,14 +497,14 @@ def spin_compute_di_eir(
         df2 = pd.DataFrame({"Freq": on.Freq, "dB": 0, "Measurements": "DI offset"})
         spin = pd.concat([spin, df2]).reset_index(drop=True)
 
-    # logger.debug("Shape ON {0} LW {1} ER {2} SP {3}", on.shape, lw.shape, er.shape, sp.shape)
+    logger.debug("Shape ON %s LW %s ER %s SP %s", on.shape, lw.shape, er.shape, sp.shape)
     if 0 not in (lw.shape[0], er.shape[0], sp.shape[0]):
         eir = estimated_inroom(lw, er, sp)
-        logger.debug("eir {0}", eir.shape)
+        logger.debug("eir %s", eir.shape)
         # logger.debug(eir)
         dfs["Estimated In-Room Response"] = graph_melt(eir)
-    # else:
-    #    logger.debug("Shape LW={0} ER={1} SP={2}", lw.shape, er.shape, sp.shape)
+    else:
+        logger.debug("Shape LW=%s ER=%s SP=%s", lw.shape, er.shape, sp.shape)
 
     # add spin (at the end because we could have modified DI curves
     dfs[title] = spin
@@ -491,6 +516,7 @@ def spin_compute_di_eir(
 
 
 def symmetrise_measurement(spl: pd.DataFrame) -> pd.DataFrame:
+    """Apply a symmetry if any to the measurements"""
     if spl.empty:
         return pd.DataFrame()
 

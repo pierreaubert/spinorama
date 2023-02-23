@@ -186,9 +186,5 @@ if __name__ == "__main__":
         version="generate_radar.py version {:1.1f}".format(VERSION),
         options_first=True,
     )
-
-    level = args2level(args)
-    logger = get_custom_logger(True)
-    logger.setLevel(level)
-
+    logger = get_custom_logger(level=args2level(args), duplicate=True)
     main()

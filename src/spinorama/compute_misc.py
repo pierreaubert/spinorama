@@ -1,5 +1,20 @@
 # -*- coding: utf-8 -*-
-import logging
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import bisect
 import math
@@ -7,11 +22,11 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from .load_misc import graph_melt, sort_angles
-from .compute_scores import octave
+from spinorama import logger
+from spinorama.load_misc import graph_melt, sort_angles
+from spinorama.compute_scores import octave
 
 # pd.set_option('display.max_rows', None)
-logger = logging.getLogger("spinorama")
 
 
 def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
@@ -31,7 +46,7 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
     er = dfs[dfs.Measurements == "Early Reflections"].rename(columns={"dB": "ER"}).set_index("Freq")
     sp = dfs[dfs.Measurements == "Sound Power"].rename(columns={"dB": "SP"}).set_index("Freq")
     logger.debug(
-        "unify_freq: on.shape={0} lw.shape={1} er.shape={2} sp.shape={3}",
+        "unify_freq: on.shape=%s lw.shape=%s er.shape=%s sp.shape=%s",
         on.shape,
         lw.shape,
         er.shape,
@@ -40,19 +55,19 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
 
     # align 2 by 2
     align = on.align(lw, axis=0)
-    logger.debug("on+lw shape: {0}", align[0].shape)
+    logger.debug("on+lw shape: %s", align[0].shape)
     if er.shape[0] != 0:
         align = align[0].align(er, axis=0)
-        logger.debug("+er shape: {0}", align[0].shape)
+        logger.debug("+er shape: %s", align[0].shape)
     else:
         logger.debug("skipping ER")
     all_on = align[0].align(sp, axis=0)
-    logger.debug("+sp shape: {0}", all_on[0].shape)
+    logger.debug("+sp shape: %s", all_on[0].shape)
     # realigned with the largest frame
     all_lw = pd.DataFrame()
     if lw.shape[0] != 0:
         all_lw = all_on[0].align(lw, axis=0)
-        logger.debug("Before call: {0} and {1}", er.shape, all_on[0].shape)
+        logger.debug("Before call: %s and %s", er.shape, all_on[0].shape)
     all_er = pd.DataFrame()
     if er.shape[0] != 0:
         all_er = all_on[0].align(er, axis=0)
@@ -61,7 +76,7 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
         all_sp = all_on[0].align(sp, axis=0)
     # expect all the same
     logger.debug(
-        "Shapes ON {0} LW {1} ER {2} SP {3}",
+        "Shapes ON %s LW %s ER %s SP %s",
         all_on[0].shape if all_on is not None and len(all_on) > 0 else "--",
         all_lw[1].shape if all_lw is not None and len(all_lw) > 1 else "--",
         all_er[1].shape if all_er is not None and len(all_er) > 1 else "--",
@@ -80,7 +95,7 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
         a_sp = all_sp[1].drop("Measurements", axis=1).interpolate()
     # expect all the same
     logger.debug(
-        "Shapes: {0} {1} {2}",
+        "Shapes: %s %s %s",
         a_lw.shape if not a_lw.empty else "--",
         a_er.shape if not a_er.empty else "--",
         a_sp.shape if not a_sp.empty else "--",
@@ -140,10 +155,6 @@ def compute_contour(dfm_in):
     af, am = np.meshgrid(hrange, vrange)
     dfm.drop("Freq", axis=1, inplace=True)
     az = dfm.T.to_numpy()
-    # if af.shape != am.shape or af.shape != az.shape:
-    #   print(
-    #       "Shape mismatch af={0} am={1} az={2}".format(af.shape, az.shape, am.shape)
-    #   )
     return (af, am, az)
 
 

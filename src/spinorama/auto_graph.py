@@ -1,8 +1,7 @@
-#!/Usr/bin/env python3
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2022 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,9 +40,9 @@ def short_curve_name(name):
     """Return an abbrev for curve name"""
     if name == "Listening Window":
         return "LW"
-    elif name == "Estimated In-Room Response":
+    if name == "Estimated In-Room Response":
         return "PIR"
-    elif name == "On Axis":
+    if name == "On Axis":
         return "ON"
     return name
 

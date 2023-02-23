@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
@@ -17,18 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import logging
-import math
-
 import numpy as np
+import math
 import scipy.optimize as opt
 
-from .ltype import DataSpeaker
-from .filter_iir import Biquad
-from .auto_loss import loss
-
-
-logger = logging.getLogger("spinorama")
+from spinorama import logger
+from spinorama.ltype import DataSpeaker
+from spinorama.filter_iir import Biquad
+from spinorama.auto_loss import loss
 
 
 def find_best_biquad(

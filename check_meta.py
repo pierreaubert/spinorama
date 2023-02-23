@@ -470,18 +470,19 @@ def sanity_check_measurement(
         if k == "symmetry" and v not in [
             "coaxial",
             "horizontal",
+            "vertical",
         ]:
             logging.error("%s: symmetry %s is not known", name, v)
             status = 1
-        if k == "review" and type(v) is not str:
+        if k == "review" and not isinstance(v, str):
             logging.error("%s: review %s is not a string", name, v)
             status = 1
         if k == "reviews":
-            if type(v) is not dict:
+            if not isinstance(v, dict):
                 logging.error("%s: review %s is not a dict", name, v)
                 status = 1
             for _, i_v in v.items():
-                if type(i_v) is not str:
+                if not isinstance(i_v, str):
                     logging.error("%s: in reviews %s review %s is not a string", name, v, i_v)
                     status = 1
         if k == "quality" and v not in ("unknown", "low", "medium", "high"):
@@ -545,5 +546,5 @@ def sanity_check_speakers(speakers: SpeakerDatabase) -> int:
 
 
 if __name__ == "__main__":
-    main_status = sanity_check_speakers(metadata.speakers_info)
-    sys.exit(main_status)
+    MAIN_STATUS = sanity_check_speakers(metadata.speakers_info)
+    sys.exit(MAIN_STATUS)

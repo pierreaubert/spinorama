@@ -271,13 +271,13 @@ def add_scores(dataframe, parse_max):
             break
         parsed = parsed + 1
         logger.info("Normalize data for %s", speaker_name)
-        if speaker_name not in metadata.speakers_info.keys():
+        if speaker_name not in metadata.speakers_info:
             # should not happen. If you mess up with names of speakers
             # and change them, then you can have inconsistent data.
             continue
         for _, measurements in speaker_data.items():
             for version, measurement in measurements.items():
-                if version not in metadata.speakers_info[speaker_name]["measurements"].keys():
+                if version not in metadata.speakers_info[speaker_name]["measurements"]:
                     if len(version) > 4 and version[-3:] != "_eq":
                         logger.error(
                             "Confusion in metadata, did you edit a speaker recently? %s should be in metadata for %s",
@@ -286,7 +286,7 @@ def add_scores(dataframe, parse_max):
                         )
                     continue
 
-                if measurement is None or "CEA2034" not in measurement.keys():
+                if measurement is None or "CEA2034" not in measurement:
                     logger.debug("skipping normalization no spinorama for %s", speaker_name)
                     continue
 
@@ -297,10 +297,7 @@ def add_scores(dataframe, parse_max):
                 if version[-3:] == "_eq":
                     logger.debug("skipping normalization for eq for %s", speaker_name)
                     continue
-                if (
-                    "estimates"
-                    not in metadata.speakers_info[speaker_name]["measurements"][version].keys()
-                ):
+                if "estimates" not in metadata.speakers_info[speaker_name]["measurements"][version]:
                     logger.debug(
                         "skipping normalization no estimates in %s for %s",
                         version,
@@ -309,7 +306,7 @@ def add_scores(dataframe, parse_max):
                     continue
                 if (
                     "pref_rating"
-                    not in metadata.speakers_info[speaker_name]["measurements"][version].keys()
+                    not in metadata.speakers_info[speaker_name]["measurements"][version]
                 ):
                     logger.debug(
                         "skipping normalization no pref_rating in %s for %s",
@@ -474,7 +471,7 @@ def add_quality(parse_max: int):
         parsed = parsed + 1
         logger.info("Processing %s", speaker_name)
         for version, m_data in speaker_data["measurements"].items():
-            if "quality" not in m_data.keys():
+            if "quality" not in m_data:
                 quality = "unknown"
                 origin = m_data.get("origin")
                 measurement_format = m_data.get("format")
@@ -497,7 +494,7 @@ def add_quality(parse_max: int):
 def add_eq(speaker_path, dataframe, parse_max):
     """Compute some values per speaker and add them to metadata"""
     parsed = 0
-    for speaker_name in dataframe.keys():
+    for speaker_name in dataframe:
         if parse_max is not None and parsed > parse_max:
             break
         parsed = parsed + 1
@@ -612,15 +609,11 @@ def get_spin_data(freq, speaker_name, speaker_data):
         for key, dfs in measurements.items():
             if "_eq" in key:
                 continue
-            if dfs is None or "CEA2034" not in dfs.keys():
+            if dfs is None or "CEA2034" not in dfs:
                 return None
 
             spin = dfs["CEA2034_unmelted"]
-            if (
-                spin is None
-                or "Listening Window" not in spin.keys()
-                or "Sound Power" not in spin.keys()
-            ):
+            if spin is None or "Listening Window" not in spin or "Sound Power" not in spin:
                 return None
 
             lw = interpolate(speaker_name, freq, spin["Freq"], spin["Listening Window"])
@@ -764,9 +757,5 @@ def main():
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="generate_meta.py version 1.4", options_first=True)
-
-    # check args section
-    level = args2level(args)
-    logger = get_custom_logger(True)
-
+    logger = get_custom_logger(level=args2level(args), duplicate=True)
     main()

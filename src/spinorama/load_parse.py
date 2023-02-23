@@ -1,9 +1,24 @@
 # -*- coding: utf-8 -*-
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import os
-import logging
 import sys
 
-import numpy as np
 import pandas as pd
 
 try:
@@ -11,27 +26,25 @@ try:
 except ModuleNotFoundError:
     import src.miniray as ray
 
-from .compute_misc import unify_freq
-from .load_klippel import parse_graphs_speaker_klippel
-from .load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
-from .load_princeton import parse_graphs_speaker_princeton
-from .load_rewstextdump import parse_graphs_speaker_rewstextdump
-from .load_rewseq import parse_eq_iir_rews
-from .load_splHVtxt import parse_graphs_speaker_splHVtxt
-from .load_gllHVtxt import parse_graphs_speaker_gllHVtxt
-from .load_misc import graph_melt, check_nan
-from .load import (
+from spinorama import logger, ray_setup_logger
+from spinorama.compute_misc import unify_freq
+from spinorama.filter_peq import peq_apply_measurements
+from spinorama.filter_scores import noscore_apply_filter
+from spinorama.load_klippel import parse_graphs_speaker_klippel
+from spinorama.load_misc import graph_melt, check_nan
+from spinorama.load_princeton import parse_graphs_speaker_princeton
+from spinorama.load_rewstextdump import parse_graphs_speaker_rewstextdump
+from spinorama.load_rewseq import parse_eq_iir_rews
+from spinorama.load_splHVtxt import parse_graphs_speaker_splHVtxt
+from spinorama.load_gllHVtxt import parse_graphs_speaker_gllHVtxt
+from spinorama.load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
+from spinorama.load import (
     filter_graphs,
     filter_graphs_eq,
     filter_graphs_partial,
     symmetrise_measurement,
     spin_compute_di_eir,
 )
-from .filter_peq import peq_apply_measurements
-from .filter_scores import noscore_apply_filter
-
-
-logger = logging.getLogger("spinorama")
 
 
 def get_mean_min_max(mparameters):
@@ -46,7 +59,11 @@ def get_mean_min_max(mparameters):
 
 
 @ray.remote(num_cpus=1)
-def parse_eq_speaker(speaker_path: str, speaker_name: str, df_ref: dict, mparameters: dict) -> dict:
+def parse_eq_speaker(
+    speaker_path: str, speaker_name: str, df_ref: dict, mparameters: dict, level: int
+) -> dict:
+    ray_setup_logger(level)
+    logger.debug("Level of debug is %d", level)
     iirname = "{0}/eq/{1}/iir.txt".format(speaker_path, speaker_name)
     mean_min, mean_max = get_mean_min_max(mparameters)
     if df_ref is not None and isinstance(df_ref, dict) and os.path.isfile(iirname):
@@ -94,12 +111,14 @@ def parse_graphs_speaker(
     speaker_path: str,
     speaker_brand: str,
     speaker_name: str,
-    mformat="klippel",
-    morigin="ASR",
-    mversion="default",
-    msymmetry=None,
-    mparameters=None,
+    mformat: str,
+    morigin: str,
+    mversion: str,
+    msymmetry: str,
+    mparameters: str,
+    level: int,
 ) -> dict:
+    ray_setup_logger(level)
     df = None
     measurement_path = f"{speaker_path}"
     mean_min, mean_max = get_mean_min_max(mparameters)
@@ -122,7 +141,6 @@ def parse_graphs_speaker(
                 measurement_path, speaker_brand, speaker_name, mversion
             )
 
-        df = None
         if msymmetry == "coaxial":
             h_spl2 = symmetrise_measurement(h_spl)
             if v_spl is None:
@@ -135,6 +153,9 @@ def parse_graphs_speaker(
             df = filter_graphs(speaker_name, h_spl2, v_spl, mean_min, mean_max)
         else:
             df = filter_graphs(speaker_name, h_spl, v_spl, mean_min, mean_max)
+        print("--- DEBUG HERE ---")
+        print(df.keys())
+        print(df["CEA2034_unmelted"].keys())
     elif mformat in ("webplotdigitizer", "rewstextdump"):
         title = None
         df_uneven = None

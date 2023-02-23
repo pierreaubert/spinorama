@@ -1,17 +1,33 @@
 # -*- coding: utf-8 -*-
-import logging
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import json
 import math
 import numpy as np
 import os
 import pandas as pd
 import tarfile
-from .load import parse_graph_freq_check, spin_compute_di_eir
+
+from spinorama import logger
+from spinorama.load import parse_graph_freq_check, spin_compute_di_eir
 
 
 pd.set_option("display.max_rows", 1000)
-
-logger = logging.getLogger("spinorama")
 
 
 def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, version):
@@ -30,7 +46,7 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
             with tarfile.open(tarfilename, "r|*") as tar:
                 info_json = None
                 for tarinfo in tar:
-                    logging.debug("Tarinfo.name %s".format(tarinfo.name))
+                    logger.debug("Tarinfo.name %s".format(tarinfo.name))
                     if tarinfo.isreg() and tarinfo.name[-9:] == "info.json":
                         # note that files/directory with name tmp are in .gitignore
                         tar.extract(tarinfo, path=filedir + "/tmp", set_attrs=False)
@@ -181,7 +197,7 @@ def parse_graphs_speaker_webplotdigitizer(
     )
 
     if jsonfilename is None:
-        logging.warning(
+        logger.warning(
             "%s %s %s didn't find data file in %s", speaker_name, origin, version, speaker_path
         )
         return None

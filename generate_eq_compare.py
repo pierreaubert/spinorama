@@ -30,7 +30,6 @@ Options:
 import json
 import os
 import sys
-import pathlib
 import glob
 import math
 
@@ -73,10 +72,10 @@ def main(force):
 
     logger.info("Data %s loaded (%d speakers!", json_filename, len(jsmeta))
 
-    for speaker_name, speaker_data in jsmeta.items():
+    for speaker_data in jsmeta.values():
         print_eq_compare(speaker_data, force)
 
-    sys.exit(0)
+    return 0
 
 
 if __name__ == "__main__":
@@ -86,10 +85,10 @@ if __name__ == "__main__":
         options_first=True,
     )
 
-    level = args2level(args)
-    logger = get_custom_logger(True)
-    logger.setLevel(level)
+    LEVEL = args2level(args)
+    logger = get_custom_logger(duplicate=True)
+    logger.setLevel(LEVEL)
 
-    force = args["--force"]
+    FORCE = args["--force"]
 
-    main(force)
+    sys.exit(main(FORCE))

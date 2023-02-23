@@ -22,6 +22,7 @@ asrbook.toc
 asrbook.log
 asrbook.pdf
 book/stats
+flycheck_*.*
 node_modules
 geckodriver.log
 package-lock.json

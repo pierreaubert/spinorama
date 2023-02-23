@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2022 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,20 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import logging
 import math
 import numpy as np
 from scipy.stats import linregress
 
+from spinorama import logger
 from spinorama.load_misc import graph_melt
 from spinorama.compute_cea2034 import estimated_inroom_hv
 from spinorama.ltype import Vector, Peq
 from spinorama.filter_peq import peq_build
 from spinorama.filter_scores import scores_apply_filter
 from spinorama.filter_peq import peq_apply_measurements
-
-logger = logging.getLogger("spinorama")
-
 
 # ------------------------------------------------------------------------------
 # various loss function

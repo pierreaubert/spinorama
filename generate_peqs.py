@@ -137,9 +137,9 @@ VERSION = "0.19"
 def get3db(spin, db_point):
     """Get -3dB point"""
     est = {}
-    if "CEA2034_unmelted" in spin.keys():
+    if "CEA2034_unmelted" in spin:
         est = estimates_spin(spin["CEA2034_unmelted"])
-    elif "CEA2034" in spin.keys() and "Measurements" in spin.keys():
+    elif "CEA2034" in spin and "Measurements" in spin:
         est = estimates_spin(spin["CEA2034"])
     return est.get("ref_3dB", None)
 
@@ -321,13 +321,9 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
             current_speaker_name, df_speaker, current_optim_config, use_score
         )
         if auto_peq is None or len(auto_peq) == 0:
-            print(
-                "optim_find_peq failed for {} with {}".format(
-                    current_speaker_name, current_optim_config
-                )
-            )
+            print(f"optim_find_peq failed for {current_speaker_name} with {current_optim_config}")
             continue
-        if "CEA2034_unmelted" in df_speaker.keys() and auto_slope_lw is not None:
+        if "CEA2034_unmelted" in df_speaker and auto_slope_lw is not None:
             for loop in range(1, 6):
                 # slope 20Hz-20kHz
                 auto_slope_lw = auto_slope_lw * 11 / 3
@@ -421,7 +417,7 @@ def optim_save_peq(
         return None, None, None
 
     # do we have CEA2034 data
-    if "CEA2034_unmelted" not in df_speaker.keys() and "CEA2034" not in df_speaker.keys():
+    if "CEA2034_unmelted" not in df_speaker and "CEA2034" not in df_speaker:
         # this should not happen
         logger.error(
             "%s %s doesn't have CEA2034 data", current_speaker_name, current_speaker_origin
@@ -430,10 +426,7 @@ def optim_save_peq(
 
     # do we have the full data?
     use_score = True
-    if (
-        "SPL Horizontal_unmelted" not in df_speaker.keys()
-        or "SPL Vertical_unmelted" not in df_speaker.keys()
-    ):
+    if "SPL Horizontal_unmelted" not in df_speaker or "SPL Vertical_unmelted" not in df_speaker:
         use_score = False
 
     if current_speaker_origin == "Princeton":
@@ -601,15 +594,15 @@ def optim_save_peq(
 def queue_speakers(df_all_speakers, optim_config, speaker_name):
     """Add all speakers to the queue"""
     ray_ids = {}
-    for current_speaker_name in df_all_speakers.keys():
+    for current_speaker_name in df_all_speakers:
         if speaker_name is not None and current_speaker_name != speaker_name:
             continue
         default = None
         default_eq = None
         default_origin = None
         if (
-            current_speaker_name in metadata.keys()
-            and "default_measurement" in metadata[current_speaker_name].keys()
+            current_speaker_name in metadata
+            and "default_measurement" in metadata[current_speaker_name]
         ):
             default = metadata[current_speaker_name]["default_measurement"]
             default_eq = "{}_eq".format(default)
@@ -617,10 +610,10 @@ def queue_speakers(df_all_speakers, optim_config, speaker_name):
         else:
             logger.error("no default_measurement for %s", current_speaker_name)
             continue
-        if default_origin not in df_all_speakers[current_speaker_name].keys():
+        if default_origin not in df_all_speakers[current_speaker_name]:
             print("error: default origin {} not in {}".format(default_origin, current_speaker_name))
             continue
-        if default not in df_all_speakers[current_speaker_name][default_origin].keys():
+        if default not in df_all_speakers[current_speaker_name][default_origin]:
             print(
                 "error: default {} not in default origin {} for {}".format(
                     default, default_origin, current_speaker_name
@@ -629,22 +622,17 @@ def queue_speakers(df_all_speakers, optim_config, speaker_name):
             continue
         df_speaker = df_all_speakers[current_speaker_name][default_origin][default]
         if not (
-            (
-                "SPL Horizontal_unmelted" in df_speaker.keys()
-                and "SPL Vertical_unmelted" in df_speaker.keys()
-            )
-            or (
-                "CEA2034" in df_speaker.keys() and "Estimated In-Room Response" in df_speaker.keys()
-            )
+            ("SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker)
+            or ("CEA2034" in df_speaker and "Estimated In-Room Response" in df_speaker)
         ):
             logger.info(
                 "not enough data for %s known measurements are (%s)",
                 current_speaker_name,
-                ", ".join(df_speaker.keys()),
+                ", ".join(df_speaker),
             )
             continue
         df_speaker_eq = None
-        if default_eq in df_all_speakers[current_speaker_name][default_origin].keys():
+        if default_eq in df_all_speakers[current_speaker_name][default_origin]:
             df_speaker_eq = df_all_speakers[current_speaker_name][default_origin][default_eq]
 
         current_id = optim_save_peq.remote(
@@ -814,17 +802,17 @@ def main():
             parameter_error = True
 
     if args["--min-Q"] is not None:
-        min_Q = float(args["--min-Q"])
-        current_optim_config["MIN_Q"] = min_Q
+        min_q = float(args["--min-Q"])
+        current_optim_config["MIN_Q"] = min_q
     if args["--max-Q"] is not None:
-        max_Q = float(args["--max-Q"])
-        current_optim_config["MAX_Q"] = max_Q
+        max_q = float(args["--max-Q"])
+        current_optim_config["MAX_Q"] = max_q
     if args["--min-dB"] is not None:
-        min_dB = float(args["--min-dB"])
-        current_optim_config["MIN_DBGAIN"] = min_dB
+        min_db = float(args["--min-dB"])
+        current_optim_config["MIN_DBGAIN"] = min_db
     if args["--max-dB"] is not None:
-        max_dB = float(args["--max-dB"])
-        current_optim_config["MAX_DBGAIN"] = max_dB
+        max_db = float(args["--max-dB"])
+        current_optim_config["MAX_DBGAIN"] = max_db
 
     if args["--use-all-biquad"] is not None and args["--use-all-biquad"] is True:
         current_optim_config["full_biquad_optim"] = True
@@ -890,11 +878,11 @@ def main():
         }
         current_optim_config["curve_names"] = []
         for current_curve_name in param_curve_names:
-            if current_curve_name not in param_curve_name_valid.keys():
+            if current_curve_name not in param_curve_name_valid:
                 print(
                     "ERROR: {} is not known, acceptable values are {}",
                     current_curve_name,
-                    param_curve_name_valid.keys(),
+                    param_curve_name_valid,
                 )
                 parameter_error = True
             else:
@@ -912,11 +900,11 @@ def main():
             "LeastSquare": "leastsquare_loss",
             "FlatPir": "flat_pir",
         }
-        if current_fitness_name not in param_fitness_name_valid.keys():
+        if current_fitness_name not in param_fitness_name_valid:
             print(
                 "ERROR: {} is not known, acceptable values are {}",
                 current_fitness_name,
-                param_fitness_name_valid.keys(),
+                param_fitness_name_valid,
             )
             parameter_error = True
         else:
@@ -925,10 +913,10 @@ def main():
     # do we build EQ for a HW graphic one?
     if args["--graphic_eq"] is not None:
         grapheq_name = args["--graphic_eq"]
-        if grapheq_name not in grapheq_info.keys():
+        if grapheq_name not in grapheq_info:
             print(
                 "ERROR: EQ name {} is not known. Please select on in {}".format(
-                    grapheq_name, grapheq_info.keys()
+                    grapheq_name, grapheq_info
                 )
             )
             sys.exit(1)
@@ -995,15 +983,14 @@ if __name__ == "__main__":
         options_first=True,
     )
 
-    logger = get_custom_logger(True)
-    logger.setLevel(args2level(args))
+    logger = get_custom_logger(level=args2level(args), duplicate=True)
 
     force = args["--force"]
     verbose = args["--verbose"]
     smoke_test = args["--smoke-test"]
 
     if args["--graphic_eq_list"]:
-        print("INFO: The list of know graphical EQ is: {}".format(grapheq_info.keys()))
+        print("INFO: The list of know graphical EQ is: {}".format(grapheq_info))
         sys.exit(0)
 
     main()

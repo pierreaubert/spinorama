@@ -1,13 +1,27 @@
 # -*- coding: utf-8 -*-
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Compute Harman/Olive score for speaker"""
-import logging
 import math
 
 import numpy as np
 import pandas as pd
 
-
-logger = logging.getLogger("spinorama")
+from spinorama import logger
 
 
 def compute_area_q(alpha_d: float, beta_d: float) -> float:
@@ -106,14 +120,14 @@ def spl2pressure(spl: float) -> float:
         pressure = pow(10, (spl - 105.0) / 20.0)
         return pressure
     except TypeError as type_error:
-        logger.error("spl2pressure spl={0} e={1}", spl, type_error)
+        logger.error("spl2pressure spl=%f e=%s", spl, type_error)
         return 0.0
 
 
 def pressure2spl(pressure: float) -> float:
     """Convert pressure to SPL"""
     if pressure < 0.0:
-        logger.error("pressure is negative p={0}", pressure)
+        logger.error("pressure is negative p=%f", pressure)
     return 105.0 + 20.0 * math.log10(pressure)
 
 
@@ -142,7 +156,7 @@ def spatial_average(sp_window: pd.DataFrame, func="rms") -> pd.DataFrame:
         logger.debug("Freq is not in sp_cols")
         return pd.DataFrame()
     if len(sp_window) < 2:
-        logger.debug("Len window is {0}", len(sp_window))
+        logger.debug("Len window is %d", len(sp_window))
         return pd.DataFrame()
 
     result = pd.DataFrame(
@@ -453,7 +467,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
         if not name.empty:
             early_reflection[key] = name.dB
         else:
-            logger.debug("{0} is empty", key)
+            logger.debug("%s is empty", key)
     return early_reflection.reset_index(drop=True)
 
 
@@ -485,7 +499,7 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
         if not name.empty:
             v_r[key] = name.dB
         else:
-            logger.debug("{0} is empty", key)
+            logger.debug("%s is empty", key)
 
     return v_r.reset_index(drop=True)
 
@@ -612,7 +626,7 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
         if not name.empty:
             h_r[key] = name.dB
         else:
-            logger.debug("{0} is empty", key)
+            logger.debug("%s is empty", key)
     return h_r.reset_index(drop=True)
 
 
@@ -695,6 +709,7 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
         spin.loc[:, er_col] = ter["Total Early Reflection"]
 
     if l_w.empty or s_p.empty or ter.empty:
+        logger.error("LW or SP or TER is empty")
         return spin.reset_index(drop=True)
 
     erdi = pd.DataFrame({"dB": l_w.dB - ter["Total Early Reflection"]})
@@ -712,7 +727,7 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
         ("DI offset", di_offset),
     ]:
         if not name.empty:
-            spin.assign(key=name.dB)
+            spin.loc[:, key] = name.dB
         else:
             logger.debug("%s is empty", key)
     return spin.reset_index(drop=True)

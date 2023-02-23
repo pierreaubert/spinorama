@@ -1,17 +1,32 @@
 # -*- coding: utf-8 -*-
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import locale
-import logging
 import os
 
 import pandas as pd
 
-from .load_misc import sort_angles
+from spinorama import logger
+from spinorama.load_misc import sort_angles
 
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
 removequote = str.maketrans({'"': None, "\n": ""})
-
-logger = logging.getLogger("spinorama")
 
 
 def parse_graph_freq_klippel(filename: str) -> tuple[str, pd.DataFrame]:

@@ -1,5 +1,21 @@
 # -*- coding: utf-8 -*-
-import logging
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import math
 
 import numpy as np
@@ -11,14 +27,15 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.io as pio
 
-from .constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
-from .filter_peq import peq_build
-from .compute_misc import compute_contour
-from .load_misc import sort_angles
+from spinorama import logger
+from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+from spinorama.filter_peq import peq_build
+from spinorama.compute_misc import compute_contour
+from spinorama.load_misc import sort_angles
 
-logger = logging.getLogger("spinorama")
 
 pio.templates.default = "plotly_white"
+
 
 # ratio is 4x3
 plot_params_default = {
@@ -671,7 +688,7 @@ def find_nearest_freq(dfu, hz, tolerance=0.05):
         if abs(f - hz) < hz * tolerance:
             ihz = i
             break
-    logger.debug("nearest: {0} hz at loc {1}", hz, ihz)
+    logger.debug("nearest: %.1f hz at loc %d", hz, ihz)
     return ihz
 
 

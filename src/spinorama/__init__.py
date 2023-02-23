@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
@@ -18,3 +17,23 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import sys
+
+# global variable
+logger = logging.getLogger("spinorama")
+
+
+def ray_setup_logger(level=logging.WARNING):
+    """Since ray execution is remote, the logger needs to be instanciated and
+    configured in each process
+    """
+    custom_file_handler = logging.FileHandler("debug_optim.log")
+    formatter = logging.Formatter(
+        "%(asctime)s - %(filename)s:%(funcName)s:%(lineno)d - %(levelname)s - %(message)s"
+    )
+    custom_file_handler.setFormatter(formatter)
+    logger.addHandler(custom_file_handler)
+    custom_stream_handler = logging.StreamHandler(sys.stdout)
+    custom_stream_handler.setFormatter(formatter)
+    logger.addHandler(custom_stream_handler)
+    logger.setLevel(level)

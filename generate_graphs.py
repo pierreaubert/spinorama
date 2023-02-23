@@ -105,6 +105,7 @@ def queue_measurement(
     mversion: str,
     msymmetry: str,
     mparameters: dict,
+    level: int,
 ) -> Tuple[int, int, int, int]:
     """Add all measurements in the queue to be processed"""
     id_df = parse_graphs_speaker.remote(
@@ -116,8 +117,9 @@ def queue_measurement(
         mversion,
         msymmetry,
         mparameters,
+        level,
     )
-    id_eq = parse_eq_speaker.remote("./datas", speaker, id_df, mparameters)
+    id_eq = parse_eq_speaker.remote("./datas", speaker, id_df, mparameters, level)
     force = False
     ptype = None
     width = plot_params_default["width"]
@@ -134,6 +136,7 @@ def queue_measurement(
         height,
         force,
         ptype,
+        level,
     )
     tracing("calling print_graph remote eq for {}".format(speaker))
     id_g2 = print_graphs.remote(
@@ -147,12 +150,13 @@ def queue_measurement(
         height,
         force,
         ptype,
+        level,
     )
     tracing("print_graph done")
     return (id_df, id_eq, id_g1, id_g2)
 
 
-def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict]) -> dict:
+def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict], level: int) -> dict:
     """Add all speakers in the queue to be processed"""
     ray_ids = {}
     count = 0
@@ -188,40 +192,40 @@ def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict]) -> dict:
             mparameters = measurement.get("parameters", None)
 
             ray_ids[speaker][mversion] = queue_measurement(
-                brand, speaker, mformat, morigin, mversion, msymmetry, mparameters
+                brand, speaker, mformat, morigin, mversion, msymmetry, mparameters, level
             )
             count += 1
-    print("Queued {0} speakers {1} measurements".format(len(speakerlist), count))
+    print("Queued {} speakers {} measurements".format(len(speakerlist), count))
     return ray_ids
 
 
-def compute(speakerlist, filters, ray_ids: dict):
+def compute(speakerlist, filters, ray_ids: dict, level: int):
     """Compute a series of measurements"""
     data_frame = {}
     done_ids = {}
     while 1:
         df_ids = [
             ray_ids[s][v][0]
-            for s in ray_ids.keys()
-            for v in ray_ids[s].keys()
+            for s in ray_ids
+            for v in ray_ids[s]
             if ray_ids[s][v][0] not in done_ids
         ]
         eq_ids = [
             ray_ids[s][v][1]
-            for s in ray_ids.keys()
-            for v in ray_ids[s].keys()
+            for s in ray_ids
+            for v in ray_ids[s]
             if ray_ids[s][v][1] not in done_ids
         ]
         g1_ids = [
             ray_ids[s][v][2]
-            for s in ray_ids.keys()
-            for v in ray_ids[s].keys()
+            for s in ray_ids
+            for v in ray_ids[s]
             if ray_ids[s][v][2] not in done_ids
         ]
         g2_ids = [
             ray_ids[s][v][3]
-            for s in ray_ids.keys()
-            for v in ray_ids[s].keys()
+            for s in ray_ids
+            for v in ray_ids[s]
             if ray_ids[s][v][3] not in done_ids
         ]
         ids = df_ids + eq_ids + g1_ids + g2_ids
@@ -231,7 +235,7 @@ def compute(speakerlist, filters, ray_ids: dict):
         ready_ids, remaining_ids = ray.wait(ids, num_returns=num_returns)
 
         logger.info(
-            "State: {0} ready IDs {1} remainings IDs {2} Total IDs {3} Done",
+            "State: %d ready IDs %d remainings IDs %d Total IDs %d Done",
             len(ready_ids),
             len(remaining_ids),
             len(ids),
@@ -273,22 +277,20 @@ def compute(speakerlist, filters, ray_ids: dict):
                 current_id = ray_ids[speaker][m_version][0]
                 if current_id in ready_ids:
                     data_frame[speaker_key][m_origin][m_version_key] = ray.get(current_id)
-                    logger.debug(
-                        "Getting df done for {0} / {1} / {2}", speaker, m_origin, m_version
-                    )
+                    logger.debug("Getting df done for %s / %s / %s", speaker, m_origin, m_version)
                     done_ids[current_id] = True
 
-                m_version_eq = "{0}_eq".format(m_version_key)
+                m_version_eq = f"{m_version_key}_eq"
                 current_id = ray_ids[speaker][m_version][1]
                 if current_id in eq_ids:
                     logger.debug(
-                        "Getting eq done for {0} / {1} / {2}", speaker, m_version_eq, m_version
+                        "Getting eq done for %s / %s / %s", speaker, m_version_eq, m_version
                     )
                     computed_eq = ray.get(current_id)
                     if computed_eq is not None:
                         data_frame[speaker_key][m_origin][m_version_eq] = computed_eq
                         logger.debug(
-                            "Getting preamp eq done for {0} / {1} / {2}",
+                            "Getting preamp eq done for %s / %s / %s",
                             speaker,
                             m_version_eq,
                             m_version,
@@ -302,7 +304,7 @@ def compute(speakerlist, filters, ray_ids: dict):
                 current_id = ray_ids[speaker][m_version][2]
                 if current_id in g1_ids:
                     logger.debug(
-                        "Getting graph done for {0} / {1} / {2}", speaker, m_version, m_origin
+                        "Getting graph done for %s / %s / %s", speaker, m_version, m_origin
                     )
                     ray.get(current_id)
                     done_ids[current_id] = True
@@ -310,7 +312,7 @@ def compute(speakerlist, filters, ray_ids: dict):
                 current_id = ray_ids[speaker][m_version][3]
                 if current_id in g2_ids:
                     logger.debug(
-                        "Getting graph done for {0} / {1} / {2}", speaker, m_version_eq, m_origin
+                        "Getting graph done for %s / %s / %s", speaker, m_version_eq, m_origin
                     )
                     ray.get(current_id)
                     done_ids[current_id] = True
@@ -321,7 +323,7 @@ def compute(speakerlist, filters, ray_ids: dict):
     return data_frame
 
 
-def main():
+def main(level):
     """Send all speakers in the queue to be processed"""
     speakerlist = get_speaker_list("./datas/measurements")
     if args["--smoke-test"] is not None:
@@ -373,8 +375,8 @@ def main():
         if args[flag] is not None:
             filters[ifilter] = args[flag]
 
-    ray_ids = queue_speakers(speakerlist, filters)
-    df_new = compute(speakerlist, filters, ray_ids)
+    ray_ids = queue_speakers(speakerlist, filters, level)
+    df_new = compute(speakerlist, filters, ray_ids, level)
 
     if len(filters.keys()) == 0:
         cache_save(df_new)
@@ -387,8 +389,6 @@ def main():
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="generate_graphs.py v{}".format(VERSION), options_first=True)
-
-    logger = get_custom_logger(True)
-    logger.setLevel(args2level(args))
-
-    main()
+    LEVEL = args2level(args)
+    logger = get_custom_logger(level=LEVEL, duplicate=True)
+    main(level=LEVEL)

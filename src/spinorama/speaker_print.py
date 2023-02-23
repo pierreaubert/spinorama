@@ -1,6 +1,22 @@
 # -*- coding: utf-8 -*-
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import os
-import logging
 import pathlib
 import copy
 import zipfile
@@ -11,10 +27,10 @@ try:
 except ModuleNotFoundError:
     import src.miniray as ray
 
-from .constant_paths import CPATH_DOCS_SPEAKERS
-
-from .pict import write_multiformat
-from .speaker_display import (
+from spinorama import logger, ray_setup_logger
+from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
+from spinorama.pict import write_multiformat
+from spinorama.speaker_display import (
     display_spinorama,
     display_onaxis,
     display_inroom,
@@ -32,10 +48,7 @@ from .speaker_display import (
     display_radar_horizontal,
     display_radar_vertical,
 )
-from .plot import plot_params_default, contour_params_default, radar_params_default
-
-
-logger = logging.getLogger("spinorama")
+from spinorama.plot import plot_params_default, contour_params_default, radar_params_default
 
 
 def print_graph(speaker, version, origin, key, title, chart, force, fileext):
@@ -103,16 +116,18 @@ def print_graph(speaker, version, origin, key, title, chart, force, fileext):
 @ray.remote
 def print_graphs(
     df: pd.DataFrame,
-    speaker,
-    version,
-    origin,
-    origins_info,
-    key="default",
-    width=1200,
-    height=800,
-    force_print=False,
-    filter_file_ext=None,
+    speaker: str,
+    version: str,
+    origin: str,
+    origins_info: str,
+    key: str,
+    width: int,
+    height: int,
+    force_print: bool,
+    filter_file_ext: str,
+    level: int,
 ):
+    ray_setup_logger(level)
     # may happens at development time or for partial measurements
     # or when the cache is confused (typically when you change the metadata)
     if df is None:
