@@ -153,9 +153,6 @@ def parse_graphs_speaker(
             df = filter_graphs(speaker_name, h_spl2, v_spl, mean_min, mean_max)
         else:
             df = filter_graphs(speaker_name, h_spl, v_spl, mean_min, mean_max)
-        print("--- DEBUG HERE ---")
-        print(df.keys())
-        print(df["CEA2034_unmelted"].keys())
     elif mformat in ("webplotdigitizer", "rewstextdump"):
         title = None
         df_uneven = None
