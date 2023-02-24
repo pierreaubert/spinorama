@@ -1676,6 +1676,28 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "BIC America FH6-LCR Center": {
+        "brand": "BIC America",
+        "model": "FH6-LCR Center",
+        "type": "passive",
+        "shape": "center",
+        "price": "150",
+        "default_measurement": "asr-vertical",
+        "measurements": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bic-fh6-lcr-center-speaker-review.42299/",
+                "review_published": "20230224",
+            },
+            "asr-horizontal": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bic-fh6-lcr-center-speaker-review.42299/",
+                "review_published": "20230224",
+            },
+        },
+    },
     "BIC America Venturi DV62si": {
         "brand": "BIC America",
         "model": "Venturi DV62si",
@@ -6874,7 +6896,7 @@ speakers_info: SpeakerDatabase = {
                 "format": "gllHVtxt",
                 "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20230223",
-                "quality": "medium",
+                "quality": "low",
                 "notes": "This is a speaker designed to be mounted on a wall.",
                 "specifications": {
                     "sensitivity": 84,
@@ -6907,7 +6929,7 @@ speakers_info: SpeakerDatabase = {
                 "format": "gllHVtxt",
                 "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20230223",
-                "quality": "medium",
+                "quality": "low",
                 "notes": "This is a speaker designed to be mounted on a wall.",
                 "specifications": {
                     "dispersion": {
