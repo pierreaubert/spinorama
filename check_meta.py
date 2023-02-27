@@ -109,10 +109,19 @@ def sanity_check_shape(name: str, speaker: Speaker) -> int:
             ", ".join(VALID_SHAPES),
         )
         return 1
+    if theshape == "center":
+        if "amount" not in speaker:
+            logging.error("shape is center but amount not in %s", name)
+            return 1
+        amount = speaker["amount"]
+        if amount != "each":
+            logging.error("shape is center but amount must be each; check price please!", name)
+            return 1
     return 0
 
 
 def sanity_check_default_measurement(name: str, speaker: Speaker) -> int:
+    """check that we have a default key"""
     if "default_measurement" not in speaker:
         logging.error("default_measurement is not in %s", name)
         return 1
@@ -127,12 +136,14 @@ TERM_MIN_SIZE = 2
 
 
 def sanity_check_version_version(term: str) -> bool:
+    """check that version match some pattern"""
     if len(term) >= TERM_MIN_SIZE and (term[0] != "v" or not term[1].isdecimal()):
         return False
     return True
 
 
 def sanity_check_version_date(term: str) -> bool:
+    """check that version match some date"""
     return term.isdecimal()
 
 
@@ -141,6 +152,7 @@ PATTERN_LENGTH_2 = 2
 
 
 def sanity_check_version_pattern(term: str) -> bool:
+    """check that version match some pattern"""
     sterm = term.split("x")
     if len(sterm) == PATTERN_LENGTH_1 and term.isdecimal():
         return True
@@ -193,7 +205,8 @@ VALID_MODIFIERS = (
 VERSION_PATTERN_LENGTH = 3
 
 
-def sanity_check_version(name: str, speaker: Speaker, version: str) -> int:
+def sanity_check_version(version: str) -> int:
+    """check that version match some patterns"""
     # update src/website/assets/search.js is you add a new modifier
     status = 0
     lversion = version.lower()
@@ -224,6 +237,7 @@ def sanity_check_version(name: str, speaker: Speaker, version: str) -> int:
 
 
 def sanity_check_vendor(vendor: str) -> bool:
+    """check that vendor is known"""
     if vendor in metadata.origins_info:
         return True
     return False
@@ -252,8 +266,15 @@ VALID_IMPEDANCE_MAX = 50
 VALID_SPL_MIN = 0
 VALID_SPL_MAX = 160
 
+VALID_DIM_MIN = 0
+VALID_DIM_MAX = 2000
+
+VALID_WEIGTH_MIN = 0
+VALID_WEIGTH_MAX = 500
+
 
 def sanity_check_specifications(name: str, version: str, specs: dict) -> int:
+    """Check that the specs block is valid"""
     status = 0
     for k, v in specs.items():
         if k not in VALID_SPECIFICATIONS:
@@ -385,7 +406,7 @@ def sanity_check_specifications(name: str, version: str, specs: dict) -> int:
                     status = 1
                 try:
                     fm_m = float(m_m)
-                    if fm_m < 0 or fm_m >= 1600:  # for Danley's :)
+                    if fm_m < VALID_DIM_MIN or fm_m >= VALID_DIM_MAX:  # for Danley's :)
                         logging.error(
                             "%s: measurement %s m_m %s is not in ]0, 160]", name, version, m_m
                         )
@@ -399,7 +420,9 @@ def sanity_check_specifications(name: str, version: str, specs: dict) -> int:
         if k == "weight":
             try:
                 fweight = float(v)
-                if fweight <= 0 or fweight >= 500:  # there are some very large beast
+                if (
+                    fweight <= VALID_WEIGTH_MIN or fweight >= VALID_WEIGTH_MAX
+                ):  # there are some very large beast
                     logging.error(
                         "%s: measurement %s weight %s is not in ]0, 50]", name, version, fweight
                     )
@@ -440,9 +463,8 @@ FORMAT_KNOWN_KEYS = (
 )
 
 
-def sanity_check_measurement(
-    name: str, speaker: Speaker, version: str, measurement: Measurement
-) -> int:
+def sanity_check_measurement(name: str, version: str, measurement: Measurement) -> int:
+    """Check each measurement"""
     status = 0
     if version[0:3] not in ("asr", "pri", "ven", "har", "eac", "mis"):
         logging.error("%s: key %s doesn't look correct", name, version)
@@ -510,20 +532,22 @@ def sanity_check_measurement(
 
 
 def sanity_check_measurements(name: str, speaker: Speaker) -> int:
+    """Check all measurements for a speaker"""
     status = 0
     if "measurements" not in speaker:
         logging.error("measurements is not in %s", name)
         status = 1
     else:
         for version, measurement in speaker["measurements"].items():
-            if sanity_check_version(name, speaker, version) != 0:
+            if sanity_check_version(version) != 0:
                 status = 1
-            if sanity_check_measurement(name, speaker, version, measurement) != 0:
+            if sanity_check_measurement(name, version, measurement) != 0:
                 status = 1
     return status
 
 
 def sanity_check_speaker(name: str, speaker: Speaker) -> int:
+    """Check a speaker description"""
     if (
         sanity_check_brand(name, speaker) != 0
         or sanity_check_model(name, speaker) != 0
@@ -538,10 +562,11 @@ def sanity_check_speaker(name: str, speaker: Speaker) -> int:
 
 
 def sanity_check_speakers(speakers: SpeakerDatabase) -> int:
+    """Check all speakers description"""
     status = 0
     for name, speaker in speakers.items():
         if sanity_check_speaker(name, speaker) != 0:
-            status = 1
+            status += 1
     return status
 
 
