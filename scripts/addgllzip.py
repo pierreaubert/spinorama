@@ -308,15 +308,15 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         sys.exit(-1)
 
-    zipfile = sys.argv[1]
+    zip_file = sys.argv[1]
 
-    if not os.path.exists(zipfile):
-        print("error: {} does not exist!".format(zipfile))
+    if not os.path.exists(zip_file):
+        print("error: {} does not exist!".format(zip_file))
         sys.exit(1)
 
-    skeys = set({k.lower() for k in metadata.keys()})
-    brands = set({v["brand"].lower() for _, v in metadata.items()})
-    models = set({v["model"].lower() for _, v in metadata.items()})
+    skeys = {k.lower() for k in metadata.keys()}
+    brands = {v["brand"].lower() for _, v in metadata.items()}
+    models = {v["model"].lower() for _, v in metadata.items()}
 
-    status = find_speaker(zipfile)
-    sys.exit(status)
+    STATUS = find_speaker(zip_file)
+    sys.exit(STATUS)

@@ -126,12 +126,12 @@ from spinorama.filter_scores import (
     scores_print,
 )
 from spinorama.auto_target import get_freq, get_target
-from spinorama.auto_optim import optim_multi_steps
+from spinorama.auto_msteps import optim_multi_steps
 
 from spinorama.auto_graph import graph_results as auto_graph_results
 
 
-VERSION = "0.19"
+VERSION = "0.20"
 
 
 def get3db(spin, db_point):
