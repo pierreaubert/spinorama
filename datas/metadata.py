@@ -1682,6 +1682,7 @@ speakers_info: SpeakerDatabase = {
         "type": "passive",
         "shape": "center",
         "price": "150",
+        "amount": "each",
         "default_measurement": "asr-vertical",
         "measurements": {
             "asr-vertical": {
@@ -2336,7 +2337,6 @@ speakers_info: SpeakerDatabase = {
                 "origin": "Vendors-Danley",
                 "data_acquisition": gll_data_acquisition_std,
                 "format": "gllHVtxt",
-                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
                 "quality": "medium",
             },
@@ -2770,7 +2770,7 @@ speakers_info: SpeakerDatabase = {
         "model": "C452-AIR",
         "type": "passive",
         "price": "",
-        "amount": "pair",
+        "amount": "each",
         "shape": "center",
         "default_measurement": "misc-audioholics",
         "measurements": {
@@ -2821,7 +2821,7 @@ speakers_info: SpeakerDatabase = {
         "model": "MK442",
         "type": "passive",
         "price": "",
-        "amount": "pair",
+        "amount": "each",
         "shape": "center",
         "default_measurement": "misc-audioholics",
         "measurements": {
@@ -3908,6 +3908,7 @@ speakers_info: SpeakerDatabase = {
         "type": "passive",
         "price": "319",
         "shape": "center",
+        "amount": "each",
         "default_measurement": "eac-horizontal",
         "measurements": {
             "eac-horizontal": {
@@ -3948,6 +3949,7 @@ speakers_info: SpeakerDatabase = {
         "type": "passive",
         "price": "700",
         "shape": "center",
+        "amount": "each",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
@@ -4702,7 +4704,6 @@ speakers_info: SpeakerDatabase = {
                 "origin": "Vendors-FBT",
                 "data_acquisition": gll_data_acquisition_std,
                 "format": "gllHVtxt",
-                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221028",
             },
@@ -5072,9 +5073,9 @@ speakers_info: SpeakerDatabase = {
         "brand": "Focal",
         "model": "Twin6 Be",
         "type": "passive",
-        "price": "3400",
+        "price": "1700",
         "shape": "center",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "eac-horizontal",
         "measurements": {
             "eac-horizontal": {
@@ -6301,7 +6302,7 @@ speakers_info: SpeakerDatabase = {
         "model": "RC252",
         "type": "passive",
         "price": "",
-        "amount": "pair",
+        "amount": "each",
         "shape": "center",
         "default_measurement": "vendor",
         "measurements": {
@@ -7394,7 +7395,7 @@ speakers_info: SpeakerDatabase = {
         "model": "Performance PC600",
         "type": "passive",
         "price": "",
-        "amount": "pair",
+        "amount": "each",
         "shape": "center",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
@@ -9334,9 +9335,15 @@ speakers_info: SpeakerDatabase = {
         "price": "7500",
         "shape": "center",
         "amount": "each",
-        "default_measurement": "asr",
+        "default_measurement": "asr-vertical",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-reference-4c-review-center-speaker.30048/",
+                "review_published": "20220118",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-reference-4c-review-center-speaker.30048/",
@@ -9810,7 +9817,7 @@ speakers_info: SpeakerDatabase = {
         "type": "passive",
         "price": "800",
         "shape": "center",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "eac-vertical",
         "measurements": {
             "eac-vertical": {
@@ -11205,7 +11212,6 @@ speakers_info: SpeakerDatabase = {
                 "review_published": "20230107",
                 "quality": "medium",
                 "notes": "{}".format(note2_meyersound_gll),
-                "data_acquisition": gll_data_acquisition_std,
                 "specifications": {
                     "dispersion": {
                         "horizontal": 110,
@@ -13179,7 +13185,6 @@ speakers_info: SpeakerDatabase = {
                 "origin": "Vendors-Presonus",
                 "data_acquisition": gll_data_acquisition_std,
                 "format": "gllHVtxt",
-                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221125",
                 "parameters": {
@@ -14614,7 +14619,7 @@ speakers_info: SpeakerDatabase = {
         "model": "C205",
         "type": "passive",
         "price": "",
-        "amount": "pair",
+        "amount": "each",
         "shape": "center",
         "default_measurement": "vendor",
         "measurements": {
@@ -14655,9 +14660,16 @@ speakers_info: SpeakerDatabase = {
         "type": "passive",
         "shape": "center",
         "price": "825",
-        "default_measurement": "asr",
+        "amount": "each",
+        "default_measurement": "asr-horizontal",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-concerta2-c25-review-center-speaker.29499/",
+                "review_published": "20211231",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-concerta2-c25-review-center-speaker.29499/",
@@ -14674,8 +14686,8 @@ speakers_info: SpeakerDatabase = {
         "model": "C426Be",
         "type": "passive",
         "price": "",
-        "amount": "pair",
         "shape": "center",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -14993,8 +15005,8 @@ speakers_info: SpeakerDatabase = {
         "model": "Ultima2 Voice2",
         "type": "passive",
         "price": "",
-        "amount": "pair",
         "shape": "center",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -15255,8 +15267,8 @@ speakers_info: SpeakerDatabase = {
         "model": "CG25",
         "type": "passive",
         "price": "",
-        "amount": "pair",
         "shape": "center",
+        "amount": "each",
         "default_measurement": "misc-audioholics",
         "measurements": {
             "misc-audioholics": {
@@ -15655,11 +15667,17 @@ speakers_info: SpeakerDatabase = {
         "model": "Prime Center",
         "type": "passive",
         "price": "400",
-        "amount": "each",
         "shape": "center",
-        "default_measurement": "eac",
+        "amount": "each",
+        "default_measurement": "eac-horizontal",
         "measurements": {
-            "eac": {
+            "eac-horizontal": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/svs_prime_center_channel/",
+                "review_published": "20220110",
+            },
+            "eac-vertical": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/svs_prime_center_channel/",
@@ -15845,7 +15863,6 @@ speakers_info: SpeakerDatabase = {
                     },
                     "weight": 11,
                 },
-                "data_acquisition": gll_data_acquisition_std,
             },
         },
     },

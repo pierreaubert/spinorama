@@ -1,15 +1,15 @@
 EQ for Reflector Audio Square Two computed from Vendors-Reflector Audio data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:43:40
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:34:53
 
 Preamp: -2.6 dB
 
-Filter  1: ON HS Fc   819 Hz Gain +1.73 dB
-Filter  2: ON PK Fc   164 Hz Gain -1.35 dB Q 0.99
-Filter  3: ON PK Fc  1752 Hz Gain -1.09 dB Q 2.98
-Filter  4: ON PK Fc 10592 Hz Gain -0.87 dB Q 2.70
-Filter  5: ON PK Fc  4384 Hz Gain +0.78 dB Q 2.69
-Filter  6: ON PK Fc   341 Hz Gain -0.50 dB Q 2.66
-Filter  7: ON PK Fc  8975 Hz Gain -0.87 dB Q 2.94
-Filter  8: ON PK Fc 13134 Hz Gain -0.88 dB Q 2.90
-Filter  9: ON PK Fc    96 Hz Gain -0.92 dB Q 2.80
+Filter  1: ON HS Fc   819 Hz Gain +1.72 dB
+Filter  2: ON PK Fc   161 Hz Gain -1.34 dB Q 0.98
+Filter  3: ON PK Fc  1750 Hz Gain -1.02 dB Q 2.87
+Filter  4: ON PK Fc 10330 Hz Gain -0.89 dB Q 2.75
+Filter  5: ON PK Fc  4363 Hz Gain +0.74 dB Q 2.66
+Filter  6: ON PK Fc  8762 Hz Gain -0.90 dB Q 2.95
+Filter  7: ON PK Fc   363 Hz Gain -0.86 dB Q 2.96
+Filter  8: ON PK Fc 12837 Hz Gain -0.87 dB Q 2.95
+Filter  9: ON PK Fc   102 Hz Gain -0.89 dB Q 2.73

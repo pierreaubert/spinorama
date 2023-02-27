@@ -1,7 +1,7 @@
 EQ for JBL 4367 computed from ErinsAudioCorner data
 Preference Score 5.25 with EQ 5.75
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:46:07
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:36:34
 
 Preamp: -3.3 dB
 

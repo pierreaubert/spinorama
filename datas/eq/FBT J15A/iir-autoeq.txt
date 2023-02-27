@@ -1,16 +1,16 @@
 EQ for FBT J15A computed from Vendors-FBT data
-Preference Score 1.35 with EQ 2.28
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:49:17
+Preference Score 1.35 with EQ 2.27
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:39:41
 
 Preamp: -3.2 dB
 
 Filter  1: ON PK Fc    33 Hz Gain +3.00 dB Q 0.91
 Filter  2: ON PK Fc  1812 Hz Gain +2.70 dB Q 0.81
-Filter  3: ON PK Fc 11054 Hz Gain -2.43 dB Q 2.72
+Filter  3: ON PK Fc 11205 Hz Gain -2.44 dB Q 2.71
 Filter  4: ON PK Fc   143 Hz Gain -1.78 dB Q 1.48
-Filter  5: ON PK Fc   352 Hz Gain -0.97 dB Q 3.00
+Filter  5: ON PK Fc   351 Hz Gain -0.97 dB Q 3.00
 Filter  6: ON PK Fc  3549 Hz Gain +1.02 dB Q 3.00
-Filter  7: ON PK Fc  4807 Hz Gain -0.94 dB Q 3.00
+Filter  7: ON PK Fc  4634 Hz Gain -0.94 dB Q 3.00
 Filter  8: ON PK Fc  1057 Hz Gain -0.94 dB Q 3.00
-Filter  9: ON PK Fc 12979 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc 12769 Hz Gain -0.50 dB Q 3.00

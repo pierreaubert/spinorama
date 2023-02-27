@@ -1,16 +1,16 @@
 EQ for Tannoy Revolution XT6 computed from ASR data
 Preference Score 1.83 with EQ 3.98
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:42:57
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:39:00
 
 Preamp: -3.0 dB
 
-Filter  1: ON PK Fc    35 Hz Gain +2.48 dB Q 0.82
-Filter  2: ON PK Fc  7916 Hz Gain -4.16 dB Q 0.73
-Filter  3: ON PK Fc   156 Hz Gain -2.00 dB Q 1.89
+Filter  1: ON PK Fc    36 Hz Gain +2.49 dB Q 0.83
+Filter  2: ON PK Fc  7881 Hz Gain -4.15 dB Q 0.73
+Filter  3: ON PK Fc   156 Hz Gain -1.99 dB Q 1.88
 Filter  4: ON PK Fc   586 Hz Gain +2.67 dB Q 3.00
-Filter  5: ON PK Fc  1043 Hz Gain -1.69 dB Q 3.00
-Filter  6: ON PK Fc  2094 Hz Gain +1.57 dB Q 3.00
-Filter  7: ON PK Fc 16000 Hz Gain +2.78 dB Q 2.37
-Filter  8: ON PK Fc   324 Hz Gain -0.78 dB Q 2.86
-Filter  9: ON PK Fc  3196 Hz Gain -1.90 dB Q 3.00
+Filter  5: ON PK Fc  1041 Hz Gain -1.69 dB Q 3.00
+Filter  6: ON PK Fc  2095 Hz Gain +1.57 dB Q 3.00
+Filter  7: ON PK Fc 16000 Hz Gain +2.77 dB Q 2.39
+Filter  8: ON PK Fc   324 Hz Gain -0.78 dB Q 2.87
+Filter  9: ON PK Fc  3191 Hz Gain -1.89 dB Q 3.00

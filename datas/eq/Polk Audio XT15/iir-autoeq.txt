@@ -1,15 +1,15 @@
 EQ for Polk Audio XT15 computed from ErinsAudioCorner data
 Preference Score 4.41 with EQ 5.74
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:43:11
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:33:35
 
 Preamp: -3.2 dB
 
 Filter  1: ON PK Fc    38 Hz Gain +3.00 dB Q 0.52
-Filter  2: ON PK Fc 12389 Hz Gain -3.35 dB Q 0.93
-Filter  3: ON PK Fc  3250 Hz Gain +1.71 dB Q 2.76
+Filter  2: ON PK Fc 12311 Hz Gain -3.36 dB Q 0.94
+Filter  3: ON PK Fc  3254 Hz Gain +1.71 dB Q 2.75
 Filter  4: ON PK Fc   127 Hz Gain -1.17 dB Q 3.00
-Filter  5: ON PK Fc  1148 Hz Gain -0.92 dB Q 3.00
-Filter  6: ON PK Fc   314 Hz Gain +0.57 dB Q 1.55
+Filter  5: ON PK Fc  1146 Hz Gain -0.92 dB Q 3.00
+Filter  6: ON PK Fc   314 Hz Gain +0.57 dB Q 1.54
 Filter  7: ON PK Fc   624 Hz Gain +0.50 dB Q 3.00
-Filter  8: ON PK Fc  7039 Hz Gain -0.50 dB Q 2.75
+Filter  8: ON PK Fc  7030 Hz Gain -0.50 dB Q 2.88

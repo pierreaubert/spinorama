@@ -1,16 +1,16 @@
 EQ for Polk Audio Reserve R350 computed from ASR data
-Preference Score 4.02 with EQ 5.02
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:48:27
+Preference Score 3.97 with EQ 5.00
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:38:50
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    44 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc  1070 Hz Gain +2.32 dB Q 0.68
-Filter  3: ON PK Fc  4387 Hz Gain -2.29 dB Q 2.45
-Filter  4: ON PK Fc   164 Hz Gain -0.81 dB Q 2.52
-Filter  5: ON PK Fc  6498 Hz Gain -0.50 dB Q 3.00
-Filter  6: ON PK Fc 13659 Hz Gain +0.86 dB Q 0.13
-Filter  7: ON PK Fc   371 Hz Gain +0.50 dB Q 3.00
-Filter  8: ON PK Fc  6164 Hz Gain -1.04 dB Q 1.43
-Filter  9: ON PK Fc  3623 Hz Gain -0.57 dB Q 3.00
+Filter  1: ON PK Fc    43 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON PK Fc   988 Hz Gain +2.19 dB Q 0.77
+Filter  3: ON PK Fc  4372 Hz Gain -2.34 dB Q 2.50
+Filter  4: ON PK Fc   167 Hz Gain -0.82 dB Q 2.42
+Filter  5: ON PK Fc 13659 Hz Gain +0.86 dB Q 0.18
+Filter  6: ON PK Fc  6451 Hz Gain -1.40 dB Q 1.84
+Filter  7: ON PK Fc  3649 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc  1442 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc 12350 Hz Gain -0.50 dB Q 3.00

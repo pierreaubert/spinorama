@@ -1,16 +1,15 @@
 EQ for Coda Audio HOPS8 computed from Vendors-Coda Audio data
-Preference Score 3.36 with EQ 3.85
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:45:29
+Preference Score 3.36 with EQ 3.91
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:34:22
 
-Preamp: -3.2 dB
+Preamp: -2.8 dB
 
-Filter  1: ON PK Fc    32 Hz Gain +3.00 dB Q 1.23
-Filter  2: ON PK Fc   100 Hz Gain -3.74 dB Q 2.09
-Filter  3: ON PK Fc   515 Hz Gain +1.54 dB Q 2.63
-Filter  4: ON PK Fc   178 Hz Gain -1.14 dB Q 3.00
-Filter  5: ON PK Fc  9687 Hz Gain +1.41 dB Q 0.59
-Filter  6: ON PK Fc  1549 Hz Gain +0.59 dB Q 3.00
-Filter  7: ON PK Fc  5453 Hz Gain -1.70 dB Q 3.00
-Filter  8: ON PK Fc  2498 Hz Gain -0.55 dB Q 3.00
-Filter  9: ON PK Fc 10679 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON LS Fc 15877 Hz Gain +0.94 dB
+Filter  2: ON PK Fc   111 Hz Gain -4.66 dB Q 1.65
+Filter  3: ON PK Fc  1203 Hz Gain +1.78 dB Q 1.72
+Filter  4: ON PK Fc   524 Hz Gain +1.36 dB Q 2.96
+Filter  5: ON PK Fc   187 Hz Gain -1.38 dB Q 2.91
+Filter  6: ON PK Fc  5345 Hz Gain -1.81 dB Q 2.94
+Filter  7: ON PK Fc  2220 Hz Gain -0.93 dB Q 2.92
+Filter  8: ON PK Fc   827 Hz Gain -0.62 dB Q 2.67

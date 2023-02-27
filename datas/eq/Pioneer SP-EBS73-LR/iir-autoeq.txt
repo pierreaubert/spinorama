@@ -1,16 +1,16 @@
 EQ for Pioneer SP-EBS73-LR computed from ASR data
-Preference Score 3.91 with EQ 4.71
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:43:36
+Preference Score 3.91 with EQ 4.94
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:34:00
 
-Preamp: -3.6 dB
+Preamp: -3.4 dB
 
-Filter  1: ON HS Fc  2622 Hz Gain +1.90 dB
-Filter  2: ON PK Fc 12700 Hz Gain -3.47 dB Q 2.74
-Filter  3: ON PK Fc   673 Hz Gain -1.17 dB Q 0.99
-Filter  4: ON PK Fc  4702 Hz Gain +1.69 dB Q 2.84
-Filter  5: ON PK Fc   111 Hz Gain -0.70 dB Q 2.92
-Filter  6: ON PK Fc   136 Hz Gain +0.53 dB Q 0.12
-Filter  7: ON PK Fc   262 Hz Gain -1.17 dB Q 1.82
-Filter  8: ON PK Fc  2080 Hz Gain -0.83 dB Q 2.62
-Filter  9: ON PK Fc   762 Hz Gain -0.82 dB Q 2.96
+Filter  1: ON HS Fc  2667 Hz Gain +1.90 dB
+Filter  2: ON PK Fc 12710 Hz Gain -3.56 dB Q 2.66
+Filter  3: ON PK Fc  4694 Hz Gain +1.55 dB Q 2.88
+Filter  4: ON PK Fc   265 Hz Gain -1.67 dB Q 2.86
+Filter  5: ON PK Fc   112 Hz Gain -0.68 dB Q 2.98
+Filter  6: ON PK Fc   769 Hz Gain -1.38 dB Q 1.90
+Filter  7: ON PK Fc  2017 Hz Gain -0.56 dB Q 2.79
+Filter  8: ON PK Fc 11005 Hz Gain -0.62 dB Q 2.96
+Filter  9: ON PK Fc 14513 Hz Gain -0.51 dB Q 2.75

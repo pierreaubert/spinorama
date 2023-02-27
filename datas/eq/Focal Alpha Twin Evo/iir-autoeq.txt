@@ -1,15 +1,15 @@
 EQ for Focal Alpha Twin Evo computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:48:01
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:36:39
 
 Preamp: -1.5 dB
 
 Filter  1: ON PK Fc    57 Hz Gain -3.00 dB Q 1.31
-Filter  2: ON PK Fc  6570 Hz Gain -3.03 dB Q 0.65
-Filter  3: ON PK Fc   107 Hz Gain -3.40 dB Q 1.73
-Filter  4: ON PK Fc   308 Hz Gain -1.55 dB Q 2.44
-Filter  5: ON PK Fc   548 Hz Gain +1.35 dB Q 3.00
-Filter  6: ON PK Fc   820 Hz Gain -1.18 dB Q 3.00
-Filter  7: ON PK Fc 13473 Hz Gain -1.37 dB Q 3.00
-Filter  8: ON PK Fc   381 Hz Gain -0.50 dB Q 3.00
-Filter  9: ON PK Fc   204 Hz Gain -0.50 dB Q 3.00
+Filter  2: ON PK Fc  6532 Hz Gain -3.04 dB Q 0.66
+Filter  3: ON PK Fc   108 Hz Gain -3.37 dB Q 1.70
+Filter  4: ON PK Fc   307 Hz Gain -1.53 dB Q 2.45
+Filter  5: ON PK Fc   545 Hz Gain +1.35 dB Q 3.00
+Filter  6: ON PK Fc   821 Hz Gain -1.18 dB Q 3.00
+Filter  7: ON PK Fc 13465 Hz Gain -1.39 dB Q 3.00
+Filter  8: ON PK Fc   361 Hz Gain -0.50 dB Q 2.94
+Filter  9: ON PK Fc  4524 Hz Gain -0.50 dB Q 3.00

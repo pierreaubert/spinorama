@@ -1,16 +1,16 @@
 EQ for Turbosound TCS122 computed from Vendors-Turbosound data
-Preference Score 0.37 with EQ 2.79
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:49:40
+Preference Score 0.37 with EQ 2.89
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:38:45
 
 Preamp: -3.2 dB
 
-Filter  1: ON HS Fc  5514 Hz Gain -2.86 dB
-Filter  2: ON PK Fc  2004 Hz Gain +2.92 dB Q 1.52
-Filter  3: ON PK Fc    98 Hz Gain -3.40 dB Q 2.88
-Filter  4: ON PK Fc   491 Hz Gain +2.77 dB Q 2.98
-Filter  5: ON PK Fc   176 Hz Gain +2.96 dB Q 2.98
-Filter  6: ON PK Fc   263 Hz Gain -3.37 dB Q 2.99
-Filter  7: ON PK Fc   846 Hz Gain -2.53 dB Q 3.00
-Filter  8: ON PK Fc 10056 Hz Gain -1.28 dB Q 2.75
-Filter  9: ON PK Fc  5507 Hz Gain -0.90 dB Q 2.97
+Filter  1: ON HS Fc  5478 Hz Gain -2.83 dB
+Filter  2: ON PK Fc  1896 Hz Gain +2.96 dB Q 1.53
+Filter  3: ON PK Fc    99 Hz Gain -3.33 dB Q 2.82
+Filter  4: ON PK Fc   492 Hz Gain +2.90 dB Q 2.99
+Filter  5: ON PK Fc   178 Hz Gain +2.93 dB Q 3.00
+Filter  6: ON PK Fc  9840 Hz Gain -1.44 dB Q 3.00
+Filter  7: ON PK Fc   262 Hz Gain -3.45 dB Q 3.00
+Filter  8: ON PK Fc   862 Hz Gain -2.84 dB Q 3.00
+Filter  9: ON PK Fc  5439 Hz Gain -0.88 dB Q 2.99

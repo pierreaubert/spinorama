@@ -1,15 +1,15 @@
 EQ for Definitive Technology D9 computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:44:52
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:32:53
 
-Preamp: -1.2 dB
+Preamp: -3.0 dB
 
-Filter  1: ON HS Fc  9668 Hz Gain -3.00 dB
-Filter  2: ON PK Fc   752 Hz Gain -1.72 dB Q 2.94
-Filter  3: ON PK Fc  2644 Hz Gain +0.96 dB Q 2.97
-Filter  4: ON PK Fc  4484 Hz Gain -1.00 dB Q 2.97
-Filter  5: ON PK Fc   269 Hz Gain -1.01 dB Q 2.25
-Filter  6: ON PK Fc  1548 Hz Gain -0.50 dB Q 2.71
-Filter  7: ON PK Fc 14463 Hz Gain -0.86 dB Q 2.96
-Filter  8: ON PK Fc  7356 Hz Gain -0.51 dB Q 3.00
-Filter  9: ON PK Fc   195 Hz Gain -0.52 dB Q 3.00
+Filter  1: ON PK Fc   414 Hz Gain +0.59 dB Q 0.50
+Filter  2: ON PK Fc  2255 Hz Gain +2.61 dB Q 2.32
+Filter  3: ON PK Fc 15914 Hz Gain -2.67 dB Q 0.27
+Filter  4: ON PK Fc  4456 Hz Gain -1.14 dB Q 3.00
+Filter  5: ON PK Fc   747 Hz Gain -0.81 dB Q 3.00
+Filter  6: ON PK Fc  1408 Hz Gain +0.70 dB Q 0.79
+Filter  7: ON PK Fc   171 Hz Gain -3.13 dB Q 3.00
+Filter  8: ON PK Fc 13714 Hz Gain -0.75 dB Q 3.00
+Filter  9: ON PK Fc    20 Hz Gain -0.53 dB Q 1.27

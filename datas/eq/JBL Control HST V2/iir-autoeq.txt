@@ -1,14 +1,14 @@
 EQ for JBL Control HST V2 computed from Vendors-JBL data
-Preference Score 7.33 with EQ 8.51
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:50:40
+Preference Score 7.33 with EQ 8.48
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:41:13
 
-Preamp: -2.0 dB
+Preamp: -3.2 dB
 
-Filter  1: ON LS Fc  1192 Hz Gain +1.82 dB
-Filter  2: ON PK Fc  5588 Hz Gain -1.64 dB Q 0.73
-Filter  3: ON PK Fc   245 Hz Gain -2.10 dB Q 1.49
-Filter  4: ON PK Fc 12581 Hz Gain -0.56 dB Q 2.44
-Filter  5: ON PK Fc 14736 Hz Gain -0.51 dB Q 2.98
-Filter  6: ON PK Fc   412 Hz Gain -0.53 dB Q 2.71
-Filter  7: ON PK Fc  3719 Hz Gain -0.51 dB Q 2.84
+Filter  1: ON LS Fc   116 Hz Gain +3.00 dB
+Filter  2: ON PK Fc   683 Hz Gain +1.76 dB Q 1.03
+Filter  3: ON PK Fc  5579 Hz Gain -1.61 dB Q 0.76
+Filter  4: ON PK Fc 12228 Hz Gain -0.61 dB Q 2.29
+Filter  5: ON PK Fc 14624 Hz Gain -0.51 dB Q 2.98
+Filter  6: ON PK Fc    65 Hz Gain -0.64 dB Q 2.92
+Filter  7: ON PK Fc  3710 Hz Gain -0.51 dB Q 2.87

@@ -1,16 +1,16 @@
 EQ for JBL Studio 530 computed from ASR data
-Preference Score 5.48 with EQ 5.93
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:43:03
+Preference Score 5.48 with EQ 5.92
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:33:59
 
 Preamp: -3.2 dB
 
 Filter  1: ON PK Fc    37 Hz Gain +3.00 dB Q 0.54
-Filter  2: ON PK Fc   322 Hz Gain +1.25 dB Q 2.88
+Filter  2: ON PK Fc   324 Hz Gain +1.24 dB Q 2.86
 Filter  3: ON PK Fc   142 Hz Gain -1.11 dB Q 3.00
 Filter  4: ON PK Fc  1514 Hz Gain +1.03 dB Q 3.00
 Filter  5: ON PK Fc    73 Hz Gain +0.68 dB Q 3.00
 Filter  6: ON PK Fc 14641 Hz Gain +1.25 dB Q 0.27
 Filter  7: ON PK Fc  2973 Hz Gain -0.69 dB Q 0.53
-Filter  8: ON PK Fc   550 Hz Gain +0.50 dB Q 3.00
-Filter  9: ON PK Fc  8047 Hz Gain -0.99 dB Q 2.53
+Filter  8: ON PK Fc   582 Hz Gain +0.50 dB Q 3.00
+Filter  9: ON PK Fc  7984 Hz Gain -0.99 dB Q 2.53

@@ -1,16 +1,15 @@
 EQ for Polk Audio XT60 computed from ErinsAudioCorner data
-Preference Score 4.80 with EQ 5.98
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:44:17
+Preference Score 4.80 with EQ 5.97
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:39:05
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    29 Hz Gain +3.00 dB Q 1.01
-Filter  2: ON PK Fc  9700 Hz Gain -2.73 dB Q 0.63
-Filter  3: ON PK Fc    84 Hz Gain -1.49 dB Q 3.00
-Filter  4: ON PK Fc  2426 Hz Gain +1.28 dB Q 3.00
+Filter  1: ON PK Fc    30 Hz Gain +3.00 dB Q 1.03
+Filter  2: ON PK Fc  9706 Hz Gain -2.73 dB Q 0.63
+Filter  3: ON PK Fc    84 Hz Gain -1.48 dB Q 3.00
+Filter  4: ON PK Fc  2428 Hz Gain +1.28 dB Q 3.00
 Filter  5: ON PK Fc  1010 Hz Gain -1.15 dB Q 3.00
-Filter  6: ON PK Fc   281 Hz Gain -0.50 dB Q 2.92
-Filter  7: ON PK Fc   153 Hz Gain +0.51 dB Q 3.00
-Filter  8: ON PK Fc  5312 Hz Gain -0.73 dB Q 2.58
-Filter  9: ON PK Fc   106 Hz Gain -0.50 dB Q 3.00
+Filter  6: ON PK Fc   281 Hz Gain -0.50 dB Q 2.94
+Filter  7: ON PK Fc   151 Hz Gain +0.51 dB Q 3.00
+Filter  8: ON PK Fc  5349 Hz Gain -0.73 dB Q 2.58

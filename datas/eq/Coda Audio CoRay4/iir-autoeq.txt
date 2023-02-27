@@ -1,15 +1,16 @@
 EQ for Coda Audio CoRay4 computed from Vendors-Coda Audio data
-Preference Score 2.83 with EQ 3.54
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:49:18
+Preference Score 2.83 with EQ 3.47
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:38:15
 
-Preamp: -4.5 dB
+Preamp: -4.7 dB
 
-Filter  1: ON HS Fc   999 Hz Gain +3.00 dB
-Filter  2: ON PK Fc   169 Hz Gain -3.32 dB Q 2.96
-Filter  3: ON PK Fc  9839 Hz Gain -3.43 dB Q 2.96
-Filter  4: ON PK Fc   364 Hz Gain +1.88 dB Q 2.80
-Filter  5: ON PK Fc  2972 Hz Gain +1.84 dB Q 2.90
-Filter  6: ON PK Fc  4592 Hz Gain -0.90 dB Q 2.24
-Filter  7: ON PK Fc  1978 Hz Gain -0.52 dB Q 1.01
-Filter  8: ON PK Fc  7422 Hz Gain -0.52 dB Q 2.99
+Filter  1: ON HS Fc  1006 Hz Gain +2.99 dB
+Filter  2: ON PK Fc   168 Hz Gain -3.47 dB Q 2.99
+Filter  3: ON PK Fc  9572 Hz Gain -3.17 dB Q 2.97
+Filter  4: ON PK Fc   359 Hz Gain +2.02 dB Q 2.64
+Filter  5: ON PK Fc  2925 Hz Gain +1.87 dB Q 2.96
+Filter  6: ON PK Fc  4508 Hz Gain -0.90 dB Q 2.34
+Filter  7: ON PK Fc  1943 Hz Gain -0.92 dB Q 2.99
+Filter  8: ON PK Fc   552 Hz Gain -0.56 dB Q 2.10
+Filter  9: ON PK Fc  7182 Hz Gain -0.50 dB Q 2.28

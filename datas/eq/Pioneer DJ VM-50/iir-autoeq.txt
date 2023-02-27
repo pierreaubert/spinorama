@@ -1,16 +1,16 @@
 EQ for Pioneer DJ VM-50 computed from ErinsAudioCorner data
 Preference Score 5.17 with EQ 5.66
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:43:52
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:38:30
 
 Preamp: -3.4 dB
 
-Filter  1: ON PK Fc    65 Hz Gain +2.70 dB Q 0.50
+Filter  1: ON PK Fc    63 Hz Gain +2.71 dB Q 0.50
 Filter  2: ON PK Fc  4352 Hz Gain +3.00 dB Q 0.63
-Filter  3: ON PK Fc   231 Hz Gain +1.56 dB Q 2.14
-Filter  4: ON PK Fc 11479 Hz Gain +1.38 dB Q 0.33
-Filter  5: ON PK Fc   361 Hz Gain +0.50 dB Q 3.00
-Filter  6: ON PK Fc   915 Hz Gain -1.78 dB Q 0.90
-Filter  7: ON PK Fc  5973 Hz Gain -1.98 dB Q 2.59
-Filter  8: ON PK Fc    81 Hz Gain -1.23 dB Q 2.75
-Filter  9: ON PK Fc  1355 Hz Gain -0.74 dB Q 3.00
+Filter  3: ON PK Fc   230 Hz Gain +1.60 dB Q 2.09
+Filter  4: ON PK Fc 11486 Hz Gain +1.38 dB Q 0.33
+Filter  5: ON PK Fc   352 Hz Gain +0.50 dB Q 3.00
+Filter  6: ON PK Fc   915 Hz Gain -1.78 dB Q 0.91
+Filter  7: ON PK Fc  5969 Hz Gain -1.98 dB Q 2.59
+Filter  8: ON PK Fc    79 Hz Gain -1.20 dB Q 2.74
+Filter  9: ON PK Fc  1353 Hz Gain -0.75 dB Q 3.00

@@ -1,16 +1,16 @@
 EQ for KEF Q250 computed from ErinsAudioCorner data
-Preference Score 4.41 with EQ 5.17
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:44:07
+Preference Score 4.42 with EQ 5.17
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:33:56
 
 Preamp: -3.2 dB
 
-Filter  1: ON LS Fc   110 Hz Gain +3.00 dB
-Filter  2: ON PK Fc  3340 Hz Gain +2.24 dB Q 1.58
-Filter  3: ON PK Fc 12823 Hz Gain -2.56 dB Q 1.37
-Filter  4: ON PK Fc   314 Hz Gain -1.02 dB Q 1.06
-Filter  5: ON PK Fc  1078 Hz Gain -0.50 dB Q 2.96
-Filter  6: ON PK Fc   693 Hz Gain +0.51 dB Q 2.98
-Filter  7: ON PK Fc 15191 Hz Gain -0.51 dB Q 2.99
-Filter  8: ON PK Fc  9239 Hz Gain -0.51 dB Q 2.93
-Filter  9: ON PK Fc   162 Hz Gain -0.51 dB Q 2.96
+Filter  1: ON LS Fc   109 Hz Gain +3.00 dB
+Filter  2: ON PK Fc  3249 Hz Gain +2.14 dB Q 1.60
+Filter  3: ON PK Fc 12794 Hz Gain -2.51 dB Q 1.37
+Filter  4: ON PK Fc   316 Hz Gain -0.95 dB Q 1.01
+Filter  5: ON PK Fc  1103 Hz Gain -0.50 dB Q 2.99
+Filter  6: ON PK Fc   693 Hz Gain +0.51 dB Q 2.68
+Filter  7: ON PK Fc 15181 Hz Gain -0.57 dB Q 2.99
+Filter  8: ON PK Fc  9114 Hz Gain -0.51 dB Q 2.92
+Filter  9: ON PK Fc   163 Hz Gain -0.52 dB Q 2.99

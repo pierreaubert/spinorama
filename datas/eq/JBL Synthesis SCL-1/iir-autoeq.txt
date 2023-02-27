@@ -1,15 +1,15 @@
 EQ for JBL Synthesis SCL-1 computed from Vendors-JBL data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:48:16
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:36:53
 
-Preamp: -4.1 dB
+Preamp: -3.9 dB
 
-Filter  1: ON LS Fc  1095 Hz Gain +1.84 dB
-Filter  2: ON PK Fc 15995 Hz Gain +3.00 dB Q 0.91
-Filter  3: ON PK Fc    69 Hz Gain -2.98 dB Q 2.99
-Filter  4: ON PK Fc   117 Hz Gain -1.96 dB Q 2.98
-Filter  5: ON PK Fc  3391 Hz Gain -1.70 dB Q 1.00
-Filter  6: ON PK Fc   449 Hz Gain +2.11 dB Q 2.52
-Filter  7: ON PK Fc   193 Hz Gain +0.51 dB Q 2.69
-Filter  8: ON PK Fc  6761 Hz Gain -1.65 dB Q 2.93
-Filter  9: ON PK Fc  7895 Hz Gain -0.88 dB Q 2.98
+Filter  1: ON LS Fc  1049 Hz Gain +1.83 dB
+Filter  2: ON PK Fc 15999 Hz Gain +2.99 dB Q 0.84
+Filter  3: ON PK Fc    69 Hz Gain -3.01 dB Q 2.96
+Filter  4: ON PK Fc   118 Hz Gain -1.89 dB Q 2.99
+Filter  5: ON PK Fc  3381 Hz Gain -1.54 dB Q 0.84
+Filter  6: ON PK Fc   463 Hz Gain +2.01 dB Q 2.02
+Filter  7: ON PK Fc  6761 Hz Gain -1.67 dB Q 3.00
+Filter  8: ON PK Fc  8082 Hz Gain -0.80 dB Q 2.84
+Filter  9: ON PK Fc   950 Hz Gain -0.89 dB Q 2.99

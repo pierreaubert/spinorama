@@ -1,16 +1,15 @@
 EQ for Fluance HFS Signature computed from ASR data
 Preference Score 3.45 with EQ 4.49
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:42:57
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-02-26-09:33:45
 
 Preamp: -3.2 dB
 
-Filter  1: ON LS Fc    94 Hz Gain +3.00 dB
-Filter  2: ON PK Fc   241 Hz Gain -1.99 dB Q 0.78
-Filter  3: ON PK Fc  2481 Hz Gain +3.00 dB Q 2.22
-Filter  4: ON PK Fc  5281 Hz Gain -1.44 dB Q 2.37
-Filter  5: ON PK Fc   979 Hz Gain -1.56 dB Q 2.55
-Filter  6: ON PK Fc 10456 Hz Gain -1.27 dB Q 2.78
-Filter  7: ON PK Fc   523 Hz Gain -0.64 dB Q 2.59
-Filter  8: ON PK Fc 12426 Hz Gain -0.50 dB Q 2.79
-Filter  9: ON PK Fc  9113 Hz Gain -0.51 dB Q 2.85
+Filter  1: ON LS Fc    93 Hz Gain +3.00 dB
+Filter  2: ON PK Fc   243 Hz Gain -2.05 dB Q 0.89
+Filter  3: ON PK Fc  2455 Hz Gain +3.00 dB Q 2.09
+Filter  4: ON PK Fc  5252 Hz Gain -1.56 dB Q 2.62
+Filter  5: ON PK Fc   943 Hz Gain -1.47 dB Q 2.05
+Filter  6: ON PK Fc 10574 Hz Gain -1.39 dB Q 2.86
+Filter  7: ON PK Fc  9248 Hz Gain -0.53 dB Q 2.83
+Filter  8: ON PK Fc   544 Hz Gain -0.60 dB Q 2.35
