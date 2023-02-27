@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>${site}/index.html</loc>
+  </url>
+  <url>
+    <loc>${site}/eqs.html</loc>
+  </url>
+  <url>
+    <loc>${site}/compare.html</loc>
+  </url>
+  <url>
+    <loc>${site}/similar.html</loc>
+  </url>
+  <url>
+    <loc>${site}/scores.html</loc>
+  </url>
+  <url>
+    <loc>${site}/statistics.html</loc>
+  </url>
+  <url>
+    <loc>${site}/help.html</loc>
+  </url>
+  % for speaker_name in meta:
+  %   for m in meta[speaker_name]['measurements']:
+  <url>
+      <loc>${site}/speakers/${speaker_name | space2url}/${meta[speaker_name]['measurements'][m]['origin'] | removeVendors}/index_${m}.html</loc>
+  </url>
+  %   endfor
+  % endfor
+</urlset>
+<%!
+  def space2url(text):
+      return text.replace(' ', '%20').replace('&', '&amp;')
+
+  def space2dash(text):
+      return text.replace(' ', '-').replace("'", '-').replace(".", '-').replace('&', '&amp;')
+
+  def removeVendors(text):
+      return text.replace('Vendors-','').replace('&', '&amp;')
+%>

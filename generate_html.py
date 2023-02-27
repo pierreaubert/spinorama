@@ -137,7 +137,9 @@ def generate_speaker(mako, dataframe, meta, site, useSearch):
                     for graph_name in kind:
                         graph_filename = "{0}/{1}/{2}.html".format(dirname, key, graph_name)
                         logger.info("Writing %s/%s for %s", key, graph_filename, speaker_name)
-                        graph_content = graph_html.render(graph=graph_name, meta=meta, site=site)
+                        graph_content = graph_html.render(
+                            speaker=speaker_name, graph=graph_name, meta=meta, site=site
+                        )
                         write_if_different(graph_content, graph_filename)
     return 0
 
@@ -276,7 +278,7 @@ def main():
         "favicon-16x16.png",
     ]:
         file_in = cpaths.CPATH_DATAS_LOGOS + "/" + f
-        file_out = cpaths.CPATH_DOCS_PICTURES + "/" + f
+        file_out = cpaths.CPATH_DOCS + "/" + f
         shutil.copy(file_in, file_out)
 
     for f in [
@@ -308,7 +310,7 @@ def main():
         print("flow failed")
 
     # copy css/js files
-    logger.info("Copy js/css files to %s", cpaths.CPATH_DOCS)
+    logger.info("Copy js files to %s", cpaths.CPATH_DOCS_ASSETS_JS)
     try:
         for item in ("misc",):
             item_name = "assets/{0}.js".format(item)
@@ -316,6 +318,25 @@ def main():
             item_html = mako_templates.get_template(item_name)
             item_content = item_html.render(df=df, meta=meta_sorted_score, site=site)
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
+            write_if_different(item_content, item_filename)
+    except KeyError as key_error:
+        print("Generating various html files failed with {}".format(key_error))
+        sys.exit(1)
+
+    # generate robots.txt and sitemap.xml
+    logger.info("Copy robots/sitemap files to %s", cpaths.CPATH_DOCS)
+    try:
+        for item_name in (
+            "robots.txt",
+            "sitemap.xml",
+        ):
+            logger.info("Write %s", item_name)
+            item_html = mako_templates.get_template(item_name)
+            item_content = item_html.render(
+                df=df, meta=meta_sorted_score, site=site, isProd=(site == SITEPROD)
+            )
+            item_filename = cpaths.CPATH_DOCS + "/" + item_name
+            # ok for robots but likely doesn't work for sitemap
             write_if_different(item_content, item_filename)
     except KeyError as key_error:
         print("Generating various html files failed with {}".format(key_error))
