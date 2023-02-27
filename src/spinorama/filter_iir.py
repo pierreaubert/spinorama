@@ -34,7 +34,7 @@ class Biquad:
         HIGHSHELF: ["Highshelf", "HS"],
     }
 
-    def __init__(self, typ, freq, srate, Q, dbGain=0):
+    def __init__(self, typ: int, freq: float, srate: int, Q: float, dbGain: float = 0):
         types = {
             Biquad.LOWPASS: Biquad.lowpass,
             Biquad.HIGHPASS: Biquad.highpass,
@@ -150,9 +150,9 @@ class Biquad:
         return y
 
     # provide a static result for a given frequency f
-    def resultSlow(self, f):
+    def resultSlow(self, f: float) -> float:
         phi = (math.sin(math.pi * f * 2 / (2 * self.srate))) ** 2
-        r = (
+        result = (
             (self.b0 + self.b1 + self.b2) ** 2
             - 4 * (self.b0 * self.b1 + 4 * self.b0 * self.b2 + self.b1 * self.b2) * phi
             + 16 * self.b0 * self.b2 * phi * phi
@@ -161,31 +161,31 @@ class Biquad:
             - 4 * (self.a1 + 4 * self.a2 + self.a1 * self.a2) * phi
             + 16 * self.a2 * phi * phi
         )
-        r = max(0, r)
-        return r ** (0.5)
+        result = max(0, result)
+        return result ** (0.5)
 
-    def result(self, f):
+    def result(self, f: float) -> float:
         phi = (math.sin(math.pi * f * 2 / (2 * self.srate))) ** 2
         phi2 = phi * phi
-        r = (self.r_up0 + self.r_up1 * phi + self.r_up2 * phi2) / (
+        result = (self.r_up0 + self.r_up1 * phi + self.r_up2 * phi2) / (
             self.r_dw0 + self.r_dw1 * phi + self.r_dw2 * phi2
         )
-        r = max(0, r)
-        return r ** (0.5)
+        result = max(0, result)
+        return result ** (0.5)
 
     # provide a static log result for a given frequency f
-    def log_result(self, f):
+    def log_result(self, f: float) -> float:
         try:
-            r = 20 * math.log10(self.result(f))
+            result = 20 * math.log10(self.result(f))
         except:
-            r = -200
-        return r
+            result = -200
+        return result
 
     # return computed constants
-    def constants(self):
+    def constants(self) -> tuple[float, float, float, float, float]:
         return self.a1, self.a2, self.b0, self.b1, self.b2
 
-    def type2str(self, short=True):
+    def type2str(self, short: bool = True) -> str:
         if short is True:
             return self.type2name[self.typ][1]
         return self.type2name[self.typ][0]
@@ -200,7 +200,7 @@ class Biquad:
         )
 
     # vector version (10x faster)
-    def np_log_result(self, freq):
+    def np_log_result(self, freq: float) -> np.ndarray:
         phi = np.sin(math.pi * freq * 2 / (2 * self.srate)) ** 2
         phi2 = phi**2
         r = (self.r_up0 + self.r_up1 * phi + self.r_up2 * phi2) / (

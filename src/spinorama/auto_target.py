@@ -22,6 +22,10 @@ import pandas as pd
 from scipy.stats import linregress
 
 from spinorama import logger
+from spinorama.ltype import Peq, FloatVector1D
+from spinorama.filter_peq import peq_build
+from spinorama.compute_misc import savitzky_golay
+
 
 # ------------------------------------------------------------------------------
 # compute freq and targets
@@ -174,3 +178,22 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     #    )
     # )
     return line
+
+
+def optim_compute_auto_target(
+    freq: FloatVector1D,
+    target: list[FloatVector1D],
+    auto_target_interp: list[FloatVector1D],
+    peq: Peq,
+    optim_config: dict,
+):
+    """Define the target for the optimiser with potentially some smoothing"""
+    peq_freq = peq_build(freq, peq)
+    diff = [target[i] - auto_target_interp[i] for i, _ in enumerate(target)]
+    if optim_config.get("smooth_measurements"):
+        window_size = optim_config.get("smooth_window_size")
+        order = optim_config.get("smooth_order")
+        smoothed = [savitzky_golay(d, window_size, order) for d in diff]
+        diff = smoothed
+    delta = [diff[i] + peq_freq for i, _ in enumerate(target)]
+    return delta

@@ -17,8 +17,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import math
+from typing import Literal
+
 import numpy as np
-from typing import Literal, List, Tuple
 import scipy.signal as sig
 from scipy.interpolate import InterpolatedUnivariateSpline
 
@@ -31,10 +32,11 @@ from spinorama.ltype import FloatVector1D, Vector
 
 
 def compute_non_admissible_freq(peq, min_freq, max_freq):
+    """returns a list of zones (range of frequencies) which are not admissible"""
     zones = []
-    for _, eq in peq:
-        f = eq.freq
-        q = eq.Q
+    for _, current_eq in peq:
+        f = current_eq.freq
+        q = current_eq.Q
         # limit the zone for small q
         if q < 1.0:
             q = 1.0
@@ -49,21 +51,22 @@ def compute_non_admissible_freq(peq, min_freq, max_freq):
     return zones
 
 
-def not_in_zones(zones, f):
-    for f1, f2 in zones:
-        if f > f1 and f < f2:
+def not_in_zones(zones, freq):
+    """check if frequency is in range for each zone"""
+    for zone_low, zone_high in zones:
+        if freq > zone_low and freq < zone_high:
             return False
     return True
 
 
 def find_largest_area(
-    freq: FloatVector1D, curve: List[FloatVector1D], optim_config: dict, peq
-) -> Tuple[Literal[-1, 1], int, float]:
+    freq: FloatVector1D, curve: list[FloatVector1D], optim_config: dict, peq
+) -> tuple[Literal[-1, 1], int, float]:
     min_freq = optim_config["target_min_freq"]
     max_freq = optim_config["target_max_freq"]
     zones = compute_non_admissible_freq(peq, min_freq, max_freq)
 
-    def largest_area(current_curve) -> Tuple[int, float]:
+    def largest_area(current_curve) -> tuple[int, float]:
         # print("[{}]".format(", ".join([str(f) for f in current_curve])))
         peaks, _ = sig.find_peaks(current_curve, distance=4)
         if len(peaks) == 0:
@@ -135,8 +138,8 @@ def find_largest_area(
 
 
 def propose_range_freq(
-    freq: FloatVector1D, local_target: List[FloatVector1D], optim_config: dict, zones
-) -> Tuple[Literal[-1, 1], float, Vector]:
+    freq: FloatVector1D, local_target: list[FloatVector1D], optim_config: dict, zones
+) -> tuple[Literal[-1, 1], float, Vector]:
     sign, init_freq = find_largest_area(freq, local_target, optim_config, zones)
     if init_freq == -1:
         init_freq = 1000
@@ -157,7 +160,7 @@ def propose_range_freq(
 
 def propose_range_db_gain(
     freq: FloatVector1D,
-    local_target: List[FloatVector1D],
+    local_target: list[FloatVector1D],
     sign: Literal[-1, 1],
     init_freq: FloatVector1D,
     optim_config: dict,

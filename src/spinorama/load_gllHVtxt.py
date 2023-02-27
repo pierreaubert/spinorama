@@ -107,7 +107,9 @@ def parse_graph_gllHVtxt(dir_path: str) -> tuple[pd.DataFrame, pd.DataFrame]:
     return sort_angles(pd.concat(spl_h, axis=1)), sort_angles(pd.concat(spl_v, axis=1))
 
 
-def parse_graphs_speaker_gllHVtxt(speaker_path, speaker_brand, speaker_name, version):
+def parse_graphs_speaker_gllHVtxt(
+    speaker_path: str, speaker_name: str, version: str
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """2 files per directory xxx_H_IR.mat and xxx_V_IR.mat"""
     dirname = "{0}/{1}/{2}".format(speaker_path, speaker_name, version)
 

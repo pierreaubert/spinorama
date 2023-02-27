@@ -137,9 +137,7 @@ def parse_graphs_speaker(
                 measurement_path, speaker_brand, speaker_name, mversion
             )
         elif mformat == "gllHVtxt":
-            h_spl, v_spl = parse_graphs_speaker_gllHVtxt(
-                measurement_path, speaker_brand, speaker_name, mversion
-            )
+            h_spl, v_spl = parse_graphs_speaker_gllHVtxt(measurement_path, speaker_name, mversion)
 
         if msymmetry == "coaxial":
             h_spl2 = symmetrise_measurement(h_spl)

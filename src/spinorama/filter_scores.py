@@ -27,14 +27,14 @@ from spinorama.plot import plot_spinorama
 
 def scores_apply_filter(df_speaker: DataSpeaker, peq: Peq):
     # get SPL H & V
-    splH = df_speaker["SPL Horizontal_unmelted"]
-    splV = df_speaker["SPL Vertical_unmelted"]
+    spl_h = df_speaker["SPL Horizontal_unmelted"]
+    spl_v = df_speaker["SPL Vertical_unmelted"]
     # apply EQ to all horizontal and vertical measurements
-    splH_filtered = peq_apply_measurements(splH, peq)
-    splV_filtered = peq_apply_measurements(splV, peq)
+    spl_h_filtered = peq_apply_measurements(spl_h, peq)
+    spl_v_filtered = peq_apply_measurements(spl_v, peq)
     # compute filtered score
-    spin_filtered = graph_melt(compute_cea2034(splH_filtered, splV_filtered))
-    pir_filtered = graph_melt(estimated_inroom_hv(splH_filtered, splV_filtered))
+    spin_filtered = graph_melt(compute_cea2034(spl_h_filtered, spl_v_filtered))
+    pir_filtered = graph_melt(estimated_inroom_hv(spl_h_filtered, spl_v_filtered))
     score_filtered = speaker_pref_rating(spin_filtered, pir_filtered, rounded=False)
     if score_filtered is None:
         logger.info("computing pref score for eq failed")
@@ -202,13 +202,13 @@ def scores_loss(df_speaker: dict, peq) -> float:
 def lw_loss(df_speaker: dict, peq) -> float:
     # optimise LW
     # get SPL H & V
-    splH = df_speaker["SPL Horizontal_unmelted"]
-    splV = df_speaker["SPL Vertical_unmelted"]
+    spl_h = df_speaker["SPL Horizontal_unmelted"]
+    spl_v = df_speaker["SPL Vertical_unmelted"]
     # apply EQ to all horizontal and vertical measurements
-    splH_filtered = peq_apply_measurements(splH, peq)
-    splV_filtered = peq_apply_measurements(splV, peq)
+    spl_h_filtered = peq_apply_measurements(spl_h, peq)
+    spl_v_filtered = peq_apply_measurements(spl_v, peq)
     # compute LW
-    lw_filtered = listening_window(splH_filtered, splV_filtered)
+    lw_filtered = listening_window(spl_h_filtered, spl_v_filtered)
     # optimize nbd
     score = nbd(lw_filtered)
     # print("LW score: {}".format(score))
