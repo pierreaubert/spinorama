@@ -505,7 +505,7 @@ def optim_save_peq(
         # print('EQ prev_score {:0.2f} > {:0.2f}'.format(previous_score, auto_score["pref_score"]))
 
         if not skip:
-            with open(eq_name, "w", encoding="ascii") as write_fd:
+            with open(eq_name, "w", encoding="utf8") as write_fd:
                 iir_txt = "iir.txt"
                 iir_name = f"{eq_dir}/{iir_txt}"
                 write_fd.write(eq_apo)

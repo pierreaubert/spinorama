@@ -119,7 +119,7 @@ def parse_eq_line(line, srate):
 def parse_eq_iir_rews(filename, srate):
     peq = []
     try:
-        with open(filename, "r") as f:
+        with open(filename, "r", encoding="utf8") as f:
             lines = f.readlines()
             for l in lines:
                 status, iir = parse_eq_line(l, srate)
