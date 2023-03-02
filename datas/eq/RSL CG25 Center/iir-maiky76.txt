@@ -1,0 +1,14 @@
+RSL CG25 APO EQ Score 96000Hz
+March012023-140858
+
+Preamp: -1.9 dB
+
+Filter 1: ON HPQ Fc 37.60,    0.00,    0.99
+Filter 2: ON PK Fc 167.78,    -5.74,    0.73
+Filter 3: ON PK Fc 355.56,    -3.57,    1.76
+Filter 4: ON PK Fc 723.34,    -4.00,    5.45
+Filter 5: ON PK Fc 896.43,    -3.21,    4.28
+Filter 6: ON PK Fc 1387.11,    3.02,    0.52
+Filter 7: ON PK Fc 2443.80,    -3.26,    1.51
+Filter 8: ON PK Fc 4615.23,    -5.80,    5.04
+Filter 9: ON PK Fc 5603.74,    2.73,    6.72

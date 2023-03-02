@@ -15210,40 +15210,6 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
-    "RSL Outsider II": {
-        "brand": "RSL",
-        "model": "Outsider II",
-        "type": "passive",
-        "price": "300",
-        "shape": "outdoor",
-        "amount": "pair",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/rsl-outsider-ii-outdoor-speaker-review.16659/",
-                "review_published": "20201011",
-            },
-        },
-    },
-    "RSL CG5": {
-        "brand": "RSL",
-        "model": "CG5",
-        "type": "passive",
-        "price": "",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "misc-audioholics",
-        "measurements": {
-            "misc-audioholics": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "quality": "low",
-                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/rsl-cg5-and-cg25/conclusion",
-            },
-        },
-    },
     "Rockville SPG88": {
         "brand": "Rockville",
         "model": "SPG88",
@@ -15262,13 +15228,85 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
-    "RSL CG25": {
+    "RSL Outsider II": {
         "brand": "RSL",
-        "model": "CG25",
+        "model": "Outsider II",
         "type": "passive",
-        "price": "",
+        "price": "300",
+        "shape": "outdoor",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/rsl-outsider-ii-outdoor-speaker-review.16659/",
+                "review_published": "20201011",
+            },
+        },
+    },
+    "RSL CG25 Center": {
+        "brand": "RSL",
+        "model": "CG25 Center",
+        "type": "passive",
+        "price": "425",
         "shape": "center",
         "amount": "each",
+        "default_measurement": "asr-horizontal",
+        "measurements": {
+            "asr-horizontal": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/rsl-cg25-center-speaker-review.42495/",
+                    "adh": "https://www.audioholics.com/bookshelf-speaker-reviews/rsl-cg5-and-cg25",
+                    "htr": "https://hometheaterreview.com/rsl-cg5-bookshelf-and-cg25-monitorcenter-channel-reviewed/",
+                },
+                "review_published": "20230302",
+                "specifications": {
+                    "sensitivity": 88,
+                    "size": {
+                        "height": 482,
+                        "width": 141,
+                        "depth": 247,
+                    },
+                    "weight": 10.4,
+                },
+            },
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/rsl-cg25-center-speaker-review.42495/",
+                    "adh": "https://www.audioholics.com/bookshelf-speaker-reviews/rsl-cg5-and-cg25",
+                    "htr": "https://hometheaterreview.com/rsl-cg5-bookshelf-and-cg25-monitorcenter-channel-reviewed/",
+                },
+                "review_published": "20230302",
+                "specifications": {
+                    "sensitivity": 88,
+                    "size": {
+                        "height": 482,
+                        "width": 141,
+                        "depth": 247,
+                    },
+                    "weight": 10.4,
+                },
+            },
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/rsl-cg5-and-cg25/conclusion",
+            },
+        },
+    },
+    "RSL CG5": {
+        "brand": "RSL",
+        "model": "CG5",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
         "default_measurement": "misc-audioholics",
         "measurements": {
             "misc-audioholics": {
@@ -16456,6 +16494,23 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/zaph-audio-za5-2-diy-kit-speaker-review.12086/",
                 "review_published": "20201317",
+            },
+        },
+    },
+    "理性派HiFi X5": {
+        "brand": "理性派HiFi",
+        "model": "X5",
+        "type": "passive",
+        "price": "284",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/%E7%90%86%E6%80%A7%E6%B4%BEhifi-x5-speaker-review.42528/",
+                "review_published": "20230302",
             },
         },
     },
