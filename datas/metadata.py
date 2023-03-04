@@ -10591,6 +10591,25 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "M-Audio BX3 D3": {
+        "brand": "M-Audio",
+        "model": "BX3 D3",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "90",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/m-audio-bx3-monitor-review.42602/",
+                },
+                "review_published": "20230304",
+            },
+        },
+    },
     "M-Audio BX4 D3": {
         "brand": "M-Audio",
         "model": "BX4 D3",
