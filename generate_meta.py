@@ -505,6 +505,8 @@ def add_eq(speaker_path, dataframe, parse_max):
             ("autoeq", "AutomaticEQ (IIR)"),
             ("amirm", "amirm@ASR (IIR)"),
             ("maiky76", "maiky76@ASR (IIR)"),
+            ("maiky76-lw", "maiky76@ASR LW (IIR)"),
+            ("maiky76-score", "maiky76@ASR (IIR)"),
             ("flipflop", "flipflop@ASR (IIR)"),
             ("autoeq-dbx-1215", "Graphic EQ 15 bands"),
             ("autoeq-dbx-1231", "Graphic EQ 31 bands"),
