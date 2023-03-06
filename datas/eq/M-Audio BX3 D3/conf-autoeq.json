@@ -37,5 +37,10 @@
     "MAX_DBGAIN": 3,
     "MIN_Q": 0.05,
     "MAX_Q": 3,
-    "second_optimiser": false
+    "second_optimiser": false,
+    "verbose": true,
+    "smoke_test": false,
+    "force": true,
+    "version": "0.20",
+    "level": 20
 }

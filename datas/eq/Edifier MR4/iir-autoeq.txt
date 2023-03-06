@@ -1,16 +1,16 @@
 EQ for Edifier MR4 computed from ErinsAudioCorner data
-Preference Score 3.46 with EQ 5.33
+Preference Score 3.46 with EQ 5.39
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-02-26-09:39:53
+Dated: 2023-03-06-14:24:58
 
 Preamp: -3.5 dB
 
 Filter  1: ON PK Fc    43 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc  2965 Hz Gain +3.00 dB Q 2.00
+Filter  2: ON PK Fc  2939 Hz Gain +3.00 dB Q 2.00
 Filter  3: ON PK Fc   459 Hz Gain -1.42 dB Q 0.89
-Filter  4: ON PK Fc 13323 Hz Gain -3.27 dB Q 1.07
-Filter  5: ON PK Fc    89 Hz Gain +1.61 dB Q 3.00
-Filter  6: ON PK Fc   875 Hz Gain +0.87 dB Q 3.00
-Filter  7: ON PK Fc   166 Hz Gain -1.27 dB Q 2.77
-Filter  8: ON PK Fc 10988 Hz Gain -0.50 dB Q 3.00
-Filter  9: ON PK Fc   621 Hz Gain -0.50 dB Q 3.00
+Filter  4: ON PK Fc 13276 Hz Gain -3.29 dB Q 1.09
+Filter  5: ON PK Fc    90 Hz Gain +1.65 dB Q 3.00
+Filter  6: ON PK Fc   865 Hz Gain +0.87 dB Q 3.00
+Filter  7: ON PK Fc   166 Hz Gain -1.26 dB Q 2.80
+Filter  8: ON PK Fc   617 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc  1133 Hz Gain -0.50 dB Q 3.00

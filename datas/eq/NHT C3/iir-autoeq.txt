@@ -1,16 +1,16 @@
 EQ for NHT C3 computed from ASR data
-Preference Score 4.46 with EQ 6.00
+Preference Score 4.46 with EQ 6.03
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-02-26-09:33:33
+Dated: 2023-03-06-14:27:56
 
 Preamp: -3.1 dB
 
-Filter  1: ON PK Fc    33 Hz Gain +2.85 dB Q 1.20
-Filter  2: ON PK Fc   140 Hz Gain -2.46 dB Q 1.02
-Filter  3: ON PK Fc 15457 Hz Gain -3.54 dB Q 0.28
-Filter  4: ON PK Fc   993 Hz Gain +2.48 dB Q 2.91
-Filter  5: ON PK Fc   447 Hz Gain -2.16 dB Q 2.66
-Filter  6: ON PK Fc  2627 Hz Gain -0.66 dB Q 3.00
-Filter  7: ON PK Fc   106 Hz Gain -0.50 dB Q 3.00
-Filter  8: ON PK Fc  6864 Hz Gain -0.50 dB Q 3.00
-Filter  9: ON PK Fc 15342 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON PK Fc    34 Hz Gain +2.85 dB Q 1.23
+Filter  2: ON PK Fc   135 Hz Gain -2.56 dB Q 1.11
+Filter  3: ON PK Fc 15877 Hz Gain -3.53 dB Q 0.26
+Filter  4: ON PK Fc   997 Hz Gain +2.47 dB Q 2.94
+Filter  5: ON PK Fc   444 Hz Gain -2.19 dB Q 2.51
+Filter  6: ON PK Fc  2607 Hz Gain -0.65 dB Q 3.00
+Filter  7: ON PK Fc  6919 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc 15276 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc   106 Hz Gain -0.50 dB Q 3.00

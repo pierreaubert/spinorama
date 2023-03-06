@@ -1,15 +1,16 @@
 EQ for Polk Audio Monitor 40 Series II computed from ASR data
-Preference Score 2.42 with EQ 5.11
+Preference Score 2.42 with EQ 5.15
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-02-26-09:36:07
+Dated: 2023-03-06-14:27:29
 
 Preamp: -3.2 dB
 
 Filter  1: ON PK Fc    41 Hz Gain +3.00 dB Q 0.71
-Filter  2: ON PK Fc 10069 Hz Gain -3.93 dB Q 0.57
-Filter  3: ON PK Fc  1617 Hz Gain +3.00 dB Q 1.66
-Filter  4: ON PK Fc   141 Hz Gain -1.99 dB Q 2.98
-Filter  5: ON PK Fc   467 Hz Gain +1.66 dB Q 2.14
-Filter  6: ON PK Fc  4662 Hz Gain -1.52 dB Q 1.61
-Filter  7: ON PK Fc  5273 Hz Gain -0.65 dB Q 3.00
-Filter  8: ON PK Fc 13190 Hz Gain -0.61 dB Q 3.00
+Filter  2: ON PK Fc 10092 Hz Gain -3.93 dB Q 0.57
+Filter  3: ON PK Fc  1609 Hz Gain +3.00 dB Q 1.65
+Filter  4: ON PK Fc   142 Hz Gain -1.99 dB Q 2.97
+Filter  5: ON PK Fc   466 Hz Gain +1.66 dB Q 2.17
+Filter  6: ON PK Fc  4736 Hz Gain -1.47 dB Q 1.59
+Filter  7: ON PK Fc  5167 Hz Gain -0.68 dB Q 3.00
+Filter  8: ON PK Fc 13274 Hz Gain -0.60 dB Q 3.00
+Filter  9: ON PK Fc   257 Hz Gain -0.50 dB Q 3.00

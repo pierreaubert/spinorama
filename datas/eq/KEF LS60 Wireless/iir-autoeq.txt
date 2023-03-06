@@ -1,15 +1,15 @@
 EQ for KEF LS60 Wireless computed from Vendors-KEF data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-02-26-09:36:16
+Dated: 2023-03-06-14:20:46
 
-Preamp: -1.3 dB
+Preamp: -1.4 dB
 
-Filter  1: ON LS Fc  1006 Hz Gain -2.16 dB
-Filter  2: ON PK Fc   143 Hz Gain -1.32 dB Q 0.96
-Filter  3: ON PK Fc  9287 Hz Gain +1.12 dB Q 0.60
-Filter  4: ON PK Fc  1749 Hz Gain -0.56 dB Q 2.45
-Filter  5: ON PK Fc   278 Hz Gain -0.51 dB Q 2.79
-Filter  6: ON PK Fc   528 Hz Gain +0.65 dB Q 1.86
-Filter  7: ON PK Fc 13871 Hz Gain -0.60 dB Q 2.97
-Filter  8: ON PK Fc    66 Hz Gain -0.75 dB Q 2.61
-Filter  9: ON PK Fc  5202 Hz Gain -0.51 dB Q 2.78
+Filter  1: ON LS Fc  1002 Hz Gain -2.16 dB
+Filter  2: ON PK Fc  8992 Hz Gain +1.16 dB Q 0.71
+Filter  3: ON PK Fc   136 Hz Gain -1.30 dB Q 1.04
+Filter  4: ON PK Fc  1685 Hz Gain -0.55 dB Q 2.65
+Filter  5: ON PK Fc   291 Hz Gain -0.52 dB Q 2.92
+Filter  6: ON PK Fc   533 Hz Gain +0.58 dB Q 1.94
+Filter  7: ON PK Fc 13897 Hz Gain -0.58 dB Q 2.69
+Filter  8: ON PK Fc  5583 Hz Gain -0.50 dB Q 2.73
+Filter  9: ON PK Fc  1335 Hz Gain -0.53 dB Q 2.88

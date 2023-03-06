@@ -1,15 +1,15 @@
 EQ for Genius SP-HF3000A computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-02-26-09:34:32
+Dated: 2023-03-06-14:21:08
 
 Preamp: -1.7 dB
 
-Filter  1: ON HS Fc  5218 Hz Gain -3.00 dB
-Filter  2: ON PK Fc  1407 Hz Gain -5.11 dB Q 2.48
-Filter  3: ON PK Fc   241 Hz Gain +1.49 dB Q 0.06
-Filter  4: ON PK Fc 11952 Hz Gain -1.74 dB Q 0.55
-Filter  5: ON PK Fc   846 Hz Gain -2.07 dB Q 1.20
-Filter  6: ON PK Fc   129 Hz Gain -3.72 dB Q 2.99
-Filter  7: ON PK Fc  6935 Hz Gain -1.90 dB Q 2.94
-Filter  8: ON PK Fc  1794 Hz Gain -1.29 dB Q 2.90
-Filter  9: ON PK Fc 15600 Hz Gain -1.19 dB Q 2.89
+Filter  1: ON HS Fc  5177 Hz Gain -3.00 dB
+Filter  2: ON PK Fc  1394 Hz Gain -5.30 dB Q 2.49
+Filter  3: ON PK Fc   242 Hz Gain +1.50 dB Q 0.05
+Filter  4: ON PK Fc 12114 Hz Gain -1.52 dB Q 0.47
+Filter  5: ON PK Fc   847 Hz Gain -2.07 dB Q 1.38
+Filter  6: ON PK Fc  6916 Hz Gain -2.13 dB Q 2.99
+Filter  7: ON PK Fc   133 Hz Gain -3.83 dB Q 2.96
+Filter  8: ON PK Fc  1738 Hz Gain -1.52 dB Q 2.99
+Filter  9: ON PK Fc 15091 Hz Gain -1.21 dB Q 2.97
