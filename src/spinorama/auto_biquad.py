@@ -27,8 +27,7 @@ from spinorama.auto_loss import loss
 
 
 def display(xk, convergence):
-    print(xk, convergence)
-    pass
+    logger.debug(xk, convergence)
 
 
 def find_best_biquad(
@@ -177,24 +176,12 @@ def find_best_peak(
         ]
     ).T
 
-    # print(v_init)
-
     z_init = [
         [v_init[i][0], v_init[j][1], v_init[k][2]]
         for i in range(0, len(v_init))
         for j in range(0, len(v_init))
         for k in range(0, len(v_init))
     ]
-
-    # z_init.append([1000, 1, -3])
-    # print(z_init)
-
-    # grid_search = sorted(
-    #     [(opt_peq(z),z) for z in z_init],
-    #     key=lambda x: x[0])
-    # for g in grid_search:
-    #     print("{:3.3f} {:.0f}Hz {:.2f}Q {:.2f}dB".format(g[0], g[1][0], g[1][1], g[1][2]))
-    # print('grid search top 2: {}'.format(grid_search[0:2]))
 
     logger.debug(
         "range is [%f, %f], [%f, %f], [%f, %f]",
@@ -243,7 +230,7 @@ def find_best_peak(
             integrality=[True, False, False],
             callback=display,
         )
-        logger.info(
+        logger.debug(
             "          optim loss %2.2f in %s iter type PK at F %.0f Hz Q %2.2f dbGain %2.2f %s",
             res.fun,
             res.nfev,

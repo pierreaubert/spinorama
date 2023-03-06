@@ -116,9 +116,10 @@ def score_loss(df_spin: pd.DataFrame, peq: Peq) -> float:
     peq: evaluated peq
     return minus score (we want to maximise the score)
     """
-    _, _, score = scores_apply_filter(df_spin, peq)
+    _, _, score = scores_apply_filter_cache(df_spin, peq)
     if len(peq) > 0:
-        print("debug {} {}".format(score.get("pref_score", -1000), peq[0][1]))
+        logger.debug("score %.2f peq %s", score.get("pref_score", -1000), peq[0][1])
+        # print("score {:.2f}".format(score.get("pref_score", -1000)))
     return -score["pref_score"]
 
 

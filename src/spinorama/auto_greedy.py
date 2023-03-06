@@ -45,11 +45,8 @@ def optim_greedy(
 ) -> tuple[list[tuple[int, float, float]], Peq]:
     """Main optimiser: follow a greedy strategy"""
 
-    print("start greedy")
-
     if not optim_preflight(freq, auto_target, auto_target_interp):
         logger.error("Preflight check failed!")
-        print("error in preflight")
         return ([(0, 0, 0)], [])
 
     auto_peq = []
@@ -133,11 +130,14 @@ def optim_greedy(
             biquad_range = propose_range_biquad(optim_config)
             biquad_range = [3]
 
-        # print(
-        #    "sign {} init_freq {} init_freq_range {} init_q_range {} biquad_range {}".format(
-        #        sign, init_freq, init_freq_range, init_q_range, biquad_range
-        #    )
-        # )
+        logger.debug(
+            "sign %.0f init_freq %.0fHz init_freq_range %s init_q_range %s biquad_range %s",
+            sign,
+            init_freq,
+            init_freq_range,
+            init_q_range,
+            biquad_range,
+        )
 
         if optim_config["full_biquad_optim"] is True:
             (
@@ -218,11 +218,15 @@ def optim_greedy(
         freq, auto_target, auto_target_interp, auto_peq, optim_config
     )
     if results[-1][1] < best_loss:
+        if use_score:
+            pref_score = score_loss(df_speaker, auto_peq)
         results.append((nb_iter + 1, best_loss, -pref_score))
+    # best score is not necessary the last one
     if use_score:
-        idx_max = np.argmax((np.array(results).T)[-1])
+        idx_max = np.argmax((np.array(results).T)[-1]) + 1
         results = results[0:idx_max]
         auto_peq = auto_peq[0:idx_max]
+
     if len(results) > 0:
         logger.info(
             "OPTIM END %s: best loss %2.2f final score %2.2f with %2d PEQs",

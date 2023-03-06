@@ -53,7 +53,7 @@ def get3db(spin, db_point):
     return est.get("ref_3dB", None)
 
 
-def optim_find_peq(
+def optim_eval_strategy(
     current_speaker_name,
     df_speaker,
     optim_config,
@@ -184,12 +184,14 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
         ):
             continue
         # compute
-        auto_score, auto_results, auto_peq, auto_slope_lw = optim_find_peq(
+        auto_score, auto_results, auto_peq, auto_slope_lw = optim_eval_strategy(
             current_speaker_name, df_speaker, current_optim_config, use_score
         )
         if auto_peq is None or len(auto_peq) == 0:
             logger.error(
-                "optim_find_peq failed for %s with %s", current_speaker_name, current_optim_config
+                "optim_eval_strategy failed for %s with %s",
+                current_speaker_name,
+                current_optim_config,
             )
             continue
         if "CEA2034_unmelted" in df_speaker and auto_slope_lw is not None:
@@ -228,10 +230,18 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
                         delta = optim_config[slope_name] - np.sign(auto_slope_lw) * 0.5 * loop
                     if delta != 0.0:
                         current_optim_config[slope_name] = delta
-                        auto_score2, auto_results2, auto_peq2, auto_slope_lw2 = optim_find_peq(
+                        auto_score2, auto_results2, auto_peq2, auto_slope_lw2 = optim_eval_strategy(
                             current_speaker_name, df_speaker, current_optim_config, use_score
                         )
-                        if auto_slope_lw2 * 11 / 3 > -1 and auto_slope_lw2 * 11 / 3 < -0.2:
+                        slope_is_admissible = (
+                            auto_slope_lw2 * 11 / 3 > -1 and auto_slope_lw2 * 11 / 3 < -0.2
+                        )
+                        score_improved = False
+                        if auto_score2.get("pref_score", -1000) > auto_score.get(
+                            "pref_score", -1000
+                        ):
+                            score_improved = True
+                        if slope_is_admissible and score_improved:
                             auto_score = auto_score2
                             auto_results = auto_results2
                             auto_peq = auto_peq2
@@ -251,14 +261,22 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
             if pref_score > best_score:
                 best_score = pref_score
                 best_i = len(results)
+            # print('debug pref_score {} best_score {} results_score {}'.format(pref_score, best_score, auto_results[-1][2]))
         else:
             loss_score = auto_results[-1][1]
             if loss_score > best_score:
                 best_score = loss_score
                 best_i = len(results)
+            # print('debug pref_loss {} best_loss {} results_loss {}'.format(pref_score, best_score, auto_results[-1][1]))
+
         results.append((auto_score, auto_results, auto_peq, current_optim_config))
 
     if best_i >= 0:
+        # print('best_i={}'.format(best_i))
+        # print(results[best_i][0]['pref_score'])
+        # print(results[best_i][1])
+        # print(results[best_i][2])
+        # print(results[best_i][3])
         return results[best_i]
 
     return None, None, None, None
@@ -352,47 +370,44 @@ def optim_save_peq(
     ]
     eq_apo = peq_format_apo("\n".join(comments), auto_peq)
 
-    # print eq
-    if not optim_config["smoke_test"]:
-        previous_score = None
-        if os.path.exists(eq_name):
-            with open(eq_name, "r", encoding="ascii") as read_fd:
-                lines = read_fd.readlines()
-                if len(lines) > 1:
-                    line_pref = lines[1]
-                    parsed = re.findall(r"[-+]?\d+(?:\.\d+)?", line_pref)
-                    if len(parsed) > 1:
-                        previous_score = float(parsed[1])
+    # do we have a previous score?
+    previous_score = None
+    if os.path.exists(eq_name):
+        with open(eq_name, "r", encoding="utf8") as read_fd:
+            lines = read_fd.readlines()
+            if len(lines) > 1:
+                line_pref = lines[1]
+                parsed = re.findall(r"[-+]?\d+(?:\.\d+)?", line_pref)
+                if len(parsed) > 1:
+                    previous_score = float(parsed[1])
+                    logger.info(
+                        "EQ prev_score %0.2f > %0.2f", previous_score, auto_score["pref_score"]
+                    )
 
-        skip = False
-        if (
-            optim_config["force"] is False
-            and use_score
-            and previous_score is not None
-            and previous_score > auto_score["pref_score"]
-        ):
-            skip = True
+    skip_write_eq = False
+    if optim_config["smoke_test"]:
+        skip_write_eq = True
+    elif use_score and previous_score is not None and previous_score > auto_score["pref_score"]:
+        skip_write_eq = True
 
-        logger.info("EQ prev_score %0.2f > %0.2f", previous_score, auto_score["pref_score"])
-
-        if not skip:
-            with open(eq_name, "w", encoding="utf8") as write_fd:
-                iir_txt = "iir.txt"
-                iir_name = f"{eq_dir}/{iir_txt}"
-                write_fd.write(eq_apo)
-                if not os.path.exists(iir_name):
-                    with contextlib.suppress(OSError):
-                        os.symlink("iir-autoeq.txt", iir_name)
-            eq_conf = f"{eq_dir}/conf-autoeq.json"
-            with open(eq_conf, "w", encoding="ascii") as write_fd:
-                conf_json = json.dumps(optim_config, indent=4)
-                write_fd.write(conf_json)
-        else:
-            logger.info(
-                "skipping writing EQ prev_score %0.2f > %0.2f",
-                previous_score,
-                auto_score["pref_score"],
-            )
+    if not skip_write_eq:
+        with open(eq_name, "w", encoding="utf8") as write_fd:
+            iir_txt = "iir.txt"
+            iir_name = f"{eq_dir}/{iir_txt}"
+            write_fd.write(eq_apo)
+            if not os.path.exists(iir_name):
+                with contextlib.suppress(OSError):
+                    os.symlink("iir-autoeq.txt", iir_name)
+                eq_conf = f"{eq_dir}/conf-autoeq.json"
+                with open(eq_conf, "w", encoding="utf8") as write_fd:
+                    conf_json = json.dumps(optim_config, indent=4)
+                    write_fd.write(conf_json)
+    else:
+        logger.info(
+            "skipping writing EQ prev_score %0.2f > %0.2f",
+            previous_score,
+            auto_score["pref_score"],
+        )
 
     # print results
     curves = optim_config["curve_names"]
@@ -437,8 +452,9 @@ def optim_save_peq(
     # print a compact table of results
     if optim_config["verbose"] and use_score:
         logger.info("%30s ---------------------------------------", current_speaker_name)
-        logger.info(peq_format_apo("\n".join(comments), auto_peq))
-        logger.info("----------------------------------------------------------------------")
+        if not skip_write_eq:
+            logger.info(peq_format_apo("\n".join(comments), auto_peq))
+            logger.info("----------------------------------------------------------------------")
         logger.info("ITER  LOSS SCORE -----------------------------------------------------")
         info_list = ["  {:2d} {:+2.2f} {:+2.2f}".format(r[0], r[1], r[2]) for r in auto_results]
         logger.info("\n".join(info_list))

@@ -263,7 +263,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
                 if lfq_db is not None:
                     ratings["lfq"] = lfq_db
                 ratings["pref_score"] = pref
-        logger.info("Ratings: %s", ratings)
+        logger.debug("Ratings: %s", ratings)
         return ratings
     except ValueError as value_error:
         logger.error(value_error)
