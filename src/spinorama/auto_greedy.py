@@ -45,8 +45,11 @@ def optim_greedy(
 ) -> tuple[list[tuple[int, float, float]], Peq]:
     """Main optimiser: follow a greedy strategy"""
 
+    print("start greedy")
+
     if not optim_preflight(freq, auto_target, auto_target_interp):
         logger.error("Preflight check failed!")
+        print("error in preflight")
         return ([(0, 0, 0)], [])
 
     auto_peq = []

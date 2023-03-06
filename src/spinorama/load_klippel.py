@@ -79,7 +79,6 @@ def find_data_klippel(speaker_path, speaker_brand, speaker_name, mversion_in, cs
 
 
 def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mversion, symmetry):
-    dfs = {}
     mandatory_csvfiles = [
         "SPL Horizontal",
         "SPL Vertical",

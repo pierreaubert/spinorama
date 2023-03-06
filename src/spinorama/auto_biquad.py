@@ -26,6 +26,11 @@ from spinorama.filter_iir import Biquad
 from spinorama.auto_loss import loss
 
 
+def display(xk, convergence):
+    print(xk, convergence)
+    pass
+
+
 def find_best_biquad(
     df_speaker: DataSpeaker,
     freq,
@@ -92,7 +97,8 @@ def find_best_biquad(
             maxiter=optim_config["maxiter"],
             atol=0.01,
             polish=False,
-            integrality=[True, False, False, False],
+            integrality=[True, True, False, False],
+            callback=display,
         )
         logger.debug(
             "          optim loss %2.2f in %s iter type %d at F %.0f Hz Q %2.2f db_gain %2.2f %s",
@@ -218,10 +224,6 @@ def find_best_peak(
         #    no_local_search=True,
         # )
 
-        def display(xk, convergence):
-            # print(xk, convergence)
-            pass
-
         res = opt.differential_evolution(
             opt_peq,
             bounds,
@@ -238,8 +240,8 @@ def find_best_peak(
             # disp=True,
             atol=0.01,
             # polish=True,
-            integrality=[False, False, False],
-            # callback=display,
+            integrality=[True, False, False],
+            callback=display,
         )
         logger.info(
             "          optim loss %2.2f in %s iter type PK at F %.0f Hz Q %2.2f dbGain %2.2f %s",

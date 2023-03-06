@@ -17,12 +17,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import math
+import bisect
 
 import numpy as np
 import pandas as pd
 from scipy import stats
 
-import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.io as pio
@@ -556,7 +556,7 @@ def plot_graph_regression_traces(df, measurement, params):
 
 
 def plot_graph_flat(df, measurement, params):
-    layout = params.get("layout", "")
+    params.get("layout", "")
     # print("{} {}".format(measurement, df.keys()))
     fig = go.Figure()
     traces = plot_graph_flat_traces(df, measurement, params)
@@ -571,7 +571,7 @@ def plot_graph_flat(df, measurement, params):
 
 
 def plot_graph_regression(df, measurement, params):
-    layout = params.get("layout", "")
+    params.get("layout", "")
     # print("{} {}".format(measurement, df.keys()))
     fig = go.Figure()
     traces = plot_graph_regression_traces(df, measurement, params)
@@ -587,7 +587,7 @@ def plot_graph_regression(df, measurement, params):
 
 def plot_contour(spl, params):
     df = spl.copy()
-    layout = params.get("layout", "")
+    params.get("layout", "")
     min_freq = params.get("contour_min_freq", 100)
 
     contour_start = -30
@@ -714,7 +714,7 @@ def plot_radar(spl, params):
         dfu = dfu.drop("Freq", axis=1)
         db_min = np.min(dfu.min(axis=0).values)
         db_max = np.max(dfu.max(axis=0).values)
-        db_scale = max(abs(db_max), abs(db_min))
+        max(abs(db_max), abs(db_min))
         # if df is normalized then 0 will be at the center of the radar which is not what
         # we want. Let's shift the whole graph up.
         # if db_mean < 45:
@@ -792,19 +792,28 @@ def plot_summary(df, summary, params):
     return None
 
 
-def plot_eqs(freq, peqs, names=None):
+def plot_eqs(freq, peqs, names=None, normalized=False):
+    peqs_spl = [peq_build(freq, peq) for peq in peqs]
+    if normalized and len(peqs) > 1:
+        freq_min = bisect.bisect(freq, 80)
+        freq_max = bisect.bisect(freq, 3000)
+        if freq_min == freq_max:
+            freq_min = 0
+            freq_max = -1
+        peqs_avg = [np.mean(spl[freq_min:freq_max]) for spl in peqs_spl]
+        peqs_spl = [spl - (peqs_avg[i] - peqs_avg[0]) for i, spl in enumerate(peqs_spl)]
     traces = None
     if names is None:
-        traces = [go.Scatter(x=freq, y=peq_build(freq, peq)) for peq in peqs]
+        traces = [go.Scatter(x=freq, y=spl) for spl in peqs_spl]
     else:
         traces = [
             go.Scatter(
                 x=freq,
-                y=peq_build(freq, peq),
+                y=spl,
                 name=name,
                 hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
             )
-            for peq, name in zip(peqs, names)
+            for spl, name in zip(peqs_spl, names)
         ]
     fig = go.Figure(data=traces)
     fig.update_xaxes(
@@ -824,5 +833,18 @@ def plot_eqs(freq, peqs, names=None):
             dtick="D1",
         ),
     )
-    fig.update_layout(title="EQs")
+    fig.update_layout(
+        title="EQs",
+        width=600,
+        height=450,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            xanchor="left",
+            y=1.02,
+            x=0.02,
+            title=None,
+            font=dict(size=12),
+        ),
+    )
     return fig

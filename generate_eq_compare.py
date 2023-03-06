@@ -54,7 +54,7 @@ def print_eq_compare(data, force):
     eqs = glob.glob("{}/{} {}/*.txt".format(CPATH_DATAS_EQ, brand, model))
     peqs = [parse_eq_iir_rews(eq, 48000) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     names = [os.path.basename(eq) for eq in eqs if os.path.basename(eq) != "iir.txt"]
-    fig = plot_eqs(freq, peqs, names)
+    fig = plot_eqs(freq, peqs, names, normalized=True)
     fig.update_layout(title=f"EQs for {brand} {model}")
     write_multiformat(fig, filename, force)
 

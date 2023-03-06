@@ -23,7 +23,7 @@ import pandas as pd
 from scipy import stats
 
 from spinorama import logger
-from spinorama.load_misc import graph_melt, sort_angles
+from spinorama.load_misc import sort_angles
 from spinorama.compute_scores import octave
 
 # pd.set_option('display.max_rows', None)
@@ -244,7 +244,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
         xp1 = int(x)
         xp2 = xp1 + 1
         per_octave = []
-        for bmin, bcenter, bmax in octave(2):
+        for bmin, _bcenter, bmax in octave(2):
             # 100hz to 16k hz
             if bmin < 1000 or bmax > 10000:
                 continue
@@ -410,7 +410,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
     try:
         window_size = abs(int(window_size))
         order = abs(int(order))
-    except ValueError as msg:
+    except ValueError:
         raise ValueError("window_size and order have to be of type int")
     if window_size % 2 != 1 or window_size < 1:
         raise TypeError("window_size size must be a positive odd number")

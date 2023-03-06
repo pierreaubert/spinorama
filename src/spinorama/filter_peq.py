@@ -63,7 +63,7 @@ def peq_preamp_gain(peq: Peq) -> float:
     individual = 0.0
     if len(peq) == 0:
         return 0.0
-    for w, iir in peq:
+    for _w, iir in peq:
         individual = max(individual, np.max(peq_build(freq, [(1.0, iir)])))
     overall = np.max(np.clip(spl, 0, None))
     gain = -(max(individual, overall) + 0.2)
@@ -93,7 +93,7 @@ def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
 
 
 def peq_print(peq: Peq) -> None:
-    for i, iir in enumerate(peq):
+    for _i, iir in enumerate(peq):
         if iir[0] != 0:
             print(iir[1])
 

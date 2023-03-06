@@ -27,8 +27,6 @@ from spinorama.constant_paths import (
     SENSITIVITY_MAX_FREQ,
 )
 from spinorama.compute_misc import (
-    compute_contour,
-    compute_directivity_deg,
     compute_directivity_deg_v2,
 )
 

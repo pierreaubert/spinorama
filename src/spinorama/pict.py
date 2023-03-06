@@ -17,7 +17,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
-import logging
 import pathlib
 
 from wand.image import Image as wim

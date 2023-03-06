@@ -18,6 +18,8 @@
 
 import math
 import numpy as np
+
+import pandas as pd
 from scipy.stats import linregress
 
 from spinorama import logger
@@ -82,7 +84,7 @@ def alternate_loss(freq: Vector, local_target: list[Vector], peq: Peq, iteration
     return l2_loss([local_target[1]], freq, peq)
 
 
-def flat_pir(freq, df_spin, peq):
+def flat_pir(freq: Vector, df_spin: pd.DataFrame, peq: Peq) -> float:
     """Flatten the PIR"""
     pir_filtered = df_spin.get("Estimated In-Room Response_unmelted", None)
     if pir_filtered is None:
@@ -103,19 +105,31 @@ def flat_pir(freq, df_spin, peq):
     return r_value**2
 
 
-def score_loss(df_spin, peq):
+def scores_apply_filter_cache(df_spin, peq):
+    """Idea is to control the discretization and interpolate under a certain level"""
+    return scores_apply_filter(df_spin, peq)
+
+
+def score_loss(df_spin: pd.DataFrame, peq: Peq) -> float:
     """Compute the preference score for speaker
     local_target: unsued
     peq: evaluated peq
     return minus score (we want to maximise the score)
     """
     _, _, score = scores_apply_filter(df_spin, peq)
-    # if len(peq)>0:
-    #    print('{} {}'.format(score.get("pref_score", -1000), peq[0][1]))
+    if len(peq) > 0:
+        print("debug {} {}".format(score.get("pref_score", -1000), peq[0][1]))
     return -score["pref_score"]
 
 
-def loss(df_speaker, freq, local_target, peq, iterations, optim_config):
+def loss(
+    df_speaker: pd.DataFrame,
+    freq: Vector,
+    local_target: list[Vector],
+    peq: Peq,
+    iterations: int,
+    optim_config: dict,
+) -> float:
     """Compute the loss and switch to the one defined in the config"""
     which_loss = optim_config["loss"]
     if which_loss == "flat_loss":
@@ -132,4 +146,5 @@ def loss(df_speaker, freq, local_target, peq, iterations, optim_config):
     if which_loss == "combine_loss":
         weigths = optim_config["loss_weigths"]
         return score_loss(df_speaker, peq) + flat_loss(freq, local_target, peq, iterations, weigths)
-    logger.error("loss function is unkown")
+    logger.error("loss function is unknown")
+    return -1

@@ -16,35 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import numpy as np
-import scipy.optimize as opt
 import pandas as pd
 
-from ray import tune, air
-from ray.air import session, Checkpoint
+from ray import tune
 from ray.tune.schedulers import (
     PopulationBasedTraining,
-    ASHAScheduler,
 )
-from ray.tune.search import ConcurrencyLimiter
-from ray.tune.search.flaml import CFO, BlendSearch
-from ray.tune.search.bayesopt import BayesOptSearch
 
-from datas.grapheq import vendor_info as grapheq_db
 
-from spinorama import logger
 from spinorama.ltype import Peq, FloatVector1D
 from spinorama.filter_iir import Biquad
-from spinorama.filter_peq import peq_build
-from spinorama.compute_misc import savitzky_golay
-from spinorama.auto_loss import loss, score_loss
-from spinorama.auto_range import (
-    propose_range_freq,
-    propose_range_q,
-    propose_range_db_gain,
-    propose_range_biquad,
-)
-from spinorama.auto_biquad import find_best_biquad, find_best_peak
+from spinorama.auto_loss import score_loss
 
 
 def optim_refine(

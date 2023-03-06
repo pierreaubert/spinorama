@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from spinorama.ltype import Peq, FloatVector1D
+from spinorama import logger
 from spinorama.auto_grapheq import optim_grapheq
 from spinorama.auto_greedy import optim_greedy
 from spinorama.auto_refine import optim_refine
@@ -35,7 +36,7 @@ def optim_multi_steps(
     Start with a greedy approach then add another algorithm to optimise for score
     """
     if optim_config["use_grapheq"] is True:
-        return optim_grapheq(
+        grapheq_results, grapheq_peq = optim_grapheq(
             speaker_name,
             df_speaker,
             freq,
@@ -44,6 +45,9 @@ def optim_multi_steps(
             optim_config,
             use_score,
         )
+        if grapheq_peq is None:
+            logger.info("autoEQ (GraphEQ) failed for %s", speaker_name)
+        return grapheq_results, grapheq_peq
 
     greedy_results, greedy_peq = optim_greedy(
         speaker_name,
@@ -55,10 +59,13 @@ def optim_multi_steps(
         use_score,
     )
 
+    if greedy_peq is None:
+        logger.info("autoEQ (Greedy) failed for %s", speaker_name)
+
     if not use_score or not optim_config["second_optimiser"]:
         return greedy_results, greedy_peq
 
-    return optim_refine(
+    refine_results, refine_peq = optim_refine(
         speaker_name,
         df_speaker,
         freq,
@@ -68,3 +75,8 @@ def optim_multi_steps(
         greedy_results,
         greedy_peq,
     )
+
+    if refine_peq is None:
+        logger.info("autoEQ (Refine) failed for %s", speaker_name)
+
+    return refine_results, refine_peq

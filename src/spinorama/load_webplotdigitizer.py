@@ -24,7 +24,6 @@ import pandas as pd
 import tarfile
 
 from spinorama import logger
-from spinorama.load import parse_graph_freq_check, spin_compute_di_eir
 
 
 pd.set_option("display.max_rows", 1000)

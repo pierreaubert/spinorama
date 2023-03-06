@@ -16,14 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import numpy as np
 import pandas as pd
 
 from spinorama import logger
-from spinorama.compute_misc import unify_freq
-from spinorama.compute_cea2034 import estimated_inroom
-from spinorama.load_misc import graph_melt
-from spinorama.load import spin_compute_di_eir
 
 
 def parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name, origin, version):

@@ -136,8 +136,6 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     # find target min and max
     first_freq = 0
     last_freq = -1
-    freq_1k5 = 0
-    freq_4k = 0
 
     for i, f in enumerate(freq):
         if f >= optim_config["target_min_freq"]:
@@ -145,11 +143,9 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
             break
     for i, f in enumerate(freq):
         if f >= 1500:
-            freq_1k5 = i
             break
     for i, f in enumerate(freq):
         if f >= 4000:
-            freq_4k = i
             break
     for i, f in enumerate(reversed(freq)):
         if f <= optim_config["target_max_freq"]:

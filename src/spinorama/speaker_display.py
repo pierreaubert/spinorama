@@ -16,12 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import numpy as np
-import pandas as pd
 import datas.metadata as metadata
 
 from spinorama import logger
-from spinorama.compute_misc import resample
 from spinorama.compute_estimates import estimates
 from spinorama.compute_scores import speaker_pref_rating
 from spinorama.plot import (
