@@ -206,4 +206,4 @@ class Biquad:
         r = (self.r_up0 + self.r_up1 * phi + self.r_up2 * phi2) / (
             self.r_dw0 + self.r_dw1 * phi + self.r_dw2 * phi2
         )
-        return np.where(r <= 0.0, -200, 20.0 * np.log10(np.sqrt(r)))
+        return np.where(r <= 1.0e-20, -200, 20.0 * np.log10(np.sqrt(r)))
