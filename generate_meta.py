@@ -471,7 +471,7 @@ def add_quality(parse_max: int):
         parsed = parsed + 1
         logger.info("Processing %s", speaker_name)
         for version, m_data in speaker_data["measurements"].items():
-            quality = "unknown"
+            quality = m_data.get("quality", "unknown")
             if "quality" not in m_data:
                 origin = m_data.get("origin")
                 measurement_format = m_data.get("format")
@@ -487,7 +487,7 @@ def add_quality(parse_max: int):
                     # Harman group provides spin from an anechoic room
                     if brand in ("JBL", "Revel", "Infinity"):
                         quality = "medium"
-                logger.debug("Setting quality %s %s to %s".format(speaker_name, version, quality))
+                logger.debug("Setting quality %s %s to %s", speaker_name, version, quality)
             metadata.speakers_info[speaker_name]["measurements"][version]["quality"] = quality
 
 
