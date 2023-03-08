@@ -2119,6 +2119,41 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Coda Audio G712": {
+        "brand": "Coda Audio",
+        "model": "G712",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-Coda Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230308",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 143,
+                    },
+                    "size": {
+                        "height": 700,
+                        "width": 420,
+                        "depth": 370,
+                    },
+                    "weight": 24.5,
+                },
+            },
+        },
+    },
     "Coda Audio HOPS5": {
         "brand": "Coda Audio",
         "model": "HOPS5",

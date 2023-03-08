@@ -31,10 +31,8 @@ import json
 import os
 import sys
 import pathlib
-import zipfile
 
 from docopt import docopt
-import pandas as pd
 import plotly.graph_objects as go
 
 from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DOCS_SPEAKERS
@@ -54,7 +52,7 @@ def compute_scale(speakers):
         for key_score in ("pref_rating", "pref_rating_eq"):
             if key_score not in measurement.keys():
                 continue
-            for key_variable in measurement[key_score].keys():
+            for key_variable in measurement[key_score]:
                 scale[key_variable] = (
                     min(
                         scale.get(key_variable, [+100, 0])[0],
@@ -81,7 +79,7 @@ def scale_lower_is_better(key, val, scale):
     return 1 - (val - v_min) / (v_max - v_min)
 
 
-def print_radar(speaker, data, scale):
+def print_radar(data, scale):
     def_measurement = data["default_measurement"]
     measurement = data["measurements"][def_measurement]
     if "pref_rating" not in measurement.keys() or "estimates" not in measurement.keys():
@@ -95,7 +93,6 @@ def print_radar(speaker, data, scale):
             continue
 
         pref_rating = measurement[key]
-        r = []
         graph_data.append(
             {
                 "type": "scatterpolar",
@@ -175,7 +172,7 @@ def main():
     scale = compute_scale(jsmeta)
 
     for speaker in jsmeta.items():
-        print_radar(speaker[0], speaker[1], scale)
+        print_radar(speaker[1], scale)
 
     sys.exit(0)
 

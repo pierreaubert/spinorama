@@ -1,0 +1,6 @@
+black[jupyter]
+flake8
+importmagic
+pre-commit
+pyright
+ruff-lsp

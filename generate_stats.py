@@ -30,8 +30,6 @@ Options:
 import json
 import os
 import sys
-import pathlib
-import zipfile
 
 from docopt import docopt
 import pandas as pd
@@ -44,7 +42,7 @@ VERSION = 0.4
 
 
 def meta2df(meta):
-    df = pd.DataFrame(
+    df_unroll = pd.DataFrame(
         {
             "speaker": [],
             "param": [],
@@ -68,16 +66,16 @@ def meta2df(meta):
             if "pref_rating" in measurement:
                 ref = "Origin"
                 for k, v in measurement["pref_rating"].items():
-                    df.loc[count] = [i, k, v, ref, origin, brand]
+                    df_unroll.loc[count] = [i, k, v, ref, origin, brand]
                     count += 1
             if "pref_rating_eq" in measurement:
                 ref = "EQ"
                 for k, v in measurement["pref_rating_eq"].items():
-                    df.loc[count] = [i, k, v, ref, origin, brand]
+                    df_unroll.loc[count] = [i, k, v, ref, origin, brand]
                     count += 1
     logger.info("meta2df %d generated data", count)
-    # print(df)
-    return df
+    # print(df_unroll)
+    return df_unroll
 
 
 def print_eq(speakers, txt_format):
@@ -105,7 +103,7 @@ def print_eq(speakers, txt_format):
         print(
             "-------------------------------------------+--------------------+------+--------------------+-----+-----+-------"
         )
-        for i, pref, pref_eq, eq in sorted(results, key=lambda a: -a[2]["pref_score"]):
+        for i, pref, pref_eq, _ in sorted(results, key=lambda a: -a[2]["pref_score"]):
             print(
                 "{0:42s} | {1:0.2f} {2:0.2f} {3:3.0f} {4:0.2f} | {5:+1.1f} | {6:0.2f} {7:0.2f} {8:3.0f} {9:0.2f} | {10:1.1f} | {11:+1.1f} |  {12:+1.1f}".format(
                     i,
@@ -130,7 +128,7 @@ def print_eq(speakers, txt_format):
         print(
             '"Speaker", "ON", "PIR", "Hz", "PIR", "ASR", "ON", "PIR", "Hz", "PIR", "EQ", "DIFF", "dB"'
         )
-        for i, pref, pref_eq, eq in sorted(results, key=lambda a: -a[2]["pref_score"]):
+        for i, pref, pref_eq, _ in sorted(results, key=lambda a: -a[2]["pref_score"]):
             print(
                 '"{0}", {1:0.2f}, {2:0.2f}, {3:3.0f}, {4:0.2f}, {5:+1.1f}, {6:0.2f}, {7:0.2f}, {8:3.0f}, {9:0.2f}, {10:+1.1f}, {11:+1.1f}, {12:+1.1f}'.format(
                     i,

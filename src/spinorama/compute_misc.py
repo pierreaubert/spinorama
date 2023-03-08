@@ -103,13 +103,13 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
     # remove NaN numbers
     data = {}
     data["Freq"] = a_on.index
-    if a_on is not None and "ON" in a_on.keys() and len(a_on.ON) == len(a_on.index):
+    if a_on is not None and "ON" in a_on and len(a_on.ON) == len(a_on.index):
         data["On Axis"] = a_on.ON
-    if a_lw is not None and "LW" in a_lw.keys() and len(a_lw.LW) == len(a_on.index):
+    if a_lw is not None and "LW" in a_lw and len(a_lw.LW) == len(a_on.index):
         data["Listening Window"] = a_lw.LW
-    if a_er is not None and "ER" in a_er.keys() and len(a_er.ER) == len(a_on.index):
+    if a_er is not None and "ER" in a_er and len(a_er.ER) == len(a_on.index):
         data["Early Reflections"] = a_er.ER
-    if a_sp is not None and "SP" in a_sp.keys() and len(a_sp.SP) == len(a_on.index):
+    if a_sp is not None and "SP" in a_sp and len(a_sp.SP) == len(a_on.index):
         data["Sound Power"] = a_sp.SP
 
     res2 = pd.DataFrame(data)
@@ -133,7 +133,7 @@ def compute_contour(dfm_in):
     # generate 3 arrays x, y, z suitable for computing equilevels
     dfm = sort_angles(dfm_in)
     # check if we have -180
-    if "180°" in dfm.keys() and "-180°" not in dfm.keys():
+    if "180°" in dfm and "-180°" not in dfm:
         dfm.insert(1, "-180°", dfm_in["180°"])
 
     # print('debug -- 180 -- min {} max {}'.format(np.min(dfm_in["180°"]), np.max(dfm_in["180°"])))
@@ -217,28 +217,28 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     """ "compute +/- angle where directivity is most constant between 1kHz and 10kz"""
     deg0 = bisect.bisect(am.T[0], 0) - 1
     # parameters
-    kHz1 = bisect.bisect(af[0], 1000)
-    kHz10 = bisect.bisect(af[0], 10000)
-    dbLess = -6
+    k_hz_1 = bisect.bisect(af[0], 1000)
+    k_hz_10 = bisect.bisect(af[0], 10000)
+    db_less = -6
     # 2% tolerance
     tol = 0.0001
     #
-    zero = az[deg0][kHz1:kHz10]
+    zero = az[deg0][k_hz_1:k_hz_10]
 
     # print('debug af {} am {} az {}'.format(af.shape, am.shape, az.shape))
     # print('debug af {}'.format(af))
     # print('debug am {}'.format(am.T[deg0]))
     # print('debug az {}'.format(az))
-    # print('debug 1kHz at pos{} 10kHz at pos {} def0 at pos {}'.format(kHz1, kHz10, deg0))
+    # print('debug 1kHz at pos{} 10kHz at pos {} def0 at pos {}'.format(k_hz_1, k_hz_10, deg0))
     def linear_eval(x: float) -> float:
         xp1 = int(x)
         xp2 = xp1 + 1
-        zp1 = az[xp1][kHz1:kHz10]
-        zp2 = az[xp2][kHz1:kHz10]
+        zp1 = az[xp1][k_hz_1:k_hz_10]
+        zp2 = az[xp2][k_hz_1:k_hz_10]
         # linear interpolation
         zp = zp1 + (x - xp1) * (zp2 - zp1)
         # normˆ2 (z-(-6dB))
-        return np.linalg.norm(zp - zero - dbLess)
+        return np.linalg.norm(zp - zero - db_less)
 
     def linear_eval_octave(x: float) -> float:
         xp1 = int(x)
@@ -257,7 +257,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
             zp = zp1 + (x - xp1) * (zp2 - zp1)
             # normˆ2 (z-(-6dB))
             # print('{}hz {} {}hz {} {}'.format(bmin, kmin, bmax, kmax, zp))
-            per_octave.append(np.linalg.norm(zp - kzero - dbLess))
+            per_octave.append(np.linalg.norm(zp - kzero - db_less))
         # print('x={} min= {} per_octave={}'.format(x, np.min(per_octave), per_octave))
         # print("x={} min= {}".format(x, np.min(per_octave)))
         return np.min(per_octave)
@@ -270,10 +270,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     # all minimum in this 1% band from min
     pos_g = [i for i, v in enumerate(eval_p) if v < min_p]
     # be generous and take best one (widest)
-    if len(pos_g) > 1:
-        pos_p = pos_g[0]
-    else:
-        pos_p = np.argmin(eval_p)
+    pos_p = pos_g[0] if len(pos_g) > 1 else np.argmin(eval_p)
     # translate in deg
     angle_p = pos_p * 180 / eval_count
     # print('debug: space_p boundaries [{}, {}] steps {}'.format(deg0, len(am.T[0])-2, eval_count))
@@ -286,10 +283,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     eval_m = [linear_eval_octave(x) for x in space_m]
     min_m = np.min(eval_m) * (1.0 + tol)
     pos_g = [i for i, v in enumerate(eval_m) if v < min_m]
-    if len(pos_g) > 1:
-        pos_m = pos_g[-1]
-    else:
-        pos_m = np.argmin(eval_m)
+    pos_m = pos_g[-1] if len(pos_g) > 1 else np.argmin(eval_m)
     # translate in deg
     angle_m = pos_m * 180 / eval_count - 180
     # print('debug: space_m boundaries [{}, {}] steps {}'.format(0, deg0-1, eval_count))
@@ -301,29 +295,29 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     return float(angle_p), float(angle_m), float((angle_p - angle_m) / 2)
 
 
-def directivity_matrix(splH, splV):
-    # print(splH.shape, splV.shape)
-    # print(splH.head())
-    # print(splV.head())
-    if splH is None or splV is None:
+def directivity_matrix(spl_h, spl_v):
+    # print(spl_h.shape, spl_v.shape)
+    # print(spl_h.head())
+    # print(spl_v.head())
+    if spl_h is None or spl_v is None:
         logger.info("Skipping directivty matrix, one measurement at least is empty")
         return None
 
-    if splH.isnull().values.any() or splV.isnull().values.any():
+    if spl_h.isnull().values.any() or spl_v.isnull().values.any():
         logger.info("Skipping directivty matrix, one value at least is NaN")
         return None
 
-    n = splH.Freq.shape[0]
+    n = spl_h.Freq.shape[0]
     r = np.floor(np.logspace(1.0 + math.log10(2), 4.0 + math.log10(2), n))
     x, y = np.meshgrid(r, r)
-    splV = splV.set_index("Freq")
-    splH = splH.set_index("Freq")
-    zU = splV.dot(splH.T)
-    zD = splV.dot(splV.T) * splH.dot(splH.T)
-    # zD = np.matmult(np.matmult(splV, splV.T), np.matmult(splH, splH.T))
+    spl_v = spl_v.set_index("Freq")
+    spl_h = spl_h.set_index("Freq")
+    z_u = spl_v.dot(spl_h.T)
+    z_d = spl_v.dot(spl_v.T) * spl_h.dot(spl_h.T)
+    # z_d = np.matmult(np.matmult(spl_v, spl_v.T), np.matmult(spl_h, spl_h.T))
     # not completly sure why it is possible to get negative values
-    zD[zD < 0] = 0.0
-    z = zU / np.sqrt(zD) - 1.0
+    z_d[z_d < 0] = 0.0
+    z = z_u / np.sqrt(z_d) - 1.0
     # print('max {} max {}'.format(np.max(np.max(z)), np.max(np.max(z))))
     return (x, y, z)
 
@@ -410,12 +404,15 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
     try:
         window_size = abs(int(window_size))
         order = abs(int(order))
-    except ValueError:
-        raise ValueError("window_size and order have to be of type int")
+    except ValueError as value_error:
+        ve_error = "window_size and order have to be of type int"
+        raise ValueError(ve_error) from value_error
     if window_size % 2 != 1 or window_size < 1:
-        raise TypeError("window_size size must be a positive odd number")
+        te_error = "window_size size must be a positive odd number"
+        raise TypeError(te_error)
     if window_size < order + 2:
-        raise TypeError("window_size is too small for the polynomials order")
+        tp_error = "window_size is too small for the polynomials order"
+        raise TypeError(tp_error)
     order_range = range(order + 1)
     half_window = (window_size - 1) // 2
     # precompute coefficients

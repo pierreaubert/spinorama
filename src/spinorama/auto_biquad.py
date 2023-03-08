@@ -16,8 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import numpy as np
 import math
+
+import numpy as np
+import pandas as pd
 import scipy.optimize as opt
 
 from spinorama import logger
@@ -46,7 +48,7 @@ def find_best_biquad(
 
     def opt_peq(x):
         peq = [(1.0, Biquad(int(x[0]), x[1], 48000, x[2], x[3]))]
-        return loss(df_speaker, freq, auto_target, peq, count, optim_config)
+        return loss(pd.DataFrame(), freq, auto_target, peq, count, optim_config)
 
     bounds = [
         (biquad_range[0], biquad_range[-1]),
@@ -123,13 +125,13 @@ def find_best_biquad(
             res.fun,
             res.nit,
         )
-    except ValueError as value_error:
+    except ValueError:
         res["success"] = False
-        logger.error("%s bounds %s", value_error, bounds)
+        logger.exception("bounds %s", bounds)
         for i in range(0, 4):
             try:
                 if bounds[i][0] >= bounds[i][1]:
-                    logger.error("on bound [%d]", i)
+                    logger.exception("on bound [%d]", i)
             except ValueError:
                 pass
             except IndexError:
@@ -244,15 +246,16 @@ def find_best_peak(
             and res.fun < prev_best
         ):
             res.success = True
-        return res.success, biquad_type, res.x[0], res.x[1], res.x[2], res.fun, res.nit
-    except ValueError as value_error:
-        logger.error("%s bounds %s", value_error, bounds)
+    except ValueError:
+        logger.exception("bounds %s", bounds)
         for i in range(0, 4):
             try:
                 if bounds[i][0] >= bounds[i][1]:
-                    logger.error("on bound [%d]", i)
+                    logger.exception("on bound [%d]", i)
             except ValueError:
                 pass
             except IndexError:
                 pass
         return False, 0, -1, -1, -1, -1, -1
+
+    return res.success, biquad_type, res.x[0], res.x[1], res.x[2], res.fun, res.nit

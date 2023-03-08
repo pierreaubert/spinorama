@@ -340,7 +340,6 @@ def main(level):
             )
         print(speakerlist)
 
-    force = args["--force"]
     ptype = None
 
     if args["--width"] is not None:
@@ -389,6 +388,7 @@ def main(level):
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="generate_graphs.py v{}".format(VERSION), options_first=True)
+    force = args["--force"]
     LEVEL = args2level(args)
     logger = get_custom_logger(level=LEVEL, duplicate=True)
     main(level=LEVEL)

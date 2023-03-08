@@ -37,9 +37,9 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
     onaxis = pd.DataFrame()
     est = {}
     try:
-        if "Measurements" in spin.keys():
+        if "Measurements" in spin:
             onaxis = spin.loc[spin["Measurements"] == "On Axis"].reset_index(drop=True)
-        elif "On Axis" in spin.keys():
+        elif "On Axis" in spin:
             onaxis["Freq"] = spin.Freq
             onaxis["dB"] = spin["On Axis"]
 
@@ -84,8 +84,8 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
         band = max(abs(up - y_ref), abs(y_ref - down))
         logger.debug("band [%s]", band)
         est = {
-            "ref_from": MIDRANGE_MIN_FREQ,
-            "ref_to": MIDRANGE_MAX_FREQ,
+            "ref_from": float(MIDRANGE_MIN_FREQ),
+            "ref_to": float(MIDRANGE_MAX_FREQ),
         }
         if not math.isnan(y_ref):
             est["ref_level"] = round(y_ref, 1)
@@ -106,22 +106,24 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
 
         logger.debug("est v2 %s", est)
 
-        return est
-    except TypeError as type_error:
-        logger.error("Estimates failed for %s with %s", onaxis.shape, type_error)
-    except ValueError as value_error:
-        logger.error("Estimates failed for %s with %s", onaxis.shape, value_error)
-    return {}
+    except TypeError:
+        logger.exception("Estimates failed for %s", onaxis.shape)
+        return {}
+    except ValueError:
+        logger.exception("Estimates failed for %s", onaxis.shape)
+        return {}
+
+    return est
 
 
-def estimates(spin: pd.DataFrame, splH: pd.DataFrame, splV: pd.DataFrame) -> dict[str, float]:
+def estimates(spin: pd.DataFrame, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> dict[str, float]:
     onaxis = pd.DataFrame()
     est = estimates_spin(spin)
     try:
         for orientation in ("horizontal", "vertical"):
-            spl = splH
+            spl = spl_h
             if orientation == "vertical":
-                spl = splV
+                spl = spl_v
             if spl is not None and not spl.empty:
                 try:
                     dir_deg_p, dir_deg_m, dir_deg = compute_directivity_deg_v2(spl)
@@ -132,9 +134,11 @@ def estimates(spin: pd.DataFrame, splH: pd.DataFrame, splV: pd.DataFrame) -> dic
                     logger.warning("Computing directivity failed! %s", error)
 
         logger.debug("Estimates v3: %s", est)
-        return est
     except TypeError as type_error:
         logger.warning("Estimates failed for %s with %s", onaxis.shape, type_error)
+        return {}
     except ValueError as value_error:
         logger.warning("Estimates failed for %s with %s", onaxis.shape, value_error)
-    return {}
+        return {}
+
+    return est

@@ -120,7 +120,7 @@ def lfx(lw, sp) -> float:
     lfx_range = sp.loc[(sp.Freq < 300) & (sp.dB <= lw_ref)].Freq
     if len(lfx_range.values) == 0:
         # happens with D&D 8C when we do not have a point low enough to get the -6
-        lfx_hz = sp.Freq.values[0]
+        lfx_hz = sp.Freq.to_numpy()[0]
     else:
         lfx_grouped = consecutive_groups(lfx_range.items(), lambda x: x[0])
         try:
@@ -264,10 +264,10 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
                     ratings["lfq"] = lfq_db
                 ratings["pref_score"] = pref
         logger.debug("Ratings: %s", ratings)
-        return ratings
-    except ValueError as value_error:
-        logger.error(value_error)
+    except ValueError:
+        logger.exception("Compute pref_rating failed")
         return None
+    return ratings
 
 
 def scores(df_speaker, rounded=False):
@@ -287,8 +287,8 @@ def scores(df_speaker, rounded=False):
 
     if pir is None:
         logger.error("pir is None, computing it")
-        splH = df_speaker["SPL Horizontal_unmelted"]
-        splV = df_speaker["SPL Vertical_unmelted"]
-        pir = graph_melt(estimated_inroom_hv(splH, splV))
+        spl_h = df_speaker["SPL Horizontal_unmelted"]
+        spl_v = df_speaker["SPL Vertical_unmelted"]
+        pir = graph_melt(estimated_inroom_hv(spl_h, spl_v))
 
     return speaker_pref_rating(cea2034=spin, df_pred_in_room=pir, rounded=rounded)

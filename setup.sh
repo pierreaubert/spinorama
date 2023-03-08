@@ -37,7 +37,7 @@ export NVM_DIR=$HOME/.nvm
 # python section
 python3 -m venv spinorama-venv
 . ./spinorama-venv/bin/activate
-pip3 install -r requirements.txt
+pip3 install -U -r requirements.txt
 
 # node section
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -49,4 +49,5 @@ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spi
 
 # run the test
 pip3 install -r requirements-tests.txt
+pip3 install -r requirements-dev.txt
 pytest

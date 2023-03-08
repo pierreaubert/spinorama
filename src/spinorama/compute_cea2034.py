@@ -118,10 +118,10 @@ def spl2pressure(spl: float) -> float:
     """Convert SPL to pressure"""
     try:
         pressure = pow(10, (spl - 105.0) / 20.0)
-        return pressure
-    except TypeError as type_error:
-        logger.error("spl2pressure spl=%f e=%s", spl, type_error)
+    except TypeError:
+        logger.exception("spl2pressure spl=%f", spl)
         return 0.0
+    return pressure
 
 
 def pressure2spl(pressure: float) -> float:
@@ -307,7 +307,7 @@ def total_early_reflections(
             v_spl,
             ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"],
         )
-    elif method == "standard":
+    else:
         return spatial_average2(
             h_spl,
             [
@@ -336,38 +336,34 @@ def total_early_reflections(
             v_spl,
             ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"],
         )
-    else:
-        logger.fatal("method is unknown %s", method)
-        return None
 
 
 def total_early_reflections2(
-    floor_bounce,
-    ceiling_bounce,
-    front_wall_bounce,
-    side_wall_bounce,
-    rear_wall_bounce,
+    floor_bounce: pd.DataFrame,
+    ceiling_bounce: pd.DataFrame,
+    front_wall_bounce: pd.DataFrame,
+    side_wall_bounce: pd.DataFrame,
+    rear_wall_bounce: pd.DataFrame,
     method="corrected",
-):
+) -> pd.DataFrame:
     floor = np.power(10, (floor_bounce.dB - 105.0) / 20.0)
     ceiling = np.power(10, (ceiling_bounce.dB - 105.0) / 20.0)
     side = np.power(10, (side_wall_bounce.dB - 105.0) / 20.0)
     rear = np.power(10, (rear_wall_bounce.dB - 105.0) / 20.0)
     front = np.power(10, (front_wall_bounce.dB - 105.0) / 20.0)
 
+    spl = None
     if method == "corrected":
         # 3+3+10+19+7 = 42
         # spl = 105.0 + 20.0 * np.log10((3*floor+3*ceiling+10*side+19*rear+7*front)/42.0)
         spl = 105.0 + 20.0 * np.log10(
             np.sqrt((floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0)
         )
-    elif method == "standard":
+    else:
         # 3+3+10+3+7 = 26
         spl = 105.0 + 20.0 * np.log10(
             np.sqrt((floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0)
         )
-    else:
-        logger.fatal("method is unknown %s", method)
     return pd.DataFrame({"dB": spl})
 
 
@@ -426,7 +422,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
                 "180°",
             ],
         )
-    elif method == "standard":
+    else:
         rear_wall_bounce = spatial_average1(
             h_spl,
             [
@@ -436,8 +432,6 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
                 "180°",
             ],
         )
-    else:
-        logger.fatal("method is unknown %s", method)
 
     # total_early_reflection = total_early_reflections(h_spl, v_spl)
     total_early_reflection = total_early_reflections2(
@@ -662,12 +656,13 @@ def estimated_inroom(l_w: pd.DataFrame, e_r: pd.DataFrame, s_p: pd.DataFrame) ->
 
         # print(eir)
 
-        return pd.DataFrame(
-            {"Freq": l_w.Freq, "Estimated In-Room Response": eir.apply(pressure2spl)}
-        ).reset_index(drop=True)
-    except TypeError as type_error:
-        logger.error(type_error)
+    except TypeError:
+        logger.exception("compute EIR failed")
         return pd.DataFrame()
+
+    return pd.DataFrame(
+        {"Freq": l_w.Freq, "Estimated In-Room Response": eir.apply(pressure2spl)}
+    ).reset_index(drop=True)
 
 
 def estimated_inroom_hv(
@@ -704,7 +699,7 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
         sp_col = "Sound Power"
         spin.loc[:, sp_col] = s_p.dB
 
-    if "Total Early Reflection" in ter.keys():
+    if "Total Early Reflection" in ter:
         er_col = "Early Reflections"
         spin.loc[:, er_col] = ter["Total Early Reflection"]
 

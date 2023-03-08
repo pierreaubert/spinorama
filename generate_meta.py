@@ -77,7 +77,7 @@ def queue_score(speaker_name, speaker_data):
         try:
             default_key = metadata.speakers_info[speaker_name]["default_measurement"]
         except KeyError:
-            logger.error(
+            logger.exception(
                 "Got an key error exception for speaker_name %s default measurement",
                 speaker_name,
             )
@@ -110,9 +110,9 @@ def queue_score(speaker_name, speaker_data):
 
                 # basic math
                 logger.debug("Compute score for speaker %s key %s", speaker_name, key)
-                splH = dfs.get("SPL Horizontal_unmelted", None)
-                splV = dfs.get("SPL Vertical_unmelted", None)
-                est = estimates(spin, splH, splV)
+                spl_h = dfs.get("SPL Horizontal_unmelted", None)
+                spl_v = dfs.get("SPL Vertical_unmelted", None)
+                est = estimates(spin, spl_h, spl_v)
                 if est is not None:
                     result["estimates"] = est
 
@@ -129,8 +129,8 @@ def queue_score(speaker_name, speaker_data):
                     if pref_rating is not None:
                         result["pref_rating"] = pref_rating
 
-            except KeyError as current_error:
-                logger.exception("%s get %s".speaker_name, current_error)
+            except KeyError:
+                logger.exception("%s", speaker_name)
 
             results.append(result)
     return results
@@ -471,8 +471,8 @@ def add_quality(parse_max: int):
         parsed = parsed + 1
         logger.info("Processing %s", speaker_name)
         for version, m_data in speaker_data["measurements"].items():
+            quality = "unknown"
             if "quality" not in m_data:
-                quality = "unknown"
                 origin = m_data.get("origin")
                 measurement_format = m_data.get("format")
                 if measurement_format == "klippel":
@@ -570,8 +570,8 @@ def interpolate(speaker_name, freq, freq1, data1):
 
             interp = data1[i] + (data1[j] - data1[i]) * (f - freq1[i]) / (freq1[j] - freq1[i])
             data.append(interp)
-        except IndexError as ie:
-            logger.exception("%s: %s for f=%f", speaker_name, ie, f)
+        except IndexError:
+            logger.exception("%s: for f=%f", speaker_name, f)
             data.append(0.0)
 
     return np.array(data)
@@ -595,7 +595,7 @@ def get_spin_data(freq, speaker_name, speaker_data):
     default_key = None
     try:
         default_key = metadata.speakers_info[speaker_name]["default_measurement"]
-        default_origin = metadata.speakers_info[speaker_name]["measurements"][default_key]["origin"]
+        # default_origin = metadata.speakers_info[speaker_name]["measurements"][default_key]["origin"]
     except KeyError:
         return None
 

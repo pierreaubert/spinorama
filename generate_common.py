@@ -116,7 +116,7 @@ def custom_ray_init(args):
     level = args2level(args)
 
     def ray_setup_logger(worker_logger):
-        worker_logger = get_custom_logger(False)
+        worker_logger = get_custom_logger(level=level, duplicate=False)
         worker_logger.setLevel(level)
 
     # doesn't work in 2.0
@@ -152,15 +152,15 @@ def cache_match(key, name):
 
 
 def cache_hash(df_all):
-    df = {}
+    df_hashed = {}
     for k, v in df_all.items():
         if k is None or len(k) == 0:
             continue
         h = cache_key(k)
-        if h not in df.keys():
-            df[h] = {}
-        df[h][k] = v
-    return df
+        if h not in df_hashed.keys():
+            df_hashed[h] = {}
+        df_hashed[h][k] = v
+    return df_hashed
 
 
 def cache_save_key(key, data):
@@ -172,7 +172,7 @@ def cache_save_key(key, data):
         fl.save(path=cache_name, data=data)
 
 
-def cache_save(df_all, smoke_test=False):
+def cache_save(df_all):
     pathlib.Path(CACHE_DIR).mkdir(parents=True, exist_ok=True)
     df_hashed = cache_hash(df_all)
     for key, data in df_hashed.items():
@@ -195,13 +195,19 @@ def is_filtered(speaker, data, filters):
             return False
         current = metadata.speakers_info[speaker]["measurements"][first]
 
-    if filters.get("origin") is not None and current is not None:
-        if current["origin"] != filters.get("origin"):
-            return True
+    if (
+        filters.get("origin") is not None
+        and current is not None
+        and current["origin"] != filters.get("origin")
+    ):
+        return True
 
-    if filters.get("format") is not None and current is not None:
-        if current["format"] != filters.get("format"):
-            return True
+    if (
+        filters.get("format") is not None
+        and current is not None
+        and current["format"] != filters.get("format")
+    ):
+        return True
 
     return False
 
@@ -218,7 +224,7 @@ def cache_load_seq(filters, smoke_test):
         df_read = fl.load(path=cache)
         # print('reading file {} found {} entries'.format(cache, len(df_read)))
         for speaker, data in df_read.items():
-            if speaker in df_all.keys():
+            if speaker in df_all:
                 print("error in cache: {} is already in keys".format(speaker))
                 continue
             if is_filtered(speaker, data, filters):
@@ -262,7 +268,7 @@ def cache_load_distributed_reduce(filters, smoke_test, ids1):
         for id in done_ids:
             df_read = ray.get(id)
             for speaker, data in df_read.items():
-                if speaker in df_all.keys():
+                if speaker in df_all:
                     print("error in cache: {} is already in keys".format(speaker))
                 if is_filtered(speaker, data, filters):
                     continue
@@ -300,12 +306,12 @@ def cache_update(df_new, filters):
     for new_speaker, new_datas in df_new.items():
         if filters is not None and new_speaker != filters.get("speaker", ""):
             continue
-        df_old = cache_load({"speaker_name": new_speaker}, False)
+        df_old = cache_load(filters={"speaker_name": new_speaker}, smoke_test=False)
         for new_origin, new_measurements in new_datas.items():
             for new_measurement, new_data in new_measurements.items():
-                if new_speaker not in df_old.keys():
+                if new_speaker not in df_old:
                     df_old[new_speaker] = {new_origin: {new_measurement: new_data}}
-                elif new_origin not in df_old[new_speaker].keys():
+                elif new_origin not in df_old[new_speaker]:
                     df_old[new_speaker][new_origin] = {new_measurement: new_data}
                 else:
                     df_old[new_speaker][new_origin][new_measurement] = new_data
