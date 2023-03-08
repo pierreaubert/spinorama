@@ -2119,9 +2119,114 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Coda Audio G512": {
+        "brand": "Coda Audio",
+        "model": "G512",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-Coda Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230308",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 630,
+                        "width": 348,
+                        "depth": 320,
+                    },
+                    "weight": 16.0,
+                },
+            },
+        },
+    },
+    "Coda Audio G515": {
+        "brand": "Coda Audio",
+        "model": "G515",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-Coda Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230308",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 700,
+                        "width": 420,
+                        "depth": 370,
+                    },
+                    "weight": 17.5,
+                },
+            },
+        },
+    },
     "Coda Audio G712": {
         "brand": "Coda Audio",
         "model": "G712",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-Coda Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230308",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 143,
+                    },
+                    "size": {
+                        "height": 700,
+                        "width": 420,
+                        "depth": 370,
+                    },
+                    "weight": 24.5,
+                },
+            },
+        },
+    },
+    "Coda Audio G715": {
+        "brand": "Coda Audio",
+        "model": "G715",
         "type": "passive",
         "price": "",
         "amount": "pair",
@@ -2214,6 +2319,42 @@ speakers_info: SpeakerDatabase = {
                 "quality": "high",
                 "review_published": "20221115",
                 "notes": "60x40 configuration.",
+            },
+        },
+    },
+    "Coda Audio TiRAY": {
+        "brand": "Coda Audio",
+        "model": "TiRAY",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor-v1x",
+        "measurements": {
+            "vendor-v1x": {
+                "origin": "Vendors-Coda Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230308",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 12,
+                    },
+                    "sensitivity": 94,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 124,
+                    },
+                    "size": {
+                        "height": 155,
+                        "width": 404,
+                        "depth": 253,
+                    },
+                    "weight": 9.9,
+                },
+                "notes": "configuration is for 1 TiRAY and 1 TiLOW (12 inch subwoofer)",
             },
         },
     },
