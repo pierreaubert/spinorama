@@ -1262,6 +1262,23 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Avantone Pro MixCube": {
+        "brand": "Avantone",
+        "model": "Pro MixCube",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "259",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/avantone-pro-mixcube-monitor-review.42817/",
+                "review_published": "20230311",
+            },
+        },
+    },
     "Axiom ED60P": {
         "brand": "Axiom",
         "model": "ED60P",
