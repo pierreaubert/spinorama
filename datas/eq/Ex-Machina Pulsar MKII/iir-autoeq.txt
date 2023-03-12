@@ -1,0 +1,16 @@
+EQ for Ex-Machina Pulsar MKII computed from ErinsAudioCorner data
+Preference Score 4.91 with EQ 6.14
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-03-12-17:40:49
+
+Preamp: -3.2 dB
+
+Filter  1: ON PK Fc    31 Hz Gain +3.00 dB Q 1.21
+Filter  2: ON PK Fc    99 Hz Gain -3.84 dB Q 2.30
+Filter  3: ON PK Fc  6066 Hz Gain -1.82 dB Q 0.42
+Filter  4: ON PK Fc   367 Hz Gain +0.77 dB Q 1.43
+Filter  5: ON PK Fc   915 Hz Gain +0.83 dB Q 3.00
+Filter  6: ON PK Fc 10506 Hz Gain -0.58 dB Q 3.00
+Filter  7: ON PK Fc  2077 Hz Gain -1.48 dB Q 3.00
+Filter  8: ON PK Fc   131 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc   534 Hz Gain -0.50 dB Q 3.00

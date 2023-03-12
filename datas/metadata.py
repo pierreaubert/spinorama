@@ -1641,6 +1641,33 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Buchardt Audio A700": {
+        "brand": "Buchardt Audio",
+        "model": "A700",
+        "type": "active",
+        "price": "6500",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a700/",
+                },
+                "review_published": "20230312",
+            },
+            "eac-cardiod": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a700/",
+                },
+                "review_published": "20230312",
+            },
+        },
+    },
     "Buchardt Audio S300": {
         "brand": "Buchardt Audio",
         "model": "S300",
@@ -4809,6 +4836,36 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/eve-audio-sc305-studio-monitor-review.37752/",
                 "review_published": "20220924",
+            },
+        },
+    },
+    "Ex-Machina Pulsar MKII": {
+        "brand": "Ex-Machina",
+        "model": "Pulsar MKII",
+        "type": "active",
+        "price": "11700",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/ex_machina_pulsar_mkii/",
+                },
+                "specifications": {
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 483,
+                        "width": 289,
+                        "depth": 345,
+                    },
+                    "weight": 23,
+                },
+                "review_published": "20230312",
             },
         },
     },
@@ -11184,12 +11241,11 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Mesanovic CDM65": {
-        "skip": True,
         "brand": "Mesanovic",
         "model": "CDM65",
         "type": "active",
-        "price": "",
-        "amount": "each",
+        "price": "5300",
+        "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "eac",
         "measurements": {
@@ -11211,7 +11267,27 @@ speakers_info: SpeakerDatabase = {
                     },
                     "weight": 16,
                 },
-                "review_published": "20221219",
+                "review_published": "20230312",
+            },
+            "eac-cardiod": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mesanovic_cdm65/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/new-mesanovic-cdm65-monitors.40172/",
+                },
+                "specifications": {
+                    "SPL": {
+                        "peak": 103,
+                    },
+                    "size": {
+                        "height": 381,
+                        "width": 203,
+                        "depth": 355,
+                    },
+                    "weight": 16,
+                },
+                "review_published": "20230312",
             },
         },
     },
@@ -15942,8 +16018,14 @@ speakers_info: SpeakerDatabase = {
         "price": "1000",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/svs_ultra_bookshelf/",
+                "review_published": "20230312",
+            },
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
