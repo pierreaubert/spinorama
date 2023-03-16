@@ -45,10 +45,17 @@ def parse_eq_line(line, srate):
     if len_words <= 3 or words[0] != "Filter":
         return None, None
 
-    if words[2] == "ON":
-        status = 1
-    else:
-        status = 0
+    status = 1 if words[2] == "ON" else 0
+
+    # reference is https://sourceforge.net/p/equalizerapo/wiki/Configuration%20reference/
+    #
+    # Filter: ON|OFF Type Fc float_freq Hz Gain float_db dB Q float_q
+    # Filter: ON|OFF Type Fc float_freq Hz Gain float_db dB BW Oct float_octave
+    # Filter: ON|OFF Type Fc float_freq Hz Gain float_db dB
+    # Filter: ON|OFF Type Fc float_freq Hz Q float_q
+    #
+    # Other models are the same without Fc / Gain / dB Q
+    # This is very error prone and needs more testing
 
     if len_words == 12:
         kind = words[3]
@@ -68,47 +75,64 @@ def parse_eq_line(line, srate):
         kind = words[3]
         freq = words[5]
 
+    ffreq = 0.0
     if freq:
         ifreq = int(float(freq))
         if ifreq < 0 or ifreq > srate / 2:
             logger.debug("IIR peq freq %sHz out of bounds (srate=%d)", freq, srate)
             return None, None
+        ffreq = float(freq)
 
+    rgain = 0.0
     if gain:
         rgain = float(gain)
         if rgain < -10 or rgain > 30:
             logger.debug("IIR peq gain %f is large!", rgain)
             return None, None
 
+    rq = 0.0
     if q:
         rq = float(q)
         if rq < 0 or rq > 20:
             logger.debug("IIR peq Q %f is out of bounds!", rq)
             return None, None
 
+    print(line)
+    print("add IIR peq {} freq {}Hz srate {} Q {} Gain {}".format(kind, ffreq, srate, rq, rgain))
+
     if kind in ("PK", "PEQ", "Modal"):
-        iir = Biquad(Biquad.PEAK, ifreq, srate, rq, rgain)
-        logger.debug("add IIR peq PEAK freq %dHz srate %d Q %f Gain %f", ifreq, srate, rq, rgain)
+        iir = Biquad(Biquad.PEAK, ffreq, srate, rq, rgain)
+        logger.debug("add IIR peq PEAK freq %.0fHz srate %d Q %f Gain %f", ifreq, srate, rq, rgain)
     elif kind == "NO":
-        iir = Biquad(Biquad.NOTCH, ifreq, srate, rq, rgain)
-        logger.debug("add IIR peq NOTCH freq %dHz srate %d Q %f Gain %f", ifreq, srate, rq, rgain)
+        iir = Biquad(Biquad.NOTCH, ffreq, srate, rq, rgain)
+        logger.debug("add IIR peq NOTCH freq %.0fHz srate %d Q %f Gain %f", ifreq, srate, rq, rgain)
     elif kind == "BP":
-        iir = Biquad(Biquad.BANDPASS, ifreq, srate, rq, rgain)
+        iir = Biquad(Biquad.BANDPASS, ffreq, srate, rq, rgain)
         logger.debug(
-            "add IIR peq BANDPASS freq %dHz srate %d Q %d Gain %f", ifreq, srate, rq, rgain
+            "add IIR peq BANDPASS freq %.0fHz srate %d Q %d Gain %f", ffreq, srate, rq, rgain
         )
     elif kind in ("HP", "HPQ"):
-        iir = Biquad(Biquad.HIGHPASS, ifreq, srate, 1.0 / math.sqrt(2.0), 1.0)
-        logger.debug("add IIR peq LOWPASS freq %dHz srate %d", ifreq, srate)
+        if rq == 0.0:
+            rq = 1 / math.sqrt(2.0)
+        iir = Biquad(Biquad.HIGHPASS, ffreq, srate, rq, rgain)
+        logger.debug(
+            "add IIR peq HIGHPASS freq %.0fHz srate %d Q %f Gain %f", ifreq, srate, rq, rgain
+        )
     elif kind in ("LP", "LPQ"):
-        iir = Biquad(Biquad.LOWPASS, ifreq, srate, 1.0 / math.sqrt(2.0), 1.0)
-        logger.debug("add IIR peq LOWPASS freq %dHz srate %d", ifreq, srate)
+        if rq == 0.0:
+            rq = 1 / math.sqrt(2.0)
+        iir = Biquad(Biquad.LOWPASS, ffreq, srate, rq, rgain)
+        logger.debug("add IIR peq LOWPASS freq %.0fHz srate %d", ffreq, srate)
     elif kind in ("LS", "LSC"):
-        iir = Biquad(Biquad.LOWSHELF, ifreq, srate, 1.0, rgain)
-        logger.debug("add IIR peq LOWSHELF freq %dHz srate %d Gain %f", ifreq, srate, rgain)
+        if rq == 0.0:
+            rq = 1.0
+        iir = Biquad(Biquad.LOWSHELF, ffreq, srate, rq, rgain)
+        logger.debug("add IIR peq LOWSHELF freq %.0fHz srate %d Gain %f", ffreq, srate, rgain)
     elif kind in ("HS", "HSC"):
-        iir = Biquad(Biquad.HIGHSHELF, ifreq, srate, 1.0, rgain)
-        logger.debug("add IIR peq HIGHSHELF freq %dHz srate %d Gain %f", ifreq, srate, rgain)
+        if rq == 0.0:
+            rq = 1.0
+        iir = Biquad(Biquad.HIGHSHELF, ffreq, srate, rq, rgain)
+        logger.debug("add IIR peq HIGHSHELF freq %.0fHz srate %d Gain %f", ffreq, srate, rgain)
     else:
         logger.warning("kind %s is unknown", kind)
         return None, None
