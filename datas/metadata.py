@@ -5302,6 +5302,25 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Focal Chora 816": {
+        "brand": "Focal",
+        "model": "Chora 816",
+        "type": "passive",
+        "price": "900",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/focal-chora-816-speaker-review.42988/",
+                },
+                "review_published": "20230316",
+            },
+        },
+    },
     "Focal Chorus OD 706 V": {
         "brand": "Focal",
         "model": "Chorus OD 706 V",

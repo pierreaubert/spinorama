@@ -1,0 +1,11 @@
+Focal Chora 816 APO EQ Score 1 96000Hz
+March162023-142841
+
+Preamp: -2.2 dB
+
+Filter 1: ON HPQ Fc 51.10,    0.00,    1.33
+Filter 2: ON PK Fc 93.69,    -1.97,    1.09
+Filter 3: ON PK Fc 669.40,    -2.40,    5.43
+Filter 4: ON PK Fc 1780.97,    -1.26,    4.24
+Filter 5: ON PK Fc 3168.17,    1.80,    2.00
+Filter 6: ON PK Fc 7960.21,    -2.86,    1.37
