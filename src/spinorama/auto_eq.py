@@ -32,7 +32,7 @@ from spinorama.constant_paths import CPATH_DOCS_SPEAKERS, MIDRANGE_MIN_FREQ, MID
 from spinorama.pict import write_multiformat
 from spinorama.compute_estimates import estimates_spin
 from spinorama.compute_misc import compute_statistics
-from spinorama.filter_peq import peq_format_apo
+from spinorama.filter_peq import peq_format_apo, peq_print
 from spinorama.filter_scores import (
     scores_apply_filter,
     noscore_apply_filter,
@@ -88,21 +88,29 @@ def optim_eval_strategy(
     auto_slope_lw = None
     if use_score:
         auto_spin, _, auto_score = scores_apply_filter(df_speaker, auto_peq)
-        unmelted_auto_spin = auto_spin.pivot_table(
-            index="Freq", columns="Measurements", values="dB", aggfunc=max
-        ).reset_index()
-        try:
-            auto_slope_lw, _, _ = compute_statistics(
-                unmelted_auto_spin,
-                "Listening Window",
-                optim_config["target_min_freq"],
-                optim_config["target_max_freq"],
-                MIDRANGE_MIN_FREQ,
-                MIDRANGE_MAX_FREQ,
-            )
-        except ValueError as value_error:
-            logger.exception("error: %s  %s", current_speaker_name, value_error)
+        if auto_spin is not None:
+            unmelted_auto_spin = auto_spin.pivot_table(
+                index="Freq", columns="Measurements", values="dB", aggfunc=max
+            ).reset_index()
+            try:
+                auto_slope_lw, _, _ = compute_statistics(
+                    unmelted_auto_spin,
+                    "Listening Window",
+                    optim_config["target_min_freq"],
+                    optim_config["target_max_freq"],
+                    MIDRANGE_MIN_FREQ,
+                    MIDRANGE_MAX_FREQ,
+                )
+            except ValueError:
+                logger.exception("error: %s", current_speaker_name)
 
+    print("debug eval strategy")
+    print("  auto score {}".format(auto_score))
+    print("  auto results {}".format(auto_results))
+    print("  auto peq")
+    print(peq_print(auto_peq))
+    print("  auto slope lw {}".format(auto_slope_lw))
+    print("end debug eval strategy")
     return auto_score, auto_results, auto_peq, auto_slope_lw
 
 
@@ -171,9 +179,8 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
         )
 
     # run optimiser for each config
-    best_i = -1
-    best_score = -1.0
-    results = []
+    best_score = -1000.0
+    results = None
     for config in configs:
         current_optim_config = deepcopy(optim_config)
         for k, v in config.items():
@@ -214,72 +221,95 @@ def optim_strategy(current_speaker_name, df_speaker, optim_config, use_score):
                 elif current_optim_config["curve_names"][0] == "Early Reflections":
                     slope_name = "slope_early_reflections"
 
-                if slope_name is not None:
-                    delta = 0.0
-                    if (
-                        current_optim_config["curve_names"][0] == "Listening Window"
-                        and auto_slope_lw >= 0
-                        or auto_slope_lw > -1
-                    ):
-                        delta = optim_config[slope_name] - np.sign(auto_slope_lw) * 0.5 * loop
-                    if (
-                        current_optim_config["curve_names"][0] == "Estimated In-Room Response"
-                        and auto_slope_lw >= 0
-                        or auto_slope_lw < -1
-                    ):
-                        delta = optim_config[slope_name] - np.sign(auto_slope_lw) * 0.5 * loop
-                    if delta != 0.0:
-                        current_optim_config[slope_name] = delta
-                        auto_score2, auto_results2, auto_peq2, auto_slope_lw2 = optim_eval_strategy(
-                            current_speaker_name, df_speaker, current_optim_config, use_score
+                if slope_name is None:
+                    continue
+
+                delta = 0.0
+                if (
+                    current_optim_config["curve_names"][0] == "Listening Window"
+                    and auto_slope_lw >= 0
+                    or auto_slope_lw > -1
+                ):
+                    delta = optim_config[slope_name] - np.sign(auto_slope_lw) * 0.5 * loop
+                if (
+                    current_optim_config["curve_names"][0] == "Estimated In-Room Response"
+                    and auto_slope_lw >= 0
+                    or auto_slope_lw < -1
+                ):
+                    delta = optim_config[slope_name] - np.sign(auto_slope_lw) * 0.5 * loop
+                if delta == 0.0:
+                    continue
+
+                current_optim_config[slope_name] = delta
+                auto_score2, auto_results2, auto_peq2, auto_slope_lw2 = optim_eval_strategy(
+                    current_speaker_name, df_speaker, current_optim_config, use_score
+                )
+                slope_is_admissible = (
+                    auto_slope_lw2 * 11 / 3 > -1 and auto_slope_lw2 * 11 / 3 < -0.2
+                )
+                if not slope_is_admissible:
+                    print(
+                        "debug slope_is_admissible {} auto slope lw {}".format(
+                            slope_is_admissible, auto_slope_lw2 * 11 / 3
                         )
-                        slope_is_admissible = (
-                            auto_slope_lw2 * 11 / 3 > -1 and auto_slope_lw2 * 11 / 3 < -0.2
-                        )
-                        score_improved = False
-                        if auto_score2.get("pref_score", -1000) > auto_score.get(
-                            "pref_score", -1000
-                        ):
-                            score_improved = True
-                        if slope_is_admissible and score_improved:
-                            auto_score = auto_score2
-                            auto_results = auto_results2
-                            auto_peq = auto_peq2
-                            auto_slope_lw = auto_slope_lw2
-                            logger.info(
-                                "new slope %1.1f init target %1.1f corrected target is %1.1f loop=%d score=%1.2f",
-                                auto_slope_lw * 11 / 3,
-                                optim_config["slope_listening_window"],
-                                delta,
-                                loop,
-                                auto_score["pref_score"],
-                            )
+                    )
+                    continue
+                score_improved = False
+                if auto_score2.get("pref_score", -1000.0) > auto_score.get("pref_score", -1000.0):
+                    score_improved = True
+                if not score_improved:
+                    print("debug score improved {}".format(score_improved))
+                    continue
+
+                auto_score = auto_score2
+                auto_results = auto_results2
+                auto_peq = auto_peq2
+                auto_slope_lw = auto_slope_lw2
+                logger.warning(
+                    "new slope %1.1f init target %1.1f corrected target is %1.1f loop=%d score=%1.2f",
+                    auto_slope_lw * 11 / 3,
+                    optim_config["slope_listening_window"],
+                    delta,
+                    loop,
+                    auto_score["pref_score"],
+                )
 
         # store score
         if auto_score is not None:
-            pref_score = auto_score.get("pref_score", -1)
+            print("debug auto score {}".format(auto_score))
+            print("debug auto results {}".format(auto_results))
+            pref_score = auto_score.get("pref_score", -1000)
             if pref_score > best_score:
                 best_score = pref_score
-                best_i = len(results)
-            # print('debug pref_score {} best_score {} results_score {}'.format(pref_score, best_score, auto_results[-1][2]))
+                results = auto_score, auto_results, auto_peq, current_optim_config
+                print(
+                    "debug score BEST pref_score {} best_score {} results_score {}".format(
+                        pref_score, best_score, auto_results[2]
+                    )
+                )
+            else:
+                print(
+                    "debug score NOT BETTER pref_score {} best_score {} results_score {}".format(
+                        pref_score, best_score, auto_results[2]
+                    )
+                )
+
         else:
-            loss_score = auto_results[-1][1]
+            loss_score = auto_results[1]
             if loss_score > best_score:
                 best_score = loss_score
-                best_i = len(results)
-            # print('debug pref_loss {} best_loss {} results_loss {}'.format(pref_score, best_score, auto_results[-1][1]))
-
-        results.append((auto_score, auto_results, auto_peq, current_optim_config))
-
-    if best_i >= 0:
-        # print('best_i={}'.format(best_i))
-        # print(results[best_i][0]['pref_score'])
-        # print(results[best_i][1])
-        # print(results[best_i][2])
-        # print(results[best_i][3])
-        return results[best_i]
-
-    return None, None, None, None
+                results = auto_score, auto_results, auto_peq, current_optim_config
+                print(
+                    "debug loss pref_loss {} best_loss {} results_loss {}".format(
+                        pref_score, best_score, auto_results[1]
+                    )
+                )
+    if results:
+        print(results[0]["pref_score"])
+        print(results[1])
+        print(results[2])
+        print(results[3])
+    return results
 
 
 @ray.remote
@@ -456,8 +486,7 @@ def optim_save_peq(
             logger.info(peq_format_apo("\n".join(comments), auto_peq))
             logger.info("----------------------------------------------------------------------")
         logger.info("ITER  LOSS SCORE -----------------------------------------------------")
-        info_list = ["  {:2d} {:+2.2f} {:+2.2f}".format(r[0], r[1], r[2]) for r in auto_results]
-        logger.info("\n".join(info_list))
+        logger.info("  %2d %+2.2f %+2.2f", auto_results[0], auto_results[1], auto_results[2])
         logger.info("----------------------------------------------------------------------")
         logger.info("%30s ---------------------------------------", current_speaker_name)
         if score is not None and auto_score is not None and "nbd_on_axis" in auto_score:

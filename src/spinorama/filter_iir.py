@@ -62,6 +62,7 @@ class Biquad:
         cs = math.cos(omega)
         alpha = sn / (2 * Q)
         beta = math.sqrt(A + A)
+        # compute
         types[typ](self, A, omega, sn, cs, alpha, beta)
         # prescale constants
         self.b0 /= self.a0

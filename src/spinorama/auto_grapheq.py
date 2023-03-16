@@ -39,14 +39,14 @@ def optim_grapheq(
     auto_target_interp: list[FloatVector1D],
     optim_config: dict,
     use_score,
-) -> tuple[list[tuple[int, float, float]], Peq]:
+) -> tuple[tuple[int, float, float], Peq]:
     """Main optimiser for graphical EQ"""
 
     logger.debug("Starting optim graphEQ for %s", speaker_name)
 
     if not optim_preflight(freq, auto_target, auto_target_interp):
         logger.error("Preflight check failed!")
-        return ([(0, 0, 0)], [])
+        return (0, 0.0, -1000.0), []
 
     # get current EQ
     grapheq = grapheq_db[optim_config.get("grapheq_name")]
@@ -78,7 +78,7 @@ def optim_grapheq(
     if use_score:
         pref_score = score_loss(df_speaker, auto_peq)
     # array of results
-    results = [(0, best_loss, -pref_score)]
+    results = (0, best_loss, -pref_score)
 
     #
     def fit(param, shift=None):
@@ -130,5 +130,4 @@ def optim_grapheq(
     if use_score:
         pref_score = score_loss(df_speaker, auto_peq)
 
-    results.append((1, opt_error, -pref_score))
-    return results, auto_peq
+    return (1, opt_error, -pref_score), auto_peq

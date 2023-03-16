@@ -397,7 +397,7 @@ def parse_graph_freq_check(speaker_name: str, df_spin: pd.DataFrame) -> bool:
             )
     for col in spin_cols:
         if col not in mandatory_cols and col not in other_cols:
-            logger.warning("%s measurement have extra column %s", speaker_name, col)
+            logger.info("%s measurement have extra column %s", speaker_name, col)
     return status
 
 

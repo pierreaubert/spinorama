@@ -747,3 +747,45 @@ def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
             "On Axis": onaxis.dB,
         }
     )
+
+
+# class CEA2034(object):
+#     """Compute CEA2034 from horizontal and vertical measurements"""
+#     def __init__(self, spl_h: pd.DataFrame, spl_v: pd.DataFrame):
+#         if not self.check(spl_h, spl_v):
+#             self.spl_h = None
+#             self.spl_v = None
+#             return
+#         self.freq  = spl_h.Freq
+#
+#         self.spl_h = spl_h
+#         self.spl_h.drop('Freq')
+#         self.spl_h_pascal = self.spl_h.apply(spl2pressure)
+#         self.spl_h_square = self.spl_h_pascal.apply(spl2pressure)
+#
+#         self.spl_v = spl_h
+#         self.spl_v.drop('Freq')
+#         self.spl_v_pascal = self.spl_v.apply(spl2pressure)
+#         self.spl_v_square = self.spl_v_pascal.apply(spl2pressure)
+#
+#         self.on = self.compute_on_axis()
+#         self.lw = self.compute_listening_window()
+#
+#     def check(self, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> bool:
+#         status = True
+#         if 'Freq' not in spl_h or 'Freq' not in spl_v:
+#             status = False
+#         if status and spl_h.Freq != spl_v.Freq:
+#             status = False
+#         return status
+#
+#     def compute_on_axis(self) -> pd.DataFrame:
+#         return compute_onaxis(self.spl_h, self.spl_v)
+#
+#     def compute_listening_window() -> pd.DataFrame:
+#         avg = []
+#         for col_h in ('On Axis', "10°", "20°", "30°", "-10°", "-20°", "-30°"]):
+#             avg.append(self.spl_h_square[col_h])
+#         return 0
+#
+#

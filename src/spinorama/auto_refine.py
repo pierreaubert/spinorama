@@ -38,9 +38,9 @@ def optim_refine(
     optim_config: dict,
     greedy_results,
     greedy_peq,
-) -> tuple[list[tuple[int, float, float]], Peq]:
+) -> tuple[tuple[int, float, float], Peq]:
     # loss from previous optim algo
-    init_loss = greedy_results[-1][2]
+    init_loss = greedy_results[2]
 
     low_cost_partial_config = {}
     config = {}

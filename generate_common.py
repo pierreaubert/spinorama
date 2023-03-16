@@ -245,7 +245,7 @@ def cache_fetch(cachepath):
 
 
 def cache_load_distributed_map(filters, smoke_test):
-    cache_files = glob("{}/*.h5".format(CACHE_DIR))
+    cache_files = glob("/home/pierre/src/spinorama/{}/*.h5".format(CACHE_DIR))
     ids = []
     # mapper read the cache and start 1 worker per file
     for cache in cache_files:

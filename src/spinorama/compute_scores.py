@@ -102,6 +102,9 @@ def nbd(dfu: pd.DataFrame) -> float:
     )
 
 
+LFX_DEFAULT = math.log10(300)
+
+
 def lfx(lw, sp) -> float:
     """lfx Low Frequency Extension
 
@@ -120,14 +123,17 @@ def lfx(lw, sp) -> float:
     lfx_range = sp.loc[(sp.Freq < 300) & (sp.dB <= lw_ref)].Freq
     if len(lfx_range.values) == 0:
         # happens with D&D 8C when we do not have a point low enough to get the -6
-        lfx_hz = sp.Freq.to_numpy()[0]
-    else:
-        lfx_grouped = consecutive_groups(lfx_range.items(), lambda x: x[0])
-        try:
-            lfx_hz = list(next(lfx_grouped))[-1][1]
-        except Exception:
-            lfx_hz = -1.0
+        return math.log10(sp.Freq.to_numpy()[0])
+
+    lfx_grouped = consecutive_groups(lfx_range.items(), lambda x: x[0])
+    try:
+        lfx_hz = list(next(lfx_grouped))[-1][1]
+    except Exception:
+        return LFX_DEFAULT
     return math.log10(lfx_hz)
+
+
+LFQ_DEFAULT = 10
 
 
 def lfq(lw, sp, lfx_log) -> float:
@@ -152,8 +158,8 @@ def lfq(lw, sp, lfx_log) -> float:
             lfq_sum += abs(y_lw - y_sp)
             n += 1
     if n == 0:
-        logger.warning("lfq is None: lfx=%f", val_lfx)
-        return -1.0
+        logger.debug("lfq is None: lfx=%f", val_lfx)
+        return LFQ_DEFAULT
     return lfq_sum / n
 
 
@@ -206,8 +212,8 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         nbd_listening_window = nbd(df_listening_window)
         nbd_sound_power = nbd(df_sound_power)
         nbd_pred_in_room = nbd(df_pred_in_room)
-        lfx_hz = -1.0
-        lfq_db = -1.0
+        lfx_hz = LFX_DEFAULT
+        lfq_db = LFQ_DEFAULT
         aad_on_axis = -1.0
         if not skip_full:
             aad_on_axis = aad(df_on_axis)
@@ -241,10 +247,8 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
             if not skip_full:
                 if aad_on_axis != -1.0:
                     ratings["aad_on_axis"] = round(aad_on_axis, 2)
-                if lfx_hz != -1.0:
-                    ratings["lfx_hz"] = int(pow(10, lfx_hz))  # in Hz
-                if lfq_db != -1.0:
-                    ratings["lfq"] = round(lfq_db, 2)
+                ratings["lfx_hz"] = int(pow(10, lfx_hz))  # in Hz
+                ratings["lfq"] = round(lfq_db, 2)
                 ratings["pref_score"] = round(pref, 1)
         else:
             ratings = {

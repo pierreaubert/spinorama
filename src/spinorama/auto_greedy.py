@@ -42,19 +42,19 @@ def optim_greedy(
     auto_target_interp: list[FloatVector1D],
     optim_config: dict,
     use_score,
-) -> tuple[list[tuple[int, float, float]], Peq]:
+) -> tuple[tuple[int, float, float], Peq]:
     """Main optimiser: follow a greedy strategy"""
 
     if not optim_preflight(freq, auto_target, auto_target_interp):
         logger.error("Preflight check failed!")
-        return ([(0, 0, 0)], [])
+        return (0, 0, 0), []
 
     auto_peq = []
     current_auto_target = optim_compute_auto_target(
         freq, auto_target, auto_target_interp, auto_peq, optim_config
     )
     best_loss = loss(df_speaker, freq, auto_target, auto_peq, 0, optim_config)
-    pref_score = 1.0
+    pref_score = 1000.0
     if use_score:
         pref_score = score_loss(df_speaker, auto_peq)
 
@@ -132,8 +132,8 @@ def optim_greedy(
 
         logger.debug(
             "sign %.0f init_freq %.0fHz init_freq_range %s init_q_range %s biquad_range %s",
-            sign,
-            init_freq,
+            sign if sign is not None else 0.0,
+            init_freq if init_freq is not None else 0.0,
             init_freq_range,
             init_q_range,
             biquad_range,
@@ -213,6 +213,10 @@ def optim_greedy(
             )
             break
 
+    if len(results) == 0:
+        logger.info("OPTIM END %s: 0 PEQ", speaker_name)
+        return (-1, -1000, -1000), []
+
     # recompute auto_target with the full auto_peq
     current_auto_target = optim_compute_auto_target(
         freq, auto_target, auto_target_interp, auto_peq, optim_config
@@ -222,19 +226,19 @@ def optim_greedy(
             pref_score = score_loss(df_speaker, auto_peq)
         results.append((nb_iter + 1, best_loss, -pref_score))
     # best score is not necessary the last one
+    best_results = None
     if use_score:
-        idx_max = np.argmax((np.array(results).T)[-1]) + 1
-        results = results[0:idx_max]
-        auto_peq = auto_peq[0:idx_max]
-
-    if len(results) > 0:
-        logger.info(
-            "OPTIM END %s: best loss %2.2f final score %2.2f with %2d PEQs",
-            speaker_name,
-            results[-1][1],
-            results[-1][2],
-            len(auto_peq),
-        )
+        idx_max = np.argmax((np.array(results).T)[-1])
+        best_results = results[idx_max]
+        auto_peq = auto_peq[:idx_max]
     else:
-        logger.info("OPTIM END %s: 0 PEQ", speaker_name)
-    return results, auto_peq
+        best_results = results[-1]
+
+    logger.info(
+        "OPTIM END %s: best loss %2.2f final score %2.2f with %2d PEQs",
+        speaker_name,
+        best_results[1],
+        best_results[2],
+        len(auto_peq),
+    )
+    return best_results, auto_peq

@@ -119,13 +119,12 @@ def print_items(aggregated_results):
     v_iter = []
     v_loss = []
     v_score = []
-    for speaker, results in aggregated_results.items():
-        for current_result in results:
-            if current_result is not None and len(current_result) > 2:
-                v_sn.append("{}".format(speaker))
-                v_iter.append(current_result[0])
-                v_loss.append(current_result[1])
-                v_score.append(current_result[2])
+    for speaker, result in aggregated_results.items():
+        if result is not None and len(result) > 2:
+            v_sn.append("{}".format(speaker))
+            v_iter.append(result[0])
+            v_loss.append(result[1])
+            v_score.append(result[2])
     df_results = pd.DataFrame(
         {"speaker_name": v_sn, "iter": v_iter, "loss": v_loss, "score": v_score}
     )

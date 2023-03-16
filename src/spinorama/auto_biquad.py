@@ -29,7 +29,8 @@ from spinorama.auto_loss import loss
 
 
 def display(xk, convergence):
-    logger.debug(xk, convergence)
+    # logger.debug(xk, convergence)
+    pass
 
 
 def find_best_biquad(

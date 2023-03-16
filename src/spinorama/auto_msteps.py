@@ -31,7 +31,7 @@ def optim_multi_steps(
     auto_target_interp: list[FloatVector1D],
     optim_config: dict,
     use_score,
-) -> tuple[list[tuple[int, float, float]], Peq]:
+) -> tuple[tuple[int, float, float], Peq]:
     """Implement multi steps optimisation:
     Start with a greedy approach then add another algorithm to optimise for score
     """

@@ -159,36 +159,36 @@ def add_scores(dataframe, parse_max):
             for result in results:
                 speaker_name = result["speaker"]
                 version = result["version"]
-                origin = result["origin"]
                 sensitivity = result.get("sensitivity")
                 estimates = result.get("estimates")
                 pref_rating = result.get("pref_rating")
                 is_eq = version[-3:] == "_eq"
 
-                if not is_eq:
+                if is_eq:
+                    version_neq = version[:-3]
                     if estimates is not None:
-                        metadata.speakers_info[speaker_name]["measurements"][version][
-                            "estimates"
-                        ] = estimates
-                        if (
-                            sensitivity is not None
-                            and metadata.speakers_info[speaker_name].get("type") == "passive"
-                        ):
-                            metadata.speakers_info[speaker_name]["sensitivity"] = sensitivity
-                        if pref_rating is not None:
-                            metadata.speakers_info[speaker_name]["measurements"][version][
-                                "pref_rating"
-                            ] = pref_rating
-                else:
-                    version_eq = version[:-3]
-                    if estimates is not None:
-                        metadata.speakers_info[speaker_name]["measurements"][version_eq][
+                        metadata.speakers_info[speaker_name]["measurements"][version_neq][
                             "estimates_eq"
                         ] = estimates
                     if pref_rating is not None:
-                        metadata.speakers_info[speaker_name]["measurements"][version_eq][
+                        metadata.speakers_info[speaker_name]["measurements"][version_neq][
                             "pref_rating_eq"
                         ] = pref_rating
+                    continue
+
+                if estimates is not None:
+                    metadata.speakers_info[speaker_name]["measurements"][version][
+                        "estimates"
+                    ] = estimates
+                if (
+                    sensitivity is not None
+                    and metadata.speakers_info[speaker_name].get("type") == "passive"
+                ):
+                    metadata.speakers_info[speaker_name]["sensitivity"] = sensitivity
+                if pref_rating is not None:
+                    metadata.speakers_info[speaker_name]["measurements"][version][
+                        "pref_rating"
+                    ] = pref_rating
 
         if len(remain_refs) == 0:
             break
