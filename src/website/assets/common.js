@@ -818,7 +818,7 @@ export function updateVersion(metaSpeakers: MetaSpeakers, speaker, selector, ori
             matches.push(val);
         }
     });
-    if (metaSpeakers[speaker].eq != null) {
+    if (metaSpeakers[speaker].eqs != null) {
         const matchesEQ = [];
         for (const key in matches) {
             matchesEQ.push(matches[key] + '_eq');
