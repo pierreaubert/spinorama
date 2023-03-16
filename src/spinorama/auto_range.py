@@ -38,8 +38,7 @@ def compute_non_admissible_freq(peq, min_freq, max_freq):
         f = current_eq.freq
         q = current_eq.Q
         # limit the zone for small q
-        if q < 1.0:
-            q = 1.0
+        q = max(1.0, q)
         q2 = q * q
         n = 1 + 1 / (2 * q2) + math.sqrt((2 + 1 / q2) * (2 + 1 / q2) / 4 - 1)
         n_2 = math.pow(2, n)
@@ -53,15 +52,12 @@ def compute_non_admissible_freq(peq, min_freq, max_freq):
 
 def not_in_zones(zones, freq):
     """check if frequency is in range for each zone"""
-    for zone_low, zone_high in zones:
-        if freq > zone_low and freq < zone_high:
-            return False
-    return True
+    return all(not (freq > zone_low and freq < zone_high) for zone_low, zone_high in zones)
 
 
 def find_largest_area(
     freq: FloatVector1D, curve: list[FloatVector1D], optim_config: dict, peq
-) -> tuple[Literal[-1, 1], int, float]:
+) -> tuple[Literal[-1] | Literal[+1], int, float]:
     min_freq = optim_config["target_min_freq"]
     max_freq = optim_config["target_max_freq"]
     zones = compute_non_admissible_freq(peq, min_freq, max_freq)

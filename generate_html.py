@@ -148,7 +148,7 @@ def main():
     # load all metadata from generated json file
     json_filename = cpaths.CPATH_METADATA_JSON
     if not os.path.exists(json_filename):
-        logger.error("Cannot find %s".format(json_filename))
+        logger.error("Cannot find %s", json_filename)
         sys.exit(1)
 
     meta = None
@@ -193,7 +193,7 @@ def main():
     index_html = mako_templates.get_template("index.html")
 
     def sort_meta_score(s):
-        if s is not None and "pref_rating" in s.keys() and "pref_score" in s["pref_rating"]:
+        if s is not None and "pref_rating" in s and "pref_score" in s["pref_rating"]:
             return s["pref_rating"]["pref_score"]
         return -1
 

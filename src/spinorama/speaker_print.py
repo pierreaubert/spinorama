@@ -85,8 +85,8 @@ def print_graph(speaker, version, origin, key, title, chart, force, fileext):
                                 f_d.write(content)
                         else:
                             write_multiformat(chart, filename, force)
-                    except Exception as e:
-                        logger.error("Got unkown error %s for %s", e, filename)
+                    except Exception:
+                        logger.exception("Got unkown error for %s", filename)
             if ext == "json":
                 filename += ".zip"
                 if (
@@ -103,11 +103,11 @@ def print_graph(speaker, version, origin, key, title, chart, force, fileext):
                                 compression=zipfile.ZIP_DEFLATED,
                                 allowZip64=True,
                             ) as current_zip:
-                                current_zip.writestr("{0}.json", title), content
+                                current_zip.writestr("{0}.json".format(title), content)
                                 logger.info("Saving %s in %s", title, filename)
                                 updated += 1
-                        except Exception as e:
-                            logger.error("Got unkown error %s for %s", e, filename)
+                        except Exception:
+                            logger.exception("Got unkown error for %s", filename)
     else:
         logger.debug("Chart is None for %s %s %s %s", speaker, origin, key, title)
     return updated

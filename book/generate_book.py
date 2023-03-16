@@ -47,7 +47,7 @@ if __name__ == "__main__":
     # load all metadata from generated json file
     json_filename = "../docs/assets/metadata.json"
     if not os.path.exists(json_filename):
-        logging.fatal("Cannot find {0}".format(json_filename))
+        logging.fatal("Cannot find %s", json_filename)
         sys.exit(1)
 
     meta = None
@@ -55,9 +55,8 @@ if __name__ == "__main__":
         meta = json.load(f)
 
     def sort_meta(s):
-        if "pref_rating" in s.keys():
-            if "pref_score" in s["pref_rating"].keys():
-                return s["pref_rating"]["pref_score"]
+        if "pref_rating" in s and "pref_score" in s["pref_rating"]:
+            return s["pref_rating"]["pref_score"]
         return -1
 
     keys_sorted = sorted(meta, key=lambda a: sort_meta(meta[a]), reverse=True)
@@ -77,7 +76,7 @@ if __name__ == "__main__":
     # write index.html
     for template in ("asrbook",):
         name = "{0}.tex".format(template)
-        logging.info("Write {0} ({1} speakers found".format(name, len(speakers.keys())))
+        logging.info("Write %s (%d speakers found", name, len(speakers.keys()))
         template_tex = mako_templates.get_template(name)
 
         with open("tmp/{0}".format(name), "w") as f:

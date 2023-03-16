@@ -61,7 +61,7 @@ def get_freq(df_speaker_data, optim_config):
     local_df = None
     if len(curves) > 0:
         columns = {"Freq"}.union(local_curves)
-        if "CEA2034_unmelted" in df_speaker_data.keys():
+        if "CEA2034_unmelted" in df_speaker_data:
             local_df = df_speaker_data["CEA2034_unmelted"].loc[:, list(columns)]
         else:
             df_tmp = df_speaker_data["CEA2034"]
@@ -86,16 +86,16 @@ def get_freq(df_speaker_data, optim_config):
                 {"Freq": pir_source.Freq, "Estimated In-Room Response": pir_source.dB}
             )
         else:
-            local_df["Estimated In-Room Response"] = pir_source.dB.values
+            local_df["Estimated In-Room Response"] = pir_source.dB.to_numpy()
 
     # sselector
     selector = get_selector(local_df, optim_config)
-    local_freq = local_df.loc[selector, "Freq"].values
+    local_freq = local_df.loc[selector, "Freq"].to_numpy()
 
     # freq
     local_target = []
     for curve in curves:
-        data = local_df.loc[selector, curve].values
+        data = local_df.loc[selector, curve].to_numpy()
         data = limit_before_freq(local_freq, data, optim_config["target_min_freq"])
         local_target.append(data)
 
@@ -106,12 +106,12 @@ def get_freq(df_speaker_data, optim_config):
 def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     # freq
     selector = get_selector(df_speaker_data, optim_config)
-    current_curve = df_speaker_data.loc[selector, current_curve_name].values
+    current_curve = df_speaker_data.loc[selector, current_curve_name].to_numpy()
     # compute linear reg on current_curve
     slope, intercept, r_value, p_value, std_err = linregress(np.log10(freq), current_curve)
     # possible correction to have a LW not too bright
     if current_curve_name == "Estimated In-Room Response":
-        lw_curve = df_speaker_data.loc[selector, "Listening Window"].values
+        lw_curve = df_speaker_data.loc[selector, "Listening Window"].to_numpy()
         slope_lw, _, _, _, _r = linregress(np.log10(freq), lw_curve)
         if slope_lw > -0.5:
             # print('slope correction on LW by -{}'.format((slope_lw+0.5)))
@@ -140,12 +140,6 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     for i, f in enumerate(freq):
         if f >= optim_config["target_min_freq"]:
             first_freq = i
-            break
-    for i, f in enumerate(freq):
-        if f >= 1500:
-            break
-    for i, f in enumerate(freq):
-        if f >= 4000:
             break
     for i, f in enumerate(reversed(freq)):
         if f <= optim_config["target_max_freq"]:
