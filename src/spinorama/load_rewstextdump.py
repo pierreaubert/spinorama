@@ -59,7 +59,7 @@ def parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name,
                         msrts.append(msrt)
         except FileNotFoundError:
             if is_mandatory:
-                logger.error("Speaker: %s File %s not found", speaker_brand, speaker_name)
+                logger.exception("Speaker: %s File %s not found", speaker_brand, speaker_name)
                 return "error", pd.DataFrame({})
 
     return "CEA2034", pd.DataFrame({"Freq": freqs, "dB": spls, "Measurements": msrts})

@@ -386,7 +386,7 @@ def plot_spinorama(spin, params):
 def plot_graph(df, params):
     layout = params.get("layout", "")
     fig = go.Figure()
-    for measurement in df.keys():
+    for measurement in df:
         if measurement != "Freq":
             trace = go.Scatter(
                 x=df.Freq,
@@ -399,9 +399,9 @@ def plot_graph(df, params):
                 trace.name = measurement
                 trace.legendgroup = "measurements"
                 trace.legendgrouptitle = {"text": "Measurements"}
-            if measurement in uniform_colors.keys():
+            if measurement in uniform_colors:
                 trace.marker = {"color": uniform_colors[measurement]}
-            if measurement in legend_rank.keys():
+            if measurement in legend_rank:
                 trace.legendrank = legend_rank[measurement]
             fig.add_trace(trace)
 
@@ -414,7 +414,7 @@ def plot_graph(df, params):
 def plot_graph_spl(df, params):
     layout = params.get("layout", "")
     fig = go.Figure()
-    for measurement in df.keys():
+    for measurement in df:
         if measurement != "Freq":
             visible = None
             if measurement in ("On Axis", "10°", "20°", "30°", "40°", "50°", "60°"):
@@ -437,9 +437,9 @@ def plot_graph_spl(df, params):
                 trace.name = measurement
                 trace.legendgroup = "measurements"
                 trace.legendgrouptitle = {"text": "Measurements"}
-            if measurement in uniform_colors.keys():
+            if measurement in uniform_colors:
                 trace.marker = {"color": uniform_colors[measurement]}
-            if measurement in legend_rank.keys():
+            if measurement in legend_rank:
                 trace.legendrank = legend_rank[measurement]
             fig.add_trace(trace)
 
@@ -697,12 +697,12 @@ def plot_radar(spl, params):
 
     anglelist = list(range(-180, 180, 10))
 
-    def projection(anglelist, gridZ, hz):
-        dbsR = [db for a, db in zip(anglelist, gridZ)]
-        dbsTheta = [a for a, db in zip(anglelist, gridZ)]
-        dbsR.append(dbsR[0])
-        dbsTheta.append(dbsTheta[0])
-        return dbsR, dbsTheta, [hz for i in range(0, len(dbsR))]
+    def projection(anglelist, grid_z, hz):
+        dbs_r = [db for a, db in zip(anglelist, grid_z, strict=False)]
+        dbs_theta = [a for a, db in zip(anglelist, grid_z, strict=False)]
+        dbs_r.append(dbs_r[0])
+        dbs_theta.append(dbs_theta[0])
+        return dbs_r, dbs_theta, [hz for i in range(0, len(dbs_r))]
 
     def label(i):
         return "{:d} Hz".format(i)
@@ -721,28 +721,28 @@ def plot_radar(spl, params):
         #    dfu += db_scale
         # print(db_min, db_max, db_mean, db_scale)
         # build 3 plots
-        dbX = []
-        dbY = []
-        hzZ = []
+        db_x = []
+        db_y = []
+        hz_z = []
         for hz in [500, 1000, 2000, 10000, 15000]:
             ihz = find_nearest_freq(freq, hz)
             if ihz is None:
                 continue
-            X, Y, Z = projection(anglelist, dfu.loc[ihz][dfu.columns != "Freq"], hz)
+            p_x, p_y, p_z = projection(anglelist, dfu.loc[ihz][dfu.columns != "Freq"], hz)
             # add to global variable
-            dbX.append(X)
-            dbY.append(Y)
-            hzZ.append(Z)
+            db_x.append(p_x)
+            db_y.append(p_y)
+            hz_z.append(p_z)
 
         # normalise
-        dbX = [v2 for v1 in dbX for v2 in v1]
-        dbY = [v2 for v1 in dbY for v2 in v1]
-        # print("dbX min={} max={}".format(np.array(dbX).min(), np.array(dbX).max()))
-        # print("dbY min={} max={}".format(np.array(dbY).min(), np.array(dbY).max()))
+        db_x = [v2 for v1 in db_x for v2 in v1]
+        db_y = [v2 for v1 in db_y for v2 in v1]
+        # print("db_x min={} max={}".format(np.array(db_x).min(), np.array(db_x).max()))
+        # print("db_y min={} max={}".format(np.array(db_y).min(), np.array(db_y).max()))
 
-        hzZ = [label(i2) for i1 in hzZ for i2 in i1]
+        hz_z = [label(i2) for i1 in hz_z for i2 in i1]
 
-        return db_mean, pd.DataFrame({"R": dbX, "Theta": dbY, "Freq": hzZ})
+        return db_mean, pd.DataFrame({"R": db_x, "Theta": db_y, "Freq": hz_z})
 
     fig = go.Figure()
 
@@ -813,7 +813,7 @@ def plot_eqs(freq, peqs, names=None, normalized=False):
                 name=name,
                 hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
             )
-            for spl, name in zip(peqs_spl, names)
+            for spl, name in zip(peqs_spl, names, strict=False)
         ]
     fig = go.Figure(data=traces)
     fig.update_xaxes(

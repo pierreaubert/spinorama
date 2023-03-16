@@ -35,6 +35,7 @@ def parse_eq_line(line, srate):
     rgain = None
     q = None
     rq = None
+    bw = None
 
     if len(line) > 0 and line[0] == "*":
         return None, None
@@ -57,21 +58,31 @@ def parse_eq_line(line, srate):
     # Other models are the same without Fc / Gain / dB Q
     # This is very error prone and needs more testing
 
-    if len_words == 12:
+    if len_words == 13:
+        # APO case with BW Oct
+        kind = words[3]
+        freq = words[5]
+        gain = words[8]
+        bw = words[12]
+    elif len_words == 12:
+        # APO case with Q
         kind = words[3]
         freq = words[5]
         gain = words[8]
         q = words[11]
     elif len_words == 10:
+        # APO case with gain but no Q
         kind = words[3]
         freq = words[5]
         gain = words[8]
-    elif len_words == 8:  # APO format
+    elif len_words == 8:
+        # APO case with gain and Q but no legend and a comma after the field
         kind = words[3]
         freq = words[5][:-1]
         gain = words[6][:-1]
         q = words[7]
     elif len_words == 7:
+        # APO case with only freq like a notch filter
         kind = words[3]
         freq = words[5]
 
@@ -97,8 +108,15 @@ def parse_eq_line(line, srate):
             logger.debug("IIR peq Q %f is out of bounds!", rq)
             return None, None
 
-    print(line)
-    print("add IIR peq {} freq {}Hz srate {} Q {} Gain {}".format(kind, ffreq, srate, rq, rgain))
+    if bw:
+        if q:
+            logger.debug("both Q and BW are defined")
+            return None, None
+        bw = float(bw)
+        q = math.sqrt(math.pow(2, bw)) / (math.pow(2, bw) - 1)
+
+    # print(line)
+    # print("add IIR peq {} freq {}Hz srate {} Q {} Gain {}".format(kind, ffreq, srate, rq, rgain))
 
     if kind in ("PK", "PEQ", "Modal"):
         iir = Biquad(Biquad.PEAK, ffreq, srate, rq, rgain)
@@ -124,11 +142,13 @@ def parse_eq_line(line, srate):
         iir = Biquad(Biquad.LOWPASS, ffreq, srate, rq, rgain)
         logger.debug("add IIR peq LOWPASS freq %.0fHz srate %d", ffreq, srate)
     elif kind in ("LS", "LSC"):
+        # need to deal with last case when slope is given (6db/oct, 12db/oct, 24db/oct)
         if rq == 0.0:
             rq = 1.0
         iir = Biquad(Biquad.LOWSHELF, ffreq, srate, rq, rgain)
         logger.debug("add IIR peq LOWSHELF freq %.0fHz srate %d Gain %f", ffreq, srate, rgain)
     elif kind in ("HS", "HSC"):
+        # need to deal with last case when slope is given (6db/oct, 12db/oct, 24db/oct)
         if rq == 0.0:
             rq = 1.0
         iir = Biquad(Biquad.HIGHSHELF, ffreq, srate, rq, rgain)

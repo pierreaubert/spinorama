@@ -55,10 +55,11 @@ def display_reflection_early(df, graph_params=plot_params_default):
     try:
         if "Early Reflections_unmelted" not in df.keys():
             return None
-        return plot_graph(df["Early Reflections_unmelted"], graph_params)
     except KeyError as ke:
         logger.warning("Display Early Reflections failed with %s", ke)
         return None
+    else:
+        return plot_graph(df["Early Reflections_unmelted"], graph_params)
 
 
 def display_onaxis(df, graph_params=plot_params_default):
@@ -81,43 +82,47 @@ def display_inroom(df, graph_params=plot_params_default):
     try:
         if "Estimated In-Room Response_unmelted" not in df.keys():
             return None
+    except KeyError as ke:
+        logger.warning("Display In Room failed with %s", ke)
+        return None
+    else:
         return plot_graph_regression(
             df["Estimated In-Room Response_unmelted"],
             "Estimated In-Room Response",
             graph_params,
         )
-    except KeyError as ke:
-        logger.warning("Display In Room failed with %s", ke)
-        return None
 
 
 def display_reflection_horizontal(df, graph_params=plot_params_default):
     try:
         if "Horizontal Reflections_unmelted" not in df.keys():
             return None
-        return plot_graph(df["Horizontal Reflections_unmelted"], graph_params)
     except KeyError as ke:
         logger.warning("Display Horizontal Reflections failed with %s", ke)
         return None
+    else:
+        return plot_graph(df["Horizontal Reflections_unmelted"], graph_params)
 
 
 def display_reflection_vertical(df, graph_params=plot_params_default):
     try:
         if "Vertical Reflections_unmelted" not in df.keys():
             return None
-        return plot_graph(df["Vertical Reflections_unmelted"], graph_params)
     except KeyError:
         return None
+    else:
+        return plot_graph(df["Vertical Reflections_unmelted"], graph_params)
 
 
 def display_spl(df, axis, graph_params=plot_params_default):
     try:
         if axis not in df.keys():
             return None
-        return plot_graph_spl(df[axis], graph_params)
     except KeyError as ke:
         logger.warning("Display SPL failed with %s", ke)
         return None
+    else:
+        return plot_graph_spl(df[axis], graph_params)
 
 
 def display_spl_horizontal(df, graph_params=plot_params_default):
@@ -208,25 +213,25 @@ def display_summary(df, params, speaker, origin, key):
                 speaker_summary += ["", ""]
 
             # 4
-            if "ref_3dB" in est.keys():
+            if "ref_3dB" in est:
                 speaker_summary += ["• -3dB at {0}Hz wrt Ref.".format(est["ref_3dB"])]
             else:
                 speaker_summary += [""]
 
             # 5
-            if "ref_6dB" in est.keys():
+            if "ref_6dB" in est:
                 speaker_summary += ["• -6dB at {0}Hz wrt Ref.".format(est["ref_6dB"])]
             else:
                 speaker_summary += [""]
 
             # 6
-            if "ref_band" in est.keys():
+            if "ref_band" in est:
                 speaker_summary += ["• +/-{0}dB wrt Ref.".format(est["ref_band"])]
             else:
                 speaker_summary += [""]
 
             # 7
-            if "dir_horizontal_p" in est.keys() and "dir_horizontal_m" in est.keys():
+            if "dir_horizontal_p" in est and "dir_horizontal_m" in est:
                 speaker_summary += [
                     "• Horizontal directivity ({}°, {}°)".format(
                         int(est["dir_horizontal_m"]), int(est["dir_horizontal_p"])
@@ -236,7 +241,7 @@ def display_summary(df, params, speaker, origin, key):
                 speaker_summary += [""]
 
             # 8
-            if "dir_vertical_p" in est.keys() and "dir_vertical_m" in est.keys():
+            if "dir_vertical_p" in est and "dir_vertical_m" in est:
                 speaker_summary += [
                     "• Vertical directivity ({}°, {}°)".format(
                         int(est["dir_vertical_m"]), int(est["dir_vertical_p"])
@@ -246,7 +251,7 @@ def display_summary(df, params, speaker, origin, key):
                 speaker_summary += [""]
 
         pref_score = None
-        if "Estimated In-Room Response" in df.keys():
+        if "Estimated In-Room Response" in df:
             inroom = df["Estimated In-Room Response"]
             if inroom is not None:
                 pref_score = speaker_pref_rating(spin, inroom)
@@ -269,12 +274,13 @@ def display_summary(df, params, speaker, origin, key):
             speaker_summary += ["", "", "", "", "", "", "", "", ""]
 
         if len(speaker_summary) != 17:
-            logger.error("speaker summary lenght is incorrect {0}", speaker_summary)
+            logger.error("speaker summary lenght is incorrect %s", speaker_summary)
 
-        return plot_summary(speaker, speaker_summary, params)
     except KeyError as ke:
-        logger.warning("Display Summary failed with {0}", ke)
+        logger.warning("Display Summary failed with %s", ke)
         return None
+    else:
+        return plot_summary(speaker, speaker_summary, params)
 
 
 def display_pict(speaker, params):

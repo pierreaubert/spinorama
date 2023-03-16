@@ -45,7 +45,7 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
             with tarfile.open(tarfilename, "r|*") as tar:
                 info_json = None
                 for tarinfo in tar:
-                    logger.debug("Tarinfo.name %s".format(tarinfo.name))
+                    logger.debug("Tarinfo.name %s", tarinfo.name)
                     if tarinfo.isreg() and tarinfo.name[-9:] == "info.json":
                         # note that files/directory with name tmp are in .gitignore
                         tar.extract(tarinfo, path=filedir + "/tmp", set_attrs=False)
@@ -64,8 +64,8 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
         else:
             logger.debug("Tarfilename %s doesn't exist", tarfilename)
 
-    except tarfile.ReadError as re:
-        logger.exception("Tarfile %s: %s", tarfilename, re)
+    except tarfile.ReadError:
+        logger.exception("Tarfile %s", tarfilename)
     if jsonfilename is None:
         jsonfilename = filename + ".json"
     if not os.path.exists(jsonfilename):
@@ -124,7 +124,7 @@ def parse_graph_freq_webplotdigitizer(filename):
                         res.append([ref_f, ref_db, col["name"]])
                     else:
                         logger.info(
-                            "fr={:.2f} fr_ref={:.2f} fr_n={:.2f} db={:.1f} db_ref={:.1f} db_n={:.1f}",
+                            "fr=%.2f fr_ref=%.2f fr_n=%.2f db=%.1f db_ref=%.1f db_n=%.1f",
                             fr,
                             ref_f,
                             frn,
@@ -169,20 +169,20 @@ def parse_graph_freq_webplotdigitizer(filename):
                 return newname
 
             # print(res)
-            freq = np.array([res[i][0] for i in range(0, len(res))]).astype(float)
-            dB = np.array([res[i][1] for i in range(0, len(res))]).astype(float)
-            mrt = [pretty(res[i][2]) for i in range(0, len(res))]
-            df = pd.DataFrame({"Freq": freq, "dB": dB, "Measurements": mrt})
+            m_freq = np.array([res[i][0] for i in range(0, len(res))]).astype(float)
+            m_db = np.array([res[i][1] for i in range(0, len(res))]).astype(float)
+            m_mrt = [pretty(res[i][2]) for i in range(0, len(res))]
+            m_df = pd.DataFrame({"Freq": m_freq, "dB": m_db, "Measurements": m_mrt})
             logger.debug(
                 "scan complete fr=[%f, %f], dB=[%f, %f]",
-                df.Freq.min(),
-                df.Freq.max(),
-                df.dB.min(),
-                df.dB.max(),
+                m_df.Freq.min(),
+                m_df.Freq.max(),
+                m_df.dB.min(),
+                m_df.dB.max(),
             )
-            return "CEA2034", df
-    except IOError as e:
-        logger.exception("Cannot not open: %s", e)
+            return "CEA2034", m_df
+    except IOError:
+        logger.exception("Cannot not open: ")
         return None, None
 
 
