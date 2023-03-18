@@ -55,7 +55,15 @@ def print_eq_compare(data, force):
     peqs = [parse_eq_iir_rews(eq, 48000) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     names = [os.path.basename(eq) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     fig = plot_eqs(freq, peqs, names, normalized=True)
-    fig.update_layout(title=f"EQs for {brand} {model}")
+    fig.update_layout(
+        title={
+            "text": f"EQs for {brand} {model}",
+            "x": 0.5,
+            "y": 0.1,
+            "xanchor": "center",
+            "yanchor": "bottom",
+        }
+    )
     write_multiformat(fig, filename, force)
 
 

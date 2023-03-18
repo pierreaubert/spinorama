@@ -840,9 +840,9 @@ def plot_eqs(freq, peqs, names=None, normalized=False):
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            xanchor="left",
-            y=1.02,
-            x=0.02,
+            xanchor="center",
+            y=1.1,
+            x=0.5,
             title=None,
             font=dict(size=12),
         ),
