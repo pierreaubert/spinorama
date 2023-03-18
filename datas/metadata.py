@@ -1372,6 +1372,23 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Bang & Olufsen Beolab 20": {
+        "brand": "Bang & Olufsen",
+        "model": "Beolab 20",
+        "type": "active",
+        "shape": "floorstanders",
+        "price": "15000",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/b-o-beolab-20-speaker-review.43041/",
+                "review_published": "20230318",
+            },
+        },
+    },
     "BiAmp Community IC6-1062": {
         "brand": "BiAmp",
         "model": "Community IC6-1062",
