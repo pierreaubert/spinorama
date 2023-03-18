@@ -19,7 +19,7 @@
 import math
 
 from spinorama import logger
-from spinorama.filter_iir import Biquad
+from spinorama.filter_iir import bw2q, Biquad
 
 # TODO(pierre): max rgain and max Q should be in parameters
 # https://www.roomeqwizard.com/help/help_en-GB/html/eqfilters.html
@@ -112,8 +112,7 @@ def parse_eq_line(line, srate):
         if q:
             logger.debug("both Q and BW are defined")
             return None, None
-        bw = float(bw)
-        q = math.sqrt(math.pow(2, bw)) / (math.pow(2, bw) - 1)
+        q = bw2q(float(bw))
 
     # print(line)
     # print("add IIR peq {} freq {}Hz srate {} Q {} Gain {}".format(kind, ffreq, srate, rq, rgain))
@@ -122,9 +121,12 @@ def parse_eq_line(line, srate):
         iir = Biquad(Biquad.PEAK, ffreq, srate, rq, rgain)
         logger.debug("add IIR peq PEAK freq %.0fHz srate %d Q %f Gain %f", ifreq, srate, rq, rgain)
     elif kind == "NO":
+        rq = 30.0
         iir = Biquad(Biquad.NOTCH, ffreq, srate, rq, rgain)
         logger.debug("add IIR peq NOTCH freq %.0fHz srate %d Q %f Gain %f", ifreq, srate, rq, rgain)
     elif kind == "BP":
+        if rq == 0.0:
+            rq = 1 / math.sqrt(2.0)
         iir = Biquad(Biquad.BANDPASS, ffreq, srate, rq, rgain)
         logger.debug(
             "add IIR peq BANDPASS freq %.0fHz srate %d Q %d Gain %f", ffreq, srate, rq, rgain
@@ -144,13 +146,13 @@ def parse_eq_line(line, srate):
     elif kind in ("LS", "LSC"):
         # need to deal with last case when slope is given (6db/oct, 12db/oct, 24db/oct)
         if rq == 0.0:
-            rq = 1.0
+            rq = bw2q(0.9)
         iir = Biquad(Biquad.LOWSHELF, ffreq, srate, rq, rgain)
         logger.debug("add IIR peq LOWSHELF freq %.0fHz srate %d Gain %f", ffreq, srate, rgain)
     elif kind in ("HS", "HSC"):
         # need to deal with last case when slope is given (6db/oct, 12db/oct, 24db/oct)
         if rq == 0.0:
-            rq = 1.0
+            rq = bw2q(0.9)
         iir = Biquad(Biquad.HIGHSHELF, ffreq, srate, rq, rgain)
         logger.debug("add IIR peq HIGHSHELF freq %.0fHz srate %d Gain %f", ffreq, srate, rgain)
     else:

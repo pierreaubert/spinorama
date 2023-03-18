@@ -20,6 +20,10 @@ import math
 import numpy as np
 
 
+def bw2q(bw: float) -> float:
+    return math.sqrt(math.pow(2, bw)) / (math.pow(2, bw) - 1)
+
+
 class Biquad:
     # pretend enumeration
     LOWPASS, HIGHPASS, BANDPASS, PEAK, NOTCH, LOWSHELF, HIGHSHELF = range(7)
@@ -51,12 +55,23 @@ class Biquad:
         self.srate = float(srate)
         self.Q = float(Q)
         self.dbGain = float(dbGain)
+        # some control over parameters
+        if typ == Biquad.NOTCH:
+            self.Q = 30.0
+        elif self.Q == 0.0 and type in (Biquad.BANDPASS, Biquad.HIGHPASS, Biquad.LOWPASS):
+            self.Q = 1.0 / math.sqrt(2.0)
+        elif self.Q == 0.0 and type in (Biquad.LOWSHELF, Biquad.HIGHSHELF):
+            self.Q = bw2q(0.9)
+        # initialize the 5 coefs
         self.a0 = self.a1 = self.a2 = 0
         self.b0 = self.b1 = self.b2 = 0
+        # and the 4 coordinates
         self.x1 = self.x2 = 0
         self.y1 = self.y2 = 0
-        # only used for peaking and shelving filter types
+        # if self.typ in (Biquad.PEAK, Biquad.LOWSHELF, Biquad.HIGHSHELF):
         A = math.pow(10, dbGain / 40)
+        # else:
+        #    A = math.pow(10, dbGain / 20)
         omega = 2 * math.pi * self.freq / self.srate
         sn = math.sin(omega)
         cs = math.cos(omega)
@@ -207,4 +222,4 @@ class Biquad:
         r = (self.r_up0 + self.r_up1 * phi + self.r_up2 * phi2) / (
             self.r_dw0 + self.r_dw1 * phi + self.r_dw2 * phi2
         )
-        return np.where(r <= 1.0e-20, -200, 20.0 * np.log10(np.sqrt(r)))
+        return 20.0 * np.log10(np.sqrt(np.where(r <= 1.0e-20, 1.0e-20, r)))
