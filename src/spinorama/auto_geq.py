@@ -93,17 +93,15 @@ def optim_grapheq(
             for f, db in zip(auto_freq, guess_db, strict=False)
         ]
 
-    def compute_delta(param: Vector) -> float:
+    def compute_delta(param: Vector) -> Vector:
         current_peq = fit(param)
         peq_values = peq_build(auto_freq, current_peq)
         peq_expend = [np.interp(f, auto_freq, peq_values) for f in freq]
-        delta = np.array(peq_expend) - np.negative(current_auto_target[0])
-        return float(delta)
+        delta = np.subtract(peq_expend, current_auto_target[0])
+        return delta
 
     def compute_error(param: Vector) -> float:
-        delta = compute_delta(param)
-        error = np.linalg.norm(delta)
-        return float(error)
+        return np.linalg.norm(compute_delta(param))
 
     def find_best_param():
         res = opt.minimize(

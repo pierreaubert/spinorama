@@ -217,8 +217,9 @@ class Biquad:
 
     # vector version (10x faster)
     def np_log_result(self, freq: float) -> np.ndarray:
-        phi = np.sin(math.pi * freq * 2 / (2 * self.srate)) ** 2
-        phi2 = phi**2
+        coeff = math.pi * 2 / (2 * self.srate)
+        phi = np.square(np.sin(np.multiply(coeff, freq)))
+        phi2 = np.square(phi)
         r = (self.r_up0 + self.r_up1 * phi + self.r_up2 * phi2) / (
             self.r_dw0 + self.r_dw1 * phi + self.r_dw2 * phi2
         )
