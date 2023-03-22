@@ -1,15 +1,15 @@
 EQ for Bowers & Wilkins 802N computed from Vendors-Bowers & Wilkins data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:21:06
+Dated: 2023-03-20-17:54:07
 
-Preamp: -3.1 dB
+Preamp: -2.6 dB
 
-Filter  1: ON PK Fc   474 Hz Gain -2.37 dB Q 0.98
-Filter  2: ON PK Fc  2659 Hz Gain +2.95 dB Q 1.99
-Filter  3: ON PK Fc  6844 Hz Gain -1.87 dB Q 1.88
-Filter  4: ON PK Fc 10690 Hz Gain -0.52 dB Q 2.32
-Filter  5: ON PK Fc  1132 Hz Gain -1.24 dB Q 2.63
-Filter  6: ON PK Fc   292 Hz Gain -0.66 dB Q 2.73
-Filter  7: ON PK Fc 15816 Hz Gain -0.51 dB Q 2.88
-Filter  8: ON PK Fc 11017 Hz Gain -0.50 dB Q 2.96
-Filter  9: ON PK Fc  1158 Hz Gain -0.52 dB Q 2.67
+Filter  1: ON PK Fc   141 Hz Gain -0.63 dB Q 0.50
+Filter  2: ON PK Fc  3560 Hz Gain +2.37 dB Q 1.37
+Filter  3: ON PK Fc   388 Hz Gain -2.35 dB Q 1.32
+Filter  4: ON PK Fc  1155 Hz Gain -1.33 dB Q 2.46
+Filter  5: ON PK Fc  7612 Hz Gain -0.68 dB Q 3.00
+Filter  6: ON PK Fc 11042 Hz Gain -0.50 dB Q 3.00
+Filter  7: ON PK Fc   305 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc    20 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc   781 Hz Gain -0.50 dB Q 3.00

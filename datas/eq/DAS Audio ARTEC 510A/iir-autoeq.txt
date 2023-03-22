@@ -1,16 +1,15 @@
 EQ for DAS Audio ARTEC 510A computed from Vendors-DAS Audio data
-Preference Score 3.60 with EQ 5.09
+Preference Score 3.60 with EQ 5.18
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:21:45
+Dated: 2023-03-21-07:02:12
 
-Preamp: -3.2 dB
+Preamp: -3.7 dB
 
-Filter  1: ON PK Fc    44 Hz Gain +3.00 dB Q 0.66
-Filter  2: ON PK Fc  2230 Hz Gain +3.00 dB Q 1.36
-Filter  3: ON PK Fc   184 Hz Gain -2.27 dB Q 2.14
-Filter  4: ON PK Fc   458 Hz Gain +2.07 dB Q 3.00
-Filter  5: ON PK Fc  4612 Hz Gain -1.58 dB Q 3.00
-Filter  6: ON PK Fc  9738 Hz Gain -0.81 dB Q 3.00
-Filter  7: ON PK Fc   646 Hz Gain -1.32 dB Q 2.70
-Filter  8: ON PK Fc 13344 Hz Gain -0.54 dB Q 3.00
-Filter  9: ON PK Fc   224 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON PK Fc    40 Hz Gain +3.00 dB Q 0.61
+Filter  2: ON PK Fc  2245 Hz Gain +3.00 dB Q 1.40
+Filter  3: ON PK Fc   184 Hz Gain -2.41 dB Q 2.20
+Filter  4: ON PK Fc   467 Hz Gain +2.35 dB Q 3.00
+Filter  5: ON PK Fc  4668 Hz Gain -1.65 dB Q 3.00
+Filter  6: ON PK Fc    80 Hz Gain +1.93 dB Q 3.00
+Filter  7: ON PK Fc  9750 Hz Gain -1.13 dB Q 3.00
+Filter  8: ON PK Fc 14418 Hz Gain -1.46 dB Q 3.00

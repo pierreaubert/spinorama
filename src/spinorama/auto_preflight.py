@@ -16,12 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import pandas as pd
+
 from spinorama import logger
-from spinorama.ltype import FloatVector1D
+from spinorama.ltype import Vector
 
 
 def optim_preflight(
-    freq: FloatVector1D, target: list[FloatVector1D], auto_target_interp: list[FloatVector1D]
+    freq: Vector,
+    target: list[Vector],
+    auto_target_interp: list[Vector],
+    df_speaker: dict[str, pd.DataFrame],
 ) -> bool:
     """Some quick checks before optim runs."""
     freq_len = len(freq)
@@ -48,5 +53,15 @@ def optim_preflight(
                 len(auto_target_interp[i]),
             )
             status = False
+
+    if isinstance(df_speaker, pd.DataFrame):
+        logger.error("df_speaker is a DataFrame but should be a dict[str, df]")
+        status = False
+    if not isinstance(df_speaker, dict):
+        logger.error("df_speaker is a DataFrame but should be a dict[str, df]")
+        status = False
+    if isinstance(df_speaker, dict) and len(df_speaker.keys()) == 0:
+        logger.error("df_speaker is empty")
+        status = False
 
     return status

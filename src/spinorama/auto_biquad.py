@@ -19,11 +19,10 @@
 import math
 
 import numpy as np
-import pandas as pd
 import scipy.optimize as opt
 
 from spinorama import logger
-from spinorama.ltype import DataSpeaker
+from spinorama.ltype import DataSpeaker, Vector
 from spinorama.filter_iir import Biquad
 from spinorama.auto_loss import loss
 
@@ -35,21 +34,21 @@ def display(xk, convergence):
 
 def find_best_biquad(
     df_speaker: DataSpeaker,
-    freq,
-    auto_target,
-    freq_range,
-    q_range,
-    db_gain_range,
-    biquad_range,
-    count,
-    optim_config,
-    prev_best,
-):
+    freq: Vector,
+    auto_target: list[Vector],
+    freq_range: list[float],
+    q_range: list[float],
+    db_gain_range: list[float],
+    biquad_range: list[int],
+    count: int,
+    optim_config: dict,
+    prev_best: float,
+) -> tuple[bool, int, float, float, float, float, int]:
     """Find the best possible biquad that minimise the loss function"""
 
-    def opt_peq(x):
+    def opt_peq(x: Vector) -> float:
         peq = [(1.0, Biquad(int(x[0]), x[1], 48000, x[2], x[3]))]
-        return loss(pd.DataFrame(), freq, auto_target, peq, count, optim_config)
+        return loss(df_speaker, freq, auto_target, peq, count, optim_config)
 
     bounds = [
         (biquad_range[0], biquad_range[-1]),
@@ -59,9 +58,9 @@ def find_best_biquad(
     ]
 
     logger.debug(
-        "range is [%f, %f], [%f, %f], [%f, %f], [%f, %f]",
-        bounds[0][0],
-        bounds[0][1],
+        "range is [%d, %d], [%f, %f], [%f, %f], [%f, %f]",
+        int(bounds[0][0]),
+        int(bounds[0][1]),
         bounds[1][0],
         bounds[1][1],
         bounds[2][0],
@@ -97,7 +96,7 @@ def find_best_biquad(
             # mutation=(0.5, 1.5),
             # recombination=1.9,
             maxiter=optim_config["maxiter"],
-            atol=0.01,
+            # atol=0.01,
             polish=False,
             integrality=[True, True, False, False],
             callback=display,
@@ -117,15 +116,6 @@ def find_best_biquad(
             and res.fun < prev_best
         ):
             res.success = True
-        return (
-            res.success,
-            int(res.x[0]),
-            res.x[1],
-            res.x[2],
-            res.x[3],
-            res.fun,
-            res.nit,
-        )
     except ValueError:
         res["success"] = False
         logger.exception("bounds %s", bounds)
@@ -138,24 +128,34 @@ def find_best_biquad(
             except IndexError:
                 pass
         return False, 0, -1, -1, -1, -1, -1
+    else:
+        return (
+            res.success,
+            int(res.x[0]),
+            res.x[1],
+            res.x[2],
+            res.x[3],
+            res.fun,
+            res.nit,
+        )
 
 
 def find_best_peak(
-    df_speaker,
-    freq,
-    auto_target,
-    freq_range,
-    q_range,
-    db_gain_range,
-    biquad_range,
-    count,
-    optim_config,
-    prev_best,
+    df_speaker: DataSpeaker,
+    freq: Vector,
+    auto_target: list[Vector],
+    freq_range: list[float],
+    q_range: list[float],
+    db_gain_range: list[float],
+    biquad_range: list[int],
+    count: int,
+    optim_config: dict,
+    prev_best: float,
 ):
     """Find the best possible peak biquad that minimise the loss function"""
     biquad_type = 3
 
-    def opt_peq(x):
+    def opt_peq(x: Vector) -> float:
         peq = [(1.0, Biquad(biquad_type, x[0], 48000, x[1], x[2]))]
         return loss(df_speaker, freq, auto_target, peq, count, optim_config)
 
@@ -187,7 +187,7 @@ def find_best_peak(
     ]
 
     logger.debug(
-        "range is [%f, %f], [%f, %f], [%f, %f]",
+        "range is [%f, %f]Hz, [%f, %f], [%f, %f]",
         bounds[0][0],
         bounds[0][1],
         bounds[1][0],
@@ -205,15 +205,6 @@ def find_best_peak(
         "message": "",
     }
     try:
-        # res = opt.dual_annealing(
-        #    opt_peq,
-        #    bounds,
-        #    visit=2.9,
-        #    maxfun=optim_config["maxiter"],
-        #    initial_temp=10000,
-        #    no_local_search=True,
-        # )
-
         res = opt.differential_evolution(
             opt_peq,
             bounds,
@@ -228,7 +219,7 @@ def find_best_peak(
             # popsize=175,
             maxiter=optim_config["maxiter"],
             # disp=True,
-            atol=0.01,
+            # atol=0.01,
             # polish=True,
             integrality=[True, False, False],
             callback=display,
@@ -258,5 +249,5 @@ def find_best_peak(
             except IndexError:
                 pass
         return False, 0, -1, -1, -1, -1, -1
-
-    return res.success, biquad_type, res.x[0], res.x[1], res.x[2], res.fun, res.nit
+    else:
+        return res.success, biquad_type, res.x[0], res.x[1], res.x[2], res.fun, res.nit

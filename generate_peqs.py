@@ -35,7 +35,6 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--slope-sp=<s_sp>] \
  [--slope-estimated-inroom=<s_pir>] \
  [--slope-pir=<s_pir>] \
- [--loss=<pick>] \
  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
  [--smooth-measurements=<window_size>] \
  [--smooth-order=<order>] \
@@ -107,10 +106,10 @@ from datas.metadata import speakers_info as metadata
 from datas.grapheq import vendor_info as grapheq_info
 
 from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
-from spinorama.auto_eq import optim_save_peq
+from spinorama.auto_save import optim_save_peq
 
 
-VERSION = "0.20"
+VERSION = "0.21"
 
 
 def print_items(aggregated_results):
@@ -161,14 +160,12 @@ def queue_speakers(df_all_speakers, optim_config, speaker_name):
         if speaker_name is not None and current_speaker_name != speaker_name:
             continue
         default = None
-        default_eq = None
         default_origin = None
         if (
             current_speaker_name in metadata
             and "default_measurement" in metadata[current_speaker_name]
         ):
             default = metadata[current_speaker_name]["default_measurement"]
-            default_eq = "{}_eq".format(default)
             default_origin = metadata[current_speaker_name]["measurements"][default]["origin"]
         else:
             logger.error("no default_measurement for %s", current_speaker_name)
@@ -195,15 +192,11 @@ def queue_speakers(df_all_speakers, optim_config, speaker_name):
                 ", ".join(df_speaker),
             )
             continue
-        df_speaker_eq = None
-        if default_eq in df_all_speakers[current_speaker_name][default_origin]:
-            df_speaker_eq = df_all_speakers[current_speaker_name][default_origin][default_eq]
 
         current_id = optim_save_peq.remote(
             current_speaker_name,
             default_origin,
             df_speaker,
-            df_speaker_eq,
             optim_config,
         )
         ray_ids[current_speaker_name] = current_id
@@ -254,8 +247,9 @@ def main():
         # "loss": "flat_loss",
         # "loss": "score_loss",
         # "loss": "combine_loss",
-        "loss": "leastsquare_loss",
+        # "loss": "leastsquare_loss",
         # "loss": "flat_pir",
+        "loss": None,
         # if you have multiple loss functions, define the weigth for each
         "loss_weigths": [100.0, 1.0],
         # do you optimise only peaks or both peaks and valleys?

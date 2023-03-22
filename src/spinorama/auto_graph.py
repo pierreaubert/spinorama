@@ -168,7 +168,6 @@ def graph_results(
     #        fd.write("{} {}\n".format(f, a))
     #    fd.close()
 
-    # print('target {} {}'.format(np.min(target), np.max(target)))
     g_eq_full = graph_eq_compare(
         freq,
         auto_peq,
@@ -206,7 +205,6 @@ def graph_results(
                 index="Freq", columns="Measurements", values="dB", aggfunc=max
             ).reset_index()
 
-        # print(data.keys())
         if which_curve == "Estimated In-Room Response":
             g_curve_noeq = plot_graph_regression_traces(data, which_curve, g_params)
         else:
@@ -492,15 +490,9 @@ def graph_results(
     fig_on_noeq.update_xaxes(xaxis)
     fig_on_auto.update_xaxes(xaxis)
 
-    if on_min < -5:
-        on_min = max(-40, -5 * round(-on_min / 5))
-    else:
-        on_min = -5
-    if on_max > 5:
-        on_max = min(20, 5 * (round(on_max / 5) + 1))
-    else:
-        on_max = 5
-    on_min = max(-15, on_min)
+    on_min = max(-15, -5 * round(-on_min / 5)) if on_min < -5 else -5
+    on_max = min(20, 5 * (round(on_max / 5) + 1)) if on_max > 5 else 5
+
     yaxis = generate_yaxis_spl(on_min, on_max, 1)
     fig.update_yaxes(yaxis, row=current_row)
     fig_on_noeq.update_yaxes(yaxis)
@@ -535,15 +527,8 @@ def graph_results(
     fig_lw_noeq.update_xaxes(xaxis)
     fig_lw_auto.update_xaxes(xaxis)
 
-    if lw_min < -5:
-        lw_min = max(-40, -5 * round(-lw_min / 5))
-    else:
-        lw_min = -5
-    if lw_max > 5:
-        lw_max = min(20, 5 * (round(lw_max / 5) + 1))
-    else:
-        lw_max = 5
-    lw_min = max(-15, lw_min)
+    lw_min = max(-15, -5 * round(-lw_min / 5)) if lw_min < -5 else -5
+    lw_max = min(20, 5 * (round(lw_max / 5) + 1))
 
     yaxis = generate_yaxis_spl(lw_min, lw_max, 1)
     fig.update_yaxes(yaxis, row=current_row)
@@ -574,15 +559,8 @@ def graph_results(
         pir_min = min(pir_min, np.min(t.y))
         pir_max = max(pir_max, np.max(t.y))
 
-    if pir_min < -5:
-        pir_min = max(-40, -5 * round(-pir_min / 5))
-    else:
-        pir_min = -5
-    if pir_max > 5:
-        pir_max = min(20, 5 * (round(pir_max / 5) + 1))
-    else:
-        pir_max = 5
-    pir_min = max(-15, pir_min)
+    pir_min = max(-15, -5 * round(-pir_min / 5))
+    pir_max = min(20, 5 * (round(pir_max / 5) + 1))
 
     xaxis = generate_xaxis()
     fig.update_xaxes(xaxis, row=current_row)

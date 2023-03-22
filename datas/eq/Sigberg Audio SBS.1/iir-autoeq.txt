@@ -1,15 +1,15 @@
 EQ for Sigberg Audio SBS.1 computed from Vendors-Sigberg Audio data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:22:44
+Dated: 2023-03-21-07:00:41
 
-Preamp: -3.1 dB
+Preamp: -2.5 dB
 
-Filter  1: ON HS Fc 15828 Hz Gain +2.99 dB
-Filter  2: ON PK Fc   299 Hz Gain -2.32 dB Q 1.11
-Filter  3: ON PK Fc  3226 Hz Gain +2.25 dB Q 2.89
-Filter  4: ON PK Fc   710 Hz Gain -0.60 dB Q 2.87
-Filter  5: ON PK Fc  1157 Hz Gain +0.57 dB Q 2.84
-Filter  6: ON PK Fc  1831 Hz Gain -0.55 dB Q 2.84
-Filter  7: ON PK Fc 11421 Hz Gain -1.67 dB Q 2.90
-Filter  8: ON PK Fc  4260 Hz Gain -0.63 dB Q 2.75
-Filter  9: ON PK Fc   167 Hz Gain -0.57 dB Q 2.76
+Filter  1: ON PK Fc   293 Hz Gain -2.99 dB Q 0.51
+Filter  2: ON PK Fc 11112 Hz Gain -2.94 dB Q 2.96
+Filter  3: ON PK Fc  3334 Hz Gain +2.31 dB Q 2.91
+Filter  4: ON PK Fc   505 Hz Gain -1.38 dB Q 0.45
+Filter  5: ON PK Fc  1208 Hz Gain +1.09 dB Q 2.43
+Filter  6: ON PK Fc  6441 Hz Gain +0.67 dB Q 2.97
+Filter  7: ON PK Fc   199 Hz Gain -1.32 dB Q 2.06
+Filter  8: ON PK Fc  8386 Hz Gain -0.98 dB Q 2.94
+Filter  9: ON PK Fc  2170 Hz Gain -0.93 dB Q 2.88

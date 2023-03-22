@@ -1,15 +1,15 @@
 EQ for Mackie MR524 computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:20:46
+Dated: 2023-03-21-07:00:51
 
-Preamp: -2.0 dB
+Preamp: -1.1 dB
 
-Filter  1: ON HS Fc  4064 Hz Gain -3.00 dB
-Filter  2: ON PK Fc   111 Hz Gain -3.13 dB Q 1.79
-Filter  3: ON PK Fc  9993 Hz Gain -2.14 dB Q 2.95
-Filter  4: ON PK Fc  1347 Hz Gain +1.78 dB Q 2.99
-Filter  5: ON PK Fc   394 Hz Gain +0.53 dB Q 2.66
-Filter  6: ON PK Fc   625 Hz Gain +0.51 dB Q 2.70
-Filter  7: ON PK Fc   949 Hz Gain -1.41 dB Q 2.99
-Filter  8: ON PK Fc  2011 Hz Gain -0.53 dB Q 2.97
-Filter  9: ON PK Fc 15964 Hz Gain -0.54 dB Q 2.95
+Filter  1: ON HS Fc  3788 Hz Gain -2.48 dB
+Filter  2: ON PK Fc   353 Hz Gain +0.94 dB Q 1.93
+Filter  3: ON PK Fc  1913 Hz Gain -1.50 dB Q 2.92
+Filter  4: ON PK Fc  9864 Hz Gain -1.85 dB Q 2.99
+Filter  5: ON PK Fc    80 Hz Gain -1.84 dB Q 0.57
+Filter  6: ON PK Fc   911 Hz Gain -1.02 dB Q 2.99
+Filter  7: ON PK Fc 15949 Hz Gain -0.58 dB Q 2.75
+Filter  8: ON PK Fc    24 Hz Gain -1.20 dB Q 1.57
+Filter  9: ON PK Fc  9595 Hz Gain -0.53 dB Q 3.00

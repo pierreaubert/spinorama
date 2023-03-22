@@ -20,7 +20,7 @@ import numpy as np
 import pandas as pd
 
 from spinorama import logger
-from spinorama.ltype import Peq, FloatVector1D
+from spinorama.ltype import Peq, Vector
 from spinorama.filter_iir import Biquad
 from spinorama.auto_loss import loss, score_loss
 from spinorama.auto_range import (
@@ -37,22 +37,23 @@ from spinorama.auto_preflight import optim_preflight
 def optim_greedy(
     speaker_name: str,
     df_speaker: dict[str, pd.DataFrame],
-    freq: FloatVector1D,
-    auto_target: list[FloatVector1D],
-    auto_target_interp: list[FloatVector1D],
+    freq: Vector,
+    auto_target: list[Vector],
+    auto_target_interp: list[Vector],
     optim_config: dict,
-    use_score,
-) -> tuple[tuple[int, float, float], Peq]:
+    use_score: bool,
+) -> tuple[bool, tuple[tuple[int, float, float], Peq]]:
     """Main optimiser: follow a greedy strategy"""
 
-    if not optim_preflight(freq, auto_target, auto_target_interp):
+    if not optim_preflight(freq, auto_target, auto_target_interp, df_speaker):
         logger.error("Preflight check failed!")
-        return (0, 0, 0), []
+        return False, ((0, 0, 0), [])
 
     auto_peq = []
     current_auto_target = optim_compute_auto_target(
         freq, auto_target, auto_target_interp, auto_peq, optim_config
     )
+
     best_loss = loss(df_speaker, freq, auto_target, auto_peq, 0, optim_config)
     pref_score = 1000.0
     if use_score:
@@ -188,10 +189,10 @@ def optim_greedy(
                 Biquad(current_type, current_freq, 48000, current_q, current_db_gain),
             )
             auto_peq.append(biquad)
-            best_loss = current_loss
+            best_loss: float = current_loss
             if use_score:
                 pref_score = score_loss(df_speaker, auto_peq)
-            results.append((int(optim_iter + 1), float(best_loss), float(-pref_score)))
+                results.append((optim_iter + 1, best_loss, -pref_score))
             logger.info(
                 "Speaker %s Iter %2d Optim converged loss %2.2f pref score %2.2f biquad %2s F:%5.0fHz Q:%2.2f G:%+2.2fdB in %d iterations",
                 speaker_name,
@@ -215,7 +216,7 @@ def optim_greedy(
 
     if len(results) == 0:
         logger.info("OPTIM END %s: 0 PEQ", speaker_name)
-        return (-1, -1000, -1000), []
+        return False, ((-1, -1000, -1000), [])
 
     # recompute auto_target with the full auto_peq
     current_auto_target = optim_compute_auto_target(
@@ -225,6 +226,7 @@ def optim_greedy(
         if use_score:
             pref_score = score_loss(df_speaker, auto_peq)
         results.append((nb_iter + 1, best_loss, -pref_score))
+
     # best score is not necessary the last one
     best_results = None
     if use_score:
@@ -241,4 +243,4 @@ def optim_greedy(
         best_results[2],
         len(auto_peq),
     )
-    return best_results, auto_peq
+    return True, (best_results, auto_peq)

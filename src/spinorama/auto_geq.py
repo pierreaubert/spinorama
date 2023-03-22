@@ -23,10 +23,10 @@ import pandas as pd
 from datas.grapheq import vendor_info as grapheq_db
 
 from spinorama import logger
-from spinorama.ltype import Peq, FloatVector1D
+from spinorama.ltype import Peq, Vector
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import peq_build
-from spinorama.auto_loss import loss, score_loss
+from spinorama.auto_loss import score_loss
 from spinorama.auto_target import optim_compute_auto_target
 from spinorama.auto_preflight import optim_preflight
 
@@ -34,27 +34,27 @@ from spinorama.auto_preflight import optim_preflight
 def optim_grapheq(
     speaker_name: str,
     df_speaker: dict[str, pd.DataFrame],
-    freq: FloatVector1D,
-    auto_target: list[FloatVector1D],
-    auto_target_interp: list[FloatVector1D],
+    freq: Vector,
+    auto_target: list[Vector],
+    auto_target_interp: list[Vector],
     optim_config: dict,
     use_score,
-) -> tuple[tuple[int, float, float], Peq]:
+) -> tuple[bool, tuple[tuple[int, float, float], Peq]]:
     """Main optimiser for graphical EQ"""
 
     logger.debug("Starting optim graphEQ for %s", speaker_name)
 
-    if not optim_preflight(freq, auto_target, auto_target_interp):
+    if not optim_preflight(freq, auto_target, auto_target_interp, df_speaker):
         logger.error("Preflight check failed!")
-        return (0, 0.0, -1000.0), []
+        return False, ((0, 0.0, -1000.0), [])
 
     # get current EQ
-    grapheq = grapheq_db[optim_config.get("grapheq_name")]
+    grapheq = grapheq_db[optim_config.get("grapheq_name", "")]
 
     # PK
     auto_type = 3
     # freq is given as a list but cannot move, that's the center of the PK
-    auto_freq = np.array(grapheq["bands"])
+    auto_freq = grapheq["bands"]
     # Q is fixed too
     auto_q = grapheq["fixed_q"]
     # dB are in a range with steps
@@ -66,55 +66,46 @@ def optim_grapheq(
     auto_db = np.zeros(len(auto_freq))
     auto_peq = [
         (1.0, Biquad(auto_type, float(f), 48000, auto_q, float(db)))
-        for f, db in zip(auto_freq, auto_db)
+        for f, db in zip(auto_freq, auto_db, strict=False)
     ]
 
     # compute initial target
     current_auto_target = optim_compute_auto_target(
         freq, auto_target, auto_target_interp, auto_peq, optim_config
     )
-    best_loss = loss(df_speaker, freq, auto_target, auto_peq, 0, optim_config)
     pref_score = 1.0
     if use_score:
         pref_score = score_loss(df_speaker, auto_peq)
-    # array of results
-    results = (0, best_loss, -pref_score)
 
-    #
-    def fit(param, shift=None):
+    def fit(param: Vector) -> Peq:
         guess_db = []
-        for i, f in enumerate(auto_freq):
+        for f in auto_freq:
             if f < freq[0] or f > freq[-1]:
                 db = 0.0
             else:
-                db = np.interp(f, freq, -current_auto_target[0]) * param
-                if shift is not None:
-                    db += shift[i][1]
-                # db = round(db/auto_step)*auto_step
-                db = round(db * 4) / 4
+                db = np.interp(f, freq, np.negative(current_auto_target[0])) * param
+                db = round(float(db) * 4) / 4
                 db = max(auto_min, db)
                 db = min(auto_max, db)
             guess_db.append(db)
         return [
             (1.0, Biquad(auto_type, float(f), 48000, auto_q, float(db)))
-            for f, db in zip(auto_freq, guess_db)
+            for f, db in zip(auto_freq, guess_db, strict=False)
         ]
 
-    def compute_delta(param, shift):
-        current_peq = fit(param, shift)
+    def compute_delta(param: Vector) -> float:
+        current_peq = fit(param)
         peq_values = peq_build(auto_freq, current_peq)
         peq_expend = [np.interp(f, auto_freq, peq_values) for f in freq]
-        delta = np.array(peq_expend) - np.array(-current_auto_target[0])
-        return delta
+        delta = np.array(peq_expend) - np.negative(current_auto_target[0])
+        return float(delta)
 
-    def compute_error(param, shift=None):
-        delta = compute_delta(param, shift)
+    def compute_error(param: Vector) -> float:
+        delta = compute_delta(param)
         error = np.linalg.norm(delta)
-        return error
+        return float(error)
 
     def find_best_param():
-        # params = np.linspace(0.1, 1.4, 100)
-        # errors = [compute_error(p, None) for p in params]
         res = opt.minimize(
             fun=lambda x: compute_error(x[0]),
             x0=0.2,
@@ -130,4 +121,4 @@ def optim_grapheq(
     if use_score:
         pref_score = score_loss(df_speaker, auto_peq)
 
-    return (1, opt_error, -pref_score), auto_peq
+    return True, ((1, opt_error, -pref_score), auto_peq)

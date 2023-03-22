@@ -21,7 +21,7 @@ import numpy as np
 import pandas as pd
 
 from spinorama import logger
-from spinorama.ltype import Vector, Peq, FloatVector1D
+from spinorama.ltype import Vector, Peq, Vector
 from spinorama.filter_iir import Biquad
 
 
@@ -35,7 +35,7 @@ def peq_equal(left: Peq, right: Peq) -> bool:
     return True
 
 
-def peq_build(freq: FloatVector1D, peq: Peq) -> Vector:
+def peq_build(freq: Vector, peq: Peq) -> Vector:
     """compute SPL for each frequency"""
     current_filter = [0.0]
     if len(peq) > 0:
@@ -44,7 +44,7 @@ def peq_build(freq: FloatVector1D, peq: Peq) -> Vector:
     return current_filter
 
 
-def peq_freq(spl: FloatVector1D, peq: Peq) -> Vector:
+def peq_freq(spl: Vector, peq: Peq) -> Vector:
     """compute SPL for each frequency"""
     current_filter = [0.0]
     if len(peq) > 0:

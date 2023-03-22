@@ -1,0 +1,4 @@
+build
+c_compute_scores.c
+spinorama
+*.so

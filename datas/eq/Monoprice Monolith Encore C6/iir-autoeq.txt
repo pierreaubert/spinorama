@@ -1,16 +1,16 @@
 EQ for Monoprice Monolith Encore C6 computed from ErinsAudioCorner data
-Preference Score 3.40 with EQ 5.46
+Preference Score 3.40 with EQ 5.68
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-02-26-09:39:53
+Dated: 2023-03-21-07:02:42
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    39 Hz Gain +3.00 dB Q 0.71
-Filter  2: ON PK Fc  4506 Hz Gain -2.85 dB Q 1.23
-Filter  3: ON PK Fc   575 Hz Gain +2.78 dB Q 1.78
-Filter  4: ON PK Fc   146 Hz Gain -2.09 dB Q 2.13
-Filter  5: ON PK Fc 12087 Hz Gain -1.67 dB Q 1.15
-Filter  6: ON PK Fc  1250 Hz Gain +0.75 dB Q 0.82
-Filter  7: ON PK Fc   771 Hz Gain -0.65 dB Q 2.65
-Filter  8: ON PK Fc  3385 Hz Gain -0.50 dB Q 3.00
-Filter  9: ON PK Fc 14938 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON PK Fc    40 Hz Gain +2.88 dB Q 0.76
+Filter  2: ON PK Fc  4204 Hz Gain -2.85 dB Q 1.35
+Filter  3: ON PK Fc   566 Hz Gain +3.00 dB Q 1.98
+Filter  4: ON PK Fc   144 Hz Gain -1.97 dB Q 2.14
+Filter  5: ON PK Fc 12004 Hz Gain -1.69 dB Q 0.94
+Filter  6: ON PK Fc  1870 Hz Gain +1.58 dB Q 1.73
+Filter  7: ON PK Fc  3164 Hz Gain -0.60 dB Q 3.00
+Filter  8: ON PK Fc 14919 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc  6244 Hz Gain -0.50 dB Q 3.00

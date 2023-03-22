@@ -3,7 +3,7 @@ line-length = 100
 
 [tool.pyright]
 include = [".", "src", "tests"]
-ignore = ["book", "experimentals"]
+ignore = ["book", "experimentals", "datas/measurements", "datas/eq", "datas/pictures"]
 venvPath = './spinorama-venv'
 typeCheckingMode = 'basic'
 pythonVersion = "3.10"

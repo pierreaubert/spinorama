@@ -8892,13 +8892,8 @@ speakers_info: SpeakerDatabase = {
         "price": "760",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8-studio-monitor-review.10897/",
-            },
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
@@ -8908,6 +8903,12 @@ speakers_info: SpeakerDatabase = {
                     "yt": "https://www.youtube.com/watch?v=DNpkizYXbVM",
                 },
                 "review_published": "20210615",
+            },
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8-studio-monitor-review.10897/",
+                "review_published": "20200114",
             },
         },
     },

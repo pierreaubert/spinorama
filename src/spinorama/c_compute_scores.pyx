@@ -19,12 +19,11 @@
 import math
 cimport numpy as np
 import numpy as np
+
 from more_itertools import consecutive_groups
 from scipy.stats import linregress
 
-
 np.import_array()
-
 
 cdef double[:] spl2pressure(const double[:] spl):
     """transform SPL to pressure"""
@@ -133,7 +132,6 @@ cpdef double c_sm(const double[:] freq, const double[:] spl):
     return r_value*r_value
 
 cpdef c_score(
-    """Compute score see details in compute_scores.py"""
     const double[:] freq,
     intervals,
     const double[:] on,
@@ -141,6 +139,7 @@ cpdef c_score(
     const double[:] sp,
     const double[:] pir
 ):
+    """Compute score see details in compute_scores.py"""
     cdef nbd_on = c_nbd(freq, intervals, on)
     cdef nbd_pir = c_nbd(freq, intervals, pir)
     cdef sm_pir = c_sm(freq, pir)
@@ -155,7 +154,6 @@ cpdef c_score(
     }
 
 cpdef c_score_peq(
-    """Compute score with a PEQ"""
     const double[:] freq,
     idx,
     intervals,
@@ -164,18 +162,18 @@ cpdef c_score_peq(
     const double[:, :] spl_v,
     const double[:] peq
 ):
+    """Compute score with a PEQ"""
     cdef spl_h_peq = np.zeros_like(spl_h)
     cdef spl_v_peq = np.zeros_like(spl_v)
     for i in range(spl_h.shape[0]):
         spl_h_peq[i] = np.add(spl_h[i], peq)
         spl_v_peq[i] = np.add(spl_v[i], peq)
     cdef spl = np.concatenate((spl_h_peq, spl_v_peq), axis=0)
-    cdef pressure = spl2pressure2(spl)
-    cdef spin = c_cea2034_pressure(pressure, idx, weigths)
+    cdef spin = c_cea2034(spl, idx, weigths)
     return spin, c_score(freq, intervals, spl_h_peq[17], spin[0], spin[-2], spin[-1])
 
+
 cpdef c_score_peq_approx(
-    """Compute score with a PEQ (faster)"""
     const double[:] freq,
     idx,
     intervals,
@@ -183,6 +181,7 @@ cpdef c_score_peq_approx(
     const double [:] on,
     const double[:] peq
 ):
+    """Compute score with a PEQ (faster)"""
     return c_score(
         freq,
         intervals,

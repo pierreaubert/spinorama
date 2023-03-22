@@ -426,8 +426,8 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
     return np.convolve(m[::-1], y, mode="valid")
 
 
-def dist_point_line(x, y, A, B, C):
-    return abs(A * x + B * y + C) / math.sqrt(A * A + B * B)
+def dist_point_line(x, y, p_a, p_b, p_c):
+    return abs(p_a * x + p_b * y + p_c) / math.sqrt(p_a * p_a + p_b * p_b)
 
 
 def compute_statistics(data_frame, measurement, min_freq, max_freq, hist_min_freq, hist_max_freq):
@@ -444,7 +444,8 @@ def compute_statistics(data_frame, measurement, min_freq, max_freq, hist_min_fre
     hist_spl = hist_minmax[measurement]
     # hist_dist = [dist_point_line(math.log10(f), db, slope, -1, intercept) for f, db in zip(hist_minmax.Freq, hist_spl)]
     hist_dist = [
-        abs(db - (slope * math.log10(f) + intercept)) for f, db in zip(hist_minmax.Freq, hist_spl)
+        abs(db - (slope * math.log10(f) + intercept))
+        for f, db in zip(hist_minmax.Freq, hist_spl, strict=False)
     ]
     # for i, (f, db) in enumerate(zip(hist_minmax.Freq, hist_spl)):
     #    print('{:4f}hz {:0.2f} db {:2.1f} dist={:0.2f}'.format(f, math.log10(f), db, hist_dist[i]))

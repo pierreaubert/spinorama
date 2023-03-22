@@ -24,14 +24,14 @@ import scipy.signal as sig
 from scipy.interpolate import InterpolatedUnivariateSpline
 
 from spinorama import logger
-from spinorama.ltype import FloatVector1D, Vector
+from spinorama.ltype import Vector, Peq, Zone
 
 # ------------------------------------------------------------------------------
 # find initial values for biquads
 # ------------------------------------------------------------------------------
 
 
-def compute_non_admissible_freq(peq, min_freq, max_freq):
+def compute_non_admissible_freq(peq: Peq, min_freq: float, max_freq: float) -> Zone:
     """returns a list of zones (range of frequencies) which are not admissible"""
     zones = []
     for _, current_eq in peq:
@@ -50,27 +50,23 @@ def compute_non_admissible_freq(peq, min_freq, max_freq):
     return zones
 
 
-def not_in_zones(zones, freq):
+def not_in_zones(zones: Zone, freq: float) -> bool:
     """check if frequency is in range for each zone"""
     return all(not (freq > zone_low and freq < zone_high) for zone_low, zone_high in zones)
 
 
 def find_largest_area(
-    freq: FloatVector1D, curve: list[FloatVector1D], optim_config: dict, peq
-) -> tuple[Literal[-1] | Literal[+1], int, float]:
+    freq: Vector, curve: Vector, optim_config: dict, peq: Peq
+) -> tuple[Literal[-1] | Literal[1], float]:
     min_freq = optim_config["target_min_freq"]
     max_freq = optim_config["target_max_freq"]
     zones = compute_non_admissible_freq(peq, min_freq, max_freq)
 
     def largest_area(current_curve) -> tuple[int, float]:
-        # print("[{}]".format(", ".join([str(f) for f in current_curve])))
         peaks, _ = sig.find_peaks(current_curve, distance=4)
         if len(peaks) == 0:
-            # print("fla: failed no peaks")
             return -1, -1
-        # print("fla: found peaks at {}".format(peaks))
         widths = sig.peak_widths(current_curve, peaks)[0]
-        # print("fla: computed width at {}".format(widths))
         areas = [
             (
                 i,
@@ -84,23 +80,15 @@ def find_largest_area(
             )
             for i in range(0, len(peaks))
         ]
-        # print("fla: areas {}".format(areas))
         sorted_areas = sorted(areas, key=lambda a: -a[1])
-        # print("fla: sorted areas {}".format(sorted_areas))
         i = 0
         ipeaks = -1
         while i < len(sorted_areas):
             ipeaks, area = sorted_areas[i]
             f = freq[peaks[ipeaks]]
             if not_in_zones(zones, f) and f < max_freq and f > min_freq:
-                # print("fla: accepted peak at {}hz area {}".format(freq[peaks[ipeaks]], area))
                 return f, area
-            else:
-                # print("fla: rejected peak at {}hz area {}".format(freq[peaks[ipeaks]], area))
-                pass
             i += 1
-        # print("fla: failed! sorted areas are {}".format(sorted_areas))
-        # print("fla: failed! freqs are {}".format([freq[i] for i in peaks]))
         return -1, -1
 
     plus_curve = np.clip(curve, a_min=0, a_max=None)
@@ -111,32 +99,25 @@ def find_largest_area(
         minus_curve = -np.clip(curve, a_min=None, a_max=0)
         minus_freq, minus_areas = largest_area(minus_curve)
 
-    # print("fla: minus a={} f={} plus a={} f={}".format(minus_areas, minus_freq, plus_areas, plus_freq))
-
     if minus_areas == -1 and plus_areas == -1:
-        # print("fla: both plus and minus missed")
         return +1, -1
 
     if plus_areas == -1:
-        # print("fla: using minus freq")
         return -1, minus_freq
 
     if minus_areas == -1:
-        # print("fla: using plus freq")
         return +1, plus_freq
 
     if minus_areas > plus_areas:
-        # print("fla: using min freq")
         return -1, minus_freq
 
-    # print("fla: using plus freq")
     return +1, plus_freq
 
 
 def propose_range_freq(
-    freq: FloatVector1D, local_target: list[FloatVector1D], optim_config: dict, zones
+    freq: Vector, local_target: Vector, optim_config: dict, peq: Peq
 ) -> tuple[Literal[-1, 1], float, Vector]:
-    sign, init_freq = find_largest_area(freq, local_target, optim_config, zones)
+    sign, init_freq = find_largest_area(freq, local_target, optim_config, peq)
     if init_freq == -1:
         init_freq = 1000
         init_freq_min = 20
@@ -146,7 +127,6 @@ def propose_range_freq(
     scale = optim_config["elastic"]
     init_freq_min = max(init_freq * scale, optim_config["target_min_freq"])
     init_freq_max = min(init_freq / scale, optim_config["target_max_freq"])
-    # print("prf: sign={} init_freq={} range=[{}, {}]".format(sign, init_freq, init_freq_min, init_freq_max))
     return (
         sign,
         init_freq,
@@ -155,15 +135,15 @@ def propose_range_freq(
 
 
 def propose_range_db_gain(
-    freq: FloatVector1D,
-    local_target: list[FloatVector1D],
+    freq: Vector,
+    local_target: Vector,
     sign: Literal[-1, 1],
-    init_freq: FloatVector1D,
+    init_freq: float,
     optim_config: dict,
-) -> Vector:
+) -> list[float]:
     spline = InterpolatedUnivariateSpline(np.log10(freq), local_target, k=1)
     scale = optim_config["elastic"]
-    init_dbgain = abs(spline(np.log10(init_freq)))
+    init_dbgain = abs(spline(math.log10(init_freq)))
     init_dbgain_min = max(init_dbgain * scale, optim_config["MIN_DBGAIN"])
     init_dbgain_max = min(init_dbgain / scale, optim_config["MAX_DBGAIN"])
     if init_dbgain_max <= init_dbgain_min:
@@ -183,7 +163,7 @@ def propose_range_db_gain(
     ).tolist()
 
 
-def propose_range_q(optim_config):
+def propose_range_q(optim_config: dict) -> list[float]:
     return np.concatenate(
         (
             np.linspace(optim_config["MIN_Q"], 1.0, optim_config["MAX_STEPS_Q"]),
@@ -197,7 +177,7 @@ def propose_range_q(optim_config):
     ).tolist()
 
 
-def propose_range_biquad(optim_config):
+def propose_range_biquad(optim_config: dict) -> list[int]:
     return [
         0,  # Biquad.lowpass
         1,  # Biquad.highpass

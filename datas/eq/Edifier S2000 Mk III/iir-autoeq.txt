@@ -1,15 +1,15 @@
 EQ for Edifier S2000 Mk III computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:21:09
+Dated: 2023-03-20-18:42:08
 
-Preamp: -3.2 dB
+Preamp: -2.5 dB
 
-Filter  1: ON PK Fc 10802 Hz Gain -3.00 dB Q 0.56
-Filter  2: ON PK Fc   879 Hz Gain +3.00 dB Q 0.90
-Filter  3: ON PK Fc  2278 Hz Gain -0.57 dB Q 0.57
-Filter  4: ON PK Fc 10559 Hz Gain -3.13 dB Q 2.79
-Filter  5: ON PK Fc  3327 Hz Gain -1.66 dB Q 2.99
-Filter  6: ON PK Fc    21 Hz Gain -1.42 dB Q 2.89
-Filter  7: ON PK Fc 13907 Hz Gain -1.37 dB Q 2.95
-Filter  8: ON PK Fc    20 Hz Gain -1.37 dB Q 2.76
-Filter  9: ON PK Fc    20 Hz Gain -1.42 dB Q 2.94
+Filter  1: ON HS Fc  3474 Hz Gain -2.65 dB
+Filter  2: ON PK Fc 10488 Hz Gain -3.42 dB Q 2.87
+Filter  3: ON PK Fc   606 Hz Gain +2.31 dB Q 0.44
+Filter  4: ON PK Fc  3172 Hz Gain -1.85 dB Q 2.99
+Filter  5: ON PK Fc   198 Hz Gain -1.94 dB Q 1.58
+Filter  6: ON PK Fc    21 Hz Gain -2.30 dB Q 2.94
+Filter  7: ON PK Fc    22 Hz Gain -2.36 dB Q 2.95
+Filter  8: ON PK Fc    20 Hz Gain -1.95 dB Q 2.99
+Filter  9: ON PK Fc    24 Hz Gain -2.04 dB Q 2.93

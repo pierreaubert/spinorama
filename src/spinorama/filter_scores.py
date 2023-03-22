@@ -26,6 +26,10 @@ from spinorama.plot import plot_spinorama
 
 
 def scores_apply_filter(df_speaker: DataSpeaker, peq: Peq):
+    # debug
+    if "SPL Horizontal_unmelted" not in df_speaker or "SPL Vertical_unmelted" not in df_speaker:
+        print("error bad call to apply filter: {}".format(df_speaker.keys()))
+        return None, None, {"pref_score": -10.0}
     # get SPL H & V
     spl_h = df_speaker["SPL Horizontal_unmelted"]
     spl_v = df_speaker["SPL Vertical_unmelted"]
