@@ -35,8 +35,51 @@ def get3db(spin: dict[str, pd.DataFrame], db_point: float) -> tuple[bool, float]
 
 def have_full_measurements(df_speaker: dict[str, pd.DataFrame]) -> bool:
     len = 0
+    required = [
+        "On Axis",
+        "10°",
+        "20°",
+        "30°",
+        "40°",
+        "50°",
+        "60°",
+        "70°",
+        "80°",
+        "90°",
+        "100°",
+        "110°",
+        "120°",
+        "130°",
+        "140°",
+        "150°",
+        "160°",
+        "170°",
+        "180°",
+        "-10°",
+        "-20°",
+        "-30°",
+        "-40°",
+        "-50°",
+        "-60°",
+        "-70°",
+        "-80°",
+        "-90°",
+        "-100°",
+        "-110°",
+        "-120°",
+        "-130°",
+        "-140°",
+        "-150°",
+        "-160°",
+        "-170°",
+    ]
+    check_required_h = False
+    check_required_v = False
     if "SPL Horizontal_unmelted" in df_speaker:
         len += df_speaker["SPL Horizontal_unmelted"].shape[1]
+        check_required_h = all([r in df_speaker["SPL Horizontal_unmelted"] for r in required])
     if "SPL Vertical_unmelted" in df_speaker:
         len += df_speaker["SPL Horizontal_unmelted"].shape[1]
-    return len >= 72
+        check_required_v = all([r in df_speaker["SPL Vertical_unmelted"] for r in required])
+    check_len = len >= 72
+    return check_len and check_required_v and check_required_h

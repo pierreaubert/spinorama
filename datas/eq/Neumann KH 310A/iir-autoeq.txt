@@ -1,15 +1,16 @@
 EQ for Neumann KH 310A computed from ASR data
-Preference Score 6.30 with EQ 7.02
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-02-26-09:35:15
+Preference Score 6.30 with EQ 7.10
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-03-22-23:15:24
 
-Preamp: -2.4 dB
+Preamp: -2.5 dB
 
-Filter  1: ON PK Fc    23 Hz Gain +2.17 dB Q 0.65
-Filter  2: ON PK Fc   225 Hz Gain -0.93 dB Q 1.50
-Filter  3: ON PK Fc 11548 Hz Gain -1.34 dB Q 0.62
-Filter  4: ON PK Fc  1739 Hz Gain +1.29 dB Q 3.00
-Filter  5: ON PK Fc    87 Hz Gain +0.90 dB Q 3.00
-Filter  6: ON PK Fc   664 Hz Gain +0.75 dB Q 3.00
-Filter  7: ON PK Fc  3299 Hz Gain -0.50 dB Q 1.33
-Filter  8: ON PK Fc  1033 Hz Gain -0.96 dB Q 3.00
+Filter  1: ON HP Fc    21 Hz
+Filter  2: ON PK Fc  4810 Hz Gain -2.10 dB Q 2.42
+Filter  3: ON PK Fc    90 Hz Gain +1.26 dB Q 2.93
+Filter  4: ON PK Fc  1013 Hz Gain -1.01 dB Q 2.96
+Filter  5: ON PK Fc 12894 Hz Gain -1.65 dB Q 1.13
+Filter  6: ON PK Fc    47 Hz Gain -0.52 dB Q 2.88
+Filter  7: ON PK Fc   224 Hz Gain -0.63 dB Q 1.44
+Filter  8: ON PK Fc   458 Hz Gain -0.67 dB Q 2.98
+Filter  9: ON PK Fc  1567 Hz Gain +1.29 dB Q 2.99

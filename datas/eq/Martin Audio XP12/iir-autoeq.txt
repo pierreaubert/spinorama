@@ -1,16 +1,16 @@
 EQ for Martin Audio XP12 computed from Vendors-Martin Audio data
-Preference Score 3.77 with EQ 4.45
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:25:07
+Preference Score 3.77 with EQ 4.46
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-03-22-23:23:13
 
 Preamp: -3.2 dB
 
-Filter  1: ON LS Fc    56 Hz Gain +2.99 dB
-Filter  2: ON PK Fc   113 Hz Gain -3.25 dB Q 2.05
-Filter  3: ON PK Fc  2482 Hz Gain +2.98 dB Q 1.64
-Filter  4: ON PK Fc 13360 Hz Gain -2.83 dB Q 2.86
-Filter  5: ON PK Fc   470 Hz Gain +0.95 dB Q 2.94
-Filter  6: ON PK Fc  3983 Hz Gain -0.54 dB Q 2.99
-Filter  7: ON PK Fc   241 Hz Gain +0.51 dB Q 2.96
-Filter  8: ON PK Fc  1224 Hz Gain +0.53 dB Q 2.92
-Filter  9: ON PK Fc  7903 Hz Gain +0.57 dB Q 1.12
+Filter  1: ON PK Fc    33 Hz Gain +3.00 dB Q 1.02
+Filter  2: ON PK Fc   113 Hz Gain -3.13 dB Q 2.11
+Filter  3: ON PK Fc  2498 Hz Gain +3.00 dB Q 0.69
+Filter  4: ON PK Fc  9029 Hz Gain +1.48 dB Q 3.00
+Filter  5: ON PK Fc 12998 Hz Gain -2.56 dB Q 3.00
+Filter  6: ON PK Fc   442 Hz Gain +1.55 dB Q 3.00
+Filter  7: ON PK Fc   171 Hz Gain -0.68 dB Q 3.00
+Filter  8: ON PK Fc   712 Hz Gain -0.79 dB Q 3.00
+Filter  9: ON PK Fc  4002 Hz Gain -0.98 dB Q 3.00

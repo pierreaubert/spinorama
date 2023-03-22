@@ -1,16 +1,16 @@
 EQ for Ascend Acoustics Sierra Titan computed from Vendors-Ascend Acoustics data
-Preference Score 6.28 with EQ 6.99
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:21:42
+Preference Score 6.28 with EQ 7.00
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-03-22-23:09:36
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    33 Hz Gain +2.96 dB Q 1.02
-Filter  2: ON PK Fc   115 Hz Gain -1.65 dB Q 1.96
-Filter  3: ON PK Fc  1829 Hz Gain +0.96 dB Q 1.59
-Filter  4: ON PK Fc  5891 Hz Gain -0.50 dB Q 3.00
-Filter  5: ON PK Fc   306 Hz Gain -0.50 dB Q 2.85
-Filter  6: ON PK Fc   467 Hz Gain +0.50 dB Q 3.00
-Filter  7: ON PK Fc 10685 Hz Gain +0.57 dB Q 0.19
-Filter  8: ON PK Fc   831 Hz Gain -0.94 dB Q 2.89
-Filter  9: ON PK Fc  6319 Hz Gain -0.67 dB Q 1.58
+Filter  1: ON PK Fc    33 Hz Gain +2.95 dB Q 1.01
+Filter  2: ON PK Fc   114 Hz Gain -1.78 dB Q 2.09
+Filter  3: ON PK Fc  1828 Hz Gain +0.97 dB Q 1.61
+Filter  4: ON PK Fc  5987 Hz Gain -0.63 dB Q 3.00
+Filter  5: ON PK Fc 11893 Hz Gain +0.54 dB Q 0.19
+Filter  6: ON PK Fc   302 Hz Gain -0.50 dB Q 2.26
+Filter  7: ON PK Fc   472 Hz Gain +0.50 dB Q 3.00
+Filter  8: ON PK Fc  3788 Hz Gain -0.50 dB Q 0.64
+Filter  9: ON PK Fc   839 Hz Gain -0.84 dB Q 3.00

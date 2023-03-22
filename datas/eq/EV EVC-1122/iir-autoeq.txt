@@ -1,15 +1,16 @@
 EQ for EV EVC-1122 computed from Vendors-EV data
-Preference Score 2.16 with EQ 3.09
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-02-26-09:35:17
+Preference Score 2.16 with EQ 3.16
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-03-22-23:23:06
 
-Preamp: -3.2 dB
+Preamp: -1.5 dB
 
-Filter  1: ON PK Fc    34 Hz Gain +3.00 dB Q 0.81
-Filter  2: ON PK Fc   123 Hz Gain -3.79 dB Q 3.00
-Filter  3: ON PK Fc   232 Hz Gain +1.76 dB Q 2.72
-Filter  4: ON PK Fc   647 Hz Gain +1.93 dB Q 3.00
-Filter  5: ON PK Fc  6009 Hz Gain -1.54 dB Q 3.00
-Filter  6: ON PK Fc  2757 Hz Gain +1.28 dB Q 2.58
-Filter  7: ON PK Fc   973 Hz Gain -0.68 dB Q 3.00
-Filter  8: ON PK Fc   354 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON LS Fc 15981 Hz Gain +1.28 dB
+Filter  2: ON PK Fc   125 Hz Gain -4.55 dB Q 2.73
+Filter  3: ON PK Fc   999 Hz Gain -1.72 dB Q 2.94
+Filter  4: ON PK Fc  6258 Hz Gain -2.82 dB Q 2.97
+Filter  5: ON PK Fc   360 Hz Gain -1.56 dB Q 2.89
+Filter  6: ON PK Fc  2023 Hz Gain -2.01 dB Q 2.90
+Filter  7: ON PK Fc   554 Hz Gain -1.22 dB Q 2.99
+Filter  8: ON PK Fc  3945 Hz Gain -1.74 dB Q 2.94
+Filter  9: ON PK Fc  6580 Hz Gain -0.58 dB Q 2.88

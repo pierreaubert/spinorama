@@ -220,10 +220,10 @@ def compute_peqs(ray_ids):
             get_results = ray.get(current_id)
             if get_results is None:
                 continue
-            current_speaker_name, results_iter, scores = get_results
-            if results_iter is not None:
+            status, (current_speaker_name, results_iter, scores) = get_results
+            if status and results_iter is not None:
                 aggregated_results[current_speaker_name] = results_iter
-            if scores is not None:
+            if status and scores is not None:
                 aggregated_scores[current_speaker_name] = scores
             done_ids.add(current_id)
 

@@ -476,10 +476,10 @@ def loss(
         score = score_loss(df_speaker, peq)
         flatness = leastsquare_loss(freq, local_target, peq, iterations)
         # add flatness as a penalty or score optim goes crazy (pir parameter)
-        print("debug: score {} flatness {}".format(score, flatness))
+        # print("debug: score {} flatness {}".format(score, flatness))
         return score + flatness
     if which_loss == "combine_loss":
         weigths = optim_config["loss_weigths"]
         return score_loss(df_speaker, peq) + flat_loss(freq, local_target, peq, iterations, weigths)
-    logger.error("loss function is unknown")
+    logger.error("loss function is unknown %s", which_loss)
     return -1

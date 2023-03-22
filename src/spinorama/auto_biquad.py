@@ -159,6 +159,11 @@ def find_best_peak(
         peq = [(1.0, Biquad(biquad_type, x[0], 48000, x[1], x[2]))]
         return loss(df_speaker, freq, auto_target, peq, count, optim_config)
 
+    if freq_range[0] < 20.0:
+        freq_range[0] = 20.0
+    if freq_range[-1] < 20.0 or freq_range[-1] <= freq_range[0]:
+        freq_range[-1] = 16000.0
+
     bounds = [
         (freq_range[0], freq_range[-1]),
         (q_range[0], q_range[-1]),

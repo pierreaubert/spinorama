@@ -1,16 +1,16 @@
 EQ for Neumann KH 80 computed from ASR data
-Preference Score 6.20 with EQ 6.44
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:29:31
+Preference Score 6.20 with EQ 6.53
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-03-22-23:18:12
 
-Preamp: -2.4 dB
+Preamp: -2.2 dB
 
-Filter  1: ON PK Fc    33 Hz Gain +2.19 dB Q 0.99
-Filter  2: ON PK Fc   316 Hz Gain -1.37 dB Q 0.66
-Filter  3: ON PK Fc  2018 Hz Gain +1.77 dB Q 2.12
-Filter  4: ON PK Fc  5625 Hz Gain +0.82 dB Q 2.83
-Filter  5: ON PK Fc 14553 Hz Gain -1.53 dB Q 2.62
-Filter  6: ON PK Fc   807 Hz Gain -0.67 dB Q 3.00
-Filter  7: ON PK Fc   103 Hz Gain -0.50 dB Q 3.00
-Filter  8: ON PK Fc 15903 Hz Gain -0.50 dB Q 3.00
-Filter  9: ON PK Fc  3391 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON LS Fc    60 Hz Gain +2.03 dB
+Filter  2: ON PK Fc  5191 Hz Gain +0.78 dB Q 1.83
+Filter  3: ON PK Fc   300 Hz Gain -0.88 dB Q 0.68
+Filter  4: ON PK Fc  1997 Hz Gain +1.45 dB Q 2.54
+Filter  5: ON PK Fc 15553 Hz Gain -1.67 dB Q 2.74
+Filter  6: ON PK Fc   537 Hz Gain +0.71 dB Q 2.99
+Filter  7: ON PK Fc  1078 Hz Gain +0.59 dB Q 2.97
+Filter  8: ON PK Fc   682 Hz Gain -0.76 dB Q 1.20
+Filter  9: ON PK Fc  3516 Hz Gain -0.53 dB Q 2.97

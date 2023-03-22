@@ -1,16 +1,16 @@
 EQ for Bowers & Wilkins 805S computed from ASR data
-Preference Score 4.59 with EQ 5.86
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-02-26-09:36:34
+Preference Score 4.59 with EQ 6.05
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-03-22-23:13:52
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    30 Hz Gain +2.66 dB Q 1.24
-Filter  2: ON PK Fc   241 Hz Gain -1.92 dB Q 0.63
-Filter  3: ON PK Fc  2537 Hz Gain +3.00 dB Q 1.82
-Filter  4: ON PK Fc 11060 Hz Gain -1.97 dB Q 1.18
-Filter  5: ON PK Fc   675 Hz Gain -1.65 dB Q 3.00
-Filter  6: ON PK Fc  1086 Hz Gain +1.70 dB Q 3.00
-Filter  7: ON PK Fc   759 Hz Gain -0.66 dB Q 3.00
-Filter  8: ON PK Fc  1508 Hz Gain -0.50 dB Q 3.00
-Filter  9: ON PK Fc 14504 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON PK Fc    31 Hz Gain +2.85 dB Q 1.34
+Filter  2: ON PK Fc   207 Hz Gain -2.39 dB Q 0.51
+Filter  3: ON PK Fc 11487 Hz Gain -2.73 dB Q 0.93
+Filter  4: ON PK Fc  2646 Hz Gain +3.00 dB Q 2.72
+Filter  5: ON PK Fc   704 Hz Gain -1.85 dB Q 2.56
+Filter  6: ON PK Fc  1027 Hz Gain +1.23 dB Q 3.00
+Filter  7: ON PK Fc  1351 Hz Gain -1.21 dB Q 3.00
+Filter  8: ON PK Fc  6297 Hz Gain -0.63 dB Q 2.69
+Filter  9: ON PK Fc   850 Hz Gain -0.51 dB Q 3.00

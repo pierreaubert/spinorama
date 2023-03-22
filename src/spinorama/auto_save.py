@@ -27,7 +27,7 @@ import pathlib
 import ray
 
 from spinorama import logger, ray_setup_logger
-from spinorama.ltype import DataSpeaker
+from spinorama.ltype import DataSpeaker, OptimResult
 from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
 from spinorama.pict import write_multiformat
 from spinorama.filter_peq import peq_format_apo
@@ -47,20 +47,23 @@ def optim_save_peq(
     current_speaker_origin: str,
     df_speaker: DataSpeaker,
     optim_config: dict,
-):
+) -> tuple[bool, tuple[str, OptimResult, list[dict]]]:
     """Compute and then save PEQ for this speaker"""
     ray_setup_logger(optim_config["level"])
+
     eq_dir = "datas/eq/{}".format(current_speaker_name)
     pathlib.Path(eq_dir).mkdir(parents=True, exist_ok=True)
     eq_name = "{}/iir-autoeq.txt".format(eq_dir)
+
     if optim_config["use_grapheq"]:
         grapheq_name = optim_config["grapheq_name"]
         short_name = grapheq_name.lower().replace(" ", "-")
         eq_name = "{}/iir-autoeq-{}.txt".format(eq_dir, short_name)
+
     if not optim_config["force"] and os.path.exists(eq_name):
         if optim_config["verbose"]:
             logger.info("eq %s already exist!", eq_name)
-        return None, None, None
+        return False, ("", (0, 0, 0), [{}])
 
     # do we have CEA2034 data
     if "CEA2034_unmelted" not in df_speaker and "CEA2034" not in df_speaker:
@@ -68,7 +71,7 @@ def optim_save_peq(
         logger.error(
             "%s %s doesn't have CEA2034 data", current_speaker_name, current_speaker_origin
         )
-        return None, None, None
+        return False, ("", (0, 0, 0), [{}])
 
     # do we have the full data?
     use_score = True
@@ -91,7 +94,7 @@ def optim_save_peq(
     )
     if auto_status is False:
         logger.error("EQ generation failed for %s", current_speaker_name)
-        return
+        return False, ("", (0, 0, 0), [{}])
     optim_config = deepcopy(auto_config)
 
     # compute new score with this PEQ
@@ -202,7 +205,10 @@ def optim_save_peq(
             if optim_config["smoke_test"]:
                 graph_filename += "_smoketest"
             graph_filename += ".png"
+            print("debug: writing graph {}".format(graph_filename))
             write_multiformat(chart=graph, filename=graph_filename, force=True)
+    else:
+        print("skipping printing graphs")
 
     # print a compact table of results
     if optim_config["verbose"] and use_score:
@@ -225,4 +231,4 @@ def optim_save_peq(
                 current_speaker_name,
             )
 
-    return current_speaker_name, auto_results, scores
+    return True, (current_speaker_name, auto_results, scores)
