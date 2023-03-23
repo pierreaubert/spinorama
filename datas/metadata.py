@@ -798,6 +798,23 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Arendal Sound 1961 Center": {
+        "brand": "Arendal Sound",
+        "model": "1961 Center",
+        "type": "passive",
+        "price": "1100",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/arendal-1961-center-monitor-speaker-review.43190/",
+                "review_published": "20230323",
+            },
+        },
+    },
     "Arendal Sound 1723 Bookshelf S THX": {
         "brand": "Arendal Sound",
         "model": "1723 Bookshelf S THX",
