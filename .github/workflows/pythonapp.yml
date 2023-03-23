@@ -17,21 +17,25 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.10.6"
+    - run: which python
+    - run: pwd
+    - run: ls -la
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        sudo apt-get install -y build-essential
         pip install -r requirements.txt
         pip install -r requirements-test.txt
     - name: Lint with flake8
       run: |
         pip install flake8
-        # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spinorama-venv
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        # flake8 . --count --exit-zero --max-complexity=13 --max-line-length=127 --statistics
     - name: Test metadata file
       run: |
         PYTHONPATH=src ./check_meta.py
+    - name: Compilation of cython files
+      run: |
+        PYTHONPATH=src cd src/spinorama && python setup.py build_ext --inplace && ln -s c_compute_scores.cpython-*.so c_compute_scores.so
     - name: Test with pytest
       run: |
         pip install pytest

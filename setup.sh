@@ -47,7 +47,10 @@ npm install --save-dev pyright w3c-html-validator standard flow flow-remove-type
 # lint
 flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spinorama-venv
 
+# compile
+PYTHONPATH=src cd src/spinorama && python setup.py build_ext --inplace && ln -s c_compute_scores.cpython-*.so c_compute_scores.so && cd ../..
+
 # run the test
-pip3 install -r requirements-tests.txt
-pip3 install -r requirements-dev.txt
+pip3 install -U -r requirements-tests.txt
+pip3 install -U -r requirements-dev.txt
 pytest
