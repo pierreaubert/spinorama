@@ -2,7 +2,6 @@
 #
 import platform
 import os
-import sys
 import unittest
 
 import pytest

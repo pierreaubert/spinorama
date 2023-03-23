@@ -115,7 +115,9 @@ def sanity_check_shape(name: str, speaker: Speaker) -> int:
             return 1
         amount = speaker["amount"]
         if amount != "each":
-            logging.error("shape is center but amount must be each; check price please!", name)
+            logging.error(
+                "shape is center and amount must be each; check amount for %s please!", name
+            )
             return 1
     return 0
 
@@ -373,6 +375,7 @@ def sanity_check_specifications(name: str, version: str, specs: dict) -> int:
                         "%s: measurement %s SPL parameter %s is not in ('mean', 'continous', 'peak')",
                         name,
                         version,
+                        state,
                     )
                     status = 1
                 try:

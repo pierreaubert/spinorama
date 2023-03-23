@@ -20,8 +20,8 @@
 # import os
 import unittest
 import math
+
 import numpy as np
-import pandas as pd
 
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import peq_build
@@ -31,7 +31,7 @@ from spinorama.auto_loss import loss
 class LossTests(unittest.TestCase):
     def setUp(self):
         self.data = np.zeros(200)
-        self.freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), len(self.data))
+        self.freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), len(self.data)).tolist()
         self.config = {
             "target_min_freq": 80,
             "target_max_freq": 16000,
@@ -55,7 +55,7 @@ class LossTests(unittest.TestCase):
 
         for func in ("leastsquare_loss", "flat_loss"):
             self.config["loss"] = func
-            init_fun = loss(None, self.freq, [auto_target], down_peq, 0, self.config)
+            init_fun = loss({}, self.freq, [auto_target], down_peq, 0, self.config)
             self.assertAlmostEqual(init_fun, 0.0)
 
 

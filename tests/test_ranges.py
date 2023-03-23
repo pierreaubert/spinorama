@@ -21,17 +21,16 @@
 import unittest
 import math
 import numpy as np
-import pandas as pd
 
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import peq_build
-from spinorama.auto_range import not_in_zones, compute_non_admissible_freq, find_largest_area
+from spinorama.auto_range import find_largest_area
 
 
 class FreqRangeTests(unittest.TestCase):
     def setUp(self):
-        self.data = np.zeros(200)
-        self.freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), len(self.data))
+        self.data = np.zeros(200).tolist()
+        self.freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), len(self.data)).tolist()
         self.config = {
             "target_min_freq": 80,
             "target_max_freq": 16000,
@@ -40,7 +39,7 @@ class FreqRangeTests(unittest.TestCase):
 
     def test_zero(self):
         peq = []
-        sign, freq = find_largest_area(self.freq, self.data, self.config, peq)
+        _, freq = find_largest_area(self.freq, self.data, self.config, peq)
         self.assertEqual(freq, -1)
 
     def test_smokec(self):
@@ -252,7 +251,7 @@ class FreqRangeTests(unittest.TestCase):
         self.assertTrue(freq1 > 6500 or freq1 < 550)
         # if we send the negative of data, sign should change but not the freq
         peq = []
-        sign1, freq1 = find_largest_area(self.freq, -np.array(data), self.config, peq)
+        sign1, freq1 = find_largest_area(self.freq, np.negative(data).tolist(), self.config, peq)
         self.assertNotEqual(sign0, sign1)
         self.assertAlmostEqual(freq1, freq0)
 

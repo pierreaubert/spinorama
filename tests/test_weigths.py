@@ -45,7 +45,7 @@ class WeigthsTests(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_area_Q(self):
+    def test_area_q(self):
         # expect area of half sphere
         self.assertAlmostEqual(compute_area_q(90, 90), 2.0 * math.pi)
 

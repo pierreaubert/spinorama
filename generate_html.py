@@ -63,7 +63,7 @@ def write_if_different(new_content, filename):
         path.write_text(new_content, encoding="utf-8")
 
 
-def generate_speaker(mako, dataframe, meta, site, useSearch):
+def generate_speaker(mako, dataframe, meta, site, use_search):
     """For each speaker, generates a set of HTML files driven by templates"""
     speaker_html = mako.get_template("speaker.html")
     graph_html = mako.get_template("graph.html")
@@ -128,7 +128,7 @@ def generate_speaker(mako, dataframe, meta, site, useSearch):
                     meta=meta,
                     origin=origin,
                     site=site,
-                    useSearch=useSearch,
+                    use_search=use_search,
                 )
                 write_if_different(speaker_content, index_name)
 
@@ -156,7 +156,7 @@ def main():
         meta = json.load(f)
 
     # only build a dictionnary will all graphs
-    df = {}
+    main_df = {}
     speakers = glob("{}/*".format(cpaths.CPATH_DOCS_SPEAKERS))
     for speaker in speakers:
         if not os.path.isdir(speaker):
@@ -165,27 +165,27 @@ def main():
         speaker_name = speaker.replace(cpaths.CPATH_DOCS_SPEAKERS + "/", "")
         if speaker_name in ("score", "assets", "stats", "compare", "logos", "pictures"):
             continue
-        df[speaker_name] = {}
+        main_df[speaker_name] = {}
         origins = glob(speaker + "/*")
         for origin in origins:
             if not os.path.isdir(origin):
                 continue
             origin_name = os.path.basename(origin)
-            df[speaker_name][origin_name] = {}
+            main_df[speaker_name][origin_name] = {}
             defaults = glob(origin + "/*")
             for default in defaults:
                 if not os.path.isdir(default):
                     continue
                 default_name = os.path.basename(default)
-                df[speaker_name][origin_name][default_name] = {}
+                main_df[speaker_name][origin_name][default_name] = {}
                 graphs = glob(default + "/*_large.png")
                 for graph in graphs:
                     g = os.path.basename(graph).replace("_large.png", "")
-                    df[speaker_name][origin_name][default_name][g] = {}
+                    main_df[speaker_name][origin_name][default_name][g] = {}
 
     # configure Mako
     mako_templates = TemplateLookup(
-        directories=["src/website"], module_directory="/tmp/mako_modules"
+        directories=["src/website"], module_directory="./build/mako_modules"
     )
 
     # write index.html
@@ -220,7 +220,9 @@ def main():
     meta_sorted_date = {k: meta[k] for k in keys_sorted_date}
 
     try:
-        html_content = index_html.render(df=df, meta=meta_sorted_date, site=site, useSearch=True)
+        html_content = index_html.render(
+            df=main_df, meta=meta_sorted_date, site=site, use_search=True
+        )
         html_filename = f"{cpaths.CPATH_DOCS}/index.html"
         write_if_different(html_content, html_filename)
     except KeyError as key_error:
@@ -232,7 +234,7 @@ def main():
     eqs_html = mako_templates.get_template("eqs.html")
 
     try:
-        eqs_content = eqs_html.render(df=df, meta=meta_sorted_date, site=site, useSearch=True)
+        eqs_content = eqs_html.render(df=main_df, meta=meta_sorted_date, site=site, use_search=True)
         eqs_filename = f"{cpaths.CPATH_DOCS}/eqs.html"
         write_if_different(eqs_content, eqs_filename)
     except KeyError as key_error:
@@ -255,7 +257,7 @@ def main():
             if item in ("scores", "similar"):
                 use_search = True
             item_content = item_html.render(
-                df=df, meta=meta_sorted_score, site=site, useSearch=use_search
+                df=main_df, meta=meta_sorted_score, site=site, use_search=use_search
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename)
@@ -267,7 +269,7 @@ def main():
     # write a file per speaker
     logger.info("Write a file per speaker")
     try:
-        generate_speaker(mako_templates, df, meta=meta, site=site, useSearch=False)
+        generate_speaker(mako_templates, main_df, meta=meta, site=site, use_search=False)
     except KeyError as key_error:
         print("Generating a file per speaker failed with {}".format(key_error))
         sys.exit(1)
@@ -316,7 +318,7 @@ def main():
             item_name = "assets/{0}.js".format(item)
             logger.info("Write %s", item_name)
             item_html = mako_templates.get_template(item_name)
-            item_content = item_html.render(df=df, meta=meta_sorted_score, site=site)
+            item_content = item_html.render(df=main_df, meta=meta_sorted_score, site=site)
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename)
     except KeyError as key_error:
@@ -333,7 +335,7 @@ def main():
             logger.info("Write %s", item_name)
             item_html = mako_templates.get_template(item_name)
             item_content = item_html.render(
-                df=df, meta=meta_sorted_score, site=site, isProd=(site == SITEPROD)
+                df=main_df, meta=meta_sorted_score, site=site, isProd=(site == SITEPROD)
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             # ok for robots but likely doesn't work for sitemap

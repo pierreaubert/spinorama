@@ -212,7 +212,7 @@ def add_scores(dataframe, parse_max):
 
     for speaker_name, speaker_data in dataframe.items():
         for _, measurements in speaker_data.items():
-            for version, measurement in measurements.items():
+            for version in measurements:
                 if speaker_name not in metadata.speakers_info.keys():
                     # should not happen. If you mess up with names of speakers
                     # and change them, then you can have inconsistent data.
@@ -222,9 +222,9 @@ def add_scores(dataframe, parse_max):
                 current = metadata.speakers_info[speaker_name]["measurements"][version]
                 if "pref_rating" not in current.keys():
                     continue
-                pref_rating = current["pref_rating"]
+                pref_rating = current.get("pref_rating", {})
                 # pref score
-                pref_score = pref_rating["pref_score"]
+                pref_score = pref_rating.get("pref_score")
                 if not math.isnan(pref_score):
                     min_pref_score = min(min_pref_score, pref_score)
                     max_pref_score = max(max_pref_score, pref_score)
@@ -375,8 +375,8 @@ def add_scores(dataframe, parse_max):
                         scaled_pref_score = 40
                     elif pref_score > 3.0:
                         scaled_pref_score = 30
-                    elif pref_score > 3.0:
-                        scaled_pref_score = 30
+                    elif pref_score > 2.0:
+                        scaled_pref_score = 20
                     elif pref_score > 1.0:
                         scaled_pref_score = 10
                     else:
@@ -703,7 +703,7 @@ def dump_metadata(meta):
 
 
 def main():
-    df = None
+    main_df = None
     speaker = args["--speaker"]
     mversion = args["--mversion"]
     morigin = args["--morigin"]
@@ -715,7 +715,7 @@ def main():
     if args["--smoke-test"] is not None:
         smoke_test = True
 
-    steps = [("start", time.perf_counter())]
+    steps: list[tuple[str, float]] = [("start", time.perf_counter())]
     custom_ray_init(args)
     steps.append(("ray init", time.perf_counter()))
 
@@ -723,11 +723,12 @@ def main():
         "speaker_name": speaker,
         "origin": morigin,
         "format": mformat,
+        "version": mversion,
     }
-    df = cache_load(filters=filters, smoke_test=smoke_test)
+    main_df = cache_load(filters=filters, smoke_test=smoke_test)
     steps.append(("loaded", time.perf_counter()))
 
-    if df is None:
+    if main_df is None:
         logger.error("Load failed! Please run ./generate_graphs.py")
         sys.exit(1)
 
@@ -735,11 +736,11 @@ def main():
     logger.info("Compute scores per speaker")
     add_quality(parse_max)
     steps.append(("quality", time.perf_counter()))
-    add_scores(df, parse_max)
+    add_scores(main_df, parse_max)
     steps.append(("scores", time.perf_counter()))
-    add_eq("./datas", df, parse_max)
+    add_eq("./datas", main_df, parse_max)
     steps.append(("eq", time.perf_counter()))
-    add_near(df, parse_max)
+    add_near(main_df, parse_max)
     steps.append(("near", time.perf_counter()))
 
     # write metadata in a json file for easy search
@@ -758,6 +759,6 @@ def main():
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="generate_meta.py version 1.4", options_first=True)
+    args = docopt(__doc__, version="generate_meta.py version 1.5", options_first=True)
     logger = get_custom_logger(level=args2level(args), duplicate=True)
     main()
