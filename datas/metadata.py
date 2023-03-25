@@ -3943,6 +3943,150 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "EAW MKC50": {
+        "brand": "EAW",
+        "model": "MKC50",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230325",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 110,
+                    },
+                    "sensitivity": 87,
+                    "impedance": 6,
+                    "SPL": {
+                        "continuous": 115,
+                        "peak": 121,
+                    },
+                    "size": {
+                        "height": 235,
+                        "width": 165,
+                        "depth": 141,
+                    },
+                    "weight": 3.3,
+                },
+            },
+        },
+    },
+    "EAW MKC60": {
+        "brand": "EAW",
+        "model": "MKC60",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230325",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 110,
+                    },
+                    "sensitivity": 89,
+                    "impedance": 6,
+                    "SPL": {
+                        "continuous": 119,
+                        "peak": 125,
+                    },
+                    "size": {
+                        "height": 324,
+                        "width": 208,
+                        "depth": 206,
+                    },
+                    "weight": 4.9,
+                },
+            },
+        },
+    },
+    "EAW MKC80": {
+        "brand": "EAW",
+        "model": "MKC80",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230325",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 93,
+                    "impedance": 7,
+                    "SPL": {
+                        "continuous": 126,
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 422,
+                        "width": 255,
+                        "depth": 267,
+                    },
+                    "weight": 10.0,
+                },
+            },
+        },
+    },
+    "EAW MKC120": {
+        "brand": "EAW",
+        "model": "MKC120",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230325",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 95,
+                    "impedance": 7.4,
+                    "SPL": {
+                        "continuous": 129,
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 569,
+                        "width": 367,
+                        "depth": 341,
+                    },
+                    "weight": 16.8,
+                },
+            },
+        },
+    },
     "Edifier Airpulse A100": {
         "brand": "Edifier",
         "model": "Airpulse A100",
@@ -17090,6 +17234,13 @@ origins_info = {
         "logo": "docs/metadata/dbaudio.png",
         "logo-small": "docs/metadata/dbaudio.png",
         "url": "https://www.dbaudio.com",
+    },
+    "Vendors-EAW": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://eaw.com",
     },
     "Vendors-EV": {
         "min hz": 20,

@@ -1,0 +1,8 @@
+EQ for EAW MKC120 computed from Vendors-EAW data
+Preference Score 5.51 with EQ 5.61
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-03-25-13:45:23
+
+Preamp: -3.2 dB
+
+Filter  1: ON PK Fc    33 Hz Gain +3.00 dB Q 0.84
