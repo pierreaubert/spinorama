@@ -1,0 +1,10 @@
+{
+    "name": "Spinorama Plugin",
+    "description": "A plugin that provides Spinorama information for a given speaker.",
+    "api_spec_url": "https://www.spinorama.org/.well-known/openapi.yaml",
+    "logo_url": "https://www.spinorama.org/logo.png",
+    "homepage": "https://www.spinorama.org",
+    "authentication": {
+      "type": "none"
+    }
+  }
