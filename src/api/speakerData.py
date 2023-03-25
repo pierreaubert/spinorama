@@ -1,11 +1,12 @@
+# -*- coding: utf-8 -*-
 from fastapi import FastAPI
 
 app = FastAPI()
 
 
-# Define some example speaker data     
-#  
-#  Should be something like this as per your code 
+# Define some example speaker data
+#
+#  Should be something like this as per your code
 # df = {}
 #   speakers = glob("{}/*".format(cpaths.CPATH_DOCS_SPEAKERS))
 #     for speaker in speakers:
@@ -15,14 +16,8 @@ app = FastAPI()
 #       speaker_name = speaker.replace(cpaths.CPATH_DOCS_SPEAKERS + "/", "")
 
 speakers = [
-    {
-        "name": "KEF LS50",
-        "referenceToDatas": "/datas/XXX"
-    },
-    {
-        "name": "KEF LS50 (Meta)",
-        "referenceToDatas": "/datas/XXX"
-    }
+    {"name": "KEF LS50", "referenceToDatas": "/datas/XXX"},
+    {"name": "KEF LS50 (Meta)", "referenceToDatas": "/datas/XXX"},
 ]
 
 # Define a route for the /speakerData endpoint
