@@ -38,12 +38,13 @@ import numpy as np
 
 from generate_common import get_custom_logger, args2level
 from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DOCS_SPEAKERS, CPATH_DATAS_EQ
+from spinorama.need_update import need_update
 from spinorama.pict import write_multiformat
 from spinorama.plot import plot_eqs
 from spinorama.load_rewseq import parse_eq_iir_rews
 
 
-VERSION = 0.1
+VERSION = 0.2
 
 
 def print_eq_compare(data, force):
@@ -64,7 +65,8 @@ def print_eq_compare(data, force):
             "yanchor": "bottom",
         }
     )
-    write_multiformat(fig, filename, force)
+    recent = need_update(filename, dependencies=eqs)
+    write_multiformat(fig, filename, force or recent)
 
 
 def main(force):

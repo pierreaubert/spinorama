@@ -43,9 +43,10 @@ import glob
 import os
 import random
 import sys
-from typing import List, Mapping, Tuple
+
 
 from docopt import docopt
+
 
 try:
     import ray
@@ -80,7 +81,7 @@ def tracing(msg):
         print(f"---- TRACING ---- {msg} ----")
 
 
-def get_speaker_list(speakerpath: str) -> List[str]:
+def get_speaker_list(speakerpath: str) -> set[str]:
     """return a list of speakers from data subdirectory"""
     speakers = []
     dirs = glob.glob(speakerpath + "/*")
@@ -106,7 +107,7 @@ def queue_measurement(
     msymmetry: str,
     mparameters: dict,
     level: int,
-) -> Tuple[int, int, int, int]:
+) -> tuple[int, int, int, int]:
     """Add all measurements in the queue to be processed"""
     id_df = parse_graphs_speaker.remote(
         "./datas/measurements",
@@ -156,7 +157,7 @@ def queue_measurement(
     return (id_df, id_eq, id_g1, id_g2)
 
 
-def queue_speakers(speakerlist: List[str], filters: Mapping[str, dict], level: int) -> dict:
+def queue_speakers(speakerlist: set[str], filters: dict[str, dict], level: int) -> dict:
     """Add all speakers in the queue to be processed"""
     ray_ids = {}
     count = 0

@@ -51,65 +51,61 @@ from spinorama.speaker_display import (
 from spinorama.plot import plot_params_default, contour_params_default, radar_params_default
 
 
-def print_graph(speaker, version, origin, key, title, chart, force, fileext):
+def build_filename(speaker, origin, key, title, file_ext) -> str:
+    filedir = CPATH_DOCS_SPEAKERS + "/" + speaker + "/" + origin.replace("Vendors-", "") + "/" + key
+    pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
+    filename = filedir + "/" + title.replace("_smoothed", "")
+    if file_ext == "png":
+        filename += "_large"
+    filename += "." + file_ext
+    return filename
+
+
+def build_title(origin: str, version: str, speaker: str, title: str) -> str:
+    whom = origin
+    if origin[0:7] == "Vendors-":
+        whom = origin.replace("Vendors-", "")
+    elif origin == "Misc":
+        if version[-3:] == "-sr":
+            whom = "Sound & Recording (data scanned)"
+        elif version[-3:] == "-pp":
+            whom = "Production Partners (data scanned)"
+        elif origin == "ASR":
+            whom = "Audio Science Review"
+    return "{2} for {0} measured by {1}".format(speaker, whom, title)
+
+
+def print_graph(filename, chart, title, ext, force) -> int:
     updated = 0
-    if chart is not None:
-        filedir = (
-            CPATH_DOCS_SPEAKERS + "/" + speaker + "/" + origin.replace("Vendors-", "") + "/" + key
-        )
-        pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
-        for ext in ["json", "png"]:  # svg and html skipped to keep size small
-            # skip the 2cols.json and 3cols.json as they are really large
-            # 2cols and 3cols are more for printing
-            if ext == "json" and title in (
-                "2cols",
-                "3cols",
-            ):
-                continue
-            filename = filedir + "/" + title.replace("_smoothed", "")
-            if ext == "png":
-                # generate large image that are then easy to find and compress
-                # before uploading
-                filename += "_large"
-            filename += "." + ext
-            if (
-                force
-                or not os.path.exists(filename)
-                or (os.path.exists(filename) and os.path.getsize(filename) == 0)
-            ):
-                if fileext is None or (fileext is not None and fileext == ext):
-                    try:
-                        if ext == "json":
-                            content = chart.to_json()
-                            with open(filename, "w") as f_d:
-                                f_d.write(content)
-                        else:
-                            write_multiformat(chart, filename, force)
-                    except Exception:
-                        logger.exception("Got unkown error for %s", filename)
-            if ext == "json":
-                filename += ".zip"
-                if (
-                    force
-                    or not os.path.exists(filename)
-                    or (os.path.exists(filename) and os.path.getsize(filename) == 0)
-                ):
-                    if fileext is None or (fileext is not None and fileext == ext):
-                        try:
-                            content = chart.to_json()
-                            with zipfile.ZipFile(
-                                filename,
-                                "w",
-                                compression=zipfile.ZIP_DEFLATED,
-                                allowZip64=True,
-                            ) as current_zip:
-                                current_zip.writestr("{0}.json".format(title), content)
-                                logger.info("Saving %s in %s", title, filename)
-                                updated += 1
-                        except Exception:
-                            logger.exception("Got unkown error for %s", filename)
-    else:
-        logger.debug("Chart is None for %s %s %s %s", speaker, origin, key, title)
+
+    check = (
+        force
+        or not os.path.exists(filename)
+        or (os.path.exists(filename) and os.path.getsize(filename) == 0)
+    )
+    if not check:
+        return updated
+
+    try:
+        if ext == "json":
+            content = chart.to_json()
+            with open(filename, "w") as f_d:
+                f_d.write(content)
+            # also store a compressed version
+            with zipfile.ZipFile(
+                filename,
+                "w",
+                compression=zipfile.ZIP_DEFLATED,
+                allowZip64=True,
+            ) as current_zip:
+                current_zip.writestr("{0}.json".format(title), content)
+                logger.info("Saving %s in %s", title, filename)
+        else:
+            write_multiformat(chart, filename, force)
+        updated += 1
+    except Exception:
+        logger.exception("Got unkown error for %s", filename)
+
     return updated
 
 
@@ -191,17 +187,7 @@ def print_graphs(
         title = k.replace("_smoothed", "")
         # optimised for small screens / vertical orientation
         if graphs[k] is not None:
-            whom = origin
-            if origin[0:7] == "Vendors-":
-                whom = origin.replace("Vendors-", "")
-            elif origin == "Misc":
-                if version[-3:] == "-sr":
-                    whom = "Sound & Recording (data scanned)"
-                elif version[-3:] == "-pp":
-                    whom = "Production Partners (data scanned)"
-            elif origin == "ASR":
-                whom = "Audio Science Review"
-            text = "{2} for {0} measured by {1}".format(speaker, whom, title)
+            text = build_title(origin, version, speaker, title)
             graphs[k].update_layout(
                 title=dict(
                     text=text,
@@ -217,14 +203,9 @@ def print_graphs(
     updated = 0
     for title, graph in graphs.items():
         if graph is not None:
-            updated = print_graph(
-                speaker,
-                version,
-                origin,
-                key,
-                title,
-                graph,
-                force_print,
-                filter_file_ext,
-            )
+            # force_update = need_update()
+            force_update = False
+            for ext in ("png", "json"):
+                filename = build_filename(speaker, origin, key, title, ext)
+                updated += print_graph(filename, graph, title, ext, force_print or force_update)
     return updated

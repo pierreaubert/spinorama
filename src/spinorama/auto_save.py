@@ -205,10 +205,10 @@ def optim_save_peq(
             if optim_config["smoke_test"]:
                 graph_filename += "_smoketest"
             graph_filename += ".png"
-            print("debug: writing graph {}".format(graph_filename))
+            logger.debug("writing graph %s", graph_filename)
             write_multiformat(chart=graph, filename=graph_filename, force=True)
     else:
-        print("skipping printing graphs")
+        logger.debug("skipping printing graphs")
 
     # print a compact table of results
     if optim_config["verbose"] and use_score:
