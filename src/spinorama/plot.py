@@ -60,7 +60,7 @@ radar_params_default = {
     "xmin": 400,
     "xmax": 20000,
     "width": 1000,
-    "height": 800,
+    "height": 1200,
 }
 
 colors = [
@@ -271,7 +271,7 @@ def contour_layout(params):
     return dict(
         width=params["width"],
         height=params["height"],
-        legend=dict(x=0.5, y=1.05, xanchor="center", orientation=orientation),
+        legend=dict(x=0.5, y=0.95, xanchor="center", orientation=orientation),
         title=dict(
             x=0.5,
             y=0.99,
@@ -295,7 +295,20 @@ def radar_layout(params):
     return dict(
         width=params["width"],
         height=params["height"],
-        legend=dict(x=0.5, y=1.05, xanchor="center", orientation=orientation),
+        legend=dict(
+            x=0.5,
+            y=1.05,
+            xanchor="center",
+            orientation=orientation,
+            title=dict(
+                font=dict(
+                    size=10,
+                ),
+            ),
+            font=dict(
+                size=9,
+            ),
+        ),
         title=dict(
             x=0.5,
             y=0.98,
@@ -707,7 +720,7 @@ def plot_radar(spl, params):
     def label(i):
         return "{:d} Hz".format(i)
 
-    def plot_radar_freq(anglelist, df):
+    def plot_radar_freq(anglelist, freqlist, df):
         dfu = sort_angles(df)
         db_mean = np.mean(dfu.loc[(dfu.Freq > 900) & (dfu.Freq < 1100)]["On Axis"].values)
         freq = dfu.Freq
@@ -724,7 +737,7 @@ def plot_radar(spl, params):
         db_x = []
         db_y = []
         hz_z = []
-        for hz in [500, 1000, 2000, 10000, 15000]:
+        for hz in freqlist:
             ihz = find_nearest_freq(freq, hz)
             if ihz is None:
                 continue
@@ -744,42 +757,81 @@ def plot_radar(spl, params):
 
         return db_mean, pd.DataFrame({"R": db_x, "Theta": db_y, "Freq": hz_z})
 
-    fig = go.Figure()
+    fig = make_subplots(
+        rows=2,
+        cols=2,
+        specs=[
+            [{"type": "polar"}, {"type": "polar"}],
+            [{"type": "polar"}, {"type": "polar"}],
+        ],
+        horizontal_spacing=0.15,
+        vertical_spacing=0.05,
+    )
 
-    _, dbs_df = plot_radar_freq(anglelist, spl)
-
-    for freq in np.unique(dbs_df["Freq"].values):
-        mslice = dbs_df.loc[dbs_df.Freq == freq]
-        trace = go.Scatterpolar(
-            r=mslice.R,
-            theta=mslice.Theta,
-            dtheta=30,
-            name=freq,
-            marker_color=uniform_colors.get(freq, "black"),
-            legendrank=int(freq[:-3]),
-        )
-        if layout != "compact":
-            trace.legendgroup = ("measurements",)
-            trace.legendgrouptitle_text = ("Frequencies",)
-        fig.add_trace(trace)
-
-    fig.update_layout(radar_layout(params))
-    fig.update_layout(
-        polar=dict(
-            radialaxis=dict(
-                range=[-45, 5],
-                dtick=5,
-            ),
-            angularaxis=dict(
-                dtick=10,
-                tickvals=list(range(0, 360, 10)),
-                ticktext=[
-                    f"{x}°" if abs(x) < 60 or not x % 30 else " "
-                    for x in (list(range(0, 190, 10)) + list(range(-170, 0, 10)))
-                ],
-            ),
+    radialaxis = dict(
+        range=[-45, 5],
+        dtick=5,
+        tickfont=dict(
+            size=10,
         ),
     )
+    angularaxis = dict(
+        dtick=10,
+        tickvals=list(range(0, 360, 10)),
+        ticktext=[
+            f"{x}°" if abs(x) < 60 or not x % 30 else " "
+            for x in (list(range(0, 190, 10)) + list(range(-170, 0, 10)))
+        ],
+        tickfont=dict(
+            size=10,
+        ),
+    )
+
+    radar_colors = {
+        "100 Hz": colors[0],
+        "125 Hz": colors[1],
+        "160 Hz": colors[2],
+        "200 Hz": colors[3],
+        "250 Hz": colors[4],
+        "315 Hz": colors[5],
+        "400 Hz": colors[6],
+        "500 Hz": colors[7],
+        "1600 Hz": colors[8],
+        "2000 Hz": colors[9],
+        "2500 Hz": colors[0],
+        "3150 Hz": colors[1],
+        "4000 Hz": colors[2],
+        "5000 Hz": colors[3],
+        "6000 Hz": colors[4],
+        "8000 Hz": colors[5],
+    }
+
+    def update_pict(anglelist, freqlist, row, col, spl):
+        _, dbs_df = plot_radar_freq(anglelist, freqlist, spl)
+
+        for freq in np.unique(dbs_df["Freq"].values):
+            mslice = dbs_df.loc[dbs_df.Freq == freq]
+            trace = go.Scatterpolar(
+                r=mslice.R,
+                theta=mslice.Theta,
+                dtheta=30,
+                name=freq,
+                marker_color=radar_colors.get(freq, "black"),
+                legendrank=int(freq[:-3]),
+            )
+            if layout != "compact":
+                trace.legendgroup = ("measurements",)
+                trace.legendgrouptitle_text = ("Frequencies",)
+            fig.add_trace(trace, row=row, col=col)
+            fig.update_polars(radialaxis=radialaxis, angularaxis=angularaxis, row=row, col=col)
+
+    update_pict(anglelist, [100, 125, 160, 200], 1, 1, spl)
+    update_pict(anglelist, [1600, 2000, 2500, 3150], 1, 2, spl)
+    update_pict(anglelist, [250, 315, 400, 500], 2, 1, spl)
+    update_pict(anglelist, [4000, 5000, 6300, 8000], 2, 2, spl)
+
+    fig.update_layout(radar_layout(params))
+    # fig.update_layout(polar=dict(radialaxis=radialaxis, angularaxis=angularaxis)), row=row, col=col)
 
     return fig
 
