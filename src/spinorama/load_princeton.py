@@ -1,13 +1,30 @@
 # -*- coding: utf-8 -*-
-import logging
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import glob
+
 import numpy as np
 import pandas as pd
 from scipy.io import loadmat
-from .load_misc import sort_angles
-from .compute_misc import resample
 
-logger = logging.getLogger("spinorama")
+from spinorama import logger
+from spinorama.load_misc import sort_angles
+from spinorama.compute_misc import resample
 
 
 def parse_graph_freq_princeton_mat(mat, suffix):
@@ -76,10 +93,10 @@ def parse_graphs_speaker_princeton(speaker_path, speaker_brand, speaker_name, ve
         elif d[-9:] == "_V_IR.mat":
             v_file = d
     if h_file is None or v_file is None:
-        logger.info("Couldn't find Horizontal and Vertical IR files for speaker {:s}".format(speaker_name))
-        logger.info("Looking in directory {:s}".format(matfilename))
+        logger.info("Couldn't find Horizontal and Vertical IR files for speaker {:s}", speaker_name)
+        logger.info("Looking in directory {:s}", matfilename)
         for d in dirpath:
-            logger.info("Found file {:s}".format(d))
+            logger.info("Found file {:s}", d)
         return None
 
     h_spl = parse_graph_princeton(h_file, "H")

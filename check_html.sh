@@ -24,11 +24,11 @@ for d in docs/*.html; do
         status=1;
         echo "$d is empty (ERROR)";
     else
-        msg=$(./node_modules/.bin/html-validator --format=html --file="$d");
+        msg=$(./node_modules/.bin/w3c-html-validator --quiet "$d");
         if test -n "$msg"; then
             status=1;
             echo "Linting $d (ERROR)";
-    	    ./node_modules/.bin/html-validator --format=html --file="$d" --verbose;
+    	    ./node_modules/.bin/w3c-html-validator "$d";
         fi
     fi
 done

@@ -46,9 +46,8 @@ if ! test -d $SPIN/spinorama-venv; then
     # rehash
     pip3 install -U pip
     pip3 install -r requirements.txt
-    pip3 install -r requirements-tests.txt
-    # currently not working on ubuntu-21.10
-    # ray install-nightly
+    pip3 install -r requirements-test.txt
+    pip3 install -r requirements-dev.txt
 fi
 source $SPIN/spinorama-venv/bin/activate
 

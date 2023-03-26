@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
@@ -48,17 +47,20 @@ def get_similar_names(speakername):
     return difflib.get_close_matches(speakername, metadata.speakers_info.keys())
 
 
-def get_custom_logger(duplicate=False):
+def get_custom_logger(level, duplicate):
     """Define properties of our logger"""
     custom = logging.getLogger("spinorama")
     custom_file_handler = logging.FileHandler("debug_optim.log")
-    formatter = logging.Formatter("%(asctime)s - %(filename)s:%(funcName)s:%(lineno)d - %(levelname)s - %(message)s")
+    formatter = logging.Formatter(
+        "%(asctime)s - %(filename)s:%(funcName)s:%(lineno)d - %(levelname)s - %(message)s"
+    )
     custom_file_handler.setFormatter(formatter)
     custom.addHandler(custom_file_handler)
     if duplicate is True:
         custom_stream_handler = logging.StreamHandler(sys.stdout)
         custom_stream_handler.setFormatter(formatter)
         custom.addHandler(custom_stream_handler)
+    custom.setLevel(level)
     return custom
 
 
@@ -66,7 +68,7 @@ def args2level(args):
     """Transform an argument into a logger level"""
     level = logging.WARNING
     if args["--log-level"] is not None:
-        check_level = args["--log-level"]
+        check_level = args["--log-level"].upper()
         if check_level in ("INFO", "DEBUG", "WARNING", "ERROR"):
             if check_level == "INFO":
                 level = logging.INFO
@@ -114,7 +116,7 @@ def custom_ray_init(args):
     level = args2level(args)
 
     def ray_setup_logger(worker_logger):
-        worker_logger = get_custom_logger(False)
+        worker_logger = get_custom_logger(level=level, duplicate=False)
         worker_logger.setLevel(level)
 
     # doesn't work in 2.0
@@ -140,7 +142,9 @@ CACHE_DIR = ".cache"
 
 def cache_key(name):
     # 256 partitions, use hashlib for stable hash
-    return "{:2s}".format(md5(name.encode("utf-8"), usedforsecurity=False).hexdigest()[0:2])
+    key = md5(name.encode("utf-8"), usedforsecurity=False).hexdigest()
+    short_key = key[0:2]
+    return f"{short_key:2s}"
 
 
 def cache_match(key, name):
@@ -148,15 +152,15 @@ def cache_match(key, name):
 
 
 def cache_hash(df_all):
-    df = {}
+    df_hashed = {}
     for k, v in df_all.items():
         if k is None or len(k) == 0:
             continue
         h = cache_key(k)
-        if h not in df.keys():
-            df[h] = {}
-        df[h][k] = v
-    return df
+        if h not in df_hashed.keys():
+            df_hashed[h] = {}
+        df_hashed[h][k] = v
+    return df_hashed
 
 
 def cache_save_key(key, data):
@@ -168,7 +172,7 @@ def cache_save_key(key, data):
         fl.save(path=cache_name, data=data)
 
 
-def cache_save(df_all, smoke_test=False):
+def cache_save(df_all):
     pathlib.Path(CACHE_DIR).mkdir(parents=True, exist_ok=True)
     df_hashed = cache_hash(df_all)
     for key, data in df_hashed.items():
@@ -177,12 +181,11 @@ def cache_save(df_all, smoke_test=False):
 
 
 def is_filtered(speaker, data, filters):
-
     if filters.get("speaker_name") is not None and filters.get("speaker_name") != speaker:
         return True
 
     current = None
-    if speaker in metadata.speakers_info.keys():
+    if speaker in metadata.speakers_info:
         if "default_measurement" not in metadata.speakers_info[speaker].keys():
             print("error no default measurement for {}".format(speaker))
             return True
@@ -192,13 +195,19 @@ def is_filtered(speaker, data, filters):
             return False
         current = metadata.speakers_info[speaker]["measurements"][first]
 
-    if filters.get("origin") is not None and current is not None:
-        if current["origin"] != filters.get("origin"):
-            return True
+    if (
+        filters.get("origin") is not None
+        and current is not None
+        and current["origin"] != filters.get("origin")
+    ):
+        return True
 
-    if filters.get("format") is not None and current is not None:
-        if current["format"] != filters.get("format"):
-            return True
+    if (
+        filters.get("format") is not None
+        and current is not None
+        and current["format"] != filters.get("format")
+    ):
+        return True
 
     return False
 
@@ -208,12 +217,14 @@ def cache_load_seq(filters, smoke_test):
     cache_files = glob("{}/*.h5".format(CACHE_DIR))
     count = 0
     for cache in cache_files:
-        if filters.get("speaker_name") is not None and cache[-5:-3] != cache_key(filters.get("speaker_name")):
+        if filters.get("speaker_name") is not None and cache[-5:-3] != cache_key(
+            filters.get("speaker_name")
+        ):
             continue
         df_read = fl.load(path=cache)
         # print('reading file {} found {} entries'.format(cache, len(df_read)))
         for speaker, data in df_read.items():
-            if speaker in df_all.keys():
+            if speaker in df_all:
                 print("error in cache: {} is already in keys".format(speaker))
                 continue
             if is_filtered(speaker, data, filters):
@@ -234,11 +245,13 @@ def cache_fetch(cachepath):
 
 
 def cache_load_distributed_map(filters, smoke_test):
-    cache_files = glob("{}/*.h5".format(CACHE_DIR))
+    cache_files = glob("/home/pierre/src/spinorama/{}/*.h5".format(CACHE_DIR))
     ids = []
     # mapper read the cache and start 1 worker per file
     for cache in cache_files:
-        if filters.get("speaker_name") is not None and cache[-5:-3] != cache_key(filters.get("speaker_name")):
+        if filters.get("speaker_name") is not None and cache[-5:-3] != cache_key(
+            filters.get("speaker_name")
+        ):
             continue
         ids.append(cache_fetch.remote(cache))
 
@@ -251,12 +264,11 @@ def cache_load_distributed_reduce(filters, smoke_test, ids1):
     count = 0
     ids = ids1
     while 1:
-
         done_ids, remaining_ids = ray.wait(ids, num_returns=min(len(ids), 64))
         for id in done_ids:
             df_read = ray.get(id)
             for speaker, data in df_read.items():
-                if speaker in df_all.keys():
+                if speaker in df_all:
                     print("error in cache: {} is already in keys".format(speaker))
                 if is_filtered(speaker, data, filters):
                     continue
@@ -294,16 +306,16 @@ def cache_update(df_new, filters):
     for new_speaker, new_datas in df_new.items():
         if filters is not None and new_speaker != filters.get("speaker", ""):
             continue
-        df_old = cache_load({"speaker_name": new_speaker}, False)
+        df_old = cache_load(filters={"speaker_name": new_speaker}, smoke_test=False)
         for new_origin, new_measurements in new_datas.items():
             for new_measurement, new_data in new_measurements.items():
-                if new_speaker not in df_old.keys():
+                if new_speaker not in df_old:
                     df_old[new_speaker] = {new_origin: {new_measurement: new_data}}
-                elif new_origin not in df_old[new_speaker].keys():
+                elif new_origin not in df_old[new_speaker]:
                     df_old[new_speaker][new_origin] = {new_measurement: new_data}
                 else:
                     df_old[new_speaker][new_origin][new_measurement] = new_data
                 count += 1
         cache_save_key(cache_key(new_speaker), df_old)
-    print("(updated +{}) ".format(count), end=" ", flush=True)
+    print(f"(updated +{count}) ", end=" ", flush=True)
     print("(saved).")

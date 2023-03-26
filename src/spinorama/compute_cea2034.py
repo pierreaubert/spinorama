@@ -1,16 +1,30 @@
 # -*- coding: utf-8 -*-
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Compute Harman/Olive score for speaker"""
-import logging
 import math
+
 import numpy as np
 import pandas as pd
-from typing import DefaultDict
+
+from spinorama import logger
 
 
-logger = logging.getLogger("spinorama")
-
-
-def compute_area_Q(alpha_d: float, beta_d: float) -> float:
+def compute_area_q(alpha_d: float, beta_d: float) -> float:
     """Compute the area of the sphere between 4 lines at alpha and beta angles"""
     alpha = alpha_d * 2 * math.pi / 360
     beta = beta_d * 2 * math.pi / 360
@@ -27,9 +41,11 @@ def compute_area_Q(alpha_d: float, beta_d: float) -> float:
 def compute_weigths() -> list[float]:
     """Compute the weigths from the CEA2034 standards"""
     angles = [i * 10 + 5 for i in range(0, 9)] + [90]
-    weigth_angles = [compute_area_Q(i, i) for i in angles]
+    weigth_angles = [compute_area_q(i, i) for i in angles]
     # weigths are the delta between 2 consecutive areas
-    weigths = [weigth_angles[0]] + [weigth_angles[i] - weigth_angles[i - 1] for i in range(1, len(weigth_angles))]
+    weigths = [weigth_angles[0]] + [
+        weigth_angles[i] - weigth_angles[i - 1] for i in range(1, len(weigth_angles))
+    ]
     weigths[9] *= 2.0
     return weigths
 
@@ -37,7 +53,7 @@ def compute_weigths() -> list[float]:
 def compute_weigths_hv(weigths: dict[str, float]) -> dict[str, float]:
     """copy weigths to both horizontal and vertical"""
     return (
-        {k: v for k, v in weigths.items()}
+        dict(weigths)
         | {f"{k}_v": v for k, v in weigths.items()}
         | {f"{k}_h": v for k, v in weigths.items()}
     )
@@ -101,20 +117,18 @@ sp_weigths_hv = compute_weigths_hv(sp_weigths)
 def spl2pressure(spl: float) -> float:
     """Convert SPL to pressure"""
     try:
-        p = pow(10, (spl - 105.0) / 20.0)
-        return p
-    except TypeError as type_error:
-        # print("spl2pressure: spl={0} e={1}".format(spl, type_error))
-        logger.error("spl2pressure spl={0} e={1}".format(spl, type_error))
+        pressure = pow(10, (spl - 105.0) / 20.0)
+    except TypeError:
+        logger.exception("spl2pressure spl=%f", spl)
         return 0.0
+    return pressure
 
 
-def pressure2spl(p: float) -> float:
+def pressure2spl(pressure: float) -> float:
     """Convert pressure to SPL"""
-    if p < 0.0:
-        # print("pressure is negative p={0}".format(p))
-        logger.error("pressure is negative p={0}".format(p))
-    return 105.0 + 20.0 * math.log10(p)
+    if pressure < 0.0:
+        logger.error("pressure is negative p=%f", pressure)
+    return 105.0 + 20.0 * math.log10(pressure)
 
 
 def column_trim(col: str) -> str:
@@ -142,7 +156,7 @@ def spatial_average(sp_window: pd.DataFrame, func="rms") -> pd.DataFrame:
         logger.debug("Freq is not in sp_cols")
         return pd.DataFrame()
     if len(sp_window) < 2:
-        logger.debug("Len window is {0}".format(len(sp_window)))
+        logger.debug("Len window is %d", len(sp_window))
         return pd.DataFrame()
 
     result = pd.DataFrame(
@@ -162,13 +176,22 @@ def spatial_average(sp_window: pd.DataFrame, func="rms") -> pd.DataFrame:
         # hack
         if n_avg == 0:
             return 0.000000001
-        r = np.sqrt(np.sum(avg) / n_avg)
-        return r
+        return np.sqrt(np.sum(avg) / n_avg)
 
     if func == "rms":
-        result["dB"] = sp_window.drop(columns=["Freq"]).apply(spl2pressure).apply(rms, axis=1).apply(pressure2spl)
+        result["dB"] = (
+            sp_window.drop(columns=["Freq"])
+            .apply(spl2pressure)
+            .apply(rms, axis=1)
+            .apply(pressure2spl)
+        )
     elif func == "weighted_rms":
-        result["dB"] = sp_window.drop(columns=["Freq"]).apply(spl2pressure).apply(weighted_rms, axis=1).apply(pressure2spl)
+        result["dB"] = (
+            sp_window.drop(columns=["Freq"])
+            .apply(spl2pressure)
+            .apply(weighted_rms, axis=1)
+            .apply(pressure2spl)
+        )
 
     return result.reset_index(drop=True)
 
@@ -235,7 +258,9 @@ def listening_window(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def total_early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected") -> pd.DataFrame:
+def total_early_reflections(
+    h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
+) -> pd.DataFrame:
     """Compute the Total Early Reflections from the SPL horizontal and vertical"""
     if method == "corrected":
         return spatial_average2(
@@ -282,7 +307,7 @@ def total_early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="co
             v_spl,
             ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"],
         )
-    elif method == "standard":
+    else:
         return spatial_average2(
             h_spl,
             [
@@ -311,34 +336,34 @@ def total_early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="co
             v_spl,
             ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"],
         )
-    else:
-        logger.fatal("method is unknown {}".format(method))
-        return None
 
 
 def total_early_reflections2(
-    floor_bounce,
-    ceiling_bounce,
-    front_wall_bounce,
-    side_wall_bounce,
-    rear_wall_bounce,
+    floor_bounce: pd.DataFrame,
+    ceiling_bounce: pd.DataFrame,
+    front_wall_bounce: pd.DataFrame,
+    side_wall_bounce: pd.DataFrame,
+    rear_wall_bounce: pd.DataFrame,
     method="corrected",
-):
+) -> pd.DataFrame:
     floor = np.power(10, (floor_bounce.dB - 105.0) / 20.0)
     ceiling = np.power(10, (ceiling_bounce.dB - 105.0) / 20.0)
     side = np.power(10, (side_wall_bounce.dB - 105.0) / 20.0)
     rear = np.power(10, (rear_wall_bounce.dB - 105.0) / 20.0)
     front = np.power(10, (front_wall_bounce.dB - 105.0) / 20.0)
 
+    spl = None
     if method == "corrected":
         # 3+3+10+19+7 = 42
         # spl = 105.0 + 20.0 * np.log10((3*floor+3*ceiling+10*side+19*rear+7*front)/42.0)
-        spl = 105.0 + 20.0 * np.log10(np.sqrt((floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0))
-    elif method == "standard":
-        # 3+3+10+3+7 = 26
-        spl = 105.0 + 20.0 * np.log10(np.sqrt((floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0))
+        spl = 105.0 + 20.0 * np.log10(
+            np.sqrt((floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0)
+        )
     else:
-        logger.fatal("method is unknown {}", method)
+        # 3+3+10+3+7 = 26
+        spl = 105.0 + 20.0 * np.log10(
+            np.sqrt((floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0)
+        )
     return pd.DataFrame({"dB": spl})
 
 
@@ -348,7 +373,9 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
 
     ceiling_bounce = spatial_average1(v_spl, ["Freq", "40°", "50°", "60°"])
 
-    front_wall_bounce = spatial_average1(h_spl, ["Freq", "On Axis", "10°", "20°", "30°", "-10°", "-20°", "-30°"])
+    front_wall_bounce = spatial_average1(
+        h_spl, ["Freq", "On Axis", "10°", "20°", "30°", "-10°", "-20°", "-30°"]
+    )
 
     side_wall_bounce = spatial_average1(
         h_spl,
@@ -395,7 +422,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
                 "180°",
             ],
         )
-    elif method == "standard":
+    else:
         rear_wall_bounce = spatial_average1(
             h_spl,
             [
@@ -405,8 +432,6 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
                 "180°",
             ],
         )
-    else:
-        logger.fatal("method is unknown {}".format(method))
 
     # total_early_reflection = total_early_reflections(h_spl, v_spl)
     total_early_reflection = total_early_reflections2(
@@ -425,7 +450,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
         }
     ).reset_index(drop=True)
 
-    for (key, name) in [
+    for key, name in [
         ("Floor Bounce", floor_bounce),
         ("Ceiling Bounce", ceiling_bounce),
         ("Front Wall Bounce", front_wall_bounce),
@@ -436,7 +461,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
         if not name.empty:
             early_reflection[key] = name.dB
         else:
-            logger.debug("{0} is empty", key)
+            logger.debug("%s is empty", key)
     return early_reflection.reset_index(drop=True)
 
 
@@ -460,7 +485,7 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
     v_r = pd.DataFrame({"Freq": v_spl.Freq}).reset_index(drop=True)
 
     # print(vr.shape, onaxis.shape, floor_reflection.shape)
-    for (key, name) in [
+    for key, name in [
         ("Floor Reflection", floor_reflection),
         ("Ceiling Reflection", ceiling_reflection),
         ("Total Vertical Reflection", total_vertical_reflection),
@@ -468,7 +493,7 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
         if not name.empty:
             v_r[key] = name.dB
         else:
-            logger.debug("{0} is empty", key)
+            logger.debug("%s is empty", key)
 
     return v_r.reset_index(drop=True)
 
@@ -532,7 +557,9 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
     # Side: ± 40°, ± 50°, ± 60°, ± 70°, ± 80° horizontal
     # Rear: ± 90°, ± 100°, ± 110°, ± 120°, ± 130°, ± 140°, ± 150°, ± 160°, ± 170°, 180°
     # horizontal, (i.e.: the horizontal part of the rear hemisphere).
-    front = spatial_average1(h_spl, ["Freq", "On Axis", "10°", "20°", "30°", "-10°", "-20°", "-30°"])
+    front = spatial_average1(
+        h_spl, ["Freq", "On Axis", "10°", "20°", "30°", "-10°", "-20°", "-30°"]
+    )
 
     side = spatial_average1(
         h_spl,
@@ -584,7 +611,7 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
             "Freq": h_spl.Freq,
         }
     ).reset_index(drop=True)
-    for (key, name) in [
+    for key, name in [
         ("Front", front),
         ("Side", side),
         ("Rear", rear),
@@ -593,13 +620,13 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
         if not name.empty:
             h_r[key] = name.dB
         else:
-            logger.debug("{0} is empty", key)
+            logger.debug("%s is empty", key)
     return h_r.reset_index(drop=True)
 
 
-def estimated_inroom(lw: pd.DataFrame, er: pd.DataFrame, sp: pd.DataFrame) -> pd.DataFrame:
+def estimated_inroom(l_w: pd.DataFrame, e_r: pd.DataFrame, s_p: pd.DataFrame) -> pd.DataFrame:
     """Compute the Estimated In-Room Response (PIR) from the SPL horizontal and vertical"""
-    if lw.empty or er.empty or sp.empty:
+    if l_w.empty or e_r.empty or s_p.empty:
         return pd.DataFrame()
     # The Estimated In-Room Response shall be calculated using the directivity
     # data acquired in Section 5 or Section 6.
@@ -612,33 +639,42 @@ def estimated_inroom(lw: pd.DataFrame, er: pd.DataFrame, sp: pd.DataFrame) -> pd
     # applied and the squared pressure values summed they shall be converted
     # back to sound pressure levels.
     key = "Total Early Reflection"
-    if key not in er.keys():
+    if key not in e_r.keys():
         key = "dB"
 
     try:
-        # print(lw.dB.shape, er[key].shape, sp.dB.shape)
-        # print(lw.dB.apply(spl2pressure))
-        # print(er[key].apply(spl2pressure))
-        # print(sp.dB.apply(spl2pressure))
+        # print(l_w.dB.shape, e_r[key].shape, s_p.dB.shape)
+        # print(l_w.dB.apply(spl2pressure))
+        # print(e_r[key].apply(spl2pressure))
+        # print(s_p.dB.apply(spl2pressure))
 
-        eir = 0.12 * lw.dB.apply(spl2pressure) + 0.44 * er[key].apply(spl2pressure) + 0.44 * sp.dB.apply(spl2pressure)
+        eir = (
+            0.12 * l_w.dB.apply(spl2pressure)
+            + 0.44 * e_r[key].apply(spl2pressure)
+            + 0.44 * s_p.dB.apply(spl2pressure)
+        )
 
         # print(eir)
 
-        return pd.DataFrame({"Freq": lw.Freq, "Estimated In-Room Response": eir.apply(pressure2spl)}).reset_index(drop=True)
-    except TypeError as e:
-        logger.error(e)
+    except TypeError:
+        logger.exception("compute EIR failed")
         return pd.DataFrame()
 
+    return pd.DataFrame(
+        {"Freq": l_w.Freq, "Estimated In-Room Response": eir.apply(pressure2spl)}
+    ).reset_index(drop=True)
 
-def estimated_inroom_HV(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected") -> pd.DataFrame:
+
+def estimated_inroom_hv(
+    h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
+) -> pd.DataFrame:
     """Compute the PIR from the SPL horizontal and vertical"""
     if v_spl.empty or h_spl.empty:
         return pd.DataFrame()
-    lw = listening_window(h_spl, v_spl)
-    er = early_reflections(h_spl, v_spl, method)
-    sp = sound_power(h_spl, v_spl)
-    return estimated_inroom(lw, er, sp)
+    l_w = listening_window(h_spl, v_spl)
+    e_r = early_reflections(h_spl, v_spl, method)
+    s_p = sound_power(h_spl, v_spl)
+    return estimated_inroom(l_w, e_r, s_p)
 
 
 def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected") -> pd.DataFrame:
@@ -647,28 +683,31 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
         return pd.DataFrame()
     # average the 2 onaxis
     onaxis = spatial_average2(h_spl, ["Freq", "On Axis"], v_spl, ["Freq", "On Axis"])
-    spin = pd.DataFrame(
+    spin: pd.DataFrame = pd.DataFrame(
         {
             "Freq": onaxis.Freq,
             "On Axis": onaxis.dB,
         }
     ).reset_index(drop=True)
-    lw = listening_window(h_spl, v_spl)
-    sp = sound_power(h_spl, v_spl)
+    l_w = listening_window(h_spl, v_spl)
+    s_p = sound_power(h_spl, v_spl)
     ter = early_reflections(h_spl, v_spl, method)
-    if not lw.empty:
-        spin["Listening Window"] = lw.dB
+    if not l_w.empty:
+        lw_col = "Listening Window"
+        spin.loc[:, lw_col] = l_w.dB
+    if not s_p.empty:
+        sp_col = "Sound Power"
+        spin.loc[:, sp_col] = s_p.dB
 
-    if not sp.empty:
-        spin["Sound Power"] = sp.dB
+    if "Total Early Reflection" in ter:
+        er_col = "Early Reflections"
+        spin.loc[:, er_col] = ter["Total Early Reflection"]
 
-    if "Total Early Reflection" in ter.keys():
-        spin["Early Reflections"] = ter["Total Early Reflection"]
-
-    if lw.empty or sp.empty or ter.empty:
+    if l_w.empty or s_p.empty or ter.empty:
+        logger.error("LW or SP or TER is empty")
         return spin.reset_index(drop=True)
 
-    erdi = pd.DataFrame({"dB": lw.dB - ter["Total Early Reflection"]})
+    erdi = pd.DataFrame({"dB": l_w.dB - ter["Total Early Reflection"]})
     # add a di offset to mimic other systems
     di_offset = pd.DataFrame({"dB": [0 for i in range(0, len(erdi))]})
     # Sound Power Directivity Index (SPDI)
@@ -676,16 +715,16 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
     # as the difference between the listening window curve and the sound power curve.
     # An SPDI of 0 dB indicates omnidirectional radiation. The larger the SPDI, the
     # more directional the loudspeaker is in the direction of the reference axis.
-    spdi = pd.DataFrame({"dB": lw.dB - sp.dB})
-    for (key, name) in [
+    spdi = pd.DataFrame({"dB": l_w.dB - s_p.dB})
+    for key, name in [
         ("Early Reflections DI", erdi),
         ("Sound Power DI", spdi),
         ("DI offset", di_offset),
     ]:
         if not name.empty:
-            spin[key] = name.dB
+            spin.loc[:, key] = name.dB
         else:
-            logger.debug("{0} is empty".format(key))
+            logger.debug("%s is empty", key)
     return spin.reset_index(drop=True)
 
 
@@ -711,62 +750,42 @@ def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
 
 # class CEA2034(object):
+#     """Compute CEA2034 from horizontal and vertical measurements"""
+#     def __init__(self, spl_h: pd.DataFrame, spl_v: pd.DataFrame):
+#         if not self.check(spl_h, spl_v):
+#             self.spl_h = None
+#             self.spl_v = None
+#             return
+#         self.freq  = spl_h.Freq
 #
-#     def __init__(self, splH, splV):
-#         self.splH = splH
-#         self.splV = splV
-#         if not self.checkSpl(splH) or not self.checSpl(splV):
-#             raise 'Hell'
-#         self.pre_compute()
+#         self.spl_h = spl_h
+#         self.spl_h.drop('Freq')
+#         self.spl_h_pascal = self.spl_h.apply(spl2pressure)
+#         self.spl_h_square = self.spl_h_pascal.apply(spl2pressure)
 #
-#     def checkSpl(spl):
-#         if spl.empty:
-#             return False
-#         for angle in [
-#                 "Freq",
-#                 "On Axis",
-#                 "10°",
-#                 "20°",
-#                 "30°",
-#                 "40°",
-#                 "50°",
-#                 "60°",
-#                 "70°",
-#                 "80°",
-#                 "90°",
-#                 "100°",
-#                 "110°",
-#                 "120°",
-#                 "130°",
-#                 "140°",
-#                 "150°",
-#                 "160°",
-#                 "170°",
-#                 "180°",
-#                 "-10°",
-#                 "-20°",
-#                 "-30°",
-#                 "-40°",
-#                 "-50°",
-#                 "-60°",
-#                 "-70°",
-#                 "-80°",
-#                 "-90°",
-#                 "-100°",
-#                 "-110°",
-#                 "-120°",
-#                 "-130°",
-#                 "-140°",
-#                 "-150°",
-#                 "-160°",
-#                 "-170°",
-#             ],
-#             if angle not in spl.keys():
-#                 return False
-#         return True
+#         self.spl_v = spl_h
+#         self.spl_v.drop('Freq')
+#         self.spl_v_pascal = self.spl_v.apply(spl2pressure)
+#         self.spl_v_square = self.spl_v_pascal.apply(spl2pressure)
 #
-#     def self.pre_compute():
-#         self.
+#         self.on = self.compute_on_axis()
+#         self.lw = self.compute_listening_window()
 #
+#     def check(self, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> bool:
+#         status = True
+#         if 'Freq' not in spl_h or 'Freq' not in spl_v:
+#             status = False
+#         if status and spl_h.Freq != spl_v.Freq:
+#             status = False
+#         return status
+#
+#     def compute_on_axis(self) -> pd.DataFrame:
+#         return compute_onaxis(self.spl_h, self.spl_v)
+#
+#     def compute_listening_window() -> pd.DataFrame:
+#         avg = []
+#         for col_h in ('On Axis', "10°", "20°", "30°", "-10°", "-20°", "-30°"]):
+#             avg.append(self.spl_h_square[col_h])
+#         return 0
 #
 #

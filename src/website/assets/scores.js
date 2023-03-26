@@ -16,10 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+/*global Handlebars*/
+/*eslint no-undef: "error"*/
+
 import {
     openModal,
     closeModal,
-    urlSite,
     getID,
     getPicture,
     getLoading,
@@ -84,10 +86,6 @@ getMetadata()
         Handlebars.registerHelper('floorFloat', function (value) {
             return Math.floor(parseFloat(value));
         });
-
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const urlScores = urlSite + 'scores.html?';
 
         const sourceSpeaker = document.querySelector('#templateScores').innerHTML;
         const templateSpeaker = Handlebars.compile(sourceSpeaker);

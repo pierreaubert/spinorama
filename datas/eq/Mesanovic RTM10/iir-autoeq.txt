@@ -1,15 +1,15 @@
 EQ for Mesanovic RTM10 computed from Vendors-Mesanovic data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:46:35
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-03-06-14:24:56
 
 Preamp: -0.9 dB
 
-Filter  1: ON PK Fc  5087 Hz Gain -1.68 dB Q 1.39
-Filter  2: ON PK Fc    99 Hz Gain -1.38 dB Q 0.99
-Filter  3: ON PK Fc  1486 Hz Gain -1.33 dB Q 2.16
-Filter  4: ON PK Fc   338 Hz Gain -0.77 dB Q 2.94
-Filter  5: ON PK Fc 15898 Hz Gain +0.72 dB Q 0.41
-Filter  6: ON PK Fc   766 Hz Gain -0.51 dB Q 2.91
-Filter  7: ON PK Fc  6559 Hz Gain -0.54 dB Q 2.88
-Filter  8: ON PK Fc 15412 Hz Gain -0.58 dB Q 2.94
-Filter  9: ON PK Fc  9190 Hz Gain -0.51 dB Q 2.86
+Filter  1: ON PK Fc  5021 Hz Gain -1.72 dB Q 1.33
+Filter  2: ON PK Fc    96 Hz Gain -1.50 dB Q 1.06
+Filter  3: ON PK Fc  1477 Hz Gain -1.34 dB Q 2.31
+Filter  4: ON PK Fc   338 Hz Gain -0.76 dB Q 2.71
+Filter  5: ON PK Fc 15916 Hz Gain +0.70 dB Q 0.60
+Filter  6: ON PK Fc   628 Hz Gain -0.51 dB Q 2.99
+Filter  7: ON PK Fc  6087 Hz Gain -0.50 dB Q 2.94
+Filter  8: ON PK Fc 15598 Hz Gain -0.54 dB Q 2.91
+Filter  9: ON PK Fc 15670 Hz Gain -0.50 dB Q 2.86

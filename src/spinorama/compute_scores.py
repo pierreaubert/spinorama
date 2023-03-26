@@ -1,5 +1,21 @@
 # -*- coding: utf-8 -*-
-import logging
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import math
 from typing import List, Tuple
 import numpy as np
@@ -7,10 +23,9 @@ import pandas as pd
 from more_itertools import consecutive_groups
 from scipy.stats import linregress
 
-from .compute_cea2034 import estimated_inroom_HV
-from .load_misc import graph_melt
-
-logger = logging.getLogger("spinorama")
+from spinorama import logger
+from spinorama.compute_cea2034 import estimated_inroom_hv
+from spinorama.load_misc import graph_melt
 
 
 # https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
@@ -25,7 +40,9 @@ def octave(N: int) -> List[Tuple[float, float, float]]:
     p_band = pow(2, 1 / (2 * N))
     o_iter = int((N * 10 + 1) / 2)
     center = (
-        [reference / p**i for i in range(o_iter, 0, -1)] + [reference] + [reference * p**i for i in range(1, o_iter + 1, 1)]
+        [reference / p**i for i in range(o_iter, 0, -1)]
+        + [reference]
+        + [reference * p**i for i in range(1, o_iter + 1, 1)]
     )
     return [(c / p_band, c, c * p_band) for c in center]
 
@@ -38,7 +55,7 @@ def aad(dfu: pd.DataFrame) -> float:
     aad_sum = 0
     n = 0
     # 1/20 octave
-    for (bmin, bcenter, bmax) in octave(20):
+    for bmin, bcenter, bmax in octave(20):
         # 100hz to 16k hz
         if bcenter < 100 or bmax > 16000:
             continue
@@ -85,6 +102,9 @@ def nbd(dfu: pd.DataFrame) -> float:
     )
 
 
+LFX_DEFAULT = math.log10(300)
+
+
 def lfx(lw, sp) -> float:
     """lfx Low Frequency Extension
 
@@ -99,22 +119,21 @@ def lfx(lw, sp) -> float:
     the loudspeaker, particularly speakers that have rear-firing ports.
     """
     lw_ref = np.mean(lw.loc[(lw.Freq >= 300) & (lw.Freq <= 10000)].dB) - 6
-    logger.debug("lw_ref {}".format(lw_ref))
     # find first freq such that y[freq]<y_ref-6dB
     lfx_range = sp.loc[(sp.Freq < 300) & (sp.dB <= lw_ref)].Freq
     if len(lfx_range.values) == 0:
         # happens with D&D 8C when we do not have a point low enough to get the -6
-        lfx_hz = sp.Freq.values[0]
-    else:
-        lfx_grouped = consecutive_groups(lfx_range.items(), lambda x: x[0])
-        # logger.debug('lfx_grouped {}'.format(lfx_grouped))
-        try:
-            lfx_hz = list(next(lfx_grouped))[-1][1]
-        except Exception:
-            lfx_hz = -1.0
-            logger.error("lfx: selecting max {0}".format(lfx_hz))
-    logger.debug("lfx_hz {}".format(lfx_hz))
+        return math.log10(sp.Freq.to_numpy()[0])
+
+    lfx_grouped = consecutive_groups(lfx_range.items(), lambda x: x[0])
+    try:
+        lfx_hz = list(next(lfx_grouped))[-1][1]
+    except Exception:
+        return LFX_DEFAULT
     return math.log10(lfx_hz)
+
+
+LFQ_DEFAULT = 10
 
 
 def lfq(lw, sp, lfx_log) -> float:
@@ -139,8 +158,8 @@ def lfq(lw, sp, lfx_log) -> float:
             lfq_sum += abs(y_lw - y_sp)
             n += 1
     if n == 0:
-        logger.warning("lfq is None: lfx={}".format(val_lfx))
-        return -1.0
+        logger.debug("lfq is None: lfx=%f", val_lfx)
+        return LFQ_DEFAULT
     return lfq_sum / n
 
 
@@ -193,8 +212,8 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         nbd_listening_window = nbd(df_listening_window)
         nbd_sound_power = nbd(df_sound_power)
         nbd_pred_in_room = nbd(df_pred_in_room)
-        lfx_hz = -1.0
-        lfq_db = -1.0
+        lfx_hz = LFX_DEFAULT
+        lfq_db = LFQ_DEFAULT
         aad_on_axis = -1.0
         if not skip_full:
             aad_on_axis = aad(df_on_axis)
@@ -228,10 +247,8 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
             if not skip_full:
                 if aad_on_axis != -1.0:
                     ratings["aad_on_axis"] = round(aad_on_axis, 2)
-                if lfx_hz != -1.0:
-                    ratings["lfx_hz"] = int(pow(10, lfx_hz))  # in Hz
-                if lfq_db != -1.0:
-                    ratings["lfq"] = round(lfq_db, 2)
+                ratings["lfx_hz"] = int(pow(10, lfx_hz))  # in Hz
+                ratings["lfq"] = round(lfq_db, 2)
                 ratings["pref_score"] = round(pref, 1)
         else:
             ratings = {
@@ -250,11 +267,11 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
                 if lfq_db is not None:
                     ratings["lfq"] = lfq_db
                 ratings["pref_score"] = pref
-        logger.info("Ratings: {0}".format(ratings))
-        return ratings
-    except ValueError as e:
-        logger.error("{0}".format(e))
+        logger.debug("Ratings: %s", ratings)
+    except ValueError:
+        logger.exception("Compute pref_rating failed")
         return None
+    return ratings
 
 
 def scores(df_speaker, rounded=False):
@@ -264,18 +281,18 @@ def scores(df_speaker, rounded=False):
         spin = df_speaker["CEA2034"]
         pir = spin.get("Estimated In-Room Response", None)
         if pir is None:
-            logger.error("Don't find pir {} v1".format(df_speaker["CEA2034"].keys()))
+            logger.error("Don't find pir (%s) v1", ", ".join(df_speaker["CEA2034"].keys()))
     elif "CEA2034_unmelted" in df_speaker:
         spin = graph_melt(df_speaker["CEA2034_unmelted"])
         if "Estimated In-Room Response" in df_speaker["CEA2034_unmelted"]:
             pir = graph_melt(df_speaker["CEA2034_unmelted"]["Estimated In-Room Response"])
         else:
-            logger.error("Don't find pir {} v2".format(df_speaker["CEA2034_unmelted"].keys()))
+            logger.error("Don't find pir (%s) v2", ", ".join(df_speaker["CEA2034_unmelted"].keys()))
 
     if pir is None:
         logger.error("pir is None, computing it")
-        splH = df_speaker["SPL Horizontal_unmelted"]
-        splV = df_speaker["SPL Vertical_unmelted"]
-        pir = graph_melt(estimated_inroom_HV(splH, splV))
+        spl_h = df_speaker["SPL Horizontal_unmelted"]
+        spl_v = df_speaker["SPL Vertical_unmelted"]
+        pir = graph_melt(estimated_inroom_hv(spl_h, spl_v))
 
     return speaker_pref_rating(cea2034=spin, df_pred_in_room=pir, rounded=rounded)

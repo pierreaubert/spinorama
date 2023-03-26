@@ -53,13 +53,14 @@ from docopt import docopt
 try:
     import ray
 except ModuleNotFoundError:
-    import miniray as ray
-except ModuleNotFoundError:
-    print("Did you run env.sh?")
-    sys.exit(-1)
+    try:
+        import miniray as ray
+    except ModuleNotFoundError:
+        print("Did you run env.sh?")
+        sys.exit(-1)
 
 from generate_common import get_custom_logger, args2level, cache_load, custom_ray_init
-import datas.metadata as metadata
+from datas import metadata
 import spinorama.constant_paths as cpaths
 from spinorama.compute_estimates import estimates
 from spinorama.compute_scores import speaker_pref_rating
@@ -69,21 +70,21 @@ from spinorama.load_rewseq import parse_eq_iir_rews
 
 @ray.remote(num_cpus=1)
 def queue_score(speaker_name, speaker_data):
-    logger.info("Processing {speaker_name}", speaker_name)
+    logger.info("Processing %s", speaker_name)
     results = []
     for origin, measurements in speaker_data.items():
         default_key = None
         try:
             default_key = metadata.speakers_info[speaker_name]["default_measurement"]
         except KeyError:
-            logger.error(
-                "Got an key error exception for speaker_name {} default measurement",
+            logger.exception(
+                "Got an key error exception for speaker_name %s default measurement",
                 speaker_name,
             )
             continue
 
         for key, dfs in measurements.items():
-            logger.debug("debug key={}".format(key))
+            logger.debug("debug key=%s", key)
             result = {
                 "speaker": speaker_name,
                 "version": key,
@@ -104,14 +105,14 @@ def queue_score(speaker_name, speaker_data):
                     and metadata.speakers_info[speaker_name].get("type") == "passive"
                     and key == default_key
                 ):
-                    logger.debug("{} sensitivity is {}".format(speaker_name, sensitivity))
+                    logger.debug("%s sensitivity is %f", speaker_name, sensitivity)
                     result["sensitivity"] = sensitivity
 
                 # basic math
-                logger.debug("Compute score for speaker {0} key {1}", speaker_name, key)
-                splH = dfs.get("SPL Horizontal_unmelted", None)
-                splV = dfs.get("SPL Vertical_unmelted", None)
-                est = estimates(spin, splH, splV)
+                logger.debug("Compute score for speaker %s key %s", speaker_name, key)
+                spl_h = dfs.get("SPL Horizontal_unmelted", None)
+                spl_v = dfs.get("SPL Vertical_unmelted", None)
+                est = estimates(spin, spl_h, spl_v)
                 if est is not None:
                     result["estimates"] = est
 
@@ -128,8 +129,8 @@ def queue_score(speaker_name, speaker_data):
                     if pref_rating is not None:
                         result["pref_rating"] = pref_rating
 
-            except KeyError as current_error:
-                logger.error("{} get {}".format(speaker_name, current_error))
+            except KeyError:
+                logger.exception("%s", speaker_name)
 
             results.append(result)
     return results
@@ -158,25 +159,36 @@ def add_scores(dataframe, parse_max):
             for result in results:
                 speaker_name = result["speaker"]
                 version = result["version"]
-                origin = result["origin"]
                 sensitivity = result.get("sensitivity")
                 estimates = result.get("estimates")
                 pref_rating = result.get("pref_rating")
                 is_eq = version[-3:] == "_eq"
 
-                if not is_eq:
+                if is_eq:
+                    version_neq = version[:-3]
                     if estimates is not None:
-                        metadata.speakers_info[speaker_name]["measurements"][version]["estimates"] = estimates
-                        if sensitivity is not None and metadata.speakers_info[speaker_name].get("type") == "passive":
-                            metadata.speakers_info[speaker_name]["sensitivity"] = sensitivity
-                        if pref_rating is not None:
-                            metadata.speakers_info[speaker_name]["measurements"][version]["pref_rating"] = pref_rating
-                else:
-                    version_eq = version[:-3]
-                    if estimates is not None:
-                        metadata.speakers_info[speaker_name]["measurements"][version_eq]["estimates_eq"] = estimates
+                        metadata.speakers_info[speaker_name]["measurements"][version_neq][
+                            "estimates_eq"
+                        ] = estimates
                     if pref_rating is not None:
-                        metadata.speakers_info[speaker_name]["measurements"][version_eq]["pref_rating_eq"] = pref_rating
+                        metadata.speakers_info[speaker_name]["measurements"][version_neq][
+                            "pref_rating_eq"
+                        ] = pref_rating
+                    continue
+
+                if estimates is not None:
+                    metadata.speakers_info[speaker_name]["measurements"][version][
+                        "estimates"
+                    ] = estimates
+                if (
+                    sensitivity is not None
+                    and metadata.speakers_info[speaker_name].get("type") == "passive"
+                ):
+                    metadata.speakers_info[speaker_name]["sensitivity"] = sensitivity
+                if pref_rating is not None:
+                    metadata.speakers_info[speaker_name]["measurements"][version][
+                        "pref_rating"
+                    ] = pref_rating
 
         if len(remain_refs) == 0:
             break
@@ -200,7 +212,7 @@ def add_scores(dataframe, parse_max):
 
     for speaker_name, speaker_data in dataframe.items():
         for _, measurements in speaker_data.items():
-            for version, measurement in measurements.items():
+            for version in measurements:
                 if speaker_name not in metadata.speakers_info.keys():
                     # should not happen. If you mess up with names of speakers
                     # and change them, then you can have inconsistent data.
@@ -210,9 +222,9 @@ def add_scores(dataframe, parse_max):
                 current = metadata.speakers_info[speaker_name]["measurements"][version]
                 if "pref_rating" not in current.keys():
                     continue
-                pref_rating = current["pref_rating"]
+                pref_rating = current.get("pref_rating", {})
                 # pref score
-                pref_score = pref_rating["pref_score"]
+                pref_score = pref_rating.get("pref_score")
                 if not math.isnan(pref_score):
                     min_pref_score = min(min_pref_score, pref_score)
                     max_pref_score = max(max_pref_score, pref_score)
@@ -258,56 +270,63 @@ def add_scores(dataframe, parse_max):
         if parse_max is not None and parsed > parse_max:
             break
         parsed = parsed + 1
-        logger.info("Normalize data for {0}", speaker_name)
-        if speaker_name not in metadata.speakers_info.keys():
+        logger.info("Normalize data for %s", speaker_name)
+        if speaker_name not in metadata.speakers_info:
             # should not happen. If you mess up with names of speakers
             # and change them, then you can have inconsistent data.
             continue
         for _, measurements in speaker_data.items():
             for version, measurement in measurements.items():
-                if version not in metadata.speakers_info[speaker_name]["measurements"].keys():
+                if version not in metadata.speakers_info[speaker_name]["measurements"]:
                     if len(version) > 4 and version[-3:] != "_eq":
                         logger.error(
-                            "Confusion in metadata, did you edit a speaker recently? {} should be in metadata for {}",
+                            "Confusion in metadata, did you edit a speaker recently? %s should be in metadata for %s",
                             version,
                             speaker_name,
                         )
                     continue
 
-                if measurement is None or "CEA2034" not in measurement.keys():
-                    logger.debug("skipping normalization no spinorama for {0}", speaker_name)
+                if measurement is None or "CEA2034" not in measurement:
+                    logger.debug("skipping normalization no spinorama for %s", speaker_name)
                     continue
 
                 spin = measurement["CEA2034"]
                 if spin is None:
-                    logger.debug("skipping normalization no spinorama for {0}", speaker_name)
+                    logger.debug("skipping normalization no spinorama for %s", speaker_name)
                     continue
                 if version[-3:] == "_eq":
-                    logger.debug("skipping normalization for eq for {0}", speaker_name)
+                    logger.debug("skipping normalization for eq for %s", speaker_name)
                     continue
-                if "estimates" not in metadata.speakers_info[speaker_name]["measurements"][version].keys():
+                if "estimates" not in metadata.speakers_info[speaker_name]["measurements"][version]:
                     logger.debug(
-                        "skipping normalization no estimates in {0} for {1}",
+                        "skipping normalization no estimates in %s for %s",
                         version,
                         speaker_name,
                     )
                     continue
-                if "pref_rating" not in metadata.speakers_info[speaker_name]["measurements"][version].keys():
+                if (
+                    "pref_rating"
+                    not in metadata.speakers_info[speaker_name]["measurements"][version]
+                ):
                     logger.debug(
-                        "skipping normalization no pref_rating in {0} for {1}",
+                        "skipping normalization no pref_rating in %s for %s",
                         version,
                         speaker_name,
                     )
                     continue
 
-                logger.debug("Compute relative score for speaker {0}", speaker_name)
+                logger.debug("Compute relative score for speaker %s", speaker_name)
                 # get values
-                pref_rating = metadata.speakers_info[speaker_name]["measurements"][version]["pref_rating"]
+                pref_rating = metadata.speakers_info[speaker_name]["measurements"][version][
+                    "pref_rating"
+                ]
                 pref_score_wsub = pref_rating["pref_score_wsub"]
                 nbd_on = pref_rating["nbd_on_axis"]
                 sm_sp = pref_rating["sm_sound_power"]
                 sm_pir = pref_rating["sm_pred_in_room"]
-                flatness = metadata.speakers_info[speaker_name]["measurements"][version]["estimates"]["ref_band"]
+                flatness = metadata.speakers_info[speaker_name]["measurements"][version][
+                    "estimates"
+                ]["ref_band"]
                 pref_score = -1
                 lfx_hz = -1
                 if "pref_score" in pref_rating:
@@ -327,7 +346,9 @@ def add_scores(dataframe, parse_max):
                     return min(max(0, p), 100)
 
                 scaled_pref_score = None
-                scaled_pref_score_wsub = percent(pref_score_wsub, min_pref_score_wsub, max_pref_score_wsub)
+                scaled_pref_score_wsub = percent(
+                    pref_score_wsub, min_pref_score_wsub, max_pref_score_wsub
+                )
                 scaled_pref_score = None
                 if "pref_score" in pref_rating:
                     scaled_pref_score = percent(pref_score, min_pref_score, max_pref_score)
@@ -354,8 +375,8 @@ def add_scores(dataframe, parse_max):
                         scaled_pref_score = 40
                     elif pref_score > 3.0:
                         scaled_pref_score = 30
-                    elif pref_score > 3.0:
-                        scaled_pref_score = 30
+                    elif pref_score > 2.0:
+                        scaled_pref_score = 20
                     elif pref_score > 1.0:
                         scaled_pref_score = 10
                     else:
@@ -429,8 +450,10 @@ def add_scores(dataframe, parse_max):
                     scaled_pref_rating["scaled_pref_score"] = scaled_pref_score
                 if "lfx_hz" in pref_rating:
                     scaled_pref_rating["scaled_lfx_hz"] = scaled_lfx_hz
-                logger.info("Adding {0}".format(scaled_pref_rating))
-                metadata.speakers_info[speaker_name]["measurements"][version]["scaled_pref_rating"] = scaled_pref_rating
+                logger.info("Adding %s", scaled_pref_rating)
+                metadata.speakers_info[speaker_name]["measurements"][version][
+                    "scaled_pref_rating"
+                ] = scaled_pref_rating
 
 
 def add_quality(parse_max: int):
@@ -446,10 +469,10 @@ def add_quality(parse_max: int):
         if parse_max is not None and parsed > parse_max:
             break
         parsed = parsed + 1
-        logger.info("Processing {0}".format(speaker_name))
+        logger.info("Processing %s", speaker_name)
         for version, m_data in speaker_data["measurements"].items():
-            if "quality" not in m_data.keys():
-                quality = "unknown"
+            quality = m_data.get("quality", "unknown")
+            if "quality" not in m_data:
                 origin = m_data.get("origin")
                 measurement_format = m_data.get("format")
                 if measurement_format == "klippel":
@@ -464,24 +487,26 @@ def add_quality(parse_max: int):
                     # Harman group provides spin from an anechoic room
                     if brand in ("JBL", "Revel", "Infinity"):
                         quality = "medium"
-                logger.debug("Setting quality {} {} to {}".format(speaker_name, version, quality))
+                logger.debug("Setting quality %s %s to %s", speaker_name, version, quality)
             metadata.speakers_info[speaker_name]["measurements"][version]["quality"] = quality
 
 
 def add_eq(speaker_path, dataframe, parse_max):
     """Compute some values per speaker and add them to metadata"""
     parsed = 0
-    for speaker_name in dataframe.keys():
+    for speaker_name in dataframe:
         if parse_max is not None and parsed > parse_max:
             break
         parsed = parsed + 1
-        logger.info("Processing {0}".format(speaker_name))
+        logger.info("Processing %s", speaker_name)
 
         metadata.speakers_info[speaker_name]["eqs"] = {}
         for suffix, display in (
             ("autoeq", "AutomaticEQ (IIR)"),
             ("amirm", "amirm@ASR (IIR)"),
             ("maiky76", "maiky76@ASR (IIR)"),
+            ("maiky76-lw", "maiky76@ASR LW (IIR)"),
+            ("maiky76-score", "maiky76@ASR (IIR)"),
             ("flipflop", "flipflop@ASR (IIR)"),
             ("autoeq-dbx-1215", "Graphic EQ 15 bands"),
             ("autoeq-dbx-1231", "Graphic EQ 31 bands"),
@@ -495,10 +520,12 @@ def add_eq(speaker_path, dataframe, parse_max):
                 metadata.speakers_info[speaker_name]["eqs"][eq_key] = {}
                 metadata.speakers_info[speaker_name]["eqs"][eq_key]["display_name"] = display
                 metadata.speakers_info[speaker_name]["eqs"][eq_key]["filename"] = eq_filename
-                metadata.speakers_info[speaker_name]["eqs"][eq_key]["preamp_gain"] = round(peq_preamp_gain(iir), 1)
+                metadata.speakers_info[speaker_name]["eqs"][eq_key]["preamp_gain"] = round(
+                    peq_preamp_gain(iir), 1
+                )
                 metadata.speakers_info[speaker_name]["eqs"][eq_key]["type"] = "peq"
                 metadata.speakers_info[speaker_name]["eqs"][eq_key]["peq"] = []
-                for (iir_weigth, iir_filter) in iir:
+                for iir_weigth, iir_filter in iir:
                     if iir_weigth != 0.0:
                         metadata.speakers_info[speaker_name]["eqs"][eq_key]["peq"].append(
                             {
@@ -509,7 +536,9 @@ def add_eq(speaker_path, dataframe, parse_max):
                                 "dbGain": iir_filter.dbGain,
                             }
                         )
-                        logger.debug("adding eq: {}".format(metadata.speakers_info[speaker_name]["eqs"][eq_key]))
+                        logger.debug(
+                            "adding eq: %s", metadata.speakers_info[speaker_name]["eqs"][eq_key]
+                        )
 
 
 def interpolate(speaker_name, freq, freq1, data1):
@@ -541,8 +570,8 @@ def interpolate(speaker_name, freq, freq1, data1):
 
             interp = data1[i] + (data1[j] - data1[i]) * (f - freq1[i]) / (freq1[j] - freq1[i])
             data.append(interp)
-        except IndexError as ie:
-            logger.error("{}: {} for f={}".format(speaker_name, ie, f))
+        except IndexError:
+            logger.exception("%s: for f=%f", speaker_name, f)
             data.append(0.0)
 
     return np.array(data)
@@ -566,7 +595,7 @@ def get_spin_data(freq, speaker_name, speaker_data):
     default_key = None
     try:
         default_key = metadata.speakers_info[speaker_name]["default_measurement"]
-        default_origin = metadata.speakers_info[speaker_name]["measurements"][default_key]["origin"]
+        # default_origin = metadata.speakers_info[speaker_name]["measurements"][default_key]["origin"]
     except KeyError:
         return None
 
@@ -582,11 +611,11 @@ def get_spin_data(freq, speaker_name, speaker_data):
         for key, dfs in measurements.items():
             if "_eq" in key:
                 continue
-            if dfs is None or "CEA2034" not in dfs.keys():
+            if dfs is None or "CEA2034" not in dfs:
                 return None
 
             spin = dfs["CEA2034_unmelted"]
-            if spin is None or "Listening Window" not in spin.keys() or "Sound Power" not in spin.keys():
+            if spin is None or "Listening Window" not in spin or "Sound Power" not in spin:
                 return None
 
             lw = interpolate(speaker_name, freq, spin["Freq"], spin["Listening Window"])
@@ -595,7 +624,7 @@ def get_spin_data(freq, speaker_name, speaker_data):
 
             return lw, er, sp
 
-        logger.warning("skipping {} no match".format(speaker_name))
+        logger.warning("skipping %s no match", speaker_name)
     return None
 
 
@@ -674,7 +703,7 @@ def dump_metadata(meta):
 
 
 def main():
-    df = None
+    main_df = None
     speaker = args["--speaker"]
     mversion = args["--mversion"]
     morigin = args["--morigin"]
@@ -686,8 +715,7 @@ def main():
     if args["--smoke-test"] is not None:
         smoke_test = True
 
-    steps = []
-    steps.append(("start", time.perf_counter()))
+    steps: list[tuple[str, float]] = [("start", time.perf_counter())]
     custom_ray_init(args)
     steps.append(("ray init", time.perf_counter()))
 
@@ -695,31 +723,25 @@ def main():
         "speaker_name": speaker,
         "origin": morigin,
         "format": mformat,
+        "version": mversion,
     }
-    df = cache_load(filters=filters, smoke_test=smoke_test)
+    main_df = cache_load(filters=filters, smoke_test=smoke_test)
     steps.append(("loaded", time.perf_counter()))
 
-    if df is None:
-        print("Load failed! Please run ./generate_graphs.py")  # logger.error
+    if main_df is None:
+        logger.error("Load failed! Please run ./generate_graphs.py")
         sys.exit(1)
 
     # add computed data to metadata
     logger.info("Compute scores per speaker")
     add_quality(parse_max)
     steps.append(("quality", time.perf_counter()))
-    add_scores(df, parse_max)
+    add_scores(main_df, parse_max)
     steps.append(("scores", time.perf_counter()))
-    add_eq("./datas", df, parse_max)
+    add_eq("./datas", main_df, parse_max)
     steps.append(("eq", time.perf_counter()))
-    add_near(df, parse_max)
+    add_near(main_df, parse_max)
     steps.append(("near", time.perf_counter()))
-
-    # check that json is valid
-    # try:
-    #   json.loads(metadata.speakers_info)
-    # except ValueError as ve:
-    #    print('Metadata Json is not valid {0}'.format(ve)) # #    logger.fatal
-    #    sys.exit(1)
 
     # write metadata in a json file for easy search
     logger.info("Write metadata")
@@ -737,10 +759,6 @@ def main():
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="generate_meta.py version 1.4", options_first=True)
-
-    # check args section
-    level = args2level(args)
-    logger = get_custom_logger(True)
-
+    args = docopt(__doc__, version="generate_meta.py version 1.5", options_first=True)
+    logger = get_custom_logger(level=args2level(args), duplicate=True)
     main()

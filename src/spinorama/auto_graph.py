@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2022 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,34 +40,37 @@ def short_curve_name(name):
     """Return an abbrev for curve name"""
     if name == "Listening Window":
         return "LW"
-    elif name == "Estimated In-Room Response":
+    if name == "Estimated In-Room Response":
         return "PIR"
-    elif name == "On Axis":
+    if name == "On Axis":
         return "ON"
     return name
 
 
-def print_freq(f):
-    if f < 1000:
-        return "{}Hz".format(int(f))
-    elif int(f) % 1000 == 0:
-        return "{}kHz".format(f // 1000)
-    else:
-        return "{:0.1f}kHz".format(f / 1000)
+def print_freq(freq):
+    """Pretty print frequency"""
+    if freq < 1000:
+        return f"{int(freq)}Hz"
+
+    if int(freq) % 1000 == 0:
+        return f"{freq // 1000}kHz"
+
+    return f"{freq / 1000:0.1f}kHz"
 
 
-def graph_eq(freq, peq, domain, title):
-    dataFrame = pd.DataFrame({"Freq": freq})
-    for i, (pos, eq) in enumerate(peq):
-        dataFrame["{} {}".format(eq.type2str(True), i)] = peq_build(freq, [(pos, eq)])
+def graph_eq(freq, peq):
+    """take a PEQ and return traces (for plotly) with frequency data"""
+    data_frame = pd.DataFrame({"Freq": freq})
+    for i, (pos, biquad) in enumerate(peq):
+        data_frame[f"{biquad.type2str(True)} {i}"] = peq_build(freq, [(pos, biquad)])
 
     traces = []
-    for i, key in enumerate(dataFrame.keys()):
+    for i, key in enumerate(data_frame.keys()):
         if key != "Freq":
             traces.append(
                 go.Scatter(
-                    x=dataFrame.Freq,
-                    y=dataFrame[key],
+                    x=data_frame.Freq,
+                    y=data_frame[key],
                     name=key,
                     legendgroup="PEQ",
                     legendgrouptitle_text="EQ",
@@ -78,7 +80,8 @@ def graph_eq(freq, peq, domain, title):
     return traces
 
 
-def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target, optim_config):
+def graph_eq_compare(freq, auto_peq, auto_target_interp, target, optim_config):
+    """ "return traces with eq v.s. target"""
     # manual_peq = [
     #    (1.0, Biquad(3, 400, 48000, 4.32, -2)),
     #    (1.0, Biquad(3, 1600, 48000, 4.32, -1)),
@@ -90,7 +93,7 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, s
     for name in optim_config["curve_names"]:
         curve_names.append(short_curve_name(name))
 
-    target_name = "error {}".format(curve_names[0], 0)
+    target_name = f"error {curve_names[0]}"
     df = pd.DataFrame(
         {
             "Freq": freq,
@@ -101,9 +104,9 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, s
     )
     for i, ati in enumerate(auto_target_interp):
         if i < len(curve_names):
-            df["ideal {}".format(curve_names[i])] = ati
+            df[f"ideal {curve_names[i]}"] = ati
         else:
-            df["ideal {}".format(i)] = ati
+            df[f"ideal {i}"] = ati
 
     if optim_config.get("smooth_measurements"):
         window_size = optim_config.get("smooth_window_size")
@@ -142,7 +145,6 @@ def graph_results(
     score,
     auto_score,
 ):
-
     # ~ default
     g_params = {
         "xmin": 20,
@@ -154,11 +156,10 @@ def graph_results(
     }
 
     # what's the min over freq?
-    reg_min = optim_config["freq_reg_min"]
-    reg_max = optim_config["freq_reg_max"]
-    domain = [reg_min, reg_max]
+    optim_config["freq_reg_min"]
+    optim_config["freq_reg_max"]
     # build a graph for each peq
-    g_auto_eq = graph_eq(freq, auto_peq, domain, "{} auto".format(speaker_name))
+    g_auto_eq = graph_eq(freq, auto_peq)
 
     # compare the 2 eqs
     target = -(auto_target[0] - auto_target_interp[0])
@@ -167,19 +168,28 @@ def graph_results(
     #        fd.write("{} {}\n".format(f, a))
     #    fd.close()
 
-    # print('target {} {}'.format(np.min(target), np.max(target)))
-    g_eq_full = graph_eq_compare(freq, auto_peq, auto_target_interp, domain, speaker_name, speaker_origin, target, optim_config)
+    g_eq_full = graph_eq_compare(
+        freq,
+        auto_peq,
+        auto_target_interp,
+        target,
+        optim_config,
+    )
 
     # compare the 2 corrected curves
     df_optim = pd.DataFrame({"Freq": freq})
     df_optim["Auto"] = auto_target[0] - auto_target_interp[0] + peq_build(freq, auto_peq)
     # show the 2 spinoramas
-    unmelted_spin = spin.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
+    unmelted_spin = spin.pivot_table(
+        index="Freq", columns="Measurements", values="dB", aggfunc=max
+    ).reset_index()
 
     g_spin_noeq, g_spin_noeq_di = plot_spinorama_traces(unmelted_spin, g_params)
     g_spin_auto, g_spin_auto_di, unmelted_spin_auto = None, None, None
     if spin_auto is not None:
-        unmelted_spin_auto = spin_auto.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
+        unmelted_spin_auto = spin_auto.pivot_table(
+            index="Freq", columns="Measurements", values="dB", aggfunc=max
+        ).reset_index()
         g_spin_auto, g_spin_auto_di = plot_spinorama_traces(unmelted_spin_auto, g_params)
 
     # show the 3 optimised curves
@@ -188,10 +198,13 @@ def graph_results(
         data = unmelted_spin
         data_auto = unmelted_spin_auto
         if which_curve == "Estimated In-Room Response":
-            data = pir.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
-            data_auto = pir_auto.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
+            data = pir.pivot_table(
+                index="Freq", columns="Measurements", values="dB", aggfunc=max
+            ).reset_index()
+            data_auto = pir_auto.pivot_table(
+                index="Freq", columns="Measurements", values="dB", aggfunc=max
+            ).reset_index()
 
-        # print(data.keys())
         if which_curve == "Estimated In-Room Response":
             g_curve_noeq = plot_graph_regression_traces(data, which_curve, g_params)
         else:
@@ -214,19 +227,26 @@ def graph_results(
             data, which_curve, target_min_freq, target_max_freq, target_min_freq, target_max_freq
         )
         auto_slope, auto_hist, auto_max = compute_statistics(
-            data_auto, which_curve, target_min_freq, target_max_freq, target_min_freq, target_max_freq
+            data_auto,
+            which_curve,
+            target_min_freq,
+            target_max_freq,
+            target_min_freq,
+            target_max_freq,
         )
 
         # generate title
         noeq_title = f"{short_curve} slope {noeq_slope:+0.2f}dB/Octave error max={noeq_max:.1f}dB"
-        auto_title = f"{short_curve} with EQ slope {auto_slope:+0.2f}dB/Octave error max={auto_max:.1f}dB"
+        auto_title = (
+            f"{short_curve} with EQ slope {auto_slope:+0.2f}dB/Octave error max={auto_max:.1f}dB"
+        )
 
         # generate histogram of deviation
         noeq_counts, noeq_bins = noeq_hist
         auto_counts, auto_bins = auto_hist
-        bins = sorted([s for s in set(noeq_bins).union(auto_bins)])
-        bins = ["{:0.1f}-{:0.1f}".format(noeq_bins[i], noeq_bins[i + 1]) for i in range(0, len(noeq_bins) - 1)]
-        bins.append("{:0.1f}+".format(noeq_bins[-1]))
+        bins = sorted(list(set(noeq_bins).union(auto_bins)))
+        bins = [f"{noeq_bins[i]:0.1f}-{noeq_bins[i+1]:0.1f}" for i in range(0, len(noeq_bins) - 1)]
+        bins.append(f"{noeq_bins[-1]:0.1f}+")
         hist_plot = [
             go.Bar(
                 x=bins,
@@ -248,16 +268,26 @@ def graph_results(
 
         # recompute over midrange only (300Hz--5kHz)
         noeq_slope, noeq_hist, noeq_max = compute_statistics(
-            data, which_curve, target_min_freq, target_max_freq, MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+            data,
+            which_curve,
+            target_min_freq,
+            target_max_freq,
+            MIDRANGE_MIN_FREQ,
+            MIDRANGE_MAX_FREQ,
         )
         auto_slope, auto_hist, auto_max = compute_statistics(
-            data_auto, which_curve, target_min_freq, target_max_freq, MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+            data_auto,
+            which_curve,
+            target_min_freq,
+            target_max_freq,
+            MIDRANGE_MIN_FREQ,
+            MIDRANGE_MAX_FREQ,
         )
         noeq_counts, noeq_bins = noeq_hist
         auto_counts, auto_bins = auto_hist
-        bins = sorted([s for s in set(noeq_bins).union(auto_bins)])
-        bins = ["{:0.1f}-{:0.1f}".format(noeq_bins[i], noeq_bins[i + 1]) for i in range(0, len(noeq_bins) - 1)]
-        bins.append("{:0.1f}+".format(noeq_bins[-1]))
+        bins = sorted(list(set(noeq_bins).union(auto_bins)))
+        bins = [f"{noeq_bins[i]:0.1f}-{noeq_bins[i+1]:0.1f}" for i in range(0, len(noeq_bins) - 1)]
+        bins.append(f"{noeq_bins[-1]:0.1f}+")
         hist_plot_midrange = [
             go.Bar(
                 x=bins,
@@ -306,7 +336,7 @@ def graph_results(
         rows=8,
         cols=2,
         subplot_titles=(
-            "PEQ details (N={} Gain={:0.1f})".format(len(auto_peq), peq_preamp_gain(auto_peq)),
+            f"PEQ details (N={len(auto_peq)} Gain={peq_preamp_gain(auto_peq):0.1f})",
             "PEQ v.s. Target",
             spin_title,
             auto_spin_title,
@@ -460,15 +490,9 @@ def graph_results(
     fig_on_noeq.update_xaxes(xaxis)
     fig_on_auto.update_xaxes(xaxis)
 
-    if on_min < -5:
-        on_min = max(-40, -5 * round(-on_min / 5))
-    else:
-        on_min = -5
-    if on_max > 5:
-        on_max = min(20, 5 * (round(on_max / 5) + 1))
-    else:
-        on_max = 5
-    on_min = max(-15, on_min)
+    on_min = max(-15, -5 * round(-on_min / 5)) if on_min < -5 else -5
+    on_max = min(20, 5 * (round(on_max / 5) + 1)) if on_max > 5 else 5
+
     yaxis = generate_yaxis_spl(on_min, on_max, 1)
     fig.update_yaxes(yaxis, row=current_row)
     fig_on_noeq.update_yaxes(yaxis)
@@ -503,15 +527,8 @@ def graph_results(
     fig_lw_noeq.update_xaxes(xaxis)
     fig_lw_auto.update_xaxes(xaxis)
 
-    if lw_min < -5:
-        lw_min = max(-40, -5 * round(-lw_min / 5))
-    else:
-        lw_min = -5
-    if lw_max > 5:
-        lw_max = min(20, 5 * (round(lw_max / 5) + 1))
-    else:
-        lw_max = 5
-    lw_min = max(-15, lw_min)
+    lw_min = max(-15, -5 * round(-lw_min / 5)) if lw_min < -5 else -5
+    lw_max = min(20, 5 * (round(lw_max / 5) + 1))
 
     yaxis = generate_yaxis_spl(lw_min, lw_max, 1)
     fig.update_yaxes(yaxis, row=current_row)
@@ -542,15 +559,8 @@ def graph_results(
         pir_min = min(pir_min, np.min(t.y))
         pir_max = max(pir_max, np.max(t.y))
 
-    if pir_min < -5:
-        pir_min = max(-40, -5 * round(-pir_min / 5))
-    else:
-        pir_min = -5
-    if pir_max > 5:
-        pir_max = min(20, 5 * (round(pir_max / 5) + 1))
-    else:
-        pir_max = 5
-    pir_min = max(-15, pir_min)
+    pir_min = max(-15, -5 * round(-pir_min / 5))
+    pir_max = min(20, 5 * (round(pir_max / 5) + 1))
 
     xaxis = generate_xaxis()
     fig.update_xaxes(xaxis, row=current_row)

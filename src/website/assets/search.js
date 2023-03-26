@@ -16,6 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+/*global Fuse*/
+/*eslint no-undef: "error"*/
+
 import { getMetadata } from './common.js';
 import { show, hide } from './misc.js';
 import { sortMetadata2 } from './sort.js';
@@ -46,7 +49,7 @@ function isFiltered(item, filter) {
     }
     if (filter.quality !== undefined && filter.quality !== '') {
         let found = true;
-        for (const [name, measurement] of Object.entries(item.measurements)) {
+        for (const [, measurement] of Object.entries(item.measurements)) {
             const quality = measurement.quality.toLowerCase();
             // console.log('filter.quality=' + filter.quality + ' quality=' + quality)
             if (filter.quality !== '' && quality === filter.quality.toLowerCase()) {
@@ -181,6 +184,22 @@ getMetadata()
             reverse: false,
         };
 
+        const fuse = new Fuse(
+            // Fuse take a list not a map
+            [...metadata].map( item => ({key: item[0], speaker: item[1]})),
+            {
+                isCaseSensitive: false,
+                matchAllTokens: true,
+                findAllMatches: true,
+                minMatchCharLength: 2,
+                keys: ['speaker.brand', 'speaker.model', 'speaker.type', 'speaker.shape'],
+                treshhold: 0.5,
+                distance: 60,
+                includeScore: true,
+                useExtendedSearch: true,
+            })
+        ;
+
         function readUrl() {
             // read sort type
             if (url.searchParams.has('sort')) {
@@ -273,7 +292,7 @@ getMetadata()
             }
 
             // use the sorted index to re-generate the divs.
-            let stripeCounter = 0
+            let stripeCounter = 0;
             sortedIndex.forEach((key, index) => {
                 const speaker = metadata.get(key);
                 const filterTest = isFiltered(speaker, filter);
@@ -281,7 +300,7 @@ getMetadata()
                 if (speakerMap.has(key)) {
                     // console.log('key='+key+' map='+speakerMap.get(key));
                     if (filterTest && searchTest) {
-                        let child = speakerMap.get(key);
+                        const child = speakerMap.get(key);
                         child.classList.remove('has-background-light');
                         child.classList.toggle('has-background-light', stripeCounter %2 == 0 );
                         show(fragment.appendChild(child));
@@ -362,7 +381,7 @@ getMetadata()
         buttons.forEach(  b => {
             const sortButton = document.querySelector('#sort-' + b + '-button');
             if (sortButton !== null ) {
-                sortButton.addEventListener('click', (e) => {
+                sortButton.addEventListener('click', () => {
                     // update sort by
                     sorter.by = b;
                     // swap reverse if it exists
@@ -384,22 +403,6 @@ getMetadata()
             updateUrl(url, keywords);
             selectDispatch();
         });
-
-        const fuse = new Fuse(
-            // Fuse take a list not a map
-            [...metadata].map( item => ({key: item[0], speaker: item[1]})),
-            {
-                isCaseSensitive: false,
-                matchAllTokens: true,
-                findAllMatches: true,
-                minMatchCharLength: 2,
-                keys: ['speaker.brand', 'speaker.model', 'speaker.type', 'speaker.shape'],
-                treshhold: 0.5,
-                distance: 60,
-                includeScore: true,
-                useExtendedSearch: true,
-            })
-        ;
 
         // if we have a parameter to start with we need to resort
         if (url.searchParams.has('sort')) {

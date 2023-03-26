@@ -1,0 +1,10 @@
+Hifi H5 APO EQ Score 96000Hz
+March022023-104657
+
+Preamp: -3.4 dB
+
+Filter 1: ON HPQ Fc 59.18,    0.00,    1.49
+Filter 2: ON PK Fc 168.55,    -2.98,    0.94
+Filter 3: ON PK Fc 804.50,    -3.14,    1.96
+Filter 4: ON PK Fc 4875.67,    -3.59,    2.02
+Filter 5: ON PK Fc 9342.88,    -2.61,    1.83

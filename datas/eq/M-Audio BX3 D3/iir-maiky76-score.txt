@@ -1,0 +1,12 @@
+M-Audio BX3 APO EQ Score 96000Hz
+March062023-144639
+
+Preamp: -2.5 dB
+
+Filter 1: ON HPQ Fc 62.38,    0.00,    1.12
+Filter 2: ON PK Fc 136.16,    -6.64,    1.24
+Filter 3: ON PK Fc 438.63,    -2.31,    6.72
+Filter 4: ON PK Fc 1362.91,    -4.88,    1.58
+Filter 5: ON PK Fc 2131.84,    -1.51,    6.93
+Filter 6: ON PK Fc 3226.78,    -4.20,    0.74
+Filter 7: ON PK Fc 10456.64,    3.20,    2.30

@@ -1,12 +1,27 @@
 # -*- coding: utf-8 -*-
-import logging
-import numpy as np
-import pandas as pd
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import datas.metadata as metadata
-from .compute_misc import resample
-from .compute_estimates import estimates
-from .compute_scores import speaker_pref_rating
-from .plot import (
+
+from spinorama import logger
+from spinorama.compute_estimates import estimates
+from spinorama.compute_scores import speaker_pref_rating
+from spinorama.plot import (
     plot_params_default,
     contour_params_default,
     radar_params_default,
@@ -21,17 +36,17 @@ from .plot import (
     plot_summary,
 )
 
-logger = logging.getLogger("spinorama")
-
 
 def display_spinorama(df, graph_params=plot_params_default):
     spin = df.get("CEA2034_unmelted")
     if spin is None:
         spin_melted = df.get("CEA2034")
         if spin_melted is not None:
-            spin = spin_melted.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
+            spin = spin_melted.pivot_table(
+                index="Freq", columns="Measurements", values="dB", aggfunc=max
+            ).reset_index()
         if spin is None:
-            logger.info("Display CEA2034 not in dataframe {0}".format(df.keys()))
+            logger.info("Display CEA2034 not in dataframe (%s)", ", ".join(df.keys()))
             return None
     return plot_spinorama(spin, graph_params)
 
@@ -40,10 +55,11 @@ def display_reflection_early(df, graph_params=plot_params_default):
     try:
         if "Early Reflections_unmelted" not in df.keys():
             return None
-        return plot_graph(df["Early Reflections_unmelted"], graph_params)
     except KeyError as ke:
-        logger.warning("Display Early Reflections failed with {0}".format(ke))
+        logger.warning("Display Early Reflections failed with %s", ke)
         return None
+    else:
+        return plot_graph(df["Early Reflections_unmelted"], graph_params)
 
 
 def display_onaxis(df, graph_params=plot_params_default):
@@ -56,7 +72,7 @@ def display_onaxis(df, graph_params=plot_params_default):
         return None
 
     if "On Axis" not in onaxis.keys():
-        logger.warning("Display On Axis failed, known keys are {}".format(onaxis.keys()))
+        logger.debug("Display On Axis failed, known keys are (%s)", ", ".join(onaxis.keys()))
         return None
 
     return plot_graph_flat(onaxis, "On Axis", graph_params)
@@ -66,43 +82,47 @@ def display_inroom(df, graph_params=plot_params_default):
     try:
         if "Estimated In-Room Response_unmelted" not in df.keys():
             return None
+    except KeyError as ke:
+        logger.warning("Display In Room failed with %s", ke)
+        return None
+    else:
         return plot_graph_regression(
             df["Estimated In-Room Response_unmelted"],
             "Estimated In-Room Response",
             graph_params,
         )
-    except KeyError as ke:
-        logger.warning("Display In Room failed with {0}".format(ke))
-        return None
 
 
 def display_reflection_horizontal(df, graph_params=plot_params_default):
     try:
         if "Horizontal Reflections_unmelted" not in df.keys():
             return None
-        return plot_graph(df["Horizontal Reflections_unmelted"], graph_params)
     except KeyError as ke:
-        logger.warning("Display Horizontal Reflections failed with {0}".format(ke))
+        logger.warning("Display Horizontal Reflections failed with %s", ke)
         return None
+    else:
+        return plot_graph(df["Horizontal Reflections_unmelted"], graph_params)
 
 
 def display_reflection_vertical(df, graph_params=plot_params_default):
     try:
         if "Vertical Reflections_unmelted" not in df.keys():
             return None
-        return plot_graph(df["Vertical Reflections_unmelted"], graph_params)
     except KeyError:
         return None
+    else:
+        return plot_graph(df["Vertical Reflections_unmelted"], graph_params)
 
 
 def display_spl(df, axis, graph_params=plot_params_default):
     try:
         if axis not in df.keys():
             return None
-        return plot_graph_spl(df[axis], graph_params)
     except KeyError as ke:
-        logger.warning("Display SPL failed with {0}".format(ke))
+        logger.warning("Display SPL failed with %s", ke)
         return None
+    else:
+        return plot_graph_spl(df[axis], graph_params)
 
 
 def display_spl_horizontal(df, graph_params=plot_params_default):
@@ -163,7 +183,7 @@ def display_summary(df, params, speaker, origin, key):
     try:
         speaker_type = ""
         speaker_shape = ""
-        if speaker in metadata.speakers_info.keys():
+        if speaker in metadata.speakers_info:
             speaker_type = metadata.speakers_info[speaker].get("type", "")
             speaker_shape = metadata.speakers_info[speaker].get("shape", "")
 
@@ -175,57 +195,63 @@ def display_summary(df, params, speaker, origin, key):
         est = estimates(spin, splH, splV)
 
         # 1
-        speaker_summary = ["{0} {1}".format(speaker_shape.capitalize(), speaker_type.capitalize())]
+        speaker_summary = [f"{speaker_shape.capitalize()} {speaker_type.capitalize()}"]
 
         if est is None:
             #                    2   3   4   5   6   7   8
             speaker_summary += ["", "", "", "", "", "", ""]
         else:
             # 2, 3
-            if "ref_level" in est.keys():
+            if "ref_level" in est:
                 speaker_summary += [
                     "• Reference level {0} dB".format(est["ref_level"]),
-                    "(mean over {0}-{1}k Hz)".format(int(est["ref_from"]), int(est["ref_to"]) / 1000),
+                    "(mean over {0}-{1}k Hz)".format(
+                        int(est["ref_from"]), int(est["ref_to"]) / 1000
+                    ),
                 ]
             else:
                 speaker_summary += ["", ""]
 
             # 4
-            if "ref_3dB" in est.keys():
+            if "ref_3dB" in est:
                 speaker_summary += ["• -3dB at {0}Hz wrt Ref.".format(est["ref_3dB"])]
             else:
                 speaker_summary += [""]
 
             # 5
-            if "ref_6dB" in est.keys():
+            if "ref_6dB" in est:
                 speaker_summary += ["• -6dB at {0}Hz wrt Ref.".format(est["ref_6dB"])]
             else:
                 speaker_summary += [""]
 
             # 6
-            if "ref_band" in est.keys():
+            if "ref_band" in est:
                 speaker_summary += ["• +/-{0}dB wrt Ref.".format(est["ref_band"])]
             else:
                 speaker_summary += [""]
 
             # 7
-            if "dir_horizontal_p" in est.keys() and "dir_horizontal_m" in est.keys():
+            if "dir_horizontal_p" in est and "dir_horizontal_m" in est:
                 speaker_summary += [
-                    "• Horizontal directivity ({}°, {}°)".format(int(est["dir_horizontal_m"]), int(est["dir_horizontal_p"]))
+                    "• Horizontal directivity ({}°, {}°)".format(
+                        int(est["dir_horizontal_m"]), int(est["dir_horizontal_p"])
+                    )
                 ]
             else:
                 speaker_summary += [""]
 
             # 8
-            if "dir_vertical_p" in est.keys() and "dir_vertical_m" in est.keys():
+            if "dir_vertical_p" in est and "dir_vertical_m" in est:
                 speaker_summary += [
-                    "• Vertical directivity ({}°, {}°)".format(int(est["dir_vertical_m"]), int(est["dir_vertical_p"]))
+                    "• Vertical directivity ({}°, {}°)".format(
+                        int(est["dir_vertical_m"]), int(est["dir_vertical_p"])
+                    )
                 ]
             else:
                 speaker_summary += [""]
 
         pref_score = None
-        if "Estimated In-Room Response" in df.keys():
+        if "Estimated In-Room Response" in df:
             inroom = df["Estimated In-Room Response"]
             if inroom is not None:
                 pref_score = speaker_pref_rating(spin, inroom)
@@ -248,12 +274,13 @@ def display_summary(df, params, speaker, origin, key):
             speaker_summary += ["", "", "", "", "", "", "", "", ""]
 
         if len(speaker_summary) != 17:
-            logger.error("speaker summary lenght is incorrect {0}".format(speaker_summary))
+            logger.error("speaker summary lenght is incorrect %s", speaker_summary)
 
-        return plot_summary(speaker, speaker_summary, params)
     except KeyError as ke:
-        logger.warning("Display Summary failed with {0}".format(ke))
+        logger.warning("Display Summary failed with %s", ke)
         return None
+    else:
+        return plot_summary(speaker, speaker_summary, params)
 
 
 def display_pict(speaker, params):

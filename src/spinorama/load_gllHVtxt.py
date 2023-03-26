@@ -1,29 +1,44 @@
 # -*- coding: utf-8 -*-
-import logging
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import os
 import glob
-import pandas as pd
 import zipfile
 
-from .load_misc import sort_angles
+import pandas as pd
 
-logger = logging.getLogger("spinorama")
+from spinorama import logger
+from spinorama.load_misc import sort_angles
 
 
-def parse_graph_gllHVtxt(dirpath):
+def parse_graph_gllHVtxt(dir_path: str) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Parse text files with meridian and parallel data"""
-    filepath = "{}/tmp/*".format(dirpath)
-    filenames = "{}/*.txt".format(filepath)
-    files = glob.glob(filenames)
+    file_path = f"{dir_path}/tmp/*"
+    file_names = f"{file_path}/*.txt"
+    files = glob.glob(file_names)
 
-    logger.debug("Found {} files in {}".format(len(files), filepath))
+    logger.debug("Found %d files in %s", len(files), file_path)
 
     spl_h = []
     spl_v = []
     already_loaded_h = set()
     already_loaded_v = set()
     for file in files:
-
         base = os.path.basename(file)
         file_format = base[:-4].split("-")
         meridian = int(file_format[-2][1:])
@@ -45,7 +60,7 @@ def parse_graph_gllHVtxt(dirpath):
             orientation = "V"
 
         if angle is None or orientation is None:
-            logger.debug("skipping {} angle is {} orientation is {}".format(base, angle, orientation))
+            logger.debug("skipping %s angle is %d orientation is %s", base, angle, orientation)
             continue
 
         if angle == 0:
@@ -88,29 +103,30 @@ def parse_graph_gllHVtxt(dirpath):
                         spl_v.append(pd.DataFrame({angle: dbs}))
                         already_loaded_v.add(angle)
 
-    logger.debug("found {} horizontal and {} vertical measurements".format(len(spl_h), len(spl_v)))
+    logger.debug("found %d horizontal and %d vertical measurements", len(spl_h), len(spl_v))
     return sort_angles(pd.concat(spl_h, axis=1)), sort_angles(pd.concat(spl_v, axis=1))
 
 
-def parse_graphs_speaker_gllHVtxt(speaker_path, speaker_brand, speaker_name, version):
+def parse_graphs_speaker_gllHVtxt(
+    speaker_path: str, speaker_name: str, version: str
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """2 files per directory xxx_H_IR.mat and xxx_V_IR.mat"""
     dirname = "{0}/{1}/{2}".format(speaker_path, speaker_name, version)
 
-    logger.debug("scanning path {}".format(dirname))
+    logger.debug("scanning path %s", dirname)
 
     zipname = "{}/{}.zip".format(dirname, speaker_name)
 
     if not os.path.exists(zipname):
-
         # maybe the name is close but not exactly the name of the speaker
         guesses = glob.glob(f"{dirname}/*.zip")
         if len(guesses) == 1:
             zipname = guesses[0]
         elif len(guesses) > 1:
-            logger.error("Multiple zip files in {}".format(dirname))
+            logger.error("Multiple zip files in %s", dirname)
             return None, None
         else:
-            logger.error("{} does not exist".format(zipname))
+            logger.error("%s does not exist", zipname)
             return None, None
 
     tmp_dirname = "{}/tmp".format(dirname)
@@ -118,7 +134,7 @@ def parse_graphs_speaker_gllHVtxt(speaker_path, speaker_brand, speaker_name, ver
         with zipfile.ZipFile(zipname, "r") as gll:
             gll.extractall(tmp_dirname)
             return parse_graph_gllHVtxt(dirname)
-    except zipfile.BadZipFile as bf:
-        logger.error("{} is a bad zipfile".format(zipname))
+    except zipfile.BadZipFile:
+        logger.exception("%s is a bad zipfile", zipname)
 
     return None, None

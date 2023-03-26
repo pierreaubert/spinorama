@@ -1,15 +1,15 @@
 EQ for Infinity R152 computed from Vendors-Infinity data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:42:16
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-03-06-14:24:47
 
-Preamp: -0.8 dB
+Preamp: -1.2 dB
 
-Filter  1: ON HS Fc  5365 Hz Gain -3.00 dB
-Filter  2: ON PK Fc   150 Hz Gain -1.22 dB Q 2.98
-Filter  3: ON PK Fc  1161 Hz Gain -1.63 dB Q 1.81
-Filter  4: ON PK Fc  9466 Hz Gain +0.60 dB Q 1.95
-Filter  5: ON PK Fc   523 Hz Gain -0.67 dB Q 2.79
-Filter  6: ON PK Fc   236 Hz Gain -0.55 dB Q 2.98
-Filter  7: ON PK Fc 15855 Hz Gain -0.89 dB Q 1.11
-Filter  8: ON PK Fc  5603 Hz Gain -0.55 dB Q 2.55
-Filter  9: ON PK Fc  1616 Hz Gain -0.65 dB Q 2.67
+Filter  1: ON HS Fc  5404 Hz Gain -2.99 dB
+Filter  2: ON PK Fc   155 Hz Gain -1.27 dB Q 2.86
+Filter  3: ON PK Fc  1157 Hz Gain -1.60 dB Q 1.88
+Filter  4: ON PK Fc  2625 Hz Gain +1.03 dB Q 2.99
+Filter  5: ON PK Fc  9117 Hz Gain +0.61 dB Q 2.94
+Filter  6: ON PK Fc   576 Hz Gain -0.59 dB Q 2.93
+Filter  7: ON PK Fc   218 Hz Gain -0.51 dB Q 2.96
+Filter  8: ON PK Fc 15807 Hz Gain -0.58 dB Q 0.35
+Filter  9: ON PK Fc  1553 Hz Gain -0.75 dB Q 2.73

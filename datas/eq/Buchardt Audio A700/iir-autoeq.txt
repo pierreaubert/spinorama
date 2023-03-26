@@ -1,0 +1,16 @@
+EQ for Buchardt Audio A700 computed from ErinsAudioCorner data
+Preference Score 6.54 with EQ 7.29
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-03-22-23:12:53
+
+Preamp: -2.8 dB
+
+Filter  1: ON LS Fc   267 Hz Gain +2.03 dB
+Filter  2: ON PK Fc  2330 Hz Gain +1.66 dB Q 2.73
+Filter  3: ON PK Fc  8057 Hz Gain -1.22 dB Q 2.36
+Filter  4: ON PK Fc   130 Hz Gain -0.90 dB Q 3.00
+Filter  5: ON PK Fc   618 Hz Gain -0.72 dB Q 2.92
+Filter  6: ON PK Fc  3924 Hz Gain -0.52 dB Q 2.90
+Filter  7: ON PK Fc    52 Hz Gain +0.58 dB Q 2.59
+Filter  8: ON PK Fc  1023 Hz Gain -0.54 dB Q 2.99
+Filter  9: ON PK Fc 11282 Hz Gain -0.53 dB Q 2.93

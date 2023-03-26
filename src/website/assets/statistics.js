@@ -16,6 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+/*global Plotly*/
+/*eslint no-undef: "error"*/
+
 import { getMetadata } from './common.js';
 
 getMetadata()
@@ -135,7 +138,7 @@ getMetadata()
             const nbdPIR = [];
             const smPIR = [];
             const names = [];
-            metadata.forEach((value, key) => {
+            metadata.forEach( (value,) => {
                 if (
                     value.measurements &&
                     value.measurements[value.default_measurement] &&

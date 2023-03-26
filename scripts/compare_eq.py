@@ -67,7 +67,6 @@ def plot_eq(peqs):
 
 
 if __name__ == "__main__":
-
     if len(sys.argv) <= 4 or sys.argv[1] != "-o":
         print("usage: {} -o output.jpg eq1.txt eq2.txt ...".format(sys.argv[0]))
         sys.exit(1)

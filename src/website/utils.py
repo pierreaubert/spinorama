@@ -5,7 +5,13 @@ def space2url(context, text):
 
 
 def space2dash(context, text):
-    return text.replace(" ", "-").replace("'", "-").replace(".", "-").replace("+", "-").replace("&", "-")
+    return (
+        text.replace(" ", "-")
+        .replace("'", "-")
+        .replace(".", "-")
+        .replace("+", "-")
+        .replace("&", "-")
+    )
 
 
 def removeVendors(context, text):

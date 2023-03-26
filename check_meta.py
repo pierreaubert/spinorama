@@ -17,8 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""
-usage: check_meta.py [--help] [--version]
+"""usage: check_meta.py [--help] [--version].
 
 Options:
   --help            display usage()
@@ -26,164 +25,212 @@ Options:
 """
 import logging
 import sys
-import datas.metadata as metadata
+
+from datas import metadata
+from datas.metadata import Speaker, SpeakerDatabase, Measurement
 
 
-def sanity_check_brand(name, speaker):
+def sanity_check_brand(name: str, speaker: Speaker) -> int:
+    """check if name include brand"""
     if "brand" not in speaker:
-        logging.error("brand is not in {0}".format(name))
+        logging.error("brand is not in %s", name)
         return 1
     brand = speaker["brand"]
     if name[0 : len(brand)] != brand:
-        logging.error("{0} doesn't start with {1}".format(name, brand))
+        logging.error("%s doesn't start with %s", name, brand)
         return 1
     return 0
 
 
-def sanity_check_model(name, speaker):
+def sanity_check_model(name: str, speaker: Speaker) -> int:
+    """check if name include model"""
     if "model" not in speaker:
-        logging.error("model is not in {0}".format(name))
+        logging.error("model is not in %s", name)
         return 1
     brand = speaker["brand"]
     model = speaker["model"]
     name_split = model.split(" ")
     if len(name_split) > 0 and name_split[0] == brand:
-        logging.warning("{0} does start with brand {1}".format(name, brand))
+        logging.warning("%s does start with brand %s", name, brand)
         return 1
     if name[-len(model) :] != model:
-        logging.error("{0} doesn't end with {1}".format(name, model))
+        logging.error("%s doesn't end with %s", name, model)
         return 1
     return 0
 
 
-def sanity_check_type(name, speaker):
-    valid_types = ("active", "passive")
+VALID_TYPES = ("active", "passive")
+
+
+def sanity_check_type(name: str, speaker: Speaker) -> int:
+    """check if type is valid"""
     if "type" not in speaker:
-        logging.error("type is not in {0}".format(name))
+        logging.error("type is not in %s", name)
         return 1
     thetype = speaker["type"]
-    if thetype not in valid_types:
-        logging.error("{0}: type {1} is not allowed. Valid items are {2}".format(name, thetype, valid_types))
+    if thetype not in VALID_TYPES:
+        logging.error(
+            "%s: type %s is not allowed. Valid items are (%s)", name, thetype, ",".join(VALID_TYPES)
+        )
         return 1
     return 0
 
 
-def sanity_check_shape(name, speaker):
-    # update src/website/nav_menu if you add a new shape
-    valid_shapes = (
-        "floorstanders",
-        "bookshelves",
-        "center",
-        "surround",
-        "omnidirectional",
-        "columns",
-        "cbt",
-        "outdoor",
-        "panel",
-        "inwall",
-        "soundbar",
-        "liveportable",
-        "toursound",
-        "cinema",
-    )
+# update src/website/nav_menu if you add a new shape
+VALID_SHAPES = (
+    "floorstanders",
+    "bookshelves",
+    "center",
+    "surround",
+    "omnidirectional",
+    "columns",
+    "cbt",
+    "outdoor",
+    "panel",
+    "inwall",
+    "soundbar",
+    "liveportable",
+    "toursound",
+    "cinema",
+)
+
+
+def sanity_check_shape(name: str, speaker: Speaker) -> int:
+    """check if shape is valid"""
     if "shape" not in speaker:
-        logging.error("shape is not in {0}".format(name))
+        logging.error("shape is not in %s", name)
         return 1
     theshape = speaker["shape"]
-    if theshape not in valid_shapes:
-        logging.error("{0}: shape '{1}' is not allowed. Valid options are {2}".format(name, theshape, valid_shapes))
+    if theshape not in VALID_SHAPES:
+        logging.error(
+            "%s: shape '%s' is not allowed. Valid options are (%s)",
+            name,
+            theshape,
+            ", ".join(VALID_SHAPES),
+        )
         return 1
+    if theshape == "center":
+        if "amount" not in speaker:
+            logging.error("shape is center but amount not in %s", name)
+            return 1
+        amount = speaker["amount"]
+        if amount != "each":
+            logging.error(
+                "shape is center and amount must be each; check amount for %s please!", name
+            )
+            return 1
     return 0
 
 
-def sanity_check_default_measurement(name, speaker):
+def sanity_check_default_measurement(name: str, speaker: Speaker) -> int:
+    """check that we have a default key"""
     if "default_measurement" not in speaker:
-        logging.error("default_measurement is not in {0}".format(name))
+        logging.error("default_measurement is not in %s", name)
         return 1
     default = speaker["default_measurement"]
     if "measurements" in speaker and default not in speaker["measurements"].keys():
-        logging.error("{0}: no measurement with key {1}".format(name, default))
+        logging.error("%s: no measurement with key %s", name, default)
         return 1
     return 0
 
 
-def sanity_check_version_version(term):
-    if len(term) >= 2 and (term[0] != "v" or not term[1].isdecimal()):
+TERM_MIN_SIZE = 2
+
+
+def sanity_check_version_version(term: str) -> bool:
+    """check that version match some pattern"""
+    if len(term) >= TERM_MIN_SIZE and (term[0] != "v" or not term[1].isdecimal()):
         return False
     return True
 
 
-def sanity_check_version_date(term):
+def sanity_check_version_date(term: str) -> bool:
+    """check that version match some date"""
     return term.isdecimal()
 
 
-def sanity_check_version_pattern(term):
+PATTERN_LENGTH_1 = 1
+PATTERN_LENGTH_2 = 2
+
+
+def sanity_check_version_pattern(term: str) -> bool:
+    """check that version match some pattern"""
     sterm = term.split("x")
-    if len(sterm) == 1 and term.isdecimal():
+    if len(sterm) == PATTERN_LENGTH_1 and term.isdecimal():
         return True
     # 90x60
-    if len(sterm) == 2 and sterm[0].isdecimal() and sterm[1].isdecimal:
+    if len(sterm) == PATTERN_LENGTH_2 and sterm[0].isdecimal() and sterm[1].isdecimal:
         return True
     # h90xv60
-    if len(sterm) == 2 and sterm[0][1:].isdecimal() and sterm[1][1:].isdecimal:
+    if len(sterm) == PATTERN_LENGTH_2 and sterm[0][1:].isdecimal() and sterm[1][1:].isdecimal:
         return True
     return False
 
 
-def sanity_check_version(name, speaker, version):
+VALID_MODIFIERS = (
+    # kind
+    "vented",
+    "sealed",
+    "ported",
+    "pattern",
+    "cardioid",
+    "bassreflex",
+    "monopole",
+    "dipole",
+    "fullrange",
+    "lowcut",
+    # speaker
+    "dome",
+    "ribbon",
+    "tweeter",
+    # power
+    "action",
+    "passive",
+    # sources
+    "klippel",
+    "gll",
+    # dispersion
+    "narrow",
+    "medium",
+    "wide",
+    # grille
+    "grilleon",
+    "grilleoff",
+    # orientation
+    "vertical",
+    "horizontal",
+    # configuration
+    "configuration",
+)
+
+
+VERSION_PATTERN_LENGTH = 3
+
+
+def sanity_check_version(version: str) -> int:
+    """check that version match some patterns"""
     # update src/website/assets/search.js is you add a new modifier
-    valid_modifiers = (
-        # kind
-        "vented",
-        "sealed",
-        "ported",
-        "pattern",
-        "cardioid",
-        "bassreflex",
-        "monopole",
-        "dipole",
-        "fullrange",
-        "lowcut",
-        # speaker
-        "dome",
-        "ribbon",
-        "tweeter",
-        # power
-        "action",
-        "passive",
-        # sources
-        "klippel",
-        "gll",
-        # dispersion
-        "narrow",
-        "medium",
-        "wide",
-        # grille
-        "grilleon",
-        "grilleoff",
-        # orientation
-        "vertical",
-        "horizontal",
-        # configuration
-        "configuration",
-    )
     status = 0
     lversion = version.lower()
     if lversion[0:4] == "misc":
         smisc = lversion.split("-")
-        if len(smisc) == 3 and smisc[2] not in valid_modifiers:
-            logging.error("{}: modifier {} not in {}".format(lversion, smisc[2], valid_modifiers))
+        if len(smisc) == VERSION_PATTERN_LENGTH and smisc[2] not in VALID_MODIFIERS:
+            logging.error(
+                "%s: modifier %s not in (%s)", lversion, smisc[2], ", ".join(VALID_MODIFIERS)
+            )
             status = 1
     elif lversion[0:6] == "vendor":
         smisc = lversion.split("-")
         for i in range(1, len(smisc)):
             if (
-                smisc[i] not in valid_modifiers
+                smisc[i] not in VALID_MODIFIERS
                 and not sanity_check_version_version(smisc[i])
                 and not sanity_check_version_date(smisc[i])
                 and not sanity_check_version_pattern(smisc[i])
             ):
-                logging.error("{}: modifier {} not in {}".format(lversion, smisc[i], valid_modifiers))
+                logging.error(
+                    "%s: modifier %s not in %s", lversion, smisc[i], ", ".join(VALID_MODIFIERS)
+                )
                 status = 1
             if smisc[i] == "configuration":
                 # skip all after configuration
@@ -191,69 +238,127 @@ def sanity_check_version(name, speaker, version):
     return status
 
 
-def sanity_check_vendor(vendor):
-    if vendor in metadata.origins_info.keys():
+def sanity_check_vendor(vendor: str) -> bool:
+    """check that vendor is known"""
+    if vendor in metadata.origins_info:
         return True
     return False
 
 
-def sanity_check_specifications(name, version, specs):
-    status = 0
-    VALID_SPECIFICATIONS = (
-        "dispersion",
-        "sensitivity",
-        "impedance",
-        "SPL",
-        "size",
-        "weight",
-    )
-    VALID_DIMS = ("height", "width", "depth")
+VALID_SPECIFICATIONS = (
+    "dispersion",
+    "sensitivity",
+    "impedance",
+    "SPL",
+    "size",
+    "weight",
+)
 
+VALID_DIMS = ("height", "width", "depth")
+
+VALID_ANGLE_MIN = 0
+VALID_ANGLE_MAX = 180
+
+VALID_SENSITIVY_MIN = 20
+VALID_SENSITIVY_MAX = 150
+
+VALID_IMPEDANCE_MIN = 0
+VALID_IMPEDANCE_MAX = 50
+
+VALID_SPL_MIN = 0
+VALID_SPL_MAX = 160
+
+VALID_DIM_MIN = 0
+VALID_DIM_MAX = 2000
+
+VALID_WEIGTH_MIN = 0
+VALID_WEIGTH_MAX = 500
+
+
+def sanity_check_specifications(name: str, version: str, specs: dict) -> int:
+    """Check that the specs block is valid"""
+    status = 0
     for k, v in specs.items():
         if k not in VALID_SPECIFICATIONS:
-            logging.error("{0}: measurement {1} key {2} is not in {3}".format(name, version, k, VALID_SPECIFICATIONS))
+            logging.error(
+                "%s: measurement %s key %s is not in %s",
+                name,
+                version,
+                k,
+                ", ".join(VALID_SPECIFICATIONS),
+            )
             status = 1
 
         if k == "dispersion":
             for direction, angle in v.items():
                 if direction not in ("horizontal", "vertical"):
                     logging.error(
-                        "{0}: measurement {1} direction {2} is not in {3}".format(
-                            name, version, direction, ("horizontal", "vertical")
-                        )
+                        "%s: measurement %s direction %s is not in ('horizontal', 'vertical')",
+                        name,
+                        version,
+                        direction,
                     )
                     status = 1
                 try:
                     fangle = float(angle)
-                    if fangle < 0 or fangle >= 180:
-                        logging.error("{0}: measurement {1} angle {2} is not in ]0, 180]".format(name, version, angle))
+                    if fangle < VALID_ANGLE_MIN or fangle >= VALID_ANGLE_MAX:
+                        logging.error(
+                            "%s: measurement %s angle %s is not in ]%d, %d]",
+                            name,
+                            version,
+                            angle,
+                            VALID_ANGLE_MIN,
+                            VALID_ANGLE_MAX,
+                        )
                         status = 1
                 except ValueError:
-                    logging.error("{0}: measurement {1} angle {2} is not an int or a float".format(name, version, angle))
+                    logging.exception(
+                        "%s: measurement %s angle %s is not an int or a float",
+                        name,
+                        version,
+                        angle,
+                    )
                     status = 1
 
         if k == "sensitivity":
             try:
                 fsensitivity = float(v)
-                if fsensitivity < 20 or fsensitivity >= 150:
+                if fsensitivity < VALID_SENSITIVY_MIN or fsensitivity >= VALID_SENSITIVY_MAX:
                     logging.error(
-                        "{0}: measurement {1} sensitivity {2} is not in ]20, 150]".format(name, version, fsensitivity)
+                        "%s: measurement %s sensitivity %s is not in ]%d, %d]",
+                        name,
+                        version,
+                        fsensitivity,
+                        VALID_SENSITIVY_MIN,
+                        VALID_SENSITIVY_MAX,
                     )
                     status = 1
             except ValueError:
-                logging.error(
-                    "{0}: measurement {1} sensitivity {2} is not an int or a float".format(name, version, fsensitivity)
+                logging.exception(
+                    "%s: measurement %s sensitivity %s is not an int or a float",
+                    name,
+                    version,
+                    v,
                 )
                 status = 1
 
         if k == "impedance":
             try:
                 fimpedance = float(v)
-                if fimpedance <= 0 or fimpedance >= 50:
-                    logging.error("{0}: measurement {1} impedance {2} is not in ]0, 50]".format(name, version, fimpedance))
+                if fimpedance <= VALID_IMPEDANCE_MIN or fimpedance >= VALID_IMPEDANCE_MAX:
+                    logging.error(
+                        "%s: measurement %s impedance %s is not in ]%d, %d]",
+                        name,
+                        version,
+                        v,
+                        VALID_IMPEDANCE_MIN,
+                        VALID_IMPEDANCE_MAX,
+                    )
                     status = 1
             except ValueError:
-                logging.error("{0}: measurement {1} impedance {2} is not an int or a float".format(name, version, fimpedance))
+                logging.exception(
+                    "%s: measurement %s impedance is not an int or a float", name, version
+                )
                 status = 1
 
         if k == "SPL":
@@ -262,155 +367,190 @@ def sanity_check_specifications(name, version, specs):
                     "max",
                     "continuous",
                     "peak",
-                    "m-noise",
-                    "b-noise",
-                    "pink-noise",
+                    "m_noise",
+                    "b_noise",
+                    "pink_noise",
                 ):
                     logging.error(
-                        "{0}: measurement {1} SPL parameter {2} is not in {3}".format(
-                            name, version, direction, ("mean", "continous", "peak")
-                        )
+                        "%s: measurement %s SPL parameter %s is not in ('mean', 'continous', 'peak')",
+                        name,
+                        version,
+                        state,
                     )
                     status = 1
                 try:
                     fspl = float(spl)
-                    if fspl < 0 or fspl >= 160:  # for Danley's :)
-                        logging.error("{0}: measurement {1} spl {2} is not in ]0, 160]".format(name, version, spl))
+                    if fspl < VALID_SPL_MIN or fspl >= VALID_SPL_MAX:  # for Danley's :)
+                        logging.error(
+                            "%s: measurement %s spl %s is not in ]%d, %d]",
+                            name,
+                            version,
+                            spl,
+                            VALID_SPL_MIN,
+                            VALID_SPL_MAX,
+                        )
                         status = 1
                 except ValueError:
-                    logging.error("{0}: measurement {1} spl {2} is not an int or a float".format(name, version, spl))
+                    logging.exception(
+                        "%s: measurement %s spl %s is not an int or a float", name, version, spl
+                    )
                     status = 1
 
         if k == "size":
-            for dim, mm in v.items():
+            for dim, m_m in v.items():
                 if dim not in VALID_DIMS:
-                    logging.error("{0}: measurement {1} SPL parameter {2} is not in {3}".format(name, version, dim, VALID_DIMS))
+                    logging.error(
+                        "%s: measurement %s SPL parameter %s is not in %s",
+                        name,
+                        version,
+                        dim,
+                        ", ".join(VALID_DIMS),
+                    )
                     status = 1
                 try:
-                    fmm = float(mm)
-                    if fmm < 0 or fmm >= 1600:  # for Danley's :)
-                        logging.error("{0}: measurement {1} mm {2} is not in ]0, 160]".format(name, version, mm))
+                    fm_m = float(m_m)
+                    if fm_m < VALID_DIM_MIN or fm_m >= VALID_DIM_MAX:  # for Danley's :)
+                        logging.error(
+                            "%s: measurement %s m_m %s is not in ]0, 160]", name, version, m_m
+                        )
                         status = 1
                 except ValueError:
-                    logging.error("{0}: measurement {1} mm {2} is not an int or a float".format(name, version, mm))
+                    logging.exception(
+                        "%s: measurement %s m_m %s is not an int or a float", name, version, m_m
+                    )
                     status = 1
 
         if k == "weight":
             try:
                 fweight = float(v)
-                if fweight <= 0 or fweight >= 500:  # there are some very large beast
-                    logging.error("{0}: measurement {1} weight {2} is not in ]0, 50]".format(name, version, fweight))
+                if (
+                    fweight <= VALID_WEIGTH_MIN or fweight >= VALID_WEIGTH_MAX
+                ):  # there are some very large beast
+                    logging.error(
+                        "%s: measurement %s weight %s is not in ]0, 50]", name, version, fweight
+                    )
                     status = 1
             except ValueError:
-                logging.error("{0}: measurement {1} weight {2} is not an int or a float".format(name, version, fweight))
+                logging.exception(
+                    "%s: measurement %s weight %s is not an int or a float", name, version, v
+                )
                 status = 1
 
     return status
 
 
-def sanity_check_measurement(name, speaker, version, measurement):
+MEASUREMENT_KNOWN_KEYS = (
+    "origin",
+    "format",
+    "review",
+    "reviews",
+    "website",
+    "misc",
+    "symmetry",
+    "review_published",
+    "notes",
+    "quality",
+    "parameters",
+    "specifications",
+    "extras",
+    "data_acquisition",
+)
+
+FORMAT_KNOWN_KEYS = (
+    "klippel",
+    "princeton",
+    "webplotdigitizer",
+    "rewstextdump",
+    "splHVtxt",
+    "gllHVtxt",
+)
+
+
+def sanity_check_measurement(name: str, version: str, measurement: Measurement) -> int:
+    """Check each measurement"""
     status = 0
     if version[0:3] not in ("asr", "pri", "ven", "har", "eac", "mis"):
-        logging.error("{0}: key {1} doesn't look correct".format(name, version))
+        logging.error("%s: key %s doesn't look correct", name, version)
         status = 1
     for k in ("origin", "format"):
         if k not in measurement.keys():
-            logging.error("{0}: measurement {1} lack a {2} key".format(name, version, k))
+            logging.error("%s: measurement %s lack a %s key", name, version, k)
             status = 1
 
     for k, v in measurement.items():
-        if k not in (
-            "origin",
-            "format",
-            "review",
-            "reviews",
-            "website",
-            "misc",
-            "symmetry",
-            "review_published",
-            "notes",
-            "quality",
-            "parameters",
-            "specifications",
-            "extras",
-            "data acquisition",
-        ):
-            logging.error("{0}: version {1} : {2} is not known".format(name, version, k))
+        if k not in MEASUREMENT_KNOWN_KEYS:
+            logging.error("%s: version %s : %s is not known", name, version, k)
             status = 1
-        if k == "origin" and (v not in ["ASR", "Misc", "ErinsAudioCorner", "Princeton"] and v[0:8] != "Vendors-"):
-            logging.error("{0}: origin {1} is not known".format(name, v))
+        if k == "origin" and (
+            v not in ["ASR", "Misc", "ErinsAudioCorner", "Princeton"] and v[0:8] != "Vendors-"
+        ):
+            logging.error("%s: origin %s is not known", name, v)
             status = 1
         if k == "origin" and v[0:8] == "Vendors-" and not sanity_check_vendor(v):
-            logging.error("{}: origin {} is known but vendor {} is not!".format(name, v, v[8:]))
+            logging.error("%s: origin %s is known but vendor %s is not!", name, v, v[8:])
             status = 1
-        if k == "format" and v not in [
-            "klippel",
-            "princeton",
-            "webplotdigitizer",
-            "rewstextdump",
-            "splHVtxt",
-            "gllHVtxt",
-        ]:
-            logging.error("{0}: format {1} is not known".format(name, v))
+        if k == "format" and v not in FORMAT_KNOWN_KEYS:
+            logging.error("%s: format %s is not known", name, v)
             status = 1
         if k == "symmetry" and v not in [
             "coaxial",
             "horizontal",
+            "vertical",
         ]:
-            logging.error("{0}: symmetry {1} is not known".format(name, v))
+            logging.error("%s: symmetry %s is not known", name, v)
             status = 1
-        if k == "review" and type(v) is not str:
-            logging.error("{0}: review {1} is not a string".format(name, v))
+        if k == "review" and not isinstance(v, str):
+            logging.error("%s: review %s is not a string", name, v)
             status = 1
         if k == "reviews":
-            if type(v) is not dict:
-                logging.error("{0}: review {1} is not a dict".format(name, v))
+            if not isinstance(v, dict):
+                logging.error("%s: review %s is not a dict", name, v)
                 status = 1
-            for ik, iv in v.items():
-                if type(iv) is not str:
-                    logging.error("{0}: in reviews {1} review {2} is not a string".format(name, v, iv))
+            for _, i_v in v.items():
+                if not isinstance(i_v, str):
+                    logging.error("%s: in reviews %s review %s is not a string", name, v, i_v)
                     status = 1
         if k == "quality" and v not in ("unknown", "low", "medium", "high"):
             logging.error(
-                "{0}: in measurement {1} quality {2} is unknown".format(
-                    name,
-                    version,
-                    v,
-                )
+                "%s: in measurement %s quality %s is unknown",
+                name,
+                version,
+                v,
             )
             status = 1
 
         if k == "specifications" and sanity_check_specifications(name, version, v) != 0:
             logging.error(
-                "{0}: in measurement {1} specifications {2} is incorrect".format(
-                    name,
-                    version,
-                    v,
-                )
+                "%s: in measurement %s specifications %s is incorrect",
+                name,
+                version,
+                v,
             )
             status = 1
 
     if version[0:3] == "mis" and "quality" not in measurement.keys():
-        logging.error("{0}: in measurement {1} quality is required".format(name, version))
+        logging.error("%s: in measurement %s quality is required", name, version)
         status = 1
     return status
 
 
-def sanity_check_measurements(name, speaker):
+def sanity_check_measurements(name: str, speaker: Speaker) -> int:
+    """Check all measurements for a speaker"""
     status = 0
     if "measurements" not in speaker:
-        logging.error("measurements is not in {0}".format(name))
+        logging.error("measurements is not in %s", name)
         status = 1
     else:
         for version, measurement in speaker["measurements"].items():
-            if sanity_check_version(name, speaker, version) != 0:
+            if sanity_check_version(version) != 0:
                 status = 1
-            if sanity_check_measurement(name, speaker, version, measurement) != 0:
+            if sanity_check_measurement(name, version, measurement) != 0:
                 status = 1
     return status
 
 
-def sanity_check_speaker(name, speaker):
+def sanity_check_speaker(name: str, speaker: Speaker) -> int:
+    """Check a speaker description"""
     if (
         sanity_check_brand(name, speaker) != 0
         or sanity_check_model(name, speaker) != 0
@@ -419,18 +559,20 @@ def sanity_check_speaker(name, speaker):
         or sanity_check_measurements(name, speaker) != 0
         or sanity_check_default_measurement(name, speaker) != 0
     ):
+        logging.error("speaker failed %s", name)
         return 1
     return 0
 
 
-def sanity_check_speakers(speakers):
+def sanity_check_speakers(speakers: SpeakerDatabase) -> int:
+    """Check all speakers description"""
     status = 0
     for name, speaker in speakers.items():
         if sanity_check_speaker(name, speaker) != 0:
-            status = 1
+            status += 1
     return status
 
 
 if __name__ == "__main__":
-    status = sanity_check_speakers(metadata.speakers_info)
-    sys.exit(status)
+    MAIN_STATUS = sanity_check_speakers(metadata.speakers_info)
+    sys.exit(MAIN_STATUS)

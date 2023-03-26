@@ -1,5 +1,20 @@
 # -*- coding: utf-8 -*-
-import logging
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import bisect
 import math
@@ -7,11 +22,11 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from .load_misc import graph_melt, sort_angles
-from .compute_scores import octave
+from spinorama import logger
+from spinorama.load_misc import sort_angles
+from spinorama.compute_scores import octave
 
 # pd.set_option('display.max_rows', None)
-logger = logging.getLogger("spinorama")
 
 
 def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
@@ -31,24 +46,28 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
     er = dfs[dfs.Measurements == "Early Reflections"].rename(columns={"dB": "ER"}).set_index("Freq")
     sp = dfs[dfs.Measurements == "Sound Power"].rename(columns={"dB": "SP"}).set_index("Freq")
     logger.debug(
-        "unify_freq: on.shape={0} lw.shape={1} er.shape={2} sp.shape={3}".format(on.shape, lw.shape, er.shape, sp.shape)
+        "unify_freq: on.shape=%s lw.shape=%s er.shape=%s sp.shape=%s",
+        on.shape,
+        lw.shape,
+        er.shape,
+        sp.shape,
     )
 
     # align 2 by 2
     align = on.align(lw, axis=0)
-    logger.debug("on+lw shape: {0}".format(align[0].shape))
+    logger.debug("on+lw shape: %s", align[0].shape)
     if er.shape[0] != 0:
         align = align[0].align(er, axis=0)
-        logger.debug("+er shape: {0}".format(align[0].shape))
+        logger.debug("+er shape: %s", align[0].shape)
     else:
         logger.debug("skipping ER")
     all_on = align[0].align(sp, axis=0)
-    logger.debug("+sp shape: {0}".format(all_on[0].shape))
+    logger.debug("+sp shape: %s", all_on[0].shape)
     # realigned with the largest frame
     all_lw = pd.DataFrame()
     if lw.shape[0] != 0:
         all_lw = all_on[0].align(lw, axis=0)
-        logger.debug("Before call: {0} and {1}".format(er.shape, all_on[0].shape))
+        logger.debug("Before call: %s and %s", er.shape, all_on[0].shape)
     all_er = pd.DataFrame()
     if er.shape[0] != 0:
         all_er = all_on[0].align(er, axis=0)
@@ -57,12 +76,11 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
         all_sp = all_on[0].align(sp, axis=0)
     # expect all the same
     logger.debug(
-        "Shapes ON {0} LW {1} ER {2} SP {3}".format(
-            all_on[0].shape if all_on is not None and len(all_on) > 0 else "--",
-            all_lw[1].shape if all_lw is not None and len(all_lw) > 1 else "--",
-            all_er[1].shape if all_er is not None and len(all_er) > 1 else "--",
-            all_sp[1].shape if all_sp is not None and len(all_sp) > 1 else "--",
-        )
+        "Shapes ON %s LW %s ER %s SP %s",
+        all_on[0].shape if all_on is not None and len(all_on) > 0 else "--",
+        all_lw[1].shape if all_lw is not None and len(all_lw) > 1 else "--",
+        all_er[1].shape if all_er is not None and len(all_er) > 1 else "--",
+        all_sp[1].shape if all_sp is not None and len(all_sp) > 1 else "--",
     )
     # extract right parts and interpolate
     a_on = all_on[0].drop("Measurements", axis=1).interpolate()
@@ -77,22 +95,21 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
         a_sp = all_sp[1].drop("Measurements", axis=1).interpolate()
     # expect all the same
     logger.debug(
-        "Shapes: {0} {1} {2}".format(
-            a_lw.shape if not a_lw.empty else "--",
-            a_er.shape if not a_er.empty else "--",
-            a_sp.shape if not a_sp.empty else "--",
-        )
+        "Shapes: %s %s %s",
+        a_lw.shape if not a_lw.empty else "--",
+        a_er.shape if not a_er.empty else "--",
+        a_sp.shape if not a_sp.empty else "--",
     )
     # remove NaN numbers
     data = {}
     data["Freq"] = a_on.index
-    if a_on is not None and "ON" in a_on.keys() and len(a_on.ON) == len(a_on.index):
+    if a_on is not None and "ON" in a_on and len(a_on.ON) == len(a_on.index):
         data["On Axis"] = a_on.ON
-    if a_lw is not None and "LW" in a_lw.keys() and len(a_lw.LW) == len(a_on.index):
+    if a_lw is not None and "LW" in a_lw and len(a_lw.LW) == len(a_on.index):
         data["Listening Window"] = a_lw.LW
-    if a_er is not None and "ER" in a_er.keys() and len(a_er.ER) == len(a_on.index):
+    if a_er is not None and "ER" in a_er and len(a_er.ER) == len(a_on.index):
         data["Early Reflections"] = a_er.ER
-    if a_sp is not None and "SP" in a_sp.keys() and len(a_sp.SP) == len(a_on.index):
+    if a_sp is not None and "SP" in a_sp and len(a_sp.SP) == len(a_on.index):
         data["Sound Power"] = a_sp.SP
 
     res2 = pd.DataFrame(data)
@@ -116,7 +133,7 @@ def compute_contour(dfm_in):
     # generate 3 arrays x, y, z suitable for computing equilevels
     dfm = sort_angles(dfm_in)
     # check if we have -180
-    if "180°" in dfm.keys() and "-180°" not in dfm.keys():
+    if "180°" in dfm and "-180°" not in dfm:
         dfm.insert(1, "-180°", dfm_in["180°"])
 
     # print('debug -- 180 -- min {} max {}'.format(np.min(dfm_in["180°"]), np.max(dfm_in["180°"])))
@@ -138,10 +155,6 @@ def compute_contour(dfm_in):
     af, am = np.meshgrid(hrange, vrange)
     dfm.drop("Freq", axis=1, inplace=True)
     az = dfm.T.to_numpy()
-    # if af.shape != am.shape or af.shape != az.shape:
-    #   print(
-    #       "Shape mismatch af={0} am={1} az={2}".format(af.shape, az.shape, am.shape)
-    #   )
     return (af, am, az)
 
 
@@ -149,7 +162,9 @@ def reshape(x, y, z, nscale):
     # change the shape and rescale it by nscale
     nx, _ = x.shape
     # expand x-axis and y-axis
-    lxi = [np.linspace(x[0][i], x[0][i + 1], nscale, endpoint=False) for i in range(0, len(x[0]) - 1)]
+    lxi = [
+        np.linspace(x[0][i], x[0][i + 1], nscale, endpoint=False) for i in range(0, len(x[0]) - 1)
+    ]
     lx = [i for j in lxi for i in j] + [x[0][-1] for i in range(0, nscale)]
     nly = (nx - 1) * nscale + 1
     # keep order
@@ -202,33 +217,34 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     """ "compute +/- angle where directivity is most constant between 1kHz and 10kz"""
     deg0 = bisect.bisect(am.T[0], 0) - 1
     # parameters
-    kHz1 = bisect.bisect(af[0], 1000)
-    kHz10 = bisect.bisect(af[0], 10000)
-    dbLess = -6
+    k_hz_1 = bisect.bisect(af[0], 1000)
+    k_hz_10 = bisect.bisect(af[0], 10000)
+    db_less = -6
     # 2% tolerance
     tol = 0.0001
     #
-    zero = az[deg0][kHz1:kHz10]
+    zero = az[deg0][k_hz_1:k_hz_10]
+
     # print('debug af {} am {} az {}'.format(af.shape, am.shape, az.shape))
     # print('debug af {}'.format(af))
     # print('debug am {}'.format(am.T[deg0]))
     # print('debug az {}'.format(az))
-    # print('debug 1kHz at pos{} 10kHz at pos {} def0 at pos {}'.format(kHz1, kHz10, deg0))
+    # print('debug 1kHz at pos{} 10kHz at pos {} def0 at pos {}'.format(k_hz_1, k_hz_10, deg0))
     def linear_eval(x: float) -> float:
         xp1 = int(x)
         xp2 = xp1 + 1
-        zp1 = az[xp1][kHz1:kHz10]
-        zp2 = az[xp2][kHz1:kHz10]
+        zp1 = az[xp1][k_hz_1:k_hz_10]
+        zp2 = az[xp2][k_hz_1:k_hz_10]
         # linear interpolation
         zp = zp1 + (x - xp1) * (zp2 - zp1)
         # normˆ2 (z-(-6dB))
-        return np.linalg.norm(zp - zero - dbLess)
+        return np.linalg.norm(zp - zero - db_less)
 
     def linear_eval_octave(x: float) -> float:
         xp1 = int(x)
         xp2 = xp1 + 1
         per_octave = []
-        for (bmin, bcenter, bmax) in octave(2):
+        for bmin, _bcenter, bmax in octave(2):
             # 100hz to 16k hz
             if bmin < 1000 or bmax > 10000:
                 continue
@@ -241,7 +257,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
             zp = zp1 + (x - xp1) * (zp2 - zp1)
             # normˆ2 (z-(-6dB))
             # print('{}hz {} {}hz {} {}'.format(bmin, kmin, bmax, kmax, zp))
-            per_octave.append(np.linalg.norm(zp - kzero - dbLess))
+            per_octave.append(np.linalg.norm(zp - kzero - db_less))
         # print('x={} min= {} per_octave={}'.format(x, np.min(per_octave), per_octave))
         # print("x={} min= {}".format(x, np.min(per_octave)))
         return np.min(per_octave)
@@ -254,10 +270,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     # all minimum in this 1% band from min
     pos_g = [i for i, v in enumerate(eval_p) if v < min_p]
     # be generous and take best one (widest)
-    if len(pos_g) > 1:
-        pos_p = pos_g[0]
-    else:
-        pos_p = np.argmin(eval_p)
+    pos_p = pos_g[0] if len(pos_g) > 1 else np.argmin(eval_p)
     # translate in deg
     angle_p = pos_p * 180 / eval_count
     # print('debug: space_p boundaries [{}, {}] steps {}'.format(deg0, len(am.T[0])-2, eval_count))
@@ -270,10 +283,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     eval_m = [linear_eval_octave(x) for x in space_m]
     min_m = np.min(eval_m) * (1.0 + tol)
     pos_g = [i for i, v in enumerate(eval_m) if v < min_m]
-    if len(pos_g) > 1:
-        pos_m = pos_g[-1]
-    else:
-        pos_m = np.argmin(eval_m)
+    pos_m = pos_g[-1] if len(pos_g) > 1 else np.argmin(eval_m)
     # translate in deg
     angle_m = pos_m * 180 / eval_count - 180
     # print('debug: space_m boundaries [{}, {}] steps {}'.format(0, deg0-1, eval_count))
@@ -285,35 +295,34 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
     return float(angle_p), float(angle_m), float((angle_p - angle_m) / 2)
 
 
-def directivity_matrix(splH, splV):
-    # print(splH.shape, splV.shape)
-    # print(splH.head())
-    # print(splV.head())
-    if splH is None or splV is None:
+def directivity_matrix(spl_h, spl_v):
+    # print(spl_h.shape, spl_v.shape)
+    # print(spl_h.head())
+    # print(spl_v.head())
+    if spl_h is None or spl_v is None:
         logger.info("Skipping directivty matrix, one measurement at least is empty")
         return None
 
-    if splH.isnull().values.any() or splV.isnull().values.any():
+    if spl_h.isnull().values.any() or spl_v.isnull().values.any():
         logger.info("Skipping directivty matrix, one value at least is NaN")
         return None
 
-    n = splH.Freq.shape[0]
+    n = spl_h.Freq.shape[0]
     r = np.floor(np.logspace(1.0 + math.log10(2), 4.0 + math.log10(2), n))
     x, y = np.meshgrid(r, r)
-    splV = splV.set_index("Freq")
-    splH = splH.set_index("Freq")
-    zU = splV.dot(splH.T)
-    zD = splV.dot(splV.T) * splH.dot(splH.T)
-    # zD = np.matmult(np.matmult(splV, splV.T), np.matmult(splH, splH.T))
+    spl_v = spl_v.set_index("Freq")
+    spl_h = spl_h.set_index("Freq")
+    z_u = spl_v.dot(spl_h.T)
+    z_d = spl_v.dot(spl_v.T) * spl_h.dot(spl_h.T)
+    # z_d = np.matmult(np.matmult(spl_v, spl_v.T), np.matmult(spl_h, spl_h.T))
     # not completly sure why it is possible to get negative values
-    zD[zD < 0] = 0.0
-    z = zU / np.sqrt(zD) - 1.0
+    z_d[z_d < 0] = 0.0
+    z = z_u / np.sqrt(z_d) - 1.0
     # print('max {} max {}'.format(np.max(np.max(z)), np.max(np.max(z))))
     return (x, y, z)
 
 
 def compute_directivity_deg_v2(df) -> tuple[float, float, float]:
-
     # def compute(spl, r):
     #     mean = spl[((spl.Freq>1000) & (spl.Freq<10000))]['On Axis'].mean()
     #     for k in r:
@@ -395,12 +404,15 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
     try:
         window_size = abs(int(window_size))
         order = abs(int(order))
-    except ValueError as msg:
-        raise ValueError("window_size and order have to be of type int")
+    except ValueError as value_error:
+        ve_error = "window_size and order have to be of type int"
+        raise ValueError(ve_error) from value_error
     if window_size % 2 != 1 or window_size < 1:
-        raise TypeError("window_size size must be a positive odd number")
+        te_error = "window_size size must be a positive odd number"
+        raise TypeError(te_error)
     if window_size < order + 2:
-        raise TypeError("window_size is too small for the polynomials order")
+        tp_error = "window_size is too small for the polynomials order"
+        raise TypeError(tp_error)
     order_range = range(order + 1)
     half_window = (window_size - 1) // 2
     # precompute coefficients
@@ -414,20 +426,27 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
     return np.convolve(m[::-1], y, mode="valid")
 
 
-def dist_point_line(x, y, A, B, C):
-    return abs(A * x + B * y + C) / math.sqrt(A * A + B * B)
+def dist_point_line(x, y, p_a, p_b, p_c):
+    return abs(p_a * x + p_b * y + p_c) / math.sqrt(p_a * p_a + p_b * p_b)
 
 
-def compute_statistics(df, measurement, min_freq, max_freq, hist_min_freq, hist_max_freq):
-    restricted_minmax = df.loc[(df.Freq > min_freq) & (df.Freq < max_freq)]
+def compute_statistics(data_frame, measurement, min_freq, max_freq, hist_min_freq, hist_max_freq):
+    restricted_minmax = data_frame.loc[(data_frame.Freq > min_freq) & (data_frame.Freq < max_freq)]
     restricted_spl = restricted_minmax[measurement]
     # regression line
-    slope, intercept, _, _, _ = stats.linregress(x=np.log10(restricted_minmax["Freq"]), y=restricted_spl)
+    slope, intercept, _, _, _ = stats.linregress(
+        x=np.log10(restricted_minmax["Freq"]), y=restricted_spl
+    )
     #
-    hist_minmax = df.loc[(df.Freq > hist_min_freq) & (df.Freq < hist_max_freq)]
+    hist_minmax = data_frame.loc[
+        (data_frame.Freq > hist_min_freq) & (data_frame.Freq < hist_max_freq)
+    ]
     hist_spl = hist_minmax[measurement]
     # hist_dist = [dist_point_line(math.log10(f), db, slope, -1, intercept) for f, db in zip(hist_minmax.Freq, hist_spl)]
-    hist_dist = [abs(db - (slope * math.log10(f) + intercept)) for f, db in zip(hist_minmax.Freq, hist_spl)]
+    hist_dist = [
+        abs(db - (slope * math.log10(f) + intercept))
+        for f, db in zip(hist_minmax.Freq, hist_spl, strict=False)
+    ]
     # for i, (f, db) in enumerate(zip(hist_minmax.Freq, hist_spl)):
     #    print('{:4f}hz {:0.2f} db {:2.1f} dist={:0.2f}'.format(f, math.log10(f), db, hist_dist[i]))
     # build an histogram to see where the deviation is above each treshhole

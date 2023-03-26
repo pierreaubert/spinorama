@@ -1,0 +1,11 @@
+Focal Chora 816 APO EQ LW 96000Hz
+March162023-142841
+
+Preamp: -2 dB
+
+Filter 1: ON HPQ Fc 50.25,    0.00,    1.24
+Filter 2: ON PK Fc 91.59,    -1.87,    1.57
+Filter 3: ON PK Fc 659.24,    -2.40,    6.92
+Filter 4: ON PK Fc 1695.21,    -0.96,    2.83
+Filter 5: ON PK Fc 3422.33,    1.92,    1.41
+Filter 6: ON PK Fc 7503.62,    -1.92,    2.00

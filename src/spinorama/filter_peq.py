@@ -1,17 +1,32 @@
 # -*- coding: utf-8 -*-
-import logging
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import math
 import numpy as np
 import pandas as pd
 
-from .ltype import Vector, Peq, FloatVector1D
-from .filter_iir import Biquad
-from .load_misc import graph_melt
-
-logger = logging.getLogger("spinorama")
+from spinorama import logger
+from spinorama.ltype import Vector, Peq, Vector
+from spinorama.filter_iir import Biquad
 
 
 def peq_equal(left: Peq, right: Peq) -> bool:
+    """are 2 peqs equals?"""
     if len(left) != len(right):
         return False
     for l, r in zip(left, right):
@@ -20,7 +35,8 @@ def peq_equal(left: Peq, right: Peq) -> bool:
     return True
 
 
-def peq_build(freq: FloatVector1D, peq: Peq) -> Vector:
+def peq_build(freq: Vector, peq: Peq) -> Vector:
+    """compute SPL for each frequency"""
     current_filter = [0.0]
     if len(peq) > 0:
         for w, iir in peq:
@@ -28,7 +44,8 @@ def peq_build(freq: FloatVector1D, peq: Peq) -> Vector:
     return current_filter
 
 
-def peq_freq(spl: FloatVector1D, peq: Peq) -> Vector:
+def peq_freq(spl: Vector, peq: Peq) -> Vector:
+    """compute SPL for each frequency"""
     current_filter = [0.0]
     if len(peq) > 0:
         for w, iir in peq:
@@ -37,17 +54,20 @@ def peq_freq(spl: FloatVector1D, peq: Peq) -> Vector:
 
 
 def peq_preamp_gain(peq: Peq) -> float:
-    # add 0.2 dB to have a margin for clipping
+    """compute preamp gain for a peq
+
+    Note that we add 0.2 dB to have a margin for clipping
+    """
     freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), 1000)
     spl = np.array(peq_build(freq, peq))
     individual = 0.0
     if len(peq) == 0:
         return 0.0
-    for w, iir in peq:
+    for _w, iir in peq:
         individual = max(individual, np.max(peq_build(freq, [(1.0, iir)])))
     overall = np.max(np.clip(spl, 0, None))
     gain = -(max(individual, overall) + 0.2)
-    # print('debug preamp gain: {}'.format(gain))
+    # print('debug preamp gain: %f'.format(gain))
     return gain
 
 
@@ -73,7 +93,7 @@ def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
 
 
 def peq_print(peq: Peq) -> None:
-    for i, iir in enumerate(peq):
+    for _i, iir in enumerate(peq):
         if iir[0] != 0:
             print(iir[1])
 
@@ -91,13 +111,17 @@ def peq_format_apo(comment: str, peq: Peq) -> str:
                 )
             )
         elif iir.typ in (Biquad.LOWPASS, Biquad.HIGHPASS):
-            res.append("Filter {:2d}: ON {:2s} Fc {:5d} Hz".format(i + 1, iir.type2str(), int(iir.freq)))
+            res.append(
+                "Filter {:2d}: ON {:2s} Fc {:5d} Hz".format(i + 1, iir.type2str(), int(iir.freq))
+            )
         elif iir.typ in (Biquad.LOWSHELF, Biquad.HIGHSHELF):
             res.append(
-                "Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB".format(i + 1, iir.type2str(), int(iir.freq), iir.dbGain)
+                "Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB".format(
+                    i + 1, iir.type2str(), int(iir.freq), iir.dbGain
+                )
             )
         else:
-            logger.error("kind {} is unkown".format(iir.typ))
+            logger.error("kind %s is unkown", iir.typ)
     res.append("")
     return "\n".join(res)
 

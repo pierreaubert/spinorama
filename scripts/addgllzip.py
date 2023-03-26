@@ -17,7 +17,10 @@ models = {}
 manual_exceptions_table = {
     "Alcons Audio 2xQR24+2QM24.zip": ("Alcons Audio QR24", "vendor-v2QR24+2QM24"),
     "Alcons Audio 3xQR24+1xQM24.zip": ("Alcons Audio QR24", "vendor-v3QR24+1QM24"),
-    "DB Audiotechnik AL60 x3 + 2 sub.zip": ("DB Audiotechnik AL60", "vendor-pattern-60x30-v3x+2sub"),
+    "DB Audiotechnik AL60 x3 + 2 sub.zip": (
+        "DB Audiotechnik AL60",
+        "vendor-pattern-60x30-v3x+2sub",
+    ),
     "DB Audiotechnik AL60 x3.zip": ("DB Audiotechnik AL60", "vendor-pattern-60x30-v3x"),
     "DB Audiotechnik AL60.zip": ("DB Audiotechnik AL60", "vendor-pattern-60x30-v1x"),
     "DB Audiotechnik AL90 x3.zip": ("DB Audiotechnik AL90", "vendor-pattern-90x30-v3x"),
@@ -89,25 +92,25 @@ def guess(speaker):
 
     # last token
     guess_1 = " ".join(tokens[-1])
-    if guess_1 in metadata.keys():
+    if guess_1 in metadata:
         return guess_1
 
     # last 2 tokens
     guess_2 = " ".join(tokens[-2])
-    if guess_2 in metadata.keys():
+    if guess_2 in metadata:
         return guess_2
 
     # forget part of brand
     brand = tokens[0]
     model = tokens[1:]
     guess_3 = " ".join([brand] + model)
-    if guess_3 in metadata.keys():
+    if guess_3 in metadata:
         return guess_3
 
     # lower / upper mismatch
     guess_4 = speaker.lower()
     if guess_4 in skeys:
-        for k in metadata.keys():
+        for k in metadata:
             if k.lower() == guess_4:
                 return k
 
@@ -139,22 +142,25 @@ def match(version, name):
     """Implement some basic matching between the name in Windows and the name in the metadata file"""
     if version in name:
         return True
-    if version[0] == "x" and len(version) > 1 and version[1].isdigit() and "v{}".format(version[1:]) in name:
+    if (
+        version[0] == "x"
+        and len(version) > 1
+        and version[1].isdigit()
+        and "v{}".format(version[1:]) in name
+    ):
         return True
     if version[0] == "[" and version[-1] == "]":
         parts = version[1:-1].split()
         zero = False
         one = False
-        if parts[0] == "BR" and "bassreflex" in name:
-            zero = True
-        elif parts[0] == "C" and "cardioid" in name:
+        if parts[0] == "BR" and ("bassreflex" in name or "cardioid" in name):
             zero = True
 
-        if parts[1] == "W" and "wide" in name:
-            one = True
-        elif parts[1] == "N" and "narrow" in name:
-            one = True
-        elif parts[1] == "M" and "medium" in name:
+        if (
+            (parts[1] == "W" and "wide" in name)
+            or (parts[1] == "N" and "narrow" in name)
+            or (parts[1] == "M" and "medium" in name)
+        ):
             one = True
         # print("debug parts[0]={} parts[1]={} return {}".format(parts[0], parts[1], zero and one))
         return zero and one
@@ -185,20 +191,20 @@ def find_speaker(zipfile):
 
     version = None
     manual_exception = False
-    if base_speaker in manual_exceptions_table.keys():
+    if base_speaker in manual_exceptions_table:
         speaker, version = manual_exceptions_table[base_speaker]
         manual_exception = True
-    elif speaker not in metadata.keys():
+    elif speaker not in metadata:
         tokens = speaker.split()
         for pos in range(1, min(len(tokens), 5)):
             candidate = " ".join(tokens[:-pos])
-            if candidate in metadata.keys():
+            if candidate in metadata:
                 speaker = candidate
                 version = " ".join(tokens[-pos:])
 
     # print("debug speaker={} version={} exception={}".format(speaker, version, manual_exception))
 
-    if speaker in metadata.keys() and version is None:
+    if speaker in metadata and version is None:
         # easy case
         measurements = metadata[speaker]
         # find the correct measurement
@@ -229,7 +235,7 @@ def find_speaker(zipfile):
             print("warning too many measurements for {}".format(speaker))
             return 0
 
-    if speaker in metadata.keys() and version is not None:
+    if speaker in metadata and version is not None:
         # easy case
         measurements = metadata[speaker]
         # find the correct measurement
@@ -277,10 +283,12 @@ def find_speaker(zipfile):
             print("warning too many measurements for {}".format(speaker))
             return 1
 
-    if speaker in metadata.keys() and version is not None:
+    if speaker in metadata and version is not None:
         measurements = metadata[speaker]
         if len(measurements["measurements"].keys()) == 1:
-            destination = "datas/measurements/{}/{}".format(speaker, measurements["default_measurement"])
+            destination = "datas/measurements/{}/{}".format(
+                speaker, measurements["default_measurement"]
+            )
             # print("goal {} goes to {}".format(zipfile, destination))
             process(zipfile, speaker, destination)
             return 0
@@ -295,19 +303,18 @@ def find_speaker(zipfile):
 
 
 if __name__ == "__main__":
-
     if len(sys.argv) != 2:
         sys.exit(-1)
 
-    zipfile = sys.argv[1]
+    zip_file = sys.argv[1]
 
-    if not os.path.exists(zipfile):
-        print("error: {} does not exist!".format(zipfile))
+    if not os.path.exists(zip_file):
+        print("error: {} does not exist!".format(zip_file))
         sys.exit(1)
 
-    skeys = set({k.lower() for k in metadata.keys()})
-    brands = set({v["brand"].lower() for _, v in metadata.items()})
-    models = set({v["model"].lower() for _, v in metadata.items()})
+    skeys = {k.lower() for k in metadata}
+    brands = {v["brand"].lower() for _, v in metadata.items()}
+    models = {v["model"].lower() for _, v in metadata.items()}
 
-    status = find_speaker(zipfile)
-    sys.exit(status)
+    STATUS = find_speaker(zip_file)
+    sys.exit(STATUS)

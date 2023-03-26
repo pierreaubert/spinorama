@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2022 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,20 +16,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import logging
 import math
 import numpy as np
 import pandas as pd
 from scipy.stats import linregress
 
-logger = logging.getLogger("spinorama")
+from spinorama import logger
+from spinorama.ltype import Peq, Vector
+from spinorama.filter_peq import peq_build
+from spinorama.compute_misc import savitzky_golay
+
 
 # ------------------------------------------------------------------------------
 # compute freq and targets
 # ------------------------------------------------------------------------------
 
 
-def limit_before_freq(freq, curve, min_freq):
+def limit_before_freq(freq: Vector, curve: list[Vector], min_freq: float) -> list[Vector]:
     i_min = 0
     while i_min < len(freq) and freq[i_min] < min_freq:
         i_min += 1
@@ -56,59 +58,59 @@ def get_freq(df_speaker_data, optim_config):
         local_curves = curves
 
     # extract LW
-    local_df = None
+    local_df = pd.DataFrame()
     if len(curves) > 0:
         columns = {"Freq"}.union(local_curves)
-        if "CEA2034_unmelted" in df_speaker_data.keys():
+        if "CEA2034_unmelted" in df_speaker_data:
             local_df = df_speaker_data["CEA2034_unmelted"].loc[:, list(columns)]
         else:
             df_tmp = df_speaker_data["CEA2034"]
             try:
-                df_pivoted = df_tmp.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max).reset_index()
+                df_pivoted = df_tmp.pivot_table(
+                    index="Freq", columns="Measurements", values="dB", aggfunc=max
+                ).reset_index()
                 local_df = df_pivoted.loc[:, columns]
-            except ValueError as ve:
-                # print("debug: {} {}".format(df_tmp.keys(), ve))
-                # print("{}".format(df_tmp.index.duplicated()))
+            except ValueError as value_error:
+                logger.debug("%s %s", df_tmp.keys(), value_error)
                 return None, None, None
-            except KeyError as ke:
-                # print("debug: columns {} {}".format(columns, ke))
-                # print("debug: {}".format(df_tmp.keys()))
+            except KeyError as key_error:
+                logger.debug("columns %s %s", columns, key_error)
                 return None, None, None
 
     if with_pir:
         pir_source = df_speaker_data["Estimated In-Room Response"]
-        if local_df is None:
-            local_df = pd.DataFrame({"Freq": pir_source.Freq, "Estimated In-Room Response": pir_source.dB})
+        if local_df.empty:
+            local_df = pd.DataFrame(
+                {"Freq": pir_source.Freq, "Estimated In-Room Response": pir_source.dB}
+            )
         else:
-            local_df["Estimated In-Room Response"] = pir_source.dB.values
+            local_df["Estimated In-Room Response"] = pir_source.dB.to_numpy()
 
     # sselector
     selector = get_selector(local_df, optim_config)
-    local_freq = local_df.loc[selector, "Freq"].values
+    local_freq = local_df.loc[selector, "Freq"].to_numpy()
 
     # freq
     local_target = []
     for curve in curves:
-        data = local_df.loc[selector, curve].values
+        data = local_df.loc[selector, curve].to_numpy()
         data = limit_before_freq(local_freq, data, optim_config["target_min_freq"])
         local_target.append(data)
 
-    # print(local_df, local_freq, local_target)
     return local_df, local_freq, local_target
 
 
 def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     # freq
     selector = get_selector(df_speaker_data, optim_config)
-    current_curve = df_speaker_data.loc[selector, current_curve_name].values
+    current_curve = df_speaker_data.loc[selector, current_curve_name].to_numpy()
     # compute linear reg on current_curve
     slope, intercept, r_value, p_value, std_err = linregress(np.log10(freq), current_curve)
     # possible correction to have a LW not too bright
     if current_curve_name == "Estimated In-Room Response":
-        lw_curve = df_speaker_data.loc[selector, "Listening Window"].values
+        lw_curve = df_speaker_data.loc[selector, "Listening Window"].to_numpy()
         slope_lw, _, _, _, _r = linregress(np.log10(freq), lw_curve)
         if slope_lw > -0.5:
-            # print('slope correction on LW by -{}'.format((slope_lw+0.5)))
             slope -= slope_lw + 0.5
 
     # normalise to have a flat target (primarly for bright speakers)
@@ -130,20 +132,10 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     # find target min and max
     first_freq = 0
     last_freq = -1
-    freq_1k5 = 0
-    freq_4k = 0
 
     for i, f in enumerate(freq):
         if f >= optim_config["target_min_freq"]:
             first_freq = i
-            break
-    for i, f in enumerate(freq):
-        if f >= 1500:
-            freq_1k5 = i
-            break
-    for i, f in enumerate(freq):
-        if f >= 4000:
-            freq_4k = i
             break
     for i, f in enumerate(reversed(freq)):
         if f <= optim_config["target_max_freq"]:
@@ -153,19 +145,30 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     if current_curve_name is None:
         return None
 
-    # print('first freq[{}]={} last freq[{}]={}'.format(first_freq, freq[first_freq], last_freq, freq[last_freq]))
     slope /= math.log10(freq[last_freq]) - math.log10(freq[first_freq])
-    # print('current curve {}'.format(current_curve[first_freq]))
-    # intercept = current_curve[first_freq] - slope * math.log10(freq[first_freq])
     intercept = -slope * math.log10(freq[first_freq])
-    # print("Slope {} Intercept {} R {} P {} err {}".format(slope, intercept, r_value, p_value, std_err))
     flat = slope * math.log10(freq[first_freq])
-    # print('Flat {}'.format(flat))
-    line = np.array([flat if i < first_freq else slope * math.log10(f) for i, f in enumerate(freq)]) + intercept
-    # print('Line {}'.format(line))
-    # print(
-    #    "Target_interp from {:.1f}dB at {}Hz to {:.1f}dB at {}Hz".format(
-    #        line[first_freq], freq[first_freq], line[last_freq], freq[last_freq]
-    #    )
-    # )
+    line = (
+        np.array([flat if i < first_freq else slope * math.log10(f) for i, f in enumerate(freq)])
+        + intercept
+    )
     return line
+
+
+def optim_compute_auto_target(
+    freq: Vector,
+    target: list[Vector],
+    auto_target_interp: list[Vector],
+    peq: Peq,
+    optim_config: dict,
+) -> list[Vector]:
+    """Define the target for the optimiser with potentially some smoothing"""
+    peq_freq = peq_build(freq, peq)
+    diff = [np.subtract(target[i], auto_target_interp[i]) for i, _ in enumerate(target)]
+    if optim_config.get("smooth_measurements"):
+        window_size = optim_config.get("smooth_window_size")
+        order = optim_config.get("smooth_order")
+        smoothed = [savitzky_golay(d, window_size, order) for d in diff]
+        diff = smoothed
+    delta = [np.add(diff[i], peq_freq).tolist() for i, _ in enumerate(target)]
+    return delta

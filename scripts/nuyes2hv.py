@@ -250,23 +250,23 @@ def interpolate(onaxis, freq):
     # dn't be smart
     return freq, onaxis[1][i]
 
-    if freqmin == freq:
-        return freq, onaxis[1][i]
+    # if freqmin == freq:
+    #    return freq, onaxis[1][i]
 
-    freqmax = onaxis[0][i + 1]
-    if freq < freqmax:
-        splmin = onaxis[1][i]
-        splmax = onaxis[1][i + 1]
-        spldelta = (splmax - splmin) / (freq - freqmin)
-        if splmin + spldelta > max(splmin, splmax):
-            print(
-                "error freq={} f min={} fmax={} spl min={} max={} delta={}".format(
-                    freq, freqmin, freqmax, splmin, splmax, spldelta
-                )
-            )
-        return freq, splmin + spldelta
+    # freqmax = onaxis[0][i + 1]
+    # if freq < freqmax:
+    #    splmin = onaxis[1][i]
+    #    splmax = onaxis[1][i + 1]
+    #    spldelta = (splmax - splmin) / (freq - freqmin)
+    #    if splmin + spldelta > max(splmin, splmax):
+    #        print(
+    #            "error freq={} f min={} fmax={} spl min={} max={} delta={}".format(
+    #                freq, freqmin, freqmax, splmin, splmax, spldelta
+    #            )
+    #        )
+    #    return freq, splmin + spldelta
 
-    print("error")
+    # print("error")
 
 
 def process_hv(speaker, direction, onaxis):
@@ -310,7 +310,6 @@ def process_hv(speaker, direction, onaxis):
 
 
 if __name__ == "__main__":
-
     if len(sys.argv) != 2:
         sys.exit(-1)
 

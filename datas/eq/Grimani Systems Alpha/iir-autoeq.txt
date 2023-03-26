@@ -1,15 +1,15 @@
 EQ for Grimani Systems Alpha computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:42:17
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-03-06-14:24:43
 
-Preamp: -3.0 dB
+Preamp: -3.1 dB
 
-Filter  1: ON LS Fc  1036 Hz Gain +2.10 dB
-Filter  2: ON PK Fc 10004 Hz Gain -3.11 dB Q 0.23
-Filter  3: ON PK Fc   467 Hz Gain -1.82 dB Q 2.97
-Filter  4: ON PK Fc    99 Hz Gain +1.52 dB Q 2.44
-Filter  5: ON PK Fc   160 Hz Gain -0.90 dB Q 2.56
-Filter  6: ON PK Fc  1802 Hz Gain -0.52 dB Q 2.84
-Filter  7: ON PK Fc   265 Hz Gain +0.52 dB Q 0.12
-Filter  8: ON PK Fc 15977 Hz Gain -2.20 dB Q 1.71
-Filter  9: ON PK Fc   104 Hz Gain -1.54 dB Q 2.99
+Filter  1: ON HS Fc  3157 Hz Gain -2.99 dB
+Filter  2: ON PK Fc   812 Hz Gain +2.51 dB Q 1.51
+Filter  3: ON PK Fc    99 Hz Gain +2.85 dB Q 0.44
+Filter  4: ON PK Fc 15814 Hz Gain -1.79 dB Q 1.92
+Filter  5: ON PK Fc  8677 Hz Gain +1.03 dB Q 2.99
+Filter  6: ON PK Fc   351 Hz Gain -0.93 dB Q 1.13
+Filter  7: ON PK Fc  1730 Hz Gain -1.21 dB Q 2.36
+Filter  8: ON PK Fc 11793 Hz Gain -0.92 dB Q 2.73
+Filter  9: ON PK Fc  2506 Hz Gain -0.89 dB Q 2.98

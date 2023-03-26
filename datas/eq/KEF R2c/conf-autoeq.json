@@ -5,7 +5,7 @@
         1.0
     ],
     "plus_and_minus": true,
-    "full_biquad_optim": true,
+    "full_biquad_optim": false,
     "elastic": 0.8,
     "fs": 48000,
     "freq_reg_min": 20,
@@ -13,7 +13,7 @@
     "freq_mean_min": 100,
     "freq_mean_max": 300,
     "curve_names": [
-        "Listening Window"
+        "Estimated In-Room Response"
     ],
     "target_min_freq": 79.8,
     "target_max_freq": 16000,

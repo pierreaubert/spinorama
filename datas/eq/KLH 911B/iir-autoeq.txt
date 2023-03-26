@@ -1,15 +1,15 @@
 EQ for KLH 911B computed from Vendors-KLH data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:46:12
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-03-21-07:00:41
 
-Preamp: -2.6 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc  9886 Hz Gain -2.98 dB Q 0.50
-Filter  2: ON PK Fc   267 Hz Gain +2.00 dB Q 0.16
-Filter  3: ON PK Fc   861 Hz Gain -2.93 dB Q 1.58
-Filter  4: ON PK Fc  1701 Hz Gain +2.35 dB Q 3.00
-Filter  5: ON PK Fc  3075 Hz Gain -3.00 dB Q 1.84
-Filter  6: ON PK Fc 11534 Hz Gain -2.86 dB Q 1.81
-Filter  7: ON PK Fc  8770 Hz Gain -0.97 dB Q 2.99
-Filter  8: ON PK Fc   157 Hz Gain -1.37 dB Q 2.23
-Filter  9: ON PK Fc 13394 Hz Gain -0.99 dB Q 2.93
+Filter  1: ON PK Fc    69 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON PK Fc 10668 Hz Gain -5.34 dB Q 0.75
+Filter  3: ON PK Fc   372 Hz Gain +1.75 dB Q 2.53
+Filter  4: ON PK Fc  1704 Hz Gain +2.22 dB Q 3.00
+Filter  5: ON PK Fc   178 Hz Gain -1.59 dB Q 3.00
+Filter  6: ON PK Fc  2942 Hz Gain -2.17 dB Q 2.02
+Filter  7: ON PK Fc   921 Hz Gain -1.74 dB Q 3.00
+Filter  8: ON PK Fc 14002 Hz Gain -0.61 dB Q 3.00
+Filter  9: ON PK Fc  3936 Hz Gain -0.60 dB Q 3.00

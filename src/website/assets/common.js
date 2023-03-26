@@ -19,7 +19,6 @@
 //@flow
 
 import { urlSite } from './misc.js';
-import { downloadZip } from './downloadzip.js';
 import { getID } from './misc.js';
 
 export const knownMeasurements = [
@@ -47,7 +46,7 @@ export const knownMeasurements = [
     'SPL Vertical Globe',
     'SPL Vertical Globe Normalized',
     'SPL Horizontal Radar',
-    'SPL Vertical Radar',
+    'SPL Vertical Radar'
 ];
 
 const colors = ['#5c77a5', '#dc842a', '#c85857', '#89b5b1', '#71a152', '#bab0ac', '#e15759', '#b07aa1', '#76b7b2', '#ff9da7'];
@@ -217,7 +216,7 @@ function getSpeakerUrl(metaSpeakers: MetaSpeakers, graph: string, speaker: strin
         getVersion(metaSpeakers, speaker, origin, version) +
         '/' +
         processGraph(graph) +
-        '.json.zip';
+        '.json';
     return url;
 }
 
@@ -231,16 +230,12 @@ export function getSpeakerData(
     // console.log('getSpeakerData ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version=' + version)
     const url = getSpeakerUrl(metaSpeakers, graph, speaker, origin, version);
     // console.log('fetching url=' + url)
-    const spec = downloadZip(url)
-        .then(function (spec) {
-            // console.log('parsing url=' + url)
-            const js = JSON.parse(spec);
-            return js;
-        })
-        .catch((error) => {
-            console.log('ERROR getSpeaker data 404 ' + error);
-            return null;
-        });
+    const spec = fetch(url)
+          .then( (response) => response.json())
+          .catch( (error) => {
+              console.log('ERROR getSpeaker data 404 ' + error);
+              return null;
+          });
     return spec;
 }
 
@@ -256,27 +251,25 @@ export function getAllSpeakers(metadata: Metadata): Array<MetaSpeakers | Array<s
 }
 
 export function getMetadata() {
-    const url = urlSite + 'assets/metadata.json.zip';
+    const url = urlSite + 'assets/metadata.json';
     // console.log('fetching url=' + url)
-    const spec = downloadZip(url)
-        .then(function (zipped) {
-            // convert to JSON
-            // console.log('parsing url=' + url)
-            const js = JSON.parse(zipped);
-            // convert to object
-            const metadata = Object.values(js);
-            // console.log('metadata '+metadata.length)
-            return new Map(
-                metadata.map((speaker) => {
-                    const key = getID(speaker.brand, speaker.model);
-                    return [key, speaker];
-                })
-            );
-        })
-        .catch((error) => {
-            console.log('ERROR getMetadata data 404 ' + error);
-            return null;
-        });
+    const spec = fetch(url)
+          .then( (response) => response.json())
+          .then( (data) => {
+              // convert to object
+              const metadata = Object.values(data);
+              // console.log('metadata '+metadata.length)
+              return new Map(
+                  metadata.map((speaker) => {
+                      const key = getID(speaker.brand, speaker.model);
+                      return [key, speaker];
+                  })
+              );
+          })
+          .catch((error) => {
+              console.log('ERROR getMetadata data 404 ' + error);
+              return null;
+          });
     return spec;
 }
 
@@ -359,7 +352,7 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
                 l: 5,
                 r: 0,
                 t: graphMarginTop,
-                b: graphMarginBottom,
+                b: graphMarginBottom
             };
             layout.legend = {
                 orientation: 'h',
@@ -367,6 +360,7 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
                 x: 0,
                 xanchor: 'bottom',
                 yanchor: 'left',
+                groupclick: 'toggleitem'
             };
             // add a legend title to replace the legend group
             if (datas[0].legendgrouptitle) {
@@ -416,7 +410,7 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
                 l: 15,
                 r: 15,
                 t: graphMarginTop * 2,
-                b: graphMarginBottom,
+                b: graphMarginBottom
             };
             layout.legend = {
                 orientation: 'h',
@@ -424,10 +418,11 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
                 x: 0,
                 xanchor: 'bottom',
                 yanchor: 'left',
+                groupclick: 'toggleitem'
             };
             config = {
                 responsive: true,
-                displayModeBar: true,
+                displayModeBar: true
             };
             if (datas[0].legendgrouptitle) {
                 let title = datas[0].legendgrouptitle.text;
@@ -443,13 +438,13 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
                     text: title,
                     font: {
                         size: 18 + windowWidth / 300,
-                        color: '#000',
+                        color: '#000'
                     },
                     xref: 'paper',
                     // title start sligthly on the right
                     x: 0.05,
                     // keep title below modBar if title is long
-                    y: 0.975,
+                    y: 0.975
                 };
             }
             layout.font = { size: 11 + windowWidth / 300 };
@@ -823,7 +818,7 @@ export function updateVersion(metaSpeakers: MetaSpeakers, speaker, selector, ori
             matches.push(val);
         }
     });
-    if (metaSpeakers[speaker].eq != null) {
+    if (metaSpeakers[speaker].eqs != null) {
         const matchesEQ = [];
         for (const key in matches) {
             matchesEQ.push(matches[key] + '_eq');

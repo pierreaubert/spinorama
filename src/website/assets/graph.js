@@ -16,6 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+/*global Plotly*/
+/*eslint no-undef: "error"*/
+
 import { setGraph } from './common.js';
 
 export function displayGraph(divName, graphSpec) {

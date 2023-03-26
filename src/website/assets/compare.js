@@ -16,6 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+/*global Plotly*/
+/*eslint no-undef: "error"*/
+
 import { urlSite } from './misc.js';
 import {
     getMetadata,
@@ -30,7 +33,7 @@ import {
     setCEA2034Split,
     setSurface,
     updateOrigin,
-    updateVersion,
+    updateVersion
 } from './common.js';
 
 getMetadata()
@@ -50,6 +53,14 @@ getMetadata()
 
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
+
+        const [metaSpeakers, speakers] = getAllSpeakers(metadata);
+        const initSpeakers = buildInitSpeakers(speakers, nbSpeakers);
+        const initMeasurement = buildInitMeasurement();
+
+        const speakersSelector = [];
+        const originsSelector = [];
+        const versionsSelector = [];
 
         function plot(measurement, speakersName, speakersGraph) {
             // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs')
@@ -215,13 +226,6 @@ getMetadata()
             updateSpeakers();
         }
 
-        const [metaSpeakers, speakers] = getAllSpeakers(metadata);
-        const initSpeakers = buildInitSpeakers(speakers, nbSpeakers);
-        const initMeasurement = buildInitMeasurement();
-
-        const speakersSelector = [];
-        const originsSelector = [];
-        const versionsSelector = [];
         for (let pos = 0; pos < nbSpeakers; pos++) {
             const tpos = pos.toString();
             speakersSelector[pos] = formContainer.querySelector('.speaker' + tpos);

@@ -1,16 +1,16 @@
 EQ for Meyer Sound Acheron 100 computed from Vendors-Meyer Sound data
-Preference Score 4.26 with EQ 5.27
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:45:44
+Preference Score 4.26 with EQ 5.29
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-03-22-22:47:28
 
 Preamp: -3.2 dB
 
 Filter  1: ON PK Fc    36 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc   658 Hz Gain +2.88 dB Q 1.03
-Filter  3: ON PK Fc  2593 Hz Gain +1.33 dB Q 1.69
-Filter  4: ON PK Fc    86 Hz Gain -0.85 dB Q 3.00
-Filter  5: ON PK Fc   139 Hz Gain +1.14 dB Q 3.00
-Filter  6: ON PK Fc  4892 Hz Gain -0.53 dB Q 3.00
-Filter  7: ON PK Fc 10484 Hz Gain -0.54 dB Q 3.00
-Filter  8: ON PK Fc   925 Hz Gain -1.00 dB Q 3.00
-Filter  9: ON PK Fc   439 Hz Gain -0.81 dB Q 3.00
+Filter  2: ON PK Fc   661 Hz Gain +2.89 dB Q 1.02
+Filter  3: ON PK Fc  2646 Hz Gain +1.34 dB Q 1.76
+Filter  4: ON PK Fc    87 Hz Gain -0.80 dB Q 3.00
+Filter  5: ON PK Fc   137 Hz Gain +1.17 dB Q 3.00
+Filter  6: ON PK Fc  4796 Hz Gain -0.53 dB Q 3.00
+Filter  7: ON PK Fc 10557 Hz Gain -0.54 dB Q 3.00
+Filter  8: ON PK Fc   921 Hz Gain -1.02 dB Q 3.00
+Filter  9: ON PK Fc   452 Hz Gain -0.79 dB Q 3.00

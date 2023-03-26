@@ -1,15 +1,15 @@
 EQ for Paradigm Persona 3F computed from Vendors-Paradigm data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:42:34
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-03-06-14:24:23
 
 Preamp: -1.1 dB
 
-Filter  1: ON PK Fc    81 Hz Gain -3.00 dB Q 1.09
-Filter  2: ON PK Fc   985 Hz Gain -3.17 dB Q 1.56
-Filter  3: ON PK Fc 14180 Hz Gain -6.00 dB Q 0.61
-Filter  4: ON PK Fc  3184 Hz Gain +0.86 dB Q 0.60
-Filter  5: ON PK Fc   349 Hz Gain -0.50 dB Q 3.00
-Filter  6: ON PK Fc   196 Hz Gain +0.50 dB Q 3.00
-Filter  7: ON PK Fc 16000 Hz Gain -0.66 dB Q 0.53
-Filter  8: ON PK Fc  1305 Hz Gain -0.62 dB Q 3.00
-Filter  9: ON PK Fc  3324 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON PK Fc    82 Hz Gain -3.00 dB Q 1.09
+Filter  2: ON PK Fc  1002 Hz Gain -3.18 dB Q 1.57
+Filter  3: ON PK Fc 14181 Hz Gain -6.00 dB Q 0.61
+Filter  4: ON PK Fc  3060 Hz Gain +0.86 dB Q 0.60
+Filter  5: ON PK Fc   352 Hz Gain -0.50 dB Q 3.00
+Filter  6: ON PK Fc   191 Hz Gain +0.50 dB Q 3.00
+Filter  7: ON PK Fc 16000 Hz Gain -0.65 dB Q 0.53
+Filter  8: ON PK Fc  1336 Hz Gain -0.57 dB Q 3.00
+Filter  9: ON PK Fc    56 Hz Gain -0.50 dB Q 3.00

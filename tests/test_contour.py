@@ -18,15 +18,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import unittest
+from itertools import pairwise
+
 import numpy as np
 import pandas as pd
+
 from spinorama.load_misc import sort_angles
 from spinorama.compute_misc import compute_contour, reshape
 
 
 class SpinoramaContourSizeTests(unittest.TestCase):
     def setUp(self):
-
         freq = [20, 200, 2000, 20000]
         onaxis = [10, 10, 10, 10]
         d10 = [8, 7, 6, 5]
@@ -40,7 +42,6 @@ class SpinoramaContourSizeTests(unittest.TestCase):
 
 class SpinoramaContourTests(unittest.TestCase):
     def setUp(self):
-
         freq = [20, 100, 200, 1000, 2000, 10000, 20000]
         onaxis = [10, 10, 10, 10, 10, 10, 10]
         #
@@ -93,12 +94,11 @@ class SpinoramaContourTests(unittest.TestCase):
         # extract all angles in order
         angles = [am[i][0] for i in range(0, len(am))]
         # check it is decreasing
-        self.assertTrue(all(i < j for i, j in zip(angles, angles[1:])))
+        self.assertTrue(all(i < j for i, j in zip(angles, angles[1:], strict=False)))
 
 
 class SpinoramaReshapeTests(unittest.TestCase):
     def setUp(self):
-
         freq = [20, 100, 200, 1000, 2000, 10000, 20000]
         onaxis = [10, 10, 10, 10, 10, 10, 10]
         d10p = [10, 10, 9, 9, 8, 8, 7]
@@ -156,7 +156,7 @@ class SpinoramaReshapeTests(unittest.TestCase):
             # extract all angles in order
             angles = [ram[i][0] for i in range(0, len(ram))]
             # check it is decreasing
-            self.assertTrue(all(i < j for i, j in zip(angles, angles[1:])))
+            self.assertTrue(all(i < j for i, j in zip(angles, angles[1:], strict=False)))
 
 
 if __name__ == "__main__":

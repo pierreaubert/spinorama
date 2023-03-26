@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>Ranking table of speaker's measurements</title>
     <%include file="head.html"/>
   </head>
   <body>
     <%include file="nav_menu.html"/>
 
     <article class="message is-warning banner">
+      <h4>Notice</h4>
       <div class="message-header">
         <p>Warning</p>
         <button class="delete" aria-label="delete"></button>
@@ -14,7 +16,7 @@
       <div class="message-body">
         Please look at the <a href="${site}/help.html">help page</a> to
         understand what the data means, what is the level of precision and how
-        you can use this data to select a speaker.<br />
+        you can use this data to select a speaker.<br>
         If you want a <b>meaningful comparison</b>, please filter the
         measurements by using the same quality for measurements. As an example,
         select "Measurement Quality" as "High" to get only Klippel quality or
@@ -37,7 +39,7 @@
         </div>
         <div class="tile py-1 is-parent is-2 px-0 py-0 m-0">
           {{#each reviews.reviews}}
-          <a href="{{this.url}}">{{this.origin}}</a>
+          <a href="{{this.url}}">{{this.origin}}</a>&nbsp;
           {{/each}}
         </div>
         <div class="tile py-1 is-parent is-1 px-0 py-0 m-0">

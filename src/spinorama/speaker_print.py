@@ -1,6 +1,22 @@
 # -*- coding: utf-8 -*-
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import os
-import logging
 import pathlib
 import copy
 import zipfile
@@ -11,10 +27,10 @@ try:
 except ModuleNotFoundError:
     import src.miniray as ray
 
-from .constant_paths import CPATH_DOCS_SPEAKERS
-
-from .pict import write_multiformat
-from .speaker_display import (
+from spinorama import logger, ray_setup_logger
+from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
+from spinorama.pict import write_multiformat
+from spinorama.speaker_display import (
     display_spinorama,
     display_onaxis,
     display_inroom,
@@ -32,73 +48,86 @@ from .speaker_display import (
     display_radar_horizontal,
     display_radar_vertical,
 )
-from .plot import plot_params_default, contour_params_default, radar_params_default
+from spinorama.plot import plot_params_default, contour_params_default, radar_params_default
 
 
-logger = logging.getLogger("spinorama")
+def build_filename(speaker, origin, key, title, file_ext) -> str:
+    filedir = CPATH_DOCS_SPEAKERS + "/" + speaker + "/" + origin.replace("Vendors-", "") + "/" + key
+    pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
+    filename = filedir + "/" + title.replace("_smoothed", "")
+    if file_ext == "png":
+        filename += "_large"
+    filename += "." + file_ext
+    return filename
 
 
-def print_graph(speaker, version, origin, key, title, chart, force, fileext):
+def build_title(origin: str, version: str, speaker: str, title: str) -> str:
+    whom = origin
+    if origin[0:7] == "Vendors-":
+        whom = origin.replace("Vendors-", "")
+    elif origin == "Misc":
+        if version[-3:] == "-sr":
+            whom = "Sound & Recording (data scanned)"
+        elif version[-3:] == "-pp":
+            whom = "Production Partners (data scanned)"
+        elif origin == "ASR":
+            whom = "Audio Science Review"
+    return "{2} for {0} measured by {1}".format(speaker, whom, title)
+
+
+def print_graph(filename, chart, title, ext, force) -> int:
     updated = 0
-    if chart is not None:
-        filedir = CPATH_DOCS_SPEAKERS + "/" + speaker + "/" + origin.replace("Vendors-", "") + "/" + key
-        pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
-        for ext in ["json", "png"]:  # svg and html skipped to keep size small
-            # skip the 2cols.json and 3cols.json as they are really large
-            # 2cols and 3cols are more for printing
-            if ext == "json" and title in (
-                "2cols",
-                "3cols",
-            ):
-                continue
-            filename = filedir + "/" + title.replace("_smoothed", "")
-            if ext == "png":
-                # generate large image that are then easy to find and compress
-                # before uploading
-                filename += "_large"
-            filename += "." + ext
-            if ext == "json":
-                filename += ".zip"
-            if force or not os.path.exists(filename) or (os.path.exists(filename) and os.path.getsize(filename) == 0):
-                if fileext is None or (fileext is not None and fileext == ext):
-                    try:
-                        if ext == "json":
-                            content = chart.to_json()
-                            with zipfile.ZipFile(
-                                filename,
-                                "w",
-                                compression=zipfile.ZIP_DEFLATED,
-                                allowZip64=True,
-                            ) as current_zip:
-                                current_zip.writestr("{0}.json".format(title), content)
-                                logger.info("Saving {0} in {1}".format(title, filename))
-                                updated += 1
-                        else:
-                            write_multiformat(chart, filename, force)
-                    except Exception as e:
-                        logger.error("Got unkown error {0} for {1}".format(e, filename))
-    else:
-        logger.debug("Chart is None for {:s} {:s} {:s} {:s}".format(speaker, origin, key, title))
+
+    check = (
+        force
+        or not os.path.exists(filename)
+        or (os.path.exists(filename) and os.path.getsize(filename) == 0)
+    )
+    if not check:
+        return updated
+
+    try:
+        if ext == "json":
+            content = chart.to_json()
+            with open(filename, "w") as f_d:
+                f_d.write(content)
+            # also store a compressed version
+            with zipfile.ZipFile(
+                filename,
+                "w",
+                compression=zipfile.ZIP_DEFLATED,
+                allowZip64=True,
+            ) as current_zip:
+                current_zip.writestr("{0}.json".format(title), content)
+                logger.info("Saving %s in %s", title, filename)
+        else:
+            write_multiformat(chart, filename, force)
+        updated += 1
+    except Exception:
+        logger.exception("Got unkown error for %s", filename)
+
     return updated
 
 
 @ray.remote
 def print_graphs(
     df: pd.DataFrame,
-    speaker,
-    version,
-    origin,
-    origins_info,
-    key="default",
-    width=1200,
-    height=800,
-    force_print=False,
-    filter_file_ext=None,
+    speaker: str,
+    version: str,
+    origin: str,
+    origins_info: str,
+    key: str,
+    width: int,
+    height: int,
+    force_print: bool,
+    filter_file_ext: str,
+    level: int,
 ):
+    ray_setup_logger(level)
     # may happens at development time or for partial measurements
+    # or when the cache is confused (typically when you change the metadata)
     if df is None:
-        if origin != "Misc" and origin != "Princeton":
-            print("error: df is None for {} {} {}".format(speaker, version, origin))
+        logger.debug("df is None for %s %s %s", speaker, version, origin)
         return 0
 
     graph_params = copy.deepcopy(plot_params_default)
@@ -112,7 +141,6 @@ def print_graphs(
     graph_params["xmax"] = origins_info[origin]["max hz"]
     graph_params["ymin"] = origins_info[origin]["min dB"]
     graph_params["ymax"] = origins_info[origin]["max dB"]
-    logger.debug("Graph configured with {0}".format(graph_params))
 
     graphs = {}
     graphs["CEA2034"] = display_spinorama(df, graph_params)
@@ -136,8 +164,12 @@ def print_graphs(
 
     graphs["SPL Horizontal Contour"] = display_contour_horizontal(df, contour_params)
     graphs["SPL Vertical Contour"] = display_contour_vertical(df, contour_params)
-    graphs["SPL Horizontal Contour Normalized"] = display_contour_horizontal_normalized(df, contour_params)
-    graphs["SPL Vertical Contour Normalized"] = display_contour_vertical_normalized(df, contour_params)
+    graphs["SPL Horizontal Contour Normalized"] = display_contour_horizontal_normalized(
+        df, contour_params
+    )
+    graphs["SPL Vertical Contour Normalized"] = display_contour_vertical_normalized(
+        df, contour_params
+    )
 
     # better square
     radar_params = copy.deepcopy(radar_params_default)
@@ -155,17 +187,7 @@ def print_graphs(
         title = k.replace("_smoothed", "")
         # optimised for small screens / vertical orientation
         if graphs[k] is not None:
-            whom = origin
-            if origin[0:7] == "Vendors-":
-                whom = origin.replace("Vendors-", "")
-            elif origin == "Misc":
-                if version[-3:] == "-sr":
-                    whom = "Sound & Recording (data scanned)"
-                elif version[-3:] == "-pp":
-                    whom = "Production Partners (data scanned)"
-            elif origin == "ASR":
-                whom = "Audio Science Review"
-            text = "{2} for {0} measured by {1}".format(speaker, whom, title)
+            text = build_title(origin, version, speaker, title)
             graphs[k].update_layout(
                 title=dict(
                     text=text,
@@ -179,16 +201,11 @@ def print_graphs(
             )
 
     updated = 0
-    for (title, graph) in graphs.items():
+    for title, graph in graphs.items():
         if graph is not None:
-            updated = print_graph(
-                speaker,
-                version,
-                origin,
-                key,
-                title,
-                graph,
-                force_print,
-                filter_file_ext,
-            )
+            # force_update = need_update()
+            force_update = False
+            for ext in ("png", "json"):
+                filename = build_filename(speaker, origin, key, title, ext)
+                updated += print_graph(filename, graph, title, ext, force_print or force_update)
     return updated

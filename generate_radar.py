@@ -31,10 +31,8 @@ import json
 import os
 import sys
 import pathlib
-import zipfile
 
 from docopt import docopt
-import pandas as pd
 import plotly.graph_objects as go
 
 from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DOCS_SPEAKERS
@@ -54,7 +52,7 @@ def compute_scale(speakers):
         for key_score in ("pref_rating", "pref_rating_eq"):
             if key_score not in measurement.keys():
                 continue
-            for key_variable in measurement[key_score].keys():
+            for key_variable in measurement[key_score]:
                 scale[key_variable] = (
                     min(
                         scale.get(key_variable, [+100, 0])[0],
@@ -81,7 +79,7 @@ def scale_lower_is_better(key, val, scale):
     return 1 - (val - v_min) / (v_max - v_min)
 
 
-def print_radar(speaker, data, scale):
+def print_radar(data, scale):
     def_measurement = data["default_measurement"]
     measurement = data["measurements"][def_measurement]
     if "pref_rating" not in measurement.keys() or "estimates" not in measurement.keys():
@@ -95,17 +93,22 @@ def print_radar(speaker, data, scale):
             continue
 
         pref_rating = measurement[key]
-        r = []
         graph_data.append(
             {
                 "type": "scatterpolar",
                 "r": [
                     scale_higher_is_better("pref_score", pref_rating["pref_score"], scale),
-                    scale_higher_is_better("pref_score_wsub", pref_rating["pref_score_wsub"], scale),
+                    scale_higher_is_better(
+                        "pref_score_wsub", pref_rating["pref_score_wsub"], scale
+                    ),
                     scale_lower_is_better("lfx_hz", pref_rating["lfx_hz"], scale),
                     scale_lower_is_better("nbd_on_axis", pref_rating["nbd_on_axis"], scale),
-                    scale_lower_is_better("nbd_pred_in_room", pref_rating["nbd_pred_in_room"], scale),
-                    scale_higher_is_better("sm_pred_in_room", pref_rating["sm_pred_in_room"], scale),
+                    scale_lower_is_better(
+                        "nbd_pred_in_room", pref_rating["nbd_pred_in_room"], scale
+                    ),
+                    scale_higher_is_better(
+                        "sm_pred_in_room", pref_rating["sm_pred_in_room"], scale
+                    ),
                 ],
                 "theta": [
                     "Score",
@@ -157,19 +160,19 @@ def main():
     # load all metadata from generated json file
     json_filename = CPATH_METADATA_JSON
     if not os.path.exists(json_filename):
-        logger.error("Cannot find {0}".format(json_filename))
+        logger.error("Cannot find %s", json_filename)
         sys.exit(1)
 
     jsmeta = None
     with open(json_filename, "r") as f:
         jsmeta = json.load(f)
 
-    logger.warning("Data {0} loaded ({1} speakers)!".format(json_filename, len(jsmeta)))
+    logger.warning("Data %s loaded (%d speakers)!", json_filename, len(jsmeta))
 
     scale = compute_scale(jsmeta)
 
     for speaker in jsmeta.items():
-        print_radar(speaker[0], speaker[1], scale)
+        print_radar(speaker[1], scale)
 
     sys.exit(0)
 
@@ -180,9 +183,5 @@ if __name__ == "__main__":
         version="generate_radar.py version {:1.1f}".format(VERSION),
         options_first=True,
     )
-
-    level = args2level(args)
-    logger = get_custom_logger(True)
-    logger.setLevel(level)
-
+    logger = get_custom_logger(level=args2level(args), duplicate=True)
     main()

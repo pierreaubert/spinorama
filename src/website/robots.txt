@@ -1,0 +1,7 @@
+User-agent: *
+% if isProd:
+Allow: /
+Sitemap: https://www.spinorama.org/sitemap.xml
+% else:
+Disallow: /
+% endif

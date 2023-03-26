@@ -1,22 +1,143 @@
 # -*- coding: utf-8 -*-
+
+# you can check the syntax with pylint or with ../check_meta.py
+
+from typing import TypedDict, Literal
+
 # common notes for some loudspeakers
-note_genelec_gll = "Data provided by Genelec is with 1/3rd octave smoothing and 5 degrees resolution"
-note_jbl_gll = "Data provided by JBL is highly variable, beware. It ranges from excellent to surprising"
+note_genelec_gll = (
+    "Data provided by Genelec is with 1/3rd octave smoothing and 5 degrees resolution"
+)
+note_jbl_gll = (
+    "Data provided by JBL is highly variable, beware. It ranges from excellent to surprising"
+)
 note_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz"
 note2_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz. Data comes from a GLL file provided by Meyer: configuration is measured at 10m, resolution is 2.5 degrees, signal is aes broadband 20Hz-20kHz, air attenuation is disabled"
 note_qsc_gll = "Data provided by QSC is of good quality but highly smoothed"
 
+
+# extra speaker info
+class Dispersion(TypedDict, total=False):
+    horizontal: float
+    vertical: float
+
+
+class SPL(TypedDict, total=False):
+    peak: float
+    continuous: float
+    max: float
+    m_noise: float
+    b_noise: float
+    pink_noise: float
+
+
+class Size(TypedDict):
+    height: int
+    width: int
+    depth: int
+
+
+class Specifications(TypedDict, total=False):
+    dispersion: Dispersion
+    sensitivity: float
+    impedance: float
+    SPL: SPL
+    size: Size
+    weight: float
+
+
+class Extras(TypedDict, total=False):
+    is_equed: bool
+    score_penalty: float
+
+
+MeasurementFormat = Literal[
+    "klippel", "webplotdigitizer", "splHVtxt", "gllHVtxt", "princeton", "rewstextdump"
+]
+
+
+class MeasurementRequired(TypedDict):
+    origin: str
+    format: MeasurementFormat
+
+
+class DataAcquisition(TypedDict, total=False):
+    via: str
+    distance: float
+    signal: str
+    air_absorbtion: bool
+    resolution: float
+    notes: str
+
+
+class Parameters(TypedDict):
+    mean_min: int
+    mean_max: int
+
+
+MeasurementQuality = Literal["low", "medium", "high", "unknown"]
+
+
+class Measurement(MeasurementRequired, total=False):
+    review: str
+    reviews: dict[str, str]
+    review_published: str
+    specifications: Specifications
+    quality: MeasurementQuality
+    notes: str
+    data_acquisition: DataAcquisition
+    extras: Extras
+    symmetry: str
+    parameters: Parameters
+
+
+SpeakerType = Literal["passive", "active"]
+SpeakerShape = Literal[
+    "floorstanders",
+    "bookshelves",
+    "center",
+    "surround",
+    "omnidirectional",
+    "columns",
+    "cbt",
+    "outdoor",
+    "panel",
+    "inwall",
+    "soundbar",
+    "liveportable",
+    "toursound",
+    "cinema",
+]
+
+
+class SpeakerRequired(TypedDict):
+    brand: str
+    model: str
+    type: SpeakerType
+    shape: SpeakerShape
+    default_measurement: str
+    measurements: dict[str, Measurement]
+
+
+class Speaker(SpeakerRequired, total=False):
+    price: str
+    amount: str
+    skip: bool
+
+
+SpeakerDatabase = dict[str, Speaker]
+
 # common GLL extraction
-gll_data_acquisition_std = {
-    "from": "gll",
+gll_data_acquisition_std: DataAcquisition = {
+    "via": "gll",
     "distance": 10,
     "signal": "aes 20Hz-20kHz",
-    "air absorbtion": False,
+    "air_absorbtion": False,
     "resolution": 2.5,
 }
 
-# extra speaker info
-speakers_info = {
+# database
+speakers_info: SpeakerDatabase = {
     "Adam A4V": {
         "brand": "Adam",
         "model": "A4V",
@@ -170,10 +291,9 @@ speakers_info = {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
                 "quality": "high",
-                "reviews": {},
                 "review_published": "20221020",
                 "notes": "Configuration with 2 LR7 and 1 LRB",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
             },
         },
     },
@@ -189,7 +309,7 @@ speakers_info = {
             "vendor-v2-20230112": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "reviews": {
                     "psw": "https://www.prosoundweb.com/alcons-introduces-qrp20-pro-ribbon-point-source-column/",
@@ -213,7 +333,6 @@ speakers_info = {
                     },
                     "weight": 12,
                 },
-                "data acquisition": gll_data_acquisition_std,
             },
             "vendor-v1-20221020": {
                 "origin": "Vendors-Alcons Audio",
@@ -241,12 +360,12 @@ speakers_info = {
                     },
                     "weight": 12,
                 },
-                "data acquisition": {
-                    "from": "gll",
-                    "distance": 2,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 2.0,
                     "signal": "aes 20Hz-20kHz",
-                    "air absorbtion": True,
-                    "resolution": 10,
+                    "air_absorbtion": True,
+                    "resolution": 10.0,
                 },
             },
         },
@@ -286,7 +405,7 @@ speakers_info = {
                     },
                     "weight": 12,
                 },
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
             },
             "vendor-v1-20221020": {
                 "origin": "Vendors-Alcons Audio",
@@ -314,13 +433,48 @@ speakers_info = {
                     },
                     "weight": 12,
                 },
-                "data acquisition": {
-                    "from": "gll",
-                    "distance": 2,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 2.0,
                     "signal": "aes 20Hz-20kHz",
-                    "air absorbtion": True,
-                    "resolution": 10,
+                    "air_absorbtion": True,
+                    "resolution": 10.0,
                 },
+            },
+        },
+    },
+    "Alcons Audio QRP40": {
+        "brand": "Alcons Audio",
+        "model": "QRP40",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "columns",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Alcons Audio",
+                "format": "gllHVtxt",
+                "quality": "high",
+                "review_published": "20230324",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 103,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 1118,
+                        "width": 161,
+                        "depth": 236,
+                    },
+                    "weight": 22,
+                },
+                "data_acquisition": gll_data_acquisition_std,
             },
         },
     },
@@ -336,7 +490,7 @@ speakers_info = {
             "vendor-pattern-110x4": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review_published": "20221024",
                 "specifications": {
@@ -360,7 +514,7 @@ speakers_info = {
             "vendor-pattern-80x4": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review_published": "20221024",
                 "specifications": {
@@ -384,14 +538,14 @@ speakers_info = {
             "vendor-v2QR24+2QM24": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review_published": "20221204",
             },
             "vendor-v3QR24+1QM24": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review_published": "20221204",
             },
@@ -409,10 +563,10 @@ speakers_info = {
             "vendor-v6x": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review_published": "20221110",
-                "notes": "measured at 2 meters with broadband pinknoise. This is for 6 RR12 in a vertical orientation.",
+                "notes": "This is for 6 RR12 in a vertical orientation.",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/spinorama-of-alcons-audio-rr12-with-beamforming-examples.39117/",
                 },
@@ -420,18 +574,18 @@ speakers_info = {
             "vendor-v1x": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review_published": "20221110",
-                "notes": "measured at 2 meters with broadband pinknoise. This is for 1 RR12 in a vertical orientation.",
+                "notes": "This is for 1 RR12 in a vertical orientation.",
             },
             "vendor-v3x": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review_published": "20221110",
-                "notes": "measured at 2 meters with broadband pinknoise. This is for 3 RR12 in a vertical orientation.",
+                "notes": "This is for 3 RR12 in a vertical orientation.",
             },
         },
     },
@@ -441,13 +595,13 @@ speakers_info = {
         "type": "passive",
         "price": "",
         "amount": "each",
-        "shape": "center",
+        "shape": "liveportable",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review_published": "20221024",
             },
@@ -465,12 +619,114 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Alcons Audio",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "reviews": {
                     "axp": "https://audioxpress.com/news/alcons-introduce-vr5-mini-versatile-monitor-with-patent-pending-waveguide-technology",
                 },
                 "review_published": "20221020",
+            },
+        },
+    },
+    "Amate Audio X102FD": {
+        "brand": "Amate Audio",
+        "model": "X102FD",
+        "type": "active",
+        "price": "5350",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Amate Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "continuous": 136,
+                        "peak": 139,
+                    },
+                    "size": {
+                        "height": 704,
+                        "width": 330,
+                        "depth": 460,
+                    },
+                    "weight": 32,
+                },
+                "review_published": "20230218",
+            },
+        },
+    },
+    "Amate Audio X12CLA": {
+        "brand": "Amate Audio",
+        "model": "X12CLA",
+        "type": "active",
+        "price": "4150",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Amate Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 15,
+                    },
+                    "SPL": {
+                        "continuous": 129,
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 352,
+                        "width": 680,
+                        "depth": 485,
+                    },
+                    "weight": 31.5,
+                },
+                "review_published": "20230218",
+            },
+        },
+    },
+    "Amate Audio X14FD": {
+        "brand": "Amate Audio",
+        "model": "X14FD",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Amate Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 80,
+                    },
+                    "SPL": {
+                        "continuous": 129,
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 623,
+                        "width": 402,
+                        "depth": 430,
+                    },
+                    "weight": 22.6,
+                },
+                "review_published": "20230218",
             },
         },
     },
@@ -577,45 +833,37 @@ speakers_info = {
             },
         },
     },
-    "Arendal Sound 1723 Bookshelf S THX": {
+    "Arendal Sound 1961 Center": {
         "brand": "Arendal Sound",
-        "model": "1723 Bookshelf S THX",
+        "model": "1961 Center",
         "type": "passive",
-        "price": "1500",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "eac-v2-20220526",
+        "price": "550",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "asr",
         "measurements": {
-            "eac-v2-20220526": {
-                "origin": "ErinsAudioCorner",
+            "asr": {
+                "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1723_thx_s/",
-                "review_published": "20220526",
-            },
-            "eac-v1-20220430": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1723_thx_s/",
-                "review_published": "20220430",
-                "notes": "This version had a bad tweeter.",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/arendal-1961-center-monitor-speaker-review.43190/",
+                "review_published": "20230323",
             },
         },
     },
-    "Arendal Sound 1723 Monitor THX": {
+    "Arendal Sound 1961 Monitor": {
         "brand": "Arendal Sound",
-        "model": "1723 Monitor THX",
+        "model": "1961 Monitor",
         "type": "passive",
-        "price": "2400",
-        "amount": "pair",
+        "price": "1100",
         "shape": "bookshelves",
-        "default_measurement": "misc-audioholics",
+        "amount": "pair",
+        "default_measurement": "asr",
         "measurements": {
-            "misc-audioholics": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "quality": "low",
-                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/arendal-1723/conclusion",
-                "review_published": "20210705",
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/arendal-1961-center-monitor-speaker-review.43190/",
+                "review_published": "20230323",
             },
         },
     },
@@ -658,6 +906,48 @@ speakers_info = {
             },
         },
     },
+    "Arendal Sound 1723 Bookshelf S THX": {
+        "brand": "Arendal Sound",
+        "model": "1723 Bookshelf S THX",
+        "type": "passive",
+        "price": "1500",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac-v2-20220526",
+        "measurements": {
+            "eac-v2-20220526": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1723_thx_s/",
+                "review_published": "20220526",
+            },
+            "eac-v1-20220430": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1723_thx_s/",
+                "review_published": "20220430",
+                "notes": "This version had a bad tweeter.",
+            },
+        },
+    },
+    "Arendal Sound 1723 Monitor THX": {
+        "brand": "Arendal Sound",
+        "model": "1723 Monitor THX",
+        "type": "passive",
+        "price": "2400",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/arendal-1723/conclusion",
+                "review_published": "20210705",
+            },
+        },
+    },
     "Ascend Acoustics CBM-170 SE": {
         "brand": "Ascend Acoustics",
         "model": "CBM-170 SE",
@@ -689,9 +979,15 @@ speakers_info = {
         "shape": "center",
         "price": "300",
         "amount": "each",
-        "default_measurement": "asr",
+        "default_measurement": "asr-vertical",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/ascend-cmt-340-se-center-channel-speaker-review.11797/#post-340461",
+                "review_published": "20200229",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/ascend-cmt-340-se-center-channel-speaker-review.11797/#post-340461",
@@ -723,9 +1019,15 @@ speakers_info = {
         "shape": "center",
         "price": "1490",
         "amount": "each",
-        "default_measurement": "asr",
+        "default_measurement": "asr-vertical",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/ascend-acoustics-horizon-center-speaker-review.15199/",
+                "review_published": "20200808",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/ascend-acoustics-horizon-center-speaker-review.15199/",
@@ -757,9 +1059,15 @@ speakers_info = {
         "shape": "center",
         "price": "800",
         "amount": "each",
-        "default_measurement": "asr",
+        "default_measurement": "asr-vertical",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-luna-duo-center-main-speaker-review.17259/",
+                "review_published": "20201103",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-luna-duo-center-main-speaker-review.17259/",
@@ -990,9 +1298,15 @@ speakers_info = {
         "shape": "center",
         "price": "199",
         "amount": "each",
-        "default_measurement": "asr",
+        "default_measurement": "asr-vertical",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/av123-x-cs-center-speaker-review.40156/",
+                "review_published": "20221218",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/av123-x-cs-center-speaker-review.40156/",
@@ -1017,6 +1331,23 @@ speakers_info = {
             },
         },
     },
+    "Avantone Pro MixCube": {
+        "brand": "Avantone",
+        "model": "Pro MixCube",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "259",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/avantone-pro-mixcube-monitor-review.42817/",
+                "review_published": "20230311",
+            },
+        },
+    },
     "Axiom ED60P": {
         "brand": "Axiom",
         "model": "ED60P",
@@ -1029,9 +1360,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Axiom",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
-                "reviews": {},
                 "review_published": "20221126",
                 "notes": "data computed at 2 meters.",
             },
@@ -1049,9 +1379,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Axiom",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
-                "reviews": {},
                 "review_published": "20221126",
                 "notes": "data computed at 2 meters.",
             },
@@ -1069,9 +1398,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Axiom",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
-                "reviews": {},
                 "review_published": "20221126",
                 "notes": "data computed at 2 meters.",
             },
@@ -1089,9 +1417,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Axiom",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
-                "reviews": {},
                 "review_published": "20221126",
                 "notes": "data computed at 2 meters.",
             },
@@ -1114,6 +1441,23 @@ speakers_info = {
             },
         },
     },
+    "Bang & Olufsen Beolab 20": {
+        "brand": "Bang & Olufsen",
+        "model": "Beolab 20",
+        "type": "active",
+        "shape": "floorstanders",
+        "price": "15000",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/b-o-beolab-20-speaker-review.43041/",
+                "review_published": "20230318",
+            },
+        },
+    },
     "BiAmp Community IC6-1062": {
         "brand": "BiAmp",
         "model": "Community IC6-1062",
@@ -1126,9 +1470,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-BiAmp",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221203",
                 "notes": "data computed at 2 meters.",
             },
@@ -1138,7 +1481,7 @@ speakers_info = {
         "brand": "BiAmp",
         "model": "Community IC6-1082",
         "type": "passive",
-        "price": "",
+        "price": "1230",
         "amount": "each",
         "shape": "liveportable",
         "default_measurement": "vendor",
@@ -1146,9 +1489,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-BiAmp",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221203",
                 "notes": "data computed at 2 meters.",
             },
@@ -1166,9 +1508,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-BiAmp",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221203",
                 "notes": "data computed at 2 meters.",
             },
@@ -1186,9 +1527,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-BiAmp",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221203",
                 "notes": "data computed at 2 meters.",
             },
@@ -1206,9 +1546,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-BiAmp",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221203",
                 "notes": "data computed at 2 meters.",
             },
@@ -1226,9 +1565,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-BiAmp",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221203",
                 "notes": "data computed at 2 meters.",
             },
@@ -1246,9 +1584,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-BiAmp",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221203",
                 "notes": "data computed at 2 meters.",
             },
@@ -1266,10 +1603,9 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-BiAmp",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221203",
-                "notes": "data computed at 2 meters.",
             },
         },
     },
@@ -1285,10 +1621,9 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-BiAmp",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221203",
-                "notes": "data computed at 2 meters.",
             },
         },
     },
@@ -1304,10 +1639,9 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-BiAmp",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221203",
-                "notes": "data computed at 2 meters.",
             },
         },
     },
@@ -1323,10 +1657,9 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-BiAmp",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221203",
-                "notes": "data computed at 2 meters.",
             },
         },
     },
@@ -1394,6 +1727,33 @@ speakers_info = {
             },
         },
     },
+    "Buchardt Audio A700": {
+        "brand": "Buchardt Audio",
+        "model": "A700",
+        "type": "active",
+        "price": "6500",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a700/",
+                },
+                "review_published": "20230312",
+            },
+            "eac-cardiod": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a700/",
+                },
+                "review_published": "20230312",
+            },
+        },
+    },
     "Buchardt Audio S300": {
         "brand": "Buchardt Audio",
         "model": "S300",
@@ -1442,8 +1802,30 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-Buchardt Audio",
-                "website": "https://www.buchardtaudio.com",
                 "format": "webplotdigitizer",
+            },
+        },
+    },
+    "BIC America FH6-LCR Center": {
+        "brand": "BIC America",
+        "model": "FH6-LCR Center",
+        "type": "passive",
+        "shape": "center",
+        "price": "150",
+        "amount": "each",
+        "default_measurement": "asr-vertical",
+        "measurements": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bic-fh6-lcr-center-speaker-review.42299/",
+                "review_published": "20230224",
+            },
+            "asr-horizontal": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bic-fh6-lcr-center-speaker-review.42299/",
+                "review_published": "20230224",
             },
         },
     },
@@ -1463,7 +1845,6 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-BIC America",
-                "website": "https://www.bicamerica.com",
                 "format": "rewstextdump",
             },
         },
@@ -1478,7 +1859,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Bose",
-                "website": "https://www.bose.com",
                 "format": "rewstextdump",
             },
         },
@@ -1493,7 +1873,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Bose",
-                "website": "https://www.bose.com",
                 "format": "rewstextdump",
             },
         },
@@ -1728,7 +2107,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Cambridge Soundworks",
-                "website": "https://en.wikipedia.org/wiki/Cambridge_SoundWorks",
                 "format": "rewstextdump",
             },
         },
@@ -1856,18 +2234,158 @@ speakers_info = {
             "vendor-pattern-120x12": {
                 "origin": "Vendors-Coda Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
-                "reviews": {},
                 "review_published": "20221126",
-                "notes": "data computed at 2 meters. 120x12 configuration",
+                "notes": "120x12 configuration",
             },
             "vendor-pattern-60x12": {
                 "origin": "Vendors-Coda Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
-                "reviews": {},
                 "review_published": "20221126",
-                "notes": "data computed at 2 meters. 60x12 configuration.",
+                "notes": "60x12 configuration.",
+            },
+        },
+    },
+    "Coda Audio G512": {
+        "brand": "Coda Audio",
+        "model": "G512",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-Coda Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230308",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 630,
+                        "width": 348,
+                        "depth": 320,
+                    },
+                    "weight": 16.0,
+                },
+            },
+        },
+    },
+    "Coda Audio G515": {
+        "brand": "Coda Audio",
+        "model": "G515",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-Coda Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230308",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 700,
+                        "width": 420,
+                        "depth": 370,
+                    },
+                    "weight": 17.5,
+                },
+            },
+        },
+    },
+    "Coda Audio G712": {
+        "brand": "Coda Audio",
+        "model": "G712",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-Coda Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230308",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 143,
+                    },
+                    "size": {
+                        "height": 700,
+                        "width": 420,
+                        "depth": 370,
+                    },
+                    "weight": 24.5,
+                },
+            },
+        },
+    },
+    "Coda Audio G715": {
+        "brand": "Coda Audio",
+        "model": "G715",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-Coda Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230308",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 143,
+                    },
+                    "size": {
+                        "height": 700,
+                        "width": 420,
+                        "depth": 370,
+                    },
+                    "weight": 24.5,
+                },
             },
         },
     },
@@ -1883,10 +2401,9 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Coda Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
-                "reviews": {},
                 "review_published": "20221115",
-                "notes": "data computed at 2 meters.",
             },
         },
     },
@@ -1902,10 +2419,9 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Coda Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
-                "reviews": {},
                 "review_published": "20221115",
-                "notes": "data computed at 2 meters.",
             },
         },
     },
@@ -1921,18 +2437,54 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Coda Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
-                "reviews": {},
                 "review_published": "20221115",
-                "notes": "data computed at 2 meters. 90x60 configuration",
+                "notes": "90x60 configuration",
             },
             "vendor-pattern-60x40": {
                 "origin": "Vendors-Coda Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
-                "reviews": {},
                 "review_published": "20221115",
-                "notes": "data computed at 2 meters. 60x40 configuration.",
+                "notes": "60x40 configuration.",
+            },
+        },
+    },
+    "Coda Audio TiRAY": {
+        "brand": "Coda Audio",
+        "model": "TiRAY",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor-v1x",
+        "measurements": {
+            "vendor-v1x": {
+                "origin": "Vendors-Coda Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230308",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 12,
+                    },
+                    "sensitivity": 94,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 124,
+                    },
+                    "size": {
+                        "height": 155,
+                        "width": 404,
+                        "depth": 253,
+                    },
+                    "weight": 9.9,
+                },
+                "notes": "configuration is for 1 TiRAY and 1 TiLOW (12 inch subwoofer)",
             },
         },
     },
@@ -1949,6 +2501,23 @@ speakers_info = {
                 "format": "princeton",
                 "review": "https://www.princeton.edu/3D3A/Directivity.html",
                 "review_published": "20151001",
+            },
+        },
+    },
+    "CSS Criton 1TD-X DIY": {
+        "brand": "CSS",
+        "model": "Criton 1TD-X DIY",
+        "type": "passive",
+        "price": "770",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/css-criton-1td-x-kit-speaker-review.41923/",
+                "review_published": "20230211",
             },
         },
     },
@@ -1981,6 +2550,7 @@ speakers_info = {
             "vendor-pattern-100x100": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
                 "quality": "medium",
             },
@@ -1998,6 +2568,7 @@ speakers_info = {
             "vendor-pattern-90x40": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
                 "quality": "medium",
             },
@@ -2015,6 +2586,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
                 "quality": "medium",
             },
@@ -2032,6 +2604,7 @@ speakers_info = {
             "vendor-pattern-60x40": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
                 "quality": "medium",
             },
@@ -2051,6 +2624,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
                 "quality": "medium",
             },
@@ -2067,6 +2641,7 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Danley",
+                "data_acquisition": gll_data_acquisition_std,
                 "format": "gllHVtxt",
                 "review_published": "20221116",
                 "quality": "medium",
@@ -2087,6 +2662,7 @@ speakers_info = {
             "vendor-pattern-90x50": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
                 "quality": "low",
             },
@@ -2113,6 +2689,7 @@ speakers_info = {
             "vendor-pattern-50x50": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/danley_sh50/",
                 },
@@ -2133,6 +2710,7 @@ speakers_info = {
             "vendor-pattern-60x60": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
                 "quality": "medium",
             },
@@ -2150,6 +2728,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
                 "quality": "medium",
             },
@@ -2168,7 +2747,7 @@ speakers_info = {
             "vendor-pattern-100x100": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20230112",
                 "quality": "low",
                 "specifications": {
@@ -2204,6 +2783,7 @@ speakers_info = {
             "vendor-pattern-180x90": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
                 "quality": "low",
             },
@@ -2221,6 +2801,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221117",
                 "quality": "medium",
             },
@@ -2238,6 +2819,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221117",
                 "quality": "medium",
             },
@@ -2255,6 +2837,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221117",
                 "quality": "medium",
             },
@@ -2274,6 +2857,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
                 "quality": "medium",
             },
@@ -2291,6 +2875,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Danley",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221116",
                 "quality": "medium",
             },
@@ -2308,6 +2893,7 @@ speakers_info = {
             "vendor-pattern-80x80": {
                 "origin": "Vendors-DAS Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221024",
             },
@@ -2325,6 +2911,7 @@ speakers_info = {
             "vendor-pattern-80x80": {
                 "origin": "Vendors-DAS Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221024",
             },
@@ -2342,6 +2929,7 @@ speakers_info = {
             "vendor-pattern-80x80": {
                 "origin": "Vendors-DAS Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221024",
             },
@@ -2359,6 +2947,7 @@ speakers_info = {
             "vendor-pattern-110x50": {
                 "origin": "Vendors-DAS Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221024",
             },
@@ -2376,6 +2965,7 @@ speakers_info = {
             "vendor-pattern-90x50": {
                 "origin": "Vendors-DAS Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221027",
             },
@@ -2393,6 +2983,7 @@ speakers_info = {
             "vendor-pattern-90x50": {
                 "origin": "Vendors-DAS Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221027",
                 "specifications": {
@@ -2426,6 +3017,7 @@ speakers_info = {
             "vendor-pattern-90x15": {
                 "origin": "Vendors-DAS Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20230111",
                 "specifications": {
@@ -2484,7 +3076,7 @@ speakers_info = {
         "model": "C452-AIR",
         "type": "passive",
         "price": "",
-        "amount": "pair",
+        "amount": "each",
         "shape": "center",
         "default_measurement": "misc-audioholics",
         "measurements": {
@@ -2535,7 +3127,7 @@ speakers_info = {
         "model": "MK442",
         "type": "passive",
         "price": "",
-        "amount": "pair",
+        "amount": "each",
         "shape": "center",
         "default_measurement": "misc-audioholics",
         "measurements": {
@@ -2579,10 +3171,9 @@ speakers_info = {
             "vendor-pattern-100x100": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221126",
-                "notes": "data computed at 2 meters.",
             },
         },
     },
@@ -2598,18 +3189,16 @@ speakers_info = {
             "vendor-pattern-110x45": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221126",
-                "notes": "data computed at 2 meters.",
             },
             "vendor-pattern-75x50": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221126",
-                "notes": "data computed at 2 meters.",
             },
         },
     },
@@ -2625,18 +3214,16 @@ speakers_info = {
             "vendor-pattern-110x45": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221126",
-                "notes": "data computed at 2 meters.",
             },
             "vendor-pattern-75x50": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221126",
-                "notes": "data computed at 2 meters.",
             },
         },
     },
@@ -2652,10 +3239,9 @@ speakers_info = {
             "vendor-pattern-110x45": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221126",
-                "notes": "data computed at 2 meters.",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 75,
@@ -2675,10 +3261,9 @@ speakers_info = {
             "vendor-pattern-75x45": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221126",
-                "notes": "data computed at 2 meters.",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 75,
@@ -2709,8 +3294,8 @@ speakers_info = {
             "vendor-pattern-90x30": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221126",
                 "notes": "data computed at 2 meters.",
             },
@@ -2728,6 +3313,7 @@ speakers_info = {
             "vendor-pattern-60x30-v1x": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221203",
                 "reviews": {
@@ -2738,6 +3324,7 @@ speakers_info = {
             "vendor-pattern-60x30-v3x": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221203",
                 "reviews": {
@@ -2748,6 +3335,7 @@ speakers_info = {
             "vendor-pattern-60x30-v3x+2sub": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221203",
                 "reviews": {
@@ -2769,6 +3357,7 @@ speakers_info = {
             "vendor-pattern-90x30-v1x": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "reviews": {
                     "pp": "https://www.production-partner.de/test/die-a-serie-von-db-im-test/",
@@ -2779,6 +3368,7 @@ speakers_info = {
             "vendor-pattern-90x30-v3x": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "reviews": {
                     "pp": "https://www.production-partner.de/test/die-a-serie-von-db-im-test/",
@@ -2800,8 +3390,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221217",
                 "notes": "data computed at 2 meters.",
                 "specifications": {
@@ -2834,8 +3424,8 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221217",
                 "notes": "data computed at 2 meters.",
                 "specifications": {
@@ -2868,6 +3458,7 @@ speakers_info = {
             "vendor-pattern-75x40": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "reviews": {
                     "pp": "https://www.production-partner.de/test/db-audiotechnik-v7p-v10p-v-gsub-test/",
@@ -2889,6 +3480,7 @@ speakers_info = {
             "vendor-pattern-110x45": {
                 "origin": "Vendors-DB Audiotechnik",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "reviews": {
                     "pp": "https://www.production-partner.de/test/db-audiotechnik-v7p-v10p-v-gsub-test/",
@@ -3351,6 +3943,150 @@ speakers_info = {
             },
         },
     },
+    "EAW MKC50": {
+        "brand": "EAW",
+        "model": "MKC50",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230325",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 110,
+                    },
+                    "sensitivity": 87,
+                    "impedance": 6,
+                    "SPL": {
+                        "continuous": 115,
+                        "peak": 121,
+                    },
+                    "size": {
+                        "height": 235,
+                        "width": 165,
+                        "depth": 141,
+                    },
+                    "weight": 3.3,
+                },
+            },
+        },
+    },
+    "EAW MKC60": {
+        "brand": "EAW",
+        "model": "MKC60",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230325",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 110,
+                    },
+                    "sensitivity": 89,
+                    "impedance": 6,
+                    "SPL": {
+                        "continuous": 119,
+                        "peak": 125,
+                    },
+                    "size": {
+                        "height": 324,
+                        "width": 208,
+                        "depth": 206,
+                    },
+                    "weight": 4.9,
+                },
+            },
+        },
+    },
+    "EAW MKC80": {
+        "brand": "EAW",
+        "model": "MKC80",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230325",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 93,
+                    "impedance": 7,
+                    "SPL": {
+                        "continuous": 126,
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 422,
+                        "width": 255,
+                        "depth": 267,
+                    },
+                    "weight": 10.0,
+                },
+            },
+        },
+    },
+    "EAW MKC120": {
+        "brand": "EAW",
+        "model": "MKC120",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230325",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 95,
+                    "impedance": 7.4,
+                    "SPL": {
+                        "continuous": 129,
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 569,
+                        "width": 367,
+                        "depth": 341,
+                    },
+                    "weight": 16.8,
+                },
+            },
+        },
+    },
     "Edifier Airpulse A100": {
         "brand": "Edifier",
         "model": "Airpulse A100",
@@ -3622,6 +4358,7 @@ speakers_info = {
         "type": "passive",
         "price": "319",
         "shape": "center",
+        "amount": "each",
         "default_measurement": "eac-horizontal",
         "measurements": {
             "eac-horizontal": {
@@ -3662,6 +4399,7 @@ speakers_info = {
         "type": "passive",
         "price": "700",
         "shape": "center",
+        "amount": "each",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
@@ -3846,7 +4584,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20230117",
                 "quality": "medium",
                 "specifications": {
@@ -3883,7 +4621,7 @@ speakers_info = {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
                 "quality": "medium",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20230117",
                 "specifications": {
                     "dispersion": {
@@ -3918,7 +4656,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20230117",
                 "specifications": {
@@ -3954,7 +4692,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20230117",
                 "specifications": {
@@ -3990,7 +4728,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20230117",
                 "quality": "medium",
                 "specifications": {
@@ -4017,15 +4755,15 @@ speakers_info = {
         "brand": "EV",
         "model": "EVC-1122",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "1400",
+        "amount": "each",
         "shape": "liveportable",
         "default_measurement": "vendor-pattern-90x55",
         "measurements": {
             "vendor-pattern-90x55": {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20230118",
                 "specifications": {
@@ -4052,15 +4790,15 @@ speakers_info = {
         "brand": "EV",
         "model": "EVC-1152",
         "type": "passive",
-        "price": "",
-        "amount": "pair",
+        "price": "1500",
+        "amount": "each",
         "shape": "liveportable",
         "default_measurement": "vendor-pattern-90x55",
         "measurements": {
             "vendor-pattern-90x55": {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20230118",
                 "quality": "medium",
                 "specifications": {
@@ -4095,7 +4833,7 @@ speakers_info = {
             "vendor-pattern-60x40": {  # FOH FR Biamp
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20230115",
                 "quality": "medium",
                 "specifications": {
@@ -4119,7 +4857,7 @@ speakers_info = {
             "vendor-pattern-40x60": {  # MON FR Biamp
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20230115",
                 "quality": "medium",
                 "specifications": {
@@ -4154,7 +4892,7 @@ speakers_info = {
             "vendor-pattern-60x40": {  # FOH FR BiAmp
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20230115",
                 "specifications": {
@@ -4178,7 +4916,7 @@ speakers_info = {
             "vendor-pattern-40x60": {  # MON FR BiAmp
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20230115",
                 "quality": "medium",
                 "specifications": {
@@ -4214,7 +4952,7 @@ speakers_info = {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
                 "quality": "medium",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20230118",
                 "specifications": {
                     "dispersion": {
@@ -4236,7 +4974,7 @@ speakers_info = {
             "vendor-pattern-40x30": {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20230118",
                 "specifications": {
@@ -4270,7 +5008,7 @@ speakers_info = {
             "vendor-pattern-60x40": {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20230118",
                 "specifications": {
@@ -4293,7 +5031,7 @@ speakers_info = {
             "vendor-pattern-40x30": {
                 "origin": "Vendors-EV",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20230118",
                 "quality": "medium",
                 "specifications": {
@@ -4331,6 +5069,36 @@ speakers_info = {
             },
         },
     },
+    "Ex-Machina Pulsar MKII": {
+        "brand": "Ex-Machina",
+        "model": "Pulsar MKII",
+        "type": "active",
+        "price": "11700",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/ex_machina_pulsar_mkii/",
+                },
+                "specifications": {
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 483,
+                        "width": 289,
+                        "depth": 345,
+                    },
+                    "weight": 23,
+                },
+                "review_published": "20230312",
+            },
+        },
+    },
     "FBT J5A": {
         "brand": "FBT",
         "model": "J5A",
@@ -4343,8 +5111,8 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-FBT",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221028",
             },
         },
@@ -4361,8 +5129,8 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-FBT",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221028",
             },
         },
@@ -4379,8 +5147,8 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-FBT",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221028",
             },
         },
@@ -4397,8 +5165,8 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-FBT",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221028",
             },
         },
@@ -4414,9 +5182,9 @@ speakers_info = {
         "measurements": {
             "vendor-pattern-80x50": {
                 "origin": "Vendors-FBT",
+                "data_acquisition": gll_data_acquisition_std,
                 "format": "gllHVtxt",
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221028",
             },
         },
@@ -4433,8 +5201,8 @@ speakers_info = {
             "vendor-pattern-80x50": {
                 "origin": "Vendors-FBT",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221028",
             },
         },
@@ -4451,8 +5219,8 @@ speakers_info = {
             "vendor-pattern-60x40": {
                 "origin": "Vendors-FBT",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221028",
             },
         },
@@ -4469,8 +5237,8 @@ speakers_info = {
             "vendor-pattern-60x40": {
                 "origin": "Vendors-FBT",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221028",
             },
         },
@@ -4487,8 +5255,8 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-FBT",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221028",
             },
         },
@@ -4505,8 +5273,8 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-FBT",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221028",
             },
         },
@@ -4523,8 +5291,8 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-FBT",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221028",
             },
         },
@@ -4541,8 +5309,8 @@ speakers_info = {
             "vendor-pattern-110x30": {
                 "origin": "Vendors-FBT",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "reviews": {},
                 "review_published": "20221028",
                 "parameters": {
                     "mean_min": 50,
@@ -4764,6 +5532,25 @@ speakers_info = {
             },
         },
     },
+    "Focal Chora 816": {
+        "brand": "Focal",
+        "model": "Chora 816",
+        "type": "passive",
+        "price": "900",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/focal-chora-816-speaker-review.42988/",
+                },
+                "review_published": "20230316",
+            },
+        },
+    },
     "Focal Chorus OD 706 V": {
         "brand": "Focal",
         "model": "Chorus OD 706 V",
@@ -4785,9 +5572,9 @@ speakers_info = {
         "brand": "Focal",
         "model": "Twin6 Be",
         "type": "passive",
-        "price": "3400",
+        "price": "1700",
         "shape": "center",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "eac-horizontal",
         "measurements": {
             "eac-horizontal": {
@@ -4883,6 +5670,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Fulcrum Acoustic",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20220924",
                 "notes": "Relatively high smoothing; Pattern is 120x60",
@@ -4901,6 +5689,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Fulcrum Acoustic",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220924",
                 "quality": "medium",
                 "notes": "Relatively high smoothing; Pattern is 100x100",
@@ -4919,6 +5708,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Fulcrum Acoustic",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220924",
                 "quality": "medium",
                 "notes": "Relatively high smoothing; Pattern is 120x60",
@@ -4937,6 +5727,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Fulcrum Acoustic",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220924",
                 "quality": "medium",
                 "notes": "Relatively high smoothing; Pattern is 60x45",
@@ -4955,6 +5746,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Fulcrum Acoustic",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220924",
                 "quality": "medium",
                 "notes": "Relatively high smoothing; Pattern is 75x75",
@@ -4973,6 +5765,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Fulcrum Acoustic",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220924",
                 "quality": "medium",
                 "notes": "Relatively high smoothing; Pattern is 90x45",
@@ -4991,6 +5784,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Fulcrum Acoustic",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20220924",
                 "notes": "Relatively high smoothing; Pattern is 120x60",
@@ -5009,6 +5803,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Fulcrum Acoustic",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20220924",
                 "notes": "Relatively high smoothing; Pattern is 60x45",
@@ -5027,6 +5822,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Fulcrum Acoustic",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20220924",
                 "notes": "Relatively high smoothing; Pattern is 100x100",
@@ -5045,6 +5841,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Fulcrum Acoustic",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20220924",
                 "notes": "Relatively high smoothing; Pattern is 120x60",
@@ -5151,6 +5948,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Genelec",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "notes": "{}".format(note_genelec_gll),
                 "review_published": "20220918",
@@ -5170,6 +5968,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Genelec",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "notes": "{}".format(note_genelec_gll),
                 "review_published": "20220918",
@@ -5189,6 +5988,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Genelec",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "notes": "{}".format(note_genelec_gll),
                 "review_published": "20220918",
@@ -5208,6 +6008,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Genelec",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "notes": "{}".format(note_genelec_gll),
                 "review_published": "20220918",
@@ -5334,6 +6135,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Genelec",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220918",
                 "quality": "low",
                 "notes": "{}".format(note_genelec_gll),
@@ -5372,6 +6174,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Genelec",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220918",
                 "quality": "low",
                 "notes": "{}".format(note_genelec_gll),
@@ -5418,6 +6221,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Genelec",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220918",
                 "quality": "low",
                 "notes": "{}".format(note_genelec_gll),
@@ -5456,6 +6260,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Genelec",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "notes": "{}".format(note_genelec_gll),
                 "review_published": "20220918",
@@ -5518,6 +6323,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Genelec",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review_published": "20220918",
             },
@@ -5553,7 +6359,6 @@ speakers_info = {
             "vendor-v2-202009-monopole": {
                 "origin": "Vendors-GGNTKT",
                 "format": "webplotdigitizer",
-                "website": "https://ggntkt.de/en/model-m1",
                 "quality": "high",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ggntkt-model-m1.12959/",
@@ -5563,7 +6368,6 @@ speakers_info = {
             "vendor-v1-202008": {
                 "origin": "Vendors-GGNTKT",
                 "format": "webplotdigitizer",
-                "website": "https://ggntkt.de/en/model-m1",
                 "quality": "high",
             },
         },
@@ -5987,7 +6791,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Infinity",
-                "website": "www.infinityspeakers.com",
                 "format": "webplotdigitizer",
                 "quality": "medium",
             },
@@ -5998,7 +6801,7 @@ speakers_info = {
         "model": "RC252",
         "type": "passive",
         "price": "",
-        "amount": "pair",
+        "amount": "each",
         "shape": "center",
         "default_measurement": "vendor",
         "measurements": {
@@ -6048,7 +6851,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Infinity",
-                "website": "www.infinityspeakers.com",
                 "format": "rewstextdump",
             },
         },
@@ -6069,7 +6871,6 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-Infinity",
-                "website": "www.infinityspeakers.com",
                 "format": "rewstextdump",
             },
         },
@@ -6128,7 +6929,6 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-Infinity",
-                "website": "www.infinityspeakers.com",
                 "format": "webplotdigitizer",
             },
         },
@@ -6304,6 +7104,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-JBL",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220915",
                 "quality": "low",
                 "notes": "{}".format(note_jbl_gll),
@@ -6322,6 +7123,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-JBL",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220915",
                 "quality": "low",
                 "notes": "{}".format(note_jbl_gll),
@@ -6341,6 +7143,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-JBL",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220915",
                 "quality": "low",
                 "notes": "{}".format(note_jbl_gll),
@@ -6359,6 +7162,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-JBL",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220915",
                 "quality": "low",
                 "notes": "{}".format(note_jbl_gll),
@@ -6380,6 +7184,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-JBL",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220915",
                 "quality": "low",
                 "notes": "{}".format(note_jbl_gll),
@@ -6398,9 +7203,107 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-JBL",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220915",
                 "quality": "low",
                 "notes": "{}".format(note_jbl_gll),
+            },
+        },
+    },
+    "JBL CV5012": {
+        "brand": "JBL",
+        "model": "CV5012",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-60x40",
+        "measurements": {
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-JBL",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20230223",
+                "quality": "medium",
+                "notes": "This is an installation speaker that you can use indoor or outdoor.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 630,
+                        "width": 394,
+                        "depth": 429,
+                    },
+                    "weight": 25.0,
+                },
+            },
+        },
+    },
+    "JBL CV5015": {
+        "brand": "JBL",
+        "model": "CV5015",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x60",
+        "measurements": {
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-JBL",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20230223",
+                "quality": "medium",
+                "notes": "This is an installation speaker that you can use indoor or outdoor.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 700,
+                        "width": 431,
+                        "depth": 520,
+                    },
+                    "weight": 33.0,
+                },
+            },
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-JBL",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20230223",
+                "quality": "medium",
+                "notes": "This is an installation speaker that you can use indoor or outdoor.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 700,
+                        "width": 431,
+                        "depth": 520,
+                    },
+                    "weight": 33.0,
+                },
             },
         },
     },
@@ -6479,6 +7382,76 @@ speakers_info = {
             },
         },
     },
+    "JBL SLP12": {
+        "brand": "JBL",
+        "model": "SLP12",
+        "type": "passive",
+        "price": "200",
+        "amount": "each",
+        "shape": "surround",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20230223",
+                "quality": "low",
+                "notes": "This is a speaker designed to be mounted on a wall.",
+                "specifications": {
+                    "sensitivity": 84,
+                    "impedance": 8,
+                    "SPL": {
+                        "continuous": 100,
+                        "peak": 106,
+                    },
+                    "size": {
+                        "height": 248,
+                        "width": 230,
+                        "depth": 100,
+                    },
+                    "weight": 1.9,
+                },
+            },
+        },
+    },
+    "JBL SLP14": {
+        "brand": "JBL",
+        "model": "SLP14",
+        "type": "passive",
+        "price": "280",
+        "amount": "each",
+        "shape": "surround",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20230223",
+                "quality": "low",
+                "notes": "This is a speaker designed to be mounted on a wall.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 140,
+                        "vertical": 120,
+                    },
+                    "sensitivity": 85,
+                    "impedance": 8,
+                    "SPL": {
+                        "continuous": 102,
+                        "peak": 108,
+                    },
+                    "size": {
+                        "height": 286,
+                        "width": 263,
+                        "depth": 100,
+                    },
+                    "weight": 2.8,
+                },
+            },
+        },
+    },
     "JBL SRX835P": {
         "brand": "JBL",
         "model": "SRX835P",
@@ -6521,9 +7494,15 @@ speakers_info = {
         "price": "1600",
         "amount": "each",
         "shape": "center",
-        "default_measurement": "asr",
+        "default_measurement": "asr-vertical",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-array-880-review-center-speaker.27911/",
+                "review_published": "20211107",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-array-880-review-center-speaker.27911/",
@@ -6915,7 +7894,7 @@ speakers_info = {
         "model": "Performance PC600",
         "type": "passive",
         "price": "",
-        "amount": "pair",
+        "amount": "each",
         "shape": "center",
         "default_measurement": "misc-speakerdata2034",
         "measurements": {
@@ -6938,6 +7917,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-JBL",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220918",
                 "quality": "low",
                 "notes": "{}".format(note_jbl_gll),
@@ -6955,6 +7935,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-JBL",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220918",
                 "quality": "low",
                 "notes": "{}".format(note_jbl_gll),
@@ -6995,6 +7976,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-JBL",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220918",
                 "quality": "low",
                 "notes": "{}".format(note_jbl_gll),
@@ -7078,9 +8060,15 @@ speakers_info = {
         "price": "120",
         "shape": "center",
         "amount": "each",
-        "default_measurement": "asr",
+        "default_measurement": "asr-vertical",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-stage-125c-review-center-speaker.28613/",
+                "review_published": "20211201",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-stage-125c-review-center-speaker.28613/",
@@ -7118,9 +8106,15 @@ speakers_info = {
         "price": "300",
         "shape": "center",
         "amount": "each",
-        "default_measurement": "asr",
+        "default_measurement": "asr-vertical",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-stage-135c-review-center-speaker.28536/",
+                "review_published": "20211129",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-stage-135c-review-center-speaker.28536/",
@@ -7487,7 +8481,6 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-JBL",
-                "website": "www.jbl.com",
                 "format": "webplotdigitizer",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-4305p.29623/",
@@ -7531,7 +8524,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-JBL",
-                "website": "www.jbl.com",
                 "format": "webplotdigitizer",
             },
         },
@@ -7589,7 +8581,6 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-JBL",
-                "website": "www.jbl.com",
                 "format": "webplotdigitizer",
             },
         },
@@ -7605,7 +8596,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-JBL",
-                "website": "www.jbl.com",
                 "format": "webplotdigitizer",
                 "review_published": "20140101",
             },
@@ -7636,7 +8626,6 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-JBL",
-                "website": "www.jbl.com",
                 "format": "webplotdigitizer",
                 "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
                 "quality": "medium",
@@ -7659,7 +8648,6 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-JBL",
-                "website": "www.jbl.com",
                 "format": "webplotdigitizer",
                 "review": "https://speakerdata2034.blogspot.com/2021/01/jbl-synthesis-spinorama-data.html",
                 "quality": "medium",
@@ -7700,9 +8688,18 @@ speakers_info = {
         "price": "1750",
         "shape": "center",
         "amount": "each",
-        "default_measurement": "eac",
+        "default_measurement": "eac-vertical",
         "measurements": {
-            "eac": {
+            "eac-vertical": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_hdi-4500/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-hdi-4500-center-channel-speaker-review.22025/",
+                },
+                "review_published": "20210401",
+            },
+            "eac-horizontal": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -7733,7 +8730,6 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-JBL",
-                "website": "www.jbl.com",
                 "format": "webplotdigitizer",
             },
         },
@@ -7766,7 +8762,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-JBL",
-                "website": "www.jbl.com",
                 "format": "webplotdigitizer",
             },
         },
@@ -7808,7 +8803,6 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-JBL",
-                "website": "www.jbl.com",
                 "format": "webplotdigitizer",
             },
         },
@@ -7824,7 +8818,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-JBL",
-                "website": "www.jbl.com",
                 "format": "rewstextdump",
             },
         },
@@ -7858,6 +8851,7 @@ speakers_info = {
             "vendor-pattern-105x60": {
                 "origin": "Vendors-JBL",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/spinorama-for-the-brand-new-jbl-prx900-serie.38843/",
                 "review_published": "20221103",
@@ -7891,6 +8885,7 @@ speakers_info = {
             "vendor-pattern-90x50": {
                 "origin": "Vendors-JBL",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review": "",
                 "review_published": "20221103",
@@ -7924,6 +8919,7 @@ speakers_info = {
             "vendor-pattern-90x50": {
                 "origin": "Vendors-JBL",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review": "",
                 "review_published": "20221103",
@@ -7952,9 +8948,15 @@ speakers_info = {
         "price": "",
         "shape": "center",
         "amount": "each",
-        "default_measurement": "eac",
+        "default_measurement": "eac-vertical",
         "measurements": {
-            "eac": {
+            "eac-vertical": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/jbl_520c_center/",
+                "review_published": "20220111",
+            },
+            "eac-horizontal": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/jbl_520c_center/",
@@ -7989,7 +8991,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-JBL",
-                "website": "www.jbl.com",
                 "format": "rewstextdump",
             },
         },
@@ -8006,6 +9007,7 @@ speakers_info = {
             "vendor-pattern-90x50": {
                 "origin": "Vendors-JBL",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221107",
                 "quality": "low",
                 "notes": "data is highly smoothed. You can remove at least .6 to 1 to score computations",
@@ -8013,6 +9015,7 @@ speakers_info = {
             "vendor-pattern-60x40": {
                 "origin": "Vendors-JBL",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221107",
                 "quality": "low",
                 "notes": "data is highly smoothed. You can remove at least .6 to 1 to score computations",
@@ -8066,7 +9069,6 @@ speakers_info = {
         "measurements": {
             "misc-avnirvana": {
                 "origin": "Misc",
-                "website": "https://www.jtrspeakers.com",
                 "format": "webplotdigitizer",
                 "quality": "low",
                 "reviews": {
@@ -8103,13 +9105,8 @@ speakers_info = {
         "price": "760",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8-studio-monitor-review.10897/",
-            },
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
@@ -8119,6 +9116,12 @@ speakers_info = {
                     "yt": "https://www.youtube.com/watch?v=DNpkizYXbVM",
                 },
                 "review_published": "20210615",
+            },
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8-studio-monitor-review.10897/",
+                "review_published": "20200114",
             },
         },
     },
@@ -8261,24 +9264,28 @@ speakers_info = {
             "vendor-configuration-onwall": {
                 "origin": "Vendors-K ARRAY",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
                 "quality": "medium",
             },
             "vendor-configuration-krx-1x": {
                 "origin": "Vendors-K ARRAY",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
                 "quality": "medium",
             },
             "vendor-configuration-krx-2x": {
                 "origin": "Vendors-K ARRAY",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
                 "quality": "medium",
             },
             "vendor-configuration-krx-3x": {
                 "origin": "Vendors-K ARRAY",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
                 "quality": "medium",
             },
@@ -8295,7 +9302,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-KEF",
-                "website": "www.kef.com",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
                 "reviews": {
@@ -8315,7 +9321,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-KEF",
-                "website": "www.kef.com",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
                 "reviews": {
@@ -8533,9 +9538,18 @@ speakers_info = {
         "price": "600",
         "shape": "center",
         "amount": "each",
-        "default_measurement": "eac",
+        "default_measurement": "eac-vertical",
         "measurements": {
-            "eac": {
+            "eac-vertical": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q250/",
+                    "yt": "",
+                },
+                "review_published": "20220317",
+            },
+            "eac-horizontal": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -8765,7 +9779,6 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-KEF",
-                "website": "www.kef.com",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
                 "quality": "medium",
@@ -8786,7 +9799,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-KEF",
-                "website": "www.kef.com",
                 "format": "webplotdigitizer",
                 "quality": "medium",
                 "review_published": "20220217",
@@ -8807,7 +9819,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-KEF",
-                "website": "www.kef.com",
                 "format": "webplotdigitizer",
                 "quality": "medium",
                 "review_published": "20220217",
@@ -8824,9 +9835,15 @@ speakers_info = {
         "price": "7500",
         "shape": "center",
         "amount": "each",
-        "default_measurement": "asr",
+        "default_measurement": "asr-vertical",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-reference-4c-review-center-speaker.30048/",
+                "review_published": "20220118",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-reference-4c-review-center-speaker.30048/",
@@ -8845,7 +9862,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-KEF",
-                "website": "www.kef.com",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
                 "quality": "medium",
@@ -8865,7 +9881,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-KEF",
-                "website": "www.kef.com",
                 "format": "webplotdigitizer",
                 "quality": "medium",
             },
@@ -8881,7 +9896,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-KEF",
-                "website": "www.kef.com",
                 "format": "webplotdigitizer",
                 "quality": "medium",
                 "review_published": "20220217",
@@ -8952,7 +9966,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-KLH",
-                "website": "www.klh.com",
                 "format": "rewstextdump",
             },
         },
@@ -9025,26 +10038,29 @@ speakers_info = {
             "vendor-fullrange-pattern-90x60": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221107",
                 "quality": "high",
                 "reviews": {
                     "ps": "https://www.professional-system.de/tests/klassiker-in-der-2-generation-kling-freitag-ca-106-pro/",
                 },
-                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, full range mode",
+                "notes": "generated from GLL file provided by Kling Freitag, full range mode",
             },
             "vendor-lowcut-pattern-90x60": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221107",
                 "quality": "high",
-                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, low cut mode",
+                "notes": "generated from GLL file provided by Kling Freitag, low cut mode",
             },
             "vendor-passive-pattern-90x60": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221107",
                 "quality": "high",
-                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, passive mode",
+                "notes": "generated from GLL file provided by Kling Freitag, passive mode",
             },
         },
     },
@@ -9060,44 +10076,50 @@ speakers_info = {
             "vendor-bassreflex-narrow": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221018",
                 "quality": "high",
-                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, bass reflex with narrow mode on",
+                "notes": "generated from GLL file provided by Kling Freitag, configuration bass reflex with narrow mode on",
             },
             "vendor-bassreflex-medium": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221018",
                 "quality": "high",
-                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, bass reflex with medium mode on",
+                "notes": "generated from GLL file provided by Kling Freitag, configuration bass reflex with medium mode on",
             },
             "vendor-bassreflex-wide": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221018",
                 "quality": "high",
-                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, bass reflex with wide mode on",
+                "notes": "generated from GLL file provided by Kling Freitag, configuration bass reflex with wide mode on",
             },
             "vendor-cardioid-wide": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221018",
                 "quality": "high",
-                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, cardiod with wide mode on",
+                "notes": "generated from GLL file provided by Kling Freitag, configuration cardiod with wide mode on",
             },
             "vendor-cardioid-medium": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221018",
                 "quality": "high",
-                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, cardiod with medium mode on",
+                "notes": "generated from GLL file provided by Kling Freitag, configuration cardiod with medium mode on",
             },
             "vendor-cardioid-narrow": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221018",
                 "quality": "high",
-                "notes": "generated from GLL file provided by Kling Freitag, pink noise, measured at 2m, cardiod with narrow mode on",
+                "notes": "generated from GLL file provided by Kling Freitag, configuration cardiod with narrow mode on",
             },
         },
     },
@@ -9113,12 +10135,14 @@ speakers_info = {
             "vendor-wide": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221028",
                 "quality": "high",
             },
             "vendor-narrow": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221028",
                 "quality": "high",
             },
@@ -9136,6 +10160,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Kling Freitag",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221027",
                 "quality": "medium",
                 "parameters": {
@@ -9213,9 +10238,15 @@ speakers_info = {
         "price": "600",
         "shape": "center",
         "amount": "each",
-        "default_measurement": "eac",
+        "default_measurement": "eac-vertical",
         "measurements": {
-            "eac": {
+            "eac-vertical": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_404cii/",
+                "review_published": "20220702",
+            },
+            "eac-horizontal": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_404cii/",
@@ -9247,9 +10278,15 @@ speakers_info = {
         "price": "500",
         "shape": "center",
         "amount": "each",
-        "default_measurement": "eac",
+        "default_measurement": "eac-vertical",
         "measurements": {
-            "eac": {
+            "eac-vertical": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_500cii/",
+                "review_published": "20220702",
+            },
+            "eac-horizontal": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_500cii/",
@@ -9280,10 +10317,16 @@ speakers_info = {
         "type": "passive",
         "price": "800",
         "shape": "center",
-        "amount": "pair",
-        "default_measurement": "eac",
+        "amount": "each",
+        "default_measurement": "eac-vertical",
         "measurements": {
-            "eac": {
+            "eac-vertical": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_504cii/",
+                "review_published": "20220702",
+            },
+            "eac-horizontal": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_rp_504cii/",
@@ -9467,6 +10510,7 @@ speakers_info = {
             "vendor-pattern-80x40": {
                 "origin": "Vendors-KME Sound",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
                 "quality": "medium",
             },
@@ -9484,6 +10528,7 @@ speakers_info = {
             "vendor-pattern-80x60": {
                 "origin": "Vendors-KME Sound",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
                 "quality": "medium",
             },
@@ -9552,6 +10597,7 @@ speakers_info = {
             "vendor-pattern-90x40": {
                 "origin": "Vendors-KV2 Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
                 "quality": "medium",
             },
@@ -9569,6 +10615,7 @@ speakers_info = {
             "vendor-pattern-90x40": {
                 "origin": "Vendors-KV2 Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
                 "quality": "medium",
             },
@@ -9586,6 +10633,7 @@ speakers_info = {
             "vendor-pattern-100x80": {
                 "origin": "Vendors-KV2 Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
                 "quality": "medium",
             },
@@ -9603,6 +10651,7 @@ speakers_info = {
             "vendor-pattern-80x40": {
                 "origin": "Vendors-KV2 Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
                 "quality": "medium",
             },
@@ -9620,6 +10669,7 @@ speakers_info = {
             "vendor-pattern-80x60": {
                 "origin": "Vendors-KV2 Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
                 "quality": "medium",
             },
@@ -9637,6 +10687,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-L Acoustics",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20220924",
             },
@@ -9654,6 +10705,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-L Acoustics",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20220924",
             },
@@ -9671,6 +10723,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-L Acoustics",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20220924",
             },
@@ -9688,6 +10741,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-L Acoustics",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20220924",
             },
@@ -9705,6 +10759,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-L Acoustics",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20220924",
             },
@@ -9722,6 +10777,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-LD Systems",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221130",
                 "reviews": {
@@ -9743,6 +10799,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-LD Systems",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221130",
                 "notes": "measured with broadband noise at 2m. DUT is a DDQ12 with a DDQ Sub 212. It is unclear to me if the measurements are correct",
@@ -9761,6 +10818,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-LD Systems",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221130",
                 "notes": "measured with broadband noise at 2m. DUT is a DDQ12 with a DDQ Sub 212. It is unclear to me if the measurements are correct",
@@ -9779,6 +10837,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-LD Systems",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "reviews": {
                     "ah": "https://blog.adamhall.com/de/2014/05/13/ld-systems-ddq-15-und-sub-18-testbericht-von-production-partner/",
@@ -9801,6 +10860,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-LD Systems",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221217",
                 "notes": "measured with broadband noise at 2m.",
@@ -9834,6 +10894,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-LD Systems",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221217",
                 "notes": "measured with broadband noise at 2m.",
@@ -9867,6 +10928,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-LD Systems",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221217",
                 "notes": "measured with broadband noise at 2m.",
@@ -9900,6 +10962,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-LD Systems",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221217",
                 "notes": "measured with broadband noise at 2m.",
@@ -9933,6 +10996,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-LD Systems",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221217",
                 "notes": "measured with broadband noise at 2m.",
@@ -10024,6 +11088,25 @@ speakers_info = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/adam-t8v-studio-monitor-review.17118/page-2#post-553606",
                 },
                 "review_published": "20201029",
+            },
+        },
+    },
+    "M-Audio BX3 D3": {
+        "brand": "M-Audio",
+        "model": "BX3 D3",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "90",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/m-audio-bx3-monitor-review.42602/",
+                },
+                "review_published": "20230304",
             },
         },
     },
@@ -10216,6 +11299,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Martin Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
             },
         },
@@ -10232,6 +11316,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Martin Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
             },
         },
@@ -10248,6 +11333,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Martin Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
             },
         },
@@ -10264,6 +11350,7 @@ speakers_info = {
             "vendor-pattern-80x60": {
                 "origin": "Vendors-Martin Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
             },
         },
@@ -10280,6 +11367,7 @@ speakers_info = {
             "vendor-pattern-80x50": {
                 "origin": "Vendors-Martin Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
             },
         },
@@ -10296,6 +11384,7 @@ speakers_info = {
             "vendor-pattern-80x50": {
                 "origin": "Vendors-Martin Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221111",
             },
         },
@@ -10402,12 +11491,11 @@ speakers_info = {
         },
     },
     "Mesanovic CDM65": {
-        "skip": True,
         "brand": "Mesanovic",
         "model": "CDM65",
         "type": "active",
-        "price": "",
-        "amount": "each",
+        "price": "5300",
+        "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "eac",
         "measurements": {
@@ -10429,7 +11517,27 @@ speakers_info = {
                     },
                     "weight": 16,
                 },
-                "review_published": "20221219",
+                "review_published": "20230312",
+            },
+            "eac-cardiod": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mesanovic_cdm65/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/new-mesanovic-cdm65-monitors.40172/",
+                },
+                "specifications": {
+                    "SPL": {
+                        "peak": 103,
+                    },
+                    "size": {
+                        "height": 381,
+                        "width": 203,
+                        "depth": 355,
+                    },
+                    "weight": 16,
+                },
+                "review_published": "20230312",
             },
         },
     },
@@ -10458,6 +11566,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Meyer Sound",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220915",
                 "quality": "medium",
                 "notes": "{}".format(note_meyersound_gll),
@@ -10475,6 +11584,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Meyer Sound",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220915",
                 "quality": "medium",
                 "notes": "{}".format(note_meyersound_gll),
@@ -10493,6 +11603,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Meyer Sound",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220915",
                 "quality": "medium",
                 "notes": "{}".format(note_meyersound_gll),
@@ -10510,6 +11621,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Meyer Sound",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220919",
                 "quality": "medium",
                 "notes": "{}".format(note_meyersound_gll),
@@ -10532,6 +11644,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Meyer Sound",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "reviews": {
                     "pp": "https://www.production-partner.de/test/test-compact-line-array-meyer-sound-lina/",
                 },
@@ -10557,6 +11670,7 @@ speakers_info = {
     #            "vendor": {
     #                "origin": "Vendors-Meyer Sound",
     #                "format": "gllHVtxt",
+    #                "data_acquisition": gll_data_acquisition_std,
     #                "review_published": "20220915",
     #                "quality": "medium",
     #                "notes": "{}".format(note_meyersound_gll),
@@ -10575,6 +11689,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Meyer Sound",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220915",
                 "quality": "medium",
                 "notes": "{}".format(note_meyersound_gll),
@@ -10593,6 +11708,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Meyer Sound",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220915",
                 "quality": "medium",
                 "notes": "{}".format(note_meyersound_gll),
@@ -10611,6 +11727,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Meyer Sound",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20220915",
                 "quality": "medium",
                 "notes": "{}".format(note_meyersound_gll),
@@ -10629,10 +11746,10 @@ speakers_info = {
             "vendor-v2-20230107": {
                 "origin": "Vendors-Meyer Sound",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20230107",
                 "quality": "medium",
                 "notes": "{}".format(note2_meyersound_gll),
-                "data acquisition": gll_data_acquisition_std,
                 "specifications": {
                     "dispersion": {
                         "horizontal": 110,
@@ -10640,9 +11757,9 @@ speakers_info = {
                     },
                     "SPL": {
                         "peak": 138,
-                        "m-noise": 132.5,
-                        "pink-noise": 130,
-                        "b-noise": 131,
+                        "m_noise": 132.5,
+                        "pink_noise": 130,
+                        "b_noise": 131,
                     },
                     "size": {
                         "height": 567,
@@ -10665,9 +11782,9 @@ speakers_info = {
                     },
                     "SPL": {
                         "peak": 138,
-                        "m-noise": 132.5,
-                        "pink-noise": 130,
-                        "b-noise": 131,
+                        "m_noise": 132.5,
+                        "pink_noise": 130,
+                        "b_noise": 131,
                     },
                     "size": {
                         "height": 567,
@@ -10676,11 +11793,11 @@ speakers_info = {
                     },
                     "weight": 23.6,
                 },
-                "data acquisition": {
-                    "from": "gll",
+                "data_acquisition": {
+                    "via": "gll",
                     "distance": 2,
                     "signal": "aes 20Hz-20kHz",
-                    "air absorbtion": True,
+                    "air_absorbtion": True,
                     "resolution": 10,
                 },
             },
@@ -10710,9 +11827,15 @@ speakers_info = {
         "price": "100",
         "shape": "center",
         "amount": "each",
-        "default_measurement": "eac",
+        "default_measurement": "eac-vertical",
         "measurements": {
-            "eac": {
+            "eac-vertical": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/micca_mb42x_center/",
+                "review_published": "20220111",
+            },
+            "eac-horizontal": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/micca_mb42x_center/",
@@ -10858,9 +11981,15 @@ speakers_info = {
         "price": "250",
         "amount": "each",
         "shape": "center",
-        "default_measurement": "eac",
+        "default_measurement": "eac-vertical",
         "measurements": {
-            "eac": {
+            "eac-vertical": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_c6/",
+                "review_published": "20220507",
+            },
+            "eac-horizontal": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_encore_c6/",
@@ -11294,7 +12423,7 @@ speakers_info = {
             "vendor-gll": {
                 "origin": "Vendors-Neumann",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "notes": "data from GLL file: computed at 2m with pink noise broadband",
             },
@@ -11346,7 +12475,7 @@ speakers_info = {
             "vendor-gll": {
                 "origin": "Vendors-Neumann",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "notes": "data from GLL file: computed at 2m with pink noise broadband",
                 "review_published": "20221110",
@@ -11371,7 +12500,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Neumann",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review_published": "20220917",
             },
@@ -12052,9 +13181,15 @@ speakers_info = {
         "price": "75",
         "shape": "center",
         "amount": "each",
-        "default_measurement": "asr",
+        "default_measurement": "asr-vertical",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/pioneer-sp-c22-review-center-speaker.33717/",
+                "review_published": "20220505",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/pioneer-sp-c22-review-center-speaker.33717/",
@@ -12249,9 +13384,15 @@ speakers_info = {
         "price": "600",
         "shape": "center",
         "amount": "each",
-        "default_measurement": "asr",
+        "default_measurement": "asr-vertical",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/polk-reserve-r350-review-center-speaker.27535/",
+                "review_published": "20211024",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/polk-reserve-r350-review-center-speaker.27535/",
@@ -12526,7 +13667,7 @@ speakers_info = {
             "vendor-v1x": {
                 "origin": "Vendors-Presonus",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221125",
                 "parameters": {
@@ -12537,7 +13678,7 @@ speakers_info = {
             "vendor-v2x": {
                 "origin": "Vendors-Presonus",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221125",
                 "parameters": {
@@ -12548,7 +13689,7 @@ speakers_info = {
             "vendor-v3x": {
                 "origin": "Vendors-Presonus",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221125",
                 "parameters": {
@@ -12559,7 +13700,7 @@ speakers_info = {
             "vendor-v4x": {
                 "origin": "Vendors-Presonus",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221125",
                 "parameters": {
@@ -12570,7 +13711,7 @@ speakers_info = {
             "vendor-v5x": {
                 "origin": "Vendors-Presonus",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221125",
                 "parameters": {
@@ -12580,7 +13721,7 @@ speakers_info = {
             },
             "vendor-v6x": {
                 "origin": "Vendors-Presonus",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "format": "gllHVtxt",
                 "quality": "medium",
                 "review_published": "20221125",
@@ -12640,7 +13781,7 @@ speakers_info = {
             "vendor-pattern-110x50": {
                 "origin": "Vendors-Presonus",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221125",
             },
@@ -12658,7 +13799,7 @@ speakers_info = {
             "vendor-pattern-110x50": {
                 "origin": "Vendors-Presonus",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221125",
             },
@@ -12803,6 +13944,24 @@ speakers_info = {
             },
         },
     },
+    "Sigberg Audio SBS.1": {
+        "skip": True,  # preliminary data
+        "brand": "Sigberg Audio",
+        "model": "SBS.1",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Sigberg Audio",
+                "format": "rewstextdump",
+                "quality": "low",
+                "review_published": "20230223",
+            },
+        },
+    },
     "Turbosound NuQ62": {
         "brand": "Turbosound",
         "model": "NuQ62",
@@ -12815,7 +13974,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Turbosound",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221205",
                 "specifications": {
@@ -12850,7 +14009,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Turbosound",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221205",
                 "specifications": {
@@ -12885,7 +14044,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Turbosound",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221205",
                 "specifications": {
@@ -12920,7 +14079,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Turbosound",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221205",
                 "specifications": {
@@ -12955,7 +14114,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Turbosound",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221205",
                 "specifications": {
@@ -12990,7 +14149,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Turbosound",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221205",
             },
@@ -13008,7 +14167,7 @@ speakers_info = {
             "vendor-pattern-90x40": {
                 "origin": "Vendors-Turbosound",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221205",
                 "specifications": {
@@ -13043,7 +14202,7 @@ speakers_info = {
             "vendor-pattern-90x40": {
                 "origin": "Vendors-Turbosound",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221205",
                 "specifications": {
@@ -13078,7 +14237,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Turbosound",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221205",
                 "parameters": {
@@ -13118,7 +14277,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-QSC",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20220918",
                 "notes": "{}".format(note_qsc_gll),
@@ -13136,7 +14295,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-QSC",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20220918",
                 "notes": "{}".format(note_qsc_gll),
@@ -13154,7 +14313,7 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-QSC",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20220918",
                 "notes": "{}".format(note_qsc_gll),
@@ -13259,7 +14418,7 @@ speakers_info = {
             "vendor-pattern-90x70": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20230114",
                 "specifications": {
@@ -13293,7 +14452,7 @@ speakers_info = {
             "vendor-pattern-90x70": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20230114",
                 "specifications": {
@@ -13326,7 +14485,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20230114",
                 "specifications": {
@@ -13359,7 +14518,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221107",
                 "specifications": {
@@ -13392,7 +14551,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20230114",
                 "specifications": {
@@ -13425,7 +14584,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20230114",
                 "specifications": {
@@ -13458,7 +14617,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20230114",
                 "specifications": {
@@ -13491,7 +14650,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20230114",
                 "specifications": {
@@ -13524,7 +14683,7 @@ speakers_info = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20230113",
                 "specifications": {
@@ -13557,7 +14716,7 @@ speakers_info = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20230113",
                 "specifications": {
@@ -13590,7 +14749,7 @@ speakers_info = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20230113",
                 "specifications": {
@@ -13623,7 +14782,7 @@ speakers_info = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20230113",
                 "specifications": {
@@ -13663,7 +14822,7 @@ speakers_info = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review": "https://www.production-partner.de/test/test-rcf-art-945-a/",
                 "review_published": "20221107",
@@ -13703,7 +14862,7 @@ speakers_info = {
             "vendor-pattern-60x40": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "low",
                 "review_published": "20221107",
                 "specifications": {
@@ -13737,7 +14896,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20230115",
                 "specifications": {
@@ -13770,7 +14929,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20230115",
                 "specifications": {
@@ -13803,7 +14962,7 @@ speakers_info = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20230113",
                 "specifications": {
@@ -13836,7 +14995,7 @@ speakers_info = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20230113",
                 "specifications": {
@@ -13869,7 +15028,7 @@ speakers_info = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20230113",
                 "specifications": {
@@ -13902,7 +15061,7 @@ speakers_info = {
             "vendor-pattern-100x60": {
                 "origin": "Vendors-RCF",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20230113",
                 "specifications": {
@@ -13998,7 +15157,7 @@ speakers_info = {
         "model": "C205",
         "type": "passive",
         "price": "",
-        "amount": "pair",
+        "amount": "each",
         "shape": "center",
         "default_measurement": "vendor",
         "measurements": {
@@ -14039,9 +15198,16 @@ speakers_info = {
         "type": "passive",
         "shape": "center",
         "price": "825",
-        "default_measurement": "asr",
+        "amount": "each",
+        "default_measurement": "asr-horizontal",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-concerta2-c25-review-center-speaker.29499/",
+                "review_published": "20211231",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-concerta2-c25-review-center-speaker.29499/",
@@ -14049,7 +15215,6 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-Revel",
-                "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
             },
         },
@@ -14059,8 +15224,8 @@ speakers_info = {
         "model": "C426Be",
         "type": "passive",
         "price": "",
-        "amount": "pair",
         "shape": "center",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -14078,9 +15243,15 @@ speakers_info = {
         "price": "2500",
         "shape": "center",
         "amount": "each",
-        "default_measurement": "asr",
+        "default_measurement": "asr-vertical",
         "measurements": {
-            "asr": {
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-c52-speaker-review-and-measurements.10934/",
+                "review_published": "20200117",
+            },
+            "asr-horizontal": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-c52-speaker-review-and-measurements.10934/",
@@ -14175,7 +15346,6 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-Revel",
-                "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
             },
         },
@@ -14272,7 +15442,6 @@ speakers_info = {
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "website": "www.revelspeakers.com",
                 "quality": "medium",
                 "review": "https://speakerdata2034.blogspot.com/2019/03/spinorama-data-revel-home.html",
             },
@@ -14295,7 +15464,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Revel",
-                "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
                 "quality": "medium",
             },
@@ -14312,7 +15480,6 @@ speakers_info = {
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Revel",
-                "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
                 "quality": "medium",
             },
@@ -14346,12 +15513,10 @@ speakers_info = {
         "measurements": {
             "harman-v1-2007": {
                 "origin": "Vendors-Revel",
-                "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
             },
             "harman-v2-2017": {
                 "origin": "Vendors-Revel",
-                "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
             },
         },
@@ -14378,8 +15543,8 @@ speakers_info = {
         "model": "Ultima2 Voice2",
         "type": "passive",
         "price": "",
-        "amount": "pair",
         "shape": "center",
+        "amount": "each",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -14545,7 +15710,6 @@ speakers_info = {
             },
             "vendor": {
                 "origin": "Vendors-Revel",
-                "website": "www.revelspeakers.com",
                 "format": "webplotdigitizer",
             },
         },
@@ -14584,40 +15748,6 @@ speakers_info = {
             },
         },
     },
-    "RSL Outsider II": {
-        "brand": "RSL",
-        "model": "Outsider II",
-        "type": "passive",
-        "price": "300",
-        "shape": "outdoor",
-        "amount": "pair",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/rsl-outsider-ii-outdoor-speaker-review.16659/",
-                "review_published": "20201011",
-            },
-        },
-    },
-    "RSL CG5": {
-        "brand": "RSL",
-        "model": "CG5",
-        "type": "passive",
-        "price": "",
-        "amount": "pair",
-        "shape": "bookshelves",
-        "default_measurement": "misc-audioholics",
-        "measurements": {
-            "misc-audioholics": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "quality": "low",
-                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/rsl-cg5-and-cg25/conclusion",
-            },
-        },
-    },
     "Rockville SPG88": {
         "brand": "Rockville",
         "model": "SPG88",
@@ -14636,13 +15766,85 @@ speakers_info = {
             },
         },
     },
-    "RSL CG25": {
+    "RSL Outsider II": {
         "brand": "RSL",
-        "model": "CG25",
+        "model": "Outsider II",
+        "type": "passive",
+        "price": "300",
+        "shape": "outdoor",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/rsl-outsider-ii-outdoor-speaker-review.16659/",
+                "review_published": "20201011",
+            },
+        },
+    },
+    "RSL CG25 Center": {
+        "brand": "RSL",
+        "model": "CG25 Center",
+        "type": "passive",
+        "price": "425",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "asr-horizontal",
+        "measurements": {
+            "asr-horizontal": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/rsl-cg25-center-speaker-review.42495/",
+                    "adh": "https://www.audioholics.com/bookshelf-speaker-reviews/rsl-cg5-and-cg25",
+                    "htr": "https://hometheaterreview.com/rsl-cg5-bookshelf-and-cg25-monitorcenter-channel-reviewed/",
+                },
+                "review_published": "20230302",
+                "specifications": {
+                    "sensitivity": 88,
+                    "size": {
+                        "height": 482,
+                        "width": 141,
+                        "depth": 247,
+                    },
+                    "weight": 10.4,
+                },
+            },
+            "asr-vertical": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/rsl-cg25-center-speaker-review.42495/",
+                    "adh": "https://www.audioholics.com/bookshelf-speaker-reviews/rsl-cg5-and-cg25",
+                    "htr": "https://hometheaterreview.com/rsl-cg5-bookshelf-and-cg25-monitorcenter-channel-reviewed/",
+                },
+                "review_published": "20230302",
+                "specifications": {
+                    "sensitivity": 88,
+                    "size": {
+                        "height": 482,
+                        "width": 141,
+                        "depth": 247,
+                    },
+                    "weight": 10.4,
+                },
+            },
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review": "https://www.audioholics.com/bookshelf-speaker-reviews/rsl-cg5-and-cg25/conclusion",
+            },
+        },
+    },
+    "RSL CG5": {
+        "brand": "RSL",
+        "model": "CG5",
         "type": "passive",
         "price": "",
         "amount": "pair",
-        "shape": "center",
+        "shape": "bookshelves",
         "default_measurement": "misc-audioholics",
         "measurements": {
             "misc-audioholics": {
@@ -14712,7 +15914,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Seeburg",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221022",
             },
@@ -14730,7 +15932,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Seeburg",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221022",
             },
@@ -14748,7 +15950,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Seeburg",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221022",
             },
@@ -14766,7 +15968,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Seeburg",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221022",
             },
@@ -14784,7 +15986,7 @@ speakers_info = {
             "vendor-pattern-80x60": {
                 "origin": "Vendors-Seeburg",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221022",
             },
@@ -14802,7 +16004,7 @@ speakers_info = {
             "vendor-pattern-80x60": {
                 "origin": "Vendors-Seeburg",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221022",
             },
@@ -15041,11 +16243,17 @@ speakers_info = {
         "model": "Prime Center",
         "type": "passive",
         "price": "400",
-        "amount": "each",
         "shape": "center",
-        "default_measurement": "eac",
+        "amount": "each",
+        "default_measurement": "eac-horizontal",
         "measurements": {
-            "eac": {
+            "eac-horizontal": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/svs_prime_center_channel/",
+                "review_published": "20220110",
+            },
+            "eac-vertical": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/svs_prime_center_channel/",
@@ -15060,8 +16268,14 @@ speakers_info = {
         "price": "1000",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/svs_ultra_bookshelf/",
+                "review_published": "20230312",
+            },
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
@@ -15211,6 +16425,7 @@ speakers_info = {
             "vendor-pattern-120x40": {
                 "origin": "Vendors-Theory Audio",
                 "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review_published": "20230115",
                 "specifications": {
@@ -15230,7 +16445,6 @@ speakers_info = {
                     },
                     "weight": 11,
                 },
-                "data acquisition": gll_data_acquisition_std,
             },
         },
     },
@@ -15504,7 +16718,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Wharfedale Pro",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "review_published": "20221026",
                 "quality": "low",
             },
@@ -15539,7 +16753,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Yamaha",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221022",
             },
@@ -15557,7 +16771,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Yamaha",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221022",
             },
@@ -15575,7 +16789,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Yamaha",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221025",
             },
@@ -15593,7 +16807,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Yamaha",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221025",
             },
@@ -15611,7 +16825,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Yamaha",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221025",
             },
@@ -15629,7 +16843,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Yamaha",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221025",
             },
@@ -15647,7 +16861,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Yamaha",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221025",
             },
@@ -15665,7 +16879,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Yamaha",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221022",
             },
@@ -15683,7 +16897,7 @@ speakers_info = {
             "vendor-pattern-90x60": {
                 "origin": "Vendors-Yamaha",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221022",
             },
@@ -15700,7 +16914,7 @@ speakers_info = {
         "measurements": {
             "vendor-pattern-90x50": {
                 "origin": "Vendors-Yamaha",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "format": "gllHVtxt",
                 "quality": "medium",
                 "review_published": "20221025",
@@ -15719,7 +16933,7 @@ speakers_info = {
             "vendor-pattern-75x50": {
                 "origin": "Vendors-Yamaha",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221022",
             },
@@ -15804,16 +17018,10 @@ speakers_info = {
             "vendor-pattern-170x40": {
                 "origin": "Vendors-Yamaha",
                 "format": "gllHVtxt",
-                "data acquisition": gll_data_acquisition_std,
+                "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20221025",
             },
-            #            "vendor-pattern-170x20": {
-            #                "origin": "Vendors-Yamaha",
-            #                "format": "gllHVtxt",
-            #                "quality": "medium",
-            #                "review_published": "20221025",
-            #            },
         },
     },
     "Zaph Audio ZA5.2": {
@@ -15830,6 +17038,23 @@ speakers_info = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/zaph-audio-za5-2-diy-kit-speaker-review.12086/",
                 "review_published": "20201317",
+            },
+        },
+    },
+    "理性派HiFi X5": {
+        "brand": "理性派HiFi",
+        "model": "X5",
+        "type": "passive",
+        "price": "284",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/%E7%90%86%E6%80%A7%E6%B4%BEhifi-x5-speaker-review.42528/",
+                "review_published": "20230302",
             },
         },
     },
@@ -15888,9 +17113,14 @@ origins_info = {
         "max hz": 20000,
         "min dB": -40,
         "max dB": 10,
-        "logo": "docs/metadata/apple.png",
-        "logo-small": "docs/metadata/apple.png",
         "url": "https://www.alconsaudio.com/",
+    },
+    "Vendors-Amate Audio": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.amateaudio.com/",
     },
     "Vendors-Apple": {
         "min hz": 20,
@@ -16004,6 +17234,13 @@ origins_info = {
         "logo": "docs/metadata/dbaudio.png",
         "logo-small": "docs/metadata/dbaudio.png",
         "url": "https://www.dbaudio.com",
+    },
+    "Vendors-EAW": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://eaw.com",
     },
     "Vendors-EV": {
         "min hz": 20,
@@ -16293,6 +17530,13 @@ origins_info = {
         "logo": "docs/metadata/turbosound.png",
         "logo-small": "docs/metadata/turbosound.png",
         "url": "https://www.turbosound.com",
+    },
+    "Vendors-Sigberg Audio": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.sigbergaudio.no",
     },
     "Vendors-Reflector Audio": {
         "min hz": 20,

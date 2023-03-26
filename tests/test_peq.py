@@ -17,13 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import math
 import unittest
 
-import numpy as np
 import numpy.testing as npt
 
-from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import peq_butterworth_q, peq_linkwitzriley_q
 
 

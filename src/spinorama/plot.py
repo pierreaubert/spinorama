@@ -1,24 +1,41 @@
 # -*- coding: utf-8 -*-
-import logging
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import math
+import bisect
 
 import numpy as np
 import pandas as pd
 from scipy import stats
 
-import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.io as pio
 
-from .constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
-from .filter_peq import peq_build
-from .compute_misc import compute_contour
-from .load_misc import sort_angles
+from spinorama import logger
+from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+from spinorama.filter_peq import peq_build
+from spinorama.compute_misc import compute_contour
+from spinorama.load_misc import sort_angles
 
-logger = logging.getLogger("spinorama")
 
 pio.templates.default = "plotly_white"
+
 
 # ratio is 4x3
 plot_params_default = {
@@ -43,7 +60,7 @@ radar_params_default = {
     "xmin": 400,
     "xmax": 20000,
     "width": 1000,
-    "height": 800,
+    "height": 1200,
 }
 
 colors = [
@@ -180,15 +197,20 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
         title_text="SPL (dB)",
         range=[range_min, range_max],
         dtick=range_step,
-        tickvals=[i for i in range(range_min, range_max + range_step, range_step)],
-        ticktext=["{}".format(i) if not i % 5 else " " for i in range(range_min, range_max + range_step, range_step)],
+        tickvals=list(range(range_min, range_max + range_step, range_step)),
+        ticktext=[
+            "{}".format(i) if not i % 5 else " "
+            for i in range(range_min, range_max + range_step, range_step)
+        ],
         showline=True,
     )
 
 
 def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
-    tickvals = [di for di in range(range_min, range_max, range_step)]
-    ticktext = [f"{di}" if pos < 5 else "" for pos, di in enumerate(range(range_min, range_max, range_step))]
+    tickvals = list(range(range_min, range_max, range_step))
+    ticktext = [
+        f"{di}" if pos < 5 else "" for pos, di in enumerate(range(range_min, range_max, range_step))
+    ]
     # print('DEBUG {} {}'.format(tickvals, ticktext))
     return dict(
         title_text="DI (dB)                                                    &nbsp;",
@@ -249,7 +271,7 @@ def contour_layout(params):
     return dict(
         width=params["width"],
         height=params["height"],
-        legend=dict(x=0.5, y=1.05, xanchor="center", orientation=orientation),
+        legend=dict(x=0.5, y=0.95, xanchor="center", orientation=orientation),
         title=dict(
             x=0.5,
             y=0.99,
@@ -273,7 +295,20 @@ def radar_layout(params):
     return dict(
         width=params["width"],
         height=params["height"],
-        legend=dict(x=0.5, y=1.05, xanchor="center", orientation=orientation),
+        legend=dict(
+            x=0.5,
+            y=1.05,
+            xanchor="center",
+            orientation=orientation,
+            title=dict(
+                font=dict(
+                    size=10,
+                ),
+            ),
+            font=dict(
+                size=9,
+            ),
+        ),
         title=dict(
             x=0.5,
             y=0.98,
@@ -364,7 +399,7 @@ def plot_spinorama(spin, params):
 def plot_graph(df, params):
     layout = params.get("layout", "")
     fig = go.Figure()
-    for measurement in df.keys():
+    for measurement in df:
         if measurement != "Freq":
             trace = go.Scatter(
                 x=df.Freq,
@@ -377,9 +412,9 @@ def plot_graph(df, params):
                 trace.name = measurement
                 trace.legendgroup = "measurements"
                 trace.legendgrouptitle = {"text": "Measurements"}
-            if measurement in uniform_colors.keys():
+            if measurement in uniform_colors:
                 trace.marker = {"color": uniform_colors[measurement]}
-            if measurement in legend_rank.keys():
+            if measurement in legend_rank:
                 trace.legendrank = legend_rank[measurement]
             fig.add_trace(trace)
 
@@ -392,7 +427,7 @@ def plot_graph(df, params):
 def plot_graph_spl(df, params):
     layout = params.get("layout", "")
     fig = go.Figure()
-    for measurement in df.keys():
+    for measurement in df:
         if measurement != "Freq":
             visible = None
             if measurement in ("On Axis", "10°", "20°", "30°", "40°", "50°", "60°"):
@@ -415,9 +450,9 @@ def plot_graph_spl(df, params):
                 trace.name = measurement
                 trace.legendgroup = "measurements"
                 trace.legendgrouptitle = {"text": "Measurements"}
-            if measurement in uniform_colors.keys():
+            if measurement in uniform_colors:
                 trace.marker = {"color": uniform_colors[measurement]}
-            if measurement in legend_rank.keys():
+            if measurement in legend_rank:
                 trace.legendrank = legend_rank[measurement]
             fig.add_trace(trace)
 
@@ -515,7 +550,6 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
 
 
 def plot_graph_flat_traces(df, measurement, params):
-
     restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
     slope = 0
     intercept = np.mean(restricted_freq[measurement])
@@ -524,15 +558,18 @@ def plot_graph_flat_traces(df, measurement, params):
 
 
 def plot_graph_regression_traces(df, measurement, params):
-
     restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
-    slope, intercept, r, p, se = stats.linregress(x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement])
+    slope, intercept, r, p, se = stats.linregress(
+        x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement]
+    )
 
-    return plot_graph_traces(df, measurement, params, slope, intercept, "Linear Regression (midrange)")
+    return plot_graph_traces(
+        df, measurement, params, slope, intercept, "Linear Regression (midrange)"
+    )
 
 
 def plot_graph_flat(df, measurement, params):
-    layout = params.get("layout", "")
+    params.get("layout", "")
     # print("{} {}".format(measurement, df.keys()))
     fig = go.Figure()
     traces = plot_graph_flat_traces(df, measurement, params)
@@ -547,7 +584,7 @@ def plot_graph_flat(df, measurement, params):
 
 
 def plot_graph_regression(df, measurement, params):
-    layout = params.get("layout", "")
+    params.get("layout", "")
     # print("{} {}".format(measurement, df.keys()))
     fig = go.Figure()
     traces = plot_graph_regression_traces(df, measurement, params)
@@ -563,7 +600,7 @@ def plot_graph_regression(df, measurement, params):
 
 def plot_contour(spl, params):
     df = spl.copy()
-    layout = params.get("layout", "")
+    params.get("layout", "")
     min_freq = params.get("contour_min_freq", 100)
 
     contour_start = -30
@@ -635,7 +672,11 @@ def plot_contour(spl, params):
         return x, y
 
     hx, hy = compute_horizontal_lines(min_freq, 20000, range(-150, 180, 30))
-    vrange = [100 * i for i in range(2, 9)] + [1000 * i for i in range(1, 10)] + [10000 + 1000 * i for i in range(1, 9)]
+    vrange = (
+        [100 * i for i in range(2, 9)]
+        + [1000 * i for i in range(1, 10)]
+        + [10000 + 1000 * i for i in range(1, 9)]
+    )
     vx, vy = compute_vertical_lines(-180, 180, vrange)
 
     add_lines(hx, hy)
@@ -660,98 +701,137 @@ def find_nearest_freq(dfu, hz, tolerance=0.05):
         if abs(f - hz) < hz * tolerance:
             ihz = i
             break
-    logger.debug("nearest: {0} hz at loc {1}".format(hz, ihz))
+    logger.debug("nearest: %.1f hz at loc %d", hz, ihz)
     return ihz
 
 
 def plot_radar(spl, params):
     layout = params.get("layout", "")
 
-    anglelist = [a for a in range(-180, 180, 10)]
+    anglelist = list(range(-180, 180, 10))
 
-    def projection(anglelist, gridZ, hz):
-        dbsR = [db for a, db in zip(anglelist, gridZ)]
-        dbsTheta = [a for a, db in zip(anglelist, gridZ)]
-        dbsR.append(dbsR[0])
-        dbsTheta.append(dbsTheta[0])
-        return dbsR, dbsTheta, [hz for i in range(0, len(dbsR))]
+    def projection(anglelist, grid_z, hz):
+        dbs_r = [db for a, db in zip(anglelist, grid_z, strict=False)]
+        dbs_theta = [a for a, db in zip(anglelist, grid_z, strict=False)]
+        dbs_r.append(dbs_r[0])
+        dbs_theta.append(dbs_theta[0])
+        return dbs_r, dbs_theta, [hz for i in range(0, len(dbs_r))]
 
     def label(i):
         return "{:d} Hz".format(i)
 
-    def plot_radar_freq(anglelist, df):
+    def plot_radar_freq(anglelist, freqlist, df):
         dfu = sort_angles(df)
         db_mean = np.mean(dfu.loc[(dfu.Freq > 900) & (dfu.Freq < 1100)]["On Axis"].values)
         freq = dfu.Freq
         dfu = dfu.drop("Freq", axis=1)
         db_min = np.min(dfu.min(axis=0).values)
         db_max = np.max(dfu.max(axis=0).values)
-        db_scale = max(abs(db_max), abs(db_min))
+        max(abs(db_max), abs(db_min))
         # if df is normalized then 0 will be at the center of the radar which is not what
         # we want. Let's shift the whole graph up.
         # if db_mean < 45:
         #    dfu += db_scale
         # print(db_min, db_max, db_mean, db_scale)
         # build 3 plots
-        dbX = []
-        dbY = []
-        hzZ = []
-        for hz in [500, 1000, 2000, 10000, 15000]:
+        db_x = []
+        db_y = []
+        hz_z = []
+        for hz in freqlist:
             ihz = find_nearest_freq(freq, hz)
             if ihz is None:
                 continue
-            X, Y, Z = projection(anglelist, dfu.loc[ihz][dfu.columns != "Freq"], hz)
+            p_x, p_y, p_z = projection(anglelist, dfu.loc[ihz][dfu.columns != "Freq"], hz)
             # add to global variable
-            dbX.append(X)
-            dbY.append(Y)
-            hzZ.append(Z)
+            db_x.append(p_x)
+            db_y.append(p_y)
+            hz_z.append(p_z)
 
         # normalise
-        dbX = [v2 for v1 in dbX for v2 in v1]
-        dbY = [v2 for v1 in dbY for v2 in v1]
-        # print("dbX min={} max={}".format(np.array(dbX).min(), np.array(dbX).max()))
-        # print("dbY min={} max={}".format(np.array(dbY).min(), np.array(dbY).max()))
+        db_x = [v2 for v1 in db_x for v2 in v1]
+        db_y = [v2 for v1 in db_y for v2 in v1]
+        # print("db_x min={} max={}".format(np.array(db_x).min(), np.array(db_x).max()))
+        # print("db_y min={} max={}".format(np.array(db_y).min(), np.array(db_y).max()))
 
-        hzZ = [label(i2) for i1 in hzZ for i2 in i1]
+        hz_z = [label(i2) for i1 in hz_z for i2 in i1]
 
-        return db_mean, pd.DataFrame({"R": dbX, "Theta": dbY, "Freq": hzZ})
+        return db_mean, pd.DataFrame({"R": db_x, "Theta": db_y, "Freq": hz_z})
 
-    fig = go.Figure()
+    fig = make_subplots(
+        rows=2,
+        cols=2,
+        specs=[
+            [{"type": "polar"}, {"type": "polar"}],
+            [{"type": "polar"}, {"type": "polar"}],
+        ],
+        horizontal_spacing=0.15,
+        vertical_spacing=0.05,
+    )
 
-    _, dbs_df = plot_radar_freq(anglelist, spl)
-
-    for freq in np.unique(dbs_df["Freq"].values):
-        mslice = dbs_df.loc[dbs_df.Freq == freq]
-        trace = go.Scatterpolar(
-            r=mslice.R,
-            theta=mslice.Theta,
-            dtheta=30,
-            name=freq,
-            marker_color=uniform_colors.get(freq, "black"),
-            legendrank=int(freq[:-3]),
-        )
-        if layout != "compact":
-            legendgroup = ("measurements",)
-            legendgrouptitle_text = ("Frequencies",)
-        fig.add_trace(trace)
-
-    fig.update_layout(radar_layout(params))
-    fig.update_layout(
-        polar=dict(
-            radialaxis=dict(
-                range=[-45, 5],
-                dtick=5,
-            ),
-            angularaxis=dict(
-                dtick=10,
-                tickvals=list(range(0, 360, 10)),
-                ticktext=[
-                    "{}°".format(x) if abs(x) < 60 or not x % 30 else " "
-                    for x in (list(range(0, 190, 10)) + list(range(-170, 0, 10)))
-                ],
-            ),
+    radialaxis = dict(
+        range=[-45, 5],
+        dtick=5,
+        tickfont=dict(
+            size=10,
         ),
     )
+    angularaxis = dict(
+        dtick=10,
+        tickvals=list(range(0, 360, 10)),
+        ticktext=[
+            f"{x}°" if abs(x) < 60 or not x % 30 else " "
+            for x in (list(range(0, 190, 10)) + list(range(-170, 0, 10)))
+        ],
+        tickfont=dict(
+            size=10,
+        ),
+    )
+
+    radar_colors = {
+        "100 Hz": colors[0],
+        "125 Hz": colors[1],
+        "160 Hz": colors[2],
+        "200 Hz": colors[3],
+        "250 Hz": colors[4],
+        "315 Hz": colors[5],
+        "400 Hz": colors[6],
+        "500 Hz": colors[7],
+        "1600 Hz": colors[8],
+        "2000 Hz": colors[9],
+        "2500 Hz": colors[0],
+        "3150 Hz": colors[1],
+        "4000 Hz": colors[2],
+        "5000 Hz": colors[3],
+        "6000 Hz": colors[4],
+        "8000 Hz": colors[5],
+    }
+
+    def update_pict(anglelist, freqlist, row, col, spl):
+        _, dbs_df = plot_radar_freq(anglelist, freqlist, spl)
+
+        for freq in np.unique(dbs_df["Freq"].values):
+            mslice = dbs_df.loc[dbs_df.Freq == freq]
+            trace = go.Scatterpolar(
+                r=mslice.R,
+                theta=mslice.Theta,
+                dtheta=30,
+                name=freq,
+                marker_color=radar_colors.get(freq, "black"),
+                legendrank=int(freq[:-3]),
+            )
+            if layout != "compact":
+                trace.legendgroup = ("measurements",)
+                trace.legendgrouptitle_text = ("Frequencies",)
+            fig.add_trace(trace, row=row, col=col)
+            fig.update_polars(radialaxis=radialaxis, angularaxis=angularaxis, row=row, col=col)
+
+    update_pict(anglelist, [100, 125, 160, 200], 1, 1, spl)
+    update_pict(anglelist, [1600, 2000, 2500, 3150], 1, 2, spl)
+    update_pict(anglelist, [250, 315, 400, 500], 2, 1, spl)
+    update_pict(anglelist, [4000, 5000, 6300, 8000], 2, 2, spl)
+
+    fig.update_layout(radar_layout(params))
+    # fig.update_layout(polar=dict(radialaxis=radialaxis, angularaxis=angularaxis)), row=row, col=col)
 
     return fig
 
@@ -764,19 +844,28 @@ def plot_summary(df, summary, params):
     return None
 
 
-def plot_eqs(freq, peqs, names=None):
+def plot_eqs(freq, peqs, names=None, normalized=False):
+    peqs_spl = [peq_build(freq, peq) for peq in peqs]
+    if normalized and len(peqs) > 1:
+        freq_min = bisect.bisect(freq, 80)
+        freq_max = bisect.bisect(freq, 3000)
+        if freq_min == freq_max:
+            freq_min = 0
+            freq_max = -1
+        peqs_avg = [np.mean(spl[freq_min:freq_max]) for spl in peqs_spl]
+        peqs_spl = [spl - (peqs_avg[i] - peqs_avg[0]) for i, spl in enumerate(peqs_spl)]
     traces = None
     if names is None:
-        traces = [go.Scatter(x=freq, y=peq_build(freq, peq)) for peq in peqs]
+        traces = [go.Scatter(x=freq, y=spl) for spl in peqs_spl]
     else:
         traces = [
             go.Scatter(
                 x=freq,
-                y=peq_build(freq, peq),
+                y=spl,
                 name=name,
                 hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
             )
-            for peq, name in zip(peqs, names)
+            for spl, name in zip(peqs_spl, names, strict=False)
         ]
     fig = go.Figure(data=traces)
     fig.update_xaxes(
@@ -796,5 +885,18 @@ def plot_eqs(freq, peqs, names=None):
             dtick="D1",
         ),
     )
-    fig.update_layout(title="EQs")
+    fig.update_layout(
+        title="EQs",
+        width=600,
+        height=450,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            xanchor="center",
+            y=1.1,
+            x=0.5,
+            title=None,
+            font=dict(size=12),
+        ),
+    )
     return fig

@@ -1,10 +1,27 @@
 # -*- coding: utf-8 -*-
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import os
-import logging
 import pathlib
+
 from wand.image import Image as wim
 
-logger = logging.getLogger("spinorama")
+from spinorama import logger
 
 
 def write_multiformat(chart, filename, force):
@@ -12,9 +29,9 @@ def write_multiformat(chart, filename, force):
     if not pathlib.Path(filename).is_file() or force:
         chart.write_image(filename)
     if os.path.getsize(filename) == 0:
-        logger.warning("Saving {} failed!".format(filename))
+        logger.warning("Saving %s failed!", filename)
         return
-    logger.info("Saving {}".format(filename))
+    logger.info("Saving %s", filename)
 
     with wim(filename=filename) as pict:
         filename = filename.replace("_large", "")

@@ -45,9 +45,9 @@ class PrefRatingTests(unittest.TestCase):
     def test_aad(self):
         freq = list(np.logspace(0.3, 4.3, 1000))
         db = [100 for i in np.logspace(0.3, 4.3, 1000)]
-        df = pd.DataFrame({"Freq": freq, "dB": db})
+        test_df = pd.DataFrame({"Freq": freq, "dB": db})
         # expect 0 deviation from flat line
-        self.assertEqual(aad(df), 0.0)
+        self.assertEqual(aad(test_df), 0.0)
 
 
 if __name__ == "__main__":

@@ -30,7 +30,6 @@ Options:
 import json
 import os
 import sys
-import pathlib
 import glob
 import math
 
@@ -39,12 +38,13 @@ import numpy as np
 
 from generate_common import get_custom_logger, args2level
 from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DOCS_SPEAKERS, CPATH_DATAS_EQ
+from spinorama.need_update import need_update
 from spinorama.pict import write_multiformat
 from spinorama.plot import plot_eqs
 from spinorama.load_rewseq import parse_eq_iir_rews
 
 
-VERSION = 0.1
+VERSION = 0.2
 
 
 def print_eq_compare(data, force):
@@ -55,41 +55,48 @@ def print_eq_compare(data, force):
     eqs = glob.glob("{}/{} {}/*.txt".format(CPATH_DATAS_EQ, brand, model))
     peqs = [parse_eq_iir_rews(eq, 48000) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     names = [os.path.basename(eq) for eq in eqs if os.path.basename(eq) != "iir.txt"]
-    fig = plot_eqs(freq, peqs, names)
-    fig.update_layout(title=f"EQs for {brand} {model}")
-    write_multiformat(fig, filename, force)
+    fig = plot_eqs(freq, peqs, names, normalized=True)
+    fig.update_layout(
+        title={
+            "text": f"EQs for {brand} {model}",
+            "x": 0.5,
+            "y": 0.1,
+            "xanchor": "center",
+            "yanchor": "bottom",
+        }
+    )
+    recent = need_update(filename, dependencies=eqs)
+    write_multiformat(fig, filename, force or recent)
 
 
 def main(force):
     # load all metadata from generated json file
     json_filename = CPATH_METADATA_JSON
     if not os.path.exists(json_filename):
-        logger.error("Cannot find {0}".format(json_filename))
+        logger.error("Cannot find %s", json_filename)
         sys.exit(1)
 
     jsmeta = None
     with open(json_filename, "r") as f:
         jsmeta = json.load(f)
 
-    logger.warning("Data {0} loaded ({1} speakers)!".format(json_filename, len(jsmeta)))
+    logger.info("Data %s loaded (%d speakers!", json_filename, len(jsmeta))
 
-    for speaker_name, speaker_data in jsmeta.items():
+    for speaker_data in jsmeta.values():
         print_eq_compare(speaker_data, force)
 
-    sys.exit(0)
+    return 0
 
 
 if __name__ == "__main__":
     args = docopt(
         __doc__,
-        version="generate_radar.py version {:1.1f}".format(VERSION),
+        version=f"generate_radar.py version {VERSION:1.1f}",
         options_first=True,
     )
 
-    level = args2level(args)
-    logger = get_custom_logger(True)
-    logger.setLevel(level)
+    logger = get_custom_logger(level=args2level(args), duplicate=True)
 
-    force = args["--force"]
+    FORCE = args["--force"]
 
-    main(force)
+    sys.exit(main(FORCE))

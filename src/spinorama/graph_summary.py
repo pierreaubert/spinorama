@@ -1,12 +1,26 @@
 # -*- coding: utf-8 -*-
-import os
-import logging
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import altair as alt
 import pandas as pd
 import numpy as np
 
-
-logger = logging.getLogger("spinorama")
+from spinorama import logger
 
 
 def graph_summary(speaker_name, speaker_summary, params):
@@ -68,7 +82,9 @@ def graph_summary(speaker_name, speaker_summary, params):
         )
         - 0.6
     )
-    logger.debug("sizes X={0} Y={1} summary={2}".format(len(pointsX), len(pointsY), len(speaker_summary)))
+    logger.debug(
+        "sizes X={0} Y={1} summary={2}".format(len(pointsX), len(pointsY), len(speaker_summary))
+    )
     source = pd.DataFrame({"x": pointsX, "y": pointsY, "summary": speaker_summary})
     return (
         alt.Chart(source)

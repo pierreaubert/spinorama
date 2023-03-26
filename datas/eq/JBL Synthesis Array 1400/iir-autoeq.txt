@@ -1,15 +1,15 @@
 EQ for JBL Synthesis Array 1400 computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:44:49
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-03-06-14:22:32
 
 Preamp: -1.4 dB
 
-Filter  1: ON HS Fc 14268 Hz Gain -1.82 dB
-Filter  2: ON PK Fc   467 Hz Gain -1.42 dB Q 1.22
-Filter  3: ON PK Fc    94 Hz Gain -0.78 dB Q 2.96
-Filter  4: ON PK Fc  1532 Hz Gain +0.95 dB Q 2.89
-Filter  5: ON PK Fc  4584 Hz Gain +1.18 dB Q 1.85
-Filter  6: ON PK Fc  1219 Hz Gain -0.69 dB Q 1.57
-Filter  7: ON PK Fc  9231 Hz Gain -0.67 dB Q 2.75
-Filter  8: ON PK Fc 15335 Hz Gain -0.52 dB Q 2.88
-Filter  9: ON PK Fc  2123 Hz Gain -0.51 dB Q 2.51
+Filter  1: ON HS Fc 14134 Hz Gain -1.89 dB
+Filter  2: ON PK Fc   476 Hz Gain -1.40 dB Q 1.13
+Filter  3: ON PK Fc    96 Hz Gain -0.76 dB Q 2.97
+Filter  4: ON PK Fc  1607 Hz Gain +0.97 dB Q 2.85
+Filter  5: ON PK Fc  4582 Hz Gain +1.20 dB Q 2.00
+Filter  6: ON PK Fc   720 Hz Gain +0.51 dB Q 2.95
+Filter  7: ON PK Fc  1232 Hz Gain -0.56 dB Q 1.03
+Filter  8: ON PK Fc  9589 Hz Gain -0.76 dB Q 2.98
+Filter  9: ON PK Fc  1929 Hz Gain -0.64 dB Q 2.93

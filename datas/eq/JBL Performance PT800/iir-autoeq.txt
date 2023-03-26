@@ -1,15 +1,15 @@
 EQ for JBL Performance PT800 computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-02-09-10:47:30
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
+Dated: 2023-03-21-07:02:44
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    49 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc   274 Hz Gain +0.88 dB Q 3.00
-Filter  3: ON PK Fc  7610 Hz Gain +1.55 dB Q 0.25
-Filter  4: ON PK Fc  2274 Hz Gain -1.44 dB Q 1.03
-Filter  5: ON PK Fc   659 Hz Gain -0.50 dB Q 3.00
-Filter  6: ON PK Fc  4129 Hz Gain -0.50 dB Q 3.00
-Filter  7: ON PK Fc   159 Hz Gain -0.50 dB Q 3.00
-Filter  8: ON PK Fc   986 Hz Gain -0.50 dB Q 3.00
-Filter  9: ON PK Fc  3418 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON PK Fc    50 Hz Gain +3.00 dB Q 0.50
+Filter  2: ON PK Fc  7717 Hz Gain +1.55 dB Q 0.28
+Filter  3: ON PK Fc  2274 Hz Gain -1.53 dB Q 1.04
+Filter  4: ON PK Fc   161 Hz Gain -0.59 dB Q 3.00
+Filter  5: ON PK Fc   263 Hz Gain +0.69 dB Q 3.00
+Filter  6: ON PK Fc   643 Hz Gain -0.50 dB Q 3.00
+Filter  7: ON PK Fc  4050 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc   426 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc   991 Hz Gain -0.50 dB Q 3.00

@@ -30,8 +30,6 @@ Options:
 import json
 import os
 import sys
-import pathlib
-import zipfile
 
 from docopt import docopt
 import pandas as pd
@@ -44,7 +42,7 @@ VERSION = 0.4
 
 
 def meta2df(meta):
-    df = pd.DataFrame(
+    df_unroll = pd.DataFrame(
         {
             "speaker": [],
             "param": [],
@@ -68,18 +66,16 @@ def meta2df(meta):
             if "pref_rating" in measurement:
                 ref = "Origin"
                 for k, v in measurement["pref_rating"].items():
-                    logger.debug("{} {} {} {} {} {}".format(i, k, v, ref, origin, brand))
-                    df.loc[count] = [i, k, v, ref, origin, brand]
+                    df_unroll.loc[count] = [i, k, v, ref, origin, brand]
                     count += 1
             if "pref_rating_eq" in measurement:
                 ref = "EQ"
                 for k, v in measurement["pref_rating_eq"].items():
-                    logger.debug("{} {} {} {} {} {}".format(i, k, v, ref, origin, brand))
-                    df.loc[count] = [i, k, v, ref, origin, brand]
+                    df_unroll.loc[count] = [i, k, v, ref, origin, brand]
                     count += 1
-    logger.info("meta2df {0} generated data".format(count))
-    # print(df)
-    return df
+    logger.info("meta2df %d generated data", count)
+    # print(df_unroll)
+    return df_unroll
 
 
 def print_eq(speakers, txt_format):
@@ -107,7 +103,7 @@ def print_eq(speakers, txt_format):
         print(
             "-------------------------------------------+--------------------+------+--------------------+-----+-----+-------"
         )
-        for i, pref, pref_eq, eq in sorted(results, key=lambda a: -a[2]["pref_score"]):
+        for i, pref, pref_eq, _ in sorted(results, key=lambda a: -a[2]["pref_score"]):
             print(
                 "{0:42s} | {1:0.2f} {2:0.2f} {3:3.0f} {4:0.2f} | {5:+1.1f} | {6:0.2f} {7:0.2f} {8:3.0f} {9:0.2f} | {10:1.1f} | {11:+1.1f} |  {12:+1.1f}".format(
                     i,
@@ -126,9 +122,13 @@ def print_eq(speakers, txt_format):
                 )
             )
     elif txt_format == "csv":
-        print('"Speaker", "NBD", "NBD", "LFX", "SM", "SCR", "NBD", "NBD", "LFX", "SM", "SCR", "SCR", "PRE"')
-        print('"Speaker", "ON", "PIR", "Hz", "PIR", "ASR", "ON", "PIR", "Hz", "PIR", "EQ", "DIFF", "dB"')
-        for i, pref, pref_eq, eq in sorted(results, key=lambda a: -a[2]["pref_score"]):
+        print(
+            '"Speaker", "NBD", "NBD", "LFX", "SM", "SCR", "NBD", "NBD", "LFX", "SM", "SCR", "SCR", "PRE"'
+        )
+        print(
+            '"Speaker", "ON", "PIR", "Hz", "PIR", "ASR", "ON", "PIR", "Hz", "PIR", "EQ", "DIFF", "dB"'
+        )
+        for i, pref, pref_eq, _ in sorted(results, key=lambda a: -a[2]["pref_score"]):
             print(
                 '"{0}", {1:0.2f}, {2:0.2f}, {3:3.0f}, {4:0.2f}, {5:+1.1f}, {6:0.2f}, {7:0.2f}, {8:3.0f}, {9:0.2f}, {10:+1.1f}, {11:+1.1f}, {12:+1.1f}'.format(
                     i,
@@ -156,14 +156,14 @@ def main():
     # load all metadata from generated json file
     json_filename = CPATH_METADATA_JSON
     if not os.path.exists(json_filename):
-        logger.error("Cannot find {0}".format(json_filename))
+        logger.error("Cannot find %s", json_filename)
         sys.exit(1)
 
     jsmeta = None
     with open(json_filename, "r") as f:
         jsmeta = json.load(f)
 
-    logger.warning("Data {0} loaded ({1} speakers)!".format(json_filename, len(jsmeta)))
+    logger.warning("Data %s loaded (%d speakers)!", json_filename, len(jsmeta))
 
     if print_what is not None:
         if print_what == "eq_txt":
@@ -179,12 +179,8 @@ def main():
 if __name__ == "__main__":
     args = docopt(
         __doc__,
-        version="generate_stats.py version {:1.1f}".format(VERSION),
+        version="./generate_stats.py version {:1.1f}".format(VERSION),
         options_first=True,
     )
-
-    level = args2level(args)
-    logger = get_custom_logger(True)
-    logger.setLevel(level)
-
+    logger = get_custom_logger(level=args2level(args), duplicate=True)
     main()
