@@ -1,0 +1,16 @@
+EQ for Audiofocus VENU 12a computed from Vendors-Audiofocus data
+Preference Score -2.29 with EQ -0.18
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-03-26-18:56:24
+
+Preamp: -4.6 dB
+
+Filter  1: ON LS Fc  5752 Hz Gain +1.74 dB
+Filter  2: ON PK Fc   390 Hz Gain -5.99 dB Q 2.36
+Filter  3: ON PK Fc   198 Hz Gain -2.63 dB Q 2.98
+Filter  4: ON PK Fc   678 Hz Gain +2.97 dB Q 2.78
+Filter  5: ON PK Fc 10876 Hz Gain -2.67 dB Q 2.53
+Filter  6: ON PK Fc  2364 Hz Gain +2.82 dB Q 2.63
+Filter  7: ON PK Fc  1037 Hz Gain -2.08 dB Q 2.96
+Filter  8: ON PK Fc   454 Hz Gain -1.66 dB Q 2.99
+Filter  9: ON PK Fc  7189 Hz Gain -1.18 dB Q 2.84

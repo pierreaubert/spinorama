@@ -1291,6 +1291,105 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Audiofocus VENU 8a": {
+        "brand": "Audiofocus",
+        "model": "VENU 8a",
+        "type": "active",
+        "price": "2100",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Audiofocus",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 80,
+                    },
+                    "SPL": {
+                        "peak": 134,
+                    },
+                    "size": {
+                        "height": 430,
+                        "width": 273,
+                        "depth": 291,
+                    },
+                    "weight": 11.5,
+                },
+                "review_published": "20230326",
+            },
+        },
+    },
+    "Audiofocus VENU 12a": {
+        "brand": "Audiofocus",
+        "model": "VENU 12a",
+        "type": "active",
+        "price": "2890",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Audiofocus",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 566,
+                        "width": 362,
+                        "depth": 357,
+                    },
+                    "weight": 18.5,
+                },
+                "review_published": "20230326",
+            },
+        },
+    },
+    "Audiofocus VENU 15a": {
+        "brand": "Audiofocus",
+        "model": "VENU 15a",
+        "type": "active",
+        "price": "3220",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Audiofocus",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 136,
+                    },
+                    "size": {
+                        "height": 638,
+                        "width": 426,
+                        "depth": 412,
+                    },
+                    "weight": 22.5,
+                },
+                "review_published": "20230326",
+            },
+        },
+    },
     "AV123 X-CS Center": {
         "brand": "AV123",
         "model": "X-CS Center",
@@ -3947,7 +4046,7 @@ speakers_info: SpeakerDatabase = {
         "brand": "EAW",
         "model": "MKC50",
         "type": "passive",
-        "price": "",
+        "price": "660",
         "shape": "liveportable",
         "amount": "pair",
         "default_measurement": "vendor",
@@ -3983,7 +4082,7 @@ speakers_info: SpeakerDatabase = {
         "brand": "EAW",
         "model": "MKC60",
         "type": "passive",
-        "price": "",
+        "price": "1200",
         "shape": "liveportable",
         "amount": "pair",
         "default_measurement": "vendor",
@@ -4019,7 +4118,7 @@ speakers_info: SpeakerDatabase = {
         "brand": "EAW",
         "model": "MKC80",
         "type": "passive",
-        "price": "",
+        "price": "1800",
         "shape": "liveportable",
         "amount": "pair",
         "default_measurement": "vendor",
@@ -4055,7 +4154,7 @@ speakers_info: SpeakerDatabase = {
         "brand": "EAW",
         "model": "MKC120",
         "type": "passive",
-        "price": "",
+        "price": "3000",
         "shape": "liveportable",
         "amount": "pair",
         "default_measurement": "vendor",
@@ -4083,6 +4182,281 @@ speakers_info: SpeakerDatabase = {
                         "depth": 341,
                     },
                     "weight": 16.8,
+                },
+            },
+        },
+    },
+    "EAW MKD1000": {
+        "brand": "EAW",
+        "model": "MKD1000",
+        "type": "passive",
+        "price": "2900",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-120x60",
+        "measurements": {
+            "vendor-pattern-120x60": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230326",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 680,
+                        "width": 370,
+                        "depth": 420,
+                    },
+                    "weight": 27.3,
+                },
+            },
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230326",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 136,
+                    },
+                    "size": {
+                        "height": 680,
+                        "width": 370,
+                        "depth": 420,
+                    },
+                    "weight": 27.3,
+                },
+            },
+            "vendor-pattern-60x45": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230326",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 45,
+                    },
+                    "SPL": {
+                        "peak": 138,
+                    },
+                    "size": {
+                        "height": 680,
+                        "width": 370,
+                        "depth": 420,
+                    },
+                    "weight": 27.3,
+                },
+            },
+        },
+    },
+    "EAW MKD1200": {
+        "brand": "EAW",
+        "model": "MKD1200",
+        "type": "passive",
+        "price": "5000",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-90x45",
+        "measurements": {
+            "vendor-pattern-90x45": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230326",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 45,
+                    },
+                    "SPL": {
+                        "peak": 139,
+                    },
+                    "size": {
+                        "height": 680,
+                        "width": 370,
+                        "depth": 420,
+                    },
+                    "weight": 47.2,
+                },
+            },
+            "vendor-pattern-60x45": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230326",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 45,
+                    },
+                    "SPL": {
+                        "peak": 141,
+                    },
+                    "size": {
+                        "height": 680,
+                        "width": 370,
+                        "depth": 420,
+                    },
+                    "weight": 27.3,
+                },
+            },
+        },
+    },
+    "EAW QX300": {
+        "brand": "EAW",
+        "model": "QX300",
+        "type": "passive",
+        "price": "3500",
+        "shape": "toursound",
+        "amount": "pair",
+        "default_measurement": "vendor-pattern-120x60",
+        "measurements": {
+            "vendor-pattern-120x60": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230326",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 141,
+                    },
+                    "size": {
+                        "height": 602,
+                        "width": 602,
+                        "depth": 505,
+                    },
+                    "weight": 43,
+                },
+            },
+            "vendor-pattern-60x45": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230326",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 45,
+                    },
+                    "SPL": {
+                        "peak": 145,
+                    },
+                    "size": {
+                        "height": 602,
+                        "width": 602,
+                        "depth": 505,
+                    },
+                    "weight": 43,
+                },
+            },
+            "vendor-pattern-60x60": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230326",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 144,
+                    },
+                    "size": {
+                        "height": 602,
+                        "width": 602,
+                        "depth": 505,
+                    },
+                    "weight": 43,
+                },
+            },
+            #            "vendor-pattern-90x45": {
+            #                "origin": "Vendors-EAW",
+            #                "format": "gllHVtxt",
+            #                "review_published": "20230326",
+            #                "data_acquisition": gll_data_acquisition_std,
+            #                "quality": "low",
+            #                "specifications": {
+            #                    "dispersion": {
+            #                        "horizontal": 90,
+            #                        "vertical": 45,
+            #                    },
+            #                    "SPL": {
+            #                        "peak": 143,
+            #                    },
+            #                    "size": {
+            #                        "height": 602,
+            #                        "width": 602,
+            #                        "depth": 505,
+            #                    },
+            #                    "weight": 43,
+            #                },
+            #            },
+            "vendor-pattern-90x60": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230326",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "peak": 142,
+                    },
+                    "size": {
+                        "height": 602,
+                        "width": 602,
+                        "depth": 505,
+                    },
+                    "weight": 43,
+                },
+            },
+            "vendor-pattern-90x90": {
+                "origin": "Vendors-EAW",
+                "format": "gllHVtxt",
+                "review_published": "20230326",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "low",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "SPL": {
+                        "peak": 141,
+                    },
+                    "size": {
+                        "height": 602,
+                        "width": 602,
+                        "depth": 505,
+                    },
+                    "weight": 43,
                 },
             },
         },
@@ -17137,6 +17511,13 @@ origins_info = {
         "min dB": -40,
         "max dB": 10,
         "url": "https://www.ascendacoustics.com/",
+    },
+    "Vendors-Audiofocus": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.audiofocus.eu/",
     },
     "Vendors-Axiom": {
         "min hz": 20,

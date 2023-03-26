@@ -17,6 +17,9 @@ models = {}
 manual_exceptions_table = {
     "Alcons Audio 2xQR24+2QM24.zip": ("Alcons Audio QR24", "vendor-v2QR24+2QM24"),
     "Alcons Audio 3xQR24+1xQM24.zip": ("Alcons Audio QR24", "vendor-v3QR24+1QM24"),
+    "Audiofocus VENUE8.zip": ("Audiofocus VENU 8a", "vendor"),
+    "Audiofocus VENUE12.zip": ("Audiofocus VENU 12a", "vendor"),
+    "Audiofocus VENUE15.zip": ("Audiofocus VENU 15a", "vendor"),
     "DB Audiotechnik AL60 x3 + 2 sub.zip": (
         "DB Audiotechnik AL60",
         "vendor-pattern-60x30-v3x+2sub",
@@ -295,7 +298,8 @@ def find_speaker(zipfile):
 
     educated = guess(speaker)
     if educated is not None:
-        print("error: didn't find ///{}/// but {} exist ".format(speaker, educated))
+        print("error: didn't find ///{}/// but ///{}/// exist ".format(speaker, educated))
+        print("error:     swapped ///{}///     ///{}///".format(educated, speaker))
     else:
         print("error: didn't find ///{}///".format(speaker))
 
