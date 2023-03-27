@@ -1,9 +1,16 @@
 EQ for EAW QX300 computed from Vendors-EAW data
-Preference Score 4.08 with EQ 4.27
+Preference Score 4.08 with EQ 4.37
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-26-18:56:01
+Dated: 2023-03-26-22:13:02
 
-Preamp: -3.2 dB
+Preamp: -9.9 dB
 
-Filter  1: ON PK Fc    41 Hz Gain +3.00 dB Q 0.88
-Filter  2: ON PK Fc   151 Hz Gain -3.12 dB Q 1.52
+Filter  1: ON HS Fc   367 Hz Gain +3.00 dB
+Filter  2: ON PK Fc   148 Hz Gain -1.85 dB Q 2.87
+Filter  3: ON PK Fc  1252 Hz Gain -1.37 dB Q 1.08
+Filter  4: ON PK Fc  2525 Hz Gain -0.90 dB Q 2.95
+Filter  5: ON PK Fc  3523 Hz Gain -0.53 dB Q 2.99
+Filter  6: ON PK Fc 13611 Hz Gain +6.93 dB Q 0.43
+Filter  7: ON PK Fc  5856 Hz Gain -2.00 dB Q 1.04
+Filter  8: ON PK Fc  4134 Hz Gain -0.66 dB Q 2.89
+Filter  9: ON PK Fc  7898 Hz Gain -0.51 dB Q 2.82

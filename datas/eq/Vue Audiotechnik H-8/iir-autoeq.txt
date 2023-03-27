@@ -1,0 +1,16 @@
+EQ for Vue Audiotechnik H-8 computed from Vendors-Vue Audiotechnik data
+Preference Score 2.12 with EQ 3.87
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-03-27-10:05:42
+
+Preamp: -5.2 dB
+
+Filter  1: ON LS Fc 15995 Hz Gain +2.40 dB
+Filter  2: ON PK Fc   241 Hz Gain +2.80 dB Q 2.56
+Filter  3: ON PK Fc   126 Hz Gain +2.01 dB Q 2.88
+Filter  4: ON PK Fc  2619 Hz Gain -3.35 dB Q 2.44
+Filter  5: ON PK Fc   774 Hz Gain -1.83 dB Q 1.01
+Filter  6: ON PK Fc  5819 Hz Gain -1.37 dB Q 2.97
+Filter  7: ON PK Fc   363 Hz Gain -0.85 dB Q 2.74
+Filter  8: ON PK Fc    93 Hz Gain -1.25 dB Q 2.66
+Filter  9: ON PK Fc  6142 Hz Gain -0.50 dB Q 2.90

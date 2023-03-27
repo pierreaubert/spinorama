@@ -1,0 +1,15 @@
+EQ for Vue Audiotechnik A-12 computed from Vendors-Vue Audiotechnik data
+Preference Score 3.22 with EQ 3.85
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-03-27-10:05:47
+
+Preamp: -6.1 dB
+
+Filter  1: ON HS Fc   764 Hz Gain +3.00 dB
+Filter  2: ON PK Fc  2207 Hz Gain -2.94 dB Q 1.50
+Filter  3: ON PK Fc   165 Hz Gain +1.47 dB Q 0.11
+Filter  4: ON PK Fc 14719 Hz Gain +2.99 dB Q 0.42
+Filter  5: ON PK Fc  4094 Hz Gain -1.85 dB Q 1.32
+Filter  6: ON PK Fc   506 Hz Gain -1.19 dB Q 1.27
+Filter  7: ON PK Fc   525 Hz Gain -0.79 dB Q 2.17
+Filter  8: ON PK Fc  9835 Hz Gain -0.84 dB Q 2.96
