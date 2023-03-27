@@ -233,7 +233,7 @@ export function getSpeakerData(
     const spec = fetch(url)
           .then( (response) => response.json())
           .catch( (error) => {
-              console.log('ERROR getSpeaker data 404 ' + error);
+              console.log('ERROR getSpeaker bad encoding' + error);
               return null;
           });
     return spec;
