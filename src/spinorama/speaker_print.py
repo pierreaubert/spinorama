@@ -19,7 +19,6 @@
 import os
 import pathlib
 import copy
-import zipfile
 import pandas as pd
 
 try:
@@ -89,17 +88,8 @@ def print_graph(filename, chart, title, ext, force) -> int:
     try:
         if ext == "json":
             content = chart.to_json()
-            with open(filename, "w") as f_d:
+            with open(filename, "w", encoding="utf-8") as f_d:
                 f_d.write(content)
-            # also store a compressed version
-            with zipfile.ZipFile(
-                filename,
-                "w",
-                compression=zipfile.ZIP_DEFLATED,
-                allowZip64=True,
-            ) as current_zip:
-                current_zip.writestr("{0}.json".format(title), content)
-                logger.info("Saving %s in %s", title, filename)
         else:
             write_multiformat(chart, filename, force)
         updated += 1
