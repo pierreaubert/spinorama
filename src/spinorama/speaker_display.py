@@ -34,6 +34,7 @@ from spinorama.plot import (
     plot_radar,
     plot_image,
     plot_summary,
+    plot_contour_3d,
 )
 
 
@@ -162,6 +163,29 @@ def display_contour_horizontal_normalized(df, graph_params=contour_params_defaul
 
 def display_contour_vertical_normalized(df, graph_params=contour_params_default):
     return display_contour(df, "SPL Vertical_normalized_unmelted", graph_params)
+
+
+def display_contour_3d(df, direction, graph_params=contour_params_default):
+    # print('Display SPL: {} {}'.format(direction, df.keys()))
+    if direction not in df.keys():
+        return None
+    return plot_contour_3d(df[direction], graph_params)
+
+
+def display_contour_horizontal_3d(df, graph_params=contour_params_default):
+    return display_contour_3d(df, "SPL Horizontal_unmelted", graph_params)
+
+
+def display_contour_vertical_3d(df, graph_params=contour_params_default):
+    return display_contour_3d(df, "SPL Vertical_unmelted", graph_params)
+
+
+def display_contour_horizontal_normalized_3d(df, graph_params=contour_params_default):
+    return display_contour_3d(df, "SPL Horizontal_normalized_unmelted", graph_params)
+
+
+def display_contour_vertical_normalized_3d(df, graph_params=contour_params_default):
+    return display_contour_3d(df, "SPL Vertical_normalized_unmelted", graph_params)
 
 
 def display_radar(df, direction, graph_params):

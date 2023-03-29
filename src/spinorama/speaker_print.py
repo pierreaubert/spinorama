@@ -44,6 +44,10 @@ from spinorama.speaker_display import (
     display_contour_vertical,
     display_contour_horizontal_normalized,
     display_contour_vertical_normalized,
+    display_contour_horizontal_3d,
+    display_contour_vertical_3d,
+    display_contour_horizontal_normalized_3d,
+    display_contour_vertical_normalized_3d,
     display_radar_horizontal,
     display_radar_vertical,
 )
@@ -158,6 +162,15 @@ def print_graphs(
         df, contour_params
     )
     graphs["SPL Vertical Contour Normalized"] = display_contour_vertical_normalized(
+        df, contour_params
+    )
+
+    graphs["SPL Horizontal Contour 3D"] = display_contour_horizontal_3d(df, contour_params)
+    graphs["SPL Vertical Contour 3D"] = display_contour_vertical_3d(df, contour_params)
+    graphs["SPL Horizontal Contour Normalized 3D"] = display_contour_horizontal_normalized_3d(
+        df, contour_params
+    )
+    graphs["SPL Vertical Contour Normalized 3D"] = display_contour_vertical_normalized_3d(
         df, contour_params
     )
 

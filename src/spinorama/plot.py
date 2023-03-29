@@ -284,6 +284,9 @@ def contour_layout(params):
             "l": 10,
             "r": 10,
         },
+        font=dict(
+            size=9,
+        ),
     )
 
 
@@ -356,6 +359,7 @@ def plot_spinorama_traces(spin, params):
             x=spin.Freq,
             y=spin[measurement],
             marker_color=uniform_colors.get(measurement, "black"),
+            hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
         if layout == "compact":
             trace.name = label_short.get(measurement, measurement)
@@ -646,6 +650,7 @@ def plot_contour(spl, params):
             ),
             autocolorscale=False,
             colorscale=contour_colorscale,
+            hovertemplate="Freq: %{x:.0f}Hz<br>Angle: %{y:.0f}<br>SPL: %{z:.1f}dB<br>",
         )
     )
 
@@ -899,4 +904,128 @@ def plot_eqs(freq, peqs, names=None, normalized=False):
             font=dict(size=12),
         ),
     )
+    return fig
+
+
+def plot_contour_3d(spl, params):
+    df = spl.copy()
+    params.get("layout", "")
+    min_freq = params.get("contour_min_freq", 100)
+
+    contour_start = -30
+    contour_end = 3
+
+    contour_colorscale = [
+        [0, "rgb(0,0,168)"],
+        [0.1, "rgb(0,0,200)"],
+        [0.2, "rgb(0,74,255)"],
+        [0.3, "rgb(0,152,255)"],
+        [0.4, "rgb(74,255,161)"],
+        [0.5, "rgb(161,255,74)"],
+        [0.6, "rgb(255,255,0)"],
+        [0.7, "rgb(234,159,0)"],
+        [0.8, "rgb(255,74,0)"],
+        [0.9, "rgb(222,74,0)"],
+        [1, "rgb(253,14,13)"],
+    ]
+
+    colorbar = dict(
+        dtick=3,
+        len=0.5,
+        lenmode="fraction",
+        tickfont=dict(size=14),
+    )
+
+    angle_list_3d = [-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
+    angle_text_3d = [f"{a}°" for a in angle_list_3d]
+    spl_list_3d = [0, -5, -10, -15, -20, -25, -30, -35, -40, -45]
+    spl_text_3d = [f"{s}" if s > -45 else "" for s in spl_list_3d]
+
+    def a2v(angle):
+        if angle == "Freq":
+            return -1000
+        elif angle == "On Axis":
+            return 0
+        iangle = int(angle[:-1])
+        return iangle
+
+    def transform(spl, dbmax, clip_min, clip_max):
+        if "-180°" not in spl and "180°" in spl:
+            spl["-180°"] = spl["180°"]
+        df_spl = spl.reindex(columns=sorted(spl.columns, key=lambda a: a2v(a))) - db_max
+        # x,y,z
+        freq = df_spl.Freq
+        angle = [a2v(i) for i in df_spl.loc[:, df_spl.columns != "Freq"].columns]
+        selector = (df_spl["Freq"] > 20) & (df_spl["Freq"] < 20000)
+        spl = df_spl.loc[selector, df_spl.columns != "Freq"].T.to_numpy()
+        # color
+        color = np.clip(np.multiply(np.floor_divide(spl, 3), 3), clip_min, clip_max)
+        return freq, angle, spl, color
+
+    db_max = spl["On Axis"].max()
+
+    freqs, angles, spls, colors = transform(spl, db_max, contour_start, contour_end)
+
+    fig = go.Figure()
+
+    trace = go.Surface(
+        x=freqs,
+        y=angles,
+        z=spls,
+        showscale=True,
+        autocolorscale=False,
+        colorscale=contour_colorscale,
+        surfacecolor=colors,
+        colorbar=colorbar,
+        cmin=contour_start,
+        cmax=contour_end,
+        hovertemplate="Freq: %{x:.0f}Hz<br>Angle:  %{y}°<br> SPL: %{z:.1f}dB<br>",
+    )
+
+    fig.add_trace(trace)
+
+    fig.update_layout(
+        autosize=False,
+        width=600,
+        height=700,
+        scene=dict(
+            xaxis=dict(
+                title="Freq. (Hz)",
+                tickfont=dict(
+                    size=11,
+                ),
+                titlefont=dict(
+                    size=14,
+                ),
+            ),
+            yaxis=dict(
+                range=[-180, 180],
+                showline=True,
+                tickvals=angle_list_3d,
+                ticktext=angle_text_3d,
+                title="Angle",
+                tickfont=dict(
+                    size=11,
+                ),
+                titlefont=dict(
+                    size=14,
+                ),
+            ),
+            zaxis=dict(
+                range=[-45, 5],
+                title="SPL",
+                showline=True,
+                tickvals=spl_list_3d,
+                ticktext=spl_text_3d,
+                tickfont=dict(
+                    size=11,
+                ),
+                titlefont=dict(
+                    size=14,
+                ),
+            ),
+        ),
+    )
+    fig.update_traces(contours_z=dict(show=True, project_z=True))
+
     return fig

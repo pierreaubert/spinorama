@@ -93,6 +93,10 @@ def generate_speaker(mako, dataframe, meta, site, use_search):
                     "SPL Vertical Contour",
                     "SPL Horizontal Contour Normalized",
                     "SPL Vertical Contour Normalized",
+                    "SPL Horizontal Contour 3D",
+                    "SPL Vertical Contour 3D",
+                    "SPL Horizontal Contour Normalized 3D",
+                    "SPL Vertical Contour Normalized 3D",
                 ]
                 contour = {k: dfs[k] for k in contour_filter if k in dfs}
                 # radar
