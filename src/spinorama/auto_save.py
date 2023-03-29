@@ -37,7 +37,7 @@ from spinorama.filter_scores import (
     scores_print,
 )
 from spinorama.auto_target import get_freq, get_target
-from spinorama.auto_graph import graph_results as auto_graph_results
+from spinorama.auto_plot import graph_results as auto_graph_results
 from spinorama.auto_strategy import optim_strategy
 
 

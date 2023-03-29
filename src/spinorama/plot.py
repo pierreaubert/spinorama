@@ -668,7 +668,7 @@ def plot_contour(spl, params):
 
     def compute_vertical_lines(y_min, y_max, x_data):
         y = np.tile([y_min, y_max, None], len(x_data))
-        x = np.ndarray.flatten(np.array([[a, a, None] for a in x_data]))
+        x = np.ndarray.flatten(np.asarray([[a, a, None] for a in x_data]))
         return x, y
 
     hx, hy = compute_horizontal_lines(min_freq, 20000, range(-150, 180, 30))
