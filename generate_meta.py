@@ -688,18 +688,19 @@ def dump_metadata(meta):
         os.makedirs(metadir)
     meta2 = {k: v for k, v in meta.items() if not v.get("skip", False)}
 
-    with open(metafile, "w") as f:
-        js = json.dumps(meta2)
+    js = json.dumps(meta2)
+    with open(metafile, "w", encoding="utf-8") as f:
         f.write(js)
         f.close()
 
-        with zipfile.ZipFile(
-            metafile + ".zip",
-            "w",
-            compression=zipfile.ZIP_DEFLATED,
-            allowZip64=True,
-        ) as current_zip:
-            current_zip.writestr("metadata.json", js)
+    # for historical reason, some web pages still ask for it
+    with zipfile.ZipFile(
+        metafile + ".zip",
+        "w",
+        compression=zipfile.ZIP_DEFLATED,
+        allowZip64=True,
+    ) as current_zip:
+        current_zip.writestr("metadata.json", js)
 
 
 def main():
