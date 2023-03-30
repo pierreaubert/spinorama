@@ -1,7 +1,7 @@
 EQ for Fulcrum Acoustic GX1526 computed from Vendors-Fulcrum Acoustic data
 Preference Score 3.01 with EQ 3.04
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:54:38
+Dated: 2023-03-29-17:36:37
 
 Preamp: -0.8 dB
 

@@ -1,16 +1,16 @@
 EQ for LCM Nearfield Monitor 3-D Printed DIY computed from ErinsAudioCorner data
-Preference Score 3.99 with EQ 6.00
+Preference Score 3.99 with EQ 6.01
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-22-23:25:18
+Dated: 2023-03-29-17:56:29
 
 Preamp: -1.5 dB
 
-Filter  1: ON HS Fc   881 Hz Gain -3.00 dB
-Filter  2: ON PK Fc    88 Hz Gain -2.52 dB Q 1.09
-Filter  3: ON PK Fc  7566 Hz Gain +1.26 dB Q 2.95
-Filter  4: ON PK Fc  3642 Hz Gain -1.33 dB Q 2.94
-Filter  5: ON PK Fc   284 Hz Gain +1.18 dB Q 1.56
-Filter  6: ON PK Fc  1607 Hz Gain -0.76 dB Q 2.67
-Filter  7: ON PK Fc 11406 Hz Gain +0.50 dB Q 2.97
-Filter  8: ON PK Fc 15984 Hz Gain -2.16 dB Q 0.86
-Filter  9: ON PK Fc   143 Hz Gain -0.99 dB Q 2.95
+Filter  1: ON HS Fc   875 Hz Gain -3.00 dB
+Filter  2: ON PK Fc    88 Hz Gain -2.51 dB Q 1.13
+Filter  3: ON PK Fc   336 Hz Gain +1.28 dB Q 1.62
+Filter  4: ON PK Fc  7553 Hz Gain +1.26 dB Q 2.78
+Filter  5: ON PK Fc  3602 Hz Gain -1.36 dB Q 2.88
+Filter  6: ON PK Fc  1620 Hz Gain -0.83 dB Q 2.54
+Filter  7: ON PK Fc 11902 Hz Gain +0.52 dB Q 2.90
+Filter  8: ON PK Fc 15997 Hz Gain -2.09 dB Q 0.87
+Filter  9: ON PK Fc   140 Hz Gain -0.95 dB Q 2.99

@@ -1,7 +1,7 @@
 EQ for Wilson Audio TuneTot computed from ASR data
 Preference Score 2.69 with EQ 2.78
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:52:17
+Dated: 2023-03-29-17:34:09
 
 Preamp: -0.5 dB
 

@@ -1,7 +1,7 @@
 EQ for Ex-Machina Pulsar MKII computed from ErinsAudioCorner data
 Preference Score 4.91 with EQ 5.47
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:53:36
+Dated: 2023-03-29-17:35:30
 
 Preamp: -0.8 dB
 

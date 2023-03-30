@@ -1,7 +1,7 @@
 EQ for JBL CV5012 computed from Vendors-JBL data
 Preference Score 1.88 with EQ 2.39
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-00:07:51
+Dated: 2023-03-29-15:54:35
 
 Preamp: -1.4 dB
 

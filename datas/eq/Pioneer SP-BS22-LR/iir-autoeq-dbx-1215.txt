@@ -1,7 +1,7 @@
 EQ for Pioneer SP-BS22-LR computed from ASR data
 Preference Score 5.05 with EQ 5.38
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:51:39
+Dated: 2023-03-29-17:35:32
 
 Preamp: -0.9 dB
 

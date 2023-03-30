@@ -1,7 +1,7 @@
 EQ for KV2 Audio ESR212 computed from Vendors-KV2 Audio data
 Preference Score 5.10 with EQ 5.30
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:51:44
+Dated: 2023-03-29-17:36:51
 
 Preamp: -1.0 dB
 

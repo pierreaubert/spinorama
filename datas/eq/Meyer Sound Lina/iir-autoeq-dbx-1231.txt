@@ -1,7 +1,7 @@
 EQ for Meyer Sound Lina computed from Vendors-Meyer Sound data
 Preference Score 1.38 with EQ 1.57
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-00:03:23
+Dated: 2023-03-29-15:53:24
 
 Preamp: -1.5 dB
 

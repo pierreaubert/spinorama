@@ -1,16 +1,16 @@
 EQ for Yamaha DBR10 computed from Vendors-Yamaha data
-Preference Score 2.73 with EQ 2.88
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-02-26-09:35:09
+Preference Score 2.73 with EQ 3.08
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-03-29-17:59:57
 
-Preamp: -3.2 dB
+Preamp: -3.1 dB
 
-Filter  1: ON PK Fc    34 Hz Gain +3.00 dB Q 1.03
-Filter  2: ON PK Fc  5766 Hz Gain +2.26 dB Q 0.17
-Filter  3: ON PK Fc   128 Hz Gain -3.02 dB Q 1.31
-Filter  4: ON PK Fc   671 Hz Gain +1.92 dB Q 3.00
-Filter  5: ON PK Fc  9970 Hz Gain -1.93 dB Q 2.81
-Filter  6: ON PK Fc  1136 Hz Gain -2.06 dB Q 3.00
-Filter  7: ON PK Fc   237 Hz Gain -1.80 dB Q 3.00
-Filter  8: ON PK Fc   447 Hz Gain -0.89 dB Q 3.00
-Filter  9: ON PK Fc  2978 Hz Gain -0.70 dB Q 3.00
+Filter  1: ON HS Fc  1496 Hz Gain +2.29 dB
+Filter  2: ON PK Fc   110 Hz Gain -3.32 dB Q 2.70
+Filter  3: ON PK Fc   239 Hz Gain -2.74 dB Q 2.95
+Filter  4: ON PK Fc   666 Hz Gain +2.70 dB Q 2.98
+Filter  5: ON PK Fc  2928 Hz Gain -0.88 dB Q 2.56
+Filter  6: ON PK Fc  9648 Hz Gain -1.59 dB Q 2.90
+Filter  7: ON PK Fc  4154 Hz Gain +0.88 dB Q 2.95
+Filter  8: ON PK Fc   448 Hz Gain -1.06 dB Q 2.81
+Filter  9: ON PK Fc  1056 Hz Gain -1.28 dB Q 2.58

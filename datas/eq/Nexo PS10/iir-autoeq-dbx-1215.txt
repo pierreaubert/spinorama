@@ -1,7 +1,7 @@
 EQ for Nexo PS10 computed from Vendors-Nexo data
 Preference Score 6.69 with EQ 6.74
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:53:10
+Dated: 2023-03-29-17:35:00
 
 Preamp: -0.9 dB
 

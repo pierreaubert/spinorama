@@ -1,7 +1,7 @@
 EQ for EV MTS-4153 computed from Vendors-EV data
 Preference Score 1.83 with EQ 1.96
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:54:48
+Dated: 2023-03-29-17:35:15
 
 Preamp: -1.2 dB
 

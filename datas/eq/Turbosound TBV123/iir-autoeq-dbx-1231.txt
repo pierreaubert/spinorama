@@ -1,7 +1,7 @@
 EQ for Turbosound TBV123 computed from Vendors-Turbosound data
 Preference Score 4.40 with EQ 4.54
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-00:07:25
+Dated: 2023-03-29-15:58:58
 
 Preamp: -2.2 dB
 

@@ -1,7 +1,7 @@
 EQ for Genelec 4010A computed from Vendors-Genelec data
 Preference Score 7.55 with EQ 7.66
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:54:54
+Dated: 2023-03-29-17:36:57
 
 Preamp: -0.5 dB
 

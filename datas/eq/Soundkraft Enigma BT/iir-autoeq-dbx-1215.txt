@@ -1,7 +1,7 @@
 EQ for Soundkraft Enigma BT computed from ASR data
 Preference Score 3.24 with EQ 3.42
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:53:35
+Dated: 2023-03-29-17:33:47
 
 Preamp: -0.5 dB
 

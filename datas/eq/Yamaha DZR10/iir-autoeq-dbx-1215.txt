@@ -1,7 +1,7 @@
 EQ for Yamaha DZR10 computed from Vendors-Yamaha data
 Preference Score 2.68 with EQ 2.82
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:53:32
+Dated: 2023-03-29-17:36:53
 
 Preamp: -1.2 dB
 

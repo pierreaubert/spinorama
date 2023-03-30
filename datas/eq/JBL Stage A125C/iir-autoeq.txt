@@ -1,16 +1,16 @@
 EQ for JBL Stage A125C computed from ASR data
-Preference Score 2.54 with EQ 4.90
+Preference Score 2.54 with EQ 4.92
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-22-23:18:52
+Dated: 2023-03-29-18:00:22
 
 Preamp: -3.2 dB
 
-Filter  1: ON LS Fc   106 Hz Gain +2.99 dB
-Filter  2: ON PK Fc   163 Hz Gain -1.86 dB Q 2.65
-Filter  3: ON PK Fc   640 Hz Gain +2.95 dB Q 1.52
-Filter  4: ON PK Fc  4705 Hz Gain -1.97 dB Q 1.22
-Filter  5: ON PK Fc  9776 Hz Gain -1.30 dB Q 2.89
-Filter  6: ON PK Fc 15364 Hz Gain -3.47 dB Q 2.99
-Filter  7: ON PK Fc  1660 Hz Gain +0.73 dB Q 2.92
-Filter  8: ON PK Fc  1243 Hz Gain -1.16 dB Q 2.66
-Filter  9: ON PK Fc   215 Hz Gain -0.89 dB Q 2.98
+Filter  1: ON PK Fc    49 Hz Gain +3.00 dB Q 0.56
+Filter  2: ON PK Fc   668 Hz Gain +3.00 dB Q 1.22
+Filter  3: ON PK Fc  5427 Hz Gain -2.20 dB Q 0.99
+Filter  4: ON PK Fc   166 Hz Gain -2.64 dB Q 2.65
+Filter  5: ON PK Fc 15224 Hz Gain -4.39 dB Q 3.00
+Filter  6: ON PK Fc  1083 Hz Gain -0.50 dB Q 3.00
+Filter  7: ON PK Fc  3879 Hz Gain -0.50 dB Q 3.00
+Filter  8: ON PK Fc 15454 Hz Gain -0.50 dB Q 3.00
+Filter  9: ON PK Fc  9599 Hz Gain -0.50 dB Q 3.00
