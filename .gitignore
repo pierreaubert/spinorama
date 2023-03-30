@@ -45,3 +45,5 @@ cache.*.h5
 .sass-cache
 build
 *.so
+bin
+coverage.xml

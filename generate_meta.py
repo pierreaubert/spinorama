@@ -91,11 +91,11 @@ def queue_score(speaker_name, speaker_data):
                 "origin": origin,
             }
             try:
-                if dfs is None or "CEA2034" not in dfs.keys():
+                if dfs is None or "CEA2034" not in dfs:
                     continue
 
                 spin = dfs["CEA2034"]
-                if spin is None or "Estimated In-Room Response" not in dfs.keys():
+                if spin is None or "Estimated In-Room Response" not in dfs:
                     continue
 
                 # sensitivity
@@ -213,14 +213,14 @@ def add_scores(dataframe, parse_max):
     for speaker_name, speaker_data in dataframe.items():
         for _, measurements in speaker_data.items():
             for version in measurements:
-                if speaker_name not in metadata.speakers_info.keys():
+                if speaker_name not in metadata.speakers_info:
                     # should not happen. If you mess up with names of speakers
                     # and change them, then you can have inconsistent data.
                     continue
                 if version[-3:] == "_eq":
                     continue
                 current = metadata.speakers_info[speaker_name]["measurements"][version]
-                if "pref_rating" not in current.keys():
+                if "pref_rating" not in current:
                     continue
                 pref_rating = current.get("pref_rating", {})
                 # pref score

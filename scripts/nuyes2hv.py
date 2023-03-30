@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 #
-import math
 import sys
 
 # Kef ls50 w II
@@ -295,7 +294,7 @@ def process_hv(speaker, direction, onaxis):
             angle = items[2]
 
             # print("{} {} {}".format(freq, spl, angle))
-            if angle not in files.keys():
+            if angle not in files:
                 print(files.keys())
                 continue
 

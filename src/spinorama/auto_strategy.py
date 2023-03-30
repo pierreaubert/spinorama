@@ -19,13 +19,11 @@
 from copy import deepcopy
 
 import numpy as np
-import pandas as pd
 
 from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
 from spinorama.ltype import DataSpeaker, Peq, OptimResult
 from spinorama.compute_misc import compute_statistics
-from spinorama.filter_peq import peq_print
 from spinorama.filter_scores import scores_apply_filter
 from spinorama.auto_misc import get3db, have_full_measurements
 from spinorama.auto_target import get_freq, get_target

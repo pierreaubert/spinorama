@@ -115,14 +115,6 @@ def custom_ray_init(args):
 
     level = args2level(args)
 
-    def ray_setup_logger(worker_logger):
-        worker_logger = get_custom_logger(level=level, duplicate=False)
-        worker_logger.setLevel(level)
-
-    # doesn't work in 2.0
-    # ray.worker.global_worker.run_function_on_all_workers(ray_setup_logger)
-    # address is the one from the ray server<
-
     if ray.is_initialized:
         ray.shutdown()
 
@@ -157,7 +149,7 @@ def cache_hash(df_all):
         if k is None or len(k) == 0:
             continue
         h = cache_key(k)
-        if h not in df_hashed.keys():
+        if h not in df_hashed:
             df_hashed[h] = {}
         df_hashed[h][k] = v
     return df_hashed
@@ -186,11 +178,11 @@ def is_filtered(speaker, data, filters):
 
     current = None
     if speaker in metadata.speakers_info:
-        if "default_measurement" not in metadata.speakers_info[speaker].keys():
+        if "default_measurement" not in metadata.speakers_info[speaker]:
             print("error no default measurement for {}".format(speaker))
             return True
         first = metadata.speakers_info[speaker]["default_measurement"]
-        if first not in metadata.speakers_info[speaker]["measurements"].keys():
+        if first not in metadata.speakers_info[speaker]["measurements"]:
             # only happens when you change the metadata
             return False
         current = metadata.speakers_info[speaker]["measurements"][first]

@@ -10,8 +10,7 @@ import plotly.graph_objects as go
 
 from spinorama.load_misc import graph_melt
 from spinorama.load_rewseq import parse_eq_iir_rews
-from spinorama.filter_iir import Biquad
-from spinorama.filter_peq import peq_build, peq_freq
+from spinorama.filter_peq import peq_build
 
 
 def flat():

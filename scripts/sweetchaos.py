@@ -62,7 +62,7 @@ def match_speaker(look, references):
         if slook == sreference:
             return True, reference
 
-        if slook in change_brands.keys() and change_brands[slook] == sreference:
+        if slook in change_brands and change_brands[slook] == sreference:
             return True, reference
 
     return False, None
@@ -79,9 +79,7 @@ def guess_brand_model(speaker_name):
 
     if chunk[0].lower() in known_brands:
         return chunk[0].capitalize(), " ".join(chunk[1:])
-    elif (
-        chunk[0].lower() in change_brands.keys() and change_brands[chunk[0].lower()] in known_brands
-    ):
+    elif chunk[0].lower() in change_brands and change_brands[chunk[0].lower()] in known_brands:
         brand = " ".join([s.capitalize() for s in change_brands[chunk[0].lower()].split(" ")])
         return brand, " ".join(chunk[1:])
     elif len(chunk) > 1 and "{} {}".format(chunk[0].lower(), chunk[1].lower()) in known_brands:
