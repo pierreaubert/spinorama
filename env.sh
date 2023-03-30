@@ -79,6 +79,9 @@ if test -d /usr/local/cuda/extras/CUPTI/lib64; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
 fi
 
+# for deepsource code coverage
+export DEEPSOURCE_DSN=https://sampledsn@deepsource.io
+
 ## summary
 ## ----------------------------------------------------------------------
 echo 'SPIN           ' "$SPIN"

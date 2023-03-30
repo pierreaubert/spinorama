@@ -1,6 +1,6 @@
 version = 1
 
-test_patterns = ["test/**"]
+test_patterns = ["tests/*.py"]
 
 [[analyzers]]
 name = "python"
@@ -18,9 +18,20 @@ name = "javascript"
 enabled = true
 
   [analyzers.meta]
-  environment = ["jquery"]
-  style_guide = "google"
+  environment = ["browser"]
+  style_guide = "standard"
+  module_system = "es-modules"
+  dialect = "flow"
+
 
 [[analyzers]]
 name = "shell"
+enabled = true
+
+[[analyzers]]
+name = "secrets"
+enabled = true
+
+[[analyzers]]
+name = "cxx"
 enabled = true

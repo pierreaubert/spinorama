@@ -50,6 +50,9 @@ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spi
 # compile
 PYTHONPATH=src cd src/spinorama && python setup.py build_ext --inplace && ln -s c_compute_scores.cpython-*.so c_compute_scores.so && cd ../..
 
+# install deepsource
+[ ! -x bin/deepsource ] && curl https://deepsource.io/cli | sh
+
 # run the test
 pip3 install -U -r requirements-tests.txt
 pip3 install -U -r requirements-dev.txt
