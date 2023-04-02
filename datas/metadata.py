@@ -78,6 +78,23 @@ class Parameters(TypedDict):
 MeasurementQuality = Literal["low", "medium", "high", "unknown"]
 
 
+Symmetry = Literal["coaxial", "vertical", "horizontal"]
+
+
+class PrefRating(TypedDict, total=False):
+    aad_on_axis: float
+    nbd_on_axis: float
+    nbd_listening_window: float
+    nbd_sound_power: float
+    nbd_pred_in_room: float
+    sm_pred_in_room: float
+    sm_sound_power: float
+    pref_score: float
+    pref_score_wsub: float
+    lfx_hz: float
+    lfq: float
+
+
 class Measurement(MeasurementRequired, total=False):
     review: str
     reviews: dict[str, str]
@@ -87,11 +104,18 @@ class Measurement(MeasurementRequired, total=False):
     notes: str
     data_acquisition: DataAcquisition
     extras: Extras
-    symmetry: str
+    symmetry: Symmetry
     parameters: Parameters
+    estimates: dict[str, float]
+    estimates_eq: dict[str, float]
+    pref_rating: dict[str, float]
+    pref_rating_eq: dict[str, float]
+    sensitivity: float
 
 
 SpeakerType = Literal["passive", "active"]
+
+
 SpeakerShape = Literal[
     "floorstanders",
     "bookshelves",
@@ -13017,6 +13041,204 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Novacoustic KIRA 5": {
+        "brand": "Novacoustic",
+        "model": "KIRA 5",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-90x90",
+        "measurements": {
+            "vendor-pattern-90x90": {
+                "origin": "Vendors-Novacoustic",
+                "format": "gllHVtxt",
+                "review_published": "20230402",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 92,
+                    "impedance": 16,
+                    "SPL": {
+                        "max": 117,
+                    },
+                    "size": {
+                        "height": 160,
+                        "width": 160,
+                        "depth": 180,
+                    },
+                    "weight": 3.0,
+                },
+            },
+        },
+    },
+    "Novacoustic KIRA 8": {
+        "brand": "Novacoustic",
+        "model": "KIRA 8",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-90x90",
+        "measurements": {
+            "vendor-pattern-90x90": {
+                "origin": "Vendors-Novacoustic",
+                "format": "gllHVtxt",
+                "review_published": "20230402",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 96,
+                    "impedance": 8,
+                    "SPL": {
+                        "max": 123,
+                    },
+                    "size": {
+                        "height": 250,
+                        "width": 250,
+                        "depth": 250,
+                    },
+                    "weight": 9.0,
+                },
+            },
+        },
+    },
+    "Novacoustic KIRA 10": {
+        "brand": "Novacoustic",
+        "model": "KIRA 10",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-90x90",
+        "measurements": {
+            "vendor-pattern-90x90": {
+                "origin": "Vendors-Novacoustic",
+                "format": "gllHVtxt",
+                "review_published": "20230402",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {
+                        "max": 128,
+                    },
+                    "size": {
+                        "height": 300,
+                        "width": 300,
+                        "depth": 300,
+                    },
+                    "weight": 14,
+                },
+            },
+        },
+    },
+    "Novacoustic KIRA 12": {
+        "brand": "Novacoustic",
+        "model": "KIRA 12",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-90x90",
+        "measurements": {
+            "vendor-pattern-90x90": {
+                "origin": "Vendors-Novacoustic",
+                "format": "gllHVtxt",
+                "review_published": "20230402",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 8,
+                    "SPL": {
+                        "max": 131,
+                    },
+                    "size": {
+                        "height": 360,
+                        "width": 360,
+                        "depth": 360,
+                    },
+                    "weight": 18.5,
+                },
+            },
+        },
+    },
+    "Novacoustic Pariz P28": {
+        "brand": "Novacoustic",
+        "model": "Pariz P28",
+        "type": "passive",
+        "price": "",
+        "shape": "liveportable",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-90x40",
+        "measurements": {
+            "vendor-pattern-90x40": {
+                "origin": "Vendors-Novacoustic",
+                "format": "gllHVtxt",
+                "review_published": "20230402",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {
+                        "max": 136,
+                    },
+                    "size": {
+                        "height": 590,
+                        "width": 270,
+                        "depth": 330,
+                    },
+                    "weight": 18.0,
+                },
+            },
+        },
+    },
+    "Novacoustic Pariz P412": {
+        "brand": "Novacoustic",
+        "model": "Pariz P412",
+        "type": "passive",
+        "price": "",
+        "shape": "toursound",
+        "amount": "each",
+        "default_measurement": "vendor-pattern-110x50",
+        "measurements": {
+            "vendor-pattern-110x50": {
+                "origin": "Vendors-Novacoustic",
+                "format": "gllHVtxt",
+                "review_published": "20230402",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 50,
+                    },
+                    "sensitivity": 112,
+                    "impedance": 2,
+                    "SPL": {
+                        "max": 149,
+                    },
+                    "size": {
+                        "height": 800,
+                        "width": 560,
+                        "depth": 570,
+                    },
+                    "weight": 60.0,
+                },
+            },
+        },
+    },
     "Ocean Way HR5": {
         "brand": "Ocean Way",
         "model": "HR5",
@@ -18168,6 +18390,13 @@ origins_info = {
         "logo": "docs/metadata/neumann.png",
         "logo-small": "docs/metadata/neumann.png",
         "url": "https://www.neumann.com",
+    },
+    "Vendors-Novacoustic": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.novacoustic.de",
     },
     "Vendors-Onesystems": {
         "min hz": 20,

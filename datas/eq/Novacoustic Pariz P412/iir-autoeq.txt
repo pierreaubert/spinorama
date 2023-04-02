@@ -1,0 +1,16 @@
+EQ for Novacoustic Pariz P412 computed from Vendors-Novacoustic data
+Preference Score -0.44 with EQ 0.51
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-04-02-21:05:12
+
+Preamp: -5.0 dB
+
+Filter  1: ON HS Fc   632 Hz Gain +2.22 dB
+Filter  2: ON PK Fc   112 Hz Gain -5.45 dB Q 1.65
+Filter  3: ON PK Fc  5689 Hz Gain -5.83 dB Q 2.74
+Filter  4: ON PK Fc  2611 Hz Gain +2.99 dB Q 2.49
+Filter  5: ON PK Fc 11084 Hz Gain -2.63 dB Q 3.00
+Filter  6: ON PK Fc  1388 Hz Gain -0.50 dB Q 2.87
+Filter  7: ON PK Fc   232 Hz Gain -2.17 dB Q 2.04
+Filter  8: ON PK Fc  4738 Hz Gain -1.24 dB Q 2.56
+Filter  9: ON PK Fc 11542 Hz Gain -1.24 dB Q 2.95
