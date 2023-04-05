@@ -94,10 +94,10 @@ getMetadata()
                     ) {
                         graphsConfigs = setContour(speakersName, graphs, windowWidth, windowHeight);
                     } else if (
-                        measurement === 'SPL Horizontal 3D' ||
-                        measurement === 'SPL Vertical 3D' ||
-                        measurement === 'SPL Horizontal 3D Normalized' ||
-                        measurement === 'SPL Vertical 3D Normalized'
+                        measurement === 'SPL Horizontal Contour 3D' ||
+                        measurement === 'SPL Vertical Contour 3D' ||
+                        measurement === 'SPL Horizontal Contour 3D Normalized' ||
+                        measurement === 'SPL Vertical Contour 3D Normalized'
                     ) {
                         graphsConfigs = setSurface(speakersName, graphs, windowWidth, windowHeight);
                     } else if (
