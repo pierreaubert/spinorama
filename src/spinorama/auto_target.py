@@ -32,11 +32,13 @@ from spinorama.compute_misc import savitzky_golay
 # ------------------------------------------------------------------------------
 
 
-def limit_before_freq(freq: Vector, curve: list[Vector], min_freq: float) -> list[Vector]:
+def limit_before_freq(
+    freq: Vector, curve: list[Vector], min_freq: float, max_db: float
+) -> list[Vector]:
     i_min = 0
     while i_min < len(freq) and freq[i_min] < min_freq:
         i_min += 1
-    db_cut = np.sign(curve[i_min]) * min(3, abs(curve[i_min]))
+    db_cut = np.sign(curve[i_min]) * min(max_db, abs(curve[i_min]))
     return [curve[i] if i > i_min else db_cut for i in range(0, len(curve))]
 
 
@@ -94,7 +96,9 @@ def get_freq(df_speaker_data, optim_config):
     local_target = []
     for curve in curves:
         data = local_df.loc[selector, curve].to_numpy()
-        data = limit_before_freq(local_freq, data, optim_config["target_min_freq"])
+        data = limit_before_freq(
+            local_freq, data, optim_config["target_min_freq"], optim_config["MAX_DBGAIN"]
+        )
         local_target.append(data)
 
     return local_df, local_freq, local_target

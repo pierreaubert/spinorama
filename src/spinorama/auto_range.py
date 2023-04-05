@@ -164,16 +164,19 @@ def propose_range_db_gain(
 
 
 def propose_range_q(optim_config: dict) -> list[float]:
-    return np.concatenate(
-        (
-            np.linspace(optim_config["MIN_Q"], 1.0, optim_config["MAX_STEPS_Q"]),
-            np.linspace(
-                1 + optim_config["MIN_Q"],
-                optim_config["MAX_Q"],
-                optim_config["MAX_STEPS_Q"],
-            ),
-        ),
-        axis=0,
+    # return np.concatenate(
+    #    (
+    #        np.linspace(optim_config["MIN_Q"], 1.0, optim_config["MAX_STEPS_Q"]),
+    #        np.linspace(
+    #            1 + optim_config["MIN_Q"],
+    #            optim_config["MAX_Q"],
+    #            optim_config["MAX_STEPS_Q"],
+    #        ),
+    #    ),
+    #    axis=0,
+    # ).tolist()
+    return np.linspace(
+        optim_config["MIN_Q"], optim_config["MAX_Q"], optim_config["MAX_STEPS_Q"]
     ).tolist()
 
 

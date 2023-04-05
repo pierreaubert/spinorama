@@ -24,10 +24,14 @@ from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
 from spinorama.ltype import DataSpeaker, Peq, OptimResult
 from spinorama.compute_misc import compute_statistics
+from spinorama.filter_peq import peq_print
 from spinorama.filter_scores import scores_apply_filter
 from spinorama.auto_misc import get3db, have_full_measurements
 from spinorama.auto_target import get_freq, get_target
 from spinorama.auto_msteps import optim_multi_steps
+
+
+TRACE = False
 
 
 def optim_eval_strategy(
@@ -81,13 +85,14 @@ def optim_eval_strategy(
             except ValueError:
                 logger.exception("error: %s", current_speaker_name)
 
-    # print("debug trace eval strategy")
-    # print("  auto score {}".format(auto_score))
-    # print("  auto results {}".format(auto_results))
-    # print("  auto peq")
-    # print(peq_print(auto_peq))
-    # print("  auto slope lw {}".format(auto_slope_lw))
-    # print("end trace debug eval strategy")
+    if TRACE:
+        print("debug trace eval strategy")
+        print("  auto score {}".format(auto_score))
+        print("  auto results {}".format(auto_results))
+        print("  auto peq")
+        print(peq_print(auto_peq))
+        print("  auto slope lw {}".format(auto_slope_lw))
+        print("end trace debug eval strategy")
     return True, (auto_score, auto_results, auto_peq, auto_slope_lw)
 
 
@@ -226,11 +231,30 @@ def optim_strategy(
         if optim_config["curve_names"] is not None and set(optim_config["curve_names"]) != set(
             config["curve_names"]
         ):
-            continue
+            logger.debug(
+                "curves: optim_config %s config %s current %s bool %s",
+                optim_config["curve_names"],
+                config["curve_names"],
+                current_optim_config.get("curve_name"),
+                constraint_optim,
+            )
+            if not constraint_optim:
+                continue
+            current_optim_config["curve_name"] = optim_config["curve_names"]
+
         # compute
         auto_status, (auto_score, auto_results, auto_peq, auto_slope_lw) = optim_eval_strategy(
             current_speaker_name, df_speaker, current_optim_config, use_score
         )
+        logger.debug(
+            "strategy: %s %s %s %s %s",
+            auto_status,
+            auto_score,
+            auto_results,
+            auto_peq,
+            auto_slope_lw,
+        )
+        logger.warning("strategy: %s %2.2f", auto_status, auto_score.get("pref_score"))
         if auto_status is False or len(auto_peq) == 0:
             logger.error(
                 "optim_eval_strategy failed for %s with %s",
@@ -243,6 +267,7 @@ def optim_strategy(
             "CEA2034_unmelted" in df_speaker
             and auto_slope_lw is not None
             and optim_config.get("loss", "") != "score_loss"
+            and not constraint_optim
         ):
             for loop in range(1, 6):
                 # slope 20Hz-20kHz
@@ -288,30 +313,38 @@ def optim_strategy(
                 ) = optim_eval_strategy(
                     current_speaker_name, df_speaker, current_optim_config, use_score
                 )
+                logger.debug(
+                    "strategy2: %s %s %s %s %s",
+                    auto_status2,
+                    auto_score2,
+                    auto_results2,
+                    auto_peq2,
+                    auto_slope_lw2,
+                )
+                logger.warning("strategy2: %s %2.2f", auto_status2, auto_score2.get("pref_score"))
                 if auto_status2 is False:
                     continue
                 slope_is_admissible = (
                     auto_slope_lw2 * 11 / 3 > -0.5 and auto_slope_lw2 * 11 / 3 < 0.2
                 )
                 if not slope_is_admissible:
-                    logger.info(
-                        "debug slope_is_admissible %s auto slope lw %f",
+                    logger.warning(
+                        "debug slope is not admissible %s auto slope lw %f",
                         slope_is_admissible,
                         auto_slope_lw2 * 11 / 3,
                     )
-                    continue
                 score_improved = False
                 if auto_score2.get("pref_score", -1000.0) > auto_score.get("pref_score", -1000.0):
                     score_improved = True
                 if not score_improved:
-                    logger.debug("score improved %f", score_improved)
+                    logger.debug("score didn't improved")
                     continue
 
-                auto_score = auto_score2
-                auto_results = auto_results2
-                auto_peq = auto_peq2
+                auto_score = deepcopy(auto_score2)
+                auto_results = deepcopy(auto_results2)
+                auto_peq = deepcopy(auto_peq2)
                 auto_slope_lw = auto_slope_lw2
-                logger.warning(
+                logger.debug(
                     "new slope %1.1f init target %1.1f corrected target is %1.1f loop=%d score=%1.2f",
                     auto_slope_lw * 11 / 3,
                     optim_config["slope_listening_window"],
@@ -319,9 +352,9 @@ def optim_strategy(
                     loop,
                     auto_score["pref_score"],
                 )
+                logger.warning("end of loop %2.2f", auto_score["pref_score"])
 
         # store score
-        pref_score = -1000
         if auto_score is not None:
             pref_score = auto_score.get("pref_score", -1000)
             if pref_score > best_score:
@@ -334,5 +367,6 @@ def optim_strategy(
                 results = auto_score, auto_results, auto_peq, current_optim_config
 
     if results:
+        logger.warning("stategy returns best score of %s", results[0])
         return True, (results[0], results[1], results[2], results[3])
     return False, ({}, (0, 0, 0), [], {})

@@ -121,7 +121,6 @@ def queue_measurement(
         level,
     )
     id_eq = parse_eq_speaker.remote("./datas", speaker, id_df, mparameters, level)
-    force = False
     ptype = None
     width = plot_params_default["width"]
     height = plot_params_default["height"]
@@ -392,4 +391,5 @@ if __name__ == "__main__":
     force = args["--force"]
     LEVEL = args2level(args)
     logger = get_custom_logger(level=LEVEL, duplicate=True)
+
     main(level=LEVEL)

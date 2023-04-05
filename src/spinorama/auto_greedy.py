@@ -105,8 +105,10 @@ def optim_greedy(
                     optim_config["target_min_freq"] / 2,
                     16000,
                 ]  # optim_config["target_min_freq"] * 2]
-                init_db_gain_range = [-3, -2, -1, 0, 1, 2, 3]
-                init_q_range = [0.5, 1, 2, 3]
+                init_db_gain_range = np.linspace(
+                    -optim_config["MAX_DBGAIN"], optim_config["MAX_DBGAIN"], 7
+                )
+                init_q_range = np.linspace(optim_config["MIN_Q"], optim_config["MAX_Q"], 7)
                 biquad_range = [0, 1, 3, 5, 6]  # LP, HP, LS, HS
             else:
                 # greedy strategy: look for lowest & highest peak
@@ -114,8 +116,10 @@ def optim_greedy(
                     optim_config["target_min_freq"] / 2,
                     optim_config["target_min_freq"] * 2,
                 ]
-                init_db_gain_range = [-3, -2, -1, 0, 1, 2, 3]
-                init_q_range = [0.5, 1, 2, 3]
+                init_db_gain_range = np.linspace(
+                    -optim_config["MAX_DBGAIN"], -optim_config["MAX_DBGAIN"], 7
+                )
+                init_q_range = np.linspace(optim_config["MIN_Q"], optim_config["MAX_Q"], 7)
                 biquad_range = [3]  # PK
         else:
             # min_freq = optim_config["target_min_freq"]

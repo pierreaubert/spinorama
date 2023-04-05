@@ -908,9 +908,8 @@ def plot_eqs(freq, peqs, names=None, normalized=False):
 
 
 def plot_contour_3d(spl, params):
-    df = spl.copy()
     params.get("layout", "")
-    min_freq = params.get("contour_min_freq", 100)
+    min_freq = max(20, params.get("contour_min_freq", 100))
 
     contour_start = -30
     contour_end = 3
@@ -949,14 +948,14 @@ def plot_contour_3d(spl, params):
         iangle = int(angle[:-1])
         return iangle
 
-    def transform(spl, dbmax, clip_min, clip_max):
+    def transform(spl, db_max, clip_min, clip_max):
         if "-180°" not in spl and "180°" in spl:
             spl["-180°"] = spl["180°"]
         df_spl = spl.reindex(columns=sorted(spl.columns, key=lambda a: a2v(a))) - db_max
         # x,y,z
         freq = df_spl.Freq
         angle = [a2v(i) for i in df_spl.loc[:, df_spl.columns != "Freq"].columns]
-        selector = (df_spl["Freq"] > 20) & (df_spl["Freq"] < 20000)
+        selector = (df_spl["Freq"] > min_freq) & (df_spl["Freq"] < 20000)
         spl = df_spl.loc[selector, df_spl.columns != "Freq"].T.to_numpy()
         # color
         color = np.clip(np.multiply(np.floor_divide(spl, 3), 3), clip_min, clip_max)

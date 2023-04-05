@@ -17,6 +17,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import numpy as np
+from typing import Any
+from numpy.typing import NDArray
 import scipy.optimize as opt
 import pandas as pd
 
@@ -93,14 +95,14 @@ def optim_grapheq(
             for f, db in zip(auto_freq, guess_db, strict=False)
         ]
 
-    def compute_delta(param: Vector) -> Vector:
+    def compute_delta(param: Vector) -> NDArray[Any]:
         current_peq = fit(param)
         peq_values = peq_build(auto_freq, current_peq)
         peq_expend = [np.interp(f, auto_freq, peq_values) for f in freq]
         delta = np.subtract(peq_expend, current_auto_target[0])
         return delta
 
-    def compute_error(param: Vector) -> float:
+    def compute_error(param: Vector) -> np.floating[Any]:
         return np.linalg.norm(compute_delta(param))
 
     def find_best_param():
@@ -119,4 +121,4 @@ def optim_grapheq(
     if use_score:
         pref_score = score_loss(df_speaker, auto_peq)
 
-    return True, ((1, opt_error, -pref_score), auto_peq)
+    return True, ((1, int(opt_error), -pref_score), auto_peq)

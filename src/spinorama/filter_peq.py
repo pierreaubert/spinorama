@@ -21,7 +21,7 @@ import numpy as np
 import pandas as pd
 
 from spinorama import logger
-from spinorama.ltype import Vector, Peq, Vector
+from spinorama.ltype import Vector, Peq
 from spinorama.filter_iir import Biquad
 
 
@@ -29,10 +29,7 @@ def peq_equal(left: Peq, right: Peq) -> bool:
     """are 2 peqs equals?"""
     if len(left) != len(right):
         return False
-    for l, r in zip(left, right):
-        if l[0] != r[0] or l[1] != r[1]:
-            return False
-    return True
+    return all(not (l[0] != r[0] or l[1] != r[1]) for l, r in zip(left, right, strict=True))
 
 
 def peq_build(freq: Vector, peq: Peq) -> Vector:
@@ -85,7 +82,7 @@ def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
     filtered = spl.loc[:, spl.columns != "Freq"].add(curve_peq, axis=0)
     filtered["Freq"] = freq
     # check for issues
-    if filtered.isnull().values.any():
+    if filtered.isna().to_numpy().any():
         logger.debug(filtered)
         logger.warning("Some filtered values post EQ are NaN")
         return filtered.dropna()

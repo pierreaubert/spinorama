@@ -160,26 +160,26 @@ def add_scores(dataframe, parse_max):
                 speaker_name = result["speaker"]
                 version = result["version"]
                 sensitivity = result.get("sensitivity")
-                estimates = result.get("estimates")
+                computed_estimates = result.get("estimates")
                 pref_rating = result.get("pref_rating")
                 is_eq = version[-3:] == "_eq"
 
                 if is_eq:
                     version_neq = version[:-3]
-                    if estimates is not None:
+                    if computed_estimates is not None:
                         metadata.speakers_info[speaker_name]["measurements"][version_neq][
                             "estimates_eq"
-                        ] = estimates
+                        ] = computed_estimates
                     if pref_rating is not None:
                         metadata.speakers_info[speaker_name]["measurements"][version_neq][
                             "pref_rating_eq"
                         ] = pref_rating
                     continue
 
-                if estimates is not None:
+                if computed_estimates is not None:
                     metadata.speakers_info[speaker_name]["measurements"][version][
                         "estimates"
-                    ] = estimates
+                    ] = computed_estimates
                 if (
                     sensitivity is not None
                     and metadata.speakers_info[speaker_name].get("type") == "passive"
@@ -225,7 +225,7 @@ def add_scores(dataframe, parse_max):
                 pref_rating = current.get("pref_rating", {})
                 # pref score
                 pref_score = pref_rating.get("pref_score")
-                if not math.isnan(pref_score):
+                if pref_score and not math.isnan(pref_score):
                     min_pref_score = min(min_pref_score, pref_score)
                     max_pref_score = max(max_pref_score, pref_score)
                 # pref lfx_hz
