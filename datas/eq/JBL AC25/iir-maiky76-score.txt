@@ -1,0 +1,14 @@
+JBL AC25 APO EQ Score 96000Hz
+April032023-121848
+
+Preamp: -0.3 dB
+
+Filter 1: ON PK Fc 189.98,    -4.55,    1.97
+Filter 2: ON PK Fc 514.79,    -2.07,    1.70
+Filter 3: ON PK Fc 1069.58,    -5.04,    1.64
+Filter 4: ON PK Fc 1366.53,    3.41,    4.70
+Filter 5: ON PK Fc 2416.09,    -2.32,    3.15
+Filter 6: ON PK Fc 3966.22,    -2.00,    4.05
+Filter 7: ON PK Fc 4279.24,    2.02,    4.51
+Filter 8: ON PK Fc 10241.22,    3.16,    4.62
+Filter 9: ON PK Fc 13200.97,    -8.02,    1.92

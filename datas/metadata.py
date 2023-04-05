@@ -7705,6 +7705,40 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "JBL AC25": {
+        "brand": "JBL",
+        "model": "AC25",
+        "type": "passive",
+        "price": "1000",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-ac25-speaker-review.43520/",
+                "review_published": "20230403",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 91,
+                    "impedance": 16,
+                    "SPL": {
+                        "peak": 115,
+                    },
+                    "size": {
+                        "height": 377,
+                        "width": 150,
+                        "depth": 178,
+                    },
+                    "weight": 7.5,
+                },
+            },
+        },
+    },
     "JBL Arena 120": {
         "brand": "JBL",
         "model": "Arena 120",
