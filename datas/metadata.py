@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 # you can check the syntax with pylint or with ../check_meta.py
-
 from typing import TypedDict, Literal
 
 # common notes for some loudspeakers
@@ -11057,7 +11056,7 @@ speakers_info: SpeakerDatabase = {
         "brand": "KV2 Audio",
         "model": "EX10",
         "type": "active",
-        "price": "",
+        "price": "2900",
         "shape": "liveportable",
         "amount": "each",
         "default_measurement": "vendor-pattern-100x80",
@@ -11075,7 +11074,7 @@ speakers_info: SpeakerDatabase = {
         "brand": "KV2 Audio",
         "model": "EX12",
         "type": "active",
-        "price": "",
+        "price": "3480",
         "shape": "liveportable",
         "amount": "each",
         "default_measurement": "vendor-pattern-80x40",
@@ -11093,7 +11092,7 @@ speakers_info: SpeakerDatabase = {
         "brand": "KV2 Audio",
         "model": "EX15",
         "type": "active",
-        "price": "",
+        "price": "6000",
         "shape": "liveportable",
         "amount": "each",
         "default_measurement": "vendor-pattern-80x60",
@@ -11577,6 +11576,25 @@ speakers_info: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/m-audio-bx5-d3-active-monitor-measurements-teardown-subjective-impressions.29425/",
                 },
                 "review_published": "20211229",
+            },
+        },
+    },
+    "M-Audio BX8 D3": {
+        "brand": "M-Audio",
+        "model": "BX8 D3",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "129",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/m-audio-bx8-d3-monitor-review.43832/",
+                },
+                "review_published": "20230414",
             },
         },
     },
