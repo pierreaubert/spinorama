@@ -1,7 +1,7 @@
 #!/bin/bash
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

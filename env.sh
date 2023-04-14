@@ -1,7 +1,7 @@
 #!/bin/sh
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,6 +35,14 @@ if test -z $github; then
     ssh-add ~/.ssh/id_rsa_github >> env.log 2>&1
     github=$(ssh-add -l 2>&1 | grep github | cut -d ' ' -f 3)
 fi
+
+## prod keys
+## ----------------------------------------------------------------------
+#esprod=$(ssh-add -l | grep 'es.spin' | cut -d ' ' -f 3)
+#if test -z $esprod; then
+#    ssh-add ~/.ssh/id_rsa_es >> env.log 2>&1
+#    esprod=$(ssh-add -l 2>&1 | grep 'es.spin' | cut -d ' ' -f 3)
+#fi
 
 ## python virtualenv
 ## ----------------------------------------------------------------------

@@ -1,7 +1,7 @@
 #!/bin/sh
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-TARGET=/var/www/html/spinorama-prod
+TARGET1=pierre@ch.spinorama.org:/var/www/html/spinorama-prod
+TARGET2=pierre@es.spinorama.org:/var/www/html/spinorama-prod
+
 # check
 command=$(grep dev.spinorama.org docs/*.html | wc -l)
 if [ $command -ne 0 ]; then
@@ -32,10 +34,11 @@ if [ $command -ne 0 ]; then
 else
     echo "OK checking for dev site in prod"
 fi
+
 # copy
-echo "Sync"
-rsync -arv --exclude '*.png' --delete ./docs/* $TARGET
-rsync -arv --include '*.png' --delete ./docs/pictures/* $TARGET/pictures
-rsync -arv --include '*.png' --delete ./docs/help_pictures/* $TARGET/help_pictures
-#
-find $TARGET/speakers -type f -name '*.png' -exec rm {} \;
+for target in "$TARGET1" "$TARGET2"; do
+    echo "Sync $target"
+    rsync -arv --exclude '*.png' --delete ./docs/* $target
+    rsync -arv --include '*.png' --delete ./docs/pictures/* $target/pictures
+    rsync -arv --include '*.png' --delete ./docs/help_pictures/* $target/help_pictures
+done

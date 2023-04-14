@@ -1,7 +1,7 @@
 #!/bin/sh
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -56,4 +56,5 @@ PYTHONPATH=src cd src/spinorama && python setup.py build_ext --inplace && ln -s 
 # run the test
 pip3 install -U -r requirements-tests.txt
 pip3 install -U -r requirements-dev.txt
+pip3 install -U -r requirements-api.txt
 pytest

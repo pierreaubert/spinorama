@@ -1,6 +1,21 @@
 [build-system]
 requires = ["setuptools", "wheel", "Cython"]
 
+[project]
+name = "spinorama"
+description = "Spinorama computes speaker measurements"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL"
+authors = [
+    { name = "Pierre Aubert", email = "pierre0aubert@gmail.com" },
+]
+
+[project.urls]
+Homepage = "https://www.spinorama.org"
+API = "https://api.spinorama.org"
+Documentation = "https://github.com/pierreaubert/spinorama/tree/master/tutorial"
+
 [tool.black]
 line-length = 100
 

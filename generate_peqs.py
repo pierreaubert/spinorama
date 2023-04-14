@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2022 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -328,7 +328,7 @@ def main():
 
     # MIN or MAX_Q or MIN or MAX_DBGAIN control the shape of the biquad which
     # are admissible.
-    current_optim_config["MIN_DBGAIN"] = 0.5
+    current_optim_config["MIN_DBGAIN"] = 0.51
     current_optim_config["MAX_DBGAIN"] = 3
     current_optim_config["MIN_Q"] = 0.05
     current_optim_config["MAX_Q"] = 3

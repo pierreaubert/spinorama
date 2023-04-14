@@ -1,36 +1,68 @@
 # -*- coding: utf-8 -*-
-from dataclasses import dataclass, field
+import json
+import logging
 import os
+import sys
 from typing import Annotated
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Depends
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse, FileResponse
 
 from datas.metadata import speakers_info
 
-app = FastAPI()
+API_VERSION = "v0"
+CURRENT_VERSION = 2
+SOFTWARE_VERSION = f"{API_VERSION}.{CURRENT_VERSION}"
 
-VERSION = "v0"
 FILES = "/var/www/html/spinorama-dev"
+METADATA = f"{FILES}/assets/metadata.json"
+CACHE = f"{FILES}/cache"
 
 
-@app.get(f"/{VERSION}/speakerList")
-async def get_speaker_list():
-    return list(speakers_info.keys())
+def load_metadata():
+    if not os.path.exists(METADATA):
+        logging.error("Cannot find %s", METADATA)
+        sys.exit(1)
+
+    with open(METADATA, "r", encoding="utf8") as f:
+        metadata = json.load(f)
+        yield metadata
 
 
-@app.get(f"/{VERSION}/speakerMetadata")
-async def get_speaker_metadata(speaker_name: Annotated[str, Query(max_length=25)]):
-    content = speakers_info.get(speaker_name, {"error": "Speaker not found"})
+app = FastAPI(
+    debug=False,
+    title="Spinorama API",
+    version=SOFTWARE_VERSION,
+    on_startup=[load_metadata],
+)
+
+
+@app.get(f"/{API_VERSION}/brands", tags=["speaker"])
+async def get_brand_list(metadata: dict = Depends(load_metadata)):
+    return sorted(set([v.get("brand") for _, v in metadata.items()]))
+
+
+@app.get(f"/{API_VERSION}/speaker", tags=["speaker"])
+async def get_speaker_list(metadata: dict = Depends(load_metadata)):
+    return sorted(metadata.keys())
+
+
+@app.get(f"/{API_VERSION}/speaker/{{speaker_name}}/metadata", tags=["speaker"])
+async def get_speaker_metadata(speaker_name: str, metadata: dict = Depends(load_metadata)):
+    content = metadata.get(speaker_name, {"error": "Speaker not found"})
     json = jsonable_encoder(content)
     return JSONResponse(content=json)
 
 
-@app.get(f"/{VERSION}/speakerMeasurements")
+@app.get(
+    f"/{API_VERSION}/speaker/{{speaker_name}}/version/{{speaker_version}}/measurements/{{measurement_name}}",
+    tags=["speaker"],
+)
 async def get_speaker_measurements(
     speaker_name: str,
-    measurement_name: Annotated[str, Query(max_length=15)],
+    speaker_version: str,
+    measurement_name: str,
     measurement_format: Annotated[str | None, Query(max_length=5)] = "json",
 ):
     if not speaker_name or not measurement_name:
