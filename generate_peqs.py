@@ -328,9 +328,9 @@ def main():
 
     # MIN or MAX_Q or MIN or MAX_DBGAIN control the shape of the biquad which
     # are admissible.
-    current_optim_config["MIN_DBGAIN"] = 0.51
+    current_optim_config["MIN_DBGAIN"] = 0.75
     current_optim_config["MAX_DBGAIN"] = 3
-    current_optim_config["MIN_Q"] = 0.05
+    current_optim_config["MIN_Q"] = 0.25
     current_optim_config["MAX_Q"] = 3
 
     # do we override optim default?
@@ -438,9 +438,10 @@ def main():
         for current_curve_name in param_curve_names:
             if current_curve_name not in param_curve_name_valid:
                 print(
-                    "ERROR: {} is not known, acceptable values are {}",
-                    current_curve_name,
-                    param_curve_name_valid,
+                    "ERROR: {} is not known, acceptable values are {}. You can add multiple curves by separating them with a comma. Ex: --curve-names=LW,PIR".format(
+                        current_curve_name,
+                        list(param_curve_name_valid.keys()),
+                    )
                 )
                 parameter_error = True
             else:
@@ -460,9 +461,9 @@ def main():
         }
         if current_fitness_name not in param_fitness_name_valid:
             print(
-                "ERROR: {} is not known, acceptable values are {}",
-                current_fitness_name,
-                param_fitness_name_valid,
+                "ERROR: {} is not known, acceptable values are {}".format(
+                    current_fitness_name, list(param_fitness_name_valid.keys())
+                )
             )
             parameter_error = True
         else:
@@ -474,7 +475,7 @@ def main():
         if grapheq_name not in grapheq_info:
             print(
                 "ERROR: EQ name {} is not known. Please select on in {}".format(
-                    grapheq_name, grapheq_info
+                    grapheq_name, grapheq_info.keys()
                 )
             )
             sys.exit(1)
@@ -556,7 +557,7 @@ if __name__ == "__main__":
     smoke_test = args["--smoke-test"]
 
     if args["--graphic_eq_list"]:
-        print("INFO: The list of know graphical EQ is: {}".format(grapheq_info))
+        print("INFO: The list of know graphical EQ is: {}".format(list(grapheq_info.keys())))
         sys.exit(0)
 
     main()

@@ -26,6 +26,8 @@ from spinorama.ltype import DataSpeaker, Vector
 from spinorama.filter_iir import Biquad
 from spinorama.auto_loss import loss
 
+POPSIZE = 25
+
 
 def display(xk, convergence):
     # logger.debug(xk, convergence)
@@ -91,10 +93,12 @@ def find_best_biquad(
         res = opt.differential_evolution(
             opt_peq,
             bounds,
+            disp=True,
             # workers=64,
             # updating='deferred',
             # mutation=(0.5, 1.5),
             # recombination=1.9,
+            popsize=POPSIZE,
             maxiter=optim_config["maxiter"],
             # atol=0.01,
             polish=False,
@@ -211,21 +215,21 @@ def find_best_peak(
     }
     try:
         res = opt.differential_evolution(
-            opt_peq,
-            bounds,
+            func=opt_peq,
+            bounds=bounds,
+            # strategy='best2bin',
             # workers=64,
             # updating='deferred',
             # mutation=(0.5, 1.5),
             # recombination=1.9,
-            # strategy='best2bin',
             # init='sobol',
-            init=z_init,
+            # init=z_init,
             # x0 = x_init,
-            # popsize=175,
-            maxiter=optim_config["maxiter"],
-            # disp=True,
-            # atol=0.01,
-            # polish=True,
+            popsize=POPSIZE,
+            maxiter=optim_config.get("maxiter", 2500),
+            disp=True,
+            # tol=0.0001,
+            polish=False,
             integrality=[True, False, False],
             callback=display,
         )

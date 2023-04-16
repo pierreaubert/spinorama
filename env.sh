@@ -38,11 +38,14 @@ fi
 
 ## prod keys
 ## ----------------------------------------------------------------------
-#esprod=$(ssh-add -l | grep 'es.spin' | cut -d ' ' -f 3)
-#if test -z $esprod; then
-#    ssh-add ~/.ssh/id_rsa_es >> env.log 2>&1
-#    esprod=$(ssh-add -l 2>&1 | grep 'es.spin' | cut -d ' ' -f 3)
-#fi
+RSA_ES=$HOME/.ssh/id_rsa_es_web
+if test -f $RSA_ES; then
+    ssh-add $RSA_ES >> env.log 2>&1
+fi
+RSA_CH=$HOME/.ssh/id_rsa_ch_web
+if test -f $RSA_CH; then
+    ssh-add $RSA_CH >> env.log 2>&1
+fi
 
 ## python virtualenv
 ## ----------------------------------------------------------------------

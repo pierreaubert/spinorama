@@ -209,9 +209,9 @@ def spatial_average1(spl, sel, func="rms") -> pd.DataFrame:
 
 def spatial_average2(
     h_spl: pd.DataFrame,
-    h_sel: list[str],
+    h_sel: pd.Index | list[str],
     v_spl: pd.DataFrame,
-    v_sel: list[str],
+    v_sel: pd.Index | list[str],
     func="rms",
 ) -> pd.DataFrame:
     """Compute the spatial average of SPL 2D"""
@@ -259,86 +259,6 @@ def listening_window(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
 
 def total_early_reflections(
-    h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
-) -> pd.DataFrame:
-    """Compute the Total Early Reflections from the SPL horizontal and vertical"""
-    if method == "corrected":
-        return spatial_average2(
-            h_spl,
-            [
-                "Freq",
-                "On Axis",
-                "10°",
-                "20°",
-                "30°",
-                "40°",
-                "50°",
-                "60°",
-                "70°",
-                "80°",
-                "90°",
-                "-10°",
-                "-20°",
-                "-30°",
-                "-40°",
-                "-50°",
-                "-60°",
-                "-70°",
-                "-80°",
-                "-90°",
-                "-170°",
-                "-160°",
-                "-150°",
-                "-140°",
-                "-130°",
-                "-120°",
-                "-110°",
-                "-100°",
-                "100°",
-                "110°",
-                "120°",
-                "130°",
-                "140°",
-                "150°",
-                "160°",
-                "170°",
-                "180°",
-            ],
-            v_spl,
-            ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"],
-        )
-    else:
-        return spatial_average2(
-            h_spl,
-            [
-                "Freq",
-                "On Axis",
-                "10°",
-                "20°",
-                "30°",
-                "40°",
-                "50°",
-                "60°",
-                "70°",
-                "80°",
-                "90°",
-                "-10°",
-                "-20°",
-                "-30°",
-                "-40°",
-                "-50°",
-                "-60°",
-                "-70°",
-                "-80°",
-                "-90°",
-                "180°",
-            ],
-            v_spl,
-            ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"],
-        )
-
-
-def total_early_reflections2(
     floor_bounce: pd.DataFrame,
     ceiling_bounce: pd.DataFrame,
     front_wall_bounce: pd.DataFrame,
@@ -433,8 +353,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
             ],
         )
 
-    # total_early_reflection = total_early_reflections(h_spl, v_spl)
-    total_early_reflection = total_early_reflections2(
+    total_early_reflection = total_early_reflections(
         floor_bounce=floor_bounce,
         ceiling_bounce=ceiling_bounce,
         front_wall_bounce=front_wall_bounce,
@@ -442,7 +361,6 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
         rear_wall_bounce=rear_wall_bounce,
         method=method,
     )
-    # total_early_reflection = total_early_reflections(h_spl, v_spl, method=method)
 
     early_reflection = pd.DataFrame(
         {

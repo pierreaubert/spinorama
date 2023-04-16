@@ -604,10 +604,11 @@ def graph_results(
         # height=1400*29.7/21, # a4 is a bit squeezed
         height=2400,
         legend=dict(orientation="v"),
-        title="{} from {}. Config: curves={} target_min_freq={:.0f}Hz".format(
+        title="{} from {}. Config: curves={} fitness={} target_min_freq={:.0f}Hz".format(
             speaker_name,
             speaker_origin,
             ", ".join(optim_config["curve_names"]),
+            optim_config.get("loss", "unknown"),
             optim_config["target_min_freq"],
         ),
     )
