@@ -265,6 +265,7 @@ def graph_results(
                 name="autoEQ",
             ),
         ]
+        hist_title = "Histogram of errors (fullrange) for {}".format(which_curve)
 
         # recompute over midrange only (300Hz--5kHz)
         noeq_slope, noeq_hist, noeq_max = compute_statistics(
@@ -306,6 +307,7 @@ def graph_results(
                 name="autoEQ",
             ),
         ]
+        hist_midrange_title = "Histogram of errors (midrange) for {}".format(which_curve)
 
         g_curves[which_curve] = {
             "noeq": g_curve_noeq,
@@ -314,6 +316,8 @@ def graph_results(
             "auto_title": auto_title,
             "hist": hist_plot,
             "hist_midrange": hist_plot_midrange,
+            "hist_title": hist_title,
+            "hist_midrange_title": hist_midrange_title,
         }
 
     spin_title = "Spin"
@@ -342,16 +346,16 @@ def graph_results(
             auto_spin_title,
             g_curves["On Axis"]["noeq_title"],
             g_curves["On Axis"]["auto_title"],
-            "",
-            "",
+            g_curves["On Axis"]["hist_title"],
+            g_curves["On Axis"]["hist_midrange_title"],
             g_curves["Listening Window"]["noeq_title"],
             g_curves["Listening Window"]["auto_title"],
-            "",
-            "",
+            g_curves["Listening Window"]["hist_title"],
+            g_curves["Listening Window"]["hist_midrange_title"],
             g_curves["Estimated In-Room Response"]["noeq_title"],
             g_curves["Estimated In-Room Response"]["auto_title"],
-            "",
-            "",
+            g_curves["Estimated In-Room Response"]["hist_title"],
+            g_curves["Estimated In-Room Response"]["hist_midrange_title"],
         ),
         row_heights=[
             0.15,  # PEQ
