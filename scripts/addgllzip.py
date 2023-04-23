@@ -45,6 +45,17 @@ manual_exceptions_table = {
     "EV MTS 4153 40x30.zip": ("EV MTS-4153", "vendor-pattern-40x30"),
     "EV MTS 6154 60x40.zip": ("EV MTS-6154", "vendor-pattern-60x40"),
     "EV MTS 6154 40x30.zip": ("EV MTS-6154", "vendor-pattern-40x30"),
+    "Bose AM10 60.zip": ("Bose ArenaMatch AM10", "vendor-pattern-60x10"),
+    "Bose AM10 80.zip": ("Bose ArenaMatch AM10", "vendor-pattern-80x10"),
+    "Bose AM10 100.zip": ("Bose ArenaMatch AM10", "vendor-pattern-100x10"),
+    "Bose AM20 60.zip": ("Bose ArenaMatch AM20", "vendor-pattern-60x20"),
+    "Bose AM20 80.zip": ("Bose ArenaMatch AM20", "vendor-pattern-80x20"),
+    "Bose AM20 100.zip": ("Bose ArenaMatch AM20", "vendor-pattern-100x20"),
+    "Bose AM40 60.zip": ("Bose ArenaMatch AM40", "vendor-pattern-60x40"),
+    "Bose AM40 80.zip": ("Bose ArenaMatch AM40", "vendor-pattern-80x40"),
+    "Bose AM40 100.zip": ("Bose ArenaMatch AM40", "vendor-pattern-100x40"),
+    "HK Audio LINEAR 9 110.zip": ("HK Audio LINEAR 9 110 XA", "vendor"),
+    "HK Audio LINEAR 9 112.zip": ("HK Audio LINEAR 9 112 XA", "vendor"),
 }
 
 

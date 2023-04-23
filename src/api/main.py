@@ -15,9 +15,8 @@ API_VERSION = "v0"
 CURRENT_VERSION = 2
 SOFTWARE_VERSION = f"{API_VERSION}.{CURRENT_VERSION}"
 
-FILES = "/var/www/html/spinorama-dev"
+FILES = "/var/www/html/spinorama-prod"
 METADATA = f"{FILES}/assets/metadata.json"
-CACHE = f"{FILES}/cache"
 
 
 def load_metadata():
@@ -72,10 +71,9 @@ async def get_speaker_measurements(
         return {"error": f"Speaker {speaker_name} is not in our database!"}
 
     meta_data = speakers_info[speaker_name]
-    version = meta_data["default_measurement"]
-    origin = meta_data["measurements"][version]["origin"]
+    origin = meta_data["measurements"][speaker_version]["origin"]
     upper_dir = f"{FILES}/speakers/{speaker_name}"
-    dir_data = f"{upper_dir}/{origin}/{version}"
+    dir_data = f"{upper_dir}/{origin}/{speaker_version}"
 
     if not os.path.exists(upper_dir):
         print(upper_dir)
@@ -83,7 +81,7 @@ async def get_speaker_measurements(
 
     if not os.path.exists(dir_data):
         return {
-            "error": f"Speaker {speaker_name} does not have precomputed measurements for origin {origin} and version {version}!"
+            "error": f"Speaker {speaker_name} does not have precomputed measurements for origin {origin} and version {speaker_version}!"
         }
 
     measurement_file = f"{dir_data}/{measurement_name}.{measurement_format}"
@@ -92,7 +90,7 @@ async def get_speaker_measurements(
 
     if not os.path.exists(measurement_file):
         return {
-            "error": f"Speaker {speaker_name} does not have precomputed {measurement_name} in format {measurement_format} for origin {origin} and version {version}!"
+            "error": f"Speaker {speaker_name} does not have precomputed {measurement_name} in format {measurement_format} for origin {origin} and version {speaker_version}!"
         }
 
     if measurement_format == "json":
