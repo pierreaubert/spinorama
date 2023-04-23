@@ -1,0 +1,28 @@
+upstream app_server {
+    server unix:/var/www/html/spinorama-api/run/gunicorn.sock fail_timeout=0;
+}
+
+server {
+    listen 443 ssl http2;
+
+    # add here the ip address of your server
+    # or a domain pointing to that ip (like example.com or www.example.com)
+    server_name api.spinorama.org;
+
+    keepalive_timeout 5;
+    client_max_body_size 4G;
+
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+
+        if (!-f $request_filename) {
+            proxy_pass http://app_server;
+            break;
+        }
+    }
+
+    ssl_certificate /etc/letsencrypt/live/api.spinorama.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/api.spinorama.org/privkey.pem; # managed by Certbot
+}
