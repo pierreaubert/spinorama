@@ -2036,6 +2036,338 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Bose ArenaMatch AM10": {
+        "brand": "Bose",
+        "model": "ArenaMatch AM10",
+        "type": "passive",
+        "price": "5000",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-100x10",
+        "measurements": {
+            "vendor-pattern-100x10": {
+                "origin": "Vendors-Bose",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 10,
+                    },
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 127,
+                    },
+                    "size": {
+                        "height": 409,
+                        "width": 783,
+                        "depth": 420,
+                    },
+                    "weight": 36.3,
+                },
+            },
+            "vendor-pattern-80x10": {
+                "origin": "Vendors-Bose",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 10,
+                    },
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 127,
+                    },
+                    "size": {
+                        "height": 409,
+                        "width": 783,
+                        "depth": 420,
+                    },
+                    "weight": 36.3,
+                },
+            },
+            "vendor-pattern-60x10": {
+                "origin": "Vendors-Bose",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 10,
+                    },
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 129,
+                    },
+                    "size": {
+                        "height": 409,
+                        "width": 783,
+                        "depth": 420,
+                    },
+                    "weight": 36.3,
+                },
+            },
+        },
+    },
+    "Bose ArenaMatch AM20": {
+        "brand": "Bose",
+        "model": "ArenaMatch AM20",
+        "type": "passive",
+        "price": "5000",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-100x20",
+        "measurements": {
+            "vendor-pattern-100x20": {
+                "origin": "Vendors-Bose",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 20,
+                    },
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 128,
+                    },
+                    "size": {
+                        "height": 409,
+                        "width": 783,
+                        "depth": 420,
+                    },
+                    "weight": 36.3,
+                },
+            },
+            "vendor-pattern-80x20": {
+                "origin": "Vendors-Bose",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 20,
+                    },
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 128,
+                    },
+                    "size": {
+                        "height": 409,
+                        "width": 783,
+                        "depth": 420,
+                    },
+                    "weight": 36.3,
+                },
+            },
+            "vendor-pattern-60x20": {
+                "origin": "Vendors-Bose",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 20,
+                    },
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 130,
+                    },
+                    "size": {
+                        "height": 409,
+                        "width": 783,
+                        "depth": 420,
+                    },
+                    "weight": 36.3,
+                },
+            },
+        },
+    },
+    "Bose ArenaMatch AM40": {
+        "brand": "Bose",
+        "model": "ArenaMatch AM40",
+        "type": "passive",
+        "price": "5000",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor-pattern-100x40",
+        "measurements": {
+            "vendor-pattern-100x40": {
+                "origin": "Vendors-Bose",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 125,
+                    },
+                    "size": {
+                        "height": 409,
+                        "width": 783,
+                        "depth": 420,
+                    },
+                    "weight": 36.3,
+                },
+            },
+            "vendor-pattern-80x40": {
+                "origin": "Vendors-Bose",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 127,
+                    },
+                    "size": {
+                        "height": 409,
+                        "width": 783,
+                        "depth": 420,
+                    },
+                    "weight": 36.3,
+                },
+            },
+            "vendor-pattern-60x40": {
+                "origin": "Vendors-Bose",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 100,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 127,
+                    },
+                    "size": {
+                        "height": 409,
+                        "width": 783,
+                        "depth": 420,
+                    },
+                    "weight": 36.3,
+                },
+            },
+        },
+    },
+    "Bose AMM108": {
+        "brand": "Bose",
+        "model": "AMM108",
+        "type": "passive",
+        "price": "1500",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Bose",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 94,
+                    "impedance": 8,
+                    "SPL": {
+                        "continuous": 116,
+                        "peak": 128,
+                    },
+                    "size": {
+                        "height": 318,
+                        "width": 318,
+                        "depth": 268,
+                    },
+                    "weight": 13.04,
+                },
+            },
+        },
+    },
+    "Bose AMM112": {
+        "brand": "Bose",
+        "model": "AMM112",
+        "type": "passive",
+        "price": "2400",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Bose",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 96,
+                    "impedance": 8,
+                    "SPL": {
+                        "continuous": 121,
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 457,
+                        "width": 457,
+                        "depth": 383,
+                    },
+                    "weight": 22.04,
+                },
+            },
+        },
+    },
     "Bose SoundLink Revolve": {
         "brand": "Bose",
         "model": "SoundLink Revolve",
@@ -7003,6 +7335,362 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/swan-hivi-x3-review-active-monitors.35376/",
                 "review_published": "20220701",
+            },
+        },
+    },
+    "HK Audio LINEAR 5 112 F": {
+        "brand": "HK Audio",
+        "model": "LINEAR 5 112 F",
+        "type": "passive",
+        "price": "605",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-HK Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {
+                    "sos": "https://www.soundonsound.com/reviews/hk-audio-linear-5-112fa-l-sub-2000a",
+                },
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 55,
+                    },
+                    "sensitivity": 103,
+                    "impedance": 8,
+                    "SPL": {
+                        "continuous": 129,
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 668,
+                        "width": 365,
+                        "depth": 370,
+                    },
+                    "weight": 23.9,
+                },
+            },
+        },
+    },
+    "HK Audio LINEAR 5 112 FA": {
+        "brand": "HK Audio",
+        "model": "LINEAR 5 112 FA",
+        "type": "active",
+        "price": "955",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-HK Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {
+                    "sos": "https://www.soundonsound.com/reviews/hk-audio-linear-5-112fa-l-sub-2000a",
+                },
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 55,
+                    },
+                    "SPL": {
+                        "continuous": 127,
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 668,
+                        "width": 365,
+                        "depth": 370,
+                    },
+                    "weight": 23.9,
+                },
+            },
+        },
+    },
+    "HK Audio LINEAR 5 112 X": {
+        "brand": "HK Audio",
+        "model": "LINEAR 5 112 X",
+        "type": "passive",
+        "price": "645",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-HK Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {
+                    "sos": "https://www.soundonsound.com/reviews/hk-audio-linear-5-112fa-l-sub-2000a",
+                },
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 8,
+                    "SPL": {
+                        "continuous": 127,
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 668,
+                        "width": 365,
+                        "depth": 370,
+                    },
+                    "weight": 19.5,
+                },
+            },
+        },
+    },
+    "HK Audio LINEAR 5 112 XA": {
+        "brand": "HK Audio",
+        "model": "LINEAR 5 112 XA",
+        "type": "active",
+        "price": "800",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-HK Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {
+                    "sos": "https://www.soundonsound.com/reviews/hk-audio-linear-5-112fa-l-sub-2000a",
+                },
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 45,
+                    },
+                    "SPL": {
+                        "continuous": 128,
+                        "peak": 136,
+                    },
+                    "size": {
+                        "height": 668,
+                        "width": 365,
+                        "depth": 370,
+                    },
+                    "weight": 21.1,
+                },
+            },
+        },
+    },
+    "HK Audio LINEAR 7 110 XA": {
+        "brand": "HK Audio",
+        "model": "LINEAR 7 110 XA",
+        "type": "active",
+        "price": "1250",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-HK Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "continuous": 126,
+                        "peak": 129,
+                    },
+                    "size": {
+                        "height": 540,
+                        "width": 360,
+                        "depth": 310,
+                    },
+                    "weight": 17,
+                },
+            },
+        },
+    },
+    "HK Audio LINEAR 7 112 XA": {
+        "brand": "HK Audio",
+        "model": "LINEAR 7 112 XA",
+        "type": "active",
+        "price": "1450",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-HK Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "continuous": 128,
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 670,
+                        "width": 370,
+                        "depth": 310,
+                    },
+                    "weight": 21,
+                },
+            },
+        },
+    },
+    "HK Audio LINEAR 7 112 FA": {
+        "brand": "HK Audio",
+        "model": "LINEAR 7 112 FA",
+        "type": "active",
+        "price": "1450",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-HK Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "continuous": 128,
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 670,
+                        "width": 370,
+                        "depth": 310,
+                    },
+                    "weight": 21,
+                },
+            },
+        },
+    },
+    "HK Audio LINEAR 7 115 FA": {
+        "brand": "HK Audio",
+        "model": "LINEAR 7 115 FA",
+        "type": "active",
+        "price": "1550",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-HK Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 60,
+                        "vertical": 40,
+                    },
+                    "SPL": {
+                        "continuous": 129,
+                        "peak": 134,
+                    },
+                    "size": {
+                        "height": 710,
+                        "width": 450,
+                        "depth": 450,
+                    },
+                    "weight": 32,
+                },
+            },
+        },
+    },
+    "HK Audio LINEAR 9 110 XA": {
+        "brand": "HK Audio",
+        "model": "LINEAR 9 110 XA",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-HK Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "continuous": 126,
+                        "peak": 129,
+                    },
+                    "size": {
+                        "height": 540,
+                        "width": 360,
+                        "depth": 310,
+                    },
+                    "weight": 16.5,
+                },
+            },
+        },
+    },
+    "HK Audio LINEAR 9 112 XA": {
+        "brand": "HK Audio",
+        "model": "LINEAR 9 112 XA",
+        "type": "active",
+        "price": "1450",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-HK Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230422",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 60,
+                    },
+                    "SPL": {
+                        "continuous": 128,
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 670,
+                        "width": 370,
+                        "depth": 310,
+                    },
+                    "weight": 20.5,
+                },
             },
         },
     },
@@ -18293,6 +18981,13 @@ origins_info = {
         "logo": "docs/metadata/fulcrum-acoustic.png",
         "logo-small": "docs/metadata/fulcrum-acoustic.png",
         "url": "https://www.fulcrum-acoustic.com",
+    },
+    "Vendors-HK Audio": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://hkaudio.com/",
     },
     "Vendors-JBL": {
         "min hz": 20,
