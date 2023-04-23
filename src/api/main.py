@@ -72,6 +72,8 @@ async def get_speaker_measurements(
 
     meta_data = speakers_info[speaker_name]
     origin = meta_data["measurements"][speaker_version]["origin"]
+    if origin[0:8] == "Vendors-":
+        origin = origin[8:]
     upper_dir = f"{FILES}/speakers/{speaker_name}"
     dir_data = f"{upper_dir}/{origin}/{speaker_version}"
 
