@@ -1,0 +1,16 @@
+EQ for Fulcrum Acoustic RX699 computed from Vendors-Fulcrum Acoustic data
+Preference Score 3.32 with EQ 3.96
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-04-24-15:08:02
+
+Preamp: -2.1 dB
+
+Filter  1: ON LS Fc  8753 Hz Gain +1.89 dB
+Filter  2: ON PK Fc   165 Hz Gain -1.88 dB Q 1.72
+Filter  3: ON PK Fc   682 Hz Gain -1.37 dB Q 2.87
+Filter  4: ON PK Fc   826 Hz Gain -0.78 dB Q 2.35
+Filter  5: ON PK Fc  1725 Hz Gain -0.78 dB Q 2.87
+Filter  6: ON PK Fc 11246 Hz Gain -1.58 dB Q 1.86
+Filter  7: ON PK Fc 11479 Hz Gain -1.10 dB Q 2.19
+Filter  8: ON PK Fc   410 Hz Gain -0.90 dB Q 2.99
+Filter  9: ON PK Fc  9204 Hz Gain -1.24 dB Q 2.97

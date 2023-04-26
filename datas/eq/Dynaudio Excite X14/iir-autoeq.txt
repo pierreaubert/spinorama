@@ -1,16 +1,14 @@
 EQ for Dynaudio Excite X14 computed from ASR data
-Preference Score 4.75 with EQ 6.17
+Preference Score 4.75 with EQ 6.24
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:46:09
+Dated: 2023-04-24-15:04:36
 
-Preamp: -3.1 dB
+Preamp: -3.2 dB
 
-Filter  1: ON LS Fc    67 Hz Gain +2.95 dB
-Filter  2: ON PK Fc   124 Hz Gain -1.39 dB Q 1.96
-Filter  3: ON PK Fc   753 Hz Gain -1.44 dB Q 2.86
-Filter  4: ON PK Fc  7500 Hz Gain -1.81 dB Q 1.20
-Filter  5: ON PK Fc  1878 Hz Gain +2.27 dB Q 2.99
-Filter  6: ON PK Fc   363 Hz Gain +0.74 dB Q 2.64
-Filter  7: ON PK Fc 15996 Hz Gain +0.71 dB Q 0.37
-Filter  8: ON PK Fc  3464 Hz Gain -1.25 dB Q 2.42
-Filter  9: ON PK Fc  9469 Hz Gain -0.66 dB Q 2.97
+Filter  1: ON LS Fc    80 Hz Gain +2.98 dB
+Filter  2: ON PK Fc   713 Hz Gain -1.79 dB Q 1.86
+Filter  3: ON PK Fc  7389 Hz Gain -2.65 dB Q 1.02
+Filter  4: ON PK Fc  1858 Hz Gain +2.91 dB Q 2.65
+Filter  5: ON PK Fc   365 Hz Gain +1.17 dB Q 1.35
+Filter  6: ON PK Fc 11772 Hz Gain +0.79 dB Q 2.90
+Filter  7: ON PK Fc  3537 Hz Gain -1.74 dB Q 1.79

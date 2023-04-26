@@ -1,0 +1,16 @@
+EQ for Attack Audio VSL206+sub computed from Vendors-Attack Audio data
+Preference Score -0.58 with EQ 2.10
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-04-24-15:05:28
+
+Preamp: -7.4 dB
+
+Filter  1: ON LS Fc  2125 Hz Gain +3.00 dB
+Filter  2: ON PK Fc   135 Hz Gain +3.00 dB Q 2.68
+Filter  3: ON PK Fc   426 Hz Gain -3.19 dB Q 1.00
+Filter  4: ON PK Fc 11290 Hz Gain +1.32 dB Q 2.80
+Filter  5: ON PK Fc  5344 Hz Gain +1.91 dB Q 2.98
+Filter  6: ON PK Fc    59 Hz Gain +1.93 dB Q 0.25
+Filter  7: ON PK Fc  5355 Hz Gain -2.32 dB Q 0.72
+Filter  8: ON PK Fc  4640 Hz Gain -1.35 dB Q 0.28
+Filter  9: ON PK Fc  2828 Hz Gain -1.18 dB Q 0.28

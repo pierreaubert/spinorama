@@ -1,15 +1,15 @@
 EQ for Novacoustic Pariz P28 computed from Vendors-Novacoustic data
-Preference Score 0.86 with EQ 1.39
+Preference Score 0.86 with EQ 2.18
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-02-21:40:18
+Dated: 2023-04-24-15:07:58
 
-Preamp: -6.7 dB
+Preamp: -5.4 dB
 
-Filter  1: ON HS Fc   479 Hz Gain +3.00 dB
-Filter  2: ON PK Fc  4349 Hz Gain +3.00 dB Q 0.73
-Filter  3: ON PK Fc  9697 Hz Gain -3.15 dB Q 2.91
-Filter  4: ON PK Fc 15924 Hz Gain +2.99 dB Q 0.72
-Filter  5: ON PK Fc  1098 Hz Gain -2.67 dB Q 3.00
-Filter  6: ON PK Fc   140 Hz Gain -0.98 dB Q 2.90
-Filter  7: ON PK Fc   222 Hz Gain +0.89 dB Q 0.05
-Filter  8: ON PK Fc 11104 Hz Gain -2.70 dB Q 3.00
+Filter  1: ON LS Fc 15972 Hz Gain +2.56 dB
+Filter  2: ON PK Fc   297 Hz Gain -2.33 dB Q 2.98
+Filter  3: ON PK Fc   118 Hz Gain -1.55 dB Q 2.43
+Filter  4: ON PK Fc  4573 Hz Gain +2.99 dB Q 1.09
+Filter  5: ON PK Fc  1121 Hz Gain -2.48 dB Q 2.98
+Filter  6: ON PK Fc   516 Hz Gain -1.32 dB Q 2.94
+Filter  7: ON PK Fc  9516 Hz Gain -4.27 dB Q 2.43
+Filter  8: ON PK Fc  8595 Hz Gain -2.65 dB Q 2.99

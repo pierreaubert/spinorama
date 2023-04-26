@@ -971,6 +971,105 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Attack Audio VSH206": {
+        "brand": "Attack Audio",
+        "model": "VSH206",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Attack Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230424",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 15,
+                    },
+                    "SPL": {
+                        "peak": 128,
+                    },
+                    "size": {
+                        "height": 620,
+                        "width": 236,
+                        "depth": 373,
+                    },
+                    "weight": 20.3,
+                },
+            },
+        },
+    },
+    "Attack Audio VSL206": {
+        "brand": "Attack Audio",
+        "model": "VSL206",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Attack Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230424",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 15,
+                    },
+                    "SPL": {
+                        "peak": 128,
+                    },
+                    "size": {
+                        "height": 209,
+                        "width": 650,
+                        "depth": 367,
+                    },
+                    "weight": 25.6,
+                },
+            },
+        },
+    },
+    "Attack Audio VSL206+sub": {
+        "brand": "Attack Audio",
+        "model": "VSL206+sub",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Attack Audio",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230424",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 15,
+                    },
+                    "SPL": {
+                        "peak": 128,
+                    },
+                    "size": {
+                        "height": 209,
+                        "width": 650,
+                        "depth": 367,
+                    },
+                    "weight": 25.6,
+                },
+            },
+        },
+    },
     "Ascend Acoustics CBM-170 SE": {
         "brand": "Ascend Acoustics",
         "model": "CBM-170 SE",
@@ -6574,6 +6673,82 @@ speakers_info: SpeakerDatabase = {
                 "quality": "medium",
                 "review_published": "20220924",
                 "notes": "Relatively high smoothing; Pattern is 120x60",
+            },
+        },
+    },
+    "Fulcrum Acoustic RX599": {
+        "brand": "Fulcrum Acoustic",
+        "model": "RX599",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Fulcrum Acoustic",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230424",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    # equalized
+                    "sensitivity": 85,
+                    "impedance": 16,
+                    # equalized
+                    "SPL": {
+                        "continuous": 107,
+                        "peak": 113,
+                    },
+                    "size": {
+                        "height": 220,
+                        "width": 142,
+                        "depth": 152,
+                    },
+                    "weight": 3.9,
+                },
+            },
+        },
+    },
+    "Fulcrum Acoustic RX699": {
+        "brand": "Fulcrum Acoustic",
+        "model": "RX699",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Fulcrum Acoustic",
+                "format": "gllHVtxt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230424",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    # equalized
+                    "sensitivity": 89,
+                    "impedance": 16,
+                    # equalized
+                    "SPL": {
+                        "continuous": 112,
+                        "peak": 118,
+                    },
+                    "size": {
+                        "height": 273,
+                        "width": 165,
+                        "depth": 163,
+                    },
+                    "weight": 5.4,
+                },
             },
         },
     },
@@ -18818,6 +18993,13 @@ origins_info = {
         "min dB": -40,
         "max dB": 10,
         "url": "https://www.ascendacoustics.com/",
+    },
+    "Vendors-Attack Audio": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.attack.com.br",
     },
     "Vendors-Audiofocus": {
         "min hz": 20,

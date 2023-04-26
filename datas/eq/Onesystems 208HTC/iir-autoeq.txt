@@ -1,15 +1,15 @@
 EQ for Onesystems 208HTC computed from Vendors-Onesystems data
-Preference Score 2.05 with EQ 3.79
+Preference Score 2.05 with EQ 4.20
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:56:37
+Dated: 2023-04-24-15:13:04
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    59 Hz Gain +3.00 dB Q 0.59
-Filter  2: ON PK Fc  1323 Hz Gain +3.00 dB Q 0.73
-Filter  3: ON PK Fc   208 Hz Gain -3.16 dB Q 2.10
-Filter  4: ON PK Fc  8282 Hz Gain +3.00 dB Q 2.40
-Filter  5: ON PK Fc  4867 Hz Gain -2.84 dB Q 3.00
-Filter  6: ON PK Fc  3833 Hz Gain -1.25 dB Q 3.00
-Filter  7: ON PK Fc   285 Hz Gain -1.26 dB Q 3.00
-Filter  8: ON PK Fc   164 Hz Gain -1.27 dB Q 3.00
+Filter  1: ON LS Fc   121 Hz Gain +3.00 dB
+Filter  2: ON PK Fc   220 Hz Gain -2.31 dB Q 2.24
+Filter  3: ON PK Fc  8055 Hz Gain +3.00 dB Q 3.00
+Filter  4: ON PK Fc  1942 Hz Gain +2.99 dB Q 2.32
+Filter  5: ON PK Fc   610 Hz Gain -1.18 dB Q 3.00
+Filter  6: ON PK Fc 15250 Hz Gain +2.31 dB Q 1.56
+Filter  7: ON PK Fc  4677 Hz Gain -3.13 dB Q 0.97
+Filter  8: ON PK Fc  5192 Hz Gain -2.67 dB Q 2.55

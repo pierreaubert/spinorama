@@ -1,16 +1,15 @@
 EQ for Alcons Audio RR12 computed from Vendors-Alcons Audio data
-Preference Score 2.69 with EQ 4.39
+Preference Score 2.69 with EQ 4.70
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:58:37
+Dated: 2023-04-24-15:18:00
 
-Preamp: -2.6 dB
+Preamp: -3.2 dB
 
-Filter  1: ON HS Fc  6280 Hz Gain -3.00 dB
-Filter  2: ON PK Fc   140 Hz Gain -4.69 dB Q 0.86
-Filter  3: ON PK Fc   449 Hz Gain -3.71 dB Q 2.83
-Filter  4: ON PK Fc  2095 Hz Gain +2.38 dB Q 2.66
-Filter  5: ON PK Fc   795 Hz Gain -1.21 dB Q 2.97
-Filter  6: ON PK Fc 13823 Hz Gain -4.01 dB Q 1.38
-Filter  7: ON PK Fc 15130 Hz Gain -1.18 dB Q 2.86
-Filter  8: ON PK Fc  3022 Hz Gain -1.05 dB Q 2.90
-Filter  9: ON PK Fc 11722 Hz Gain -1.05 dB Q 2.94
+Filter  1: ON PK Fc 12884 Hz Gain -3.00 dB Q 0.52
+Filter  2: ON PK Fc   140 Hz Gain -2.21 dB Q 0.63
+Filter  3: ON PK Fc   449 Hz Gain -2.74 dB Q 3.00
+Filter  4: ON PK Fc  1962 Hz Gain +2.97 dB Q 1.26
+Filter  5: ON PK Fc   811 Hz Gain -2.27 dB Q 2.99
+Filter  6: ON PK Fc  2901 Hz Gain -1.67 dB Q 3.00
+Filter  7: ON PK Fc 13166 Hz Gain -2.77 dB Q 0.68
+Filter  8: ON PK Fc 12662 Hz Gain -2.82 dB Q 0.97

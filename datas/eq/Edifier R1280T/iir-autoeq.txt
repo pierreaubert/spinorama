@@ -1,15 +1,15 @@
 EQ for Edifier R1280T computed from ASR data
-Preference Score 2.11 with EQ 4.85
+Preference Score 2.11 with EQ 5.01
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-18:00:26
+Dated: 2023-04-24-15:15:31
 
 Preamp: -3.2 dB
 
-Filter  1: ON HS Fc 13049 Hz Gain +3.00 dB
-Filter  2: ON PK Fc   440 Hz Gain +2.57 dB Q 1.41
-Filter  3: ON PK Fc    96 Hz Gain -2.46 dB Q 2.99
-Filter  4: ON PK Fc  2267 Hz Gain +2.47 dB Q 2.99
-Filter  5: ON PK Fc  1301 Hz Gain -2.59 dB Q 2.98
-Filter  6: ON PK Fc   131 Hz Gain +0.55 dB Q 0.11
-Filter  7: ON PK Fc  8025 Hz Gain -2.79 dB Q 1.81
-Filter  8: ON PK Fc  4621 Hz Gain -1.79 dB Q 2.94
+Filter  1: ON PK Fc  7058 Hz Gain -3.00 dB Q 0.61
+Filter  2: ON PK Fc    96 Hz Gain -2.68 dB Q 3.00
+Filter  3: ON PK Fc   390 Hz Gain +2.99 dB Q 0.72
+Filter  4: ON PK Fc  1151 Hz Gain -2.31 dB Q 2.81
+Filter  5: ON PK Fc  2102 Hz Gain +1.12 dB Q 2.99
+Filter  6: ON PK Fc  8589 Hz Gain -2.50 dB Q 1.70
+Filter  7: ON PK Fc  4584 Hz Gain -2.53 dB Q 2.99
+Filter  8: ON PK Fc  4596 Hz Gain -2.56 dB Q 3.00

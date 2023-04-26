@@ -1,16 +1,15 @@
 EQ for HTD Level THREE computed from ASR data
-Preference Score 0.19 with EQ 2.48
+Preference Score 0.19 with EQ 2.91
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:59:08
+Dated: 2023-04-24-15:18:17
 
-Preamp: -1.8 dB
+Preamp: -3.2 dB
 
-Filter  1: ON HS Fc  3295 Hz Gain -3.00 dB
-Filter  2: ON PK Fc 14703 Hz Gain -5.95 dB Q 0.82
-Filter  3: ON PK Fc    74 Hz Gain -1.51 dB Q 2.04
-Filter  4: ON PK Fc   117 Hz Gain -1.01 dB Q 2.57
-Filter  5: ON PK Fc   412 Hz Gain +1.63 dB Q 2.90
-Filter  6: ON PK Fc   682 Hz Gain -3.02 dB Q 2.99
-Filter  7: ON PK Fc   216 Hz Gain +0.61 dB Q 0.07
-Filter  8: ON PK Fc   316 Hz Gain -2.11 dB Q 2.99
-Filter  9: ON PK Fc  1758 Hz Gain -1.71 dB Q 2.96
+Filter  1: ON LP Fc 15999 Hz
+Filter  2: ON PK Fc    73 Hz Gain -1.36 dB Q 0.52
+Filter  3: ON PK Fc  1118 Hz Gain +1.90 dB Q 2.94
+Filter  4: ON PK Fc   320 Hz Gain +2.99 dB Q 0.76
+Filter  5: ON PK Fc  3727 Hz Gain +2.79 dB Q 2.98
+Filter  6: ON PK Fc  1733 Hz Gain -2.94 dB Q 2.79
+Filter  7: ON PK Fc   703 Hz Gain -3.18 dB Q 2.93
+Filter  8: ON PK Fc  9122 Hz Gain -2.87 dB Q 0.65

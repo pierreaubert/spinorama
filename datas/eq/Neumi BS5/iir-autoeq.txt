@@ -1,14 +1,16 @@
 EQ for Neumi BS5 computed from ErinsAudioCorner data
-Preference Score 2.93 with EQ 5.19
+Preference Score 2.93 with EQ 5.62
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:52:47
+Dated: 2023-04-24-15:17:06
 
-Preamp: -2.4 dB
+Preamp: -3.2 dB
 
-Filter  1: ON LS Fc   456 Hz Gain +1.77 dB
-Filter  2: ON PK Fc  1153 Hz Gain -2.91 dB Q 2.99
-Filter  3: ON PK Fc   112 Hz Gain -2.22 dB Q 2.45
-Filter  4: ON PK Fc 10404 Hz Gain -2.24 dB Q 0.60
-Filter  5: ON PK Fc  1626 Hz Gain +2.21 dB Q 3.00
-Filter  6: ON PK Fc  3271 Hz Gain -0.69 dB Q 0.67
-Filter  7: ON PK Fc   134 Hz Gain +0.59 dB Q 0.13
+Filter  1: ON LS Fc   578 Hz Gain +2.99 dB
+Filter  2: ON PK Fc    82 Hz Gain -2.69 dB Q 2.98
+Filter  3: ON PK Fc  1139 Hz Gain -2.88 dB Q 2.97
+Filter  4: ON PK Fc  1544 Hz Gain +1.74 dB Q 3.00
+Filter  5: ON PK Fc  8563 Hz Gain +1.42 dB Q 3.00
+Filter  6: ON PK Fc  2494 Hz Gain +1.91 dB Q 2.99
+Filter  7: ON PK Fc 10430 Hz Gain -3.25 dB Q 0.27
+Filter  8: ON PK Fc  7571 Hz Gain -1.75 dB Q 0.39
+Filter  9: ON PK Fc  7717 Hz Gain -1.72 dB Q 0.36

@@ -1,16 +1,14 @@
 EQ for DB Audiotechnik AL60 computed from Vendors-DB Audiotechnik data
-Preference Score 3.04 with EQ 4.93
+Preference Score 3.04 with EQ 5.02
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:55:45
+Dated: 2023-04-24-15:10:56
 
-Preamp: -5.0 dB
+Preamp: -5.2 dB
 
-Filter  1: ON LS Fc  2285 Hz Gain +2.99 dB
-Filter  2: ON PK Fc   219 Hz Gain +1.56 dB Q 2.30
-Filter  3: ON PK Fc  6593 Hz Gain -1.75 dB Q 2.93
-Filter  4: ON PK Fc 15971 Hz Gain +2.97 dB Q 0.51
-Filter  5: ON PK Fc   646 Hz Gain +2.05 dB Q 2.99
-Filter  6: ON PK Fc   981 Hz Gain -0.85 dB Q 2.95
-Filter  7: ON PK Fc   134 Hz Gain +0.50 dB Q 2.86
-Filter  8: ON PK Fc  9044 Hz Gain -1.39 dB Q 1.66
-Filter  9: ON PK Fc   435 Hz Gain -1.00 dB Q 2.94
+Filter  1: ON LS Fc  2079 Hz Gain +3.00 dB
+Filter  2: ON PK Fc 15997 Hz Gain +2.58 dB Q 1.31
+Filter  3: ON PK Fc  4482 Hz Gain +1.17 dB Q 3.00
+Filter  4: ON PK Fc   125 Hz Gain -0.78 dB Q 2.97
+Filter  5: ON PK Fc   225 Hz Gain +2.14 dB Q 0.25
+Filter  6: ON PK Fc   424 Hz Gain -1.98 dB Q 2.99
+Filter  7: ON PK Fc  5902 Hz Gain -3.50 dB Q 0.73

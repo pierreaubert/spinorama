@@ -1,16 +1,16 @@
 EQ for MartinLogan Motion 4i computed from ASR data
-Preference Score 1.71 with EQ 4.66
+Preference Score 1.71 with EQ 4.78
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-18:01:51
+Dated: 2023-04-24-15:20:21
 
-Preamp: -2.8 dB
+Preamp: -3.9 dB
 
-Filter  1: ON LS Fc   287 Hz Gain +2.62 dB
-Filter  2: ON PK Fc 15449 Hz Gain -4.18 dB Q 0.96
-Filter  3: ON PK Fc  1300 Hz Gain -1.62 dB Q 2.98
-Filter  4: ON PK Fc  1986 Hz Gain +2.22 dB Q 3.00
-Filter  5: ON PK Fc  3167 Hz Gain -1.29 dB Q 3.00
-Filter  6: ON PK Fc   566 Hz Gain -0.51 dB Q 2.98
-Filter  7: ON PK Fc  7678 Hz Gain -1.14 dB Q 2.98
-Filter  8: ON PK Fc 15825 Hz Gain -0.50 dB Q 2.88
-Filter  9: ON PK Fc   210 Hz Gain -0.57 dB Q 2.22
+Filter  1: ON LS Fc   248 Hz Gain +3.00 dB
+Filter  2: ON PK Fc  1998 Hz Gain +2.48 dB Q 3.00
+Filter  3: ON PK Fc  4189 Hz Gain +2.04 dB Q 3.00
+Filter  4: ON PK Fc   348 Hz Gain +1.43 dB Q 0.30
+Filter  5: ON PK Fc 12857 Hz Gain -3.84 dB Q 0.26
+Filter  6: ON PK Fc  1051 Hz Gain -1.68 dB Q 1.10
+Filter  7: ON PK Fc 12926 Hz Gain -2.08 dB Q 0.75
+Filter  8: ON PK Fc  1388 Hz Gain -1.62 dB Q 3.00
+Filter  9: ON PK Fc 13042 Hz Gain -2.43 dB Q 0.82

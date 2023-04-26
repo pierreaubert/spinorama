@@ -1,16 +1,12 @@
 EQ for Coda Audio G712 computed from Vendors-Coda Audio data
-Preference Score 2.72 with EQ 5.27
+Preference Score 2.72 with EQ 5.34
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:49:47
+Dated: 2023-04-24-15:08:29
 
-Preamp: -2.0 dB
+Preamp: -2.7 dB
 
-Filter  1: ON LS Fc  4036 Hz Gain +1.80 dB
-Filter  2: ON PK Fc  1093 Hz Gain -2.09 dB Q 2.91
-Filter  3: ON PK Fc 11836 Hz Gain -2.55 dB Q 0.52
-Filter  4: ON PK Fc   156 Hz Gain -1.51 dB Q 2.96
-Filter  5: ON PK Fc   502 Hz Gain -1.86 dB Q 2.95
-Filter  6: ON PK Fc  2076 Hz Gain -0.52 dB Q 2.96
-Filter  7: ON PK Fc 15651 Hz Gain -1.46 dB Q 2.95
-Filter  8: ON PK Fc  9449 Hz Gain -1.08 dB Q 2.97
-Filter  9: ON PK Fc 15812 Hz Gain -0.63 dB Q 2.99
+Filter  1: ON LS Fc  4803 Hz Gain +2.48 dB
+Filter  2: ON PK Fc   156 Hz Gain -1.77 dB Q 2.86
+Filter  3: ON PK Fc  1116 Hz Gain -2.29 dB Q 2.99
+Filter  4: ON PK Fc   494 Hz Gain -1.90 dB Q 2.99
+Filter  5: ON PK Fc  9163 Hz Gain -5.11 dB Q 0.57

@@ -1,8 +1,8 @@
 EQ for EAW MKD1200 computed from Vendors-EAW data
-Preference Score 5.63 with EQ 5.67
+Preference Score 5.63 with EQ 5.91
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:51:58
+Dated: 2023-04-24-15:16:10
 
 Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    31 Hz Gain +3.00 dB Q 0.93
+Filter  1: ON HS Fc  9707 Hz Gain +3.00 dB
