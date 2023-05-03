@@ -20,8 +20,9 @@ import numpy as np
 import pandas as pd
 
 from spinorama import logger
-from spinorama.ltype import Peq, Vector
+from spinorama.ltype import Vector
 from spinorama.filter_iir import Biquad
+from spinorama.filter_peq import Peq
 from spinorama.auto_loss import loss, score_loss
 from spinorama.auto_range import (
     propose_range_freq,
@@ -41,7 +42,7 @@ def optim_greedy(
     auto_target: list[Vector],
     auto_target_interp: list[Vector],
     optim_config: dict,
-    use_score: bool,
+    use_score: bool,  # noqa: FBT001
 ) -> tuple[bool, tuple[tuple[int, float, float], Peq]]:
     """Main optimiser: follow a greedy strategy"""
 
@@ -203,7 +204,7 @@ def optim_greedy(
                 optim_iter,
                 best_loss,
                 -pref_score,
-                biquad[1].type2str(),
+                biquad[1].type2str_short(),
                 current_freq,
                 current_q,
                 current_db_gain,

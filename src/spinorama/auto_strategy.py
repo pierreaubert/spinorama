@@ -22,7 +22,8 @@ import numpy as np
 
 from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
-from spinorama.ltype import DataSpeaker, Peq, OptimResult
+from spinorama.ltype import DataSpeaker, OptimResult
+from spinorama.filter_peq import Peq
 from spinorama.compute_misc import compute_statistics
 from spinorama.filter_peq import peq_print
 from spinorama.filter_scores import scores_apply_filter
@@ -38,7 +39,7 @@ def optim_eval_strategy(
     current_speaker_name: str,
     df_speaker: DataSpeaker,
     optim_config: dict,
-    use_score: bool,
+    use_score: bool,  # noqa: FBT001
 ) -> tuple[bool, tuple[dict, OptimResult, Peq, float]]:
     """Find the best EQ for this speaker"""
     # shortcut
@@ -97,7 +98,10 @@ def optim_eval_strategy(
 
 
 def optim_strategy(
-    current_speaker_name: str, df_speaker: DataSpeaker, optim_config: dict, use_score: bool
+    current_speaker_name: str,
+    df_speaker: DataSpeaker,
+    optim_config: dict,
+    use_score: bool,  # noqa: FBT001
 ) -> tuple[bool, tuple[dict, OptimResult, Peq, dict]]:
     # do we use -3dB point for target?
     if optim_config["target_min_freq"] is None:

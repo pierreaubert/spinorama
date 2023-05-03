@@ -23,12 +23,13 @@ import zipfile
 import pandas as pd
 
 from spinorama import logger
+from spinorama.ltype import StatusOr
 from spinorama.load_misc import sort_angles
 
 
-def parse_graph_gllHVtxt(dir_path: str) -> tuple[pd.DataFrame, pd.DataFrame]:
+def parse_graph_gll_hv_txt(dir_path: str) -> StatusOr[tuple[pd.DataFrame, pd.DataFrame]]:
     """Parse text files with meridian and parallel data"""
-    file_path = f"{dir_path}/tmp/*"
+    file_path = f"{dir_path}/tmp/*"  # noqa: S108
     file_names = f"{file_path}/*.txt"
     files = glob.glob(file_names)
 
@@ -63,11 +64,7 @@ def parse_graph_gllHVtxt(dir_path: str) -> tuple[pd.DataFrame, pd.DataFrame]:
             logger.debug("skipping %s angle is %d orientation is %s", base, angle, orientation)
             continue
 
-        if angle == 0:
-            angle = "On Axis"
-        else:
-            angle = f"{angle}°"
-
+        angle = "On Axis" if angle == 0 else f"{angle}°"
         # print('angle is {} orientation is {}'.format(angle, orientation))
 
         freqs = []
@@ -92,24 +89,22 @@ def parse_graph_gllHVtxt(dir_path: str) -> tuple[pd.DataFrame, pd.DataFrame]:
                 if angle not in already_loaded_v:
                     spl_v.append(pd.DataFrame({"Freq": freqs, angle: dbs}))
                 already_loaded_v.add(angle)
-        else:
-            if angle != "-180°":
-                if orientation == "H":
-                    if angle not in already_loaded_h:
-                        spl_h.append(pd.DataFrame({angle: dbs}))
-                        already_loaded_h.add(angle)
-                elif orientation == "V":
-                    if angle not in already_loaded_v:
-                        spl_v.append(pd.DataFrame({angle: dbs}))
-                        already_loaded_v.add(angle)
+
+        if angle != "-180°":
+            if orientation == "H" and angle not in already_loaded_h:
+                spl_h.append(pd.DataFrame({angle: dbs}))
+                already_loaded_h.add(angle)
+            if orientation == "V" and angle not in already_loaded_v:
+                spl_v.append(pd.DataFrame({angle: dbs}))
+                already_loaded_v.add(angle)
 
     logger.debug("found %d horizontal and %d vertical measurements", len(spl_h), len(spl_v))
-    return sort_angles(pd.concat(spl_h, axis=1)), sort_angles(pd.concat(spl_v, axis=1))
+    return True, (sort_angles(pd.concat(spl_h, axis=1)), sort_angles(pd.concat(spl_v, axis=1)))
 
 
-def parse_graphs_speaker_gllHVtxt(
+def parse_graphs_speaker_gll_hv_txt(
     speaker_path: str, speaker_name: str, version: str
-) -> tuple[pd.DataFrame, pd.DataFrame]:
+) -> StatusOr[tuple[pd.DataFrame, pd.DataFrame]]:
     """2 files per directory xxx_H_IR.mat and xxx_V_IR.mat"""
     dirname = "{0}/{1}/{2}".format(speaker_path, speaker_name, version)
 
@@ -124,17 +119,17 @@ def parse_graphs_speaker_gllHVtxt(
             zipname = guesses[0]
         elif len(guesses) > 1:
             logger.error("Multiple zip files in %s", dirname)
-            return None, None
+            return False, ()
         else:
             logger.error("%s does not exist", zipname)
-            return None, None
+            return False, ()
 
     tmp_dirname = "{}/tmp".format(dirname)
     try:
         with zipfile.ZipFile(zipname, "r") as gll:
             gll.extractall(tmp_dirname)
-            return parse_graph_gllHVtxt(dirname)
+            return parse_graph_gll_hv_txt(dirname)
     except zipfile.BadZipFile:
         logger.exception("%s is a bad zipfile", zipname)
 
-    return None, None
+    return False, ()

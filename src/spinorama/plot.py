@@ -603,7 +603,7 @@ def plot_graph_regression(df, measurement, params):
 
 
 def plot_contour(spl, params):
-    df = spl.copy()
+    df_spl = spl.copy()
     params.get("layout", "")
     min_freq = params.get("contour_min_freq", 100)
 
@@ -626,7 +626,7 @@ def plot_contour(spl, params):
 
     fig = go.Figure()
 
-    af, am, az = compute_contour(df.loc[df.Freq > min_freq])
+    af, am, az = compute_contour(df_spl.loc[df_spl.Freq > min_freq])
     az = np.clip(az, contour_start, contour_end)
     fig.add_trace(
         go.Contour(
@@ -849,9 +849,9 @@ def plot_summary(df, summary, params):
     return None
 
 
-def plot_eqs(freq, peqs, names=None, normalized=False):
+def plot_eqs(freq, peqs, names):
     peqs_spl = [peq_build(freq, peq) for peq in peqs]
-    if normalized and len(peqs) > 1:
+    if len(peqs) > 1:
         freq_min = bisect.bisect(freq, 80)
         freq_max = bisect.bisect(freq, 3000)
         if freq_min == freq_max:

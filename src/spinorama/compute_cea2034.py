@@ -29,13 +29,13 @@ def compute_area_q(alpha_d: float, beta_d: float) -> float:
     alpha = alpha_d * 2 * math.pi / 360
     beta = beta_d * 2 * math.pi / 360
     gamma = math.acos(math.cos(alpha) * math.cos(beta))
-    A = math.atan(math.sin(beta) / math.tan(alpha))
-    B = math.atan(math.sin(alpha) / math.tan(beta))
-    C = math.acos(-math.cos(A) * math.cos(B) + math.sin(A) * math.sin(B) * math.cos(gamma))
-    S = 4 * C - 2 * math.pi
+    a = math.atan(math.sin(beta) / math.tan(alpha))
+    b = math.atan(math.sin(alpha) / math.tan(beta))
+    c = math.acos(-math.cos(a) * math.cos(b) + math.sin(a) * math.sin(b) * math.cos(gamma))
+    s = 4 * c - 2 * math.pi
     # print('gamma {} A {} B {} C {} S {}'.format(
     #    gamma*360/2/math.pi, A*360/2/math.pi, B*360/2/math.pi, C*360/2/math.pi, S))
-    return S
+    return s
 
 
 def compute_weigths() -> list[float]:

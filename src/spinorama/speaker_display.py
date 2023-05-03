@@ -54,7 +54,7 @@ def display_spinorama(df, graph_params=plot_params_default):
 
 def display_reflection_early(df, graph_params=plot_params_default):
     try:
-        if "Early Reflections_unmelted" not in df.keys():
+        if "Early Reflections_unmelted" not in df:
             return None
     except KeyError as ke:
         logger.warning("Display Early Reflections failed with %s", ke)
@@ -72,7 +72,7 @@ def display_onaxis(df, graph_params=plot_params_default):
         logger.debug("Display On Axis failed")
         return None
 
-    if "On Axis" not in onaxis.keys():
+    if "On Axis" not in onaxis:
         logger.debug("Display On Axis failed, known keys are (%s)", ", ".join(onaxis.keys()))
         return None
 
@@ -81,7 +81,7 @@ def display_onaxis(df, graph_params=plot_params_default):
 
 def display_inroom(df, graph_params=plot_params_default):
     try:
-        if "Estimated In-Room Response_unmelted" not in df.keys():
+        if "Estimated In-Room Response_unmelted" not in df:
             return None
     except KeyError as ke:
         logger.warning("Display In Room failed with %s", ke)
@@ -96,7 +96,7 @@ def display_inroom(df, graph_params=plot_params_default):
 
 def display_reflection_horizontal(df, graph_params=plot_params_default):
     try:
-        if "Horizontal Reflections_unmelted" not in df.keys():
+        if "Horizontal Reflections_unmelted" not in df:
             return None
     except KeyError as ke:
         logger.warning("Display Horizontal Reflections failed with %s", ke)
@@ -107,7 +107,7 @@ def display_reflection_horizontal(df, graph_params=plot_params_default):
 
 def display_reflection_vertical(df, graph_params=plot_params_default):
     try:
-        if "Vertical Reflections_unmelted" not in df.keys():
+        if "Vertical Reflections_unmelted" not in df:
             return None
     except KeyError:
         return None
@@ -117,7 +117,7 @@ def display_reflection_vertical(df, graph_params=plot_params_default):
 
 def display_spl(df, axis, graph_params=plot_params_default):
     try:
-        if axis not in df.keys():
+        if axis not in df:
             return None
     except KeyError as ke:
         logger.warning("Display SPL failed with %s", ke)
@@ -144,7 +144,7 @@ def display_spl_vertical_normalized(df, graph_params=plot_params_default):
 
 def display_contour(df, direction, graph_params=contour_params_default):
     # print('Display SPL: {} {}'.format(direction, df.keys()))
-    if direction not in df.keys():
+    if direction not in df:
         return None
     return plot_contour(df[direction], graph_params)
 
@@ -167,7 +167,7 @@ def display_contour_vertical_normalized(df, graph_params=contour_params_default)
 
 def display_contour_3d(df, direction, graph_params=contour_params_default):
     # print('Display SPL: {} {}'.format(direction, df.keys()))
-    if direction not in df.keys():
+    if direction not in df:
         return None
     return plot_contour_3d(df[direction], graph_params)
 
@@ -211,12 +211,12 @@ def display_summary(df, params, speaker, origin, key):
             speaker_type = metadata.speakers_info[speaker].get("type", "")
             speaker_shape = metadata.speakers_info[speaker].get("shape", "")
 
-        if "CEA2034" not in df.keys():
+        if "CEA2034" not in df:
             return None
         spin = df["CEA2034"]
-        splH = df.get("SPL Horizontal_unmelted", None)
-        splV = df.get("SPL Vertical_unmelted", None)
-        est = estimates(spin, splH, splV)
+        spl_h = df.get("SPL Horizontal_unmelted", None)
+        spl_v = df.get("SPL Vertical_unmelted", None)
+        est = estimates(spin, spl_h, spl_v)
 
         # 1
         speaker_summary = [f"{speaker_shape.capitalize()} {speaker_type.capitalize()}"]
@@ -278,7 +278,7 @@ def display_summary(df, params, speaker, origin, key):
         if "Estimated In-Room Response" in df:
             inroom = df["Estimated In-Room Response"]
             if inroom is not None:
-                pref_score = speaker_pref_rating(spin, inroom)
+                pref_score = speaker_pref_rating(cea2034=spin, pir=inroom, rounded=True)
 
         # 9-17
         if pref_score is not None:

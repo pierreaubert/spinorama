@@ -17,16 +17,21 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # local types
+from typing import Literal, TypeVar
+
+import numpy.typing as npt
 import pandas as pd
 
-from spinorama.filter_iir import Biquad
-
-Vector = list[float]
-
-Peq = list[tuple[float, Biquad]]
+Vector = npt.ArrayLike
 
 DataSpeaker = dict[str, pd.DataFrame]
 
 Zone = list[tuple[float, float]]
 
 OptimResult = tuple[int, float, float]
+
+Status = Literal[True] | Literal[False]
+
+T = TypeVar("T")
+
+StatusOr = tuple[Status, T]

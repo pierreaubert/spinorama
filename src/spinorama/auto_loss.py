@@ -23,10 +23,10 @@ import pandas as pd
 from scipy.stats import linregress
 
 from spinorama import logger
-from spinorama.ltype import Vector, Peq, DataSpeaker
+from spinorama.ltype import Vector, DataSpeaker
 from spinorama.compute_cea2034 import sp_weigths, estimated_inroom_hv
 from spinorama.compute_scores import octave
-from spinorama.filter_peq import peq_build
+from spinorama.filter_peq import Peq, peq_build
 from spinorama.filter_scores import scores_apply_filter
 from spinorama.filter_peq import peq_apply_measurements
 from spinorama.load_misc import graph_melt

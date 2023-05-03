@@ -41,16 +41,16 @@ from spinorama.compute_misc import unify_freq
 
 def shift_spl(spl, mean):
     """Shift all measurement by means"""
-    df = pd.DataFrame()
-    for k in spl.keys():
+    spl_copy = pd.DataFrame()
+    for k in spl:
         if k == "Freq":
-            df[k] = spl[k]
+            spl_copy[k] = spl[k]
         else:
-            df[k] = spl[k] - mean
+            spl_copy[k] = spl[k] - mean
         # too many side effects
-        # if k == "180°" and "-180°" not in df.keys():
-        #     df.insert(1, "-180°", spl["180°"] - mean)
-    return df
+        # if k == "180°" and "-180°" not in spl_copy.keys():
+        #     spl_copy.insert(1, "-180°", spl["180°"] - mean)
+    return spl_copy
 
 
 def shift_spl_melted(spl, mean):
@@ -65,13 +65,13 @@ def shift_spl_melted_cea2034(spl, mean):
     logger.debug("DEBUG shift_spl_melted_cea2034")
     # logger.debug(spl.head())
     # shift all measurement by means
-    df = None
+    spl_copy = None
     # for the rare case we do not have ON curve
     for curve in ("On Axis", "Listening Window"):
         if curve not in set(spl.Measurements):
             continue
-        df = pd.DataFrame({"Freq": spl.loc[spl.Measurements == curve].Freq}).reset_index()
-    if df is None:
+        spl_copy = pd.DataFrame({"Freq": spl.loc[spl.Measurements == curve].Freq}).reset_index()
+    if spl_copy is None:
         logger.error("CEA2034 is empty: known columns are (%s)", ", ".join(set(spl.Measurements)))
         return spl
 
@@ -79,30 +79,30 @@ def shift_spl_melted_cea2034(spl, mean):
         logger.debug("shifting col %s", col)
         logger.debug(spl.loc[spl.Measurements == col].dB.iloc[0:10])
         if "DI" in col:
-            df[col] = spl.loc[spl.Measurements == col].dB.values
+            spl_copy[col] = spl.loc[spl.Measurements == col].dB.to_numpy()
         else:
-            df[col] = spl.loc[spl.Measurements == col].dB.values - mean
-    logger.debug("melted_cea %f (%s)", mean, ", ".join(df.keys()))
-    logger.debug(df.head())
-    for k in df.keys():
-        count = df[k].isna().sum().sum()
+            spl_copy[col] = spl.loc[spl.Measurements == col].dB.to_numpy() - mean
+    logger.debug("melted_cea %f (%s)", mean, ", ".join(spl_copy.keys()))
+    logger.debug(spl_copy.head())
+    for k in spl_copy:
+        count = spl_copy[k].isna().sum().sum()
         logger.debug("%s %d", k, count)
     logger.debug("DEBUG END shift_spl_melted_cea2034")
-    return graph_melt(df)
+    return graph_melt(spl_copy)
 
 
 def norm_spl(spl):
     """Normalize SPL for a set of measurements"""
     # check
-    if "dB" in spl.keys():
+    if "dB" in spl:
         raise KeyError
     # nornalize v.s. on axis
-    df = pd.DataFrame({"Freq": spl.Freq})
-    on = spl["On Axis"].values
-    for k in spl.keys():
+    df_normalized = pd.DataFrame({"Freq": spl.Freq})
+    on = spl["On Axis"].to_numpy()
+    for k in spl:
         if k != "Freq":
-            df[k] = spl[k] - on
-    return df
+            df_normalized[k] = spl[k] - on
+    return df_normalized
 
 
 def filter_graphs(
@@ -189,10 +189,10 @@ def filter_graphs(
 
     for title, functor in table:
         try:
-            df = functor(sh_spl, sv_spl)
-            if df is not None:
-                dfs[title + "_unmelted"] = df
-                dfs[title] = graph_melt(df)
+            df_funct = functor(sh_spl, sv_spl)
+            if df_funct is not None:
+                dfs[title + "_unmelted"] = df_funct
+                dfs[title] = graph_melt(df_funct)
             else:
                 logger.info("%s computation is None for speaker %s", title, speaker_name)
         except KeyError as key_error:
@@ -274,28 +274,28 @@ def filter_graphs_eq(
 
     if sh_spl is None or sv_spl is None:
         #
-        df = compute_onaxis(sh_spl, sv_spl)
-        dfs["On Axis_unmelted"] = df
-        dfs["On Axis"] = graph_melt(df)
+        df_on = compute_onaxis(sh_spl, sv_spl)
+        dfs["On Axis_unmelted"] = df_on
+        dfs["On Axis"] = graph_melt(df_on)
         # SPL H
         if sh_spl is not None:
-            df = horizontal_reflections(sh_spl, sv_spl)
-            dfs["Horizontal Reflections_unmelted"] = df
-            dfs["Horizontal Reflections"] = graph_melt(df)
+            df_hr = horizontal_reflections(sh_spl, sv_spl)
+            dfs["Horizontal Reflections_unmelted"] = df_hr
+            dfs["Horizontal Reflections"] = graph_melt(df_hr)
         # SPL V
         if sv_spl is not None:
-            df = vertical_reflections(sh_spl, sv_spl)
-            dfs["Vectical Reflections_unmelted"] = df
-            dfs["Vectical Reflections"] = graph_melt(df)
+            df_vr = vertical_reflections(sh_spl, sv_spl)
+            dfs["Vectical Reflections_unmelted"] = df_vr
+            dfs["Vectical Reflections"] = graph_melt(df_vr)
         # that's all folks
         return dfs
 
     for title, functor in table:
         try:
-            df = functor(sh_spl, sv_spl)
-            if df is not None:
-                dfs[title + "_unmelted"] = df
-                dfs[title] = graph_melt(df)
+            df_funct = functor(sh_spl, sv_spl)
+            if df_funct is not None:
+                dfs[title + "_unmelted"] = df_funct
+                dfs[title] = graph_melt(df_funct)
             else:
                 logger.info("%s computation is None for speaker %s", title, speaker_name)
         except KeyError as ke:
@@ -341,9 +341,9 @@ def filter_graphs_partial(df):
             )
     if mean_midrange is not None:
         logger.debug("DEBUG: mean %f", mean_midrange)
-        if mean_sensitivity > 20:
+        if mean_sensitivity is not None and mean_sensitivity > 20:
             dfs["sensitivity"] = mean_sensitivity
-        for k in df.keys():
+        for k in df:
             if k == "CEA2034":
                 logger.debug("DEBUG %s pre shift cols=(%s)", k, ", ".join(set(df[k].Measurements)))
                 dfs[k] = shift_spl_melted_cea2034(df[k], mean_midrange)
@@ -351,10 +351,10 @@ def filter_graphs_partial(df):
             else:
                 dfs[k] = shift_spl_melted(df[k], mean_midrange)
     else:
-        for k in df.keys():
+        for k in df:
             dfs[k] = df[k]
 
-    for k in df.keys():
+    for k in df:
         dfs["{}_unmelted".format(k)] = (
             dfs[k]
             .pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max)
@@ -362,7 +362,7 @@ def filter_graphs_partial(df):
         )
 
     logger.debug("DEBUG  filter_graphs partial (%s)", ", ".join(dfs.keys()))
-    for k in dfs.keys():
+    for k in dfs:
         if k != "sensitivity":
             logger.debug(dfs[k].head())
 
@@ -378,7 +378,7 @@ def filter_graphs_partial(df):
 
 def parse_graph_freq_check(speaker_name: str, df_spin: pd.DataFrame) -> bool:
     status = True
-    spin_cols = set(df_spin.Measurements.values)
+    spin_cols = set(df_spin.Measurements.to_numpy())
     mandatory_cols = ("Listening Window", "On Axis", "Early Reflections", "Sound Power")
     other_cols = ("Early Reflections DI", "Sound Power DI")
     for col in mandatory_cols:
@@ -411,16 +411,14 @@ def spin_compute_di_eir(
         return {}
 
     spin_melted = spin_uneven
-    if "Measurements" not in spin_uneven.keys():
+    if "Measurements" not in spin_uneven:
         spin_melted = graph_melt(spin_uneven)
 
     if not parse_graph_freq_check(speaker_name, spin_melted):
         dfs[title] = spin_melted
         return dfs
 
-    # logger.debug("DEBUG before unify: spin_melted {}", spin_melted.keys())
     spin_even = unify_freq(spin_melted)
-    # logger.debug("DEBUG before melt: spin_even {}", spin_even.keys())
     spin = graph_melt(spin_even)
     logger.debug("DEBUG after melt: spin {}", spin.keys())
 
@@ -509,7 +507,7 @@ def spin_compute_di_eir(
     # add spin (at the end because we could have modified DI curves
     dfs[title] = spin
 
-    if on.isna().values.any():
+    if on.isna().to_numpy().any():
         logger.error("On Axis has NaN values")
 
     return dfs
@@ -525,14 +523,11 @@ def symmetrise_measurement(spl: pd.DataFrame) -> pd.DataFrame:
     min_angle = 180
     max_angle = -180
     for col in cols:
-        if col != "Freq":
-            angle = None
-            if col == "On Axis":
-                angle = 0
-            else:
-                angle = int(col[:-1])
-            min_angle = min(min_angle, angle)
-            max_angle = max(max_angle, angle)
+        if col == "Freq":
+            continue
+        angle = 0 if col == "On Axis" else int(col[:-1])
+        min_angle = min(min_angle, angle)
+        max_angle = max(max_angle, angle)
     # logger.debug("min {} max {}", min_angle, max_angle)
 
     # extend 0-180 to -170 0 180

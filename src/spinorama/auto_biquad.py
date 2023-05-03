@@ -16,9 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import math
-
-import numpy as np
 import scipy.optimize as opt
 
 from spinorama import logger
@@ -180,20 +177,20 @@ def find_best_peak(
         (bounds[2][0] + bounds[2][-1]) / 2,
     ]
 
-    v_init = np.array(
-        [
-            np.logspace(math.log10(bounds[0][0]), math.log10(bounds[0][-1]), 5),
-            np.linspace(bounds[1][0], bounds[1][-1], 5),
-            np.linspace(bounds[2][0], bounds[2][-1], 5),
-        ]
-    ).T
+    #    v_init = np.array(
+    #        [
+    #            np.logspace(math.log10(bounds[0][0]), math.log10(bounds[0][-1]), 5),
+    #            np.linspace(bounds[1][0], bounds[1][-1], 5),
+    #            np.linspace(bounds[2][0], bounds[2][-1], 5),
+    #        ]
+    #    ).T
 
-    z_init = [
-        [v_init[i][0], v_init[j][1], v_init[k][2]]
-        for i in range(0, len(v_init))
-        for j in range(0, len(v_init))
-        for k in range(0, len(v_init))
-    ]
+    #    z_init = [
+    #        [v_init[i][0], v_init[j][1], v_init[k][2]]
+    #        for i in range(0, len(v_init))
+    #        for j in range(0, len(v_init))
+    #        for k in range(0, len(v_init))
+    #    ]
 
     logger.debug(
         "range is [%f, %f]Hz, [%f, %f], [%f, %f]",

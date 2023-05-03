@@ -21,8 +21,11 @@ import numpy as np
 import pandas as pd
 
 from spinorama import logger
-from spinorama.ltype import Vector, Peq
+from spinorama.ltype import Vector
 from spinorama.filter_iir import Biquad
+
+# declare type here to prevent circular dependencies
+Peq = list[tuple[float, Biquad]]
 
 
 def peq_equal(left: Peq, right: Peq) -> bool:
@@ -41,7 +44,7 @@ def peq_build(freq: Vector, peq: Peq) -> Vector:
     return current_filter
 
 
-def peq_freq(spl: Vector, peq: Peq) -> Vector:
+def peq_freq(spl: list[Vector], peq: Peq) -> Vector:
     """compute SPL for each frequency"""
     current_filter = [0.0]
     if len(peq) > 0:
@@ -104,17 +107,19 @@ def peq_format_apo(comment: str, peq: Peq) -> str:
         if iir.typ in (Biquad.PEAK, Biquad.NOTCH, Biquad.BANDPASS):
             res.append(
                 "Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB Q {:0.2f}".format(
-                    i + 1, iir.type2str(), int(iir.freq), iir.dbGain, iir.Q
+                    i + 1, iir.type2str_short(), int(iir.freq), iir.db_gain, iir.q
                 )
             )
         elif iir.typ in (Biquad.LOWPASS, Biquad.HIGHPASS):
             res.append(
-                "Filter {:2d}: ON {:2s} Fc {:5d} Hz".format(i + 1, iir.type2str(), int(iir.freq))
+                "Filter {:2d}: ON {:2s} Fc {:5d} Hz".format(
+                    i + 1, iir.type2str_short(), int(iir.freq)
+                )
             )
         elif iir.typ in (Biquad.LOWSHELF, Biquad.HIGHSHELF):
             res.append(
                 "Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB".format(
-                    i + 1, iir.type2str(), int(iir.freq), iir.dbGain
+                    i + 1, iir.type2str_short(), int(iir.freq), iir.db_gain
                 )
             )
         else:

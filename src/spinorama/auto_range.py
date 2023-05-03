@@ -24,7 +24,8 @@ import scipy.signal as sig
 from scipy.interpolate import InterpolatedUnivariateSpline
 
 from spinorama import logger
-from spinorama.ltype import Vector, Peq, Zone
+from spinorama.ltype import Vector, Zone
+from spinorama.filter_peq import Peq
 
 # ------------------------------------------------------------------------------
 # find initial values for biquads
@@ -36,7 +37,7 @@ def compute_non_admissible_freq(peq: Peq, min_freq: float, max_freq: float) -> Z
     zones = []
     for _, current_eq in peq:
         f = current_eq.freq
-        q = current_eq.Q
+        q = current_eq.q
         # limit the zone for small q
         q = max(1.0, q)
         q2 = q * q

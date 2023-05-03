@@ -24,21 +24,19 @@ from more_itertools import consecutive_groups
 from scipy.stats import linregress
 
 from spinorama import logger
-from spinorama.compute_cea2034 import estimated_inroom_hv
-from spinorama.load_misc import graph_melt
 
 
 # https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
-def octave(N: int) -> List[Tuple[float, float, float]]:
+def octave(count: int) -> List[Tuple[float, float, float]]:
     """compute 1/N octave band
 
     N: >=2 when N increases, bands are narrower
     """
     # why 1290 and not 1000?
     reference = 1290.0
-    p = pow(2, 1 / N)
-    p_band = pow(2, 1 / (2 * N))
-    o_iter = int((N * 10 + 1) / 2)
+    p = pow(2, 1 / count)
+    p_band = pow(2, 1 / (2 * count))
+    o_iter = int((count * 10 + 1) / 2)
     center = (
         [reference / p**i for i in range(o_iter, 0, -1)]
         + [reference]
@@ -83,12 +81,12 @@ def nbd(dfu: pd.DataFrame) -> float:
     """nbd Narrow Band
 
     The narrow band deviation is defined by:
-      NBD(dB)=⎜ ∑ y −y ⎟÷N  ⎛
+      NBD(dB)=⎜ ∑ y -y ⎟÷N  ⎛
     where ⎜ OctaveBandn⎟ is the average amplitude value
-    within the 1⁄2-octave band n, yb is the amplitude
-    value of band b, and N is the total number of 1⁄2­ octave bands
+    within the 1/2-octave band n, yb is the amplitude
+    value of band b, and N is the total number of 1/2­ octave bands
     between 100 Hz-12 kHz. The mean absolute deviation within each
-    1⁄2-octave band is based a sample of 10 equally log-spaced data points.
+    1/2-octave band is based a sample of 10 equally log-spaced data points.
     """
     # return np.mean([median_absolute_deviation(dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB)
     #                for (bmin, bcenter, bmax) in octave(2)
@@ -109,7 +107,7 @@ def lfx(lw, sp) -> float:
     """lfx Low Frequency Extension
 
     The low frequency extension (LFX)
-         LFX = log10(xSP−6dB.re:y _ LW(300Hz−10kHz) (7)
+         LFX = log10(xSP-6dB.re:y _ LW(300Hz-10kHz) (7)
     where LFX is the log10 of the first frequency x_SP below 300 Hz
     in the sound power curve, that is -6 dB relative to the mean level y_LW
     measured in listening window (LW) between 300 Hz-10 kHz.
@@ -172,7 +170,7 @@ def sm(dfu):
     regression based on least square error. SM is the Pearson correlation
     coefficient of determination (r2) that describes the goodness of fit of the
     regression line defined by:
-    ⎛ SM =⎜ n(∑XY)−(∑X)(∑Y) ⎟ / ⎜ (n∑X2 −(∑X)2)(n∑Y2 −(∑Y)2)⎟
+    ⎛ SM =⎜ n(∑XY)-(∑X)(∑Y) ⎟ / ⎜ (n∑X2-(∑X)2)(n∑Y2-(∑Y)2)⎟
 
     where n is number of data points used to estimate the regression curve and
     X and Y represent the measured versus estimated amplitude values of the
@@ -191,13 +189,13 @@ def sm(dfu):
     return r_value**2
 
 
-def pref_rating(nbd_on, nbd_pir, lf_x, sm_pir):
+def pref_rating(nbd_on: float, nbd_pir: float, lf_x: float, sm_pir: float) -> float:
     return 12.69 - 2.49 * nbd_on - 2.99 * nbd_pir - 4.31 * lf_x + 2.32 * sm_pir
 
 
-def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
+def speaker_pref_rating(cea2034, pir, rounded):
     try:
-        if df_pred_in_room is None or df_pred_in_room.shape[0] == 0:
+        if pir is None or pir.shape[0] == 0:
             logger.info("PIR is empty")
             return None
         df_on_axis = cea2034.loc[lambda df: df.Measurements == "On Axis"]
@@ -211,7 +209,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
         nbd_on_axis = nbd(df_on_axis)
         nbd_listening_window = nbd(df_listening_window)
         nbd_sound_power = nbd(df_sound_power)
-        nbd_pred_in_room = nbd(df_pred_in_room)
+        nbd_pred_in_room = nbd(pir)
         lfx_hz = LFX_DEFAULT
         lfq_db = LFQ_DEFAULT
         aad_on_axis = -1.0
@@ -220,7 +218,7 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
             lfx_hz = lfx(df_listening_window, df_sound_power)
             lfq_db = lfq(df_listening_window, df_sound_power, lfx_hz)
         sm_sound_power = sm(df_sound_power)
-        sm_pred_in_room = sm(df_pred_in_room)
+        sm_pred_in_room = sm(pir)
         if nbd_on_axis is None or nbd_pred_in_room is None or sm_pred_in_room is None:
             logger.info("One of the pref score components is None")
             return None
@@ -274,25 +272,33 @@ def speaker_pref_rating(cea2034, df_pred_in_room, rounded=True):
     return ratings
 
 
-def scores(df_speaker, rounded=False):
-    pir = None
-    spin = None
-    if "CEA2034" in df_speaker:
-        spin = df_speaker["CEA2034"]
-        pir = spin.get("Estimated In-Room Response", None)
-        if pir is None:
-            logger.error("Don't find pir (%s) v1", ", ".join(df_speaker["CEA2034"].keys()))
-    elif "CEA2034_unmelted" in df_speaker:
-        spin = graph_melt(df_speaker["CEA2034_unmelted"])
-        if "Estimated In-Room Response" in df_speaker["CEA2034_unmelted"]:
-            pir = graph_melt(df_speaker["CEA2034_unmelted"]["Estimated In-Room Response"])
-        else:
-            logger.error("Don't find pir (%s) v2", ", ".join(df_speaker["CEA2034_unmelted"].keys()))
+# unused code?
 
-    if pir is None:
-        logger.error("pir is None, computing it")
-        spl_h = df_speaker["SPL Horizontal_unmelted"]
-        spl_v = df_speaker["SPL Vertical_unmelted"]
-        pir = graph_melt(estimated_inroom_hv(spl_h, spl_v))
+# from spinorama.compute_cea2034 import estimated_inroom_hv
+# from spinorama.load_misc import graph_melt
 
-    return speaker_pref_rating(cea2034=spin, df_pred_in_room=pir, rounded=rounded)
+# def scores(
+#        df_speaker: dict[str, pd.DataFrame],
+#        rounded: bool #noqa: FBT001
+# ):
+#    pir = None
+#    spin = None
+#    if "CEA2034" in df_speaker:
+#        spin = df_speaker["CEA2034"]
+#        pir = spin.get("Estimated In-Room Response", None)
+#        if pir is None:
+#            logger.error("Don't find pir (%s) v1", ", ".join(df_speaker["CEA2034"].keys()))
+#    elif "CEA2034_unmelted" in df_speaker:
+#        spin = graph_melt(df_speaker["CEA2034_unmelted"])
+#        if "Estimated In-Room Response" in df_speaker["CEA2034_unmelted"]:
+#            pir = graph_melt(df_speaker["CEA2034_unmelted"]["Estimated In-Room Response"])
+#        else:
+#            logger.error("Don't find pir (%s) v2", ", ".join(df_speaker["CEA2034_unmelted"].keys()))
+#
+#    if pir is None:
+#        logger.error("pir is None, computing it")
+#        spl_h = df_speaker["SPL Horizontal_unmelted"]
+#        spl_v = df_speaker["SPL Vertical_unmelted"]
+#        pir = graph_melt(estimated_inroom_hv(spl_h, spl_v))
+#
+#    return speaker_pref_rating(cea2034=spin, pir=pir, rounded=rounded)

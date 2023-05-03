@@ -19,9 +19,16 @@
 import math
 import numpy as np
 
+from spinorama.ltype import Vector
+
 
 def bw2q(bw: float) -> float:
     return math.sqrt(math.pow(2, bw)) / (math.pow(2, bw) - 1)
+
+
+def q2bw(q: float) -> float:
+    q2 = (2.0 * q * q + 1) / (2.0 * q * q)
+    return math.log(q2 + math.sqrt(q2 * q2 - 1.0)) / math.log(2.0)
 
 
 class Biquad:
@@ -38,7 +45,7 @@ class Biquad:
         HIGHSHELF: ["Highshelf", "HS"],
     }
 
-    def __init__(self, typ: int, freq: float, srate: int, Q: float, dbGain: float = 0):
+    def __init__(self, typ: int, freq: float, srate: int, q: float, db_gain: float = 0):
         types = {
             Biquad.LOWPASS: Biquad.lowpass,
             Biquad.HIGHPASS: Biquad.highpass,
@@ -53,15 +60,15 @@ class Biquad:
         self.typ = typ
         self.freq = float(freq)
         self.srate = float(srate)
-        self.Q = float(Q)
-        self.dbGain = float(dbGain)
+        self.q = float(q)
+        self.db_gain = float(db_gain)
         # some control over parameters
         if typ == Biquad.NOTCH:
-            self.Q = 30.0
-        elif self.Q == 0.0 and type in (Biquad.BANDPASS, Biquad.HIGHPASS, Biquad.LOWPASS):
-            self.Q = 1.0 / math.sqrt(2.0)
-        elif self.Q == 0.0 and type in (Biquad.LOWSHELF, Biquad.HIGHSHELF):
-            self.Q = bw2q(0.9)
+            self.q = 30.0
+        elif self.q == 0.0 and type in (Biquad.BANDPASS, Biquad.HIGHPASS, Biquad.LOWPASS):
+            self.q = 1.0 / math.sqrt(2.0)
+        elif self.q == 0.0 and type in (Biquad.LOWSHELF, Biquad.HIGHSHELF):
+            self.q = bw2q(0.9)
         # initialize the 5 coefs
         self.a0 = self.a1 = self.a2 = 0
         self.b0 = self.b1 = self.b2 = 0
@@ -69,16 +76,16 @@ class Biquad:
         self.x1 = self.x2 = 0
         self.y1 = self.y2 = 0
         # if self.typ in (Biquad.PEAK, Biquad.LOWSHELF, Biquad.HIGHSHELF):
-        A = math.pow(10, dbGain / 40)
+        a = math.pow(10, db_gain / 40)
         # else:
-        #    A = math.pow(10, dbGain / 20)
+        #    a = math.pow(10, db_gain / 20)
         omega = 2 * math.pi * self.freq / self.srate
         sn = math.sin(omega)
         cs = math.cos(omega)
-        alpha = sn / (2 * Q)
-        beta = math.sqrt(A + A)
+        alpha = sn / (2 * q)
+        beta = math.sqrt(a + a)
         # compute
-        types[typ](self, A, omega, sn, cs, alpha, beta)
+        types[typ](self, a, omega, sn, cs, alpha, beta)
         # prescale constants
         self.b0 /= self.a0
         self.b1 /= self.a0
@@ -94,7 +101,7 @@ class Biquad:
         self.r_dw1 = -4 * (self.a1 + 4 * self.a2 + self.a1 * self.a2)
         self.r_dw2 = 16 * self.a2
 
-    def lowpass(self, A, omega, sn, cs, alpha, beta):
+    def lowpass(self, a, omega, sn, cs, alpha, beta):
         self.b0 = (1 - cs) / 2
         self.b1 = 1 - cs
         self.b2 = (1 - cs) / 2
@@ -102,7 +109,7 @@ class Biquad:
         self.a1 = -2 * cs
         self.a2 = 1 - alpha
 
-    def highpass(self, A, omega, sn, cs, alpha, beta):
+    def highpass(self, a, omega, sn, cs, alpha, beta):
         self.b0 = (1 + cs) / 2
         self.b1 = -(1 + cs)
         self.b2 = (1 + cs) / 2
@@ -110,7 +117,7 @@ class Biquad:
         self.a1 = -2 * cs
         self.a2 = 1 - alpha
 
-    def bandpass(self, A, omega, sn, cs, alpha, beta):
+    def bandpass(self, a, omega, sn, cs, alpha, beta):
         self.b0 = alpha
         self.b1 = 0
         self.b2 = -alpha
@@ -118,7 +125,7 @@ class Biquad:
         self.a1 = -2 * cs
         self.a2 = 1 - alpha
 
-    def notch(self, A, omega, sn, cs, alpha, beta):
+    def notch(self, a, omega, sn, cs, alpha, beta):
         self.b0 = 1
         self.b1 = -2 * cs
         self.b2 = 1
@@ -126,29 +133,29 @@ class Biquad:
         self.a1 = -2 * cs
         self.a2 = 1 - alpha
 
-    def peak(self, A, omega, sn, cs, alpha, beta):
-        self.b0 = 1 + (alpha * A)
+    def peak(self, a, omega, sn, cs, alpha, beta):
+        self.b0 = 1 + (alpha * a)
         self.b1 = -2 * cs
-        self.b2 = 1 - (alpha * A)
-        self.a0 = 1 + (alpha / A)
+        self.b2 = 1 - (alpha * a)
+        self.a0 = 1 + (alpha / a)
         self.a1 = -2 * cs
-        self.a2 = 1 - (alpha / A)
+        self.a2 = 1 - (alpha / a)
 
-    def lowshelf(self, A, omega, sn, cs, alpha, beta):
-        self.b0 = A * ((A + 1) - (A - 1) * cs + beta * sn)
-        self.b1 = 2 * A * ((A - 1) - (A + 1) * cs)
-        self.b2 = A * ((A + 1) - (A - 1) * cs - beta * sn)
-        self.a0 = (A + 1) + (A - 1) * cs + beta * sn
-        self.a1 = -2 * ((A - 1) + (A + 1) * cs)
-        self.a2 = (A + 1) + (A - 1) * cs - beta * sn
+    def lowshelf(self, a, omega, sn, cs, alpha, beta):
+        self.b0 = a * ((a + 1) - (a - 1) * cs + beta * sn)
+        self.b1 = 2 * a * ((a - 1) - (a + 1) * cs)
+        self.b2 = a * ((a + 1) - (a - 1) * cs - beta * sn)
+        self.a0 = (a + 1) + (a - 1) * cs + beta * sn
+        self.a1 = -2 * ((a - 1) + (a + 1) * cs)
+        self.a2 = (a + 1) + (a - 1) * cs - beta * sn
 
-    def highshelf(self, A, omega, sn, cs, alpha, beta):
-        self.b0 = A * ((A + 1) + (A - 1) * cs + beta * sn)
-        self.b1 = -2 * A * ((A - 1) + (A + 1) * cs)
-        self.b2 = A * ((A + 1) + (A - 1) * cs - beta * sn)
-        self.a0 = (A + 1) - (A - 1) * cs + beta * sn
-        self.a1 = 2 * ((A - 1) - (A + 1) * cs)
-        self.a2 = (A + 1) - (A - 1) * cs - beta * sn
+    def highshelf(self, a, omega, sn, cs, alpha, beta):
+        self.b0 = a * ((a + 1) + (a - 1) * cs + beta * sn)
+        self.b1 = -2 * a * ((a - 1) + (a + 1) * cs)
+        self.b2 = a * ((a + 1) + (a - 1) * cs - beta * sn)
+        self.a0 = (a + 1) - (a - 1) * cs + beta * sn
+        self.a1 = 2 * ((a - 1) - (a + 1) * cs)
+        self.a2 = (a + 1) - (a - 1) * cs - beta * sn
 
     # perform filtering function
     def __call__(self, x):
@@ -166,7 +173,7 @@ class Biquad:
         return y
 
     # provide a static result for a given frequency f
-    def resultSlow(self, f: float) -> float:
+    def result_slow(self, f: float) -> float:
         phi = (math.sin(math.pi * f * 2 / (2 * self.srate))) ** 2
         result = (
             (self.b0 + self.b1 + self.b2) ** 2
@@ -201,22 +208,23 @@ class Biquad:
     def constants(self) -> tuple[float, float, float, float, float]:
         return self.a1, self.a2, self.b0, self.b1, self.b2
 
-    def type2str(self, short: bool = True) -> str:
-        if short is True:
-            return self.type2name[self.typ][1]
+    def type2str_short(self) -> str:
+        return self.type2name[self.typ][1]
+
+    def type2str_long(self) -> str:
         return self.type2name[self.typ][0]
 
     def __str__(self):
         return "Type:%s,Freq:%.1f,Rate:%.1f,Q:%.1f,Gain:%.1f" % (
-            self.type2str(),
+            self.type2str_short(),
             self.freq,
             self.srate,
-            self.Q,
-            self.dbGain,
+            self.q,
+            self.db_gain,
         )
 
     # vector version (10x faster)
-    def np_log_result(self, freq: float) -> np.ndarray:
+    def np_log_result(self, freq: Vector) -> np.ndarray:
         coeff = math.pi * 2 / (2 * self.srate)
         phi = np.square(np.sin(np.multiply(coeff, freq)))
         phi2 = np.square(phi)

@@ -38,14 +38,10 @@ def scale_params(params, factor):
         new_width = math.floor(width - 3 * SPACING) / 2
     new_params["width"] = new_width
     for check in ("xmin", "xmax"):
-        if check not in new_params.keys():
+        if check not in new_params:
             logger.error("scale_param %s is not a key", check)
     if new_params["xmin"] == new_params["xmax"]:
         logger.error("scale_param x-range is empty")
-    if (
-        "ymin" in new_params.keys()
-        and "ymax" in new_params.keys()
-        and new_params["ymin"] == new_params["ymax"]
-    ):
+    if "ymin" in new_params and "ymax" in new_params and new_params["ymin"] == new_params["ymax"]:
         logger.error("scale_param y-range is empty")
     return new_params

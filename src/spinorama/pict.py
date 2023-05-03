@@ -19,7 +19,7 @@
 import os
 import pathlib
 
-from wand.image import Image as wim
+from wand.image import Image as Wim
 
 from spinorama import logger
 
@@ -33,7 +33,7 @@ def write_multiformat(chart, filename, force):
         return
     logger.info("Saving %s", filename)
 
-    with wim(filename=filename) as pict:
+    with Wim(filename=filename) as pict:
         filename = filename.replace("_large", "")
         webp = "{}.webp".format(filename[:-4])
         if not pathlib.Path(webp).is_file() or force:

@@ -33,10 +33,10 @@ from spinorama.filter_scores import noscore_apply_filter
 from spinorama.load_klippel import parse_graphs_speaker_klippel
 from spinorama.load_misc import graph_melt, check_nan
 from spinorama.load_princeton import parse_graphs_speaker_princeton
-from spinorama.load_rewstextdump import parse_graphs_speaker_rewstextdump
-from spinorama.load_rewseq import parse_eq_iir_rews
-from spinorama.load_splHVtxt import parse_graphs_speaker_splHVtxt
-from spinorama.load_gllHVtxt import parse_graphs_speaker_gllHVtxt
+from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
+from spinorama.load_rew_eq import parse_eq_iir_rews
+from spinorama.load_spl_hv_txt import parse_graphs_speaker_spl_hv_txt
+from spinorama.load_gll_hv_txt import parse_graphs_speaker_gll_hv_txt
 from spinorama.load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
 from spinorama.load import (
     filter_graphs,
@@ -47,7 +47,7 @@ from spinorama.load import (
 )
 
 
-def get_mean_min_max(mparameters):
+def get_mean_min_max(mparameters: dict) -> tuple[int, int]:
     # default works well for flatish speakers but not at all for line arrays for ex
     # where the mean is flat but usually high bass and low high
     mean_min = 300
@@ -70,7 +70,7 @@ def parse_eq_speaker(
         srate = 48000
         logger.debug("found IIR eq %s: applying to %s", iirname, speaker_name)
         iir = parse_eq_iir_rews(iirname, srate)
-        if "SPL Horizontal_unmelted" in df_ref.keys() and "SPL Vertical_unmelted" in df_ref.keys():
+        if "SPL Horizontal_unmelted" in df_ref and "SPL Vertical_unmelted" in df_ref:
             h_spl = df_ref["SPL Horizontal_unmelted"]
             v_spl = df_ref["SPL Vertical_unmelted"]
             eq_h_spl = peq_apply_measurements(h_spl, iir)
@@ -79,7 +79,7 @@ def parse_eq_speaker(
                 speaker_name, h_spl, v_spl, eq_h_spl, eq_v_spl, mean_min, mean_max
             )
             return df_eq
-        elif "CEA2034" in df_ref.keys():
+        elif "CEA2034" in df_ref:
             spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir)
             df_eq = {}
             if spin_eq is not None:
@@ -103,7 +103,7 @@ def parse_eq_speaker(
             return df_eq
 
     logger.debug("no EQ for %s/eq/%s", speaker_path, speaker_name)
-    return None
+    return {}
 
 
 @ray.remote(num_cpus=1)
@@ -115,56 +115,61 @@ def parse_graphs_speaker(
     morigin: str,
     mversion: str,
     msymmetry: str,
-    mparameters: str,
+    mparameters: dict,
     level: int,
 ) -> dict:
     ray_setup_logger(level)
-    df = None
+    df_graph = None
     measurement_path = f"{speaker_path}"
     mean_min, mean_max = get_mean_min_max(mparameters)
 
-    if mformat in ("klippel", "princeton", "splHVtxt", "gllHVtxt"):
+    status = False
+    h_spl = pd.DataFrame()
+    v_spl = pd.DataFrame()
+    if mformat in ("klippel", "princeton", "spl_hv_txt", "gll_hv_txt"):
         if mformat == "klippel":
-            h_spl, v_spl = parse_graphs_speaker_klippel(
+            status, (h_spl, v_spl) = parse_graphs_speaker_klippel(
                 measurement_path, speaker_brand, speaker_name, mversion, msymmetry
             )
         elif mformat == "princeton":
-            h_spl, v_spl = parse_graphs_speaker_princeton(
+            status, (h_spl, v_spl) = parse_graphs_speaker_princeton(
                 measurement_path, speaker_brand, speaker_name, mversion, msymmetry
             )
-        elif mformat == "splHVtxt":
-            h_spl, v_spl = parse_graphs_speaker_splHVtxt(
+        elif mformat == "spl_hv_txt":
+            status, (h_spl, v_spl) = parse_graphs_speaker_spl_hv_txt(
                 measurement_path, speaker_brand, speaker_name, mversion
             )
-        elif mformat == "gllHVtxt":
-            h_spl, v_spl = parse_graphs_speaker_gllHVtxt(measurement_path, speaker_name, mversion)
+        elif mformat == "gll_hv_txt":
+            status, (h_spl, v_spl) = parse_graphs_speaker_gll_hv_txt(
+                measurement_path, speaker_name, mversion
+            )
 
-        if msymmetry == "coaxial":
+        if not status:
+            return {}
+
+        if h_spl is not None and msymmetry == "coaxial":
             h_spl2 = symmetrise_measurement(h_spl)
-            if v_spl is None:
-                v_spl2 = h_spl2.copy()
-            else:
-                v_spl2 = symmetrise_measurement(v_spl)
-            df = filter_graphs(speaker_name, h_spl2, v_spl2, mean_min, mean_max)
-        elif msymmetry == "horizontal":
+            v_spl2 = h_spl2.copy() if v_spl is None else symmetrise_measurement(v_spl)
+            df_graph = filter_graphs(speaker_name, h_spl2, v_spl2, mean_min, mean_max)
+        elif h_spl is not None and msymmetry == "horizontal":
             h_spl2 = symmetrise_measurement(h_spl)
-            df = filter_graphs(speaker_name, h_spl2, v_spl, mean_min, mean_max)
+            df_graph = filter_graphs(speaker_name, h_spl2, v_spl, mean_min, mean_max)
         else:
-            df = filter_graphs(speaker_name, h_spl, v_spl, mean_min, mean_max)
-    elif mformat in ("webplotdigitizer", "rewstextdump"):
+            df_graph = filter_graphs(speaker_name, h_spl, v_spl, mean_min, mean_max)
+    elif mformat in ("webplotdigitizer", "rew_text_dump"):
         title = None
         df_uneven = None
         if mformat == "webplotdigitizer":
-            title, df_uneven = parse_graphs_speaker_webplotdigitizer(
+            status, (title, df_uneven) = parse_graphs_speaker_webplotdigitizer(
                 measurement_path, speaker_brand, speaker_name, morigin, mversion
             )
             # necessary to do first (most digitalize graphs are uneven in frequency)
             df_uneven = graph_melt(unify_freq(df_uneven))
-        elif mformat == "rewstextdump":
-            title, df_uneven = parse_graphs_speaker_rewstextdump(
+        elif mformat == "rew_text_dump":
+            status, (title, df_uneven) = parse_graphs_speaker_rew_text_dump(
                 measurement_path, speaker_brand, speaker_name, morigin, mversion
             )
-        nan_count = check_nan(df_uneven)
+        nan_count = check_nan({"test": df_uneven})
         if nan_count > 0:
             logger.error("df_uneven %s has %d NaNs", speaker_name, nan_count)
 
@@ -179,40 +184,38 @@ def parse_graphs_speaker(
             nan_count = check_nan(df_full)
             if nan_count > 0:
                 logger.error("df_full %s has %d NaNs", speaker_name, nan_count)
-                for k in df_full.keys():
+                for k in df_full:
                     if isinstance(df_full[k], pd.DataFrame):
                         logger.error("------------ %s -----------", k)
                         logger.error(df_full[k].head())
 
-            for k in df_full.keys():
+            for k in df_full:
                 logger.debug("-- DF FULL ---------- %s -----------", k)
                 if isinstance(df_full[k], pd.DataFrame):
                     logger.debug(df_full[k].head())
 
-            df = filter_graphs_partial(df_full)
-            nan_count = check_nan(df)
+            df_graph = filter_graphs_partial(df_full)
+            nan_count = check_nan(df_graph)
             if nan_count > 0:
-                logger.error("df %s has %d NaNs", speaker_name, nan_count)
-                for k in df.keys():
-                    if isinstance(df[k], pd.DataFrame):
+                logger.error("df_graph %s has %d NaNs", speaker_name, nan_count)
+                for k in df_graph:
+                    if isinstance(df_graph[k], pd.DataFrame):
                         logger.error("------------ %s -----------", k)
-                        logger.error(df[k].head())
+                        logger.error(df_graph[k].head())
 
-            for k in df.keys():
-                if isinstance(df[k], pd.DataFrame):
+            for k in df_graph:
+                if isinstance(df_graph[k], pd.DataFrame):
                     logger.debug("-- DF ---------- %s -----------", k)
-                    logger.debug(df[k].head())
+                    logger.debug(df_graph[k].head())
         except ValueError as ve:
             logger.exception("ValueError for speaker %s: %s", speaker_name, ve)
-            raise ve
-            # return None
-
+            raise
     else:
         logger.fatal("Format %s is unkown", mformat)
         sys.exit(1)
 
-    if df is None:
+    if df_graph is None:
         logger.warning("Parsing failed for %s/%s/%s", measurement_path, speaker_name, mversion)
-        return None
+        return {}
 
-    return df
+    return df_graph

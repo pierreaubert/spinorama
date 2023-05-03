@@ -17,12 +17,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from spinorama import logger
-from spinorama.ltype import DataSpeaker, Peq
+from spinorama.ltype import DataSpeaker
 from spinorama.load import graph_melt
 from spinorama.compute_scores import speaker_pref_rating, nbd
 from spinorama.compute_cea2034 import compute_cea2034, estimated_inroom_hv, listening_window
-from spinorama.filter_peq import peq_apply_measurements
-from spinorama.plot import plot_spinorama
+from spinorama.filter_peq import Peq, peq_apply_measurements
 
 
 def scores_apply_filter(df_speaker: DataSpeaker, peq: Peq):
@@ -39,7 +38,7 @@ def scores_apply_filter(df_speaker: DataSpeaker, peq: Peq):
     # compute filtered score
     spin_filtered = graph_melt(compute_cea2034(spl_h_filtered, spl_v_filtered))
     pir_filtered = graph_melt(estimated_inroom_hv(spl_h_filtered, spl_v_filtered))
-    score_filtered = speaker_pref_rating(spin_filtered, pir_filtered, rounded=False)
+    score_filtered = speaker_pref_rating(cea2034=spin_filtered, pir=pir_filtered, rounded=False)
     if score_filtered is None:
         logger.info("computing pref score for eq failed")
         # max score is around 10
@@ -51,7 +50,7 @@ def noscore_apply_filter(df_speaker: DataSpeaker, peq: Peq):
     spin_filtered = None
     pir_filtered = None
     on_filtered = None
-    if "CEA2034" in df_speaker.keys():
+    if "CEA2034" in df_speaker:
         spin = df_speaker["CEA2034"]
         try:
             pivoted_spin = spin.pivot_table(
@@ -61,13 +60,13 @@ def noscore_apply_filter(df_speaker: DataSpeaker, peq: Peq):
             spin_filtered = peq_apply_measurements(pivoted_spin, peq)
             # not modified by eq
             for curve in ("Early Reflections DI", "Sound Power DI", "DI offset"):
-                if curve in pivoted_spin.keys():
+                if curve in pivoted_spin:
                     spin_filtered[curve] = pivoted_spin[curve]
         except ValueError:
             print("debug: {}".format(spin.keys()))
             return None, None, None
 
-    if "Estimated In-Room Response" in df_speaker.keys():
+    if "Estimated In-Room Response" in df_speaker:
         pir = df_speaker["Estimated In-Room Response"]
         # pivoted_pir = pir.pivot(*pir).rename_axis(columns=None).reset_index()
         pivoted_pir = (
@@ -77,7 +76,7 @@ def noscore_apply_filter(df_speaker: DataSpeaker, peq: Peq):
         )
         pir_filtered = peq_apply_measurements(pivoted_pir, peq)
 
-    if "On Axis" in df_speaker.keys():
+    if "On Axis" in df_speaker:
         on = df_speaker["On Axis"]
         # pivoted_on = on.pivot(*on).rename_axis(columns=None).reset_index()
         pivoted_on = (
@@ -100,10 +99,6 @@ def noscore_apply_filter(df_speaker: DataSpeaker, peq: Peq):
         on_melted = graph_melt(on_filtered)
 
     return spin_melted, pir_melted, on_melted
-
-
-def scores_graph(spin: DataSpeaker, spin_filtered: DataSpeaker, params: dict):
-    return plot_spinorama(spin, params) | plot_spinorama(spin_filtered, params)
 
 
 def scores_print(score: dict, score_filtered: dict):

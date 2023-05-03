@@ -19,9 +19,12 @@
 import pandas as pd
 
 from spinorama import logger
+from spinorama.ltype import StatusOr
 
 
-def parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name, origin, version):
+def parse_graphs_speaker_rew_text_dump(
+    speaker_path: str, speaker_brand: str, speaker_name: str, origin: str, version: str
+) -> StatusOr[tuple[str, pd.DataFrame]]:
     """Parse text files with speaker measurements and return a dataframe.
 
     Mandatory files are ON, LW, ER and SP. ERDI and PSDI are ignored. PIR is optional.
@@ -48,7 +51,7 @@ def parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name,
                     if len(l) > 0 and l[0] == "*":
                         continue
                     words = l.split()
-                    if len(words) == 3:
+                    if len(words) >= 2:
                         freq = float(words[0])
                         spl = float(words[1])
                         # phase = float(words[2])
@@ -60,6 +63,6 @@ def parse_graphs_speaker_rewstextdump(speaker_path, speaker_brand, speaker_name,
         except FileNotFoundError:
             if is_mandatory:
                 logger.exception("Speaker: %s File %s not found", speaker_brand, speaker_name)
-                return "error", pd.DataFrame({})
+                return False, ("", pd.DataFrame({}))
 
-    return "CEA2034", pd.DataFrame({"Freq": freqs, "dB": spls, "Measurements": msrts})
+    return True, ("CEA2034", pd.DataFrame({"Freq": freqs, "dB": spls, "Measurements": msrts}))

@@ -36,7 +36,7 @@ from spinorama.plot import (
 )
 
 
-def short_curve_name(name):
+def short_curve_name(name: str) -> str:
     """Return an abbrev for curve name"""
     if name == "Listening Window":
         return "LW"
@@ -47,9 +47,9 @@ def short_curve_name(name):
     return name
 
 
-def print_freq(freq):
+def print_freq(freq: float) -> str:
     """Pretty print frequency"""
-    if freq < 1000:
+    if freq < 1000.0:
         return f"{int(freq)}Hz"
 
     if int(freq) % 1000 == 0:
@@ -62,7 +62,7 @@ def graph_eq(freq, peq):
     """take a PEQ and return traces (for plotly) with frequency data"""
     data_frame = pd.DataFrame({"Freq": freq})
     for i, (pos, biquad) in enumerate(peq):
-        data_frame[f"{biquad.type2str(True)} {i}"] = peq_build(freq, [(pos, biquad)])
+        data_frame[f"{biquad.type2str_long()} {i}"] = peq_build(freq, [(pos, biquad)])
 
     traces = []
     for i, key in enumerate(data_frame.keys()):
@@ -94,7 +94,7 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, target, optim_config):
         curve_names.append(short_curve_name(name))
 
     target_name = f"error {curve_names[0]}"
-    df = pd.DataFrame(
+    df_compare = pd.DataFrame(
         {
             "Freq": freq,
             "autoEQ": peq_build(freq, auto_peq),
@@ -104,23 +104,23 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, target, optim_config):
     )
     for i, ati in enumerate(auto_target_interp):
         if i < len(curve_names):
-            df[f"ideal {curve_names[i]}"] = ati
+            df_compare[f"ideal {curve_names[i]}"] = ati
         else:
-            df[f"ideal {i}"] = ati
+            df_compare[f"ideal {i}"] = ati
 
     if optim_config.get("smooth_measurements"):
         window_size = optim_config.get("smooth_window_size")
         order = optim_config.get("smooth_order")
         smoothed = savitzky_golay(target, window_size, order)
-        df["smoothed {}".format(curve_names[0])] = smoothed
+        df_compare["smoothed {}".format(curve_names[0])] = smoothed
 
     traces = []
-    for i, key in enumerate(df.keys()):
+    for i, key in enumerate(df_compare.keys()):
         if key != "Freq":
             traces.append(
                 go.Scatter(
-                    x=df.Freq,
-                    y=df[key],
+                    x=df_compare.Freq,
+                    y=df_compare[key],
                     name=key,
                     legendgroup="target",
                     legendgrouptitle_text="EQ v.s. Target",

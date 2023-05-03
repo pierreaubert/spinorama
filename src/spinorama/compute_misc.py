@@ -118,7 +118,7 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
     return res2.dropna().reset_index(drop=True)
 
 
-def resample(df: pd.DataFrame, target_size: int):
+def resample(df: pd.DataFrame, target_size: int) -> pd.DataFrame:
     # resample dataframe to minimize size
     len_freq = df.shape[0]
     if len_freq > 2 * target_size:
@@ -153,7 +153,8 @@ def compute_contour(dfm_in):
     # print("nf={:d} vrange={}".format(len(vrange), vrange))
     hrange = dfm_in.Freq
     af, am = np.meshgrid(hrange, vrange)
-    dfm.drop("Freq", axis=1, inplace=True)
+    # suppress the warning down since it is working in this case
+    dfm.drop("Freq", axis=1, inplace=True)  # noqa: PD002
     az = dfm.T.to_numpy()
     return (af, am, az)
 
@@ -237,8 +238,8 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
         zp2 = az[xp2][k_hz_1:k_hz_10]
         # linear interpolation
         zp = zp1 + (x - xp1) * (zp2 - zp1)
-        # normˆ2 (z-(-6dB))
-        return np.linalg.norm(zp - zero - db_less)
+        # norm  L2 (z-(-6dB))
+        return float(np.linalg.norm(zp - zero - db_less))
 
     def linear_eval_octave(x: float) -> float:
         xp1 = int(x)
@@ -255,7 +256,7 @@ def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
             zp2 = az[xp2][kmin:kmax]
             # linear interpolation
             zp = zp1 + (x - xp1) * (zp2 - zp1)
-            # normˆ2 (z-(-6dB))
+            # norm L2 (z-(-6dB))
             # print('{}hz {} {}hz {} {}'.format(bmin, kmin, bmax, kmax, zp))
             per_octave.append(np.linalg.norm(zp - kzero - db_less))
         # print('x={} min= {} per_octave={}'.format(x, np.min(per_octave), per_octave))
@@ -303,7 +304,7 @@ def directivity_matrix(spl_h, spl_v):
         logger.info("Skipping directivty matrix, one measurement at least is empty")
         return None
 
-    if spl_h.isnull().values.any() or spl_v.isnull().values.any():
+    if spl_h.isna().to_numpy().any() or spl_v.is_na().to_numpy().any():
         logger.info("Skipping directivty matrix, one value at least is NaN")
         return None
 

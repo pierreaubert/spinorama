@@ -113,8 +113,7 @@ def print_graphs(
     key: str,
     width: int,
     height: int,
-    force_print: bool,
-    filter_file_ext: str,
+    force_print: bool,  # noqa: FBT001
     level: int,
 ):
     ray_setup_logger(level)

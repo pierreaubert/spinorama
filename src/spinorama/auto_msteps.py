@@ -16,7 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from spinorama.ltype import Peq, Vector, OptimResult
+from spinorama.ltype import Vector, OptimResult
+from spinorama.filter_peq import Peq
 from spinorama import logger
 from spinorama.auto_geq import optim_grapheq
 from spinorama.auto_greedy import optim_greedy

@@ -22,8 +22,8 @@ import pandas as pd
 from scipy.stats import linregress
 
 from spinorama import logger
-from spinorama.ltype import Peq, Vector
-from spinorama.filter_peq import peq_build
+from spinorama.ltype import Vector
+from spinorama.filter_peq import Peq, peq_build
 from spinorama.compute_misc import savitzky_golay
 
 

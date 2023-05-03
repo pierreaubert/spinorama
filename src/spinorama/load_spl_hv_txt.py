@@ -21,10 +21,11 @@ import glob
 import pandas as pd
 
 from spinorama import logger
+from spinorama.ltype import StatusOr
 from spinorama.load_misc import sort_angles
 
 
-def parse_graph_splHVtxt(dirpath: str, orientation: str) -> pd.DataFrame:
+def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFrame]:
     """Parse text files with Horizontal and Vertical data"""
     filenames = "{0}/*_{1}.txt".format(dirpath, orientation)
     files = glob.glob(filenames)
@@ -111,18 +112,18 @@ def parse_graph_splHVtxt(dirpath: str, orientation: str) -> pd.DataFrame:
                 mangle = f"-{angle}"
                 dfs.append(pd.DataFrame({mangle: dbs}))
 
-    return sort_angles(pd.concat(dfs, axis=1))
+    return True, sort_angles(pd.concat(dfs, axis=1))
 
 
-def parse_graphs_speaker_splHVtxt(
+def parse_graphs_speaker_spl_hv_txt(
     speaker_path: str, speaker_brand: str, speaker_name: str, version: str
-) -> tuple[pd.DataFrame, pd.DataFrame]:
+) -> StatusOr[tuple[pd.DataFrame, pd.DataFrame]]:
     """2 files per directory xxx_H_IR.mat and xxx_V_IR.mat"""
     dirname = "{0}/{1}/{2}".format(speaker_path, speaker_name, version)
 
     logger.debug("scanning path %s", dirname)
 
-    h_spl = parse_graph_splHVtxt(dirname, "H")
-    v_spl = parse_graph_splHVtxt(dirname, "V")
+    h_status, h_spl = parse_graph_spl_hv_txt(dirname, "H")
+    v_status, v_spl = parse_graph_spl_hv_txt(dirname, "V")
 
-    return h_spl, v_spl
+    return h_status and v_status, (h_spl, v_spl)
