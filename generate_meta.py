@@ -65,7 +65,7 @@ import spinorama.constant_paths as cpaths
 from spinorama.compute_estimates import estimates
 from spinorama.compute_scores import speaker_pref_rating
 from spinorama.filter_peq import peq_preamp_gain
-from spinorama.load_rewseq import parse_eq_iir_rews
+from spinorama.load_rew_eq import parse_eq_iir_rews
 
 
 @ray.remote(num_cpus=1)
@@ -118,7 +118,7 @@ def queue_score(speaker_name, speaker_data):
 
                 inroom = dfs["Estimated In-Room Response"]
                 if inroom is not None:
-                    pref_rating = speaker_pref_rating(spin, inroom)
+                    pref_rating = speaker_pref_rating(cea2034=spin, pir=inroom, rounded=True)
                     score_penalty = 0.0
                     current = metadata.speakers_info[speaker_name]["measurements"].get(key)
                     if current is not None and current.get("extras") is not None:
@@ -532,8 +532,8 @@ def add_eq(speaker_path, dataframe, parse_max):
                                 "type": iir_filter.typ,
                                 "freq": iir_filter.freq,
                                 "srate": iir_filter.srate,
-                                "Q": iir_filter.Q,
-                                "dbGain": iir_filter.dbGain,
+                                "Q": iir_filter.q,
+                                "dbGain": iir_filter.db_gain,
                             }
                         )
                         logger.debug(

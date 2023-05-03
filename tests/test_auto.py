@@ -67,7 +67,7 @@ class BiquadRangeTests(unittest.TestCase):
             test_peq = [
                 (
                     1.0,
-                    Biquad(typ=Biquad.PEAK, freq=case_freq, srate=48000, Q=case_q, dbGain=db_gain),
+                    Biquad(typ=Biquad.PEAK, freq=case_freq, srate=48000, q=case_q, db_gain=db_gain),
                 ),
             ]
             auto_target = peq_build(self.freq, test_peq)

@@ -44,14 +44,16 @@ class LossTests(unittest.TestCase):
 
     def test_loss(self):
         up_peq = [
-            (1.0, Biquad(typ=Biquad.PEAK, freq=1000, srate=48000, Q=1, dbGain=3)),
+            (1.0, Biquad(typ=Biquad.PEAK, freq=1000, srate=48000, q=1, db_gain=3)),
         ]
         down_peq = [
-            (1.0, Biquad(typ=Biquad.PEAK, freq=1000, srate=48000, Q=1, dbGain=-3)),
+            (1.0, Biquad(typ=Biquad.PEAK, freq=1000, srate=48000, q=1, db_gain=-3)),
         ]
         auto_target = peq_build(self.freq, up_peq)
 
-        self.assertAlmostEqual(np.linalg.norm(auto_target + peq_build(self.freq, down_peq)), 0.0)
+        self.assertAlmostEqual(
+            float(np.linalg.norm(np.add(auto_target, peq_build(self.freq, down_peq)))), 0.0
+        )
 
         for func in ("leastsquare_loss", "flat_loss"):
             self.config["loss"] = func

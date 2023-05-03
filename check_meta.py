@@ -460,9 +460,9 @@ FORMAT_KNOWN_KEYS = (
     "klippel",
     "princeton",
     "webplotdigitizer",
-    "rewstextdump",
-    "splHVtxt",
-    "gllHVtxt",
+    "rew_text_dump",
+    "spl_hv_txt",
+    "gll_hv_txt",
 )
 
 

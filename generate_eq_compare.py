@@ -41,7 +41,7 @@ from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DOCS_SPEAKERS, C
 from spinorama.need_update import need_update
 from spinorama.pict import write_multiformat
 from spinorama.plot import plot_eqs
-from spinorama.load_rewseq import parse_eq_iir_rews
+from spinorama.load_rew_eq import parse_eq_iir_rews
 
 
 VERSION = 0.2
@@ -55,7 +55,7 @@ def print_eq_compare(data, force):
     eqs = glob.glob("{}/{} {}/*.txt".format(CPATH_DATAS_EQ, brand, model))
     peqs = [parse_eq_iir_rews(eq, 48000) for eq in eqs if os.path.basename(eq) != "iir.txt"]
     names = [os.path.basename(eq) for eq in eqs if os.path.basename(eq) != "iir.txt"]
-    fig = plot_eqs(freq, peqs, names, normalized=True)
+    fig = plot_eqs(freq, peqs, names)
     fig.update_layout(
         title={
             "text": f"EQs for {brand} {model}",

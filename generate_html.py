@@ -311,7 +311,9 @@ def main():
         "--out-dir",
         cpaths.CPATH_DOCS_ASSETS_JS,
     )
-    status = subprocess.run([flow_command], shell=True, check=True, capture_output=True)
+    status = subprocess.run(
+        [flow_command], shell=True, check=True, capture_output=True
+    )  # noqa: S602
     if status.returncode != 0:
         print("flow failed")
 

@@ -28,7 +28,6 @@ Options:
   --width=<width>     width size in pixel
   --height=<height>   height size in pixel
   --force             force regeneration of all graphs, by default only generate new ones
-  --type=<ext>        choose one of: json, html, png, svg
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
   --origin=<origin>   filter by origin
   --brand=<brand>     filter by brand
@@ -121,7 +120,6 @@ def queue_measurement(
         level,
     )
     id_eq = parse_eq_speaker.remote("./datas", speaker, id_df, mparameters, level)
-    ptype = None
     width = plot_params_default["width"]
     height = plot_params_default["height"]
     tracing("calling print_graph remote for {}".format(speaker))
@@ -135,7 +133,6 @@ def queue_measurement(
         width,
         height,
         force,
-        ptype,
         level,
     )
     tracing("calling print_graph remote eq for {}".format(speaker))
@@ -149,7 +146,6 @@ def queue_measurement(
         width,
         height,
         force,
-        ptype,
         level,
     )
     tracing("print_graph done")
@@ -340,8 +336,6 @@ def main(level):
             )
         print(speakerlist)
 
-    ptype = None
-
     if args["--width"] is not None:
         opt_width = int(args["--width"])
         plot_params_default["width"] = opt_width
@@ -349,17 +343,6 @@ def main(level):
     if args["--height"] is not None:
         opt_height = int(args["--height"])
         plot_params_default["height"] = opt_height
-
-    if args["--type"] is not None:
-        ptype = args["--type"]
-        picture_suffixes = ("png", "html", "svg", "json")
-        if ptype not in picture_suffixes:
-            print(
-                "Picture type {} is not recognize! Allowed list is {}".format(
-                    ptype, picture_suffixes
-                )
-            )
-        sys.exit(1)
 
     update_cache = False
     if args["--update-cache"] is True:

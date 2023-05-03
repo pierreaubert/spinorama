@@ -54,7 +54,7 @@ Options:
   --origin=<origin>        Restrict to a specific origin
   --speaker=<speaker>      Restrict to a specific speaker, if not specified it will optimise all speakers
   --mversion=<mversion>    Restrict to a specific mversion (for a given origin you can have multiple measurements)
-  --mformat=<mformat>      Restrict to a specifig format (klippel, splHVtxt, gllHVtxt, webplotdigitizer, ...)
+  --mformat=<mformat>      Restrict to a specifig format (klippel, spl_hv_txt, gll_hv_txt, webplotdigitizer, ...)
   --max-peq=<count>        Maximum allowed number of Biquad
   --min-Q=<minQ>           Minumum value for Q
   --max-Q=<maxQ>           Maximum value for Q

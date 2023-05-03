@@ -35,17 +35,14 @@ from docopt import docopt
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="generate_book.py version 0.1", options_first=True)
 
-    # logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-    #                    datefmt='%Y-%m-%d:%H:%M:%S')
+    args = docopt(__doc__, version="generate_book.py version 0.1", options_first=True)
     if args["--log-level"] is not None:
         level = args["--log-level"]
         if level in ["INFO", "DEBUG", "WARNING", "ERROR"]:
             logging.basicConfig(level=level)
-
-    # load all metadata from generated json file
     json_filename = "../docs/assets/metadata.json"
+
     if not os.path.exists(json_filename):
         logging.fatal("Cannot find %s", json_filename)
         sys.exit(1)
@@ -71,7 +68,7 @@ if __name__ == "__main__":
         speakers[speaker_name] = {"image": speaker_name, "title": speaker_title}
 
     # configure Mako
-    mako_templates = TemplateLookup(directories=["."], module_directory="/tmp/mako_modules")
+    mako_templates = TemplateLookup(directories=["."], module_directory="../build/mako_modules")
 
     # write index.html
     for template in ("asrbook",):
