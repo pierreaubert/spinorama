@@ -117,7 +117,7 @@ def guess(speaker):
     # forget part of brand
     brand = tokens[0]
     model = tokens[1:]
-    guess_3 = " ".join([brand] + model)
+    guess_3 = " ".join([brand, *model])
     if guess_3 in metadata:
         return guess_3
 
@@ -133,7 +133,7 @@ def guess(speaker):
     brand2 = " ".join(tokens[0:2])
     if brand1 not in brands and brand2 not in brands:
         possible_brand = None
-        for k, v in metadata.items():
+        for _, v in metadata.items():
             if v["brand"].lower().startswith(tokens[0].lower()):
                 possible_brand = v["brand"]
         print("Brand is not known for {}: it could be {}".format(speaker, possible_brand))
@@ -204,10 +204,8 @@ def find_speaker(zipfile):
     speaker = base_speaker[:-4]
 
     version = None
-    manual_exception = False
     if base_speaker in manual_exceptions_table:
         speaker, version = manual_exceptions_table[base_speaker]
-        manual_exception = True
     elif speaker not in metadata:
         tokens = speaker.split()
         for pos in range(1, min(len(tokens), 5)):

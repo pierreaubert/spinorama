@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 import sys
@@ -25,7 +26,7 @@ SPLDELTA = -2  # 70.69 - 68.80
 # CUTOFF = 125  # Hz
 # SPLDELTA = 87.146 - 64.61
 
-refFreq = [
+REF_FREQ = [
     20.5078,
     21.9727,
     23.4375,
@@ -245,7 +246,7 @@ def interpolate(onaxis, freq):
     i = 0
     while onaxis[0][i] <= freq:
         i += 1
-    freqmin = onaxis[0][i]
+    # freqmin = onaxis[0][i]
     # dn't be smart
     return freq, onaxis[1][i]
 
@@ -271,16 +272,17 @@ def interpolate(onaxis, freq):
 def process_hv(speaker, direction, onaxis):
     files = {}
     for angle in range(-180, 190, 10):
-        files["{}".format(angle)] = open("{} _{} {}.txt".format(speaker, direction[0], angle), "w")
-        files["{}".format(angle)].write("Freq Spl Phase\n")
-        for freq in refFreq:
-            if freq >= FIXED:
-                continue
-            freqOn, splOn = interpolate(onaxis, freq)
-            if freqOn == 20.0:
-                continue
-            # print('debug {} {} {}'.format(freq, freqOn, splOn))
-            files["{}".format(angle)].write("{} {} 0.0\n".format(freqOn, splOn))
+        with open("{} _{} {}.txt".format(speaker, direction[0], angle), "w") as fd:
+            files["{}".format(angle)] = fd
+            files["{}".format(angle)].write("Freq Spl Phase\n")
+            for freq in REF_FREQ:
+                if freq >= FIXED:
+                    continue
+                freq_on, spl_on = interpolate(onaxis, freq)
+                if freq_on == 20.0:
+                    continue
+                # print('debug {} {} {}'.format(freq, freq_on, spl_on))
+                files["{}".format(angle)].write("{} {} 0.0\n".format(freq_on, spl_on))
 
     with open("{} Contour Plot.txt".format(direction), "r") as data:
         lines = data.readlines()

@@ -95,7 +95,6 @@ def save(dir: str, curves):
 
 
 def process_copy(dirname, speaker_in, speaker_out):
-
     # check dirs
     dir_out = Path(f"./datas/measurements/{speaker_out}")
 

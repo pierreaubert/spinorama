@@ -16,7 +16,6 @@ def exec_git(command):
 
 def move_data(speaker_name, speaker_data):
     brand = speaker_data["brand"]
-    model = speaker_data["model"]
 
     root = "./datas/measurements"
     target_dir = "{}/{}/{}".format(root, brand, speaker_name)

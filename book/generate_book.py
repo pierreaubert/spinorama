@@ -35,7 +35,6 @@ from docopt import docopt
 
 
 if __name__ == "__main__":
-
     args = docopt(__doc__, version="generate_book.py version 0.1", options_first=True)
     if args["--log-level"] is not None:
         level = args["--log-level"]

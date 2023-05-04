@@ -32,7 +32,7 @@ known_brands.update(
 change_brands = {
     "polk": "polk audio",
     "buchardt": "buchardt audio",
-    "devialet’s": "devialet",
+    "devialet's": "devialet",
     "martinlogan": "martin logan",
 }
 
@@ -145,7 +145,7 @@ def get_review_tar(speakerdir):
     return review_tar
 
 
-def get_review_txt(key, review_src, reviews_src):
+def get_review_txt(review_src, reviews_src):
     review_txt = ""
     if review_src is not None:
         review_txt = '"review": "{}",'.format(review_src)
@@ -153,11 +153,12 @@ def get_review_txt(key, review_src, reviews_src):
     if reviews_src is not None and len(reviews_src.keys()) > 0:
         review_tab = ['"reviews": {']
         for k, v in reviews_src.items():
+            key = k
             if "audiosciencereview" in v:
-                k = "asr"
+                key = "asr"
             elif "thenextweb" in v:
-                k = "tnw"
-            review_tab.append('                        "{}": "{}",'.format(k, v))
+                key = "tnw"
+            review_tab.append('                        "{}": "{}",'.format(key, v))
         review_tab.append("                    },")
         review_txt = "\n".join(review_tab)
 
@@ -182,7 +183,7 @@ def scan_speaker(reviewer, speakerdir):
         # print("{} is new".format(speaker_name))
         review_key = get_review_key(reviewer_name)
         review_src, reviews_src = get_review_src(speakerdir)
-        review_txt = get_review_txt(key, review_src, reviews_src)
+        review_txt = get_review_txt(review_src, reviews_src)
         review_tar = get_review_tar(speakerdir)
         speaker_brand, speaker_model = guess_brand_model(speaker_name)
         if speaker_brand is None:

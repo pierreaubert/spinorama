@@ -38,17 +38,19 @@ app = FastAPI(
 
 
 @app.get(f"/{API_VERSION}/brands", tags=["speaker"])
-async def get_brand_list(metadata: dict = Depends(load_metadata)):
+async def get_brand_list(metadata: dict = Depends(load_metadata)):  # noqa: B008
     return sorted(set([v.get("brand") for _, v in metadata.items()]))
 
 
 @app.get(f"/{API_VERSION}/speaker", tags=["speaker"])
-async def get_speaker_list(metadata: dict = Depends(load_metadata)):
+async def get_speaker_list(metadata: dict = Depends(load_metadata)):  # noqa: B008
     return sorted(metadata.keys())
 
 
 @app.get(f"/{API_VERSION}/speaker/{{speaker_name}}/metadata", tags=["speaker"])
-async def get_speaker_metadata(speaker_name: str, metadata: dict = Depends(load_metadata)):
+async def get_speaker_metadata(
+    speaker_name: str, metadata: dict = Depends(load_metadata)  # noqa: B008
+):
     content = metadata.get(speaker_name, {"error": "Speaker not found"})
     json = jsonable_encoder(content)
     return JSONResponse(content=json)

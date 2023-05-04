@@ -96,8 +96,8 @@ class SpinoramaContourTests(unittest.TestCase):
         angles = [am[i][0] for i in range(0, len(am))]
         # check it is decreasing
         self.assertTrue(
-            all(i < j for i, j in zip(angles, angles[1:], strict=False))
-        )  # noqa: RUF007
+            all(i < j for i, j in zip(angles, angles[1:], strict=False))  # noqa: RUF007
+        )
 
 
 class SpinoramaReshapeTests(unittest.TestCase):
@@ -160,8 +160,8 @@ class SpinoramaReshapeTests(unittest.TestCase):
             angles = [ram[i][0] for i in range(0, len(ram))]
             # check it is decreasing
             self.assertTrue(
-                all(i < j for i, j in zip(angles, angles[1:], strict=False))
-            )  # noqa: RUF007
+                all(i < j for i, j in zip(angles, angles[1:], strict=False))  # noqa: RUF007
+            )
 
 
 if __name__ == "__main__":

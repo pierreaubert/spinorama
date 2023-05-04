@@ -69,7 +69,7 @@ def merge(
 ) -> dict[str, list[float]]:
     merged = {}
     # delta between the 2, could be small or large if one is already normalized
-    delta = kef["LW"][0] - cea2034["LW"].loc[cea2034.freq < cut_freq_high].to_numpy()[-1]
+    # delta = kef["LW"][0] - cea2034["LW"].loc[cea2034.freq < cut_freq_high].to_numpy()[-1]
     # what's -6dB ? computed on On Axis since that's all we have?
     idx_300 = 0
     while kef["freq"][idx_300] < 300:

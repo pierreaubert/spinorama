@@ -14,7 +14,7 @@ def space2dash(context, text):
     )
 
 
-def removeVendors(context, text):
+def removeVendors(context, text):  # noqa: N802
     return text.replace("Vendors-", "").replace(" ", "%20").replace("&", "%26")
 
 
@@ -31,15 +31,15 @@ def eq2text(context, eq):
     return text.get(eq, "ERROR")
 
 
-def unmeltC(context, text):
+def unmeltC(context, text):  # noqa: N802
     return text.replace("_unmelted", " Contour")
 
 
-def unmeltI(context, text):
+def unmeltI(context, text):  # noqa: N802
     return text.replace("_unmelted", " IsoBand")
 
 
-def unmeltR(context, text):
+def unmeltR(context, text):  # noqa: N802
     return text.replace("_unmelted", " Radar")
 
 
