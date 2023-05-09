@@ -27,8 +27,7 @@ POPSIZE = 15
 
 
 def display(xk, convergence):
-    # logger.debug(xk, convergence)
-    pass
+    logger.debug(xk, convergence)
 
 
 def find_best_biquad(
@@ -45,7 +44,7 @@ def find_best_biquad(
 ) -> tuple[bool, int, float, float, float, float, int]:
     """Find the best possible biquad that minimise the loss function"""
 
-    def opt_peq(x: Vector) -> float:
+    def opt_peq(x: list[float]) -> float:
         peq = [(1.0, Biquad(int(x[0]), x[1], 48000, x[2], x[3]))]
         return loss(df_speaker, freq, auto_target, peq, count, optim_config)
 
@@ -156,7 +155,7 @@ def find_best_peak(
     """Find the best possible peak biquad that minimise the loss function"""
     biquad_type = 3
 
-    def opt_peq(x: Vector) -> float:
+    def opt_peq(x: list[float]) -> float:
         peq = [(1.0, Biquad(biquad_type, x[0], 48000, x[1], x[2]))]
         return loss(df_speaker, freq, auto_target, peq, count, optim_config)
 

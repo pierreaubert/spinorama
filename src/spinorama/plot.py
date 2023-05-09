@@ -16,8 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import math
 import bisect
+import itertools
+import math
+from typing import TypeVar
 
 import numpy as np
 import pandas as pd
@@ -602,6 +604,13 @@ def plot_graph_regression(df, measurement, params):
     return fig
 
 
+T = TypeVar("T")
+
+
+def flatten(l: list[list[T | None]]) -> list[T | None]:
+    return list(itertools.chain.from_iterable(l))
+
+
 def plot_contour(spl, params):
     df_spl = spl.copy()
     params.get("layout", "")
@@ -666,14 +675,18 @@ def plot_contour(spl, params):
             )
         )
 
-    def compute_horizontal_lines(x_min, x_max, y_data):
-        x = np.tile([x_min, x_max, None], len(y_data))
-        y = np.ndarray.flatten(np.array([[a, a, None] for a in y_data]))
+    def compute_horizontal_lines(
+        x_min: float, x_max: float, y_data: range
+    ) -> tuple[list[float | None], list[int | None]]:
+        x = [x_min, x_max, None] * len(y_data)
+        y = flatten([[a, a, None] for a in y_data])
         return x, y
 
-    def compute_vertical_lines(y_min, y_max, x_data):
-        y = np.tile([y_min, y_max, None], len(x_data))
-        x = np.ndarray.flatten(np.asarray([[a, a, None] for a in x_data]))
+    def compute_vertical_lines(
+        y_min: int, y_max: int, x_data: list[int]
+    ) -> tuple[list[int | None], list[float | None]]:
+        x = flatten([[a, a, None] for a in x_data])
+        y = [y_min, y_max, None] * len(x_data)
         return x, y
 
     hx, hy = compute_horizontal_lines(min_freq, 20000, range(-150, 180, 30))
@@ -698,7 +711,7 @@ def plot_contour(spl, params):
     return fig
 
 
-def find_nearest_freq(dfu, hz, tolerance=0.05):
+def find_nearest_freq(dfu: pd.DataFrame, hz: float, tolerance: float = 0.05) -> int | None:
     """return the index of the nearest freq in dfu, return None if not found"""
     ihz = None
     for i in dfu.index:
@@ -857,8 +870,8 @@ def plot_eqs(freq, peqs, names):
         if freq_min == freq_max:
             freq_min = 0
             freq_max = -1
-        peqs_avg = [np.mean(spl[freq_min:freq_max]) for spl in peqs_spl]
-        peqs_spl = [spl - (peqs_avg[i] - peqs_avg[0]) for i, spl in enumerate(peqs_spl)]
+        peqs_avg = [np.mean(np.array(spl)[freq_min:freq_max]) for spl in peqs_spl]
+        peqs_spl = [np.array(spl) - (peqs_avg[i] - peqs_avg[0]) for i, spl in enumerate(peqs_spl)]
     traces = None
     if names is None:
         traces = [go.Scatter(x=freq, y=spl) for spl in peqs_spl]

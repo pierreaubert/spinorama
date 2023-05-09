@@ -35,7 +35,7 @@ class SpinoramaEstimatesNV2Tests(unittest.TestCase):
         )
         self.assertTrue(status)
         self.df = graph_melt(self.df_unmelted)
-        self.estimates = estimates(self.df, None, None)
+        self.estimates = estimates(self.df, pd.DataFrame(), pd.DataFrame())
 
     def test_estimates(self):
         self.assertNotEqual(-1, self.estimates["ref_level"])

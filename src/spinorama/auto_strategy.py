@@ -258,7 +258,7 @@ def optim_strategy(
             auto_peq,
             auto_slope_lw,
         )
-        logger.warning("strategy: %s %2.2f", auto_status, auto_score.get("pref_score"))
+        logger.warning("strategy: %s %2.2f", auto_status, auto_score.get("pref_score", -1000.0))
         if auto_status is False or len(auto_peq) == 0:
             logger.error(
                 "optim_eval_strategy failed for %s with %s",
@@ -325,7 +325,9 @@ def optim_strategy(
                     auto_peq2,
                     auto_slope_lw2,
                 )
-                logger.warning("strategy2: %s %2.2f", auto_status2, auto_score2.get("pref_score"))
+                logger.warning(
+                    "strategy2: %s %2.2f", auto_status2, auto_score2.get("pref_score", -1000.0)
+                )
                 if auto_status2 is False:
                     continue
                 slope_is_admissible = (

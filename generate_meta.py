@@ -68,6 +68,92 @@ from spinorama.filter_peq import peq_preamp_gain
 from spinorama.load_rew_eq import parse_eq_iir_rews
 
 
+def compute_scaled_pref_score(pref_score: float) -> float:
+    scaled_pref_score = 0
+    if pref_score > 7:
+        scaled_pref_score = 100
+    elif pref_score > 6.5:
+        scaled_pref_score = 90
+    elif pref_score > 6:
+        scaled_pref_score = 80
+    elif pref_score > 5.5:
+        scaled_pref_score = 70
+    elif pref_score > 5:
+        scaled_pref_score = 60
+    elif pref_score > 4.5:
+        scaled_pref_score = 50
+    elif pref_score > 4.0:
+        scaled_pref_score = 40
+    elif pref_score > 3.0:
+        scaled_pref_score = 30
+    elif pref_score > 2.0:
+        scaled_pref_score = 20
+    elif pref_score > 1.0:
+        scaled_pref_score = 10
+    return scaled_pref_score
+
+
+def compute_scaled_flatness(flatness: float) -> float:
+    scaled_flatness = 0
+    if flatness < 2.0:
+        scaled_flatness = 100
+    elif flatness < 2.25:
+        scaled_flatness = 90
+    elif flatness < 2.5:
+        scaled_flatness = 80
+    elif flatness < 3:
+        scaled_flatness = 70
+    elif flatness < 4:
+        scaled_flatness = 50
+    elif flatness < 5:
+        scaled_flatness = 30
+    elif flatness < 6:
+        scaled_flatness = 10
+    return scaled_flatness
+
+
+def compute_scaled_lfx_hz(lfx_hz: float) -> float:
+    scaled_lfx_hz = 0
+    if lfx_hz < 25:
+        scaled_lfx_hz = 100
+    elif lfx_hz < 30:
+        scaled_lfx_hz = 90
+    elif lfx_hz < 35:
+        scaled_lfx_hz = 80
+    elif lfx_hz < 40:
+        scaled_lfx_hz = 70
+    elif lfx_hz < 50:
+        scaled_lfx_hz = 60
+    elif lfx_hz < 60:
+        scaled_lfx_hz = 50
+    elif lfx_hz < 70:
+        scaled_lfx_hz = 40
+    elif lfx_hz < 80:
+        scaled_lfx_hz = 30
+    elif lfx_hz < 100:
+        scaled_lfx_hz = 10
+    return scaled_lfx_hz
+
+
+def compute_scaled_sm_pir(sm_pir: float) -> float:
+    scaled_sm_pir = 0
+    if sm_pir > 0.95:
+        scaled_sm_pir = 100
+    elif sm_pir > 0.9:
+        scaled_sm_pir = 90
+    elif sm_pir > 0.85:
+        scaled_sm_pir = 80
+    elif sm_pir > 0.8:
+        scaled_sm_pir = 70
+    elif sm_pir > 0.7:
+        scaled_sm_pir = 60
+    elif sm_pir > 0.6:
+        scaled_sm_pir = 50
+    elif sm_pir > 0.5:
+        scaled_sm_pir = 25
+    return scaled_sm_pir
+
+
 @ray.remote(num_cpus=1)
 def queue_score(speaker_name, speaker_data):
     logger.info("Processing %s", speaker_name)
@@ -209,6 +295,10 @@ def add_scores(dataframe, parse_max):
     max_sm_sp = 0
     min_sm_pir = 1
     max_sm_pir = 0
+    min_spl_peak = 1000
+    max_spl_peak = 0
+    min_spl_continuous = 1000
+    max_spl_continuous = 0
 
     for speaker_name, speaker_data in dataframe.items():
         for _, measurements in speaker_data.items():
@@ -220,6 +310,15 @@ def add_scores(dataframe, parse_max):
                 if version[-3:] == "_eq":
                     continue
                 current = metadata.speakers_info[speaker_name]["measurements"][version]
+                if "specifications" in current and "SPL" in current["specifications"]:
+                    current_peak = current["specifications"]["SPL"].get("peak", None)
+                    current_continuous = current["specifications"]["SPL"].get("continuous", None)
+                    if current_peak:
+                        min_spl_peak = min(min_spl_peak, current_peak)
+                        max_spl_peak = max(max_spl_peak, current_peak)
+                    if current_continuous:
+                        min_spl_continuous = min(min_spl_continuous, current_continuous)
+                        max_spl_continuous = max(max_spl_continuous, current_continuous)
                 if "pref_rating" not in current:
                     continue
                 pref_rating = current.get("pref_rating", {})
@@ -254,10 +353,15 @@ def add_scores(dataframe, parse_max):
                     min_pref_score_wsub = min(min_pref_score_wsub, pref_score_wsub)
                     max_pref_score_wsub = max(max_pref_score_wsub, pref_score_wsub)
                 # flatness
+                if "estimates" not in current:
+                    continue
                 flatness = current["estimates"].get("ref_band")
                 if flatness is not None and not math.isnan(flatness):
                     min_flatness = min(min_flatness, flatness)
                     max_flatness = max(max_flatness, flatness)
+
+    print("info: spl continuous [{}, {}]".format(min_spl_continuous, max_spl_continuous))
+    print("info: spl       peak [{}, {}]".format(min_spl_peak, max_spl_peak))
 
     # if we are looking only after 1 speaker, return
     if len(dataframe.items()) == 1:
@@ -304,6 +408,7 @@ def add_scores(dataframe, parse_max):
                         speaker_name,
                     )
                     continue
+                logger.debug("Compute relative score for speaker %s", speaker_name)
                 if (
                     "pref_rating"
                     not in metadata.speakers_info[speaker_name]["measurements"][version]
@@ -314,8 +419,6 @@ def add_scores(dataframe, parse_max):
                         speaker_name,
                     )
                     continue
-
-                logger.debug("Compute relative score for speaker %s", speaker_name)
                 # get values
                 pref_rating = metadata.speakers_info[speaker_name]["measurements"][version][
                     "pref_rating"
@@ -350,6 +453,7 @@ def add_scores(dataframe, parse_max):
                     pref_score_wsub, min_pref_score_wsub, max_pref_score_wsub
                 )
                 scaled_pref_score = None
+                scaled_lfx_hz = None
                 if "pref_score" in pref_rating:
                     scaled_pref_score = percent(pref_score, min_pref_score, max_pref_score)
                     scaled_lfx_hz = 100 - percent(lfx_hz, min_lfx_hz, max_lfx_hz)
@@ -359,96 +463,25 @@ def add_scores(dataframe, parse_max):
                 scaled_flatness = 100 - percent(flatness, min_flatness, max_flatness)
                 # bucket score instead of a linear scale
                 if scaled_pref_score is not None:
-                    if pref_score > 7:
-                        scaled_pref_score = 100
-                    elif pref_score > 6.5:
-                        scaled_pref_score = 90
-                    elif pref_score > 6:
-                        scaled_pref_score = 80
-                    elif pref_score > 5.5:
-                        scaled_pref_score = 70
-                    elif pref_score > 5:
-                        scaled_pref_score = 60
-                    elif pref_score > 4.5:
-                        scaled_pref_score = 50
-                    elif pref_score > 4.0:
-                        scaled_pref_score = 40
-                    elif pref_score > 3.0:
-                        scaled_pref_score = 30
-                    elif pref_score > 2.0:
-                        scaled_pref_score = 20
-                    elif pref_score > 1.0:
-                        scaled_pref_score = 10
-                    else:
-                        scaled_pref_score = 0
+                    scaled_pref_score = compute_scaled_pref_score(pref_score)
                 # bucket flatness instead of a linear scale
-                if flatness < 2.0:
-                    scaled_flatness = 100
-                elif flatness < 2.25:
-                    scaled_flatness = 90
-                elif flatness < 2.5:
-                    scaled_flatness = 80
-                elif flatness < 3:
-                    scaled_flatness = 70
-                elif flatness < 4:
-                    scaled_flatness = 50
-                elif flatness < 5:
-                    scaled_flatness = 30
-                elif flatness < 6:
-                    scaled_flatness = 10
-                else:
-                    scaled_flatness = 0
+                scaled_flatness = compute_scaled_flatness(flatness)
                 # bucked lfx too
                 if scaled_lfx_hz is not None:
-                    if lfx_hz < 25:
-                        scaled_lfx_hz = 100
-                    elif lfx_hz < 30:
-                        scaled_lfx_hz = 90
-                    elif lfx_hz < 35:
-                        scaled_lfx_hz = 80
-                    elif lfx_hz < 40:
-                        scaled_lfx_hz = 70
-                    elif lfx_hz < 50:
-                        scaled_lfx_hz = 60
-                    elif lfx_hz < 60:
-                        scaled_lfx_hz = 50
-                    elif lfx_hz < 70:
-                        scaled_lfx_hz = 40
-                    elif lfx_hz < 80:
-                        scaled_lfx_hz = 30
-                    elif lfx_hz < 100:
-                        scaled_lfx_hz = 10
-                    else:
-                        scaled_lfx_hz = 0
+                    scaled_lfx_hz = compute_scaled_lfx_hz(lfx_hz)
                 # bucket sm_pir too
-                if sm_pir > 0.95:
-                    scaled_sm_pir = 100
-                elif sm_pir > 0.9:
-                    scaled_sm_pir = 90
-                elif sm_pir > 0.85:
-                    scaled_sm_pir = 80
-                elif sm_pir > 0.8:
-                    scaled_sm_pir = 70
-                elif sm_pir > 0.7:
-                    scaled_sm_pir = 60
-                elif sm_pir > 0.6:
-                    scaled_sm_pir = 50
-                elif sm_pir > 0.5:
-                    scaled_sm_pir = 25
-                else:
-                    scaled_sm_pir = 0
-
+                scaled_sm_pir = compute_scaled_sm_pir(sm_pir)
                 # add normalized values
-                scaled_pref_rating = {
+                scaled_pref_rating: dict[str, float] = {
                     "scaled_pref_score_wsub": scaled_pref_score_wsub,
                     "scaled_nbd_on_axis": scaled_nbd_on,
                     "scaled_flatness": scaled_flatness,
                     "scaled_sm_sound_power": scaled_sm_sp,
                     "scaled_sm_pred_in_room": scaled_sm_pir,
                 }
-                if "pref_score" in pref_rating:
+                if "pref_score" in pref_rating and scaled_pref_score is not None:
                     scaled_pref_rating["scaled_pref_score"] = scaled_pref_score
-                if "lfx_hz" in pref_rating:
+                if "lfx_hz" in pref_rating and scaled_lfx_hz is not None:
                     scaled_pref_rating["scaled_lfx_hz"] = scaled_lfx_hz
                 logger.info("Adding %s", scaled_pref_rating)
                 metadata.speakers_info[speaker_name]["measurements"][version][

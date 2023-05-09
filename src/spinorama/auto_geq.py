@@ -79,13 +79,15 @@ def optim_grapheq(
     if use_score:
         pref_score = score_loss(df_speaker, auto_peq)
 
+    afreq = np.array(freq)
+
     def fit(param: Vector) -> Peq:
         guess_db = []
         for f in auto_freq:
-            if f < freq[0] or f > freq[-1]:
+            if f < afreq[0] or f > afreq[-1]:
                 db = 0.0
             else:
-                db = np.interp(f, freq, np.negative(current_auto_target[0])) * param
+                db = np.interp(f, afreq, np.negative(current_auto_target[0])) * np.array(param)
                 db = round(float(db) * 4) / 4
                 db = max(auto_min, db)
                 db = min(auto_max, db)
@@ -97,8 +99,8 @@ def optim_grapheq(
 
     def compute_delta(param: Vector) -> NDArray[Any]:
         current_peq = fit(param)
-        peq_values = peq_build(auto_freq, current_peq)
-        peq_expend = [np.interp(f, auto_freq, peq_values) for f in freq]
+        peq_values = np.array(peq_build(auto_freq, current_peq))
+        peq_expend = [np.interp(f, auto_freq, peq_values) for f in afreq]
         delta = np.subtract(peq_expend, current_auto_target[0])
         return delta
 

@@ -23,7 +23,8 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--max-peq=<count>] [--min-Q=<minQ>] [--max-Q=<maxQ>] \
  [--min-dB=<mindB>] [--max-dB=<maxdB>] \
  [--min-freq=<minFreq>] [--max-freq=<maxFreq>] \
- [--max-iter=<maxiter>] [--use-all-biquad] [--curve-peak-only] \
+ [--max-iter=<maxiter>] [--use-all-biquad] \
+ [--use-only-pk] [--curve-peak-only] \
  [--target-min-freq=<tminf>] [--target-max-freq=<tmaxf>] \
  [--slope-on-axis=<s_on>] \
  [--slope-on=<s_on>] \
@@ -64,6 +65,7 @@ Options:
   --max-freq=<maxFreq>     Optimisation will happen below max freq
   --max-iter=<maxiter>     Maximum number of iterations
   --use-all-biquad         PEQ can be any kind of biquad (by default it uses only PK, PeaK)
+  --use-only-pk            force PEQ to be only PK / Peak
   --curve-peak-only        Optimise both for peaks and valleys on a curve
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
   --dash-port=<dash-port>  Port for the ray dashbboard
@@ -374,6 +376,8 @@ def main():
 
     if args["--use-all-biquad"] is not None and args["--use-all-biquad"] is True:
         current_optim_config["full_biquad_optim"] = True
+    if args["--use-only-pk"] is not None and args["--use-only-pk"] is True:
+        current_optim_config["full_biquad_optim"] = False
     if args["--curve-peak-only"] is not None and args["--curve-peak-only"] is True:
         current_optim_config["plus_and_minus"] = False
 

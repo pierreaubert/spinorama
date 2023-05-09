@@ -102,10 +102,12 @@ def optim_greedy(
         if optim_iter == 0:
             if optim_config["full_biquad_optim"] is True:
                 # see if a LP can help get some flatness of bass
-                init_freq_range = [
-                    optim_config["target_min_freq"] / 2,
-                    16000,
-                ]  # optim_config["target_min_freq"] * 2]
+                init_freq_range = np.asarray(
+                    [
+                        optim_config["target_min_freq"] / 2,
+                        16000,
+                    ]
+                )  # optim_config["target_min_freq"] * 2]
                 init_db_gain_range = np.linspace(
                     -optim_config["MAX_DBGAIN"], optim_config["MAX_DBGAIN"], 7
                 )
@@ -113,10 +115,12 @@ def optim_greedy(
                 biquad_range = [0, 1, 3, 5, 6]  # LP, HP, LS, HS
             else:
                 # greedy strategy: look for lowest & highest peak
-                init_freq_range = [
-                    optim_config["target_min_freq"] / 2,
-                    optim_config["target_min_freq"] * 2,
-                ]
+                init_freq_range = np.asarray(
+                    [
+                        optim_config["target_min_freq"] / 2,
+                        optim_config["target_min_freq"] * 2,
+                    ]
+                )
                 init_db_gain_range = np.linspace(
                     -optim_config["MAX_DBGAIN"], -optim_config["MAX_DBGAIN"], 7
                 )

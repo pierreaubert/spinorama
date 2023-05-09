@@ -108,9 +108,26 @@ class Measurement(MeasurementRequired, total=False):
     parameters: Parameters
     estimates: dict[str, float]
     estimates_eq: dict[str, float]
-    pref_rating: dict[str, float]
+    pref_rating: PrefRating
+    scaled_pref_rating: PrefRating
     pref_rating_eq: dict[str, float]
     sensitivity: float
+
+
+class Peq(TypedDict, total=False):
+    type: int
+    freq: float
+    srate: float
+    Q: float
+    dbGain: float
+
+
+class EQ(TypedDict, total=False):
+    display_name: str
+    filename: str
+    pream_gain: float
+    type: str
+    peq: list[Peq]
 
 
 SpeakerType = Literal["passive", "active"]
@@ -147,6 +164,10 @@ class Speaker(SpeakerRequired, total=False):
     price: str
     amount: str
     skip: bool
+    sensitivity: float
+    default_eq: str
+    eqs: dict[str, EQ]
+    nearest: list[tuple[float, str]]
 
 
 SpeakerDatabase = dict[str, Speaker]
@@ -11171,6 +11192,25 @@ speakers_info: SpeakerDatabase = {
                     "white_paper": "https://assets.kef.com/documents/rseries/rseries2018-white-paper.pdf",
                 },
                 "review_published": "20210807",
+            },
+        },
+    },
+    "KEF R8 Meta": {
+        "brand": "KEF",
+        "model": "R8 Meta",
+        "type": "passive",
+        "price": "800",
+        "amount": "each",
+        "shape": "surround",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-r8-meta-dolby-atmos-speaker-review.44520/",
+                },
+                "review_published": "20230509",
             },
         },
     },
