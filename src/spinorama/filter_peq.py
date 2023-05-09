@@ -54,7 +54,16 @@ def peq_freq(spl: list[Vector], peq: Peq) -> Vector:
 
 
 def peq_preamp_gain(peq: Peq) -> float:
-    """compute preamp gain for a peq
+    """compute preamp gain for a peq: well adapted to computers"""
+    freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), 1000)
+    spl = np.array(peq_build(freq, peq))
+    overall = np.max(np.clip(spl, 0, None))
+    # print('debug preamp gain: %f'.format(gain))
+    return -overall
+
+
+def peq_preamp_gain_max(peq: Peq) -> float:
+    """compute preamp gain for a peq and look at the worst case
 
     Note that we add 0.2 dB to have a margin for clipping
     """
