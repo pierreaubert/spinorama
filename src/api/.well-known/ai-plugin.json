@@ -1,7 +1,7 @@
 {
     "name": "Spinorama Plugin",
-    "description": "A plugin that provides Spinorama information for a given speaker.",
-    "api_spec_url": "https://api.spinorama.org/.well-known/openapi.yaml",
+    "description": "A plugin that provides measurement data for speakers and ways to manipulate them.",
+    "api_spec_url": "https://api.spinorama.org/openapi.yaml",
     "logo_url": "https://www.spinorama.org/logo.png",
     "homepage": "https://www.spinorama.org",
     "authentication": {
