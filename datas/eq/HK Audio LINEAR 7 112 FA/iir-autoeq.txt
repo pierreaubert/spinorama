@@ -1,16 +1,16 @@
 EQ for HK Audio LINEAR 7 112 FA computed from Vendors-HK Audio data
 Preference Score 3.96 with EQ 5.17
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-23-16:19:33
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:20:40
 
-Preamp: -1.6 dB
+Preamp: -1.4 dB
 
-Filter  1: ON LS Fc  2804 Hz Gain +1.44 dB
-Filter  2: ON PK Fc   106 Hz Gain -3.44 dB Q 2.03
-Filter  3: ON PK Fc   208 Hz Gain -1.85 dB Q 2.98
-Filter  4: ON PK Fc 10366 Hz Gain -2.55 dB Q 0.77
-Filter  5: ON PK Fc   311 Hz Gain -1.04 dB Q 2.98
-Filter  6: ON PK Fc   696 Hz Gain -1.03 dB Q 2.99
-Filter  7: ON PK Fc  1265 Hz Gain -0.75 dB Q 2.96
-Filter  8: ON PK Fc  3688 Hz Gain -1.79 dB Q 2.82
-Filter  9: ON PK Fc 11988 Hz Gain -2.10 dB Q 2.95
+Filter  1: ON LS Fc  2747 Hz Gain +1.44 dB Q 2.03
+Filter  2: ON PK Fc   105 Hz Gain -3.15 dB Q 1.89
+Filter  3: ON PK Fc   207 Hz Gain -1.86 dB Q 3.00
+Filter  4: ON PK Fc 10510 Hz Gain -2.57 dB Q 0.70
+Filter  5: ON PK Fc   314 Hz Gain -1.06 dB Q 2.85
+Filter  6: ON PK Fc   708 Hz Gain -1.03 dB Q 2.97
+Filter  7: ON PK Fc  1278 Hz Gain -0.75 dB Q 2.92
+Filter  8: ON PK Fc 12027 Hz Gain -2.03 dB Q 2.94
+Filter  9: ON PK Fc  3697 Hz Gain -1.83 dB Q 2.91

@@ -1,15 +1,15 @@
 EQ for Palmer Studimon 5 computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:26:51
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:27:36
 
-Preamp: -3.0 dB
+Preamp: -1.4 dB
 
-Filter  1: ON PK Fc  6256 Hz Gain -2.98 dB Q 0.72
-Filter  2: ON PK Fc  1257 Hz Gain +2.84 dB Q 2.98
-Filter  3: ON PK Fc   159 Hz Gain -2.27 dB Q 2.98
-Filter  4: ON PK Fc   648 Hz Gain -1.18 dB Q 1.44
-Filter  5: ON PK Fc   196 Hz Gain +0.90 dB Q 0.09
-Filter  6: ON PK Fc 13943 Hz Gain +0.65 dB Q 2.99
-Filter  7: ON PK Fc  1213 Hz Gain -1.24 dB Q 0.30
-Filter  8: ON PK Fc  8503 Hz Gain -0.54 dB Q 2.69
-Filter  9: ON PK Fc 15988 Hz Gain -0.51 dB Q 2.12
+Filter  1: ON PK Fc   152 Hz Gain -3.00 dB Q 2.99
+Filter  2: ON PK Fc  5730 Hz Gain -1.22 dB Q 1.51
+Filter  3: ON PK Fc  1229 Hz Gain +2.29 dB Q 2.99
+Filter  4: ON PK Fc 13861 Hz Gain +1.23 dB Q 2.79
+Filter  5: ON PK Fc   822 Hz Gain -1.06 dB Q 0.97
+Filter  6: ON PK Fc  2822 Hz Gain -0.79 dB Q 2.47
+Filter  7: ON PK Fc 15719 Hz Gain -0.75 dB Q 1.90
+Filter  8: ON PK Fc  1746 Hz Gain -0.82 dB Q 2.61
+Filter  9: ON PK Fc 15923 Hz Gain -0.80 dB Q 2.33

@@ -1,15 +1,15 @@
 EQ for Polk Audio Reserve R200 computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:21:04
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:26:37
 
-Preamp: -0.8 dB
+Preamp: -0.4 dB
 
-Filter  1: ON PK Fc   150 Hz Gain -1.65 dB Q 1.23
-Filter  2: ON PK Fc  5847 Hz Gain -1.63 dB Q 1.17
-Filter  3: ON PK Fc   463 Hz Gain -0.90 dB Q 2.84
-Filter  4: ON PK Fc  1140 Hz Gain -0.51 dB Q 2.92
-Filter  5: ON PK Fc 12016 Hz Gain -0.50 dB Q 2.76
-Filter  6: ON PK Fc  2421 Hz Gain +0.61 dB Q 2.70
-Filter  7: ON PK Fc  3762 Hz Gain -0.55 dB Q 2.51
-Filter  8: ON PK Fc  6910 Hz Gain -0.54 dB Q 2.95
-Filter  9: ON PK Fc   859 Hz Gain -0.55 dB Q 2.68
+Filter  1: ON PK Fc    97 Hz Gain -3.00 dB Q 2.99
+Filter  2: ON PK Fc   185 Hz Gain -1.43 dB Q 2.22
+Filter  3: ON PK Fc  5918 Hz Gain -1.80 dB Q 1.39
+Filter  4: ON PK Fc   467 Hz Gain -1.04 dB Q 2.60
+Filter  5: ON PK Fc   947 Hz Gain -0.89 dB Q 2.44
+Filter  6: ON PK Fc  2290 Hz Gain +0.75 dB Q 2.97
+Filter  7: ON PK Fc 11688 Hz Gain -0.78 dB Q 2.21
+Filter  8: ON PK Fc  3727 Hz Gain -0.80 dB Q 2.29
+Filter  9: ON PK Fc   277 Hz Gain -0.76 dB Q 2.71

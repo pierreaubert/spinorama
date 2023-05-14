@@ -1,13 +1,13 @@
 EQ for Adam T5V computed from ASR data
-Preference Score 4.44 with EQ 5.83
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:08:10
+Preference Score 4.44 with EQ 5.88
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-13:42:56
 
-Preamp: -2.0 dB
+Preamp: -1.5 dB
 
-Filter  1: ON PK Fc  7000 Hz Gain -2.97 dB Q 1.07
-Filter  2: ON PK Fc   270 Hz Gain +1.79 dB Q 0.26
-Filter  3: ON PK Fc   819 Hz Gain -1.71 dB Q 2.98
-Filter  4: ON PK Fc  1407 Hz Gain -1.33 dB Q 2.42
-Filter  5: ON PK Fc 11165 Hz Gain -1.46 dB Q 0.50
-Filter  6: ON PK Fc  5637 Hz Gain -2.72 dB Q 2.96
+Filter  1: ON PK Fc  7181 Hz Gain -2.98 dB Q 0.92
+Filter  2: ON PK Fc   269 Hz Gain +1.54 dB Q 0.30
+Filter  3: ON PK Fc   811 Hz Gain -1.78 dB Q 2.99
+Filter  4: ON PK Fc  1407 Hz Gain -1.44 dB Q 2.63
+Filter  5: ON PK Fc 11147 Hz Gain -1.27 dB Q 0.45
+Filter  6: ON PK Fc  5614 Hz Gain -2.41 dB Q 2.99

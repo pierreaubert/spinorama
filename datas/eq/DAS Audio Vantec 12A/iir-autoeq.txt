@@ -1,16 +1,16 @@
 EQ for DAS Audio Vantec 12A computed from Vendors-DAS Audio data
-Preference Score 0.79 with EQ 2.18
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:19:52
+Preference Score 0.79 with EQ 2.31
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:17:19
 
-Preamp: -3.2 dB
+Preamp: -2.9 dB
 
-Filter  1: ON LS Fc    72 Hz Gain +2.88 dB
-Filter  2: ON PK Fc  2474 Hz Gain +2.99 dB Q 2.61
-Filter  3: ON PK Fc   316 Hz Gain -1.60 dB Q 2.80
-Filter  4: ON PK Fc   521 Hz Gain +3.00 dB Q 2.97
-Filter  5: ON PK Fc  7866 Hz Gain -2.57 dB Q 0.47
-Filter  6: ON PK Fc   150 Hz Gain -1.86 dB Q 0.94
-Filter  7: ON PK Fc   742 Hz Gain -0.91 dB Q 2.94
-Filter  8: ON PK Fc 15073 Hz Gain -5.97 dB Q 2.97
-Filter  9: ON PK Fc  1289 Hz Gain +1.53 dB Q 2.83
+Filter  1: ON LS Fc    70 Hz Gain +2.98 dB Q 1.95
+Filter  2: ON PK Fc  2470 Hz Gain +2.94 dB Q 2.82
+Filter  3: ON PK Fc   320 Hz Gain -1.59 dB Q 2.85
+Filter  4: ON PK Fc  1291 Hz Gain +2.96 dB Q 2.98
+Filter  5: ON PK Fc   524 Hz Gain +2.98 dB Q 2.93
+Filter  6: ON PK Fc  7752 Hz Gain -2.42 dB Q 0.43
+Filter  7: ON PK Fc   152 Hz Gain -1.85 dB Q 1.13
+Filter  8: ON PK Fc 15024 Hz Gain -5.95 dB Q 2.95
+Filter  9: ON PK Fc 14999 Hz Gain -2.01 dB Q 2.88

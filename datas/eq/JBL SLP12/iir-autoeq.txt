@@ -1,11 +1,11 @@
 EQ for JBL SLP12 computed from Vendors-JBL data
-Preference Score 2.13 with EQ 4.41
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:06:20
+Preference Score 2.13 with EQ 4.42
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:18:47
 
-Preamp: -3.2 dB
+Preamp: -2.8 dB
 
-Filter  1: ON LS Fc   776 Hz Gain +2.80 dB
-Filter  2: ON PK Fc  6840 Hz Gain +3.00 dB Q 1.26
-Filter  3: ON PK Fc   152 Hz Gain -3.86 dB Q 1.76
-Filter  4: ON PK Fc  1631 Hz Gain -5.14 dB Q 1.13
+Filter  1: ON LS Fc   778 Hz Gain +2.80 dB Q 1.37
+Filter  2: ON PK Fc  6807 Hz Gain +3.00 dB Q 1.27
+Filter  3: ON PK Fc   153 Hz Gain -4.00 dB Q 1.81
+Filter  4: ON PK Fc  1641 Hz Gain -5.19 dB Q 1.14

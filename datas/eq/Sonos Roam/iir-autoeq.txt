@@ -1,15 +1,15 @@
 EQ for Sonos Roam computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:22:36
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:16:20
 
-Preamp: -0.7 dB
+Preamp: -0.6 dB
 
-Filter  1: ON PK Fc  9028 Hz Gain -2.79 dB Q 2.02
-Filter  2: ON PK Fc   253 Hz Gain -0.51 dB Q 0.34
-Filter  3: ON PK Fc  2192 Hz Gain -0.59 dB Q 2.96
-Filter  4: ON PK Fc   559 Hz Gain +0.51 dB Q 2.92
-Filter  5: ON PK Fc  1020 Hz Gain -0.50 dB Q 2.83
-Filter  6: ON PK Fc  4095 Hz Gain +0.52 dB Q 2.64
-Filter  7: ON PK Fc 11809 Hz Gain -0.62 dB Q 2.96
-Filter  8: ON PK Fc    30 Hz Gain -0.58 dB Q 1.30
-Filter  9: ON PK Fc    21 Hz Gain -0.81 dB Q 1.79
+Filter  1: ON PK Fc    37 Hz Gain -3.00 dB Q 1.45
+Filter  2: ON PK Fc  9015 Hz Gain -2.68 dB Q 2.08
+Filter  3: ON PK Fc   251 Hz Gain -0.77 dB Q 1.72
+Filter  4: ON PK Fc  2203 Hz Gain -0.79 dB Q 2.99
+Filter  5: ON PK Fc   956 Hz Gain -0.76 dB Q 2.86
+Filter  6: ON PK Fc   471 Hz Gain -0.75 dB Q 2.97
+Filter  7: ON PK Fc    96 Hz Gain +0.75 dB Q 2.96
+Filter  8: ON PK Fc  4035 Hz Gain +0.76 dB Q 2.64
+Filter  9: ON PK Fc 11793 Hz Gain -0.75 dB Q 3.00

@@ -1,15 +1,15 @@
 EQ for Focal Chora 806 computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:22:25
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:29:30
 
-Preamp: -1.3 dB
+Preamp: -0.8 dB
 
-Filter  1: ON LS Fc  1291 Hz Gain -0.78 dB
-Filter  2: ON PK Fc  2765 Hz Gain +1.02 dB Q 2.50
-Filter  3: ON PK Fc  9784 Hz Gain +1.07 dB Q 1.72
-Filter  4: ON PK Fc   290 Hz Gain +0.59 dB Q 2.92
-Filter  5: ON PK Fc 14484 Hz Gain +0.50 dB Q 2.99
-Filter  6: ON PK Fc  3453 Hz Gain -0.51 dB Q 2.95
-Filter  7: ON PK Fc   179 Hz Gain -1.19 dB Q 2.99
-Filter  8: ON PK Fc   867 Hz Gain -0.64 dB Q 3.00
-Filter  9: ON PK Fc 15896 Hz Gain -0.50 dB Q 0.55
+Filter  1: ON LS Fc  1296 Hz Gain -0.78 dB Q 1.84
+Filter  2: ON PK Fc  2699 Hz Gain +1.04 dB Q 2.79
+Filter  3: ON PK Fc  9643 Hz Gain +1.04 dB Q 1.64
+Filter  4: ON PK Fc   289 Hz Gain +0.75 dB Q 2.98
+Filter  5: ON PK Fc   506 Hz Gain +0.76 dB Q 2.98
+Filter  6: ON PK Fc 14856 Hz Gain +0.76 dB Q 2.97
+Filter  7: ON PK Fc  3410 Hz Gain -0.76 dB Q 2.99
+Filter  8: ON PK Fc   128 Hz Gain -1.67 dB Q 1.10
+Filter  9: ON PK Fc 15991 Hz Gain -0.77 dB Q 0.75

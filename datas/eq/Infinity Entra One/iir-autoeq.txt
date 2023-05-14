@@ -1,15 +1,15 @@
 EQ for Infinity Entra One computed from Vendors-Infinity data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-21-07:01:27
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:20:36
 
-Preamp: -1.2 dB
+Preamp: -0.8 dB
 
-Filter  1: ON HS Fc 10369 Hz Gain -2.46 dB
-Filter  2: ON PK Fc   129 Hz Gain -1.20 dB Q 3.00
-Filter  3: ON PK Fc   431 Hz Gain -0.87 dB Q 1.80
-Filter  4: ON PK Fc  2006 Hz Gain +1.00 dB Q 2.97
-Filter  5: ON PK Fc  1088 Hz Gain -0.63 dB Q 1.21
-Filter  6: ON PK Fc  4409 Hz Gain +0.53 dB Q 2.89
-Filter  7: ON PK Fc 13402 Hz Gain -0.51 dB Q 2.04
-Filter  8: ON PK Fc  2645 Hz Gain -0.76 dB Q 2.95
-Filter  9: ON PK Fc  5393 Hz Gain -0.50 dB Q 2.75
+Filter  1: ON HS Fc 10199 Hz Gain -2.46 dB Q 1.42
+Filter  2: ON PK Fc   136 Hz Gain -1.18 dB Q 3.00
+Filter  3: ON PK Fc   927 Hz Gain -0.76 dB Q 1.66
+Filter  4: ON PK Fc  1960 Hz Gain +1.10 dB Q 2.95
+Filter  5: ON PK Fc   206 Hz Gain +1.07 dB Q 2.98
+Filter  6: ON PK Fc   333 Hz Gain -0.86 dB Q 1.39
+Filter  7: ON PK Fc  4351 Hz Gain +0.77 dB Q 2.96
+Filter  8: ON PK Fc  2722 Hz Gain -0.93 dB Q 2.49
+Filter  9: ON PK Fc 13609 Hz Gain -0.76 dB Q 2.87

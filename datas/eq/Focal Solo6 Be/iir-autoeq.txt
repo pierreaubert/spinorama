@@ -1,14 +1,14 @@
 EQ for Focal Solo6 Be computed from ASR data
-Preference Score 5.16 with EQ 5.91
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:06:41
+Preference Score 5.16 with EQ 5.92
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-13:43:12
 
-Preamp: -3.4 dB
+Preamp: -3.2 dB
 
-Filter  1: ON LS Fc    83 Hz Gain +2.90 dB
-Filter  2: ON PK Fc   148 Hz Gain +0.85 dB Q 0.29
-Filter  3: ON PK Fc 11861 Hz Gain +1.08 dB Q 0.66
-Filter  4: ON PK Fc  1820 Hz Gain +1.54 dB Q 1.69
-Filter  5: ON PK Fc   420 Hz Gain -1.83 dB Q 2.37
-Filter  6: ON PK Fc   765 Hz Gain +1.34 dB Q 3.00
-Filter  7: ON PK Fc  5187 Hz Gain -2.21 dB Q 2.15
+Filter  1: ON LS Fc    86 Hz Gain +2.86 dB Q 1.14
+Filter  2: ON PK Fc   153 Hz Gain +0.90 dB Q 0.25
+Filter  3: ON PK Fc 11866 Hz Gain +1.19 dB Q 0.84
+Filter  4: ON PK Fc  1825 Hz Gain +1.50 dB Q 1.63
+Filter  5: ON PK Fc   418 Hz Gain -1.90 dB Q 2.54
+Filter  6: ON PK Fc   772 Hz Gain +1.26 dB Q 2.96
+Filter  7: ON PK Fc  5158 Hz Gain -2.26 dB Q 2.29

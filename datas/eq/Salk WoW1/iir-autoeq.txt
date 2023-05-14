@@ -1,13 +1,14 @@
 EQ for Salk WoW1 computed from ASR data
-Preference Score 3.98 with EQ 5.98
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:08:09
+Preference Score 3.98 with EQ 6.14
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:32:44
 
-Preamp: -3.2 dB
+Preamp: -2.6 dB
 
-Filter  1: ON PK Fc  6665 Hz Gain -2.96 dB Q 0.47
-Filter  2: ON PK Fc   579 Hz Gain +2.99 dB Q 1.13
-Filter  3: ON PK Fc   120 Hz Gain -1.10 dB Q 1.75
-Filter  4: ON PK Fc   979 Hz Gain -2.52 dB Q 2.99
-Filter  5: ON PK Fc  1479 Hz Gain -1.93 dB Q 2.19
-Filter  6: ON PK Fc  6498 Hz Gain -2.83 dB Q 0.56
+Filter  1: ON PK Fc  6648 Hz Gain -3.00 dB Q 0.42
+Filter  2: ON PK Fc   121 Hz Gain -1.16 dB Q 2.18
+Filter  3: ON PK Fc   569 Hz Gain +3.00 dB Q 1.12
+Filter  4: ON PK Fc   988 Hz Gain -2.64 dB Q 2.99
+Filter  5: ON PK Fc    56 Hz Gain +2.51 dB Q 1.03
+Filter  6: ON PK Fc  1536 Hz Gain -2.08 dB Q 2.35
+Filter  7: ON PK Fc  6797 Hz Gain -2.47 dB Q 0.41

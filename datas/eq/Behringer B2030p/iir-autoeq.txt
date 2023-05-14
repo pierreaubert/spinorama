@@ -1,15 +1,15 @@
 EQ for Behringer B2030p computed from ASR data
-Preference Score 3.14 with EQ 5.26
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:05:23
+Preference Score 3.14 with EQ 5.30
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:28:26
 
-Preamp: -3.2 dB
+Preamp: -3.0 dB
 
-Filter  1: ON LS Fc   108 Hz Gain +3.00 dB
-Filter  2: ON PK Fc   789 Hz Gain -3.13 dB Q 2.97
-Filter  3: ON PK Fc  1172 Hz Gain +2.42 dB Q 3.00
-Filter  4: ON PK Fc   424 Hz Gain +2.28 dB Q 1.24
-Filter  5: ON PK Fc  8011 Hz Gain -1.69 dB Q 0.78
-Filter  6: ON PK Fc  1558 Hz Gain -0.79 dB Q 2.79
-Filter  7: ON PK Fc 15911 Hz Gain +1.21 dB Q 2.81
-Filter  8: ON PK Fc  8145 Hz Gain -2.16 dB Q 1.10
+Filter  1: ON LS Fc   109 Hz Gain +2.99 dB Q 2.08
+Filter  2: ON PK Fc   807 Hz Gain -3.15 dB Q 2.99
+Filter  3: ON PK Fc  1168 Hz Gain +2.42 dB Q 2.98
+Filter  4: ON PK Fc   436 Hz Gain +2.22 dB Q 1.19
+Filter  5: ON PK Fc  8112 Hz Gain -1.68 dB Q 0.74
+Filter  6: ON PK Fc  1547 Hz Gain -0.75 dB Q 2.93
+Filter  7: ON PK Fc 15998 Hz Gain +1.28 dB Q 2.77
+Filter  8: ON PK Fc  8125 Hz Gain -2.01 dB Q 1.03

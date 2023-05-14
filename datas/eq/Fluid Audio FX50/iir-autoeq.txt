@@ -1,16 +1,16 @@
 EQ for Fluid Audio FX50 computed from ASR data
-Preference Score 2.87 with EQ 4.27
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:08:41
+Preference Score 2.87 with EQ 4.31
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-13:37:53
 
-Preamp: -3.2 dB
+Preamp: -2.7 dB
 
-Filter  1: ON PK Fc  2469 Hz Gain +3.00 dB Q 2.53
-Filter  2: ON PK Fc   106 Hz Gain -3.69 dB Q 1.55
-Filter  3: ON PK Fc  6033 Hz Gain +2.30 dB Q 3.00
-Filter  4: ON PK Fc  1020 Hz Gain -2.82 dB Q 2.99
-Filter  5: ON PK Fc 14597 Hz Gain +2.48 dB Q 2.74
-Filter  6: ON PK Fc   375 Hz Gain +1.02 dB Q 1.58
-Filter  7: ON PK Fc  7777 Hz Gain -2.63 dB Q 2.68
-Filter  8: ON PK Fc  1616 Hz Gain -2.17 dB Q 2.99
-Filter  9: ON PK Fc  9829 Hz Gain -1.58 dB Q 2.93
+Filter  1: ON PK Fc  2462 Hz Gain +3.00 dB Q 2.24
+Filter  2: ON PK Fc   106 Hz Gain -3.52 dB Q 1.64
+Filter  3: ON PK Fc  6083 Hz Gain +2.14 dB Q 3.00
+Filter  4: ON PK Fc 12031 Hz Gain +1.11 dB Q 2.97
+Filter  5: ON PK Fc   363 Hz Gain +1.28 dB Q 1.44
+Filter  6: ON PK Fc  1022 Hz Gain -2.76 dB Q 2.98
+Filter  7: ON PK Fc  1610 Hz Gain -2.16 dB Q 2.98
+Filter  8: ON PK Fc  9769 Hz Gain -2.02 dB Q 2.94
+Filter  9: ON PK Fc  7799 Hz Gain -1.44 dB Q 2.99

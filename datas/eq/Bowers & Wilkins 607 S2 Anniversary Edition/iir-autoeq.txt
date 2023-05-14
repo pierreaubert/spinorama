@@ -1,16 +1,16 @@
 EQ for Bowers & Wilkins 607 S2 Anniversary Edition computed from ASR data
-Preference Score 3.37 with EQ 5.85
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-18:02:40
+Preference Score 3.37 with EQ 5.93
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:25:31
 
-Preamp: -3.2 dB
+Preamp: -1.8 dB
 
-Filter  1: ON PK Fc    35 Hz Gain +2.50 dB Q 0.80
-Filter  2: ON PK Fc 10321 Hz Gain -4.57 dB Q 0.65
-Filter  3: ON PK Fc   988 Hz Gain -2.38 dB Q 3.00
-Filter  4: ON PK Fc  2500 Hz Gain +3.00 dB Q 2.97
-Filter  5: ON PK Fc   138 Hz Gain -1.29 dB Q 2.09
-Filter  6: ON PK Fc    64 Hz Gain +0.92 dB Q 3.00
-Filter  7: ON PK Fc   347 Hz Gain +0.53 dB Q 3.00
-Filter  8: ON PK Fc  5550 Hz Gain -1.41 dB Q 3.00
-Filter  9: ON PK Fc  1365 Hz Gain -0.98 dB Q 3.00
+Filter  1: ON HS Fc  4219 Hz Gain -3.00 dB Q 1.51
+Filter  2: ON PK Fc   944 Hz Gain -2.33 dB Q 3.00
+Filter  3: ON PK Fc    80 Hz Gain +1.95 dB Q 0.25
+Filter  4: ON PK Fc 10626 Hz Gain -3.97 dB Q 0.65
+Filter  5: ON PK Fc  1404 Hz Gain -1.84 dB Q 2.93
+Filter  6: ON PK Fc   519 Hz Gain -1.27 dB Q 3.00
+Filter  7: ON PK Fc   154 Hz Gain -1.68 dB Q 1.89
+Filter  8: ON PK Fc   211 Hz Gain -0.76 dB Q 2.99
+Filter  9: ON PK Fc 10637 Hz Gain -3.64 dB Q 0.69

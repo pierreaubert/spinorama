@@ -1,13 +1,15 @@
 EQ for Coda Audio G515 computed from Vendors-Coda Audio data
-Preference Score 2.95 with EQ 4.89
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:12:43
+Preference Score 2.95 with EQ 4.95
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-13:43:24
 
-Preamp: -3.6 dB
+Preamp: -3.8 dB
 
-Filter  1: ON LS Fc  4504 Hz Gain +2.41 dB
-Filter  2: ON PK Fc   106 Hz Gain -2.26 dB Q 2.89
-Filter  3: ON PK Fc   587 Hz Gain -2.05 dB Q 2.94
-Filter  4: ON PK Fc  1066 Hz Gain -2.54 dB Q 2.98
-Filter  5: ON PK Fc  9719 Hz Gain -3.64 dB Q 1.02
-Filter  6: ON PK Fc   250 Hz Gain +1.14 dB Q 1.06
+Filter  1: ON LS Fc  4691 Hz Gain +2.57 dB Q 0.26
+Filter  2: ON PK Fc   106 Hz Gain -2.31 dB Q 2.84
+Filter  3: ON PK Fc   584 Hz Gain -1.79 dB Q 2.98
+Filter  4: ON PK Fc  1057 Hz Gain -2.38 dB Q 3.00
+Filter  5: ON PK Fc 14647 Hz Gain +0.76 dB Q 2.99
+Filter  6: ON PK Fc   267 Hz Gain +1.40 dB Q 1.78
+Filter  7: ON PK Fc 10273 Hz Gain -3.09 dB Q 2.17
+Filter  8: ON PK Fc  7621 Hz Gain -2.09 dB Q 2.50

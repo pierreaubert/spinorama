@@ -1,15 +1,15 @@
 EQ for LYX SPA8PAS computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:22:11
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:18:30
 
-Preamp: -3.2 dB
+Preamp: -2.9 dB
 
-Filter  1: ON PK Fc  6783 Hz Gain -2.99 dB Q 1.69
-Filter  2: ON PK Fc  2687 Hz Gain +3.00 dB Q 2.57
-Filter  3: ON PK Fc   186 Hz Gain -2.84 dB Q 3.00
-Filter  4: ON PK Fc   336 Hz Gain +2.85 dB Q 2.32
-Filter  5: ON PK Fc 15854 Hz Gain +2.98 dB Q 0.74
-Filter  6: ON PK Fc   782 Hz Gain -2.65 dB Q 2.91
-Filter  7: ON PK Fc  1298 Hz Gain +2.17 dB Q 2.89
-Filter  8: ON PK Fc  6651 Hz Gain -3.39 dB Q 1.98
-Filter  9: ON PK Fc  5284 Hz Gain -1.64 dB Q 2.98
+Filter  1: ON HS Fc 12108 Hz Gain +2.98 dB Q 1.53
+Filter  2: ON PK Fc   184 Hz Gain -2.75 dB Q 2.88
+Filter  3: ON PK Fc   331 Hz Gain +2.76 dB Q 2.30
+Filter  4: ON PK Fc  2610 Hz Gain +2.69 dB Q 2.77
+Filter  5: ON PK Fc   786 Hz Gain -2.81 dB Q 2.96
+Filter  6: ON PK Fc  1278 Hz Gain +2.48 dB Q 2.90
+Filter  7: ON PK Fc  5864 Hz Gain -5.64 dB Q 2.01
+Filter  8: ON PK Fc  7770 Hz Gain -2.84 dB Q 2.99
+Filter  9: ON PK Fc  8789 Hz Gain -2.68 dB Q 2.99

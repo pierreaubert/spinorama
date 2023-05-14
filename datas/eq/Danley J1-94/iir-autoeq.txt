@@ -1,14 +1,16 @@
 EQ for Danley J1-94 computed from Vendors-Danley data
-Preference Score 1.16 with EQ 2.76
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-05-10-19:53:05
+Preference Score 1.16 with EQ 2.79
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-13:37:35
 
-Preamp: -4.3 dB
+Preamp: -3.0 dB
 
-Filter  1: ON LS Fc    60 Hz Gain +4.38 dB
-Filter  2: ON PK Fc  1871 Hz Gain -2.45 dB Q 3.44
-Filter  3: ON PK Fc  3868 Hz Gain -4.03 dB Q 1.45
-Filter  4: ON PK Fc  4321 Hz Gain +4.48 dB Q 3.44
-Filter  5: ON PK Fc 10116 Hz Gain +3.13 dB Q 3.29
-Filter  6: ON PK Fc 10134 Hz Gain -1.67 dB Q 1.35
-Filter  7: ON PK Fc 15474 Hz Gain -4.50 dB Q 3.07
+Filter  1: ON PK Fc    34 Hz Gain +2.99 dB Q 1.23
+Filter  2: ON PK Fc   210 Hz Gain -1.38 dB Q 2.96
+Filter  3: ON PK Fc    93 Hz Gain -1.31 dB Q 2.98
+Filter  4: ON PK Fc   636 Hz Gain -2.36 dB Q 2.97
+Filter  5: ON PK Fc  2309 Hz Gain -2.59 dB Q 1.01
+Filter  6: ON PK Fc  7860 Hz Gain +0.80 dB Q 0.98
+Filter  7: ON PK Fc   409 Hz Gain +1.65 dB Q 1.67
+Filter  8: ON PK Fc 15005 Hz Gain -1.76 dB Q 2.95
+Filter  9: ON PK Fc  5344 Hz Gain -2.26 dB Q 2.99

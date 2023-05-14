@@ -1,15 +1,15 @@
 EQ for JBL Synthesis SK2-1000 computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-21-07:00:44
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:26:03
 
-Preamp: -3.5 dB
+Preamp: -3.0 dB
 
-Filter  1: ON LS Fc  3429 Hz Gain +1.68 dB
-Filter  2: ON PK Fc   173 Hz Gain -1.97 dB Q 1.37
-Filter  3: ON PK Fc  1091 Hz Gain +1.74 dB Q 2.98
-Filter  4: ON PK Fc   474 Hz Gain -2.42 dB Q 2.57
-Filter  5: ON PK Fc  9151 Hz Gain +2.20 dB Q 2.98
-Filter  6: ON PK Fc 14746 Hz Gain -1.07 dB Q 2.99
-Filter  7: ON PK Fc  2973 Hz Gain -0.63 dB Q 2.84
-Filter  8: ON PK Fc  7921 Hz Gain -0.51 dB Q 2.87
-Filter  9: ON PK Fc 15320 Hz Gain -0.50 dB Q 2.99
+Filter  1: ON PK Fc   158 Hz Gain -3.00 dB Q 2.99
+Filter  2: ON PK Fc  1151 Hz Gain +2.80 dB Q 0.85
+Filter  3: ON PK Fc  9189 Hz Gain +2.17 dB Q 2.81
+Filter  4: ON PK Fc  4426 Hz Gain +0.78 dB Q 2.94
+Filter  5: ON PK Fc 14359 Hz Gain -1.08 dB Q 2.84
+Filter  6: ON PK Fc   207 Hz Gain +1.37 dB Q 0.26
+Filter  7: ON PK Fc  2082 Hz Gain +0.77 dB Q 2.93
+Filter  8: ON PK Fc   503 Hz Gain -2.43 dB Q 1.76
+Filter  9: ON PK Fc  2468 Hz Gain -0.77 dB Q 1.56

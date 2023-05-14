@@ -1,15 +1,15 @@
 EQ for JBL L82 Classic computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-21-07:03:42
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:31:48
 
-Preamp: -1.0 dB
+Preamp: -0.0 dB
 
-Filter  1: ON LS Fc   248 Hz Gain -2.72 dB
-Filter  2: ON PK Fc 12520 Hz Gain -2.37 dB Q 1.15
-Filter  3: ON PK Fc  1488 Hz Gain -1.57 dB Q 2.98
-Filter  4: ON PK Fc   642 Hz Gain -1.11 dB Q 2.96
-Filter  5: ON PK Fc  2301 Hz Gain +0.75 dB Q 0.67
-Filter  6: ON PK Fc   114 Hz Gain -1.40 dB Q 2.97
-Filter  7: ON PK Fc 14915 Hz Gain -1.39 dB Q 2.98
-Filter  8: ON PK Fc  1612 Hz Gain -1.41 dB Q 2.92
-Filter  9: ON PK Fc   422 Hz Gain -1.51 dB Q 3.00
+Filter  1: ON HS Fc  5601 Hz Gain -2.83 dB Q 1.45
+Filter  2: ON PK Fc   119 Hz Gain -4.04 dB Q 1.88
+Filter  3: ON PK Fc  1526 Hz Gain -1.79 dB Q 2.56
+Filter  4: ON PK Fc 14602 Hz Gain -2.31 dB Q 2.97
+Filter  5: ON PK Fc   415 Hz Gain -1.15 dB Q 2.85
+Filter  6: ON PK Fc   192 Hz Gain -0.84 dB Q 2.88
+Filter  7: ON PK Fc   660 Hz Gain -0.78 dB Q 2.97
+Filter  8: ON PK Fc  2526 Hz Gain -1.36 dB Q 2.96
+Filter  9: ON PK Fc 14474 Hz Gain -1.40 dB Q 2.67

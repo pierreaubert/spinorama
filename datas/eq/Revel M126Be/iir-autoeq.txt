@@ -1,15 +1,15 @@
 EQ for Revel M126Be computed from Vendors-Revel data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:26:36
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:29:49
 
-Preamp: -1.8 dB
+Preamp: -0.6 dB
 
-Filter  1: ON HS Fc   178 Hz Gain -0.87 dB
-Filter  2: ON PK Fc  5236 Hz Gain -1.32 dB Q 2.08
-Filter  3: ON PK Fc  1694 Hz Gain +1.14 dB Q 2.84
-Filter  4: ON PK Fc 12537 Hz Gain -1.01 dB Q 1.98
-Filter  5: ON PK Fc   482 Hz Gain +0.76 dB Q 2.04
-Filter  6: ON PK Fc    67 Hz Gain +1.56 dB Q 0.96
-Filter  7: ON PK Fc   795 Hz Gain -0.61 dB Q 2.90
-Filter  8: ON PK Fc   143 Hz Gain -2.24 dB Q 2.14
-Filter  9: ON PK Fc  2513 Hz Gain -0.50 dB Q 2.90
+Filter  1: ON PK Fc   126 Hz Gain -3.00 dB Q 3.00
+Filter  2: ON PK Fc 13709 Hz Gain -1.06 dB Q 2.54
+Filter  3: ON PK Fc   949 Hz Gain -1.18 dB Q 1.73
+Filter  4: ON PK Fc  5087 Hz Gain -0.85 dB Q 2.53
+Filter  5: ON PK Fc   321 Hz Gain +0.77 dB Q 0.41
+Filter  6: ON PK Fc  1370 Hz Gain -0.81 dB Q 2.48
+Filter  7: ON PK Fc  2922 Hz Gain +0.76 dB Q 2.76
+Filter  8: ON PK Fc   288 Hz Gain -0.81 dB Q 1.55
+Filter  9: ON PK Fc 15722 Hz Gain -0.82 dB Q 2.97
