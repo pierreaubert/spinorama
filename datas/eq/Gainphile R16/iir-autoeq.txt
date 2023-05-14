@@ -1,0 +1,15 @@
+EQ for Gainphile R16 computed from Princeton data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:16:54
+
+Preamp: -3.6 dB
+
+Filter  1: ON PK Fc    43 Hz Gain -3.00 dB Q 2.75
+Filter  2: ON PK Fc 14180 Hz Gain +2.99 dB Q 0.25
+Filter  3: ON PK Fc  2280 Hz Gain +2.74 dB Q 0.25
+Filter  4: ON PK Fc  4718 Hz Gain -2.21 dB Q 2.48
+Filter  5: ON PK Fc  7580 Hz Gain -0.80 dB Q 2.54
+Filter  6: ON PK Fc    51 Hz Gain -1.12 dB Q 1.52
+Filter  7: ON PK Fc    47 Hz Gain -1.98 dB Q 1.86
+Filter  8: ON PK Fc    23 Hz Gain -1.89 dB Q 2.05
+Filter  9: ON PK Fc   126 Hz Gain -1.15 dB Q 2.67

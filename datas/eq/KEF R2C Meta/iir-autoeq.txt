@@ -1,0 +1,15 @@
+EQ for KEF R2C Meta computed from Vendors-KEF data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:31:47
+
+Preamp: -0.9 dB
+
+Filter  1: ON PK Fc   149 Hz Gain -3.00 dB Q 2.70
+Filter  2: ON PK Fc  2400 Hz Gain +1.27 dB Q 1.24
+Filter  3: ON PK Fc   328 Hz Gain -1.31 dB Q 1.89
+Filter  4: ON PK Fc   695 Hz Gain -0.82 dB Q 2.88
+Filter  5: ON PK Fc 11313 Hz Gain +0.84 dB Q 0.80
+Filter  6: ON PK Fc 14911 Hz Gain -0.82 dB Q 2.93
+Filter  7: ON PK Fc  2795 Hz Gain -0.83 dB Q 2.88
+Filter  8: ON PK Fc 11699 Hz Gain -0.79 dB Q 2.94
+Filter  9: ON PK Fc  5870 Hz Gain -0.83 dB Q 2.63

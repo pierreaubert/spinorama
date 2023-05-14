@@ -1,0 +1,15 @@
+EQ for KEF R11 Meta computed from Vendors-KEF data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:16:38
+
+Preamp: -2.7 dB
+
+Filter  1: ON HS Fc  6536 Hz Gain +2.74 dB Q 1.03
+Filter  2: ON PK Fc   247 Hz Gain -1.84 dB Q 0.61
+Filter  3: ON PK Fc   588 Hz Gain -0.83 dB Q 2.88
+Filter  4: ON PK Fc  1093 Hz Gain +0.75 dB Q 2.83
+Filter  5: ON PK Fc 11709 Hz Gain -0.77 dB Q 2.86
+Filter  6: ON PK Fc  1504 Hz Gain -0.77 dB Q 2.92
+Filter  7: ON PK Fc  8973 Hz Gain -0.75 dB Q 2.91
+Filter  8: ON PK Fc   181 Hz Gain -0.81 dB Q 2.75
+Filter  9: ON PK Fc 15540 Hz Gain -0.78 dB Q 2.85

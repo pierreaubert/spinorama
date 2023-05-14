@@ -1,0 +1,15 @@
+EQ for Sanders Sound Systems Model 11 computed from Princeton data
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-17:30:57
+
+Preamp: -4.4 dB
+
+Filter  1: ON PK Fc    33 Hz Gain -3.00 dB Q 2.55
+Filter  2: ON PK Fc  8791 Hz Gain +2.99 dB Q 0.25
+Filter  3: ON PK Fc  1340 Hz Gain +2.99 dB Q 0.25
+Filter  4: ON PK Fc    24 Hz Gain -1.52 dB Q 2.97
+Filter  5: ON PK Fc    28 Hz Gain -2.76 dB Q 2.41
+Filter  6: ON PK Fc    23 Hz Gain -2.22 dB Q 2.19
+Filter  7: ON PK Fc    29 Hz Gain -2.47 dB Q 1.89
+Filter  8: ON PK Fc    23 Hz Gain -1.26 dB Q 2.36
+Filter  9: ON PK Fc    31 Hz Gain -1.26 dB Q 3.00
