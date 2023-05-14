@@ -75,6 +75,11 @@ def parse_eq_line(line, srate):
         kind = words[3]
         freq = words[5]
         gain = words[8]
+    elif len_words == 9:
+        # APO case without gain but with Q
+        kind = words[3]
+        freq = words[5][:-1]
+        q = words[8]
     elif len_words == 8:
         # APO case with gain and Q but no legend and a comma after the field
         kind = words[3]
@@ -139,16 +144,16 @@ def parse_eq_line(line, srate):
     elif kind in ("LP", "LPQ"):
         iir = Biquad(Biquad.LOWPASS, ffreq, srate, rq, rgain)
         logger.debug("add IIR peq LOWPASS freq %.0fHz srate %d", ffreq, srate)
-    elif kind in ("LS", "LSC"):
+    elif kind in ("LS", "LSQ", "LSC"):
         # need to deal with last case when slope is given (6db/oct, 12db/oct, 24db/oct)
         iir = Biquad(Biquad.LOWSHELF, ffreq, srate, rq, rgain)
         logger.debug("add IIR peq LOWSHELF freq %.0fHz srate %d Gain %f", ffreq, srate, rgain)
-    elif kind in ("HS", "HSC"):
+    elif kind in ("HS", "HSQ", "HSC"):
         # need to deal with last case when slope is given (6db/oct, 12db/oct, 24db/oct)
         iir = Biquad(Biquad.HIGHSHELF, ffreq, srate, rq, rgain)
         logger.debug("add IIR peq HIGHSHELF freq %.0fHz srate %d Gain %f", ffreq, srate, rgain)
     else:
-        logger.warning("kind %s is unknown", kind)
+        logger.warning("kind %s is unknown (line: %s)", kind, line)
         return None, None
 
     return status, iir
@@ -163,6 +168,8 @@ def parse_eq_iir_rews(filename, srate):
                 status, iir = parse_eq_line(l, srate)
                 if status is not None and iir is not None:
                     peq.append((status, iir))
+                else:
+                    logger.info("Unknown iir in %s", filename)
     except FileNotFoundError:
         logger.info("Loading filter: eq file %s not found", filename)
     return peq

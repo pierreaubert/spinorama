@@ -27,7 +27,7 @@ POPSIZE = 15
 
 
 def display(xk, convergence):
-    logger.debug(xk, convergence)
+    logger.debug("%s %s", ",".join([str(f) for f in xk]), convergence)
 
 
 def find_best_biquad(
@@ -80,22 +80,16 @@ def find_best_biquad(
         "message": "",
     }
     try:
-        # res = opt.dual_annealing(
-        #    opt_peq,
-        #    bounds,
-        #    MAX_ITER=optim_config["MAX_ITER"],
-        #    # initial_temp=10000
-        # )
         res = opt.differential_evolution(
             opt_peq,
             bounds,
-            disp=True,
+            disp=False,
             # workers=64,
             # updating='deferred',
             # mutation=(0.5, 1.5),
             # recombination=1.9,
             popsize=POPSIZE,
-            MAX_ITER=optim_config["MAX_ITER"],
+            maxiter=optim_config["MAX_ITER"],
             # atol=0.01,
             polish=False,
             integrality=[True, True, False, False],
@@ -223,7 +217,7 @@ def find_best_peak(
             # x0 = x_init,
             popsize=POPSIZE,
             maxiter=optim_config.get("MAX_ITER", 2500),
-            disp=True,
+            disp=False,
             # tol=0.0001,
             polish=False,
             integrality=[True, False, False],

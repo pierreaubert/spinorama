@@ -117,7 +117,7 @@ def optim_strategy(
     # create a few options for controling the optimiser
     configs = []
     # add a default config
-    if optim_config.get("loss") == "score_loss":
+    if use_score and optim_config.get("loss") == "score_loss":
         configs.append(
             {
                 "curve_names": [
@@ -251,17 +251,21 @@ def optim_strategy(
             current_speaker_name, df_speaker, current_optim_config, use_score
         )
         logger.debug(
-            "strategy: %s %s %s %s %s",
+            "strategy: status %s score %s results %s peq %s slope %s",
             auto_status,
             auto_score,
             auto_results,
             auto_peq,
             auto_slope_lw,
         )
-        logger.warning("strategy: %s %2.2f", auto_status, auto_score.get("pref_score", -1000.0))
+        if use_score:
+            logger.info("strategy: %s %2.2f", auto_status, auto_score.get("pref_score", -1000.0))
+        else:
+            logger.info("strategy: %s %2.2f", auto_status, auto_results[1])
+
         if auto_status is False or len(auto_peq) == 0:
             logger.error(
-                "optim_eval_strategy failed for %s with %s",
+                "optim_strategy failed for %s with %s",
                 current_speaker_name,
                 current_optim_config,
             )
@@ -325,7 +329,7 @@ def optim_strategy(
                     auto_peq2,
                     auto_slope_lw2,
                 )
-                logger.warning(
+                logger.info(
                     "strategy2: %s %2.2f", auto_status2, auto_score2.get("pref_score", -1000.0)
                 )
                 if auto_status2 is False:
@@ -334,7 +338,7 @@ def optim_strategy(
                     auto_slope_lw2 * 11 / 3 > -0.5 and auto_slope_lw2 * 11 / 3 < 0.2
                 )
                 if not slope_is_admissible:
-                    logger.warning(
+                    logger.info(
                         "debug slope is not admissible %s auto slope lw %f",
                         slope_is_admissible,
                         auto_slope_lw2 * 11 / 3,
@@ -358,21 +362,23 @@ def optim_strategy(
                     loop,
                     auto_score["pref_score"],
                 )
-                logger.warning("end of loop %2.2f", auto_score["pref_score"])
+                logger.info("end of loop %2.2f", auto_score["pref_score"])
 
         # store score
-        if auto_score is not None:
+        if use_score and auto_score is not None:
             pref_score = auto_score.get("pref_score", -1000)
             if pref_score > best_score:
                 best_score = pref_score
                 results = auto_score, auto_results, auto_peq, current_optim_config
         else:
+            print("DEBUG auto_results {}".format(auto_results))
             loss_score = auto_results[1]
             if loss_score > best_score:
                 best_score = loss_score
                 results = auto_score, auto_results, auto_peq, current_optim_config
+            print("DEBUG results {}".format(results))
 
     if results:
-        logger.warning("stategy returns best score of %s", results[0])
+        logger.info("stategy returns best score of %s", results[0])
         return True, (results[0], results[1], results[2], results[3])
     return False, ({}, (0, 0, 0), [], {})

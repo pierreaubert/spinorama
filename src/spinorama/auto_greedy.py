@@ -201,7 +201,7 @@ def optim_greedy(
             best_loss: float = current_loss
             if use_score:
                 pref_score = score_loss(df_speaker, auto_peq)
-                results.append((optim_iter + 1, best_loss, -pref_score))
+            results.append((optim_iter + 1, best_loss, -pref_score))
             logger.info(
                 "Speaker %s Iter %2d Optim converged loss %2.2f pref score %2.2f biquad %2s F:%5.0fHz Q:%2.2f G:%+2.2fdB in %d iterations",
                 speaker_name,
@@ -232,6 +232,7 @@ def optim_greedy(
         freq, auto_target, auto_target_interp, auto_peq, optim_config
     )
     if results[-1][1] < best_loss:
+        best_loss = results[-1][1]
         if use_score:
             pref_score = score_loss(df_speaker, auto_peq)
         results.append((nb_iter + 1, best_loss, -pref_score))
@@ -243,6 +244,7 @@ def optim_greedy(
         best_results = results[idx_max]
         auto_peq = auto_peq[:idx_max]
     else:
+        # TODO select the best one
         best_results = results[-1]
 
     logger.info(

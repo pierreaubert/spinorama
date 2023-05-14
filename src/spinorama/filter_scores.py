@@ -27,7 +27,9 @@ from spinorama.filter_peq import Peq, peq_apply_measurements
 def scores_apply_filter(df_speaker: DataSpeaker, peq: Peq):
     # debug
     if "SPL Horizontal_unmelted" not in df_speaker or "SPL Vertical_unmelted" not in df_speaker:
-        print("error bad call to apply filter: {}".format(df_speaker.keys()))
+        logger.error("error bad call to apply filter: %s", ",".join(list(df_speaker.keys())))
+        if "CEA2034" in df_speaker:
+            return noscore_apply_filter(df_speaker, peq)
         return None, None, {"pref_score": -10.0}
     # get SPL H & V
     spl_h = df_speaker["SPL Horizontal_unmelted"]

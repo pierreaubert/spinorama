@@ -22,7 +22,7 @@ import pandas as pd
 
 from spinorama import logger
 from spinorama.ltype import Vector
-from spinorama.filter_iir import Biquad, DEFAULT_Q_HIGH_LOW_PASS, DEFAULT_Q_HIGH_LOW_SHELF
+from spinorama.filter_iir import Biquad, DEFAULT_Q_HIGH_LOW_PASS
 
 # declare type here to prevent circular dependencies
 Peq = list[tuple[float, Biquad]]
@@ -133,18 +133,11 @@ def peq_format_apo(comment: str, peq: Peq) -> str:
                     )
                 )
         elif iir.biquad_type in (Biquad.LOWSHELF, Biquad.HIGHSHELF):
-            if iir.q == DEFAULT_Q_HIGH_LOW_SHELF:
-                res.append(
-                    "Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB".format(
-                        i + 1, iir.type2str_short(), int(iir.freq), iir.db_gain
-                    )
+            res.append(
+                "Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB Q {:.2f}".format(
+                    i + 1, iir.type2str_short(), int(iir.freq), iir.db_gain, iir.q
                 )
-            else:
-                res.append(
-                    "Filter {:2d}: ON {:2s}Q Fc {:5d} Hz Gain {:+0.2f} dB Q {:.2f}".format(
-                        i + 1, iir.type2str_short(), int(iir.freq), iir.db_gain, iir.q
-                    )
-                )
+            )
         else:
             logger.error("kind %s is unkown", iir.biquad_type)
     res.append("")
