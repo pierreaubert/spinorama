@@ -55,7 +55,7 @@ class SpinoramaSortAngleKlippelTests(unittest.TestCase):
 class SpinoramaSortAnglePrincetonests(unittest.TestCase):
     def setUp(self):
         status, self.df = parse_graph_princeton(
-            "datas/measurements/Genelec 8351A/princeton/Genelec8351A_V_IR.mat", "V"
+            "datas/measurements/Genelec 8351A/princeton/Genelec8351A_V_IR.mat", "V", None
         )
         self.assertTrue(status)
 
@@ -85,7 +85,7 @@ class SpinoramaLoadSPLTests(unittest.TestCase):
 class SpinoramaLoadPrinceton(unittest.TestCase):
     def setUp(self):
         status, self.df = parse_graph_princeton(
-            "datas/measurements/Genelec 8351A/princeton/Genelec8351A_V_IR.mat", "V"
+            "datas/measurements/Genelec 8351A/princeton/Genelec8351A_V_IR.mat", "V", None
         )
         self.assertTrue(status)
 
