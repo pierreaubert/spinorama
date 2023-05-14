@@ -1,16 +1,14 @@
 EQ for Danley SH-Mini computed from Vendors-Danley data
-Preference Score -6.43 with EQ -3.32
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-11-16:39:33
+Preference Score -6.43 with EQ -2.55
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-05-10-19:45:28
 
 Preamp: -4.5 dB
 
-Filter  1: ON LS Fc  5625 Hz Gain +2.33 dB
-Filter  2: ON PK Fc  8363 Hz Gain -5.91 dB Q 3.00
-Filter  3: ON PK Fc  1837 Hz Gain +2.90 dB Q 2.64
-Filter  4: ON PK Fc   339 Hz Gain -3.13 dB Q 1.58
-Filter  5: ON PK Fc  2617 Hz Gain -2.43 dB Q 2.96
-Filter  6: ON PK Fc   783 Hz Gain +2.46 dB Q 2.96
-Filter  7: ON PK Fc  1149 Hz Gain -3.49 dB Q 2.89
-Filter  8: ON PK Fc  8240 Hz Gain -0.92 dB Q 2.99
-Filter  9: ON PK Fc   580 Hz Gain -1.83 dB Q 2.68
+Filter  1: ON LS Fc   208 Hz Gain +4.48 dB
+Filter  2: ON PK Fc  8389 Hz Gain -4.49 dB Q 2.99
+Filter  3: ON PK Fc  8446 Hz Gain -4.49 dB Q 3.32
+Filter  4: ON PK Fc  8716 Hz Gain -4.46 dB Q 2.76
+Filter  5: ON PK Fc 10646 Hz Gain +4.46 dB Q 2.80
+Filter  6: ON PK Fc 12614 Hz Gain -0.23 dB Q 3.24
+Filter  7: ON PK Fc 13510 Hz Gain +0.32 dB Q 2.86

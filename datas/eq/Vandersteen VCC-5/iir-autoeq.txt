@@ -1,16 +1,14 @@
 EQ for Vandersteen VCC-5 computed from ASR data
-Preference Score 4.07 with EQ 5.23
+Preference Score 4.07 with EQ 5.30
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:48:24
+Dated: 2023-05-10-19:45:42
 
-Preamp: -3.2 dB
+Preamp: -4.1 dB
 
-Filter  1: ON HS Fc 15177 Hz Gain +2.98 dB
-Filter  2: ON PK Fc  2086 Hz Gain +2.98 dB Q 2.65
-Filter  3: ON PK Fc   239 Hz Gain +1.91 dB Q 2.85
-Filter  4: ON PK Fc   564 Hz Gain -2.02 dB Q 1.66
-Filter  5: ON PK Fc    73 Hz Gain +1.63 dB Q 0.39
-Filter  6: ON PK Fc  1027 Hz Gain -1.27 dB Q 2.91
-Filter  7: ON PK Fc  8415 Hz Gain +0.96 dB Q 2.74
-Filter  8: ON PK Fc  3456 Hz Gain +0.63 dB Q 2.75
-Filter  9: ON PK Fc  7757 Hz Gain -0.98 dB Q 2.31
+Filter  1: ON LS Fc   435 Hz Gain +2.44 dB
+Filter  2: ON PK Fc   485 Hz Gain -2.16 dB Q 2.09
+Filter  3: ON PK Fc  2061 Hz Gain +3.67 dB Q 3.03
+Filter  4: ON PK Fc  4731 Hz Gain -0.95 dB Q 2.30
+Filter  5: ON PK Fc  7553 Hz Gain -1.71 dB Q 3.40
+Filter  6: ON PK Fc 11867 Hz Gain -0.40 dB Q 3.18
+Filter  7: ON PK Fc 14804 Hz Gain +4.17 dB Q 2.86

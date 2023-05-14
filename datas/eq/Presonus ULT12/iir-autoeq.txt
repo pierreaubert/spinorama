@@ -1,15 +1,14 @@
 EQ for Presonus ULT12 computed from Vendors-Presonus data
-Preference Score 0.28 with EQ 2.41
+Preference Score 0.28 with EQ 2.91
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:09:01
+Dated: 2023-05-10-19:55:40
 
-Preamp: -3.1 dB
+Preamp: -3.2 dB
 
-Filter  1: ON LS Fc  2097 Hz Gain +2.34 dB
-Filter  2: ON PK Fc    89 Hz Gain -2.15 dB Q 3.00
-Filter  3: ON PK Fc 11881 Hz Gain +2.90 dB Q 3.00
-Filter  4: ON PK Fc   494 Hz Gain -2.79 dB Q 2.98
-Filter  5: ON PK Fc   201 Hz Gain -1.90 dB Q 3.00
-Filter  6: ON PK Fc   904 Hz Gain -1.71 dB Q 2.94
-Filter  7: ON PK Fc  6625 Hz Gain -4.24 dB Q 0.95
-Filter  8: ON PK Fc  9369 Hz Gain -2.45 dB Q 3.00
+Filter  1: ON LS Fc   415 Hz Gain +3.21 dB
+Filter  2: ON PK Fc  1563 Hz Gain +1.93 dB Q 1.34
+Filter  3: ON PK Fc  2444 Hz Gain -3.07 dB Q 2.84
+Filter  4: ON PK Fc  3243 Hz Gain +1.35 dB Q 3.38
+Filter  5: ON PK Fc  5269 Hz Gain -2.80 dB Q 3.44
+Filter  6: ON PK Fc  7163 Hz Gain -3.42 dB Q 3.24
+Filter  7: ON PK Fc  9512 Hz Gain -4.36 dB Q 3.48

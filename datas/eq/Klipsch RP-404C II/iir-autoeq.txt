@@ -1,16 +1,14 @@
 EQ for Klipsch RP-404C II computed from ErinsAudioCorner data
-Preference Score 2.33 with EQ 4.81
+Preference Score 2.33 with EQ 5.30
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:17:00
+Dated: 2023-05-10-19:43:23
 
-Preamp: -2.7 dB
+Preamp: -4.5 dB
 
-Filter  1: ON LS Fc   174 Hz Gain +2.54 dB
-Filter  2: ON PK Fc 12013 Hz Gain -3.28 dB Q 0.68
-Filter  3: ON PK Fc   780 Hz Gain +1.56 dB Q 1.84
-Filter  4: ON PK Fc  2340 Hz Gain -1.66 dB Q 3.00
-Filter  5: ON PK Fc   411 Hz Gain +0.75 dB Q 3.00
-Filter  6: ON PK Fc 14156 Hz Gain -0.75 dB Q 3.00
-Filter  7: ON PK Fc   180 Hz Gain -0.75 dB Q 2.99
-Filter  8: ON PK Fc   665 Hz Gain -0.75 dB Q 2.99
-Filter  9: ON PK Fc  5262 Hz Gain -0.75 dB Q 2.99
+Filter  1: ON LS Fc   114 Hz Gain +4.49 dB
+Filter  2: ON PK Fc  2397 Hz Gain -2.89 dB Q 3.41
+Filter  3: ON PK Fc  4837 Hz Gain -1.55 dB Q 2.96
+Filter  4: ON PK Fc  6414 Hz Gain -1.40 dB Q 3.17
+Filter  5: ON PK Fc  9794 Hz Gain -1.35 dB Q 2.53
+Filter  6: ON PK Fc 12508 Hz Gain -3.72 dB Q 0.89
+Filter  7: ON PK Fc 15317 Hz Gain -1.81 dB Q 3.31

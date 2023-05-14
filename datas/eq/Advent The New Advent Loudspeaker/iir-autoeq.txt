@@ -1,16 +1,14 @@
 EQ for Advent The New Advent Loudspeaker computed from ASR data
-Preference Score 3.32 with EQ 5.66
+Preference Score 3.32 with EQ 5.89
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:15:58
+Dated: 2023-05-10-19:42:51
 
-Preamp: -3.2 dB
+Preamp: -4.2 dB
 
-Filter  1: ON LS Fc   293 Hz Gain +3.00 dB
-Filter  2: ON PK Fc  6917 Hz Gain +1.59 dB Q 2.99
-Filter  3: ON PK Fc   986 Hz Gain +2.82 dB Q 2.25
-Filter  4: ON PK Fc  3246 Hz Gain +1.58 dB Q 2.99
-Filter  5: ON PK Fc 15995 Hz Gain +2.97 dB Q 2.99
-Filter  6: ON PK Fc    62 Hz Gain -0.77 dB Q 2.96
-Filter  7: ON PK Fc   500 Hz Gain +1.27 dB Q 2.99
-Filter  8: ON PK Fc  1805 Hz Gain +1.16 dB Q 2.99
-Filter  9: ON PK Fc  6334 Hz Gain -3.36 dB Q 0.40
+Filter  1: ON LS Fc   223 Hz Gain +4.23 dB
+Filter  2: ON PK Fc  1010 Hz Gain +2.61 dB Q 2.75
+Filter  3: ON PK Fc  4520 Hz Gain -1.73 dB Q 2.02
+Filter  4: ON PK Fc  9260 Hz Gain -2.33 dB Q 0.60
+Filter  5: ON PK Fc 11086 Hz Gain +1.53 dB Q 0.29
+Filter  6: ON PK Fc 13099 Hz Gain -3.92 dB Q 2.72
+Filter  7: ON PK Fc 15334 Hz Gain +4.43 dB Q 3.35

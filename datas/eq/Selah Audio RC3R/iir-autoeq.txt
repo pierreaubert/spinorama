@@ -1,15 +1,14 @@
 EQ for Selah Audio RC3R computed from ASR data
-Preference Score 4.85 with EQ 6.34
+Preference Score 4.85 with EQ 6.63
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-18:01:51
+Dated: 2023-05-10-19:44:15
 
-Preamp: -3.2 dB
+Preamp: -4.4 dB
 
-Filter  1: ON LS Fc   102 Hz Gain +2.99 dB
-Filter  2: ON PK Fc 13624 Hz Gain -2.64 dB Q 0.33
-Filter  3: ON PK Fc  1046 Hz Gain +1.87 dB Q 2.99
-Filter  4: ON PK Fc   306 Hz Gain -0.99 dB Q 1.65
-Filter  5: ON PK Fc   533 Hz Gain +0.80 dB Q 2.98
-Filter  6: ON PK Fc  2345 Hz Gain -0.90 dB Q 2.00
-Filter  7: ON PK Fc  3820 Hz Gain +1.37 dB Q 2.99
-Filter  8: ON PK Fc  1358 Hz Gain -1.21 dB Q 2.99
+Filter  1: ON LS Fc    92 Hz Gain +4.43 dB
+Filter  2: ON PK Fc  2613 Hz Gain -1.21 dB Q 1.87
+Filter  3: ON PK Fc  5007 Hz Gain -1.73 dB Q 3.24
+Filter  4: ON PK Fc  6924 Hz Gain -2.35 dB Q 3.18
+Filter  5: ON PK Fc 10262 Hz Gain -1.33 dB Q 2.29
+Filter  6: ON PK Fc 11133 Hz Gain -1.35 dB Q 1.86
+Filter  7: ON PK Fc 15731 Hz Gain -3.43 dB Q 2.19

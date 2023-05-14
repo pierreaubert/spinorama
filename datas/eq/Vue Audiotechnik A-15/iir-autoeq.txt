@@ -1,16 +1,14 @@
 EQ for Vue Audiotechnik A-15 computed from Vendors-Vue Audiotechnik data
-Preference Score 1.48 with EQ 3.00
+Preference Score 1.48 with EQ 3.41
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:15:30
+Dated: 2023-05-10-19:50:46
 
-Preamp: -3.2 dB
+Preamp: -4.5 dB
 
-Filter  1: ON LS Fc   172 Hz Gain +3.00 dB
-Filter  2: ON PK Fc  2508 Hz Gain +2.63 dB Q 3.00
-Filter  3: ON PK Fc  7806 Hz Gain +1.43 dB Q 3.00
-Filter  4: ON PK Fc   338 Hz Gain -1.20 dB Q 2.44
-Filter  5: ON PK Fc   845 Hz Gain +2.87 dB Q 2.98
-Filter  6: ON PK Fc  5149 Hz Gain -1.26 dB Q 1.37
-Filter  7: ON PK Fc  1093 Hz Gain -1.66 dB Q 2.99
-Filter  8: ON PK Fc  9763 Hz Gain -0.78 dB Q 2.98
-Filter  9: ON PK Fc  6202 Hz Gain -1.61 dB Q 2.99
+Filter  1: ON LS Fc   136 Hz Gain +4.49 dB
+Filter  2: ON PK Fc  1101 Hz Gain -2.19 dB Q 3.48
+Filter  3: ON PK Fc  2507 Hz Gain +2.35 dB Q 3.26
+Filter  4: ON PK Fc  6679 Hz Gain -3.21 dB Q 2.50
+Filter  5: ON PK Fc  7608 Hz Gain +4.41 dB Q 3.30
+Filter  6: ON PK Fc  9035 Hz Gain -3.44 dB Q 3.48
+Filter  7: ON PK Fc 10973 Hz Gain +3.97 dB Q 2.84

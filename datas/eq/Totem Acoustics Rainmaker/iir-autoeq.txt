@@ -1,16 +1,14 @@
 EQ for Totem Acoustics Rainmaker computed from ASR data
-Preference Score 3.11 with EQ 5.72
+Preference Score 3.11 with EQ 5.85
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-22-22:47:34
+Dated: 2023-05-10-19:56:25
 
-Preamp: -3.3 dB
+Preamp: -4.4 dB
 
-Filter  1: ON PK Fc    36 Hz Gain +3.00 dB Q 0.89
-Filter  2: ON PK Fc  7058 Hz Gain -5.68 dB Q 0.94
-Filter  3: ON PK Fc   185 Hz Gain -4.49 dB Q 1.50
-Filter  4: ON PK Fc    69 Hz Gain +2.08 dB Q 2.57
-Filter  5: ON PK Fc  1271 Hz Gain +1.26 dB Q 1.01
-Filter  6: ON PK Fc   131 Hz Gain -0.99 dB Q 3.00
-Filter  7: ON PK Fc 11036 Hz Gain -1.09 dB Q 3.00
-Filter  8: ON PK Fc  4246 Hz Gain -0.87 dB Q 3.00
-Filter  9: ON PK Fc   301 Hz Gain -0.61 dB Q 3.00
+Filter  1: ON LS Fc    83 Hz Gain +4.38 dB
+Filter  2: ON PK Fc   700 Hz Gain +2.81 dB Q 1.89
+Filter  3: ON PK Fc  3002 Hz Gain +2.32 dB Q 3.45
+Filter  4: ON PK Fc  6047 Hz Gain -4.46 dB Q 1.42
+Filter  5: ON PK Fc 10826 Hz Gain -3.97 dB Q 0.99
+Filter  6: ON PK Fc 12685 Hz Gain -0.09 dB Q 0.71
+Filter  7: ON PK Fc 13061 Hz Gain +0.63 dB Q 1.50

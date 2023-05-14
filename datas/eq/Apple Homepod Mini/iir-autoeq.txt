@@ -1,13 +1,14 @@
 EQ for Apple Homepod Mini computed from ErinsAudioCorner data
-Preference Score 2.22 with EQ 3.30
+Preference Score 2.22 with EQ 3.71
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:16:54
+Dated: 2023-05-10-19:57:27
 
-Preamp: -3.2 dB
+Preamp: -10.1 dB
 
-Filter  1: ON HS Fc 12311 Hz Gain +3.00 dB
-Filter  2: ON PK Fc   150 Hz Gain -1.56 dB Q 2.98
-Filter  3: ON PK Fc    87 Hz Gain -2.52 dB Q 2.97
-Filter  4: ON PK Fc  2705 Hz Gain -5.99 dB Q 2.84
-Filter  5: ON PK Fc  4149 Hz Gain +1.08 dB Q 2.99
-Filter  6: ON PK Fc   413 Hz Gain -2.35 dB Q 3.00
+Filter  1: ON LS Fc   343 Hz Gain +1.35 dB
+Filter  2: ON PK Fc  2725 Hz Gain -4.50 dB Q 3.09
+Filter  3: ON PK Fc  7004 Hz Gain +1.88 dB Q 0.25
+Filter  4: ON PK Fc  7204 Hz Gain -3.54 dB Q 2.89
+Filter  5: ON PK Fc  8881 Hz Gain +4.46 dB Q 3.32
+Filter  6: ON PK Fc 15165 Hz Gain +4.45 dB Q 3.31
+Filter  7: ON PK Fc 15310 Hz Gain +4.45 dB Q 3.36

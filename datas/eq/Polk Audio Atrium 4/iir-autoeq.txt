@@ -1,15 +1,14 @@
 EQ for Polk Audio Atrium 4 computed from ASR data
-Preference Score 1.02 with EQ 3.62
+Preference Score 1.02 with EQ 3.83
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:20:18
+Dated: 2023-05-10-19:48:51
 
-Preamp: -3.2 dB
+Preamp: -4.5 dB
 
-Filter  1: ON PK Fc  6884 Hz Gain -3.00 dB Q 0.69
-Filter  2: ON PK Fc   370 Hz Gain +3.00 dB Q 1.25
-Filter  3: ON PK Fc  1270 Hz Gain -2.05 dB Q 3.00
-Filter  4: ON PK Fc  1912 Hz Gain +2.17 dB Q 2.98
-Filter  5: ON PK Fc   547 Hz Gain -0.75 dB Q 3.00
-Filter  6: ON PK Fc  6442 Hz Gain -2.02 dB Q 0.57
-Filter  7: ON PK Fc  7428 Hz Gain -1.69 dB Q 1.02
-Filter  8: ON PK Fc  7456 Hz Gain -1.62 dB Q 1.14
+Filter  1: ON LS Fc   111 Hz Gain +4.46 dB
+Filter  2: ON PK Fc  1298 Hz Gain -2.74 dB Q 2.85
+Filter  3: ON PK Fc  1818 Hz Gain +2.00 dB Q 1.52
+Filter  4: ON PK Fc  3441 Hz Gain -2.25 dB Q 1.84
+Filter  5: ON PK Fc  6604 Hz Gain -2.81 dB Q 1.34
+Filter  6: ON PK Fc  8396 Hz Gain -2.94 dB Q 1.61
+Filter  7: ON PK Fc  9357 Hz Gain -0.57 dB Q 2.75

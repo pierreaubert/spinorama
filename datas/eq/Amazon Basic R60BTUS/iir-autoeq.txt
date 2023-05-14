@@ -1,16 +1,14 @@
 EQ for Amazon Basic R60BTUS computed from ASR data
-Preference Score 3.38 with EQ 4.58
+Preference Score 3.38 with EQ 4.95
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:18:15
+Dated: 2023-05-10-19:44:08
 
-Preamp: -3.5 dB
+Preamp: -4.5 dB
 
-Filter  1: ON LS Fc   171 Hz Gain +3.00 dB
-Filter  2: ON PK Fc  7927 Hz Gain +1.46 dB Q 2.99
-Filter  3: ON PK Fc  1312 Hz Gain -3.16 dB Q 3.00
-Filter  4: ON PK Fc   294 Hz Gain -0.77 dB Q 2.98
-Filter  5: ON PK Fc   421 Hz Gain +1.64 dB Q 0.32
-Filter  6: ON PK Fc  2523 Hz Gain +0.97 dB Q 2.65
-Filter  7: ON PK Fc  3307 Hz Gain +0.76 dB Q 2.92
-Filter  8: ON PK Fc 10072 Hz Gain +0.76 dB Q 2.82
-Filter  9: ON PK Fc  6229 Hz Gain -2.61 dB Q 2.97
+Filter  1: ON LS Fc   148 Hz Gain +4.46 dB
+Filter  2: ON PK Fc  6360 Hz Gain -3.99 dB Q 3.43
+Filter  3: ON PK Fc  7151 Hz Gain +2.60 dB Q 3.09
+Filter  4: ON PK Fc  8690 Hz Gain +0.94 dB Q 1.08
+Filter  5: ON PK Fc 10137 Hz Gain -1.12 dB Q 0.40
+Filter  6: ON PK Fc 10946 Hz Gain -0.67 dB Q 0.41
+Filter  7: ON PK Fc 13574 Hz Gain +0.74 dB Q 2.24

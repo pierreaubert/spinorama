@@ -1,16 +1,14 @@
 EQ for EAW MKC60 computed from Vendors-EAW data
-Preference Score 4.36 with EQ 4.68
+Preference Score 4.36 with EQ 4.71
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-25-13:41:43
+Dated: 2023-05-10-19:42:44
 
-Preamp: -3.2 dB
+Preamp: -10.5 dB
 
-Filter  1: ON PK Fc    45 Hz Gain +3.00 dB Q 0.73
-Filter  2: ON PK Fc   162 Hz Gain -2.42 dB Q 1.77
-Filter  3: ON PK Fc 10576 Hz Gain +3.00 dB Q 0.16
-Filter  4: ON PK Fc  2125 Hz Gain -1.04 dB Q 0.38
-Filter  5: ON PK Fc   294 Hz Gain -0.63 dB Q 3.00
-Filter  6: ON PK Fc   400 Hz Gain -0.50 dB Q 3.00
-Filter  7: ON PK Fc  5119 Hz Gain -1.78 dB Q 3.00
-Filter  8: ON PK Fc  6538 Hz Gain -1.37 dB Q 3.00
-Filter  9: ON PK Fc  3558 Hz Gain -1.37 dB Q 3.00
+Filter  1: ON PK Fc  1624 Hz Gain +0.65 dB Q 0.70
+Filter  2: ON PK Fc  5806 Hz Gain +0.98 dB Q 2.64
+Filter  3: ON PK Fc  7158 Hz Gain -1.31 dB Q 2.82
+Filter  4: ON PK Fc  8603 Hz Gain +1.75 dB Q 2.57
+Filter  5: ON PK Fc 14058 Hz Gain +2.70 dB Q 0.54
+Filter  6: ON PK Fc 15283 Hz Gain +4.17 dB Q 2.12
+Filter  7: ON PK Fc 15907 Hz Gain +4.01 dB Q 2.26

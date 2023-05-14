@@ -1,13 +1,14 @@
 EQ for Axiom ED120A computed from Vendors-Axiom data
-Preference Score 4.30 with EQ 4.64
+Preference Score 4.30 with EQ 4.87
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:17:21
+Dated: 2023-05-10-19:52:24
 
-Preamp: -5.9 dB
+Preamp: -10.6 dB
 
-Filter  1: ON HS Fc   720 Hz Gain +3.00 dB
-Filter  2: ON PK Fc   201 Hz Gain -2.14 dB Q 0.57
-Filter  3: ON PK Fc  3758 Hz Gain -3.19 dB Q 3.00
-Filter  4: ON PK Fc  7270 Hz Gain +2.99 dB Q 2.57
-Filter  5: ON PK Fc  1915 Hz Gain -1.13 dB Q 2.99
-Filter  6: ON PK Fc 10881 Hz Gain -1.10 dB Q 2.95
+Filter  1: ON HS Fc   951 Hz Gain +4.40 dB
+Filter  2: ON PK Fc  3745 Hz Gain -2.74 dB Q 3.45
+Filter  3: ON PK Fc  5897 Hz Gain -3.19 dB Q 0.26
+Filter  4: ON PK Fc  7211 Hz Gain +3.62 dB Q 2.02
+Filter  5: ON PK Fc 13234 Hz Gain -3.66 dB Q 2.57
+Filter  6: ON PK Fc 15767 Hz Gain +4.17 dB Q 1.94
+Filter  7: ON PK Fc 15920 Hz Gain +4.26 dB Q 2.51

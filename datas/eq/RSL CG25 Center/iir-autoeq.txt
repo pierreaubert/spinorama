@@ -1,15 +1,14 @@
 EQ for RSL CG25 Center computed from ASR data
-Preference Score 3.00 with EQ 4.70
+Preference Score 3.00 with EQ 5.47
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:06:54
+Dated: 2023-05-10-19:52:41
 
-Preamp: -3.7 dB
+Preamp: -4.5 dB
 
-Filter  1: ON PK Fc   548 Hz Gain +3.00 dB Q 3.00
-Filter  2: ON PK Fc  1345 Hz Gain +3.00 dB Q 1.42
-Filter  3: ON PK Fc  2887 Hz Gain +0.92 dB Q 0.25
-Filter  4: ON PK Fc   195 Hz Gain -2.86 dB Q 0.91
-Filter  5: ON PK Fc  5847 Hz Gain +1.95 dB Q 2.99
-Filter  6: ON PK Fc 13658 Hz Gain +2.75 dB Q 1.51
-Filter  7: ON PK Fc  4621 Hz Gain -5.12 dB Q 3.00
-Filter  8: ON PK Fc   774 Hz Gain -2.82 dB Q 3.00
+Filter  1: ON LS Fc    96 Hz Gain +4.42 dB
+Filter  2: ON PK Fc   542 Hz Gain +4.27 dB Q 3.47
+Filter  3: ON PK Fc  1268 Hz Gain +4.12 dB Q 2.06
+Filter  4: ON PK Fc  4675 Hz Gain -1.40 dB Q 3.44
+Filter  5: ON PK Fc  4696 Hz Gain -4.12 dB Q 3.42
+Filter  6: ON PK Fc  5592 Hz Gain +4.40 dB Q 3.44
+Filter  7: ON PK Fc 13393 Hz Gain +1.86 dB Q 0.40
