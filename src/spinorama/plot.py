@@ -40,7 +40,7 @@ pio.templates.default = "plotly_white"
 
 
 # ratio is 4x3
-plot_params_default = {
+plot_params_default: dict[str, int | str] = {
     "xmin": 20,
     "xmax": 20000,
     "ymin": -40,
@@ -719,7 +719,8 @@ def find_nearest_freq(dfu: pd.DataFrame, hz: float, tolerance: float = 0.05) -> 
         if abs(f - hz) < hz * tolerance:
             ihz = i
             break
-    logger.debug("nearest: %.1f hz at loc %d", hz, ihz)
+    if ihz:
+        logger.debug("nearest: %.1f hz at loc %d", hz, ihz)
     return ihz
 
 

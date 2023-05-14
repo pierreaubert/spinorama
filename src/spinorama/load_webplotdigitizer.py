@@ -188,7 +188,7 @@ def parse_graph_freq_webplotdigitizer(filename: str) -> StatusOr[tuple[str, pd.D
             return True, ("CEA2034", m_df)
     except IOError:
         logger.exception("Cannot not open: ")
-        return True, ("", pd.DataFrame())
+        return False, ("", pd.DataFrame())
 
 
 def parse_graphs_speaker_webplotdigitizer(
@@ -204,7 +204,12 @@ def parse_graphs_speaker_webplotdigitizer(
         )
         return False, ("", pd.DataFrame())
     try:
-        return parse_graph_freq_webplotdigitizer(jsonfilename)
+        status, graph = parse_graph_freq_webplotdigitizer(jsonfilename)
+        if not status:
+            logger.info("Parse failed for %s %s %s", speaker_name, origin, version)
+            return False, ("", pd.DataFrame())
     except FileNotFoundError:
         logger.info("Speaker: %s Not found: %s", speaker_name, jsonfilename)
+    else:
+        return True, graph
     return False, ("", pd.DataFrame())

@@ -124,8 +124,8 @@ def optim_strategy(
                     "Listening Window",
                     "Estimated In-Room Response",
                 ],  # fit on the 2 curves
-                "full_biquad_optim": True,
-                "smooth_measurements": False,  # do not smooth
+                "full_biquad_optim": optim_config.get("full_biquad_option", True),
+                "smooth_measurements": optim_config.get("smooth_measurements", False),
                 "loss": "score_loss",
             }
         )

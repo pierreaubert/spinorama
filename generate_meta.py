@@ -562,7 +562,7 @@ def add_eq(speaker_path, dataframe, parse_max):
                     if iir_weigth != 0.0:
                         metadata.speakers_info[speaker_name]["eqs"][eq_key]["peq"].append(
                             {
-                                "type": iir_filter.typ,
+                                "type": iir_filter.biquad_type,
                                 "freq": iir_filter.freq,
                                 "srate": iir_filter.srate,
                                 "Q": iir_filter.q,

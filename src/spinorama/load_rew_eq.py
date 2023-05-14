@@ -132,27 +132,19 @@ def parse_eq_line(line, srate):
             "add IIR peq BANDPASS freq %.0fHz srate %d Q %d Gain %f", ffreq, srate, rq, rgain
         )
     elif kind in ("HP", "HPQ"):
-        if rq == 0.0:
-            rq = 1 / math.sqrt(2.0)
         iir = Biquad(Biquad.HIGHPASS, ffreq, srate, rq, rgain)
         logger.debug(
             "add IIR peq HIGHPASS freq %.0fHz srate %d Q %f Gain %f", ifreq, srate, rq, rgain
         )
     elif kind in ("LP", "LPQ"):
-        if rq == 0.0:
-            rq = 1 / math.sqrt(2.0)
         iir = Biquad(Biquad.LOWPASS, ffreq, srate, rq, rgain)
         logger.debug("add IIR peq LOWPASS freq %.0fHz srate %d", ffreq, srate)
     elif kind in ("LS", "LSC"):
         # need to deal with last case when slope is given (6db/oct, 12db/oct, 24db/oct)
-        if rq == 0.0:
-            rq = bw2q(0.9)
         iir = Biquad(Biquad.LOWSHELF, ffreq, srate, rq, rgain)
         logger.debug("add IIR peq LOWSHELF freq %.0fHz srate %d Gain %f", ffreq, srate, rgain)
     elif kind in ("HS", "HSC"):
         # need to deal with last case when slope is given (6db/oct, 12db/oct, 24db/oct)
-        if rq == 0.0:
-            rq = bw2q(0.9)
         iir = Biquad(Biquad.HIGHSHELF, ffreq, srate, rq, rgain)
         logger.debug("add IIR peq HIGHSHELF freq %.0fHz srate %d Gain %f", ffreq, srate, rgain)
     else:

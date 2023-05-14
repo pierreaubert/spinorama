@@ -31,6 +31,10 @@ def q2bw(q: float) -> float:
     return math.log(q2 + math.sqrt(q2 * q2 - 1.0)) / math.log(2.0)
 
 
+DEFAULT_Q_HIGH_LOW_PASS = 1.0 / math.sqrt(2.0)
+DEFAULT_Q_HIGH_LOW_SHELF = bw2q(0.9)
+
+
 class Biquad:
     # pretend enumeration
     LOWPASS, HIGHPASS, BANDPASS, PEAK, NOTCH, LOWSHELF, HIGHSHELF = range(7)
@@ -45,8 +49,8 @@ class Biquad:
         HIGHSHELF: ["Highshelf", "HS"],
     }
 
-    def __init__(self, typ: int, freq: float, srate: int, q: float, db_gain: float = 0):
-        types = {
+    def __init__(self, biquad_type: int, freq: float, srate: int, q: float, db_gain: float = 0):
+        biquad_types = {
             Biquad.LOWPASS: Biquad.lowpass,
             Biquad.HIGHPASS: Biquad.highpass,
             Biquad.BANDPASS: Biquad.bandpass,
@@ -55,27 +59,27 @@ class Biquad:
             Biquad.LOWSHELF: Biquad.lowshelf,
             Biquad.HIGHSHELF: Biquad.highshelf,
         }
-        if typ not in types:
+        if biquad_type not in biquad_types:
             raise AssertionError
-        self.typ = typ
+        self.biquad_type = biquad_type
         self.freq = float(freq)
         self.srate = float(srate)
         self.q = float(q)
         self.db_gain = float(db_gain)
         # some control over parameters
-        if typ == Biquad.NOTCH:
+        if biquad_type == Biquad.NOTCH:
             self.q = 30.0
-        elif self.q == 0.0 and typ in (Biquad.BANDPASS, Biquad.HIGHPASS, Biquad.LOWPASS):
-            self.q = 1.0 / math.sqrt(2.0)
-        elif self.q == 0.0 and typ in (Biquad.LOWSHELF, Biquad.HIGHSHELF):
-            self.q = bw2q(0.9)
+        elif self.q == 0.0 and biquad_type in (Biquad.BANDPASS, Biquad.HIGHPASS, Biquad.LOWPASS):
+            self.q = DEFAULT_Q_HIGH_LOW_PASS
+        elif self.q == 0.0 and biquad_type in (Biquad.LOWSHELF, Biquad.HIGHSHELF):
+            self.q = DEFAULT_Q_HIGH_LOW_SHELF
         # initialize the 5 coefs
         self.a0 = self.a1 = self.a2 = 0
         self.b0 = self.b1 = self.b2 = 0
         # and the 4 coordinates
         self.x1 = self.x2 = 0
         self.y1 = self.y2 = 0
-        # if self.typ in (Biquad.PEAK, Biquad.LOWSHELF, Biquad.HIGHSHELF):
+        # if self.biquad_type in (Biquad.PEAK, Biquad.LOWSHELF, Biquad.HIGHSHELF):
         a = math.pow(10, db_gain / 40)
         # else:
         #    a = math.pow(10, db_gain / 20)
@@ -85,7 +89,7 @@ class Biquad:
         alpha = sn / (2 * self.q)
         beta = math.sqrt(a + a)
         # compute
-        types[typ](self, a, omega, sn, cs, alpha, beta)
+        biquad_types[biquad_type](self, a, omega, sn, cs, alpha, beta)
         # prescale constants
         self.b0 /= self.a0
         self.b1 /= self.a0
@@ -209,10 +213,10 @@ class Biquad:
         return self.a1, self.a2, self.b0, self.b1, self.b2
 
     def type2str_short(self) -> str:
-        return self.type2name[self.typ][1]
+        return self.type2name[self.biquad_type][1]
 
     def type2str_long(self) -> str:
-        return self.type2name[self.typ][0]
+        return self.type2name[self.biquad_type][0]
 
     def __str__(self):
         return "Type:%s,Freq:%.1f,Rate:%.1f,Q:%.1f,Gain:%.1f" % (

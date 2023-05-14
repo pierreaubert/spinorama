@@ -39,7 +39,7 @@ class BiquadRangeTests(unittest.TestCase):
             "plus_and_minus": True,
             "curves": ["Listening Window"],
             "loss": "leastsquare_loss",
-            "maxiter": 100,
+            "MAX_ITER": 100,
         }
 
     def test_one_peak(self):
@@ -67,7 +67,13 @@ class BiquadRangeTests(unittest.TestCase):
             test_peq = [
                 (
                     1.0,
-                    Biquad(typ=Biquad.PEAK, freq=case_freq, srate=48000, q=case_q, db_gain=db_gain),
+                    Biquad(
+                        biquad_type=Biquad.PEAK,
+                        freq=case_freq,
+                        srate=48000,
+                        q=case_q,
+                        db_gain=db_gain,
+                    ),
                 ),
             ]
             auto_target = peq_build(self.freq, test_peq)

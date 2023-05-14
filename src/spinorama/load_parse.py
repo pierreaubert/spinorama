@@ -145,6 +145,7 @@ def parse_graphs_speaker(
             )
 
         if not status:
+            logger.info("Load %s failed for %s %s %s", mformat, speaker_name, mversion, morigin)
             return {}
 
         if h_spl is not None and msymmetry == "coaxial":
@@ -163,12 +164,19 @@ def parse_graphs_speaker(
             status, (title, df_uneven) = parse_graphs_speaker_webplotdigitizer(
                 measurement_path, speaker_brand, speaker_name, morigin, mversion
             )
+            if not status:
+                logger.info("Load %s failed for %s %s %s", mformat, speaker_name, mversion, morigin)
+                return {}
             # necessary to do first (most digitalize graphs are uneven in frequency)
             df_uneven = graph_melt(unify_freq(df_uneven))
         elif mformat == "rew_text_dump":
             status, (title, df_uneven) = parse_graphs_speaker_rew_text_dump(
                 measurement_path, speaker_brand, speaker_name, morigin, mversion
             )
+            if not status:
+                logger.info("Load %s failed for %s %s %s", mformat, speaker_name, mversion, morigin)
+                return {}
+
         nan_count = check_nan({"test": df_uneven})
         if nan_count > 0:
             logger.error("df_uneven %s has %d NaNs", speaker_name, nan_count)
@@ -217,5 +225,10 @@ def parse_graphs_speaker(
     if df_graph is None:
         logger.warning("Parsing failed for %s/%s/%s", measurement_path, speaker_name, mversion)
         return {}
+
+    if "CEA2034" not in df_graph:
+        logger.info("CEA2034 not in graph after parsing for %s, %s", speaker_name, mversion)
+
+    # print("DEBUG {} {} : {}".format(speaker_name, mversion, df_graph.keys()))
 
     return df_graph

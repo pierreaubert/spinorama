@@ -39,9 +39,9 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
  [--smooth-measurements=<window_size>] \
  [--smooth-order=<order>] \
- [--second-optimiser=<sopt>] \
  [--curves=<curve_name>] \
  [--fitness=<function>] \
+ [--optimisation=<options>] \
  [--graphic_eq=<eq_name>] \
  [--graphic_eq_list]
 
@@ -82,13 +82,13 @@ Options:
   --slope-sp=<s_sp>        Same as above (shortcut)
   --slope-estimated-inroom=<s_pir> Slope of estimated in-room response, default is -8dB
   --slope-pir=<s_pir>      Same as above (shortcut)
-  --second-optimiser=<sopt>
   --smooth-measurements=<window_size> If present the measurements will be smoothed before optimisation, window_size is the size of the window use for smoothing
   --smooth-order=<order>   Order of the interpolation, 3 by default for Savitzky-Golay filter.
   --curves=<curve_name>    Curve name: must be one of "ON", "LW", "PIR", "ER" or "SP" or a combinaison separated by a ,. Ex: 'PIR,LW' is valid
   --fitness=<function>     Fit function: must be one of "Flat", "Score", "LeastSquare", "FlatPir", "Combine".
   --graphic_eq=<eq_name>   Result is tailored for graphic_eq "name".
   --graphic_eq_list        List the known graphic eq and exit
+  --optimisation=<options> Choose an algorithm: options are greedy or global. Greedy is fast, Global is much slower but could find better solutions.
 """
 import sys
 
@@ -111,7 +111,7 @@ from generate_common import get_custom_logger, args2level, custom_ray_init, cach
 from spinorama.auto_save import optim_save_peq
 
 
-VERSION = "0.21"
+VERSION = "0.22"
 
 
 def print_items(aggregated_results):
@@ -308,6 +308,8 @@ def main():
         "grapheq_name": None,
         # use -3dB point as a starting point for target
         "use_3dB_target": True,
+        # optimisation algorithm (greedy or global)
+        "optimisation": "greedy",
     }
 
     # define other parameters for the optimisation algorithms
@@ -319,14 +321,14 @@ def main():
         current_optim_config["MAX_STEPS_DBGAIN"] = 3
         current_optim_config["MAX_STEPS_Q"] = 3
         # max iterations (if algorithm is iterative)
-        current_optim_config["maxiter"] = 20
+        current_optim_config["MAX_ITER"] = 20
     else:
         current_optim_config["MAX_NUMBER_PEQ"] = 9
         current_optim_config["MAX_STEPS_FREQ"] = 6
         current_optim_config["MAX_STEPS_DBGAIN"] = 6
         current_optim_config["MAX_STEPS_Q"] = 6
         # max iterations (if algorithm is iterative)
-        current_optim_config["maxiter"] = 150
+        current_optim_config["MAX_ITER"] = 150
 
     # MIN or MAX_Q or MIN or MAX_DBGAIN control the shape of the biquad which
     # are admissible.
@@ -344,7 +346,7 @@ def main():
             parameter_error = True
     if args["--max-iter"] is not None:
         max_iter = int(args["--max-iter"])
-        current_optim_config["maxiter"] = max_iter
+        current_optim_config["MAX_ITER"] = max_iter
         if max_iter < 1:
             print("ERROR: max_iter is {} which is below 1".format(max_iter))
             parameter_error = True
@@ -423,11 +425,6 @@ def main():
             print("ERROR: Polynomial order {} is not between  is 1 and 5".format(order))
             parameter_error = True
 
-    # do we run a second optimiser?
-    current_optim_config["second_optimiser"] = False
-    if args["--second-optimiser"] is not None:
-        current_optim_config["second_optimiser"] = True
-
     # which curve (measurement) to target?
     if args["--curves"] is not None:
         param_curve_names = args["--curves"].replace(" ", "").split(",")
@@ -485,6 +482,17 @@ def main():
             sys.exit(1)
         current_optim_config["use_grapheq"] = True
         current_optim_config["grapheq_name"] = grapheq_name
+
+    # which optimisation algo?
+    if args["--optimisation"] is not None:
+        optimisation_name = args["--optimisation"]
+        if optimisation_name == "greedy":
+            current_optim_config["optimisation"] = "greedy"
+        elif optimisation_name == "global":
+            current_optim_config["optimisation"] = "global"
+        else:
+            print("ERROR: Optimisation algorithm needs to be either 'greedy' or 'global'.")
+            sys.exit(1)
 
     # name of speaker
     speaker_name = None

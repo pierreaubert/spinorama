@@ -21,6 +21,7 @@ from spinorama.filter_peq import Peq
 from spinorama import logger
 from spinorama.auto_geq import optim_grapheq
 from spinorama.auto_greedy import optim_greedy
+from spinorama.auto_global import optim_global
 
 
 def optim_multi_steps(
@@ -49,20 +50,34 @@ def optim_multi_steps(
             logger.info("autoEQ (GraphEQ) failed for %s", speaker_name)
         return grapheq_status, (grapheq_results, grapheq_peq)
 
-    greedy_status, (greedy_results, greedy_peq) = optim_greedy(
-        speaker_name,
-        df_speaker,
-        freq,
-        auto_target,
-        auto_target_interp,
-        optim_config,
-        use_score,
-    )
+    if optim_config["optimisation"] == "greedy":
+        greedy_status, (greedy_results, greedy_peq) = optim_greedy(
+            speaker_name,
+            df_speaker,
+            freq,
+            auto_target,
+            auto_target_interp,
+            optim_config,
+            use_score,
+        )
 
-    if greedy_status is False:
-        logger.info("autoEQ (Greedy) failed for %s", speaker_name)
+        if greedy_status is False:
+            logger.info("autoEQ (Greedy) failed for %s", speaker_name)
 
-    if not use_score or not optim_config["second_optimiser"]:
         return greedy_status, (greedy_results, greedy_peq)
+
+    if optim_config["optimisation"] == "global":
+        global_status, (global_results, global_peq) = optim_global(
+            df_speaker,
+            freq,
+            auto_target,
+            auto_target_interp,
+            optim_config,
+        )
+
+        if global_status is False:
+            logger.info("autoEQ (Global) failed for %s", speaker_name)
+
+        return global_status, (global_results, global_peq)
 
     return False, ((0, 0, 0), [])

@@ -28,7 +28,7 @@ from spinorama.load_misc import sort_angles
 from spinorama.compute_misc import resample
 
 
-def parse_graph_freq_princeton_mat(mat, suffix: str) -> StatusOr[pd.DataFrame]:
+def parse_graph_freq_princeton_mat(mat, suffix: str, onaxis) -> StatusOr[pd.DataFrame]:
     """Suffix can be either H or V"""
     ir_name = "IR_{:1s}".format(suffix)
     fs_name = "fs_{:1s}".format(suffix)
@@ -67,18 +67,25 @@ def parse_graph_freq_princeton_mat(mat, suffix: str) -> StatusOr[pd.DataFrame]:
             label = "On Axis"
         if ilabel % 10 == 0:
             df_3d3a[label] = ys
+        logger.debug("%d %s", ilabel, label)
     # check empty case
     if "On Axis" not in df_3d3a:
-        return False, pd.DataFrame()
+        if suffix == "V" and onaxis is not None:
+            df_3d3a["On Axis"] = onaxis
+        else:
+            logger.info(
+                "On Axis not in %s file, keys are %s", suffix, ",".join(list(df_3d3a.keys()))
+            )
+            return False, pd.DataFrame()
     # sort datas
     df_3d3a_sa = sort_angles(df_3d3a)
     # precision of measurement is ok above 500
     return True, resample(df_3d3a_sa[df_3d3a_sa.Freq >= 500], 200)
 
 
-def parse_graph_princeton(filename: str, orient: str) -> StatusOr[pd.DataFrame]:
+def parse_graph_princeton(filename: str, orient: str, onaxis) -> StatusOr[pd.DataFrame]:
     matfile = loadmat(filename)
-    return parse_graph_freq_princeton_mat(matfile, orient)
+    return parse_graph_freq_princeton_mat(matfile, orient, onaxis)
 
 
 def parse_graphs_speaker_princeton(
@@ -95,6 +102,7 @@ def parse_graphs_speaker_princeton(
             h_file = d
         elif d[-9:] == "_V_IR.mat":
             v_file = d
+
     if h_file is None or v_file is None:
         logger.info("Couldn't find Horizontal and Vertical IR files for speaker {:s}", speaker_name)
         logger.info("Looking in directory {:s}", matfilename)
@@ -102,10 +110,16 @@ def parse_graphs_speaker_princeton(
             logger.info("Found file {:s}", d)
         return False, (pd.DataFrame(), pd.DataFrame())
 
-    h_status, h_spl = parse_graph_princeton(h_file, "H")
-    v_status, v_spl = parse_graph_princeton(v_file, "V")
+    h_status, h_spl = parse_graph_princeton(h_file, "H", None)
+    if not h_status:
+        logger.info("Found file but loading didn't work for %s %s", speaker_name, version)
+        return False, (pd.DataFrame(), pd.DataFrame())
 
-    if not h_status or not v_status:
+    onaxis = h_spl["On Axis"]
+    v_status, v_spl = parse_graph_princeton(v_file, "V", onaxis)
+
+    if not v_status:
+        logger.info("Found file but loading didn't work for %s %s", speaker_name, version)
         return False, (pd.DataFrame(), pd.DataFrame())
 
     return True, (h_spl, v_spl)

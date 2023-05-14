@@ -420,7 +420,7 @@ def spin_compute_di_eir(
 
     spin_even = unify_freq(spin_melted)
     spin = graph_melt(spin_even)
-    logger.debug("DEBUG after melt: spin {}", spin.keys())
+    logger.debug("DEBUG after melt: spin %s", ",".join(list(spin.keys())))
 
     if spin is None:
         logger.error("spin is None")

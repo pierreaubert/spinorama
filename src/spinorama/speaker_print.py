@@ -105,11 +105,11 @@ def print_graph(filename, chart, title, ext, force) -> int:
 
 @ray.remote
 def print_graphs(
-    df: pd.DataFrame,
+    df: dict[str, pd.DataFrame],
     speaker: str,
     version: str,
     origin: str,
-    origins_info: str,
+    origins_info: dict,
     key: str,
     width: int,
     height: int,
@@ -121,6 +121,11 @@ def print_graphs(
     # or when the cache is confused (typically when you change the metadata)
     if df is None:
         logger.debug("df is None for %s %s %s", speaker, version, origin)
+        return 0
+
+    if len(df.keys()) == 0:
+        # if print_graph is called before df is ready
+        # fix: ray call above
         return 0
 
     graph_params = copy.deepcopy(plot_params_default)
@@ -136,16 +141,26 @@ def print_graphs(
     graph_params["ymax"] = origins_info[origin]["max dB"]
 
     graphs = {}
-    graphs["CEA2034"] = display_spinorama(df, graph_params)
-    graphs["On Axis"] = display_onaxis(df, graph_params)
-    graphs["Estimated In-Room Response"] = display_inroom(df, graph_params)
-    graphs["Early Reflections"] = display_reflection_early(df, graph_params)
-    graphs["Horizontal Reflections"] = display_reflection_horizontal(df, graph_params)
-    graphs["Vertical Reflections"] = display_reflection_vertical(df, graph_params)
-    graphs["SPL Horizontal"] = display_spl_horizontal(df, graph_params)
-    graphs["SPL Vertical"] = display_spl_vertical(df, graph_params)
-    graphs["SPL Horizontal Normalized"] = display_spl_horizontal_normalized(df, graph_params)
-    graphs["SPL Vertical Normalized"] = display_spl_vertical_normalized(df, graph_params)
+    for op_title, op_call in (
+        ("CEA2034", display_spinorama),
+        ("On Axis", display_onaxis),
+        ("Estimated In-Room Response", display_inroom),
+        ("Early Reflections", display_reflection_early),
+        ("Horizontal Reflections", display_reflection_horizontal),
+        ("Vertical Reflections", display_reflection_vertical),
+        ("SPL Horizontal", display_spl_horizontal),
+        ("SPL Vertical", display_spl_vertical),
+        ("SPL Horizontal Normalized", display_spl_horizontal_normalized),
+        ("SPL Vertical Normalized", display_spl_vertical_normalized),
+    ):
+        print("DEBUG {} {} {} {}".format(speaker, version, origin, df.keys()))
+        graph = op_call(df, graph_params)
+        if graph is None:
+            logger.debug("display %s failed for %s %s %s", op_title, speaker, version, origin)
+            if op_title == "CEA2034":
+                logger.warning("display %s failed for %s %s %s", op_title, speaker, version, origin)
+            continue
+        graphs[op_title] = graph
 
     # change params for contour
     contour_params = copy.deepcopy(contour_params_default)

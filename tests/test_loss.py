@@ -39,15 +39,15 @@ class LossTests(unittest.TestCase):
             "curves": ["Listening Window"],
             "loss_weigths": [100.0, 1.0],
             "loss": "leastsquare_loss",
-            "maxiter": 100,
+            "MAX_ITER": 100,
         }
 
     def test_loss(self):
         up_peq = [
-            (1.0, Biquad(typ=Biquad.PEAK, freq=1000, srate=48000, q=1, db_gain=3)),
+            (1.0, Biquad(biquad_type=Biquad.PEAK, freq=1000, srate=48000, q=1, db_gain=3)),
         ]
         down_peq = [
-            (1.0, Biquad(typ=Biquad.PEAK, freq=1000, srate=48000, q=1, db_gain=-3)),
+            (1.0, Biquad(biquad_type=Biquad.PEAK, freq=1000, srate=48000, q=1, db_gain=-3)),
         ]
         auto_target = peq_build(self.freq, up_peq)
 

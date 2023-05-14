@@ -22,7 +22,7 @@ import pandas as pd
 
 from spinorama import logger
 from spinorama.ltype import Vector
-from spinorama.filter_iir import Biquad
+from spinorama.filter_iir import Biquad, DEFAULT_Q_HIGH_LOW_PASS, DEFAULT_Q_HIGH_LOW_SHELF
 
 # declare type here to prevent circular dependencies
 Peq = list[tuple[float, Biquad]]
@@ -113,26 +113,40 @@ def peq_format_apo(comment: str, peq: Peq) -> str:
     res.append("")
     for i, data in enumerate(peq):
         _, iir = data
-        if iir.typ in (Biquad.PEAK, Biquad.NOTCH, Biquad.BANDPASS):
+        if iir.biquad_type in (Biquad.PEAK, Biquad.NOTCH, Biquad.BANDPASS):
             res.append(
                 "Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB Q {:0.2f}".format(
                     i + 1, iir.type2str_short(), int(iir.freq), iir.db_gain, iir.q
                 )
             )
-        elif iir.typ in (Biquad.LOWPASS, Biquad.HIGHPASS):
-            res.append(
-                "Filter {:2d}: ON {:2s} Fc {:5d} Hz".format(
-                    i + 1, iir.type2str_short(), int(iir.freq)
+        elif iir.biquad_type in (Biquad.LOWPASS, Biquad.HIGHPASS):
+            if iir.q == DEFAULT_Q_HIGH_LOW_PASS:
+                res.append(
+                    "Filter {:2d}: ON {:2s} Fc {:5d} Hz".format(
+                        i + 1, iir.type2str_short(), int(iir.freq)
+                    )
                 )
-            )
-        elif iir.typ in (Biquad.LOWSHELF, Biquad.HIGHSHELF):
-            res.append(
-                "Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB".format(
-                    i + 1, iir.type2str_short(), int(iir.freq), iir.db_gain
+            else:
+                res.append(
+                    "Filter {:2d}: ON {:2s}Q Fc {:5d} Hz Q {:0.2f}".format(
+                        i + 1, iir.type2str_short(), int(iir.freq), iir.q
+                    )
                 )
-            )
+        elif iir.biquad_type in (Biquad.LOWSHELF, Biquad.HIGHSHELF):
+            if iir.q == DEFAULT_Q_HIGH_LOW_SHELF:
+                res.append(
+                    "Filter {:2d}: ON {:2s} Fc {:5d} Hz Gain {:+0.2f} dB".format(
+                        i + 1, iir.type2str_short(), int(iir.freq), iir.db_gain
+                    )
+                )
+            else:
+                res.append(
+                    "Filter {:2d}: ON {:2s}Q Fc {:5d} Hz Gain {:+0.2f} dB Q {:.2f}".format(
+                        i + 1, iir.type2str_short(), int(iir.freq), iir.db_gain, iir.q
+                    )
+                )
         else:
-            logger.error("kind %s is unkown", iir.typ)
+            logger.error("kind %s is unkown", iir.biquad_type)
     res.append("")
     return "\n".join(res)
 

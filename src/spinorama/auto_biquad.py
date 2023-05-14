@@ -83,7 +83,7 @@ def find_best_biquad(
         # res = opt.dual_annealing(
         #    opt_peq,
         #    bounds,
-        #    maxiter=optim_config["maxiter"],
+        #    MAX_ITER=optim_config["MAX_ITER"],
         #    # initial_temp=10000
         # )
         res = opt.differential_evolution(
@@ -95,7 +95,7 @@ def find_best_biquad(
             # mutation=(0.5, 1.5),
             # recombination=1.9,
             popsize=POPSIZE,
-            maxiter=optim_config["maxiter"],
+            MAX_ITER=optim_config["MAX_ITER"],
             # atol=0.01,
             polish=False,
             integrality=[True, True, False, False],
@@ -222,7 +222,7 @@ def find_best_peak(
             # init=z_init,
             # x0 = x_init,
             popsize=POPSIZE,
-            maxiter=optim_config.get("maxiter", 2500),
+            maxiter=optim_config.get("MAX_ITER", 2500),
             disp=True,
             # tol=0.0001,
             polish=False,

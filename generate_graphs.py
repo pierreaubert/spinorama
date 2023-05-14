@@ -69,12 +69,12 @@ from spinorama.speaker_print import print_graphs
 from spinorama.plot import plot_params_default
 
 
-VERSION = "2.01"
+VERSION = "2.02"
 
-ACTIVATE_TRACING = False
+ACTIVATE_TRACING: bool = True
 
 
-def tracing(msg):
+def tracing(msg: str):
     """debugging ray is sometimes painfull"""
     if ACTIVATE_TRACING:
         print(f"---- TRACING ---- {msg} ----")
@@ -120,8 +120,8 @@ def queue_measurement(
         level,
     )
     id_eq = parse_eq_speaker.remote("./datas", speaker, id_df, mparameters, level)
-    width = plot_params_default["width"]
-    height = plot_params_default["height"]
+    width = int(plot_params_default["width"])
+    height = int(plot_params_default["height"])
     tracing("calling print_graph remote for {}".format(speaker))
     id_g1 = print_graphs.remote(
         id_df,
