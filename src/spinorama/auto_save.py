@@ -75,8 +75,10 @@ def optim_save_peq(
 
     # do we have the full data?
     use_score = True
-    if "SPL Horizontal_unmelted" not in df_speaker or "SPL Vertical_unmelted" not in df_speaker:
-        use_score = False
+    # EXPERIMENT
+    # if "SPL Horizontal_unmelted" not in df_speaker or "SPL Vertical_unmelted" not in df_speaker:
+    #    use_score = False
+    # EXPERIMENT
 
     if current_speaker_origin == "Princeton":
         # we have SPL H and V but they are only above 500Hz so score computation fails.
@@ -139,7 +141,9 @@ def optim_save_peq(
                 if len(parsed) > 1:
                     previous_score = float(parsed[1])
                     logger.info(
-                        "EQ prev_score %0.2f > %0.2f", previous_score, auto_score["pref_score"]
+                        "EQ prev_score %0.2f new score %0.2f",
+                        previous_score,
+                        auto_score["pref_score"],
                     )
 
     skip_write_eq = False

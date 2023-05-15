@@ -1,15 +1,14 @@
 EQ for Polk Audio Rti 10 computed from Misc data
+Preference Score 3.08 with EQ 5.13
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-17:15:46
+Dated: 2023-05-15-11:37:32
 
-Preamp: -1.9 dB
+Preamp: -1.6 dB
 
-Filter  1: ON PK Fc    77 Hz Gain -3.00 dB Q 2.85
-Filter  2: ON PK Fc 12879 Hz Gain -4.71 dB Q 0.41
-Filter  3: ON PK Fc  3027 Hz Gain -1.91 dB Q 2.98
-Filter  4: ON PK Fc   266 Hz Gain -1.78 dB Q 2.93
-Filter  5: ON PK Fc   915 Hz Gain +2.50 dB Q 2.96
-Filter  6: ON PK Fc  1908 Hz Gain +0.95 dB Q 2.96
-Filter  7: ON PK Fc   575 Hz Gain -0.78 dB Q 2.89
-Filter  8: ON PK Fc  1260 Hz Gain -1.51 dB Q 2.57
-Filter  9: ON PK Fc 12538 Hz Gain -0.76 dB Q 2.99
+Filter  1: ON PK Fc  1918 Hz Gain +2.27 dB Q 0.49
+Filter  2: ON PK Fc  2899 Hz Gain -2.63 dB Q 2.72
+Filter  3: ON PK Fc  4332 Hz Gain -2.81 dB Q 1.04
+Filter  4: ON PK Fc  9076 Hz Gain -1.14 dB Q 2.85
+Filter  5: ON PK Fc 12944 Hz Gain -2.82 dB Q 0.78
+Filter  6: ON PK Fc 13239 Hz Gain +0.24 dB Q 1.68
+Filter  7: ON PK Fc 14829 Hz Gain -2.61 dB Q 0.51

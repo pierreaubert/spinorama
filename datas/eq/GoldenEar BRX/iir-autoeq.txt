@@ -1,16 +1,16 @@
 EQ for GoldenEar BRX computed from ASR data
-Preference Score 4.64 with EQ 5.65
+Preference Score 4.64 with EQ 5.67
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-13:34:28
+Dated: 2023-05-14-18:20:41
 
 Preamp: -3.0 dB
 
-Filter  1: ON LS Fc   100 Hz Gain +2.98 dB Q 2.91
-Filter  2: ON PK Fc   190 Hz Gain -1.61 dB Q 1.41
-Filter  3: ON PK Fc   833 Hz Gain -2.17 dB Q 3.00
-Filter  4: ON PK Fc  5554 Hz Gain +1.57 dB Q 2.92
-Filter  5: ON PK Fc  1321 Hz Gain -0.86 dB Q 2.78
-Filter  6: ON PK Fc  2632 Hz Gain +2.06 dB Q 2.65
-Filter  7: ON PK Fc 13025 Hz Gain -0.81 dB Q 2.41
-Filter  8: ON PK Fc   439 Hz Gain +0.91 dB Q 1.40
-Filter  9: ON PK Fc  4253 Hz Gain -1.79 dB Q 2.98
+Filter  1: ON LS Fc   100 Hz Gain +2.98 dB Q 1.45
+Filter  2: ON PK Fc   188 Hz Gain -1.75 dB Q 1.44
+Filter  3: ON PK Fc   836 Hz Gain -2.13 dB Q 2.97
+Filter  4: ON PK Fc  5479 Hz Gain +1.57 dB Q 2.88
+Filter  5: ON PK Fc  1325 Hz Gain -0.84 dB Q 2.97
+Filter  6: ON PK Fc  2643 Hz Gain +2.07 dB Q 2.79
+Filter  7: ON PK Fc 13484 Hz Gain -0.81 dB Q 2.70
+Filter  8: ON PK Fc   439 Hz Gain +0.92 dB Q 1.23
+Filter  9: ON PK Fc  4270 Hz Gain -1.86 dB Q 2.99

@@ -1,14 +1,15 @@
 EQ for Polk Audio Signature S15 computed from ASR data
 Preference Score 4.33 with EQ 5.79
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-17:17:16
+Dated: 2023-05-14-18:14:01
 
-Preamp: -2.7 dB
+Preamp: -2.6 dB
 
-Filter  1: ON PK Fc  1584 Hz Gain +2.97 dB Q 2.09
-Filter  2: ON PK Fc   358 Hz Gain +1.97 dB Q 1.19
-Filter  3: ON PK Fc  2915 Hz Gain +1.67 dB Q 2.98
-Filter  4: ON PK Fc  7983 Hz Gain +0.78 dB Q 2.95
-Filter  5: ON PK Fc   915 Hz Gain -0.86 dB Q 2.78
-Filter  6: ON PK Fc 10065 Hz Gain -2.27 dB Q 0.32
-Filter  7: ON PK Fc   117 Hz Gain -0.81 dB Q 1.84
+Filter  1: ON PK Fc  1586 Hz Gain +2.94 dB Q 2.12
+Filter  2: ON PK Fc   361 Hz Gain +2.17 dB Q 1.26
+Filter  3: ON PK Fc   118 Hz Gain -0.92 dB Q 1.57
+Filter  4: ON PK Fc  2919 Hz Gain +1.66 dB Q 2.98
+Filter  5: ON PK Fc  8301 Hz Gain +0.78 dB Q 2.84
+Filter  6: ON PK Fc   915 Hz Gain -0.97 dB Q 2.96
+Filter  7: ON PK Fc 10081 Hz Gain -2.15 dB Q 0.31
+Filter  8: ON PK Fc  5122 Hz Gain -2.04 dB Q 1.28

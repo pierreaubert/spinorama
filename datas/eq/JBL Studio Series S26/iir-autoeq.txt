@@ -1,15 +1,14 @@
 EQ for JBL Studio Series S26 computed from Vendors-JBL data
+Preference Score 5.99 with EQ 6.50
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-17:33:10
+Dated: 2023-05-15-11:46:57
 
-Preamp: -0.9 dB
+Preamp: -1.8 dB
 
-Filter  1: ON PK Fc  5499 Hz Gain -2.15 dB Q 2.06
-Filter  2: ON PK Fc   126 Hz Gain -2.16 dB Q 1.29
-Filter  3: ON PK Fc   545 Hz Gain -1.79 dB Q 2.10
-Filter  4: ON PK Fc  1312 Hz Gain +0.81 dB Q 2.87
-Filter  5: ON PK Fc  2639 Hz Gain +1.21 dB Q 2.92
-Filter  6: ON PK Fc  7794 Hz Gain -0.76 dB Q 2.95
-Filter  7: ON PK Fc   289 Hz Gain -0.78 dB Q 2.86
-Filter  8: ON PK Fc  3744 Hz Gain -0.90 dB Q 2.88
-Filter  9: ON PK Fc    94 Hz Gain -0.92 dB Q 2.96
+Filter  1: ON PK Fc   580 Hz Gain -1.80 dB Q 1.27
+Filter  2: ON PK Fc  2728 Hz Gain +2.01 dB Q 2.07
+Filter  3: ON PK Fc  5319 Hz Gain -2.27 dB Q 2.26
+Filter  4: ON PK Fc  6932 Hz Gain -0.66 dB Q 2.75
+Filter  5: ON PK Fc 13812 Hz Gain -2.14 dB Q 1.60
+Filter  6: ON PK Fc 15187 Hz Gain +1.15 dB Q 1.72
+Filter  7: ON PK Fc 15514 Hz Gain +1.66 dB Q 1.10

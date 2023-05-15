@@ -1,15 +1,14 @@
 EQ for Magico A5 computed from Misc data
+Preference Score 6.03 with EQ 6.55
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-17:20:45
+Dated: 2023-05-15-11:51:13
 
-Preamp: -2.2 dB
+Preamp: -4.8 dB
 
-Filter  1: ON PK Fc    99 Hz Gain -3.00 dB Q 2.93
-Filter  2: ON PK Fc   210 Hz Gain -1.60 dB Q 2.04
-Filter  3: ON PK Fc  3649 Hz Gain -1.77 dB Q 1.12
-Filter  4: ON PK Fc   456 Hz Gain +0.76 dB Q 2.90
-Filter  5: ON PK Fc   948 Hz Gain -0.77 dB Q 1.21
-Filter  6: ON PK Fc 12936 Hz Gain +2.38 dB Q 0.52
-Filter  7: ON PK Fc  6618 Hz Gain -1.56 dB Q 1.87
-Filter  8: ON PK Fc  1977 Hz Gain -0.75 dB Q 2.09
-Filter  9: ON PK Fc  8509 Hz Gain -0.77 dB Q 2.89
+Filter  1: ON PK Fc   142 Hz Gain -1.72 dB Q 1.18
+Filter  2: ON PK Fc  3595 Hz Gain -0.63 dB Q 1.94
+Filter  3: ON PK Fc  6880 Hz Gain -1.42 dB Q 2.65
+Filter  4: ON PK Fc  7818 Hz Gain +0.06 dB Q 0.64
+Filter  5: ON PK Fc 10650 Hz Gain +0.75 dB Q 2.89
+Filter  6: ON PK Fc 12632 Hz Gain +2.48 dB Q 0.58
+Filter  7: ON PK Fc 15776 Hz Gain +2.79 dB Q 2.15

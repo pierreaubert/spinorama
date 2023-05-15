@@ -1,16 +1,16 @@
 EQ for GR Research LGK 2.0 computed from ASR data
-Preference Score 3.69 with EQ 5.10
+Preference Score 3.69 with EQ 5.12
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-13:38:52
+Dated: 2023-05-14-18:23:58
 
 Preamp: -2.9 dB
 
-Filter  1: ON LS Fc    83 Hz Gain +2.91 dB Q 0.63
-Filter  2: ON PK Fc   345 Hz Gain +1.40 dB Q 1.56
-Filter  3: ON PK Fc  8509 Hz Gain +2.95 dB Q 2.96
-Filter  4: ON PK Fc  1604 Hz Gain +2.45 dB Q 3.00
-Filter  5: ON PK Fc 15998 Hz Gain +1.79 dB Q 0.66
-Filter  6: ON PK Fc  2800 Hz Gain +0.75 dB Q 2.95
-Filter  7: ON PK Fc   670 Hz Gain +0.77 dB Q 2.93
-Filter  8: ON PK Fc  3307 Hz Gain -2.48 dB Q 0.66
-Filter  9: ON PK Fc   126 Hz Gain -1.91 dB Q 2.21
+Filter  1: ON PK Fc    45 Hz Gain +2.97 dB Q 0.87
+Filter  2: ON PK Fc   125 Hz Gain -1.90 dB Q 2.44
+Filter  3: ON PK Fc   343 Hz Gain +1.54 dB Q 1.57
+Filter  4: ON PK Fc  8516 Hz Gain +2.99 dB Q 3.00
+Filter  5: ON PK Fc  1606 Hz Gain +2.42 dB Q 2.99
+Filter  6: ON PK Fc 15981 Hz Gain +1.50 dB Q 0.69
+Filter  7: ON PK Fc  2806 Hz Gain +0.75 dB Q 2.89
+Filter  8: ON PK Fc   683 Hz Gain +0.79 dB Q 2.97
+Filter  9: ON PK Fc  3256 Hz Gain -2.46 dB Q 0.74

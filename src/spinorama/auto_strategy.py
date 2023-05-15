@@ -263,9 +263,17 @@ def optim_strategy(
         else:
             logger.info("strategy: %s %2.2f", auto_status, auto_results[1])
 
-        if auto_status is False or len(auto_peq) == 0:
+        if auto_status is False:
             logger.error(
                 "optim_strategy failed for %s with %s",
+                current_speaker_name,
+                current_optim_config,
+            )
+            continue
+
+        if len(auto_peq) == 0:
+            logger.info(
+                "optim_strategy didn't find a better EQ for %s with config %s",
                 current_speaker_name,
                 current_optim_config,
             )
@@ -371,12 +379,10 @@ def optim_strategy(
                 best_score = pref_score
                 results = auto_score, auto_results, auto_peq, current_optim_config
         else:
-            print("DEBUG auto_results {}".format(auto_results))
             loss_score = auto_results[1]
             if loss_score > best_score:
                 best_score = loss_score
                 results = auto_score, auto_results, auto_peq, current_optim_config
-            print("DEBUG results {}".format(results))
 
     if results:
         logger.info("stategy returns best score of %s", results[0])

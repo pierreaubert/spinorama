@@ -1,15 +1,15 @@
 EQ for Martin Logan 5XW computed from ErinsAudioCorner data
-Preference Score 2.62 with EQ 4.63
+Preference Score 2.62 with EQ 4.66
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-17:29:16
+Dated: 2023-05-14-18:24:14
 
-Preamp: -2.8 dB
+Preamp: -2.9 dB
 
-Filter  1: ON PK Fc   479 Hz Gain +3.00 dB Q 1.35
-Filter  2: ON PK Fc   132 Hz Gain -4.12 dB Q 1.33
-Filter  3: ON PK Fc  8179 Hz Gain +1.69 dB Q 2.99
-Filter  4: ON PK Fc 15678 Hz Gain +1.29 dB Q 2.93
-Filter  5: ON PK Fc  1710 Hz Gain -3.23 dB Q 2.96
-Filter  6: ON PK Fc  2264 Hz Gain +2.21 dB Q 2.99
-Filter  7: ON PK Fc  4920 Hz Gain -3.65 dB Q 1.53
-Filter  8: ON PK Fc  1014 Hz Gain +1.83 dB Q 2.99
+Filter  1: ON PK Fc   135 Hz Gain -3.00 dB Q 1.59
+Filter  2: ON PK Fc   477 Hz Gain +2.99 dB Q 1.37
+Filter  3: ON PK Fc  8158 Hz Gain +1.68 dB Q 2.99
+Filter  4: ON PK Fc 15690 Hz Gain +1.30 dB Q 2.96
+Filter  5: ON PK Fc  1711 Hz Gain -3.36 dB Q 2.98
+Filter  6: ON PK Fc  2263 Hz Gain +2.22 dB Q 2.99
+Filter  7: ON PK Fc  4816 Hz Gain -3.54 dB Q 1.57
+Filter  8: ON PK Fc  1014 Hz Gain +1.90 dB Q 3.00

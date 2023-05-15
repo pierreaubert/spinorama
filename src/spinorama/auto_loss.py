@@ -309,7 +309,7 @@ def build_index_cea2034(spl_keys):
     return idx_cea2034, idx_cea2034_required
 
 
-def compute_scores_prep(
+def compute_scores_prep_full(
     spl_h: pd.DataFrame, spl_v: pd.DataFrame
 ) -> dict[str, Vector | list[list] | list[tuple[int, int]] | pd.DataFrame]:
     freq = spl_h["Freq"].to_numpy()
@@ -324,9 +324,28 @@ def compute_scores_prep(
     return {
         "freq": freq,
         "intervals": intervals,
-        "weigths": weigths,
         "idx": idx,
         "on": spl_h["On Axis"].to_numpy(),
+        "spin": spin,
+    }
+
+
+def compute_scores_prep_cea2034(
+    df_spin: pd.DataFrame, df_pir: pd.DataFrame
+) -> dict[str, Vector | list[list] | list[tuple[int, int]] | pd.DataFrame]:
+    freq = df_spin["Freq"].to_numpy()
+    intervals = intervals_nbd(freq)
+    idx = [0, 1, 2, 3]  # aka lw er sp pir
+    spin = np.ndarray(shape=[len(idx), len(freq)], dtype=float)
+    spin[0] = df_spin["Listening Window"].to_numpy()
+    spin[1] = df_spin["Early Reflections"].to_numpy()
+    spin[2] = df_spin["Sound Power"].to_numpy()
+    spin[3] = df_pir["Estimated In-Room Response"].to_numpy()
+    return {
+        "freq": freq,
+        "intervals": intervals,
+        "idx": idx,
+        "on": df_spin["On Axis"].to_numpy(),
         "spin": spin,
     }
 
@@ -407,7 +426,6 @@ def flat_pir(freq: Vector, df_spin: DataSpeaker, peq: Peq) -> float:
 
 def score_loss_slow(df_spin: DataSpeaker, peq: Peq) -> float:
     """Compute the preference score for speaker
-    local_target: unsued
     peq: evaluated peq
     return minus score (we want to maximise the score)
     """
@@ -423,15 +441,21 @@ def score_loss(df_spin: DataSpeaker, peq: Peq) -> float:
     peq: evaluated peq
     return minus score (we want to maximise the score)
     """
-    if not have_full_measurements(df_spin):
-        return score_loss_slow(df_spin, peq)
-
     pre_computed = df_spin.get("pre_computed", None)
     if pre_computed is None:
-        spl_h = df_spin["SPL Horizontal_unmelted"]
-        spl_v = df_spin["SPL Vertical_unmelted"]
-        pre_computed = compute_scores_prep(spl_h, spl_v)
-        df_spin["pre_computed"] = pre_computed
+        if have_full_measurements(df_spin):
+            spl_h = df_spin["SPL Horizontal_unmelted"]
+            spl_v = df_spin["SPL Vertical_unmelted"]
+            pre_computed = compute_scores_prep_full(spl_h, spl_v)
+            df_spin["pre_computed"] = pre_computed
+        elif "CEA2034_unmelted" in df_spin and "Estimated In-Room Response_unmelted" in df_spin:
+            pre_computed = compute_scores_prep_cea2034(
+                df_spin["CEA2034_unmelted"], df_spin["Estimated In-Room Response_unmelted"]
+            )
+            df_spin["pre_computed"] = pre_computed
+
+    if pre_computed is None:
+        return score_loss_slow(df_spin, peq)
 
     peq_spl = np.asarray(peq_build(pre_computed["freq"], peq))
 
@@ -441,13 +465,14 @@ def score_loss(df_spin: DataSpeaker, peq: Peq) -> float:
     # print('debug:  peq {}'.format(peq_spl.shape()))
 
     score = c_score_peq_approx(
-        np.asarray(pre_computed["freq"]),
-        pre_computed["idx"],
-        pre_computed["intervals"],
-        pre_computed["spin"],
-        np.asarray(pre_computed["on"]),
-        np.asarray(peq_spl),
+        freq=np.asarray(pre_computed["freq"]),
+        idx=pre_computed["idx"],
+        intervals=pre_computed["intervals"],
+        spin=pre_computed["spin"],
+        on=np.asarray(pre_computed["on"]),
+        peq=np.asarray(peq_spl),
     )
+
     if len(peq) > 0:
         logger.debug("score %.2f peq %s", score.get("pref_score", -1000), peq[0][1])
     return -score["pref_score"]

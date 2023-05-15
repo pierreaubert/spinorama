@@ -1,15 +1,14 @@
 EQ for LYX SPA8PAS computed from Misc data
+Preference Score -3.25 with EQ -1.18
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-17:18:30
+Dated: 2023-05-15-11:38:36
 
-Preamp: -2.9 dB
+Preamp: -3.0 dB
 
-Filter  1: ON HS Fc 12108 Hz Gain +2.98 dB Q 1.53
-Filter  2: ON PK Fc   184 Hz Gain -2.75 dB Q 2.88
-Filter  3: ON PK Fc   331 Hz Gain +2.76 dB Q 2.30
-Filter  4: ON PK Fc  2610 Hz Gain +2.69 dB Q 2.77
-Filter  5: ON PK Fc   786 Hz Gain -2.81 dB Q 2.96
-Filter  6: ON PK Fc  1278 Hz Gain +2.48 dB Q 2.90
-Filter  7: ON PK Fc  5864 Hz Gain -5.64 dB Q 2.01
-Filter  8: ON PK Fc  7770 Hz Gain -2.84 dB Q 2.99
-Filter  9: ON PK Fc  8789 Hz Gain -2.68 dB Q 2.99
+Filter  1: ON LS Fc   451 Hz Gain +2.97 dB Q 1.06
+Filter  2: ON PK Fc  7267 Hz Gain -2.34 dB Q 2.38
+Filter  3: ON PK Fc  7355 Hz Gain -2.76 dB Q 0.93
+Filter  4: ON PK Fc  9473 Hz Gain -1.96 dB Q 0.32
+Filter  5: ON PK Fc 11691 Hz Gain +2.57 dB Q 2.57
+Filter  6: ON PK Fc 11717 Hz Gain +2.64 dB Q 1.99
+Filter  7: ON PK Fc 14595 Hz Gain -2.60 dB Q 2.46

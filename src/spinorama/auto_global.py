@@ -108,7 +108,6 @@ def optim_global(
 
     def opt_display(xk, convergence):
         # comment if you want to print verbose traces
-        return
         l = len(xk) // 4
         print(f"IIR    Hz.  Q.   dB [{convergence}]")
         for i in range(l):
@@ -126,7 +125,7 @@ def optim_global(
         integrality=opt_integrality(max_peq),
         callback=opt_display,
         constraints=opt_constraints(max_peq),
-        disp=False,
+        disp=True,
         tol=0.01,
     )
 

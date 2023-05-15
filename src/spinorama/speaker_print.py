@@ -153,7 +153,7 @@ def print_graphs(
         ("SPL Horizontal Normalized", display_spl_horizontal_normalized),
         ("SPL Vertical Normalized", display_spl_vertical_normalized),
     ):
-        print("DEBUG {} {} {} {}".format(speaker, version, origin, df.keys()))
+        logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df.keys())))
         graph = op_call(df, graph_params)
         if graph is None:
             logger.debug("display %s failed for %s %s %s", op_title, speaker, version, origin)

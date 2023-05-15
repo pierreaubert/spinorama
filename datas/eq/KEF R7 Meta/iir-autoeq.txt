@@ -1,15 +1,14 @@
 EQ for KEF R7 Meta computed from Vendors-KEF data
+Preference Score 6.99 with EQ 7.10
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-17:32:24
+Dated: 2023-05-15-11:45:33
 
-Preamp: -1.3 dB
+Preamp: -0.9 dB
 
-Filter  1: ON PK Fc   105 Hz Gain -3.00 dB Q 2.99
-Filter  2: ON PK Fc   221 Hz Gain -1.28 dB Q 1.80
-Filter  3: ON PK Fc  2598 Hz Gain +0.97 dB Q 1.19
-Filter  4: ON PK Fc  9871 Hz Gain +1.56 dB Q 0.87
-Filter  5: ON PK Fc   530 Hz Gain -0.78 dB Q 2.25
-Filter  6: ON PK Fc  3350 Hz Gain -0.80 dB Q 1.95
-Filter  7: ON PK Fc  8611 Hz Gain -0.77 dB Q 2.99
-Filter  8: ON PK Fc  1392 Hz Gain -0.86 dB Q 2.75
-Filter  9: ON PK Fc 15455 Hz Gain -0.79 dB Q 2.97
+Filter  1: ON LS Fc  1933 Hz Gain -0.90 dB Q 0.96
+Filter  2: ON PK Fc  2250 Hz Gain +1.10 dB Q 2.16
+Filter  3: ON PK Fc  5274 Hz Gain -1.29 dB Q 0.97
+Filter  4: ON PK Fc  7808 Hz Gain +1.27 dB Q 2.96
+Filter  5: ON PK Fc  8696 Hz Gain +0.04 dB Q 1.51
+Filter  6: ON PK Fc  8959 Hz Gain -0.54 dB Q 2.57
+Filter  7: ON PK Fc 13852 Hz Gain +0.81 dB Q 0.34

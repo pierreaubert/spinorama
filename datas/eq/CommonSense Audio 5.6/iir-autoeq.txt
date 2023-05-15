@@ -1,15 +1,13 @@
 EQ for CommonSense Audio 5.6 computed from Princeton data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-17:32:47
+Dated: 2023-05-15-11:47:05
 
-Preamp: -3.0 dB
+Preamp: -3.4 dB
 
-Filter  1: ON PK Fc   153 Hz Gain -3.00 dB Q 2.88
-Filter  2: ON PK Fc 15875 Hz Gain +2.99 dB Q 0.26
-Filter  3: ON PK Fc  1982 Hz Gain +1.38 dB Q 0.27
-Filter  4: ON PK Fc  2998 Hz Gain -0.91 dB Q 2.91
-Filter  5: ON PK Fc  7301 Hz Gain -5.37 dB Q 2.95
-Filter  6: ON PK Fc   103 Hz Gain -2.96 dB Q 2.86
-Filter  7: ON PK Fc   125 Hz Gain -4.49 dB Q 1.96
-Filter  8: ON PK Fc   124 Hz Gain -2.64 dB Q 1.88
-Filter  9: ON PK Fc   136 Hz Gain -1.99 dB Q 2.30
+Filter  1: ON NO Fc  1434 Hz Gain +0.11 dB Q 30.00
+Filter  2: ON PK Fc  3977 Hz Gain +2.96 dB Q 2.22
+Filter  3: ON PK Fc  4369 Hz Gain +2.25 dB Q 2.45
+Filter  4: ON PK Fc  6656 Hz Gain -2.99 dB Q 1.43
+Filter  5: ON PK Fc  6996 Hz Gain -2.95 dB Q 1.57
+Filter  6: ON PK Fc 10827 Hz Gain -2.94 dB Q 2.85
+Filter  7: ON PK Fc 15106 Hz Gain +2.91 dB Q 1.88

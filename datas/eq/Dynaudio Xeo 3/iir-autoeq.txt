@@ -1,15 +1,13 @@
 EQ for Dynaudio Xeo 3 computed from Princeton data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-17:18:08
+Dated: 2023-05-15-11:36:46
 
-Preamp: -2.9 dB
+Preamp: -3.0 dB
 
-Filter  1: ON PK Fc    21 Hz Gain -3.00 dB Q 2.98
-Filter  2: ON PK Fc 15998 Hz Gain +2.79 dB Q 0.52
-Filter  3: ON PK Fc  1433 Hz Gain +2.95 dB Q 1.44
-Filter  4: ON PK Fc  5363 Hz Gain -1.22 dB Q 0.99
-Filter  5: ON PK Fc 12564 Hz Gain -0.76 dB Q 2.99
-Filter  6: ON PK Fc    23 Hz Gain -0.79 dB Q 2.60
-Filter  7: ON PK Fc    28 Hz Gain -1.25 dB Q 2.95
-Filter  8: ON PK Fc    20 Hz Gain -0.83 dB Q 2.40
-Filter  9: ON PK Fc    25 Hz Gain -0.76 dB Q 2.92
+Filter  1: ON PK Fc  1461 Hz Gain +2.97 dB Q 1.02
+Filter  2: ON PK Fc  5111 Hz Gain -0.55 dB Q 2.78
+Filter  3: ON PK Fc  8507 Hz Gain +1.40 dB Q 2.88
+Filter  4: ON PK Fc  9531 Hz Gain -1.00 dB Q 2.46
+Filter  5: ON PK Fc 12619 Hz Gain -0.03 dB Q 1.09
+Filter  6: ON PK Fc 13092 Hz Gain +1.11 dB Q 0.93
+Filter  7: ON PK Fc 15283 Hz Gain +1.52 dB Q 1.32

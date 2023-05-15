@@ -1,15 +1,15 @@
 EQ for Monoprice MP-65RT computed from Misc data
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-17:15:42
+Dated: 2023-05-15-09:36:53
 
-Preamp: -2.7 dB
+Preamp: -3.0 dB
 
-Filter  1: ON LPQ Fc 16000 Hz Q 0.35
-Filter  2: ON PK Fc  3271 Hz Gain -2.65 dB Q 2.98
-Filter  3: ON PK Fc   296 Hz Gain +2.73 dB Q 1.29
-Filter  4: ON PK Fc  1389 Hz Gain -1.73 dB Q 2.93
-Filter  5: ON PK Fc   803 Hz Gain -0.80 dB Q 2.54
-Filter  6: ON PK Fc 11934 Hz Gain -1.64 dB Q 1.64
-Filter  7: ON PK Fc 12084 Hz Gain -1.65 dB Q 2.41
-Filter  8: ON PK Fc 13378 Hz Gain -1.48 dB Q 2.98
-Filter  9: ON PK Fc    32 Hz Gain -1.46 dB Q 2.44
+Filter  1: ON LPQ Fc 16000 Hz Q 0.32
+Filter  2: ON PK Fc   337 Hz Gain +2.96 dB Q 0.61
+Filter  3: ON PK Fc  3338 Hz Gain -2.25 dB Q 2.91
+Filter  4: ON PK Fc  1075 Hz Gain +2.18 dB Q 2.88
+Filter  5: ON PK Fc  2161 Hz Gain +0.75 dB Q 0.63
+Filter  6: ON PK Fc 11956 Hz Gain -3.32 dB Q 2.20
+Filter  7: ON PK Fc  1133 Hz Gain -1.88 dB Q 1.81
+Filter  8: ON PK Fc 13407 Hz Gain -1.81 dB Q 2.92
+Filter  9: ON PK Fc 10738 Hz Gain -0.85 dB Q 2.88

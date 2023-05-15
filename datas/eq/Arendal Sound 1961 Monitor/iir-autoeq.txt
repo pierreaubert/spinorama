@@ -1,12 +1,12 @@
 EQ for Arendal Sound 1961 Monitor computed from ASR data
-Preference Score 3.29 with EQ 5.02
+Preference Score 3.29 with EQ 5.03
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-13:34:26
+Dated: 2023-05-14-18:20:50
 
 Preamp: -1.9 dB
 
-Filter  1: ON LS Fc  1980 Hz Gain +1.95 dB Q 0.41
-Filter  2: ON PK Fc   159 Hz Gain -1.92 dB Q 2.00
-Filter  3: ON PK Fc  9196 Hz Gain -3.76 dB Q 2.41
-Filter  4: ON PK Fc   442 Hz Gain -1.48 dB Q 2.99
-Filter  5: ON PK Fc  3636 Hz Gain -2.04 dB Q 1.28
+Filter  1: ON LS Fc  1981 Hz Gain +1.92 dB Q 0.61
+Filter  2: ON PK Fc   158 Hz Gain -1.87 dB Q 1.96
+Filter  3: ON PK Fc  9240 Hz Gain -3.74 dB Q 2.31
+Filter  4: ON PK Fc   443 Hz Gain -1.47 dB Q 2.98
+Filter  5: ON PK Fc  3613 Hz Gain -2.16 dB Q 1.26

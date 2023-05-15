@@ -1,14 +1,16 @@
 EQ for Vue Audiotechnik H-12 computed from Vendors-Vue Audiotechnik data
-Preference Score 3.69 with EQ 4.82
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-05-10-19:47:03
+Preference Score 3.69 with EQ 4.90
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-21:12:35
 
-Preamp: -4.7 dB
+Preamp: -4.3 dB
 
-Filter  1: ON LS Fc   218 Hz Gain +3.15 dB
-Filter  2: ON PK Fc  1238 Hz Gain +1.79 dB Q 2.38
-Filter  3: ON PK Fc  8664 Hz Gain -1.79 dB Q 3.15
-Filter  4: ON PK Fc  9602 Hz Gain -3.57 dB Q 1.95
-Filter  5: ON PK Fc  9883 Hz Gain +2.52 dB Q 0.70
-Filter  6: ON PK Fc 11006 Hz Gain +4.00 dB Q 3.32
-Filter  7: ON PK Fc 15839 Hz Gain +3.87 dB Q 3.18
+Filter  1: ON LS Fc   312 Hz Gain +2.56 dB Q 0.47
+Filter  2: ON PK Fc  1257 Hz Gain +2.38 dB Q 1.95
+Filter  3: ON PK Fc  2128 Hz Gain -1.57 dB Q 1.11
+Filter  4: ON PK Fc  6356 Hz Gain +0.51 dB Q 2.47
+Filter  5: ON PK Fc  9069 Hz Gain -2.92 dB Q 2.50
+Filter  6: ON PK Fc  9453 Hz Gain -0.72 dB Q 1.53
+Filter  7: ON PK Fc 11112 Hz Gain +2.73 dB Q 2.95
+Filter  8: ON PK Fc 13798 Hz Gain +2.23 dB Q 0.39
+Filter  9: ON PK Fc 15837 Hz Gain +2.16 dB Q 2.97

@@ -20,6 +20,7 @@ import bisect
 import itertools
 import math
 from typing import TypeVar
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -866,13 +867,15 @@ def plot_summary(df, summary, params):
 def plot_eqs(freq, peqs, names):
     peqs_spl = [peq_build(freq, peq) for peq in peqs]
     if len(peqs) > 1:
-        freq_min = bisect.bisect(freq, 80)
-        freq_max = bisect.bisect(freq, 3000)
-        if freq_min == freq_max:
-            freq_min = 0
-            freq_max = -1
-        peqs_avg = [np.mean(np.array(spl)[freq_min:freq_max]) for spl in peqs_spl]
-        peqs_spl = [np.array(spl) - (peqs_avg[i] - peqs_avg[0]) for i, spl in enumerate(peqs_spl)]
+        freq_min = bisect.bisect_right(freq, 80)
+        freq_max = bisect.bisect_left(freq, 3000)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", RuntimeWarning)
+            if freq_min < freq_max:
+                peqs_avg = [np.mean(np.array(spl)[freq_min:freq_max]) for spl in peqs_spl]
+                peqs_spl = [
+                    np.array(spl) - (peqs_avg[i] - peqs_avg[0]) for i, spl in enumerate(peqs_spl)
+                ]
     traces = None
     if names is None:
         traces = [go.Scatter(x=freq, y=spl) for spl in peqs_spl]

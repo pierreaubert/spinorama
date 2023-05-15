@@ -16,39 +16,46 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import pandas as pd
+
 from spinorama import logger
-from spinorama.ltype import DataSpeaker
+from spinorama.ltype import DataSpeaker, ScoreType
 from spinorama.load import graph_melt
 from spinorama.compute_scores import speaker_pref_rating, nbd
 from spinorama.compute_cea2034 import compute_cea2034, estimated_inroom_hv, listening_window
 from spinorama.filter_peq import Peq, peq_apply_measurements
 
+SCORE_ERROR = (None, None, {"pref_score": -1000.0})
 
-def scores_apply_filter(df_speaker: DataSpeaker, peq: Peq):
-    # debug
-    if "SPL Horizontal_unmelted" not in df_speaker or "SPL Vertical_unmelted" not in df_speaker:
+
+def scores_apply_filter(df_speaker: DataSpeaker, peq: Peq) -> ScoreType:
+    spin_filtered = pd.DataFrame()
+    pir_filtered = pd.DataFrame()
+    if "SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker:
+        # get SPL H & V
+        spl_h = df_speaker["SPL Horizontal_unmelted"]
+        spl_v = df_speaker["SPL Vertical_unmelted"]
+        # apply EQ to all horizontal and vertical measurements
+        spl_h_filtered = peq_apply_measurements(spl_h, peq)
+        spl_v_filtered = peq_apply_measurements(spl_v, peq)
+        spin_filtered = graph_melt(compute_cea2034(spl_h_filtered, spl_v_filtered))
+        pir_filtered = graph_melt(estimated_inroom_hv(spl_h_filtered, spl_v_filtered))
+    elif "CEA2034" in df_speaker:
+        spin_filtered, pir_filtered, _ = noscore_apply_filter(df_speaker, peq)
+    else:
         logger.error("error bad call to apply filter: %s", ",".join(list(df_speaker.keys())))
-        if "CEA2034" in df_speaker:
-            return noscore_apply_filter(df_speaker, peq)
-        return None, None, {"pref_score": -10.0}
-    # get SPL H & V
-    spl_h = df_speaker["SPL Horizontal_unmelted"]
-    spl_v = df_speaker["SPL Vertical_unmelted"]
-    # apply EQ to all horizontal and vertical measurements
-    spl_h_filtered = peq_apply_measurements(spl_h, peq)
-    spl_v_filtered = peq_apply_measurements(spl_v, peq)
-    # compute filtered score
-    spin_filtered = graph_melt(compute_cea2034(spl_h_filtered, spl_v_filtered))
-    pir_filtered = graph_melt(estimated_inroom_hv(spl_h_filtered, spl_v_filtered))
+        return SCORE_ERROR
+
     score_filtered = speaker_pref_rating(cea2034=spin_filtered, pir=pir_filtered, rounded=False)
     if score_filtered is None:
         logger.info("computing pref score for eq failed")
-        # max score is around 10
-        return None, None, {"pref_score": -10.0}
+        return SCORE_ERROR
     return spin_filtered, pir_filtered, score_filtered
 
 
-def noscore_apply_filter(df_speaker: DataSpeaker, peq: Peq):
+def noscore_apply_filter(
+    df_speaker: DataSpeaker, peq: Peq
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     spin_filtered = None
     pir_filtered = None
     on_filtered = None
@@ -65,8 +72,8 @@ def noscore_apply_filter(df_speaker: DataSpeaker, peq: Peq):
                 if curve in pivoted_spin:
                     spin_filtered[curve] = pivoted_spin[curve]
         except ValueError:
-            print("debug: {}".format(spin.keys()))
-            return None, None, None
+            logger.debug("%s", ",".join(list(spin.keys())))
+            return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
     if "Estimated In-Room Response" in df_speaker:
         pir = df_speaker["Estimated In-Room Response"]

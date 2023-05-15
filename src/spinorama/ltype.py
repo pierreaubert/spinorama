@@ -30,8 +30,10 @@ Zone = list[tuple[float, float]]
 
 OptimResult = tuple[int, float, float]
 
-Status = Literal[True] | Literal[False]
-
 T = TypeVar("T")
-
+Status = Literal[True] | Literal[False]
 StatusOr = tuple[Status, T]
+
+ScoreError = tuple[None, None, dict[str, float]]
+ScoreSuccess = tuple[DataSpeaker, DataSpeaker, dict[str, float]]
+ScoreType = ScoreError | ScoreSuccess

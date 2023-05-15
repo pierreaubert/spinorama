@@ -1,16 +1,16 @@
 EQ for DIYSG Volt-8 v2 computed from ErinsAudioCorner data
-Preference Score 2.17 with EQ 4.08
+Preference Score 2.17 with EQ 4.10
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-13:33:13
+Dated: 2023-05-14-18:19:05
 
 Preamp: -3.0 dB
 
-Filter  1: ON LS Fc   135 Hz Gain +3.00 dB Q 1.80
-Filter  2: ON PK Fc  2582 Hz Gain +2.96 dB Q 2.34
-Filter  3: ON PK Fc  1046 Hz Gain +2.68 dB Q 3.00
-Filter  4: ON PK Fc   212 Hz Gain -1.36 dB Q 1.92
-Filter  5: ON PK Fc 16000 Hz Gain +2.95 dB Q 1.55
-Filter  6: ON PK Fc  5134 Hz Gain +2.57 dB Q 3.00
-Filter  7: ON PK Fc   450 Hz Gain +2.13 dB Q 2.98
-Filter  8: ON PK Fc  6006 Hz Gain -2.34 dB Q 1.20
-Filter  9: ON PK Fc   792 Hz Gain -3.09 dB Q 2.99
+Filter  1: ON LS Fc   134 Hz Gain +3.00 dB Q 1.57
+Filter  2: ON PK Fc  2581 Hz Gain +2.99 dB Q 2.34
+Filter  3: ON PK Fc   213 Hz Gain -1.37 dB Q 2.03
+Filter  4: ON PK Fc  1045 Hz Gain +2.56 dB Q 3.00
+Filter  5: ON PK Fc 15999 Hz Gain +2.99 dB Q 1.70
+Filter  6: ON PK Fc  5102 Hz Gain +2.26 dB Q 3.00
+Filter  7: ON PK Fc   449 Hz Gain +1.94 dB Q 2.99
+Filter  8: ON PK Fc  6104 Hz Gain -2.36 dB Q 1.15
+Filter  9: ON PK Fc   794 Hz Gain -3.13 dB Q 2.99

@@ -1,16 +1,14 @@
 EQ for JBL 305P Mark ii computed from ErinsAudioCorner data
-Preference Score 5.18 with EQ 6.35
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:46:48
+Preference Score 5.18 with EQ 6.37
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-15-11:43:35
 
-Preamp: -0.9 dB
+Preamp: -1.5 dB
 
-Filter  1: ON HS Fc  2487 Hz Gain -2.69 dB
-Filter  2: ON PK Fc   134 Hz Gain -1.77 dB Q 1.22
-Filter  3: ON PK Fc  1129 Hz Gain +0.74 dB Q 2.94
-Filter  4: ON PK Fc 14832 Hz Gain -1.24 dB Q 2.78
-Filter  5: ON PK Fc   509 Hz Gain +0.66 dB Q 2.91
-Filter  6: ON PK Fc  6899 Hz Gain +0.50 dB Q 2.98
-Filter  7: ON PK Fc   295 Hz Gain -0.51 dB Q 2.99
-Filter  8: ON PK Fc 10507 Hz Gain -0.71 dB Q 2.81
-Filter  9: ON PK Fc  1662 Hz Gain -0.91 dB Q 2.96
+Filter  1: ON PK Fc  1080 Hz Gain +1.90 dB Q 0.34
+Filter  2: ON PK Fc  1671 Hz Gain -2.49 dB Q 2.84
+Filter  3: ON PK Fc  3918 Hz Gain -1.46 dB Q 0.59
+Filter  4: ON PK Fc  8037 Hz Gain +1.41 dB Q 1.59
+Filter  5: ON PK Fc  9569 Hz Gain -1.55 dB Q 2.94
+Filter  6: ON PK Fc 10004 Hz Gain +0.67 dB Q 0.95
+Filter  7: ON PK Fc 13543 Hz Gain -2.67 dB Q 0.31

@@ -1,15 +1,14 @@
 EQ for Hsu Research CCB-8 computed from Misc data
+Preference Score 3.23 with EQ 4.62
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-17:16:55
+Dated: 2023-05-15-11:37:57
 
-Preamp: -1.6 dB
+Preamp: -1.4 dB
 
-Filter  1: ON PK Fc 12897 Hz Gain -2.98 dB Q 1.95
-Filter  2: ON PK Fc   116 Hz Gain -3.10 dB Q 2.95
-Filter  3: ON PK Fc  2309 Hz Gain -2.11 dB Q 2.97
-Filter  4: ON PK Fc  1098 Hz Gain -1.75 dB Q 3.00
-Filter  5: ON PK Fc   366 Hz Gain +1.19 dB Q 2.02
-Filter  6: ON PK Fc  6204 Hz Gain +1.95 dB Q 2.65
-Filter  7: ON PK Fc 15679 Hz Gain -0.90 dB Q 0.74
-Filter  8: ON PK Fc 11667 Hz Gain -0.75 dB Q 2.90
-Filter  9: ON PK Fc   133 Hz Gain -0.89 dB Q 2.72
+Filter  1: ON PK Fc   376 Hz Gain +1.41 dB Q 1.25
+Filter  2: ON PK Fc  2281 Hz Gain -2.75 dB Q 2.82
+Filter  3: ON PK Fc  9581 Hz Gain +2.96 dB Q 2.98
+Filter  4: ON PK Fc 11502 Hz Gain -2.24 dB Q 1.51
+Filter  5: ON PK Fc 12698 Hz Gain -0.40 dB Q 1.96
+Filter  6: ON PK Fc 13256 Hz Gain -2.53 dB Q 2.01
+Filter  7: ON PK Fc 14535 Hz Gain -2.25 dB Q 0.81

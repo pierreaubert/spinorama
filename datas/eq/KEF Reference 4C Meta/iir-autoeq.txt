@@ -1,15 +1,14 @@
 EQ for KEF Reference 4C Meta computed from Vendors-KEF data
+Preference Score 6.67 with EQ 6.79
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-17:15:27
+Dated: 2023-05-15-11:36:37
 
-Preamp: -1.3 dB
+Preamp: -1.4 dB
 
-Filter  1: ON HS Fc  6933 Hz Gain +1.32 dB Q 0.73
-Filter  2: ON PK Fc   127 Hz Gain -2.00 dB Q 1.46
-Filter  3: ON PK Fc   569 Hz Gain -1.22 dB Q 1.92
-Filter  4: ON PK Fc  1382 Hz Gain -0.78 dB Q 2.91
-Filter  5: ON PK Fc 15812 Hz Gain -0.82 dB Q 2.80
-Filter  6: ON PK Fc   238 Hz Gain -0.76 dB Q 2.99
-Filter  7: ON PK Fc  8379 Hz Gain -0.75 dB Q 2.91
-Filter  8: ON PK Fc 15165 Hz Gain -0.82 dB Q 2.99
-Filter  9: ON PK Fc  5829 Hz Gain -0.78 dB Q 2.95
+Filter  1: ON PK Fc   114 Hz Gain -1.89 dB Q 1.28
+Filter  2: ON PK Fc  9806 Hz Gain -0.22 dB Q 2.24
+Filter  3: ON PK Fc 11231 Hz Gain +1.99 dB Q 1.84
+Filter  4: ON PK Fc 13342 Hz Gain -2.43 dB Q 1.11
+Filter  5: ON PK Fc 13616 Hz Gain +0.65 dB Q 1.91
+Filter  6: ON PK Fc 13731 Hz Gain +2.17 dB Q 1.66
+Filter  7: ON PK Fc 15178 Hz Gain -0.17 dB Q 2.65
