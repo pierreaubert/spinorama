@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
+import io
 import json
 import logging
 import os
 import sys
 from typing import Annotated
+import yaml
 
 from fastapi import FastAPI, Query, Depends
 from fastapi.encoders import jsonable_encoder
-from starlette.responses import JSONResponse, FileResponse
+from starlette.responses import JSONResponse, FileResponse, Response
 
 from datas.metadata import speakers_info
 
@@ -40,6 +42,14 @@ app = FastAPI(
 @app.get("/.well-known/ai-plugin.json")
 async def get_ai_plugin():
     return FileResponse("/var/www/html/spinorama-api/ai-plugin.json")
+
+
+@app.get("/openapi.yaml", include_in_schema=False)
+def read_openapi_yaml() -> Response:
+    openapi_json = app.openapi()
+    yaml_s = io.StringIO()
+    yaml.dump(openapi_json, yaml_s)
+    return Response(yaml_s.getvalue(), media_type="text/yaml")
 
 
 @app.get(f"/{API_VERSION}/brands", tags=["speaker"])
