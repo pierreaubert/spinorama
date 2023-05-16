@@ -1,10 +1,18 @@
 {
-    "name": "Spinorama Plugin",
-    "description": "A plugin that provides measurement data for speakers and ways to manipulate them.",
-    "api_spec_url": "https://api.spinorama.org/openapi.yaml",
-    "logo_url": "https://www.spinorama.org/logo.png",
-    "homepage": "https://www.spinorama.org",
-    "authentication": {
+    "schema_version": "v1",
+    "name_for_human": "spinorama",
+    "name_for_model": "spinorama",
+    "description_for_human": "Plugin for manipulating speaker measurements.",
+    "description_for_model": "Plugin for manipulating speaker measurements.",
+    "auth": {
       "type": "none"
-    }
+    },
+    "api": {
+      "type": "openapi",
+      "url": "https://api.spinorama.org/openapi.json",
+      "is_user_authenticated": false
+    },
+    "logo_url": "https://www.spinorama.org/logo.png",
+    "contact_email": "pierre@spinorama.org",
+    "legal_info_url": "https://www.spinorama.org/help.html"
 }
