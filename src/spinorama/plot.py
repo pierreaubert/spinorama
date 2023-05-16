@@ -559,7 +559,9 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
 def plot_graph_flat_traces(df, measurement, params):
     restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
     slope = 0
-    intercept = np.mean(restricted_freq[measurement])
+    intercept = (
+        np.mean(restricted_freq[measurement]) if not restricted_freq[measurement].empty else 0.0
+    )
 
     return plot_graph_traces(df, measurement, params, slope, intercept, None)
 
@@ -742,7 +744,7 @@ def plot_radar(spl, params):
 
     def plot_radar_freq(anglelist, freqlist, df):
         dfu = sort_angles(df)
-        db_mean = np.mean(dfu.loc[(dfu.Freq > 900) & (dfu.Freq < 1100)]["On Axis"].values)
+        db_mean = dfu.loc[(dfu.Freq > 900) & (dfu.Freq < 1100)]["On Axis"].mean()
         freq = dfu.Freq
         dfu = dfu.drop("Freq", axis=1)
         db_min = np.min(dfu.min(axis=0).values)
@@ -872,7 +874,8 @@ def plot_eqs(freq, peqs, names):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", RuntimeWarning)
             if freq_min < freq_max:
-                peqs_avg = [np.mean(np.array(spl)[freq_min:freq_max]) for spl in peqs_spl]
+                peqs_restriced = [np.array(spl)[freq_min:freq_max] for spl in peqs_spl]
+                peqs_avg = [np.mean(v) if len(v) > 0 else 0.0 for v in peqs_restriced]
                 peqs_spl = [
                     np.array(spl) - (peqs_avg[i] - peqs_avg[0]) for i, spl in enumerate(peqs_spl)
                 ]

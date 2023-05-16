@@ -55,12 +55,12 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
             return {}
 
         # mean over 300-10k
-        y_ref = np.mean(
-            onaxis.loc[
-                (onaxis.Freq >= max(freq_min, MIDRANGE_MIN_FREQ))
-                & (onaxis.Freq <= min(freq_max, MIDRANGE_MAX_FREQ))
-            ].dB
-        )
+        y_data = onaxis.loc[
+            (onaxis.Freq >= max(freq_min, MIDRANGE_MIN_FREQ))
+            & (onaxis.Freq <= min(freq_max, MIDRANGE_MAX_FREQ))
+        ].dB
+
+        y_ref = np.mean(y_data) if not y_data.empty else 0.0
         y_3 = None
         y_6 = None
         logger.debug("mean over %f-%f Hz = %f", MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ, y_ref)

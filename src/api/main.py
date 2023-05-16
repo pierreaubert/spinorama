@@ -37,6 +37,11 @@ app = FastAPI(
 )
 
 
+@app.get("/.well-known/ai-plugin.json")
+async def get_ai_plugin():
+    return FileResponse("/var/www/html/spinorama-api/ai-plugin.json")
+
+
 @app.get(f"/{API_VERSION}/brands", tags=["speaker"])
 async def get_brand_list(metadata: dict = Depends(load_metadata)):  # noqa: B008
     return sorted(set([v.get("brand") for _, v in metadata.items()]))

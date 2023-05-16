@@ -25,8 +25,8 @@ cp ./scripts/gunicorn_start.sh $DIST
 cp requirements-api.txt $DIST
 cp datas/metadata.py $DIST/datas
 cp docs/assets/metadata.json $DIST/datas
-for source in "__init__.py" "main.py" ".well-known"; do
-    cp -r ./src/api/$source $DIST;
+for source in "__init__.py" "main.py" "ai-plugin.json"; do
+    cp ./src/api/$source $DIST;
 done
 
 cd $DIST && source .venv/bin/activate && pip install -U -r requirements-api.txt

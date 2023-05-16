@@ -324,19 +324,9 @@ def directivity_matrix(spl_h, spl_v):
 
 
 def compute_directivity_deg_v2(df) -> tuple[float, float, float]:
-    # def compute(spl, r):
-    #     mean = spl[((spl.Freq>1000) & (spl.Freq<10000))]['On Axis'].mean()
-    #     for k in r:
-    #         key = '{}°'.format(k)
-    #         db = spl[((spl.Freq>1000) & (spl.Freq<6000))][key] - mean
-    #         pos = db.min()
-    #         # print('key {}  pos {} {}'.format(key, pos, db.values))
-    #         if pos < -6:
-    #             return k
-    #     return 0
-
     def compute(spl, r):
-        mean = spl[((spl.Freq > 1000) & (spl.Freq < 10000))]["On Axis"].mean()
+        on = spl[((spl.Freq > 1000) & (spl.Freq < 10000))]["On Axis"]
+        mean = on.mean() if not on.empty else 0.0
         for k in r:
             key = "{}°".format(k)
             db = spl[((spl.Freq > 1000) & (spl.Freq < 6000))][key] - mean
@@ -431,7 +421,14 @@ def dist_point_line(x, y, p_a, p_b, p_c):
     return abs(p_a * x + p_b * y + p_c) / math.sqrt(p_a * p_a + p_b * p_b)
 
 
-def compute_statistics(data_frame, measurement, min_freq, max_freq, hist_min_freq, hist_max_freq):
+def compute_statistics(
+    data_frame: pd.DataFrame,
+    measurement,
+    min_freq: float,
+    max_freq: float,
+    hist_min_freq: float,
+    hist_max_freq: float,
+) -> tuple[float, float]:
     restricted_minmax = data_frame.loc[(data_frame.Freq > min_freq) & (data_frame.Freq < max_freq)]
     restricted_spl = restricted_minmax[measurement]
     # regression line
