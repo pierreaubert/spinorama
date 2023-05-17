@@ -1,14 +1,15 @@
 EQ for Speakercraft AIM8 One computed from Misc data
-Preference Score -1.73 with EQ 1.59
+Preference Score -1.73 with EQ 1.95
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-15-11:39:04
+Dated: 2023-05-15-14:25:57
 
-Preamp: -2.8 dB
+Preamp: -2.0 dB
 
-Filter  1: ON LS Fc   695 Hz Gain +2.80 dB Q 0.51
-Filter  2: ON PK Fc   770 Hz Gain -2.96 dB Q 2.98
-Filter  3: ON PK Fc   772 Hz Gain -2.98 dB Q 2.99
-Filter  4: ON PK Fc  5650 Hz Gain +2.63 dB Q 2.94
-Filter  5: ON PK Fc  6086 Hz Gain -0.47 dB Q 0.43
-Filter  6: ON PK Fc 10147 Hz Gain -1.07 dB Q 2.57
-Filter  7: ON PK Fc 15017 Hz Gain -2.59 dB Q 2.37
+Filter  1: ON PK Fc   113 Hz Gain -3.00 dB Q 1.22
+Filter  2: ON PK Fc   774 Hz Gain -5.99 dB Q 2.38
+Filter  3: ON PK Fc  2253 Hz Gain -3.27 dB Q 2.21
+Filter  4: ON PK Fc 15445 Hz Gain -3.08 dB Q 0.98
+Filter  5: ON PK Fc  4302 Hz Gain -1.12 dB Q 2.94
+Filter  6: ON PK Fc   732 Hz Gain -3.70 dB Q 2.97
+Filter  7: ON PK Fc   144 Hz Gain -1.40 dB Q 2.34
+Filter  8: ON PK Fc   269 Hz Gain +2.80 dB Q 0.70

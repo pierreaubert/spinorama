@@ -1,14 +1,16 @@
 EQ for IK Multimedia iLoud Micro Monitor computed from Misc data
-Preference Score 3.96 with EQ 4.75
+Preference Score 3.96 with EQ 5.08
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-15-11:37:01
+Dated: 2023-05-15-15:11:38
 
-Preamp: -1.1 dB
+Preamp: -0.7 dB
 
-Filter  1: ON PK Fc  3050 Hz Gain +2.96 dB Q 1.28
-Filter  2: ON PK Fc  4860 Hz Gain -2.62 dB Q 1.99
-Filter  3: ON PK Fc  5842 Hz Gain +2.89 dB Q 2.85
-Filter  4: ON PK Fc  6350 Hz Gain -2.18 dB Q 0.34
-Filter  5: ON PK Fc 11102 Hz Gain +1.36 dB Q 1.84
-Filter  6: ON PK Fc 12819 Hz Gain -0.54 dB Q 1.28
-Filter  7: ON PK Fc 14277 Hz Gain +0.51 dB Q 1.11
+Filter  1: ON HS Fc   134 Hz Gain -1.77 dB Q 0.62
+Filter  2: ON PK Fc   628 Hz Gain +2.87 dB Q 2.99
+Filter  3: ON PK Fc 10467 Hz Gain -1.08 dB Q 0.59
+Filter  4: ON PK Fc  2810 Hz Gain +1.54 dB Q 2.94
+Filter  5: ON PK Fc  1215 Hz Gain +0.80 dB Q 2.98
+Filter  6: ON PK Fc   314 Hz Gain +0.75 dB Q 2.90
+Filter  7: ON PK Fc  4245 Hz Gain -1.35 dB Q 2.99
+Filter  8: ON PK Fc   796 Hz Gain -1.34 dB Q 2.97
+Filter  9: ON PK Fc  1613 Hz Gain -0.77 dB Q 2.99

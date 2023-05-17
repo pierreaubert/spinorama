@@ -1,15 +1,15 @@
 EQ for Presonus Eris E8 XT computed from Misc data
+Preference Score 2.11 with EQ 3.21
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-18:11:42
+Dated: 2023-05-15-16:04:09
 
-Preamp: -1.1 dB
+Preamp: -2.0 dB
 
-Filter  1: ON HS Fc 11950 Hz Gain -3.00 dB Q 1.17
-Filter  2: ON PK Fc  2663 Hz Gain +1.20 dB Q 0.26
-Filter  3: ON PK Fc   704 Hz Gain -1.30 dB Q 2.90
-Filter  4: ON PK Fc   223 Hz Gain +0.81 dB Q 0.44
-Filter  5: ON PK Fc 13937 Hz Gain -2.27 dB Q 2.99
-Filter  6: ON PK Fc  3244 Hz Gain -0.75 dB Q 2.98
-Filter  7: ON PK Fc    21 Hz Gain -0.78 dB Q 2.95
-Filter  8: ON PK Fc 15215 Hz Gain -0.76 dB Q 3.00
-Filter  9: ON PK Fc    20 Hz Gain -0.90 dB Q 2.79
+Filter  1: ON PK Fc 15061 Hz Gain -2.92 dB Q 2.26
+Filter  2: ON PK Fc  6645 Hz Gain +2.08 dB Q 2.34
+Filter  3: ON PK Fc  1190 Hz Gain -0.98 dB Q 1.45
+Filter  4: ON PK Fc   377 Hz Gain +0.75 dB Q 2.95
+Filter  5: ON PK Fc  2326 Hz Gain +0.75 dB Q 3.00
+Filter  6: ON PK Fc   672 Hz Gain -0.77 dB Q 3.00
+Filter  7: ON PK Fc 13748 Hz Gain -0.75 dB Q 3.00
+Filter  8: ON PK Fc   302 Hz Gain -0.75 dB Q 2.96
