@@ -13455,6 +13455,25 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Mission LX-3 MKII": {
+        "brand": "Mission",
+        "model": "LX-3 MKII",
+        "type": "passive",
+        "price": "250",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mission-lx-3-mkii-speaker-review.44772/",
+                },
+                "review_published": "20230519",
+            },
+        },
+    },
     "Monitor Audio Silver 50 7g": {
         "brand": "Monitor Audio",
         "model": "Silver 50 7g",

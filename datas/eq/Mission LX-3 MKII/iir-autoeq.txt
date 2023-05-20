@@ -1,0 +1,16 @@
+EQ for Mission LX-3 MKII computed from ASR data
+Preference Score 4.60 with EQ 5.51
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-20-16:06:23
+
+Preamp: -4.0 dB
+
+Filter  1: ON HS Fc   856 Hz Gain +1.87 dB Q 1.03
+Filter  2: ON PK Fc  1201 Hz Gain -1.83 dB Q 2.63
+Filter  3: ON PK Fc  2346 Hz Gain -1.69 dB Q 2.78
+Filter  4: ON PK Fc  2693 Hz Gain +1.85 dB Q 2.23
+Filter  5: ON PK Fc  5848 Hz Gain -0.44 dB Q 2.07
+Filter  6: ON PK Fc  6691 Hz Gain +0.34 dB Q 2.81
+Filter  7: ON PK Fc  8808 Hz Gain -2.82 dB Q 2.09
+Filter  8: ON PK Fc 11942 Hz Gain +2.70 dB Q 2.75
+Filter  9: ON PK Fc 13709 Hz Gain +0.13 dB Q 1.55
