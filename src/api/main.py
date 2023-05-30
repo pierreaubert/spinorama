@@ -88,6 +88,13 @@ async def get_speaker_measurements(
         return {"error": f"Speaker {speaker_name} is not in our database!"}
 
     meta_data = speakers_info[speaker_name]
+
+    if speaker_version not in meta_data["measurements"]:
+        valid_keys = ", ".join(list(meta_data["measurements"].keys()))
+        return {
+            "error": f"Version {speaker_version} is not known for speaker {speaker_name}! Valid keys are ({valid_keys})."
+        }
+
     origin = meta_data["measurements"][speaker_version]["origin"]
     if origin[0:8] == "Vendors-":
         origin = origin[8:]
@@ -102,6 +109,9 @@ async def get_speaker_measurements(
         return {
             "error": f"Speaker {speaker_name} does not have precomputed measurements for origin {origin} and version {speaker_version}!"
         }
+
+    if "_unmelted" in measurement_name:
+        measurement_name = measurement_name[0:-9]
 
     measurement_file = f"{dir_data}/{measurement_name}.{measurement_format}"
     if measurement_format == "png":
