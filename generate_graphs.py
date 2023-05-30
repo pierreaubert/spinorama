@@ -71,7 +71,7 @@ from spinorama.plot import plot_params_default
 
 VERSION = "2.02"
 
-ACTIVATE_TRACING: bool = True
+ACTIVATE_TRACING: bool = False
 
 
 def tracing(msg: str):

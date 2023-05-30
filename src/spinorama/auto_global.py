@@ -53,12 +53,25 @@ def optim_global(
         logger.error("Preflight check failed!")
         return False, ((0, 0, 0), [])
 
+    freq_min = optim_config["freq_reg_min"]
+    freq_max = optim_config["freq_reg_max"]
+    log_freq = np.logspace(np.log10(freq_min), np.log10(freq_max), 200 + 1)
+    max_db = optim_config["MAX_DBGAIN"]
+    min_q = optim_config["MIN_Q"]
+    max_q = optim_config["MAX_Q"]
+    max_peq = optim_config["MAX_NUMBER_PEQ"]
+    max_iter = optim_config["MAX_ITER"]
+
     def x2peq(x: list[float | int]) -> Peq:
         l = len(x) // 4
         peq = []
         for i in range(l):
+            ifreq = int(x[i * 4 + 1])
+            peq_freq = log_freq[ifreq]
+            peq_freq = max(freq_min, peq_freq)
+            peq_freq = min(freq_max, peq_freq)
             peq.append(
-                (1.0, Biquad(int(x[i * 4]), x[i * 4 + 1], 48000, x[i * 4 + 2], x[i * 4 + 3]))
+                (1.0, Biquad(int(x[i * 4]), int(peq_freq), 48000, x[i * 4 + 2], x[i * 4 + 3]))
             )
         return peq
 
@@ -72,22 +85,16 @@ def optim_global(
         flatness = np.linalg.norm(np.add(target, peq_spl))
         return score + float(flatness) / 20.0
 
-    max_db = optim_config["MAX_DBGAIN"]
-    min_q = optim_config["MIN_Q"]
-    max_q = optim_config["MAX_Q"]
-    max_peq = optim_config["MAX_NUMBER_PEQ"]
-    max_iter = optim_config["MAX_ITER"]
-
     def opt_bounds(n: int) -> list[list[int | float]]:
         bounds0 = [
             [0, 6],
-            [60, 16000],
+            [0, 200],  # algo does not support log scaling so I do it manually
             [min_q, 1.3],  # need to be computed from max_db
             [-max_db, max_db],
         ]
         bounds1 = [
             [3, 3],
-            [60, 16000],
+            [0, 200],
             [min_q, max_q],
             [-max_db, max_db],
         ]
@@ -101,7 +108,8 @@ def optim_global(
         mat = np.asarray([[0] * (n * 4)] * m)
         for i in range(m):
             j = i * 4 + 1
-            mat[i][j] = 1
+            # f1 < f2 * 1.1
+            mat[i][j] = 1.1
             j += 4
             mat[i][j] = -1
         return opt.LinearConstraint(mat, -np.inf, 0.0)
@@ -112,7 +120,7 @@ def optim_global(
         print(f"IIR    Hz.  Q.   dB [{convergence}]")
         for i in range(l):
             t = int(xk[i * 4 + 0])
-            f = int(xk[i * 4 + 1])
+            f = int(log_freq[int(xk[i * 4 + 1])])
             q = xk[i * 4 + 2]
             db = xk[i * 4 + 3]
             print(f"{t:3d} {f:5d} {q:1.1f} {db:+1.2f}")

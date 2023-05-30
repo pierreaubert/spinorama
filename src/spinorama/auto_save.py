@@ -264,6 +264,15 @@ def optim_save_peq(
     if use_score:
         if previous_score is not None and previous_score > auto_score["pref_score"]:
             auto_peq = parse_eq_iir_rews(eq_name, 48000)
+
+        if (
+            previous_score is not None
+            and previous_score < auto_score["pref_score"]
+            and optim_config["verbose"]
+        ):
+            print("Current run is not a winner:")
+            print_small_summary(current_speaker_name, score, auto_score)
+
         auto_spin, auto_pir, auto_score = scores_apply_filter(df_speaker, auto_peq)
         scores = [
             score.get("pref_score", -1000),

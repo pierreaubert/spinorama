@@ -164,12 +164,12 @@ def parse_eq_iir_rews(filename, srate):
     try:
         with open(filename, "r", encoding="utf8") as f:
             lines = f.readlines()
-            for l in lines:
+            for i, l in enumerate(lines):
                 status, iir = parse_eq_line(l, srate)
                 if status is not None and iir is not None:
                     peq.append((status, iir))
                 else:
-                    logger.info("Unknown iir in %s", filename)
+                    logger.debug("Unknown iir on line %s in file %s:%d", l, filename, i)
     except FileNotFoundError:
         logger.info("Loading filter: eq file %s not found", filename)
     return peq
