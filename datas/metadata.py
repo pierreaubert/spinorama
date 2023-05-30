@@ -4393,6 +4393,42 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Dolby CS 136LF": {
+        "brand": "Dolby",
+        "model": "CS 136LF",
+        "type": "passive",
+        "price": "",
+        "shape": "cinema",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Dolby",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230601",
+            },
+        },
+    },
+    "Dolby CS 136MH": {
+        "brand": "Dolby",
+        "model": "CS 136MH",
+        "type": "passive",
+        "price": "",
+        "shape": "cinema",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Dolby",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230601",
+            },
+        },
+    },
     "Donner Dyna 3": {
         "brand": "Donner",
         "model": "Dyna 3",
@@ -19441,6 +19477,13 @@ origins_info = {
         "logo": "docs/metadata/dbaudio.png",
         "logo-small": "docs/metadata/dbaudio.png",
         "url": "https://www.dbaudio.com",
+    },
+    "Vendors-Dolby": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://professional.dolby.com/product/dolby-audio-solutions-for-movie-theaters/",
     },
     "Vendors-EAW": {
         "min hz": 20,
