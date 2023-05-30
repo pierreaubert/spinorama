@@ -2489,6 +2489,78 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Bose DesignMax DM6SE": {
+        "brand": "Bose",
+        "model": "DesignMax DM6SE",
+        "type": "passive",
+        "price": "530",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-pattern-125x125",
+        "measurements": {
+            "vendor-pattern-125x125": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230530",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 125,
+                        "vertical": 125,
+                    },
+                    "sensitivity": 90,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 111,
+                    },
+                    "size": {
+                        "height": 340,
+                        "width": 222,
+                        "depth": 229,
+                    },
+                    "weight": 5.93,
+                },
+            },
+        },
+    },
+    "Bose DesignMax DM8S": {
+        "brand": "Bose",
+        "model": "DesignMax DM8S",
+        "type": "passive",
+        "price": "666",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-pattern-130x130",
+        "measurements": {
+            "vendor-pattern-130x130": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230524",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 130,
+                        "vertical": 130,
+                    },
+                    "sensitivity": 93,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 115,
+                    },
+                    "size": {
+                        "height": 395,
+                        "width": 249,
+                        "depth": 273,
+                    },
+                    "weight": 10.34,
+                },
+            },
+        },
+    },
     "Bose SoundLink Revolve": {
         "brand": "Bose",
         "model": "SoundLink Revolve",
