@@ -104,15 +104,16 @@ def optim_global(
         return [True, True, False, False] * n
 
     def opt_constraints(n: int):
+        # f1+4 < f2
+        # 4 create some space between the various PEQ; if not the optimiser will add multiple PEQ at more or less the same frequency and that will generate too much of a cut on the max SPL
         m = n - 1
         mat = np.asarray([[0] * (n * 4)] * m)
         for i in range(m):
             j = i * 4 + 1
-            # f1 < f2 * 1.1
-            mat[i][j] = 1.1
+            mat[i][j] = 1
             j += 4
             mat[i][j] = -1
-        return opt.LinearConstraint(mat, -np.inf, 0.0)
+        return opt.LinearConstraint(mat, -np.inf, -4.0)
 
     def opt_display(xk, convergence):
         # comment if you want to print verbose traces
