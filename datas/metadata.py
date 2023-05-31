@@ -2489,6 +2489,42 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Bose DesignMax DM5SE": {
+        "brand": "Bose",
+        "model": "DesignMax DM5SE",
+        "type": "passive",
+        "price": "530",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-pattern-130x130",
+        "measurements": {
+            "vendor-pattern-130x130": {
+                "origin": "Vendors-Bose",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "reviews": {},
+                "review_published": "20230601",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 130,
+                        "vertical": 130,
+                    },
+                    "sensitivity": 90,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 111,
+                    },
+                    "size": {
+                        "height": 286,
+                        "width": 192,
+                        "depth": 197,
+                    },
+                    "weight": 4.38,
+                },
+            },
+        },
+    },
     "Bose DesignMax DM6SE": {
         "brand": "Bose",
         "model": "DesignMax DM6SE",
@@ -2510,10 +2546,10 @@ speakers_info: SpeakerDatabase = {
                         "horizontal": 125,
                         "vertical": 125,
                     },
-                    "sensitivity": 90,
+                    "sensitivity": 89,
                     "impedance": 8,
                     "SPL": {
-                        "peak": 111,
+                        "peak": 107,
                     },
                     "size": {
                         "height": 340,
@@ -4394,6 +4430,7 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Dolby CS 136LF": {
+        "skip": True,  # only here to provide data for the MH freq speaker
         "brand": "Dolby",
         "model": "CS 136LF",
         "type": "passive",
