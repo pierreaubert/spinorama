@@ -4429,6 +4429,25 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Dolby CS 133": {
+        "brand": "Dolby",
+        "model": "CS 133",
+        "type": "passive",
+        "price": "",
+        "shape": "cinema",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Dolby",
+                "format": "spl_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230601",
+                "notes": "data computed from the 2 GLL files, one for the LF speaker and one for the MH speaker. The crossover used is a LR of order 8 and frequency of 365Hz.",
+            },
+        },
+    },
     "Dolby CS 136LF": {
         "skip": True,  # only here to provide data for the MH freq speaker
         "brand": "Dolby",
