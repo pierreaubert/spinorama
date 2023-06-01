@@ -4443,7 +4443,7 @@ speakers_info: SpeakerDatabase = {
                 "format": "spl_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "review_published": "20230601",
+                "review_published": "20230602",
                 "notes": "data computed from the 2 GLL files, one for the LF speaker and one for the MH speaker. The crossover used is a LR of order 8 and frequency of 365Hz.",
             },
         },
@@ -12202,6 +12202,26 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Klipsch The Nines": {
+        "brand": "Klipsch",
+        "model": "The Nines",
+        "type": "active",
+        "price": "1840",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/klipsch_the_nines/",
+                    "yt": "https://youtu.be/PxiUWhIeIeY",
+                },
+                "review_published": "20230602",
+            },
+        },
+    },
     "KME Sound ICS4": {
         "brand": "KME Sound",
         "model": "ICS4",
@@ -13635,6 +13655,35 @@ speakers_info: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mission-lx-3-mkii-speaker-review.44772/",
                 },
                 "review_published": "20230519",
+            },
+        },
+    },
+    "MoFi SourcePoint 10": {
+        "brand": "MoFi",
+        "model": "SourcePoint 10",
+        "type": "passive",
+        "price": "3700",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac-v1-0",
+        "measurements": {
+            "eac-v1-0": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mofi_10/",
+                    "yt": "https://youtu.be/DcYVu0TQtDs",
+                },
+                "review_published": "20230602",
+            },
+            "eac-v1-10": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mofi_10/",
+                    "yt": "https://youtu.be/DcYVu0TQtDs",
+                },
+                "review_published": "20230602",
             },
         },
     },
@@ -15939,6 +15988,26 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Q Acoustics 5020": {
+        "brand": "Q Acoustics",
+        "model": "5020",
+        "type": "passive",
+        "price": "900",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/q_acoustics_5020/",
+                    "yt": "https://youtu.be/_lEhxLptP9E",
+                },
+                "review_published": "20230602",
+            },
+        },
+    },
     "Quad Electroacoustics ESL-57": {
         "brand": "Quad Electroacoustics",
         "model": "ESL-57",
@@ -15971,6 +16040,26 @@ speakers_info: SpeakerDatabase = {
                 "format": "rew_text_dump",
                 "quality": "low",
                 "review_published": "20230223",
+            },
+        },
+    },
+    "Triad In-Room Gold LCR": {
+        "brand": "Triad",
+        "model": "In-Room Gold LCR",
+        "type": "passive",
+        "price": "",
+        "shape": "cinema",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://erinsaudiocorner.com/loudspeakers/triad_inroom_gold_lcr/",
+                    "yt": "https://youtu.be/gNKs0Dj2v5E",
+                },
+                "review_published": "20230602",
             },
         },
     },
@@ -19737,6 +19826,13 @@ origins_info = {
         "logo": "docs/metadata/meyersound.png",
         "logo-small": "docs/metadata/meyersound.png",
         "url": "https://www.meyersound.com",
+    },
+    "Vendors-MoFi": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://mofi.com/",
     },
     "Vendors-Nexo": {
         "min hz": 20,
