@@ -23,7 +23,7 @@ from scipy.stats import linregress
 
 from spinorama import logger
 from spinorama.ltype import Vector
-from spinorama.filter_peq import Peq, peq_build
+from spinorama.filter_peq import Peq, peq_spl
 from spinorama.compute_misc import savitzky_golay
 
 
@@ -167,7 +167,7 @@ def optim_compute_auto_target(
     optim_config: dict,
 ) -> list[Vector]:
     """Define the target for the optimiser with potentially some smoothing"""
-    peq_freq = peq_build(freq, peq)
+    peq_freq = peq_spl(freq, peq)
     diff = [np.subtract(target[i], auto_target_interp[i]) for i, _ in enumerate(target)]
     if optim_config.get("smooth_measurements"):
         window_size = optim_config.get("smooth_window_size")

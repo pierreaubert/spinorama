@@ -35,7 +35,7 @@ def peq_equal(left: Peq, right: Peq) -> bool:
     return all(not (l[0] != r[0] or l[1] != r[1]) for l, r in zip(left, right, strict=True))
 
 
-def peq_build(freq: Vector, peq: Peq) -> Vector:
+def peq_spl(freq: Vector, peq: Peq) -> Vector:
     """compute SPL for each frequency"""
     current_filter = [0.0]
     if len(peq) > 0:
@@ -44,19 +44,10 @@ def peq_build(freq: Vector, peq: Peq) -> Vector:
     return current_filter
 
 
-def peq_freq(spl: list[Vector], peq: Peq) -> Vector:
-    """compute SPL for each frequency"""
-    current_filter = [0.0]
-    if len(peq) > 0:
-        for w, iir in peq:
-            current_filter += w * np.array([iir(v) for v in spl])
-    return current_filter
-
-
 def peq_preamp_gain(peq: Peq) -> float:
     """compute preamp gain for a peq: well adapted to computers"""
     freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), 1000)
-    spl = np.array(peq_build(freq, peq))
+    spl = np.array(peq_spl(freq, peq))
     overall = np.max(np.clip(spl, 0, None))
     # print('debug preamp gain: %f'.format(gain))
     return -overall
@@ -68,12 +59,12 @@ def peq_preamp_gain_max(peq: Peq) -> float:
     Note that we add 0.2 dB to have a margin for clipping
     """
     freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), 1000)
-    spl = np.array(peq_build(freq, peq))
+    spl = np.array(peq_spl(freq, peq))
     individual = 0.0
     if len(peq) == 0:
         return 0.0
     for _w, iir in peq:
-        individual = max(individual, np.max(peq_build(freq, [(1.0, iir)])))
+        individual = max(individual, np.max(peq_spl(freq, [(1.0, iir)])))
     overall = np.max(np.clip(spl, 0, None))
     gain = -(max(individual, overall) + 0.2)
     # print('debug preamp gain: %f'.format(gain))
@@ -84,7 +75,7 @@ def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
     if len(peq) == 0:
         return spl
     freq = spl["Freq"].to_numpy()
-    curve_peq = peq_build(freq, peq)
+    curve_peq = peq_spl(freq, peq)
 
     # create a new frame
     filtered = spl.loc[:, spl.columns != "Freq"].add(curve_peq, axis=0)

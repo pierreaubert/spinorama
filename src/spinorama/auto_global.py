@@ -25,7 +25,7 @@ import scipy.optimize as opt
 from spinorama import logger
 from spinorama.ltype import Vector
 from spinorama.filter_iir import Biquad
-from spinorama.filter_peq import Peq, peq_build
+from spinorama.filter_peq import Peq, peq_spl
 from spinorama.auto_loss import score_loss
 
 # from spinorama.auto_target import optim_compute_auto_target
@@ -76,13 +76,13 @@ def optim_global(
         return peq
 
     def x2spl(x: list[float | int]) -> Vector:
-        return peq_build(freq, x2peq(x))
+        return peq_spl(freq, x2peq(x))
 
     def opt_peq_score(x) -> float:
         peq = x2peq(x)
-        peq_spl = np.array(x2spl(x))[freq_low:freq_high]
+        peq_freq = np.array(x2spl(x))[freq_low:freq_high]
         score = score_loss(df_speaker, peq)
-        flatness = np.linalg.norm(np.add(target, peq_spl))
+        flatness = np.linalg.norm(np.add(target, peq_freq))
         return score + float(flatness) / 20.0
 
     def opt_bounds(n: int) -> list[list[int | float]]:

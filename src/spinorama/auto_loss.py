@@ -26,7 +26,7 @@ from spinorama import logger
 from spinorama.ltype import Vector, DataSpeaker
 from spinorama.compute_cea2034 import sp_weigths, estimated_inroom_hv
 from spinorama.compute_scores import octave
-from spinorama.filter_peq import Peq, peq_build
+from spinorama.filter_peq import Peq, peq_spl
 from spinorama.filter_scores import scores_apply_filter
 from spinorama.filter_peq import peq_apply_measurements
 from spinorama.load_misc import graph_melt
@@ -357,7 +357,7 @@ def compute_scores_prep_cea2034(
 
 def l2_loss(freq: Vector, local_target: list[Vector], peq: Peq) -> float:
     # L2 norm
-    return np.linalg.norm(local_target + peq_build(freq, peq), 2)
+    return np.linalg.norm(local_target + peq_spl(freq, peq), 2)
 
 
 def leastsquare_loss(freq: Vector, local_target: list[Vector], peq: Peq, iterations: int) -> float:
@@ -416,7 +416,7 @@ def flat_pir(freq: Vector, df_spin: DataSpeaker, peq: Peq) -> float:
         pir_filtered = graph_melt(estimated_inroom_hv(spl_h_filtered, spl_v_filtered))
     else:
         if len(peq) > 0:
-            pir_filtered["Estimated In-Room Response"].add(peq_build(pir_filtered.Freq.values, peq))
+            pir_filtered["Estimated In-Room Response"].add(peq_spl(pir_filtered.Freq.values, peq))
         pir_filtered = graph_melt(pir_filtered)
 
     data = pir_filtered.loc[(pir_filtered.Freq >= 100) & (pir_filtered.Freq <= 16000)]
@@ -457,12 +457,12 @@ def score_loss(df_spin: DataSpeaker, peq: Peq) -> float:
     if pre_computed is None:
         return score_loss_slow(df_spin, peq)
 
-    peq_spl = np.asarray(peq_build(pre_computed["freq"], peq))
+    computed_peq_spl = np.asarray(peq_spl(pre_computed["freq"], peq))
 
     # print('debug: freq {}'.format(pre_computed["freq"].shape()))
     # print('debug: spin {}'.format(pre_computed["spin"].shape()))
     # print('debug:   on {}'.format(pre_computed["on"].shape()))
-    # print('debug:  peq {}'.format(peq_spl.shape()))
+    # print('debug:  peq {}'.format(computed_peq_spl.shape()))
 
     score = c_score_peq_approx(
         freq=np.asarray(pre_computed["freq"]),
@@ -470,7 +470,7 @@ def score_loss(df_spin: DataSpeaker, peq: Peq) -> float:
         intervals=pre_computed["intervals"],
         spin=pre_computed["spin"],
         on=np.asarray(pre_computed["on"]),
-        peq=np.asarray(peq_spl),
+        peq=np.asarray(computed_peq_spl),
     )
 
     if len(peq) > 0:

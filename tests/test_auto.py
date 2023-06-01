@@ -24,7 +24,7 @@ import math
 import numpy as np
 
 from spinorama.filter_iir import Biquad
-from spinorama.filter_peq import peq_build
+from spinorama.filter_peq import peq_spl
 from spinorama.auto_loss import loss
 from spinorama.auto_biquad import find_best_peak
 
@@ -76,7 +76,7 @@ class BiquadRangeTests(unittest.TestCase):
                     ),
                 ),
             ]
-            auto_target = peq_build(self.freq, test_peq)
+            auto_target = peq_spl(self.freq, test_peq)
 
             init_fun = loss({}, self.freq, [auto_target], [], 0, self.config)
 

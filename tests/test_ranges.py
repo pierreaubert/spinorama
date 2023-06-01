@@ -23,7 +23,7 @@ import math
 import numpy as np
 
 from spinorama.filter_iir import Biquad
-from spinorama.filter_peq import peq_build
+from spinorama.filter_peq import peq_spl
 from spinorama.auto_range import find_largest_area
 
 
@@ -260,7 +260,7 @@ class FreqRangeTests(unittest.TestCase):
         test_peq = [
             (1.0, Biquad(biquad_type=Biquad.PEAK, freq=1000, srate=48000, q=1, db_gain=3)),
         ]
-        data = peq_build(self.freq, test_peq)
+        data = peq_spl(self.freq, test_peq)
 
         # expect 1 peak
         sign, freq = find_largest_area(self.freq, data, self.config, empty_peq)
@@ -278,7 +278,7 @@ class FreqRangeTests(unittest.TestCase):
             (1.0, Biquad(biquad_type=Biquad.PEAK, freq=100, srate=48000, q=3, db_gain=2)),
             (1.0, Biquad(biquad_type=Biquad.PEAK, freq=5000, srate=48000, q=3, db_gain=1)),
         ]
-        data = peq_build(self.freq, test_peq)
+        data = peq_spl(self.freq, test_peq)
 
         # expect first peak
         sign, freq = find_largest_area(self.freq, data, self.config, empty_peq)
@@ -300,7 +300,7 @@ class FreqRangeTests(unittest.TestCase):
             (1.0, Biquad(biquad_type=Biquad.PEAK, freq=1000, srate=48000, q=1, db_gain=3)),
             (1.0, Biquad(biquad_type=Biquad.PEAK, freq=5000, srate=48000, q=1, db_gain=1)),
         ]
-        data = peq_build(self.freq, test_peq)
+        data = peq_spl(self.freq, test_peq)
 
         # expect first peak
         sign, freq = find_largest_area(self.freq, data, self.config, empty_peq)

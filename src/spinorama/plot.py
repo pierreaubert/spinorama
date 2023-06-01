@@ -32,7 +32,7 @@ import plotly.io as pio
 
 from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
-from spinorama.filter_peq import peq_build
+from spinorama.filter_peq import peq_spl
 from spinorama.compute_misc import compute_contour
 from spinorama.load_misc import sort_angles
 
@@ -867,7 +867,7 @@ def plot_summary(df, summary, params):
 
 
 def plot_eqs(freq, peqs, names):
-    peqs_spl = [peq_build(freq, peq) for peq in peqs]
+    peqs_spl = [peq_spl(freq, peq) for peq in peqs]
     if len(peqs) > 1:
         freq_min = bisect.bisect_right(freq, 80)
         freq_max = bisect.bisect_left(freq, 3000)

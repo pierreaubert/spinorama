@@ -27,7 +27,7 @@ from datas.grapheq import vendor_info as grapheq_db
 from spinorama import logger
 from spinorama.ltype import Vector
 from spinorama.filter_iir import Biquad
-from spinorama.filter_peq import Peq, peq_build
+from spinorama.filter_peq import Peq, peq_spl
 from spinorama.auto_loss import score_loss
 from spinorama.auto_target import optim_compute_auto_target
 from spinorama.auto_preflight import optim_preflight
@@ -99,7 +99,7 @@ def optim_grapheq(
 
     def compute_delta(param: Vector) -> NDArray[Any]:
         current_peq = fit(param)
-        peq_values = np.array(peq_build(auto_freq, current_peq))
+        peq_values = np.array(peq_spl(auto_freq, current_peq))
         peq_expend = [np.interp(f, auto_freq, peq_values) for f in afreq]
         delta = np.subtract(peq_expend, current_auto_target[0])
         return delta

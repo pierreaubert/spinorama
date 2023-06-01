@@ -23,7 +23,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
-from spinorama.filter_peq import peq_build, peq_preamp_gain
+from spinorama.filter_peq import peq_spl, peq_preamp_gain
 from spinorama.compute_misc import savitzky_golay, compute_statistics
 from spinorama.plot import (
     colors,
@@ -62,7 +62,7 @@ def graph_eq(freq, peq):
     """take a PEQ and return traces (for plotly) with frequency data"""
     data_frame = pd.DataFrame({"Freq": freq})
     for i, (pos, biquad) in enumerate(peq):
-        data_frame[f"{biquad.type2str_long()} {i}"] = peq_build(freq, [(pos, biquad)])
+        data_frame[f"{biquad.type2str_long()} {i}"] = peq_spl(freq, [(pos, biquad)])
 
     traces = []
     for i, key in enumerate(data_frame.keys()):
@@ -97,8 +97,8 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, target, optim_config):
     df_compare = pd.DataFrame(
         {
             "Freq": freq,
-            "autoEQ": peq_build(freq, auto_peq),
-            #        "manualEQ": peq_build(freq, manual_peq),
+            "autoEQ": peq_spl(freq, auto_peq),
+            #        "manualEQ": peq_spl(freq, manual_peq),
             target_name: target,
         }
     )
@@ -178,7 +178,7 @@ def graph_results(
 
     # compare the 2 corrected curves
     df_optim = pd.DataFrame({"Freq": freq})
-    df_optim["Auto"] = auto_target[0] - auto_target_interp[0] + peq_build(freq, auto_peq)
+    df_optim["Auto"] = auto_target[0] - auto_target_interp[0] + peq_spl(freq, auto_peq)
     # show the 2 spinoramas
     unmelted_spin = spin.pivot_table(
         index="Freq", columns="Measurements", values="dB", aggfunc=max
