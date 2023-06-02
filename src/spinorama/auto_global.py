@@ -26,6 +26,7 @@ from spinorama import logger
 from spinorama.ltype import Vector
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import Peq, peq_spl
+from spinorama.auto_misc import get3db
 from spinorama.auto_loss import score_loss
 
 # from spinorama.auto_target import optim_compute_auto_target
@@ -53,9 +54,13 @@ def optim_global(
         logger.error("Preflight check failed!")
         return False, ((0, 0, 0), [])
 
-    freq_min = optim_config["freq_reg_min"]
-    freq_max = optim_config["freq_reg_max"]
-    log_freq = np.logspace(np.log10(freq_min), np.log10(freq_max), 200 + 1)
+    freq_min = optim_config["target_min_freq"]
+    if freq_min is None:
+        status, freq_min = get3db(df_speaker, 3.0)
+        if status is None:
+            freq_min = 80
+    freq_max = optim_config["target_max_freq"]
+    log_freq = np.logspace(np.log10(20), np.log10(20000), 200 + 1)
     max_db = optim_config["MAX_DBGAIN"]
     min_q = optim_config["MIN_Q"]
     max_q = optim_config["MAX_Q"]
@@ -104,16 +109,25 @@ def optim_global(
         return [True, True, False, False] * n
 
     def opt_constraints(n: int):
-        # f1+4 < f2
-        # 4 create some space between the various PEQ; if not the optimiser will add multiple PEQ at more or less the same frequency and that will generate too much of a cut on the max SPL
-        m = n - 1
+        # Create some space between the various PEQ; if not the optimiser will add multiple PEQ
+        # at more or less the same frequency and that will generate too much of a cut on the max
+        # SPL. we have 200 points from 20Hz-20kHz, 5 give us 1/4 octave
+        m = n
         mat = np.asarray([[0] * (n * 4)] * m)
+        vec = np.asarray([0] * m)
         for i in range(m):
-            j = i * 4 + 1
+            if i == 0:
+                # first freq can be as low as possible
+                # second needs to be > freq_min
+                mat[0][5] = -1
+                vec[0] = -freq_min
+                continue
+            j = (i - 1) * 4 + 1
             mat[i][j] = 1
             j += 4
             mat[i][j] = -1
-        return opt.LinearConstraint(mat, -np.inf, -4.0)
+            vec[i] = -5
+        return opt.LinearConstraint(mat, -np.inf, vec)
 
     def opt_display(xk, convergence):
         # comment if you want to print verbose traces

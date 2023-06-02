@@ -1,16 +1,16 @@
 EQ for Bose DesignMax DM6SE computed from Vendors-Bose data
-Preference Score -0.23 with EQ 3.44
+Preference Score -0.23 with EQ 3.26
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-31-09:32:36
+Dated: 2023-06-02-15:31:06
 
-Preamp: -5.9 dB
+Preamp: -5.1 dB
 
-Filter  1: ON HS Fc    48 Hz Gain -2.07 dB Q 0.88
-Filter  2: ON PK Fc    62 Hz Gain +2.93 dB Q 2.71
-Filter  3: ON PK Fc   327 Hz Gain +2.98 dB Q 1.06
-Filter  4: ON PK Fc   375 Hz Gain +2.92 dB Q 1.85
-Filter  5: ON PK Fc   430 Hz Gain +2.96 dB Q 2.53
-Filter  6: ON PK Fc   849 Hz Gain +2.65 dB Q 2.99
-Filter  7: ON PK Fc  3087 Hz Gain -2.04 dB Q 2.94
-Filter  8: ON PK Fc  6300 Hz Gain -2.98 dB Q 2.91
-Filter  9: ON PK Fc 10850 Hz Gain -2.99 dB Q 3.00
+Filter  1: ON PK Fc   120 Hz Gain -2.41 dB Q 1.03
+Filter  2: ON PK Fc   351 Hz Gain +2.99 dB Q 1.35
+Filter  3: ON PK Fc   417 Hz Gain +2.99 dB Q 2.80
+Filter  4: ON PK Fc   893 Hz Gain +2.89 dB Q 2.98
+Filter  5: ON PK Fc  1099 Hz Gain -2.80 dB Q 1.95
+Filter  6: ON PK Fc  3097 Hz Gain -2.08 dB Q 2.79
+Filter  7: ON PK Fc  5383 Hz Gain -1.80 dB Q 0.27
+Filter  8: ON PK Fc  6397 Hz Gain -2.98 dB Q 2.98
+Filter  9: ON PK Fc 11118 Hz Gain -2.99 dB Q 2.97
