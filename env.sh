@@ -1,7 +1,7 @@
 #!/bin/sh
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,6 +34,17 @@ github=$(ssh-add -l | grep github | cut -d ' ' -f 3)
 if test -z $github; then
     ssh-add ~/.ssh/id_rsa_github >> env.log 2>&1
     github=$(ssh-add -l 2>&1 | grep github | cut -d ' ' -f 3)
+fi
+
+## prod keys
+## ----------------------------------------------------------------------
+RSA_ES=$HOME/.ssh/id_rsa_es_web
+if test -f $RSA_ES; then
+    ssh-add $RSA_ES >> env.log 2>&1
+fi
+RSA_CH=$HOME/.ssh/id_rsa_ch_web
+if test -f $RSA_CH; then
+    ssh-add $RSA_CH >> env.log 2>&1
 fi
 
 ## python virtualenv
@@ -78,6 +89,9 @@ fi
 if test -d /usr/local/cuda/extras/CUPTI/lib64; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
 fi
+
+# for deepsource code coverage
+export DEEPSOURCE_DSN=https://sampledsn@deepsource.io
 
 ## summary
 ## ----------------------------------------------------------------------

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,8 +20,9 @@ import numpy as np
 import pandas as pd
 
 from spinorama import logger
-from spinorama.ltype import Peq, Vector
+from spinorama.ltype import Vector
 from spinorama.filter_iir import Biquad
+from spinorama.filter_peq import Peq
 from spinorama.auto_loss import loss, score_loss
 from spinorama.auto_range import (
     propose_range_freq,
@@ -41,7 +42,7 @@ def optim_greedy(
     auto_target: list[Vector],
     auto_target_interp: list[Vector],
     optim_config: dict,
-    use_score: bool,
+    use_score: bool,  # noqa: FBT001
 ) -> tuple[bool, tuple[tuple[int, float, float], Peq]]:
     """Main optimiser: follow a greedy strategy"""
 
@@ -101,21 +102,29 @@ def optim_greedy(
         if optim_iter == 0:
             if optim_config["full_biquad_optim"] is True:
                 # see if a LP can help get some flatness of bass
-                init_freq_range = [
-                    optim_config["target_min_freq"] / 2,
-                    16000,
-                ]  # optim_config["target_min_freq"] * 2]
-                init_db_gain_range = [-3, -2, -1, 0, 1, 2, 3]
-                init_q_range = [0.5, 1, 2, 3]
+                init_freq_range = np.asarray(
+                    [
+                        optim_config["target_min_freq"] / 2,
+                        16000,
+                    ]
+                )  # optim_config["target_min_freq"] * 2]
+                init_db_gain_range = np.linspace(
+                    -optim_config["MAX_DBGAIN"], optim_config["MAX_DBGAIN"], 7
+                )
+                init_q_range = np.linspace(optim_config["MIN_Q"], optim_config["MAX_Q"], 7)
                 biquad_range = [0, 1, 3, 5, 6]  # LP, HP, LS, HS
             else:
                 # greedy strategy: look for lowest & highest peak
-                init_freq_range = [
-                    optim_config["target_min_freq"] / 2,
-                    optim_config["target_min_freq"] * 2,
-                ]
-                init_db_gain_range = [-3, -2, -1, 0, 1, 2, 3]
-                init_q_range = [0.5, 1, 2, 3]
+                init_freq_range = np.asarray(
+                    [
+                        optim_config["target_min_freq"] / 2,
+                        optim_config["target_min_freq"] * 2,
+                    ]
+                )
+                init_db_gain_range = np.linspace(
+                    -optim_config["MAX_DBGAIN"], -optim_config["MAX_DBGAIN"], 7
+                )
+                init_q_range = np.linspace(optim_config["MIN_Q"], optim_config["MAX_Q"], 7)
                 biquad_range = [3]  # PK
         else:
             # min_freq = optim_config["target_min_freq"]
@@ -192,14 +201,14 @@ def optim_greedy(
             best_loss: float = current_loss
             if use_score:
                 pref_score = score_loss(df_speaker, auto_peq)
-                results.append((optim_iter + 1, best_loss, -pref_score))
+            results.append((optim_iter + 1, best_loss, -pref_score))
             logger.info(
                 "Speaker %s Iter %2d Optim converged loss %2.2f pref score %2.2f biquad %2s F:%5.0fHz Q:%2.2f G:%+2.2fdB in %d iterations",
                 speaker_name,
                 optim_iter,
                 best_loss,
                 -pref_score,
-                biquad[1].type2str(),
+                biquad[1].type2str_short(),
                 current_freq,
                 current_q,
                 current_db_gain,
@@ -223,6 +232,7 @@ def optim_greedy(
         freq, auto_target, auto_target_interp, auto_peq, optim_config
     )
     if results[-1][1] < best_loss:
+        best_loss = results[-1][1]
         if use_score:
             pref_score = score_loss(df_speaker, auto_peq)
         results.append((nb_iter + 1, best_loss, -pref_score))
@@ -234,6 +244,7 @@ def optim_greedy(
         best_results = results[idx_max]
         auto_peq = auto_peq[:idx_max]
     else:
+        # TODO select the best one
         best_results = results[-1]
 
     logger.info(

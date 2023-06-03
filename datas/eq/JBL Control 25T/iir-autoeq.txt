@@ -1,16 +1,14 @@
 EQ for JBL Control 25T computed from Vendors-JBL data
-Preference Score -0.01 with EQ 1.15
+Preference Score -0.01 with EQ 1.87
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-22-22:47:24
+Dated: 2023-05-10-19:50:53
 
-Preamp: -3.5 dB
+Preamp: -6.5 dB
 
-Filter  1: ON PK Fc    86 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc   384 Hz Gain +1.93 dB Q 0.94
-Filter  3: ON PK Fc  6405 Hz Gain -2.65 dB Q 2.88
-Filter  4: ON PK Fc  2800 Hz Gain +0.98 dB Q 0.05
-Filter  5: ON PK Fc   704 Hz Gain -1.31 dB Q 0.47
-Filter  6: ON PK Fc  5239 Hz Gain -1.16 dB Q 1.71
-Filter  7: ON PK Fc  8219 Hz Gain -1.12 dB Q 3.00
-Filter  8: ON PK Fc   222 Hz Gain -0.50 dB Q 3.00
-Filter  9: ON PK Fc  4879 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON LS Fc   538 Hz Gain +4.48 dB
+Filter  2: ON PK Fc  4605 Hz Gain -0.34 dB Q 3.00
+Filter  3: ON PK Fc  6716 Hz Gain -3.93 dB Q 0.92
+Filter  4: ON PK Fc  9390 Hz Gain -1.21 dB Q 2.06
+Filter  5: ON PK Fc  9797 Hz Gain +0.33 dB Q 3.41
+Filter  6: ON PK Fc 13290 Hz Gain +3.92 dB Q 0.96
+Filter  7: ON PK Fc 15958 Hz Gain +4.33 dB Q 2.45

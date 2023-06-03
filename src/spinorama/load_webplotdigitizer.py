@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,12 +24,15 @@ import pandas as pd
 import tarfile
 
 from spinorama import logger
+from spinorama.ltype import StatusOr
 
 
 pd.set_option("display.max_rows", 1000)
 
 
-def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, version):
+def parse_webplotdigitizer_get_jsonfilename(
+    dirname: str, speaker_name: str, origin: str, version: str
+) -> str:
     filename = None
     clean_dir = dirname
     if dirname[-1] == "/":
@@ -48,11 +51,13 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
                     logger.debug("Tarinfo.name %s", tarinfo.name)
                     if tarinfo.isreg() and tarinfo.name[-9:] == "info.json":
                         # note that files/directory with name tmp are in .gitignore
-                        tar.extract(tarinfo, path=filedir + "/tmp", set_attrs=False)
-                        info_json = filedir + "/tmp/" + tarinfo.name
+                        tar.extract(tarinfo, path=filedir + "/extracted", set_attrs=False)
+                        info_json = filedir + "/extracted/" + tarinfo.name
                         with open(info_json, "r") as f:
                             info = json.load(f)
-                            jsonfilename = filedir + "/tmp/" + tarinfo.name[:-9] + info["json"]
+                            jsonfilename = (
+                                filedir + "/extracted/" + tarinfo.name[:-9] + info["json"]
+                            )
 
             # now extract the large json file
             if jsonfilename is not None:
@@ -60,7 +65,7 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
                     for tarinfo in tar:
                         if tarinfo.isfile() and tarinfo.name in jsonfilename:
                             logger.debug("Extracting: %s", tarinfo.name)
-                            tar.extract(tarinfo, path=filedir + "/tmp", set_attrs=False)
+                            tar.extract(tarinfo, path=filedir + "/extracted", set_attrs=False)
         else:
             logger.debug("Tarfilename %s doesn't exist", tarfilename)
 
@@ -70,12 +75,12 @@ def parse_webplotdigitizer_get_jsonfilename(dirname, speaker_name, origin, versi
         jsonfilename = filename + ".json"
     if not os.path.exists(jsonfilename):
         logger.warning("Didn't find tar or json for %s %s %s", speaker_name, origin, version)
-        return None
+        return ""
     logger.debug("Jsonfilename %s", jsonfilename)
     return jsonfilename
 
 
-def parse_graph_freq_webplotdigitizer(filename):
+def parse_graph_freq_webplotdigitizer(filename: str) -> StatusOr[tuple[str, pd.DataFrame]]:
     """ """
     # from 20Hz to 20kHz, log(2)~0.3
     ref_freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), 1000)
@@ -135,7 +140,7 @@ def parse_graph_freq_webplotdigitizer(filename):
                         break
 
             # build dataframe
-            def pretty(name):
+            def pretty(name: str) -> str:
                 newname = name
                 if newname.lower() in ("on axis", "on-axis", "oa", "onaxis", "on"):
                     newname = "On Axis"
@@ -180,29 +185,31 @@ def parse_graph_freq_webplotdigitizer(filename):
                 m_df.dB.min(),
                 m_df.dB.max(),
             )
-            return "CEA2034", m_df
+            return True, ("CEA2034", m_df)
     except IOError:
         logger.exception("Cannot not open: ")
-        return None, None
+        return False, ("", pd.DataFrame())
 
 
 def parse_graphs_speaker_webplotdigitizer(
-    speaker_path, speaker_brand, speaker_name, origin, version
-):
-    dfs = {}
+    speaker_path: str, speaker_brand: str, speaker_name: str, origin: str, version: str
+) -> StatusOr[tuple[str, pd.DataFrame]]:
     logger.debug("speaker_path set to %s", speaker_path)
     jsonfilename = parse_webplotdigitizer_get_jsonfilename(
         speaker_path, speaker_name, origin, version
     )
-
-    if jsonfilename is None:
+    if not jsonfilename:
         logger.warning(
             "%s %s %s didn't find data file in %s", speaker_name, origin, version, speaker_path
         )
-        return None
-
+        return False, ("", pd.DataFrame())
     try:
-        return parse_graph_freq_webplotdigitizer(jsonfilename)
+        status, graph = parse_graph_freq_webplotdigitizer(jsonfilename)
+        if not status:
+            logger.info("Parse failed for %s %s %s", speaker_name, origin, version)
+            return False, ("", pd.DataFrame())
     except FileNotFoundError:
         logger.info("Speaker: %s Not found: %s", speaker_name, jsonfilename)
-    return dfs
+    else:
+        return True, graph
+    return False, ("", pd.DataFrame())

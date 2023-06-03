@@ -1,7 +1,7 @@
 #!/bin/sh
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,6 +38,9 @@ export NVM_DIR=$HOME/.nvm
 python3 -m venv spinorama-venv
 . ./spinorama-venv/bin/activate
 pip3 install -U -r requirements.txt
+pip3 install -U -r requirements-test.txt
+pip3 install -U -r requirements-dev.txt
+pip3 install -U -r requirements-api.txt
 
 # node section
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -50,7 +53,8 @@ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spi
 # compile
 PYTHONPATH=src cd src/spinorama && python setup.py build_ext --inplace && ln -s c_compute_scores.cpython-*.so c_compute_scores.so && cd ../..
 
+# install deepsource
+[ ! -x bin/deepsource ] && curl https://deepsource.io/cli | sh
+
 # run the test
-pip3 install -U -r requirements-tests.txt
-pip3 install -U -r requirements-dev.txt
-pytest
+pytest .

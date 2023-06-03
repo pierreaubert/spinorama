@@ -1,7 +1,7 @@
 EQ for Martin Audio CDD8 computed from Vendors-Martin Audio data
 Preference Score 1.52 with EQ 1.79
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:51:40
+Dated: 2023-03-29-17:35:00
 
 Preamp: -1.3 dB
 

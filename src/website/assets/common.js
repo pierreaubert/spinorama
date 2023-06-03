@@ -37,10 +37,10 @@ export const knownMeasurements = [
     'SPL Horizontal Contour Normalized',
     'SPL Vertical Contour',
     'SPL Vertical Contour Normalized',
-    'SPL Horizontal 3D',
-    'SPL Horizontal 3D Normalized',
-    'SPL Vertical 3D',
-    'SPL Vertical 3D Normalized',
+    'SPL Horizontal Contour 3D',
+    'SPL Horizontal Contour 3D Normalized',
+    'SPL Vertical Contour 3D',
+    'SPL Vertical Contour 3D Normalized',
     'SPL Horizontal Globe',
     'SPL Horizontal Globe Normalized',
     'SPL Vertical Globe',
@@ -157,8 +157,6 @@ function processOrigin(origin: string): string {
 function processGraph(name: string): string {
     if (name.includes('CEA2034')) {
         return 'CEA2034';
-    } else if (name.includes('3D')) {
-        return name.replace('3D', 'Contour');
     } else if (name.includes('Globe')) {
         return name.replace('Globe', 'Contour');
     }
@@ -233,7 +231,7 @@ export function getSpeakerData(
     const spec = fetch(url)
           .then( (response) => response.json())
           .catch( (error) => {
-              console.log('ERROR getSpeaker data 404 ' + error);
+              console.log('ERROR getSpeaker bad encoding' + error);
               return null;
           });
     return spec;
@@ -639,35 +637,11 @@ export function setSurface(
         if (speakerGraphs[i]) {
             let surfaceData = [];
             for (const j in speakerGraphs[i].data) {
-                // console.log('debug: speakerGraphs[' + i + '].data[' + j + '].x ' + speakerGraphs[i].data[j].x.length)
-                // console.log('debug: speakerGraphs[' + i + '].data[' + j + '].y ' + speakerGraphs[i].data[j].y.length)
-                // TODO: debug that we get the right angles
-                speakerGraphs[i].data[j].y = speakerGraphs[i].data[j].y.slice(10, -10);
-                if (!speakerGraphs[i].data[j].z) {
-                    continue;
-                }
-                // console.log('debug: speakerGraphs[' + i + '].data[' + j + '].z ' + speakerGraphs[i].data[j].z.length)
-                // TODO: debug that we get the right angles
-                let currentSurfaceData = {};
-                currentSurfaceData.x = speakerGraphs[i].data[j].x;
-                currentSurfaceData.y = speakerGraphs[i].data[j].y;
-                currentSurfaceData.z = speakerGraphs[i].data[j].z.slice(10, -10);
-                currentSurfaceData.type = 'surface';
-                currentSurfaceData.legendgroup = 'speaker' + i;
-                currentSurfaceData.legendgrouptitle = { text: speakerNames[i] };
-
-                surfaceData.push(currentSurfaceData);
+                surfaceData.push(speakerGraphs[i].data[j]);
             }
             const layout = speakerGraphs[i].layout;
-            layout.autosize = false;
             layout.width = width;
             layout.height = (height - 100) / 2;
-            layout.yaxis = {
-                range: [-60, 60],
-            };
-            layout.zaxis = {
-                range: [-20, 5],
-            };
             graphsConfigs.push({
                 data: surfaceData,
                 layout: layout,

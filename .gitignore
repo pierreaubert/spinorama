@@ -13,6 +13,7 @@ TAGS
 *_large.png
 docs
 tmp
+extracted
 logs
 asrbook.aux
 asrbook.bbl
@@ -45,3 +46,5 @@ cache.*.h5
 .sass-cache
 build
 *.so
+bin
+coverage.xml

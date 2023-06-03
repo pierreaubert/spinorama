@@ -3,7 +3,6 @@ import inspect
 import random
 import string
 from functools import wraps
-from typing import List, Tuple, Any
 
 # put all the tasks in a queue
 global_worker = {"queue": {}, "results": {}}
@@ -34,11 +33,8 @@ class RemoteFunction:
         self.remote = _remote_proxy
 
     def __call__(self, *args, **kwargs):
-        raise TypeError(
-            "Remote functions cannot be called directly. Instead "
-            f"of running '{self._function_name}()', "
-            f"try '{self._function_name}.remote()'."
-        )
+        msg = f"Remote functions cannot be called directly. Instead of running '{self._function_name}()', try '{self._function_name}.remote()'."
+        raise TypeError(msg)
 
     def _remote(self, args=None, kwargs=None):
         kwargs = {} if kwargs is None else kwargs
@@ -65,7 +61,8 @@ def make_decorator():
             return RemoteFunction(function=func)
         if inspect.isclass(func):
             raise NotImplementedError
-        raise TypeError("remote must be apply to a function or a class.")
+        msg = "remote must be apply to a function or a class."
+        raise TypeError(msg)
 
     return decorator
 

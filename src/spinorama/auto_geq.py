@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,15 +17,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import numpy as np
+from typing import Any
+from numpy.typing import NDArray
 import scipy.optimize as opt
 import pandas as pd
 
 from datas.grapheq import vendor_info as grapheq_db
 
 from spinorama import logger
-from spinorama.ltype import Peq, Vector
+from spinorama.ltype import Vector
 from spinorama.filter_iir import Biquad
-from spinorama.filter_peq import peq_build
+from spinorama.filter_peq import Peq, peq_spl
 from spinorama.auto_loss import score_loss
 from spinorama.auto_target import optim_compute_auto_target
 from spinorama.auto_preflight import optim_preflight
@@ -77,13 +79,15 @@ def optim_grapheq(
     if use_score:
         pref_score = score_loss(df_speaker, auto_peq)
 
+    afreq = np.array(freq)
+
     def fit(param: Vector) -> Peq:
         guess_db = []
         for f in auto_freq:
-            if f < freq[0] or f > freq[-1]:
+            if f < afreq[0] or f > afreq[-1]:
                 db = 0.0
             else:
-                db = np.interp(f, freq, np.negative(current_auto_target[0])) * param
+                db = np.interp(f, afreq, np.negative(current_auto_target[0])) * np.array(param)
                 db = round(float(db) * 4) / 4
                 db = max(auto_min, db)
                 db = min(auto_max, db)
@@ -93,14 +97,14 @@ def optim_grapheq(
             for f, db in zip(auto_freq, guess_db, strict=False)
         ]
 
-    def compute_delta(param: Vector) -> Vector:
+    def compute_delta(param: Vector) -> NDArray[Any]:
         current_peq = fit(param)
-        peq_values = peq_build(auto_freq, current_peq)
-        peq_expend = [np.interp(f, auto_freq, peq_values) for f in freq]
+        peq_values = np.array(peq_spl(auto_freq, current_peq))
+        peq_expend = [np.interp(f, auto_freq, peq_values) for f in afreq]
         delta = np.subtract(peq_expend, current_auto_target[0])
         return delta
 
-    def compute_error(param: Vector) -> float:
+    def compute_error(param: Vector) -> np.floating[Any]:
         return np.linalg.norm(compute_delta(param))
 
     def find_best_param():
@@ -119,4 +123,4 @@ def optim_grapheq(
     if use_score:
         pref_score = score_loss(df_speaker, auto_peq)
 
-    return True, ((1, opt_error, -pref_score), auto_peq)
+    return True, ((1, int(opt_error), -pref_score), auto_peq)

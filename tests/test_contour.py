@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2022 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import unittest
-from itertools import pairwise
+
+# from itertools import pairwise
 
 import numpy as np
 import pandas as pd
@@ -94,7 +95,9 @@ class SpinoramaContourTests(unittest.TestCase):
         # extract all angles in order
         angles = [am[i][0] for i in range(0, len(am))]
         # check it is decreasing
-        self.assertTrue(all(i < j for i, j in zip(angles, angles[1:], strict=False)))
+        self.assertTrue(
+            all(i < j for i, j in zip(angles, angles[1:], strict=False))  # noqa: RUF007
+        )
 
 
 class SpinoramaReshapeTests(unittest.TestCase):
@@ -156,7 +159,9 @@ class SpinoramaReshapeTests(unittest.TestCase):
             # extract all angles in order
             angles = [ram[i][0] for i in range(0, len(ram))]
             # check it is decreasing
-            self.assertTrue(all(i < j for i, j in zip(angles, angles[1:], strict=False)))
+            self.assertTrue(
+                all(i < j for i, j in zip(angles, angles[1:], strict=False))  # noqa: RUF007
+            )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,13 @@
+M-Audio BX8 D3 APO EQ Score 96000Hz
+April142023-124611
+
+Preamp: -2.7 dB
+
+Filter 1: ON PK Fc 63.50,    -1.48,    4.13
+Filter 2: ON PK Fc 117.21,    -1.51,    1.21
+Filter 3: ON PK Fc 625.78,    -2.90,    4.98
+Filter 4: ON PK Fc 932.00,    -2.00,    1.81
+Filter 5: ON PK Fc 1665.60,    2.96,    1.14
+Filter 6: ON PK Fc 2929.12,    -1.46,    5.00
+Filter 7: ON PK Fc 12251.29,    2.18,    0.71
+Filter 8: ON PK Fc 9511.76,    -1.65,    3.17

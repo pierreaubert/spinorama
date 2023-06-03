@@ -1,16 +1,14 @@
 EQ for Monoprice MM-3 computed from ErinsAudioCorner data
-Preference Score 3.36 with EQ 5.75
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:26:14
+Preference Score 3.36 with EQ 6.30
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-05-10-19:45:27
 
-Preamp: -3.2 dB
+Preamp: -4.1 dB
 
-Filter  1: ON PK Fc   125 Hz Gain -3.00 dB Q 1.57
-Filter  2: ON PK Fc 11716 Hz Gain -5.70 dB Q 0.28
-Filter  3: ON PK Fc   300 Hz Gain -1.73 dB Q 1.03
-Filter  4: ON PK Fc  2006 Hz Gain +3.00 dB Q 2.79
-Filter  5: ON PK Fc   742 Hz Gain -1.05 dB Q 2.03
-Filter  6: ON PK Fc  4276 Hz Gain -2.06 dB Q 2.35
-Filter  7: ON PK Fc  3383 Hz Gain -0.50 dB Q 3.00
-Filter  8: ON PK Fc 15021 Hz Gain -0.50 dB Q 3.00
-Filter  9: ON PK Fc  5410 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON LS Fc   275 Hz Gain -2.00 dB
+Filter  2: ON PK Fc  1951 Hz Gain +4.32 dB Q 3.24
+Filter  3: ON PK Fc  2278 Hz Gain +2.35 dB Q 2.22
+Filter  4: ON PK Fc  3138 Hz Gain -1.80 dB Q 1.44
+Filter  5: ON PK Fc  4634 Hz Gain -2.62 dB Q 0.61
+Filter  6: ON PK Fc  8340 Hz Gain +0.15 dB Q 2.44
+Filter  7: ON PK Fc 14368 Hz Gain -4.37 dB Q 0.44

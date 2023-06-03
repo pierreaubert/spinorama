@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2022 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,7 +23,8 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--max-peq=<count>] [--min-Q=<minQ>] [--max-Q=<maxQ>] \
  [--min-dB=<mindB>] [--max-dB=<maxdB>] \
  [--min-freq=<minFreq>] [--max-freq=<maxFreq>] \
- [--max-iter=<maxiter>] [--use-all-biquad] [--curve-peak-only] \
+ [--max-iter=<maxiter>] [--use-all-biquad] \
+ [--use-only-pk] [--curve-peak-only] \
  [--target-min-freq=<tminf>] [--target-max-freq=<tmaxf>] \
  [--slope-on-axis=<s_on>] \
  [--slope-on=<s_on>] \
@@ -38,9 +39,9 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
  [--smooth-measurements=<window_size>] \
  [--smooth-order=<order>] \
- [--second-optimiser=<sopt>] \
  [--curves=<curve_name>] \
  [--fitness=<function>] \
+ [--optimisation=<options>] \
  [--graphic_eq=<eq_name>] \
  [--graphic_eq_list]
 
@@ -54,7 +55,7 @@ Options:
   --origin=<origin>        Restrict to a specific origin
   --speaker=<speaker>      Restrict to a specific speaker, if not specified it will optimise all speakers
   --mversion=<mversion>    Restrict to a specific mversion (for a given origin you can have multiple measurements)
-  --mformat=<mformat>      Restrict to a specifig format (klippel, splHVtxt, gllHVtxt, webplotdigitizer, ...)
+  --mformat=<mformat>      Restrict to a specifig format (klippel, spl_hv_txt, gll_hv_txt, webplotdigitizer, ...)
   --max-peq=<count>        Maximum allowed number of Biquad
   --min-Q=<minQ>           Minumum value for Q
   --max-Q=<maxQ>           Maximum value for Q
@@ -64,6 +65,7 @@ Options:
   --max-freq=<maxFreq>     Optimisation will happen below max freq
   --max-iter=<maxiter>     Maximum number of iterations
   --use-all-biquad         PEQ can be any kind of biquad (by default it uses only PK, PeaK)
+  --use-only-pk            force PEQ to be only PK / Peak
   --curve-peak-only        Optimise both for peaks and valleys on a curve
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
   --dash-port=<dash-port>  Port for the ray dashbboard
@@ -80,13 +82,13 @@ Options:
   --slope-sp=<s_sp>        Same as above (shortcut)
   --slope-estimated-inroom=<s_pir> Slope of estimated in-room response, default is -8dB
   --slope-pir=<s_pir>      Same as above (shortcut)
-  --second-optimiser=<sopt>
   --smooth-measurements=<window_size> If present the measurements will be smoothed before optimisation, window_size is the size of the window use for smoothing
   --smooth-order=<order>   Order of the interpolation, 3 by default for Savitzky-Golay filter.
   --curves=<curve_name>    Curve name: must be one of "ON", "LW", "PIR", "ER" or "SP" or a combinaison separated by a ,. Ex: 'PIR,LW' is valid
   --fitness=<function>     Fit function: must be one of "Flat", "Score", "LeastSquare", "FlatPir", "Combine".
   --graphic_eq=<eq_name>   Result is tailored for graphic_eq "name".
   --graphic_eq_list        List the known graphic eq and exit
+  --optimisation=<options> Choose an algorithm: options are greedy or global. Greedy is fast, Global is much slower but could find better solutions.
 """
 import sys
 
@@ -109,7 +111,7 @@ from generate_common import get_custom_logger, args2level, custom_ray_init, cach
 from spinorama.auto_save import optim_save_peq
 
 
-VERSION = "0.21"
+VERSION = "0.22"
 
 
 def print_items(aggregated_results):
@@ -306,6 +308,8 @@ def main():
         "grapheq_name": None,
         # use -3dB point as a starting point for target
         "use_3dB_target": True,
+        # optimisation algorithm (greedy or global)
+        "optimisation": "greedy",
     }
 
     # define other parameters for the optimisation algorithms
@@ -317,20 +321,20 @@ def main():
         current_optim_config["MAX_STEPS_DBGAIN"] = 3
         current_optim_config["MAX_STEPS_Q"] = 3
         # max iterations (if algorithm is iterative)
-        current_optim_config["maxiter"] = 20
+        current_optim_config["MAX_ITER"] = 20
     else:
         current_optim_config["MAX_NUMBER_PEQ"] = 9
         current_optim_config["MAX_STEPS_FREQ"] = 6
         current_optim_config["MAX_STEPS_DBGAIN"] = 6
         current_optim_config["MAX_STEPS_Q"] = 6
         # max iterations (if algorithm is iterative)
-        current_optim_config["maxiter"] = 150
+        current_optim_config["MAX_ITER"] = 150
 
     # MIN or MAX_Q or MIN or MAX_DBGAIN control the shape of the biquad which
     # are admissible.
-    current_optim_config["MIN_DBGAIN"] = 0.5
+    current_optim_config["MIN_DBGAIN"] = 0.75
     current_optim_config["MAX_DBGAIN"] = 3
-    current_optim_config["MIN_Q"] = 0.05
+    current_optim_config["MIN_Q"] = 0.25
     current_optim_config["MAX_Q"] = 3
 
     # do we override optim default?
@@ -342,7 +346,7 @@ def main():
             parameter_error = True
     if args["--max-iter"] is not None:
         max_iter = int(args["--max-iter"])
-        current_optim_config["maxiter"] = max_iter
+        current_optim_config["MAX_ITER"] = max_iter
         if max_iter < 1:
             print("ERROR: max_iter is {} which is below 1".format(max_iter))
             parameter_error = True
@@ -374,6 +378,8 @@ def main():
 
     if args["--use-all-biquad"] is not None and args["--use-all-biquad"] is True:
         current_optim_config["full_biquad_optim"] = True
+    if args["--use-only-pk"] is not None and args["--use-only-pk"] is True:
+        current_optim_config["full_biquad_optim"] = False
     if args["--curve-peak-only"] is not None and args["--curve-peak-only"] is True:
         current_optim_config["plus_and_minus"] = False
 
@@ -419,11 +425,6 @@ def main():
             print("ERROR: Polynomial order {} is not between  is 1 and 5".format(order))
             parameter_error = True
 
-    # do we run a second optimiser?
-    current_optim_config["second_optimiser"] = False
-    if args["--second-optimiser"] is not None:
-        current_optim_config["second_optimiser"] = True
-
     # which curve (measurement) to target?
     if args["--curves"] is not None:
         param_curve_names = args["--curves"].replace(" ", "").split(",")
@@ -438,9 +439,10 @@ def main():
         for current_curve_name in param_curve_names:
             if current_curve_name not in param_curve_name_valid:
                 print(
-                    "ERROR: {} is not known, acceptable values are {}",
-                    current_curve_name,
-                    param_curve_name_valid,
+                    "ERROR: {} is not known, acceptable values are {}. You can add multiple curves by separating them with a comma. Ex: --curve-names=LW,PIR".format(
+                        current_curve_name,
+                        list(param_curve_name_valid.keys()),
+                    )
                 )
                 parameter_error = True
             else:
@@ -460,9 +462,9 @@ def main():
         }
         if current_fitness_name not in param_fitness_name_valid:
             print(
-                "ERROR: {} is not known, acceptable values are {}",
-                current_fitness_name,
-                param_fitness_name_valid,
+                "ERROR: {} is not known, acceptable values are {}".format(
+                    current_fitness_name, list(param_fitness_name_valid.keys())
+                )
             )
             parameter_error = True
         else:
@@ -474,12 +476,23 @@ def main():
         if grapheq_name not in grapheq_info:
             print(
                 "ERROR: EQ name {} is not known. Please select on in {}".format(
-                    grapheq_name, grapheq_info
+                    grapheq_name, grapheq_info.keys()
                 )
             )
             sys.exit(1)
         current_optim_config["use_grapheq"] = True
         current_optim_config["grapheq_name"] = grapheq_name
+
+    # which optimisation algo?
+    if args["--optimisation"] is not None:
+        optimisation_name = args["--optimisation"]
+        if optimisation_name == "greedy":
+            current_optim_config["optimisation"] = "greedy"
+        elif optimisation_name == "global":
+            current_optim_config["optimisation"] = "global"
+        else:
+            print("ERROR: Optimisation algorithm needs to be either 'greedy' or 'global'.")
+            sys.exit(1)
 
     # name of speaker
     speaker_name = None
@@ -556,7 +569,7 @@ if __name__ == "__main__":
     smoke_test = args["--smoke-test"]
 
     if args["--graphic_eq_list"]:
-        print("INFO: The list of know graphical EQ is: {}".format(grapheq_info))
+        print("INFO: The list of know graphical EQ is: {}".format(list(grapheq_info.keys())))
         sys.exit(0)
 
     main()

@@ -1,0 +1,13 @@
+M-Audio BX8 D3 APO EQ LW 96000Hz
+April142023-124610
+
+Preamp: -2.8 dB
+
+Filter 1: ON PK Fc 64.51,    -1.53,    3.27
+Filter 2: ON PK Fc 117.71,    -1.47,    1.55
+Filter 3: ON PK Fc 645.12,    -3.11,    4.13
+Filter 4: ON PK Fc 922.00,    -1.55,    2.14
+Filter 5: ON PK Fc 1799.79,    2.50,    0.82
+Filter 6: ON PK Fc 2979.36,    -1.86,    4.75
+Filter 7: ON PK Fc 12256.79,    2.94,    0.55
+Filter 8: ON PK Fc 9514.76,    -1.80,    4.14

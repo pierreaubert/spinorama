@@ -1,16 +1,16 @@
 EQ for Nexus Center DIY computed from Misc data
 Preference Score 5.03 with EQ 6.19
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-02-26-09:34:59
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-18:14:47
 
-Preamp: -3.2 dB
+Preamp: -3.0 dB
 
-Filter  1: ON PK Fc    31 Hz Gain +3.00 dB Q 0.75
-Filter  2: ON PK Fc   107 Hz Gain -2.74 dB Q 3.00
-Filter  3: ON PK Fc  5036 Hz Gain -1.94 dB Q 2.04
-Filter  4: ON PK Fc  2227 Hz Gain +1.22 dB Q 2.43
-Filter  5: ON PK Fc   362 Hz Gain +0.77 dB Q 0.91
-Filter  6: ON PK Fc 15003 Hz Gain +1.43 dB Q 0.60
-Filter  7: ON PK Fc  1140 Hz Gain +0.50 dB Q 3.00
-Filter  8: ON PK Fc  7515 Hz Gain -1.24 dB Q 2.40
-Filter  9: ON PK Fc  3571 Hz Gain -0.66 dB Q 3.00
+Filter  1: ON LS Fc    63 Hz Gain +3.00 dB Q 1.53
+Filter  2: ON PK Fc  5106 Hz Gain -1.85 dB Q 2.05
+Filter  3: ON PK Fc   108 Hz Gain -2.54 dB Q 2.93
+Filter  4: ON PK Fc  2183 Hz Gain +1.16 dB Q 2.45
+Filter  5: ON PK Fc   392 Hz Gain +0.88 dB Q 0.90
+Filter  6: ON PK Fc 14570 Hz Gain +1.38 dB Q 0.60
+Filter  7: ON PK Fc   681 Hz Gain -0.76 dB Q 2.80
+Filter  8: ON PK Fc  1031 Hz Gain +0.77 dB Q 2.98
+Filter  9: ON PK Fc  7620 Hz Gain -1.18 dB Q 1.96

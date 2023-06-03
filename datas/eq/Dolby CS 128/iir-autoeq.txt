@@ -1,0 +1,16 @@
+EQ for Dolby CS 128 computed from Vendors-Dolby data
+Preference Score 4.67 with EQ 5.40
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-06-03-10:57:52
+
+Preamp: -2.9 dB
+
+Filter  1: ON LS Fc    71 Hz Gain +2.91 dB Q 0.58
+Filter  2: ON PK Fc   116 Hz Gain -0.51 dB Q 1.66
+Filter  3: ON PK Fc   188 Hz Gain -1.78 dB Q 2.93
+Filter  4: ON PK Fc   363 Hz Gain -1.18 dB Q 2.88
+Filter  5: ON PK Fc  1099 Hz Gain -0.66 dB Q 1.80
+Filter  6: ON PK Fc  2270 Hz Gain +1.80 dB Q 1.18
+Filter  7: ON PK Fc  8147 Hz Gain -0.19 dB Q 0.82
+Filter  8: ON PK Fc 10023 Hz Gain -0.73 dB Q 1.94
+Filter  9: ON PK Fc 16000 Hz Gain +2.97 dB Q 1.88

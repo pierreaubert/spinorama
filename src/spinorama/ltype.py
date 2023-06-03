@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,16 +17,23 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # local types
+from typing import Literal, TypeVar
+
+import numpy.typing as npt
 import pandas as pd
 
-from spinorama.filter_iir import Biquad
-
-Vector = list[float]
-
-Peq = list[tuple[float, Biquad]]
+Vector = npt.ArrayLike
 
 DataSpeaker = dict[str, pd.DataFrame]
 
 Zone = list[tuple[float, float]]
 
 OptimResult = tuple[int, float, float]
+
+T = TypeVar("T")
+Status = Literal[True] | Literal[False]
+StatusOr = tuple[Status, T]
+
+ScoreError = tuple[None, None, dict[str, float]]
+ScoreSuccess = tuple[DataSpeaker, DataSpeaker, dict[str, float]]
+ScoreType = ScoreError | ScoreSuccess

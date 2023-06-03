@@ -111,9 +111,13 @@
 % endif
 % if sdb is not None:
 %   if g_key in meta[speaker]["measurements"]:
-%     if meta[speaker]["measurements"][g_key].get("format", "?") != "gllHVTxt":
+%     if meta[speaker]["measurements"][g_key].get("format", "?") != "gllHVtxt":
 <li>
-  Sensitivity: <b>${'{0:.1f}'.format(sdb)}</b>dB (avg. 100Hz-1kHz for 2.83V measured at 1m)
+  Sensitivity: <b>${'{0:.1f}'.format(sdb)}</b>dB (avg. 100Hz-1kHz for 2.83V measured at <b>1m</b>)
+</li>
+%     else:
+<li>
+  Sensitivity: <b>${'{0:.1f}'.format(sdb)}</b>dB (avg. 100Hz-1kHz for 2.83V measured at <b>10m</b>)
 </li>
 %     endif
 %   endif

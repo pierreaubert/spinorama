@@ -2,16 +2,12 @@
 # -*- coding: utf-8 -*-
 #
 import glob
-import sys
 import os
 import pathlib
-import shutil
-
-from string import Template
 
 import datas.metadata as metadata
 
-known_brands = set(v["brand"] for k, v in metadata.speakers_info.items())
+known_brands = set(v["brand"] for _, v in metadata.speakers_info.items())
 
 
 def exec_git(command):
@@ -20,7 +16,6 @@ def exec_git(command):
 
 def move_data(speaker_name, speaker_data):
     brand = speaker_data["brand"]
-    model = speaker_data["model"]
 
     root = "./datas/measurements"
     target_dir = "{}/{}/{}".format(root, brand, speaker_name)
@@ -41,17 +36,13 @@ def move_data(speaker_name, speaker_data):
         elif origin == "ErinsAudioCorner":
             from_dir = "./datas/ErinsAudioCorner/{}".format(speaker_name)
             scan = glob.glob(from_dir + "/*")
-            found = False
             for unk in scan:
-                if os.path.isdir(unk) and unk[-3:] != "tmp":
+                if (
+                    (os.path.isdir(unk) and unk[-3:] != "tmp")
+                    or (os.path.isfile(unk) and len(unk) > 5 and unk[-4:] == ".tar")
+                    or (os.path.isfile(unk) and len(unk) > 5 and unk[-4:] == ".txt")
+                ):
                     exec_git('git mv "{}" "{}"'.format(unk, measurement_dir))
-                    found = True
-                elif os.path.isfile(unk) and len(unk) > 5 and unk[-4:] == ".tar":
-                    exec_git('git mv "{}" "{}"'.format(unk, measurement_dir))
-                    found = True
-                elif os.path.isfile(unk) and len(unk) > 5 and unk[-4:] == ".txt":
-                    exec_git('git mv "{}" "{}"'.format(unk, measurement_dir))
-                    found = True
             # if not found or unk[-2:] == 'tmp':
             #    print("ERROR error for {}".format(speaker_name))
         elif origin == "Misc" or "Vendor" in origin:

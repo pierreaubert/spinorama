@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2022 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ class SpinoramaFilterIIRTests(unittest.TestCase):
         self.peak = Biquad(3, 1000, 48000, 1, 3)
 
     def test_smoke1(self):
-        peq_slow = np.array([20.0 * math.log10(self.peak.resultSlow(f)) for f in self.freq])
+        peq_slow = np.array([20.0 * math.log10(self.peak.result_slow(f)) for f in self.freq])
         peq_fast = np.array([20.0 * math.log10(self.peak.result(f)) for f in self.freq])
         peq_vec = self.peak.np_log_result(self.freq)
         with self.assertRaises(AssertionError):

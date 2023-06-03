@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2022 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,17 +37,20 @@ pd.set_option("display.max_rows", 202)
 class SpinoramaSpinoramaTests(unittest.TestCase):
     def setUp(self):
         # load spin from klippel data
-        self.title, self.spin_unmelted = parse_graph_freq_klippel(
+        status, (self.title, self.spin_unmelted) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/CEA2034.txt"
         )
+        self.assertTrue(status)
         self.spin = graph_melt(self.spin_unmelted)
         # load spl vertical and horizontal
-        self.titleH, self.splH = parse_graph_freq_klippel(
+        status, (self.titleH, self.splH) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
         )
-        self.titleV, self.splV = parse_graph_freq_klippel(
+        self.assertTrue(status)
+        status, (self.titleV, self.splV) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt"
         )
+        self.assertTrue(status)
         # computed graphs
         self.computed_spin_unmelted = compute_cea2034(self.splH, self.splV, method="standard")
         self.computed_spin = graph_melt(self.computed_spin_unmelted)
@@ -86,17 +89,20 @@ class SpinoramaSpinoramaTests(unittest.TestCase):
 class SpinoramaEarlyReflectionsTests(unittest.TestCase):
     def setUp(self):
         # load spin from klippel data
-        self.title, self.reference_unmelted = parse_graph_freq_klippel(
+        status, (self.title, self.reference_unmelted) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/Early Reflections.txt"
         )
+        self.assertTrue(status)
         self.reference = graph_melt(self.reference_unmelted)
         # load spl vertical and horizontal
-        self.titleH, self.splH = parse_graph_freq_klippel(
+        status, (self.titleH, self.splH) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
         )
-        self.titleV, self.splV = parse_graph_freq_klippel(
+        self.assertTrue(status)
+        status, (self.titleV, self.splV) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt"
         )
+        self.assertTrue(status)
         # computed graphs: use method == standard since it is an old klippel measurement
         self.computed_unmelted = early_reflections(self.splH, self.splV, method="standard")
         self.computed = graph_melt(self.computed_unmelted)
@@ -135,17 +141,20 @@ class SpinoramaEarlyReflectionsTests(unittest.TestCase):
 class SpinoramaVerticalReflectionsTests(unittest.TestCase):
     def setUp(self):
         # load spin from klippel data
-        self.title, self.reference_unmelted = parse_graph_freq_klippel(
+        status, (self.title, self.reference_unmelted) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/Vertical Reflections.txt"
         )
+        self.assertTrue(status)
         self.reference = graph_melt(self.reference_unmelted)
         # load spl vertical and horizontal
-        self.titleH, self.splH = parse_graph_freq_klippel(
+        status, (self.titleH, self.splH) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
         )
-        self.titleV, self.splV = parse_graph_freq_klippel(
+        self.assertTrue(status)
+        status, (self.titleV, self.splV) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt"
         )
+        self.assertTrue(status)
         # computed graphs
         self.computed_unmelted = vertical_reflections(self.splH, self.splV)
         self.computed = graph_melt(self.computed_unmelted)
@@ -175,17 +184,20 @@ class SpinoramaVerticalReflectionsTests(unittest.TestCase):
 class SpinoramaHorizontalReflectionsTests(unittest.TestCase):
     def setUp(self):
         # load spin from klippel data
-        self.title, self.reference_unmelted = parse_graph_freq_klippel(
+        status, (self.title, self.reference_unmelted) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/Horizontal Reflections.txt"
         )
+        self.assertTrue(status)
         self.reference = graph_melt(self.reference_unmelted)
         # load spl vertical and horizontal
-        self.titleH, self.splH = parse_graph_freq_klippel(
+        status, (self.titleH, self.splH) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
         )
-        self.titleV, self.splV = parse_graph_freq_klippel(
+        self.assertTrue(status)
+        status, (self.titleV, self.splV) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt"
         )
+        self.assertTrue(status)
         # computed graphs
         self.computed_unmelted = horizontal_reflections(self.splH, self.splV)
         self.computed = graph_melt(self.computed_unmelted)
@@ -213,17 +225,20 @@ class SpinoramaHorizontalReflectionsTests(unittest.TestCase):
 class SpinoramaEstimatedInRoomTests(unittest.TestCase):
     def setUp(self):
         # load spin from klippel data
-        self.title, self.reference_unmelted = parse_graph_freq_klippel(
+        status, (self.title, self.reference_unmelted) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/Estimated In-Room Response.txt"
         )
+        self.assertTrue(status)
         self.reference = graph_melt(self.reference_unmelted)
         # load spl vertical and horizontal
-        self.titleH, self.splH = parse_graph_freq_klippel(
+        status, (self.titleH, self.splH) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
         )
-        self.titleV, self.splV = parse_graph_freq_klippel(
+        self.assertTrue(status)
+        status, (self.titleV, self.splV) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt"
         )
+        self.assertTrue(status)
         # computed graphs
         self.computed_unmelted = estimated_inroom_hv(self.splH, self.splV, "standard")
         self.computed = graph_melt(self.computed_unmelted)

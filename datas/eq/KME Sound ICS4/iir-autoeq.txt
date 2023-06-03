@@ -1,16 +1,14 @@
 EQ for KME Sound ICS4 computed from Vendors-KME Sound data
-Preference Score -0.40 with EQ 1.21
+Preference Score -0.40 with EQ 1.98
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-22-23:21:24
+Dated: 2023-05-10-19:57:46
 
-Preamp: -3.2 dB
+Preamp: -4.5 dB
 
-Filter  1: ON LS Fc   193 Hz Gain +3.00 dB
-Filter  2: ON PK Fc  8647 Hz Gain +1.73 dB Q 0.08
-Filter  3: ON PK Fc  1715 Hz Gain -2.68 dB Q 1.62
-Filter  4: ON PK Fc   579 Hz Gain +2.44 dB Q 2.93
-Filter  5: ON PK Fc  4475 Hz Gain -2.30 dB Q 1.95
-Filter  6: ON PK Fc  9429 Hz Gain -1.98 dB Q 2.98
-Filter  7: ON PK Fc   384 Hz Gain -0.79 dB Q 1.48
-Filter  8: ON PK Fc  9476 Hz Gain -0.51 dB Q 2.99
-Filter  9: ON PK Fc   785 Hz Gain -0.89 dB Q 2.74
+Filter  1: ON PK Fc   105 Hz Gain +4.50 dB Q 1.29
+Filter  2: ON PK Fc  5169 Hz Gain -3.46 dB Q 1.84
+Filter  3: ON PK Fc  5596 Hz Gain +3.64 dB Q 3.49
+Filter  4: ON PK Fc  9765 Hz Gain -1.95 dB Q 3.03
+Filter  5: ON PK Fc 10471 Hz Gain -1.49 dB Q 2.84
+Filter  6: ON PK Fc 11966 Hz Gain +3.28 dB Q 3.21
+Filter  7: ON PK Fc 14795 Hz Gain +3.15 dB Q 3.15

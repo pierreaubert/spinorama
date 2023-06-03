@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2021 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ import math
 import numpy as np
 
 from spinorama.filter_iir import Biquad
-from spinorama.filter_peq import peq_build
+from spinorama.filter_peq import peq_spl
 from spinorama.auto_loss import loss
 from spinorama.auto_biquad import find_best_peak
 
@@ -39,7 +39,7 @@ class BiquadRangeTests(unittest.TestCase):
             "plus_and_minus": True,
             "curves": ["Listening Window"],
             "loss": "leastsquare_loss",
-            "maxiter": 100,
+            "MAX_ITER": 100,
         }
 
     def test_one_peak(self):
@@ -67,10 +67,16 @@ class BiquadRangeTests(unittest.TestCase):
             test_peq = [
                 (
                     1.0,
-                    Biquad(typ=Biquad.PEAK, freq=case_freq, srate=48000, Q=case_q, dbGain=db_gain),
+                    Biquad(
+                        biquad_type=Biquad.PEAK,
+                        freq=case_freq,
+                        srate=48000,
+                        q=case_q,
+                        db_gain=db_gain,
+                    ),
                 ),
             ]
-            auto_target = peq_build(self.freq, test_peq)
+            auto_target = peq_spl(self.freq, test_peq)
 
             init_fun = loss({}, self.freq, [auto_target], [], 0, self.config)
 

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -460,9 +460,9 @@ FORMAT_KNOWN_KEYS = (
     "klippel",
     "princeton",
     "webplotdigitizer",
-    "rewstextdump",
-    "splHVtxt",
-    "gllHVtxt",
+    "rew_text_dump",
+    "spl_hv_txt",
+    "gll_hv_txt",
 )
 
 
@@ -481,17 +481,28 @@ def sanity_check_measurement(name: str, version: str, measurement: Measurement) 
         if k not in MEASUREMENT_KNOWN_KEYS:
             logging.error("%s: version %s : %s is not known", name, version, k)
             status = 1
+            continue
         if k == "origin" and (
-            v not in ["ASR", "Misc", "ErinsAudioCorner", "Princeton"] and v[0:8] != "Vendors-"
+            isinstance(v, str)
+            and v not in ["ASR", "Misc", "ErinsAudioCorner", "Princeton"]
+            and v[0:8] != "Vendors-"
         ):
             logging.error("%s: origin %s is not known", name, v)
             status = 1
-        if k == "origin" and v[0:8] == "Vendors-" and not sanity_check_vendor(v):
+            continue
+        if (
+            k == "origin"
+            and isinstance(v, str)
+            and v[0:8] == "Vendors-"
+            and not sanity_check_vendor(v)
+        ):
             logging.error("%s: origin %s is known but vendor %s is not!", name, v, v[8:])
             status = 1
+            continue
         if k == "format" and v not in FORMAT_KNOWN_KEYS:
             logging.error("%s: format %s is not known", name, v)
             status = 1
+            continue
         if k == "symmetry" and v not in [
             "coaxial",
             "horizontal",
@@ -499,17 +510,21 @@ def sanity_check_measurement(name: str, version: str, measurement: Measurement) 
         ]:
             logging.error("%s: symmetry %s is not known", name, v)
             status = 1
+            continue
         if k == "review" and not isinstance(v, str):
             logging.error("%s: review %s is not a string", name, v)
             status = 1
+            continue
         if k == "reviews":
             if not isinstance(v, dict):
                 logging.error("%s: review %s is not a dict", name, v)
                 status = 1
+                continue
             for _, i_v in v.items():
                 if not isinstance(i_v, str):
                     logging.error("%s: in reviews %s review %s is not a string", name, v, i_v)
                     status = 1
+            continue
         if k == "quality" and v not in ("unknown", "low", "medium", "high"):
             logging.error(
                 "%s: in measurement %s quality %s is unknown",
@@ -518,8 +533,13 @@ def sanity_check_measurement(name: str, version: str, measurement: Measurement) 
                 v,
             )
             status = 1
+            continue
 
-        if k == "specifications" and sanity_check_specifications(name, version, v) != 0:
+        if (
+            k == "specifications"
+            and isinstance(v, dict)
+            and sanity_check_specifications(name, version, v) != 0
+        ):
             logging.error(
                 "%s: in measurement %s specifications %s is incorrect",
                 name,
@@ -527,6 +547,7 @@ def sanity_check_measurement(name: str, version: str, measurement: Measurement) 
                 v,
             )
             status = 1
+            continue
 
     if version[0:3] == "mis" and "quality" not in measurement.keys():
         logging.error("%s: in measurement %s quality is required", name, version)

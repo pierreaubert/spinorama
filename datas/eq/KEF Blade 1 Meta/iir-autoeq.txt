@@ -1,15 +1,16 @@
 EQ for KEF Blade 1 Meta computed from Vendors-KEF data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:25:28
+Preference Score 7.49 with EQ 7.98
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-06-03-10:16:28
 
-Preamp: -1.6 dB
+Preamp: -2.5 dB
 
-Filter  1: ON LS Fc   832 Hz Gain -1.63 dB
-Filter  2: ON PK Fc   115 Hz Gain -2.26 dB Q 1.39
-Filter  3: ON PK Fc  2474 Hz Gain +1.38 dB Q 1.36
-Filter  4: ON PK Fc   270 Hz Gain -1.10 dB Q 1.89
-Filter  5: ON PK Fc  5968 Hz Gain +0.50 dB Q 2.79
-Filter  6: ON PK Fc 12477 Hz Gain +0.50 dB Q 2.88
-Filter  7: ON PK Fc 15889 Hz Gain -0.62 dB Q 1.08
-Filter  8: ON PK Fc 15906 Hz Gain -0.53 dB Q 2.83
-Filter  9: ON PK Fc    69 Hz Gain -0.59 dB Q 2.62
+Filter  1: ON LS Fc    47 Hz Gain +2.65 dB Q 0.93
+Filter  2: ON PK Fc   108 Hz Gain -2.73 dB Q 1.51
+Filter  3: ON PK Fc   276 Hz Gain -0.84 dB Q 2.96
+Filter  4: ON PK Fc   610 Hz Gain -0.66 dB Q 2.34
+Filter  5: ON PK Fc  1261 Hz Gain -0.72 dB Q 2.15
+Filter  6: ON PK Fc  1845 Hz Gain +0.07 dB Q 2.34
+Filter  7: ON PK Fc 10740 Hz Gain -0.31 dB Q 2.30
+Filter  8: ON PK Fc 13213 Hz Gain +0.11 dB Q 1.04
+Filter  9: ON PK Fc 16000 Hz Gain -1.53 dB Q 1.08

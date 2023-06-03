@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2022 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ class PrefRatingTests(unittest.TestCase):
         db = [100 for i in np.logspace(0.3, 4.3, 1000)]
         test_df = pd.DataFrame({"Freq": freq, "dB": db})
         # expect 0 deviation from flat line
-        self.assertEqual(aad(test_df), 0.0)
+        self.assertEqual(aad(test_df, 20), 0.0)
 
 
 if __name__ == "__main__":

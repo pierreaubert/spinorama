@@ -1,0 +1,12 @@
+Kef R8 Meta DB Atmos APO EQ Score 96000Hz
+May092023-170552
+
+Preamp: -3.5 dB
+
+Filter 1: ON HPQ Fc 86.25,    0.00,    1.15
+Filter 2: ON PK Fc 179.02,    -3.03,    1.59
+Filter 3: ON PK Fc 1010.95,    -2.04,    2.48
+Filter 4: ON PK Fc 1302.22,    4.40,    2.58
+Filter 5: ON PK Fc 2514.16,    -2.00,    3.25
+Filter 6: ON PK Fc 7518.11,    -4.11,    0.98
+Filter 7: ON PK Fc 11528.50,    1.11,    2.59

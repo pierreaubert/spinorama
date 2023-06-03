@@ -1,7 +1,7 @@
 EQ for RCF ART 912-A computed from Vendors-RCF data
 Preference Score 2.34 with EQ 2.47
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:50:13
+Dated: 2023-03-29-17:32:08
 
 Preamp: -0.8 dB
 

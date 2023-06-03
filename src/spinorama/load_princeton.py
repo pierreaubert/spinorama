@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,11 +23,12 @@ import pandas as pd
 from scipy.io import loadmat
 
 from spinorama import logger
+from spinorama.ltype import StatusOr
 from spinorama.load_misc import sort_angles
 from spinorama.compute_misc import resample
 
 
-def parse_graph_freq_princeton_mat(mat, suffix):
+def parse_graph_freq_princeton_mat(mat, suffix: str, onaxis) -> StatusOr[pd.DataFrame]:
     """Suffix can be either H or V"""
     ir_name = "IR_{:1s}".format(suffix)
     fs_name = "fs_{:1s}".format(suffix)
@@ -42,7 +43,7 @@ def parse_graph_freq_princeton_mat(mat, suffix):
     lgs = 3414
     xs = freq[0][0:lgs]
     #
-    df = pd.DataFrame({"Freq": xs})
+    df_3d3a = pd.DataFrame({"Freq": xs})
     # loop over measurements (skipping the 5 increments)
     for i in range(0, 72, 1):
         # extract ir
@@ -65,22 +66,31 @@ def parse_graph_freq_princeton_mat(mat, suffix):
         if ilabel == 0:
             label = "On Axis"
         if ilabel % 10 == 0:
-            df[label] = ys
+            df_3d3a[label] = ys
+        logger.debug("%d %s", ilabel, label)
     # check empty case
-    if "On Axis" not in df.keys():
-        return None
+    if "On Axis" not in df_3d3a:
+        if suffix == "V" and onaxis is not None:
+            df_3d3a["On Axis"] = onaxis
+        else:
+            logger.info(
+                "On Axis not in %s file, keys are %s", suffix, ",".join(list(df_3d3a.keys()))
+            )
+            return False, pd.DataFrame()
     # sort datas
-    df_sa = sort_angles(df)
+    df_3d3a_sa = sort_angles(df_3d3a)
     # precision of measurement is ok above 500
-    return resample(df_sa[df_sa.Freq >= 500], 200)
+    return True, resample(df_3d3a_sa[df_3d3a_sa.Freq >= 500], 200)
 
 
-def parse_graph_princeton(filename, orient):
+def parse_graph_princeton(filename: str, orient: str, onaxis) -> StatusOr[pd.DataFrame]:
     matfile = loadmat(filename)
-    return parse_graph_freq_princeton_mat(matfile, orient)
+    return parse_graph_freq_princeton_mat(matfile, orient, onaxis)
 
 
-def parse_graphs_speaker_princeton(speaker_path, speaker_brand, speaker_name, version, symmetry):
+def parse_graphs_speaker_princeton(
+    speaker_path, speaker_brand, speaker_name, version, symmetry
+) -> StatusOr[tuple[pd.DataFrame, pd.DataFrame]]:
     # 2 files per directory xxx_H_IR.mat and xxx_V_IR.mat
     matfilename = "{0}/{1}/{2}".format(speaker_path, speaker_name, version)
 
@@ -92,14 +102,24 @@ def parse_graphs_speaker_princeton(speaker_path, speaker_brand, speaker_name, ve
             h_file = d
         elif d[-9:] == "_V_IR.mat":
             v_file = d
+
     if h_file is None or v_file is None:
         logger.info("Couldn't find Horizontal and Vertical IR files for speaker {:s}", speaker_name)
         logger.info("Looking in directory {:s}", matfilename)
         for d in dirpath:
             logger.info("Found file {:s}", d)
-        return None
+        return False, (pd.DataFrame(), pd.DataFrame())
 
-    h_spl = parse_graph_princeton(h_file, "H")
-    v_spl = parse_graph_princeton(v_file, "V")
+    h_status, h_spl = parse_graph_princeton(h_file, "H", None)
+    if not h_status:
+        logger.info("Found file but loading didn't work for %s %s", speaker_name, version)
+        return False, (pd.DataFrame(), pd.DataFrame())
 
-    return h_spl, v_spl
+    onaxis = h_spl["On Axis"]
+    v_status, v_spl = parse_graph_princeton(v_file, "V", onaxis)
+
+    if not v_status:
+        logger.info("Found file but loading didn't work for %s %s", speaker_name, version)
+        return False, (pd.DataFrame(), pd.DataFrame())
+
+    return True, (h_spl, v_spl)

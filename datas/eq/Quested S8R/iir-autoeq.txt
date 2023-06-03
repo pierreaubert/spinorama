@@ -1,15 +1,16 @@
 EQ for Quested S8R computed from Misc data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:21:18
+Preference Score 4.93 with EQ 5.99
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-06-03-10:25:11
 
-Preamp: -2.1 dB
+Preamp: -2.7 dB
 
-Filter  1: ON LS Fc  8670 Hz Gain -0.86 dB
-Filter  2: ON PK Fc   105 Hz Gain -3.34 dB Q 1.73
-Filter  3: ON PK Fc   430 Hz Gain -2.26 dB Q 2.54
-Filter  4: ON PK Fc  1322 Hz Gain +1.95 dB Q 2.86
-Filter  5: ON PK Fc  2922 Hz Gain -1.79 dB Q 3.00
-Filter  6: ON PK Fc   720 Hz Gain +1.66 dB Q 2.97
-Filter  7: ON PK Fc   166 Hz Gain +0.50 dB Q 2.55
-Filter  8: ON PK Fc   256 Hz Gain -1.26 dB Q 2.61
-Filter  9: ON PK Fc   942 Hz Gain -1.33 dB Q 2.88
+Filter  1: ON NO Fc    85 Hz Gain -0.85 dB Q 30.00
+Filter  2: ON PK Fc   108 Hz Gain -2.83 dB Q 1.95
+Filter  3: ON PK Fc   188 Hz Gain +0.89 dB Q 2.09
+Filter  4: ON PK Fc   240 Hz Gain -1.70 dB Q 1.15
+Filter  5: ON PK Fc   479 Hz Gain -2.40 dB Q 2.88
+Filter  6: ON PK Fc  2992 Hz Gain -2.99 dB Q 2.92
+Filter  7: ON PK Fc  6180 Hz Gain +1.44 dB Q 0.35
+Filter  8: ON PK Fc  9037 Hz Gain -2.94 dB Q 1.64
+Filter  9: ON PK Fc 13678 Hz Gain +2.46 dB Q 2.16

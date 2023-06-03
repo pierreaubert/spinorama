@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2022 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,9 +26,10 @@ from spinorama.load_princeton import parse_graph_princeton
 
 class SpinoramaLoadTests(unittest.TestCase):
     def setUp(self):
-        self.title, self.df = parse_graph_freq_klippel(
+        status, (self.title, self.df) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/CEA2034.txt"
         )
+        self.assertTrue(status)
 
     def test_smoke1(self):
         self.assertEqual(self.title, "CEA2034")
@@ -41,9 +42,10 @@ class SpinoramaLoadTests(unittest.TestCase):
 
 class SpinoramaSortAngleKlippelTests(unittest.TestCase):
     def setUp(self):
-        self.title, self.df = parse_graph_freq_klippel(
+        status, (self.title, self.df) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
         )
+        self.assertTrue(status)
 
     def test_sort_angles_klippel(self):
         df_sa = sort_angles(self.df)
@@ -52,9 +54,10 @@ class SpinoramaSortAngleKlippelTests(unittest.TestCase):
 
 class SpinoramaSortAnglePrincetonests(unittest.TestCase):
     def setUp(self):
-        self.df = parse_graph_princeton(
-            "datas/measurements/Genelec 8351A/princeton/Genelec8351A_V_IR.mat", "V"
+        status, self.df = parse_graph_princeton(
+            "datas/measurements/Genelec 8351A/princeton/Genelec8351A_V_IR.mat", "V", None
         )
+        self.assertTrue(status)
 
     def test_sort_angles_princeton(self):
         df_sa = sort_angles(self.df)
@@ -63,9 +66,10 @@ class SpinoramaSortAnglePrincetonests(unittest.TestCase):
 
 class SpinoramaLoadSPLTests(unittest.TestCase):
     def setUp(self):
-        self.title, self.df = parse_graph_freq_klippel(
+        status, (self.title, self.df) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
         )
+        self.assertTrue(status)
 
     def test_smoke1(self):
         self.assertEqual(self.title, "SPL Horizontal")
@@ -80,9 +84,10 @@ class SpinoramaLoadSPLTests(unittest.TestCase):
 
 class SpinoramaLoadPrinceton(unittest.TestCase):
     def setUp(self):
-        self.df = parse_graph_princeton(
-            "datas/measurements/Genelec 8351A/princeton/Genelec8351A_V_IR.mat", "V"
+        status, self.df = parse_graph_princeton(
+            "datas/measurements/Genelec 8351A/princeton/Genelec8351A_V_IR.mat", "V", None
         )
+        self.assertTrue(status)
 
     def test_smoke1(self):
         self.assertIsNotNone(self.df)

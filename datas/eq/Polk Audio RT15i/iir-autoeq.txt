@@ -1,15 +1,16 @@
 EQ for Polk Audio RT15i computed from Vendors-Polk Audio data
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:28:01
+Preference Score 3.17 with EQ 5.41
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-06-03-09:55:21
 
-Preamp: -3.2 dB
+Preamp: -4.0 dB
 
-Filter  1: ON PK Fc 13250 Hz Gain -2.80 dB Q 0.71
-Filter  2: ON PK Fc  2702 Hz Gain +2.98 dB Q 2.50
-Filter  3: ON PK Fc   163 Hz Gain -2.71 dB Q 1.98
-Filter  4: ON PK Fc  1049 Hz Gain -3.32 dB Q 2.60
-Filter  5: ON PK Fc   462 Hz Gain -1.28 dB Q 1.87
-Filter  6: ON PK Fc  5751 Hz Gain -1.54 dB Q 2.78
-Filter  7: ON PK Fc 13594 Hz Gain -0.78 dB Q 2.71
-Filter  8: ON PK Fc  4181 Hz Gain -1.15 dB Q 2.97
-Filter  9: ON PK Fc 15861 Hz Gain -0.80 dB Q 2.98
+Filter  1: ON LS Fc    76 Hz Gain +2.94 dB Q 0.76
+Filter  2: ON PK Fc   285 Hz Gain -2.31 dB Q 0.28
+Filter  3: ON PK Fc   514 Hz Gain +1.41 dB Q 0.42
+Filter  4: ON PK Fc  1061 Hz Gain -2.74 dB Q 2.75
+Filter  5: ON PK Fc  2697 Hz Gain +2.81 dB Q 2.07
+Filter  6: ON PK Fc  3206 Hz Gain +2.97 dB Q 2.53
+Filter  7: ON PK Fc  4083 Hz Gain -2.84 dB Q 2.97
+Filter  8: ON PK Fc  5768 Hz Gain -1.58 dB Q 2.63
+Filter  9: ON PK Fc 13213 Hz Gain -2.89 dB Q 0.56

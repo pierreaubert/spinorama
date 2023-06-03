@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -93,6 +93,10 @@ def generate_speaker(mako, dataframe, meta, site, use_search):
                     "SPL Vertical Contour",
                     "SPL Horizontal Contour Normalized",
                     "SPL Vertical Contour Normalized",
+                    "SPL Horizontal Contour 3D",
+                    "SPL Vertical Contour 3D",
+                    "SPL Horizontal Contour Normalized 3D",
+                    "SPL Vertical Contour Normalized 3D",
                 ]
                 contour = {k: dfs[k] for k in contour_filter if k in dfs}
                 # radar
@@ -307,7 +311,9 @@ def main():
         "--out-dir",
         cpaths.CPATH_DOCS_ASSETS_JS,
     )
-    status = subprocess.run([flow_command], shell=True, check=True, capture_output=True)
+    status = subprocess.run(
+        [flow_command], shell=True, check=True, capture_output=True  # noqa: S602
+    )
     if status.returncode != 0:
         print("flow failed")
 

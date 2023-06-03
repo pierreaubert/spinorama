@@ -1,8 +1,9 @@
+#!/bin/zsh
 mkdir -p ./tmp
 # copy files to tmp
-for i in ../docs/[A-Z]*/ASR/asr/2cols.jpg; do
-    j=${i#../docs/}
-    speaker1=${j%/ASR/asr/2cols.jpg}
+for i in ../docs/speakers/[A-Z]*/ASR/filters_eq.jpg; do
+    j=${i#../docs/speakers}
+    speaker1=${j%/ASR/filters_eq.jpg}
     speaker2=${speaker1// /-}
     speaker3=${speaker2//./-}
     cp "$i" ./tmp/$speaker3.jpg

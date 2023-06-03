@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ Options:
   --width=<width>     width size in pixel
   --height=<height>   height size in pixel
   --force             force regeneration of all graphs, by default only generate new ones
-  --type=<ext>        choose one of: json, html, png, svg
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
   --origin=<origin>   filter by origin
   --brand=<brand>     filter by brand
@@ -70,12 +69,12 @@ from spinorama.speaker_print import print_graphs
 from spinorama.plot import plot_params_default
 
 
-VERSION = "2.01"
+VERSION = "2.02"
 
-ACTIVATE_TRACING = False
+ACTIVATE_TRACING: bool = False
 
 
-def tracing(msg):
+def tracing(msg: str):
     """debugging ray is sometimes painfull"""
     if ACTIVATE_TRACING:
         print(f"---- TRACING ---- {msg} ----")
@@ -121,10 +120,8 @@ def queue_measurement(
         level,
     )
     id_eq = parse_eq_speaker.remote("./datas", speaker, id_df, mparameters, level)
-    force = False
-    ptype = None
-    width = plot_params_default["width"]
-    height = plot_params_default["height"]
+    width = int(plot_params_default["width"])
+    height = int(plot_params_default["height"])
     tracing("calling print_graph remote for {}".format(speaker))
     id_g1 = print_graphs.remote(
         id_df,
@@ -136,7 +133,6 @@ def queue_measurement(
         width,
         height,
         force,
-        ptype,
         level,
     )
     tracing("calling print_graph remote eq for {}".format(speaker))
@@ -150,7 +146,6 @@ def queue_measurement(
         width,
         height,
         force,
-        ptype,
         level,
     )
     tracing("print_graph done")
@@ -341,8 +336,6 @@ def main(level):
             )
         print(speakerlist)
 
-    ptype = None
-
     if args["--width"] is not None:
         opt_width = int(args["--width"])
         plot_params_default["width"] = opt_width
@@ -350,17 +343,6 @@ def main(level):
     if args["--height"] is not None:
         opt_height = int(args["--height"])
         plot_params_default["height"] = opt_height
-
-    if args["--type"] is not None:
-        ptype = args["--type"]
-        picture_suffixes = ("png", "html", "svg", "json")
-        if ptype not in picture_suffixes:
-            print(
-                "Picture type {} is not recognize! Allowed list is {}".format(
-                    ptype, picture_suffixes
-                )
-            )
-        sys.exit(1)
 
     update_cache = False
     if args["--update-cache"] is True:
@@ -392,4 +374,5 @@ if __name__ == "__main__":
     force = args["--force"]
     LEVEL = args2level(args)
     logger = get_custom_logger(level=LEVEL, duplicate=True)
+
     main(level=LEVEL)

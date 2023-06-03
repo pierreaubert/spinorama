@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,9 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import math
-
-import numpy as np
 import scipy.optimize as opt
 
 from spinorama import logger
@@ -26,10 +23,11 @@ from spinorama.ltype import DataSpeaker, Vector
 from spinorama.filter_iir import Biquad
 from spinorama.auto_loss import loss
 
+POPSIZE = 15
+
 
 def display(xk, convergence):
-    # logger.debug(xk, convergence)
-    pass
+    logger.debug("%s %s", ",".join([str(f) for f in xk]), convergence)
 
 
 def find_best_biquad(
@@ -46,7 +44,7 @@ def find_best_biquad(
 ) -> tuple[bool, int, float, float, float, float, int]:
     """Find the best possible biquad that minimise the loss function"""
 
-    def opt_peq(x: Vector) -> float:
+    def opt_peq(x: list[float]) -> float:
         peq = [(1.0, Biquad(int(x[0]), x[1], 48000, x[2], x[3]))]
         return loss(df_speaker, freq, auto_target, peq, count, optim_config)
 
@@ -82,20 +80,16 @@ def find_best_biquad(
         "message": "",
     }
     try:
-        # res = opt.dual_annealing(
-        #    opt_peq,
-        #    bounds,
-        #    maxiter=optim_config["maxiter"],
-        #    # initial_temp=10000
-        # )
         res = opt.differential_evolution(
             opt_peq,
             bounds,
+            disp=False,
             # workers=64,
             # updating='deferred',
             # mutation=(0.5, 1.5),
             # recombination=1.9,
-            maxiter=optim_config["maxiter"],
+            popsize=POPSIZE,
+            maxiter=optim_config["MAX_ITER"],
             # atol=0.01,
             polish=False,
             integrality=[True, True, False, False],
@@ -155,7 +149,7 @@ def find_best_peak(
     """Find the best possible peak biquad that minimise the loss function"""
     biquad_type = 3
 
-    def opt_peq(x: Vector) -> float:
+    def opt_peq(x: list[float]) -> float:
         peq = [(1.0, Biquad(biquad_type, x[0], 48000, x[1], x[2]))]
         return loss(df_speaker, freq, auto_target, peq, count, optim_config)
 
@@ -176,20 +170,20 @@ def find_best_peak(
         (bounds[2][0] + bounds[2][-1]) / 2,
     ]
 
-    v_init = np.array(
-        [
-            np.logspace(math.log10(bounds[0][0]), math.log10(bounds[0][-1]), 5),
-            np.linspace(bounds[1][0], bounds[1][-1], 5),
-            np.linspace(bounds[2][0], bounds[2][-1], 5),
-        ]
-    ).T
+    #    v_init = np.array(
+    #        [
+    #            np.logspace(math.log10(bounds[0][0]), math.log10(bounds[0][-1]), 5),
+    #            np.linspace(bounds[1][0], bounds[1][-1], 5),
+    #            np.linspace(bounds[2][0], bounds[2][-1], 5),
+    #        ]
+    #    ).T
 
-    z_init = [
-        [v_init[i][0], v_init[j][1], v_init[k][2]]
-        for i in range(0, len(v_init))
-        for j in range(0, len(v_init))
-        for k in range(0, len(v_init))
-    ]
+    #    z_init = [
+    #        [v_init[i][0], v_init[j][1], v_init[k][2]]
+    #        for i in range(0, len(v_init))
+    #        for j in range(0, len(v_init))
+    #        for k in range(0, len(v_init))
+    #    ]
 
     logger.debug(
         "range is [%f, %f]Hz, [%f, %f], [%f, %f]",
@@ -211,21 +205,21 @@ def find_best_peak(
     }
     try:
         res = opt.differential_evolution(
-            opt_peq,
-            bounds,
+            func=opt_peq,
+            bounds=bounds,
+            # strategy='best2bin',
             # workers=64,
             # updating='deferred',
             # mutation=(0.5, 1.5),
             # recombination=1.9,
-            # strategy='best2bin',
             # init='sobol',
-            init=z_init,
+            # init=z_init,
             # x0 = x_init,
-            # popsize=175,
-            maxiter=optim_config["maxiter"],
-            # disp=True,
-            # atol=0.01,
-            # polish=True,
+            popsize=POPSIZE,
+            maxiter=optim_config.get("MAX_ITER", 2500),
+            disp=False,
+            # tol=0.0001,
+            polish=False,
             integrality=[True, False, False],
             callback=display,
         )

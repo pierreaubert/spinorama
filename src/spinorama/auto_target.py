@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@ import pandas as pd
 from scipy.stats import linregress
 
 from spinorama import logger
-from spinorama.ltype import Peq, Vector
-from spinorama.filter_peq import peq_build
+from spinorama.ltype import Vector
+from spinorama.filter_peq import Peq, peq_spl
 from spinorama.compute_misc import savitzky_golay
 
 
@@ -32,11 +32,13 @@ from spinorama.compute_misc import savitzky_golay
 # ------------------------------------------------------------------------------
 
 
-def limit_before_freq(freq: Vector, curve: list[Vector], min_freq: float) -> list[Vector]:
+def limit_before_freq(
+    freq: Vector, curve: list[Vector], min_freq: float, max_db: float
+) -> list[Vector]:
     i_min = 0
     while i_min < len(freq) and freq[i_min] < min_freq:
         i_min += 1
-    db_cut = np.sign(curve[i_min]) * min(3, abs(curve[i_min]))
+    db_cut = np.sign(curve[i_min]) * min(max_db, abs(curve[i_min]))
     return [curve[i] if i > i_min else db_cut for i in range(0, len(curve))]
 
 
@@ -94,7 +96,9 @@ def get_freq(df_speaker_data, optim_config):
     local_target = []
     for curve in curves:
         data = local_df.loc[selector, curve].to_numpy()
-        data = limit_before_freq(local_freq, data, optim_config["target_min_freq"])
+        data = limit_before_freq(
+            local_freq, data, optim_config["target_min_freq"], optim_config["MAX_DBGAIN"]
+        )
         local_target.append(data)
 
     return local_df, local_freq, local_target
@@ -105,11 +109,11 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     selector = get_selector(df_speaker_data, optim_config)
     current_curve = df_speaker_data.loc[selector, current_curve_name].to_numpy()
     # compute linear reg on current_curve
-    slope, intercept, r_value, p_value, std_err = linregress(np.log10(freq), current_curve)
+    slope, intercept, _, _, _ = linregress(np.log10(freq), current_curve)
     # possible correction to have a LW not too bright
     if current_curve_name == "Estimated In-Room Response":
         lw_curve = df_speaker_data.loc[selector, "Listening Window"].to_numpy()
-        slope_lw, _, _, _, _r = linregress(np.log10(freq), lw_curve)
+        slope_lw, _, _, _, _ = linregress(np.log10(freq), lw_curve)
         if slope_lw > -0.5:
             slope -= slope_lw + 0.5
 
@@ -163,7 +167,7 @@ def optim_compute_auto_target(
     optim_config: dict,
 ) -> list[Vector]:
     """Define the target for the optimiser with potentially some smoothing"""
-    peq_freq = peq_build(freq, peq)
+    peq_freq = peq_spl(freq, peq)
     diff = [np.subtract(target[i], auto_target_interp[i]) for i, _ in enumerate(target)]
     if optim_config.get("smooth_measurements"):
         window_size = optim_config.get("smooth_window_size")

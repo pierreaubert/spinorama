@@ -1,7 +1,7 @@
 EQ for Alcons Audio QR24 computed from Vendors-Alcons Audio data
 Preference Score 4.84 with EQ 4.94
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-00:05:35
+Dated: 2023-03-29-15:55:45
 
 Preamp: -1.0 dB
 

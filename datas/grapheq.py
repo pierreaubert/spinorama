@@ -7,7 +7,7 @@ import math
 # http://www.sengpielaudio.com/calculator-bandwidth.htm
 
 
-def bandwidth2Q(bw):
+def bandwidth2q(bw):
     pbw = math.pow(2, bw)
     return math.sqrt(pbw) / (pbw - 1)
 
@@ -33,7 +33,7 @@ vendor_info = {
             16000,
         ],
         # 2/3 octave
-        "fixed_q": bandwidth2Q(2 / 3),
+        "fixed_q": bandwidth2q(2 / 3),
     },
     "Subzero SZEQ-215": {  # yet another clone
         "gain_p": 6,  # dB
@@ -55,7 +55,7 @@ vendor_info = {
             16000,
         ],
         # 2/3 octave
-        "fixed_q": bandwidth2Q(2 / 3),
+        "fixed_q": bandwidth2q(2 / 3),
     },
     "Altair EQ-230": {
         "gain_p": 6,  # dB
@@ -95,7 +95,7 @@ vendor_info = {
             20000,
         ],
         # 1/3 octave
-        "fixed_q": bandwidth2Q(1 / 3),
+        "fixed_q": bandwidth2q(1 / 3),
     },
     "Behringer FBQ3102HD": {
         "gain_p": 6,  # dB
@@ -135,7 +135,7 @@ vendor_info = {
             20000,
         ],
         # 1/3 octave
-        "fixed_q": bandwidth2Q(1 / 3),
+        "fixed_q": bandwidth2q(1 / 3),
     },
     "DBX 1215": {
         "gain_p": 6,  # dB
@@ -159,7 +159,7 @@ vendor_info = {
             16000,
         ],
         # 2/3 octave
-        "fixed_q": bandwidth2Q(2 / 3),
+        "fixed_q": bandwidth2q(2 / 3),
     },
     "DBX 1231": {
         "gain_p": 6,  # dB can do more up to +/- 15dB
@@ -199,7 +199,7 @@ vendor_info = {
             20000,
         ],
         # 1/3 octave
-        "fixed_q": bandwidth2Q(1 / 3),
+        "fixed_q": bandwidth2q(1 / 3),
     },
     "DBX 2231": {
         "gain_p": 6,  # dB can do more up to +/- 15dB
@@ -239,7 +239,7 @@ vendor_info = {
             20000,
         ],
         # 1/3 octave
-        "fixed_q": bandwidth2Q(1 / 3),
+        "fixed_q": bandwidth2q(1 / 3),
     },
     "DBX 321S": {
         "gain_p": 6,  # dB
@@ -279,7 +279,7 @@ vendor_info = {
             20000,
         ],
         # 1/3 octave
-        "fixed_q": bandwidth2Q(1 / 3),
+        "fixed_q": bandwidth2q(1 / 3),
     },
     "KlarkTecknik DN360": {
         "gain_p": 6,  # dB can do more up to +/- 15dB
@@ -319,7 +319,7 @@ vendor_info = {
             20000,
         ],
         # 1/3 octave
-        "fixed_q": bandwidth2Q(1 / 3),
+        "fixed_q": bandwidth2q(1 / 3),
     },
     # this one has a proportional Q but I do not understand what that means
     #
@@ -361,6 +361,6 @@ vendor_info = {
             20000,
         ],
         # 1/3 octave
-        "fixed_q": bandwidth2Q(1 / 3),
+        "fixed_q": bandwidth2q(1 / 3),
     },
 }

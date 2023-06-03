@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -115,14 +115,6 @@ def custom_ray_init(args):
 
     level = args2level(args)
 
-    def ray_setup_logger(worker_logger):
-        worker_logger = get_custom_logger(level=level, duplicate=False)
-        worker_logger.setLevel(level)
-
-    # doesn't work in 2.0
-    # ray.worker.global_worker.run_function_on_all_workers(ray_setup_logger)
-    # address is the one from the ray server<
-
     if ray.is_initialized:
         ray.shutdown()
 
@@ -140,30 +132,30 @@ def custom_ray_init(args):
 CACHE_DIR = ".cache"
 
 
-def cache_key(name):
+def cache_key(name: str) -> str:
     # 256 partitions, use hashlib for stable hash
     key = md5(name.encode("utf-8"), usedforsecurity=False).hexdigest()
     short_key = key[0:2]
     return f"{short_key:2s}"
 
 
-def cache_match(key, name):
+def cache_match(key: str, name: str) -> bool:
     return key == cache_key(name)
 
 
-def cache_hash(df_all):
+def cache_hash(df_all: dict) -> dict:
     df_hashed = {}
     for k, v in df_all.items():
         if k is None or len(k) == 0:
             continue
         h = cache_key(k)
-        if h not in df_hashed.keys():
+        if h not in df_hashed:
             df_hashed[h] = {}
         df_hashed[h][k] = v
     return df_hashed
 
 
-def cache_save_key(key, data):
+def cache_save_key(key: str, data):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", tables.NaturalNameWarning)
         # print('{} {}'.format(key, data.keys()))
@@ -172,7 +164,7 @@ def cache_save_key(key, data):
         fl.save(path=cache_name, data=data)
 
 
-def cache_save(df_all):
+def cache_save(df_all: dict):
     pathlib.Path(CACHE_DIR).mkdir(parents=True, exist_ok=True)
     df_hashed = cache_hash(df_all)
     for key, data in df_hashed.items():
@@ -180,17 +172,17 @@ def cache_save(df_all):
     print("(saved {} speakers)".format(len(df_all)))
 
 
-def is_filtered(speaker, data, filters):
+def is_filtered(speaker: str, data, filters: dict):
     if filters.get("speaker_name") is not None and filters.get("speaker_name") != speaker:
         return True
 
     current = None
     if speaker in metadata.speakers_info:
-        if "default_measurement" not in metadata.speakers_info[speaker].keys():
+        if "default_measurement" not in metadata.speakers_info[speaker]:
             print("error no default measurement for {}".format(speaker))
             return True
         first = metadata.speakers_info[speaker]["default_measurement"]
-        if first not in metadata.speakers_info[speaker]["measurements"].keys():
+        if first not in metadata.speakers_info[speaker]["measurements"]:
             # only happens when you change the metadata
             return False
         current = metadata.speakers_info[speaker]["measurements"][first]
@@ -218,11 +210,13 @@ def cache_load_seq(filters, smoke_test):
     count = 0
     for cache in cache_files:
         if filters.get("speaker_name") is not None and cache[-5:-3] != cache_key(
-            filters.get("speaker_name")
+            filters["speaker_name"]
         ):
             continue
         df_read = fl.load(path=cache)
         # print('reading file {} found {} entries'.format(cache, len(df_read)))
+        if not isinstance(df_read, dict):
+            continue
         for speaker, data in df_read.items():
             if speaker in df_all:
                 print("error in cache: {} is already in keys".format(speaker))
@@ -240,7 +234,7 @@ def cache_load_seq(filters, smoke_test):
 
 
 @ray.remote(num_cpus=1)
-def cache_fetch(cachepath):
+def cache_fetch(cachepath: str):
     return fl.load(path=cachepath)
 
 
@@ -259,10 +253,9 @@ def cache_load_distributed_map(filters, smoke_test):
     return ids
 
 
-def cache_load_distributed_reduce(filters, smoke_test, ids1):
+def cache_load_distributed_reduce(filters, smoke_test, ids):
     df_all = defaultdict()
     count = 0
-    ids = ids1
     while 1:
         done_ids, remaining_ids = ray.wait(ids, num_returns=min(len(ids), 64))
         for id in done_ids:

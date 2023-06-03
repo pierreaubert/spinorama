@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -44,15 +44,15 @@ def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:
     return dfu
 
 
-def check_nan(df):
-    for k in df.keys():
+def check_nan(df: dict) -> float:
+    for k in df:
         if not isinstance(df[k], pd.DataFrame):
             continue
-        for j in df[k].keys():
+        for j in df[k]:
             if isinstance(df[k], pd.DataFrame):
                 count = df[k][j].isna().sum()
                 if count > 0:
                     logger.error("%d %d %d", k, j, count)
     return np.sum(
-        [df[frame].isna().sum().sum() for frame in df.keys() if isinstance(df[frame], pd.DataFrame)]
+        [df[frame].isna().sum().sum() for frame in df if isinstance(df[frame], pd.DataFrame)]
     )

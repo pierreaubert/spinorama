@@ -1,15 +1,16 @@
 EQ for KV2 Audio ESR212 computed from Vendors-KV2 Audio data
-Preference Score 5.10 with EQ 6.14
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-02-26-09:33:36
+Preference Score 5.10 with EQ 6.40
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-06-03-09:51:48
 
-Preamp: -3.2 dB
+Preamp: -2.9 dB
 
-Filter  1: ON PK Fc    33 Hz Gain +3.00 dB Q 0.50
-Filter  2: ON PK Fc  2686 Hz Gain +3.00 dB Q 0.38
-Filter  3: ON PK Fc   235 Hz Gain +2.31 dB Q 1.99
-Filter  4: ON PK Fc    69 Hz Gain -0.80 dB Q 2.04
-Filter  5: ON PK Fc 10872 Hz Gain -1.03 dB Q 3.00
-Filter  6: ON PK Fc   464 Hz Gain +0.83 dB Q 3.00
-Filter  7: ON PK Fc   924 Hz Gain -1.38 dB Q 3.00
-Filter  8: ON PK Fc  6669 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON PK Fc    40 Hz Gain +2.97 dB Q 0.86
+Filter  2: ON PK Fc    85 Hz Gain +1.14 dB Q 0.36
+Filter  3: ON PK Fc   170 Hz Gain -1.78 dB Q 0.25
+Filter  4: ON PK Fc   232 Hz Gain +2.48 dB Q 2.62
+Filter  5: ON PK Fc   496 Hz Gain +1.83 dB Q 2.95
+Filter  6: ON PK Fc   990 Hz Gain -1.94 dB Q 2.67
+Filter  7: ON PK Fc  1352 Hz Gain +1.43 dB Q 0.71
+Filter  8: ON PK Fc  3556 Hz Gain +1.70 dB Q 1.31
+Filter  9: ON PK Fc 11508 Hz Gain -1.75 dB Q 1.27

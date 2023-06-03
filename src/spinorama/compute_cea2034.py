@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,13 +29,13 @@ def compute_area_q(alpha_d: float, beta_d: float) -> float:
     alpha = alpha_d * 2 * math.pi / 360
     beta = beta_d * 2 * math.pi / 360
     gamma = math.acos(math.cos(alpha) * math.cos(beta))
-    A = math.atan(math.sin(beta) / math.tan(alpha))
-    B = math.atan(math.sin(alpha) / math.tan(beta))
-    C = math.acos(-math.cos(A) * math.cos(B) + math.sin(A) * math.sin(B) * math.cos(gamma))
-    S = 4 * C - 2 * math.pi
+    a = math.atan(math.sin(beta) / math.tan(alpha))
+    b = math.atan(math.sin(alpha) / math.tan(beta))
+    c = math.acos(-math.cos(a) * math.cos(b) + math.sin(a) * math.sin(b) * math.cos(gamma))
+    s = 4 * c - 2 * math.pi
     # print('gamma {} A {} B {} C {} S {}'.format(
     #    gamma*360/2/math.pi, A*360/2/math.pi, B*360/2/math.pi, C*360/2/math.pi, S))
-    return S
+    return s
 
 
 def compute_weigths() -> list[float]:
@@ -209,9 +209,9 @@ def spatial_average1(spl, sel, func="rms") -> pd.DataFrame:
 
 def spatial_average2(
     h_spl: pd.DataFrame,
-    h_sel: list[str],
+    h_sel: pd.Index | list[str],
     v_spl: pd.DataFrame,
-    v_sel: list[str],
+    v_sel: pd.Index | list[str],
     func="rms",
 ) -> pd.DataFrame:
     """Compute the spatial average of SPL 2D"""
@@ -259,86 +259,6 @@ def listening_window(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
 
 
 def total_early_reflections(
-    h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
-) -> pd.DataFrame:
-    """Compute the Total Early Reflections from the SPL horizontal and vertical"""
-    if method == "corrected":
-        return spatial_average2(
-            h_spl,
-            [
-                "Freq",
-                "On Axis",
-                "10°",
-                "20°",
-                "30°",
-                "40°",
-                "50°",
-                "60°",
-                "70°",
-                "80°",
-                "90°",
-                "-10°",
-                "-20°",
-                "-30°",
-                "-40°",
-                "-50°",
-                "-60°",
-                "-70°",
-                "-80°",
-                "-90°",
-                "-170°",
-                "-160°",
-                "-150°",
-                "-140°",
-                "-130°",
-                "-120°",
-                "-110°",
-                "-100°",
-                "100°",
-                "110°",
-                "120°",
-                "130°",
-                "140°",
-                "150°",
-                "160°",
-                "170°",
-                "180°",
-            ],
-            v_spl,
-            ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"],
-        )
-    else:
-        return spatial_average2(
-            h_spl,
-            [
-                "Freq",
-                "On Axis",
-                "10°",
-                "20°",
-                "30°",
-                "40°",
-                "50°",
-                "60°",
-                "70°",
-                "80°",
-                "90°",
-                "-10°",
-                "-20°",
-                "-30°",
-                "-40°",
-                "-50°",
-                "-60°",
-                "-70°",
-                "-80°",
-                "-90°",
-                "180°",
-            ],
-            v_spl,
-            ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"],
-        )
-
-
-def total_early_reflections2(
     floor_bounce: pd.DataFrame,
     ceiling_bounce: pd.DataFrame,
     front_wall_bounce: pd.DataFrame,
@@ -433,8 +353,7 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
             ],
         )
 
-    # total_early_reflection = total_early_reflections(h_spl, v_spl)
-    total_early_reflection = total_early_reflections2(
+    total_early_reflection = total_early_reflections(
         floor_bounce=floor_bounce,
         ceiling_bounce=ceiling_bounce,
         front_wall_bounce=front_wall_bounce,
@@ -442,7 +361,6 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
         rear_wall_bounce=rear_wall_bounce,
         method=method,
     )
-    # total_early_reflection = total_early_reflections(h_spl, v_spl, method=method)
 
     early_reflection = pd.DataFrame(
         {

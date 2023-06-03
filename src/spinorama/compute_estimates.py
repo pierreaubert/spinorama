@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -55,12 +55,12 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
             return {}
 
         # mean over 300-10k
-        y_ref = np.mean(
-            onaxis.loc[
-                (onaxis.Freq >= max(freq_min, MIDRANGE_MIN_FREQ))
-                & (onaxis.Freq <= min(freq_max, MIDRANGE_MAX_FREQ))
-            ].dB
-        )
+        y_data = onaxis.loc[
+            (onaxis.Freq >= max(freq_min, MIDRANGE_MIN_FREQ))
+            & (onaxis.Freq <= min(freq_max, MIDRANGE_MAX_FREQ))
+        ].dB
+
+        y_ref = np.mean(y_data) if not y_data.empty else 0.0
         y_3 = None
         y_6 = None
         logger.debug("mean over %f-%f Hz = %f", MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ, y_ref)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 import os
 import pathlib
 
-from wand.image import Image as wim
+from wand.image import Image as Wim
 
 from spinorama import logger
 
@@ -33,7 +33,7 @@ def write_multiformat(chart, filename, force):
         return
     logger.info("Saving %s", filename)
 
-    with wim(filename=filename) as pict:
+    with Wim(filename=filename) as pict:
         filename = filename.replace("_large", "")
         webp = "{}.webp".format(filename[:-4])
         if not pathlib.Path(webp).is_file() or force:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,8 @@ import scipy.signal as sig
 from scipy.interpolate import InterpolatedUnivariateSpline
 
 from spinorama import logger
-from spinorama.ltype import Vector, Peq, Zone
+from spinorama.ltype import Vector, Zone
+from spinorama.filter_peq import Peq
 
 # ------------------------------------------------------------------------------
 # find initial values for biquads
@@ -36,7 +37,7 @@ def compute_non_admissible_freq(peq: Peq, min_freq: float, max_freq: float) -> Z
     zones = []
     for _, current_eq in peq:
         f = current_eq.freq
-        q = current_eq.Q
+        q = current_eq.q
         # limit the zone for small q
         q = max(1.0, q)
         q2 = q * q
@@ -164,16 +165,19 @@ def propose_range_db_gain(
 
 
 def propose_range_q(optim_config: dict) -> list[float]:
-    return np.concatenate(
-        (
-            np.linspace(optim_config["MIN_Q"], 1.0, optim_config["MAX_STEPS_Q"]),
-            np.linspace(
-                1 + optim_config["MIN_Q"],
-                optim_config["MAX_Q"],
-                optim_config["MAX_STEPS_Q"],
-            ),
-        ),
-        axis=0,
+    # return np.concatenate(
+    #    (
+    #        np.linspace(optim_config["MIN_Q"], 1.0, optim_config["MAX_STEPS_Q"]),
+    #        np.linspace(
+    #            1 + optim_config["MIN_Q"],
+    #            optim_config["MAX_Q"],
+    #            optim_config["MAX_STEPS_Q"],
+    #        ),
+    #    ),
+    #    axis=0,
+    # ).tolist()
+    return np.linspace(
+        optim_config["MIN_Q"], optim_config["MAX_Q"], optim_config["MAX_STEPS_Q"]
     ).tolist()
 
 

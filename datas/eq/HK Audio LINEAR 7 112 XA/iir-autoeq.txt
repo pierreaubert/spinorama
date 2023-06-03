@@ -1,0 +1,16 @@
+EQ for HK Audio LINEAR 7 112 XA computed from Vendors-HK Audio data
+Preference Score 2.32 with EQ 4.01
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-18:29:15
+
+Preamp: -2.1 dB
+
+Filter  1: ON LS Fc  1850 Hz Gain +2.07 dB Q 1.31
+Filter  2: ON PK Fc   119 Hz Gain -2.90 dB Q 2.95
+Filter  3: ON PK Fc   644 Hz Gain -1.70 dB Q 2.99
+Filter  4: ON PK Fc   212 Hz Gain -1.56 dB Q 3.00
+Filter  5: ON PK Fc  9757 Hz Gain -2.56 dB Q 0.73
+Filter  6: ON PK Fc  2222 Hz Gain -1.73 dB Q 3.00
+Filter  7: ON PK Fc  2242 Hz Gain -1.63 dB Q 3.00
+Filter  8: ON PK Fc 12063 Hz Gain -2.18 dB Q 2.99
+Filter  9: ON PK Fc  3574 Hz Gain -2.02 dB Q 3.00

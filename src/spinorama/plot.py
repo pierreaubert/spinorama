@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,8 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import math
 import bisect
+import itertools
+import math
+from typing import TypeVar
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -29,7 +32,7 @@ import plotly.io as pio
 
 from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
-from spinorama.filter_peq import peq_build
+from spinorama.filter_peq import peq_spl
 from spinorama.compute_misc import compute_contour
 from spinorama.load_misc import sort_angles
 
@@ -38,7 +41,7 @@ pio.templates.default = "plotly_white"
 
 
 # ratio is 4x3
-plot_params_default = {
+plot_params_default: dict[str, int | str] = {
     "xmin": 20,
     "xmax": 20000,
     "ymin": -40,
@@ -284,6 +287,9 @@ def contour_layout(params):
             "l": 10,
             "r": 10,
         },
+        font=dict(
+            size=9,
+        ),
     )
 
 
@@ -356,6 +362,7 @@ def plot_spinorama_traces(spin, params):
             x=spin.Freq,
             y=spin[measurement],
             marker_color=uniform_colors.get(measurement, "black"),
+            hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
         if layout == "compact":
             trace.name = label_short.get(measurement, measurement)
@@ -552,14 +559,16 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
 def plot_graph_flat_traces(df, measurement, params):
     restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
     slope = 0
-    intercept = np.mean(restricted_freq[measurement])
+    intercept = (
+        np.mean(restricted_freq[measurement]) if not restricted_freq[measurement].empty else 0.0
+    )
 
     return plot_graph_traces(df, measurement, params, slope, intercept, None)
 
 
 def plot_graph_regression_traces(df, measurement, params):
     restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
-    slope, intercept, r, p, se = stats.linregress(
+    slope, intercept, _, _, _ = stats.linregress(
         x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement]
     )
 
@@ -598,8 +607,15 @@ def plot_graph_regression(df, measurement, params):
     return fig
 
 
+T = TypeVar("T")
+
+
+def flatten(l: list[list[T | None]]) -> list[T | None]:
+    return list(itertools.chain.from_iterable(l))
+
+
 def plot_contour(spl, params):
-    df = spl.copy()
+    df_spl = spl.copy()
     params.get("layout", "")
     min_freq = params.get("contour_min_freq", 100)
 
@@ -622,7 +638,7 @@ def plot_contour(spl, params):
 
     fig = go.Figure()
 
-    af, am, az = compute_contour(df.loc[df.Freq > min_freq])
+    af, am, az = compute_contour(df_spl.loc[df_spl.Freq > min_freq])
     az = np.clip(az, contour_start, contour_end)
     fig.add_trace(
         go.Contour(
@@ -646,6 +662,7 @@ def plot_contour(spl, params):
             ),
             autocolorscale=False,
             colorscale=contour_colorscale,
+            hovertemplate="Freq: %{x:.0f}Hz<br>Angle: %{y:.0f}<br>SPL: %{z:.1f}dB<br>",
         )
     )
 
@@ -661,14 +678,18 @@ def plot_contour(spl, params):
             )
         )
 
-    def compute_horizontal_lines(x_min, x_max, y_data):
-        x = np.tile([x_min, x_max, None], len(y_data))
-        y = np.ndarray.flatten(np.array([[a, a, None] for a in y_data]))
+    def compute_horizontal_lines(
+        x_min: float, x_max: float, y_data: range
+    ) -> tuple[list[float | None], list[int | None]]:
+        x = [x_min, x_max, None] * len(y_data)
+        y = flatten([[a, a, None] for a in y_data])
         return x, y
 
-    def compute_vertical_lines(y_min, y_max, x_data):
-        y = np.tile([y_min, y_max, None], len(x_data))
-        x = np.ndarray.flatten(np.array([[a, a, None] for a in x_data]))
+    def compute_vertical_lines(
+        y_min: int, y_max: int, x_data: list[int]
+    ) -> tuple[list[int | None], list[float | None]]:
+        x = flatten([[a, a, None] for a in x_data])
+        y = [y_min, y_max, None] * len(x_data)
         return x, y
 
     hx, hy = compute_horizontal_lines(min_freq, 20000, range(-150, 180, 30))
@@ -693,7 +714,7 @@ def plot_contour(spl, params):
     return fig
 
 
-def find_nearest_freq(dfu, hz, tolerance=0.05):
+def find_nearest_freq(dfu: pd.DataFrame, hz: float, tolerance: float = 0.05) -> int | None:
     """return the index of the nearest freq in dfu, return None if not found"""
     ihz = None
     for i in dfu.index:
@@ -701,7 +722,8 @@ def find_nearest_freq(dfu, hz, tolerance=0.05):
         if abs(f - hz) < hz * tolerance:
             ihz = i
             break
-    logger.debug("nearest: %.1f hz at loc %d", hz, ihz)
+    if ihz:
+        logger.debug("nearest: %.1f hz at loc %d", hz, ihz)
     return ihz
 
 
@@ -722,7 +744,7 @@ def plot_radar(spl, params):
 
     def plot_radar_freq(anglelist, freqlist, df):
         dfu = sort_angles(df)
-        db_mean = np.mean(dfu.loc[(dfu.Freq > 900) & (dfu.Freq < 1100)]["On Axis"].values)
+        db_mean = dfu.loc[(dfu.Freq > 900) & (dfu.Freq < 1100)]["On Axis"].mean()
         freq = dfu.Freq
         dfu = dfu.drop("Freq", axis=1)
         db_min = np.min(dfu.min(axis=0).values)
@@ -844,16 +866,19 @@ def plot_summary(df, summary, params):
     return None
 
 
-def plot_eqs(freq, peqs, names=None, normalized=False):
-    peqs_spl = [peq_build(freq, peq) for peq in peqs]
-    if normalized and len(peqs) > 1:
-        freq_min = bisect.bisect(freq, 80)
-        freq_max = bisect.bisect(freq, 3000)
-        if freq_min == freq_max:
-            freq_min = 0
-            freq_max = -1
-        peqs_avg = [np.mean(spl[freq_min:freq_max]) for spl in peqs_spl]
-        peqs_spl = [spl - (peqs_avg[i] - peqs_avg[0]) for i, spl in enumerate(peqs_spl)]
+def plot_eqs(freq, peqs, names):
+    peqs_spl = [peq_spl(freq, peq) for peq in peqs]
+    if len(peqs) > 1:
+        freq_min = bisect.bisect_right(freq, 80)
+        freq_max = bisect.bisect_left(freq, 3000)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", RuntimeWarning)
+            if freq_min < freq_max:
+                peqs_restriced = [np.array(spl)[freq_min:freq_max] for spl in peqs_spl]
+                peqs_avg = [np.mean(v) if len(v) > 0 else 0.0 for v in peqs_restriced]
+                peqs_spl = [
+                    np.array(spl) - (peqs_avg[i] - peqs_avg[0]) for i, spl in enumerate(peqs_spl)
+                ]
     traces = None
     if names is None:
         traces = [go.Scatter(x=freq, y=spl) for spl in peqs_spl]
@@ -899,4 +924,127 @@ def plot_eqs(freq, peqs, names=None, normalized=False):
             font=dict(size=12),
         ),
     )
+    return fig
+
+
+def plot_contour_3d(spl, params):
+    params.get("layout", "")
+    min_freq = max(20, params.get("contour_min_freq", 100))
+
+    contour_start = -30
+    contour_end = 3
+
+    contour_colorscale = [
+        [0, "rgb(0,0,168)"],
+        [0.1, "rgb(0,0,200)"],
+        [0.2, "rgb(0,74,255)"],
+        [0.3, "rgb(0,152,255)"],
+        [0.4, "rgb(74,255,161)"],
+        [0.5, "rgb(161,255,74)"],
+        [0.6, "rgb(255,255,0)"],
+        [0.7, "rgb(234,159,0)"],
+        [0.8, "rgb(255,74,0)"],
+        [0.9, "rgb(222,74,0)"],
+        [1, "rgb(253,14,13)"],
+    ]
+
+    colorbar = dict(
+        dtick=3,
+        len=0.5,
+        lenmode="fraction",
+        tickfont=dict(size=14),
+    )
+
+    angle_list_3d = [-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
+    angle_text_3d = [f"{a}°" for a in angle_list_3d]
+    spl_list_3d = [0, -5, -10, -15, -20, -25, -30, -35, -40, -45]
+    spl_text_3d = [f"{s}" if s > -45 else "" for s in spl_list_3d]
+
+    def a2v(angle):
+        if angle == "Freq":
+            return -1000
+        elif angle == "On Axis":
+            return 0
+        iangle = int(angle[:-1])
+        return iangle
+
+    def transform(spl, db_max, clip_min, clip_max):
+        if "-180°" not in spl and "180°" in spl:
+            spl["-180°"] = spl["180°"]
+        df_spl = spl.reindex(columns=sorted(spl.columns, key=lambda a: a2v(a))) - db_max
+        # x,y,z
+        freq = df_spl.Freq
+        angle = [a2v(i) for i in df_spl.loc[:, df_spl.columns != "Freq"].columns]
+        selector = (df_spl["Freq"] > min_freq) & (df_spl["Freq"] < 20000)
+        spl = df_spl.loc[selector, df_spl.columns != "Freq"].T.to_numpy()
+        # color
+        color = np.clip(np.multiply(np.floor_divide(spl, 3), 3), clip_min, clip_max)
+        return freq, angle, spl, color
+
+    db_max = spl["On Axis"].max()
+
+    freqs, angles, spls, colors = transform(spl, db_max, contour_start, contour_end)
+
+    fig = go.Figure()
+
+    trace = go.Surface(
+        x=freqs,
+        y=angles,
+        z=spls,
+        showscale=True,
+        autocolorscale=False,
+        colorscale=contour_colorscale,
+        surfacecolor=colors,
+        colorbar=colorbar,
+        cmin=contour_start,
+        cmax=contour_end,
+        hovertemplate="Freq: %{x:.0f}Hz<br>Angle:  %{y}°<br> SPL: %{z:.1f}dB<br>",
+    )
+
+    fig.add_trace(trace)
+
+    fig.update_layout(
+        autosize=False,
+        width=600,
+        height=700,
+        scene=dict(
+            xaxis=dict(
+                title="Freq. (Hz)",
+                tickfont=dict(
+                    size=11,
+                ),
+                titlefont=dict(
+                    size=14,
+                ),
+            ),
+            yaxis=dict(
+                range=[-180, 180],
+                showline=True,
+                tickvals=angle_list_3d,
+                ticktext=angle_text_3d,
+                title="Angle",
+                tickfont=dict(
+                    size=11,
+                ),
+                titlefont=dict(
+                    size=14,
+                ),
+            ),
+            zaxis=dict(
+                range=[-45, 5],
+                title="SPL",
+                showline=True,
+                tickvals=spl_list_3d,
+                ticktext=spl_text_3d,
+                tickfont=dict(
+                    size=11,
+                ),
+                titlefont=dict(
+                    size=14,
+                ),
+            ),
+        ),
+    )
+    fig.update_traces(contours_z=dict(show=True, project_z=True))
+
     return fig

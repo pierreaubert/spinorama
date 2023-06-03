@@ -1,0 +1,16 @@
+EQ for Bose ArenaMatch AM40 computed from Vendors-Bose data
+Preference Score 1.66 with EQ 4.06
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-05-14-13:32:39
+
+Preamp: -3.3 dB
+
+Filter  1: ON LS Fc  3060 Hz Gain +2.63 dB Q 2.24
+Filter  2: ON PK Fc   270 Hz Gain -2.92 dB Q 2.98
+Filter  3: ON PK Fc    67 Hz Gain -2.57 dB Q 2.99
+Filter  4: ON PK Fc   551 Hz Gain -2.14 dB Q 2.99
+Filter  5: ON PK Fc   130 Hz Gain -2.24 dB Q 3.00
+Filter  6: ON PK Fc 10817 Hz Gain -5.63 dB Q 2.96
+Filter  7: ON PK Fc   868 Hz Gain -2.26 dB Q 2.96
+Filter  8: ON PK Fc  1532 Hz Gain +1.20 dB Q 1.54
+Filter  9: ON PK Fc  5425 Hz Gain -3.22 dB Q 1.27

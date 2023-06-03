@@ -1,7 +1,7 @@
 EQ for Meyer Sound Ultra X40 computed from Vendors-Meyer Sound data
 Preference Score 2.83 with EQ 3.04
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:52:52
+Dated: 2023-03-29-17:36:32
 
 Preamp: -0.9 dB
 

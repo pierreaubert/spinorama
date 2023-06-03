@@ -1,0 +1,16 @@
+EQ for Triad In-Room Gold LCR computed from ErinsAudioCorner data
+Preference Score 3.98 with EQ 5.95
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-06-01-06:38:16
+
+Preamp: -2.7 dB
+
+Filter  1: ON PK Fc    39 Hz Gain +2.75 dB Q 0.49
+Filter  2: ON PK Fc    99 Hz Gain -2.74 dB Q 2.85
+Filter  3: ON PK Fc   185 Hz Gain +0.95 dB Q 0.94
+Filter  4: ON PK Fc   369 Hz Gain -1.64 dB Q 1.39
+Filter  5: ON PK Fc  1036 Hz Gain +2.98 dB Q 1.43
+Filter  6: ON PK Fc  1678 Hz Gain -2.24 dB Q 1.71
+Filter  7: ON PK Fc  4553 Hz Gain -1.91 dB Q 1.78
+Filter  8: ON PK Fc  9708 Hz Gain +0.81 dB Q 1.39
+Filter  9: ON PK Fc 16838 Hz Gain +0.76 dB Q 0.71

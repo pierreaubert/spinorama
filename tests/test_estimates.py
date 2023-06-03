@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2022 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,11 +30,12 @@ pd.set_option("display.max_rows", 202)
 
 class SpinoramaEstimatesNV2Tests(unittest.TestCase):
     def setUp(self):
-        self.title, self.df_unmelted = parse_graph_freq_klippel(
+        status, (self.title, self.df_unmelted) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v2-20200208/CEA2034.txt"
         )
+        self.assertTrue(status)
         self.df = graph_melt(self.df_unmelted)
-        self.estimates = estimates(self.df, None, None)
+        self.estimates = estimates(self.df, pd.DataFrame(), pd.DataFrame())
 
     def test_estimates(self):
         self.assertNotEqual(-1, self.estimates["ref_level"])
@@ -50,16 +51,19 @@ class SpinoramaEstimatesNV2Tests(unittest.TestCase):
 
 class SpinoramaEstimatesNV3Tests(unittest.TestCase):
     def setUp(self):
-        self.title, self.spin_unmelted = parse_graph_freq_klippel(
+        status, (self.title, self.spin_unmelted) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/CEA2034.txt"
         )
+        self.assertTrue(status)
         self.spin = graph_melt(self.spin_unmelted)
-        _, self.splH = parse_graph_freq_klippel(
+        status, (_, self.splH) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
         )
-        _, self.splV = parse_graph_freq_klippel(
+        self.assertTrue(status)
+        status, (_, self.splV) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Vertical.txt"
         )
+        self.assertTrue(status)
         self.estimates = estimates(self.spin, self.splH, self.splV)
 
     def test_estimates(self):
@@ -82,16 +86,19 @@ class SpinoramaEstimatesNV3Tests(unittest.TestCase):
 
 class SpinoramaEstimatesNV4Tests(unittest.TestCase):
     def setUp(self):
-        self.title, self.spin_unmelted = parse_graph_freq_klippel(
+        status, (self.title, self.spin_unmelted) = parse_graph_freq_klippel(
             "datas/measurements/Revel C52/asr-vertical/CEA2034.txt"
         )
+        self.assertTrue(status)
         self.spin = graph_melt(self.spin_unmelted)
-        _, self.splH = parse_graph_freq_klippel(
+        status, (_, self.splH) = parse_graph_freq_klippel(
             "datas/measurements/Revel C52/asr-vertical/SPL Horizontal.txt"
         )
-        _, self.splV = parse_graph_freq_klippel(
+        self.assertTrue(status)
+        status, (_, self.splV) = parse_graph_freq_klippel(
             "datas/measurements/Revel C52/asr-vertical/SPL Vertical.txt"
         )
+        self.assertTrue(status)
         self.estimates = estimates(self.spin, self.splH, self.splV)
 
     def test_estimates(self):

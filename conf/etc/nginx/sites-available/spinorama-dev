@@ -1,0 +1,17 @@
+##
+# Default server configuration
+#
+server {
+        listen 443 ssl http2; # managed by Certbot
+	server_name dev.spinorama.org; # managed by Certbot
+        ssl_certificate /etc/letsencrypt/live/dev.spinorama.org/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/dev.spinorama.org/privkey.pem; # managed by Certbot
+        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+        root /var/www/html/spinorama-dev;
+	autoindex on;
+	index index.html;
+	expires modified +1s;
+	add_header Cache-Control no-cache;
+}

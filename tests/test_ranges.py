@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2021 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import math
 import numpy as np
 
 from spinorama.filter_iir import Biquad
-from spinorama.filter_peq import peq_build
+from spinorama.filter_peq import peq_spl
 from spinorama.auto_range import find_largest_area
 
 
@@ -258,9 +258,9 @@ class FreqRangeTests(unittest.TestCase):
     def test_one_peak(self):
         empty_peq = []
         test_peq = [
-            (1.0, Biquad(typ=Biquad.PEAK, freq=1000, srate=48000, Q=1, dbGain=3)),
+            (1.0, Biquad(biquad_type=Biquad.PEAK, freq=1000, srate=48000, q=1, db_gain=3)),
         ]
-        data = peq_build(self.freq, test_peq)
+        data = peq_spl(self.freq, test_peq)
 
         # expect 1 peak
         sign, freq = find_largest_area(self.freq, data, self.config, empty_peq)
@@ -275,10 +275,10 @@ class FreqRangeTests(unittest.TestCase):
         empty_peq = []
         # 2 very distincts peaks
         test_peq = [
-            (1.0, Biquad(typ=Biquad.PEAK, freq=100, srate=48000, Q=3, dbGain=2)),
-            (1.0, Biquad(typ=Biquad.PEAK, freq=5000, srate=48000, Q=3, dbGain=1)),
+            (1.0, Biquad(biquad_type=Biquad.PEAK, freq=100, srate=48000, q=3, db_gain=2)),
+            (1.0, Biquad(biquad_type=Biquad.PEAK, freq=5000, srate=48000, q=3, db_gain=1)),
         ]
-        data = peq_build(self.freq, test_peq)
+        data = peq_spl(self.freq, test_peq)
 
         # expect first peak
         sign, freq = find_largest_area(self.freq, data, self.config, empty_peq)
@@ -287,7 +287,7 @@ class FreqRangeTests(unittest.TestCase):
 
         # expect second peak
         one_peq = [
-            (1.0, Biquad(typ=Biquad.PEAK, freq=100, srate=48000, Q=3, dbGain=2)),
+            (1.0, Biquad(biquad_type=Biquad.PEAK, freq=100, srate=48000, q=3, db_gain=2)),
         ]
         sign, freq = find_largest_area(self.freq, data, self.config, one_peq)
         self.assertFalse(abs(test_peq[0][1].freq - freq) < 50)
@@ -297,10 +297,10 @@ class FreqRangeTests(unittest.TestCase):
         empty_peq = []
         # same test but with closer peaks
         test_peq = [
-            (1.0, Biquad(typ=Biquad.PEAK, freq=1000, srate=48000, Q=1, dbGain=3)),
-            (1.0, Biquad(typ=Biquad.PEAK, freq=5000, srate=48000, Q=1, dbGain=1)),
+            (1.0, Biquad(biquad_type=Biquad.PEAK, freq=1000, srate=48000, q=1, db_gain=3)),
+            (1.0, Biquad(biquad_type=Biquad.PEAK, freq=5000, srate=48000, q=1, db_gain=1)),
         ]
-        data = peq_build(self.freq, test_peq)
+        data = peq_spl(self.freq, test_peq)
 
         # expect first peak
         sign, freq = find_largest_area(self.freq, data, self.config, empty_peq)
@@ -309,7 +309,7 @@ class FreqRangeTests(unittest.TestCase):
 
         # expect second peak
         one_peq = [
-            (1.0, Biquad(typ=Biquad.PEAK, freq=1000, srate=48000, Q=1, dbGain=3)),
+            (1.0, Biquad(biquad_type=Biquad.PEAK, freq=1000, srate=48000, q=1, db_gain=3)),
         ]
         sign, freq = find_largest_area(self.freq, data, self.config, one_peq)
         self.assertFalse(abs(test_peq[0][1].freq - freq) < 50)

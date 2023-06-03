@@ -57,6 +57,8 @@ getMetadata()
         const [metaSpeakers, speakers] = getAllSpeakers(metadata);
         const initSpeakers = buildInitSpeakers(speakers, nbSpeakers);
         const initMeasurement = buildInitMeasurement();
+        const initOrigins = buildInitOrigins(nbSpeakers);
+        const initVersions = buildInitVersions(nbSpeakers);
 
         const speakersSelector = [];
         const originsSelector = [];
@@ -94,10 +96,10 @@ getMetadata()
                     ) {
                         graphsConfigs = setContour(speakersName, graphs, windowWidth, windowHeight);
                     } else if (
-                        measurement === 'SPL Horizontal 3D' ||
-                        measurement === 'SPL Vertical 3D' ||
-                        measurement === 'SPL Horizontal 3D Normalized' ||
-                        measurement === 'SPL Vertical 3D Normalized'
+                        measurement === 'SPL Horizontal Contour 3D' ||
+                        measurement === 'SPL Vertical Contour 3D' ||
+                        measurement === 'SPL Horizontal Contour 3D Normalized' ||
+                        measurement === 'SPL Vertical Contour 3D Normalized'
                     ) {
                         graphsConfigs = setSurface(speakersName, graphs, windowWidth, windowHeight);
                     } else if (
@@ -140,9 +142,9 @@ getMetadata()
             for (let pos = 0; pos < count; pos++) {
                 if (urlParams.has('speaker' + pos)) {
                     list[pos] = urlParams.get('speaker' + pos);
-                    continue;
+                } else {
+                    list[pos] = speakers[Math.floor(Math.random() * speakers.length)];
                 }
-                list[pos] = speakers[Math.floor(Math.random() * speakers.length)];
             }
             return list;
         }
@@ -155,6 +157,32 @@ getMetadata()
                 }
             }
             return knownMeasurements[0];
+        }
+
+        function buildInitOrigins(count) {
+            const list = [];
+            for (let pos = 0; pos < count; pos++) {
+                if (urlParams.has('origin'+pos)) {
+                    list[pos] = urlParams.get('origin'+pos);
+                }
+                else {
+                    list[pos] = null;
+                }
+            }
+            return list;
+        }
+
+        function buildInitVersions(count) {
+            const list = [];
+            for (let pos = 0; pos < count; pos++) {
+                if (urlParams.has('version'+pos)) {
+                    list[pos] = urlParams.get('version'+pos);
+                }
+                else {
+                    list[pos] = null;
+                }
+            }
+            return list;
         }
 
         function updateTitle() {
@@ -226,6 +254,7 @@ getMetadata()
             updateSpeakers();
         }
 
+        // initial setup
         for (let pos = 0; pos < nbSpeakers; pos++) {
             const tpos = pos.toString();
             speakersSelector[pos] = formContainer.querySelector('.speaker' + tpos);
@@ -238,7 +267,6 @@ getMetadata()
         }
         assignOptions(knownMeasurements, graphsSelector, initMeasurement);
 
-        // initial setup
         const initDatas = [];
         for (let pos = 0; pos < nbSpeakers; pos++) {
             updateOrigin(
@@ -249,10 +277,16 @@ getMetadata()
                 urlParams.get('origin' + pos),
                 urlParams.get('version' + pos)
             );
+            updateVersionPos(pos);
             updateOriginPos(pos);
             updateSpeakerPos(pos);
             // console.log('DEBUG: ' + originsSelector[pos].options[0])
-            initDatas[pos] = getSpeakerData(metaSpeakers, initMeasurement, initSpeakers[pos], null, null);
+            initDatas[pos] = getSpeakerData(
+                metaSpeakers,
+                initMeasurement,
+                initSpeakers[pos],
+                initOrigins[pos],
+                initVersions[pos]);
         }
 
         // add listeners

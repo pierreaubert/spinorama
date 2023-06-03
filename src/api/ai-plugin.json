@@ -1,0 +1,18 @@
+{
+    "schema_version": "v1",
+    "name_for_human": "spinorama",
+    "name_for_model": "spinorama",
+    "description_for_human": "Plugin for manipulating speaker measurements.",
+    "description_for_model": "Plugin for manipulating speaker measurements.",
+    "auth": {
+      "type": "none"
+    },
+    "api": {
+      "type": "openapi",
+      "url": "https://api.spinorama.org/openapi.json",
+      "is_user_authenticated": false
+    },
+    "logo_url": "https://www.spinorama.org/logo.png",
+    "contact_email": "pierre@spinorama.org",
+    "legal_info_url": "https://www.spinorama.org/help.html"
+}

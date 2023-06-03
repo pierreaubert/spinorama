@@ -17,6 +17,9 @@ models = {}
 manual_exceptions_table = {
     "Alcons Audio 2xQR24+2QM24.zip": ("Alcons Audio QR24", "vendor-v2QR24+2QM24"),
     "Alcons Audio 3xQR24+1xQM24.zip": ("Alcons Audio QR24", "vendor-v3QR24+1QM24"),
+    "Audiofocus VENUE8.zip": ("Audiofocus VENU 8a", "vendor"),
+    "Audiofocus VENUE12.zip": ("Audiofocus VENU 12a", "vendor"),
+    "Audiofocus VENUE15.zip": ("Audiofocus VENU 15a", "vendor"),
     "DB Audiotechnik AL60 x3 + 2 sub.zip": (
         "DB Audiotechnik AL60",
         "vendor-pattern-60x30-v3x+2sub",
@@ -42,6 +45,17 @@ manual_exceptions_table = {
     "EV MTS 4153 40x30.zip": ("EV MTS-4153", "vendor-pattern-40x30"),
     "EV MTS 6154 60x40.zip": ("EV MTS-6154", "vendor-pattern-60x40"),
     "EV MTS 6154 40x30.zip": ("EV MTS-6154", "vendor-pattern-40x30"),
+    "Bose AM10 60.zip": ("Bose ArenaMatch AM10", "vendor-pattern-60x10"),
+    "Bose AM10 80.zip": ("Bose ArenaMatch AM10", "vendor-pattern-80x10"),
+    "Bose AM10 100.zip": ("Bose ArenaMatch AM10", "vendor-pattern-100x10"),
+    "Bose AM20 60.zip": ("Bose ArenaMatch AM20", "vendor-pattern-60x20"),
+    "Bose AM20 80.zip": ("Bose ArenaMatch AM20", "vendor-pattern-80x20"),
+    "Bose AM20 100.zip": ("Bose ArenaMatch AM20", "vendor-pattern-100x20"),
+    "Bose AM40 60.zip": ("Bose ArenaMatch AM40", "vendor-pattern-60x40"),
+    "Bose AM40 80.zip": ("Bose ArenaMatch AM40", "vendor-pattern-80x40"),
+    "Bose AM40 100.zip": ("Bose ArenaMatch AM40", "vendor-pattern-100x40"),
+    "HK Audio LINEAR 9 110.zip": ("HK Audio LINEAR 9 110 XA", "vendor"),
+    "HK Audio LINEAR 9 112.zip": ("HK Audio LINEAR 9 112 XA", "vendor"),
 }
 
 
@@ -103,7 +117,7 @@ def guess(speaker):
     # forget part of brand
     brand = tokens[0]
     model = tokens[1:]
-    guess_3 = " ".join([brand] + model)
+    guess_3 = " ".join([brand, *model])
     if guess_3 in metadata:
         return guess_3
 
@@ -119,7 +133,7 @@ def guess(speaker):
     brand2 = " ".join(tokens[0:2])
     if brand1 not in brands and brand2 not in brands:
         possible_brand = None
-        for k, v in metadata.items():
+        for _, v in metadata.items():
             if v["brand"].lower().startswith(tokens[0].lower()):
                 possible_brand = v["brand"]
         print("Brand is not known for {}: it could be {}".format(speaker, possible_brand))
@@ -190,10 +204,8 @@ def find_speaker(zipfile):
     speaker = base_speaker[:-4]
 
     version = None
-    manual_exception = False
     if base_speaker in manual_exceptions_table:
         speaker, version = manual_exceptions_table[base_speaker]
-        manual_exception = True
     elif speaker not in metadata:
         tokens = speaker.split()
         for pos in range(1, min(len(tokens), 5)):
@@ -295,7 +307,8 @@ def find_speaker(zipfile):
 
     educated = guess(speaker)
     if educated is not None:
-        print("error: didn't find ///{}/// but {} exist ".format(speaker, educated))
+        print("error: didn't find ///{}/// but ///{}/// exist ".format(speaker, educated))
+        print("error:     swapped ///{}///     ///{}///".format(educated, speaker))
     else:
         print("error: didn't find ///{}///".format(speaker))
 

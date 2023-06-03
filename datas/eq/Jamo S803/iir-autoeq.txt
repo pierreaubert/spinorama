@@ -1,16 +1,15 @@
 EQ for Jamo S803 computed from ErinsAudioCorner data
-Preference Score 2.72 with EQ 5.20
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-02-26-09:34:46
+Preference Score 2.72 with EQ 5.50
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
+Dated: 2023-04-24-15:10:53
 
-Preamp: -2.3 dB
+Preamp: -3.2 dB
 
-Filter  1: ON PK Fc    95 Hz Gain -3.00 dB Q 2.06
-Filter  2: ON PK Fc 10763 Hz Gain -5.52 dB Q 0.35
-Filter  3: ON PK Fc   366 Hz Gain +1.59 dB Q 1.13
-Filter  4: ON PK Fc  1426 Hz Gain +2.09 dB Q 3.00
-Filter  5: ON PK Fc  3480 Hz Gain -2.15 dB Q 2.29
-Filter  6: ON PK Fc    92 Hz Gain -2.12 dB Q 2.99
-Filter  7: ON PK Fc   814 Hz Gain -0.52 dB Q 3.00
-Filter  8: ON PK Fc 13366 Hz Gain -0.60 dB Q 3.00
-Filter  9: ON PK Fc   130 Hz Gain -0.50 dB Q 3.00
+Filter  1: ON HS Fc  2188 Hz Gain -3.00 dB
+Filter  2: ON PK Fc   104 Hz Gain -6.00 dB Q 1.40
+Filter  3: ON PK Fc   326 Hz Gain +3.00 dB Q 0.25
+Filter  4: ON PK Fc   461 Hz Gain -1.83 dB Q 0.41
+Filter  5: ON PK Fc  4900 Hz Gain +1.25 dB Q 2.95
+Filter  6: ON PK Fc 10785 Hz Gain -3.94 dB Q 0.29
+Filter  7: ON PK Fc   903 Hz Gain -1.56 dB Q 3.00
+Filter  8: ON PK Fc  2991 Hz Gain -0.91 dB Q 2.99

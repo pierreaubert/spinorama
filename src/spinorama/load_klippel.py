@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ import os
 import pandas as pd
 
 from spinorama import logger
+from spinorama.ltype import StatusOr
 from spinorama.load_misc import sort_angles
 
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
@@ -29,7 +30,7 @@ locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 removequote = str.maketrans({'"': None, "\n": ""})
 
 
-def parse_graph_freq_klippel(filename: str) -> tuple[str, pd.DataFrame]:
+def parse_graph_freq_klippel(filename: str) -> StatusOr[tuple[str, pd.DataFrame]]:
     """Parse a klippel generated file"""
     title = None
     columns = ["Freq"]
@@ -52,33 +53,37 @@ def parse_graph_freq_klippel(filename: str) -> tuple[str, pd.DataFrame]:
             # print(usecols)
     except FileNotFoundError as file_not_found:
         logger.error("File not found: %s", file_not_found)
-        raise file_not_found
+        raise
 
     # read all columns, drop 0
-    df = pd.read_csv(
+    df_klippel = pd.read_csv(
         filename, sep="\t", skiprows=2, usecols=usecols, names=columns, thousands=","
     ).drop(0)
     # convert to float (issues with , and . in numbers)
-    df = df.applymap(locale.atof)
+    df_klippel = df_klippel.applymap(locale.atof)
     # put it in order, not relevant for pandas but for np array
-    if len(df.columns) > 2 and df.columns[2] == "10°":
-        return title, sort_angles(df)
-    return title, df
+    if len(df_klippel.columns) > 2 and df_klippel.columns[2] == "10°":
+        return True, (title, sort_angles(df_klippel))
+    return True, (title, df_klippel)
 
 
-def find_data_klippel(speaker_path, speaker_brand, speaker_name, mversion_in, csvname):
+def find_data_klippel(
+    speaker_path, speaker_brand, speaker_name, mversion_in, csvname
+) -> StatusOr[str]:
     """return the expected filename for Klippel data"""
     csvfilename = f"{speaker_path}/{speaker_name}/{mversion_in}/{csvname}.txt"
 
     if os.path.exists(csvfilename):
         logger.debug("match for %s", csvfilename)
-        return csvfilename
+        return True, csvfilename
 
     logger.error("no match for %s", csvfilename)
-    return None
+    return False, ""
 
 
-def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mversion, symmetry):
+def parse_graphs_speaker_klippel(
+    speaker_path, speaker_brand, speaker_name, mversion, symmetry
+) -> StatusOr[tuple[pd.DataFrame, pd.DataFrame]]:
     mandatory_csvfiles = [
         "SPL Horizontal",
         "SPL Vertical",
@@ -94,15 +99,25 @@ def parse_graphs_speaker_klippel(speaker_path, speaker_brand, speaker_name, mver
 
     if found != len(mandatory_csvfiles):
         logger.info("Didn't find all mandatory files for speaker %s %s", speaker_name, mversion)
-        return None, None
+        return False, (pd.DataFrame(), pd.DataFrame())
 
-    h_name = find_data_klippel(
+    h_status, h_name = find_data_klippel(
         speaker_path, speaker_brand, speaker_name, mversion, "SPL Horizontal"
     )
-    v_name = find_data_klippel(speaker_path, speaker_brand, speaker_name, mversion, "SPL Vertical")
-    # print(h_name, v_name)
-    _, h_spl = parse_graph_freq_klippel(h_name)
-    _, v_spl = parse_graph_freq_klippel(v_name)
+    v_status, v_name = find_data_klippel(
+        speaker_path, speaker_brand, speaker_name, mversion, "SPL Vertical"
+    )
+
+    if not h_status or not v_status:
+        logger.info("File error")
+        return False, (pd.DataFrame(), pd.DataFrame())
+    h_status, (_, h_spl) = parse_graph_freq_klippel(h_name)
+    v_status, (_, v_spl) = parse_graph_freq_klippel(v_name)
+
+    if not h_status or not v_status:
+        logger.info("Parse error")
+        return False, (pd.DataFrame(), pd.DataFrame())
+
     logger.debug("Speaker: %s (Klippel) loaded", speaker_name)
 
-    return h_spl, v_spl
+    return True, (h_spl, v_spl)

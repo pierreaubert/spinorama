@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,8 +34,8 @@ def get3db(spin: dict[str, pd.DataFrame], db_point: float) -> tuple[bool, float]
 
 
 def have_full_measurements(df_speaker: dict[str, pd.DataFrame]) -> bool:
-    len = 0
-    required = [
+    nb_cols = 0
+    required_cols = [
         "On Axis",
         "10°",
         "20°",
@@ -76,10 +76,10 @@ def have_full_measurements(df_speaker: dict[str, pd.DataFrame]) -> bool:
     check_required_h = False
     check_required_v = False
     if "SPL Horizontal_unmelted" in df_speaker:
-        len += df_speaker["SPL Horizontal_unmelted"].shape[1]
-        check_required_h = all([r in df_speaker["SPL Horizontal_unmelted"] for r in required])
+        nb_cols += df_speaker["SPL Horizontal_unmelted"].shape[1]
+        check_required_h = all([r in df_speaker["SPL Horizontal_unmelted"] for r in required_cols])
     if "SPL Vertical_unmelted" in df_speaker:
-        len += df_speaker["SPL Horizontal_unmelted"].shape[1]
-        check_required_v = all([r in df_speaker["SPL Vertical_unmelted"] for r in required])
-    check_len = len >= 72
-    return check_len and check_required_v and check_required_h
+        nb_cols += df_speaker["SPL Horizontal_unmelted"].shape[1]
+        check_required_v = all([r in df_speaker["SPL Vertical_unmelted"] for r in required_cols])
+    check_nb_cols = nb_cols >= 72
+    return check_nb_cols and check_required_v and check_required_h
