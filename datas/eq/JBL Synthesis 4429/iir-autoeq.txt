@@ -1,14 +1,16 @@
 EQ for JBL Synthesis 4429 computed from Misc data
-Preference Score 4.83 with EQ 5.28
+Preference Score 4.83 with EQ 5.75
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-15-11:47:40
+Dated: 2023-06-03-10:25:38
 
-Preamp: -3.9 dB
+Preamp: -4.1 dB
 
-Filter  1: ON PK Fc   310 Hz Gain -1.17 dB Q 1.27
-Filter  2: ON PK Fc  5100 Hz Gain -2.63 dB Q 2.41
-Filter  3: ON PK Fc  5648 Hz Gain +2.54 dB Q 2.97
-Filter  4: ON PK Fc  8293 Hz Gain +2.94 dB Q 2.99
-Filter  5: ON PK Fc  8690 Hz Gain +0.69 dB Q 1.67
-Filter  6: ON PK Fc 12566 Hz Gain +1.11 dB Q 1.44
-Filter  7: ON PK Fc 14617 Hz Gain -0.08 dB Q 1.21
+Filter  1: ON LS Fc    58 Hz Gain +2.95 dB Q 0.80
+Filter  2: ON PK Fc   202 Hz Gain +2.35 dB Q 2.13
+Filter  3: ON PK Fc   240 Hz Gain -2.57 dB Q 0.70
+Filter  4: ON PK Fc   550 Hz Gain +1.15 dB Q 2.84
+Filter  5: ON PK Fc  1025 Hz Gain +0.82 dB Q 0.84
+Filter  6: ON PK Fc  1663 Hz Gain -1.66 dB Q 2.78
+Filter  7: ON PK Fc  4688 Hz Gain -1.17 dB Q 2.75
+Filter  8: ON PK Fc  8147 Hz Gain +2.88 dB Q 2.79
+Filter  9: ON PK Fc 11118 Hz Gain +1.57 dB Q 0.58

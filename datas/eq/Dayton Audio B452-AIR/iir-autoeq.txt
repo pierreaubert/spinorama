@@ -1,15 +1,16 @@
 EQ for Dayton Audio B452-AIR computed from Misc data
+Preference Score -1.22 with EQ -1.48
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-18:16:55
+Dated: 2023-06-03-10:06:46
 
-Preamp: -1.8 dB
+Preamp: -1.3 dB
 
-Filter  1: ON HS Fc  5631 Hz Gain -3.00 dB Q 0.35
-Filter  2: ON PK Fc  1196 Hz Gain -2.93 dB Q 2.98
-Filter  3: ON PK Fc 11442 Hz Gain -2.35 dB Q 2.80
-Filter  4: ON PK Fc   388 Hz Gain +1.78 dB Q 2.89
-Filter  5: ON PK Fc   512 Hz Gain +0.76 dB Q 2.78
-Filter  6: ON PK Fc   656 Hz Gain -0.85 dB Q 1.85
-Filter  7: ON PK Fc    26 Hz Gain -0.96 dB Q 2.51
-Filter  8: ON PK Fc 13781 Hz Gain -0.76 dB Q 2.82
-Filter  9: ON PK Fc    51 Hz Gain -0.78 dB Q 2.81
+Filter  1: ON LS Fc   251 Hz Gain -1.33 dB Q 0.87
+Filter  2: ON PK Fc  8433 Hz Gain -1.36 dB Q 0.90
+Filter  3: ON PK Fc  6180 Hz Gain +1.07 dB Q 1.71
+Filter  4: ON PK Fc  7345 Hz Gain -0.71 dB Q 2.43
+Filter  5: ON PK Fc  8730 Hz Gain +0.41 dB Q 0.60
+Filter  6: ON PK Fc 10376 Hz Gain -0.04 dB Q 1.65
+Filter  7: ON PK Fc 10023 Hz Gain +1.69 dB Q 0.54
+Filter  8: ON PK Fc 12765 Hz Gain -0.04 dB Q 1.29
+Filter  9: ON PK Fc 16000 Hz Gain +0.21 dB Q 2.18

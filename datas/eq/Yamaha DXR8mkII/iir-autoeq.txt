@@ -1,14 +1,16 @@
 EQ for Yamaha DXR8mkII computed from Vendors-Yamaha data
-Preference Score 3.49 with EQ 4.51
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:05:09
+Preference Score 3.49 with EQ 4.56
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-06-03-09:51:59
 
-Preamp: -1.3 dB
+Preamp: -1.5 dB
 
-Filter  1: ON LS Fc  5264 Hz Gain +1.14 dB
-Filter  2: ON PK Fc   118 Hz Gain -1.89 dB Q 1.55
-Filter  3: ON PK Fc  1477 Hz Gain -2.22 dB Q 2.68
-Filter  4: ON PK Fc   561 Hz Gain -1.04 dB Q 2.93
-Filter  5: ON PK Fc   207 Hz Gain -0.77 dB Q 3.00
-Filter  6: ON PK Fc  9727 Hz Gain -1.84 dB Q 2.97
-Filter  7: ON PK Fc  6102 Hz Gain -2.06 dB Q 2.99
+Filter  1: ON LS Fc    69 Hz Gain +0.76 dB Q 0.74
+Filter  2: ON PK Fc   316 Hz Gain +1.47 dB Q 2.23
+Filter  3: ON PK Fc   532 Hz Gain -0.07 dB Q 2.22
+Filter  4: ON PK Fc   726 Hz Gain +1.21 dB Q 2.91
+Filter  5: ON PK Fc  1499 Hz Gain -2.08 dB Q 2.50
+Filter  6: ON PK Fc  3097 Hz Gain +1.19 dB Q 1.41
+Filter  7: ON PK Fc  4688 Hz Gain +1.57 dB Q 1.53
+Filter  8: ON PK Fc  6180 Hz Gain -2.79 dB Q 2.18
+Filter  9: ON PK Fc 12331 Hz Gain +1.54 dB Q 2.99

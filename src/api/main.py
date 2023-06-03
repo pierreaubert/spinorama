@@ -54,7 +54,7 @@ def read_openapi_yaml() -> Response:
 
 @app.get(f"/{API_VERSION}/brands", tags=["speaker"])
 async def get_brand_list(metadata: dict = Depends(load_metadata)):  # noqa: B008
-    return sorted(set([v.get("brand") for _, v in metadata.items()]))
+    return sorted({v.get("brand") for _, v in metadata.items()})
 
 
 @app.get(f"/{API_VERSION}/speaker", tags=["speaker"])

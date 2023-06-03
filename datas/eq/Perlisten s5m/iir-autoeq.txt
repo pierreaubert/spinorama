@@ -1,14 +1,16 @@
 EQ for Perlisten s5m computed from Vendors-Perlisten data
-Preference Score 6.63 with EQ 6.90
+Preference Score 6.63 with EQ 7.20
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-15-11:50:44
+Dated: 2023-06-03-10:09:49
 
-Preamp: -0.8 dB
+Preamp: -2.9 dB
 
-Filter  1: ON PK Fc   355 Hz Gain -0.64 dB Q 0.32
-Filter  2: ON PK Fc   724 Hz Gain +1.11 dB Q 2.85
-Filter  3: ON PK Fc  4098 Hz Gain +1.14 dB Q 1.07
-Filter  4: ON PK Fc  7076 Hz Gain -1.30 dB Q 1.35
-Filter  5: ON PK Fc  9138 Hz Gain +0.81 dB Q 1.22
-Filter  6: ON PK Fc 11064 Hz Gain -1.16 dB Q 1.60
-Filter  7: ON PK Fc 12733 Hz Gain -0.28 dB Q 1.40
+Filter  1: ON LS Fc    74 Hz Gain +2.99 dB Q 0.70
+Filter  2: ON PK Fc   276 Hz Gain -0.85 dB Q 0.29
+Filter  3: ON PK Fc   417 Hz Gain +0.49 dB Q 2.63
+Filter  4: ON PK Fc   805 Hz Gain +1.30 dB Q 2.13
+Filter  5: ON PK Fc  1099 Hz Gain -0.24 dB Q 0.50
+Filter  6: ON PK Fc  2192 Hz Gain +0.78 dB Q 2.78
+Filter  7: ON PK Fc  4083 Hz Gain +1.16 dB Q 2.58
+Filter  8: ON PK Fc 10376 Hz Gain -1.09 dB Q 1.87
+Filter  9: ON PK Fc 16000 Hz Gain -0.52 dB Q 0.94

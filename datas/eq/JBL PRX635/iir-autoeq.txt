@@ -1,16 +1,16 @@
 EQ for JBL PRX635 computed from Princeton data
 Preference Score -1000.00 with EQ -1000.00
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-15-15:11:27
+Dated: 2023-06-03-09:54:36
 
-Preamp: -3.3 dB
+Preamp: -6.2 dB
 
-Filter  1: ON PK Fc 13643 Hz Gain -3.00 dB Q 2.25
-Filter  2: ON PK Fc  4389 Hz Gain +2.20 dB Q 0.47
-Filter  3: ON PK Fc   868 Hz Gain +2.98 dB Q 0.54
-Filter  4: ON PK Fc  4152 Hz Gain -2.56 dB Q 2.94
-Filter  5: ON PK Fc 11342 Hz Gain -2.19 dB Q 2.96
-Filter  6: ON PK Fc    20 Hz Gain -2.85 dB Q 2.73
-Filter  7: ON PK Fc    23 Hz Gain -3.05 dB Q 2.71
-Filter  8: ON PK Fc    20 Hz Gain -5.22 dB Q 2.98
-Filter  9: ON PK Fc    20 Hz Gain -2.67 dB Q 2.99
+Filter  1: ON NO Fc    26 Hz Gain +1.81 dB Q 30.00
+Filter  2: ON PK Fc    79 Hz Gain -2.60 dB Q 1.11
+Filter  3: ON PK Fc   432 Hz Gain +2.53 dB Q 0.65
+Filter  4: ON PK Fc   610 Hz Gain +2.14 dB Q 1.60
+Filter  5: ON PK Fc   751 Hz Gain +2.63 dB Q 2.94
+Filter  6: ON PK Fc  1137 Hz Gain +2.92 dB Q 2.97
+Filter  7: ON PK Fc  2697 Hz Gain +3.00 dB Q 2.94
+Filter  8: ON PK Fc 12331 Hz Gain -2.92 dB Q 1.90
+Filter  9: ON PK Fc 16000 Hz Gain -2.90 dB Q 0.90

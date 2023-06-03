@@ -81,7 +81,7 @@ def interpolate(kef: dict[str, list[float]], cut_freq_high: float) -> dict[str, 
     return merged
 
 
-def save(dir: str, curves):
+def data_save(dir: str, curves):
     freq = curves["freq"]
     for curve in curves:
         if curve == "freq":
@@ -121,7 +121,7 @@ def process_copy(dirname, speaker_in, speaker_out):
     # interpolate data and save the result
     data = kef2dict(dir_vendor2k.as_posix())
     interpolated = interpolate(data, 300)
-    save(dir_vendor2.as_posix(), interpolated)
+    data_save(dir_vendor2.as_posix(), interpolated)
 
 
 def run(dirname):

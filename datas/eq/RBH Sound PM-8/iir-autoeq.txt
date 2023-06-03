@@ -1,15 +1,16 @@
 EQ for RBH Sound PM-8 computed from Misc data
+Preference Score 1.87 with EQ 0.90
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-18:14:40
+Dated: 2023-06-03-10:02:08
 
-Preamp: -1.7 dB
+Preamp: -0.8 dB
 
-Filter  1: ON PK Fc   102 Hz Gain -3.00 dB Q 2.92
-Filter  2: ON PK Fc  3285 Hz Gain -2.39 dB Q 0.70
-Filter  3: ON PK Fc   759 Hz Gain +2.04 dB Q 2.96
-Filter  4: ON PK Fc  7096 Hz Gain -1.08 dB Q 2.85
-Filter  5: ON PK Fc   346 Hz Gain +0.75 dB Q 2.94
-Filter  6: ON PK Fc 10032 Hz Gain -0.77 dB Q 3.00
-Filter  7: ON PK Fc    49 Hz Gain -1.08 dB Q 0.39
-Filter  8: ON PK Fc  1363 Hz Gain -0.80 dB Q 2.91
-Filter  9: ON PK Fc    24 Hz Gain -0.96 dB Q 2.78
+Filter  1: ON NO Fc  3097 Hz Gain -1.73 dB Q 30.00
+Filter  2: ON PK Fc  5572 Hz Gain -0.39 dB Q 2.34
+Filter  3: ON PK Fc  6622 Hz Gain -2.22 dB Q 1.02
+Filter  4: ON PK Fc  7096 Hz Gain +1.17 dB Q 0.62
+Filter  5: ON PK Fc  8433 Hz Gain +0.80 dB Q 2.66
+Filter  6: ON PK Fc 10740 Hz Gain +1.72 dB Q 1.11
+Filter  7: ON PK Fc 12765 Hz Gain -1.74 dB Q 1.02
+Filter  8: ON PK Fc 15171 Hz Gain -1.42 dB Q 2.33
+Filter  9: ON PK Fc 16000 Hz Gain +0.43 dB Q 1.23

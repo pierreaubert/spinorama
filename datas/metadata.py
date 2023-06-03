@@ -4448,6 +4448,97 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Dolby CS 126": {
+        "brand": "Dolby",
+        "model": "CS 126",
+        "type": "passive",
+        "price": "",
+        "shape": "cinema",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Dolby",
+                "format": "spl_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230603",
+            },
+        },
+    },
+    "Dolby CS 126MH": {
+        "brand": "Dolby",
+        "model": "CS 126MH",
+        "type": "passive",
+        "price": "",
+        "shape": "cinema",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Dolby",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230603",
+            },
+        },
+    },
+    "Dolby CS 128": {
+        "brand": "Dolby",
+        "model": "CS 128",
+        "type": "passive",
+        "price": "",
+        "shape": "cinema",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Dolby",
+                "format": "spl_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230603",
+            },
+        },
+    },
+    "Dolby CS 128MH": {
+        "brand": "Dolby",
+        "model": "CS 128MH",
+        "type": "passive",
+        "price": "",
+        "shape": "cinema",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Dolby",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230603",
+            },
+        },
+    },
+    "Dolby CS 128LF": {
+        "skip": True,  # only here to provide data for the MH freq speaker
+        "brand": "Dolby",
+        "model": "CS 128LF",
+        "type": "passive",
+        "price": "",
+        "shape": "cinema",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Dolby",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20230603",
+            },
+        },
+    },
     "Dolby CS 136LF": {
         "skip": True,  # only here to provide data for the MH freq speaker
         "brand": "Dolby",

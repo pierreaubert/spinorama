@@ -1,14 +1,16 @@
 EQ for JTR Noesis 212rt computed from Misc data
-Preference Score 5.03 with EQ 5.43
+Preference Score 5.03 with EQ 5.49
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-15-11:46:19
+Dated: 2023-06-03-10:14:06
 
-Preamp: -0.0 dB
+Preamp: -2.5 dB
 
-Filter  1: ON PK Fc   209 Hz Gain -1.74 dB Q 0.43
-Filter  2: ON PK Fc  1578 Hz Gain +0.16 dB Q 1.80
-Filter  3: ON PK Fc  4707 Hz Gain -1.30 dB Q 2.32
-Filter  4: ON PK Fc  8066 Hz Gain +0.38 dB Q 2.68
-Filter  5: ON PK Fc  9542 Hz Gain -1.48 dB Q 1.81
-Filter  6: ON PK Fc 13842 Hz Gain -0.94 dB Q 0.67
-Filter  7: ON PK Fc 14771 Hz Gain +0.60 dB Q 1.72
+Filter  1: ON LS Fc    66 Hz Gain +2.69 dB Q 0.56
+Filter  2: ON PK Fc   232 Hz Gain -2.65 dB Q 0.29
+Filter  3: ON PK Fc   417 Hz Gain +0.86 dB Q 0.53
+Filter  4: ON PK Fc   726 Hz Gain +0.19 dB Q 0.38
+Filter  5: ON PK Fc  1025 Hz Gain +0.09 dB Q 1.07
+Filter  6: ON PK Fc  1845 Hz Gain +0.64 dB Q 2.64
+Filter  7: ON PK Fc  4529 Hz Gain -0.81 dB Q 2.82
+Filter  8: ON PK Fc  9354 Hz Gain -1.20 dB Q 2.98
+Filter  9: ON PK Fc 13213 Hz Gain -0.63 dB Q 1.94

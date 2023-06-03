@@ -116,7 +116,7 @@ def merge(
     return merged
 
 
-def save(dir: str, curves):
+def data_save(dir: str, curves):
     freq = curves["freq"]
     for curve in curves:
         if curve == "freq":
@@ -133,7 +133,7 @@ def run(cea2034_json, kef_in_dir, kef_out_dir):
     cea2034 = process_json(cea2034_json)
     kef = process_kef(kef_in_dir)
     kef_merged = merge(kef, cea2034, 80, 300)
-    save(kef_out_dir, kef_merged)
+    data_save(kef_out_dir, kef_merged)
 
 
 if __name__ == "__main__":

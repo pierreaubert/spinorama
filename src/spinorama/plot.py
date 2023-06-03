@@ -568,7 +568,7 @@ def plot_graph_flat_traces(df, measurement, params):
 
 def plot_graph_regression_traces(df, measurement, params):
     restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
-    slope, intercept, r, p, se = stats.linregress(
+    slope, intercept, _, _, _ = stats.linregress(
         x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement]
     )
 

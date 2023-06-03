@@ -1,13 +1,16 @@
 EQ for Genelec 8330A computed from ASR data
-Preference Score 5.68 with EQ 6.32
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:18:36
+Preference Score 5.68 with EQ 6.35
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
+Dated: 2023-06-03-10:06:31
 
-Preamp: -2.8 dB
+Preamp: -3.0 dB
 
-Filter  1: ON LS Fc 15980 Hz Gain +1.03 dB
-Filter  2: ON PK Fc   207 Hz Gain +0.75 dB Q 1.16
-Filter  3: ON PK Fc  1149 Hz Gain +1.84 dB Q 2.96
-Filter  4: ON PK Fc  1846 Hz Gain -2.57 dB Q 2.97
-Filter  5: ON PK Fc   557 Hz Gain -0.91 dB Q 2.73
-Filter  6: ON PK Fc  2822 Hz Gain +1.09 dB Q 2.93
+Filter  1: ON LS Fc    55 Hz Gain +2.99 dB Q 0.83
+Filter  2: ON PK Fc   176 Hz Gain +1.25 dB Q 0.89
+Filter  3: ON PK Fc   363 Hz Gain +0.00 dB Q 1.52
+Filter  4: ON PK Fc   550 Hz Gain -1.38 dB Q 2.61
+Filter  5: ON PK Fc   654 Hz Gain +1.68 dB Q 0.89
+Filter  6: ON PK Fc  1137 Hz Gain +1.58 dB Q 2.66
+Filter  7: ON PK Fc  1845 Hz Gain -2.42 dB Q 2.73
+Filter  8: ON PK Fc  4529 Hz Gain +0.88 dB Q 0.96
+Filter  9: ON PK Fc 16000 Hz Gain +2.32 dB Q 1.19

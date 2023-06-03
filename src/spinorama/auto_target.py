@@ -109,11 +109,11 @@ def get_target(df_speaker_data, freq, current_curve_name, optim_config):
     selector = get_selector(df_speaker_data, optim_config)
     current_curve = df_speaker_data.loc[selector, current_curve_name].to_numpy()
     # compute linear reg on current_curve
-    slope, intercept, r_value, p_value, std_err = linregress(np.log10(freq), current_curve)
+    slope, intercept, _, _, _ = linregress(np.log10(freq), current_curve)
     # possible correction to have a LW not too bright
     if current_curve_name == "Estimated In-Room Response":
         lw_curve = df_speaker_data.loc[selector, "Listening Window"].to_numpy()
-        slope_lw, _, _, _, _r = linregress(np.log10(freq), lw_curve)
+        slope_lw, _, _, _, _ = linregress(np.log10(freq), lw_curve)
         if slope_lw > -0.5:
             slope -= slope_lw + 0.5
 

@@ -1,15 +1,16 @@
 EQ for Yamaha DXR15mkII computed from Vendors-Yamaha data
-Preference Score 2.79 with EQ 4.31
+Preference Score 2.79 with EQ 4.39
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-18:19:30
+Dated: 2023-06-03-10:05:41
 
-Preamp: -4.0 dB
+Preamp: -3.2 dB
 
-Filter  1: ON LS Fc  4851 Hz Gain +1.30 dB Q 1.67
-Filter  2: ON PK Fc   104 Hz Gain -4.07 dB Q 1.63
-Filter  3: ON PK Fc   319 Hz Gain -2.67 dB Q 2.13
-Filter  4: ON PK Fc  1100 Hz Gain -1.40 dB Q 3.00
-Filter  5: ON PK Fc 10850 Hz Gain -3.96 dB Q 2.49
-Filter  6: ON PK Fc  1977 Hz Gain +2.87 dB Q 2.00
-Filter  7: ON PK Fc   515 Hz Gain +1.05 dB Q 2.97
-Filter  8: ON PK Fc  5880 Hz Gain -1.66 dB Q 3.00
+Filter  1: ON PK Fc   101 Hz Gain -3.00 dB Q 1.24
+Filter  2: ON PK Fc   339 Hz Gain -1.37 dB Q 1.77
+Filter  3: ON PK Fc   514 Hz Gain +1.84 dB Q 1.95
+Filter  4: ON PK Fc  1137 Hz Gain -1.60 dB Q 1.86
+Filter  5: ON PK Fc  1399 Hz Gain +2.90 dB Q 2.91
+Filter  6: ON PK Fc  2046 Hz Gain +2.92 dB Q 2.95
+Filter  7: ON PK Fc  4688 Hz Gain +1.75 dB Q 2.85
+Filter  8: ON PK Fc  5768 Hz Gain -1.54 dB Q 2.70
+Filter  9: ON PK Fc 11118 Hz Gain -2.61 dB Q 2.54

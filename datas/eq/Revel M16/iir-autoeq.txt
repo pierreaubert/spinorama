@@ -1,14 +1,16 @@
 EQ for Revel M16 computed from ASR data
-Preference Score 5.58 with EQ 6.09
+Preference Score 5.58 with EQ 6.29
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-18:28:30
+Dated: 2023-06-03-10:24:44
 
-Preamp: -3.0 dB
+Preamp: -2.8 dB
 
-Filter  1: ON HS Fc 12372 Hz Gain +3.00 dB Q 0.71
-Filter  2: ON PK Fc   113 Hz Gain -3.06 dB Q 1.55
-Filter  3: ON PK Fc  2494 Hz Gain +2.00 dB Q 2.51
-Filter  4: ON PK Fc   301 Hz Gain +1.80 dB Q 1.59
-Filter  5: ON PK Fc   624 Hz Gain +0.87 dB Q 2.71
-Filter  6: ON PK Fc   980 Hz Gain -1.03 dB Q 1.70
-Filter  7: ON PK Fc  4943 Hz Gain -1.43 dB Q 2.00
+Filter  1: ON LS Fc    60 Hz Gain +2.96 dB Q 0.66
+Filter  2: ON PK Fc   158 Hz Gain -2.92 dB Q 0.56
+Filter  3: ON PK Fc   216 Hz Gain +2.17 dB Q 1.47
+Filter  4: ON PK Fc   306 Hz Gain +1.75 dB Q 2.63
+Filter  5: ON PK Fc  1061 Hz Gain -0.88 dB Q 1.63
+Filter  6: ON PK Fc  2270 Hz Gain +1.23 dB Q 0.37
+Filter  7: ON PK Fc  4853 Hz Gain -1.49 dB Q 2.80
+Filter  8: ON PK Fc 12765 Hz Gain +1.94 dB Q 2.52
+Filter  9: ON PK Fc 15704 Hz Gain +2.24 dB Q 1.78
