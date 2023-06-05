@@ -4503,6 +4503,7 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Dolby CS 128MH": {
+        "skip": True,  # only here to provide data for the MH freq speaker
         "brand": "Dolby",
         "model": "CS 128MH",
         "type": "passive",
@@ -4559,6 +4560,7 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Dolby CS 136MH": {
+        "skip": True,  # only here to provide data for the MH freq speaker
         "brand": "Dolby",
         "model": "CS 136MH",
         "type": "passive",
