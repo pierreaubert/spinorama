@@ -56,6 +56,18 @@
       Handlebars.registerHelper("isShort", function (value) {
         return value.length < 3;
       });
+      Handlebars.registerHelper("iconVolume", function (value) {
+        ivalue = parseInt(value);
+        if (ivalue <= 25) {
+          return 'fa-volume-off';
+        } else if (ivalue <= 50 ) {
+          return 'fa-volume-down';
+        } else if (ivalue <= 75 ) {
+          return 'fa-volume';
+        } else {
+          return 'fa-volume-high';
+        }
+      });
     </script>
 
     <script id="templateSpeaker" type="text/x-handlebars-template">
@@ -68,18 +80,36 @@
            </div>
            <header class="card-header">
              <p class="card-header-title">{{brand}} {{model}}</p>
-             <p class="card-header-title is-pulled-right">{{price}}</p>
            </header>
            <div class="card-content">
              <div class="content is-small">
-               <p>Tonality: <b>{{score.score}}</b></p>
-               <progress class="progress is-small is-danger" value="{{score.scoreScaled}}" max="100"></progress>
-       	       <p>Bass extension: <b>{{score.lfx}}</b>Hz</p>
-               <progress class="progress is-small is-info" value="{{score.lfxScaled}}" max="100"></progress>
-               <p>Flatness: <b>&plusmn;{{score.flatness}}</b>dB ~300-10kHz</p>
-               <progress class="progress is-small is-success" value="{{score.flatnessScaled}}" max="100"></progress>
-               <p>Smoothness (PIR): <b>{{score.smoothness}}</b></p>
-               <progress class="progress is-small is-warning" value="{{score.smoothnessScaled}}" max="100"></progress>
+               <span class="icon-text">
+                 <span class="icon">
+                   <i class="fas fa-dollar"></i>
+                 </span>
+                 <span>Price: <b>{{price}}</b></span>
+               </span>
+               <br/>
+               <span class="icon-text">
+                 <span class="icon has-text-info">
+                   <i class="fas fas-lg {{iconVolume score.scoreScaled}}"></i>
+                 </span>
+                 <span>Tonality: <b>{{score.score}}</b></span>
+               </span>
+               <br/>
+               <span class="icon-text">
+                 <span class="icon has-text-danger">
+                   <i class="fas {{iconVolume scpre.lfxScaled}}"></i>
+                 </span>
+                 <span>Bass extension: <b>{{score.lfx}}</b>Hz</span>
+               </span>
+               <br/>
+               <span class="icon-text">
+                 <span class="icon has-text-success">
+                   <i class="fas {{iconVolume score.flatnessScaled}}"></i>
+                 </span>
+                 <span>Flatness: <b>&plusmn;{{score.flatness}}</b>dB</span>
+               </span>
              </div>
            </div>
            <footer class="card-footer">

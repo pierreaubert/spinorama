@@ -134,6 +134,35 @@ function isFiltered(item, filter) {
         }
         // console.log('debug: post price ' + shouldShow)
     }
+    // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.priceMin+','+filter.priceMax+'<<<')
+    if (filter.priceMin !== undefined || filter.priceMax !== undefined) {
+        var priceMin = parseInt(filter.priceMin);
+        if(isNaN(priceMin)) {
+            priceMin = -1;
+        }
+        var priceMax = parseInt(filter.priceMax);
+        if(isNaN(priceMax)) {
+            priceMax = Number.MAX_SAFE_INTEGER;
+        }
+        // console.log('debug: pre price ' + filter.price)
+        if (item.price !== '') {
+            let price = parseInt(item.price);
+            if (isNaN(price)) {
+                shouldShow = false;
+            } else {
+                if (item.amount === 'pair') {
+                    price /= 2.0;
+                }
+                if(price>priceMax || price < priceMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            // no known price
+            shouldShow = false;
+        }
+        // console.log('debug: post price ' + shouldShow)
+    }
     return shouldShow;
 }
 
@@ -184,7 +213,8 @@ getMetadata()
             brand: '',
             power: '',
             quality: '',
-            price: '',
+            priceMin: '',
+            priceMax: '',
             reviewer: '',
             shape: '',
         };
@@ -358,8 +388,14 @@ getMetadata()
             selectDispatch();
         });
 
-        document.querySelector('#selectPrice').addEventListener('change', function () {
-            filter.price = this.value;
+        document.querySelector('#inputPriceMin').addEventListener('change', function () {
+            filter.priceMin = this.value;
+            updateUrl(url, keywords);
+            selectDispatch();
+        });
+
+        document.querySelector('#inputPriceMax').addEventListener('change', function () {
+            filter.priceMax = this.value;
             updateUrl(url, keywords);
             selectDispatch();
         });

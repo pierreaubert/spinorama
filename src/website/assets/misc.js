@@ -107,15 +107,15 @@ export function getPrice(price, amount) {
     const val = parseFloat(price);
     if (isNaN(val)) {
         // console.log('no price')
-        return '';
+        return '?';
     }
     if (amount && amount === 'each') {
         // console.log('price each '+price)
-        return price + '$';
+        return price;
     }
     // default is per pair
     // console.log('price pair '+price)
-    return (val / 2.0).toString() + '$';
+    return (val / 2.0).toString();
 }
 
 export function getField(value, field, version) {
