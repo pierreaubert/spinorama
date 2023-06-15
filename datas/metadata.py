@@ -4467,6 +4467,7 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Dolby CS 126MH": {
+        "skip": True,  # only here to provide data for the MH freq speaker
         "brand": "Dolby",
         "model": "CS 126MH",
         "type": "passive",
@@ -13729,6 +13730,47 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/m_and_k_s150/",
                 "review_published": "20220126",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 4,
+                    "size": {
+                        "height": 318,
+                        "width": 266,
+                        "depth": 308,
+                    },
+                    "weight": 11.5,
+                },
+            },
+        },
+    },
+    "Miller & Kreisel S150 THX": {
+        "brand": "Miller & Kreisel",
+        "model": "S150 THX",
+        "type": "passive",
+        "price": "1500",
+        "shape": "cinema",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/m-k-s-150thx-speaker-review.45586/",
+                    "srp": "https://www.stereophile.com/content/mk-s-150-thx-surround-loudspeaker-system-sght-review-sidebar-2-measurements",
+                },
+                "review_published": "20230615",
+                "notes": "this is an older version of the S150 around mid 1990s",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 4,
+                    "size": {
+                        "height": 318,
+                        "width": 266,
+                        "depth": 308,
+                    },
+                    "weight": 11.5,
+                },
             },
         },
     },
