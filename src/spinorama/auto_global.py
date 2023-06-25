@@ -60,7 +60,7 @@ def optim_global(
         if status is None:
             freq_min = 80
     freq_max = optim_config["target_max_freq"]
-    log_freq = np.logspace(np.log10(20), np.log10(20000), 200 + 1)
+    log_freq = np.logspace(np.log10(freq_min), np.log10(20000), 200 + 1)
     max_db = optim_config["MAX_DBGAIN"]
     min_q = optim_config["MIN_Q"]
     max_q = optim_config["MAX_Q"]
@@ -90,7 +90,7 @@ def optim_global(
         flatness = np.linalg.norm(np.add(target, peq_freq))
         return score + float(flatness) / 20.0
 
-    def opt_bounds(n: int) -> list[list[int | float]]:
+    def opt_bounds_all(n: int) -> list[list[int | float]]:
         bounds0 = [
             [0, 6],
             [0, 200],  # algo does not support log scaling so I do it manually
@@ -104,6 +104,18 @@ def optim_global(
             [-max_db, max_db],
         ]
         return bounds0 + bounds1 * (n - 1)
+
+    def opt_bounds_pk(n: int) -> list[list[int | float]]:
+        bounds0 = [
+            [3, 3],
+            [0, 200],
+            [min_q, max_q],
+            [-max_db, max_db],
+        ]
+        return bounds0 * n
+
+    def opt_bounds(n: int) -> list[list[int | float]]:
+        return opt_bounds_all(n) if optim_config["full_biquad_optim"] else opt_bounds_pk(n)
 
     def opt_integrality(n: int) -> list[bool]:
         return [True, True, False, False] * n
