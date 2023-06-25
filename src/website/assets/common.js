@@ -328,6 +328,23 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
             datas = spin[1].data;
         }
     }
+
+    const selectorOptionsFreq = {
+        buttons: [{
+            step: 'freq',
+            stepmode: 'backward',
+            count: 10,
+            label: '10hz'
+        }, {
+            step: 'freq',
+            stepmode: 'backward',
+            count: 10,
+            label: '10hz'
+        }, {
+            step: 'all',
+        }],
+    };
+
     if (layout != null && datas != null) {
         if (windowWidth < graphSmall || windowHeight < graphSmall) {
             if (windowWidth < windowHeight) {
@@ -340,6 +357,8 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
                     layout.yaxis2.visible = false;
                 }
                 layout.xaxis.title = 'SPL (dB) v.s. Frequency (Hz)';
+                layout.xaxis.rangeselector = selectorOptionsFreq;
+                layout.xaxis.rangeslider = {};
             } else {
                 // landscape
                 layout.height = windowHeight + graphSpacer;

@@ -29,13 +29,28 @@ getMetadata()
         const template = Handlebars.compile(source);
         const speakerContainer = document.querySelector('[data-num="0"');
 
+        function getDollar(price) {
+            if (price === '?') {
+                return price;
+            }
+            const iprice = parseInt(price);
+            if (iprice<=200) {
+                return '$';
+            } else if (iprice <=500) {
+                return '$$';
+            }
+            return '$$$';
+        }
+
         function getContext(key, index, value) {
             // console.log(getReviews(value));
+            const price = getPrice(value.price, value.amount);
             return {
                 id: getID(value.brand, value.model),
                 brand: value.brand,
                 model: value.model,
-                price: getPrice(value.price, value.amount),
+                price: price,
+                priceAsDollar : getDollar(price),
                 img: {
                     avif: getPicture(value.brand, value.model, 'avif'),
                     webp: getPicture(value.brand, value.model, 'webp'),

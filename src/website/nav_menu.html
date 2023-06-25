@@ -1,73 +1,129 @@
-<nav class="navbar">
-  <div class="navbar-brand">
-    <div class="navbar-item is-hidden-desktop" id="navbar-burger">
-      <button type="button" class="button" value="Menu" aria-label="Menu">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
-    <a class="navbar-item is-size-4" href="${site}"><b>SPIN</b>orama</a>
-    <div class="navbar-item is-hidden-tablet" id="smallSearch">
-      % if use_search:
-      <button type="button" class="button is-rounded" value="Search" aria-label="Search">
-        <span class="icon is-left">
-          <i class="fas fa-search"></i>
-        </span>
-      </button>
-      % endif
-    </div>
-  </div>
-  <div class="navbar-menu">
-    <div class="navbar-start">
-      <a class="navbar-item"
-         href="https://github.com/pierreaubert/spinorama">
-        <span class="icon"><i class="fab fa-lg fa-github-alt"></i></span>
-      </a>
-    </div>
-    <div class="navbar-end">
-      <a class="navbar-item" href="${site}/index.html">Search</a>
-      <a class="navbar-item" href="${site}/eqs.html">EQs</a>
-      <a class="navbar-item" href="${site}/compare.html">Compare</a>
-      <a class="navbar-item" href="${site}/similar.html">Similar<sup>&alpha;</sup></a>
-      <a class="navbar-item" href="${site}/scores.html?quality=High">Ranking</a>
-      <a class="navbar-item" href="${site}/statistics.html">Statistics</a>
-      <a class="navbar-item" href="${site}/help.html">Help</a>
-    </div>
-  </div>
-</nav>
 
-% if use_search:
-<div class="level has-background-info-dark is-hidden-mobile" id="search-bar">
-  <div class="level-item">
-    <div class="dropdown is-hoverable">
-      <div class="dropdown-trigger">
-        <button type="button" class="button" aria-haspopup="true"
-                aria-controls="filters-dropdown-menu" value="filter" aria-label="filter">
-          <span class="icon">
-            <i class="fas fa-filter" aria-hidden="true"></i>
-          </span>
-        </button>
+  <nav class="level is-light is-mobile">
+    <div class="level-left">
+      <div class="level-item is-hidden-mobile">
+        <img src="/icons/icon-bookshelves.svg" alt="SPINorama" width="48" height="40">
+        <a href="/" class="is-size-4 is-hidden-mobile"><b>SPIN</b>orama</a>
       </div>
-      <div class="dropdown-menu" id="filters-dropdown-menu" role="menu">
-        <div class="dropdown-content">
-          <div class="dropdown-item">
-            <div class="label">Filter by:</div>
+    </div>
+
+    <div class="level-right">
+
+      <div class="level-item is-hoverable px-0">
+        <div class="control has-icons-right">
+          <input id="searchInput" class="input is-info is-align-self-flex-end" type="text" placeholder="brand or model ...">
+          <div class="icon is-right"><i class="fas fa-search"></i></div>
+        </div>
+        <div class="dropdown is-hoverable is-right" id="filters-dropdown">
+          <div class="dropdown-trigger" id="filters-dropdown-trigger">
+            <button type="button" class="button" aria-haspopup="true" aria-controls="filters-dropdown-menu" value="filter" aria-label="filter">
+              <span class="icon">
+                <i class="fas fa-sliders" aria-hidden="true"></i>
+              </span>
+            </button>
           </div>
-          <hr class="dropdown-divider">
-          ${filters()}
-          <hr class="dropdown-divider">
-          <div class="dropdown-item">
-            <div class="label">Sort by:</div>
+          <div class="dropdown-menu" id="filters-dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <div class="dropdown-item">
+                <div class="label">Filter by:</div>
+              </div>
+              <hr class="dropdown-divider">
+              ${filters()}
+              <hr class="dropdown-divider">
+              <div class="dropdown-item">
+                <div class="label">Sort by:</div>
+              </div>
+              ${sortBy()}
+            </div>
           </div>
-          ${sortBy()}
+        </div>
+      </div>
+      <div class="level-item is-right dropdown is-hoverable" id="menu-main">
+        <div class="dropdown-trigger" id="menu-main-trigger">
+          <button type="button" class="button" aria-haspopup="true" aria-controls="menu-main" value="menu-main" aria-label="menu-main">
+            <span class="icon">
+              <i class="fas fa-solid fa-bars" aria-hidden="true"></i>
+            </span>
+          </button>
+        </div>
+        <div class="dropdown-menu" id="menu-main-dropdown" role="menu">
+          <div class="dropdown-content">
+            ${menuMain()}
+          </div>
         </div>
       </div>
     </div>
-    <div class="control has-icons-right">
-      <input id="searchInput" class="input" type="text" placeholder="brand or model ...">
-      <div class="icon is-right"><i class="fas fa-search"></i></div>
+
+  </nav>
+
+
+<%def name="menuMain()">
+  <a class="dropdown-item" href="https://dev.spinorama.org/index.html">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-solid fa-house"></i></span>
+      Home
     </div>
-  </div>
-</div>
+  </a>
+  <a class="dropdown-item"
+     href="https://dev.spinorama.org/eqs.html">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-solid fa-wand-magic-sparkles"></i></span>
+      EQs
+    </div>
+  </a>
+  <a class="dropdown-item"
+     href="https://dev.spinorama.org/compare.html">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-solid fa-scale-unbalanced"></i></span>
+      Compare
+    </div>
+  </a>
+  <a class="dropdown-item"
+     href="https://dev.spinorama.org/similar.html">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-solid fa-scale-balanced"></i></span>
+      Similar
+    </div>
+  </a>
+  <a class="dropdown-item"
+     href="https://dev.spinorama.org/scores.html?quality=High">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-solid fa-table"></i></span>
+      Ranking
+    </div>
+  </a>
+  <a class="dropdown-item"
+     href="https://dev.spinorama.org/statistics.html">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-solid fa-chart-column"></i></span>
+      Statistics
+    </div>
+  </a>
+  <a class="dropdown-item" href="https://dev.spinorama.org/help.html">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-regular fa-circle-question"></i></span>
+      Help
+    </div>
+  </a>
+  <a class="dropdown-item" href="https://github.com/pierreaubert/spinorama">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fab fa-lg fa-github-alt"></i></span>
+      Code
+    </div>
+  </a>
+  <a class="dropdown-item" href="https://github.com/pierreaubert/spinorama/issues">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-regular fa-bug"></i></span>
+      Bugs
+    </div>
+  </a>
+  <a class="dropdown-item" href="https://github.com/pierreaubert/spinorama/discussions">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-regular fa-comment"></i></span>
+      Feedback
+    </div>
+  </a>
+</%def>
 
 <%def name="filters()">
   ${filterQuality()}
@@ -222,4 +278,3 @@
   </div>
 </div>
 </%def>
-% endif
