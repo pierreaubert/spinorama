@@ -6862,23 +6862,6 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
-    "Focal ST6 Solo6": {
-        "brand": "Focal",
-        "model": "ST6 Solo6",
-        "type": "active",
-        "price": "1800",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/focal-solo6-st6-monitor-review.45784/",
-                "review_published": "20230621",
-            },
-        },
-    },
     "Focal Sopra 1": {
         "brand": "Focal",
         "model": "Sopra 1",
@@ -6894,6 +6877,23 @@ speakers_info: SpeakerDatabase = {
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/focal-sopra-nb01/focal-sopra-nb01-conclusion",
                 "quality": "low",
                 "review_published": "20210609",
+            },
+        },
+    },
+    "Focal ST6 Solo6": {
+        "brand": "Focal",
+        "model": "ST6 Solo6",
+        "type": "active",
+        "price": "2400",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/focal-solo6-st6-monitor-review.45784/",
+                "review_published": "20230621",
             },
         },
     },

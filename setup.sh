@@ -19,7 +19,9 @@
 ## package check
 ## ----------------------------------------------------------------------
 
-# apt install -y python3 python3-pip imagemagick keychain npm wget
+sudo [ -x /usr/bin/apt ] && /usr/bin/apt install -y python3 python3-pip imagemagick keychain npm wget python3.10-venv
+# add locale if they don't exist possibly C.utf8 would work
+sudo [ -x /usr/bin/localedef ] && /usr/bin/localedef -f UTF-8 -i en_US en_US.UTF-8
 # wget -O- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 
 export PYTHONPATH=./src:./src/website

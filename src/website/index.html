@@ -27,17 +27,19 @@
     </script>
 
     <script id="templateSpeaker" type="text/x-handlebars-template">
-       <div class="card">
+       <div class="card card-min">
            <div class="card-image">
              <picture class="image is-2by3">
                <source srcset="{{img.webp}}" type="image/webp" width="400" height="600"></source>
                <img src="{{img.jpg}}" loading="{{img.loading}}" decoding="{{img.decoding}}" alt="{{brand}} {{model}}" width="400" height="600"/>
              </picture>
            </div>
-           <header class="card-header">
-             <p class="card-header-title">{{brand}} {{model}}</p>
-           </header>
            <div class="card-content">
+             <div class="content">
+               <span><b>{{brand}}</b></span>
+               <br/>
+               <span><b>{{model}}</b></span>
+             </div>
              <div class="content is-small">
                <span class="icon-text">
                  <span class="icon">
@@ -102,7 +104,7 @@
 
     <div class="section">
       <div class="searchresults">
-        <div class="columns is-multiline is-mobile is-centered is-variable" id="speakers" data-num="0">
+        <div class="columns is-multiline is-mobile is-centered" id="speakers" data-num="0">
           <script type="module" src="./assets/index.js"></script>
         </div>
       </div>
