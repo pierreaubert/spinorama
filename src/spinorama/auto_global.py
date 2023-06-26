@@ -32,6 +32,8 @@ from spinorama.auto_loss import score_loss
 # from spinorama.auto_target import optim_compute_auto_target
 from spinorama.auto_preflight import optim_preflight
 
+FREQ_NB_POINTS = 200
+
 
 def optim_global(
     df_speaker: dict[str, pd.DataFrame],
@@ -42,9 +44,29 @@ def optim_global(
 ) -> tuple[bool, tuple[tuple[int, float, float], Peq]]:
     """Main optimiser: follow a greedy strategy"""
 
-    lw = df_speaker["CEA2034_unmelted"]["On Axis"].to_numpy()
-    freq_low = bisect.bisect(freq, 100)
-    freq_high = bisect.bisect(freq, 16000)
+    # get min/max
+    freq_min = optim_config["target_min_freq"]
+    if freq_min is None:
+        status, freq_min = get3db(df_speaker, 3.0)
+        if not status:
+            freq_min = 80
+    freq_max = optim_config.get("target_max_freq", 16000)
+
+    # Freq (hz)
+    # ---|----------|-------------------------------------------|-----|
+    #   20       -3dB                                       16000 20000
+    # ---|----------|-------------------------------------------|-----|
+    #  min      first                                        last   max
+    #  low      first                                        last  high
+
+    # get range for target
+    freq_first = max(freq_min, 20)
+    freq_last = min(freq_max, 20000)
+    freq_low = bisect.bisect(freq, freq_first)
+    freq_high = bisect.bisect(freq, freq_last)
+
+    # get lw/on
+    lw = df_speaker["CEA2034_unmelted"]["Listening Window"].to_numpy()
 
     # used for controlling optimisation of the score
     target = lw[freq_low:freq_high] - np.linspace(0, 0.5, len(lw[freq_low:freq_high]))
@@ -54,13 +76,9 @@ def optim_global(
         logger.error("Preflight check failed!")
         return False, ((0, 0, 0), [])
 
-    freq_min = optim_config["target_min_freq"]
-    if freq_min is None:
-        status, freq_min = get3db(df_speaker, 3.0)
-        if status is None:
-            freq_min = 80
-    freq_max = optim_config["target_max_freq"]
-    log_freq = np.logspace(np.log10(freq_min), np.log10(20000), 200 + 1)
+    log_freq = np.logspace(np.log10(20), np.log10(freq_max), FREQ_NB_POINTS + 1)
+    # idx_3db = bisect.bisect(log_freq, np.log10(est_3db / 2))
+    # idx_targetmin = bisect.bisect(log_freq, np.log10(est_3db))
     max_db = optim_config["MAX_DBGAIN"]
     min_q = optim_config["MIN_Q"]
     max_q = optim_config["MAX_Q"]
@@ -88,18 +106,29 @@ def optim_global(
         peq_freq = np.array(x2spl(x))[freq_low:freq_high]
         score = score_loss(df_speaker, peq)
         flatness = np.linalg.norm(np.add(target, peq_freq))
+        # this is black magic, why 20?
+        # if you increase 20 you give more flexibility to the score (and less flat LW/ON)
+        # without the constraint optimising the score get crazy results
         return score + float(flatness) / 20.0
+
+    def opt_peq_flat(x) -> float:
+        peq_freq = np.array(x2spl(x))[freq_low:freq_high]
+        flatness = np.linalg.norm(np.add(target, peq_freq))
+        return float(flatness)
+
+    def opt_peq(x) -> float:
+        return opt_peq_score(x) if optim_config["loss"] == "score_loss" else opt_peq_flat(x)
 
     def opt_bounds_all(n: int) -> list[list[int | float]]:
         bounds0 = [
             [0, 6],
-            [0, 200],  # algo does not support log scaling so I do it manually
+            [0, FREQ_NB_POINTS],  # algo does not support log scaling so I do it manually
             [min_q, 1.3],  # need to be computed from max_db
             [-max_db, max_db],
         ]
         bounds1 = [
             [3, 3],
-            [0, 200],
+            [0, FREQ_NB_POINTS],
             [min_q, max_q],
             [-max_db, max_db],
         ]
@@ -108,7 +137,7 @@ def optim_global(
     def opt_bounds_pk(n: int) -> list[list[int | float]]:
         bounds0 = [
             [3, 3],
-            [0, 200],
+            [0, FREQ_NB_POINTS],
             [min_q, max_q],
             [-max_db, max_db],
         ]
@@ -153,7 +182,7 @@ def optim_global(
             print(f"{t:3d} {f:5d} {q:1.1f} {db:+1.2f}")
 
     res = opt.differential_evolution(
-        func=opt_peq_score,
+        func=opt_peq,
         bounds=opt_bounds(max_peq),
         maxiter=max_iter,
         polish=False,
