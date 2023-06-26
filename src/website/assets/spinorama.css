@@ -29,3 +29,7 @@
 .graph {
   width: max(400px, 100%);
 }
+
+.card-min {
+    min-block-size: 300px;
+}

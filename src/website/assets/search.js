@@ -135,7 +135,7 @@ function isFiltered(item, filter) {
         // console.log('debug: post price ' + shouldShow)
     }
     // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.priceMin+','+filter.priceMax+'<<<')
-    if (filter.priceMin !== undefined || filter.priceMax !== undefined) {
+    if ((filter.priceMin !== undefined && filter.priceMin !== '') || (filter.priceMax !== undefined && filter.priceMax !== '')) {
         var priceMin = parseInt(filter.priceMin);
         if(isNaN(priceMin)) {
             priceMin = -1;
@@ -321,7 +321,7 @@ getMetadata()
             let minScore = 1;
             if (keywords !== '') {
                 results = fuse.search(keywords);
-                // console.log('searching with keywords: '+keywords+' #matches: '+results.length);
+                console.log('searching with keywords: '+keywords+' #matches: '+results.length);
                 if (results.length > 0) {
                     // minScore
                     for (const spk in results) {
@@ -340,7 +340,7 @@ getMetadata()
                 const filterTest = isFiltered(speaker, filter);
                 const searchTest = isSearch(key, results, minScore, keywords);
                 if (speakerMap.has(key)) {
-                    // console.log('key='+key+' map='+speakerMap.get(key));
+                    console.log('key='+key+' map='+speakerMap.get(key)+' filterTest='+filterTest+' searchTest='+searchTest);
                     if (filterTest && searchTest) {
                         const child = speakerMap.get(key);
                         child.classList.remove('has-background-light');
