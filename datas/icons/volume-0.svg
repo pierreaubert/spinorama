@@ -3,6 +3,6 @@
      width="640" height="512" viewBox="-320.0 -256.0 640 512">
 <defs>
 </defs>
-<rect x="-300" y="-128.0" width="140" height="256.0" rx="10" ry="10" />
+<rect x="-320" y="-128.0" width="180" height="256.0" rx="40" ry="40" />
 <path d="M-160,-128.0 L-50,-250 L-50,250 L-160,128.0 Z" fill="black" />
 </svg>

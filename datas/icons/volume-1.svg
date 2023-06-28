@@ -3,7 +3,7 @@
      width="640" height="512" viewBox="-320.0 -256.0 640 512">
 <defs>
 </defs>
-<rect x="-300" y="-128.0" width="140" height="256.0" rx="10" ry="10" />
+<rect x="-320" y="-128.0" width="180" height="256.0" rx="40" ry="40" />
 <path d="M-160,-128.0 L-50,-250 L-50,250 L-160,128.0 Z" fill="black" />
-<circle cx="-20" cy="0" r="60" stroke-dasharray="167.55160819145564 209.4395102393195" stroke-dashoffset="-293.21531433504737" stroke="black" stroke-width="50" fill="red" fill-opacity="0.0" />
+<circle cx="0" cy="0" r="80" stroke-dasharray="251.32741228718345 251.32741228718345" stroke-dashoffset="-376.99111843077515" stroke="hsl(348, 100%, 61%)" stroke-width="50" fill="hsl(348, 100%, 61%)" fill-opacity="0" />
 </svg>

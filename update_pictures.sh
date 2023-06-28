@@ -50,7 +50,9 @@ for d in "${sourcedir}/pictures"; do
     done
 done
 # copy logs
+mkdir -p docs/logos docs/icons
 cp datas/logos/* docs/logos
+cp datas/icons/* docs/icons
 # copy help pictures
 find ./src/website/help_pictures -type f -name '*.png'| while read pict; do
     smaller=$targetdir/help_pictures/`basename $pict`

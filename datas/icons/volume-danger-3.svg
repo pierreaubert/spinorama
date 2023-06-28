@@ -3,8 +3,9 @@
      width="640" height="512" viewBox="-320.0 -256.0 640 512">
 <defs>
 </defs>
-<rect x="-320" y="-128.0" width="180" height="256.0" rx="40" ry="40" />
-<path d="M-160,-128.0 L-50,-250 L-50,250 L-160,128.0 Z" fill="black" />
+<rect x="-320" y="-128.0" width="180" height="256.0" rx="40" ry="40" fill="hsl(348, 100%, 61%)" fill-opacity="0.9" />
+<path d="M-160,-128.0 L-50,-250 L-50,250 L-160,128.0 Z" fill="hsl(348, 100%, 61%)" fill-opacity="0.9" />
 <circle cx="0" cy="0" r="80" stroke-dasharray="251.32741228718345 251.32741228718345" stroke-dashoffset="-376.99111843077515" stroke="hsl(348, 100%, 61%)" stroke-width="50" fill="hsl(348, 100%, 61%)" fill-opacity="0" />
 <circle cx="0" cy="0" r="180" stroke-dasharray="376.99111843077515 753.9822368615504" stroke-dashoffset="-942.477796076938" stroke="hsl(348, 100%, 61%)" stroke-width="50" fill="hsl(348, 100%, 61%)" fill-opacity="0.0" />
+<circle cx="0" cy="0" r="280" stroke-dasharray="586.4306286700946 1172.8612573401895" stroke-dashoffset="-1466.076571675237" stroke="hsl(348, 100%, 61%)" stroke-width="50" fill="hsl(348, 100%, 61%)" fill-opacity="0.0" />
 </svg>
