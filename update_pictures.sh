@@ -21,6 +21,7 @@
 sourcedir=datas
 targetdir=docs
 mkdir -p ${targetdir}/logos
+mkdir -p ${targetdir}/icons
 mkdir -p ${targetdir}/pictures
 mkdir -p ${targetdir}/help_pictures
 for d in "${sourcedir}/pictures"; do
