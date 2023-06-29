@@ -19,7 +19,7 @@
 ## package check
 ## ----------------------------------------------------------------------
 
-OS=$(unname)
+OS=$(uname)
 
 if [ "$OS" == "Linux" ]; then
   sudo [ -x /usr/bin/apt ] && /usr/bin/apt install -y python3 python3-pip imagemagick keychain npm wget python3.10-venv
@@ -36,7 +36,7 @@ if [ "$OS" == "Linux" ]; then
   # sudo apt-get -y install nvidia-cuda nvidia-cuda-toolkit libcudnn8
 elif [ "$OS" == "Darwin" ]; then
   brew install hdf5
-  export HDF5=/opt/homebrew
+  export HDF5_DIR=/opt/homebrew
 fi
 
 export PYTHONPATH=./src:./src/website
