@@ -20,6 +20,7 @@ import math
 
 from spinorama import logger
 from spinorama.filter_iir import bw2q, Biquad
+from spinorama.filter_peq import Peq
 
 # TODO(pierre): max rgain and max Q should be in parameters
 # https://www.roomeqwizard.com/help/help_en-GB/html/eqfilters.html
@@ -159,7 +160,7 @@ def parse_eq_line(line, srate):
     return status, iir
 
 
-def parse_eq_iir_rews(filename, srate):
+def parse_eq_iir_rews(filename: str, srate: int) -> Peq:
     peq = []
     try:
         with open(filename, "r", encoding="utf8") as f:

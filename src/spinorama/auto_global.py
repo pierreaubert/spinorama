@@ -105,11 +105,13 @@ def optim_global(
         peq = x2peq(x)
         peq_freq = np.array(x2spl(x))[freq_low:freq_high]
         score = score_loss(df_speaker, peq)
-        flatness = np.linalg.norm(np.add(target, peq_freq))
+        flat = np.add(target, peq_freq)
+        flatness_l2 = np.linalg.norm(flat, ord=2)
+        # flatness_l1 = np.linalg.norm(flat, ord=1)
         # this is black magic, why 20?
         # if you increase 20 you give more flexibility to the score (and less flat LW/ON)
         # without the constraint optimising the score get crazy results
-        return score + float(flatness) / 20.0
+        return score + float(flatness_l2) / 20.0
 
     def opt_peq_flat(x) -> float:
         peq_freq = np.array(x2spl(x))[freq_low:freq_high]
@@ -132,7 +134,7 @@ def optim_global(
             [min_q, max_q],
             [-max_db, max_db],
         ]
-        return bounds0 + bounds1 * (n - 1)
+        return bounds0 + bounds1 * (n - 2) + bounds0
 
     def opt_bounds_pk(n: int) -> list[list[int | float]]:
         bounds0 = [
@@ -168,7 +170,8 @@ def optim_global(
             j += 4
             mat[i][j] = -1
             vec[i] = -5
-        return opt.LinearConstraint(mat, -np.inf, vec)
+        # lb / uf can be float or array
+        return opt.LinearConstraint(A=mat, lb=-np.inf, ub=vec, keep_feasible=False)
 
     def opt_display(xk, convergence):
         # comment if you want to print verbose traces

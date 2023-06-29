@@ -69,7 +69,7 @@ from spinorama.speaker_print import print_graphs
 from spinorama.plot import plot_params_default
 
 
-VERSION = "2.02"
+VERSION = "2.03"
 
 ACTIVATE_TRACING: bool = False
 

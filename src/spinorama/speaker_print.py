@@ -19,7 +19,6 @@
 import os
 import pathlib
 import copy
-import pandas as pd
 
 try:
     import ray
@@ -28,6 +27,8 @@ except ModuleNotFoundError:
 
 from spinorama import logger, ray_setup_logger
 from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
+from spinorama.ltype import DataSpeaker
+from spinorama.filter_peq import Peq, peq_preamp_gain
 from spinorama.pict import write_multiformat
 from spinorama.speaker_display import (
     display_spinorama,
@@ -64,21 +65,25 @@ def build_filename(speaker, origin, key, title, file_ext) -> str:
     return filename
 
 
-def build_title(origin: str, version: str, speaker: str, title: str) -> str:
+def build_title(origin: str, version: str, speaker: str, title: str, iir: Peq) -> str:
     whom = origin
-    if origin[0:7] == "Vendors-":
+    if origin[0:8] == "Vendors-":
         whom = origin.replace("Vendors-", "")
     elif origin == "Misc":
         if version[-3:] == "-sr":
             whom = "Sound & Recording (data scanned)"
         elif version[-3:] == "-pp":
             whom = "Production Partners (data scanned)"
-        elif origin == "ASR":
-            whom = "Audio Science Review"
-    return "{2} for {0} measured by {1}".format(speaker, whom, title)
+    elif origin == "ASR":
+        whom = "Audio Science Review"
+    preamp = peq_preamp_gain(iir) if len(iir) > 0 else 0.0
+    gain = ""
+    if preamp != 0.0:
+        gain = " (eq gain {:+1.1f}dB)".format(preamp)
+    return "{2} for {0} measured by {1}{3}".format(speaker, whom, title, gain)
 
 
-def print_graph(filename, chart, title, ext, force) -> int:
+def print_graph(filename, chart, ext, force) -> int:
     updated = 0
 
     check = (
@@ -105,7 +110,7 @@ def print_graph(filename, chart, title, ext, force) -> int:
 
 @ray.remote
 def print_graphs(
-    df: dict[str, pd.DataFrame],
+    data: DataSpeaker | tuple[Peq, DataSpeaker],
     speaker: str,
     version: str,
     origin: str,
@@ -115,16 +120,23 @@ def print_graphs(
     height: int,
     force_print: bool,  # noqa: FBT001
     level: int,
-):
+) -> int:
     ray_setup_logger(level)
+    #
+    df_speaker = {}
+    iir = []
+    if isinstance(data, dict):
+        df_speaker = data
+    else:
+        iir, df_speaker = data
     # may happens at development time or for partial measurements
     # or when the cache is confused (typically when you change the metadata)
-    if df is None:
-        logger.debug("df is None for %s %s %s", speaker, version, origin)
+    if df_speaker is None:
+        logger.debug("df_speaker is None for %s %s %s", speaker, version, origin)
         return 0
 
-    if len(df.keys()) == 0:
-        # if print_graph is called before df is ready
+    if len(df_speaker.keys()) == 0:
+        # if print_graph is called before df_speaker is ready
         # fix: ray call above
         return 0
 
@@ -153,8 +165,8 @@ def print_graphs(
         ("SPL Horizontal Normalized", display_spl_horizontal_normalized),
         ("SPL Vertical Normalized", display_spl_vertical_normalized),
     ):
-        logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df.keys())))
-        graph = op_call(df, graph_params)
+        logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
+        graph = op_call(df_speaker, graph_params)
         if graph is None:
             logger.debug("display %s failed for %s %s %s", op_title, speaker, version, origin)
             if op_title == "CEA2034":
@@ -170,22 +182,22 @@ def print_graphs(
     contour_params["xmin"] = origins_info[origin]["min hz"]
     contour_params["xmax"] = origins_info[origin]["max hz"]
 
-    graphs["SPL Horizontal Contour"] = display_contour_horizontal(df, contour_params)
-    graphs["SPL Vertical Contour"] = display_contour_vertical(df, contour_params)
+    graphs["SPL Horizontal Contour"] = display_contour_horizontal(df_speaker, contour_params)
+    graphs["SPL Vertical Contour"] = display_contour_vertical(df_speaker, contour_params)
     graphs["SPL Horizontal Contour Normalized"] = display_contour_horizontal_normalized(
-        df, contour_params
+        df_speaker, contour_params
     )
     graphs["SPL Vertical Contour Normalized"] = display_contour_vertical_normalized(
-        df, contour_params
+        df_speaker, contour_params
     )
 
-    graphs["SPL Horizontal Contour 3D"] = display_contour_horizontal_3d(df, contour_params)
-    graphs["SPL Vertical Contour 3D"] = display_contour_vertical_3d(df, contour_params)
+    graphs["SPL Horizontal Contour 3D"] = display_contour_horizontal_3d(df_speaker, contour_params)
+    graphs["SPL Vertical Contour 3D"] = display_contour_vertical_3d(df_speaker, contour_params)
     graphs["SPL Horizontal Contour Normalized 3D"] = display_contour_horizontal_normalized_3d(
-        df, contour_params
+        df_speaker, contour_params
     )
     graphs["SPL Vertical Contour Normalized 3D"] = display_contour_vertical_normalized_3d(
-        df, contour_params
+        df_speaker, contour_params
     )
 
     # better square
@@ -196,15 +208,15 @@ def print_graphs(
     radar_params["xmin"] = origins_info[origin]["min hz"]
     radar_params["xmax"] = origins_info[origin]["max hz"]
 
-    graphs["SPL Horizontal Radar"] = display_radar_horizontal(df, radar_params)
-    graphs["SPL Vertical Radar"] = display_radar_vertical(df, radar_params)
+    graphs["SPL Horizontal Radar"] = display_radar_horizontal(df_speaker, radar_params)
+    graphs["SPL Vertical Radar"] = display_radar_vertical(df_speaker, radar_params)
 
     # add a title and setup legend
     for k in graphs:
         title = k.replace("_smoothed", "")
         # optimised for small screens / vertical orientation
         if graphs[k] is not None:
-            text = build_title(origin, version, speaker, title)
+            text = build_title(origin, version, speaker, title, iir)
             graphs[k].update_layout(
                 title=dict(
                     text=text,
@@ -224,5 +236,5 @@ def print_graphs(
             force_update = False
             for ext in ("png", "json"):
                 filename = build_filename(speaker, origin, key, title, ext)
-                updated += print_graph(filename, graph, title, ext, force_print or force_update)
+                updated += print_graph(filename, graph, ext, force_print or force_update)
     return updated

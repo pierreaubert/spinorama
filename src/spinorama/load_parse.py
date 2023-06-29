@@ -27,8 +27,9 @@ except ModuleNotFoundError:
     import src.miniray as ray
 
 from spinorama import logger, ray_setup_logger
+from spinorama.ltype import DataSpeaker
 from spinorama.compute_misc import unify_freq
-from spinorama.filter_peq import peq_apply_measurements
+from spinorama.filter_peq import Peq, peq_apply_measurements
 from spinorama.filter_scores import noscore_apply_filter
 from spinorama.load_klippel import parse_graphs_speaker_klippel
 from spinorama.load_misc import graph_melt, check_nan
@@ -61,7 +62,7 @@ def get_mean_min_max(mparameters: dict) -> tuple[int, int]:
 @ray.remote(num_cpus=1)
 def parse_eq_speaker(
     speaker_path: str, speaker_name: str, df_ref: dict, mparameters: dict, level: int
-) -> dict:
+) -> tuple[Peq, DataSpeaker]:
     ray_setup_logger(level)
     logger.debug("Level of debug is %d", level)
     iirname = "{0}/eq/{1}/iir.txt".format(speaker_path, speaker_name)
@@ -78,7 +79,7 @@ def parse_eq_speaker(
             df_eq = filter_graphs_eq(
                 speaker_name, h_spl, v_spl, eq_h_spl, eq_v_spl, mean_min, mean_max
             )
-            return df_eq
+            return iir, df_eq
         elif "CEA2034" in df_ref:
             spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir)
             df_eq = {}
@@ -100,10 +101,11 @@ def parse_eq_speaker(
                     index="Freq", columns="Measurements", values="dB", aggfunc=max
                 ).reset_index()
 
-            return df_eq
+            df_eq["eq"] = iir
+            return iir, df_eq
 
     logger.debug("no EQ for %s/eq/%s", speaker_path, speaker_name)
-    return {}
+    return [], {}
 
 
 @ray.remote(num_cpus=1)
