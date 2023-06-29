@@ -1,16 +1,16 @@
 EQ for Part Express DIY C-Note computed from ASR data
-Preference Score 4.10 with EQ 6.40
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-06-03-10:05:40
+Preference Score 4.10 with EQ 6.45
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
+Dated: 2023-06-29-14:47:12
 
-Preamp: -2.5 dB
+Preamp: -4.3 dB
 
-Filter  1: ON LS Fc   590 Hz Gain +2.51 dB Q 0.64
-Filter  2: ON PK Fc   833 Hz Gain -2.61 dB Q 3.00
-Filter  3: ON PK Fc  1061 Hz Gain +1.65 dB Q 1.95
-Filter  4: ON PK Fc  1782 Hz Gain -1.17 dB Q 0.98
-Filter  5: ON PK Fc  3097 Hz Gain +2.45 dB Q 2.70
-Filter  6: ON PK Fc  3810 Hz Gain -1.07 dB Q 1.21
-Filter  7: ON PK Fc  7096 Hz Gain +2.17 dB Q 1.35
-Filter  8: ON PK Fc  9683 Hz Gain -1.15 dB Q 1.93
-Filter  9: ON PK Fc 11913 Hz Gain +1.27 dB Q 2.29
+Filter  1: ON LS Fc   102 Hz Gain +2.24 dB Q 1.11
+Filter  2: ON PK Fc   817 Hz Gain -2.98 dB Q 2.55
+Filter  3: ON PK Fc  1032 Hz Gain +0.47 dB Q 2.28
+Filter  4: ON PK Fc  1884 Hz Gain -2.36 dB Q 0.99
+Filter  5: ON PK Fc  3110 Hz Gain +1.47 dB Q 2.82
+Filter  6: ON PK Fc  4345 Hz Gain -1.72 dB Q 1.37
+Filter  7: ON PK Fc  7930 Hz Gain +1.38 dB Q 0.70
+Filter  8: ON PK Fc  9691 Hz Gain -1.76 dB Q 2.68
+Filter  9: ON LS Fc 13997 Hz Gain +2.08 dB Q 0.46

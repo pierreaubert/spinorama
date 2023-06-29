@@ -1,16 +1,16 @@
 EQ for JBL Synthesis SK2-3300 computed from Misc data
-Preference Score 4.71 with EQ 5.72
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-06-03-10:24:34
+Preference Score 4.71 with EQ 5.75
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
+Dated: 2023-06-29-15:00:51
 
-Preamp: -3.5 dB
+Preamp: -4.1 dB
 
-Filter  1: ON LS Fc    91 Hz Gain +2.93 dB Q 0.93
-Filter  2: ON PK Fc   209 Hz Gain -0.84 dB Q 0.66
-Filter  3: ON PK Fc   590 Hz Gain -1.20 dB Q 2.45
-Filter  4: ON PK Fc   893 Hz Gain +2.88 dB Q 2.68
-Filter  5: ON PK Fc  1261 Hz Gain +0.53 dB Q 2.19
-Filter  6: ON PK Fc  7603 Hz Gain -1.07 dB Q 1.02
-Filter  7: ON PK Fc  9354 Hz Gain -1.51 dB Q 2.06
-Filter  8: ON PK Fc 11118 Hz Gain +2.72 dB Q 2.33
-Filter  9: ON PK Fc 16000 Hz Gain +2.87 dB Q 0.50
+Filter  1: ON PK Fc    66 Hz Gain +2.97 dB Q 1.28
+Filter  2: ON PK Fc   187 Hz Gain -1.27 dB Q 0.55
+Filter  3: ON PK Fc   604 Hz Gain -1.89 dB Q 2.53
+Filter  4: ON PK Fc   873 Hz Gain +2.60 dB Q 2.73
+Filter  5: ON PK Fc  1067 Hz Gain +1.37 dB Q 1.19
+Filter  6: ON PK Fc  2082 Hz Gain +0.31 dB Q 2.70
+Filter  7: ON PK Fc  7930 Hz Gain -2.41 dB Q 1.70
+Filter  8: ON PK Fc 11454 Hz Gain +2.58 dB Q 1.59
+Filter  9: ON PK Fc 14965 Hz Gain +2.79 dB Q 0.68

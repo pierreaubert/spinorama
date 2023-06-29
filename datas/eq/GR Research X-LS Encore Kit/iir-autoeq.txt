@@ -1,15 +1,16 @@
 EQ for GR Research X-LS Encore Kit computed from ASR data
-Preference Score 5.36 with EQ 6.00
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-22-22:47:24
+Preference Score 5.36 with EQ 6.14
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
+Dated: 2023-06-29-14:34:43
 
-Preamp: -3.2 dB
+Preamp: -2.1 dB
 
-Filter  1: ON PK Fc    33 Hz Gain +3.00 dB Q 1.10
-Filter  2: ON PK Fc   120 Hz Gain -3.01 dB Q 2.00
-Filter  3: ON PK Fc  4000 Hz Gain -1.46 dB Q 2.43
-Filter  4: ON PK Fc   467 Hz Gain +1.23 dB Q 3.00
-Filter  5: ON PK Fc  1653 Hz Gain +1.30 dB Q 3.00
-Filter  6: ON PK Fc  7210 Hz Gain -0.63 dB Q 3.00
-Filter  7: ON PK Fc 13660 Hz Gain +1.33 dB Q 0.29
-Filter  8: ON PK Fc   649 Hz Gain -0.70 dB Q 3.00
+Filter  1: ON PK Fc   117 Hz Gain -2.73 dB Q 1.13
+Filter  2: ON PK Fc   331 Hz Gain -0.61 dB Q 2.09
+Filter  3: ON PK Fc   478 Hz Gain +2.00 dB Q 2.15
+Filter  4: ON PK Fc   604 Hz Gain -2.31 dB Q 2.90
+Filter  5: ON PK Fc  1541 Hz Gain +0.59 dB Q 2.43
+Filter  6: ON PK Fc  4202 Hz Gain -1.57 dB Q 2.47
+Filter  7: ON PK Fc  7417 Hz Gain -0.97 dB Q 2.15
+Filter  8: ON PK Fc 10713 Hz Gain +1.23 dB Q 1.53
+Filter  9: ON LS Fc 16000 Hz Gain +1.11 dB Q 1.08

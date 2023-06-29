@@ -1,16 +1,16 @@
 EQ for Coda Audio G512 computed from Vendors-Coda Audio data
-Preference Score 2.07 with EQ 4.78
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:17:05
+Preference Score 2.07 with EQ 4.96
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
+Dated: 2023-06-29-14:33:36
 
-Preamp: -3.1 dB
+Preamp: -2.8 dB
 
-Filter  1: ON LS Fc   395 Hz Gain +2.93 dB
-Filter  2: ON PK Fc 11871 Hz Gain -5.16 dB Q 0.55
-Filter  3: ON PK Fc  1483 Hz Gain +2.42 dB Q 2.36
-Filter  4: ON PK Fc  2294 Hz Gain +1.27 dB Q 2.96
-Filter  5: ON PK Fc 15999 Hz Gain -1.59 dB Q 2.01
-Filter  6: ON PK Fc   604 Hz Gain -1.13 dB Q 2.97
-Filter  7: ON PK Fc  1817 Hz Gain -0.82 dB Q 3.00
-Filter  8: ON PK Fc  9126 Hz Gain -0.76 dB Q 2.99
-Filter  9: ON PK Fc   145 Hz Gain -0.76 dB Q 2.95
+Filter  1: ON HS Fc   391 Hz Gain -2.57 dB Q 0.93
+Filter  2: ON PK Fc  1103 Hz Gain -1.71 dB Q 2.92
+Filter  3: ON PK Fc  1394 Hz Gain +2.73 dB Q 2.80
+Filter  4: ON PK Fc  2226 Hz Gain +2.42 dB Q 2.90
+Filter  5: ON PK Fc  4645 Hz Gain +2.89 dB Q 2.93
+Filter  6: ON PK Fc  5677 Hz Gain -1.19 dB Q 1.56
+Filter  7: ON PK Fc  7669 Hz Gain -1.49 dB Q 0.49
+Filter  8: ON PK Fc 10361 Hz Gain -2.10 dB Q 1.54
+Filter  9: ON LS Fc 15474 Hz Gain +2.77 dB Q 0.47

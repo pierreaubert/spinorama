@@ -1,16 +1,16 @@
 EQ for Perlisten s7t computed from Vendors-Perlisten data
-Preference Score 6.68 with EQ 7.84
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-06-03-09:58:04
+Preference Score 6.68 with EQ 7.89
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
+Dated: 2023-06-29-14:40:22
 
-Preamp: -2.9 dB
+Preamp: -4.6 dB
 
-Filter  1: ON LS Fc    55 Hz Gain +2.97 dB Q 0.66
-Filter  2: ON PK Fc   164 Hz Gain -1.57 dB Q 0.89
-Filter  3: ON PK Fc   417 Hz Gain -0.84 dB Q 2.03
-Filter  4: ON PK Fc   805 Hz Gain -0.54 dB Q 2.71
-Filter  5: ON PK Fc  1663 Hz Gain -0.99 dB Q 2.14
-Filter  6: ON PK Fc  3097 Hz Gain +0.55 dB Q 2.31
-Filter  7: ON PK Fc  5023 Hz Gain -0.48 dB Q 2.46
-Filter  8: ON PK Fc 11118 Hz Gain -0.79 dB Q 0.86
-Filter  9: ON PK Fc 16000 Hz Gain -0.03 dB Q 1.65
+Filter  1: ON LS Fc    55 Hz Gain +2.96 dB Q 1.03
+Filter  2: ON PK Fc   169 Hz Gain -2.93 dB Q 0.47
+Filter  3: ON PK Fc   584 Hz Gain +0.25 dB Q 2.81
+Filter  4: ON PK Fc   764 Hz Gain -0.56 dB Q 1.03
+Filter  5: ON PK Fc  2082 Hz Gain -1.43 dB Q 0.33
+Filter  6: ON PK Fc  2909 Hz Gain +0.56 dB Q 2.97
+Filter  7: ON PK Fc  3801 Hz Gain +0.43 dB Q 1.78
+Filter  8: ON PK Fc  6937 Hz Gain -0.57 dB Q 0.62
+Filter  9: ON LS Fc 14965 Hz Gain +1.84 dB Q 0.74
