@@ -1042,8 +1042,14 @@ speakers_info: SpeakerDatabase = {
         "price": "2400",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "misc-audioholics",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/arendal-1723-speaker-review.46141/",
+                "review_published": "20230704",
+            },
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
