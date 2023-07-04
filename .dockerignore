@@ -1,0 +1,6 @@
+node_modules
+docs
+bin
+build
+.vscode
+.cache
