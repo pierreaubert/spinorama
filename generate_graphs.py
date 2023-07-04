@@ -282,8 +282,8 @@ def compute(speakerlist, filters, ray_ids: dict, level: int):
                     logger.debug(
                         "Getting eq done for %s / %s / %s", speaker, m_version_eq, m_version
                     )
-                    computed_eq = ray.get(current_id)
-                    if computed_eq is not None:
+                    _, computed_eq = ray.get(current_id)
+                    if computed_eq is not None and len(computed_eq) > 0:
                         data_frame[speaker_key][m_origin][m_version_eq] = computed_eq
                         logger.debug(
                             "Getting preamp eq done for %s / %s / %s",
