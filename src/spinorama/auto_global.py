@@ -64,6 +64,7 @@ def optim_global(
     freq_last = min(freq_max, 20000)
     freq_low = bisect.bisect(freq, freq_first)
     freq_high = bisect.bisect(freq, freq_last)
+    freq_1k = bisect.bisect(freq, 1000)
 
     # get lw/on
     lw = df_speaker["CEA2034_unmelted"]["Listening Window"].to_numpy()
@@ -108,14 +109,15 @@ def optim_global(
         flat = np.add(target, peq_freq)
         flatness_l2 = np.linalg.norm(flat, ord=2)
         # flatness_l1 = np.linalg.norm(flat, ord=1)
+        flatness_midbass = np.linalg.norm(flat[0 : freq_1k - freq_low], ord=2)
         # this is black magic, why 20?
         # if you increase 20 you give more flexibility to the score (and less flat LW/ON)
         # without the constraint optimising the score get crazy results
-        return score + float(flatness_l2) / 20.0
+        return score + float(flatness_l2) / 20.0 + float(flatness_midbass) / 10
 
     def opt_peq_flat(x) -> float:
         peq_freq = np.array(x2spl(x))[freq_low:freq_high]
-        flatness = np.linalg.norm(np.add(target, peq_freq))
+        flatness = np.linalg.norm(np.add(target, peq_freq), ord=2)
         return float(flatness)
 
     def opt_peq(x) -> float:
