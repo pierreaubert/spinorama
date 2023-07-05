@@ -1,44 +1,9 @@
+<div class="block my-1 mx-1">
 
   <nav class="level is-light is-mobile">
+
     <div class="level-left">
-      <div class="level-item is-hidden-mobile">
-        <img src="/icons/icon-bookshelves.svg" alt="SPINorama" width="48" height="40">
-        <a href="/" class="is-size-4 is-hidden-mobile"><b>SPIN</b>orama</a>
-      </div>
-    </div>
-
-    <div class="level-right">
-
-      <div class="level-item is-hoverable px-0">
-        <div class="control has-icons-right">
-          <input id="searchInput" class="input is-info is-align-self-flex-end" type="text" placeholder="brand or model ...">
-          <div class="icon is-right"><i class="fas fa-search"></i></div>
-        </div>
-        <div class="dropdown is-hoverable is-right" id="filters-dropdown">
-          <div class="dropdown-trigger" id="filters-dropdown-trigger">
-            <button type="button" class="button" aria-haspopup="true" aria-controls="filters-dropdown-menu" value="filter" aria-label="filter">
-              <span class="icon">
-                <i class="fas fa-sliders" aria-hidden="true"></i>
-              </span>
-            </button>
-          </div>
-          <div class="dropdown-menu" id="filters-dropdown-menu" role="menu">
-            <div class="dropdown-content">
-              <div class="dropdown-item">
-                <div class="label">Filter by:</div>
-              </div>
-              <hr class="dropdown-divider">
-              ${filters()}
-              <hr class="dropdown-divider">
-              <div class="dropdown-item">
-                <div class="label">Sort by:</div>
-              </div>
-              ${sortBy()}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="level-item is-right dropdown is-hoverable" id="menu-main">
+      <div class="level-item is-left dropdown is-hoverable" id="menu-main">
         <div class="dropdown-trigger" id="menu-main-trigger">
           <button type="button" class="button" aria-haspopup="true" aria-controls="menu-main" value="menu-main" aria-label="menu-main">
             <span class="icon">
@@ -52,10 +17,53 @@
           </div>
         </div>
       </div>
+      <div class="level-item is-hidden-mobile py-0 my-0">
+        <a href="/" class="is-size-4 is-hidden-mobile">
+          <img src="/icons/icon-bookshelves.svg" alt="SPINorama" width="44">
+          <b>SPIN</b>orama
+        </a>
+      </div>
+    </div>
+
+    <div class="level-right">
+      <div class="level-item is-hoverable px-0">
+        <div class="field has-addons">
+          <div class="control has-icons-right is-expended">
+            <input id="searchInput" class="input is-info is-align-self-flex-end" type="text" placeholder="brand or model ...">
+            <div class="icon is-right"><i class="fas fa-search"></i></div>
+          </div>
+          <div class="control">
+            <button type="button" class="button" aria-haspopup="true" aria-controls="filters-dropdown-menu" value="filter" aria-label="filter">
+              <div class="dropdown is-hoverable is-right" id="filters-dropdown">
+                <div class="dropdown-trigger" id="filters-dropdown-trigger">
+                  <span class="icon">
+                    <i class="fas fa-sliders" aria-hidden="true"></i>
+                  </span>
+                </div>
+                <div class="dropdown-menu" id="filters-dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    <div class="dropdown-item">
+                      <div class="label">Filter by:</div>
+                    </div>
+                    <hr class="dropdown-divider">
+                    ${filters()}
+                    <hr class="dropdown-divider">
+                    <div class="dropdown-item">
+                      <div class="label">Sort by:</div>
+                    </div>
+                    ${sortBy()}
+                  </div>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
   </nav>
 
+</div>
 
 <%def name="menuMain()">
   <a class="dropdown-item" href="${site}/index.html">
