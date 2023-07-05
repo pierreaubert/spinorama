@@ -11465,8 +11465,56 @@ speakers_info: SpeakerDatabase = {
         "price": "3500",
         "amount": "2200",
         "shape": "bookshelves",
-        "default_measurement": "vendor-v2",
+        "default_measurement": "eac-v1-ported",
         "measurements": {
+            "eac-v1-ported": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20230705",
+                "reviews": {
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r3_meta/",
+                    "yt": "https://youtu.be/nbZGj69rI0c",
+                    "whi": "https://www.whathifi.com/reviews/kef-r3-meta",
+                    "hifi": "https://hifi.de/test/kef-r3-meta-test-137367",
+                },
+            },
+            "eac-v1-sealed": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20230705",
+                "reviews": {
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r3_meta/",
+                    "yt": "https://youtu.be/nbZGj69rI0c",
+                    "whi": "https://www.whathifi.com/reviews/kef-r3-meta",
+                    "hifi": "https://hifi.de/test/kef-r3-meta-test-137367",
+                },
+            },
+            "eac-v1-ported-10-degrees": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20230705",
+                "reviews": {
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r3_meta/",
+                    "yt": "https://youtu.be/nbZGj69rI0c",
+                    "whi": "https://www.whathifi.com/reviews/kef-r3-meta",
+                    "hifi": "https://hifi.de/test/kef-r3-meta-test-137367",
+                },
+            },
+            "eac-v1-sealed-10-degrees": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20230705",
+                "reviews": {
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r3_meta/",
+                    "yt": "https://youtu.be/nbZGj69rI0c",
+                    "whi": "https://www.whathifi.com/reviews/kef-r3-meta",
+                    "hifi": "https://hifi.de/test/kef-r3-meta-test-137367",
+                },
+            },
             "vendor-v2": {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
