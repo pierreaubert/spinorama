@@ -33,34 +33,33 @@
             <div class="icon is-right"><i class="fas fa-search"></i></div>
           </div>
           <div class="control">
-            <button type="button" class="button" aria-haspopup="true" aria-controls="filters-dropdown-menu" value="filter" aria-label="filter">
-              <div class="dropdown is-hoverable is-right" id="filters-dropdown">
-                <div class="dropdown-trigger" id="filters-dropdown-trigger">
+            <div class="dropdown is-hoverable is-right" id="filters-dropdown">
+              <div class="dropdown-trigger" id="filters-dropdown-trigger">
+                <button type="button" class="button" aria-haspopup="true" aria-controls="filters-dropdown-menu" value="filter" aria-label="filter">
                   <span class="icon">
                     <i class="fas fa-sliders" aria-hidden="true"></i>
                   </span>
-                </div>
-                <div class="dropdown-menu" id="filters-dropdown-menu" role="menu">
-                  <div class="dropdown-content">
-                    <div class="dropdown-item">
-                      <div class="label">Filter by:</div>
-                    </div>
-                    <hr class="dropdown-divider">
-                    ${filters()}
-                    <hr class="dropdown-divider">
-                    <div class="dropdown-item">
-                      <div class="label">Sort by:</div>
-                    </div>
-                    ${sortBy()}
+                </button>
+              </div>
+              <div class="dropdown-menu" id="filters-dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <div class="dropdown-item">
+                    <div class="label">Filter by:</div>
                   </div>
+                  <hr class="dropdown-divider">
+                  ${filters()}
+                  <hr class="dropdown-divider">
+                  <div class="dropdown-item">
+                    <div class="label">Sort by:</div>
+                  </div>
+                  ${sortBy()}
                 </div>
               </div>
-            </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
   </nav>
 
 </div>
