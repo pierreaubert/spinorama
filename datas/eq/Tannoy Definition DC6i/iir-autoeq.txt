@@ -1,16 +1,14 @@
 EQ for Tannoy Definition DC6i computed from Princeton data
 Preference Score -1000.00 with EQ -1000.00
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-06-29-14:56:32
+Dated: 2023-07-10-18:47:45
 
-Preamp: -4.9 dB
+Preamp: -4.0 dB
 
-Filter  1: ON PK Fc    25 Hz Gain +2.97 dB Q 2.16
-Filter  2: ON PK Fc    93 Hz Gain +1.69 dB Q 2.48
-Filter  3: ON PK Fc   404 Hz Gain +1.57 dB Q 2.07
-Filter  4: ON PK Fc  1180 Hz Gain -2.86 dB Q 1.11
-Filter  5: ON PK Fc  1884 Hz Gain +2.02 dB Q 2.21
-Filter  6: ON PK Fc  2545 Hz Gain +2.12 dB Q 1.36
-Filter  7: ON PK Fc  4645 Hz Gain -1.91 dB Q 2.98
-Filter  8: ON PK Fc 11843 Hz Gain +2.68 dB Q 0.70
-Filter  9: ON PK Fc 14965 Hz Gain +2.88 dB Q 2.98
+Filter  1: ON PK Fc    33 Hz Gain +2.88 dB Q 5.52
+Filter  2: ON PK Fc    81 Hz Gain +3.74 dB Q 2.88
+Filter  3: ON PK Fc   164 Hz Gain -2.57 dB Q 1.83
+Filter  4: ON PK Fc   933 Hz Gain -1.50 dB Q 2.66
+Filter  5: ON PK Fc  1220 Hz Gain -2.17 dB Q 2.35
+Filter  6: ON PK Fc  2226 Hz Gain +3.52 dB Q 2.43
+Filter  7: ON PK Fc 14965 Hz Gain +4.00 dB Q 0.60

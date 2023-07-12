@@ -1,16 +1,14 @@
 EQ for JBL PRX915 computed from Vendors-JBL data
-Preference Score 2.83 with EQ 4.08
+Preference Score 2.83 with EQ 4.12
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-06-29-15:10:42
+Dated: 2023-07-10-18:56:15
 
-Preamp: -3.1 dB
+Preamp: -3.5 dB
 
-Filter  1: ON PK Fc    84 Hz Gain -2.93 dB Q 1.21
-Filter  2: ON PK Fc   175 Hz Gain +2.98 dB Q 1.29
-Filter  3: ON PK Fc   366 Hz Gain -2.11 dB Q 0.90
-Filter  4: ON PK Fc   511 Hz Gain +1.83 dB Q 2.39
-Filter  5: ON PK Fc  1032 Hz Gain +2.35 dB Q 3.00
-Filter  6: ON PK Fc  1822 Hz Gain +2.90 dB Q 1.68
-Filter  7: ON PK Fc  3930 Hz Gain +1.75 dB Q 2.05
-Filter  8: ON PK Fc  4966 Hz Gain -1.81 dB Q 2.59
-Filter  9: ON PK Fc 13537 Hz Gain +0.03 dB Q 0.69
+Filter  1: ON PK Fc    89 Hz Gain -3.97 dB Q 1.30
+Filter  2: ON PK Fc   187 Hz Gain +1.97 dB Q 1.24
+Filter  3: ON PK Fc   320 Hz Gain -3.13 dB Q 1.27
+Filter  4: ON PK Fc  1032 Hz Gain +2.01 dB Q 5.79
+Filter  5: ON PK Fc  1822 Hz Gain +2.36 dB Q 2.30
+Filter  6: ON PK Fc  5310 Hz Gain -2.20 dB Q 5.70
+Filter  7: ON LS Fc  6709 Hz Gain +1.15 dB Q 1.18

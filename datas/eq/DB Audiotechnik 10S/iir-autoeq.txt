@@ -1,16 +1,14 @@
 EQ for DB Audiotechnik 10S computed from Vendors-DB Audiotechnik data
-Preference Score 2.81 with EQ 4.21
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-06-03-10:23:42
+Preference Score 2.81 with EQ 4.48
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
+Dated: 2023-07-10-19:01:48
 
-Preamp: -3.3 dB
+Preamp: -4.0 dB
 
-Filter  1: ON PK Fc    75 Hz Gain +2.96 dB Q 0.87
-Filter  2: ON PK Fc   266 Hz Gain +2.93 dB Q 2.67
-Filter  3: ON PK Fc   403 Hz Gain -0.40 dB Q 2.21
-Filter  4: ON PK Fc   514 Hz Gain +1.06 dB Q 2.47
-Filter  5: ON PK Fc  1219 Hz Gain +1.33 dB Q 2.69
-Filter  6: ON PK Fc  1977 Hz Gain +2.88 dB Q 2.92
-Filter  7: ON PK Fc  2432 Hz Gain -2.88 dB Q 2.52
-Filter  8: ON PK Fc 11913 Hz Gain -2.34 dB Q 2.58
-Filter  9: ON PK Fc 15171 Hz Gain +2.63 dB Q 1.86
+Filter  1: ON PK Fc    75 Hz Gain +2.32 dB Q 1.29
+Filter  2: ON PK Fc   253 Hz Gain +3.86 dB Q 4.31
+Filter  3: ON PK Fc   511 Hz Gain +1.96 dB Q 5.74
+Filter  4: ON PK Fc  1884 Hz Gain +3.83 dB Q 2.83
+Filter  5: ON PK Fc  2461 Hz Gain -3.44 dB Q 5.73
+Filter  6: ON PK Fc  7173 Hz Gain +3.13 dB Q 5.60
+Filter  7: ON PK Fc 10361 Hz Gain -0.69 dB Q 0.82

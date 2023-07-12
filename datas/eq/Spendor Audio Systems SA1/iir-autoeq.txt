@@ -1,16 +1,14 @@
 EQ for Spendor Audio Systems SA1 computed from Princeton data
 Preference Score -1000.00 with EQ -1000.00
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-06-29-15:04:23
+Dated: 2023-07-10-18:50:53
 
-Preamp: -2.3 dB
+Preamp: -4.0 dB
 
-Filter  1: ON PK Fc    21 Hz Gain -1.37 dB Q 1.92
-Filter  2: ON PK Fc    25 Hz Gain +0.87 dB Q 1.65
-Filter  3: ON PK Fc    35 Hz Gain +1.53 dB Q 1.83
-Filter  4: ON PK Fc   138 Hz Gain +2.09 dB Q 2.18
-Filter  5: ON PK Fc   933 Hz Gain +1.10 dB Q 0.55
-Filter  6: ON PK Fc  2302 Hz Gain +1.10 dB Q 2.57
-Filter  7: ON PK Fc  3801 Hz Gain -1.02 dB Q 0.27
-Filter  8: ON PK Fc  4645 Hz Gain +3.00 dB Q 2.97
-Filter  9: ON PK Fc 13092 Hz Gain +2.68 dB Q 1.15
+Filter  1: ON PK Fc    43 Hz Gain -2.49 dB Q 0.87
+Filter  2: ON PK Fc    96 Hz Gain -1.57 dB Q 0.95
+Filter  3: ON PK Fc   148 Hz Gain -2.51 dB Q 3.22
+Filter  4: ON PK Fc   625 Hz Gain +1.69 dB Q 5.57
+Filter  5: ON PK Fc  1067 Hz Gain +1.12 dB Q 2.31
+Filter  6: ON PK Fc  4645 Hz Gain +3.93 dB Q 5.33
+Filter  7: ON PK Fc 13092 Hz Gain +2.31 dB Q 1.51
