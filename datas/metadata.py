@@ -4727,6 +4727,25 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Donner Dyna 4": {
+        "brand": "Donner",
+        "model": "Dyna 4",
+        "type": "active",
+        "price": "90",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/donner-dyna-4-monitor-review.46474/",
+                },
+                "review_published": "20230717",
+            },
+        },
+    },
     "Philharmonic BMR": {
         "brand": "Philharmonic",
         "model": "BMR",
@@ -14554,6 +14573,23 @@ speakers_info: SpeakerDatabase = {
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "notes": "data from GLL file: computed at 2m with pink noise broadband",
+            },
+        },
+    },
+    "Neumann KH 120 II": {
+        "brand": "Neumann",
+        "model": "KH 120 II",
+        "type": "active",
+        "price": "1000",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh120-ii-monitor-review.46362/",
+                "review_published": "20230714",
             },
         },
     },
