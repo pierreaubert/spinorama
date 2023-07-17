@@ -304,6 +304,45 @@ getMetadata()
             window.history.pushState({}, '', url);
         }
 
+        function updateBreadcrumb(target, value) {
+            if (! url.searchParams.has('experiment')) {
+                return;
+            }
+            const breadcrumb = document.querySelector('#breadcrumb-' + target);
+            function genHtml(icon, val) {
+                return '<div class="has-icons-left">\
+                <div class="icon is-left">\
+                  <i class="fas '+icon+'"></i>'+
+                    val+'</div></div>';
+            }
+            if (breadcrumb) {
+                if (value && value !== '' ) {
+                    if (target == "quality") {
+                        breadcrumb.innerHTML = genHtml("fa-chart-line", value);
+                    } else if  (target == "reviewer") {
+                        breadcrumb.innerHTML = genHtml("fa-user-alt", value);
+                    } else if  (target == "shape") {
+                        breadcrumb.innerHTML = genHtml("fa-shapes", value);
+                    } else if  (target == "power") {
+                        if (value == "active") {
+                            breadcrumb.innerHTML = genHtml("fa-plug", "Active");
+                        } else {
+                            breadcrumb.innerHTML = genHtml("fa-plug", "Passive");
+                        }
+                    } else if  (target == "brand") {
+                        breadcrumb.innerHTML = genHtml("fa-copyright", value);
+                    } else if  (target == "price-min") {
+                        breadcrumb.innerHTML = value + "$ &lt;";
+                    } else if  (target == "price-max") {
+                        breadcrumb.innerHTML = "&lt; " + value + "$";
+                    }
+                    show(breadcrumb);
+                } else {
+                    hide(breadcrumb);
+                }
+            }
+        }
+
         function selectDispatch() {
             readUrl();
 
@@ -361,30 +400,35 @@ getMetadata()
         document.querySelector('#selectReviewer').addEventListener('change', function () {
             filter.reviewer = this.value;
             updateUrl(url, keywords);
+            updateBreadcrumb("reviewer", this.value);
             selectDispatch();
         });
 
         document.querySelector('#selectQuality').addEventListener('change', function () {
             filter.quality = this.value;
             updateUrl(url, keywords);
+            updateBreadcrumb("quality", this.value);
             selectDispatch();
         });
 
         document.querySelector('#selectShape').addEventListener('change', function () {
             filter.shape = this.value;
             updateUrl(url, keywords);
+            updateBreadcrumb("shape", this.value);
             selectDispatch();
         });
 
         document.querySelector('#selectPower').addEventListener('change', function () {
             filter.power = this.value;
             updateUrl(url, keywords);
+            updateBreadcrumb("power", this.value);
             selectDispatch();
         });
 
         document.querySelector('#selectBrand').addEventListener('change', function () {
             filter.brand = this.value;
             updateUrl(url, keywords);
+            updateBreadcrumb("brand", this.value);
             selectDispatch();
         });
 

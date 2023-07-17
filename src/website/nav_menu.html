@@ -62,6 +62,8 @@
     </div>
   </nav>
 
+  ${FilterSortState()}
+
 </div>
 
 <%def name="menuMain()">
@@ -284,4 +286,20 @@
     <div class="icon is-left"><i class="fas fa-sort"></i></div>
   </div>
 </div>
+</%def>
+
+<%def name="FilterSortState()">
+<nav class="breadcrumb has-bullet-separator is-centered is-hidden-mobile" aria-label="breadcrumbs">
+  <ul>
+    <li id="breadcrumb-quality" class="hidden"></li>
+    <li id="breadcrumb-reviewer" class="hidden"></li>
+    <li id="breadcrumb-shape" class="hidden"></li>
+    <li id="breadcrumb-power" class="hidden"></li>
+    <li id="breadcrumb-brand" class="hidden"></li>
+    <li id="breadcrumb-price-min" class="hidden"></li>
+    <li id="breadcrumb-price-max" class="hidden"></li>
+    <li id="breadcrumb-sort-by" class="hidden"></li>
+    <li id="breadcrumb-sort-order" class="hidden"></li>
+  </ul>
+</nav>
 </%def>
