@@ -1,0 +1,11 @@
+Donner Dyna 4 APO EQ Score 96000Hz
+July182023-111214
+
+Preamp: -2.4 dB
+
+Filter 1: ON HPQ Fc 45.48,    0.00,    1.15
+Filter 2: ON PK Fc 130.64,    -5.02,    0.84
+Filter 3: ON PK Fc 661.91,    2.32,    1.22
+Filter 4: ON PK Fc 2382.29,    -2.99,    4.03
+Filter 5: ON PK Fc 3331.87,    3.44,    1.68
+Filter 6: ON PK Fc 7287.37,    -5.62,    1.49

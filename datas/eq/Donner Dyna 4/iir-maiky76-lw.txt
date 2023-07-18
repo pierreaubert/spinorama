@@ -1,0 +1,12 @@
+onner Dyna 4 APO EQ LW 96000Hz
+July182023-111214
+
+Preamp: -4 dB
+
+Filter 1: ON HPQ Fc 46.48,    0.00,    1.15
+Filter 2: ON PK Fc 130.18,    -5.22,    1.09
+Filter 3: ON PK Fc 707.24,    3.01,    1.29
+Filter 4: ON PK Fc 2311.54,    -1.72,    2.83
+Filter 5: ON PK Fc 3186.42,    4.53,    1.82
+Filter 6: ON PK Fc 7334.05,    -3.95,    1.87
+Filter 7: ON PK Fc 9662.85,    -2.18,    4.47
