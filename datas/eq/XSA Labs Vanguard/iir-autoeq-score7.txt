@@ -1,0 +1,15 @@
+EQ for XSA Labs Vanguard computed from ASR data
+Preference Score 3.40 with EQ 5.85
+Generated from
+http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
+Dated: 2023-07-23-08:44:43
+
+Preamp: -5.9 dB
+
+Filter  1: ON LS Fc    87 Hz Gain +5.91 dB Q 0.70
+Filter  2: ON PK Fc   366 Hz Gain +3.58 dB Q 0.84
+Filter  3: ON PK Fc   817 Hz Gain +0.62 dB Q 5.94
+Filter  4: ON PK Fc  1220 Hz Gain -2.58 dB Q 2.42
+Filter  5: ON PK Fc  2302 Hz Gain -2.12 dB Q 2.71
+Filter  6: ON PK Fc  4345 Hz Gain +3.62 dB Q 5.51
+Filter  7: ON PK Fc 11843 Hz Gain +5.17 dB Q 0.38

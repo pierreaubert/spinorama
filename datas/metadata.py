@@ -19497,6 +19497,26 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "XSA Labs Vanguard": {
+        "brand": "XSA Labs",
+        "model": "Vanguard",
+        "type": "passive",
+        "price": "1000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/xsa-labs-vanguard-speaker-review.46629/",
+                    "diy": "https://www.diyaudio.com/community/threads/vanguard-speaker.388184/",
+                },
+                "review_published": "20230723",
+            },
+        },
+    },
     "Yamaha DBR10": {
         "brand": "Yamaha",
         "model": "DBR10",
