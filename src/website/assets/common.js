@@ -357,8 +357,8 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
                     layout.yaxis2.visible = false;
                 }
                 layout.xaxis.title = 'SPL (dB) v.s. Frequency (Hz)';
-                layout.xaxis.rangeselector = selectorOptionsFreq;
-                layout.xaxis.rangeslider = {};
+                // layout.xaxis.rangeselector = selectorOptionsFreq;
+                // layout.xaxis.rangeslider = {};
             } else {
                 // landscape
                 layout.height = windowHeight + graphSpacer;

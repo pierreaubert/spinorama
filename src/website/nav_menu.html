@@ -48,10 +48,25 @@
                   </div>
                   <hr class="dropdown-divider">
                   ${filters()}
-                  <hr class="dropdown-divider">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="control">
+            <div class="dropdown is-hoverable is-right" id="sorters-dropdown">
+              <div class="dropdown-trigger" id="sorters-dropdown-trigger">
+                <button type="button" class="button" aria-haspopup="true" aria-controls="sorters-dropdown-menu" value="filter" aria-label="filter">
+                  <span class="icon">
+                    <i class="fas fa-solid fa-sort" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="sorters-dropdown-menu" role="menu">
+                <div class="dropdown-content">
                   <div class="dropdown-item">
                     <div class="label">Sort by:</div>
                   </div>
+                  <hr class="dropdown-divider">
                   ${sortBy()}
                 </div>
               </div>
@@ -61,9 +76,6 @@
       </div>
     </div>
   </nav>
-
-  ${FilterSortState()}
-
 </div>
 
 <%def name="menuMain()">
@@ -141,6 +153,10 @@
   ${filterPower()}
   ${filterBrand()}
   ${filterPrice()}
+  ${filterWeight()}
+  ${filterHeight()}
+  ${filterWidth()}
+  ${filterDepth()}
 </%def>
 
 <%def name="filterQuality()">
@@ -261,6 +277,76 @@
 </div>
 </%def>
 
+<%def name="filterWeight()">
+<div class="dropdown-item">
+  <div class="label">Weight: (kg)</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputWeightMin">
+      <div class="icon is-left"><i class="fas fa-solid fa-weight-scale"></i></div>
+    </div>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputWeightMax">
+      <div class="icon is-left"><i class="fas fa-solid fa-weight-scale"></i></div>
+    </div>
+  </div>
+</div>
+</%def>
+
+<%def name="filterHeight()">
+<div class="dropdown-item">
+  <div class="label">Height (cm):</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputHeightMin">
+      <div class="icon is-left"><i class="fas fa-solid fa-ruler-vertical"></i></div>
+    </div>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputHeightMax">
+      <div class="icon is-left"><i class="fas fa-solid fa-ruler-vertical"></i></div>
+    </div>
+  </div>
+</div>
+</%def>
+
+<%def name="filterWidth()">
+<div class="dropdown-item">
+  <div class="label">Width: (cm)</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputWidthMin">
+      <div class="icon is-left"><i class="fas fa-solid fa-ruler-horizontal"></i></div>
+    </div>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputWidthMax">
+      <div class="icon is-left"><i class="fas fa-solid fa-ruler-horizontal"></i></div>
+    </div>
+  </div>
+</div>
+</%def>
+
+<%def name="filterDepth()">
+<div class="dropdown-item">
+  <div class="label">Depth: (cm)</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputDepthMin">
+    </div>
+    <div class="control">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputDepthMax">
+    </div>
+  </div>
+</div>
+</%def>
+
 <%def name="sortBy()">
 <div class="dropdown-item">
   <div class="control has-icons-left">
@@ -286,20 +372,11 @@
     <div class="icon is-left"><i class="fas fa-sort"></i></div>
   </div>
 </div>
-</%def>
-
-<%def name="FilterSortState()">
-<nav class="breadcrumb has-bullet-separator is-centered is-hidden-mobile" aria-label="breadcrumbs">
-  <ul>
-    <li id="breadcrumb-quality" class="hidden"></li>
-    <li id="breadcrumb-reviewer" class="hidden"></li>
-    <li id="breadcrumb-shape" class="hidden"></li>
-    <li id="breadcrumb-power" class="hidden"></li>
-    <li id="breadcrumb-brand" class="hidden"></li>
-    <li id="breadcrumb-price-min" class="hidden"></li>
-    <li id="breadcrumb-price-max" class="hidden"></li>
-    <li id="breadcrumb-sort-by" class="hidden"></li>
-    <li id="breadcrumb-sort-order" class="hidden"></li>
-  </ul>
-</nav>
+<div class="dropdown-item">
+  <div class="control">
+    <label class="checkbox">
+      <input type="checkbox" id="sortReverse">Reverse search order.
+    </label>
+  </div>
+</div>
 </%def>
