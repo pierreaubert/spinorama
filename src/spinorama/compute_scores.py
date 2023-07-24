@@ -26,6 +26,17 @@ from scipy.stats import linregress
 from spinorama import logger
 
 
+#
+def round_down(x: float, decimals: int) -> float:
+    """return a rounded value down"""
+    if x > 0:
+        mul = 10**decimals
+        return math.floor(x * mul) / mul
+    else:
+        # not necessary what I want
+        return round(x, decimals)
+
+
 # https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
 def octave(count: int) -> List[Tuple[float, float, float]]:
     """compute 1/N octave band
@@ -224,19 +235,19 @@ def speaker_pref_rating(cea2034, pir, rounded):
 
         if rounded:
             ratings = {
-                "nbd_on_axis": round(nbd_on_axis, 2),
-                "nbd_listening_window": round(nbd_listening_window, 2),
-                "nbd_sound_power": round(nbd_sound_power, 2),
-                "nbd_pred_in_room": round(nbd_pred_in_room, 2),
-                "sm_pred_in_room": round(sm_pred_in_room, 2),
-                "sm_sound_power": round(sm_sound_power, 2),
-                "pref_score_wsub": round(pref_wsub, 1),
+                "nbd_on_axis": round_down(nbd_on_axis, 2),
+                "nbd_listening_window": round_down(nbd_listening_window, 2),
+                "nbd_sound_power": round_down(nbd_sound_power, 2),
+                "nbd_pred_in_room": round_down(nbd_pred_in_room, 2),
+                "sm_pred_in_room": round_down(sm_pred_in_room, 2),
+                "sm_sound_power": round_down(sm_sound_power, 2),
+                "pref_score_wsub": round_down(pref_wsub, 1),
             }
             if aad_on_axis != -1.0:
-                ratings["aad_on_axis"] = round(aad_on_axis, 2)
+                ratings["aad_on_axis"] = round_down(aad_on_axis, 2)
             ratings["lfx_hz"] = int(pow(10, lfx_hz))  # in Hz
-            ratings["lfq"] = round(lfq_db, 2)
-            ratings["pref_score"] = round(pref, 1)
+            ratings["lfq"] = round_down(lfq_db, 2)
+            ratings["pref_score"] = round_down(pref, 1)
         else:
             ratings = {
                 "nbd_on_axis": nbd_on_axis,
