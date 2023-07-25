@@ -1,1 +1,1 @@
-iir-autoeq-score7.txt
+iir-autoeq.txt
