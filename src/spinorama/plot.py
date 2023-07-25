@@ -478,17 +478,18 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     restricted_line = [slope * math.log10(f) + intercept for f in restricted_freq.Freq]
     line = [slope * math.log10(f) + intercept for f in df.Freq]
 
-    # 600 px = 50 dB
+    # 600 px = 50 dB; this is super annoying ; parameter takes pixels
+    # that depends on toons of parameters
     height = params["height"]
-    one_db = (height - 150) / 50
+    one_db = (height - 140) / 25
 
     # add 3 dBs zone
     traces.append(
         go.Scatter(
             x=df.Freq,
             y=line,
-            line=dict(width=6 * one_db, color="#E4FC5B"),
-            opacity=0.4,
+            line=dict(width=6 * one_db, color="#E2F705"),
+            opacity=0.5,
             name="Band ±3dB",
         )
     )
@@ -497,8 +498,8 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
         go.Scatter(
             x=df.Freq,
             y=line,
-            line=dict(width=3 * one_db, color="#E4FC5B"),
-            opacity=0.7,
+            line=dict(width=3 * one_db, color="#E2F705"),
+            opacity=1.0,
             name="Band ±1.5dB",
         )
     )
@@ -518,11 +519,15 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     )
 
     # add -3/+3 lines
-    offset = 3  # math.sqrt(3*3+slope*slope)
+    offset = 3
+    # compute the offset as a function of the slope
+    # theta = math.atan(slope)
+    offset_freq = 0
+    offset_spl = offset
     traces.append(
         go.Scatter(
-            x=restricted_freq.Freq,
-            y=np.array(restricted_line) + offset,
+            x=restricted_freq.Freq + offset_freq,
+            y=np.array(restricted_line) + offset_spl,
             line=dict(width=2, color="black", dash="dash"),
             opacity=1,
             showlegend=False,
@@ -572,9 +577,7 @@ def plot_graph_regression_traces(df, measurement, params):
         x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement]
     )
 
-    return plot_graph_traces(
-        df, measurement, params, slope, intercept, "Linear Regression (midrange)"
-    )
+    return plot_graph_traces(df, measurement, params, slope, intercept, "Midrange ±3dB")
 
 
 def plot_graph_flat(df, measurement, params):
