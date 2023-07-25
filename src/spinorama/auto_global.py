@@ -78,8 +78,6 @@ def optim_global(
         return False, ((0, 0, 0), [])
 
     log_freq = np.logspace(np.log10(20), np.log10(freq_max), FREQ_NB_POINTS + 1)
-    # idx_3db = bisect.bisect(log_freq, np.log10(est_3db / 2))
-    # idx_targetmin = bisect.bisect(log_freq, np.log10(est_3db))
     max_db = optim_config["MAX_DBGAIN"]
     min_q = optim_config["MIN_Q"]
     max_q = optim_config["MAX_Q"]
@@ -107,13 +105,14 @@ def optim_global(
         peq_freq = np.array(x2spl(x))[freq_low:freq_high]
         score = score_loss(df_speaker, peq)
         flat = np.add(target, peq_freq)
-        flatness_l2 = np.linalg.norm(flat, ord=2)
+        # flatness_l2 = np.linalg.norm(flat, ord=2)
         # flatness_l1 = np.linalg.norm(flat, ord=1)
-        flatness_midbass = np.linalg.norm(flat[0 : freq_1k - freq_low], ord=2)
-        # this is black magic, why 20?
+        flatness_bass_mid = np.linalg.norm(flat[0 : freq_1k - freq_low], ord=2)
+        flatness_mid_high = np.linalg.norm(flat[freq_1k - freq_low :], ord=2)
+        # this is black magic, why 10, 20, 40?
         # if you increase 20 you give more flexibility to the score (and less flat LW/ON)
         # without the constraint optimising the score get crazy results
-        return score + float(flatness_l2) / 20.0 + float(flatness_midbass) / 10
+        return score + float(flatness_bass_mid) / 10 + float(flatness_mid_high) / 50
 
     def opt_peq_flat(x) -> float:
         peq_freq = np.array(x2spl(x))[freq_low:freq_high]

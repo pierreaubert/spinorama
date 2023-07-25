@@ -29,7 +29,7 @@ from spinorama import logger
 #
 def round_down(x: float, decimals: int) -> float:
     """return a rounded value down"""
-    if x > 0:
+    if x > 0 and decimals <= 5:
         mul = 10**decimals
         return math.floor(x * mul) / mul
     else:
