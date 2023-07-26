@@ -1,16 +1,14 @@
 EQ for EAW MKC80 computed from Vendors-EAW data
-Preference Score 4.75 with EQ 5.64
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-21:14:24
+Preference Score 4.75 with EQ 5.71
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
+Dated: 2023-07-25-23:11:26
 
-Preamp: -8.0 dB
+Preamp: -5.8 dB
 
-Filter  1: ON LS Fc    98 Hz Gain +2.90 dB Q 0.53
-Filter  2: ON PK Fc  1011 Hz Gain +2.62 dB Q 2.76
-Filter  3: ON PK Fc  2957 Hz Gain +1.87 dB Q 1.48
-Filter  4: ON PK Fc  7385 Hz Gain +1.45 dB Q 1.79
-Filter  5: ON PK Fc 12666 Hz Gain +1.63 dB Q 1.51
-Filter  6: ON PK Fc 13667 Hz Gain +1.45 dB Q 0.53
-Filter  7: ON PK Fc 14060 Hz Gain +1.93 dB Q 1.77
-Filter  8: ON PK Fc 14895 Hz Gain +1.72 dB Q 0.85
-Filter  9: ON PK Fc 15761 Hz Gain +2.34 dB Q 1.41
+Filter  1: ON LS Fc    85 Hz Gain +5.90 dB Q 0.63
+Filter  2: ON PK Fc   308 Hz Gain -0.88 dB Q 0.30
+Filter  3: ON PK Fc  1003 Hz Gain +2.96 dB Q 2.78
+Filter  4: ON PK Fc  1286 Hz Gain -1.12 dB Q 3.29
+Filter  5: ON PK Fc  2797 Hz Gain +1.10 dB Q 2.55
+Filter  6: ON PK Fc  5541 Hz Gain -2.87 dB Q 0.66
+Filter  7: ON PK Fc  9694 Hz Gain +5.84 dB Q 0.26

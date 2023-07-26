@@ -1,14 +1,14 @@
 EQ for Dolby CS 126MH computed from Vendors-Dolby data
-Preference Score -4.18 with EQ -2.92
+Preference Score -4.18 with EQ -2.82
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-07-10-18:56:55
+Dated: 2023-07-25-23:05:46
 
-Preamp: -24.9 dB
+Preamp: -29.3 dB
 
-Filter  1: ON PK Fc    33 Hz Gain +3.84 dB Q 0.27
-Filter  2: ON PK Fc    50 Hz Gain +3.87 dB Q 0.30
-Filter  3: ON PK Fc    62 Hz Gain +3.84 dB Q 0.30
-Filter  4: ON PK Fc    76 Hz Gain +3.87 dB Q 0.43
-Filter  5: ON PK Fc    93 Hz Gain +3.87 dB Q 0.28
-Filter  6: ON PK Fc   117 Hz Gain +3.87 dB Q 0.71
-Filter  7: ON LS Fc   378 Hz Gain +3.97 dB Q 1.18
+Filter  1: ON PK Fc    34 Hz Gain +5.99 dB Q 0.26
+Filter  2: ON PK Fc    42 Hz Gain +5.99 dB Q 0.28
+Filter  3: ON PK Fc    49 Hz Gain +5.99 dB Q 0.30
+Filter  4: ON PK Fc    59 Hz Gain +5.86 dB Q 0.28
+Filter  5: ON PK Fc   555 Hz Gain -1.53 dB Q 5.18
+Filter  6: ON PK Fc  1101 Hz Gain -4.38 dB Q 0.76
+Filter  7: ON LS Fc  2394 Hz Gain +5.80 dB Q 0.48

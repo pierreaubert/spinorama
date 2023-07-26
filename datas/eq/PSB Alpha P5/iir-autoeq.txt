@@ -1,16 +1,14 @@
 EQ for PSB Alpha P5 computed from ASR data
-Preference Score 4.14 with EQ 5.96
+Preference Score 4.14 with EQ 6.14
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-06-29-14:54:10
+Dated: 2023-07-25-23:10:07
 
-Preamp: -3.4 dB
+Preamp: -4.1 dB
 
-Filter  1: ON PK Fc   113 Hz Gain -1.33 dB Q 1.04
-Filter  2: ON PK Fc   262 Hz Gain +1.62 dB Q 1.16
-Filter  3: ON PK Fc   378 Hz Gain +2.34 dB Q 2.25
-Filter  4: ON PK Fc   646 Hz Gain +2.71 dB Q 2.37
-Filter  5: ON PK Fc   790 Hz Gain -2.61 dB Q 2.95
-Filter  6: ON PK Fc  1541 Hz Gain +1.86 dB Q 2.24
-Filter  7: ON PK Fc  3216 Hz Gain +1.10 dB Q 2.80
-Filter  8: ON PK Fc  4064 Hz Gain -1.33 dB Q 1.95
-Filter  9: ON PK Fc  9064 Hz Gain +1.34 dB Q 1.00
+Filter  1: ON LS Fc    58 Hz Gain +5.96 dB Q 0.99
+Filter  2: ON PK Fc   348 Hz Gain +4.21 dB Q 0.77
+Filter  3: ON PK Fc   669 Hz Gain +2.73 dB Q 1.42
+Filter  4: ON PK Fc   807 Hz Gain -3.96 dB Q 5.26
+Filter  5: ON PK Fc  1649 Hz Gain +3.13 dB Q 2.75
+Filter  6: ON PK Fc  3167 Hz Gain +1.90 dB Q 5.71
+Filter  7: ON LS Fc  4893 Hz Gain -1.76 dB Q 0.78

@@ -1,16 +1,14 @@
 EQ for Kling Freitag Sequenza 5B+5W computed from Vendors-Kling Freitag data
-Preference Score 1.63 with EQ 2.58
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.20
-Dated: 2023-03-06-14:25:50
+Preference Score 1.63 with EQ 2.63
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
+Dated: 2023-07-25-23:06:09
 
-Preamp: -8.9 dB
+Preamp: -12.7 dB
 
-Filter  1: ON PK Fc    37 Hz Gain +3.00 dB Q 1.10
-Filter  2: ON PK Fc  6250 Hz Gain +3.00 dB Q 0.05
-Filter  3: ON PK Fc   177 Hz Gain -5.22 dB Q 2.43
-Filter  4: ON PK Fc   609 Hz Gain +3.00 dB Q 0.05
-Filter  5: ON PK Fc    96 Hz Gain -3.76 dB Q 0.55
-Filter  6: ON PK Fc  1700 Hz Gain +3.00 dB Q 0.05
-Filter  7: ON PK Fc   261 Hz Gain -5.18 dB Q 1.00
-Filter  8: ON PK Fc   864 Hz Gain -2.11 dB Q 3.00
-Filter  9: ON PK Fc   106 Hz Gain -0.57 dB Q 1.40
+Filter  1: ON LS Fc    53 Hz Gain +5.94 dB Q 0.78
+Filter  2: ON PK Fc   176 Hz Gain -4.73 dB Q 2.39
+Filter  3: ON PK Fc   298 Hz Gain -2.32 dB Q 4.24
+Filter  4: ON PK Fc   490 Hz Gain +4.28 dB Q 1.16
+Filter  5: ON PK Fc  1649 Hz Gain +5.00 dB Q 0.40
+Filter  6: ON PK Fc  4598 Hz Gain +5.60 dB Q 0.49
+Filter  7: ON PK Fc 10000 Hz Gain +5.99 dB Q 0.25

@@ -1,16 +1,14 @@
 EQ for Novacoustic KIRA 10 computed from Vendors-Novacoustic data
-Preference Score -2.04 with EQ -0.04
+Preference Score -2.04 with EQ 0.90
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-06-29-14:54:50
+Dated: 2023-07-25-23:02:46
 
-Preamp: -4.8 dB
+Preamp: -6.0 dB
 
-Filter  1: ON LS Fc   106 Hz Gain +2.97 dB Q 0.29
-Filter  2: ON PK Fc   764 Hz Gain -2.99 dB Q 2.94
-Filter  3: ON PK Fc  1067 Hz Gain +2.63 dB Q 2.97
-Filter  4: ON PK Fc  1648 Hz Gain +2.99 dB Q 2.99
-Filter  5: ON PK Fc  1948 Hz Gain -2.93 dB Q 2.88
-Filter  6: ON PK Fc  2302 Hz Gain -2.81 dB Q 2.95
-Filter  7: ON PK Fc  4492 Hz Gain +3.00 dB Q 2.99
-Filter  8: ON PK Fc 12662 Hz Gain +2.99 dB Q 2.28
-Filter  9: ON LS Fc 16000 Hz Gain +1.83 dB Q 0.53
+Filter  1: ON LS Fc   106 Hz Gain +5.97 dB Q 1.26
+Filter  2: ON PK Fc   735 Hz Gain -4.03 dB Q 5.99
+Filter  3: ON PK Fc  1067 Hz Gain +2.83 dB Q 3.97
+Filter  4: ON PK Fc  1649 Hz Gain +5.83 dB Q 5.96
+Filter  5: ON PK Fc  2114 Hz Gain -4.82 dB Q 3.44
+Filter  6: ON PK Fc  4457 Hz Gain +4.42 dB Q 5.49
+Filter  7: ON PK Fc  9397 Hz Gain -1.73 dB Q 1.28
