@@ -4782,6 +4782,27 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Philharmonic Ceramic Mini": {
+        "skip": True,
+        "brand": "Philharmonic",
+        "model": "Ceramic Mini",
+        "type": "passive",
+        "price": "850",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/philharmonic_ceramic_mini/",
+                    "yt": "https://youtu.be/313qwtkdMxo",
+                },
+                "review_published": "20230730",
+            },
+        },
+    },
     "Definitive Technology ProMonitor 1000": {
         "brand": "Definitive Technology",
         "model": "ProMonitor 1000",
@@ -4904,6 +4925,25 @@ speakers_info: SpeakerDatabase = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/dynaudio-lyd-5-studio-monitor-review.15963/",
+            },
+        },
+    },
+    "Dynaudio Special Forty": {
+        "skip": True,
+        "brand": "Dynaudio",
+        "model": "Special Forty",
+        "type": "passive",
+        "price": "900",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "",
+                },
             },
         },
     },
@@ -10291,6 +10331,27 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "JBL 4329P": {
+        "skip": True,
+        "brand": "JBL",
+        "model": "4329P",
+        "type": "active",
+        "price": "4500",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_4329p/",
+                    "yt": "https://youtu.be/XhOz8WsKb8U",
+                },
+                "review_published": "20230731",
+            },
+        },
+    },
     "JBL 4349": {
         "brand": "JBL",
         "model": "4349",
@@ -13494,6 +13555,36 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/martinlogan-motion-4i-review-bookshelf-speaker.18805/",
                 "review_published": "20201226",
+            },
+        },
+    },
+    "MartinLogan Motion B10": {
+        "brand": "MartinLogan",
+        "model": "Motion B10",
+        "type": "passive",
+        "price": "360",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/martin-logan-b10-speaker-review.46798/",
+                    "eac": "",
+                    "yt": "https://www.youtube.com/live/XXTBJbb3naU?feature=share",
+                },
+                "review_published": "20230730",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 5,
+                    "size": {
+                        "height": 318,
+                        "width": 178,
+                        "depth": 248,
+                    },
+                    "weight": 6.6,
+                },
             },
         },
     },
@@ -17922,6 +18013,15 @@ speakers_info: SpeakerDatabase = {
         "shape": "bookshelves",
         "default_measurement": "vendor",
         "measurements": {
+            #            "eac" : {
+            #                "origin": "ErinsAudioCorner",
+            #                "format": "klippel",
+            #                "reviews": {
+            #                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/revel_m126be/",
+            #                    "yt": "https://youtu.be/KecbtoerdE0",
+            #                },
+            #                "review_published": "20230731",
+            #            },
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
