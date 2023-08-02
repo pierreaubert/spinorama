@@ -23,6 +23,10 @@ from spinorama.filter_iir import bw2q, Biquad
 from spinorama.filter_peq import Peq
 
 # TODO(pierre): max rgain and max Q should be in parameters
+INPUT_MAX_GAIN = 30
+INPUT_MAX_Q = 30
+
+
 # https://www.roomeqwizard.com/help/help_en-GB/html/eqfilters.html
 
 
@@ -103,14 +107,14 @@ def parse_eq_line(line, srate):
     rgain = 0.0
     if gain:
         rgain = float(gain)
-        if rgain < -10 or rgain > 30:
+        if abs(rgain) > INPUT_MAX_GAIN:
             logger.debug("IIR peq gain %f is large!", rgain)
             return None, None
 
     rq = 0.0
     if q:
         rq = float(q)
-        if rq < 0 or rq > 20:
+        if rq < 0 or rq > INPUT_MAX_Q:
             logger.debug("IIR peq Q %f is out of bounds!", rq)
             return None, None
 
