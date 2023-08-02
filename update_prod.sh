@@ -17,8 +17,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #TARGET1=pierre@ch.spinorama.org:/var/www/html/spinorama-prod
-#TARGET2=pierre@es.spinorama.org:/var/www/html/spinorama-prod
-TARGET3=pierre@192.168.1.19:/var/www/html/spinorama-prod
+TARGET2=pierre@es.spinorama.org:/var/www/html/spinorama-prod
+#TARGET3=pierre@192.168.1.19:/var/www/html/spinorama-prod
 
 # check
 command=$(grep dev.spinorama.org docs/*.html | wc -l)
@@ -38,9 +38,9 @@ fi
 
 # copy
 #for target in "$TARGET1" "$TARGET2" "$TARGET3"; do
-for target in "$TARGET3"; do
+for target in "$TARGET2"; do
     echo "Sync $target"
-    rsync -arv --exclude '*.png' --delete ./docs/* "$target"
-    rsync -arv --include '*.png' --delete ./docs/pictures/* "$target/pictures"
-    rsync -arv --include '*.png' --delete ./docs/help_pictures/* "$target/help_pictures"
+    rsync -arvz --exclude '*.png' --delete ./docs/* "$target"
+    rsync -arvz --include '*.png' --delete ./docs/pictures/* "$target/pictures"
+    rsync -arvz --include '*.png' --delete ./docs/help_pictures/* "$target/help_pictures"
 done

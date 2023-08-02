@@ -19,7 +19,8 @@
 # TARGET=$HOME/src/pierreaubert.github.io/spinorama
 # TARGET=/var/www/html/spinorama-prod
 # TARGET=/var/www/html/spinorama-dev
-TARGET=pierre@192.168.1.19:/var/www/html/spinorama-dev
+# TARGET=pierre@192.168.1.19:/var/www/html/spinorama-dev
+TARGET=pierre@es.spinorama.org:/var/www/html/spinorama-dev
 # check
 command=$(grep www.spinorama.org docs/*.html | wc -l)
 if [ $command -ne 0 ]; then
@@ -37,6 +38,6 @@ else
 fi
 # copy
 echo "Sync"
-rsync -arv --exclude '*.png' --delete ./docs/* "$TARGET"
-rsync -arv --include '*.png' --delete ./docs/pictures/* "$TARGET/pictures"
-rsync -arv --include '*.png' --delete ./docs/help_pictures/* "$TARGET/help_pictures"
+rsync -arvz --exclude '*.png' --delete ./docs/* "$TARGET"
+rsync -arvz --include '*.png' --delete ./docs/pictures/* "$TARGET/pictures"
+rsync -arvz --include '*.png' --delete ./docs/help_pictures/* "$TARGET/help_pictures"
