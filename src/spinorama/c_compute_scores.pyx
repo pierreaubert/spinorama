@@ -127,7 +127,7 @@ cpdef double c_sm(const double[:] freq, const double[:] spl):
     """Compute SM see details in compute_scores.py"""
     cdef f_min = np.searchsorted(freq, 100, side="right")
     cdef f_max = np.searchsorted(freq, 16000, side="left")
-    cdef log_freq = np.log(freq[f_min:f_max])
+    cdef log_freq = np.log10(freq[f_min:f_max])
     _, _, r_value, _, _ = linregress(log_freq, spl[f_min:f_max])
     return r_value*r_value
 

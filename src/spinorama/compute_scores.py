@@ -100,7 +100,7 @@ def nbd(dfu: pd.DataFrame, min_freq: float) -> float:
         [
             mad(dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB)
             for (bmin, bcenter, bmax) in octave(2)
-            if bmin_freq <= bcenter <= 12000
+            if bmin_freq <= bmin and bmax <= 12000
         ]
     )
 
@@ -150,8 +150,8 @@ def lfq(lw, sp, lfx_log) -> float:
     val_lfx = pow(10, lfx_log)
     lfq_sum = 0
     n = 0
-    # print('DEBUG lfx={1} octave(20): {0}'.format(octave(20), val_lfx))
-    for bmin, _, bmax in octave(20):
+    # print('DEBUG lfx={1} octave(2): {0}'.format(octave(2), val_lfx))
+    for bmin, _, bmax in octave(2):
         # 100hz to 12k hz
         if bmin < val_lfx or bmax > 300:
             continue
@@ -187,13 +187,25 @@ def sm(dfu):
     smoother frequency response curves.
     """
     data = dfu.loc[(dfu.Freq >= 100) & (dfu.Freq <= 16000)]
-    log_freq = np.log(data.Freq)
+    log_freq = np.log10(data.Freq)
     _, _, r_value, _, _ = linregress(log_freq, data.dB)
-    # if math.isnan(r_value):
-    #    print('data shape={} keys={}'.format(data.shape, dfu.keys()))
-    #    print(log_freq)
-    #    print(data.dB)
     return r_value**2
+
+
+"""
+    # same results as above
+    slope, intercept, r_value, _, _ = linregress(log_freq, data.dB)
+    n = log_freq.size
+    x = data.dB.to_numpy()
+    y = intercept + slope * log_freq
+    sm_num = n*np.sum(np.multiply(x, y))-np.sum(x)*np.sum(y)
+    sm_den_x = n*np.sum(np.multiply(x, x))-np.sum(x)**2
+    sm_den_y = n*np.sum(np.multiply(y, y))-np.sum(y)**2
+    sm_den = math.sqrt(sm_den_x*sm_den_y)
+    sm_pir = (sm_num/sm_den)**2
+    logger.error('debug: sm_pir %f r2 %f', sm_pir, r_value**2)
+    return sm_pir
+"""
 
 
 def pref_rating(nbd_on: float, nbd_pir: float, lf_x: float, sm_pir: float) -> float:
