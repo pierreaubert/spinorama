@@ -481,6 +481,7 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     # 600 px = 50 dB; this is super annoying ; parameter takes pixels
     # that depends on toons of parameters
     height = params["height"]
+    band_width = 3
     one_db = (height - 140) / 25
 
     # add 3 dBs zone
@@ -488,7 +489,7 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
         go.Scatter(
             x=df.Freq,
             y=line,
-            line=dict(width=6 * one_db, color="#E2F705"),
+            line=dict(width=band_width * one_db, color="#E2F705"),
             opacity=0.5,
             name="Band ±3dB",
         )
@@ -498,7 +499,7 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
         go.Scatter(
             x=df.Freq,
             y=line,
-            line=dict(width=3 * one_db, color="#E2F705"),
+            line=dict(width=band_width * one_db / 2, color="#E2F705"),
             opacity=1.0,
             name="Band ±1.5dB",
         )
