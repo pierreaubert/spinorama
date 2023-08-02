@@ -77,6 +77,11 @@ def optim_global(
         logger.error("Preflight check failed!")
         return False, ((0, 0, 0), [])
 
+    if optim_config.get("full_biquad_optim") is None:
+        logger.error("optim_config is not properly configured")
+        # set a default but should debug above why it is happening
+        optim_config["full_biquad_optim"] = True
+
     log_freq = np.logspace(np.log10(20), np.log10(freq_max), FREQ_NB_POINTS + 1)
     max_db = optim_config["MAX_DBGAIN"]
     min_q = optim_config["MIN_Q"]
@@ -112,7 +117,7 @@ def optim_global(
         # this is black magic, why 10, 20, 40?
         # if you increase 20 you give more flexibility to the score (and less flat LW/ON)
         # without the constraint optimising the score get crazy results
-        return score + float(flatness_bass_mid) / 10 + float(flatness_mid_high) / 50
+        return score + float(flatness_bass_mid) / 5 + float(flatness_mid_high) / 50
 
     def opt_peq_flat(x) -> float:
         peq_freq = np.array(x2spl(x))[freq_low:freq_high]
@@ -177,7 +182,7 @@ def optim_global(
     def opt_display(xk, convergence):
         # comment if you want to print verbose traces
         l = len(xk) // 4
-        print(f"IIR    Hz.  Q.   dB [{convergence}]")
+        print(f"IIR    Hz.  Q.   dB [{convergence}] iir={optim_config['full_biquad_optim']}")
         for i in range(l):
             t = int(xk[i * 4 + 0])
             f = int(log_freq[int(xk[i * 4 + 1])])
