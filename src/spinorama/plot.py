@@ -472,45 +472,50 @@ def plot_graph_spl(df, params):
 def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     layout = params.get("layout", "")
     traces = []
+
+    freq = df.Freq.to_numpy()
+    freq_box = np.concatenate([freq, freq[::-1]])
+    line = [slope * math.log10(f) + intercept for f in freq]
+    line_box30 = np.concatenate([np.add(line, 3.0), np.add(line, -3.0)[::-1]])
+    line_box15 = np.concatenate([np.add(line, 1.5), np.add(line, -1.5)[::-1]])
+
     # some speakers start very high
     restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
-
     restricted_line = [slope * math.log10(f) + intercept for f in restricted_freq.Freq]
-    line = [slope * math.log10(f) + intercept for f in df.Freq]
-
-    # 600 px = 50 dB; this is super annoying ; parameter takes pixels
-    # that depends on toons of parameters
-    height = params["height"]
-    band_width = 3
-    one_db = (height - 140) / 25
 
     # add 3 dBs zone
     traces.append(
         go.Scatter(
-            x=df.Freq,
-            y=line,
-            line=dict(width=band_width * one_db, color="#E2F705"),
-            opacity=0.5,
+            x=freq_box,
+            y=line_box30,
+            fill="toself",
+            fillcolor="#E2F705",
+            line_color="#E2F705",
+            opacity=0.25,
+            showlegend=True,
             name="Band ±3dB",
         )
     )
     # add 1.5 dBs zone
     traces.append(
         go.Scatter(
-            x=df.Freq,
-            y=line,
-            line=dict(width=band_width * one_db / 2, color="#E2F705"),
-            opacity=1.0,
+            x=freq_box,
+            y=line_box15,
+            fill="toself",
+            fillcolor="#E2F705",
+            line_color="#E2F705",
+            showlegend=True,
             name="Band ±1.5dB",
         )
     )
+
     # add line
     showlegend = True
     if line_title is None:
         showlegend = False
     traces.append(
         go.Scatter(
-            x=df.Freq,
+            x=freq,
             y=line,
             line=dict(width=2, color="black", dash="dot"),
             opacity=1,
@@ -592,7 +597,6 @@ def plot_graph_flat(df, measurement, params):
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
 
-    fig.update_layout(common_layout(params))
     return fig
 
 
@@ -608,6 +612,9 @@ def plot_graph_regression(df, measurement, params):
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
 
     fig.update_layout(common_layout(params))
+
+    fig.update_traces(mode="lines")
+
     return fig
 
 
