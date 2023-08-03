@@ -5,7 +5,7 @@ for d in datas/eq/*; do
     version=${lineversion##* }
     current="$d/iir-autoeq.txt";
     if test -f "$current"; then
-        cp "$current" "$d/iir-$version.txt";
+        mv "$current" "$d/iir-$version.txt";
     fi
     rm -f docs/speakers/"$speaker"/*.png ;
 done
