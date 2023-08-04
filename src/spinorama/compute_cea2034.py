@@ -571,12 +571,6 @@ def estimated_inroom(l_w: pd.DataFrame, e_r: pd.DataFrame, s_p: pd.DataFrame) ->
         # print(s_p.dB.apply(spl2pressure))
 
         eir = (
-            0.12 * l_w.dB.apply(spl2pressure)
-            + 0.44 * e_r[key].apply(spl2pressure)
-            + 0.44 * s_p.dB.apply(spl2pressure)
-        ).apply(pressure2spl)
-
-        eir = (
             np.sqrt(
                 0.12 * l_w.dB.apply(spl2pressure) ** 2
                 + 0.44 * e_r[key].apply(spl2pressure) ** 2

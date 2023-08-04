@@ -88,10 +88,15 @@ cpdef c_cea2034(const double[:,:] spl, idx, const double[:] weigths):
     # SP is weighted rms
     cea2034[idx_sp] = apply_weigthed_rms(pressure2, idx[idx_sp], weigths)
     # EIR
+    pir_lw = spl2pressure(cea2034[idx_lw])
+    pir_er = spl2pressure(cea2034[idx_er])
+    pir_sp = spl2pressure(cea2034[idx_sp])
     cea2034[idx_pir] = pressure2spl(
-        np.multiply(0.12, spl2pressure(cea2034[idx_lw]))+
-        np.multiply(0.44, spl2pressure(cea2034[idx_er]))+
-        np.multiply(0.44, spl2pressure(cea2034[idx_sp]))
+        np.sqrt(
+            np.multiply(0.12, np.power(pir_lw, 2))+
+            np.multiply(0.44, np.power(pir_er, 2))+
+            np.multiply(0.44, np.power(pir_sp, 2))
+        )
     )
     return cea2034
 
