@@ -511,8 +511,10 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
 
     # add line
     showlegend = True
+    title = line_title
     if line_title is None:
         showlegend = False
+        title = "Linear interpolation"
     traces.append(
         go.Scatter(
             x=freq,
@@ -520,7 +522,7 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
             line=dict(width=2, color="black", dash="dot"),
             opacity=1,
             showlegend=showlegend,
-            name=line_title,
+            name=title,
         )
     )
 
@@ -537,15 +539,17 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
             line=dict(width=2, color="black", dash="dash"),
             opacity=1,
             showlegend=False,
+            name="Midrange Band +3dB",
         )
     )
     traces.append(
         go.Scatter(
-            x=restricted_freq.Freq,
-            y=np.array(restricted_line) - offset,
+            x=restricted_freq.Freq + offset_freq,
+            y=np.array(restricted_line) - offset_spl,
             line=dict(width=2, color="black", dash="dash"),
             opacity=1,
             showlegend=False,
+            name="Midrange Band -3dB",
         )
     )
 
@@ -573,7 +577,6 @@ def plot_graph_flat_traces(df, measurement, params):
     intercept = (
         np.mean(restricted_freq[measurement]) if not restricted_freq[measurement].empty else 0.0
     )
-
     return plot_graph_traces(df, measurement, params, slope, intercept, None)
 
 
@@ -582,13 +585,11 @@ def plot_graph_regression_traces(df, measurement, params):
     slope, intercept, _, _, _ = stats.linregress(
         x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement]
     )
-
     return plot_graph_traces(df, measurement, params, slope, intercept, "Midrange ±3dB")
 
 
 def plot_graph_flat(df, measurement, params):
     params.get("layout", "")
-    # print("{} {}".format(measurement, df.keys()))
     fig = go.Figure()
     traces = plot_graph_flat_traces(df, measurement, params)
     for t in traces:
@@ -597,12 +598,14 @@ def plot_graph_flat(df, measurement, params):
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
 
+    fig.update_layout(common_layout(params))
+    fig.update_traces(mode="lines")
+
     return fig
 
 
 def plot_graph_regression(df, measurement, params):
     params.get("layout", "")
-    # print("{} {}".format(measurement, df.keys()))
     fig = go.Figure()
     traces = plot_graph_regression_traces(df, measurement, params)
     for t in traces:
@@ -612,7 +615,6 @@ def plot_graph_regression(df, measurement, params):
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
 
     fig.update_layout(common_layout(params))
-
     fig.update_traces(mode="lines")
 
     return fig

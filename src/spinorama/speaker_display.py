@@ -28,7 +28,6 @@ from spinorama.plot import (
     plot_spinorama,
     plot_graph,
     plot_graph_spl,
-    plot_graph_flat,
     plot_graph_regression,
     plot_contour,
     plot_radar,
@@ -76,7 +75,7 @@ def display_onaxis(df, graph_params=plot_params_default):
         logger.debug("Display On Axis failed, known keys are (%s)", ", ".join(onaxis.keys()))
         return None
 
-    return plot_graph_flat(onaxis, "On Axis", graph_params)
+    return plot_graph_regression(onaxis, "On Axis", graph_params)
 
 
 def display_inroom(df, graph_params=plot_params_default):

@@ -515,6 +515,12 @@ export function setGraph(speakerNames: Array<string>, speakerGraphs: Graphs, wid
         if (speakerGraphs[i] != null) {
             // console.log('adding graph ' + i)
             for (const trace in speakerGraphs[i].data) {
+                const name = speakerGraphs[i].data[trace].name;
+                // hide yellow bands since when you have more than one it is difficult to see the graphs
+                // also remove the midrange lines for the same reason
+                if (name != null && (name == 'Band ±3dB' || name == 'Band ±1.5dB' || name == 'Midrange Band +3dB' || name == 'Midrange Band -3dB')) {
+                    speakerGraphs[i].data[trace].visible = false;
+                }
                 speakerGraphs[i].data[trace].legendgroup = 'speaker' + i;
                 speakerGraphs[i].data[trace].legendgrouptitle = {
                     text: speakerNames[i],
