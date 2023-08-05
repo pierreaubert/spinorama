@@ -1,14 +1,16 @@
 EQ for Dolby CS 136LF computed from Vendors-Dolby data
-Preference Score -16.54 with EQ -11.61
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-07-25-23:07:49
+Preference Score -18.58 with EQ -12.14
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:18:30
 
-Preamp: -2.4 dB
+Preamp: -11.4 dB
 
-Filter  1: ON PK Fc    30 Hz Gain +5.76 dB Q 0.86
-Filter  2: ON PK Fc    39 Hz Gain +5.49 dB Q 0.32
-Filter  3: ON PK Fc    47 Hz Gain +5.93 dB Q 0.59
-Filter  4: ON PK Fc   247 Hz Gain -5.95 dB Q 0.44
-Filter  5: ON PK Fc   327 Hz Gain -5.27 dB Q 0.65
-Filter  6: ON PK Fc   382 Hz Gain -5.97 dB Q 0.97
-Filter  7: ON HPQ Fc  2711 Hz Q 1.26
+Filter  1: ON HPQ Fc  2599 Hz Q 2.90
+Filter  2: ON PK Fc  6274 Hz Gain +2.56 dB Q 0.32
+Filter  3: ON PK Fc   294 Hz Gain -5.61 dB Q 0.69
+Filter  4: ON PK Fc 14036 Hz Gain +2.93 dB Q 0.29
+Filter  5: ON PK Fc   250 Hz Gain -3.86 dB Q 0.83
+Filter  6: ON PK Fc   311 Hz Gain -4.42 dB Q 1.20
+Filter  7: ON PK Fc   232 Hz Gain -4.79 dB Q 1.72
+Filter  8: ON PK Fc   391 Hz Gain -2.25 dB Q 2.81
+Filter  9: ON PK Fc   417 Hz Gain -5.37 dB Q 2.66

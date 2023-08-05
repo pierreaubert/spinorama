@@ -1,14 +1,16 @@
 EQ for MartinLogan Prodigy computed from Misc data
-Preference Score 3.91 with EQ 5.40
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-07-25-23:02:04
+Preference Score 3.55 with EQ 4.92
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-03:45:02
 
-Preamp: -3.2 dB
+Preamp: -1.5 dB
 
-Filter  1: ON LS Fc    41 Hz Gain +5.92 dB Q 0.72
-Filter  2: ON PK Fc   165 Hz Gain +4.21 dB Q 2.06
-Filter  3: ON PK Fc   225 Hz Gain -3.53 dB Q 5.74
-Filter  4: ON PK Fc   942 Hz Gain +5.34 dB Q 1.77
-Filter  5: ON PK Fc  1598 Hz Gain +4.94 dB Q 5.85
-Filter  6: ON PK Fc  2885 Hz Gain +3.39 dB Q 5.70
-Filter  7: ON LS Fc  3370 Hz Gain -3.13 dB Q 0.92
+Filter  1: ON HS Fc    50 Hz Gain -1.70 dB Q 0.73
+Filter  2: ON PK Fc    78 Hz Gain -2.41 dB Q 1.93
+Filter  3: ON PK Fc   169 Hz Gain +2.99 dB Q 2.46
+Filter  4: ON PK Fc   229 Hz Gain -2.98 dB Q 2.98
+Filter  5: ON PK Fc   933 Hz Gain +2.99 dB Q 2.88
+Filter  6: ON PK Fc  1648 Hz Gain +2.96 dB Q 2.69
+Filter  7: ON PK Fc  2380 Hz Gain -2.95 dB Q 2.98
+Filter  8: ON PK Fc  2909 Hz Gain +2.84 dB Q 2.99
+Filter  9: ON PK Fc  9691 Hz Gain +2.41 dB Q 1.17

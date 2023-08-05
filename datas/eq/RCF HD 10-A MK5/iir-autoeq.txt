@@ -1,16 +1,16 @@
 EQ for RCF HD 10-A MK5 computed from Vendors-RCF data
-Preference Score 2.72 with EQ 4.92
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-06-03-10:08:51
+Preference Score 2.55 with EQ 5.05
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-03:48:16
 
-Preamp: -2.8 dB
+Preamp: -3.4 dB
 
-Filter  1: ON LS Fc    69 Hz Gain +2.92 dB Q 0.96
-Filter  2: ON PK Fc   266 Hz Gain -1.21 dB Q 0.33
-Filter  3: ON PK Fc   590 Hz Gain +1.94 dB Q 2.07
-Filter  4: ON PK Fc   833 Hz Gain -2.92 dB Q 2.93
-Filter  5: ON PK Fc  1061 Hz Gain +2.96 dB Q 2.90
-Filter  6: ON PK Fc  2046 Hz Gain +2.62 dB Q 2.74
-Filter  7: ON PK Fc  5383 Hz Gain -0.58 dB Q 1.79
-Filter  8: ON PK Fc 10376 Hz Gain -2.16 dB Q 1.00
-Filter  9: ON PK Fc 12765 Hz Gain -1.96 dB Q 1.23
+Filter  1: ON LS Fc    69 Hz Gain +1.22 dB Q 1.07
+Filter  2: ON PK Fc   221 Hz Gain -1.26 dB Q 0.26
+Filter  3: ON PK Fc   604 Hz Gain +2.48 dB Q 2.20
+Filter  4: ON PK Fc   844 Hz Gain -2.98 dB Q 2.95
+Filter  5: ON PK Fc  1067 Hz Gain +2.91 dB Q 2.99
+Filter  6: ON PK Fc  2014 Hz Gain +2.69 dB Q 2.71
+Filter  7: ON PK Fc  2461 Hz Gain +1.38 dB Q 0.50
+Filter  8: ON PK Fc  7930 Hz Gain -2.15 dB Q 0.46
+Filter  9: ON PK Fc 12246 Hz Gain -2.71 dB Q 1.11

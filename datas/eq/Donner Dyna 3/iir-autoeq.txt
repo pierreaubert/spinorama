@@ -1,14 +1,16 @@
 EQ for Donner Dyna 3 computed from ErinsAudioCorner data
-Preference Score -0.46 with EQ 3.69
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-07-25-23:09:41
+Preference Score -0.53 with EQ 3.59
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-01:53:34
 
-Preamp: -4.4 dB
+Preamp: -2.8 dB
 
-Filter  1: ON HS Fc    97 Hz Gain -5.99 dB Q 0.67
-Filter  2: ON PK Fc   461 Hz Gain +5.86 dB Q 0.87
-Filter  3: ON PK Fc  1034 Hz Gain +5.99 dB Q 5.28
-Filter  4: ON PK Fc  1810 Hz Gain -1.38 dB Q 5.60
-Filter  5: ON PK Fc  2394 Hz Gain -2.36 dB Q 5.98
-Filter  6: ON PK Fc  3586 Hz Gain +5.91 dB Q 1.25
-Filter  7: ON LS Fc  4598 Hz Gain +2.40 dB Q 0.74
+Filter  1: ON PK Fc   169 Hz Gain -3.00 dB Q 1.30
+Filter  2: ON PK Fc   432 Hz Gain +2.78 dB Q 1.57
+Filter  3: ON PK Fc  1067 Hz Gain +2.98 dB Q 3.00
+Filter  4: ON PK Fc  1704 Hz Gain -2.87 dB Q 2.50
+Filter  5: ON PK Fc  2380 Hz Gain -2.95 dB Q 3.00
+Filter  6: ON PK Fc  3555 Hz Gain +3.00 dB Q 1.21
+Filter  7: ON PK Fc  5870 Hz Gain -2.75 dB Q 2.95
+Filter  8: ON PK Fc  9691 Hz Gain -2.99 dB Q 0.75
+Filter  9: ON PK Fc 13092 Hz Gain -2.99 dB Q 0.49

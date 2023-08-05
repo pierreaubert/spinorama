@@ -1,14 +1,16 @@
 EQ for KEF Reference 1 Meta computed from ErinsAudioCorner data
-Preference Score 6.67 with EQ 7.21
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-07-25-23:08:54
+Preference Score 6.54 with EQ 7.20
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-01:38:09
 
-Preamp: -4.8 dB
+Preamp: -2.5 dB
 
-Filter  1: ON LS Fc    45 Hz Gain +5.05 dB Q 0.99
-Filter  2: ON PK Fc    80 Hz Gain -1.49 dB Q 3.00
-Filter  3: ON PK Fc   170 Hz Gain +0.96 dB Q 2.81
-Filter  4: ON PK Fc   972 Hz Gain +2.01 dB Q 2.49
-Filter  5: ON PK Fc  2711 Hz Gain +0.66 dB Q 1.55
-Filter  6: ON PK Fc  6082 Hz Gain -0.69 dB Q 3.19
-Filter  7: ON PK Fc  7560 Hz Gain +1.80 dB Q 0.57
+Filter  1: ON PK Fc    76 Hz Gain -2.98 dB Q 1.24
+Filter  2: ON PK Fc   129 Hz Gain -1.03 dB Q 1.80
+Filter  3: ON PK Fc   253 Hz Gain -1.23 dB Q 1.43
+Filter  4: ON PK Fc   309 Hz Gain -0.94 dB Q 2.08
+Filter  5: ON PK Fc   565 Hz Gain -2.43 dB Q 1.63
+Filter  6: ON PK Fc  1032 Hz Gain +1.96 dB Q 2.32
+Filter  7: ON PK Fc  1304 Hz Gain -2.90 dB Q 0.89
+Filter  8: ON PK Fc  2082 Hz Gain -0.12 dB Q 2.71
+Filter  9: ON LS Fc  3555 Hz Gain +2.71 dB Q 0.97

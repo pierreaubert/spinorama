@@ -1,14 +1,16 @@
 EQ for March Audio Sointuva computed from ErinsAudioCorner data
-Preference Score 6.98 with EQ 7.46
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-07-25-23:00:40
+Preference Score 6.83 with EQ 7.30
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-04:32:40
 
-Preamp: -5.4 dB
+Preamp: -2.9 dB
 
-Filter  1: ON LS Fc    43 Hz Gain +5.67 dB Q 0.68
-Filter  2: ON PK Fc   100 Hz Gain -0.24 dB Q 5.94
-Filter  3: ON PK Fc   141 Hz Gain -0.54 dB Q 2.23
-Filter  4: ON PK Fc   858 Hz Gain +0.66 dB Q 0.88
-Filter  5: ON PK Fc  2321 Hz Gain +0.80 dB Q 1.52
-Filter  6: ON PK Fc  3267 Hz Gain -1.01 dB Q 2.91
-Filter  7: ON PK Fc  9397 Hz Gain +0.29 dB Q 0.70
+Filter  1: ON LS Fc    71 Hz Gain +2.92 dB Q 0.70
+Filter  2: ON PK Fc    93 Hz Gain -0.97 dB Q 1.67
+Filter  3: ON PK Fc   134 Hz Gain -0.43 dB Q 2.63
+Filter  4: ON PK Fc   604 Hz Gain +0.92 dB Q 2.01
+Filter  5: ON PK Fc  1261 Hz Gain +1.09 dB Q 2.94
+Filter  6: ON PK Fc  2153 Hz Gain +0.88 dB Q 2.46
+Filter  7: ON PK Fc  6069 Hz Gain -0.19 dB Q 0.66
+Filter  8: ON PK Fc  7930 Hz Gain +0.19 dB Q 1.33
+Filter  9: ON PK Fc 13537 Hz Gain +0.68 dB Q 0.51

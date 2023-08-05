@@ -1,9 +1,0 @@
-EQ for Arendal Sound 1961 Tower computed from ErinsAudioCorner data
-Preference Score 5.12 with EQ 5.14
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.19
-Dated: 2023-01-15-08:07:13
-
-Preamp: -3.2 dB
-
-Filter  1: ON PK Fc    40 Hz Gain +2.98 dB Q 0.89
-Filter  2: ON PK Fc 15011 Hz Gain +2.17 dB Q 0.05

@@ -1,16 +1,16 @@
 EQ for Danley SH-60 computed from Vendors-Danley data
-Preference Score 1.49 with EQ 3.40
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-06-29-14:34:35
+Preference Score 1.73 with EQ 3.86
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-04:46:01
 
-Preamp: -4.7 dB
+Preamp: -3.0 dB
 
-Filter  1: ON HS Fc   138 Hz Gain +1.56 dB Q 0.90
-Filter  2: ON PK Fc   164 Hz Gain +2.77 dB Q 2.72
-Filter  3: ON PK Fc   366 Hz Gain +2.84 dB Q 2.99
-Filter  4: ON PK Fc   547 Hz Gain +2.98 dB Q 2.92
-Filter  5: ON PK Fc   739 Hz Gain -2.59 dB Q 1.95
-Filter  6: ON PK Fc  1648 Hz Gain +2.99 dB Q 1.73
-Filter  7: ON PK Fc  2302 Hz Gain -2.74 dB Q 2.94
-Filter  8: ON PK Fc  5490 Hz Gain -2.98 dB Q 2.95
-Filter  9: ON HS Fc 10020 Hz Gain +2.99 dB Q 1.01
+Filter  1: ON PK Fc   109 Hz Gain -2.16 dB Q 1.30
+Filter  2: ON PK Fc   164 Hz Gain +2.87 dB Q 1.88
+Filter  3: ON PK Fc   271 Hz Gain -2.77 dB Q 2.97
+Filter  4: ON PK Fc   366 Hz Gain +2.84 dB Q 1.24
+Filter  5: ON PK Fc   565 Hz Gain +2.29 dB Q 2.88
+Filter  6: ON PK Fc   714 Hz Gain -2.84 dB Q 2.53
+Filter  7: ON PK Fc  1541 Hz Gain +2.92 dB Q 2.47
+Filter  8: ON PK Fc  5490 Hz Gain -2.97 dB Q 2.96
+Filter  9: ON PK Fc 13537 Hz Gain +2.99 dB Q 1.29

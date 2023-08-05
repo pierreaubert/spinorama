@@ -1,14 +1,16 @@
 EQ for FBT Mitus 112A computed from Vendors-FBT data
-Preference Score 2.64 with EQ 5.75
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-07-25-23:05:40
+Preference Score 2.56 with EQ 4.98
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-01:38:12
 
-Preamp: -6.6 dB
+Preamp: -5.5 dB
 
-Filter  1: ON LS Fc   103 Hz Gain +5.99 dB Q 0.57
-Filter  2: ON PK Fc   669 Hz Gain +1.04 dB Q 4.39
-Filter  3: ON PK Fc  1411 Hz Gain +2.75 dB Q 2.40
-Filter  4: ON PK Fc  2470 Hz Gain +3.16 dB Q 5.39
-Filter  5: ON PK Fc  3699 Hz Gain +4.24 dB Q 3.92
-Filter  6: ON PK Fc  6887 Hz Gain -4.15 dB Q 0.26
-Filter  7: ON LS Fc  9397 Hz Gain +0.65 dB Q 1.00
+Filter  1: ON LS Fc   103 Hz Gain +2.98 dB Q 0.41
+Filter  2: ON PK Fc   625 Hz Gain -2.82 dB Q 0.25
+Filter  3: ON PK Fc   790 Hz Gain +1.17 dB Q 1.37
+Filter  4: ON PK Fc  1442 Hz Gain +2.01 dB Q 2.32
+Filter  5: ON PK Fc  3008 Hz Gain -1.74 dB Q 2.90
+Filter  6: ON PK Fc  3555 Hz Gain +2.96 dB Q 2.87
+Filter  7: ON PK Fc  8199 Hz Gain -3.00 dB Q 0.29
+Filter  8: ON PK Fc 10020 Hz Gain -2.77 dB Q 2.72
+Filter  9: ON LS Fc 12246 Hz Gain +2.56 dB Q 0.89

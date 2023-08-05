@@ -1,8 +1,0 @@
-EQ for Magnepan LRS computed from ASR data
-Preference Score -0.2 with EQ -0.5
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.15
-Dated: 2022-05-07-13:57:54
-
-Preamp: -0.2 dB
-
-Filter  1: ON PK Fc   438 Hz Gain -7.98 dB Q 0.05

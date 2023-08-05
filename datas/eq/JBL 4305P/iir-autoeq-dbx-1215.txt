@@ -1,9 +1,9 @@
 EQ for JBL 4305P computed from ErinsAudioCorner data
-Preference Score 5.57 with EQ 5.70
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:33:28
+Preference Score 5.46 with EQ 5.60
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:32:54
 
-Preamp: -0.8 dB
+Preamp: -0.6 dB
 
 Filter  1: ON PK Fc    25 Hz Gain +0.50 dB Q 2.14
 Filter  2: ON PK Fc    40 Hz Gain +0.50 dB Q 2.14

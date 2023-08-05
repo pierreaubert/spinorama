@@ -1,9 +1,9 @@
 EQ for JBL Control 25T computed from Vendors-JBL data
-Preference Score -0.01 with EQ 0.23
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:32:07
+Preference Score 1.80 with EQ 2.02
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:29:14
 
-Preamp: -1.7 dB
+Preamp: -1.5 dB
 
 Filter  1: ON PK Fc    25 Hz Gain +0.50 dB Q 2.14
 Filter  2: ON PK Fc    40 Hz Gain +0.50 dB Q 2.14

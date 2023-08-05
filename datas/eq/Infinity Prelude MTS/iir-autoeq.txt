@@ -1,16 +1,16 @@
 EQ for Infinity Prelude MTS computed from Vendors-Infinity data
-Preference Score 7.48 with EQ 8.07
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-06-29-14:35:19
+Preference Score 7.35 with EQ 8.03
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-04:04:59
 
-Preamp: -2.4 dB
+Preamp: -2.3 dB
 
-Filter  1: ON PK Fc    26 Hz Gain +1.47 dB Q 1.13
-Filter  2: ON PK Fc    71 Hz Gain -0.82 dB Q 1.30
-Filter  3: ON PK Fc   229 Hz Gain +0.37 dB Q 1.65
-Filter  4: ON PK Fc   354 Hz Gain +0.28 dB Q 2.32
-Filter  5: ON PK Fc  2153 Hz Gain +2.10 dB Q 2.91
-Filter  6: ON PK Fc  3325 Hz Gain -0.44 dB Q 1.94
-Filter  7: ON PK Fc  5135 Hz Gain -0.31 dB Q 0.89
-Filter  8: ON PK Fc  7930 Hz Gain +1.23 dB Q 2.28
-Filter  9: ON PK Fc 15474 Hz Gain +2.35 dB Q 0.98
+Filter  1: ON PK Fc    26 Hz Gain +2.13 dB Q 1.27
+Filter  2: ON PK Fc    50 Hz Gain -0.69 dB Q 0.58
+Filter  3: ON PK Fc   262 Hz Gain +0.16 dB Q 0.98
+Filter  4: ON PK Fc  1704 Hz Gain -0.42 dB Q 2.29
+Filter  5: ON PK Fc  2153 Hz Gain +2.08 dB Q 2.99
+Filter  6: ON PK Fc  3555 Hz Gain -0.36 dB Q 1.44
+Filter  7: ON PK Fc  6489 Hz Gain -1.12 dB Q 2.54
+Filter  8: ON PK Fc  7669 Hz Gain +1.98 dB Q 2.62
+Filter  9: ON PK Fc 15474 Hz Gain +2.28 dB Q 0.99

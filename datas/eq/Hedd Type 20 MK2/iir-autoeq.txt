@@ -1,16 +1,13 @@
 EQ for Hedd Type 20 MK2 computed from ASR data
-Preference Score 6.30 with EQ 6.80
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-06-03-10:04:49
+Preference Score 6.20 with EQ 6.59
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:13:23
 
-Preamp: -3.1 dB
+Preamp: -1.0 dB
 
-Filter  1: ON PK Fc    35 Hz Gain +2.93 dB Q 0.77
-Filter  2: ON PK Fc    76 Hz Gain +0.96 dB Q 1.23
-Filter  3: ON PK Fc   216 Hz Gain +1.32 dB Q 1.92
-Filter  4: ON PK Fc   266 Hz Gain -0.76 dB Q 1.50
-Filter  5: ON PK Fc   610 Hz Gain +0.49 dB Q 1.72
-Filter  6: ON PK Fc  1061 Hz Gain +0.24 dB Q 1.62
-Filter  7: ON PK Fc  2192 Hz Gain -0.62 dB Q 1.39
-Filter  8: ON PK Fc  5970 Hz Gain +0.79 dB Q 1.87
-Filter  9: ON PK Fc 16000 Hz Gain +1.64 dB Q 0.69
+Filter  1: ON PK Fc    47 Hz Gain -3.00 dB Q 2.96
+Filter  2: ON PK Fc    69 Hz Gain +1.12 dB Q 0.58
+Filter  3: ON PK Fc   140 Hz Gain -0.81 dB Q 2.60
+Filter  4: ON PK Fc   198 Hz Gain +1.02 dB Q 2.99
+Filter  5: ON PK Fc   370 Hz Gain -1.04 dB Q 2.19
+Filter  6: ON PK Fc  2703 Hz Gain -1.00 dB Q 0.68

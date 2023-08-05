@@ -1,14 +1,16 @@
 EQ for Focal Aria 906 computed from ErinsAudioCorner data
-Preference Score 4.87 with EQ 6.00
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-07-25-23:11:49
+Preference Score 4.68 with EQ 5.85
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-03:04:03
 
-Preamp: -5.2 dB
+Preamp: -2.7 dB
 
-Filter  1: ON LS Fc    63 Hz Gain +5.45 dB Q 0.74
-Filter  2: ON PK Fc   141 Hz Gain -1.33 dB Q 0.33
-Filter  3: ON PK Fc   522 Hz Gain +1.32 dB Q 0.27
-Filter  4: ON PK Fc   832 Hz Gain -1.98 dB Q 2.53
-Filter  5: ON PK Fc  1456 Hz Gain +1.01 dB Q 4.79
-Filter  6: ON PK Fc  2976 Hz Gain +2.43 dB Q 1.51
-Filter  7: ON HS Fc  6887 Hz Gain -1.84 dB Q 0.78
+Filter  1: ON HS Fc    63 Hz Gain -2.96 dB Q 0.61
+Filter  2: ON PK Fc   511 Hz Gain +0.94 dB Q 1.00
+Filter  3: ON PK Fc   817 Hz Gain -1.76 dB Q 2.70
+Filter  4: ON PK Fc  1442 Hz Gain +0.64 dB Q 1.97
+Filter  5: ON PK Fc  1704 Hz Gain -0.16 dB Q 2.66
+Filter  6: ON PK Fc  2461 Hz Gain +1.82 dB Q 0.71
+Filter  7: ON PK Fc  3008 Hz Gain +1.43 dB Q 2.97
+Filter  8: ON PK Fc  8766 Hz Gain -0.95 dB Q 1.29
+Filter  9: ON LS Fc 14473 Hz Gain +2.55 dB Q 0.85

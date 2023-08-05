@@ -1,9 +1,9 @@
 EQ for FBT Vertus CS1000 computed from Vendors-FBT data
-Preference Score 2.65 with EQ 3.10
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-15:53:23
+Preference Score 2.76 with EQ 3.22
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:41:27
 
-Preamp: -1.9 dB
+Preamp: -1.6 dB
 
 Filter  1: ON PK Fc    20 Hz Gain +0.00 dB Q 4.32
 Filter  2: ON PK Fc    25 Hz Gain +0.25 dB Q 4.32
@@ -31,8 +31,8 @@ Filter 23: ON PK Fc  3150 Hz Gain +0.75 dB Q 4.32
 Filter 24: ON PK Fc  4000 Hz Gain +0.75 dB Q 4.32
 Filter 25: ON PK Fc  5000 Hz Gain +1.25 dB Q 4.32
 Filter 26: ON PK Fc  6300 Hz Gain +1.00 dB Q 4.32
-Filter 27: ON PK Fc  8000 Hz Gain +0.75 dB Q 4.32
-Filter 28: ON PK Fc 10000 Hz Gain +1.00 dB Q 4.32
+Filter 27: ON PK Fc  8000 Hz Gain +0.50 dB Q 4.32
+Filter 28: ON PK Fc 10000 Hz Gain +0.75 dB Q 4.32
 Filter 29: ON PK Fc 12000 Hz Gain +0.50 dB Q 4.32
-Filter 30: ON PK Fc 16000 Hz Gain +0.00 dB Q 4.32
+Filter 30: ON PK Fc 16000 Hz Gain -0.25 dB Q 4.32
 Filter 31: ON PK Fc 20000 Hz Gain +0.00 dB Q 4.32

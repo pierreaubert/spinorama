@@ -1,14 +1,16 @@
 EQ for Amate Audio X14FD computed from Vendors-Amate Audio data
-Preference Score 3.15 with EQ 4.13
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-07-25-23:11:03
+Preference Score 2.95 with EQ 3.79
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-03:45:47
 
-Preamp: -3.4 dB
+Preamp: -2.9 dB
 
-Filter  1: ON LS Fc    65 Hz Gain +2.77 dB Q 0.41
-Filter  2: ON PK Fc   280 Hz Gain +1.27 dB Q 5.75
-Filter  3: ON PK Fc   573 Hz Gain +2.93 dB Q 5.70
-Filter  4: ON PK Fc  1067 Hz Gain +3.31 dB Q 5.40
-Filter  5: ON PK Fc  2250 Hz Gain +2.05 dB Q 4.75
-Filter  6: ON PK Fc  5896 Hz Gain -3.50 dB Q 5.76
-Filter  7: ON PK Fc  6887 Hz Gain +2.95 dB Q 1.27
+Filter  1: ON LS Fc    65 Hz Gain +2.42 dB Q 0.30
+Filter  2: ON PK Fc   478 Hz Gain -1.80 dB Q 2.59
+Filter  3: ON PK Fc   565 Hz Gain +2.98 dB Q 2.98
+Filter  4: ON PK Fc  1103 Hz Gain +2.78 dB Q 2.98
+Filter  5: ON PK Fc  1884 Hz Gain -1.58 dB Q 2.85
+Filter  6: ON PK Fc  2226 Hz Gain +2.37 dB Q 2.88
+Filter  7: ON PK Fc  5870 Hz Gain -2.14 dB Q 2.94
+Filter  8: ON PK Fc  6937 Hz Gain +2.96 dB Q 3.00
+Filter  9: ON PK Fc 11077 Hz Gain +2.56 dB Q 1.27

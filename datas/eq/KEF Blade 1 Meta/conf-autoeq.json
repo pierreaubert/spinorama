@@ -20,10 +20,10 @@
     "slope_on_axis": 0,
     "slope_listening_window": -0.5,
     "slope_early_reflections": -4,
-    "slope_estimated_inroom": -6.5,
+    "slope_estimated_inroom": -4.0,
     "slope_sound_power": -9,
     "smooth_measurements": true,
-    "smooth_window_size": 21,
+    "smooth_window_size": 9,
     "smooth_order": 3,
     "use_grapheq": false,
     "grapheq_name": null,
@@ -41,6 +41,6 @@
     "verbose": true,
     "smoke_test": false,
     "force": true,
-    "version": "0.22",
+    "version": "0.24",
     "level": 30
 }

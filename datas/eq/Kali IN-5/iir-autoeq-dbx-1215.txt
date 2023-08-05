@@ -1,9 +1,9 @@
 EQ for Kali IN-5 computed from ErinsAudioCorner data
-Preference Score 5.39 with EQ 5.52
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:50:05
+Preference Score 5.45 with EQ 5.61
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:29:07
 
-Preamp: -0.8 dB
+Preamp: -0.6 dB
 
 Filter  1: ON PK Fc    25 Hz Gain +0.50 dB Q 2.14
 Filter  2: ON PK Fc    40 Hz Gain +0.50 dB Q 2.14

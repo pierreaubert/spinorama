@@ -1,9 +1,9 @@
 EQ for DIYSG HTM-12v1 computed from ErinsAudioCorner data
-Preference Score 2.57 with EQ 3.13
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:34:11
+Preference Score 2.45 with EQ 3.03
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:31:20
 
-Preamp: -1.3 dB
+Preamp: -1.1 dB
 
 Filter  1: ON PK Fc    25 Hz Gain +0.75 dB Q 2.14
 Filter  2: ON PK Fc    40 Hz Gain +0.75 dB Q 2.14

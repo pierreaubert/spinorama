@@ -1,16 +1,16 @@
 EQ for FBT J12A computed from Vendors-FBT data
-Preference Score 3.09 with EQ 3.25
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:52:23
+Preference Score 2.80 with EQ 2.99
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:31:24
 
-Preamp: -1.1 dB
+Preamp: -0.9 dB
 
 Filter  1: ON PK Fc    25 Hz Gain +0.50 dB Q 2.14
 Filter  2: ON PK Fc    40 Hz Gain +0.50 dB Q 2.14
 Filter  3: ON PK Fc    63 Hz Gain -0.25 dB Q 2.14
 Filter  4: ON PK Fc   100 Hz Gain +0.00 dB Q 2.14
 Filter  5: ON PK Fc   160 Hz Gain +0.25 dB Q 2.14
-Filter  6: ON PK Fc   250 Hz Gain +0.00 dB Q 2.14
+Filter  6: ON PK Fc   250 Hz Gain +0.25 dB Q 2.14
 Filter  7: ON PK Fc   400 Hz Gain +0.00 dB Q 2.14
 Filter  8: ON PK Fc   630 Hz Gain +0.50 dB Q 2.14
 Filter  9: ON PK Fc  1000 Hz Gain +0.00 dB Q 2.14

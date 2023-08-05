@@ -1,14 +1,16 @@
 EQ for JansZen Loudspeaker zA1.1 computed from Princeton data
 Preference Score -1000.00 with EQ -1000.00
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-07-25-22:59:39
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-04:42:22
 
-Preamp: -6.0 dB
+Preamp: -7.5 dB
 
-Filter  1: ON PK Fc    23 Hz Gain -0.82 dB Q 3.43
-Filter  2: ON PK Fc   129 Hz Gain +2.18 dB Q 2.81
-Filter  3: ON PK Fc   263 Hz Gain -0.14 dB Q 3.01
-Filter  4: ON PK Fc   475 Hz Gain -1.89 dB Q 3.86
-Filter  5: ON PK Fc   832 Hz Gain +3.42 dB Q 0.92
-Filter  6: ON PK Fc  1701 Hz Gain -3.24 dB Q 1.38
-Filter  7: ON PK Fc  9397 Hz Gain +6.00 dB Q 0.71
+Filter  1: ON PK Fc    39 Hz Gain -1.63 dB Q 2.21
+Filter  2: ON PK Fc    54 Hz Gain -2.56 dB Q 0.55
+Filter  3: ON PK Fc   342 Hz Gain -0.11 dB Q 1.56
+Filter  4: ON PK Fc   844 Hz Gain +3.00 dB Q 1.28
+Filter  5: ON PK Fc  1822 Hz Gain -2.99 dB Q 1.44
+Filter  6: ON PK Fc  4803 Hz Gain -1.26 dB Q 2.53
+Filter  7: ON PK Fc 10020 Hz Gain +2.51 dB Q 0.64
+Filter  8: ON PK Fc 13537 Hz Gain +3.00 dB Q 0.26
+Filter  9: ON PK Fc 16000 Hz Gain +2.97 dB Q 0.44

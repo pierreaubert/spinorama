@@ -1,14 +1,16 @@
 EQ for Essence Electrostatic Model 1600 computed from Princeton data
 Preference Score -1000.00 with EQ -1000.00
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-07-25-23:04:31
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-04:30:54
 
 Preamp: -10.6 dB
 
-Filter  1: ON PK Fc    24 Hz Gain -3.33 dB Q 4.63
-Filter  2: ON PK Fc    83 Hz Gain -4.26 dB Q 4.76
-Filter  3: ON PK Fc   447 Hz Gain -3.42 dB Q 4.03
-Filter  4: ON PK Fc   858 Hz Gain -3.60 dB Q 0.95
-Filter  5: ON PK Fc  3370 Hz Gain +5.72 dB Q 0.33
-Filter  6: ON PK Fc  7329 Hz Gain +2.78 dB Q 0.72
-Filter  7: ON PK Fc  9694 Hz Gain +5.35 dB Q 1.86
+Filter  1: ON PK Fc    27 Hz Gain -2.09 dB Q 1.65
+Filter  2: ON PK Fc    41 Hz Gain -1.03 dB Q 0.68
+Filter  3: ON PK Fc   320 Hz Gain -0.91 dB Q 1.88
+Filter  4: ON PK Fc   646 Hz Gain -2.61 dB Q 0.52
+Filter  5: ON PK Fc  2461 Hz Gain +2.92 dB Q 0.63
+Filter  6: ON PK Fc  6489 Hz Gain +2.90 dB Q 0.26
+Filter  7: ON PK Fc  8478 Hz Gain +2.92 dB Q 0.44
+Filter  8: ON PK Fc 10713 Hz Gain +2.94 dB Q 0.68
+Filter  9: ON PK Fc 12662 Hz Gain +2.97 dB Q 1.40

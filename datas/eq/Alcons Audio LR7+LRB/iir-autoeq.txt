@@ -1,14 +1,16 @@
 EQ for Alcons Audio LR7+LRB computed from Vendors-Alcons Audio data
-Preference Score 3.23 with EQ 5.35
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-18:13:17
+Preference Score 4.03 with EQ 5.83
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-01:47:29
 
-Preamp: -3.1 dB
+Preamp: -4.2 dB
 
-Filter  1: ON PK Fc 10951 Hz Gain +3.00 dB Q 2.40
-Filter  2: ON PK Fc   144 Hz Gain +2.80 dB Q 2.08
-Filter  3: ON PK Fc    64 Hz Gain -4.73 dB Q 1.80
-Filter  4: ON PK Fc   265 Hz Gain +2.99 dB Q 2.74
-Filter  5: ON PK Fc  1321 Hz Gain +3.00 dB Q 2.34
-Filter  6: ON PK Fc  2744 Hz Gain -3.13 dB Q 2.71
-Filter  7: ON PK Fc   529 Hz Gain -3.38 dB Q 2.98
+Filter  1: ON PK Fc    78 Hz Gain -2.97 dB Q 1.09
+Filter  2: ON PK Fc   138 Hz Gain +2.98 dB Q 2.91
+Filter  3: ON PK Fc   271 Hz Gain +2.92 dB Q 1.06
+Filter  4: ON PK Fc   547 Hz Gain -2.68 dB Q 2.97
+Filter  5: ON PK Fc   691 Hz Gain +0.91 dB Q 1.60
+Filter  6: ON PK Fc  1348 Hz Gain +2.68 dB Q 2.92
+Filter  7: ON PK Fc  2813 Hz Gain -2.87 dB Q 2.69
+Filter  8: ON PK Fc  7173 Hz Gain +2.05 dB Q 0.59
+Filter  9: ON PK Fc 11454 Hz Gain +2.86 dB Q 1.29

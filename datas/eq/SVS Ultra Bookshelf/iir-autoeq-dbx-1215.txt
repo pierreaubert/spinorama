@@ -1,9 +1,9 @@
 EQ for SVS Ultra Bookshelf computed from ErinsAudioCorner data
-Preference Score 5.62 with EQ 5.89
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:32:05
+Preference Score 5.41 with EQ 5.72
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:29:11
 
-Preamp: -0.9 dB
+Preamp: -0.7 dB
 
 Filter  1: ON PK Fc    25 Hz Gain +0.50 dB Q 2.14
 Filter  2: ON PK Fc    40 Hz Gain +0.50 dB Q 2.14

@@ -1,14 +1,11 @@
 EQ for Revel Ultima2 Voice2 computed from Vendors-Revel data
-Preference Score 5.28 with EQ 6.44
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.23
-Dated: 2023-07-25-23:02:31
+Preference Score 5.29 with EQ 6.38
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:09:06
 
-Preamp: -5.1 dB
+Preamp: -3.0 dB
 
-Filter  1: ON LS Fc    63 Hz Gain +5.16 dB Q 0.95
-Filter  2: ON PK Fc   218 Hz Gain -1.06 dB Q 3.94
-Filter  3: ON PK Fc  1411 Hz Gain -0.08 dB Q 4.68
-Filter  4: ON PK Fc  1987 Hz Gain +2.39 dB Q 4.30
-Filter  5: ON PK Fc  3267 Hz Gain +0.12 dB Q 3.94
-Filter  6: ON PK Fc  4598 Hz Gain -0.40 dB Q 1.99
-Filter  7: ON PK Fc  7799 Hz Gain -0.04 dB Q 0.79
+Filter  1: ON LS Fc    91 Hz Gain +3.00 dB Q 1.91
+Filter  2: ON PK Fc  1916 Hz Gain +1.93 dB Q 2.99
+Filter  3: ON PK Fc   383 Hz Gain +1.04 dB Q 2.34
+Filter  4: ON PK Fc  5946 Hz Gain -0.84 dB Q 1.09

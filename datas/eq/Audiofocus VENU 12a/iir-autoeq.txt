@@ -1,16 +1,16 @@
 EQ for Audiofocus VENU 12a computed from Vendors-Audiofocus data
-Preference Score -2.29 with EQ 0.43
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-04-24-15:20:38
+Preference Score -2.21 with EQ -0.04
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:14:08
 
-Preamp: -4.5 dB
+Preamp: -3.5 dB
 
-Filter  1: ON LS Fc  3586 Hz Gain +2.65 dB
-Filter  2: ON PK Fc   406 Hz Gain -6.00 dB Q 2.37
-Filter  3: ON PK Fc   203 Hz Gain -2.96 dB Q 2.94
-Filter  4: ON PK Fc   658 Hz Gain +2.98 dB Q 2.96
-Filter  5: ON PK Fc  7050 Hz Gain -4.29 dB Q 2.99
-Filter  6: ON PK Fc  1014 Hz Gain -2.53 dB Q 2.97
-Filter  7: ON PK Fc  1460 Hz Gain -1.20 dB Q 2.97
-Filter  8: ON PK Fc 10970 Hz Gain -3.61 dB Q 2.00
-Filter  9: ON PK Fc 11169 Hz Gain -2.02 dB Q 2.99
+Filter  1: ON LS Fc  5641 Hz Gain +1.44 dB Q 1.03
+Filter  2: ON PK Fc   384 Hz Gain -5.99 dB Q 2.17
+Filter  3: ON PK Fc 10517 Hz Gain -2.83 dB Q 2.21
+Filter  4: ON PK Fc   675 Hz Gain +2.97 dB Q 3.00
+Filter  5: ON PK Fc  1503 Hz Gain +1.16 dB Q 0.80
+Filter  6: ON PK Fc   195 Hz Gain -2.74 dB Q 2.99
+Filter  7: ON PK Fc  7118 Hz Gain -1.58 dB Q 2.98
+Filter  8: ON PK Fc   462 Hz Gain -2.29 dB Q 2.93
+Filter  9: ON PK Fc  1383 Hz Gain -1.56 dB Q 2.89

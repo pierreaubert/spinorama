@@ -1,9 +1,9 @@
 EQ for Genelec 8050B computed from ASR data
-Preference Score 6.33 with EQ 6.45
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-20:51:14
+Preference Score 6.17 with EQ 6.27
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:33:13
 
-Preamp: -0.8 dB
+Preamp: -0.6 dB
 
 Filter  1: ON PK Fc    25 Hz Gain +0.25 dB Q 2.14
 Filter  2: ON PK Fc    40 Hz Gain +0.00 dB Q 2.14
