@@ -23,6 +23,7 @@ import pandas as pd
 import scipy.optimize as opt
 
 from spinorama import logger
+from spinorama.constant_paths import MIDRANGE_MAX_FREQ
 from spinorama.ltype import Vector
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import Peq, peq_spl
@@ -64,7 +65,8 @@ def optim_global(
     freq_last = min(freq_max, 20000)
     freq_low = bisect.bisect(freq, freq_first)
     freq_high = bisect.bisect(freq, freq_last)
-    freq_1k = bisect.bisect(freq, 1000)
+    # a bit of black magic
+    freq_midrange = bisect.bisect(freq, MIDRANGE_MAX_FREQ / 2)
 
     # get lw/on
     lw = df_speaker["CEA2034_unmelted"]["Listening Window"].to_numpy()
@@ -112,8 +114,8 @@ def optim_global(
         flat = np.add(target, peq_freq)
         # flatness_l2 = np.linalg.norm(flat, ord=2)
         # flatness_l1 = np.linalg.norm(flat, ord=1)
-        flatness_bass_mid = np.linalg.norm(flat[0 : freq_1k - freq_low], ord=2)
-        flatness_mid_high = np.linalg.norm(flat[freq_1k - freq_low :], ord=2)
+        flatness_bass_mid = np.linalg.norm(flat[0 : freq_midrange - freq_low], ord=2)
+        flatness_mid_high = np.linalg.norm(flat[freq_midrange - freq_low :], ord=2)
         # this is black magic, why 10, 20, 40?
         # if you increase 20 you give more flexibility to the score (and less flat LW/ON)
         # without the constraint optimising the score get crazy results
