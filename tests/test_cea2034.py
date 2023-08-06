@@ -33,6 +33,7 @@ from spinorama.compute_cea2034 import (
     horizontal_reflections,
     estimated_inroom_hv,
 )
+from spinorama.auto_loss import score_loss
 
 
 pd.set_option("display.max_rows", 202)
@@ -306,6 +307,10 @@ class SpinoramaSpinoramaCorrectedERTests(unittest.TestCase):
             self.reference[key] = mat["Spininorama_corrected_F_ON_LW_ER_PIR_SP_SPDI_ERDI_DIoffset"][
                 0
             ][0][0].T[index]
+        # get data from Cython code
+        self.df_spin = {}
+        self.df_spin["SPL Horizontal_unmelted"] = self.splH
+        self.df_spin["SPL Vertical_unmelted"] = self.splV
 
     def test_validate_cea2034(self):
         for measurement in [
@@ -339,6 +344,51 @@ class SpinoramaSpinoramaCorrectedERTests(unittest.TestCase):
         computed_pir_mean = np.mean(computed_pir)
         reference_pir_mean = np.mean(reference_pir)
         delta = (computed_pir - computed_pir_mean - reference_pir + reference_pir_mean).abs().max()
+        tolerance = 2 * 1.0e-7
+        self.assertLess(delta, tolerance)
+
+    def test_validate_cython(self):
+        empty_eq = ()
+        self.assertNotIn("pre_computed", self.df_spin.keys())
+        _ = score_loss(self.df_spin, empty_eq)
+        self.assertIn("pre_computed", self.df_spin.keys())
+        cython = {}
+        cython["Freq"] = self.df_spin["pre_computed"]["freq"]
+        cython["On Axis"] = self.df_spin["pre_computed"]["on"]
+        cython["Listening Window"] = self.df_spin["pre_computed"]["spin"][0]
+        cython["Early Reflections"] = self.df_spin["pre_computed"]["spin"][1]
+        cython["Sound Power"] = self.df_spin["pre_computed"]["spin"][14]
+        cython["Estimated In-Room Response"] = self.df_spin["pre_computed"]["spin"][15]
+        #
+        for measurement in [
+            "On Axis",
+            "Listening Window",
+            "Sound Power",
+            "Early Reflections",
+        ]:
+            # from klippel
+            mreference = self.reference[measurement]
+            # computed
+            computed = cython[measurement]
+            # should have the same Freq
+            self.assertEqual(len(cython["Freq"]), len(self.reference["Freq"]))
+            delta = np.max(np.abs(cython["Freq"] - self.reference["Freq"]))
+            tolerance = 1.0e-7
+            self.assertLess(delta, tolerance)
+            # same for spl
+            computed_mean = np.mean(computed)
+            reference_mean = np.mean(mreference)
+            delta = np.max(np.abs((computed - computed_mean - mreference + reference_mean)))
+            tolerance = 2 * 1.0e-7
+            self.assertLess(delta, tolerance)
+        # now testing PIR
+        computed_pir = cython["Estimated In-Room Response"]
+        reference_pir = self.reference["Estimated In-Room Response"]
+        computed_pir_mean = np.mean(computed_pir)
+        reference_pir_mean = np.mean(reference_pir)
+        delta = np.max(
+            np.abs(computed_pir - computed_pir_mean - reference_pir + reference_pir_mean)
+        )
         tolerance = 2 * 1.0e-7
         self.assertLess(delta, tolerance)
 
