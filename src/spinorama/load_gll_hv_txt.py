@@ -78,7 +78,10 @@ def parse_graph_gll_hv_txt(dir_path: str) -> StatusOr[tuple[pd.DataFrame, pd.Dat
                     current_spl = float(words[1])
                     if current_freq > 20 and current_freq < 20000:
                         freqs.append(current_freq)
-                        dbs.append(current_spl)
+                        # GLL files are measured at 10m spl is usually reported at 1m
+                        # estimating real SPL at +10dB (since 10 ~ log2(10*10*10))
+                        # TODO: compute it more precisely by taking into account the speaker dispersion
+                        dbs.append(current_spl + 10.0)
 
         if angle == "On Axis":
             if orientation == "H":

@@ -81,8 +81,17 @@ def args2level(args):
     return level
 
 
+CACHE_DIR = ".cache"
+
+
+def create_default_directories():
+    for d in (CACHE_DIR, "docs", "docs/assets", "docs/pictures", "docs/speakers"):
+        pathlib.Path(d).mkdir(parents=True, exist_ok=True)
+
+
 def custom_ray_init(args):
     """Customize ray initialisation with a few parameters"""
+    create_default_directories()
     if MINIRAY:
         return
     # expose the dashboard on another ip if required
@@ -127,9 +136,6 @@ def custom_ray_init(args):
         logging_level=level,
         log_to_driver=True,
     )
-
-
-CACHE_DIR = ".cache"
 
 
 def cache_key(name: str) -> str:

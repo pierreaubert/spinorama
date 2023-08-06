@@ -1,16 +1,16 @@
 EQ for Bose DesignMax DM8S computed from Vendors-Bose data
-Preference Score 0.13 with EQ 2.98
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-31-09:16:03
+Preference Score -0.15 with EQ 2.79
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-00:53:05
 
-Preamp: -3.2 dB
+Preamp: -3.8 dB
 
-Filter  1: ON HPQ Fc    47 Hz Q 1.30
-Filter  2: ON PK Fc   103 Hz Gain -2.96 dB Q 2.82
-Filter  3: ON PK Fc   249 Hz Gain +3.00 dB Q 2.92
-Filter  4: ON PK Fc   766 Hz Gain +2.95 dB Q 2.97
-Filter  5: ON PK Fc  1040 Hz Gain +1.76 dB Q 2.96
-Filter  6: ON PK Fc  2352 Hz Gain -2.99 dB Q 2.96
-Filter  7: ON PK Fc  4641 Hz Gain -1.52 dB Q 0.42
-Filter  8: ON PK Fc  6300 Hz Gain -2.99 dB Q 2.99
-Filter  9: ON PK Fc 11225 Hz Gain -1.02 dB Q 2.48
+Filter  1: ON PK Fc   102 Hz Gain -1.83 dB Q 1.30
+Filter  2: ON PK Fc   253 Hz Gain +3.00 dB Q 2.54
+Filter  3: ON PK Fc   604 Hz Gain -0.85 dB Q 2.48
+Filter  4: ON PK Fc   764 Hz Gain +3.00 dB Q 2.99
+Filter  5: ON PK Fc   903 Hz Gain +1.50 dB Q 1.27
+Filter  6: ON PK Fc  2302 Hz Gain -2.99 dB Q 2.90
+Filter  7: ON PK Fc  6276 Hz Gain -2.99 dB Q 2.99
+Filter  8: ON PK Fc  8199 Hz Gain +1.55 dB Q 2.97
+Filter  9: ON PK Fc  9691 Hz Gain -2.62 dB Q 0.27

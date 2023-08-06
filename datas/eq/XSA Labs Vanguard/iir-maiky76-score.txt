@@ -1,0 +1,12 @@
+XSA Labs Vanguard APO EQ Score 96000Hz
+July242023-160405
+
+Preamp: -1.3 dB
+
+Filter 1: ON HPQ Fc 52.09,    0.00,    1.15
+Filter 2: ON PK Fc 132.87,    -3.59,    1.20
+Filter 3: ON PK Fc 1175.02,    -5.39,    1.27
+Filter 4: ON PK Fc 2391.92,    -4.61,    1.77
+Filter 5: ON PK Fc 3661.89,    -4.10,    4.99
+Filter 6: ON PK Fc 4354.75,    3.75,    2.39
+Filter 7: ON PK Fc 4982.74,    -2.75,    4.99

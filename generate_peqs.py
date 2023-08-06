@@ -111,7 +111,7 @@ from generate_common import get_custom_logger, args2level, custom_ray_init, cach
 from spinorama.auto_save import optim_save_peq
 
 
-VERSION = "0.22"
+VERSION = "0.24"
 
 
 def print_items(aggregated_results):

@@ -1,8 +1,0 @@
-EQ for Bose 901 Series V computed from ErinsAudioCorner data
-Preference Score 1.9 with EQ 1.5
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.11
-Dated: 2021-09-17-19:34:54
-
-Preamp: -8.2 dB
-
-Filter  1: ON PK Fc 13493 Hz Gain +8.00 dB Q 0.24

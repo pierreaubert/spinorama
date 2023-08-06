@@ -1,9 +1,9 @@
 EQ for Revel F228Be computed from ASR data
-Preference Score 6.22 with EQ 6.48
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:36:54
+Preference Score 6.01 with EQ 6.28
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:34:01
 
-Preamp: -0.8 dB
+Preamp: -0.6 dB
 
 Filter  1: ON PK Fc    25 Hz Gain +0.50 dB Q 2.14
 Filter  2: ON PK Fc    40 Hz Gain +0.50 dB Q 2.14

@@ -106,14 +106,17 @@
     <div class="tab-pane" id="pane-3">
       <table>
         % if g_eq is not None:
+<%
+          g_key_eq = g_key.replace("_eq", "") + "_eq"
+%>
         % for freq in g_freq:
         <tr>
           <td>
             <div class="box has-background-link-light">
-              <a href="${g_key}_eq/${freq | space2url}.html">
+              <a href="${g_key_eq}/${freq | space2url}.html">
                 <picture>
                   <source
-                    srcset="${g_key}_eq/${freq | space2url}.webp"
+                    srcset="${g_key_eq}/${freq | space2url}.webp"
                     width="1200"
                     height="800"
                     type="image/webp"
@@ -121,7 +124,7 @@
                   <img
                     class="graph"
                     alt="${freq}"
-                    src="${g_key}_eq/${freq | space2url}.jpg"
+                    src="${g_key_eq}/${freq | space2url}.jpg"
                     width="1200"
                     height="800"
                   >
@@ -135,10 +138,10 @@
         <tr>
           <td>
             <div class="box has-background-link-light">
-              <a href="${g_key}_eq/${contour | unmeltC, space2url}.html">
+              <a href="${g_key_eq}/${contour | unmeltC, space2url}.html">
                 <picture>
                   <source
-                    srcset="${g_key}_eq/${contour | unmeltC, space2url}.webp"
+                    srcset="${g_key_eq}/${contour | unmeltC, space2url}.webp"
                     width="1200"
                     height="800"
                     type="image/webp"
@@ -148,7 +151,7 @@
                     alt="${contour}"
                     width="1200"
                     height="800"
-                    src="${g_key}_eq/${contour | unmeltC, space2url}.jpg"
+                    src="${g_key_eq}/${contour | unmeltC, space2url}.jpg"
                   >
                 </picture>
               </a>
@@ -160,10 +163,10 @@
         <tr>
           <td>
             <div class="box has-background-link-light">
-              <a href="${g_key}_eq/${radar | unmeltR, space2url}.html">
+              <a href="${g_key_eq}/${radar | unmeltR, space2url}.html">
                 <picture>
                   <source
-                    srcset="${g_key}_eq/${radar | unmeltR, space2url}.webp"
+                    srcset="${g_key_eq}/${radar | unmeltR, space2url}.webp"
                     width="1000"
                     height="800"
                     type="image/webp"
@@ -171,7 +174,7 @@
                   <img
                     class="graph"
                     alt="${radar}"
-                    src="${g_key}_eq/${radar | unmeltR, space2url}.jpg"
+                    src="${g_key_eq}/${radar | unmeltR, space2url}.jpg"
                     width="1000"
                     height="800"
                   >
@@ -191,6 +194,9 @@
     <div class="tab-pane display:none" id="pane-4">
       <div id="vis4"></div>
       <table>
+<%
+          g_key_eq = g_key.replace("_eq", "") + "_eq"
+%>
         % for freq in g_freq:
         <tr>
           <td>
@@ -206,14 +212,14 @@
                 alt="Frequency"
                 width="1200"
                 height="800"
-                src="${g_key}_eq/${freq | space2url}.jpg"
+                src="${g_key}/${freq | space2url}.jpg"
               >
             </picture>
           </td>
           <td>
             <picture>
               <source
-                srcset="${g_key}_eq/${freq | space2url}.webp"
+                srcset="${g_key_eq}/${freq | space2url}.webp"
                 width="1200"
                 height="800"
                 type="image/webp"
@@ -223,7 +229,7 @@
                 alt="Frequency with EQ"
                 width="1200"
                 height="800"
-                src="${g_key}_eq/${freq | space2url}.jpg"
+                src="${g_key_eq}/${freq | space2url}.jpg"
               >
             </picture>
           </td>

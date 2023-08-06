@@ -1,14 +1,16 @@
 EQ for BiAmp Community V2-28 computed from Vendors-BiAmp data
-Preference Score -1.51 with EQ 1.51
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-05-10-19:56:48
+Preference Score -1.48 with EQ 1.55
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-01:20:00
 
-Preamp: -5.2 dB
+Preamp: -3.0 dB
 
-Filter  1: ON PK Fc    66 Hz Gain +4.49 dB Q 0.90
-Filter  2: ON PK Fc   997 Hz Gain +4.16 dB Q 3.49
-Filter  3: ON PK Fc  1177 Hz Gain +2.37 dB Q 3.50
-Filter  4: ON PK Fc  6422 Hz Gain -4.50 dB Q 3.49
-Filter  5: ON PK Fc  9342 Hz Gain -2.97 dB Q 3.48
-Filter  6: ON PK Fc 10649 Hz Gain -4.49 dB Q 3.47
-Filter  7: ON PK Fc 13377 Hz Gain +4.50 dB Q 2.92
+Filter  1: ON LS Fc    90 Hz Gain +2.99 dB Q 0.64
+Filter  2: ON PK Fc   404 Hz Gain -1.64 dB Q 2.79
+Filter  3: ON PK Fc  1067 Hz Gain +2.92 dB Q 2.95
+Filter  4: ON PK Fc  1594 Hz Gain -2.78 dB Q 2.75
+Filter  5: ON PK Fc  2153 Hz Gain -2.92 dB Q 2.97
+Filter  6: ON PK Fc  5135 Hz Gain -2.64 dB Q 0.84
+Filter  7: ON PK Fc  6276 Hz Gain -2.88 dB Q 2.90
+Filter  8: ON PK Fc  8199 Hz Gain -2.72 dB Q 0.87
+Filter  9: ON PK Fc  9691 Hz Gain -2.96 dB Q 1.30

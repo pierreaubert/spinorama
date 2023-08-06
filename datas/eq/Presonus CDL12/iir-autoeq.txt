@@ -1,14 +1,16 @@
 EQ for Presonus CDL12 computed from Vendors-Presonus data
-Preference Score 1.60 with EQ 4.29
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-05-10-19:55:00
+Preference Score 2.07 with EQ 4.15
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:15:24
 
-Preamp: -2.8 dB
+Preamp: -1.3 dB
 
-Filter  1: ON LS Fc   947 Hz Gain +2.83 dB
-Filter  2: ON PK Fc  1506 Hz Gain -2.87 dB Q 1.92
-Filter  3: ON PK Fc  2030 Hz Gain -4.16 dB Q 0.27
-Filter  4: ON PK Fc  5512 Hz Gain -3.23 dB Q 3.38
-Filter  5: ON PK Fc  8532 Hz Gain -3.52 dB Q 3.10
-Filter  6: ON PK Fc  9488 Hz Gain +3.96 dB Q 3.35
-Filter  7: ON PK Fc 15252 Hz Gain -3.97 dB Q 1.52
+Filter  1: ON PK Fc  3994 Hz Gain -3.00 dB Q 0.25
+Filter  2: ON PK Fc 11721 Hz Gain -2.86 dB Q 0.25
+Filter  3: ON PK Fc   322 Hz Gain +2.24 dB Q 0.79
+Filter  4: ON PK Fc   520 Hz Gain +0.75 dB Q 2.97
+Filter  5: ON PK Fc  1650 Hz Gain -4.47 dB Q 1.26
+Filter  6: ON PK Fc 14984 Hz Gain -1.36 dB Q 2.95
+Filter  7: ON PK Fc  5419 Hz Gain -0.77 dB Q 2.98
+Filter  8: ON PK Fc  2637 Hz Gain -0.79 dB Q 2.82
+Filter  9: ON PK Fc   309 Hz Gain -0.87 dB Q 2.71

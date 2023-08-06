@@ -1,14 +1,16 @@
 EQ for EAW MKD1200 computed from Vendors-EAW data
-Preference Score 5.63 with EQ 6.20
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-15-11:51:35
+Preference Score 5.93 with EQ 6.46
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-04:04:46
 
-Preamp: -10.2 dB
+Preamp: -5.6 dB
 
-Filter  1: ON PK Fc  2229 Hz Gain +1.03 dB Q 0.52
-Filter  2: ON PK Fc  4954 Hz Gain +1.13 dB Q 1.05
-Filter  3: ON PK Fc  6615 Hz Gain -2.10 dB Q 1.75
-Filter  4: ON PK Fc 12346 Hz Gain +2.86 dB Q 0.43
-Filter  5: ON PK Fc 14034 Hz Gain +2.55 dB Q 1.06
-Filter  6: ON PK Fc 14768 Hz Gain +2.89 dB Q 1.55
-Filter  7: ON PK Fc 15570 Hz Gain +2.68 dB Q 2.05
+Filter  1: ON LS Fc    60 Hz Gain +2.84 dB Q 0.81
+Filter  2: ON PK Fc   138 Hz Gain -1.34 dB Q 0.73
+Filter  3: ON PK Fc   565 Hz Gain +0.55 dB Q 2.10
+Filter  4: ON PK Fc   933 Hz Gain +1.19 dB Q 2.83
+Filter  5: ON PK Fc  1442 Hz Gain -0.00 dB Q 0.54
+Filter  6: ON PK Fc  4064 Hz Gain +0.72 dB Q 2.17
+Filter  7: ON PK Fc  6709 Hz Gain -1.86 dB Q 2.18
+Filter  8: ON PK Fc 13537 Hz Gain +2.97 dB Q 0.87
+Filter  9: ON PK Fc 16000 Hz Gain +2.99 dB Q 0.53

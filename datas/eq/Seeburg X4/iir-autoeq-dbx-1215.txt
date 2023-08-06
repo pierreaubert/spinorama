@@ -1,9 +1,9 @@
 EQ for Seeburg X4 computed from Vendors-Seeburg data
-Preference Score 3.25 with EQ 3.44
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:35:32
+Preference Score 3.34 with EQ 3.52
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:33:28
 
-Preamp: -1.3 dB
+Preamp: -1.1 dB
 
 Filter  1: ON PK Fc    25 Hz Gain +0.75 dB Q 2.14
 Filter  2: ON PK Fc    40 Hz Gain +0.75 dB Q 2.14

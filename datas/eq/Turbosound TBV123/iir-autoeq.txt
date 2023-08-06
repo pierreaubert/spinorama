@@ -1,15 +1,16 @@
 EQ for Turbosound TBV123 computed from Vendors-Turbosound data
-Preference Score 4.40 with EQ 5.03
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-13:31:34
+Preference Score 4.28 with EQ 5.41
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-03:12:40
 
-Preamp: -6.2 dB
+Preamp: -8.1 dB
 
-Filter  1: ON LS Fc 15935 Hz Gain +3.00 dB Q 1.35
-Filter  2: ON PK Fc   110 Hz Gain -5.36 dB Q 1.21
-Filter  3: ON PK Fc  2789 Hz Gain +2.98 dB Q 0.25
-Filter  4: ON PK Fc   355 Hz Gain +1.34 dB Q 0.29
-Filter  5: ON PK Fc   191 Hz Gain -3.78 dB Q 1.87
-Filter  6: ON PK Fc   415 Hz Gain -2.93 dB Q 2.91
-Filter  7: ON PK Fc    87 Hz Gain -3.45 dB Q 2.92
-Filter  8: ON PK Fc   584 Hz Gain -2.99 dB Q 2.97
+Filter  1: ON PK Fc    46 Hz Gain +2.99 dB Q 1.27
+Filter  2: ON PK Fc    99 Hz Gain -3.00 dB Q 1.30
+Filter  3: ON PK Fc   181 Hz Gain -2.99 dB Q 0.48
+Filter  4: ON PK Fc   299 Hz Gain +3.00 dB Q 2.98
+Filter  5: ON PK Fc   903 Hz Gain +2.99 dB Q 2.82
+Filter  6: ON PK Fc  1348 Hz Gain +2.98 dB Q 1.24
+Filter  7: ON PK Fc  2226 Hz Gain +2.76 dB Q 3.00
+Filter  8: ON PK Fc  7930 Hz Gain +3.00 dB Q 0.25
+Filter  9: ON LS Fc 16000 Hz Gain +2.61 dB Q 1.07

@@ -1,16 +1,16 @@
 EQ for Bose ArenaMatch AM20 computed from Vendors-Bose data
-Preference Score 1.85 with EQ 4.51
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-06-03-10:08:10
+Preference Score 1.96 with EQ 4.69
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-02:58:55
 
-Preamp: -3.2 dB
+Preamp: -4.6 dB
 
-Filter  1: ON PK Fc   133 Hz Gain +2.95 dB Q 1.28
-Filter  2: ON PK Fc   195 Hz Gain -2.95 dB Q 3.00
-Filter  3: ON PK Fc   351 Hz Gain +2.41 dB Q 2.91
-Filter  4: ON PK Fc   570 Hz Gain -0.89 dB Q 2.96
-Filter  5: ON PK Fc  1552 Hz Gain +2.82 dB Q 2.92
-Filter  6: ON PK Fc  2270 Hz Gain +1.67 dB Q 2.44
-Filter  7: ON PK Fc  3206 Hz Gain +0.21 dB Q 2.93
-Filter  8: ON PK Fc  7603 Hz Gain -1.70 dB Q 1.55
-Filter  9: ON PK Fc  9683 Hz Gain -2.92 dB Q 2.87
+Filter  1: ON LS Fc    56 Hz Gain +1.60 dB Q 1.10
+Filter  2: ON PK Fc   143 Hz Gain +2.36 dB Q 2.91
+Filter  3: ON PK Fc   194 Hz Gain -3.00 dB Q 3.00
+Filter  4: ON PK Fc   331 Hz Gain +2.73 dB Q 1.84
+Filter  5: ON PK Fc   547 Hz Gain -1.66 dB Q 2.86
+Filter  6: ON PK Fc  1491 Hz Gain +2.99 dB Q 2.97
+Filter  7: ON PK Fc  2082 Hz Gain +2.59 dB Q 1.15
+Filter  8: ON PK Fc  7930 Hz Gain -0.88 dB Q 1.81
+Filter  9: ON PK Fc  9372 Hz Gain -2.88 dB Q 1.25

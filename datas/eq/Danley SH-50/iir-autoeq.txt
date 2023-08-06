@@ -1,16 +1,16 @@
 EQ for Danley SH-50 computed from ErinsAudioCorner data
-Preference Score 0.08 with EQ 3.36
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-13:36:26
+Preference Score -0.27 with EQ 2.38
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-04:15:45
 
-Preamp: -4.1 dB
+Preamp: -2.9 dB
 
-Filter  1: ON LS Fc  5410 Hz Gain +2.03 dB Q 0.81
-Filter  2: ON PK Fc    96 Hz Gain -3.95 dB Q 2.99
-Filter  3: ON PK Fc   256 Hz Gain -5.85 dB Q 3.00
-Filter  4: ON PK Fc  1118 Hz Gain -5.11 dB Q 3.00
-Filter  5: ON PK Fc    53 Hz Gain +1.08 dB Q 2.99
-Filter  6: ON PK Fc 10717 Hz Gain -3.86 dB Q 1.09
-Filter  7: ON PK Fc   554 Hz Gain +2.57 dB Q 1.76
-Filter  8: ON PK Fc  7553 Hz Gain -3.02 dB Q 2.99
-Filter  9: ON PK Fc 15472 Hz Gain -3.53 dB Q 2.96
+Filter  1: ON LS Fc    52 Hz Gain +2.87 dB Q 1.10
+Filter  2: ON PK Fc   113 Hz Gain -2.19 dB Q 1.88
+Filter  3: ON PK Fc   262 Hz Gain -3.00 dB Q 2.98
+Filter  4: ON PK Fc   529 Hz Gain +2.96 dB Q 1.42
+Filter  5: ON PK Fc   903 Hz Gain +2.99 dB Q 2.99
+Filter  6: ON PK Fc  1141 Hz Gain -2.99 dB Q 2.99
+Filter  7: ON PK Fc  4492 Hz Gain +2.54 dB Q 2.99
+Filter  8: ON PK Fc 10361 Hz Gain -2.71 dB Q 1.04
+Filter  9: ON PK Fc 16000 Hz Gain -2.87 dB Q 0.31

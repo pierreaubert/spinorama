@@ -328,6 +328,23 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
             datas = spin[1].data;
         }
     }
+
+    const selectorOptionsFreq = {
+        buttons: [{
+            step: 'freq',
+            stepmode: 'backward',
+            count: 10,
+            label: '10hz'
+        }, {
+            step: 'freq',
+            stepmode: 'backward',
+            count: 10,
+            label: '10hz'
+        }, {
+            step: 'all',
+        }],
+    };
+
     if (layout != null && datas != null) {
         if (windowWidth < graphSmall || windowHeight < graphSmall) {
             if (windowWidth < windowHeight) {
@@ -340,6 +357,8 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
                     layout.yaxis2.visible = false;
                 }
                 layout.xaxis.title = 'SPL (dB) v.s. Frequency (Hz)';
+                // layout.xaxis.rangeselector = selectorOptionsFreq;
+                // layout.xaxis.rangeslider = {};
             } else {
                 // landscape
                 layout.height = windowHeight + graphSpacer;
@@ -496,6 +515,12 @@ export function setGraph(speakerNames: Array<string>, speakerGraphs: Graphs, wid
         if (speakerGraphs[i] != null) {
             // console.log('adding graph ' + i)
             for (const trace in speakerGraphs[i].data) {
+                const name = speakerGraphs[i].data[trace].name;
+                // hide yellow bands since when you have more than one it is difficult to see the graphs
+                // also remove the midrange lines for the same reason
+                if (name != null && (name == 'Band ±3dB' || name == 'Band ±1.5dB' || name == 'Midrange Band +3dB' || name == 'Midrange Band -3dB')) {
+                    speakerGraphs[i].data[trace].visible = false;
+                }
                 speakerGraphs[i].data[trace].legendgroup = 'speaker' + i;
                 speakerGraphs[i].data[trace].legendgrouptitle = {
                     text: speakerNames[i],

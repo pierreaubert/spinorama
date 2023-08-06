@@ -68,6 +68,15 @@ from spinorama.filter_peq import peq_preamp_gain
 from spinorama.load_rew_eq import parse_eq_iir_rews
 
 
+ACTIVATE_TRACING: bool = False
+
+
+def tracing(msg: str):
+    """debugging ray is sometimes painfull"""
+    if ACTIVATE_TRACING:
+        print(f"---- TRACING ---- {msg} ----")
+
+
 def compute_scaled_pref_score(pref_score: float) -> float:
     scaled_pref_score = 0
     if pref_score > 7:
@@ -154,6 +163,12 @@ def compute_scaled_sm_pir(sm_pir: float) -> float:
     return scaled_sm_pir
 
 
+def reject(filters: dict, speaker_name: str) -> bool:
+    if filters["speaker_name"] is not None and filters["speaker_name"] != speaker_name:
+        return True
+    return False
+
+
 @ray.remote(num_cpus=1)
 def queue_score(speaker_name, speaker_data):
     logger.info("Processing %s", speaker_name)
@@ -170,7 +185,7 @@ def queue_score(speaker_name, speaker_data):
             continue
 
         for key, dfs in measurements.items():
-            logger.debug("debug key=%s", key)
+            tracing("speaker_name={} version={} origin={}".format(speaker_name, key, origin))
             result = {
                 "speaker": speaker_name,
                 "version": key,
@@ -222,11 +237,11 @@ def queue_score(speaker_name, speaker_data):
     return results
 
 
-def queue_scores(dataframe, parse_max):
+def queue_scores(dataframe, parse_max, filters):
     parsed = 0
     refs = []
     for speaker_name, speaker_data in dataframe.items():
-        if parse_max is not None and parsed > parse_max:
+        if reject(filters, speaker_name) or (parse_max is not None and parsed > parse_max):
             break
         parsed = parsed + 1
         ref = queue_score.remote(speaker_name, speaker_data)
@@ -234,9 +249,9 @@ def queue_scores(dataframe, parse_max):
     return refs
 
 
-def add_scores(dataframe, parse_max):
+def add_scores(dataframe, parse_max, filters):
     """Compute some values per speaker and add them to metadata"""
-    refs = queue_scores(dataframe, parse_max)
+    refs = queue_scores(dataframe, parse_max, filters)
     while 1:
         done_refs, remain_refs = ray.wait(refs, num_returns=min(len(refs), 64))
 
@@ -249,6 +264,14 @@ def add_scores(dataframe, parse_max):
                 computed_estimates = result.get("estimates")
                 pref_rating = result.get("pref_rating")
                 is_eq = version[-3:] == "_eq"
+
+                logger.debug(
+                    "%s (%s): is_eq=%s estimates=%s",
+                    speaker_name,
+                    version,
+                    "true" if is_eq else "false",
+                    "computed" if computed_estimates is not None else "failed",
+                )
 
                 if is_eq:
                     version_neq = version[:-3]
@@ -489,7 +512,7 @@ def add_scores(dataframe, parse_max):
                 ] = scaled_pref_rating
 
 
-def add_quality(parse_max: int):
+def add_quality(parse_max: int, filters: dict):
     """Compute quality of data and add it to metadata
     Rules:
     - Independant measurements from ASR or EAC : high quality
@@ -499,7 +522,7 @@ def add_quality(parse_max: int):
     """
     parsed = 0
     for speaker_name, speaker_data in metadata.speakers_info.items():
-        if parse_max is not None and parsed > parse_max:
+        if reject(filters, speaker_name) or (parse_max is not None and parsed > parse_max):
             break
         parsed = parsed + 1
         logger.info("Processing %s", speaker_name)
@@ -524,11 +547,11 @@ def add_quality(parse_max: int):
             metadata.speakers_info[speaker_name]["measurements"][version]["quality"] = quality
 
 
-def add_eq(speaker_path, dataframe, parse_max):
+def add_eq(speaker_path, dataframe, parse_max, filters):
     """Compute some values per speaker and add them to metadata"""
     parsed = 0
     for speaker_name in dataframe:
-        if parse_max is not None and parsed > parse_max:
+        if reject(filters, speaker_name) or (parse_max is not None and parsed > parse_max):
             break
         parsed = parsed + 1
         logger.info("Processing %s", speaker_name)
@@ -661,7 +684,7 @@ def get_spin_data(freq, speaker_name, speaker_data):
     return None
 
 
-def add_near(dataframe, parse_max):
+def add_near(dataframe, parse_max: int, filters: dict):
     """Compute nearest speaker"""
     parsed = 0
     distribution = []
@@ -675,7 +698,7 @@ def add_near(dataframe, parse_max):
             distances[speaker_name] = {}
 
     for speaker_name1, speaker_data1 in normalized.items():
-        if parse_max is not None and parsed > parse_max:
+        if reject(filters, speaker_name) or (parse_max is not None and parsed > parse_max):
             break
         parsed = parsed + 1
         deltas = []
@@ -768,13 +791,13 @@ def main():
 
     # add computed data to metadata
     logger.info("Compute scores per speaker")
-    add_quality(parse_max)
+    add_quality(parse_max, filters)
     steps.append(("quality", time.perf_counter()))
-    add_scores(main_df, parse_max)
+    add_scores(main_df, parse_max, filters)
     steps.append(("scores", time.perf_counter()))
-    add_eq("./datas", main_df, parse_max)
+    add_eq("./datas", main_df, parse_max, filters)
     steps.append(("eq", time.perf_counter()))
-    add_near(main_df, parse_max)
+    add_near(main_df, parse_max, filters)
     steps.append(("near", time.perf_counter()))
 
     # write metadata in a json file for easy search
@@ -793,6 +816,6 @@ def main():
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="generate_meta.py version 1.5", options_first=True)
+    args = docopt(__doc__, version="generate_meta.py version 1.6", options_first=True)
     logger = get_custom_logger(level=args2level(args), duplicate=True)
     main()

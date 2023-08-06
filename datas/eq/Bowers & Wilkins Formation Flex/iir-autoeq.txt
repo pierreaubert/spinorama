@@ -1,14 +1,16 @@
 EQ for Bowers & Wilkins Formation Flex computed from ASR data
-Preference Score 3.44 with EQ 5.80
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-05-10-19:55:08
+Preference Score 3.36 with EQ 5.69
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-04:08:46
 
-Preamp: -4.4 dB
+Preamp: -3.1 dB
 
-Filter  1: ON LS Fc    92 Hz Gain +4.40 dB
-Filter  2: ON PK Fc  2056 Hz Gain +3.90 dB Q 3.14
-Filter  3: ON PK Fc  4139 Hz Gain -1.25 dB Q 0.39
-Filter  4: ON PK Fc  7542 Hz Gain -1.71 dB Q 1.07
-Filter  5: ON PK Fc  8685 Hz Gain +2.92 dB Q 3.20
-Filter  6: ON PK Fc 11810 Hz Gain -2.01 dB Q 2.88
-Filter  7: ON PK Fc 14830 Hz Gain -1.44 dB Q 1.98
+Filter  1: ON LS Fc   121 Hz Gain +2.97 dB Q 0.76
+Filter  2: ON PK Fc   604 Hz Gain -0.63 dB Q 2.66
+Filter  3: ON PK Fc   844 Hz Gain -0.13 dB Q 1.89
+Filter  4: ON PK Fc  2014 Hz Gain +1.82 dB Q 2.42
+Filter  5: ON PK Fc  2380 Hz Gain +2.37 dB Q 2.21
+Filter  6: ON PK Fc  3438 Hz Gain -1.24 dB Q 1.28
+Filter  7: ON PK Fc  6276 Hz Gain -1.19 dB Q 2.27
+Filter  8: ON PK Fc  8766 Hz Gain +2.29 dB Q 2.31
+Filter  9: ON PK Fc 12662 Hz Gain -2.87 dB Q 0.91

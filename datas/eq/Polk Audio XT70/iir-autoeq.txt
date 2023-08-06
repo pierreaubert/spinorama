@@ -1,16 +1,16 @@
 EQ for Polk Audio XT70 computed from ErinsAudioCorner data
-Preference Score 4.82 with EQ 6.04
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-06-03-10:19:16
+Preference Score 4.54 with EQ 6.03
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-03:05:19
 
-Preamp: -1.3 dB
+Preamp: -1.5 dB
 
-Filter  1: ON LS Fc    43 Hz Gain +1.27 dB Q 0.65
-Filter  2: ON PK Fc   164 Hz Gain +1.11 dB Q 0.58
-Filter  3: ON PK Fc   276 Hz Gain -2.31 dB Q 2.86
-Filter  4: ON PK Fc   514 Hz Gain +0.55 dB Q 1.24
-Filter  5: ON PK Fc   726 Hz Gain +0.33 dB Q 2.68
-Filter  6: ON PK Fc  3435 Hz Gain +1.02 dB Q 1.29
-Filter  7: ON PK Fc  4688 Hz Gain -1.61 dB Q 1.44
-Filter  8: ON PK Fc 11913 Hz Gain -2.57 dB Q 0.77
-Filter  9: ON PK Fc 16000 Hz Gain +0.54 dB Q 2.20
+Filter  1: ON LS Fc    43 Hz Gain +1.53 dB Q 0.45
+Filter  2: ON PK Fc   229 Hz Gain +1.71 dB Q 2.48
+Filter  3: ON PK Fc   271 Hz Gain -2.86 dB Q 2.61
+Filter  4: ON PK Fc   739 Hz Gain +1.38 dB Q 0.39
+Filter  5: ON PK Fc   965 Hz Gain -0.95 dB Q 2.39
+Filter  6: ON PK Fc  3325 Hz Gain +1.20 dB Q 1.24
+Filter  7: ON PK Fc  4803 Hz Gain -1.81 dB Q 1.40
+Filter  8: ON PK Fc  7669 Hz Gain -0.50 dB Q 1.91
+Filter  9: ON PK Fc 11843 Hz Gain -1.66 dB Q 1.03

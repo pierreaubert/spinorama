@@ -124,7 +124,7 @@ def optim_strategy(
                     "Listening Window",
                     "Estimated In-Room Response",
                 ],  # fit on the 2 curves
-                "full_biquad_optim": optim_config.get("full_biquad_option", True),
+                "full_biquad_optim": optim_config.get("full_biquad_optim", True),
                 "smooth_measurements": optim_config.get("smooth_measurements", False),
                 "loss": "score_loss",
             }
@@ -218,7 +218,7 @@ def optim_strategy(
             configs.append(
                 {
                     "curve_names": ["Listening Window", "Estimated In-Room Response"],
-                    "full_biquad_optim": True,
+                    "full_biquad_optim": optim_config.get("full_biquad_optim", True),
                     "smooth_measurements": False,
                     "loss": "score_loss",
                 }
@@ -228,9 +228,16 @@ def optim_strategy(
     best_score = -1000.0
     results = None
     for config in configs:
+        logger.debug(
+            "config: optim_config full_biquad_optim %s", optim_config.get("full_biquad_optim")
+        )
         current_optim_config = deepcopy(optim_config)
         for k, v in config.items():
             current_optim_config[k] = v
+        logger.debug(
+            "config: current_optim_config full_biquad_optim %s",
+            current_optim_config.get("full_biquad_optim"),
+        )
         # don't compute configs that do not match
         if optim_config["curve_names"] is not None and set(optim_config["curve_names"]) != set(
             config["curve_names"]

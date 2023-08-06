@@ -10,7 +10,7 @@
 This library provides an easy way to view, compare or analyse speakers data. This can help you take informed
 decision when buying a speaker instead of relying on commercial information or internet buzz.
 
-## Jump to the [gallery](https://www.spinorama.org) of all (500+) speakers measurements.
+## Jump to the [gallery](https://www.spinorama.org) of all (1000+) speakers measurements.
 
 # What is a spinorama set of graphs?
 

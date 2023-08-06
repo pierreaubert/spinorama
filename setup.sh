@@ -19,20 +19,28 @@
 ## package check
 ## ----------------------------------------------------------------------
 
-# apt install -y python3 python3-pip imagemagick keychain npm wget
-# wget -O- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+OS=$(uname)
+
+if test "$OS" = "Linux"; then
+  sudo [ -x /usr/bin/apt ] && /usr/bin/apt install -y python3 python3-pip imagemagick keychain npm wget python3.11-venv
+  # add locale if they don't exist possibly C.utf8 would work
+  sudo [ -x /usr/bin/localedef ] && /usr/bin/localedef -f UTF-8 -i en_US en_US.UTF-8
+  # wget -O- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+  # CUDA stuff for tensorflow
+  #
+  # wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+  # sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
+  # sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
+  # sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
+  # sudo apt-get update
+  # sudo apt-get -y install nvidia-cuda nvidia-cuda-toolkit libcudnn8
+elif test "$OS" = "Darwin"; then
+  brew install hdf5
+  export HDF5_DIR=/opt/homebrew
+fi
 
 export PYTHONPATH=./src:./src/website
 export NVM_DIR=$HOME/.nvm
-
-# CUDA stuff for tensorflow
-#
-# wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
-# sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
-# sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
-# sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
-# sudo apt-get update
-# sudo apt-get -y install nvidia-cuda nvidia-cuda-toolkit libcudnn8
 
 # python section
 python3 -m venv spinorama-venv

@@ -1,16 +1,16 @@
 EQ for JBL CFR2 computed from Vendors-JBL data
-Preference Score -18.32 with EQ -9.72
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-06-03-10:19:07
+Preference Score -19.65 with EQ -11.12
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-03:54:55
 
-Preamp: -8.8 dB
+Preamp: -11.9 dB
 
-Filter  1: ON BP Fc   116 Hz Gain -0.70 dB Q 0.85
-Filter  2: ON PK Fc   143 Hz Gain +2.86 dB Q 0.25
-Filter  3: ON PK Fc   195 Hz Gain +2.94 dB Q 0.50
-Filter  4: ON PK Fc   257 Hz Gain +3.00 dB Q 0.81
-Filter  5: ON PK Fc   306 Hz Gain +2.89 dB Q 0.31
-Filter  6: ON PK Fc  1352 Hz Gain -2.83 dB Q 1.76
-Filter  7: ON PK Fc  7871 Hz Gain -2.91 dB Q 1.98
-Filter  8: ON PK Fc 10023 Hz Gain -2.95 dB Q 2.22
-Filter  9: ON PK Fc 16000 Hz Gain -1.61 dB Q 0.82
+Filter  1: ON BP Fc    71 Hz Gain -0.10 dB Q 0.29
+Filter  2: ON PK Fc   113 Hz Gain +2.96 dB Q 0.46
+Filter  3: ON PK Fc   148 Hz Gain +2.85 dB Q 0.42
+Filter  4: ON PK Fc   194 Hz Gain +2.60 dB Q 0.36
+Filter  5: ON PK Fc   309 Hz Gain +2.55 dB Q 0.44
+Filter  6: ON PK Fc  1261 Hz Gain -2.31 dB Q 1.28
+Filter  7: ON PK Fc  3438 Hz Gain +0.60 dB Q 1.89
+Filter  8: ON PK Fc 10020 Hz Gain -0.49 dB Q 2.83
+Filter  9: ON LS Fc 11843 Hz Gain +2.93 dB Q 0.62

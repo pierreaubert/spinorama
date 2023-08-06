@@ -17,6 +17,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 export function sortMetadata2(metadata, sorter) {
+
     const sortChildren2 = ({ container, score, reverse }) => {
         // console.log('sorting2 by '+score)
         const items = [...container.keys()];
@@ -143,6 +144,46 @@ export function sortMetadata2(metadata, sorter) {
         return 0.0;
     }
 
+    function getWeightV2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('specifications' in msr && 'weight' in msr.specifications) {
+            return spk.measurements[def].specifications.weight;
+        }
+        return 0.0;
+    }
+
+    function getSizeWidthV2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('specifications' in msr && 'size' in msr.specifications && 'width' in msr.specifications.size) {
+            return spk.measurements[def].specifications.size.width;
+        }
+        return 0.0;
+    }
+
+    function getSizeDepthV2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('specifications' in msr && 'size' in msr.specifications && 'depth' in msr.specifications.size) {
+            return spk.measurements[def].specifications.size.depth;
+        }
+        return 0.0;
+    }
+
+    function getSizeHeightV2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('specifications' in msr && 'size' in msr.specifications && 'height' in msr.specifications.size) {
+            return spk.measurements[def].specifications.size.height;
+        }
+        return 0.0;
+    }
+
     function getBrandV2(key) {
         const spk = metadata.get(key);
         return spk.brand + ' ' + spk.model;
@@ -214,7 +255,31 @@ export function sortMetadata2(metadata, sorter) {
             score: (k) => getBrandV2(k),
             reverse: sorter.reverse,
         });
-    } else {
+    } else if (sorter.by === 'weight') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getWeightV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'width') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getSizeWidthV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'height') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getSizeHeightV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'depth') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getSizeDepthV2(k),
+            reverse: sorter.reverse,
+        });
+   } else {
         console.log('ERROR: unknown sorter ' + sorter.by);
     }
 }

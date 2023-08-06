@@ -1,9 +1,9 @@
 EQ for KEF LS50 Meta computed from ASR data
-Preference Score 5.71 with EQ 5.76
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-17:34:07
+Preference Score 5.61 with EQ 5.66
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:31:40
 
-Preamp: -0.9 dB
+Preamp: -0.7 dB
 
 Filter  1: ON PK Fc    25 Hz Gain +0.50 dB Q 2.14
 Filter  2: ON PK Fc    40 Hz Gain +0.50 dB Q 2.14

@@ -1,73 +1,150 @@
-<nav class="navbar">
-  <div class="navbar-brand">
-    <div class="navbar-item is-hidden-desktop" id="navbar-burger">
-      <button type="button" class="button" value="Menu" aria-label="Menu">
-        Menu
-      </button>
-    </div>
-    <a class="navbar-item is-size-4" href="${site}"><b>SPIN</b>orama</a>
-    <div class="navbar-item is-hidden-tablet" id="smallSearch">
-      % if use_search:
-      <button type="button" class="button is-rounded" value="Search" aria-label="Search">
-        <span class="icon is-left">
-          <i class="fas fa-search"></i>
-        </span>
-      </button>
-      % endif
-    </div>
-  </div>
-  <div class="navbar-menu">
-    <div class="navbar-start">
-      <a class="navbar-item"
-         href="https://github.com/pierreaubert/spinorama">
-        <span class="icon"><i class="fab fa-lg fa-github-alt"></i></span>
-      </a>
-    </div>
-    <div class="navbar-end">
-      <a class="navbar-item" href="${site}/index.html">Search</a>
-      <a class="navbar-item" href="${site}/eqs.html">EQs</a>
-      <a class="navbar-item" href="${site}/compare.html">Compare</a>
-      <a class="navbar-item" href="${site}/similar.html">Similar<sup>&alpha;</sup></a>
-      <a class="navbar-item" href="${site}/scores.html?quality=High">Ranking</a>
-      <a class="navbar-item" href="${site}/statistics.html">Statistics</a>
-      <a class="navbar-item" href="${site}/help.html">Help</a>
-    </div>
-  </div>
-</nav>
+<div class="block my-1 mx-1">
 
-% if use_search:
-<div class="level has-background-info-dark is-hidden-mobile" id="search-bar">
-  <div class="level-item">
-    <div class="dropdown is-hoverable">
-      <div class="dropdown-trigger">
-        <button type="button" class="button" aria-haspopup="true"
-                aria-controls="filters-dropdown-menu" value="cog" aria-label="cog">
-          <span class="icon">
-            <i class="fas fa-cog" aria-hidden="true"></i>
-          </span>
-        </button>
+  <nav class="level is-light is-mobile">
+
+    <div class="level-left">
+      <div class="level-item is-left dropdown is-hoverable" id="menu-main">
+        <div class="dropdown-trigger" id="menu-main-trigger">
+          <button type="button" class="button" aria-haspopup="true" aria-controls="menu-main" value="menu-main" aria-label="menu-main">
+            <span class="icon">
+              <i class="fas fa-solid fa-bars" aria-hidden="true"></i>
+            </span>
+          </button>
+        </div>
+        <div class="dropdown-menu" id="menu-main-dropdown" role="menu">
+          <div class="dropdown-content">
+            ${menuMain()}
+          </div>
+        </div>
       </div>
-      <div class="dropdown-menu" id="filters-dropdown-menu" role="menu">
-        <div class="dropdown-content">
-          <div class="dropdown-item">
-            Filter by:
+      <div class="level-item is-hidden-mobile py-0 my-0">
+        <a href="/" class="is-size-4 is-hidden-mobile">
+          <img src="/icons/icon-bookshelves.svg" alt="SPINorama" width="44">
+          <b>SPIN</b>orama
+        </a>
+      </div>
+    </div>
+
+    <div class="level-right">
+      <div class="level-item is-hoverable px-0">
+        <div class="field has-addons">
+          <div class="control has-icons-right is-expended">
+            <input id="searchInput" class="input is-info is-align-self-flex-end" type="text" placeholder="brand or model ...">
+            <div class="icon is-right"><i class="fas fa-search"></i></div>
           </div>
-          <hr class="dropdown-divider">
-          ${filters()}
-          <hr class="dropdown-divider">
-          <div class="dropdown-item">
-            Sort by:
+          <div class="control">
+            <div class="dropdown is-hoverable is-right" id="filters-dropdown">
+              <div class="dropdown-trigger" id="filters-dropdown-trigger">
+                <button type="button" class="button" aria-haspopup="true" aria-controls="filters-dropdown-menu" value="filter" aria-label="filter">
+                  <span class="icon">
+                    <i class="fas fa-sliders" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="filters-dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <div class="dropdown-item">
+                    <div class="label">Filter by:</div>
+                  </div>
+                  <hr class="dropdown-divider">
+                  ${filters()}
+                </div>
+              </div>
+            </div>
           </div>
-          ${sortBy()}
+          <div class="control">
+            <div class="dropdown is-hoverable is-right" id="sorters-dropdown">
+              <div class="dropdown-trigger" id="sorters-dropdown-trigger">
+                <button type="button" class="button" aria-haspopup="true" aria-controls="sorters-dropdown-menu" value="filter" aria-label="filter">
+                  <span class="icon">
+                    <i class="fas fa-solid fa-sort" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="sorters-dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <div class="dropdown-item">
+                    <div class="label">Sort by:</div>
+                  </div>
+                  <hr class="dropdown-divider">
+                  ${sortBy()}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="control has-icons-left">
-      <input id="searchInput" class="input" type="text" placeholder="brand or model ...">
-      <div class="icon is-left"><i class="fas fa-search"></i></div>
-    </div>
-  </div>
+  </nav>
 </div>
+
+<%def name="menuMain()">
+  <a class="dropdown-item" href="${site}/index.html">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-solid fa-house"></i></span>
+      Home
+    </div>
+  </a>
+  <a class="dropdown-item"
+     href="${site}/eqs.html">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-solid fa-wand-magic-sparkles"></i></span>
+      EQs
+    </div>
+  </a>
+  <a class="dropdown-item"
+     href="${site}/compare.html">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-solid fa-scale-unbalanced"></i></span>
+      Compare
+    </div>
+  </a>
+  <a class="dropdown-item"
+     href="${site}/similar.html">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-solid fa-scale-balanced"></i></span>
+      Similar
+    </div>
+  </a>
+  <a class="dropdown-item"
+     href="${site}/scores.html?quality=High">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-solid fa-table"></i></span>
+      Ranking
+    </div>
+  </a>
+  <a class="dropdown-item"
+     href="${site}/statistics.html">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-solid fa-chart-column"></i></span>
+      Statistics
+    </div>
+  </a>
+  <a class="dropdown-item" href="${site}/help.html">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-regular fa-circle-question"></i></span>
+      Help
+    </div>
+  </a>
+  <a class="dropdown-item" href="https://github.com/pierreaubert/spinorama">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fab fa-lg fa-github-alt"></i></span>
+      Code
+    </div>
+  </a>
+  <a class="dropdown-item" href="https://github.com/pierreaubert/spinorama/issues">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-regular fa-bug"></i></span>
+      Bugs
+    </div>
+  </a>
+  <a class="dropdown-item" href="https://github.com/pierreaubert/spinorama/discussions">
+    <div class="has-icons-left">
+      <span class="icon is-left"><i class="fas fa-regular fa-comment"></i></span>
+      Feedback
+    </div>
+  </a>
+</%def>
 
 <%def name="filters()">
   ${filterQuality()}
@@ -76,116 +153,196 @@
   ${filterPower()}
   ${filterBrand()}
   ${filterPrice()}
+  ${filterWeight()}
+  ${filterHeight()}
+  ${filterWidth()}
+  ${filterDepth()}
 </%def>
 
 <%def name="filterQuality()">
 <div class="dropdown-item">
-  <div class="control has-icons-left">
-    <div class="select">
-      <select id="selectQuality">
-        <option value="">Measurements Quality</option>
-        <option value="high">High</option>
-        <option value="medium">Medium</option>
-        <option value="low">Low</option>
-	<option value="unknown">Unknown</option>
-      </select>
+  <div class="field">
+    <div class="control has-icons-left">
+      <div class="select">
+        <select id="selectQuality">
+          <option value="">Measurements Quality</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+	  <option value="unknown">Unknown</option>
+        </select>
+      </div>
+      <div class="icon is-left"><i class="fas fa-chart-line"></i></div>
     </div>
-    <div class="icon is-left"><i class="fas fa-chart-line"></i></div>
   </div>
 </div>
 </%def>
 
 <%def name="filterReviewer()">
 <div class="dropdown-item">
-  <div class="control has-icons-left">
-    <div class="select">
-      <select id="selectReviewer">
-        <option value="">Reviewer</option>
-        <option value="ASR">ASR</option>
-        <option value="ErinsAudioCorner">ErinsAudioCorner</option>
-	<option value="Princeton">Princeton</option>
+  <div class="field">
+    <div class="control has-icons-left">
+      <div class="select">
+        <select id="selectReviewer">
+          <option value="">Reviewer</option>
+          <option value="ASR">ASR</option>
+          <option value="ErinsAudioCorner">ErinsAudioCorner</option>
+	  <option value="Princeton">Princeton</option>
 	  <%include file="reviewers.html"/>
-      </select>
+        </select>
+      </div>
+      <div class="icon is-left"><i class="fas fa-user-alt"></i></div>
     </div>
-    <div class="icon is-left"><i class="fas fa-user-alt"></i></div>
   </div>
 </div>
 </%def>
 
 <%def name="filterShape()">
 <div class="dropdown-item">
-  <div class="control has-icons-left">
-    <div class="select">
-      <select id="selectShape">
-        <option value="">Shape</option>
-        <option value="bookshelves">Bookshelves</option>
-        <option value="floorstanders">Floorstanders</option>
-        <option value="center">Center</option>
-        <option value="surround">Surround</option>
-        <option value="omnidirectional">Omnidirectional</option>
-        <option value="outdoor">Outdoor</option>
-        <option value="columns">Columns</option>
-        <option value="cbt">CBT</option>
-        <option value="panel">Panel</option>
-        <option value="inwall">In Wall</option>
-        <option value="soundbar">Soundbar</option>
-        <option value="cinema">Cinema</option>
-        <option value="liveportable">Live Portable</option>
-        <option value="toursound">Tour Sound</option>
-      </select>
+  <div class="field">
+    <div class="control has-icons-left">
+      <div class="select">
+        <select id="selectShape">
+          <option value="">Shape</option>
+          <option value="bookshelves">Bookshelves</option>
+          <option value="floorstanders">Floorstanders</option>
+          <option value="center">Center</option>
+          <option value="surround">Surround</option>
+          <option value="omnidirectional">Omnidirectional</option>
+          <option value="outdoor">Outdoor</option>
+          <option value="columns">Columns</option>
+          <option value="cbt">CBT</option>
+          <option value="panel">Panel</option>
+          <option value="inwall">In Wall</option>
+          <option value="soundbar">Soundbar</option>
+          <option value="cinema">Cinema</option>
+          <option value="liveportable">Live Portable</option>
+          <option value="toursound">Tour Sound</option>
+        </select>
+      </div>
+      <div class="icon is-left"><i class="fas fa-shapes"></i></div>
     </div>
-    <div class="icon is-left"><i class="fas fa-shapes"></i></div>
   </div>
 </div>
 </%def>
 
 <%def name="filterPower()">
 <div class="dropdown-item">
-  <div class="control has-icons-left">
-    <div class="select">
-      <select id="selectPower">
-        <option value="">Powered?</option>
-        <option value="active">Active</option>
-        <option value="passive">Passive</option>
-      </select>
+  <div class="field">
+    <div class="control has-icons-left">
+      <div class="select">
+        <select id="selectPower">
+          <option value="">Powered?</option>
+          <option value="active">Active</option>
+          <option value="passive">Passive</option>
+        </select>
+      </div>
+      <div class="icon is-left"><i class="fas fa-plug"></i></div>
     </div>
-    <div class="icon is-left"><i class="fas fa-plug"></i></div>
   </div>
 </div>
 </%def>
 
 <%def name="filterBrand()">
 <div class="dropdown-item">
-  <div class="control has-icons-left">
-    <div class="select">
-      <select id="selectBrand">
-        <option value="">Brand</option>
-        <%include file="brands.html"/>
-      </select>
+  <div class="field">
+    <div class="control has-icons-left">
+      <div class="select">
+        <select id="selectBrand">
+          <option value="">Brand</option>
+          <%include file="brands.html"/>
+        </select>
+      </div>
+      <div class="icon is-left"><i class="fas fa-copyright"></i></div>
     </div>
-    <div class="icon is-left"><i class="fas fa-copyright"></i></div>
   </div>
 </div>
 </%def>
 
 <%def name="filterPrice()">
 <div class="dropdown-item">
-  <div class="control has-icons-left">
-    <div class="select">
-      <select id="selectPrice">
-        <option value="">Price (each)</option>
-        <option value="p100">&lt;100$</option>
-        <option value="p200">100$-200$</option>
-        <option value="p200">200$-300$</option>
-        <option value="p300">300$-400$</option>
-        <option value="p500">400$-500$</option>
-        <option value="p1000">500$-1000$</option>
-        <option value="p2000">1000$-2000$</option>
-        <option value="p5000">2000$-5000$</option>
-        <option value="p5000p">&gt;5000$</option>
-      </select>
+  <div class="label">Price (each):</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputPriceMin">
+      <div class="icon is-left"><i class="fas fa-dollar-sign"></i></div>
     </div>
-    <div class="icon is-left"><i class="fas fa-dollar-sign"></i></div>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputPriceMax">
+      <div class="icon is-left"><i class="fas fa-dollar-sign"></i></div>
+    </div>
+  </div>
+</div>
+</%def>
+
+<%def name="filterWeight()">
+<div class="dropdown-item">
+  <div class="label">Weight: (kg)</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputWeightMin">
+      <div class="icon is-left"><i class="fas fa-solid fa-weight-scale"></i></div>
+    </div>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputWeightMax">
+      <div class="icon is-left"><i class="fas fa-solid fa-weight-scale"></i></div>
+    </div>
+  </div>
+</div>
+</%def>
+
+<%def name="filterHeight()">
+<div class="dropdown-item">
+  <div class="label">Height (cm):</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputHeightMin">
+      <div class="icon is-left"><i class="fas fa-solid fa-ruler-vertical"></i></div>
+    </div>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputHeightMax">
+      <div class="icon is-left"><i class="fas fa-solid fa-ruler-vertical"></i></div>
+    </div>
+  </div>
+</div>
+</%def>
+
+<%def name="filterWidth()">
+<div class="dropdown-item">
+  <div class="label">Width: (cm)</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputWidthMin">
+      <div class="icon is-left"><i class="fas fa-solid fa-ruler-horizontal"></i></div>
+    </div>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputWidthMax">
+      <div class="icon is-left"><i class="fas fa-solid fa-ruler-horizontal"></i></div>
+    </div>
+  </div>
+</div>
+</%def>
+
+<%def name="filterDepth()">
+<div class="dropdown-item">
+  <div class="label">Depth: (cm)</div>
+</div>
+<div class="dropdown-item">
+  <div class="field is-grouped is-horizontal">
+    <div class="control">
+      <input class="input" type="text" placeholder="Min" size="4" maxlength="5" id="inputDepthMin">
+    </div>
+    <div class="control">
+      <input class="input" type="text" placeholder="Max" size="4" maxlength="5" id="inputDepthMax">
+    </div>
   </div>
 </div>
 </%def>
@@ -206,10 +363,20 @@
         <option value="f6">F6 (Hz)</option>
         <option value="flatness">Flatness (dB)</option>
         <option value="sensitivity">Sensitivity (dB)</option>
+        <option value="weight">Weight (kg)</option>
+        <option value="width">Width (m)</option>
+        <option value="height">Height (m)</option>
+        <option value="depth">Depth (m)</option>
       </select>
     </div>
     <div class="icon is-left"><i class="fas fa-sort"></i></div>
   </div>
 </div>
+<div class="dropdown-item">
+  <div class="control">
+    <label class="checkbox">
+      <input type="checkbox" id="sortReverse">Reverse search order.
+    </label>
+  </div>
+</div>
 </%def>
-% endif

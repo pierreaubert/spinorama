@@ -1,15 +1,14 @@
 EQ for Miller & Kreisel IW150 computed from ErinsAudioCorner data
-Preference Score 3.37 with EQ 5.21
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-18:21:25
+Preference Score 3.97 with EQ 5.52
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:17:57
 
-Preamp: -1.0 dB
+Preamp: -0.7 dB
 
-Filter  1: ON PK Fc   186 Hz Gain -3.00 dB Q 1.05
-Filter  2: ON PK Fc  7800 Hz Gain -4.11 dB Q 0.84
-Filter  3: ON PK Fc   616 Hz Gain -1.36 dB Q 1.77
-Filter  4: ON PK Fc  1694 Hz Gain +1.50 dB Q 1.77
-Filter  5: ON PK Fc 13375 Hz Gain -1.31 dB Q 2.81
-Filter  6: ON PK Fc  3822 Hz Gain -1.24 dB Q 2.60
-Filter  7: ON PK Fc   143 Hz Gain -2.47 dB Q 3.00
-Filter  8: ON PK Fc   885 Hz Gain -0.90 dB Q 2.72
+Filter  1: ON PK Fc   190 Hz Gain -3.00 dB Q 0.97
+Filter  2: ON PK Fc  8220 Hz Gain -4.61 dB Q 0.66
+Filter  3: ON PK Fc   619 Hz Gain -1.42 dB Q 1.62
+Filter  4: ON PK Fc  1675 Hz Gain +1.28 dB Q 1.84
+Filter  5: ON PK Fc 13711 Hz Gain -1.40 dB Q 2.88
+Filter  6: ON PK Fc  4265 Hz Gain -1.10 dB Q 2.90
+Filter  7: ON PK Fc   145 Hz Gain -2.56 dB Q 2.99

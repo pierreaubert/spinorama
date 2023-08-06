@@ -1,38 +1,38 @@
 EQ for FBT Promaxx 114A computed from Vendors-FBT data
-Preference Score 4.6 with EQ 5.3
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.18
-Dated: 2023-01-01-22:38:47
+Preference Score 4.56 with EQ 4.78
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:44:35
 
-Preamp: -4.4 dB
+Preamp: -0.8 dB
 
 Filter  1: ON PK Fc    20 Hz Gain +0.00 dB Q 4.32
-Filter  2: ON PK Fc    25 Hz Gain +2.75 dB Q 4.32
-Filter  3: ON PK Fc    31 Hz Gain +2.75 dB Q 4.32
-Filter  4: ON PK Fc    40 Hz Gain +2.75 dB Q 4.32
-Filter  5: ON PK Fc    50 Hz Gain +2.75 dB Q 4.32
-Filter  6: ON PK Fc    63 Hz Gain +2.75 dB Q 4.32
-Filter  7: ON PK Fc    80 Hz Gain +2.50 dB Q 4.32
-Filter  8: ON PK Fc   100 Hz Gain +0.50 dB Q 4.32
-Filter  9: ON PK Fc   125 Hz Gain -0.75 dB Q 4.32
-Filter 10: ON PK Fc   160 Hz Gain -1.00 dB Q 4.32
-Filter 11: ON PK Fc   200 Hz Gain -1.00 dB Q 4.32
-Filter 12: ON PK Fc   250 Hz Gain -0.75 dB Q 4.32
-Filter 13: ON PK Fc   315 Hz Gain -0.25 dB Q 4.32
-Filter 14: ON PK Fc   400 Hz Gain +0.50 dB Q 4.32
-Filter 15: ON PK Fc   500 Hz Gain +0.50 dB Q 4.32
+Filter  2: ON PK Fc    25 Hz Gain +0.50 dB Q 4.32
+Filter  3: ON PK Fc    31 Hz Gain +0.50 dB Q 4.32
+Filter  4: ON PK Fc    40 Hz Gain +0.50 dB Q 4.32
+Filter  5: ON PK Fc    50 Hz Gain +0.50 dB Q 4.32
+Filter  6: ON PK Fc    63 Hz Gain +0.50 dB Q 4.32
+Filter  7: ON PK Fc    80 Hz Gain +0.50 dB Q 4.32
+Filter  8: ON PK Fc   100 Hz Gain +0.00 dB Q 4.32
+Filter  9: ON PK Fc   125 Hz Gain +0.00 dB Q 4.32
+Filter 10: ON PK Fc   160 Hz Gain -0.25 dB Q 4.32
+Filter 11: ON PK Fc   200 Hz Gain -0.25 dB Q 4.32
+Filter 12: ON PK Fc   250 Hz Gain +0.00 dB Q 4.32
+Filter 13: ON PK Fc   315 Hz Gain +0.00 dB Q 4.32
+Filter 14: ON PK Fc   400 Hz Gain +0.25 dB Q 4.32
+Filter 15: ON PK Fc   500 Hz Gain +0.25 dB Q 4.32
 Filter 16: ON PK Fc   630 Hz Gain +0.25 dB Q 4.32
-Filter 17: ON PK Fc   800 Hz Gain +0.50 dB Q 4.32
-Filter 18: ON PK Fc  1000 Hz Gain -0.25 dB Q 4.32
+Filter 17: ON PK Fc   800 Hz Gain +0.25 dB Q 4.32
+Filter 18: ON PK Fc  1000 Hz Gain +0.00 dB Q 4.32
 Filter 19: ON PK Fc  1250 Hz Gain +0.25 dB Q 4.32
 Filter 20: ON PK Fc  1600 Hz Gain +0.00 dB Q 4.32
 Filter 21: ON PK Fc  2000 Hz Gain +0.25 dB Q 4.32
-Filter 22: ON PK Fc  2500 Hz Gain +1.25 dB Q 4.32
-Filter 23: ON PK Fc  3150 Hz Gain +1.75 dB Q 4.32
-Filter 24: ON PK Fc  4000 Hz Gain +1.00 dB Q 4.32
-Filter 25: ON PK Fc  5000 Hz Gain +2.00 dB Q 4.32
-Filter 26: ON PK Fc  6300 Hz Gain +2.25 dB Q 4.32
-Filter 27: ON PK Fc  8000 Hz Gain +1.50 dB Q 4.32
-Filter 28: ON PK Fc 10000 Hz Gain +0.75 dB Q 4.32
-Filter 29: ON PK Fc 12000 Hz Gain +1.00 dB Q 4.32
-Filter 30: ON PK Fc 16000 Hz Gain +3.25 dB Q 4.32
+Filter 22: ON PK Fc  2500 Hz Gain +0.25 dB Q 4.32
+Filter 23: ON PK Fc  3150 Hz Gain +0.50 dB Q 4.32
+Filter 24: ON PK Fc  4000 Hz Gain +0.25 dB Q 4.32
+Filter 25: ON PK Fc  5000 Hz Gain +0.50 dB Q 4.32
+Filter 26: ON PK Fc  6300 Hz Gain +0.50 dB Q 4.32
+Filter 27: ON PK Fc  8000 Hz Gain +0.25 dB Q 4.32
+Filter 28: ON PK Fc 10000 Hz Gain +0.25 dB Q 4.32
+Filter 29: ON PK Fc 12000 Hz Gain +0.25 dB Q 4.32
+Filter 30: ON PK Fc 16000 Hz Gain +0.50 dB Q 4.32
 Filter 31: ON PK Fc 20000 Hz Gain +0.00 dB Q 4.32

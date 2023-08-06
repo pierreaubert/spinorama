@@ -140,9 +140,9 @@ def column_trim(col: str) -> str:
 
 def column_valid(col: str) -> bool:
     """True is a column is valid false otherwise"""
-    if col[0] == "O":  # On Axis
+    if col[0:4] in ("On A", "Ceil", "Rear", "Fron", "Side", "Floo"):
         return True
-    if col[0] == "F":  # Freq
+    if col == "Freq":
         return False
     if int(column_trim(col)[:-1]) % 10 == 0:
         return True
@@ -158,20 +158,19 @@ def spatial_average(sp_window: pd.DataFrame, func="rms") -> pd.DataFrame:
     if len(sp_window) < 2:
         logger.debug("Len window is %d", len(sp_window))
         return pd.DataFrame()
-
     result = pd.DataFrame(
         {
             "Freq": sp_window.Freq,
         }
     )
 
-    def weighted_rms(spl):
-        avg = [sp_weigths_hv[c] * spl[c] ** 2 for c in sp_cols if column_valid(c)]
+    def weighted_rms(pressure):
+        avg = [sp_weigths_hv[c] * pressure[c] ** 2 for c in sp_cols if column_valid(c)]
         wsm = [sp_weigths_hv[c] for c in sp_cols if column_valid(c)]
         return np.sqrt(np.sum(avg) / np.sum(wsm))
 
-    def rms(spl):
-        avg = [spl[c] ** 2 for c in sp_cols if column_valid(c)]
+    def rms(pressure):
+        avg = [pressure[c] ** 2 for c in sp_cols if column_valid(c)]
         n_avg = len(avg)
         # hack
         if n_avg == 0:
@@ -266,24 +265,29 @@ def total_early_reflections(
     rear_wall_bounce: pd.DataFrame,
     method="corrected",
 ) -> pd.DataFrame:
+    if method == "corrected":
+        df_spl = pd.DataFrame(
+            {
+                "Freq": floor_bounce.Freq,
+                "Floor": floor_bounce.dB,
+                "Ceiling": ceiling_bounce.dB,
+                "Front": front_wall_bounce.dB,
+                "Side": side_wall_bounce.dB,
+                "Rear": rear_wall_bounce.dB,
+            }
+        )
+        return spatial_average1(df_spl, ["Freq", "Floor", "Ceiling", "Front", "Side", "Rear"])
+
+    spl = None
     floor = np.power(10, (floor_bounce.dB - 105.0) / 20.0)
     ceiling = np.power(10, (ceiling_bounce.dB - 105.0) / 20.0)
     side = np.power(10, (side_wall_bounce.dB - 105.0) / 20.0)
     rear = np.power(10, (rear_wall_bounce.dB - 105.0) / 20.0)
     front = np.power(10, (front_wall_bounce.dB - 105.0) / 20.0)
 
-    spl = None
-    if method == "corrected":
-        # 3+3+10+19+7 = 42
-        # spl = 105.0 + 20.0 * np.log10((3*floor+3*ceiling+10*side+19*rear+7*front)/42.0)
-        spl = 105.0 + 20.0 * np.log10(
-            np.sqrt((floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0)
-        )
-    else:
-        # 3+3+10+3+7 = 26
-        spl = 105.0 + 20.0 * np.log10(
-            np.sqrt((floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0)
-        )
+    spl = 105.0 + 20.0 * np.log10(
+        np.sqrt((floor**2 + ceiling**2 + side**2 + rear**2 + front**2) / 5.0)
+    )
     return pd.DataFrame({"dB": spl})
 
 
@@ -567,10 +571,12 @@ def estimated_inroom(l_w: pd.DataFrame, e_r: pd.DataFrame, s_p: pd.DataFrame) ->
         # print(s_p.dB.apply(spl2pressure))
 
         eir = (
-            0.12 * l_w.dB.apply(spl2pressure)
-            + 0.44 * e_r[key].apply(spl2pressure)
-            + 0.44 * s_p.dB.apply(spl2pressure)
-        )
+            np.sqrt(
+                0.12 * l_w.dB.apply(spl2pressure) ** 2
+                + 0.44 * e_r[key].apply(spl2pressure) ** 2
+                + 0.44 * s_p.dB.apply(spl2pressure) ** 2
+            )
+        ).apply(pressure2spl)
 
         # print(eir)
 
@@ -578,9 +584,9 @@ def estimated_inroom(l_w: pd.DataFrame, e_r: pd.DataFrame, s_p: pd.DataFrame) ->
         logger.exception("compute EIR failed")
         return pd.DataFrame()
 
-    return pd.DataFrame(
-        {"Freq": l_w.Freq, "Estimated In-Room Response": eir.apply(pressure2spl)}
-    ).reset_index(drop=True)
+    return pd.DataFrame({"Freq": l_w.Freq, "Estimated In-Room Response": eir}).reset_index(
+        drop=True
+    )
 
 
 def estimated_inroom_hv(
@@ -665,45 +671,3 @@ def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
             "On Axis": onaxis.dB,
         }
     )
-
-
-# class CEA2034(object):
-#     """Compute CEA2034 from horizontal and vertical measurements"""
-#     def __init__(self, spl_h: pd.DataFrame, spl_v: pd.DataFrame):
-#         if not self.check(spl_h, spl_v):
-#             self.spl_h = None
-#             self.spl_v = None
-#             return
-#         self.freq  = spl_h.Freq
-#
-#         self.spl_h = spl_h
-#         self.spl_h.drop('Freq')
-#         self.spl_h_pascal = self.spl_h.apply(spl2pressure)
-#         self.spl_h_square = self.spl_h_pascal.apply(spl2pressure)
-#
-#         self.spl_v = spl_h
-#         self.spl_v.drop('Freq')
-#         self.spl_v_pascal = self.spl_v.apply(spl2pressure)
-#         self.spl_v_square = self.spl_v_pascal.apply(spl2pressure)
-#
-#         self.on = self.compute_on_axis()
-#         self.lw = self.compute_listening_window()
-#
-#     def check(self, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> bool:
-#         status = True
-#         if 'Freq' not in spl_h or 'Freq' not in spl_v:
-#             status = False
-#         if status and spl_h.Freq != spl_v.Freq:
-#             status = False
-#         return status
-#
-#     def compute_on_axis(self) -> pd.DataFrame:
-#         return compute_onaxis(self.spl_h, self.spl_v)
-#
-#     def compute_listening_window() -> pd.DataFrame:
-#         avg = []
-#         for col_h in ('On Axis', "10°", "20°", "30°", "-10°", "-20°", "-30°"]):
-#             avg.append(self.spl_h_square[col_h])
-#         return 0
-#
-#

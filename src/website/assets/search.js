@@ -83,37 +83,42 @@ function isFiltered(item, filter) {
             }
             switch (filter.price) {
                 case 'p100':
-                    if (price >= 100) {
+                    if (price > 100) {
                         shouldShow = false;
                     }
                     break;
                 case 'p200':
-                    if (price >= 200 || price <= 100) {
+                    if (price > 200 || price < 100) {
                         shouldShow = false;
                     }
                     break;
                 case 'p300':
-                    if (price >= 300 || price <= 200) {
+                    if (price > 300 || price < 200) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p400':
+                    if (price > 400 || price < 300) {
                         shouldShow = false;
                     }
                     break;
                 case 'p500':
-                    if (price >= 500 || price <= 300) {
+                    if (price > 500 ||  price < 400) {
                         shouldShow = false;
                     }
                     break;
                 case 'p1000':
-                    if (price >= 1000 || price <= 500) {
+                    if (price > 1000 || price < 500) {
                         shouldShow = false;
                     }
                     break;
                 case 'p2000':
-                    if (price >= 2000 || price <= 1000) {
+                    if (price > 2000 || price < 1000) {
                         shouldShow = false;
                     }
                     break;
                 case 'p5000':
-                    if (price >= 5000 || price <= 2000) {
+                    if (price > 5000 || price < 2000) {
                         shouldShow = false;
                     }
                     break;
@@ -129,16 +134,49 @@ function isFiltered(item, filter) {
         }
         // console.log('debug: post price ' + shouldShow)
     }
+    // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.priceMin+','+filter.priceMax+'<<<')
+    if ((filter.priceMin !== undefined && filter.priceMin !== '') || (filter.priceMax !== undefined && filter.priceMax !== '')) {
+        var priceMin = parseInt(filter.priceMin);
+        if(isNaN(priceMin)) {
+            priceMin = -1;
+        }
+        var priceMax = parseInt(filter.priceMax);
+        if(isNaN(priceMax)) {
+            priceMax = Number.MAX_SAFE_INTEGER;
+        }
+        // console.log('debug: pre price ' + filter.price)
+        if (item.price !== '') {
+            let price = parseInt(item.price);
+            if (isNaN(price)) {
+                shouldShow = false;
+            } else {
+                if (item.amount === 'pair') {
+                    price /= 2.0;
+                }
+                if(price>priceMax || price < priceMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            // no known price
+            shouldShow = false;
+        }
+        // console.log('debug: post price ' + shouldShow)
+    }
     return shouldShow;
 }
 
 function isSearch(key, results, minScore, keywords) {
+    // console.log('Starting isSearch with key='+key+' minscore='+minScore+' keywords='+keywords);
+
     let shouldShow = true;
     if (keywords === '' || results === undefined) {
+        // console.log('shouldShow is true');
         return shouldShow;
     }
 
     if (!results.has(key)) {
+        // console.log('shouldShow is false (no key '+key+')');
         return false;
     }
 
@@ -148,7 +186,7 @@ function isSearch(key, results, minScore, keywords) {
 
     if (minScore < Math.pow(10, -15)) {
         const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase());
-        // console.log('isExact ' + isExact + ' model' + imeta.model.toLowerCase() + ' keywords ' + keywords.toLowerCase());
+        // console.log('isExact ' + isExact + ' model ' + imeta.model.toLowerCase() + ' keywords ' + keywords.toLowerCase());
         // we have an exact match, only shouldShow other exact matches
         if (score >= Math.pow(10, -15) && !isExact) {
             // console.log('filtered out (minscore)' + score);
@@ -160,6 +198,7 @@ function isSearch(key, results, minScore, keywords) {
             // console.log('filtered out (score=' + score + 'minscore=' + minScore + ')');
             shouldShow = false;
         }
+        // else { console.log('not filtered out (score=' + score + 'minscore=' + minScore + ')'); }
     }
     return shouldShow;
 }
@@ -174,7 +213,8 @@ getMetadata()
             brand: '',
             power: '',
             quality: '',
-            price: '',
+            priceMin: '',
+            priceMax: '',
             reviewer: '',
             shape: '',
         };
@@ -193,10 +233,11 @@ getMetadata()
                 findAllMatches: true,
                 minMatchCharLength: 2,
                 keys: ['speaker.brand', 'speaker.model', 'speaker.type', 'speaker.shape'],
-                treshhold: 0.5,
-                distance: 60,
+                treshhold: 0.2,
+                distance: 10,
                 includeScore: true,
-                useExtendedSearch: true,
+                useExtendedSearch: false,
+                shouldSort: true,
             })
         ;
 
@@ -280,6 +321,7 @@ getMetadata()
             let minScore = 1;
             if (keywords !== '') {
                 results = fuse.search(keywords);
+                // console.log('searching with keywords: '+keywords+' #matches: '+results.length);
                 if (results.length > 0) {
                     // minScore
                     for (const spk in results) {
@@ -298,7 +340,7 @@ getMetadata()
                 const filterTest = isFiltered(speaker, filter);
                 const searchTest = isSearch(key, results, minScore, keywords);
                 if (speakerMap.has(key)) {
-                    // console.log('key='+key+' map='+speakerMap.get(key));
+                    // console.log('key='+key+' map='+speakerMap.get(key)+' filterTest='+filterTest+' searchTest='+searchTest);
                     if (filterTest && searchTest) {
                         const child = speakerMap.get(key);
                         child.classList.remove('has-background-light');
@@ -346,8 +388,14 @@ getMetadata()
             selectDispatch();
         });
 
-        document.querySelector('#selectPrice').addEventListener('change', function () {
-            filter.price = this.value;
+        document.querySelector('#inputPriceMin').addEventListener('change', function () {
+            filter.priceMin = this.value;
+            updateUrl(url, keywords);
+            selectDispatch();
+        });
+
+        document.querySelector('#inputPriceMax').addEventListener('change', function () {
+            filter.priceMax = this.value;
             updateUrl(url, keywords);
             selectDispatch();
         });

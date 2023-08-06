@@ -840,9 +840,9 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
-    "Aperion N5T": {
-        "brand": "Aperion",
-        "model": "N5T",
+    "Aperion Audio Novus N5T": {
+        "brand": "Aperion Audio",
+        "model": "Novus N5T",
         "type": "passive",
         "price": "1400",
         "shape": "floorstanders",
@@ -854,6 +854,66 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/aperion-n5t-speaker-review.38821/",
                 "review_published": "20221104",
+            },
+        },
+    },
+    "Aperion Audio Verus III Concert V8B": {
+        "brand": "Aperion Audio",
+        "model": "Verus III Concert V8B",
+        "type": "passive",
+        "price": "750",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/aperion_verus_8/",
+                    "yt": "https://youtu.be/JzU9cxYMkKg",
+                },
+                "review_published": "20230619",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 6,
+                    "size": {
+                        "height": 433,
+                        "width": 269,
+                        "depth": 330,
+                    },
+                    "weight": 12.7,
+                },
+            },
+        },
+    },
+    "Aperion Audio Verus III Concert V6C": {
+        "brand": "Aperion Audio",
+        "model": "Verus III Concert V6C",
+        "type": "passive",
+        "price": "680",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/aperion_verus_6_center/",
+                    "yt": "https://youtu.be/JzU9cxYMkKg",
+                },
+                "review_published": "20230619",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4,
+                    "size": {
+                        "height": 629,
+                        "width": 279,
+                        "depth": 235,
+                    },
+                    "weight": 15.0,
+                },
             },
         },
     },
@@ -982,8 +1042,14 @@ speakers_info: SpeakerDatabase = {
         "price": "2400",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "misc-audioholics",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/arendal-1723-speaker-review.46141/",
+                "review_published": "20230704",
+            },
             "misc-audioholics": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
@@ -1574,9 +1640,31 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Avantone Pro CLA-10": {
+        "brand": "Avantone Pro",
+        "model": "CLA-10",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "550",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/avantone-cla-10-yamaha-ns-10m-clone-review.46954/",
+                    "top": "https://tapeop.com/reviews/gear/133/cla-10-passive-studio-monitor-system/",
+                    "brd": "https://www.barryrudolph.com/mix/avantone_cla10.html",
+                    "inl": "https://www.interface.nl/nieuws/artikel/54-23228/avantone-pro-cla-10-en-cla-200-studiomonitors-en-versterker",
+                },
+                "review_published": "20230805",
+            },
+        },
+    },
     "Avantone Pro MixCube": {
-        "brand": "Avantone",
-        "model": "Pro MixCube",
+        "brand": "Avantone Pro",
+        "model": "MixCube",
         "type": "active",
         "shape": "bookshelves",
         "price": "259",
@@ -1937,6 +2025,68 @@ speakers_info: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "review": "https://www.avsforum.com/threads/cambridge-audio-s30-or-infinity-primus-163.1489764/#post-23716707",
                 "quality": "low",
+            },
+        },
+    },
+    "Behringer Eurolive B212XL": {
+        "brand": "Behringer",
+        "model": "Eurolive B212XL",
+        "type": "passive",
+        "shape": "liveportable",
+        "price": "135",
+        "amount": "each",
+        "default_measurement": "eac-pattern-90x60",
+        "measurements": {
+            "eac-pattern-90x60": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/behringer_b212xl/",
+                "review_published": "20230618",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 95,
+                    "impedance": 8,
+                    "size": {
+                        "height": 550,
+                        "width": 345,
+                        "depth": 270,
+                    },
+                    "weight": 10.9,
+                },
+            },
+        },
+    },
+    "Behringer Eurolive B215XL": {
+        "brand": "Behringer",
+        "model": "Eurolive B215XL",
+        "type": "passive",
+        "shape": "liveportable",
+        "price": "145",
+        "amount": "each",
+        "default_measurement": "eac-pattern-70x40",
+        "measurements": {
+            "eac-pattern-70x40": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/behringer_b215xl/",
+                "review_published": "20230618",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 70,
+                        "vertical": 40,
+                    },
+                    "sensitivity": 96,
+                    "impedance": 8,
+                    "size": {
+                        "height": 695,
+                        "width": 440,
+                        "depth": 335,
+                    },
+                    "weight": 17.6,
+                },
             },
         },
     },
@@ -4467,6 +4617,7 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Dolby CS 126MH": {
+        "skip": True,  # only here to provide data for the MH freq speaker
         "brand": "Dolby",
         "model": "CS 126MH",
         "type": "passive",
@@ -4503,6 +4654,7 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Dolby CS 128MH": {
+        "skip": True,  # only here to provide data for the MH freq speaker
         "brand": "Dolby",
         "model": "CS 128MH",
         "type": "passive",
@@ -4559,6 +4711,7 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Dolby CS 136MH": {
+        "skip": True,  # only here to provide data for the MH freq speaker
         "brand": "Dolby",
         "model": "CS 136MH",
         "type": "passive",
@@ -4596,6 +4749,25 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Donner Dyna 4": {
+        "brand": "Donner",
+        "model": "Dyna 4",
+        "type": "active",
+        "price": "90",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/donner-dyna-4-monitor-review.46474/",
+                },
+                "review_published": "20230717",
+            },
+        },
+    },
     "Philharmonic BMR": {
         "brand": "Philharmonic",
         "model": "BMR",
@@ -4629,6 +4801,27 @@ speakers_info: SpeakerDatabase = {
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/bmr-philharmonitor-1/conclusion",
                 "review_published": "20211121",
+            },
+        },
+    },
+    "Philharmonic Ceramic Mini": {
+        "skip": True,
+        "brand": "Philharmonic",
+        "model": "Ceramic Mini",
+        "type": "passive",
+        "price": "850",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/philharmonic_ceramic_mini/",
+                    "yt": "https://youtu.be/313qwtkdMxo",
+                },
+                "review_published": "20230730",
             },
         },
     },
@@ -4754,6 +4947,25 @@ speakers_info: SpeakerDatabase = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/dynaudio-lyd-5-studio-monitor-review.15963/",
+            },
+        },
+    },
+    "Dynaudio Special Forty": {
+        "skip": True,
+        "brand": "Dynaudio",
+        "model": "Special Forty",
+        "type": "passive",
+        "price": "900",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "",
+                },
             },
         },
     },
@@ -6607,8 +6819,17 @@ speakers_info: SpeakerDatabase = {
         "price": "450",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/focal_aria_906/",
+                    "yt": "https://youtu.be/XHdutNbcXG0",
+                },
+                "review_published": "20230618",
+            },
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
@@ -6743,6 +6964,23 @@ speakers_info: SpeakerDatabase = {
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/focal-sopra-nb01/focal-sopra-nb01-conclusion",
                 "quality": "low",
                 "review_published": "20210609",
+            },
+        },
+    },
+    "Focal ST6 Solo6": {
+        "brand": "Focal",
+        "model": "ST6 Solo6",
+        "type": "active",
+        "price": "2400",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/focal-solo6-st6-monitor-review.45784/",
+                "review_published": "20230621",
             },
         },
     },
@@ -10115,6 +10353,27 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "JBL 4329P": {
+        "skip": True,
+        "brand": "JBL",
+        "model": "4329P",
+        "type": "active",
+        "price": "4500",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_4329p/",
+                    "yt": "https://youtu.be/XhOz8WsKb8U",
+                },
+                "review_published": "20230731",
+            },
+        },
+    },
     "JBL 4349": {
         "brand": "JBL",
         "model": "4349",
@@ -11308,8 +11567,56 @@ speakers_info: SpeakerDatabase = {
         "price": "3500",
         "amount": "2200",
         "shape": "bookshelves",
-        "default_measurement": "vendor-v2",
+        "default_measurement": "eac-v1-ported",
         "measurements": {
+            "eac-v1-ported": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20230705",
+                "reviews": {
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r3_meta/",
+                    "yt": "https://youtu.be/nbZGj69rI0c",
+                    "whi": "https://www.whathifi.com/reviews/kef-r3-meta",
+                    "hifi": "https://hifi.de/test/kef-r3-meta-test-137367",
+                },
+            },
+            "eac-v1-sealed": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20230705",
+                "reviews": {
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r3_meta/",
+                    "yt": "https://youtu.be/nbZGj69rI0c",
+                    "whi": "https://www.whathifi.com/reviews/kef-r3-meta",
+                    "hifi": "https://hifi.de/test/kef-r3-meta-test-137367",
+                },
+            },
+            "eac-v1-ported-10-degrees": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20230705",
+                "reviews": {
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r3_meta/",
+                    "yt": "https://youtu.be/nbZGj69rI0c",
+                    "whi": "https://www.whathifi.com/reviews/kef-r3-meta",
+                    "hifi": "https://hifi.de/test/kef-r3-meta-test-137367",
+                },
+            },
+            "eac-v1-sealed-10-degrees": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20230705",
+                "reviews": {
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r3_meta/",
+                    "yt": "https://youtu.be/nbZGj69rI0c",
+                    "whi": "https://www.whathifi.com/reviews/kef-r3-meta",
+                    "hifi": "https://hifi.de/test/kef-r3-meta-test-137367",
+                },
+            },
             "vendor-v2": {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
@@ -13273,6 +13580,36 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "MartinLogan Motion B10": {
+        "brand": "MartinLogan",
+        "model": "Motion B10",
+        "type": "passive",
+        "price": "360",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/martin-logan-b10-speaker-review.46798/",
+                    "eac": "",
+                    "yt": "https://www.youtube.com/live/XXTBJbb3naU?feature=share",
+                },
+                "review_published": "20230730",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 5,
+                    "size": {
+                        "height": 318,
+                        "width": 178,
+                        "depth": 248,
+                    },
+                    "weight": 6.6,
+                },
+            },
+        },
+    },
     "MartinLogan Prodigy": {
         "brand": "MartinLogan",
         "model": "Prodigy",
@@ -13727,6 +14064,47 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/m_and_k_s150/",
                 "review_published": "20220126",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 4,
+                    "size": {
+                        "height": 318,
+                        "width": 266,
+                        "depth": 308,
+                    },
+                    "weight": 11.5,
+                },
+            },
+        },
+    },
+    "Miller & Kreisel S150 THX": {
+        "brand": "Miller & Kreisel",
+        "model": "S150 THX",
+        "type": "passive",
+        "price": "1500",
+        "shape": "cinema",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/m-k-s-150thx-speaker-review.45586/",
+                    "srp": "https://www.stereophile.com/content/mk-s-150-thx-surround-loudspeaker-system-sght-review-sidebar-2-measurements",
+                },
+                "review_published": "20230615",
+                "notes": "this is an older version of the S150 around mid 1990s",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 4,
+                    "size": {
+                        "height": 318,
+                        "width": 266,
+                        "depth": 308,
+                    },
+                    "weight": 11.5,
+                },
             },
         },
     },
@@ -14308,6 +14686,23 @@ speakers_info: SpeakerDatabase = {
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "notes": "data from GLL file: computed at 2m with pink noise broadband",
+            },
+        },
+    },
+    "Neumann KH 120 II": {
+        "brand": "Neumann",
+        "model": "KH 120 II",
+        "type": "active",
+        "price": "1000",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh120-ii-monitor-review.46362/",
+                "review_published": "20230714",
             },
         },
     },
@@ -15518,8 +15913,17 @@ speakers_info: SpeakerDatabase = {
         "price": "700",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "misc-napilopez",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/polk_r200/",
+                    "yt": "https://youtu.be/BzDClEAQsBU",
+                },
+                "review_published": "20230618",
+            },
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "rew_text_dump",
@@ -17631,6 +18035,15 @@ speakers_info: SpeakerDatabase = {
         "shape": "bookshelves",
         "default_measurement": "vendor",
         "measurements": {
+            #            "eac" : {
+            #                "origin": "ErinsAudioCorner",
+            #                "format": "klippel",
+            #                "reviews": {
+            #                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/revel_m126be/",
+            #                    "yt": "https://youtu.be/KecbtoerdE0",
+            #                },
+            #                "review_published": "20230731",
+            #            },
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
@@ -19203,6 +19616,26 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/wilson-audio-tunetot-review-high-end-bookshelf-speaker.29219/",
                 "review_published": "20211221",
+            },
+        },
+    },
+    "XSA Labs Vanguard": {
+        "brand": "XSA Labs",
+        "model": "Vanguard",
+        "type": "passive",
+        "price": "1000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/xsa-labs-vanguard-speaker-review.46629/",
+                    "diy": "https://www.diyaudio.com/community/threads/vanguard-speaker.388184/",
+                },
+                "review_published": "20230723",
             },
         },
     },

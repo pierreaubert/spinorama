@@ -23,6 +23,7 @@ import pandas as pd
 import scipy.optimize as opt
 
 from spinorama import logger
+from spinorama.constant_paths import MIDRANGE_MAX_FREQ
 from spinorama.ltype import Vector
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import Peq, peq_spl
@@ -31,6 +32,8 @@ from spinorama.auto_loss import score_loss
 
 # from spinorama.auto_target import optim_compute_auto_target
 from spinorama.auto_preflight import optim_preflight
+
+FREQ_NB_POINTS = 200
 
 
 def optim_global(
@@ -42,9 +45,31 @@ def optim_global(
 ) -> tuple[bool, tuple[tuple[int, float, float], Peq]]:
     """Main optimiser: follow a greedy strategy"""
 
-    lw = df_speaker["CEA2034_unmelted"]["On Axis"].to_numpy()
-    freq_low = bisect.bisect(freq, 100)
-    freq_high = bisect.bisect(freq, 16000)
+    # get min/max
+    freq_min = optim_config["target_min_freq"]
+    if freq_min is None:
+        status, freq_min = get3db(df_speaker, 3.0)
+        if not status:
+            freq_min = 80
+    freq_max = optim_config.get("target_max_freq", 16000)
+
+    # Freq (hz)
+    # ---|----------|-------------------------------------------|-----|
+    #   20       -3dB                                       16000 20000
+    # ---|----------|-------------------------------------------|-----|
+    #  min      first                                        last   max
+    #  low      first                                        last  high
+
+    # get range for target
+    freq_first = max(freq_min, 20)
+    freq_last = min(freq_max, 20000)
+    freq_low = bisect.bisect(freq, freq_first)
+    freq_high = bisect.bisect(freq, freq_last)
+    # a bit of black magic
+    freq_midrange = bisect.bisect(freq, MIDRANGE_MAX_FREQ / 2)
+
+    # get lw/on
+    lw = df_speaker["CEA2034_unmelted"]["Listening Window"].to_numpy()
 
     # used for controlling optimisation of the score
     target = lw[freq_low:freq_high] - np.linspace(0, 0.5, len(lw[freq_low:freq_high]))
@@ -54,13 +79,12 @@ def optim_global(
         logger.error("Preflight check failed!")
         return False, ((0, 0, 0), [])
 
-    freq_min = optim_config["target_min_freq"]
-    if freq_min is None:
-        status, freq_min = get3db(df_speaker, 3.0)
-        if status is None:
-            freq_min = 80
-    freq_max = optim_config["target_max_freq"]
-    log_freq = np.logspace(np.log10(20), np.log10(20000), 200 + 1)
+    if optim_config.get("full_biquad_optim") is None:
+        logger.error("optim_config is not properly configured")
+        # set a default but should debug above why it is happening
+        optim_config["full_biquad_optim"] = True
+
+    log_freq = np.logspace(np.log10(20), np.log10(freq_max), FREQ_NB_POINTS + 1)
     max_db = optim_config["MAX_DBGAIN"]
     min_q = optim_config["MIN_Q"]
     max_q = optim_config["MAX_Q"]
@@ -87,23 +111,50 @@ def optim_global(
         peq = x2peq(x)
         peq_freq = np.array(x2spl(x))[freq_low:freq_high]
         score = score_loss(df_speaker, peq)
-        flatness = np.linalg.norm(np.add(target, peq_freq))
-        return score + float(flatness) / 20.0
+        flat = np.add(target, peq_freq)
+        # flatness_l2 = np.linalg.norm(flat, ord=2)
+        # flatness_l1 = np.linalg.norm(flat, ord=1)
+        flatness_bass_mid = np.linalg.norm(flat[0 : freq_midrange - freq_low], ord=2)
+        flatness_mid_high = np.linalg.norm(flat[freq_midrange - freq_low :], ord=2)
+        # this is black magic, why 10, 20, 40?
+        # if you increase 20 you give more flexibility to the score (and less flat LW/ON)
+        # without the constraint optimising the score get crazy results
+        return score + float(flatness_bass_mid) / 5 + float(flatness_mid_high) / 50
 
-    def opt_bounds(n: int) -> list[list[int | float]]:
+    def opt_peq_flat(x) -> float:
+        peq_freq = np.array(x2spl(x))[freq_low:freq_high]
+        flatness = np.linalg.norm(np.add(target, peq_freq), ord=2)
+        return float(flatness)
+
+    def opt_peq(x) -> float:
+        return opt_peq_score(x) if optim_config["loss"] == "score_loss" else opt_peq_flat(x)
+
+    def opt_bounds_all(n: int) -> list[list[int | float]]:
         bounds0 = [
             [0, 6],
-            [0, 200],  # algo does not support log scaling so I do it manually
+            [0, FREQ_NB_POINTS],  # algo does not support log scaling so I do it manually
             [min_q, 1.3],  # need to be computed from max_db
             [-max_db, max_db],
         ]
         bounds1 = [
             [3, 3],
-            [0, 200],
+            [0, FREQ_NB_POINTS],
             [min_q, max_q],
             [-max_db, max_db],
         ]
-        return bounds0 + bounds1 * (n - 1)
+        return bounds0 + bounds1 * (n - 2) + bounds0
+
+    def opt_bounds_pk(n: int) -> list[list[int | float]]:
+        bounds0 = [
+            [3, 3],
+            [0, FREQ_NB_POINTS],
+            [min_q, max_q],
+            [-max_db, max_db],
+        ]
+        return bounds0 * n
+
+    def opt_bounds(n: int) -> list[list[int | float]]:
+        return opt_bounds_all(n) if optim_config["full_biquad_optim"] else opt_bounds_pk(n)
 
     def opt_integrality(n: int) -> list[bool]:
         return [True, True, False, False] * n
@@ -127,12 +178,13 @@ def optim_global(
             j += 4
             mat[i][j] = -1
             vec[i] = -5
-        return opt.LinearConstraint(mat, -np.inf, vec)
+        # lb / uf can be float or array
+        return opt.LinearConstraint(A=mat, lb=-np.inf, ub=vec, keep_feasible=False)
 
     def opt_display(xk, convergence):
         # comment if you want to print verbose traces
         l = len(xk) // 4
-        print(f"IIR    Hz.  Q.   dB [{convergence}]")
+        print(f"IIR    Hz.  Q.   dB [{convergence}] iir={optim_config['full_biquad_optim']}")
         for i in range(l):
             t = int(xk[i * 4 + 0])
             f = int(log_freq[int(xk[i * 4 + 1])])
@@ -141,7 +193,7 @@ def optim_global(
             print(f"{t:3d} {f:5d} {q:1.1f} {db:+1.2f}")
 
     res = opt.differential_evolution(
-        func=opt_peq_score,
+        func=opt_peq,
         bounds=opt_bounds(max_peq),
         maxiter=max_iter,
         polish=False,

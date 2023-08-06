@@ -1,0 +1,12 @@
+Martin Logan B10 APO EQ Score 96000Hz
+July302023-124917
+
+Preamp: -1.6 dB
+
+Filter 1: ON HPQ Fc 49.54,    0.00,    1.15
+Filter 2: ON PK Fc 122.93,    -2.15,    1.22
+Filter 3: ON PK Fc 889.39,    -3.09,    4.98
+Filter 4: ON PK Fc 1402.10,    -1.20,    1.90
+Filter 5: ON PK Fc 1876.37,    1.50,    0.47
+Filter 6: ON PK Fc 5969.04,    -3.53,    0.76
+Filter 7: ON PK Fc 15316.64,    -3.18,    2.48

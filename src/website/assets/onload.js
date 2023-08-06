@@ -20,10 +20,12 @@ window.onload = () => {
     const navbarBurger = document.querySelector('#navbar-burger');
     const navbarMenu = document.querySelector('.navbar-menu');
 
-    navbarBurger.addEventListener('click', () => {
-        navbarBurger.classList.toggle('is-active');
-        navbarMenu.classList.toggle('is-active');
-    });
+    if (navbarBurger && navbarMenu) {
+        navbarBurger.addEventListener('click', () => {
+            navbarBurger.classList.toggle('is-active');
+            navbarMenu.classList.toggle('is-active');
+        });
+    }
 
     const smallSearch = document.querySelector('#smallSearch');
     const searchBar = document.querySelector('#search-bar');
@@ -38,6 +40,18 @@ window.onload = () => {
     if (banner) {
         banner.addEventListener('click', () => {
             banner.classList.toggle('hidden');
+        });
+    }
+
+    const filters = document.querySelector('#filters-dropdown');
+    if (filters) {
+        const trigger = filters.querySelector('#filters-dropdown-trigger');
+        const menu = filters.querySelector('#filters-dropdown-menu');
+        if (!trigger || !menu) {
+            console.log("error dropdown trigger+menu not found!");
+        }
+        trigger.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
         });
     }
 };

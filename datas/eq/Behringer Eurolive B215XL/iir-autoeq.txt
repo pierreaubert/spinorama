@@ -1,0 +1,16 @@
+EQ for Behringer Eurolive B215XL computed from ErinsAudioCorner data
+Preference Score -0.17 with EQ 2.63
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-04:57:29
+
+Preamp: -3.2 dB
+
+Filter  1: ON PK Fc   187 Hz Gain +2.07 dB Q 1.30
+Filter  2: ON PK Fc   462 Hz Gain +1.31 dB Q 2.98
+Filter  3: ON PK Fc   764 Hz Gain +2.98 dB Q 2.99
+Filter  4: ON PK Fc  1304 Hz Gain +1.34 dB Q 3.00
+Filter  5: ON PK Fc  2302 Hz Gain -2.84 dB Q 2.98
+Filter  6: ON PK Fc  4803 Hz Gain -2.99 dB Q 2.66
+Filter  7: ON PK Fc  6489 Hz Gain +1.93 dB Q 2.96
+Filter  8: ON PK Fc 10020 Hz Gain -2.41 dB Q 2.90
+Filter  9: ON PK Fc 13537 Hz Gain -3.00 dB Q 0.44

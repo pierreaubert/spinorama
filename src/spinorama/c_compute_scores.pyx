@@ -88,10 +88,15 @@ cpdef c_cea2034(const double[:,:] spl, idx, const double[:] weigths):
     # SP is weighted rms
     cea2034[idx_sp] = apply_weigthed_rms(pressure2, idx[idx_sp], weigths)
     # EIR
+    pir_lw = spl2pressure(cea2034[idx_lw])
+    pir_er = spl2pressure(cea2034[idx_er])
+    pir_sp = spl2pressure(cea2034[idx_sp])
     cea2034[idx_pir] = pressure2spl(
-        np.multiply(0.12, spl2pressure(cea2034[idx_lw]))+
-        np.multiply(0.44, spl2pressure(cea2034[idx_er]))+
-        np.multiply(0.44, spl2pressure(cea2034[idx_sp]))
+        np.sqrt(
+            np.multiply(0.12, np.power(pir_lw, 2))+
+            np.multiply(0.44, np.power(pir_er, 2))+
+            np.multiply(0.44, np.power(pir_sp, 2))
+        )
     )
     return cea2034
 
@@ -127,7 +132,7 @@ cpdef double c_sm(const double[:] freq, const double[:] spl):
     """Compute SM see details in compute_scores.py"""
     cdef f_min = np.searchsorted(freq, 100, side="right")
     cdef f_max = np.searchsorted(freq, 16000, side="left")
-    cdef log_freq = np.log(freq[f_min:f_max])
+    cdef log_freq = np.log10(freq[f_min:f_max])
     _, _, r_value, _, _ = linregress(log_freq, spl[f_min:f_max])
     return r_value*r_value
 
@@ -185,8 +190,8 @@ cpdef c_score_peq_approx(
     return c_score(
         freq,
         intervals,
-        np.add(on,peq),
-        np.add(spin[0], peq),
-        np.add(spin[-2], peq),
-        np.add(spin[-1], peq)
+        np.add(on,peq),        # on
+        np.add(spin[0], peq),  # lw
+        np.add(spin[-2], peq), # sp
+        np.add(spin[-1], peq)  # pir
     )

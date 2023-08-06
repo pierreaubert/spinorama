@@ -1,16 +1,16 @@
 EQ for FBT J12A computed from Vendors-FBT data
-Preference Score 3.09 with EQ 4.10
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-06-03-10:24:15
+Preference Score 2.80 with EQ 3.81
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-05-00:32:22
 
-Preamp: -1.7 dB
+Preamp: -2.7 dB
 
-Filter  1: ON PK Fc    54 Hz Gain +1.42 dB Q 1.13
-Filter  2: ON PK Fc   158 Hz Gain +1.36 dB Q 1.85
-Filter  3: ON PK Fc   276 Hz Gain -0.69 dB Q 0.78
-Filter  4: ON PK Fc   403 Hz Gain -2.68 dB Q 2.99
-Filter  5: ON PK Fc   550 Hz Gain +1.89 dB Q 0.91
-Filter  6: ON PK Fc  1099 Hz Gain -1.81 dB Q 2.86
-Filter  7: ON PK Fc  2192 Hz Gain +0.69 dB Q 1.61
-Filter  8: ON PK Fc  3944 Hz Gain +1.61 dB Q 2.78
-Filter  9: ON PK Fc 10740 Hz Gain -2.14 dB Q 1.78
+Filter  1: ON PK Fc    78 Hz Gain -2.99 dB Q 1.29
+Filter  2: ON PK Fc   121 Hz Gain +1.65 dB Q 2.25
+Filter  3: ON PK Fc   391 Hz Gain -2.72 dB Q 2.87
+Filter  4: ON PK Fc   565 Hz Gain +2.06 dB Q 0.76
+Filter  5: ON PK Fc  1141 Hz Gain -1.78 dB Q 2.95
+Filter  6: ON PK Fc  2545 Hz Gain +2.35 dB Q 2.97
+Filter  7: ON PK Fc  3930 Hz Gain +1.93 dB Q 2.98
+Filter  8: ON PK Fc 11077 Hz Gain -2.91 dB Q 2.14
+Filter  9: ON PK Fc 13537 Hz Gain +1.38 dB Q 1.01

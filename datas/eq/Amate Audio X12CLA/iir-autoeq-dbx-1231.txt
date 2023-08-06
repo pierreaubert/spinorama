@@ -1,9 +1,9 @@
 EQ for Amate Audio X12CLA computed from Vendors-Amate Audio data
-Preference Score 2.15 with EQ 2.30
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-23-00:06:53
+Preference Score 2.26 with EQ 2.42
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:42:50
 
-Preamp: -2.5 dB
+Preamp: -2.3 dB
 
 Filter  1: ON PK Fc    20 Hz Gain +0.00 dB Q 4.32
 Filter  2: ON PK Fc    25 Hz Gain +0.00 dB Q 4.32

@@ -1,9 +1,9 @@
 EQ for Vue Audiotechnik H-15 computed from Vendors-Vue Audiotechnik data
-Preference Score 3.65 with EQ 3.80
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-03-29-15:55:46
+Preference Score 4.32 with EQ 4.44
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:44:32
 
-Preamp: -1.2 dB
+Preamp: -1.0 dB
 
 Filter  1: ON PK Fc    20 Hz Gain +0.00 dB Q 4.32
 Filter  2: ON PK Fc    25 Hz Gain +0.25 dB Q 4.32

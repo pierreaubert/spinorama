@@ -21,6 +21,7 @@
 sourcedir=datas
 targetdir=docs
 mkdir -p ${targetdir}/logos
+mkdir -p ${targetdir}/icons
 mkdir -p ${targetdir}/pictures
 mkdir -p ${targetdir}/help_pictures
 for d in "${sourcedir}/pictures"; do
@@ -50,7 +51,9 @@ for d in "${sourcedir}/pictures"; do
     done
 done
 # copy logs
-cp datas/logos/* docs/logos
+mkdir -p docs/logos docs/icons
+cp datas/logos/* docs/pictures
+cp datas/icons/* docs/icons
 # copy help pictures
 find ./src/website/help_pictures -type f -name '*.png'| while read pict; do
     smaller=$targetdir/help_pictures/`basename $pict`

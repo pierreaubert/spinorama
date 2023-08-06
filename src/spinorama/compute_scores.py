@@ -26,6 +26,16 @@ from scipy.stats import linregress
 from spinorama import logger
 
 
+def round_down(x: float, decimals: int) -> float:
+    """return a rounded value down"""
+    if x > 0 and decimals <= 5:
+        mul = 10**decimals
+        return math.floor(x * mul) / mul
+    else:
+        # not necessary what I want
+        return round(x, decimals)
+
+
 # https://courses.physics.illinois.edu/phys406/sp2017/Lab_Handouts/Octave_Bands.pdf
 def octave(count: int) -> List[Tuple[float, float, float]]:
     """compute 1/N octave band
@@ -89,7 +99,7 @@ def nbd(dfu: pd.DataFrame, min_freq: float) -> float:
         [
             mad(dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB)
             for (bmin, bcenter, bmax) in octave(2)
-            if bmin_freq <= bcenter <= 12000
+            if bmin_freq <= bmin and bmax <= 12000
         ]
     )
 
@@ -139,8 +149,8 @@ def lfq(lw, sp, lfx_log) -> float:
     val_lfx = pow(10, lfx_log)
     lfq_sum = 0
     n = 0
-    # print('DEBUG lfx={1} octave(20): {0}'.format(octave(20), val_lfx))
-    for bmin, _, bmax in octave(20):
+    # print('DEBUG lfx={1} octave(2): {0}'.format(octave(2), val_lfx))
+    for bmin, _, bmax in octave(2):
         # 100hz to 12k hz
         if bmin < val_lfx or bmax > 300:
             continue
@@ -176,13 +186,25 @@ def sm(dfu):
     smoother frequency response curves.
     """
     data = dfu.loc[(dfu.Freq >= 100) & (dfu.Freq <= 16000)]
-    log_freq = np.log(data.Freq)
+    log_freq = np.log10(data.Freq)
     _, _, r_value, _, _ = linregress(log_freq, data.dB)
-    # if math.isnan(r_value):
-    #    print('data shape={} keys={}'.format(data.shape, dfu.keys()))
-    #    print(log_freq)
-    #    print(data.dB)
     return r_value**2
+
+
+"""
+    # same results as above
+    slope, intercept, r_value, _, _ = linregress(log_freq, data.dB)
+    n = log_freq.size
+    x = data.dB.to_numpy()
+    y = intercept + slope * log_freq
+    sm_num = n*np.sum(np.multiply(x, y))-np.sum(x)*np.sum(y)
+    sm_den_x = n*np.sum(np.multiply(x, x))-np.sum(x)**2
+    sm_den_y = n*np.sum(np.multiply(y, y))-np.sum(y)**2
+    sm_den = math.sqrt(sm_den_x*sm_den_y)
+    sm_pir = (sm_num/sm_den)**2
+    logger.error('debug: sm_pir %f r2 %f', sm_pir, r_value**2)
+    return sm_pir
+"""
 
 
 def pref_rating(nbd_on: float, nbd_pir: float, lf_x: float, sm_pir: float) -> float:
@@ -224,19 +246,19 @@ def speaker_pref_rating(cea2034, pir, rounded):
 
         if rounded:
             ratings = {
-                "nbd_on_axis": round(nbd_on_axis, 2),
-                "nbd_listening_window": round(nbd_listening_window, 2),
-                "nbd_sound_power": round(nbd_sound_power, 2),
-                "nbd_pred_in_room": round(nbd_pred_in_room, 2),
-                "sm_pred_in_room": round(sm_pred_in_room, 2),
-                "sm_sound_power": round(sm_sound_power, 2),
-                "pref_score_wsub": round(pref_wsub, 1),
+                "nbd_on_axis": round_down(nbd_on_axis, 3),
+                "nbd_listening_window": round_down(nbd_listening_window, 3),
+                "nbd_sound_power": round_down(nbd_sound_power, 3),
+                "nbd_pred_in_room": round_down(nbd_pred_in_room, 3),
+                "sm_pred_in_room": round_down(sm_pred_in_room, 3),
+                "sm_sound_power": round_down(sm_sound_power, 3),
+                "pref_score_wsub": round_down(pref_wsub, 1),
             }
             if aad_on_axis != -1.0:
-                ratings["aad_on_axis"] = round(aad_on_axis, 2)
+                ratings["aad_on_axis"] = round_down(aad_on_axis, 3)
             ratings["lfx_hz"] = int(pow(10, lfx_hz))  # in Hz
-            ratings["lfq"] = round(lfq_db, 2)
-            ratings["pref_score"] = round(pref, 1)
+            ratings["lfq"] = round_down(lfq_db, 3)
+            ratings["pref_score"] = round_down(pref, 1)
         else:
             ratings = {
                 "nbd_on_axis": nbd_on_axis,

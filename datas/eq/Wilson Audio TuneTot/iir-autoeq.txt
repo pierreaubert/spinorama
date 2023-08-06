@@ -1,16 +1,14 @@
 EQ for Wilson Audio TuneTot computed from ASR data
-Preference Score 2.69 with EQ 4.45
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.22
-Dated: 2023-05-14-17:30:50
+Preference Score 2.85 with EQ 4.42
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:08:40
 
-Preamp: -0.1 dB
+Preamp: -1.3 dB
 
-Filter  1: ON PK Fc   133 Hz Gain -3.00 dB Q 1.42
-Filter  2: ON PK Fc  5186 Hz Gain -2.56 dB Q 0.27
-Filter  3: ON PK Fc   838 Hz Gain -2.45 dB Q 2.62
-Filter  4: ON PK Fc   309 Hz Gain +0.80 dB Q 3.00
-Filter  5: ON PK Fc 10925 Hz Gain +0.77 dB Q 2.44
-Filter  6: ON PK Fc   127 Hz Gain -5.03 dB Q 3.00
-Filter  7: ON PK Fc 15966 Hz Gain -1.31 dB Q 2.59
-Filter  8: ON PK Fc  6487 Hz Gain -0.76 dB Q 2.81
-Filter  9: ON PK Fc 15885 Hz Gain -0.88 dB Q 2.81
+Filter  1: ON PK Fc   131 Hz Gain -3.00 dB Q 2.96
+Filter  2: ON PK Fc   860 Hz Gain -2.46 dB Q 2.60
+Filter  3: ON PK Fc  2553 Hz Gain +1.62 dB Q 2.98
+Filter  4: ON PK Fc   325 Hz Gain +1.62 dB Q 1.61
+Filter  5: ON PK Fc  5332 Hz Gain -2.30 dB Q 0.62
+Filter  6: ON PK Fc 13053 Hz Gain +1.45 dB Q 2.56
+Filter  7: ON PK Fc   124 Hz Gain -6.00 dB Q 2.91

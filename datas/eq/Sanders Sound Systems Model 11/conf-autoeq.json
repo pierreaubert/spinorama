@@ -13,7 +13,7 @@
     "freq_mean_min": 100,
     "freq_mean_max": 300,
     "curve_names": [
-        "Estimated In-Room Response"
+        "Listening Window"
     ],
     "target_min_freq": 0.0,
     "target_max_freq": 16000,
@@ -41,6 +41,6 @@
     "verbose": true,
     "smoke_test": false,
     "force": true,
-    "version": "0.22",
+    "version": "0.24",
     "level": 30
 }

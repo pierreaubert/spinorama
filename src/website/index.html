@@ -1,52 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta http-equiv="content-type" content="text/html;charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>A collection of loudspeakers measurements</title>
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"
-      integrity="sha256-ZSnrWNaPzGe8v25yP0S6YaMaDLMTDHC+4mHTw0xydEk="
-      crossorigin="anonymous"
-      ></script>
-
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css"
-      integrity="sha256-O8SsQwDg1R10WnKJNyYgd9J3rlom+YSVcGbEF5RmfFk="
-      crossorigin="anonymous"
-      >
-
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css"
-      integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU="
-      crossorigin="anonymous"
-      >
-
-    <link
-      crossorigin="anonymous"
-      media="all"
-      rel="stylesheet"
-      href="${site}/assets/spinorama.css"
-      >
-
-    <link
-      rel="icon"
-      type="image/png"
-      href="${site}/pictures/favicon-16x16.png"
-      sizes="16x16"
-      >
-
-    <script type="module" src="${site}/assets/onload.js"></script>
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/fuse.js@6.5.3/dist/fuse.min.js"
-      integrity="sha256-4//idYV/ANIVNos4oYKsGVDHJJ/i57AZ2uutpd/nmv0="
-      crossorigin="anonymous"
-      ></script>
-
+    <%include file="head.html"/>
   </head>
   <body>
     <%include file="nav_menu.html"/>
@@ -56,30 +12,62 @@
       Handlebars.registerHelper("isShort", function (value) {
         return value.length < 3;
       });
+      Handlebars.registerHelper("iconVolume", function (value) {
+        ivalue = parseInt(value);
+        if (ivalue        <= 30) {
+          return '0';
+        } else if (ivalue <= 60 ) {
+          return '1';
+        } else if (ivalue <= 90 ) {
+          return '2';
+        } else {
+          return '3';
+        }
+      });
     </script>
 
     <script id="templateSpeaker" type="text/x-handlebars-template">
-       <div class="card">
+       <div class="card card-min">
            <div class="card-image">
              <picture class="image is-2by3">
                <source srcset="{{img.webp}}" type="image/webp" width="400" height="600"></source>
                <img src="{{img.jpg}}" loading="{{img.loading}}" decoding="{{img.decoding}}" alt="{{brand}} {{model}}" width="400" height="600"/>
              </picture>
            </div>
-           <header class="card-header">
-             <p class="card-header-title">{{brand}} {{model}}</p>
-             <p class="card-header-title is-pulled-right">{{price}}</p>
-           </header>
            <div class="card-content">
+             <div class="content">
+               <span><b>{{brand}}</b></span>
+               <br/>
+               <span><b>{{model}}</b></span>
+             </div>
              <div class="content is-small">
-               <p>Tonality: <b>{{score.score}}</b></p>
-               <progress class="progress is-small is-danger" value="{{score.scoreScaled}}" max="100"></progress>
-       	       <p>Bass extension: <b>{{score.lfx}}</b>Hz</p>
-               <progress class="progress is-small is-info" value="{{score.lfxScaled}}" max="100"></progress>
-               <p>Flatness: <b>&plusmn;{{score.flatness}}</b>dB ~300-10kHz</p>
-               <progress class="progress is-small is-success" value="{{score.flatnessScaled}}" max="100"></progress>
-               <p>Smoothness (PIR): <b>{{score.smoothness}}</b></p>
-               <progress class="progress is-small is-warning" value="{{score.smoothnessScaled}}" max="100"></progress>
+               <span class="icon-text">
+                 <span class="icon">
+                   {{priceAsDollar}}
+                 </span>
+                 <span>Price: <b>{{price}}</b></span>
+               </span>
+               <br/>
+               <span class="icon-text">
+                 <span class="icon">
+                   <img src="/icons/volume-danger-{{iconVolume score.scoreScaled}}.svg" height="1em" alt="rating"></img>
+                 </span>
+                 <span>Tonality: <b>{{score.score}}</b></span>
+               </span>
+               <br/>
+               <span class="icon-text">
+                 <span class="icon has-text-danger">
+                   <img src="/icons/volume-info-{{iconVolume score.lfxScaled}}.svg" height="1em" alt="rating"></img>
+                 </span>
+                 <span>Bass extension: <b>{{score.lfx}}</b>Hz</span>
+               </span>
+               <br/>
+               <span class="icon-text">
+                 <span class="icon has-text-success">
+                   <img src="/icons/volume-success-{{iconVolume score.flatnessScaled}}.svg" height="1em" alt="rating"></img>
+                 </span>
+                 <span>Flatness: <b>&plusmn;{{score.flatness}}</b>dB</span>
+               </span>
              </div>
            </div>
            <footer class="card-footer">
@@ -94,7 +82,7 @@
                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu-reviews-{{id}}">
                      <span>Measurements</span>
                      <span class="icon is-small">
-                       <i class="fas fa-angle-down" aria-hidden="true"></i>
+                       <i class="fa-solid fa-angle-down" aria-hidden="true"></i>
                      </span>
                    </button>
                  </div>
@@ -116,7 +104,7 @@
 
     <div class="section">
       <div class="searchresults">
-        <div class="columns is-multiline is-mobile is-centered is-variable" id="speakers" data-num="0">
+        <div class="columns is-multiline is-mobile is-centered" id="speakers" data-num="0">
           <script type="module" src="./assets/index.js"></script>
         </div>
       </div>

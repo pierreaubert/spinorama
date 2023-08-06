@@ -1,14 +1,16 @@
 EQ for KEF Q650C computed from ErinsAudioCorner data
-Preference Score 3.55 with EQ 5.69
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.21
-Dated: 2023-05-10-19:52:35
+Preference Score 3.29 with EQ 5.43
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-04-23:09:15
 
-Preamp: -4.3 dB
+Preamp: -2.3 dB
 
-Filter  1: ON LS Fc   161 Hz Gain +4.32 dB
-Filter  2: ON PK Fc   962 Hz Gain +4.45 dB Q 3.39
-Filter  3: ON PK Fc   988 Hz Gain -1.05 dB Q 1.41
-Filter  4: ON PK Fc  5773 Hz Gain -0.16 dB Q 1.39
-Filter  5: ON PK Fc  9789 Hz Gain -2.96 dB Q 1.96
-Filter  6: ON PK Fc 12940 Hz Gain -2.33 dB Q 1.45
-Filter  7: ON PK Fc 14670 Hz Gain -1.11 dB Q 1.90
+Filter  1: ON HS Fc  6387 Hz Gain -2.43 dB Q 1.50
+Filter  2: ON PK Fc    94 Hz Gain +2.45 dB Q 0.55
+Filter  3: ON PK Fc   494 Hz Gain -1.82 dB Q 1.41
+Filter  4: ON PK Fc 12232 Hz Gain -1.06 dB Q 2.01
+Filter  5: ON PK Fc   948 Hz Gain +2.92 dB Q 3.00
+Filter  6: ON PK Fc   235 Hz Gain -0.79 dB Q 1.26
+Filter  7: ON PK Fc  2661 Hz Gain +0.76 dB Q 2.69
+Filter  8: ON PK Fc   698 Hz Gain -1.02 dB Q 2.41
+Filter  9: ON PK Fc  9818 Hz Gain -0.77 dB Q 2.60
