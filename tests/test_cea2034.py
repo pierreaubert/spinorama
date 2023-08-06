@@ -349,7 +349,6 @@ class SpinoramaSpinoramaCorrectedERTests(unittest.TestCase):
 
     def test_validate_cython(self):
         empty_eq = ()
-        self.assertNotIn("pre_computed", self.df_spin.keys())
         _ = score_loss(self.df_spin, empty_eq)
         self.assertIn("pre_computed", self.df_spin.keys())
         cython = {}
@@ -391,6 +390,12 @@ class SpinoramaSpinoramaCorrectedERTests(unittest.TestCase):
         )
         tolerance = 2 * 1.0e-7
         self.assertLess(delta, tolerance)
+
+    def test_validate_cython2(self):
+        # testing cache effect
+        self.test_validate_cython()
+        self.test_validate_cython()
+        self.test_validate_cython()
 
 
 class SpinoramaSpinoramaCorrectedERTestsMLMB10(SpinoramaSpinoramaCorrectedERTests):
