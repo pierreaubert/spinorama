@@ -1640,9 +1640,31 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Avantone Pro CLA-10": {
+        "brand": "Avantone Pro",
+        "model": "CLA-10",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "550",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/avantone-cla-10-yamaha-ns-10m-clone-review.46954/",
+                    "top": "https://tapeop.com/reviews/gear/133/cla-10-passive-studio-monitor-system/",
+                    "brd": "https://www.barryrudolph.com/mix/avantone_cla10.html",
+                    "inl": "https://www.interface.nl/nieuws/artikel/54-23228/avantone-pro-cla-10-en-cla-200-studiomonitors-en-versterker",
+                },
+                "review_published": "20230805",
+            },
+        },
+    },
     "Avantone Pro MixCube": {
-        "brand": "Avantone",
-        "model": "Pro MixCube",
+        "brand": "Avantone Pro",
+        "model": "MixCube",
         "type": "active",
         "shape": "bookshelves",
         "price": "259",
