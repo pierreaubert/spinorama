@@ -190,8 +190,8 @@ cpdef c_score_peq_approx(
     return c_score(
         freq,
         intervals,
-        np.add(on,peq),
-        np.add(spin[0], peq),
-        np.add(spin[-2], peq),
-        np.add(spin[-1], peq)
+        np.add(on,peq),        # on
+        np.add(spin[0], peq),  # lw
+        np.add(spin[-2], peq), # sp
+        np.add(spin[-1], peq)  # pir
     )

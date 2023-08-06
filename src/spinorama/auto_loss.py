@@ -321,6 +321,11 @@ def compute_scores_prep_full(
     idx, _ = build_index_cea2034(spl_keys)
     spl = np.concatenate((spl_h.T.to_numpy(), spl_v.T.to_numpy()), axis=0)
     spin = c_cea2034(spl, idx, weigths)
+    # spin = np.ndarray(shape=[len(idx), len(freq)], dtype=float)
+    # spin[0] = df_spin[0]
+    # spin[1] = df_spin[1]
+    # spin[2] = df_spin[14]
+    # spin[3] = df_spin[15]
     return {
         "freq": freq,
         "intervals": intervals,
