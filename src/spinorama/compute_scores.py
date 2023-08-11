@@ -99,7 +99,7 @@ def nbd(dfu: pd.DataFrame, min_freq: float) -> float:
         [
             mad(dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB)
             for (bmin, bcenter, bmax) in octave(2)
-            if bmin_freq <= bmin and bmax <= 12000
+            if bmin_freq <= bcenter and bcenter <= 12000
         ]
     )
 
@@ -124,15 +124,23 @@ def lfx(lw, sp) -> float:
     lw_ref = np.mean(lw_data) if not lw_data.empty else 0.0
     lw_ref -= 6.0
     # find first freq such that y[freq]<y_ref-6dB
-    lfx_range = sp.loc[(sp.Freq < 300) & (sp.dB <= lw_ref)].Freq
-    if len(lfx_range.values) == 0:
+    lfx_range = sp.loc[(sp.Freq <= 300) & (sp.dB <= lw_ref)].Freq
+    if lfx_range.shape[0] == 0:
         # happens with D&D 8C when we do not have a point low enough to get the -6
         return math.log10(sp.Freq.to_numpy()[0])
 
+    # trying to deal with oscillating bass range
+    # trick is: index is contiguous, the filter above make creates hole
     lfx_grouped = consecutive_groups(lfx_range.items(), lambda x: x[0])
     try:
-        lfx_hz = list(next(lfx_grouped))[-1][1]
+        # grab the last group and return freq
+        lfx_last = list(next(lfx_grouped))[-1]
+        lfx_pos = lfx_last[0]
+        # get the next freq to be more inlined with the other people computing the code
+        # nothing wrong if you remove the +1
+        lfx_hz = (sp.Freq)[lfx_pos + 1]
     except Exception:
+        # some speaker measurements start above 300Hz
         return LFX_DEFAULT
     return math.log10(lfx_hz)
 
@@ -252,13 +260,13 @@ def speaker_pref_rating(cea2034, pir, rounded):
                 "nbd_pred_in_room": round_down(nbd_pred_in_room, 3),
                 "sm_pred_in_room": round_down(sm_pred_in_room, 3),
                 "sm_sound_power": round_down(sm_sound_power, 3),
-                "pref_score_wsub": round_down(pref_wsub, 1),
+                "pref_score_wsub": round_down(pref_wsub, 2),
             }
             if aad_on_axis != -1.0:
                 ratings["aad_on_axis"] = round_down(aad_on_axis, 3)
             ratings["lfx_hz"] = int(pow(10, lfx_hz))  # in Hz
             ratings["lfq"] = round_down(lfq_db, 3)
-            ratings["pref_score"] = round_down(pref, 1)
+            ratings["pref_score"] = round_down(pref, 2)
         else:
             ratings = {
                 "nbd_on_axis": nbd_on_axis,

@@ -126,7 +126,10 @@ cpdef double c_lfx(const double[:] freq, const double[:] lw, const double[:] sp)
     lfx_list = list(next(lfx_grouped))
     if len(lfx_list) <= 1:
         return LFX_DEFAULT
-    return math.log10(lfx_list[-1][1])
+    pos = lfx_list[-1][0]
+    if len(freq) < pos-1:
+        pos = pos +1
+    return math.log10(freq[pos])
 
 cpdef double c_sm(const double[:] freq, const double[:] spl):
     """Compute SM see details in compute_scores.py"""
