@@ -42,6 +42,27 @@ def sanity_check_brand(name: str, speaker: Speaker) -> int:
     return 0
 
 
+VALID_AMOUNTS = ("each", "pair")
+
+
+def sanity_check_amount(name: str, speaker: Speaker) -> int:
+    """check if name include brand"""
+    # if "amount" not in speaker:
+    #     logging.error("amount is not in %s", name)
+    #     return 1
+    if "amount" in speaker:
+        amount = speaker["amount"]
+        if amount not in VALID_AMOUNTS:
+            logging.error(
+                "%s: amount %s is not allowed. Valid amounts are (%s)",
+                name,
+                amount,
+                ",".join(VALID_AMOUNTS),
+            )
+            return 1
+    return 0
+
+
 def sanity_check_model(name: str, speaker: Speaker) -> int:
     """check if name include model"""
     if "model" not in speaker:
@@ -128,7 +149,7 @@ def sanity_check_default_measurement(name: str, speaker: Speaker) -> int:
         logging.error("default_measurement is not in %s", name)
         return 1
     default = speaker["default_measurement"]
-    if "measurements" in speaker and default not in speaker["measurements"].keys():
+    if "measurements" in speaker and default not in speaker["measurements"]:
         logging.error("%s: no measurement with key %s", name, default)
         return 1
     return 0
@@ -473,7 +494,7 @@ def sanity_check_measurement(name: str, version: str, measurement: Measurement) 
         logging.error("%s: key %s doesn't look correct", name, version)
         status = 1
     for k in ("origin", "format"):
-        if k not in measurement.keys():
+        if k not in measurement:
             logging.error("%s: measurement %s lack a %s key", name, version, k)
             status = 1
 
@@ -549,7 +570,7 @@ def sanity_check_measurement(name: str, version: str, measurement: Measurement) 
             status = 1
             continue
 
-    if version[0:3] == "mis" and "quality" not in measurement.keys():
+    if version[0:3] == "mis" and "quality" not in measurement:
         logging.error("%s: in measurement %s quality is required", name, version)
         status = 1
     return status
@@ -577,6 +598,7 @@ def sanity_check_speaker(name: str, speaker: Speaker) -> int:
         or sanity_check_model(name, speaker) != 0
         or sanity_check_type(name, speaker) != 0
         or sanity_check_shape(name, speaker) != 0
+        or sanity_check_amount(name, speaker) != 0
         or sanity_check_measurements(name, speaker) != 0
         or sanity_check_default_measurement(name, speaker) != 0
     ):

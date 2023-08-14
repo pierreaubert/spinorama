@@ -818,7 +818,7 @@ speakers_info: SpeakerDatabase = {
         "type": "active",
         "price": "500",
         "shape": "omnidirectional",
-        "amount": "single",
+        "amount": "each",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
@@ -837,6 +837,27 @@ speakers_info: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "review": "https://www.sausalitoaudio.com/data/",
                 "quality": "low",
+            },
+        },
+    },
+    "Apple Homepod Mini": {
+        "brand": "Apple",
+        "model": "Homepod Mini",
+        "type": "active",
+        "price": "100",
+        "shape": "omnidirectional",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/apple_homepod_mini/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/apple-homepod-mini-review.24588/",
+                },
+                "review_published": "20210627",
+                "notes": "...Score formula is for monopole speaker...",
             },
         },
     },
@@ -914,27 +935,6 @@ speakers_info: SpeakerDatabase = {
                     },
                     "weight": 15.0,
                 },
-            },
-        },
-    },
-    "Apple Homepod Mini": {
-        "brand": "Apple",
-        "model": "Homepod Mini",
-        "type": "active",
-        "price": "100",
-        "shape": "omnidirectional",
-        "amount": "single",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/apple_homepod_mini/",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/apple-homepod-mini-review.24588/",
-                },
-                "review_published": "20210627",
-                "notes": "...Score formula is for monopole speaker...",
             },
         },
     },
@@ -8594,7 +8594,7 @@ speakers_info: SpeakerDatabase = {
         "type": "passive",
         "price": "200",
         "shape": "floorstanders",
-        "amount": "",
+        "amount": "pair",
         "default_measurement": "asr-v2-20201202",
         "measurements": {
             "asr-v1-20201126": {
@@ -11565,7 +11565,7 @@ speakers_info: SpeakerDatabase = {
         "model": "R3 Meta",
         "type": "passive",
         "price": "3500",
-        "amount": "2200",
+        "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "eac-v1-ported",
         "measurements": {
@@ -14262,7 +14262,7 @@ speakers_info: SpeakerDatabase = {
         "model": "Monolith Encore T6",
         "type": "passive",
         "price": "800",
-        "amount": "both",
+        "amount": "pair",
         "shape": "floorstanders",
         "default_measurement": "eac",
         "measurements": {
