@@ -434,12 +434,6 @@ getMetadata()
                     sorter.by = b;
                     // swap reverse if it exists
                     sorter.reverse = false;
-                    if (url.searchParams.has('reverse')) {
-                        const sortOrder = url.searchParams.get('reverse');
-                        if (sortOrder === 'false' ) {
-                            sorter.reverse = true;
-                        }
-                    }
                     updateUrl(url, keywords);
                     selectDispatch();
                 });
@@ -447,9 +441,18 @@ getMetadata()
         });
 
         document.querySelector('#searchInput').addEventListener('keyup', function () {
-            keywords = document.querySelector('#searchInput').value;
+            const keywords = document.querySelector('#searchInput').value;
             updateUrl(url, keywords);
             selectDispatch();
+        });
+
+        document.querySelector('#sortReverse').addEventListener('change', function () {
+            const sortReverse = document.querySelector('#sortReverse').value;
+            if (sortReverse) {
+                sorter.reverse = ! sorter.reverse;
+                updateUrl(url, keywords);
+                selectDispatch();
+            }
         });
 
         // if we have a parameter to start with we need to resort
