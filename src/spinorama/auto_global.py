@@ -85,6 +85,7 @@ def optim_global(
         optim_config["full_biquad_optim"] = True
 
     log_freq = np.logspace(np.log10(20), np.log10(freq_max), FREQ_NB_POINTS + 1)
+    # min_db = optim_config["MIN_DBGAIN"]
     max_db = optim_config["MAX_DBGAIN"]
     min_q = optim_config["MIN_Q"]
     max_q = optim_config["MAX_Q"]
@@ -123,8 +124,10 @@ def optim_global(
 
     def opt_peq_flat(x) -> float:
         peq_freq = np.array(x2spl(x))[freq_low:freq_high]
-        flatness = np.linalg.norm(np.add(target, peq_freq), ord=2)
-        return float(flatness)
+        flat = np.add(target, peq_freq)
+        flatness_l2 = np.linalg.norm(flat, ord=2)
+        flatness_l1 = np.linalg.norm(flat, ord=1)
+        return float(flatness_l2 + flatness_l1)
 
     def opt_peq(x) -> float:
         return opt_peq_score(x) if optim_config["loss"] == "score_loss" else opt_peq_flat(x)
