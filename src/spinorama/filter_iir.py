@@ -39,15 +39,17 @@ class Biquad:
     # pretend enumeration
     LOWPASS, HIGHPASS, BANDPASS, PEAK, NOTCH, LOWSHELF, HIGHSHELF = range(7)
 
-    type2name = {
-        LOWPASS: ["Lowpass", "LP"],
-        HIGHPASS: ["Highpass", "HP"],
-        BANDPASS: ["Bandpath", "BP"],
-        PEAK: ["Peak", "PK"],
-        NOTCH: ["Notch", "NO"],
-        LOWSHELF: ["Lowshelf", "LS"],
-        HIGHSHELF: ["Highshelf", "HS"],
-    }
+    TYPE2NAME = frozenset(
+        {
+            LOWPASS: ["Lowpass", "LP"],
+            HIGHPASS: ["Highpass", "HP"],
+            BANDPASS: ["Bandpath", "BP"],
+            PEAK: ["Peak", "PK"],
+            NOTCH: ["Notch", "NO"],
+            LOWSHELF: ["Lowshelf", "LS"],
+            HIGHSHELF: ["Highshelf", "HS"],
+        }
+    )
 
     def __init__(self, biquad_type: int, freq: float, srate: int, q: float, db_gain: float = 0):
         biquad_types = {
@@ -213,10 +215,10 @@ class Biquad:
         return self.a1, self.a2, self.b0, self.b1, self.b2
 
     def type2str_short(self) -> str:
-        return self.type2name[self.biquad_type][1]
+        return self.TYPE2NAME[self.biquad_type][1]
 
     def type2str_long(self) -> str:
-        return self.type2name[self.biquad_type][0]
+        return self.TYPE2NAME[self.biquad_type][0]
 
     def __str__(self):
         return "Type:%s,Freq:%.1f,Rate:%.1f,Q:%.1f,Gain:%.1f" % (

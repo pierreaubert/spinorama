@@ -339,7 +339,7 @@ def plot_spinorama_traces(spin, params):
         "Early Reflections",
         "Sound Power",
     ):
-        if measurement not in spin.keys():
+        if measurement not in spin:
             continue
         trace = go.Scatter(
             x=spin.Freq,
@@ -356,7 +356,7 @@ def plot_spinorama_traces(spin, params):
 
     traces_di = []
     for measurement in ("Early Reflections DI", "Sound Power DI"):
-        if measurement not in spin.keys():
+        if measurement not in spin:
             continue
         trace = go.Scatter(
             x=spin.Freq,
