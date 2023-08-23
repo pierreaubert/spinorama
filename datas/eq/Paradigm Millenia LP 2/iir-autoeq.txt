@@ -1,0 +1,14 @@
+EQ for Paradigm Millenia LP 2 computed from Misc data
+Preference Score 0.31 with EQ 0.28
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-23-11:40:43
+
+Preamp: -4.4 dB
+
+Filter  1: ON PK Fc   389 Hz Gain +1.65 dB Q 1.84
+Filter  2: ON PK Fc  4083 Hz Gain +7.14 dB Q 0.65
+Filter  3: ON PK Fc  4853 Hz Gain -3.37 dB Q 1.60
+Filter  4: ON PK Fc  7603 Hz Gain -0.98 dB Q 5.50
+Filter  5: ON PK Fc  9354 Hz Gain -4.03 dB Q 0.66
+Filter  6: ON PK Fc 12331 Hz Gain -0.91 dB Q 5.04
+Filter  7: ON PK Fc 20000 Hz Gain +3.99 dB Q 2.14

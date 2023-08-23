@@ -1,0 +1,12 @@
+EQ for JBL Control X Wireless computed from Misc data
+Preference Score 4.54 with EQ 5.71
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-08-18-14:17:09
+
+Preamp: -2.5 dB
+
+Filter  1: ON PK Fc   110 Hz Gain +2.47 dB Q 1.75
+Filter  2: ON PK Fc   758 Hz Gain +1.68 dB Q 2.31
+Filter  3: ON PK Fc  1135 Hz Gain +0.90 dB Q 2.81
+Filter  4: ON PK Fc  4598 Hz Gain -1.03 dB Q 2.30
+Filter  5: ON PK Fc  9694 Hz Gain -1.88 dB Q 2.77
