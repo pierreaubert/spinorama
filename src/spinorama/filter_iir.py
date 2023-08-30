@@ -19,6 +19,8 @@
 import math
 import numpy as np
 
+from frozendict import frozendict
+
 from spinorama.ltype import Vector
 
 
@@ -39,7 +41,7 @@ class Biquad:
     # pretend enumeration
     LOWPASS, HIGHPASS, BANDPASS, PEAK, NOTCH, LOWSHELF, HIGHSHELF = range(7)
 
-    TYPE2NAME = frozenset(
+    TYPE2NAME = frozendict(
         {
             LOWPASS: ["Lowpass", "LP"],
             HIGHPASS: ["Highpass", "HP"],
@@ -52,15 +54,17 @@ class Biquad:
     )
 
     def __init__(self, biquad_type: int, freq: float, srate: int, q: float, db_gain: float = 0):
-        biquad_types = {
-            Biquad.LOWPASS: Biquad.lowpass,
-            Biquad.HIGHPASS: Biquad.highpass,
-            Biquad.BANDPASS: Biquad.bandpass,
-            Biquad.PEAK: Biquad.peak,
-            Biquad.NOTCH: Biquad.notch,
-            Biquad.LOWSHELF: Biquad.lowshelf,
-            Biquad.HIGHSHELF: Biquad.highshelf,
-        }
+        biquad_types = frozendict(
+            {
+                Biquad.LOWPASS: Biquad.lowpass,
+                Biquad.HIGHPASS: Biquad.highpass,
+                Biquad.BANDPASS: Biquad.bandpass,
+                Biquad.PEAK: Biquad.peak,
+                Biquad.NOTCH: Biquad.notch,
+                Biquad.LOWSHELF: Biquad.lowshelf,
+                Biquad.HIGHSHELF: Biquad.highshelf,
+            }
+        )
         if biquad_type not in biquad_types:
             raise AssertionError
         self.biquad_type = biquad_type
