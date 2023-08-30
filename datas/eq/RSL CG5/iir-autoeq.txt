@@ -1,16 +1,16 @@
 EQ for RSL CG5 computed from Misc data
-Preference Score 1.62 with EQ 3.05
+Preference Score 1.89 with EQ 3.43
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-08-04-23:12:25
+Dated: 2023-08-26-15:14:47
 
-Preamp: -2.6 dB
+Preamp: -3.0 dB
 
-Filter  1: ON PK Fc   252 Hz Gain -3.00 dB Q 1.23
-Filter  2: ON PK Fc  6432 Hz Gain -2.53 dB Q 0.93
-Filter  3: ON PK Fc  1340 Hz Gain +3.00 dB Q 2.72
-Filter  4: ON PK Fc   432 Hz Gain +0.75 dB Q 2.97
-Filter  5: ON PK Fc 15995 Hz Gain -1.81 dB Q 1.57
-Filter  6: ON PK Fc   874 Hz Gain -1.51 dB Q 2.98
-Filter  7: ON PK Fc    80 Hz Gain -0.98 dB Q 0.40
-Filter  8: ON PK Fc  3802 Hz Gain -0.75 dB Q 2.98
-Filter  9: ON PK Fc    20 Hz Gain -1.24 dB Q 2.60
+Filter  1: ON PK Fc   201 Hz Gain -1.58 dB Q 0.99
+Filter  2: ON PK Fc   201 Hz Gain -1.84 dB Q 0.25
+Filter  3: ON PK Fc   201 Hz Gain -0.85 dB Q 1.91
+Filter  4: ON PK Fc   299 Hz Gain -2.15 dB Q 1.51
+Filter  5: ON PK Fc   418 Hz Gain +1.19 dB Q 2.99
+Filter  6: ON PK Fc   903 Hz Gain -3.00 dB Q 3.00
+Filter  7: ON PK Fc  1220 Hz Gain +3.00 dB Q 2.99
+Filter  8: ON PK Fc  5490 Hz Gain -2.62 dB Q 0.83
+Filter  9: ON LS Fc 14965 Hz Gain +1.48 dB Q 0.76

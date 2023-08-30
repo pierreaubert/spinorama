@@ -6906,6 +6906,23 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Focal Dome Flax": {
+        "brand": "Focal",
+        "model": "Dome Flax",
+        "type": "passive",
+        "price": "400",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/focal-dome-flax-speaker-review.47510/",
+                "review_published": "20230830",
+            },
+        },
+    },
     "Focal Twin6 Be": {
         "brand": "Focal",
         "model": "Twin6 Be",
