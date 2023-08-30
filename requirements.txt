@@ -1,6 +1,6 @@
 docopt
 flammkuchen
-jupyterlab
+frozendict
 kaleido
 mako
 more_itertools
