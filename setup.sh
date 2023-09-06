@@ -22,12 +22,17 @@
 OS=$(uname)
 
 if test "$OS" = "Linux"; then
+  # ------------ PYTHON
   sudo [ -x /usr/bin/apt ] && /usr/bin/apt install -y python3 python3-pip imagemagick keychain npm wget python3.11-venv
+  # ------------ LOCALE 
   # add locale if they don't exist possibly C.utf8 would work
   sudo [ -x /usr/bin/localedef ] && /usr/bin/localedef -f UTF-8 -i en_US en_US.UTF-8
+  # or maybe
+  # sudo apt -y install language-pack-en-base && localectl set-locale LANG=en_US.UTF-8
+  # ------------ NPM
+  # should not be required
   # wget -O- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-  # CUDA stuff for tensorflow
-  #
+  # ------------ CUDA stuff for tensorflow
   # wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
   # sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
   # sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
@@ -35,8 +40,8 @@ if test "$OS" = "Linux"; then
   # sudo apt-get update
   # sudo apt-get -y install nvidia-cuda nvidia-cuda-toolkit libcudnn8
 elif test "$OS" = "Darwin"; then
-  brew install hdf5
-  export HDF5_DIR=/opt/homebrew
+  brew install hdf5 npm bzip2 lzo c-blosc
+  export HDF5_DIR="$(brew --prefix hdf5)"
 fi
 
 export PYTHONPATH=./src:./src/website
@@ -52,7 +57,6 @@ pip3 install -U -r requirements-api.txt
 
 # node section
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# nvm install lts/fermium
 npm install --save-dev pyright w3c-html-validator standard flow flow-remove-types
 
 # lint
