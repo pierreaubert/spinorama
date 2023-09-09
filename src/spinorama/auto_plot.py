@@ -156,8 +156,8 @@ def graph_results(
     }
 
     # what's the min over freq?
-    optim_config["freq_reg_min"]
-    optim_config["freq_reg_max"]
+    # optim_config["freq_reg_min"]
+    # optim_config["freq_reg_max"]
     # build a graph for each peq
     g_auto_eq = graph_eq(freq, auto_peq)
 
