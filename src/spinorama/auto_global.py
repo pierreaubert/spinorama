@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import bisect
+import math
 
 import numpy as np
 import pandas as pd
@@ -81,15 +82,25 @@ def optim_global(
 
     if optim_config.get("full_biquad_optim") is None:
         logger.error("optim_config is not properly configured")
-        # set a default but should debug above why it is happening
         optim_config["full_biquad_optim"] = True
 
     log_freq = np.logspace(np.log10(20), np.log10(freq_max), FREQ_NB_POINTS + 1)
+    min_db = optim_config["MIN_DBGAIN"]
     max_db = optim_config["MAX_DBGAIN"]
     min_q = optim_config["MIN_Q"]
     max_q = optim_config["MAX_Q"]
     max_peq = optim_config["MAX_NUMBER_PEQ"]
     max_iter = optim_config["MAX_ITER"]
+
+    logger.info(
+        "global optim: #peq=%d dB=[%1.1f, %1.1f] Q=[%1.1f, %1.1f] #iter=%d",
+        max_peq,
+        min_db,
+        max_db,
+        min_q,
+        max_q,
+        max_iter,
+    )
 
     def x2peq(x: list[float | int]) -> Peq:
         l = len(x) // 4
@@ -123,8 +134,10 @@ def optim_global(
 
     def opt_peq_flat(x) -> float:
         peq_freq = np.array(x2spl(x))[freq_low:freq_high]
-        flatness = np.linalg.norm(np.add(target, peq_freq), ord=2)
-        return float(flatness)
+        flat = np.add(target, peq_freq)
+        flatness_l2 = np.linalg.norm(flat, ord=2)
+        flatness_l1 = np.linalg.norm(flat, ord=1)
+        return float(flatness_l2 + flatness_l1)
 
     def opt_peq(x) -> float:
         return opt_peq_score(x) if optim_config["loss"] == "score_loss" else opt_peq_flat(x)
@@ -159,7 +172,7 @@ def optim_global(
     def opt_integrality(n: int) -> list[bool]:
         return [True, True, False, False] * n
 
-    def opt_constraints(n: int):
+    def opt_constraints_linear(n: int):
         # Create some space between the various PEQ; if not the optimiser will add multiple PEQ
         # at more or less the same frequency and that will generate too much of a cut on the max
         # SPL. we have 200 points from 20Hz-20kHz, 5 give us 1/4 octave
@@ -181,6 +194,46 @@ def optim_global(
         # lb / uf can be float or array
         return opt.LinearConstraint(A=mat, lb=-np.inf, ub=vec, keep_feasible=False)
 
+    def opt_constraints_nonlinear(n: int):
+        # Create some space between the various PEQ; if not the optimiser will add multiple PEQ
+        # at more or less the same frequency and that will generate too much of a cut on the max
+        # SPL. we have 200 points from 20Hz-20kHz, 5 give us 1/4 octave
+
+        # freq_min_first_peq = max(freq_low, freq_min // 2)
+
+        def x2data(x, i):
+            idx = i * 4 + 1
+            f = int(x[idx])
+            idx += 1
+            q = float(x[idx])
+            idx += 1
+            db = float(x[idx])
+            sign = int(math.copysign(1, db))
+            return f, q, db, sign
+
+        vec = np.asarray([0] * n)
+
+        def freq_constraints(x):
+            res = np.asarray([0] * n)
+            l = len(x) // 4
+            for i in range(l - 1):
+                f1, q1, g1, s1 = x2data(x, i)
+                f2, q2, g2, s2 = x2data(x, i + 1)
+                # first peq
+                if i == 0:
+                    # should be the index of that frequency, 1/2 octave
+                    vec[0] = -10
+                # if the sign is the same, then make some space between frequencies
+                if s1 == s2:
+                    vec[i] = -5
+                # you want increasing frequencies
+                res[i] = f1 - f2
+            return res
+
+        return opt.NonlinearConstraint(
+            fun=freq_constraints, lb=-np.inf, ub=vec, keep_feasible=False
+        )
+
     def opt_display(xk, convergence):
         # comment if you want to print verbose traces
         l = len(xk) // 4
@@ -196,10 +249,12 @@ def optim_global(
         func=opt_peq,
         bounds=opt_bounds(max_peq),
         maxiter=max_iter,
+        # workers=32,
+        init="sobol",
         polish=False,
         integrality=opt_integrality(max_peq),
         callback=opt_display,
-        constraints=opt_constraints(max_peq),
+        constraints=opt_constraints_nonlinear(max_peq),
         disp=True,
         tol=0.01,
     )

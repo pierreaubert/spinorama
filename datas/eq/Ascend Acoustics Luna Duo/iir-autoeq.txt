@@ -1,16 +1,16 @@
 EQ for Ascend Acoustics Luna Duo computed from ASR data
-Preference Score 1.34 with EQ 4.00
+Preference Score 1.33 with EQ 4.09
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-08-05-01:39:03
+Dated: 2023-08-26-14:44:51
 
-Preamp: -2.8 dB
+Preamp: -4.4 dB
 
-Filter  1: ON HS Fc   113 Hz Gain -2.98 dB Q 1.08
-Filter  2: ON PK Fc   354 Hz Gain +1.29 dB Q 2.89
-Filter  3: ON PK Fc   529 Hz Gain +2.78 dB Q 2.63
-Filter  4: ON PK Fc  1141 Hz Gain +2.99 dB Q 2.71
-Filter  5: ON PK Fc  1648 Hz Gain -2.98 dB Q 2.96
-Filter  6: ON PK Fc  2302 Hz Gain +2.93 dB Q 2.93
-Filter  7: ON PK Fc  2813 Hz Gain +2.53 dB Q 0.65
-Filter  8: ON PK Fc  6489 Hz Gain -2.92 dB Q 1.58
-Filter  9: ON LS Fc  7669 Hz Gain +1.00 dB Q 0.69
+Filter  1: ON LS Fc    85 Hz Gain +2.99 dB Q 0.25
+Filter  2: ON PK Fc    87 Hz Gain +2.75 dB Q 0.47
+Filter  3: ON PK Fc   138 Hz Gain -2.94 dB Q 1.44
+Filter  4: ON PK Fc   187 Hz Gain -2.91 dB Q 1.27
+Filter  5: ON PK Fc  1103 Hz Gain +2.36 dB Q 2.99
+Filter  6: ON PK Fc  2461 Hz Gain +3.00 dB Q 2.99
+Filter  7: ON PK Fc  6489 Hz Gain -2.83 dB Q 2.33
+Filter  8: ON PK Fc  9691 Hz Gain -2.10 dB Q 2.73
+Filter  9: ON PK Fc 14965 Hz Gain -1.64 dB Q 0.53

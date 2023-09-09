@@ -1,6 +1,8 @@
 black[jupyter]
 flake8
 importmagic
+ipywidgets
+jupyterlab
 pre-commit
 pyright
 ruff-lsp

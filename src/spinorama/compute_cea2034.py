@@ -561,7 +561,7 @@ def estimated_inroom(l_w: pd.DataFrame, e_r: pd.DataFrame, s_p: pd.DataFrame) ->
     # applied and the squared pressure values summed they shall be converted
     # back to sound pressure levels.
     key = "Total Early Reflection"
-    if key not in e_r.keys():
+    if key not in e_r:
         key = "dB"
 
     try:

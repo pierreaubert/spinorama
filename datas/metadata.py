@@ -818,7 +818,7 @@ speakers_info: SpeakerDatabase = {
         "type": "active",
         "price": "500",
         "shape": "omnidirectional",
-        "amount": "single",
+        "amount": "each",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
@@ -837,6 +837,27 @@ speakers_info: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "review": "https://www.sausalitoaudio.com/data/",
                 "quality": "low",
+            },
+        },
+    },
+    "Apple Homepod Mini": {
+        "brand": "Apple",
+        "model": "Homepod Mini",
+        "type": "active",
+        "price": "100",
+        "shape": "omnidirectional",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/apple_homepod_mini/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/apple-homepod-mini-review.24588/",
+                },
+                "review_published": "20210627",
+                "notes": "...Score formula is for monopole speaker...",
             },
         },
     },
@@ -914,27 +935,6 @@ speakers_info: SpeakerDatabase = {
                     },
                     "weight": 15.0,
                 },
-            },
-        },
-    },
-    "Apple Homepod Mini": {
-        "brand": "Apple",
-        "model": "Homepod Mini",
-        "type": "active",
-        "price": "100",
-        "shape": "omnidirectional",
-        "amount": "single",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/apple_homepod_mini/",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/apple-homepod-mini-review.24588/",
-                },
-                "review_published": "20210627",
-                "notes": "...Score formula is for monopole speaker...",
             },
         },
     },
@@ -4955,7 +4955,8 @@ speakers_info: SpeakerDatabase = {
         "brand": "Dynaudio",
         "model": "Special Forty",
         "type": "passive",
-        "price": "900",
+        "price": "3000",
+        "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "eac",
         "measurements": {
@@ -4963,8 +4964,19 @@ speakers_info: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "",
-                    "yt": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/dynaudio_special_forty/",
+                    "yt": "https://youtu.be/jDTOAw4gLNM",
+                },
+                "review_published": "20230821",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 6,
+                    "size": {
+                        "height": 360,
+                        "width": 198,
+                        "depth": 307,
+                    },
+                    "weight": 8.1,
                 },
             },
         },
@@ -6894,6 +6906,23 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Focal Dome Flax": {
+        "brand": "Focal",
+        "model": "Dome Flax",
+        "type": "passive",
+        "price": "400",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/focal-dome-flax-speaker-review.47510/",
+                "review_published": "20230830",
+            },
+        },
+    },
     "Focal Twin6 Be": {
         "brand": "Focal",
         "model": "Twin6 Be",
@@ -8594,7 +8623,7 @@ speakers_info: SpeakerDatabase = {
         "type": "passive",
         "price": "200",
         "shape": "floorstanders",
-        "amount": "",
+        "amount": "pair",
         "default_measurement": "asr-v2-20201202",
         "measurements": {
             "asr-v1-20201126": {
@@ -9843,6 +9872,24 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "JBL Control X Wireless": {
+        "brand": "JBL",
+        "model": "Control X Wireless",
+        "type": "active",
+        "price": "500",
+        "shape": "outdoor",
+        "amount": "pair",
+        "default_measurement": "misc-matthews",
+        "measurements": {
+            "misc-matthews": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "medium",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-control-x-wireless-measurements-review.47175/",
+                "review_published": "20230817",
+            },
+        },
+    },
     "JBL Stage A120": {
         "brand": "JBL",
         "model": "Stage A120",
@@ -10810,6 +10857,23 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "JBL Studio 590": {
+        "brand": "JBL",
+        "model": "Studio 590",
+        "type": "passive",
+        "price": "1000",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-studio-590-speaker-review.47269/",
+                "review_published": "20230819",
+            },
+        },
+    },
     "JBL Studio Series S26": {
         "brand": "JBL",
         "model": "Studio Series S26",
@@ -11565,7 +11629,7 @@ speakers_info: SpeakerDatabase = {
         "model": "R3 Meta",
         "type": "passive",
         "price": "3500",
-        "amount": "2200",
+        "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "eac-v1-ported",
         "measurements": {
@@ -14262,7 +14326,7 @@ speakers_info: SpeakerDatabase = {
         "model": "Monolith Encore T6",
         "type": "passive",
         "price": "800",
-        "amount": "both",
+        "amount": "pair",
         "shape": "floorstanders",
         "default_measurement": "eac",
         "measurements": {
@@ -14381,6 +14445,37 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/monoprice-thx-365iw-review-in-wall-speaker.24500/",
                 "review_published": "20210625",
+            },
+        },
+    },
+    "Monoprice Monolith THX Compact Satellite": {
+        "skip": True,
+        "brand": "Monoprice",
+        "model": "Monolith THX Compact Satellite",
+        "type": "passive",
+        "price": "125",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_comp_thx_sat/",
+                    "yt": "https://youtu.be/4Hjk7iOkM_4",
+                },
+                "review_published": "20230821",
+                "specifications": {
+                    "sensitivity": 81,
+                    "impedance": 4,
+                    "size": {
+                        "height": 153,
+                        "width": 160,
+                        "depth": 150,
+                    },
+                    "weight": 1.9,
+                },
             },
         },
     },
@@ -15371,6 +15466,25 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/paradigm-monitor-se-atom-speaker-review.17837/",
                 "review_published": "20201124",
+            },
+        },
+    },
+    "Paradigm Millenia LP 2": {
+        "brand": "Paradigm",
+        "model": "Millenia LP 2",
+        "type": "passive",
+        "price": "550",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "misc-matthews",
+        "measurements": {
+            "misc-matthews": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "medium",
+                "symmetry": "coaxial",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/paradigm-millenia-lp-2-review-measurements.47312/",
+                "review_published": "20230823",
             },
         },
     },

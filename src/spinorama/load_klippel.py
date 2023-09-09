@@ -60,7 +60,7 @@ def parse_graph_freq_klippel(filename: str) -> StatusOr[tuple[str, pd.DataFrame]
         filename, sep="\t", skiprows=2, usecols=usecols, names=columns, thousands=","
     ).drop(0)
     # convert to float (issues with , and . in numbers)
-    df_klippel = df_klippel.applymap(locale.atof)
+    df_klippel = df_klippel.map(locale.atof)
     # put it in order, not relevant for pandas but for np array
     if len(df_klippel.columns) > 2 and df_klippel.columns[2] == "10°":
         return True, (title, sort_angles(df_klippel))

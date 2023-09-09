@@ -19,6 +19,8 @@
 import math
 import numpy as np
 
+from frozendict import frozendict
+
 from spinorama.ltype import Vector
 
 
@@ -39,26 +41,30 @@ class Biquad:
     # pretend enumeration
     LOWPASS, HIGHPASS, BANDPASS, PEAK, NOTCH, LOWSHELF, HIGHSHELF = range(7)
 
-    type2name = {
-        LOWPASS: ["Lowpass", "LP"],
-        HIGHPASS: ["Highpass", "HP"],
-        BANDPASS: ["Bandpath", "BP"],
-        PEAK: ["Peak", "PK"],
-        NOTCH: ["Notch", "NO"],
-        LOWSHELF: ["Lowshelf", "LS"],
-        HIGHSHELF: ["Highshelf", "HS"],
-    }
+    TYPE2NAME = frozendict(
+        {
+            LOWPASS: ["Lowpass", "LP"],
+            HIGHPASS: ["Highpass", "HP"],
+            BANDPASS: ["Bandpath", "BP"],
+            PEAK: ["Peak", "PK"],
+            NOTCH: ["Notch", "NO"],
+            LOWSHELF: ["Lowshelf", "LS"],
+            HIGHSHELF: ["Highshelf", "HS"],
+        }
+    )
 
     def __init__(self, biquad_type: int, freq: float, srate: int, q: float, db_gain: float = 0):
-        biquad_types = {
-            Biquad.LOWPASS: Biquad.lowpass,
-            Biquad.HIGHPASS: Biquad.highpass,
-            Biquad.BANDPASS: Biquad.bandpass,
-            Biquad.PEAK: Biquad.peak,
-            Biquad.NOTCH: Biquad.notch,
-            Biquad.LOWSHELF: Biquad.lowshelf,
-            Biquad.HIGHSHELF: Biquad.highshelf,
-        }
+        biquad_types = frozendict(
+            {
+                Biquad.LOWPASS: Biquad.lowpass,
+                Biquad.HIGHPASS: Biquad.highpass,
+                Biquad.BANDPASS: Biquad.bandpass,
+                Biquad.PEAK: Biquad.peak,
+                Biquad.NOTCH: Biquad.notch,
+                Biquad.LOWSHELF: Biquad.lowshelf,
+                Biquad.HIGHSHELF: Biquad.highshelf,
+            }
+        )
         if biquad_type not in biquad_types:
             raise AssertionError
         self.biquad_type = biquad_type
@@ -213,10 +219,10 @@ class Biquad:
         return self.a1, self.a2, self.b0, self.b1, self.b2
 
     def type2str_short(self) -> str:
-        return self.type2name[self.biquad_type][1]
+        return self.TYPE2NAME[self.biquad_type][1]
 
     def type2str_long(self) -> str:
-        return self.type2name[self.biquad_type][0]
+        return self.TYPE2NAME[self.biquad_type][0]
 
     def __str__(self):
         return "Type:%s,Freq:%.1f,Rate:%.1f,Q:%.1f,Gain:%.1f" % (
