@@ -37,8 +37,8 @@ else
 fi
 
 # copy
-#for target in "$TARGET1" "$TARGET2" "$TARGET3"; do
-for target in "$TARGET1"; do
+for target in "$TARGET3" "$TARGET2"; do
+
     echo "Sync $target"
     rsync -arvz --exclude '*.png' --delete ./docs/* "$target"
     rsync -arvz --include '*.png' --delete ./docs/pictures/* "$target/pictures"
