@@ -101,8 +101,7 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
         a_sp.shape if not a_sp.empty else "--",
     )
     # remove NaN numbers
-    data = {}
-    data["Freq"] = a_on.index
+    data = {"Freq": a_on.index}
     if a_on is not None and "ON" in a_on and len(a_on.ON) == len(a_on.index):
         data["On Axis"] = a_on.ON
     if a_lw is not None and "LW" in a_lw and len(a_lw.LW) == len(a_on.index):

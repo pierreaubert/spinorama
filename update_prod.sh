@@ -22,14 +22,14 @@ TARGET3=pierre@192.168.1.19:/var/www/html/spinorama-prod
 
 # check
 command=$(grep dev.spinorama.org docs/*.html | wc -l)
-if [ $command -ne 0 ]; then
+if [ "${command}" -ne 0 ]; then
     echo "KO found DEV url in PROD site"
     exit 1;
 else
     echo "OK checking for DEV site in PROD"
 fi
 command=$(grep spinorama.internet-box.ch docs/*.html | wc -l)
-if [ $command -ne 0 ]; then
+if [ "${command}" -ne 0 ]; then
     echo "KO found old dev url in prod site"
     exit 1;
 else
@@ -37,10 +37,9 @@ else
 fi
 
 # copy
-for target in "$TARGET3" "$TARGET2"; do
-
-    echo "Sync $target"
-    rsync -arvz --exclude '*.png' --delete ./docs/* "$target"
-    rsync -arvz --include '*.png' --delete ./docs/pictures/* "$target/pictures"
-    rsync -arvz --include '*.png' --delete ./docs/help_pictures/* "$target/help_pictures"
+echo "Sync starts:"
+for target in "$TARGET3" "TARGET1" "$TARGET2"; do
+    rsync -arz --exclude '*.png' --delete ./docs/* "$target"
+    rsync -arz --include '*.png' --delete ./docs/pictures/* "$target/pictures"
+    rsync -arz --include '*.png' --delete ./docs/help_pictures/* "$target/help_pictures"
 done

@@ -205,8 +205,9 @@ function isSearch(key, results, minScore, keywords) {
 
 getMetadata()
     .then((metadata) => {
-        const url = new URL(window.location);
         const resultdiv = document.querySelector('div.searchresults');
+        // this 2 are global variables
+        let url = new URL(window.location);
         let keywords = document.querySelector('#searchInput').value;
 
         const filter = {
@@ -441,16 +442,19 @@ getMetadata()
         });
 
         document.querySelector('#searchInput').addEventListener('keyup', function () {
-            const keywords = document.querySelector('#searchInput').value;
-            updateUrl(url, keywords);
-            selectDispatch();
+            // warning: keyword is a global variable
+            keywords = document.querySelector('#searchInput').value;
+            if (keywords.length > 2 ) {
+                updateUrl();
+                selectDispatch();
+            }
         });
 
         document.querySelector('#sortReverse').addEventListener('change', function () {
             const sortReverse = document.querySelector('#sortReverse').value;
             if (sortReverse) {
                 sorter.reverse = ! sorter.reverse;
-                updateUrl(url, keywords);
+                updateUrl();
                 selectDispatch();
             }
         });

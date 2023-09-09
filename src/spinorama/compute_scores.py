@@ -261,12 +261,12 @@ def speaker_pref_rating(cea2034, pir, rounded):
                 "sm_pred_in_room": round_down(sm_pred_in_room, 3),
                 "sm_sound_power": round_down(sm_sound_power, 3),
                 "pref_score_wsub": round_down(pref_wsub, 2),
+                "lfx_hz": int(pow(10, lfx_hz)),  # in Hz
+                "lfq": round_down(lfq_db, 3),
+                "pref_score": round_down(pref, 2),
             }
             if aad_on_axis != -1.0:
                 ratings["aad_on_axis"] = round_down(aad_on_axis, 3)
-            ratings["lfx_hz"] = int(pow(10, lfx_hz))  # in Hz
-            ratings["lfq"] = round_down(lfq_db, 3)
-            ratings["pref_score"] = round_down(pref, 2)
         else:
             ratings = {
                 "nbd_on_axis": nbd_on_axis,
@@ -276,13 +276,13 @@ def speaker_pref_rating(cea2034, pir, rounded):
                 "sm_pred_in_room": sm_pred_in_room,
                 "sm_sound_power": sm_sound_power,
                 "pref_score_wsub": pref_wsub,
+                "aad_on_axis": (aad_on_axis,),
+                "pref_score": pref,
             }
-            ratings["aad_on_axis"] = (aad_on_axis,)
             if lfx_hz is not None:
                 ratings["lfx_hz"] = pow(10, lfx_hz)
             if lfq_db is not None:
                 ratings["lfq"] = lfq_db
-            ratings["pref_score"] = pref
         logger.debug("Ratings: %s", ratings)
     except ValueError:
         logger.exception("Compute pref_rating failed")

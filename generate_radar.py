@@ -47,10 +47,10 @@ def compute_scale(speakers):
     for speaker in speakers.values():
         def_measurement = speaker["default_measurement"]
         measurement = speaker["measurements"][def_measurement]
-        if "pref_rating" not in measurement.keys() or "estimates" not in measurement.keys():
+        if "pref_rating" not in measurement or "estimates" not in measurement:
             continue
         for key_score in ("pref_rating", "pref_rating_eq"):
-            if key_score not in measurement.keys():
+            if key_score not in measurement:
                 continue
             for key_variable in measurement[key_score]:
                 scale[key_variable] = (
@@ -82,14 +82,14 @@ def scale_lower_is_better(key, val, scale):
 def print_radar(data, scale):
     def_measurement = data["default_measurement"]
     measurement = data["measurements"][def_measurement]
-    if "pref_rating" not in measurement.keys() or "estimates" not in measurement.keys():
+    if "pref_rating" not in measurement or "estimates" not in measurement:
         return
     filename = "{}/{} {}/spider.jpg".format(CPATH_DOCS_SPEAKERS, data["brand"], data["model"])
     if pathlib.Path(filename).is_file():
         return
     graph_data = []
     for key in ("pref_rating", "pref_rating_eq"):
-        if key not in measurement.keys():
+        if key not in measurement:
             continue
 
         pref_rating = measurement[key]
