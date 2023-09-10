@@ -4861,6 +4861,64 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Devialet Phantom I": {
+        "brand": "Devialet",
+        "model": "Phantom I",
+        "type": "active",
+        "price": "2400",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Devialet",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20230910",
+                "data_acquisition": gll_data_acquisition_std,
+                "specifications": {
+                    "SPL": {
+                        "peak": 103,
+                    },
+                    "size": {
+                        "height": 255,
+                        "width": 252,
+                        "depth": 342,
+                    },
+                    "weight": 11.4,
+                },
+            },
+        },
+    },
+    "Devialet Phantom II": {
+        "brand": "Devialet",
+        "model": "Phantom II",
+        "type": "active",
+        "price": "1200",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Devialet",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20230910",
+                "data_acquisition": gll_data_acquisition_std,
+                "specifications": {
+                    "SPL": {
+                        "peak": 95,
+                    },
+                    "size": {
+                        "height": 168,
+                        "width": 157,
+                        "depth": 219,
+                    },
+                    "weight": 4.3,
+                },
+            },
+        },
+    },
     "Dutch Dutch 8C": {
         "brand": "Dutch Dutch",
         "model": "8C",
@@ -19074,7 +19132,7 @@ speakers_info: SpeakerDatabase = {
         "model": "System 600",
         "type": "passive",
         "price": "",
-        "shape": "bookshelves",
+        "shape": "cinema",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
@@ -19082,6 +19140,62 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/tannoy-system-600-speaker-review.11919/",
                 "review_published": "20200307",
+            },
+        },
+    },
+    "Tannoy VQ100": {
+        "brand": "Tannoy",
+        "model": "VQ100",
+        "type": "passive",
+        "price": "2500",
+        "amount": "each",
+        "shape": "cinema",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Tannoy",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20230909",
+                "data_acquisition": gll_data_acquisition_std,
+                "specifications": {
+                    "impedance": 8,
+                    "size": {
+                        "height": 925,
+                        "width": 694,
+                        "depth": 515,
+                    },
+                },
+            },
+        },
+    },
+    "Tannoy VX12": {
+        "brand": "Tannoy",
+        "model": "VX12",
+        "type": "passive",
+        "price": "860",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-pattern-75x40",
+        "measurements": {
+            "vendor-pattern-75x40": {
+                "origin": "Vendors-Tannoy",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20230909",
+                "data_acquisition": gll_data_acquisition_std,
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 75,
+                        "vertical": 40,
+                    },
+                    "impedance": 8,
+                    "size": {
+                        "height": 486,
+                        "width": 370,
+                        "depth": 360,
+                    },
+                },
             },
         },
     },
@@ -20261,6 +20375,13 @@ origins_info = {
         "logo-small": "docs/metadata/dbaudio.png",
         "url": "https://www.dbaudio.com",
     },
+    "Vendors-Devialet": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.davialet.com",
+    },
     "Vendors-Dolby": {
         "min hz": 20,
         "max hz": 20000,
@@ -20632,6 +20753,13 @@ origins_info = {
         "min dB": -40,
         "max dB": 10,
         "url": "https://www.theoryprofessional.com",
+    },
+    "Vendors-Tannoy": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.tannoy.com",
     },
     "Vendors-Vue Audiotechnik": {
         "min hz": 20,

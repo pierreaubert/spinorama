@@ -1,0 +1,14 @@
+EQ for Tannoy VX12 computed from Vendors-Tannoy data
+Preference Score 2.23 with EQ 5.11
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-09-10-16:35:32
+
+Preamp: -3.8 dB
+
+Filter  1: ON LS Fc    90 Hz Gain +1.80 dB Q 0.59
+Filter  2: ON PK Fc    90 Hz Gain +2.50 dB Q 5.31
+Filter  3: ON PK Fc   404 Hz Gain +2.19 dB Q 1.44
+Filter  4: ON PK Fc   903 Hz Gain +2.63 dB Q 5.86
+Filter  5: ON PK Fc  1541 Hz Gain +4.10 dB Q 5.94
+Filter  6: ON PK Fc  4645 Hz Gain +3.32 dB Q 5.73
+Filter  7: ON PK Fc  4645 Hz Gain -0.71 dB Q 0.27

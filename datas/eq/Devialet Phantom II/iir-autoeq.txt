@@ -1,0 +1,14 @@
+EQ for Devialet Phantom II computed from Vendors-Devialet data
+Preference Score 7.06 with EQ 7.35
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-09-10-14:03:17
+
+Preamp: -2.5 dB
+
+Filter  1: ON LS Fc    30 Hz Gain +2.87 dB Q 0.90
+Filter  2: ON PK Fc    62 Hz Gain -0.66 dB Q 3.73
+Filter  3: ON PK Fc    76 Hz Gain -1.28 dB Q 2.17
+Filter  4: ON PK Fc   342 Hz Gain -0.71 dB Q 0.41
+Filter  5: ON PK Fc  1220 Hz Gain +0.32 dB Q 4.56
+Filter  6: ON PK Fc  1594 Hz Gain +2.18 dB Q 2.37
+Filter  7: ON PK Fc  7669 Hz Gain +1.88 dB Q 0.37
