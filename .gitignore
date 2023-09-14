@@ -48,3 +48,4 @@ build
 *.so
 bin
 coverage.xml
+recompute_eqs.sh

@@ -1,16 +1,14 @@
 EQ for JBL Control 1 Pro computed from ASR data
-Preference Score 3.36 with EQ 5.75
+Preference Score 2.79 with EQ 3.56
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-08-05-00:40:31
+Dated: 2023-09-14-11:01:08
 
-Preamp: -3.0 dB
+Preamp: -3.3 dB
 
-Filter  1: ON LS Fc   117 Hz Gain +2.99 dB Q 1.20
-Filter  2: ON PK Fc  1304 Hz Gain -1.19 dB Q 1.24
-Filter  3: ON PK Fc  1648 Hz Gain -2.22 dB Q 2.10
-Filter  4: ON PK Fc  2014 Hz Gain +1.73 dB Q 2.43
-Filter  5: ON PK Fc  3555 Hz Gain -1.94 dB Q 2.94
-Filter  6: ON PK Fc  4645 Hz Gain -1.69 dB Q 1.22
-Filter  7: ON PK Fc  5870 Hz Gain +0.02 dB Q 2.99
-Filter  8: ON PK Fc 10361 Hz Gain -2.06 dB Q 1.23
-Filter  9: ON LPQ Fc 14965 Hz Q 0.41
+Filter  1: ON PK Fc   117 Hz Gain +1.02 dB Q 0.26
+Filter  2: ON PK Fc   117 Hz Gain +2.71 dB Q 2.89
+Filter  3: ON PK Fc   181 Hz Gain -2.96 dB Q 1.46
+Filter  4: ON PK Fc  2302 Hz Gain +2.87 dB Q 2.47
+Filter  5: ON PK Fc  6489 Hz Gain +2.94 dB Q 1.79
+Filter  6: ON PK Fc  8478 Hz Gain +2.28 dB Q 2.20
+Filter  7: ON PK Fc 13537 Hz Gain -1.95 dB Q 0.75
