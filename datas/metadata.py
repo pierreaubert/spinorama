@@ -18861,6 +18861,24 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "SONBS SD-10E": {
+        "brand": "SONBS",
+        "model": "SD-10E",
+        "type": "passive",
+        "price": "100",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-SONBS",
+                "format": "gll_hv_txt",
+                "quality": "high",
+                "review_published": "20230914",
+                "data_acquisition": gll_data_acquisition_std,
+            },
+        },
+    },
     "Sonos Move": {
         "brand": "Sonos",
         "model": "Move",
@@ -20746,6 +20764,13 @@ origins_info = {
         "logo": "docs/metadata/seeburg.png",
         "logo-small": "docs/metadata/seeburg.png",
         "url": "https://www.seeburg.net",
+    },
+    "Vendors-SONBS": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.sonbs.net",
     },
     "Vendors-Theory Audio": {
         "min hz": 20,
