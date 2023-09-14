@@ -46,17 +46,27 @@ VERSION = 0.1
 SCRIPT_NAME = "recompute_eqs.sh"
 
 
+def check_eq_minmax(name, freq, spl):
+    status = True
+    max_spl = np.max(spl)
+    min_spl = np.min(spl)
+    if max_spl > 12:
+        print(f"{name} max spl {max_spl} above treshold")
+        status = False
+    if min_spl < -12:
+        print(f"{name} min spl {min_spl} below treshold")
+        status = False
+    return status
+
+
 def check_eq(freq, peq, name):
     status = True
     spl = peq_spl(freq, peq)
-    max_spl = np.max(spl)
-    min_spl = np.min(spl)
-    if max_spl > 15:
-        print(f"{name} max spl {max_spl} above treshold")
-        status = False
-    if min_spl < -15:
-        print(f"{name} min spl {min_spl} below treshold")
-        status = False
+
+    for checker in (check_eq_minmax,):
+        if not checker(name, freq, spl):
+            status = False
+
     return status
 
 
