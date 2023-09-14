@@ -100,6 +100,8 @@ def createscript(speakers):
     lines.append(
         '  mv "./datas/eq/$SPEAKER/iir-autoeq.txt" "./datas/eq/$SPEAKER/iir-autoeq-score.txt"'
     )
+    lines.append('  rm -f "./datas/eq/$SPEAKER/iir.txt"')
+    lines.append('  ln -s "./iir-autoeq-score.txt" "./datas/eq/$SPEAKER/iir.txt"')
     lines.append('  ./generate_graphs.py --speaker="$SPEAKER" --update-cache')
     lines.append("done")
 

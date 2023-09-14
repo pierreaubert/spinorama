@@ -1,16 +1,14 @@
 EQ for King's Audio KingSound KS 3001 computed from Princeton data
 Preference Score -1000.00 with EQ -1000.00
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-08-26-14:42:09
+Dated: 2023-09-14-12:57:26
 
-Preamp: -5.2 dB
+Preamp: -5.7 dB
 
-Filter  1: ON PK Fc    26 Hz Gain +2.91 dB Q 1.69
-Filter  2: ON PK Fc    39 Hz Gain -2.97 dB Q 0.47
-Filter  3: ON PK Fc   117 Hz Gain +2.01 dB Q 1.04
-Filter  4: ON PK Fc   547 Hz Gain +2.33 dB Q 2.50
-Filter  5: ON PK Fc   547 Hz Gain +2.86 dB Q 0.83
-Filter  6: ON PK Fc  1948 Hz Gain -1.75 dB Q 1.60
-Filter  7: ON PK Fc  5677 Hz Gain -1.82 dB Q 2.35
-Filter  8: ON PK Fc  9372 Hz Gain -2.97 dB Q 2.97
-Filter  9: ON PK Fc 14473 Hz Gain +3.00 dB Q 0.60
+Filter  1: ON PK Fc   391 Hz Gain +1.11 dB Q 2.92
+Filter  2: ON PK Fc   547 Hz Gain +2.88 dB Q 2.70
+Filter  3: ON PK Fc   625 Hz Gain +2.82 dB Q 0.76
+Filter  4: ON PK Fc  2909 Hz Gain -1.09 dB Q 0.27
+Filter  5: ON PK Fc  9372 Hz Gain -2.11 dB Q 2.94
+Filter  6: ON PK Fc 15474 Hz Gain +2.99 dB Q 0.82
+Filter  7: ON PK Fc 15474 Hz Gain +2.98 dB Q 1.43
