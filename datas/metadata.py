@@ -4888,6 +4888,42 @@ speakers_info: SpeakerDatabase = {
                     "weight": 11.4,
                 },
             },
+            "vendor-vGecko": {
+                "origin": "Vendors-Devialet",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20230910",
+                "data_acquisition": gll_data_acquisition_std,
+                "specifications": {
+                    "SPL": {
+                        "peak": 103,
+                    },
+                    "size": {
+                        "height": 255,
+                        "width": 252,
+                        "depth": 342,
+                    },
+                    "weight": 11.4,
+                },
+            },
+            "vendor-vTree": {
+                "origin": "Vendors-Devialet",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20230910",
+                "data_acquisition": gll_data_acquisition_std,
+                "specifications": {
+                    "SPL": {
+                        "peak": 103,
+                    },
+                    "size": {
+                        "height": 255,
+                        "width": 252,
+                        "depth": 342,
+                    },
+                    "weight": 11.4,
+                },
+            },
         },
     },
     "Devialet Phantom II": {
