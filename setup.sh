@@ -35,7 +35,7 @@ if test "$OS" = "Linux"; then
   # sudo apt-get update
   # sudo apt-get -y install nvidia-cuda nvidia-cuda-toolkit libcudnn8
 elif test "$OS" = "Darwin"; then
-  brew install hdf5
+  brew install hdf5 c-blosc lzo bzip2 python@3.10
   export HDF5_DIR=/opt/homebrew
 fi
 
@@ -45,6 +45,11 @@ export NVM_DIR=$HOME/.nvm
 # python section
 python3 -m venv spinorama-venv
 . ./spinorama-venv/bin/activate
+ARCH=$(uname -a | awk '{print $NF}')
+if test "$OS" = "Darwin"  -a "$ARCH" = "arm64" ; then
+    # ack to install tables on arm
+    echo pip install git+https://github.com/PyTables/PyTables.git@master#egg=tables
+fi
 pip3 install -U -r requirements.txt
 pip3 install -U -r requirements-test.txt
 pip3 install -U -r requirements-dev.txt
