@@ -35,7 +35,7 @@ if test "$OS" = "Linux"; then
   # sudo apt-get update
   # sudo apt-get -y install nvidia-cuda nvidia-cuda-toolkit libcudnn8
 elif test "$OS" = "Darwin"; then
-  brew install hdf5 c-blosc lzo bzip2 python@3.10
+  brew install hdf5 c-blosc lzo bzip2 python@3.10 freetype imagemagick
   export HDF5_DIR=/opt/homebrew
 fi
 
