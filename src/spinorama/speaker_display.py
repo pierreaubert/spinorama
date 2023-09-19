@@ -19,6 +19,7 @@
 import datas.metadata as metadata
 
 from spinorama import logger
+from spinorama.load_misc import graph_unmelt
 from spinorama.compute_estimates import estimates
 from spinorama.compute_scores import speaker_pref_rating
 from spinorama.plot import (
@@ -43,9 +44,7 @@ def display_spinorama(df, graph_params=plot_params_default):
     if spin is None:
         spin_melted = df.get("CEA2034")
         if spin_melted is not None:
-            spin = spin_melted.pivot_table(
-                index="Freq", columns="Measurements", values="dB", aggfunc=max
-            ).reset_index()
+            spin = graph_unmelt(spin_melted)
         if spin is None:
             logger.info("Display CEA2034 not in dataframe (%s)", ", ".join(df.keys()))
             return None

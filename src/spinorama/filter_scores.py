@@ -20,7 +20,7 @@ import pandas as pd
 
 from spinorama import logger
 from spinorama.ltype import DataSpeaker, ScoreType
-from spinorama.load import graph_melt
+from spinorama.load import graph_melt, graph_unmelt
 from spinorama.compute_scores import speaker_pref_rating, nbd
 from spinorama.compute_cea2034 import compute_cea2034, estimated_inroom_hv, listening_window
 from spinorama.filter_peq import Peq, peq_apply_measurements
@@ -62,9 +62,7 @@ def noscore_apply_filter(
     if "CEA2034" in df_speaker:
         spin = df_speaker["CEA2034"]
         try:
-            pivoted_spin = spin.pivot_table(
-                index="Freq", columns="Measurements", values="dB", aggfunc=max
-            ).reset_index()
+            pivoted_spin = graph_unmelt(spin)
             # modify all curve but should not touch DI
             spin_filtered = peq_apply_measurements(pivoted_spin, peq)
             # not modified by eq
@@ -77,22 +75,12 @@ def noscore_apply_filter(
 
     if "Estimated In-Room Response" in df_speaker:
         pir = df_speaker["Estimated In-Room Response"]
-        # pivoted_pir = pir.pivot(*pir).rename_axis(columns=None).reset_index()
-        pivoted_pir = (
-            pir.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max)
-            .rename_axis(columns=None)
-            .reset_index()
-        )
+        pivoted_pir = graph_unmelt(pir)
         pir_filtered = peq_apply_measurements(pivoted_pir, peq)
 
     if "On Axis" in df_speaker:
         on = df_speaker["On Axis"]
-        # pivoted_on = on.pivot(*on).rename_axis(columns=None).reset_index()
-        pivoted_on = (
-            on.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max)
-            .rename_axis(columns=None)
-            .reset_index()
-        )
+        pivoted_on = graph_unmelt(on)
         on_filtered = peq_apply_measurements(pivoted_on, peq)
 
     spin_melted = None

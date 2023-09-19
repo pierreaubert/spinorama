@@ -23,6 +23,7 @@ import numpy as np
 from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
 from spinorama.ltype import DataSpeaker, OptimResult
+from spinorama.load_misc import graph_unmelt
 from spinorama.filter_peq import Peq
 from spinorama.compute_misc import compute_statistics
 from spinorama.filter_peq import peq_print
@@ -71,9 +72,7 @@ def optim_eval_strategy(
     if use_score and auto_status:
         auto_spin, _, auto_score = scores_apply_filter(df_speaker, auto_peq)
         if auto_spin is not None:
-            unmelted_auto_spin = auto_spin.pivot_table(
-                index="Freq", columns="Measurements", values="dB", aggfunc=max
-            ).reset_index()
+            unmelted_auto_spin = graph_unmelt(auto_spin)
             try:
                 auto_slope_lw, _, _ = compute_statistics(
                     unmelted_auto_spin,

@@ -23,6 +23,7 @@ from scipy.stats import linregress
 
 from spinorama import logger
 from spinorama.ltype import Vector
+from spinorama.load_misc import graph_unmelt
 from spinorama.filter_peq import Peq, peq_spl
 from spinorama.compute_misc import savitzky_golay
 
@@ -68,9 +69,7 @@ def get_freq(df_speaker_data, optim_config):
         else:
             df_tmp = df_speaker_data["CEA2034"]
             try:
-                df_pivoted = df_tmp.pivot_table(
-                    index="Freq", columns="Measurements", values="dB", aggfunc=max
-                ).reset_index()
+                df_pivoted = graph_unmelt(df_tmp)
                 local_df = df_pivoted.loc[:, columns]
             except ValueError as value_error:
                 logger.debug("%s %s", df_tmp.keys(), value_error)
