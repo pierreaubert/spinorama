@@ -288,7 +288,7 @@ class GlobalOptimizer(object):
                 if f2 < self.freq_min_index:
                     return 1
                 # if pk = 1 or 5, check that the max is below max_db
-                if t1 in (1, 5):
+                if t1 != 3: # PK
                     m = self._x2peq(x)[i][1].log_result(f1)
                     if abs(m) > self.max_db:
                         return 1
