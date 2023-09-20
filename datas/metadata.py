@@ -2199,6 +2199,35 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Buchardt Audio S400 MKII": {
+        "brand": "Buchardt Audio",
+        "model": "S400 MKII",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "2250",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_s400_mkii/",
+                    "yt": "https://www.youtube.com/live/yXhsJejwGuw?feature=shared",
+                },
+                "format": "klippel",
+                "review_published": "20230919",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4,
+                    "size": {
+                        "height": 365,
+                        "width": 180,
+                        "depth": 280,
+                    },
+                    "weight": 7.5,
+                },
+            },
+        },
+    },
     "BIC America FH6-LCR Center": {
         "brand": "BIC America",
         "model": "FH6-LCR Center",
@@ -18540,6 +18569,23 @@ speakers_info: SpeakerDatabase = {
                 "quality": "low",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/worst-measuring-loudspeaker.11394/page-8#post-945725",
                 "review_published": "20211019",
+            },
+        },
+    },
+    "Role Audio Skiff": {
+        "brand": "Role Audio",
+        "model": "Skiff",
+        "type": "passive",
+        "price": "400",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/role-audio-skiff-speaker-review.47981/",
+                "review_published": "20230918",
             },
         },
     },
