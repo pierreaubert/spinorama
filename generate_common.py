@@ -214,13 +214,14 @@ def cache_load_seq(filters, smoke_test):
     df_all = defaultdict()
     cache_files = glob("{}/*.h5".format(CACHE_DIR))
     count = 0
+    logging.debug("found %d cache files", len(cache_files))
     for cache in cache_files:
-        if filters.get("speaker_name") is not None and cache[-5:-3] != cache_key(
-            filters["speaker_name"]
-        ):
+        speaker_name = filters.get("speaker_name")
+        if speaker_name is not None and cache[-5:-3] != cache_key(speaker_name):
+            logging.debug("skipping %s key=%s".format(speaker_name, cache_key(speaker_name)))
             continue
         df_read = fl.load(path=cache)
-        # print('reading file {} found {} entries'.format(cache, len(df_read)))
+        logging.debug("reading file %s found %d entries", cache, len(df_read))
         if not isinstance(df_read, dict):
             continue
         for speaker, data in df_read.items():
@@ -228,7 +229,7 @@ def cache_load_seq(filters, smoke_test):
                 print("error in cache: {} is already in keys".format(speaker))
                 continue
             if is_filtered(speaker, data, filters):
-                print(speaker, filters["speaker_name"])
+                print(speaker, speaker_name)
                 continue
             df_all[speaker] = data
             count += 1
@@ -291,7 +292,7 @@ def cache_load_distributed(filters, smoke_test):
 
 
 def cache_load(filters, smoke_test):
-    if ray.is_initialized:
+    if ray.is_initialized and filters.get("speaker_name") is None:
         return cache_load_distributed(filters, smoke_test)
     return cache_load_seq(filters, smoke_test)
 
