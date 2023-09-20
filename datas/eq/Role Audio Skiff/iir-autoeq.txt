@@ -1,0 +1,14 @@
+EQ for Role Audio Skiff computed from ASR data
+Preference Score -1.13 with EQ 2.85
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.25
+Dated: 2023-09-20-17:56:12
+
+Preamp: -5.7 dB
+
+Filter  1: ON PK Fc   105 Hz Gain +6.00 dB Q 1.22
+Filter  2: ON PK Fc   190 Hz Gain -3.71 dB Q 2.10
+Filter  3: ON PK Fc   910 Hz Gain +1.64 dB Q 0.57
+Filter  4: ON PK Fc  1532 Hz Gain -5.97 dB Q 3.00
+Filter  5: ON PK Fc  1586 Hz Gain +1.81 dB Q 1.41
+Filter  6: ON PK Fc  9648 Hz Gain -5.94 dB Q 1.55
+Filter  7: ON PK Fc 19317 Hz Gain +5.84 dB Q 1.20
