@@ -32,7 +32,7 @@ from spinorama.compute_misc import unify_freq
 from spinorama.filter_peq import Peq, peq_apply_measurements
 from spinorama.filter_scores import noscore_apply_filter
 from spinorama.load_klippel import parse_graphs_speaker_klippel
-from spinorama.load_misc import graph_melt, check_nan
+from spinorama.load_misc import graph_melt, graph_unmelt, check_nan
 from spinorama.load_princeton import parse_graphs_speaker_princeton
 from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
 from spinorama.load_rew_eq import parse_eq_iir_rews
@@ -85,21 +85,15 @@ def parse_eq_speaker(
             df_eq = {}
             if spin_eq is not None:
                 df_eq["CEA2034"] = spin_eq
-                df_eq["CEA2034_unmelted"] = spin_eq.pivot_table(
-                    index="Freq", columns="Measurements", values="dB", aggfunc=max
-                ).reset_index()
+                df_eq["CEA2034_unmelted"] = graph_unmelt(spin_eq)
 
             if eir_eq is not None:
                 df_eq["Estimated In-Room Response"] = eir_eq
-                df_eq["Estimated In-Room Response_unmelted"] = eir_eq.pivot_table(
-                    index="Freq", columns="Measurements", values="dB", aggfunc=max
-                ).reset_index()
+                df_eq["Estimated In-Room Response_unmelted"] = graph_unmelt(eir_eq)
 
             if on_eq is not None:
                 df_eq["On Axis"] = on_eq
-                df_eq["On Axis_unmelted"] = on_eq.pivot_table(
-                    index="Freq", columns="Measurements", values="dB", aggfunc=max
-                ).reset_index()
+                df_eq["On Axis_unmelted"] = graph_unmelt(on_eq)
 
             df_eq["eq"] = iir
             return iir, df_eq
