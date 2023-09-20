@@ -69,9 +69,6 @@ def optim_multi_steps(
     if optim_config["optimisation"] == "global":
         go = GlobalOptimizer(
             df_speaker,
-            freq,
-            auto_target,
-            auto_target_interp,
             optim_config,
         )
         global_status, (global_results, global_peq) = go.run()

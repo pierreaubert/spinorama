@@ -32,9 +32,7 @@ def graph_melt(df: pd.DataFrame) -> pd.DataFrame:
 
 def graph_unmelt(df: pd.DataFrame) -> pd.DataFrame:
     return (
-        df.pivot_table(
-            index="Freq", columns="Measurements", values="dB", aggfunc=max
-        )
+        df.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max)
         .rename_axis(columns=None)
         .reset_index()
     )

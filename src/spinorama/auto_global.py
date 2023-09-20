@@ -22,6 +22,7 @@ import math
 import numpy as np
 import pandas as pd
 import scipy.optimize as opt
+from scipy.interpolate import InterpolatedUnivariateSpline
 
 from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MAX_FREQ
@@ -37,17 +38,42 @@ FREQ_NB_POINTS = 200
 Encoded = list[float | int]
 
 
+def _resample(x1: list[float], x2: list[float], y1: list[float]) -> list[float]:
+    # resample
+    #   x1 array of x values
+    #   y1 array of y values
+    #   x2 new array of x values
+    #   return y2 which is a linear interpolation of
+    # Note:
+    # doesnt need to be fast since it is called only a few times
+    #
+    # x1    .   .   .  .  .
+    # x2      .   .  ..  . ...
+    # for x each element of x2
+    #  find i such that x1[i] <= x < x1[i+1]
+    #  y = linear interpolation of y1[i] and y1[i+1]
+    # --------------
+    # y2 = []
+    # for x in x2:
+    #    i = bisect.bisect_left(x1, x)
+    #    j = bisect.bisect_right(x1, x)
+    #    t = (y1[j]-y1[i])/(x1[j]-x1[i])
+    #    y2.append(t)
+    # return y2
+    # --------------
+    spline = InterpolatedUnivariateSpline(np.log10(x1), y1, k=3)
+    return spline(np.log10(x2))
+
+
 class GlobalOptimizer(object):
     """Main optimiser: follow a greedy strategy"""
 
     def __init__(
         self,
         df_speaker: DataSpeaker,
-        freq: Vector,
         optim_config: dict,
     ):
         self.df_speaker = df_speaker
-        self.freq = freq
         self.optim_config = optim_config
 
         # get min/max
@@ -66,22 +92,26 @@ class GlobalOptimizer(object):
         # ---|----------|-------------------------------------------|-----|
         #   20       -3dB              |                        16000 20000
         # ---|----------|-------------------------------------------|-----|
-        #             min              midrange                   max
+        #             min              midrange                   max     |
         # ---|----------|-------------------------------------------|-----|
+        #    |                    valid range (Hz)                        |
+        #    | 0                     indexed_freq                     200 |
+        # ---|------------------------------------------------------------|
 
-        self.log_freq = np.logspace(math.log10(20), math.log10(20000), FREQ_NB_POINTS + 1)
+        self.freq_space = np.logspace(1 + math.log10(2), 4 + math.log10(2), FREQ_NB_POINTS)
+
         # a bit of black magic
-        self.freq_min_index = bisect.bisect(self.log_freq, self.freq_min)
-        self.freq_midrange_index = bisect.bisect(self.log_freq, MIDRANGE_MAX_FREQ / 2)
-        self.freq_max_index = bisect.bisect(self.log_freq, self.freq_max)
+        self.freq_min_index = self._freq2index(self.freq_min)
+        self.freq_midrange_index = self._freq2index(MIDRANGE_MAX_FREQ / 2)
+        self.freq_max_index = self._freq2index(self.freq_max)
 
         # get lw/on
         self.lw = df_speaker["CEA2034_unmelted"]["Listening Window"].to_numpy()
+        self.freq = df_speaker["CEA2034_unmelted"]["Freq"].to_numpy()
 
         # used for controlling optimisation of the score
-        self.target = self.lw[self.freq_min_index : self.freq_max_index] - np.linspace(
-            0, 0.5, len(self.lw[self.freq_min_index : self.freq_max_index])
-        )
+        lw_target = self.lw - np.linspace(0, 0.5, len(self.lw))
+        self.target = _resample(self.freq, self.freq_space, lw_target)
 
         self.min_db = optim_config["MIN_DBGAIN"]
         self.max_db = optim_config["MAX_DBGAIN"]
@@ -90,6 +120,15 @@ class GlobalOptimizer(object):
         self.max_peq = optim_config["MAX_NUMBER_PEQ"]
         self.max_iter = optim_config["MAX_ITER"]
 
+    def _freq2index(self, f: float):
+        return bisect.bisect_left(self.freq_space, f)
+
+    def _index2freq(self, i: int):
+        # TODO
+        if i == 200:
+            i = 199
+        return self.freq_space[i]
+
     def _x2params(self, x: Encoded, i: int) -> tuple[int, int, float, float, int]:
         # take an encoded Peq and return all values of the parameters of the filter
         # type
@@ -97,7 +136,7 @@ class GlobalOptimizer(object):
         t = int(x[idx])
         # freq (encoded as an int)
         idx += 1
-        f_pos = int(x[idx])
+        f_pos = int(x[idx])  # supposed to be an int but depending on the algo it may not be true
         # Q
         idx += 1
         q = float(x[idx])
@@ -113,27 +152,25 @@ class GlobalOptimizer(object):
         l = len(x) // 4
         peq = []
         for i in range(l):
-            t, f, q, spl, _ = self._x2params(x, i)
-            f = self.log_freq[f]
-            peq.append((1.0, Biquad(t, f, 48000, q, spl)))
+            iir_type, index_freq, q, spl, _ = self._x2params(x, i)
+            freq = self._index2freq(index_freq)
+            peq.append((1.0, Biquad(iir_type, freq, 48000, q, spl)))
         return peq
 
     def _x2spl(self, x: Encoded) -> Vector:
         # take a list of encoded filters and return the magnitude of the filter across the freq range
-        return peq_spl(self.freq, self._x2peq(x))
+        return peq_spl(self.freq_space, self._x2peq(x))
 
     def _opt_peq_score(self, x: Encoded) -> float:
         # for  a given encoded peq, compute the score
         peq = self._x2peq(x)
-        peq_freq = np.array(self._x2spl(x))[self.freq_min_index : self.freq_max_index]
+        peq_freq = np.array(self._x2spl(x))
         score = score_loss(self.df_speaker, peq)
         flat = np.add(self.target, peq_freq)
         flatness_bass_mid = np.linalg.norm(
-            flat[0 : self.freq_midrange_index - self.freq_min_index], ord=2
+            flat[self.freq_min_index : self.freq_midrange_index], ord=2
         )
-        flatness_mid_high = np.linalg.norm(
-            flat[self.freq_midrange_index - self.freq_min_index :], ord=2
-        )
+        flatness_mid_high = np.linalg.norm(flat[self.freq_midrange_index :], ord=2)
         # this is black magic, why 10, 20, 40?
         # if you increase 20 you give more flexibility to the score (and less flat LW/ON)
         # without the constraint optimising the score get crazy results
@@ -141,8 +178,8 @@ class GlobalOptimizer(object):
 
     def _opt_peq_flat(self, x: list[float | int]) -> float:
         # for  a given encoded peq, compute a loss function based on flatness
-        peq_freq = np.array(self._x2spl(x))[self.freq_min_index : self.freq_max_index]
-        flat = np.add(self.target, peq_freq)
+        peq_freq = np.array(self._x2spl(x))
+        flat = np.add(self.target, peq_freq)[self.freq_min_index : self.freq_max_index]
         flatness_l2 = np.linalg.norm(flat, ord=2)
         flatness_l1 = np.linalg.norm(flat, ord=1)
         return float(flatness_l2 + flatness_l1)
@@ -257,14 +294,10 @@ class GlobalOptimizer(object):
 
     def _opt_display(self, xk, convergence):
         # comment if you want to print verbose traces
-        l = len(xk) // 4
         print(f"IIR    Hz.  Q.   dB [{convergence}] iir={self.optim_config['full_biquad_optim']}")
-        for i in range(l):
-            t = int(xk[i * 4 + 0])
-            f = int(self.log_freq[int(xk[i * 4 + 1])])
-            q = xk[i * 4 + 2]
-            db = xk[i * 4 + 3]
-            print(f"{t:3d} {f:5d} {q:1.1f} {db:+1.2f}")
+        peq = self._x2peq(xk)
+        for _, iir in peq:
+            print(f"{iir.biquad_type:3d} {iir.freq:5.0f} {iir.q:1.1f} {iir.db_gain:+1.2f}")
 
     def run(self):
         logger.info(
