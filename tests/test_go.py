@@ -18,6 +18,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # import os
+import math
+import random
 import unittest
 
 import numpy as np
@@ -27,9 +29,36 @@ import scipy.io
 
 from spinorama.load import graph_melt
 from spinorama.load_klippel import parse_graph_freq_klippel
-from spinorama.auto_global import GlobalOptimizer
+from spinorama.auto_global import GlobalOptimizer, _resample
 
 pd.set_option("display.max_rows", 202)
+
+
+class ResampleTests(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def testBasic(self):
+        x1 = [1, 2, 3, 4, 5]
+        y1 = [x * x for x in x1]
+        x2 = [1.5, 2.5, 3.5, 4.5]
+        y2 = _resample(x1, x2, y1)
+        y2_expected = [x * x for x in x2]
+        npt.assert_almost_equal(y2_expected, y2, decimal=0)
+
+    def testRealistic(self):
+        x1 = np.logspace(math.log10(20), math.log10(20000), 200)
+        x2 = np.logspace(math.log10(20), math.log10(20000), 180)
+        y1 = [random.randrange(40, 80, 1) for x in x1]
+        y2 = _resample(x1, x2, y1)
+        error = np.sum(y1) / len(y1) - np.sum(y2) / len(y2)
+        self.assertAlmostEqual(error, 0, 1)
+        x2 = np.logspace(math.log10(20), math.log10(20000), 200)
+        x1 = np.logspace(math.log10(20), math.log10(20000), 180)
+        y1 = [random.randrange(40, 80, 1) for x in x1]
+        y2 = _resample(x1, x2, y1)
+        error = np.sum(y1) / len(y1) - np.sum(y2) / len(y2)
+        self.assertAlmostEqual(error, 0, 1)
 
 
 class GlobalOptimizerTests(unittest.TestCase):
@@ -38,8 +67,6 @@ class GlobalOptimizerTests(unittest.TestCase):
         _, (self.title, self.spin_unmelted) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/CEA2034.txt"
         )
-        # get freq from graph
-        freq = self.spin_unmelted.Freq
         # configuration
         optim_config = {
             "target_min_freq": 80,
@@ -54,19 +81,29 @@ class GlobalOptimizerTests(unittest.TestCase):
             "full_biquad_optim": False,
         }
         # speaker data
-        df_speaker = {"CEA2034_unmelted": self.spin_unmelted}
+        df_speaker = {
+            "CEA2034_unmelted": self.spin_unmelted,
+        }
         # create an optimizer object
-        self.go = GlobalOptimizer(df_speaker, freq, optim_config)
+        self.go = GlobalOptimizer(df_speaker, optim_config)
 
     def testSmokeTest(self):
         self.assertEqual(self.go.freq_min, 80)
         self.assertEqual(self.go.freq_max, 16000)
         self.assertEqual(len(self.go.freq), 194)
-        self.assertGreater(self.go.freq.values[0], 20)
-        self.assertLess(self.go.freq.values[-1], 20000)
-        self.assertEqual(len(self.go.log_freq), 201)
+        self.assertGreater(self.go.freq_space[0], 20)
+        self.assertAlmostEqual(self.go.freq_space[-1], 20000)
+        self.assertEqual(len(self.go.freq_space), 200)
         self.assertGreater(self.go.freq_min_index, 19)
         self.assertGreater(self.go.freq_max_index, 180)
+
+    def freq2indexTest(self):
+        for f in [20, 21, 10000, 16000, 20000]:
+            self.assertEqual(f, self.go._index2freq(self.go._freq2index(f)))
+
+    def index2freqTest(self):
+        for idx in [0, 1, 50, 200]:
+            self.assertEqual(idx, self.go._freq2index(self.go._index2freq(idx)))
 
     def testX2Params(self):
         x1 = [3, 20, 1, -5]
@@ -90,7 +127,7 @@ class GlobalOptimizerTests(unittest.TestCase):
         self.assertEqual(len(peq), 1)
         iir = peq[0][1]
         self.assertEqual(iir.biquad_type, 3)
-        self.assertEqual(iir.freq, self.go.log_freq[x1[1]])
+        self.assertAlmostEqual(iir.freq, self.go.freq_space[20])
 
     def testX2SPL(self):
         x1 = [3, 20, 1, -5]
@@ -107,10 +144,10 @@ class GlobalOptimizerTests(unittest.TestCase):
         self.assertEqual(b3[1], [0, 200])
         # second
         self.assertEqual(b3[4], [3, 3])
-        self.assertEqual(b3[5], [41, 200])
+        self.assertEqual(b3[5], [40, 200])
         # third
         self.assertEqual(b3[8], [0, 6])
-        self.assertEqual(b3[9], [41, 200])
+        self.assertEqual(b3[9], [40, 200])
 
     def testBoundsPK(self):
         b3 = self.go._opt_bounds_pk(3)
@@ -119,10 +156,10 @@ class GlobalOptimizerTests(unittest.TestCase):
         self.assertEqual(b3[1], [0, 200])
         # second
         self.assertEqual(b3[4], [3, 3])
-        self.assertEqual(b3[5], [41, 200])
+        self.assertEqual(b3[5], [40, 200])
         # third
         self.assertEqual(b3[8], [3, 3])
-        self.assertEqual(b3[9], [41, 200])
+        self.assertEqual(b3[9], [40, 200])
 
     def testLinearConstraint(self):
         lc = self.go._opt_constraints_linear(3)
@@ -133,7 +170,7 @@ class GlobalOptimizerTests(unittest.TestCase):
         C = np.matmul(A, X) - B
         npt.assert_array_less(C, 0)
         # first freq above min failed
-        X = np.array([0, 25, 0, 0, 0, 35, 0, 0, 0, 75, 0, 0])
+        X = np.array([0, 25, 0, 0, 0, 34, 0, 0, 0, 75, 0, 0])
         C = np.matmul(A, X) - B
         self.assertGreater(C[0], 0)
         # second > third failed
@@ -147,7 +184,7 @@ class GlobalOptimizerTests(unittest.TestCase):
         X = np.array([0, 25, 0, 0, 0, 50, 0, 0, 0, 75, 0, 0])
         C = fun(X)
         self.assertEqual(C, -1)  # true
-        X = np.array([0, 25, 0, 0, 0, 35, 0, 0, 0, 75, 0, 0])
+        X = np.array([0, 25, 0, 0, 0, 34, 0, 0, 0, 75, 0, 0])
         C = fun(X)
         self.assertEqual(C, 1)  # false
         X = np.array([0, 25, 0, 0, 0, 100, 0, 0, 0, 75, 0, 0])
