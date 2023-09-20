@@ -28,7 +28,7 @@ from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MAX_FREQ
 from spinorama.ltype import Vector, DataSpeaker, OptimResult
 from spinorama.filter_iir import Biquad
-from spinorama.filter_peq import Peq, peq_spl
+from spinorama.filter_peq import Peq, peq_spl, peq_print
 from spinorama.auto_misc import get3db
 from spinorama.auto_loss import score_loss
 
@@ -284,8 +284,14 @@ class GlobalOptimizer(object):
                 else:
                     if f1 - f2 > -1:
                         return 1
+                # only 1 peq before min_index
                 if f2 < self.freq_min_index:
                     return 1
+                # if pk = 1 or 5, check that the max is below max_db
+                if t1 in (1, 5):
+                    m = self._x2peq(x)[i][1].log_result(f1)
+                    if abs(m) > self.max_db:
+                        return 1
             return -1
 
         return opt.NonlinearConstraint(
@@ -294,10 +300,8 @@ class GlobalOptimizer(object):
 
     def _opt_display(self, xk, convergence):
         # comment if you want to print verbose traces
-        print(f"IIR    Hz.  Q.   dB [{convergence}] iir={self.optim_config['full_biquad_optim']}")
-        peq = self._x2peq(xk)
-        for _, iir in peq:
-            print(f"{iir.biquad_type:3d} {iir.freq:5.0f} {iir.q:1.1f} {iir.db_gain:+1.2f}")
+        print(f"[f={convergence}] iir={self.optim_config['full_biquad_optim']}")
+        peq_print(self._x2peq(xk))
 
     def run(self):
         logger.info(
