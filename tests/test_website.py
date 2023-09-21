@@ -19,9 +19,17 @@ def systemcheck():
     current_os = os.getenv("OSTYPE")
     current_display = os.getenv("DISPLAY")
 
+    if current_display is None or len(current_display) == 0:
+        return False
+    
     if (
         platform.system() == "Linux" or (current_os is not None and current_os == "linux-gnu")
-    ) and (current_display is None or len(current_display) == 0):
+    ): 
+        return False
+
+    if (
+        platform.system() == "darwin22.0"
+    ):
         return False
 
     return True
