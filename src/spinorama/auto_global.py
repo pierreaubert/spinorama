@@ -33,6 +33,7 @@ from spinorama.auto_misc import get3db
 from spinorama.auto_loss import score_loss
 
 FREQ_NB_POINTS = 200
+CONVERGENCE_TOLERANCE = 0.001
 
 # a type for variables to be optimised
 Encoded = list[float | int]
@@ -198,13 +199,13 @@ class GlobalOptimizer(object):
             [0, 6],
             [0, FREQ_NB_POINTS],  # algo does not support log scaling so I do it manually
             [self.min_q, self.max_q],  # max may be dependant on max_db
-            [-self.max_db*3, self.max_db],
+            [-self.max_db * 3, self.max_db],
         ]
         bounds1 = [
             [3, 3],
             [self.freq_min_index, FREQ_NB_POINTS],
             [self.min_q, self.max_q],
-            [-self.max_db*3, self.max_db],
+            [-self.max_db * 3, self.max_db],
         ]
         bounds2 = [
             [0, 6],
@@ -213,7 +214,7 @@ class GlobalOptimizer(object):
                 FREQ_NB_POINTS,
             ],  # algo does not support log scaling so I do it manually
             [self.min_q, 1.3],  # need to be computed from max_db
-            [-self.max_db*3, self.max_db],
+            [-self.max_db * 3, self.max_db],
         ]
         return bounds0 + bounds1 * (n - 2) + bounds2
 
@@ -223,13 +224,13 @@ class GlobalOptimizer(object):
             [3, 3],
             [0, FREQ_NB_POINTS],
             [self.min_q, self.max_q],
-            [-self.max_db*3, self.max_db],
+            [-self.max_db * 3, self.max_db],
         ]
         bounds1 = [
             [3, 3],
             [self.freq_min_index, FREQ_NB_POINTS],
             [self.min_q, self.max_q],
-            [-self.max_db*3, self.max_db],
+            [-self.max_db * 3, self.max_db],
         ]
         return bounds0 + bounds1 * (n - 1)
 
@@ -289,7 +290,7 @@ class GlobalOptimizer(object):
                 if f2 < self.freq_min_index or f2 > self.freq_max_index:
                     return 1
                 # if pk = 1 or 5, check that the max is below max_db
-                if t1 != 3: # PK
+                if t1 != 3:  # PK
                     m = self._x2peq(x)[i][1].log_result(f1)
                     if abs(m) > self.max_db:
                         return 1
@@ -297,7 +298,7 @@ class GlobalOptimizer(object):
                 # algorithm does not converge well ...
                 # if abs(g1) < self.min_db or abs(g2) < self.min_db:
                 #    return 1
-                
+
                 # you don't need to re-check the Q since it done by the bounds
             return -1
 
@@ -307,7 +308,9 @@ class GlobalOptimizer(object):
 
     def _opt_display(self, xk, convergence):
         # comment if you want to print verbose traces
-        print(f"[f={convergence}] iir={self.optim_config['full_biquad_optim']}")
+        print(
+            f"[f={1-convergence}<{CONVERGENCE_TOLERANCE}] iir={self.optim_config['full_biquad_optim']}"
+        )
         peq_print(self._x2peq(xk))
 
     def run(self):
@@ -331,7 +334,7 @@ class GlobalOptimizer(object):
             callback=self._opt_display,
             constraints=self._opt_constraints_nonlinear(self.max_peq),
             disp=True,
-            tol=0.01,
+            tol=CONVERGENCE_TOLERANCE,
         )
 
         auto_peq = self._x2peq(res.x)

@@ -21,15 +21,11 @@ def systemcheck():
 
     if current_display is None or len(current_display) == 0:
         return False
-    
-    if (
-        platform.system() == "Linux" or (current_os is not None and current_os == "linux-gnu")
-    ): 
+
+    if platform.system() == "Linux" or (current_os is not None and current_os == "linux-gnu"):
         return False
 
-    if (
-        platform.system() == "darwin22.0"
-    ):
+    if platform.system() == "darwin22.0":
         return False
 
     return True

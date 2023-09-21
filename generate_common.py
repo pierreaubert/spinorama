@@ -229,7 +229,7 @@ def cache_load_seq(filters, smoke_test):
                 print("error in cache: {} is already in keys".format(speaker))
                 continue
             if is_filtered(speaker, data, filters):
-                print(speaker, speaker_name)
+                # print(speaker, speaker_name)
                 continue
             df_all[speaker] = data
             count += 1
