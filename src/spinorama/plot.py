@@ -79,7 +79,7 @@ colors = [
     "#ff9da7",
 ]
 
-uniform_colors = {
+UNIFORM_COLORS = {
     # regression
     "Linear Regression": colors[0],
     "Band ±1.5dB": colors[1],
@@ -182,6 +182,40 @@ legend_rank = {
     "-70°": -70,
     "-80°": -80,
     "-90°": -90,
+}
+
+
+CONTOUR_COLORSCALE = [
+    [0, "rgb(0,0,168)"],
+    [0.1, "rgb(0,0,200)"],
+    [0.2, "rgb(0,74,255)"],
+    [0.3, "rgb(0,152,255)"],
+    [0.4, "rgb(74,255,161)"],
+    [0.5, "rgb(161,255,74)"],
+    [0.6, "rgb(255,255,0)"],
+    [0.7, "rgb(234,159,0)"],
+    [0.8, "rgb(255,74,0)"],
+    [0.9, "rgb(222,74,0)"],
+    [1, "rgb(253,14,13)"],
+]
+
+RADAR_COLORS = {
+    "100 Hz": colors[0],
+    "125 Hz": colors[1],
+    "160 Hz": colors[2],
+    "200 Hz": colors[3],
+    "250 Hz": colors[4],
+    "315 Hz": colors[5],
+    "400 Hz": colors[6],
+    "500 Hz": colors[7],
+    "1600 Hz": colors[8],
+    "2000 Hz": colors[9],
+    "2500 Hz": colors[0],
+    "3150 Hz": colors[1],
+    "4000 Hz": colors[2],
+    "5000 Hz": colors[3],
+    "6000 Hz": colors[4],
+    "8000 Hz": colors[5],
 }
 
 
@@ -344,7 +378,7 @@ def plot_spinorama_traces(spin, params):
         trace = go.Scatter(
             x=spin.Freq,
             y=spin[measurement],
-            marker_color=uniform_colors.get(measurement, "black"),
+            marker_color=UNIFORM_COLORS.get(measurement, "black"),
             name=label_short.get(measurement, measurement),
             hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
@@ -361,7 +395,7 @@ def plot_spinorama_traces(spin, params):
         trace = go.Scatter(
             x=spin.Freq,
             y=spin[measurement],
-            marker_color=uniform_colors.get(measurement, "black"),
+            marker_color=UNIFORM_COLORS.get(measurement, "black"),
             hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
         if layout == "compact":
@@ -419,8 +453,8 @@ def plot_graph(df, params):
                 trace.name = measurement
                 trace.legendgroup = "measurements"
                 trace.legendgrouptitle = {"text": "Measurements"}
-            if measurement in uniform_colors:
-                trace.marker = {"color": uniform_colors[measurement]}
+            if measurement in UNIFORM_COLORS:
+                trace.marker = {"color": UNIFORM_COLORS[measurement]}
             if measurement in legend_rank:
                 trace.legendrank = legend_rank[measurement]
             fig.add_trace(trace)
@@ -457,8 +491,8 @@ def plot_graph_spl(df, params):
                 trace.name = measurement
                 trace.legendgroup = "measurements"
                 trace.legendgrouptitle = {"text": "Measurements"}
-            if measurement in uniform_colors:
-                trace.marker = {"color": uniform_colors[measurement]}
+            if measurement in UNIFORM_COLORS:
+                trace.marker = {"color": UNIFORM_COLORS[measurement]}
             if measurement in legend_rank:
                 trace.legendrank = legend_rank[measurement]
             fig.add_trace(trace)
@@ -556,7 +590,7 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     trace = go.Scatter(
         x=df.Freq,
         y=df[measurement],
-        marker_color=uniform_colors.get(measurement, "black"),
+        marker_color=UNIFORM_COLORS.get(measurement, "black"),
         opacity=1,
         hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
     )
@@ -635,20 +669,6 @@ def plot_contour(spl, params):
     contour_start = -30
     contour_end = 3
 
-    contour_colorscale = [
-        [0, "rgb(0,0,168)"],
-        [0.1, "rgb(0,0,200)"],
-        [0.2, "rgb(0,74,255)"],
-        [0.3, "rgb(0,152,255)"],
-        [0.4, "rgb(74,255,161)"],
-        [0.5, "rgb(161,255,74)"],
-        [0.6, "rgb(255,255,0)"],
-        [0.7, "rgb(234,159,0)"],
-        [0.8, "rgb(255,74,0)"],
-        [0.9, "rgb(222,74,0)"],
-        [1, "rgb(253,14,13)"],
-    ]
-
     fig = go.Figure()
 
     af, am, az = compute_contour(df_spl.loc[df_spl.Freq > min_freq])
@@ -674,7 +694,7 @@ def plot_contour(spl, params):
                 lenmode="fraction",
             ),
             autocolorscale=False,
-            colorscale=contour_colorscale,
+            colorscale=CONTOUR_COLORSCALE,
             hovertemplate="Freq: %{x:.0f}Hz<br>Angle: %{y:.0f}<br>SPL: %{z:.1f}dB<br>",
         )
     )
@@ -822,25 +842,6 @@ def plot_radar(spl, params):
         ),
     )
 
-    radar_colors = {
-        "100 Hz": colors[0],
-        "125 Hz": colors[1],
-        "160 Hz": colors[2],
-        "200 Hz": colors[3],
-        "250 Hz": colors[4],
-        "315 Hz": colors[5],
-        "400 Hz": colors[6],
-        "500 Hz": colors[7],
-        "1600 Hz": colors[8],
-        "2000 Hz": colors[9],
-        "2500 Hz": colors[0],
-        "3150 Hz": colors[1],
-        "4000 Hz": colors[2],
-        "5000 Hz": colors[3],
-        "6000 Hz": colors[4],
-        "8000 Hz": colors[5],
-    }
-
     def update_pict(anglelist, freqlist, row, col, spl):
         _, dbs_df = plot_radar_freq(anglelist, freqlist, spl)
 
@@ -851,7 +852,7 @@ def plot_radar(spl, params):
                 theta=mslice.Theta,
                 dtheta=30,
                 name=freq,
-                marker_color=radar_colors.get(freq, "black"),
+                marker_color=RADAR_COLORS.get(freq, "black"),
                 legendrank=int(freq[:-3]),
             )
             if layout != "compact":
@@ -947,20 +948,6 @@ def plot_contour_3d(spl, params):
     contour_start = -30
     contour_end = 3
 
-    contour_colorscale = [
-        [0, "rgb(0,0,168)"],
-        [0.1, "rgb(0,0,200)"],
-        [0.2, "rgb(0,74,255)"],
-        [0.3, "rgb(0,152,255)"],
-        [0.4, "rgb(74,255,161)"],
-        [0.5, "rgb(161,255,74)"],
-        [0.6, "rgb(255,255,0)"],
-        [0.7, "rgb(234,159,0)"],
-        [0.8, "rgb(255,74,0)"],
-        [0.9, "rgb(222,74,0)"],
-        [1, "rgb(253,14,13)"],
-    ]
-
     colorbar = dict(
         dtick=3,
         len=0.5,
@@ -984,7 +971,7 @@ def plot_contour_3d(spl, params):
     def transform(spl, db_max, clip_min, clip_max):
         if "-180°" not in spl and "180°" in spl:
             spl["-180°"] = spl["180°"]
-        df_spl = spl.reindex(columns=sorted(spl.columns, key=lambda a: a2v(a))) - db_max
+        df_spl = spl.reindex(columns=sorted(spl.columns, key=a2v)) - db_max
         # x,y,z
         freq = df_spl.Freq
         angle = [a2v(i) for i in df_spl.loc[:, df_spl.columns != "Freq"].columns]
@@ -996,7 +983,7 @@ def plot_contour_3d(spl, params):
 
     db_max = spl["On Axis"].max()
 
-    freqs, angles, spls, colors = transform(spl, db_max, contour_start, contour_end)
+    freqs, angles, spls, surface_colors = transform(spl, db_max, contour_start, contour_end)
 
     fig = go.Figure()
 
@@ -1006,8 +993,8 @@ def plot_contour_3d(spl, params):
         z=spls,
         showscale=True,
         autocolorscale=False,
-        colorscale=contour_colorscale,
-        surfacecolor=colors,
+        colorscale=CONTOUR_COLORSCALE,
+        surfacecolor=surface_colors,
         colorbar=colorbar,
         cmin=contour_start,
         cmax=contour_end,

@@ -1,0 +1,76 @@
+<div class="block my-1 mx-1">
+  <nav class="level is-light is-mobile">
+    <div class="level-left">
+      <div class="level-item is-left dropdown is-hoverable" id="menu-main">
+        <div class="dropdown-trigger" id="menu-main-trigger">
+          <button type="button" class="button" aria-haspopup="true" aria-controls="menu-main" value="menu-main" aria-label="menu-main">
+            <span class="icon">
+              <i class="fas fa-solid fa-bars" aria-hidden="true"></i>
+            </span>
+          </button>
+        </div>
+        <div class="dropdown-menu" id="menu-main-dropdown" role="menu">
+          <div class="dropdown-content">
+            <%include file="nav_menu.html"/>
+          </div>
+        </div>
+      </div>
+      <div class="level-item is-hidden-mobile py-0 my-0">
+        <a href="/" class="is-size-4 is-hidden-mobile">
+          <img src="/icons/icon-bookshelves.svg" alt="SPINorama" width="44">
+          <b>SPIN</b>orama
+        </a>
+      </div>
+    </div>
+    <div class="level-right">
+      <div class="level-item is-hoverable px-0">
+        <div class="field has-addons">
+          <div class="control has-icons-right is-expended">
+            <input id="searchInput" class="input is-info is-align-self-flex-end" type="text" placeholder="brand or model ...">
+            <div class="icon is-right"><i class="fas fa-search"></i></div>
+          </div>
+          <div class="control">
+            <div class="dropdown is-hoverable is-right" id="filters-dropdown">
+              <div class="dropdown-trigger" id="filters-dropdown-trigger">
+                <button type="button" class="button" aria-haspopup="true" aria-controls="filters-dropdown-menu" value="filter" aria-label="filter">
+                  <span class="icon">
+                    <i class="fas fa-sliders" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="filters-dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <div class="dropdown-item">
+                    <div class="label">Filter by:</div>
+                  </div>
+                  <hr class="dropdown-divider">
+                  <%include file="nav_filters.html"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="control">
+            <div class="dropdown is-hoverable is-right" id="sorters-dropdown">
+              <div class="dropdown-trigger" id="sorters-dropdown-trigger">
+                <button type="button" class="button" aria-haspopup="true" aria-controls="sorters-dropdown-menu" value="filter" aria-label="filter">
+                  <span class="icon">
+                    <i class="fas fa-solid fa-sort" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="sorters-dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <div class="dropdown-item">
+                    <div class="label">Sort by:</div>
+                  </div>
+                  <hr class="dropdown-divider">
+                  <%include file="nav_sortby.html"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>

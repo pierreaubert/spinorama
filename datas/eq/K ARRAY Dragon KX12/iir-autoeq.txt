@@ -1,16 +1,14 @@
 EQ for K ARRAY Dragon KX12 computed from Vendors-K ARRAY data
-Preference Score -3.46 with EQ -1.31
+Preference Score -4.71 with EQ -0.95
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-08-05-04:43:51
+Dated: 2023-09-14-15:43:24
 
-Preamp: -0.8 dB
+Preamp: -9.8 dB
 
-Filter  1: ON NO Fc   148 Hz Gain -0.43 dB Q 30.00
-Filter  2: ON PK Fc  1261 Hz Gain +1.51 dB Q 2.58
-Filter  3: ON PK Fc  1704 Hz Gain -2.64 dB Q 2.43
-Filter  4: ON PK Fc  2082 Hz Gain -0.94 dB Q 2.52
-Filter  5: ON PK Fc  2631 Hz Gain +2.88 dB Q 2.98
-Filter  6: ON PK Fc  4492 Hz Gain +2.87 dB Q 2.86
-Filter  7: ON PK Fc  5310 Hz Gain -2.39 dB Q 2.76
-Filter  8: ON PK Fc  7173 Hz Gain +2.44 dB Q 2.64
-Filter  9: ON LPQ Fc 11454 Hz Q 0.27
+Filter  1: ON PK Fc   109 Hz Gain +7.86 dB Q 0.80
+Filter  2: ON PK Fc   109 Hz Gain +9.60 dB Q 1.36
+Filter  3: ON PK Fc   121 Hz Gain -9.86 dB Q 2.96
+Filter  4: ON PK Fc   148 Hz Gain -9.47 dB Q 1.89
+Filter  5: ON PK Fc   280 Hz Gain -2.70 dB Q 2.93
+Filter  6: ON PK Fc  2380 Hz Gain +2.18 dB Q 1.19
+Filter  7: ON PK Fc 12662 Hz Gain -9.89 dB Q 0.88

@@ -698,7 +698,7 @@ def add_near(dataframe, parse_max: int, filters: dict):
             distances[speaker_name] = {}
 
     for speaker_name1, speaker_data1 in normalized.items():
-        if reject(filters, speaker_name) or (parse_max is not None and parsed > parse_max):
+        if reject(filters, speaker_name1) or (parse_max is not None and parsed > parse_max):
             break
         parsed = parsed + 1
         deltas = []

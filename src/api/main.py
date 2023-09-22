@@ -67,8 +67,8 @@ async def get_speaker_metadata(
     speaker_name: str, metadata: dict = Depends(load_metadata)  # noqa: B008
 ):
     content = metadata.get(speaker_name, {"error": "Speaker not found"})
-    json = jsonable_encoder(content)
-    return JSONResponse(content=json)
+    encoded = jsonable_encoder(content)
+    return JSONResponse(content=encoded)
 
 
 @app.get(

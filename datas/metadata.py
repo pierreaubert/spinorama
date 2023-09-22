@@ -2199,6 +2199,35 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Buchardt Audio S400 MKII": {
+        "brand": "Buchardt Audio",
+        "model": "S400 MKII",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "2250",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_s400_mkii/",
+                    "yt": "https://www.youtube.com/live/yXhsJejwGuw?feature=shared",
+                },
+                "format": "klippel",
+                "review_published": "20230919",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4,
+                    "size": {
+                        "height": 365,
+                        "width": 180,
+                        "depth": 280,
+                    },
+                    "weight": 7.5,
+                },
+            },
+        },
+    },
     "BIC America FH6-LCR Center": {
         "brand": "BIC America",
         "model": "FH6-LCR Center",
@@ -4857,6 +4886,100 @@ speakers_info: SpeakerDatabase = {
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/devialet-phantom-reactor-900-measurements-now-with-spinorama.9963/page-2#post-305596",
                     "tnw": "https://thenextweb.com/news/review-devialets-phantom-reactor-is-the-david-to-your-subwoofers-goliath",
+                },
+            },
+        },
+    },
+    "Devialet Phantom I": {
+        "brand": "Devialet",
+        "model": "Phantom I",
+        "type": "active",
+        "price": "2400",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Devialet",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20230910",
+                "data_acquisition": gll_data_acquisition_std,
+                "specifications": {
+                    "SPL": {
+                        "peak": 103,
+                    },
+                    "size": {
+                        "height": 255,
+                        "width": 252,
+                        "depth": 342,
+                    },
+                    "weight": 11.4,
+                },
+            },
+            "vendor-vGecko": {
+                "origin": "Vendors-Devialet",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20230910",
+                "data_acquisition": gll_data_acquisition_std,
+                "specifications": {
+                    "SPL": {
+                        "peak": 103,
+                    },
+                    "size": {
+                        "height": 255,
+                        "width": 252,
+                        "depth": 342,
+                    },
+                    "weight": 11.4,
+                },
+            },
+            "vendor-vTree": {
+                "origin": "Vendors-Devialet",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20230910",
+                "data_acquisition": gll_data_acquisition_std,
+                "specifications": {
+                    "SPL": {
+                        "peak": 103,
+                    },
+                    "size": {
+                        "height": 255,
+                        "width": 252,
+                        "depth": 342,
+                    },
+                    "weight": 11.4,
+                },
+            },
+        },
+    },
+    "Devialet Phantom II": {
+        "brand": "Devialet",
+        "model": "Phantom II",
+        "type": "active",
+        "price": "1200",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Devialet",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20230910",
+                "data_acquisition": gll_data_acquisition_std,
+                "specifications": {
+                    "SPL": {
+                        "peak": 95,
+                    },
+                    "size": {
+                        "height": 168,
+                        "width": 157,
+                        "depth": 219,
+                    },
+                    "weight": 4.3,
                 },
             },
         },
@@ -18485,6 +18608,23 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Role Audio Skiff": {
+        "brand": "Role Audio",
+        "model": "Skiff",
+        "type": "passive",
+        "price": "400",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/role-audio-skiff-speaker-review.47981/",
+                "review_published": "20230918",
+            },
+        },
+    },
     "RSL Outsider II": {
         "brand": "RSL",
         "model": "Outsider II",
@@ -18803,6 +18943,24 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "SONBS SD-10E": {
+        "brand": "SONBS",
+        "model": "SD-10E",
+        "type": "passive",
+        "price": "100",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-SONBS",
+                "format": "gll_hv_txt",
+                "quality": "high",
+                "review_published": "20230914",
+                "data_acquisition": gll_data_acquisition_std,
+            },
+        },
+    },
     "Sonos Move": {
         "brand": "Sonos",
         "model": "Move",
@@ -19074,7 +19232,7 @@ speakers_info: SpeakerDatabase = {
         "model": "System 600",
         "type": "passive",
         "price": "",
-        "shape": "bookshelves",
+        "shape": "cinema",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
@@ -19082,6 +19240,62 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/tannoy-system-600-speaker-review.11919/",
                 "review_published": "20200307",
+            },
+        },
+    },
+    "Tannoy VQ100": {
+        "brand": "Tannoy",
+        "model": "VQ100",
+        "type": "passive",
+        "price": "2500",
+        "amount": "each",
+        "shape": "cinema",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Tannoy",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20230909",
+                "data_acquisition": gll_data_acquisition_std,
+                "specifications": {
+                    "impedance": 8,
+                    "size": {
+                        "height": 925,
+                        "width": 694,
+                        "depth": 515,
+                    },
+                },
+            },
+        },
+    },
+    "Tannoy VX12": {
+        "brand": "Tannoy",
+        "model": "VX12",
+        "type": "passive",
+        "price": "860",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-pattern-75x40",
+        "measurements": {
+            "vendor-pattern-75x40": {
+                "origin": "Vendors-Tannoy",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20230909",
+                "data_acquisition": gll_data_acquisition_std,
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 75,
+                        "vertical": 40,
+                    },
+                    "impedance": 8,
+                    "size": {
+                        "height": 486,
+                        "width": 370,
+                        "depth": 360,
+                    },
+                },
             },
         },
     },
@@ -20261,6 +20475,13 @@ origins_info = {
         "logo-small": "docs/metadata/dbaudio.png",
         "url": "https://www.dbaudio.com",
     },
+    "Vendors-Devialet": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.davialet.com",
+    },
     "Vendors-Dolby": {
         "min hz": 20,
         "max hz": 20000,
@@ -20626,12 +20847,26 @@ origins_info = {
         "logo-small": "docs/metadata/seeburg.png",
         "url": "https://www.seeburg.net",
     },
+    "Vendors-SONBS": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.sonbs.net",
+    },
     "Vendors-Theory Audio": {
         "min hz": 20,
         "max hz": 20000,
         "min dB": -40,
         "max dB": 10,
         "url": "https://www.theoryprofessional.com",
+    },
+    "Vendors-Tannoy": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.tannoy.com",
     },
     "Vendors-Vue Audiotechnik": {
         "min hz": 20,

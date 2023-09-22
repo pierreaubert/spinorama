@@ -1,0 +1,26 @@
+<div class="block my-1 mx-1">
+  <nav class="level is-light is-mobile">
+    <div class="level-left">
+      <div class="level-item is-left dropdown is-hoverable" id="menu-main">
+        <div class="dropdown-trigger" id="menu-main-trigger">
+          <button type="button" class="button" aria-haspopup="true" aria-controls="menu-main" value="menu-main" aria-label="menu-main">
+            <span class="icon">
+              <i class="fas fa-solid fa-bars" aria-hidden="true"></i>
+            </span>
+          </button>
+        </div>
+        <div class="dropdown-menu" id="menu-main-dropdown" role="menu">
+          <div class="dropdown-content">
+            <%include file="nav_menu.html"/>
+          </div>
+        </div>
+      </div>
+      <div class="level-item is-hidden-mobile py-0 my-0">
+        <a href="/" class="is-size-4 is-hidden-mobile">
+          <img src="/icons/icon-bookshelves.svg" alt="SPINorama" width="44">
+          <b>SPIN</b>orama
+        </a>
+      </div>
+    </div>
+  </nav>
+</div>

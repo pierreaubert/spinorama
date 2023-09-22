@@ -1,16 +1,14 @@
 EQ for Genelec 8030A computed from Princeton data
 Preference Score -1000.00 with EQ -1000.00
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-08-26-15:19:15
+Dated: 2023-09-14-12:56:52
 
-Preamp: -2.8 dB
+Preamp: -2.9 dB
 
-Filter  1: ON PK Fc    37 Hz Gain -0.53 dB Q 0.78
-Filter  2: ON PK Fc    73 Hz Gain -2.18 dB Q 1.10
-Filter  3: ON PK Fc    81 Hz Gain -1.39 dB Q 1.26
-Filter  4: ON PK Fc   117 Hz Gain +0.38 dB Q 0.90
-Filter  5: ON PK Fc   965 Hz Gain +1.43 dB Q 2.01
-Filter  6: ON PK Fc  3438 Hz Gain +1.72 dB Q 2.94
-Filter  7: ON PK Fc  8478 Hz Gain -0.73 dB Q 1.53
-Filter  8: ON PK Fc 10713 Hz Gain +1.52 dB Q 1.90
-Filter  9: ON PK Fc 12662 Hz Gain +1.71 dB Q 0.34
+Filter  1: ON PK Fc    25 Hz Gain -0.31 dB Q 1.22
+Filter  2: ON PK Fc   143 Hz Gain +0.28 dB Q 2.21
+Filter  3: ON PK Fc   181 Hz Gain -1.82 dB Q 1.71
+Filter  4: ON PK Fc   965 Hz Gain +1.47 dB Q 2.02
+Filter  5: ON PK Fc  3438 Hz Gain +2.11 dB Q 2.88
+Filter  6: ON PK Fc 11077 Hz Gain +1.55 dB Q 1.94
+Filter  7: ON PK Fc 16000 Hz Gain +1.55 dB Q 0.32

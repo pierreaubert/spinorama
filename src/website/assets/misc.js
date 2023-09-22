@@ -270,6 +270,17 @@ export function getReviews(value) {
             originLong = originLong.slice(0, originLong.length - 1) + '/Medium)';
         }
 
+        if (version.search('Gecko') !== -1) {
+            origin = origin + ' (Gecko)';
+            originLong = originLong + ' (Gecko)';
+        } else if (version.search('Tree') !== -1) {
+            origin = origin + ' (Tree)';
+            originLong = originLong + ' (Tree)';
+        } else if (version.search('Pod') !== -1) {
+            origin = origin + ' (Pod)';
+            originLong = originLong + ' (Pod)';
+        }
+
         const ipattern = version.search('pattern');
         if (ipattern !== -1) {
             const sversion = version.slice(ipattern + 8);
@@ -311,6 +322,13 @@ export function getReviews(value) {
         if (posConfiguration !== -1) {
             origin = origin + ' (' + version.slice(posConfiguration + 14).replace('-', ' ') + ')';
             originLong = originLong + ' (' + version.slice(posConfiguration + 14).replace('-', ' ') + ')';
+        }
+
+        // angree
+        const posDegrees = version.search(/10-degrees/);
+        if (posDegrees !== -1) {
+            origin = origin + ' (10°)';
+            originLong = originLong + ' (10°)';
         }
 
         reviews.push({

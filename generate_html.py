@@ -48,7 +48,7 @@ SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
 
 
-def write_if_different(new_content, filename):
+def write_if_different(new_content, filename: str):
     """Write the new content to disk only if it is different from the current one.
     The unchanged html files are then untouched and http cache effect is better.
     """

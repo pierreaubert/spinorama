@@ -35,7 +35,7 @@ from spinorama.compute_cea2034 import (
     estimated_inroom,
     estimated_inroom_hv,
 )
-from spinorama.load_misc import graph_melt, sort_angles
+from spinorama.load_misc import graph_melt, graph_unmelt, sort_angles
 from spinorama.compute_misc import unify_freq
 
 
@@ -355,11 +355,7 @@ def filter_graphs_partial(df):
             dfs[k] = df[k]
 
     for k in df:
-        dfs["{}_unmelted".format(k)] = (
-            dfs[k]
-            .pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max)
-            .reset_index()
-        )
+        dfs["{}_unmelted".format(k)] = graph_unmelt(dfs[k])
 
     logger.debug("DEBUG  filter_graphs partial (%s)", ", ".join(dfs.keys()))
     for k in dfs:

@@ -89,9 +89,9 @@ def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
 
 
 def peq_print(peq: Peq) -> None:
-    for _i, iir in enumerate(peq):
-        if iir[0] != 0:
-            print(iir[1])
+    print("IIR    Hz.  Q.   dB")
+    for _, iir in peq:
+        print(f"{iir.biquad_type:3d} {iir.freq:5.0f} {iir.q:1.1f} {iir.db_gain:+1.2f}")
 
 
 def peq_format_apo(comment: str, peq: Peq) -> str:

@@ -248,21 +248,21 @@ def compute(speakerlist, filters, ray_ids: dict, level: int):
             for m_version, measurement in metadata.speakers_info[speaker]["measurements"].items():
                 m_version_key = m_version  # .translate({ord(ch) : '_' for ch in '-.;/\' '})
                 # should not happen, usually it is an error in metadata that should be trapped by check_meta
-                if "origin" not in measurement.keys():
+                if "origin" not in measurement:
                     logger.error(
                         "measurement's data are incorrect: speaker=%s m_version=%s keys are (%s)",
                         speaker,
                         m_version,
-                        ", ".join(measurement.keys()),
+                        ", ".join(measurement),
                     )
                 m_origin = measurement["origin"]
-                if m_origin not in data_frame[speaker_key].keys():
+                if m_origin not in data_frame[speaker_key]:
                     data_frame[speaker_key][m_origin] = {}
 
                 if speaker not in ray_ids:
                     continue
 
-                if m_version not in ray_ids[speaker].keys():
+                if m_version not in ray_ids[speaker]:
                     if "mversion" in filters and (
                         m_version == filters["mversion"]
                         or m_version == "{}_eq".format(filters["mversion"])

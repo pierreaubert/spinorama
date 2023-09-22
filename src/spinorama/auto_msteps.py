@@ -21,7 +21,7 @@ from spinorama.filter_peq import Peq
 from spinorama import logger
 from spinorama.auto_geq import optim_grapheq
 from spinorama.auto_greedy import optim_greedy
-from spinorama.auto_global import optim_global
+from spinorama.auto_global import GlobalOptimizer
 
 
 def optim_multi_steps(
@@ -67,13 +67,11 @@ def optim_multi_steps(
         return greedy_status, (greedy_results, greedy_peq)
 
     if optim_config["optimisation"] == "global":
-        global_status, (global_results, global_peq) = optim_global(
+        go = GlobalOptimizer(
             df_speaker,
-            freq,
-            auto_target,
-            auto_target_interp,
             optim_config,
         )
+        global_status, (global_results, global_peq) = go.run()
 
         if global_status is False:
             logger.info("autoEQ (Global) failed for %s", speaker_name)

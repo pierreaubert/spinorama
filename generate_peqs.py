@@ -111,7 +111,7 @@ from generate_common import get_custom_logger, args2level, custom_ray_init, cach
 from spinorama.auto_save import optim_save_peq
 
 
-VERSION = "0.24"
+VERSION = "0.25"
 
 
 def print_items(aggregated_results):
@@ -516,17 +516,22 @@ def main():
         print("ERROR: please check for errors in parameters above!")
         sys.exit(1)
 
+    logger.debug("parameters: speaker_name=%s", speaker_name)
+    logger.debug("parameters:       origin=%s", origin)
+    logger.debug("parameters:     mversion=%s", mversion)
+    logger.debug("parameters:      mformat=%s", mformat)
+
     # load data
     print("Reading cache ...", end=" ", flush=True)
     df_all_speakers = {}
     try:
-        filters = {
+        do_filters = {
             "speaker_name": speaker_name,
             "format": mformat,
             "origin": origin,
             "version": mversion,
         }
-        df_all_speakers = cache_load(filters=filters, smoke_test=smoke_test)
+        df_all_speakers = cache_load(filters=do_filters, smoke_test=smoke_test)
     except ValueError as v_e:
         if speaker_name is not None:
             print(

@@ -23,6 +23,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+from spinorama.load_misc import graph_unmelt
 from spinorama.filter_peq import peq_spl, peq_preamp_gain
 from spinorama.compute_misc import savitzky_golay, compute_statistics
 from spinorama.plot import (
@@ -156,8 +157,8 @@ def graph_results(
     }
 
     # what's the min over freq?
-    optim_config["freq_reg_min"]
-    optim_config["freq_reg_max"]
+    # optim_config["freq_reg_min"]
+    # optim_config["freq_reg_max"]
     # build a graph for each peq
     g_auto_eq = graph_eq(freq, auto_peq)
 
@@ -180,16 +181,12 @@ def graph_results(
     df_optim = pd.DataFrame({"Freq": freq})
     df_optim["Auto"] = auto_target[0] - auto_target_interp[0] + peq_spl(freq, auto_peq)
     # show the 2 spinoramas
-    unmelted_spin = spin.pivot_table(
-        index="Freq", columns="Measurements", values="dB", aggfunc=max
-    ).reset_index()
+    unmelted_spin = graph_unmelt(spin)
 
     g_spin_noeq, g_spin_noeq_di = plot_spinorama_traces(unmelted_spin, g_params)
     g_spin_auto, g_spin_auto_di, unmelted_spin_auto = None, None, None
     if spin_auto is not None:
-        unmelted_spin_auto = spin_auto.pivot_table(
-            index="Freq", columns="Measurements", values="dB", aggfunc=max
-        ).reset_index()
+        unmelted_spin_auto = graph_unmelt(spin_auto)
         g_spin_auto, g_spin_auto_di = plot_spinorama_traces(unmelted_spin_auto, g_params)
 
     # show the 3 optimised curves
@@ -198,12 +195,8 @@ def graph_results(
         data = unmelted_spin
         data_auto = unmelted_spin_auto
         if which_curve == "Estimated In-Room Response":
-            data = pir.pivot_table(
-                index="Freq", columns="Measurements", values="dB", aggfunc=max
-            ).reset_index()
-            data_auto = pir_auto.pivot_table(
-                index="Freq", columns="Measurements", values="dB", aggfunc=max
-            ).reset_index()
+            data = graph_unmelt(pir)
+            data_auto = graph_unmelt(pir_auto)
 
         if which_curve == "Estimated In-Room Response":
             g_curve_noeq = plot_graph_regression_traces(data, which_curve, g_params)

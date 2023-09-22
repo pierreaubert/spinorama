@@ -308,9 +308,10 @@ class SpinoramaSpinoramaCorrectedERTests(unittest.TestCase):
                 0
             ][0][0].T[index]
         # get data from Cython code
-        self.df_spin = {}
-        self.df_spin["SPL Horizontal_unmelted"] = self.splH
-        self.df_spin["SPL Vertical_unmelted"] = self.splV
+        self.df_spin = {
+            "SPL Horizontal_unmelted": self.splH,
+            "SPL Vertical_unmelted": self.splV,
+        }
 
     def test_validate_cea2034(self):
         for measurement in [
@@ -351,13 +352,14 @@ class SpinoramaSpinoramaCorrectedERTests(unittest.TestCase):
         empty_eq = ()
         _ = score_loss(self.df_spin, empty_eq)
         self.assertIn("pre_computed", self.df_spin.keys())
-        cython = {}
-        cython["Freq"] = self.df_spin["pre_computed"]["freq"]
-        cython["On Axis"] = self.df_spin["pre_computed"]["on"]
-        cython["Listening Window"] = self.df_spin["pre_computed"]["spin"][0]
-        cython["Early Reflections"] = self.df_spin["pre_computed"]["spin"][1]
-        cython["Sound Power"] = self.df_spin["pre_computed"]["spin"][14]
-        cython["Estimated In-Room Response"] = self.df_spin["pre_computed"]["spin"][15]
+        cython = {
+            "Freq": self.df_spin["pre_computed"]["freq"],
+            "On Axis": self.df_spin["pre_computed"]["on"],
+            "Listening Window": self.df_spin["pre_computed"]["spin"][0],
+            "Early Reflections": self.df_spin["pre_computed"]["spin"][1],
+            "Sound Power": self.df_spin["pre_computed"]["spin"][14],
+            "Estimated In-Room Response": self.df_spin["pre_computed"]["spin"][15],
+        }
         #
         for measurement in [
             "On Axis",

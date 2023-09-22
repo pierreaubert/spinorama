@@ -222,6 +222,10 @@ VALID_MODIFIERS = (
     "horizontal",
     # configuration
     "configuration",
+    # specific for Devialet Phantom
+    "vtree",
+    "vgecko",
+    "vpod",
 )
 
 

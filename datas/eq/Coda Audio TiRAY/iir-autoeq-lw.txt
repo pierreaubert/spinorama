@@ -1,0 +1,14 @@
+EQ for Coda Audio TiRAY computed from Vendors-Coda Audio data
+Preference Score 2.55 with EQ 3.93
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
+Dated: 2023-09-14-14:14:52
+
+Preamp: -1.7 dB
+
+Filter  1: ON PK Fc    73 Hz Gain -2.51 dB Q 0.98
+Filter  2: ON PK Fc    99 Hz Gain -2.92 dB Q 0.86
+Filter  3: ON PK Fc   106 Hz Gain -2.68 dB Q 1.04
+Filter  4: ON PK Fc   181 Hz Gain -2.69 dB Q 1.76
+Filter  5: ON PK Fc   604 Hz Gain +2.04 dB Q 0.28
+Filter  6: ON PK Fc 12246 Hz Gain -3.00 dB Q 0.39
+Filter  7: ON PK Fc 13092 Hz Gain -2.99 dB Q 0.33
