@@ -218,7 +218,7 @@ def cache_load_seq(filters, smoke_test):
     for cache in cache_files:
         speaker_name = filters.get("speaker_name")
         if speaker_name is not None and cache[-5:-3] != cache_key(speaker_name):
-            logging.debug("skipping %s key=%s".format(speaker_name, cache_key(speaker_name)))
+            logging.debug("skipping %s key=%s", speaker_name, cache_key(speaker_name))
             continue
         df_read = fl.load(path=cache)
         logging.debug("reading file %s found %d entries", cache, len(df_read))

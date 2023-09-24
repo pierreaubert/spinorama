@@ -20,13 +20,12 @@ import bisect
 import math
 
 import numpy as np
-import pandas as pd
 import scipy.optimize as opt
 from scipy.interpolate import InterpolatedUnivariateSpline
 
 from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MAX_FREQ
-from spinorama.ltype import Vector, DataSpeaker, OptimResult
+from spinorama.ltype import Vector, DataSpeaker
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import Peq, peq_spl, peq_print
 from spinorama.auto_misc import get3db
