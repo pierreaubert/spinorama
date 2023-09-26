@@ -6011,7 +6011,7 @@ speakers_info: SpeakerDatabase = {
         "brand": "Epos",
         "model": "ES14N",
         "type": "passive",
-        "price": "",
+        "price": "2000",
         "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "vendor",
@@ -6022,6 +6022,9 @@ speakers_info: SpeakerDatabase = {
                 "quality": "high",
                 "reviews": {
                     "ref": "https://karl-heinz-fink.de/the-measurements-checking-out-the-epos-14n",
+                    "whf": "https://www.whathifi.com/reviews/epos-es14n",
+                    "ahl": "https://www.audioholics.com/bookshelf-speaker-reviews/epos-es14n",
+                    "avf": "https://www.avforums.com/reviews/epos-es14n-standmount-speaker-review.20944/",
                 },
                 "review_published": "20230926",
                 "specifications": {
@@ -6034,6 +6037,7 @@ speakers_info: SpeakerDatabase = {
                     },
                     "weight": 16,
                 },
+                "notes": "data is Klippel generated, voltage is 2.83V and results are smoothed at 1/12 octave which may increase the score a bit",
             },
         },
     },
