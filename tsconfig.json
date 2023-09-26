@@ -1,0 +1,5 @@
+{
+  "compilerOptions": {},
+  "include": ["src/websites/assets/*.ts", "tests/*.ts"],
+  "lib": ["dom", "ES2021"]
+}

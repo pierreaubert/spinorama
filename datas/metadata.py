@@ -6007,6 +6007,36 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Epos ES14N": {
+        "brand": "Epos",
+        "model": "ES14N",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "high",
+                "reviews": {
+                    "ref": "https://karl-heinz-fink.de/the-measurements-checking-out-the-epos-14n",
+                },
+                "review_published": "20230926",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4.3,
+                    "size": {
+                        "height": 491,
+                        "width": 250,
+                        "depth": 385,
+                    },
+                    "weight": 16,
+                },
+            },
+        },
+    },
     "Essence Electrostatic Model 1600": {
         "brand": "Essence Electrostatic",
         "model": "Model 1600",

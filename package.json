@@ -1,11 +1,14 @@
 {
   "dependencies": {
+    "fnm": "^0.0.0",
     "html-validate": "^7.13.2",
     "html-validator": "^6.0.1",
     "html-validator-cli": "^7.0.1",
     "npm": "^9.8.1",
     "plotly": "^1.0.6",
-    "sass": "^1.58.0"
+    "prettier": "^3.0.3",
+    "sass": "^1.58.0",
+    "typescript-language-server": "^3.3.2"
   },
   "devDependencies": {
     "flow": "^0.2.3",
