@@ -13983,6 +13983,42 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Meyer Sound Amie": {
+        "brand": "Meyer Sound",
+        "model": "Amie",
+        "type": "active",
+        "price": "4100",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review_published": "20231001",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/meyer-sound-amie-monitor-review.48281/",
+                    "pp": "https://www.production-partner.de/allgemein/test-meyer-sound-amie/",
+                },
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "m_noise": 120.5,
+                        "pink_noise": 117.5,
+                        "b_noise": 120,
+                    },
+                    "size": {
+                        "height": 389,
+                        "width": 229,
+                        "depth": 336,
+                    },
+                    "weight": 11.3,
+                },
+            },
+        },
+    },
     "Meyer Sound Acheron LF": {
         "skip": True,
         "brand": "Meyer Sound",
