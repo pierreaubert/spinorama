@@ -13988,6 +13988,7 @@ speakers_info: SpeakerDatabase = {
         "model": "Amie",
         "type": "active",
         "price": "4100",
+        "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "asr",
         "measurements": {

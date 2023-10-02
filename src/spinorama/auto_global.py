@@ -107,11 +107,14 @@ class GlobalOptimizer(object):
 
         # get lw/on
         self.lw = df_speaker["CEA2034_unmelted"]["Listening Window"].to_numpy()
+        self.on = df_speaker["CEA2034_unmelted"]["On Axis"].to_numpy()
         self.freq = df_speaker["CEA2034_unmelted"]["Freq"].to_numpy()
 
         # used for controlling optimisation of the score
-        lw_target = self.lw - np.linspace(0, 0.5, len(self.lw))
+        lw_slope = self.optim_config.get("slope_listening_window", -0.5)
+        lw_target = self.lw + np.linspace(0, lw_slope, len(self.lw))
         self.target = _resample(self.freq, self.freq_space, lw_target)
+        self.target = _resample(self.freq, self.freq_space, self.on)
 
         self.min_db = optim_config["MIN_DBGAIN"]
         self.max_db = optim_config["MAX_DBGAIN"]
