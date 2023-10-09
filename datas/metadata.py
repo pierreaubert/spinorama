@@ -970,6 +970,14 @@ speakers_info: SpeakerDatabase = {
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/arendal-1961-center-monitor-speaker-review.43190/",
                 "review_published": "20230323",
             },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/arenda_1961_monitor/",
+                },
+                "review_published": "20231009",
+            },
         },
     },
     "Arendal Sound 1961 Bookshelf": {
@@ -1056,6 +1064,43 @@ speakers_info: SpeakerDatabase = {
                 "quality": "low",
                 "review": "https://www.audioholics.com/bookshelf-speaker-reviews/arendal-1723/conclusion",
                 "review_published": "20210705",
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1723_thx_monitor",
+                },
+                "review_published": "20231011",
+            },
+        },
+    },
+    "Arendal Sound 1723 Monitor S THX": {
+        "brand": "Arendal Sound",
+        "model": "1723 Monitor S THX",
+        "type": "passive",
+        "price": "2000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/arendal_1723_thx_s_monitor/",
+                },
+                "review_published": "20231011",
+                "specifications": {
+                    "sensitivity": "88.7",
+                    "impedance": "4",
+                    "size": {
+                        "height": 569,
+                        "width": 245,
+                        "depth": 320,
+                    },
+                    "weight": 18.7,
+                },
             },
         },
     },
@@ -6802,6 +6847,23 @@ speakers_info: SpeakerDatabase = {
                     "mean_min": 50,
                     "mean_max": 500,
                 },
+            },
+        },
+    },
+    "Fiio SP3": {
+        "brand": "Fiio",
+        "model": "SP3",
+        "type": "active",
+        "price": "350",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/fiio_sp3/",
+                "review_published": "20231009",
             },
         },
     },
@@ -13988,7 +14050,7 @@ speakers_info: SpeakerDatabase = {
         "model": "Amie",
         "type": "active",
         "price": "4100",
-        "amount": "pair",
+        "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "asr",
         "measurements": {
@@ -16613,6 +16675,25 @@ speakers_info: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/presonus-eris-e3-5-powered-monitor-review-100-pair.23388/",
                 },
                 "review_published": "20210514",
+            },
+        },
+    },
+    "Presonus Eris E3.5 2nd edition": {
+        "brand": "Presonus",
+        "model": "Eris E3.5 2nd edition",
+        "type": "active",
+        "price": "100",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/presonus_eris3.5_mk2/",
+                },
+                "review_published": "20231009",
             },
         },
     },
