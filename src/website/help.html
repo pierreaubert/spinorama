@@ -2,14 +2,14 @@
 <html lang="en">
   <head>
     <title>Help for spinorama website</title>
-    <%include file="head.html"/> <%include file="head_vega.html"/>
+    <%include file="head.html"/>
   </head>
   <body>
     <%include file="nav_simple.html"/>
 
     <div class="level has-background-info-dark is-hidden-mobile">...</div>
 
-    <div class="container">
+    <div class="container is-fluid">
       <section class="content">
         <h1 class="title">Measurements</h1>
         <h2 class="subtitle">What is a spinorama set of graphs?</h2>
@@ -443,7 +443,58 @@
         tonality score will be easier to EQ and will adapt well to your room.
         Define the SPL you want (at 1% distorsion) and now you have reasonable
         choices.
+
+	<h2>How to interpret the numbers on the landing page?</h2>
+	<a name="definition"></a>
+
+	Each speaker measurement shows up in a box similar to:
+	<picture>
+          <source
+            srcset="help_pictures/example_main_page.webp"
+            type="image/webp"
+            >
+          <img
+            src="help_pictures/help_select_high_quality.jpg"
+            alt="Example for one speaker on the landing page"
+            >
+	</picture>
+	<ul>
+	  <li>
+	    <a name="priceDefinition"></a>
+	    <b>Price</b>: should be self explanatory; it is in USD per
+	    speaker not for a pair. The price was the first hit on Google
+	    when I looked it up. It may be different in your country and/or
+	    later in time.
+	  </li>
+	  <li>
+	    <a name="tonalityDefinition"></a>
+	    <b>Tonality</b>: this is a value between -10 and 10. It is defined in
+	    the <a href="https://webstore.ansi.org/standards/cea/cea20342015ansi">CEA2034</a>
+	    standard and computed from the spinorama data. If you know
+	    how to read code, you can find my
+	    implementation <a href="https://github.com/pierreaubert/spinorama/blob/master/src/spinorama/compute_cea2034.py">here</a>. Higher
+	    is better. Note that a difference between two scores is
+	    only significant if the difference is greater than 0.6. Be
+	    also mindfull than smoother or less precise data can yield
+	    a higher score than an Klippel generated set of data for example.
+	  </li>
+	  <li>
+	    <a name="bassExtensionDefinition"></a>
+	    <b>Bass extension</b>: this is the frequency at which the
+	    SPL is 3dB lower than the
+	    average of the on axis measurement between 300Hz and
+	    5kHz. Details of the computations
+	    are <a href="https://github.com/pierreaubert/spinorama/blob/7266833ce84556508e52b59a0b5e2f77227fa9ab/src/spinorama/compute_estimates.py#L57">here</a>. Lower
+	    is better.
+	  </li>
+	  <li>
+	    <a name="flatnessDefinition"></a>
+	    <b>Flatness</b>: this is the variation in dB around the average SPL of
+	    the on axis measurement between 300Hz and 5kHz. Lower is better.
+	  </li>
+	</ul>
       </section>
+
 
       <section class="content">
         <h1 class="title">Source of data and citations</h1>

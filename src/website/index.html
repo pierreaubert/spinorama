@@ -6,6 +6,7 @@
   </head>
   <body>
     <%include file="nav_search.html"/>
+    <%include file="nav_counters.html"/>
     <%namespace name="util" module="website.utils" import="*"/>
 
     <script>
@@ -46,6 +47,9 @@
                    {{priceAsDollar}}
                  </span>
                  <span>Price: <b>{{price}}</b></span>
+                 <span class="icon">
+		   <a href="/help.html#priceDefinition"><i class="fa-regular fa-circle-question"></i></a>
+		 </span>
                </span>
                <br/>
                <span class="icon-text">
@@ -53,6 +57,9 @@
                    <img src="/icons/volume-danger-{{iconVolume score.scoreScaled}}.svg" height="1em" alt="rating"></img>
                  </span>
                  <span>Tonality: <b>{{score.score}}</b></span>
+                 <span class="icon">
+		   <a href="/help.html#tonalityDefinition"><i class="fa-regular fa-circle-question"></i></a>
+		 </span>
                </span>
                <br/>
                <span class="icon-text">
@@ -60,6 +67,9 @@
                    <img src="/icons/volume-info-{{iconVolume score.lfxScaled}}.svg" height="1em" alt="rating"></img>
                  </span>
                  <span>Bass extension: <b>{{score.lfx}}</b>Hz</span>
+                 <span class="icon">
+		   <a href="/help.html#bassExtensionDefinition"><i class="fa-regular fa-circle-question"></i></a>
+		 </span>
                </span>
                <br/>
                <span class="icon-text">
@@ -67,6 +77,9 @@
                    <img src="/icons/volume-success-{{iconVolume score.flatnessScaled}}.svg" height="1em" alt="rating"></img>
                  </span>
                  <span>Flatness: <b>&plusmn;{{score.flatness}}</b>dB</span>
+                 <span class="icon">
+		   <a href="/help.html#flatnessDefinition"><i class="fa-regular fa-circle-question"></i></a>
+		 </span>
                </span>
              </div>
            </div>
@@ -105,12 +118,14 @@
     <div class="section">
       <div class="searchresults">
         <div class="columns is-multiline is-mobile is-centered" id="speakers" data-num="0">
-          <script type="module" src="./assets/index.js"></script>
         </div>
       </div>
     </div>
 
     <%include file="search.html"/>
     <%include file="footer.html"/>
+
+    <script type="module" src="./assets/index.js"></script>
+
   </body>
 </html>

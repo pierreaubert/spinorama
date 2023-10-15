@@ -28,6 +28,30 @@ getMetadata()
         const source = document.querySelector('#templateSpeaker').innerHTML;
         const template = Handlebars.compile(source);
         const speakerContainer = document.querySelector('[data-num="0"');
+	const speakerCount = document.querySelector('#speakerCount p:nth-child(2)');
+	const measurementCount = document.querySelector('#measurementCount p:nth-child(2)');
+	const brandCount = document.querySelector('#brandCount p:nth-child(2)');
+	const reviewCount = document.querySelector('#reviewCount p:nth-child(2)');
+
+	function getMeasurementCount() {
+	    let count = 0;
+	    metadata.forEach( (e) => {
+		count += Object.values(e.measurements).length;
+	    });
+	    return count;
+	}
+
+	function getBrandCount() {
+	    const brands = new Set();
+	    metadata.forEach( (e) => {
+		brands.add(e.brand);
+	    });
+	    return brands.size;
+	}
+
+	function getReviewCount() {
+	    return document.querySelectorAll('#selectReviewer')[0].options.length;
+	}
 
         function getDollar(price) {
             if (price === '?') {
@@ -81,6 +105,11 @@ getMetadata()
             });
             return fragment;
         }
+
+	speakerCount.innerHTML = metadata.size;
+	measurementCount.innerHTML = getMeasurementCount();
+	brandCount.innerHTML = getBrandCount();
+	reviewCount.innerHTML = getReviewCount();
 
         speakerContainer.appendChild(display(metadata));
     })
