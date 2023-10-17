@@ -19499,6 +19499,23 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Tekton M-Lore": {
+        "brand": "Tekton",
+        "model": "M-Lore",
+        "type": "passive",
+        "price": "750",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/tekton-m-lore-speaker-review.48732/",
+                "review_published": "20231017",
+            },
+        },
+    },
     "Theory Audio SB25": {
         "brand": "Theory Audio",
         "model": "SB25",
