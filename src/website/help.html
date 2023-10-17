@@ -451,8 +451,7 @@
         Define the SPL you want (at 1% distorsion) and now you have reasonable
         choices.
 
-	<h2>How to interpret the numbers on the landing page?</h2>
-	<a name="definition"></a>
+	<h2 id="definition">How to interpret the numbers on the landing page?</h2>
 
 	Each speaker measurement shows up in a box similar to:
 	<picture>
@@ -466,15 +465,13 @@
             >
 	</picture>
 	<ul>
-	  <li>
-	    <a name="priceDefinition"></a>
+	  <li id="priceDefinition">
 	    <b>Price</b>: should be self explanatory; it is in USD per
 	    speaker not for a pair. The price was the first hit on Google
 	    when I looked it up. It may be different in your country and/or
 	    later in time.
 	  </li>
-	  <li>
-	    <a name="tonalityDefinition"></a>
+	  <li id="tonalityDefinition">
 	    <b>Tonality</b>: this is a value between -10 and 10. It is defined in
 	    the <a href="https://webstore.ansi.org/standards/cea/cea20342015ansi">CEA2034</a>
 	    standard and computed from the spinorama data. If you know
@@ -485,8 +482,7 @@
 	    also mindfull than smoother or less precise data can yield
 	    a higher score than an Klippel generated set of data for example.
 	  </li>
-	  <li>
-	    <a name="bassExtensionDefinition"></a>
+	  <li id="bassExtensionDefinition">
 	    <b>Bass extension</b>: this is the frequency at which the
 	    SPL is 3dB lower than the
 	    average of the on axis measurement between 300Hz and
@@ -494,8 +490,7 @@
 	    are <a href="https://github.com/pierreaubert/spinorama/blob/7266833ce84556508e52b59a0b5e2f77227fa9ab/src/spinorama/compute_estimates.py#L57">here</a>. Lower
 	    is better.
 	  </li>
-	  <li>
-	    <a name="flatnessDefinition"></a>
+	  <li id="flatnessDefinition">
 	    <b>Flatness</b>: this is the variation in dB around the average SPL of
 	    the on axis measurement between 300Hz and 5kHz. Lower is better.
 	  </li>

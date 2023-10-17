@@ -19513,6 +19513,16 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/tekton-m-lore-speaker-review.48732/",
                 "review_published": "20231017",
+                "specifications": {
+                    "sensitivity": 95,
+                    "impedance": 8,
+                    "size": {
+                        "height": 863,
+                        "width": 231,
+                        "depth": 254,
+                    },
+                    "weight": 20,
+                },
             },
         },
     },
