@@ -326,7 +326,7 @@ def sanity_check_specifications(name: str, version: str, specs: dict) -> int:
                     status = 1
                 try:
                     fangle = float(angle)
-                    if fangle < VALID_ANGLE_MIN or fangle >= VALID_ANGLE_MAX:
+                    if fangle < VALID_ANGLE_MIN or fangle > VALID_ANGLE_MAX:
                         logging.error(
                             "%s: measurement %s angle %s is not in ]%d, %d]",
                             name,
