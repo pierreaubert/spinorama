@@ -16140,6 +16140,40 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Perlisten r4s": {
+        "brand": "Perlisten",
+        "model": "r4s",
+        "type": "passive",
+        "price": "2000",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Perlisten",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "vendor": "https://www.perlistenaudio.com/downloads/",
+                },
+                "notes": "Warning: measurements provided by vendor (Perlisten) are smoothed",
+                "review_published": "20231022",
+                "quality": "medium",
+                "specifications": {
+                    "sensitivity": 86.5,
+                    "impedance": 4,
+                    "SPL": {
+                        "max": 109,
+                    },
+                    "size": {
+                        "height": 378,
+                        "width": 230,
+                        "depth": 173,
+                    },
+                    "weight": 9.5,
+                },
+            },
+        },
+    },
     "Perlisten r5t": {
         "brand": "Perlisten",
         "model": "r5t",
@@ -16158,6 +16192,74 @@ speakers_info: SpeakerDatabase = {
                 "notes": "Warning: measurements provided by vendor (Perlisten) are smoothed",
                 "review_published": "20220208",
                 "quality": "low",
+            },
+        },
+    },
+    "Perlisten r5c": {
+        "brand": "Perlisten",
+        "model": "r5c",
+        "type": "passive",
+        "price": "3000",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Perlisten",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "vendor": "https://www.perlistenaudio.com/downloads/",
+                },
+                "notes": "Warning: measurements provided by vendor (Perlisten) are smoothed",
+                "review_published": "20231025",
+                "quality": "medium",
+                "specifications": {
+                    "sensitivity": 88.6,
+                    "impedance": 4,
+                    "SPL": {
+                        "max": 109,
+                    },
+                    "size": {
+                        "height": 240,
+                        "width": 550,
+                        "depth": 270,
+                    },
+                    "weight": 15.0,
+                },
+            },
+        },
+    },
+    "Perlisten r5m": {
+        "brand": "Perlisten",
+        "model": "r5m",
+        "type": "passive",
+        "price": "6000",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Perlisten",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "vendor": "https://www.perlistenaudio.com/downloads/",
+                },
+                "notes": "Warning: measurements provided by vendor (Perlisten) are smoothed",
+                "review_published": "20231025",
+                "quality": "medium",
+                "specifications": {
+                    "sensitivity": 89.2,
+                    "impedance": 4,
+                    "SPL": {
+                        "max": 113,
+                    },
+                    "size": {
+                        "height": 546,
+                        "width": 230,
+                        "depth": 336,
+                    },
+                    "weight": 17.5,
+                },
             },
         },
     },
