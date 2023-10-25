@@ -177,11 +177,8 @@ cpdef c_score_peq(
     for i in range(spl_h.shape[0]):
         spl_h_peq[i] = np.add(spl_h[i], peq)
         spl_v_peq[i] = np.add(spl_v[i], peq)
-    cdef Py_ssize_t [:, :] c_idx
-    for i, r in enumerate(range(idx)):
-        c_idx[i] = r
     cdef spl = np.concatenate((spl_h_peq, spl_v_peq), axis=0)
-    cdef spin = c_cea2034(spl, c_idx, weigths)
+    cdef spin = c_cea2034(spl, idx, weigths)
     return spin, c_score(freq, intervals, spl_h_peq[17], spin[0], spin[-2], spin[-1])
 
 
