@@ -10112,6 +10112,44 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "JBL CBT 1000": {
+        "brand": "JBL",
+        "model": "CBT 1000",
+        "type": "passive",
+        "price": "2600",
+        "shape": "cbt",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-JBL",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20231025",
+                "quality": "low",
+                "notes": "{}".format(note_jbl_gll),
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 160,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 95,
+                    "impedance": 4,
+                    "SPL": {
+                        "max": 127,
+                        "peak": 130,
+                        "pink_noise": 124,
+                    },
+                    "size": {
+                        "height": 1020,
+                        "width": 250,
+                        "depth": 345,
+                    },
+                    "weight": 24.5,
+                },
+            },
+        },
+    },
     "JBL Control 1 Pro": {
         "brand": "JBL",
         "model": "Control 1 Pro",
