@@ -45,7 +45,7 @@ cdef double[:,:] spl2pressure2(const double[:,:] spl):
     return p2
 
 
-cdef double[:] apply_rms(const double[:,:] p2, idx):
+cdef double[:] apply_rms(const double[:,:] p2, const Py_ssize_t[:] idx):
     """"Compute RMS"""
     cdef Py_ssize_t len_idx = len(idx)
     cdef double[:] rms = np.zeros(p2.shape[1])
@@ -55,7 +55,7 @@ cdef double[:] apply_rms(const double[:,:] p2, idx):
     return pressure2spl(np.sqrt(np.divide(rms, len_idx)))
 
 
-cdef double[:] apply_weigthed_rms(const double[:,:] p2, idx, const double[:] weigths):
+cdef double[:] apply_weigthed_rms(const double[:,:] p2, const Py_ssize_t[:] idx, const double[:] weigths):
     """"Compute "weigthed RMS"""
     cdef Py_ssize_t len_idx = len(idx)
     cdef double[:] rms = np.zeros(p2.shape[1])
@@ -67,7 +67,7 @@ cdef double[:] apply_weigthed_rms(const double[:,:] p2, idx, const double[:] wei
     return pressure2spl(np.sqrt(np.divide(rms, sum_weigths)))
 
 
-cpdef c_cea2034(const double[:,:] spl, idx, const double[:] weigths):
+cpdef c_cea2034(const double[:,:] spl, const Py_ssize_t[:,:] idx, const double[:] weigths):
     """Compute CEA2034"""
     cdef Py_ssize_t len_spl = len(spl[0])
     cdef pressure2 = spl2pressure2(spl)
@@ -118,7 +118,8 @@ cpdef double c_lfx(const double[:] freq, const double[:] lw, const double[:] sp)
     cdef lw_min = np.searchsorted(freq, 300, side="right")
     cdef lw_max = np.searchsorted(freq, 10000, side="left")
     cdef double lw_ref = np.mean(lw[lw_min:lw_max])-6
-    cdef lfx_range = [(i, f) for i, f in enumerate(freq[:lw_min]) if sp[i]<=lw_ref]
+    cdef Py_ssize_t i
+    lfx_range = [(i, f) for i, f in enumerate(freq[:lw_min]) if sp[i]<=lw_ref]
     if len(lfx_range) == 0:
         return math.log10(freq[0])
 
@@ -126,7 +127,7 @@ cpdef double c_lfx(const double[:] freq, const double[:] lw, const double[:] sp)
     lfx_list = list(next(lfx_grouped))
     if len(lfx_list) <= 1:
         return LFX_DEFAULT
-    pos = lfx_list[-1][0]
+    cdef Py_ssize_t pos = lfx_list[-1][0]
     if len(freq) < pos-1:
         pos = pos +1
     return math.log10(freq[pos])
@@ -176,8 +177,11 @@ cpdef c_score_peq(
     for i in range(spl_h.shape[0]):
         spl_h_peq[i] = np.add(spl_h[i], peq)
         spl_v_peq[i] = np.add(spl_v[i], peq)
+    cdef Py_ssize_t [:, :] c_idx
+    for i, r in enumerate(range(idx)):
+        c_idx[i] = r
     cdef spl = np.concatenate((spl_h_peq, spl_v_peq), axis=0)
-    cdef spin = c_cea2034(spl, idx, weigths)
+    cdef spin = c_cea2034(spl, c_idx, weigths)
     return spin, c_score(freq, intervals, spl_h_peq[17], spin[0], spin[-2], spin[-1])
 
 
