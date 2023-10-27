@@ -1,0 +1,14 @@
+EQ for Sigberg Audio Manta computed from Vendors-Sigberg Audio data
+Preference Score 3.40 with EQ 4.71
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.25
+Dated: 2023-10-27-18:05:45
+
+Preamp: -2.7 dB
+
+Filter  1: ON PK Fc    85 Hz Gain +3.00 dB Q 1.60
+Filter  2: ON PK Fc   204 Hz Gain -1.88 dB Q 1.30
+Filter  3: ON PK Fc   942 Hz Gain -2.01 dB Q 3.00
+Filter  4: ON PK Fc  1244 Hz Gain +2.99 dB Q 1.81
+Filter  5: ON PK Fc  5165 Hz Gain -1.83 dB Q 0.36
+Filter  6: ON PK Fc 11882 Hz Gain -2.74 dB Q 1.55
+Filter  7: ON PK Fc 16239 Hz Gain +2.99 dB Q 0.45
