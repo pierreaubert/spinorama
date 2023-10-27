@@ -45,29 +45,33 @@ cdef double[:,:] spl2pressure2(const double[:,:] spl):
     return p2
 
 
-cdef double[:] apply_rms(const double[:,:] p2, const Py_ssize_t[:] idx):
+cdef double[:] apply_rms(const double[:,:] p2, idx):
     """"Compute RMS"""
     cdef Py_ssize_t len_idx = len(idx)
     cdef double[:] rms = np.zeros(p2.shape[1])
     cdef Py_ssize_t i
+    cdef Py_ssize_t idxi
     for i in range(len_idx):
-        rms = np.add(rms, p2[idx[i]])
+        idxi = idx[i]
+        rms = np.add(rms, p2[idxi])
     return pressure2spl(np.sqrt(np.divide(rms, len_idx)))
 
 
-cdef double[:] apply_weigthed_rms(const double[:,:] p2, const Py_ssize_t[:] idx, const double[:] weigths):
+cdef double[:] apply_weigthed_rms(const double[:,:] p2, idx, const double[:] weigths):
     """"Compute "weigthed RMS"""
     cdef Py_ssize_t len_idx = len(idx)
     cdef double[:] rms = np.zeros(p2.shape[1])
     cdef double sum_weigths = 0.0
     cdef Py_ssize_t i
+    cdef Py_ssize_t idxi
     for i in range(len_idx):
-        rms = np.add(rms, np.multiply(p2[idx[i]],weigths[idx[i]]))
-        sum_weigths += weigths[idx[i]]
+        idxi = idx[i]
+        rms = np.add(rms, np.multiply(p2[idxi],weigths[idxi]))
+        sum_weigths += weigths[idxi]
     return pressure2spl(np.sqrt(np.divide(rms, sum_weigths)))
 
 
-cpdef c_cea2034(const double[:,:] spl, const Py_ssize_t[:,:] idx, const double[:] weigths):
+cpdef c_cea2034(const double[:,:] spl, idx, const double[:] weigths):
     """Compute CEA2034"""
     cdef Py_ssize_t len_spl = len(spl[0])
     cdef pressure2 = spl2pressure2(spl)
