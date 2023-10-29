@@ -17375,7 +17375,7 @@ speakers_info: SpeakerDatabase = {
                 "origin": "Vendors-Sigberg Audio",
                 "format": "spl_hv_txt",
                 "quality": "high",
-                "review_published": "20231027",
+                "review_published": "20231028",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/sigberg-audio-manta-12-wideband-cardioid-active-speakers-prototype-build-thread.28255/",
                     "sigbergaudio": "https://www.sigbergaudio.no/blogs/news/interview-with-christer-krogh-head-engineer-of-velvet-recording",
@@ -17399,7 +17399,7 @@ speakers_info: SpeakerDatabase = {
         "brand": "Sigberg Audio",
         "model": "SBS.1",
         "type": "active",
-        "price": "",
+        "price": "2500",
         "amount": "each",
         "shape": "bookshelves",
         "default_measurement": "vendor-v2",
@@ -17408,18 +17408,18 @@ speakers_info: SpeakerDatabase = {
                 "origin": "Vendors-Sigberg Audio",
                 "format": "spl_hv_txt",
                 "quality": "high",
-                "review_published": "20231027",
+                "review_published": "20231028",
                 "reviews": {},
                 "specifications": {
                     "SPL": {
-                        "peak": 122,
+                        "peak": 116,
                     },
                     "size": {
-                        "height": 600,
-                        "width": 360,
-                        "depth": 350,
+                        "height": 410,
+                        "width": 190,
+                        "depth": 230,
                     },
-                    "weight": 25,
+                    "weight": 9.5,
                 },
             },
             "vendor-v1": {
@@ -18842,9 +18842,9 @@ speakers_info: SpeakerDatabase = {
         "brand": "Revel",
         "model": "F226be",
         "type": "passive",
-        "price": "",
+        "price": "2900",
         "shape": "floorstanders",
-        "amount": "pair",
+        "amount": "each",
         "default_measurement": "eac",
         "measurements": {
             "eac": {

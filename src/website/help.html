@@ -474,13 +474,24 @@
 	  <li id="tonalityDefinition">
 	    <b>Tonality</b>: this is a value between -10 and 10. It is defined in
 	    the <a href="https://webstore.ansi.org/standards/cea/cea20342015ansi">CEA2034</a>
-	    standard and computed from the spinorama data. If you know
-	    how to read code, you can find my
-	    implementation <a href="https://github.com/pierreaubert/spinorama/blob/master/src/spinorama/compute_cea2034.py">here</a>. Higher
-	    is better. Note that a difference between two scores is
-	    only significant if the difference is greater than 0.6. Be
-	    also mindfull than smoother or less precise data can yield
-	    a higher score than an Klippel generated set of data for example.
+	    standard and is computed from the spinorama data.
+	    <ul>
+	      <li>Higher is better</li>
+	      <li>It make sense for tower, bookshelves or center but
+		not for surround, in-wall or column speakers</li>
+	      <li>Note that a difference between two scores is
+		only significant if the difference is greater than
+		0.6. </li>
+	      <li>Be also mindfull than smoother or less precise data
+	      can yield a higher score than an Klippel generated set
+		of data for example. You can easily remove 0.5 to 1.5
+	      to the score for highly smoothed data.</li>
+	      <li>The score does not tell about maximum output or
+		about distorsion. You can get the same score for a
+		portable bluetooth speaker and a large tower.</li>
+	      <li>If you know how to read code, you can find my
+		implementation <a href="https://github.com/pierreaubert/spinorama/blob/master/src/spinorama/compute_cea2034.py">here</a>.</li>
+	    </ul>
 	  </li>
 	  <li id="bassExtensionDefinition">
 	    <b>Bass extension</b>: this is the frequency at which the

@@ -320,7 +320,10 @@ def main():
     # copy css/js files
     logger.info("Copy js files to %s", cpaths.CPATH_DOCS_ASSETS_JS)
     try:
-        for item in ("misc",):
+        for item in (
+            "misc",
+            "params",
+        ):
             item_name = "assets/{0}.js".format(item)
             logger.info("Write %s", item_name)
             item_html = mako_templates.get_template(item_name)
