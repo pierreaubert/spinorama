@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/awk
+# -*- awk -*-
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
@@ -16,20 +17,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-export LOCALE=C
+BEGIN {
+    known["sr"]="Sound &amp; Recording";
+    known["pp"]="Production Partner";
+    known["audioxpress"]="Audio Xpress";
+    known["avnirvana"]="AV Nirvana";
+    known["sausalitoaudio"]="Sausalito Audio";
+    known["soundstageultra"]="Sound Stage Ultra";
+    known["tomvg"]="TomVG";
+    # known[""]="";
+}
+{
+    val=toupper(substr($0,1,1));
+    name=substr($0,2);
 
-AWK=awk
-SED=sed
+    if ($0 in known) {
+       val="";
+       name=known[$0];
+    } else if (length($0) < 4 ) {
+       val="";
+       name=toupper($0);
+    }
 
-if test "$OS" = "Darwin"  -a "$ARCH" = "arm64" ; then
-    AWK=gawk
-    SED=gsed
-fi
-
-json_pp < docs/assets/metadata.json  | \
-    grep -e '"misc-' | \
-    grep -v default | \
-    $SED -e s'/[ \t"":{"]//g' | \
-    $SED -e 's/misc-//' -e 's/-horizontal//g' -e 's/-vertical//g' -e 's/-sealed//g' -e 's/-ported//g' | \
-    sort -s -f -u | \
-    $AWK -f ./scripts/update_reviewers.awk > src/website/reviewers.html
+    printf("<option value=\"%s\">%s%s</option>\n", $0, val, name);
+}
