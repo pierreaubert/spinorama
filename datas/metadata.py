@@ -6942,8 +6942,27 @@ speakers_info: SpeakerDatabase = {
         "price": "3800",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/fluid_image2/",
+                },
+                "review_published": "20231106",
+                "specifications": {
+                    "SPL": {
+                        "max": 113,
+                    },
+                    "size": {
+                        "height": 351,
+                        "width": 241,
+                        "depth": 363,
+                    },
+                    "weight": 12.6,
+                },
+            },
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
@@ -10255,6 +10274,42 @@ speakers_info: SpeakerDatabase = {
                 "quality": "medium",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-control-x-wireless-measurements-review.47175/",
                 "review_published": "20230817",
+            },
+        },
+    },
+    "JBL SCS 8": {
+        "brand": "JBL",
+        "model": "SCS 8",
+        "type": "passive",
+        "price": "600",
+        "shape": "surround",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_scs8/",
+                },
+                "review_published": "20231106",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 120,
+                    },
+                    "sensitivity": 94,
+                    "impedance": 8,
+                    "SPL": {
+                        "max": 118,
+                    },
+                    "size": {
+                        "height": 300,
+                        "width": 300,
+                        "depth": 305,
+                    },
+                    "weight": 11.4,
+                },
             },
         },
     },
@@ -15351,6 +15406,36 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Neumi Silk 4": {
+        "brand": "Neumi",
+        "model": "Silk 4",
+        "type": "active",
+        "price": "150",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/neumi_silk4/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/neumi-silk-4-review-measurements-by-erin.49025/",
+                },
+                "review_published": "20231106",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 8,
+                    "size": {
+                        "height": 208,
+                        "width": 140,
+                        "depth": 226,
+                    },
+                    "weight": 2.8,
+                },
+            },
+        },
+    },
     "NHT Pro M-00": {
         "brand": "NHT",
         "model": "Pro M-00",
@@ -17034,6 +17119,35 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Power Sound Audio MT-110-M": {
+        "brand": "Power Sound Audio",
+        "model": "MT-110-M",
+        "type": "passive",
+        "price": "1350",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/powersoundaudiomt110m/",
+                },
+                "review_published": "20231106",
+                "specifications": {
+                    "sensitivity": 95,
+                    "impedance": 8,
+                    "size": {
+                        "height": 444,
+                        "width": 279,
+                        "depth": 356,
+                    },
+                    "weight": 13.6,
+                },
+            },
+        },
+    },
     "Presonus CDL12": {
         "brand": "Presonus",
         "model": "CDL12",
@@ -17409,7 +17523,11 @@ speakers_info: SpeakerDatabase = {
                 "format": "spl_hv_txt",
                 "quality": "high",
                 "review_published": "20231028",
-                "reviews": {},
+                "notes": "Klippel generated data",
+                "reviews": {
+                    "ahl": "https://www.audioholics.com/bookshelf-speaker-reviews/sigberg-audio-sbs.1-1",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/sigberg-audio-sbs-1-active-speakers-prototype-build-thread.20141/",
+                },
                 "specifications": {
                     "SPL": {
                         "peak": 116,
@@ -17422,12 +17540,13 @@ speakers_info: SpeakerDatabase = {
                     "weight": 9.5,
                 },
             },
-            "vendor-v1": {
-                "origin": "Vendors-Sigberg Audio",
-                "format": "rew_text_dump",
-                "quality": "low",
-                "review_published": "20230223",
-            },
+            # removed since the v2 is higher quality
+            # "vendor-v1": {
+            #    "origin": "Vendors-Sigberg Audio",
+            #    "format": "rew_text_dump",
+            #    "quality": "low",
+            #    "review_published": "20230223",
+            # },
         },
     },
     "Triad In-Room Gold LCR": {
