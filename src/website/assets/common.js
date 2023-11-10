@@ -16,14 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-//@flow
-
 import { urlSite } from './misc.js';
 import { getID } from './misc.js';
 
 export const knownMeasurements = [
     'CEA2034',
-    'CEA2034 with splitted views',
     'On Axis',
     'Estimated In-Room Response',
     'Early Reflections',
@@ -38,65 +35,16 @@ export const knownMeasurements = [
     'SPL Vertical Contour',
     'SPL Vertical Contour Normalized',
     'SPL Horizontal Contour 3D',
-    'SPL Horizontal Contour 3D Normalized',
+    'SPL Horizontal Contour Normalized 3D',
     'SPL Vertical Contour 3D',
-    'SPL Vertical Contour 3D Normalized',
+    'SPL Vertical Contour Normalized 3D',
     'SPL Horizontal Globe',
     'SPL Horizontal Globe Normalized',
     'SPL Vertical Globe',
     'SPL Vertical Globe Normalized',
     'SPL Horizontal Radar',
-    'SPL Vertical Radar'
+    'SPL Vertical Radar',
 ];
-
-const colors = ['#5c77a5', '#dc842a', '#c85857', '#89b5b1', '#71a152', '#bab0ac', '#e15759', '#b07aa1', '#76b7b2', '#ff9da7'];
-
-const uniformColors = {
-    // regression
-    'Linear Regression': colors[0],
-    'Band ±1.5dB': colors[1],
-    'Band ±3dB': colors[1],
-    // PIR
-    'Estimated In-Room Response': colors[0],
-    // spin
-    'On Axis': colors[0],
-    'Listening Window': colors[1],
-    'Early Reflections': colors[2],
-    'Sound Power': colors[3],
-    'Early Reflections DI': colors[4],
-    'Sound Power DI': colors[5],
-    // reflections
-    'Ceiling Bounce': colors[1],
-    'Floor Bounce': colors[2],
-    'Front Wall Bounce': colors[3],
-    'Rear Wall Bounce': colors[4],
-    'Side Wall Bounce': colors[5],
-    //
-    'Ceiling Reflection': colors[1],
-    'Floor Reflection': colors[2],
-    //
-    Front: colors[1],
-    Rear: colors[2],
-    Side: colors[3],
-    //
-    'Total Early Reflection': colors[7],
-    'Total Horizontal Reflection': colors[8],
-    'Total Vertical Reflection': colors[9],
-    // SPL
-    '10°': colors[1],
-    '20°': colors[2],
-    '30°': colors[3],
-    '40°': colors[4],
-    '50°': colors[5],
-    '60°': colors[6],
-    '70°': colors[7],
-    // Radars
-    '500 Hz': colors[1],
-    '1000 Hz': colors[2],
-    '2000 Hz': colors[3],
-    '10000 Hz': colors[4],
-    '15000 Hz': colors[5],
-};
 
 const contourMin = -30;
 const contourMax = 3;
@@ -147,14 +95,14 @@ const labelShort = {
     'Total Vertical Reflection': 'TVR',
 };
 
-function processOrigin(origin: string): string {
+function processOrigin(origin) {
     if (origin.includes('Vendors-')) {
         return origin.slice(8);
     }
     return origin;
 }
 
-function processGraph(name: string): string {
+function processGraph(name) {
     if (name.includes('CEA2034')) {
         return 'CEA2034';
     } else if (name.includes('Globe')) {
@@ -163,27 +111,7 @@ function processGraph(name: string): string {
     return name;
 }
 
-type MetaSpeaker = {
-    default_measurement: string,
-    brand: string,
-    model: string,
-    tfgype: 'active' | 'passive',
-    price: number,
-    shape: 'bookshelves' | 'floorstander',
-    amount: 'pair' | 'each',
-    measurements: Array<{
-        origin: 'ASR' | 'ErinsAudioCorner',
-        format: 'klippel',
-        review?: string,
-        review_published?: 'string',
-    }>,
-};
-
-type MetaSpeakers = { speaker: MetaSpeaker };
-
-type Metadata = Array<MetaSpeaker>;
-
-function getOrigin(metaSpeakers: MetaSpeakers, speaker: string, origin: string): string {
+function getOrigin(metaSpeakers, speaker, origin) {
     // console.log('getOrigin ' + speaker + ' origin=' + origin)
     if (origin == null || origin === '') {
         const defaultMeasurement = metaSpeakers[speaker].default_measurement;
@@ -194,7 +122,7 @@ function getOrigin(metaSpeakers: MetaSpeakers, speaker: string, origin: string):
     return processOrigin(origin);
 }
 
-function getVersion(metaSpeakers: MetaSpeakers, speaker: string, origin: string, version: string): string {
+function getVersion(metaSpeakers, speaker, origin, version) {
     if (version == null || version === '') {
         const defaultVersion = metaSpeakers[speaker].default_measurement;
         return defaultVersion;
@@ -202,7 +130,7 @@ function getVersion(metaSpeakers: MetaSpeakers, speaker: string, origin: string,
     return version;
 }
 
-function getSpeakerUrl(metaSpeakers: MetaSpeakers, graph: string, speaker: string, origin: string, version: string): string {
+function getSpeakerUrl(metaSpeakers, graph, speaker, origin, version) {
     // console.log('getSpeakerUrl ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version=' + version)
     const url =
         urlSite +
@@ -218,27 +146,21 @@ function getSpeakerUrl(metaSpeakers: MetaSpeakers, graph: string, speaker: strin
     return url;
 }
 
-export function getSpeakerData(
-    metaSpeakers: MetaSpeakers,
-    graph: string,
-    speaker: string,
-    origin: string,
-    version: string
-): any | null {
+export function getSpeakerData(metaSpeakers, graph, speaker, origin, version) {
     // console.log('getSpeakerData ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version=' + version)
     const url = getSpeakerUrl(metaSpeakers, graph, speaker, origin, version);
     // console.log('fetching url=' + url)
     const spec = fetch(url)
-          .then( (response) => response.json())
-          .catch( (error) => {
-              console.log('ERROR getSpeaker bad encoding' + error);
-              return null;
-          });
+        .then((response) => response.json())
+        .catch((error) => {
+            console.log('ERROR getSpeaker failed for ' + url + 'with error: ' + error);
+            return null;
+        });
     return spec;
 }
 
-export function getAllSpeakers(metadata: Metadata): Array<MetaSpeakers | Array<string>> {
-    const metaSpeakers: MetaSpeakers = {};
+export function getAllSpeakers(metadata) {
+    const metaSpeakers = {};
     const speakers = [];
     metadata.forEach((value) => {
         const speaker = value.brand + ' ' + value.model;
@@ -251,67 +173,89 @@ export function getAllSpeakers(metadata: Metadata): Array<MetaSpeakers | Array<s
 export function getMetadata() {
     const url = urlSite + 'assets/metadata.json';
     // console.log('fetching url=' + url)
-    const spec = fetch(url)
-          .then( (response) => response.json())
-          .then( (data) => {
-              // convert to object
-              const metadata = Object.values(data);
-              // console.log('metadata '+metadata.length)
-              return new Map(
-                  metadata.map((speaker) => {
-                      const key = getID(speaker.brand, speaker.model);
-                      return [key, speaker];
-                  })
-              );
-          })
-          .catch((error) => {
-              console.log('ERROR getMetadata data 404 ' + error);
-              return null;
-          });
+    const spec = fetch(url, {
+        headers: {
+            'Content-Encoding': 'gzip',
+            'Content-Type': 'application/json',
+        },
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            // convert to object
+            const metadata = Object.values(data);
+            // console.log('metadata '+metadata.length)
+            return new Map(
+                metadata.map((speaker) => {
+                    const key = getID(speaker.brand, speaker.model);
+                    return [key, speaker];
+                })
+            );
+        })
+        .catch((error) => {
+            console.log('ERROR getMetadata for ' + url + 'yield a 404 with error: ' + error);
+            return null;
+        });
     return spec;
 }
 
-type GraphLayout = ?{
-    width: number,
-    height: number,
-    margin: number,
-    legend: {
-        orientation: string,
-        x: number,
-        y: number,
-    },
-    margin: {
-        l: number,
-        r: number,
-        t: number,
-        b: number,
-    },
-};
+const graphSmall = 550;
+const graphLarge = 900;
+const graphRatio = 1.414;
+const graphMarginTop = 30;
+const graphMarginBottom = 40;
+const graphTitle = 30;
+const graphSpacer = graphMarginTop + graphMarginBottom + graphTitle;
+const graphExtraPadding = 40;
 
-type GraphData = ?{
-    data: any,
-};
+export function isVertical() {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    if (windowWidth <= windowHeight) {
+        return true;
+    }
+    return false;
+}
 
-type Graph = ?{
-    data: GraphData,
-    layout: GraphLayout,
-};
+export function isCompact() {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    if (windowWidth < graphSmall || windowHeight < graphSmall) {
+        return true;
+    }
+    return false;
+}
 
-type Graphs = Array<Graph>;
+function computeDims(windowWidth, windowHeight, is_vertical, is_compact) {
+    let width = windowWidth;
+    let height = windowHeight;
+    if (is_compact) {
+        if (is_vertical) {
+            // portraint
+            width = windowWidth;
+            height = Math.min(windowHeight, windowWidth / graphRatio + graphSpacer);
+        } else {
+            // landscape
+            width = windowWidth - graphExtraPadding;
+            height = Math.min(windowHeight, windowWidth / graphRatio + graphSpacer);
+        }
+    } else {
+        if (is_vertical) {
+            // portraint
+            width = Math.min(graphLarge, windowWidth);
+            height = Math.min(windowHeight, windowWidth / graphRatio + graphSpacer);
+        } else {
+            // landscape
+            height = Math.min(windowHeight, windowWidth / 2);
+            width = Math.min(windowWidth, windowHeight / graphRatio + graphSpacer);
+        }
+    }
+    return [width, height];
+}
 
-function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number): Graphs {
-    const graphSmall = 400;
-    const graphRatio = 1.414;
-    const graphMarginTop = 30;
-    const graphMarginBottom = 40;
-    const graphTitle = 30;
-    const graphSpacer = graphMarginTop + graphMarginBottom + graphTitle;
-    const graphExtraPadding = 40;
-
+function setGraphOptions(spin, windowWidth, windowHeight) {
     let datas = null;
     let layout = null;
     let config = null;
-    let countDifferent = 0;
     // console.log('layout and data: ' + spin.length + ' w='+windowWidth+' h='+windowHeight)
     if (spin.length === 1) {
         layout = spin[0].layout;
@@ -329,77 +273,162 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
         }
     }
 
-    const selectorOptionsFreq = {
-        buttons: [{
-            step: 'freq',
-            stepmode: 'backward',
-            count: 10,
-            label: '10hz'
-        }, {
-            step: 'freq',
-            stepmode: 'backward',
-            count: 10,
-            label: '10hz'
-        }, {
-            step: 'all',
-        }],
-    };
+    const is_vertical = isVertical();
+    const is_compact = isCompact();
 
-    if (layout != null && datas != null) {
-        if (windowWidth < graphSmall || windowHeight < graphSmall) {
-            if (windowWidth < windowHeight) {
-                // portraint
-                layout.width = windowWidth;
-                layout.height = Math.min(windowHeight, windowWidth / graphRatio + graphSpacer);
-                // hide axis to recover some space on mobile
-                layout.yaxis.visible = false;
-                if (layout.yaxis2) {
-                    layout.yaxis2.visible = false;
-                }
-                layout.xaxis.title = 'SPL (dB) v.s. Frequency (Hz)';
-                // layout.xaxis.rangeselector = selectorOptionsFreq;
-                // layout.xaxis.rangeslider = {};
+    function computeXaxis() {
+        if (layout.xaxis) {
+            layout.xaxis.title = 'SPL (dB) v.s. Frequency (Hz)';
+            layout.xaxis.font = {
+                size: 10,
+                color: '#000',
+            };
+        }
+        if (is_compact && is_vertical && layout.yaxis && layout.yaxis.title) {
+            const freq_min = Math.round(Math.pow(10, layout.xaxis.range[0]));
+            const freq_max = Math.round(Math.pow(10, layout.xaxis.range[1]));
+            let title = '';
+            if (layout.yaxis && layout.yaxis.title && layout.yaxis.title.text && layout.yaxis.title.text === 'Angle') {
+                title =
+                    'Angle [' +
+                    layout.yaxis.range[0] +
+                    'º, ' +
+                    layout.yaxis.range[1] +
+                    'º]) v.s. Frequency (Hz [' +
+                    freq_min +
+                    ', ' +
+                    freq_max +
+                    ']).';
             } else {
-                // landscape
-                layout.height = windowHeight + graphSpacer;
-                layout.width = Math.min(windowWidth, windowHeight * graphRatio + graphSpacer);
+                title =
+                    'SPL (dB [' +
+                    layout.yaxis.range[0] +
+                    ', ' +
+                    layout.yaxis.range[1] +
+                    ']) v.s. Frequency (Hz [' +
+                    freq_min +
+                    ', ' +
+                    freq_max +
+                    ']).';
             }
-            // get legend horizontal below the graph
-            layout.margin = {
-                l: 5,
-                r: 0,
-                t: graphMarginTop,
-                b: graphMarginBottom
-            };
-            layout.legend = {
-                orientation: 'h',
-                y: -0.25,
-                x: 0,
-                xanchor: 'bottom',
-                yanchor: 'left',
-                groupclick: 'toggleitem'
-            };
-            // add a legend title to replace the legend group
+            layout.xaxis.title = title;
+        }
+        if (is_compact) {
+            if (layout.xaxis) {
+                layout.xaxis.autotick = false;
+            }
+        }
+    }
+
+    function computeYaxis() {
+        // hide axis to recover some space on mobile
+        if (is_compact && is_vertical) {
+            if (layout.yaxis) {
+                layout.yaxis.visible = false;
+            }
+            if (layout.yaxis2) {
+                layout.yaxis2.visible = false;
+            }
+        }
+        if (layout.yaxis) {
+            layout.yaxis.dtick = 1;
+        }
+    }
+
+    function computeTitle() {
+        if (is_compact) {
             if (datas[0].legendgrouptitle) {
                 let title = datas[0].legendgrouptitle.text;
-                if (title) {
-                    for (let k = 1; k < datas.length; k++) {
-                        if (datas[k - 1].legendgrouptitle.text != datas[k].legendgrouptitle.text) {
-                            title += ' v.s.' + datas[k].legendgrouptitle.text;
-                            countDifferent++;
-                        }
-                    }
-                }
                 layout.title = {
                     text: title,
                     font: {
-                        size: 16,
+                        size: 10 + windowWidth / 300,
                         color: '#000',
                     },
                     xref: 'paper',
-                    x: 0.05,
+                    // title start sligthly on the right
+                    x: 0.0,
+                    // keep title below modBar if title is long
+                    y: 0.975,
                 };
             }
+        } else {
+            layout.title.font = {
+                size: 12 + windowWidth / 300,
+                color: '#000',
+            };
+        }
+    }
+
+    function computeMargin() {
+        if (is_compact) {
+            if (is_vertical) {
+                // get legend horizontal below the graph
+                layout.margin = {
+                    l: 5,
+                    r: 5,
+                    t: graphMarginTop,
+                    b: graphMarginBottom,
+                };
+            } else {
+                // get legend horizontal below the graph
+                layout.margin = {
+                    l: 15,
+                    r: 15,
+                    t: 20,
+                    b: graphMarginBottom,
+                };
+            }
+        } else {
+            // right margin depends on a if we have a second axis or not.
+            let offset = 25;
+            if (layout.yaxis2) {
+                offset = 0;
+            }
+            layout.margin = {
+                l: 15,
+                r: 15 + offset,
+                t: graphMarginTop * 2,
+                b: graphMarginBottom,
+            };
+        }
+    }
+
+    function computeLegend() {
+        if (is_vertical) {
+            layout.legend = {
+                orientation: 'h',
+                y: -0.2,
+                x: 0,
+                xanchor: 'bottom',
+                yanchor: 'left',
+                groupclick: 'toggleitem',
+            };
+        } else {
+            layout.legend = {
+                orientation: 'h',
+                y: -0.25,
+                x: 0.5,
+                xanchor: 'bottom',
+                yanchor: 'center',
+                groupclick: 'toggleitem',
+            };
+        }
+        if (!is_compact) {
+            for (let k = 0; k < datas.length; k++) {
+                const title = datas[k].legendgrouptitle;
+                if (title && title.text) {
+                    const pos_vs = title.text.indexOf(' v.s. ');
+                    if (pos_vs !== -1) {
+                        datas[k].legendgrouptitle.text = title.text.slice(0, pos_vs);
+                    }
+                }
+            }
+        }
+    }
+
+    function computeLabel() {
+        if (is_compact) {
             // shorten labels
             for (let k = 0; k < datas.length; k++) {
                 // remove group
@@ -410,74 +439,72 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
                     datas[k].name = labelShort[datas[k].name];
                 }
             }
+        }
+    }
+
+    function computeModbar() {
+        if (is_compact) {
             // remove mod bar
             config = {
                 responsive: true,
                 displayModeBar: false,
             };
-            layout.font = { size: 11 };
         } else {
-            // larger screen
-            layout.width = windowWidth - graphExtraPadding;
-            layout.height = Math.max(
-                800,
-                Math.min(windowHeight - graphExtraPadding, windowWidth / graphRatio + graphExtraPadding + graphSpacer)
-            );
-            layout.margin = {
-                l: 15,
-                r: 15,
-                t: graphMarginTop * 2,
-                b: graphMarginBottom
-            };
-            layout.legend = {
-                orientation: 'h',
-                y: -0.1,
-                x: 0,
-                xanchor: 'bottom',
-                yanchor: 'left',
-                groupclick: 'toggleitem'
+            layout.modebar = {
+                orientation: 'v',
             };
             config = {
                 responsive: true,
-                displayModeBar: true
+                displayModeBar: true,
             };
-            if (datas[0].legendgrouptitle) {
-                let title = datas[0].legendgrouptitle.text;
-                if (title) {
-                    for (let k = 1; k < datas.length; k++) {
-                        if (datas[k - 1].legendgrouptitle.text != datas[k].legendgrouptitle.text) {
-                            title += ' v.s.' + datas[k].legendgrouptitle.text;
-                            countDifferent++;
-                        }
-                    }
-                }
-                layout.title = {
-                    text: title,
-                    font: {
-                        size: 18 + windowWidth / 300,
-                        color: '#000'
-                    },
-                    xref: 'paper',
-                    // title start sligthly on the right
-                    x: 0.05,
-                    // keep title below modBar if title is long
-                    y: 0.975
-                };
-            }
+        }
+    }
+
+    function computeFont() {
+        if (is_compact) {
+            layout.font = { size: 10 };
+        } else {
             layout.font = { size: 11 + windowWidth / 300 };
         }
-        if (layout.xaxis) {
-            layout.xaxis.autotick = false;
-        }
-        if (layout.yaxis) {
-            layout.yaxis.dtick = 1;
-        }
-        if (countDifferent === 0) {
+    }
+
+    function computeColorbar() {
+        if (is_compact) {
             for (let k = 0; k < datas.length; k++) {
-                datas[k].legendgroup = null;
-                datas[k].legendgrouptitle = null;
+                if (datas[k].colorbar) {
+                    datas[k].colorbar.x = 0.5;
+                    datas[k].colorbar.xanchor = 'center';
+                    // datas[k].colorbar.xref = 'container';
+                    datas[k].colorbar.y = -0.45;
+                    datas[k].colorbar.yanchor = 'bottom';
+                    datas[k].colorbar.len = 1.0;
+                    datas[k].colorbar.lenmode = 'fraction';
+                    datas[k].colorbar.thickness = 15;
+                    datas[k].colorbar.thicknessmode = 'pixels';
+                    datas[k].colorbar.orientation = 'h';
+                    datas[k].colorbar.title = {
+                        text: 'Contours: SPL (3dB steps)',
+                        font: {
+                            size: 10,
+                        },
+                        side: 'bottom',
+                    };
+                }
             }
         }
+    }
+
+    if (layout != null && datas != null) {
+        [layout.width, layout.height] = computeDims(windowWidth, windowHeight, is_vertical, is_compact);
+        computeFont();
+        computeXaxis();
+        computeYaxis();
+        computeTitle(); // before legend
+        computeLegend();
+        computeLabel();
+        computeModbar();
+        computeColorbar();
+        computeMargin(); // must be last
     } else {
         // should be a pop up
         console.log('Error: No graph available');
@@ -485,12 +512,7 @@ function setGraphOptions(spin: Graphs, windowWidth: number, windowHeight: number
     return { data: datas, layout: layout, config: config };
 }
 
-export function setCEA2034(
-    speakerNames: Array<string>,
-    speakerGraphs: Graphs,
-    width: number,
-    height: number
-): Array<LayoutData> {
+export function setCEA2034(speakerNames, speakerGraphs, width, height) {
     // console.log('setCEA2034 got ' + speakerGraphs.length + ' graphs')
     for (let i = 0; i < speakerGraphs.length; i++) {
         if (speakerGraphs[i] != null) {
@@ -509,7 +531,7 @@ export function setCEA2034(
     return [setGraphOptions(speakerGraphs, width, height)];
 }
 
-export function setGraph(speakerNames: Array<string>, speakerGraphs: Graphs, width: number, height: number): Array<LayoutData> {
+export function setGraph(speakerNames, speakerGraphs, width, height) {
     // console.log('setGraph got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     for (const i in speakerGraphs) {
         if (speakerGraphs[i] != null) {
@@ -518,7 +540,13 @@ export function setGraph(speakerNames: Array<string>, speakerGraphs: Graphs, wid
                 const name = speakerGraphs[i].data[trace].name;
                 // hide yellow bands since when you have more than one it is difficult to see the graphs
                 // also remove the midrange lines for the same reason
-                if (name != null && (name == 'Band ±3dB' || name == 'Band ±1.5dB' || name == 'Midrange Band +3dB' || name == 'Midrange Band -3dB')) {
+                if (
+                    name != null &&
+                    (name == 'Band ±3dB' ||
+                        name == 'Band ±1.5dB' ||
+                        name == 'Midrange Band +3dB' ||
+                        name == 'Midrange Band -3dB')
+                ) {
                     speakerGraphs[i].data[trace].visible = false;
                 }
                 speakerGraphs[i].data[trace].legendgroup = 'speaker' + i;
@@ -534,35 +562,32 @@ export function setGraph(speakerNames: Array<string>, speakerGraphs: Graphs, wid
     return [setGraphOptions(speakerGraphs, width, height)];
 }
 
-export function setContour(
-    speakerNames: Array<string>,
-    speakerGraphs: Graphs,
-    width: number,
-    height: number
-): Array<LayoutData> {
+export function setContour(speakerNames, speakerGraphs, width, height) {
     // console.log('setContour got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
-    const config = {
-        responsive: true,
-        displayModeBar: true,
-    };
     for (const i in speakerGraphs) {
         if (speakerGraphs[i]) {
             for (const j in speakerGraphs[i].data) {
                 speakerGraphs[i].data[j].legendgroup = 'speaker' + i;
                 speakerGraphs[i].data[j].legendgrouptitle = { text: speakerNames[i] };
             }
-            graphsConfigs.push({
-                data: speakerGraphs[i].data,
-                layout: speakerGraphs[i].layout,
-                config: config,
-            });
+            let options = setGraphOptions([{ data: speakerGraphs[i].data, layout: speakerGraphs[i].layout }], width, height);
+            if (i == 0 && isCompact()) {
+                // remove the axis to have the 2 graphs closer together
+                options.layout.xaxis.visible = false;
+                options.layout.showlegend = false;
+                options.data[0].showscale = false;
+                options.layout.margin.b = 0;
+                options.layout.height -= 80; // size in pixel of xaxis + colorbar
+            }
+            graphsConfigs.push(options);
         }
     }
+
     return graphsConfigs;
 }
 
-export function setGlobe(speakerNames: Array<string>, speakerGraphs: Graphs, width: number, height: number): Array<LayoutData> {
+export function setGlobe(speakerNames, speakerGraphs) {
     // console.log('setGlobe ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
     const config = {
@@ -646,12 +671,7 @@ export function setGlobe(speakerNames: Array<string>, speakerGraphs: Graphs, wid
     return graphsConfigs;
 }
 
-export function setSurface(
-    speakerNames: Array<string>,
-    speakerGraphs: Graphs,
-    width: number,
-    height: number
-): Array<LayoutData> {
+export function setSurface(speakerNames, speakerGraphs, width, height) {
     // console.log('setSurface ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
     const config = {
@@ -666,7 +686,7 @@ export function setSurface(
             }
             const layout = speakerGraphs[i].layout;
             layout.width = width;
-            layout.height = (height - 100) / 2;
+            layout.height = height - 100;
             graphsConfigs.push({
                 data: surfaceData,
                 layout: layout,
@@ -677,117 +697,7 @@ export function setSurface(
     return graphsConfigs;
 }
 
-export function setCEA2034Split(
-    speakerNames: Array<string>,
-    speakerGraphs: Graphs,
-    windowWidth: number,
-    windowHeight: number
-): Array<LayoutData> {
-    // console.log('setCEA2034Split got ' + speakerGraphs.length + ' graphs')
-    const graphsConfigs = [];
-    for (let i = 0; i < speakerGraphs.length; i++) {
-        if (speakerGraphs[i] != null) {
-            // console.log('adding graph ' + i)
-            for (const trace in speakerGraphs[i].data) {
-                speakerGraphs[i].data[trace].legendgroup = 'speaker' + i;
-                speakerGraphs[i].data[trace].legendgrouptitle = {
-                    text: speakerNames[i],
-                };
-                if (i % 2 === 1) {
-                    speakerGraphs[i].data[trace].line = { dash: 'dashdot' };
-                }
-            }
-        }
-    }
-    let layout = null;
-    let datas = null;
-    const config = {
-        responsive: true,
-        displayModeBar: true,
-    };
-
-    if (speakerGraphs[0] != null && speakerGraphs[1] != null) {
-        layout = speakerGraphs[0].layout;
-        datas = speakerGraphs[0].data.concat(speakerGraphs[1].data);
-
-        layout.width = windowWidth - 40;
-        layout.height = Math.max(360, Math.min(windowHeight, windowWidth * 0.7 + 140));
-        layout.title = null;
-        layout.font = { size: 12 };
-        layout.margin = {
-            l: 15,
-            r: 15,
-            t: 30,
-            b: 30,
-        };
-        layout.legend = {
-            orientation: 'h',
-            y: -0.1,
-            x: 0,
-            xanchor: 'bottom',
-            yanchor: 'left',
-            itemclick: 'toggleothers',
-        };
-
-        graphsConfigs.push({
-            data: datas,
-            layout: layout,
-            config: config,
-        });
-
-        const deltas = [];
-        for (const g0 in speakerGraphs[0].data) {
-            const name0 = speakerGraphs[0].data[g0].name;
-            const deltasX = speakerGraphs[0].data[g0].x;
-            for (const g1 in speakerGraphs[1].data) {
-                if (name0 === speakerGraphs[1].data[g1].name) {
-                    const deltasY = [];
-                    for (const i in speakerGraphs[0].data[g0].y) {
-                        deltasY[i] = speakerGraphs[0].data[g0].y[i] - speakerGraphs[1].data[g1].y[i];
-                    }
-                    deltas.push({
-                        x: deltasX,
-                        y: deltasY,
-                        type: 'scatter',
-                        name: name0,
-                        // "legendgroup": "differences",
-                        // "legendgrouptitle": {
-                        //    "text": 'Differences',
-                        // },
-                        marker: {
-                            color: uniformColors[name0],
-                        },
-                    });
-                }
-            }
-        }
-        // console.log(deltas.length)
-        // deltas.forEach( (data) => console.log(data.name) );
-
-        const layout2 = JSON.parse(JSON.stringify(layout));
-        layout2.height = 440;
-        layout2.yaxis = {
-            title: 'Delta SPL (dB)',
-            range: [-5, 5],
-            dtick: 1,
-        };
-        layout2.showlegend = true;
-        layout2.legend = layout.legend;
-        layout2.legend.y = -0.3;
-        layout2.margin = layout.margin;
-
-        graphsConfigs.push({
-            data: datas,
-            layout: layout2,
-            config: config,
-        });
-    } else {
-        graphsConfigs.push(setGraphOptions(speakerGraphs, windowWidth, windowHeight));
-    }
-    return graphsConfigs;
-}
-
-export function assignOptions(textArray: Array<string>, selector, textSelected: string): null {
+export function assignOptions(textArray, selector, textSelected) {
     // console.log('assignOptions: selected = ' + textSelected)
     // textArray.forEach( item => // console.log('assignOptions: '+item));
     while (selector.firstChild) {
@@ -806,7 +716,7 @@ export function assignOptions(textArray: Array<string>, selector, textSelected: 
     }
 }
 
-export function updateVersion(metaSpeakers: MetaSpeakers, speaker, selector, origin, value) {
+export function updateVersion(metaSpeakers, speaker, selector, origin, value) {
     // update possible version(s) for matching speaker and origin
     // console.log('update version for ' + speaker + ' origin=' + origin + ' value=' + value)
     const versions = Object.keys(metaSpeakers[speaker].measurements);
@@ -831,7 +741,7 @@ export function updateVersion(metaSpeakers: MetaSpeakers, speaker, selector, ori
     }
 }
 
-export function updateOrigin(metaSpeakers: MetaSpeakers, speaker, originSelector, versionSelector, origin, version) {
+export function updateOrigin(metaSpeakers, speaker, originSelector, versionSelector, origin, version) {
     // console.log('updateOrigin for ' + speaker + ' with origin ' + origin + ' version=' + version)
     const measurements = Object.keys(metaSpeakers[speaker].measurements);
     const origins = new Set();

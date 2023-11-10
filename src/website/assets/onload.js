@@ -48,7 +48,7 @@ window.onload = () => {
         const trigger = filters.querySelector('#filters-dropdown-trigger');
         const menu = filters.querySelector('#filters-dropdown-menu');
         if (!trigger || !menu) {
-            console.log("error dropdown trigger+menu not found!");
+            console.log('error dropdown trigger+menu not found!');
         }
         trigger.addEventListener('click', () => {
             menu.classList.toggle('hidden');

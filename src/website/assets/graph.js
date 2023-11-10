@@ -22,7 +22,6 @@
 import { setGraph } from './common.js';
 
 export function displayGraph(divName, graphSpec) {
-
     async function run() {
         const w = window.innerWidth;
         const h = window.innerHeight;

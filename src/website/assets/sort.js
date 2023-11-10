@@ -16,8 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-export function sortMetadata2(metadata, sorter) {
+/*global Fuse*/
+/*eslint no-undef: "error"*/
 
+import { show, hide } from './misc.js';
+
+export function sortMetadata2(metadata, sorter) {
     const sortChildren2 = ({ container, score, reverse }) => {
         // console.log('sorting2 by '+score)
         const items = [...container.keys()];
@@ -279,7 +283,242 @@ export function sortMetadata2(metadata, sorter) {
             score: (k) => getSizeDepthV2(k),
             reverse: sorter.reverse,
         });
-   } else {
+    } else {
         console.log('ERROR: unknown sorter ' + sorter.by);
     }
+}
+
+export function isFiltered(item, filter) {
+    let shouldShow = true;
+    if (filter.reviewer !== undefined && filter.reviewer !== '') {
+        let found = true;
+        for (const [name, measurement] of Object.entries(item.measurements)) {
+            const origin = measurement.origin.toLowerCase();
+            let name2 = name.toLowerCase();
+            // not ideal
+            name2 = name2
+                .replace('misc-', '')
+                .replace('-sealed', '')
+                .replace('-ported', '')
+                .replace('-vertical')
+                .replace('-horizontal');
+            // console.log('debug: name2=' + name2 + ' origin=' + origin + ' filter.reviewer=' + filter.reviewer)
+            if (name2 === filter.reviewer.toLowerCase() || origin === filter.reviewer.toLowerCase()) {
+                found = false;
+                break;
+            }
+        }
+        if (found) {
+            shouldShow = false;
+        }
+    }
+    if (filter.quality !== undefined && filter.quality !== '') {
+        let found = true;
+        for (const [, measurement] of Object.entries(item.measurements)) {
+            const quality = measurement.quality.toLowerCase();
+            // console.log('filter.quality=' + filter.quality + ' quality=' + quality)
+            if (filter.quality !== '' && quality === filter.quality.toLowerCase()) {
+                found = false;
+                break;
+            }
+        }
+        if (found) {
+            shouldShow = false;
+        }
+    }
+    // console.log('debug: post quality ' + shouldShow)
+    if (filter.power !== undefined && filter.power !== '' && item.type !== filter.power) {
+        shouldShow = false;
+    }
+    // console.log('debug: post power ' + shouldShow)
+    if (filter.shape !== undefined && filter.shape !== '' && item.shape !== filter.shape) {
+        shouldShow = false;
+    }
+    // console.log('debug: post shape ' + shouldShow)
+    if (filter.brand !== undefined && filter.brand !== '' && item.brand.toLowerCase() !== filter.brand.toLowerCase()) {
+        shouldShow = false;
+    }
+    // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.price+'<<<')
+    if (filter.price !== undefined && filter.price !== '') {
+        // console.log('debug: pre price ' + filter.price)
+        if (item.price !== '') {
+            let price = parseInt(item.price);
+            if (item.amount === 'pair') {
+                price /= 2.0;
+            }
+            switch (filter.price) {
+                case 'p100':
+                    if (price > 100) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p200':
+                    if (price > 200 || price < 100) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p300':
+                    if (price > 300 || price < 200) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p400':
+                    if (price > 400 || price < 300) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p500':
+                    if (price > 500 || price < 400) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p1000':
+                    if (price > 1000 || price < 500) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p2000':
+                    if (price > 2000 || price < 1000) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p5000':
+                    if (price > 5000 || price < 2000) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p5000p':
+                    if (price <= 5000) {
+                        shouldShow = false;
+                    }
+                    break;
+            }
+        } else {
+            // no known price
+            shouldShow = false;
+        }
+        // console.log('debug: post price ' + shouldShow)
+    }
+    // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.priceMin+','+filter.priceMax+'<<<')
+    if (
+        (filter.priceMin !== undefined && filter.priceMin !== '') ||
+        (filter.priceMax !== undefined && filter.priceMax !== '')
+    ) {
+        var priceMin = parseInt(filter.priceMin);
+        if (isNaN(priceMin)) {
+            priceMin = -1;
+        }
+        var priceMax = parseInt(filter.priceMax);
+        if (isNaN(priceMax)) {
+            priceMax = Number.MAX_SAFE_INTEGER;
+        }
+        // console.log('debug: pre price ' + filter.price)
+        if (item.price !== '') {
+            let price = parseInt(item.price);
+            if (isNaN(price)) {
+                shouldShow = false;
+            } else {
+                if (item.amount === 'pair') {
+                    price /= 2.0;
+                }
+                if (price > priceMax || price < priceMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            // no known price
+            shouldShow = false;
+        }
+        // console.log('debug: post price ' + shouldShow)
+    }
+    return shouldShow;
+}
+
+export function isSearch(key, results, minScore, keywords) {
+    // console.log('Starting isSearch with key='+key+' minscore='+minScore+' keywords='+keywords);
+
+    let shouldShow = true;
+    if (keywords === '' || results === undefined) {
+        // console.log('shouldShow is true');
+        return shouldShow;
+    }
+
+    if (!results.has(key)) {
+        // console.log('shouldShow is false (no key '+key+')');
+        return false;
+    }
+
+    const result = results.get(key);
+    const imeta = result.item.speaker;
+    const score = result.score;
+
+    if (minScore < Math.pow(10, -15)) {
+        const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase());
+        // console.log('isExact ' + isExact + ' model ' + imeta.model.toLowerCase() + ' keywords ' + keywords.toLowerCase());
+        // we have an exact match, only shouldShow other exact matches
+        if (score >= Math.pow(10, -15) && !isExact) {
+            // console.log('filtered out (minscore)' + score);
+            shouldShow = false;
+        }
+    } else {
+        // only partial match
+        if (score > minScore * 10) {
+            // console.log('filtered out (score=' + score + 'minscore=' + minScore + ')');
+            shouldShow = false;
+        }
+        // else { console.log('not filtered out (score=' + score + 'minscore=' + minScore + ')'); }
+    }
+    return shouldShow;
+}
+
+export function process(data, params, printer) {
+    const fuse = new Fuse(
+        // Fuse take a list not a map
+        [...data].map((item) => ({ key: item[0], speaker: item[1] })),
+        {
+            isCaseSensitive: false,
+            matchAllTokens: true,
+            findAllMatches: true,
+            minMatchCharLength: 2,
+            keys: ['speaker.brand', 'speaker.model', 'speaker.type', 'speaker.shape'],
+            treshhold: 0.2,
+            distance: 10,
+            includeScore: true,
+            useExtendedSearch: false,
+            shouldSort: true,
+        }
+    );
+    const fragment = new DocumentFragment();
+    const sorter = params[0];
+    const filters = params[1];
+    const keywords = params[2];
+    let results;
+    let minScore = 1;
+    if (keywords !== '') {
+        results = fuse.search(keywords);
+        // console.log('searching with keywords: '+keywords+' #matches: '+results.length);
+        if (results.length > 0) {
+            // minScore
+            for (const spk in results) {
+                if (results[spk].score < minScore) {
+                    minScore = results[spk].score;
+                }
+            }
+        }
+        results = new Map(results.map((obj) => [obj.item.key, obj]));
+    }
+
+    sortMetadata2(data, sorter).forEach((key, index) => {
+        const speaker = data.get(key);
+        const testFiltered = isFiltered(speaker, filters);
+        const testKeywords = isSearch(key, results, minScore, keywords);
+        const currentFragment = printer(key, index, speaker);
+        if (testFiltered && testKeywords) {
+            show(currentFragment);
+        } else {
+            hide(currentFragment);
+        }
+        fragment.appendChild(currentFragment);
+    });
+    return fragment;
 }

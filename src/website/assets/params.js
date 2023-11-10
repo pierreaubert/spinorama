@@ -19,17 +19,17 @@
 export function urlParameters2Sort(url) {
     let keywords = '';
     const filter = {
-	brand: '',
-	power: '',
-	quality: '',
-	priceMin: '',
-	priceMax: '',
-	reviewer: '',
-	shape: '',
+        brand: '',
+        power: '',
+        quality: '',
+        priceMin: '',
+        priceMax: '',
+        reviewer: '',
+        shape: '',
     };
     const sorter = {
-	by: 'date',
-	reverse: false,
+        by: 'date',
+        reverse: false,
     };
 
     if (url.searchParams.has('sort')) {
@@ -38,7 +38,7 @@ export function urlParameters2Sort(url) {
     }
     if (url.searchParams.has('reverse')) {
         const sortOrder = url.searchParams.get('reverse');
-        if (sortOrder === 'true' ) {
+        if (sortOrder === 'true') {
             sorter.reverse = true;
         } else {
             sorter.reverse = false;
@@ -46,8 +46,8 @@ export function urlParameters2Sort(url) {
     } else {
         sorter.reverse = false;
     }
-    for( const filterName of Object.keys(filter) ) {
-        if (url.searchParams.has(filterName) ) {
+    for (const filterName of Object.keys(filter)) {
+        if (url.searchParams.has(filterName)) {
             filter[filterName] = url.searchParams.get(filterName);
         }
     }

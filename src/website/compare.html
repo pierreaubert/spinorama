@@ -11,67 +11,67 @@
 
     <div id="cea2034plots" data-num="0">
       <div class="plotForm">
-        <nav class="level has-background-info-dark mb-0">
-          <div class="level-left">
-            <div class="level-item has-text-centered">
-              <p class="has-text-white">Graph:</p>
-              <select class="graph" id="compare-select-graph"></select>
-            </div>
-          </div>
-        </nav>
-        <nav class="level mb-0 mt-0">
-          <div class="level-left">
-            <div class="level-item">
-              <nav
-                class="breadcrumb has-arrow-separator"
-                aria-label="breadcrumbs"
-              >
-                <ul>
-                  <li>
-                    Speaker <b>A</b>:
-                    <select class="speaker0" id="compare-select-speaker0"></select>
-                  </li>
-                  <li>
-                    Origin:
-                    <select class="origin0" id="compare-select-origin0"></select>
-                  </li>
-                  <li>
-                    Version:
-                    <select class="version0" id="compare-select-version0"></select>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </nav>
-        <nav class="level mb-0 mt-0">
-          <div class="level-left">
-            <div class="level-item">
-              <nav
-                class="breadcrumb has-arrow-separator"
-                aria-label="breadcrumbs"
-              >
-                <ul>
-                  <li>
-                    Speaker <b>B</b>:
-                    <select class="speaker1" id="compare-select-speaker1"></select>
-                  </li>
-                  <li>
-                    Origin:
-                    <select class="origin1" id="compare-select-origin1"></select>
-                  </li>
-                  <li>
-                    Version:
-                    <select class="version1" id="compare-select-version1"></select>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </nav>
-        <div class="plotSingle" id="plotSingle"></div>
-        <div class="plotDouble0" id="plotDouble0"></div>
-        <div class="plotDouble1" id="plotDouble1"></div>
+
+	<div class="section has-background-light">
+
+	  <nav class="level">
+
+	    % for name, number in (("A", 0), ("B", 1)):
+	    <div class="level-item">
+	      <div class="box">
+		<p class="title is-4 has-text-centered">Speaker ${name}</p>
+		%     for label, field in (("Name", "speaker"), ("Origin", "origin"), ("Version", "version")):
+		<div class="field is-horizontal">
+		  <div class="field-label is-normal">
+		    <label class="label" for="compare-select-${field}${number}">${label}</label>
+		  </div>
+		  <div class="field-body">
+		    <div class="field">
+		      <div class="control is-expanded">
+			<div class="select is-fullwidth">
+			  <select class="is-small" id="compare-select-${field}${number}"></select>
+			</div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		%     endfor
+	      </div>
+	    </div>
+	    % endfor
+
+	    <div class="level-item">
+	      <div class="box">
+		<p class="title is-4 has-text-centered">Compare</p>
+		<div class="field is-horizontal">
+		  <div class="field-label is-normal">
+		    <label class="label">Graph</label>
+		  </div>
+		  <div class="field-body">
+		    <div class="field">
+		      <div class="control is-expanded has-icons-left">
+			<div class="select is-fullwidth">
+			  <select class="graph is-small" id="compare-select-graph"></select>
+			</div>
+			<div class="icon is-left">
+			  <i class="fa-solid fa-chart-line"></i>
+			</div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	      </div>
+	    </div>
+
+	  </nav>
+	</div>
+
+	<div class="section">
+          <div class="plotSingle" id="plotSingle"></div>
+          <div class="plotDouble0" id="plotDouble0"></div>
+          <div class="plotDouble1" id="plotDouble1"></div>
+	</div>
+
       </div>
     </div>
 

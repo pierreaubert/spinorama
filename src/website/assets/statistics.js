@@ -138,7 +138,7 @@ getMetadata()
             const nbdPIR = [];
             const smPIR = [];
             const names = [];
-            metadata.forEach( (value,) => {
+            metadata.forEach((value) => {
                 if (
                     value.measurements &&
                     value.measurements[value.default_measurement] &&

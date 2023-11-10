@@ -122,7 +122,7 @@ export function getField(value, field, version) {
     let fields = {};
     if (value.measurements && value.measurements[version]) {
         const measurement = value.measurements[version];
-        if (measurement.hasOwnProperty(field)) {
+        if (Object.hasOwn(measurement, field)) {
             fields = measurement[field];
         }
     }
@@ -137,7 +137,7 @@ export function getSensitivity(value, version) {
     }
     if (value.measurements && value.measurements[version]) {
         const measurement = value.measurements[version];
-        if (measurement.hasOwnProperty('sensitivity_delta')) {
+        if (Object.hasOwn(measurement, 'sensitivity_delta')) {
             delta = measurement.sensitivity_delta;
         }
     }

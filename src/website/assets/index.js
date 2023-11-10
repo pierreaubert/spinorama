@@ -21,46 +21,47 @@
 
 import { getMetadata } from './common.js';
 import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc.js';
-import { sortMetadata2 } from './sort.js';
+import { process } from './sort.js';
+import { urlParameters2Sort } from './params.js';
 
 getMetadata()
     .then((metadata) => {
         const source = document.querySelector('#templateSpeaker').innerHTML;
         const template = Handlebars.compile(source);
         const speakerContainer = document.querySelector('[data-num="0"');
-	const speakerCount = document.querySelector('#speakerCount p:nth-child(2)');
-	const measurementCount = document.querySelector('#measurementCount p:nth-child(2)');
-	const brandCount = document.querySelector('#brandCount p:nth-child(2)');
-	const reviewCount = document.querySelector('#reviewCount p:nth-child(2)');
+        const speakerCount = document.querySelector('#speakerCount p:nth-child(2)');
+        const measurementCount = document.querySelector('#measurementCount p:nth-child(2)');
+        const brandCount = document.querySelector('#brandCount p:nth-child(2)');
+        const reviewCount = document.querySelector('#reviewCount p:nth-child(2)');
 
-	function getMeasurementCount() {
-	    let count = 0;
-	    metadata.forEach( (e) => {
-		count += Object.values(e.measurements).length;
-	    });
-	    return count;
-	}
+        function getMeasurementCount() {
+            let count = 0;
+            metadata.forEach((e) => {
+                count += Object.values(e.measurements).length;
+            });
+            return count;
+        }
 
-	function getBrandCount() {
-	    const brands = new Set();
-	    metadata.forEach( (e) => {
-		brands.add(e.brand);
-	    });
-	    return brands.size;
-	}
+        function getBrandCount() {
+            const brands = new Set();
+            metadata.forEach((e) => {
+                brands.add(e.brand);
+            });
+            return brands.size;
+        }
 
-	function getReviewCount() {
-	    return document.querySelectorAll('#selectReviewer')[0].options.length;
-	}
+        function getReviewCount() {
+            return document.querySelectorAll('#selectReviewer')[0].options.length;
+        }
 
         function getDollar(price) {
             if (price === '?') {
                 return price;
             }
             const iprice = parseInt(price);
-            if (iprice<=200) {
+            if (iprice <= 200) {
                 return '$';
-            } else if (iprice <=500) {
+            } else if (iprice <= 500) {
                 return '$$';
             }
             return '$$$';
@@ -74,7 +75,7 @@ getMetadata()
                 brand: value.brand,
                 model: value.model,
                 price: price,
-                priceAsDollar : getDollar(price),
+                priceAsDollar: getDollar(price),
                 img: {
                     avif: getPicture(value.brand, value.model, 'avif'),
                     webp: getPicture(value.brand, value.model, 'webp'),
@@ -97,21 +98,18 @@ getMetadata()
             return divSpeaker;
         }
 
-        function display(data) {
-            const fragment = new DocumentFragment();
-            sortMetadata2(data, { by: 'date', reverse: false }).forEach((key, index) => {
-                const speaker = data.get(key);
-                fragment.appendChild(printSpeaker(key, index, speaker));
-            });
-            return fragment;
+        function display(data, speakerHtml) {
+            const url = new URL(window.location);
+            const params = urlParameters2Sort(url);
+            return process(data, params, speakerHtml);
         }
 
-	speakerCount.innerHTML = metadata.size;
-	measurementCount.innerHTML = getMeasurementCount();
-	brandCount.innerHTML = getBrandCount();
-	reviewCount.innerHTML = getReviewCount();
+        speakerCount.innerHTML = metadata.size;
+        measurementCount.innerHTML = getMeasurementCount();
+        brandCount.innerHTML = getBrandCount();
+        reviewCount.innerHTML = getReviewCount();
 
-        speakerContainer.appendChild(display(metadata));
+        speakerContainer.appendChild(display(metadata, printSpeaker));
     })
     .catch((error) => {
         console.log(error);

@@ -30,10 +30,9 @@ import {
     setGlobe,
     setGraph,
     setCEA2034,
-    setCEA2034Split,
     setSurface,
     updateOrigin,
-    updateVersion
+    updateVersion,
 } from './common.js';
 
 getMetadata()
@@ -49,7 +48,7 @@ getMetadata()
         const plotDouble0Container = plotContainer.querySelector('.plotDouble0');
         const plotDouble1Container = plotContainer.querySelector('.plotDouble1');
         const formContainer = plotContainer.querySelector('.plotForm');
-        const graphsSelector = formContainer.querySelector('.graph');
+        const graphsSelector = formContainer.querySelector('#compare-select-graph');
 
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
@@ -72,8 +71,6 @@ getMetadata()
                     let graphsConfigs = [];
                     if (measurement === 'CEA2034') {
                         graphsConfigs = setCEA2034(speakersName, graphs, windowWidth, windowHeight);
-                    } else if (measurement === 'CEA2034 with splitted views') {
-                        graphsConfigs = setCEA2034Split(speakersName, graphs, windowWidth, windowHeight);
                     } else if (
                         measurement === 'On Axis' ||
                         measurement === 'Estimated In-Room Response' ||
@@ -108,7 +105,7 @@ getMetadata()
                         measurement === 'SPL Horizontal Globe Normalized' ||
                         measurement === 'SPL Vertical Globe Normalized'
                     ) {
-                        graphsConfigs = setGlobe(speakersName, graphs, windowWidth, windowHeight);
+                        graphsConfigs = setGlobe(speakersName, graphs);
                     } // todo add multi view
 
                     // console.log('datas and layouts length='+graphsConfigs.length)
@@ -162,10 +159,9 @@ getMetadata()
         function buildInitOrigins(count) {
             const list = [];
             for (let pos = 0; pos < count; pos++) {
-                if (urlParams.has('origin'+pos)) {
-                    list[pos] = urlParams.get('origin'+pos);
-                }
-                else {
+                if (urlParams.has('origin' + pos)) {
+                    list[pos] = urlParams.get('origin' + pos);
+                } else {
                     list[pos] = null;
                 }
             }
@@ -175,10 +171,9 @@ getMetadata()
         function buildInitVersions(count) {
             const list = [];
             for (let pos = 0; pos < count; pos++) {
-                if (urlParams.has('version'+pos)) {
-                    list[pos] = urlParams.get('version'+pos);
-                }
-                else {
+                if (urlParams.has('version' + pos)) {
+                    list[pos] = urlParams.get('version' + pos);
+                } else {
                     list[pos] = null;
                 }
             }
@@ -257,9 +252,9 @@ getMetadata()
         // initial setup
         for (let pos = 0; pos < nbSpeakers; pos++) {
             const tpos = pos.toString();
-            speakersSelector[pos] = formContainer.querySelector('.speaker' + tpos);
-            originsSelector[pos] = formContainer.querySelector('.origin' + tpos);
-            versionsSelector[pos] = formContainer.querySelector('.version' + tpos);
+            speakersSelector[pos] = formContainer.querySelector('#compare-select-speaker' + tpos);
+            originsSelector[pos] = formContainer.querySelector('#compare-select-origin' + tpos);
+            versionsSelector[pos] = formContainer.querySelector('#compare-select-version' + tpos);
         }
 
         for (let pos = 0; pos < nbSpeakers; pos++) {
@@ -286,7 +281,8 @@ getMetadata()
                 initMeasurement,
                 initSpeakers[pos],
                 initOrigins[pos],
-                initVersions[pos]);
+                initVersions[pos]
+            );
         }
 
         // add listeners

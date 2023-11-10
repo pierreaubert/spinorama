@@ -294,13 +294,6 @@ def main():
         file_out = cpaths.CPATH_DOCS_ASSETS_CSS + "/" + f
         shutil.copy(file_in, file_out)
 
-    for f in [
-        "zip.min.js",
-    ]:
-        file_in = cpaths.CPATH_WEBSITE_ASSETS_JS + "/" + f
-        file_out = cpaths.CPATH_DOCS_ASSETS_JS + "/" + f
-        shutil.copy(file_in, file_out)
-
     flow_bin = "flow-remove-types"
     flow_param = ""  # "--pretty --sourcemaps"
 
