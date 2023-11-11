@@ -245,11 +245,11 @@ getMetadata()
                 versionsSelector[pos],
                 originsSelector[pos].value
             );
-	    if (originsSelector[pos].childElementCount === 1 ) {
-		fieldsetOriginsSelector[pos].disabled = true;
-	    } else {
-		fieldsetOriginsSelector[pos].removeAttribute('disabled');
-	    }
+            if (originsSelector[pos].childElementCount === 1) {
+                fieldsetOriginsSelector[pos].disabled = true;
+            } else {
+                fieldsetOriginsSelector[pos].removeAttribute('disabled');
+            }
             urlParams.set('origin' + pos, originsSelector[pos].value);
             updateTitle();
             window.history.pushState({ page: 1 }, 'Compare speakers', urlCompare + urlParams.toString());
