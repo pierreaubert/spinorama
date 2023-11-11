@@ -27,21 +27,26 @@
   <h4>What we know about the measurement:</h4>
   <div class="message-header">
     <p>
-      ${meta[speaker].get('brand')} ${meta[speaker].get('model')}
-      is a ${meta[speaker].get('type', '')} ${meta[speaker].get('shape')} speaker
-<%
-      price =meta[speaker].get('price', '?')
-%>
-%     if price not in ('?', ''):
+      ${meta[speaker].get('brand')} ${meta[speaker].get('model')} is
+      % if meta[speaker].get('type', '') == 'active':
+      an active
+      % else:
+      a passive
+      % endif
+      ${meta[speaker].get('shape')} speaker
+      <%
+	price =meta[speaker].get('price', '?')
+	%>
+      % if price not in ('?', ''):
           that cost around ${meta[speaker].get('price', '?')}USD
-%         if meta[speaker].get('amount', '?') != '?' and meta[speaker].get('shape') != 'center':
-%             if meta[speaker].get('amount') == 'pair':
+      %     if meta[speaker].get('amount', '?') != '?' and meta[speaker].get('shape') != 'center':
+      %         if meta[speaker].get('amount') == 'pair':
                   for a pair
-%             else:
+      %         else:
                   each
-%             endif
-%         endif
-%     endif
+      %         endif
+      %     endif
+      % endif
 .
     </p>
   </div>

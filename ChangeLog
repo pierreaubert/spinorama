@@ -1,5 +1,13 @@
 2023-11-11  pierre  <pierre@spin.internet-box.ch>
 
+	* src/website/assets/common.js: split title over 2 lines if too long
+	; got the grid back
+
+	* src/website/speaker_desc.html: fix a v.s an for active / passive
+
+	* src/website/compare.html: fix levels ; fix call order when a
+	change is done to a selector
+
 	* src/website/assets/compare.js: add title again; looks like
 	pre-submit messed up
 
@@ -7,4 +15,3 @@
 
 	* src/website/assets/compare.js: fix fieldset and make it disabled
 	automatically if only one field is present
-

@@ -31,9 +31,51 @@ import {
     setGraph,
     setCEA2034,
     setSurface,
-    updateOrigin,
-    updateVersion,
 } from './common.js';
+
+function updateVersion(metaSpeakers, speaker, selector, origin, version) {
+    // update possible version(s) for matching speaker and origin
+    // console.log('update version for ' + speaker + ' origin=' + origin + ' version=' + version)
+    const versions = Object.keys(metaSpeakers[speaker].measurements);
+    let matches = new Set();
+    versions.forEach((val) => {
+        const current = metaSpeakers[speaker].measurements[val];
+        if (current.origin === origin || origin === '' || origin == null) {
+            matches.add(val);
+            matches.add(val + '_eq');
+        }
+    });
+    const [first] = matches;
+    let correct_version = null;
+    if (version != null && matches.has(version)) {
+        correct_version = version;
+    } else if (selector.value != null && matches.has(selector.value)) {
+        correct_version = selector.value;
+    } else {
+        correct_version = first;
+    }
+    assignOptions(Array.from(matches), selector, correct_version);
+}
+
+function updateOrigin(metaSpeakers, speaker, originSelector, versionSelector, origin, version) {
+    // console.log('updateOrigin for ' + speaker + ' with origin ' + origin + ' version=' + version)
+    const measurements = Object.keys(metaSpeakers[speaker].measurements);
+    const origins = new Set();
+    for (const key in measurements) {
+        origins.add(metaSpeakers[speaker].measurements[measurements[key]].origin);
+    }
+    const [first] = origins;
+    // console.log('updateOrigin found this possible origins: ' + origins.size + ' first=' + first)
+    // origins.forEach(item => console.log('updateOrigin: ' + item))
+    let correct_origin = null;
+    if (origin != null && origins.has(origin)) {
+        correct_origin = origin;
+    } else {
+        correct_origin = first;
+    }
+    assignOptions(Array.from(origins), originSelector, correct_origin);
+    updateVersion(metaSpeakers, speaker, versionSelector, correct_origin, version);
+}
 
 getMetadata()
     .then((metadata) => {
@@ -216,24 +258,7 @@ getMetadata()
             // console.log('updateSpeakerPos(' + pos + ')')
             updateOrigin(metaSpeakers, speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos]);
             urlParams.set('speaker' + pos, speakersSelector[pos].value);
-            updateTitle();
-            window.history.pushState({ page: 1 }, 'Compare speakers', urlCompare + urlParams.toString());
-            updateSpeakers();
-        }
-
-        function updateVersionPos(pos) {
-            // console.log('updateVersionsPos(' + pos + ')')
-            updateVersion(
-                metaSpeakers,
-                speakersSelector[pos].value,
-                versionsSelector[pos],
-                originsSelector[pos].value,
-                versionsSelector[pos].value
-            );
-            updateSpeakers();
-            urlParams.set('version' + pos, versionsSelector[pos].value);
-            updateTitle();
-            window.history.pushState({ page: 1 }, 'Compare speakers', urlCompare + urlParams.toString());
+            updateOriginPos(pos);
         }
 
         function updateOriginPos(pos) {
@@ -251,9 +276,25 @@ getMetadata()
                 fieldsetOriginsSelector[pos].removeAttribute('disabled');
             }
             urlParams.set('origin' + pos, originsSelector[pos].value);
-            updateTitle();
+            updateVersionPos(pos);
+        }
+
+        function updateVersionPos(pos) {
+            // console.log('updateVersionsPos(' + pos + ')')
+            updateVersion(
+                metaSpeakers,
+                speakersSelector[pos].value,
+                versionsSelector[pos],
+                originsSelector[pos].value,
+                versionsSelector[pos].value
+            );
+            if (versionsSelector[pos].childElementCount === 1) {
+                fieldsetVersionsSelector[pos].disabled = true;
+            } else {
+                fieldsetVersionsSelector[pos].removeAttribute('disabled');
+            }
+            urlParams.set('version' + pos, versionsSelector[pos].value);
             window.history.pushState({ page: 1 }, 'Compare speakers', urlCompare + urlParams.toString());
-            updateSpeakers();
         }
 
         // initial setup
@@ -273,16 +314,7 @@ getMetadata()
 
         const initDatas = [];
         for (let pos = 0; pos < nbSpeakers; pos++) {
-            updateOrigin(
-                metaSpeakers,
-                initSpeakers[pos],
-                originsSelector[pos],
-                versionsSelector[pos],
-                urlParams.get('origin' + pos),
-                urlParams.get('version' + pos)
-            );
-            updateVersionPos(pos);
-            updateOriginPos(pos);
+            updateOrigin(metaSpeakers, initSpeakers[pos], originsSelector[pos], versionsSelector[pos], null, null);
             updateSpeakerPos(pos);
             // console.log('DEBUG: ' + originsSelector[pos].options[0])
             initDatas[pos] = getSpeakerData(
@@ -293,6 +325,7 @@ getMetadata()
                 initVersions[pos]
             );
         }
+        updateSpeakers();
 
         // add listeners
         graphsSelector.addEventListener('change', updateSpeakers, false);
@@ -301,21 +334,24 @@ getMetadata()
             speakersSelector[pos].addEventListener(
                 'change',
                 () => {
-                    return updateSpeakerPos(pos);
+                    updateSpeakerPos(pos);
+                    updateSpeakers();
                 },
                 false
             );
             originsSelector[pos].addEventListener(
                 'change',
                 () => {
-                    return updateOriginPos(pos);
+                    updateOriginPos(pos);
+                    updateSpeakers();
                 },
                 false
             );
             versionsSelector[pos].addEventListener(
                 'change',
                 () => {
-                    return updateVersionPos(pos);
+                    updateVersionPos(pos);
+                    updateSpeakers();
                 },
                 false
             );

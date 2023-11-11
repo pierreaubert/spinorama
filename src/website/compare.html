@@ -21,26 +21,29 @@
 	      <div class="box">
 		<p class="title is-4 has-text-centered">Speaker ${name}</p>
 		% for label, field in (("Name", "speaker"), ("Origin", "origin"), ("Version", "version")):
-		<div class="field is-horizontal">
-		  <div class="field-label is-normal">
-		    <label class="label" for="compare-select-${field}${number}">${label}</label>
-		  </div>
-		  <fieldset id="compare-fieldset-${field}${number}">
+		<fieldset id="compare-fieldset-${field}${number}">
+		  <div class="field is-horizontal">
+		    <div class="field-label is-normal">
+		      <label class="label" for="compare-select-${field}${number}">${label}</label>
+		    </div>
 		    <div class="field-body">
 		      <div class="field">
 			<div class="control is-expanded">
 			  <div class="select is-fullwidth">
-			    <select class="is-small" id="compare-select-${field}${number}"></select>
+			    <select class="is-normal" id="compare-select-${field}${number}"></select>
 			  </div>
 			</div>
 		      </div>
 		    </div>
-		  </fieldset>
-		</div>
+		  </div>
+		</fieldset>
 		% endfor
 	      </div>
 	    </div>
 	    % endfor
+
+	  </nav>
+	  <nav class="level">
 
 	    <div class="level-item">
 	      <div class="box">
@@ -53,7 +56,7 @@
 		    <div class="field">
 		      <div class="control is-expanded has-icons-left">
 			<div class="select is-fullwidth">
-			  <select class="graph is-small" id="compare-select-graph"></select>
+			  <select class="graph is-normal" id="compare-select-graph"></select>
 			</div>
 			<div class="icon is-left">
 			  <i class="fa-solid fa-chart-line"></i>
@@ -68,11 +71,9 @@
 	  </nav>
 	</div>
 
-	<div class="section">
-          <div class="plotSingle" id="plotSingle"></div>
-          <div class="plotDouble0" id="plotDouble0"></div>
-          <div class="plotDouble1" id="plotDouble1"></div>
-	</div>
+        <div class="plotSingle" id="plotSingle"></div>
+        <div class="plotDouble0" id="plotDouble0"></div>
+        <div class="plotDouble1" id="plotDouble1"></div>
 
       </div>
     </div>

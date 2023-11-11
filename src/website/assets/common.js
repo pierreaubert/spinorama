@@ -113,7 +113,12 @@ function processGraph(name) {
 
 function getOrigin(metaSpeakers, speaker, origin) {
     // console.log('getOrigin ' + speaker + ' origin=' + origin)
-    if (origin == null || origin === '') {
+    const measurements = Object.keys(metaSpeakers[speaker].measurements);
+    const origins = new Set();
+    for (const key in measurements) {
+        origins.add(metaSpeakers[speaker].measurements[measurements[key]].origin);
+    }
+    if (origin == null || origin === '' || !origins.has(origin)) {
         const defaultMeasurement = metaSpeakers[speaker].default_measurement;
         const defaultOrigin = metaSpeakers[speaker].measurements[defaultMeasurement].origin;
         // console.log('getOrigin default=' + defaultOrigin)
@@ -123,7 +128,16 @@ function getOrigin(metaSpeakers, speaker, origin) {
 }
 
 function getVersion(metaSpeakers, speaker, origin, version) {
-    if (version == null || version === '') {
+    const versions = Object.keys(metaSpeakers[speaker].measurements);
+    let matches = new Set();
+    versions.forEach((val) => {
+        const current = metaSpeakers[speaker].measurements[val];
+        if (current.origin === origin || origin === '' || origin == null) {
+            matches.add(val);
+            matches.add(val + '_eq');
+        }
+    });
+    if (version == null || version === '' || !matches.has(version)) {
         const defaultVersion = metaSpeakers[speaker].default_measurement;
         return defaultVersion;
     }
@@ -148,6 +162,7 @@ function getSpeakerUrl(metaSpeakers, graph, speaker, origin, version) {
 
 export function getSpeakerData(metaSpeakers, graph, speaker, origin, version) {
     // console.log('getSpeakerData ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version=' + version)
+
     const url = getSpeakerUrl(metaSpeakers, graph, speaker, origin, version);
     // console.log('fetching url=' + url)
     const spec = fetch(url)
@@ -314,9 +329,6 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
                 }
                 layout.xaxis.title = title;
             }
-            if (layout.xaxis) {
-                layout.xaxis.autotick = false;
-            }
         }
     }
 
@@ -324,10 +336,12 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
         // hide axis to recover some space on mobile
         if (is_compact && is_vertical) {
             if (layout.yaxis) {
-                layout.yaxis.visible = false;
+                layout.yaxis.title = null;
+                layout.yaxis.showticklabels = false;
             }
             if (layout.yaxis2) {
-                layout.yaxis2.visible = false;
+                layout.yaxis2.title = null;
+                layout.yaxis2.showticklabels = false;
             }
         }
         if (layout.yaxis) {
@@ -349,6 +363,12 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
                 size: 10,
                 color: '#000',
             };
+            if (spin.length === 1) {
+                const measured_pos = title.indexOf(' measured ');
+                if (measured_pos !== -1) {
+                    title = title.slice(0, measured_pos) + ' <br>' + title.slice(measured_pos + 1);
+                }
+            }
             if (title === '' && datas[0].legendgrouptitle) {
                 title = datas[0].legendgrouptitle.text;
             }
@@ -377,9 +397,9 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
             if (is_vertical) {
                 // get legend horizontal below the graph
                 layout.margin = {
-                    l: 5,
-                    r: 5,
-                    t: graphMarginTop,
+                    l: 10,
+                    r: 10,
+                    t: graphMarginTop + 10,
                     b: graphMarginBottom,
                 };
             } else {
@@ -553,6 +573,7 @@ export function setGraph(speakerNames, speakerGraphs, width, height) {
                 // hide yellow bands since when you have more than one it is difficult to see the graphs
                 // also remove the midrange lines for the same reason
                 if (
+                    i > 0 && // keep only the first one
                     name != null &&
                     (name == 'Band ±3dB' ||
                         name == 'Band ±1.5dB' ||
@@ -717,7 +738,8 @@ export function assignOptions(textArray, selector, textSelected) {
     }
     for (let i = 0; i < textArray.length; i++) {
         const currentOption = document.createElement('option');
-        currentOption.text = textArray[i];
+        currentOption.value = textArray[i];
+        currentOption.text = textArray[i].replace('Vendors-', '').replace('vendor-pattern-', 'Pattern ');
         if (textArray[i] === textSelected) {
             currentOption.selected = true;
         }
@@ -726,47 +748,4 @@ export function assignOptions(textArray, selector, textSelected) {
         }
         selector.appendChild(currentOption);
     }
-}
-
-export function updateVersion(metaSpeakers, speaker, selector, origin, value) {
-    // update possible version(s) for matching speaker and origin
-    // console.log('update version for ' + speaker + ' origin=' + origin + ' value=' + value)
-    const versions = Object.keys(metaSpeakers[speaker].measurements);
-    let matches = [];
-    versions.forEach((val) => {
-        const current = metaSpeakers[speaker].measurements[val];
-        if (current.origin === origin || origin === '' || origin == null) {
-            matches.push(val);
-        }
-    });
-    if (metaSpeakers[speaker].eqs != null) {
-        const matchesEQ = [];
-        for (const key in matches) {
-            matchesEQ.push(matches[key] + '_eq');
-        }
-        matches = matches.concat(matchesEQ);
-    }
-    if (value != null) {
-        assignOptions(matches, selector, value);
-    } else {
-        assignOptions(matches, selector, selector.value);
-    }
-}
-
-export function updateOrigin(metaSpeakers, speaker, originSelector, versionSelector, origin, version) {
-    // console.log('updateOrigin for ' + speaker + ' with origin ' + origin + ' version=' + version)
-    const measurements = Object.keys(metaSpeakers[speaker].measurements);
-    const origins = new Set();
-    for (const key in measurements) {
-        origins.add(metaSpeakers[speaker].measurements[measurements[key]].origin);
-    }
-    const [first] = origins;
-    // console.log('updateOrigin found this possible origins: ' + origins.size + ' first=' + first)
-    // origins.forEach(item => console.log('updateOrigin: ' + item))
-    if (origin != null) {
-        assignOptions(Array.from(origins), originSelector, origin);
-    } else {
-        assignOptions(Array.from(origins), originSelector, first);
-    }
-    updateVersion(metaSpeakers, speaker, versionSelector, originSelector.value, version);
 }
