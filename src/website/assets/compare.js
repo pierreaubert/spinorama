@@ -62,6 +62,8 @@ getMetadata()
         const speakersSelector = [];
         const originsSelector = [];
         const versionsSelector = [];
+        const fieldsetOriginsSelector = [];
+        const fieldsetVersionsSelector = [];
 
         function plot(measurement, speakersName, speakersGraph) {
             // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs')
@@ -243,6 +245,11 @@ getMetadata()
                 versionsSelector[pos],
                 originsSelector[pos].value
             );
+	    if (originsSelector[pos].childElementCount === 1 ) {
+		fieldsetOriginsSelector[pos].disabled = true;
+	    } else {
+		fieldsetOriginsSelector[pos].removeAttribute('disabled');
+	    }
             urlParams.set('origin' + pos, originsSelector[pos].value);
             updateTitle();
             window.history.pushState({ page: 1 }, 'Compare speakers', urlCompare + urlParams.toString());
@@ -255,6 +262,8 @@ getMetadata()
             speakersSelector[pos] = formContainer.querySelector('#compare-select-speaker' + tpos);
             originsSelector[pos] = formContainer.querySelector('#compare-select-origin' + tpos);
             versionsSelector[pos] = formContainer.querySelector('#compare-select-version' + tpos);
+            fieldsetOriginsSelector[pos] = formContainer.querySelector('#compare-fieldset-origin' + tpos);
+            fieldsetVersionsSelector[pos] = formContainer.querySelector('#compare-fieldset-version' + tpos);
         }
 
         for (let pos = 0; pos < nbSpeakers; pos++) {

@@ -1,3 +1,8 @@
+2023-11-11  pierre  <pierre@spin.internet-box.ch>
+
+	* src/website/assets/compare.js: add title again; looks like
+	pre-submit messed up
+
 2023-11-10  pierre  <pierre@spin.internet-box.ch>
 
 	* src/website/assets/compare.js: fix fieldset and make it disabled

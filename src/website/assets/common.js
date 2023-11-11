@@ -76,19 +76,19 @@ const labelShort = {
     'Sound Power': 'SP',
     'Early Reflections DI': 'ERDI',
     'Sound Power DI': 'SPDI',
-    // reflections
+    // Bounce
     'Ceiling Bounce': 'CB',
     'Floor Bounce': 'FB',
     'Front Wall Bounce': 'FWB',
     'Rear Wall Bounce': 'RWB',
     'Side Wall Bounce': 'SWB',
-    //
+    // Reflection
     'Ceiling Reflection': 'CR',
     'Floor Reflection': 'FR',
     //
-    Front: 'F',
-    Rear: 'R',
-    Side: 'S',
+    'Front': 'F',
+    'Rear': 'R',
+    'Side': 'S',
     //
     'Total Early Reflection': 'TER',
     'Total Horizontal Reflection': 'THR',
@@ -284,42 +284,42 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
                 color: '#000',
             };
         }
-        if (is_compact && is_vertical && layout.yaxis && layout.yaxis.title) {
-            const freq_min = Math.round(Math.pow(10, layout.xaxis.range[0]));
-            const freq_max = Math.round(Math.pow(10, layout.xaxis.range[1]));
-            let title = '';
-            if (layout.yaxis && layout.yaxis.title && layout.yaxis.title.text && layout.yaxis.title.text === 'Angle') {
-                title =
-                    'Angle [' +
-                    layout.yaxis.range[0] +
-                    'º, ' +
-                    layout.yaxis.range[1] +
-                    'º]) v.s. Frequency (Hz [' +
-                    freq_min +
-                    ', ' +
-                    freq_max +
-                    ']).';
-            } else {
-                title =
-                    'SPL (dB [' +
-                    layout.yaxis.range[0] +
-                    ', ' +
-                    layout.yaxis.range[1] +
-                    ']) v.s. Frequency (Hz [' +
-                    freq_min +
-                    ', ' +
-                    freq_max +
-                    ']).';
-            }
-            layout.xaxis.title = title;
-        }
         if (is_compact) {
+	    if ( is_vertical && layout.yaxis && layout.yaxis.title) {
+		const freq_min = Math.round(Math.pow(10, layout.xaxis.range[0]));
+		const freq_max = Math.round(Math.pow(10, layout.xaxis.range[1]));
+		let title = '';
+		if (layout.yaxis.title.text && layout.yaxis.title.text === 'Angle') {
+                    title =
+			'Angle [' +
+			layout.yaxis.range[0] +
+			'º, ' +
+			layout.yaxis.range[1] +
+			'º]) v.s. Frequency (Hz [' +
+			freq_min +
+			', ' +
+			freq_max +
+			']).';
+		} else {
+                    title =
+			'SPL (dB [' +
+			layout.yaxis.range[0] +
+			', ' +
+			layout.yaxis.range[1] +
+			']) v.s. Frequency (Hz [' +
+			freq_min +
+			', ' +
+			freq_max +
+			']).';
+		}
+		layout.xaxis.title = title;
+	    }
             if (layout.xaxis) {
                 layout.xaxis.autotick = false;
             }
         }
     }
-
+    
     function computeYaxis() {
         // hide axis to recover some space on mobile
         if (is_compact && is_vertical) {
@@ -336,22 +336,34 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
     }
 
     function computeTitle() {
+	let title = '';
+	if (spin[0].layout && spin[0].layout.title && spin[0].layout.title.text) {
+	    title = spin[0].layout.title.text;
+	}
+	if (spin.length === 2 && spin[1].layout && spin[1].layout.title && spin[1].layout.title.text) {
+	    title += '<br> v.s. '+ spin[0].layout.title.text;
+	}
+
         if (is_compact) {
-            if (datas[0].legendgrouptitle) {
-                let title = datas[0].legendgrouptitle.text;
-                layout.title = {
-                    text: title,
-                    font: {
-                        size: 10 + windowWidth / 300,
-                        color: '#000',
-                    },
-                    xref: 'paper',
-                    // title start sligthly on the right
-                    x: 0.0,
-                    // keep title below modBar if title is long
-                    y: 0.975,
-                };
-            }
+	    layout.title.font = {
+                size: 10,
+                color: '#000',
+	    };
+	    if (title === '' && datas[0].legendgrouptitle) {
+                title = datas[0].legendgrouptitle.text;
+	    }
+            layout.title = {
+		text: title,
+		font: {
+                    size: 10 + windowWidth / 300,
+                    color: '#000',
+		},
+		xref: 'paper',
+		// title start sligthly on the right
+		x: 0.0,
+		// keep title below modBar if title is long
+		y: 0.975,
+            };
         } else {
             layout.title.font = {
                 size: 12 + windowWidth / 300,

@@ -25,7 +25,6 @@ import {
     getSpeakerData,
     knownMeasurements,
     setCEA2034,
-    setCEA2034Split,
     setContour,
     setGraph,
     setGlobe,
@@ -75,8 +74,6 @@ getMetadata()
                         const currentNames = [speakersName[0] + ' v.s. ' + speakersName[i + 1], speakersName[i + 1]];
                         if (measurement === 'CEA2034') {
                             graphOptions = setCEA2034(currentNames, currentGraphs, windowWidth, windowHeight);
-                        } else if (measurement === 'CEA2034 with splitted views') {
-                            graphOptions = setCEA2034Split(currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (
                             measurement === 'On Axis' ||
                             measurement === 'Estimated In-Room Response' ||

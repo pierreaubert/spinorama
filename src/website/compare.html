@@ -20,22 +20,24 @@
 	    <div class="level-item">
 	      <div class="box">
 		<p class="title is-4 has-text-centered">Speaker ${name}</p>
-		%     for label, field in (("Name", "speaker"), ("Origin", "origin"), ("Version", "version")):
+		% for label, field in (("Name", "speaker"), ("Origin", "origin"), ("Version", "version")):
 		<div class="field is-horizontal">
 		  <div class="field-label is-normal">
 		    <label class="label" for="compare-select-${field}${number}">${label}</label>
 		  </div>
-		  <div class="field-body">
-		    <div class="field">
-		      <div class="control is-expanded">
-			<div class="select is-fullwidth">
-			  <select class="is-small" id="compare-select-${field}${number}"></select>
+		  <fieldset id="compare-fieldset-${field}${number}">
+		    <div class="field-body">
+		      <div class="field">
+			<div class="control is-expanded">
+			  <div class="select is-fullwidth">
+			    <select class="is-small" id="compare-select-${field}${number}"></select>
+			  </div>
 			</div>
 		      </div>
 		    </div>
-		  </div>
+		  </fieldset>
 		</div>
-		%     endfor
+		% endfor
 	      </div>
 	    </div>
 	    % endfor
