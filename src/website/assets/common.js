@@ -240,7 +240,7 @@ export function isCompact() {
     return false;
 }
 
-function computeDims(windowWidth, windowHeight, is_vertical, is_compact) {
+function computeDims(windowWidth, windowHeight, is_vertical, is_compact, nb_graphs) {
     let width = windowWidth;
     let height = windowHeight;
     if (is_compact) {
@@ -256,6 +256,15 @@ function computeDims(windowWidth, windowHeight, is_vertical, is_compact) {
     } else {
         width = Math.min(graphLarge, windowWidth);
         height = Math.min(windowHeight, windowWidth / graphRatio + graphSpacer);
+	if (nb_graphs > 1 ) {
+	    if (is_vertical) {
+		height /= 2;
+		width = height*graphRatio;
+	    } else {
+		width /= 2;
+		height = width/graphRatio;
+	    }
+	}
     }
     return [width, height];
 }
@@ -528,7 +537,7 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
     }
 
     if (layout != null && datas != null) {
-        [layout.width, layout.height] = computeDims(windowWidth, windowHeight, is_vertical, is_compact);
+        [layout.width, layout.height] = computeDims(windowWidth, windowHeight, is_vertical, is_compact, spin.length);
         computeFont();
         computeXaxis();
         computeYaxis();
