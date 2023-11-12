@@ -382,7 +382,7 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
                 // title start sligthly on the right
                 x: 0.0,
                 // keep title below modBar if title is long
-                y: 0.975,
+                y: 0.95,
             };
         } else {
             layout.title.font = {
@@ -459,6 +459,13 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
         }
     }
 
+    function computePolar() {
+        layout.polar = {
+            bargap: 0,
+            hole: 0.05,
+        };
+    }
+
     function computeLabel() {
         if (is_compact) {
             // shorten labels
@@ -507,7 +514,7 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
                     datas[k].colorbar.x = 0.5;
                     datas[k].colorbar.xanchor = 'center';
                     // datas[k].colorbar.xref = 'container';
-                    datas[k].colorbar.y = -0.45;
+                    datas[k].colorbar.y = -0.55;
                     datas[k].colorbar.yanchor = 'bottom';
                     datas[k].colorbar.len = 1.0;
                     datas[k].colorbar.lenmode = 'fraction';
@@ -536,6 +543,7 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
         computeLabel();
         computeModbar();
         computeColorbar();
+        computePolar();
         computeMargin(); // must be last
     } else {
         // should be a pop up
@@ -595,6 +603,24 @@ export function setGraph(speakerNames, speakerGraphs, width, height) {
     return [setGraphOptions(speakerGraphs, width, height)];
 }
 
+export function setRadar(speakerNames, speakerGraphs, width, height) {
+    // console.log('setRadar got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
+    for (const i in speakerGraphs) {
+        if (speakerGraphs[i] != null) {
+            // console.log('adding graph ' + i)
+            for (const trace in speakerGraphs[i].data) {
+                speakerGraphs[i].data[trace].legendgroup = 'speaker' + i;
+                speakerGraphs[i].data[trace].legendgrouptitle = {
+                    text: speakerNames[i],
+                };
+            }
+        }
+    }
+    const options = setGraphOptions(speakerGraphs, width, height);
+    options.layout.height += 20 * 12;
+    return [options];
+}
+
 export function setContour(speakerNames, speakerGraphs, width, height) {
     // console.log('setContour got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
@@ -605,13 +631,15 @@ export function setContour(speakerNames, speakerGraphs, width, height) {
                 speakerGraphs[i].data[j].legendgrouptitle = { text: speakerNames[i] };
             }
             let options = setGraphOptions([{ data: speakerGraphs[i].data, layout: speakerGraphs[i].layout }], width, height);
-            if (i == 0 && isCompact()) {
+            if (i == 0 && isCompact() && speakerGraphs.length > 1) {
                 // remove the axis to have the 2 graphs closer together
                 options.layout.xaxis.visible = false;
                 options.layout.showlegend = false;
                 options.data[0].showscale = false;
                 options.layout.margin.b = 0;
-                options.layout.height -= 80; // size in pixel of xaxis + colorbar
+                options.layout.margin.l = 15; // annoyingly the second graph has a label that shift the graphs
+                // size                  xaxis colorbar xticks
+                options.layout.height -= 14.5 + 63.5 + 44;
             }
             graphsConfigs.push(options);
         }
@@ -620,13 +648,9 @@ export function setContour(speakerNames, speakerGraphs, width, height) {
     return graphsConfigs;
 }
 
-export function setGlobe(speakerNames, speakerGraphs) {
+export function setGlobe(speakerNames, speakerGraphs, width, height) {
     // console.log('setGlobe ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
-    const config = {
-        responsive: true,
-        displayModeBar: true,
-    };
     for (const i in speakerGraphs) {
         if (speakerGraphs[i]) {
             let polarData = [];
@@ -669,36 +693,62 @@ export function setGlobe(speakerNames, speakerGraphs) {
                 currentPolarData.type = 'barpolar';
                 currentPolarData.r = r;
                 currentPolarData.theta = theta;
-                currentPolarData.marker = {
-                    autocolorscale: false,
-                    colorscale: contourColorscale,
-                    color: color,
-                    colorbar: {
-                        title: {
-                            text: 'dB (SPL)',
+                // should be in layout?
+                if (isVertical()) {
+                    currentPolarData.marker = {
+                        autocolorscale: false,
+                        colorscale: contourColorscale,
+                        color: color,
+                        colorbar: {
+                            title: {
+                                font: {
+                                    size: 10,
+                                },
+                                text: 'dB (SPL)',
+                                side: 'bottom',
+                            },
+                            orientation: 'h',
+                            xanchor: 'center',
+                            yanchor: 'bottom',
+                            yref: 'paper',
+                            y: -0.25,
                         },
-                    },
-                    showscale: true,
-                    line: {
-                        color: null,
-                        width: 0,
-                    },
-                };
+                        showscale: true,
+                        line: {
+                            color: null,
+                            width: 0,
+                        },
+                    };
+                } else {
+                    currentPolarData.marker = {
+                        autocolorscale: false,
+                        colorscale: contourColorscale,
+                        color: color,
+                        colorbar: {
+                            title: {
+                                text: 'dB (SPL)',
+                            },
+                            orientation: 'v',
+                        },
+                        showscale: true,
+                        line: {
+                            color: null,
+                            width: 0,
+                        },
+                    };
+                }
                 currentPolarData.legendgroup = 'speaker' + i;
                 currentPolarData.legendgrouptitle = { text: speakerNames[i] };
 
                 polarData.push(currentPolarData);
             }
-            let layout = speakerGraphs[i].layout;
-            layout.polar = {
-                bargap: 0,
-                hole: 0.05,
-            };
-            graphsConfigs.push({
-                data: polarData,
-                layout: layout,
-                config: config,
-            });
+            let options = setGraphOptions([{ data: polarData, layout: speakerGraphs[i].layout }], width, height);
+            if (speakerGraphs.length > 1 && i == 0) {
+                options.data[0].marker.showscale = false;
+                options.layout.margin.l += 60;
+                options.layout.margin.r += 60;
+            }
+            graphsConfigs.push(options);
         }
     }
     return graphsConfigs;
@@ -707,24 +757,14 @@ export function setGlobe(speakerNames, speakerGraphs) {
 export function setSurface(speakerNames, speakerGraphs, width, height) {
     // console.log('setSurface ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
-    const config = {
-        responsive: true,
-        displayModeBar: true,
-    };
     for (const i in speakerGraphs) {
         if (speakerGraphs[i]) {
             let surfaceData = [];
             for (const j in speakerGraphs[i].data) {
                 surfaceData.push(speakerGraphs[i].data[j]);
             }
-            const layout = speakerGraphs[i].layout;
-            layout.width = width;
-            layout.height = height - 100;
-            graphsConfigs.push({
-                data: surfaceData,
-                layout: layout,
-                config: config,
-            });
+            let options = setGraphOptions([{ data: surfaceData, layout: speakerGraphs[i].layout }], width, height);
+            graphsConfigs.push(options);
         }
     }
     return graphsConfigs;

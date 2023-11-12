@@ -47,12 +47,14 @@ class ResampleTests(unittest.TestCase):
     def test_realistic(self):
         x1 = np.logspace(math.log10(20), math.log10(20000), 200)
         x2 = np.logspace(math.log10(20), math.log10(20000), 180)
+        # ruff: noqa: S311
         y1 = [random.randrange(40, 80, 1) for x in x1]
         y2 = _resample(x1, x2, y1)
         error = np.sum(y1) / len(y1) - np.sum(y2) / len(y2)
         self.assertAlmostEqual(error, 0, 1)
         x2 = np.logspace(math.log10(20), math.log10(20000), 200)
         x1 = np.logspace(math.log10(20), math.log10(20000), 180)
+        # ruff: noqa: S311
         y1 = [random.randrange(40, 80, 1) for x in x1]
         y2 = _resample(x1, x2, y1)
         error = np.sum(y1) / len(y1) - np.sum(y2) / len(y2)

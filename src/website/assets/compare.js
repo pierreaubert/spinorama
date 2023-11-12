@@ -30,6 +30,7 @@ import {
     setGlobe,
     setGraph,
     setCEA2034,
+    setRadar,
     setSurface,
 } from './common.js';
 
@@ -124,11 +125,11 @@ getMetadata()
                         measurement === 'SPL Horizontal Normalized' ||
                         measurement === 'SPL Vertical Normalized' ||
                         measurement === 'Horizontal Reflections' ||
-                        measurement === 'Vertical Reflections' ||
-                        measurement === 'SPL Horizontal Radar' ||
-                        measurement === 'SPL Vertical Radar'
+                        measurement === 'Vertical Reflections'
                     ) {
                         graphsConfigs = setGraph(speakersName, graphs, windowWidth, windowHeight);
+                    } else if (measurement === 'SPL Horizontal Radar' || measurement === 'SPL Vertical Radar') {
+                        graphsConfigs = setRadar(speakersName, graphs, windowWidth, windowHeight);
                     } else if (
                         measurement === 'SPL Horizontal Contour' ||
                         measurement === 'SPL Vertical Contour' ||
@@ -149,8 +150,8 @@ getMetadata()
                         measurement === 'SPL Horizontal Globe Normalized' ||
                         measurement === 'SPL Vertical Globe Normalized'
                     ) {
-                        graphsConfigs = setGlobe(speakersName, graphs);
-                    } // todo add multi view
+                        graphsConfigs = setGlobe(speakersName, graphs, windowWidth, windowHeight);
+                    }
 
                     // console.log('datas and layouts length='+graphsConfigs.length)
                     if (graphsConfigs.length === 1) {
@@ -329,6 +330,17 @@ getMetadata()
 
         // add listeners
         graphsSelector.addEventListener('change', updateSpeakers, false);
+
+        document.addEventListener('keydown', (event) => {
+            const key = event.key;
+            if (key === 'a' || key === '1') {
+                speakersSelector[0].focus();
+            } else if (key === 'b' || key === '2') {
+                speakersSelector[1].focus();
+            } else if (key === 'g') {
+                graphsSelector.focus();
+            }
+        });
 
         for (let pos = 0; pos < nbSpeakers; pos++) {
             speakersSelector[pos].addEventListener(

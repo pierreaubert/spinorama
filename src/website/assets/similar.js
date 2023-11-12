@@ -28,6 +28,7 @@ import {
     setContour,
     setGraph,
     setGlobe,
+    setRadar,
     setSurface,
 } from './common.js';
 import { urlSite } from './misc.js';
@@ -83,11 +84,11 @@ getMetadata()
                             measurement === 'SPL Horizontal Normalized' ||
                             measurement === 'SPL Vertical Normalized' ||
                             measurement === 'Horizontal Reflections' ||
-                            measurement === 'Vertical Reflections' ||
-                            measurement === 'SPL Horizontal Radar' ||
-                            measurement === 'SPL Vertical Radar'
+                            measurement === 'Vertical Reflections'
                         ) {
                             graphOptions = setGraph(currentNames, currentGraphs, windowWidth, windowHeight);
+                        } else if (measurement === 'SPL Horizontal Radar' || measurement === 'SPL Vertical Radar') {
+                            graphOptions = setRadar(currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (
                             measurement === 'SPL Horizontal Contour' ||
                             measurement === 'SPL Vertical Contour' ||
