@@ -214,7 +214,7 @@ export function getMetadata() {
 }
 
 const graphSmall = 550;
-const graphLarge = 900;
+const graphLarge = 1200;
 const graphRatio = 1.414;
 const graphMarginTop = 30;
 const graphMarginBottom = 40;
@@ -254,15 +254,8 @@ function computeDims(windowWidth, windowHeight, is_vertical, is_compact) {
             height = Math.min(windowHeight, windowWidth / graphRatio + graphSpacer);
         }
     } else {
-        if (is_vertical) {
-            // portraint
-            width = Math.min(graphLarge, windowWidth);
-            height = Math.min(windowHeight, windowWidth / graphRatio + graphSpacer);
-        } else {
-            // landscape
-            height = Math.min(windowHeight, windowWidth / 2);
-            width = Math.min(windowWidth, windowHeight / graphRatio + graphSpacer);
-        }
+        width = Math.min(graphLarge, windowWidth);
+        height = Math.min(windowHeight, windowWidth / graphRatio + graphSpacer);
     }
     return [width, height];
 }
@@ -427,7 +420,7 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
     }
 
     function computeLegend() {
-        if (is_vertical) {
+        if (is_vertical || is_compact) {
             layout.legend = {
                 orientation: 'h',
                 y: -0.2,
@@ -438,11 +431,12 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
             };
         } else {
             layout.legend = {
-                orientation: 'h',
-                y: -0.25,
-                x: 0.5,
-                xanchor: 'bottom',
-                yanchor: 'center',
+                orientation: 'v',
+                y: 1.,
+                x: 1.4,
+		xref: 'paper',
+                xanchor: 'right',
+                yanchor: 'top',
                 groupclick: 'toggleitem',
             };
         }
