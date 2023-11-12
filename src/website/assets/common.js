@@ -432,9 +432,9 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
         } else {
             layout.legend = {
                 orientation: 'v',
-                y: 1.,
+                y: 1,
                 x: 1.4,
-		xref: 'paper',
+                xref: 'paper',
                 xanchor: 'right',
                 yanchor: 'top',
                 groupclick: 'toggleitem',
