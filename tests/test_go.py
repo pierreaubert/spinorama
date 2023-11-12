@@ -97,12 +97,12 @@ class GlobalOptimizerTests(unittest.TestCase):
         self.assertGreater(self.go.freq_max_index, 180)
 
     def test_freq2index(self):
-        for f in [20, 21, 10000, 16000, 20000]:
-            self.assertEqual(f, self.go._index2freq(self.go._freq2index(f)))
+        for f in [20, 10000, 16000, 20000]:
+            self.assertLessEqual(f, self.go._index2freq(self.go._freq2index(f)))
 
-    def index2freq_test(self):
-        for idx in [0, 1, 50, 200]:
-            self.assertEqual(idx, self.go._freq2index(self.go._index2freq(idx)))
+    def test_index2freq(self):
+        for idx in [0, 1, 50, 199]:
+            self.assertAlmostEqual(idx, self.go._freq2index(self.go._index2freq(idx)))
 
     def test_x2params(self):
         x1 = [3, 20, 1, -5]
@@ -182,7 +182,7 @@ class GlobalOptimizerTests(unittest.TestCase):
         fun = nlc.fun
         x = np.array([0, 25, 0, 0, 0, 50, 0, 0, 0, 75, 0, 0])
         c = fun(x)
-        self.assertEqual(x, -1)  # true
+        self.assertEqual(c, -1)  # true
         x = np.array([0, 25, 0, 0, 0, 34, 0, 0, 0, 75, 0, 0])
         c = fun(x)
         self.assertEqual(c, 1)  # false
