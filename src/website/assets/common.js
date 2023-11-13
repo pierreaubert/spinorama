@@ -256,15 +256,15 @@ function computeDims(windowWidth, windowHeight, is_vertical, is_compact, nb_grap
     } else {
         width = Math.min(graphLarge, windowWidth);
         height = Math.min(windowHeight, windowWidth / graphRatio + graphSpacer);
-	if (nb_graphs > 1 ) {
-	    if (is_vertical) {
-		height /= 2;
-		width = height*graphRatio;
-	    } else {
-		width /= 2;
-		height = width/graphRatio;
-	    }
-	}
+        if (nb_graphs > 1) {
+            if (is_vertical) {
+                height /= 2;
+                width = height * graphRatio;
+            } else {
+                width /= 2;
+                height = width / graphRatio;
+            }
+        }
     }
     return [width, height];
 }
@@ -426,6 +426,9 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
                 b: graphMarginBottom,
             };
         }
+        if (layout['polar4']) {
+            layout.margin.t = 100;
+        }
     }
 
     function computeLegend() {
@@ -463,10 +466,33 @@ function setGraphOptions(spin, windowWidth, windowHeight) {
     }
 
     function computePolar() {
-        layout.polar = {
-            bargap: 0,
-            hole: 0.05,
-        };
+        const polars = ['polar', 'polar2', 'polar3', 'polar4'];
+        if (layout['polar4'] && is_compact) {
+            layout.height = layout.width * 4;
+            // full width
+            layout.polar.domain.x = [0, 1];
+            layout.polar2.domain.x = [0, 1];
+            layout.polar3.domain.x = [0, 1];
+            layout.polar4.domain.x = [0, 1];
+            // split in 4
+            const start = 0.04;
+            const len = 0.2;
+            const gap = 0.05;
+            layout.polar4.domain.y = [start, start + len * 1];
+            layout.polar2.domain.y = [start + len * 1 + gap, start + len * 2 + gap];
+            layout.polar3.domain.y = [start + len * 2 + gap * 2, start + len * 3 + gap * 2];
+            layout.polar.domain.y = [start + len * 3 + gap * 3, start + len * 4 + gap * 3];
+            // move legend up
+            layout.legend.x = 0.5;
+            layout.legend.xanchor = 'center';
+            layout.legend.y = 0.0;
+        }
+        for (let polar in polars) {
+            if (layout[polar]) {
+                layout[polar].bargap = 0;
+                layout[polar].hole = 0.05;
+            }
+        }
     }
 
     function computeLabel() {
@@ -616,6 +642,9 @@ export function setRadar(speakerNames, speakerGraphs, width, height) {
                 speakerGraphs[i].data[trace].legendgrouptitle = {
                     text: speakerNames[i],
                 };
+                if (i % 2 === 1) {
+                    speakerGraphs[i].data[trace].line = { dash: 'dashdot' };
+                }
             }
         }
     }

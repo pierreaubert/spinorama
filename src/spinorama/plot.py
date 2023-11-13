@@ -324,6 +324,10 @@ def contour_layout(params):
         font=dict(
             size=9,
         ),
+        polar=dict(
+            bargap=0,
+            hole=0.05,
+        ),
     )
 
 
@@ -355,12 +359,12 @@ def radar_layout(params):
             xanchor="center",
             yanchor="top",
         ),
-        margin={
-            "t": 100,
-            "b": 0,
-            "l": 50,
-            "r": 50,
-        },
+        margin=dict(
+            t= 100,
+            b= 0,
+            l= 50,
+            r= 50,
+        ),
     )
 
 
