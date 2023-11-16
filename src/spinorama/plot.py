@@ -360,10 +360,10 @@ def radar_layout(params):
             yanchor="top",
         ),
         margin=dict(
-            t= 100,
-            b= 0,
-            l= 50,
-            r= 50,
+            t=100,
+            b=0,
+            l=50,
+            r=50,
         ),
     )
 

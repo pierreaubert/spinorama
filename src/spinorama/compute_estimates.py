@@ -49,16 +49,18 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
 
         freq_min = onaxis.Freq.min()
         freq_max = onaxis.Freq.max()
+
+        midrange = (onaxis.Freq >= max(freq_min, MIDRANGE_MIN_FREQ)) & (
+            onaxis.Freq <= min(freq_max, MIDRANGE_MAX_FREQ)
+        )
+
         logger.debug("Freq min: %f", freq_min)
         if math.isnan(freq_min) or math.isnan(freq_max):
             logger.error("Estimates failed for onaxis %s", onaxis.shape)
             return {}
 
         # mean over 300-10k
-        y_data = onaxis.loc[
-            (onaxis.Freq >= max(freq_min, MIDRANGE_MIN_FREQ))
-            & (onaxis.Freq <= min(freq_max, MIDRANGE_MAX_FREQ))
-        ].dB
+        y_data = onaxis.loc[midrange].dB
 
         y_ref = np.mean(y_data) if not y_data.empty else 0.0
         y_3 = None
@@ -77,10 +79,8 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
             y_6 = restricted_onaxis.Freq[y_6_idx]
         logger.debug("-3 and -6: %fHz and %fHz", y_3, y_6)
         #
-        up: float = onaxis.loc[
-            (onaxis.Freq >= MIDRANGE_MIN_FREQ) & (onaxis.Freq <= MIDRANGE_MAX_FREQ)
-        ].dB.max()
-        down: float = onaxis.loc[(onaxis.Freq >= 100) & (onaxis.Freq <= 10000)].dB.min()
+        up: float = onaxis.loc[midrange].dB.max()
+        down: float = onaxis.loc[midrange].dB.min()
         band = max(abs(up - y_ref), abs(y_ref - down))
         logger.debug("band [%s]", band)
         est = {
