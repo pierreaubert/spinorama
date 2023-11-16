@@ -8102,6 +8102,25 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "GR Research AV123": {
+        "brand": "GR Research",
+        "model": "AV123",
+        "shape": "center",
+        "type": "passive",
+        "price": "500",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/av123-gr-research-x-voce-speaker-review.49563/",
+                },
+                "review_published": "20231116",
+            },
+        },
+    },
     "GR Research Klipsch RP-600M Upgrade": {
         "brand": "GR Research",
         "model": "Klipsch RP-600M Upgrade",
