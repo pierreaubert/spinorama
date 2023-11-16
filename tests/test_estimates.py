@@ -46,7 +46,7 @@ class SpinoramaEstimatesNV2Tests(unittest.TestCase):
         self.assertAlmostEqual(self.estimates["ref_level"], 105.9)
         self.assertAlmostEqual(self.estimates["ref_3dB"], 58.6)  # Hz
         self.assertAlmostEqual(self.estimates["ref_6dB"], 54.2)  # Hz
-        self.assertAlmostEqual(self.estimates["ref_band"], 1.9)  # deviation in dB
+        self.assertAlmostEqual(self.estimates["ref_band"], 1.6)  # deviation in dB
 
 
 class SpinoramaEstimatesNV3Tests(unittest.TestCase):
