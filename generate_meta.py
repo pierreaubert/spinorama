@@ -556,6 +556,10 @@ def add_eq(speaker_path, dataframe, parse_max, filters):
         parsed = parsed + 1
         logger.info("Processing %s", speaker_name)
 
+        if speaker_name not in metadata.speakers_info:
+            logger.info("Error: %s is not in metadata", speaker_name)
+            continue
+
         metadata.speakers_info[speaker_name]["eqs"] = {}
         for suffix, display in (
             ("autoeq", "AutomaticEQ (IIR)"),
@@ -742,9 +746,10 @@ def dump_metadata(meta):
     metafile = cpaths.CPATH_METADATA_JSON
     if not os.path.isdir(metadir):
         os.makedirs(metadir)
-    meta2 = {k: v for k, v in meta.items() if not v.get("skip", False)}
 
-    js = json.dumps(meta2)
+    meta_full = {k: v for k, v in meta.items() if not v.get("skip", False)}
+
+    js = json.dumps(meta_full)
     with open(metafile, "w", encoding="utf-8") as f:
         f.write(js)
         f.close()
@@ -757,6 +762,9 @@ def dump_metadata(meta):
         allowZip64=True,
     ) as current_zip:
         current_zip.writestr("metadata.json", js)
+
+    # generate a short version for rapid home page charging
+    # meta_short = {k: v for k, v in meta2.items()[0:10])}
 
 
 def main():

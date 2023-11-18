@@ -26,7 +26,11 @@ from spinorama import logger
 
 def write_multiformat(chart, filename, force):
     """Write a png file and then convert and save to jpg and webp"""
-    if not pathlib.Path(filename).is_file() or force:
+    filepath = pathlib.Path(filename)
+    if not filepath.parent.exists():
+        logger.warning("%s does not exists!", filename)
+        return
+    if not filepath.is_file() or force:
         chart.write_image(filename)
     if os.path.getsize(filename) == 0:
         logger.warning("Saving %s failed!", filename)
