@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-/*global Plotly*/
+/*global Plotly */
 /*eslint no-undef: "error"*/
 
 import { urlSite } from './misc.js';
@@ -108,12 +108,13 @@ getMetadata()
         const fieldsetOriginsSelector = [];
         const fieldsetVersionsSelector = [];
 
+        let graphsConfigs = [];
+
         function plot(measurement, speakersName, speakersGraph) {
             // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs')
             async function run() {
                 Promise.all(speakersGraph).then((graphs) => {
                     // console.log('plot: resolved ' + graphs.length + ' graphs')
-                    let graphsConfigs = [];
                     if (measurement === 'CEA2034') {
                         graphsConfigs = setCEA2034(speakersName, graphs, windowWidth, windowHeight);
                     } else if (
@@ -158,9 +159,9 @@ getMetadata()
                         plotSingleContainer.style.display = 'block';
                         plotDouble0Container.style.display = 'none';
                         plotDouble1Container.style.display = 'none';
-                        const config = graphsConfigs[0];
-                        if (config) {
-                            Plotly.newPlot('plotSingle', config);
+                        const graphConfig = graphsConfigs[0];
+                        if (graphConfig) {
+                            Plotly.react('plotSingle', graphConfig.data, graphConfig.layout, graphConfig.config);
                         }
                     } else if (graphsConfigs.length === 2) {
                         plotSingleContainer.style.display = 'none';
@@ -169,7 +170,7 @@ getMetadata()
                         for (let i = 0; i < graphsConfigs.length; i++) {
                             const config = graphsConfigs[i];
                             if (config) {
-                                Plotly.newPlot('plotDouble' + i, config);
+                                Plotly.react('plotDouble' + i, config);
                             }
                         }
                     }
@@ -329,6 +330,27 @@ getMetadata()
         updateSpeakers();
 
         // add listeners
+        function windowChanges(event) {
+            if (!graphsConfigs) {
+                return;
+            }
+            console.log('DEBUG: resize ' + event.name);
+            if (graphsConfigs.length == 1) {
+                Plotly.Plots.resize('plotSingle');
+            } else if (graphsConfigs.length == 2) {
+                Plotly.Plots.resize('plotDouble0');
+                Plotly.Plots.resize('plotDouble1');
+            }
+        }
+
+        window.addEventListener('resize', (event) => {
+            return windowChanges(event);
+        });
+
+        screen.orientation.addEventListener('change', (event) => {
+            return windowChanges(event);
+        });
+
         graphsSelector.addEventListener('change', updateSpeakers, false);
 
         document.addEventListener('keydown', (event) => {

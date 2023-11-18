@@ -30,10 +30,12 @@
     <script id="templateSpeaker" type="text/x-handlebars-template">
        <div class="card card-min">
            <div class="card-image">
-             <picture class="image is-2by3">
-               <source srcset="{{img.webp}}" type="image/webp" width="400" height="600"></source>
-               <img src="{{img.jpg}}" loading="{{img.loading}}" decoding="{{img.decoding}}" alt="{{brand}} {{model}}" width="400" height="600"/>
-             </picture>
+             <figure class="image is-2by3">
+               <picture>
+		 <source srcset="{{img.webp}}" type="image/webp" width="400" height="600"></source>
+		 <img src="{{img.jpg}}" loading="{{img.loading}}" decoding="{{img.decoding}}" alt="{{brand}} {{model}}" width="400" height="600"/>
+               </picture>
+	     </figure>
            </div>
            <div class="card-content">
              <div class="content">

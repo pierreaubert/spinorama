@@ -8,29 +8,25 @@
   <body>
     <%include file="nav_simple.html"/>
     <%namespace name="util" module="website.utils" import="*"/>
-
     <div id="cea2034plots" data-num="0">
       <div class="plotForm">
 	<div class="section has-background-light px-1 py-1">
-
 	  <nav class="level px-1 py-1">
 	    % for name, number in (("A", 0), ("B", 1)):
 	    <div class="level-item px-1 py-1">
 	      <div class="box px-1 py-1">
-		<p class="title is-4 has-text-centered">Speaker ${name}</p>
-		% for label, field in (("Name", "speaker"), ("Origin", "origin"), ("Version", "version")):
+		<p class="title is-5 has-text-centered">Speaker ${name}</p>
+		% for label, field in (("Pick a brand and model:", "speaker"), ("Where does the measurement come from?", "origin"), ("Which version (with eq, v1 or v2, etc)?", "version")):
 		<fieldset id="compare-fieldset-${field}${number}">
-		  <div class="field is-horizontal">
-		    <div class="field-label is-normal">
-		      <label class="label" for="compare-select-${field}${number}">${label}</label>
-		    </div>
-		    <div class="field-body">
-		      <div class="field">
-			<div class="control is-expanded">
-			  <div class="select is-fullwidth">
-			    <select class="is-normal" id="compare-select-${field}${number}"></select>
-			  </div>
-			</div>
+		  <div class="field">
+		    <p class="help">${label}</p>
+		    <div class="control is-expanded">
+		      % if field == "speaker": 
+		      <div class="select is-fullwidth is-small">
+		      % else:
+		      <div class="select is-small">
+		      % endif
+			<select class="is-small" id="compare-select-${field}${number}"></select>
 		      </div>
 		    </div>
 		  </div>
@@ -39,44 +35,29 @@
 	      </div>
 	    </div>
 	    % endfor
-	  </nav>
-	  
-	  <nav class="level px-1 py-1">
 	    <div class="level-item px-1 py-1">
 	      <div class="box px-1 py-1">
-		<p class="title is-4 has-text-centered">Compare</p>
-		<div class="field is-horizontal">
-		  <div class="field-label is-normal">
-		    <label class="label">Graph</label>
-		  </div>
-		  <div class="field-body">
-		    <div class="field">
-		      <div class="control is-expanded has-icons-left">
-			<div class="select is-fullwidth">
-			  <select class="graph is-normal" id="compare-select-graph"></select>
-			</div>
-			<div class="icon is-left">
-			  <i class="fa-solid fa-chart-line"></i>
-			</div>
-		      </div>
+		<p class="title is-5 has-text-centered">Compare</p>
+		<div class="field">
+		  <div class="control is-expanded has-icons-left">
+		    <div class="select is-fullwidth is-small">
+		      <select class="graph is-small" id="compare-select-graph"></select>
+		    </div>
+		    <div class="icon is-left is-small">
+		      <i class="fa-solid fa-chart-line"></i>
 		    </div>
 		  </div>
 		</div>
 	      </div>
 	    </div>
 	  </nav>
-	  
 	</div>
-
         <div class="plotSingle" id="plotSingle"></div>
         <div class="plotDouble0" id="plotDouble0"></div>
         <div class="plotDouble1" id="plotDouble1"></div>
-
       </div>
     </div>
-
     <script type="module" src="./assets/compare.js"></script>
-
     <%include file="footer.html"/>
   </body>
 </html>
