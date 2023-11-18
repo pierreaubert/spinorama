@@ -1267,6 +1267,23 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Ascend Acoustics ELX Ribbon Tower": {
+        "brand": "Ascend Acoustics",
+        "model": "ELX Ribbon Tower",
+        "type": "passive",
+        "shape": "floorstanders",
+        "price": "2649",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Ascend Acoustics",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "review_published": "20231118",
+            },
+        },
+    },
     "Ascend Acoustics Horizon Center": {
         "brand": "Ascend Acoustics",
         "model": "Horizon Center",
@@ -7269,9 +7286,9 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
-    "Fulcrum Acoustic CCX1226": {
+    "Fulcrum Acoustic CCX826": {
         "brand": "Fulcrum Acoustic",
-        "model": "CCX1226",
+        "model": "CCX826",
         "type": "passive",
         "price": "",
         "amount": "each",
@@ -7285,6 +7302,44 @@ speakers_info: SpeakerDatabase = {
                 "quality": "medium",
                 "review_published": "20220924",
                 "notes": "Relatively high smoothing; Pattern is 120x60",
+            },
+        },
+    },
+    "Fulcrum Acoustic CX826": {
+        "brand": "Fulcrum Acoustic",
+        "model": "CX826",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Fulcrum Acoustic",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20231116",
+                "notes": "Relatively high smoothing; Pattern is 120x60",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 60,
+                    },
+                    # equalized
+                    "sensitivity": 102,
+                    # equalized
+                    "SPL": {
+                        "continuous": 126,
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 297,
+                        "width": 362,
+                        "depth": 298,
+                    },
+                    "weight": 7.7,
+                },
             },
         },
     },
@@ -7383,6 +7438,43 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Fulcrum Acoustic DX1226": {
+        "brand": "Fulcrum Acoustic",
+        "model": "DX1226",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "toursound",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Fulcrum Acoustic",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20231117",
+                "notes": "Relatively high smoothing; Pattern is 120x60",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 120,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 98,
+                    "impedance": 8,
+                    "SPL": {
+                        "continuous": 126,
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 711,
+                        "width": 457,
+                        "depth": 406,
+                    },
+                    "weight": 28.6,
+                },
+            },
+        },
+    },
     "Fulcrum Acoustic DX1526": {
         "brand": "Fulcrum Acoustic",
         "model": "DX1526",
@@ -7456,6 +7548,42 @@ speakers_info: SpeakerDatabase = {
                 "quality": "medium",
                 "review_published": "20220924",
                 "notes": "Relatively high smoothing; Pattern is 120x60",
+            },
+        },
+    },
+    "Fulcrum Acoustic P8": {
+        "brand": "Fulcrum Acoustic",
+        "model": "P8",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Fulcrum Acoustic",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20231117",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 100,
+                    },
+                    "sensitivity": 101,
+                    "impedance": 16,
+                    "SPL": {
+                        "continuous": 119,
+                        "peak": 125,
+                    },
+                    "size": {
+                        "height": 313,
+                        "width": 313,
+                        "depth": 263,
+                    },
+                    "weight": 7.3,
+                },
             },
         },
     },
