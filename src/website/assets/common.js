@@ -820,7 +820,7 @@ export function setSurface(speakerNames, speakerGraphs, width, height) {
                 [{ data: surfaceData, layout: speakerGraphs[i].layout }],
                 width,
                 height,
-                speakerGraphs.length
+		speakerGraphs.length
             );
             graphsConfigs.push(options);
         }

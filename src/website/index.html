@@ -10,20 +10,29 @@
     <%namespace name="util" module="website.utils" import="*"/>
 
     <script>
-      Handlebars.registerHelper("isShort", function (value) {
-        return value.length < 3;
+      Handlebars.registerHelper("isShort", function (values) {
+	  const max_len = 25;
+	  let len = 0;
+	  for (const value of values) {
+	      if (value.origin) {
+		  len += [...value.origin].length+4;
+	      } else {
+		  len += 10;
+	      }
+	  }
+	  return len < max_len;
       });
       Handlebars.registerHelper("iconVolume", function (value) {
-        ivalue = parseInt(value);
-        if (ivalue        <= 30) {
-          return '0';
-        } else if (ivalue <= 60 ) {
-          return '1';
-        } else if (ivalue <= 90 ) {
-          return '2';
-        } else {
-          return '3';
-        }
+	  const ivalue = parseInt(value);
+	  if (ivalue        <= 30) {
+	      return '0';
+	  } else if (ivalue <= 60 ) {
+	      return '1';
+	  } else if (ivalue <= 90 ) {
+	      return '2';
+	  } else {
+	      return '3';
+	  }
       });
     </script>
 
@@ -124,10 +133,10 @@
       </div>
     </div>
 
+    <script type="module" src="./assets/index.js"></script>
+
     <%include file="search.html"/>
     <%include file="footer.html"/>
-
-    <script type="module" src="./assets/index.js"></script>
 
   </body>
 </html>
