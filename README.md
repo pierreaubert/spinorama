@@ -18,7 +18,7 @@ It is a way to understand quickly a speaker properties, how it will sound.
 
 Here is an example:
 
-![image](https://github.com/pierreaubert/spinorama/blob/develop/datas/pictures/ex-Genelec-8341A-cea2034.png)
+![image](https://www.spinorama.org/speakers/Genelec%208341A/ASR/asr-vertical/CEA2034.html)
 
 - On Axis: this the frequency response. You expect it to be as flat as possible after 100Hz.
 - Listening Window: an average of various measurements around on axis. Expected to be close to the previous one.
@@ -72,16 +72,16 @@ The library support four different formats of data:
 
 # Other ways to look at the graphs in a more interactive way.
 
-If you want to generate the graphs yourself or play with the data you need to install the software.
-We have a dedicated [INSTALL section](./tutorial/INSTALL.md).
+If you want to generate the graphs yourself or play with the data you need to install the software. Please see
+the dedicated [INSTALL section](./tutorial/INSTALL.md).
 
 # How to add a speaker to the database.
 
-We have a dedicated [tutorial](./tutorial/ADDSPEAKER.md).
+Please see the dedicated [tutorial](./tutorial/ADDSPEAKER.md).
 
 # How to use the software.
 
-We have a dedicated [manual](./tutorial/HOWTOUSE.md).
+Please see the dedicated [manual](./tutorial/HOWTOUSE.md).
 
 # Source of data and citations
 
@@ -123,13 +123,26 @@ Some papers related to finding the optimal IIR filters: I used a different algor
 
 ## Speakers manufacturers.
 
-- If you are a manufacturer of speakers, it would be great if you could provide spinorama datas.
+- If you are a manufacturer of speakers, it would be great if you could provide spinorama datas. Send me an email pierre@spinorama.org.
 - Manufactures with good datas usually in speaker's manual:
-  - JBL
-  - Revel
-  - Genelec
   - Adam
+  - Arendal Sound
+  - Ascend Acoustic
+  - Buscardt Audio
+  - DB Audiotechnik
+  - Devialet
   - Eve Audio
-  - Buscard Audio
-  - KEF
+  - Fulcrum Acoustic
+  - Genelec
+  - GGNTKT
+  - JBL
   - JTR
+  - KEF
+  - Meyer Sound
+  - Neumann
+  - Perlisten
+  - PSI Audio
+  - Revel
+  - RCF
+  - Sigberg Audio
+
