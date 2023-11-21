@@ -28,11 +28,13 @@ from spinorama.load_misc import sort_angles
 from spinorama.compute_misc import resample
 
 
-def parse_graph_freq_princeton_mat(mat, suffix: str, onaxis) -> StatusOr[pd.DataFrame]:
+def parse_graph_freq_princeton_mat(
+    mat, suffix: str, on_axis: pd.DataFrame
+) -> StatusOr[pd.DataFrame]:
     """Suffix can be either H or V"""
     ir_name = "IR_{:1s}".format(suffix)
     fs_name = "fs_{:1s}".format(suffix)
-    # compute Freq
+    # fs=96k or should be
     timestep = 1.0 / mat[fs_name]
     # hummm
     freq = np.fft.fftfreq(2**14, d=timestep)
@@ -70,8 +72,8 @@ def parse_graph_freq_princeton_mat(mat, suffix: str, onaxis) -> StatusOr[pd.Data
         logger.debug("%d %s", ilabel, label)
     # check empty case
     if "On Axis" not in df_3d3a:
-        if suffix == "V" and onaxis is not None:
-            df_3d3a["On Axis"] = onaxis
+        if suffix == "V" and on_axis is not None:
+            df_3d3a["On Axis"] = on_axis
         else:
             logger.info(
                 "On Axis not in %s file, keys are %s", suffix, ",".join(list(df_3d3a.keys()))
@@ -83,9 +85,11 @@ def parse_graph_freq_princeton_mat(mat, suffix: str, onaxis) -> StatusOr[pd.Data
     return True, resample(df_3d3a_sa[df_3d3a_sa.Freq >= 500], 200)
 
 
-def parse_graph_princeton(filename: str, orient: str, onaxis) -> StatusOr[pd.DataFrame]:
+def parse_graph_princeton(
+    filename: str, orient: str, on_axis: pd.DataFrame
+) -> StatusOr[pd.DataFrame]:
     matfile = loadmat(filename)
-    return parse_graph_freq_princeton_mat(matfile, orient, onaxis)
+    return parse_graph_freq_princeton_mat(matfile, orient, on_axis)
 
 
 def parse_graphs_speaker_princeton(
@@ -115,8 +119,8 @@ def parse_graphs_speaker_princeton(
         logger.info("Found file but loading didn't work for %s %s", speaker_name, version)
         return False, (pd.DataFrame(), pd.DataFrame())
 
-    onaxis = h_spl["On Axis"]
-    v_status, v_spl = parse_graph_princeton(v_file, "V", onaxis)
+    on_axis = h_spl["On Axis"]
+    v_status, v_spl = parse_graph_princeton(v_file, "V", on_axis)
 
     if not v_status:
         logger.info("Found file but loading didn't work for %s %s", speaker_name, version)
