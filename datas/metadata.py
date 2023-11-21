@@ -1281,6 +1281,20 @@ speakers_info: SpeakerDatabase = {
                 "format": "spl_hv_txt",
                 "quality": "high",
                 "review_published": "20231118",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 80,
+                    },
+                    "impedance": 8,
+                    "sensitivity": 87.5,
+                    "size": {
+                        "height": 109.22,
+                        "width": 190,
+                        "depth": 267,
+                    },
+                    "weight": 25.4,
+                },
             },
         },
     },
@@ -7300,7 +7314,7 @@ speakers_info: SpeakerDatabase = {
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
-                "review_published": "20220924",
+                "review_published": "20231115",
                 "notes": "Relatively high smoothing; Pattern is 120x60",
             },
         },
@@ -8184,6 +8198,37 @@ speakers_info: SpeakerDatabase = {
                 "origin": "Vendors-GGNTKT",
                 "format": "webplotdigitizer",
                 "quality": "high",
+            },
+        },
+    },
+    "GGNTKT M3": {
+        "brand": "GGNTKT",
+        "model": "M3",
+        "shape": "floorstanders",
+        "type": "active",
+        "price": "22500",
+        "amount": "pair",
+        "default_measurement": "vendor-v1-202304",
+        "measurements": {
+            "vendor-v1-202304": {
+                "origin": "Vendors-GGNTKT",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ggntkt-m3-yes-m3-formerly-known-as-m2.14656",
+                },
+                "review_published": "20231118",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 140,
+                        "vertical": 100,
+                    },
+                    "size": {
+                        "height": 1286,
+                        "width": 499,
+                        "depth": 199,
+                    },
+                },
             },
         },
     },
@@ -11762,9 +11807,9 @@ speakers_info: SpeakerDatabase = {
         "price": "35000",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "vendor-v2",
+        "default_measurement": "vendor-v2-20230503",
         "measurements": {
-            "vendor-v2": {
+            "vendor-v2-20230503": {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "review_published": "20230503",
@@ -11774,7 +11819,7 @@ speakers_info: SpeakerDatabase = {
                     "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
                 },
             },
-            "vendor-v1": {
+            "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
@@ -11793,9 +11838,9 @@ speakers_info: SpeakerDatabase = {
         "price": "25000",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "vendor-v2",
+        "default_measurement": "vendor-v2-20230503",
         "measurements": {
-            "vendor-v2": {
+            "vendor-v2-20230503": {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "review_published": "20230503",
@@ -11805,7 +11850,7 @@ speakers_info: SpeakerDatabase = {
                     "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
                 },
             },
-            "vendor-v1": {
+            "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
@@ -12251,7 +12296,7 @@ speakers_info: SpeakerDatabase = {
                     "hifi": "https://hifi.de/test/kef-r3-meta-test-137367",
                 },
             },
-            "vendor-v2": {
+            "vendor-v2-20230503": {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "quality": "medium",
@@ -12478,14 +12523,14 @@ speakers_info: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-reference-1-meta-bookshelf-speaker-review-by-erins-audio-corner.33666/",
                 },
             },
-            "vendor-v2": {
+            "vendor-v2-20230503": {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "review_published": "20230503",
                 "notes": note_kef_data,
                 "quality": "medium",
             },
-            "vendor-v1": {
+            "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
@@ -12500,16 +12545,16 @@ speakers_info: SpeakerDatabase = {
         "price": "5500",
         "amount": "each",
         "shape": "center",
-        "default_measurement": "vendor-v2",
+        "default_measurement": "vendor-v2-20230503",
         "measurements": {
-            "vendor-v2": {
+            "vendor-v2-20230503": {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "review_published": "20230503",
                 "notes": note_kef_data,
                 "quality": "medium",
             },
-            "vendor-v1": {
+            "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "quality": "medium",
@@ -12527,16 +12572,16 @@ speakers_info: SpeakerDatabase = {
         "price": "13500",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "vendor-v2",
+        "default_measurement": "vendor-v2-20230503",
         "measurements": {
-            "vendor-v2": {
+            "vendor-v2-20230503": {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "review_published": "20230503",
                 "notes": note_kef_data,
                 "quality": "medium",
             },
-            "vendor-v1": {
+            "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "quality": "medium",
@@ -12581,16 +12626,16 @@ speakers_info: SpeakerDatabase = {
         "price": "8000",
         "amount": "each",
         "shape": "center",
-        "default_measurement": "vendor-v2",
+        "default_measurement": "vendor-v2-20230503",
         "measurements": {
-            "vendor-v2": {
+            "vendor-v2-20230503": {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "review_published": "20230503",
                 "notes": note_kef_data,
                 "quality": "medium",
             },
-            "vendor-v1": {
+            "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
@@ -12623,20 +12668,20 @@ speakers_info: SpeakerDatabase = {
         "price": "20000",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "vendor-v2",
+        "default_measurement": "vendor-v2-20230428",
         "measurements": {
-            "vendor-v1": {
-                "origin": "Vendors-KEF",
-                "format": "webplotdigitizer",
-                "quality": "medium",
-                "review_published": "20220217",
-                "notes": note_kef_data,
-            },
-            "vendor-v2": {
+            "vendor-v2-20230428": {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "quality": "medium",
                 "review_published": "20230428",
+                "notes": note_kef_data,
+            },
+            "vendor-v1-20220217": {
+                "origin": "Vendors-KEF",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "review_published": "20220217",
                 "notes": note_kef_data,
             },
         },
