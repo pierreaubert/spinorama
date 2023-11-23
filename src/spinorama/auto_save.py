@@ -168,16 +168,13 @@ def print_small_summary(
         )
 
 
-@ray.remote
-def optim_save_peq(
+def optim_save_peq_seq(
     current_speaker_name: str,
     current_speaker_origin: str,
     df_speaker: DataSpeaker,
     optim_config: dict,
 ) -> tuple[bool, tuple[str, OptimResult, list[dict]]]:
     """Compute and then save PEQ for this speaker"""
-    ray_setup_logger(optim_config["level"])
-
     eq_dir = "datas/eq/{}".format(current_speaker_name)
     pathlib.Path(eq_dir).mkdir(parents=True, exist_ok=True)
     eq_name = "{}/iir-autoeq.txt".format(eq_dir)
@@ -301,3 +298,17 @@ def optim_save_peq(
         print_small_summary(current_speaker_name, score, auto_score)
 
     return True, (current_speaker_name, auto_results, scores)
+
+
+@ray.remote
+def optim_save_peq(
+    current_speaker_name: str,
+    current_speaker_origin: str,
+    df_speaker: DataSpeaker,
+    optim_config: dict,
+) -> tuple[bool, tuple[str, OptimResult, list[dict]]]:
+    """Compute and then save PEQ for this speaker"""
+    ray_setup_logger(optim_config["level"])
+    return optim_save_peq_seq(
+        current_speaker_name, current_speaker_origin, df_speaker, optim_config
+    )

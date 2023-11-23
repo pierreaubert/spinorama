@@ -102,19 +102,25 @@ class GlobalOptimizer(object):
 
         # a bit of black magic
         self.freq_min_index = self._freq2index(self.freq_min)
+        self.freq_2k_index = self._freq2index(2000)
         self.freq_midrange_index = self._freq2index(MIDRANGE_MAX_FREQ / 2)
         self.freq_max_index = self._freq2index(self.freq_max)
 
-        # get lw/on
+        # get lw/on/pir & freq
         self.lw = df_speaker["CEA2034_unmelted"]["Listening Window"].to_numpy()
         self.on = df_speaker["CEA2034_unmelted"]["On Axis"].to_numpy()
+        # self.pir = df_speaker["Estimated In-Room Response_unmelted"]["Estimated In-Room Response"].to_numpy()
         self.freq = df_speaker["CEA2034_unmelted"]["Freq"].to_numpy()
 
         # used for controlling optimisation of the score
-        lw_slope = self.optim_config.get("slope_listening_window", -0.5)
-        lw_target = self.lw + np.linspace(0, lw_slope, len(self.lw))
-        self.target = _resample(self.freq, self.freq_space, lw_target)
-        self.target = _resample(self.freq, self.freq_space, self.on)
+        # lw_slope = self.optim_config.get("slope_listening_window", -0.5)
+        # lw_target = self.lw + np.linspace(0, lw_slope, len(self.lw))
+        # pir_slope = self.optim_config.get("slope_pred_in_room", -7)
+        # pir_target = self.pir + np.linspace(0, pir_slope, len(self.pir))
+
+        # self.target_lw = _resample(self.freq, self.freq_space, lw_target)
+        self.target_on = _resample(self.freq, self.freq_space, self.on)
+        # self.target_pir = _resample(self.freq, self.freq_space, pir_target)
 
         self.min_db = optim_config["MIN_DBGAIN"]
         self.max_db = optim_config["MAX_DBGAIN"]
@@ -169,20 +175,30 @@ class GlobalOptimizer(object):
         peq = self._x2peq(x)
         peq_freq = np.array(self._x2spl(x))
         score = score_loss(self.df_speaker, peq)
-        flat = np.add(self.target, peq_freq)
-        flatness_bass_mid = np.linalg.norm(
-            flat[self.freq_min_index : self.freq_midrange_index], ord=2
+        flat_on = np.add(self.target_on, peq_freq)
+        # currently unsued
+        # flat_lw = np.add(self.target_lw, peq_freq)
+        # flat_pir = np.add(self.target_pir, peq_freq)
+        # split flatness of ON on various ranges
+        flatness_on_bass_mid = np.linalg.norm(
+            flat_on[self.freq_min_index : self.freq_midrange_index], ord=2
         )
-        flatness_mid_high = np.linalg.norm(flat[self.freq_midrange_index :], ord=2)
+        flatness_on_mid_high = np.linalg.norm(flat_on[self.freq_midrange_index :], ord=2)
+        # flatness_on_bass_mid = np.linalg.norm(flat_on[self.freq_min_index : self.freq_2k_index], ord=2)
+        # flatness_on_mid_high = np.linalg.norm(flat_on[self.freq_2k_index :], ord=2)
+        # not used but could be
+        # flatness_pir = np.linalg.norm(flat_pir, ord=2)
+        # flatness_pir_bass_mid = np.linalg.norm(flat_pir[self.freq_min_index : self.freq_midrange_index], ord=2)
+        # flatness_pir_mid_high = np.linalg.norm(flat_pir[self.freq_midrange_index :], ord=2)
         # this is black magic, why 10, 20, 40?
         # if you increase 20 you give more flexibility to the score (and less flat LW/ON)
         # without the constraint optimising the score get crazy results
-        return score + float(flatness_bass_mid) / 5 + float(flatness_mid_high) / 50
+        return score + float(flatness_on_bass_mid) / 15 + float(flatness_on_mid_high) / 50
 
     def _opt_peq_flat(self, x: list[float | int]) -> float:
         # for  a given encoded peq, compute a loss function based on flatness
         peq_freq = np.array(self._x2spl(x))
-        flat = np.add(self.target, peq_freq)[self.freq_min_index : self.freq_max_index]
+        flat = np.add(self.target_on, peq_freq)[self.freq_min_index : self.freq_max_index]
         flatness_l2 = np.linalg.norm(flat, ord=2)
         flatness_l1 = np.linalg.norm(flat, ord=1)
         return float(flatness_l2 + flatness_l1)
