@@ -5119,6 +5119,35 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Dynaudio Emit 20": {
+        "brand": "Dynaudio",
+        "model": "Emit 20",
+        "type": "passive",
+        "price": "800",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://dynaudio.com/home-audio/emit/emit-20",
+                    "yt": "https://youtu.be/Z7R9YApGY6w?si=BVOiNDokYFoPpWTE",
+                },
+                "review_published": "20231122",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 6,
+                    "size": {
+                        "height": 370,
+                        "width": 205,
+                        "depth": 211,
+                    },
+                    "weight": 10.32,
+                },
+            },
+        },
+    },
     "Dynaudio Excite X14": {
         "brand": "Dynaudio",
         "model": "Excite X14",
@@ -19574,6 +19603,39 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Rogers LS3|5A": {
+        "brand": "Rogers",
+        "model": "LS3|5A",
+        "type": "passive",
+        "price": "3500",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/rogers-ls3-5a-bbc-speaker-review.49746/page-2",
+                    "bbc": "https://downloads.bbc.co.uk/rd/pubs/reports/1976-29.pdf",
+                    "msc": "https://www.facebook.com/Akoustia/posts/195118823028401?ref=embed_post",
+                    "str": "https://www.stereophile.com/content/bbc-ls35a-loudspeaker-1989-rogers-version",
+                    "tas": "https://www.theabsolutesound.com/articles/2022-golden-ear-rogers-ls3-5a-classic-15-ohm-special-edition-loudspeaker/",
+                },
+                "review_published": "20231123",
+                "specifications": {
+                    "sensitivity": 82.5,
+                    "impedance": 15,
+                    "size": {
+                        "height": 305,
+                        "width": 190,
+                        "depth": 165,
+                    },
+                    "weight": 4.9,
+                },
+            },
+        },
+    },
     "Role Audio Skiff": {
         "brand": "Role Audio",
         "model": "Skiff",
@@ -20457,6 +20519,26 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/vanatoo-transparent-zero-speaker-review.13717/",
                 "review_published": "20200531",
+            },
+        },
+    },
+    "Vanatoo Transparent Zero Plus": {
+        "brand": "Vanatoo",
+        "model": "Transparent Zero Plus",
+        "type": "active",
+        "price": "450",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/vanatoo_zero_plus/",
+                    "yt": "https://youtu.be/jztXlVDCBME",
+                },
+                "review_published": "20231122",
             },
         },
     },

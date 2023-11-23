@@ -1,0 +1,14 @@
+EQ for Vanatoo Transparent Zero Plus computed from ErinsAudioCorner data
+Preference Score 4.23 with EQ 5.66
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.25
+Dated: 2023-11-23-10:02:48
+
+Preamp: -4.3 dB
+
+Filter  1: ON PK Fc    51 Hz Gain +2.92 dB Q 0.84
+Filter  2: ON PK Fc    95 Hz Gain +2.98 dB Q 0.70
+Filter  3: ON PK Fc   160 Hz Gain -2.81 dB Q 0.94
+Filter  4: ON PK Fc  1429 Hz Gain +0.99 dB Q 2.98
+Filter  5: ON PK Fc  2245 Hz Gain +0.31 dB Q 2.87
+Filter  6: ON PK Fc  7308 Hz Gain -3.20 dB Q 0.71
+Filter  7: ON PK Fc  7566 Hz Gain +3.00 dB Q 3.00
