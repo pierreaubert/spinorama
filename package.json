@@ -13,12 +13,12 @@
   "devDependencies": {
     "eslint": "^8.53.0",
     "flow": "^0.2.3",
-    "flow-remove-types": "^2.216.1",
+    "flow-remove-types": "^2.222.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.0.2",
     "prettier": "^3.0.3",
-    "pyright": "^1.1.327",
+    "pyright": "^1.1.337",
     "standard": "^17.1.0",
-    "w3c-html-validator": "^1.4.0"
+    "w3c-html-validator": "^1.6.1"
   }
 }
