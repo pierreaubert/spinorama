@@ -100,7 +100,7 @@ export function removeVendors(str) {
 }
 
 export function getID(brand, model) {
-    return (brand + ' ' + model).replace(/['.+& ]/g, '-');
+    return (brand + ' ' + model).replace(/['.+& |]/g, '-');
 }
 
 export function getPrice(price, amount) {
