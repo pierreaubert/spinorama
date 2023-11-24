@@ -1361,6 +1361,37 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Ascend Acoustics Sierra 1 V2": {
+        "brand": "Ascend Acoustics",
+        "model": "Sierra 1 V2",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "1000",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/ascend_sierra_1_v2/",
+                    "yt": "https://youtu.be/XuLAkwYEdfY",
+                    "history": "https://forum.ascendacoustics.com/showthread.php?7896-Something-old-is-young-again-introducing-the-Sierra-1-V2!!!",
+                },
+                "review_published": "20231124",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 8,
+                    "size": {
+                        "height": 362,
+                        "width": 190,
+                        "depth": 267,
+                    },
+                    "weight": 8.4,
+                },
+            },
+        },
+    },
     "Ascend Acoustics Sierra 2": {
         "brand": "Ascend Acoustics",
         "model": "Sierra 2",
@@ -4910,7 +4941,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Philharmonic Ceramic Mini": {
-        "skip": True,
         "brand": "Philharmonic",
         "model": "Ceramic Mini",
         "type": "passive",
@@ -4926,7 +4956,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/philharmonic_ceramic_mini/",
                     "yt": "https://youtu.be/313qwtkdMxo",
                 },
-                "review_published": "20230730",
+                "review_published": "20231124",
             },
         },
     },
@@ -5178,8 +5208,37 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Dynaudio Heritage Special": {
+        "brand": "Dynaudio",
+        "model": "Heritage Special",
+        "type": "passive",
+        "price": "7000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/dynaudio_heritage_special",
+                    "yt": "https://youtu.be/vKwWokI3K08",
+                },
+                "review_published": "20231124",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 4,
+                    "size": {
+                        "height": 385,
+                        "width": 208,
+                        "depth": 320,
+                    },
+                    "weight": 11.0,
+                },
+            },
+        },
+    },
     "Dynaudio Special Forty": {
-        "skip": True,
         "brand": "Dynaudio",
         "model": "Special Forty",
         "type": "passive",
@@ -5195,7 +5254,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/dynaudio_special_forty/",
                     "yt": "https://youtu.be/jDTOAw4gLNM",
                 },
-                "review_published": "20230821",
+                "review_published": "20231124",
                 "specifications": {
                     "sensitivity": 86,
                     "impedance": 6,
@@ -11045,7 +11104,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "JBL 4329P": {
-        "skip": True,
         "brand": "JBL",
         "model": "4329P",
         "type": "active",
@@ -11061,7 +11119,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_4329p/",
                     "yt": "https://youtu.be/XhOz8WsKb8U",
                 },
-                "review_published": "20230731",
+                "review_published": "20231124",
             },
         },
     },
@@ -14136,6 +14194,26 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "March Audio Sointuva AWG": {
+        "brand": "March Audio",
+        "model": "Sointuva AWG",
+        "type": "passive",
+        "price": "7000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-March Audio",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "reviews": {
+                    "eac": "https://www.audiosciencereview.com/forum/index.php?threads/march-audio-sointuva.26085/",
+                },
+                "review_published": "20231125",
+            },
+        },
+    },
     "Martin Audio CDD8": {
         "brand": "Martin Audio",
         "model": "CDD8",
@@ -14294,14 +14372,34 @@ speakers_info: SpeakerDatabase = {
         "type": "passive",
         "price": "360",
         "shape": "bookshelves",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/martin_logan_b10/",
+                    "yt": "https://www.youtube.com/live/XXTBJbb3naU?feature=share",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/martin-logan-b10-speaker-review.46798/",
+                },
+                "review_published": "20231124",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 5,
+                    "size": {
+                        "height": 318,
+                        "width": 178,
+                        "depth": 248,
+                    },
+                    "weight": 6.6,
+                },
+            },
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/martin-logan-b10-speaker-review.46798/",
-                    "eac": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/martin_logan_b10/",
                     "yt": "https://www.youtube.com/live/XXTBJbb3naU?feature=share",
                 },
                 "review_published": "20230730",
@@ -14314,6 +14412,36 @@ speakers_info: SpeakerDatabase = {
                         "depth": 248,
                     },
                     "weight": 6.6,
+                },
+            },
+        },
+    },
+    "MartinLogan Motion XT B100": {
+        "brand": "MartinLogan",
+        "model": "Motion XT B100",
+        "type": "passive",
+        "price": "800",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/martin_logan_xt_b100/",
+                    "yt": "https://youtu.be/XXTBJbb3naU",
+                },
+                "review_published": "20231124",
+                "specifications": {
+                    "sensitivity": 93,
+                    "impedance": 4,
+                    "size": {
+                        "height": 368,
+                        "width": 203,
+                        "depth": 318,
+                    },
+                    "weight": 9.3,
                 },
             },
         },
@@ -21855,6 +21983,13 @@ origins_info = {
         "logo": "docs/metadata/magico.png",
         "logo-small": "docs/metadata/magico.png",
         "url": "https://www.magicoaudio.com",
+    },
+    "Vendors-March Audio": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://marchaudio.com/",
     },
     "Vendors-Martin Audio": {
         "min hz": 20,

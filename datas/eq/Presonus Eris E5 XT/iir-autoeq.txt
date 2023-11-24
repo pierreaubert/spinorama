@@ -1,0 +1,14 @@
+EQ for Presonus Eris E5 XT computed from ASR data
+Preference Score 3.56 with EQ 5.85
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2023-11-24-18:10:10
+
+Preamp: -2.8 dB
+
+Filter  1: ON PK Fc    54 Hz Gain +3.00 dB Q 1.89
+Filter  2: ON PK Fc    92 Hz Gain -3.84 dB Q 1.32
+Filter  3: ON PK Fc   332 Hz Gain +0.80 dB Q 0.40
+Filter  4: ON PK Fc   666 Hz Gain -1.64 dB Q 2.97
+Filter  5: ON PK Fc  3405 Hz Gain +3.00 dB Q 2.74
+Filter  6: ON PK Fc  5347 Hz Gain +1.36 dB Q 3.00
+Filter  7: ON PK Fc 14633 Hz Gain -5.36 dB Q 0.65

@@ -16,7 +16,7 @@
         "Listening Window",
         "Estimated In-Room Response"
     ],
-    "target_min_freq": 22.4,
+    "target_min_freq": 132.0,
     "target_max_freq": 16000,
     "slope_on_axis": 0,
     "slope_listening_window": -0.5,

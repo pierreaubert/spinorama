@@ -8,7 +8,7 @@
     "full_biquad_optim": null,
     "elastic": 0.8,
     "fs": 48000,
-    "freq_reg_min": 22.4,
+    "freq_reg_min": 20.5078,
     "freq_reg_max": 20000,
     "freq_mean_min": 100,
     "freq_mean_max": 300,
@@ -16,7 +16,7 @@
         "Listening Window",
         "Estimated In-Room Response"
     ],
-    "target_min_freq": 22.4,
+    "target_min_freq": 54.2,
     "target_max_freq": 16000,
     "slope_on_axis": 0,
     "slope_listening_window": -0.5,
