@@ -322,8 +322,8 @@ def main():
             item_name = "assets/{0}.js".format(item)
             logger.info("Write %s", item_name)
             item_html = mako_templates.get_template(item_name)
-            # remove the ./docs/ parts
-            metadata_filename = json_filename[7:]
+            # remove the ./docs/assets parts
+            metadata_filename = json_filename[13:]
             item_content = item_html.render(
                 df=main_df, meta=meta_sorted_score, site=site, metadata_filename=metadata_filename
             )
