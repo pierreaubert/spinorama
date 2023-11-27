@@ -286,7 +286,18 @@ function computeDims(windowWidth, windowHeight, is_vertical, is_compact, nb_grap
         ratio = (width / height).toFixed(2);
     }
     console.log(
-        'DEBUG: Window(' + windowHeight + ', ' + windowHeight + ') and width=' + width + ' heigth=' + height + ' ratio=' + ratio
+        'DEBUG: Window(' +
+            windowHeight +
+            ', ' +
+            windowHeight +
+            ') and width=' +
+            width +
+            ' heigth=' +
+            height +
+            ' ratio=' +
+            ratio +
+            '#graphs=' +
+            nb_graphs
     );
     return [width, height];
 }
@@ -795,7 +806,7 @@ export function setGlobe(speakerNames, speakerGraphs, width, height) {
                     colorbar: {
                         title: {
                             font: {
-                                size: 10 + fontDelta,
+                                size: 11,
                             },
                             text: 'dB (SPL)',
                             side: 'bottom',
