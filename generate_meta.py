@@ -39,9 +39,11 @@ Options:
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
   --dash-port=<dash-port>  Port for the ray dashbboard
 """
-import os
+from hashlib import md5
+from itertools import groupby
 import json
 import math
+import os
 import sys
 import time
 import zipfile
@@ -59,14 +61,20 @@ except ModuleNotFoundError:
         print("Did you run env.sh?")
         sys.exit(-1)
 
-from generate_common import get_custom_logger, args2level, cache_load, custom_ray_init
-from datas import metadata
+from generate_common import (
+    get_custom_logger,
+    args2level,
+    cache_load,
+    custom_ray_init,
+    sort_metadata_per_date,
+)
 import spinorama.constant_paths as cpaths
 from spinorama.compute_estimates import estimates
 from spinorama.compute_scores import speaker_pref_rating
 from spinorama.filter_peq import peq_preamp_gain
 from spinorama.load_rew_eq import parse_eq_iir_rews
 
+from datas import metadata
 
 ACTIVATE_TRACING: bool = False
 
@@ -383,8 +391,8 @@ def add_scores(dataframe, parse_max, filters):
                     min_flatness = min(min_flatness, flatness)
                     max_flatness = max(max_flatness, flatness)
 
-    print("info: spl continuous [{}, {}]".format(min_spl_continuous, max_spl_continuous))
-    print("info: spl       peak [{}, {}]".format(min_spl_peak, max_spl_peak))
+    # print("info: spl continuous [{}, {}]".format(min_spl_continuous, max_spl_continuous))
+    # print("info: spl       peak [{}, {}]".format(min_spl_peak, max_spl_peak))
 
     # if we are looking only after 1 speaker, return
     if len(dataframe.items()) == 1:
@@ -747,24 +755,53 @@ def dump_metadata(meta):
     if not os.path.isdir(metadir):
         os.makedirs(metadir)
 
+    def dict_to_json(filename, d):
+        js = json.dumps(d)
+        key = md5(js.encode("utf-8"), usedforsecurity=False).hexdigest()[0:5]
+        hashname = "{}-{}.json".format(filename[:-5], key)
+        if os.path.exists(hashname) and os.path.exists(hashname + ".zip"):
+            return
+        with open(hashname, "w", encoding="utf-8") as f:
+            f.write(js)
+            f.close()
+
+            with zipfile.ZipFile(
+                hashname + ".zip",
+                "w",
+                compression=zipfile.ZIP_DEFLATED,
+                allowZip64=True,
+            ) as current_zip:
+                current_zip.writestr(hashname, js)
+
     meta_full = {k: v for k, v in meta.items() if not v.get("skip", False)}
-
-    js = json.dumps(meta_full)
-    with open(metafile, "w", encoding="utf-8") as f:
-        f.write(js)
-        f.close()
-
-    # for historical reason, some web pages still ask for it
-    with zipfile.ZipFile(
-        metafile + ".zip",
-        "w",
-        compression=zipfile.ZIP_DEFLATED,
-        allowZip64=True,
-    ) as current_zip:
-        current_zip.writestr("metadata.json", js)
+    dict_to_json(metafile, meta_full)
 
     # generate a short version for rapid home page charging
-    # meta_short = {k: v for k, v in meta2.items()[0:10])}
+    # TODO(pierre)
+    # let's check if it is faster to load slices than the full file
+    # partitionning is per year, each file is hashed and the hash
+    # is stored in the name.
+    # Warning: when reading the chunks you need to read them from recent to old and discard the keys you already have seen,
+    meta_sorted_date = list(sort_metadata_per_date(meta_full).items())
+    meta_sorted_date_head = dict(meta_sorted_date[0:10])
+    meta_sorted_date_tail = dict(meta_sorted_date[10:])
+
+    filename = metafile[:-5] + "-head.json"
+    dict_to_json(filename, meta_sorted_date_head)
+
+    def by_year(key):
+        m = meta_sorted_date_tail[key]
+        def_m = m["default_measurement"]
+        year = int(m["measurements"][def_m].get("review_published", "1970")[0:4])
+        # group together years without too many reviews
+        if year > 1970 and year < 2021:
+            return 2020
+        return year
+
+    grouped_by_year = groupby(meta_sorted_date_tail, by_year)
+    for year, group in grouped_by_year:
+        filename = "{}-{:4d}.json".format(metafile[:-5], year)
+        dict_to_json(filename, {k: meta_sorted_date_tail[k] for k in list(group)})
 
 
 def main():

@@ -319,3 +319,35 @@ def cache_update(df_new, filters):
         cache_save_key(cache_key(new_speaker), df_old)
     print(f"(updated +{count}) ", end=" ", flush=True)
     print("(saved).")
+
+
+def sort_metadata_per_date(meta):
+    def sort_meta_date(s):
+        if s is not None:
+            return s.get("review_published", "20170101")
+        return "20170101"
+
+    keys_sorted_date = sorted(
+        meta,
+        key=lambda a: sort_meta_date(
+            meta[a]["measurements"].get(meta[a].get("default_measurement"))
+        ),
+        reverse=True,
+    )
+    return {k: meta[k] for k in keys_sorted_date}
+
+
+def sort_metadata_per_score(meta):
+    def sort_meta_score(s):
+        if s is not None and "pref_rating" in s and "pref_score" in s["pref_rating"]:
+            return s["pref_rating"]["pref_score"]
+        return -1
+
+    keys_sorted_score = sorted(
+        meta,
+        key=lambda a: sort_meta_score(
+            meta[a]["measurements"].get(meta[a].get("default_measurement"))
+        ),
+        reverse=True,
+    )
+    return {k: meta[k] for k in keys_sorted_score}

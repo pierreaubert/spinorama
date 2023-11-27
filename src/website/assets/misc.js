@@ -19,6 +19,7 @@
 // @flow
 
 export const urlSite = '${site}' + '/';
+export const metadataFilename = '${metadata_filename}';
 
 // hide an element
 export const hide = (elem) => {

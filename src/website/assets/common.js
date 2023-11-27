@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { urlSite } from './misc.js';
+import { urlSite, metadataFilename } from './misc.js';
 import { getID } from './misc.js';
 
 export const knownMeasurements = [
@@ -186,7 +186,7 @@ export function getAllSpeakers(metadata) {
 }
 
 export function getMetadata() {
-    const url = urlSite + 'assets/metadata.json';
+    const url = urlSite + 'assets/' + metadataFilename;
     // console.log('fetching url=' + url)
     const spec = fetch(url, {
         headers: {

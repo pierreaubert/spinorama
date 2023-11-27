@@ -32,6 +32,7 @@ import os
 import shutil
 import subprocess
 import pathlib
+import re
 import sys
 from glob import glob
 
@@ -40,7 +41,12 @@ from docopt import docopt
 from mako.lookup import TemplateLookup
 
 from datas.metadata import speakers_info as extradata
-from generate_common import get_custom_logger, args2level
+from generate_common import (
+    get_custom_logger,
+    args2level,
+    sort_metadata_per_score,
+    sort_metadata_per_date,
+)
 
 import spinorama.constant_paths as cpaths
 
@@ -118,7 +124,7 @@ def generate_speaker(
             index_name = "{0}/index_{1}.html".format(dirname, key)
 
             # write index.html
-            logger.warning("Writing %s for %s", index_name, speaker_name)
+            logger.info("Writing %s for %s", index_name, speaker_name)
             speaker_content = speaker_html.render(
                 speaker=speaker_name,
                 g_freq=freq,
@@ -165,7 +171,13 @@ def generate_speakers(mako, dataframe, meta, site, use_search):
 
 def main():
     # load all metadata from generated json file
-    json_filename = cpaths.CPATH_METADATA_JSON
+    pattern = "{}-[0-9]*.json".format(cpaths.CPATH_METADATA_JSON[:-5])
+    json_filenames = glob(pattern)
+    json_filename = None
+    for json_maybe in json_filenames:
+        check = re.match(".*[-][0-9]{5}[.]json$", json_maybe)
+        if check is not None:
+            json_filename = json_maybe
     if not os.path.exists(json_filename):
         logger.error("Cannot find %s", json_filename)
         sys.exit(1)
@@ -210,33 +222,7 @@ def main():
     # write index.html
     logger.info("Write index.html")
     index_html = mako_templates.get_template("index.html")
-
-    def sort_meta_score(s):
-        if s is not None and "pref_rating" in s and "pref_score" in s["pref_rating"]:
-            return s["pref_rating"]["pref_score"]
-        return -1
-
-    def sort_meta_date(s):
-        if s is not None:
-            return s.get("review_published", "20170101")
-        return "20170101"
-
-    keys_sorted_date = sorted(
-        meta,
-        key=lambda a: sort_meta_date(
-            meta[a]["measurements"].get(meta[a].get("default_measurement"))
-        ),
-        reverse=True,
-    )
-    keys_sorted_score = sorted(
-        meta,
-        key=lambda a: sort_meta_score(
-            meta[a]["measurements"].get(meta[a].get("default_measurement"))
-        ),
-        reverse=True,
-    )
-    meta_sorted_score = {k: meta[k] for k in keys_sorted_score}
-    meta_sorted_date = {k: meta[k] for k in keys_sorted_date}
+    meta_sorted_date = sort_metadata_per_date(meta)
 
     try:
         html_content = index_html.render(
@@ -261,6 +247,7 @@ def main():
         sys.exit(1)
 
     # write various html files
+    meta_sorted_score = sort_metadata_per_score(meta)
     try:
         for item in (
             "scores",
@@ -335,7 +322,11 @@ def main():
             item_name = "assets/{0}.js".format(item)
             logger.info("Write %s", item_name)
             item_html = mako_templates.get_template(item_name)
-            item_content = item_html.render(df=main_df, meta=meta_sorted_score, site=site)
+            # remove the ./docs/ parts
+            metadata_filename = json_filename[7:]
+            item_content = item_html.render(
+                df=main_df, meta=meta_sorted_score, site=site, metadata_filename=metadata_filename
+            )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename)
     except KeyError as key_error:
