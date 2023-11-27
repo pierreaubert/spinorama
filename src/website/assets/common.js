@@ -269,20 +269,25 @@ function computeDims(windowWidth, windowHeight, is_vertical, is_compact, nb_grap
                 height = Math.min(windowHeight, width / graphRatio);
             }
         }
-        if (nb_graphs > 1) {
-            if (is_vertical) {
-                height /= nb_graphs;
-                width = height * graphRatio;
-            } else {
-                width /= nb_graphs;
-                height = width / graphRatio;
-            }
-        }
+        // if (nb_graphs > 1) {
+        //    if (is_vertical) {
+        //        height /= nb_graphs;
+        //        width = height * graphRatio;
+        //    } else {
+        //        width /= nb_graphs;
+        //        height = width / graphRatio;
+        //    }
+        // }
     }
     width = Math.round(width);
     height = Math.round(height);
-    const ratio = Math.round(height / width, 2);
-    console.log('DEBUG: width=' + width + ' heigth=' + height + ' ratio=' + ratio);
+    let ratio = (height / width).toFixed(2);
+    if (width > height) {
+        ratio = (width / height).toFixed(2);
+    }
+    console.log(
+        'DEBUG: Window(' + windowHeight + ', ' + windowHeight + ') and width=' + width + ' heigth=' + height + ' ratio=' + ratio
+    );
     return [width, height];
 }
 
@@ -290,7 +295,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
     let datas = null;
     let layout = null;
     let config = null;
-    console.log('layout and data: ' + spin.length + ' w=' + windowWidth + ' h=' + windowHeight);
+    // console.log('layout and data: ' + spin.length + ' w=' + windowWidth + ' h=' + windowHeight);
     if (spin.length === 1) {
         layout = spin[0].layout;
         datas = spin[0].data;
@@ -312,12 +317,17 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
     const single_graph = nb_graphs == 1;
     let is_radar = false;
     let is_globe = false;
+    let is_spin = false;
+    let fontDelta = 0;
+    if (!is_compact) {
+        fontDelta = Math.round(windowWidth / 300);
+    }
 
     function computeXaxis() {
         if (layout.xaxis && layout.xaxis.title) {
             layout.xaxis.title.text = 'SPL (dB) v.s. Frequency (Hz)';
             layout.xaxis.title.font = {
-                size: 10,
+                size: 10 + fontDelta,
                 color: '#000',
             };
             layout.xaxis.automargin = 'height';
@@ -381,27 +391,30 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             title = spin[0].layout.title.text;
         }
         if (!single_graph && spin[1] && spin[1].layout && spin[1].layout.title && spin[1].layout.title.text) {
-            title += '<br> v.s. ' + spin[0].layout.title.text;
+            title += '<br> v.s. ' + spin[1].layout.title.text;
         }
-
+        if (title === '' && datas[0].legendgrouptitle && datas[0].legendgrouptitle.title) {
+            title = datas[0].legendgrouptitle.text;
+        }
+        if (title.indexOf('CEA2034') !== -1) {
+            is_spin = true;
+        }
         if (is_compact) {
             layout.title.font = {
-                size: 10,
+                size: 10 + fontDelta,
                 color: '#000',
             };
             if (single_graph) {
+                // split title on 2 lines
                 const measured_pos = title.indexOf(' measured ');
                 if (measured_pos !== -1) {
                     title = title.slice(0, measured_pos) + ' <br>' + title.slice(measured_pos + 1);
                 }
             }
-            if (title === '' && datas[0].legendgrouptitle) {
-                title = datas[0].legendgrouptitle.text;
-            }
             layout.title = {
                 text: title,
                 font: {
-                    size: 10 + windowWidth / 300,
+                    size: 10 + fontDelta,
                     color: '#000',
                 },
                 xref: 'paper',
@@ -414,9 +427,20 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
                 // y: 1.15,
             };
         } else {
-            layout.title.font = {
-                size: 12 + windowWidth / 300,
-                color: '#000',
+            layout.title = {
+                text: title,
+                font: {
+                    size: 12 + fontDelta,
+                    color: '#000',
+                },
+                xref: 'paper',
+                xanchor: 'center',
+                // title start sligthly on the right
+                x: 0.5,
+                // keep title below modBar if title is long
+                // yref: 'paper',
+                // yanchor: 'top',
+                // y: 1.15,
             };
         }
     }
@@ -448,6 +472,10 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         }
         if (is_radar) {
             layout.margin.t += 100;
+        }
+        if (is_spin) {
+            layout.margin.b += 100;
+            layout.height += 100;
         }
     }
 
@@ -563,7 +591,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         if (is_compact) {
             layout.font = { size: 10 };
         } else {
-            layout.font = { size: 11 + windowWidth / 300 };
+            layout.font = { size: 12 + fontDelta };
         }
     }
 
@@ -582,7 +610,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
                 datas[k].colorbar.title = {
                     text: 'Contours: SPL (3dB steps)',
                     font: {
-                        size: 11,
+                        size: 10 + fontDelta,
                     },
                     side: 'bottom',
                 };
@@ -625,7 +653,7 @@ export function setCEA2034(speakerNames, speakerGraphs, width, height) {
             }
         }
     }
-    return [setGraphOptions(speakerGraphs, width, height, 1)];
+    return [setGraphOptions(speakerGraphs, width, height, speakerGraphs.length)];
 }
 
 export function setGraph(speakerNames, speakerGraphs, width, height) {
@@ -657,7 +685,7 @@ export function setGraph(speakerNames, speakerGraphs, width, height) {
             }
         }
     }
-    return [setGraphOptions(speakerGraphs, width, height, 1)];
+    return [setGraphOptions(speakerGraphs, width, height, speakerGraphs.length)];
 }
 
 export function setRadar(speakerNames, speakerGraphs, width, height) {
@@ -767,7 +795,7 @@ export function setGlobe(speakerNames, speakerGraphs, width, height) {
                     colorbar: {
                         title: {
                             font: {
-                                size: 10,
+                                size: 10 + fontDelta,
                             },
                             text: 'dB (SPL)',
                             side: 'bottom',
@@ -820,7 +848,7 @@ export function setSurface(speakerNames, speakerGraphs, width, height) {
                 [{ data: surfaceData, layout: speakerGraphs[i].layout }],
                 width,
                 height,
-		speakerGraphs.length
+                speakerGraphs.length
             );
             graphsConfigs.push(options);
         }
