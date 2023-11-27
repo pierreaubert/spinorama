@@ -13,6 +13,8 @@ WORKDIR /usr/src/spinorama
 
 COPY . .
 
+RUN [ -x /usr/bin/apt ] && /usr/bin/apt install -y python3 python3-pip imagemagick keychain npm wget python3.10-venv
+RUN [ -x /usr/bin/localedef ] && /usr/bin/localedef -f UTF-8 -i en_US en_US.UTF-8
 RUN /usr/bin/python3.10 -m venv .venv
 RUN . .venv/bin/activate
 RUN pip3 install -U -r ./requirements.txt && \
@@ -20,12 +22,13 @@ RUN pip3 install -U -r ./requirements.txt && \
     pip3 install -U -r ./requirements-dev.txt && \
     pip3 install -U -r ./requirements-api.txt
 
-RUN npm install --production
+RUN npm install --production pyright w3c-html-validator standard flow flow-remove-types
 
 # FROM ubuntu:22.04 AS final
 
 ENV PYTHONPATH=/usr/src/spinorama/src:/usr/src/spinorama/src/website
 
-CMD pytest tests
+RUN cd /usr/src/spinorama/src/spinorama && python setup.py build_ext --inplace && ln -s c_compute_scores.cpython-*.so c_compute_scores.so
+CMD cd /usr/src/spinorama && pytest tests
 
 EXPOSE 443
