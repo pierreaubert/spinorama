@@ -15758,7 +15758,7 @@ speakers_info: SpeakerDatabase = {
     "Neumi Silk 4": {
         "brand": "Neumi",
         "model": "Silk 4",
-        "type": "active",
+        "type": "passive",
         "price": "150",
         "shape": "bookshelves",
         "amount": "pair",
@@ -20195,6 +20195,23 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/sony-ss-cs5-3-way-speaker-review.13562/",
                 "review_published": "20200523",
+            },
+        },
+    },
+    "SoundArtist LS3|5A": {
+        "brand": "SoundArtist",
+        "model": "LS3|5A",
+        "type": "passive",
+        "price": "630",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/soundartist-bbc-ls3-5a-speaker-review.49833/",
+                "review_published": "20231125",
             },
         },
     },
