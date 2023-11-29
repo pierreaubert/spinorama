@@ -130,8 +130,11 @@ def estimates(spin: pd.DataFrame, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> d
                     est["dir_{}_p".format(orientation)] = dir_deg_p
                     est["dir_{}_m".format(orientation)] = dir_deg_m
                     est["dir_{}".format(orientation)] = dir_deg
+                except KeyError as error:
+                    # missing data
+                    logger.debug("Computing %s directivity failed! %s", orientation, error)
                 except Exception as error:
-                    logger.warning("Computing directivity failed! %s", error)
+                    logger.warning("Computing %s directivity failed! %s", orientation, error)
 
         logger.debug("Estimates v3: %s", est)
     except TypeError as type_error:

@@ -19,7 +19,7 @@
 echo "Update starts"
 export PYTHONPATH=src:src/website:src/spinorama:.
 
-PYTHON=python3.10
+PYTHON=python3.11
 
 IP="127.0.0.1"
 case $HOSTNAME in
@@ -40,7 +40,7 @@ esac
 #echo $IP
 
 # check meta
-command=$(python3.10 ./check_meta.py)
+command=$(python3.11 ./check_meta.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO checking metadata ($status)";
@@ -53,7 +53,7 @@ fi
 ./update_pictures.sh
 # generate all graphs if some are missing
 rm -fr /tmp/ray
-command=$(python3.10 ./generate_graphs.py --dash-ip="$IP")
+command=$(python3.11 ./generate_graphs.py --dash-ip="$IP")
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate graph!"
@@ -63,7 +63,7 @@ else
 fi
 # recompute metadata for all speakers
 rm -f docs/assets/metadata.json
-command=$(python3.10 ./generate_meta.py  --dash-ip="$IP")
+command=$(python3.11 ./generate_meta.py  --dash-ip="$IP")
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate meta!"
@@ -75,7 +75,7 @@ fi
 ./update_pictures.sh
 # generate radar
 # rm -f docs/speakers/*/spider*
-command=$(python3.10 ./generate_radar.py)
+command=$(python3.11 ./generate_radar.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate radar!"
@@ -85,7 +85,7 @@ else
 fi
 # generate eq_compare
 # rm -f docs/speakers/*/eq_compare*
-command=$(python3.10 ./generate_eq_compare.py)
+command=$(python3.11 ./generate_eq_compare.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate EQ compare!"
@@ -95,7 +95,7 @@ else
 fi
 # generate status
 rm -f docs/stats/*.json
-command=$(python3.10 ./generate_stats.py)
+command=$(python3.11 ./generate_stats.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate statistics!"
@@ -106,7 +106,7 @@ fi
 # generate website
 ./update_brands.sh
 ./update_reviewers.sh
-command=$(python3.10 ./generate_html.py --dev --sitedev=https://dev.spinorama.org)
+command=$(python3.11 ./generate_html.py --dev --sitedev=https://dev.spinorama.org)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate HTML!"

@@ -42,6 +42,7 @@ Options:
 from hashlib import md5
 from itertools import groupby
 import json
+from glob import glob
 import math
 import os
 import sys
@@ -51,6 +52,8 @@ import zipfile
 import numpy as np
 
 from docopt import docopt
+
+from spinorama import ray_setup_logger
 
 try:
     import ray
@@ -179,6 +182,8 @@ def reject(filters: dict, speaker_name: str) -> bool:
 
 @ray.remote(num_cpus=1)
 def queue_score(speaker_name, speaker_data):
+    ray_setup_logger(level)
+    logger.debug("Level of debug is %d", level)
     logger.info("Processing %s", speaker_name)
     results = []
     for origin, measurements in speaker_data.items():
@@ -758,20 +763,27 @@ def dump_metadata(meta):
     def dict_to_json(filename, d):
         js = json.dumps(d)
         key = md5(js.encode("utf-8"), usedforsecurity=False).hexdigest()[0:5]
-        hashname = "{}-{}.json".format(filename[:-5], key)
-        if os.path.exists(hashname) and os.path.exists(hashname + ".zip"):
+        hashed_filename = "{}-{}.json".format(filename[:-5], key)
+        if os.path.exists(hashed_filename) and os.path.exists(hashed_filename + ".zip"):
+            logger.debug("skipping %s", hashed_filename)
             return
-        with open(hashname, "w", encoding="utf-8") as f:
+        # hash changed, remove old files
+        old_hash_pattern = "{}-*.json".format(filename[:-5])
+        for fileold in glob(old_hash_pattern):
+            logger.debug("remove old file %s", fileold)
+            os.remove(fileold)
+        with open(hashed_filename, "w", encoding="utf-8") as f:
             f.write(js)
             f.close()
 
             with zipfile.ZipFile(
-                hashname + ".zip",
+                hashed_filename + ".zip",
                 "w",
                 compression=zipfile.ZIP_DEFLATED,
                 allowZip64=True,
             ) as current_zip:
-                current_zip.writestr(hashname, js)
+                current_zip.writestr(hashed_filename, js)
+            logger.debug("generated %s and zip version", hashed_filename)
 
     meta_full = {k: v for k, v in meta.items() if not v.get("skip", False)}
     dict_to_json(metafile, meta_full)
@@ -794,8 +806,8 @@ def dump_metadata(meta):
         def_m = m["default_measurement"]
         year = int(m["measurements"][def_m].get("review_published", "1970")[0:4])
         # group together years without too many reviews
-        if year > 1970 and year < 2021:
-            return 2020
+        if year > 1970 and year < 2020:
+            return 2019
         return year
 
     grouped_by_year = groupby(meta_sorted_date_tail, by_year)
@@ -827,7 +839,7 @@ def main():
         "format": mformat,
         "version": mversion,
     }
-    main_df = cache_load(filters=filters, smoke_test=smoke_test)
+    main_df = cache_load(filters=filters, smoke_test=smoke_test, level=level)
     steps.append(("loaded", time.perf_counter()))
 
     if main_df is None:
@@ -862,5 +874,6 @@ def main():
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="generate_meta.py version 1.6", options_first=True)
-    logger = get_custom_logger(level=args2level(args), duplicate=True)
+    level = args2level(args)
+    logger = get_custom_logger(level=level, duplicate=True)
     main()

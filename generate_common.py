@@ -32,6 +32,8 @@ import tables
 
 import datas.metadata as metadata
 
+from spinorama import ray_setup_logger
+
 MINIRAY = None
 try:
     import ray
@@ -241,12 +243,15 @@ def cache_load_seq(filters, smoke_test):
 
 
 @ray.remote(num_cpus=1)
-def cache_fetch(cachepath: str):
+def cache_fetch(cachepath: str, level):
+    logger = logging.getLogger("spinorama")
+    ray_setup_logger(level)
+    logger.debug("Level of debug is %d", level)
     return fl.load(path=cachepath)
 
 
-def cache_load_distributed_map(filters, smoke_test):
-    cache_files = glob("/home/pierre/src/spinorama/{}/*.h5".format(CACHE_DIR))
+def cache_load_distributed_map(filters, smoke_test, level):
+    cache_files = glob("./{}/*.h5".format(CACHE_DIR))
     ids = []
     # mapper read the cache and start 1 worker per file
     for cache in cache_files:
@@ -254,7 +259,7 @@ def cache_load_distributed_map(filters, smoke_test):
             filters.get("speaker_name")
         ):
             continue
-        ids.append(cache_fetch.remote(cache))
+        ids.append(cache_fetch.remote(cache, level))
 
     print("(queued {} files)".format(len(cache_files)))
     return ids
@@ -286,14 +291,14 @@ def cache_load_distributed_reduce(filters, smoke_test, ids):
     return df_all
 
 
-def cache_load_distributed(filters, smoke_test):
-    ids = cache_load_distributed_map(filters, smoke_test)
+def cache_load_distributed(filters, smoke_test, level):
+    ids = cache_load_distributed_map(filters, smoke_test, level)
     return cache_load_distributed_reduce(filters, smoke_test, ids)
 
 
-def cache_load(filters, smoke_test):
+def cache_load(filters, smoke_test, level):
     if ray.is_initialized and filters.get("speaker_name") is None:
-        return cache_load_distributed(filters, smoke_test)
+        return cache_load_distributed(filters, smoke_test, level)
     return cache_load_seq(filters, smoke_test)
 
 
