@@ -1,0 +1,14 @@
+EQ for Acoustic Energy AE100 Mk2 computed from ErinsAudioCorner data
+Preference Score 4.57 with EQ 6.38
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2023-11-29-20:09:30
+
+Preamp: -3.9 dB
+
+Filter  1: ON PK Fc    49 Hz Gain +3.91 dB Q 1.41
+Filter  2: ON PK Fc   321 Hz Gain +1.28 dB Q 2.98
+Filter  3: ON PK Fc   666 Hz Gain +3.99 dB Q 1.96
+Filter  4: ON PK Fc   820 Hz Gain -4.28 dB Q 2.24
+Filter  5: ON PK Fc  2670 Hz Gain +1.51 dB Q 1.60
+Filter  6: ON PK Fc 10341 Hz Gain -3.28 dB Q 0.25
+Filter  7: ON PK Fc 16239 Hz Gain +0.83 dB Q 2.19

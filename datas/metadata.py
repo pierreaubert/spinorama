@@ -183,6 +183,39 @@ gll_data_acquisition_std: DataAcquisition = {
 
 # database
 speakers_info: SpeakerDatabase = {
+    "Acoustic Energy AE100 Mk2": {
+        "brand": "Acoustic Energy",
+        "model": "AE100 Mk2",
+        "type": "passive",
+        "price": "500",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/acoustic_energy_ae100_mk2/",
+                    "yt": "https://youtu.be/-q4VkErtoAQ",
+                },
+                "review_published": "20231129",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 112,
+                    },
+                    "size": {
+                        "height": 290,
+                        "width": 165,
+                        "depth": 250,
+                    },
+                    "weight": 4.6,
+                },
+            },
+        },
+    },
     "Adam A4V": {
         "brand": "Adam",
         "model": "A4V",
@@ -858,6 +891,93 @@ speakers_info: SpeakerDatabase = {
                 },
                 "review_published": "20210627",
                 "notes": "...Score formula is for monopole speaker...",
+            },
+        },
+    },
+    "Aperion Audio Novus N5B": {
+        "brand": "Aperion Audio",
+        "model": "Novus N5B",
+        "type": "passive",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/aperion_novus_n5b/",
+                },
+                "review_published": "20231129",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 4,
+                    "size": {
+                        "height": 300,
+                        "width": 180,
+                        "depth": 200,
+                    },
+                    "weight": 4.5,
+                },
+            },
+        },
+    },
+    "Aperion Audio Novus N6SR": {
+        "brand": "Aperion Audio",
+        "model": "Novus N6SR",
+        "type": "passive",
+        "price": "650",
+        "shape": "surround",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/aperion_novus_n6sr/",
+                },
+                "review_published": "20231129",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "size": {
+                        "height": 300,
+                        "width": 200,
+                        "depth": 125,
+                    },
+                    "weight": 4.5,
+                },
+            },
+        },
+    },
+    "Aperion Audio Novus N5C": {
+        "brand": "Aperion Audio",
+        "model": "Novus N5C",
+        "type": "passive",
+        "price": "550",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/aperion_novus_n5c/",
+                },
+                "review_published": "20231129",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 4,
+                    "size": {
+                        "height": 186,
+                        "width": 485,
+                        "depth": 231,
+                    },
+                    "weight": 8.5,
+                },
             },
         },
     },
@@ -14211,6 +14331,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.audiosciencereview.com/forum/index.php?threads/march-audio-sointuva.26085/",
                 },
                 "review_published": "20231125",
+                "notes": "sensitivity is currently incorrect and will be fixed soon",
             },
         },
     },
