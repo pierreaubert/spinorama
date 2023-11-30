@@ -35,7 +35,7 @@ from docopt import docopt
 import pandas as pd
 
 from spinorama.constant_paths import CPATH_METADATA_JSON
-from generate_common import get_custom_logger, args2level
+from generate_common import get_custom_logger, args2level, find_metadata_file
 
 
 VERSION = 0.4
@@ -154,9 +154,9 @@ def main():
         print_what = args["--print"]
 
     # load all metadata from generated json file
-    json_filename = CPATH_METADATA_JSON
-    if not os.path.exists(json_filename):
-        logger.error("Cannot find %s", json_filename)
+    json_filename = find_metadata_file()
+    if json_filename is None:
+        logger.error("Cannot find metadata file, did you ran generate_meta.py ?")
         sys.exit(1)
 
     jsmeta = None

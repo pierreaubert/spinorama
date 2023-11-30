@@ -588,7 +588,7 @@ def main():
         if disable_ray:
             df_all_speakers = cache_load_seq(filters=do_filters, smoke_test=smoke_test)
         else:
-            df_all_speakers = cache_load(filters=do_filters, smoke_test=smoke_test, level)
+            df_all_speakers = cache_load(filters=do_filters, smoke_test=smoke_test, level=level)
     except ValueError as v_e:
         if speaker_name is not None:
             print(

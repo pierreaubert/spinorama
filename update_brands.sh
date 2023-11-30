@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 export LOCALE=C
-json_pp < docs/assets/metadata.json  | \
+json_pp < ./docs/assets/metadata.json  | \
     grep '"brand" : ' | \
     cut -d: -f 2 | \
     cut -b 2- | \

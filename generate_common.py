@@ -24,6 +24,7 @@ import ipaddress
 import logging
 import os
 import pathlib
+import re
 import sys
 import warnings
 
@@ -33,6 +34,7 @@ import tables
 import datas.metadata as metadata
 
 from spinorama import ray_setup_logger
+import spinorama.constant_paths as cpaths
 
 MINIRAY = None
 try:
@@ -356,3 +358,19 @@ def sort_metadata_per_score(meta):
         reverse=True,
     )
     return {k: meta[k] for k in keys_sorted_score}
+
+
+def find_metadata_file():
+    pattern = "{}-[0-9a-f]*.json".format(cpaths.CPATH_METADATA_JSON[:-5])
+    json_filenames = glob(pattern)
+    # print('DEBUG: {}'.format(json_filenames))
+    json_filename = None
+    for json_maybe in json_filenames:
+        check = re.match(".*[-][0-9a-f]{5}[.]json$", json_maybe)
+        if check is not None:
+            json_filename = json_maybe
+            break
+    if json_filename is not None and os.path.exists(json_filename):
+        return json_filename
+
+    return None
