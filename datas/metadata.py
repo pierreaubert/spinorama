@@ -20771,6 +20771,25 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Vanatoo Transparent One Encore Plus": {
+        "brand": "Vanatoo",
+        "model": "Transparent One Encore Plus",
+        "type": "active",
+        "price": "450",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/vanatoo_one_plus/",
+                },
+                "review_published": "20231201",
+            },
+        },
+    },
     "Vanatoo Transparent Zero": {
         "brand": "Vanatoo",
         "model": "Transparent Zero",
