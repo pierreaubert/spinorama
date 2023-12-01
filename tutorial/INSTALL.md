@@ -46,13 +46,7 @@ For linting the python, html and javascript code:
 npm install --save-dev pyright w3c-html-validator standard flow flow-remove-types
 ```
 
-You may have to update your npm version above 12.0:
-
-```
-nvm install lts/fermium
-```
-
-Please add tests and
+Please add tests and run all of them:
 
 ```
 export PYTHONPATH=src
@@ -65,6 +59,7 @@ Before committing, please check that the various checks are fine:
 2. `./check_meta.py` : check that the metadata file looks sane.
 3. `flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spinorama-venv` should report 0
 4. `black .` will take care of formatting all the python files.
+5. `ruff check` also need to pass.
 
 and also (but WIP):
 
@@ -72,4 +67,5 @@ and also (but WIP):
 6. `./node_modules/.bin/pyright` : should not report new type error.
 7. Check that notebook are cleaned up before committing.
 
-Tests 1. to 4. should be in the pre-submit.
+Most of the checks are enforced in the pre-submit which means that
+you cannot commit new codes without passing tests and checks.
