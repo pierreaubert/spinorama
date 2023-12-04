@@ -67,6 +67,10 @@ def optim_multi_steps(
         return greedy_status, (greedy_results, greedy_peq)
 
     if optim_config["optimisation"] == "global":
+        logger.debug(
+            "msteps config {%s}",
+            ", ".join(["{}: {}".format(k, v) for k, v in optim_config.items()]),
+        )
         go = GlobalOptimizer(
             df_speaker,
             optim_config,

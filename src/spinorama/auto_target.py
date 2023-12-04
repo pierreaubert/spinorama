@@ -52,7 +52,9 @@ def get_freq(df_speaker_data, optim_config):
     curves = optim_config["curve_names"]
     with_pir = False
     local_curves = []
-    if "Estimated In-Room Response" in curves:
+    if curves is None:
+        local_curves.append("Listening Window")
+    elif "Estimated In-Room Response" in curves:
         local_curves = [c for c in curves if c != "Estimated In-Room Response"]
         if "Listening Window" not in set(local_curves):
             local_curves.append("Listening Window")
@@ -62,7 +64,7 @@ def get_freq(df_speaker_data, optim_config):
 
     # extract LW
     local_df = pd.DataFrame()
-    if len(curves) > 0:
+    if len(local_curves) > 0:
         columns = {"Freq"}.union(local_curves)
         if "CEA2034_unmelted" in df_speaker_data:
             local_df = df_speaker_data["CEA2034_unmelted"].loc[:, list(columns)]
@@ -93,7 +95,7 @@ def get_freq(df_speaker_data, optim_config):
 
     # freq
     local_target = []
-    for curve in curves:
+    for curve in local_curves:
         data = local_df.loc[selector, curve].to_numpy()
         data = limit_before_freq(
             local_freq, data, optim_config["target_min_freq"], optim_config["MAX_DBGAIN"]

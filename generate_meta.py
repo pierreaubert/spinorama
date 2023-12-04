@@ -788,7 +788,7 @@ def dump_metadata(meta):
         ) as current_zip:
             current_zip.writestr(hashed_filename, js)
             logger.debug("generated %s and zip version", hashed_filename)
-            
+
         # add a link to make it easier for other scripts to find the metadata
         with contextlib.suppress(OSError):
             os.symlink(Path(hashed_filename).name, cpaths.CPATH_METADATA_JSON)

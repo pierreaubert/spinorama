@@ -57,6 +57,10 @@ def optim_eval_strategy(
         target = get_target(data_frame, freq, curve, optim_config)
         auto_target_interp.append(target)
 
+    logger.debug(
+        "eval strategy config {%s}",
+        ", ".join(["{}: {}".format(k, v) for k, v in optim_config.items()]),
+    )
     auto_status, (auto_results, auto_peq) = optim_multi_steps(
         current_speaker_name,
         df_speaker,
@@ -117,26 +121,34 @@ def optim_strategy(
     configs = []
     # add a default config
     if use_score and optim_config.get("loss") == "score_loss":
+        curve_names = optim_config.get("curve_names")
+        if curve_names is None:
+            curve_names = [
+                "Listening Window",
+                "Estimated In-Room Response",
+            ]
         configs.append(
             {
-                "curve_names": [
-                    "Listening Window",
-                    "Estimated In-Room Response",
-                ],  # fit on the 2 curves
+                "curve_names": curve_names,  # fit on the 2 curves
                 "full_biquad_optim": optim_config.get("full_biquad_optim", True),
                 "smooth_measurements": optim_config.get("smooth_measurements", False),
                 "loss": "score_loss",
             }
         )
     else:
+        curve_names = optim_config.get("curve_names")
+        if curve_names is None:
+            curve_names = [
+                "Listening Window",
+            ]
         configs.append(
             {
-                "curve_names": ["Listening Window"],  # robust default
-                "full_biquad_optim": False,  # only PK
+                "curve_names": curve_names,
+                "full_biquad_optim": optim_config.get("full_biquad_optim", False),  # only PK
                 "smooth_measurements": True,  # some smoothing
                 "smooth_window_size": 21,
                 "smooth_order": 3,
-                "loss": "leastsquare_loss",  # robust function
+                "loss": optim_config.get("loss", "leastsquare_loss"),  # robust function
             }
         )
 

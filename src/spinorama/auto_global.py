@@ -74,7 +74,11 @@ class GlobalOptimizer(object):
         optim_config: dict,
     ):
         self.df_speaker = df_speaker
-        self.optim_config = optim_config
+        self.config = optim_config
+        logger.debug(
+            "GlobalOptimizer config {%s}",
+            ", ".join(["{}: {}".format(k, v) for k, v in optim_config.items()]),
+        )
 
         # get min/max
         self.freq_min = optim_config["target_min_freq"]
@@ -109,25 +113,27 @@ class GlobalOptimizer(object):
         # get lw/on/pir & freq
         self.lw = df_speaker["CEA2034_unmelted"]["Listening Window"].to_numpy()
         self.on = df_speaker["CEA2034_unmelted"]["On Axis"].to_numpy()
-        # self.pir = df_speaker["Estimated In-Room Response_unmelted"]["Estimated In-Room Response"].to_numpy()
+        self.pir = df_speaker["Estimated In-Room Response_unmelted"][
+            "Estimated In-Room Response"
+        ].to_numpy()
         self.freq = df_speaker["CEA2034_unmelted"]["Freq"].to_numpy()
 
         # used for controlling optimisation of the score
-        # lw_slope = self.optim_config.get("slope_listening_window", -0.5)
-        # lw_target = self.lw + np.linspace(0, lw_slope, len(self.lw))
-        # pir_slope = self.optim_config.get("slope_pred_in_room", -7)
-        # pir_target = self.pir + np.linspace(0, pir_slope, len(self.pir))
+        lw_slope = self.config.get("slope_listening_window", -0.5)
+        lw_target = self.lw - np.linspace(0, lw_slope, len(self.lw))
+        pir_slope = self.config.get("slope_pred_in_room", -7)
+        pir_target = self.pir - np.linspace(0, pir_slope, len(self.pir))
 
-        # self.target_lw = _resample(self.freq, self.freq_space, lw_target)
+        self.target_lw = _resample(self.freq, self.freq_space, lw_target)
         self.target_on = _resample(self.freq, self.freq_space, self.on)
-        # self.target_pir = _resample(self.freq, self.freq_space, pir_target)
+        self.target_pir = _resample(self.freq, self.freq_space, pir_target)
 
-        self.min_db = optim_config["MIN_DBGAIN"]
-        self.max_db = optim_config["MAX_DBGAIN"]
-        self.min_q = optim_config["MIN_Q"]
-        self.max_q = optim_config["MAX_Q"]
-        self.max_peq = optim_config["MAX_NUMBER_PEQ"]
-        self.max_iter = optim_config["MAX_ITER"]
+        self.min_db = self.config["MIN_DBGAIN"]
+        self.max_db = self.config["MAX_DBGAIN"]
+        self.min_q = self.config["MIN_Q"]
+        self.max_q = self.config["MAX_Q"]
+        self.max_peq = self.config["MAX_NUMBER_PEQ"]
+        self.max_iter = self.config["MAX_ITER"]
 
     def _freq2index(self, f: float):
         return bisect.bisect_left(self.freq_space, f)
@@ -198,7 +204,18 @@ class GlobalOptimizer(object):
     def _opt_peq_flat(self, x: list[float | int]) -> float:
         # for  a given encoded peq, compute a loss function based on flatness
         peq_freq = np.array(self._x2spl(x))
-        flat = np.add(self.target_on, peq_freq)[self.freq_min_index : self.freq_max_index]
+        flat = None
+        curves = self.config.get("curve_names")
+        if curves is None or (len(curves) == 1 and curves[0] == "On Axis"):
+            flat = np.add(self.target_on, peq_freq)[self.freq_min_index : self.freq_max_index]
+        elif len(curves) == 1 and curves[0] == "Listening Window":
+            flat = np.add(self.target_lw, peq_freq)[self.freq_min_index : self.freq_max_index]
+        elif len(curves) == 1 and curves[0] == "Estimated In-Room Response":
+            flat = np.add(self.target_pir, peq_freq)[self.freq_min_index : self.freq_max_index]
+        else:
+            logger.error("configuration is not yet supported")
+            return 1000.0
+
         flatness_l2 = np.linalg.norm(flat, ord=2)
         flatness_l1 = np.linalg.norm(flat, ord=1)
         return float(flatness_l2 + flatness_l1)
@@ -206,9 +223,7 @@ class GlobalOptimizer(object):
     def _opt_peq(self, x: list[float | int]) -> float:
         # for  a given encoded peq, compute a loss function
         return (
-            self._opt_peq_score(x)
-            if self.optim_config["loss"] == "score_loss"
-            else self._opt_peq_flat(x)
+            self._opt_peq_score(x) if self.config["loss"] == "score_loss" else self._opt_peq_flat(x)
         )
 
     def _opt_bounds_all(self, n: int) -> list[list[int | float]]:
@@ -255,9 +270,7 @@ class GlobalOptimizer(object):
     def _opt_bounds(self, n: int) -> list[list[int | float]]:
         # compute bounds for variables
         return (
-            self._opt_bounds_all(n)
-            if self.optim_config["full_biquad_optim"]
-            else self._opt_bounds_pk(n)
+            self._opt_bounds_all(n) if self.config["full_biquad_optim"] else self._opt_bounds_pk(n)
         )
 
     def _opt_integrality(self, n: int) -> list[bool]:
@@ -326,9 +339,7 @@ class GlobalOptimizer(object):
 
     def _opt_display(self, xk, convergence):
         # comment if you want to print verbose traces
-        print(
-            f"[f={1-convergence}<{CONVERGENCE_TOLERANCE}] iir={self.optim_config['full_biquad_optim']}"
-        )
+        print(f"[f={1-convergence}<{CONVERGENCE_TOLERANCE}] iir={self.config['full_biquad_optim']}")
         peq_print(self._x2peq(xk))
 
     def run(self):
