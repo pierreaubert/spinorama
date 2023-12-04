@@ -304,7 +304,7 @@ def cache_load(filters, smoke_test, level):
     return cache_load_seq(filters, smoke_test)
 
 
-def cache_update(df_new, filters):
+def cache_update(df_new, filters, level):
     if not os.path.exists(CACHE_DIR) or len(df_new) == 0:
         return
 
@@ -313,7 +313,7 @@ def cache_update(df_new, filters):
     for new_speaker, new_datas in df_new.items():
         if filters is not None and new_speaker != filters.get("speaker", ""):
             continue
-        df_old = cache_load(filters={"speaker_name": new_speaker}, smoke_test=False)
+        df_old = cache_load(filters={"speaker_name": new_speaker}, smoke_test=False, level=level)
         for new_origin, new_measurements in new_datas.items():
             for new_measurement, new_data in new_measurements.items():
                 if new_speaker not in df_old:

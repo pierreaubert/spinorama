@@ -363,7 +363,7 @@ def main(level):
     if len(filters.keys()) == 0:
         cache_save(df_new)
     elif update_cache:
-        cache_update(df_new, filters)
+        cache_update(df_new, filters, LEVEL)
 
     ray.shutdown()
     sys.exit(0)
