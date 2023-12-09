@@ -74,4 +74,5 @@ PYTHONPATH=src cd src/spinorama && python setup.py build_ext --inplace && ln -s 
 [ ! -x bin/deepsource ] && curl https://deepsource.io/cli | sh
 
 # run the test
-pytest .
+pytest tests
+

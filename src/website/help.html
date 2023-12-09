@@ -494,12 +494,19 @@
 	    </ul>
 	  </li>
 	  <li id="bassExtensionDefinition">
-	    <b>Bass extension</b>: this is the frequency at which the
-	    SPL is 3dB lower than the
-	    average of the on axis measurement between 300Hz and
-	    5kHz. Details of the computations
-	    are <a href="https://github.com/pierreaubert/spinorama/blob/7266833ce84556508e52b59a0b5e2f77227fa9ab/src/spinorama/compute_estimates.py#L57">here</a>. Lower
-	    is better.
+	    <b>Bass extension</b>: this is low frequency extension
+	    (LFX in short) from a research paper from Olive. It is computed
+	    as <a href="https://github.com/pierreaubert/spinorama/blob/3b6e70966e0466328f44f36752cc182f3ae7baae/src/spinorama/compute_scores.py#L110">here</a>. Lower
+	    is better. Note that it is slighlty different from the frequency of
+	    the -3dB point. The rational for using it is: <i>The low frequency extension (LFX)
+         LFX = log10(xSP-6dB.re:y _ LW(300Hz-10kHz) (7)
+    where LFX is the log10 of the first frequency x_SP below 300 Hz
+    in the sound power curve, that is -6 dB relative to the mean level y_LW
+    measured in listening window (LW) between 300 Hz-10 kHz.
+    LFX is log-transformed to produce a linear relationship between the
+    variable LFX and preference rating. The sound power curve (SP) is used
+    for the calculation because it better defines the true bass output of
+    the loudspeaker, particularly speakers that have rear-firing ports.</i>.
 	  </li>
 	  <li id="flatnessDefinition">
 	    <b>Flatness</b>: this is the variation in dB around the average SPL of

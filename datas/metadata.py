@@ -1490,6 +1490,22 @@ speakers_info: SpeakerDatabase = {
         "amount": "pair",
         "default_measurement": "eac",
         "measurements": {
+            "vendor": {
+                "origin": "Vendors-Ascend Acoustics",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "review_published": "20231209",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 8,
+                    "size": {
+                        "height": 362,
+                        "width": 190,
+                        "depth": 267,
+                    },
+                    "weight": 8.4,
+                },
+            },
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
@@ -17953,13 +17969,13 @@ speakers_info: SpeakerDatabase = {
         "price": "5500",
         "amount": "each",
         "shape": "bookshelves",
-        "default_measurement": "vendor",
+        "default_measurement": "vendor-v1-20231028",
         "measurements": {
-            "vendor": {
+            "vendor-v1-20231028": {
                 "origin": "Vendors-Sigberg Audio",
                 "format": "spl_hv_txt",
                 "quality": "high",
-                "review_published": "20231028",
+                "review_published": "20231207",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/sigberg-audio-manta-12-wideband-cardioid-active-speakers-prototype-build-thread.28255/",
                     "sigbergaudio": "https://www.sigbergaudio.no/blogs/news/interview-with-christer-krogh-head-engineer-of-velvet-recording",
