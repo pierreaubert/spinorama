@@ -1488,7 +1488,7 @@ speakers_info: SpeakerDatabase = {
         "shape": "bookshelves",
         "price": "1000",
         "amount": "pair",
-        "default_measurement": "eac",
+        "default_measurement": "vendor",
         "measurements": {
             "vendor": {
                 "origin": "Vendors-Ascend Acoustics",
@@ -17974,7 +17974,7 @@ speakers_info: SpeakerDatabase = {
             "vendor-v1-20231028": {
                 "origin": "Vendors-Sigberg Audio",
                 "format": "spl_hv_txt",
-                "quality": "high",
+                "quality": "medium",
                 "review_published": "20231207",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/sigberg-audio-manta-12-wideband-cardioid-active-speakers-prototype-build-thread.28255/",
@@ -18007,7 +18007,7 @@ speakers_info: SpeakerDatabase = {
             "vendor-v2": {
                 "origin": "Vendors-Sigberg Audio",
                 "format": "spl_hv_txt",
-                "quality": "high",
+                "quality": "medium",
                 "review_published": "20231028",
                 "notes": "Klippel generated data",
                 "reviews": {
@@ -20294,6 +20294,37 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Sonus Faber Lumina II": {
+        "skip": True,
+        "brand": "Sonus Faber",
+        "model": "Lumina II",
+        "type": "passive",
+        "price": "1300",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/sonus_faber_lumina_ii/",
+                    "yt": "https://youtu.be/Q1RdxgLwnHc?si=mcKDc-XByFdDt8OK",
+                },
+                "review_published": "20231200",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "size": {
+                        "height": 304,
+                        "width": 180,
+                        "depth": 263,
+                    },
+                    "weight": 5.65,
+                },
+            },
+        },
+    },
     "Sonus Faber Sonetto II": {
         "brand": "Sonus Faber",
         "model": "Sonetto II",
@@ -20680,6 +20711,35 @@ speakers_info: SpeakerDatabase = {
                         "depth": 254,
                     },
                     "weight": 20,
+                },
+            },
+        },
+    },
+    "Thomann Swissonic A306": {
+        "skip": True,
+        "brand": "Thomann Swissonic",
+        "model": "A306",
+        "type": "active",
+        "price": "250",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/thomann_swissonic_a306/",
+                    "yt": "https://youtu.be/SMXj6u8pSjM",
+                },
+                "review_published": "20231200",
+                "specifications": {
+                    "size": {
+                        "height": 361,
+                        "width": 224,
+                        "depth": 282,
+                    },
+                    "weight": 6.17,
                 },
             },
         },
