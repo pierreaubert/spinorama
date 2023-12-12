@@ -20295,7 +20295,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Sonus Faber Lumina II": {
-        "skip": True,
         "brand": "Sonus Faber",
         "model": "Lumina II",
         "type": "passive",
@@ -20311,7 +20310,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/sonus_faber_lumina_ii/",
                     "yt": "https://youtu.be/Q1RdxgLwnHc?si=mcKDc-XByFdDt8OK",
                 },
-                "review_published": "20231200",
+                "review_published": "20231212",
                 "specifications": {
                     "sensitivity": 86,
                     "impedance": 4,
@@ -20716,7 +20715,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Thomann Swissonic A306": {
-        "skip": True,
         "brand": "Thomann Swissonic",
         "model": "A306",
         "type": "active",
@@ -20732,7 +20730,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/thomann_swissonic_a306/",
                     "yt": "https://youtu.be/SMXj6u8pSjM",
                 },
-                "review_published": "20231200",
+                "review_published": "20231212",
                 "specifications": {
                     "size": {
                         "height": 361,
@@ -20741,6 +20739,7 @@ speakers_info: SpeakerDatabase = {
                     },
                     "weight": 6.17,
                 },
+                "notes": "Treble was set at -2dB.",
             },
         },
     },
