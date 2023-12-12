@@ -113,20 +113,26 @@ class GlobalOptimizer(object):
         # get lw/on/pir & freq
         self.lw = df_speaker["CEA2034_unmelted"]["Listening Window"].to_numpy()
         self.on = df_speaker["CEA2034_unmelted"]["On Axis"].to_numpy()
-        self.pir = df_speaker["Estimated In-Room Response_unmelted"][
-            "Estimated In-Room Response"
-        ].to_numpy()
+        self.pir = None
+        if "Estimated In-Room Response_unmelted" in df_speaker:
+            self.pir = df_speaker["Estimated In-Room Response_unmelted"][
+                "Estimated In-Room Response"
+            ].to_numpy()
         self.freq = df_speaker["CEA2034_unmelted"]["Freq"].to_numpy()
 
         # used for controlling optimisation of the score
         lw_slope = self.config.get("slope_listening_window", -0.5)
         lw_target = self.lw - np.linspace(0, lw_slope, len(self.lw))
         pir_slope = self.config.get("slope_pred_in_room", -7)
-        pir_target = self.pir - np.linspace(0, pir_slope, len(self.pir))
+        pir_target = None
+        if self.pir is not None:
+            pir_target = self.pir - np.linspace(0, pir_slope, len(self.pir))
 
         self.target_lw = _resample(self.freq, self.freq_space, lw_target)
         self.target_on = _resample(self.freq, self.freq_space, self.on)
-        self.target_pir = _resample(self.freq, self.freq_space, pir_target)
+        self.target_pir = None
+        if pir_target is not None:
+            self.target_pir = _resample(self.freq, self.freq_space, pir_target)
 
         self.min_db = self.config["MIN_DBGAIN"]
         self.max_db = self.config["MAX_DBGAIN"]
