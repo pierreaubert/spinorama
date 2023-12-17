@@ -12213,8 +12213,54 @@ speakers_info: SpeakerDatabase = {
         "price": "7000",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "vendor",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_ls60/",
+                    "yt": "",
+                    "whf": "https://www.whathifi.com/reviews/kef-ls60-wireless",
+                    "sss": "https://www.soundstagesimplifi.com/index.php/equipment-reviews/209-kef-ls60-wireless-active-speaker-system",
+                    "hfn": "https://www.hifinews.com/content/kef-ls60-wireless-loudspeaker",
+                },
+                "review_published": "20231218",
+                "specifications": {
+                    "SPL": {
+                        "peak": 111,
+                    },
+                    "size": {
+                        "height": 1090,
+                        "width": 212,
+                        "depth": 394,
+                    },
+                    "weight": 31.2,
+                },
+            },
+            "eac-15-degrees": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_ls60/",
+                    "yt": "",
+                    "whf": "https://www.whathifi.com/reviews/kef-ls60-wireless",
+                    "sss": "https://www.soundstagesimplifi.com/index.php/equipment-reviews/209-kef-ls60-wireless-active-speaker-system",
+                    "hfn": "https://www.hifinews.com/content/kef-ls60-wireless-loudspeaker",
+                },
+                "review_published": "20231218",
+                "specifications": {
+                    "SPL": {
+                        "peak": 111,
+                    },
+                    "size": {
+                        "height": 1090,
+                        "width": 212,
+                        "depth": 394,
+                    },
+                    "weight": 31.2,
+                },
+            },
             "vendor": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
@@ -12225,6 +12271,17 @@ speakers_info: SpeakerDatabase = {
                     "hfn": "https://www.hifinews.com/content/kef-ls60-wireless-loudspeaker",
                 },
                 "review_published": "20220909",
+                "specifications": {
+                    "SPL": {
+                        "peak": 111,
+                    },
+                    "size": {
+                        "height": 1090,
+                        "width": 212,
+                        "depth": 394,
+                    },
+                    "weight": 31.2,
+                },
             },
         },
     },
