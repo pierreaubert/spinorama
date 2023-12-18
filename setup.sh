@@ -75,4 +75,3 @@ PYTHONPATH=src cd src/spinorama && python setup.py build_ext --inplace && ln -s 
 
 # run the test
 pytest tests
-

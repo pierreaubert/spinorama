@@ -56,9 +56,9 @@ The library support four different formats of data:
 2. Princeton 3D3A files: they are IR data in [hdf5](https://www.hdfgroup.org/solutions/hdf5/) format.
 3. Scanned data from a picture with [WebPlotDigitizer](https://automeris.io/WebPlotDigitizer/).
 4. Export in text form from [REW](https://www.roomeqwizard.com/)
-4. GLL data files are also (weakly) supported. If you want access to
+5. GLL data files are also (weakly) supported. If you want access to
    the automation, then please drop an email. GLL viewer is a Windows
-   only application and the automation is based on Windows automation. 
+   only application and the automation is based on Windows automation.
 
 ## Computations
 
@@ -70,7 +70,7 @@ The library support four different formats of data:
    preference score also called Olive score) based on anechoic
    data. Note: this is not yet a room correction software. EQ can be
    PEQ based but it also can generate a solution for a hardware
-   graphical EQ. 
+   graphical EQ.
 6. It can compute the effect of an EQ (IIR) on the spinorama.
 
 ## Website generation
@@ -106,7 +106,7 @@ ASR is a fantastic source of speakers data thanks to [amirm@](https://www.audios
 Erin is a motivated person reviewing speakers and doing an outstanging
 jobs. He also has a [Youtube
 channel](https://youtube.com/c/ErinsAudioCorner). You can also
-[support him](https://www.erinsaudiocorner.com/contribute/). 
+[support him](https://www.erinsaudiocorner.com/contribute/).
 
 ## [3D3A](https://www.princeton.edu/3D3A/) is a research organisation at [Princeton](https://www.princeton.edu).
 
@@ -160,4 +160,3 @@ Some papers related to finding the optimal IIR filters: I used a different algor
   - Revel
   - RCF
   - Sigberg Audio
-

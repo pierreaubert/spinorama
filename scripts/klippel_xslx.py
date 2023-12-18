@@ -23,17 +23,17 @@ import pandas as pd
 
 
 def process(speakername, filename):
-    df = pd.read_excel(
+    data_speaker = pd.read_excel(
         io=filename,
         sheet_name=["Hor Contour", "Ver Contour"],
         header=2,
     )
     col_freq = "Frequency / Hz"
-    col_spl = "Sound Pressure Level  / dB (re 20 µPa)"
+    col_spl = "Sound Pressure Level  / dB (re 20 µPa)"  # noqa: RUF001
     col_angle = "Theta / deg"
 
-    spl_h = df["Hor Contour"].groupby(col_angle)
-    spl_v = df["Ver Contour"].groupby(col_angle)
+    spl_h = data_speaker["Hor Contour"].groupby(col_angle)
+    spl_v = data_speaker["Ver Contour"].groupby(col_angle)
 
     for orientation, spls in [("_H", spl_h), ("_V", spl_v)]:
         for current_angle, current_spl in spls:
@@ -42,7 +42,9 @@ def process(speakername, filename):
             filename = "{} {} {}.txt".format(speakername, orientation, current_angle)
             with open(filename, "w") as fd:
                 fd.write("Freq SPL Phase\n")
-                for freq, spl in zip(current_spl[col_freq].values, current_spl[col_spl].values):
+                for freq, spl in zip(
+                    current_spl[col_freq].values, current_spl[col_spl].values, strict=True
+                ):
                     fd.write("{} {} 0.0\n".format(freq, spl))
 
 

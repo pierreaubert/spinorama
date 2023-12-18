@@ -12,7 +12,7 @@
     "webpack": "^5.89.0"
   },
   "devDependencies": {
-    "eslint": "^8.54.0",
+    "eslint": "^8.56.0",
     "flow": "^0.2.3",
     "flow-remove-types": "^2.223.3",
     "husky": "^8.0.3",

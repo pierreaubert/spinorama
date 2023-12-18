@@ -213,6 +213,34 @@ export function getMetadata() {
     return spec;
 }
 
+export function getMetadataChunked() {
+    const url = urlSite + 'assets/' + metadataFilename;
+    // console.log('fetching url=' + url)
+    const spec = fetch(url, {
+        headers: {
+            'Content-Encoding': 'gzip',
+            'Content-Type': 'application/json',
+        },
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            // convert to object
+            const metadata = Object.values(data);
+            // console.log('metadata '+metadata.length)
+            return new Map(
+                metadata.map((speaker) => {
+                    const key = getID(speaker.brand, speaker.model);
+                    return [key, speaker];
+                })
+            );
+        })
+        .catch((error) => {
+            console.log('ERROR getMetadata for ' + url + 'yield a 404 with error: ' + error);
+            return null;
+        });
+    return spec;
+}
+
 const graphSmall = 550;
 const graphLarge = 1200;
 const graphRatio = 1.3;
