@@ -286,7 +286,7 @@ def compute_peqs_sequential(df_all_speakers, optim_config, speaker_name):
             )
             continue
 
-        status, (current_speaker_name, results_iter, scores) = optim_save_peq_seq(
+        status, (_, results_iter, scores) = optim_save_peq_seq(
             current_speaker_name,
             default_origin,
             df_speaker,

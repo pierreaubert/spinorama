@@ -374,3 +374,7 @@ def find_metadata_file():
         return json_filename
 
     return None
+
+
+def find_metadata_file_chunks():
+    return "['c1', 'c2']"

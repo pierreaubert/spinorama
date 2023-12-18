@@ -33,7 +33,6 @@ import os
 import shutil
 import subprocess
 import pathlib
-import re
 import sys
 
 from docopt import docopt
@@ -45,6 +44,7 @@ from generate_common import (
     args2level,
     get_custom_logger,
     find_metadata_file,
+    find_metadata_file_chunks,
     sort_metadata_per_score,
     sort_metadata_per_date,
 )
@@ -56,7 +56,7 @@ SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
 
 
-def write_if_different(new_content, filename: str, force: bool):
+def write_if_different(new_content: str, filename: str, force: bool):  # noqa: FBT001
     """Write the new content to disk only if it is different from the current one.
     The unchanged html files are then untouched and http cache effect is better.
     """
@@ -154,7 +154,9 @@ def generate_measurement(
         "./src/website/utils.py",
         "./datas/metadata.py",
         find_metadata_file(),
-    ] + glob("./src/website/assets/*.js")
+        *find_metadata_file_chunks(),
+        *glob("./src/website/assets/*.js"),
+    ]
     index_force = need_update(index_name, index_deps)
     write_if_different(speaker_content, index_name, index_force)
 
@@ -166,10 +168,11 @@ def generate_measurement(
             graph_content = graph_html.render(
                 speaker=speaker_name, graph=graph_name, meta=meta, site=site
             )
-            graph_deps = glob("./datas/measurements/{}/{}/*.*".format(speaker_name, key)) + glob(
-                "./src/spinorama/*.py"
-            )
-            graph_force = need_update(index_name, index_deps)
+            graph_deps = [
+                *glob("./datas/measurements/{}/{}/*.*".format(speaker_name, key)),
+                *glob("./src/spinorama/*.py"),
+            ]
+            graph_force = need_update(graph_filename, graph_deps)
             write_if_different(graph_content, graph_filename, graph_force)
 
 
@@ -207,7 +210,7 @@ def generate_speakers(mako, dataframe, meta, site, use_search):
     speaker_html = mako.get_template("speaker.html")
     graph_html = mako.get_template("graph.html")
     for speaker_name, origins in dataframe.items():
-        logger.debug("html generation for speaker_name=" + speaker_name)
+        logger.debug("html generation for speaker_name %s", speaker_name)
         if speaker_name in extradata and extradata[speaker_name].get("skip", False):
             logger.debug("skipping %s", speaker_name)
             continue
@@ -272,7 +275,7 @@ def main():
             df=main_df, meta=meta_sorted_date, site=site, use_search=True
         )
         html_filename = f"{cpaths.CPATH_DOCS}/index.html"
-        write_if_different(html_content, html_filename, False)
+        write_if_different(html_content, html_filename, force=False)
     except KeyError as key_error:
         print("Generating index.html failed with {}".format(key_error))
         sys.exit(1)
@@ -284,7 +287,7 @@ def main():
     try:
         eqs_content = eqs_html.render(df=main_df, meta=meta_sorted_date, site=site, use_search=True)
         eqs_filename = f"{cpaths.CPATH_DOCS}/eqs.html"
-        write_if_different(eqs_content, eqs_filename, False)
+        write_if_different(eqs_content, eqs_filename, force=False)
     except KeyError as key_error:
         print("Generating eqs.htmlfailed with {}".format(key_error))
         sys.exit(1)
@@ -309,7 +312,7 @@ def main():
                 df=main_df, meta=meta_sorted_score, site=site, use_search=use_search
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
-            write_if_different(item_content, item_filename, False)
+            write_if_different(item_content, item_filename, force=False)
 
     except KeyError as key_error:
         print("Generating various html files failed with {}".format(key_error))
@@ -371,7 +374,7 @@ def main():
                 df=main_df, meta=meta_sorted_score, site=site, metadata_filename=metadata_filename
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
-            write_if_different(item_content, item_filename, False)
+            write_if_different(item_content, item_filename, force=False)
     except KeyError as key_error:
         print("Generating various html files failed with {}".format(key_error))
         sys.exit(1)
@@ -390,7 +393,7 @@ def main():
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             # ok for robots but likely doesn't work for sitemap
-            write_if_different(item_content, item_filename, False)
+            write_if_different(item_content, item_filename, force=False)
     except KeyError as key_error:
         print("Generating various html files failed with {}".format(key_error))
         sys.exit(1)

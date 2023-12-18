@@ -28,13 +28,11 @@ Options:
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
 import json
-import os
 import sys
 
 from docopt import docopt
 import pandas as pd
 
-from spinorama.constant_paths import CPATH_METADATA_JSON
 from generate_common import get_custom_logger, args2level, find_metadata_file
 
 

@@ -28,14 +28,13 @@ Options:
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
 import json
-import os
 import sys
 import pathlib
 
 from docopt import docopt
 import plotly.graph_objects as go
 
-from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DOCS_SPEAKERS
+from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
 from generate_common import get_custom_logger, args2level, find_metadata_file
 
 
