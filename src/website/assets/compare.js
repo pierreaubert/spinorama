@@ -111,7 +111,7 @@ getMetadata()
         let graphsConfigs = [];
 
         function plot(measurement, speakersName, speakersGraph) {
-            // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs')
+            // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs');
             async function run() {
                 Promise.all(speakersGraph).then((graphs) => {
                     // console.log('plot: resolved ' + graphs.length + ' graphs')
