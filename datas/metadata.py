@@ -19587,17 +19587,17 @@ speakers_info: SpeakerDatabase = {
         "price": "",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "vendor",
+        "default_measurement": "eac",
         "measurements": {
-            #            "eac" : {
-            #                "origin": "ErinsAudioCorner",
-            #                "format": "klippel",
-            #                "reviews": {
-            #                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/revel_m126be/",
-            #                    "yt": "https://youtu.be/KecbtoerdE0",
-            #                },
-            #                "review_published": "20230731",
-            #            },
+            "eac" : {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/revel_m126be/",
+                    "yt": "https://youtu.be/KecbtoerdE0",
+                },
+                "review_published": "20231219",
+            },
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
