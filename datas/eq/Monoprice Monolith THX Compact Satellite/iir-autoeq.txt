@@ -1,0 +1,14 @@
+EQ for Monoprice Monolith THX Compact Satellite computed from ErinsAudioCorner data
+Preference Score 3.26 with EQ 5.37
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2023-12-20-18:57:39
+
+Preamp: -2.7 dB
+
+Filter  1: ON PK Fc    69 Hz Gain +2.96 dB Q 1.62
+Filter  2: ON PK Fc   139 Hz Gain -0.92 dB Q 1.15
+Filter  3: ON PK Fc   204 Hz Gain -0.32 dB Q 2.36
+Filter  4: ON PK Fc   765 Hz Gain +1.00 dB Q 3.00
+Filter  5: ON PK Fc  1532 Hz Gain +3.00 dB Q 3.00
+Filter  6: ON PK Fc  3912 Hz Gain -2.33 dB Q 0.57
+Filter  7: ON PK Fc 14134 Hz Gain -2.57 dB Q 1.03

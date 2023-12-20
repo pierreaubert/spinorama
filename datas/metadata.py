@@ -15194,6 +15194,55 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "MoFi SourcePoint 8": {
+        "brand": "MoFi",
+        "model": "SourcePoint 8",
+        "type": "passive",
+        "price": "2750",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac-v1",
+        "measurements": {
+            "eac-v1": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mofi_8/",
+                    "yt": "",
+                },
+                "review_published": "20231220",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 6.4,
+                    "size": {
+                        "height": 456,
+                        "width": 290,
+                        "depth": 335,
+                    },
+                    "weight": 12.7,
+                },
+            },
+            "eac-v1-15-degrees": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mofi_8/",
+                    "yt": "",
+                },
+                "review_published": "20231220",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 6.4,
+                    "size": {
+                        "height": 456,
+                        "width": 290,
+                        "depth": 335,
+                    },
+                    "weight": 12.7,
+                },
+            },
+        },
+    },
     "MoFi SourcePoint 10": {
         "brand": "MoFi",
         "model": "SourcePoint 10",
@@ -15201,9 +15250,9 @@ speakers_info: SpeakerDatabase = {
         "price": "3700",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac-v1-0",
+        "default_measurement": "eac-v1",
         "measurements": {
-            "eac-v1-0": {
+            "eac-v1": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -15211,8 +15260,18 @@ speakers_info: SpeakerDatabase = {
                     "yt": "https://youtu.be/DcYVu0TQtDs",
                 },
                 "review_published": "20230602",
+                "specifications": {
+                    "sensitivity": 91,
+                    "impedance": 6.4,
+                    "size": {
+                        "height": 572,
+                        "width": 368,
+                        "depth": 422,
+                    },
+                    "weight": 21,
+                },
             },
-            "eac-v1-10": {
+            "eac-v1-10-degrees": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
@@ -15220,6 +15279,16 @@ speakers_info: SpeakerDatabase = {
                     "yt": "https://youtu.be/DcYVu0TQtDs",
                 },
                 "review_published": "20230602",
+                "specifications": {
+                    "sensitivity": 91,
+                    "impedance": 6.4,
+                    "size": {
+                        "height": 572,
+                        "width": 368,
+                        "depth": 422,
+                    },
+                    "weight": 21,
+                },
             },
         },
     },
@@ -15452,7 +15521,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Monoprice Monolith THX Compact Satellite": {
-        "skip": True,
         "brand": "Monoprice",
         "model": "Monolith THX Compact Satellite",
         "type": "passive",
@@ -15468,7 +15536,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/monoprice_comp_thx_sat/",
                     "yt": "https://youtu.be/4Hjk7iOkM_4",
                 },
-                "review_published": "20230821",
+                "review_published": "20231220",
                 "specifications": {
                     "sensitivity": 81,
                     "impedance": 4,
@@ -19584,7 +19652,7 @@ speakers_info: SpeakerDatabase = {
         "brand": "Revel",
         "model": "M126Be",
         "type": "passive",
-        "price": "",
+        "price": "3300",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "eac",
@@ -20856,9 +20924,29 @@ speakers_info: SpeakerDatabase = {
         "model": "Borea BR03",
         "type": "passive",
         "price": "500",
+        "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/triangle_br03/",
+                    "yt": "https://youtu.be/MNBWQGv2-SM",
+                },
+                "review_published": "20231220",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 4.2,
+                    "size": {
+                        "height": 380,
+                        "width": 206,
+                        "depth": 314,
+                    },
+                    "weight": 6.26,
+                },
+            },
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
