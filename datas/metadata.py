@@ -3626,6 +3626,37 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Dali Oberon Vokal": {
+        "brand": "Dali",
+        "model": "Oberon Vokal",
+        "type": "passive",
+        "price": "359",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/dali-oberon-vokal-center-speaker-review.50624/",
+                },
+                "review_published": "20231221",
+                "specifications": {
+                    "sensitivity": 89.5,
+                    "SPL": {
+                        "peak": 109,
+                    },
+                    "size": {
+                        "height": 161,
+                        "width": 441,
+                        "depth": 295,
+                    },
+                    "weight": 7.45,
+                },
+            },
+        },
+    },
     "Dali Spektor 1": {
         "brand": "Dali",
         "model": "Spektor 1",
@@ -5982,12 +6013,33 @@ speakers_info: SpeakerDatabase = {
         "type": "passive",
         "price": "600",
         "shape": "bookshelves",
-        "default_measurement": "asr",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_dbr62/",
+                    "yt": "https://youtu.be/VCY_CDu5Xas",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/elac-debut-reference-dbr-62-speaker-review.12232/#post-357719",
+                },
+                "review_published": "20231221",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 6,
+                    "size": {
+                        "height": 275,
+                        "width": 207,
+                        "depth": 363,
+                    },
+                    "weight": 8.2,
+                },
+            },
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/elac-debut-reference-dbr-62-speaker-review.12232/#post-357719",
+                "review_published": "20200325",
             },
         },
     },
@@ -12140,11 +12192,61 @@ speakers_info: SpeakerDatabase = {
         "brand": "KEF",
         "model": "LS50 Meta",
         "type": "passive",
-        "price": "2800",
+        "price": "1000",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "asr",
+        "default_measurement": "eac-v1",
         "measurements": {
+            "eac-v1": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_ls50_meta/",
+                    "yt": "https://youtu.be/RAKKVe6stCs",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-ls50-meta-review-speaker.25574/",
+                    "npz": "https://www.audiosciencereview.com/forum/index.php?threads/kef-ls50-meta-spinorama-and-measurements.18353/#post-59879",
+                    "tnw": "https://thenextweb.com/news/review-kefs-ls50-meta-upgrades-an-audiophile-fave-to-near-perfection",
+                },
+                "review_published": "20231221",
+                "specifications": {
+                    "SPL": {
+                        "peak": 106,
+                    },
+                    "sensitivity": 65,
+                    "impedance": 3.5,
+                    "size": {
+                        "height": 302,
+                        "width": 200,
+                        "depth": 280,
+                    },
+                    "weight": 7.8,
+                },
+            },
+            "eac-v1-15-degrees": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_ls50_meta/",
+                    "yt": "https://youtu.be/RAKKVe6stCs",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kef-ls50-meta-review-speaker.25574/",
+                    "npz": "https://www.audiosciencereview.com/forum/index.php?threads/kef-ls50-meta-spinorama-and-measurements.18353/#post-59879",
+                    "tnw": "https://thenextweb.com/news/review-kefs-ls50-meta-upgrades-an-audiophile-fave-to-near-perfection",
+                },
+                "review_published": "20231221",
+                "specifications": {
+                    "SPL": {
+                        "peak": 106,
+                    },
+                    "sensitivity": 65,
+                    "impedance": 3.5,
+                    "size": {
+                        "height": 302,
+                        "width": 200,
+                        "depth": 280,
+                    },
+                    "weight": 7.8,
+                },
+            },
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
@@ -19657,7 +19759,7 @@ speakers_info: SpeakerDatabase = {
         "shape": "bookshelves",
         "default_measurement": "eac",
         "measurements": {
-            "eac" : {
+            "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
