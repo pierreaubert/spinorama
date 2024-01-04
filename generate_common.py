@@ -366,7 +366,7 @@ def find_metadata_file():
     # print('DEBUG: {}'.format(json_filenames))
     json_filename = None
     for json_maybe in json_filenames:
-        check = re.match(".*[-][0-9a-f]{5}[.]json$", json_maybe)
+        check = re.match(".*/metadata[-][0-9a-f]{5}[.]json$", json_maybe)
         if check is not None:
             json_filename = json_maybe
             break

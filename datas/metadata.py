@@ -9170,6 +9170,23 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Human Speakers 81 dk": {
+        "brand": "Human Speakers",
+        "model": "81 dk",
+        "type": "passive",
+        "price": "1200",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/human-speakers-81-dk-review.50915/",
+                "review_published": "20240104",
+            },
+        },
+    },
     "IK Multimedia iLoud Micro Monitor": {
         "brand": "IK Multimedia",
         "model": "iLoud Micro Monitor",

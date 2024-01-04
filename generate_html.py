@@ -154,7 +154,7 @@ def generate_measurement(
         "./src/website/utils.py",
         "./datas/metadata.py",
         find_metadata_file(),
-        *find_metadata_file_chunks(),
+        # *find_metadata_file_chunks(),
         *glob("./src/website/assets/*.js"),
     ]
     index_force = need_update(index_name, index_deps)
@@ -363,6 +363,7 @@ def main():
     try:
         for item in (
             "misc",
+            "meta",
             "params",
         ):
             item_name = "assets/{0}.js".format(item)
