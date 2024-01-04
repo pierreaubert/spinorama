@@ -19,7 +19,7 @@
 /*global Plotly */
 /*eslint no-undef: "error"*/
 
-import { urlSite } from './misc.js';
+import { urlSite } from './meta.js';
 import {
     getMetadata,
     assignOptions,

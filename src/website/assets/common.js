@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { urlSite, metadataFilename } from './misc.js';
+import { urlSite, metadataFilename } from './meta.js';
 import { getID } from './misc.js';
 
 export const knownMeasurements = [
