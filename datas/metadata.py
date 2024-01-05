@@ -5,10 +5,10 @@ from typing import TypedDict, Literal
 
 # common notes for some loudspeakers
 note_genelec_gll = (
-    "Data provided by Genelec is with 1/3rd octave smoothing and 5 degrees resolution"
+    "Data provided by Genelec in GLL format uses 1/3rd octave smoothing and 5 degrees resolution"
 )
 note_jbl_gll = (
-    "Data provided by JBL is highly variable, beware. It ranges from excellent to surprising"
+    "Data provided by JBL in GLL format is highly variable, beware. It ranges from excellent to surprising"
 )
 note_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz"
 note2_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz. Data comes from a GLL file provided by Meyer: configuration is measured at 10m, resolution is 2.5 degrees, signal is aes broadband 20Hz-20kHz, air attenuation is disabled"
@@ -11781,6 +11781,68 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "JBL Studio 630": {
+        "skip": True,
+        "brand": "JBL",
+        "model": "Studio 630",
+        "type": "passive",
+        "price": "700",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_studio_630/",
+                    "yt": "https://youtu.be/PznnGL-hoSc",
+                },
+                "review_published": "202401xx",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 6,
+                    "size": {
+                        "height": 372,
+                        "width": 230,
+                        "depth": 280,
+                    },
+                    "weight": 9.02,
+                },
+            },
+        },
+    },
+    "JBL Studio 698": {
+        "skip": True,
+        "brand": "JBL",
+        "model": "Studio 698",
+        "type": "passive",
+        "price": "1700",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_studio_698/",
+                    "yt": "https://youtu.be/DpwL5rXUMvg",
+                },
+                "review_published": "202401xx",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 6,
+                    "size": {
+                        "height": 1058,
+                        "width": 300,
+                        "depth": 400,
+                    },
+                    "weight": 35.8,
+                },
+            },
+        },
+    },
     "JBL Studio Series S26": {
         "brand": "JBL",
         "model": "Studio Series S26",
@@ -18169,6 +18231,40 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Q Acoustics 3050i": {
+        "skip": True,
+        "brand": "Q Acoustics",
+        "model": "3050i",
+        "type": "passive",
+        "price": "750",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/q_acoustics_3050i/",
+                    "yt": "",
+                },
+                "review_published": "2024xxxx",
+                "specifications": {
+                    "sensitivity": 91,
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 122,
+                    },
+                    "size": {
+                        "height": 1020,
+                        "width": 310,
+                        "depth": 320,
+                    },
+                    "weight": 17.8,
+                },
+            },
+        },
+    },
     "Q Acoustics 5020": {
         "brand": "Q Acoustics",
         "model": "5020",
@@ -18186,6 +18282,40 @@ speakers_info: SpeakerDatabase = {
                     "yt": "https://youtu.be/_lEhxLptP9E",
                 },
                 "review_published": "20230602",
+            },
+        },
+    },
+    "Q Acoustics 5040": {
+        "skip": True,
+        "brand": "Q Acoustics",
+        "model": "5040",
+        "type": "passive",
+        "price": "1250",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/q_acoustics_5040/",
+                    "yt": "https://youtu.be/-EW8YTVEukQ?si=1QIzKeW_ql88x0H2",
+                },
+                "review_published": "2024xxxx",
+                "specifications": {
+                    "sensitivity": 91.5,
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 122,
+                    },
+                    "size": {
+                        "height": 967,
+                        "width": 293,
+                        "depth": 361,
+                    },
+                    "weight": 18,
+                },
             },
         },
     },
@@ -20958,6 +21088,35 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Thomann Swissonic A305": {
+        "skip": True,
+        "brand": "Thomann Swissonic",
+        "model": "A305",
+        "type": "active",
+        "price": "220",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/thomann_swissonic_a305/",
+                    "yt": "",
+                },
+                "review_published": "202401xx",
+                "specifications": {
+                    "size": {
+                        "height": 298,
+                        "width": 185,
+                        "depth": 231,
+                    },
+                    "weight": 4.4,
+                },
+            },
+        },
+    },
     "Thomann Swissonic A306": {
         "brand": "Thomann Swissonic",
         "model": "A306",
@@ -21527,6 +21686,40 @@ speakers_info: SpeakerDatabase = {
                         "depth": 457,
                     },
                     "weight": 38.05,
+                },
+            },
+        },
+    },
+    "Wharfedale Aura 2": {
+        "skip": True,
+        "brand": "Wharfedale",
+        "model": "Aura 2",
+        "type": "passive",
+        "price": "2500",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/wharfedale_aura_2",
+                    "yt": "https://youtu.be/MCNQDNpM4x0?si=ROqUZUaKHrFvY4XH",
+                },
+                "review_published": "202401xx",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 103,
+                    },
+                    "size": {
+                        "height": 560,
+                        "width": 286,
+                        "depth": 352,
+                    },
+                    "weight": 20.5,
                 },
             },
         },
