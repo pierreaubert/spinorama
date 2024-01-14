@@ -1,0 +1,14 @@
+EQ for JBL Studio 630 computed from ErinsAudioCorner data
+Preference Score 3.61 with EQ 6.17
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-01-13-13:26:28
+
+Preamp: -2.9 dB
+
+Filter  1: ON PK Fc    36 Hz Gain +2.98 dB Q 0.75
+Filter  2: ON PK Fc    88 Hz Gain -3.24 dB Q 1.43
+Filter  3: ON PK Fc   243 Hz Gain +1.55 dB Q 2.01
+Filter  4: ON PK Fc   540 Hz Gain +2.99 dB Q 1.89
+Filter  5: ON PK Fc  1381 Hz Gain -3.27 dB Q 1.81
+Filter  6: ON PK Fc  3525 Hz Gain -2.33 dB Q 3.00
+Filter  7: ON PK Fc  7059 Hz Gain -1.79 dB Q 0.88

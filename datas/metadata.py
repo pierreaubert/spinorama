@@ -11277,6 +11277,33 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "JBL 4312MII": {
+        "brand": "JBL",
+        "model": "4312MII",
+        "type": "passive",
+        "price": "1000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-4312m-ii-3-way-studio-monitor-review.51226/",
+                "review_published": "20240110",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 6,
+                    "size": {
+                        "height": 300,
+                        "width": 180,
+                        "depth": 180,
+                    },
+                    "weight": 4.0,
+                },
+            },
+        },
+    },
     "JBL 4312SE": {
         "brand": "JBL",
         "model": "4312SE",
@@ -11782,7 +11809,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "JBL Studio 630": {
-        "skip": True,
         "brand": "JBL",
         "model": "Studio 630",
         "type": "passive",
@@ -11798,7 +11824,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_studio_630/",
                     "yt": "https://youtu.be/PznnGL-hoSc",
                 },
-                "review_published": "202401xx",
+                "review_published": "20240112",
                 "specifications": {
                     "sensitivity": 85,
                     "impedance": 6,
@@ -11813,7 +11839,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "JBL Studio 698": {
-        "skip": True,
         "brand": "JBL",
         "model": "Studio 698",
         "type": "passive",
@@ -11829,7 +11854,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_studio_698/",
                     "yt": "https://youtu.be/DpwL5rXUMvg",
                 },
-                "review_published": "202401xx",
+                "review_published": "20240112",
                 "specifications": {
                     "sensitivity": 90,
                     "impedance": 6,
@@ -21089,7 +21114,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Thomann Swissonic A305": {
-        "skip": True,
         "brand": "Thomann Swissonic",
         "model": "A305",
         "type": "active",
@@ -21105,7 +21129,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/thomann_swissonic_a305/",
                     "yt": "",
                 },
-                "review_published": "202401xx",
+                "review_published": "20240112",
                 "specifications": {
                     "size": {
                         "height": 298,
@@ -21691,7 +21715,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Wharfedale Aura 2": {
-        "skip": True,
         "brand": "Wharfedale",
         "model": "Aura 2",
         "type": "passive",
@@ -21707,7 +21730,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/wharfedale_aura_2",
                     "yt": "https://youtu.be/MCNQDNpM4x0?si=ROqUZUaKHrFvY4XH",
                 },
-                "review_published": "202401xx",
+                "review_published": "20240112",
                 "specifications": {
                     "sensitivity": 88,
                     "impedance": 6,
