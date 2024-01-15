@@ -18311,7 +18311,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Q Acoustics 5040": {
-        "skip": True,
         "brand": "Q Acoustics",
         "model": "5040",
         "type": "passive",
@@ -18327,7 +18326,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/q_acoustics_5040/",
                     "yt": "https://youtu.be/-EW8YTVEukQ?si=1QIzKeW_ql88x0H2",
                 },
-                "review_published": "2024xxxx",
+                "review_published": "20240115",
                 "specifications": {
                     "sensitivity": 91.5,
                     "impedance": 6,
@@ -20738,6 +20737,34 @@ speakers_info: SpeakerDatabase = {
                 "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/sonus-faber-sonetto-ii-measurements-now-with-a-spinorama.10727/#post-305705",
+                },
+            },
+        },
+    },
+    "Sony SS-CS3": {
+        "brand": "Sony",
+        "model": "SS-CS3",
+        "type": "passive",
+        "price": "450",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/sony_sscs3_tower/",
+                    "yt": "https://youtu.be/RSnHZ0w3UjI",
+                },
+                "review_published": "20240115",
+                "specifications": {
+                    "impedance": 6,
+                    "size": {
+                        "height": 922,
+                        "width": 230,
+                        "depth": 260,
+                    },
+                    "weight": 11.5,
                 },
             },
         },
