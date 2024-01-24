@@ -2,6 +2,7 @@ cython
 docopt
 flammkuchen
 frozendict
+google-api-python-client
 kaleido
 mako
 more_itertools

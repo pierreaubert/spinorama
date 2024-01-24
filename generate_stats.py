@@ -19,12 +19,13 @@
 
 """
 usage: generate_stats.py [--help] [--version] [--dev] [--print=<what>]\
- [--sitedev=<http>]  [--log-level=<level>]
+ [--sitedev=<http>]  [--log-level=<level>] [--push=<KEY>]
 
 Options:
   --help            display usage()
   --version         script version number
   --print=<what>    print information. Options are 'eq_txt' or 'eq_csv'
+  --push=<KEY>      push data to Google sheet
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
 import json
@@ -36,120 +37,177 @@ import pandas as pd
 from generate_common import get_custom_logger, args2level, find_metadata_file
 
 
-VERSION = 0.4
+VERSION = 0.5
 
 
-def meta2df(meta):
-    df_unroll = pd.DataFrame(
-        {
-            "speaker": [],
-            "param": [],
-            "value": [],
-            "ref": [],
-            "origin": [],
-            "brand": [],
-        }
-    )
-    count = 0
-    for i in meta:
-        speaker = meta[i]
-        brand = speaker.get("brand", "unknown")
-        measurements = speaker["measurements"]
-        for version, measurement in measurements.items():
-            origin = measurement["origin"]
-            if origin[1:5] == "endor":
-                origin = "Vendor"
-            if version not in ("asr", "vendor", "princeton"):
-                origin = "{} - {}".format(origin, version)
-            if "pref_rating" in measurement:
-                ref = "Origin"
-                for k, v in measurement["pref_rating"].items():
-                    df_unroll.loc[count] = [i, k, v, ref, origin, brand]
-                    count += 1
-            if "pref_rating_eq" in measurement:
-                ref = "EQ"
-                for k, v in measurement["pref_rating_eq"].items():
-                    df_unroll.loc[count] = [i, k, v, ref, origin, brand]
-                    count += 1
-    logger.info("meta2df %d generated data", count)
-    # print(df_unroll)
-    return df_unroll
-
-
-def print_eq(speakers, txt_format):
+def speakers2results(speakers):
     results = []
     for i in speakers:
         speaker = speakers[i]
+        price = speaker.get("price", None)
+        amount = speaker.get("amount", None)
+        if price is not None and len(price) > 0 and amount is not None and amount == "pair":
+            price = "{:d}".format(int(price) // 2)
+        shape = speaker.get("shape", None)
+        energy = speaker.get("type", None)
+        sensitivity = float(speaker.get("sensitivity", 0.0))
+        default_measurement = speaker["default_measurement"]
         measurements = speaker["measurements"]
-        eq = speaker.get("eq", None)
+        eq = None
+        eqs = speaker.get("eqs", None)
+        if eqs:
+            default_eq = speaker.get("default_eq", None)
+            if default_eq:
+                eq = eqs[default_eq]
         for key, measurement in measurements.items():
-            pref = measurement.get("pref_rating", None)
-            pref_eq = measurement.get("pref_rating_eq", None)
-            if pref is not None and pref_eq is not None:
-                name = i
-                if key not in ("asr", "princeton", "eac", "vendor", "misc"):
-                    name = "{} ({})".format(i, key)
-                results.append((name, pref, pref_eq, eq))
+            pref = measurement.get("pref_rating", {})
+            pref_eq = measurement.get("pref_rating_eq", {})
+            estimates = measurement.get("estimates", {})
+            estimates_eq = measurement.get("estimates_eq", {})
+            data_format = measurement.get("format", "")
+            quality = measurement.get("quality", "")
+            specifications = measurement.get("specifications", {})
+            if quality == "" and data_format == "klippel":
+                quality = "high"
+            is_default = True if key == default_measurement else False
+            results.append(
+                (
+                    i,
+                    key,
+                    is_default,
+                    price,
+                    shape,
+                    energy,
+                    sensitivity,
+                    pref,
+                    pref_eq,
+                    eq,
+                    data_format,
+                    quality,
+                    estimates,
+                    estimates_eq,
+                    specifications,
+                )
+            )
+    return results
 
+
+def print_eq(speakers, txt_format, push_key):
+    results = speakers2results(speakers)
+    header = []
     if txt_format == "txt":
-        print(
-            "                                           | NBD  NBD  LFX   SM |  SCR | NBD  NBD  LFX   SM | SCR |  SCR|Pre AMP"
+        header.append(
+            "                                                     | Price Shape           Type    Sensitivity | DataFormat       Quality |   -3dB  -6dB  Dev   NBD  NBD  LFX  SM |  SCR SWS | -3dB -6dB  Dev    NBD  NBD  LFX   SM |  SCR SWS |  SCR |Pre AMP | Width Height Depth Weigth"
         )
-        print(
-            "Speaker                                    |  ON  PIR   Hz  PIR |  ASR |  ON  PIR   Hz  PIR |  EQ | DIFF|     dB"
+        header.append(
+            "Speaker                                              | each$                                  dB |                          |                      ON  PIR   Hz PIR |      |                    ON  PIR   Hz  PIR |   EQ | DIFF |     dB | mm    mm     mm    kg"
         )
-        print(
-            "-------------------------------------------+--------------------+------+--------------------+-----+-----+-------"
+        format_characteristics = "{:5s} {:15s} {:7s} {:=11.1f}"
+        format_measurement = "{:18s} {:7s}"
+        format_estimates = "{:5.1f} {:5.1f} {:+5.1f} {:0.2f} {:0.2f} {:3.0f} {:0.2f} {:0.2f}"
+        format_dimension = "{:4d} {:4d} {:4d} {:5.1f}"
+        format_string = "{{:35s}} {{:17s}} {{:5b}}| {0:s}| {1:s} | {2:s} | {{:+1.1f}} | {2:s} | {{:+1.1f}} |  {{:+1.1f}} | {{:+5.1f}} | {3:s} |".format(
+            format_characteristics, format_measurement, format_estimates, format_dimension
         )
-        for i, pref, pref_eq, _ in sorted(results, key=lambda a: -a[2]["pref_score"]):
-            print(
-                "{0:42s} | {1:0.2f} {2:0.2f} {3:3.0f} {4:0.2f} | {5:+1.1f} | {6:0.2f} {7:0.2f} {8:3.0f} {9:0.2f} | {10:1.1f} | {11:+1.1f} |  {12:+1.1f}".format(
-                    i,
-                    pref["nbd_on_axis"],
-                    pref["nbd_pred_in_room"],
-                    pref["lfx_hz"],
-                    pref["sm_pred_in_room"],
-                    pref["pref_score"],
-                    pref_eq["nbd_on_axis"],
-                    pref_eq["nbd_pred_in_room"],
-                    pref_eq["lfx_hz"],
-                    pref_eq["sm_pred_in_room"],
-                    pref_eq["pref_score"],
-                    pref_eq["pref_score"] - pref["pref_score"],
-                    pref_eq.get("preamp_gain", 0.0),
-                )
-            )
     elif txt_format == "csv":
-        print(
-            '"Speaker", "NBD", "NBD", "LFX", "SM", "SCR", "NBD", "NBD", "LFX", "SM", "SCR", "SCR", "PRE"'
+        header.append(
+            'Speaker, Measurement, IsDefault, Price, Shape, Type, Sensitivity, DataFormat, Quality, "Measured -3dB",  "Measured -6dB", Deviation, Measured_NBD_ON,  Measured_NBD_PIR,  Measured_LFX, Measured_SM_PIR, Measured_Score, Measured_Score_With_Sub, "EQed -3dB", "EQed -6dB", EQed_Deviation, EQed_NBD_ON,  EQed_NBD_PIR, EQed_LFX, EQed_SM_PIR, EQed_Score, EQed_Score_With_Sub, EQ_Preamp_Gain, Width, Height, Depth, Weigth'
         )
-        print(
-            '"Speaker", "ON", "PIR", "Hz", "PIR", "ASR", "ON", "PIR", "Hz", "PIR", "EQ", "DIFF", "dB"'
+        format_characteristics = "{:s}, {:s}, {:s}, {:f}"
+        format_measurement = "{:s}, {:s}"
+        format_estimates = "{:5.1f}, {:5.1f}, {:5.1f}, {:0.2f}, {:0.2f}, {:3.0f}, {:0.2f}, {:0.2f}"
+        format_dimension = "{:4d}, {:4d}, {:4d}, {:5.1f}"
+        format_string = "{{:s}}, {{:s}}, {{:b}}, {0:s}, {1:s}, {2:s}, {{:5.1f}}, {2:s}, {{:5.1f}}, {{:5.1f}}, {{:5.1f}}, {3:s}".format(
+            format_characteristics, format_measurement, format_estimates, format_dimension
         )
-        for i, pref, pref_eq, _ in sorted(results, key=lambda a: -a[2]["pref_score"]):
-            print(
-                '"{0}", {1:0.2f}, {2:0.2f}, {3:3.0f}, {4:0.2f}, {5:+1.1f}, {6:0.2f}, {7:0.2f}, {8:3.0f}, {9:0.2f}, {10:+1.1f}, {11:+1.1f}, {12:+1.1f}'.format(
-                    i,
-                    pref["nbd_on_axis"],
-                    pref["nbd_pred_in_room"],
-                    pref["lfx_hz"],
-                    pref["sm_pred_in_room"],
-                    pref["pref_score"],
-                    pref_eq["nbd_on_axis"],
-                    pref_eq["nbd_pred_in_room"],
-                    pref_eq["lfx_hz"],
-                    pref_eq["sm_pred_in_room"],
-                    pref_eq["pref_score"],
-                    pref_eq["pref_score"] - pref["pref_score"],
-                    pref_eq.get("preamp_gain", 0.0),
-                )
+    else:
+        return
+
+    for h in header:
+        print(h)
+
+    for (
+        speaker_name,
+        key,
+        is_default,
+        price,
+        shape,
+        energy,
+        sensitivity,
+        pref,
+        pref_eq,
+        eq,
+        data_format,
+        quality,
+        estimates,
+        estimates_eq,
+        specifications,
+    ) in sorted(results, key=lambda a: a[0]):
+        # between scores
+        delta = pref_eq.get("pref_score", 0.0) - pref.get("pref_score", 0.0)
+        # get preamp_gain
+        preamp_gain = 0.0
+        if eq is not None:
+            preamp_gain = float(eq.get("preamp_gain", 0.0))
+        # get dimensions
+        weight = -0.0
+        depth = 0
+        width = 0
+        height = 0
+        if specifications is not None:
+            weight = float(specifications.get("weight", 0.0))
+            size = specifications.get("size", None)
+            if size is not None:
+                depth = int(size.get("depth", 0))
+                width = int(size.get("width", 0))
+                height = int(size.get("height", 0))
+        print(
+            format_string.format(
+                speaker_name,
+                key,
+                is_default,
+                price,
+                shape,
+                energy,
+                sensitivity,
+                data_format,
+                quality,
+                estimates.get("ref_3dB", -1.0),
+                estimates.get("ref_6dB", -1.0),
+                estimates.get("ref_band", -1.0),
+                pref.get("nbd_on_axis", -1.0),
+                pref.get("nbd_pred_in_room", -1.0),
+                pref.get("lfx_hz", -1.0),
+                pref.get("sm_pred_in_room", -1.0),
+                pref.get("pref_score", -10.0),
+                pref.get("pref_score_swub", -10.0),
+                estimates_eq.get("ref_3dB", -1.0),
+                estimates_eq.get("ref_6dB", -1.0),
+                estimates_eq.get("ref_band", -1.0),
+                pref_eq.get("nbd_on_axis", -1.0),
+                pref_eq.get("nbd_pred_in_room", -1.0),
+                pref_eq.get("lfx_hz", -1.0),
+                pref_eq.get("sm_pred_in_room", -1.0),
+                pref_eq.get("pref_score", -10.0),
+                pref_eq.get("pref_score_swub", -10.0),
+                delta,
+                preamp_gain,
+                width,
+                height,
+                depth,
+                weight,
             )
+        )
 
 
 def main():
     print_what = None
     if args["--print"] is not None:
         print_what = args["--print"]
+
+    push_key = None
+    if args["--push"] is not None:
+        push_key = args["--push"]
 
     # load all metadata from generated json file
     json_filename = find_metadata_file()
@@ -165,9 +223,9 @@ def main():
 
     if print_what is not None:
         if print_what == "eq_txt":
-            print_eq(jsmeta, "txt")
+            print_eq(jsmeta, "txt", push_key)
         elif print_what == "eq_csv":
-            print_eq(jsmeta, "csv")
+            print_eq(jsmeta, "csv", push_key)
         else:
             logger.error('unkown print type either "eq_txt" or "eq_csv"')
 
