@@ -579,6 +579,8 @@ def add_eq(speaker_path, dataframe, parse_max, filters):
         metadata.speakers_info[speaker_name]["eqs"] = {}
         for suffix, display in (
             ("autoeq", "AutomaticEQ (IIR)"),
+            ("autoeq-lw", "AutomaticEQ LW (IIR)"),
+            ("autoeq-score", "AutomaticEQ Score (IIR)"),
             ("amirm", "amirm@ASR (IIR)"),
             ("maiky76", "maiky76@ASR (IIR)"),
             ("maiky76-lw", "maiky76@ASR LW (IIR)"),
@@ -763,12 +765,18 @@ def dump_metadata(meta):
     if not os.path.isdir(metadir):
         os.makedirs(metadir)
 
+    def check_link(hashed_filename):
+        # add a link to make it easier for other scripts to find the metadata
+        with contextlib.suppress(OSError):
+            os.symlink(Path(hashed_filename).name, cpaths.CPATH_METADATA_JSON)
+
     def dict_to_json(filename, d):
         js = json.dumps(d)
         key = md5(js.encode("utf-8"), usedforsecurity=False).hexdigest()[0:5]
         hashed_filename = "{}-{}.json".format(filename[:-5], key)
         if os.path.exists(hashed_filename) and os.path.exists(hashed_filename + ".zip"):
             logger.debug("skipping %s", hashed_filename)
+            check_link(hashed_filename)
             return
         # hash changed, remove old files
         old_hash_pattern = "{}-*.json".format(filename[:-5])
@@ -789,9 +797,7 @@ def dump_metadata(meta):
             current_zip.writestr(hashed_filename, js)
             logger.debug("generated %s and zip version", hashed_filename)
 
-        # add a link to make it easier for other scripts to find the metadata
-        with contextlib.suppress(OSError):
-            os.symlink(Path(hashed_filename).name, cpaths.CPATH_METADATA_JSON)
+        check_link(hashed_filename)
 
     meta_full = {k: v for k, v in meta.items() if not v.get("skip", False)}
     dict_to_json(metafile, meta_full)
