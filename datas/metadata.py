@@ -888,7 +888,7 @@ speakers_info: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/apple-homepod-mini-review.24588/",
                 },
                 "review_published": "20210627",
-                "notes": "...Score formula is for monopole speaker...",
+                "notes": "Score formula is for monopole speaker and it is unclear if it applies also to this kind of speaker. Same comment for EQ where it may or may not work.",
             },
         },
     },
@@ -1382,6 +1382,33 @@ speakers_info: SpeakerDatabase = {
                 "format": "spl_hv_txt",
                 "quality": "high",
                 "review_published": "20221108",
+            },
+        },
+    },
+    "Ascend Acoustics ELX Ribbon Horizon": {
+        "brand": "Ascend Acoustics",
+        "model": "ELX Ribbon Horizon",
+        "type": "passive",
+        "shape": "center",
+        "price": "2800",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Ascend Acoustics",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "review_published": "20240127",
+                "specifications": {
+                    "impedance": 8,
+                    "sensitivity": 88.0,
+                    "size": {
+                        "height": 279,
+                        "width": 584,
+                        "depth": 317,
+                    },
+                    "weight": 24,
+                },
             },
         },
     },
@@ -17624,7 +17651,6 @@ speakers_info: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/polk_r100/",
-                "quality": "low",
                 "review_published": "20211209",
             },
         },
@@ -20656,7 +20682,7 @@ speakers_info: SpeakerDatabase = {
         "type": "active",
         "price": "650",
         "amount": "each",
-        "shape": "bookshelves",
+        "shape": "omnidirectional",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
@@ -20674,6 +20700,7 @@ speakers_info: SpeakerDatabase = {
                     },
                     "weight": 6.3,
                 },
+                "notes": "Since the speaker is almost omnidirectional, it is unclear if the automatic EQ is helping or not. Do not blindly use it and do some listenting",
             },
         },
     },
@@ -20682,8 +20709,8 @@ speakers_info: SpeakerDatabase = {
         "model": "Move",
         "type": "active",
         "price": "400",
-        "amount": "pair",
-        "shape": "bookshelves",
+        "amount": "each",
+        "shape": "omnidirectional",
         "default_measurement": "misc-napilopez",
         "measurements": {
             "misc-napilopez": {
@@ -20702,8 +20729,8 @@ speakers_info: SpeakerDatabase = {
         "model": "Roam",
         "type": "active",
         "price": "179",
-        "amount": "pair",
-        "shape": "bookshelves",
+        "amount": "each",
+        "shape": "omnidirectional",
         "default_measurement": "misc-napilopez",
         "measurements": {
             "misc-napilopez": {
