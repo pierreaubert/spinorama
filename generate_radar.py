@@ -30,7 +30,8 @@ Options:
 import json
 import sys
 import pathlib
-from pprint import pprint
+
+# from pprint import pprint
 
 
 from docopt import docopt
@@ -148,19 +149,19 @@ def print_radar(meta_data, scale, speaker_data):
             continue
         # load eq
         eq_filename = "{}/{} {}/iir-{}.txt".format(
-            CPATH_DATAS_EQ, meta_data["brand"], meta_data["model"], eq_key
+            CPATH_DATAS_EQ, meta_data["brand"], meta_data["model"], eq_key.replace("_", "-")
         )
         # print(eq_filename)
         iir = parse_eq_iir_rews(eq_filename, 48000)
         # print(iir)
         # compute pref_rating and estimates
         # print(speaker_data[measurement["origin"]][def_measurement].keys())
-        spin_eq, _, pref_rating = scores_apply_filter(
+        spin_eq, _, pref_rating_eq = scores_apply_filter(
             speaker_data[measurement["origin"]][def_measurement], iir
         )
-        # pprint(pref_rating)
+        # pprint(pref_rating_eq)
         # add results to data
-        graph_data.append(build_scatterplot(pref_rating, scale, eq_key))
+        graph_data.append(build_scatterplot(pref_rating_eq, scale, eq_key))
 
     layout = {
         "width": 400,
