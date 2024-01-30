@@ -1,4 +1,5 @@
-cudf-cu11
-cugraph-cu11
-cuml-cu11
-dask-cudf-cu11
+cudf-cu12
+cugraph-cu12
+cuml-cu12
+dask-cudf-cu12
+
