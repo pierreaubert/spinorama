@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,13 +20,12 @@ import bisect
 import math
 
 import numpy as np
-import pandas as pd
 import scipy.optimize as opt
 from scipy.interpolate import InterpolatedUnivariateSpline
 
 from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MAX_FREQ
-from spinorama.ltype import Vector, DataSpeaker, OptimResult
+from spinorama.ltype import Vector, DataSpeaker
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import Peq, peq_spl, peq_print
 from spinorama.auto_misc import get3db
@@ -75,7 +74,11 @@ class GlobalOptimizer(object):
         optim_config: dict,
     ):
         self.df_speaker = df_speaker
-        self.optim_config = optim_config
+        self.config = optim_config
+        logger.debug(
+            "GlobalOptimizer config {%s}",
+            ", ".join(["{}: {}".format(k, v) for k, v in optim_config.items()]),
+        )
 
         # get min/max
         self.freq_min = optim_config["target_min_freq"]
@@ -103,23 +106,40 @@ class GlobalOptimizer(object):
 
         # a bit of black magic
         self.freq_min_index = self._freq2index(self.freq_min)
+        self.freq_2k_index = self._freq2index(2000)
         self.freq_midrange_index = self._freq2index(MIDRANGE_MAX_FREQ / 2)
         self.freq_max_index = self._freq2index(self.freq_max)
 
-        # get lw/on
+        # get lw/on/pir & freq
         self.lw = df_speaker["CEA2034_unmelted"]["Listening Window"].to_numpy()
+        self.on = df_speaker["CEA2034_unmelted"]["On Axis"].to_numpy()
+        self.pir = None
+        if "Estimated In-Room Response_unmelted" in df_speaker:
+            self.pir = df_speaker["Estimated In-Room Response_unmelted"][
+                "Estimated In-Room Response"
+            ].to_numpy()
         self.freq = df_speaker["CEA2034_unmelted"]["Freq"].to_numpy()
 
         # used for controlling optimisation of the score
-        lw_target = self.lw - np.linspace(0, 0.5, len(self.lw))
-        self.target = _resample(self.freq, self.freq_space, lw_target)
+        lw_slope = self.config.get("slope_listening_window", -0.5)
+        lw_target = self.lw - np.linspace(0, lw_slope, len(self.lw))
+        pir_slope = self.config.get("slope_pred_in_room", -7)
+        pir_target = None
+        if self.pir is not None:
+            pir_target = self.pir - np.linspace(0, pir_slope, len(self.pir))
 
-        self.min_db = optim_config["MIN_DBGAIN"]
-        self.max_db = optim_config["MAX_DBGAIN"]
-        self.min_q = optim_config["MIN_Q"]
-        self.max_q = optim_config["MAX_Q"]
-        self.max_peq = optim_config["MAX_NUMBER_PEQ"]
-        self.max_iter = optim_config["MAX_ITER"]
+        self.target_lw = _resample(self.freq, self.freq_space, lw_target)
+        self.target_on = _resample(self.freq, self.freq_space, self.on)
+        self.target_pir = None
+        if pir_target is not None:
+            self.target_pir = _resample(self.freq, self.freq_space, pir_target)
+
+        self.min_db = self.config["MIN_DBGAIN"]
+        self.max_db = self.config["MAX_DBGAIN"]
+        self.min_q = self.config["MIN_Q"]
+        self.max_q = self.config["MAX_Q"]
+        self.max_peq = self.config["MAX_NUMBER_PEQ"]
+        self.max_iter = self.config["MAX_ITER"]
 
     def _freq2index(self, f: float):
         return bisect.bisect_left(self.freq_space, f)
@@ -167,20 +187,41 @@ class GlobalOptimizer(object):
         peq = self._x2peq(x)
         peq_freq = np.array(self._x2spl(x))
         score = score_loss(self.df_speaker, peq)
-        flat = np.add(self.target, peq_freq)
-        flatness_bass_mid = np.linalg.norm(
-            flat[self.freq_min_index : self.freq_midrange_index], ord=2
+        flat_on = np.add(self.target_on, peq_freq)
+        # currently unsued
+        # flat_lw = np.add(self.target_lw, peq_freq)
+        # flat_pir = np.add(self.target_pir, peq_freq)
+        # split flatness of ON on various ranges
+        flatness_on_bass_mid = np.linalg.norm(
+            flat_on[self.freq_min_index : self.freq_midrange_index], ord=2
         )
-        flatness_mid_high = np.linalg.norm(flat[self.freq_midrange_index :], ord=2)
+        flatness_on_mid_high = np.linalg.norm(flat_on[self.freq_midrange_index :], ord=2)
+        # flatness_on_bass_mid = np.linalg.norm(flat_on[self.freq_min_index : self.freq_2k_index], ord=2)
+        # flatness_on_mid_high = np.linalg.norm(flat_on[self.freq_2k_index :], ord=2)
+        # not used but could be
+        # flatness_pir = np.linalg.norm(flat_pir, ord=2)
+        # flatness_pir_bass_mid = np.linalg.norm(flat_pir[self.freq_min_index : self.freq_midrange_index], ord=2)
+        # flatness_pir_mid_high = np.linalg.norm(flat_pir[self.freq_midrange_index :], ord=2)
         # this is black magic, why 10, 20, 40?
         # if you increase 20 you give more flexibility to the score (and less flat LW/ON)
         # without the constraint optimising the score get crazy results
-        return score + float(flatness_bass_mid) / 5 + float(flatness_mid_high) / 50
+        return score + float(flatness_on_bass_mid) / 15 + float(flatness_on_mid_high) / 50
 
     def _opt_peq_flat(self, x: list[float | int]) -> float:
         # for  a given encoded peq, compute a loss function based on flatness
         peq_freq = np.array(self._x2spl(x))
-        flat = np.add(self.target, peq_freq)[self.freq_min_index : self.freq_max_index]
+        flat = None
+        curves = self.config.get("curve_names")
+        if curves is None or (len(curves) == 1 and curves[0] == "On Axis"):
+            flat = np.add(self.target_on, peq_freq)[self.freq_min_index : self.freq_max_index]
+        elif len(curves) == 1 and curves[0] == "Listening Window":
+            flat = np.add(self.target_lw, peq_freq)[self.freq_min_index : self.freq_max_index]
+        elif len(curves) == 1 and curves[0] == "Estimated In-Room Response":
+            flat = np.add(self.target_pir, peq_freq)[self.freq_min_index : self.freq_max_index]
+        else:
+            logger.error("configuration is not yet supported")
+            return 1000.0
+
         flatness_l2 = np.linalg.norm(flat, ord=2)
         flatness_l1 = np.linalg.norm(flat, ord=1)
         return float(flatness_l2 + flatness_l1)
@@ -188,9 +229,7 @@ class GlobalOptimizer(object):
     def _opt_peq(self, x: list[float | int]) -> float:
         # for  a given encoded peq, compute a loss function
         return (
-            self._opt_peq_score(x)
-            if self.optim_config["loss"] == "score_loss"
-            else self._opt_peq_flat(x)
+            self._opt_peq_score(x) if self.config["loss"] == "score_loss" else self._opt_peq_flat(x)
         )
 
     def _opt_bounds_all(self, n: int) -> list[list[int | float]]:
@@ -237,9 +276,7 @@ class GlobalOptimizer(object):
     def _opt_bounds(self, n: int) -> list[list[int | float]]:
         # compute bounds for variables
         return (
-            self._opt_bounds_all(n)
-            if self.optim_config["full_biquad_optim"]
-            else self._opt_bounds_pk(n)
+            self._opt_bounds_all(n) if self.config["full_biquad_optim"] else self._opt_bounds_pk(n)
         )
 
     def _opt_integrality(self, n: int) -> list[bool]:
@@ -308,9 +345,7 @@ class GlobalOptimizer(object):
 
     def _opt_display(self, xk, convergence):
         # comment if you want to print verbose traces
-        print(
-            f"[f={1-convergence}<{CONVERGENCE_TOLERANCE}] iir={self.optim_config['full_biquad_optim']}"
-        )
+        print(f"[f={1-convergence}<{CONVERGENCE_TOLERANCE}] iir={self.config['full_biquad_optim']}")
         peq_print(self._x2peq(xk))
 
     def run(self):

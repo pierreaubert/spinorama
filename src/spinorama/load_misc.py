@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ def graph_melt(df: pd.DataFrame) -> pd.DataFrame:
 
 def graph_unmelt(df: pd.DataFrame) -> pd.DataFrame:
     return (
-        df.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc=max)
+        df.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc="max")
         .rename_axis(columns=None)
         .reset_index()
     )

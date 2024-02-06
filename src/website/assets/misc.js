@@ -18,8 +18,6 @@
 
 // @flow
 
-export const urlSite = '${site}' + '/';
-
 // hide an element
 export const hide = (elem) => {
     elem.classList.add('hidden');
@@ -100,7 +98,7 @@ export function removeVendors(str) {
 }
 
 export function getID(brand, model) {
-    return (brand + ' ' + model).replace(/['.+& ]/g, '-');
+    return (brand + ' ' + model).replace(/['.+& |]/g, '-');
 }
 
 export function getPrice(price, amount) {
@@ -122,7 +120,7 @@ export function getField(value, field, version) {
     let fields = {};
     if (value.measurements && value.measurements[version]) {
         const measurement = value.measurements[version];
-        if (measurement.hasOwnProperty(field)) {
+        if (Object.hasOwn(measurement, field)) {
             fields = measurement[field];
         }
     }
@@ -137,7 +135,7 @@ export function getSensitivity(value, version) {
     }
     if (value.measurements && value.measurements[version]) {
         const measurement = value.measurements[version];
-        if (measurement.hasOwnProperty('sensitivity_delta')) {
+        if (Object.hasOwn(measurement, 'sensitivity_delta')) {
             delta = measurement.sensitivity_delta;
         }
     }
@@ -162,32 +160,29 @@ export function getReviews(value) {
         } else {
             origin = origin.replace('Vendors-', '');
             originLong = origin.replace('Vendors-', '');
-            if (origin === 'Kling Freitag') {
-                origin = 'K&F';
-            } else if (origin === 'Alcons Audio') {
-                origin = 'AA';
-            }
         }
-        if (origin === 'ErinsAudioCorner') {
-            origin = 'EAC';
-        } else if (origin === 'Princeton') {
-            origin = 'PCT';
+        if (origin === 'Princeton') {
+            origin = 'Princeton';
         } else if (origin === 'napilopez') {
-            origin = 'NPZ';
+            origin = 'Napilopez';
         } else if (origin === 'speakerdata2034') {
-            origin = 'SPK';
+            origin = 'SpeakerData2034';
         } else if (origin === 'archimago') {
-            origin = 'AMG';
+            origin = 'Archimago';
         } else if (origin === 'audioxpress') {
-            origin = 'AXP';
+            origin = 'AudioXPress';
         } else if (origin === 'audioholics') {
-            origin = 'AHL';
+            origin = 'audioholics';
         } else if (origin === 'soundstageultra') {
-            origin = 'SSU';
+            origin = 'Sound Stage Ultra';
         } else if (origin === 'sr') {
-            origin = 'S&R';
+            origin = 'Sound & Recordings';
         } else if (origin.search('nuyes') !== -1) {
-            origin = 'NYS';
+            origin = 'Nuyes';
+        } else if (origin.search('ASR') !== -1) {
+            origin = 'Audio Science Review';
+        } else if (origin.search('ErinsAudioCorner') !== -1) {
+            origin = "Erin's Audio Corner";
         }
 
         origin = origin.charAt(0).toUpperCase() + origin.slice(1);

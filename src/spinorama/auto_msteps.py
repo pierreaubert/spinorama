@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -67,6 +67,10 @@ def optim_multi_steps(
         return greedy_status, (greedy_results, greedy_peq)
 
     if optim_config["optimisation"] == "global":
+        logger.debug(
+            "msteps config {%s}",
+            ", ".join(["{}: {}".format(k, v) for k, v in optim_config.items()]),
+        )
         go = GlobalOptimizer(
             df_speaker,
             optim_config,

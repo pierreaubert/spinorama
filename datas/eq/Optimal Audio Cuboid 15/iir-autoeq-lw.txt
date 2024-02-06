@@ -1,0 +1,14 @@
+EQ for Optimal Audio Cuboid 15 computed from Vendors-Optimal Audio data
+Preference Score 2.12 with EQ 3.36
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.25
+Dated: 2023-10-20-13:52:28
+
+Preamp: -1.9 dB
+
+Filter  1: ON PK Fc    46 Hz Gain +3.00 dB Q 2.99
+Filter  2: ON PK Fc    72 Hz Gain -5.34 dB Q 1.37
+Filter  3: ON PK Fc   260 Hz Gain +1.44 dB Q 2.99
+Filter  4: ON PK Fc   470 Hz Gain -1.99 dB Q 2.98
+Filter  5: ON PK Fc  2245 Hz Gain +2.99 dB Q 3.00
+Filter  6: ON PK Fc  2324 Hz Gain -0.96 dB Q 0.67
+Filter  7: ON PK Fc  7834 Hz Gain -1.74 dB Q 1.03

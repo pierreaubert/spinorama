@@ -50,8 +50,10 @@ cdef double[:] apply_rms(const double[:,:] p2, idx):
     cdef Py_ssize_t len_idx = len(idx)
     cdef double[:] rms = np.zeros(p2.shape[1])
     cdef Py_ssize_t i
+    cdef Py_ssize_t idxi
     for i in range(len_idx):
-        rms = np.add(rms, p2[idx[i]])
+        idxi = idx[i]
+        rms = np.add(rms, p2[idxi])
     return pressure2spl(np.sqrt(np.divide(rms, len_idx)))
 
 
@@ -61,9 +63,11 @@ cdef double[:] apply_weigthed_rms(const double[:,:] p2, idx, const double[:] wei
     cdef double[:] rms = np.zeros(p2.shape[1])
     cdef double sum_weigths = 0.0
     cdef Py_ssize_t i
+    cdef Py_ssize_t idxi
     for i in range(len_idx):
-        rms = np.add(rms, np.multiply(p2[idx[i]],weigths[idx[i]]))
-        sum_weigths += weigths[idx[i]]
+        idxi = idx[i]
+        rms = np.add(rms, np.multiply(p2[idxi],weigths[idxi]))
+        sum_weigths += weigths[idxi]
     return pressure2spl(np.sqrt(np.divide(rms, sum_weigths)))
 
 
@@ -118,7 +122,8 @@ cpdef double c_lfx(const double[:] freq, const double[:] lw, const double[:] sp)
     cdef lw_min = np.searchsorted(freq, 300, side="right")
     cdef lw_max = np.searchsorted(freq, 10000, side="left")
     cdef double lw_ref = np.mean(lw[lw_min:lw_max])-6
-    cdef lfx_range = [(i, f) for i, f in enumerate(freq[:lw_min]) if sp[i]<=lw_ref]
+    cdef Py_ssize_t i
+    lfx_range = [(i, f) for i, f in enumerate(freq[:lw_min]) if sp[i]<=lw_ref]
     if len(lfx_range) == 0:
         return math.log10(freq[0])
 
@@ -126,7 +131,7 @@ cpdef double c_lfx(const double[:] freq, const double[:] lw, const double[:] sp)
     lfx_list = list(next(lfx_grouped))
     if len(lfx_list) <= 1:
         return LFX_DEFAULT
-    pos = lfx_list[-1][0]
+    cdef Py_ssize_t pos = lfx_list[-1][0]
     if len(freq) < pos-1:
         pos = pos +1
     return math.log10(freq[pos])

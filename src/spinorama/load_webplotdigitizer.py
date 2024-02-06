@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -173,6 +173,28 @@ def parse_graph_freq_webplotdigitizer(filename: str) -> StatusOr[tuple[str, pd.D
                     newname = "Sound Power DI"
                 return newname
 
+            def expended(df_speaker: pd.DataFrame) -> pd.DataFrame:
+                mins = df_speaker.groupby("Measurements").min()
+                min_measurement = mins.Freq.idxmin()
+                for measurement in mins.index:
+                    if measurement == min_measurement:
+                        continue
+                    query = 'Measurements == "{}"'.format(measurement)
+                    min_measurement_freq = mins.query(query).Freq.to_numpy()[0]
+                    copy = df_speaker.loc[
+                        (df_speaker["Measurements"] == min_measurement)
+                        & (df_speaker.Freq < min_measurement_freq)
+                    ][["Freq", "dB"]]
+                    df_speaker = pd.concat(
+                        [
+                            df_speaker,
+                            pd.DataFrame(
+                                {"Freq": copy.Freq, "dB": copy.dB, "Measurements": measurement}
+                            ),
+                        ]
+                    )
+                return df_speaker
+
             # print(res)
             m_freq = np.array([res[i][0] for i in range(0, len(res))]).astype(float)
             m_db = np.array([res[i][1] for i in range(0, len(res))]).astype(float)
@@ -185,7 +207,9 @@ def parse_graph_freq_webplotdigitizer(filename: str) -> StatusOr[tuple[str, pd.D
                 m_df.dB.min(),
                 m_df.dB.max(),
             )
-            return True, ("CEA2034", m_df)
+            # compute mins
+            m_df_expended = expended(m_df)
+            return True, ("CEA2034", m_df_expended)
     except IOError:
         logger.exception("Cannot not open: ")
         return False, ("", pd.DataFrame())

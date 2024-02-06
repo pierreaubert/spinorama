@@ -19,23 +19,12 @@
 /*global Handlebars*/
 /*eslint no-undef: "error"*/
 
-import {
-    openModal,
-    closeModal,
-    getID,
-    getPicture,
-    getLoading,
-    getDecoding,
-    getField,
-    getReviews,
-    getPrice
-} from './misc.js';
+import { openModal, closeModal, getID, getPicture, getLoading, getDecoding, getField, getReviews, getPrice } from './misc.js';
 import { getMetadata } from './common.js';
 import { sortMetadata2 } from './sort.js';
 
 getMetadata()
     .then((metadata) => {
-
         function getSpider(brand, model) {
             // console.log(brand + model);
             return encodeURI('speakers/' + brand + ' ' + model + '/spider.jpg');
@@ -104,12 +93,14 @@ getMetadata()
             divScore.innerHTML = htmlSpeaker;
             const button = divScore.querySelector('#' + context.id + '-button');
             const target = button.dataset.target;
-            const modal = divScore.querySelector('#'+target);
+            const modal = divScore.querySelector('#' + target);
             button.addEventListener('click', () => {
                 return openModal(modal);
             });
-            const childs = modal.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button');
-            childs.forEach( closeable => {
+            const childs = modal.querySelectorAll(
+                '.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button'
+            );
+            childs.forEach((closeable) => {
                 const target = closeable.closest('.modal');
                 closeable.addEventListener('click', () => closeModal(target));
             });
@@ -119,12 +110,12 @@ getMetadata()
         function hasQuality(meta, quality) {
             let status = false;
 
-            for (const [key, measurement] of Object.entries(meta)) {
+            for (const measurement of Object.values(meta)) {
                 const mFormat = measurement.format.toLowerCase();
                 const mQuality = measurement.quality.toLowerCase();
 
                 if (mQuality && mQuality === quality) {
-                   status = true;
+                    status = true;
                     break;
                 }
 
@@ -165,7 +156,7 @@ getMetadata()
             sortMetadata2(metadata, { by: by_key }, reverse).forEach(function (key, index) {
                 const speaker = metadata.get(key);
                 if (!quality || hasQuality(speaker.measurements, quality.toLowerCase())) {
-                    fragment1.appendChild(printScore(key, index, speaker, count %2 == 0));
+                    fragment1.appendChild(printScore(key, index, speaker, count % 2 == 0));
                     count += 1;
                 }
             });
@@ -176,8 +167,9 @@ getMetadata()
 
         document.addEventListener('keydown', (event) => {
             const e = event || window.event;
-            if (e.keyCode === 27) { // Escape key
-                document.querySelectorAll('.modal').forEach( modal => closeModal(modal));
+            if (e.keyCode === 27) {
+                // Escape key
+                document.querySelectorAll('.modal').forEach((modal) => closeModal(modal));
             }
         });
     })

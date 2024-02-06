@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,9 +39,14 @@ Options:
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
   --dash-port=<dash-port>  Port for the ray dashbboard
 """
-import os
+import contextlib
+from hashlib import md5
+from itertools import groupby
 import json
+from glob import glob
 import math
+from pathlib import Path
+import os
 import sys
 import time
 import zipfile
@@ -49,6 +54,8 @@ import zipfile
 import numpy as np
 
 from docopt import docopt
+
+from spinorama import ray_setup_logger
 
 try:
     import ray
@@ -59,14 +66,21 @@ except ModuleNotFoundError:
         print("Did you run env.sh?")
         sys.exit(-1)
 
-from generate_common import get_custom_logger, args2level, cache_load, custom_ray_init
-from datas import metadata
+from generate_common import (
+    get_custom_logger,
+    args2level,
+    cache_load,
+    custom_ray_init,
+    sort_metadata_per_date,
+    #    find_metadata_file,
+)
 import spinorama.constant_paths as cpaths
 from spinorama.compute_estimates import estimates
 from spinorama.compute_scores import speaker_pref_rating
 from spinorama.filter_peq import peq_preamp_gain
 from spinorama.load_rew_eq import parse_eq_iir_rews
 
+from datas import metadata
 
 ACTIVATE_TRACING: bool = False
 
@@ -171,6 +185,8 @@ def reject(filters: dict, speaker_name: str) -> bool:
 
 @ray.remote(num_cpus=1)
 def queue_score(speaker_name, speaker_data):
+    ray_setup_logger(level)
+    logger.debug("Level of debug is %d", level)
     logger.info("Processing %s", speaker_name)
     results = []
     for origin, measurements in speaker_data.items():
@@ -383,8 +399,8 @@ def add_scores(dataframe, parse_max, filters):
                     min_flatness = min(min_flatness, flatness)
                     max_flatness = max(max_flatness, flatness)
 
-    print("info: spl continuous [{}, {}]".format(min_spl_continuous, max_spl_continuous))
-    print("info: spl       peak [{}, {}]".format(min_spl_peak, max_spl_peak))
+    # print("info: spl continuous [{}, {}]".format(min_spl_continuous, max_spl_continuous))
+    # print("info: spl       peak [{}, {}]".format(min_spl_peak, max_spl_peak))
 
     # if we are looking only after 1 speaker, return
     if len(dataframe.items()) == 1:
@@ -556,9 +572,15 @@ def add_eq(speaker_path, dataframe, parse_max, filters):
         parsed = parsed + 1
         logger.info("Processing %s", speaker_name)
 
+        if speaker_name not in metadata.speakers_info:
+            logger.info("Error: %s is not in metadata", speaker_name)
+            continue
+
         metadata.speakers_info[speaker_name]["eqs"] = {}
         for suffix, display in (
             ("autoeq", "AutomaticEQ (IIR)"),
+            ("autoeq-lw", "AutomaticEQ LW (IIR)"),
+            ("autoeq-score", "AutomaticEQ Score (IIR)"),
             ("amirm", "amirm@ASR (IIR)"),
             ("maiky76", "maiky76@ASR (IIR)"),
             ("maiky76-lw", "maiky76@ASR LW (IIR)"),
@@ -742,21 +764,78 @@ def dump_metadata(meta):
     metafile = cpaths.CPATH_METADATA_JSON
     if not os.path.isdir(metadir):
         os.makedirs(metadir)
-    meta2 = {k: v for k, v in meta.items() if not v.get("skip", False)}
 
-    js = json.dumps(meta2)
-    with open(metafile, "w", encoding="utf-8") as f:
-        f.write(js)
-        f.close()
+    def check_link(hashed_filename):
+        # add a link to make it easier for other scripts to find the metadata
+        with contextlib.suppress(OSError):
+            os.symlink(Path(hashed_filename).name, cpaths.CPATH_METADATA_JSON)
 
-    # for historical reason, some web pages still ask for it
-    with zipfile.ZipFile(
-        metafile + ".zip",
-        "w",
-        compression=zipfile.ZIP_DEFLATED,
-        allowZip64=True,
-    ) as current_zip:
-        current_zip.writestr("metadata.json", js)
+    def dict_to_json(filename, d):
+        js = json.dumps(d)
+        key = md5(js.encode("utf-8"), usedforsecurity=False).hexdigest()[0:5]
+        hashed_filename = "{}-{}.json".format(filename[:-5], key)
+        if os.path.exists(hashed_filename) and os.path.exists(hashed_filename + ".zip"):
+            logger.debug("skipping %s", hashed_filename)
+            check_link(hashed_filename)
+            return
+        # hash changed, remove old files
+        old_hash_pattern = "{}-*.json".format(filename[:-5])
+        for old_filename in glob(old_hash_pattern):
+            logger.debug("remove old file %s", old_filename)
+            os.remove(old_filename)
+        with open(hashed_filename, "w", encoding="utf-8") as f:
+            f.write(js)
+            f.close()
+
+        # write the zip file
+        with zipfile.ZipFile(
+            hashed_filename + ".zip",
+            "w",
+            compression=zipfile.ZIP_DEFLATED,
+            allowZip64=True,
+        ) as current_zip:
+            current_zip.writestr(hashed_filename, js)
+            logger.debug("generated %s and zip version", hashed_filename)
+
+        check_link(hashed_filename)
+
+    meta_full = {k: v for k, v in meta.items() if not v.get("skip", False)}
+    dict_to_json(metafile, meta_full)
+
+    #    debugjs = find_metadata_file()
+    #    debugmeta = None
+    #    with open(debugjs, "r") as f:
+    #        debugmeta = json.load(f)
+    #    print('DEBUG: size of full ==> {}'.format(len(meta.keys())))
+    #    print('DEBUG: size of meta ==> {}'.format(len(meta_full.keys())))
+    #    print('DEBUG: size of   js ==> {}'.format(len(debugmeta.keys())))
+
+    # generate a short version for rapid home page charging
+    # TODO(pierre)
+    # let's check if it is faster to load slices than the full file
+    # partitionning is per year, each file is hashed and the hash
+    # is stored in the name.
+    # Warning: when reading the chunks you need to read them from recent to old and discard he keys you a#lready have seen,
+    meta_sorted_date = list(sort_metadata_per_date(meta_full).items())
+    meta_sorted_date_head = dict(meta_sorted_date[0:10])
+    meta_sorted_date_tail = dict(meta_sorted_date[10:])
+
+    filename = metafile[:-5] + "-head.json"
+    dict_to_json(filename, meta_sorted_date_head)
+
+    def by_year(key):
+        m = meta_sorted_date_tail[key]
+        def_m = m["default_measurement"]
+        year = int(m["measurements"][def_m].get("review_published", "1970")[0:4])
+        # group together years without too many reviews
+        if year > 1970 and year < 2020:
+            return 2019
+        return year
+
+    grouped_by_year = groupby(meta_sorted_date_tail, by_year)
+    for year, group in grouped_by_year:
+        filename = "{}-{:4d}.json".format(metafile[:-5], year)
+        dict_to_json(filename, {k: meta_sorted_date_tail[k] for k in list(group)})
 
 
 def main():
@@ -782,7 +861,7 @@ def main():
         "format": mformat,
         "version": mversion,
     }
-    main_df = cache_load(filters=filters, smoke_test=smoke_test)
+    main_df = cache_load(filters=filters, smoke_test=smoke_test, level=level)
     steps.append(("loaded", time.perf_counter()))
 
     if main_df is None:
@@ -817,5 +896,6 @@ def main():
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="generate_meta.py version 1.6", options_first=True)
-    logger = get_custom_logger(level=args2level(args), duplicate=True)
+    level = args2level(args)
+    logger = get_custom_logger(level=level, duplicate=True)
     main()

@@ -21,20 +21,14 @@
 
 import { getMetadata } from './common.js';
 import { sortMetadata2 } from './sort.js';
-import {
-    openModal,
-    closeModal,
-    getPeq,
-    getID
-}
-from './misc.js';
+import { openModal, closeModal, getPeq, getID } from './misc.js';
 
 function getPictureEqCompare(brand, model, suffix) {
     return encodeURI('speakers/' + brand + ' ' + model + '/eq_compare.' + suffix);
 }
 
 function getPictureEqDetails(brand, model, version) {
-    return encodeURI('speakers/' + brand + ' ' + model + '/' + version + '/filters')
+    return encodeURI('speakers/' + brand + ' ' + model + '/' + version + '/filters');
 }
 
 getMetadata()
@@ -51,7 +45,7 @@ getMetadata()
                         key: eqType,
                         name: pValue.eqs[eqType].display_name,
                         url:
-                        'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/' +
+                            'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/' +
                             encodeURI(pValue.eqs[eqType].filename),
                         preamp_gain: pValue.eqs[eqType].preamp_gain,
                         peq: getPeq(pValue.eqs[eqType].peq),
@@ -66,38 +60,39 @@ getMetadata()
                 name: pValue.eqs.autoeq.display_name,
                 img_eq_compare: {
                     webp: getPictureEqCompare(pValue.brand, pValue.model, 'webp'),
-                    jpg: getPictureEqCompare(pValue.brand, pValue.model, 'jpg')
+                    jpg: getPictureEqCompare(pValue.brand, pValue.model, 'jpg'),
                 },
                 img_eq_details: getPictureEqDetails(pValue.brand, pValue.model, origin),
                 autoeq: {
                     key: 'autoeq',
                     name: pValue.eqs.autoeq.display_name,
-                    url: 'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/' +
+                    url:
+                        'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/' +
                         encodeURI(pValue.eqs.autoeq.filename),
                     preamp_gain: pValue.eqs.autoeq.preamp_gain,
-                    peq: getPeq(pValue.eqs.autoeq.peq)
+                    peq: getPeq(pValue.eqs.autoeq.peq),
                 },
                 othereq: otherEQ,
             };
         }
 
         function switchVisible(divEQ, context, current) {
-            if ( current === 'autoeq' ) {
-                const autoeq = divEQ.querySelector('#eq-'+context.id+'-autoeq');
+            if (current === 'autoeq') {
+                const autoeq = divEQ.querySelector('#eq-' + context.id + '-autoeq');
                 autoeq.classList.remove('hidden');
                 for (const oeq in context.othereq) {
-                    const eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
+                    const eq = divEQ.querySelector('#eq-' + context.id + '-' + context.othereq[oeq].key);
                     eq.classList.add('hidden');
                 }
             } else {
-                const autoeq = divEQ.querySelector('#eq-'+context.id+'-autoeq');
+                const autoeq = divEQ.querySelector('#eq-' + context.id + '-autoeq');
                 autoeq.classList.add('hidden');
                 for (const oeq in context.othereq) {
                     if (oeq === current) {
-                        const eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
+                        const eq = divEQ.querySelector('#eq-' + context.id + '-' + context.othereq[oeq].key);
                         eq.classList.remove('hidden');
                     } else {
-                        const eq = divEQ.querySelector('#eq-'+context.id+'-'+context.othereq[oeq].key);
+                        const eq = divEQ.querySelector('#eq-' + context.id + '-' + context.othereq[oeq].key);
                         eq.classList.add('hidden');
                     }
                 }
@@ -105,7 +100,7 @@ getMetadata()
         }
 
         function addChangeEvents(divEQ, context) {
-            const selectEQ = divEQ.querySelector('#eq-select-'+context.id);
+            const selectEQ = divEQ.querySelector('#eq-select-' + context.id);
             if (selectEQ !== null) {
                 selectEQ.addEventListener('change', function () {
                     switchVisible(divEQ, context, this.value);
@@ -115,15 +110,17 @@ getMetadata()
 
         function addModalEventsTag(divEQ, context, tag) {
             const click = divEQ.querySelector('#' + tag + '-' + context.id);
-            if (click !== null ) {
+            if (click !== null) {
                 const target = click.dataset.target;
-                const modal = divEQ.querySelector('#'+target);
+                const modal = divEQ.querySelector('#' + target);
                 if (modal !== null) {
                     click.addEventListener('click', () => {
                         return openModal(modal);
                     });
-                    const childs = modal.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button');
-                    childs.forEach( closeable => {
+                    const childs = modal.querySelectorAll(
+                        '.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button'
+                    );
+                    childs.forEach((closeable) => {
                         const target = closeable.closest('.modal');
                         closeable.addEventListener('click', () => closeModal(target));
                     });
@@ -162,8 +159,9 @@ getMetadata()
             speakerContainer.appendChild(fragment1);
             speakerContainer.addEventListener('keydown', (event) => {
                 const e = event || window.event;
-                if (e.keyCode === 27) { // Escape key
-                    document.querySelectorAll('.modal').forEach( modal => closeModal(modal));
+                if (e.keyCode === 27) {
+                    // Escape key
+                    document.querySelectorAll('.modal').forEach((modal) => closeModal(modal));
                 }
             });
         }

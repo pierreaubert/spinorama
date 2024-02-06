@@ -1,7 +1,7 @@
 #!/bin/sh
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,4 +32,4 @@ json_pp < docs/assets/metadata.json  | \
     $SED -e s'/[ \t"":{"]//g' | \
     $SED -e 's/misc-//' -e 's/-horizontal//g' -e 's/-vertical//g' -e 's/-sealed//g' -e 's/-ported//g' | \
     sort -s -f -u | \
-    $AWK '{val=toupper(substr($0,1,1)); name=substr($0,2); if (length($0) < 4 ) { val=""; name=toupper($0); } printf("<option value=\"%s\">%s%s</option>\n", $0, val, name);}' > src/website/reviewers.html
+    $AWK -f ./scripts/update_reviewers.awk > src/website/reviewers.html

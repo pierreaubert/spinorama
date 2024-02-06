@@ -7,8 +7,11 @@
 [![Website www.spinorama.org](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://www.spinorama.org/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 
-This library provides an easy way to view, compare or analyse speakers data. This can help you take informed
-decision when buying a speaker instead of relying on commercial information or internet buzz.
+This library provides an easy way to view, compare or analyse speakers
+data. This can help you take informed
+decision when buying a speaker instead of relying on commercial
+information or internet buzz. There are enough measurements now that
+you can do statistical analysis if you wanted too.
 
 ## Jump to the [gallery](https://www.spinorama.org) of all (1000+) speakers measurements.
 
@@ -18,7 +21,7 @@ It is a way to understand quickly a speaker properties, how it will sound.
 
 Here is an example:
 
-![image](https://github.com/pierreaubert/spinorama/blob/develop/datas/pictures/ex-Genelec-8341A-cea2034.png)
+![image](https://www.spinorama.org/speakers/Genelec%208341A/ASR/asr-vertical/CEA2034.html)
 
 - On Axis: this the frequency response. You expect it to be as flat as possible after 100Hz.
 - Listening Window: an average of various measurements around on axis. Expected to be close to the previous one.
@@ -47,18 +50,27 @@ Or if you prefer videos, there is a nice set from [ErinsAudioCorner](https://www
 
 The library support four different formats of data:
 
-1. [Klippel NFS](https://www.klippel.de/products/rd-system/modules/nfs-near-field-scanner.html) format: a set of CSV files.
-2. Princeton 3D3A files: they are IR data in [hdf5](https://www.hdfgroup.org/solutions/hdf5/) format
-3. Scanned data from a picture with [WebPlotDigitizer](https://automeris.io/WebPlotDigitizer/) (takes 10 minutes per picture)
+1. [Klippel NFS](https://www.klippel.de/products/rd-system/modules/nfs-near-field-scanner.html)
+   format: a set of CSV files. Various variants of the data format are
+   supported via scripts that allows to convert one format to another.
+2. Princeton 3D3A files: they are IR data in [hdf5](https://www.hdfgroup.org/solutions/hdf5/) format.
+3. Scanned data from a picture with [WebPlotDigitizer](https://automeris.io/WebPlotDigitizer/).
 4. Export in text form from [REW](https://www.roomeqwizard.com/)
+5. GLL data files are also (weakly) supported. If you want access to
+   the automation, then please drop an email. GLL viewer is a Windows
+   only application and the automation is based on Windows automation.
 
 ## Computations
 
 1. Generate CEA2034 data from horizontal and vertical SPL data.
-2. Calculate contour plot, radar plot, isolines and isobands.
+2. Calculate contour plots, radar plots, isolines and isobands.
 3. Estimate basic data for a speaker (-3dB output, flatness over a range, etc)
 4. Compute various parameters defined in a paper from Olive (ref. below).
-5. It can generate an EQ to optimise the speaker (and get a better preference score) based on anechoic data. Note: this is not yet a room correction software. EQ can be PEQ based but it also can generate a solution for a hardware graphical EQ.
+5. It can generate an EQ to optimise the speaker (and get a better
+   preference score also called Olive score) based on anechoic
+   data. Note: this is not yet a room correction software. EQ can be
+   PEQ based but it also can generate a solution for a hardware
+   graphical EQ.
 6. It can compute the effect of an EQ (IIR) on the spinorama.
 
 ## Website generation
@@ -72,16 +84,16 @@ The library support four different formats of data:
 
 # Other ways to look at the graphs in a more interactive way.
 
-If you want to generate the graphs yourself or play with the data you need to install the software.
-We have a dedicated [INSTALL section](./tutorial/INSTALL.md).
+If you want to generate the graphs yourself or play with the data you need to install the software. Please see
+the dedicated [INSTALL section](./tutorial/INSTALL.md).
 
 # How to add a speaker to the database.
 
-We have a dedicated [tutorial](./tutorial/ADDSPEAKER.md).
+Please see the dedicated [tutorial](./tutorial/ADDSPEAKER.md).
 
 # How to use the software.
 
-We have a dedicated [manual](./tutorial/HOWTOUSE.md).
+Please see the dedicated [manual](./tutorial/HOWTOUSE.md).
 
 # Source of data and citations
 
@@ -91,7 +103,10 @@ ASR is a fantastic source of speakers data thanks to [amirm@](https://www.audios
 
 ## [ErinsAudioCorner _aka_ EAC](https://www.erinsaudiocorner.com/)
 
-Erin is a motivated person reviewing speakers. He is doing an outstanging jobs. He also has a [Youtube channel](https://youtube.com/c/ErinsAudioCorner). You can also [support him](https://www.erinsaudiocorner.com/contribute/).
+Erin is a motivated person reviewing speakers and doing an outstanging
+jobs. He also has a [Youtube
+channel](https://youtube.com/c/ErinsAudioCorner). You can also
+[support him](https://www.erinsaudiocorner.com/contribute/).
 
 ## [3D3A](https://www.princeton.edu/3D3A/) is a research organisation at [Princeton](https://www.princeton.edu).
 
@@ -123,13 +138,25 @@ Some papers related to finding the optimal IIR filters: I used a different algor
 
 ## Speakers manufacturers.
 
-- If you are a manufacturer of speakers, it would be great if you could provide spinorama datas.
+- If you are a manufacturer of speakers, it would be great if you could provide spinorama datas. Send me an email pierre@spinorama.org.
 - Manufactures with good datas usually in speaker's manual:
-  - JBL
-  - Revel
-  - Genelec
-  - Adam
+  - Adam Audio
+  - Arendal Sound
+  - Ascend Acoustic
+  - Buscardt Audio
+  - DB Audiotechnik
+  - Devialet
   - Eve Audio
-  - Buscard Audio
-  - KEF
+  - Fulcrum Acoustic
+  - Genelec
+  - GGNTKT
+  - JBL
   - JTR
+  - KEF
+  - Meyer Sound
+  - Neumann
+  - Perlisten
+  - PSI Audio
+  - Revel
+  - RCF
+  - Sigberg Audio

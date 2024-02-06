@@ -74,21 +74,21 @@ def process(zipfile, speaker, destination_path):
         print("error zipfile {} does not exist".format(zipfile))
         return
 
-    # print('mv {}.zip to {}'.format(speaker, destination))
+    print("mv {}.zip to {}".format(speaker, destination))
     destination_zipfile = destination / os.path.basename(zipfile)
     if destination_zipfile.exists():
         os.unlink(destination_zipfile)
     shutil.move(zipfile, destination)
-    # print('git remove  {}/*.txt'.format(destination))
+    print("git remove  {}/*.txt".format(destination))
     txts = glob.glob(f"{destination}/*.txt")
     for t in txts:
         os.unlink(t)
 
-    # print('git remove  {}/*/*.txt'.format(destination))
+    print("git remove  {}/*/*.txt".format(destination))
     txts = glob.glob(f"{destination}/*/*.txt")
     for t in txts:
         os.unlink(t)
-    # print('rmdir {}/*'.format(destination))
+    print("rmdir {}/*".format(destination))
     dirs = glob.glob(f"{destination}/*")
     for d in dirs:
         if os.path.isdir(d):
@@ -96,7 +96,7 @@ def process(zipfile, speaker, destination_path):
 
 
 def edit_meta_change_spltogll(speaker):
-    # print("change format for {} {} from SPL to GLL".format(speaker))
+    print("change format for {} from SPL to GLL".format(speaker))
     pass
 
 
@@ -176,7 +176,7 @@ def match(version, name):
             or (parts[1] == "M" and "medium" in name)
         ):
             one = True
-        # print("debug parts[0]={} parts[1]={} return {}".format(parts[0], parts[1], zero and one))
+        print("debug parts[0]={} parts[1]={} return {}".format(parts[0], parts[1], zero and one))
         return zero and one
     if version[0:4] == "FR+H" and version[4:].isdigit():
         return version[4:] in name
@@ -214,7 +214,8 @@ def find_speaker(zipfile):
                 speaker = candidate
                 version = " ".join(tokens[-pos:])
 
-    # print("debug speaker={} version={} exception={}".format(speaker, version, manual_exception))
+    # print("debug speaker={} version={} exception={}".format(speaker, version, manual_exceptions_table))
+    print("debug speaker={} version={}".format(speaker, version))
 
     if speaker in metadata and version is None:
         # easy case
@@ -225,12 +226,14 @@ def find_speaker(zipfile):
         gll_name = None
         spl_name = None
         for name, data in measurements["measurements"].items():
-            if data["format"] == "gllHVtxt":
+            if data["format"] == "gll_hv_txt":
                 count_gll += 1
                 gll_name = name
-            elif data["format"] == "splHVtxt":
+            elif data["format"] == "spl_hv_txt":
                 count_spl += 1
                 spl_name = name
+
+        print("debug counts gll={} spl={}".format(count_gll, count_spl))
 
         if count_gll == 1:
             destination = "datas/measurements/{}/{}".format(speaker, gll_name)
@@ -264,7 +267,11 @@ def find_speaker(zipfile):
                 count_spl += 1
                 spl_name = name
 
-        # print('debug 1 version={} name={} format={} #gll={} #spl={}'.format(version, gll_name, data["format"], count_gll, count_spl))
+        print(
+            "debug 1 version={} name={} format={} #gll={} #spl={}".format(
+                version, gll_name, data["format"], count_gll, count_spl
+            )
+        )
 
         # if not look for partial matches
         if count_gll + count_spl == 0:
@@ -276,17 +283,21 @@ def find_speaker(zipfile):
                     count_spl += 1
                     spl_name = name
 
-        # print('debug 2 version={} name={} format={} #gll={} #spl={}'.format(version, gll_name, data["format"], count_gll, count_spl))
+        print(
+            "debug 2 version={} name={} format={} #gll={} #spl={}".format(
+                version, gll_name, data["format"], count_gll, count_spl
+            )
+        )
 
         if count_gll == 1:
             destination = "datas/measurements/{}/{}".format(speaker, gll_name)
-            # print("goal {} goes to {}".format(zipfile, destination))
+            print("goal {} goes to {}".format(zipfile, destination))
             process(zipfile, speaker, destination)
             return 0
 
         if count_spl == 1:
             destination = "datas/measurements/{}/{}".format(speaker, spl_name)
-            # print("goal {} goes to {}".format(zipfile, destination))
+            print("goal {} goes to {}".format(zipfile, destination))
             process(zipfile, speaker, destination)
             edit_meta_change_spltogll(speaker)
             return 0
@@ -301,7 +312,7 @@ def find_speaker(zipfile):
             destination = "datas/measurements/{}/{}".format(
                 speaker, measurements["default_measurement"]
             )
-            # print("goal {} goes to {}".format(zipfile, destination))
+            print("goal {} goes to {}".format(zipfile, destination))
             process(zipfile, speaker, destination)
             return 0
 

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,7 +43,8 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--fitness=<function>] \
  [--optimisation=<options>] \
  [--graphic_eq=<eq_name>] \
- [--graphic_eq_list]
+ [--graphic_eq_list] \
+ [--disable-ray]
 
 Options:
   --help                   Display usage()
@@ -89,6 +90,7 @@ Options:
   --graphic_eq=<eq_name>   Result is tailored for graphic_eq "name".
   --graphic_eq_list        List the known graphic eq and exit
   --optimisation=<options> Choose an algorithm: options are greedy or global. Greedy is fast, Global is much slower but could find better solutions.
+  --disable-ray            Disable ray
 """
 import sys
 
@@ -107,11 +109,17 @@ except ModuleNotFoundError:
 from datas.metadata import speakers_info as metadata
 from datas.grapheq import vendor_info as grapheq_info
 
-from generate_common import get_custom_logger, args2level, custom_ray_init, cache_load
-from spinorama.auto_save import optim_save_peq
+from generate_common import (
+    get_custom_logger,
+    args2level,
+    custom_ray_init,
+    cache_load,
+    cache_load_seq,
+)
+from spinorama.auto_save import optim_save_peq, optim_save_peq_seq
 
 
-VERSION = "0.25"
+VERSION = "0.26"
 
 
 def print_items(aggregated_results):
@@ -238,6 +246,52 @@ def compute_peqs(ray_ids):
     print_scores(aggregated_scores)
 
     return 0
+
+
+def compute_peqs_sequential(df_all_speakers, optim_config, speaker_name):
+    for current_speaker_name in df_all_speakers:
+        if speaker_name is not None and current_speaker_name != speaker_name:
+            continue
+        default = None
+        default_origin = None
+        if (
+            current_speaker_name in metadata
+            and "default_measurement" in metadata[current_speaker_name]
+        ):
+            default = metadata[current_speaker_name]["default_measurement"]
+            default_origin = metadata[current_speaker_name]["measurements"][default]["origin"]
+        else:
+            logger.error("no default_measurement for %s", current_speaker_name)
+            continue
+        if default_origin not in df_all_speakers[current_speaker_name]:
+            logger.error("default origin %s not in %s", default_origin, current_speaker_name)
+            continue
+        if default not in df_all_speakers[current_speaker_name][default_origin]:
+            logger.error(
+                "default %s not in default origin %s for %s",
+                default,
+                default_origin,
+                current_speaker_name,
+            )
+            continue
+        df_speaker = df_all_speakers[current_speaker_name][default_origin][default]
+        if not (
+            ("SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker)
+            or ("CEA2034" in df_speaker and "Estimated In-Room Response" in df_speaker)
+        ):
+            logger.info(
+                "not enough data for %s known measurements are (%s)",
+                current_speaker_name,
+                ", ".join(df_speaker),
+            )
+            continue
+
+        status, (_, results_iter, scores) = optim_save_peq_seq(
+            current_speaker_name,
+            default_origin,
+            df_speaker,
+            optim_config,
+        )
 
 
 def main():
@@ -531,7 +585,10 @@ def main():
             "origin": origin,
             "version": mversion,
         }
-        df_all_speakers = cache_load(filters=do_filters, smoke_test=smoke_test)
+        if disable_ray:
+            df_all_speakers = cache_load_seq(filters=do_filters, smoke_test=smoke_test)
+        else:
+            df_all_speakers = cache_load(filters=do_filters, smoke_test=smoke_test, level=level)
     except ValueError as v_e:
         if speaker_name is not None:
             print(
@@ -544,7 +601,8 @@ def main():
         sys.exit(1)
 
     # start ray
-    custom_ray_init(args)
+    if not disable_ray:
+        custom_ray_init(args)
 
     # add global parameters into the config
     current_optim_config["verbose"] = verbose
@@ -553,8 +611,11 @@ def main():
     current_optim_config["version"] = VERSION
     current_optim_config["level"] = level
 
-    ids = queue_speakers(df_all_speakers, current_optim_config, speaker_name)
-    compute_peqs(ids)
+    if disable_ray:
+        compute_peqs_sequential(df_all_speakers, current_optim_config, speaker_name)
+    else:
+        ids = queue_speakers(df_all_speakers, current_optim_config, speaker_name)
+        compute_peqs(ids)
 
     sys.exit(0)
 
@@ -572,6 +633,7 @@ if __name__ == "__main__":
     force = args["--force"]
     verbose = args["--verbose"]
     smoke_test = args["--smoke-test"]
+    disable_ray = args["--disable-ray"]
 
     if args["--graphic_eq_list"]:
         print("INFO: The list of know graphical EQ is: {}".format(list(grapheq_info.keys())))

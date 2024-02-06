@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,8 +36,8 @@ import math
 from docopt import docopt
 import numpy as np
 
-from generate_common import get_custom_logger, args2level
-from spinorama.constant_paths import CPATH_METADATA_JSON, CPATH_DOCS_SPEAKERS, CPATH_DATAS_EQ
+from generate_common import get_custom_logger, args2level, find_metadata_file
+from spinorama.constant_paths import CPATH_DOCS_SPEAKERS, CPATH_DATAS_EQ
 from spinorama.need_update import need_update
 from spinorama.pict import write_multiformat
 from spinorama.plot import plot_eqs
@@ -71,9 +71,9 @@ def print_eq_compare(data, force):
 
 def main(force):
     # load all metadata from generated json file
-    json_filename = CPATH_METADATA_JSON
-    if not os.path.exists(json_filename):
-        logger.error("Cannot find %s", json_filename)
+    json_filename = find_metadata_file()
+    if json_filename is None:
+        logger.error("Cannot find metadata file!")
         sys.exit(1)
 
     jsmeta = None

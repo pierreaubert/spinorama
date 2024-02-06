@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -294,7 +294,7 @@ VALID_SPL_MIN = 0
 VALID_SPL_MAX = 160
 
 VALID_DIM_MIN = 0
-VALID_DIM_MAX = 2000
+VALID_DIM_MAX = 2500
 
 VALID_WEIGTH_MIN = 0
 VALID_WEIGTH_MAX = 500
@@ -326,7 +326,7 @@ def sanity_check_specifications(name: str, version: str, specs: dict) -> int:
                     status = 1
                 try:
                     fangle = float(angle)
-                    if fangle < VALID_ANGLE_MIN or fangle >= VALID_ANGLE_MAX:
+                    if fangle < VALID_ANGLE_MIN or fangle > VALID_ANGLE_MAX:
                         logging.error(
                             "%s: measurement %s angle %s is not in ]%d, %d]",
                             name,

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -363,7 +363,7 @@ def main(level):
     if len(filters.keys()) == 0:
         cache_save(df_new)
     elif update_cache:
-        cache_update(df_new, filters)
+        cache_update(df_new, filters, LEVEL)
 
     ray.shutdown()
     sys.exit(0)

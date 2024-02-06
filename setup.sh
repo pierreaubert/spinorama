@@ -1,7 +1,7 @@
 #!/bin/sh
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ OS=$(uname)
 if test "$OS" = "Linux"; then
   # ------------ PYTHON
   sudo [ -x /usr/bin/apt ] && /usr/bin/apt install -y python3 python3-pip imagemagick keychain npm wget python3.11-venv
-  # ------------ LOCALE 
+  # ------------ LOCALE
   # add locale if they don't exist possibly C.utf8 would work
   sudo [ -x /usr/bin/localedef ] && /usr/bin/localedef -f UTF-8 -i en_US en_US.UTF-8
   # or maybe
@@ -74,4 +74,4 @@ PYTHONPATH=src cd src/spinorama && python setup.py build_ext --inplace && ln -s 
 [ ! -x bin/deepsource ] && curl https://deepsource.io/cli | sh
 
 # run the test
-pytest .
+pytest tests

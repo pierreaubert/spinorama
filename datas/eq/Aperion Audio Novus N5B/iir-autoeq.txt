@@ -1,0 +1,14 @@
+EQ for Aperion Audio Novus N5B computed from ErinsAudioCorner data
+Preference Score 3.81 with EQ 6.24
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2023-11-29-19:51:39
+
+Preamp: -3.8 dB
+
+Filter  1: ON PK Fc    36 Hz Gain +3.99 dB Q 0.95
+Filter  2: ON PK Fc   113 Hz Gain -2.09 dB Q 1.00
+Filter  3: ON PK Fc   270 Hz Gain +1.17 dB Q 2.13
+Filter  4: ON PK Fc  2168 Hz Gain +3.13 dB Q 2.99
+Filter  5: ON PK Fc  4051 Hz Gain -4.62 dB Q 1.20
+Filter  6: ON PK Fc  9989 Hz Gain -0.42 dB Q 2.81
+Filter  7: ON PK Fc 16239 Hz Gain -1.00 dB Q 1.01

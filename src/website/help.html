@@ -2,14 +2,14 @@
 <html lang="en">
   <head>
     <title>Help for spinorama website</title>
-    <%include file="head.html"/> <%include file="head_vega.html"/>
+    <%include file="head.html"/>
   </head>
   <body>
     <%include file="nav_simple.html"/>
 
     <div class="level has-background-info-dark is-hidden-mobile">...</div>
 
-    <div class="container">
+    <div class="container is-fluid">
       <section class="content">
         <h1 class="title">Measurements</h1>
         <h2 class="subtitle">What is a spinorama set of graphs?</h2>
@@ -209,7 +209,10 @@
         <ul>
           <li>
             <i>High quality</i> data: provided by a Klippel NFS or measured in a
-            large anechoic chamber. Data precision is around 1%.
+            large anechoic chamber. Data precision is around
+            1%. Smoothing post measurement can be done by the Klippel
+            software so you cannot necessary compare two Klippel
+            measurements.
           </li>
           <li>
             <i>Medium quality</i> data: medium size anechoc chamber, data
@@ -225,18 +228,22 @@
               </li>
               <li>
                 provided by vendors: usually smoothed data (less measurement
-                points, or data is smoothed, or quality is just unknown).
-                Smoothed measurements
-                <a
-                  href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/page-5#post-742037"
-                  >usually generate</a
-                >
-                a score which higher by 0.7 on average over a score computed raw
-                data. Note that the 0.7 can change depending on the amount of
-                smoothing and other factors. Personally I never compare a score
-                computed with high quality data with something else.
-              </li>
-            </ul>
+                points, or data is smoothed, or quality is just
+                unknown).
+	      </li>
+	    </ul>
+	  </li>
+	  <li>
+            Impact of smoothed or poor quality measurements.
+	    Smoothing
+            <a
+              href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/page-5#post-742037"
+              >generates on average</a>
+            a higher core higher (+0.7) with respect to a
+            score computed from the raw
+            data. Note that the 0.7 can change depending on the amount of
+            smoothing and other factors. Personally I never compare a score
+            computed with high quality data with something else.
           </li>
         </ul>
 
@@ -443,7 +450,71 @@
         tonality score will be easier to EQ and will adapt well to your room.
         Define the SPL you want (at 1% distorsion) and now you have reasonable
         choices.
+
+	<h2 id="definition">How to interpret the numbers on the landing page?</h2>
+
+	Each speaker measurement shows up in a box similar to:
+	<picture>
+          <source
+            srcset="help_pictures/example_main_page.webp"
+            type="image/webp"
+            >
+          <img
+            src="help_pictures/help_select_high_quality.jpg"
+            alt="Example for one speaker on the landing page"
+            >
+	</picture>
+	<ul>
+	  <li id="priceDefinition">
+	    <b>Price</b>: should be self explanatory; it is in USD per
+	    speaker not for a pair. The price was the first hit on Google
+	    when I looked it up. It may be different in your country and/or
+	    later in time.
+	  </li>
+	  <li id="tonalityDefinition">
+	    <b>Tonality</b>: this is a value between -10 and 10. It is defined in
+	    the <a href="https://webstore.ansi.org/standards/cea/cea20342015ansi">CEA2034</a>
+	    standard and is computed from the spinorama data.
+	    <ul>
+	      <li>Higher is better</li>
+	      <li>It make sense for tower, bookshelves or center but
+		not for surround, in-wall or column speakers</li>
+	      <li>Note that a difference between two scores is
+		only significant if the difference is greater than
+		0.6. </li>
+	      <li>Be also mindfull than smoother or less precise data
+	      can yield a higher score than an Klippel generated set
+		of data for example. You can easily remove 0.5 to 1.5
+	      to the score for highly smoothed data.</li>
+	      <li>The score does not tell about maximum output or
+		about distorsion. You can get the same score for a
+		portable bluetooth speaker and a large tower.</li>
+	      <li>If you know how to read code, you can find my
+		implementation <a href="https://github.com/pierreaubert/spinorama/blob/master/src/spinorama/compute_cea2034.py">here</a>.</li>
+	    </ul>
+	  </li>
+	  <li id="bassExtensionDefinition">
+	    <b>Bass extension</b>: this is low frequency extension
+	    (LFX in short) from a research paper from Olive. It is computed
+	    as <a href="https://github.com/pierreaubert/spinorama/blob/3b6e70966e0466328f44f36752cc182f3ae7baae/src/spinorama/compute_scores.py#L110">here</a>. Lower
+	    is better. Note that it is slighlty different from the frequency of
+	    the -3dB point. The rational for using it is: <i>The low frequency extension (LFX)
+         LFX = log10(xSP-6dB.re:y _ LW(300Hz-10kHz) (7)
+    where LFX is the log10 of the first frequency x_SP below 300 Hz
+    in the sound power curve, that is -6 dB relative to the mean level y_LW
+    measured in listening window (LW) between 300 Hz-10 kHz.
+    LFX is log-transformed to produce a linear relationship between the
+    variable LFX and preference rating. The sound power curve (SP) is used
+    for the calculation because it better defines the true bass output of
+    the loudspeaker, particularly speakers that have rear-firing ports.</i>.
+	  </li>
+	  <li id="flatnessDefinition">
+	    <b>Flatness</b>: this is the variation in dB around the average SPL of
+	    the on axis measurement between 300Hz and 5kHz. Lower is better.
+	  </li>
+	</ul>
       </section>
+
 
       <section class="content">
         <h1 class="title">Source of data and citations</h1>

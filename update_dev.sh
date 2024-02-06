@@ -1,7 +1,7 @@
 #!/bin/sh
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,8 @@
 # TARGET=/var/www/html/spinorama-dev
 # TARGET=pierre@ch.spinorama.org:/var/www/html/spinorama-dev
 # TARGET=pierre@es.spinorama.org:/var/www/html/spinorama-dev
-TARGET=pierre@web:/var/www/html/spinorama-dev
+# TARGET=pierre@web:/var/www/html/spinorama-dev
+TARGET=pierre@192.168.1.19:/var/www/html/spinorama-dev
 # check
 command=$(grep www.spinorama.org docs/*.html | wc -l)
 if [ $command -ne 0 ]; then

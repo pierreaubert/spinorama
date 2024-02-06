@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -206,6 +206,6 @@ def lw_loss(df_speaker: dict, peq) -> float:
     # compute LW
     lw_filtered = listening_window(spl_h_filtered, spl_v_filtered)
     # optimize nbd
-    score = nbd(lw_filtered)
+    score = nbd(dfu=lw_filtered, min_freq=100)
     # print("LW score: {}".format(score))
     return score

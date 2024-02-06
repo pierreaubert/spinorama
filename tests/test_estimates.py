@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ class SpinoramaEstimatesNV2Tests(unittest.TestCase):
         self.assertAlmostEqual(self.estimates["ref_level"], 105.9)
         self.assertAlmostEqual(self.estimates["ref_3dB"], 58.6)  # Hz
         self.assertAlmostEqual(self.estimates["ref_6dB"], 54.2)  # Hz
-        self.assertAlmostEqual(self.estimates["ref_band"], 1.9)  # deviation in dB
+        self.assertAlmostEqual(self.estimates["ref_band"], 1.6)  # deviation in dB
 
 
 class SpinoramaEstimatesNV3Tests(unittest.TestCase):

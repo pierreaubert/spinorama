@@ -1,0 +1,14 @@
+EQ for Aperion Audio Novus N6SR computed from ErinsAudioCorner data
+Preference Score 2.20 with EQ 5.02
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2023-11-29-19:55:11
+
+Preamp: -3.6 dB
+
+Filter  1: ON PK Fc    58 Hz Gain +4.00 dB Q 0.37
+Filter  2: ON PK Fc   139 Hz Gain -4.44 dB Q 1.38
+Filter  3: ON PK Fc  1046 Hz Gain -1.57 dB Q 2.99
+Filter  4: ON PK Fc  3068 Hz Gain +2.36 dB Q 1.49
+Filter  5: ON PK Fc  4342 Hz Gain -4.60 dB Q 1.73
+Filter  6: ON PK Fc  8694 Hz Gain -2.92 dB Q 1.44
+Filter  7: ON PK Fc 13652 Hz Gain -2.72 dB Q 1.21

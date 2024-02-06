@@ -16,10 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-/*global Plotly*/
+/*global Plotly */
 /*eslint no-undef: "error"*/
 
-import { urlSite } from './misc.js';
+import { urlSite } from './meta.js';
 import {
     getMetadata,
     assignOptions,
@@ -30,11 +30,53 @@ import {
     setGlobe,
     setGraph,
     setCEA2034,
-    setCEA2034Split,
+    setRadar,
     setSurface,
-    updateOrigin,
-    updateVersion
 } from './common.js';
+
+function updateVersion(metaSpeakers, speaker, selector, origin, version) {
+    // update possible version(s) for matching speaker and origin
+    // console.log('update version for ' + speaker + ' origin=' + origin + ' version=' + version)
+    const versions = Object.keys(metaSpeakers[speaker].measurements);
+    let matches = new Set();
+    versions.forEach((val) => {
+        const current = metaSpeakers[speaker].measurements[val];
+        if (current.origin === origin || origin === '' || origin == null) {
+            matches.add(val);
+            matches.add(val + '_eq');
+        }
+    });
+    const [first] = matches;
+    let correct_version = null;
+    if (version != null && matches.has(version)) {
+        correct_version = version;
+    } else if (selector.value != null && matches.has(selector.value)) {
+        correct_version = selector.value;
+    } else {
+        correct_version = first;
+    }
+    assignOptions(Array.from(matches), selector, correct_version);
+}
+
+function updateOrigin(metaSpeakers, speaker, originSelector, versionSelector, origin, version) {
+    // console.log('updateOrigin for ' + speaker + ' with origin ' + origin + ' version=' + version)
+    const measurements = Object.keys(metaSpeakers[speaker].measurements);
+    const origins = new Set();
+    for (const key in measurements) {
+        origins.add(metaSpeakers[speaker].measurements[measurements[key]].origin);
+    }
+    const [first] = origins;
+    // console.log('updateOrigin found this possible origins: ' + origins.size + ' first=' + first)
+    // origins.forEach(item => console.log('updateOrigin: ' + item))
+    let correct_origin = null;
+    if (origin != null && origins.has(origin)) {
+        correct_origin = origin;
+    } else {
+        correct_origin = first;
+    }
+    assignOptions(Array.from(origins), originSelector, correct_origin);
+    updateVersion(metaSpeakers, speaker, versionSelector, correct_origin, version);
+}
 
 getMetadata()
     .then((metadata) => {
@@ -49,7 +91,7 @@ getMetadata()
         const plotDouble0Container = plotContainer.querySelector('.plotDouble0');
         const plotDouble1Container = plotContainer.querySelector('.plotDouble1');
         const formContainer = plotContainer.querySelector('.plotForm');
-        const graphsSelector = formContainer.querySelector('.graph');
+        const graphsSelector = formContainer.querySelector('#compare-select-graph');
 
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
@@ -63,17 +105,18 @@ getMetadata()
         const speakersSelector = [];
         const originsSelector = [];
         const versionsSelector = [];
+        const fieldsetOriginsSelector = [];
+        const fieldsetVersionsSelector = [];
+
+        let graphsConfigs = [];
 
         function plot(measurement, speakersName, speakersGraph) {
-            // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs')
+            // console.log('plot: ' + speakersName.length + ' names and ' + speakersGraph.length + ' graphs');
             async function run() {
                 Promise.all(speakersGraph).then((graphs) => {
                     // console.log('plot: resolved ' + graphs.length + ' graphs')
-                    let graphsConfigs = [];
                     if (measurement === 'CEA2034') {
                         graphsConfigs = setCEA2034(speakersName, graphs, windowWidth, windowHeight);
-                    } else if (measurement === 'CEA2034 with splitted views') {
-                        graphsConfigs = setCEA2034Split(speakersName, graphs, windowWidth, windowHeight);
                     } else if (
                         measurement === 'On Axis' ||
                         measurement === 'Estimated In-Room Response' ||
@@ -83,11 +126,11 @@ getMetadata()
                         measurement === 'SPL Horizontal Normalized' ||
                         measurement === 'SPL Vertical Normalized' ||
                         measurement === 'Horizontal Reflections' ||
-                        measurement === 'Vertical Reflections' ||
-                        measurement === 'SPL Horizontal Radar' ||
-                        measurement === 'SPL Vertical Radar'
+                        measurement === 'Vertical Reflections'
                     ) {
                         graphsConfigs = setGraph(speakersName, graphs, windowWidth, windowHeight);
+                    } else if (measurement === 'SPL Horizontal Radar' || measurement === 'SPL Vertical Radar') {
+                        graphsConfigs = setRadar(speakersName, graphs, windowWidth, windowHeight);
                     } else if (
                         measurement === 'SPL Horizontal Contour' ||
                         measurement === 'SPL Vertical Contour' ||
@@ -109,16 +152,16 @@ getMetadata()
                         measurement === 'SPL Vertical Globe Normalized'
                     ) {
                         graphsConfigs = setGlobe(speakersName, graphs, windowWidth, windowHeight);
-                    } // todo add multi view
+                    }
 
                     // console.log('datas and layouts length='+graphsConfigs.length)
                     if (graphsConfigs.length === 1) {
                         plotSingleContainer.style.display = 'block';
                         plotDouble0Container.style.display = 'none';
                         plotDouble1Container.style.display = 'none';
-                        const config = graphsConfigs[0];
-                        if (config) {
-                            Plotly.newPlot('plotSingle', config);
+                        const graphConfig = graphsConfigs[0];
+                        if (graphConfig) {
+                            Plotly.react('plotSingle', graphConfig.data, graphConfig.layout, graphConfig.config);
                         }
                     } else if (graphsConfigs.length === 2) {
                         plotSingleContainer.style.display = 'none';
@@ -127,7 +170,7 @@ getMetadata()
                         for (let i = 0; i < graphsConfigs.length; i++) {
                             const config = graphsConfigs[i];
                             if (config) {
-                                Plotly.newPlot('plotDouble' + i, config);
+                                Plotly.react('plotDouble' + i, config);
                             }
                         }
                     }
@@ -162,10 +205,9 @@ getMetadata()
         function buildInitOrigins(count) {
             const list = [];
             for (let pos = 0; pos < count; pos++) {
-                if (urlParams.has('origin'+pos)) {
-                    list[pos] = urlParams.get('origin'+pos);
-                }
-                else {
+                if (urlParams.has('origin' + pos)) {
+                    list[pos] = urlParams.get('origin' + pos);
+                } else {
                     list[pos] = null;
                 }
             }
@@ -175,10 +217,9 @@ getMetadata()
         function buildInitVersions(count) {
             const list = [];
             for (let pos = 0; pos < count; pos++) {
-                if (urlParams.has('version'+pos)) {
-                    list[pos] = urlParams.get('version'+pos);
-                }
-                else {
+                if (urlParams.has('version' + pos)) {
+                    list[pos] = urlParams.get('version' + pos);
+                } else {
                     list[pos] = null;
                 }
             }
@@ -219,24 +260,7 @@ getMetadata()
             // console.log('updateSpeakerPos(' + pos + ')')
             updateOrigin(metaSpeakers, speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos]);
             urlParams.set('speaker' + pos, speakersSelector[pos].value);
-            updateTitle();
-            window.history.pushState({ page: 1 }, 'Compare speakers', urlCompare + urlParams.toString());
-            updateSpeakers();
-        }
-
-        function updateVersionPos(pos) {
-            // console.log('updateVersionsPos(' + pos + ')')
-            updateVersion(
-                metaSpeakers,
-                speakersSelector[pos].value,
-                versionsSelector[pos],
-                originsSelector[pos].value,
-                versionsSelector[pos].value
-            );
-            updateSpeakers();
-            urlParams.set('version' + pos, versionsSelector[pos].value);
-            updateTitle();
-            window.history.pushState({ page: 1 }, 'Compare speakers', urlCompare + urlParams.toString());
+            updateOriginPos(pos);
         }
 
         function updateOriginPos(pos) {
@@ -248,18 +272,41 @@ getMetadata()
                 versionsSelector[pos],
                 originsSelector[pos].value
             );
+            if (originsSelector[pos].childElementCount === 1) {
+                fieldsetOriginsSelector[pos].disabled = true;
+            } else {
+                fieldsetOriginsSelector[pos].removeAttribute('disabled');
+            }
             urlParams.set('origin' + pos, originsSelector[pos].value);
-            updateTitle();
+            updateVersionPos(pos);
+        }
+
+        function updateVersionPos(pos) {
+            // console.log('updateVersionsPos(' + pos + ')')
+            updateVersion(
+                metaSpeakers,
+                speakersSelector[pos].value,
+                versionsSelector[pos],
+                originsSelector[pos].value,
+                versionsSelector[pos].value
+            );
+            if (versionsSelector[pos].childElementCount === 1) {
+                fieldsetVersionsSelector[pos].disabled = true;
+            } else {
+                fieldsetVersionsSelector[pos].removeAttribute('disabled');
+            }
+            urlParams.set('version' + pos, versionsSelector[pos].value);
             window.history.pushState({ page: 1 }, 'Compare speakers', urlCompare + urlParams.toString());
-            updateSpeakers();
         }
 
         // initial setup
         for (let pos = 0; pos < nbSpeakers; pos++) {
             const tpos = pos.toString();
-            speakersSelector[pos] = formContainer.querySelector('.speaker' + tpos);
-            originsSelector[pos] = formContainer.querySelector('.origin' + tpos);
-            versionsSelector[pos] = formContainer.querySelector('.version' + tpos);
+            speakersSelector[pos] = formContainer.querySelector('#compare-select-speaker' + tpos);
+            originsSelector[pos] = formContainer.querySelector('#compare-select-origin' + tpos);
+            versionsSelector[pos] = formContainer.querySelector('#compare-select-version' + tpos);
+            fieldsetOriginsSelector[pos] = formContainer.querySelector('#compare-fieldset-origin' + tpos);
+            fieldsetVersionsSelector[pos] = formContainer.querySelector('#compare-fieldset-version' + tpos);
         }
 
         for (let pos = 0; pos < nbSpeakers; pos++) {
@@ -269,16 +316,7 @@ getMetadata()
 
         const initDatas = [];
         for (let pos = 0; pos < nbSpeakers; pos++) {
-            updateOrigin(
-                metaSpeakers,
-                initSpeakers[pos],
-                originsSelector[pos],
-                versionsSelector[pos],
-                urlParams.get('origin' + pos),
-                urlParams.get('version' + pos)
-            );
-            updateVersionPos(pos);
-            updateOriginPos(pos);
+            updateOrigin(metaSpeakers, initSpeakers[pos], originsSelector[pos], versionsSelector[pos], null, null);
             updateSpeakerPos(pos);
             // console.log('DEBUG: ' + originsSelector[pos].options[0])
             initDatas[pos] = getSpeakerData(
@@ -286,31 +324,68 @@ getMetadata()
                 initMeasurement,
                 initSpeakers[pos],
                 initOrigins[pos],
-                initVersions[pos]);
+                initVersions[pos]
+            );
         }
+        updateSpeakers();
 
         // add listeners
+        function windowChanges(event) {
+            if (!graphsConfigs) {
+                return;
+            }
+            console.log('DEBUG: resize ' + event.name);
+            if (graphsConfigs.length == 1) {
+                Plotly.Plots.resize('plotSingle');
+            } else if (graphsConfigs.length == 2) {
+                Plotly.Plots.resize('plotDouble0');
+                Plotly.Plots.resize('plotDouble1');
+            }
+        }
+
+        window.addEventListener('resize', (event) => {
+            return windowChanges(event);
+        });
+
+        screen.orientation.addEventListener('change', (event) => {
+            return windowChanges(event);
+        });
+
         graphsSelector.addEventListener('change', updateSpeakers, false);
+
+        document.addEventListener('keydown', (event) => {
+            const key = event.key;
+            if (key === 'a' || key === '1') {
+                speakersSelector[0].focus();
+            } else if (key === 'b' || key === '2') {
+                speakersSelector[1].focus();
+            } else if (key === 'g') {
+                graphsSelector.focus();
+            }
+        });
 
         for (let pos = 0; pos < nbSpeakers; pos++) {
             speakersSelector[pos].addEventListener(
                 'change',
                 () => {
-                    return updateSpeakerPos(pos);
+                    updateSpeakerPos(pos);
+                    updateSpeakers();
                 },
                 false
             );
             originsSelector[pos].addEventListener(
                 'change',
                 () => {
-                    return updateOriginPos(pos);
+                    updateOriginPos(pos);
+                    updateSpeakers();
                 },
                 false
             );
             versionsSelector[pos].addEventListener(
                 'change',
                 () => {
-                    return updateVersionPos(pos);
+                    updateVersionPos(pos);
+                    updateSpeakers();
                 },
                 false
             );

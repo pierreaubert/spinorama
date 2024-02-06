@@ -19,19 +19,19 @@
 /*global Plotly*/
 /*eslint no-undef: "error"*/
 
+import { urlSite } from './meta.js';
 import {
     getMetadata,
     assignOptions,
     getSpeakerData,
     knownMeasurements,
     setCEA2034,
-    setCEA2034Split,
     setContour,
     setGraph,
     setGlobe,
+    setRadar,
     setSurface,
 } from './common.js';
-import { urlSite } from './misc.js';
 
 function getNearSpeakers(metadata) {
     const metaSpeakers = {};
@@ -71,11 +71,10 @@ getMetadata()
                     for (let i = 0; i < graphs.length - 1; i++) {
                         let graphOptions = [null];
                         const currentGraphs = [graphs[0], graphs[i + 1]];
-                        const currentNames = [speakersName[0], speakersName[i + 1]];
+                        // const currentNames = [speakersName[0], speakersName[i + 1]];
+                        const currentNames = [speakersName[0] + ' v.s. ' + speakersName[i + 1], speakersName[i + 1]];
                         if (measurement === 'CEA2034') {
                             graphOptions = setCEA2034(currentNames, currentGraphs, windowWidth, windowHeight);
-                        } else if (measurement === 'CEA2034 with splitted views') {
-                            graphOptions = setCEA2034Split(currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (
                             measurement === 'On Axis' ||
                             measurement === 'Estimated In-Room Response' ||
@@ -85,11 +84,11 @@ getMetadata()
                             measurement === 'SPL Horizontal Normalized' ||
                             measurement === 'SPL Vertical Normalized' ||
                             measurement === 'Horizontal Reflections' ||
-                            measurement === 'Vertical Reflections' ||
-                            measurement === 'SPL Horizontal Radar' ||
-                            measurement === 'SPL Vertical Radar'
+                            measurement === 'Vertical Reflections'
                         ) {
                             graphOptions = setGraph(currentNames, currentGraphs, windowWidth, windowHeight);
+                        } else if (measurement === 'SPL Horizontal Radar' || measurement === 'SPL Vertical Radar') {
+                            graphOptions = setRadar(currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (
                             measurement === 'SPL Horizontal Contour' ||
                             measurement === 'SPL Vertical Contour' ||

@@ -1,0 +1,14 @@
+EQ for JBL CBT 1000 computed from Vendors-JBL data
+Preference Score 3.72 with EQ 6.85
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2023-11-24-18:10:41
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    49 Hz Gain +2.99 dB Q 0.45
+Filter  2: ON PK Fc   332 Hz Gain +2.56 dB Q 1.23
+Filter  3: ON PK Fc   621 Hz Gain -0.33 dB Q 2.26
+Filter  4: ON PK Fc   879 Hz Gain +0.43 dB Q 1.94
+Filter  5: ON PK Fc  6585 Hz Gain -2.31 dB Q 0.30
+Filter  6: ON PK Fc 10341 Hz Gain +0.10 dB Q 0.33
+Filter  7: ON PK Fc 11085 Hz Gain -3.74 dB Q 0.63

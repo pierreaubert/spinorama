@@ -1,0 +1,14 @@
+EQ for Fulcrum Acoustic CCX826 computed from Vendors-Fulcrum Acoustic data
+Preference Score 3.19 with EQ 4.62
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2023-11-24-18:10:40
+
+Preamp: -2.9 dB
+
+Filter  1: ON PK Fc    98 Hz Gain +2.99 dB Q 2.54
+Filter  2: ON PK Fc   219 Hz Gain -0.74 dB Q 1.53
+Filter  3: ON PK Fc  1429 Hz Gain +1.55 dB Q 2.99
+Filter  4: ON PK Fc  3177 Hz Gain -0.73 dB Q 0.27
+Filter  5: ON PK Fc  3289 Hz Gain +2.98 dB Q 2.96
+Filter  6: ON PK Fc  5347 Hz Gain +2.22 dB Q 3.00
+Filter  7: ON PK Fc 10707 Hz Gain -1.18 dB Q 2.92

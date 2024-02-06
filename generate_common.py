@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2023 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import ipaddress
 import logging
 import os
 import pathlib
+import re
 import sys
 import warnings
 
@@ -31,6 +32,9 @@ import flammkuchen as fl
 import tables
 
 import datas.metadata as metadata
+
+from spinorama import ray_setup_logger
+import spinorama.constant_paths as cpaths
 
 MINIRAY = None
 try:
@@ -218,7 +222,7 @@ def cache_load_seq(filters, smoke_test):
     for cache in cache_files:
         speaker_name = filters.get("speaker_name")
         if speaker_name is not None and cache[-5:-3] != cache_key(speaker_name):
-            logging.debug("skipping %s key=%s".format(speaker_name, cache_key(speaker_name)))
+            logging.debug("skipping %s key=%s", speaker_name, cache_key(speaker_name))
             continue
         df_read = fl.load(path=cache)
         logging.debug("reading file %s found %d entries", cache, len(df_read))
@@ -241,12 +245,15 @@ def cache_load_seq(filters, smoke_test):
 
 
 @ray.remote(num_cpus=1)
-def cache_fetch(cachepath: str):
+def cache_fetch(cachepath: str, level):
+    logger = logging.getLogger("spinorama")
+    ray_setup_logger(level)
+    logger.debug("Level of debug is %d", level)
     return fl.load(path=cachepath)
 
 
-def cache_load_distributed_map(filters, smoke_test):
-    cache_files = glob("/home/pierre/src/spinorama/{}/*.h5".format(CACHE_DIR))
+def cache_load_distributed_map(filters, smoke_test, level):
+    cache_files = glob("./{}/*.h5".format(CACHE_DIR))
     ids = []
     # mapper read the cache and start 1 worker per file
     for cache in cache_files:
@@ -254,7 +261,7 @@ def cache_load_distributed_map(filters, smoke_test):
             filters.get("speaker_name")
         ):
             continue
-        ids.append(cache_fetch.remote(cache))
+        ids.append(cache_fetch.remote(cache, level))
 
     print("(queued {} files)".format(len(cache_files)))
     return ids
@@ -286,18 +293,18 @@ def cache_load_distributed_reduce(filters, smoke_test, ids):
     return df_all
 
 
-def cache_load_distributed(filters, smoke_test):
-    ids = cache_load_distributed_map(filters, smoke_test)
+def cache_load_distributed(filters, smoke_test, level):
+    ids = cache_load_distributed_map(filters, smoke_test, level)
     return cache_load_distributed_reduce(filters, smoke_test, ids)
 
 
-def cache_load(filters, smoke_test):
+def cache_load(filters, smoke_test, level):
     if ray.is_initialized and filters.get("speaker_name") is None:
-        return cache_load_distributed(filters, smoke_test)
+        return cache_load_distributed(filters, smoke_test, level)
     return cache_load_seq(filters, smoke_test)
 
 
-def cache_update(df_new, filters):
+def cache_update(df_new, filters, level):
     if not os.path.exists(CACHE_DIR) or len(df_new) == 0:
         return
 
@@ -306,7 +313,7 @@ def cache_update(df_new, filters):
     for new_speaker, new_datas in df_new.items():
         if filters is not None and new_speaker != filters.get("speaker", ""):
             continue
-        df_old = cache_load(filters={"speaker_name": new_speaker}, smoke_test=False)
+        df_old = cache_load(filters={"speaker_name": new_speaker}, smoke_test=False, level=level)
         for new_origin, new_measurements in new_datas.items():
             for new_measurement, new_data in new_measurements.items():
                 if new_speaker not in df_old:
@@ -319,3 +326,55 @@ def cache_update(df_new, filters):
         cache_save_key(cache_key(new_speaker), df_old)
     print(f"(updated +{count}) ", end=" ", flush=True)
     print("(saved).")
+
+
+def sort_metadata_per_date(meta):
+    def sort_meta_date(s):
+        if s is not None:
+            return s.get("review_published", "20170101")
+        return "20170101"
+
+    keys_sorted_date = sorted(
+        meta,
+        key=lambda a: sort_meta_date(
+            meta[a]["measurements"].get(meta[a].get("default_measurement"))
+        ),
+        reverse=True,
+    )
+    return {k: meta[k] for k in keys_sorted_date}
+
+
+def sort_metadata_per_score(meta):
+    def sort_meta_score(s):
+        if s is not None and "pref_rating" in s and "pref_score" in s["pref_rating"]:
+            return s["pref_rating"]["pref_score"]
+        return -1
+
+    keys_sorted_score = sorted(
+        meta,
+        key=lambda a: sort_meta_score(
+            meta[a]["measurements"].get(meta[a].get("default_measurement"))
+        ),
+        reverse=True,
+    )
+    return {k: meta[k] for k in keys_sorted_score}
+
+
+def find_metadata_file():
+    pattern = "{}-[0-9a-f]*.json".format(cpaths.CPATH_METADATA_JSON[:-5])
+    json_filenames = glob(pattern)
+    # print('DEBUG: {}'.format(json_filenames))
+    json_filename = None
+    for json_maybe in json_filenames:
+        check = re.match(".*/metadata[-][0-9a-f]{5}[.]json$", json_maybe)
+        if check is not None:
+            json_filename = json_maybe
+            break
+    if json_filename is not None and os.path.exists(json_filename):
+        return json_filename
+
+    return None
+
+
+def find_metadata_file_chunks():
+    return "['c1', 'c2']"

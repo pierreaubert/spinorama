@@ -1,0 +1,14 @@
+EQ for Fiio SP3 computed from ErinsAudioCorner data
+Preference Score 2.46 with EQ 5.91
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.25
+Dated: 2023-10-09-10:13:57
+
+Preamp: -3.1 dB
+
+Filter  1: ON PK Fc    54 Hz Gain +4.96 dB Q 2.95
+Filter  2: ON PK Fc    72 Hz Gain -7.78 dB Q 2.92
+Filter  3: ON PK Fc   243 Hz Gain +2.35 dB Q 0.90
+Filter  4: ON PK Fc   454 Hz Gain +2.00 dB Q 1.53
+Filter  5: ON PK Fc  1532 Hz Gain -1.91 dB Q 2.99
+Filter  6: ON PK Fc  2324 Hz Gain +3.41 dB Q 2.82
+Filter  7: ON PK Fc  7308 Hz Gain -5.27 dB Q 0.29
