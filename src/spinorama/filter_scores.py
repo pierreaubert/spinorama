@@ -206,6 +206,6 @@ def lw_loss(df_speaker: dict, peq) -> float:
     # compute LW
     lw_filtered = listening_window(spl_h_filtered, spl_v_filtered)
     # optimize nbd
-    score = nbd(lw_filtered)
+    score = nbd(dfu=lw_filtered, min_freq=100)
     # print("LW score: {}".format(score))
     return score

@@ -4,7 +4,6 @@ rm -- *.txt
 unzip $1
 
 PATTERN='/^[0-9].*/ {printf("%f,%f\n", $1, $2)}'
-SPEAKER=$2
 
 for i in $2_hor_+*.txt; do
     j="${i#$2_hor_+}";

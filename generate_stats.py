@@ -32,7 +32,6 @@ import json
 import sys
 
 from docopt import docopt
-import pandas as pd
 
 from generate_common import get_custom_logger, args2level, find_metadata_file
 
@@ -69,7 +68,7 @@ def speakers2results(speakers):
             specifications = measurement.get("specifications", {})
             if quality == "" and data_format == "klippel":
                 quality = "high"
-            is_default = True if key == default_measurement else False
+            is_default = key == default_measurement
             results.append(
                 (
                     i,

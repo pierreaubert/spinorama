@@ -37,22 +37,17 @@ import pathlib
 from docopt import docopt
 import plotly.graph_objects as go
 
-from spinorama import ray_setup_logger
-import ray
 
 from generate_common import (
     get_custom_logger,
     args2level,
     cache_load,
     custom_ray_init,
-    sort_metadata_per_date,
     find_metadata_file,
 )
 
 from spinorama.constant_paths import CPATH_DOCS_SPEAKERS, CPATH_DATAS_EQ
 from spinorama.filter_scores import scores_apply_filter
-from spinorama.need_update import need_update
-from spinorama.pict import write_multiformat
 from spinorama.load_rew_eq import parse_eq_iir_rews
 
 VERSION = 0.2
@@ -219,7 +214,7 @@ def main(args):
 
     for speaker in jsmeta.items():
         speaker_name = "{} {}".format(speaker[1]["brand"], speaker[1]["model"])
-        if not speaker_name in df_speaker:
+        if speaker_name not in df_speaker:
             continue
         speaker_data = df_speaker[speaker_name]
         print_radar(speaker[1], scale, speaker_data)

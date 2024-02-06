@@ -18,8 +18,7 @@
 
 echo "Update starts"
 export PYTHONPATH=src:src/website:src/spinorama:.
-
-PYTHON=./spinorama-env/bin/python3
+# PYTHON=./spinorama-env/bin/python3
 
 IP="127.0.0.1"
 case $HOSTNAME in
