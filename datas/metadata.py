@@ -12856,8 +12856,31 @@ speakers_info: SpeakerDatabase = {
         "price": "3500",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "vendor-v2",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r5_meta/",
+                    "yt": "https://youtu.be/THBJXdZl2qM",
+                    "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                },
+                "review_published": "20240206",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 1025,
+                        "width": 175,
+                        "depth": 344,
+                    },
+                    "weight": 24.5,
+                },
+            },
             "vendor-v2": {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",

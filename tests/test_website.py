@@ -18,7 +18,7 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         options = webdriver.ChromeOptions()
         options.add_argument("--headless=new")
         # unclear why we need that option but selenium crashes without it
-        options.add_argument('--remote-debugging-pipe')
+        options.add_argument("--remote-debugging-pipe")
         self.driver = webdriver.Chrome(options=options)
 
     def tearDown(self):
