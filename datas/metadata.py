@@ -17795,6 +17795,32 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Polk Audio Signature Elite ES60": {
+        "brand": "Polk Audio",
+        "model": "Signature Elite ES60",
+        "type": "passive",
+        "price": "540",
+        "shape": "floorstanders",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/polk-es60-tower-speaker-review.52064/",
+                "review_published": "20240208",
+                "specifications": {
+                    "sensitivity": 90,
+                    "size": {
+                        "height": 1130,
+                        "width": 216,
+                        "depth": 399,
+                    },
+                    "weight": 23.6,
+                },
+            },
+        },
+    },
     "Polk Audio Signature S15": {
         "brand": "Polk Audio",
         "model": "Signature S15",
