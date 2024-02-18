@@ -58,16 +58,19 @@
     pref_rating = None
     notes = None
     specifications = None
+    sensitivity = None 
+    sensitivity_distance = None 
+    sensitivity_1m = None 
     default = meta[speaker].get('default_measurement')
     if default is not None and default in meta[speaker]['measurements'].keys():
         estimates = meta[speaker]['measurements'][default].get('estimates', None)
         pref_rating = meta[speaker]['measurements'][default].get('pref_rating', None)
         pref_rating_eq = meta[speaker]['measurements'][default].get('pref_rating_eq', None)
         notes = meta[speaker]['measurements'][default].get('notes', None)
-    sensitivity_data = meta[speaker]["measurements"].get('sensitivity', {})
-    sensitivity = sensitivity_data.get('computed', None)
-    sensitivity_1m = sensitivity_data.get('sensitivity_1m', None)
-    sensitivity_distance = sensitivity_data.get('sensitivity_distance', None)
+        sensitivity_data = meta[speaker]["measurements"][default].get('sensitivity', {})
+        sensitivity = sensitivity_data.get('computed', None)
+        sensitivity_1m = sensitivity_data.get('sensitivity_1m', None)
+        sensitivity_distance = sensitivity_data.get('distance', None)
     if g_key in meta[speaker]['measurements'].keys():
         specifications = meta[speaker]['measurements'][g_key].get('specifications', None)
 %>
@@ -121,9 +124,8 @@
 %    if sensitivity_1m is not None:
 <li>
   Sensitivity: <b>${'{0:.1f}'.format(sensitivity_1m)}</b>dB (avg. 100Hz-1kHz for 2.83V estimated at <b>1m</b>)
-%        if sensitivity_distance is not None:
-  . Sensitivity computed at the measurement distance
-  (${sensitivity_distance})} over the same frequency range: ${'{0:.1f}'.format(sensitivity_distance)}.
+%        if sensitivity_distance is not None and sensitivity_distance > 1.0:
+. Sensitivity computed at the measurement distance (${sensitivity_distance}m) over the same frequency range: ${'{:.1f}dB'.format(sensitivity)}.
 %        endif
 </li>
 %    else:
