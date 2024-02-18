@@ -20982,6 +20982,28 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "SunAudio Purified 4": {
+        "brand": "SunAudio",
+        "model": "Purified 4",
+        "type": "passive",
+        "price": "2800",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-SunAudio",
+                "format": "spl_hv_txt",
+                "quality": "medium",
+                "review": "https://sunaudio.com/products/purified-4-modular-active-loudspeakers",
+                "review_published": "20240217",
+                "data_acquisition": {
+                    "distance": 3.0,
+                },
+                "notes": "Sun Audio Purified 4 XP25A Crossover: Woofer: BW12 @ 1495Hz Tweeter: BW18 @ 2201Hz. Measurements are done at 3m",
+            },
+        },
+    },
     "SVS Prime Center": {
         "brand": "SVS",
         "model": "Prime Center",
@@ -23049,6 +23071,13 @@ origins_info = {
         "min dB": -40,
         "max dB": 10,
         "url": "https://www.sonbs.net",
+    },
+    "Vendors-SunAudio": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://sunaudio.com/",
     },
     "Vendors-Theory Audio": {
         "min hz": 20,
