@@ -49,7 +49,6 @@ def speakers2results(speakers):
             price = "{:d}".format(int(price) // 2)
         shape = speaker.get("shape", None)
         energy = speaker.get("type", None)
-        sensitivity = float(speaker.get("sensitivity", 0.0))
         default_measurement = speaker["default_measurement"]
         measurements = speaker["measurements"]
         eq = None
@@ -66,6 +65,8 @@ def speakers2results(speakers):
             data_format = measurement.get("format", "")
             quality = measurement.get("quality", "")
             specifications = measurement.get("specifications", {})
+            sensitivity_data = speaker.get("sensitivity", {})
+            sensitivity = sensitivity_data.get("sensitivity_1m")
             if quality == "" and data_format == "klippel":
                 quality = "high"
             is_default = key == default_measurement
