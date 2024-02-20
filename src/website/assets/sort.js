@@ -145,7 +145,7 @@ export function sortMetadata2(metadata, sorter) {
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
         if ('sensitivity' in msr && 'sensitivity_1m' in msr.sensitivity) {
-	    return spk.measurements[def].sensitivity.sensitivity_1m;
+            return spk.measurements[def].sensitivity.sensitivity_1m;
         }
         return 0.0;
     }

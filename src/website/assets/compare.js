@@ -36,7 +36,7 @@ import {
 
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin
-    // console.log('update version for ' + speaker + ' origin=' + origin + ' version=' + version)
+    console.log('update version for ' + speaker + ' origin=' + origin + ' version=' + version);
     const versions = Object.keys(metaSpeakers[speaker].measurements);
     let matches = new Set();
     versions.forEach((val) => {
@@ -58,8 +58,8 @@ function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     assignOptions(Array.from(matches), selector, correct_version);
 }
 
-function updateOrigin(metaSpeakers, speaker, originSelector, versionSelector, origin, version) {
-    // console.log('updateOrigin for ' + speaker + ' with origin ' + origin + ' version=' + version)
+function updateOriginAndVersion(metaSpeakers, speaker, originSelector, versionSelector, origin, version) {
+    console.log('updateOrigin for ' + speaker + ' with origin ' + origin + ' version=' + version);
     const measurements = Object.keys(metaSpeakers[speaker].measurements);
     const origins = new Set();
     for (const key in measurements) {
@@ -258,14 +258,14 @@ getMetadata()
 
         function updateSpeakerPos(pos) {
             // console.log('updateSpeakerPos(' + pos + ')')
-            updateOrigin(metaSpeakers, speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos]);
+            updateOriginAndVersion(metaSpeakers, speakersSelector[pos].value, originsSelector[pos], versionsSelector[pos]);
             urlParams.set('speaker' + pos, speakersSelector[pos].value);
             updateOriginPos(pos);
         }
 
         function updateOriginPos(pos) {
             // console.log('updateOriginPos(' + pos + ')')
-            updateOrigin(
+            updateOriginAndVersion(
                 metaSpeakers,
                 speakersSelector[pos].value,
                 originsSelector[pos],
@@ -299,35 +299,46 @@ getMetadata()
             window.history.pushState({ page: 1 }, 'Compare speakers', urlCompare + urlParams.toString());
         }
 
-        // initial setup
-        for (let pos = 0; pos < nbSpeakers; pos++) {
-            const tpos = pos.toString();
-            speakersSelector[pos] = formContainer.querySelector('#compare-select-speaker' + tpos);
-            originsSelector[pos] = formContainer.querySelector('#compare-select-origin' + tpos);
-            versionsSelector[pos] = formContainer.querySelector('#compare-select-version' + tpos);
-            fieldsetOriginsSelector[pos] = formContainer.querySelector('#compare-fieldset-origin' + tpos);
-            fieldsetVersionsSelector[pos] = formContainer.querySelector('#compare-fieldset-version' + tpos);
-        }
-
-        for (let pos = 0; pos < nbSpeakers; pos++) {
-            assignOptions(speakers, speakersSelector[pos], initSpeakers[pos]);
-        }
-        assignOptions(knownMeasurements, graphsSelector, initMeasurement);
-
         const initDatas = [];
-        for (let pos = 0; pos < nbSpeakers; pos++) {
-            updateOrigin(metaSpeakers, initSpeakers[pos], originsSelector[pos], versionsSelector[pos], null, null);
-            updateSpeakerPos(pos);
-            // console.log('DEBUG: ' + originsSelector[pos].options[0])
-            initDatas[pos] = getSpeakerData(
-                metaSpeakers,
-                initMeasurement,
-                initSpeakers[pos],
-                initOrigins[pos],
-                initVersions[pos]
-            );
+
+        if (initDatas.length === 0) {
+            for (let pos = 0; pos < nbSpeakers; pos++) {
+                // read selectors
+                const tpos = pos.toString();
+                speakersSelector[pos] = formContainer.querySelector('#compare-select-speaker' + tpos);
+                originsSelector[pos] = formContainer.querySelector('#compare-select-origin' + tpos);
+                versionsSelector[pos] = formContainer.querySelector('#compare-select-version' + tpos);
+                fieldsetOriginsSelector[pos] = formContainer.querySelector('#compare-fieldset-origin' + tpos);
+                fieldsetVersionsSelector[pos] = formContainer.querySelector('#compare-fieldset-version' + tpos);
+
+                // assign initial values
+                assignOptions(speakers, speakersSelector[pos], initSpeakers[pos]);
+
+                // update associated origin and version
+                updateOriginAndVersion(
+                    metaSpeakers,
+                    speakersSelector[pos].value,
+                    originsSelector[pos],
+                    versionsSelector[pos],
+                    initOrigins[pos],
+                    initVersions[pos]
+                );
+
+                // get data
+                initDatas[pos] = getSpeakerData(
+                    metaSpeakers,
+                    initMeasurement,
+                    initSpeakers[pos],
+                    initOrigins[pos],
+                    initVersions[pos]
+                );
+            }
+
+            // update list of graphs in the form
+            assignOptions(knownMeasurements, graphsSelector, initMeasurement);
+        } else {
+            updateSpeakers();
         }
-        updateSpeakers();
 
         // add listeners
         function windowChanges(event) {

@@ -330,6 +330,23 @@ function computeDims(windowWidth, windowHeight, is_vertical, is_compact, nb_grap
     return [width, height];
 }
 
+function showMinMaxMeasurements(datas) {
+    let results = new Map();
+    for (let i in datas) {
+        if (datas[i].legendgrouptitle != null && datas[i].legendgrouptitle.text != null) {
+            const speaker_name = datas[i].legendgrouptitle.text;
+            if (datas[i].x != null && datas[i].x.length > 0) {
+                if (results.has(speaker_name)) {
+                    results.set(speaker_name, Math.min(results.get(speaker_name), datas[i].x[0]));
+                } else {
+                    results.set(speaker_name, datas[i].x[0]);
+                }
+            }
+        }
+    }
+    return results;
+}
+
 function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
     let datas = null;
     let layout = null;
@@ -360,6 +377,33 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
     let fontDelta = 0;
     if (!is_compact) {
         fontDelta = Math.round(windowWidth / 300);
+    }
+
+    function displayMeasurementsLimits(datas) {
+        let shapes = [];
+        const mins = showMinMaxMeasurements(datas);
+        mins.forEach((min_freq, speaker_name) => {
+            if (min_freq > 40) {
+                shapes.push({
+                    type: 'rect',
+                    xref: 'x',
+                    yref: 'y',
+                    x0: 20,
+                    y0: -45,
+                    x1: min_freq,
+                    y1: 5,
+                    fillcolor: '#d3d3d3',
+                    opacity: 0.2,
+                    line: { width: 2 },
+                    label: {
+                        text: 'No data below ' + Math.round(min_freq) + 'Hz for' + speaker_name,
+                        font: { size: 10, color: 'green' },
+                        textposition: 'top center',
+                    },
+                });
+            }
+        });
+        return shapes;
     }
 
     function computeXaxis() {
@@ -668,6 +712,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         computeModbar();
         computeColorbar();
         computePolar();
+        layout.shapes = displayMeasurementsLimits(datas);
         computeMargin(); // must be last
     } else {
         // should be a pop up
