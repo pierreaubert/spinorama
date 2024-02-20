@@ -20732,9 +20732,26 @@ speakers_info: SpeakerDatabase = {
         "price": "650",
         "amount": "each",
         "shape": "omnidirectional",
-        "default_measurement": "asr",
+        "default_measurement": "asr-horizontal",
         "measurements": {
-            "asr": {
+            "asr-horizontal": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/sonos-five-smart-speaker-review.51409/",
+                },
+                "review_published": "20240116",
+                "specifications": {
+                    "size": {
+                        "height": 203,
+                        "width": 364,
+                        "depth": 154,
+                    },
+                    "weight": 6.3,
+                },
+                "notes": "Since the speaker is almost omnidirectional, it is unclear if the automatic EQ is helping or not. Do not blindly use it and do some listenting",
+            },
+            "asr-vertical": {
                 "origin": "ASR",
                 "format": "klippel",
                 "reviews": {
