@@ -382,9 +382,19 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
     function displayMeasurementsLimits(datas) {
         let shapes = [];
         const mins = showMinMaxMeasurements(datas);
+        let title = '';
         mins.forEach((min_freq, speaker_name) => {
             if (min_freq > 40) {
-                shapes.push({
+                if (title.length > 1) {
+                    title += '<br>';
+                }
+                title += 'No data below ' + Math.round(min_freq) + 'Hz for' + speaker_name;
+            }
+        });
+        let i = 0;
+        mins.forEach((min_freq, speaker_name) => {
+            if (min_freq > 40) {
+                let shape = {
                     type: 'rect',
                     xref: 'x',
                     yref: 'y',
@@ -395,12 +405,16 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
                     fillcolor: '#d3d3d3',
                     opacity: 0.2,
                     line: { width: 2 },
-                    label: {
-                        text: 'No data below ' + Math.round(min_freq) + 'Hz for' + speaker_name,
+                };
+                if (i == 0) {
+                    shape.label = {
+                        text: title,
                         font: { size: 10, color: 'green' },
                         textposition: 'top center',
-                    },
-                });
+                    };
+                }
+                shapes.push(shape);
+                i += 1;
             }
         });
         return shapes;
