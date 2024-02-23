@@ -4670,7 +4670,7 @@ speakers_info: SpeakerDatabase = {
                 },
                 "review_published": "2024xxxx",
                 "specifications": {
-                    "sensitivity":92,
+                    "sensitivity": 92,
                     "impedance": 8,
                     "size": {
                         "height": 902,

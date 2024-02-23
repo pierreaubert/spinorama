@@ -115,6 +115,11 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         self.driver.get("{}/{}?{}".format(DEV, COMPARE, compare_basic))
         self.driver.implicitly_wait(2)
 
+    def test_compare_measurements_without_low_freq(self):
+        compare_basic = "speaker0=Genelec+8351A&origin0=Princeton&version0=princeton&measurement=CEA2034&speaker1=Polk+Audio+Legend+L200&origin1=Misc&version1=misc-audioholics"
+        self.driver.get("{}/{}?{}".format(DEV, COMPARE, compare_basic))
+        self.driver.implicitly_wait(2)
+
 
 if __name__ == "__main__":
     unittest.main()

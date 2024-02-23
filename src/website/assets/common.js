@@ -333,10 +333,10 @@ function computeDims(windowWidth, windowHeight, is_vertical, is_compact, nb_grap
 function showMinMaxMeasurements(datas) {
     let results = new Map();
     for (let i in datas) {
-        let speaker_name = "Speaker";
+        let speaker_name = 'Speaker';
         if (datas[i].legendgrouptitle != null && datas[i].legendgrouptitle.text != null) {
             speaker_name = datas[i].legendgrouptitle.text;
-	}
+        }
         if (datas[i].x != null && datas[i].x.length > 0) {
             if (results.has(speaker_name)) {
                 results.set(speaker_name, Math.min(results.get(speaker_name), datas[i].x[0]));
@@ -390,9 +390,9 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
                     title += '<br>';
                 }
                 title += 'No data below ' + Math.round(min_freq) + 'Hz';
-		if (speaker_name !== "Speaker") {
-		    title += ' for ' + speaker_name;
-		}
+                if (speaker_name !== 'Speaker') {
+                    title += ' for ' + speaker_name;
+                }
             }
         });
         let i = 0;
