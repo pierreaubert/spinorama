@@ -9,3 +9,6 @@ apt install linux-headers-$(uname -r)
 apt --fix-broken install
 apt install nvidia-dkms-${VERSION}
 
+sudo dkms install -m nvidia/545.29.06
+
+
