@@ -6271,6 +6271,37 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Elac Vela BS 403": {
+        "skip": True,
+        "brand": "Elac",
+        "model": "Vela BS 403",
+        "type": "passive",
+        "price": "1150",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_vela_bs_403/",
+                    "yt": "https://youtu.be/Io6gsJK3pSM",
+                },
+                "review_published": "202402xx",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "size": {
+                        "height": 362,
+                        "width": 191,
+                        "depth": 240,
+                    },
+                    "weight": 7.1,
+                },
+            },
+        },
+    },
     "Emotiva Airmotiv 6s": {
         "brand": "Emotiva",
         "model": "Airmotiv 6s",
@@ -10014,6 +10045,37 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "JBL L52 Classic": {
+        "skip": True,
+        "brand": "JBL",
+        "model": "L52 Classic",
+        "type": "passive",
+        "price": "1000",
+        "amount": "each",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_l52_classic/",
+                    "yt": "https://youtu.be/wG9iIMId0ew",
+                },
+                "review_published": "202402xx",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 4,
+                    "size": {
+                        "height": 330,
+                        "width": 197,
+                        "depth": 216,
+                    },
+                    "weight": 5,
+                },
+            },
+        },
+    },
     "JBL LSR308": {
         "brand": "JBL",
         "model": "LSR308",
@@ -12159,6 +12221,38 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_lp-8v2/",
                 },
                 "review_published": "20211114",
+            },
+        },
+    },
+    "Kali LP-UNF": {
+        "skip": True,
+        "brand": "Kali",
+        "model": "LP-UNF",
+        "type": "active",
+        "price": "300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_lp_unf/",
+                    "yt": "https://youtu.be/hOkMVbW7Yts",
+                },
+                "review_published": "202403xx",
+                "specifications": {
+                    "SPL": {
+                        "peak": 103,
+                    },
+                    "size": {
+                        "height": 254,
+                        "width": 164,
+                        "depth": 186,
+                    },
+                    "weight": 3.2,
+                },
             },
         },
     },
@@ -18329,6 +18423,37 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/psb-alpha-p5-speaker-review.15161/",
                 "review_published": "20200806",
+            },
+        },
+    },
+    "PSB Imagine T65": {
+        "skip": True,
+        "brand": "PSB",
+        "model": "Imagine T65",
+        "type": "passive",
+        "price": "2180",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/psb_t65/",
+                    "yt": "https://youtu.be/HXuFjZ5Q3vg",
+                },
+                "review_published": "202403xx",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 4,
+                    "size": {
+                        "height": 986,
+                        "width": 343,
+                        "depth": 213,
+                    },
+                    "weight": 20.0,
+                },
             },
         },
     },
