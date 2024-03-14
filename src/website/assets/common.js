@@ -185,12 +185,11 @@ export function getAllSpeakers(metadata) {
     return [metaSpeakers, speakers.sort()];
 }
 
-export function getMetadata() {
-    const url = urlSite + 'assets/' + metadataFilename;
-    // console.log('fetching url=' + url)
+function fetchDataAndMap(url, encoding) {
+    console.log('fetching url=' + url + ' encoding=' + encoding)
     const spec = fetch(url, {
         headers: {
-            'Content-Encoding': 'gzip',
+            'Content-Encoding': encoding,
             'Content-Type': 'application/json',
         },
     })
@@ -211,6 +210,19 @@ export function getMetadata() {
             return null;
         });
     return spec;
+}
+
+export function getMetadata() {
+    const url = urlSite + 'assets/' + metadataFilename;
+    const spec_bz2 = fetchDataAndMap(url+'.bz2', 'bz2');
+    if (spec_bz2) {
+	return spec_bz2;
+    }
+    const spec_zip = fetchDataAndMap(url+'.zip', 'zip');
+    if (spec_zip) {
+	return spec_zip;
+    }
+    return null;
 }
 
 export function getMetadataChunked() {
