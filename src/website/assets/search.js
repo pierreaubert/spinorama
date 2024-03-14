@@ -86,6 +86,7 @@ getMetadata()
             // read search type
             if (url.searchParams.has('search')) {
                 keywords = url.searchParams.get('search');
+                document.querySelector('#searchInput').value = keywords;
             }
         }
 
@@ -260,6 +261,8 @@ getMetadata()
             }
         });
 
+        // TODO: need to deal with other keys (backspace, delete, return, C-K)
+        // can I get the key if I use a generic event like change?
         document.querySelector('#searchInput').addEventListener('keyup', function () {
             // warning: keyword is a global variable
             keywords = document.querySelector('#searchInput').value;
