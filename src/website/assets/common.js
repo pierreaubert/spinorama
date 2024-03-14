@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { urlSite, metadataFilename } from './meta.js';
+import { urlSite, metadataFilename, eqdataFilename } from './meta.js';
 import { getID } from './misc.js';
 
 export const knownMeasurements = [
@@ -174,10 +174,10 @@ export function getSpeakerData(metaSpeakers, graph, speaker, origin, version) {
     return spec;
 }
 
-export function getAllSpeakers(metadata) {
+export function getAllSpeakers(table) {
     const metaSpeakers = {};
     const speakers = [];
-    metadata.forEach((value) => {
+    table.forEach((value) => {
         const speaker = value.brand + ' ' + value.model;
         speakers.push(speaker);
         metaSpeakers[speaker] = value;
@@ -186,43 +186,59 @@ export function getAllSpeakers(metadata) {
 }
 
 function fetchDataAndMap(url, encoding) {
-    console.log('fetching url=' + url + ' encoding=' + encoding)
-    const spec = fetch(url, {
-        headers: {
-            'Content-Encoding': encoding,
-            'Content-Type': 'application/json',
-        },
-    })
+    console.log('fetching url=' + url + ' encoding=' + encoding);
+    const spec = fetch(url, { headers: { 'Accept-Encoding': encoding, 'Content-Type': 'application/json' } })
+        .catch((error) => {
+            console.log('ERROR getMetadata for ' + url + ' yield a 404 with error: ' + error);
+            return null;
+        })
         .then((response) => response.json())
+        .catch((error) => {
+            console.log('ERROR getMetadata for ' + url + ' yield a json error: ' + error);
+            return null;
+        })
         .then((data) => {
-            // convert to object
-            const metadata = Object.values(data);
-            // console.log('metadata '+metadata.length)
+            const values = Object.values(data);
             return new Map(
-                metadata.map((speaker) => {
+                values.map((speaker) => {
                     const key = getID(speaker.brand, speaker.model);
                     return [key, speaker];
                 })
             );
         })
         .catch((error) => {
-            console.log('ERROR getMetadata for ' + url + 'yield a 404 with error: ' + error);
+            console.log('ERROR getMetadata for ' + url + ' failed: ' + error);
             return null;
         });
     return spec;
 }
 
 export function getMetadata() {
-    const url = urlSite + 'assets/' + metadataFilename;
-    const spec_bz2 = fetchDataAndMap(url+'.bz2', 'bz2');
-    if (spec_bz2) {
-	return spec_bz2;
-    }
-    const spec_zip = fetchDataAndMap(url+'.zip', 'zip');
-    if (spec_zip) {
-	return spec_zip;
-    }
-    return null;
+    const url = urlSite + 'assets' + metadataFilename;
+    return fetchDataAndMap(url, 'bz2, zip, deflate');
+}
+
+export function getEQdata(table) {
+    const url = urlSite + 'assets' + eqdataFilename;
+    const runit = fetchDataAndMap(url, 'bz2, gzip, zip, deflate')
+        .then((specs) => {
+            const data = new Map();
+            table.forEach((speaker, key) => {
+                if (specs.has(key)) {
+                    const eqs = specs.get(key);
+                    if (eqs.eqs) {
+                        speaker['eqs'] = eqs.eqs;
+                    }
+                }
+                data.set(key, speaker);
+            });
+            return data;
+        })
+        .catch((error) => {
+            console.log('ERROR getEQdata for ' + url + 'yield a 404 with error: ' + error);
+            return null;
+        });
+    return runit;
 }
 
 export function getMetadataChunked() {
@@ -230,7 +246,7 @@ export function getMetadataChunked() {
     // console.log('fetching url=' + url)
     const spec = fetch(url, {
         headers: {
-            'Content-Encoding': 'gzip',
+            'Accept-Encoding': 'zip',
             'Content-Type': 'application/json',
         },
     })

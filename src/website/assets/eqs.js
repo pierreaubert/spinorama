@@ -19,7 +19,7 @@
 /*global Handlebars*/
 /*eslint no-undef: "error"*/
 
-import { getMetadata } from './common.js';
+import { getMetadata, getEQdata } from './common.js';
 import { sortMetadata2 } from './sort.js';
 import { openModal, closeModal, getPeq, getID } from './misc.js';
 
@@ -32,7 +32,12 @@ function getPictureEqDetails(brand, model, version) {
 }
 
 getMetadata()
+    .then((metadataNoEQ) => {
+        console.log('metadataNoEQ has ' + metadataNoEQ.keys().toArray().length + ' entries');
+        return getEQdata(metadataNoEQ);
+    })
     .then((metadata) => {
+        console.log('metadataWithEQ has ' + metadata.keys().toArray().length + ' entries');
         const source = document.querySelector('#templateEQ').innerHTML;
         const template = Handlebars.compile(source);
 
