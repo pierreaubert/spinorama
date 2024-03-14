@@ -147,12 +147,14 @@ def generate_measurement(
         site=site,
         use_search=use_search,
     )
+    meta_file, eq_file = find_metadata_file()
     index_deps = [
         "./src/website/speaker.html",
         "./src/website/speaker_desc.html",
         "./src/website/utils.py",
         "./datas/metadata.py",
-        find_metadata_file(),
+        meta_file,
+        eq_file,
         # *find_metadata_file_chunks(),
         *glob("./src/website/assets/*.js"),
     ]
@@ -222,13 +224,17 @@ def generate_speakers(mako, dataframe, meta, site, use_search):
 
 def main():
     # load all metadata from generated json file
-    json_filename = find_metadata_file()
-    if json_filename is None:
-        logger.error("Cannot find %s", json_filename)
-        sys.exit(1)
+    metadata_json_filename, eqdata_json_filename = find_metadata_file()
+    for radical, json_check in (
+        ("metadata", metadata_json_filename),
+        ("eqdata", eqdata_json_filename),
+    ):
+        if json_check is None:
+            logger.error("Cannot find %s, you should run generate_meta.py again!", radical)
+            sys.exit(1)
 
     meta = None
-    with open(json_filename, "r") as f:
+    with open(metadata_json_filename, "r") as f:
         meta = json.load(f)
 
     # only build a dictionnary will all graphs
@@ -369,9 +375,14 @@ def main():
             logger.info("Write %s", item_name)
             item_html = mako_templates.get_template(item_name)
             # remove the ./docs/assets parts
-            metadata_filename = json_filename[13:]
+            metadata_filename = metadata_json_filename[13:]
+            eqdata_filename = eqdata_json_filename[13:]
             item_content = item_html.render(
-                df=main_df, meta=meta_sorted_score, site=site, metadata_filename=metadata_filename
+                df=main_df,
+                meta=meta_sorted_score,
+                site=site,
+                metadata_filename=metadata_filename,
+                eqdata_filename=eqdata_filename,
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename, force=False)

@@ -361,19 +361,26 @@ def sort_metadata_per_score(meta):
 
 
 def find_metadata_file():
-    pattern = "{}-[0-9a-f]*.json".format(cpaths.CPATH_METADATA_JSON[:-5])
-    json_filenames = glob(pattern)
-    # print('DEBUG: {}'.format(json_filenames))
-    json_filename = None
-    for json_maybe in json_filenames:
-        check = re.match(".*/metadata[-][0-9a-f]{5}[.]json$", json_maybe)
-        if check is not None:
-            json_filename = json_maybe
-            break
-    if json_filename is not None and os.path.exists(json_filename):
-        return json_filename
-
-    return None
+    json_paths = []
+    for radical, json_path in (
+        ("metadata", cpaths.CPATH_METADATA_JSON),
+        ("eqdata", cpaths.CPATH_EQDATA_JSON),
+    ):
+        pattern = "{}-[0-9a-f]*.json".format(json_path[:-5])
+        json_filenames = glob(pattern)
+        # print('DEBUG: {}'.format(json_filenames))
+        json_filename = None
+        for json_maybe in json_filenames:
+            regexp = ".*/{}[-][0-9a-f]{{5}}[.]json$".format(radical)
+            check = re.match(regexp, json_maybe)
+            if check is not None:
+                json_filename = json_maybe
+                break
+        if json_filename is not None and os.path.exists(json_filename):
+            json_paths.append(json_filename)
+        else:
+            json_paths.append(None)
+    return json_paths
 
 
 def find_metadata_file_chunks():
