@@ -805,7 +805,8 @@ def dump_metadata(meta):
     def check_link(hashed_filename):
         # add a link to make it easier for other scripts to find the metadata
         with contextlib.suppress(OSError):
-            os.symlink(Path(hashed_filename).name, cpaths.CPATH_METADATA_JSON)
+            if 'metadata' in hashed_filename:
+                os.symlink(Path(hashed_filename).name, cpaths.CPATH_METADATA_JSON)
 
     def dict_to_json(filename, d):
         js = json.dumps(d)
@@ -824,7 +825,7 @@ def dump_metadata(meta):
         old_hash_pattern = "{}-*.json".format(filename[:-KEY_LENGTH])
         old_hash_pattern_zip = "{}.zip".format(old_hash_pattern)
         old_hash_pattern_bz2 = "{}.bz2".format(old_hash_pattern)
-        for pattern in (old_hash_pattern, old_hash_pattern_zip):
+        for pattern in (old_hash_pattern, old_hash_pattern_zip, old_hash_pattern_bz2):
             for old_filename in glob(pattern):
                 logger.debug("remove old file %s", old_filename)
                 print("remove old file {}".format(old_filename))
@@ -858,7 +859,7 @@ def dump_metadata(meta):
         if not v.get("skip", False)
     }
     eq_full = {
-        k: {k2: v2 for k2, v2 in v.items() if k2 == "eqs"}
+        k: {k2: v2 for k2, v2 in v.items() if k2 in ("eqs", "brand", "model")}
         for k, v in meta.items()
         if not v.get("skip", False)
     }
