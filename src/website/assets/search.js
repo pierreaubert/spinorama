@@ -71,8 +71,10 @@ getMetadata()
                 const sortOrder = url.searchParams.get('reverse');
                 if (sortOrder === 'true') {
                     sorter.reverse = true;
+                    document.querySelector('#sortReverse').checked = true;
                 } else {
                     sorter.reverse = false;
+                    document.querySelector('#sortReverse').checked = false;
                 }
             } else {
                 sorter.reverse = false;

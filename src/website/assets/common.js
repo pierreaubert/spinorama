@@ -165,7 +165,7 @@ export function getSpeakerData(metaSpeakers, graph, speaker, origin, version) {
 
     const url = getSpeakerUrl(metaSpeakers, graph, speaker, origin, version);
     // console.log('fetching url=' + url)
-    const spec = fetch(url)
+    const spec = fetch(url, { headers: { 'Accept-Encoding': 'bz2, gzip, deflate', 'Content-Type': 'application/json' } })
         .then((response) => response.json())
         .catch((error) => {
             console.log('ERROR getSpeaker failed for ' + url + 'with error: ' + error);
@@ -186,7 +186,7 @@ export function getAllSpeakers(table) {
 }
 
 function fetchDataAndMap(url, encoding) {
-    console.log('fetching url=' + url + ' encoding=' + encoding);
+    // console.log('fetching url=' + url + ' encoding=' + encoding);
     const spec = fetch(url, { headers: { 'Accept-Encoding': encoding, 'Content-Type': 'application/json' } })
         .catch((error) => {
             console.log('ERROR getMetadata for ' + url + ' yield a 404 with error: ' + error);
