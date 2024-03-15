@@ -19,9 +19,9 @@
 /*global Fuse*/
 /*eslint no-undef: "error"*/
 
-import { getMetadata } from './common.js';
-import { show, hide } from './misc.js';
-import { sortMetadata2, isFiltered, isSearch } from './sort.js';
+import { getMetadata } from './common${min}.js';
+import { show, hide } from './misc${min}.js';
+import { sortMetadata2, isFiltered, isSearch } from './sort${min}.js';
 
 getMetadata()
     .then((metadata) => {
@@ -268,8 +268,8 @@ getMetadata()
         document.querySelector('#searchInput').addEventListener('keyup', function () {
             // warning: keyword is a global variable
             keywords = document.querySelector('#searchInput').value;
+            updateUrl();
             if (keywords.length > 2) {
-                updateUrl();
                 selectDispatch();
             }
         });

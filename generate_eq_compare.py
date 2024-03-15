@@ -71,7 +71,7 @@ def print_eq_compare(data, force):
 
 def main(force):
     # load all metadata from generated json file
-    json_filename = find_metadata_file()
+    json_filename, _ = find_metadata_file()
     if json_filename is None:
         logger.error("Cannot find metadata file!")
         sys.exit(1)

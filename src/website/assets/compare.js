@@ -19,7 +19,7 @@
 /*global Plotly */
 /*eslint no-undef: "error"*/
 
-import { urlSite } from './meta.js';
+import { urlSite } from './meta${min}.js';
 import {
     getMetadata,
     assignOptions,
@@ -32,7 +32,7 @@ import {
     setCEA2034,
     setRadar,
     setSurface,
-} from './common.js';
+} from './common${min}.js';
 
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin

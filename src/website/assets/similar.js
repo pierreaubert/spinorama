@@ -19,7 +19,7 @@
 /*global Plotly*/
 /*eslint no-undef: "error"*/
 
-import { urlSite } from './meta.js';
+import { urlSite } from './meta${min}.js';
 import {
     getMetadata,
     assignOptions,
@@ -31,7 +31,7 @@ import {
     setGlobe,
     setRadar,
     setSurface,
-} from './common.js';
+} from './common${min}.js';
 
 function getNearSpeakers(metadata) {
     const metaSpeakers = {};

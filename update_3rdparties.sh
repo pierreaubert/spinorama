@@ -1,10 +1,14 @@
 #!/bin/sh
 
+# warning this section is read by a python script (generate_html) to grab the versions
+
 PLOTLY=2.29.1
 HANDLEBARS=4.7.8
 BULMA=0.9.4
 FONTAWESOME=6.5.1
 FUSE=7.0.0
+
+# end section
 
 ASSETS=./docs/assets
 WEBFONTS=./docs/webfonts

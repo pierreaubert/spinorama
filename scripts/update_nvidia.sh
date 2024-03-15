@@ -2,7 +2,7 @@
 
 ubuntu-drivers devices
 
-VERSION=545
+VERSION=550
 
 apt install --reinstall nvidia-driver-${VERSION}
 apt install linux-headers-$(uname -r)

@@ -27,7 +27,7 @@ class CORSRequestHandler(SimpleHTTPRequestHandler):
                 self.copyfile(f, self.wfile)
             finally:
                 f.close()
-                
+
     def end_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET")

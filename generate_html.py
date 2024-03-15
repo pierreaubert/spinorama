@@ -18,13 +18,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-usage: generate_html.py [--help] [--version] [--dev]\
+usage: generate_html.py [--help] [--version] [--dev] [--optim]\
  [--sitedev=<http>]  [--log-level=<level>]
 
 Options:
   --help            display usage()
   --version         script version number
   --sitedev=<http>  default: http://localhost:8000/docs
+  --dev             if you want to generate the dev websites
+  --optim           if you want an optimised built       
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
 from glob import glob
@@ -53,6 +55,28 @@ from spinorama.need_update import need_update
 
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
+
+
+def get_versions(filename):
+    versions = {}
+    with open(filename, "r") as fd:
+        lines = fd.readlines()
+        for line in lines:
+            tokens = line[:-1].split("=")
+            if len(tokens) != 2:
+                continue
+            if not (tokens[0].isalpha() and tokens[0].isupper()):
+                continue
+            numbers = tokens[1].split(".")
+            if not (
+                len(numbers) == 3
+                and numbers[0].isdigit()
+                and numbers[1].isdigit()
+                and numbers[2].isdigit()
+            ):
+                continue
+            versions[tokens[0]] = tokens[1]
+    return versions
 
 
 def write_if_different(new_content: str, filename: str, force: bool):  # noqa: FBT001
@@ -105,6 +129,7 @@ def generate_measurement(
     meta,
     site,
     use_search,
+    versions,
     speaker_name,
     origins,
     speaker_html,
@@ -146,6 +171,8 @@ def generate_measurement(
         origin=origin,
         site=site,
         use_search=use_search,
+        min=".min" if flag_optim else "",
+        versions=versions,
     )
     meta_file, eq_file = find_metadata_file()
     index_deps = [
@@ -167,7 +194,12 @@ def generate_measurement(
             graph_filename = "{0}/{1}/{2}.html".format(dirname, key, graph_name)
             logger.info("Writing %s/%s for %s", key, graph_filename, speaker_name)
             graph_content = graph_html.render(
-                speaker=speaker_name, graph=graph_name, meta=meta, site=site
+                speaker=speaker_name,
+                graph=graph_name,
+                meta=meta,
+                site=site,
+                min=".min" if flag_optim else "",
+                versions=versions,
             )
             graph_deps = [
                 *glob("./datas/measurements/{}/{}/*.*".format(speaker_name, key)),
@@ -178,7 +210,7 @@ def generate_measurement(
 
 
 def generate_speaker(
-    dataframe, meta, site, use_search, speaker_name, origins, speaker_html, graph_html
+    dataframe, meta, site, use_search, versions, speaker_name, origins, speaker_html, graph_html
 ):
     for origin, measurements in origins.items():
         for key, dfs in measurements.items():
@@ -189,6 +221,7 @@ def generate_speaker(
                     meta,
                     site,
                     use_search,
+                    versions,
                     speaker_name,
                     origins,
                     speaker_html,
@@ -206,7 +239,7 @@ def generate_speaker(
                 )
 
 
-def generate_speakers(mako, dataframe, meta, site, use_search):
+def generate_speakers(mako, dataframe, meta, site, use_search, versions):
     """For each speaker, generates a set of HTML files driven by templates"""
     speaker_html = mako.get_template("speaker.html")
     graph_html = mako.get_template("graph.html")
@@ -216,7 +249,15 @@ def generate_speakers(mako, dataframe, meta, site, use_search):
             logger.debug("skipping %s", speaker_name)
             continue
         generate_speaker(
-            dataframe, meta, site, use_search, speaker_name, origins, speaker_html, graph_html
+            dataframe,
+            meta,
+            site,
+            use_search,
+            versions,
+            speaker_name,
+            origins,
+            speaker_html,
+            graph_html,
         )
 
     return 0
@@ -236,6 +277,9 @@ def main():
     meta = None
     with open(metadata_json_filename, "r") as f:
         meta = json.load(f)
+
+    # load versions for various css and js files
+    versions = get_versions("./update_3rdparties.sh")
 
     # only build a dictionnary will all graphs
     main_df = {}
@@ -277,7 +321,12 @@ def main():
 
     try:
         html_content = index_html.render(
-            df=main_df, meta=meta_sorted_date, site=site, use_search=True
+            df=main_df,
+            meta=meta_sorted_date,
+            site=site,
+            use_search=True,
+            min=".min" if flag_optim else "",
+            versions=versions,
         )
         html_filename = f"{cpaths.CPATH_DOCS}/index.html"
         write_if_different(html_content, html_filename, force=False)
@@ -290,7 +339,14 @@ def main():
     eqs_html = mako_templates.get_template("eqs.html")
 
     try:
-        eqs_content = eqs_html.render(df=main_df, meta=meta_sorted_date, site=site, use_search=True)
+        eqs_content = eqs_html.render(
+            df=main_df,
+            meta=meta_sorted_date,
+            site=site,
+            use_search=True,
+            min=".min" if flag_optim else "",
+            versions=versions,
+        )
         eqs_filename = f"{cpaths.CPATH_DOCS}/eqs.html"
         write_if_different(eqs_content, eqs_filename, force=False)
     except KeyError as key_error:
@@ -314,7 +370,12 @@ def main():
             if item in ("scores", "similar"):
                 use_search = True
             item_content = item_html.render(
-                df=main_df, meta=meta_sorted_score, site=site, use_search=use_search
+                df=main_df,
+                meta=meta_sorted_score,
+                site=site,
+                use_search=use_search,
+                min=".min" if flag_optim else "",
+                versions=versions,
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename, force=False)
@@ -326,7 +387,9 @@ def main():
     # write a file per speaker
     logger.info("Write a file per speaker")
     try:
-        generate_speakers(mako_templates, main_df, meta=meta, site=site, use_search=False)
+        generate_speakers(
+            mako_templates, main_df, meta=meta, site=site, use_search=False, versions=versions
+        )
     except KeyError as key_error:
         print("Generating a file per speaker failed with {}".format(key_error))
         sys.exit(1)
@@ -340,6 +403,7 @@ def main():
         file_out = cpaths.CPATH_DOCS + "/" + f
         shutil.copy(file_in, file_out)
 
+    # copy custom css
     for f in [
         "spinorama.css",
     ]:
@@ -347,6 +411,7 @@ def main():
         file_out = cpaths.CPATH_DOCS_ASSETS_CSS + "/" + f
         shutil.copy(file_in, file_out)
 
+    # cleanup flow directives
     flow_bin = "flow-remove-types"
     flow_param = ""  # "--pretty --sourcemaps"
 
@@ -367,9 +432,21 @@ def main():
     logger.info("Copy js files to %s", cpaths.CPATH_DOCS_ASSETS_JS)
     try:
         for item in (
-            "misc",
+            "common",
+            "compare",
+            "eqs",
+            "graph",
+            "index",
             "meta",
+            "misc",
+            "onload",
             "params",
+            "scores",
+            "search",
+            "similar",
+            "sort",
+            "statistics",
+            "tabs",
         ):
             item_name = "assets/{0}.js".format(item)
             logger.info("Write %s", item_name)
@@ -383,9 +460,22 @@ def main():
                 site=site,
                 metadata_filename=metadata_filename,
                 eqdata_filename=eqdata_filename,
+                min=".min" if flag_optim else "",
+                versions=versions,
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename, force=False)
+            terser_command = "{0} {1}/{2} > {1}/{3}".format(
+                "terser",
+                cpaths.CPATH_DOCS,
+                "assets/{}.js".format(item),
+                "assets/{}.min.js".format(item),
+            )
+            status = subprocess.run(
+                [terser_command], shell=True, check=True, capture_output=True  # noqa: S602
+            )
+            if status.returncode != 0:
+                print("terser failed for item {}".format(item))
     except KeyError as key_error:
         print("Generating various html files failed with {}".format(key_error))
         sys.exit(1)
@@ -400,7 +490,12 @@ def main():
             logger.info("Write %s", item_name)
             item_html = mako_templates.get_template(item_name)
             item_content = item_html.render(
-                df=main_df, meta=meta_sorted_score, site=site, isProd=(site == SITEPROD)
+                df=main_df,
+                meta=meta_sorted_score,
+                site=site,
+                isProd=(site == SITEPROD),
+                min=".min" if flag_optim else "",
+                versions=versions,
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             # ok for robots but likely doesn't work for sitemap
@@ -414,9 +509,10 @@ def main():
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="update_html.py version 1.23", options_first=True)
-    dev = args["--dev"]
+    flag_dev = args["--dev"]
+    flag_optim = args["--optim"]
     site = SITEPROD
-    if dev is True:
+    if flag_dev:
         site = SITEDEV
         if args["--sitedev"] is not None:
             site = args["--sitedev"]

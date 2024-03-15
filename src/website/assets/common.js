@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { urlSite, metadataFilename, eqdataFilename } from './meta.js';
-import { getID } from './misc.js';
+import { urlSite, metadataFilename, eqdataFilename } from './meta${min}.js';
+import { getID } from './misc${min}.js';
 
 export const knownMeasurements = [
     'CEA2034',

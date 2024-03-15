@@ -805,7 +805,7 @@ def dump_metadata(meta):
     def check_link(hashed_filename):
         # add a link to make it easier for other scripts to find the metadata
         with contextlib.suppress(OSError):
-            if 'metadata' in hashed_filename:
+            if "metadata" in hashed_filename:
                 os.symlink(Path(hashed_filename).name, cpaths.CPATH_METADATA_JSON)
 
     def dict_to_json(filename, d):

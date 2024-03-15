@@ -19,7 +19,7 @@
 /*global Fuse*/
 /*eslint no-undef: "error"*/
 
-import { show, hide } from './misc.js';
+import { show, hide } from './misc${min}.js';
 
 export function sortMetadata2(metadata, sorter) {
     const sortChildren2 = ({ container, score, reverse }) => {

@@ -19,9 +19,19 @@
 /*global Handlebars*/
 /*eslint no-undef: "error"*/
 
-import { openModal, closeModal, getID, getPicture, getLoading, getDecoding, getField, getReviews, getPrice } from './misc.js';
-import { getMetadata } from './common.js';
-import { sortMetadata2 } from './sort.js';
+import {
+    openModal,
+    closeModal,
+    getID,
+    getPicture,
+    getLoading,
+    getDecoding,
+    getField,
+    getReviews,
+    getPrice,
+} from './misc${min}.js';
+import { getMetadata } from './common${min}.js';
+import { sortMetadata2 } from './sort${min}.js';
 
 getMetadata()
     .then((metadata) => {

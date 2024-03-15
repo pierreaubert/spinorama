@@ -19,9 +19,9 @@
 /*global Handlebars*/
 /*eslint no-undef: "error"*/
 
-import { getMetadata, getEQdata } from './common.js';
-import { sortMetadata2 } from './sort.js';
-import { openModal, closeModal, getPeq, getID } from './misc.js';
+import { getMetadata, getEQdata } from './common${min}.js';
+import { sortMetadata2 } from './sort${min}.js';
+import { openModal, closeModal, getPeq, getID } from './misc${min}.js';
 
 function getPictureEqCompare(brand, model, suffix) {
     return encodeURI('speakers/' + brand + ' ' + model + '/eq_compare.' + suffix);

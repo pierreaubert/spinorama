@@ -19,10 +19,10 @@
 /*global Handlebars*/
 /*eslint no-undef: "error"*/
 
-import { getMetadata } from './common.js';
-import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc.js';
-import { process } from './sort.js';
-import { urlParameters2Sort } from './params.js';
+import { getMetadata } from './common${min}.js';
+import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc${min}.js';
+import { process } from './sort${min}.js';
+import { urlParameters2Sort } from './params${min}.js';
 
 getMetadata()
     .then((metadata) => {
