@@ -473,6 +473,15 @@ export function isSearch(key, results, minScore, keywords) {
     return shouldShow;
 }
 
+function isWithinPage(count, pagination) {
+    const page = pagination.page;
+    const size = pagination.count;
+    if (!pagination.active || (count >= page * size && count <= (page + 1) * size)) {
+        return true;
+    }
+    return false;
+}
+
 export function process(data, params, printer) {
     const fuse = new Fuse(
         // Fuse take a list not a map
@@ -494,6 +503,7 @@ export function process(data, params, printer) {
     const sorter = params[0];
     const filters = params[1];
     const keywords = params[2];
+    const pagination = params[3];
     let results;
     let minScore = 1;
     if (keywords !== '') {
@@ -515,7 +525,8 @@ export function process(data, params, printer) {
         const testFiltered = isFiltered(speaker, filters);
         const testKeywords = isSearch(key, results, minScore, keywords);
         const currentFragment = printer(key, index, speaker);
-        if (testFiltered && testKeywords) {
+        const withinPage = isWithinPage(index, pagination);
+        if (testFiltered && testKeywords && withinPage) {
             show(currentFragment);
         } else {
             hide(currentFragment);

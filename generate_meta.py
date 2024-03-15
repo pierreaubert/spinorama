@@ -83,6 +83,7 @@ from spinorama.load_rew_eq import parse_eq_iir_rews
 from datas import metadata
 
 ACTIVATE_TRACING: bool = False
+METADATA_HEAD_SIZE = 20
 
 
 def tracing(msg: str):
@@ -790,47 +791,84 @@ def add_near(dataframe, parse_max: int, filters: dict):
 
 
 def dump_metadata(meta):
+    # size of the md5 hash
+    KEY_LENGTH = 5
+    # size of years (2024 -> 4)
+    YEAR_LENGTH = 4
+
     metadir = cpaths.CPATH_DOCS_ASSETS
     metafile = cpaths.CPATH_METADATA_JSON
+    eqfile = cpaths.CPATH_EQDATA_JSON
     if not os.path.isdir(metadir):
         os.makedirs(metadir)
 
     def check_link(hashed_filename):
         # add a link to make it easier for other scripts to find the metadata
         with contextlib.suppress(OSError):
-            os.symlink(Path(hashed_filename).name, cpaths.CPATH_METADATA_JSON)
+            if 'metadata' in hashed_filename:
+                os.symlink(Path(hashed_filename).name, cpaths.CPATH_METADATA_JSON)
 
     def dict_to_json(filename, d):
         js = json.dumps(d)
-        key = md5(js.encode("utf-8"), usedforsecurity=False).hexdigest()[0:5]
-        hashed_filename = "{}-{}.json".format(filename[:-5], key)
-        if os.path.exists(hashed_filename) and os.path.exists(hashed_filename + ".zip"):
+        key = md5(js.encode("utf-8"), usedforsecurity=False).hexdigest()[0:KEY_LENGTH]
+        hashed_filename = "{}-{}.json".format(filename[:-KEY_LENGTH], key)
+        if (
+            os.path.exists(hashed_filename)
+            and os.path.exists(hashed_filename + ".zip")
+            and os.path.exists(hashed_filename + ".bz2")
+        ):
             logger.debug("skipping %s", hashed_filename)
             check_link(hashed_filename)
             return
+
         # hash changed, remove old files
-        old_hash_pattern = "{}-*.json".format(filename[:-5])
-        for old_filename in glob(old_hash_pattern):
-            logger.debug("remove old file %s", old_filename)
-            os.remove(old_filename)
+        old_hash_pattern = "{}-*.json".format(filename[:-KEY_LENGTH])
+        old_hash_pattern_zip = "{}.zip".format(old_hash_pattern)
+        old_hash_pattern_bz2 = "{}.bz2".format(old_hash_pattern)
+        for pattern in (old_hash_pattern, old_hash_pattern_zip, old_hash_pattern_bz2):
+            for old_filename in glob(pattern):
+                logger.debug("remove old file %s", old_filename)
+                print("remove old file {}".format(old_filename))
+                os.remove(old_filename)
+
+        # write the non zipped file
         with open(hashed_filename, "w", encoding="utf-8") as f:
             f.write(js)
             f.close()
 
-        # write the zip file
-        with zipfile.ZipFile(
-            hashed_filename + ".zip",
-            "w",
-            compression=zipfile.ZIP_DEFLATED,
-            allowZip64=True,
-        ) as current_zip:
-            current_zip.writestr(hashed_filename, js)
-            logger.debug("generated %s and zip version", hashed_filename)
+        # write the zip and bz2 files
+        for ext, method in (
+            ("zip", zipfile.ZIP_DEFLATED),
+            ("bz2", zipfile.ZIP_BZIP2),
+        ):
+            with zipfile.ZipFile(
+                "{}.{}".format(hashed_filename, ext),
+                "w",
+                compression=method,
+                allowZip64=True,
+            ) as current_compressed:
+                current_compressed.writestr(hashed_filename, js)
+                logger.debug("generated %s and %s version", hashed_filename, ext)
 
         check_link(hashed_filename)
 
-    meta_full = {k: v for k, v in meta.items() if not v.get("skip", False)}
+    # split eq data v.s. others as they are not required on the front page
+    meta_full = {
+        k: {k2: v2 for k2, v2 in v.items() if k2 != "eqs"}
+        for k, v in meta.items()
+        if not v.get("skip", False)
+    }
+    eq_full = {
+        k: {k2: v2 for k2, v2 in v.items() if k2 in ("eqs", "brand", "model")}
+        for k, v in meta.items()
+        if not v.get("skip", False)
+    }
+
+    # first store a big file with all the data inside. It worked well up to 2023
+    # when it became too large even compressed and slowed down the web frontend
+    # too much
     dict_to_json(metafile, meta_full)
+    dict_to_json(eqfile, eq_full)
 
     #    debugjs = find_metadata_file()
     #    debugmeta = None
@@ -840,23 +878,25 @@ def dump_metadata(meta):
     #    print('DEBUG: size of meta ==> {}'.format(len(meta_full.keys())))
     #    print('DEBUG: size of   js ==> {}'.format(len(debugmeta.keys())))
 
-    # generate a short version for rapid home page charging
+    # generate a short head for rapid home page charging
+
     # TODO(pierre)
     # let's check if it is faster to load slices than the full file
     # partitionning is per year, each file is hashed and the hash
     # is stored in the name.
+
     # Warning: when reading the chunks you need to read them from recent to old and discard he keys you a#lready have seen,
     meta_sorted_date = list(sort_metadata_per_date(meta_full).items())
-    meta_sorted_date_head = dict(meta_sorted_date[0:10])
-    meta_sorted_date_tail = dict(meta_sorted_date[10:])
+    meta_sorted_date_head = dict(meta_sorted_date[0:METADATA_HEAD_SIZE])
+    meta_sorted_date_tail = dict(meta_sorted_date[METADATA_HEAD_SIZE:])
 
-    filename = metafile[:-5] + "-head.json"
+    filename = metafile[:-KEY_LENGTH] + "-head.json"
     dict_to_json(filename, meta_sorted_date_head)
 
     def by_year(key):
         m = meta_sorted_date_tail[key]
         def_m = m["default_measurement"]
-        year = int(m["measurements"][def_m].get("review_published", "1970")[0:4])
+        year = int(m["measurements"][def_m].get("review_published", "1970")[0:YEAR_LENGTH])
         # group together years without too many reviews
         if year > 1970 and year < 2020:
             return 2019
@@ -864,7 +904,7 @@ def dump_metadata(meta):
 
     grouped_by_year = groupby(meta_sorted_date_tail, by_year)
     for year, group in grouped_by_year:
-        filename = "{}-{:4d}.json".format(metafile[:-5], year)
+        filename = "{}-{:4d}.json".format(metafile[:-KEY_LENGTH], year)
         dict_to_json(filename, {k: meta_sorted_date_tail[k] for k in list(group)})
 
 

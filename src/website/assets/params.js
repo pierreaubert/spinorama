@@ -31,6 +31,11 @@ export function urlParameters2Sort(url) {
         by: 'date',
         reverse: false,
     };
+    const pagination = {
+        page: 0,
+        count: 10,
+        active: false,
+    };
 
     if (url.searchParams.has('sort')) {
         const sortParams = url.searchParams.get('sort');
@@ -54,5 +59,14 @@ export function urlParameters2Sort(url) {
     if (url.searchParams.has('search')) {
         keywords = url.searchParams.get('search');
     }
-    return [sorter, filter, keywords];
+    if (url.searchParams.has('page')) {
+        const page = parseInt(url.searchParams.get('page'));
+        if (!isNaN(page) || page < 0) {
+            pagination.page = page;
+            pagination.active = true;
+        } else {
+            console.log('Warning: ignored parameter page that must be a positive integer!');
+        }
+    }
+    return [sorter, filter, keywords, pagination];
 }

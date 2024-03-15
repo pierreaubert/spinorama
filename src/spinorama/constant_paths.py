@@ -38,6 +38,7 @@ CPATH_DOCS_ASSETS = "{}/{}".format(CPATH_DOCS, "assets")
 CPATH_DOCS_ASSETS_JS = "{}/{}".format(CPATH_DOCS_ASSETS, "")
 CPATH_DOCS_ASSETS_CSS = "{}/{}".format(CPATH_DOCS_ASSETS, "")
 CPATH_METADATA_JSON = "{}/{}".format(CPATH_DOCS_ASSETS, "metadata.json")
+CPATH_EQDATA_JSON = "{}/{}".format(CPATH_DOCS_ASSETS, "eqdata.json")
 CPATH_DOCS_SPEAKERS = "{}/{}".format(CPATH_DOCS, "speakers")
 CPATH_DOCS_PICTURES = "{}/{}".format(CPATH_DOCS, "pictures")
 

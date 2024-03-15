@@ -104,12 +104,13 @@ getMetadata()
             return process(data, params, speakerHtml);
         }
 
+        speakerContainer.appendChild(display(metadata, printSpeaker));
+
+        // moved after the main display of speakers to minimise reflow
         speakerCount.innerHTML = metadata.size;
         measurementCount.innerHTML = getMeasurementCount();
         brandCount.innerHTML = getBrandCount();
         reviewCount.innerHTML = getReviewCount();
-
-        speakerContainer.appendChild(display(metadata, printSpeaker));
     })
     .catch((error) => {
         console.log(error);
