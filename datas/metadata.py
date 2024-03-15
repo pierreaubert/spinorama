@@ -4668,7 +4668,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/deftech_bp9020/",
                     "dt": "https://www.definitivetechnology.com/en/product/legacy-products/bp9020",
                 },
-                "review_published": "2024xxxx",
+                "review_published": "20240312",
                 "specifications": {
                     "sensitivity": 92,
                     "impedance": 8,
@@ -6272,7 +6272,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Elac Vela BS 403": {
-        "skip": True,
         "brand": "Elac",
         "model": "Vela BS 403",
         "type": "passive",
@@ -6288,7 +6287,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_vela_bs_403/",
                     "yt": "https://youtu.be/Io6gsJK3pSM",
                 },
-                "review_published": "202402xx",
+                "review_published": "20240312",
                 "specifications": {
                     "sensitivity": 86,
                     "impedance": 4,
@@ -10046,7 +10045,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "JBL L52 Classic": {
-        "skip": True,
         "brand": "JBL",
         "model": "L52 Classic",
         "type": "passive",
@@ -10062,7 +10060,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_l52_classic/",
                     "yt": "https://youtu.be/wG9iIMId0ew",
                 },
-                "review_published": "202402xx",
+                "review_published": "20240312",
                 "specifications": {
                     "sensitivity": 85,
                     "impedance": 4,
@@ -12225,7 +12223,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Kali LP-UNF": {
-        "skip": True,
         "brand": "Kali",
         "model": "LP-UNF",
         "type": "active",
@@ -12241,7 +12238,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_lp_unf/",
                     "yt": "https://youtu.be/hOkMVbW7Yts",
                 },
-                "review_published": "202403xx",
+                "review_published": "20240312",
                 "specifications": {
                     "SPL": {
                         "peak": 103,
@@ -14773,8 +14770,30 @@ speakers_info: SpeakerDatabase = {
         "price": "4100",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "vendor",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/march_sointuva_awg/",
+                    "yt": "https://www.youtube.com/watch?v=CBIjLicpAck",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/march-audio-sointuva.26085/",
+                    "whf": "https://www.whathifi.com/reviews/march-audio-sointuva-wg",
+                },
+                "review_published": "20231125",
+                "notes": "sensitivity is currently incorrect and will be fixed soon",
+                "specifications": {
+                    "sensitivity": 82.5,
+                    "impedance": 3.4,
+                    "size": {
+                        "height": 450,
+                        "width": 240,
+                        "depth": 220,
+                    },
+                    "weight": 6.6,
+                },
+            },
             "vendor": {
                 "origin": "Vendors-March Audio",
                 "format": "spl_hv_txt",
@@ -17866,9 +17885,8 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Polk Audio Reserve R500": {
-        "skip": True,
         "brand": "Polk Audio",
-        "model": "R500",
+        "model": "Reserve R500",
         "type": "passive",
         "price": "650",
         "amount": "each",
@@ -17882,7 +17900,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/polk_r500/",
                     "yt": "https://www.youtube.com/watch?v=yYewhU3ydwE",
                 },
-                "review_published": "2024xxxx",
+                "review_published": "20240312",
                 "specifications": {
                     "sensitivity": 87,
                     "impedance": 4,
@@ -18427,7 +18445,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "PSB Imagine T65": {
-        "skip": True,
         "brand": "PSB",
         "model": "Imagine T65",
         "type": "passive",
@@ -18443,7 +18460,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/psb_t65/",
                     "yt": "https://youtu.be/HXuFjZ5Q3vg",
                 },
-                "review_published": "202403xx",
+                "review_published": "20240312",
                 "specifications": {
                     "sensitivity": 88,
                     "impedance": 4,
@@ -18545,7 +18562,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/q_acoustics_3050i/",
                     "yt": "",
                 },
-                "review_published": "2024xxxx",
+                "review_published": "20240312",
                 "specifications": {
                     "sensitivity": 91,
                     "impedance": 6,
