@@ -218,27 +218,27 @@ export function getMetadata() {
     return fetchDataAndMap(url, 'bz2, zip, deflate');
 }
 
-export function getEQdata(table) {
+export function getEQdata() {
+    const metaDataPromise = getMetadata();
     const url = urlSite + 'assets' + eqdataFilename;
-    const runit = fetchDataAndMap(url, 'bz2, gzip, zip, deflate')
-        .then((specs) => {
-            const data = new Map();
-            table.forEach((speaker, key) => {
-                if (specs.has(key)) {
-                    const eqs = specs.get(key);
-                    if (eqs.eqs) {
-                        speaker['eqs'] = eqs.eqs;
-                    }
+    const eqDataPromise = fetchDataAndMap(url, 'bz2, gzip, zip, deflate').catch((error) => {
+        console.log('ERROR getEQdata for ' + url + 'yield a 404 with error: ' + error);
+        return null;
+    });
+
+    return Promise.all([metaDataPromise, eqDataPromise]).then(([metaData, eqData]) => {
+        const mergedData = new Map();
+        metaData.forEach((speaker, key) => {
+            if (eqData.has(key)) {
+                const eqs = eqData.get(key);
+                if (eqs.eqs) {
+                    speaker['eqs'] = eqs.eqs;
                 }
-                data.set(key, speaker);
-            });
-            return data;
-        })
-        .catch((error) => {
-            console.log('ERROR getEQdata for ' + url + 'yield a 404 with error: ' + error);
-            return null;
+            }
+            mergedData.set(key, speaker);
         });
-    return runit;
+        return mergedData;
+    });
 }
 
 export function getMetadataChunked() {

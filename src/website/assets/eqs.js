@@ -31,13 +31,8 @@ function getPictureEqDetails(brand, model, version) {
     return encodeURI('speakers/' + brand + ' ' + model + '/' + version + '/filters');
 }
 
-getMetadata()
-    .then((metadataNoEQ) => {
-        console.log('metadataNoEQ has ' + metadataNoEQ.keys().toArray().length + ' entries');
-        return getEQdata(metadataNoEQ);
-    })
+getEQdata()
     .then((metadata) => {
-        console.log('metadataWithEQ has ' + metadata.keys().toArray().length + ' entries');
         const source = document.querySelector('#templateEQ').innerHTML;
         const template = Handlebars.compile(source);
 
