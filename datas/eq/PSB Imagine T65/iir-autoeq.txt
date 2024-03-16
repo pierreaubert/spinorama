@@ -1,0 +1,14 @@
+EQ for PSB Imagine T65 computed from ErinsAudioCorner data
+Preference Score 5.18 with EQ 6.90
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-15-18:47:50
+
+Preamp: -2.7 dB
+
+Filter  1: ON PK Fc    29 Hz Gain +2.15 dB Q 0.72
+Filter  2: ON PK Fc    49 Hz Gain +2.43 dB Q 1.83
+Filter  3: ON PK Fc    85 Hz Gain -3.82 dB Q 1.19
+Filter  4: ON PK Fc   820 Hz Gain +2.22 dB Q 2.99
+Filter  5: ON PK Fc  3289 Hz Gain -1.84 dB Q 2.02
+Filter  6: ON PK Fc  6361 Hz Gain -2.18 dB Q 2.88
+Filter  7: ON PK Fc 13186 Hz Gain -2.19 dB Q 0.79
