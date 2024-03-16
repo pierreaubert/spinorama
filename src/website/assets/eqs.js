@@ -19,9 +19,10 @@
 /*global Handlebars*/
 /*eslint no-undef: "error"*/
 
-import { getMetadata, getEQdata } from './common${min}.js';
-import { sortMetadata2 } from './sort${min}.js';
+import { getEQdata } from './common${min}.js';
 import { openModal, closeModal, getPeq, getID } from './misc${min}.js';
+import { process } from './sort${min}.js';
+import { urlParameters2Sort } from './params${min}.js';
 
 function getPictureEqCompare(brand, model, suffix) {
     return encodeURI('speakers/' + brand + ' ' + model + '/eq_compare.' + suffix);
@@ -35,6 +36,7 @@ getEQdata()
     .then((metadata) => {
         const source = document.querySelector('#templateEQ').innerHTML;
         const template = Handlebars.compile(source);
+        const speakerContainer = document.querySelector('[data-num="0"');
 
         function getContext(pKey, pIndex, pValue) {
             const defaultEQ = pValue.default_eq;
@@ -134,38 +136,34 @@ getEQdata()
         }
 
         function printEQ(key, index, pValue) {
-            const context = getContext(key, index, pValue);
-            const html = template(context);
             const divEQ = document.createElement('div');
-            // populate
             divEQ.setAttribute('class', 'column is-narrow searchable');
-            divEQ.setAttribute('id', context.id);
-            divEQ.innerHTML = html;
-            // add events
-            addChangeEvents(divEQ, context);
-            addModalEvents(divEQ, context);
+            divEQ.setAttribute('id', getID(pValue.brand, pValue.model));
+            if ('eqs' in pValue && 'default_eq' in pValue) {
+                const context = getContext(key, index, pValue);
+                const html = template(context);
+                // populate
+                divEQ.innerHTML = html;
+                // add events
+                addChangeEvents(divEQ, context);
+                addModalEvents(divEQ, context);
+            }
             return divEQ;
         }
 
-        function display() {
-            const speakerContainer = document.querySelector('[data-num="0"');
-            const fragment1 = new DocumentFragment();
-            sortMetadata2(metadata, { by: 'date' }).forEach(function (key, index) {
-                const speaker = metadata.get(key);
-                if ('eqs' in speaker && 'default_eq' in speaker) {
-                    fragment1.appendChild(printEQ(key, index, speaker));
-                }
-            });
-            speakerContainer.appendChild(fragment1);
-            speakerContainer.addEventListener('keydown', (event) => {
-                const e = event || window.event;
-                if (e.keyCode === 27) {
-                    // Escape key
-                    document.querySelectorAll('.modal').forEach((modal) => closeModal(modal));
-                }
-            });
+        function display(data, speakerHtml) {
+            const url = new URL(window.location);
+            const params = urlParameters2Sort(url);
+            return process(data, params, speakerHtml);
         }
 
-        display();
+        speakerContainer.appendChild(display(metadata, printEQ));
+        speakerContainer.addEventListener('keydown', (event) => {
+            const e = event || window.event;
+            if (e.keyCode === 27) {
+                // Escape key
+                document.querySelectorAll('.modal').forEach((modal) => closeModal(modal));
+            }
+        });
     })
     .catch((err) => console.log(err));
