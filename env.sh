@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
@@ -51,22 +51,21 @@ fi
 ## ----------------------------------------------------------------------
 SPIN=$PWD
 export PYTHONPATH=$SPIN/src:$SPIN/src/website:$SPIN
-if ! test -d $SPIN/spinorama-venv; then
-    python3 -m venv spinorama-venv
-    source $SPIN/spinorama-venv/bin/activate
+if ! test -d $SPIN/.venv; then
+    python3 -m venv .venv
+    source $SPIN/.venv/bin/activate
     # rehash
     pip3 install -U pip
     pip3 install -r requirements.txt
     pip3 install -r requirements-test.txt
     pip3 install -r requirements-dev.txt
 fi
-source $SPIN/spinorama-venv/bin/activate
+source .venv/bin/activate
 
 ## node install
 ## ----------------------------------------------------------------------
 if ! test -d $SPIN/node_modules; then
-    npm install plotly
-    npm install pyright html-validator-cli standard flow-remove-types
+    npm install plotly pyright html-validator-cli standard flow-remove-types
 fi
 export PATH=$PATH:$SPIN/node_modules/.bin
 

@@ -43,7 +43,7 @@ pip3 install -r requirements-tests.txt
 For linting the python, html and javascript code:
 
 ```
-npm install --save-dev pyright w3c-html-validator standard flow flow-remove-types
+npm install --save-dev pyright w3c-html-validator standard flow flow-remove-types terser prettier eslint
 ```
 
 Please add tests and run all of them:

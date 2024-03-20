@@ -1,21 +1,21 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<script src="${site}/assets/handlebars-${versions['HANDLEBARS']}.min.js"></script>
+<script src="${site}/handlebars-${versions['HANDLEBARS']}.min.js"></script>
 
 <link
   rel="stylesheet"
-  href="${site}/assets/bulma-${versions['BULMA']}.min.css"
+  href="${site}/bulma-${versions['BULMA']}.min.css"
   >
 
 <link
   rel="stylesheet"
-  href="${site}/assets/fontawesome-${versions['FONTAWESOME']}.min.css"
+  href="${site}/fontawesome-${versions['FONTAWESOME']}.min.css"
   >
 
 <link
   media="all"
-  href="${site}/assets/spinorama.css"
+  href="${site}/spinorama.css"
   rel="stylesheet"
   crossorigin="anonymous">
 
@@ -25,5 +25,17 @@
   href="${site}/pictures/favicon-16x16.png"
   sizes="16x16">
 
-<script type="module" src="${site}/assets/onload${min}.js"></script>
+<script type="module" src="${site}/onload${min}.js"></script>
+<script type="module" src="${site}/workbox-window-${versions['WORKBOX']}${min}.js">
+  import {Workbox} from 'workbox-window';
+
+  if ('serviceWorker' in navigator) {
+  const wb = new Workbox('/sw.js');
+  console.log('SW register');
+  wb.register();
+  } else {
+  console.log('SW is not available');
+  }
+</script>
+
 

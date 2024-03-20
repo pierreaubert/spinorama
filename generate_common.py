@@ -89,7 +89,7 @@ CACHE_DIR = ".cache"
 
 
 def create_default_directories():
-    for d in (CACHE_DIR, "docs", "docs/assets", "docs/pictures", "docs/speakers"):
+    for d in (CACHE_DIR, "docs", "docs/pictures", "docs/speakers"):
         pathlib.Path(d).mkdir(parents=True, exist_ok=True)
 
 
@@ -363,8 +363,8 @@ def sort_metadata_per_score(meta):
 def find_metadata_file():
     json_paths = []
     for radical, json_path in (
-        ("metadata", cpaths.CPATH_METADATA_JSON),
-        ("eqdata", cpaths.CPATH_EQDATA_JSON),
+        ("metadata", cpaths.CPATH_DOCS_METADATA_JSON),
+        ("eqdata", cpaths.CPATH_DOCS_EQDATA_JSON),
     ):
         pattern = "{}-[0-9a-f]*.json".format(json_path[:-5])
         json_filenames = glob(pattern)

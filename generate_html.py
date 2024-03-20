@@ -407,8 +407,8 @@ def main():
     for f in [
         "spinorama.css",
     ]:
-        file_in = cpaths.CPATH_WEBSITE_ASSETS_CSS + "/" + f
-        file_out = cpaths.CPATH_DOCS_ASSETS_CSS + "/" + f
+        file_in = cpaths.CPATH_WEBSITE + "/" + f
+        file_out = cpaths.CPATH_DOCS + "/" + f
         shutil.copy(file_in, file_out)
 
     # cleanup flow directives
@@ -418,9 +418,9 @@ def main():
     flow_command = "{} {} {} {} {}".format(
         flow_bin,
         flow_param,
-        cpaths.CPATH_WEBSITE_ASSETS_JS,
+        cpaths.CPATH_WEBSITE,
         "--out-dir",
-        cpaths.CPATH_DOCS_ASSETS_JS,
+        cpaths.CPATH_DOCS,
     )
     status = subprocess.run(
         [flow_command], shell=True, check=True, capture_output=True  # noqa: S602
@@ -429,11 +429,11 @@ def main():
         print("flow failed")
 
     # copy css/js files
-    logger.info("Copy js files to %s", cpaths.CPATH_DOCS_ASSETS_JS)
+    logger.info("Copy js files to %s", cpaths.CPATH_DOCS)
     try:
         for item in (
-            "common",
             "compare",
+            "download",
             "eqs",
             "graph",
             "index",
@@ -441,6 +441,7 @@ def main():
             "misc",
             "onload",
             "params",
+            "plot",
             "scores",
             "search",
             "similar",
@@ -448,12 +449,13 @@ def main():
             "statistics",
             "tabs",
         ):
-            item_name = "assets/{0}.js".format(item)
+            item_name = "{0}.js".format(item)
             logger.info("Write %s", item_name)
             item_html = mako_templates.get_template(item_name)
-            # remove the ./docs/assets parts
-            metadata_filename = metadata_json_filename[13:]
-            eqdata_filename = eqdata_json_filename[13:]
+            # remove the ./docs parts
+            len_docs = len("/docs/")
+            metadata_filename = metadata_json_filename[len_docs:]
+            eqdata_filename = eqdata_json_filename[len_docs:]
             item_content = item_html.render(
                 df=main_df,
                 meta=meta_sorted_score,
@@ -468,8 +470,8 @@ def main():
             terser_command = "{0} {1}/{2} > {1}/{3}".format(
                 "terser",
                 cpaths.CPATH_DOCS,
-                "assets/{}.js".format(item),
-                "assets/{}.min.js".format(item),
+                "{}.js".format(item),
+                "{}.min.js".format(item),
             )
             status = subprocess.run(
                 [terser_command], shell=True, check=True, capture_output=True  # noqa: S602

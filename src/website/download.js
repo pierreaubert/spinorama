@@ -138,13 +138,13 @@ function fetchDataAndMap(url, encoding) {
 }
 
 export function getMetadata() {
-    const url = urlSite + 'assets' + metadataFilename;
+    const url = urlSite + metadataFilename;
     return fetchDataAndMap(url, 'bz2, zip, deflate');
 }
 
 export function getEQdata() {
     const metaDataPromise = getMetadata();
-    const url = urlSite + 'assets' + eqdataFilename;
+    const url = urlSite + eqdataFilename;
     const eqDataPromise = fetchDataAndMap(url, 'bz2, gzip, zip, deflate').catch((error) => {
         console.log('ERROR getEQdata for ' + url + 'yield a 404 with error: ' + error);
         return null;
@@ -166,7 +166,7 @@ export function getEQdata() {
 }
 
 export function getMetadataChunked() {
-    const url = urlSite + 'assets/' + metadataFilename;
+    const url = urlSite + metadataFilename;
     // console.log('fetching url=' + url)
     const spec = fetch(url, {
         headers: {
@@ -193,3 +193,22 @@ export function getMetadataChunked() {
     return spec;
 }
 
+export function assignOptions(textArray, selector, textSelected) {
+    // console.log('assignOptions: selected = ' + textSelected)
+    // textArray.forEach( item => // console.log('assignOptions: '+item));
+    while (selector.firstChild) {
+        selector.firstChild.remove();
+    }
+    for (let i = 0; i < textArray.length; i++) {
+        const currentOption = document.createElement('option');
+        currentOption.value = textArray[i];
+        currentOption.text = textArray[i].replace('Vendors-', '').replace('vendor-pattern-', 'Pattern ');
+        if (textArray[i] === textSelected) {
+            currentOption.selected = true;
+        }
+        if (textArray.length === 1) {
+            currentOption.disabled = true;
+        }
+        selector.appendChild(currentOption);
+    }
+}

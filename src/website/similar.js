@@ -20,18 +20,8 @@
 /*eslint no-undef: "error"*/
 
 import { urlSite } from './meta${min}.js';
-import {
-    getMetadata,
-    assignOptions,
-    getSpeakerData,
-    knownMeasurements,
-    setCEA2034,
-    setContour,
-    setGraph,
-    setGlobe,
-    setRadar,
-    setSurface,
-} from './common${min}.js';
+import { getMetadata, assignOptions, getSpeakerData } from './download${min}.js';
+import { knownMeasurements, setCEA2034, setContour, setGraph, setGlobe, setRadar, setSurface } from './plot${min}.js';
 
 function getNearSpeakers(metadata) {
     const metaSpeakers = {};
@@ -112,7 +102,7 @@ getMetadata()
                             graphOptions = setGlobe(currentNames, currentGraphs, windowWidth, windowHeight);
                         }
                         if (graphOptions !== null && graphOptions.length === 1) {
-                            Plotly.newPlot('plotDouble' + i, graphOptions[0]);
+                            Plotly.newPlot('plot' + i, graphOptions[0]);
                         }
                     }
                     return null;

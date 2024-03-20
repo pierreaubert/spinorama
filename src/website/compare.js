@@ -20,23 +20,12 @@
 /*eslint no-undef: "error"*/
 
 import { urlSite } from './meta${min}.js';
-import {
-    getMetadata,
-    assignOptions,
-    knownMeasurements,
-    getAllSpeakers,
-    getSpeakerData,
-    setContour,
-    setGlobe,
-    setGraph,
-    setCEA2034,
-    setRadar,
-    setSurface,
-} from './common${min}.js';
+import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download${min}.js';
+import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setSurface } from './plot${min}.js';
 
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin
-    console.log('update version for ' + speaker + ' origin=' + origin + ' version=' + version);
+    // console.log('update version for ' + speaker + ' origin=' + origin + ' version=' + version);
     const versions = Object.keys(metaSpeakers[speaker].measurements);
     let matches = new Set();
     versions.forEach((val) => {
@@ -59,7 +48,7 @@ function updateVersion(metaSpeakers, speaker, selector, origin, version) {
 }
 
 function updateOriginAndVersion(metaSpeakers, speaker, originSelector, versionSelector, origin, version) {
-    console.log('updateOrigin for ' + speaker + ' with origin ' + origin + ' version=' + version);
+    // console.log('updateOrigin for ' + speaker + ' with origin ' + origin + ' version=' + version);
     const measurements = Object.keys(metaSpeakers[speaker].measurements);
     const origins = new Set();
     for (const key in measurements) {
@@ -86,11 +75,12 @@ getMetadata()
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
 
-        const plotContainer = document.querySelector('[data-num="0"');
-        const plotSingleContainer = plotContainer.querySelector('.plotSingle');
-        const plotDouble0Container = plotContainer.querySelector('.plotDouble0');
-        const plotDouble1Container = plotContainer.querySelector('.plotDouble1');
-        const formContainer = plotContainer.querySelector('.plotForm');
+        const plotContainers = document.querySelector('[data-num="0"');
+        const plotContainer = plotContainers.querySelector('.plot');
+        const plot0Container = plotContainers.querySelector('.plot0');
+        const plot1Container = plotContainers.querySelector('.plot1');
+        const plot2Container = plotContainers.querySelector('.plot2');
+        const formContainer = plotContainers.querySelector('.plotForm');
         const graphsSelector = formContainer.querySelector('#compare-select-graph');
 
         const windowWidth = window.innerWidth;
@@ -156,21 +146,34 @@ getMetadata()
 
                     // console.log('datas and layouts length='+graphsConfigs.length)
                     if (graphsConfigs.length === 1) {
-                        plotSingleContainer.style.display = 'block';
-                        plotDouble0Container.style.display = 'none';
-                        plotDouble1Container.style.display = 'none';
+                        plotContainer.style.display = 'block';
+                        plot0Container.style.display = 'none';
+                        plot1Container.style.display = 'none';
+                        plot2Container.style.display = 'none';
                         const graphConfig = graphsConfigs[0];
                         if (graphConfig) {
-                            Plotly.react('plotSingle', graphConfig.data, graphConfig.layout, graphConfig.config);
+                            Plotly.react('plot', graphConfig.data, graphConfig.layout, graphConfig.config);
                         }
                     } else if (graphsConfigs.length === 2) {
-                        plotSingleContainer.style.display = 'none';
-                        plotDouble0Container.style.display = 'block';
-                        plotDouble1Container.style.display = 'block';
+                        plotContainer.style.display = 'none';
+                        plot0Container.style.display = 'block';
+                        plot1Container.style.display = 'block';
+                        plot2Container.style.display = 'none';
                         for (let i = 0; i < graphsConfigs.length; i++) {
                             const config = graphsConfigs[i];
                             if (config) {
-                                Plotly.react('plotDouble' + i, config);
+                                Plotly.react('plot' + i, config);
+                            }
+                        }
+                    } else if (graphsConfigs.length === 3) {
+                        plotContainer.style.display = 'none';
+                        plot0Container.style.display = 'block';
+                        plot1Container.style.display = 'block';
+                        plot2Container.style.display = 'block';
+                        for (let i = 0; i < graphsConfigs.length; i++) {
+                            const config = graphsConfigs[i];
+                            if (config) {
+                                Plotly.react('plot' + i, config);
                             }
                         }
                     }
@@ -345,12 +348,16 @@ getMetadata()
             if (!graphsConfigs) {
                 return;
             }
-            console.log('DEBUG: resize ' + event.name);
+            // console.log('DEBUG: resize ' + event.name);
             if (graphsConfigs.length == 1) {
-                Plotly.Plots.resize('plotSingle');
+                Plotly.Plots.resize('plot');
             } else if (graphsConfigs.length == 2) {
-                Plotly.Plots.resize('plotDouble0');
-                Plotly.Plots.resize('plotDouble1');
+                Plotly.Plots.resize('plot0');
+                Plotly.Plots.resize('plot1');
+            } else if (graphsConfigs.length == 3) {
+                Plotly.Plots.resize('plot0');
+                Plotly.Plots.resize('plot1');
+                Plotly.Plots.resize('plot2');
             }
         }
 

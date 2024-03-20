@@ -19,7 +19,7 @@
 /*global Handlebars*/
 /*eslint no-undef: "error"*/
 
-import { getEQdata } from './common${min}.js';
+import { getEQdata } from './download${min}.js';
 import { openModal, closeModal, getPeq, getID } from './misc${min}.js';
 import { process } from './sort${min}.js';
 import { urlParameters2Sort } from './params${min}.js';

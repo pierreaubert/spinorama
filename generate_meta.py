@@ -796,9 +796,9 @@ def dump_metadata(meta):
     # size of years (2024 -> 4)
     YEAR_LENGTH = 4
 
-    metadir = cpaths.CPATH_DOCS_ASSETS
-    metafile = cpaths.CPATH_METADATA_JSON
-    eqfile = cpaths.CPATH_EQDATA_JSON
+    metadir = cpaths.CPATH_DOCS
+    metafile = cpaths.CPATH_DOCS_METADATA_JSON
+    eqfile = cpaths.CPATH_DOCS_EQDATA_JSON
     if not os.path.isdir(metadir):
         os.makedirs(metadir)
 
@@ -806,7 +806,7 @@ def dump_metadata(meta):
         # add a link to make it easier for other scripts to find the metadata
         with contextlib.suppress(OSError):
             if "metadata" in hashed_filename:
-                os.symlink(Path(hashed_filename).name, cpaths.CPATH_METADATA_JSON)
+                os.symlink(Path(hashed_filename).name, cpaths.CPATH_DOCS_METADATA_JSON)
 
     def dict_to_json(filename, d):
         js = json.dumps(d)

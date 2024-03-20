@@ -30,7 +30,7 @@ import {
     getReviews,
     getPrice,
 } from './misc${min}.js';
-import { getMetadata } from './common${min}.js';
+import { getMetadata } from './download${min}.js';
 import { sortMetadata2 } from './sort${min}.js';
 
 getMetadata()

@@ -16,9 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { urlSite, metadataFilename, eqdataFilename } from './meta${min}.js';
-import { getID } from './misc${min}.js';
-
 export const knownMeasurements = [
     'CEA2034',
     'On Axis',
@@ -94,180 +91,6 @@ const labelShort = {
     'Total Horizontal Reflection': 'THR',
     'Total Vertical Reflection': 'TVR',
 };
-
-function processOrigin(origin) {
-    if (origin.includes('Vendors-')) {
-        return origin.slice(8);
-    }
-    return origin;
-}
-
-function processGraph(name) {
-    if (name.includes('CEA2034')) {
-        return 'CEA2034';
-    } else if (name.includes('Globe')) {
-        return name.replace('Globe', 'Contour');
-    }
-    return name;
-}
-
-function getOrigin(metaSpeakers, speaker, origin) {
-    // console.log('getOrigin ' + speaker + ' origin=' + origin)
-    const measurements = Object.keys(metaSpeakers[speaker].measurements);
-    const origins = new Set();
-    for (const key in measurements) {
-        origins.add(metaSpeakers[speaker].measurements[measurements[key]].origin);
-    }
-    if (origin == null || origin === '' || !origins.has(origin)) {
-        const defaultMeasurement = metaSpeakers[speaker].default_measurement;
-        const defaultOrigin = metaSpeakers[speaker].measurements[defaultMeasurement].origin;
-        // console.log('getOrigin default=' + defaultOrigin)
-        return processOrigin(defaultOrigin);
-    }
-    return processOrigin(origin);
-}
-
-function getVersion(metaSpeakers, speaker, origin, version) {
-    const versions = Object.keys(metaSpeakers[speaker].measurements);
-    let matches = new Set();
-    versions.forEach((val) => {
-        const current = metaSpeakers[speaker].measurements[val];
-        if (current.origin === origin || origin === '' || origin == null) {
-            matches.add(val);
-            matches.add(val + '_eq');
-        }
-    });
-    if (version == null || version === '' || !matches.has(version)) {
-        const defaultVersion = metaSpeakers[speaker].default_measurement;
-        return defaultVersion;
-    }
-    return version;
-}
-
-function getSpeakerUrl(metaSpeakers, graph, speaker, origin, version) {
-    // console.log('getSpeakerUrl ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version=' + version)
-    const url =
-        urlSite +
-        'speakers/' +
-        speaker +
-        '/' +
-        getOrigin(metaSpeakers, speaker, origin) +
-        '/' +
-        getVersion(metaSpeakers, speaker, origin, version) +
-        '/' +
-        processGraph(graph) +
-        '.json';
-    return url;
-}
-
-export function getSpeakerData(metaSpeakers, graph, speaker, origin, version) {
-    // console.log('getSpeakerData ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version=' + version)
-
-    const url = getSpeakerUrl(metaSpeakers, graph, speaker, origin, version);
-    // console.log('fetching url=' + url)
-    const spec = fetch(url, { headers: { 'Accept-Encoding': 'bz2, gzip, deflate', 'Content-Type': 'application/json' } })
-        .then((response) => response.json())
-        .catch((error) => {
-            console.log('ERROR getSpeaker failed for ' + url + 'with error: ' + error);
-            return null;
-        });
-    return spec;
-}
-
-export function getAllSpeakers(table) {
-    const metaSpeakers = {};
-    const speakers = [];
-    table.forEach((value) => {
-        const speaker = value.brand + ' ' + value.model;
-        speakers.push(speaker);
-        metaSpeakers[speaker] = value;
-    });
-    return [metaSpeakers, speakers.sort()];
-}
-
-function fetchDataAndMap(url, encoding) {
-    // console.log('fetching url=' + url + ' encoding=' + encoding);
-    const spec = fetch(url, { headers: { 'Accept-Encoding': encoding, 'Content-Type': 'application/json' } })
-        .catch((error) => {
-            console.log('ERROR getMetadata for ' + url + ' yield a 404 with error: ' + error);
-            return null;
-        })
-        .then((response) => response.json())
-        .catch((error) => {
-            console.log('ERROR getMetadata for ' + url + ' yield a json error: ' + error);
-            return null;
-        })
-        .then((data) => {
-            const values = Object.values(data);
-            return new Map(
-                values.map((speaker) => {
-                    const key = getID(speaker.brand, speaker.model);
-                    return [key, speaker];
-                })
-            );
-        })
-        .catch((error) => {
-            console.log('ERROR getMetadata for ' + url + ' failed: ' + error);
-            return null;
-        });
-    return spec;
-}
-
-export function getMetadata() {
-    const url = urlSite + 'assets' + metadataFilename;
-    return fetchDataAndMap(url, 'bz2, zip, deflate');
-}
-
-export function getEQdata() {
-    const metaDataPromise = getMetadata();
-    const url = urlSite + 'assets' + eqdataFilename;
-    const eqDataPromise = fetchDataAndMap(url, 'bz2, gzip, zip, deflate').catch((error) => {
-        console.log('ERROR getEQdata for ' + url + 'yield a 404 with error: ' + error);
-        return null;
-    });
-
-    return Promise.all([metaDataPromise, eqDataPromise]).then(([metaData, eqData]) => {
-        const mergedData = new Map();
-        metaData.forEach((speaker, key) => {
-            if (eqData.has(key)) {
-                const eqs = eqData.get(key);
-                if (eqs.eqs) {
-                    speaker['eqs'] = eqs.eqs;
-                }
-            }
-            mergedData.set(key, speaker);
-        });
-        return mergedData;
-    });
-}
-
-export function getMetadataChunked() {
-    const url = urlSite + 'assets/' + metadataFilename;
-    // console.log('fetching url=' + url)
-    const spec = fetch(url, {
-        headers: {
-            'Accept-Encoding': 'zip',
-            'Content-Type': 'application/json',
-        },
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            // convert to object
-            const metadata = Object.values(data);
-            // console.log('metadata '+metadata.length)
-            return new Map(
-                metadata.map((speaker) => {
-                    const key = getID(speaker.brand, speaker.model);
-                    return [key, speaker];
-                })
-            );
-        })
-        .catch((error) => {
-            console.log('ERROR getMetadata for ' + url + 'yield a 404 with error: ' + error);
-            return null;
-        });
-    return spec;
-}
 
 const graphSmall = 550;
 const graphLarge = 1200;
@@ -840,6 +663,84 @@ export function setRadar(speakerNames, speakerGraphs, width, height) {
     return [options];
 }
 
+function equals(a, b) {
+    // check the length
+    if (a.length != b.length) {
+        return false;
+    }
+    for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function merge(a, b) {
+    // merge => sort => remove duplicates => take intersection
+    const minBound = Math.max(a[0], b[0]);
+    const maxBound = Math.min(a.slice(-1), b.slice(-1));
+    return a
+        .concat(b)
+        .sort((a, b) => a - b)
+        .filter((e, i, a) => e !== a[i - 1])
+        .filter((e, i, a) => a[i] <= maxBound && minBound <= a[i]);
+}
+
+function interpolate(data1, data2, newFreq, newAngle) {
+    const freq1Length = data1[0].x.length;
+    const freq2Length = data2[0].x.length;
+    let ifreq1 = 0;
+    let ifreq2 = 0;
+    const angle1Length = data1[0].y.length;
+    const angle2Length = data2[0].y.length;
+    let iangle1 = 0;
+    let iangle2 = 0;
+    let datas = [];
+    for (angle in newAngle) {
+        while (data1[0].y[iangle1] < freq && iangle1 < angle1Length) {
+            iangle1 += 1;
+        }
+        let angle1 = data1[0].y[iangle1 + 1];
+        if (angle1 !== angle) {
+            // interpolate
+        }
+        let data = [];
+        for (freq in newFreq) {
+            while (data1[0].x[ifreq1] < freq && ifreq1 < freq1Length) {
+                ifreq1 += 1;
+            }
+            let freq1 = data1[0].x[ifreq1 + 1];
+            if (freq1 !== freq) {
+                // interpolate
+            }
+        }
+    }
+    return datas;
+}
+
+function computeContourDelta(data1, data2) {
+    let data = [];
+    let contour = {};
+    if (data1 == null || data2 == null) {
+        console.log('data is null!');
+        return null;
+    }
+    if (!('0' in data1) || !('0' in data2)) {
+        console.log('data[0] does not exist!');
+        return null;
+    }
+    // compute delta
+    contour[0] = {};
+    contour[0]['x'] = merge(data1[0].x, data2[0].x);
+    contour[0]['y'] = merge(data1[0].y, data2[0].y);
+    // now we may have to interpolate
+    contour[0]['z'] = interpolate(data1, data2, contour[0]['x'], contour[0]['y']);
+    // done
+    data.push(contour);
+    return data;
+}
+
 export function setContour(speakerNames, speakerGraphs, width, height) {
     // console.log('setContour got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
@@ -866,6 +767,13 @@ export function setContour(speakerNames, speakerGraphs, width, height) {
                 options.layout.height -= 14.5 + 63.5 + 44;
             }
             graphsConfigs.push(options);
+        }
+    }
+    if (speakerGraphs.length === 2) {
+        const dataDelta = computeContourDelta(speakerGraphs[0].data, speakerGraphs[1].data);
+        if (dataDelta != null) {
+            const optionsDelta = setGraphOptions([{ data: dataDelta, layout: speakerGraphs[1].layout }]);
+            graphsConfigs.push(optionsDelta);
         }
     }
 
@@ -984,24 +892,4 @@ export function setSurface(speakerNames, speakerGraphs, width, height) {
         }
     }
     return graphsConfigs;
-}
-
-export function assignOptions(textArray, selector, textSelected) {
-    // console.log('assignOptions: selected = ' + textSelected)
-    // textArray.forEach( item => // console.log('assignOptions: '+item));
-    while (selector.firstChild) {
-        selector.firstChild.remove();
-    }
-    for (let i = 0; i < textArray.length; i++) {
-        const currentOption = document.createElement('option');
-        currentOption.value = textArray[i];
-        currentOption.text = textArray[i].replace('Vendors-', '').replace('vendor-pattern-', 'Pattern ');
-        if (textArray[i] === textSelected) {
-            currentOption.selected = true;
-        }
-        if (textArray.length === 1) {
-            currentOption.disabled = true;
-        }
-        selector.appendChild(currentOption);
-    }
 }

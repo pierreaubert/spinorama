@@ -7,10 +7,11 @@ HANDLEBARS=4.7.8
 BULMA=0.9.4
 FONTAWESOME=6.5.1
 FUSE=7.0.0
+WORKBOX=7.0.0
 
 # end section
 
-ASSETS=./docs/assets
+ASSETS=./docs
 WEBFONTS=./docs/webfonts
 SVGS=./docs/svg
 DOWNLOADS=./docs/tmp
@@ -28,6 +29,12 @@ fi
 if ! test -f "${ASSETS}/fuse-${FUSE}.min.js"; then
     wget -O${ASSETS}/fuse-${FUSE}.min.js https://cdn.jsdelivr.net/npm/fuse.js@${FUSE}/dist/fuse.min.js
 fi
+
+# WORKBOX
+
+npm install workbox-window
+cp node_modules/workbox-window/build/workbox-window.prod.mjs docs/workbox-window-${WORKBOX}.min.js
+cp node_modules/workbox-window/build/workbox-window.prod.mjs.map docs/workbox-window-${WORKBOX}.min.js.map
 
 # fontawesome
 if ! test -f "${ASSETS}/fontawesome-${FONTAWESOME}.min.css"; then

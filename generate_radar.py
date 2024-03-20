@@ -199,7 +199,7 @@ def main(args):
     )
 
     # load all metadata from generated json file
-    json_filename, _ = find_metadata_file()
+    json_filename, eq_filename = find_metadata_file()
     if json_filename is None:
         logger.error("Cannot find metadata file, did you ran generate_meta.py ?")
         sys.exit(1)
@@ -207,6 +207,13 @@ def main(args):
     jsmeta = None
     with open(json_filename, "r") as f:
         jsmeta = json.load(f)
+
+    eqmeta = None
+    with open(eq_filename, "r") as f:
+        eqmeta = json.load(f)
+        for k, v in jsmeta.items():
+            if k in eqmeta:
+                jsmeta[k]["eqs"] = eqmeta[k]["eqs"]
 
     logger.warning("Data %s loaded (%d speakers)!", json_filename, len(jsmeta))
 

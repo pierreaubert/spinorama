@@ -19,7 +19,7 @@
 /*global Fuse*/
 /*eslint no-undef: "error"*/
 
-import { getMetadata } from './common${min}.js';
+import { getMetadata } from './download${min}.js';
 import { show, hide } from './misc${min}.js';
 import { sortMetadata2, isFiltered, isSearch } from './sort${min}.js';
 
