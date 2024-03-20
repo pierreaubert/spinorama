@@ -1,14 +1,14 @@
 EQ for Genelec 8351A computed from Princeton data
 Preference Score -1000.00 with EQ -1000.00
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-09-14-12:52:09
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-19-16:36:49
 
-Preamp: -1.7 dB
+Preamp: -5.6 dB
 
-Filter  1: ON PK Fc    30 Hz Gain +0.41 dB Q 1.94
-Filter  2: ON PK Fc    37 Hz Gain +0.08 dB Q 1.38
-Filter  3: ON PK Fc   175 Hz Gain +0.31 dB Q 1.92
-Filter  4: ON PK Fc   320 Hz Gain -0.41 dB Q 0.90
-Filter  5: ON PK Fc   873 Hz Gain +1.73 dB Q 2.05
-Filter  6: ON PK Fc  6276 Hz Gain +0.38 dB Q 1.11
-Filter  7: ON PK Fc 10713 Hz Gain +1.29 dB Q 0.28
+Filter  1: ON PK Fc    22 Hz Gain +2.65 dB Q 0.85
+Filter  2: ON PK Fc    26 Hz Gain +2.70 dB Q 1.38
+Filter  3: ON PK Fc    47 Hz Gain +2.46 dB Q 1.72
+Filter  4: ON PK Fc   310 Hz Gain +1.48 dB Q 1.98
+Filter  5: ON PK Fc   560 Hz Gain -5.82 dB Q 2.65
+Filter  6: ON PK Fc  1760 Hz Gain -7.61 dB Q 0.70
+Filter  7: ON PK Fc 13652 Hz Gain +1.94 dB Q 1.34

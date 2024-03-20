@@ -1,14 +1,14 @@
 EQ for Perlisten r4s computed from Vendors-Perlisten data
-Preference Score 5.88 with EQ 6.58
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.25
-Dated: 2023-10-24-14:41:56
+Preference Score 5.88 with EQ 6.83
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-19-16:34:39
 
-Preamp: -2.8 dB
+Preamp: -5.0 dB
 
-Filter  1: ON PK Fc    54 Hz Gain +2.99 dB Q 0.73
-Filter  2: ON PK Fc   117 Hz Gain -1.93 dB Q 1.80
-Filter  3: ON PK Fc   184 Hz Gain -0.61 dB Q 1.43
-Filter  4: ON PK Fc   579 Hz Gain -1.28 dB Q 0.66
-Filter  5: ON PK Fc   765 Hz Gain +0.67 dB Q 2.79
-Filter  6: ON PK Fc  4342 Hz Gain -0.85 dB Q 2.85
-Filter  7: ON PK Fc  7566 Hz Gain -0.91 dB Q 2.82
+Filter  1: ON PK Fc    42 Hz Gain +3.00 dB Q 0.93
+Filter  2: ON PK Fc    80 Hz Gain +2.99 dB Q 0.25
+Filter  3: ON PK Fc   125 Hz Gain -4.01 dB Q 0.87
+Filter  4: ON PK Fc   382 Hz Gain -1.70 dB Q 0.72
+Filter  5: ON PK Fc  1083 Hz Gain -1.06 dB Q 2.99
+Filter  6: ON PK Fc  7566 Hz Gain -0.59 dB Q 2.74
+Filter  7: ON PK Fc 12736 Hz Gain +0.78 dB Q 2.59

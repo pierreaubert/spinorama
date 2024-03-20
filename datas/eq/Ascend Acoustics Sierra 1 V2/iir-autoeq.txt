@@ -1,14 +1,14 @@
-EQ for Ascend Acoustics Sierra 1 V2 computed from ErinsAudioCorner data
-Preference Score 6.43 with EQ 6.85
+EQ for Ascend Acoustics Sierra 1 V2 computed from Vendors-Ascend Acoustics data
+Preference Score 6.70 with EQ 7.04
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
-Dated: 2023-11-24-17:53:26
+Dated: 2024-03-19-16:21:33
 
-Preamp: -3.9 dB
+Preamp: -2.8 dB
 
-Filter  1: ON PK Fc    42 Hz Gain +3.94 dB Q 1.29
-Filter  2: ON PK Fc    88 Hz Gain -0.79 dB Q 2.82
-Filter  3: ON PK Fc   227 Hz Gain +1.03 dB Q 2.23
-Filter  4: ON PK Fc  1202 Hz Gain -1.11 dB Q 1.63
-Filter  5: ON PK Fc  2765 Hz Gain +1.32 dB Q 1.08
-Filter  6: ON PK Fc  9001 Hz Gain -0.14 dB Q 4.36
-Filter  7: ON PK Fc 15685 Hz Gain +1.24 dB Q 2.30
+Filter  1: ON PK Fc    41 Hz Gain +2.98 dB Q 0.78
+Filter  2: ON PK Fc    83 Hz Gain -1.56 dB Q 1.66
+Filter  3: ON PK Fc   211 Hz Gain +0.90 dB Q 1.58
+Filter  4: ON PK Fc   289 Hz Gain +0.59 dB Q 2.90
+Filter  5: ON PK Fc  1244 Hz Gain -0.68 dB Q 2.23
+Filter  6: ON PK Fc  3405 Hz Gain +1.20 dB Q 2.21
+Filter  7: ON PK Fc  5536 Hz Gain +0.81 dB Q 2.26

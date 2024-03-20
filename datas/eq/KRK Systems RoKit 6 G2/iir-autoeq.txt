@@ -1,14 +1,14 @@
 EQ for KRK Systems RoKit 6 G2 computed from Princeton data
 Preference Score -1000.00 with EQ -1000.00
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-09-14-12:40:25
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-19-16:18:44
 
-Preamp: -1.8 dB
+Preamp: -5.4 dB
 
-Filter  1: ON PK Fc    34 Hz Gain -1.99 dB Q 1.70
-Filter  2: ON PK Fc   109 Hz Gain -1.53 dB Q 2.37
-Filter  3: ON PK Fc   164 Hz Gain +1.19 dB Q 1.44
-Filter  4: ON PK Fc   309 Hz Gain -2.23 dB Q 1.38
-Filter  5: ON PK Fc   584 Hz Gain -0.71 dB Q 2.61
-Filter  6: ON PK Fc  3110 Hz Gain +1.75 dB Q 2.99
-Filter  7: ON PK Fc  9691 Hz Gain +1.66 dB Q 1.47
+Filter  1: ON PK Fc    23 Hz Gain +2.58 dB Q 2.63
+Filter  2: ON PK Fc    65 Hz Gain +2.99 dB Q 0.45
+Filter  3: ON PK Fc   113 Hz Gain +2.82 dB Q 0.79
+Filter  4: ON PK Fc   600 Hz Gain +2.94 dB Q 0.89
+Filter  5: ON PK Fc   849 Hz Gain +0.23 dB Q 1.62
+Filter  6: ON PK Fc  4495 Hz Gain -2.15 dB Q 1.83
+Filter  7: ON PK Fc 15685 Hz Gain -1.90 dB Q 0.89

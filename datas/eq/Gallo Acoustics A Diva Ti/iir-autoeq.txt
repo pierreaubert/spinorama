@@ -1,16 +1,14 @@
 EQ for Gallo Acoustics A Diva Ti computed from Misc data
-Preference Score 0.68 with EQ 2.71
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-08-04-23:05:46
+Preference Score 1.64 with EQ 4.59
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-19-16:21:24
 
 Preamp: -2.9 dB
 
-Filter  1: ON HS Fc 15266 Hz Gain +3.00 dB Q 1.11
-Filter  2: ON PK Fc  1627 Hz Gain -3.16 dB Q 2.42
-Filter  3: ON PK Fc   538 Hz Gain +1.43 dB Q 2.16
-Filter  4: ON PK Fc  2633 Hz Gain -1.22 dB Q 2.85
-Filter  5: ON PK Fc   817 Hz Gain -0.77 dB Q 2.99
-Filter  6: ON PK Fc  5348 Hz Gain +0.93 dB Q 1.78
-Filter  7: ON PK Fc 11074 Hz Gain -5.55 dB Q 2.99
-Filter  8: ON PK Fc 13094 Hz Gain -1.03 dB Q 2.93
-Filter  9: ON PK Fc    23 Hz Gain -1.02 dB Q 2.89
+Filter  1: ON PK Fc    98 Hz Gain +3.00 dB Q 2.55
+Filter  2: ON PK Fc   178 Hz Gain -1.27 dB Q 2.60
+Filter  3: ON PK Fc   522 Hz Gain +1.55 dB Q 2.49
+Filter  4: ON PK Fc  1586 Hz Gain -3.30 dB Q 2.99
+Filter  5: ON PK Fc  2670 Hz Gain -1.59 dB Q 2.99
+Filter  6: ON PK Fc  8397 Hz Gain +2.14 dB Q 1.85
+Filter  7: ON PK Fc 10707 Hz Gain -7.56 dB Q 1.87

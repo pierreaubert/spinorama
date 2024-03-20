@@ -1,14 +1,14 @@
 EQ for MTG Designs AlTi DIY computed from Misc data
-Preference Score 6.38 with EQ 6.97
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-08-04-23:19:23
+Preference Score 6.31 with EQ 7.01
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-19-16:23:41
 
-Preamp: -3.0 dB
+Preamp: -4.1 dB
 
-Filter  1: ON LS Fc    90 Hz Gain +3.00 dB Q 1.78
-Filter  2: ON PK Fc   224 Hz Gain -0.88 dB Q 1.70
-Filter  3: ON PK Fc  1183 Hz Gain +0.82 dB Q 1.04
-Filter  4: ON PK Fc  4733 Hz Gain -1.02 dB Q 2.58
-Filter  5: ON PK Fc 13693 Hz Gain +2.05 dB Q 2.13
-Filter  6: ON PK Fc  2279 Hz Gain +0.75 dB Q 2.99
-Filter  7: ON PK Fc  6159 Hz Gain -0.76 dB Q 2.99
+Filter  1: ON PK Fc    40 Hz Gain +2.85 dB Q 1.53
+Filter  2: ON PK Fc    67 Hz Gain +2.35 dB Q 0.87
+Filter  3: ON PK Fc   105 Hz Gain -0.32 dB Q 0.87
+Filter  4: ON PK Fc   252 Hz Gain -0.44 dB Q 1.37
+Filter  5: ON PK Fc  1010 Hz Gain +0.49 dB Q 2.96
+Filter  6: ON PK Fc  2579 Hz Gain +0.47 dB Q 1.53
+Filter  7: ON PK Fc  4654 Hz Gain -1.24 dB Q 1.02

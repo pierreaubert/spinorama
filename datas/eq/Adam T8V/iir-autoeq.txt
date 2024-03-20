@@ -1,16 +1,14 @@
 EQ for Adam T8V computed from ASR data
-Preference Score 4.49 with EQ 6.24
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-08-05-04:55:27
+Preference Score 4.65 with EQ 6.34
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-19-16:55:47
 
-Preamp: -2.7 dB
+Preamp: -1.8 dB
 
-Filter  1: ON LS Fc    39 Hz Gain +2.93 dB Q 0.47
-Filter  2: ON PK Fc   175 Hz Gain +0.43 dB Q 2.85
-Filter  3: ON PK Fc   354 Hz Gain +0.63 dB Q 2.62
-Filter  4: ON PK Fc   933 Hz Gain +1.48 dB Q 2.91
-Filter  5: ON PK Fc  1103 Hz Gain -2.51 dB Q 2.99
-Filter  6: ON PK Fc  2082 Hz Gain +2.65 dB Q 1.60
-Filter  7: ON PK Fc  2721 Hz Gain -0.28 dB Q 2.07
-Filter  8: ON PK Fc  7173 Hz Gain -1.33 dB Q 1.52
-Filter  9: ON PK Fc  8478 Hz Gain -2.42 dB Q 0.64
+Filter  1: ON PK Fc    36 Hz Gain +1.81 dB Q 2.10
+Filter  2: ON PK Fc   178 Hz Gain +0.46 dB Q 2.93
+Filter  3: ON PK Fc  1121 Hz Gain -2.08 dB Q 2.97
+Filter  4: ON PK Fc  2245 Hz Gain +3.00 dB Q 1.26
+Filter  5: ON PK Fc  4654 Hz Gain +2.46 dB Q 2.99
+Filter  6: ON PK Fc  6144 Hz Gain -4.53 dB Q 0.56
+Filter  7: ON PK Fc 12301 Hz Gain -0.74 dB Q 2.84

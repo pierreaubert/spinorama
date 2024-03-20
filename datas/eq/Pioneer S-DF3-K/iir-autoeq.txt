@@ -1,16 +1,14 @@
 EQ for Pioneer S-DF3-K computed from Vendors-Pioneer data
-Preference Score 3.50 with EQ 5.89
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-08-05-01:00:56
+Preference Score 3.45 with EQ 5.95
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-19-16:50:11
 
-Preamp: -2.7 dB
+Preamp: -3.2 dB
 
-Filter  1: ON LS Fc   129 Hz Gain +0.34 dB Q 1.14
-Filter  2: ON PK Fc   164 Hz Gain +2.57 dB Q 0.99
-Filter  3: ON PK Fc   529 Hz Gain +0.42 dB Q 2.61
-Filter  4: ON PK Fc   933 Hz Gain +1.02 dB Q 2.71
-Filter  5: ON PK Fc  1541 Hz Gain +2.84 dB Q 2.75
-Filter  6: ON PK Fc  2014 Hz Gain -1.64 dB Q 2.93
-Filter  7: ON PK Fc  2461 Hz Gain +2.20 dB Q 2.87
-Filter  8: ON PK Fc  3801 Hz Gain -1.71 dB Q 1.44
-Filter  9: ON PK Fc  9691 Hz Gain -1.22 dB Q 1.25
+Filter  1: ON PK Fc    49 Hz Gain +2.94 dB Q 2.92
+Filter  2: ON PK Fc   130 Hz Gain +0.60 dB Q 2.50
+Filter  3: ON PK Fc   166 Hz Gain +2.24 dB Q 0.86
+Filter  4: ON PK Fc   299 Hz Gain -0.25 dB Q 2.51
+Filter  5: ON PK Fc  1532 Hz Gain +2.34 dB Q 2.99
+Filter  6: ON PK Fc  4051 Hz Gain -3.50 dB Q 1.02
+Filter  7: ON PK Fc  9989 Hz Gain -3.55 dB Q 1.63

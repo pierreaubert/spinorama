@@ -1,14 +1,14 @@
 EQ for Sonos Five computed from ASR data
-Preference Score 2.88 with EQ 5.55
+Preference Score 2.88 with EQ 5.64
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
-Dated: 2024-01-16-11:27:44
+Dated: 2024-03-19-16:50:49
 
-Preamp: -1.2 dB
+Preamp: -2.7 dB
 
-Filter  1: ON PK Fc    83 Hz Gain -5.39 dB Q 1.03
-Filter  2: ON PK Fc    85 Hz Gain +2.90 dB Q 0.26
-Filter  3: ON PK Fc   184 Hz Gain -3.91 dB Q 2.18
-Filter  4: ON PK Fc  1480 Hz Gain -0.76 dB Q 1.35
-Filter  5: ON PK Fc  4342 Hz Gain +2.24 dB Q 2.99
-Filter  6: ON PK Fc  8397 Hz Gain +2.47 dB Q 1.50
-Filter  7: ON PK Fc  9989 Hz Gain -6.08 dB Q 0.47
+Filter  1: ON PK Fc    27 Hz Gain +2.97 dB Q 1.19
+Filter  2: ON PK Fc    77 Hz Gain -3.65 dB Q 1.40
+Filter  3: ON PK Fc   184 Hz Gain -2.68 dB Q 2.97
+Filter  4: ON PK Fc   270 Hz Gain +1.02 dB Q 2.98
+Filter  5: ON PK Fc  2168 Hz Gain -1.11 dB Q 0.77
+Filter  6: ON PK Fc  7059 Hz Gain -2.36 dB Q 1.34
+Filter  7: ON PK Fc 12736 Hz Gain -5.06 dB Q 1.14

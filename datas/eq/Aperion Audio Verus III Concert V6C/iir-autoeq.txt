@@ -1,16 +1,14 @@
 EQ for Aperion Audio Verus III Concert V6C computed from ErinsAudioCorner data
-Preference Score 2.77 with EQ 5.20
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-08-05-00:37:39
+Preference Score 2.95 with EQ 5.33
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-19-16:18:12
 
-Preamp: -2.9 dB
+Preamp: -3.0 dB
 
-Filter  1: ON LS Fc    74 Hz Gain +2.88 dB Q 0.77
-Filter  2: ON PK Fc   331 Hz Gain +1.41 dB Q 2.20
-Filter  3: ON PK Fc   511 Hz Gain +1.94 dB Q 2.13
-Filter  4: ON PK Fc  1180 Hz Gain +2.79 dB Q 2.33
-Filter  5: ON PK Fc  1594 Hz Gain -2.47 dB Q 2.95
-Filter  6: ON PK Fc  2014 Hz Gain +2.92 dB Q 2.83
-Filter  7: ON PK Fc  3555 Hz Gain -2.10 dB Q 2.95
-Filter  8: ON PK Fc  9064 Hz Gain -0.32 dB Q 0.57
-Filter  9: ON PK Fc 11454 Hz Gain -2.32 dB Q 1.08
+Filter  1: ON PK Fc    46 Hz Gain +2.97 dB Q 2.91
+Filter  2: ON PK Fc   409 Hz Gain +1.34 dB Q 1.13
+Filter  3: ON PK Fc  1586 Hz Gain -3.39 dB Q 2.99
+Filter  4: ON PK Fc  1954 Hz Gain +2.98 dB Q 2.99
+Filter  5: ON PK Fc  3525 Hz Gain -2.98 dB Q 2.97
+Filter  6: ON PK Fc  8397 Hz Gain -2.82 dB Q 0.80
+Filter  7: ON PK Fc 12736 Hz Gain -3.18 dB Q 2.66
