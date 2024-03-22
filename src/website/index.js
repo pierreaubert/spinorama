@@ -19,85 +19,86 @@
 /*global Handlebars*/
 /*eslint no-undef: "error"*/
 
-import { getMetadata } from './download${min}.js';
+import { getMetadata, getMetadataHead } from './download${min}.js';
 import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc${min}.js';
 import { process } from './sort${min}.js';
 import { urlParameters2Sort } from './params${min}.js';
 
-getMetadata()
+function getMeasurementCount(metadata) {
+    let count = 0;
+    metadata.forEach((e) => {
+        count += Object.values(e.measurements).length;
+    });
+    return count;
+}
+
+function getBrandCount(metadata) {
+    const brands = new Set();
+    metadata.forEach((e) => {
+        brands.add(e.brand);
+    });
+    return brands.size;
+}
+
+function getDollar(price) {
+    if (price === '?') {
+        return price;
+    }
+    const iprice = parseInt(price);
+    if (iprice <= 200) {
+        return '$';
+    } else if (iprice <= 500) {
+        return '$$';
+    }
+    return '$$$';
+}
+
+function getContext(key, index, value) {
+    // console.log(getReviews(value));
+    const price = getPrice(value.price, value.amount);
+    return {
+        id: getID(value.brand, value.model),
+        brand: value.brand,
+        model: value.model,
+        price: price,
+        priceAsDollar: getDollar(price),
+        img: {
+            avif: getPicture(value.brand, value.model, 'avif'),
+            webp: getPicture(value.brand, value.model, 'webp'),
+            jpg: getPicture(value.brand, value.model, 'jpg'),
+            loading: getLoading(index),
+            decoding: getDecoding(index),
+        },
+        score: getScore(value, value.default_measurement),
+        reviews: getReviews(value),
+    };
+}
+
+const source = document.querySelector('#templateSpeaker').innerHTML;
+const template = Handlebars.compile(source);
+
+function printSpeaker(key, index, value) {
+    const context = getContext(key, index, value);
+    const html = template(context);
+    const divSpeaker = document.createElement('div');
+    divSpeaker.setAttribute('class', 'column is-narrow searchable');
+    divSpeaker.setAttribute('id', context.id);
+    divSpeaker.innerHTML = html;
+    return divSpeaker;
+}
+
+const speakerContainer = document.querySelector('[data-num="0"');
+const speakerCount = document.querySelector('#speakerCount p:nth-child(2)');
+const measurementCount = document.querySelector('#measurementCount p:nth-child(2)');
+const brandCount = document.querySelector('#brandCount p:nth-child(2)');
+const reviewCount = document.querySelector('#reviewCount p:nth-child(2)');
+
+function getReviewCount() {
+    return document.querySelectorAll('#selectReviewer')[0].options.length;
+}
+
+getMetadataHead()
     .then((metadata) => {
-        const source = document.querySelector('#templateSpeaker').innerHTML;
-        const template = Handlebars.compile(source);
-        const speakerContainer = document.querySelector('[data-num="0"');
-        const speakerCount = document.querySelector('#speakerCount p:nth-child(2)');
-        const measurementCount = document.querySelector('#measurementCount p:nth-child(2)');
-        const brandCount = document.querySelector('#brandCount p:nth-child(2)');
-        const reviewCount = document.querySelector('#reviewCount p:nth-child(2)');
-
-        function getMeasurementCount() {
-            let count = 0;
-            metadata.forEach((e) => {
-                count += Object.values(e.measurements).length;
-            });
-            return count;
-        }
-
-        function getBrandCount() {
-            const brands = new Set();
-            metadata.forEach((e) => {
-                brands.add(e.brand);
-            });
-            return brands.size;
-        }
-
-        function getReviewCount() {
-            return document.querySelectorAll('#selectReviewer')[0].options.length;
-        }
-
-        function getDollar(price) {
-            if (price === '?') {
-                return price;
-            }
-            const iprice = parseInt(price);
-            if (iprice <= 200) {
-                return '$';
-            } else if (iprice <= 500) {
-                return '$$';
-            }
-            return '$$$';
-        }
-
-        function getContext(key, index, value) {
-            // console.log(getReviews(value));
-            const price = getPrice(value.price, value.amount);
-            return {
-                id: getID(value.brand, value.model),
-                brand: value.brand,
-                model: value.model,
-                price: price,
-                priceAsDollar: getDollar(price),
-                img: {
-                    avif: getPicture(value.brand, value.model, 'avif'),
-                    webp: getPicture(value.brand, value.model, 'webp'),
-                    jpg: getPicture(value.brand, value.model, 'jpg'),
-                    loading: getLoading(index),
-                    decoding: getDecoding(index),
-                },
-                score: getScore(value, value.default_measurement),
-                reviews: getReviews(value),
-            };
-        }
-
-        function printSpeaker(key, index, value) {
-            const context = getContext(key, index, value);
-            const html = template(context);
-            const divSpeaker = document.createElement('div');
-            divSpeaker.setAttribute('class', 'column is-narrow searchable');
-            divSpeaker.setAttribute('id', context.id);
-            divSpeaker.innerHTML = html;
-            return divSpeaker;
-        }
-
         function display(data, speakerHtml) {
             const url = new URL(window.location);
             const params = urlParameters2Sort(url);
@@ -108,8 +109,8 @@ getMetadata()
 
         // moved after the main display of speakers to minimise reflow
         speakerCount.innerHTML = metadata.size;
-        measurementCount.innerHTML = getMeasurementCount();
-        brandCount.innerHTML = getBrandCount();
+        measurementCount.innerHTML = getMeasurementCount(metadata);
+        brandCount.innerHTML = getBrandCount(metadata);
         reviewCount.innerHTML = getReviewCount();
     })
     .catch((error) => {

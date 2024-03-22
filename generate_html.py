@@ -46,6 +46,7 @@ from generate_common import (
     args2level,
     get_custom_logger,
     find_metadata_file,
+    find_metadata_chunks,
     sort_metadata_per_score,
     sort_metadata_per_date,
 )
@@ -182,7 +183,7 @@ def generate_measurement(
         "./datas/metadata.py",
         meta_file,
         eq_file,
-        # *find_metadata_file_chunks(),
+        *find_metadata_chunks(),
         *glob("./src/website/assets/*.js"),
     ]
     index_force = need_update(index_name, index_deps)
@@ -266,6 +267,7 @@ def generate_speakers(mako, dataframe, meta, site, use_search, versions):
 def main():
     # load all metadata from generated json file
     metadata_json_filename, eqdata_json_filename = find_metadata_file()
+    metadata_json_chunks = find_metadata_chunks()
     for radical, json_check in (
         ("metadata", metadata_json_filename),
         ("eqdata", eqdata_json_filename),
@@ -411,8 +413,9 @@ def main():
         file_out = cpaths.CPATH_DOCS + "/" + f
         shutil.copy(file_in, file_out)
 
-    # cleanup flow directives
-    flow_bin = "flow-remove-types"
+    # cleanup flow directives: currently unused
+
+    flow_bin = "./node_modules/.bin/flow-remove-types"
     flow_param = ""  # "--pretty --sourcemaps"
 
     flow_command = "{} {} {} {} {}".format(
@@ -461,14 +464,16 @@ def main():
                 meta=meta_sorted_score,
                 site=site,
                 metadata_filename=metadata_filename,
+                metadata_filename_head=metadata_json_chunks['head'],
                 eqdata_filename=eqdata_filename,
                 min=".min" if flag_optim else "",
                 versions=versions,
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename, force=False)
+            # compress files with terser
             terser_command = "{0} {1}/{2} > {1}/{3}".format(
-                "terser",
+                "./node_modules/.bin/terser",
                 cpaths.CPATH_DOCS,
                 "{}.js".format(item),
                 "{}.min.js".format(item),
@@ -478,6 +483,7 @@ def main():
             )
             if status.returncode != 0:
                 print("terser failed for item {}".format(item))
+            # optimise files with critical
     except KeyError as key_error:
         print("Generating various html files failed with {}".format(key_error))
         sys.exit(1)

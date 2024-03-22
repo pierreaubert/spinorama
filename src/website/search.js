@@ -287,5 +287,7 @@ getMetadata()
         if (url.searchParams.has('sort')) {
             selectDispatch();
         }
+
+	return metadata;
     })
     .catch((err) => console.log(err.message));

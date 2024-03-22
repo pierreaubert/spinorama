@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { urlSite, metadataFilename, eqdataFilename } from './meta${min}.js';
+import { urlSite, metadataFilename, metadataFilenameHead, eqdataFilename } from './meta${min}.js';
 import { getID } from './misc${min}.js';
 
 function processOrigin(origin) {
@@ -112,29 +112,26 @@ export function getAllSpeakers(table) {
 function fetchDataAndMap(url, encoding) {
     // console.log('fetching url=' + url + ' encoding=' + encoding);
     const spec = fetch(url, { headers: { 'Accept-Encoding': encoding, 'Content-Type': 'application/json' } })
-        .catch((error) => {
-            console.log('ERROR getMetadata for ' + url + ' yield a 404 with error: ' + error);
-            return null;
-        })
-        .then((response) => response.json())
-        .catch((error) => {
-            console.log('ERROR getMetadata for ' + url + ' yield a json error: ' + error);
-            return null;
-        })
-        .then((data) => {
-            const values = Object.values(data);
-            return new Map(
-                values.map((speaker) => {
-                    const key = getID(speaker.brand, speaker.model);
-                    return [key, speaker];
-                })
-            );
-        })
-        .catch((error) => {
-            console.log('ERROR getMetadata for ' + url + ' failed: ' + error);
-            return null;
-        });
+          .catch((error) => {
+              console.log('ERROR fetchData for ' + url + ' yield a 404 with error: ' + error);
+              return null;
+          })
+          .then((response) => response.json())
+          .catch((error) => {
+              console.log('ERROR fetchData for ' + url + ' yield a json error: ' + error);
+              return null;
+          })
+          .then((data) => new Map(Object.values(data).map((speaker) => [getID(speaker.brand, speaker.model), speaker])))
+          .catch((error) => {
+              console.log('ERROR fetchData for ' + url + ' failed: ' + error);
+              return null;
+          });
     return spec;
+}
+
+export function getMetadataHead() {
+    const url = urlSite + metadataFilenameHead;
+    return fetchDataAndMap(url, 'bz2, zip, deflate');
 }
 
 export function getMetadata() {

@@ -18,5 +18,6 @@
 
 export const urlSite = '${site}' + '/';
 export const metadataFilename = '${metadata_filename}';
+export const metadataFilenameHead = '${metadata_filename_head}';
 export const eqdataFilename = '${eqdata_filename}';
 // export const metadataFilenameChunks = 'metadata_filename_chunks';

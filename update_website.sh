@@ -103,8 +103,25 @@ else
     echo "OK after generate statistics!"
 fi
 # generate website
-./update_brands.sh
-./update_reviewers.sh
+command=$(./update_brands.sh)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after update brands!"
+    rm -f src/website/brands.html
+    exit 1;
+else
+    echo "OK after update brands"
+fi
+command=$(./update_reviewers.sh)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after update reviewers!"
+    rm -f src/website/reviewers.html
+    exit 1;
+else
+    echo "OK after update reviewers"
+fi
+
 command=$(python3 ./generate_html.py --dev --sitedev=https://dev.spinorama.org)
 status=$?
 if [ $status -ne 0 ]; then

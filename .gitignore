@@ -34,6 +34,7 @@ htmlcov
 *.mp4
 *.mpeg
 .DS_Store
+.venv
 spinorama-venv
 cache.*.json
 cache.*.h5

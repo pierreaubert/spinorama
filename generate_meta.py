@@ -828,7 +828,7 @@ def dump_metadata(meta):
         for pattern in (old_hash_pattern, old_hash_pattern_zip, old_hash_pattern_bz2):
             for old_filename in glob(pattern):
                 logger.debug("remove old file %s", old_filename)
-                print("remove old file {}".format(old_filename))
+                # print("removed old file {}".format(old_filename))
                 os.remove(old_filename)
 
         # write the non zipped file

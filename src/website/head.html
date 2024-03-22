@@ -26,15 +26,15 @@
   sizes="16x16">
 
 <script type="module" src="${site}/onload${min}.js"></script>
-<script type="module" src="${site}/workbox-window-${versions['WORKBOX']}${min}.js">
-  import {Workbox} from 'workbox-window';
+<script type="module">
+  import {Workbox} from '/workbox-window-${versions['WORKBOX']}${min}.js';
 
   if ('serviceWorker' in navigator) {
-  const wb = new Workbox('/sw.js');
-  console.log('SW register');
-  wb.register();
+    const wb = new Workbox('/sw.js');
+    console.log('SW register');
+    wb.register();
   } else {
-  console.log('SW is not available');
+   console.log('SW is not available');
   }
 </script>
 
