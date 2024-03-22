@@ -62,7 +62,7 @@ pip3 install -U -r requirements-api.txt
 
 # node section
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-npm install --save-dev pyright w3c-html-validator standard flow flow-remove-types critical terser
+npm install --save-dev pyright w3c-html-validator standard flow flow-remove-types critical terser workbox-cli workbox-window
 
 # lint
 flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude .venv

@@ -97,7 +97,7 @@ function getReviewCount() {
     return document.querySelectorAll('#selectReviewer')[0].options.length;
 }
 
-getMetadataHead()
+getMetadata()
     .then((metadata) => {
         function display(data, speakerHtml) {
             const url = new URL(window.location);

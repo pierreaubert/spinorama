@@ -292,9 +292,9 @@ def compute(speakerlist, filters, ray_ids: dict, level: int):
                             m_version,
                         )
                         if "preamp_gain" in computed_eq:
-                            data_frame[speaker_key][m_origin][m_version_eq][
-                                "preamp_gain"
-                            ] = computed_eq["preamp_gain"]
+                            data_frame[speaker_key][m_origin][m_version_eq]["preamp_gain"] = (
+                                computed_eq["preamp_gain"]
+                            )
                     done_ids[current_id] = True
 
                 current_id = ray_ids[speaker][m_version][2]

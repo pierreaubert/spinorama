@@ -183,7 +183,7 @@ def generate_measurement(
         "./datas/metadata.py",
         meta_file,
         eq_file,
-        *find_metadata_chunks(),
+        *find_metadata_chunks().values(),
         *glob("./src/website/assets/*.js"),
     ]
     index_force = need_update(index_name, index_deps)
@@ -458,13 +458,24 @@ def main():
             # remove the ./docs parts
             len_docs = len("/docs/")
             metadata_filename = metadata_json_filename[len_docs:]
+            metadata_filename_head = metadata_json_chunks["head"][len_docs:]
+            js_chunks = "[{}]".format(
+                ", ".join(
+                    [
+                        "'{}'".format(v[len_docs:])
+                        for k, v in metadata_json_chunks.items()
+                        if k != "head"
+                    ]
+                )
+            )
             eqdata_filename = eqdata_json_filename[len_docs:]
             item_content = item_html.render(
                 df=main_df,
                 meta=meta_sorted_score,
                 site=site,
                 metadata_filename=metadata_filename,
-                metadata_filename_head=metadata_json_chunks['head'],
+                metadata_filename_head=metadata_filename_head,
+                metadata_filename_chunks=js_chunks,
                 eqdata_filename=eqdata_filename,
                 min=".min" if flag_optim else "",
                 versions=versions,
@@ -472,18 +483,21 @@ def main():
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename, force=False)
             # compress files with terser
-            terser_command = "{0} {1}/{2} > {1}/{3}".format(
-                "./node_modules/.bin/terser",
-                cpaths.CPATH_DOCS,
-                "{}.js".format(item),
-                "{}.min.js".format(item),
-            )
-            status = subprocess.run(
-                [terser_command], shell=True, check=True, capture_output=True  # noqa: S602
-            )
-            if status.returncode != 0:
-                print("terser failed for item {}".format(item))
+            if flag_optim:
+                terser_command = "{0} {1}/{2} > {1}/{3}".format(
+                    "./node_modules/.bin/terser",
+                    cpaths.CPATH_DOCS,
+                    "{}.js".format(item),
+                    "{}.min.js".format(item),
+                )
+                status = subprocess.run(
+                    [terser_command], shell=True, check=True, capture_output=True  # noqa: S602
+                )
+                if status.returncode != 0:
+                    print("terser failed for item {}".format(item))
             # optimise files with critical
+            if flag_optim:
+                pass
     except KeyError as key_error:
         print("Generating various html files failed with {}".format(key_error))
         sys.exit(1)

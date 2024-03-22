@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { urlSite, metadataFilename, metadataFilenameHead, eqdataFilename } from './meta${min}.js';
+import { urlSite, metadataFilename, metadataFilenameHead, metadataFilenameChunks, eqdataFilename } from './meta${min}.js';
 import { getID } from './misc${min}.js';
 
 function processOrigin(origin) {
@@ -112,20 +112,20 @@ export function getAllSpeakers(table) {
 function fetchDataAndMap(url, encoding) {
     // console.log('fetching url=' + url + ' encoding=' + encoding);
     const spec = fetch(url, { headers: { 'Accept-Encoding': encoding, 'Content-Type': 'application/json' } })
-          .catch((error) => {
-              console.log('ERROR fetchData for ' + url + ' yield a 404 with error: ' + error);
-              return null;
-          })
-          .then((response) => response.json())
-          .catch((error) => {
-              console.log('ERROR fetchData for ' + url + ' yield a json error: ' + error);
-              return null;
-          })
-          .then((data) => new Map(Object.values(data).map((speaker) => [getID(speaker.brand, speaker.model), speaker])))
-          .catch((error) => {
-              console.log('ERROR fetchData for ' + url + ' failed: ' + error);
-              return null;
-          });
+        .catch((error) => {
+            console.log('ERROR fetchData for ' + url + ' yield a 404 with error: ' + error);
+            return null;
+        })
+        .then((response) => response.json())
+        .catch((error) => {
+            console.log('ERROR fetchData for ' + url + ' yield a json error: ' + error);
+            return null;
+        })
+        .then((data) => new Map(Object.values(data).map((speaker) => [getID(speaker.brand, speaker.model), speaker])))
+        .catch((error) => {
+            console.log('ERROR fetchData for ' + url + ' failed: ' + error);
+            return null;
+        });
     return spec;
 }
 
@@ -134,9 +134,27 @@ export function getMetadataHead() {
     return fetchDataAndMap(url, 'bz2, zip, deflate');
 }
 
-export function getMetadata() {
+export function getMetadataOld() {
     const url = urlSite + metadataFilename;
     return fetchDataAndMap(url, 'bz2, zip, deflate');
+}
+
+export function getMetadata() {
+    const promisedHead = getMetadataHead();
+    const promisedChunks = [promisedHead];
+    for (let i in metadataFilenameChunks) {
+        const url = urlSite + metadataFilenameChunks[i];
+        promisedChunks.push(fetchDataAndMap(url));
+    }
+    return Promise.all(promisedChunks).then((chunks) => {
+        const merged = new Map();
+	for (const chunk of chunks) {
+	    for (const [key, value] of chunk) {
+		merged.set(key, value);
+	    }
+	}
+        return merged;
+    });
 }
 
 export function getEQdata() {
@@ -160,34 +178,6 @@ export function getEQdata() {
         });
         return mergedData;
     });
-}
-
-export function getMetadataChunked() {
-    const url = urlSite + metadataFilename;
-    // console.log('fetching url=' + url)
-    const spec = fetch(url, {
-        headers: {
-            'Accept-Encoding': 'zip',
-            'Content-Type': 'application/json',
-        },
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            // convert to object
-            const metadata = Object.values(data);
-            // console.log('metadata '+metadata.length)
-            return new Map(
-                metadata.map((speaker) => {
-                    const key = getID(speaker.brand, speaker.model);
-                    return [key, speaker];
-                })
-            );
-        })
-        .catch((error) => {
-            console.log('ERROR getMetadata for ' + url + 'yield a 404 with error: ' + error);
-            return null;
-        });
-    return spec;
 }
 
 export function assignOptions(textArray, selector, textSelected) {

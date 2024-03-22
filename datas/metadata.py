@@ -18410,7 +18410,6 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
-
     "PSB Alpha P3": {
         "brand": "PSB",
         "model": "Alpha P3",

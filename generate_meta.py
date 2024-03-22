@@ -40,6 +40,7 @@ Options:
   --dash-port=<dash-port>  Port for the ray dashbboard
 """
 import contextlib
+import errno
 from hashlib import md5
 from itertools import groupby
 import json
@@ -804,9 +805,16 @@ def dump_metadata(meta):
 
     def check_link(hashed_filename):
         # add a link to make it easier for other scripts to find the metadata
-        with contextlib.suppress(OSError):
-            if "metadata" in hashed_filename:
+        if "metadata" in hashed_filename:
+            try:
                 os.symlink(Path(hashed_filename).name, cpaths.CPATH_DOCS_METADATA_JSON)
+            except OSError as e:
+                if e.errno == errno.EEXIST:
+                    os.remove(cpaths.CPATH_DOCS_METADATA_JSON)
+                    os.symlink(Path(hashed_filename).name, cpaths.CPATH_DOCS_METADATA_JSON)
+                else:
+                    print("print unlink/link didnt work for {} with {}".format(hashed_filename, e))
+                    raise e
 
     def dict_to_json(filename, d):
         js = json.dumps(d)

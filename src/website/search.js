@@ -288,6 +288,6 @@ getMetadata()
             selectDispatch();
         }
 
-	return metadata;
+        return metadata;
     })
     .catch((err) => console.log(err.message));

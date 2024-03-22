@@ -40,10 +40,10 @@ pip3 install -r requirements.txt
 pip3 install -r requirements-tests.txt
 ```
 
-For linting the python, html and javascript code:
+For linting the python, html and javascript code or generating helpers:
 
 ```
-npm install --save-dev pyright w3c-html-validator standard flow flow-remove-types terser prettier eslint
+npm install --save-dev pyright w3c-html-validator standard flow flow-remove-types terser prettier eslint workbox-cli workbox-window
 ```
 
 Please add tests and run all of them:
