@@ -18,7 +18,7 @@
 
 TARGET1=pierre@ch.spinorama.org:/var/www/html/spinorama-prod
 TARGET2=pierre@es.spinorama.org:/var/www/html/spinorama-prod
-TARGET3=pierre@web:/var/www/html/spinorama-prod
+TARGET3=pierre@web01:/var/www/html/spinorama-prod
 
 # check
 command=$(grep dev.spinorama.org docs/*.html | wc -l)

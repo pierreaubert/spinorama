@@ -408,13 +408,13 @@ def main():
     # copy custom css
     for f in [
         "spinorama.css",
+        "manifest.json",
     ]:
         file_in = cpaths.CPATH_WEBSITE + "/" + f
         file_out = cpaths.CPATH_DOCS + "/" + f
         shutil.copy(file_in, file_out)
 
     # cleanup flow directives: currently unused
-
     flow_bin = "./node_modules/.bin/flow-remove-types"
     flow_param = ""  # "--pretty --sourcemaps"
 
