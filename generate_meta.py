@@ -805,7 +805,7 @@ def dump_metadata(meta):
 
     def check_link(hashed_filename):
         # add a link to make it easier for other scripts to find the metadata
-        if "metadata" in hashed_filename:
+        if "metadata" in hashed_filename and len(hashed_filename.split('-')) == 2 and 'head' not in hashed_filename:
             try:
                 os.symlink(Path(hashed_filename).name, cpaths.CPATH_DOCS_METADATA_JSON)
             except OSError as e:

@@ -1,20 +1,31 @@
 {
-  "name": "Spinorama",
-  "short_name": "Spinorama",
-  "start_url": ".",
-  "display": "standalone",
-  "background_color": "#fff",
-  "description": "Speaker measurements",
-  "icons": [
-      {
-	  "src": "icons/icon-bookshelves.svg",
-	  "sizes": "48x48",
-	  "type": "image/svg+xml"
-      },
-      {
-	  "src": "icons/icon-bookshelves.svg",
-	  "sizes": "144x144",
-	  "type": "image/svg+xml"
-      }
-  ]
+    "manifest_version": 3,
+    "name": "Spinorama",
+    "short_name": "Spinorama",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#fff",
+    "description": "Speaker measurements",
+    "icons": [
+	{
+	    "src": "icons/icon-bookshelves-48x48.png",
+	    "sizes": "48x48",
+	    "type": "image/png"
+	},
+	{
+	    "src": "icons/icon-bookshelves-144x144.png",
+	    "sizes": "144x144",
+	    "type": "image/png"
+	},
+	{
+	    "src": "icons/icon-bookshelves.svg",
+	    "sizes": "640x512",
+	    "type": "image/svg+xml"
+	},
+	{
+	    "src": "icons/icon-bookshelves.png",
+	    "sizes": "640x512",
+	    "type": "image/png"
+	}
+    ]
 }
