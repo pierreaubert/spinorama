@@ -396,12 +396,57 @@ def main():
         print("Generating a file per speaker failed with {}".format(key_error))
         sys.exit(1)
 
-    # copy favicon(s)
+    # copy favicon(s) and logos
     for f in [
-        "favicon.ico",
+        "3d3a.png",
+        "asr.png",
+        "asr-small.png",
+        "BIC America.jpg'",
+        "bose.png",
+        "Buchardt Audio.png'",
+        "eac.png",
         "favicon-16x16.png",
+        "favicon.ico",
+        "fulcrum-acoustic.png",
+        "icon-bookshelves.png",
+        "icon-bookshelves.svg",
+        "icon-bookshelves.webp",
+        "icon-bookshelves-zigzag.svg",
+        "infinity.png",
+        "infinity-small.png",
+        "jbl.jpg",
+        "jtr.png",
+        "jtr-small.png",
+        "kef.png",
+        "kling-freitag.png",
+        "magico.png",
+        "meyersound.png",
+        "neumann.png",
+        "paradigm.png",
+        "pmc.png",
+        "revel.png",
+        "spin.svg",
+        "volume-0.svg",
+        "volume-1.svg",
+        "volume-2.svg",
+        "volume-3.svg",
+        "volume-4.svg",
+        "volume-5.svg",
+        "volume-danger-0.svg",
+        "volume-danger-1.svg",
+        "volume-danger-2.svg",
+        "volume-danger-3.svg",
+        "volume-info-0.svg",
+        "volume-info-1.svg",
+        "volume-info-2.svg",
+        "volume-info-3.svg",
+        "volume-success-0.svg",
+        "volume-success-1.svg",
+        "volume-success-2.svg",
+        "volume-success-3.svg",
+        "volume.svg",
     ]:
-        file_in = cpaths.CPATH_DATAS_LOGOS + "/" + f
+        file_in = cpaths.CPATH_DATAS_ICONS + "/" + f
         file_out = cpaths.CPATH_DOCS + "/" + f
         shutil.copy(file_in, file_out)
 
@@ -411,7 +456,7 @@ def main():
         "manifest.json",
     ]:
         file_in = cpaths.CPATH_WEBSITE + "/" + f
-        file_out = cpaths.CPATH_DOCS + "/" + f
+        file_out = cpaths.CPATH_DOCS + "/svg" + f
         shutil.copy(file_in, file_out)
 
     # cleanup flow directives: currently unused

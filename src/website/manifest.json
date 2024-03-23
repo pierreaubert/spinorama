@@ -1,0 +1,20 @@
+{
+  "name": "Spinorama",
+  "short_name": "Spinorama",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "Speaker measurements",
+  "icons": [
+      {
+	  "src": "icons/icon-bookshelves.svg",
+	  "sizes": "48x48",
+	  "type": "image/svg+xml"
+      },
+      {
+	  "src": "icons/icon-bookshelves.svg",
+	  "sizes": "144x144",
+	  "type": "image/svg+xml"
+      }
+  ]
+}

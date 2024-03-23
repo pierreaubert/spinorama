@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "bulmajs": "^0.0.2",
     "fnm": "^0.0.0",
+    "handlebars": "^4.7.8",
     "html-validate": "^7.13.2",
     "html-validator": "^5.1.18",
     "html-validator-cli": "^2.0.0",
