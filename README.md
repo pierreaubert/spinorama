@@ -21,7 +21,7 @@ It is a way to understand quickly a speaker properties, how it will sound.
 
 Here is an example:
 
-![image](https://www.spinorama.org/speakers/Genelec%208341A/ASR/asr-vertical/CEA2034.jpg)
+![image](https://www.spinorama.org/speakers/Genelec%208341A/ASR/asr-vertical/CEA2034.html)
 
 - On Axis: this the frequency response. You expect it to be as flat as possible after 100Hz.
 - Listening Window: an average of various measurements around on axis. Expected to be close to the previous one.
