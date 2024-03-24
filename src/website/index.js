@@ -97,16 +97,25 @@ function getReviewCount() {
     return document.querySelectorAll('#selectReviewer')[0].options.length;
 }
 
+function display(data, speakerHtml) {
+    const url = new URL(window.location);
+    const params = urlParameters2Sort(url);
+    return process(data, params, speakerHtml);
+}
+
+getMetadataHead()
+    .then((metadata) => {
+        speakerContainer.appendChild(display(metadata, printSpeaker));
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+
 getMetadata()
     .then((metadata) => {
-        function display(data, speakerHtml) {
-            const url = new URL(window.location);
-            const params = urlParameters2Sort(url);
-            return process(data, params, speakerHtml);
-        }
-
-        speakerContainer.appendChild(display(metadata, printSpeaker));
-
+	
+	speakerContainer.appendChild(display(metadata, printSpeaker));
+	
         // moved after the main display of speakers to minimise reflow
         speakerCount.innerHTML = metadata.size;
         measurementCount.innerHTML = getMeasurementCount(metadata);

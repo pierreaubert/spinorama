@@ -377,7 +377,7 @@ getMetadata()
                 speakersSelector[0].focus();
             } else if (key === 'b' || key === '2') {
                 speakersSelector[1].focus();
-            } else if (key === 'g') {
+            } else if (key === 'g' || key === 'c') {
                 graphsSelector.focus();
             }
         });
