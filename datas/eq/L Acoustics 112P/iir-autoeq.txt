@@ -1,16 +1,14 @@
 EQ for L Acoustics 112P computed from Vendors-L Acoustics data
-Preference Score 5.78 with EQ 6.39
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-08-05-03:48:56
+Preference Score 5.73 with EQ 6.54
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-19-16:23:19
 
-Preamp: -3.0 dB
+Preamp: -2.5 dB
 
-Filter  1: ON LS Fc    60 Hz Gain +1.34 dB Q 0.32
-Filter  2: ON PK Fc   194 Hz Gain +0.62 dB Q 2.67
-Filter  3: ON PK Fc   289 Hz Gain +0.41 dB Q 1.84
-Filter  4: ON PK Fc   547 Hz Gain +1.01 dB Q 2.44
-Filter  5: ON PK Fc  1261 Hz Gain -0.07 dB Q 1.58
-Filter  6: ON PK Fc  2545 Hz Gain +2.34 dB Q 2.61
-Filter  7: ON PK Fc  3110 Hz Gain -1.37 dB Q 2.99
-Filter  8: ON PK Fc 11077 Hz Gain +2.99 dB Q 1.59
-Filter  9: ON HS Fc 15474 Hz Gain -0.20 dB Q 0.68
+Filter  1: ON PK Fc    49 Hz Gain +2.45 dB Q 2.97
+Filter  2: ON PK Fc   197 Hz Gain +0.45 dB Q 2.79
+Filter  3: ON PK Fc   522 Hz Gain +0.81 dB Q 2.90
+Filter  4: ON PK Fc  1202 Hz Gain -0.60 dB Q 1.56
+Filter  5: ON PK Fc  2579 Hz Gain +1.43 dB Q 2.96
+Filter  6: ON PK Fc  3177 Hz Gain -2.09 dB Q 3.00
+Filter  7: ON PK Fc  6818 Hz Gain -1.44 dB Q 1.40

@@ -39,3 +39,9 @@ rm -fr **/.ipynb_checkpoints
 rm -fr ./book/.pytest_cache ./book/*.aux ./book/*.bbl ./book/*.blg ./book/*.lof ./book/*.out ./book/*.pdf ./book/*.toc ./book/*.back ./book/tmp ./book/*~
 # Mac stuff
 rm -fr .DS_Store
+# cpython stuff
+rm -f src/spinorama/c_compute_scores.c
+rm -f src/spinorama/c_compute_scores.so
+rm -f src/spinorama/c_compute_scores.*.so
+rm -f src/spinorama/c_compute_scores.*~
+

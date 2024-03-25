@@ -1,15 +1,14 @@
 EQ for OS Acoustics DBS8 computed from Misc data
-Preference Score 6.13 with EQ 6.69
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-08-04-23:08:06
+Preference Score 6.13 with EQ 6.71
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-19-16:44:30
 
-Preamp: -2.9 dB
+Preamp: -1.8 dB
 
-Filter  1: ON PK Fc    28 Hz Gain +3.00 dB Q 1.05
-Filter  2: ON PK Fc  3495 Hz Gain -2.65 dB Q 1.91
-Filter  3: ON PK Fc    87 Hz Gain -2.13 dB Q 1.44
-Filter  4: ON PK Fc   271 Hz Gain -0.98 dB Q 1.02
-Filter  5: ON PK Fc 13210 Hz Gain +1.29 dB Q 1.64
-Filter  6: ON PK Fc   658 Hz Gain -0.99 dB Q 2.98
-Filter  7: ON PK Fc  1606 Hz Gain +0.78 dB Q 2.99
-Filter  8: ON PK Fc  6358 Hz Gain -0.77 dB Q 2.98
+Filter  1: ON PK Fc    42 Hz Gain +3.00 dB Q 1.33
+Filter  2: ON PK Fc    80 Hz Gain -2.19 dB Q 0.69
+Filter  3: ON PK Fc   621 Hz Gain -1.70 dB Q 2.96
+Filter  4: ON PK Fc  1202 Hz Gain -0.86 dB Q 2.92
+Filter  5: ON PK Fc  3289 Hz Gain -1.76 dB Q 1.00
+Filter  6: ON PK Fc  6585 Hz Gain -1.36 dB Q 2.94
+Filter  7: ON PK Fc  9001 Hz Gain +0.41 dB Q 0.64

@@ -77,7 +77,11 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
         if len(restricted_onaxis_6) > 0:
             y_6_idx = np.argmin(restricted_onaxis_6)
             y_6 = restricted_onaxis.Freq[y_6_idx]
-        logger.debug("-3 and -6: %fHz and %fHz", y_3, y_6)
+        logger.debug(
+            "-3 and -6: %fHz and %fHz",
+            y_3 if y_3 is not None else -1.0,
+            y_6 if y_6 is not None else -1.0,
+        )
         #
         up: float = onaxis.loc[midrange].dB.max()
         down: float = onaxis.loc[midrange].dB.min()

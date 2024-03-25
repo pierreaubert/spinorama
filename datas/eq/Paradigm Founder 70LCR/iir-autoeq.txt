@@ -1,14 +1,14 @@
 EQ for Paradigm Founder 70LCR computed from Misc data
-Preference Score 0.56 with EQ 2.64
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-09-14-12:46:16
+Preference Score 0.58 with EQ 2.74
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-19-16:22:03
 
-Preamp: -2.2 dB
+Preamp: -0.0 dB
 
-Filter  1: ON LS Fc   565 Hz Gain +0.39 dB Q 1.11
-Filter  2: ON PK Fc   646 Hz Gain -0.89 dB Q 1.78
-Filter  3: ON PK Fc  1594 Hz Gain -1.92 dB Q 2.24
-Filter  4: ON PK Fc  2153 Hz Gain +3.00 dB Q 2.97
-Filter  5: ON PK Fc  4345 Hz Gain +2.94 dB Q 2.98
-Filter  6: ON PK Fc  4966 Hz Gain -2.43 dB Q 2.97
-Filter  7: ON PK Fc 16000 Hz Gain -2.96 dB Q 0.36
+Filter  1: ON PK Fc   243 Hz Gain -1.35 dB Q 1.81
+Filter  2: ON PK Fc   689 Hz Gain -2.33 dB Q 0.98
+Filter  3: ON PK Fc  1700 Hz Gain -4.00 dB Q 1.81
+Filter  4: ON PK Fc  2023 Hz Gain +2.94 dB Q 2.98
+Filter  5: ON PK Fc  3405 Hz Gain -2.49 dB Q 3.00
+Filter  6: ON PK Fc  9001 Hz Gain -4.89 dB Q 0.67
+Filter  7: ON PK Fc 16239 Hz Gain -7.42 dB Q 1.69

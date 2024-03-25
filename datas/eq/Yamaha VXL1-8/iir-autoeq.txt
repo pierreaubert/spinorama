@@ -1,14 +1,14 @@
 EQ for Yamaha VXL1-8 computed from Vendors-Yamaha data
-Preference Score -0.52 with EQ 1.03
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.25
-Dated: 2023-10-20-08:59:14
+Preference Score -0.52 with EQ 4.97
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-19-16:25:51
 
-Preamp: -6.4 dB
+Preamp: -5.9 dB
 
-Filter  1: ON PK Fc   197 Hz Gain +2.83 dB Q 1.80
-Filter  2: ON PK Fc   252 Hz Gain +2.99 dB Q 0.96
-Filter  3: ON PK Fc  1642 Hz Gain +3.00 dB Q 3.00
-Filter  4: ON PK Fc  2245 Hz Gain -4.63 dB Q 1.11
-Filter  5: ON PK Fc  8110 Hz Gain +3.00 dB Q 1.67
-Filter  6: ON PK Fc  9648 Hz Gain +2.99 dB Q 0.42
-Filter  7: ON PK Fc 14633 Hz Gain +2.94 dB Q 0.87
+Filter  1: ON PK Fc    46 Hz Gain +3.00 dB Q 0.25
+Filter  2: ON PK Fc    54 Hz Gain +3.00 dB Q 0.25
+Filter  3: ON PK Fc   487 Hz Gain -3.80 dB Q 1.08
+Filter  4: ON PK Fc  1161 Hz Gain -4.35 dB Q 2.67
+Filter  5: ON PK Fc  2168 Hz Gain -5.28 dB Q 2.69
+Filter  6: ON PK Fc  3289 Hz Gain -4.29 dB Q 1.08
+Filter  7: ON PK Fc  8397 Hz Gain +2.73 dB Q 0.78

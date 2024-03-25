@@ -48,8 +48,8 @@ export PYTHONPATH=./src:./src/website
 export NVM_DIR=$HOME/.nvm
 
 # python section
-python3 -m venv spinorama-venv
-. ./spinorama-venv/bin/activate
+python3 -m venv .venv
+. ./.venv/bin/activate
 ARCH=$(uname -a | awk '{print $NF}')
 if test "$OS" = "Darwin"  -a "$ARCH" = "arm64" ; then
     # ack to install tables on arm
@@ -62,13 +62,14 @@ pip3 install -U -r requirements-api.txt
 
 # node section
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-npm install --save-dev pyright w3c-html-validator standard flow flow-remove-types
+npm install --save-dev pyright w3c-html-validator standard flow flow-remove-types critical terser workbox-cli workbox-window
 
 # lint
-flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spinorama-venv
+flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude .venv
 
 # compile
-PYTHONPATH=src cd src/spinorama && python setup.py build_ext --inplace && ln -s c_compute_scores.cpython-*.so c_compute_scores.so && cd ../..
+rm -f src/spinorama/c_compute_scores.cpython-*.so
+PYTHONPATH=src cd src/spinorama && python3 setup.py build_ext --inplace && ln -s c_compute_scores.cpython-*.so c_compute_scores.so && cd ../..
 
 # install deepsource
 [ ! -x bin/deepsource ] && curl https://deepsource.io/cli | sh

@@ -1,14 +1,14 @@
 EQ for Tekton M-Lore computed from ASR data
-Preference Score 3.53 with EQ 5.54
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.25
-Dated: 2023-10-18-16:47:42
+Preference Score 3.53 with EQ 5.72
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-19-16:45:12
 
-Preamp: -3.4 dB
+Preamp: -3.8 dB
 
-Filter  1: ON LS Fc    74 Hz Gain +3.00 dB Q 1.52
-Filter  2: ON PK Fc   178 Hz Gain +2.97 dB Q 3.00
-Filter  3: ON PK Fc   540 Hz Gain +1.11 dB Q 0.49
-Filter  4: ON PK Fc   689 Hz Gain -3.61 dB Q 2.45
-Filter  5: ON PK Fc  4194 Hz Gain +3.00 dB Q 2.97
-Filter  6: ON PK Fc  8397 Hz Gain -2.09 dB Q 1.59
-Filter  7: ON PK Fc 16239 Hz Gain +1.35 dB Q 0.25
+Filter  1: ON PK Fc    36 Hz Gain +2.99 dB Q 2.60
+Filter  2: ON PK Fc    60 Hz Gain +1.83 dB Q 1.05
+Filter  3: ON PK Fc   178 Hz Gain +3.00 dB Q 2.98
+Filter  4: ON PK Fc   310 Hz Gain +1.15 dB Q 2.21
+Filter  5: ON PK Fc   689 Hz Gain -2.74 dB Q 2.91
+Filter  6: ON PK Fc  4194 Hz Gain +2.99 dB Q 3.00
+Filter  7: ON PK Fc  8110 Hz Gain -1.88 dB Q 1.92

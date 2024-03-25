@@ -18,13 +18,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-usage: generate_html.py [--help] [--version] [--dev]\
+usage: generate_html.py [--help] [--version] [--dev] [--optim]\
  [--sitedev=<http>]  [--log-level=<level>]
 
 Options:
   --help            display usage()
   --version         script version number
   --sitedev=<http>  default: http://localhost:8000/docs
+  --dev             if you want to generate the dev websites
+  --optim           if you want an optimised built       
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
 from glob import glob
@@ -44,6 +46,7 @@ from generate_common import (
     args2level,
     get_custom_logger,
     find_metadata_file,
+    find_metadata_chunks,
     sort_metadata_per_score,
     sort_metadata_per_date,
 )
@@ -53,6 +56,28 @@ from spinorama.need_update import need_update
 
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
+
+
+def get_versions(filename):
+    versions = {}
+    with open(filename, "r") as fd:
+        lines = fd.readlines()
+        for line in lines:
+            tokens = line[:-1].split("=")
+            if len(tokens) != 2:
+                continue
+            if not (tokens[0].isalpha() and tokens[0].isupper()):
+                continue
+            numbers = tokens[1].split(".")
+            if not (
+                len(numbers) == 3
+                and numbers[0].isdigit()
+                and numbers[1].isdigit()
+                and numbers[2].isdigit()
+            ):
+                continue
+            versions[tokens[0]] = tokens[1]
+    return versions
 
 
 def write_if_different(new_content: str, filename: str, force: bool):  # noqa: FBT001
@@ -105,6 +130,7 @@ def generate_measurement(
     meta,
     site,
     use_search,
+    versions,
     speaker_name,
     origins,
     speaker_html,
@@ -146,14 +172,18 @@ def generate_measurement(
         origin=origin,
         site=site,
         use_search=use_search,
+        min=".min" if flag_optim else "",
+        versions=versions,
     )
+    meta_file, eq_file = find_metadata_file()
     index_deps = [
         "./src/website/speaker.html",
         "./src/website/speaker_desc.html",
         "./src/website/utils.py",
         "./datas/metadata.py",
-        find_metadata_file(),
-        # *find_metadata_file_chunks(),
+        meta_file,
+        eq_file,
+        *find_metadata_chunks().values(),
         *glob("./src/website/assets/*.js"),
     ]
     index_force = need_update(index_name, index_deps)
@@ -165,7 +195,12 @@ def generate_measurement(
             graph_filename = "{0}/{1}/{2}.html".format(dirname, key, graph_name)
             logger.info("Writing %s/%s for %s", key, graph_filename, speaker_name)
             graph_content = graph_html.render(
-                speaker=speaker_name, graph=graph_name, meta=meta, site=site
+                speaker=speaker_name,
+                graph=graph_name,
+                meta=meta,
+                site=site,
+                min=".min" if flag_optim else "",
+                versions=versions,
             )
             graph_deps = [
                 *glob("./datas/measurements/{}/{}/*.*".format(speaker_name, key)),
@@ -176,7 +211,7 @@ def generate_measurement(
 
 
 def generate_speaker(
-    dataframe, meta, site, use_search, speaker_name, origins, speaker_html, graph_html
+    dataframe, meta, site, use_search, versions, speaker_name, origins, speaker_html, graph_html
 ):
     for origin, measurements in origins.items():
         for key, dfs in measurements.items():
@@ -187,6 +222,7 @@ def generate_speaker(
                     meta,
                     site,
                     use_search,
+                    versions,
                     speaker_name,
                     origins,
                     speaker_html,
@@ -204,7 +240,7 @@ def generate_speaker(
                 )
 
 
-def generate_speakers(mako, dataframe, meta, site, use_search):
+def generate_speakers(mako, dataframe, meta, site, use_search, versions):
     """For each speaker, generates a set of HTML files driven by templates"""
     speaker_html = mako.get_template("speaker.html")
     graph_html = mako.get_template("graph.html")
@@ -214,7 +250,15 @@ def generate_speakers(mako, dataframe, meta, site, use_search):
             logger.debug("skipping %s", speaker_name)
             continue
         generate_speaker(
-            dataframe, meta, site, use_search, speaker_name, origins, speaker_html, graph_html
+            dataframe,
+            meta,
+            site,
+            use_search,
+            versions,
+            speaker_name,
+            origins,
+            speaker_html,
+            graph_html,
         )
 
     return 0
@@ -222,14 +266,22 @@ def generate_speakers(mako, dataframe, meta, site, use_search):
 
 def main():
     # load all metadata from generated json file
-    json_filename = find_metadata_file()
-    if json_filename is None:
-        logger.error("Cannot find %s", json_filename)
-        sys.exit(1)
+    metadata_json_filename, eqdata_json_filename = find_metadata_file()
+    metadata_json_chunks = find_metadata_chunks()
+    for radical, json_check in (
+        ("metadata", metadata_json_filename),
+        ("eqdata", eqdata_json_filename),
+    ):
+        if json_check is None:
+            logger.error("Cannot find %s, you should run generate_meta.py again!", radical)
+            sys.exit(1)
 
     meta = None
-    with open(json_filename, "r") as f:
+    with open(metadata_json_filename, "r") as f:
         meta = json.load(f)
+
+    # load versions for various css and js files
+    versions = get_versions("./update_3rdparties.sh")
 
     # only build a dictionnary will all graphs
     main_df = {}
@@ -271,7 +323,12 @@ def main():
 
     try:
         html_content = index_html.render(
-            df=main_df, meta=meta_sorted_date, site=site, use_search=True
+            df=main_df,
+            meta=meta_sorted_date,
+            site=site,
+            use_search=True,
+            min=".min" if flag_optim else "",
+            versions=versions,
         )
         html_filename = f"{cpaths.CPATH_DOCS}/index.html"
         write_if_different(html_content, html_filename, force=False)
@@ -284,7 +341,14 @@ def main():
     eqs_html = mako_templates.get_template("eqs.html")
 
     try:
-        eqs_content = eqs_html.render(df=main_df, meta=meta_sorted_date, site=site, use_search=True)
+        eqs_content = eqs_html.render(
+            df=main_df,
+            meta=meta_sorted_date,
+            site=site,
+            use_search=True,
+            min=".min" if flag_optim else "",
+            versions=versions,
+        )
         eqs_filename = f"{cpaths.CPATH_DOCS}/eqs.html"
         write_if_different(eqs_content, eqs_filename, force=False)
     except KeyError as key_error:
@@ -308,7 +372,12 @@ def main():
             if item in ("scores", "similar"):
                 use_search = True
             item_content = item_html.render(
-                df=main_df, meta=meta_sorted_score, site=site, use_search=use_search
+                df=main_df,
+                meta=meta_sorted_score,
+                site=site,
+                use_search=use_search,
+                min=".min" if flag_optim else "",
+                versions=versions,
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename, force=False)
@@ -320,36 +389,90 @@ def main():
     # write a file per speaker
     logger.info("Write a file per speaker")
     try:
-        generate_speakers(mako_templates, main_df, meta=meta, site=site, use_search=False)
+        generate_speakers(
+            mako_templates, main_df, meta=meta, site=site, use_search=False, versions=versions
+        )
     except KeyError as key_error:
         print("Generating a file per speaker failed with {}".format(key_error))
         sys.exit(1)
 
-    # copy favicon(s)
+    # copy favicon(s) and logos
     for f in [
-        "favicon.ico",
+        "3d3a.png",
+        "asr.png",
+        "asr-small.png",
+        "BIC America.jpg",
+        "bose.png",
+        "Buchardt Audio.png",
+        "eac.png",
         "favicon-16x16.png",
+        "favicon.ico",
+        "fulcrum-acoustic.png",
+        "icon-bookshelves.svg",
+        "icon-bookshelves.png",
+        "icon-bookshelves.webp",
+        "icon-bookshelves-48x48.png",
+        "icon-bookshelves-48x48.webp",
+        "icon-bookshelves-144x144.png",
+        "icon-bookshelves-144x144.webp",
+        "icon-bookshelves-zigzag.svg",
+        "infinity.png",
+        "infinity-small.png",
+        "jbl.jpg",
+        "jtr.png",
+        "jtr-small.png",
+        "kef.png",
+        "kling-freitag.png",
+        "magico.png",
+        "meyersound.png",
+        "neumann.png",
+        "paradigm.png",
+        "pmc.png",
+        "revel.png",
+        "spin.svg",
+        "volume-0.svg",
+        "volume-1.svg",
+        "volume-2.svg",
+        "volume-3.svg",
+        "volume-4.svg",
+        "volume-5.svg",
+        "volume-danger-0.svg",
+        "volume-danger-1.svg",
+        "volume-danger-2.svg",
+        "volume-danger-3.svg",
+        "volume-info-0.svg",
+        "volume-info-1.svg",
+        "volume-info-2.svg",
+        "volume-info-3.svg",
+        "volume-success-0.svg",
+        "volume-success-1.svg",
+        "volume-success-2.svg",
+        "volume-success-3.svg",
+        "volume.svg",
     ]:
-        file_in = cpaths.CPATH_DATAS_LOGOS + "/" + f
+        file_in = cpaths.CPATH_DATAS_ICONS + "/" + f
         file_out = cpaths.CPATH_DOCS + "/" + f
         shutil.copy(file_in, file_out)
 
+    # copy custom css
     for f in [
         "spinorama.css",
+        "manifest.json",
     ]:
-        file_in = cpaths.CPATH_WEBSITE_ASSETS_CSS + "/" + f
-        file_out = cpaths.CPATH_DOCS_ASSETS_CSS + "/" + f
+        file_in = cpaths.CPATH_WEBSITE + "/" + f
+        file_out = cpaths.CPATH_DOCS + "/svg" + f
         shutil.copy(file_in, file_out)
 
-    flow_bin = "flow-remove-types"
+    # cleanup flow directives: currently unused
+    flow_bin = "./node_modules/.bin/flow-remove-types"
     flow_param = ""  # "--pretty --sourcemaps"
 
     flow_command = "{} {} {} {} {}".format(
         flow_bin,
         flow_param,
-        cpaths.CPATH_WEBSITE_ASSETS_JS,
+        cpaths.CPATH_WEBSITE,
         "--out-dir",
-        cpaths.CPATH_DOCS_ASSETS_JS,
+        cpaths.CPATH_DOCS,
     )
     status = subprocess.run(
         [flow_command], shell=True, check=True, capture_output=True  # noqa: S602
@@ -358,23 +481,72 @@ def main():
         print("flow failed")
 
     # copy css/js files
-    logger.info("Copy js files to %s", cpaths.CPATH_DOCS_ASSETS_JS)
+    logger.info("Copy js files to %s", cpaths.CPATH_DOCS)
     try:
         for item in (
-            "misc",
+            "compare",
+            "download",
+            "eqs",
+            "graph",
+            "index",
             "meta",
+            "misc",
+            "onload",
             "params",
+            "plot",
+            "scores",
+            "search",
+            "similar",
+            "sort",
+            "statistics",
+            "tabs",
         ):
-            item_name = "assets/{0}.js".format(item)
+            item_name = "{0}.js".format(item)
             logger.info("Write %s", item_name)
             item_html = mako_templates.get_template(item_name)
-            # remove the ./docs/assets parts
-            metadata_filename = json_filename[13:]
+            # remove the ./docs parts
+            len_docs = len("/docs/")
+            metadata_filename = metadata_json_filename[len_docs:]
+            metadata_filename_head = metadata_json_chunks["head"][len_docs:]
+            js_chunks = "[{}]".format(
+                ", ".join(
+                    [
+                        "'{}'".format(v[len_docs:])
+                        for k, v in metadata_json_chunks.items()
+                        if k != "head"
+                    ]
+                )
+            )
+            eqdata_filename = eqdata_json_filename[len_docs:]
             item_content = item_html.render(
-                df=main_df, meta=meta_sorted_score, site=site, metadata_filename=metadata_filename
+                df=main_df,
+                meta=meta_sorted_score,
+                site=site,
+                metadata_filename=metadata_filename,
+                metadata_filename_head=metadata_filename_head,
+                metadata_filename_chunks=js_chunks,
+                eqdata_filename=eqdata_filename,
+                min=".min" if flag_optim else "",
+                versions=versions,
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             write_if_different(item_content, item_filename, force=False)
+            # compress files with terser
+            if flag_optim:
+                terser_command = "{0} {1}/{2} > {1}/{3}".format(
+                    "./node_modules/.bin/terser",
+                    cpaths.CPATH_DOCS,
+                    "{}.js".format(item),
+                    "{}.min.js".format(item),
+                )
+                status = subprocess.run(
+                    [terser_command], shell=True, check=True, capture_output=True  # noqa: S602
+                )
+                if status.returncode != 0:
+                    print("terser failed for item {}".format(item))
+            # optimise files with critical
+            if flag_optim:
+                pass
     except KeyError as key_error:
         print("Generating various html files failed with {}".format(key_error))
         sys.exit(1)
@@ -389,7 +561,12 @@ def main():
             logger.info("Write %s", item_name)
             item_html = mako_templates.get_template(item_name)
             item_content = item_html.render(
-                df=main_df, meta=meta_sorted_score, site=site, isProd=(site == SITEPROD)
+                df=main_df,
+                meta=meta_sorted_score,
+                site=site,
+                isProd=(site == SITEPROD),
+                min=".min" if flag_optim else "",
+                versions=versions,
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             # ok for robots but likely doesn't work for sitemap
@@ -403,9 +580,10 @@ def main():
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="update_html.py version 1.23", options_first=True)
-    dev = args["--dev"]
+    flag_dev = args["--dev"]
+    flag_optim = args["--optim"]
     site = SITEPROD
-    if dev is True:
+    if flag_dev:
         site = SITEDEV
         if args["--sitedev"] is not None:
             site = args["--sitedev"]

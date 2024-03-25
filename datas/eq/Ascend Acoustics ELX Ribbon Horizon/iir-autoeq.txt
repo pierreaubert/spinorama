@@ -1,14 +1,14 @@
 EQ for Ascend Acoustics ELX Ribbon Horizon computed from Vendors-Ascend Acoustics data
-Preference Score 6.25 with EQ 7.00
+Preference Score 6.25 with EQ 7.13
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
-Dated: 2024-01-27-16:32:05
+Dated: 2024-03-19-16:18:25
 
-Preamp: -2.8 dB
+Preamp: -5.0 dB
 
-Filter  1: ON PK Fc    32 Hz Gain +2.89 dB Q 0.49
-Filter  2: ON PK Fc    98 Hz Gain -1.68 dB Q 1.29
-Filter  3: ON PK Fc   227 Hz Gain +0.62 dB Q 2.33
-Filter  4: ON PK Fc  1010 Hz Gain +1.77 dB Q 3.00
-Filter  5: ON PK Fc  2964 Hz Gain +0.83 dB Q 2.77
-Filter  6: ON PK Fc  9989 Hz Gain -0.74 dB Q 2.83
-Filter  7: ON PK Fc 11085 Hz Gain +1.01 dB Q 2.81
+Filter  1: ON PK Fc    29 Hz Gain +2.99 dB Q 1.64
+Filter  2: ON PK Fc    54 Hz Gain +2.79 dB Q 0.34
+Filter  3: ON PK Fc    98 Hz Gain -3.06 dB Q 0.94
+Filter  4: ON PK Fc   765 Hz Gain -0.89 dB Q 1.11
+Filter  5: ON PK Fc  1010 Hz Gain +2.96 dB Q 2.99
+Filter  6: ON PK Fc  1288 Hz Gain -1.04 dB Q 2.16
+Filter  7: ON PK Fc  9319 Hz Gain -0.82 dB Q 2.99

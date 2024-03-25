@@ -50,6 +50,7 @@ fi
 
 # update logos and speakers picture
 ./update_pictures.sh
+
 # generate all graphs if some are missing
 rm -fr /tmp/ray
 command=$(python3 ./generate_graphs.py --dash-ip="$IP")
@@ -60,6 +61,7 @@ if [ $status -ne 0 ]; then
 else
     echo "OK after generate graph!"
 fi
+
 # recompute metadata for all speakers
 rm -f docs/assets/metadata.json
 command=$(python3 ./generate_meta.py  --dash-ip="$IP")
@@ -70,8 +72,10 @@ if [ $status -ne 0 ]; then
 else
     echo "OK after generate meta!"
 fi
+
 # generate all jpg if some are missing
 ./update_pictures.sh
+
 # generate radar
 # rm -f docs/speakers/*/spider*
 command=$(python3 ./generate_radar.py)
@@ -82,6 +86,7 @@ if [ $status -ne 0 ]; then
 else
     echo "OK after generate radar!"
 fi
+
 # generate eq_compare
 # rm -f docs/speakers/*/eq_compare*
 command=$(python3 ./generate_eq_compare.py)
@@ -92,6 +97,7 @@ if [ $status -ne 0 ]; then
 else
     echo "OK after generate EQ compare!"
 fi
+
 # generate status
 rm -f docs/stats/*.json
 command=$(python3 ./generate_stats.py)
@@ -102,9 +108,37 @@ if [ $status -ne 0 ]; then
 else
     echo "OK after generate statistics!"
 fi
+
 # generate website
-./update_brands.sh
-./update_reviewers.sh
+command=$(./update_brands.sh)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after update brands!"
+    rm -f src/website/brands.html
+    exit 1;
+else
+    echo "OK after update brands"
+fi
+
+command=$(./update_reviewers.sh)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after update reviewers!"
+    rm -f src/website/reviewers.html
+    exit 1;
+else
+    echo "OK after update reviewers"
+fi
+
+command=$(workbox generateSW workbox-config.js)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate service worker!"
+    exit 1;
+else
+    echo "OK after generate service worker!"
+fi
+
 command=$(python3 ./generate_html.py --dev --sitedev=https://dev.spinorama.org)
 status=$?
 if [ $status -ne 0 ]; then

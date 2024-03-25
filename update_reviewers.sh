@@ -26,7 +26,7 @@ if test "$OS" = "Darwin"  -a "$ARCH" = "arm64" ; then
     SED=gsed
 fi
 
-json_pp < docs/assets/metadata.json  | \
+json_pp < docs/metadata.json  | \
     grep -e '"misc-' | \
     grep -v default | \
     $SED -e s'/[ \t"":{"]//g' | \

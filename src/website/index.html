@@ -65,7 +65,7 @@
                <br/>
                <span class="icon-text">
                  <span class="icon">
-                   <img src="/icons/volume-danger-{{iconVolume score.scoreScaled}}.svg" height="1em" alt="rating"></img>
+                   <img src="/icons/volume-danger-{{iconVolume score.scoreScaled}}.svg" width="20px" height="16px" alt="rating"></img>
                  </span>
                  <span>Tonality: <b>{{score.score}}</b></span>
                  <span class="icon">
@@ -75,7 +75,7 @@
                <br/>
                <span class="icon-text">
                  <span class="icon has-text-danger">
-                   <img src="/icons/volume-info-{{iconVolume score.lfxScaled}}.svg" height="1em" alt="rating"></img>
+                   <img src="/icons/volume-info-{{iconVolume score.lfxScaled}}.svg" width="20px" height="16px" alt="rating"></img>
                  </span>
                  <span>Bass extension: <b>{{score.lfx}}</b>Hz</span>
                  <span class="icon">
@@ -85,7 +85,7 @@
                <br/>
                <span class="icon-text">
                  <span class="icon has-text-success">
-                   <img src="/icons/volume-success-{{iconVolume score.flatnessScaled}}.svg" height="1em" alt="rating"></img>
+                   <img src="/icons/volume-success-{{iconVolume score.flatnessScaled}}.svg" width="20px" height="16px" alt="rating"></img>
                  </span>
                  <span>Flatness: <b>&plusmn;{{score.flatness}}</b>dB</span>
                  <span class="icon">
@@ -133,7 +133,7 @@
       </div>
     </div>
 
-    <script type="module" src="./assets/index.js"></script>
+    <script type="module" src="./index${min}.js"></script>
 
     <%include file="search.html"/>
     <%include file="footer.html"/>
