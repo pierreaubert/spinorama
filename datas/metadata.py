@@ -30,9 +30,9 @@ class SPL(TypedDict, total=False):
 
 
 class Size(TypedDict):
-    height: int
-    width: int
-    depth: int
+    height: float
+    width: float
+    depth: float
 
 
 class Specifications(TypedDict, total=False):
@@ -1210,8 +1210,8 @@ speakers_info: SpeakerDatabase = {
                 },
                 "review_published": "20231011",
                 "specifications": {
-                    "sensitivity": "88.7",
-                    "impedance": "4",
+                    "sensitivity": 88.7,
+                    "impedance": 4,
                     "size": {
                         "height": 569,
                         "width": 245,
@@ -13137,8 +13137,17 @@ speakers_info: SpeakerDatabase = {
         "price": "6500",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "vendor-v2",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-r11-meta-tower-speaker-review.53282/",
+                "review_published": "20240326",
+                "reviews": {
+                    "white_paper": "https://assets.kef.com/pdf_doc/REF/REF-White-Paper-201219-LR.pdf",
+                },
+            },
             "vendor-v2": {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
