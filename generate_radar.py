@@ -211,7 +211,7 @@ def main(args):
     eqmeta = None
     with open(eq_filename, "r") as f:
         eqmeta = json.load(f)
-        for k, v in jsmeta.items():
+        for k in jsmeta:
             if k in eqmeta:
                 jsmeta[k]["eqs"] = eqmeta[k]["eqs"]
 

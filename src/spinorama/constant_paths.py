@@ -46,3 +46,16 @@ MIDRANGE_FREQ = [MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ]
 # sensitivity defintion (no agreement here)
 SENSITIVITY_MIN_FREQ = 100
 SENSITIVITY_MAX_FREQ = 1000
+
+# curve names
+C_ON = "On Axis"
+C_LW = "Listening Window"
+C_PIR = "Estimeated In-Room Response"
+C_SP = "Sound Power"
+C_ER = "Early Reflections"
+
+U_ON = "{}_unmelted".format(C_ON)
+U_LW = "{}_unmelted".format(C_LW)
+U_PIR = "{}_unmelted".format(C_PIR)
+U_SP = "{}_unmelted".format(C_SP)
+U_ER = "{}_unmelted".format(C_ER)

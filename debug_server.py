@@ -20,7 +20,7 @@ from docopt import docopt
 class CORSRequestHandler(SimpleHTTPRequestHandler):
     """Generate CORS headers"""
 
-    def do_GET(self):
+    def do_GET(self):  # noqa: N802
         f = self.send_head()
         if f:
             try:

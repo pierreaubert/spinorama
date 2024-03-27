@@ -56,6 +56,7 @@ from spinorama.need_update import need_update
 
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
+META_VERSION = "v2"
 
 
 def get_versions(filename):
@@ -77,6 +78,7 @@ def get_versions(filename):
             ):
                 continue
             versions[tokens[0]] = tokens[1]
+    versions["META"] = META_VERSION
     return versions
 
 
@@ -489,7 +491,7 @@ def main():
             "eqs",
             "graph",
             "index",
-            "meta",
+            "meta-{}".format(META_VERSION),
             "misc",
             "onload",
             "params",

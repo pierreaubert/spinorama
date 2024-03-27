@@ -172,7 +172,7 @@ def filter_graphs(
     if sh_spl is None or sv_spl is None:
         #
         df_on_axis = compute_onaxis(sh_spl, sv_spl)
-        dfs["On Axis_unmelted"] = df_on_axis
+        dfs[U_ON] = df_on_axis
         dfs["On Axis"] = graph_melt(df_on_axis)
         # SPL H
         if sh_spl is not None:
@@ -275,7 +275,7 @@ def filter_graphs_eq(
     if sh_spl is None or sv_spl is None:
         #
         df_on = compute_onaxis(sh_spl, sv_spl)
-        dfs["On Axis_unmelted"] = df_on
+        dfs[U_ON] = df_on
         dfs["On Axis"] = graph_melt(df_on)
         # SPL H
         if sh_spl is not None:

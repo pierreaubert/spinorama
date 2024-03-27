@@ -182,7 +182,7 @@ def cache_save(df_all: dict):
     print("(saved {} speakers)".format(len(df_all)))
 
 
-def is_filtered(speaker: str, data, filters: dict):
+def is_filtered(speaker: str, filters: dict):
     if filters.get("speaker_name") is not None and filters.get("speaker_name") != speaker:
         return True
 
@@ -225,14 +225,14 @@ def cache_load_seq(filters, smoke_test):
             logging.debug("skipping %s key=%s", speaker_name, cache_key(speaker_name))
             continue
         df_read = fl.load(path=cache)
-        logging.debug("reading file %s found %d entries", cache, len(df_read))
+        logging.debug("reading file %s found %d entries", cache, len(df_read) if df_read else 0)
         if not isinstance(df_read, dict):
             continue
         for speaker, data in df_read.items():
             if speaker in df_all:
                 print("error in cache: {} is already in keys".format(speaker))
                 continue
-            if is_filtered(speaker, data, filters):
+            if is_filtered(speaker, filters):
                 # print(speaker, speaker_name)
                 continue
             df_all[speaker] = data
@@ -277,7 +277,7 @@ def cache_load_distributed_reduce(filters, smoke_test, ids):
             for speaker, data in df_read.items():
                 if speaker in df_all:
                     print("error in cache: {} is already in keys".format(speaker))
-                if is_filtered(speaker, data, filters):
+                if is_filtered(speaker, filters):
                     continue
                 df_all[speaker] = data
                 count += 1

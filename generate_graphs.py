@@ -103,8 +103,8 @@ def queue_measurement(
     mformat: str,
     morigin: str,
     mversion: str,
-    msymmetry: str,
-    mparameters: dict,
+    msymmetry: str | None,
+    mparameters: dict | None,
     level: int,
 ) -> tuple[int, int, int, int]:
     """Add all measurements in the queue to be processed"""

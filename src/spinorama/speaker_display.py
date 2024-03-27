@@ -65,7 +65,7 @@ def display_reflection_early(df, graph_params=plot_params_default):
 def display_onaxis(df, graph_params=plot_params_default):
     onaxis = df.get("CEA2034_unmelted")
     if onaxis is None:
-        onaxis = df.get("On Axis_unmelted")
+        onaxis = df.get(U_ON)
 
     if onaxis is None:
         logger.debug("Display On Axis failed")

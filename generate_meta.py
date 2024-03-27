@@ -39,7 +39,6 @@ Options:
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
   --dash-port=<dash-port>  Port for the ray dashbboard
 """
-import contextlib
 import errno
 from hashlib import md5
 from itertools import groupby
@@ -83,8 +82,17 @@ from spinorama.load_rew_eq import parse_eq_iir_rews
 
 from datas import metadata
 
+# activate some tracing
 ACTIVATE_TRACING: bool = False
+
+# number of speakers to put in the head file
 METADATA_HEAD_SIZE = 20
+
+# size of the md5 hash
+KEY_LENGTH = 5
+
+# size of years (2024 -> 4)
+YEAR_LENGTH = 4
 
 
 def tracing(msg: str):
@@ -792,11 +800,6 @@ def add_near(dataframe, parse_max: int, filters: dict):
 
 
 def dump_metadata(meta):
-    # size of the md5 hash
-    KEY_LENGTH = 5
-    # size of years (2024 -> 4)
-    YEAR_LENGTH = 4
-
     metadir = cpaths.CPATH_DOCS
     metafile = cpaths.CPATH_DOCS_METADATA_JSON
     eqfile = cpaths.CPATH_DOCS_EQDATA_JSON
@@ -805,7 +808,11 @@ def dump_metadata(meta):
 
     def check_link(hashed_filename):
         # add a link to make it easier for other scripts to find the metadata
-        if "metadata" in hashed_filename and len(hashed_filename.split('-')) == 2 and 'head' not in hashed_filename:
+        if (
+            "metadata" in hashed_filename
+            and len(hashed_filename.split("-")) == 2
+            and "head" not in hashed_filename
+        ):
             try:
                 os.symlink(Path(hashed_filename).name, cpaths.CPATH_DOCS_METADATA_JSON)
             except OSError as e:
@@ -814,7 +821,7 @@ def dump_metadata(meta):
                     os.symlink(Path(hashed_filename).name, cpaths.CPATH_DOCS_METADATA_JSON)
                 else:
                     print("print unlink/link didnt work for {} with {}".format(hashed_filename, e))
-                    raise e
+                    raise OSError from e
 
     def dict_to_json(filename, d):
         js = json.dumps(d)
