@@ -1519,6 +1519,12 @@ speakers_info: SpeakerDatabase = {
                 "origin": "Vendors-Ascend Acoustics",
                 "format": "spl_hv_txt",
                 "quality": "high",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/ascend_sierra_1_v2/",
+                    "yt": "https://youtu.be/XuLAkwYEdfY",
+                    "history": "https://forum.ascendacoustics.com/showthread.php?7896-Something-old-is-young-again-introducing-the-Sierra-1-V2!!!",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-1-v2-speaker-review.53350/",
+                },
                 "review_published": "20231209",
                 "specifications": {
                     "sensitivity": 87,
@@ -1538,8 +1544,30 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/ascend_sierra_1_v2/",
                     "yt": "https://youtu.be/XuLAkwYEdfY",
                     "history": "https://forum.ascendacoustics.com/showthread.php?7896-Something-old-is-young-again-introducing-the-Sierra-1-V2!!!",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-1-v2-speaker-review.53350/",
                 },
                 "review_published": "20231124",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 8,
+                    "size": {
+                        "height": 362,
+                        "width": 190,
+                        "depth": 267,
+                    },
+                    "weight": 8.4,
+                },
+            },
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/ascend_sierra_1_v2/",
+                    "yt": "https://youtu.be/XuLAkwYEdfY",
+                    "history": "https://forum.ascendacoustics.com/showthread.php?7896-Something-old-is-young-again-introducing-the-Sierra-1-V2!!!",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-1-v2-speaker-review.53350/",
+                },
+                "review_published": "20240329",
                 "specifications": {
                     "sensitivity": 87,
                     "impedance": 8,
