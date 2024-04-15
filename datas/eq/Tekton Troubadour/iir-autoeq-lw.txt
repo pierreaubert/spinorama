@@ -1,0 +1,14 @@
+EQ for Tekton Troubadour computed from ErinsAudioCorner data
+Preference Score 5.55 with EQ 6.33
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-04-15-09:57:19
+
+Preamp: -2.9 dB
+
+Filter  1: ON PK Fc    46 Hz Gain +2.04 dB Q 3.00
+Filter  2: ON PK Fc   149 Hz Gain +2.35 dB Q 0.44
+Filter  3: ON PK Fc   310 Hz Gain -1.45 dB Q 3.00
+Filter  4: ON PK Fc   643 Hz Gain +1.98 dB Q 1.91
+Filter  5: ON PK Fc  2023 Hz Gain +2.99 dB Q 1.17
+Filter  6: ON PK Fc  2094 Hz Gain -2.58 dB Q 0.31
+Filter  7: ON PK Fc 15150 Hz Gain +2.99 dB Q 0.25

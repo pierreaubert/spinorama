@@ -4680,7 +4680,6 @@ speakers_info: SpeakerDatabase = {
         },
     },
     "Definitive Technology BP9020": {
-        "skip": True,
         "brand": "Definitive Technology",
         "model": "BP9020",
         "type": "passive",
@@ -4696,7 +4695,7 @@ speakers_info: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/deftech_bp9020/",
                     "dt": "https://www.definitivetechnology.com/en/product/legacy-products/bp9020",
                 },
-                "review_published": "20240312",
+                "review_published": "20240331",
                 "specifications": {
                     "sensitivity": 92,
                     "impedance": 8,
@@ -9648,6 +9647,36 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Jamo S7-15B": {
+        "brand": "Jamo",
+        "model": "S7-15B",
+        "type": "passive",
+        "price": "350",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jamo_s7_15b",
+                    "yt": "https://youtu.be/T0sqGFqLqDk",
+                },
+                "review_published": "20240331",
+                "specifications": {
+                    "sensitivity": 86.3,
+                    "impedance": 4,
+                    "size": {
+                        "height": 320,
+                        "width": 200,
+                        "depth": 340,
+                    },
+                    "weight": 5.93,
+                },
+            },
+        },
+    },
     "Jamo S803": {
         "brand": "Jamo",
         "model": "S803",
@@ -12412,6 +12441,32 @@ speakers_info: SpeakerDatabase = {
                 "quality": "medium",
                 "reviews": {
                     "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                },
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_blade2_met#a/",
+                    "yt": "https://youtu.be/lh8D7LhlVoQ",
+                    "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade#_Ref_Meta_Tech_Paper.pdf",
+                    "str": "https://www.stereophile.com/content/kef-blade-two-meta-louds#peaker",
+                    "whf": "https://www.whathifi.com/reviews/kef-blade-two-meta",
+                    "ssh": "https://www.soundstagehifi.com/index.php/equipment-reviews/9#60-kef-blade-two-loudspeakers",
+                },
+                "review_published": "20240327",
+                "specifications": {
+                    "SPL": {
+                        "peak": 116,
+                    },
+                    "sensitivity": 88,
+                    "impedance": 3.2,
+                    "size": {
+                        "height": 1461,
+                        "width": 338,
+                        "depth": 475,
+                    },
+                    "weight": 35.3,
                 },
             },
         },
@@ -16252,22 +16307,36 @@ speakers_info: SpeakerDatabase = {
             "asr-v3-20200711": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh80-dsp-monitor-measurements-3.14637/",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh80-dsp-monitor-measurements-3.14637/",
+                    "tnw": "https://thenextweb.com/news/these-3-studio-monitors-are-great-speakers-for-a-small-desk",
+                    "vendor": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-80-dsp-speaker-measurements-take-two.11323/page-22#post-425237",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/neumann_kh80/",
+                },
                 "review_published": "20200711",
             },
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "quality": "low",
-                "reviews": {
-                    "tnw": "https://thenextweb.com/news/these-3-studio-monitors-are-great-speakers-for-a-small-desk",
-                },
             },
             "vendor": {
                 "origin": "Vendors-Neumann",
                 "format": "webplotdigitizer",
                 "quality": "medium",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-80-dsp-speaker-measurements-take-two.11323/page-22#post-425237",
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20240331",
+                "specifications": {
+                    "size": {
+                        "height": 345,
+                        "width": 243,
+                        "depth": 277,
+                    },
+                    "weight": 4.1,
+                },
             },
         },
     },
@@ -18545,6 +18614,36 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "PSB Imagine B50": {
+        "brand": "PSB",
+        "model": "Imagine B50",
+        "type": "passive",
+        "price": "700",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/psb_b50/",
+                    "yt": "",
+                },
+                "review_published": "20240330",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4,
+                    "size": {
+                        "height": 300,
+                        "width": 171,
+                        "depth": 251,
+                    },
+                    "weight": 5.13,
+                },
+            },
+        },
+    },
     "PSB Imagine T65": {
         "brand": "PSB",
         "model": "Imagine T65",
@@ -19797,11 +19896,29 @@ speakers_info: SpeakerDatabase = {
         "brand": "Revel",
         "model": "F206",
         "type": "passive",
-        "price": "",
+        "price": "2500",
         "shape": "floorstanders",
         "amount": "pair",
-        "default_measurement": "vendor",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/revel-f206-tower-speaker-review.53691/",
+                },
+                "review_published": "20240411",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 8,
+                    "size": {
+                        "height": 1052,
+                        "width": 249,
+                        "depth": 347,
+                    },
+                    "weight": 26.0,
+                },
+            },
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
@@ -21597,6 +21714,34 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Tekton Troubadour": {
+        "brand": "Tekton",
+        "model": "Troubadour",
+        "type": "passive",
+        "price": "1000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/tekton_troubadour/",
+                    "yt": "https://youtu.be/ItAwcW-3Kv4",
+                },
+                "review_published": "20240414",
+                "specifications": {
+                    "size": {
+                        "height": 53.34,
+                        "width": 53.34,
+                        "depth": 22.86,
+                    },
+                    "weight": 14.5,
+                },
+            },
+        },
+    },
     "Thomann Swissonic A305": {
         "brand": "Thomann Swissonic",
         "model": "A305",
@@ -21754,6 +21899,37 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/triangle-esprit-antal-ez-review-tower-speaker.22080/",
                 "review_published": "20210403",
+            },
+        },
+    },
+    "Shivaudyo Point Zero": {
+        "brand": "Shivaudyo",
+        "model": "Point Zero",
+        "type": "active",
+        "price": "6500",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/shivaudyo_point_zero/",
+                    "yt": "https://youtu.be/ItAwcW-3Kv4",
+                },
+                "review_published": "20240414",
+                "specifications": {
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 400,
+                        "width": 290,
+                        "depth": 390,
+                    },
+                    "weight": 16.5,
+                },
             },
         },
     },

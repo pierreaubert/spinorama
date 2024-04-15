@@ -1,0 +1,14 @@
+EQ for Jamo S7-15B computed from ErinsAudioCorner data
+Preference Score 4.66 with EQ 6.09
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-03-31-16:09:16
+
+Preamp: -1.7 dB
+
+Filter  1: ON PK Fc    72 Hz Gain +3.00 dB Q 2.81
+Filter  2: ON PK Fc   117 Hz Gain -3.52 dB Q 1.23
+Filter  3: ON PK Fc   600 Hz Gain +0.89 dB Q 0.56
+Filter  4: ON PK Fc   689 Hz Gain -1.81 dB Q 3.00
+Filter  5: ON PK Fc  1760 Hz Gain +1.47 dB Q 2.98
+Filter  6: ON PK Fc  4194 Hz Gain -1.26 dB Q 3.00
+Filter  7: ON PK Fc  7834 Hz Gain -1.33 dB Q 0.25
