@@ -93,7 +93,7 @@ def parse_eq_speaker(
 
             if on_eq is not None:
                 df_eq["On Axis"] = on_eq
-                df_eq[U_ON] = graph_unmelt(on_eq)
+                df_eq["On Axis_unmelted"] = graph_unmelt(on_eq)
 
             df_eq["eq"] = iir
             return iir, df_eq

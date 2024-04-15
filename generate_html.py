@@ -56,7 +56,7 @@ from spinorama.need_update import need_update
 
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
-META_VERSION = "v2"
+CACHE_VERSION = "v2"
 
 
 def get_versions(filename):
@@ -78,7 +78,7 @@ def get_versions(filename):
             ):
                 continue
             versions[tokens[0]] = tokens[1]
-    versions["META"] = META_VERSION
+    versions["CACHE"] = CACHE_VERSION
     return versions
 
 
@@ -491,20 +491,17 @@ def main():
             "eqs",
             "graph",
             "index",
-            "meta-{}".format(META_VERSION),
+            "meta",
             "misc",
             "onload",
-            "params",
             "plot",
             "scores",
             "search",
             "similar",
-            "sort",
             "statistics",
             "tabs",
         ):
-            item_name = "{0}.js".format(item)
-            logger.info("Write %s", item_name)
+            item_name = "{}.js".format(item)
             item_html = mako_templates.get_template(item_name)
             # remove the ./docs parts
             len_docs = len("/docs/")
@@ -531,15 +528,15 @@ def main():
                 min=".min" if flag_optim else "",
                 versions=versions,
             )
-            item_filename = cpaths.CPATH_DOCS + "/" + item_name
+            item_filename = "{}/{}-{}.js".format(cpaths.CPATH_DOCS, item, CACHE_VERSION)
             write_if_different(item_content, item_filename, force=False)
             # compress files with terser
             if flag_optim:
                 terser_command = "{0} {1}/{2} > {1}/{3}".format(
                     "./node_modules/.bin/terser",
                     cpaths.CPATH_DOCS,
-                    "{}.js".format(item),
-                    "{}.min.js".format(item),
+                    "{}-{}.js".format(item, CACHE_VERSION),
+                    "{}-{}.min.js".format(item, CACHE_VERSION),
                 )
                 status = subprocess.run(
                     [terser_command], shell=True, check=True, capture_output=True  # noqa: S602

@@ -131,15 +131,52 @@ def custom_ray_init(args):
     if ray.is_initialized:
         ray.shutdown()
 
-    ray.init(
-        include_dashboard=True,
-        dashboard_host=dashboard_ip,
-        dashboard_port=dashboard_port,
-        local_mode=ray_local_mode,
-        configure_logging=True,
-        logging_level=level,
-        log_to_driver=True,
-    )
+    ray_address = None
+    if "--ray-cluster" in args and args["--ray-cluster"] is not None:
+        check_address = args["--ray-cluster"]
+        check_ip, check_port = check_address.split(":")
+        try:
+            _ = ipaddress.ip_address(check_ip)
+        except ipaddress.AddressValueError as ave:
+            print("ray ip {} is not valid {}!".format(check_ip, ave))
+            sys.exit(1)
+        try:
+            ray_port = int(check_port)
+            if ray_port < 0 or ray__port > 2**16 - 1:
+                print("ray port {} is out of bounds".format(check_port))
+                sys.exit(1)
+        except ValueError:
+            print("ray port is not an integer".format(check_port))
+            sys.exit(1)
+        ray_address = check_adress
+
+    if ray_address is not None:
+        print(
+            "Calling init with cluster at {} dashboard at {}:{}".format(
+                ray_address, dashboard_ip, dashboard_port
+            )
+        )
+        ray.init(
+            address=ray_address,
+            include_dashboard=True,
+            dashboard_host=dashboard_ip,
+            dashboard_port=dashboard_port,
+            local_mode=ray_local_mode,
+            configure_logging=True,
+            logging_level=level,
+            log_to_driver=True,
+        )
+    else:
+        print("Calling init with dashboard at {}:{}".format(dashboard_ip, dashboard_port))
+        ray.init(
+            include_dashboard=True,
+            dashboard_host=dashboard_ip,
+            dashboard_port=dashboard_port,
+            local_mode=ray_local_mode,
+            configure_logging=True,
+            logging_level=level,
+            log_to_driver=True,
+        )
 
 
 def cache_key(name: str) -> str:

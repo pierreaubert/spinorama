@@ -139,7 +139,7 @@ else
     echo "OK after generate service worker!"
 fi
 
-command=$(python3 ./generate_html.py --dev --sitedev=https://dev.spinorama.org)
+command=$(python3 ./generate_html.py --dev --optim --sitedev=https://dev.spinorama.org)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate HTML!"
