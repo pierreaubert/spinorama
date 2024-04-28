@@ -1,0 +1,14 @@
+EQ for XMechanik Mechano23 DIY computed from ASR data
+Preference Score 5.55 with EQ 6.81
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-04-28-11:26:56
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    60 Hz Gain +2.97 dB Q 0.98
+Filter  2: ON PK Fc   454 Hz Gain -0.72 dB Q 2.96
+Filter  3: ON PK Fc   522 Hz Gain +1.39 dB Q 2.91
+Filter  4: ON PK Fc  2579 Hz Gain -1.43 dB Q 1.48
+Filter  5: ON PK Fc  2964 Hz Gain +2.01 dB Q 2.99
+Filter  6: ON PK Fc  9648 Hz Gain +2.08 dB Q 2.72
+Filter  7: ON PK Fc 12301 Hz Gain -1.90 dB Q 2.20

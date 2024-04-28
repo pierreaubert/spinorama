@@ -15193,6 +15193,26 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "XMechanik Mechano23 DIY": {
+        "brand": "XMechanik",
+        "model": "Mechano23 DIY",
+        "type": "passive",
+        "price": "200",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mechano23-open-source-diy-speaker-review.54066/",
+                    "design": "https://www.audiosciencereview.com/forum/index.php?threads/small-2-way-speakers-with-linear-on-axis-and-power-response-characteristics-scan-speak-and-sb-acoustics-drivers-h-v-off-axis-measurements-included.41757/",
+                },
+                "review_published": "20240428",
+            },
+        },
+    },
     "Mesanovic CDM65": {
         "brand": "Mesanovic",
         "model": "CDM65",
