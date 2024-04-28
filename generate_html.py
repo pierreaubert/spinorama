@@ -19,14 +19,15 @@
 
 """
 usage: generate_html.py [--help] [--version] [--dev] [--optim]\
- [--sitedev=<http>]  [--log-level=<level>]
+ [--sitedev=<http>]  [--log-level=<level>] [--skip-speakers]
 
 Options:
   --help            display usage()
   --version         script version number
   --sitedev=<http>  default: http://localhost:8000/docs
   --dev             if you want to generate the dev websites
-  --optim           if you want an optimised built       
+  --optim           if you want an optimised built
+  --skip-speakers   skip speaker html page generation (useful for debugging)
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
 from glob import glob
@@ -389,14 +390,17 @@ def main():
         sys.exit(1)
 
     # write a file per speaker
-    logger.info("Write a file per speaker")
-    try:
-        generate_speakers(
-            mako_templates, main_df, meta=meta, site=site, use_search=False, versions=versions
-        )
-    except KeyError as key_error:
-        print("Generating a file per speaker failed with {}".format(key_error))
-        sys.exit(1)
+    if not skip_speakers:
+        logger.info("Write a file per speaker")
+        try:
+            generate_speakers(
+                mako_templates, main_df, meta=meta, site=site, use_search=False, versions=versions
+            )
+        except KeyError as key_error:
+            print("Generating a file per speaker failed with {}".format(key_error))
+            sys.exit(1)
+    else:
+        logger.info("Skip speaker html generation!")
 
     # copy favicon(s) and logos
     for f in [
@@ -582,6 +586,7 @@ if __name__ == "__main__":
     flag_dev = args["--dev"]
     flag_optim = args["--optim"]
     site = SITEPROD
+    skip_speakers = False
     if flag_dev:
         site = SITEDEV
         if args["--sitedev"] is not None:
@@ -589,6 +594,7 @@ if __name__ == "__main__":
             if len(site) < 4 or site[0:4] != "http":
                 print("sitedev {} does not start with http!".format(site))
                 sys.exit(1)
+        skip_speakers = args["--skip-speakers"]
 
     logger = get_custom_logger(level=args2level(args), duplicate=True)
     main()

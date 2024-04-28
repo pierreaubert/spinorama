@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="640" height="512" viewBox="-320.0 -256.0 640 512">
+<defs>
+</defs>
+<rect x="-320" y="-128.0" width="180" height="256.0" rx="40" ry="40" fill="hsl(348, 100%, 61%)" fill-opacity="0.9" />
+<path d="M-160,-128.0 L-50,-250 L-50,250 L-160,128.0 Z" fill="hsl(348, 100%, 61%)" fill-opacity="0.9" />
+<circle cx="0" cy="0" r="80" stroke-dasharray="251.32741228718345 251.32741228718345" stroke-dashoffset="-376.99111843077515" stroke="hsl(348, 100%, 61%)" stroke-width="50" fill="hsl(348, 100%, 61%)" fill-opacity="0" />
+</svg>

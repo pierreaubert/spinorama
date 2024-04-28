@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // A library to display spinorama charts
 //
-// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+// Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,13 +16,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-/*global Handlebars*/
 /*eslint no-undef: "error"*/
 
-import { getMetadata, getMetadataHead } from './download${min}.js';
-import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc${min}.js';
-import { process } from './sort${min}.js';
-import { urlParameters2Sort } from './params${min}.js';
+// import Handlebars from './handlebars-${versions["HANDLEBARS"]}.min.js';
+import { getMetadata, getMetadataHead, getMetadataTail } from './download-${versions["CACHE"]}${min}.js';
+import {
+    getPrice,
+    getID,
+    getPicture,
+    getLoading,
+    getDecoding,
+    getScore,
+    getReviews,
+} from './misc-${versions["CACHE"]}${min}.js';
+import { process, urlParameters2Sort, setupEventListener } from './search-${versions["CACHE"]}${min}.js';
 
 function getMeasurementCount(metadata) {
     let count = 0;
@@ -74,12 +81,12 @@ function getContext(key, index, value) {
     };
 }
 
-const source = document.querySelector('#templateSpeaker').innerHTML;
-const template = Handlebars.compile(source);
+const templateSource = document.querySelector('#templateSpeaker').innerHTML;
+const templateCompiled = Handlebars.compile(templateSource);
 
 function printSpeaker(key, index, value) {
     const context = getContext(key, index, value);
-    const html = template(context);
+    const html = templateCompiled(context);
     const divSpeaker = document.createElement('div');
     divSpeaker.setAttribute('class', 'column is-narrow searchable');
     divSpeaker.setAttribute('id', context.id);
@@ -87,31 +94,129 @@ function printSpeaker(key, index, value) {
     return divSpeaker;
 }
 
-const speakerContainer = document.querySelector('[data-num="0"');
-const speakerCount = document.querySelector('#speakerCount p:nth-child(2)');
-const measurementCount = document.querySelector('#measurementCount p:nth-child(2)');
-const brandCount = document.querySelector('#brandCount p:nth-child(2)');
-const reviewCount = document.querySelector('#reviewCount p:nth-child(2)');
-
 function getReviewCount() {
     return document.querySelectorAll('#selectReviewer')[0].options.length;
 }
 
-getMetadata()
-    .then((metadata) => {
-        function display(data, speakerHtml) {
-            const url = new URL(window.location);
-            const params = urlParameters2Sort(url);
-            return process(data, params, speakerHtml);
+const speakerContainer = document.querySelector('[data-num="0"');
+
+function display(data, speakerHtml, parentDiv) {
+    const url = new URL(window.location);
+    const params = urlParameters2Sort(url);
+    const fragment = process(data, params, speakerHtml);
+    parentDiv.appendChild(fragment);
+}
+
+const navigationContainer = document.querySelector('#pagination');
+
+function urlChangePage(url, newpage) {
+    const newUrl = new URL(url);
+    newUrl.searchParams.set('page', newpage);
+    return newUrl.toString();
+}
+
+function navigation(numberSpeakers) {
+    // the ${} for mako is replaced by ${"$"} because mako is ran twice on this file
+    const navHeader = '<nav class="pagination" role="navigation" aria-label="pagination">';
+    const navFooter = '</nav>';
+
+    const url = new URL(window.location);
+    const params = urlParameters2Sort(url);
+    const currentPage = params[3].page;
+    const perPage = params[3].count;
+    const maxPage = Math.floor(numberSpeakers / perPage);
+    const prevPage = Math.max(currentPage - 1, 1);
+    const nextPage = Math.min(currentPage + 1, maxPage);
+
+    console.log('currentPage='+currentPage+' perPage='+perPage+' maxPage='+maxPage+' prevPage='+prevPage+' nextPage='+nextPage);
+
+    let html = navHeader;
+    if (currentPage <= 3) {
+        let disabled = '';
+        if (currentPage == 1) {
+            disabled = 'is-disabled';
         }
+        html += '<a href="' + urlChangePage(url, prevPage) + '" class="pagination-previous" ${"$"}{disabled}>Prev</a>';
+        html += '<a href=' + urlChangePage(url, nextPage) + ' class="pagination-next">Next</a>';
+        html += '<ul class="pagination-list">';
+        for (let i = 1; i <= Math.min(3, maxPage); i++) {
+            let current = '';
+            if (i === currentPage) {
+                current = 'is-current';
+            }
+            html +=
+                '<li><a href="' +
+                urlChangePage(url, i) +
+                `" class="pagination-link ${'$'}{current}" aria-label="Goto page ${'$'}{i}">${'$'}{i}</a></li>`;
+        }
+        if (maxPage > 5) {
+            html += '<li><span class="pagination-ellipsis">&hellip;</span></li>';
+            html +=
+                '<li><a href="' +
+                urlChangePage(url, nextPage) +
+                `" class="pagination-link" aria-label="Goto page ${'$'}{maxPage}">${'$'}{maxPage}</a></li>`;
+        }
+        html += '</ul>';
+    } else if (maxPage - currentPage <= 3) {
+        html += '<a href="' + urlChangePage(url, prevPage) + '" class="pagination-previous ${"$"}">Prev</a>';
+        html += '<a href=' + urlChangePage(url, nextPage) + ' class="pagination-next">Next</a>';
+        html += '<ul class="pagination-list">';
+        for (let i = 1; i <= Math.min(3, maxPage); i++) {
+            let current = '';
+            if (i === currentPage) {
+                current = 'is-current';
+            }
+            html +=
+                '<li><a href="' +
+                urlChangePage(url, i) +
+                `" class="pagination-link ${'$'}{current}" aria-label="Goto page ${'$'}{i}">${'$'}{i}</a></li>`;
+        }
+        if (maxPage > 5) {
+            html += '<li><span class="pagination-ellipsis">&hellip;</span></li>';
+            html +=
+                '<li><a href="' +
+                urlChangePage(url, nextPage) +
+                `" class="pagination-link" aria-label="Goto page ${'$'}{maxPage}">${'$'}{maxPage}</a></li>`;
+        }
+        html += '</ul>';
+    } else {
+    }
+    html += navFooter;
+    const divNavigation = document.createElement('div');
+    while (divNavigation.firstChild) {
+        divNavigation.removeChild(divNavigation.firstChild);
+    }
+    divNavigation.innerHTML = html;
+    navigationContainer.appendChild(divNavigation);
+}
 
-        speakerContainer.appendChild(display(metadata, printSpeaker));
-
+getMetadataHead()
+    .then((metadataHead) => {
+        const url = new URL(window.location);
+        if (url.pathname === '' || url.pathname === 'index.html') {
+            display(metadataHead, printSpeaker, speakerContainer);
+        }
+        return metadataHead;
+    })
+    .then((metadataHead) => getMetadataTail(metadataHead))
+    .then((metadata) => {
+        // now that we have all the data
+        setupEventListener(metadata, printSpeaker, speakerContainer);
         // moved after the main display of speakers to minimise reflow
+        const speakerCount = document.querySelector('#speakerCount p:nth-child(2)');
+        const measurementCount = document.querySelector('#measurementCount p:nth-child(2)');
+        const brandCount = document.querySelector('#brandCount p:nth-child(2)');
+        const reviewCount = document.querySelector('#reviewCount p:nth-child(2)');
         speakerCount.innerHTML = metadata.size;
         measurementCount.innerHTML = getMeasurementCount(metadata);
         brandCount.innerHTML = getBrandCount(metadata);
         reviewCount.innerHTML = getReviewCount();
+        // display if not done above
+        const url = new URL(window.location);
+        if (url.pathname !== '' && url.pathname !== 'index.html') {
+            display(metadata, printSpeaker, speakerContainer);
+        }
+        navigation(metadata.size);
     })
     .catch((error) => {
         console.log(error);

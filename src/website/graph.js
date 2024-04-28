@@ -19,7 +19,7 @@
 /*global Plotly*/
 /*eslint no-undef: "error"*/
 
-import { setGraph } from './plot${min}.js';
+import { setGraph } from './plot-${versions["CACHE"]}${min}.js';
 
 export function displayGraph(divName, graphSpec) {
     async function run() {

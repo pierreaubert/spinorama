@@ -1,27 +1,35 @@
-<div class="tabs is-centered is-toggle is-small" id="nav">
+<div class="tabs is-centered is-toggle is-boxed is-small" id="navtab">
   <ul>
     <li data-target="pane-1" id="1">
       <a>
-        <span class="icon"><i class="fas fa-solid fa-database"></i></span>
-        <span>Data</span>
+	<span class="icon" aria-hidden="true">
+	  <svg width="24px" height="24px"><use href="#icon-database"/></svg>
+	</span>
+        <span>Data&amp;EQ</span>
       </a>
     </li>
     <li data-target="pane-2" id="2" class="is-active">
       <a>
-        <span class="icon"><i class="fas fa-solid fa-ruler-horizontal"></i></span>
+	<span class="icon" aria-hidden="true">
+	  <svg width="24px" height="24px"><use href="#icon-ruler-horizontal"/></svg>
+	</span>
         <span>Ref.</span>
       </a>
     </li>
     % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
     <li data-target="pane-3" id="3">
       <a>
-        <span class="icon"><i class="fas fa-solid fa-ruler-vertical"></i></span>
+	<span class="icon" aria-hidden="true">
+	  <svg width="24px" height="24px"><use href="#icon-ruler-vertical"/></svg>
+	</span>
         <span>With EQ</span>
       </a>
     </li>
     <li data-target="pane-4" id="4">
       <a>
-        <span class="icon"><i class="fas fa-solid fa-ruler-combined"></i></span>
+	<span class="icon" aria-hidden="true">
+	  <svg width="24px" height="24px"><use href="#icon-ruler-combined"/></svg>
+	</span>
         <span>Ref. v.s. EQ</span>
       </a>
     </li>

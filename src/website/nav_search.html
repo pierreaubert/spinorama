@@ -4,9 +4,7 @@
       <div class="level-item is-left dropdown is-hoverable" id="menu-main">
         <div class="dropdown-trigger" id="menu-main-trigger">
           <button type="button" class="button" aria-haspopup="true" aria-controls="menu-main" value="menu-main" aria-label="menu-main">
-            <span class="icon">
-              <i class="fas fa-solid fa-bars" aria-hidden="true"></i>
-            </span>
+	    <svg class="icon"><use href="#icon-bars"/></svg>  
           </button>
         </div>
         <div class="dropdown-menu" id="menu-main-dropdown" role="menu">
@@ -27,15 +25,17 @@
         <div class="field has-addons">
           <div class="control has-icons-right is-expended">
             <input id="searchInput" class="input is-info is-align-self-flex-end" type="text" placeholder="brand or model ...">
-            <div class="icon is-right"><i class="fas fa-search"></i></div>
+	    <span class="icon is-right">
+	      <svg width="24px" height="24px" aria-hidden="true"><use href="#icon-search"/></svg>
+	    </span>
           </div>
           <div class="control">
             <div class="dropdown is-hoverable is-right" id="filters-dropdown">
               <div class="dropdown-trigger" id="filters-dropdown-trigger">
                 <button type="button" class="button" aria-haspopup="true" aria-controls="filters-dropdown-menu" value="filter" aria-label="filter">
-                  <span class="icon">
-                    <i class="fas fa-sliders" aria-hidden="true"></i>
-                  </span>
+		  <span class="icon">
+		    <svg aria-hidden="true"><use href="#icon-sliders"/></svg>
+		  </span>
                 </button>
               </div>
               <div class="dropdown-menu" id="filters-dropdown-menu" role="menu">
@@ -53,9 +53,10 @@
             <div class="dropdown is-hoverable is-right" id="sorters-dropdown">
               <div class="dropdown-trigger" id="sorters-dropdown-trigger">
                 <button type="button" class="button" aria-haspopup="true" aria-controls="sorters-dropdown-menu" value="filter" aria-label="filter">
-                  <span class="icon">
-                    <i class="fas fa-solid fa-sort" aria-hidden="true"></i>
-                  </span>
+		  <span class="icon">
+		    <svg width="16px" height="16px"
+			 aria-hidden="true"><use href="#icon-sort"/></svg>
+		  </span>
                 </button>
               </div>
               <div class="dropdown-menu" id="sorters-dropdown-menu" role="menu">

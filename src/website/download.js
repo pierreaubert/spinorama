@@ -16,8 +16,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { urlSite, metadataFilename, metadataFilenameHead, metadataFilenameChunks, eqdataFilename } from './meta${min}.js';
-import { getID } from './misc${min}.js';
+import {
+    urlSite,
+    metadataFilename,
+    metadataFilenameHead,
+    metadataFilenameChunks,
+    eqdataFilename,
+} from './meta-${versions["CACHE"]}${min}.js';
+import { getID } from './misc-${versions["CACHE"]}${min}.js';
 
 function processOrigin(origin) {
     if (origin.includes('Vendors-')) {
@@ -134,25 +140,24 @@ export function getMetadataHead() {
     return fetchDataAndMap(url, 'bz2, zip, deflate');
 }
 
-export function getMetadataOld() {
+export function getMetadata() {
     const url = urlSite + metadataFilename;
     return fetchDataAndMap(url, 'bz2, zip, deflate');
 }
 
-export function getMetadata() {
-    const promisedHead = getMetadataHead();
-    const promisedChunks = [promisedHead];
+export function getMetadataTail(metadataHead) {
+    const promisedChunks = [];
     for (let i in metadataFilenameChunks) {
         const url = urlSite + metadataFilenameChunks[i];
         promisedChunks.push(fetchDataAndMap(url));
     }
     return Promise.all(promisedChunks).then((chunks) => {
-        const merged = new Map();
-	for (const chunk of chunks) {
-	    for (const [key, value] of chunk) {
-		merged.set(key, value);
-	    }
-	}
+        const merged = new Map(metadataHead);
+        for (const chunk of chunks) {
+            for (const [key, value] of chunk) {
+                merged.set(key, value);
+            }
+        }
         return merged;
     });
 }
@@ -186,11 +191,11 @@ export function assignOptions(textArray, selector, textSelected) {
     while (selector.firstChild) {
         selector.firstChild.remove();
     }
-    for (let i = 0; i < textArray.length; i++) {
+    for (const element of textArray) {
         const currentOption = document.createElement('option');
-        currentOption.value = textArray[i];
-        currentOption.text = textArray[i].replace('Vendors-', '').replace('vendor-pattern-', 'Pattern ');
-        if (textArray[i] === textSelected) {
+        currentOption.value = element;
+        currentOption.text = element.replace('Vendors-', '').replace('vendor-pattern-', 'Pattern ');
+        if (element === textSelected) {
             currentOption.selected = true;
         }
         if (textArray.length === 1) {

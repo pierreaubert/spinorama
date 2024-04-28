@@ -29,9 +29,9 @@ import {
     getField,
     getReviews,
     getPrice,
-} from './misc${min}.js';
-import { getMetadata } from './download${min}.js';
-import { sortMetadata2 } from './sort${min}.js';
+} from './misc-${versions["CACHE"]}${min}.js';
+import { getMetadata } from './download-${versions["CACHE"]}${min}.js';
+import { sortMetadata2 } from './search-${versions["CACHE"]}${min}.js';
 
 getMetadata()
     .then((metadata) => {

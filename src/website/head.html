@@ -1,38 +1,40 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="manifest" href="manifest.json" />
+
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/bulma-${versions['BULMA']}.min.css">
+<link media="all" href="/spinorama.css" rel="stylesheet" crossorigin="anonymous">
+<link rel="icon" type="image/png" href="/pictures/favicon-16x16.png" sizes="16x16">
 
 <script src="/handlebars-${versions['HANDLEBARS']}.min.js"></script>
+<script type="module" src="/onload-${versions['CACHE']}${min}.js"></script>
 
-<link
-  rel="stylesheet"
-  href="/bulma-${versions['BULMA']}.min.css"
-  >
-
-<link
-  rel="stylesheet"
-  href="/fontawesome-${versions['FONTAWESOME']}.min.css"
-  >
-
-<link
-  media="all"
-  href="/spinorama.css"
-  rel="stylesheet"
-  crossorigin="anonymous">
-
-<link
-  rel="icon"
-  type="image/png"
-  href="${site}/pictures/favicon-16x16.png"
-  sizes="16x16">
-
-<script type="module" src="/onload${min}.js"></script>
 <script type="module">
   import {Workbox} from "/workbox-window-${versions['WORKBOX']}${min}.js";
 
   if ('serviceWorker' in navigator) {
-    const wb = new Workbox('/sw.js');
-    wb.register();
+      const wb = new Workbox('/sw.js');
+
+      wb.addEventListener('activated', event => {
+	  if (!event.isUpdate) {
+              console.log('Service worker activated for the first time!');
+	  }
+      });
+      
+      wb.addEventListener('waiting', event => {
+	  console.log(
+	      `A new service worker has installed, but it can't activate` +
+              `until all tabs running the current version have fully unloaded.`);
+      });
+      
+      wb.addEventListener('message', event => {
+	  if (event.data.type === 'CACHE_UPDATED') {
+	      const {updatedURL} = event.data.payload;
+	      console.log(`A newer version of ${{updatedURL}} is available!`);
+	  }
+      });
+      
+      wb.register();
   }
 </script>
 

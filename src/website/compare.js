@@ -19,9 +19,17 @@
 /*global Plotly */
 /*eslint no-undef: "error"*/
 
-import { urlSite } from './meta${min}.js';
-import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download${min}.js';
-import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setSurface } from './plot${min}.js';
+import { urlSite } from './meta-${versions["CACHE"]}${min}.js';
+import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download-${versions["CACHE"]}${min}.js';
+import {
+    knownMeasurements,
+    setContour,
+    setGlobe,
+    setGraph,
+    setCEA2034,
+    setRadar,
+    setSurface,
+} from './plot-${versions["CACHE"]}${min}.js';
 
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin
@@ -377,7 +385,7 @@ getMetadata()
                 speakersSelector[0].focus();
             } else if (key === 'b' || key === '2') {
                 speakersSelector[1].focus();
-            } else if (key === 'g') {
+            } else if (key === 'g' || key === 'c') {
                 graphsSelector.focus();
             }
         });

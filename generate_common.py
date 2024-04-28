@@ -142,13 +142,13 @@ def custom_ray_init(args):
             sys.exit(1)
         try:
             ray_port = int(check_port)
-            if ray_port < 0 or ray__port > 2**16 - 1:
+            if ray_port < 0 or ray_port > 2**16 - 1:
                 print("ray port {} is out of bounds".format(check_port))
                 sys.exit(1)
         except ValueError:
             print("ray port is not an integer".format(check_port))
             sys.exit(1)
-        ray_address = check_adress
+        ray_address = check_address
 
     if ray_address is not None:
         print(

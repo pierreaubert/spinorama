@@ -5,6 +5,7 @@
     <%include file="head.html"/>
   </head>
   <body>
+    <%include file="icons.html"/>
     <%include file="nav_search.html"/>
     <%namespace name="util"  module="website.utils" import="*"/>
 
@@ -22,11 +23,11 @@
             {{model}}
           </th>
         </tr>
-        {{#if (isNotEmpty othereq)}}
         <tr>
           <td class="has-text-centered">
             <nav class="level">
               <div class="level-left">
+		{{#if (isNotEmpty othereq)}}
                 <div class="control">
                   <div class="select is-small">
                     <select id="eq-select-{{id}}">
@@ -37,6 +38,9 @@
                     </select>
                   </div>
                 </div>
+		{{else}}
+                <span>{{autoeq.name}}</span>
+		{{/if}}
               </div>
               <div class="level-item">
                 <button
@@ -46,14 +50,13 @@
                   data-target="eq-modal-compare-{{id}}"
                   >
                   <span class="icon">
-                    <i class="fa-solid fa-image"></i>
+		     <svg width="16px" height="16px"><use href="#icon-image"/></svg>
                   </span>
                 </button>
               </div>
             </nav>
           </td>
         </tr>
-        {{/if}}
         <tr id="eq-{{id}}-autoeq">
           <td>
             <table class="table is-striped">
@@ -331,15 +334,15 @@
       </div>
     </script>
 
-    <%include file="search.html"/>
     <div class="section">
       <!-- Speakers -->
       <div class="searchresults">
         <div class="columns is-multiline is-mobile is-centered is-variable" id="speakers" data-num="0">
-          <script type="module" src="./eqs${min}.js"></script>
+          <script type="module" src="./eqs-${versions['CACHE']}${min}.js"></script>
         </div>
       </div>
     </div>
+    <%include file="search.html"/>
     <%include file="footer.html"/>
 
   </body>

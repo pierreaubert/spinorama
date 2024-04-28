@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // A library to display spinorama charts
 //
-// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+// Copyright (C) 2020-2024 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,275 +19,769 @@
 /*global Fuse*/
 /*eslint no-undef: "error"*/
 
-import { getMetadata } from './download${min}.js';
-import { show, hide } from './misc${min}.js';
-import { sortMetadata2, isFiltered, isSearch } from './sort${min}.js';
+import { show, hide } from './misc-${versions['CACHE']}${min}.js';
+import Fuse from './fuse.mjs';
 
-getMetadata()
-    .then((metadata) => {
-        const resultdiv = document.querySelector('div.searchresults');
-        // this 2 are global variables
-        let url = new URL(window.location);
-        let keywords = document.querySelector('#searchInput').value;
+const parametersMapping = [
+    // filters
+    {'selectorName': '#selectReviewer', 'urlParameter': 'reviewer', 'eventType': 'change'},
+    {'selectorName': '#selectQuality', 'urlParameter': 'quality', 'eventType': 'change'},
+    {'selectorName': '#selectShape', 'urlParameter': 'shape', 'eventType': 'change'},
+    {'selectorName': '#selectPower', 'urlParameter': 'power', 'eventType': 'change'},
+    {'selectorName': '#selectBrand', 'urlParameter': 'brand', 'eventType': 'change'},
+    {'selectorName': '#inputPriceMin', 'urlParameter': 'priceMin', 'eventType': 'change'},
+    {'selectorName': '#inputPriceMax', 'urlParameter': 'priceMax', 'eventType': 'change'},
+    {'selectorName': '#inputWeightMin', 'urlParameter': 'weightMin', 'eventType': 'change'},
+    {'selectorName': '#inputWeightMax', 'urlParameter': 'weightMax', 'eventType': 'change'},
+    {'selectorName': '#inputHeightMin', 'urlParameter': 'heightMin', 'eventType': 'change'},
+    {'selectorName': '#inputHeightMax', 'urlParameter': 'heightMax', 'eventType': 'change'},
+    {'selectorName': '#inputWidthMin', 'urlParameter': 'widthMin', 'eventType': 'change'},
+    {'selectorName': '#inputWidthMax', 'urlParameter': 'widthMax', 'eventType': 'change'},
+    {'selectorName': '#inputDepthMin', 'urlParameter': 'depthMin', 'eventType': 'change'},
+    {'selectorName': '#inputDepthMax', 'urlParameter': 'depthMax', 'eventType': 'change'},
+    // search
+    {'selectorName': '#searchInput', 'urlParameter': 'search', 'eventType': 'keyup'},
+    // sort
+    {'selectorName': '#sortBy', 'urlParameter': 'sort', 'eventType': 'change'},
+    {'selectorName': '#sortReverse', 'urlParameter': 'reverse', 'eventType': 'change'}
+];
 
-        const filter = {
-            brand: '',
-            power: '',
-            quality: '',
-            priceMin: '',
-            priceMax: '',
-            reviewer: '',
-            shape: '',
-        };
+const urlToSelectorName = new Map(
+    parametersMapping.map(
+	(v) => [v['urlParameter'], v['selectorName']]
+    ));
 
-        const sorter = {
-            by: 'date',
-            reverse: false,
-        };
+const knownSorter = new Set([
+    'brand',
+    'date',
+    'depth',
+    'f3',
+    'f6',
+    'flatness',
+    'height',
+    'price',
+    'score',
+    'scoreEQ',
+    'scoreEQWSUB',
+    'scoreWSUB',
+    'sensitivity',
+    'weight',
+    'width'
+]);
 
-        const fuse = new Fuse(
-            // Fuse take a list not a map
-            [...metadata].map((item) => ({ key: item[0], speaker: item[1] })),
-            {
-                isCaseSensitive: false,
-                matchAllTokens: true,
-                findAllMatches: true,
-                minMatchCharLength: 2,
-                keys: ['speaker.brand', 'speaker.model', 'speaker.type', 'speaker.shape'],
-                treshhold: 0.2,
-                distance: 10,
-                includeScore: true,
-                useExtendedSearch: false,
-                shouldSort: true,
-            }
-        );
-        function readUrl() {
-            // read sort type
-            if (url.searchParams.has('sort')) {
-                const sortParams = url.searchParams.get('sort');
-                sorter.by = sortParams;
-            }
-            if (url.searchParams.has('reverse')) {
-                const sortOrder = url.searchParams.get('reverse');
-                if (sortOrder === 'true') {
-                    sorter.reverse = true;
-                    document.querySelector('#sortReverse').checked = true;
-                } else {
-                    sorter.reverse = false;
-                    document.querySelector('#sortReverse').checked = false;
-                }
-            } else {
-                sorter.reverse = false;
-            }
-            // read filter type
-            for (const filterName of Object.keys(filter)) {
-                if (url.searchParams.has(filterName)) {
-                    filter[filterName] = url.searchParams.get(filterName);
-                }
-            }
-            // read search type
-            if (url.searchParams.has('search')) {
-                keywords = url.searchParams.get('search');
-                document.querySelector('#searchInput').value = keywords;
-            }
-        }
+function printParams(params) {
+    const [sorter, filter, keywords, pagination] = [...params];
+    console.log('  sorter: '+sorter.by+' reverse: '+sorter.reverse);
+    console.log('  filter:'+
+		' brand='+filter.brand+
+		' power='+filter.power+
+		' quality='+filter.quality+
+		' '+ filter.priceMin+' <=price<= '+ filter.priceMax+
+		' reviewer='+filter.reviewer+
+		' shape='+filter.shape);
+    console.log(' keywords='+keywords.toString());
+    console.log(' pagination: page='+pagination.page);
+}
 
-        function updateUrl() {
-            // update sort
-            if (sorter.by !== '') {
-                url.searchParams.set('sort', sorter.by);
-            } else {
-                url.searchParams.delete('sort');
-            }
-            if (sorter.reverse !== '') {
-                url.searchParams.set('reverse', sorter.reverse);
-            } else {
-                url.searchParams.delete('reverse');
-            }
-            if (keywords !== '') {
-                url.searchParams.set('search', keywords);
-            } else {
-                url.searchParams.delete('search');
-            }
-            // update filters
-            for (const [filterName, filterValue] of Object.entries(filter)) {
-                if (filterValue !== '') {
-                    url.searchParams.set(filterName, filterValue);
-                } else {
-                    url.searchParams.delete(filterName);
-                }
-            }
-            // keywords
-            if (keywords !== '') {
-                url.searchParams.set('search', keywords);
-            } else {
-                url.searchParams.delete('search');
-            }
-            // push
-            window.history.pushState({}, '', url);
-        }
+function sortParameters2Sort(url) {
+    const sorter = {
+        by: 'date',
+        reverse: false,
+    };
+    if (url.searchParams.has('sort')) {
+        const sortParams = url.searchParams.get('sort');
+	if (knownSorter.has(sortParams)) {
+            sorter.by = sortParams;
+	    const selectorName = urlToSelectorName.get('sort');
+	    let selector = document.querySelector(selectorName);
+	    if (selector) {
+		selector.value = sortParams;
+	    } else {
+		console.log('Error: selector ' + selectorName + ' is unknown!');
+	    }
+	} else {
+	    console.log('Error: sort function ' + sortParams + ' is unknown!');
+	}
+    }
 
-        function selectDispatch() {
-            readUrl();
-
-            // sort first
-            const sortedIndex = sortMetadata2(metadata, sorter);
-
-            // regenerate the speakers section
-            const speakerContainer = document.querySelector('[data-num="0"');
-            const speakerDiv = [...speakerContainer.querySelectorAll('.searchable')];
-            const speakerMap = new Map(speakerDiv.map((s) => [s.getAttribute('id'), s]));
-            const fragment = new DocumentFragment();
-
-            // do we have an exact match?
-            let results;
-            let minScore = 1;
-            if (keywords !== '') {
-                results = fuse.search(keywords);
-                // console.log('searching with keywords: '+keywords+' #matches: '+results.length);
-                if (results.length > 0) {
-                    // minScore
-                    for (const spk in results) {
-                        if (results[spk].score < minScore) {
-                            minScore = results[spk].score;
-                        }
-                    }
-                }
-                results = new Map(results.map((obj) => [obj.item.key, obj]));
-            }
-
-            // use the sorted index to re-generate the divs.
-            let stripeCounter = 0;
-            sortedIndex.forEach((key) => {
-                const speaker = metadata.get(key);
-                const filterTest = isFiltered(speaker, filter);
-                const searchTest = isSearch(key, results, minScore, keywords);
-                if (speakerMap.has(key)) {
-                    // console.log('key='+key+' map='+speakerMap.get(key)+' filterTest='+filterTest+' searchTest='+searchTest);
-                    if (filterTest && searchTest) {
-                        const child = speakerMap.get(key);
-                        child.classList.remove('has-background-light');
-                        child.classList.toggle('has-background-light', stripeCounter % 2 == 0);
-                        show(fragment.appendChild(child));
-                        stripeCounter = stripeCounter + 1;
-                    } else {
-                        hide(fragment.appendChild(speakerMap.get(key)));
-                    }
-                }
-            });
-            speakerContainer.appendChild(fragment);
-
-            // show the whole div
-            show(resultdiv);
-        }
-
-        document.querySelector('#selectReviewer').addEventListener('change', function () {
-            filter.reviewer = this.value;
-            updateUrl(url, keywords);
-            selectDispatch();
-        });
-
-        document.querySelector('#selectQuality').addEventListener('change', function () {
-            filter.quality = this.value;
-            updateUrl(url, keywords);
-            selectDispatch();
-        });
-
-        document.querySelector('#selectShape').addEventListener('change', function () {
-            filter.shape = this.value;
-            updateUrl(url, keywords);
-            selectDispatch();
-        });
-
-        document.querySelector('#selectPower').addEventListener('change', function () {
-            filter.power = this.value;
-            updateUrl(url, keywords);
-            selectDispatch();
-        });
-
-        document.querySelector('#selectBrand').addEventListener('change', function () {
-            filter.brand = this.value;
-            updateUrl(url, keywords);
-            selectDispatch();
-        });
-
-        document.querySelector('#inputPriceMin').addEventListener('change', function () {
-            filter.priceMin = this.value;
-            updateUrl(url, keywords);
-            selectDispatch();
-        });
-
-        document.querySelector('#inputPriceMax').addEventListener('change', function () {
-            filter.priceMax = this.value;
-            updateUrl(url, keywords);
-            selectDispatch();
-        });
-
-        document.querySelector('#sortBy').addEventListener('change', function () {
-            // swap reverse if it exists and if we keep the same ordering
+    if (url.searchParams.has('reverse')) {
+        const sortOrder = url.searchParams.get('reverse');
+        if (sortOrder === 'true') {
+            sorter.reverse = true;
+        } else {
             sorter.reverse = false;
-            if (url.searchParams.has('reverse') && sorter.by === this.value) {
-                const sortOrder = url.searchParams.get('reverse');
-                if (sortOrder === 'false') {
-                    sorter.reverse = true;
+        }
+    } else {
+        sorter.reverse = false;
+    }
+    const selectorName = urlToSelectorName.get('reverse');
+    let selector = document.querySelector(selectorName);
+    if (selector) {
+	selector.value = sorter.reverse;
+    } else {
+	console.log('Error: selector ' + selectorName + ' is unknown!');
+    }
+
+    return sorter;
+}
+
+function filtersParameters2Sort(url) {
+    const filters = {
+        brand: '',
+        power: '',
+        quality: '',
+        priceMin: '',
+        priceMax: '',
+        weightMin: '',
+        weightMax: '',
+        widthMin: '',
+        widthMax: '',
+        depthMin: '',
+        depthMax: '',
+        heightMin: '',
+        heightMax: '',
+        reviewer: '',
+        shape: '',
+    };
+    for (const filterName of Object.keys(filters)) {
+        if (url.searchParams.has(filterName)) {
+            filters[filterName] = url.searchParams.get(filterName);
+	    const selectorName = urlToSelectorName.get(filterName);
+	    let selector = document.querySelector(selectorName);
+	    if (selector) {
+		selector.value = filters[filterName];
+	    } else {
+		console.log('Error: filter selector '+filterName+' is unknown!');
+	    }
+        }
+    }
+    return filters;
+}
+
+function keywordsParameters2Sort(url) {
+    let keywords = '';
+    if (url.searchParams.has('search')) {
+        keywords = url.searchParams.get('search');
+	const selectorName = urlToSelectorName.get('search');
+	let selector = document.querySelector(selectorName);
+	if (selector) {
+	    selector.value = keywords.toString();
+	} else {
+	    console.log('Error: search selector ' + selectorName + ' is unknown!');
+	}
+    }
+    return keywords;
+}
+
+function paginationParameters2Sort(url) {
+    const pagination = {
+        page: 1,
+        count: 20,
+        active: true,
+    };
+
+    if (url.searchParams.has('page')) {
+        const page = parseInt(url.searchParams.get('page'));
+        if (!isNaN(page) || page < 0) {
+            pagination.page = page;
+            pagination.active = true;
+        } else {
+            console.log('Warning: ignored parameter page that must be a positive integer (got ' + page + '!');
+        }
+    }
+    return pagination;
+}
+
+export function urlParameters2Sort(url) {
+    const sorter = sortParameters2Sort(url);
+    const filters = filtersParameters2Sort(url);
+    const keywords = keywordsParameters2Sort(url);
+    const pagination = paginationParameters2Sort(url);
+    return [sorter, filters, keywords, pagination];
+}
+
+export function sortMetadata2(metadata, sorter, results) {
+
+    const sortChildren2 = ({ container, score, reverse }) => {
+        // console.log('sorting2 by '+score)
+        const items = [...container.keys()];
+        if (reverse) {
+            items.sort((a, b) => {
+                // console.log(score(a), score(b))
+                return score(a) - score(b);
+            });
+        } else {
+            items.sort((a, b) => {
+                // console.log(score(a), score(b))
+                return score(b) - score(a);
+            });
+        }
+        // console.table(items)
+        return items;
+    };
+
+    function getDateV2(key) {
+        const spk = metadata.get(key);
+	let date = 19700101;
+        // comparing ints (works because 20210101 is bigger than 20201010)
+	for( const reviewer in spk.measurements) {
+	    const msr = spk.measurements[reviewer];
+	    if (msr && 'review_published' in msr) {
+		const reviewPublished = parseInt(msr.review_published);
+		if (!isNaN(reviewPublished)) {
+                    date = Math.max(reviewPublished, date);
+		}
+	    }
+	}
+        return date;
+    }
+
+    function getPriceV2(key) {
+        const spk = metadata.get(key);
+        let price = parseFloat(spk.price);
+        if (!isNaN(price)) {
+            const amount = spk.amount;
+            if (amount && amount !== 'each') {
+                price /= 2;
+                // console.log('getPrice2 each '+price)
+            }
+            // console.log('getPriceV2 '+price)
+            return price;
+        }
+        // console.log('getPriceV2 noprice')
+        return -1;
+    }
+
+    function getScoreV2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('pref_rating' in msr && 'pref_score' in msr.pref_rating) {
+            return spk.measurements[def].pref_rating.pref_score;
+        }
+        return -10.0;
+    }
+
+    function getScoreWsubV2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('pref_rating' in msr && 'pref_score_wsub' in msr.pref_rating) {
+            return spk.measurements[def].pref_rating.pref_score_wsub;
+        }
+        return -10.0;
+    }
+
+    function getScoreEqV2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('pref_rating_eq' in msr && 'pref_score' in msr.pref_rating_eq) {
+            return spk.measurements[def].pref_rating_eq.pref_score;
+        }
+        return -10.0;
+    }
+
+    function getScoreEqWsubV2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('pref_rating_eq' in msr && 'pref_score_wsub' in msr.pref_rating_eq) {
+            return spk.measurements[def].pref_rating_eq.pref_score_wsub;
+        }
+        return -10.0;
+    }
+
+    function getF3V2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('estimates' in msr && 'ref_3dB' in msr.estimates) {
+            return -spk.measurements[def].estimates.ref_3dB;
+        }
+        return -1000;
+    }
+
+    function getF6V2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('estimates' in msr && 'ref_6dB' in msr.estimates) {
+            return -spk.measurements[def].estimates.ref_6dB;
+        }
+        return -1000;
+    }
+
+    function getFlatnessV2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('estimates' in msr && 'ref_band' in msr.estimates) {
+            return -spk.measurements[def].estimates.ref_band;
+        }
+        return -1000;
+    }
+
+    function getSensitivityV2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('sensitivity' in msr && 'sensitivity_1m' in msr.sensitivity) {
+            return spk.measurements[def].sensitivity.sensitivity_1m;
+        }
+        return 0.0;
+    }
+
+    function getWeightV2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('specifications' in msr && 'weight' in msr.specifications) {
+            return spk.measurements[def].specifications.weight;
+        }
+        return 0.0;
+    }
+
+    function getSizeWidthV2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('specifications' in msr && 'size' in msr.specifications && 'width' in msr.specifications.size) {
+            return spk.measurements[def].specifications.size.width;
+        }
+        return 0.0;
+    }
+
+    function getSizeDepthV2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('specifications' in msr && 'size' in msr.specifications && 'depth' in msr.specifications.size) {
+            return spk.measurements[def].specifications.size.depth;
+        }
+        return 0.0;
+    }
+
+    function getSizeHeightV2(key) {
+        const spk = metadata.get(key);
+        const def = spk.default_measurement;
+        const msr = spk.measurements[def];
+        if ('specifications' in msr && 'size' in msr.specifications && 'height' in msr.specifications.size) {
+            return spk.measurements[def].specifications.size.height;
+        }
+        return 0.0;
+    }
+
+    function getBrandV2(key) {
+        const spk = metadata.get(key);
+        return spk.brand + ' ' + spk.model;
+    }
+
+    // if we have keywords, then sort by quality of match
+    if (results != null ) {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => {
+		if (results.has(k)) {
+		    return results.get(k).score;
+		}
+		return 1000;
+	    },
+            reverse: true,
+        });
+    }
+
+    if (sorter.by === 'date') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getDateV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'score') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getScoreV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'scoreEQ') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getScoreEqV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'scoreWSUB') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getScoreWsubV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'scoreEQWSUB') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getScoreEqWsubV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'price') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getPriceV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'f3') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getF3V2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'f6') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getF6V2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'flatness') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getFlatnessV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'sensitivity') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getSensitivityV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'brand') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getBrandV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'weight') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getWeightV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'width') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getSizeWidthV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'height') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getSizeHeightV2(k),
+            reverse: sorter.reverse,
+        });
+    } else if (sorter.by === 'depth') {
+        return sortChildren2({
+            container: metadata,
+            score: (k) => getSizeDepthV2(k),
+            reverse: sorter.reverse,
+        });
+    } else {
+        console.log('ERROR: unknown sorter ' + sorter.by);
+    }
+
+    return metadata;
+}
+
+export function isFiltered(item, filter) {
+    let shouldShow = true;
+    if (filter.reviewer !== undefined && filter.reviewer !== '') {
+        let found = true;
+        for (const [name, measurement] of Object.entries(item.measurements)) {
+            const origin = measurement.origin.toLowerCase();
+            let name2 = name.toLowerCase();
+            // not ideal
+            name2 = name2
+                .replace('misc-', '')
+                .replace('-sealed', '')
+                .replace('-ported', '')
+                .replace('-vertical')
+                .replace('-horizontal');
+            // console.log('debug: name2=' + name2 + ' origin=' + origin + ' filter.reviewer=' + filter.reviewer)
+            if (name2 === filter.reviewer.toLowerCase() || origin === filter.reviewer.toLowerCase()) {
+                found = false;
+                break;
+            }
+        }
+        if (found) {
+            shouldShow = false;
+        }
+    }
+    if (filter.quality !== undefined && filter.quality !== '') {
+        let found = true;
+        for (const [, measurement] of Object.entries(item.measurements)) {
+            const quality = measurement.quality.toLowerCase();
+            // console.log('filter.quality=' + filter.quality + ' quality=' + quality)
+            if (filter.quality !== '' && quality === filter.quality.toLowerCase()) {
+                found = false;
+                break;
+            }
+        }
+        if (found) {
+            shouldShow = false;
+        }
+    }
+    // console.log('debug: post quality ' + shouldShow)
+    if (filter.power !== undefined && filter.power !== '' && item.type !== filter.power) {
+        shouldShow = false;
+    }
+    // console.log('debug: post power ' + shouldShow)
+    if (filter.shape !== undefined && filter.shape !== '' && item.shape !== filter.shape) {
+        shouldShow = false;
+    }
+    // console.log('debug: post shape ' + shouldShow)
+    if (filter.brand !== undefined && filter.brand !== '' && item.brand.toLowerCase() !== filter.brand.toLowerCase()) {
+        shouldShow = false;
+    }
+    // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.price+'<<<')
+    if (filter.price !== undefined && filter.price !== '') {
+        // console.log('debug: pre price ' + filter.price)
+        if (item.price !== '') {
+            let price = parseInt(item.price);
+            if (item.amount === 'pair') {
+                price /= 2.0;
+            }
+            switch (filter.price) {
+                case 'p100':
+                    if (price > 100) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p200':
+                    if (price > 200 || price < 100) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p300':
+                    if (price > 300 || price < 200) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p400':
+                    if (price > 400 || price < 300) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p500':
+                    if (price > 500 || price < 400) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p1000':
+                    if (price > 1000 || price < 500) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p2000':
+                    if (price > 2000 || price < 1000) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p5000':
+                    if (price > 5000 || price < 2000) {
+                        shouldShow = false;
+                    }
+                    break;
+                case 'p5000p':
+                    if (price <= 5000) {
+                        shouldShow = false;
+                    }
+                    break;
+            }
+        } else {
+            // no known price
+            shouldShow = false;
+        }
+        // console.log('debug: post price ' + shouldShow)
+    }
+    // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.priceMin+','+filter.priceMax+'<<<')
+    if (
+        (filter.priceMin !== undefined && filter.priceMin !== '') ||
+        (filter.priceMax !== undefined && filter.priceMax !== '')
+    ) {
+        var priceMin = parseInt(filter.priceMin);
+        if (isNaN(priceMin)) {
+            priceMin = -1;
+        }
+        var priceMax = parseInt(filter.priceMax);
+        if (isNaN(priceMax)) {
+            priceMax = Number.MAX_SAFE_INTEGER;
+        }
+        // console.log('debug: pre price ' + filter.price)
+        if (item.price !== '') {
+            let price = parseInt(item.price);
+            if (isNaN(price)) {
+                shouldShow = false;
+            } else {
+                if (item.amount === 'pair') {
+                    price /= 2.0;
+                }
+                if (price > priceMax || price < priceMin) {
+                    shouldShow = false;
                 }
             }
-            sorter.by = this.value;
-            updateUrl(url, keywords);
-            selectDispatch();
-        });
-
-        const buttons = [
-            'brand',
-            // 'date',
-            'price',
-            'f3',
-            // 'f6',
-            'flatness',
-            'score',
-            'scoreEQ',
-            'scoreWSUB',
-            'scoreEQWSUB',
-        ];
-        buttons.forEach((b) => {
-            const sortButton = document.querySelector('#sort-' + b + '-button');
-            if (sortButton !== null) {
-                sortButton.addEventListener('click', () => {
-                    // update sort by
-                    sorter.by = b;
-                    // swap reverse if it exists
-                    sorter.reverse = false;
-                    updateUrl(url, keywords);
-                    selectDispatch();
-                });
-            }
-        });
-
-        // TODO: need to deal with other keys (backspace, delete, return, C-K)
-        // can I get the key if I use a generic event like change?
-        document.querySelector('#searchInput').addEventListener('keyup', function () {
-            // warning: keyword is a global variable
-            keywords = document.querySelector('#searchInput').value;
-            updateUrl();
-            if (keywords.length > 2) {
-                selectDispatch();
-            }
-        });
-
-        document.querySelector('#sortReverse').addEventListener('change', function () {
-            const sortReverse = document.querySelector('#sortReverse').value;
-            if (sortReverse) {
-                sorter.reverse = !sorter.reverse;
-                updateUrl();
-                selectDispatch();
-            }
-        });
-
-        // if we have a parameter to start with we need to resort
-        if (url.searchParams.has('sort')) {
-            selectDispatch();
+        } else {
+            // no known price
+            shouldShow = false;
         }
+        // console.log('debug: post price ' + shouldShow)
+    }
+    return shouldShow;
+}
 
-        return metadata;
-    })
-    .catch((err) => console.log(err.message));
+export function isSearch(key, results, minScore, keywords) {
+    // console.log('Starting isSearch with key='+key+' minscore='+minScore+' keywords='+keywords);
+
+    let shouldShow = true;
+    if (keywords === '' || results === undefined) {
+        // console.log('shouldShow is true');
+        return shouldShow;
+    }
+
+    if (!results.has(key)) {
+        // console.log('shouldShow is false (no key '+key+')');
+        return false;
+    }
+
+    const result = results.get(key);
+    const imeta = result.item.speaker;
+    const score = result.score;
+
+    if (minScore < Math.pow(10, -15)) {
+        const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase());
+        // console.log('isExact ' + isExact + ' model ' + imeta.model.toLowerCase() + ' keywords ' + keywords.toLowerCase());
+        // we have an exact match, only shouldShow other exact matches
+        if (score >= Math.pow(10, -15) && !isExact) {
+            // console.log('filtered out (minscore)' + score);
+            shouldShow = false;
+        }
+    } else {
+        // only partial match
+        if (score > minScore * 10) {
+            // console.log('filtered out (score=' + score + 'minscore=' + minScore + ')');
+            shouldShow = false;
+        }
+        // else { console.log('not filtered out (score=' + score + 'minscore=' + minScore + ')'); }
+    }
+    return shouldShow;
+}
+
+function isWithinPage(count, pagination) {
+    const page = pagination.page;
+    const size = pagination.count;
+    if (!pagination.active || (count >= (page-1) * size && count <= page * size)) {
+        return true;
+    }
+    return false;
+}
+
+export function process(data, params, printer) {
+    const fuse = new Fuse(
+        // Fuse take a list not a map
+        [...data].map((item) => ({ key: item[0], speaker: item[1] })),
+        {
+            isCaseSensitive: false,
+            matchAllTokens: true,
+            findAllMatches: true,
+            minMatchCharLength: 2,
+            keys: ['speaker.brand', 'speaker.model', 'speaker.type', 'speaker.shape'],
+            treshhold: 0.2,
+            distance: 10,
+            includeScore: true,
+            useExtendedSearch: false,
+            shouldSort: true,
+        }
+    );
+    const fragment = new DocumentFragment();
+    const sorter = params[0];
+    const filters = params[1];
+    const keywords = params[2];
+    const pagination = params[3];
+    let results = null;
+    let minScore = 1;
+    if (keywords !== '') {
+        const fuse_results = fuse.search(keywords);
+        // console.log('searching with keywords: '+keywords+' #matches: '+fuse_results.length);
+        if (fuse_results.length > 0) {
+            // minScore
+            for (const spk in fuse_results) {
+                if (fuse_results[spk].score < minScore) {
+                    minScore = fuse_results[spk].score;
+                }
+            }
+        }
+        results = new Map(fuse_results.map((obj) => [obj.item.key, obj]));
+    }
+
+    let currentDisplay = 0;
+    sortMetadata2(data, sorter, results).forEach((key, index) => {
+        const speaker = data.get(key);
+        const testFiltered = isFiltered(speaker, filters);
+        const testKeywords = isSearch(key, results, minScore, keywords);
+        const withinPage = isWithinPage(index, pagination);
+	console.log(speaker.brand+' '+speaker.model+' '+testFiltered+' '+testKeywords+' '+withinPage);
+        if (testFiltered && testKeywords && withinPage && currentDisplay < pagination.count) {
+            const currentFragment = printer(key, index, speaker);
+            show(currentFragment);
+            fragment.appendChild(currentFragment);
+	    currentDisplay += 1;
+        }
+    });
+    return fragment;
+}
+
+export function setupEventListener(metadata, speaker2html, mainDiv) {
+
+    function update(element, urlParameter, parentDiv) {
+	const url = new URL(window.location);
+	if (element.id === 'searchInput' && element.value && element.value.length <= 2) {
+	    return;
+	}
+	if (element.id === 'sortReverse') {
+	    let reverseValue = "false";
+	    if (element.checked) {
+		reverseValue = "true";
+	    }
+	    url.searchParams.set(urlParameter, reverseValue);
+	    // console.log('Info: '+urlParameter + ' changed to ' + element.value);
+	} else {
+	    if (element.value !== '') {
+		url.searchParams.set(urlParameter, element.value);
+		// console.log('Info: '+urlParameter + ' changed to ' + element.value);
+	    } else {
+		url.searchParams.delete(urlParameter);
+		// console.log('Info: '+urlParameter + ' removed');
+	    }
+	}
+	window.history.pushState({}, '', url);
+	const params = urlParameters2Sort(url);
+	printParams(params);
+	const fragment = process(metadata, params, speaker2html);
+	// very slow if long list
+	while (parentDiv.firstChild) {
+	    parentDiv.removeChild(parentDiv.firstChild);
+	}
+	parentDiv.appendChild(fragment);
+	show(parentDiv);
+    }
+    
+    parametersMapping.forEach( (parameter) => {
+	const selectorName = parameter['selectorName'];
+	const urlParameter = parameter['urlParameter'];
+	const eventType    = parameter['eventType'];
+	// console.log('processing '+selectorName+' with '+eventType);
+	let element = document.querySelector(selectorName); 
+	if (element) {
+	    element.addEventListener(eventType, () => update(element, urlParameter, mainDiv));
+	} else {
+	    console.log('Error: Element '+selectorName+' not found');
+	}
+    });
+
+}
+

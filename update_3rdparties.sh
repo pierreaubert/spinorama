@@ -2,10 +2,10 @@
 
 # warning this section is read by a python script (generate_html) to grab the versions
 
-PLOTLY=2.29.1
+PLOTLY=2.30.0
 HANDLEBARS=4.7.8
-BULMA=0.9.4
-FONTAWESOME=6.5.1
+BULMA=1.0.0
+FONTAWESOME=6.5.2
 FUSE=7.0.0
 WORKBOX=7.0.0
 
@@ -60,22 +60,3 @@ if ! test -f "${DOWNLOADS}/fontawesome-free-${FONTAWESOME}-web.zip"; then
     cd ${DOWNLOADS} && unzip fontawesome-free-${FONTAWESOME}-web.zip && cd -
 fi
 
-mkdir -p ${SVGS}
-
-echo "SOLID"
-FASOLID=$(grep 'fas' ./src/website/*.html | grep -e 'fa[-]' | sed -e 's/.*class="//' -e 's/".*//'  -e 's/fas //g' -e 's/fa-solid //'| sort -u)
-for fa in $FASOLID; do
-    cp "${DOWNLOADS}/fontawesome-free-${FONTAWESOME}-web/svgs/solid/${fa#fa-}.svg" ${SVGS}
-done
-
-echo "BRAND"
-FABRAND=$(grep 'fab' ./src/website/*.html | grep -e 'fa[-]' | sed -e 's/.*class="//' -e 's/".*//'  -e 's/fab //g' -e 's/fa-brand //'| sort -u)
-for fa in $FABRAND; do
-    cp "${DOWNLOADS}/fontawesome-free-${FONTAWESOME}-web/svgs/brands/${fa}" ${SVGS}
-done
-
-echo "REGULAR"
-FAREGULAR=$(grep 'regular' ./src/website/*.html | sed -e 's/.*class="//' -e 's/".*//'  -e 's/fas //g' -e 's/fa-regular //'| sort -u)
-for fa in $FAREGULAR; do
-    cp "${DOWNLOADS}/fontawesome-free-${FONTAWESOME}-web/svgs/regular/${fa}" ${SVGS}
-done
