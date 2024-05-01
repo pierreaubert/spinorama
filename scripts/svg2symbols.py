@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!python3
 
 from glob import glob
 from os.path import basename
@@ -31,7 +31,7 @@ def process(filename, xml):
 
 if __name__ == "__main__":
     svg_paths = [
-        "src/website/icons/*.svg",
+        "src/website/svg/*.svg",
     ]
 
     xml_pre()

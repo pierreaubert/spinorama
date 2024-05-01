@@ -21,6 +21,7 @@ CPATH = "."
 CPATH_SRC = "{}/{}".format(CPATH, "src")
 CPATH_PYTHON = "{}/{}".format(CPATH_SRC, "spinorama")
 CPATH_WEBSITE = "{}/{}".format(CPATH_SRC, "website")
+CPATH_SCRIPTS = "{}/{}".format(CPATH, "scripts")
 
 # where the metadata around the speakers are
 CPATH_DATAS = "{}/{}".format(CPATH, "datas")
@@ -29,14 +30,20 @@ CPATH_DATAS_PICTURES = "{}/{}".format(CPATH_DATAS, "pictures")
 CPATH_DATAS_SPEAKERS = "{}/{}".format(CPATH_DATAS, "measurements")
 CPATH_DATAS_EQ = "{}/{}".format(CPATH_DATAS, "eq")
 
+# where the temporay files go
+CPATH_BUILD = "{}/{}".format(CPATH, "build")
+CPATH_BUILD_WEBSITE = "{}/{}".format(CPATH_BUILD, "website")
+CPATH_BUILD_MAKO = "{}/{}".format(CPATH_BUILD, "mako_modules")
+
 # where the generated files go
 CPATH_DOCS = "{}/{}".format(CPATH, "docs")
-CPATH_DOCS_METADATA_JSON = "{}/{}".format(CPATH_DOCS, "metadata.json")
-CPATH_DOCS_EQDATA_JSON = "{}/{}".format(CPATH_DOCS, "eqdata.json")
+CPATH_DOCS_JS = "{}/{}".format(CPATH_DOCS, "js")
+CPATH_DOCS_CSS = "{}/{}".format(CPATH_DOCS, "css")
+CPATH_DOCS_JSON = "{}/{}".format(CPATH_DOCS, "json")
+CPATH_DOCS_METADATA_JSON = "{}/{}.json".format(CPATH_DOCS_JSON, "metadata")
+CPATH_DOCS_EQDATA_JSON = "{}/{}.json".format(CPATH_DOCS_JSON, "eqdata")
 CPATH_DOCS_SPEAKERS = "{}/{}".format(CPATH_DOCS, "speakers")
 CPATH_DOCS_PICTURES = "{}/{}".format(CPATH_DOCS, "pictures")
-CPATH_DOCS_SVG = "{}/{}".format(CPATH_DOCS, "svg")
-CPATH_DOCS_WEBFONTS = "{}/{}".format(CPATH_DOCS, "webfonts")
 
 # midrange defintion
 MIDRANGE_MIN_FREQ = 300

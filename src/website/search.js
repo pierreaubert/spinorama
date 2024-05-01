@@ -16,11 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-/*global Fuse*/
 /*eslint no-undef: "error"*/
 
-import { show, hide } from './misc-${versions['CACHE']}${min}.js';
-import Fuse from './fuse.mjs';
+import Fuse from '/js3rd/fuse-${versions['FUSE']}${min}.mjs';
+import { show, hide } from '/js/misc-${versions['CACHE']}${min}.js';
 
 const parametersMapping = [
     // filters
@@ -739,8 +738,15 @@ export function setupEventListener(metadata, speaker2html, mainDiv) {
 
     function update(element, urlParameter, parentDiv) {
 	const url = new URL(window.location);
-	if (element.id === 'searchInput' && element.value && element.value.length <= 2) {
-	    return;
+	if (element.id === 'searchInput' && element.value) {
+	    // disable search for short words?
+	    // if (element.value.length <= 2) {
+	    //   return;
+	    // }
+	    // remove pagination if it was not a search before
+	    if (!url.searchParams.has('search')) {
+		url.searchParams.set('page', 1);
+	    }
 	}
 	if (element.id === 'sortReverse') {
 	    let reverseValue = "false";

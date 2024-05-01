@@ -7,12 +7,13 @@
   </head>
   <body>
     <%include file="nav_simple.html"/>
+    <%include file="graph_tip.html"/>
     <%! def space2url(text): return text.replace(' ', '%20') %>
 
     <div id="visGraph" class="graph"></div>
 
     <script type="module">
-      import { displayGraph } from "${site}/graph-${versions['CACHE']}${min}.js";
+      import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
       const spec = fetch("${graph | space2url}.json")
       .then( (response) => response.json() )
       .then( (spec) => {

@@ -17,6 +17,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 window.onload = () => {
+
     const navbarBurger = document.querySelector('#navbar-burger');
     const navbarMenu = document.querySelector('.navbar-menu');
 
@@ -43,6 +44,15 @@ window.onload = () => {
         });
     }
 
+    const tips = document.querySelectorAll('.speaker-tip');
+    if (tips) {
+        tips.forEach( (tip) => {
+	    tip.addEventListener('click', () => {
+		tip.classList.toggle('hidden');
+            });
+	});
+    }
+
     const filters = document.querySelector('#filters-dropdown');
     if (filters) {
         const trigger = filters.querySelector('#filters-dropdown-trigger');
@@ -53,5 +63,18 @@ window.onload = () => {
         trigger.addEventListener('click', () => {
             menu.classList.toggle('hidden');
         });
+    }
+
+    const navtabs = document.querySelector('#navtab');
+    if (navtabs) {
+	const tabs = document.querySelectorAll('.tab-pane');
+	tabs.forEach( (tab) => {
+	    console.info(tab.id);
+            if (tab.id === 'pane-2') {
+		tab.style.display = 'block';
+            } else {
+		tab.style.display = 'none';
+            }
+	});
     }
 };

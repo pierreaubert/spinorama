@@ -247,7 +247,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             }
         });
         let i = 0;
-        mins.forEach((min_freq, speaker_name) => {
+        mins.forEach((min_freq, _) => {
             if (min_freq > 40) {
                 let shape = {
                     type: 'rect',

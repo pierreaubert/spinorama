@@ -17,19 +17,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 export LOCALE=C
-
-AWK=awk
-SED=sed
-
-if test "$OS" = "Darwin"  -a "$ARCH" = "arm64" ; then
-    AWK=gawk
-    SED=gsed
-fi
-
-json_pp < docs/metadata.json  | \
-    grep -e '"misc-' | \
-    grep -v default | \
-    $SED -e s'/[ \t"":{"]//g' | \
-    $SED -e 's/misc-//' -e 's/-horizontal//g' -e 's/-vertical//g' -e 's/-sealed//g' -e 's/-ported//g' | \
-    sort -s -f -u | \
-    $AWK -f ./scripts/update_reviewers.awk > src/website/reviewers.html
+mkdir -p build/website
+json_pp < ./docs/json/metadata.json  | \
+    grep '"brand" : ' | \
+    cut -d: -f 2 | \
+    cut -b 2- | \
+    sed -e 's/[,"]//g' | \
+    sort -s -V -f -u | \
+    awk '{brand=$0; gsub("&", "&amp;", $0) ; printf("<option value=\"%s\">%s</option>\n", brand, $0);}' > build/website/brands.html

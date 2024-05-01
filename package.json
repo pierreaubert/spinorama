@@ -2,6 +2,7 @@
   "dependencies": {
     "bulmajs": "^0.0.2",
     "fnm": "^0.0.0",
+    "fuse.js": "^7.0.0",
     "handlebars": "^4.7.8",
     "html-validate": "^7.13.2",
     "html-validator": "^5.1.18",
@@ -9,6 +10,7 @@
     "node": "^21.1.0",
     "npm": "^10.2.3",
     "plotly": "^1.0.6",
+    "plotly.js": "^2.32.0",
     "sass": "^1.58.0",
     "typescript-language-server": "^3.3.2"
   },
@@ -24,6 +26,6 @@
     "terser": "^5.30.3",
     "w3c-html-validator": "^1.7.0",
     "workbox-cli": "^7.0.0",
-    "workbox-window": "^7.0.0"
+    "workbox-window": "^7.1.0"
   }
 }

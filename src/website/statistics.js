@@ -19,7 +19,7 @@
 /*global Plotly*/
 /*eslint no-undef: "error"*/
 
-import { getMetadata } from './download-${versions['CACHE']}${min}.js';
+import { getMetadata } from '/js/download-${versions['CACHE']}${min}.js';
 
 getMetadata()
     .then((metadata) => {

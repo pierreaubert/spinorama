@@ -19,9 +19,9 @@
 /*global Handlebars*/
 /*eslint no-undef: "error"*/
 
-import { getEQdata } from './download-${versions["CACHE"]}${min}.js';
-import { openModal, closeModal, getPeq, getID } from './misc-${versions["CACHE"]}${min}.js';
-import { process, urlParameters2Sort } from './search-${versions["CACHE"]}${min}.js';
+import { getEQdata } from '/js/download-${versions["CACHE"]}${min}.js';
+import { openModal, closeModal, getPeq, getID } from '/js/misc-${versions["CACHE"]}${min}.js';
+import { process, urlParameters2Sort } from '/js/search-${versions["CACHE"]}${min}.js';
 
 function getPictureEqCompare(brand, model, suffix) {
     return encodeURI('speakers/' + brand + ' ' + model + '/eq_compare.' + suffix);

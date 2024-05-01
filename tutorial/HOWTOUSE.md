@@ -22,7 +22,7 @@ This file is a json file but the checker enforce more constraints.
 
 
 ```
-./update_picture.sh
+./scripts/update_picture.sh
 ```
 
 Takes all the pictures of speakers, resizes them and generates multiple formats for web consumption.

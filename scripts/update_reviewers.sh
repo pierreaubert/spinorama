@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # A library to display spinorama charts
 #
 # Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
@@ -16,11 +16,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+export LOCALE=C
 
-pylinkvalidate.py -P https://www.spinorama.org
+AWK=awk
+SED=sed
 
-for f in docs/speakers/*/*/*/*.html; do
-    name=${f#docs/}
-    u=${name// /%20}
-    pylinkvalidate.py -P "https://www.spinorama.org/$u"
-done
+if test "$OS" = "Darwin"  -a "$ARCH" = "arm64" ; then
+    AWK=gawk
+    SED=gsed
+fi
+
+mkdir -p build/website
+
+json_pp < docs/json/metadata.json  | \
+    grep -e '"misc-' | \
+    grep -v default | \
+    $SED -e s'/[ \t"":{"]//g' | \
+    $SED -e 's/misc-//' -e 's/-horizontal//g' -e 's/-vertical//g' -e 's/-sealed//g' -e 's/-ported//g' | \
+    sort -s -f -u | \
+    $AWK -f ./scripts/update_reviewers.awk > build/website/reviewers.html

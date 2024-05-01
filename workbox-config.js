@@ -1,14 +1,13 @@
 module.exports = {
-    // dontCacheBustURLsMatching: ['meta.js', 'meta.min.js'],
+    // dontCacheBustURLsMatching: ['js/meta-v2.min.js'],
     globDirectory: 'docs/',
     globPatterns: [
-        '*.{css,json}',
-        'icons/*.svg',
-        'svg/*.svg',
-        'webfonts/*.woff2',
-        '{index|download|compare|eqs|misc|onload|plot|scores|similar|statistics|tabs|search}-v*.js',
+        'css/*.css',
+        'js3rd/*.js',
+        'js/*-v*.js',
+        '*.html',
     ],
     maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
-    swDest: 'docs/sw.js',
+    swDest: 'docs/js/sw.js',
     ignoreURLParametersMatching: [/^utm_/, /^fbclid$/],
 };

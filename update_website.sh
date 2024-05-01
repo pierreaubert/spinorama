@@ -17,8 +17,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 echo "Update starts"
+mkdir -p build/website
 export PYTHONPATH=src:src/website:src/spinorama:.
-# PYTHON=./spinorama-env/bin/python3
 
 IP="127.0.0.1"
 case $HOSTNAME in
@@ -32,6 +32,12 @@ case $HOSTNAME in
     "web")
         IP="192.168.1.20"
         ;;
+    "web01")
+        IP="192.168.1.20"
+        ;;
+    "web02")
+        IP="192.168.1.22"
+        ;;
     "horn")
         IP="192.168.1.36"
         ;;
@@ -39,7 +45,7 @@ esac
 #echo $IP
 
 # check meta
-command=$(python3 ./check_meta.py)
+command=$(python3 ./scripts/check_meta.py)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO checking metadata ($status)";
@@ -49,7 +55,7 @@ else
 fi
 
 # update logos and speakers picture
-./update_pictures.sh
+./scripts/update_pictures.sh
 
 # generate all graphs if some are missing
 rm -fr /tmp/ray
@@ -63,7 +69,6 @@ else
 fi
 
 # recompute metadata for all speakers
-rm -f docs/assets/metadata.json
 command=$(python3 ./generate_meta.py  --dash-ip="$IP")
 status=$?
 if [ $status -ne 0 ]; then
@@ -74,10 +79,9 @@ else
 fi
 
 # generate all jpg if some are missing
-./update_pictures.sh
+./scripts/update_pictures.sh
 
 # generate radar
-# rm -f docs/speakers/*/spider*
 command=$(python3 ./generate_radar.py)
 status=$?
 if [ $status -ne 0 ]; then
@@ -88,7 +92,6 @@ else
 fi
 
 # generate eq_compare
-# rm -f docs/speakers/*/eq_compare*
 command=$(python3 ./generate_eq_compare.py)
 status=$?
 if [ $status -ne 0 ]; then
@@ -99,7 +102,6 @@ else
 fi
 
 # generate status
-rm -f docs/stats/*.json
 command=$(python3 ./generate_stats.py)
 status=$?
 if [ $status -ne 0 ]; then
@@ -109,22 +111,34 @@ else
     echo "OK after generate statistics!"
 fi
 
-# generate website
-command=$(./update_brands.sh)
+# generate list of svgs
+command=$(python3 ./scripts/svg2symbols.py > build/website/symbols.html)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after update symbols!"
+    rm -f build/website/symbols.html
+    exit 1;
+else
+    echo "OK after update symbols"
+fi
+
+# generate list of brands
+command=$(./scripts/update_brands.sh)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after update brands!"
-    rm -f src/website/brands.html
+    rm -f build/website/brands.html
     exit 1;
 else
     echo "OK after update brands"
 fi
 
-command=$(./update_reviewers.sh)
+# generate list of reviewers
+command=$(./scripts/update_reviewers.sh)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after update reviewers!"
-    rm -f src/website/reviewers.html
+    rm -f build/website/reviewers.html
     exit 1;
 else
     echo "OK after update reviewers"
@@ -147,7 +161,7 @@ if [ $status -ne 0 ]; then
 else
     echo "OK after generate HTML!"
 fi
-command=$(./check_html.sh)
+command=$(./scripts/check_html.sh)
 if [ $status -ne 0 ]; then
     echo "KO after checking HTML!"
     exit 1;
@@ -155,7 +169,7 @@ else
     echo "OK after checking HTML!"
 fi
 # copy
-command=$(./update_dev.sh)
+command=$(./scripts/update_dev.sh)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO Update $TARGET!"

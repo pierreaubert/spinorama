@@ -22,8 +22,8 @@ import {
     metadataFilenameHead,
     metadataFilenameChunks,
     eqdataFilename,
-} from './meta-${versions["CACHE"]}${min}.js';
-import { getID } from './misc-${versions["CACHE"]}${min}.js';
+} from '/js/meta-${versions["CACHE"]}${min}.js';
+import { getID } from '/js/misc-${versions["CACHE"]}${min}.js';
 
 function processOrigin(origin) {
     if (origin.includes('Vendors-')) {

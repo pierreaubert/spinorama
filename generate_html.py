@@ -284,7 +284,7 @@ def main():
         meta = json.load(f)
 
     # load versions for various css and js files
-    versions = get_versions("./update_3rdparties.sh")
+    versions = get_versions("{}/update_3rdparties.sh".format(cpaths.CPATH_SCRIPTS))
 
     # only build a dictionnary will all graphs
     main_df = {}
@@ -316,7 +316,8 @@ def main():
 
     # configure Mako
     mako_templates = TemplateLookup(
-        directories=["src/website"], module_directory="./build/mako_modules"
+        directories=[cpaths.CPATH_WEBSITE, cpaths.CPATH_BUILD_WEBSITE],
+        module_directory=cpaths.CPATH_BUILD_MAKO,
     )
 
     # write index.html
@@ -436,37 +437,25 @@ def main():
         "pmc.png",
         "revel.png",
         "spin.svg",
-        "volume-0.svg",
-        "volume-1.svg",
-        "volume-2.svg",
-        "volume-3.svg",
-        "volume-4.svg",
-        "volume-5.svg",
-        "volume-danger-0.svg",
-        "volume-danger-1.svg",
-        "volume-danger-2.svg",
-        "volume-danger-3.svg",
-        "volume-info-0.svg",
-        "volume-info-1.svg",
-        "volume-info-2.svg",
-        "volume-info-3.svg",
-        "volume-success-0.svg",
-        "volume-success-1.svg",
-        "volume-success-2.svg",
-        "volume-success-3.svg",
-        "volume.svg",
     ]:
         file_in = cpaths.CPATH_DATAS_ICONS + "/" + f
-        file_out = cpaths.CPATH_DOCS + "/" + f
+        file_out = cpaths.CPATH_DOCS + "/pictures/" + f
         shutil.copy(file_in, file_out)
 
     # copy custom css
     for f in [
         "spinorama.css",
+    ]:
+        file_in = cpaths.CPATH_WEBSITE + "/" + f
+        file_out = cpaths.CPATH_DOCS + "/css/" + f
+        shutil.copy(file_in, file_out)
+
+    # copy manifest
+    for f in [
         "manifest.json",
     ]:
         file_in = cpaths.CPATH_WEBSITE + "/" + f
-        file_out = cpaths.CPATH_DOCS + "/svg" + f
+        file_out = cpaths.CPATH_DOCS + "/" + f
         shutil.copy(file_in, file_out)
 
     # cleanup flow directives: currently unused
@@ -478,7 +467,7 @@ def main():
         flow_param,
         cpaths.CPATH_WEBSITE,
         "--out-dir",
-        cpaths.CPATH_DOCS,
+        cpaths.CPATH_BUILD_WEBSITE,
     )
     status = subprocess.run(
         [flow_command], shell=True, check=True, capture_output=True  # noqa: S602
@@ -487,7 +476,7 @@ def main():
         print("flow failed")
 
     # copy css/js files
-    logger.info("Copy js files to %s", cpaths.CPATH_DOCS)
+    logger.info("Copy js files to %s", cpaths.CPATH_DOCS_JS)
     try:
         for item in (
             "compare",
@@ -498,6 +487,7 @@ def main():
             "meta",
             "misc",
             "onload",
+            "pagination",
             "plot",
             "scores",
             "search",
@@ -532,21 +522,26 @@ def main():
                 min=".min" if flag_optim else "",
                 versions=versions,
             )
-            item_filename = "{}/{}-{}.js".format(cpaths.CPATH_DOCS, item, CACHE_VERSION)
-            write_if_different(item_content, item_filename, force=False)
+            item_filename = "{}/{}-1-gen.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
+            write_if_different(item_content, item_filename, force=True)
             # compress files with terser
             if flag_optim:
-                terser_command = "{0} {1}/{2} > {1}/{3}".format(
+                terser_command = "{0} {1}/{2} > {3}/{4}".format(
                     "./node_modules/.bin/terser",
-                    cpaths.CPATH_DOCS,
-                    "{}-{}.js".format(item, CACHE_VERSION),
+                    cpaths.CPATH_BUILD_WEBSITE,
+                    "{}-1-gen.js".format(item),
+                    cpaths.CPATH_DOCS_JS,
                     "{}-{}.min.js".format(item, CACHE_VERSION),
                 )
-                status = subprocess.run(
-                    [terser_command], shell=True, check=True, capture_output=True  # noqa: S602
-                )
-                if status.returncode != 0:
-                    print("terser failed for item {}".format(item))
+                # print(terser_command)
+                try:
+                    status = subprocess.run(
+                        [terser_command], shell=True, check=True, capture_output=True  # noqa: S602
+                    )
+                    if status.returncode != 0:
+                        print("terser failed for item {}".format(item))
+                except subprocess.CalledProcessError as e:
+                    print("terser failed for item {} with {}".format(item, e))
             # optimise files with critical
             if flag_optim:
                 pass
@@ -573,7 +568,7 @@ def main():
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             # ok for robots but likely doesn't work for sitemap
-            write_if_different(item_content, item_filename, force=False)
+            write_if_different(item_content, item_filename, force=True)
     except KeyError as key_error:
         print("Generating various html files failed with {}".format(key_error))
         sys.exit(1)

@@ -4348,6 +4348,40 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Dayton Audio OPAL1": {
+        "skip": True,
+        "brand": "Dayton Audio",
+        "model": "OPAL1",
+        "type": "passive",
+        "price": "800",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/dayton_opal1/",
+                    "yt": "https://youtu.be/BDv222LHNM0",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 78.5,
+                    "impedance": 4.3,
+                    "SPL": {
+                        "peak": 102,
+                    },
+                    "size": {
+                        "height": 356,
+                        "width": 178,
+                        "depth": 241,
+                    },
+                    "weight": 9.4,
+                },
+            },
+        },
+    },
     "DB Audiotechnik 8S": {
         "brand": "DB Audiotechnik",
         "model": "8S",
@@ -22542,6 +22576,41 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Wharfedale Super Denton": {
+        "skip": True,
+        "brand": "Wharfedale",
+        "model": "Super Denton",
+        "type": "passive",
+        "price": "1400",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/wharfedale_super_denton/",
+                    "yt": "https://youtu.be/5Xb9Ku0Fy_E",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 3.4,
+                    "SPL": {
+                        "peak": 103,
+                    },
+                    "size": {
+                        "height": 360,
+                        "width": 246,
+                        "depth": 295,
+                    },
+                    "weight": 9.2,
+                },
+            },
+        },
+    },
+
     "Wilson Audio TuneTot": {
         "brand": "Wilson Audio",
         "model": "TuneTot",

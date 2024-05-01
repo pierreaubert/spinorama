@@ -16,11 +16,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-/*global Plotly */
 /*eslint no-undef: "error"*/
 
-import { urlSite } from './meta-${versions["CACHE"]}${min}.js';
-import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download-${versions["CACHE"]}${min}.js';
+import {
+    urlSite
+} from '/js/meta-${versions["CACHE"]}${min}.js';
+import {
+    getMetadata,
+    assignOptions,
+    getAllSpeakers,
+    getSpeakerData
+} from '/js/download-${versions["CACHE"]}${min}.js';
 import {
     knownMeasurements,
     setContour,
@@ -29,7 +35,7 @@ import {
     setCEA2034,
     setRadar,
     setSurface,
-} from './plot-${versions["CACHE"]}${min}.js';
+} from '/js/plot-${versions["CACHE"]}${min}.js';
 
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin

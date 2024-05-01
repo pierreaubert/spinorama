@@ -8,22 +8,22 @@
     "description": "Speaker measurements",
     "icons": [
 	{
-	    "src": "icons/icon-bookshelves-48x48.png",
+	    "src": "/pictures/icon-bookshelves-48x48.png",
 	    "sizes": "48x48",
 	    "type": "image/png"
 	},
 	{
-	    "src": "icons/icon-bookshelves-144x144.png",
-	    "sizes": "144x144",
+	    "src": "/pictures/icon-bookshelves-144x144.png",
+	    "sizes": "144x115",
 	    "type": "image/png"
 	},
 	{
-	    "src": "icons/icon-bookshelves.svg",
+	    "src": "/pictures/icon-bookshelves.svg",
 	    "sizes": "640x512",
 	    "type": "image/svg+xml"
 	},
 	{
-	    "src": "icons/icon-bookshelves.png",
+	    "src": "/pictures/icon-bookshelves.png",
 	    "sizes": "640x512",
 	    "type": "image/png"
 	}

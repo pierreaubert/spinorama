@@ -16,23 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-echo "Update starts"
-export PYTHONPATH=src:src/website:src/spinorama:.
 
-DIST=/var/www/html/spinorama-api
+pylinkvalidate.py -P https://www.spinorama.org
 
-cp ./scripts/gunicorn_start.sh $DIST
-cp requirements-api.txt $DIST
-cp datas/metadata.py $DIST/datas
-cp docs/assets/metadata.json $DIST/datas
-for source in "__init__.py" "main.py" "ai-plugin.json"; do
-    cp ./src/api/$source $DIST;
+for f in ./docs/speakers/*/*/*/*.html; do
+    name=${f#docs/}
+    u=${name// /%20}
+    pylinkvalidate.py -P "https://www.spinorama.org/$u"
 done
-
-cd $DIST && source .venv/bin/activate && pip install -U -r requirements-api.txt
-
-echo "you may need to restart gunicorn and possibly reload nginx:"
-echo "sudo supervisorctl restart spinorama-api"
-echo "sudo nginx -s reload"
-
-exit 0;

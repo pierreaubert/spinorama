@@ -1,11 +1,14 @@
-<div class="tabs is-centered is-toggle is-boxed is-small" id="navtab">
+<div class="tabs is-centered is-fullwidth is-toggle is-small" id="navtab">
   <ul>
     <li data-target="pane-1" id="1">
       <a>
 	<span class="icon" aria-hidden="true">
 	  <svg width="24px" height="24px"><use href="#icon-database"/></svg>
 	</span>
-        <span>Data&amp;EQ</span>
+        <table>
+	  <tr><td>Data</td></tr>
+	  <tr><td>&amp; EQ</td></tr>
+	</table>
       </a>
     </li>
     <li data-target="pane-2" id="2" class="is-active">
@@ -13,7 +16,10 @@
 	<span class="icon" aria-hidden="true">
 	  <svg width="24px" height="24px"><use href="#icon-ruler-horizontal"/></svg>
 	</span>
-        <span>Ref.</span>
+        <table>
+	  <tr><td>Ref.</td></tr>
+	  <tr><td>Graphs</td></tr>
+	</table>
       </a>
     </li>
     % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
@@ -22,7 +28,10 @@
 	<span class="icon" aria-hidden="true">
 	  <svg width="24px" height="24px"><use href="#icon-ruler-vertical"/></svg>
 	</span>
-        <span>With EQ</span>
+        <table>
+	  <tr><td>EQed</td></tr>
+	  <tr><td>Graphs</td></tr>
+	</table>
       </a>
     </li>
     <li data-target="pane-4" id="4">
@@ -30,11 +39,14 @@
 	<span class="icon" aria-hidden="true">
 	  <svg width="24px" height="24px"><use href="#icon-ruler-combined"/></svg>
 	</span>
-        <span>Ref. v.s. EQ</span>
+        <table>
+	  <tr><td>Ref.</td></tr>
+	  <tr><td>v.s. EQ</td></tr>
+	</table>
       </a>
     </li>
     % endif
   </ul>
 </div>
 
-<div class="tab-content"></div>
+<div class="tab-content">

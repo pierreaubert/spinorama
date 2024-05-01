@@ -18,8 +18,7 @@
 
 /*eslint no-undef: "error"*/
 
-// import Handlebars from './handlebars-${versions["HANDLEBARS"]}.min.js';
-import { getMetadata, getMetadataHead, getMetadataTail } from './download-${versions["CACHE"]}${min}.js';
+import { getMetadataHead, getMetadataTail } from '/js/download-${versions["CACHE"]}${min}.js';
 import {
     getPrice,
     getID,
@@ -28,8 +27,9 @@ import {
     getDecoding,
     getScore,
     getReviews,
-} from './misc-${versions["CACHE"]}${min}.js';
-import { process, urlParameters2Sort, setupEventListener } from './search-${versions["CACHE"]}${min}.js';
+} from '/js/misc-${versions["CACHE"]}${min}.js';
+import { process, urlParameters2Sort, setupEventListener } from '/js/search-${versions["CACHE"]}${min}.js';
+import { pagination } from '/js/pagination-${versions["CACHE"]}${min}.js';
 
 function getMeasurementCount(metadata) {
     let count = 0;
@@ -107,89 +107,6 @@ function display(data, speakerHtml, parentDiv) {
     parentDiv.appendChild(fragment);
 }
 
-const navigationContainer = document.querySelector('#pagination');
-
-function urlChangePage(url, newpage) {
-    const newUrl = new URL(url);
-    newUrl.searchParams.set('page', newpage);
-    return newUrl.toString();
-}
-
-function navigation(numberSpeakers) {
-    // the ${} for mako is replaced by ${"$"} because mako is ran twice on this file
-    const navHeader = '<nav class="pagination" role="navigation" aria-label="pagination">';
-    const navFooter = '</nav>';
-
-    const url = new URL(window.location);
-    const params = urlParameters2Sort(url);
-    const currentPage = params[3].page;
-    const perPage = params[3].count;
-    const maxPage = Math.floor(numberSpeakers / perPage);
-    const prevPage = Math.max(currentPage - 1, 1);
-    const nextPage = Math.min(currentPage + 1, maxPage);
-
-    console.log('currentPage='+currentPage+' perPage='+perPage+' maxPage='+maxPage+' prevPage='+prevPage+' nextPage='+nextPage);
-
-    let html = navHeader;
-    if (currentPage <= 3) {
-        let disabled = '';
-        if (currentPage == 1) {
-            disabled = 'is-disabled';
-        }
-        html += '<a href="' + urlChangePage(url, prevPage) + '" class="pagination-previous" ${"$"}{disabled}>Prev</a>';
-        html += '<a href=' + urlChangePage(url, nextPage) + ' class="pagination-next">Next</a>';
-        html += '<ul class="pagination-list">';
-        for (let i = 1; i <= Math.min(3, maxPage); i++) {
-            let current = '';
-            if (i === currentPage) {
-                current = 'is-current';
-            }
-            html +=
-                '<li><a href="' +
-                urlChangePage(url, i) +
-                `" class="pagination-link ${'$'}{current}" aria-label="Goto page ${'$'}{i}">${'$'}{i}</a></li>`;
-        }
-        if (maxPage > 5) {
-            html += '<li><span class="pagination-ellipsis">&hellip;</span></li>';
-            html +=
-                '<li><a href="' +
-                urlChangePage(url, nextPage) +
-                `" class="pagination-link" aria-label="Goto page ${'$'}{maxPage}">${'$'}{maxPage}</a></li>`;
-        }
-        html += '</ul>';
-    } else if (maxPage - currentPage <= 3) {
-        html += '<a href="' + urlChangePage(url, prevPage) + '" class="pagination-previous ${"$"}">Prev</a>';
-        html += '<a href=' + urlChangePage(url, nextPage) + ' class="pagination-next">Next</a>';
-        html += '<ul class="pagination-list">';
-        for (let i = 1; i <= Math.min(3, maxPage); i++) {
-            let current = '';
-            if (i === currentPage) {
-                current = 'is-current';
-            }
-            html +=
-                '<li><a href="' +
-                urlChangePage(url, i) +
-                `" class="pagination-link ${'$'}{current}" aria-label="Goto page ${'$'}{i}">${'$'}{i}</a></li>`;
-        }
-        if (maxPage > 5) {
-            html += '<li><span class="pagination-ellipsis">&hellip;</span></li>';
-            html +=
-                '<li><a href="' +
-                urlChangePage(url, nextPage) +
-                `" class="pagination-link" aria-label="Goto page ${'$'}{maxPage}">${'$'}{maxPage}</a></li>`;
-        }
-        html += '</ul>';
-    } else {
-    }
-    html += navFooter;
-    const divNavigation = document.createElement('div');
-    while (divNavigation.firstChild) {
-        divNavigation.removeChild(divNavigation.firstChild);
-    }
-    divNavigation.innerHTML = html;
-    navigationContainer.appendChild(divNavigation);
-}
-
 getMetadataHead()
     .then((metadataHead) => {
         const url = new URL(window.location);
@@ -216,7 +133,7 @@ getMetadataHead()
         if (url.pathname !== '' && url.pathname !== 'index.html') {
             display(metadata, printSpeaker, speakerContainer);
         }
-        navigation(metadata.size);
+        pagination(metadata.size);
     })
     .catch((error) => {
         console.log(error);
