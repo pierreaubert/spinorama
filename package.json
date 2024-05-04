@@ -25,7 +25,7 @@
     "standard": "^17.1.0",
     "terser": "^5.30.3",
     "w3c-html-validator": "^1.7.0",
-    "workbox-cli": "^7.0.0",
+    "workbox-cli": "^7.1.0",
     "workbox-window": "^7.1.0"
   }
 }

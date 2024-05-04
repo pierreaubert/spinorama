@@ -5,6 +5,7 @@ module.exports = {
         'css/*.css',
         'js3rd/*.js',
         'js/*-v*.js',
+        'json/*.json',
         '*.html',
     ],
     maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
