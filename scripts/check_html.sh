@@ -16,10 +16,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
+OS=$(uname)
 status=0
+
 for d in docs/*.html; do
-    sz=$(stat -c %s "$d")
+    let sz=0
+    if test "$OS" = "Linux"; then
+	sz=$(stat -c %s "$d")
+    elif test "$OS" = "Darwin"; then
+	sz=$(stat -f "%z" "$d")
+    fi
     if test $sz -eq 0; then
         status=1;
         echo "$d is empty (ERROR)";
