@@ -6,7 +6,6 @@
 <link media="all" href="/css/spinorama.css" rel="stylesheet" crossorigin="anonymous">
 <link rel="icon" type="image/png" href="/pictures/favicon-16x16.png" sizes="16x16">
 
-<script src="/js3rd/handlebars-${versions['HANDLEBARS']}.min.js"></script>
 <script type="module" src="/js/onload-${versions['CACHE']}${min}.js"></script>
 
 <script type="module">
@@ -30,7 +29,7 @@
       wb.addEventListener('message', event => {
 	  if (event.data.type === 'CACHE_UPDATED') {
 	      const {updatedURL} = event.data.payload;
-	      console.log(`A newer version of ${{updatedURL}} is available!`);
+	      console.log('A newer version of '+updatedURL+' is available!');
 	  }
       });
       

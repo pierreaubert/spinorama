@@ -803,8 +803,8 @@ def dump_metadata(meta):
     metadir = cpaths.CPATH_DOCS
     metafile = cpaths.CPATH_DOCS_METADATA_JSON
     eqfile = cpaths.CPATH_DOCS_EQDATA_JSON
-    if not os.path.isdir(metadir):
-        os.makedirs(metadir)
+    os.makedirs(metadir, mode=0o755, exist_ok=True)
+    os.makedirs(cpaths.CPATH_DOCS_JSON, mode=0o755, exist_ok=True)
 
     def check_link(hashed_filename):
         # add a link to make it easier for other scripts to find the metadata

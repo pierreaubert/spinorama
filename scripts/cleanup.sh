@@ -24,7 +24,7 @@ rm -fr /tmp/ray
 rm -fr ./__pycache__ ./*/__pycache__ ./*/*/__pycache__
 rm -fr ./.mypy_cache ./*/.mypy_cache ./*/*/.mypy_cache
 rm -fr ./.pytest_cache ./*/.pytest_cache ./*/*/.pytest_cache
-rm -f cache.*.h5
+rm -f .cache/*.h5
 rm -fr **/results_*.csv
 # node stuff
 rm -fr ./node_modules

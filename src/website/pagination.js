@@ -40,7 +40,7 @@ export function pagination(numberSpeakers) {
     const prevPage = Math.max(currentPage - 1, 1);
     const nextPage = Math.min(currentPage + 1, maxPage);
 
-    console.log('currentPage='+currentPage+' perPage='+perPage+' maxPage='+maxPage+' prevPage='+prevPage+' nextPage='+nextPage);
+    // console.log('currentPage='+currentPage+' perPage='+perPage+' maxPage='+maxPage+' prevPage='+prevPage+' nextPage='+nextPage);
 
     let html = navHeader;
     if (currentPage <= 3) {

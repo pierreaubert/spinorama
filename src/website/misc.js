@@ -20,17 +20,23 @@
 
 // hide an element
 export const hide = (elem) => {
-    elem.classList.add('hidden');
+    if (elem && elem.classList) {
+	elem.classList.add('hidden');
+    }
 };
 
 // show an element
 export const show = (elem) => {
-    elem.classList.remove('hidden');
+    if (elem && elem.classList) {
+	elem.classList.remove('hidden');
+    }
 };
 
 // toggle the element visibility
 export const toggle = (elem) => {
-    elem.classList.toggle('hidden');
+    if (elem && elem.classList) {
+	elem.classList.toggle('hidden');
+    }
 };
 
 export function toggleId(id) {
@@ -40,12 +46,16 @@ export function toggleId(id) {
     }
 }
 
-export function openModal(el) {
-    el.classList.add('is-active');
+export function openModal(elem) {
+    if (elem && elem.classList) {
+	elem.classList.add('is-active');
+    }
 }
 
-export function closeModal(el) {
-    el.classList.remove('is-active');
+export function closeModal(elem) {
+    if (elem && elem.classList) {
+	elem.classList.remove('is-active');
+    }
 }
 
 function getEQType(type) {
@@ -153,36 +163,50 @@ export function getReviews(value) {
         const measurement = value.measurements[version];
         let origin = measurement.origin;
         let originLong = measurement.origin;
+        let originShort = measurement.origin;
         const url = 'speakers/' + value.brand + ' ' + value.model + '/' + removeVendors(origin) + '/index_' + version + '.html';
         if (origin === 'Misc') {
             origin = version.replace('misc-', '');
+            originShort = version.replace('misc-', '');
             originLong = version.replace('misc-', '');
         } else {
             origin = origin.replace('Vendors-', '');
+            originShort = origin.replace('Vendors-', '');
             originLong = origin.replace('Vendors-', '');
         }
         if (origin === 'Princeton') {
             origin = 'Princeton';
+            originShort = 'Pri.';
         } else if (origin === 'napilopez') {
             origin = 'Napilopez';
+            originShort = 'Nap.';
         } else if (origin === 'speakerdata2034') {
             origin = 'SpeakerData2034';
+            originShort = 'SPD.';
         } else if (origin === 'archimago') {
             origin = 'Archimago';
+            originShort = 'Arc.';
         } else if (origin === 'audioxpress') {
             origin = 'AudioXPress';
+            originShort = 'Axp.';
         } else if (origin === 'audioholics') {
             origin = 'audioholics';
+            originShort = 'Aud.';
         } else if (origin === 'soundstageultra') {
             origin = 'Sound Stage Ultra';
+            originShort = 'SSU.';
         } else if (origin === 'sr') {
             origin = 'Sound & Recordings';
+            originShort = 'S&R';
         } else if (origin.search('nuyes') !== -1) {
             origin = 'Nuyes';
+            originShort = 'Nuy.';
         } else if (origin.search('ASR') !== -1) {
             origin = 'Audio Science Review';
+            originShort = 'ASR';
         } else if (origin.search('ErinsAudioCorner') !== -1) {
             origin = "Erin's Audio Corner";
+            originShort = 'EAC';
         }
 
         origin = origin.charAt(0).toUpperCase() + origin.slice(1);
@@ -190,43 +214,54 @@ export function getReviews(value) {
         if (version.search('sealed') !== -1) {
             origin = origin + ' (Sealed)';
             originLong = originLong + ' (Sealed)';
+            originShort = originShort + ' (S)';
         } else if (version.search('vented') !== -1) {
             origin = origin + ' (Vented)';
+            originShort = originShort + ' (V)';
             originLong = originLong + ' (Vented)';
         } else if (version.search('ported') !== -1) {
             origin = origin + ' (Ported)';
+            originShort = originShort + ' (P)';
             originLong = originLong + ' (Ported)';
         }
 
         if (version.search('grille-on') !== -1) {
             origin = origin + ' (Grille on)';
+            originShort = originShort + ' (Gon)';
             originLong = originLong + ' (Grille on)';
         } else if (version.search('no-grille') !== -1) {
             origin = origin + ' (Grille off)';
+            originShort = originShort + ' (Gof)';
             originLong = originLong + ' (Grille off)';
         }
 
         if (version.search('short-port') !== -1) {
             origin = origin + ' (Short Port)';
+            originShort = originShort + ' (sP)';
             originLong = originLong + ' (Short Port)';
         } else if (version.search('long-port') !== -1) {
             origin = origin + ' (Long Port)';
+            originShort = originShort + ' (lP)';
             originLong = originLong + ' (Long Port)';
         }
 
         if (version.search('bassreflex') !== -1) {
             origin = origin + ' (BR)';
+            originShort = originShort + ' (BR)';
             originLong = originLong + ' (Bass Reflex)';
         } else if (version.search('cardioid') !== -1) {
             origin = origin + ' (C)';
+            originShort = originShort + ' (C)';
             originLong = originLong + ' (Cardiod)';
         }
 
         if (version.search('fullrange') !== -1) {
             origin = origin + ' (FR)';
+            originShort = originShort + ' (FR)';
             originLong = originLong + ' (Full Range)';
         } else if (version.search('lowcut') !== -1) {
             origin = origin + ' (LC)';
+            originShort = originShort + ' (LC)';
             originLong = originLong + ' (Low Cut)';
         }
 
@@ -240,28 +275,35 @@ export function getReviews(value) {
 
         if (version.search('horizontal') !== -1) {
             origin = origin + ' (Hor.)';
+            originShort = originShort + ' (Ho)';
             originLong = originLong + ' (Horizontal)';
         } else if (version.search('vertical') !== -1) {
             origin = origin + ' (Ver.)';
+            originShort = originShort + ' (Ve)';
             originLong = originLong + ' (Vertical)';
         }
 
         if (version.search('gll') !== -1) {
             origin = origin + ' (gll)';
+            originShort = originShort + ' (gll)';
             originLong = originLong + ' (gll)';
         } else if (version.search('klippel') !== -1) {
             origin = origin + ' (klippel)';
+            originShort = originShort + ' (nfs)';
             originLong = originLong + ' (klippel)';
         }
 
         if (version.search('wide') !== -1) {
             origin = origin.slice(0, origin.length - 1) + '/W)';
+            originShort = originShort + ' (/W)';
             originLong = originLong.slice(0, originLong.length - 1) + '/Wide)';
         } else if (version.search('narrow') !== -1) {
             origin = origin.slice(0, origin.length - 1) + '/N)';
+            originShort = originShort + ' (/N)';
             originLong = originLong.slice(0, originLong.length - 1) + '/Narrow)';
         } else if (version.search('medium') !== -1) {
             origin = origin.slice(0, origin.length - 1) + '/M)';
+            originShort = originShort + ' (/M)';
             originLong = originLong.slice(0, originLong.length - 1) + '/Medium)';
         }
 
@@ -329,6 +371,7 @@ export function getReviews(value) {
         reviews.push({
             url: encodeURI(url),
             origin: origin,
+            originShort: originShort,
             originLong: originLong,
             version: version,
             scores: getField(value, 'pref_rating', version),

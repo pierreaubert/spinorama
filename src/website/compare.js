@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // A library to display spinorama charts
 //
-// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+// Copyright (C) 2020-2024 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +18,11 @@
 
 /*eslint no-undef: "error"*/
 
+import Plotly from '/js3rd/plotly-${versions["PLOTLY"]}${min}.mjs';
+
 import {
     urlSite
-} from '/js/meta-${versions["CACHE"]}${min}.js';
+} from '/js/meta-${versions["CACHE"]}${min}.mjs';
 import {
     getMetadata,
     assignOptions,
@@ -391,7 +393,7 @@ getMetadata()
                 speakersSelector[0].focus();
             } else if (key === 'b' || key === '2') {
                 speakersSelector[1].focus();
-            } else if (key === 'g' || key === 'c') {
+            } else if (key === 'g' || key === 'c' || key === '3') {
                 graphsSelector.focus();
             }
         });

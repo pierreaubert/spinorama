@@ -18,7 +18,6 @@
 
 import {
     urlSite,
-    metadataFilename,
     metadataFilenameHead,
     metadataFilenameChunks,
     eqdataFilename,
@@ -140,11 +139,6 @@ export function getMetadataHead() {
     return fetchDataAndMap(url, 'bz2, zip, deflate');
 }
 
-export function getMetadata() {
-    const url = urlSite + metadataFilename;
-    return fetchDataAndMap(url, 'bz2, zip, deflate');
-}
-
 export function getMetadataTail(metadataHead) {
     const promisedChunks = [];
     for (let i in metadataFilenameChunks) {
@@ -160,6 +154,10 @@ export function getMetadataTail(metadataHead) {
         }
         return merged;
     });
+}
+
+export function getMetadata() {
+    return getMetadataHead().then((data) => getMetadataTail(data));
 }
 
 export function getEQdata() {

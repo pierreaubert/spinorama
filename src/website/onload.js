@@ -77,4 +77,13 @@ window.onload = () => {
             }
 	});
     }
-};
+
+    document.addEventListener('keydown', (event) => {
+        const e = event || window.event;
+        if (e.keyCode === 27) {
+            // Escape key
+            document.querySelectorAll('.modal').forEach((modal) => modal.remove('is-active'));
+        }
+    });
+			      
+}

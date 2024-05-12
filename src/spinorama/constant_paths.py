@@ -38,6 +38,7 @@ CPATH_BUILD_MAKO = "{}/{}".format(CPATH_BUILD, "mako_modules")
 # where the generated files go
 CPATH_DOCS = "{}/{}".format(CPATH, "docs")
 CPATH_DOCS_JS = "{}/{}".format(CPATH_DOCS, "js")
+CPATH_DOCS_JS3RD = "{}/{}".format(CPATH_DOCS, "js3rd")
 CPATH_DOCS_CSS = "{}/{}".format(CPATH_DOCS, "css")
 CPATH_DOCS_JSON = "{}/{}".format(CPATH_DOCS, "json")
 CPATH_DOCS_METADATA_JSON = "{}/{}.json".format(CPATH_DOCS_JSON, "metadata")

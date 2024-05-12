@@ -25,14 +25,13 @@ repos:
     hooks:
     -   id: csslint
 -   repo: https://github.com/pre-commit/mirrors-eslint
-    rev: 'v9.0.0-rc.0'  # Use the sha / tag you want to point at
+    rev: 'v9.2.0'  # Use the sha / tag you want to point at
     hooks:
     -   id: eslint
         additional_dependencies:
-        -   eslint@4.15.0
-        -   eslint-loader@1.6.1
-        -   eslint-plugin-react@6.10.3
-        -   babel-eslint@6.1.2
+        -   eslint
+        -   eslint-loader
+        -   eslint-prettier
 -   repo: https://github.com/pre-commit/mirrors-prettier
     rev: 'v4.0.0-alpha.8'  # Use the sha / tag you want to point at
     hooks:

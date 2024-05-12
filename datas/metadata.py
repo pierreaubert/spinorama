@@ -12455,28 +12455,8 @@ speakers_info: SpeakerDatabase = {
         "price": "25000",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "vendor-v2-20230503",
+        "default_measurement": "eac",
         "measurements": {
-            "vendor-v2-20230503": {
-                "origin": "Vendors-KEF",
-                "format": "rew_text_dump",
-                "review_published": "20230503",
-                "notes": note_kef_data,
-                "quality": "medium",
-                "reviews": {
-                    "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
-                },
-            },
-            "vendor-v1-20220217": {
-                "origin": "Vendors-KEF",
-                "format": "webplotdigitizer",
-                "review_published": "20220217",
-                "notes": note_kef_data,
-                "quality": "medium",
-                "reviews": {
-                    "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
-                },
-            },
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
@@ -12501,6 +12481,26 @@ speakers_info: SpeakerDatabase = {
                         "depth": 475,
                     },
                     "weight": 35.3,
+                },
+            },
+            "vendor-v2-20230503": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "review_published": "20230503",
+                "notes": note_kef_data,
+                "quality": "medium",
+                "reviews": {
+                    "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                },
+            },
+            "vendor-v1-20220217": {
+                "origin": "Vendors-KEF",
+                "format": "webplotdigitizer",
+                "review_published": "20220217",
+                "notes": note_kef_data,
+                "quality": "medium",
+                "reviews": {
+                    "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
                 },
             },
         },

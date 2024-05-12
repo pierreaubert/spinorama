@@ -19,7 +19,8 @@
 /*eslint no-undef: "error"*/
 
 import Fuse from '/js3rd/fuse-${versions['FUSE']}${min}.mjs';
-import { show, hide } from '/js/misc-${versions['CACHE']}${min}.js';
+
+import { show } from '/js/misc-${versions['CACHE']}${min}.js';
 
 const parametersMapping = [
     // filters
@@ -68,19 +69,19 @@ const knownSorter = new Set([
     'width'
 ]);
 
-function printParams(params) {
-    const [sorter, filter, keywords, pagination] = [...params];
-    console.log('  sorter: '+sorter.by+' reverse: '+sorter.reverse);
-    console.log('  filter:'+
-		' brand='+filter.brand+
-		' power='+filter.power+
-		' quality='+filter.quality+
-		' '+ filter.priceMin+' <=price<= '+ filter.priceMax+
-		' reviewer='+filter.reviewer+
-		' shape='+filter.shape);
-    console.log(' keywords='+keywords.toString());
-    console.log(' pagination: page='+pagination.page);
-}
+// function printParams(params) {
+//     const [sorter, filter, keywords, pagination] = [...params];
+//     console.log('  sorter: '+sorter.by+' reverse: '+sorter.reverse);
+//     console.log('  filter:'+
+// 		' brand='+filter.brand+
+// 		' power='+filter.power+
+// 		' quality='+filter.quality+
+// 		' '+ filter.priceMin+' <=price<= '+ filter.priceMax+
+// 		' reviewer='+filter.reviewer+
+// 		' shape='+filter.shape);
+//     console.log(' keywords='+keywords.toString());
+//     console.log(' pagination: page='+pagination.page);
+// }
 
 function sortParameters2Sort(url) {
     const sorter = {
@@ -186,6 +187,15 @@ function paginationParameters2Sort(url) {
             pagination.active = true;
         } else {
             console.log('Warning: ignored parameter page that must be a positive integer (got ' + page + '!');
+        }
+    }
+    if (url.searchParams.has('count')) {
+        const count = parseInt(url.searchParams.get('count'));
+        if (!isNaN(count) || count < 2) {
+            pagination.count = count;
+            pagination.active = true;
+        } else {
+            console.log('Warning: ignored parameter count that must be an integer greater than 1 (got ' + count + '!');
         }
     }
     return pagination;
@@ -723,9 +733,9 @@ export function process(data, params, printer) {
         const testFiltered = isFiltered(speaker, filters);
         const testKeywords = isSearch(key, results, minScore, keywords);
         const withinPage = isWithinPage(index, pagination);
-	console.log(speaker.brand+' '+speaker.model+' '+testFiltered+' '+testKeywords+' '+withinPage);
+	// console.log(speaker.brand+' '+speaker.model+' '+testFiltered+' '+testKeywords+' '+withinPage);
         if (testFiltered && testKeywords && withinPage && currentDisplay < pagination.count) {
-            const currentFragment = printer(key, index, speaker);
+            const currentFragment = printer(key, currentDisplay, speaker);
             show(currentFragment);
             fragment.appendChild(currentFragment);
 	    currentDisplay += 1;
@@ -766,7 +776,7 @@ export function setupEventListener(metadata, speaker2html, mainDiv) {
 	}
 	window.history.pushState({}, '', url);
 	const params = urlParameters2Sort(url);
-	printParams(params);
+	// printParams(params);
 	const fragment = process(metadata, params, speaker2html);
 	// very slow if long list
 	while (parentDiv.firstChild) {

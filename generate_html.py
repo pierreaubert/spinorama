@@ -268,6 +268,16 @@ def generate_speakers(mako, dataframe, meta, site, use_search, versions):
 
 
 def main():
+    # create some directories
+    for dir in (
+            cpaths.CPATH_DOCS,
+            cpaths.CPATH_DOCS_JS,
+            cpaths.CPATH_DOCS_JS3RD,
+            cpaths.CPATH_DOCS_JSON,
+            cpaths.CPATH_DOCS_CSS
+    ):
+        os.makedirs(dir, mode=0o755, exist_ok=True)
+
     # load all metadata from generated json file
     metadata_json_filename, eqdata_json_filename = find_metadata_file()
     metadata_json_chunks = find_metadata_chunks()
@@ -459,21 +469,21 @@ def main():
         shutil.copy(file_in, file_out)
 
     # cleanup flow directives: currently unused
-    flow_bin = "./node_modules/.bin/flow-remove-types"
-    flow_param = ""  # "--pretty --sourcemaps"
-
-    flow_command = "{} {} {} {} {}".format(
-        flow_bin,
-        flow_param,
-        cpaths.CPATH_WEBSITE,
-        "--out-dir",
-        cpaths.CPATH_BUILD_WEBSITE,
-    )
-    status = subprocess.run(
-        [flow_command], shell=True, check=True, capture_output=True  # noqa: S602
-    )
-    if status.returncode != 0:
-        print("flow failed")
+    # flow_bin = "./node_modules/.bin/flow-remove-types"
+    # flow_param = ""  # "--pretty --sourcemaps"
+    # 
+    # flow_command = "{} {} {} {} {}".format(
+    # flow_bin,
+    # flow_param,
+    # cpaths.CPATH_WEBSITE,
+    # "--out-dir",
+    # cpaths.CPATH_BUILD_WEBSITE,
+    # )
+    # status = subprocess.run(
+    # [flow_command], shell=True, check=True, capture_output=True  # noqa: S602
+    # )
+    # if status.returncode != 0:
+    # print("flow failed")
 
     # copy css/js files
     logger.info("Copy js files to %s", cpaths.CPATH_DOCS_JS)
