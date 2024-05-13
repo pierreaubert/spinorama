@@ -17,24 +17,22 @@ ASSETS_JSON=${ASSETS}/json
 
 mkdir -p ${ASSETS} ${ASSETS_JS} ${ASSETS_CSS} ${ASSETS_JSON}
 
-# BULMA
+# handlebars
 if ! test -f "${ASSETS_JS}/handlebars-${HANDLEBARS}.min.js"; then
     wget -O${ASSETS_JS}/handlebars-${HANDLEBARS}.min.js https://cdn.jsdelivr.net/npm/handlebars@${HANDLEBARS}/dist/handlebars.min.js
 fi
 
 # BULMA
-if ! test -f "${ASSETS_CSS}/bulma-${BULMA}.min.css"; then
-    wget -O${ASSETS_CSS}/bulma-${BULMA}.min.css https://cdn.jsdelivr.net/npm/bulma@${BULMA}/css/bulma.min.css
-fi
-
-# PLOTLY
-if ! test -f "${ASSETS_JS}/plotly-${PLOTLY}.min.js"; then
-    wget -O${ASSETS_JS}/plotly-${PLOTLY}.min.js https://cdn.plot.ly/plotly-${PLOTLY}.min.js
-fi
+npm install bulma
+cp node_modules/bulma/css/bulma.min.css docs/css/bulma-1.0.0.min.css
 
 # FUSE.JS
 npm install fuse.js
 cp node_modules/fuse.js/dist/fuse.min.mjs ${ASSETS_JS}/fuse-${FUSE}.min.mjs
+
+# PLOTLY
+npm install plotly.js-dist-min
+cp node_modules/plotly.js-dist-min/plotly.min.js ${ASSETS_JS}/plotly-${PLOTLY}.min.mjs
 
 # WORKBOX
 npm install workbox-window
