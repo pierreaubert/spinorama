@@ -1,0 +1,14 @@
+EQ for Nubert NuVero 60 computed from ASR data
+Preference Score 5.17 with EQ 6.87
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-05-13-09:19:25
+
+Preamp: -3.1 dB
+
+Filter  1: ON PK Fc    30 Hz Gain +2.91 dB Q 1.91
+Filter  2: ON PK Fc    83 Hz Gain +1.99 dB Q 1.31
+Filter  3: ON PK Fc   227 Hz Gain +0.55 dB Q 2.59
+Filter  4: ON PK Fc   820 Hz Gain -1.37 dB Q 2.97
+Filter  5: ON PK Fc  2245 Hz Gain +1.47 dB Q 2.65
+Filter  6: ON PK Fc  5732 Hz Gain -3.11 dB Q 1.03
+Filter  7: ON PK Fc  8397 Hz Gain +0.95 dB Q 2.98
