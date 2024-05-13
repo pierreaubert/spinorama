@@ -187,7 +187,7 @@ def generate_measurement(
         meta_file,
         eq_file,
         *find_metadata_chunks().values(),
-        *glob("./src/website/assets/*.js"),
+        *glob("./src/website/*.js"),
     ]
     index_force = need_update(index_name, index_deps)
     write_if_different(speaker_content, index_name, index_force)
@@ -292,6 +292,11 @@ def main():
     meta = None
     with open(metadata_json_filename, "r") as f:
         meta = json.load(f)
+
+    with open(eqdata_json_filename, "r") as f:
+        meta_eqs = json.load(f)
+        for k, v in meta_eqs.items():
+            meta[k]['eqs'] = v['eqs']
 
     # load versions for various css and js files
     versions = get_versions("{}/update_3rdparties.sh".format(cpaths.CPATH_SCRIPTS))

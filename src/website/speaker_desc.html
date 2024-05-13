@@ -7,21 +7,25 @@
       default_origin = meta[speaker]['measurements'].get(default).get('origin')
       default_origin = default_origin.replace('Vendors-', '')
   current = meta[speaker]['measurements'].get(g_key, None)
+  current_eqs = meta[speaker].get('eqs', None)
+  brand = meta[speaker].get('brand')
+  model = meta[speaker].get('model')
+  speaker_path = '/speakers/{} {}/'.format(brand, model)
 %>
 
 <%def name="speaker_header(current)">
-${current.get('brand')} ${current.get('model')} is
+${brand} ${model} is
 % if current.get('type', '') == 'active':
 an active
 % else:
 a passive
 % endif
-${current.get('shape')} current
+${current.get('shape')}
 <%
   price = current.get('price', '?')
 %>
 % if price not in ('?', ''):
-that cost around ${current.get('price', '?')}USD
+that cost around ${current.get('price', '?')} USD
 %   if current.get('amount', '?') != '?' and current.get('shape') != 'center':
 %      if current.get('amount') == 'pair':
 for a pair.
@@ -127,9 +131,9 @@ Warning: this measurement was already process with an equalizer.
 %   endif
 %   if estimates.get('ref_from', '?') !=  '?':
 <li>
-      Reference level is normalised to ${estimates.get('ref_level')}dB
-      computed over the frequency range [${estimates.get('ref_from')}Hz,
-      ${estimates.get('ref_to')}Hz].
+  Reference level is normalised to ${estimates.get('ref_level')}dB
+  computed over the frequency range [${estimates.get('ref_from')}Hz,
+  ${estimates.get('ref_to')}Hz].
 </li>
 %   endif
 %   if estimates.get('ref_band', '?') !=  '?':
@@ -267,38 +271,6 @@ Links to other reviews: <a href="${review}">${key} review</a>
 .
 </li>
 % endif
-<%
-  review = None
-  reviews = None
-  h_or_v = None
-  if current:
-    review = current.get("review", None)
-    reviews = current.get("reviews", None)
-    if "horizontal" in g_key:
-      h_or_v = "Horizontal"
-    elif "vertical" in g_key:
-      h_or_v = "Vertical"
-%>
-% if h_or_v is not None:
-<li>${h_or_v} measurement</li>
-% endif
-% if review is not None:
-<li>Link to <a href="${review}">Original review</a>.</li>
-% endif
-% if reviews is not None:
-<li>
-%   for pos, (key, review) in enumerate(reviews.items()):
-%     if pos == 0:
-Link to original Review: <a href="${review}">${key} review</a>.
-%     elif pos == 1:
-Links to other reviews: <a href="${review}">${key} review</a>
-%     else:
-, <a href="${review}">${key} review</a>
-%     endif
-%   endfor
-.
-</li>
-% endif
 </%def>
 
 <%def name="speaker_notes(current)">
@@ -393,7 +365,7 @@ Links to other reviews: <a href="${review}">${key} review</a>
   </div>
   <div class="message-body">
     <div class="content">
-% if current:
+      % if current:
       <ul>
         ${speaker_quality(current)}
         ${speaker_origin(current)}
@@ -410,17 +382,173 @@ Links to other reviews: <a href="${review}">${key} review</a>
         ${speaker_notes(current)}
         ${speaker_specifications(current)}
       </ul>
-% endif	
+      % endif	
     </div>
   </div>
 </article>
 
-<article class="message is-info">
-  <h4>Anechoic EQs built from the measurements</h4>
+<%def name="eqs_info_eq(name)">
+<h4 class="title is-4">
+% if name == 'AutomaticEQ (IIR)':
+These EQ optimise the Harman score and is a good start for far field listening like in your living room.
+% elif name == 'AutomaticEQ LW (IIR)':
+These EQ optimise for a flat listening window and is a good start for near field listening like on your desk.
+% elif name == 'Graphic EQ 15 bands':
+These EQ is designed for a 15 bands graphical EQ.
+% elif name == 'Graphic EQ 31 bands':
+These EQ is designed for a 31 bands graphical EQ.
+% elif name == 'flipflop@ASR (IIR)':
+These EQ is designed by ASR member flipflop.
+% elif name == 'maiky76@ASR LW (IIR)':
+These EQ is designed by ASR member maiky76. These EQ optimise for a flat listening window and is a good start for near field listening like on your desk.
+% elif name == 'maiky76@ASR (IIR)':
+These EQ is designed by ASR member maiky76. These EQ optimise the Harman score and is a good start for far field listening like in your living room.
+% endif
+</h4>
+</%def>
+
+
+<%def name="eqs_print_eq(eq)">
+<%
+  dev = 'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq{}'.format(eq['filename'][1:])
+%>
+<table class="table is-striped">
+  <thead>
+    <tr>
+      <td colspan="4" class="has-text-centered">
+        ${eq['display_name']}
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="has-text-centered">
+        Set preamp gain to: <b>${eq['preamp_gain']}dB</b>.
+      </td>
+    </tr>
+    <tr>
+      <th>Type</th>
+      <th>Freq</th>
+      <th>Q</th>
+      <th>Gain</th>
+    </tr>
+  </thead>
+  <tbody>
+    % for iir in eq['peq']:
+    <tr>
+      <td>${iir['type']}</td>
+      <td>${iir['freq']}</td>
+      <td>${iir['Q']}</td>
+      <td>${iir['dbGain']}</td>
+    </tr>
+    % endfor
+    <tr>
+      <td colspan="4" class="has-text-centered">
+        <a class="button is-link is-light" href="${dev|u}">Download</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</%def>
+
+<%def name="eqs_print_graph(graph, doc)">
+<div class="box">
+  <picture class="image">
+    <source srcset="../${origin | u}/${graph}.webp" type="image/webp"></source>
+    <img src="../${origin | u}/${graph}.jpg" alt="${brand} ${model} ${graph}" loading="lazy" decoding="async" width="700" height="500"/>
+  </picture>
+  <h4 class="title is-4">${doc}</h4>
+</div>
+</%def>
+
+
+<%def name="eqs_print_graphs(eq)">
+<%
+  graphs_eq = [
+    ('filters_auto_eq', 'AutomaticEQ'),
+    ('filters_eq_full', 'Target v.s. EQ'),
+  ]
+  graphs_spin = [
+    ('filters_spin_noeq', 'Spinorama without EQ'),
+    ('filters_spin_auto', 'Spinorama with EQ'),
+  ]
+  graphs_on = [
+    ('filters_on_noeq', 'On Axis'),
+    ('filters_on_auto', 'On Axis with EQ'),
+    ('filters_on_hist_fullrange', 'Histogram of deviation from flat (full range)'),
+    ('filters_on_hist_midrange', 'Histogram of deviation from flat (mid range)'),
+  ]
+  graphs_lw = [
+    ('filters_lw_noeq', 'Listening window'),
+    ('filters_lw_auto', 'Listening Window with EQ'),
+    ('filters_lw_hist_fullrange', 'Histogram of deviation from flat (full range)'),
+    ('filters_lw_hist_midrange', 'Histogram of deviation from flat (mid range)'),
+  ]
+  graphs_pir = [
+    ('filters_pir_noeq', 'Predicted In Room Response'),
+    ('filters_pir_auto', 'Predicted In Room Response with EQ'),
+    ('filters_pir_hist_fullrange', 'Histogram of deviation from flat (full range)'),
+    ('filters_pir_hist_midrange', 'Histogram of deviation from flat  (mid range)'),
+  ]
+%>
+
+% for graph, doc in graphs_eq:
+  ${eqs_print_graph(graph, doc)}
+% endfor
+
+</%def>
+
+<%def name="eqs_compare(eq)">
+<picture class="image">
+  <source srcset="../eq_compare.webp" type="image/webp"></source>
+  <img src="../eq_compare.jpg" alt="${brand} ${model}" loading="lazy" decoding="async" width="700" height="500"/>
+</picture>
+</%def>
+
+<%def name="eqs_spider(eq)">
+<picture class="image">
+  <source srcset="../spider.jpg" type="image/jpg"></source>
+  <img src="../spider.jpg" alt="${brand} ${model}" loading="lazy" decoding="async" width="700" height="500"/>
+</picture>
+</%def>
+
+<%def name="eqs_print_eqs(current_eqs)">
+% for i, (name, eq) in enumerate(current_eqs.items()):
+<article class="message is-primary">
   <div class="message-header">
+    ${brand} ${model}
+  </div>
+  <div class="message-body">
+    ${eqs_print_eq(eq)}
+    ${eqs_info_eq(eq['display_name'])}
+    % if i == 0 or eq['display_name'] == 'AutomaticEQ (IIR)':
+    ${eqs_print_graphs(eq)}
+    % endif    
+  </div>
+</article>
+% endfor
+
+% if len(current_eqs) > 1:
+<article class="message is-info">
+  <div class="message-header">
+    ${brand} ${model}: comparison between EQs
   </div>
   <div class="message-body">
     <div class="content">
-    </div>
+      <div class="content">
+	${eqs_compare(eq)}
+	<h4 class="title is-4">Comparison betweens various EQs</h4>
+      </div>
+      <div class="content">
+	${eqs_spider(eq)}
+	<h4 class="title is-4">Improvements made by EQ</h4>
+      </div>
   </div>
 </article>
+% endif
+</%def>
+
+
+% if not print_warning:
+% if current_eqs:
+${eqs_print_eqs(current_eqs)}
+% endif
+% endif

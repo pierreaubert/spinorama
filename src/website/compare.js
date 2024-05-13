@@ -18,11 +18,11 @@
 
 /*eslint no-undef: "error"*/
 
-import Plotly from '/js3rd/plotly-${versions["PLOTLY"]}${min}.mjs';
+// import Plotly from '/js3rd/plotly-${versions["PLOTLY"]}${min}.mjs';
 
 import {
     urlSite
-} from '/js/meta-${versions["CACHE"]}${min}.mjs';
+} from '/js/meta-${versions["CACHE"]}${min}.js';
 import {
     getMetadata,
     assignOptions,

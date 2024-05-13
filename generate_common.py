@@ -435,3 +435,27 @@ def find_metadata_chunks():
                     tokens = json_filename[span[0] : span[1]].split("-")
                     json_paths[tokens[1]] = json_filename
     return json_paths
+
+
+def find_eqdata_file():
+    json_paths = []
+    for radical, json_path in (
+        ("metadata", cpaths.CPATH_DOCS_EQDATA_JSON),
+        ("eqdata", cpaths.CPATH_DOCS_EQDATA_JSON),
+    ):
+        pattern = "{}-[0-9a-f]*.json".format(json_path[:-5])
+        json_filenames = glob(pattern)
+        json_filename = None
+        for json_maybe in json_filenames:
+            regexp = ".*/{}[-][0-9a-f]{{5}}[.]json$".format(radical)
+            check = re.match(regexp, json_maybe)
+            if check is not None:
+                json_filename = json_maybe
+                break
+        if json_filename is not None and os.path.exists(json_filename):
+            json_paths.append(json_filename)
+        else:
+            json_paths.append(None)
+    return json_paths
+
+

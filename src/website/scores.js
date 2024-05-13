@@ -57,14 +57,8 @@ function getContext(key, index, value) {
         reviews: getReviews(value),
         scores: scores,
         scoresEq: scoresEq,
-        sensitivity: value.sensitivity,
-        spider: getSpider(value.brand, value.model),
+        sensitivity: value.sensitivity
     };
-}
-
-function getSpider(brand, model) {
-    // console.log(brand + model);
-    return encodeURI('speakers/' + brand + ' ' + model + '/spider.jpg');
 }
 
 const speakerContainer = document.querySelector('[data-num="0"');
@@ -148,18 +142,6 @@ function contextFragment(context, index) {
 	div8.innerHTML = '<b>'+eq_pref_score_wsub+'</b>';
     }
     fragment.append(div8);
-    
-    const id = context.id;
-    const div9 = document.createElement('div');
-    div9.setAttribute('class', class1);
-    div9.innerHTML = `
-        <div class="cell p-0 m-0">
-          <button id="${"${"}id}-button" class="button is-small" aria-label="more options for ${"${"}id}" data-target="${"${"}id}-modal">
-            <span class="icon is-small"><svg width="16px" height="16px"><use href="#icon-circle-info"/></svg></span>
-          </button>
-        </div>
-    `;
-    fragment.append(div9);
 
     return fragment;
 }
@@ -167,19 +149,6 @@ function contextFragment(context, index) {
 function printScore(key, index, value) {
     const context = getContext(key, index, value);
     const fragment = contextFragment(context, index);
-    //const button = divScore.querySelector('#' + context.id + '-button');
-    //const target = button.dataset.target;
-    //const modal = divScore.querySelector('#' + target);
-    //button.addEventListener('click', () => {
-    //    return openModal(modal);
-    //});
-    //const childs = modal.querySelectorAll(
-    //    '.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button'
-    //);
-    //childs.forEach((closeable) => {
-    //    const target = closeable.closest('.modal');
-    //    closeable.addEventListener('click', () => closeModal(target));
-    //});
     return fragment;
 }
 

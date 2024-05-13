@@ -12,7 +12,7 @@
   import {Workbox} from "/js3rd/workbox-window-${versions['WORKBOX']}${min}.js";
 
   if ('serviceWorker' in navigator) {
-      const wb = new Workbox('/js/sw.js');
+      const wb = new Workbox('/sw.js');
 
       wb.addEventListener('activated', event => {
 	  if (!event.isUpdate) {

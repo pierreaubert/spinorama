@@ -144,6 +144,15 @@ else
     echo "OK after update reviewers"
 fi
 
+command=$(python3 ./generate_html.py --dev --optim --sitedev=https://dev.spinorama.org)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate HTML!"
+    exit 1;
+else
+    echo "OK after generate HTML!"
+fi
+
 command=$(workbox generateSW workbox-config.js)
 status=$?
 if [ $status -ne 0 ]; then
@@ -153,14 +162,6 @@ else
     echo "OK after generate service worker!"
 fi
 
-command=$(python3 ./generate_html.py --dev --optim --sitedev=https://dev.spinorama.org)
-status=$?
-if [ $status -ne 0 ]; then
-    echo "KO after generate HTML!"
-    exit 1;
-else
-    echo "OK after generate HTML!"
-fi
 command=$(./scripts/check_html.sh)
 if [ $status -ne 0 ]; then
     echo "KO after checking HTML!"
@@ -168,6 +169,7 @@ if [ $status -ne 0 ]; then
 else
     echo "OK after checking HTML!"
 fi
+
 # copy
 command=$(./scripts/update_dev.sh)
 status=$?

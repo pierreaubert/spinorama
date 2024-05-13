@@ -69,7 +69,7 @@ window.onload = () => {
     if (navtabs) {
 	const tabs = document.querySelectorAll('.tab-pane');
 	tabs.forEach( (tab) => {
-	    console.info(tab.id);
+	    // console.info(tab.id);
             if (tab.id === 'pane-2') {
 		tab.style.display = 'block';
             } else {
