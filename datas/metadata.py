@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# you can check the syntax with pylint or with ../check_meta.py
+# you can check the syntax with pylint or with ../scripts/check_meta.py
 from typing import TypedDict, Literal
 
 # common notes for some loudspeakers
@@ -15227,26 +15227,6 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
-    "XMechanik Mechano23 DIY": {
-        "brand": "XMechanik",
-        "model": "Mechano23 DIY",
-        "type": "passive",
-        "price": "200",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "reviews": {
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mechano23-open-source-diy-speaker-review.54066/",
-                    "design": "https://www.audiosciencereview.com/forum/index.php?threads/small-2-way-speakers-with-linear-on-axis-and-power-response-characteristics-scan-speak-and-sb-acoustics-drivers-h-v-off-axis-measurements-included.41757/",
-                },
-                "review_published": "20240428",
-            },
-        },
-    },
     "Mesanovic CDM65": {
         "brand": "Mesanovic",
         "model": "CDM65",
@@ -16884,6 +16864,36 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Nubert NuVero 60": {
+        "brand": "Nubert",
+        "model": "NuVero 60",
+        "type": "passive",
+        "price": "1750",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/nubert-nuvero-60-speaker-review.54390/",
+                },
+                "review_published": "20240513",
+                "specifications": {
+                    "sensitivity": 83,
+                    "impedance": 4,
+                    "size": {
+                        "height": 490,
+                        "width": 23.4,
+                        "depth": 37.5,
+                    },
+                    "weight": 16.0,
+                },
+            },
+        },
+    },
+
     "Ocean Way HR5": {
         "brand": "Ocean Way",
         "model": "HR5",
@@ -22625,6 +22635,26 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/wilson-audio-tunetot-review-high-end-bookshelf-speaker.29219/",
                 "review_published": "20211221",
+            },
+        },
+    },
+    "XMechanik Mechano23 DIY": {
+        "brand": "XMechanik",
+        "model": "Mechano23 DIY",
+        "type": "passive",
+        "price": "200",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mechano23-open-source-diy-speaker-review.54066/",
+                    "design": "https://www.audiosciencereview.com/forum/index.php?threads/small-2-way-speakers-with-linear-on-axis-and-power-response-characteristics-scan-speak-and-sb-acoustics-drivers-h-v-off-axis-measurements-included.41757/",
+                },
+                "review_published": "20240428",
             },
         },
     },
