@@ -151,7 +151,7 @@ function contextHtml(context) {
     const footer = footerHtml(context.id, context.reviews.reviews);
     const html = `
      <div class="cell">
-       <div class="card card-min has-background-white-ter">
+       <div class="card card-min has-background-white-bis">
            <div class="card-image">
              <figure class="image is-2by3">
                <picture>

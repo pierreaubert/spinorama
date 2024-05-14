@@ -11,11 +11,13 @@
     <%include file="tabs_header.html"/>
 
     <div class="tab-pane display:non" id="pane-1">
-      <table>
-        <tr>
-          <td><%include file="speaker_desc.html"/></td>
-        </tr>
-      </table>
+      <div class="container">
+	<table>
+          <tr>
+            <td><%include file="speaker_desc.html"/></td>
+          </tr>
+	</table>
+      </div>
     </div>
 
     <!-- Mobile view: sequential-->
@@ -32,7 +34,7 @@
         % for freq in g_freq:
         <tr>
           <td>
-            <div class="box has-background-info-light m-1">
+            <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key}/${freq | space2url}.html">
                 <picture>
                   <source
@@ -57,7 +59,7 @@
         % for contour in g_contour:
         <tr>
           <td>
-            <div class="box has-background-info-light">
+            <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key}/${contour | unmeltC, space2url}.html">
                 <picture>
                   <source
@@ -82,7 +84,7 @@
         % for radar in g_radar:
         <tr>
           <td>
-            <div class="box has-background-info-light">
+            <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key}/${radar | unmeltR, space2url}.html">
                 <picture>
                   <source
@@ -127,7 +129,7 @@
         % for freq in g_freq:
         <tr>
           <td>
-            <div class="box has-background-info-light">
+            <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key_eq}/${freq | space2url}.html">
                 <picture>
                   <source
@@ -152,7 +154,7 @@
         % for contour in g_contour:
         <tr>
           <td>
-            <div class="box has-background-info-light">
+            <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key_eq}/${contour | unmeltC, space2url}.html">
                 <picture>
                   <source
@@ -177,7 +179,7 @@
         % for radar in g_radar:
         <tr>
           <td>
-            <div class="box has-background-info-light">
+            <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key_eq}/${radar | unmeltR, space2url}.html">
                 <picture>
                   <source
