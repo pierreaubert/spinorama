@@ -18,6 +18,8 @@
 
 /*eslint no-undef: "error"*/
 
+const flagCounters = false;
+
 import { getMetadataHead, getMetadataTail } from '/js/download-${versions["CACHE"]}${min}.js';
 import {
     getPrice,
@@ -149,7 +151,7 @@ function contextHtml(context) {
     const footer = footerHtml(context.id, context.reviews.reviews);
     const html = `
      <div class="cell">
-       <div class="card card-min">
+       <div class="card card-min has-background-white-ter">
            <div class="card-image">
              <figure class="image is-2by3">
                <picture>
@@ -247,18 +249,20 @@ getMetadataHead()
         // now that we have all the data
         setupEventListener(metadata, printSpeaker, speakerContainer);
         // moved after the main display of speakers to minimise reflow
-        const speakerCount = document.querySelector('#speakerCount p:nth-child(2)');
-        const measurementCount = document.querySelector('#measurementCount p:nth-child(2)');
-        const brandCount = document.querySelector('#brandCount p:nth-child(2)');
-        const reviewCount = document.querySelector('#reviewCount p:nth-child(2)');
-        speakerCount.innerHTML = metadata.size;
-        measurementCount.innerHTML = getMeasurementCount(metadata);
-        brandCount.innerHTML = getBrandCount(metadata);
-        reviewCount.innerHTML = getReviewCount();
+	if (flagCounters) {
+            const speakerCount = document.querySelector('#speakerCount p:nth-child(2)');
+            const measurementCount = document.querySelector('#measurementCount p:nth-child(2)');
+            const brandCount = document.querySelector('#brandCount p:nth-child(2)');
+            const reviewCount = document.querySelector('#reviewCount p:nth-child(2)');
+            speakerCount.innerHTML = metadata.size;
+            measurementCount.innerHTML = getMeasurementCount(metadata);
+            brandCount.innerHTML = getBrandCount(metadata);
+            reviewCount.innerHTML = getReviewCount();
+	}
         // display if not done above
         const url = new URL(window.location);
         if (url.pathname !== '' && url.pathname !== 'index.html') {
-            display(metadata, printSpeaker, speakerContainer);
+	    display(metadata, printSpeaker, speakerContainer);
         }
         pagination(metadata.size);
     })

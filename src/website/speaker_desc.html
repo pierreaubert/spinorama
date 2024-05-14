@@ -410,7 +410,7 @@ These EQ is designed by ASR member maiky76. These EQ optimise the Harman score a
 
 <%def name="eqs_print_eq(eq)">
 <%
-  dev = 'https://raw.githubusercontent.com/pierreaubert/spinorama/develop/datas/eq{}'.format(eq['filename'][1:])
+  dev = 'https://raw.githubusercontent.com/pierreaubert/spinorama/develop{}'.format(eq['filename'][1:])
 %>
 <table class="table is-striped">
   <thead>
@@ -442,7 +442,7 @@ These EQ is designed by ASR member maiky76. These EQ optimise the Harman score a
     % endfor
     <tr>
       <td colspan="4" class="has-text-centered">
-        <a class="button is-link is-light" href="${dev|u}">Download</a>
+        <a class="button is-link is-light" href="${dev}">Download</a>
       </td>
     </tr>
   </tbody>
@@ -452,8 +452,8 @@ These EQ is designed by ASR member maiky76. These EQ optimise the Harman score a
 <%def name="eqs_print_graph(graph, doc)">
 <div class="box">
   <picture class="image">
-    <source srcset="../${origin | u}/${graph}.webp" type="image/webp"></source>
-    <img src="../${origin | u}/${graph}.jpg" alt="${brand} ${model} ${graph}" loading="lazy" decoding="async" width="700" height="500"/>
+    <source srcset="../${origin | u}/${graph | u}.webp" type="image/webp"></source>
+    <img src="../${origin | u}/${graph | u}.jpg" alt="${brand} ${model} ${graph}" loading="lazy" decoding="async" width="700" height="500"/>
   </picture>
   <h4 class="title is-4">${doc}</h4>
 </div>

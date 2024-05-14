@@ -7,20 +7,21 @@
   <body>
     <%include file="symbols.html"/>
     <%include file="nav_search.html"/>
-    <%include file="nav_counters.html"/>
     <%namespace name="util" module="website.utils" import="*"/>
 
-    <div class="section">
-      <div class="searchresults">
-        <div class="grid is-col-min-12 column-gap-0 row-gap-1" id="speakers" data-num="0">
-        </div>
+    <div class="container">
+      <div class="section">
+	<div class="searchresults">
+          <div class="grid is-col-min-12 column-gap-0 row-gap-1" id="speakers" data-num="0">
+          </div>
+	</div>
+      </div>
+      <div class="section">
+	<div id="pagination">
+	</div>
       </div>
     </div>
-    <div class="section">
-      <div id="pagination">
-      </div>
-    </div>
-
+    
     <script type="module" src="/js/index-${versions['CACHE']}${min}.js"></script>
     
     <%include file="search.html"/>

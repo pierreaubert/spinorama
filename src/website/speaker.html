@@ -11,24 +11,24 @@
     <%include file="tabs_header.html"/>
 
     <div class="tab-pane display:non" id="pane-1">
-      <div class="box is-centered">
-        <table>
-          <tr>
-            <td><%include file="speaker_desc.html"/></td>
-          </tr>
-        </table>
-      </div>
+      <table>
+        <tr>
+          <td><%include file="speaker_desc.html"/></td>
+        </tr>
+      </table>
     </div>
 
     <!-- Mobile view: sequential-->
     <div class="tab-pane is-active display:block" id="pane-2">
       <div class="section">
       <table>
+<!--
 	<tr>
 	  <td>
 	    <%include file="speaker_tip.html"/>
 	  </td>
 	</tr>
+-->	
         % for freq in g_freq:
         <tr>
           <td>
@@ -113,11 +113,13 @@
     <div class="tab-pane display:none" id="pane-3">
       <div class="section">
       <table>
+<!--
 	<tr>
 	  <td>
 	    <%include file="speaker_tip.html"/>
 	  </td>
 	</tr>
+-->
         % if g_eq is not None:
 <%
           g_key_eq = g_key.replace("_eq", "") + "_eq"

@@ -57,7 +57,7 @@ from spinorama.need_update import need_update
 
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
-CACHE_VERSION = "v2"
+CACHE_VERSION = "v3"
 
 
 def get_versions(filename):
