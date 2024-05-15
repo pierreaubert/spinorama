@@ -457,5 +457,3 @@ def find_eqdata_file():
         else:
             json_paths.append(None)
     return json_paths
-
-

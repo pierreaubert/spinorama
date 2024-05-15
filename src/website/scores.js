@@ -28,9 +28,9 @@ import {
     getField,
     getReviews,
     getPrice,
-} from '/js/misc-${versions["CACHE"]}${min}.js';
-import { getMetadata } from '/js/download-${versions["CACHE"]}${min}.js';
-import { process, urlParameters2Sort, setupEventListener } from '/js/search-${versions["CACHE"]}${min}.js';
+} from './misc.js';
+import { getMetadata } from './download.js';
+import { process, urlParameters2Sort, setupEventListener } from './search.js';
 
 function getContext(key, index, value) {
     // console.log(getReviews(value));

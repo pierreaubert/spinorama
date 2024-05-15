@@ -187,7 +187,7 @@ def optim_save_peq_seq(
     if not optim_config["force"] and os.path.exists(eq_name):
         if optim_config["verbose"]:
             logger.info("eq %s already exist!", eq_name)
-        logger.debug('Skipping %s since EQ already exist!', current_speaker_name)
+        logger.debug("Skipping %s since EQ already exist!", current_speaker_name)
         return False, ("", (0, 0, 0), [{}])
 
     # do we have CEA2034 data
@@ -217,11 +217,11 @@ def optim_save_peq_seq(
 
     score = {}
     if use_score:
-        logger.debug('Computing init score for %s', current_speaker_name)
+        logger.debug("Computing init score for %s", current_speaker_name)
         _, _, score = scores_apply_filter(df_speaker, [])
 
     # compute pref score from speaker if possible
-    logger.debug('Calling strategy for %s', current_speaker_name)
+    logger.debug("Calling strategy for %s", current_speaker_name)
     auto_status, (auto_score, auto_results, auto_peq, auto_config) = optim_strategy(
         current_speaker_name, df_speaker, optim_config, use_score
     )

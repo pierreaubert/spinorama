@@ -20,7 +20,7 @@
 
 const flagCounters = false;
 
-import { getMetadataHead, getMetadataTail } from '/js/download-${versions["CACHE"]}${min}.js';
+import { getMetadataHead, getMetadataTail } from './download.js';
 import {
     getPrice,
     getID,
@@ -29,9 +29,9 @@ import {
     getDecoding,
     getScore,
     getReviews,
-} from '/js/misc-${versions["CACHE"]}${min}.js';
-import { process, urlParameters2Sort, setupEventListener } from '/js/search-${versions["CACHE"]}${min}.js';
-import { pagination } from '/js/pagination-${versions["CACHE"]}${min}.js';
+} from './misc.js';
+import { process, urlParameters2Sort, setupEventListener } from './search.js';
+import { pagination } from './pagination.js';
 
 function getMeasurementCount(metadata) {
     let count = 0;

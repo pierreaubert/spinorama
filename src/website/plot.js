@@ -119,7 +119,7 @@ export function isCompact() {
     return false;
 }
 
-function computeDims(windowWidth, windowHeight, is_vertical, is_compact, nb_graphs) {
+export function computeDims(windowWidth, windowHeight, is_vertical, is_compact, nb_graphs) {
     let width = windowWidth;
     let height = windowHeight;
     if (is_compact) {

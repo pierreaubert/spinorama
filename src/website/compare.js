@@ -22,13 +22,13 @@
 
 import {
     urlSite
-} from '/js/meta-${versions["CACHE"]}${min}.js';
+} from './meta.js';
 import {
     getMetadata,
     assignOptions,
     getAllSpeakers,
     getSpeakerData
-} from '/js/download-${versions["CACHE"]}${min}.js';
+} from './download.js';
 import {
     knownMeasurements,
     setContour,
@@ -37,7 +37,7 @@ import {
     setCEA2034,
     setRadar,
     setSurface,
-} from '/js/plot-${versions["CACHE"]}${min}.js';
+} from './plot.js';
 
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin

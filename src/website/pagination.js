@@ -18,7 +18,7 @@
 
 /*eslint no-undef: "error"*/
 
-import { urlParameters2Sort } from '/js/search-${versions["CACHE"]}${min}.js';
+import { urlParameters2Sort } from './search.js';
 
 function urlChangePage(url, newpage) {
     const newUrl = new URL(url);

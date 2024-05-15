@@ -33,9 +33,10 @@ Options:
 from glob import glob
 import json
 import os
+import pathlib
+import re
 import shutil
 import subprocess
-import pathlib
 import sys
 
 from docopt import docopt
@@ -53,14 +54,26 @@ from generate_common import (
 )
 
 import spinorama.constant_paths as cpaths
-from spinorama.need_update import need_update
+from spinorama.need_update import need_update, write_if_different
 
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
 CACHE_VERSION = "v3"
 
 
+def get_files(dir, ext):
+    """return a list of files matching the extension in a directory, results are stripped of paths and extensions"""
+    files = []
+    filenames = glob("{}/*.{}".format(dir, ext))
+    for filename in filenames:
+        if not os.path.isfile(filename):
+            continue
+        files.append(os.path.basename(filename).split(".")[-2])
+    return files
+
+
 def get_versions(filename):
+    """get the current versions for some js libraries"""
     versions = {}
     with open(filename, "r") as fd:
         lines = fd.readlines()
@@ -83,19 +96,33 @@ def get_versions(filename):
     return versions
 
 
-def write_if_different(new_content: str, filename: str, force: bool):  # noqa: FBT001
-    """Write the new content to disk only if it is different from the current one.
-    The unchanged html files are then untouched and http cache effect is better.
-    """
-    identical = False
-    path = pathlib.Path(filename)
-    if path.exists():
-        old_content = path.read_text(encoding="utf-8")
-        if old_content == new_content:
-            identical = True
+def adapt_imports(jscode, versions, jsfiles):
+    """ " replace import statements
 
-    if not identical or force:
-        path.write_text(new_content, encoding="utf-8")
+    The source code is compatible with node / vite / vitess.
+    The production code need to be browser compatible.
+
+    Local js files go to /js and libraries go to /js3rd.
+
+    This is very very basic.
+    """
+    replacements = [
+        (" from 'fuse.js';", " from '/js3rd/fuse-{}.min.mjs';".format(versions["FUSE"])),
+        (
+            " from 'handlebars.js';",
+            " from '/js3rd/handlebars-{}.min.js';".format(versions["HANDLEBARS"]),
+        ),
+        # (
+        #    " from 'plotly-dist-min.js';",
+        #    " from '/js3rd/plotly-{}.min.mjs';".format(versions['PLOTLY'])
+        # ),
+        (r"}} from '\.\/({})\.js';".format("|".join(jsfiles)), r"} from '/js/\1.js';"),
+    ]
+    code = jscode
+    for re_from, re_to in replacements:
+        code = re.sub(re_from, re_to, code)
+
+    return code
 
 
 FREQ_FILTER = [
@@ -270,11 +297,11 @@ def generate_speakers(mako, dataframe, meta, site, use_search, versions):
 def main():
     # create some directories
     for dir in (
-            cpaths.CPATH_DOCS,
-            cpaths.CPATH_DOCS_JS,
-            cpaths.CPATH_DOCS_JS3RD,
-            cpaths.CPATH_DOCS_JSON,
-            cpaths.CPATH_DOCS_CSS
+        cpaths.CPATH_DOCS,
+        cpaths.CPATH_DOCS_JS,
+        cpaths.CPATH_DOCS_JS3RD,
+        cpaths.CPATH_DOCS_JSON,
+        cpaths.CPATH_DOCS_CSS,
     ):
         os.makedirs(dir, mode=0o755, exist_ok=True)
 
@@ -296,10 +323,13 @@ def main():
     with open(eqdata_json_filename, "r") as f:
         meta_eqs = json.load(f)
         for k, v in meta_eqs.items():
-            meta[k]['eqs'] = v['eqs']
+            meta[k]["eqs"] = v["eqs"]
 
     # load versions for various css and js files
     versions = get_versions("{}/update_3rdparties.sh".format(cpaths.CPATH_SCRIPTS))
+
+    # get a list of js files
+    jsfiles = get_files(cpaths.CPATH_WEBSITE, "js")
 
     # only build a dictionnary will all graphs
     main_df = {}
@@ -457,38 +487,14 @@ def main():
         file_out = cpaths.CPATH_DOCS + "/pictures/" + f
         shutil.copy(file_in, file_out)
 
-    # copy custom css
-    for f in [
-        "spinorama.css",
+    # copy custom css and manifest
+    for file, sub in [
+        ("spinorama.css", "css/"),
+        ("manifest.json", "/"),
     ]:
-        file_in = cpaths.CPATH_WEBSITE + "/" + f
-        file_out = cpaths.CPATH_DOCS + "/css/" + f
+        file_in = "{}/{}".format(cpaths.CPATH_WEBSITE, file)
+        file_out = "{}/{}{}".format(cpaths.CPATH_DOCS, sub, file)
         shutil.copy(file_in, file_out)
-
-    # copy manifest
-    for f in [
-        "manifest.json",
-    ]:
-        file_in = cpaths.CPATH_WEBSITE + "/" + f
-        file_out = cpaths.CPATH_DOCS + "/" + f
-        shutil.copy(file_in, file_out)
-
-    # cleanup flow directives: currently unused
-    # flow_bin = "./node_modules/.bin/flow-remove-types"
-    # flow_param = ""  # "--pretty --sourcemaps"
-    # 
-    # flow_command = "{} {} {} {} {}".format(
-    # flow_bin,
-    # flow_param,
-    # cpaths.CPATH_WEBSITE,
-    # "--out-dir",
-    # cpaths.CPATH_BUILD_WEBSITE,
-    # )
-    # status = subprocess.run(
-    # [flow_command], shell=True, check=True, capture_output=True  # noqa: S602
-    # )
-    # if status.returncode != 0:
-    # print("flow failed")
 
     # copy css/js files
     logger.info("Copy js files to %s", cpaths.CPATH_DOCS_JS)
@@ -510,8 +516,6 @@ def main():
             "statistics",
             "tabs",
         ):
-            item_name = "{}.js".format(item)
-            item_html = mako_templates.get_template(item_name)
             # remove the ./docs parts
             len_docs = len("/docs/")
             metadata_filename = metadata_json_filename[len_docs:]
@@ -525,6 +529,25 @@ def main():
                     ]
                 )
             )
+            # cleanup flow directives: currently unused
+            item_original = "{}/{}.js".format(cpaths.CPATH_WEBSITE, item)
+            item_filename = "{}/{}-0-flow.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
+            flow_bin = "./node_modules/.bin/flow-remove-types"
+            flow_param = ""  # "--pretty --sourcemaps"
+
+            flow_command = "{} {} {} > {}".format(
+                flow_bin, flow_param, item_original, item_filename
+            )
+            status = subprocess.run(
+                [flow_command], shell=True, check=True, capture_output=True  # noqa: S602
+            )
+            if status.returncode != 0:
+                print("flow failed for %s", item_name)
+
+            # build first generation with metadata expension
+            item_name = "{}.js".format(item)
+            item_mako = "{}-0-flow.js".format(item)
+            item_html = mako_templates.get_template(item_mako)
             eqdata_filename = eqdata_json_filename[len_docs:]
             item_content = item_html.render(
                 df=main_df,
@@ -539,12 +562,18 @@ def main():
             )
             item_filename = "{}/{}-1-gen.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             write_if_different(item_content, item_filename, force=True)
+
+            # change inport to match prod/dev and browser requirements
+            item_content = adapt_imports(item_content, versions, jsfiles)
+            item_filename = "{}/{}-2-imp.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
+            write_if_different(item_content, item_filename, force=True)
+
             # compress files with terser
             if flag_optim:
                 terser_command = "{0} {1}/{2} > {3}/{4}".format(
                     "./node_modules/.bin/terser",
                     cpaths.CPATH_BUILD_WEBSITE,
-                    "{}-1-gen.js".format(item),
+                    "{}-2-imp.js".format(item),
                     cpaths.CPATH_DOCS_JS,
                     "{}-{}.min.js".format(item, CACHE_VERSION),
                 )

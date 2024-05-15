@@ -20,8 +20,8 @@
 
 // import Plotly from '/js3rd/plotly-${versions["PLOTLY"]}${min}.mjs';
 
-import { getMetadata, assignOptions, getSpeakerData } from '/js/download-${versions["CACHE"]}${min}.js';
-import { knownMeasurements, setCEA2034, setContour, setGraph, setGlobe, setRadar, setSurface } from '/js/plot-${versions['CACHE']}${min}.js';
+import { getMetadata, assignOptions, getSpeakerData } from './download.js';
+import { knownMeasurements, setCEA2034, setContour, setGraph, setGlobe, setRadar, setSurface } from './plot.js';
 
 function getNearSpeakers(metadata) {
     const metaSpeakers = {};

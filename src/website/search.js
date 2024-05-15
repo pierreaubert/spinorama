@@ -18,9 +18,8 @@
 
 /*eslint no-undef: "error"*/
 
-import Fuse from '/js3rd/fuse-${versions['FUSE']}${min}.mjs';
-
-import { show } from '/js/misc-${versions['CACHE']}${min}.js';
+import Fuse from 'fuse.js';
+import { show } from './misc.js';
 
 const parametersMapping = [
     // filters

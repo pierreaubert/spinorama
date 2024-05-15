@@ -286,7 +286,7 @@ def compute_peqs_sequential(df_all_speakers, optim_config, speaker_name):
             )
             continue
 
-        logger.debug('starting optim for %s', current_speaker_name)
+        logger.debug("starting optim for %s", current_speaker_name)
         status, (_, results_iter, scores) = optim_save_peq_seq(
             current_speaker_name,
             default_origin,

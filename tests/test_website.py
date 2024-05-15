@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions
+from selenium.common.exceptions import NoSuchElementException
 
 
 PROD = "https://www.spinorama.org"
@@ -14,6 +15,7 @@ COMPARE = "/compare.html"
 
 
 class SpinoramaWebsiteTests(unittest.TestCase):
+
     def setUp(self):
         options = webdriver.ChromeOptions()
         options.add_argument("--headless=new")
@@ -29,7 +31,7 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         title = self.driver.title
         self.assertIn("collection", title)
 
-    def test_index_search(self):
+    def test_index_search_elac(self):
         self.driver.get(DEV)
         self.driver.implicitly_wait(2)
 
@@ -45,10 +47,15 @@ class SpinoramaWebsiteTests(unittest.TestCase):
 
         search_box.clear()
         search_box.send_keys("elac")
-        gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
-        self.assertIsNotNone(gene)
-        is_hidden = "hidden" in gene.get_attribute("class")
-        self.assertTrue(is_hidden)
+        with self.assertRaises(NoSuchElementException):
+            gene = self.driver.find_element(by=By.ID, value="Genelec-8361A")
+            self.assertIsNone(gene)
+
+    def test_index_search_genelec(self):
+        self.driver.get(DEV)
+        self.driver.implicitly_wait(2)
+
+        search_box = self.driver.find_element(by=By.ID, value="searchInput")
 
         search_box.clear()
         search_box.send_keys("8361A")
@@ -85,7 +92,7 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         self.assertFalse(is_hidden)
 
     def test_filters_price(self):
-        self.driver.get(DEV)
+        self.driver.get("{}?{}".format(DEV, "count=10000"))
         self.driver.implicitly_wait(2)
 
         WebDriverWait(self.driver, 1).until(

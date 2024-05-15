@@ -16893,7 +16893,6 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
-
     "Ocean Way HR5": {
         "brand": "Ocean Way",
         "model": "HR5",
@@ -22620,7 +22619,6 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
-
     "Wilson Audio TuneTot": {
         "brand": "Wilson Audio",
         "model": "TuneTot",

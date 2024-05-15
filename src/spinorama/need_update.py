@@ -42,3 +42,18 @@ def need_update(filename: str, dependencies: list[str]) -> bool:
             return True
 
     return False
+
+
+def write_if_different(new_content: str, filename: str, force: bool):  # noqa: FBT001
+    """Write the new content to disk only if it is different from the current one.
+    The unchanged html files are then untouched and http cache effect is better.
+    """
+    identical = False
+    path = pathlib.Path(filename)
+    if path.exists():
+        old_content = path.read_text(encoding="utf-8")
+        if old_content == new_content:
+            identical = True
+
+    if not identical or force:
+        path.write_text(new_content, encoding="utf-8")
