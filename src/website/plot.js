@@ -477,14 +477,14 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         if (layout && layout['polar4'] && is_compact) {
             is_radar = true;
             layout.height = layout.width * 4;
-	    // fill defaults
-	    polars.forEach( (polar) => {
-		if (!layout[polar].domain) {
-		    layout[polar]['domain'] = {};
-		    layout[polar]['domain']['x'] = [0,1];
-		    layout[polar]['domain']['y'] = [0,1];
-		}
-	    });
+            // fill defaults
+            polars.forEach((polar) => {
+                if (!layout[polar].domain) {
+                    layout[polar]['domain'] = {};
+                    layout[polar]['domain']['x'] = [0, 1];
+                    layout[polar]['domain']['y'] = [0, 1];
+                }
+            });
             // full width
             layout.polar.domain.x = [0, 1];
             layout.polar2.domain.x = [0, 1];
@@ -497,7 +497,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             layout.polar4.domain.y = [start, start + len * 1];
             layout.polar3.domain.y = [start + len * 2 + gap * 2, start + len * 3 + gap * 2];
             layout.polar2.domain.y = [start + len * 1 + gap, start + len * 2 + gap];
-            layout.polar.domain.y  = [start + len * 3 + gap * 3, start + len * 4 + gap * 3];
+            layout.polar.domain.y = [start + len * 3 + gap * 3, start + len * 4 + gap * 3];
             // move legend up
             layout.legend.x = 0.5;
             layout.legend.xanchor = 'center';

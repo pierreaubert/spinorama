@@ -47,5 +47,6 @@ cache.*.h5
 .sass-cache
 build
 bin
+coverage
 coverage.xml
 recompute_eqs.sh

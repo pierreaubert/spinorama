@@ -16,8 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-/*global Plotly*/
 /*eslint no-undef: "error"*/
+
+import Plotly from 'plotly-dist-min';
 
 import { setGraph } from './plot.js';
 

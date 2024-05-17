@@ -23,32 +23,29 @@ import { show } from './misc.js';
 
 const parametersMapping = [
     // filters
-    {'selectorName': '#selectReviewer', 'urlParameter': 'reviewer', 'eventType': 'change'},
-    {'selectorName': '#selectQuality', 'urlParameter': 'quality', 'eventType': 'change'},
-    {'selectorName': '#selectShape', 'urlParameter': 'shape', 'eventType': 'change'},
-    {'selectorName': '#selectPower', 'urlParameter': 'power', 'eventType': 'change'},
-    {'selectorName': '#selectBrand', 'urlParameter': 'brand', 'eventType': 'change'},
-    {'selectorName': '#inputPriceMin', 'urlParameter': 'priceMin', 'eventType': 'change'},
-    {'selectorName': '#inputPriceMax', 'urlParameter': 'priceMax', 'eventType': 'change'},
-    {'selectorName': '#inputWeightMin', 'urlParameter': 'weightMin', 'eventType': 'change'},
-    {'selectorName': '#inputWeightMax', 'urlParameter': 'weightMax', 'eventType': 'change'},
-    {'selectorName': '#inputHeightMin', 'urlParameter': 'heightMin', 'eventType': 'change'},
-    {'selectorName': '#inputHeightMax', 'urlParameter': 'heightMax', 'eventType': 'change'},
-    {'selectorName': '#inputWidthMin', 'urlParameter': 'widthMin', 'eventType': 'change'},
-    {'selectorName': '#inputWidthMax', 'urlParameter': 'widthMax', 'eventType': 'change'},
-    {'selectorName': '#inputDepthMin', 'urlParameter': 'depthMin', 'eventType': 'change'},
-    {'selectorName': '#inputDepthMax', 'urlParameter': 'depthMax', 'eventType': 'change'},
+    { selectorName: '#selectReviewer', urlParameter: 'reviewer', eventType: 'change' },
+    { selectorName: '#selectQuality', urlParameter: 'quality', eventType: 'change' },
+    { selectorName: '#selectShape', urlParameter: 'shape', eventType: 'change' },
+    { selectorName: '#selectPower', urlParameter: 'power', eventType: 'change' },
+    { selectorName: '#selectBrand', urlParameter: 'brand', eventType: 'change' },
+    { selectorName: '#inputPriceMin', urlParameter: 'priceMin', eventType: 'change' },
+    { selectorName: '#inputPriceMax', urlParameter: 'priceMax', eventType: 'change' },
+    { selectorName: '#inputWeightMin', urlParameter: 'weightMin', eventType: 'change' },
+    { selectorName: '#inputWeightMax', urlParameter: 'weightMax', eventType: 'change' },
+    { selectorName: '#inputHeightMin', urlParameter: 'heightMin', eventType: 'change' },
+    { selectorName: '#inputHeightMax', urlParameter: 'heightMax', eventType: 'change' },
+    { selectorName: '#inputWidthMin', urlParameter: 'widthMin', eventType: 'change' },
+    { selectorName: '#inputWidthMax', urlParameter: 'widthMax', eventType: 'change' },
+    { selectorName: '#inputDepthMin', urlParameter: 'depthMin', eventType: 'change' },
+    { selectorName: '#inputDepthMax', urlParameter: 'depthMax', eventType: 'change' },
     // search
-    {'selectorName': '#searchInput', 'urlParameter': 'search', 'eventType': 'keyup'},
+    { selectorName: '#searchInput', urlParameter: 'search', eventType: 'keyup' },
     // sort
-    {'selectorName': '#sortBy', 'urlParameter': 'sort', 'eventType': 'change'},
-    {'selectorName': '#sortReverse', 'urlParameter': 'reverse', 'eventType': 'change'}
+    { selectorName: '#sortBy', urlParameter: 'sort', eventType: 'change' },
+    { selectorName: '#sortReverse', urlParameter: 'reverse', eventType: 'change' },
 ];
 
-const urlToSelectorName = new Map(
-    parametersMapping.map(
-	(v) => [v['urlParameter'], v['selectorName']]
-    ));
+const urlToSelectorName = new Map(parametersMapping.map((v) => [v['urlParameter'], v['selectorName']]));
 
 const knownSorter = new Set([
     'brand',
@@ -65,7 +62,7 @@ const knownSorter = new Set([
     'scoreWSUB',
     'sensitivity',
     'weight',
-    'width'
+    'width',
 ]);
 
 // function printParams(params) {
@@ -89,18 +86,18 @@ function sortParameters2Sort(url) {
     };
     if (url.searchParams.has('sort')) {
         const sortParams = url.searchParams.get('sort');
-	if (knownSorter.has(sortParams)) {
+        if (knownSorter.has(sortParams)) {
             sorter.by = sortParams;
-	    const selectorName = urlToSelectorName.get('sort');
-	    let selector = document.querySelector(selectorName);
-	    if (selector) {
-		selector.value = sortParams;
-	    } else {
-		console.log('Error: selector ' + selectorName + ' is unknown!');
-	    }
-	} else {
-	    console.log('Error: sort function ' + sortParams + ' is unknown!');
-	}
+            const selectorName = urlToSelectorName.get('sort');
+            let selector = document.querySelector(selectorName);
+            if (selector) {
+                selector.value = sortParams;
+            } else {
+                console.log('Error: selector ' + selectorName + ' is unknown!');
+            }
+        } else {
+            console.log('Error: sort function ' + sortParams + ' is unknown!');
+        }
     }
 
     if (url.searchParams.has('reverse')) {
@@ -116,9 +113,9 @@ function sortParameters2Sort(url) {
     const selectorName = urlToSelectorName.get('reverse');
     let selector = document.querySelector(selectorName);
     if (selector) {
-	selector.value = sorter.reverse;
+        selector.value = sorter.reverse;
     } else {
-	console.log('Error: selector ' + selectorName + ' is unknown!');
+        console.log('Error: selector ' + selectorName + ' is unknown!');
     }
 
     return sorter;
@@ -145,13 +142,13 @@ function filtersParameters2Sort(url) {
     for (const filterName of Object.keys(filters)) {
         if (url.searchParams.has(filterName)) {
             filters[filterName] = url.searchParams.get(filterName);
-	    const selectorName = urlToSelectorName.get(filterName);
-	    let selector = document.querySelector(selectorName);
-	    if (selector) {
-		selector.value = filters[filterName];
-	    } else {
-		console.log('Error: filter selector '+filterName+' is unknown!');
-	    }
+            const selectorName = urlToSelectorName.get(filterName);
+            let selector = document.querySelector(selectorName);
+            if (selector) {
+                selector.value = filters[filterName];
+            } else {
+                console.log('Error: filter selector ' + filterName + ' is unknown!');
+            }
         }
     }
     return filters;
@@ -161,13 +158,13 @@ function keywordsParameters2Sort(url) {
     let keywords = '';
     if (url.searchParams.has('search')) {
         keywords = url.searchParams.get('search');
-	const selectorName = urlToSelectorName.get('search');
-	let selector = document.querySelector(selectorName);
-	if (selector) {
-	    selector.value = keywords.toString();
-	} else {
-	    console.log('Error: search selector ' + selectorName + ' is unknown!');
-	}
+        const selectorName = urlToSelectorName.get('search');
+        let selector = document.querySelector(selectorName);
+        if (selector) {
+            selector.value = keywords.toString();
+        } else {
+            console.log('Error: search selector ' + selectorName + ' is unknown!');
+        }
     }
     return keywords;
 }
@@ -209,7 +206,6 @@ export function urlParameters2Sort(url) {
 }
 
 export function sortMetadata2(metadata, sorter, results) {
-
     const sortChildren2 = ({ container, score, reverse }) => {
         // console.log('sorting2 by '+score)
         const items = [...container.keys()];
@@ -230,17 +226,17 @@ export function sortMetadata2(metadata, sorter, results) {
 
     function getDateV2(key) {
         const spk = metadata.get(key);
-	let date = 19700101;
+        let date = 19700101;
         // comparing ints (works because 20210101 is bigger than 20201010)
-	for( const reviewer in spk.measurements) {
-	    const msr = spk.measurements[reviewer];
-	    if (msr && 'review_published' in msr) {
-		const reviewPublished = parseInt(msr.review_published);
-		if (!isNaN(reviewPublished)) {
+        for (const reviewer in spk.measurements) {
+            const msr = spk.measurements[reviewer];
+            if (msr && 'review_published' in msr) {
+                const reviewPublished = parseInt(msr.review_published);
+                if (!isNaN(reviewPublished)) {
                     date = Math.max(reviewPublished, date);
-		}
-	    }
-	}
+                }
+            }
+        }
         return date;
     }
 
@@ -386,15 +382,15 @@ export function sortMetadata2(metadata, sorter, results) {
     }
 
     // if we have keywords, then sort by quality of match
-    if (results != null ) {
+    if (results != null) {
         return sortChildren2({
             container: metadata,
             score: (k) => {
-		if (results.has(k)) {
-		    return results.get(k).score;
-		}
-		return 1000;
-	    },
+                if (results.has(k)) {
+                    return results.get(k).score;
+                }
+                return 1000;
+            },
             reverse: true,
         });
     }
@@ -520,7 +516,7 @@ export function isFiltered(item, filter) {
             shouldShow = false;
         }
     }
-    if (filter.quality !== undefined && filter.quality !== '') {
+    if (shouldShow && filter.quality !== undefined && filter.quality !== '') {
         let found = true;
         for (const [, measurement] of Object.entries(item.measurements)) {
             const quality = measurement.quality.toLowerCase();
@@ -535,19 +531,27 @@ export function isFiltered(item, filter) {
         }
     }
     // console.log('debug: post quality ' + shouldShow)
-    if (filter.power !== undefined && filter.power !== '' && item.type !== filter.power) {
+    if (shouldShow && filter.power !== undefined && filter.power !== '' && item.type !== filter.power) {
         shouldShow = false;
     }
+
     // console.log('debug: post power ' + shouldShow)
-    if (filter.shape !== undefined && filter.shape !== '' && item.shape !== filter.shape) {
+    if (shouldShow && filter.shape !== undefined && filter.shape !== '' && item.shape !== filter.shape) {
         shouldShow = false;
     }
+
     // console.log('debug: post shape ' + shouldShow)
-    if (filter.brand !== undefined && filter.brand !== '' && item.brand.toLowerCase() !== filter.brand.toLowerCase()) {
+    if (
+        shouldShow &&
+        filter.brand !== undefined &&
+        filter.brand !== '' &&
+        item.brand.toLowerCase() !== filter.brand.toLowerCase()
+    ) {
         shouldShow = false;
     }
+
     // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.price+'<<<')
-    if (filter.price !== undefined && filter.price !== '') {
+    if (shouldShow && filter.price !== undefined && filter.price !== '') {
         // console.log('debug: pre price ' + filter.price)
         if (item.price !== '') {
             let price = parseInt(item.price);
@@ -607,38 +611,129 @@ export function isFiltered(item, filter) {
         }
         // console.log('debug: post price ' + shouldShow)
     }
-    // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.priceMin+','+filter.priceMax+'<<<')
+
     if (
-        (filter.priceMin !== undefined && filter.priceMin !== '') ||
-        (filter.priceMax !== undefined && filter.priceMax !== '')
+        shouldShow &&
+        ((filter.weightMin !== undefined && filter.weightMin !== '') ||
+            (filter.weightMax !== undefined && filter.weightMax !== ''))
     ) {
-        var priceMin = parseInt(filter.priceMin);
-        if (isNaN(priceMin)) {
-            priceMin = -1;
+        var weightMin = parseInt(filter.weightMin);
+        if (isNaN(weightMin)) {
+            weightMin = -1;
         }
-        var priceMax = parseInt(filter.priceMax);
-        if (isNaN(priceMax)) {
-            priceMax = Number.MAX_SAFE_INTEGER;
+        var weightMax = parseInt(filter.weightMax);
+        if (isNaN(weightMax)) {
+            weightMax = Number.MAX_SAFE_INTEGER;
         }
-        // console.log('debug: pre price ' + filter.price)
-        if (item.price !== '') {
-            let price = parseInt(item.price);
-            if (isNaN(price)) {
+        const msr = item.measurements[item.default_measurement];
+        if ('specifications' in msr && 'weight' in msr.specifications) {
+            let weight = parseInt(msr.specifications.weight);
+            // console.debug('pre weight ' + weightMin + ', ' + weightMax + ' and item.weight=' + msr.specifications.weight);
+            if (isNaN(weight)) {
                 shouldShow = false;
             } else {
-                if (item.amount === 'pair') {
-                    price /= 2.0;
-                }
-                if (price > priceMax || price < priceMin) {
+                if (weight > weightMax || weight < weightMin) {
                     shouldShow = false;
                 }
             }
         } else {
-            // no known price
+            // no known weight
             shouldShow = false;
         }
-        // console.log('debug: post price ' + shouldShow)
+        // console.debug('debug: post weight ' + shouldShow);
     }
+
+    if (
+        shouldShow &&
+        ((filter.heightMin !== undefined && filter.heightMin !== '') ||
+            (filter.heightMax !== undefined && filter.heightMax !== ''))
+    ) {
+        var heightMin = parseInt(filter.heightMin);
+        if (isNaN(heightMin)) {
+            heightMin = -1;
+        }
+        var heightMax = parseInt(filter.heightMax);
+        if (isNaN(heightMax)) {
+            heightMax = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('specifications' in msr && 'size' in msr.specifications && 'height' in msr.specifications.size) {
+            let height = parseInt(msr.specifications.size.height);
+            // console.debug('pre height ' + heightMin + ', ' + heightMax + ' and item.height=' + msr.specifications.size.height);
+            if (isNaN(height)) {
+                shouldShow = false;
+            } else {
+                if (height > heightMax || height < heightMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            // no known height
+            shouldShow = false;
+        }
+        // console.debug('debug: post height ' + shouldShow);
+    }
+
+    if (
+        shouldShow &&
+        ((filter.depthMin !== undefined && filter.depthMin !== '') || (filter.depthMax !== undefined && filter.depthMax !== ''))
+    ) {
+        var depthMin = parseInt(filter.depthMin);
+        if (isNaN(depthMin)) {
+            depthMin = -1;
+        }
+        var depthMax = parseInt(filter.depthMax);
+        if (isNaN(depthMax)) {
+            depthMax = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('specifications' in msr && 'size' in msr.specifications && 'depth' in msr.specifications.size) {
+            let depth = parseInt(msr.specifications.size.depth);
+            // console.debug('pre depth ' + depthMin + ', ' + depthMax + ' and item.depth=' + msr.specifications.size.depth);
+            if (isNaN(depth)) {
+                shouldShow = false;
+            } else {
+                if (depth > depthMax || depth < depthMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            // no known depth
+            shouldShow = false;
+        }
+        // console.debug('debug: post depth ' + shouldShow);
+    }
+
+    if (
+        shouldShow &&
+        ((filter.widthMin !== undefined && filter.widthMin !== '') || (filter.widthMax !== undefined && filter.widthMax !== ''))
+    ) {
+        var widthMin = parseInt(filter.widthMin);
+        if (isNaN(widthMin)) {
+            widthMin = -1;
+        }
+        var widthMax = parseInt(filter.widthMax);
+        if (isNaN(widthMax)) {
+            widthMax = Number.MAX_SAFE_INTEGER;
+        }
+        const msr = item.measurements[item.default_measurement];
+        if ('specifications' in msr && 'size' in msr.specifications && 'width' in msr.specifications.size) {
+            let width = parseInt(msr.specifications.size.width);
+            // console.debug('pre width ' + widthMin + ', ' + widthMax + ' and item.width=' + msr.specifications.size.width);
+            if (isNaN(width)) {
+                shouldShow = false;
+            } else {
+                if (width > widthMax || width < widthMin) {
+                    shouldShow = false;
+                }
+            }
+        } else {
+            // no known width
+            shouldShow = false;
+        }
+        // console.debug('debug: post width ' + shouldShow);
+    }
+
     return shouldShow;
 }
 
@@ -682,13 +777,13 @@ export function isSearch(key, results, minScore, keywords) {
 function isWithinPage(count, pagination) {
     const page = pagination.page;
     const size = pagination.count;
-    if (!pagination.active || (count >= (page-1) * size && count <= page * size)) {
+    if (!pagination.active || (count >= (page - 1) * size && count <= page * size)) {
         return true;
     }
     return false;
 }
 
-export function process(data, params, printer) {
+export function search(data, params) {
     const fuse = new Fuse(
         // Fuse take a list not a map
         [...data].map((item) => ({ key: item[0], speaker: item[1] })),
@@ -705,12 +800,12 @@ export function process(data, params, printer) {
             shouldSort: true,
         }
     );
-    const fragment = new DocumentFragment();
+
     const sorter = params[0];
     const filters = params[1];
     const keywords = params[2];
     const pagination = params[3];
-    let results = null;
+    let resultsFullText = null;
     let minScore = 1;
     if (keywords !== '') {
         const fuse_results = fuse.search(keywords);
@@ -723,80 +818,95 @@ export function process(data, params, printer) {
                 }
             }
         }
-        results = new Map(fuse_results.map((obj) => [obj.item.key, obj]));
+        resultsFullText = new Map(fuse_results.map((obj) => [obj.item.key, obj]));
     }
 
+    const resultsFiltered = [];
     let currentDisplay = 0;
-    sortMetadata2(data, sorter, results).forEach((key, index) => {
+    let maxDisplay = 0;
+    const targetDisplay = pagination.count;
+    sortMetadata2(data, sorter, resultsFullText).forEach((key, index) => {
         const speaker = data.get(key);
         const testFiltered = isFiltered(speaker, filters);
-        const testKeywords = isSearch(key, results, minScore, keywords);
-        const withinPage = isWithinPage(index, pagination);
-	// console.log(speaker.brand+' '+speaker.model+' '+testFiltered+' '+testKeywords+' '+withinPage);
-        if (testFiltered && testKeywords && withinPage && currentDisplay < pagination.count) {
-            const currentFragment = printer(key, currentDisplay, speaker);
-            show(currentFragment);
-            fragment.appendChild(currentFragment);
-	    currentDisplay += 1;
+        const testKeywords = isSearch(key, resultsFullText, minScore, keywords);
+        const withinPage = isWithinPage(currentDisplay, pagination);
+        // console.debug(speaker.brand+' '+speaker.model+' '+testFiltered+' '+testKeywords+' '+withinPage);
+        if (currentDisplay < targetDisplay) {
+            if (testFiltered && testKeywords && withinPage && currentDisplay < targetDisplay) {
+                resultsFiltered.push(key);
+                currentDisplay += 1;
+                maxDisplay += 1;
+            } else if (testFiltered && testKeywords) {
+                maxDisplay += 1;
+            }
         }
     });
-    return fragment;
+    return [maxDisplay, resultsFiltered];
+}
+
+export function process(data, params, printer) {
+    const [maxResults, results] = search(data, params);
+    const fragment = new DocumentFragment();
+    results.forEach((key, index) => {
+        const speaker = data.get(key);
+        const current = printer(key, index, speaker);
+        show(current);
+        fragment.appendChild(current);
+    });
+    return [maxResults, fragment];
 }
 
 export function setupEventListener(metadata, speaker2html, mainDiv) {
-
     function update(element, urlParameter, parentDiv) {
-	const url = new URL(window.location);
-	if (element.id === 'searchInput' && element.value) {
-	    // disable search for short words?
-	    // if (element.value.length <= 2) {
-	    //   return;
-	    // }
-	    // remove pagination if it was not a search before
-	    if (!url.searchParams.has('search')) {
-		url.searchParams.set('page', 1);
-	    }
-	}
-	if (element.id === 'sortReverse') {
-	    let reverseValue = "false";
-	    if (element.checked) {
-		reverseValue = "true";
-	    }
-	    url.searchParams.set(urlParameter, reverseValue);
-	    // console.log('Info: '+urlParameter + ' changed to ' + element.value);
-	} else {
-	    if (element.value !== '') {
-		url.searchParams.set(urlParameter, element.value);
-		// console.log('Info: '+urlParameter + ' changed to ' + element.value);
-	    } else {
-		url.searchParams.delete(urlParameter);
-		// console.log('Info: '+urlParameter + ' removed');
-	    }
-	}
-	window.history.pushState({}, '', url);
-	const params = urlParameters2Sort(url);
-	// printParams(params);
-	const fragment = process(metadata, params, speaker2html);
-	// very slow if long list
-	while (parentDiv.firstChild) {
-	    parentDiv.removeChild(parentDiv.firstChild);
-	}
-	parentDiv.appendChild(fragment);
-	show(parentDiv);
+        const url = new URL(window.location);
+        if (element.id === 'searchInput' && element.value) {
+            // disable search for short words?
+            // if (element.value.length <= 2) {
+            //   return;
+            // }
+            // remove pagination if it was not a search before
+            if (!url.searchParams.has('search')) {
+                url.searchParams.set('page', 1);
+            }
+        }
+        if (element.id === 'sortReverse') {
+            let reverseValue = 'false';
+            if (element.checked) {
+                reverseValue = 'true';
+            }
+            url.searchParams.set(urlParameter, reverseValue);
+            // console.log('Info: '+urlParameter + ' changed to ' + element.value);
+        } else {
+            if (element.value !== '') {
+                url.searchParams.set(urlParameter, element.value);
+                // console.log('Info: '+urlParameter + ' changed to ' + element.value);
+            } else {
+                url.searchParams.delete(urlParameter);
+                // console.log('Info: '+urlParameter + ' removed');
+            }
+        }
+        window.history.pushState({}, '', url);
+        const params = urlParameters2Sort(url);
+        // printParams(params);
+        const fragment = process(metadata, params, speaker2html);
+        // very slow if long list
+        while (parentDiv.firstChild) {
+            parentDiv.removeChild(parentDiv.firstChild);
+        }
+        parentDiv.appendChild(fragment);
+        show(parentDiv);
     }
-    
-    parametersMapping.forEach( (parameter) => {
-	const selectorName = parameter['selectorName'];
-	const urlParameter = parameter['urlParameter'];
-	const eventType    = parameter['eventType'];
-	// console.log('processing '+selectorName+' with '+eventType);
-	let element = document.querySelector(selectorName); 
-	if (element) {
-	    element.addEventListener(eventType, () => update(element, urlParameter, mainDiv));
-	} else {
-	    console.log('Error: Element '+selectorName+' not found');
-	}
+
+    parametersMapping.forEach((parameter) => {
+        const selectorName = parameter['selectorName'];
+        const urlParameter = parameter['urlParameter'];
+        const eventType = parameter['eventType'];
+        // console.log('processing '+selectorName+' with '+eventType);
+        let element = document.querySelector(selectorName);
+        if (element) {
+            element.addEventListener(eventType, () => update(element, urlParameter, mainDiv));
+        } else {
+            console.log('Error: Element ' + selectorName + ' not found');
+        }
     });
-
 }
-

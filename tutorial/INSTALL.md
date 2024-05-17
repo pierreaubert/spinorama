@@ -46,11 +46,15 @@ For linting the python, html and javascript code or generating helpers:
 npm install --save-dev pyright w3c-html-validator standard flow flow-remove-types terser prettier eslint workbox-cli workbox-window
 ```
 
-Please add tests and run all of them:
-
+Please add tests and run them. 
+For Python files:
 ```
 export PYTHONPATH=src
-python3 -m pytest --cov=src .
+python3 -m pytest --cov=src tests
+```
+and for javascript files:
+```
+npx vitest
 ```
 
 Before committing, please check that the various checks are fine:

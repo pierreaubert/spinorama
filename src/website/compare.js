@@ -18,26 +18,11 @@
 
 /*eslint no-undef: "error"*/
 
-// import Plotly from '/js3rd/plotly-${versions["PLOTLY"]}${min}.mjs';
+import Plotly from 'plotly-dist-min';
 
-import {
-    urlSite
-} from './meta.js';
-import {
-    getMetadata,
-    assignOptions,
-    getAllSpeakers,
-    getSpeakerData
-} from './download.js';
-import {
-    knownMeasurements,
-    setContour,
-    setGlobe,
-    setGraph,
-    setCEA2034,
-    setRadar,
-    setSurface,
-} from './plot.js';
+import { urlSite } from './meta.js';
+import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
+import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setSurface } from './plot.js';
 
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin

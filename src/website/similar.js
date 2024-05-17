@@ -18,7 +18,7 @@
 
 /*eslint no-undef: "error"*/
 
-// import Plotly from '/js3rd/plotly-${versions["PLOTLY"]}${min}.mjs';
+import Plotly from 'plotly-dist-min';
 
 import { getMetadata, assignOptions, getSpeakerData } from './download.js';
 import { knownMeasurements, setCEA2034, setContour, setGraph, setGlobe, setRadar, setSurface } from './plot.js';

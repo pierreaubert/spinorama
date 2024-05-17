@@ -13,7 +13,7 @@ You should see a long help with all the options. If not, please open a ticket [h
 ## Check metadata
 
 ```
-./check_meta.py
+./scripts/check_meta.py
 ```
 Should return 0 and if not will explain to you what is incorrect in the metadata file.
 This file is a json file but the checker enforce more constraints.
@@ -81,7 +81,7 @@ generates a picture per speaker showning the improvement to the speaker if you u
 will generate all HTML files. If you want to generate a dev site you can change the default URL with
 
 ```
-./generate_html.py --dev --sitedev=https://spinorama.internet-box.ch
+./generate_html.py --optim --dev --sitedev=https://spinorama.internet-box.ch
 ```
 and I usually copy all generated files to where the httpd daemon can use them:
 ```
@@ -99,7 +99,7 @@ export SPEAKER='Genelec S360'
 Then let's run the autoEQ:
 
 ```
-./generate_peqs.py --speaker="$SPEAKER" --force --verbose
+./generate_peqs.py --speaker="$SPEAKER" --force --verbose --optimisation=global --max-iter=5000 --fitness=Flat
 ```
 output should looks like:
 ```
@@ -128,7 +128,7 @@ So what's happening?
 - It start a parallel evaluation running on a Ray cluster (your machine by default)
 - Since we are optimising 1 speaker only, it just queued 1 job.
 - Results shows the various parameters of the tonality score with and without EQ, with and without a large subwoofer.
-- It also generate a picture in './docs/speaker/$SPEAKER/*/filters_eq.png' that shows the current results on the speaker.
+- It also generate a set of pictures in './docs/speaker/$SPEAKER/*/filters_eq.png' that shows the current results on the speaker.
 ![image](https://github.com/pierreaubert/spinorama/blob/develop/tutorial/picts/autoEQ/genelec_s360_v1.png)
 
 Here the generated EQ:

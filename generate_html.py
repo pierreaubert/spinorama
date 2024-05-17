@@ -96,7 +96,7 @@ def get_versions(filename):
     return versions
 
 
-def adapt_imports(jscode, versions, jsfiles):
+def adapt_imports(jscode, versions, js_files):
     """ " replace import statements
 
     The source code is compatible with node / vite / vitess.
@@ -107,19 +107,28 @@ def adapt_imports(jscode, versions, jsfiles):
     This is very very basic.
     """
     replacements = [
-        (" from 'fuse.js';", " from '/js3rd/fuse-{}.min.mjs';".format(versions["FUSE"])),
+        (
+            " from 'fuse.js';",
+            " from '/js3rd/fuse-{}.min.mjs';".format(versions["FUSE"])),
         (
             " from 'handlebars.js';",
             " from '/js3rd/handlebars-{}.min.js';".format(versions["HANDLEBARS"]),
         ),
-        # (
-        #    " from 'plotly-dist-min.js';",
-        #    " from '/js3rd/plotly-{}.min.mjs';".format(versions['PLOTLY'])
-        # ),
-        (r"}} from '\.\/({})\.js';".format("|".join(jsfiles)), r"} from '/js/\1.js';"),
+        (
+            "import Plotly from 'plotly-dist-min';",
+            "", # because module support is complicated :(
+        ),
+    ]
+    re_replacements = [
+        (
+            r"}} from '\.\/({})\.js';".format("|".join(js_files)),
+            r"}} from '/js/\1-{}.min.js';".format(CACHE_VERSION),
+        ),
     ]
     code = jscode
-    for re_from, re_to in replacements:
+    for str_from, str_to in replacements:
+        code = code.replace(str_from, str_to)
+    for re_from, re_to in re_replacements:
         code = re.sub(re_from, re_to, code)
 
     return code
@@ -529,14 +538,22 @@ def main():
                     ]
                 )
             )
+            # pipeline
+            item_name        = "{}.js".format(item)
+            item_original    = "{}/{}.js".format(cpaths.CPATH_WEBSITE, item)
+            item_mako_tmpl   = "{}-0-flow.js".format(item)
+            item_post_flow   = "{}/{}-0-flow.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
+            item_post_mako   = "{}/{}-1-mako.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
+            item_post_import = "{}/{}-2-import.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
+            item_post_terser = "{}/{}-3-terser.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
+            item_dist        = "{}/{}-{}.min.js".format(cpaths.CPATH_DOCS_JS, item, CACHE_VERSION)
+            
             # cleanup flow directives: currently unused
-            item_original = "{}/{}.js".format(cpaths.CPATH_WEBSITE, item)
-            item_filename = "{}/{}-0-flow.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             flow_bin = "./node_modules/.bin/flow-remove-types"
             flow_param = ""  # "--pretty --sourcemaps"
 
             flow_command = "{} {} {} > {}".format(
-                flow_bin, flow_param, item_original, item_filename
+                flow_bin, flow_param, item_original, item_post_flow
             )
             status = subprocess.run(
                 [flow_command], shell=True, check=True, capture_output=True  # noqa: S602
@@ -544,51 +561,53 @@ def main():
             if status.returncode != 0:
                 print("flow failed for %s", item_name)
 
-            # build first generation with metadata expension
-            item_name = "{}.js".format(item)
-            item_mako = "{}-0-flow.js".format(item)
-            item_html = mako_templates.get_template(item_mako)
-            eqdata_filename = eqdata_json_filename[len_docs:]
-            item_content = item_html.render(
-                df=main_df,
-                meta=meta_sorted_score,
-                site=site,
-                metadata_filename=metadata_filename,
-                metadata_filename_head=metadata_filename_head,
-                metadata_filename_chunks=js_chunks,
-                eqdata_filename=eqdata_filename,
-                min=".min" if flag_optim else "",
-                versions=versions,
-            )
-            item_filename = "{}/{}-1-gen.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
-            write_if_different(item_content, item_filename, force=True)
+            # build first generation with metadata expension, now only useful for meta.js
+            if item == 'meta':
+                item_html = mako_templates.get_template(item_mako_tmpl)
+                eqdata_filename = eqdata_json_filename[len_docs:]
+                item_content = item_html.render(
+                    df=main_df,
+                    meta=meta_sorted_score,
+                    site=site,
+                    metadata_filename=metadata_filename,
+                    metadata_filename_head=metadata_filename_head,
+                    metadata_filename_chunks=js_chunks,
+                    eqdata_filename=eqdata_filename,
+                    min=".min" if flag_optim else "",
+                    versions=versions,
+                )
+                write_if_different(item_content, item_post_mako, force=True)
+            else:
+                shutil.copy(item_post_flow, item_post_mako)            
 
             # change inport to match prod/dev and browser requirements
-            item_content = adapt_imports(item_content, versions, jsfiles)
-            item_filename = "{}/{}-2-imp.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
-            write_if_different(item_content, item_filename, force=True)
+            with open(item_post_mako, "r") as fd:
+                item_content = ''.join(fd.readlines())
+                item_content = adapt_imports(item_content, versions, jsfiles)
+                write_if_different(item_content, item_post_import, force=True)
 
             # compress files with terser
-            if flag_optim:
-                terser_command = "{0} {1}/{2} > {3}/{4}".format(
-                    "./node_modules/.bin/terser",
-                    cpaths.CPATH_BUILD_WEBSITE,
-                    "{}-2-imp.js".format(item),
-                    cpaths.CPATH_DOCS_JS,
-                    "{}-{}.min.js".format(item, CACHE_VERSION),
+            terser_command = "{0} {1} > {2}".format(
+                "./node_modules/.bin/terser",
+                item_post_import,
+                item_post_terser
+            )
+            # print(terser_command)
+            try:
+                status = subprocess.run(
+                    [terser_command], shell=True, check=True, capture_output=True  # noqa: S602
                 )
-                # print(terser_command)
-                try:
-                    status = subprocess.run(
-                        [terser_command], shell=True, check=True, capture_output=True  # noqa: S602
-                    )
-                    if status.returncode != 0:
-                        print("terser failed for item {}".format(item))
-                except subprocess.CalledProcessError as e:
-                    print("terser failed for item {} with {}".format(item, e))
+                if status.returncode != 0:
+                    print("terser failed for item {}".format(item))
+            except subprocess.CalledProcessError as e:
+                print("terser failed for item {} with {}".format(item, e))
+
             # optimise files with critical
-            if flag_optim:
-                pass
+            # TBD
+            
+            # copy last file
+            shutil.copy(item_post_terser, item_dist)
+            
     except KeyError as key_error:
         print("Generating various html files failed with {}".format(key_error))
         sys.exit(1)

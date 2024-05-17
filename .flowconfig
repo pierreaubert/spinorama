@@ -3,7 +3,6 @@
 
 [include]
 ./src/website/.*
-./src/website/assets/.*
 
 [libs]
 

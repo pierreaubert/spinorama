@@ -21,7 +21,7 @@ import unittest
 
 import spinorama.constant_paths as cpaths
 
-from generate_html import adapt_imports, get_versions, get_files
+from generate_html import adapt_imports, get_versions, get_files, CACHE_VERSION
 
 
 class JSImportTests(unittest.TestCase):
@@ -40,6 +40,13 @@ class JSImportTests(unittest.TestCase):
         transformed = adapt_imports(code, self.versions, self.jsfiles)
         self.assertIn("/js3rd", transformed)
         self.assertIn(self.versions["FUSE"], transformed)
+
+    def test_import_plotly(self):
+        code = "import Plotly from 'plotly-dist-min';"
+        transformed = adapt_imports(code, self.versions, self.jsfiles)
+        self.assertNotIn("/js3rd", transformed)
+        self.assertNotIn("/js", transformed)
+        self.assertNotIn("Plotly", transformed)
 
     def test_import_multi(self):
         code = """
@@ -66,9 +73,9 @@ import {
         """
         transformed = adapt_imports(code, self.versions, self.jsfiles)
         self.assertIn("/js3rd", transformed)
-        self.assertIn("/js/download.js", transformed)
-        self.assertIn("/js/meta.js", transformed)
-        self.assertIn("/js/plot.js", transformed)
+        self.assertIn("/js/download-{}.min.js".format(CACHE_VERSION), transformed)
+        self.assertIn("/js/meta-{}.min.js".format(CACHE_VERSION), transformed)
+        self.assertIn("/js/plot-{}.min.js".format(CACHE_VERSION), transformed)
         self.assertIn(self.versions["FUSE"], transformed)
 
 

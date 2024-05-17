@@ -21,21 +21,21 @@
 // hide an element
 export const hide = (elem) => {
     if (elem && elem.classList) {
-	elem.classList.add('hidden');
+        elem.classList.add('hidden');
     }
 };
 
 // show an element
 export const show = (elem) => {
     if (elem && elem.classList) {
-	elem.classList.remove('hidden');
+        elem.classList.remove('hidden');
     }
 };
 
 // toggle the element visibility
 export const toggle = (elem) => {
     if (elem && elem.classList) {
-	elem.classList.toggle('hidden');
+        elem.classList.toggle('hidden');
     }
 };
 
@@ -48,13 +48,13 @@ export function toggleId(id) {
 
 export function openModal(elem) {
     if (elem && elem.classList) {
-	elem.classList.add('is-active');
+        elem.classList.add('is-active');
     }
 }
 
 export function closeModal(elem) {
     if (elem && elem.classList) {
-	elem.classList.remove('is-active');
+        elem.classList.remove('is-active');
     }
 }
 

@@ -22,6 +22,7 @@
 import { getEQdata } from './download.js';
 import { openModal, closeModal, getPeq, getID } from './misc.js';
 import { process, urlParameters2Sort } from './search.js';
+import { pagination } from './pagination.js';
 
 function getPictureEqCompare(brand, model, suffix) {
     return encodeURI('speakers/' + brand + ' ' + model + '/eq_compare.' + suffix);
@@ -156,7 +157,11 @@ getEQdata()
             return process(data, params, speakerHtml);
         }
 
-        speakerContainer.appendChild(display(metadata, printEQ));
+        const [maxResults, fragment] = display(metadata, printEQ);
+        speakerContainer.appendChild(fragment);
+        pagination(maxResults);
+
+        // should be done once
         speakerContainer.addEventListener('keydown', (event) => {
             const e = event || window.event;
             if (e.keyCode === 27) {

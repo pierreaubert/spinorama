@@ -27,7 +27,6 @@ function urlChangePage(url, newpage) {
 }
 
 export function pagination(numberSpeakers) {
-    // the ${} for mako is replaced by ${"$"} because mako is ran twice on this file
     const navigationContainer = document.querySelector('#pagination');
     const navHeader = '<nav class="pagination" role="navigation" aria-label="pagination">';
     const navFooter = '</nav>';
@@ -48,7 +47,7 @@ export function pagination(numberSpeakers) {
         if (currentPage == 1) {
             disabled = ' is-disabled';
         }
-        html += '<a href="' + urlChangePage(url, prevPage) + '" class="pagination-previous'+disabled+'">Prev</a>';
+        html += '<a href="' + urlChangePage(url, prevPage) + '" class="pagination-previous' + disabled + '">Prev</a>';
         html += '<a href=' + urlChangePage(url, nextPage) + ' class="pagination-next">Next</a>';
         html += '<ul class="pagination-list">';
         for (let i = 1; i <= Math.min(3, maxPage); i++) {
@@ -58,12 +57,25 @@ export function pagination(numberSpeakers) {
             }
             html +=
                 '<li><a href="' +
-                urlChangePage(url, i) +
-                `" class="pagination-link ${'$'}{current}" aria-label="Goto page ${'$'}{i}">${'$'}{i}</a></li>`;
+		urlChangePage(url, i) +
+                ' class="pagination-link ' +
+		current +
+		'" aria-label="Goto page ' +
+		i +
+		'">' +
+		i +
+		'</a></li>';
         }
         if (maxPage > 5) {
             html += '<li><span class="pagination-ellipsis">&hellip;</span></li>';
-            html += '<li><a href="' +  urlChangePage(url, maxPage) + '" class="pagination-link" aria-label="Goto page '+maxPage+'">'+maxPage+'</a></li>';
+            html +=
+                '<li><a href="' +
+                urlChangePage(url, maxPage) +
+                '" class="pagination-link" aria-label="Goto page ' +
+                maxPage +
+                '">' +
+                maxPage +
+                '</a></li>';
         }
         html += '</ul>';
     } else if (maxPage - currentPage <= 3) {
@@ -71,14 +83,14 @@ export function pagination(numberSpeakers) {
         if (currentPage == maxPage) {
             disabled = ' is-disabled';
         }
-        html += '<a href="' + urlChangePage(url, prevPage) + '" class="pagination-previous ${"$"}">Prev</a>';
-        html += '<a href=' + urlChangePage(url, nextPage) + ' class="pagination-next'+disabled+'">Next</a>';
+        html += '<a href="' + urlChangePage(url, prevPage) + '" class="pagination-previous">Prev</a>';
+        html += '<a href=' + urlChangePage(url, nextPage) + ' class="pagination-next' + disabled + '">Next</a>';
         html += '<ul class="pagination-list">';
         if (maxPage > 5) {
             html += '<li><a href="' + urlChangePage(url, 1) + '" class="pagination-link" aria-label="Goto page 1">1</a></li>';
             html += '<li><span class="pagination-ellipsis">&hellip;</span></li>';
         }
-        for (let i = Math.max(1, maxPage-3); i <= maxPage; i++) {
+        for (let i = Math.max(1, maxPage - 3); i <= maxPage; i++) {
             let current = '';
             if (i === currentPage) {
                 current = 'is-current';
@@ -86,26 +98,48 @@ export function pagination(numberSpeakers) {
             html +=
                 '<li><a href="' +
                 urlChangePage(url, i) +
-                '" class="pagination-link '+current+'" aria-label="Goto page '+i+'">'+i+'</a></li>';
+                '" class="pagination-link ' +
+                current +
+                '" aria-label="Goto page ' +
+                i +
+                '">' +
+                i +
+                '</a></li>';
         }
         html += '</ul>';
     } else {
-        html += '<a href="' + urlChangePage(url, prevPage) + '" class="pagination-previous ${"$"}">Prev</a>';
+        html += '<a href="' + urlChangePage(url, prevPage) + '" class="pagination-previous">Prev</a>';
         html += '<a href=' + urlChangePage(url, nextPage) + ' class="pagination-next">Next</a>';
         html += '<ul class="pagination-list">';
         html += '<li><a href="' + urlChangePage(url, 1) + '" class="pagination-link" aria-label="Goto page 1">1</a></li>';
         html += '<li><span class="pagination-ellipsis">&hellip;</span></li>';
-        for (let i = currentPage-2; i <= currentPage+2; i++) {
+        for (let i = currentPage - 2; i <= currentPage + 2; i++) {
             let current = '';
             if (i === currentPage) {
                 current = 'is-current';
             }
-	    if (i !== currentPage-1 && i !== currentPage+1) {
-		html += '<li><a href="' + urlChangePage(url, i) + '" class="pagination-link '+current+'" aria-label="Goto page '+i+'">'+i+'</a></li>';
-	    }
+            if (i !== currentPage - 1 && i !== currentPage + 1) {
+                html +=
+                    '<li><a href="' +
+                    urlChangePage(url, i) +
+                    '" class="pagination-link ' +
+                    current +
+                    '" aria-label="Goto page ' +
+                    i +
+                    '">' +
+                    i +
+                    '</a></li>';
+            }
         }
         html += '<li><span class="pagination-ellipsis">&hellip;</span></li>';
-        html += '<li><a href="' +  urlChangePage(url, maxPage) + '" class="pagination-link" aria-label="Goto page '+maxPage+'">'+maxPage+'</a></li>';
+        html +=
+            '<li><a href="' +
+            urlChangePage(url, maxPage) +
+            '" class="pagination-link" aria-label="Goto page ' +
+            maxPage +
+            '">' +
+            maxPage +
+            '</a></li>';
         html += '</ul>';
     }
     html += navFooter;
@@ -116,4 +150,3 @@ export function pagination(numberSpeakers) {
     divNavigation.innerHTML = html;
     navigationContainer.appendChild(divNavigation);
 }
-
