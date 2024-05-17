@@ -893,7 +893,7 @@ export function setupEventListener(metadata, speaker2html, mainDiv) {
         while (parentDiv.firstChild) {
             parentDiv.removeChild(parentDiv.firstChild);
         }
-        parentDiv.appendChild(fragment);
+        parentDiv.appendChild(fragment[1]);
         show(parentDiv);
     }
 

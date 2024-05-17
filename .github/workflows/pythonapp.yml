@@ -38,5 +38,4 @@ jobs:
         PYTHONPATH=.:./src cd src/spinorama && python setup.py build_ext --inplace && ln -s c_compute_scores.cpython-*.so c_compute_scores.so
     - name: Test with pytest
       run: |
-        pip install pytest
-        PYTHONPATH=src pytest tests
+        PYTHONPATH=.:./src:./src/spinorama:./src/website pytest tests
