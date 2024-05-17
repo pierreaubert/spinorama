@@ -16885,8 +16885,8 @@ speakers_info: SpeakerDatabase = {
                     "impedance": 4,
                     "size": {
                         "height": 490,
-                        "width": 23.4,
-                        "depth": 37.5,
+                        "width": 234,
+                        "depth": 375,
                     },
                     "weight": 16.0,
                 },
@@ -21796,9 +21796,9 @@ speakers_info: SpeakerDatabase = {
                 "review_published": "20240414",
                 "specifications": {
                     "size": {
-                        "height": 53.34,
-                        "width": 53.34,
-                        "depth": 22.86,
+                        "height": 533,
+                        "width": 533,
+                        "depth": 228,
                     },
                     "weight": 14.5,
                 },
