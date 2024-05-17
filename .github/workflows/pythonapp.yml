@@ -1,4 +1,4 @@
-name: Spinorama
+name: Spinorama Python
 
 on:
   push:
@@ -32,10 +32,10 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude .venv
     - name: Test metadata file
       run: |
-        PYTHONPATH=src ./scripts/check_meta.py
+        PYTHONPATH=.:./src:./src/spinorama:./src/website ./scripts/check_meta.py
     - name: Compilation of cython files
       run: |
-        PYTHONPATH=src cd src/spinorama && python setup.py build_ext --inplace && ln -s c_compute_scores.cpython-*.so c_compute_scores.so
+        PYTHONPATH=.:./src cd src/spinorama && python setup.py build_ext --inplace && ln -s c_compute_scores.cpython-*.so c_compute_scores.so
     - name: Test with pytest
       run: |
         pip install pytest
