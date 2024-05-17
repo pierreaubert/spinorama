@@ -33,7 +33,6 @@ Options:
 from glob import glob
 import json
 import os
-import pathlib
 import re
 import shutil
 import subprocess
@@ -107,16 +106,14 @@ def adapt_imports(jscode, versions, js_files):
     This is very very basic.
     """
     replacements = [
-        (
-            " from 'fuse.js';",
-            " from '/js3rd/fuse-{}.min.mjs';".format(versions["FUSE"])),
+        (" from 'fuse.js';", " from '/js3rd/fuse-{}.min.mjs';".format(versions["FUSE"])),
         (
             " from 'handlebars.js';",
             " from '/js3rd/handlebars-{}.min.js';".format(versions["HANDLEBARS"]),
         ),
         (
             "import Plotly from 'plotly-dist-min';",
-            "", # because module support is complicated :(
+            "",  # because module support is complicated :(
         ),
     ]
     re_replacements = [
@@ -539,15 +536,15 @@ def main():
                 )
             )
             # pipeline
-            item_name        = "{}.js".format(item)
-            item_original    = "{}/{}.js".format(cpaths.CPATH_WEBSITE, item)
-            item_mako_tmpl   = "{}-0-flow.js".format(item)
-            item_post_flow   = "{}/{}-0-flow.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
-            item_post_mako   = "{}/{}-1-mako.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
+            item_name = "{}.js".format(item)
+            item_original = "{}/{}.js".format(cpaths.CPATH_WEBSITE, item)
+            item_mako_tmpl = "{}-0-flow.js".format(item)
+            item_post_flow = "{}/{}-0-flow.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
+            item_post_mako = "{}/{}-1-mako.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             item_post_import = "{}/{}-2-import.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             item_post_terser = "{}/{}-3-terser.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
-            item_dist        = "{}/{}-{}.min.js".format(cpaths.CPATH_DOCS_JS, item, CACHE_VERSION)
-            
+            item_dist = "{}/{}-{}.min.js".format(cpaths.CPATH_DOCS_JS, item, CACHE_VERSION)
+
             # cleanup flow directives: currently unused
             flow_bin = "./node_modules/.bin/flow-remove-types"
             flow_param = ""  # "--pretty --sourcemaps"
@@ -562,7 +559,7 @@ def main():
                 print("flow failed for %s", item_name)
 
             # build first generation with metadata expension, now only useful for meta.js
-            if item == 'meta':
+            if item == "meta":
                 item_html = mako_templates.get_template(item_mako_tmpl)
                 eqdata_filename = eqdata_json_filename[len_docs:]
                 item_content = item_html.render(
@@ -578,19 +575,17 @@ def main():
                 )
                 write_if_different(item_content, item_post_mako, force=True)
             else:
-                shutil.copy(item_post_flow, item_post_mako)            
+                shutil.copy(item_post_flow, item_post_mako)
 
             # change inport to match prod/dev and browser requirements
             with open(item_post_mako, "r") as fd:
-                item_content = ''.join(fd.readlines())
+                item_content = "".join(fd.readlines())
                 item_content = adapt_imports(item_content, versions, jsfiles)
                 write_if_different(item_content, item_post_import, force=True)
 
             # compress files with terser
             terser_command = "{0} {1} > {2}".format(
-                "./node_modules/.bin/terser",
-                item_post_import,
-                item_post_terser
+                "./node_modules/.bin/terser", item_post_import, item_post_terser
             )
             # print(terser_command)
             try:
@@ -604,10 +599,10 @@ def main():
 
             # optimise files with critical
             # TBD
-            
+
             # copy last file
             shutil.copy(item_post_terser, item_dist)
-            
+
     except KeyError as key_error:
         print("Generating various html files failed with {}".format(key_error))
         sys.exit(1)

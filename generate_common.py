@@ -146,7 +146,7 @@ def custom_ray_init(args):
                 print("ray port {} is out of bounds".format(check_port))
                 sys.exit(1)
         except ValueError:
-            print("ray port is not an integer".format(check_port))
+            print("ray port {} is not an integer".format(check_port))
             sys.exit(1)
         ray_address = check_address
 

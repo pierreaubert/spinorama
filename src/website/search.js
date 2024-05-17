@@ -898,10 +898,9 @@ export function setupEventListener(metadata, speaker2html, mainDiv) {
     }
 
     parametersMapping.forEach((parameter) => {
-        const selectorName = parameter['selectorName'];
-        const urlParameter = parameter['urlParameter'];
-        const eventType = parameter['eventType'];
-        // console.log('processing '+selectorName+' with '+eventType);
+        const selectorName = parameter.selectorName;
+        const urlParameter = parameter.urlParameter;
+        const eventType = parameter.eventType;
         let element = document.querySelector(selectorName);
         if (element) {
             element.addEventListener(eventType, () => update(element, urlParameter, mainDiv));
