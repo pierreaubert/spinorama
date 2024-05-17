@@ -10,12 +10,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
+    - name: Checkout
       uses: actions/checkout@v4
-    - name: setup
+    - name: Setup
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '21'
         cache: 'npm'
-    - name: Test with vitest
-      run: npx vitest
+    - name: CI
+      run: npm ci
+    - name: Test
+      run: npm test
