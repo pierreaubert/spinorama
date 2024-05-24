@@ -150,7 +150,6 @@ function contextHtml(context) {
     const iconFlatness = '#icon-volume-success-' + iconValue(score.flatnessScaled);
     const footer = footerHtml(context.id, context.reviews.reviews);
     const html = `
-     <div class="cell">
        <div class="card card-min has-background-white-bis">
            <div class="card-image">
              <figure class="image is-2by3">
@@ -208,7 +207,6 @@ function contextHtml(context) {
              ${footer}
            </footer>
        </div>
-     </div>
     `;
     return html;
 }
@@ -217,7 +215,7 @@ function printSpeaker(key, index, value) {
     const context = getContext(key, index, value);
     const html = contextHtml(context);
     const divSpeaker = document.createElement('div');
-    divSpeaker.setAttribute('class', 'column is-narrow searchable');
+    divSpeaker.setAttribute('class', 'cell');
     divSpeaker.setAttribute('id', context.id);
     divSpeaker.innerHTML = html;
     return divSpeaker;

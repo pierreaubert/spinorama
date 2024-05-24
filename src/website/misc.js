@@ -20,40 +20,40 @@
 
 // hide an element
 export const hide = (elem) => {
-    if (elem && elem.classList) {
+    if (elem?.classList) {
         elem.classList.add('hidden');
     }
 };
 
 // show an element
 export const show = (elem) => {
-    if (elem && elem.classList) {
+    if (elem?.classList) {
         elem.classList.remove('hidden');
     }
 };
 
 // toggle the element visibility
 export const toggle = (elem) => {
-    if (elem && elem.classList) {
+    if (elem?.classList) {
         elem.classList.toggle('hidden');
     }
 };
 
 export function toggleId(id) {
     const elem = document.querySelector(id);
-    if (elem && elem.classList) {
+    if (elem?.classList) {
         elem.classList.toggle('hidden');
     }
 }
 
 export function openModal(elem) {
-    if (elem && elem.classList) {
+    if (elem?.classList) {
         elem.classList.add('is-active');
     }
 }
 
 export function closeModal(elem) {
-    if (elem && elem.classList) {
+    if (elem?.classList) {
         elem.classList.remove('is-active');
     }
 }
@@ -128,7 +128,7 @@ export function getPrice(price, amount) {
 
 export function getField(value, field, version) {
     let fields = {};
-    if (value.measurements && value.measurements[version]) {
+    if (value?.measurements[version]) {
         const measurement = value.measurements[version];
         if (Object.hasOwn(measurement, field)) {
             fields = measurement[field];
@@ -143,7 +143,7 @@ export function getSensitivity(value, version) {
     if (value.sensitivity) {
         init_sensitivity = value.sensitivity;
     }
-    if (value.measurements && value.measurements[version]) {
+    if (value?.measurements[version]) {
         const measurement = value.measurements[version];
         if (Object.hasOwn(measurement, 'sensitivity_delta')) {
             delta = measurement.sensitivity_delta;
@@ -400,7 +400,7 @@ export function getScore(value, def) {
     let lfxScaled = 0.0;
     let flatnessScaled = 0.0;
     let smoothnessScaled = 0.0;
-    if (value.measurements && value.measurements[def].pref_rating) {
+    if (value?.measurements[def].pref_rating) {
         const measurement = value.measurements[def];
         const pref = measurement.pref_rating;
         score = pref.pref_score;
@@ -416,13 +416,13 @@ export function getScore(value, def) {
         smoothnessScaled = prefScaled.scaled_sm_pred_in_room;
 
         const estimates = measurement.estimates;
-        if (estimates && estimates.ref_band) {
+        if (estimates?.ref_band) {
             flatness = estimates.ref_band;
         }
         flatnessScaled = prefScaled.scaled_flatness;
     }
     let specifications = {};
-    if (value.measurements && value.measurements[def].specifications) {
+    if (value?.measurements[def].specifications) {
         specifications = value.measurements[def].specifications;
     }
     return {

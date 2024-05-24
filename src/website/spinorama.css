@@ -12,5 +12,6 @@
 
 .card-min {
     min-block-size: 340px;
+    width: max(340px, 25%);
 }
 

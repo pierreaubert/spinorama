@@ -41,6 +41,10 @@ export function pagination(numberSpeakers) {
 
     // console.log('currentPage='+currentPage+' perPage='+perPage+' maxPage='+maxPage+' prevPage='+prevPage+' nextPage='+nextPage);
 
+    if (numberSpeakers <= currentPage) {
+	return;
+    }
+
     let html = navHeader;
     if (currentPage <= 3) {
         let disabled = '';

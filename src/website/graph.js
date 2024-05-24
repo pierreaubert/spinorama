@@ -30,7 +30,7 @@ export function displayGraph(divName, graphSpec) {
         const title = graphSpec.layout.title.text;
         const graphOptions = setGraph([title], [graphSpec], w, h, 1);
 
-        if (graphOptions && graphOptions.length >= 1) {
+        if (graphOptions?.length >= 1) {
             Plotly.newPlot(divName, graphOptions[0]);
         }
     }

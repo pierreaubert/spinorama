@@ -185,10 +185,10 @@ function showMinMaxMeasurements(datas) {
     let results = new Map();
     for (let i in datas) {
         let speaker_name = 'Speaker';
-        if (datas[i].legendgrouptitle != null && datas[i].legendgrouptitle.text != null) {
+        if (datas[i]?.legendgrouptitle.text != null) {
             speaker_name = datas[i].legendgrouptitle.text;
         }
-        if (datas[i].x != null && datas[i].x.length > 0) {
+        if (datas[i]?.x.length > 0) {
             if (results.has(speaker_name)) {
                 results.set(speaker_name, Math.min(results.get(speaker_name), datas[i].x[0]));
             } else {
@@ -276,7 +276,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
     }
 
     function computeXaxis() {
-        if (layout.xaxis && layout.xaxis.title) {
+        if (layout?.xaxis.title) {
             layout.xaxis.title.text = 'SPL (dB) v.s. Frequency (Hz)';
             layout.xaxis.title.font = {
                 size: 10 + fontDelta,
@@ -286,11 +286,11 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             layout.xaxis.side = 'bottom';
         }
         if (is_compact) {
-            if (is_vertical && layout.yaxis && layout.yaxis.title) {
+            if (is_vertical && layout?.yaxis.title) {
                 const freq_min = Math.round(Math.pow(10, layout.xaxis.range[0]));
                 const freq_max = Math.round(Math.pow(10, layout.xaxis.range[1]));
                 let title = '';
-                if (layout.yaxis.title.text && layout.yaxis.title.text === 'Angle') {
+                if (layout?.yaxis.title.text === 'Angle') {
                     title =
                         'Angle [' +
                         layout.yaxis.range[0] +
@@ -339,13 +339,13 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
 
     function computeTitle() {
         let title = '';
-        if (spin[0] && spin[0].layout && spin[0].layout.title && spin[0].layout.title.text) {
+        if (spin[0] && spin[0]?.layout.title.text) {
             title = spin[0].layout.title.text;
         }
-        if (!single_graph && spin[1] && spin[1].layout && spin[1].layout.title && spin[1].layout.title.text) {
+        if (!single_graph && spin[1] && spin[1]?.layout.title.text) {
             title += '<br> v.s. ' + spin[1].layout.title.text;
         }
-        if (title === '' && datas[0].legendgrouptitle && datas[0].legendgrouptitle.title) {
+        if (title === '' && datas[0]?.legendgrouptitle.title) {
             title = datas[0].legendgrouptitle.text;
         }
         if (title.indexOf('CEA2034') !== -1) {
@@ -459,7 +459,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         } else if (!is_compact && layout.width > graphLarge) {
             for (let k = 0; k < datas.length; k++) {
                 const title = datas[k].legendgrouptitle;
-                if (title && title.text) {
+                if (title?.text) {
                     const pos_vs = title.text.indexOf(' v.s. ');
                     if (pos_vs !== -1) {
                         datas[k].legendgrouptitle.text = title.text.slice(0, pos_vs);

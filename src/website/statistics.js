@@ -155,8 +155,7 @@ getMetadata()
                 if (
                     value.measurements &&
                     value.measurements[value.default_measurement] &&
-                    value.measurements[value.default_measurement].pref_rating_eq &&
-                    value.measurements[value.default_measurement].pref_rating_eq.pref_score
+                    value.measurements[value.default_measurement]?.pref_rating_eq.pref_score
                 ) {
                     // gather various scores
                     scoresEQ.push(value.measurements[value.default_measurement].pref_rating_eq.pref_score);

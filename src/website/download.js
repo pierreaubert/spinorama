@@ -98,6 +98,14 @@ export function getSpeakerData(metaSpeakers, graph, speaker, origin, version) {
     return spec;
 }
 
+function updateCache(url, encoding) {
+    const urlMeta = '/js/meta-v3.min.js';
+    caches.open("https://dev.spinorama.org").then((cache) => {
+	cache.delete(urlMeta).then((response) => {
+	});
+    });
+}
+
 export function getAllSpeakers(table) {
     const metaSpeakers = {};
     const speakers = [];
@@ -109,7 +117,7 @@ export function getAllSpeakers(table) {
     return [metaSpeakers, speakers.sort()];
 }
 
-function fetchDataAndMap(url, encoding) {
+function fetchDataAndMap(url, encoding, state) {
     // console.log('fetching url=' + url + ' encoding=' + encoding);
     const spec = fetch(url, { headers: { 'Accept-Encoding': encoding, 'Content-Type': 'application/json' } })
         .catch((error) => {
@@ -123,22 +131,26 @@ function fetchDataAndMap(url, encoding) {
         })
         .then((data) => new Map(Object.values(data).map((speaker) => [getID(speaker.brand, speaker.model), speaker])))
         .catch((error) => {
-            console.log('ERROR fetchData for ' + url + ' failed: ' + error);
-            return null;
+	    if (state === 1) {
+		const newUrl = updateCache(url, encoding);
+		return fetchDataAndMap(newUrl, encoding, 2);
+	    } else {
+		console.log('ERROR fetchData for ' + url + ' failed: ' + error);
+	    }
         });
     return spec;
 }
 
 export function getMetadataHead() {
     const url = urlSite + metadataFilenameHead;
-    return fetchDataAndMap(url, 'bz2, zip, deflate');
+    return fetchDataAndMap(url, 'bz2, zip, deflate', 1);
 }
 
 export function getMetadataTail(metadataHead) {
     const promisedChunks = [];
     for (let i in metadataFilenameChunks) {
         const url = urlSite + metadataFilenameChunks[i];
-        promisedChunks.push(fetchDataAndMap(url));
+        promisedChunks.push(fetchDataAndMap(url, 1));
     }
     return Promise.all(promisedChunks).then((chunks) => {
         const merged = new Map(metadataHead);
@@ -158,7 +170,7 @@ export function getMetadata() {
 export function getEQdata() {
     const metaDataPromise = getMetadata();
     const url = urlSite + eqdataFilename;
-    const eqDataPromise = fetchDataAndMap(url, 'bz2, gzip, zip, deflate').catch((error) => {
+    const eqDataPromise = fetchDataAndMap(url, 'bz2, gzip, zip, deflate', 1).catch((error) => {
         console.log('ERROR getEQdata for ' + url + 'yield a 404 with error: ' + error);
         return null;
     });

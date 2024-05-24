@@ -28,7 +28,7 @@ function getNearSpeakers(metadata) {
     const speakers = [];
     metadata.forEach(function (value) {
         const speaker = value.brand + ' ' + value.model;
-        if (value.nearest && value.nearest.length > 0) {
+        if (value?.nearest.length > 0) {
             speakers.push(speaker);
             metaSpeakers[speaker] = value;
         }
@@ -101,7 +101,7 @@ getMetadata()
                         ) {
                             graphOptions = setGlobe(currentNames, currentGraphs, windowWidth, windowHeight);
                         }
-                        if (graphOptions !== null && graphOptions.length === 1) {
+                        if (graphOptions?.length === 1) {
                             Plotly.newPlot('plot' + i, graphOptions[0]);
                         }
                     }
