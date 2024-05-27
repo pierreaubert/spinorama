@@ -20354,6 +20354,99 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Revel W126Be": {
+        "brand": "Revel",
+        "model": "W126Be",
+        "type": "passive",
+        "price": "1650",
+        "shape": "inwall",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Revel",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "review": "https://www.avsforum.com/threads/revel-owners-thread.710918/page-1326#replies",
+                "review_published": "20240526",
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 105,
+                    },
+                    "size": {
+                        "height": 395,
+                        "width": 260,
+                        "depth": 97,
+                    },
+                    "weight": 6.4,
+                },
+            },
+        },
+    },
+    "Revel W226Be": {
+        "brand": "Revel",
+        "model": "W226Be",
+        "type": "passive",
+        "price": "2250",
+        "shape": "inwall",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Revel",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "review": "https://www.avsforum.com/threads/revel-owners-thread.710918/page-1326#replies",
+                "review_published": "20240526",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 582,
+                        "width": 260,
+                        "depth": 97,
+                    },
+                    "weight": 7.1,
+                },
+            },
+        },
+    },
+    "Revel W228Be": {
+        "brand": "Revel",
+        "model": "W228Be",
+        "type": "passive",
+        "price": "3500",
+        "shape": "inwall",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Revel",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "review": "https://www.avsforum.com/threads/revel-owners-thread.710918/page-1326#replies",
+                "review_published": "20240526",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 115,
+                    },
+                    "size": {
+                        "height": 938.6,
+                        "width": 352.9,
+                        "depth": 104.5,
+                    },
+                    "weight": 14.3,
+                },
+            },
+        },
+    },
     "Revel W553L": {
         "brand": "Revel",
         "model": "W553L",
