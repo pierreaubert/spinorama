@@ -19,10 +19,10 @@
 /*eslint no-undef: "error"*/
 
 import { readFileSync } from 'fs';
-
 import { beforeAll, describe, expect, it } from 'vitest';
+
 import { getID } from './misc.js';
-import { urlParameters2Sort, search } from './search.js';
+import { isWithinPage, urlParameters2Sort, search } from './search.js';
 
 const METADATA_TEST_FILE = './tests/datas/metadata-20240516.json';
 
@@ -200,4 +200,67 @@ describe('test search', () => {
         expect(results.includes('HK-Audio-LINEAR-7-112-FA')).toBeFalsy();
         expect(results.includes('Acoustic-Energy-AE100-Mk2')).toBeTruthy();
     });
+
+    it('search no constraint page 1 & 2', () => {
+	// page 1
+        const url1 = new URL('https://spinorama.org/index.html?page=1&count=20');
+        const params1 = urlParameters2Sort(url1);
+        const [maxResults1, results1] = search(metadata, params1);
+        expect(results1).toBeDefined();
+        expect(results1).toBeTypeOf('object');
+        expect(maxResults1).toBeGreaterThanOrEqual(917);
+	// page 2
+        const url2 = new URL('https://spinorama.org/index.html?page=2&count=20');
+        const params2 = urlParameters2Sort(url2);
+        const [maxResults2, results2] = search(metadata, params2);
+        expect(results2).toBeDefined();
+        expect(results2).toBeTypeOf('object');
+        expect(maxResults2).toBeGreaterThanOrEqual(917);
+	// consistency
+	expect(maxResults1).toEqual(maxResults2);
+	const set1 = new Set(results1);
+	const set2 = new Set(results2);
+	// need node >22
+	expect(set1.isDisjointFrom(set2)).toBeTruthy();
+    });
+});
+
+describe('check within page', () => {
+
+    it('test boundaries page 1 with 10 per page', () => {
+	const pagination_1_10 = {
+	    active: true,
+	    page: 1,
+	    count: 10
+	};
+	expect(isWithinPage(0, pagination_1_10)).toBeTruthy();
+	expect(isWithinPage(1, pagination_1_10)).toBeTruthy();
+	expect(isWithinPage(9, pagination_1_10)).toBeTruthy();
+	expect(isWithinPage(10, pagination_1_10)).toBeFalsy();
+    });
+    
+    it('test boundaries page 1 with 20 per page', () => {
+	const pagination_1_20 = {
+	    active: true,
+	    page: 1,
+	    count: 20
+	};
+	expect(isWithinPage(0, pagination_1_20)).toBeTruthy();
+	expect(isWithinPage(1, pagination_1_20)).toBeTruthy();
+	expect(isWithinPage(19, pagination_1_20)).toBeTruthy();
+	expect(isWithinPage(20, pagination_1_20)).toBeFalsy();
+    });
+    
+    it('test boundaries page 2 with 10 per page', () => {
+	const pagination_2_10 = {
+	    active: true,
+	    page: 2,
+	    count: 10
+	};
+	expect(isWithinPage(9, pagination_2_10)).toBeFalsy();
+	expect(isWithinPage(10, pagination_2_10)).toBeTruthy();
+	expect(isWithinPage(19, pagination_2_10)).toBeTruthy();
+	expect(isWithinPage(20, pagination_2_10)).toBeFalsy();
+    });
+    
 });

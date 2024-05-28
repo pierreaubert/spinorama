@@ -18,6 +18,7 @@
 
 /*eslint no-undef: "error"*/
 
+import { hide } from './misc.js';
 import { urlParameters2Sort } from './search.js';
 
 function urlChangePage(url, newpage) {
@@ -38,10 +39,12 @@ export function pagination(numberSpeakers) {
     const maxPage = Math.floor(numberSpeakers / perPage);
     const prevPage = Math.max(currentPage - 1, 1);
     const nextPage = Math.min(currentPage + 1, maxPage);
+    
+    console.info('currentPage='+currentPage+' perPage='+perPage+' maxPage='+maxPage+' prevPage='+prevPage+' nextPage='+nextPage+' #speakers='+numberSpeakers);
 
-    // console.log('currentPage='+currentPage+' perPage='+perPage+' maxPage='+maxPage+' prevPage='+prevPage+' nextPage='+nextPage);
-
-    if (numberSpeakers <= currentPage) {
+    // if less than one page
+    if (numberSpeakers <= perPage) {
+	hide(navigationContainer);
         return;
     }
 
@@ -60,14 +63,8 @@ export function pagination(numberSpeakers) {
                 current = 'is-current';
             }
             html +=
-                '<li><a href="' +
-                urlChangePage(url, i) +
-                ' class="pagination-link ' +
-                current +
-                '" aria-label="Goto page ' +
-                i +
-                '">' +
-                i +
+                '<li><a href="' + urlChangePage(url, i) +'" class="pagination-link ' +  current +
+		'" aria-label="Goto page ' + i + '">' +  i +
                 '</a></li>';
         }
         if (maxPage > 5) {
@@ -147,10 +144,8 @@ export function pagination(numberSpeakers) {
         html += '</ul>';
     }
     html += navFooter;
+    // cleanup
     const divNavigation = document.createElement('div');
-    while (divNavigation.firstChild) {
-        divNavigation.removeChild(divNavigation.firstChild);
-    }
     divNavigation.innerHTML = html;
     navigationContainer.appendChild(divNavigation);
 }

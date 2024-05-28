@@ -100,7 +100,7 @@ export function getSpeakerData(metaSpeakers, graph, speaker, origin, version) {
 
 function cleanupCache(url) {
     caches.open('https://dev.spinorama.org').then((cache) => {
-        cache.delete(url).then(() => consolo.log('deleted ' + url + ' from cache.'));
+        cache.delete(url).then(() => console.info('deleted ' + url + ' from cache.'));
     });
 }
 

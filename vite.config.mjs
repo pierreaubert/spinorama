@@ -6,6 +6,6 @@ export default defineConfig({
         include: ['**/src/website/*.test.js', '**/tests/*.test.js'],
         exclude: [...configDefaults.exclude, '**/docs/**', '**/build/**'],
         watch: false,
-        environment: 'jsdom',
-    },
+        environment: 'jsdom'
+    }
 });

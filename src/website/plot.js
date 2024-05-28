@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { flags_Contour_Delta } from './meta.js';
+const flags_Contour_Delta = false;
 
 export const knownMeasurements = [
     'CEA2034',
@@ -162,24 +162,25 @@ export function computeDims(windowWidth, windowHeight, is_vertical, is_compact, 
     }
     width = Math.round(width);
     height = Math.round(height);
-    // let ratio = (height / width).toFixed(2);
-    // if (width > height) {
-    //    ratio = (width / height).toFixed(2);
-    // }
-    // console.log(
-    //     'DEBUG: Window(' +
-    //         windowHeight +
-    //         ', ' +
-    //         windowHeight +
-    //         ') and width=' +
-    //         width +
-    //         ' heigth=' +
-    //         height +
-    //         ' ratio=' +
-    //         ratio +
-    //         '#graphs=' +
-    //         nb_graphs
-    // );
+
+    let ratio = (height / width).toFixed(2);
+    if (width > height) {
+       ratio = (width / height).toFixed(2);
+    }
+    console.info(
+        'Window(' +
+            windowHeight +
+            ', ' +
+            windowHeight +
+            ') and width=' +
+            width +
+            ' heigth=' +
+            height +
+            ' ratio=' +
+            ratio +
+            '#graphs=' +
+            nb_graphs
+    );
     return [width, height];
 }
 
@@ -249,7 +250,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             }
         });
         let i = 0;
-        mins.forEach((min_freq, _) => {
+        mins.forEach( (min_freq) => { // or maybe you need , _
             if (min_freq > 40) {
                 let shape = {
                     type: 'rect',
@@ -673,6 +674,8 @@ export function setRadar(speakerNames, speakerGraphs, width, height) {
     return [options];
 }
 
+/*
+  
 function equals(a, b) {
     // check the length
     if (a.length != b.length) {
@@ -751,6 +754,8 @@ function computeContourDelta(data1, data2) {
     return data;
 }
 
+*/    
+
 export function setContour(speakerNames, speakerGraphs, width, height) {
     // console.log('setContour got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
@@ -779,6 +784,7 @@ export function setContour(speakerNames, speakerGraphs, width, height) {
             graphsConfigs.push(options);
         }
     }
+/*
     if (speakerGraphs.length === 2 && flags_Contour_Delta) {
         const dataDelta = computeContourDelta(speakerGraphs[0].data, speakerGraphs[1].data);
         if (dataDelta != null) {
@@ -786,7 +792,7 @@ export function setContour(speakerNames, speakerGraphs, width, height) {
             graphsConfigs.push(optionsDelta);
         }
     }
-
+*/
     return graphsConfigs;
 }
 

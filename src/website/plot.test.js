@@ -37,7 +37,7 @@ const screens = {
     'Samsung Galaxy S8+': { width: 360, height: 740 },
     'iPad Pro': { width: 1024, height: 1366 },
     '16:9 2k': { width: 1920, height: 1080 },
-    '16:9 4k': { width: 3840, height: 2160 },
+    '16:9 4k': { width: 3840, height: 2160 }
 };
 
 describe('computeDims', () => {
@@ -70,3 +70,4 @@ describe('computeDims', () => {
         });
     });
 });
+

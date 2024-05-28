@@ -774,10 +774,10 @@ export function isSearch(key, results, minScore, keywords) {
     return shouldShow;
 }
 
-function isWithinPage(count, pagination) {
+export function isWithinPage(position, pagination) {
     const page = pagination.page;
-    const size = pagination.count;
-    if (!pagination.active || (count >= (page - 1) * size && count <= page * size)) {
+    const count = pagination.count;
+    if (!pagination.active || (position >= (page - 1) * count && position < page * count)) {
         return true;
     }
     return false;
@@ -809,7 +809,7 @@ export function search(data, params) {
     let minScore = 1;
     if (keywords !== '') {
         const fuse_results = fuse.search(keywords);
-        // console.log('searching with keywords: '+keywords+' #matches: '+fuse_results.length);
+        // console.debug('searching with keywords: '+keywords+' #matches: '+fuse_results.length);
         if (fuse_results.length > 0) {
             // minScore
             for (const spk in fuse_results) {
@@ -829,16 +829,13 @@ export function search(data, params) {
         const speaker = data.get(key);
         const testFiltered = isFiltered(speaker, filters);
         const testKeywords = isSearch(key, resultsFullText, minScore, keywords);
-        const withinPage = isWithinPage(currentDisplay, pagination);
-        // console.debug(speaker.brand+' '+speaker.model+' '+testFiltered+' '+testKeywords+' '+withinPage);
-        if (currentDisplay < targetDisplay) {
-            if (testFiltered && testKeywords && withinPage && currentDisplay < targetDisplay) {
-                resultsFiltered.push(key);
-                currentDisplay += 1;
-                maxDisplay += 1;
-            } else if (testFiltered && testKeywords) {
-                maxDisplay += 1;
-            }
+        const withinPage = isWithinPage(maxDisplay, pagination);
+        // console.debug('currentDisplay='+currentDisplay+' maxDisplay='+maxDisplay+' '+speaker.brand+' '+speaker.model+' filter='+testFiltered+' kwd='+testKeywords+' page='+withinPage);
+        if (testFiltered && testKeywords && withinPage && currentDisplay < targetDisplay) {
+            resultsFiltered.push(key);
+            maxDisplay += 1;
+        } else if (testFiltered && testKeywords) {
+            maxDisplay += 1;
         }
     });
     return [maxDisplay, resultsFiltered];

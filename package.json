@@ -15,7 +15,6 @@
     "eslint-config-prettier": "^9.1.0",
     "flow-bin": "^0.236.0",
     "flow-remove-types": "^2.236.0",
-    "husky": "^9.0.11",
     "jsdom": "^24.0.0",
     "prettier": "^3.2.5",
     "terser": "^5.31.0",

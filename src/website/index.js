@@ -151,13 +151,13 @@ function contextHtml(context) {
     const footer = footerHtml(context.id, context.reviews.reviews);
     const html = `
        <div class="card card-min has-background-white-bis">
-           <div class="card-image">
+           <div class="card-image"
              <figure class="image is-2by3">
                <picture>
-		 <source srcset="${img.webp}" type="image/webp" width="320" height="480"></source>
-		 <img src="${img.jpg}" loading="${img.loading}" decoding="${img.decoding}" alt="${brand} ${model}" width="320" height="480"/>
+                 <source srcset="${img.webp}" type="image/webp"></source>
+                 <img src="${img.jpg}" loading="${img.loading}" decoding="${img.decoding}" alt="${brand} ${model}"/>
                </picture>
-	     </figure>
+             </figure>
            </div>
            <div class="card-content">
              <div class="content">
