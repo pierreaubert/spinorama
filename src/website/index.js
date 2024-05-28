@@ -25,6 +25,8 @@ import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getRevi
 import { process, urlParameters2Sort, setupEventListener } from './search.js';
 import { pagination } from './pagination.js';
 
+const validShape = Object.freeze(new Set(["floorstanders", "bookshelves", "center", "columns", "liveportable", "cinema"]));
+
 function getMeasurementCount(metadata) {
     let count = 0;
     metadata.forEach((e) => {
@@ -63,6 +65,7 @@ function getContext(key, index, value) {
         model: value.model,
         price: price,
         priceAsDollar: getDollar(price),
+	shape: value.shape,
         img: {
             avif: getPicture(value.brand, value.model, 'avif'),
             webp: getPicture(value.brand, value.model, 'webp'),
@@ -89,6 +92,9 @@ function isShort(values) {
 }
 
 function iconValue(value) {
+    if (value === '***') {
+	return '0';
+    }
     const iValue = parseInt(value);
     if (iValue <= 30) {
         return '0';
@@ -138,24 +144,62 @@ function footerHtml(id, reviews) {
     `;
 }
 
+function scoreHtml(shape, score) {
+    const iconScore = '#icon-volume-danger-' + iconValue(score.scoreScaled);
+    const help = `
+               <span class="icon is-pulled-right">
+                 <a href="/help.html#tonalityDefinition">
+                   <svg width="20px" height="20px">
+                     <use href="#icon-circle-question"/>
+                   </svg>
+                 </a>
+               </span>
+    `;
+    if (validShape.has(shape)) {
+	return `
+               <span class="icon-text">
+                 <span class="icon">
+                   <svg width="20px" height="20px" alt="rating">
+                     <use href="${iconScore}"/>
+                   </svg>
+                 </span>
+                 <span>Tonality: <b>${score.score}</b></span>
+               </span>
+               ${help}
+    `;
+    } else {
+	return  `
+               <span class="icon-text">
+                 <span class="icon">
+                   <svg width="20px" height="20px" alt="rating">
+                     <use href="${iconScore}"/>
+                   </svg>
+                 </span>
+                 <span>Tonality: <b>***</b></span>
+               </span>
+               ${help}
+    `;
+    }
+}
+
 function contextHtml(context) {
     const brand = context.brand;
     const model = context.model;
     const img = context.img;
+    const score = context.score;
     const price = context.price;
     const dollar = context.priceAsDollar;
-    const score = context.score;
-    const iconScore = '#icon-volume-danger-' + iconValue(score.scoreScaled);
     const iconLFX = '#icon-volume-info-' + iconValue(score.lfxScaled);
     const iconFlatness = '#icon-volume-success-' + iconValue(score.flatnessScaled);
     const footer = footerHtml(context.id, context.reviews.reviews);
+    const html_score = scoreHtml(context.shape, score);
     const html = `
        <div class="card card-min has-background-white-bis">
            <div class="card-image"
              <figure class="image is-2by3">
                <picture>
-                 <source srcset="${img.webp}" type="image/webp"></source>
-                 <img src="${img.jpg}" loading="${img.loading}" decoding="${img.decoding}" alt="${brand} ${model}"/>
+                 <source srcset="${img.webp}" type="image/webp" width="340" height="510"></source>
+                 <img src="${img.jpg}" loading="${img.loading}" decoding="${img.decoding}" alt="${brand} ${model}" width="340" height="510"/>
                </picture>
              </figure>
            </div>
@@ -176,13 +220,7 @@ function contextHtml(context) {
                   </a>
                </span>
                <br/>
-               <span class="icon-text">
-                 <span class="icon"><svg width="20px" height="20px" alt="rating"><use href="${iconScore}"/></svg></span>
-                 <span>Tonality: <b>${score.score}</b></span>
-               </span>
-               <span class="icon is-pulled-right">
-                  <a href="/help.html#tonalityDefinition"><svg width="20px" height="20px"><use href="#icon-circle-question"/></svg></a>
-               </span>
+               ${html_score}
                <br/>
                <span class="icon-text">
                  <span class="icon has-text-danger"><svg width="20px" height="20px" alt="rating"><use href="${iconLFX}"/></svg></span>
