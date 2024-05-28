@@ -12344,6 +12344,32 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Kanto ORA": {
+        "brand": "Kanto",
+        "model": "ORA",
+        "type": "active",
+        "price": "350",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-audioholics",
+        "measurements": {
+            "misc-audioholics": {
+                "origin": "Misc",
+                "format": "rew_text_dump",
+                "quality": "low",
+                "review": "https://www.audioholics.com/computer-speaker-reviews/kanto-living-ora",
+                "notes": "done by James Larson in free air",
+                "specifications": {
+                    "size": {
+                        "height": 254,
+                        "width": 227,
+                        "depth": 383,
+                    },
+                    "weight": 1.0,
+                },
+            },
+        },
+    },
     "Kanto YU": {
         "brand": "Kanto",
         "model": "YU",
@@ -12519,6 +12545,27 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/kef_ci3160rl-thx/",
                 "review_published": "20220514",
+            },
+        },
+    },
+    "KEF CI250RRM-THX": {
+        "brand": "KEF",
+        "model": "CI250RRM-THX",
+        "type": "passive",
+        "price": "2500",
+        "amount": "each",
+        "shape": "inwall",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "gll_hv_txt",
+                "quality": "medium",
+                "review_published": "20240527",
+                "reviews": {
+                    "white_paper": "https://images.salsify.com/image/upload/s--NpCBx-SO--/w9cbdm861tt4vimzda3g.pdf",
+                },
+                "notes": "The speaker is optimised for being listen to off axis at 30 up to 60 degrees",
             },
         },
     },
