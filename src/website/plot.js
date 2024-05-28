@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import { flags_Contour_Delta } from './meta.js';
+
 export const knownMeasurements = [
     'CEA2034',
     'On Axis',
@@ -185,10 +187,10 @@ function showMinMaxMeasurements(datas) {
     let results = new Map();
     for (let i in datas) {
         let speaker_name = 'Speaker';
-        if (datas[i]?.legendgrouptitle.text != null) {
+        if (datas[i].legendgrouptitle && datas[i].legendgrouptitle.text !== null) {
             speaker_name = datas[i].legendgrouptitle.text;
         }
-        if (datas[i]?.x.length > 0) {
+        if (datas[i].x && datas[i].x.length > 0) {
             if (results.has(speaker_name)) {
                 results.set(speaker_name, Math.min(results.get(speaker_name), datas[i].x[0]));
             } else {
@@ -276,7 +278,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
     }
 
     function computeXaxis() {
-        if (layout?.xaxis.title) {
+        if (layout?.axis && layout.xaxis.title) {
             layout.xaxis.title.text = 'SPL (dB) v.s. Frequency (Hz)';
             layout.xaxis.title.font = {
                 size: 10 + fontDelta,
@@ -286,7 +288,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             layout.xaxis.side = 'bottom';
         }
         if (is_compact) {
-            if (is_vertical && layout?.yaxis.title) {
+            if (is_vertical && layout?.yaxis && layout.yaxis.title) {
                 const freq_min = Math.round(Math.pow(10, layout.xaxis.range[0]));
                 const freq_max = Math.round(Math.pow(10, layout.xaxis.range[1]));
                 let title = '';
@@ -705,7 +707,7 @@ function interpolate(data1, data2, newFreq, newAngle) {
     let iangle1 = 0;
     let iangle2 = 0;
     let datas = [];
-    for (angle in newAngle) {
+    for (let angle in newAngle) {
         while (data1[0].y[iangle1] < freq && iangle1 < angle1Length) {
             iangle1 += 1;
         }
@@ -714,7 +716,7 @@ function interpolate(data1, data2, newFreq, newAngle) {
             // interpolate
         }
         let data = [];
-        for (freq in newFreq) {
+        for (let freq in newFreq) {
             while (data1[0].x[ifreq1] < freq && ifreq1 < freq1Length) {
                 ifreq1 += 1;
             }
@@ -777,7 +779,7 @@ export function setContour(speakerNames, speakerGraphs, width, height) {
             graphsConfigs.push(options);
         }
     }
-    if (speakerGraphs.length === 2) {
+    if (speakerGraphs.length === 2 && flags_Contour_Delta) {
         const dataDelta = computeContourDelta(speakerGraphs[0].data, speakerGraphs[1].data);
         if (dataDelta != null) {
             const optionsDelta = setGraphOptions([{ data: dataDelta, layout: speakerGraphs[1].layout }]);

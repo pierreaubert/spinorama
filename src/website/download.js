@@ -98,12 +98,21 @@ export function getSpeakerData(metaSpeakers, graph, speaker, origin, version) {
     return spec;
 }
 
-function updateCache(url, encoding) {
-    const urlMeta = '/js/meta-v3.min.js';
-    caches.open("https://dev.spinorama.org").then((cache) => {
-	cache.delete(urlMeta).then((response) => {
-	});
+function cleanupCache(url) {
+    caches.open('https://dev.spinorama.org').then((cache) => {
+        cache.delete(url).then(() => consolo.log('deleted ' + url + ' from cache.'));
     });
+}
+
+function updateCache(url) {
+    const urlMeta = '/js/meta-v3.min.js';
+    cleanupCache(urlMeta);
+    const request = new Request(urlMeta, { cache: 'reload' });
+    const spec = fetch(request).then((response) => {
+        console.log('cache uploaded: ' + response.text());
+        metadataFilenameHead = response.metadataFilenameHead;
+    });
+    return spec;
 }
 
 export function getAllSpeakers(table) {
@@ -121,23 +130,25 @@ function fetchDataAndMap(url, encoding, state) {
     // console.log('fetching url=' + url + ' encoding=' + encoding);
     const spec = fetch(url, { headers: { 'Accept-Encoding': encoding, 'Content-Type': 'application/json' } })
         .catch((error) => {
-            console.log('ERROR fetchData for ' + url + ' yield a 404 with error: ' + error);
+            console.log('ERROR fetchData for ' + url + ' ' + error);
             return null;
         })
-        .then((response) => response.json())
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+            if (state === 1 && response.status === 404) {
+                const newUrl = updateCache(url);
+                return fetchDataAndMap(newUrl, encoding, 2);
+            }
+            console.log('ERROR fetchData for ' + url + ' failed: ' + response.status);
+            return null;
+        })
         .catch((error) => {
             console.log('ERROR fetchData for ' + url + ' yield a json error: ' + error);
             return null;
         })
-        .then((data) => new Map(Object.values(data).map((speaker) => [getID(speaker.brand, speaker.model), speaker])))
-        .catch((error) => {
-	    if (state === 1) {
-		const newUrl = updateCache(url, encoding);
-		return fetchDataAndMap(newUrl, encoding, 2);
-	    } else {
-		console.log('ERROR fetchData for ' + url + ' failed: ' + error);
-	    }
-        });
+        .then((data) => new Map(Object.values(data).map((speaker) => [getID(speaker.brand, speaker.model), speaker])));
     return spec;
 }
 

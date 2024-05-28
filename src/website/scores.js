@@ -81,11 +81,11 @@ function contextFragment(context, index) {
     div2.setAttribute('class', class2);
     if (window.innerWidth < 860) {
         div2.innerHTML = reviews
-            .flatMap((review) => '<a href="'+review.url+'">'+review.originShort+'</a>&nbsp;')
+            .flatMap((review) => '<a href="' + review.url + '">' + review.originShort + '</a>&nbsp;')
             .join('<br/>');
     } else {
         div2.innerHTML = reviews
-            .flatMap((review) => '<a href="'+review.url+'">'+review.originLong+'</a>&nbsp;')
+            .flatMap((review) => '<a href="' + review.url + '">' + review.originLong + '</a>&nbsp;')
             .join('<br/>');
     }
     fragment.append(div2);

@@ -42,7 +42,7 @@ export function pagination(numberSpeakers) {
     // console.log('currentPage='+currentPage+' perPage='+perPage+' maxPage='+maxPage+' prevPage='+prevPage+' nextPage='+nextPage);
 
     if (numberSpeakers <= currentPage) {
-	return;
+        return;
     }
 
     let html = navHeader;
@@ -61,14 +61,14 @@ export function pagination(numberSpeakers) {
             }
             html +=
                 '<li><a href="' +
-		urlChangePage(url, i) +
+                urlChangePage(url, i) +
                 ' class="pagination-link ' +
-		current +
-		'" aria-label="Goto page ' +
-		i +
-		'">' +
-		i +
-		'</a></li>';
+                current +
+                '" aria-label="Goto page ' +
+                i +
+                '">' +
+                i +
+                '</a></li>';
         }
         if (maxPage > 5) {
             html += '<li><span class="pagination-ellipsis">&hellip;</span></li>';

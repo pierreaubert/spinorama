@@ -231,7 +231,9 @@ function display(data, speakerHtml, parentDiv) {
     const url = new URL(window.location);
     const params = urlParameters2Sort(url);
     const [maxResults, fragment] = process(data, params, speakerHtml);
-    parentDiv.appendChild(fragment);
+    if (fragment) {
+        parentDiv.appendChild(fragment);
+    }
     return maxResults;
 }
 

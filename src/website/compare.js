@@ -20,7 +20,7 @@
 
 import Plotly from 'plotly-dist-min';
 
-import { urlSite } from './meta.js';
+import { urlSite, flags_Screen } from './meta.js';
 import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
 import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setSurface } from './plot.js';
 
@@ -366,9 +366,11 @@ getMetadata()
             return windowChanges(event);
         });
 
-        screen.orientation.addEventListener('change', (event) => {
-            return windowChanges(event);
-        });
+        if (flags_Screen) {
+            screen.orientation.addEventListener('change', (event) => {
+                return windowChanges(event);
+            });
+        }
 
         graphsSelector.addEventListener('change', updateSpeakers, false);
 

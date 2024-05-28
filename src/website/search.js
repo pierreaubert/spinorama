@@ -825,7 +825,7 @@ export function search(data, params) {
     let currentDisplay = 0;
     let maxDisplay = 0;
     const targetDisplay = pagination.count;
-    sortMetadata2(data, sorter, resultsFullText).forEach((key, index) => {
+    sortMetadata2(data, sorter, resultsFullText).forEach((key) => {
         const speaker = data.get(key);
         const testFiltered = isFiltered(speaker, filters);
         const testKeywords = isSearch(key, resultsFullText, minScore, keywords);
@@ -893,7 +893,9 @@ export function setupEventListener(metadata, speaker2html, mainDiv) {
         while (parentDiv.firstChild) {
             parentDiv.removeChild(parentDiv.firstChild);
         }
-        parentDiv.appendChild(fragment[1]);
+        if (fragment) {
+            parentDiv.appendChild(fragment[1]);
+        }
         show(parentDiv);
     }
 

@@ -18,12 +18,11 @@
 
 /*eslint no-undef: "error"*/
 
-import { log } from 'console';
-import { global, afterEach, beforeAll, beforeEach, describe, expect, test, it, vi } from 'vitest';
+import { readFileSync } from 'fs';
+
+import { beforeAll, describe, expect, it } from 'vitest';
 import { getID } from './misc.js';
 import { urlParameters2Sort, search } from './search.js';
-
-const fs = require('fs');
 
 const METADATA_TEST_FILE = './tests/datas/metadata-20240516.json';
 
@@ -58,7 +57,7 @@ describe('test search', () => {
     let metadata = null;
 
     beforeAll(() => {
-        const bytes = fs.readFileSync(METADATA_TEST_FILE, 'utf-8');
+        const bytes = readFileSync(METADATA_TEST_FILE, 'utf-8');
         const metajson = JSON.parse(bytes);
         metadata = new Map(Object.values(metajson).map((speaker) => [getID(speaker.brand, speaker.model), speaker]));
     });

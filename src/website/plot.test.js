@@ -18,8 +18,8 @@
 
 /*eslint no-undef: "error"*/
 
-import { global, afterEach, beforeAll, beforeEach, describe, expect, test, it, vi } from 'vitest';
-import { isVertical, isCompact, computeDims } from './plot.js';
+import { describe, expect, it } from 'vitest';
+import { computeDims } from './plot.js';
 
 function graph_ratio(width, height) {
     width = Math.round(width);

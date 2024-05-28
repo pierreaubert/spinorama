@@ -28,7 +28,7 @@ function getNearSpeakers(metadata) {
     const speakers = [];
     metadata.forEach(function (value) {
         const speaker = value.brand + ' ' + value.model;
-        if (value?.nearest.length > 0) {
+        if (value.nearest && value.nearest.length > 0) {
             speakers.push(speaker);
             metaSpeakers[speaker] = value;
         }

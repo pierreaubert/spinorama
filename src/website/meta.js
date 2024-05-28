@@ -21,3 +21,6 @@ export const urlSite = '${site}' + '/';
 export const metadataFilenameHead = '${metadata_filename_head}';
 export const metadataFilenameChunks = ${metadata_filename_chunks};
 export const eqdataFilename = '${eqdata_filename}';
+
+export const flags_Screen = true;
+export const flags_Contour_Delta = false;

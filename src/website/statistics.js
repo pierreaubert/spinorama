@@ -139,7 +139,11 @@ getMetadata()
             const smPIR = [];
             const names = [];
             metadata.forEach((value) => {
-                if ( value.measurements[value.default_measurement]?.pref_rating.pref_score
+                if (
+                    value.measurements &&
+                    value.measurements[value.default_measurement] &&
+                    value.measurements[value.default_measurement].pref_rating &&
+                    value.measurements[value.default_measurement].pref_rating.pref_score
                 ) {
                     // gather various scores
                     scores.push(value.measurements[value.default_measurement].pref_rating.pref_score);
@@ -155,7 +159,8 @@ getMetadata()
                 if (
                     value.measurements &&
                     value.measurements[value.default_measurement] &&
-                    value.measurements[value.default_measurement]?.pref_rating_eq.pref_score
+                    value.measurements[value.default_measurement].pref_rating_eq &&
+                    value.measurements[value.default_measurement].pref_rating_eq.pref_score
                 ) {
                     // gather various scores
                     scoresEQ.push(value.measurements[value.default_measurement].pref_rating_eq.pref_score);

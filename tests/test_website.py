@@ -2,6 +2,33 @@
 #
 import unittest
 
+knownMeasurements = [
+    "CEA2034",
+    "On Axis",
+    "Estimated In-Room Response",
+    "Early Reflections",
+    "Horizontal Reflections",
+    "Vertical Reflections",
+    "SPL Horizontal",
+    "SPL Horizontal Normalized",
+    "SPL Vertical",
+    "SPL Vertical Normalized",
+    "SPL Horizontal Contour",
+    "SPL Horizontal Contour Normalized",
+    "SPL Vertical Contour",
+    "SPL Vertical Contour Normalized",
+    "SPL Horizontal Contour 3D",
+    "SPL Horizontal Contour Normalized 3D",
+    "SPL Vertical Contour 3D",
+    "SPL Vertical Contour Normalized 3D",
+    "SPL Horizontal Globe",
+    "SPL Horizontal Globe Normalized",
+    "SPL Vertical Globe",
+    "SPL Vertical Globe Normalized",
+    "SPL Horizontal Radar",
+    "SPL Vertical Radar",
+]
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
@@ -12,6 +39,8 @@ from selenium.common.exceptions import NoSuchElementException
 PROD = "https://www.spinorama.org"
 DEV = "https://dev.spinorama.org"
 COMPARE = "/compare.html"
+SIMILAR = "/similar.html"
+SCORES = "/scores.html"
 
 
 class SpinoramaWebsiteTests(unittest.TestCase):
@@ -125,6 +154,43 @@ class SpinoramaWebsiteTests(unittest.TestCase):
     def test_compare_measurements_without_low_freq(self):
         compare_basic = "speaker0=Genelec+8351A&origin0=Princeton&version0=princeton&measurement=CEA2034&speaker1=Polk+Audio+Legend+L200&origin1=Misc&version1=misc-audioholics"
         self.driver.get("{}/{}?{}".format(DEV, COMPARE, compare_basic))
+        self.driver.implicitly_wait(2)
+
+    def test_compare_allgraphs(self):
+        compare_basic = "speaker0=Ascend+Acoustics+Sierra+1+V2&origin0=Vendors-Ascend+Acoustics&version0=vendor&speaker1=Neumann+KH+150&origin1=ASR&version1=asr"
+        for measurement in knownMeasurements:
+            self.driver.get(
+                "{}/{}?{}&measurement={}".format(
+                    DEV, COMPARE, compare_basic, measurement.replace(" ", "+")
+                )
+            )
+            self.driver.implicitly_wait(2)
+
+    def test_similar_basic(self):
+        similar_basic = (
+            "speaker0=Ascend+Acoustics+Sierra+1+V2&origin0=Vendors-Ascend+Acoustics&version0=vendor"
+        )
+        self.driver.get("{}/{}?{}".format(DEV, SIMILAR, similar_basic))
+        self.driver.implicitly_wait(2)
+
+    def test_similar_allgraphs(self):
+        for measurement in knownMeasurements:
+            similar_basic = "speaker0=Ascend+Acoustics+Sierra+1+V2&origin0=Vendors-Ascend+Acoustics&version0=vendor"
+            self.driver.get(
+                "{}/{}?{}&graphs={}".format(
+                    DEV, SIMILAR, similar_basic, measurement.replace(" ", "+")
+                )
+            )
+            self.driver.implicitly_wait(2)
+
+    def test_scores_basic(self):
+        scores_basic = "quality=High&sort=score&count=1000"
+        self.driver.get("{}/{}?{}".format(DEV, SCORES, scores_basic))
+        self.driver.implicitly_wait(2)
+
+    def test_scores_check_filters(self):
+        scores_basic = "quality=High&sort=score&count=1000&weightMin=50"
+        self.driver.get("{}/{}?{}".format(DEV, SCORES, scores_basic))
         self.driver.implicitly_wait(2)
 
 

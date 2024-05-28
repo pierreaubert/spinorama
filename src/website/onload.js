@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import { flags_Screen } from './meta.js';
+
 window.onload = () => {
     const navbarBurger = document.querySelector('#navbar-burger');
     const navbarMenu = document.querySelector('.navbar-menu');
@@ -84,4 +86,19 @@ window.onload = () => {
             document.querySelectorAll('.modal').forEach((modal) => modal.remove('is-active'));
         }
     });
+
+    if (flags_Screen) {
+        switch (screen.orientation.type) {
+            case 'landscape-primary':
+            case 'landscape-secondary':
+                console.log('Mmmh… you should rotate your device to portrait');
+                break;
+            case 'portrait-secondary':
+            case 'portrait-primary':
+                console.log('We are in portrait mode, all good');
+                break;
+            default:
+                console.log("The orientation API isn't supported in this browser :(");
+        }
+    }
 };
