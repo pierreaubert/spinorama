@@ -607,6 +607,14 @@ def main():
         print("Generating various html files failed with {}".format(key_error))
         sys.exit(1)
 
+    # call workbox
+    workbox_command = ""
+    status = subprocess.run(
+        [workbox_command], shell=True, check=True, capture_output=True  # noqa: S602
+    )
+    if status.returncode != 0:
+        print("workbox failed!")
+
     # generate robots.txt and sitemap.xml
     logger.info("Copy robots/sitemap files to %s", cpaths.CPATH_DOCS)
     try:
