@@ -18,7 +18,8 @@
 
 TARGET1=pierre@ch.spinorama.org:/var/www/html/spinorama-prod
 TARGET2=pierre@es.spinorama.org:/var/www/html/spinorama-prod
-TARGET3=pierre@web01:/var/www/html/spinorama-prod
+TARGET3=pierre@192.168.1.18:/var/www/html/spinorama-prod
+TARGET4=pierre@192.168.1.20:/var/www/html/spinorama-prod
 
 # check
 command=$(grep dev.spinorama.org docs/*.html | wc -l)
@@ -38,7 +39,7 @@ fi
 
 # copy
 echo "Sync starts:"
-for target in "$TARGET3" "$TARGET1" "$TARGET2"; do
+for target in "$TARGET3" "$TARGET4"; do
     rsync -arz --exclude '*.png' --delete ./docs/* "$target"
     rsync -arz --include '*.png' --delete ./docs/pictures/* "$target/pictures"
     rsync -arz --include '*.png' --delete ./docs/help_pictures/* "$target/help_pictures"

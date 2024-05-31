@@ -1690,6 +1690,48 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "AsciLab C5B": {
+        "brand": "AsciLab",
+        "model": "C5B",
+        "type": "passive",
+        "price": "1000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-AsciLab",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
+                    "abi": "https://audiolabinsight.com/t/ascilab-c5b-ver/248",
+                },
+                "review_published": "20240531",
+            },
+        },
+    },
+    "AsciLab C6B": {
+        "brand": "AsciLab",
+        "model": "C6B",
+        "type": "passive",
+        "price": "1100",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-AsciLab",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
+                    "abi": "https://audiolabinsight.com/t/ascilab-c6b-ver/247",
+                },
+                "review_published": "20240531",
+            },
+        },
+    },
     "ASR Directiva Open Source Speaker": {
         "brand": "ASR",
         "model": "Directiva Open Source Speaker",
@@ -23334,6 +23376,13 @@ origins_info = {
         "min dB": -40,
         "max dB": 10,
         "url": "https://www.ascendacoustics.com/",
+    },
+    "Vendors-AsciLab": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.audiolabinsight.com/", # ?
     },
     "Vendors-Attack Audio": {
         "min hz": 20,

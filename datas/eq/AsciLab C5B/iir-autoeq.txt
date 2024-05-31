@@ -1,0 +1,14 @@
+EQ for AsciLab C5B computed from Vendors-AsciLab data
+Preference Score 6.28 with EQ 6.85
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-05-31-10:31:21
+
+Preamp: -4.1 dB
+
+Filter  1: ON PK Fc    37 Hz Gain +2.94 dB Q 1.13
+Filter  2: ON PK Fc    60 Hz Gain +1.75 dB Q 0.29
+Filter  3: ON PK Fc    85 Hz Gain -2.05 dB Q 1.00
+Filter  4: ON PK Fc   321 Hz Gain -0.96 dB Q 1.45
+Filter  5: ON PK Fc  1121 Hz Gain +0.77 dB Q 2.94
+Filter  6: ON PK Fc 10341 Hz Gain -0.90 dB Q 2.64
+Filter  7: ON PK Fc 15685 Hz Gain -1.18 dB Q 2.75
