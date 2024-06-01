@@ -796,6 +796,7 @@ export function setContour(speakerNames, speakerGraphs, width, height) {
     return graphsConfigs;
 }
 
+/*
 export function setGlobe(speakerNames, speakerGraphs, width, height) {
     // console.log('setGlobe ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
@@ -803,24 +804,84 @@ export function setGlobe(speakerNames, speakerGraphs, width, height) {
         if (speakerGraphs[i]) {
             let polarData = [];
             for (const j in speakerGraphs[i].data) {
-                const x = speakerGraphs[i].data[j].x;
-                const y = speakerGraphs[i].data[j].y;
-                const z = speakerGraphs[i].data[j].z;
-                if (!z) {
+                const freq = speakerGraphs[i].data[j].x;
+                const angle = speakerGraphs[i].data[j].y;
+                const spl = speakerGraphs[i].data[j].z;
+                if (!spl) {
+                    continue;
+                }
+                const x = [];
+                for (let k1 = 0; k1 < freq.length; k1++) {
+                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
+			const f = Math.log10(freq[k1]);
+			const a = Math.cos(angle[k2]);
+                        x.push(f*a);
+                    }
+                }
+                const y = [];
+                for (let k = 0; k < freq.length; k++) {
+                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
+			const f = Math.log10(freq[k1]);
+			const a = Math.sin(angle[k2]);
+                        y.push(f*a);
+                    }
+                }
+                const color = [];
+                for (let k1 = 0; k1 < freq.length; k1++) {
+                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
+                        let val = spl[k2][k1];
+                        val = Math.max(contourMin, val);
+                        val = Math.min(contourMax, val);
+                        color.push(val);
+                    }
+                }
+		// now need to interpolate
+		// 
+                polarData.push({x: x, y:y, z:color);
+            }
+            let options = setGraphOptions(
+                [{ data: polarData, layout: speakerGraphs[i].layout }],
+                width,
+                height,
+                speakerGraphs.length
+            );
+            if (speakerGraphs.length > 1 && i == 0) {
+                options.data[0].marker.showscale = false;
+                options.layout.margin.l += 60;
+                options.layout.margin.r += 60;
+            }
+            graphsConfigs.push(options);
+        }
+    }
+    return graphsConfigs;
+}
+*/
+
+export function setGlobe(speakerNames, speakerGraphs, width, height) {
+    // console.log('setGlobe ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
+    const graphsConfigs = [];
+    for (const i in speakerGraphs) {
+        if (speakerGraphs[i]) {
+            let polarData = [];
+            for (const j in speakerGraphs[i].data) {
+                const freq = speakerGraphs[i].data[j].x;
+                const angle = speakerGraphs[i].data[j].y;
+                const spl = speakerGraphs[i].data[j].z;
+                if (!spl) {
                     continue;
                 }
                 const r = [];
                 // r is x (len of y times)
-                for (let k1 = 0; k1 < x.length; k1++) {
-                    for (let k2 = 0; k2 < y.length - 1; k2++) {
-                        r.push(Math.log10(x[k1]));
+                for (let k1 = 0; k1 < freq.length; k1++) {
+                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
+                        r.push(Math.log10(freq[k1]));
                     }
                 }
                 // theta is y (len of x times)
                 let theta = [];
-                for (let k = 0; k < x.length; k++) {
-                    for (let k2 = 0; k2 < y.length - 1; k2++) {
-                        theta.push(y[k2]);
+                for (let k = 0; k < freq.length; k++) {
+                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
+                        theta.push(angle[k2]);
                     }
                 }
                 theta = theta.flat();
@@ -829,9 +890,9 @@ export function setGlobe(speakerNames, speakerGraphs, width, height) {
                 // console.log('debug: len(speakerGraphs[' + i + '].data[' + j + '].y=' + y.length)
                 // console.log('debug: len(speakerGraphs[' + i + '].data[' + j + '].z=' + z.length)
                 const color = [];
-                for (let k1 = 0; k1 < x.length; k1++) {
-                    for (let k2 = 0; k2 < y.length - 1; k2++) {
-                        let val = z[k2][k1];
+                for (let k1 = 0; k1 < freq.length; k1++) {
+                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
+                        let val = spl[k2][k1];
                         val = Math.max(contourMin, val);
                         val = Math.min(contourMax, val);
                         color.push(val);
