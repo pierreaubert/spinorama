@@ -7713,6 +7713,34 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Focal Solo6 ST6": {
+        "brand": "Focal",
+        "model": "Solo6 ST6",
+        "type": "active",
+        "price": "2400",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/focal-solo6-st6-monitor-review.45784/",
+                "review_published": "20230621",
+                "specifications": {
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 334,
+                        "width": 246,
+                        "depth": 295,
+                    },
+                    "weight": 13.0,
+                },
+            },
+        },
+    },
     "Focal Sopra 1": {
         "brand": "Focal",
         "model": "Sopra 1",
@@ -7731,20 +7759,34 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
-    "Focal ST6 Solo6": {
+    "Focal Trio6 ST6": {
         "brand": "Focal",
-        "model": "ST6 Solo6",
+        "model": "Trio ST6",
         "type": "active",
-        "price": "2400",
+        "price": "2900",
         "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "asr",
+        "amount": "each",
+        "default_measurement": "misc-sr",
         "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/focal-solo6-st6-monitor-review.45784/",
+            "misc-sr": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "reviews": {
+                    "snr": "https://www.soundandrecording.de/equipment/focal-trio6-midfield-monitor-im-test/",
+                },
                 "review_published": "20230621",
+                "specifications": {
+                    "SPL": {
+                        "peak": 115,
+                    },
+                    "size": {
+                        "height": 537,
+                        "width": 292,
+                        "depth": 369,
+                    },
+                    "weight": 25,
+                },
             },
         },
     },
