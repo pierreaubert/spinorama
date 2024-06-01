@@ -1,3 +1,11 @@
+2024-06-01  pierre  <pierre@spin.internet-box.ch>
+
+	* datas/metadata.py: added Focal Trio6 and added specs to Focal Solo6
+
+	* src/website/scores.js: fix order of columns
+
+	* src/website/misc.js: pretty print production partner / pp
+
 2024-05-10  pierrre  <pierrre@PAR03240>
 
 	* optimisation of website: removed handlebars, replaced by js templates

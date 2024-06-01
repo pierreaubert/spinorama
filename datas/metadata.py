@@ -7761,7 +7761,7 @@ speakers_info: SpeakerDatabase = {
     },
     "Focal Trio6 ST6": {
         "brand": "Focal",
-        "model": "Trio ST6",
+        "model": "Trio6 ST6",
         "type": "active",
         "price": "2900",
         "shape": "bookshelves",
@@ -7775,7 +7775,7 @@ speakers_info: SpeakerDatabase = {
                 "reviews": {
                     "snr": "https://www.soundandrecording.de/equipment/focal-trio6-midfield-monitor-im-test/",
                 },
-                "review_published": "20230621",
+                "review_published": "20240621",
                 "specifications": {
                     "SPL": {
                         "peak": 115,
@@ -23424,7 +23424,7 @@ origins_info = {
         "max hz": 20000,
         "min dB": -40,
         "max dB": 10,
-        "url": "https://www.audiolabinsight.com/", # ?
+        "url": "https://www.audiolabinsight.com/",  # ?
     },
     "Vendors-Attack Audio": {
         "min hz": 20,
