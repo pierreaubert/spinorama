@@ -20560,7 +20560,10 @@ speakers_info: SpeakerDatabase = {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
                 "quality": "medium",
-                "review": "https://www.avsforum.com/threads/revel-owners-thread.710918/page-1326#replies",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/revel-w228be-in-wall-speaker-review.54848/",
+                    "avs": "https://www.avsforum.com/threads/revel-owners-thread.710918/page-1326#replies",
+                },
                 "review_published": "20240526",
                 "specifications": {
                     "sensitivity": 90,
@@ -20575,6 +20578,15 @@ speakers_info: SpeakerDatabase = {
                     },
                     "weight": 14.3,
                 },
+            },
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/revel-w228be-in-wall-speaker-review.54848/",
+                    "avs": "https://www.avsforum.com/threads/revel-owners-thread.710918/page-1326#replies",
+                },
+                "review_published": "20240602",
             },
         },
     },

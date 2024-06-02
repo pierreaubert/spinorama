@@ -1,0 +1,10 @@
+{
+	"urlSite" : '${site}' + '/',
+	"metadataFilenameHead": '${metadata_filename_head}',
+	"metadataFilenameChunks": ${metadata_filename_chunks},
+	"eqdataFilename": '${eqdata_filename}',
+	"flags" : {
+		"flags_Screen": True;
+		"flags_Contour_Delta": False,
+	}
+}
