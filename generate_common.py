@@ -35,6 +35,7 @@ import datas.metadata as metadata
 
 from spinorama import ray_setup_logger
 import spinorama.constant_paths as cpaths
+from spinorama.constant_paths import flags_ADD_HASH
 
 MINIRAY = None
 try:
@@ -45,6 +46,8 @@ except ModuleNotFoundError:
     import src.miniray as ray
 
     MINIRAY = True
+
+CACHE_DIR = ".cache"
 
 
 def get_similar_names(speakername):
@@ -83,9 +86,6 @@ def args2level(args):
             elif check_level == "ERROR":
                 level = logging.ERROR
     return level
-
-
-CACHE_DIR = ".cache"
 
 
 def create_default_directories():
@@ -398,6 +398,9 @@ def sort_metadata_per_score(meta):
 
 
 def find_metadata_file():
+    if not flags_ADD_HASH:
+        return [cpaths.CPATH_DOCS_METADATA_JSON, cpaths.CPATH_DOCS_EQDATA_JSON]
+
     json_paths = []
     for radical, json_path in (
         ("metadata", cpaths.CPATH_DOCS_METADATA_JSON),
@@ -421,39 +424,23 @@ def find_metadata_file():
 
 def find_metadata_chunks():
     json_paths = {}
-    for radical, json_path in (("metadata", cpaths.CPATH_DOCS_METADATA_JSON),):
-        pattern = "{}*.json".format(json_path[:-5])
-        regexp = "{}[-][0-9a-z]{{4}}[-][0-9a-f]{{5}}[.]json$".format(radical)
-        json_filenames = glob(pattern)
-        json_filename = None
-        for json_maybe in json_filenames:
-            check = re.search(regexp, json_maybe)
-            if check is not None:
-                json_filename = json_maybe
-                if json_filename is not None and os.path.exists(json_filename):
-                    span = check.span()
-                    tokens = json_filename[span[0] : span[1]].split("-")
-                    json_paths[tokens[1]] = json_filename
-    return json_paths
-
-
-def find_eqdata_file():
-    json_paths = []
-    for radical, json_path in (
-        ("metadata", cpaths.CPATH_DOCS_EQDATA_JSON),
-        ("eqdata", cpaths.CPATH_DOCS_EQDATA_JSON),
-    ):
-        pattern = "{}-[0-9a-f]*.json".format(json_path[:-5])
-        json_filenames = glob(pattern)
-        json_filename = None
-        for json_maybe in json_filenames:
-            regexp = ".*/{}[-][0-9a-f]{{5}}[.]json$".format(radical)
-            check = re.match(regexp, json_maybe)
-            if check is not None:
-                json_filename = json_maybe
-                break
-        if json_filename is not None and os.path.exists(json_filename):
-            json_paths.append(json_filename)
-        else:
-            json_paths.append(None)
+    json_path = cpaths.CPATH_DOCS_METADATA_JSON
+    pattern = "{}*.json".format(json_path[:-5])
+    regexp = "{}[-][0-9a-z]{{4}}[.]json$".format(json_path[:-5])
+    if flags_ADD_HASH:
+        regexp = "{}[-][0-9a-z]{{4}}[-][0-9a-f]{{5}}[.]json$".format(json_path[:-5])
+    json_filenames = glob(pattern)
+    for json_filename in json_filenames:
+        check = re.search(regexp, json_filename)
+        if not check:
+            # print('{} does not match'.format(json_filename))
+            continue
+        if os.path.exists(json_filename):
+            span = check.span()
+            if flags_ADD_HASH:
+                tokens = json_filename[span[0] : span[1]].split("-")
+                json_paths[tokens[1]] = json_filename
+            else:
+                tokens = json_filename[span[0] : span[1]].split("-")
+                json_paths[tokens[1].split(".")[0]] = json_filename
     return json_paths

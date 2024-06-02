@@ -56,6 +56,7 @@ import numpy as np
 from docopt import docopt
 
 from spinorama import ray_setup_logger
+from spinorama.constant_paths import flags_ADD_HASH
 
 try:
     import ray
@@ -826,7 +827,9 @@ def dump_metadata(meta):
     def dict_to_json(filename, d):
         js = json.dumps(d)
         key = md5(js.encode("utf-8"), usedforsecurity=False).hexdigest()[0:KEY_LENGTH]
-        hashed_filename = "{}-{}.json".format(filename[:-KEY_LENGTH], key)
+        hashed_filename = filename
+        if flags_ADD_HASH:
+            hashed_filename = "{}-{}.json".format(filename[:-KEY_LENGTH], key)
         if (
             os.path.exists(hashed_filename)
             and os.path.exists(hashed_filename + ".zip")
@@ -837,14 +840,15 @@ def dump_metadata(meta):
             return
 
         # hash changed, remove old files
-        old_hash_pattern = "{}-*.json".format(filename[:-KEY_LENGTH])
-        old_hash_pattern_zip = "{}.zip".format(old_hash_pattern)
-        old_hash_pattern_bz2 = "{}.bz2".format(old_hash_pattern)
-        for pattern in (old_hash_pattern, old_hash_pattern_zip, old_hash_pattern_bz2):
-            for old_filename in glob(pattern):
-                logger.debug("remove old file %s", old_filename)
-                # print("removed old file {}".format(old_filename))
-                os.remove(old_filename)
+        if flags_ADD_HASH:
+            old_hash_pattern = "{}-*.json".format(filename[:-KEY_LENGTH])
+            old_hash_pattern_zip = "{}.zip".format(old_hash_pattern)
+            old_hash_pattern_bz2 = "{}.bz2".format(old_hash_pattern)
+            for pattern in (old_hash_pattern, old_hash_pattern_zip, old_hash_pattern_bz2):
+                for old_filename in glob(pattern):
+                    logger.debug("remove old file %s", old_filename)
+                    # print("removed old file {}".format(old_filename))
+                    os.remove(old_filename)
 
         # write the non zipped file
         with open(hashed_filename, "w", encoding="utf-8") as f:
@@ -865,7 +869,8 @@ def dump_metadata(meta):
                 current_compressed.writestr(hashed_filename, js)
                 logger.debug("generated %s and %s version", hashed_filename, ext)
 
-        check_link(hashed_filename)
+        if flags_ADD_HASH:
+            check_link(hashed_filename)
 
     # split eq data v.s. others as they are not required on the front page
     meta_full = {

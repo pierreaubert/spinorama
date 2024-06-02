@@ -110,7 +110,7 @@ function updateCache(url) {
     const request = new Request(urlMeta, { cache: 'reload' });
     const spec = fetch(request).then((response) => {
         console.log('cache uploaded: ' + response.text());
-        metadataFilenameHead = response.metadataFilenameHead;
+        // metadataFilenameHead = response.metadataFilenameHead;
     });
     return spec;
 }

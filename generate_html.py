@@ -504,24 +504,24 @@ def main():
 
     # copy css/js files
     logger.info("Copy js files to %s", cpaths.CPATH_DOCS_JS)
-    try:
-        for item in (
-            "compare",
-            "download",
-            "eqs",
-            "graph",
-            "index",
-            "meta",
-            "misc",
-            "onload",
-            "pagination",
-            "plot",
-            "scores",
-            "search",
-            "similar",
-            "statistics",
-            "tabs",
-        ):
+    for item in (
+        "compare",
+        "download",
+        "eqs",
+        "graph",
+        "index",
+        "meta",
+        "misc",
+        "onload",
+        "pagination",
+        "plot",
+        "scores",
+        "search",
+        "similar",
+        "statistics",
+        "tabs",
+    ):
+        try:
             # remove the ./docs parts
             len_docs = len("/docs/")
             metadata_filename = metadata_json_filename[len_docs:]
@@ -603,9 +603,9 @@ def main():
             # copy last file
             shutil.copy(item_post_terser, item_dist)
 
-    except KeyError as key_error:
-        print("Generating various html files failed with {}".format(key_error))
-        sys.exit(1)
+        except KeyError as key_error:
+            print("Generating {} js file failed with {}".format(item, key_error))
+            sys.exit(1)
 
     # call workbox
     workbox_command = ""
@@ -636,7 +636,7 @@ def main():
             # ok for robots but likely doesn't work for sitemap
             write_if_different(item_content, item_filename, force=True)
     except KeyError as key_error:
-        print("Generating various html files failed with {}".format(key_error))
+        print("Copying robots files failed with {}".format(key_error))
         sys.exit(1)
 
     sys.exit(0)

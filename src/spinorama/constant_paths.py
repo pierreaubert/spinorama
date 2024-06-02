@@ -67,3 +67,6 @@ U_LW = "{}_unmelted".format(C_LW)
 U_PIR = "{}_unmelted".format(C_PIR)
 U_SP = "{}_unmelted".format(C_SP)
 U_ER = "{}_unmelted".format(C_ER)
+
+# flags
+flags_ADD_HASH = False
