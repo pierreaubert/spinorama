@@ -57,7 +57,7 @@ from spinorama.need_update import need_update, write_if_different
 
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
-CACHE_VERSION = "v3"
+CACHE_VERSION = "v4"
 
 
 def get_files(dir, ext):
