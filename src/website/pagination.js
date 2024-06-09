@@ -32,14 +32,14 @@ export function pagination(numberSpeakers) {
     const navHeader = '<nav class="pagination" role="navigation" aria-label="pagination">';
     const navFooter = '</nav>';
 
-    const url = new URL(window.location);
+    const url = new URL(window.location.href);
     const params = urlParameters2Sort(url);
     const currentPage = params[3].page;
     const perPage = params[3].count;
     const maxPage = Math.floor(numberSpeakers / perPage);
     const prevPage = Math.max(currentPage - 1, 1);
     const nextPage = Math.min(currentPage + 1, maxPage);
-    
+
     // console.info('currentPage='+currentPage+' perPage='+perPage+' maxPage='+maxPage+' prevPage='+prevPage+' nextPage='+nextPage+' #speakers='+numberSpeakers);
 
     // if less than one page
