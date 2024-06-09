@@ -19,7 +19,6 @@
 import logging
 import sys
 
-# global variable
 logger = logging.getLogger("spinorama")
 
 
