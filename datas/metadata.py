@@ -16268,6 +16268,39 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Morel AVYRA 633": {
+        "skip": True,
+        "brand": "Morel",
+        "model": "AVYRA 633",
+        "type": "passive",
+        "price": "2000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ASR",
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/morel_avyra_633/",
+                    "yt": "https://youtu.be/jALCwzEzHNM?si=v3gCLZjYc0OkqZt1",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 4,
+                    "size": {
+                        "height": 982,
+                        "width": 326,
+                        "depth": 310,
+                    },
+                    "weight": 22.0,
+                },
+            },
+        },
+    },
+
     "MTG Designs AlTi DIY": {
         "brand": "MTG Designs",
         "model": "AlTi DIY",
@@ -21797,6 +21830,38 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/svs-ultra-bookshelf-speaker-review.15055/",
                 "review_published": "20200801",
+            },
+        },
+    },
+    "TAD COMPACT REFERENCE ONE CR1TX": {
+        "skip": True,
+        "brand": "TAD",
+        "model": "COMPACT REFERENCE ONE CR1TX",
+        "type": "passive",
+        "price": "85000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ASR",
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://youtu.be/WiFAXve_KjE?si=3uBSyFTPK_lTsQgc",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "size": {
+                        "height": 628,
+                        "width": 341,
+                        "depth": 446,
+                    },
+                    "weight": 46,
+                },
             },
         },
     },
