@@ -39,8 +39,8 @@ fi
 
 # copy
 echo "Sync starts:"
-for target in "$TARGET3" "$TARGET4"; do
-    rsync -arz --exclude '*.png' --delete ./docs/* "$target"
-    rsync -arz --include '*.png' --delete ./docs/pictures/* "$target/pictures"
-    rsync -arz --include '*.png' --delete ./docs/help_pictures/* "$target/help_pictures"
+for target in "$TARGET2" ; do
+    rsync -avrz --exclude '*.png' --delete ./docs/* "$target"
+    rsync -arvz --include '*.png' --delete ./docs/pictures/* "$target/pictures"
+    rsync -arvz --include '*.png' --delete ./docs/help_pictures/* "$target/help_pictures"
 done
