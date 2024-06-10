@@ -2,9 +2,9 @@
 
 # warning this section is read by a python script (generate_html) to grab the versions
 
-PLOTLY=2.32.0
+PLOTLY=2.33.0
 HANDLEBARS=4.7.8
-BULMA=1.0.0
+BULMA=1.0.1
 FUSE=7.0.0
 WORKBOX=7.1.0
 
@@ -24,7 +24,7 @@ fi
 
 # BULMA
 npm install bulma
-cp node_modules/bulma/css/bulma.min.css docs/css/bulma-1.0.0.min.css
+cp node_modules/bulma/css/bulma.min.css docs/css/bulma-${BULMA}.min.css
 
 # FUSE.JS
 npm install fuse.js

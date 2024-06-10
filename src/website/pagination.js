@@ -21,7 +21,7 @@
 import { hide } from './misc.js';
 import { urlParameters2Sort } from './search.js';
 
-function urlChangePage(url, newpage) {
+export function urlChangePage(url, newpage) {
     const newUrl = new URL(url);
     newUrl.searchParams.set('page', newpage);
     return newUrl.toString();
