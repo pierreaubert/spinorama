@@ -208,7 +208,7 @@ export function getReviews(value) {
             origin = "Erin's Audio Corner";
             originShort = 'EAC';
         } else if (origin.search('pp') !== -1) {
-            origin = "Production Partner";
+            origin = 'Production Partner';
             originShort = 'PP';
         }
 

@@ -22,19 +22,16 @@ import { describe, expect, it } from 'vitest';
 import { urlChangePage } from './pagination.js';
 
 describe('check pagination', () => {
-
     it('testing default url', () => {
-	const url = 'https://www.spinorama.org'
-	const newUrl = urlChangePage(url, 2);
+        const url = 'https://www.spinorama.org';
+        const newUrl = urlChangePage(url, 2);
         expect(newUrl).toContain('page=2');
     });
 
     it('testing preserve parameters', () => {
-	const url = 'https://www.spinorama.org/?brand=JBL'
-	const newUrl = urlChangePage(url, 2);
+        const url = 'https://www.spinorama.org/?brand=JBL';
+        const newUrl = urlChangePage(url, 2);
         expect(newUrl).toContain('page=2');
         expect(newUrl).toContain('brand=JBL');
     });
-
 });
-

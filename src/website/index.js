@@ -25,7 +25,7 @@ import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getRevi
 import { process, urlParameters2Sort, setupEventListener } from './search.js';
 import { pagination } from './pagination.js';
 
-const validShape = Object.freeze(new Set(["floorstanders", "bookshelves", "center", "columns", "liveportable", "cinema"]));
+const validShape = Object.freeze(new Set(['floorstanders', 'bookshelves', 'center', 'columns', 'liveportable', 'cinema']));
 
 function getMeasurementCount(metadata) {
     let count = 0;
@@ -65,7 +65,7 @@ function getContext(key, index, value) {
         model: value.model,
         price: price,
         priceAsDollar: getDollar(price),
-	shape: value.shape,
+        shape: value.shape,
         img: {
             avif: getPicture(value.brand, value.model, 'avif'),
             webp: getPicture(value.brand, value.model, 'webp'),
@@ -93,7 +93,7 @@ function isShort(values) {
 
 function iconValue(value) {
     if (value === '***') {
-	return '0';
+        return '0';
     }
     const iValue = parseInt(value);
     if (iValue <= 30) {
@@ -156,7 +156,7 @@ function scoreHtml(shape, score) {
                </span>
     `;
     if (validShape.has(shape)) {
-	return `
+        return `
                <span class="icon-text">
                  <span class="icon">
                    <svg width="20px" height="20px" alt="rating">
@@ -168,7 +168,7 @@ function scoreHtml(shape, score) {
                ${help}
     `;
     } else {
-	return  `
+        return `
                <span class="icon-text">
                  <span class="icon">
                    <svg width="20px" height="20px" alt="rating">

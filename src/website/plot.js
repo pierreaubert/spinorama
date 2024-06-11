@@ -165,7 +165,7 @@ export function computeDims(windowWidth, windowHeight, is_vertical, is_compact, 
 
     let ratio = (height / width).toFixed(2);
     if (width > height) {
-       ratio = (width / height).toFixed(2);
+        ratio = (width / height).toFixed(2);
     }
     console.info(
         'Window(' +
@@ -250,7 +250,8 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             }
         });
         let i = 0;
-        mins.forEach( (min_freq) => { // or maybe you need , _
+        mins.forEach((min_freq) => {
+            // or maybe you need , _
             if (min_freq > 40) {
                 let shape = {
                     type: 'rect',
@@ -754,7 +755,7 @@ function computeContourDelta(data1, data2) {
     return data;
 }
 
-*/    
+*/
 
 export function setContour(speakerNames, speakerGraphs, width, height) {
     // console.log('setContour got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
@@ -784,7 +785,7 @@ export function setContour(speakerNames, speakerGraphs, width, height) {
             graphsConfigs.push(options);
         }
     }
-/*
+    /*
     if (speakerGraphs.length === 2 && flags_Contour_Delta) {
         const dataDelta = computeContourDelta(speakerGraphs[0].data, speakerGraphs[1].data);
         if (dataDelta != null) {

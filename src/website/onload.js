@@ -87,7 +87,7 @@ window.onload = () => {
         }
     });
 
-/*
+    /*
     if (flags_Screen) {
         switch (screen.orientation.type) {
             case 'landscape-primary':
@@ -102,5 +102,5 @@ window.onload = () => {
                 console.log("The orientation API isn't supported in this browser :(");
         }
     }
-*/	
+*/
 };

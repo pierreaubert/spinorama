@@ -201,66 +201,150 @@ describe('test search', () => {
         expect(results.includes('Acoustic-Energy-AE100-Mk2')).toBeTruthy();
     });
 
+    it('search by price alone with Min and Max', () => {
+        const priceMin = 100;
+        const priceMax = 300;
+        const href = 'https://spinorama.org/index.html?priceMin=' + priceMin + '&priceMax=' + priceMax + '&count=1000';
+        const url = new URL(href);
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = search(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(159);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            let price = parseFloat(result.price);
+            if (result?.amount === 'pair') {
+                price /= 2.0;
+            }
+            expect(price).toBeGreaterThanOrEqual(priceMin);
+            expect(price).toBeLessThanOrEqual(priceMax);
+        });
+    });
+
+    it('search by price alone with Min and no Max', () => {
+        const priceMin = 100;
+        const href = 'https://spinorama.org/index.html?priceMin=' + priceMin + '&count=1000';
+        const url = new URL(href);
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = search(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(650);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            let price = parseFloat(result.price);
+            if (result?.amount === 'pair') {
+                price /= 2.0;
+            }
+            expect(price).toBeGreaterThanOrEqual(priceMin);
+        });
+    });
+
+    it('search by price alone with no Min and a Max', () => {
+        const priceMax = 300;
+        const href = 'https://spinorama.org/index.html?priceMax=' + priceMax + '&count=1000';
+        const url = new URL(href);
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = search(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(201);
+        results.forEach((key) => {
+            const result = metadata.get(key);
+            let price = parseFloat(result.price);
+            if (result?.amount === 'pair') {
+                price /= 2.0;
+            }
+            expect(price).toBeLessThanOrEqual(priceMax);
+        });
+    });
+
+    it('search by price : check that we have less results if the range is smaller', () => {
+        function getResults(priceMax) {
+            const href = 'https://spinorama.org/index.html?priceMax=' + priceMax + '&count=1000';
+            const url = new URL(href);
+            const params = urlParameters2Sort(url);
+            return search(metadata, params);
+        }
+        const [maxResults1, results1] = getResults(100);
+        const [maxResults2, results2] = getResults(200);
+        expect(maxResults1).toBeLessThanOrEqual(maxResults2);
+        expect(results1.length).toBeLessThanOrEqual(results2.length);
+    });
+
+    it('search by price : check that we have disjoint  results if the ranges do not intersect', () => {
+        function getResults(priceMin, priceMax) {
+            const href = 'https://spinorama.org/index.html?priceMin=' + priceMin + '&priceMax=' + priceMax + '&count=1000';
+            const url = new URL(href);
+            const params = urlParameters2Sort(url);
+            return search(metadata, params);
+        }
+        const [maxResults1, results1] = getResults(100, 200);
+        const [maxResults2, results2] = getResults(300, 1000);
+        const set1 = new Set(results1);
+        const set2 = new Set(results2);
+        expect(set1.isDisjointFrom(set2)).toBeTruthy();
+    });
+
     it('search no constraint page 1 & 2', () => {
-	// page 1
+        // page 1
         const url1 = new URL('https://spinorama.org/index.html?page=1&count=20');
         const params1 = urlParameters2Sort(url1);
         const [maxResults1, results1] = search(metadata, params1);
         expect(results1).toBeDefined();
         expect(results1).toBeTypeOf('object');
         expect(maxResults1).toBeGreaterThanOrEqual(917);
-	// page 2
+        // page 2
         const url2 = new URL('https://spinorama.org/index.html?page=2&count=20');
         const params2 = urlParameters2Sort(url2);
         const [maxResults2, results2] = search(metadata, params2);
         expect(results2).toBeDefined();
         expect(results2).toBeTypeOf('object');
         expect(maxResults2).toBeGreaterThanOrEqual(917);
-	// consistency
-	expect(maxResults1).toEqual(maxResults2);
-	const set1 = new Set(results1);
-	const set2 = new Set(results2);
-	// need node >22
-	expect(set1.isDisjointFrom(set2)).toBeTruthy();
+        // consistency
+        expect(maxResults1).toEqual(maxResults2);
+        const set1 = new Set(results1);
+        const set2 = new Set(results2);
+        // need node >22
+        expect(set1.isDisjointFrom(set2)).toBeTruthy();
     });
 });
 
 describe('check within page', () => {
-
     it('test boundaries page 1 with 10 per page', () => {
-	const pagination_1_10 = {
-	    active: true,
-	    page: 1,
-	    count: 10
-	};
-	expect(isWithinPage(0, pagination_1_10)).toBeTruthy();
-	expect(isWithinPage(1, pagination_1_10)).toBeTruthy();
-	expect(isWithinPage(9, pagination_1_10)).toBeTruthy();
-	expect(isWithinPage(10, pagination_1_10)).toBeFalsy();
+        const pagination_1_10 = {
+            active: true,
+            page: 1,
+            count: 10,
+        };
+        expect(isWithinPage(0, pagination_1_10)).toBeTruthy();
+        expect(isWithinPage(1, pagination_1_10)).toBeTruthy();
+        expect(isWithinPage(9, pagination_1_10)).toBeTruthy();
+        expect(isWithinPage(10, pagination_1_10)).toBeFalsy();
     });
-    
+
     it('test boundaries page 1 with 20 per page', () => {
-	const pagination_1_20 = {
-	    active: true,
-	    page: 1,
-	    count: 20
-	};
-	expect(isWithinPage(0, pagination_1_20)).toBeTruthy();
-	expect(isWithinPage(1, pagination_1_20)).toBeTruthy();
-	expect(isWithinPage(19, pagination_1_20)).toBeTruthy();
-	expect(isWithinPage(20, pagination_1_20)).toBeFalsy();
+        const pagination_1_20 = {
+            active: true,
+            page: 1,
+            count: 20,
+        };
+        expect(isWithinPage(0, pagination_1_20)).toBeTruthy();
+        expect(isWithinPage(1, pagination_1_20)).toBeTruthy();
+        expect(isWithinPage(19, pagination_1_20)).toBeTruthy();
+        expect(isWithinPage(20, pagination_1_20)).toBeFalsy();
     });
-    
+
     it('test boundaries page 2 with 10 per page', () => {
-	const pagination_2_10 = {
-	    active: true,
-	    page: 2,
-	    count: 10
-	};
-	expect(isWithinPage(9, pagination_2_10)).toBeFalsy();
-	expect(isWithinPage(10, pagination_2_10)).toBeTruthy();
-	expect(isWithinPage(19, pagination_2_10)).toBeTruthy();
-	expect(isWithinPage(20, pagination_2_10)).toBeFalsy();
+        const pagination_2_10 = {
+            active: true,
+            page: 2,
+            count: 10,
+        };
+        expect(isWithinPage(9, pagination_2_10)).toBeFalsy();
+        expect(isWithinPage(10, pagination_2_10)).toBeTruthy();
+        expect(isWithinPage(19, pagination_2_10)).toBeTruthy();
+        expect(isWithinPage(20, pagination_2_10)).toBeFalsy();
     });
-    
 });

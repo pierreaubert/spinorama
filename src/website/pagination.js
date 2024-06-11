@@ -44,7 +44,7 @@ export function pagination(numberSpeakers) {
 
     // if less than one page
     if (numberSpeakers <= perPage) {
-	hide(navigationContainer);
+        hide(navigationContainer);
         return;
     }
 
@@ -63,8 +63,14 @@ export function pagination(numberSpeakers) {
                 current = 'is-current';
             }
             html +=
-                '<li><a href="' + urlChangePage(url, i) +'" class="pagination-link ' +  current +
-		'" aria-label="Goto page ' + i + '">' +  i +
+                '<li><a href="' +
+                urlChangePage(url, i) +
+                '" class="pagination-link ' +
+                current +
+                '" aria-label="Goto page ' +
+                i +
+                '">' +
+                i +
                 '</a></li>';
         }
         if (maxPage > 5) {

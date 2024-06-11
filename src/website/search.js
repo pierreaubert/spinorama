@@ -550,66 +550,36 @@ export function isFiltered(item, filter) {
         shouldShow = false;
     }
 
-    // console.log('debug: post brand ' + shouldShow + 'filter.price=>>>'+filter.price+'<<<')
-    if (shouldShow && filter.price !== undefined && filter.price !== '') {
-        // console.log('debug: pre price ' + filter.price)
-        if (item.price !== '') {
-            let price = parseInt(item.price);
-            if (item.amount === 'pair') {
-                price /= 2.0;
-            }
-            switch (filter.price) {
-                case 'p100':
-                    if (price > 100) {
-                        shouldShow = false;
-                    }
-                    break;
-                case 'p200':
-                    if (price > 200 || price < 100) {
-                        shouldShow = false;
-                    }
-                    break;
-                case 'p300':
-                    if (price > 300 || price < 200) {
-                        shouldShow = false;
-                    }
-                    break;
-                case 'p400':
-                    if (price > 400 || price < 300) {
-                        shouldShow = false;
-                    }
-                    break;
-                case 'p500':
-                    if (price > 500 || price < 400) {
-                        shouldShow = false;
-                    }
-                    break;
-                case 'p1000':
-                    if (price > 1000 || price < 500) {
-                        shouldShow = false;
-                    }
-                    break;
-                case 'p2000':
-                    if (price > 2000 || price < 1000) {
-                        shouldShow = false;
-                    }
-                    break;
-                case 'p5000':
-                    if (price > 5000 || price < 2000) {
-                        shouldShow = false;
-                    }
-                    break;
-                case 'p5000p':
-                    if (price <= 5000) {
-                        shouldShow = false;
-                    }
-                    break;
+    // console.log('debug: before price ' + shouldShow + 'min=>>>'+filter.priceMin+'<<< max=>>>'+filter.priceMax+'<<<')
+    if (
+        shouldShow &&
+        ((filter.priceMin !== undefined && filter.priceMin !== '') || (filter.priceMax !== undefined && filter.priceMax !== ''))
+    ) {
+        var priceMin = parseFloat(filter.priceMin);
+        if (isNaN(priceMin)) {
+            priceMin = -1;
+        }
+        var priceMax = parseFloat(filter.priceMax);
+        if (isNaN(priceMax)) {
+            priceMax = Number.MAX_SAFE_INTEGER;
+        }
+        if (item?.price !== '') {
+            let price = parseFloat(item.price);
+            if (isNaN(price)) {
+                shouldShow = false;
+            } else {
+                if (item?.amount === 'pair') {
+                    price /= 2.0;
+                }
+                if (price > priceMax || price < priceMin) {
+                    shouldShow = false;
+                }
             }
         } else {
             // no known price
             shouldShow = false;
         }
-        // console.log('debug: post price ' + shouldShow)
+        // console.debug('debug: post price ' + shouldShow);
     }
 
     if (
