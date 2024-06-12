@@ -4,8 +4,8 @@
   default_origin = None
   if default != g_key:
       print_warning = True
-      default_origin = meta[speaker]['measurements'].get(default).get('origin')
-      default_origin = default_origin.replace('Vendors-', '')
+  default_origin = meta[speaker]['measurements'].get(default).get('origin')
+  default_origin = default_origin.replace('Vendors-', '')
   current        = meta[speaker]['measurements'].get(g_key, None)
   current_eqs    = meta[speaker].get('eqs', None)
   speaker_brand  = meta[speaker].get('brand')
@@ -125,7 +125,7 @@ Warning: this measurement was already process with an equalizer.
 <%def name="speaker_estimates(measurement)">
 <%
   estimates = measurement.get('estimates', None)
-%>  
+%>
 % if estimates is not None:
 %   if estimates.get('ref_3dB', '?') !=  '?':
 <li>
@@ -151,7 +151,7 @@ Warning: this measurement was already process with an equalizer.
 <%def name="speaker_directivity(measurement)">
 <%
   estimates = measurement.get('estimates', None)
-%>  
+%>
 % if estimates is not None and (estimates.get('dir_horizontal', '?') !=  '?' or estimates.get('dir_vertical', '?') !=  '?'):
 <li>Directivity
   <ul>
@@ -178,7 +178,7 @@ Warning: this measurement was already process with an equalizer.
 <%
   pref_rating = measurement.get('pref_rating', None)
   pref_rating_eq = measurement.get('pref_rating_eq', None)
-%>  
+%>
 % if pref_rating is not None or pref_rating_eq is not None:
 <li>Tonality (Preference) Score
   <ul>
@@ -194,7 +194,7 @@ Warning: this measurement was already process with an equalizer.
 <%def name="speaker_pref_rating(measurement)">
 <%
   pref_rating = measurement.get('pref_rating', None)
-%>  
+%>
 % if pref_rating is not None:
 <li>Tonality (Preference) Score is <b>${pref_rating.get('pref_score')}</b>
   and would be <b>${pref_rating.get('pref_score_wsub')}</b> with a
@@ -217,7 +217,7 @@ Warning: this measurement was already process with an equalizer.
 <%def name="speaker_pref_rating_eq(measurement)">
 <%
   pref_rating_eq = measurement.get('pref_rating_eq', None)
-%>  
+%>
 % if pref_rating_eq is not None:
 <li>Tonality (Preference) Score is <b>${pref_rating_eq.get('pref_score')}</b>
   with an EQ and would be <b>${pref_rating_eq.get('pref_score_wsub')}</b> with a
@@ -240,7 +240,7 @@ Warning: this measurement was already process with an equalizer.
 <%
   pref_rating = measurement.get('pref_rating', None)
   pref_rating_eq = measurement.get('pref_rating_eq', None)
-%>  
+%>
 % if pref_rating is not None or pref_rating_eq is not None:
 </ul>
 </li>
@@ -285,7 +285,7 @@ Links to other reviews: <a href="${review}">${key} review</a>
 <%def name="speaker_notes(measurement)">
 <%
   notes = measurement.get('notes', None)
-%>  
+%>
 % if notes is not None:
 <li>
     <span class="tag is-warning">Note:</span> ${notes}.
@@ -391,7 +391,7 @@ Links to other reviews: <a href="${review}">${key} review</a>
         ${speaker_notes(current)}
         ${speaker_specifications(current)}
       </ul>
-      % endif	
+      % endif
     </div>
   </div>
 </article>
@@ -459,10 +459,13 @@ These EQ is designed by ASR member maiky76. These EQ optimise the Harman score a
 </%def>
 
 <%def name="eqs_print_graph(graph, doc)">
+<%
+  origin = default_origin.replace('+', '%20').replace(' ', '%20')
+%>
 <div class="box">
   <picture class="image">
-    <source srcset="../${origin | u}/${graph | u}.webp" type="image/webp"></source>
-    <img src="../${origin | u}/${graph | u}.jpg" alt="${speaker_brand} ${speaker_model} ${graph}" loading="lazy" decoding="async" width="700" height="500"/>
+    <source srcset="../${origin}/${graph | u}.webp" type="image/webp"></source>
+    <img src="../${origin}/${graph | u}.jpg" alt="${speaker_brand} ${speaker_model} ${graph}" loading="lazy" decoding="async" width="700" height="500"/>
   </picture>
   <h4 class="title is-4">${doc}</h4>
 </div>
@@ -530,7 +533,7 @@ These EQ is designed by ASR member maiky76. These EQ optimise the Harman score a
     ${eqs_info_eq(eq['display_name'])}
     % if i == 0 or eq['display_name'] == 'AutomaticEQ (IIR)':
     ${eqs_print_graphs(eq)}
-    % endif    
+    % endif
   </div>
 </article>
 % endfor
