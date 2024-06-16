@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // A library to display spinorama charts
 //
-// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+// Copyright (C) 2020-2024 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,10 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-/*global Plotly*/
 /*eslint no-undef: "error"*/
 
-import { setGraph } from './plot${min}.js';
+import Plotly from 'plotly-dist-min';
+
+import { setGraph } from './plot.js';
 
 export function displayGraph(divName, graphSpec) {
     async function run() {
@@ -29,7 +30,7 @@ export function displayGraph(divName, graphSpec) {
         const title = graphSpec.layout.title.text;
         const graphOptions = setGraph([title], [graphSpec], w, h, 1);
 
-        if (graphOptions && graphOptions.length >= 1) {
+        if (graphOptions?.length >= 1) {
             Plotly.newPlot(divName, graphOptions[0]);
         }
     }

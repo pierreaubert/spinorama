@@ -1,32 +1,56 @@
-<div class="tabs is-centered is-toggle is-small" id="nav">
+<div class="tabs is-centered is-boxed" id="navtab">
   <ul>
     <li data-target="pane-1" id="1">
       <a>
-        <span class="icon"><i class="fas fa-solid fa-database"></i></span>
-        <span>Data</span>
+	<span class="icon is-hidden-mobile" aria-hidden="true">
+	  <svg width="24px" height="24px"><use href="#icon-database"/></svg>
+	</span>
+        <table class="is-hidden-tablet">
+	  <tr><td>Data</td></tr>
+	  <tr><td>&amp; EQ</td></tr>
+	</table>
+	<span class="is-hidden-mobile">Data &amp; EQ</span>
       </a>
     </li>
     <li data-target="pane-2" id="2" class="is-active">
       <a>
-        <span class="icon"><i class="fas fa-solid fa-ruler-horizontal"></i></span>
-        <span>Ref.</span>
+	<span class="icon is-hidden-mobile" aria-hidden="true">
+	  <svg width="24px" height="24px"><use href="#icon-ruler-horizontal"/></svg>
+	</span>
+        <table class="is-hidden-tablet">
+	  <tr><td>Ref.</td></tr>
+	  <tr><td>Graphs</td></tr>
+	</table>
+	<span class="is-hidden-mobile">Reference graphs</span>
       </a>
     </li>
     % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
     <li data-target="pane-3" id="3">
       <a>
-        <span class="icon"><i class="fas fa-solid fa-ruler-vertical"></i></span>
-        <span>With EQ</span>
+	<span class="icon is-hidden-mobile" aria-hidden="true">
+	  <svg width="24px" height="24px"><use href="#icon-ruler-vertical"/></svg>
+	</span>
+        <table class="is-hidden-tablet">
+	  <tr><td>EQed</td></tr>
+	  <tr><td>Graphs</td></tr>
+	</table>
+	<span class="is-hidden-mobile">EQed graphs</span>
       </a>
     </li>
     <li data-target="pane-4" id="4">
       <a>
-        <span class="icon"><i class="fas fa-solid fa-ruler-combined"></i></span>
-        <span>Ref. v.s. EQ</span>
+	<span class="icon is-hidden-mobile" aria-hidden="true">
+	  <svg width="24px" height="24px"><use href="#icon-ruler-combined"/></svg>
+	</span>
+        <table class="is-hidden-tablet">
+	  <tr><td>Ref.</td></tr>
+	  <tr><td>v.s. EQ</td></tr>
+	</table>
+	<span class="is-hidden-mobile">Reference v.s. EQed</span>
       </a>
     </li>
     % endif
   </ul>
 </div>
 
-<div class="tab-content"></div>
+<div class="tab-content">

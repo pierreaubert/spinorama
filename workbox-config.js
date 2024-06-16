@@ -1,14 +1,13 @@
 module.exports = {
-	globDirectory: 'docs/',
-	globPatterns: [
-	    '*.{css,js,json}',
-	    'icons/*.svg',
-	    'svg/*.svg',
-	    'webfonts/*.woff2',
-	],
-	swDest: 'docs/sw.js',
-	ignoreURLParametersMatching: [
-		/^utm_/,
-		/^fbclid$/
-	]
+    globDirectory: 'docs/',
+    globPatterns: [
+        '*.{js,html,xml,txt,svg}',
+        'css/*.css',
+        'js/*-v4.min.js',
+        'js3rd/*.{js,mjs}',
+        'json/{eqdata,metadata-*}.json',
+    ],
+    maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
+    swDest: 'docs/sw.js',
+    ignoreURLParametersMatching: [/^utm_/, /^fbclid$/],
 };

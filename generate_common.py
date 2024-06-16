@@ -35,6 +35,7 @@ import datas.metadata as metadata
 
 from spinorama import ray_setup_logger
 import spinorama.constant_paths as cpaths
+from spinorama.constant_paths import flags_ADD_HASH
 
 MINIRAY = None
 try:
@@ -45,6 +46,8 @@ except ModuleNotFoundError:
     import src.miniray as ray
 
     MINIRAY = True
+
+CACHE_DIR = ".cache"
 
 
 def get_similar_names(speakername):
@@ -83,9 +86,6 @@ def args2level(args):
             elif check_level == "ERROR":
                 level = logging.ERROR
     return level
-
-
-CACHE_DIR = ".cache"
 
 
 def create_default_directories():
@@ -131,15 +131,52 @@ def custom_ray_init(args):
     if ray.is_initialized:
         ray.shutdown()
 
-    ray.init(
-        include_dashboard=True,
-        dashboard_host=dashboard_ip,
-        dashboard_port=dashboard_port,
-        local_mode=ray_local_mode,
-        configure_logging=True,
-        logging_level=level,
-        log_to_driver=True,
-    )
+    ray_address = None
+    if "--ray-cluster" in args and args["--ray-cluster"] is not None:
+        check_address = args["--ray-cluster"]
+        check_ip, check_port = check_address.split(":")
+        try:
+            _ = ipaddress.ip_address(check_ip)
+        except ipaddress.AddressValueError as ave:
+            print("ray ip {} is not valid {}!".format(check_ip, ave))
+            sys.exit(1)
+        try:
+            ray_port = int(check_port)
+            if ray_port < 0 or ray_port > 2**16 - 1:
+                print("ray port {} is out of bounds".format(check_port))
+                sys.exit(1)
+        except ValueError:
+            print("ray port {} is not an integer".format(check_port))
+            sys.exit(1)
+        ray_address = check_address
+
+    if ray_address is not None:
+        print(
+            "Calling init with cluster at {} dashboard at {}:{}".format(
+                ray_address, dashboard_ip, dashboard_port
+            )
+        )
+        ray.init(
+            address=ray_address,
+            include_dashboard=True,
+            dashboard_host=dashboard_ip,
+            dashboard_port=dashboard_port,
+            local_mode=ray_local_mode,
+            configure_logging=True,
+            logging_level=level,
+            log_to_driver=True,
+        )
+    else:
+        print("Calling init with dashboard at {}:{}".format(dashboard_ip, dashboard_port))
+        ray.init(
+            include_dashboard=True,
+            dashboard_host=dashboard_ip,
+            dashboard_port=dashboard_port,
+            local_mode=ray_local_mode,
+            configure_logging=True,
+            logging_level=level,
+            log_to_driver=True,
+        )
 
 
 def cache_key(name: str) -> str:
@@ -182,7 +219,7 @@ def cache_save(df_all: dict):
     print("(saved {} speakers)".format(len(df_all)))
 
 
-def is_filtered(speaker: str, data, filters: dict):
+def is_filtered(speaker: str, filters: dict):
     if filters.get("speaker_name") is not None and filters.get("speaker_name") != speaker:
         return True
 
@@ -225,14 +262,14 @@ def cache_load_seq(filters, smoke_test):
             logging.debug("skipping %s key=%s", speaker_name, cache_key(speaker_name))
             continue
         df_read = fl.load(path=cache)
-        logging.debug("reading file %s found %d entries", cache, len(df_read))
+        logging.debug("reading file %s found %d entries", cache, len(df_read) if df_read else 0)
         if not isinstance(df_read, dict):
             continue
         for speaker, data in df_read.items():
             if speaker in df_all:
                 print("error in cache: {} is already in keys".format(speaker))
                 continue
-            if is_filtered(speaker, data, filters):
+            if is_filtered(speaker, filters):
                 # print(speaker, speaker_name)
                 continue
             df_all[speaker] = data
@@ -277,7 +314,7 @@ def cache_load_distributed_reduce(filters, smoke_test, ids):
             for speaker, data in df_read.items():
                 if speaker in df_all:
                     print("error in cache: {} is already in keys".format(speaker))
-                if is_filtered(speaker, data, filters):
+                if is_filtered(speaker, filters):
                     continue
                 df_all[speaker] = data
                 count += 1
@@ -361,6 +398,9 @@ def sort_metadata_per_score(meta):
 
 
 def find_metadata_file():
+    if not flags_ADD_HASH:
+        return [cpaths.CPATH_DOCS_METADATA_JSON, cpaths.CPATH_DOCS_EQDATA_JSON]
+
     json_paths = []
     for radical, json_path in (
         ("metadata", cpaths.CPATH_DOCS_METADATA_JSON),
@@ -384,17 +424,23 @@ def find_metadata_file():
 
 def find_metadata_chunks():
     json_paths = {}
-    for radical, json_path in (("metadata", cpaths.CPATH_DOCS_METADATA_JSON),):
-        pattern = "{}*.json".format(json_path[:-5])
-        regexp = "{}[-][0-9a-z]{{4}}[-][0-9a-f]{{5}}[.]json$".format(radical)
-        json_filenames = glob(pattern)
-        json_filename = None
-        for json_maybe in json_filenames:
-            check = re.search(regexp, json_maybe)
-            if check is not None:
-                json_filename = json_maybe
-                if json_filename is not None and os.path.exists(json_filename):
-                    span = check.span()
-                    tokens = json_filename[span[0] : span[1]].split("-")
-                    json_paths[tokens[1]] = json_filename
+    json_path = cpaths.CPATH_DOCS_METADATA_JSON
+    pattern = "{}*.json".format(json_path[:-5])
+    regexp = "{}[-][0-9a-z]{{4}}[.]json$".format(json_path[:-5])
+    if flags_ADD_HASH:
+        regexp = "{}[-][0-9a-z]{{4}}[-][0-9a-f]{{5}}[.]json$".format(json_path[:-5])
+    json_filenames = glob(pattern)
+    for json_filename in json_filenames:
+        check = re.search(regexp, json_filename)
+        if not check:
+            # print('{} does not match'.format(json_filename))
+            continue
+        if os.path.exists(json_filename):
+            span = check.span()
+            if flags_ADD_HASH:
+                tokens = json_filename[span[0] : span[1]].split("-")
+                json_paths[tokens[1]] = json_filename
+            else:
+                tokens = json_filename[span[0] : span[1]].split("-")
+                json_paths[tokens[1].split(".")[0]] = json_filename
     return json_paths

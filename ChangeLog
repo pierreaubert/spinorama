@@ -1,3 +1,17 @@
+2024-06-01  pierre  <pierre@spin.internet-box.ch>
+
+	* datas/metadata.py: added Focal Trio6 and added specs to Focal Solo6
+
+	* src/website/scores.js: fix order of columns
+
+	* src/website/misc.js: pretty print production partner / pp
+
+2024-05-10  pierrre  <pierrre@PAR03240>
+
+	* optimisation of website: removed handlebars, replaced by js templates
+	* optimisation of website: removed fontawesome, replace by a selection of icons in svg format
+	* optimisation of website: added a service worker to improve caching
+
 2023-11-12  pierre  <pierre@spin.internet-box.ch>
 
 	* tests/test_go.py: tests are not passing for mysterious reasons

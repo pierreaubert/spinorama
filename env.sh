@@ -65,7 +65,7 @@ source .venv/bin/activate
 ## node install
 ## ----------------------------------------------------------------------
 if ! test -d $SPIN/node_modules; then
-    npm install plotly pyright html-validator-cli standard flow-remove-types
+    npm install .
 fi
 export PATH=$PATH:$SPIN/node_modules/.bin
 

@@ -54,9 +54,10 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
         freqs = []
         dbs = []
 
-        # 2 possible formats:
+        # 3 possible formats:
         # 1. angle_H or angle_V.txt
         # 2. name _H angle.txt
+        # 3. _[HV] angle.txt
         file_format = os.path.basename(file).split()
         if len(file_format) > 2:
             angle = file_format[-1][:-4]

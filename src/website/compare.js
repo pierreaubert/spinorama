@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // A library to display spinorama charts
 //
-// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+// Copyright (C) 2020-2024 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,12 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-/*global Plotly */
 /*eslint no-undef: "error"*/
 
-import { urlSite } from './meta${min}.js';
-import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download${min}.js';
-import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setSurface } from './plot${min}.js';
+import Plotly from 'plotly-dist-min';
+
+import { urlSite, flags_Screen } from './meta.js';
+import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
+import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setSurface } from './plot.js';
 
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin
@@ -365,9 +366,11 @@ getMetadata()
             return windowChanges(event);
         });
 
-        screen.orientation.addEventListener('change', (event) => {
-            return windowChanges(event);
-        });
+        if (flags_Screen) {
+            screen.orientation.addEventListener('change', (event) => {
+                return windowChanges(event);
+            });
+        }
 
         graphsSelector.addEventListener('change', updateSpeakers, false);
 
@@ -377,7 +380,7 @@ getMetadata()
                 speakersSelector[0].focus();
             } else if (key === 'b' || key === '2') {
                 speakersSelector[1].focus();
-            } else if (key === 'g') {
+            } else if (key === 'g' || key === 'c' || key === '3') {
                 graphsSelector.focus();
             }
         });

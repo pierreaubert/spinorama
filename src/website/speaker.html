@@ -10,23 +10,31 @@
     <%namespace name="util" module="website.utils" import="*"/>
     <%include file="tabs_header.html"/>
 
-    <div class="tab-pane" id="pane-1">
-      <div class="box is-centered">
-        <table>
+    <div class="tab-pane display:non" id="pane-1">
+      <div class="container">
+	<table>
           <tr>
             <td><%include file="speaker_desc.html"/></td>
           </tr>
-        </table>
+	</table>
       </div>
     </div>
 
     <!-- Mobile view: sequential-->
-    <div class="tab-pane is-active" id="pane-2">
+    <div class="tab-pane is-active display:block" id="pane-2">
+      <div class="section">
       <table>
+<!--
+	<tr>
+	  <td>
+	    <%include file="speaker_tip.html"/>
+	  </td>
+	</tr>
+-->	
         % for freq in g_freq:
         <tr>
           <td>
-            <div class="box has-background-link-light">
+            <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key}/${freq | space2url}.html">
                 <picture>
                   <source
@@ -51,7 +59,7 @@
         % for contour in g_contour:
         <tr>
           <td>
-            <div class="box has-background-link-light">
+            <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key}/${contour | unmeltC, space2url}.html">
                 <picture>
                   <source
@@ -76,7 +84,7 @@
         % for radar in g_radar:
         <tr>
           <td>
-            <div class="box has-background-link-light">
+            <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key}/${radar | unmeltR, space2url}.html">
                 <picture>
                   <source
@@ -100,11 +108,20 @@
         % endfor
       </table>
     </div>
+    </div>
 
     <!-- EQ view: sequential-->
     % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
-    <div class="tab-pane" id="pane-3">
+    <div class="tab-pane display:none" id="pane-3">
+      <div class="section">
       <table>
+<!--
+	<tr>
+	  <td>
+	    <%include file="speaker_tip.html"/>
+	  </td>
+	</tr>
+-->
         % if g_eq is not None:
 <%
           g_key_eq = g_key.replace("_eq", "") + "_eq"
@@ -112,7 +129,7 @@
         % for freq in g_freq:
         <tr>
           <td>
-            <div class="box has-background-link-light">
+            <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key_eq}/${freq | space2url}.html">
                 <picture>
                   <source
@@ -137,7 +154,7 @@
         % for contour in g_contour:
         <tr>
           <td>
-            <div class="box has-background-link-light">
+            <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key_eq}/${contour | unmeltC, space2url}.html">
                 <picture>
                   <source
@@ -162,7 +179,7 @@
         % for radar in g_radar:
         <tr>
           <td>
-            <div class="box has-background-link-light">
+            <div class="box has-background-white-bis m-1 p-1">
               <a href="${g_key_eq}/${radar | unmeltR, space2url}.html">
                 <picture>
                   <source
@@ -186,13 +203,13 @@
         % endfor
         % endif
       </table>
+      </div>
     </div>
     % endif
 
     <!-- Desktop view: Ref vs. EQ views-->
     % if 'default_measurement' in meta[speaker] and 'pref_rating_eq' in meta[speaker]['measurements'][meta[speaker]['default_measurement']]:
     <div class="tab-pane display:none" id="pane-4">
-      <div id="vis4"></div>
       <table>
 <%
           g_key_eq = g_key.replace("_eq", "") + "_eq"

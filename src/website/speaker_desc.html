@@ -1,88 +1,56 @@
 <%
   print_warning = False
   default = meta[speaker].get('default_measurement')
+  default_origin = None
   if default != g_key:
       print_warning = True
-      default_origin = meta[speaker]['measurements'].get(default).get('origin')
-      default_origin = default_origin.replace('Vendors-', '')
+  default_origin = meta[speaker]['measurements'].get(default).get('origin')
+  default_origin = default_origin.replace('Vendors-', '')
+  current        = meta[speaker]['measurements'].get(g_key, None)
+  current_eqs    = meta[speaker].get('eqs', None)
+  speaker_brand  = meta[speaker].get('brand')
+  speaker_model  = meta[speaker].get('model')
+  speaker_shape  = meta[speaker].get('shape')
+  speaker_price  = meta[speaker].get('price')
+  speaker_amount = meta[speaker].get('amount')
+  speaker_type   = meta[speaker].get('type')
+  speaker_path = '/speakers/{} {}/'.format(speaker_brand, speaker_model)
 %>
-% if print_warning:
-<article class="message is-warning">
-  <h4>Notice</h4>
-  <div class="message-header">
-    <p>Warning</p>
-    <button class="delete" aria-label="delete"></button>
-  </div>
-  <div class="message-body">
-    We have multiple measurements for this speaker. Click
-    <a href="../${default_origin | u}/index_${default}.html">here</a> to
-    see the default one (which is higher quality if we have one
-    measurement better than the others).
-  </div>
-</article>
+
+<%def name="speaker_header(measurement)">
+${speaker_brand} ${speaker_model} is
+% if speaker_type == 'active':
+an active
+% else:
+a passive
 % endif
-
-
-<article class="message is-info">
-  <h4>What we know about the measurement:</h4>
-  <div class="message-header">
-    <p>
-      ${meta[speaker].get('brand')} ${meta[speaker].get('model')} is
-      % if meta[speaker].get('type', '') == 'active':
-      an active
-      % else:
-      a passive
-      % endif
-      ${meta[speaker].get('shape')} speaker
-      <%
-	price =meta[speaker].get('price', '?')
-	%>
-      % if price not in ('?', ''):
-          that cost around ${meta[speaker].get('price', '?')}USD
-      %     if meta[speaker].get('amount', '?') != '?' and meta[speaker].get('shape') != 'center':
-      %         if meta[speaker].get('amount') == 'pair':
-                  for a pair
-      %         else:
-                  each
-      %         endif
-      %     endif
-      % endif
-.
-    </p>
-  </div>
-  <div class="message-body">
-    <div class="content">
-      <ul>
-<%
-    estimates = None
-    pref_rating = None
-    notes = None
-    specifications = None
-    sensitivity = None 
-    sensitivity_distance = None 
-    sensitivity_1m = None 
-    default = meta[speaker].get('default_measurement')
-    if default is not None and default in meta[speaker]['measurements'].keys():
-        estimates = meta[speaker]['measurements'][default].get('estimates', None)
-        pref_rating = meta[speaker]['measurements'][default].get('pref_rating', None)
-        pref_rating_eq = meta[speaker]['measurements'][default].get('pref_rating_eq', None)
-        notes = meta[speaker]['measurements'][default].get('notes', None)
-        sensitivity_data = meta[speaker]["measurements"][default].get('sensitivity', {})
-        sensitivity = sensitivity_data.get('computed', None)
-        sensitivity_1m = sensitivity_data.get('sensitivity_1m', None)
-        sensitivity_distance = sensitivity_data.get('distance', None)
-    if g_key in meta[speaker]['measurements'].keys():
-        specifications = meta[speaker]['measurements'][g_key].get('specifications', None)
-%>
-% if g_key in meta[speaker]["measurements"]:
-<li>Quality of the measurement data is
-%   if  meta[speaker]["measurements"][g_key].get("quality", "?") != "?":
-    <b>${meta[speaker]["measurements"][g_key]["quality"]}</b>
-%   else:
-    <b>unknown</b>
+${speaker_shape}
+% if speaker_price not in ('?', ''):
+that cost around ${speaker_price} USD
+%   if speaker_amount != '?' and speaker_shape != 'center':
+%      if speaker_amount == 'pair':
+for a pair.
+%      else:
+each.
+%      endif
 %   endif
-.</li>
-%   if meta[speaker]["measurements"][g_key].get("origin", "?") != "?":
+% endif
+</%def>
+
+<%def name="speaker_quality(measurement)">
+<li>Quality of the measurement data is
+%   if measurement.get("quality", "?") != "?":
+  <b>${measurement["quality"]}</b>.
+%   elif measurement.get("format", "?") == "klippel":
+  <b>high</b>,
+%   else:
+  <b>unknown</b>,
+%   endif
+</li>
+</%def>
+
+<%def name="speaker_origin(measurement)">
+% if measurement.get("origin", "?") != "?":
 <%
   clean_key = g_key
   if g_key == "misc-sr":
@@ -90,36 +58,53 @@
   elif g_key == "misc-pp":
       clean_key="Production Partner"
   else:
-      clean_key = meta[speaker]["measurements"][g_key].get("origin").replace('Vendors-', '')
+      clean_key = measurement.get("origin").replace('Vendors-', '')
 %>
 <li>
   Origin of the data is ${clean_key}.
 </li>
-%   endif
-%   if meta[speaker]["measurements"][g_key].get("format", "?") != "?":
+% endif
+</%def>
+
+
+<%def name="speaker_format(measurement)">
+% if measurement.get("format", "?") != "?":
 <li>
   Format of the data is
-%     if meta[speaker]["measurements"][g_key]["format"] == 'webplotdigitizer':
-  a scanned image
-%     elif meta[speaker]["measurements"][g_key]["format"] == 'klippel':
-  generated by a Klippel NFS
-%     elif meta[speaker]["measurements"][g_key]["format"] == 'rewstextdump':
-  an ascii file
-%     elif meta[speaker]["measurements"][g_key]["format"] == 'spl_hv_txt':
-  a set of 36 horizontal and 36 vertical measurements
-%     elif meta[speaker]["measurements"][g_key]["format"] == 'gll_hv_txt':
-  a GLL file
-%     endif
-.</li>
+%   if measurement["format"] == 'webplotdigitizer':
+a scanned image
+%   elif measurement["format"] == 'klippel':
+generated by a Klippel NFS
+%   elif measurement["format"] == 'rewstextdump':
+an ascii file
+%   elif measurement["format"] == 'spl_hv_txt':
+a set of 36 horizontal and 36 vertical measurements
+%   elif measurement["format"] == 'gll_hv_txt':
+a GLL file
 %   endif
-%   if meta[speaker]["measurements"][g_key].get("extras", "?") != "?":
-<li>
-%     if meta[speaker]["measurements"][g_key]["extras"].get("is_equed"):
-  Warning: this measurement was already process with an equalizer
-%     endif
 .</li>
-%   endif
 % endif
+</%def>
+
+
+<%def name="speaker_extras(measurement)">
+% if measurement.get("extras", "?") != "?":
+<li>
+%   if measurement["extras"].get("is_equed"):
+Warning: this measurement was already process with an equalizer.
+%   endif
+</li>
+% endif
+</%def>
+
+
+<%def name="speaker_sensitivity(measurement)">
+<%
+  sensitivity_data = measurement.get('sensitivity', {})
+  sensitivity = sensitivity_data.get('computed', None)
+  sensitivity_1m = sensitivity_data.get('sensitivity_1m', None)
+  sensitivity_distance = sensitivity_data.get('distance', None)
+%>
 % if sensitivity is not None:
 %    if sensitivity_1m is not None:
 <li>
@@ -134,6 +119,13 @@
 </li>
 %    endif
 % endif
+</%def>
+
+
+<%def name="speaker_estimates(measurement)">
+<%
+  estimates = measurement.get('estimates', None)
+%>
 % if estimates is not None:
 %   if estimates.get('ref_3dB', '?') !=  '?':
 <li>
@@ -142,9 +134,9 @@
 %   endif
 %   if estimates.get('ref_from', '?') !=  '?':
 <li>
-      Reference level is normalised to ${estimates.get('ref_level')}dB
-      computed over the frequency range [${estimates.get('ref_from')}Hz,
-      ${estimates.get('ref_to')}Hz].
+  Reference level is normalised to ${estimates.get('ref_level')}dB
+  computed over the frequency range [${estimates.get('ref_from')}Hz,
+  ${estimates.get('ref_to')}Hz].
 </li>
 %   endif
 %   if estimates.get('ref_band', '?') !=  '?':
@@ -152,10 +144,17 @@
       Frequency deviation is <b>${estimates.get('ref_band')}dB</b> over the same frequency range.
 </li>
 %   endif
-%   if estimates.get('dir_horizontal', '?') !=  '?' or estimates.get('dir_vertical', '?') !=  '?':
+% endif
+</%def>
+
+
+<%def name="speaker_directivity(measurement)">
+<%
+  estimates = measurement.get('estimates', None)
+%>
+% if estimates is not None and (estimates.get('dir_horizontal', '?') !=  '?' or estimates.get('dir_vertical', '?') !=  '?'):
 <li>Directivity
   <ul>
-%   endif
 %   if estimates.get('dir_horizontal', '?') !=  '?':
     <li>
       Horizontal directivity
@@ -170,67 +169,95 @@
       between 1kHz and 10kHz. Angle computed for +/-6dB.
     </li>
 %   endif
-%   if estimates.get('dir_horizontal', '?') !=  '?' or estimates.get('dir_vertical', '?') !=  '?':
   </ul>
 </li>
-%   endif
 % endif
+</%def>
 
+<%def name="speaker_pref_rating_head(measurement)">
+<%
+  pref_rating = measurement.get('pref_rating', None)
+  pref_rating_eq = measurement.get('pref_rating_eq', None)
+%>
 % if pref_rating is not None or pref_rating_eq is not None:
 <li>Tonality (Preference) Score
   <ul>
+% if speaker_shape in ('inwall', "surround", "omnidirectional", "cbt", "panel", "toursound"):
+    <li><span class="tag is-warning">Note:</span> The tonality (Preference) score
+  does not make sense for ${speaker_shape} speakers. Don't give too much credits
+  to the value.
+    </li>
 % endif
+% endif
+</%def>
 
+<%def name="speaker_pref_rating(measurement)">
+<%
+  pref_rating = measurement.get('pref_rating', None)
+%>
 % if pref_rating is not None:
-    <li>Tonality (Preference) Score is <b>${pref_rating.get('pref_score')}</b>
-      and would be <b>${pref_rating.get('pref_score_wsub')}</b> with a
-        perfect subwoofer.
-      <ul>
-        <li>Details:
-        NBD: ON ${pref_rating.get('nbd_on_axis')},
-        LW ${pref_rating.get('nbd_listening_window')}, SP
-        ${pref_rating.get('nbd_sound_power')}, PIR
-        ${pref_rating.get('nbd_pred_in_room')}; SM:
-        SP${pref_rating.get('sm_sound_power')},
-        PIR${pref_rating.get('sm_pred_in_room')}; LFQ
-        ${pref_rating.get('lfq')}, LFX ${pref_rating.get('lfx_hz')}Hz
-        </li>
-      </ul>
+<li>Tonality (Preference) Score is <b>${pref_rating.get('pref_score')}</b>
+  and would be <b>${pref_rating.get('pref_score_wsub')}</b> with a
+  perfect subwoofer.
+  <ul>
+    <li>Details:
+      NBD: ON ${pref_rating.get('nbd_on_axis')},
+      LW ${pref_rating.get('nbd_listening_window')}, SP
+      ${pref_rating.get('nbd_sound_power')}, PIR
+      ${pref_rating.get('nbd_pred_in_room')}; SM:
+      SP${pref_rating.get('sm_sound_power')},
+      PIR${pref_rating.get('sm_pred_in_room')}; LFQ
+      ${pref_rating.get('lfq')}, LFX ${pref_rating.get('lfx_hz')}Hz
     </li>
+  </ul>
+</li>
 % endif
+</%def>
+
+<%def name="speaker_pref_rating_eq(measurement)">
+<%
+  pref_rating_eq = measurement.get('pref_rating_eq', None)
+%>
 % if pref_rating_eq is not None:
-    <li>Tonality (Preference) Score is <b>${pref_rating_eq.get('pref_score')}</b>
-      with an EQ and would be <b>${pref_rating_eq.get('pref_score_wsub')}</b> with a
-        perfect subwoofer and the same EQ.
-       <ul>
-          <li>Details:
-        NBD: ON ${pref_rating_eq.get('nbd_on_axis')},
-        LW ${pref_rating_eq.get('nbd_listening_window')}, SP
-        ${pref_rating_eq.get('nbd_sound_power')}, PIR
-        ${pref_rating_eq.get('nbd_pred_in_room')}; SM:
-        SP${pref_rating_eq.get('sm_sound_power')},
-        PIR${pref_rating_eq.get('sm_pred_in_room')}; LFQ ${pref_rating_eq.get('lfq')}, LFX ${pref_rating_eq.get('lfx_hz')}Hz
-          </li>
-       </ul>
+<li>Tonality (Preference) Score is <b>${pref_rating_eq.get('pref_score')}</b>
+  with an EQ and would be <b>${pref_rating_eq.get('pref_score_wsub')}</b> with a
+  perfect subwoofer and the same EQ.
+  <ul>
+    <li>Details:
+      NBD: ON ${pref_rating_eq.get('nbd_on_axis')},
+      LW ${pref_rating_eq.get('nbd_listening_window')}, SP
+      ${pref_rating_eq.get('nbd_sound_power')}, PIR
+      ${pref_rating_eq.get('nbd_pred_in_room')}; SM:
+      SP${pref_rating_eq.get('sm_sound_power')},
+      PIR${pref_rating_eq.get('sm_pred_in_room')}; LFQ ${pref_rating_eq.get('lfq')}, LFX ${pref_rating_eq.get('lfx_hz')}Hz
     </li>
+  </ul>
+</li>
 % endif
+</%def>
+
+<%def name="speaker_pref_rating_tail(measurement)">
+<%
+  pref_rating = measurement.get('pref_rating', None)
+  pref_rating_eq = measurement.get('pref_rating_eq', None)
+%>
 % if pref_rating is not None or pref_rating_eq is not None:
 </ul>
 </li>
 % endif
+</%def>
 
+<%def name="speaker_reviews(measurement)">
 <%
   review = None
   reviews = None
   h_or_v = None
-  if "default_measurement" in meta[speaker]:
-    default =  meta[speaker]["default_measurement"]
-    compute = meta[speaker]["measurements"][default]
-    review = compute.get("review", None)
-    reviews = compute.get("reviews", None)
-    if "horizontal" in default:
+  if measurement:
+    review = measurement.get("review", None)
+    reviews = measurement.get("reviews", None)
+    if "horizontal" in g_key:
       h_or_v = "Horizontal"
-    elif "vertical" in default:
+    elif "vertical" in g_key:
       h_or_v = "Vertical"
 %>
 % if h_or_v is not None:
@@ -253,25 +280,36 @@ Links to other reviews: <a href="${review}">${key} review</a>
 .
 </li>
 % endif
+</%def>
+
+<%def name="speaker_notes(measurement)">
+<%
+  notes = measurement.get('notes', None)
+%>
 % if notes is not None:
 <li>
-  <b>Note</b>: ${notes}
+    <span class="tag is-warning">Note:</span> ${notes}.
 </li>
 % endif
-<% if specifications is not None:
-   dispersion = specifications.get('dispersion')
-   if dispersion is not None:
-       horizontal = dispersion.get('horizontal')
-       vertical = dispersion.get('vertical')
-   sensitivity = specifications.get('sensitivity')
-   impedance = specifications.get('impedance')
-   spl = specifications.get('SPL')
-   size = specifications.get('size')
-   if size is not None:
-       height = size.get('height')
-       width = size.get('width')
-       depth = size.get('depth')
-   weight = specifications.get('weight')
+</%def>
+
+<%def name="speaker_specifications(measurement)">
+<%
+  specifications = measurement.get('specifications', None)
+  if specifications is not None:
+    dispersion = specifications.get('dispersion')
+    if dispersion is not None:
+      horizontal = dispersion.get('horizontal')
+      vertical = dispersion.get('vertical')
+    sensitivity = specifications.get('sensitivity')
+    impedance = specifications.get('impedance')
+    spl = specifications.get('SPL')
+    size = specifications.get('size')
+    if size is not None:
+      height = size.get('height')
+      width = size.get('width')
+      depth = size.get('depth')
+    weight = specifications.get('weight')
 %>
 % if specifications is not None:
 <li>
@@ -311,7 +349,218 @@ Links to other reviews: <a href="${review}">${key} review</a>
 </ul>
 </li>
 % endif
+</%def>
+
+
+% if print_warning:
+<article class="message is-warning">
+  <h4>Notice</h4>
+  <div class="message-header">
+    <p>Warning</p>
+    <button class="delete" aria-label="delete"></button>
+  </div>
+  <div class="message-body">
+    We have multiple measurements for this speaker. Click <a href="../${default_origin | u}/index_${default}.html">here</a> to see the default one (which is higher quality if we have one measurement better than the others).
+  </div>
+</article>
+% endif
+
+<article class="message is-info">
+  <h4>What we know about the measurement:</h4>
+  <div class="message-header">
+    <p>
+      ${speaker_header(meta[speaker])}
+    </p>
+  </div>
+  <div class="message-body">
+    <div class="content">
+      % if current:
+      <ul>
+        ${speaker_quality(current)}
+        ${speaker_origin(current)}
+        ${speaker_format(current)}
+        ${speaker_extras(current)}
+        ${speaker_sensitivity(current)}
+        ${speaker_estimates(current)}
+        ${speaker_directivity(current)}
+        ${speaker_pref_rating_head(current)}
+        ${speaker_pref_rating(current)}
+        ${speaker_pref_rating_eq(current)}
+        ${speaker_pref_rating_tail(current)}
+        ${speaker_reviews(current)}
+        ${speaker_notes(current)}
+        ${speaker_specifications(current)}
       </ul>
+      % endif
     </div>
   </div>
 </article>
+
+<%def name="eqs_info_eq(name)">
+<h4 class="title is-4">
+% if name == 'AutomaticEQ (IIR)':
+These EQ optimise the Harman score and is a good start for far field listening like in your living room.
+% elif name == 'AutomaticEQ LW (IIR)':
+These EQ optimise for a flat listening window and is a good start for near field listening like on your desk.
+% elif name == 'Graphic EQ 15 bands':
+These EQ is designed for a 15 bands graphical EQ.
+% elif name == 'Graphic EQ 31 bands':
+These EQ is designed for a 31 bands graphical EQ.
+% elif name == 'flipflop@ASR (IIR)':
+These EQ is designed by ASR member flipflop.
+% elif name == 'maiky76@ASR LW (IIR)':
+These EQ is designed by ASR member maiky76. These EQ optimise for a flat listening window and is a good start for near field listening like on your desk.
+% elif name == 'maiky76@ASR (IIR)':
+These EQ is designed by ASR member maiky76. These EQ optimise the Harman score and is a good start for far field listening like in your living room.
+% endif
+</h4>
+</%def>
+
+
+<%def name="eqs_print_eq(eq)">
+<%
+  dev = 'https://raw.githubusercontent.com/pierreaubert/spinorama/develop{}'.format(eq['filename'][1:])
+%>
+<table class="table is-striped">
+  <thead>
+    <tr>
+      <td colspan="4" class="has-text-centered">
+        ${eq['display_name']}
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="has-text-centered">
+        Set preamp gain to: <b>${eq['preamp_gain']}dB</b>.
+      </td>
+    </tr>
+    <tr>
+      <th>Type</th>
+      <th>Freq</th>
+      <th>Q</th>
+      <th>Gain</th>
+    </tr>
+  </thead>
+  <tbody>
+    % for iir in eq['peq']:
+    <tr>
+      <td>${iir['type']}</td>
+      <td>${iir['freq']}</td>
+      <td>${iir['Q']}</td>
+      <td>${iir['dbGain']}</td>
+    </tr>
+    % endfor
+    <tr>
+      <td colspan="4" class="has-text-centered">
+        <a class="button is-link is-light" href="${dev}">Download</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</%def>
+
+<%def name="eqs_print_graph(graph, doc)">
+<%
+  origin = default_origin.replace('+', '%20').replace(' ', '%20')
+%>
+<div class="box">
+  <picture class="image">
+    <source srcset="../${origin}/${graph | u}.webp" type="image/webp"></source>
+    <img src="../${origin}/${graph | u}.jpg" alt="${speaker_brand} ${speaker_model} ${graph}" loading="lazy" decoding="async" width="700" height="500"/>
+  </picture>
+  <h4 class="title is-4">${doc}</h4>
+</div>
+</%def>
+
+
+<%def name="eqs_print_graphs(eq)">
+<%
+  graphs_eq = [
+    ('filters_auto_eq', 'AutomaticEQ'),
+    ('filters_eq_full', 'Target v.s. EQ'),
+  ]
+  graphs_spin = [
+    ('filters_spin_noeq', 'Spinorama without EQ'),
+    ('filters_spin_auto', 'Spinorama with EQ'),
+  ]
+  graphs_on = [
+    ('filters_on_noeq', 'On Axis'),
+    ('filters_on_auto', 'On Axis with EQ'),
+    ('filters_on_hist_fullrange', 'Histogram of deviation from flat (full range)'),
+    ('filters_on_hist_midrange', 'Histogram of deviation from flat (mid range)'),
+  ]
+  graphs_lw = [
+    ('filters_lw_noeq', 'Listening window'),
+    ('filters_lw_auto', 'Listening Window with EQ'),
+    ('filters_lw_hist_fullrange', 'Histogram of deviation from flat (full range)'),
+    ('filters_lw_hist_midrange', 'Histogram of deviation from flat (mid range)'),
+  ]
+  graphs_pir = [
+    ('filters_pir_noeq', 'Predicted In Room Response'),
+    ('filters_pir_auto', 'Predicted In Room Response with EQ'),
+    ('filters_pir_hist_fullrange', 'Histogram of deviation from flat (full range)'),
+    ('filters_pir_hist_midrange', 'Histogram of deviation from flat  (mid range)'),
+  ]
+%>
+
+% for graph, doc in graphs_eq:
+  ${eqs_print_graph(graph, doc)}
+% endfor
+
+</%def>
+
+<%def name="eqs_compare(eq)">
+<picture class="image">
+  <source srcset="../eq_compare.webp" type="image/webp"></source>
+  <img src="../eq_compare.jpg" alt="${speaker_brand} ${speaker_model}" loading="lazy" decoding="async" width="700" height="500"/>
+</picture>
+</%def>
+
+<%def name="eqs_spider(eq)">
+<picture class="image">
+  <source srcset="../spider.jpg" type="image/jpg"></source>
+  <img src="../spider.jpg" alt="${speaker_brand} ${speaker_model}" loading="lazy" decoding="async" width="700" height="500"/>
+</picture>
+</%def>
+
+<%def name="eqs_print_eqs(current_eqs)">
+% for i, (name, eq) in enumerate(current_eqs.items()):
+<article class="message is-primary">
+  <div class="message-header">
+    ${speaker_brand} ${speaker_model}
+  </div>
+  <div class="message-body">
+    ${eqs_print_eq(eq)}
+    ${eqs_info_eq(eq['display_name'])}
+    % if i == 0 or eq['display_name'] == 'AutomaticEQ (IIR)':
+    ${eqs_print_graphs(eq)}
+    % endif
+  </div>
+</article>
+% endfor
+
+% if len(current_eqs) > 1:
+<article class="message is-info">
+  <div class="message-header">
+    ${speaker_brand} ${speaker_model}: comparison between EQs
+  </div>
+  <div class="message-body">
+    <div class="content">
+      <div class="content">
+	${eqs_compare(eq)}
+	<h4 class="title is-4">Comparison betweens various EQs</h4>
+      </div>
+      <div class="content">
+	${eqs_spider(eq)}
+	<h4 class="title is-4">Improvements made by EQ</h4>
+      </div>
+  </div>
+</article>
+% endif
+</%def>
+
+
+% if not print_warning:
+% if current_eqs:
+${eqs_print_eqs(current_eqs)}
+% endif
+% endif

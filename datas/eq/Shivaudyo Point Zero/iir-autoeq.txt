@@ -1,0 +1,14 @@
+EQ for Shivaudyo Point Zero computed from ErinsAudioCorner data
+Preference Score 6.64 with EQ 7.48
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-04-15-09:50:57
+
+Preamp: -3.4 dB
+
+Filter  1: ON PK Fc    21 Hz Gain +2.41 dB Q 1.27
+Filter  2: ON PK Fc    49 Hz Gain +2.99 dB Q 1.35
+Filter  3: ON PK Fc   289 Hz Gain -1.77 dB Q 2.86
+Filter  4: ON PK Fc  1823 Hz Gain +1.05 dB Q 2.35
+Filter  5: ON PK Fc  6361 Hz Gain -1.14 dB Q 2.93
+Filter  6: ON PK Fc  9648 Hz Gain -1.04 dB Q 2.53
+Filter  7: ON PK Fc 11882 Hz Gain +0.51 dB Q 2.22

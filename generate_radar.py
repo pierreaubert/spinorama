@@ -92,7 +92,7 @@ def scale_lower_is_better(key, val, scale):
 
 def build_scatterplot(pref_rating, scale, name):
     opacity = 0.5
-    if name == "No EQ":
+    if name == "Reference":
         opacity = 1.0
     return {
         "type": "scatterpolar",
@@ -132,7 +132,7 @@ def print_radar(meta_data, scale, speaker_data):
     graph_data = []
     pref_rating = measurement["pref_rating"]
     # pprint(pref_rating)
-    graph_data.append(build_scatterplot(pref_rating, scale, "No EQ"))
+    graph_data.append(build_scatterplot(pref_rating, scale, "no EQ"))
     for eq_key in meta_data["eqs"]:
         if eq_key not in ("autoeq", "autoeq_lw", "autoeq_score"):
             continue
@@ -156,7 +156,12 @@ def print_radar(meta_data, scale, speaker_data):
         )
         # pprint(pref_rating_eq)
         # add results to data
-        graph_data.append(build_scatterplot(pref_rating_eq, scale, eq_key))
+        pretty_name = {
+            "no EQ": "Reference",
+            "autoeq_lw": "autoEQ LW",
+            "autoeq": "autoEQ Score",
+        }
+        graph_data.append(build_scatterplot(pref_rating_eq, scale, pretty_name.get(eq_key, eq_key)))
 
     layout = {
         "width": 400,
@@ -211,7 +216,7 @@ def main(args):
     eqmeta = None
     with open(eq_filename, "r") as f:
         eqmeta = json.load(f)
-        for k, v in jsmeta.items():
+        for k in jsmeta:
             if k in eqmeta:
                 jsmeta[k]["eqs"] = eqmeta[k]["eqs"]
 

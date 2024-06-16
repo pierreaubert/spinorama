@@ -16,12 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-/*global Plotly*/
 /*eslint no-undef: "error"*/
 
-import { urlSite } from './meta${min}.js';
-import { getMetadata, assignOptions, getSpeakerData } from './download${min}.js';
-import { knownMeasurements, setCEA2034, setContour, setGraph, setGlobe, setRadar, setSurface } from './plot${min}.js';
+import Plotly from 'plotly-dist-min';
+
+import { getMetadata, assignOptions, getSpeakerData } from './download.js';
+import { knownMeasurements, setCEA2034, setContour, setGraph, setGlobe, setRadar, setSurface } from './plot.js';
 
 function getNearSpeakers(metadata) {
     const metaSpeakers = {};
@@ -38,15 +38,15 @@ function getNearSpeakers(metadata) {
 
 getMetadata()
     .then((metadata) => {
-        const urlSimilar = urlSite + 'similar.html?';
+        const urlSimilar = '/similar.html?';
 
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
 
         const plotContainer = document.querySelector('[data-num="0"');
         const formContainer = plotContainer.querySelector('.plotForm');
-        const graphSelector = formContainer.querySelector('.graph');
-        const speakerSelector = formContainer.querySelector('.speaker0');
+        const graphSelector = formContainer.querySelector('#similar-select-graph');
+        const speakerSelector = formContainer.querySelector('#similar-select-speaker');
 
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
@@ -101,7 +101,7 @@ getMetadata()
                         ) {
                             graphOptions = setGlobe(currentNames, currentGraphs, windowWidth, windowHeight);
                         }
-                        if (graphOptions !== null && graphOptions.length === 1) {
+                        if (graphOptions?.length === 1) {
                             Plotly.newPlot('plot' + i, graphOptions[0]);
                         }
                     }
@@ -126,7 +126,7 @@ getMetadata()
             const graphName = graphSelector.value;
             const names = [];
             const graphs = [];
-            console.log('speaker >' + speakerName + '< graph >' + graphName + '<');
+            // console.log('speaker >' + speakerName + '< graph >' + graphName + '<');
             graphs.push(getSpeakerData(metaSpeakers, graphName, speakerName, null, null));
             names[0] = speakerName;
             if (metaSpeakers[names[0]].nearest !== null) {

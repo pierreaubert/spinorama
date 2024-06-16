@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+const flags_Contour_Delta = false;
+
 export const knownMeasurements = [
     'CEA2034',
     'On Axis',
@@ -119,7 +121,7 @@ export function isCompact() {
     return false;
 }
 
-function computeDims(windowWidth, windowHeight, is_vertical, is_compact, nb_graphs) {
+export function computeDims(windowWidth, windowHeight, is_vertical, is_compact, nb_graphs) {
     let width = windowWidth;
     let height = windowHeight;
     if (is_compact) {
@@ -160,12 +162,13 @@ function computeDims(windowWidth, windowHeight, is_vertical, is_compact, nb_grap
     }
     width = Math.round(width);
     height = Math.round(height);
+
     let ratio = (height / width).toFixed(2);
     if (width > height) {
         ratio = (width / height).toFixed(2);
     }
-    console.log(
-        'DEBUG: Window(' +
+    console.info(
+        'Window(' +
             windowHeight +
             ', ' +
             windowHeight +
@@ -185,10 +188,10 @@ function showMinMaxMeasurements(datas) {
     let results = new Map();
     for (let i in datas) {
         let speaker_name = 'Speaker';
-        if (datas[i].legendgrouptitle != null && datas[i].legendgrouptitle.text != null) {
+        if (datas[i].legendgrouptitle && datas[i].legendgrouptitle.text !== null) {
             speaker_name = datas[i].legendgrouptitle.text;
         }
-        if (datas[i].x != null && datas[i].x.length > 0) {
+        if (datas[i].x && datas[i].x.length > 0) {
             if (results.has(speaker_name)) {
                 results.set(speaker_name, Math.min(results.get(speaker_name), datas[i].x[0]));
             } else {
@@ -247,7 +250,8 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             }
         });
         let i = 0;
-        mins.forEach((min_freq, speaker_name) => {
+        mins.forEach((min_freq) => {
+            // or maybe you need , _
             if (min_freq > 40) {
                 let shape = {
                     type: 'rect',
@@ -276,7 +280,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
     }
 
     function computeXaxis() {
-        if (layout.xaxis && layout.xaxis.title) {
+        if (layout?.axis && layout.xaxis.title) {
             layout.xaxis.title.text = 'SPL (dB) v.s. Frequency (Hz)';
             layout.xaxis.title.font = {
                 size: 10 + fontDelta,
@@ -286,11 +290,11 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             layout.xaxis.side = 'bottom';
         }
         if (is_compact) {
-            if (is_vertical && layout.yaxis && layout.yaxis.title) {
+            if (is_vertical && layout?.yaxis && layout.yaxis.title) {
                 const freq_min = Math.round(Math.pow(10, layout.xaxis.range[0]));
                 const freq_max = Math.round(Math.pow(10, layout.xaxis.range[1]));
                 let title = '';
-                if (layout.yaxis.title.text && layout.yaxis.title.text === 'Angle') {
+                if (layout?.yaxis.title.text === 'Angle') {
                     title =
                         'Angle [' +
                         layout.yaxis.range[0] +
@@ -339,13 +343,13 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
 
     function computeTitle() {
         let title = '';
-        if (spin[0] && spin[0].layout && spin[0].layout.title && spin[0].layout.title.text) {
+        if (spin[0] && spin[0]?.layout.title.text) {
             title = spin[0].layout.title.text;
         }
-        if (!single_graph && spin[1] && spin[1].layout && spin[1].layout.title && spin[1].layout.title.text) {
+        if (!single_graph && spin[1] && spin[1]?.layout.title.text) {
             title += '<br> v.s. ' + spin[1].layout.title.text;
         }
-        if (title === '' && datas[0].legendgrouptitle && datas[0].legendgrouptitle.title) {
+        if (title === '' && datas[0]?.legendgrouptitle.title) {
             title = datas[0].legendgrouptitle.text;
         }
         if (title.indexOf('CEA2034') !== -1) {
@@ -459,7 +463,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         } else if (!is_compact && layout.width > graphLarge) {
             for (let k = 0; k < datas.length; k++) {
                 const title = datas[k].legendgrouptitle;
-                if (title && title.text) {
+                if (title?.text) {
                     const pos_vs = title.text.indexOf(' v.s. ');
                     if (pos_vs !== -1) {
                         datas[k].legendgrouptitle.text = title.text.slice(0, pos_vs);
@@ -474,9 +478,17 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
 
     function computePolar() {
         const polars = ['polar', 'polar2', 'polar3', 'polar4'];
-        if (layout['polar4'] && is_compact) {
+        if (layout && layout['polar4'] && is_compact) {
             is_radar = true;
             layout.height = layout.width * 4;
+            // fill defaults
+            polars.forEach((polar) => {
+                if (!layout[polar].domain) {
+                    layout[polar]['domain'] = {};
+                    layout[polar]['domain']['x'] = [0, 1];
+                    layout[polar]['domain']['y'] = [0, 1];
+                }
+            });
             // full width
             layout.polar.domain.x = [0, 1];
             layout.polar2.domain.x = [0, 1];
@@ -487,8 +499,8 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             const len = 0.2;
             const gap = 0.05;
             layout.polar4.domain.y = [start, start + len * 1];
-            layout.polar2.domain.y = [start + len * 1 + gap, start + len * 2 + gap];
             layout.polar3.domain.y = [start + len * 2 + gap * 2, start + len * 3 + gap * 2];
+            layout.polar2.domain.y = [start + len * 1 + gap, start + len * 2 + gap];
             layout.polar.domain.y = [start + len * 3 + gap * 3, start + len * 4 + gap * 3];
             // move legend up
             layout.legend.x = 0.5;
@@ -663,6 +675,8 @@ export function setRadar(speakerNames, speakerGraphs, width, height) {
     return [options];
 }
 
+/*
+  
 function equals(a, b) {
     // check the length
     if (a.length != b.length) {
@@ -697,7 +711,7 @@ function interpolate(data1, data2, newFreq, newAngle) {
     let iangle1 = 0;
     let iangle2 = 0;
     let datas = [];
-    for (angle in newAngle) {
+    for (let angle in newAngle) {
         while (data1[0].y[iangle1] < freq && iangle1 < angle1Length) {
             iangle1 += 1;
         }
@@ -706,7 +720,7 @@ function interpolate(data1, data2, newFreq, newAngle) {
             // interpolate
         }
         let data = [];
-        for (freq in newFreq) {
+        for (let freq in newFreq) {
             while (data1[0].x[ifreq1] < freq && ifreq1 < freq1Length) {
                 ifreq1 += 1;
             }
@@ -741,6 +755,8 @@ function computeContourDelta(data1, data2) {
     return data;
 }
 
+*/
+
 export function setContour(speakerNames, speakerGraphs, width, height) {
     // console.log('setContour got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
@@ -769,16 +785,78 @@ export function setContour(speakerNames, speakerGraphs, width, height) {
             graphsConfigs.push(options);
         }
     }
-    if (speakerGraphs.length === 2) {
+    /*
+    if (speakerGraphs.length === 2 && flags_Contour_Delta) {
         const dataDelta = computeContourDelta(speakerGraphs[0].data, speakerGraphs[1].data);
         if (dataDelta != null) {
             const optionsDelta = setGraphOptions([{ data: dataDelta, layout: speakerGraphs[1].layout }]);
             graphsConfigs.push(optionsDelta);
         }
     }
-
+*/
     return graphsConfigs;
 }
+
+/*
+export function setGlobe(speakerNames, speakerGraphs, width, height) {
+    // console.log('setGlobe ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
+    const graphsConfigs = [];
+    for (const i in speakerGraphs) {
+        if (speakerGraphs[i]) {
+            let polarData = [];
+            for (const j in speakerGraphs[i].data) {
+                const freq = speakerGraphs[i].data[j].x;
+                const angle = speakerGraphs[i].data[j].y;
+                const spl = speakerGraphs[i].data[j].z;
+                if (!spl) {
+                    continue;
+                }
+                const x = [];
+                for (let k1 = 0; k1 < freq.length; k1++) {
+                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
+			const f = Math.log10(freq[k1]);
+			const a = Math.cos(angle[k2]);
+                        x.push(f*a);
+                    }
+                }
+                const y = [];
+                for (let k = 0; k < freq.length; k++) {
+                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
+			const f = Math.log10(freq[k1]);
+			const a = Math.sin(angle[k2]);
+                        y.push(f*a);
+                    }
+                }
+                const color = [];
+                for (let k1 = 0; k1 < freq.length; k1++) {
+                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
+                        let val = spl[k2][k1];
+                        val = Math.max(contourMin, val);
+                        val = Math.min(contourMax, val);
+                        color.push(val);
+                    }
+                }
+		// now need to interpolate
+		// 
+                polarData.push({x: x, y:y, z:color);
+            }
+            let options = setGraphOptions(
+                [{ data: polarData, layout: speakerGraphs[i].layout }],
+                width,
+                height,
+                speakerGraphs.length
+            );
+            if (speakerGraphs.length > 1 && i == 0) {
+                options.data[0].marker.showscale = false;
+                options.layout.margin.l += 60;
+                options.layout.margin.r += 60;
+            }
+            graphsConfigs.push(options);
+        }
+    }
+    return graphsConfigs;
+}
+*/
 
 export function setGlobe(speakerNames, speakerGraphs, width, height) {
     // console.log('setGlobe ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
@@ -787,24 +865,24 @@ export function setGlobe(speakerNames, speakerGraphs, width, height) {
         if (speakerGraphs[i]) {
             let polarData = [];
             for (const j in speakerGraphs[i].data) {
-                const x = speakerGraphs[i].data[j].x;
-                const y = speakerGraphs[i].data[j].y;
-                const z = speakerGraphs[i].data[j].z;
-                if (!z) {
+                const freq = speakerGraphs[i].data[j].x;
+                const angle = speakerGraphs[i].data[j].y;
+                const spl = speakerGraphs[i].data[j].z;
+                if (!spl) {
                     continue;
                 }
                 const r = [];
                 // r is x (len of y times)
-                for (let k1 = 0; k1 < x.length; k1++) {
-                    for (let k2 = 0; k2 < y.length - 1; k2++) {
-                        r.push(Math.log10(x[k1]));
+                for (let k1 = 0; k1 < freq.length; k1++) {
+                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
+                        r.push(Math.log10(freq[k1]));
                     }
                 }
                 // theta is y (len of x times)
                 let theta = [];
-                for (let k = 0; k < x.length; k++) {
-                    for (let k2 = 0; k2 < y.length - 1; k2++) {
-                        theta.push(y[k2]);
+                for (let k = 0; k < freq.length; k++) {
+                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
+                        theta.push(angle[k2]);
                     }
                 }
                 theta = theta.flat();
@@ -813,9 +891,9 @@ export function setGlobe(speakerNames, speakerGraphs, width, height) {
                 // console.log('debug: len(speakerGraphs[' + i + '].data[' + j + '].y=' + y.length)
                 // console.log('debug: len(speakerGraphs[' + i + '].data[' + j + '].z=' + z.length)
                 const color = [];
-                for (let k1 = 0; k1 < x.length; k1++) {
-                    for (let k2 = 0; k2 < y.length - 1; k2++) {
-                        let val = z[k2][k1];
+                for (let k1 = 0; k1 < freq.length; k1++) {
+                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
+                        let val = spl[k2][k1];
                         val = Math.max(contourMin, val);
                         val = Math.min(contourMax, val);
                         color.push(val);

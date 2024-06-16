@@ -44,7 +44,8 @@ usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
  [--optimisation=<options>] \
  [--graphic_eq=<eq_name>] \
  [--graphic_eq_list] \
- [--disable-ray]
+ [--disable-ray] \
+ [--generate-images-only]
 
 Options:
   --help                   Display usage()
@@ -91,6 +92,7 @@ Options:
   --graphic_eq_list        List the known graphic eq and exit
   --optimisation=<options> Choose an algorithm: options are greedy or global. Greedy is fast, Global is much slower but could find better solutions.
   --disable-ray            Disable ray
+  --generate-images-only   Do not compute EQs but use the current ones to generate the various pictures
 """
 import sys
 
@@ -286,6 +288,7 @@ def compute_peqs_sequential(df_all_speakers, optim_config, speaker_name):
             )
             continue
 
+        logger.debug("starting optim for %s", current_speaker_name)
         status, (_, results_iter, scores) = optim_save_peq_seq(
             current_speaker_name,
             default_origin,
@@ -634,6 +637,7 @@ if __name__ == "__main__":
     verbose = args["--verbose"]
     smoke_test = args["--smoke-test"]
     disable_ray = args["--disable-ray"]
+    generate_images_only = args["--generate-images-only"]
 
     if args["--graphic_eq_list"]:
         print("INFO: The list of know graphical EQ is: {}".format(list(grapheq_info.keys())))

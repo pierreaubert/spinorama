@@ -10,26 +10,57 @@
 
     <div id="cea2034plots" data-num="0">
       <div class="plotForm">
-        <nav class="level has-background-info-dark mb-0">
-          <div class="level-left">
-            <div class="level-item has-text-centered">
-              <p class="has-text-white">Graph:</p>
-              <select class="graph"></select>
-            </div>
-          </div>
-        </nav>
-        <div>
-          Choose a speaker:
-          <select class="speaker0"></select
-          >: it will show you 3 speakers with a close tonality.
-        </div>
-        <div class="plot0" id="plot0"></div>
-        <div class="plot1" id="plot1"></div>
-        <div class="plot2" id="plot2"></div>
+	<div class="section has-background-light px-1 py-1">
+          <nav class="level px-1 py-1">
+            <div class="level-item px-1 py-1">
+	      <div class="box px-1 py-1">
+		<p class="title is-5 has-text-centered">Speaker:</p>
+		<div class="field">
+		  <div class="control is-expanded has-icons-left">
+		    <div class="select is-fullwidth is-small">
+		      <select class="graph is-small" id="similar-select-speaker"></select>
+		    </div>
+		    <div class="icon is-left is-small">
+		      <i class="fa-solid fa-chart-line"></i>
+		    </div>
+		  </div>
+		</div>
+              </div>
+	    </div>
+          </nav>
+          <nav class="level px-1 py-1">
+            <div class="level-item px-1 py-1">
+	      <div class="box px-1 py-1">
+		<p class="title is-5 has-text-centered">Graph:</p>
+		<fieldset id="similar-fieldset">
+		  <div class="field">
+		    <div class="control is-expanded has-icons-left">
+		      <div class="select is-fullwidth is-small">
+			<select class="graph is-small" id="similar-select-graph"></select>
+		      </div>
+		      <div class="icon is-left is-small">
+			<i class="fa-solid fa-chart-line"></i>
+		      </div>
+		    </div>
+		  </div>
+		</fieldset>
+              </div>
+	    </div>
+          </nav>
+	</div>
+	<div class="section">
+          <div class="plot0" id="plot0"></div>
+	</div>
+	<div class="section">
+          <div class="plot1" id="plot1"></div>
+	</div>
+	<div class="section">
+          <div class="plot2" id="plot2"></div>
+	</div>
       </div>
     </div>
-
-    <script type="module" src="./similar${min}.js"></script>
+    
+    <script type="module" src="./js/similar-${versions['CACHE']}${min}.js"></script>
 
     <%include file="footer.html"/>
   </body>

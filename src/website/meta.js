@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // A library to display spinorama charts
 //
-// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+// Copyright (C) 2020-2024 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,10 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 export const urlSite = '${site}' + '/';
-export const metadataFilename = '${metadata_filename}';
+
 export const metadataFilenameHead = '${metadata_filename_head}';
 export const metadataFilenameChunks = ${metadata_filename_chunks};
 export const eqdataFilename = '${eqdata_filename}';
+
+export const flags_Screen = true;
+export const flags_Contour_Delta = false;

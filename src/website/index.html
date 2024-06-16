@@ -1,142 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <title>A collection of loudspeakers measurements</title>
     <%include file="head.html"/>
+    <%include file="head_sw.html"/>
   </head>
   <body>
+    <%include file="symbols.html"/>
     <%include file="nav_search.html"/>
-    <%include file="nav_counters.html"/>
     <%namespace name="util" module="website.utils" import="*"/>
 
-    <script>
-      Handlebars.registerHelper("isShort", function (values) {
-	  const max_len = 25;
-	  let len = 0;
-	  for (const value of values) {
-	      if (value.origin) {
-		  len += [...value.origin].length+4;
-	      } else {
-		  len += 10;
-	      }
-	  }
-	  return len < max_len;
-      });
-      Handlebars.registerHelper("iconVolume", function (value) {
-	  const ivalue = parseInt(value);
-	  if (ivalue        <= 30) {
-	      return '0';
-	  } else if (ivalue <= 60 ) {
-	      return '1';
-	  } else if (ivalue <= 90 ) {
-	      return '2';
-	  } else {
-	      return '3';
-	  }
-      });
-    </script>
-
-    <script id="templateSpeaker" type="text/x-handlebars-template">
-       <div class="card card-min">
-           <div class="card-image">
-             <figure class="image is-2by3">
-               <picture>
-		 <source srcset="{{img.webp}}" type="image/webp" width="400" height="600"></source>
-		 <img src="{{img.jpg}}" loading="{{img.loading}}" decoding="{{img.decoding}}" alt="{{brand}} {{model}}" width="400" height="600"/>
-               </picture>
-	     </figure>
-           </div>
-           <div class="card-content">
-             <div class="content">
-               <span><b>{{brand}}</b></span>
-               <br/>
-               <span><b>{{model}}</b></span>
-             </div>
-             <div class="content is-small">
-               <span class="icon-text">
-                 <span class="icon">
-                   {{priceAsDollar}}
-                 </span>
-                 <span>Price: <b>{{price}}</b></span>
-                 <span class="icon">
-		   <a href="/help.html#priceDefinition"><i class="fa-regular fa-circle-question"></i></a>
-		 </span>
-               </span>
-               <br/>
-               <span class="icon-text">
-                 <span class="icon">
-                   <img src="/icons/volume-danger-{{iconVolume score.scoreScaled}}.svg" width="20px" height="16px" alt="rating"></img>
-                 </span>
-                 <span>Tonality: <b>{{score.score}}</b></span>
-                 <span class="icon">
-		   <a href="/help.html#tonalityDefinition"><i class="fa-regular fa-circle-question"></i></a>
-		 </span>
-               </span>
-               <br/>
-               <span class="icon-text">
-                 <span class="icon has-text-danger">
-                   <img src="/icons/volume-info-{{iconVolume score.lfxScaled}}.svg" width="20px" height="16px" alt="rating"></img>
-                 </span>
-                 <span>Bass extension: <b>{{score.lfx}}</b>Hz</span>
-                 <span class="icon">
-		   <a href="/help.html#bassExtensionDefinition"><i class="fa-regular fa-circle-question"></i></a>
-		 </span>
-               </span>
-               <br/>
-               <span class="icon-text">
-                 <span class="icon has-text-success">
-                   <img src="/icons/volume-success-{{iconVolume score.flatnessScaled}}.svg" width="20px" height="16px" alt="rating"></img>
-                 </span>
-                 <span>Flatness: <b>&plusmn;{{score.flatness}}</b>dB</span>
-                 <span class="icon">
-		   <a href="/help.html#flatnessDefinition"><i class="fa-regular fa-circle-question"></i></a>
-		 </span>
-               </span>
-             </div>
-           </div>
-           <footer class="card-footer">
-             {{#if (isShort reviews.reviews)}}
-             {{#each reviews.reviews}}
-             <a class="card-footer-item" href="{{this.url}}">{{this.origin}}</a>
-             {{/each}}
-             {{else}}
-             <div class="card-footer-item">
-               <div class="dropdown is-hoverable">
-                 <div class="dropdown-trigger">
-                   <button class="button" aria-haspopup="true" aria-controls="dropdown-menu-reviews-{{id}}">
-                     <span>Measurements</span>
-                     <span class="icon is-small">
-                       <i class="fa-solid fa-angle-down" aria-hidden="true"></i>
-                     </span>
-                   </button>
-                 </div>
-                 <div class="dropdown-menu" id="dropdown-menu-reviews-{{id}}" role="menu">
-                   <div class="dropdown-content">
-                     {{#each reviews.reviews}}
-                     <div class="dropdown-item">
-                       <a href="{{this.url}}">{{this.originLong}}</a>
-                     </div>
-                     {{/each}}
-                   </div>
-                 </div>
-               </div>
-               {{/if}}
-             </div>
-           </footer>
-       </div>
-    </script>
-
-    <div class="section">
-      <div class="searchresults">
-        <div class="columns is-multiline is-mobile is-centered" id="speakers" data-num="0">
+    <div class="container has-background-white-bis">
+      <div class="section">
+        <div class="grid is-col-min-12 column-gap-0 row-gap-1" id="speakers" data-num="0">
         </div>
+      </div>
+      <div class="section">
+	<div id="pagination">
+	</div>
       </div>
     </div>
 
-    <script type="module" src="./index${min}.js"></script>
+    <script type="module" src="/js/index-${versions['CACHE']}${min}.js"></script>
 
     <%include file="search.html"/>
-    <%include file="footer.html"/>
 
   </body>
 </html>

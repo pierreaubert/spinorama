@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // A library to display spinorama charts
 //
-// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+// Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,13 +16,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-/*global Handlebars*/
 /*eslint no-undef: "error"*/
 
-import { getMetadata, getMetadataHead } from './download${min}.js';
-import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc${min}.js';
-import { process } from './sort${min}.js';
-import { urlParameters2Sort } from './params${min}.js';
+const flagCounters = false;
+
+import { getMetadataHead, getMetadataTail } from './download.js';
+import { getPrice, getID, getPicture, getLoading, getDecoding, getScore, getReviews } from './misc.js';
+import { process, urlParameters2Sort, setupEventListener } from './search.js';
+import { pagination } from './pagination.js';
+
+const validShape = Object.freeze(new Set(['floorstanders', 'bookshelves', 'center', 'columns', 'liveportable', 'cinema']));
 
 function getMeasurementCount(metadata) {
     let count = 0;
@@ -62,6 +65,7 @@ function getContext(key, index, value) {
         model: value.model,
         price: price,
         priceAsDollar: getDollar(price),
+        shape: value.shape,
         img: {
             avif: getPicture(value.brand, value.model, 'avif'),
             webp: getPicture(value.brand, value.model, 'webp'),
@@ -74,44 +78,229 @@ function getContext(key, index, value) {
     };
 }
 
-const source = document.querySelector('#templateSpeaker').innerHTML;
-const template = Handlebars.compile(source);
+function isShort(values) {
+    const max_len = 25;
+    let len = 0;
+    for (const value of values) {
+        if (value.origin) {
+            len += [...value.origin].length + 4;
+        } else {
+            len += 10;
+        }
+    }
+    return len < max_len;
+}
+
+function iconValue(value) {
+    if (value === '***') {
+        return '0';
+    }
+    const iValue = parseInt(value);
+    if (iValue <= 30) {
+        return '0';
+    } else if (iValue <= 60) {
+        return '1';
+    } else if (iValue <= 90) {
+        return '2';
+    }
+    return '3';
+}
+
+function footerHtml(id, reviews) {
+    if (isShort(reviews)) {
+        return reviews
+            .flatMap(
+                (review) => `
+            <a class="card-footer-item" href="${review.url}">${review.origin}</a>
+        `
+            )
+            .join(' ');
+    }
+    const dropdown = reviews
+        .flatMap(
+            (review) =>
+                `<div class="dropdown-item">
+                <a href="${review.url}">${review.originLong}</a>
+         </div>
+        `
+        )
+        .join(' ');
+    return `
+        <div class="card-footer-item">
+           <div class="dropdown is-hoverable">
+             <div class="dropdown-trigger">
+               <button class="button" aria-haspopup="true" aria-controls="dropdown-menu-reviews-${id}">
+                 <span>Measurements</span>
+                   <span class="icon is-small"><svg width="16px" height="16px"><use href="#icon-angle-down"/></svg></span>
+               </button>
+             </div>
+             <div class="dropdown-menu" id="dropdown-menu-reviews-${id}" role="menu">
+                <div class="dropdown-content">
+                  ${dropdown}
+                </div>
+             </div>
+           </div>
+        </div>
+    `;
+}
+
+function scoreHtml(shape, score) {
+    const iconScore = '#icon-volume-danger-' + iconValue(score.scoreScaled);
+    const help = `
+               <span class="icon is-pulled-right">
+                 <a href="/help.html#tonalityDefinition">
+                   <svg width="20px" height="20px">
+                     <use href="#icon-circle-question"/>
+                   </svg>
+                 </a>
+               </span>
+    `;
+    if (validShape.has(shape)) {
+        return `
+               <span class="icon-text">
+                 <span class="icon">
+                   <svg width="20px" height="20px" alt="rating">
+                     <use href="${iconScore}"/>
+                   </svg>
+                 </span>
+                 <span>Tonality: <b>${score.score}</b></span>
+               </span>
+               ${help}
+    `;
+    } else {
+        return `
+               <span class="icon-text">
+                 <span class="icon">
+                   <svg width="20px" height="20px" alt="rating">
+                     <use href="${iconScore}"/>
+                   </svg>
+                 </span>
+                 <span>Tonality: <b>***</b></span>
+               </span>
+               ${help}
+    `;
+    }
+}
+
+function contextHtml(context) {
+    const brand = context.brand;
+    const model = context.model;
+    const img = context.img;
+    const score = context.score;
+    const price = context.price;
+    const dollar = context.priceAsDollar;
+    const iconLFX = '#icon-volume-info-' + iconValue(score.lfxScaled);
+    const iconFlatness = '#icon-volume-success-' + iconValue(score.flatnessScaled);
+    const footer = footerHtml(context.id, context.reviews.reviews);
+    const html_score = scoreHtml(context.shape, score);
+    const html = `
+       <div class="card card-min has-background-white-bis">
+           <div class="card-image"
+             <figure class="image is-2by3">
+               <picture>
+                 <source srcset="${img.webp}" type="image/webp" width="340" height="510"></source>
+                 <img src="${img.jpg}" loading="${img.loading}" decoding="${img.decoding}" alt="${brand} ${model}" width="340" height="510"/>
+               </picture>
+             </figure>
+           </div>
+           <div class="card-content">
+             <div class="content">
+               <span><b>${brand}</b></span>
+               <br/>
+               <span><b>${model}</b></span>
+             </div>
+             <div class="content">
+               <span class="icon-text">
+                 <span class="icon">${dollar}</span>
+                 <span>Price: <b>${price}</b></span>
+               </span>
+               <span class="icon is-pulled-right">
+                  <a href="/help.html#priceDefinition">
+                     <svg width="20px" height="20px"><use href="#icon-circle-question"/></svg>
+                  </a>
+               </span>
+               <br/>
+               ${html_score}
+               <br/>
+               <span class="icon-text">
+                 <span class="icon has-text-danger"><svg width="20px" height="20px" alt="rating"><use href="${iconLFX}"/></svg></span>
+                 <span>Bass extension: <b>${score.lfx}</b>Hz</span>
+               </span>
+               <span class="icon is-pulled-right"><a href="/help.html#bassExtensionDefinition"><svg width="20px" height="20px"><use href="#icon-circle-question"/></svg></a></span>
+               <br/>
+               <span class="icon-text">
+                 <span class="icon has-text-success"><svg width="20px" height="20px" alt="rating"><use href="${iconFlatness}"/></svg></span>
+                 <span>Flatness: <b>&plusmn;${score.flatness}</b>dB</span>
+               </span>
+               <span class="icon is-pulled-right">
+                  <a href="/help.html#flatnessDefinition">
+                     <svg width="20px" height="20px">
+                        <use href="#icon-circle-question"/>
+                     </svg>
+                  </a>
+               </span>
+             </div>
+           </div>
+           <footer class="card-footer">
+             ${footer}
+           </footer>
+       </div>
+    `;
+    return html;
+}
 
 function printSpeaker(key, index, value) {
     const context = getContext(key, index, value);
-    const html = template(context);
+    const html = contextHtml(context);
     const divSpeaker = document.createElement('div');
-    divSpeaker.setAttribute('class', 'column is-narrow searchable');
+    divSpeaker.setAttribute('class', 'cell');
     divSpeaker.setAttribute('id', context.id);
     divSpeaker.innerHTML = html;
     return divSpeaker;
 }
 
-const speakerContainer = document.querySelector('[data-num="0"');
-const speakerCount = document.querySelector('#speakerCount p:nth-child(2)');
-const measurementCount = document.querySelector('#measurementCount p:nth-child(2)');
-const brandCount = document.querySelector('#brandCount p:nth-child(2)');
-const reviewCount = document.querySelector('#reviewCount p:nth-child(2)');
-
 function getReviewCount() {
     return document.querySelectorAll('#selectReviewer')[0].options.length;
 }
 
-getMetadata()
-    .then((metadata) => {
-        function display(data, speakerHtml) {
-            const url = new URL(window.location);
-            const params = urlParameters2Sort(url);
-            return process(data, params, speakerHtml);
+const speakerContainer = document.querySelector('[data-num="0"');
+
+function display(data, speakerHtml, parentDiv) {
+    const url = new URL(window.location);
+    const params = urlParameters2Sort(url);
+    const [maxResults, fragment] = process(data, params, speakerHtml);
+    if (fragment) {
+        parentDiv.appendChild(fragment);
+    }
+    return maxResults;
+}
+
+getMetadataHead()
+    .then((metadataHead) => {
+        const url = new URL(window.location);
+        if (url.pathname === '' || url.pathname === 'index.html') {
+            display(metadataHead, printSpeaker, speakerContainer);
         }
-
-        speakerContainer.appendChild(display(metadata, printSpeaker));
-
+        return metadataHead;
+    })
+    .then((metadataHead) => getMetadataTail(metadataHead))
+    .then((metadata) => {
+        // now that we have all the data
+        setupEventListener(metadata, printSpeaker, speakerContainer);
         // moved after the main display of speakers to minimise reflow
-        speakerCount.innerHTML = metadata.size;
-        measurementCount.innerHTML = getMeasurementCount(metadata);
-        brandCount.innerHTML = getBrandCount(metadata);
-        reviewCount.innerHTML = getReviewCount();
+        if (flagCounters) {
+            const speakerCount = document.querySelector('#speakerCount p:nth-child(2)');
+            const measurementCount = document.querySelector('#measurementCount p:nth-child(2)');
+            const brandCount = document.querySelector('#brandCount p:nth-child(2)');
+            const reviewCount = document.querySelector('#reviewCount p:nth-child(2)');
+            speakerCount.innerHTML = metadata.size;
+            measurementCount.innerHTML = getMeasurementCount(metadata);
+            brandCount.innerHTML = getBrandCount(metadata);
+            reviewCount.innerHTML = getReviewCount();
+        }
+        // display if not done above
+        const maxResults = display(metadata, printSpeaker, speakerContainer);
+        pagination(maxResults);
     })
     .catch((error) => {
         console.log(error);

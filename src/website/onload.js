@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // A library to display spinorama charts
 //
-// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+// Copyright (C) 2020-2024 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,6 +15,8 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+import { flags_Screen } from './meta.js';
 
 window.onload = () => {
     const navbarBurger = document.querySelector('#navbar-burger');
@@ -43,6 +45,15 @@ window.onload = () => {
         });
     }
 
+    const tips = document.querySelectorAll('.speaker-tip');
+    if (tips) {
+        tips.forEach((tip) => {
+            tip.addEventListener('click', () => {
+                tip.classList.toggle('hidden');
+            });
+        });
+    }
+
     const filters = document.querySelector('#filters-dropdown');
     if (filters) {
         const trigger = filters.querySelector('#filters-dropdown-trigger');
@@ -54,4 +65,42 @@ window.onload = () => {
             menu.classList.toggle('hidden');
         });
     }
+
+    const navtabs = document.querySelector('#navtab');
+    if (navtabs) {
+        const tabs = document.querySelectorAll('.tab-pane');
+        tabs.forEach((tab) => {
+            // console.info(tab.id);
+            if (tab.id === 'pane-2') {
+                tab.style.display = 'block';
+            } else {
+                tab.style.display = 'none';
+            }
+        });
+    }
+
+    document.addEventListener('keydown', (event) => {
+        const e = event || window.event;
+        if (e.keyCode === 27) {
+            // Escape key
+            document.querySelectorAll('.modal').forEach((modal) => modal.remove('is-active'));
+        }
+    });
+
+    /*
+    if (flags_Screen) {
+        switch (screen.orientation.type) {
+            case 'landscape-primary':
+            case 'landscape-secondary':
+                console.log('Mmmh… you should rotate your device to portrait');
+                break;
+            case 'portrait-secondary':
+            case 'portrait-primary':
+                console.log('We are in portrait mode, all good');
+                break;
+            default:
+                console.log("The orientation API isn't supported in this browser :(");
+        }
+    }
+*/
 };

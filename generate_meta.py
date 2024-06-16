@@ -39,7 +39,6 @@ Options:
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
   --dash-port=<dash-port>  Port for the ray dashbboard
 """
-import contextlib
 import errno
 from hashlib import md5
 from itertools import groupby
@@ -57,6 +56,7 @@ import numpy as np
 from docopt import docopt
 
 from spinorama import ray_setup_logger
+from spinorama.constant_paths import flags_ADD_HASH
 
 try:
     import ray
@@ -83,8 +83,17 @@ from spinorama.load_rew_eq import parse_eq_iir_rews
 
 from datas import metadata
 
+# activate some tracing
 ACTIVATE_TRACING: bool = False
+
+# number of speakers to put in the head file
 METADATA_HEAD_SIZE = 20
+
+# size of the md5 hash
+KEY_LENGTH = 5
+
+# size of years (2024 -> 4)
+YEAR_LENGTH = 4
 
 
 def tracing(msg: str):
@@ -792,20 +801,20 @@ def add_near(dataframe, parse_max: int, filters: dict):
 
 
 def dump_metadata(meta):
-    # size of the md5 hash
-    KEY_LENGTH = 5
-    # size of years (2024 -> 4)
-    YEAR_LENGTH = 4
-
     metadir = cpaths.CPATH_DOCS
     metafile = cpaths.CPATH_DOCS_METADATA_JSON
     eqfile = cpaths.CPATH_DOCS_EQDATA_JSON
-    if not os.path.isdir(metadir):
-        os.makedirs(metadir)
+    os.makedirs(metadir, mode=0o755, exist_ok=True)
+    os.makedirs(cpaths.CPATH_DOCS_JSON, mode=0o755, exist_ok=True)
 
     def check_link(hashed_filename):
         # add a link to make it easier for other scripts to find the metadata
-        if "metadata" in hashed_filename and len(hashed_filename.split('-')) == 2 and 'head' not in hashed_filename:
+        if (
+            "metadata" in hashed_filename
+            and len(hashed_filename.split("-")) == 2
+            and "head" not in hashed_filename
+            and flags_ADD_HASH
+        ):
             try:
                 os.symlink(Path(hashed_filename).name, cpaths.CPATH_DOCS_METADATA_JSON)
             except OSError as e:
@@ -814,12 +823,14 @@ def dump_metadata(meta):
                     os.symlink(Path(hashed_filename).name, cpaths.CPATH_DOCS_METADATA_JSON)
                 else:
                     print("print unlink/link didnt work for {} with {}".format(hashed_filename, e))
-                    raise e
+                    raise OSError from e
 
     def dict_to_json(filename, d):
         js = json.dumps(d)
         key = md5(js.encode("utf-8"), usedforsecurity=False).hexdigest()[0:KEY_LENGTH]
-        hashed_filename = "{}-{}.json".format(filename[:-KEY_LENGTH], key)
+        hashed_filename = filename
+        if flags_ADD_HASH:
+            hashed_filename = "{}-{}.json".format(filename[:-KEY_LENGTH], key)
         if (
             os.path.exists(hashed_filename)
             and os.path.exists(hashed_filename + ".zip")
@@ -830,14 +841,15 @@ def dump_metadata(meta):
             return
 
         # hash changed, remove old files
-        old_hash_pattern = "{}-*.json".format(filename[:-KEY_LENGTH])
-        old_hash_pattern_zip = "{}.zip".format(old_hash_pattern)
-        old_hash_pattern_bz2 = "{}.bz2".format(old_hash_pattern)
-        for pattern in (old_hash_pattern, old_hash_pattern_zip, old_hash_pattern_bz2):
-            for old_filename in glob(pattern):
-                logger.debug("remove old file %s", old_filename)
-                # print("removed old file {}".format(old_filename))
-                os.remove(old_filename)
+        if flags_ADD_HASH:
+            old_hash_pattern = "{}-*.json".format(filename[:-KEY_LENGTH])
+            old_hash_pattern_zip = "{}.zip".format(old_hash_pattern)
+            old_hash_pattern_bz2 = "{}.bz2".format(old_hash_pattern)
+            for pattern in (old_hash_pattern, old_hash_pattern_zip, old_hash_pattern_bz2):
+                for old_filename in glob(pattern):
+                    logger.debug("remove old file %s", old_filename)
+                    # print("removed old file {}".format(old_filename))
+                    os.remove(old_filename)
 
         # write the non zipped file
         with open(hashed_filename, "w", encoding="utf-8") as f:
@@ -858,7 +870,8 @@ def dump_metadata(meta):
                 current_compressed.writestr(hashed_filename, js)
                 logger.debug("generated %s and %s version", hashed_filename, ext)
 
-        check_link(hashed_filename)
+        if flags_ADD_HASH:
+            check_link(hashed_filename)
 
     # split eq data v.s. others as they are not required on the front page
     meta_full = {

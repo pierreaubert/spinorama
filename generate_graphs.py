@@ -20,23 +20,26 @@
 generate_graphs.py [-h|--help] [-v] [--width=<width>] [--height=<height>]\
   [--force] [--smoke-test=<algo>] [--type=<ext>] [--log-level=<level>]\
   [--origin=<origin>]  [--speaker=<speaker>] [--mversion=<mversion>] [--brand=<brand>]\
-  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] [--update-cache]
+  [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] [--update-cache]\
+  [--data-dir=<data_dir>] [--ray-cluster=<ip_port>]
 
 Options:
-  -h|--help           display usage()
-  --smoke-test=<algo> run a few speakers only (choice are random or default)
-  --width=<width>     width size in pixel
+ -h|--help           display usage()
+  --data-dir=<data_dir> directory where the datas are stores (. by default)
   --height=<height>   height size in pixel
   --force             force regeneration of all graphs, by default only generate new ones
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
   --origin=<origin>   filter by origin
   --brand=<brand>     filter by brand
-  --speaker=<speaker> filter by speaker
-  --mversion=<mversion> filter by measurement
   --dash-ip=<ip>      ip of dashboard to track execution, default to localhost/127.0.0.1
   --dash-port=<port>  port for the dashbboard, default to 8265
+  --mversion=<mversion> filter by measurement
   --ray-local         if present, ray will run locally, it is usefull for debugging
+  --ray-cluster=<ip_port> set to ip:port if you want to join an existing cluster
+  --smoke-test=<algo> run a few speakers only (choice are random or default)
+  --speaker=<speaker> filter by speaker
   --update-cache      force updating the cache
+  --width=<width>     width size in pixel
 """
 import glob
 import os
@@ -103,13 +106,13 @@ def queue_measurement(
     mformat: str,
     morigin: str,
     mversion: str,
-    msymmetry: str,
-    mparameters: dict,
+    msymmetry: str | None,
+    mparameters: dict | None,
     level: int,
 ) -> tuple[int, int, int, int]:
     """Add all measurements in the queue to be processed"""
     id_df = parse_graphs_speaker.remote(
-        "./datas/measurements",
+        f"{data_dir}/datas/measurements",
         brand,
         speaker,
         mformat,
@@ -119,7 +122,7 @@ def queue_measurement(
         mparameters,
         level,
     )
-    id_eq = parse_eq_speaker.remote("./datas", speaker, id_df, mparameters, level)
+    id_eq = parse_eq_speaker.remote(f"{data_dir}/datas", speaker, id_df, mparameters, level)
     width = int(plot_params_default["width"])
     height = int(plot_params_default["height"])
     tracing("calling print_graph remote for {}".format(speaker))
@@ -321,7 +324,7 @@ def compute(speakerlist, filters, ray_ids: dict, level: int):
 
 def main(level):
     """Send all speakers in the queue to be processed"""
-    speakerlist = get_speaker_list("./datas/measurements")
+    speakerlist = get_speaker_list(f"{data_dir}/datas/measurements")
     if args["--smoke-test"] is not None:
         if args["--smoke-test"] == "random":
             speakerlist = set(random.sample(list(speakerlist), 15))
@@ -374,5 +377,7 @@ if __name__ == "__main__":
     force = args["--force"]
     LEVEL = args2level(args)
     logger = get_custom_logger(level=LEVEL, duplicate=True)
-
+    data_dir = "."
+    if args["--data-dir"] is not None:
+        data_dir = args["--data-dir"]
     main(level=LEVEL)

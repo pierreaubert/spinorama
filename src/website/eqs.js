@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // A library to display spinorama charts
 //
-// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+// Copyright (C) 2020-2024 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@
 /*global Handlebars*/
 /*eslint no-undef: "error"*/
 
-import { getEQdata } from './download${min}.js';
-import { openModal, closeModal, getPeq, getID } from './misc${min}.js';
-import { process } from './sort${min}.js';
-import { urlParameters2Sort } from './params${min}.js';
+import { getEQdata } from './download.js';
+import { openModal, closeModal, getPeq, getID } from './misc.js';
+import { process, urlParameters2Sort } from './search.js';
+import { pagination } from './pagination.js';
 
 function getPictureEqCompare(brand, model, suffix) {
     return encodeURI('speakers/' + brand + ' ' + model + '/eq_compare.' + suffix);
@@ -157,7 +157,11 @@ getEQdata()
             return process(data, params, speakerHtml);
         }
 
-        speakerContainer.appendChild(display(metadata, printEQ));
+        const [maxResults, fragment] = display(metadata, printEQ);
+        speakerContainer.appendChild(fragment);
+        pagination(maxResults);
+
+        // should be done once
         speakerContainer.addEventListener('keydown', (event) => {
             const e = event || window.event;
             if (e.keyCode === 27) {

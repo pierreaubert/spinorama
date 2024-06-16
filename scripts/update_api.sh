@@ -1,23 +1,38 @@
 #!/bin/bash
+# A library to display spinorama charts
+#
+# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-TARGET=/var/www/html/spinorama-api
+echo "Update starts"
+export PYTHONPATH=src:src/website:src/spinorama:.
 
-cp ./datas/metadata.py $TARGET
-cp ./scripts/gunicorn_start.sh $TARGET
-cp ./requirements-api.txt $TARGET
+DIST=/var/www/html/spinorama-api
 
-cp ./src/api/__init__.py $TARGET
-cp ./src/api/main.py $TARGET
-cp ./src/api/openapi.yml $TARGET
+cp ./scripts/gunicorn_start.sh $DIST
+cp requirements-api.txt $DIST
+cp datas/metadata.py $DIST/datas
+cp docs/assets/metadata.json $DIST/datas
+for source in "__init__.py" "main.py" "ai-plugin.json"; do
+    cp ./src/api/$source $DIST;
+done
 
-mkdir -p $TARGET/.well-known
-cp ./src/api/.well-known/ai-plugin.json $TARGET/.well-known
-cp ./src/api/.well-known/readme.md $TARGET/.well-known
+cd $DIST && source .venv/bin/activate && pip install -U -r requirements-api.txt
 
-# make it writable for the group
-chmod 775 $TARGET/*.sh
-chmod 664 $TARGET/*.py
-chmod 664 $TARGET/*.txt
+echo "you may need to restart gunicorn and possibly reload nginx:"
+echo "sudo supervisorctl restart spinorama-api"
+echo "sudo nginx -s reload"
 
-# reload
-sudo supervisorctl restart spinorama-api
+exit 0;

@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // A library to display spinorama charts
 //
-// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+// Copyright (C) 2020-2024 Pierre Aubert pierreaubert(at)yahoo(dot)fr
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { urlSite, metadataFilename, metadataFilenameHead, metadataFilenameChunks, eqdataFilename } from './meta${min}.js';
-import { getID } from './misc${min}.js';
+import { urlSite, metadataFilenameHead, metadataFilenameChunks, eqdataFilename } from './meta.js';
+import { getID } from './misc.js';
 
 function processOrigin(origin) {
     if (origin.includes('Vendors-')) {
@@ -98,6 +98,23 @@ export function getSpeakerData(metaSpeakers, graph, speaker, origin, version) {
     return spec;
 }
 
+function cleanupCache(url) {
+    caches.open('https://dev.spinorama.org').then((cache) => {
+        cache.delete(url).then(() => console.info('deleted ' + url + ' from cache.'));
+    });
+}
+
+function updateCache(url) {
+    const urlMeta = '/js/meta-v3.min.js';
+    cleanupCache(urlMeta);
+    const request = new Request(urlMeta, { cache: 'reload' });
+    const spec = fetch(request).then((response) => {
+        console.log('cache uploaded: ' + response.text());
+        // metadataFilenameHead = response.metadataFilenameHead;
+    });
+    return spec;
+}
+
 export function getAllSpeakers(table) {
     const metaSpeakers = {};
     const speakers = [];
@@ -109,58 +126,62 @@ export function getAllSpeakers(table) {
     return [metaSpeakers, speakers.sort()];
 }
 
-function fetchDataAndMap(url, encoding) {
+function fetchDataAndMap(url, encoding, state) {
     // console.log('fetching url=' + url + ' encoding=' + encoding);
     const spec = fetch(url, { headers: { 'Accept-Encoding': encoding, 'Content-Type': 'application/json' } })
         .catch((error) => {
-            console.log('ERROR fetchData for ' + url + ' yield a 404 with error: ' + error);
+            console.log('ERROR fetchData for ' + url + ' ' + error);
             return null;
         })
-        .then((response) => response.json())
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+            if (state === 1 && response.status === 404) {
+                const newUrl = updateCache(url);
+                return fetchDataAndMap(newUrl, encoding, 2);
+            }
+            console.log('ERROR fetchData for ' + url + ' failed: ' + response.status);
+            return null;
+        })
         .catch((error) => {
             console.log('ERROR fetchData for ' + url + ' yield a json error: ' + error);
             return null;
         })
-        .then((data) => new Map(Object.values(data).map((speaker) => [getID(speaker.brand, speaker.model), speaker])))
-        .catch((error) => {
-            console.log('ERROR fetchData for ' + url + ' failed: ' + error);
-            return null;
-        });
+        .then((data) => new Map(Object.values(data).map((speaker) => [getID(speaker.brand, speaker.model), speaker])));
     return spec;
 }
 
 export function getMetadataHead() {
     const url = urlSite + metadataFilenameHead;
-    return fetchDataAndMap(url, 'bz2, zip, deflate');
+    return fetchDataAndMap(url, 'bz2, zip, deflate', 1);
 }
 
-export function getMetadataOld() {
-    const url = urlSite + metadataFilename;
-    return fetchDataAndMap(url, 'bz2, zip, deflate');
+export function getMetadataTail(metadataHead) {
+    const promisedChunks = [];
+    for (let i in metadataFilenameChunks) {
+        const url = urlSite + metadataFilenameChunks[i];
+        promisedChunks.push(fetchDataAndMap(url, 1));
+    }
+    return Promise.all(promisedChunks).then((chunks) => {
+        const merged = new Map(metadataHead);
+        for (const chunk of chunks) {
+            for (const [key, value] of chunk) {
+                merged.set(key, value);
+            }
+        }
+        return merged;
+    });
 }
 
 export function getMetadata() {
-    const promisedHead = getMetadataHead();
-    const promisedChunks = [promisedHead];
-    for (let i in metadataFilenameChunks) {
-        const url = urlSite + metadataFilenameChunks[i];
-        promisedChunks.push(fetchDataAndMap(url));
-    }
-    return Promise.all(promisedChunks).then((chunks) => {
-        const merged = new Map();
-	for (const chunk of chunks) {
-	    for (const [key, value] of chunk) {
-		merged.set(key, value);
-	    }
-	}
-        return merged;
-    });
+    return getMetadataHead().then((data) => getMetadataTail(data));
 }
 
 export function getEQdata() {
     const metaDataPromise = getMetadata();
     const url = urlSite + eqdataFilename;
-    const eqDataPromise = fetchDataAndMap(url, 'bz2, gzip, zip, deflate').catch((error) => {
+    const eqDataPromise = fetchDataAndMap(url, 'bz2, gzip, zip, deflate', 1).catch((error) => {
         console.log('ERROR getEQdata for ' + url + 'yield a 404 with error: ' + error);
         return null;
     });
@@ -186,11 +207,11 @@ export function assignOptions(textArray, selector, textSelected) {
     while (selector.firstChild) {
         selector.firstChild.remove();
     }
-    for (let i = 0; i < textArray.length; i++) {
+    for (const element of textArray) {
         const currentOption = document.createElement('option');
-        currentOption.value = textArray[i];
-        currentOption.text = textArray[i].replace('Vendors-', '').replace('vendor-pattern-', 'Pattern ');
-        if (textArray[i] === textSelected) {
+        currentOption.value = element;
+        currentOption.text = element.replace('Vendors-', '').replace('vendor-pattern-', 'Pattern ');
+        if (element === textSelected) {
             currentOption.selected = true;
         }
         if (textArray.length === 1) {

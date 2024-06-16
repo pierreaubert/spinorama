@@ -19,22 +19,24 @@
 
 """
 usage: generate_html.py [--help] [--version] [--dev] [--optim]\
- [--sitedev=<http>]  [--log-level=<level>]
+ [--sitedev=<http>]  [--log-level=<level>] [--skip-speakers]
 
 Options:
   --help            display usage()
   --version         script version number
   --sitedev=<http>  default: http://localhost:8000/docs
   --dev             if you want to generate the dev websites
-  --optim           if you want an optimised built       
+  --optim           if you want an optimised built
+  --skip-speakers   skip speaker html page generation (useful for debugging)
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
+
 from glob import glob
 import json
 import os
+import re
 import shutil
 import subprocess
-import pathlib
 import sys
 
 from docopt import docopt
@@ -52,13 +54,26 @@ from generate_common import (
 )
 
 import spinorama.constant_paths as cpaths
-from spinorama.need_update import need_update
+from spinorama.need_update import need_update, write_if_different
 
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
+CACHE_VERSION = "v4"
+
+
+def get_files(dir, ext):
+    """return a list of files matching the extension in a directory, results are stripped of paths and extensions"""
+    files = []
+    filenames = glob("{}/*.{}".format(dir, ext))
+    for filename in filenames:
+        if not os.path.isfile(filename):
+            continue
+        files.append(os.path.basename(filename).split(".")[-2])
+    return files
 
 
 def get_versions(filename):
+    """get the current versions for some js libraries"""
     versions = {}
     with open(filename, "r") as fd:
         lines = fd.readlines()
@@ -77,22 +92,44 @@ def get_versions(filename):
             ):
                 continue
             versions[tokens[0]] = tokens[1]
+    versions["CACHE"] = CACHE_VERSION
     return versions
 
 
-def write_if_different(new_content: str, filename: str, force: bool):  # noqa: FBT001
-    """Write the new content to disk only if it is different from the current one.
-    The unchanged html files are then untouched and http cache effect is better.
-    """
-    identical = False
-    path = pathlib.Path(filename)
-    if path.exists():
-        old_content = path.read_text(encoding="utf-8")
-        if old_content == new_content:
-            identical = True
+def adapt_imports(jscode, versions, js_files):
+    """ " replace import statements
 
-    if not identical or force:
-        path.write_text(new_content, encoding="utf-8")
+    The source code is compatible with node / vite / vitess.
+    The production code need to be browser compatible.
+
+    Local js files go to /js and libraries go to /js3rd.
+
+    This is very very basic.
+    """
+    replacements = [
+        (" from 'fuse.js';", " from '/js3rd/fuse-{}.min.mjs';".format(versions["FUSE"])),
+        (
+            " from 'handlebars.js';",
+            " from '/js3rd/handlebars-{}.min.js';".format(versions["HANDLEBARS"]),
+        ),
+        (
+            "import Plotly from 'plotly-dist-min';",
+            "",  # because module support is complicated :(
+        ),
+    ]
+    re_replacements = [
+        (
+            r"}} from '\.\/({})\.js';".format("|".join(js_files)),
+            r"}} from '/js/\1-{}.min.js';".format(CACHE_VERSION),
+        ),
+    ]
+    code = jscode
+    for str_from, str_to in replacements:
+        code = code.replace(str_from, str_to)
+    for re_from, re_to in re_replacements:
+        code = re.sub(re_from, re_to, code)
+
+    return code
 
 
 FREQ_FILTER = [
@@ -184,7 +221,7 @@ def generate_measurement(
         meta_file,
         eq_file,
         *find_metadata_chunks().values(),
-        *glob("./src/website/assets/*.js"),
+        *glob("./src/website/*.js"),
     ]
     index_force = need_update(index_name, index_deps)
     write_if_different(speaker_content, index_name, index_force)
@@ -265,6 +302,16 @@ def generate_speakers(mako, dataframe, meta, site, use_search, versions):
 
 
 def main():
+    # create some directories
+    for dir in (
+        cpaths.CPATH_DOCS,
+        cpaths.CPATH_DOCS_JS,
+        cpaths.CPATH_DOCS_JS3RD,
+        cpaths.CPATH_DOCS_JSON,
+        cpaths.CPATH_DOCS_CSS,
+    ):
+        os.makedirs(dir, mode=0o755, exist_ok=True)
+
     # load all metadata from generated json file
     metadata_json_filename, eqdata_json_filename = find_metadata_file()
     metadata_json_chunks = find_metadata_chunks()
@@ -280,8 +327,16 @@ def main():
     with open(metadata_json_filename, "r") as f:
         meta = json.load(f)
 
+    with open(eqdata_json_filename, "r") as f:
+        meta_eqs = json.load(f)
+        for k, v in meta_eqs.items():
+            meta[k]["eqs"] = v["eqs"]
+
     # load versions for various css and js files
-    versions = get_versions("./update_3rdparties.sh")
+    versions = get_versions("{}/update_3rdparties.sh".format(cpaths.CPATH_SCRIPTS))
+
+    # get a list of js files
+    jsfiles = get_files(cpaths.CPATH_WEBSITE, "js")
 
     # only build a dictionnary will all graphs
     main_df = {}
@@ -313,7 +368,8 @@ def main():
 
     # configure Mako
     mako_templates = TemplateLookup(
-        directories=["src/website"], module_directory="./build/mako_modules"
+        directories=[cpaths.CPATH_WEBSITE, cpaths.CPATH_BUILD_WEBSITE],
+        module_directory=cpaths.CPATH_BUILD_MAKO,
     )
 
     # write index.html
@@ -350,9 +406,13 @@ def main():
             versions=versions,
         )
         eqs_filename = f"{cpaths.CPATH_DOCS}/eqs.html"
-        write_if_different(eqs_content, eqs_filename, force=False)
+        if isinstance(eqs_content, str):
+            write_if_different(eqs_content, eqs_filename, force=False)
+        else:
+            print("Generating eqs.html failed, template generation failed")
+            sys.exit(1)
     except KeyError as key_error:
-        print("Generating eqs.htmlfailed with {}".format(key_error))
+        print("Generating eqs.html failed with {}".format(key_error))
         sys.exit(1)
 
     # write various html files
@@ -387,14 +447,17 @@ def main():
         sys.exit(1)
 
     # write a file per speaker
-    logger.info("Write a file per speaker")
-    try:
-        generate_speakers(
-            mako_templates, main_df, meta=meta, site=site, use_search=False, versions=versions
-        )
-    except KeyError as key_error:
-        print("Generating a file per speaker failed with {}".format(key_error))
-        sys.exit(1)
+    if not skip_speakers:
+        logger.info("Write a file per speaker")
+        try:
+            generate_speakers(
+                mako_templates, main_df, meta=meta, site=site, use_search=False, versions=versions
+            )
+        except KeyError as key_error:
+            print("Generating a file per speaker failed with {}".format(key_error))
+            sys.exit(1)
+    else:
+        logger.info("Skip speaker html generation!")
 
     # copy favicon(s) and logos
     for f in [
@@ -430,80 +493,40 @@ def main():
         "pmc.png",
         "revel.png",
         "spin.svg",
-        "volume-0.svg",
-        "volume-1.svg",
-        "volume-2.svg",
-        "volume-3.svg",
-        "volume-4.svg",
-        "volume-5.svg",
-        "volume-danger-0.svg",
-        "volume-danger-1.svg",
-        "volume-danger-2.svg",
-        "volume-danger-3.svg",
-        "volume-info-0.svg",
-        "volume-info-1.svg",
-        "volume-info-2.svg",
-        "volume-info-3.svg",
-        "volume-success-0.svg",
-        "volume-success-1.svg",
-        "volume-success-2.svg",
-        "volume-success-3.svg",
-        "volume.svg",
     ]:
         file_in = cpaths.CPATH_DATAS_ICONS + "/" + f
-        file_out = cpaths.CPATH_DOCS + "/" + f
+        file_out = cpaths.CPATH_DOCS + "/pictures/" + f
         shutil.copy(file_in, file_out)
 
-    # copy custom css
-    for f in [
-        "spinorama.css",
-        "manifest.json",
+    # copy custom css and manifest
+    for file, sub in [
+        ("spinorama.css", "css/"),
+        ("manifest.json", "/"),
     ]:
-        file_in = cpaths.CPATH_WEBSITE + "/" + f
-        file_out = cpaths.CPATH_DOCS + "/svg" + f
+        file_in = "{}/{}".format(cpaths.CPATH_WEBSITE, file)
+        file_out = "{}/{}{}".format(cpaths.CPATH_DOCS, sub, file)
         shutil.copy(file_in, file_out)
-
-    # cleanup flow directives: currently unused
-    flow_bin = "./node_modules/.bin/flow-remove-types"
-    flow_param = ""  # "--pretty --sourcemaps"
-
-    flow_command = "{} {} {} {} {}".format(
-        flow_bin,
-        flow_param,
-        cpaths.CPATH_WEBSITE,
-        "--out-dir",
-        cpaths.CPATH_DOCS,
-    )
-    status = subprocess.run(
-        [flow_command], shell=True, check=True, capture_output=True  # noqa: S602
-    )
-    if status.returncode != 0:
-        print("flow failed")
 
     # copy css/js files
-    logger.info("Copy js files to %s", cpaths.CPATH_DOCS)
-    try:
-        for item in (
-            "compare",
-            "download",
-            "eqs",
-            "graph",
-            "index",
-            "meta",
-            "misc",
-            "onload",
-            "params",
-            "plot",
-            "scores",
-            "search",
-            "similar",
-            "sort",
-            "statistics",
-            "tabs",
-        ):
-            item_name = "{0}.js".format(item)
-            logger.info("Write %s", item_name)
-            item_html = mako_templates.get_template(item_name)
+    logger.info("Copy js files to %s", cpaths.CPATH_DOCS_JS)
+    for item in (
+        "compare",
+        "download",
+        "eqs",
+        "graph",
+        "index",
+        "meta",
+        "misc",
+        "onload",
+        "pagination",
+        "plot",
+        "scores",
+        "search",
+        "similar",
+        "statistics",
+        "tabs",
+    ):
+        try:
             # remove the ./docs parts
             len_docs = len("/docs/")
             metadata_filename = metadata_json_filename[len_docs:]
@@ -517,39 +540,94 @@ def main():
                     ]
                 )
             )
-            eqdata_filename = eqdata_json_filename[len_docs:]
-            item_content = item_html.render(
-                df=main_df,
-                meta=meta_sorted_score,
-                site=site,
-                metadata_filename=metadata_filename,
-                metadata_filename_head=metadata_filename_head,
-                metadata_filename_chunks=js_chunks,
-                eqdata_filename=eqdata_filename,
-                min=".min" if flag_optim else "",
-                versions=versions,
+            # pipeline
+            item_name = "{}.js".format(item)
+            item_original = "{}/{}.js".format(cpaths.CPATH_WEBSITE, item)
+            item_mako_tmpl = "{}-0-flow.js".format(item)
+            item_post_flow = "{}/{}-0-flow.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
+            item_post_mako = "{}/{}-1-mako.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
+            item_post_import = "{}/{}-2-import.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
+            item_post_terser = "{}/{}-3-terser.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
+            item_dist = "{}/{}-{}.min.js".format(cpaths.CPATH_DOCS_JS, item, CACHE_VERSION)
+
+            # cleanup flow directives: currently unused
+            flow_bin = "./node_modules/.bin/flow-remove-types"
+            flow_param = ""  # "--pretty --sourcemaps"
+
+            flow_command = "{} {} {} > {}".format(
+                flow_bin, flow_param, item_original, item_post_flow
             )
-            item_filename = cpaths.CPATH_DOCS + "/" + item_name
-            write_if_different(item_content, item_filename, force=False)
-            # compress files with terser
-            if flag_optim:
-                terser_command = "{0} {1}/{2} > {1}/{3}".format(
-                    "./node_modules/.bin/terser",
-                    cpaths.CPATH_DOCS,
-                    "{}.js".format(item),
-                    "{}.min.js".format(item),
+            status = subprocess.run(
+                [flow_command],
+                shell=True,  # noqa: S602
+                check=True,
+                capture_output=True,
+            )
+            if status.returncode != 0:
+                print("flow failed for %s", item_name)
+
+            # build first generation with metadata expension, now only useful for meta.js
+            if item == "meta":
+                item_html = mako_templates.get_template(item_mako_tmpl)
+                eqdata_filename = eqdata_json_filename[len_docs:]
+                item_content = item_html.render(
+                    df=main_df,
+                    meta=meta_sorted_score,
+                    site=site,
+                    metadata_filename=metadata_filename,
+                    metadata_filename_head=metadata_filename_head,
+                    metadata_filename_chunks=js_chunks,
+                    eqdata_filename=eqdata_filename,
+                    min=".min" if flag_optim else "",
+                    versions=versions,
                 )
+                write_if_different(item_content, item_post_mako, force=True)
+            else:
+                shutil.copy(item_post_flow, item_post_mako)
+
+            # change inport to match prod/dev and browser requirements
+            with open(item_post_mako, "r") as fd:
+                item_content = "".join(fd.readlines())
+                item_content = adapt_imports(item_content, versions, jsfiles)
+                write_if_different(item_content, item_post_import, force=True)
+
+            # compress files with terser
+            terser_command = "{0} {1} > {2}".format(
+                "./node_modules/.bin/terser", item_post_import, item_post_terser
+            )
+            # print(terser_command)
+            try:
                 status = subprocess.run(
-                    [terser_command], shell=True, check=True, capture_output=True  # noqa: S602
+                    [terser_command],
+                    shell=True,
+                    check=True,
+                    capture_output=True,  # noqa: S602
                 )
                 if status.returncode != 0:
                     print("terser failed for item {}".format(item))
+            except subprocess.CalledProcessError as e:
+                print("terser failed for item {} with {}".format(item, e))
+
             # optimise files with critical
-            if flag_optim:
-                pass
-    except KeyError as key_error:
-        print("Generating various html files failed with {}".format(key_error))
-        sys.exit(1)
+            # TBD
+
+            # copy last file
+            shutil.copy(item_post_terser, item_dist)
+
+        except KeyError as key_error:
+            print("Generating {} js file failed with {}".format(item, key_error))
+            sys.exit(1)
+
+    # call workbox
+    workbox_command = ""
+    status = subprocess.run(
+        [workbox_command],
+        shell=True,
+        check=True,
+        capture_output=True,  # noqa: S602
+    )
+    if status.returncode != 0:
+        print("workbox failed!")
 
     # generate robots.txt and sitemap.xml
     logger.info("Copy robots/sitemap files to %s", cpaths.CPATH_DOCS)
@@ -570,9 +648,9 @@ def main():
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             # ok for robots but likely doesn't work for sitemap
-            write_if_different(item_content, item_filename, force=False)
+            write_if_different(item_content, item_filename, force=True)
     except KeyError as key_error:
-        print("Generating various html files failed with {}".format(key_error))
+        print("Copying robots files failed with {}".format(key_error))
         sys.exit(1)
 
     sys.exit(0)
@@ -583,6 +661,7 @@ if __name__ == "__main__":
     flag_dev = args["--dev"]
     flag_optim = args["--optim"]
     site = SITEPROD
+    skip_speakers = False
     if flag_dev:
         site = SITEDEV
         if args["--sitedev"] is not None:
@@ -590,6 +669,7 @@ if __name__ == "__main__":
             if len(site) < 4 or site[0:4] != "http":
                 print("sitedev {} does not start with http!".format(site))
                 sys.exit(1)
+        skip_speakers = args["--skip-speakers"]
 
     logger = get_custom_logger(level=args2level(args), duplicate=True)
     main()

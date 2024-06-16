@@ -4,16 +4,18 @@
     <title>Graphs and Measurements for ${speaker}</title>
     <%include file="head.html"/>
     <%include file="head_vega.html"/>
-    <script type="module" src="${site}/graph${min}.js"></script>
   </head>
   <body>
     <%include file="nav_simple.html"/>
+<!--
+    <%include file="graph_tip.html"/>
+-->    
     <%! def space2url(text): return text.replace(' ', '%20') %>
 
     <div id="visGraph" class="graph"></div>
 
     <script type="module">
-      import { displayGraph } from "${site}/graph.js";
+      import { displayGraph } from "/js/graph-${versions['CACHE']}${min}.js";
       const spec = fetch("${graph | space2url}.json")
       .then( (response) => response.json() )
       .then( (spec) => {

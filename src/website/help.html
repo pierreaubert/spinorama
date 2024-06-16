@@ -478,7 +478,16 @@
 	    <ul>
 	      <li>Higher is better</li>
 	      <li>It make sense for tower, bookshelves or center but
-		not for surround, in-wall or column speakers</li>
+		not for surround, in-wall or column speakers; if you
+		see *** instead of a number, it is to remind you that
+		the score is not valid for some shapes of
+		speakers. If you go to the page of a speaker you
+		will still still see the computed value. It needs to
+		be taken with care. It may "work" for some speakers
+		but not for others. The predicted in-room response
+		assumes a rectangular room with standard reflection
+		and a dipole speaker. All bets are off for a stadium
+		or an omnidirectional speaker.</li>
 	      <li>Note that a difference between two scores is
 		only significant if the difference is greater than
 		0.6. </li>
@@ -490,7 +499,10 @@
 		about distorsion. You can get the same score for a
 		portable bluetooth speaker and a large tower.</li>
 	      <li>If you know how to read code, you can find my
-		implementation <a href="https://github.com/pierreaubert/spinorama/blob/master/src/spinorama/compute_cea2034.py">here</a>.</li>
+		implementation in
+		python <a href="https://github.com/pierreaubert/spinorama/blob/master/src/spinorama/compute_cea2034.py">here</a>. There
+		is also a version in Cython which is faster if needed
+		be in the same repository.</li>
 	    </ul>
 	  </li>
 	  <li id="bassExtensionDefinition">

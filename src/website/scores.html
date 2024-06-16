@@ -5,16 +5,17 @@
     <%include file="head.html"/>
   </head>
   <body>
+    <%include file="symbols.html"/>
     <%include file="nav_search.html"/>
 
     <article class="message is-warning banner">
-      <h4>Notice</h4>
+      <h4>Please read:</h4>
       <div class="message-header">
         <p>Warning</p>
         <button class="delete" aria-label="delete"></button>
       </div>
       <div class="message-body">
-        Please look at the <a href="${site}/help.html">help page</a> to
+        Please look at the <a href="/help.html">help page</a> to
         understand what the data means, what is the level of precision and how
         you can use this data to select a speaker.<br>
         If you want a <b>meaningful comparison</b>, please filter the
@@ -26,345 +27,23 @@
 
     <%namespace name="util" module="website.utils" import="*"/>
 
-    <script id="templateScores" type="text/x-handlebars-template">
-      <div class="tile py-1 is-ancestor px-0 py-0 m-0">
-        <div class="tile py-1 is-parent is-2 px-0 py-0 m-0">
-          {{brand}}
-          {{model}}
-        </div>
-        <div class="tile py-1 is-parent is-1 px-0 py-0 m-0">
-          <span class="has-text-right">
-            {{price}}
-          </span>
-        </div>
-        <div class="tile py-1 is-parent is-2 px-0 py-0 m-0">
-          {{#each reviews.reviews}}
-          <a href="{{this.url}}">{{this.origin}}</a>&nbsp;
-          {{/each}}
-        </div>
-        <div class="tile py-1 is-parent is-1 px-0 py-0 m-0">
-          {{estimates.ref_3dB}}Hz
-        </div>
-        <div class="tile py-1 is-parent is-1 px-0 py-0 m-0">
-          &plusmn;{{estimates.ref_band}}dB
-        </div>
-        <div class="tile py-1 is-parent is-1 px-0 py-0 m-0">
-          {{#unless (isNaN scores.pref_score)}}
-          <b>{{scores.pref_score}}</b>
-          {{/unless}}
-        </div>
-        <div class="tile py-1 is-parent is-1 px-0 py-0 m-0">
-          {{#unless (isNaN scores.pref_score)}}
-          {{scoresEq.pref_score}}
-          {{/unless}}
-        </div>
-        <div class="tile py-1 is-parent is-1 px-0 py-0 m-0">
-          {{#unless (isNaN scores.pref_score)}}
-          {{scores.pref_score_wsub}}
-          {{/unless}}
-        </div>
-        <div class="tile py-1 is-parent is-1 px-0 py-0 m-0">
-          {{#unless (isNaN scores.pref_score)}}
-          {{scoresEq.pref_score_wsub}}
-          {{/unless}}
-        </div>
-        <div class="tile py-1 is-parent is-1 px-0 py-0 m-0">
-          <button id="{{id}}-button" class="button is-small" aria-label="more options for {{id}}" data-target="{{id}}-modal">
-            <i class="fas fa-circle-info"></i>
-          </button>
-        </div>
+    <div class="container">
+      <div class="fixed-grid has-11-cols gap-0 has-6-cols-mobile">
+	<div class="grid" id="speakers" data-num="0">
+          <div class="cell is-col-span-2"><b>Brand Model</b></div>
+          <div class="cell"><span class="has-text-right"><b>USD</b></span></div>
+          <div class="cell is-col-span-2"><span class="has-text-left"><b>Reviews</b></span></div>
+          <div class="cell"><b>-3dB</b></div>
+          <div class="cell"><b>Flat.</b></div>
+          <div class="cell"><b>Tone</b></div>
+          <div class="cell"><b>w/sub</b></div>
+          <div class="cell"><b>w/eq</b></div>
+          <div class="cell"><b>w/both</b></div>
+	</div>
       </div>
-      <div id="{{id}}-modal" class="modal px-0 py-0 m-0">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">{{brand}} {{model}}</p>
-            <button class="delete" aria-label="close"></button>
-          </header>
-          <section class="modal-card-body">
-            <div class="table-container">
-              {{#each reviews.reviews}}
-              <table class="table is-striped is-narrow">
-                <thead>
-                  <tr>
-                    <th colspan="100%">
-                      <a href={{this.url}}>Review</a>
-                      from
-                      {{this.origin}}
-                      ({{this.version}})
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="has-text-right">
-                    <th>Estimates</th>
-                    <th>Def.</th>
-                    <th>w/Eq</th>
-                  </tr>
-                  <tr class="has-text-right">
-                    <td>-3dB v.s. reference:</td>
-                    <td>{{floorFloat this.estimates.ref_3dB}}Hz</td>
-                    <td>{{floorFloat this.estimatesEq.ref_3dB}}Hz</td>
-                  </tr>
-                  <tr class="has-text-right">
-                    <td>-6dB v.s. reference:</td>
-                    <td>{{floorFloat this.estimates.ref_6dB}}Hz</td>
-                    <td>{{floorFloat this.estimatesEq.ref_6dB}}Hz</td>
-                  </tr>
-                  <tr class="has-text-right">
-                    <td>Horizontal Directivity between 1kHz and 10kHz</td>
-                    <td>[{{this.estimates.dir_horizontal_m}}°,
-                      {{this.estimates.dir_horizontal_p}}°]</td>
-                    <td>--</td>
-                  </tr>
-                  <tr class="has-text-right">
-                    <td>Vertical Directivity between 1kHz and 10kHz</td>
-                    <td>[{{this.estimates.dir_vertical_m}}°,
-                      {{this.estimates.dir_vertical_p}}°]</td>
-                    <td>--</td>
-                  </tr>
-                  <tr class="has-text-right">
-                    <td>Deviation between
-                      {{this.estimates.ref_from}}Hz to
-                      {{this.estimates.ref_to}}Hz</td>
-                    <td>&plusmn;{{this.estimates.ref_band}}dB</td>
-                    <td>&plusmn;{{this.estimatesEq.ref_band}}dB</td>
-                  </tr>
-                  {{#if (isDefined this.sensitivity)}}
-                  <tr class="has-text-right">
-                    <td>Sensitivity:</td>
-                    <td>{{roundFloat this.sensitivity}}dB</td>
-                    <td></td>
-                  </tr>
-                  {{/if}}
-                  {{#unless (isNaN scores.pref_score)}}
-                  <tr class="has-text-right">
-                    <th>Score components</th>
-                    <th>Def.</th>
-                    <th>w/Eq</th>
-                  </tr>
-                  <tr class="has-text-right">
-                    <td>NBD ON:</td>
-                    <td>{{this.scores.nbd_on_axis}}</td>
-                    <td>{{this.scoresEq.nbd_on_axis}}</td>
-                  </tr>
-                  <tr class="has-text-right">
-                    <td>NBD LW:</td>
-                    <td>{{this.scores.nbd_listening_window}}</td>
-                    <td>{{this.scoresEq.nbd_listening_window}}</td>
-                  </tr>
-                  <tr class="has-text-right">
-                    <td>LFX (Hz):</td>
-                    <td>{{this.this.scores.lfx_hz}}</td>
-                    <td>{{this.scoresEq.lfx_hz}}</td>
-                  </tr>
-                  <tr class="has-text-right">
-                    <td>SM PIR:</td>
-                    <td>{{this.scores.sm_pred_in_room}}</td>
-                    <td>{{this.scoresEq.sm_pred_in_room}}</td>
-                  </tr>
-                  <tr class="has-text-right">
-                    <td>SM SP:</td>
-                    <td>{{this.scores.sm_sound_power}}</td>
-                    <td>{{this.scoresEq.sm_sound_power}}</td>
-                  </tr>
-                  <tr class="has-text-right">
-                    <td>Score</td>
-                    <td><b>{{this.scores.pref_score}}</b></td>
-                    <td>{{this.scoresEq.pref_score}}</td>
-                  </tr>
-                  <tr class="has-text-right">
-                    <td>Score with subwoofer</td>
-                    <td>{{this.scores.pref_score_wsub}}</td>
-                    <td>{{this.scoresEq.pref_score_wsub}}</td>
-                  </tr>
-                  {{/unless}}
-                  {{#if (isDefined specifications)}}
-                  <tr class="has-text-right">
-                    <th>Vendor specifications</th>
-                    <th></th>
-                    <th></th>
-                  </tr>
-                  {{#if (isDefined specifications.dispersion)}}
-                  {{#if (isDefined specifications.dispersion.horizontal)}}
-                  <tr class="has-text-right">
-                    <td>Dispersion Horizontal</td>
-                    <td>{{this.specifications.dispersion.horizontal}}°</td>
-                    <td></td>
-                  </tr>
-                  {{/if}}
-                  {{#if (isDefined specifications.dispersion.vertical)}}
-                  <tr class="has-text-right">
-                    <td>Dispersion Vertical</td>
-                    <td>{{this.specifications.dispersion.vertical}}°</td>
-                    <td></td>
-                  </tr>
-                  {{/if}}
-                  {{/if}}
-                  {{#if (isDefined specifications.sensitivity)}}
-                  <tr class="has-text-right">
-                    <td>Sensitivity</td>
-                    <td>{{this.specifications.sensitivity}}dB</td>
-                    <td></td>
-                  </tr>
-                  {{/if}}
-                  {{#if (isDefined specifications.impedance)}}
-                  <tr class="has-text-right">
-                    <td>Impedance</td>
-                    <td>{{this.specifications.impedance}}&#8486;</td>
-                    <td></td>
-                  </tr>
-                  {{/if}}
-                  {{#if (isDefined specifications.SPL)}}
-                  {{#if (isDefined specifications.SPL.peak)}}
-                  <tr class="has-text-right">
-                    <td>SPL Peak</td>
-                    <td>{{this.specifications.SPL.peak}}dB</td>
-                    <td></td>
-                  </tr>
-                  {{/if}}
-                  {{#if (isDefined specifications.SPL.continuous)}}
-                  <tr class="has-text-right">
-                    <td>SPL continuous</td>
-                    <td>{{this.specifications.SPL.continuous}}dB</td>
-                    <td></td>
-                  </tr>
-                  {{/if}}
-                  {{/if}}
-                  {{#if (isDefined specifications.size)}}
-                  {{#if (isDefined specifications.size.width)}}
-                  <tr class="has-text-right">
-                    <td>Width</td>
-                    <td>{{this.specifications.size.width}}mm</td>
-                    <td></td>
-                  </tr>
-                  {{/if}}
-                  {{#if (isDefined specifications.size.height)}}
-                  <tr class="has-text-right">
-                    <td>Height</td>
-                    <td>{{this.specifications.size.height}}mm</td>
-                    <td></td>
-                  </tr>
-                  {{/if}}
-                  {{#if (isDefined specifications.size.depth)}}
-                  <tr class="has-text-right">
-                    <td>Depth</td>
-                    <td>{{this.specifications.size.depth}}mm</td>
-                    <td></td>
-                  </tr>
-                  {{/if}}
-                  {{/if}}
-                  {{#if (isDefined specifications.weight)}}
-                  <tr class="has-text-right">
-                    <td>Weight</td>
-                    <td>{{this.specifications.weight}}kg</td>
-                    <td></td>
-                  </tr>
-                  {{/if}}
-                  {{/if}}
-                </tbody>
-              </table>
-              {{/each}}
-              {{#unless (isNaN scores.pref_score)}}
-              <figure>
-                <img src="{{spider}}" />
-              </figure>
-              {{/unless}}
-          </section>
-          </div>
-        </div>
-    </script>
-
-    <div class="section">
-
-      <div class="column py-0 is-12 is-mobile px-0 py-0 m-0">
-        <div class="tile py-0 is-ancestor px-0 py-0 m-0">
-          <div class="tile py-0 is-parent is-2 px-0 py-0 m-0">
-              <b>Brand Model</b>
-              <button class="button is-small" aria-label="sort by brand" id="sort-brand-button">
-                <i class="fa-solid fa-sort"></i>
-              </button>
-          </div>
-          <div class="tile py-0 is-parent is-1">
-              <span class="has-text-right">
-                <b>USD</b>
-                <button class="button is-small" aria-label="sort by price" id="sort-price-button">
-                  <i class="fa-solid fa-sort"></i>
-                </button>
-              </span>
-          </div>
-          <div class="tile py-0 is-parent is-2">
-              <span class="has-text-left">
-                <b>Reviews</b>
-              </span>
-          </div>
-          <div class="tile py-0 is-parent is-1">
-              <b>-3dB</b>
-              <button class="button is-small" aria-label="sort by f3" id="sort-f3-button">
-                <i class="fa-solid fa-sort"></i>
-              </button>
-          </div>
-          <div class="tile py-0 is-parent is-1">
-              <b>Flat.</b>
-              <button class="button is-small" aria-label="sort by flatness" id="sort-flatness-button">
-                <i class="fa-solid fa-sort"></i>
-              </button>
-          </div>
-          <div class="tile py-0 is-parent is-1">
-              <b>Tone</b>
-              <button
-                class="button is-small"
-                aria-label="sort by flatness"
-                id="sort-score-button"
-                >
-                <i class="fa-solid fa-sort"></i>
-              </button>
-          </div>
-          <div class="tile py-0 is-parent is-1">
-              <b>w/eq</b>
-              <button
-                class="button is-small"
-                aria-label="sort by flatness"
-                id="sort-scoreEQ-button"
-                >
-                <i class="fa-solid fa-sort"></i>
-              </button>
-          </div>
-          <div class="tile py-0 is-parent is-1">
-              <b>w/sub</b>
-              <button
-                class="button is-small"
-                aria-label="sort by flatness"
-                id="sort-scoreWSUB-button"
-                >
-                <i class="fa-solid fa-sort"></i>
-              </button>
-          </div>
-          <div class="tile py-0 is-parent is-1">
-              <b>w/both</b>
-              <button
-                class="button is-small"
-                aria-label="sort by flatness"
-                id="sort-scoreEQWSUB-button"
-                >
-                <i class="fa-solid fa-sort"></i>
-              </button>
-          </div>
-          <div class="tile py-0 is-parent is-1">
-            <b>Info</b>
-          </div>
-        </div>
-      </div>
-
-      <div class="searchresults">
-        <div class="columns is-multiline is-mobile p-0 m-0" id="speakers" data-num="0">
-          <script type="module" src="./scores${min}.js"></script>
-        </div>
-      </div>
-
-      <%include file="search.html"/>
-
     </div>
+    <script type="module" src="/js/scores-${versions['CACHE']}${min}.js"></script>
+    <%include file="search.html"/>
     <%include file="footer.html"/>
   </body>
 </html>

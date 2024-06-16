@@ -2,5 +2,6 @@ node_modules
 docs
 bin
 build
+venv
 .vscode
 .cache

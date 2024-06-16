@@ -8,6 +8,7 @@ snippets*.ipynb
 **/*.so
 **/*_large.png
 __pycache__
+.pytest_cache
 .idea
 TAGS
 .coverage
@@ -47,5 +48,7 @@ cache.*.h5
 .sass-cache
 build
 bin
+coverage
 coverage.xml
 recompute_eqs.sh
+.ruff_cache
