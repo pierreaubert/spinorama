@@ -244,15 +244,11 @@ export function sortMetadata2(metadata, sorter, results) {
         const spk = metadata.get(key);
         let price = parseFloat(spk.price);
         if (!isNaN(price)) {
-            const amount = spk.amount;
-            if (amount && amount !== 'each') {
+            if (!spk.amount || spk?.amount === 'pair') {
                 price /= 2;
-                // console.log('getPrice2 each '+price)
             }
-            // console.log('getPriceV2 '+price)
             return price;
         }
-        // console.log('getPriceV2 noprice')
         return -1;
     }
 
@@ -568,7 +564,7 @@ export function isFiltered(item, filter) {
             if (isNaN(price)) {
                 shouldShow = false;
             } else {
-                if (item?.amount === 'pair') {
+                if (!item.amount || item?.amount === 'pair') {
                     price /= 2.0;
                 }
                 if (price > priceMax || price < priceMin) {

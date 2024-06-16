@@ -15,26 +15,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# generate docs
-rm -fr ./docs
-rm -f *.log */*.log
-# sometimes ray left things behind
-rm -fr /tmp/ray
 # various cache files
-rm -fr ./__pycache__ ./*/__pycache__ ./*/*/__pycache__
-rm -fr ./.mypy_cache ./*/.mypy_cache ./*/*/.mypy_cache
-rm -fr ./.pytest_cache ./*/.pytest_cache ./*/*/.pytest_cache
-rm -f .cache/*.h5
-rm -fr **/results_*.csv
+rm -fr .sass-cache
 # node stuff
 rm -fr ./node_modules
 # emacs stuff
 rm -f ./TAGS ./*/*/TAGS
-rm -f **/.*~ **/.#* **/*~
+rm -f .*~ */*~ */*/*~
+rm -f \.#*\# \#.*\# *.md.tmp \#*\#
 # python venv
-rm -fr spinorama-venv
-rm -fr **/*.pyc
-rm -fr **/.ipynb_checkpoints
+rm -fr spinorama-venv venv .venv
+rm -fr *.pyc src/*/*.pyc
+rm -fr ./.ipynb_checkpoints
+rm -fr ./__pycache__ ./*/__pycache__ ./*/*/__pycache__
+rm -fr ./.pytest_cache ./*/.pytest_cache ./*/*/.pytest_cache
+rm -fr ./.mypy_cache ./*/.mypy_cache ./*/*/.mypy_cache
+rm -fr .ruff_cache
+rm -f .coverage coverage.xml
+rm -fr coverage
 # latex stuff
 rm -fr ./book/.pytest_cache ./book/*.aux ./book/*.bbl ./book/*.blg ./book/*.lof ./book/*.out ./book/*.pdf ./book/*.toc ./book/*.back ./book/tmp ./book/*~
 # Mac stuff
@@ -44,4 +42,11 @@ rm -f src/spinorama/c_compute_scores.c
 rm -f src/spinorama/c_compute_scores.so
 rm -f src/spinorama/c_compute_scores.*.so
 rm -f src/spinorama/c_compute_scores.*~
+# spinorama
+rm -fr ./.cache
+rm -fr ./docs
+rm -fr ./build
+rm -f *.log */*.log
+rm -fr /tmp/ray
+rm -fr **/results_*.csv
 

@@ -813,6 +813,7 @@ def dump_metadata(meta):
             "metadata" in hashed_filename
             and len(hashed_filename.split("-")) == 2
             and "head" not in hashed_filename
+            and flags_ADD_HASH
         ):
             try:
                 os.symlink(Path(hashed_filename).name, cpaths.CPATH_DOCS_METADATA_JSON)

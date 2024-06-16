@@ -30,6 +30,7 @@ Options:
   --skip-speakers   skip speaker html page generation (useful for debugging)
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
+
 from glob import glob
 import json
 import os
@@ -405,9 +406,13 @@ def main():
             versions=versions,
         )
         eqs_filename = f"{cpaths.CPATH_DOCS}/eqs.html"
-        write_if_different(eqs_content, eqs_filename, force=False)
+        if isinstance(eqs_content, str):
+            write_if_different(eqs_content, eqs_filename, force=False)
+        else:
+            print("Generating eqs.html failed, template generation failed")
+            sys.exit(1)
     except KeyError as key_error:
-        print("Generating eqs.htmlfailed with {}".format(key_error))
+        print("Generating eqs.html failed with {}".format(key_error))
         sys.exit(1)
 
     # write various html files
@@ -553,7 +558,10 @@ def main():
                 flow_bin, flow_param, item_original, item_post_flow
             )
             status = subprocess.run(
-                [flow_command], shell=True, check=True, capture_output=True  # noqa: S602
+                [flow_command],
+                shell=True,  # noqa: S602
+                check=True,
+                capture_output=True,
             )
             if status.returncode != 0:
                 print("flow failed for %s", item_name)
@@ -590,7 +598,10 @@ def main():
             # print(terser_command)
             try:
                 status = subprocess.run(
-                    [terser_command], shell=True, check=True, capture_output=True  # noqa: S602
+                    [terser_command],
+                    shell=True,
+                    check=True,
+                    capture_output=True,  # noqa: S602
                 )
                 if status.returncode != 0:
                     print("terser failed for item {}".format(item))
@@ -610,7 +621,10 @@ def main():
     # call workbox
     workbox_command = ""
     status = subprocess.run(
-        [workbox_command], shell=True, check=True, capture_output=True  # noqa: S602
+        [workbox_command],
+        shell=True,
+        check=True,
+        capture_output=True,  # noqa: S602
     )
     if status.returncode != 0:
         print("workbox failed!")

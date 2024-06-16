@@ -53,7 +53,7 @@ describe('urlParameters2Sort', () => {
     });
 });
 
-describe('test search', () => {
+describe('test full text search and filtering', () => {
     let metadata = null;
 
     beforeAll(() => {
@@ -210,11 +210,11 @@ describe('test search', () => {
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
         expect(results).toBeTypeOf('object');
-        expect(results.length).toBe(159);
+        expect(results.length).toBe(162);
         results.forEach((key) => {
             const result = metadata.get(key);
             let price = parseFloat(result.price);
-            if (result?.amount === 'pair') {
+            if (!result.amount || result?.amount === 'pair') {
                 price /= 2.0;
             }
             expect(price).toBeGreaterThanOrEqual(priceMin);
@@ -230,11 +230,11 @@ describe('test search', () => {
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
         expect(results).toBeTypeOf('object');
-        expect(results.length).toBe(650);
+        expect(results.length).toBe(643);
         results.forEach((key) => {
             const result = metadata.get(key);
             let price = parseFloat(result.price);
-            if (result?.amount === 'pair') {
+            if (!result.amount || result?.amount === 'pair') {
                 price /= 2.0;
             }
             expect(price).toBeGreaterThanOrEqual(priceMin);
@@ -249,11 +249,11 @@ describe('test search', () => {
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
         expect(results).toBeTypeOf('object');
-        expect(results.length).toBe(201);
+        expect(results.length).toBe(211);
         results.forEach((key) => {
             const result = metadata.get(key);
             let price = parseFloat(result.price);
-            if (result?.amount === 'pair') {
+            if (!result.amount || result?.amount === 'pair') {
                 price /= 2.0;
             }
             expect(price).toBeLessThanOrEqual(priceMax);
@@ -285,6 +285,15 @@ describe('test search', () => {
         const set1 = new Set(results1);
         const set2 = new Set(results2);
         expect(set1.isDisjointFrom(set2)).toBeTruthy();
+    });
+
+    it('sort by price', () => {
+        const href = 'https://spinorama.org/index.html?sort=price';
+        const url = new URL(href);
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = search(metadata, params);
+        expect(results[0]).toBe('KEF-Blade-1-Meta');
+        expect(results[1]).toBe('JBL-Synthesis-SCL-1');
     });
 
     it('search no constraint page 1 & 2', () => {

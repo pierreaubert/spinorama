@@ -870,7 +870,6 @@ speakers_info: SpeakerDatabase = {
                     },
                     "weight": 4.0,
                 },
-
             },
         },
     },
@@ -885,7 +884,7 @@ speakers_info: SpeakerDatabase = {
         "measurements": {
             "misc-ageve": {
                 "origin": "Misc",
-                "format": "rew_text_dump", # "spl_hv_txt",
+                "format": "rew_text_dump",  # "spl_hv_txt",
                 "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/argon-6350-bookshelf-speaker-spinorama-measurements.55175/",
@@ -7830,7 +7829,7 @@ speakers_info: SpeakerDatabase = {
                 "reviews": {
                     "snr": "https://www.soundandrecording.de/equipment/focal-trio6-midfield-monitor-im-test/",
                 },
-                "review_published": "20240621",
+                "review_published": "20240612",
                 "specifications": {
                     "SPL": {
                         "peak": 115,
@@ -16377,7 +16376,6 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
-
     "MTG Designs AlTi DIY": {
         "brand": "MTG Designs",
         "model": "AlTi DIY",

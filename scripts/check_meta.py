@@ -47,9 +47,15 @@ VALID_AMOUNTS = ("each", "pair")
 
 def sanity_check_amount(name: str, speaker: Speaker) -> int:
     """check if name include brand"""
-    # if "amount" not in speaker:
-    #     logging.error("amount is not in %s", name)
-    #     return 1
+    #    if "amount" not in speaker and "price" in speaker:
+    #        sprice = speaker["price"]
+    #        try:
+    #            price = int(sprice)
+    #            if price>0:
+    #                logging.error("amount is not in %s but price is %d", name, price)
+    #                return 1
+    #        except ValueError:
+    #            pass
     if "amount" in speaker:
         amount = speaker["amount"]
         if amount not in VALID_AMOUNTS:

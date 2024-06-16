@@ -22,11 +22,12 @@ import re
 import shutil
 import sys
 
+
 def process(speakername, filename):
     numbers = re.compile(r"\d+")
     ln = len(speakername)
     phi, theta = numbers.findall(filename[ln:])
-    print('debug: phi {} theta {}'.format(phi, theta))
+    print("debug: phi {} theta {}".format(phi, theta))
     iphi = int(phi)
     if iphi == 0:
         orient = "_H"
