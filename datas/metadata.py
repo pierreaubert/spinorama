@@ -843,6 +843,57 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Andersson HIS 2.1": {
+        "brand": "Andersson",
+        "model": "HIS 2.1",
+        "type": "passive",
+        "price": "20",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/spinorama-measurements-of-a-19-center-speaker-andersson-pure-acoustics.55029/#post-2002105",
+                },
+                "review_published": "20240616",
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 8,
+                    "size": {
+                        "height": 160,
+                        "width": 460,
+                        "depth": 190,
+                    },
+                    "weight": 4.0,
+                },
+
+            },
+        },
+    },
+    "Argon Audio 6350": {
+        "brand": "Argon Audio",
+        "model": "6350",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "174",
+        "amount": "pair",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "rew_text_dump", # "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/argon-6350-bookshelf-speaker-spinorama-measurements.55175/",
+                },
+                "review_published": "20240616",
+            },
+        },
+    },
     "Apple Homepod": {
         "brand": "Apple",
         "model": "Homepod",
@@ -1967,6 +2018,7 @@ speakers_info: SpeakerDatabase = {
         "type": "passive",
         "shape": "floorstanders",
         "price": "7000",
+        "amount": "pair",
         "default_measurement": "princeton",
         "measurements": {
             "princeton": {
@@ -2508,6 +2560,7 @@ speakers_info: SpeakerDatabase = {
         "type": "passive",
         "shape": "bookshelves",
         "price": "1800",
+        "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
@@ -2595,6 +2648,7 @@ speakers_info: SpeakerDatabase = {
         "type": "passive",
         "shape": "bookshelves",
         "price": "275",
+        "amount": "pair",
         "default_measurement": "asr",
         "measurements": {
             "asr": {
@@ -2615,6 +2669,7 @@ speakers_info: SpeakerDatabase = {
         "type": "passive",
         "shape": "bookshelves",
         "price": "",
+        "amount": "pair",
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
@@ -14787,24 +14842,6 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
-    "Mackie HR824": {
-        "brand": "Mackie",
-        "model": "HR824",
-        "type": "active",
-        "shape": "bookshelves",
-        "price": "",
-        "default_measurement": "harman",
-        "measurements": {
-            "harman": {
-                "origin": "Misc",
-                "format": "webplotdigitizer",
-                "reviews": {
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/adam-t8v-studio-monitor-review.17118/page-2#post-553606",
-                },
-                "review_published": "20201029",
-            },
-        },
-    },
     "M-Audio BX3 D3": {
         "brand": "M-Audio",
         "model": "BX3 D3",
@@ -14900,6 +14937,26 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
+    "Mackie CR4": {
+        "skip": True,
+        "brand": "Mackie",
+        "model": "CR4",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "100",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mackie-cr4-quasi-anechoic-measurements.54767/",
+                },
+                "review_published": "202406xx",
+            },
+        },
+    },
     "Mackie MR524": {
         "brand": "Mackie",
         "model": "MR524",
@@ -14916,6 +14973,24 @@ speakers_info: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mackie-mr524-studio-monitor-measurements-subjective-impressions.28890/",
                 },
                 "review_published": "20211210",
+            },
+        },
+    },
+    "Mackie HR824": {
+        "brand": "Mackie",
+        "model": "HR824",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "",
+        "default_measurement": "harman",
+        "measurements": {
+            "harman": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/adam-t8v-studio-monitor-review.17118/page-2#post-553606",
+                },
+                "review_published": "20201029",
             },
         },
     },
@@ -14963,6 +15038,7 @@ speakers_info: SpeakerDatabase = {
         "model": "A3",
         "type": "passive",
         "price": "12300",
+        "amount": "pair",
         "shape": "floorstanders",
         "default_measurement": "vendor",
         "measurements": {
@@ -14977,6 +15053,7 @@ speakers_info: SpeakerDatabase = {
         "model": "A5",
         "type": "passive",
         "price": "24800",
+        "amount": "pair",
         "shape": "floorstanders",
         "default_measurement": "misc-soundstageultra",
         "measurements": {
@@ -21772,14 +21849,22 @@ speakers_info: SpeakerDatabase = {
         "price": "2800",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "vendor",
+        "default_measurement": "vendor-v2-20240613",
         "measurements": {
-            "vendor": {
+            "vendor-v2-20240613": {
+                "origin": "Vendors-SunAudio",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "review": "https://sunaudio.com/products/purified-4-modular-active-loudspeakers",
+                "review_published": "20240613",
+                "notes": "Sun Audio Purified 4 XP25A Crossover: Woofer: BW12 @ 1495Hz Tweeter: BW18 @ 2201Hz.",
+            },
+            "vendor-v1-20240218": {
                 "origin": "Vendors-SunAudio",
                 "format": "spl_hv_txt",
                 "quality": "medium",
                 "review": "https://sunaudio.com/products/purified-4-modular-active-loudspeakers",
-                "review_published": "20240217",
+                "review_published": "20240218",
                 "data_acquisition": {
                     "distance": 3.0,
                 },
