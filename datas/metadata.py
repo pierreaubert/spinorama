@@ -884,7 +884,7 @@ speakers_info: SpeakerDatabase = {
         "measurements": {
             "misc-ageve": {
                 "origin": "Misc",
-                "format": "rew_text_dump",  # "spl_hv_txt",
+                "format": "spl_hv_txt",
                 "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/argon-6350-bookshelf-speaker-spinorama-measurements.55175/",
@@ -3820,6 +3820,39 @@ speakers_info: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/dali-spektor-1-review-bookshelf-speaker.25063/",
                 "review_published": "20210719",
+            },
+        },
+    },
+    "Dali Zensor 1": {
+        "brand": "Dali",
+        "model": "Zensor 1",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "100",
+        "amount": "pair",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/dali-zensor-1-spinorama-measurements-passive-version.55016/",
+                },
+                "review_published": "20240618",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 106,
+                    },
+                    "size": {
+                        "height": 274,
+                        "width": 162,
+                        "depth": 220,
+                    },
+                    "weight": 4.2,
+                },
             },
         },
     },
@@ -21840,11 +21873,11 @@ speakers_info: SpeakerDatabase = {
             },
         },
     },
-    "SunAudio Purified 4": {
+    "SunAudio Purified 4 4XA25A Fiber+Alu": {
         "brand": "SunAudio",
-        "model": "Purified 4",
+        "model": "Purified 4 4XA25A Fiber+Alu",
         "type": "passive",
-        "price": "2800",
+        "price": "3300",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "vendor-v2-20240613",
@@ -21852,11 +21885,41 @@ speakers_info: SpeakerDatabase = {
             "vendor-v2-20240613": {
                 "origin": "Vendors-SunAudio",
                 "format": "spl_hv_txt",
-                "quality": "high",
+                "quality": "high", # klippel measurements by https://www.dausend-acoustics.com/
                 "review": "https://sunaudio.com/products/purified-4-modular-active-loudspeakers",
                 "review_published": "20240613",
-                "notes": "Sun Audio Purified 4 XP25A Crossover: Woofer: BW12 @ 1495Hz Tweeter: BW18 @ 2201Hz.",
+                "notes": "Version with 25mm aluminium tweeter (BlieSMa T25A-6 tweeter) and paper fiber woofer (Purifi PTT4.0X04-NLC-02). Crossovers are at 2200Hz and 4000Hz. Measurements are done with a Klippel NFS from https://www.dausend-acoustics.com/",
             },
+        },
+    },
+    "SunAudio Purified 4 4XA25A Alu+Alu": {
+        "brand": "SunAudio",
+        "model": "Purified 4 4XA25A Alu+Alu",
+        "type": "passive",
+        "price": "3300",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-v3-20240619",
+        "measurements": {
+            "vendor-v3-20240619": {
+                "origin": "Vendors-SunAudio",
+                "format": "spl_hv_txt",
+                "quality": "high", # klippel measurements by https://www.dausend-acoustics.com/
+                "review": "https://sunaudio.com/products/purified-4-modular-active-loudspeakers",
+                "review_published": "20240619",
+                "notes": "Version with 25mm aluminium tweeter (BlieSMa T25A-6 tweeter) and aluminium woofer (Purifi PTT4.0X04-NLC-04). Crossovers are at 2200Hz and 4145Hz. Measurements are done with a Klippel NFS from https://www.dausend-acoustics.com/",
+            },
+        },
+    },
+    "SunAudio Purified 4 4XA25A tw35mm": {
+        "brand": "SunAudio",
+        "model": "Purified 4 4XA25A tw35mm",
+        "type": "passive",
+        "price": "2800",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-v1-20240218",
+        "measurements": {
             "vendor-v1-20240218": {
                 "origin": "Vendors-SunAudio",
                 "format": "spl_hv_txt",
@@ -21866,7 +21929,7 @@ speakers_info: SpeakerDatabase = {
                 "data_acquisition": {
                     "distance": 3.0,
                 },
-                "notes": "Sun Audio Purified 4 XP25A Crossover: Woofer: BW12 @ 1495Hz Tweeter: BW18 @ 2201Hz. Measurements are done at 3m",
+                "notes": "Sun Audio Purified 4 XP25A with a 35mm tweeter: crossover: Woofer: BW12 @ 1495Hz Tweeter: BW18 @ 2201Hz. Measurements are done at 3m",
             },
         },
     },
@@ -21927,7 +21990,6 @@ speakers_info: SpeakerDatabase = {
         "default_measurement": "eac",
         "measurements": {
             "eac": {
-                "origin": "ASR",
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
