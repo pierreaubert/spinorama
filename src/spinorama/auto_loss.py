@@ -316,7 +316,10 @@ def compute_scores_prep_full(
     spl_h = spl_h.drop("Freq", axis=1)
     spl_v = spl_v.drop("Freq", axis=1)
     spl_keys = [f"H{k}" for k in spl_h] + [f"V{k}" for k in spl_v]
-    weigths = np.asarray([sp_weigths[k] for k in spl_h] + [sp_weigths[k] for k in spl_v])
+    weigths = np.asarray(
+        [sp_weigths[k] for k in spl_h if k in sp_weigths]
+        + [sp_weigths[k] for k in spl_v if k in sp_weigths]
+    )
     intervals = intervals_nbd(freq)
     idx, _ = build_index_cea2034(spl_keys)
     spl = np.concatenate((spl_h.T.to_numpy(), spl_v.T.to_numpy()), axis=0)
