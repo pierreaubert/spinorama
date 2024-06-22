@@ -153,6 +153,15 @@ else
     echo "OK after generate HTML!"
 fi
 
+command=$(workbox generateSW workbox-config.js)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generateSWL!"
+    exit 1;
+else
+    echo "OK after generateSW!"
+fi
+
 command=$(./scripts/check_html.sh)
 if [ $status -ne 0 ]; then
     echo "KO after checking HTML!"

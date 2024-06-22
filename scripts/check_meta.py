@@ -26,8 +26,7 @@ Options:
 import logging
 import sys
 
-from datas import metadata
-from datas.metadata import Speaker, SpeakerDatabase, Measurement
+from datas import metadata, Speaker, SpeakerDatabase, Measurement
 
 
 def sanity_check_brand(name: str, speaker: Speaker) -> int:
