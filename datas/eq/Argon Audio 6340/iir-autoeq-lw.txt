@@ -1,0 +1,12 @@
+EQ for Argon Audio 6340 computed from Misc data
+Preference Score 3.27 with EQ 5.17
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-06-22-17:44:28
+
+Preamp: -2.6 dB
+
+Filter  1: ON PK Fc    74 Hz Gain +2.97 dB Q 2.61
+Filter  2: ON PK Fc   130 Hz Gain -2.09 dB Q 1.68
+Filter  3: ON PK Fc   382 Hz Gain +1.87 dB Q 1.40
+Filter  4: ON PK Fc  1760 Hz Gain -3.27 dB Q 2.91
+Filter  5: ON PK Fc 11882 Hz Gain -4.10 dB Q 1.15

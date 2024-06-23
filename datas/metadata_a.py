@@ -693,6 +693,26 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Argon Audio 6340": {
+        "brand": "Argon Audio",
+        "model": "6340",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "94",
+        "amount": "pair",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/argon-6340-spinorama-measurements-small-bookshelf-speaker.55247/",
+                },
+                "review_published": "20240622",
+            },
+        },
+    },
     "Argon Audio 6350": {
         "brand": "Argon Audio",
         "model": "6350",
@@ -1805,6 +1825,26 @@ speakers_info_a: SpeakerDatabase = {
                     "weight": 22.5,
                 },
                 "review_published": "20230326",
+            },
+        },
+    },
+    "Audio Pro Addon T14": {
+        "brand": "Audio Pro",
+        "model": "Addon T14",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "190",
+        "amount": "pair",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/audio-pro-addon-t14-spinorama-measurements.55291/#post-2009936",
+                },
+                "review_published": "20240622",
             },
         },
     },
