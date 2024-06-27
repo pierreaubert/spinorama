@@ -1,6 +1,7 @@
 # you can check the syntax with pylint or with ../scripts/check_meta.py
 from typing import TypedDict, Literal
 
+
 # extra speaker info
 class Dispersion(TypedDict, total=False):
     horizontal: float

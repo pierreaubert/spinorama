@@ -100,7 +100,6 @@ speakers_info_m: SpeakerDatabase = {
         },
     },
     "Mackie CR4": {
-        "skip": True,
         "brand": "Mackie",
         "model": "CR4",
         "type": "active",
@@ -115,7 +114,7 @@ speakers_info_m: SpeakerDatabase = {
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mackie-cr4-quasi-anechoic-measurements.54767/",
                 },
-                "review_published": "202406xx",
+                "review_published": "20240624",
             },
         },
     },
