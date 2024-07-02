@@ -5,5 +5,5 @@ ipywidgets
 jupyterlab
 pre-commit
 pyright
-ruff-lsp
 python-lsp-server[pyright]
+ruff-lsp
