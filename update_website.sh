@@ -84,6 +84,16 @@ fi
 # generate all jpg if some are missing
 ./scripts/update_pictures.sh
 
+# generate eq filters
+command=$(python3 ./generate_peqs.py --generate-images-only)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate eq filters!"
+    exit 1;
+else
+    echo "OK after generate eq filters!"
+fi
+
 # generate radar
 command=$(python3 ./generate_radar.py)
 status=$?

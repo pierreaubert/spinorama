@@ -23,7 +23,7 @@ OS=$(uname)
 
 if test "$OS" = "Linux"; then
   # ------------ PYTHON
-  sudo [ -x /usr/bin/apt ] && /usr/bin/apt install -y python3 python3-pip imagemagick keychain npm wget python3.11-venv
+  sudo [ -x /usr/bin/apt ] && /usr/bin/apt install -y python3 python3-pip imagemagick keychain npm wget python3.12-venv
   # ------------ LOCALE
   # add locale if they don't exist possibly C.utf8 would work
   sudo [ -x /usr/bin/localedef ] && /usr/bin/localedef -f UTF-8 -i en_US en_US.UTF-8
