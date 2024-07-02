@@ -12,5 +12,3 @@ apt install nvidia-dkms-${VERSION}
 candidates=$(ls -d /usr/src/nvidia-$VERSION.*)
 numbers=$(basename $candidates)
 sudo dkms install -m ${numbers/-/\/}
-
-
