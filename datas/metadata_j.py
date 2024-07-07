@@ -4,6 +4,7 @@ note_jbl_gll = "Data provided by JBL in GLL format is highly variable, beware. I
 
 
 speakers_info_j: SpeakerDatabase = {
+
     "Jamo C93 II": {
         "brand": "Jamo",
         "model": "C93 II",
@@ -22,6 +23,39 @@ speakers_info_j: SpeakerDatabase = {
             },
         },
     },
+
+    "Jamo Concert 8": {
+        "brand": "Jamo",
+        "model": "Concert 8",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "2500",
+        "amount": "pair",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/jamo-concert-8-d830-spinorama-measurements-cta-2034.55557/",
+                },
+                "review_published": "20240707",
+                "specifications": {
+                    "sensitivity": 91,
+                    "impedance": 4,
+                    "size": {
+                        "height": 380,
+                        "width": 245,
+                        "depth": 310,
+                    },
+                    "weight": 13.0,
+                },
+            },
+        },
+    },
+
+
     "Jamo S7-15B": {
         "brand": "Jamo",
         "model": "S7-15B",

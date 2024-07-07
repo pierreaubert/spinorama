@@ -721,6 +721,36 @@ speakers_info_s: SpeakerDatabase = {
             },
         },
     },
+    "SVS Ultra Evolution Pinnacle Tower": {
+        "skip": True,
+        "brand": "SVS",
+        "model": "Ultra Evolution Pinnacle Tower",
+        "type": "passive",
+        "price": "5000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/svs_ultra_evolution_pinnacle/",
+                    "yt": "https://youtu.be/mpsg7coXals",
+                },
+                "review_published": "20240707",
+                "specifications": {
+                    "sensitivity": 88,
+                    "size": {
+                        "height": 1260,
+                        "width": 300,
+                        "depth": 460.7,
+                    },
+                    "weight": 43.9,
+                },
+            },
+        },
+    },
     "Shivaudyo Point Zero": {
         "brand": "Shivaudyo",
         "model": "Point Zero",

@@ -1113,7 +1113,7 @@ speakers_info_m: SpeakerDatabase = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/mofi_8/",
-                    "yt": "",
+                    "yt": "https://youtu.be/h90tqdGsgP4?si=NRIE9kFnU3T-z5Qx",
                 },
                 "review_published": "20231220",
                 "specifications": {
@@ -1132,7 +1132,7 @@ speakers_info_m: SpeakerDatabase = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/mofi_8/",
-                    "yt": "",
+                    "yt": "https://youtu.be/h90tqdGsgP4?si=NRIE9kFnU3T-z5Qx",
                 },
                 "review_published": "20231220",
                 "specifications": {
@@ -1144,6 +1144,37 @@ speakers_info_m: SpeakerDatabase = {
                         "depth": 335,
                     },
                     "weight": 12.7,
+                },
+            },
+        },
+    },
+    "MoFi SourcePoint 888": {
+        "skip": True,
+        "brand": "MoFi",
+        "model": "SourcePoint 888",
+        "type": "passive",
+        "price": "2750",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mofi_888/",
+                    "yt": "https://youtu.be/9bv5Mt5X__k",
+                },
+                "review_published": "20240707",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4.5,
+                    "size": {
+                        "height": 1070,
+                        "width": 320,
+                        "depth": 410,
+                    },
+                    "weight": 43,
                 },
             },
         },
