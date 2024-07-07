@@ -1,0 +1,13 @@
+EQ for XTZ Spirit 4 computed from Misc data
+Preference Score 4.42 with EQ 6.06
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-07-07-09:04:35
+
+Preamp: -2.9 dB
+
+Filter  1: ON PK Fc    40 Hz Gain +3.00 dB Q 2.91
+Filter  2: ON PK Fc   139 Hz Gain -1.37 dB Q 1.37
+Filter  3: ON PK Fc   540 Hz Gain +2.16 dB Q 3.00
+Filter  4: ON PK Fc  1532 Hz Gain +3.00 dB Q 2.99
+Filter  5: ON PK Fc  1586 Hz Gain -1.42 dB Q 0.31
+Filter  6: ON PK Fc 12301 Hz Gain -3.24 dB Q 1.26

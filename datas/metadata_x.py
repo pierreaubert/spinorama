@@ -1,6 +1,7 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_x: SpeakerDatabase = {
+
     "XMechanik Mechano23 DIY": {
         "brand": "XMechanik",
         "model": "Mechano23 DIY",
@@ -21,6 +22,7 @@ speakers_info_x: SpeakerDatabase = {
             },
         },
     },
+
     "XSA Labs Vanguard": {
         "brand": "XSA Labs",
         "model": "Vanguard",
@@ -41,4 +43,36 @@ speakers_info_x: SpeakerDatabase = {
             },
         },
     },
+
+    "XTZ Spirit 4": {
+        "brand": "XTZ",
+        "model": "Spirit 4",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "477",
+        "amount": "pair",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/xtz-spirit-4-spinorama-measurements-cta-2034.55433/",
+                },
+                "review_published": "20240707",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "size": {
+                        "height": 350,
+                        "width": 190,
+                        "depth": 270,
+                    },
+                    "weight": 8.1,
+                },
+            },
+        },
+    },
+
 }
