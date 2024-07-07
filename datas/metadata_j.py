@@ -4,7 +4,6 @@ note_jbl_gll = "Data provided by JBL in GLL format is highly variable, beware. I
 
 
 speakers_info_j: SpeakerDatabase = {
-
     "Jamo C93 II": {
         "brand": "Jamo",
         "model": "C93 II",
@@ -23,7 +22,6 @@ speakers_info_j: SpeakerDatabase = {
             },
         },
     },
-
     "Jamo Concert 8": {
         "brand": "Jamo",
         "model": "Concert 8",
@@ -54,8 +52,6 @@ speakers_info_j: SpeakerDatabase = {
             },
         },
     },
-
-
     "Jamo S7-15B": {
         "brand": "Jamo",
         "model": "S7-15B",

@@ -1,7 +1,6 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_x: SpeakerDatabase = {
-
     "XMechanik Mechano23 DIY": {
         "brand": "XMechanik",
         "model": "Mechano23 DIY",
@@ -22,7 +21,6 @@ speakers_info_x: SpeakerDatabase = {
             },
         },
     },
-
     "XSA Labs Vanguard": {
         "brand": "XSA Labs",
         "model": "Vanguard",
@@ -43,7 +41,6 @@ speakers_info_x: SpeakerDatabase = {
             },
         },
     },
-
     "XTZ Spirit 4": {
         "brand": "XTZ",
         "model": "Spirit 4",
@@ -74,5 +71,4 @@ speakers_info_x: SpeakerDatabase = {
             },
         },
     },
-
 }
