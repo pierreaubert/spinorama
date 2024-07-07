@@ -50,12 +50,12 @@ export function pagination(numberSpeakers) {
 
     let html = navHeader;
     if (currentPage <= 3) {
-        let disabled = '';
-        if (currentPage == 1) {
-            disabled = ' is-disabled';
+        let prev_disabled = '';
+        if (currentPage === 1) {
+            prev_disabled = ' is-disabled';
         }
-        html += '<a href="' + urlChangePage(url, prevPage) + '" class="pagination-previous' + disabled + '">Prev</a>';
-        html += '<a href=' + urlChangePage(url, nextPage) + ' class="pagination-next">Next</a>';
+        html += '<a href="' + urlChangePage(url, prevPage) + '" class="pagination-previous' + prev_disabled + '">Prev</a>';
+        html += '<a href="' + urlChangePage(url, nextPage) + '" class="pagination-next">Next</a>';
         html += '<ul class="pagination-list">';
         for (let i = 1; i <= Math.min(3, maxPage); i++) {
             let current = '';
@@ -151,6 +151,9 @@ export function pagination(numberSpeakers) {
     }
     html += navFooter;
     // cleanup
+    while (navigationContainer.firstChild) {
+        navigationContainer.removeChild(navigationContainer.firstChild);
+    }
     const divNavigation = document.createElement('div');
     divNavigation.innerHTML = html;
     navigationContainer.appendChild(divNavigation);

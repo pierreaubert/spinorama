@@ -68,6 +68,9 @@ else
     echo "OK after generate graph!"
 fi
 
+# bug in generate_meta
+rm -f docs/json/*
+
 # recompute metadata for all speakers
 command=$(python3 ./generate_meta.py  --dash-ip="$IP")
 status=$?
@@ -80,6 +83,16 @@ fi
 
 # generate all jpg if some are missing
 ./scripts/update_pictures.sh
+
+# generate eq filters
+command=$(python3 ./generate_peqs.py --generate-images-only)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate eq filters!"
+    exit 1;
+else
+    echo "OK after generate eq filters!"
+fi
 
 # generate radar
 command=$(python3 ./generate_radar.py)
@@ -151,6 +164,15 @@ if [ $status -ne 0 ]; then
     exit 1;
 else
     echo "OK after generate HTML!"
+fi
+
+command=$(workbox generateSW workbox-config.js)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generateSWL!"
+    exit 1;
+else
+    echo "OK after generateSW!"
 fi
 
 command=$(./scripts/check_html.sh)

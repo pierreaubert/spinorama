@@ -855,6 +855,7 @@ def dump_metadata(meta):
         with open(hashed_filename, "w", encoding="utf-8") as f:
             f.write(js)
             f.close()
+            logger.debug("generated %s", hashed_filename)
 
         # write the zip and bz2 files
         for ext, method in (

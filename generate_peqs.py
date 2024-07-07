@@ -613,6 +613,7 @@ def main():
     current_optim_config["force"] = force
     current_optim_config["version"] = VERSION
     current_optim_config["level"] = level
+    current_optim_config["generate_images_only"] = generate_images_only
 
     if disable_ray:
         compute_peqs_sequential(df_all_speakers, current_optim_config, speaker_name)

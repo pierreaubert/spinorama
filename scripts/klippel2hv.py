@@ -25,11 +25,14 @@ import sys
 
 def process(speakername, filename):
     numbers = re.compile(r"\d+")
-    phi, theta = numbers.findall(filename)
-    if phi == "0":
-        orient = "_V"
-    elif phi == "90":
+    parsed = numbers.findall(filename)
+    phi, theta = parsed[-2:]
+    print("debug: phi {} theta {}".format(phi, theta))
+    iphi = int(phi)
+    if iphi == 0:
         orient = "_H"
+    elif iphi == 90:
+        orient = "_V"
     else:
         print("phi is unknown {}".format(phi))
         return
@@ -40,7 +43,7 @@ def process(speakername, filename):
     elif itheta > 180:
         itheta = itheta - 360
 
-    newname = "{} {} {}.txt".format(speakername, orient, itheta)
+    newname = "../{} {} {}.txt".format(speakername, orient, itheta)
 
     with open(filename) as fin:
         lines = fin.readlines()
@@ -57,13 +60,13 @@ def process(speakername, filename):
 
     if itheta == 180:
         itheta = -180
-        negname = "{} {} {}.txt".format(speakername, orient, itheta)
+        negname = "../{} {} {}.txt".format(speakername, orient, itheta)
         shutil.copy(newname, negname)
 
 
 if __name__ == "__main__":
     speakername = sys.argv[1]
-    files = glob.glob("Phi*.txt")
+    files = glob.glob("*.txt")
     for filename in files:
         process(speakername, filename)
     sys.exit(0)

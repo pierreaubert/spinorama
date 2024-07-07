@@ -20,6 +20,7 @@
 
 import Fuse from 'fuse.js';
 import { show } from './misc.js';
+import { pagination } from './pagination.js';
 
 const parametersMapping = [
     // filters
@@ -851,13 +852,14 @@ export function setupEventListener(metadata, speaker2html, mainDiv) {
         window.history.pushState({}, '', url);
         const params = urlParameters2Sort(url);
         // printParams(params);
-        const fragment = process(metadata, params, speaker2html);
+        const [maxResults, fragment] = process(metadata, params, speaker2html);
         // very slow if long list
         while (parentDiv.firstChild) {
             parentDiv.removeChild(parentDiv.firstChild);
         }
         if (fragment) {
-            parentDiv.appendChild(fragment[1]);
+            parentDiv.appendChild(fragment);
+            pagination(maxResults);
         }
         show(parentDiv);
     }
