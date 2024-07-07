@@ -17,7 +17,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 TARGET1=pierre@ch.spinorama.org:/var/www/html/spinorama-prod
-TARGET2=pierre@es.spinorama.org:/var/www/html/spinorama-prod
 TARGET3=pierre@192.168.1.18:/var/www/html/spinorama-prod
 TARGET4=pierre@192.168.1.20:/var/www/html/spinorama-prod
 
