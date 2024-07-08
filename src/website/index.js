@@ -300,6 +300,7 @@ getMetadataHead()
         }
         // display if not done above
         const maxResults = display(metadata, printSpeaker, speakerContainer);
+	// is it needed?
         pagination(maxResults);
     })
     .catch((error) => {

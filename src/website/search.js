@@ -207,7 +207,8 @@ export function urlParameters2Sort(url) {
 }
 
 export function sortMetadata2(metadata, sorter, results) {
-    const sortChildren2 = ({ container, score, reverse }) => {
+
+    const sortChildren = ({ container, score, reverse }) => {
         // console.log('sorting2 by '+score)
         const items = [...container.keys()];
         if (reverse) {
@@ -225,7 +226,7 @@ export function sortMetadata2(metadata, sorter, results) {
         return items;
     };
 
-    function getDateV2(key) {
+    function getDate(key) {
         const spk = metadata.get(key);
         let date = 19700101;
         // comparing ints (works because 20210101 is bigger than 20201010)
@@ -241,7 +242,7 @@ export function sortMetadata2(metadata, sorter, results) {
         return date;
     }
 
-    function getPriceV2(key) {
+    function getPrice(key) {
         const spk = metadata.get(key);
         let price = parseFloat(spk.price);
         if (!isNaN(price)) {
@@ -253,17 +254,18 @@ export function sortMetadata2(metadata, sorter, results) {
         return -1;
     }
 
-    function getScoreV2(key) {
+    function getScore(key) {
         const spk = metadata.get(key);
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
+	let score = -10
         if ('pref_rating' in msr && 'pref_score' in msr.pref_rating) {
-            return spk.measurements[def].pref_rating.pref_score;
+            score = spk.measurements[def].pref_rating.pref_score;
         }
-        return -10.0;
+        return score;
     }
 
-    function getScoreWsubV2(key) {
+    function getScoreWsub(key) {
         const spk = metadata.get(key);
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
@@ -273,7 +275,7 @@ export function sortMetadata2(metadata, sorter, results) {
         return -10.0;
     }
 
-    function getScoreEqV2(key) {
+    function getScoreEq(key) {
         const spk = metadata.get(key);
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
@@ -283,7 +285,7 @@ export function sortMetadata2(metadata, sorter, results) {
         return -10.0;
     }
 
-    function getScoreEqWsubV2(key) {
+    function getScoreEqWsub(key) {
         const spk = metadata.get(key);
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
@@ -293,7 +295,7 @@ export function sortMetadata2(metadata, sorter, results) {
         return -10.0;
     }
 
-    function getF3V2(key) {
+    function getF3(key) {
         const spk = metadata.get(key);
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
@@ -303,7 +305,7 @@ export function sortMetadata2(metadata, sorter, results) {
         return -1000;
     }
 
-    function getF6V2(key) {
+    function getF6(key) {
         const spk = metadata.get(key);
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
@@ -313,7 +315,7 @@ export function sortMetadata2(metadata, sorter, results) {
         return -1000;
     }
 
-    function getFlatnessV2(key) {
+    function getFlatness(key) {
         const spk = metadata.get(key);
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
@@ -323,7 +325,7 @@ export function sortMetadata2(metadata, sorter, results) {
         return -1000;
     }
 
-    function getSensitivityV2(key) {
+    function getSensitivity(key) {
         const spk = metadata.get(key);
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
@@ -333,7 +335,7 @@ export function sortMetadata2(metadata, sorter, results) {
         return 0.0;
     }
 
-    function getWeightV2(key) {
+    function getWeight(key) {
         const spk = metadata.get(key);
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
@@ -343,7 +345,7 @@ export function sortMetadata2(metadata, sorter, results) {
         return 0.0;
     }
 
-    function getSizeWidthV2(key) {
+    function getSizeWidth(key) {
         const spk = metadata.get(key);
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
@@ -353,7 +355,7 @@ export function sortMetadata2(metadata, sorter, results) {
         return 0.0;
     }
 
-    function getSizeDepthV2(key) {
+    function getSizeDepth(key) {
         const spk = metadata.get(key);
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
@@ -363,7 +365,7 @@ export function sortMetadata2(metadata, sorter, results) {
         return 0.0;
     }
 
-    function getSizeHeightV2(key) {
+    function getSizeHeight(key) {
         const spk = metadata.get(key);
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
@@ -373,113 +375,99 @@ export function sortMetadata2(metadata, sorter, results) {
         return 0.0;
     }
 
-    function getBrandV2(key) {
+    function getBrand(key) {
         const spk = metadata.get(key);
         return spk.brand + ' ' + spk.model;
     }
 
-    // if we have keywords, then sort by quality of match
-    if (results != null) {
-        return sortChildren2({
-            container: metadata,
-            score: (k) => {
-                if (results.has(k)) {
-                    return results.get(k).score;
-                }
-                return 1000;
-            },
-            reverse: true,
-        });
-    }
-
     if (sorter.by === 'date') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getDateV2(k),
+            score: (k) => getDate(k),
             reverse: sorter.reverse,
         });
     } else if (sorter.by === 'score') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getScoreV2(k),
+            score: (k) => getScore(k),
             reverse: sorter.reverse,
         });
     } else if (sorter.by === 'scoreEQ') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getScoreEqV2(k),
+            score: (k) => getScoreEq(k),
             reverse: sorter.reverse,
         });
     } else if (sorter.by === 'scoreWSUB') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getScoreWsubV2(k),
+            score: (k) => getScoreWsub(k),
             reverse: sorter.reverse,
         });
     } else if (sorter.by === 'scoreEQWSUB') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getScoreEqWsubV2(k),
+            score: (k) => getScoreEqWsub(k),
             reverse: sorter.reverse,
         });
     } else if (sorter.by === 'price') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getPriceV2(k),
+            score: (k) => getPrice(k),
             reverse: sorter.reverse,
         });
     } else if (sorter.by === 'f3') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getF3V2(k),
+            score: (k) => getF3(k),
             reverse: sorter.reverse,
         });
     } else if (sorter.by === 'f6') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getF6V2(k),
+            score: (k) => getF6(k),
             reverse: sorter.reverse,
         });
     } else if (sorter.by === 'flatness') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getFlatnessV2(k),
+            score: (k) => getFlatness(k),
             reverse: sorter.reverse,
         });
     } else if (sorter.by === 'sensitivity') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getSensitivityV2(k),
+            score: (k) => getSensitivity(k),
             reverse: sorter.reverse,
         });
     } else if (sorter.by === 'brand') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getBrandV2(k),
+            score: (k) => getBrand(k),
             reverse: sorter.reverse,
         });
     } else if (sorter.by === 'weight') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getWeightV2(k),
+            score: (k) => getWeight(k),
             reverse: sorter.reverse,
         });
     } else if (sorter.by === 'width') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getSizeWidthV2(k),
+            score: (k) => getSizeWidth(k),
             reverse: sorter.reverse,
         });
     } else if (sorter.by === 'height') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getSizeHeightV2(k),
+            score: (k) => getSizeHeight(k),
             reverse: sorter.reverse,
         });
     } else if (sorter.by === 'depth') {
-        return sortChildren2({
+        return sortChildren({
             container: metadata,
-            score: (k) => getSizeDepthV2(k),
+            score: (k) => getSizeDepth(k),
             reverse: sorter.reverse,
         });
     } else {
@@ -805,6 +793,7 @@ export function search(data, params) {
             maxDisplay += 1;
         }
     });
+    console.log('search for: '+keywords+' found #'+maxDisplay);
     return [maxDisplay, resultsFiltered];
 }
 
@@ -843,10 +832,12 @@ export function setupEventListener(metadata, speaker2html, mainDiv) {
         } else {
             if (element.value !== '') {
                 url.searchParams.set(urlParameter, element.value);
+                url.searchParams.set('page', 1);
                 // console.log('Info: '+urlParameter + ' changed to ' + element.value);
             } else {
                 url.searchParams.delete(urlParameter);
                 // console.log('Info: '+urlParameter + ' removed');
+                url.searchParams.set('page', 1);
             }
         }
         window.history.pushState({}, '', url);

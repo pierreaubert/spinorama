@@ -18,7 +18,7 @@
 
 /*eslint no-undef: "error"*/
 
-import { hide } from './misc.js';
+import { show, hide } from './misc.js';
 import { urlParameters2Sort } from './search.js';
 
 export function urlChangePage(url, newpage) {
@@ -36,11 +36,11 @@ export function pagination(numberSpeakers) {
     const params = urlParameters2Sort(url);
     const currentPage = params[3].page;
     const perPage = params[3].count;
-    const maxPage = Math.floor(numberSpeakers / perPage);
+    const maxPage = Math.floor((numberSpeakers-1)/perPage)+1;
     const prevPage = Math.max(currentPage - 1, 1);
     const nextPage = Math.min(currentPage + 1, maxPage);
 
-    // console.info('currentPage='+currentPage+' perPage='+perPage+' maxPage='+maxPage+' prevPage='+prevPage+' nextPage='+nextPage+' #speakers='+numberSpeakers);
+    console.info('currentPage='+currentPage+' perPage='+perPage+' maxPage='+maxPage+' prevPage='+prevPage+' nextPage='+nextPage+' #speakers='+numberSpeakers);
 
     // if less than one page
     if (numberSpeakers <= perPage) {
@@ -157,4 +157,5 @@ export function pagination(numberSpeakers) {
     const divNavigation = document.createElement('div');
     divNavigation.innerHTML = html;
     navigationContainer.appendChild(divNavigation);
+    show(navigationContainer);
 }
