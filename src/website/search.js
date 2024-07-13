@@ -94,10 +94,10 @@ function sortParameters2Sort(url) {
             if (selector) {
                 selector.value = sortParams;
             } else {
-                console.log('Error: selector ' + selectorName + ' is unknown!');
+                console.error('Selector ' + selectorName + ' is unknown!');
             }
         } else {
-            console.log('Error: sort function ' + sortParams + ' is unknown!');
+            console.error('Sort function ' + sortParams + ' is unknown!');
         }
     }
 
@@ -116,7 +116,7 @@ function sortParameters2Sort(url) {
     if (selector) {
         selector.value = sorter.reverse;
     } else {
-        console.log('Error: selector ' + selectorName + ' is unknown!');
+        console.error('Selector ' + selectorName + ' is unknown!');
     }
 
     return sorter;
@@ -148,7 +148,7 @@ function filtersParameters2Sort(url) {
             if (selector) {
                 selector.value = filters[filterName];
             } else {
-                console.log('Error: filter selector ' + filterName + ' is unknown!');
+                console.error('Filter selector ' + filterName + ' is unknown!');
             }
         }
     }
@@ -213,13 +213,21 @@ export function sortMetadata2(metadata, sorter, results) {
         const items = [...container.keys()];
         if (reverse) {
             items.sort((a, b) => {
-                // console.log(score(a), score(b))
-                return score(a) - score(b);
+		const sa = score(a);
+		const sb = score(b)
+		if ( sa == sb ) {
+		    return a < b;
+		}
+                return sa - sb;
             });
         } else {
             items.sort((a, b) => {
-                // console.log(score(a), score(b))
-                return score(b) - score(a);
+		const sa = score(a);
+		const sb = score(b)
+		if ( sa == sb ) {
+		    return b < a;
+		}
+                return sb-sa;
             });
         }
         // console.table(items)

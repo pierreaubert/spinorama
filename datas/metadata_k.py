@@ -1033,7 +1033,7 @@ speakers_info_k: SpeakerDatabase = {
         "brand": "KEF",
         "model": "R7",
         "type": "passive",
-        "price": "",
+        "price": "3200",
         "amount": "pair",
         "shape": "floorstanders",
         "default_measurement": "misc-speakerdata2034",
