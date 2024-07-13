@@ -37,6 +37,108 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
+    "L Acoustics 5XT": {
+        "brand": "L Acoustics",
+        "model": "5XT",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-L Acoustics",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20240713",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 110,
+                    },
+                    "impedance": 16,
+                    "SPL": {
+                        "peak": 121,
+                    },
+                    "size": {
+                        "height": 165,
+                        "width": 165,
+                        "depth": 165,
+                    },
+                    "weight": 3.5,
+                },
+            },
+        },
+    },
+    "L Acoustics X4i": {
+        "brand": "L Acoustics",
+        "model": "X4i",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-L Acoustics",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20240713",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 110,
+                    },
+                    "impedance": 16,
+                    "SPL": {
+                        "peak": 116,
+                    },
+                    "size": {
+                        "height": 116,
+                        "width": 116,
+                        "depth": 99,
+                    },
+                    "weight": 1.0,
+                },
+            },
+        },
+    },
+    "L Acoustics X6i": {
+        "brand": "L Acoustics",
+        "model": "X6i",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-L Acoustics",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20240713",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 123,
+                    },
+                    "size": {
+                        "height": 362,
+                        "width": 187,
+                        "depth": 170,
+                    },
+                    "weight": 6.3,
+                },
+            },
+        },
+    },
     "L Acoustics X8": {
         "brand": "L Acoustics",
         "model": "X8",
