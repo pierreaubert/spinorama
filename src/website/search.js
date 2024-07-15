@@ -162,7 +162,7 @@ function keywordsParameters2Sort(url) {
         const selectorName = urlToSelectorName.get('search');
         let selector = document.querySelector(selectorName);
         if (selector) {
-            selector.value = keywords.toString();
+            selector.value = keywords.toString().replace(/[^a-zA-Z0-9&]/g, ' ');
         } else {
             console.log('Error: search selector ' + selectorName + ' is unknown!');
         }
