@@ -1,0 +1,14 @@
+EQ for Monacor Sound-4BT computed from Misc data
+Preference Score 3.69 with EQ 5.70
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-07-15-09:21:58
+
+Preamp: -4.8 dB
+
+Filter  1: ON PK Fc    44 Hz Gain +3.00 dB Q 2.90
+Filter  2: ON PK Fc    62 Hz Gain +2.98 dB Q 0.30
+Filter  3: ON PK Fc   139 Hz Gain -4.73 dB Q 0.70
+Filter  4: ON PK Fc   310 Hz Gain -1.44 dB Q 1.48
+Filter  5: ON PK Fc   666 Hz Gain +1.99 dB Q 2.30
+Filter  6: ON PK Fc  5347 Hz Gain -3.67 dB Q 1.22
+Filter  7: ON PK Fc 10341 Hz Gain -2.97 dB Q 0.75

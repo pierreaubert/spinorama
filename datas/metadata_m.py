@@ -1408,6 +1408,35 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "Monacor Sound-4BT": {
+        "brand": "Monacor",
+        "model": "Sound-4BT",
+        "type": "active",
+        "price": "310",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "hs://www.audiosciencereview.com/forum/index.php?threads/monacor-sound-4bt-spinorama-measurements-cta-2034.55731/",
+                },
+                "review_published": "20240715",
+                "specifications": {
+                    "sensitivity": 85,
+                    "size": {
+                        "height": 215,
+                        "width": 140,
+                        "depth": 170,
+                    },
+                    "weight": 2.6,
+                },
+            },
+        },
+    },
     "Monitor Audio Silver 50 7g": {
         "brand": "Monitor Audio",
         "model": "Silver 50 7g",
