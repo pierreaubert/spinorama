@@ -381,6 +381,186 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "Martin Audio Flexpoint FP4": {
+        "brand": "Martin Audio",
+        "model": "Flexpoint FP4",
+        "type": "passive",
+        "price": "550",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20240713",
+                "notes": "data looks valid between 125Hz and 12kHz maybe 16kHz.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 110,
+                        "vertical": 110,
+                    },
+                    "sensitivity": 84,
+                    "impedance": 16,
+                    "SPL": {
+                        "continuous": 102,
+                        "peak": 108,
+                    },
+                    "size": {
+                        "height": 130,
+                        "width": 130,
+                        "depth": 126,
+                    },
+                    "weight": 1.9,
+                },
+            },
+        },
+    },
+    "Martin Audio Flexpoint FP6": {
+        "brand": "Martin Audio",
+        "model": "Flexpoint FP6",
+        "type": "passive",
+        "price": "860",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20240713",
+                "notes": "data looks valid between 125Hz and 12kHz maybe 16kHz.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 80,
+                    },
+                    "sensitivity": 91,
+                    "impedance": 16,
+                    "SPL": {
+                        "continuous": 113,
+                        "peak": 119,
+                    },
+                    "size": {
+                        "height": 321,
+                        "width": 220,
+                        "depth": 197,
+                    },
+                    "weight": 5.5,
+                },
+            },
+        },
+    },
+    "Martin Audio Flexpoint FP8": {
+        "brand": "Martin Audio",
+        "model": "Flexpoint FP8",
+        "type": "passive",
+        "price": "1300",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20240713",
+                "notes": "data looks valid between 125Hz and 12kHz maybe 16kHz.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 80,
+                    },
+                    "sensitivity": 94,
+                    "impedance": 8,
+                    "SPL": {
+                        "continuous": 118,
+                        "peak": 124,
+                    },
+                    "size": {
+                        "height": 376,
+                        "width": 280,
+                        "depth": 265,
+                    },
+                    "weight": 9.3,
+                },
+            },
+        },
+    },
+    "Martin Audio Flexpoint FP12": {
+        "brand": "Martin Audio",
+        "model": "Flexpoint FP12",
+        "type": "passive",
+        "price": "2160",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20240713",
+                "notes": "data looks valid between 125Hz and 12kHz maybe 16kHz.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 60,
+                    },
+                    "sensitivity": 97,
+                    "impedance": 8,
+                    "SPL": {
+                        "continuous": 122,
+                        "peak": 128,
+                    },
+                    "size": {
+                        "height": 521,
+                        "width": 390,
+                        "depth": 346,
+                    },
+                    "weight": 17.5,
+                },
+            },
+        },
+    },
+    "Martin Audio Flexpoint FP15": {
+        "brand": "Martin Audio",
+        "model": "Flexpoint FP15",
+        "type": "passive",
+        "price": "3000",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Martin Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20240713",
+                "notes": "data looks valid between 125Hz and 12kHz maybe 16kHz.",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 50,
+                    },
+                    "sensitivity": 99,
+                    "impedance": 8,
+                    "SPL": {
+                        "continuous": 126,
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 601,
+                        "width": 460,
+                        "depth": 420,
+                    },
+                    "weight": 27.4,
+                },
+            },
+        },
+    },
     "Martin Audio XP12": {
         "brand": "Martin Audio",
         "model": "XP12",
