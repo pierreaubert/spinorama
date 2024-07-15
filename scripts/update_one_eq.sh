@@ -31,4 +31,3 @@ compute_eq 4 "Score"
 compute_eq 5 "Score"
 compute_eq 6 "Score"
 compute_eq 7 "Score"
-

@@ -49,4 +49,3 @@ rm -fr ./build
 rm -f *.log */*.log
 rm -fr /tmp/ray
 rm -fr **/results_*.csv
-

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 note_jbl_gll = "Data provided by JBL in GLL format is highly variable, beware. It ranges from excellent to surprising"

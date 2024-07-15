@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # you can check the syntax with pylint or with ../scripts/check_meta.py
 from typing import TypedDict, Literal
 

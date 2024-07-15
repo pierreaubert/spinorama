@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 note_kef_data = "Data computed by KEF is precise above 300Hz, the on axis is corrected below that. The other curves are interpolated below 300Hz and are not very precise."

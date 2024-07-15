@@ -5,7 +5,7 @@
 * REW Settings:
 *  C-weighting compensation: Off
 *  Target level: 75.0 dB
-* Note: Sun Audio Purified 4 XP25A Crossover: Woofer: BW12 @ 1495Hz Tweeter: BW18 @ 2201Hz; Measurement imported from C:\Users\User\Documents\Sun Audio\Spinorama\Purified 4 PP T25A\Polar FR\Purified_4_XP25A_PolarFR V000H300.txt Format: Comma/Tab/Space delimited data 587 values loaded, 5 Hz to 23.661 Hz log spaced 
+* Note: Sun Audio Purified 4 XP25A Crossover: Woofer: BW12 @ 1495Hz Tweeter: BW18 @ 2201Hz; Measurement imported from C:\Users\User\Documents\Sun Audio\Spinorama\Purified 4 PP T25A\Polar FR\Purified_4_XP25A_PolarFR V000H300.txt Format: Comma/Tab/Space delimited data 587 values loaded, 5 Hz to 23.661 Hz log spaced
 * Measurement: Purified_4_XP25A_PolarFR V
 * Smoothing: None
 * Frequency Step: 96 ppo

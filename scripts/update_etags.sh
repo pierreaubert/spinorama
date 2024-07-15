@@ -6,9 +6,4 @@ etags \
       tests/*.py tests/*/*.md tests/*/*.[ch]pp tests/*/*.py tests/*/*.sh \
       scripts/*.py scripts/*.sh scripts/*.awk \
       datas/*.py \
-      tutorial/*.md tutorial/*/*.md 
-      
-      
-      
-      
-      
+      tutorial/*.md tutorial/*/*.md
