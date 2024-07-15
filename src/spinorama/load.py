@@ -20,11 +20,10 @@ import numpy as np
 import pandas as pd
 
 from spinorama import logger
+from spinorama.compute_estimates import compute_sensitivity, compute_sensitivity_details
 from spinorama.constant_paths import (
     MIDRANGE_MIN_FREQ,
     MIDRANGE_MAX_FREQ,
-    SENSITIVITY_MIN_FREQ,
-    SENSITIVITY_MAX_FREQ,
 )
 from spinorama.compute_cea2034 import (
     early_reflections,
@@ -106,7 +105,12 @@ def norm_spl(spl):
 
 
 def filter_graphs(
-    speaker_name, h_spl, v_spl, mean_min=MIDRANGE_MIN_FREQ, mean_max=MIDRANGE_MAX_FREQ
+    speaker_name,
+    h_spl,
+    v_spl,
+    mean_min=MIDRANGE_MIN_FREQ,
+    mean_max=MIDRANGE_MAX_FREQ,
+    mformat="klippel",
 ):
     """Filter a set of graphs defined by h_spl and v_spl.
 
@@ -124,11 +128,7 @@ def filter_graphs(
         mean_min_max = np.mean(
             h_spl.loc[(h_spl.Freq > mean_min) & (h_spl.Freq < mean_max)]["On Axis"]
         )
-        mean_sensitivity = np.mean(
-            h_spl.loc[(h_spl.Freq > SENSITIVITY_MIN_FREQ) & (h_spl.Freq < SENSITIVITY_MAX_FREQ)][
-                "On Axis"
-            ]
-        )
+        mean_sensitivity = compute_sensitivity(h_spl, mformat)
         sh_spl = shift_spl(h_spl, mean_min_max)
         dfs["SPL Horizontal"] = graph_melt(sh_spl)
         dfs["SPL Horizontal_unmelted"] = sh_spl
@@ -142,11 +142,7 @@ def filter_graphs(
                 v_spl.loc[(v_spl.Freq > mean_min) & (v_spl.Freq < mean_max)]["On Axis"]
             )
         if mean_sensitivity is None:
-            mean_sensitivity = np.mean(
-                v_spl.loc[
-                    (v_spl.Freq > SENSITIVITY_MIN_FREQ) & (v_spl.Freq < SENSITIVITY_MAX_FREQ)
-                ]["On Axis"]
-            )
+            mean_sensitivity = compute_sensitivity(v_spl, mformat)
         sv_spl = shift_spl(v_spl, mean_min_max)
         dfs["SPL Vertical"] = graph_melt(sv_spl)
         dfs["SPL Vertical_unmelted"] = sv_spl
@@ -158,6 +154,7 @@ def filter_graphs(
     if mean_sensitivity is not None and mean_sensitivity > 20:
         logger.debug("%s sensitivity %f", speaker_name, mean_sensitivity)
         dfs["sensitivity"] = mean_sensitivity
+    logger.debug("{} sensitivity: {}".format(speaker_name, mean_sensitivity))
 
     # add computed graphs
     table = [
@@ -211,6 +208,7 @@ def filter_graphs_eq(
     v_eq_spl,
     mean_min=MIDRANGE_MIN_FREQ,
     mean_max=MIDRANGE_MAX_FREQ,
+    mformat="klippel",
 ):
     """Filter a set of graphs defined by h_spl and v_spl.
 
@@ -228,11 +226,7 @@ def filter_graphs_eq(
         mean_min_max = np.mean(
             h_spl.loc[(h_spl.Freq > mean_min) & (h_spl.Freq < mean_max)]["On Axis"]
         )
-        mean_sensitivity = np.mean(
-            h_spl.loc[(h_spl.Freq > SENSITIVITY_MIN_FREQ) & (h_spl.Freq < SENSITIVITY_MAX_FREQ)][
-                "On Axis"
-            ]
-        )
+        mean_sensitivity = compute_sensitivity(h_eq_spl, mformat)
         sh_spl = shift_spl(h_eq_spl, mean_min_max)
         dfs["SPL Horizontal"] = graph_melt(sh_spl)
         dfs["SPL Horizontal_unmelted"] = sh_spl
@@ -246,11 +240,8 @@ def filter_graphs_eq(
                 v_spl.loc[(v_spl.Freq > mean_min) & (v_spl.Freq < mean_max)]["On Axis"]
             )
         if mean_sensitivity is None:
-            mean_sensitivity = np.mean(
-                v_spl.loc[
-                    (v_spl.Freq > SENSITIVITY_MIN_FREQ) & (v_spl.Freq < SENSITIVITY_MAX_FREQ)
-                ]["On Axis"]
-            )
+            mean_sensitivity = compute_sensitivity(v_eq_spl, mformat)
+
         sv_spl = shift_spl(v_eq_spl, mean_min_max)
         dfs["SPL Vertical"] = graph_melt(sv_spl)
         dfs["SPL Vertical_unmelted"] = sv_spl
@@ -306,7 +297,7 @@ def filter_graphs_eq(
     return dfs
 
 
-def filter_graphs_partial(df):
+def filter_graphs_partial(df, mformat):
     dfs = {}
     # normalize first
     mean_midrange = None
@@ -332,13 +323,8 @@ def filter_graphs_partial(df):
                     & (on.Measurements == curve)
                 ].dB
             )
-            mean_sensitivity = np.mean(
-                on.loc[
-                    (on.Freq > SENSITIVITY_MIN_FREQ)
-                    & (on.Freq < SENSITIVITY_MAX_FREQ)
-                    & (on.Measurements == curve)
-                ].dB
-            )
+            mean_sensitivity = compute_sensitivity_details(on, curve, mformat)
+
     if mean_midrange is not None:
         logger.debug("DEBUG: mean %f", mean_midrange)
         if mean_sensitivity is not None and mean_sensitivity > 20:

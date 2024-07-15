@@ -122,7 +122,9 @@ def queue_measurement(
         mparameters,
         level,
     )
-    id_eq = parse_eq_speaker.remote(f"{data_dir}/datas", speaker, id_df, mparameters, level)
+    id_eq = parse_eq_speaker.remote(
+        f"{data_dir}/datas", speaker, mformat, id_df, mparameters, level
+    )
     width = int(plot_params_default["width"])
     height = int(plot_params_default["height"])
     tracing("calling print_graph remote for {}".format(speaker))

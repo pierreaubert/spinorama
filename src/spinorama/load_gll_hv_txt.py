@@ -81,7 +81,8 @@ def parse_graph_gll_hv_txt(dir_path: str) -> StatusOr[tuple[pd.DataFrame, pd.Dat
                         # GLL files are measured at 10m spl is usually reported at 1m
                         # estimating real SPL at +10dB (since 10 ~ log2(10*10*10))
                         # TODO: compute it more precisely by taking into account the speaker dispersion
-                        dbs.append(current_spl + 10.0)
+                        # Keep it as measured
+                        dbs.append(current_spl)
 
         if angle == "On Axis":
             if orientation == "H":

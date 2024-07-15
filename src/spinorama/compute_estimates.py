@@ -149,3 +149,30 @@ def estimates(spin: pd.DataFrame, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> d
         return {}
 
     return est
+
+
+def compute_sensitivity_distance(sensitivity: float, mformat: str) -> float:
+    if mformat == "gll_hv_txt":
+        # measured at 10m
+        return sensitivity + 20.0
+    return sensitivity
+
+
+def compute_sensitivity(spl, mformat: str) -> float:
+    sensitivity = np.mean(
+        spl.loc[(spl.Freq > SENSITIVITY_MIN_FREQ) & (spl.Freq < SENSITIVITY_MAX_FREQ)]["On Axis"]
+    )
+    sensitivity = compute_sensitivity_distance(sensitivity, mformat)
+    return sensitivity
+
+
+def compute_sensitivity_details(spl, curve: str, mformat: str) -> float:
+    sensitivity = np.mean(
+        spl.loc[
+            (spl.Freq > SENSITIVITY_MIN_FREQ)
+            & (spl.Freq < SENSITIVITY_MAX_FREQ)
+            & (spl.Measurements == curve)
+        ].dB
+    )
+    sensitivity = compute_sensitivity_distance(sensitivity, mformat)
+    return sensitivity
