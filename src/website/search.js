@@ -158,11 +158,11 @@ function filtersParameters2Sort(url) {
 function keywordsParameters2Sort(url) {
     let keywords = '';
     if (url.searchParams.has('search')) {
-        keywords = url.searchParams.get('search');
+        keywords = url.searchParams.get('search').toString().replace(/[^a-zA-Z0-9&]/g, ' ').trim();
         const selectorName = urlToSelectorName.get('search');
         let selector = document.querySelector(selectorName);
         if (selector) {
-            selector.value = keywords.toString().replace(/[^a-zA-Z0-9&]/g, ' ');
+            selector.value = keywords;
         } else {
             console.log('Error: search selector ' + selectorName + ' is unknown!');
         }
@@ -800,7 +800,7 @@ export function search(data, params) {
             maxDisplay += 1;
         }
     });
-    console.log('search for: ' + keywords + ' found #' + maxDisplay);
+    // console.log('search for: >' + keywords + '< found #' + maxDisplay);
     return [maxDisplay, resultsFiltered];
 }
 
