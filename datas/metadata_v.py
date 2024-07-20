@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_v: SpeakerDatabase = {

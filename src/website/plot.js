@@ -676,7 +676,7 @@ export function setRadar(speakerNames, speakerGraphs, width, height) {
 }
 
 /*
-  
+
 function equals(a, b) {
     // check the length
     if (a.length != b.length) {
@@ -837,7 +837,7 @@ export function setGlobe(speakerNames, speakerGraphs, width, height) {
                     }
                 }
 		// now need to interpolate
-		// 
+		//
                 polarData.push({x: x, y:y, z:color);
             }
             let options = setGraphOptions(

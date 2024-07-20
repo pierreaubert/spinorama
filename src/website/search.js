@@ -207,27 +207,26 @@ export function urlParameters2Sort(url) {
 }
 
 export function sortMetadata2(metadata, sorter, results) {
-
     const sortChildren = ({ container, score, reverse }) => {
         // console.log('sorting2 by '+score)
         const items = [...container.keys()];
         if (reverse) {
             items.sort((a, b) => {
-		const sa = score(a);
-		const sb = score(b)
-		if ( sa == sb ) {
-		    return a < b;
-		}
+                const sa = score(a);
+                const sb = score(b);
+                if (sa == sb) {
+                    return a < b;
+                }
                 return sa - sb;
             });
         } else {
             items.sort((a, b) => {
-		const sa = score(a);
-		const sb = score(b)
-		if ( sa == sb ) {
-		    return b < a;
-		}
-                return sb-sa;
+                const sa = score(a);
+                const sb = score(b);
+                if (sa == sb) {
+                    return b < a;
+                }
+                return sb - sa;
             });
         }
         // console.table(items)
@@ -266,7 +265,7 @@ export function sortMetadata2(metadata, sorter, results) {
         const spk = metadata.get(key);
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
-	let score = -10
+        let score = -10;
         if ('pref_rating' in msr && 'pref_score' in msr.pref_rating) {
             score = spk.measurements[def].pref_rating.pref_score;
         }
@@ -801,7 +800,7 @@ export function search(data, params) {
             maxDisplay += 1;
         }
     });
-    console.log('search for: '+keywords+' found #'+maxDisplay);
+    console.log('search for: ' + keywords + ' found #' + maxDisplay);
     return [maxDisplay, resultsFiltered];
 }
 
