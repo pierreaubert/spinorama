@@ -499,7 +499,7 @@ FORMAT_KNOWN_KEYS = (
 def sanity_check_measurement(name: str, version: str, measurement: Measurement) -> int:
     """Check each measurement"""
     status = 0
-    if version[0:3] not in ("asr", "pri", "ven", "har", "eac", "mis"):
+    if version[0:3] not in ("asr", "pri", "ven", "har", "eac", "mis", "aud"):
         logging.error("%s: key %s doesn't look correct", name, version)
         status = 1
     for k in ("origin", "format"):

@@ -1580,6 +1580,33 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "AsciLab A6B Passive": {
+        "brand": "AsciLab",
+        "model": "A6B Passive",
+        "type": "passive",
+        "price": "2900",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-AsciLab",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
+                },
+                "review_published": "20240720",
+                "specifications": {
+                    "size": {
+                        "height": 400,
+                        "width": 220,
+                        "depth": 260,
+                    },
+                },
+            },
+        },
+    },
     "AsciLab C5B": {
         "brand": "AsciLab",
         "model": "C5B",
@@ -1598,6 +1625,13 @@ speakers_info_a: SpeakerDatabase = {
                     "abi": "https://audiolabinsight.com/t/ascilab-c5b-ver/248",
                 },
                 "review_published": "20240531",
+                "specifications": {
+                    "size": {
+                        "height": 362,
+                        "width": 176,
+                        "depth": 230,
+                    },
+                },
             },
         },
     },
@@ -1619,6 +1653,13 @@ speakers_info_a: SpeakerDatabase = {
                     "abi": "https://audiolabinsight.com/t/ascilab-c6b-ver/247",
                 },
                 "review_published": "20240531",
+                "specifications": {
+                    "size": {
+                        "height": 385,
+                        "width": 197,
+                        "depth": 265,
+                    },
+                },
             },
         },
     },
