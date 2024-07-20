@@ -71,8 +71,7 @@ def aad(dfu: pd.DataFrame, min_freq) -> float:
         mean = dfu.loc[(dfu.Freq >= bmin_freq) & (dfu.Freq < bmax)].dB.mean()
         aad_sum += abs(y_ref - mean)
         n += 1
-    if n == 0:
-        logger.error("aad is None")
+    if aad_sum is None or math.isnan(aad_sum) or n == 0:
         return -1.0
     return aad_sum / n
 
