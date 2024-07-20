@@ -17,7 +17,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 TARGET1=pierre@ch.spinorama.org:/var/www/html/spinorama-prod
-TARGET2=pierre@es.spinorama.org:/var/www/html/spinorama-prod
 TARGET3=pierre@192.168.1.18:/var/www/html/spinorama-prod
 TARGET4=pierre@192.168.1.20:/var/www/html/spinorama-prod
 
@@ -39,7 +38,7 @@ fi
 
 # copy
 echo "Sync starts:"
-for target in "$TARGET2" "$TARGET3" "$TARGET4"; do
+for target in "$TARGET1" "$TARGET3" "$TARGET4"; do
     rsync -avrz --exclude '*.png' --delete ./docs/* "$target"
     rsync -arvz --include '*.png' --delete ./docs/pictures/* "$target/pictures"
     rsync -arvz --include '*.png' --delete ./docs/help_pictures/* "$target/help_pictures"

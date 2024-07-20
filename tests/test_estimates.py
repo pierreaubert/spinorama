@@ -22,7 +22,8 @@ import unittest
 import pandas as pd
 from spinorama.load import graph_melt
 from spinorama.load_klippel import parse_graph_freq_klippel
-from spinorama.compute_estimates import estimates
+from spinorama.load_gll_hv_txt import parse_graphs_speaker_gll_hv_txt
+from spinorama.compute_estimates import estimates, compute_sensitivity
 
 
 pd.set_option("display.max_rows", 202)
@@ -117,6 +118,29 @@ class SpinoramaEstimatesNV4Tests(unittest.TestCase):
         self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -80)
         self.assertAlmostEqual(self.estimates["dir_vertical_p"], 40)
         self.assertAlmostEqual(self.estimates["dir_vertical_m"], -20)
+
+
+class SpinoramaEstimatesSensitivityGLLTests(unittest.TestCase):
+
+    def test_1(self):
+        status, (self.title, self.df_unmelted) = parse_graphs_speaker_gll_hv_txt(
+            speaker_path="datas/measurements",
+            speaker_name="Danley SH-50",
+            version="vendor-pattern-50x50",
+        )
+        self.assertTrue(status)
+        self.sensitivity = compute_sensitivity(self.df_unmelted, "gll_hv_txt")
+        self.assertAlmostEqual(self.sensitivity, 101, delta=1)
+
+    def test_2(self):
+        status, (self.title, self.df_unmelted) = parse_graphs_speaker_gll_hv_txt(
+            speaker_path="datas/measurements",
+            speaker_name="Martin Audio Flexpoint FP12",
+            version="vendor",
+        )
+        self.assertTrue(status)
+        self.sensitivity = compute_sensitivity(self.df_unmelted, "gll_hv_txt")
+        self.assertAlmostEqual(self.sensitivity, 96.8, delta=1)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 # Spinorama : a library to display speaker frequency response and similar graphs
 
-![image](https://github.com/pierreaubert/spinorama/workflows/Spinorama/badge.svg?branch=master)
+![image](https://github.com/pierreaubert/spinorama/workflows/pythonapp.yml/badge.svg?branch=develop&event=push)
+![image](https://github.com/pierreaubert/spinorama/workflows/webappapp.yml/badge.svg?branch=develop&event=push)
 [![DeepSource](https://deepsource.io/gh/pierreaubert/spinorama.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/pierreaubert/spinorama/?ref=repository-badge)
 [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://gitHub.com/pierreaubert/spinorama/graphs/commit-activity)

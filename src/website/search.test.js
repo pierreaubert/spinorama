@@ -357,3 +357,74 @@ describe('check within page', () => {
         expect(isWithinPage(20, pagination_2_10)).toBeFalsy();
     });
 });
+
+describe('non regression for bug discussions/279', () => {
+    let metadata = null;
+    let kef = null;
+    let kef_by_date = null;
+
+    function getDate(item) {
+	const [id, spk] = item;
+        let date = 19700101;
+        // comparing ints (works because 20210101 is bigger than 20201010)
+        for (const reviewer in spk.measurements) {
+            const msr = spk.measurements[reviewer];
+            if (msr?.review_published) {
+		const reviewPublished = parseInt(msr.review_published);
+                if (!isNaN(reviewPublished)) {
+                    date = Math.max(reviewPublished, date);
+                }
+            }
+        }
+	return date;
+    }
+
+    beforeAll(() => {
+        const bytes = readFileSync(METADATA_TEST_FILE, 'utf-8');
+        const metajson = JSON.parse(bytes);
+        metadata = new Map(Object.values(metajson).map((speaker) => [getID(speaker.brand, speaker.model), speaker]));
+        kef = new Map(
+	    Object.values(metajson).filter( (speaker) => speaker.brand==='KEF'
+	    ).map((speaker) => [getID(speaker.brand, speaker.model), speaker])
+	);
+
+	kef_by_date = [...kef.entries()].sort((a, b) => {
+	    const da = getDate(a);
+	    const db = getDate(b);
+	    return db-da;
+	});
+    });
+
+    it('search by brand KEF and check that we have the correct speakers', () => {
+        const url = new URL('https://spinorama.org/index.html?brand=KEF');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = search(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(20);
+        expect(maxResults).toBe(kef.size);
+        expect(maxResults).toBe(35);
+    });
+
+    it('search by brand KEF and check that we have the correct speakers add page=1', () => {
+        const url = new URL('https://spinorama.org/index.html?brand=KEF&page=1');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = search(metadata, params);
+        expect(results).toBeDefined();
+        expect(results).toBeTypeOf('object');
+        expect(results.length).toBe(20);
+        expect(maxResults).toBe(kef.size);
+        expect(maxResults).toBe(35);
+    });
+
+    it('search by brand KEF and sort by date', () => {
+        const url = new URL('https://spinorama.org/index.html?brand=KEF&sort=date');
+        const params = urlParameters2Sort(url);
+        const [maxResults, results] = search(metadata, params);
+        expect(maxResults).toBe(kef.size);
+        expect(results[0]).toBe(kef_by_date[0][0]);
+        expect(results[1]).toBe(kef_by_date[1][0]);
+        expect(results[2]).toBe(kef_by_date[2][0]);
+    });
+});
+

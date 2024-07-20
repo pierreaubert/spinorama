@@ -61,7 +61,7 @@ def get_mean_min_max(mparameters: dict) -> tuple[int, int]:
 
 @ray.remote(num_cpus=1)
 def parse_eq_speaker(
-    speaker_path: str, speaker_name: str, df_ref: dict, mparameters: dict, level: int
+    speaker_path: str, speaker_name: str, mformat: str, df_ref: dict, mparameters: dict, level: int
 ) -> tuple[Peq, DataSpeaker]:
     ray_setup_logger(level)
     logger.debug("Level of debug is %d", level)
@@ -147,12 +147,12 @@ def parse_graphs_speaker(
         if h_spl is not None and msymmetry == "coaxial":
             h_spl2 = symmetrise_measurement(h_spl)
             v_spl2 = h_spl2.copy() if v_spl is None else symmetrise_measurement(v_spl)
-            df_graph = filter_graphs(speaker_name, h_spl2, v_spl2, mean_min, mean_max)
+            df_graph = filter_graphs(speaker_name, h_spl2, v_spl2, mean_min, mean_max, mformat)
         elif h_spl is not None and msymmetry == "horizontal":
             h_spl2 = symmetrise_measurement(h_spl)
-            df_graph = filter_graphs(speaker_name, h_spl2, v_spl, mean_min, mean_max)
+            df_graph = filter_graphs(speaker_name, h_spl2, v_spl, mean_min, mean_max, mformat)
         else:
-            df_graph = filter_graphs(speaker_name, h_spl, v_spl, mean_min, mean_max)
+            df_graph = filter_graphs(speaker_name, h_spl, v_spl, mean_min, mean_max, mformat)
     elif mformat in ("webplotdigitizer", "rew_text_dump"):
         title = None
         df_uneven = None
@@ -198,7 +198,7 @@ def parse_graphs_speaker(
                 if isinstance(df_full[k], pd.DataFrame):
                     logger.debug(df_full[k].head())
 
-            df_graph = filter_graphs_partial(df_full)
+            df_graph = filter_graphs_partial(df_full, mformat)
             nan_count = check_nan(df_graph)
             if nan_count > 0:
                 logger.error("df_graph %s has %d NaNs", speaker_name, nan_count)

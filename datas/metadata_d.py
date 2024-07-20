@@ -956,6 +956,108 @@ speakers_info_d: SpeakerDatabase = {
             },
         },
     },
+    "DB Audiotechnik MAX2": {
+        "brand": "DB Audiotechnik",
+        "model": "MAX2",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-DB Audiotechnik",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20240717",
+                "specifications": {
+                    "impedance": 8,
+                    "dispersion": {
+                        "horizontal": 75,
+                        "vertical": 75,
+                    },
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 354,
+                        "width": 580,
+                        "depth": 496,
+                    },
+                    "weight": 23.0,
+                },
+            },
+        },
+    },
+    "DB Audiotechnik M4": {
+        "brand": "DB Audiotechnik",
+        "model": "M4",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-DB Audiotechnik",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20240717",
+                "specifications": {
+                    "impedance": 8,
+                    "dispersion": {
+                        "horizontal": 50,
+                        "vertical": 70,
+                    },
+                    "SPL": {
+                        "peak": 140,
+                    },
+                    "size": {
+                        "height": 363,
+                        "width": 580,
+                        "depth": 505,
+                    },
+                    "weight": 20.0,
+                },
+            },
+        },
+    },
+    "DB Audiotechnik M6": {
+        "brand": "DB Audiotechnik",
+        "model": "M6",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-DB Audiotechnik",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20240717",
+                "specifications": {
+                    "impedance": 8,
+                    "dispersion": {
+                        "horizontal": 50,
+                        "vertical": 80,
+                    },
+                    "SPL": {
+                        "peak": 138,
+                    },
+                    "size": {
+                        "height": 332,
+                        "width": 486,
+                        "depth": 455,
+                    },
+                    "weight": 16.0,
+                },
+            },
+        },
+    },
     "DB Audiotechnik Q7": {
         "brand": "DB Audiotechnik",
         "model": "Q7",
