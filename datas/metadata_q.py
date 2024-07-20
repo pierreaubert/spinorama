@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 note_qsc_gll = "Data provided by QSC is of good quality but highly smoothed"

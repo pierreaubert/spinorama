@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 note_meyersound_gll = "Data provided by Meyer is high quality above 50Hz-100Hz"

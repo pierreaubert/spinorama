@@ -38,4 +38,3 @@ cp node_modules/plotly.js-dist-min/plotly.min.js ${ASSETS_JS}/plotly-${PLOTLY}.m
 npm install workbox-window
 cp node_modules/workbox-window/build/workbox-window.prod.mjs ${ASSETS_JS}/workbox-window-${WORKBOX}.min.js
 cp node_modules/workbox-window/build/workbox-window.prod.mjs.map ${ASSETS_JS}/workbox-window-${WORKBOX}.min.js.map
-
