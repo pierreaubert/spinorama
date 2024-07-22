@@ -158,7 +158,7 @@ function filtersParameters2Sort(url) {
 function keywordsParameters2Sort(url) {
     let keywords = '';
     if (url.searchParams.has('search')) {
-        keywords = url.searchParams.get('search').toString().replace(/[^a-zA-Z0-9&]/g, ' ').trim();
+        keywords = url.searchParams.get('search').toString().replace(/[^a-zA-Z0-9&]/g, ' ');
         const selectorName = urlToSelectorName.get('search');
         let selector = document.querySelector(selectorName);
         if (selector) {
@@ -701,7 +701,6 @@ export function isFiltered(item, filter) {
 
 export function isSearch(key, results, minScore, keywords) {
     // console.log('Starting isSearch with key='+key+' minscore='+minScore+' keywords='+keywords);
-
     let shouldShow = true;
     if (keywords === '' || results === undefined) {
         // console.log('shouldShow is true');
@@ -770,7 +769,7 @@ export function search(data, params) {
     let resultsFullText = null;
     let minScore = 1;
     if (keywords !== '') {
-        const fuse_results = fuse.search(keywords);
+        const fuse_results = fuse.search(keywords.trim());
         // console.debug('searching with keywords: '+keywords+' #matches: '+fuse_results.length);
         if (fuse_results.length > 0) {
             // minScore
