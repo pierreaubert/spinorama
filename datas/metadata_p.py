@@ -807,6 +807,37 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
+    "Polk Audio Reserve R700": {
+        "skip": True,
+        "brand": "Polk Audio",
+        "model": "Reserve R700",
+        "type": "passive",
+        "price": "1100",
+        "amount": "each",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/polk_r700/",
+                    "yt": "https://www.youtube.com/watch?v=E6APuGxTtJw",
+                },
+                "review_published": "2024xxxx",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 4,
+                    "size": {
+                        "height": 1144,
+                        "width": 320,
+                        "depth": 428,
+                    },
+                    "weight": 35.9,
+                },
+            },
+        },
+    },
     "Polk Audio RT15i": {
         "brand": "Polk Audio",
         "model": "RT15i",

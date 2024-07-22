@@ -1493,6 +1493,37 @@ speakers_info_r: SpeakerDatabase = {
             },
         },
     },
+    "Revival Audio Atalante 5": {
+        "skip": True,
+        "brand": "Revival Audio",
+        "model": "Atalante 5",
+        "type": "passive",
+        "price": "1100",
+        "amount": "each",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://youtu.be/uo9yBHfLDDE?si=mmMrGA3BmPMxbJ6T",
+                },
+                "review_published": "2024xxxx",
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 4,
+                    "size": {
+                        "height": 710,
+                        "width": 420,
+                        "depth": 355,
+                    },
+                    "weight": 33.0,
+                },
+            },
+        },
+    },
     "Rockville SPG88": {
         "brand": "Rockville",
         "model": "SPG88",

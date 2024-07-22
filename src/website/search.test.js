@@ -394,6 +394,7 @@ describe('non regression for bug discussions/279', () => {
             const db = getDate(b);
             return db - da;
         });
+
     });
 
     it('search by brand KEF and check that we have the correct speakers', () => {

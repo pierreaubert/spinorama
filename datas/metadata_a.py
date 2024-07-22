@@ -1757,6 +1757,35 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Audio Engine A2+": {
+        "skip": True,
+        "brand": "Audio Engine",
+        "model": "A2+",
+        "type": "active",
+        "shape": "bookshelves",
+        "price": "269",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://youtu.be/mAMv_ueINlk?si=eGu5yNVAlAJ1encX",
+                },
+                "review_published": "2024xxxx",
+                "specifications": {
+                    "size": {
+                        "height": 159,
+                        "width": 106,
+                        "depth": 167,
+                    },
+                    "weight": 1.6,
+                },
+            },
+        },
+    },
     "Audio Engine A5+ Powered": {
         "brand": "Audio Engine",
         "model": "A5+ Powered",
