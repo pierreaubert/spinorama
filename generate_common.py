@@ -241,14 +241,11 @@ def is_filtered(speaker: str, filters: dict):
     ):
         return True
 
-    if (
+    return (
         filters.get("format") is not None
         and current is not None
         and current["format"] != filters.get("format")
-    ):
-        return True
-
-    return False
+    )
 
 
 def cache_load_seq(filters, smoke_test):
