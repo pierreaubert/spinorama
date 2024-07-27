@@ -3,7 +3,6 @@ from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_t: SpeakerDatabase = {
     "TAD COMPACT REFERENCE ONE CR1TX": {
-        "skip": True,
         "brand": "TAD",
         "model": "COMPACT REFERENCE ONE CR1TX",
         "type": "passive",
@@ -16,10 +15,10 @@ speakers_info_t: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/tad_cr1tx/",
                     "yt": "https://youtu.be/WiFAXve_KjE?si=3uBSyFTPK_lTsQgc",
                 },
-                "review_published": "202404xx",
+                "review_published": "20240727",
                 "specifications": {
                     "sensitivity": 86,
                     "impedance": 4,

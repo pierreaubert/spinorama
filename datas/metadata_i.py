@@ -110,11 +110,33 @@ speakers_info_i: SpeakerDatabase = {
         "brand": "Infinity",
         "model": "Primus 360",
         "type": "passive",
-        "price": "",
+        "price": "660",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "vendor",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "asr": "",
+                    "yt": "https://youtu.be/AqXFeENMCJo?si=-BxYwD79VbSwCryA",
+                    "sph": "https://www.stereophile.com/floorloudspeakers/605infinity/index.html",
+                },
+                "review_published": "20240727",
+                "specifications": {
+                    "sensitivity": 93,
+                    "impedance": 8,
+                    "size": {
+                        "height": 990,
+                        "width": 208,
+                        "depth": 330,
+                    },
+                    "weight": 22,
+                },
+            },
+
             "vendor": {
                 "origin": "Vendors-Infinity",
                 "format": "webplotdigitizer",

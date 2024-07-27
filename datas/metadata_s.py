@@ -723,7 +723,6 @@ speakers_info_s: SpeakerDatabase = {
         },
     },
     "SVS Ultra Evolution Pinnacle Tower": {
-        "skip": True,
         "brand": "SVS",
         "model": "Ultra Evolution Pinnacle Tower",
         "type": "passive",
@@ -739,7 +738,7 @@ speakers_info_s: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/svs_ultra_evolution_pinnacle/",
                     "yt": "https://youtu.be/mpsg7coXals",
                 },
-                "review_published": "20240707",
+                "review_published": "20240727",
                 "specifications": {
                     "sensitivity": 88,
                     "size": {

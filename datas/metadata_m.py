@@ -1330,7 +1330,6 @@ speakers_info_m: SpeakerDatabase = {
         },
     },
     "MoFi SourcePoint 888": {
-        "skip": True,
         "brand": "MoFi",
         "model": "SourcePoint 888",
         "type": "passive",
@@ -1346,7 +1345,7 @@ speakers_info_m: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/mofi_888/",
                     "yt": "https://youtu.be/9bv5Mt5X__k",
                 },
-                "review_published": "20240707",
+                "review_published": "20240727",
                 "specifications": {
                     "sensitivity": 87,
                     "impedance": 4.5,
@@ -1748,7 +1747,6 @@ speakers_info_m: SpeakerDatabase = {
         },
     },
     "Morel AVYRA 633": {
-        "skip": True,
         "brand": "Morel",
         "model": "AVYRA 633",
         "type": "passive",
@@ -1758,14 +1756,13 @@ speakers_info_m: SpeakerDatabase = {
         "default_measurement": "eac",
         "measurements": {
             "eac": {
-                "origin": "ASR",
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/morel_avyra_633/",
                     "yt": "https://youtu.be/jALCwzEzHNM?si=v3gCLZjYc0OkqZt1",
                 },
-                "review_published": "202404xx",
+                "review_published": "20240727",
                 "specifications": {
                     "sensitivity": 89,
                     "impedance": 4,

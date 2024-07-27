@@ -808,7 +808,6 @@ speakers_info_p: SpeakerDatabase = {
         },
     },
     "Polk Audio Reserve R700": {
-        "skip": True,
         "brand": "Polk Audio",
         "model": "Reserve R700",
         "type": "passive",
@@ -824,7 +823,7 @@ speakers_info_p: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/polk_r700/",
                     "yt": "https://www.youtube.com/watch?v=E6APuGxTtJw",
                 },
-                "review_published": "2024xxxx",
+                "review_published": "20240727",
                 "specifications": {
                     "sensitivity": 88,
                     "impedance": 4,

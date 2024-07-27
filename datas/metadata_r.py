@@ -1494,7 +1494,6 @@ speakers_info_r: SpeakerDatabase = {
         },
     },
     "Revival Audio Atalante 5": {
-        "skip": True,
         "brand": "Revival Audio",
         "model": "Atalante 5",
         "type": "passive",
@@ -1507,10 +1506,10 @@ speakers_info_r: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/revival_atalante_5/",
                     "yt": "https://youtu.be/uo9yBHfLDDE?si=mmMrGA3BmPMxbJ6T",
                 },
-                "review_published": "2024xxxx",
+                "review_published": "20240727",
                 "specifications": {
                     "sensitivity": 89,
                     "impedance": 4,
