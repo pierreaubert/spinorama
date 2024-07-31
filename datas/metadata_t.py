@@ -333,17 +333,19 @@ speakers_info_t: SpeakerDatabase = {
     "Theory Audio SB25": {
         "brand": "Theory Audio",
         "model": "SB25",
-        "type": "active",
-        "price": "",
+        "type": "passive",
+        "price": "1700",
+        "amout": "each",
         "shape": "bookshelves",
-        "default_measurement": "vendor-pattern-120x40",
+        "default_measurement": "asr",
         "measurements": {
-            "vendor-pattern-120x40": {
-                "origin": "Vendors-Theory Audio",
-                "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
-                "quality": "high",
-                "review_published": "20230115",
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/theory-audio-sb25-speaker-system-review.56069/",
+                },
+                "review_published": "20240731",
                 "specifications": {
                     "dispersion": {
                         "horizontal": 120,
@@ -361,6 +363,13 @@ speakers_info_t: SpeakerDatabase = {
                     },
                     "weight": 11,
                 },
+            },
+            "vendor-pattern-120x40": {
+                "origin": "Vendors-Theory Audio",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "high",
+                "review_published": "20230115",
             },
         },
     },
