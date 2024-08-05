@@ -38,6 +38,38 @@ speakers_info_i: SpeakerDatabase = {
             },
         },
     },
+    "IK Multimedia iLoud MTM MKII": {
+        "skip": True,
+        "brand": "IK Multimedia",
+        "model": "iLoud MTM MKII",
+        "type": "active",
+        "price": "485",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://www.youtube.com/watch?v=Pdj69hJNCAg",
+                },
+                "review_published": "202408xx",
+                "specifications": {
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 264,
+                        "width": 130,
+                        "depth": 160,
+                    },
+                    "weight": 2.5,
+                },
+            },
+        },
+    },
     "iKey-Audio M-808V2": {
         "brand": "iKey-Audio",
         "model": "M-808V2",
