@@ -1,10 +1,24 @@
 # -*- coding: utf-8 -*-
 # you can check the syntax with pylint or with ../scripts/check_meta.py
+"""All speaker measurements metadata are stored in this format
+Due to the size of the file (metadata.py) it has been splitted into several files, one per letter of the alphabet.
+"""
 from typing import TypedDict, Literal
 
 
 # extra speaker info
 class Dispersion(TypedDict, total=False):
+    """Extra speaker info.
+
+    This TypedDict contains additional speaker positioning information that can be used for
+    calculating sound dispersion. The keys are 'horizontal' and 'vertical', which represent the
+    angles at which the sound will bounce off a surface.
+
+    Attributes:
+        horizontal (float): Horizontal angle in degrees.
+        vertical (float): Vertical angle in degrees.
+    """
+
     horizontal: float
     vertical: float
 
@@ -19,6 +33,16 @@ class SPL(TypedDict, total=False):
 
 
 class Size(TypedDict):
+    """
+    This TypedDict contains the size of the speaker opening in millimeters for the left and right sides.
+
+    Attributes:
+        left (float): Left side opening size in mm.
+        right (float): Right side opening size in mm.
+    """
+
+    left: float
+    right: float
     height: float
     width: float
     depth: float
@@ -65,7 +89,7 @@ class Parameters(TypedDict):
 MeasurementQuality = Literal["low", "medium", "high", "unknown"]
 
 
-Symmetry = Literal["coaxial", "vertical", "horizontal"]
+Symmetry = Literal["none", "coaxial", "vertical", "horizontal"]
 
 
 class PrefRating(TypedDict, total=False):
@@ -164,6 +188,5 @@ gll_data_acquisition_std: DataAcquisition = {
     "via": "gll",
     "distance": 10,
     "signal": "aes 20Hz-20kHz",
-    "air_absorbtion": False,
     "resolution": 2.5,
 }
