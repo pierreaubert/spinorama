@@ -28,7 +28,7 @@ for d in "${sourcedir}/pictures"; do
         for t in "jpg" "webp"; do
 	    smallert=${smaller%.png}.${t}
 	    if ! test -f "$smallert"; then
-	        convert "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallert";
+	        magick convert "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallert";
 	    fi
         done
     done
@@ -37,13 +37,13 @@ for d in "${sourcedir}/pictures"; do
         for t in "jpg" ; do
 	    smallert=${smaller%.jpg}.${t}
 	    if ! test -f "$smallert"; then
-	        convert "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallert";
+	        magick convert "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallert";
 	    fi
         done
         for t in "webp"; do
 	    smallerw=${smaller%.jpg}.${t}
 	    if ! test -f "$smallerw"; then
-	        convert "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallerw";
+	        magick convert "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallerw";
 	    fi
         done
     done
@@ -56,7 +56,7 @@ find ./src/website/help_pictures -type f -name '*.png'| while read pict; do
     for t in "jpg" "webp"; do
 	smallert=${smaller%.png}.${t}
 	if ! test -f "$smallert"; then
-	    convert "$pict" "$smallert";
+	    magick convert "$pict" "$smallert";
 	fi
     done
 done
