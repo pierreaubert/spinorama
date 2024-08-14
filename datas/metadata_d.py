@@ -229,6 +229,20 @@ speakers_info_d: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/danley_sh50/",
                     "yt": "",
                 },
+                "specifications": {
+                    "sensitivity": 100,
+                    "impedance": 4,
+                    "SPL": {
+                        "continuous": 127,
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 711,
+                        "width": 711,
+                        "depth": 647,
+                    },
+                    "weight": 60.3,
+                },
                 "review_published": "20210815",
             },
             "vendor-pattern-50x50": {

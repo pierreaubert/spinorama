@@ -168,7 +168,6 @@ speakers_info_i: SpeakerDatabase = {
                     "weight": 22,
                 },
             },
-
             "vendor": {
                 "origin": "Vendors-Infinity",
                 "format": "webplotdigitizer",
