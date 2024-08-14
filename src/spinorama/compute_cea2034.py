@@ -387,12 +387,12 @@ def early_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="correcte
     return early_reflection.reset_index(drop=True)
 
 
-def total_vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+def total_vertical_reflections(v_spl: pd.DataFrame) -> pd.DataFrame:
     """Compute the Total Vertical Reflections from the SPL horizontal and vertical"""
     return spatial_average1(v_spl, ["Freq", "On Axis", "-20°", "-30°", "-40°", "40°", "50°", "60°"])
 
 
-def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+def vertical_reflections(v_spl: pd.DataFrame) -> pd.DataFrame:
     """Compute vertical reflections
 
     h_spl: unused
@@ -402,7 +402,7 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
 
     ceiling_reflection = spatial_average1(v_spl, ["Freq", "40°", "50°", "60°"])
 
-    total_vertical_reflection = total_vertical_reflections(h_spl, v_spl)
+    total_vertical_reflection = total_vertical_reflections(v_spl)
 
     v_r = pd.DataFrame({"Freq": v_spl.Freq}).reset_index(drop=True)
 
@@ -420,7 +420,7 @@ def vertical_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFra
     return v_r.reset_index(drop=True)
 
 
-def total_horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+def total_horizontal_reflections(h_spl: pd.DataFrame) -> pd.DataFrame:
     """Compute the Total Horizontal Reflections from the SPL horizontal and vertical"""
     return spatial_average1(
         h_spl,
@@ -466,7 +466,7 @@ def total_horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd
     )
 
 
-def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+def horizontal_reflections(h_spl: pd.DataFrame) -> pd.DataFrame:
     """Compute horizontal reflections
 
     h_spl: horizontal data
@@ -526,7 +526,7 @@ def horizontal_reflections(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataF
         ],
     )
 
-    total_horizontal_reflection = total_horizontal_reflections(h_spl, v_spl)
+    total_horizontal_reflection = total_horizontal_reflections(h_spl)
 
     h_r = pd.DataFrame(
         {
@@ -652,7 +652,7 @@ def compute_cea2034(h_spl: pd.DataFrame, v_spl: pd.DataFrame, method="corrected"
     return spin.reset_index(drop=True)
 
 
-def compute_onaxis(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> pd.DataFrame:
+def compute_onaxis(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | None) -> pd.DataFrame:
     """Compute On Axis depending of which kind of data we have"""
     onaxis = pd.DataFrame()
     if v_spl is None or v_spl.empty:

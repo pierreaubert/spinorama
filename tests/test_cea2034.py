@@ -161,7 +161,7 @@ class SpinoramaVerticalReflectionsKlippelTests(unittest.TestCase):
         )
         self.assertTrue(status)
         # computed graphs
-        self.computed_unmelted = vertical_reflections(self.splH, self.splV)
+        self.computed_unmelted = vertical_reflections(self.splV)
         self.computed = graph_melt(self.computed_unmelted)
 
     def test_smoke(self):
@@ -204,7 +204,7 @@ class SpinoramaHorizontalReflectionsKlippelTests(unittest.TestCase):
         )
         self.assertTrue(status)
         # computed graphs
-        self.computed_unmelted = horizontal_reflections(self.splH, self.splV)
+        self.computed_unmelted = horizontal_reflections(self.splH)
         self.computed = graph_melt(self.computed_unmelted)
 
     def test_smoke(self):

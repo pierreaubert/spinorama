@@ -63,40 +63,37 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
         y_data = onaxis.loc[midrange].dB
 
         y_ref = np.mean(y_data) if not y_data.empty else 0.0
-        y_3 = None
-        y_6 = None
         logger.debug("mean over %f-%f Hz = %f", MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ, y_ref)
         restricted_onaxis = onaxis.loc[(onaxis.Freq < MIDRANGE_MIN_FREQ)]
         # note that this is not necessary the max
-        restricted_onaxis_3 = restricted_onaxis.dB < (y_ref - 3)
-        if len(restricted_onaxis_3) > 0:
-            y_3_idx = np.argmin(restricted_onaxis_3)
-            y_3 = restricted_onaxis.Freq[y_3_idx]
-        # note that this is not necessary the max
-        restricted_onaxis_6 = restricted_onaxis.dB < (y_ref - 6)
-        if len(restricted_onaxis_6) > 0:
-            y_6_idx = np.argmin(restricted_onaxis_6)
-            y_6 = restricted_onaxis.Freq[y_6_idx]
-        logger.debug(
-            "-3 and -6: %fHz and %fHz",
-            y_3 if y_3 is not None else -1.0,
-            y_6 if y_6 is not None else -1.0,
-        )
+        for y_name, y_delta in (
+            ("ref_3dB", 3),
+            ("ref_6dB", 6),
+            ("ref_9dB", 9),
+            ("ref_12dB", 12),
+        ):
+            y_val = None
+            restricted_onaxis_y = restricted_onaxis.dB < (y_ref - y_delta)
+            if len(restricted_onaxis_y) > 0:
+                y_idx = np.argmin(restricted_onaxis_y)
+                y_val = restricted_onaxis.Freq[y_idx]
+            if y_val is not None and not math.isnan(y_val):
+                est[y_name] = round(y_val, 1)
+            logger.debug(
+                "-%fdB : %fHz",
+                y_delta,
+                y_val if y_val is not None else -1.0,
+            )
+
         #
         up: float = onaxis.loc[midrange].dB.max()
         down: float = onaxis.loc[midrange].dB.min()
         band = max(abs(up - y_ref), abs(y_ref - down))
         logger.debug("band [%s]", band)
-        est = {
-            "ref_from": float(MIDRANGE_MIN_FREQ),
-            "ref_to": float(MIDRANGE_MAX_FREQ),
-        }
+        est["ref_from"] = float(MIDRANGE_MIN_FREQ)
+        est["ref_to"] = float(MIDRANGE_MAX_FREQ)
         if not math.isnan(y_ref):
             est["ref_level"] = round(y_ref, 1)
-        if y_3 is not None and not math.isnan(y_3):
-            est["ref_3dB"] = round(y_3, 1)
-        if y_6 is not None and not math.isnan(y_6):
-            est["ref_6dB"] = round(y_6, 1)
         if not math.isnan(band):
             est["ref_band"] = round(band, 1)
 
@@ -151,22 +148,38 @@ def estimates(spin: pd.DataFrame, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> d
     return est
 
 
-def compute_sensitivity_distance(sensitivity: float, mformat: str) -> float:
-    if mformat == "gll_hv_txt":
-        # measured at 10m
-        return sensitivity + 20.0
-    return sensitivity
+def compute_sensitivity_distance(sensitivity: float, mformat: str, distance: float) -> float:
+    sensitivity_delta = 0.0
+    # assume monopole dispersion, can do better since we know the dispersion
+    # at least horizontally and vertically
+    if distance == 2.0:
+        sensitivity_delta = 6.0
+    elif distance == 2.5:
+        sensitivity_delta = 8.0
+    elif distance == 3.0:
+        sensitivity_delta = 9.5
+    elif distance == 4.0:
+        sensitivity_delta = 12.0
+    elif distance == 5.0:
+        sensitivity_delta = 14.0
+    elif distance == 10.0:
+        sensitivity_delta = 20.0
+    elif distance != 1.0:
+        logger.warning("%s distance is unknown", distance)
+    return sensitivity + sensitivity_delta
 
 
-def compute_sensitivity(spl, mformat: str) -> float:
+def compute_sensitivity(spl, mformat: str, distance: float) -> tuple[float, float]:
     sensitivity = np.mean(
         spl.loc[(spl.Freq > SENSITIVITY_MIN_FREQ) & (spl.Freq < SENSITIVITY_MAX_FREQ)]["On Axis"]
     )
-    sensitivity = compute_sensitivity_distance(sensitivity, mformat)
-    return sensitivity
+    sensitivity_1m = compute_sensitivity_distance(sensitivity, mformat, distance)
+    return sensitivity, sensitivity_1m
 
 
-def compute_sensitivity_details(spl, curve: str, mformat: str) -> float:
+def compute_sensitivity_details(
+    spl, curve: str, mformat: str, distance: float
+) -> tuple[float, float]:
     sensitivity = np.mean(
         spl.loc[
             (spl.Freq > SENSITIVITY_MIN_FREQ)
@@ -174,5 +187,5 @@ def compute_sensitivity_details(spl, curve: str, mformat: str) -> float:
             & (spl.Measurements == curve)
         ].dB
     )
-    sensitivity = compute_sensitivity_distance(sensitivity, mformat)
-    return sensitivity
+    sensitivity_1m = compute_sensitivity_distance(sensitivity, mformat, distance)
+    return sensitivity, sensitivity_1m
