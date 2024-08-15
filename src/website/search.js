@@ -158,11 +158,11 @@ function filtersParameters2Sort(url) {
 function keywordsParameters2Sort(url) {
     let keywords = '';
     if (url.searchParams.has('search')) {
-        keywords = url.searchParams.get('search');
+        keywords = url.searchParams.get('search').toString().replace(/[^a-zA-Z0-9&]/g, ' ');
         const selectorName = urlToSelectorName.get('search');
         let selector = document.querySelector(selectorName);
         if (selector) {
-            selector.value = keywords.toString().replace(/[^a-zA-Z0-9&]/g, ' ');
+            selector.value = keywords;
         } else {
             console.log('Error: search selector ' + selectorName + ' is unknown!');
         }
@@ -207,27 +207,26 @@ export function urlParameters2Sort(url) {
 }
 
 export function sortMetadata2(metadata, sorter, results) {
-
     const sortChildren = ({ container, score, reverse }) => {
         // console.log('sorting2 by '+score)
         const items = [...container.keys()];
         if (reverse) {
             items.sort((a, b) => {
-		const sa = score(a);
-		const sb = score(b)
-		if ( sa == sb ) {
-		    return a < b;
-		}
+                const sa = score(a);
+                const sb = score(b);
+                if (sa == sb) {
+                    return a < b;
+                }
                 return sa - sb;
             });
         } else {
             items.sort((a, b) => {
-		const sa = score(a);
-		const sb = score(b)
-		if ( sa == sb ) {
-		    return b < a;
-		}
-                return sb-sa;
+                const sa = score(a);
+                const sb = score(b);
+                if (sa == sb) {
+                    return b < a;
+                }
+                return sb - sa;
             });
         }
         // console.table(items)
@@ -266,7 +265,7 @@ export function sortMetadata2(metadata, sorter, results) {
         const spk = metadata.get(key);
         const def = spk.default_measurement;
         const msr = spk.measurements[def];
-	let score = -10
+        let score = -10;
         if ('pref_rating' in msr && 'pref_score' in msr.pref_rating) {
             score = spk.measurements[def].pref_rating.pref_score;
         }
@@ -702,7 +701,6 @@ export function isFiltered(item, filter) {
 
 export function isSearch(key, results, minScore, keywords) {
     // console.log('Starting isSearch with key='+key+' minscore='+minScore+' keywords='+keywords);
-
     let shouldShow = true;
     if (keywords === '' || results === undefined) {
         // console.log('shouldShow is true');
@@ -771,7 +769,7 @@ export function search(data, params) {
     let resultsFullText = null;
     let minScore = 1;
     if (keywords !== '') {
-        const fuse_results = fuse.search(keywords);
+        const fuse_results = fuse.search(keywords.trim());
         // console.debug('searching with keywords: '+keywords+' #matches: '+fuse_results.length);
         if (fuse_results.length > 0) {
             // minScore
@@ -801,7 +799,7 @@ export function search(data, params) {
             maxDisplay += 1;
         }
     });
-    console.log('search for: '+keywords+' found #'+maxDisplay);
+    // console.log('search for: >' + keywords + '< found #' + maxDisplay);
     return [maxDisplay, resultsFiltered];
 }
 

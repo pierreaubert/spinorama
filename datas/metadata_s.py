@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_s: SpeakerDatabase = {
@@ -675,6 +676,50 @@ speakers_info_s: SpeakerDatabase = {
             },
         },
     },
+    "SunAudio Purified 4 4XA25B Alu+Berryllium": {
+        "brand": "SunAudio",
+        "model": "Purified 4 4XA25B Alu+Berryllium",
+        "type": "passive",
+        "price": "3228",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-v1-20240730",
+        "measurements": {
+            "vendor-v1-20240730": {
+                "origin": "Vendors-SunAudio",
+                "format": "spl_hv_txt",
+                "quality": "medium",
+                "review": "https://sunaudio.com/products/purified-4-modular-active-loudspeakers?variant=47286699491674",
+                "review_published": "20240730",
+                "data_acquisition": {
+                    "distance": 2.5,
+                },
+                "notes": "Crossover Woofer: BW12 @ 2158Hz Tweeter: BW12 @ 4146Hz. Measurements done at 2.5 meter.",
+            },
+        },
+    },
+    "SunAudio Purified 4 4XP25B Fiber+Berryllium": {
+        "brand": "SunAudio",
+        "model": "Purified 4 4XP25B Fiber+Berryllium",
+        "type": "passive",
+        "price": "3228",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-v1-20240730",
+        "measurements": {
+            "vendor-v1-20240730": {
+                "origin": "Vendors-SunAudio",
+                "format": "spl_hv_txt",
+                "quality": "medium",
+                "review": "https://sunaudio.com/products/purified-4-modular-active-loudspeakers?variant=47286699327834",
+                "review_published": "20240730",
+                "data_acquisition": {
+                    "distance": 2.5,
+                },
+                "notes": "Sun Audio Purified 4 XP25B Woofer: BW12 @ 2126Hz Tweeter: BW12 @ 4157Hz. Measurements done at 2.5 meter.",
+            },
+        },
+    },
     "SVS Prime Center": {
         "brand": "SVS",
         "model": "Prime Center",
@@ -722,7 +767,6 @@ speakers_info_s: SpeakerDatabase = {
         },
     },
     "SVS Ultra Evolution Pinnacle Tower": {
-        "skip": True,
         "brand": "SVS",
         "model": "Ultra Evolution Pinnacle Tower",
         "type": "passive",
@@ -738,7 +782,7 @@ speakers_info_s: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/svs_ultra_evolution_pinnacle/",
                     "yt": "https://youtu.be/mpsg7coXals",
                 },
-                "review_published": "20240707",
+                "review_published": "20240727",
                 "specifications": {
                     "sensitivity": 88,
                     "size": {

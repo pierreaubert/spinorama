@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 note_genelec_gll = (
@@ -218,6 +219,17 @@ speakers_info_g: SpeakerDatabase = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8030c-studio-monitor-review.14795/",
+                "specifications": {
+                    "SPL": {
+                        "peak": 104,
+                    },
+                    "size": {
+                        "height": 299,
+                        "width": 189,
+                        "depth": 178,
+                    },
+                    "weight": 5,
+                },
             },
         },
     },
@@ -234,6 +246,17 @@ speakers_info_g: SpeakerDatabase = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8050b-review-studio-monitor.20542/",
+                "specifications": {
+                    "SPL": {
+                        "peak": 104,
+                    },
+                    "size": {
+                        "height": 452,
+                        "width": 286,
+                        "depth": 278,
+                    },
+                    "weight": 14.4,
+                },
             },
         },
     },
@@ -251,6 +274,17 @@ speakers_info_g: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8320a-review-powered-monitor.23831/",
                 "review_published": "20210530",
+                "specifications": {
+                    "SPL": {
+                        "peak": 100,
+                    },
+                    "size": {
+                        "height": 242,
+                        "width": 151,
+                        "depth": 142,
+                    },
+                    "weight": 3.2,
+                },
             },
         },
     },
@@ -268,6 +302,17 @@ speakers_info_g: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8330a-review-studio-monitor.25704/",
                 "review_published": "20210812",
+                "specifications": {
+                    "SPL": {
+                        "peak": 104,
+                    },
+                    "size": {
+                        "height": 299,
+                        "width": 189,
+                        "depth": 178,
+                    },
+                    "weight": 6.7,
+                },
             },
         },
     },
@@ -288,6 +333,17 @@ speakers_info_g: SpeakerDatabase = {
                     "yt": "https://www.youtube.com/watch?v=Ui1Gh_s_sX0",
                 },
                 "review_published": "20220303",
+                "specifications": {
+                    "SPL": {
+                        "peak": 104,
+                    },
+                    "size": {
+                        "height": 305,
+                        "width": 189,
+                        "depth": 212,
+                    },
+                    "weight": 6.7,
+                },
             },
             "vendor": {
                 "origin": "Vendors-Genelec",
@@ -312,6 +368,17 @@ speakers_info_g: SpeakerDatabase = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8341a-sam%E2%84%A2-studio-monitor-review.11652/#post-335087",
+                "specifications": {
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 370,
+                        "width": 237,
+                        "depth": 243,
+                    },
+                    "weight": 9.8,
+                },
             },
             "asr-horizontal": {
                 "origin": "ASR",
@@ -369,6 +436,17 @@ speakers_info_g: SpeakerDatabase = {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-8351b-review-studio-monitor.23432/",
+                "specifications": {
+                    "SPL": {
+                        "peak": 113,
+                    },
+                    "size": {
+                        "height": 454,
+                        "width": 287,
+                        "depth": 278,
+                    },
+                    "weight": 14.3,
+                },
             },
             "asr-horizontal": {
                 "origin": "ASR",
@@ -407,6 +485,17 @@ speakers_info_g: SpeakerDatabase = {
                     "lbd": "https://www.lowbeats.de/test-genelec-8361a-und-subwoofer-w371a-aktiv-monitor-dreamteam/",
                 },
                 "review_published": "20211112",
+                "specifications": {
+                    "SPL": {
+                        "peak": 118,
+                    },
+                    "size": {
+                        "height": 593,
+                        "width": 357,
+                        "depth": 347,
+                    },
+                    "weight": 31.9,
+                },
             },
             "asr-horizontal": {
                 "origin": "ASR",
@@ -476,6 +565,17 @@ speakers_info_g: SpeakerDatabase = {
                     "sos": "https://www.soundonsound.com/reviews/genelec-s360",
                 },
                 "review_published": "20220801",
+                "specifications": {
+                    "SPL": {
+                        "peak": 118,
+                    },
+                    "size": {
+                        "height": 530,
+                        "width": 360,
+                        "depth": 360,
+                    },
+                    "weight": 30,
+                },
             },
             "vendor": {
                 "origin": "Vendors-Genelec",

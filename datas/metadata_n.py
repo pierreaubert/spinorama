@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_n: SpeakerDatabase = {
@@ -212,6 +213,18 @@ speakers_info_n: SpeakerDatabase = {
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "notes": "data from GLL file: computed at 2m with pink noise broadband",
+                "specifications": {
+                    "SPL": {
+                        "peak": 105,
+                        "pink_noise": 88,
+                    },
+                    "size": {
+                        "height": 277,
+                        "width": 182,
+                        "depth": 220,
+                    },
+                    "weight": 5.4,
+                },
             },
         },
     },
@@ -229,6 +242,18 @@ speakers_info_n: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh120-ii-monitor-review.46362/",
                 "review_published": "20230714",
+                "specifications": {
+                    "SPL": {
+                        "peak": 108,
+                        "pink_noise": 87,
+                    },
+                    "size": {
+                        "height": 287,
+                        "width": 182,
+                        "depth": 227,
+                    },
+                    "weight": 5.4,
+                },
             },
         },
     },
@@ -274,6 +299,19 @@ speakers_info_n: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh-310a-review-powered-monitor.17723/",
                 "review_published": "20201120",
+                "specifications": {
+                    "SPL": {
+                        "max": 108,
+                        "peak": 116,
+                        "pink_noise": 93,
+                    },
+                    "size": {
+                        "height": 253,
+                        "width": 383,
+                        "depth": 292,
+                    },
+                    "weight": 13.0,
+                },
             },
             "vendor-gll": {
                 "origin": "Vendors-Neumann",
@@ -299,6 +337,19 @@ speakers_info_n: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/neumann-kh420-review-studio-monitor.33529/",
                 "review_published": "20220501",
+                "specifications": {
+                    "SPL": {
+                        "max": 116,
+                        "peak": 122,
+                        "pink_noise": 90,
+                    },
+                    "size": {
+                        "height": 253,
+                        "width": 383,
+                        "depth": 292,
+                    },
+                    "weight": 35.0,
+                },
             },
             "vendor": {
                 "origin": "Vendors-Neumann",

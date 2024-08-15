@@ -99,8 +99,8 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         self.assertNotIn("hidden", gene.get_attribute("class"))
 
     def test_filters_brand(self):
-        self.driver.get(DEV)
-        self.driver.implicitly_wait(2)
+        self.driver.get("{}?".format(DEV, "page=1&count=100"))
+        self.driver.implicitly_wait(3)
 
         WebDriverWait(self.driver, 1).until(
             expected_conditions.element_to_be_clickable((By.ID, "filters-dropdown"))

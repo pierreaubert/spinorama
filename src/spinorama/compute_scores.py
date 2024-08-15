@@ -71,8 +71,7 @@ def aad(dfu: pd.DataFrame, min_freq) -> float:
         mean = dfu.loc[(dfu.Freq >= bmin_freq) & (dfu.Freq < bmax)].dB.mean()
         aad_sum += abs(y_ref - mean)
         n += 1
-    if n == 0:
-        logger.error("aad is None")
+    if aad_sum is None or math.isnan(aad_sum) or n == 0:
         return -1.0
     return aad_sum / n
 
@@ -265,7 +264,7 @@ def speaker_pref_rating(cea2034, pir, rounded):
                 "lfq": round_down(lfq_db, 3),
                 "pref_score": round_down(pref, 2),
             }
-            if aad_on_axis != -1.0:
+            if aad_on_axis and aad_on_axis != -1.0:
                 ratings["aad_on_axis"] = round_down(aad_on_axis, 3)
         else:
             ratings = {
@@ -276,13 +275,14 @@ def speaker_pref_rating(cea2034, pir, rounded):
                 "sm_pred_in_room": sm_pred_in_room,
                 "sm_sound_power": sm_sound_power,
                 "pref_score_wsub": pref_wsub,
-                "aad_on_axis": (aad_on_axis,),
                 "pref_score": pref,
             }
             if lfx_hz is not None:
                 ratings["lfx_hz"] = pow(10, lfx_hz)
             if lfq_db is not None:
                 ratings["lfq"] = lfq_db
+            if aad_on_axis and aad_on_axis != -1.0:
+                ratings["aad_on_axis"] = round_down(aad_on_axis, 3)
         logger.debug("Ratings: %s", ratings)
     except ValueError:
         logger.exception("Compute pref_rating failed")

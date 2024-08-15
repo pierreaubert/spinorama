@@ -8,7 +8,7 @@
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
+
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -105,12 +105,13 @@ def norm_spl(spl):
 
 
 def filter_graphs(
-    speaker_name,
+    speaker_name: str,
     h_spl,
     v_spl,
-    mean_min=MIDRANGE_MIN_FREQ,
-    mean_max=MIDRANGE_MAX_FREQ,
-    mformat="klippel",
+    mean_min: float = MIDRANGE_MIN_FREQ,
+    mean_max: float = MIDRANGE_MAX_FREQ,
+    mformat: str = "klippel",
+    mdistance: float = 1.0,
 ):
     """Filter a set of graphs defined by h_spl and v_spl.
 
@@ -121,6 +122,7 @@ def filter_graphs(
     # add H and V SPL graphs
     mean_min_max = None
     mean_sensitivity = None
+    mean_sensitivity_1m = None
     sv_spl = None
     sh_spl = None
 
@@ -128,7 +130,7 @@ def filter_graphs(
         mean_min_max = np.mean(
             h_spl.loc[(h_spl.Freq > mean_min) & (h_spl.Freq < mean_max)]["On Axis"]
         )
-        mean_sensitivity = compute_sensitivity(h_spl, mformat)
+        mean_sensitivity, mean_sensitivity_1m = compute_sensitivity(h_spl, mformat, mdistance)
         sh_spl = shift_spl(h_spl, mean_min_max)
         dfs["SPL Horizontal"] = graph_melt(sh_spl)
         dfs["SPL Horizontal_unmelted"] = sh_spl
@@ -142,7 +144,7 @@ def filter_graphs(
                 v_spl.loc[(v_spl.Freq > mean_min) & (v_spl.Freq < mean_max)]["On Axis"]
             )
         if mean_sensitivity is None:
-            mean_sensitivity = compute_sensitivity(v_spl, mformat)
+            mean_sensitivity, mean_sensitivity_1m = compute_sensitivity(v_spl, mformat, mdistance)
         sv_spl = shift_spl(v_spl, mean_min_max)
         dfs["SPL Vertical"] = graph_melt(sv_spl)
         dfs["SPL Vertical_unmelted"] = sv_spl
@@ -154,7 +156,14 @@ def filter_graphs(
     if mean_sensitivity is not None and mean_sensitivity > 20:
         logger.debug("%s sensitivity %f", speaker_name, mean_sensitivity)
         dfs["sensitivity"] = mean_sensitivity
-    logger.debug("{} sensitivity: {}".format(speaker_name, mean_sensitivity))
+        dfs["sensitivity_distance"] = mdistance
+        dfs["sensitivity_1m"] = mean_sensitivity_1m
+    logger.debug(
+        "%s sensitivity: %f and sensitivity 1m: %f",
+        speaker_name,
+        mean_sensitivity,
+        mean_sensitivity_1m,
+    )
 
     # add computed graphs
     table = [
@@ -173,12 +182,12 @@ def filter_graphs(
         dfs["On Axis"] = graph_melt(df_on_axis)
         # SPL H
         if sh_spl is not None:
-            df_horizontals = horizontal_reflections(sh_spl, sv_spl)
+            df_horizontals = horizontal_reflections(sh_spl)
             dfs["Horizontal Reflections_unmelted"] = df_horizontals
             dfs["Horizontal Reflections"] = graph_melt(df_horizontals)
         # SPL V
         if sv_spl is not None:
-            df_verticals = vertical_reflections(sh_spl, sv_spl)
+            df_verticals = vertical_reflections(sv_spl)
             dfs["Vectical Reflections_unmelted"] = df_verticals
             dfs["Vectical Reflections"] = graph_melt(df_verticals)
         # that's all folks
@@ -186,7 +195,13 @@ def filter_graphs(
 
     for title, functor in table:
         try:
-            df_funct = functor(sh_spl, sv_spl)
+            df_funct = None
+            if title == "Horizontal Reflections":
+                df_funct = functor(sh_spl)
+            elif title == "Vertical Reflections":
+                df_funct = functor(sv_spl)
+            else:
+                df_funct = functor(sh_spl, sv_spl)
             if df_funct is not None:
                 dfs[title + "_unmelted"] = df_funct
                 dfs[title] = graph_melt(df_funct)
@@ -209,6 +224,7 @@ def filter_graphs_eq(
     mean_min=MIDRANGE_MIN_FREQ,
     mean_max=MIDRANGE_MAX_FREQ,
     mformat="klippel",
+    mdistance: float = 1.0,
 ):
     """Filter a set of graphs defined by h_spl and v_spl.
 
@@ -219,6 +235,7 @@ def filter_graphs_eq(
     # add H and V SPL graphs
     mean_min_max = None
     mean_sensitivity = None
+    mean_sensitivity_1m = None
     sv_spl = None
     sh_spl = None
 
@@ -226,7 +243,7 @@ def filter_graphs_eq(
         mean_min_max = np.mean(
             h_spl.loc[(h_spl.Freq > mean_min) & (h_spl.Freq < mean_max)]["On Axis"]
         )
-        mean_sensitivity = compute_sensitivity(h_eq_spl, mformat)
+        mean_sensitivity, mean_sensitivity_1m = compute_sensitivity(h_eq_spl, mformat, mdistance)
         sh_spl = shift_spl(h_eq_spl, mean_min_max)
         dfs["SPL Horizontal"] = graph_melt(sh_spl)
         dfs["SPL Horizontal_unmelted"] = sh_spl
@@ -240,7 +257,9 @@ def filter_graphs_eq(
                 v_spl.loc[(v_spl.Freq > mean_min) & (v_spl.Freq < mean_max)]["On Axis"]
             )
         if mean_sensitivity is None:
-            mean_sensitivity = compute_sensitivity(v_eq_spl, mformat)
+            mean_sensitivity, mean_sensitivity_1m = compute_sensitivity(
+                v_eq_spl, mformat, mdistance
+            )
 
         sv_spl = shift_spl(v_eq_spl, mean_min_max)
         dfs["SPL Vertical"] = graph_melt(sv_spl)
@@ -252,6 +271,8 @@ def filter_graphs_eq(
     # horrible hack for EQ speakers which are already normalized
     if mean_sensitivity is not None and mean_sensitivity > 20:
         dfs["sensitivity"] = mean_sensitivity
+        dfs["sensitivity_distance"] = mdistance
+        dfs["sensitivity_1m"] = mean_sensitivity_1m
 
     # add computed graphs
     table = [
@@ -270,12 +291,12 @@ def filter_graphs_eq(
         dfs["On Axis"] = graph_melt(df_on)
         # SPL H
         if sh_spl is not None:
-            df_hr = horizontal_reflections(sh_spl, sv_spl)
+            df_hr = horizontal_reflections(sh_spl)
             dfs["Horizontal Reflections_unmelted"] = df_hr
             dfs["Horizontal Reflections"] = graph_melt(df_hr)
         # SPL V
         if sv_spl is not None:
-            df_vr = vertical_reflections(sh_spl, sv_spl)
+            df_vr = vertical_reflections(sv_spl)
             dfs["Vectical Reflections_unmelted"] = df_vr
             dfs["Vectical Reflections"] = graph_melt(df_vr)
         # that's all folks
@@ -283,7 +304,13 @@ def filter_graphs_eq(
 
     for title, functor in table:
         try:
-            df_funct = functor(sh_spl, sv_spl)
+            df_funct = None
+            if title == "Horizontal Reflections":
+                df_funct = functor(sh_spl)
+            elif title == "Vertical Reflections":
+                df_funct = functor(sv_spl)
+            else:
+                df_funct = functor(sh_spl, sv_spl)
             if df_funct is not None:
                 dfs[title + "_unmelted"] = df_funct
                 dfs[title] = graph_melt(df_funct)
@@ -297,11 +324,12 @@ def filter_graphs_eq(
     return dfs
 
 
-def filter_graphs_partial(df, mformat):
+def filter_graphs_partial(df, mformat, mdistance):
     dfs = {}
     # normalize first
     mean_midrange = None
     mean_sensitivity = None
+    mean_sensitivity_1m = None
     on = None
     if "CEA2034" in df:
         on = df["CEA2034"]
@@ -323,12 +351,16 @@ def filter_graphs_partial(df, mformat):
                     & (on.Measurements == curve)
                 ].dB
             )
-            mean_sensitivity = compute_sensitivity_details(on, curve, mformat)
+            mean_sensitivity, mean_sensitivity_1m = compute_sensitivity_details(
+                on, curve, mformat, mdistance
+            )
 
     if mean_midrange is not None:
         logger.debug("DEBUG: mean %f", mean_midrange)
         if mean_sensitivity is not None and mean_sensitivity > 20:
             dfs["sensitivity"] = mean_sensitivity
+            dfs["sensitivity_distance"] = mdistance
+            dfs["sensitivity_1m"] = mean_sensitivity_1m
         for k in df:
             if k == "CEA2034":
                 logger.debug("DEBUG %s pre shift cols=(%s)", k, ", ".join(set(df[k].Measurements)))
@@ -345,7 +377,7 @@ def filter_graphs_partial(df, mformat):
 
     logger.debug("DEBUG  filter_graphs partial (%s)", ", ".join(dfs.keys()))
     for k in dfs:
-        if k != "sensitivity":
+        if k not in ("sensitivity", "sensitivity_1m", "sensitivity_distance"):
             logger.debug(dfs[k].head())
 
     logger.debug(

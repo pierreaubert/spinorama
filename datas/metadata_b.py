@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_b: SpeakerDatabase = {
@@ -332,6 +333,35 @@ speakers_info_b: SpeakerDatabase = {
                         "depth": 335,
                     },
                     "weight": 17.6,
+                },
+            },
+        },
+    },
+    "Buchardt Audio A10": {
+        "skip": True,
+        "brand": "Buchardt Audio",
+        "model": "A10",
+        "type": "active",
+        "price": "3800",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a10/",
+                    "yt": "https://youtu.be/VL7WtnxIZc8?si=iKZpDSVfWf68GNxj",
+                },
+                "review_published": "2024xxxx",
+                "specifications": {
+                    "size": {
+                        "height": 370,
+                        "width": 178,
+                        "depth": 245,
+                    },
+                    "weight": 6.8,
                 },
             },
         },

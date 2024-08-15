@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 import inspect
+import logging
 import random
 import string
 from functools import wraps
+
+is_initialized: bool = False
+
 
 # put all the tasks in a queue
 global_worker = {"queue": {}, "results": {}}
@@ -81,15 +85,13 @@ def wait(ids: dict, num_returns: int):
 
     ready_ids = []
     remaining_ids = []
-    returns = 0
-    for ref, fun_args in global_worker["queue"].items():
+    for returns, (ref, fun_args) in enumerate(global_worker["queue"].items()):
         func = fun_args[0]
         args = fun_args[1]
         # unused
         # kwargs = fun_args[2]
         results = func(*args)
         global_worker["results"][ref] = results
-        returns += 1
         ready_ids.append(ref)
         if returns >= num_returns:
             break
@@ -106,7 +108,16 @@ def get(id):
     return global_worker["results"][id]
 
 
-def init():
+def init(
+        address="172.0.01",
+        include_dashboard=True,
+        dashboard_host="127.0.0.1",
+        dashboard_port=8080,
+        local_mode=True,
+        configure_logging=True,
+        logging_level=logging.INFO,
+        log_to_driver=True,
+):
     return None
 
 

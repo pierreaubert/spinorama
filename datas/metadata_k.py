@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 note_kef_data = "Data computed by KEF is precise above 300Hz, the on axis is corrected below that. The other curves are interpolated below 300Hz and are not very precise."
@@ -653,6 +654,38 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kef-lsx-review-wireless-speaker.24802/",
                 "review_published": "20210708",
+            },
+        },
+    },
+    "KEF LSX II LT": {
+        "skip": True,
+        "brand": "KEF",
+        "model": "LSX II LT",
+        "type": "active",
+        "price": "1000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://youtu.be/Tcz905gti5A?si=GCiNCa1E-Rb-vJHi",
+                },
+                "review_published": "202408xx",
+                "specifications": {
+                    "SPL": {
+                        "peak": 102,
+                    },
+                    "size": {
+                        "height": 240,
+                        "width": 155,
+                        "depth": 180,
+                    },
+                    "weight": 6.8,
+                },
             },
         },
     },

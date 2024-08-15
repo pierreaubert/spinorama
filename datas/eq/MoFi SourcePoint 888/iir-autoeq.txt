@@ -1,0 +1,14 @@
+EQ for MoFi SourcePoint 888 computed from ErinsAudioCorner data
+Preference Score 6.16 with EQ 6.86
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-08-15-20:55:12
+
+Preamp: -2.9 dB
+
+Filter  1: ON PK Fc    24 Hz Gain +2.99 dB Q 0.90
+Filter  2: ON PK Fc    60 Hz Gain -1.22 dB Q 2.42
+Filter  3: ON PK Fc   139 Hz Gain -1.26 dB Q 2.95
+Filter  4: ON PK Fc   454 Hz Gain +0.92 dB Q 2.98
+Filter  5: ON PK Fc   910 Hz Gain -1.60 dB Q 2.05
+Filter  6: ON PK Fc  2579 Hz Gain +1.07 dB Q 2.64
+Filter  7: ON PK Fc 16239 Hz Gain -1.27 dB Q 0.34

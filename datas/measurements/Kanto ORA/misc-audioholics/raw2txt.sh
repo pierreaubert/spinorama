@@ -4,4 +4,3 @@ for i in raw/[A-Z]*.txt; do
 done
 
 mv ON.txt On\ Axis.txt
-

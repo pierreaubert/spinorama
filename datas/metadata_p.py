@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_p: SpeakerDatabase = {
@@ -802,6 +803,36 @@ speakers_info_p: SpeakerDatabase = {
                         "depth": 349,
                     },
                     "weight": 17.7,
+                },
+            },
+        },
+    },
+    "Polk Audio Reserve R700": {
+        "brand": "Polk Audio",
+        "model": "Reserve R700",
+        "type": "passive",
+        "price": "1100",
+        "amount": "each",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/polk_r700/",
+                    "yt": "https://www.youtube.com/watch?v=E6APuGxTtJw",
+                },
+                "review_published": "20240727",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 4,
+                    "size": {
+                        "height": 1144,
+                        "width": 320,
+                        "depth": 428,
+                    },
+                    "weight": 35.9,
                 },
             },
         },

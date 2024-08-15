@@ -57,6 +57,7 @@ from docopt import docopt
 
 from spinorama import ray_setup_logger
 from spinorama.constant_paths import flags_ADD_HASH
+from metadata.helpers import measurement2distance
 
 try:
     import ray
@@ -233,35 +234,11 @@ def queue_score(speaker_name, speaker_data):
                     and metadata.speakers_info[speaker_name].get("type") == "passive"
                     and key == default_key
                 ):
-                    distance = 1.0
-                    sensitivity_delta = 0
-                    current = metadata.speakers_info[speaker_name]["measurements"][key]
-                    if current.get("data_acquisition") is not None:
-                        distance = current["data_acquisition"].get("distance", 1.0)
-                    # assume monopole dispersion
-                    if distance == 2.0:
-                        sensitivity_delta = 6.0
-                    elif distance == 3.0:
-                        sensitivity_delta = 9.5
-                    elif distance == 4.0:
-                        sensitivity_delta = 12.0
-                    elif distance == 5.0:
-                        sensitivity_delta = 14.0
-                    elif distance == 10.0:
-                        sensitivity_delta = 20.0
-                    elif distance != 1.0:
-                        logger.warning("%s distance is unknown %f", speaker_name, distance)
-
-                    logger.debug("%s sensitivity is %f", speaker_name, sensitivity)
-                    logger.debug(
-                        "%s sensitivity is %f (at 1m)",
-                        speaker_name,
-                        sensitivity + sensitivity_delta,
-                    )
+                    distance = measurement2distance(speaker_name, dfs)
                     result["sensitivity"] = {
                         "computed": sensitivity,
                         "distance": distance,
-                        "sensitivity_1m": sensitivity + sensitivity_delta,
+                        "sensitivity_1m": dfs.get("sensitivity_1m")
                     }
 
                 # basic math

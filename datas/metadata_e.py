@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_e: SpeakerDatabase = {
@@ -457,6 +458,13 @@ speakers_info_e: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.erinsaudiocorner.com/loudspeakers/edifier_mr4/",
                 "review_published": "20220111",
+            },
+            "misc-audiolabinsight": {
+                "origin": "Misc",
+                "format": "klippel",
+                "quality": "high",
+                "review": "https://audiolabinsight.com/t/britz-br-monitor4/246",
+                "review_published": "20240720",
             },
         },
     },
