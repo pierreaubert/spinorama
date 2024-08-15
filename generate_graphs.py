@@ -67,6 +67,7 @@ from generate_common import (
     get_custom_logger,
 )
 from datas import metadata
+from datas.helpers import measurement2distance
 from spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
 from spinorama.speaker_print import print_graphs
 from spinorama.plot import plot_params_default
@@ -109,6 +110,7 @@ def queue_measurement(
     msymmetry: str | None,
     mparameters: dict | None,
     level: int,
+    distance: float
 ) -> tuple[int, int, int, int]:
     """Add all measurements in the queue to be processed"""
     id_df = parse_graphs_speaker.remote(
@@ -121,9 +123,10 @@ def queue_measurement(
         msymmetry,
         mparameters,
         level,
+        distance
     )
     id_eq = parse_eq_speaker.remote(
-        f"{data_dir}/datas", speaker, mformat, id_df, mparameters, level
+        f"{data_dir}/datas", speaker, mformat, id_df, mparameters, level, distance,
     )
     width = int(plot_params_default["width"])
     height = int(plot_params_default["height"])
@@ -191,9 +194,9 @@ def queue_speakers(speakerlist: set[str], filters: dict[str, dict], level: int) 
             logger.debug("queing %s/%s/%s/%s", speaker, morigin, mformat, mversion)
             msymmetry = measurement.get("symmetry", None)
             mparameters = measurement.get("parameters", None)
-
+            distance = measurement2distance(speaker, measurement)
             ray_ids[speaker][mversion] = queue_measurement(
-                brand, speaker, mformat, morigin, mversion, msymmetry, mparameters, level
+                brand, speaker, mformat, morigin, mversion, msymmetry, mparameters, level, distance
             )
             count += 1
     print("Queued {} speakers {} measurements".format(len(speakerlist), count))
