@@ -219,6 +219,41 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
+    "Kanto YU4": {
+        "skip": True,
+        "brand": "Kanto",
+        "model": "YU4",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "",
+                    "eac": "",
+                    "yt": "",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 0,
+                    "impedance": 0,
+                    "SPL": {
+                        "peak": 0,
+                    },
+                    "size": {
+                        "height": 0,
+                        "width": 0,
+                        "depth": 0,
+                    },
+                    "weight": 0,
+                },
+            },
+        },
+    },
     "Kanto YU6": {
         "brand": "Kanto",
         "model": "YU6",
@@ -1228,6 +1263,37 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
                 "quality": "medium",
+            },
+        },
+    },
+    "KEF Reference 201": {
+        "skip": True,
+        "brand": "KEF",
+        "model": "Reference 201",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudiocorner",
+                "format": "klippel",
+                "review_published": "2024xxxx",
+                "reviews": {
+                    "eac": "",
+                    "yt": "",
+                },
+                "specifications": {
+                    "sensitivity": 0,
+                    "impedance": 0,
+                    "size": {
+                        "height": 0,
+                        "width": 0,
+                        "depth": 0,
+                    },
+                    "weight": 0,
+                },
             },
         },
     },

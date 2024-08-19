@@ -1482,6 +1482,68 @@ speakers_info_j: SpeakerDatabase = {
             },
         },
     },
+    "JBL Stage 250B": {
+        "skip": True,
+        "brand": "JBL",
+        "model": "Stage 250B",
+        "type": "passive",
+        "price": "400",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_250b/",
+                    "yt": "https://youtu.be/YcAgRBndf3c",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 6,
+                    "size": {
+                        "height": 0,
+                        "width": 0,
+                        "depth": 0,
+                    },
+                    "weight": 0,
+                },
+            },
+        },
+    },
+    "JBL Stage 280F": {
+        "skip": True,
+        "brand": "JBL",
+        "model": "Stage 280F",
+        "type": "passive",
+        "price": "1200",
+        "amount": "floorstanders",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_280f/",
+                    "yt": "https://youtu.be/YcAgRBndf3c",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 91,
+                    "impedance": 6,
+                    "size": {
+                        "height": 0,
+                        "width": 0,
+                        "depth": 0,
+                    },
+                    "weight": 0,
+                },
+            },
+        },
+    },
     "JBL 100 Classic": {
         "brand": "JBL",
         "model": "100 Classic",
