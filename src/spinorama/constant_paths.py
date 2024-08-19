@@ -46,6 +46,10 @@ CPATH_DOCS_EQDATA_JSON = "{}/{}.json".format(CPATH_DOCS_JSON, "eqdata")
 CPATH_DOCS_SPEAKERS = "{}/{}".format(CPATH_DOCS, "speakers")
 CPATH_DOCS_PICTURES = "{}/{}".format(CPATH_DOCS, "pictures")
 
+# mean is computed over a range
+MEAN_MIN = 300
+MEAN_MAX = 3000
+
 # midrange defintion
 MIDRANGE_MIN_FREQ = 300
 MIDRANGE_MAX_FREQ = 5000

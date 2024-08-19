@@ -273,11 +273,30 @@ class GlobalOptimizer(object):
         ]
         return bounds0 + bounds1 * (n - 1)
 
+    # only allow negative amplitude
+    def _opt_bounds_pk_neg(self, n: int) -> list[list[int | float]]:
+        # compute bounds for variables
+        bounds0 = [
+            [3, 3],
+            [0, FREQ_NB_POINTS],
+            [self.min_q, self.max_q],
+            [-self.max_db * 3, -self.min_db],
+        ]
+        bounds1 = [
+            [3, 3],
+            [self.freq_min_index, FREQ_NB_POINTS],
+            [self.min_q, self.max_q],
+            [-self.max_db * 3, -self.min_db],
+        ]
+        return bounds0 + bounds1 * (n - 1)
+
     def _opt_bounds(self, n: int) -> list[list[int | float]]:
         # compute bounds for variables
-        return (
-            self._opt_bounds_all(n) if self.config["full_biquad_optim"] else self._opt_bounds_pk(n)
-        )
+        if self.config["use_all_biquad"]:
+            return self._opt_bounds_all(n)
+        if self.config["plus_and_minus"]:
+            return self._opt_bounds_pk(n)
+        return self._opt_bounds_pk_neg(n)
 
     def _opt_integrality(self, n: int) -> list[bool]:
         # True is a variable is an int and False if not
@@ -311,11 +330,36 @@ class GlobalOptimizer(object):
         # SPL. If we have 200 points from 20Hz-20kHz, 5 points give us 1/4 octave.
         # Control various parameters and keep them under check.
 
-        def _opt_constraints_freq(x):
+        def _opt_constraints_q(x) -> int:
+            # you don't need to re-check the Q since it done by the bounds
+            # but we should reduce the Q with frequency since it is less and less detectable
+            # 3400Hz => 340 m/s / 3400 Hz == 10 cm
+            # assumption 10 cm movement -> above that very low q allowed only
+            l = len(x) // 4
+            for i in range(l):
+                _, f, q, _, _ = self._x2params(x, i)
+                f_hz = self._index2freq(f)
+                if (f_hz > 2000 and q > 1.0) or (f_hz > 3400 and q > 0.5):
+                    return 1
+            return -1
+
+        def _opt_constraints_gain(x) -> int:
+            # check that total gain at any point in lower that max_db
+            l = len(x) // 4
+            m = 0
+            for i in range(l):
+                _, f, _, _, _ = self._x2params(x, i)
+                m += self._x2peq(x)[i][1].log_result(f)
+                if np.max(np.clip(m, 0, None)) > self.max_db:
+                    return 1
+            return -1
+
+        def _opt_constraints_freq(x) -> int:
+            # check on frequencies
             l = len(x) // 4
             for i in range(l - 1):
-                t1, f1, q1, g1, s1 = self._x2params(x, i)
-                t2, f2, q2, g2, s2 = self._x2params(x, i + 1)
+                _, f1, _, _, s1 = self._x2params(x, i)
+                _, f2, _, _, s2 = self._x2params(x, i + 1)
                 # if the sign is the same, then make some space between frequencies
                 if s1 == s2:
                     if f1 - f2 > -5:
@@ -326,26 +370,24 @@ class GlobalOptimizer(object):
                 # only 1 peq before min_index
                 if f2 < self.freq_min_index or f2 > self.freq_max_index:
                     return 1
-                # if pk = 1 or 5, check that the max is below max_db
-                if t1 != 3:  # PK
-                    m = self._x2peq(x)[i][1].log_result(f1)
-                    if abs(m) > self.max_db:
-                        return 1
-                # check gain (since bounds do not support 2 intervals)
-                # algorithm does not converge well ...
-                # if abs(g1) < self.min_db or abs(g2) < self.min_db:
-                #    return 1
+            return -1
 
-                # you don't need to re-check the Q since it done by the bounds
+        def _opt_constraints_all(x) -> int:
+            if (
+                _opt_constraints_freq(x) == 1
+                or _opt_constraints_gain(x) == 1
+                or _opt_constraints_q(x) == 1
+            ):
+                return 1
             return -1
 
         return opt.NonlinearConstraint(
-            fun=_opt_constraints_freq, lb=-np.inf, ub=0, keep_feasible=False
+            fun=_opt_constraints_all, lb=-np.inf, ub=0, keep_feasible=False
         )
 
     def _opt_display(self, xk, convergence):
         # comment if you want to print verbose traces
-        print(f"[f={1-convergence}<{CONVERGENCE_TOLERANCE}] iir={self.config['full_biquad_optim']}")
+        print(f"[f={1-convergence}<{CONVERGENCE_TOLERANCE}] iir={self.config['use_all_biquad']}")
         peq_print(self._x2peq(xk))
 
     def run(self):

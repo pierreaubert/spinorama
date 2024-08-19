@@ -314,7 +314,7 @@ def main():
         # do you optimise only peaks or both peaks and valleys?
         "plus_and_minus": True,
         # do you optimise for all kind of biquad or do you want only Peaks?
-        "full_biquad_optim": None,
+        "use_all_biquad": None,
         # lookup around a value is [value*elastic, value/elastic]
         # "elastic": 0.2,
         "elastic": 0.8,
@@ -434,9 +434,9 @@ def main():
         current_optim_config["MAX_DBGAIN"] = max_db
 
     if args["--use-all-biquad"] is not None and args["--use-all-biquad"] is True:
-        current_optim_config["full_biquad_optim"] = True
+        current_optim_config["use_all_biquad"] = True
     if args["--use-only-pk"] is not None and args["--use-only-pk"] is True:
-        current_optim_config["full_biquad_optim"] = False
+        current_optim_config["use_all_biquad"] = False
     if args["--curve-peak-only"] is not None and args["--curve-peak-only"] is True:
         current_optim_config["plus_and_minus"] = False
 

@@ -100,7 +100,7 @@ def optim_greedy(
         init_db_gain_range = None
         biquad_range = None
         if optim_iter == 0:
-            if optim_config["full_biquad_optim"] is True:
+            if optim_config["use_all_biquad"] is True:
                 # see if a LP can help get some flatness of bass
                 init_freq_range = np.asarray(
                     [
@@ -149,7 +149,7 @@ def optim_greedy(
             biquad_range,
         )
 
-        if optim_config["full_biquad_optim"] is True:
+        if optim_config["use_all_biquad"] is True:
             (
                 state,
                 current_type,
