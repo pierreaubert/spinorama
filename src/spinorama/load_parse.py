@@ -30,17 +30,22 @@ from datas import Symmetry, Parameters
 
 from spinorama import logger, ray_setup_logger
 from spinorama.ltype import DataSpeaker
+from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
+
 from spinorama.compute_misc import unify_freq
+
 from spinorama.filter_peq import Peq, peq_apply_measurements
 from spinorama.filter_scores import noscore_apply_filter
-from spinorama.load_klippel import parse_graphs_speaker_klippel
+
 from spinorama.load_misc import graph_melt, graph_unmelt, check_nan
+from spinorama.load_klippel import parse_graphs_speaker_klippel
 from spinorama.load_princeton import parse_graphs_speaker_princeton
 from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
 from spinorama.load_rew_eq import parse_eq_iir_rews
 from spinorama.load_spl_hv_txt import parse_graphs_speaker_spl_hv_txt
 from spinorama.load_gll_hv_txt import parse_graphs_speaker_gll_hv_txt
 from spinorama.load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
+
 from spinorama.load import (
     filter_graphs,
     filter_graphs_eq,
@@ -53,8 +58,8 @@ from spinorama.load import (
 def get_mean_min_max(mparameters: Parameters | None) -> tuple[int, int]:
     # default works well for flatish speakers but not at all for line arrays for ex
     # where the mean is flat but usually high bass and low high
-    mean_min = 300
-    mean_max = 3000
+    mean_min = MEAN_MIN
+    mean_max = MEAN_MAX
     if mparameters is not None:
         mean_min = mparameters.get("mean_min", mean_min)
         mean_max = mparameters.get("mean_max", mean_max)
