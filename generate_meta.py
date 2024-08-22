@@ -57,7 +57,6 @@ from docopt import docopt
 
 from spinorama import ray_setup_logger
 from spinorama.constant_paths import flags_ADD_HASH
-from datas.helpers import measurement2distance
 
 try:
     import ray
@@ -234,10 +233,9 @@ def queue_score(speaker_name, speaker_data):
                     and metadata.speakers_info[speaker_name].get("type") == "passive"
                     and key == default_key
                 ):
-                    distance = measurement2distance(speaker_name, dfs)
                     result["sensitivity"] = {
                         "computed": sensitivity,
-                        "distance": distance,
+                        "distance": dfs.get("sensitivity_distance", 1.0),
                         "sensitivity_1m": dfs.get("sensitivity_1m"),
                     }
 

@@ -75,26 +75,6 @@ speakers_info_s: SpeakerDatabase = {
             # },
         },
     },
-    "Triad In-Room Gold LCR": {
-        "brand": "Triad",
-        "model": "In-Room Gold LCR",
-        "type": "passive",
-        "price": "6600",
-        "shape": "cinema",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://erinsaudiocorner.com/loudspeakers/triad_inroom_gold_lcr/",
-                    "yt": "https://youtu.be/gNKs0Dj2v5E",
-                },
-                "review_published": "20230602",
-            },
-        },
-    },
     "Salk WoW1": {
         "brand": "Salk",
         "model": "WoW1",
