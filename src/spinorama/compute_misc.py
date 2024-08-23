@@ -439,7 +439,6 @@ def compute_statistics(
         (data_frame.Freq > hist_min_freq) & (data_frame.Freq < hist_max_freq)
     ]
     hist_spl = hist_minmax[measurement]
-    # hist_dist = [dist_point_line(math.log10(f), db, slope, -1, intercept) for f, db in zip(hist_minmax.Freq, hist_spl)]
     hist_dist = [
         abs(db - (slope * math.log10(f) + intercept))
         for f, db in zip(hist_minmax.Freq, hist_spl, strict=False)

@@ -188,14 +188,14 @@ def scores_print2(score: dict, score1: dict, score2: dict):
     return "\n".join(res)
 
 
-def scores_loss(df_speaker: dict, peq) -> float:
+def scores_loss(df_speaker: dict, peq: Peq) -> float:
     # optimise for score directly
     _, _, score_filtered = scores_apply_filter(df_speaker, peq)
     # optimize max score is the same as optimize min -score
     return -score_filtered["pref_score"]
 
 
-def lw_loss(df_speaker: dict, peq) -> float:
+def lw_loss(df_speaker: dict, peq: Peq) -> float:
     # optimise LW
     # get SPL H & V
     spl_h = df_speaker["SPL Horizontal_unmelted"]
