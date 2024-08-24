@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+CONVERT=convert
+
+if test "$OS" = "Darwin"  -a "$ARCH" = "arm64" ; then
+    CONVERT="magick convert"
+fi
 
 # convert is from imagemagick package
 sourcedir=datas
@@ -28,7 +33,7 @@ for d in "${sourcedir}/pictures"; do
         for t in "jpg" "webp"; do
 	    smallert=${smaller%.png}.${t}
 	    if ! test -f "$smallert"; then
-	        magick convert "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallert";
+	        "$CONVERT" "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallert";
 	    fi
         done
     done
@@ -37,13 +42,13 @@ for d in "${sourcedir}/pictures"; do
         for t in "jpg" ; do
 	    smallert=${smaller%.jpg}.${t}
 	    if ! test -f "$smallert"; then
-	        magick convert "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallert";
+	        "$CONVERT" "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallert";
 	    fi
         done
         for t in "webp"; do
 	    smallerw=${smaller%.jpg}.${t}
 	    if ! test -f "$smallerw"; then
-	        magick convert "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallerw";
+	        "$CONVERT" "$pict" -define jpeg:size=300x500  -thumbnail '400x600>' -gravity center -extent 400x600 "$smallerw";
 	    fi
         done
     done
@@ -56,7 +61,7 @@ find ./src/website/help_pictures -type f -name '*.png'| while read pict; do
     for t in "jpg" "webp"; do
 	smallert=${smaller%.png}.${t}
 	if ! test -f "$smallert"; then
-	    magick convert "$pict" "$smallert";
+	    "$CONVERT" "$pict" "$smallert";
 	fi
     done
 done
