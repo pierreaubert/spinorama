@@ -983,6 +983,166 @@ speakers_info_f: SpeakerDatabase = {
             },
         },
     },
+    "Fulcrum Acoustic RX4": {
+        "brand": "Fulcrum Acoustic",
+        "model": "RX4",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Fulcrum Acoustic",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20240825",
+                "extras": {
+                    "is_equed": True,
+                },
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 100,
+                    },
+                    # equalized
+                    "sensitivity": 85,
+                    # equalized
+                    "SPL": {
+                        "continuous": 105,
+                        "peak": 111,
+                    },
+                    "size": {
+                        "height": 127,
+                        "width": 135,
+                        "depth": 132,
+                    },
+                    "weight": 1.4,
+                },
+            },
+        },
+    },
+    "Fulcrum Acoustic RX5": {
+        "brand": "Fulcrum Acoustic",
+        "model": "RX5",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Fulcrum Acoustic",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20240825",
+                "extras": {
+                    "is_equed": True,
+                },
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 75,
+                    },
+                    # equalized
+                    "sensitivity": 89,
+                    # equalized
+                    "SPL": {
+                        "continuous": 111,
+                        "peak": 117,
+                    },
+                    "size": {
+                        "height": 152,
+                        "width": 220,
+                        "depth": 151,
+                    },
+                    "weight": 4.1,
+                },
+            },
+        },
+    },
+    "Fulcrum Acoustic RX6": {
+        "brand": "Fulcrum Acoustic",
+        "model": "RX6",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Fulcrum Acoustic",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20240825",
+                "extras": {
+                    "is_equed": True,
+                },
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 75,
+                    },
+                    # equalized
+                    "sensitivity": 90,
+                    # equalized
+                    "SPL": {
+                        "continuous": 112,
+                        "peak": 118,
+                    },
+                    "size": {
+                        "height": 184,
+                        "width": 273,
+                        "depth": 154,
+                    },
+                    "weight": 4.9,
+                },
+            },
+        },
+    },
+    "Fulcrum Acoustic RX8": {
+        "brand": "Fulcrum Acoustic",
+        "model": "RX8",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Fulcrum Acoustic",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20240825",
+                "extras": {
+                    "is_equed": True,
+                },
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 75,
+                    },
+                    # equalized
+                    "sensitivity": 93,
+                    # equalized
+                    "SPL": {
+                        "continuous": 116,
+                        "peak": 122,
+                    },
+                    "size": {
+                        "height": 229,
+                        "width": 323,
+                        "depth": 235,
+                    },
+                    "weight": 6.4,
+                },
+            },
+        },
+    },
     "Fulcrum Acoustic RX599": {
         "brand": "Fulcrum Acoustic",
         "model": "RX599",

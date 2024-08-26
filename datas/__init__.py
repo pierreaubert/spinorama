@@ -34,15 +34,14 @@ class SPL(TypedDict, total=False):
 
 class Size(TypedDict):
     """
-    This TypedDict contains the size of the speaker opening in millimeters for the left and right sides.
+    This TypedDict contains the size of the speaker in millimeters.
 
     Attributes:
-        left (float): Left side opening size in mm.
-        right (float): Right side opening size in mm.
+        height (float): in mm.
+        width (float): in mm.
+        depthh (float): in mm.
     """
 
-    left: float
-    right: float
     height: float
     width: float
     depth: float

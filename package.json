@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "bulma": "^1.0.1",
+    "bulma": "^1.0.2",
     "fuse.js": "^7.0.0",
     "handlebars": "^4.7.8",
     "npm": "^10.7.0",

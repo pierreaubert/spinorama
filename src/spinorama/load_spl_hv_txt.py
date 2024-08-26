@@ -128,7 +128,11 @@ def parse_graphs_speaker_spl_hv_txt(
     h_status, h_spl = parse_graph_spl_hv_txt(dirname, "H")
     v_status, v_spl = parse_graph_spl_hv_txt(dirname, "V")
 
-    if len(h_spl.keys()) + len(v_spl.keys()) < 72 and not known_incomplete_measurements.has("{} {}".format(speaker_brand, speaker_name), version):
+    if (
+        len(h_spl.keys()) + len(v_spl.keys()) < 72
+        and ("{} {}".format(speaker_brand, speaker_name), version)
+        not in known_incomplete_measurements
+    ):
         logger.warning("We have only partial data in %s", dirname)
 
     return h_status and v_status, (h_spl, v_spl)
