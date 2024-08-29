@@ -35,6 +35,7 @@ from glob import glob
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -554,17 +555,18 @@ def main():
             flow_bin = "./node_modules/.bin/flow-remove-types"
             flow_param = ""  # "--pretty --sourcemaps"
 
-            flow_command = "{} {} {} > {}".format(
-                flow_bin, flow_param, item_original, item_post_flow
+            flow_command = "{} {} {}".format(
+                flow_bin, flow_param, item_original
             )
-            status = subprocess.run(
-                [flow_command],
-                shell=True,  # noqa: S602
-                check=True,
-                capture_output=True,
-            )
-            if status.returncode != 0:
-                print("flow failed for %s", item_name)
+            with open(item_post_flow, "w") as item_post_flow_fd:
+                status = subprocess.run(
+                    shlex.split(flow_command),
+                    shell=False,  # noqa: S602
+                    check=True,
+                    stdout=item_post_flow_fd,
+                )
+                if status.returncode != 0:
+                    print("flow failed for %s", item_name)
 
             # build first generation with metadata expension, now only useful for meta.js
             if item == "meta":
@@ -581,7 +583,8 @@ def main():
                     min=".min" if flag_optim else "",
                     versions=versions,
                 )
-                write_if_different(item_content, item_post_mako, force=True)
+                if item_content:
+                    write_if_different(str(item_content), item_post_mako, force=True)
             else:
                 shutil.copy(item_post_flow, item_post_mako)
 
@@ -592,19 +595,20 @@ def main():
                 write_if_different(item_content, item_post_import, force=True)
 
             # compress files with terser
-            terser_command = "{0} {1} > {2}".format(
-                "./node_modules/.bin/terser", item_post_import, item_post_terser
+            terser_command = "{0} {1}".format(
+                "./node_modules/.bin/terser", item_post_import
             )
             # print(terser_command)
             try:
-                status = subprocess.run(
-                    [terser_command],
-                    shell=True,
-                    check=True,
-                    capture_output=True,  # noqa: S602
-                )
-                if status.returncode != 0:
-                    print("terser failed for item {}".format(item))
+                with open(item_post_terser, "w") as item_post_terser_fd:
+                    status = subprocess.run(
+                        shlex.split(terser_command),
+                        shell=False, # noqa: S602
+                        check=True,
+                        stdout=item_post_terser_fd,
+                    )
+                    if status.returncode != 0:
+                        print("terser failed for item {}".format(item))
             except subprocess.CalledProcessError as e:
                 print("terser failed for item {} with {}".format(item, e))
 
@@ -619,10 +623,10 @@ def main():
             sys.exit(1)
 
     # call workbox
-    workbox_command = ""
+    workbox_command = "workbox generateSW workbox-config.js"
     status = subprocess.run(
-        [workbox_command],
-        shell=True,
+        shlex.split(workbox_command),
+        shell=False,
         check=True,
         capture_output=True,  # noqa: S602
     )
