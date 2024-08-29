@@ -87,6 +87,14 @@ async def get_speaker_measurements(
     if speaker_name not in speakers_info:
         return {"error": f"Speaker {speaker_name} is not in our database!"}
 
+    if (
+        "/" in speaker_version
+        or "/" in measurement_name
+        or ".." in speaker_version
+        or ".." in measurement_name
+    ):
+        return {"error": f"Invalid speaker_version or speaker_name!"}
+
     meta_data = speakers_info[speaker_name]
 
     if speaker_version not in meta_data["measurements"]:

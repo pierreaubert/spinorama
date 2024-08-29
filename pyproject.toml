@@ -5,7 +5,7 @@ requires = ["setuptools", "wheel", "Cython"]
 name = "spinorama"
 description = "Spinorama computes speaker measurements"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = "GPL"
 authors = [
     { name = "Pierre Aubert", email = "pierre0aubert@gmail.com" },
@@ -22,9 +22,9 @@ line-length = 100
 [tool.pyright]
 include = [".", "src", "tests"]
 ignore = ["book", "experimentals", "datas/measurements", "datas/eq", "datas/pictures"]
-venvPath = './spinorama-venv'
+venvPath = './.venv'
 typeCheckingMode = 'basic'
-pythonVersion = "3.11"
+pythonVersion = "3.12"
 pythonPlatform = "Linux"
 
 [tool.ruff]
