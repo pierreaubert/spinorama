@@ -646,7 +646,7 @@ speakers_info_s: SpeakerDatabase = {
             "vendor-v1-20240218": {
                 "origin": "Vendors-SunAudio",
                 "format": "spl_hv_txt",
-                "quality": "medium",
+                "quality": "high",  # klippel measurements by https://www.dausend-acoustics.com/
                 "review": "https://sunaudio.com/products/purified-4-modular-active-loudspeakers",
                 "review_published": "20240218",
                 "data_acquisition": {
@@ -668,7 +668,7 @@ speakers_info_s: SpeakerDatabase = {
             "vendor-v1-20240730": {
                 "origin": "Vendors-SunAudio",
                 "format": "spl_hv_txt",
-                "quality": "medium",
+                "quality": "high",  # klippel measurements by https://www.dausend-acoustics.com/
                 "review": "https://sunaudio.com/products/purified-4-modular-active-loudspeakers?variant=47286699491674",
                 "review_published": "20240730",
                 "data_acquisition": {
@@ -690,7 +690,7 @@ speakers_info_s: SpeakerDatabase = {
             "vendor-v1-20240730": {
                 "origin": "Vendors-SunAudio",
                 "format": "spl_hv_txt",
-                "quality": "medium",
+                "quality": "high",  # klippel measurements by https://www.dausend-acoustics.com/
                 "review": "https://sunaudio.com/products/purified-4-modular-active-loudspeakers?variant=47286699327834",
                 "review_published": "20240730",
                 "data_acquisition": {
