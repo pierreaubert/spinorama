@@ -132,8 +132,8 @@ getMetadata()
                     } else if (
                         measurement === 'SPL Horizontal Contour 3D' ||
                         measurement === 'SPL Vertical Contour 3D' ||
-                        measurement === 'SPL Horizontal Contour 3D Normalized' ||
-                        measurement === 'SPL Vertical Contour 3D Normalized'
+                        measurement === 'SPL Horizontal Contour Normalized 3D' ||
+                        measurement === 'SPL Vertical Contour Normalized 3D'
                     ) {
                         graphsConfigs = setSurface(speakersName, graphs, windowWidth, windowHeight);
                     } else if (
@@ -143,7 +143,9 @@ getMetadata()
                         measurement === 'SPL Vertical Globe Normalized'
                     ) {
                         graphsConfigs = setGlobe(speakersName, graphs, windowWidth, windowHeight);
-                    }
+                    } else {
+			console.error('Measurement '+measurement+' is unknown');
+		    }
 
                     // console.log('datas and layouts length='+graphsConfigs.length)
                     if (graphsConfigs.length === 1) {
