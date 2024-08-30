@@ -555,9 +555,7 @@ def main():
             flow_bin = "./node_modules/.bin/flow-remove-types"
             flow_param = ""  # "--pretty --sourcemaps"
 
-            flow_command = "{} {} {}".format(
-                flow_bin, flow_param, item_original
-            )
+            flow_command = "{} {} {}".format(flow_bin, flow_param, item_original)
             with open(item_post_flow, "w") as item_post_flow_fd:
                 status = subprocess.run(
                     shlex.split(flow_command),
@@ -595,15 +593,13 @@ def main():
                 write_if_different(item_content, item_post_import, force=True)
 
             # compress files with terser
-            terser_command = "{0} {1}".format(
-                "./node_modules/.bin/terser", item_post_import
-            )
+            terser_command = "{0} {1}".format("./node_modules/.bin/terser", item_post_import)
             # print(terser_command)
             try:
                 with open(item_post_terser, "w") as item_post_terser_fd:
                     status = subprocess.run(
                         shlex.split(terser_command),
-                        shell=False, # noqa: S602
+                        shell=False,  # noqa: S602
                         check=True,
                         stdout=item_post_terser_fd,
                     )
