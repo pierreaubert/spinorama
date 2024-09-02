@@ -18,33 +18,33 @@
 
 # where the code for the website is
 CPATH = "."
-CPATH_SRC = "{}/{}".format(CPATH, "src")
-CPATH_PYTHON = "{}/{}".format(CPATH_SRC, "spinorama")
-CPATH_WEBSITE = "{}/{}".format(CPATH_SRC, "website")
-CPATH_SCRIPTS = "{}/{}".format(CPATH, "scripts")
+CPATH_SRC = f"{CPATH}/src"
+CPATH_PYTHON = f"{CPATH_SRC}/spinorama"
+CPATH_WEBSITE = f"{CPATH_SRC}/website"
+CPATH_SCRIPTS = f"{CPATH}/scripts"
 
 # where the metadata around the speakers are
-CPATH_DATAS = "{}/{}".format(CPATH, "datas")
-CPATH_DATAS_ICONS = "{}/{}".format(CPATH_DATAS, "icons")
-CPATH_DATAS_PICTURES = "{}/{}".format(CPATH_DATAS, "pictures")
-CPATH_DATAS_SPEAKERS = "{}/{}".format(CPATH_DATAS, "measurements")
-CPATH_DATAS_EQ = "{}/{}".format(CPATH_DATAS, "eq")
+CPATH_DATAS = f"{CPATH}/datas"
+CPATH_DATAS_ICONS = f"{CPATH_DATAS}/icons"
+CPATH_DATAS_PICTURES = f"{CPATH_DATAS}/pictures"
+CPATH_DATAS_SPEAKERS = f"{CPATH_DATAS}/measurements"
+CPATH_DATAS_EQ = f"{CPATH_DATAS}/eq"
 
 # where the temporay files go
-CPATH_BUILD = "{}/{}".format(CPATH, "build")
-CPATH_BUILD_WEBSITE = "{}/{}".format(CPATH_BUILD, "website")
-CPATH_BUILD_MAKO = "{}/{}".format(CPATH_BUILD, "mako_modules")
+CPATH_BUILD = f"{CPATH}/build"
+CPATH_BUILD_WEBSITE = f"{CPATH_BUILD}/website"
+CPATH_BUILD_MAKO = f"{CPATH_BUILD}/mako_modules"
 
 # where the generated files go
-CPATH_DOCS = "{}/{}".format(CPATH, "docs")
-CPATH_DOCS_JS = "{}/{}".format(CPATH_DOCS, "js")
-CPATH_DOCS_JS3RD = "{}/{}".format(CPATH_DOCS, "js3rd")
-CPATH_DOCS_CSS = "{}/{}".format(CPATH_DOCS, "css")
-CPATH_DOCS_JSON = "{}/{}".format(CPATH_DOCS, "json")
-CPATH_DOCS_METADATA_JSON = "{}/{}.json".format(CPATH_DOCS_JSON, "metadata")
-CPATH_DOCS_EQDATA_JSON = "{}/{}.json".format(CPATH_DOCS_JSON, "eqdata")
-CPATH_DOCS_SPEAKERS = "{}/{}".format(CPATH_DOCS, "speakers")
-CPATH_DOCS_PICTURES = "{}/{}".format(CPATH_DOCS, "pictures")
+CPATH_DOCS = f"{CPATH}/docs"
+CPATH_DOCS_JS = f"{CPATH_DOCS}/js"
+CPATH_DOCS_JS3RD = f"{CPATH_DOCS}/js3rd"
+CPATH_DOCS_CSS = f"{CPATH_DOCS}/css"
+CPATH_DOCS_JSON = f"{CPATH_DOCS}/json"
+CPATH_DOCS_METADATA_JSON = f"{CPATH_DOCS_JSON}/metadata.json"
+CPATH_DOCS_EQDATA_JSON = f"{CPATH_DOCS_JSON}/eqdata.json"
+CPATH_DOCS_SPEAKERS = f"{CPATH_DOCS}/speakers"
+CPATH_DOCS_PICTURES = f"{CPATH_DOCS}/pictures"
 
 # mean is computed over a range
 MEAN_MIN = 300
@@ -66,11 +66,11 @@ C_PIR = "Estimeated In-Room Response"
 C_SP = "Sound Power"
 C_ER = "Early Reflections"
 
-U_ON = "{}_unmelted".format(C_ON)
-U_LW = "{}_unmelted".format(C_LW)
-U_PIR = "{}_unmelted".format(C_PIR)
-U_SP = "{}_unmelted".format(C_SP)
-U_ER = "{}_unmelted".format(C_ER)
+U_ON = f"{C_ON}_unmelted"
+U_LW = f"{C_LW}_unmelted"
+U_PIR = f"{C_PIR}_unmelted"
+U_SP = f"{C_SP}_unmelted"
+U_ER = f"{C_ER}_unmelted"
 
 # flags
 flags_ADD_HASH = False
