@@ -13,7 +13,7 @@ const imagesRoute = new Route(
         plugins: [
             new ExpirationPlugin({
                 maxEntries: 2500,
-                maxAgeSeconds: 60 * 60 * 24 * 10,
+                maxAgeSeconds: 60 * 60 * 24,
             }),
         ],
     })
@@ -27,7 +27,7 @@ const scriptsRoute = new Route(
         cacheName: 'scripts',
         plugins: [
             new ExpirationPlugin({
-                maxAgeSeconds: 60 * 60 * 24 * 10,
+                maxAgeSeconds: 60 * 60 * 2,
             }),
         ],
     })
@@ -56,7 +56,7 @@ const jsonRoute = new Route(
         plugins: [
             new ExpirationPlugin({
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 30,
+                maxAgeSeconds: 60 * 60 * 24,
             }),
         ],
     })

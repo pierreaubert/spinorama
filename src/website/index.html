@@ -25,5 +25,39 @@
 
     <%include file="search.html"/>
 
+    <article class="message is-danger banner hidden" id="alert">
+      <div class="message-header">
+        <p>If you see a banner, that's a bug, sorry about that!</p>
+        <button class="delete" aria-label="delete"></button>
+      </div>
+      <div class="message-body">
+	<ul>
+	  <li>Can you please try to <a href="https://www.google.com/search?q=how+to+force+reload+a+webpage">clear your cache</a> and reload, please?</li>
+	  <li>You can also let us know that <a href="https://github.com/pierreaubert/spinorama/issues/297">it happens and if the trick works</a>?</li>
+	</ul>
+	Debug information:
+	<ul id='alertdebug'>
+	</ul>
+      </div>
+    </article>;
+
+    <script>
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    sleep(5000).then( () => {
+      const counter = document.getElementById('speakers').children.length;
+      if (counter == 0) {
+	const alert = document.getElementById('alert');
+	alert.classList.remove('hidden');
+	const debug = document.getElementById('alertdebug');
+	debug.innerHTML='<li>Found: '+counter+' speakers</li>'+\
+	'<li> Href: '+window?.location.href+'</li>'+\
+	'<li> Browser'+window?.navigator.appVersion+'</li>';
+      }
+    });
+    </script>
+
   </body>
 </html>

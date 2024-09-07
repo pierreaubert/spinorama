@@ -18,7 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-usage: generate_html.py [--help] [--version] [--dev] [--optim]\
+usage: generate_html.py [--help] [--version] [--dev] [--optim] [--sw]\
  [--sitedev=<http>]  [--log-level=<level>] [--skip-speakers]
 
 Options:
@@ -27,6 +27,7 @@ Options:
   --sitedev=<http>  default: http://localhost:8000/docs
   --dev             if you want to generate the dev websites
   --optim           if you want an optimised built
+  --sw              if you want a service worker to be generated
   --skip-speakers   skip speaker html page generation (useful for debugging)
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
@@ -59,7 +60,7 @@ from spinorama.need_update import need_update, write_if_different
 
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
-CACHE_VERSION = "v4"
+CACHE_VERSION = "v5"
 
 
 def get_files(dir, ext):
@@ -384,6 +385,7 @@ def main():
             meta=meta_sorted_date,
             site=site,
             use_search=True,
+            use_sw=flag_sw,
             min=".min" if flag_optim else "",
             versions=versions,
         )
@@ -403,6 +405,7 @@ def main():
             meta=meta_sorted_date,
             site=site,
             use_search=True,
+            use_sw=flag_sw,
             min=".min" if flag_optim else "",
             versions=versions,
         )
@@ -437,6 +440,7 @@ def main():
                 meta=meta_sorted_score,
                 site=site,
                 use_search=use_search,
+                use_sw=flag_sw,
                 min=".min" if flag_optim else "",
                 versions=versions,
             )
@@ -557,9 +561,9 @@ def main():
 
             flow_command = "{} {} {}".format(flow_bin, flow_param, item_original)
             with open(item_post_flow, "w") as item_post_flow_fd:
-                status = subprocess.run(
+                status = subprocess.run(  # noqa: S603
                     shlex.split(flow_command),
-                    shell=False,  # noqa: S602
+                    shell=False,
                     check=True,
                     stdout=item_post_flow_fd,
                 )
@@ -597,9 +601,9 @@ def main():
             # print(terser_command)
             try:
                 with open(item_post_terser, "w") as item_post_terser_fd:
-                    status = subprocess.run(
+                    status = subprocess.run(  # noqa: S603
                         shlex.split(terser_command),
-                        shell=False,  # noqa: S602
+                        shell=False,
                         check=True,
                         stdout=item_post_terser_fd,
                     )
@@ -620,14 +624,15 @@ def main():
 
     # call workbox
     workbox_command = "workbox generateSW workbox-config.js"
-    status = subprocess.run(
-        shlex.split(workbox_command),
-        shell=False,
-        check=True,
-        capture_output=True,  # noqa: S602
-    )
-    if status.returncode != 0:
-        print("workbox failed!")
+    if flag_sw:
+        status = subprocess.run(  # noqa: S603
+            shlex.split(workbox_command),
+            shell=False,
+            check=True,
+            capture_output=True,
+        )
+        if status.returncode != 0:
+            print("workbox failed!")
 
     # generate robots.txt and sitemap.xml
     logger.info("Copy robots/sitemap files to %s", cpaths.CPATH_DOCS)
@@ -648,7 +653,7 @@ def main():
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             # ok for robots but likely doesn't work for sitemap
-            write_if_different(item_content, item_filename, force=True)
+            write_if_different(str(item_content), item_filename, force=True)
     except KeyError as key_error:
         print("Copying robots files failed with {}".format(key_error))
         sys.exit(1)
@@ -657,9 +662,10 @@ def main():
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="update_html.py version 1.23", options_first=True)
+    args = docopt(str(__doc__), version="update_html.py version 1.23", options_first=True)
     flag_dev = args["--dev"]
     flag_optim = args["--optim"]
+    flag_sw = args["--sw"]
     site = SITEPROD
     skip_speakers = False
     if flag_dev:

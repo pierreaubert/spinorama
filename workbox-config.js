@@ -1,9 +1,9 @@
 module.exports = {
     globDirectory: 'docs/',
     globPatterns: [
-        '*.{js,html,xml,txt,svg}',
+        '*.{html,xml,txt,svg}',
         'css/*.css',
-        'js/*-v4.min.js',
+        'js/*-v5.min.js',
         'js3rd/*.{js,mjs}',
         'json/{eqdata,metadata-*}.json',
     ],
