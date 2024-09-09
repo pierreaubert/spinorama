@@ -429,3 +429,21 @@ describe('non regression for bug discussions/279', () => {
         expect(results[2]).toBe(kef_by_date[2][0]);
     });
 });
+
+describe('non regression for bug discussions/288', () => {
+    let metadata = null;
+
+    beforeAll(() => {
+        const bytes = readFileSync(METADATA_TEST_FILE, 'utf-8');
+        const metajson = JSON.parse(bytes);
+        metadata = new Map(Object.values(metajson).map((speaker) => [getID(speaker.brand, speaker.model), speaker]));
+    });
+
+    it('search for JBL 306 and check that the results are sane', () => {
+        const url1 = new URL('https://spinorama.org/index.html?brand=JBL+306');
+        const params1 = urlParameters2Sort(url1);
+        const [maxResults1, results1] = search(metadata, params1);
+        expect(results1).toBeDefined();
+        expect(results1).toBeTypeOf('object');
+    });
+});

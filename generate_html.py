@@ -95,6 +95,9 @@ def get_versions(filename):
                 continue
             versions[tokens[0]] = tokens[1]
     versions["CACHE"] = CACHE_VERSION
+    # usefull when debugging FUSE itself, waiting for patches to be included post 7.0.0
+    # versions["FUSE"] += '-pa2'
+    print(versions)
     return versions
 
 

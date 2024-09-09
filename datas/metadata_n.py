@@ -428,6 +428,34 @@ speakers_info_n: SpeakerDatabase = {
             },
         },
     },
+    "Neumi BS5P-ARC": {
+        "skip": True,
+        "brand": "Neumi",
+        "model": "BS5P-ARC",
+        "type": "active",
+        "price": "170",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/neumi_bs5p_arc/",
+                },
+                "review_published": "202109xx",
+                "specifications": {
+                    "size": {
+                        "height": 269,
+                        "width": 182,
+                        "depth": 216,
+                    },
+                    "weight": 0.45,
+                },
+            },
+        },
+    },
     "Neumi Silk 4": {
         "brand": "Neumi",
         "model": "Silk 4",

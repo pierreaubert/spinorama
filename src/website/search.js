@@ -55,6 +55,7 @@ const knownSorter = new Set([
     'f3',
     'f6',
     'flatness',
+    'fullTextSearch',
     'height',
     'price',
     'score',
@@ -66,19 +67,19 @@ const knownSorter = new Set([
     'width',
 ]);
 
-// function printParams(params) {
-//     const [sorter, filter, keywords, pagination] = [...params];
-//     console.log('  sorter: '+sorter.by+' reverse: '+sorter.reverse);
-//     console.log('  filter:'+
-// 		' brand='+filter.brand+
-// 		' power='+filter.power+
-// 		' quality='+filter.quality+
-// 		' '+ filter.priceMin+' <=price<= '+ filter.priceMax+
-// 		' reviewer='+filter.reviewer+
-// 		' shape='+filter.shape);
-//     console.log(' keywords='+keywords.toString());
-//     console.log(' pagination: page='+pagination.page);
-// }
+function printParams(params) {
+    const [sorter, filter, keywords, pagination] = [...params];
+    console.log('  sorter: '+sorter.by+' reverse: '+sorter.reverse);
+    console.log('  filter:'+
+		' brand='+filter.brand+
+		' power='+filter.power+
+		' quality='+filter.quality+
+		' '+ filter.priceMin+' <=price<= '+ filter.priceMax+
+		' reviewer='+filter.reviewer+
+		' shape='+filter.shape);
+    console.log(' keywords='+keywords.toString());
+    console.log(' pagination: page='+pagination.page);
+}
 
 function sortParameters2Sort(url) {
     const sorter = {
@@ -164,7 +165,7 @@ function keywordsParameters2Sort(url) {
         if (selector) {
             selector.value = keywords;
         } else {
-            console.log('Error: search selector ' + selectorName + ' is unknown!');
+            console.error('Search selector ' + selectorName + ' is unknown!');
         }
     }
     return keywords;
@@ -183,7 +184,7 @@ function paginationParameters2Sort(url) {
             pagination.page = page;
             pagination.active = true;
         } else {
-            console.log('Warning: ignored parameter page that must be a positive integer (got ' + page + '!');
+            console.warning('Ignored parameter page that must be a positive integer (got ' + page + '!');
         }
     }
     if (url.searchParams.has('count')) {
@@ -192,7 +193,7 @@ function paginationParameters2Sort(url) {
             pagination.count = count;
             pagination.active = true;
         } else {
-            console.log('Warning: ignored parameter count that must be an integer greater than 1 (got ' + count + '!');
+            console.warning('Ignored parameter count that must be an integer greater than 1 (got ' + count + '!');
         }
     }
     return pagination;
@@ -203,12 +204,19 @@ export function urlParameters2Sort(url) {
     const filters = filtersParameters2Sort(url);
     const keywords = keywordsParameters2Sort(url);
     const pagination = paginationParameters2Sort(url);
+
+    // if we have keywords to search for then give priority for search
+    if (keywords !== '') {
+	sorter.by = 'fullTextSearch';
+	sorter.reverse = true;;
+    }
     return [sorter, filters, keywords, pagination];
 }
 
 export function sortMetadata2(metadata, sorter, results) {
+
     const sortChildren = ({ container, score, reverse }) => {
-        // console.log('sorting2 by '+score)
+        console.log('sorting2 by '+score)
         const items = [...container.keys()];
         if (reverse) {
             items.sort((a, b) => {
@@ -229,7 +237,7 @@ export function sortMetadata2(metadata, sorter, results) {
                 return sb - sa;
             });
         }
-        // console.table(items)
+        console.table(items)
         return items;
     };
 
@@ -387,6 +395,20 @@ export function sortMetadata2(metadata, sorter, results) {
         return spk.brand + ' ' + spk.model;
     }
 
+    function getBrand(key) {
+        const spk = metadata.get(key);
+        return spk.brand + ' ' + spk.model;
+    }
+
+    function getFullTextSearch(key, fts) {
+        const spk = fts.get(key);
+	if (!spk || !spk.score) {
+	    return 100;
+	}
+	console.debug('speaker '+key+' score='+spk.score);
+        return spk.score;
+    }
+
     if (sorter.by === 'date') {
         return sortChildren({
             container: metadata,
@@ -477,8 +499,14 @@ export function sortMetadata2(metadata, sorter, results) {
             score: (k) => getSizeDepth(k),
             reverse: sorter.reverse,
         });
+    } else if (sorter.by === 'fullTextSearch') {
+        return sortChildren({
+            container: metadata,
+            score: (k) => getFullTextSearch(k, results),
+            reverse: sorter.reverse,
+        });
     } else {
-        console.log('ERROR: unknown sorter ' + sorter.by);
+        console.error('Unknown sorter ' + sorter.by);
     }
 
     return metadata;
@@ -498,7 +526,7 @@ export function isFiltered(item, filter) {
                 .replace('-ported', '')
                 .replace('-vertical')
                 .replace('-horizontal');
-            // console.log('debug: name2=' + name2 + ' origin=' + origin + ' filter.reviewer=' + filter.reviewer)
+            console.log('debug: name2=' + name2 + ' origin=' + origin + ' filter.reviewer=' + filter.reviewer)
             if (name2 === filter.reviewer.toLowerCase() || origin === filter.reviewer.toLowerCase()) {
                 found = false;
                 break;
@@ -512,7 +540,7 @@ export function isFiltered(item, filter) {
         let found = true;
         for (const [, measurement] of Object.entries(item.measurements)) {
             const quality = measurement.quality.toLowerCase();
-            // console.log('filter.quality=' + filter.quality + ' quality=' + quality)
+            console.log('filter.quality=' + filter.quality + ' quality=' + quality)
             if (filter.quality !== '' && quality === filter.quality.toLowerCase()) {
                 found = false;
                 break;
@@ -522,17 +550,17 @@ export function isFiltered(item, filter) {
             shouldShow = false;
         }
     }
-    // console.log('debug: post quality ' + shouldShow)
+    console.log('debug: post quality ' + shouldShow)
     if (shouldShow && filter.power !== undefined && filter.power !== '' && item.type !== filter.power) {
         shouldShow = false;
     }
 
-    // console.log('debug: post power ' + shouldShow)
+    console.log('debug: post power ' + shouldShow)
     if (shouldShow && filter.shape !== undefined && filter.shape !== '' && item.shape !== filter.shape) {
         shouldShow = false;
     }
 
-    // console.log('debug: post shape ' + shouldShow)
+    console.log('debug: post shape ' + shouldShow)
     if (
         shouldShow &&
         filter.brand !== undefined &&
@@ -542,7 +570,7 @@ export function isFiltered(item, filter) {
         shouldShow = false;
     }
 
-    // console.log('debug: before price ' + shouldShow + 'min=>>>'+filter.priceMin+'<<< max=>>>'+filter.priceMax+'<<<')
+    console.log('debug: before price ' + shouldShow + 'min=>>>'+filter.priceMin+'<<< max=>>>'+filter.priceMax+'<<<')
     if (
         shouldShow &&
         ((filter.priceMin !== undefined && filter.priceMin !== '') || (filter.priceMax !== undefined && filter.priceMax !== ''))
@@ -571,7 +599,7 @@ export function isFiltered(item, filter) {
             // no known price
             shouldShow = false;
         }
-        // console.debug('debug: post price ' + shouldShow);
+        console.debug('debug: post price ' + shouldShow);
     }
 
     if (
@@ -590,7 +618,7 @@ export function isFiltered(item, filter) {
         const msr = item.measurements[item.default_measurement];
         if ('specifications' in msr && 'weight' in msr.specifications) {
             let weight = parseInt(msr.specifications.weight);
-            // console.debug('pre weight ' + weightMin + ', ' + weightMax + ' and item.weight=' + msr.specifications.weight);
+            console.debug('pre weight ' + weightMin + ', ' + weightMax + ' and item.weight=' + msr.specifications.weight);
             if (isNaN(weight)) {
                 shouldShow = false;
             } else {
@@ -602,7 +630,7 @@ export function isFiltered(item, filter) {
             // no known weight
             shouldShow = false;
         }
-        // console.debug('debug: post weight ' + shouldShow);
+        console.debug('debug: post weight ' + shouldShow);
     }
 
     if (
@@ -621,7 +649,7 @@ export function isFiltered(item, filter) {
         const msr = item.measurements[item.default_measurement];
         if ('specifications' in msr && 'size' in msr.specifications && 'height' in msr.specifications.size) {
             let height = parseInt(msr.specifications.size.height);
-            // console.debug('pre height ' + heightMin + ', ' + heightMax + ' and item.height=' + msr.specifications.size.height);
+            console.debug('pre height ' + heightMin + ', ' + heightMax + ' and item.height=' + msr.specifications.size.height);
             if (isNaN(height)) {
                 shouldShow = false;
             } else {
@@ -633,7 +661,7 @@ export function isFiltered(item, filter) {
             // no known height
             shouldShow = false;
         }
-        // console.debug('debug: post height ' + shouldShow);
+        console.debug('debug: post height ' + shouldShow);
     }
 
     if (
@@ -651,7 +679,7 @@ export function isFiltered(item, filter) {
         const msr = item.measurements[item.default_measurement];
         if ('specifications' in msr && 'size' in msr.specifications && 'depth' in msr.specifications.size) {
             let depth = parseInt(msr.specifications.size.depth);
-            // console.debug('pre depth ' + depthMin + ', ' + depthMax + ' and item.depth=' + msr.specifications.size.depth);
+            console.debug('pre depth ' + depthMin + ', ' + depthMax + ' and item.depth=' + msr.specifications.size.depth);
             if (isNaN(depth)) {
                 shouldShow = false;
             } else {
@@ -663,7 +691,7 @@ export function isFiltered(item, filter) {
             // no known depth
             shouldShow = false;
         }
-        // console.debug('debug: post depth ' + shouldShow);
+        console.debug('debug: post depth ' + shouldShow);
     }
 
     if (
@@ -681,7 +709,7 @@ export function isFiltered(item, filter) {
         const msr = item.measurements[item.default_measurement];
         if ('specifications' in msr && 'size' in msr.specifications && 'width' in msr.specifications.size) {
             let width = parseInt(msr.specifications.size.width);
-            // console.debug('pre width ' + widthMin + ', ' + widthMax + ' and item.width=' + msr.specifications.size.width);
+            console.debug('pre width ' + widthMin + ', ' + widthMax + ' and item.width=' + msr.specifications.size.width);
             if (isNaN(width)) {
                 shouldShow = false;
             } else {
@@ -693,22 +721,22 @@ export function isFiltered(item, filter) {
             // no known width
             shouldShow = false;
         }
-        // console.debug('debug: post width ' + shouldShow);
+        console.debug('debug: post width ' + shouldShow);
     }
 
     return shouldShow;
 }
 
 export function isSearch(key, results, minScore, keywords) {
-    // console.log('Starting isSearch with key='+key+' minscore='+minScore+' keywords='+keywords);
+    console.log('Starting isSearch with key='+key+' minscore='+minScore+' keywords='+keywords);
     let shouldShow = true;
     if (keywords === '' || results === undefined) {
-        // console.log('shouldShow is true');
+        console.log('shouldShow is true');
         return shouldShow;
     }
 
     if (!results.has(key)) {
-        // console.log('shouldShow is false (no key '+key+')');
+        console.log('shouldShow is false (no key '+key+')');
         return false;
     }
 
@@ -717,20 +745,21 @@ export function isSearch(key, results, minScore, keywords) {
     const score = result.score;
 
     if (minScore < Math.pow(10, -15)) {
-        const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase());
+        // const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase());
         // console.log('isExact ' + isExact + ' model ' + imeta.model.toLowerCase() + ' keywords ' + keywords.toLowerCase());
         // we have an exact match, only shouldShow other exact matches
-        if (score >= Math.pow(10, -15) && !isExact) {
-            // console.log('filtered out (minscore)' + score);
+        if (score >= Math.pow(10, -15) ) { // || !isExact) {
+            console.log('filtered out (minscore)' + score);
             shouldShow = false;
         }
     } else {
         // only partial match
         if (score > minScore * 10) {
-            // console.log('filtered out (score=' + score + 'minscore=' + minScore + ')');
+            console.log('filtered out (score=' + score + 'minscore=' + minScore + ')');
             shouldShow = false;
-        }
-        // else { console.log('not filtered out (score=' + score + 'minscore=' + minScore + ')'); }
+        } else {
+	    console.log('not filtered out (score=' + score + 'minscore=' + minScore + ')');
+	}
     }
     return shouldShow;
 }
@@ -744,8 +773,64 @@ export function isWithinPage(position, pagination) {
     return false;
 }
 
+export function rank1(fuse, word) {
+    const results = fuse.search(word.trim());
+    return results;
+}
+
+export function rankN(fuse, keywords) {
+    const words = keywords.split(' ');
+    if (words.length === 2) {
+	const query_exact = {
+	    $and: [
+		{'speaker.brand': "'"+words[0]},
+		{'speaker.model': "'"+words[1]}
+	    ]
+	};
+	const results_exact = fuse.search(query_exact);
+	if (results_exact.length > 0 ) {
+	    return results_exact;
+	}
+	const query = {
+	    $and: [
+		{'speaker.brand': words[0]},
+		{'speaker.model': words[1]}
+	    ]
+	};
+	const results = fuse.search(query);
+	if (results.length > 0 ) {
+	    return results;
+	}
+    }
+    return fuse.search(keywords);
+}
+
+
+export function rank(fuse, keywords) {
+    let results = null;
+    let minScore = 100;
+    let resultsFullText = null;
+    if (keywords !== '') {
+	const words = keywords.trim().split(' ');
+	if (words.length === 1 ) {
+	    results = rank1(fuse, words[0]);
+	} else {
+	    results = rankN(fuse, keywords);
+	}
+	if (results.length > 0) {
+            for (const spk in results) {
+		if (results[spk].score < minScore) {
+                    minScore = results[spk].score;
+		}
+            }
+	}
+	resultsFullText = new Map(results.map((obj) => [obj.item.key, obj]));
+    }
+    return [minScore, resultsFullText];
+}
+
 export function search(data, params) {
-    const fuse = new Fuse(
+    const fuse_exact = new Fuse(
         // Fuse take a list not a map
         [...data].map((item) => ({ key: item[0], speaker: item[1] })),
         {
@@ -754,11 +839,10 @@ export function search(data, params) {
             findAllMatches: true,
             minMatchCharLength: 2,
             keys: ['speaker.brand', 'speaker.model', 'speaker.type', 'speaker.shape'],
-            treshhold: 0.2,
-            distance: 10,
             includeScore: true,
-            useExtendedSearch: false,
-            shouldSort: true,
+	    shouldSort: false,
+	    treshhold: 0,
+	    useExtendedSearch: true
         }
     );
 
@@ -766,21 +850,7 @@ export function search(data, params) {
     const filters = params[1];
     const keywords = params[2];
     const pagination = params[3];
-    let resultsFullText = null;
-    let minScore = 1;
-    if (keywords !== '') {
-        const fuse_results = fuse.search(keywords.trim());
-        // console.debug('searching with keywords: '+keywords+' #matches: '+fuse_results.length);
-        if (fuse_results.length > 0) {
-            // minScore
-            for (const spk in fuse_results) {
-                if (fuse_results[spk].score < minScore) {
-                    minScore = fuse_results[spk].score;
-                }
-            }
-        }
-        resultsFullText = new Map(fuse_results.map((obj) => [obj.item.key, obj]));
-    }
+    const [minScore, resultsFullText] = rank(fuse_exact, keywords);
 
     const resultsFiltered = [];
     let currentDisplay = 0;
@@ -791,7 +861,7 @@ export function search(data, params) {
         const testFiltered = isFiltered(speaker, filters);
         const testKeywords = isSearch(key, resultsFullText, minScore, keywords);
         const withinPage = isWithinPage(maxDisplay, pagination);
-        // console.debug('currentDisplay='+currentDisplay+' maxDisplay='+maxDisplay+' '+speaker.brand+' '+speaker.model+' filter='+testFiltered+' kwd='+testKeywords+' page='+withinPage);
+        console.debug('currentDisplay='+currentDisplay+' maxDisplay='+maxDisplay+' '+speaker.brand+' '+speaker.model+' filter='+testFiltered+' kwd='+testKeywords+' page='+withinPage);
         if (testFiltered && testKeywords && withinPage && currentDisplay < targetDisplay) {
             resultsFiltered.push(key);
             maxDisplay += 1;
@@ -799,7 +869,7 @@ export function search(data, params) {
             maxDisplay += 1;
         }
     });
-    // console.log('search for: >' + keywords + '< found #' + maxDisplay);
+    console.log('search for: >' + keywords + '< found #' + maxDisplay);
     return [maxDisplay, resultsFiltered];
 }
 
@@ -834,15 +904,15 @@ export function setupEventListener(metadata, speaker2html, mainDiv) {
                 reverseValue = 'true';
             }
             url.searchParams.set(urlParameter, reverseValue);
-            // console.log('Info: '+urlParameter + ' changed to ' + element.value);
+            console.log('Info: '+urlParameter + ' changed to ' + element.value);
         } else {
             if (element.value !== '') {
                 url.searchParams.set(urlParameter, element.value);
                 url.searchParams.set('page', 1);
-                // console.log('Info: '+urlParameter + ' changed to ' + element.value);
+                console.log('Info: '+urlParameter + ' changed to ' + element.value);
             } else {
                 url.searchParams.delete(urlParameter);
-                // console.log('Info: '+urlParameter + ' removed');
+                console.log('Info: '+urlParameter + ' removed');
                 url.searchParams.set('page', 1);
             }
         }
