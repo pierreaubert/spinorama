@@ -23,6 +23,13 @@ speakers_info_k: SpeakerDatabase = {
                 },
                 "review_published": "20210415",
             },
+            "vendor": {
+                "origin": "Vendors-Kali",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20240909",
+                "quality": "medium",
+            },
         },
     },
     "Kali IN-8": {
@@ -49,6 +56,13 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8-studio-monitor-review.10897/",
                 "review_published": "20200114",
+            },
+            "vendor": {
+                "origin": "Vendors-Kali",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20240909",
+                "quality": "medium",
             },
         },
     },
