@@ -173,7 +173,7 @@ speakers_info_j: SpeakerDatabase = {
         "brand": "JBL",
         "model": "3733",
         "type": "passive",
-        "price": "",
+        "price": "10000",
         "amount": "pair",
         "shape": "cinema",
         "default_measurement": "vendor",
