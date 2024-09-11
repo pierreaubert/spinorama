@@ -24,11 +24,12 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { getID } from './misc.js';
 import { isWithinPage, urlParameters2Sort, search } from './search.js';
 
+const TEST_URL='https://dev.spinorama.org/index.html'
 const METADATA_TEST_FILE = './tests/datas/metadata-20240516.json';
 
 describe('urlParameters2Sort', () => {
     it('test search', () => {
-        const url = new URL('https://spinorama.org/index.html?count=20&search=it');
+        const url = new URL(TEST_URL + '?count=20&search=it');
         const params = urlParameters2Sort(url);
         const keywords = params[2];
         expect(params.length).toBe(4);
@@ -37,7 +38,7 @@ describe('urlParameters2Sort', () => {
     });
 
     it('test sort', () => {
-        const url = new URL('https://spinorama.org/index.html?sort=score');
+        const url = new URL(TEST_URL + '?sort=score');
         const params = urlParameters2Sort(url);
         const sorter = params[0];
         expect(sorter.by).toBe('score');
@@ -45,7 +46,7 @@ describe('urlParameters2Sort', () => {
     });
 
     it('test sort with reverse', () => {
-        const url = new URL('https://spinorama.org/index.html?sort=score&reverse=true');
+        const url = new URL(TEST_URL + '?sort=score&reverse=true');
         const params = urlParameters2Sort(url);
         const sorter = params[0];
         expect(sorter.by).toBe('score');
@@ -71,7 +72,7 @@ describe('test full text search and filtering', () => {
     });
 
     it('search basic genelec', () => {
-        const url = new URL('https://spinorama.org/index.html?search=genelec&sort=score&page=1&count=15');
+        const url = new URL(TEST_URL + '?search=genelec&sort=score&page=1&count=15');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
@@ -84,7 +85,7 @@ describe('test full text search and filtering', () => {
     });
 
     it('search by brand revel', () => {
-        const url = new URL('https://spinorama.org/index.html?brand=Revel&count=14');
+        const url = new URL(TEST_URL + '?brand=Revel&count=14');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
@@ -95,7 +96,7 @@ describe('test full text search and filtering', () => {
     });
 
     it('search by brand revel and active', () => {
-        const url = new URL('https://spinorama.org/index.html?brand=Revel&count=14&power=active');
+        const url = new URL(TEST_URL + '?brand=Revel&count=14&power=active');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
@@ -106,7 +107,7 @@ describe('test full text search and filtering', () => {
     });
 
     it('search by brand revel and bookshelves', () => {
-        const url = new URL('https://spinorama.org/index.html?brand=Revel&count=14&power=passive&shape=bookshelves');
+        const url = new URL(TEST_URL + '?brand=Revel&count=14&power=passive&shape=bookshelves');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
@@ -118,7 +119,7 @@ describe('test full text search and filtering', () => {
     });
 
     it('search by brand revel and bookshelves sorted by price', () => {
-        const url = new URL('https://spinorama.org/index.html?brand=Revel&count=14&power=passive&shape=bookshelves&sort=price');
+        const url = new URL(TEST_URL + '?brand=Revel&count=14&power=passive&shape=bookshelves&sort=price');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
@@ -131,7 +132,7 @@ describe('test full text search and filtering', () => {
 
     it('search by brand revel and bookshelves sorted by price, cheaper first', () => {
         const url = new URL(
-            'https://spinorama.org/index.html?brand=Revel&count=14&power=passive&shape=bookshelves&sort=price&reverse=true'
+            TEST_URL + '?brand=Revel&count=14&power=passive&shape=bookshelves&sort=price&reverse=true'
         );
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
@@ -144,7 +145,7 @@ describe('test full text search and filtering', () => {
     });
 
     it('search by brand HK Audio and filter by weight', () => {
-        const url = new URL('https://spinorama.org/index.html?brand=HK%20Audio&weightMin=20');
+        const url = new URL(TEST_URL + '?brand=HK%20Audio&weightMin=20');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
@@ -155,7 +156,7 @@ describe('test full text search and filtering', () => {
     });
 
     it('search by brand HK Audio and filter by weight', () => {
-        const url = new URL('https://spinorama.org/index.html?brand=HK%20Audio&weightMin=20');
+        const url = new URL(TEST_URL + '?brand=HK%20Audio&weightMin=20');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
@@ -166,7 +167,7 @@ describe('test full text search and filtering', () => {
     });
 
     it('search by brand HK Audio and filter by weight', () => {
-        const url = new URL('https://spinorama.org/index.html?brand=HK%20Audio&weightMin=20&weightMax=22');
+        const url = new URL(TEST_URL + '?brand=HK%20Audio&weightMin=20&weightMax=22');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
@@ -178,7 +179,7 @@ describe('test full text search and filtering', () => {
     });
 
     it('search heavy weight', () => {
-        const url = new URL('https://spinorama.org/index.html?weightMin=100');
+        const url = new URL(TEST_URL + '?weightMin=100');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
@@ -190,7 +191,7 @@ describe('test full text search and filtering', () => {
     });
 
     it('search small width', () => {
-        const url = new URL('https://spinorama.org/index.html?widthMax=170&count=100');
+        const url = new URL(TEST_URL + '?widthMax=170&count=100');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
@@ -204,7 +205,7 @@ describe('test full text search and filtering', () => {
     it('search by price alone with Min and Max', () => {
         const priceMin = 100;
         const priceMax = 300;
-        const href = 'https://spinorama.org/index.html?priceMin=' + priceMin + '&priceMax=' + priceMax + '&count=1000';
+        const href = TEST_URL + '?priceMin=' + priceMin + '&priceMax=' + priceMax + '&count=1000';
         const url = new URL(href);
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
@@ -224,7 +225,7 @@ describe('test full text search and filtering', () => {
 
     it('search by price alone with Min and no Max', () => {
         const priceMin = 100;
-        const href = 'https://spinorama.org/index.html?priceMin=' + priceMin + '&count=1000';
+        const href = TEST_URL + '?priceMin=' + priceMin + '&count=1000';
         const url = new URL(href);
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
@@ -243,7 +244,7 @@ describe('test full text search and filtering', () => {
 
     it('search by price alone with no Min and a Max', () => {
         const priceMax = 300;
-        const href = 'https://spinorama.org/index.html?priceMax=' + priceMax + '&count=1000';
+        const href = TEST_URL + '?priceMax=' + priceMax + '&count=1000';
         const url = new URL(href);
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
@@ -262,7 +263,7 @@ describe('test full text search and filtering', () => {
 
     it('search by price : check that we have less results if the range is smaller', () => {
         function getResults(priceMax) {
-            const href = 'https://spinorama.org/index.html?priceMax=' + priceMax + '&count=1000';
+            const href = TEST_URL + '?priceMax=' + priceMax + '&count=1000';
             const url = new URL(href);
             const params = urlParameters2Sort(url);
             return search(metadata, params);
@@ -275,7 +276,7 @@ describe('test full text search and filtering', () => {
 
     it('search by price : check that we have disjoint  results if the ranges do not intersect', () => {
         function getResults(priceMin, priceMax) {
-            const href = 'https://spinorama.org/index.html?priceMin=' + priceMin + '&priceMax=' + priceMax + '&count=1000';
+            const href = TEST_URL + '?priceMin=' + priceMin + '&priceMax=' + priceMax + '&count=1000';
             const url = new URL(href);
             const params = urlParameters2Sort(url);
             return search(metadata, params);
@@ -288,7 +289,7 @@ describe('test full text search and filtering', () => {
     });
 
     it('sort by price', () => {
-        const href = 'https://spinorama.org/index.html?sort=price';
+        const href = TEST_URL + '?sort=price';
         const url = new URL(href);
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
@@ -298,14 +299,14 @@ describe('test full text search and filtering', () => {
 
     it('search no constraint page 1 & 2', () => {
         // page 1
-        const url1 = new URL('https://spinorama.org/index.html?page=1&count=20');
+        const url1 = new URL(TEST_URL + '?page=1&count=20');
         const params1 = urlParameters2Sort(url1);
         const [maxResults1, results1] = search(metadata, params1);
         expect(results1).toBeDefined();
         expect(results1).toBeTypeOf('object');
         expect(maxResults1).toBeGreaterThanOrEqual(917);
         // page 2
-        const url2 = new URL('https://spinorama.org/index.html?page=2&count=20');
+        const url2 = new URL(TEST_URL + '?page=2&count=20');
         const params2 = urlParameters2Sort(url2);
         const [maxResults2, results2] = search(metadata, params2);
         expect(results2).toBeDefined();
@@ -398,7 +399,7 @@ describe('non regression for bug discussions/279', () => {
     });
 
     it('search by brand KEF and check that we have the correct speakers', () => {
-        const url = new URL('https://spinorama.org/index.html?brand=KEF');
+        const url = new URL(TEST_URL + '?brand=KEF');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
@@ -409,7 +410,7 @@ describe('non regression for bug discussions/279', () => {
     });
 
     it('search by brand KEF and check that we have the correct speakers add page=1', () => {
-        const url = new URL('https://spinorama.org/index.html?brand=KEF&page=1');
+        const url = new URL(TEST_URL + '?brand=KEF&page=1');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
@@ -420,7 +421,7 @@ describe('non regression for bug discussions/279', () => {
     });
 
     it('search by brand KEF and sort by date', () => {
-        const url = new URL('https://spinorama.org/index.html?brand=KEF&sort=date');
+        const url = new URL(TEST_URL + '?brand=KEF&sort=date');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
         expect(maxResults).toBe(kef.size);
@@ -440,10 +441,30 @@ describe('non regression for bug discussions/288', () => {
     });
 
     it('search for JBL 306 and check that the results are sane', () => {
-        const url1 = new URL('https://spinorama.org/index.html?brand=JBL+306');
+        const url1 = new URL(TEST_URL + '?search=JBL+306');
         const params1 = urlParameters2Sort(url1);
         const [maxResults1, results1] = search(metadata, params1);
         expect(results1).toBeDefined();
         expect(results1).toBeTypeOf('object');
+	expect(results1[0]).toBe('JBL-306P-Mark-ii');
+    });
+
+    it('search for JBL 306p and check that the results are sane', () => {
+        const url1 = new URL(TEST_URL + '?search=JBL+306p');
+        const params1 = urlParameters2Sort(url1);
+        const [maxResults1, results1] = search(metadata, params1);
+        expect(results1).toBeDefined();
+        expect(results1).toBeTypeOf('object');
+	expect(results1[0]).toBe('JBL-306P-Mark-ii');
+    });
+
+    it('search for JBL 308p mark and check that the results are sane', () => {
+        const url1 = new URL(TEST_URL + '?search=jbl+308+mark');
+        const params1 = urlParameters2Sort(url1);
+        const [maxResults1, results1] = search(metadata, params1);
+        expect(results1).toBeDefined();
+        expect(results1).toBeTypeOf('object');
+        expect(maxResults1).toBe(3);
+	expect(results1[0]).toBe('JBL-308P-Mark-ii');
     });
 });

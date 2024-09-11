@@ -216,7 +216,7 @@ export function urlParameters2Sort(url) {
 export function sortMetadata2(metadata, sorter, results) {
 
     const sortChildren = ({ container, score, reverse }) => {
-        console.log('sorting2 by '+score)
+        // console.log('sorting2 by '+score)
         const items = [...container.keys()];
         if (reverse) {
             items.sort((a, b) => {
@@ -237,7 +237,7 @@ export function sortMetadata2(metadata, sorter, results) {
                 return sb - sa;
             });
         }
-        console.table(items)
+        // console.table(items)
         return items;
     };
 
@@ -405,7 +405,7 @@ export function sortMetadata2(metadata, sorter, results) {
 	if (!spk || !spk.score) {
 	    return 100;
 	}
-	console.debug('speaker '+key+' score='+spk.score);
+	// console.debug('speaker '+key+' score='+spk.score);
         return spk.score;
     }
 
@@ -526,7 +526,7 @@ export function isFiltered(item, filter) {
                 .replace('-ported', '')
                 .replace('-vertical')
                 .replace('-horizontal');
-            console.log('debug: name2=' + name2 + ' origin=' + origin + ' filter.reviewer=' + filter.reviewer)
+            // console.log('debug: name2=' + name2 + ' origin=' + origin + ' filter.reviewer=' + filter.reviewer)
             if (name2 === filter.reviewer.toLowerCase() || origin === filter.reviewer.toLowerCase()) {
                 found = false;
                 break;
@@ -540,7 +540,7 @@ export function isFiltered(item, filter) {
         let found = true;
         for (const [, measurement] of Object.entries(item.measurements)) {
             const quality = measurement.quality.toLowerCase();
-            console.log('filter.quality=' + filter.quality + ' quality=' + quality)
+            // console.log('filter.quality=' + filter.quality + ' quality=' + quality)
             if (filter.quality !== '' && quality === filter.quality.toLowerCase()) {
                 found = false;
                 break;
@@ -550,17 +550,17 @@ export function isFiltered(item, filter) {
             shouldShow = false;
         }
     }
-    console.log('debug: post quality ' + shouldShow)
+    // console.log('debug: post quality ' + shouldShow)
     if (shouldShow && filter.power !== undefined && filter.power !== '' && item.type !== filter.power) {
         shouldShow = false;
     }
 
-    console.log('debug: post power ' + shouldShow)
+    // console.log('debug: post power ' + shouldShow)
     if (shouldShow && filter.shape !== undefined && filter.shape !== '' && item.shape !== filter.shape) {
         shouldShow = false;
     }
 
-    console.log('debug: post shape ' + shouldShow)
+    // console.log('debug: post shape ' + shouldShow)
     if (
         shouldShow &&
         filter.brand !== undefined &&
@@ -570,7 +570,7 @@ export function isFiltered(item, filter) {
         shouldShow = false;
     }
 
-    console.log('debug: before price ' + shouldShow + 'min=>>>'+filter.priceMin+'<<< max=>>>'+filter.priceMax+'<<<')
+    // console.log('debug: before price ' + shouldShow + 'min=>>>'+filter.priceMin+'<<< max=>>>'+filter.priceMax+'<<<')
     if (
         shouldShow &&
         ((filter.priceMin !== undefined && filter.priceMin !== '') || (filter.priceMax !== undefined && filter.priceMax !== ''))
@@ -599,7 +599,7 @@ export function isFiltered(item, filter) {
             // no known price
             shouldShow = false;
         }
-        console.debug('debug: post price ' + shouldShow);
+        // console.debug('debug: post price ' + shouldShow);
     }
 
     if (
@@ -618,7 +618,7 @@ export function isFiltered(item, filter) {
         const msr = item.measurements[item.default_measurement];
         if ('specifications' in msr && 'weight' in msr.specifications) {
             let weight = parseInt(msr.specifications.weight);
-            console.debug('pre weight ' + weightMin + ', ' + weightMax + ' and item.weight=' + msr.specifications.weight);
+            // console.debug('pre weight ' + weightMin + ', ' + weightMax + ' and item.weight=' + msr.specifications.weight);
             if (isNaN(weight)) {
                 shouldShow = false;
             } else {
@@ -630,7 +630,7 @@ export function isFiltered(item, filter) {
             // no known weight
             shouldShow = false;
         }
-        console.debug('debug: post weight ' + shouldShow);
+        // console.debug('debug: post weight ' + shouldShow);
     }
 
     if (
@@ -649,7 +649,7 @@ export function isFiltered(item, filter) {
         const msr = item.measurements[item.default_measurement];
         if ('specifications' in msr && 'size' in msr.specifications && 'height' in msr.specifications.size) {
             let height = parseInt(msr.specifications.size.height);
-            console.debug('pre height ' + heightMin + ', ' + heightMax + ' and item.height=' + msr.specifications.size.height);
+            // console.debug('pre height ' + heightMin + ', ' + heightMax + ' and item.height=' + msr.specifications.size.height);
             if (isNaN(height)) {
                 shouldShow = false;
             } else {
@@ -661,7 +661,7 @@ export function isFiltered(item, filter) {
             // no known height
             shouldShow = false;
         }
-        console.debug('debug: post height ' + shouldShow);
+        // console.debug('debug: post height ' + shouldShow);
     }
 
     if (
@@ -679,7 +679,7 @@ export function isFiltered(item, filter) {
         const msr = item.measurements[item.default_measurement];
         if ('specifications' in msr && 'size' in msr.specifications && 'depth' in msr.specifications.size) {
             let depth = parseInt(msr.specifications.size.depth);
-            console.debug('pre depth ' + depthMin + ', ' + depthMax + ' and item.depth=' + msr.specifications.size.depth);
+            // console.debug('pre depth ' + depthMin + ', ' + depthMax + ' and item.depth=' + msr.specifications.size.depth);
             if (isNaN(depth)) {
                 shouldShow = false;
             } else {
@@ -691,7 +691,7 @@ export function isFiltered(item, filter) {
             // no known depth
             shouldShow = false;
         }
-        console.debug('debug: post depth ' + shouldShow);
+        // console.debug('debug: post depth ' + shouldShow);
     }
 
     if (
@@ -709,7 +709,7 @@ export function isFiltered(item, filter) {
         const msr = item.measurements[item.default_measurement];
         if ('specifications' in msr && 'size' in msr.specifications && 'width' in msr.specifications.size) {
             let width = parseInt(msr.specifications.size.width);
-            console.debug('pre width ' + widthMin + ', ' + widthMax + ' and item.width=' + msr.specifications.size.width);
+            // console.debug('pre width ' + widthMin + ', ' + widthMax + ' and item.width=' + msr.specifications.size.width);
             if (isNaN(width)) {
                 shouldShow = false;
             } else {
@@ -721,22 +721,22 @@ export function isFiltered(item, filter) {
             // no known width
             shouldShow = false;
         }
-        console.debug('debug: post width ' + shouldShow);
+        // console.debug('debug: post width ' + shouldShow);
     }
 
     return shouldShow;
 }
 
 export function isSearch(key, results, minScore, keywords) {
-    console.log('Starting isSearch with key='+key+' minscore='+minScore+' keywords='+keywords);
+    // console.debug('Starting isSearch with key='+key+' minscore='+minScore+' keywords='+keywords);
     let shouldShow = true;
     if (keywords === '' || results === undefined) {
-        console.log('shouldShow is true');
+        // console.log('shouldShow is true');
         return shouldShow;
     }
 
     if (!results.has(key)) {
-        console.log('shouldShow is false (no key '+key+')');
+        // console.debug('shouldShow is false (no key '+key+')');
         return false;
     }
 
@@ -746,19 +746,19 @@ export function isSearch(key, results, minScore, keywords) {
 
     if (minScore < Math.pow(10, -15)) {
         // const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase());
-        // console.log('isExact ' + isExact + ' model ' + imeta.model.toLowerCase() + ' keywords ' + keywords.toLowerCase());
+        // console.debug('isExact ' + isExact + ' model ' + imeta.model.toLowerCase() + ' keywords ' + keywords.toLowerCase());
         // we have an exact match, only shouldShow other exact matches
         if (score >= Math.pow(10, -15) ) { // || !isExact) {
-            console.log('filtered out (minscore)' + score);
+            // console.debug('filtered out (minscore)' + score);
             shouldShow = false;
         }
     } else {
         // only partial match
         if (score > minScore * 10) {
-            console.log('filtered out (score=' + score + 'minscore=' + minScore + ')');
+            // console.debug('filtered out (score=' + score + 'minscore=' + minScore + ')');
             shouldShow = false;
         } else {
-	    console.log('not filtered out (score=' + score + 'minscore=' + minScore + ')');
+	    // console.debug('not filtered out (score=' + score + 'minscore=' + minScore + ')');
 	}
     }
     return shouldShow;
@@ -773,14 +773,14 @@ export function isWithinPage(position, pagination) {
     return false;
 }
 
-export function rank1(fuse, word) {
+export function rank1(fuse, brands, models, word) {
     const results = fuse.search(word.trim());
     return results;
 }
 
-export function rankN(fuse, keywords) {
-    const words = keywords.split(' ');
-    if (words.length === 2) {
+export function rank2(fuse, brands, models,  words) {
+    // perfect world
+    if (brands.has(words[0]) && models.has(words[1])) {
 	const query_exact = {
 	    $and: [
 		{'speaker.brand': "'"+words[0]},
@@ -791,31 +791,64 @@ export function rankN(fuse, keywords) {
 	if (results_exact.length > 0 ) {
 	    return results_exact;
 	}
-	const query = {
-	    $and: [
-		{'speaker.brand': words[0]},
-		{'speaker.model': words[1]}
-	    ]
-	};
-	const results = fuse.search(query);
-	if (results.length > 0 ) {
-	    return results;
-	}
     }
-    return fuse.search(keywords);
+    // concat 2 words and see if that is a brand or a model
+    const concat1 = words[0] + ' ' + words[1];
+    if (brands.has(concat1) || models.has(concat1)) {
+	return rank1(fuse, brands, models, concat1);
+    }
+    const concat2 = words[0] + words[1];
+    if (brands.has(concat2) || models.has(concat2)) {
+	return rank1(fuse, brands, models, concat2);
+    }
+    // try a normal query
+    const query = {
+	$and: [
+	    {'speaker.brand': words[0]},
+	    {'speaker.model': words[1]}
+	]
+    };
+    const results = fuse.search(query);
+    if (results.length > 0 ) {
+	return results;
+    }
+    return fuse.search(words.join(' '));
+}
+
+export function rankN(fuse, brands, models,  words) {
+    if (words.length === 2 ) {
+	return rank2(fuse, brands, models, words);
+    }
+    const concat01 = words[0]+' '+words[1];
+    if (brands.has(concat01) || models.has(concat01)) {
+	const condensed = [concat01].concat(words.slice(2));
+	return rankN(fuse, brands, models, condensed);
+    }
+    const concat12 = words[1]+' '+words[2];
+    if (brands.has(concat12) || models.has(concat12)) {
+	const condensed = [words[0], concat12].concat(words.slice(3));
+	return rankN(fuse, brands, models, condensed);
+    }
+    if (brands.has(words[0])) {
+	const condensed = [words[0], words.slice(1).join(' ')];
+	return rank2(fuse, brands, models, condensed);
+    }
+    return fuse.search(words.join(' '));
 }
 
 
-export function rank(fuse, keywords) {
+export function rank(fuse, brands, models, keywords) {
     let results = null;
     let minScore = 100;
     let resultsFullText = null;
     if (keywords !== '') {
 	const words = keywords.trim().split(' ');
 	if (words.length === 1 ) {
-	    results = rank1(fuse, words[0]);
+	    results = rank1(fuse, brands, models, words[0]);
+	} else if (words.length === 2 ) {
+	    results = rank2(fuse, brands, models, words);
 	} else {
-	    results = rankN(fuse, keywords);
+	    results = rankN(fuse, brands, models, words);
 	}
 	if (results.length > 0) {
             for (const spk in results) {
@@ -830,6 +863,12 @@ export function rank(fuse, keywords) {
 }
 
 export function search(data, params) {
+    const brands = new Set();
+    const models = new Set();
+    data.forEach( (v, k) => {
+	brands.add(v["brand"].toLowerCase());
+	models.add(v["model"].toLowerCase());
+    });
     const fuse_exact = new Fuse(
         // Fuse take a list not a map
         [...data].map((item) => ({ key: item[0], speaker: item[1] })),
@@ -850,7 +889,7 @@ export function search(data, params) {
     const filters = params[1];
     const keywords = params[2];
     const pagination = params[3];
-    const [minScore, resultsFullText] = rank(fuse_exact, keywords);
+    const [minScore, resultsFullText] = rank(fuse_exact, brands, models, keywords);
 
     const resultsFiltered = [];
     let currentDisplay = 0;
@@ -861,7 +900,7 @@ export function search(data, params) {
         const testFiltered = isFiltered(speaker, filters);
         const testKeywords = isSearch(key, resultsFullText, minScore, keywords);
         const withinPage = isWithinPage(maxDisplay, pagination);
-        console.debug('currentDisplay='+currentDisplay+' maxDisplay='+maxDisplay+' '+speaker.brand+' '+speaker.model+' filter='+testFiltered+' kwd='+testKeywords+' page='+withinPage);
+        // console.debug('currentDisplay='+currentDisplay+' maxDisplay='+maxDisplay+' '+speaker.brand+' '+speaker.model+' filter='+testFiltered+' kwd='+testKeywords+' page='+withinPage);
         if (testFiltered && testKeywords && withinPage && currentDisplay < targetDisplay) {
             resultsFiltered.push(key);
             maxDisplay += 1;
@@ -869,7 +908,7 @@ export function search(data, params) {
             maxDisplay += 1;
         }
     });
-    console.log('search for: >' + keywords + '< found #' + maxDisplay);
+    // console.debug('search for: >' + keywords + '< found #' + maxDisplay);
     return [maxDisplay, resultsFiltered];
 }
 
@@ -904,15 +943,15 @@ export function setupEventListener(metadata, speaker2html, mainDiv) {
                 reverseValue = 'true';
             }
             url.searchParams.set(urlParameter, reverseValue);
-            console.log('Info: '+urlParameter + ' changed to ' + element.value);
+            // console.debug('Info: '+urlParameter + ' changed to ' + element.value);
         } else {
             if (element.value !== '') {
                 url.searchParams.set(urlParameter, element.value);
                 url.searchParams.set('page', 1);
-                console.log('Info: '+urlParameter + ' changed to ' + element.value);
+                // console.debug('Info: '+urlParameter + ' changed to ' + element.value);
             } else {
                 url.searchParams.delete(urlParameter);
-                console.log('Info: '+urlParameter + ' removed');
+                // console.debug('Info: '+urlParameter + ' removed');
                 url.searchParams.set('page', 1);
             }
         }
@@ -939,7 +978,7 @@ export function setupEventListener(metadata, speaker2html, mainDiv) {
         if (element) {
             element.addEventListener(eventType, () => update(element, urlParameter, mainDiv));
         } else {
-            console.log('Error: Element ' + selectorName + ' not found');
+            console.error('Element ' + selectorName + ' not found');
         }
     });
 }
