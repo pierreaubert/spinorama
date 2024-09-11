@@ -189,9 +189,7 @@ def compute_scaled_sm_pir(sm_pir: float) -> float:
 
 
 def reject(filters: dict, speaker_name: str) -> bool:
-    if filters["speaker_name"] is not None and filters["speaker_name"] != speaker_name:
-        return True
-    return False
+    return filters["speaker_name"] is not None and filters["speaker_name"] != speaker_name
 
 
 @ray.remote(num_cpus=1)

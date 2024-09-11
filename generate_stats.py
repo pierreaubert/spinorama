@@ -144,7 +144,7 @@ def speakers2results(speakers):
     return results
 
 
-def print_eq(speakers, txt_format, push_key):
+def print_eq(speakers, txt_format):
     format_string = ""
     results = speakers2results(speakers)
     headers = []
@@ -165,7 +165,7 @@ def print_eq(speakers, txt_format, push_key):
         headers.append(header)
     elif txt_format == "txt":
         header = ""
-        for group, field, short, unit, formatter in structured:
+        for group, _, short, _, formatter in structured:
             header += '"{} {} "'.format(group, short)
             format_string += " {}".format(formatter)
         headers.append(header)
@@ -275,9 +275,12 @@ def main():
     if args["--print"] is not None:
         print_what = args["--print"]
 
-    push_key = None
-    if args["--push"] is not None:
-        push_key = args["--push"]
+    # TODO: wanted to push directly to GCP but you need a project id and so one
+    # I will just generate an Excel file
+    #
+    # push_key = None
+    # if args["--push"] is not None:
+    #     push_key = args["--push"]
 
     # load all metadata from generated json file
     meta_filename, eq_filename = find_metadata_file()
@@ -300,9 +303,9 @@ def main():
 
     if print_what is not None:
         if print_what == "eq_txt":
-            print_eq(jsmeta, "txt", push_key)
+            print_eq(jsmeta, "txt")
         elif print_what == "eq_csv":
-            print_eq(jsmeta, "csv", push_key)
+            print_eq(jsmeta, "csv")
         else:
             logger.error('unkown print type either "eq_txt" or "eq_csv"')
 
