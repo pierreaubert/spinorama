@@ -22,6 +22,14 @@ speakers_info_k: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kali-in-5-studio-monitor-review.22487/",
                 },
                 "review_published": "20210415",
+                "specifications": {
+                    "size": {
+                        "height": 382,
+                        "width": 206,
+                        "depth": 286,
+                    },
+                    "weight": 8.4,
+                },
             },
             "vendor": {
                 "origin": "Vendors-Kali",
@@ -50,6 +58,14 @@ speakers_info_k: SpeakerDatabase = {
                     "yt": "https://www.youtube.com/watch?v=DNpkizYXbVM",
                 },
                 "review_published": "20210615",
+                "specifications": {
+                    "size": {
+                        "height": 441,
+                        "width": 285,
+                        "depth": 254,
+                    },
+                    "weight": 10.4,
+                },
             },
             "asr": {
                 "origin": "ASR",
@@ -84,6 +100,14 @@ speakers_info_k: SpeakerDatabase = {
                     "yt": "https://www.youtube.com/watch?v=DNpkizYXbVM",
                 },
                 "review_published": "20210615",
+                "specifications": {
+                    "size": {
+                        "height": 441,
+                        "width": 285,
+                        "depth": 254,
+                    },
+                    "weight": 10.4,
+                },
             },
         },
     },
@@ -120,6 +144,14 @@ speakers_info_k: SpeakerDatabase = {
                     "yt": "https://www.youtube.com/watch?v=Wj47W9EP4tQ&t=2s",
                 },
                 "review_published": "20211025",
+                "specifications": {
+                    "size": {
+                        "height": 359,
+                        "width": 222,
+                        "depth": 260,
+                    },
+                    "weight": 7.01,
+                },
             },
         },
     },
@@ -156,6 +188,14 @@ speakers_info_k: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_lp-8v2/",
                 },
                 "review_published": "20211114",
+                "specifications": {
+                    "size": {
+                        "height": 419,
+                        "width": 254,
+                        "depth": 286,
+                    },
+                    "weight": 9.0,
+                },
             },
         },
     },
