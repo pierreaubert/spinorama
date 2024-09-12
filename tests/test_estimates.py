@@ -121,7 +121,6 @@ class SpinoramaEstimatesNV4Tests(unittest.TestCase):
 
 
 class SpinoramaEstimatesSensitivityGLLTests(unittest.TestCase):
-
     def test_1(self):
         status, (self.title, self.df_unmelted) = parse_graphs_speaker_gll_hv_txt(
             speaker_path="datas/measurements",

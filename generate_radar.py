@@ -27,6 +27,7 @@ Options:
   --print=<what>    print information. Options are 'eq_txt' or 'eq_csv'
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
+
 import json
 import sys
 import pathlib

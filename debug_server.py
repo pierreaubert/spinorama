@@ -12,6 +12,7 @@ Options:
   --ip=<ip>     ip to bind, default is localhost
   --port=<port> port to listen to, default is 8000
 """
+
 import sys
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from docopt import docopt

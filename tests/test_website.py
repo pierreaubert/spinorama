@@ -44,7 +44,6 @@ SCORES = "/scores.html"
 
 
 class SpinoramaWebsiteTests(unittest.TestCase):
-
     def setUp(self):
         options = webdriver.ChromeOptions()
         options.add_argument("--headless=new")

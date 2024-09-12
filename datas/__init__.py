@@ -3,6 +3,7 @@
 """All speaker measurements metadata are stored in this format
 Due to the size of the file (metadata.py) it has been splitted into several files, one per letter of the alphabet.
 """
+
 from typing import TypedDict, Literal
 
 

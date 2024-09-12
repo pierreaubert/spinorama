@@ -39,6 +39,7 @@ Options:
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
   --dash-port=<dash-port>  Port for the ray dashbboard
 """
+
 import errno
 from hashlib import md5
 from itertools import groupby
@@ -314,20 +315,20 @@ def add_scores(dataframe, parse_max, filters):
                     continue
 
                 if computed_estimates is not None:
-                    metadata.speakers_info[speaker_name]["measurements"][version][
-                        "estimates"
-                    ] = computed_estimates
+                    metadata.speakers_info[speaker_name]["measurements"][version]["estimates"] = (
+                        computed_estimates
+                    )
                 if (
                     sensitivity is not None
                     and metadata.speakers_info[speaker_name].get("type") == "passive"
                 ):
-                    metadata.speakers_info[speaker_name]["measurements"][version][
-                        "sensitivity"
-                    ] = sensitivity
+                    metadata.speakers_info[speaker_name]["measurements"][version]["sensitivity"] = (
+                        sensitivity
+                    )
                 if pref_rating is not None:
-                    metadata.speakers_info[speaker_name]["measurements"][version][
-                        "pref_rating"
-                    ] = pref_rating
+                    metadata.speakers_info[speaker_name]["measurements"][version]["pref_rating"] = (
+                        pref_rating
+                    )
 
         if len(remain_refs) == 0:
             break

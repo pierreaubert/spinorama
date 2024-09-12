@@ -337,11 +337,14 @@ def optim_strategy(
                     continue
 
                 current_optim_config[slope_name] = delta
-                auto_status2, (
-                    auto_score2,
-                    auto_results2,
-                    auto_peq2,
-                    auto_slope_lw2,
+                (
+                    auto_status2,
+                    (
+                        auto_score2,
+                        auto_results2,
+                        auto_peq2,
+                        auto_slope_lw2,
+                    ),
                 ) = optim_eval_strategy(
                     current_speaker_name, df_speaker, current_optim_config, use_score
                 )

@@ -27,6 +27,7 @@ Options:
   --force           regenerate pictures even if they already exist.
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
+
 import json
 import os
 import sys

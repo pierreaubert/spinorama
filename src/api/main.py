@@ -95,7 +95,8 @@ async def get_speaker_list(metadata: dict = Depends(load_metadata)):  # noqa: B0
 
 @app.get(f"/{API_VERSION}/speaker/{{speaker_name}}/metadata", tags=["speaker"])
 async def get_speaker_metadata(
-    speaker_name: str, metadata: dict = Depends(load_metadata)  # noqa: B008
+    speaker_name: str,
+    metadata: dict = Depends(load_metadata),  # noqa: B008
 ):
     content = metadata.get(speaker_name, {"error": "Speaker not found"})
     encoded = jsonable_encoder(content)

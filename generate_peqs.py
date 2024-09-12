@@ -94,6 +94,7 @@ Options:
   --disable-ray            Disable ray
   --generate-images-only   Do not compute EQs but use the current ones to generate the various pictures
 """
+
 import sys
 
 from docopt import docopt

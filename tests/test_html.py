@@ -25,7 +25,6 @@ from generate_html import adapt_imports, get_versions, get_files, CACHE_VERSION
 
 
 class JSImportTests(unittest.TestCase):
-
     def setUp(self):
         self.versions = get_versions("{}/update_3rdparties.sh".format(cpaths.CPATH_SCRIPTS))
         self.jsfiles = get_files(cpaths.CPATH_WEBSITE, "js")

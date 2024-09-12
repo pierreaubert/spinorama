@@ -41,6 +41,7 @@ Options:
   --update-cache      force updating the cache
   --width=<width>     width size in pixel
 """
+
 import glob
 import os
 import random

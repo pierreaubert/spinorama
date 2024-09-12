@@ -1,4 +1,4 @@
 [DEFAULT]
 max_line_length = 120
-checkers = flake8, pylint, pyright
+checkers = flake8, pylint, pyright, ruff
 flake8_config_file = .flake8

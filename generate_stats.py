@@ -28,6 +28,7 @@ Options:
   --push=<KEY>      push data to Google sheet
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
+
 import json
 import sys
 
