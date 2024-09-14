@@ -1185,6 +1185,41 @@ speakers_info_d: SpeakerDatabase = {
             },
         },
     },
+    "dBTechnologies Opera Reevo 210": {
+        "brand": "dBTechnologies",
+        "model": "Opera Reevo 210",
+        "type": "active",
+        "price": "1200",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "misc-pp",
+        "measurements": {
+            "misc-pp": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "reviews": {
+                    "pp": "https://www.production-partner.de/test/opera-reevo-210-von-dbtechnologies-im-test/",
+                },
+                "review_published": "20240914",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 90,
+                    },
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 604,
+                        "width": 300,
+                        "depth": 324,
+                    },
+                    "weight": 17.2,
+                },
+            },
+        },
+    },
     "Definitive Technology BP9020": {
         "brand": "Definitive Technology",
         "model": "BP9020",

@@ -194,6 +194,23 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
+    "LCM Nearfield Monitor 3-D Printed DIY": {
+        "brand": "LCM",
+        "model": "Nearfield Monitor 3-D Printed DIY",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/lcm_nearfield_monitor/",
+                "review_published": "20220623",
+            },
+        },
+    },
     "LD Systems DDQ10": {
         "brand": "LD Systems",
         "model": "DDQ10",
@@ -467,20 +484,31 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "LCM Nearfield Monitor 3-D Printed DIY": {
-        "brand": "LCM",
-        "model": "Nearfield Monitor 3-D Printed DIY",
-        "type": "passive",
-        "price": "",
-        "shape": "bookshelves",
+    "LOGProfessional Alpha": {
+        "brand": "LOGProfessional",
+        "model": "Alpha",
+        "type": "active",
+        "price": "5930",
         "amount": "pair",
-        "default_measurement": "eac",
+        "shape": "bookshelves",
+        "default_measurement": "misc-sr",
         "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/lcm_nearfield_monitor/",
-                "review_published": "20220623",
+            "misc-sr": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "reviews": {
+                    "snr": "https://www.soundandrecording.de/allgemein/log-professional-alpha-2-wege-nahfeldmonitor-im-test/",
+                },
+                "review_published": "20240914",
+                "specifications": {
+                    "size": {
+                        "height": 340,
+                        "width": 220,
+                        "depth": 220,
+                    },
+                    "weight": 7.0,
+                },
             },
         },
     },

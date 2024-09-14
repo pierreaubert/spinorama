@@ -69,6 +69,34 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Adam A7V": {
+        "brand": "Adam",
+        "model": "A7V",
+        "type": "active",
+        "price": "579",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "misc-sr",
+        "measurements": {
+            "misc-sr": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "reviews": {
+                    "snr": "https://www.soundandrecording.de/equipment/studiomonitor-adam-audio-a7v-im-test/",
+                },
+                "review_published": "202400914",
+                "specifications": {
+                    "size": {
+                        "height": 337,
+                        "width": 200,
+                        "depth": 280,
+                    },
+                    "weight": 8.7,
+                },
+            },
+        },
+    },
     "Adam S2V": {
         "brand": "Adam",
         "model": "S2V",
