@@ -158,7 +158,10 @@ function filtersParameters2Sort(url) {
 function keywordsParameters2Sort(url) {
     let keywords = '';
     if (url.searchParams.has('search')) {
-        keywords = url.searchParams.get('search').toString().replace(/[^a-zA-Z0-9&]/g, ' ');
+        keywords = url.searchParams
+            .get('search')
+            .toString()
+            .replace(/[^a-zA-Z0-9&]/g, ' ');
         const selectorName = urlToSelectorName.get('search');
         let selector = document.querySelector(selectorName);
         if (selector) {

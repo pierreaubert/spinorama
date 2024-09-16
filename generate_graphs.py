@@ -110,7 +110,7 @@ def queue_measurement(
     msymmetry: str | None,
     mparameters: dict | None,
     level: int,
-    distance: float
+    distance: float,
 ) -> tuple[int, int, int, int]:
     """Add all measurements in the queue to be processed"""
     id_df = parse_graphs_speaker.remote(
@@ -123,10 +123,16 @@ def queue_measurement(
         msymmetry,
         mparameters,
         level,
-        distance
+        distance,
     )
     id_eq = parse_eq_speaker.remote(
-        f"{data_dir}/datas", speaker, mformat, id_df, mparameters, level, distance,
+        f"{data_dir}/datas",
+        speaker,
+        mformat,
+        id_df,
+        mparameters,
+        level,
+        distance,
     )
     width = int(plot_params_default["width"])
     height = int(plot_params_default["height"])

@@ -238,7 +238,7 @@ def queue_score(speaker_name, speaker_data):
                     result["sensitivity"] = {
                         "computed": sensitivity,
                         "distance": distance,
-                        "sensitivity_1m": dfs.get("sensitivity_1m")
+                        "sensitivity_1m": dfs.get("sensitivity_1m"),
                     }
 
                 # basic math
