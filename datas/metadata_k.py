@@ -741,7 +741,6 @@ speakers_info_k: SpeakerDatabase = {
         },
     },
     "KEF LSX II LT": {
-        "skip": True,
         "brand": "KEF",
         "model": "LSX II LT",
         "type": "active",
@@ -754,10 +753,10 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_lsx_ii_lt/",
                     "yt": "https://youtu.be/Tcz905gti5A?si=GCiNCa1E-Rb-vJHi",
                 },
-                "review_published": "202408xx",
+                "review_published": "20240916",
                 "specifications": {
                     "SPL": {
                         "peak": 102,
@@ -1315,7 +1314,6 @@ speakers_info_k: SpeakerDatabase = {
         },
     },
     "KEF Reference 203": {
-        "skip": True,
         "brand": "KEF",
         "model": "Reference 203",
         "type": "passive",
@@ -1327,9 +1325,9 @@ speakers_info_k: SpeakerDatabase = {
             "eac": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "review_published": "2024xxxx",
+                "review_published": "20240916",
                 "reviews": {
-                    "eac": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_reference_203/",
                     "yt": "https://youtu.be/mVdCcxN2DEY",
                 },
                 "specifications": {

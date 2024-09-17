@@ -1616,9 +1616,26 @@ speakers_info_a: SpeakerDatabase = {
         "price": "2900",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "vendor",
+        "default_measurement": "vendor-v2-20240917",
         "measurements": {
-            "vendor": {
+            "vendor-v2-20240917": {
+                "origin": "Vendors-AsciLab",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
+                },
+                "review_published": "20240720",
+                "specifications": {
+                    "size": {
+                        "height": 400,
+                        "width": 220,
+                        "depth": 260,
+                    },
+                    "weight": 13.0,
+                },
+            },
+            "vendor-v1-20240720": {
                 "origin": "Vendors-AsciLab",
                 "format": "klippel",
                 "quality": "high",

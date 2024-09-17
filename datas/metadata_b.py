@@ -366,7 +366,6 @@ speakers_info_b: SpeakerDatabase = {
         },
     },
     "Buchardt Audio A10": {
-        "skip": True,
         "brand": "Buchardt Audio",
         "model": "A10",
         "type": "active",
@@ -382,7 +381,7 @@ speakers_info_b: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a10/",
                     "yt": "https://youtu.be/VL7WtnxIZc8?si=iKZpDSVfWf68GNxj",
                 },
-                "review_published": "2024xxxx",
+                "review_published": "20241016",
                 "specifications": {
                     "size": {
                         "height": 370,

@@ -1,0 +1,14 @@
+EQ for Adam A7V computed from Misc data
+Preference Score 4.55 with EQ 5.33
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-09-14-16:53:08
+
+Preamp: -2.2 dB
+
+Filter  1: ON PK Fc    47 Hz Gain +2.92 dB Q 2.95
+Filter  2: ON PK Fc    62 Hz Gain -1.39 dB Q 1.99
+Filter  3: ON PK Fc   113 Hz Gain -0.55 dB Q 1.51
+Filter  4: ON PK Fc   600 Hz Gain -2.96 dB Q 3.00
+Filter  5: ON PK Fc   714 Hz Gain +2.99 dB Q 3.00
+Filter  6: ON PK Fc  1083 Hz Gain -3.03 dB Q 0.25
+Filter  7: ON PK Fc  1333 Hz Gain +3.00 dB Q 0.47

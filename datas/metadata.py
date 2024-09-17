@@ -446,7 +446,7 @@ origins_info = {
         "logo-small": "docs/metadata/klipsch.png",
         "url": "https://www.klipsch.com",
     },
-    "Vendors-L Acoustics": {
+    "Vendors-L-Acoustics": {
         "min hz": 20,
         "max hz": 20000,
         "min dB": -40,

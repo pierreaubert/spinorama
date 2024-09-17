@@ -118,7 +118,6 @@ speakers_info_v: SpeakerDatabase = {
         },
     },
     "Vandersteen Treo CT": {
-        "skip": True,
         "brand": "Vandersteen",
         "model": "Treo CT",
         "type": "passive",
@@ -132,9 +131,8 @@ speakers_info_v: SpeakerDatabase = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/vandersteen_treo_ct/",
-                    "yt": "",
                 },
-                "review_published": "202404xx",
+                "review_published": "2024040916",
                 "specifications": {
                     "sensitivity": 85,
                     "impedance": 3,

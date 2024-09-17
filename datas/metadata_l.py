@@ -2,8 +2,8 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_l: SpeakerDatabase = {
-    "L Acoustics 108P": {
-        "brand": "L Acoustics",
+    "L-Acoustics 108P": {
+        "brand": "L-Acoustics",
         "model": "108P",
         "type": "active",
         "price": "7400",
@@ -12,7 +12,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
@@ -20,8 +20,8 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "L Acoustics 112P": {
-        "brand": "L Acoustics",
+    "L-Acoustics 112P": {
+        "brand": "L-Acoustics",
         "model": "112P",
         "type": "active",
         "price": "",
@@ -30,7 +30,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
@@ -38,8 +38,8 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "L Acoustics 5XT": {
-        "brand": "L Acoustics",
+    "L-Acoustics 5XT": {
+        "brand": "L-Acoustics",
         "model": "5XT",
         "type": "passive",
         "price": "",
@@ -48,7 +48,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
@@ -72,8 +72,8 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "L Acoustics X4i": {
-        "brand": "L Acoustics",
+    "L-Acoustics X4i": {
+        "brand": "L-Acoustics",
         "model": "X4i",
         "type": "passive",
         "price": "",
@@ -82,7 +82,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
@@ -106,8 +106,8 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "L Acoustics X6i": {
-        "brand": "L Acoustics",
+    "L-Acoustics X6i": {
+        "brand": "L-Acoustics",
         "model": "X6i",
         "type": "passive",
         "price": "",
@@ -116,7 +116,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
@@ -140,8 +140,8 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "L Acoustics X8": {
-        "brand": "L Acoustics",
+    "L-Acoustics X8": {
+        "brand": "L-Acoustics",
         "model": "X8",
         "type": "passive",
         "price": "",
@@ -150,7 +150,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
@@ -158,8 +158,8 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "L Acoustics X12": {
-        "brand": "L Acoustics",
+    "L-Acoustics X12": {
+        "brand": "L-Acoustics",
         "model": "X12",
         "type": "passive",
         "price": "",
@@ -168,7 +168,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
@@ -176,8 +176,8 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "L Acoustics X15 HiQ": {
-        "brand": "L Acoustics",
+    "L-Acoustics X15 HiQ": {
+        "brand": "L-Acoustics",
         "model": "X15 HiQ",
         "type": "passive",
         "price": "",
@@ -186,7 +186,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",

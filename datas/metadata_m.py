@@ -1216,6 +1216,15 @@ speakers_info_m: SpeakerDatabase = {
                 },
                 "review_published": "20200204",
             },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/micca_rb42/",
+                    "yt": "https://youtu.be/aU_3cidukOE",
+                },
+                "review_published": "20240916",
+            },
         },
     },
     "Miller & Kreisel IW150": {

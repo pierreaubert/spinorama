@@ -429,7 +429,6 @@ speakers_info_n: SpeakerDatabase = {
         },
     },
     "Neumi BS5P-ARC": {
-        "skip": True,
         "brand": "Neumi",
         "model": "BS5P-ARC",
         "type": "active",

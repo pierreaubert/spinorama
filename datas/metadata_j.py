@@ -1483,7 +1483,6 @@ speakers_info_j: SpeakerDatabase = {
         },
     },
     "JBL Stage 250B": {
-        "skip": True,
         "brand": "JBL",
         "model": "Stage 250B",
         "type": "passive",
@@ -1499,7 +1498,7 @@ speakers_info_j: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_250b/",
                     "yt": "https://youtu.be/YcAgRBndf3c",
                 },
-                "review_published": "202404xx",
+                "review_published": "2024040916",
                 "specifications": {
                     "sensitivity": 86,
                     "impedance": 6,
@@ -1514,7 +1513,6 @@ speakers_info_j: SpeakerDatabase = {
         },
     },
     "JBL Stage 280F": {
-        "skip": True,
         "brand": "JBL",
         "model": "Stage 280F",
         "type": "passive",
@@ -1530,7 +1528,7 @@ speakers_info_j: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_280f/",
                     "yt": "https://youtu.be/YcAgRBndf3c",
                 },
-                "review_published": "202404xx",
+                "review_published": "20240916",
                 "specifications": {
                     "sensitivity": 91,
                     "impedance": 6,
