@@ -19,6 +19,7 @@
 import bisect
 import math
 import numpy as np
+import numpy.typing as npt
 import pandas as pd
 from scipy import stats
 
@@ -427,20 +428,18 @@ def compute_statistics(
     max_freq: float,
     hist_min_freq: float,
     hist_max_freq: float,
-) -> tuple[float, float]:
+) -> tuple[float, tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]], float]:
     restricted_minmax = data_frame.loc[(data_frame.Freq > min_freq) & (data_frame.Freq < max_freq)]
     restricted_spl = restricted_minmax[measurement]
     # regression line
-    slope, intercept, _, _, _ = stats.linregress(
-        x=np.log10(restricted_minmax["Freq"]), y=restricted_spl
-    )
+    result = stats.linregress(x=np.log10(restricted_minmax["Freq"]), y=restricted_spl)
     #
     hist_minmax = data_frame.loc[
         (data_frame.Freq > hist_min_freq) & (data_frame.Freq < hist_max_freq)
     ]
     hist_spl = hist_minmax[measurement]
     hist_dist = [
-        abs(db - (slope * math.log10(f) + intercept))
+        abs(db - (result.slope * math.log10(f) + result.intercept))
         for f, db in zip(hist_minmax.Freq, hist_spl, strict=False)
     ]
     # for i, (f, db) in enumerate(zip(hist_minmax.Freq, hist_spl)):
@@ -450,5 +449,5 @@ def compute_statistics(
     hist = np.histogram(hist_dist, bins=[0, 0.5, 1, 1.5, 2, 2.5, 3, 5], density=False)
     # 3 = math.log10(20000)-math.log10(20)
     # 11 octaves between 20Hz and 20kHz
-    db_per_octave = slope * 3 / 11
+    db_per_octave = result.slope * 3.0 / 11.0
     return db_per_octave, hist, np.max(hist_dist)

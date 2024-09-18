@@ -128,9 +128,6 @@ def custom_ray_init(args):
 
     level = args2level(args)
 
-    if ray.is_initialized:
-        ray.shutdown()
-
     ray_address = None
     if "--ray-cluster" in args and args["--ray-cluster"] is not None:
         check_address = args["--ray-cluster"]
@@ -168,6 +165,8 @@ def custom_ray_init(args):
         )
     else:
         print("Calling init with dashboard at {}:{}".format(dashboard_ip, dashboard_port))
+        if ray.is_initialized:
+            ray.shutdown()
         ray.init(
             include_dashboard=True,
             dashboard_host=dashboard_ip,

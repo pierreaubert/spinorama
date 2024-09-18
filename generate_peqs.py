@@ -17,82 +17,102 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-usage: generate_peqs.py [--help] [--version] [--log-level=<level>] \
- [--force] [--smoke-test] [-v|--verbose] [--origin=<origin>] \
- [--speaker=<speaker>] [--mversion=<mversion>] [--mformat=<mformat>]\
- [--max-peq=<count>] [--min-Q=<minQ>] [--max-Q=<maxQ>] \
- [--min-dB=<mindB>] [--max-dB=<maxdB>] \
- [--min-freq=<minFreq>] [--max-freq=<maxFreq>] \
- [--max-iter=<maxiter>] [--use-all-biquad] \
- [--use-only-pk] [--curve-peak-only] \
- [--target-min-freq=<tminf>] [--target-max-freq=<tmaxf>] \
- [--slope-on-axis=<s_on>] \
- [--slope-on=<s_on>] \
- [--slope-listening-window=<s_lw>] \
- [--slope-lw=<s_lw>] \
+usage: generate_peqs.py \
+ [--curve-peak-only] \
+ [--curves=<curve_name>] \
+ [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
+ [--disable-ray] \
+ [--fitness=<function>] \
+ [--force] \
+ [--generate-images-only] \
+ [--graphic-eq-list] \
+ [--graphic-eq=<eq_name>] \
+ [--help] \
+ [--log-level=<level>] \
+ [--max-Q=<maxQ>] \
+ [--max-dB=<maxdB>] \
+ [--max-freq=<maxFreq>] \
+ [--max-iter=<maxiter>] \
+ [--max-peq=<count>] \
+ [--mformat=<mformat>] \
+ [--min-Q=<minQ>] \
+ [--min-dB=<mindB>] \
+ [--min-freq=<minFreq>] \
+ [--mversion=<mversion>] \
+ [--optimisation=<options>] \
+ [--origin=<origin>] \
+ [--output-dir=<path>] \
+ [--ray-local] \
+ [--ray-cluster=<host_ip>] \
  [--slope-early-reflections=<s_er>] \
  [--slope-er=<s_lw>] \
+ [--slope-estimated-inroom=<s_pir>] \
+ [--slope-listening-window=<s_lw>] \
+ [--slope-lw=<s_lw>] \
+ [--slope-on-axis=<s_on>] \
+ [--slope-on=<s_on>] \
+ [--slope-pir=<s_pir>] \
  [--slope-sound-power=<s_sp>] \
  [--slope-sp=<s_sp>] \
- [--slope-estimated-inroom=<s_pir>] \
- [--slope-pir=<s_pir>] \
- [--dash-ip=<ip>] [--dash-port=<port>] [--ray-local] \
+ [--smoke-test] \
  [--smooth-measurements=<window_size>] \
  [--smooth-order=<order>] \
- [--curves=<curve_name>] \
- [--fitness=<function>] \
- [--optimisation=<options>] \
- [--graphic_eq=<eq_name>] \
- [--graphic_eq_list] \
- [--disable-ray] \
- [--generate-images-only]
+ [--speaker=<speaker>] \
+ [--target-max-freq=<tmaxf>] \
+ [--target-min-freq=<tminf>] \
+ [--use-all-biquad] \
+ [--use-only-pk] \
+ [--version] \
+ [-v|--verbose]
 
 Options:
-  --help                   Display usage()
-  --version                Script version number
-  --force                  Force generation of eq even if already computed
-  --verbose                Print some informations
-  --smoke-test             Test the optimiser with a small amount of variables
-  --log-level=<level>      Default is WARNING, options are DEBUG or INFO or ERROR.
-  --origin=<origin>        Restrict to a specific origin
-  --speaker=<speaker>      Restrict to a specific speaker, if not specified it will optimise all speakers
-  --mversion=<mversion>    Restrict to a specific mversion (for a given origin you can have multiple measurements)
-  --mformat=<mformat>      Restrict to a specifig format (klippel, spl_hv_txt, gll_hv_txt, webplotdigitizer, ...)
-  --max-peq=<count>        Maximum allowed number of Biquad
-  --min-Q=<minQ>           Minumum value for Q
-  --max-Q=<maxQ>           Maximum value for Q
-  --min-dB=<mindB>         Minumum value for dBGain
-  --max-dB=<maxdB>         Maximum value for dBGain
-  --min-freq=<minFreq>     Optimisation will happen above min freq
-  --max-freq=<maxFreq>     Optimisation will happen below max freq
-  --max-iter=<maxiter>     Maximum number of iterations
-  --use-all-biquad         PEQ can be any kind of biquad (by default it uses only PK, PeaK)
-  --use-only-pk            force PEQ to be only PK / Peak
   --curve-peak-only        Optimise both for peaks and valleys on a curve
+  --curves=<curve_name>    Curve name: must be one of "ON", "LW", "PIR", "ER" or "SP" or a combinaison separated by a ,. Ex: 'PIR,LW' is valid
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
   --dash-port=<dash-port>  Port for the ray dashbboard
+  --disable-ray            Disable ray
+  --fitness=<function>     Fit function: must be one of "Flat", "Score", "LeastSquare", "FlatPir", "Combine".
+  --force                  Force generation of eq even if already computed
+  --generate-images-only   Do not compute EQs but use the current ones to generate the various pictures
+  --graphic-eq-list        List the known graphic eq and exit
+  --graphic-eq=<eq_name>   Result is tailored for graphic_eq "name".
+  --help                   Display usage()
+  --log-level=<level>      Default is WARNING, options are DEBUG or INFO or ERROR.
+  --max-Q=<maxQ>           Maximum value for Q
+  --max-dB=<maxdB>         Maximum value for dBGain
+  --max-freq=<maxFreq>     Optimisation will happen below max freq
+  --max-iter=<maxiter>     Maximum number of iterations
+  --max-peq=<count>        Maximum allowed number of Biquad
+  --mformat=<mformat>      Restrict to a specifig format (klippel, spl_hv_txt, gll_hv_txt, webplotdigitizer, ...)
+  --min-Q=<minQ>           Minumum value for Q
+  --min-dB=<mindB>         Minumum value for dBGain
+  --min-freq=<minFreq>     Optimisation will happen above min freq
+  --mversion=<mversion>    Restrict to a specific mversion (for a given origin you can have multiple measurements)
+  --optimisation=<options> Choose an algorithm: options are greedy or global. Greedy is fast, Global is much slower but could find better solutions.
+  --origin=<origin>        Restrict to a specific origin
+  --output-dir=<path>      If specified all the pictures and eq txt files will be generated there
+  --ray-cluster=<ip_port>  Set to ip:port if you want to join an existing cluster
   --ray-local              If present, ray will run locally, it is usefull for debugging
-  --target-min-freq=<tminf> targets will be flat up to min freq
-  --target-max-freq=<tmaxf> targets will not be important after max freq
-  --slope-on-axis=<s_on>   Slope of the ideal target for On Axis, default is 0, as in flat anechoic
-  --slope-on=<s_lw>        Same as above (shortcut)
+  --slope-early-reflections=<s_er> Slope of early reflections, default is -5dB
+  --slope-estimated-inroom=<s_pir> Slope of estimated in-room response, default is -8dB
   --slope-listening-window=<s_lw> Slope of listening window, default is -0.5dB
   --slope-lw=<s_lw>        Same as above (shortcut)
-  --slope-early-reflections=<s_er> Slope of early reflections, default is -5dB
-  --slopw-er=<s_er>        Same as above (shortcut)
+  --slope-on-axis=<s_on>   Slope of the ideal target for On Axis, default is 0, as in flat anechoic
+  --slope-on=<s_lw>        Same as above (shortcut)
+  --slope-pir=<s_pir>      Same as above (shortcut)
   --slope-sound-power=<s_sp> Slope of sound power, default is -8dB
   --slope-sp=<s_sp>        Same as above (shortcut)
-  --slope-estimated-inroom=<s_pir> Slope of estimated in-room response, default is -8dB
-  --slope-pir=<s_pir>      Same as above (shortcut)
+  --slopw-er=<s_er>        Same as above (shortcut)
+  --smoke-test             Test the optimiser with a small amount of variables
   --smooth-measurements=<window_size> If present the measurements will be smoothed before optimisation, window_size is the size of the window use for smoothing
   --smooth-order=<order>   Order of the interpolation, 3 by default for Savitzky-Golay filter.
-  --curves=<curve_name>    Curve name: must be one of "ON", "LW", "PIR", "ER" or "SP" or a combinaison separated by a ,. Ex: 'PIR,LW' is valid
-  --fitness=<function>     Fit function: must be one of "Flat", "Score", "LeastSquare", "FlatPir", "Combine".
-  --graphic_eq=<eq_name>   Result is tailored for graphic_eq "name".
-  --graphic_eq_list        List the known graphic eq and exit
-  --optimisation=<options> Choose an algorithm: options are greedy or global. Greedy is fast, Global is much slower but could find better solutions.
-  --disable-ray            Disable ray
-  --generate-images-only   Do not compute EQs but use the current ones to generate the various pictures
+  --speaker=<speaker>      Restrict to a specific speaker, if not specified it will optimise all speakers
+  --target-max-freq=<tmaxf> targets will not be important after max freq
+  --target-min-freq=<tminf> targets will be flat up to min freq
+  --use-all-biquad         PEQ can be any kind of biquad (by default it uses only PK, PeaK)
+  --use-only-pk            force PEQ to be only PK / Peak
+  --verbose                Print some informations
+  --version                Script version number
 """
 
 import sys
@@ -227,7 +247,7 @@ def compute_peqs(ray_ids):
     while 1:
         ids = [current_id for current_id in ray_ids.values() if current_id not in done_ids]
         num_returns = min(len(ids), 16)
-        ready_ids, remaining_ids = ray.wait(ids, num_returns=num_returns)
+        ready_ids, remaining_ids = ray.wait(ray_waitables=ids, num_returns=num_returns)
 
         for current_id in ready_ids:
             get_results = ray.get(current_id)
@@ -529,8 +549,8 @@ def main():
             current_optim_config["loss"] = param_fitness_name_valid[current_fitness_name]
 
     # do we build EQ for a HW graphic one?
-    if args["--graphic_eq"] is not None:
-        grapheq_name = args["--graphic_eq"]
+    if args["--graphic-eq"] is not None:
+        grapheq_name = args["--graphic-eq"]
         if grapheq_name not in grapheq_info:
             print(
                 "ERROR: EQ name {} is not known. Please select on in {}".format(
@@ -615,6 +635,7 @@ def main():
     current_optim_config["version"] = VERSION
     current_optim_config["level"] = level
     current_optim_config["generate_images_only"] = generate_images_only
+    current_optim_config["output_dir"] = output_dir
 
     if disable_ray:
         compute_peqs_sequential(df_all_speakers, current_optim_config, speaker_name)
@@ -640,8 +661,9 @@ if __name__ == "__main__":
     smoke_test = args["--smoke-test"]
     disable_ray = args["--disable-ray"]
     generate_images_only = args["--generate-images-only"]
+    output_dir = args["--output-dir"]
 
-    if args["--graphic_eq_list"]:
+    if args["--graphic-eq-list"]:
         print("INFO: The list of know graphical EQ is: {}".format(list(grapheq_info.keys())))
         sys.exit(0)
 

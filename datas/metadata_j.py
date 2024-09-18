@@ -280,7 +280,6 @@ speakers_info_j: SpeakerDatabase = {
         },
     },
     "JBL CFR2": {
-        "skip": True,
         "brand": "JBL",
         "model": "CFR2",
         "type": "passive",
@@ -341,6 +340,7 @@ speakers_info_j: SpeakerDatabase = {
         },
     },
     "JBL Control HST V2": {
+        "skip": True,  # quality is very low
         "brand": "JBL",
         "model": "Control HST V2",
         "type": "passive",

@@ -219,7 +219,10 @@ def main(args):
         eqmeta = json.load(f)
         for k in jsmeta:
             if k in eqmeta:
-                jsmeta[k]["eqs"] = eqmeta[k]["eqs"]
+                if "eqs" in eqmeta[k]:
+                    jsmeta[k]["eqs"] = eqmeta[k]["eqs"]
+                else:
+                    logger.info('"eqs" is not in eqmeta for %s', k)
 
     logger.warning("Data %s loaded (%d speakers)!", json_filename, len(jsmeta))
 

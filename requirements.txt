@@ -7,9 +7,9 @@ kaleido
 mako
 more_itertools
 nptyping
-numpy>1.19.5
+numpy>1.26.4
 pandas>=2.1.0
 plotly
-ray[default]
-scipy>=1.9.0
+ray[default]>=1.35
+scipy>=1.14.1
 wand
