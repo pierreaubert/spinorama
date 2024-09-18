@@ -36,6 +36,34 @@ speakers_info_b: SpeakerDatabase = {
             },
         },
     },
+    "Bang & Olufsen Beosound Balance": {
+        "brand": "Bang & Olufsen",
+        "model": "Beosound Balance",
+        "type": "active",
+        "shape": "omnidirectional",
+        "price": "3300",
+        "amount": "each",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bang-olufsen-beosound-balance-review.56971/",
+                "review_published": "20240913",
+                "specifications": {
+                    "SPL": {
+                        "peak": 104,
+                    },
+                    "size": {
+                        "height": 380,
+                        "width": 200,
+                        "depth": 200,
+                    },
+                    "weight": 7.2,
+                },
+            },
+        },
+    },
     "BiAmp Community IC6-1062": {
         "brand": "BiAmp",
         "model": "Community IC6-1062",
@@ -338,7 +366,6 @@ speakers_info_b: SpeakerDatabase = {
         },
     },
     "Buchardt Audio A10": {
-        "skip": True,
         "brand": "Buchardt Audio",
         "model": "A10",
         "type": "active",
@@ -354,7 +381,7 @@ speakers_info_b: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a10/",
                     "yt": "https://youtu.be/VL7WtnxIZc8?si=iKZpDSVfWf68GNxj",
                 },
-                "review_published": "2024xxxx",
+                "review_published": "20241016",
                 "specifications": {
                     "size": {
                         "height": 370,

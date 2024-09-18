@@ -124,6 +124,17 @@ else
     echo "OK after generate statistics!"
 fi
 
+# generate status
+today=$(date "+%Y-%m-%d")
+command=$(python3 ./generate_stats.py --print=eq_csv --log-level=ERROR 2>&1 > spinorama.org-${today}.csv)
+status=$?
+if [ $status -ne 0 ]; then
+    echo "KO after generate statistics in csv!"
+    exit 1;
+else
+    echo "OK after generate statistics in csv!"
+fi
+
 # generate list of svgs
 command=$(python3 ./scripts/svg2symbols.py > build/website/symbols.html)
 status=$?

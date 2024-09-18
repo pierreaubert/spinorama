@@ -148,7 +148,13 @@ function fetchDataAndMap(url, encoding, state) {
             console.log('ERROR fetchData for ' + url + ' yield a json error: ' + error);
             return null;
         })
-        .then((data) => new Map(Object.values(data).map((speaker) => [getID(speaker.brand, speaker.model), speaker])));
+        .then((data) => {
+            if (!data) {
+                console.log('ERROR fetchData for ' + url + ' yield empty data!');
+                return null;
+            }
+            return new Map(Object.values(data).map((speaker) => [getID(speaker.brand, speaker.model), speaker]));
+        });
     return spec;
 }
 
@@ -166,8 +172,10 @@ export function getMetadataTail(metadataHead) {
     return Promise.all(promisedChunks).then((chunks) => {
         const merged = new Map(metadataHead);
         for (const chunk of chunks) {
-            for (const [key, value] of chunk) {
-                merged.set(key, value);
+            if (chunk) {
+                for (const [key, value] of chunk) {
+                    merged.set(key, value);
+                }
             }
         }
         return merged;

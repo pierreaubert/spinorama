@@ -1,33 +1,66 @@
 #!/bin/bash
 
-./generate_graphs.py --speaker="$SPEAKER" --update-cache
+if test "$(hostname)" = "horn"; then
+    export NUMEXPR_MAX_THREADS=96
+fi
 
-mkdir -p "build/eqs/$SPEAKER"
+IP=192.168.1.36
+PORT=9999
 
-rm -f "datas/eq/$SPEAKER/iir-autoeq.txt"
-rm -f "docs/speakers/$SPEAKER"/*/filters_*
+start_ray()
+{
+    #                                                                        prometheus exporter
+    ray start --node-ip-address=$IP --port $PORT --head --dashboard-host=$IP --metrics-export-port=9101
+}
 
 compute_eq()
 {
-    target_dir="build/eqs/$SPEAKER/$2-$1"
-
+    target_dir="$(pwd)/build/eqs/$3/$2-$1"
     mkdir -p "$target_dir"
-
-    ./generate_peqs.py --verbose --force --optimisation=global --max-iter=15000 --dash-ip=192.168.1.37 --speaker="$SPEAKER" --max-peq=$1 --fitness=$2
-
-    mkdir -p "$target_dir"
-    mv "datas/eq/$SPEAKER/iir-autoeq.txt" "$target_dir"
-    mv "docs/speakers/$SPEAKER"/*/filters_* "$target_dir"
+    ./generate_peqs.py \
+	--verbose \
+	--force \
+	--optimisation=global \
+	--max-iter=15000 \
+	--speaker="$3" \
+	--max-peq=$1 \
+        --fitness=$2 \
+	--ray-cluster=$IP:$PORT \
+	--output-dir="$target_dir" 2>&1 > "$target_dir.log" \
+	&
 }
 
-compute_eq 3 "Flat"
-compute_eq 4 "Flat"
-compute_eq 5 "Flat"
-compute_eq 6 "Flat"
-compute_eq 7 "Flat"
+start_ray
 
-compute_eq 3 "Score"
-compute_eq 4 "Score"
-compute_eq 5 "Score"
-compute_eq 6 "Score"
-compute_eq 7 "Score"
+FAIL=0
+
+for spk in "$@"
+do
+    compute_eq 1 "Flat" "$spk"
+    compute_eq 2 "Flat" "$spk"
+    compute_eq 4 "Flat" "$spk"
+    compute_eq 5 "Flat" "$spk"
+    compute_eq 6 "Flat" "$spk"
+    compute_eq 7 "Flat" "$spk"
+
+    compute_eq 1 "Score" "$spk"
+    compute_eq 2 "Score" "$spk"
+    compute_eq 4 "Score" "$spk"
+    compute_eq 5 "Score" "$spk"
+    compute_eq 6 "Score" "$spk"
+    compute_eq 7 "Score" "$spk"
+done
+
+for job in `jobs -p`
+do
+    wait $job || let "FAIL+=1"
+done
+
+if [ "$FAIL" == "0" ];
+then
+    echo "YAY!"
+else
+    echo "FAIL! ($FAIL)"
+fi
+
+ray stop

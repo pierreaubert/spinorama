@@ -119,7 +119,9 @@ class Biquad:
         self.a1 = -2 * cs
         self.a2 = 1 - alpha
 
-    def highpass(self, a, omega, sn, cs, alpha, beta):
+    def highpass(
+        self, a: float, omega: float, sn: float, cs: float, alpha: float, beta: float
+    ) -> None:
         self.b0 = (1 + cs) / 2
         self.b1 = -(1 + cs)
         self.b2 = (1 + cs) / 2
@@ -127,7 +129,9 @@ class Biquad:
         self.a1 = -2 * cs
         self.a2 = 1 - alpha
 
-    def bandpass(self, a, omega, sn, cs, alpha, beta):
+    def bandpass(
+        self, a: float, omega: float, sn: float, cs: float, alpha: float, beta: float
+    ) -> None:
         self.b0 = alpha
         self.b1 = 0
         self.b2 = -alpha
@@ -135,7 +139,9 @@ class Biquad:
         self.a1 = -2 * cs
         self.a2 = 1 - alpha
 
-    def notch(self, a, omega, sn, cs, alpha, beta):
+    def notch(
+        self, a: float, omega: float, sn: float, cs: float, alpha: float, beta: float
+    ) -> None:
         self.b0 = 1
         self.b1 = -2 * cs
         self.b2 = 1
@@ -143,7 +149,7 @@ class Biquad:
         self.a1 = -2 * cs
         self.a2 = 1 - alpha
 
-    def peak(self, a, omega, sn, cs, alpha, beta):
+    def peak(self, a: float, omega: float, sn: float, cs: float, alpha: float, beta: float) -> None:
         self.b0 = 1 + (alpha * a)
         self.b1 = -2 * cs
         self.b2 = 1 - (alpha * a)
@@ -151,7 +157,9 @@ class Biquad:
         self.a1 = -2 * cs
         self.a2 = 1 - (alpha / a)
 
-    def lowshelf(self, a, omega, sn, cs, alpha, beta):
+    def lowshelf(
+        self, a: float, omega: float, sn: float, cs: float, alpha: float, beta: float
+    ) -> None:
         self.b0 = a * ((a + 1) - (a - 1) * cs + beta * sn)
         self.b1 = 2 * a * ((a - 1) - (a + 1) * cs)
         self.b2 = a * ((a + 1) - (a - 1) * cs - beta * sn)
@@ -159,7 +167,9 @@ class Biquad:
         self.a1 = -2 * ((a - 1) + (a + 1) * cs)
         self.a2 = (a + 1) + (a - 1) * cs - beta * sn
 
-    def highshelf(self, a, omega, sn, cs, alpha, beta):
+    def highshelf(
+        self, a: float, omega: float, sn: float, cs: float, alpha: float, beta: float
+    ) -> None:
         self.b0 = a * ((a + 1) + (a - 1) * cs + beta * sn)
         self.b1 = -2 * a * ((a - 1) + (a + 1) * cs)
         self.b2 = a * ((a + 1) + (a - 1) * cs - beta * sn)
@@ -168,7 +178,7 @@ class Biquad:
         self.a2 = (a + 1) - (a - 1) * cs - beta * sn
 
     # perform filtering function
-    def __call__(self, x):
+    def __call__(self, x: float) -> float:
         y = (
             self.b0 * x
             + self.b1 * self.x1

@@ -173,7 +173,7 @@ speakers_info_j: SpeakerDatabase = {
         "brand": "JBL",
         "model": "3733",
         "type": "passive",
-        "price": "",
+        "price": "10000",
         "amount": "pair",
         "shape": "cinema",
         "default_measurement": "vendor",
@@ -280,7 +280,6 @@ speakers_info_j: SpeakerDatabase = {
         },
     },
     "JBL CFR2": {
-        "skip": True,
         "brand": "JBL",
         "model": "CFR2",
         "type": "passive",
@@ -341,6 +340,7 @@ speakers_info_j: SpeakerDatabase = {
         },
     },
     "JBL Control HST V2": {
+        "skip": True,  # quality is very low
         "brand": "JBL",
         "model": "Control HST V2",
         "type": "passive",
@@ -1479,6 +1479,66 @@ speakers_info_j: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/jbl-a180-tower-speaker-review.34846/",
                 "review_published": "20220610",
+            },
+        },
+    },
+    "JBL Stage 250B": {
+        "brand": "JBL",
+        "model": "Stage 250B",
+        "type": "passive",
+        "price": "400",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_250b/",
+                    "yt": "https://youtu.be/YcAgRBndf3c",
+                },
+                "review_published": "2024040916",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 6,
+                    "size": {
+                        "height": 321,
+                        "width": 200,
+                        "depth": 241,
+                    },
+                    "weight": 5.6,
+                },
+            },
+        },
+    },
+    "JBL Stage 280F": {
+        "brand": "JBL",
+        "model": "Stage 280F",
+        "type": "passive",
+        "price": "1200",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_280f/",
+                    "yt": "https://youtu.be/YcAgRBndf3c",
+                },
+                "review_published": "20240916",
+                "specifications": {
+                    "sensitivity": 91,
+                    "impedance": 6,
+                    "size": {
+                        "height": 1113,
+                        "width": 357,
+                        "depth": 420,
+                    },
+                    "weight": 25.1,
+                },
             },
         },
     },

@@ -207,6 +207,7 @@ speakers_info_m: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-Magico",
                 "format": "webplotdigitizer",
+                "quality": "medium",
             },
         },
     },
@@ -217,17 +218,48 @@ speakers_info_m: SpeakerDatabase = {
         "price": "24800",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "misc-soundstageultra",
+        "default_measurement": "vendor",
         "measurements": {
-            "misc-soundstageultra": {
-                "origin": "Misc",
+            "vendor": {
+                "origin": "Vendors-Magico",
                 "format": "webplotdigitizer",
-                "quality": "low",
+                "quality": "medium",
                 "review_published": "20210601",
                 "reviews": {
                     "ssu": "https://www.soundstageultra.com/index.php/equipment-menu/1042-magico-a5-loudspeakers",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/magico-a5-spinorama-cea2034.23866/",
                 },
+            },
+        },
+    },
+    "Magico S5 2024": {
+        "brand": "Magico",
+        "model": "S5 2024",
+        "type": "passive",
+        "price": "74500",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Magico",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "review_published": "20240913",
+                "reviews": {
+                    "tas": "https://www.theabsolutesound.com/articles/best-speakers-magico-s5-2024-first-listen-and-factory-tour/",
+                },
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 4,
+                    "size": {
+                        "height": 1220,
+                        "width": 485,
+                        "depth": 490,
+                    },
+                    "weight": 118,
+                },
+                "notes": "data is from a Klippel NFS smoothed at 1/9th octave",
             },
         },
     },
@@ -1183,6 +1215,15 @@ speakers_info_m: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/micca-rb42-bookshelf-speaker-review.11267/",
                 },
                 "review_published": "20200204",
+            },
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/micca_rb42/",
+                    "yt": "https://youtu.be/aU_3cidukOE",
+                },
+                "review_published": "20240916",
             },
         },
     },

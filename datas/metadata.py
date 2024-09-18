@@ -374,6 +374,15 @@ origins_info = {
         "logo-small": "docs/metadata/jtr-small.png",
         "url": "https://www.jtrspeakers.com",
     },
+    "Vendors-Kali": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "logo": "docs/metadata/kali.png",
+        "logo-small": "docs/metadata/kali-small.png",
+        "url": "https://www.kaliaudio.com",
+    },
     "Vendors-KLH": {
         "min hz": 20,
         "max hz": 20000,
@@ -437,7 +446,7 @@ origins_info = {
         "logo-small": "docs/metadata/klipsch.png",
         "url": "https://www.klipsch.com",
     },
-    "Vendors-L Acoustics": {
+    "Vendors-L-Acoustics": {
         "min hz": 20,
         "max hz": 20000,
         "min dB": -40,

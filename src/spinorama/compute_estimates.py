@@ -34,6 +34,7 @@ pd.set_option("display.max_rows", 1000)
 
 
 def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
+    """Compute values that you can derive from the spinorama"""
     onaxis = pd.DataFrame()
     est = {}
     try:
@@ -118,6 +119,7 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
 
 
 def estimates(spin: pd.DataFrame, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> dict[str, float]:
+    """ "Compute values when you do not necessary have all the 72 measurements"""
     onaxis = pd.DataFrame()
     est = estimates_spin(spin)
     try:
@@ -149,6 +151,7 @@ def estimates(spin: pd.DataFrame, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> d
 
 
 def compute_sensitivity_distance(sensitivity: float, mformat: str, distance: float) -> float:
+    """Compute sensitivity as a function of the measurement distance"""
     sensitivity_delta = 0.0
     # assume monopole dispersion, can do better since we know the dispersion
     # at least horizontally and vertically
@@ -170,6 +173,12 @@ def compute_sensitivity_distance(sensitivity: float, mformat: str, distance: flo
 
 
 def compute_sensitivity(spl, mformat: str, distance: float) -> tuple[float, float]:
+    """Compute sensitivity
+
+    By default, distance is 1 meter. If not, you will have 2 different values:
+    - a computed value at the measurement distance
+    - an estimated value at 1 meter
+    """
     sensitivity = np.mean(
         spl.loc[(spl.Freq > SENSITIVITY_MIN_FREQ) & (spl.Freq < SENSITIVITY_MAX_FREQ)]["On Axis"]
     )
@@ -180,6 +189,7 @@ def compute_sensitivity(spl, mformat: str, distance: float) -> tuple[float, floa
 def compute_sensitivity_details(
     spl, curve: str, mformat: str, distance: float
 ) -> tuple[float, float]:
+    """Compute sensitivity for a specific curve. It could be on axis or listening window for example"""
     sensitivity = np.mean(
         spl.loc[
             (spl.Freq > SENSITIVITY_MIN_FREQ)
@@ -187,5 +197,6 @@ def compute_sensitivity_details(
             & (spl.Measurements == curve)
         ].dB
     )
+
     sensitivity_1m = compute_sensitivity_distance(sensitivity, mformat, distance)
     return sensitivity, sensitivity_1m

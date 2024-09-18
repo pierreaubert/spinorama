@@ -20,6 +20,37 @@ SOFTWARE_VERSION = f"{API_VERSION}.{CURRENT_VERSION}"
 FILES = "/var/www/html/spinorama-prod"
 METADATA = f"{FILES}/assets/metadata.json"
 
+KNOWN_MEASUREMENTS = set(
+    [
+        "CEA2034",
+        "On Axis",
+        "Estimated In-Room Response",
+        "Early Reflections",
+        "Horizontal Reflections",
+        "Vertical Reflections",
+        "SPL Horizontal",
+        "SPL Horizontal Normalized",
+        "SPL Vertical",
+        "SPL Vertical Normalized",
+        "SPL Horizontal Contour",
+        "SPL Horizontal Contour Normalized",
+        "SPL Vertical Contour",
+        "SPL Vertical Contour Normalized",
+        "SPL Horizontal Contour 3D",
+        "SPL Horizontal Contour Normalized 3D",
+        "SPL Vertical Contour 3D",
+        "SPL Vertical Contour Normalized 3D",
+        "SPL Horizontal Globe",
+        "SPL Horizontal Globe Normalized",
+        "SPL Vertical Globe",
+        "SPL Vertical Globe Normalized",
+        "SPL Horizontal Radar",
+        "SPL Vertical Radar",
+    ]
+)
+
+KNOWN_FORMATS = set(["jpeg", "jpg", "json", "png", "webp"])
+
 
 def load_metadata():
     if not os.path.exists(METADATA):
@@ -64,7 +95,8 @@ async def get_speaker_list(metadata: dict = Depends(load_metadata)):  # noqa: B0
 
 @app.get(f"/{API_VERSION}/speaker/{{speaker_name}}/metadata", tags=["speaker"])
 async def get_speaker_metadata(
-    speaker_name: str, metadata: dict = Depends(load_metadata)  # noqa: B008
+    speaker_name: str,
+    metadata: dict = Depends(load_metadata),  # noqa: B008
 ):
     content = metadata.get(speaker_name, {"error": "Speaker not found"})
     encoded = jsonable_encoder(content)
@@ -86,6 +118,14 @@ async def get_speaker_measurements(
 
     if speaker_name not in speakers_info:
         return {"error": f"Speaker {speaker_name} is not in our database!"}
+
+    if (
+        "/" in speaker_version
+        or "/" in measurement_name
+        or ".." in speaker_version
+        or ".." in measurement_name
+    ):
+        return {"error": f"Invalid speaker_version or speaker_name!"}
 
     meta_data = speakers_info[speaker_name]
 
@@ -112,6 +152,16 @@ async def get_speaker_measurements(
 
     if "_unmelted" in measurement_name:
         measurement_name = measurement_name[0:-9]
+
+    if measurement_name not in KNOWN_MEASUREMENTS:
+        return {
+            "error": f"Version {measurement_name} is not known! Valid options are ({KNOWN_MEASUREMENTS})."
+        }
+
+    if measurement_format and measurement_format not in KNOWN_FORMATS:
+        return {
+            "error": f"Version {measurement_format} is not known! Valid options are either None or({KNOWN_FORMATS})."
+        }
 
     measurement_file = f"{dir_data}/{measurement_name}.{measurement_format}"
     if measurement_format == "png":

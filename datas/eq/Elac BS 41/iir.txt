@@ -1,0 +1,14 @@
+EQ for Elac BS 41 computed from ErinsAudioCorner data
+Preference Score 4.64 with EQ 5.69
+Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-09-16-15:36:57
+
+Preamp: -1.5 dB
+
+Filter  1: ON PK Fc    44 Hz Gain +1.03 dB Q 2.86
+Filter  2: ON PK Fc   125 Hz Gain -1.28 dB Q 1.08
+Filter  3: ON PK Fc   560 Hz Gain +2.16 dB Q 2.85
+Filter  4: ON PK Fc   643 Hz Gain -2.10 dB Q 2.69
+Filter  5: ON PK Fc  1202 Hz Gain +1.92 dB Q 2.97
+Filter  6: ON PK Fc  1887 Hz Gain +3.00 dB Q 2.97
+Filter  7: ON PK Fc  3912 Hz Gain -2.32 dB Q 0.37

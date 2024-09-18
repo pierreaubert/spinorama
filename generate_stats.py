@@ -28,6 +28,7 @@ Options:
   --push=<KEY>      push data to Google sheet
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
+
 import json
 import sys
 
@@ -36,7 +37,55 @@ from docopt import docopt
 from generate_common import get_custom_logger, args2level, find_metadata_file
 
 
-VERSION = 0.5
+VERSION = 0.7
+DEBUG_TYPE = False
+
+structured = [
+    # Group,         Field name,     Short,   Unit , Formatter
+    ("Speaker", "Speaker", "SPK", None, "{:35s}"),
+    ("Speaker", "Measurement", "MSR", None, "{:17s}"),
+    ("Speaker", "Price", "$$$", None, "{:s}"),
+    ("Speaker", "Shape", "SHP", None, "{:18s}"),
+    ("Speaker", "Energy", "P/A", None, "{:7s}"),
+    #
+    ("Dimension", "Width", "WID", "mm", "{:4d}"),
+    ("Dimension", "Heigth", "HEI", "mm", "{:4d}"),
+    ("Dimension", "Depth", "DEP", "mm", "{:4d}"),
+    ("Dimention", "Weight", "WEI", "kg", "{:5.1f}"),
+    #
+    ("Measurement", "IsDefault", "Def", None, "{:5s}"),
+    ("Measurement", "DataFormat", "FMT", None, "{:8s}"),
+    ("Measurement", "Quality", "Qua", None, "{:8s}"),
+    ("Measurement", "Distance", "Dis", "m", "{:4f}"),
+    #
+    ("Properties", "Sensitivity Computed", "Sen", "Ohm", "{:4.1f}"),
+    ("Properties", "Sensitivity Estimated at 1m", "S1m", "Ohm", "{:4.1f}"),
+    ("Properties", " -3", " -3", "Hz", "{:2f}"),
+    ("Properties", " -6", " -6", "Hz", "{:2f}"),
+    ("Properties", " -9", " -9", "Hz", "{:2f}"),
+    ("Properties", " -12", "-12", "Hz", "{:2f}"),
+    ("Properties", "Ref", "Ref", "SPL", "{:4.1f}"),
+    ("Properties", "NBD On Axis", "NON", None, "{:3.1f}"),
+    ("Properties", "NBD In-Room", "NIR", None, "{:3.1f}"),
+    ("Properties", "LFX", "LFX", "Hz", "{:3.1f}"),
+    ("Properties", "SM In-Room", "SIR", None, "{:3.1f}"),
+    ("Properties", "Preference Score", "SCR", None, "{:3.1f}"),
+    ("Properties", "Preference Score With Sub", "Sub", None, "{:3.1f}"),
+    #
+    ("EQ", " -3", " -3", "dB", "{:2f}"),
+    ("EQ", " -6", " -6", "dB", "{:2f}"),
+    ("EQ", " -9", " -9", "dB", "{:2f}"),
+    ("EQ", " -12", "-12", "dB", "{:2f}"),
+    ("EQ", "Ref", "Ref", "SPL", "{:4.1f}"),
+    ("EQ", "NBD On Axis", "NON", None, "{:3.1f}"),
+    ("EQ", "NBD In-Room", "NIR", None, "{:3.1f}"),
+    ("EQ", "LFX", "LFX", None, "{:3.1f}"),
+    ("EQ", "SM In-Room", "SIR", None, "{:3.1f}"),
+    ("EQ", "Preference Score w/eq", "SEQ", None, "{:3.1f}"),
+    ("EQ", "Preference Score with Sub w/eq", "SSE", None, "{:3.1f}"),
+    ("EQ", "Preamp-Gain", "PAG", "dB", "{:3.1f}"),
+    ("EQ", "Score Delta", "DEL", None, "{:3.1f}"),
+]
 
 
 def speakers2results(speakers):
@@ -65,11 +114,13 @@ def speakers2results(speakers):
             data_format = measurement.get("format", "")
             quality = measurement.get("quality", "")
             specifications = measurement.get("specifications", {})
-            sensitivity_data = speaker.get("sensitivity", {})
-            sensitivity = sensitivity_data.get("sensitivity_1m")
+            sensitivity_data = measurement.get("sensitivity", {})
+            sensitivity = sensitivity_data.get("computed", -1)
+            sensitivity_distance = sensitivity_data.get("distance", 1.0)
+            sensitivity_1m = sensitivity_data.get("sensitivity_1m", -1)
             if quality == "" and data_format == "klippel":
                 quality = "high"
-            is_default = key == default_measurement
+            is_default = str(key == default_measurement)
             results.append(
                 (
                     i,
@@ -79,6 +130,8 @@ def speakers2results(speakers):
                     shape,
                     energy,
                     sensitivity,
+                    sensitivity_distance,
+                    sensitivity_1m,
                     pref,
                     pref_eq,
                     eq,
@@ -92,39 +145,37 @@ def speakers2results(speakers):
     return results
 
 
-def print_eq(speakers, txt_format, push_key):
+def print_eq(speakers, txt_format):
+    format_string = ""
     results = speakers2results(speakers)
-    header = []
-    if txt_format == "txt":
-        header.append(
-            "                                                     | Price Shape           Type    Sensitivity | DataFormat       Quality |   -3dB  -6dB  Dev   NBD  NBD  LFX  SM |  SCR SWS | -3dB -6dB  Dev    NBD  NBD  LFX   SM |  SCR SWS |  SCR |Pre AMP | Width Height Depth Weigth"
-        )
-        header.append(
-            "Speaker                                              | each$                                  dB |                          |                      ON  PIR   Hz PIR |      |                    ON  PIR   Hz  PIR |   EQ | DIFF |     dB | mm    mm     mm    kg"
-        )
-        format_characteristics = "{:5s} {:15s} {:7s} {:=11.1f}"
-        format_measurement = "{:18s} {:7s}"
-        format_estimates = "{:5.1f} {:5.1f} {:+5.1f} {:0.2f} {:0.2f} {:3.0f} {:0.2f} {:0.2f}"
-        format_dimension = "{:4d} {:4d} {:4d} {:5.1f}"
-        format_string = "{{:35s}} {{:17s}} {{:5b}}| {0:s}| {1:s} | {2:s} | {{:+1.1f}} | {2:s} | {{:+1.1f}} |  {{:+1.1f}} | {{:+5.1f}} | {3:s} |".format(
-            format_characteristics, format_measurement, format_estimates, format_dimension
-        )
-    elif txt_format == "csv":
-        header.append(
-            'Speaker, Measurement, IsDefault, Price, Shape, Type, Sensitivity, DataFormat, Quality, "Measured -3dB",  "Measured -6dB", Deviation, Measured_NBD_ON,  Measured_NBD_PIR,  Measured_LFX, Measured_SM_PIR, Measured_Score, Measured_Score_With_Sub, "EQed -3dB", "EQed -6dB", EQed_Deviation, EQed_NBD_ON,  EQed_NBD_PIR, EQed_LFX, EQed_SM_PIR, EQed_Score, EQed_Score_With_Sub, EQ_Preamp_Gain, Width, Height, Depth, Weigth'
-        )
-        format_characteristics = "{:s}, {:s}, {:s}, {:f}"
-        format_measurement = "{:s}, {:s}"
-        format_estimates = "{:5.1f}, {:5.1f}, {:5.1f}, {:0.2f}, {:0.2f}, {:3.0f}, {:0.2f}, {:0.2f}"
-        format_dimension = "{:4d}, {:4d}, {:4d}, {:5.1f}"
-        format_string = "{{:s}}, {{:s}}, {{:b}}, {0:s}, {1:s}, {2:s}, {{:5.1f}}, {2:s}, {{:5.1f}}, {{:5.1f}}, {{:5.1f}}, {3:s}".format(
-            format_characteristics, format_measurement, format_estimates, format_dimension
-        )
+    headers = []
+    if txt_format == "csv":
+        header = ""
+        for group, field, _, unit, formatter in structured:
+            if unit is None:
+                if group != field:
+                    header += '"{} {}", '.format(group, field)
+                else:
+                    header += '"{}", '.format(group)
+            else:
+                header += '"{} {} ({})", '.format(group, field, unit)
+            if formatter[-2] == "s":
+                format_string += '"{:s}",'
+            else:
+                format_string += "{{:{0}}},".format(formatter[-2])
+        headers.append(header)
+    elif txt_format == "txt":
+        header = ""
+        for group, _, short, _, formatter in structured:
+            header += '"{} {} "'.format(group, short)
+            format_string += " {}".format(formatter)
+        headers.append(header)
     else:
+        print("Warning: {} is unknown".format(txt_format))
         return
 
-    for h in header:
-        print(h)
+    for header in headers:
+        print(header)
 
     for (
         speaker_name,
@@ -134,6 +185,8 @@ def print_eq(speakers, txt_format, push_key):
         shape,
         energy,
         sensitivity,
+        sensitivity_distance,
+        sensitivity_1m,
         pref,
         pref_eq,
         eq,
@@ -161,43 +214,61 @@ def print_eq(speakers, txt_format, push_key):
                 depth = int(size.get("depth", 0))
                 width = int(size.get("width", 0))
                 height = int(size.get("height", 0))
-        print(
-            format_string.format(
-                speaker_name,
-                key,
-                is_default,
-                price,
-                shape,
-                energy,
-                sensitivity,
-                data_format,
-                quality,
-                estimates.get("ref_3dB", -1.0),
-                estimates.get("ref_6dB", -1.0),
-                estimates.get("ref_band", -1.0),
-                pref.get("nbd_on_axis", -1.0),
-                pref.get("nbd_pred_in_room", -1.0),
-                pref.get("lfx_hz", -1.0),
-                pref.get("sm_pred_in_room", -1.0),
-                pref.get("pref_score", -10.0),
-                pref.get("pref_score_swub", -10.0),
-                estimates_eq.get("ref_3dB", -1.0),
-                estimates_eq.get("ref_6dB", -1.0),
-                estimates_eq.get("ref_band", -1.0),
-                pref_eq.get("nbd_on_axis", -1.0),
-                pref_eq.get("nbd_pred_in_room", -1.0),
-                pref_eq.get("lfx_hz", -1.0),
-                pref_eq.get("sm_pred_in_room", -1.0),
-                pref_eq.get("pref_score", -10.0),
-                pref_eq.get("pref_score_swub", -10.0),
-                delta,
-                preamp_gain,
-                width,
-                height,
-                depth,
-                weight,
-            )
+
+        format_parameters = (
+            # speaker
+            speaker_name,
+            key,
+            price,
+            shape,
+            energy,
+            # dimension
+            width,
+            height,
+            depth,
+            weight,
+            # measurement
+            is_default,
+            data_format,
+            quality,
+            sensitivity_distance,
+            # properties
+            sensitivity,
+            sensitivity_1m,
+            estimates.get("ref_3dB", -1.0),
+            estimates.get("ref_6dB", -1.0),
+            estimates.get("ref_9dB", -1.0),
+            estimates.get("ref_12dB", -1.0),
+            estimates.get("ref_band", -1.0),
+            pref.get("nbd_on_axis", -1.0),
+            pref.get("nbd_pred_in_room", -1.0),
+            pref.get("lfx_hz", -1.0),
+            pref.get("sm_pred_in_room", -1.0),
+            pref.get("pref_score", -10.0),
+            pref.get("pref_score_swub", -10.0),
+            # eq
+            estimates_eq.get("ref_3dB", -1.0),
+            estimates_eq.get("ref_6dB", -1.0),
+            estimates_eq.get("ref_9dB", -1.0),
+            estimates_eq.get("ref_12dB", -1.0),
+            estimates_eq.get("ref_band", -1.0),
+            pref_eq.get("nbd_on_axis", -1.0),
+            pref_eq.get("nbd_pred_in_room", -1.0),
+            pref_eq.get("lfx_hz", -1.0),
+            pref_eq.get("sm_pred_in_room", -1.0),
+            pref_eq.get("pref_score", -10.0),
+            pref_eq.get("pref_score_swub", -10.0),
+            preamp_gain,
+            delta,
         )
+        if DEBUG_TYPE:
+            for i, p in enumerate(format_parameters):
+                if p is None:
+                    print("Parameter {} is None".format(i))
+                else:
+                    print("Parameter {} is {}".format(i, type(p)))
+
+        print(format_string.format(*format_parameters))
 
 
 def main():
@@ -205,9 +276,12 @@ def main():
     if args["--print"] is not None:
         print_what = args["--print"]
 
-    push_key = None
-    if args["--push"] is not None:
-        push_key = args["--push"]
+    # TODO: wanted to push directly to GCP but you need a project id and so one
+    # I will just generate an Excel file
+    #
+    # push_key = None
+    # if args["--push"] is not None:
+    #     push_key = args["--push"]
 
     # load all metadata from generated json file
     meta_filename, eq_filename = find_metadata_file()
@@ -230,9 +304,9 @@ def main():
 
     if print_what is not None:
         if print_what == "eq_txt":
-            print_eq(jsmeta, "txt", push_key)
+            print_eq(jsmeta, "txt")
         elif print_what == "eq_csv":
-            print_eq(jsmeta, "csv", push_key)
+            print_eq(jsmeta, "csv")
         else:
             logger.error('unkown print type either "eq_txt" or "eq_csv"')
 
@@ -241,7 +315,7 @@ def main():
 
 if __name__ == "__main__":
     args = docopt(
-        __doc__,
+        str(__doc__),
         version="./generate_stats.py version {:1.1f}".format(VERSION),
         options_first=True,
     )

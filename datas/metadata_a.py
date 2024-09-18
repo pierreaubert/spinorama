@@ -69,6 +69,34 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Adam A7V": {
+        "brand": "Adam",
+        "model": "A7V",
+        "type": "active",
+        "price": "579",
+        "shape": "bookshelves",
+        "amount": "each",
+        "default_measurement": "misc-sr",
+        "measurements": {
+            "misc-sr": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "reviews": {
+                    "snr": "https://www.soundandrecording.de/equipment/studiomonitor-adam-audio-a7v-im-test/",
+                },
+                "review_published": "202400914",
+                "specifications": {
+                    "size": {
+                        "height": 337,
+                        "width": 200,
+                        "depth": 280,
+                    },
+                    "weight": 8.7,
+                },
+            },
+        },
+    },
     "Adam S2V": {
         "brand": "Adam",
         "model": "S2V",
@@ -1588,9 +1616,26 @@ speakers_info_a: SpeakerDatabase = {
         "price": "2900",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "vendor",
+        "default_measurement": "vendor-v2-20240917",
         "measurements": {
-            "vendor": {
+            "vendor-v2-20240917": {
+                "origin": "Vendors-AsciLab",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
+                },
+                "review_published": "20240720",
+                "specifications": {
+                    "size": {
+                        "height": 400,
+                        "width": 220,
+                        "depth": 260,
+                    },
+                    "weight": 13.0,
+                },
+            },
+            "vendor-v1-20240720": {
                 "origin": "Vendors-AsciLab",
                 "format": "klippel",
                 "quality": "high",

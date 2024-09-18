@@ -75,26 +75,6 @@ speakers_info_s: SpeakerDatabase = {
             # },
         },
     },
-    "Triad In-Room Gold LCR": {
-        "brand": "Triad",
-        "model": "In-Room Gold LCR",
-        "type": "passive",
-        "price": "6600",
-        "shape": "cinema",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://erinsaudiocorner.com/loudspeakers/triad_inroom_gold_lcr/",
-                    "yt": "https://youtu.be/gNKs0Dj2v5E",
-                },
-                "review_published": "20230602",
-            },
-        },
-    },
     "Salk WoW1": {
         "brand": "Salk",
         "model": "WoW1",
@@ -666,7 +646,7 @@ speakers_info_s: SpeakerDatabase = {
             "vendor-v1-20240218": {
                 "origin": "Vendors-SunAudio",
                 "format": "spl_hv_txt",
-                "quality": "medium",
+                "quality": "high",  # klippel measurements by https://www.dausend-acoustics.com/
                 "review": "https://sunaudio.com/products/purified-4-modular-active-loudspeakers",
                 "review_published": "20240218",
                 "data_acquisition": {
@@ -680,7 +660,7 @@ speakers_info_s: SpeakerDatabase = {
         "brand": "SunAudio",
         "model": "Purified 4 4XA25B Alu+Berryllium",
         "type": "passive",
-        "price": "3228",
+        "price": "3650",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "vendor-v1-20240730",
@@ -688,7 +668,7 @@ speakers_info_s: SpeakerDatabase = {
             "vendor-v1-20240730": {
                 "origin": "Vendors-SunAudio",
                 "format": "spl_hv_txt",
-                "quality": "medium",
+                "quality": "high",  # klippel measurements by https://www.dausend-acoustics.com/
                 "review": "https://sunaudio.com/products/purified-4-modular-active-loudspeakers?variant=47286699491674",
                 "review_published": "20240730",
                 "data_acquisition": {
@@ -702,7 +682,7 @@ speakers_info_s: SpeakerDatabase = {
         "brand": "SunAudio",
         "model": "Purified 4 4XP25B Fiber+Berryllium",
         "type": "passive",
-        "price": "3228",
+        "price": "3650",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "vendor-v1-20240730",
@@ -710,7 +690,7 @@ speakers_info_s: SpeakerDatabase = {
             "vendor-v1-20240730": {
                 "origin": "Vendors-SunAudio",
                 "format": "spl_hv_txt",
-                "quality": "medium",
+                "quality": "high",  # klippel measurements by https://www.dausend-acoustics.com/
                 "review": "https://sunaudio.com/products/purified-4-modular-active-loudspeakers?variant=47286699327834",
                 "review_published": "20240730",
                 "data_acquisition": {

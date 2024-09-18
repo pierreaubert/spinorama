@@ -55,6 +55,7 @@ const knownSorter = new Set([
     'f3',
     'f6',
     'flatness',
+    'fullTextSearch',
     'height',
     'price',
     'score',
@@ -66,19 +67,29 @@ const knownSorter = new Set([
     'width',
 ]);
 
-// function printParams(params) {
-//     const [sorter, filter, keywords, pagination] = [...params];
-//     console.log('  sorter: '+sorter.by+' reverse: '+sorter.reverse);
-//     console.log('  filter:'+
-// 		' brand='+filter.brand+
-// 		' power='+filter.power+
-// 		' quality='+filter.quality+
-// 		' '+ filter.priceMin+' <=price<= '+ filter.priceMax+
-// 		' reviewer='+filter.reviewer+
-// 		' shape='+filter.shape);
-//     console.log(' keywords='+keywords.toString());
-//     console.log(' pagination: page='+pagination.page);
-// }
+function printParams(params) {
+    const [sorter, filter, keywords, pagination] = [...params];
+    console.log('  sorter: ' + sorter.by + ' reverse: ' + sorter.reverse);
+    console.log(
+        '  filter:' +
+            ' brand=' +
+            filter.brand +
+            ' power=' +
+            filter.power +
+            ' quality=' +
+            filter.quality +
+            ' ' +
+            filter.priceMin +
+            ' <=price<= ' +
+            filter.priceMax +
+            ' reviewer=' +
+            filter.reviewer +
+            ' shape=' +
+            filter.shape
+    );
+    console.log(' keywords=' + keywords.toString());
+    console.log(' pagination: page=' + pagination.page);
+}
 
 function sortParameters2Sort(url) {
     const sorter = {
@@ -158,13 +169,16 @@ function filtersParameters2Sort(url) {
 function keywordsParameters2Sort(url) {
     let keywords = '';
     if (url.searchParams.has('search')) {
-        keywords = url.searchParams.get('search').toString().replace(/[^a-zA-Z0-9&]/g, ' ');
+        keywords = url.searchParams
+            .get('search')
+            .toString()
+            .replace(/[^a-zA-Z0-9&]/g, ' ');
         const selectorName = urlToSelectorName.get('search');
         let selector = document.querySelector(selectorName);
         if (selector) {
             selector.value = keywords;
         } else {
-            console.log('Error: search selector ' + selectorName + ' is unknown!');
+            console.error('Search selector ' + selectorName + ' is unknown!');
         }
     }
     return keywords;
@@ -183,7 +197,7 @@ function paginationParameters2Sort(url) {
             pagination.page = page;
             pagination.active = true;
         } else {
-            console.log('Warning: ignored parameter page that must be a positive integer (got ' + page + '!');
+            console.warning('Ignored parameter page that must be a positive integer (got ' + page + '!');
         }
     }
     if (url.searchParams.has('count')) {
@@ -192,7 +206,7 @@ function paginationParameters2Sort(url) {
             pagination.count = count;
             pagination.active = true;
         } else {
-            console.log('Warning: ignored parameter count that must be an integer greater than 1 (got ' + count + '!');
+            console.warning('Ignored parameter count that must be an integer greater than 1 (got ' + count + '!');
         }
     }
     return pagination;
@@ -203,6 +217,12 @@ export function urlParameters2Sort(url) {
     const filters = filtersParameters2Sort(url);
     const keywords = keywordsParameters2Sort(url);
     const pagination = paginationParameters2Sort(url);
+
+    // if we have keywords to search for then give priority for search
+    if (keywords !== '') {
+        sorter.by = 'fullTextSearch';
+        sorter.reverse = true;
+    }
     return [sorter, filters, keywords, pagination];
 }
 
@@ -387,6 +407,20 @@ export function sortMetadata2(metadata, sorter, results) {
         return spk.brand + ' ' + spk.model;
     }
 
+    function getBrand(key) {
+        const spk = metadata.get(key);
+        return spk.brand + ' ' + spk.model;
+    }
+
+    function getFullTextSearch(key, fts) {
+        const spk = fts.get(key);
+        if (!spk || !spk.score) {
+            return 100;
+        }
+        // console.debug('speaker '+key+' score='+spk.score);
+        return spk.score;
+    }
+
     if (sorter.by === 'date') {
         return sortChildren({
             container: metadata,
@@ -477,8 +511,14 @@ export function sortMetadata2(metadata, sorter, results) {
             score: (k) => getSizeDepth(k),
             reverse: sorter.reverse,
         });
+    } else if (sorter.by === 'fullTextSearch') {
+        return sortChildren({
+            container: metadata,
+            score: (k) => getFullTextSearch(k, results),
+            reverse: sorter.reverse,
+        });
     } else {
-        console.log('ERROR: unknown sorter ' + sorter.by);
+        console.error('Unknown sorter ' + sorter.by);
     }
 
     return metadata;
@@ -700,7 +740,7 @@ export function isFiltered(item, filter) {
 }
 
 export function isSearch(key, results, minScore, keywords) {
-    // console.log('Starting isSearch with key='+key+' minscore='+minScore+' keywords='+keywords);
+    // console.debug('Starting isSearch with key='+key+' minscore='+minScore+' keywords='+keywords);
     let shouldShow = true;
     if (keywords === '' || results === undefined) {
         // console.log('shouldShow is true');
@@ -708,7 +748,7 @@ export function isSearch(key, results, minScore, keywords) {
     }
 
     if (!results.has(key)) {
-        // console.log('shouldShow is false (no key '+key+')');
+        // console.debug('shouldShow is false (no key '+key+')');
         return false;
     }
 
@@ -717,20 +757,22 @@ export function isSearch(key, results, minScore, keywords) {
     const score = result.score;
 
     if (minScore < Math.pow(10, -15)) {
-        const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase());
-        // console.log('isExact ' + isExact + ' model ' + imeta.model.toLowerCase() + ' keywords ' + keywords.toLowerCase());
+        // const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase());
+        // console.debug('isExact ' + isExact + ' model ' + imeta.model.toLowerCase() + ' keywords ' + keywords.toLowerCase());
         // we have an exact match, only shouldShow other exact matches
-        if (score >= Math.pow(10, -15) && !isExact) {
-            // console.log('filtered out (minscore)' + score);
+        if (score >= Math.pow(10, -15)) {
+            // || !isExact) {
+            // console.debug('filtered out (minscore)' + score);
             shouldShow = false;
         }
     } else {
         // only partial match
         if (score > minScore * 10) {
-            // console.log('filtered out (score=' + score + 'minscore=' + minScore + ')');
+            // console.debug('filtered out (score=' + score + 'minscore=' + minScore + ')');
             shouldShow = false;
+        } else {
+            // console.debug('not filtered out (score=' + score + 'minscore=' + minScore + ')');
         }
-        // else { console.log('not filtered out (score=' + score + 'minscore=' + minScore + ')'); }
     }
     return shouldShow;
 }
@@ -744,8 +786,96 @@ export function isWithinPage(position, pagination) {
     return false;
 }
 
+export function rank1(fuse, brands, models, word) {
+    const results = fuse.search(word.trim());
+    return results;
+}
+
+export function rank2(fuse, brands, models, words) {
+    // perfect world
+    if (brands.has(words[0]) && models.has(words[1])) {
+        const query_exact = {
+            $and: [{ 'speaker.brand': "'" + words[0] }, { 'speaker.model': "'" + words[1] }],
+        };
+        const results_exact = fuse.search(query_exact);
+        if (results_exact.length > 0) {
+            return results_exact;
+        }
+    }
+    // concat 2 words and see if that is a brand or a model
+    const concat1 = words[0] + ' ' + words[1];
+    if (brands.has(concat1) || models.has(concat1)) {
+        return rank1(fuse, brands, models, concat1);
+    }
+    const concat2 = words[0] + words[1];
+    if (brands.has(concat2) || models.has(concat2)) {
+        return rank1(fuse, brands, models, concat2);
+    }
+    // try a normal query
+    const query = {
+        $and: [{ 'speaker.brand': words[0] }, { 'speaker.model': words[1] }],
+    };
+    const results = fuse.search(query);
+    if (results.length > 0) {
+        return results;
+    }
+    return fuse.search(words.join(' '));
+}
+
+export function rankN(fuse, brands, models, words) {
+    if (words.length === 2) {
+        return rank2(fuse, brands, models, words);
+    }
+    const concat01 = words[0] + ' ' + words[1];
+    if (brands.has(concat01) || models.has(concat01)) {
+        const condensed = [concat01].concat(words.slice(2));
+        return rankN(fuse, brands, models, condensed);
+    }
+    const concat12 = words[1] + ' ' + words[2];
+    if (brands.has(concat12) || models.has(concat12)) {
+        const condensed = [words[0], concat12].concat(words.slice(3));
+        return rankN(fuse, brands, models, condensed);
+    }
+    if (brands.has(words[0])) {
+        const condensed = [words[0], words.slice(1).join(' ')];
+        return rank2(fuse, brands, models, condensed);
+    }
+    return fuse.search(words.join(' '));
+}
+
+export function rank(fuse, brands, models, keywords) {
+    let results = null;
+    let minScore = 100;
+    let resultsFullText = null;
+    if (keywords !== '') {
+        const words = keywords.trim().split(' ');
+        if (words.length === 1) {
+            results = rank1(fuse, brands, models, words[0]);
+        } else if (words.length === 2) {
+            results = rank2(fuse, brands, models, words);
+        } else {
+            results = rankN(fuse, brands, models, words);
+        }
+        if (results.length > 0) {
+            for (const spk in results) {
+                if (results[spk].score < minScore) {
+                    minScore = results[spk].score;
+                }
+            }
+        }
+        resultsFullText = new Map(results.map((obj) => [obj.item.key, obj]));
+    }
+    return [minScore, resultsFullText];
+}
+
 export function search(data, params) {
-    const fuse = new Fuse(
+    const brands = new Set();
+    const models = new Set();
+    data.forEach((v, k) => {
+        brands.add(v['brand'].toLowerCase());
+        models.add(v['model'].toLowerCase());
+    });
+    const fuse_exact = new Fuse(
         // Fuse take a list not a map
         [...data].map((item) => ({ key: item[0], speaker: item[1] })),
         {
@@ -754,11 +884,10 @@ export function search(data, params) {
             findAllMatches: true,
             minMatchCharLength: 2,
             keys: ['speaker.brand', 'speaker.model', 'speaker.type', 'speaker.shape'],
-            treshhold: 0.2,
-            distance: 10,
             includeScore: true,
-            useExtendedSearch: false,
-            shouldSort: true,
+            shouldSort: false,
+            treshhold: 0,
+            useExtendedSearch: true,
         }
     );
 
@@ -766,21 +895,7 @@ export function search(data, params) {
     const filters = params[1];
     const keywords = params[2];
     const pagination = params[3];
-    let resultsFullText = null;
-    let minScore = 1;
-    if (keywords !== '') {
-        const fuse_results = fuse.search(keywords.trim());
-        // console.debug('searching with keywords: '+keywords+' #matches: '+fuse_results.length);
-        if (fuse_results.length > 0) {
-            // minScore
-            for (const spk in fuse_results) {
-                if (fuse_results[spk].score < minScore) {
-                    minScore = fuse_results[spk].score;
-                }
-            }
-        }
-        resultsFullText = new Map(fuse_results.map((obj) => [obj.item.key, obj]));
-    }
+    const [minScore, resultsFullText] = rank(fuse_exact, brands, models, keywords);
 
     const resultsFiltered = [];
     let currentDisplay = 0;
@@ -799,7 +914,7 @@ export function search(data, params) {
             maxDisplay += 1;
         }
     });
-    // console.log('search for: >' + keywords + '< found #' + maxDisplay);
+    // console.debug('search for: >' + keywords + '< found #' + maxDisplay);
     return [maxDisplay, resultsFiltered];
 }
 
@@ -834,15 +949,15 @@ export function setupEventListener(metadata, speaker2html, mainDiv) {
                 reverseValue = 'true';
             }
             url.searchParams.set(urlParameter, reverseValue);
-            // console.log('Info: '+urlParameter + ' changed to ' + element.value);
+            // console.debug('Info: '+urlParameter + ' changed to ' + element.value);
         } else {
             if (element.value !== '') {
                 url.searchParams.set(urlParameter, element.value);
                 url.searchParams.set('page', 1);
-                // console.log('Info: '+urlParameter + ' changed to ' + element.value);
+                // console.debug('Info: '+urlParameter + ' changed to ' + element.value);
             } else {
                 url.searchParams.delete(urlParameter);
-                // console.log('Info: '+urlParameter + ' removed');
+                // console.debug('Info: '+urlParameter + ' removed');
                 url.searchParams.set('page', 1);
             }
         }
@@ -869,7 +984,7 @@ export function setupEventListener(metadata, speaker2html, mainDiv) {
         if (element) {
             element.addEventListener(eventType, () => update(element, urlParameter, mainDiv));
         } else {
-            console.log('Error: Element ' + selectorName + ' not found');
+            console.error('Element ' + selectorName + ' not found');
         }
     });
 }

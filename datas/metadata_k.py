@@ -22,6 +22,21 @@ speakers_info_k: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/kali-in-5-studio-monitor-review.22487/",
                 },
                 "review_published": "20210415",
+                "specifications": {
+                    "size": {
+                        "height": 382,
+                        "width": 206,
+                        "depth": 286,
+                    },
+                    "weight": 8.4,
+                },
+            },
+            "vendor": {
+                "origin": "Vendors-Kali",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20240909",
+                "quality": "medium",
             },
         },
     },
@@ -43,12 +58,27 @@ speakers_info_k: SpeakerDatabase = {
                     "yt": "https://www.youtube.com/watch?v=DNpkizYXbVM",
                 },
                 "review_published": "20210615",
+                "specifications": {
+                    "size": {
+                        "height": 441,
+                        "width": 285,
+                        "depth": 254,
+                    },
+                    "weight": 10.4,
+                },
             },
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kali-audio-in-8-studio-monitor-review.10897/",
                 "review_published": "20200114",
+            },
+            "vendor": {
+                "origin": "Vendors-Kali",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20240909",
+                "quality": "medium",
             },
         },
     },
@@ -70,6 +100,14 @@ speakers_info_k: SpeakerDatabase = {
                     "yt": "https://www.youtube.com/watch?v=DNpkizYXbVM",
                 },
                 "review_published": "20210615",
+                "specifications": {
+                    "size": {
+                        "height": 441,
+                        "width": 285,
+                        "depth": 254,
+                    },
+                    "weight": 10.4,
+                },
             },
         },
     },
@@ -106,6 +144,14 @@ speakers_info_k: SpeakerDatabase = {
                     "yt": "https://www.youtube.com/watch?v=Wj47W9EP4tQ&t=2s",
                 },
                 "review_published": "20211025",
+                "specifications": {
+                    "size": {
+                        "height": 359,
+                        "width": 222,
+                        "depth": 260,
+                    },
+                    "weight": 7.01,
+                },
             },
         },
     },
@@ -142,6 +188,14 @@ speakers_info_k: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kali_lp-8v2/",
                 },
                 "review_published": "20211114",
+                "specifications": {
+                    "size": {
+                        "height": 419,
+                        "width": 254,
+                        "depth": 286,
+                    },
+                    "weight": 9.0,
+                },
             },
         },
     },
@@ -216,6 +270,35 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/kanto-yu-review-pc-speaker.22329/",
                 "review_published": "20210409",
+            },
+        },
+    },
+    "Kanto YU4": {
+        "skip": True,
+        "brand": "Kanto",
+        "model": "YU4",
+        "type": "passive",
+        "price": "420",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "size": {
+                        "height": 220,
+                        "width": 140,
+                        "depth": 190,
+                    },
+                    "weight": 2.5,
+                },
             },
         },
     },
@@ -658,7 +741,6 @@ speakers_info_k: SpeakerDatabase = {
         },
     },
     "KEF LSX II LT": {
-        "skip": True,
         "brand": "KEF",
         "model": "LSX II LT",
         "type": "active",
@@ -671,10 +753,10 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_lsx_ii_lt/",
                     "yt": "https://youtu.be/Tcz905gti5A?si=GCiNCa1E-Rb-vJHi",
                 },
-                "review_published": "202408xx",
+                "review_published": "20240916",
                 "specifications": {
                     "SPL": {
                         "peak": 102,
@@ -1228,6 +1310,39 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
                 "quality": "medium",
+            },
+        },
+    },
+    "KEF Reference 203": {
+        "brand": "KEF",
+        "model": "Reference 203",
+        "type": "passive",
+        "price": "9000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20240916",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_reference_203/",
+                    "yt": "https://youtu.be/mVdCcxN2DEY",
+                },
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 4.2,
+                    "SPL": {
+                        "peak": 113,
+                    },
+                    "size": {
+                        "height": 1020,
+                        "width": 248,
+                        "depth": 405,
+                    },
+                    "weight": 26.5,
+                },
             },
         },
     },

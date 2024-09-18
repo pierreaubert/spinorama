@@ -18,7 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-usage: generate_html.py [--help] [--version] [--dev] [--optim]\
+usage: generate_html.py [--help] [--version] [--dev] [--optim] [--sw]\
  [--sitedev=<http>]  [--log-level=<level>] [--skip-speakers]
 
 Options:
@@ -27,6 +27,7 @@ Options:
   --sitedev=<http>  default: http://localhost:8000/docs
   --dev             if you want to generate the dev websites
   --optim           if you want an optimised built
+  --sw              if you want a service worker to be generated
   --skip-speakers   skip speaker html page generation (useful for debugging)
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
@@ -35,6 +36,7 @@ from glob import glob
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -58,7 +60,7 @@ from spinorama.need_update import need_update, write_if_different
 
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
-CACHE_VERSION = "v4"
+CACHE_VERSION = "v5"
 
 
 def get_files(dir, ext):
@@ -93,6 +95,9 @@ def get_versions(filename):
                 continue
             versions[tokens[0]] = tokens[1]
     versions["CACHE"] = CACHE_VERSION
+    # usefull when debugging FUSE itself, waiting for patches to be included post 7.0.0
+    # versions["FUSE"] += '-pa2'
+    # print(versions)
     return versions
 
 
@@ -383,6 +388,7 @@ def main():
             meta=meta_sorted_date,
             site=site,
             use_search=True,
+            use_sw=flag_sw,
             min=".min" if flag_optim else "",
             versions=versions,
         )
@@ -402,6 +408,7 @@ def main():
             meta=meta_sorted_date,
             site=site,
             use_search=True,
+            use_sw=flag_sw,
             min=".min" if flag_optim else "",
             versions=versions,
         )
@@ -436,6 +443,7 @@ def main():
                 meta=meta_sorted_score,
                 site=site,
                 use_search=use_search,
+                use_sw=flag_sw,
                 min=".min" if flag_optim else "",
                 versions=versions,
             )
@@ -512,6 +520,7 @@ def main():
     for item in (
         "compare",
         "download",
+        "error",
         "eqs",
         "graph",
         "index",
@@ -554,17 +563,16 @@ def main():
             flow_bin = "./node_modules/.bin/flow-remove-types"
             flow_param = ""  # "--pretty --sourcemaps"
 
-            flow_command = "{} {} {} > {}".format(
-                flow_bin, flow_param, item_original, item_post_flow
-            )
-            status = subprocess.run(
-                [flow_command],
-                shell=True,  # noqa: S602
-                check=True,
-                capture_output=True,
-            )
-            if status.returncode != 0:
-                print("flow failed for %s", item_name)
+            flow_command = "{} {} {}".format(flow_bin, flow_param, item_original)
+            with open(item_post_flow, "w") as item_post_flow_fd:
+                status = subprocess.run(  # noqa: S603
+                    shlex.split(flow_command),
+                    shell=False,
+                    check=True,
+                    stdout=item_post_flow_fd,
+                )
+                if status.returncode != 0:
+                    print("flow failed for %s", item_name)
 
             # build first generation with metadata expension, now only useful for meta.js
             if item == "meta":
@@ -581,7 +589,8 @@ def main():
                     min=".min" if flag_optim else "",
                     versions=versions,
                 )
-                write_if_different(item_content, item_post_mako, force=True)
+                if item_content:
+                    write_if_different(str(item_content), item_post_mako, force=True)
             else:
                 shutil.copy(item_post_flow, item_post_mako)
 
@@ -592,19 +601,18 @@ def main():
                 write_if_different(item_content, item_post_import, force=True)
 
             # compress files with terser
-            terser_command = "{0} {1} > {2}".format(
-                "./node_modules/.bin/terser", item_post_import, item_post_terser
-            )
+            terser_command = "{0} {1}".format("./node_modules/.bin/terser", item_post_import)
             # print(terser_command)
             try:
-                status = subprocess.run(
-                    [terser_command],
-                    shell=True,
-                    check=True,
-                    capture_output=True,  # noqa: S602
-                )
-                if status.returncode != 0:
-                    print("terser failed for item {}".format(item))
+                with open(item_post_terser, "w") as item_post_terser_fd:
+                    status = subprocess.run(  # noqa: S603
+                        shlex.split(terser_command),
+                        shell=False,
+                        check=True,
+                        stdout=item_post_terser_fd,
+                    )
+                    if status.returncode != 0:
+                        print("terser failed for item {}".format(item))
             except subprocess.CalledProcessError as e:
                 print("terser failed for item {} with {}".format(item, e))
 
@@ -619,15 +627,16 @@ def main():
             sys.exit(1)
 
     # call workbox
-    workbox_command = ""
-    status = subprocess.run(
-        [workbox_command],
-        shell=True,
-        check=True,
-        capture_output=True,  # noqa: S602
-    )
-    if status.returncode != 0:
-        print("workbox failed!")
+    workbox_command = "workbox generateSW workbox-config.js"
+    if flag_sw:
+        status = subprocess.run(  # noqa: S603
+            shlex.split(workbox_command),
+            shell=False,
+            check=True,
+            capture_output=True,
+        )
+        if status.returncode != 0:
+            print("workbox failed!")
 
     # generate robots.txt and sitemap.xml
     logger.info("Copy robots/sitemap files to %s", cpaths.CPATH_DOCS)
@@ -648,7 +657,7 @@ def main():
             )
             item_filename = cpaths.CPATH_DOCS + "/" + item_name
             # ok for robots but likely doesn't work for sitemap
-            write_if_different(item_content, item_filename, force=True)
+            write_if_different(str(item_content), item_filename, force=True)
     except KeyError as key_error:
         print("Copying robots files failed with {}".format(key_error))
         sys.exit(1)
@@ -657,9 +666,10 @@ def main():
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="update_html.py version 1.23", options_first=True)
+    args = docopt(str(__doc__), version="update_html.py version 1.23", options_first=True)
     flag_dev = args["--dev"]
     flag_optim = args["--optim"]
+    flag_sw = args["--sw"]
     site = SITEPROD
     skip_speakers = False
     if flag_dev:

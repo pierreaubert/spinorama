@@ -117,6 +117,35 @@ speakers_info_v: SpeakerDatabase = {
             },
         },
     },
+    "Vandersteen Treo CT": {
+        "brand": "Vandersteen",
+        "model": "Treo CT",
+        "type": "passive",
+        "price": "19790",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/vandersteen_treo_ct/",
+                },
+                "review_published": "2024040916",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 3,
+                    "size": {
+                        "height": 1092,
+                        "width": 254,
+                        "depth": 381,
+                    },
+                    "weight": 36.3,
+                },
+            },
+        },
+    },
     "Vandersteen VLR": {
         "brand": "Vandersteen",
         "model": "VLR",

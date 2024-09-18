@@ -2,7 +2,7 @@
 #
 import unittest
 
-knownMeasurements = [
+known_measurements = [
     "CEA2034",
     "On Axis",
     "Estimated In-Room Response",
@@ -44,7 +44,6 @@ SCORES = "/scores.html"
 
 
 class SpinoramaWebsiteTests(unittest.TestCase):
-
     def setUp(self):
         options = webdriver.ChromeOptions()
         options.add_argument("--headless=new")
@@ -99,7 +98,7 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         self.assertNotIn("hidden", gene.get_attribute("class"))
 
     def test_filters_brand(self):
-        self.driver.get("{}?".format(DEV, "page=1&count=100"))
+        self.driver.get("{}?{}".format(DEV, "page=1&count=100"))
         self.driver.implicitly_wait(3)
 
         WebDriverWait(self.driver, 1).until(
@@ -158,7 +157,7 @@ class SpinoramaWebsiteTests(unittest.TestCase):
 
     def test_compare_allgraphs(self):
         compare_basic = "speaker0=Ascend+Acoustics+Sierra+1+V2&origin0=Vendors-Ascend+Acoustics&version0=vendor&speaker1=Neumann+KH+150&origin1=ASR&version1=asr"
-        for measurement in knownMeasurements:
+        for measurement in known_measurements:
             self.driver.get(
                 "{}/{}?{}&measurement={}".format(
                     DEV, COMPARE, compare_basic, measurement.replace(" ", "+")
@@ -174,7 +173,7 @@ class SpinoramaWebsiteTests(unittest.TestCase):
         self.driver.implicitly_wait(2)
 
     def test_similar_allgraphs(self):
-        for measurement in knownMeasurements:
+        for measurement in known_measurements:
             similar_basic = "speaker0=Ascend+Acoustics+Sierra+1+V2&origin0=Vendors-Ascend+Acoustics&version0=vendor"
             self.driver.get(
                 "{}/{}?{}&graphs={}".format(

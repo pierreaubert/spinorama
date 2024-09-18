@@ -121,7 +121,6 @@ class SpinoramaEstimatesNV4Tests(unittest.TestCase):
 
 
 class SpinoramaEstimatesSensitivityGLLTests(unittest.TestCase):
-
     def test_1(self):
         status, (self.title, self.df_unmelted) = parse_graphs_speaker_gll_hv_txt(
             speaker_path="datas/measurements",
@@ -129,8 +128,11 @@ class SpinoramaEstimatesSensitivityGLLTests(unittest.TestCase):
             version="vendor-pattern-50x50",
         )
         self.assertTrue(status)
-        self.sensitivity = compute_sensitivity(self.df_unmelted, "gll_hv_txt")
-        self.assertAlmostEqual(self.sensitivity, 101, delta=1)
+        self.sensitivity, self.sensitivity_1m = compute_sensitivity(
+            self.df_unmelted, "gll_hv_txt", 10.0
+        )
+        self.assertAlmostEqual(self.sensitivity, 81, delta=1)
+        self.assertAlmostEqual(self.sensitivity_1m, 101, delta=1)
 
     def test_2(self):
         status, (self.title, self.df_unmelted) = parse_graphs_speaker_gll_hv_txt(
@@ -139,8 +141,11 @@ class SpinoramaEstimatesSensitivityGLLTests(unittest.TestCase):
             version="vendor",
         )
         self.assertTrue(status)
-        self.sensitivity = compute_sensitivity(self.df_unmelted, "gll_hv_txt")
-        self.assertAlmostEqual(self.sensitivity, 96.8, delta=1)
+        self.sensitivity, self.sensitivity_1m = compute_sensitivity(
+            self.df_unmelted, "gll_hv_txt", 10.0
+        )
+        self.assertAlmostEqual(self.sensitivity, 76.8, delta=1)
+        self.assertAlmostEqual(self.sensitivity_1m, 96.8, delta=1)
 
 
 if __name__ == "__main__":

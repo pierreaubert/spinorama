@@ -25,6 +25,7 @@ Options:
   --version         script version number
   --log-level=<level> default is WARNING, options are DEBUG INFO ERROR.
 """
+
 import json
 import logging
 import os

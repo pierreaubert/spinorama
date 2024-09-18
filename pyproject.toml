@@ -5,7 +5,7 @@ requires = ["setuptools", "wheel", "Cython"]
 name = "spinorama"
 description = "Spinorama computes speaker measurements"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = "GPL"
 authors = [
     { name = "Pierre Aubert", email = "pierre0aubert@gmail.com" },
@@ -16,15 +16,12 @@ Homepage = "https://www.spinorama.org"
 API = "https://api.spinorama.org"
 Documentation = "https://github.com/pierreaubert/spinorama/tree/master/tutorial"
 
-[tool.black]
-line-length = 100
-
 [tool.pyright]
 include = [".", "src", "tests"]
 ignore = ["book", "experimentals", "datas/measurements", "datas/eq", "datas/pictures"]
-venvPath = './spinorama-venv'
+venvPath = './.venv'
 typeCheckingMode = 'basic'
-pythonVersion = "3.11"
+pythonVersion = "3.12"
 pythonPlatform = "Linux"
 
 [tool.ruff]
@@ -80,6 +77,7 @@ lint.select = ["F", "N", "YTT", "S", "B", "FBT", "EM", "ISC", "EXE", "G", "Q", "
 lint.ignore = [
        "PLR",
        "T20",
+       "ISC001",
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.

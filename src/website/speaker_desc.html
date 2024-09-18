@@ -100,24 +100,32 @@ Warning: this measurement was already process with an equalizer.
 
 <%def name="speaker_sensitivity(measurement)">
 <%
-  sensitivity_data = measurement.get('sensitivity', {})
-  sensitivity = sensitivity_data.get('computed', None)
-  sensitivity_1m = sensitivity_data.get('sensitivity_1m', None)
+  sensitivity_data     = measurement.get('sensitivity', {})
+  sensitivity          = sensitivity_data.get('computed', None)
+  sensitivity_1m       = sensitivity_data.get('sensitivity_1m', None)
   sensitivity_distance = sensitivity_data.get('distance', None)
 %>
 % if sensitivity is not None:
-%    if sensitivity_1m is not None:
 <li>
-  Sensitivity: <b>${'{0:.1f}'.format(sensitivity_1m)}</b>dB (avg. 100Hz-1kHz for 2.83V estimated at <b>1m</b>)
-%        if sensitivity_distance is not None and sensitivity_distance > 1.0:
-. Sensitivity computed at the measurement distance (${sensitivity_distance}m) over the same frequency range: ${'{:.1f}dB'.format(sensitivity)}.
-%        endif
+% if sensitivity_1m is not None:
+  % if sensitivity_distance is not None and sensitivity_distance != 1.0:
+  Sensitivity:
+  <ul>
+    <li>
+      Sensitivity: <b>${'{0:.1f}'.format(sensitivity_1m)}</b>dB (avg. 100Hz-1kHz for 2.83V estimated at <b>1m</b>).
+    </li>
+    <li>
+      Sensitivity: ${'{:.1f}dB'.format(sensitivity)} computed at the measurement distance (${sensitivity_distance}m) over the same frequency range.
+    </li>
+  </ul>
+  % else:
+  Sensitivity: <b>${'{0:.1f}'.format(sensitivity_1m)}</b>dB (avg. 100Hz-1kHz for 2.83V measured at <b>1m</b>).
+  % endif
 </li>
-%    else:
-<li>
-  Sensitivity: <b>${'{0:.1f}'.format(sensitivity)}</b>dB (avg. 100Hz-1kHz for 2.83V measured at <b>1m</b>).
+% else:
+Sensitivity: <b>${'{0:.1f}'.format(sensitivity)}</b>dB (avg. 100Hz-1kHz for 2.83V measured at <b>1m</b>).
+% endif
 </li>
-%    endif
 % endif
 </%def>
 

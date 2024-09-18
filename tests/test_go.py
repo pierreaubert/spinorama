@@ -77,7 +77,7 @@ class GlobalOptimizerTests(unittest.TestCase):
             "MAX_DBGAIN": 3.0,
             "MAX_ITER": 500,
             "MAX_NUMBER_PEQ": 3,
-            "full_biquad_optim": False,
+            "use_all_biquad": False,
         }
         # speaker data
         df_speaker = {

@@ -565,6 +565,26 @@ speakers_info_e: SpeakerDatabase = {
             },
         },
     },
+    "Elac BS 41": {
+        "brand": "Elac",
+        "model": "BS 41",
+        "type": "passive",
+        "price": "180",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_bs41/",
+                    "yt": "https://youtu.be/aU_3cidukOE?si=aXuAKkVI8DvE1LHQ",
+                },
+                "review_published": "20240916",
+            },
+        },
+    },
     "Elac Debut Reference DBR-62": {
         "brand": "Elac",
         "model": "Debut Reference DBR-62",

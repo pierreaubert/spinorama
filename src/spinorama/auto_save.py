@@ -140,6 +140,11 @@ def print_auto_graphs_seq(
             graph_filename = "{}/{}/{}/filters_{}".format(
                 CPATH_DOCS_SPEAKERS, speaker_name, origin, name
             )
+            if optim_config["output_dir"] and pathlib.Path(optim_config["output_dir"]).exists():
+                graph_filename = "{}/filters_{}".format(
+                    pathlib.Path(optim_config["output_dir"]).resolve(), name
+                )
+
             if optim_config["use_grapheq"]:
                 grapheq_name = optim_config["grapheq_name"]
                 short_name = grapheq_name.lower().replace(" ", "-")
@@ -170,8 +175,12 @@ def print_small_summary(
 def build_eq_name(
     current_speaker_name: str,
     optim_config: dict,
-) -> tuple[str, str]:
-    eq_dir = "datas/eq/{}".format(current_speaker_name)
+) -> tuple[pathlib.Path, str]:
+    eq_dir = pathlib.Path("datas/eq/{}".format(current_speaker_name))
+    if optim_config["output_dir"]:
+        output_dir = pathlib.Path(optim_config["output_dir"])
+        if output_dir.exists():
+            eq_dir = output_dir.resolve()
     pathlib.Path(eq_dir).mkdir(parents=True, exist_ok=True)
     eq_name = "{}/iir-autoeq.txt".format(eq_dir)
 

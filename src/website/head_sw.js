@@ -4,9 +4,9 @@ function matchOldJS(names) {
     if (names.length > 0) {
         const name = names[0];
         const js = name.match(/\/js\/[a-z]*.min.js/);
-        const v4 = name.match(/-v4-/);
-        // js file and v4 not in the name
-        if (js.length === 1 && v4.length !== 1) {
+        const v5 = name.match(/-v5-/);
+        // js file and v5 not in the name
+        if (js.length === 1 && v5.length !== 1) {
             return true;
         }
     }

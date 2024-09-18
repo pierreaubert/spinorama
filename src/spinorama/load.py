@@ -108,10 +108,10 @@ def filter_graphs(
     speaker_name: str,
     h_spl,
     v_spl,
-    mean_min: float = MIDRANGE_MIN_FREQ,
-    mean_max: float = MIDRANGE_MAX_FREQ,
-    mformat: str = "klippel",
-    mdistance: float = 1.0,
+    mean_min: float,
+    mean_max: float,
+    mformat: str,
+    mdistance: float,
 ):
     """Filter a set of graphs defined by h_spl and v_spl.
 
@@ -221,10 +221,10 @@ def filter_graphs_eq(
     v_spl,
     h_eq_spl,
     v_eq_spl,
-    mean_min=MIDRANGE_MIN_FREQ,
-    mean_max=MIDRANGE_MAX_FREQ,
-    mformat="klippel",
-    mdistance: float = 1.0,
+    mean_min,
+    mean_max,
+    mformat,
+    mdistance,
 ):
     """Filter a set of graphs defined by h_spl and v_spl.
 

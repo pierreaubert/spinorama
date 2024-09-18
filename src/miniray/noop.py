@@ -109,14 +109,14 @@ def get(id):
 
 
 def init(
-        address="172.0.01",
-        include_dashboard=True,
-        dashboard_host="127.0.0.1",
-        dashboard_port=8080,
-        local_mode=True,
-        configure_logging=True,
-        logging_level=logging.INFO,
-        log_to_driver=True,
+    address="172.0.01",
+    include_dashboard=True,
+    dashboard_host="127.0.0.1",
+    dashboard_port=8080,
+    local_mode=True,
+    configure_logging=True,
+    logging_level=logging.INFO,
+    log_to_driver=True,
 ):
     return None
 

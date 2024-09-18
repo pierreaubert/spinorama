@@ -41,6 +41,7 @@ Options:
   --update-cache      force updating the cache
   --width=<width>     width size in pixel
 """
+
 import glob
 import os
 import random
@@ -66,7 +67,7 @@ from generate_common import (
     custom_ray_init,
     get_custom_logger,
 )
-from datas import metadata
+from datas import metadata, Symmetry, Parameters
 from datas.helpers import measurement2distance
 from spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
 from spinorama.speaker_print import print_graphs
@@ -107,10 +108,10 @@ def queue_measurement(
     mformat: str,
     morigin: str,
     mversion: str,
-    msymmetry: str | None,
-    mparameters: dict | None,
+    msymmetry: Symmetry | None,
+    mparameters: Parameters | None,
     level: int,
-    distance: float
+    distance: float,
 ) -> tuple[int, int, int, int]:
     """Add all measurements in the queue to be processed"""
     id_df = parse_graphs_speaker.remote(
@@ -123,10 +124,16 @@ def queue_measurement(
         msymmetry,
         mparameters,
         level,
-        distance
+        distance,
     )
     id_eq = parse_eq_speaker.remote(
-        f"{data_dir}/datas", speaker, mformat, id_df, mparameters, level, distance,
+        f"{data_dir}/datas",
+        speaker,
+        mformat,
+        id_df,
+        mparameters,
+        level,
+        distance,
     )
     width = int(plot_params_default["width"])
     height = int(plot_params_default["height"])

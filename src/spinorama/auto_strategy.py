@@ -130,7 +130,7 @@ def optim_strategy(
         configs.append(
             {
                 "curve_names": curve_names,  # fit on the 2 curves
-                "full_biquad_optim": optim_config.get("full_biquad_optim", True),
+                "use_all_biquad": optim_config.get("use_all_biquad", True),
                 "smooth_measurements": optim_config.get("smooth_measurements", False),
                 "loss": "score_loss",
             }
@@ -144,7 +144,7 @@ def optim_strategy(
         configs.append(
             {
                 "curve_names": curve_names,
-                "full_biquad_optim": optim_config.get("full_biquad_optim", False),  # only PK
+                "use_all_biquad": optim_config.get("use_all_biquad", False),  # only PK
                 "smooth_measurements": True,  # some smoothing
                 "smooth_window_size": 21,
                 "smooth_order": 3,
@@ -155,7 +155,7 @@ def optim_strategy(
     constraint_optim = False
     if (
         optim_config["curve_names"] is not None
-        or optim_config["full_biquad_optim"] is not None
+        or optim_config["use_all_biquad"] is not None
         or optim_config["smooth_measurements"] is not None
         or optim_config["smooth_window_size"] is not None
         or optim_config["smooth_order"] is not None
@@ -168,7 +168,7 @@ def optim_strategy(
         configs.append(
             {
                 "curve_names": ["Listening Window"],
-                "full_biquad_optim": True,
+                "use_all_biquad": True,
                 "smooth_measurements": True,
                 "smooth_window_size": 21,
                 "smooth_order": 3,
@@ -178,7 +178,7 @@ def optim_strategy(
         configs.append(
             {
                 "curve_names": ["Estimated In-Room Response"],
-                "full_biquad_optim": False,
+                "use_all_biquad": False,
                 "smooth_measurements": True,
                 "smooth_window_size": 21,
                 "smooth_order": 3,
@@ -188,7 +188,7 @@ def optim_strategy(
         configs.append(
             {
                 "curve_names": ["Estimated In-Room Response"],
-                "full_biquad_optim": True,
+                "use_all_biquad": True,
                 "smooth_measurements": True,
                 "smooth_window_size": 21,
                 "smooth_order": 3,
@@ -198,7 +198,7 @@ def optim_strategy(
         configs.append(
             {
                 "curve_names": ["Listening Window"],
-                "full_biquad_optim": True,
+                "use_all_biquad": True,
                 "smooth_measurements": True,
                 "smooth_window_size": 9,
                 "smooth_order": 3,
@@ -208,7 +208,7 @@ def optim_strategy(
         configs.append(
             {
                 "curve_names": ["Estimated In-Room Response"],
-                "full_biquad_optim": False,
+                "use_all_biquad": False,
                 "smooth_measurements": True,
                 "smooth_window_size": 9,
                 "smooth_order": 3,
@@ -218,7 +218,7 @@ def optim_strategy(
         configs.append(
             {
                 "curve_names": ["Estimated In-Room Response"],
-                "full_biquad_optim": True,
+                "use_all_biquad": True,
                 "smooth_measurements": True,
                 "smooth_window_size": 9,
                 "smooth_order": 3,
@@ -229,7 +229,7 @@ def optim_strategy(
             configs.append(
                 {
                     "curve_names": ["Listening Window", "Estimated In-Room Response"],
-                    "full_biquad_optim": optim_config.get("full_biquad_optim", True),
+                    "use_all_biquad": optim_config.get("use_all_biquad", True),
                     "smooth_measurements": False,
                     "loss": "score_loss",
                 }
@@ -239,15 +239,13 @@ def optim_strategy(
     best_score = -1000.0
     results = None
     for config in configs:
-        logger.debug(
-            "config: optim_config full_biquad_optim %s", optim_config.get("full_biquad_optim")
-        )
+        logger.debug("config: optim_config use_all_biquad %s", optim_config.get("use_all_biquad"))
         current_optim_config = deepcopy(optim_config)
         for k, v in config.items():
             current_optim_config[k] = v
         logger.debug(
-            "config: current_optim_config full_biquad_optim %s",
-            current_optim_config.get("full_biquad_optim"),
+            "config: current_optim_config use_all_biquad %s",
+            current_optim_config.get("use_all_biquad"),
         )
         # don't compute configs that do not match
         if optim_config["curve_names"] is not None and set(optim_config["curve_names"]) != set(
@@ -339,11 +337,14 @@ def optim_strategy(
                     continue
 
                 current_optim_config[slope_name] = delta
-                auto_status2, (
-                    auto_score2,
-                    auto_results2,
-                    auto_peq2,
-                    auto_slope_lw2,
+                (
+                    auto_status2,
+                    (
+                        auto_score2,
+                        auto_results2,
+                        auto_peq2,
+                        auto_slope_lw2,
+                    ),
                 ) = optim_eval_strategy(
                     current_speaker_name, df_speaker, current_optim_config, use_score
                 )

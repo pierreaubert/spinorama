@@ -62,6 +62,13 @@ if ! test -d $SPIN/.venv; then
 fi
 source .venv/bin/activate
 
+## ray configuration
+## ---------------------------------------------------------------------
+if test "$(hostname)" = "horn"; then
+    # remove a warning from Ray since horn has 128 threads
+    export NUMEXPR_MAX_THREADS=96
+fi
+
 ## node install
 ## ----------------------------------------------------------------------
 if ! test -d $SPIN/node_modules; then

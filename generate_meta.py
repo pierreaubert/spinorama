@@ -39,6 +39,7 @@ Options:
   --dash-ip=<dash-ip>      IP for the ray dashboard to track execution
   --dash-port=<dash-port>  Port for the ray dashbboard
 """
+
 import errno
 from hashlib import md5
 from itertools import groupby
@@ -57,7 +58,6 @@ from docopt import docopt
 
 from spinorama import ray_setup_logger
 from spinorama.constant_paths import flags_ADD_HASH
-from metadata.helpers import measurement2distance
 
 try:
     import ray
@@ -190,9 +190,7 @@ def compute_scaled_sm_pir(sm_pir: float) -> float:
 
 
 def reject(filters: dict, speaker_name: str) -> bool:
-    if filters["speaker_name"] is not None and filters["speaker_name"] != speaker_name:
-        return True
-    return False
+    return filters["speaker_name"] is not None and filters["speaker_name"] != speaker_name
 
 
 @ray.remote(num_cpus=1)
@@ -234,11 +232,10 @@ def queue_score(speaker_name, speaker_data):
                     and metadata.speakers_info[speaker_name].get("type") == "passive"
                     and key == default_key
                 ):
-                    distance = measurement2distance(speaker_name, dfs)
                     result["sensitivity"] = {
                         "computed": sensitivity,
-                        "distance": distance,
-                        "sensitivity_1m": dfs.get("sensitivity_1m")
+                        "distance": dfs.get("sensitivity_distance", 1.0),
+                        "sensitivity_1m": dfs.get("sensitivity_1m"),
                     }
 
                 # basic math
@@ -318,20 +315,20 @@ def add_scores(dataframe, parse_max, filters):
                     continue
 
                 if computed_estimates is not None:
-                    metadata.speakers_info[speaker_name]["measurements"][version][
-                        "estimates"
-                    ] = computed_estimates
+                    metadata.speakers_info[speaker_name]["measurements"][version]["estimates"] = (
+                        computed_estimates
+                    )
                 if (
                     sensitivity is not None
                     and metadata.speakers_info[speaker_name].get("type") == "passive"
                 ):
-                    metadata.speakers_info[speaker_name]["measurements"][version][
-                        "sensitivity"
-                    ] = sensitivity
+                    metadata.speakers_info[speaker_name]["measurements"][version]["sensitivity"] = (
+                        sensitivity
+                    )
                 if pref_rating is not None:
-                    metadata.speakers_info[speaker_name]["measurements"][version][
-                        "pref_rating"
-                    ] = pref_rating
+                    metadata.speakers_info[speaker_name]["measurements"][version]["pref_rating"] = (
+                        pref_rating
+                    )
 
         if len(remain_refs) == 0:
             break

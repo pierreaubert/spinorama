@@ -2,8 +2,8 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_l: SpeakerDatabase = {
-    "L Acoustics 108P": {
-        "brand": "L Acoustics",
+    "L-Acoustics 108P": {
+        "brand": "L-Acoustics",
         "model": "108P",
         "type": "active",
         "price": "7400",
@@ -12,7 +12,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
@@ -20,8 +20,8 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "L Acoustics 112P": {
-        "brand": "L Acoustics",
+    "L-Acoustics 112P": {
+        "brand": "L-Acoustics",
         "model": "112P",
         "type": "active",
         "price": "",
@@ -30,7 +30,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
@@ -38,8 +38,8 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "L Acoustics 5XT": {
-        "brand": "L Acoustics",
+    "L-Acoustics 5XT": {
+        "brand": "L-Acoustics",
         "model": "5XT",
         "type": "passive",
         "price": "",
@@ -48,7 +48,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
@@ -72,8 +72,8 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "L Acoustics X4i": {
-        "brand": "L Acoustics",
+    "L-Acoustics X4i": {
+        "brand": "L-Acoustics",
         "model": "X4i",
         "type": "passive",
         "price": "",
@@ -82,7 +82,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
@@ -106,8 +106,8 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "L Acoustics X6i": {
-        "brand": "L Acoustics",
+    "L-Acoustics X6i": {
+        "brand": "L-Acoustics",
         "model": "X6i",
         "type": "passive",
         "price": "",
@@ -116,7 +116,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
@@ -140,8 +140,8 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "L Acoustics X8": {
-        "brand": "L Acoustics",
+    "L-Acoustics X8": {
+        "brand": "L-Acoustics",
         "model": "X8",
         "type": "passive",
         "price": "",
@@ -150,7 +150,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
@@ -158,8 +158,8 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "L Acoustics X12": {
-        "brand": "L Acoustics",
+    "L-Acoustics X12": {
+        "brand": "L-Acoustics",
         "model": "X12",
         "type": "passive",
         "price": "",
@@ -168,7 +168,7 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
@@ -176,8 +176,8 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "L Acoustics X15 HiQ": {
-        "brand": "L Acoustics",
+    "L-Acoustics X15 HiQ": {
+        "brand": "L-Acoustics",
         "model": "X15 HiQ",
         "type": "passive",
         "price": "",
@@ -186,11 +186,28 @@ speakers_info_l: SpeakerDatabase = {
         "default_measurement": "vendor",
         "measurements": {
             "vendor": {
-                "origin": "Vendors-L Acoustics",
+                "origin": "Vendors-L-Acoustics",
                 "format": "gll_hv_txt",
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "medium",
                 "review_published": "20220924",
+            },
+        },
+    },
+    "LCM Nearfield Monitor 3-D Printed DIY": {
+        "brand": "LCM",
+        "model": "Nearfield Monitor 3-D Printed DIY",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/lcm_nearfield_monitor/",
+                "review_published": "20220623",
             },
         },
     },
@@ -467,20 +484,31 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
-    "LCM Nearfield Monitor 3-D Printed DIY": {
-        "brand": "LCM",
-        "model": "Nearfield Monitor 3-D Printed DIY",
-        "type": "passive",
-        "price": "",
-        "shape": "bookshelves",
+    "LOGProfessional Alpha": {
+        "brand": "LOGProfessional",
+        "model": "Alpha",
+        "type": "active",
+        "price": "5930",
         "amount": "pair",
-        "default_measurement": "eac",
+        "shape": "bookshelves",
+        "default_measurement": "misc-sr",
         "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "review": "https://www.erinsaudiocorner.com/loudspeakers/lcm_nearfield_monitor/",
-                "review_published": "20220623",
+            "misc-sr": {
+                "origin": "Misc",
+                "format": "webplotdigitizer",
+                "quality": "medium",
+                "reviews": {
+                    "snr": "https://www.soundandrecording.de/allgemein/log-professional-alpha-2-wege-nahfeldmonitor-im-test/",
+                },
+                "review_published": "20240914",
+                "specifications": {
+                    "size": {
+                        "height": 340,
+                        "width": 220,
+                        "depth": 220,
+                    },
+                    "weight": 7.0,
+                },
             },
         },
     },
