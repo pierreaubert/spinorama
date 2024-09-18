@@ -24,7 +24,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { getID } from './misc.js';
 import { isWithinPage, urlParameters2Sort, search } from './search.js';
 
-const TEST_URL='https://dev.spinorama.org/index.html'
+const TEST_URL = 'https://dev.spinorama.org/index.html';
 const METADATA_TEST_FILE = './tests/datas/metadata-20240516.json';
 
 describe('urlParameters2Sort', () => {
@@ -131,9 +131,7 @@ describe('test full text search and filtering', () => {
     });
 
     it('search by brand revel and bookshelves sorted by price, cheaper first', () => {
-        const url = new URL(
-            TEST_URL + '?brand=Revel&count=14&power=passive&shape=bookshelves&sort=price&reverse=true'
-        );
+        const url = new URL(TEST_URL + '?brand=Revel&count=14&power=passive&shape=bookshelves&sort=price&reverse=true');
         const params = urlParameters2Sort(url);
         const [maxResults, results] = search(metadata, params);
         expect(results).toBeDefined();
@@ -395,7 +393,6 @@ describe('non regression for bug discussions/279', () => {
             const db = getDate(b);
             return db - da;
         });
-
     });
 
     it('search by brand KEF and check that we have the correct speakers', () => {
@@ -446,7 +443,7 @@ describe('non regression for bug discussions/288', () => {
         const [maxResults1, results1] = search(metadata, params1);
         expect(results1).toBeDefined();
         expect(results1).toBeTypeOf('object');
-	expect(results1[0]).toBe('JBL-306P-Mark-ii');
+        expect(results1[0]).toBe('JBL-306P-Mark-ii');
     });
 
     it('search for JBL 306p and check that the results are sane', () => {
@@ -455,7 +452,7 @@ describe('non regression for bug discussions/288', () => {
         const [maxResults1, results1] = search(metadata, params1);
         expect(results1).toBeDefined();
         expect(results1).toBeTypeOf('object');
-	expect(results1[0]).toBe('JBL-306P-Mark-ii');
+        expect(results1[0]).toBe('JBL-306P-Mark-ii');
     });
 
     it('search for JBL 308p mark and check that the results are sane', () => {
@@ -465,6 +462,6 @@ describe('non regression for bug discussions/288', () => {
         expect(results1).toBeDefined();
         expect(results1).toBeTypeOf('object');
         expect(maxResults1).toBe(3);
-	expect(results1[0]).toBe('JBL-308P-Mark-ii');
+        expect(results1[0]).toBe('JBL-308P-Mark-ii');
     });
 });

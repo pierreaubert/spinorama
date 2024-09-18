@@ -144,8 +144,8 @@ getMetadata()
                     ) {
                         graphsConfigs = setGlobe(speakersName, graphs, windowWidth, windowHeight);
                     } else {
-			console.error('Measurement '+measurement+' is unknown');
-		    }
+                        console.error('Measurement ' + measurement + ' is unknown');
+                    }
 
                     // console.log('datas and layouts length='+graphsConfigs.length)
                     if (graphsConfigs.length === 1) {

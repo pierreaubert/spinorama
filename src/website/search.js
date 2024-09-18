@@ -69,16 +69,26 @@ const knownSorter = new Set([
 
 function printParams(params) {
     const [sorter, filter, keywords, pagination] = [...params];
-    console.log('  sorter: '+sorter.by+' reverse: '+sorter.reverse);
-    console.log('  filter:'+
-		' brand='+filter.brand+
-		' power='+filter.power+
-		' quality='+filter.quality+
-		' '+ filter.priceMin+' <=price<= '+ filter.priceMax+
-		' reviewer='+filter.reviewer+
-		' shape='+filter.shape);
-    console.log(' keywords='+keywords.toString());
-    console.log(' pagination: page='+pagination.page);
+    console.log('  sorter: ' + sorter.by + ' reverse: ' + sorter.reverse);
+    console.log(
+        '  filter:' +
+            ' brand=' +
+            filter.brand +
+            ' power=' +
+            filter.power +
+            ' quality=' +
+            filter.quality +
+            ' ' +
+            filter.priceMin +
+            ' <=price<= ' +
+            filter.priceMax +
+            ' reviewer=' +
+            filter.reviewer +
+            ' shape=' +
+            filter.shape
+    );
+    console.log(' keywords=' + keywords.toString());
+    console.log(' pagination: page=' + pagination.page);
 }
 
 function sortParameters2Sort(url) {
@@ -159,7 +169,10 @@ function filtersParameters2Sort(url) {
 function keywordsParameters2Sort(url) {
     let keywords = '';
     if (url.searchParams.has('search')) {
-        keywords = url.searchParams.get('search').toString().replace(/[^a-zA-Z0-9&]/g, ' ');
+        keywords = url.searchParams
+            .get('search')
+            .toString()
+            .replace(/[^a-zA-Z0-9&]/g, ' ');
         const selectorName = urlToSelectorName.get('search');
         let selector = document.querySelector(selectorName);
         if (selector) {
@@ -207,14 +220,13 @@ export function urlParameters2Sort(url) {
 
     // if we have keywords to search for then give priority for search
     if (keywords !== '') {
-	sorter.by = 'fullTextSearch';
-	sorter.reverse = true;;
+        sorter.by = 'fullTextSearch';
+        sorter.reverse = true;
     }
     return [sorter, filters, keywords, pagination];
 }
 
 export function sortMetadata2(metadata, sorter, results) {
-
     const sortChildren = ({ container, score, reverse }) => {
         // console.log('sorting2 by '+score)
         const items = [...container.keys()];
@@ -402,10 +414,10 @@ export function sortMetadata2(metadata, sorter, results) {
 
     function getFullTextSearch(key, fts) {
         const spk = fts.get(key);
-	if (!spk || !spk.score) {
-	    return 100;
-	}
-	// console.debug('speaker '+key+' score='+spk.score);
+        if (!spk || !spk.score) {
+            return 100;
+        }
+        // console.debug('speaker '+key+' score='+spk.score);
         return spk.score;
     }
 
@@ -748,7 +760,8 @@ export function isSearch(key, results, minScore, keywords) {
         // const isExact = imeta.model.toLowerCase().includes(keywords.toLowerCase());
         // console.debug('isExact ' + isExact + ' model ' + imeta.model.toLowerCase() + ' keywords ' + keywords.toLowerCase());
         // we have an exact match, only shouldShow other exact matches
-        if (score >= Math.pow(10, -15) ) { // || !isExact) {
+        if (score >= Math.pow(10, -15)) {
+            // || !isExact) {
             // console.debug('filtered out (minscore)' + score);
             shouldShow = false;
         }
@@ -758,8 +771,8 @@ export function isSearch(key, results, minScore, keywords) {
             // console.debug('filtered out (score=' + score + 'minscore=' + minScore + ')');
             shouldShow = false;
         } else {
-	    // console.debug('not filtered out (score=' + score + 'minscore=' + minScore + ')');
-	}
+            // console.debug('not filtered out (score=' + score + 'minscore=' + minScore + ')');
+        }
     }
     return shouldShow;
 }
@@ -778,86 +791,79 @@ export function rank1(fuse, brands, models, word) {
     return results;
 }
 
-export function rank2(fuse, brands, models,  words) {
+export function rank2(fuse, brands, models, words) {
     // perfect world
     if (brands.has(words[0]) && models.has(words[1])) {
-	const query_exact = {
-	    $and: [
-		{'speaker.brand': "'"+words[0]},
-		{'speaker.model': "'"+words[1]}
-	    ]
-	};
-	const results_exact = fuse.search(query_exact);
-	if (results_exact.length > 0 ) {
-	    return results_exact;
-	}
+        const query_exact = {
+            $and: [{ 'speaker.brand': "'" + words[0] }, { 'speaker.model': "'" + words[1] }],
+        };
+        const results_exact = fuse.search(query_exact);
+        if (results_exact.length > 0) {
+            return results_exact;
+        }
     }
     // concat 2 words and see if that is a brand or a model
     const concat1 = words[0] + ' ' + words[1];
     if (brands.has(concat1) || models.has(concat1)) {
-	return rank1(fuse, brands, models, concat1);
+        return rank1(fuse, brands, models, concat1);
     }
     const concat2 = words[0] + words[1];
     if (brands.has(concat2) || models.has(concat2)) {
-	return rank1(fuse, brands, models, concat2);
+        return rank1(fuse, brands, models, concat2);
     }
     // try a normal query
     const query = {
-	$and: [
-	    {'speaker.brand': words[0]},
-	    {'speaker.model': words[1]}
-	]
+        $and: [{ 'speaker.brand': words[0] }, { 'speaker.model': words[1] }],
     };
     const results = fuse.search(query);
-    if (results.length > 0 ) {
-	return results;
+    if (results.length > 0) {
+        return results;
     }
     return fuse.search(words.join(' '));
 }
 
-export function rankN(fuse, brands, models,  words) {
-    if (words.length === 2 ) {
-	return rank2(fuse, brands, models, words);
+export function rankN(fuse, brands, models, words) {
+    if (words.length === 2) {
+        return rank2(fuse, brands, models, words);
     }
-    const concat01 = words[0]+' '+words[1];
+    const concat01 = words[0] + ' ' + words[1];
     if (brands.has(concat01) || models.has(concat01)) {
-	const condensed = [concat01].concat(words.slice(2));
-	return rankN(fuse, brands, models, condensed);
+        const condensed = [concat01].concat(words.slice(2));
+        return rankN(fuse, brands, models, condensed);
     }
-    const concat12 = words[1]+' '+words[2];
+    const concat12 = words[1] + ' ' + words[2];
     if (brands.has(concat12) || models.has(concat12)) {
-	const condensed = [words[0], concat12].concat(words.slice(3));
-	return rankN(fuse, brands, models, condensed);
+        const condensed = [words[0], concat12].concat(words.slice(3));
+        return rankN(fuse, brands, models, condensed);
     }
     if (brands.has(words[0])) {
-	const condensed = [words[0], words.slice(1).join(' ')];
-	return rank2(fuse, brands, models, condensed);
+        const condensed = [words[0], words.slice(1).join(' ')];
+        return rank2(fuse, brands, models, condensed);
     }
     return fuse.search(words.join(' '));
 }
-
 
 export function rank(fuse, brands, models, keywords) {
     let results = null;
     let minScore = 100;
     let resultsFullText = null;
     if (keywords !== '') {
-	const words = keywords.trim().split(' ');
-	if (words.length === 1 ) {
-	    results = rank1(fuse, brands, models, words[0]);
-	} else if (words.length === 2 ) {
-	    results = rank2(fuse, brands, models, words);
-	} else {
-	    results = rankN(fuse, brands, models, words);
-	}
-	if (results.length > 0) {
+        const words = keywords.trim().split(' ');
+        if (words.length === 1) {
+            results = rank1(fuse, brands, models, words[0]);
+        } else if (words.length === 2) {
+            results = rank2(fuse, brands, models, words);
+        } else {
+            results = rankN(fuse, brands, models, words);
+        }
+        if (results.length > 0) {
             for (const spk in results) {
-		if (results[spk].score < minScore) {
+                if (results[spk].score < minScore) {
                     minScore = results[spk].score;
-		}
+                }
             }
-	}
-	resultsFullText = new Map(results.map((obj) => [obj.item.key, obj]));
+        }
+        resultsFullText = new Map(results.map((obj) => [obj.item.key, obj]));
     }
     return [minScore, resultsFullText];
 }
@@ -865,9 +871,9 @@ export function rank(fuse, brands, models, keywords) {
 export function search(data, params) {
     const brands = new Set();
     const models = new Set();
-    data.forEach( (v, k) => {
-	brands.add(v["brand"].toLowerCase());
-	models.add(v["model"].toLowerCase());
+    data.forEach((v, k) => {
+        brands.add(v['brand'].toLowerCase());
+        models.add(v['model'].toLowerCase());
     });
     const fuse_exact = new Fuse(
         // Fuse take a list not a map
@@ -879,9 +885,9 @@ export function search(data, params) {
             minMatchCharLength: 2,
             keys: ['speaker.brand', 'speaker.model', 'speaker.type', 'speaker.shape'],
             includeScore: true,
-	    shouldSort: false,
-	    treshhold: 0,
-	    useExtendedSearch: true
+            shouldSort: false,
+            treshhold: 0,
+            useExtendedSearch: true,
         }
     );
 
