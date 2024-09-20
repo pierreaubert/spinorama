@@ -22,10 +22,10 @@ touch env.log
 ## SSH AGENT
 ## ----------------------------------------------------------------------
 ssh-agent -k >> env.log 2>&1
-eval `ssh-agent`
+eval $(ssh-agent)
 echo $SSH_AGENT_SOCK
 if ! test -f ~/.ssh/id_rsa_github; then
-    echo "ERROR github key don\'t exists!"
+    echo "ERROR github key don't exists!"
 fi
 
 ## Github keys
@@ -51,9 +51,9 @@ fi
 ## ----------------------------------------------------------------------
 SPIN=$PWD
 export PYTHONPATH=$SPIN/src:$SPIN/src/website:$SPIN
-if ! test -d $SPIN/.venv; then
+if ! test -d "$SPIN/.venv"; then
     python3 -m venv .venv
-    source $SPIN/.venv/bin/activate
+    source "$SPIN/.venv/bin/activate"
     # rehash
     pip3 install -U pip
     pip3 install -r requirements.txt
@@ -71,7 +71,7 @@ fi
 
 ## node install
 ## ----------------------------------------------------------------------
-if ! test -d $SPIN/node_modules; then
+if ! test -d "$SPIN/node_modules"; then
     npm install .
 fi
 export PATH=$PATH:$SPIN/node_modules/.bin
@@ -80,7 +80,7 @@ export PATH=$PATH:$SPIN/node_modules/.bin
 ## ----------------------------------------------------------------------
 CUDA=""
 if test -x /usr/bin/nvidia-smi; then
-    CUDA=$(nvidia-smi  -L)
+    CUDA="$(nvidia-smi  -L)"
 fi
 if test -d /usr/local/cuda/extras/CUPTI/lib64; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
@@ -90,7 +90,7 @@ fi
 ## ----------------------------------------------------------------------
 ROCM=""
 if test -x /usr/bin/rocminfo; then
-    ROCM=$(rocminfo  | grep 'Marketing Name' | grep Radeon | cut -d: -f 2 | sed -e 's/  //g')
+    ROCM="$(rocminfo  | grep 'Marketing Name' | grep Radeon | cut -d: -f 2 | sed -e 's/  //g')"
 fi
 if test -d /usr/local/cuda/extras/CUPTI/lib64; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64

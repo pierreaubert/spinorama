@@ -17,17 +17,17 @@ compute_eq()
 {
     target_dir="$(pwd)/build/eqs/$3/$2-$1"
     mkdir -p "$target_dir"
-    ./generate_peqs.py \
-	--verbose \
-	--force \
-	--optimisation=global \
-	--max-iter=15000 \
-	--speaker="$3" \
-	--max-peq=$1 \
-        --fitness=$2 \
-	--ray-cluster=$IP:$PORT \
-	--output-dir="$target_dir" 2>&1 > "$target_dir.log" \
-	&
+    { ./generate_peqs.py \
+	  --verbose \
+	  --force \
+	  --optimisation=global \
+	  --max-iter=15000 \
+	  --speaker="$3" \
+	  --max-peq=$1 \
+          --fitness=$2 \
+	  --ray-cluster=$IP:$PORT \
+	  --output-dir="$target_dir" > "$target_dir.log"; \
+	} 2>&1 &
 }
 
 start_ray
@@ -51,7 +51,7 @@ do
     compute_eq 7 "Score" "$spk"
 done
 
-for job in `jobs -p`
+for job in $(jobs -p)
 do
     wait $job || let "FAIL+=1"
 done
