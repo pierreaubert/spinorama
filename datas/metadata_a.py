@@ -1625,7 +1625,7 @@ speakers_info_a: SpeakerDatabase = {
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
                 },
-                "review_published": "20240720",
+                "review_published": "20240920",
                 "specifications": {
                     "size": {
                         "height": 400,
@@ -1671,7 +1671,7 @@ speakers_info_a: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
                     "abi": "https://audiolabinsight.com/t/ascilab-c5b-ver/248",
                 },
-                "review_published": "20240531",
+                "review_published": "20240920",
                 "specifications": {
                     "size": {
                         "height": 362,
@@ -1718,7 +1718,7 @@ speakers_info_a: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
                     "abi": "https://audiolabinsight.com/t/ascilab-c6b-ver/247",
                 },
-                "review_published": "20240531",
+                "review_published": "20240920",
                 "specifications": {
                     "size": {
                         "height": 385,

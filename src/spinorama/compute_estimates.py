@@ -108,6 +108,15 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
 
         logger.debug("est v2 %s", est)
 
+        # estimate how constant the directivity is
+        # see https://3d3a.princeton.edu/sites/g/files/toruqf931/files/documents/Sridhar_AES140_CDMetrics.pdf
+        spdi = spin.loc[spin["Measurements"] == "Sound Power DI"].reset_index(drop=True)
+        if spdi is not None:
+            est["dir_constant"] = spdi.dB.std()
+            logger.debug("Constant directivity %d", est["dir_constant"])
+        else:
+            print(spin.keys())
+
     except TypeError:
         logger.exception("Estimates failed for %s", onaxis.shape)
         return {}
@@ -120,7 +129,6 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
 
 def estimates(spin: pd.DataFrame, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> dict[str, float]:
     """ "Compute values when you do not necessary have all the 72 measurements"""
-    onaxis = pd.DataFrame()
     est = estimates_spin(spin)
     try:
         for orientation in ("horizontal", "vertical"):
@@ -141,10 +149,10 @@ def estimates(spin: pd.DataFrame, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> d
 
         logger.debug("Estimates v3: %s", est)
     except TypeError as type_error:
-        logger.warning("Estimates failed for %s with %s", onaxis.shape, type_error)
+        logger.warning("Estimates failed with %s", type_error)
         return {}
     except ValueError as value_error:
-        logger.warning("Estimates failed for %s with %s", onaxis.shape, value_error)
+        logger.warning("Estimates failed with %s", value_error)
         return {}
 
     return est
