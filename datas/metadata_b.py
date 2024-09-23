@@ -381,7 +381,7 @@ speakers_info_b: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/buchardt_a10/",
                     "yt": "https://youtu.be/VL7WtnxIZc8?si=iKZpDSVfWf68GNxj",
                 },
-                "review_published": "20241016",
+                "review_published": "20240916",
                 "specifications": {
                     "size": {
                         "height": 370,
