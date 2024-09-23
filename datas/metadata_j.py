@@ -1498,7 +1498,7 @@ speakers_info_j: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/jbl_250b/",
                     "yt": "https://youtu.be/YcAgRBndf3c",
                 },
-                "review_published": "2024040916",
+                "review_published": "20240916",
                 "specifications": {
                     "sensitivity": 86,
                     "impedance": 6,

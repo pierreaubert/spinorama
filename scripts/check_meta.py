@@ -24,6 +24,7 @@ Options:
   --version         script version number
 """
 
+import datetime
 import logging
 import sys
 
@@ -578,6 +579,28 @@ def sanity_check_measurement(name: str, version: str, measurement: Measurement) 
                 v,
             )
             status = 1
+            continue
+
+        if k == "review_published" and (not isinstance(v, str) or len(v) != 8):
+            if isinstance(v, str):
+                try:
+                    datetime.date.fromisoformat(v)
+                except ValueError:
+                    logging.error(
+                        "%s: in measurement %s review_published %s is not a valid ISO date",
+                        name,
+                        version,
+                        v,
+                    )
+                else:
+                    logging.error(
+                        "%s: in measurement %s review_published %s is incorrect (len is %d and should be 8)",
+                        name,
+                        version,
+                        v,
+                        len(v),
+                    )
+                status = 1
             continue
 
     if version[0:3] == "mis" and "quality" not in measurement:

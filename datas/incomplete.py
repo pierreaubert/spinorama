@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 """a list of measurements that are known to be incomplete.
 The set is used to decrease verbosity of warnings.
 """

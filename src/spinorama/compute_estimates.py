@@ -110,12 +110,13 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
 
         # estimate how constant the directivity is
         # see https://3d3a.princeton.edu/sites/g/files/toruqf931/files/documents/Sridhar_AES140_CDMetrics.pdf
-        spdi = spin.loc[spin["Measurements"] == "Sound Power DI"].reset_index(drop=True)
-        if spdi is not None:
-            est["dir_constant"] = spdi.dB.std()
-            logger.debug("Constant directivity %d", est["dir_constant"])
-        else:
-            print(spin.keys())
+        if "Measurements" in spin:
+            spdi = spin.loc[spin["Measurements"] == "Sound Power DI"].reset_index(drop=True)
+            if spdi is not None:
+                est["dir_constant"] = spdi.dB.std()
+                logger.debug("Constant directivity %d", est["dir_constant"])
+            else:
+                print(spin.keys())
 
     except TypeError:
         logger.exception("Estimates failed for %s", onaxis.shape)

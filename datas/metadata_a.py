@@ -85,7 +85,7 @@ speakers_info_a: SpeakerDatabase = {
                 "reviews": {
                     "snr": "https://www.soundandrecording.de/equipment/studiomonitor-adam-audio-a7v-im-test/",
                 },
-                "review_published": "202400914",
+                "review_published": "20240914",
                 "specifications": {
                     "size": {
                         "height": 337,
@@ -1625,7 +1625,7 @@ speakers_info_a: SpeakerDatabase = {
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
                 },
-                "review_published": "20240920",
+                "review_published": "20240923",
                 "specifications": {
                     "size": {
                         "height": 400,
