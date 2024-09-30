@@ -688,6 +688,34 @@ speakers_info_e: SpeakerDatabase = {
             },
         },
     },
+    "Elac Debut 3.0 Bookshelf": {
+        "skip": True,
+        "brand": "Elac",
+        "model": "Debut 3.0 Bookshelf",
+        "type": "passive",
+        "price": "430",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review": "https://www.erinsaudiocorner.com/loudspeakers/elac_xxx/",
+                "review_published": "2024xxxx",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 6,
+                    "size": {
+                        "height": 339,
+                        "width": 195,
+                        "depth": 298,
+                    },
+                    "weight": 17.3,
+                },
+            },
+        },
+    },
     "Elac BS U5 Slim": {
         "brand": "Elac",
         "model": "BS U5 Slim",
