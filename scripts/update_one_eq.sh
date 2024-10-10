@@ -10,7 +10,7 @@ PORT=9999
 start_ray()
 {
     #                                                                        prometheus exporter
-    ray start --node-ip-address=$IP --port $PORT --head --dashboard-host=$IP --metrics-export-port=9101
+    ray start --node-ip-address=$IP --port $PORT --head --dashboard-host=$IP --metrics-export-port=9101 --disable-usage-stats
 }
 
 compute_eq()

@@ -358,6 +358,37 @@ speakers_info_f: SpeakerDatabase = {
             },
         },
     },
+    "Fluid Audio FX50v2": {
+        "brand": "Fluid Audio",
+        "model": "FX50v2",
+        "type": "active",
+        "price": "300",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/fluid-audio-fx50v2-monitor-review.57541/",
+                    "pre": "https://www.production-expert.com/production-expert-1/fluid-audio-fx50-1",
+                },
+                "review_published": "20241009",
+                "specifications": {
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 234,
+                        "width": 176,
+                        "depth": 230,
+                    },
+                    "weight": 3.8,
+                },
+            },
+        },
+    },
     "Focal 1000 IWLCR6": {
         "brand": "Focal",
         "model": "1000 IWLCR6",
