@@ -1,3 +1,4 @@
+<%namespace name="util" module="website.utils" import="*"/>
 <%
   print_warning = False
   default = meta[speaker].get('default_measurement')
@@ -368,7 +369,7 @@ Links to other reviews: <a href="${review}">${key} review</a>
     <button class="delete" aria-label="delete"></button>
   </div>
   <div class="message-body">
-    We have multiple measurements for this speaker. Click <a href="../${default_origin | u}/index_${default}.html">here</a> to see the default one (which is higher quality if we have one measurement better than the others).
+    We have multiple measurements for this speaker. Click <a href="../${default_origin | space2url}/index_${default}.html">here</a> to see the default one (which is higher quality if we have one measurement better than the others).
   </div>
 </article>
 % endif

@@ -1516,6 +1516,41 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "Monitor Audio Silver RX1": {
+        "brand": "Monitor Audio",
+        "model": "Silver RX1",
+        "type": "passive",
+        "price": "675",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/monitor-audio-rx1-spinorama-measurements-cta-2034.57130/#post-2090018",
+                    "sav": "https://www.soundandvision.com/content/monitor-audio-silver-rx8-speaker-system-ht-labs-measures",
+                    "whf": "https://www.whathifi.com/monitor-audio/silver-rx1/review",
+                },
+                "review_published": "20240923",
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 6,
+                    "SPL": {
+                        "peak": 111.8,
+                    },
+                    "size": {
+                        "height": 312,
+                        "width": 185,
+                        "depth": 240,
+                    },
+                    "weight": 6.8,
+                },
+            },
+        },
+    },
     "Monoprice DT-3": {
         "brand": "Monoprice",
         "model": "DT-3",

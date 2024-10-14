@@ -85,7 +85,7 @@ speakers_info_a: SpeakerDatabase = {
                 "reviews": {
                     "snr": "https://www.soundandrecording.de/equipment/studiomonitor-adam-audio-a7v-im-test/",
                 },
-                "review_published": "202400914",
+                "review_published": "20240914",
                 "specifications": {
                     "size": {
                         "height": 337,
@@ -1625,7 +1625,7 @@ speakers_info_a: SpeakerDatabase = {
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
                 },
-                "review_published": "20240720",
+                "review_published": "20240923",
                 "specifications": {
                     "size": {
                         "height": 400,
@@ -1661,9 +1661,27 @@ speakers_info_a: SpeakerDatabase = {
         "price": "1000",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "vendor",
+        "default_measurement": "vendor-v2-20240919",
         "measurements": {
-            "vendor": {
+            "vendor-v2-20240919": {
+                "origin": "Vendors-AsciLab",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
+                    "abi": "https://audiolabinsight.com/t/ascilab-c5b-ver/248",
+                },
+                "review_published": "20240920",
+                "specifications": {
+                    "size": {
+                        "height": 362,
+                        "width": 176,
+                        "depth": 230,
+                    },
+                    "weight": 10.4,
+                },
+            },
+            "vendor-v1-20240814": {
                 "origin": "Vendors-AsciLab",
                 "format": "klippel",
                 "quality": "high",
@@ -1690,9 +1708,27 @@ speakers_info_a: SpeakerDatabase = {
         "price": "1100",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "vendor",
+        "default_measurement": "vendor-v2-20240919",
         "measurements": {
-            "vendor": {
+            "vendor-v2-20240919": {
+                "origin": "Vendors-AsciLab",
+                "format": "klippel",
+                "quality": "high",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ascilab-speakers-are-about-to-launch.54794/",
+                    "abi": "https://audiolabinsight.com/t/ascilab-c6b-ver/247",
+                },
+                "review_published": "20240920",
+                "specifications": {
+                    "size": {
+                        "height": 385,
+                        "width": 197,
+                        "depth": 265,
+                    },
+                    "weight": 10.5,
+                },
+            },
+            "vendor-v1-20240814": {
                 "origin": "Vendors-AsciLab",
                 "format": "klippel",
                 "quality": "high",

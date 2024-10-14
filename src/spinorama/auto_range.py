@@ -71,7 +71,7 @@ def find_largest_area(
         areas = [
             (
                 i,
-                np.trapz(
+                np.trapezoid(
                     current_curve[
                         max(0, peaks[i] - int(widths[i] // 2)) : min(
                             len(current_curve), peaks[i] + int(widths[i] // 2)

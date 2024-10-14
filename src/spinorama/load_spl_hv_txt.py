@@ -130,8 +130,7 @@ def parse_graphs_speaker_spl_hv_txt(
 
     if (
         len(h_spl.keys()) + len(v_spl.keys()) < 72
-        and ("{} {}".format(speaker_brand, speaker_name), version)
-        not in known_incomplete_measurements
+        and (speaker_name, version) not in known_incomplete_measurements
     ):
         logger.warning("We have only partial data in %s", dirname)
 

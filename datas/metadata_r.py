@@ -2,6 +2,38 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_r: SpeakerDatabase = {
+    "Radiant Clarity 6.2": {
+        "skip": True,
+        "brand": "Radiant",
+        "model": "Clarity 6.2",
+        "type": "passive",
+        "price": "4000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ASR",
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "",
+                },
+                "review_published": "2024xxxx",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 4,
+                    "size": {
+                        "height": 364,
+                        "width": 222,
+                        "depth": 266,
+                    },
+                    "weight": 12.45,
+                },
+            },
+        },
+    },
     "RBH Sound R-5": {
         "brand": "RBH Sound",
         "model": "R-5",

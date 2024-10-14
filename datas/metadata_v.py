@@ -132,7 +132,7 @@ speakers_info_v: SpeakerDatabase = {
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/vandersteen_treo_ct/",
                 },
-                "review_published": "2024040916",
+                "review_published": "20240916",
                 "specifications": {
                     "sensitivity": 85,
                     "impedance": 3,

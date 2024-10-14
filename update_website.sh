@@ -125,8 +125,8 @@ else
 fi
 
 # generate status
-today=$(date "+%Y-%m-%d")
-command=$(python3 ./generate_stats.py --print=eq_csv --log-level=ERROR 2>&1 > spinorama.org-${today}.csv)
+today="$(date "+%Y-%m-%d")"
+command=$(python3 ./generate_stats.py --print=eq_csv --log-level=ERROR > spinorama.org-${today}.csv 2>&1)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate statistics in csv!"

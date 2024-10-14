@@ -57,7 +57,7 @@ done
 cp datas/icons/* docs/pictures
 # copy help pictures
 find ./src/website/help_pictures -type f -name '*.png'| while read pict; do
-    smaller=$targetdir/help_pictures/`basename $pict`
+    smaller="$targetdir/help_pictures/$(basename $pict)"
     for t in "jpg" "webp"; do
 	smallert=${smaller%.png}.${t}
 	if ! test -f "$smallert"; then
