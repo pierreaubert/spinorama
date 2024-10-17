@@ -857,6 +857,40 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
+    "KEF Q3 Meta": {
+        "skip": True,
+        "brand": "KEF",
+        "model": "Q3 Meta",
+        "type": "passive",
+        "price": "800",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q3_meta/",
+                    "yt": "https://youtu.be/GhyF1ZnebRY?si=ajJ4qHTN25ofBy1Y",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 109,
+                    },
+                    "size": {
+                        "height": 357,
+                        "width": 210,
+                        "depth": 305,
+                    },
+                    "weight": 8.2,
+                },
+            },
+        },
+    },
     "KEF Q650C": {
         "brand": "KEF",
         "model": "Q650C",

@@ -2,9 +2,9 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_r: SpeakerDatabase = {
-    "Radiant Clarity 6.2": {
+    "Radiant Acoustics Clarity 6.2": {
         "skip": True,
-        "brand": "Radiant",
+        "brand": "Radiant Acoustics",
         "model": "Clarity 6.2",
         "type": "passive",
         "price": "4000",
@@ -13,12 +13,11 @@ speakers_info_r: SpeakerDatabase = {
         "default_measurement": "eac",
         "measurements": {
             "eac": {
-                "origin": "ASR",
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "",
-                    "yt": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/radiant_acoustics_clarity62/",
+                    "yt": "https://youtu.be/wV52ek8lUWc?si=Flb48-ZXMJP3ctFd",
                 },
                 "review_published": "2024xxxx",
                 "specifications": {
