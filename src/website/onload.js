@@ -87,6 +87,15 @@ window.onload = () => {
         }
     });
 
+    if (window.trustedTypes && window.trustedTypes.createPolicy && !window.trustedTypes.defaultPolicy) {
+	window.trustedTypes.createPolicy('default', {
+            createHTML: string => string
+            // Optional, only needed for script (url) tags
+            //,createScriptURL: string => string
+            //,createScript: string => string,
+	});
+    }
+
     /*
     if (flags_Screen) {
         switch (screen.orientation.type) {
