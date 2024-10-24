@@ -484,6 +484,40 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
+    "KEF Q Concerto Meta": {
+        "skip": True,
+        "brand": "KEF",
+        "model": "Q Concerto Meta",
+        "type": "passive",
+        "price": "1300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q3_meta/",
+                    "yt": "https://youtu.be/O-7b6sqDOus",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 3.2,
+                    "SPL": {
+                        "peak": 108,
+                    },
+                    "size": {
+                        "height": 415,
+                        "width": 210,
+                        "depth": 315,
+                    },
+                    "weight": 9.5,
+                },
+            },
+        },
+    },
     "KEF LS50": {
         "brand": "KEF",
         "model": "LS50",
