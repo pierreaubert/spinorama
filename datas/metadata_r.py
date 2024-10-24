@@ -33,6 +33,36 @@ speakers_info_r: SpeakerDatabase = {
             },
         },
     },
+    "Rauna Freja": {
+        "brand": "Rauna",
+        "model": "Freja",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-mab",
+        "measurements": {
+            "misc-mab": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/rauna-freja-vintage-2-way-loudspeaker-measurements.50093/page-2#post-2117440",
+                },
+                "review_published": "20241023",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 7,
+                    "size": {
+                        "height": 805,
+                        "width": 280,
+                        "depth": 320,
+                    },
+                    "weight": 33.0,
+                },
+            },
+        },
+    },
     "RBH Sound R-5": {
         "brand": "RBH Sound",
         "model": "R-5",
@@ -748,12 +778,21 @@ speakers_info_r: SpeakerDatabase = {
         "type": "passive",
         "price": "",
         "shape": "bookshelves",
-        "default_measurement": "misc-archimago",
+        "default_measurement": "misc-mab",
         "measurements": {
+            "misc-mab": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/realistic-minimus-7-measurements.57184/",
+                    "amg": "https://archimago.blogspot.com/2021/01/retro-measure-radio-shack-realistic.html",
+                },
+                "review_published": "20241023",
+            },
             "misc-archimago": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "review": "https://archimago.blogspot.com/2021/01/retro-measure-radio-shack-realistic.html",
                 "quality": "low",
             },
         },

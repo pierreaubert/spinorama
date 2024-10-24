@@ -26,15 +26,27 @@ from spinorama.ltype import StatusOr
 from spinorama.load_misc import sort_angles
 
 
-def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFrame]:
-    """Parse text files with Horizontal and Vertical data"""
-    filenames = "{0}/*_{1}.txt".format(dirpath, orientation)
+def parse_graph_spl_find_file(dirpath: str, orientation: str) -> StatusOr[list[str]]:
+    # warning this are fnmatch(es) and not regexps
+    filenames = "{0}/*{1}*[0-9]*.txt".format(dirpath, orientation)
     files = glob.glob(filenames)
     if len(files) == 0:
-        filenames = "{0}/* _{1} *.txt".format(dirpath, orientation)
+        filenames = "{0}/*[0-9]*{1}.txt".format(dirpath, orientation)
         files = glob.glob(filenames)
 
-    logger.debug("Found %d files in %s", len(files), dirpath)
+    logger.debug("Found %d files in %s for orientation %s", len(files), dirpath, orientation)
+    if len(files) == 0:
+        return False, []
+
+    return True, files
+
+
+def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFrame]:
+    """Parse text files with Horizontal and Vertical data"""
+    status, files = parse_graph_spl_find_file(dirpath, orientation)
+    if not status:
+        logger.warning("Did not find files in %s", dirpath)
+        return False, pd.DataFrame()
 
     symmetry = True
     for file in files:
@@ -47,7 +59,7 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
         if int(angle) < 0:
             symmetry = False
 
-    logger.info("Symmetrie is %s", symmetry)
+    logger.debug("Symmetrie is %s", symmetry)
 
     dfs = []
     already_loaded = set()
@@ -59,6 +71,7 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
         # 1. angle_H or angle_V.txt
         # 2. name _H angle.txt
         # 3. _[HV] angle.txt
+        # where _H could H, hor with or without _
         file_format = os.path.basename(file).split()
         if len(file_format) > 2:
             angle = file_format[-1][:-4]
@@ -114,7 +127,24 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
                 mangle = f"-{angle}"
                 dfs.append(pd.DataFrame({mangle: dbs}))
 
+    # print("debug {}".format(orientation))
+    # print(sort_angles(pd.concat(dfs, axis=1)).keys())
+    # print(sort_angles(pd.concat(dfs, axis=1)).head())
     return True, sort_angles(pd.concat(dfs, axis=1))
+
+
+def list_missing_angles(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> str:
+    expected = set(["{}°".format(i) for i in range(-180, 190, 10)])
+    expected.remove("0°")
+    expected.add("On Axis")
+    found_h = set(h_spl.keys())
+    found_v = set(v_spl.keys())
+    diff_h = expected - found_h
+    diff_v = expected - found_v
+    return "H {} V {}".format(
+        ", ".join(diff_h),
+        ", ".join(diff_v),
+    )
 
 
 def parse_graphs_speaker_spl_hv_txt(
@@ -123,7 +153,7 @@ def parse_graphs_speaker_spl_hv_txt(
     """2 files per directory xxx_H_IR.mat and xxx_V_IR.mat"""
     dirname = "{0}/{1}/{2}".format(speaker_path, speaker_name, version)
 
-    logger.debug("scanning path %s", dirname)
+    logger.debug("scanning path %s for speaker %s %s", dirname, speaker_brand, speaker_name)
 
     h_status, h_spl = parse_graph_spl_hv_txt(dirname, "H")
     v_status, v_spl = parse_graph_spl_hv_txt(dirname, "V")
@@ -133,5 +163,12 @@ def parse_graphs_speaker_spl_hv_txt(
         and (speaker_name, version) not in known_incomplete_measurements
     ):
         logger.warning("We have only partial data in %s", dirname)
+        logger.debug(
+            "We have only partial data in %s len(H)=%i len(V)=%i missing measurements %s",
+            dirname,
+            len(h_spl),
+            len(v_spl),
+            list_missing_angles(h_spl, v_spl),
+        )
 
     return h_status and v_status, (h_spl, v_spl)

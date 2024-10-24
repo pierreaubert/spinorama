@@ -16,7 +16,7 @@
         "Listening Window",
         "Estimated In-Room Response"
     ],
-    "target_min_freq": 179.6,
+    "target_min_freq": 118.1,
     "target_max_freq": 16000,
     "slope_on_axis": 0,
     "slope_listening_window": -0.5,
@@ -45,5 +45,5 @@
     "version": "0.26",
     "level": 30,
     "generate_images_only": false,
-    "output_dir": "/home/pierre/src/spinorama/build/eqs/Realistic Tandy Minimus 7/Score-6"
+    "output_dir": "/home/pierre/src/spinorama/build/eqs/Rauna Freja/Score-6"
 }
