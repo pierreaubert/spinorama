@@ -77,7 +77,7 @@ def write_eq_to_file(
 
     version = optim_config["version"]
     comments += [
-        f"Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v{version}",
+        f"Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v{version}",
         f"Dated: {datetime.today().strftime('%Y-%m-%d-%H:%M:%S')}",
         "",
     ]
