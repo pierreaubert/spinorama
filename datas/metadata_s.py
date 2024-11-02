@@ -437,6 +437,39 @@ speakers_info_s: SpeakerDatabase = {
             },
         },
     },
+    "Sonus Faber Picolo": {
+        "brand": "Sonus Faber",
+        "model": "Picolo",
+        "type": "passive",
+        "price": "585",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/sonus-faber-piccolo-solo-spinorama-measurements-cta-2034.58107/",
+                    "snv": "https://www.soundandvision.com/content/sonus-faber-concerto-speaker-system-page-2",
+                },
+                "review_published": "20231212",
+                # partial measurements
+                "symmetry": "coaxial",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 8,
+                    "size": {
+                        "height": 170,
+                        "width": 485,
+                        "depth": 235,
+                    },
+                    "weight": 10.0,
+                },
+            },
+        },
+    },
     "Sonus Faber Sonetto II": {
         "brand": "Sonus Faber",
         "model": "Sonetto II",
