@@ -690,16 +690,30 @@ speakers_info_g: SpeakerDatabase = {
         "price": "90",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "misc-napilopez",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/google-nest-audio-speaker-review.58134/",
+                    "asr2": "https://www.audiosciencereview.com/forum/index.php?threads/google-nest-audio-spinorama-and-measurements.16464/",
+                    "tnw": "https://thenextweb.com/news/review-googles-nest-audio-is-a-legit-good-speaker-and-i-have-the-data-to-prove-it",
+                },
+                "specifications": {
+                    "size": {
+                        "height": 175,
+                        "width": 124,
+                        "depth": 78,
+                    },
+                    "weight": 1.2,
+                },
+                "review_published": "20241102",
+            },
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "quality": "low",
-                "reviews": {
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/google-nest-audio-spinorama-and-measurements.16464/",
-                    "tnw": "https://thenextweb.com/news/review-googles-nest-audio-is-a-legit-good-speaker-and-i-have-the-data-to-prove-it",
-                },
             },
         },
     },
