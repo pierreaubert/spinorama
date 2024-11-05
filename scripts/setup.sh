@@ -20,10 +20,11 @@
 ## ----------------------------------------------------------------------
 
 OS=$(uname)
+PYVERSION=3.12
 
 if test "$OS" = "Linux"; then
   # ------------ PYTHON
-  sudo [ -x /usr/bin/apt ] && /usr/bin/apt install -y python3 python3-pip imagemagick keychain npm wget python3.12-venv
+  sudo [ -x /usr/bin/apt ] && /usr/bin/apt install -y python3 python3-pip imagemagick keychain npm wget python${PYVERSION}-venv
   # ------------ LOCALE
   # add locale if they don't exist possibly C.utf8 would work
   sudo [ -x /usr/bin/localedef ] && /usr/bin/localedef -f UTF-8 -i en_US en_US.UTF-8
@@ -40,7 +41,7 @@ if test "$OS" = "Linux"; then
   # sudo apt-get update
   # sudo apt-get -y install nvidia-cuda nvidia-cuda-toolkit libcudnn8
 elif test "$OS" = "Darwin"; then
-  brew install npm hdf5 c-blosc lzo bzip2 python@3.10 freetype imagemagick gawk gsed
+  brew install npm hdf5 c-blosc lzo bzip2 python@${PYVERSION} freetype imagemagick gawk gsed
   export HDF5_DIR="$(brew --prefix hdf5)"
 fi
 
@@ -48,7 +49,7 @@ export PYTHONPATH=./src:./src/website
 export NVM_DIR=$HOME/.nvm
 
 # python section
-python3 -m venv .venv
+python${PYVERSION} -m venv .venv
 . ./.venv/bin/activate
 ARCH=$(uname -a | awk '{print $NF}')
 if test "$OS" = "Darwin"  -a "$ARCH" = "arm64" ; then
