@@ -28,10 +28,10 @@ from spinorama.load_misc import sort_angles
 
 def parse_graph_spl_find_file(dirpath: str, orientation: str) -> StatusOr[list[str]]:
     # warning this are fnmatch(es) and not regexps
-    filenames = "{0}/*{1}*[0-9]*.txt".format(dirpath, orientation)
+    filenames = "{0}/*_{1}*[0-9]*.txt".format(dirpath, orientation)
     files = glob.glob(filenames)
     if len(files) == 0:
-        filenames = "{0}/*[0-9]*{1}.txt".format(dirpath, orientation)
+        filenames = "{0}/*[0-9]*_{1}.txt".format(dirpath, orientation)
         files = glob.glob(filenames)
 
     logger.debug("Found %d files in %s for orientation %s", len(files), dirpath, orientation)
@@ -51,11 +51,9 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
     symmetry = True
     for file in files:
         file_format = os.path.basename(file).split()
+        angle = os.path.basename(file).split("_")[0]
         if len(file_format) > 2:
             angle = file_format[-1][:-4]
-        else:
-            angle = os.path.basename(file).split("_")[0]
-
         if int(angle) < 0:
             symmetry = False
 
@@ -72,6 +70,7 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
         # 2. name _H angle.txt
         # 3. _[HV] angle.txt
         # where _H could H, hor with or without _
+        angle = 'error'
         file_format = os.path.basename(file).split()
         if len(file_format) > 2:
             angle = file_format[-1][:-4]
@@ -83,7 +82,10 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
         else:
             angle += "°"
 
-        logger.debug('read file "%s" for angle "%s"', file, angle)
+        if angle == 'error':
+            logger.error('read file "%s" failed for angle "%s"', file, angle)
+        else:
+            logger.debug('read file "%s" for angle "%s"', file, angle)
         with open(file, "r") as fd:
             lines = fd.readlines()
             for l in lines:

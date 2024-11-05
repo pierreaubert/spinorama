@@ -234,6 +234,35 @@ speakers_info_y: SpeakerDatabase = {
             },
         },
     },
+    "Yamaha NS-18": {
+        "brand": "Yamaha",
+        "model": "NS-18",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-mab",
+        "measurements": {
+            "misc-mab": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/vintage-yamaha-ns-18-speaker-measurements.58087/",
+                },
+                "review_published": "20241105",
+                "specifications": {
+                    "impedance": 8,
+                    "size": {
+                        "height": 720,
+                        "width": 540,
+                        "depth": 250,
+                    },
+                    "weight": 18.0,
+                },
+            },
+        },
+    },
     "Yamaha NS-A638": {
         "brand": "Yamaha",
         "model": "NS-A638",

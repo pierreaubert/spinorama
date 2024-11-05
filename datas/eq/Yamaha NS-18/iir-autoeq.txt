@@ -1,0 +1,13 @@
+EQ for Yamaha NS-18 computed from Misc data
+Preference Score 0.26 with EQ 3.49
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-11-05-11:26:34
+
+Preamp: -5.4 dB
+
+Filter  1: ON PK Fc    20 Hz Gain +3.00 dB Q 2.81
+Filter  2: ON PK Fc    62 Hz Gain +3.00 dB Q 0.25
+Filter  3: ON PK Fc   149 Hz Gain +3.00 dB Q 3.00
+Filter  4: ON PK Fc   409 Hz Gain +3.00 dB Q 2.91
+Filter  5: ON PK Fc  1083 Hz Gain +3.00 dB Q 3.00
+Filter  6: ON PK Fc  3068 Hz Gain -4.35 dB Q 0.28

@@ -359,6 +359,42 @@ speakers_info_j: SpeakerDatabase = {
             },
         },
     },
+    "JBL CV3015": {
+        "brand": "JBL",
+        "model": "CV3015",
+        "type": "passive",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-90x90",
+        "measurements": {
+            "vendor-pattern-90x90": {
+                "origin": "Vendors-JBL",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "review_published": "20241105",
+                "quality": "medium",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 90,
+                        "vertical": 90,
+                    },
+                    "sensitivity": 99,
+                    "impedance": 8,
+                    "SPL": {
+                        "max": 125,
+                        "peak": 131,
+                    },
+                    "size": {
+                        "height": 680,
+                        "width": 414,
+                        "depth": 445,
+                    },
+                    "weight": 23.15,
+                },
+            },
+        },
+    },
     "JBL CV5012": {
         "brand": "JBL",
         "model": "CV5012",

@@ -4,7 +4,11 @@ if test "$(hostname)" = "horn"; then
     export NUMEXPR_MAX_THREADS=96
 fi
 
-IP=192.168.1.36
+IP=$(ifconfig | grep 192 | cut -d ' ' -f 2)
+if test -z "$IP"; then
+    IP="192.168.1.36";
+fi
+
 PORT=9999
 
 start_ray()

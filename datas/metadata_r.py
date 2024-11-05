@@ -756,6 +756,39 @@ speakers_info_r: SpeakerDatabase = {
             },
         },
     },
+    "RCF NXL 14-A": {
+        "brand": "RCF",
+        "model": "NXL 14-A",
+        "type": "active",
+        "price": "1200",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x70",
+        "measurements": {
+            "vendor-pattern-100x70": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20241105",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 70,
+                    },
+                    "SPL": {
+                        "peak": 128,
+                    },
+                    "size": {
+                        "height": 576,
+                        "width": 197,
+                        "depth": 270,
+                    },
+                    "weight": 12.8,
+                },
+            },
+        },
+    },
     "Realistic MC-1000": {
         "brand": "Realistic",
         "model": "MC-1000",
