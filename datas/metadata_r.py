@@ -1356,20 +1356,38 @@ speakers_info_r: SpeakerDatabase = {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-speaker-review.11884/",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-speaker-review.11884/",
+                    "asr-dominikz": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-quasi-anechoic-spinorama-and-misc-measurements.27076/#post-928962",
+                    "asr-ageve": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-spinorama-measurements-cta-2034.58370/",
+                },
                 "review_published": "20200305",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 6,
+                    "size": {
+                        "height": 370,
+                        "width": 220,
+                        "depth": 370,
+                    },
+                    "weight": 7.26,
+                },
             },
             "misc-dominikz": {
                 "origin": "Misc",
                 "format": "rew_text_dump",
                 "quality": "low",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-quasi-anechoic-spinorama-and-misc-measurements.27076/#post-928962",
                 "review_published": "20211002",
             },
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "review": "",
+            },
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "review_published": "20241111",
             },
         },
     },
