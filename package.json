@@ -6,8 +6,8 @@
     "handlebars": "^4.7.8",
     "npm": "^10.9.0",
     "plotly.js-dist-min": "^2.35.2",
-    "workbox-cli": "^7.1.0",
-    "workbox-window": "^7.1.0"
+    "workbox-cli": "^7.3.0",
+    "workbox-window": "^7.3.0"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^2.1.3",

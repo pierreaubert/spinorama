@@ -110,13 +110,13 @@ def get(id):
 
 def init(
     address="172.0.01",
-    include_dashboard=True,
+    include_dashboard=True,  # noqa: FBT002
     dashboard_host="127.0.0.1",
     dashboard_port=8080,
-    local_mode=True,
-    configure_logging=True,
+    local_mode=True,  # noqa: FBT002
+    configure_logging=True,  # noqa: FBT002
     logging_level=logging.INFO,
-    log_to_driver=True,
+    log_to_driver=True,  # noqa: FBT002
 ):
     return None
 

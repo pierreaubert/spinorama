@@ -73,4 +73,4 @@ U_SP = f"{C_SP}_unmelted"
 U_ER = f"{C_ER}_unmelted"
 
 # flags
-flags_ADD_HASH = False
+flags_ADD_HASH = False # noqa: N816

@@ -145,9 +145,7 @@ def column_valid(col: str) -> bool:
         return True
     if col == "Freq":
         return False
-    if int(column_trim(col)[:-1]) % 10 == 0:
-        return True
-    return False
+    return int(column_trim(col)[:-1]) % 10 == 0
 
 
 def spatial_average(sp_window: pd.DataFrame, func="rms") -> pd.DataFrame:

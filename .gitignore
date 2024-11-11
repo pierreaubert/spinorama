@@ -1,4 +1,5 @@
 .ipynb_checkpoints
+.virtual_documents
 Untitled*.ipynb
 snippets*.ipynb
 **/*~

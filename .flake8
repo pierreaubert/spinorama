@@ -1,6 +1,0 @@
-[flake8]
-select = E9,F63,F7,F82
-exclude = spinorama-venv
-count = True
-show-source = True
-statistics = True

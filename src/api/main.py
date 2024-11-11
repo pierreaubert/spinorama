@@ -125,7 +125,7 @@ async def get_speaker_measurements(
         or ".." in speaker_version
         or ".." in measurement_name
     ):
-        return {"error": f"Invalid speaker_version or speaker_name!"}
+        return {"error": f"Invalid speaker_version {speaker_version} or speaker_name {speaker_name}!"}
 
     meta_data = speakers_info[speaker_name]
 

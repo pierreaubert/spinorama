@@ -70,7 +70,7 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
         # 2. name _H angle.txt
         # 3. _[HV] angle.txt
         # where _H could H, hor with or without _
-        angle = 'error'
+        angle = "error"
         file_format = os.path.basename(file).split()
         if len(file_format) > 2:
             angle = file_format[-1][:-4]
@@ -82,7 +82,7 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
         else:
             angle += "°"
 
-        if angle == 'error':
+        if angle == "error":
             logger.error('read file "%s" failed for angle "%s"', file, angle)
         else:
             logger.debug('read file "%s" for angle "%s"', file, angle)

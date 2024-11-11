@@ -1,12 +1,18 @@
 #!/bin/bash
 
+OS=$(uname)
+
 if test "$(hostname)" = "horn"; then
     export NUMEXPR_MAX_THREADS=96
 fi
 
-IP=$(ifconfig | grep 192 | cut -d ' ' -f 2)
-if test -z "$IP"; then
-    IP="192.168.1.36";
+# local by default
+IP="127.0.0.1"
+
+if test "$OS" = "Linux"; then
+    IP=$(ifconfig | grep 192 | cut -d ' ' -f 2)
+elif test "$OS" = "Darwin"; then
+    IP=$(/sbin/ifconfig| grep 'inet ' | grep broadcast | cut -d ' ' -f 2)
 fi
 
 PORT=9999
@@ -14,6 +20,8 @@ PORT=9999
 start_ray()
 {
     #                                                                        prometheus exporter
+    echo "Starting Ray with ${IP} at ${PORT}"
+    mkdir -p ./build/ray
     ray start --node-ip-address=$IP --port $PORT --head --dashboard-host=$IP --metrics-export-port=9101 --disable-usage-stats
 }
 
@@ -60,8 +68,7 @@ do
     wait $job || let "FAIL+=1"
 done
 
-if [ "$FAIL" == "0" ];
-then
+if [ "$FAIL" == "0" ]; then
     echo "YAY!"
 else
     echo "FAIL! ($FAIL)"
