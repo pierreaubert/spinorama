@@ -12,6 +12,7 @@ IP="127.0.0.1"
 if test "$OS" = "Linux"; then
     IP=$(ifconfig | grep 192 | cut -d ' ' -f 2)
 elif test "$OS" = "Darwin"; then
+    ulimit -n 10240
     IP=$(/sbin/ifconfig| grep 'inet ' | grep broadcast | cut -d ' ' -f 2)
 fi
 
@@ -20,9 +21,10 @@ PORT=9999
 start_ray()
 {
     #                                                                        prometheus exporter
-    echo "Starting Ray with ${IP} at ${PORT}"
+    TEMP_DIR=$(pwd)/build/ray
     mkdir -p ./build/ray
-    ray start --node-ip-address=$IP --port $PORT --head --dashboard-host=$IP --metrics-export-port=9101 --disable-usage-stats
+    echo "Starting Ray with ${IP} at ${PORT} with tmp set to {$TEMP_DIR}"
+    ray start --node-ip-address=${IP} --port ${PORT} --head --dashboard-host=$IP --metrics-export-port=9101 --disable-usage-stats --temp-dir=$TEMP_DIR
 }
 
 compute_eq()

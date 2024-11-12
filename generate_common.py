@@ -148,7 +148,7 @@ def custom_ray_init(args):
             sys.exit(1)
         ray_address = check_address
 
-    tmp_dir = (pathlib.Path.cwd().absolute() / 'build/ray').as_posix()
+    # tmp_dir = (pathlib.Path.cwd().absolute() / 'build/ray').as_posix()
     if ray_address is not None:
         print(
             "Calling init with cluster at {} dashboard at {}:{}".format(
@@ -164,7 +164,7 @@ def custom_ray_init(args):
             configure_logging=True,
             logging_level=level,
             log_to_driver=True,
-            _temp_dir=tmp_dir,
+            # _temp_dir=tmp_dir,
         )
     else:
         print("Calling init with dashboard at {}:{}".format(dashboard_ip, dashboard_port))
@@ -178,7 +178,7 @@ def custom_ray_init(args):
             configure_logging=True,
             logging_level=level,
             log_to_driver=True,
-            _temp_dir=tmp_dir,
+            # _temp_dir=tmp_dir,
         )
 
 
