@@ -426,4 +426,32 @@ speakers_info_c: SpeakerDatabase = {
             },
         },
     },
+    "CSS Criton 3TD-X DIY": {
+        "brand": "CSS",
+        "model": "Criton 3TD-X DIY",
+        "type": "passive",
+        "price": "2000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/css-criton-3td-x-kit-speaker-review.58467/",
+                "review_published": "20241113",
+                "specifications": {
+                    "sensitivity": 87.8,
+                    "impedance": 4,
+                    "size": {
+                        "height": 1054,
+                        "width": 216,
+                        "depth": 342,
+                    },
+                    "weight": 31.7,
+                },
+
+            },
+        },
+    },
 }
