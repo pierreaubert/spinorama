@@ -365,6 +365,37 @@ speakers_info_b: SpeakerDatabase = {
             },
         },
     },
+    "Børresen X3": {
+        "brand": "Børresen",
+        "model": "X3",
+        "type": "passive",
+        "price": "20000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/b%C3%B8rresen_x3/",
+                    "yt": "https://youtu.be/EfasOu928tQ?si=M4CuGOGwbgHQdizF",
+                },
+                "review_published": "20241117",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 4,
+                    "size": {
+                        "height": 1290,
+                        "width": 345,
+                        "depth": 607,
+                    },
+                    "weight": 55.0,
+                },
+            },
+        },
+    },
+
     "Buchardt Audio A10": {
         "brand": "Buchardt Audio",
         "model": "A10",

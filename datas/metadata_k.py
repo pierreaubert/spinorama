@@ -274,7 +274,6 @@ speakers_info_k: SpeakerDatabase = {
         },
     },
     "Kanto YU4": {
-        "skip": True,
         "brand": "Kanto",
         "model": "YU4",
         "type": "passive",
@@ -287,10 +286,10 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "",
-                    "yt": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kanto__yu4/",
+                    "yt": "https://youtu.be/aU_3cidukOE?si=29-suzrb4YdUd-ag",
                 },
-                "review_published": "202404xx",
+                "review_published": "20241117",
                 "specifications": {
                     "size": {
                         "height": 220,
@@ -485,7 +484,6 @@ speakers_info_k: SpeakerDatabase = {
         },
     },
     "KEF Q Concerto Meta": {
-        "skip": True,
         "brand": "KEF",
         "model": "Q Concerto Meta",
         "type": "passive",
@@ -501,7 +499,7 @@ speakers_info_k: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q3_meta/",
                     "yt": "https://youtu.be/O-7b6sqDOus",
                 },
-                "review_published": "202404xx",
+                "review_published": "20241117",
                 "specifications": {
                     "sensitivity": 85,
                     "impedance": 3.2,
@@ -892,7 +890,6 @@ speakers_info_k: SpeakerDatabase = {
         },
     },
     "KEF Q3 Meta": {
-        "skip": True,
         "brand": "KEF",
         "model": "Q3 Meta",
         "type": "passive",
@@ -908,7 +905,7 @@ speakers_info_k: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q3_meta/",
                     "yt": "https://youtu.be/GhyF1ZnebRY?si=ajJ4qHTN25ofBy1Y",
                 },
-                "review_published": "202404xx",
+                "review_published": "20241117",
                 "specifications": {
                     "sensitivity": 87,
                     "impedance": 4,

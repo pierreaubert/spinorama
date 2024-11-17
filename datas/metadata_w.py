@@ -184,6 +184,39 @@ speakers_info_w: SpeakerDatabase = {
             },
         },
     },
+    "Wharfedale Super Linton": {
+        "brand": "Wharfedale",
+        "model": "Super Linton",
+        "type": "passive",
+        "price": "3000",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/wharfedale_super_linton",
+                    "yt": "https://youtu.be/kIf6677oMTA?si=xHh7lrBgByZdG00x",
+                },
+                "review_published": "20241117",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 3.9,
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 605,
+                        "width": 300,
+                        "depth": 350,
+                    },
+                    "weight": 19.8,
+                },
+            },
+        },
+    },
     "Wilson Audio TuneTot": {
         "brand": "Wilson Audio",
         "model": "TuneTot",
