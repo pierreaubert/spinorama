@@ -166,6 +166,37 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "ADS L520": {
+        "brand": "ADS",
+        "model": "L520",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-mab",
+        "measurements": {
+            "misc-mab": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ads-l520-vintage-speaker-measurements.58690/#post-2144542",
+                },
+                "review_published": "20241123",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 6,
+                    "size": {
+                        "height": 517,
+                        "width": 298,
+                        "depth": 241,
+                    },
+                    "weight": 14.0,
+                },
+            },
+        },
+    },
+
     "Advent The New Advent Loudspeaker": {
         "brand": "Advent",
         "model": "The New Advent Loudspeaker",
