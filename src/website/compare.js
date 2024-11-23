@@ -78,6 +78,7 @@ getMetadata()
 
         const plotContainers = document.querySelector('[data-num="0"');
         const plotContainer = plotContainers.querySelector('.plot');
+        const plotContainerError = plotContainers.querySelector('#plotError');
         const plot0Container = plotContainers.querySelector('.plot0');
         const plot1Container = plotContainers.querySelector('.plot1');
         const plot2Container = plotContainers.querySelector('.plot2');
@@ -147,21 +148,25 @@ getMetadata()
                         console.error('Measurement ' + measurement + ' is unknown');
                     }
 
-                    // console.log('datas and layouts length='+graphsConfigs.length)
+		    // hide blocks by default
+                    plotContainerError.style.display = 'none';
+                    plotContainer.style.display = 'none';
+                    plot0Container.style.display = 'none';
+                    plot1Container.style.display = 'none';
+                    plot2Container.style.display = 'none';
+
+		    // console.log('datas and layouts length='+graphsConfigs.length)
                     if (graphsConfigs.length === 1) {
-                        plotContainer.style.display = 'block';
-                        plot0Container.style.display = 'none';
-                        plot1Container.style.display = 'none';
-                        plot2Container.style.display = 'none';
                         const graphConfig = graphsConfigs[0];
                         if (graphConfig) {
+                            plotContainer.style.display = 'block';
                             Plotly.react('plot', graphConfig.data, graphConfig.layout, graphConfig.config);
-                        }
+                        } else {
+                            plotContainer.style.display = 'none';
+			}
                     } else if (graphsConfigs.length === 2) {
-                        plotContainer.style.display = 'none';
                         plot0Container.style.display = 'block';
                         plot1Container.style.display = 'block';
-                        plot2Container.style.display = 'none';
                         for (let i = 0; i < graphsConfigs.length; i++) {
                             const config = graphsConfigs[i];
                             if (config) {
@@ -169,7 +174,6 @@ getMetadata()
                             }
                         }
                     } else if (graphsConfigs.length === 3) {
-                        plotContainer.style.display = 'none';
                         plot0Container.style.display = 'block';
                         plot1Container.style.display = 'block';
                         plot2Container.style.display = 'block';

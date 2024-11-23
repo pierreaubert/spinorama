@@ -343,29 +343,29 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
 
     function computeTitle() {
         let title = '';
-	let pos0for = -1;
-	let pos0by = -1;
-	let speaker0 = '';
-	let version0 = '';
+        let pos0for = -1;
+        let pos0by = -1;
+        let speaker0 = '';
+        let version0 = '';
         if (spin[0] && spin[0]?.layout.title.text) {
             title = spin[0].layout.title.text;
-	    pos0for = spin[0].layout.title.text.indexOf(' for ');
-	    pos0by = spin[0].layout.title.text.indexOf(' measured by ');
-	    speaker0 = spin[0].layout.title.text.slice(pos0for, pos0by);
-	    version0 = spin[0].layout.title.text.slice(pos0by+13);
+            pos0for = spin[0].layout.title.text.indexOf(' for ');
+            pos0by = spin[0].layout.title.text.indexOf(' measured by ');
+            speaker0 = spin[0].layout.title.text.slice(pos0for, pos0by);
+            version0 = spin[0].layout.title.text.slice(pos0by + 13);
         }
         if (!single_graph && spin[1] && spin[1]?.layout.title.text) {
             title += '<br> v.s. ' + spin[1].layout.title.text;
-	    const pos1for = spin[1].layout.title.text.indexOf(' for ');
-	    const pos1by = spin[1].layout.title.text.indexOf(' measured by ');
-	    const speaker1 = spin[1].layout.title.text.slice(pos1for, pos1by);
-	    const version1 = spin[1].layout.title.text.slice(pos1by+13);
-	    if (speaker0 === speaker1 ) {
-		// if we have 1 speaker with 2 measurements, add some infos to make the difference explicit
-		datas[0].legendgrouptitle.text += ' ('+version0 + ')';
-		const offset = datas.length / 2;
-		datas[offset].legendgrouptitle.text += ' ('+version1 + ')';
-	    }
+            const pos1for = spin[1].layout.title.text.indexOf(' for ');
+            const pos1by = spin[1].layout.title.text.indexOf(' measured by ');
+            const speaker1 = spin[1].layout.title.text.slice(pos1for, pos1by);
+            const version1 = spin[1].layout.title.text.slice(pos1by + 13);
+            if (speaker0 === speaker1) {
+                // if we have 1 speaker with 2 measurements, add some infos to make the difference explicit
+                datas[0].legendgrouptitle.text += ' (' + version0 + ')';
+                const offset = datas.length / 2;
+                datas[offset].legendgrouptitle.text += ' (' + version1 + ')';
+            }
         }
         if (title === '' && datas[0]?.legendgrouptitle.title) {
             title = datas[0].legendgrouptitle.text;
