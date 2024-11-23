@@ -454,7 +454,7 @@ speakers_info_s: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/sonus-faber-piccolo-solo-spinorama-measurements-cta-2034.58107/",
                     "snv": "https://www.soundandvision.com/content/sonus-faber-concerto-speaker-system-page-2",
                 },
-                "review_published": "20231212",
+                "review_published": "20241102",
                 # partial measurements
                 "symmetry": "coaxial",
                 "specifications": {
