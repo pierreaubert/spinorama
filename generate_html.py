@@ -125,7 +125,7 @@ def adapt_imports(jscode, versions, js_files):
     re_replacements = [
         (
             r"}} from '\.\/({})\.js';".format("|".join(js_files)),
-            r"}} from '/js/\1-{}.min.js';".format(CACHE_VERSION),
+            r"}} from '/js/\1-{}{}.js';".format(CACHE_VERSION, ".min" if flag_optim else ""),
         ),
     ]
     code = jscode
@@ -558,6 +558,9 @@ def main():
             item_post_import = "{}/{}-2-import.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             item_post_terser = "{}/{}-3-terser.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             item_dist = "{}/{}-{}.min.js".format(cpaths.CPATH_DOCS_JS, item, CACHE_VERSION)
+            if flag_dev:
+                item_dist = "{}/{}-{}.js".format(cpaths.CPATH_DOCS_JS, item, CACHE_VERSION)
+
 
             # cleanup flow directives: currently unused
             flow_bin = "./node_modules/.bin/flow-remove-types"
@@ -594,33 +597,34 @@ def main():
             else:
                 shutil.copy(item_post_flow, item_post_mako)
 
-            # change inport to match prod/dev and browser requirements
+            # change import to match prod/dev and browser requirements
             with open(item_post_mako, "r") as fd:
                 item_content = "".join(fd.readlines())
                 item_content = adapt_imports(item_content, versions, jsfiles)
                 write_if_different(item_content, item_post_import, force=True)
 
             # compress files with terser
-            terser_command = "{0} {1}".format("./node_modules/.bin/terser", item_post_import)
-            # print(terser_command)
-            try:
-                with open(item_post_terser, "w") as item_post_terser_fd:
-                    status = subprocess.run(  # noqa: S603
-                        shlex.split(terser_command),
-                        shell=False,
-                        check=True,
-                        stdout=item_post_terser_fd,
-                    )
-                    if status.returncode != 0:
-                        print("terser failed for item {}".format(item))
-            except subprocess.CalledProcessError as e:
-                print("terser failed for item {} with {}".format(item, e))
+            if flag_optim:
+                terser_command = "{0} {1}".format("./node_modules/.bin/terser", item_post_import)
+                # print(terser_command)
+                try:
+                    with open(item_post_terser, "w") as item_post_terser_fd:
+                        status = subprocess.run(  # noqa: S603
+                            shlex.split(terser_command),
+                            shell=False,
+                            check=True,
+                            stdout=item_post_terser_fd,
+                        )
+                        if status.returncode != 0:
+                            print("terser failed for item {}".format(item))
+                except subprocess.CalledProcessError as e:
+                    print("terser failed for item {} with {}".format(item, e))
 
-            # optimise files with critical
-            # TBD
-
-            # copy last file
-            shutil.copy(item_post_terser, item_dist)
+                # copy last file
+                shutil.copy(item_post_terser, item_dist)
+            else:
+                # copy last file
+                shutil.copy(item_post_import, item_dist)
 
         except KeyError as key_error:
             print("Generating {} js file failed with {}".format(item, key_error))
@@ -674,6 +678,7 @@ if __name__ == "__main__":
     skip_speakers = False
     if flag_dev:
         site = SITEDEV
+        flag_optim = False
         if args["--sitedev"] is not None:
             site = args["--sitedev"]
             if len(site) < 4 or site[0:4] != "http":
