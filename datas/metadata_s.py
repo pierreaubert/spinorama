@@ -839,4 +839,36 @@ speakers_info_s: SpeakerDatabase = {
             },
         },
     },
+    "System One S-15B": {
+        "brand": "System One",
+        "model": "S-15B",
+        "type": "passive",
+        "price": "130",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/system-one-s15b-spinorama-measurements-cta-2034.58759/",
+                },
+                "review_published": "20241124",
+                "notes": "Tweeter polarity was fixed before measuring. Out of the box, the speaker is worse!",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "size": {
+                        "height": 300,
+                        "width": 185,
+                        "depth": 225,
+                    },
+                    "weight": 3.25,
+                },
+            },
+        },
+    },
+
 }

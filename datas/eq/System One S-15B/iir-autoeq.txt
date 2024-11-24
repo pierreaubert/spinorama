@@ -1,0 +1,14 @@
+EQ for System One S-15B computed from Misc data
+Preference Score 1.13 with EQ 5.33
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-11-24-15:35:32
+
+Preamp: -6.1 dB
+
+Filter  1: ON PK Fc    49 Hz Gain +4.99 dB Q 0.77
+Filter  2: ON PK Fc   197 Hz Gain +2.05 dB Q 0.25
+Filter  3: ON PK Fc   243 Hz Gain +0.91 dB Q 2.20
+Filter  4: ON PK Fc   487 Hz Gain +1.55 dB Q 3.00
+Filter  5: ON PK Fc  1010 Hz Gain -2.50 dB Q 2.99
+Filter  6: ON PK Fc  1642 Hz Gain -3.55 dB Q 2.57
+Filter  7: ON PK Fc 13652 Hz Gain -3.01 dB Q 0.49
