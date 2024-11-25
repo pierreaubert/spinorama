@@ -75,9 +75,9 @@ def build_title(origin: str, version: str, speaker: str, title: str, iir: Peq) -
         elif version[-3:] == "-pp":
             whom = "Production Partners (data scanned)"
         else:
-            dash_pos = version.find('-')
-            if dash_pos != -1 and dash_pos < len(version)-1:
-                whom = version[dash_pos+1:].capitalize()
+            dash_pos = version.find("-")
+            if dash_pos != -1 and dash_pos < len(version) - 1:
+                whom = version[dash_pos + 1 :].capitalize()
     elif origin == "ASR":
         whom = "Audio Science Review"
     preamp = peq_preamp_gain(iir) if len(iir) > 0 else 0.0

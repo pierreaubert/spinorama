@@ -90,7 +90,16 @@ def args2level(args):
 
 
 def create_default_directories():
-    for d in (CACHE_DIR, "docs", "docs/pictures", "docs/speakers", "build/eqs", "build/ray", "build/website", "build/mako_modules"):
+    for d in (
+        CACHE_DIR,
+        "docs",
+        "docs/pictures",
+        "docs/speakers",
+        "build/eqs",
+        "build/ray",
+        "build/website",
+        "build/mako_modules",
+    ):
         pathlib.Path(d).mkdir(parents=True, exist_ok=True)
 
 

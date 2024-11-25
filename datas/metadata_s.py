@@ -870,5 +870,4 @@ speakers_info_s: SpeakerDatabase = {
             },
         },
     },
-
 }

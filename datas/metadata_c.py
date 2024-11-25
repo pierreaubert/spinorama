@@ -450,7 +450,6 @@ speakers_info_c: SpeakerDatabase = {
                     },
                     "weight": 31.7,
                 },
-
             },
         },
     },

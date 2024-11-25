@@ -28,21 +28,22 @@ class JSImportTests(unittest.TestCase):
     def setUp(self):
         self.versions = get_versions("{}/update_3rdparties.sh".format(cpaths.CPATH_SCRIPTS))
         self.jsfiles = get_files(cpaths.CPATH_WEBSITE, "js")
+        self.mini = ".min"
 
     def test_import_misc(self):
         code = "import { show } from './misc.js';"
-        transformed = adapt_imports(code, self.versions, self.jsfiles)
+        transformed = adapt_imports(code, self.versions, self.jsfiles, self.mini)
         self.assertIn("/js", transformed)
 
     def test_import_fuse(self):
         code = "import Fuse from 'fuse.js';"
-        transformed = adapt_imports(code, self.versions, self.jsfiles)
+        transformed = adapt_imports(code, self.versions, self.jsfiles, self.mini)
         self.assertIn("/js3rd", transformed)
         self.assertIn(self.versions["FUSE"], transformed)
 
     def test_import_plotly(self):
         code = "import Plotly from 'plotly-dist-min';"
-        transformed = adapt_imports(code, self.versions, self.jsfiles)
+        transformed = adapt_imports(code, self.versions, self.jsfiles, self.mini)
         self.assertNotIn("/js3rd", transformed)
         self.assertNotIn("/js", transformed)
         self.assertNotIn("Plotly", transformed)
@@ -70,11 +71,19 @@ import {
     setSurface,
 } from './plot.js';
         """
-        transformed = adapt_imports(code, self.versions, self.jsfiles)
+
+        minimized = adapt_imports(code, self.versions, self.jsfiles, self.mini)
+        self.assertIn("/js3rd", minimized)
+        self.assertIn("/js/download-{}.min.js".format(CACHE_VERSION), minimized)
+        self.assertIn("/js/meta-{}.min.js".format(CACHE_VERSION), minimized)
+        self.assertIn("/js/plot-{}.min.js".format(CACHE_VERSION), minimized)
+        self.assertIn(self.versions["FUSE"], minimized)
+
+        transformed = adapt_imports(code, self.versions, self.jsfiles, "")
         self.assertIn("/js3rd", transformed)
-        self.assertIn("/js/download-{}.min.js".format(CACHE_VERSION), transformed)
-        self.assertIn("/js/meta-{}.min.js".format(CACHE_VERSION), transformed)
-        self.assertIn("/js/plot-{}.min.js".format(CACHE_VERSION), transformed)
+        self.assertIn("/js/download-{}.js".format(CACHE_VERSION), transformed)
+        self.assertIn("/js/meta-{}.js".format(CACHE_VERSION), transformed)
+        self.assertIn("/js/plot-{}.js".format(CACHE_VERSION), transformed)
         self.assertIn(self.versions["FUSE"], transformed)
 
 

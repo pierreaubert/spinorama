@@ -395,7 +395,6 @@ speakers_info_b: SpeakerDatabase = {
             },
         },
     },
-
     "Buchardt Audio A10": {
         "brand": "Buchardt Audio",
         "model": "A10",

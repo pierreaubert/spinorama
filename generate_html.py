@@ -63,7 +63,7 @@ SITEDEV = "https://dev.spinorama.org"
 CACHE_VERSION = "v5"
 
 
-def get_files(dir, ext):
+def get_files(dir: str, ext: str) -> list[str]:
     """return a list of files matching the extension in a directory, results are stripped of paths and extensions"""
     files = []
     filenames = glob("{}/*.{}".format(dir, ext))
@@ -74,7 +74,7 @@ def get_files(dir, ext):
     return files
 
 
-def get_versions(filename):
+def get_versions(filename: str) -> dict[str, str]:
     """get the current versions for some js libraries"""
     versions = {}
     with open(filename, "r") as fd:
@@ -101,7 +101,7 @@ def get_versions(filename):
     return versions
 
 
-def adapt_imports(jscode, versions, js_files):
+def adapt_imports(jscode, versions: dict[str, str], js_files: list[str], mini: str):
     """ " replace import statements
 
     The source code is compatible with node / vite / vitess.
@@ -125,7 +125,7 @@ def adapt_imports(jscode, versions, js_files):
     re_replacements = [
         (
             r"}} from '\.\/({})\.js';".format("|".join(js_files)),
-            r"}} from '/js/\1-{}{}.js';".format(CACHE_VERSION, ".min" if flag_optim else ""),
+            r"}} from '/js/\1-{}{}.js';".format(CACHE_VERSION, mini),
         ),
     ]
     code = jscode
@@ -561,7 +561,6 @@ def main():
             if flag_dev:
                 item_dist = "{}/{}-{}.js".format(cpaths.CPATH_DOCS_JS, item, CACHE_VERSION)
 
-
             # cleanup flow directives: currently unused
             flow_bin = "./node_modules/.bin/flow-remove-types"
             flow_param = ""  # "--pretty --sourcemaps"
@@ -600,7 +599,9 @@ def main():
             # change import to match prod/dev and browser requirements
             with open(item_post_mako, "r") as fd:
                 item_content = "".join(fd.readlines())
-                item_content = adapt_imports(item_content, versions, jsfiles)
+                item_content = adapt_imports(
+                    item_content, versions, jsfiles, ".min" if flag_optim else ""
+                )
                 write_if_different(item_content, item_post_import, force=True)
 
             # compress files with terser

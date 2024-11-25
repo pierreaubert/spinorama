@@ -196,7 +196,6 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
-
     "Advent The New Advent Loudspeaker": {
         "brand": "Advent",
         "model": "The New Advent Loudspeaker",
