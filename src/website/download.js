@@ -89,18 +89,18 @@ export function getSpeakerData(metaSpeakers, graph, speaker, origin, version) {
 
     const url = constructSpeakerUrl(metaSpeakers, graph, speaker, origin, version);
     // console.log('fetching url=' + url)
-    const spec = fetch(url, { headers: { 'Accept-Encoding': 'bz2, gzip, deflate', 'Content-Type': 'application/json' }, })
-	  .then((response) => {
-	      if (!response.ok) {
-		  console.log('ERROR getSpeaker failed for ' + url + 'with error: ' + response.status);
-		  return null;
-	      }
-	      return response.json();
-	  })
-          .catch((error) => {
-              console.log('ERROR getSpeaker failed for ' + url + 'with error: ' + error);
-              return null;
-          });
+    const spec = fetch(url, { headers: { 'Accept-Encoding': 'bz2, gzip, deflate', 'Content-Type': 'application/json' } })
+        .then((response) => {
+            if (!response.ok) {
+                console.log('ERROR getSpeaker failed for ' + url + 'with error: ' + response.status);
+                return null;
+            }
+            return response.json();
+        })
+        .catch((error) => {
+            console.log('ERROR getSpeaker failed for ' + url + 'with error: ' + error);
+            return null;
+        });
     return spec;
 }
 
@@ -135,29 +135,29 @@ export function getAllSpeakers(table) {
 function fetchDataAndMap(url, encoding, state) {
     // console.log('fetching url=' + url + ' encoding=' + encoding);
     const spec = fetch(url, { headers: { 'Accept-Encoding': encoding, 'Content-Type': 'application/json' } })
-	  .then( (response) => {
-	      if (response.ok) {
-		  console.log('ERROR fetchData for ' + url + ' yield a ' + response.status);
-                  return response.json();
-              }
-              if (state === 1 && response.status === 404) {
-                  const newUrl = updateCache(url);
-                  return fetchDataAndMap(newUrl, encoding, 2);
-              }
-              console.log('ERROR fetchData for ' + url + ' failed: ' + response.status);
-              return null;
-          })
-          .catch((error) => {
-              console.log('ERROR fetchData for ' + url + ' yield a json error: ' + error);
-              return null;
-          })
-          .then((data) => {
-              if (!data) {
-                  console.log('ERROR fetchData for ' + url + ' yield empty data!');
-                  return null;
-              }
-              return new Map(Object.values(data).map((speaker) => [getID(speaker.brand, speaker.model), speaker]));
-          });
+        .then((response) => {
+            if (response.ok) {
+                console.log('ERROR fetchData for ' + url + ' yield a ' + response.status);
+                return response.json();
+            }
+            if (state === 1 && response.status === 404) {
+                const newUrl = updateCache(url);
+                return fetchDataAndMap(newUrl, encoding, 2);
+            }
+            console.log('ERROR fetchData for ' + url + ' failed: ' + response.status);
+            return null;
+        })
+        .catch((error) => {
+            console.log('ERROR fetchData for ' + url + ' yield a json error: ' + error);
+            return null;
+        })
+        .then((data) => {
+            if (!data) {
+                console.log('ERROR fetchData for ' + url + ' yield empty data!');
+                return null;
+            }
+            return new Map(Object.values(data).map((speaker) => [getID(speaker.brand, speaker.model), speaker]));
+        });
     return spec;
 }
 

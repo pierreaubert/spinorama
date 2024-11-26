@@ -148,14 +148,14 @@ getMetadata()
                         console.error('Measurement ' + measurement + ' is unknown');
                     }
 
-		    // hide blocks by default
+                    // hide blocks by default
                     plotContainerError.style.display = 'none';
                     plotContainer.style.display = 'none';
                     plot0Container.style.display = 'none';
                     plot1Container.style.display = 'none';
                     plot2Container.style.display = 'none';
 
-		    // console.log('datas and layouts length='+graphsConfigs.length)
+                    // console.log('datas and layouts length='+graphsConfigs.length)
                     if (graphsConfigs.length === 1) {
                         const graphConfig = graphsConfigs[0];
                         if (graphConfig) {
@@ -163,7 +163,7 @@ getMetadata()
                             Plotly.react('plot', graphConfig.data, graphConfig.layout, graphConfig.config);
                         } else {
                             plotContainer.style.display = 'none';
-			}
+                        }
                     } else if (graphsConfigs.length === 2) {
                         plot0Container.style.display = 'block';
                         plot1Container.style.display = 'block';

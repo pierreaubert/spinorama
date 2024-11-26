@@ -54,8 +54,63 @@ function getContext(key, index, value) {
 
 const speakerContainer = document.querySelector('[data-num="0"');
 
+function headFragment() {
+    const head = new DocumentFragment();
+
+    const div0 = document.createElement('div');
+    div0.setAttribute('class', 'cell is-col-span-2');
+    div0.innerHTML = '<b>Brand Model</b>';
+    head.append(div0);
+
+    const div1 = document.createElement('div');
+    div1.setAttribute('class', 'cell');
+    div1.innerHTML = '<span class="has-text-right"><b>USD</b></span>';
+    head.append(div1);
+
+    const div2 = document.createElement('div');
+    div2.setAttribute('class', 'cell is-col-span-2');
+    div2.innerHTML = '<span class="has-text-left"><b>Reviews</b></span>';
+    head.append(div2);
+
+    const div3 = document.createElement('div');
+    div3.setAttribute('class', 'cell');
+    div3.innerHTML = '<b>-3dB</b>';
+    head.append(div3);
+
+    const div4 = document.createElement('div');
+    div4.setAttribute('class', 'cell');
+    div4.innerHTML = '<b>Flat.</b>';
+    head.append(div4);
+
+    const div5 = document.createElement('div');
+    div5.setAttribute('class', 'cell');
+    div5.innerHTML = '<b>Tone</b>';
+    head.append(div5);
+
+    const div6 = document.createElement('div');
+    div6.setAttribute('class', 'cell');
+    div6.innerHTML = '<b>w/sub</b>';
+    head.append(div6);
+
+    const div7 = document.createElement('div');
+    div7.setAttribute('class', 'cell');
+    div7.innerHTML = '<b>w/eq</b>';
+    head.append(div7);
+
+    const div8 = document.createElement('div');
+    div8.setAttribute('class', 'cell');
+    div8.innerHTML = '<b>w/both</b>';
+    head.append(div8);
+
+    return head;
+}
+
 function contextFragment(context, index) {
     const fragment = new DocumentFragment();
+    if (index === 0) {
+        const divs = headFragment().children;
+        [...divs].map((div) => fragment.append(div));
+    }
     let class1 = 'cell';
     let class2 = 'cell is-col-span-2';
     if (index % 2 == 0) {
@@ -149,7 +204,10 @@ function display(data, speakerHtml, parentDiv) {
     const url = new URL(window.location);
     const params = urlParameters2Sort(url);
     const [maxResults, fragment] = process(data, params, speakerHtml);
-    parentDiv.appendChild(fragment);
+
+    if (fragment) {
+        parentDiv.appendChild(fragment);
+    }
     return maxResults;
 }
 
