@@ -1896,7 +1896,7 @@ speakers_info_d: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "https://dynaudio.com/home-audio/emit/emit-20",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/dynaudio_emit_20/",
                     "yt": "https://youtu.be/Z7R9YApGY6w?si=BVOiNDokYFoPpWTE",
                 },
                 "review_published": "20231122",
@@ -1909,6 +1909,36 @@ speakers_info_d: SpeakerDatabase = {
                         "depth": 211,
                     },
                     "weight": 10.32,
+                },
+            },
+        },
+    },
+    "Dynaudio Emit 30": {
+        "skip": True,
+        "brand": "Dynaudio",
+        "model": "Emit 30",
+        "type": "passive",
+        "price": "1500",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/dynaudio_emit_30/",
+                    "yt": "",
+                },
+                "review_published": "2024xxxx",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 4,
+                    "size": {
+                        "height": 900,
+                        "width": 170,
+                        "depth": 272,
+                    },
+                    "weight": 15.5,
                 },
             },
         },
