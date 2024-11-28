@@ -952,6 +952,9 @@ def plot_contour_3d(spl, params):
     contour_start = -30
     contour_end = 3
 
+    z_min = -45
+    z_max = 5
+
     colorbar = dict(
         dtick=3,
         len=0.5,
@@ -964,7 +967,7 @@ def plot_contour_3d(spl, params):
     spl_list_3d = [0, -5, -10, -15, -20, -25, -30, -35, -40, -45]
     spl_text_3d = [f"{s}" if s > -45 else "" for s in spl_list_3d]
 
-    def a2v(angle):
+    def a2v(angle: str) -> int:
         if angle == "Freq":
             return -1000
         elif angle == "On Axis":
@@ -972,16 +975,15 @@ def plot_contour_3d(spl, params):
         iangle = int(angle[:-1])
         return iangle
 
-    def transform(spl, db_max, clip_min, clip_max):
+    def transform(spl: pd.DataFrame, db_max: float, clip_min: float, clip_max: float):
         if "-180°" not in spl and "180°" in spl:
             spl["-180°"] = spl["180°"]
         df_spl = spl.reindex(columns=sorted(spl.columns, key=a2v)) - db_max
-        # x,y,z
-        freq = df_spl.Freq
-        angle = [a2v(i) for i in df_spl.loc[:, df_spl.columns != "Freq"].columns]
+        # freq, angle, spl, color
         selector = (df_spl["Freq"] > min_freq) & (df_spl["Freq"] < 20000)
-        spl = df_spl.loc[selector, df_spl.columns != "Freq"].T.to_numpy()
-        # color
+        freq = df_spl.Freq.loc[selector].to_numpy()
+        angle = [a2v(i) for i in df_spl.loc[:, df_spl.columns != "Freq"].columns]
+        spl = df_spl.loc[selector, df_spl.columns != "Freq"].clip(z_min, z_max).T.to_numpy()
         color = np.clip(np.multiply(np.floor_divide(spl, 3), 3), clip_min, clip_max)
         return freq, angle, spl, color
 
@@ -1008,12 +1010,16 @@ def plot_contour_3d(spl, params):
     fig.add_trace(trace)
 
     fig.update_layout(
-        autosize=False,
-        width=600,
-        height=700,
+        autosize=True,
+        width=800,
+        height=800,
         scene=dict(
             xaxis=dict(
                 title="Freq. (Hz)",
+                type="log",
+                range=[math.log10(min_freq), math.log10(20000)],
+                showline=True,
+                dtick="D1",
                 tickfont=dict(
                     size=11,
                 ),
@@ -1035,7 +1041,7 @@ def plot_contour_3d(spl, params):
                 ),
             ),
             zaxis=dict(
-                range=[-45, 5],
+                range=[z_min, z_max],
                 title="SPL",
                 showline=True,
                 tickvals=spl_list_3d,
@@ -1046,6 +1052,16 @@ def plot_contour_3d(spl, params):
                 titlefont=dict(
                     size=14,
                 ),
+            ),
+            aspectratio=dict(
+                x=1.414,
+                y=1,
+                z=1,
+            ),
+            camera_eye=dict(
+                x=1.25,
+                y=-2.0,
+                z=1.5,
             ),
         ),
     )
