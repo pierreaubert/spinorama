@@ -984,7 +984,12 @@ export function setSurface(speakerNames, speakerGraphs, width, height) {
                 height,
                 speakerGraphs.length
             );
-            graphsConfigs.push(options);
+	    // this shapes are not working in 3D thus removing them
+            let layout = options.layout;
+            if (layout && layout?.shapes) {
+                layout.shapes = null;
+            }
+            graphsConfigs.push({ data: options.data, layout: layout, config: options.config });
         }
     }
     return graphsConfigs;
