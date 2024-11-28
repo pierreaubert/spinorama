@@ -22,7 +22,7 @@
 # TARGET=pierre@ch.spinorama.org:/var/www/html/spinorama-dev
 # TARGET=pierre@es.spinorama.org:/var/www/html/spinorama-dev
 # TARGET=pierre@web:/var/www/html/spinorama-dev
-TARGET=pierre@192.168.1.19:/var/www/html/spinorama-dev
+TARGET=pierre@192.168.1.18:/var/www/html/spinorama-dev
 # check
 command=$(grep www.spinorama.org docs/*.html | wc -l)
 if [ $command -ne 0 ]; then
