@@ -28,7 +28,7 @@ function processOrigin(origin) {
 
 function processGraph(name) {
     if (name.includes('CEA2034')) {
-        return 'CEA2034';
+        return name;
     } else if (name.includes('Globe')) {
         return name.replace('Globe', 'Contour');
     }

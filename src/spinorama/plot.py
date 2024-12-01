@@ -31,13 +31,25 @@ from plotly.subplots import make_subplots
 import plotly.io as pio
 
 from spinorama import logger
-from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+from spinorama.constant_paths import (
+    MIDRANGE_MIN_FREQ,
+    MIDRANGE_MAX_FREQ,
+    SLOPE_MIN_FREQ,
+    SLOPE_MAX_FREQ,
+)
 from spinorama.filter_peq import peq_spl
 from spinorama.compute_misc import compute_contour
 from spinorama.load_misc import sort_angles
 
 
 pio.templates.default = "plotly_white"
+
+FONT_SIZE_H1 = 18
+FONT_SIZE_H2 = 16
+FONT_SIZE_H3 = 14
+FONT_SIZE_H4 = 12
+FONT_SIZE_H5 = 10
+FONT_SIZE_H6 = 9
 
 
 # ratio is 4x3
@@ -51,7 +63,7 @@ plot_params_default: dict[str, int | str] = {
 }
 
 # ratio is 2x1
-contour_params_default = {
+contour_params_default: dict[str, int | str] = {
     "xmin": 100,
     "xmax": 20000,
     "width": 1200,
@@ -59,14 +71,14 @@ contour_params_default = {
 }
 
 # ratio is 4x5
-radar_params_default = {
+radar_params_default: dict[str, int | str] = {
     "xmin": 400,
     "xmax": 20000,
     "width": 1000,
     "height": 1200,
 }
 
-colors = [
+colors: list[str] = [
     "#5c77a5",
     "#dc842a",
     "#c85857",
@@ -79,7 +91,7 @@ colors = [
     "#ff9da7",
 ]
 
-UNIFORM_COLORS = {
+UNIFORM_COLORS: dict[str, str] = {
     # regression
     "Linear Regression": colors[0],
     "Band ±1.5dB": colors[1],
@@ -199,7 +211,7 @@ CONTOUR_COLORSCALE = [
     [1, "rgb(253,14,13)"],
 ]
 
-RADAR_COLORS = {
+RADAR_COLORS: dict[str, str] = {
     "100 Hz": colors[0],
     "125 Hz": colors[1],
     "160 Hz": colors[2],
@@ -221,17 +233,33 @@ RADAR_COLORS = {
 
 def generate_xaxis(freq_min=20, freq_max=20000):
     return dict(
-        title_text="Frequency (Hz)",
+        title=dict(
+            text="Frequency (Hz)",
+            font=dict(
+                size=FONT_SIZE_H3,
+                family="Arial",
+            ),
+        ),
         type="log",
         range=[math.log10(freq_min), math.log10(freq_max)],
         showline=True,
         dtick="D1",
+        tickfont=dict(
+            size=FONT_SIZE_H3,
+            family="Arial",
+        ),
     )
 
 
 def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
     return dict(
-        title_text="SPL (dB)",
+        title=dict(
+            text="SPL (dB)",
+            font=dict(
+                size=FONT_SIZE_H3,
+                family="Arial",
+            ),
+        ),
         range=[range_min, range_max],
         dtick=range_step,
         tickvals=list(range(range_min, range_max + range_step, range_step)),
@@ -239,6 +267,10 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
             "{}".format(i) if not i % 5 else " "
             for i in range(range_min, range_max + range_step, range_step)
         ],
+        tickfont=dict(
+            size=FONT_SIZE_H3,
+            family="Arial",
+        ),
         showline=True,
     )
 
@@ -250,22 +282,42 @@ def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
     ]
     # print('DEBUG {} {}'.format(tickvals, ticktext))
     return dict(
-        title_text="DI (dB)                                                    &nbsp;",
+        title=dict(
+            text="DI (dB)                                                    &nbsp;",
+            font=dict(
+                size=12,
+                family="Arial",
+            ),
+        ),
         range=[range_min, range_max],
         dtick=range_step,
         tickvals=tickvals,
         ticktext=ticktext,
+        tickfont=dict(
+            size=FONT_SIZE_H3,
+            family="Arial",
+        ),
         showline=True,
     )
 
 
 def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
     return dict(
-        title_text="Angle",
+        title=dict(
+            text="Angle",
+            font=dict(
+                size=FONT_SIZE_H3,
+                family="Arial",
+            ),
+        ),
         range=[angle_min, angle_max],
         dtick=angle_step,
         tickvals=list(range(angle_min, angle_max + angle_step, angle_step)),
         ticktext=["{}°".format(v) for v in range(angle_min, angle_max + angle_step, angle_step)],
+        tickfont=dict(
+            size=FONT_SIZE_H3,
+            family="Arial",
+        ),
         showline=True,
     )
 
@@ -283,6 +335,10 @@ def common_layout(params):
             y=0.99,
             xanchor="center",
             yanchor="top",
+            font=dict(
+                size=FONT_SIZE_H1,
+                family="Arial",
+            ),
         ),
         legend=dict(
             x=0.5,
@@ -290,6 +346,10 @@ def common_layout(params):
             xanchor="center",
             yanchor="top",
             orientation=orientation,
+            font=dict(
+                size=FONT_SIZE_H2,
+                family="Arial",
+            ),
         ),
         margin={
             "t": 100,
@@ -322,7 +382,7 @@ def contour_layout(params):
             "r": 10,
         },
         font=dict(
-            size=9,
+            size=FONT_SIZE_H6,
         ),
         polar=dict(
             bargap=0,
@@ -346,11 +406,11 @@ def radar_layout(params):
             orientation=orientation,
             title=dict(
                 font=dict(
-                    size=10,
+                    size=FONT_SIZE_H5,
                 ),
             ),
             font=dict(
-                size=9,
+                size=FONT_SIZE_H6,
             ),
         ),
         title=dict(
@@ -386,7 +446,9 @@ def plot_spinorama_traces(spin, params):
             name=label_short.get(measurement, measurement),
             hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
-        if layout != "compact":
+        if layout == "compact":
+            trace.name = label_short.get(measurement, measurement)
+        else:
             trace.name = measurement
             trace.legendgroup = "measurements"
             trace.legendgrouptitle = {"text": "Measurements"}
@@ -432,6 +494,96 @@ def plot_spinorama(spin, params):
     di_max = 35 + int(di_max / 5) * 5
     di_min = di_max - 50
     # print('DI min={} max={}'.format(di_min, di_max))
+
+    fig.update_xaxes(generate_xaxis())
+    fig.update_yaxes(generate_yaxis_spl(t_min, t_max, 5))
+    fig.update_yaxes(generate_yaxis_di(di_min, di_max, 5), secondary_y=True)
+
+    fig.update_layout(common_layout(params))
+    return fig
+
+
+def plot_spinorama_normalized_traces(spin, params):
+    layout = params.get("layout", "")
+    traces = []
+    for measurement in (
+        "On Axis",
+        "Listening Window",
+        "Early Reflections",
+        "Sound Power",
+    ):
+        if measurement not in spin:
+            continue
+        trace = go.Scatter(
+            x=spin.Freq,
+            y=spin[measurement],
+            marker_color=UNIFORM_COLORS.get(measurement, "black"),
+            name=label_short.get(measurement, measurement),
+            hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
+        )
+        restricted_freq = spin.loc[(spin.Freq >= SLOPE_MIN_FREQ) & (spin.Freq <= SLOPE_MAX_FREQ)]
+        slope, intercept, _, _, _ = stats.linregress(
+            x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement]
+        )
+        # line = go.Scatter(
+        #    x=restricted_freq,
+        #    y=[slope * math.log10(f) + intercept for f in restricted_freq.Freq],
+        #    marker_color=UNIFORM_COLORS.get(measurement, "black")
+        # )
+        # traces.append(line)
+        slope /= 6  # range covers ~6 octaves
+        if layout == "compact":
+            trace.name = "{} {:3.1f}dB/oct".format(label_short.get(measurement, measurement), slope)
+        else:
+            trace.name = "{} slope {:3.1f}dB/oct".format(measurement, slope)
+            trace.legendgroup = "measurements"
+            trace.legendgrouptitle = {"text": "Measurements"}
+        traces.append(trace)
+
+    traces_di = []
+    for measurement in ("Early Reflections DI", "Sound Power DI"):
+        if measurement not in spin:
+            continue
+        trace = go.Scatter(
+            x=spin.Freq,
+            y=spin[measurement],
+            marker_color=UNIFORM_COLORS.get(measurement, "black"),
+            hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
+        )
+        restricted_freq = spin.loc[(spin.Freq >= SLOPE_MIN_FREQ) & (spin.Freq <= SLOPE_MAX_FREQ)]
+        slope, intercept, _, _, _ = stats.linregress(
+            x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement]
+        )
+        slope /= 6  # range covers ~6 octaves
+        if layout == "compact":
+            trace.name = "{} {:3.1f}dB/oct".format(label_short.get(measurement, measurement), slope)
+        else:
+            trace.name = "{} slope {:3.1f}dB/oct".format(measurement, slope)
+            trace.legendgroup = "directivity"
+            trace.legendgrouptitle = {"text": "Directivity"}
+        traces_di.append(trace)
+    return traces, traces_di
+
+
+def plot_spinorama_normalized(spin, params):
+    print(spin.keys())
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    t_max = 0
+    traces, traces_di = plot_spinorama_normalized_traces(spin, params)
+    for t in traces:
+        t_max = max(t_max, np.max(t.y[np.where(t.x < 20000)]))
+        fig.add_trace(t, secondary_y=False)
+
+    t_max = 5 + int(t_max / 5) * 5
+    t_min = t_max - 50
+
+    di_max = 0
+    for t in traces_di:
+        di_max = max(di_max, np.max(t.y[np.where(t.x < 20000)]))
+        fig.add_trace(t, secondary_y=True)
+
+    di_max = 35 + int(di_max / 5) * 5
+    di_min = di_max - 50
 
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(t_min, t_max, 5))
@@ -831,7 +983,7 @@ def plot_radar(spl, params):
         range=[-45, 5],
         dtick=5,
         tickfont=dict(
-            size=10,
+            size=FONT_SIZE_H5,
         ),
     )
     angularaxis = dict(
@@ -842,7 +994,7 @@ def plot_radar(spl, params):
             for x in (list(range(0, 190, 10)) + list(range(-170, 0, 10)))
         ],
         tickfont=dict(
-            size=10,
+            size=FONT_SIZE_H6,
         ),
     )
 
@@ -939,7 +1091,9 @@ def plot_eqs(freq, peqs, names):
             y=1.1,
             x=0.5,
             title=None,
-            font=dict(size=12),
+            font=dict(
+                size=FONT_SIZE_H3,
+            ),
         ),
     )
     return fig
@@ -959,7 +1113,7 @@ def plot_contour_3d(spl, params):
         dtick=3,
         len=0.5,
         lenmode="fraction",
-        tickfont=dict(size=14),
+        tickfont=dict(size=FONT_SIZE_H3),
     )
 
     angle_list_3d = [-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
@@ -1021,10 +1175,10 @@ def plot_contour_3d(spl, params):
                 showline=True,
                 dtick="D1",
                 tickfont=dict(
-                    size=11,
+                    size=FONT_SIZE_H4,
                 ),
                 titlefont=dict(
-                    size=14,
+                    size=FONT_SIZE_H3,
                 ),
             ),
             yaxis=dict(
@@ -1034,10 +1188,10 @@ def plot_contour_3d(spl, params):
                 ticktext=angle_text_3d,
                 title="Angle",
                 tickfont=dict(
-                    size=11,
+                    size=FONT_SIZE_H4,
                 ),
                 titlefont=dict(
-                    size=14,
+                    size=FONT_SIZE_H3,
                 ),
             ),
             zaxis=dict(
@@ -1047,10 +1201,10 @@ def plot_contour_3d(spl, params):
                 tickvals=spl_list_3d,
                 ticktext=spl_text_3d,
                 tickfont=dict(
-                    size=11,
+                    size=FONT_SIZE_H4,
                 ),
                 titlefont=dict(
-                    size=14,
+                    size=FONT_SIZE_H3,
                 ),
             ),
             aspectratio=dict(

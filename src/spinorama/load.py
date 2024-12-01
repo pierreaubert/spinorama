@@ -173,6 +173,7 @@ def filter_graphs(
         ["Estimated In-Room Response", estimated_inroom_hv],
         ["On Axis", compute_onaxis],
         ["CEA2034", compute_cea2034],
+        ["CEA2034 Normalized", compute_cea2034],
     ]
 
     if sh_spl is None or sv_spl is None:
@@ -200,6 +201,8 @@ def filter_graphs(
                 df_funct = functor(sh_spl)
             elif title == "Vertical Reflections":
                 df_funct = functor(sv_spl)
+            elif title == "CEA2034 Normalized":
+                df_funct = functor(norm_spl(sh_spl), norm_spl(sv_spl))
             else:
                 df_funct = functor(sh_spl, sv_spl)
             if df_funct is not None:
@@ -282,6 +285,7 @@ def filter_graphs_eq(
         ["Estimated In-Room Response", estimated_inroom_hv],
         ["On Axis", compute_onaxis],
         ["CEA2034", compute_cea2034],
+        ["CEA2034 Normalized", compute_cea2034],
     ]
 
     if sh_spl is None or sv_spl is None:
@@ -309,6 +313,8 @@ def filter_graphs_eq(
                 df_funct = functor(sh_spl)
             elif title == "Vertical Reflections":
                 df_funct = functor(sv_spl)
+            elif title == "CEA2034 Normalized":
+                df_funct = functor(norm_spl(sh_spl), norm_spl(sv_spl))
             else:
                 df_funct = functor(sh_spl, sv_spl)
             if df_funct is not None:
@@ -492,14 +498,6 @@ def spin_compute_di_eir(
             delta = np.mean(er_di) - np.mean(er_di_computed)
             logger.debug("Early Reflections DI curve: removing %f", delta)
             spin.loc[spin["Measurements"] == "Early Reflections DI", "dB"] -= delta
-
-        # er_di = spin.loc[spin['Measurements'] == 'Early Reflections DI'].reset_index(drop=True)
-        # logger.debug(
-        #    "Post treatment ER DI: shape={0} min={1} max={2}",
-        #    er_di.shape,
-        #    er_di_computed.min(),
-        #    er_di_computed.max(),
-        # )
     else:
         logger.debug("Shape LW=%s ER=%s", lw.shape, er.shape)
 
@@ -513,7 +511,6 @@ def spin_compute_di_eir(
     if 0 not in (lw.shape[0], er.shape[0], sp.shape[0]):
         eir = estimated_inroom(lw, er, sp)
         logger.debug("eir %s", eir.shape)
-        # logger.debug(eir)
         dfs["Estimated In-Room Response"] = graph_melt(eir)
     else:
         logger.debug("Shape LW=%s ER=%s SP=%s", lw.shape, er.shape, sp.shape)
@@ -542,7 +539,6 @@ def symmetrise_measurement(spl: pd.DataFrame) -> pd.DataFrame:
         angle = 0 if col == "On Axis" else int(col[:-1])
         min_angle = min(min_angle, angle)
         max_angle = max(max_angle, angle)
-    # logger.debug("min {} max {}", min_angle, max_angle)
 
     # extend 0-180 to -170 0 180
     # extend 0-90  to -90 to 90

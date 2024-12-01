@@ -27,6 +27,7 @@ from spinorama.plot import (
     contour_params_default,
     radar_params_default,
     plot_spinorama,
+    plot_spinorama_normalized,
     plot_graph,
     plot_graph_flat,
     plot_graph_spl,
@@ -49,6 +50,18 @@ def display_spinorama(df, graph_params=plot_params_default):
             logger.info("Display CEA2034 not in dataframe (%s)", ", ".join(df.keys()))
             return None
     return plot_spinorama(spin, graph_params)
+
+
+def display_spinorama_normalized(df, graph_params=plot_params_default):
+    spin = df.get("CEA2034 Normalized_unmelted")
+    if spin is None:
+        spin_melted = df.get("CEA2034 Normalized")
+        if spin_melted is not None:
+            spin = graph_unmelt(spin_melted)
+        if spin is None:
+            logger.info("Display CEA2034 not in dataframe (%s)", ", ".join(df.keys()))
+            return None
+    return plot_spinorama_normalized(spin, graph_params)
 
 
 def display_reflection_early(df, graph_params=plot_params_default):

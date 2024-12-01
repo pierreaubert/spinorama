@@ -32,6 +32,7 @@ from spinorama.filter_peq import Peq, peq_preamp_gain
 from spinorama.pict import write_multiformat
 from spinorama.speaker_display import (
     display_spinorama,
+    display_spinorama_normalized,
     display_onaxis,
     display_inroom,
     display_reflection_early,
@@ -159,6 +160,7 @@ def print_graphs(
     graphs = {}
     for op_title, op_call in (
         ("CEA2034", display_spinorama),
+        ("CEA2034 Normalized", display_spinorama_normalized),
         ("On Axis", display_onaxis),
         ("Estimated In-Room Response", display_inroom),
         ("Early Reflections", display_reflection_early),

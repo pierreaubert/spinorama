@@ -139,6 +139,7 @@ def adapt_imports(jscode, versions: dict[str, str], js_files: list[str], mini: s
 
 FREQ_FILTER = [
     "CEA2034",
+    "CEA2034 Normalized",
     "On Axis",
     "Early Reflections",
     "Estimated In-Room Response",

@@ -20,6 +20,7 @@ const flags_Contour_Delta = false;
 
 export const knownMeasurements = [
     'CEA2034',
+    'CEA2034 Normalized',
     'On Axis',
     'Estimated In-Room Response',
     'Early Reflections',
@@ -620,7 +621,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
     return { data: datas, layout: layout, config: config };
 }
 
-export function setCEA2034(speakerNames, speakerGraphs, width, height) {
+export function setCEA2034(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setCEA2034 got ' + speakerGraphs.length + ' graphs')
     for (let i = 0; i < speakerGraphs.length; i++) {
         if (speakerGraphs[i] != null) {
@@ -984,7 +985,7 @@ export function setSurface(speakerNames, speakerGraphs, width, height) {
                 height,
                 speakerGraphs.length
             );
-	    // this shapes are not working in 3D thus removing them
+            // this shapes are not working in 3D thus removing them
             let layout = options.layout;
             if (layout && layout?.shapes) {
                 layout.shapes = null;

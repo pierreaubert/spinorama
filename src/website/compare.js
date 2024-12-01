@@ -107,8 +107,8 @@ getMetadata()
             async function run() {
                 Promise.all(speakersGraph).then((graphs) => {
                     // console.log('plot: resolved ' + graphs.length + ' graphs')
-                    if (measurement === 'CEA2034') {
-                        graphsConfigs = setCEA2034(speakersName, graphs, windowWidth, windowHeight);
+                    if (measurement === 'CEA2034' || measurement === 'CEA2034 Normalized') {
+                        graphsConfigs = setCEA2034(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else if (
                         measurement === 'On Axis' ||
                         measurement === 'Estimated In-Room Response' ||
