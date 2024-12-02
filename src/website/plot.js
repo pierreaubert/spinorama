@@ -151,15 +151,15 @@ export function computeDims(windowWidth, windowHeight, is_vertical, is_compact, 
                 height = Math.min(windowHeight, width / graphRatio);
             }
         }
-        // if (nb_graphs > 1) {
-        //    if (is_vertical) {
-        //        height /= nb_graphs;
-        //        width = height * graphRatio;
-        //    } else {
-        //        width /= nb_graphs;
-        //        height = width / graphRatio;
-        //    }
-        // }
+        if (nb_graphs > 1) {
+            if (is_vertical) {
+		height /= nb_graphs;
+		width = height * graphRatio;
+	    } else {
+		width /= nb_graphs;
+		height = width / graphRatio;
+	    }
+        }
     }
     width = Math.round(width);
     height = Math.round(height);
@@ -226,7 +226,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
 
     const is_vertical = isVertical();
     const is_compact = isCompact();
-    const single_graph = nb_graphs == 1;
+    const single_graph = nb_graphs === 1;
     let is_radar = false;
     let is_globe = false;
     let is_spin = false;
@@ -637,7 +637,7 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
             }
         }
     }
-    return [setGraphOptions(speakerGraphs, width, height, speakerGraphs.length)];
+    return [setGraphOptions(speakerGraphs, width, height, 1)];
 }
 
 export function setGraph(speakerNames, speakerGraphs, width, height) {
@@ -669,7 +669,7 @@ export function setGraph(speakerNames, speakerGraphs, width, height) {
             }
         }
     }
-    return [setGraphOptions(speakerGraphs, width, height, speakerGraphs.length)];
+    return [setGraphOptions(speakerGraphs, width, height, 1)];
 }
 
 export function setRadar(speakerNames, speakerGraphs, width, height) {
@@ -688,93 +688,11 @@ export function setRadar(speakerNames, speakerGraphs, width, height) {
             }
         }
     }
-    const options = setGraphOptions(speakerGraphs, width, height, 1);
+    const options = setGraphOptions(speakerGraphs, width, height, 4);
     options.layout.height += 20 * 12;
     options.layout.margin.t += 40;
     return [options];
 }
-
-/*
-
-function equals(a, b) {
-    // check the length
-    if (a.length != b.length) {
-        return false;
-    }
-    for (let i = 0; i < a.length; i++) {
-        if (a[i] !== b[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-
-function merge(a, b) {
-    // merge => sort => remove duplicates => take intersection
-    const minBound = Math.max(a[0], b[0]);
-    const maxBound = Math.min(a.slice(-1), b.slice(-1));
-    return a
-        .concat(b)
-        .sort((a, b) => a - b)
-        .filter((e, i, a) => e !== a[i - 1])
-        .filter((e, i, a) => a[i] <= maxBound && minBound <= a[i]);
-}
-
-function interpolate(data1, data2, newFreq, newAngle) {
-    const freq1Length = data1[0].x.length;
-    const freq2Length = data2[0].x.length;
-    let ifreq1 = 0;
-    let ifreq2 = 0;
-    const angle1Length = data1[0].y.length;
-    const angle2Length = data2[0].y.length;
-    let iangle1 = 0;
-    let iangle2 = 0;
-    let datas = [];
-    for (let angle in newAngle) {
-        while (data1[0].y[iangle1] < freq && iangle1 < angle1Length) {
-            iangle1 += 1;
-        }
-        let angle1 = data1[0].y[iangle1 + 1];
-        if (angle1 !== angle) {
-            // interpolate
-        }
-        let data = [];
-        for (let freq in newFreq) {
-            while (data1[0].x[ifreq1] < freq && ifreq1 < freq1Length) {
-                ifreq1 += 1;
-            }
-            let freq1 = data1[0].x[ifreq1 + 1];
-            if (freq1 !== freq) {
-                // interpolate
-            }
-        }
-    }
-    return datas;
-}
-
-function computeContourDelta(data1, data2) {
-    let data = [];
-    let contour = {};
-    if (data1 == null || data2 == null) {
-        console.log('data is null!');
-        return null;
-    }
-    if (!('0' in data1) || !('0' in data2)) {
-        console.log('data[0] does not exist!');
-        return null;
-    }
-    // compute delta
-    contour[0] = {};
-    contour[0]['x'] = merge(data1[0].x, data2[0].x);
-    contour[0]['y'] = merge(data1[0].y, data2[0].y);
-    // now we may have to interpolate
-    contour[0]['z'] = interpolate(data1, data2, contour[0]['x'], contour[0]['y']);
-    // done
-    data.push(contour);
-    return data;
-}
-
-*/
 
 export function setContour(speakerNames, speakerGraphs, width, height) {
     // console.log('setContour got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
@@ -789,7 +707,7 @@ export function setContour(speakerNames, speakerGraphs, width, height) {
                 [{ data: speakerGraphs[i].data, layout: speakerGraphs[i].layout }],
                 width,
                 height,
-                speakerGraphs.length
+                2
             );
             if (i == 0 && isCompact() && speakerGraphs.length > 1) {
                 // remove the axis to have the 2 graphs closer together
@@ -804,78 +722,8 @@ export function setContour(speakerNames, speakerGraphs, width, height) {
             graphsConfigs.push(options);
         }
     }
-    /*
-    if (speakerGraphs.length === 2 && flags_Contour_Delta) {
-        const dataDelta = computeContourDelta(speakerGraphs[0].data, speakerGraphs[1].data);
-        if (dataDelta != null) {
-            const optionsDelta = setGraphOptions([{ data: dataDelta, layout: speakerGraphs[1].layout }]);
-            graphsConfigs.push(optionsDelta);
-        }
-    }
-*/
     return graphsConfigs;
 }
-
-/*
-export function setGlobe(speakerNames, speakerGraphs, width, height) {
-    // console.log('setGlobe ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
-    const graphsConfigs = [];
-    for (const i in speakerGraphs) {
-        if (speakerGraphs[i]) {
-            let polarData = [];
-            for (const j in speakerGraphs[i].data) {
-                const freq = speakerGraphs[i].data[j].x;
-                const angle = speakerGraphs[i].data[j].y;
-                const spl = speakerGraphs[i].data[j].z;
-                if (!spl) {
-                    continue;
-                }
-                const x = [];
-                for (let k1 = 0; k1 < freq.length; k1++) {
-                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
-			const f = Math.log10(freq[k1]);
-			const a = Math.cos(angle[k2]);
-                        x.push(f*a);
-                    }
-                }
-                const y = [];
-                for (let k = 0; k < freq.length; k++) {
-                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
-			const f = Math.log10(freq[k1]);
-			const a = Math.sin(angle[k2]);
-                        y.push(f*a);
-                    }
-                }
-                const color = [];
-                for (let k1 = 0; k1 < freq.length; k1++) {
-                    for (let k2 = 0; k2 < angle.length - 1; k2++) {
-                        let val = spl[k2][k1];
-                        val = Math.max(contourMin, val);
-                        val = Math.min(contourMax, val);
-                        color.push(val);
-                    }
-                }
-		// now need to interpolate
-		//
-                polarData.push({x: x, y:y, z:color);
-            }
-            let options = setGraphOptions(
-                [{ data: polarData, layout: speakerGraphs[i].layout }],
-                width,
-                height,
-                speakerGraphs.length
-            );
-            if (speakerGraphs.length > 1 && i == 0) {
-                options.data[0].marker.showscale = false;
-                options.layout.margin.l += 60;
-                options.layout.margin.r += 60;
-            }
-            graphsConfigs.push(options);
-        }
-    }
-    return graphsConfigs;
-}
-*/
 
 export function setGlobe(speakerNames, speakerGraphs, width, height) {
     // console.log('setGlobe ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
