@@ -136,9 +136,9 @@ function fetchDataAndMap(url, encoding, state) {
     // console.log('fetching url=' + url + ' encoding=' + encoding);
     const spec = fetch(url, { headers: { 'Accept-Encoding': encoding, 'Content-Type': 'application/json' } })
         .then((response) => {
-            if (response.ok) {
+            if (!response.ok) {
                 console.log('ERROR fetchData for ' + url + ' yield a ' + response.status);
-                return response.json();
+                return null;
             }
             if (state === 1 && response.status === 404) {
                 const newUrl = updateCache(url);
