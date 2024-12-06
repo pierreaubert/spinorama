@@ -9,7 +9,7 @@
     <%include file="nav_simple.html"/>
     <%namespace name="util" module="website.utils" import="*"/>
     <div id="cea2034plots" data-num="0">
-      <div class="plotForm">
+      <div id="plotForm">
 	<div class="section has-background-light px-1 py-1">
 	  <nav class="level px-1 py-1">
 	    % for name, number in (("A", 0), ("B", 1)):
@@ -51,12 +51,13 @@
 	      </div>
 	    </div>
 	  </nav>
+	    </div>
+        <div class="grid is-col-min-20" id="plotZone">
+          <div class="cell" id="plotError"></div>
+          <div class="cell" id="plot0"></div>
+          <div class="cell" id="plot1"></div>
+          <div class="cell" id="plot2"></div>
 	</div>
-        <div class="plot" id="plot"></div>
-        <div class="message" id="plotError"></div>
-        <div class="plot0" id="plot0"></div>
-        <div class="plot1" id="plot1"></div>
-        <div class="plot2" id="plot2"></div>
       </div>
     </div>
     <script type="module" src="/js/compare-${versions['CACHE']}${min}.js"></script>

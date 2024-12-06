@@ -77,12 +77,12 @@ getMetadata()
         const urlParams = new URLSearchParams(queryString);
 
         const plotContainers = document.querySelector('[data-num="0"');
-        const plotContainer = plotContainers.querySelector('.plot');
+        const plotContainer = plotContainers.querySelector('#plotZone');
         const plotContainerError = plotContainers.querySelector('#plotError');
-        const plot0Container = plotContainers.querySelector('.plot0');
-        const plot1Container = plotContainers.querySelector('.plot1');
-        const plot2Container = plotContainers.querySelector('.plot2');
-        const formContainer = plotContainers.querySelector('.plotForm');
+        const plot0Container = plotContainers.querySelector('#plot0');
+        const plot1Container = plotContainers.querySelector('#plot1');
+        const plot2Container = plotContainers.querySelector('#plot2');
+        const formContainer = plotContainers.querySelector('#plotForm');
         const graphsSelector = formContainer.querySelector('#compare-select-graph');
 
         const windowWidth = window.innerWidth;
@@ -150,7 +150,6 @@ getMetadata()
 
                     // hide blocks by default
                     plotContainerError.style.display = 'none';
-                    plotContainer.style.display = 'none';
                     plot0Container.style.display = 'none';
                     plot1Container.style.display = 'none';
                     plot2Container.style.display = 'none';
@@ -159,10 +158,8 @@ getMetadata()
                     if (graphsConfigs.length === 1) {
                         const graphConfig = graphsConfigs[0];
                         if (graphConfig) {
-                            plotContainer.style.display = 'block';
-                            Plotly.react('plot', graphConfig.data, graphConfig.layout, graphConfig.config);
-                        } else {
-                            plotContainer.style.display = 'none';
+                            plot0Container.style.display = 'block';
+                            Plotly.react('plot0', graphConfig.data, graphConfig.layout, graphConfig.config);
                         }
                     } else if (graphsConfigs.length === 2) {
                         plot0Container.style.display = 'block';
@@ -357,7 +354,7 @@ getMetadata()
             }
             console.log('DEBUG: resize ' + event.name);
             if (graphsConfigs.length == 1) {
-                Plotly.Plots.resize('plot');
+                Plotly.Plots.resize('plot0');
             } else if (graphsConfigs.length == 2) {
                 Plotly.Plots.resize('plot0');
                 Plotly.Plots.resize('plot1');

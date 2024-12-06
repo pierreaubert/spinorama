@@ -99,10 +99,18 @@ const graphSmall = 550;
 const graphLarge = 1200;
 const graphRatio = 1.3;
 const graphMarginTop = 30;
+const graphMarginRight = 30;
 const graphMarginBottom = 60;
 const graphTitle = 40;
 const graphSpacer = graphMarginTop + graphMarginBottom + graphTitle;
 const graphExtraPadding = 40;
+
+const fontSizeH1 = 16;
+const fontSizeH2 = 14;
+const fontSizeH3 = 12;
+const fontSizeH4 = 11;
+const fontSizeH5 = 10;
+const fontSizeH6 =  9;
 
 export function isVertical() {
     const windowWidth = window.innerWidth;
@@ -144,30 +152,25 @@ export function computeDims(windowWidth, windowHeight, is_vertical, is_compact, 
                 width = height * graphRatio - graphSpacer;
             }
         } else {
-            height = Math.min(graphLarge, windowHeight);
-            width = windowHeight * graphRatio - graphSpacer;
-            if (width > windowWidth) {
-                width = windowWidth - graphSpacer;
-                height = Math.min(windowHeight, width / graphRatio);
-            }
+            width = windowWidth-graphMarginRight;
+            height = Math.min(windowHeight, width / graphRatio);
         }
         if (nb_graphs > 1) {
             if (is_vertical) {
-		height /= nb_graphs;
-		width = height * graphRatio;
+		height = (windowHeight - graphExtraPadding) / nb_graphs;
 	    } else {
-		width /= nb_graphs;
-		height = width / graphRatio;
+		width = (windowWidth - graphExtraPadding) / nb_graphs;
+		height = Math.min(height, width / graphRatio);
 	    }
         }
     }
-    width = Math.round(width);
-    height = Math.round(height);
-
     let ratio = (height / width).toFixed(2);
     if (width > height) {
         ratio = (width / height).toFixed(2);
     }
+    width = Math.round(width);
+    height = Math.round(height);
+
     console.info(
         'Window(' +
             windowHeight +
@@ -182,6 +185,7 @@ export function computeDims(windowWidth, windowHeight, is_vertical, is_compact, 
             '#graphs=' +
             nb_graphs
     );
+
     return [width, height];
 }
 
@@ -269,7 +273,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
                 if (i == 0) {
                     shape.label = {
                         text: title,
-                        font: { size: 10, color: 'green' },
+                        font: { size: fontSizeH5, color: 'green' },
                         textposition: 'top center',
                     };
                 }
@@ -284,7 +288,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         if (layout?.axis && layout.xaxis.title) {
             layout.xaxis.title.text = 'SPL (dB) v.s. Frequency (Hz)';
             layout.xaxis.title.font = {
-                size: 10 + fontDelta,
+                size: fontSizeH5,
                 color: '#000',
             };
             layout.xaxis.automargin = 'height';
@@ -376,7 +380,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         }
         if (is_compact) {
             layout.title.font = {
-                size: 10 + fontDelta,
+                size: fontSizeH1,
                 color: '#000',
             };
             if (single_graph) {
@@ -389,7 +393,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             layout.title = {
                 text: title,
                 font: {
-                    size: 10 + fontDelta,
+                    size: fontSizeH1,
                     color: '#000',
                 },
                 xref: 'paper',
@@ -405,7 +409,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             layout.title = {
                 text: title,
                 font: {
-                    size: 12 + fontDelta,
+                    size: fontSizeH1,
                     color: '#000',
                 },
                 xref: 'paper',
@@ -435,12 +439,21 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             if (layout.yaxis2) {
                 offset = 0;
             }
-            layout.margin = {
-                l: 15,
-                r: 15 + offset,
-                t: graphMarginTop,
-                b: graphMarginBottom * 2,
-            };
+	    if (is_vertical) {
+		layout.margin = {
+                    l: 15,
+                    r: 15 + offset,
+                    t: graphMarginTop,
+                    b: graphMarginBottom * 2
+		};
+	    } else {
+		layout.margin = {
+                    l: 15,
+                    r: 15 + graphMarginRight*2,
+                    t: graphMarginTop,
+                    b: 15
+		};
+	    }
         }
         if (is_globe) {
             layout.margin.t += 50;
@@ -448,10 +461,10 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         if (is_radar) {
             layout.margin.t += 100;
         }
-        if (is_spin) {
-            layout.margin.b += 100;
-            layout.height += 100;
-        }
+        if (is_spin && is_vertical) {
+		layout.margin.b += 100;
+		layout.height += 100;
+	}
     }
 
     function computeLegend() {
@@ -466,6 +479,14 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             yref: 'container',
             groupclick: 'toggleitem',
         };
+	if (!is_compact && !is_vertical) {
+            layout.legend.orientation = 'v';
+            layout.legend.y = 1.0;
+            layout.legend.x = 0.85;
+            layout.legend.xanchor = 'bottom';
+            layout.legend.yanchor = 'top';
+	    layout.legend.width = 140;
+	}
         // how many columns in legend?
         const groups = new Set();
         for (let k = 0; k < datas.length; k++) {
@@ -474,7 +495,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             }
         }
         const countColumns = Array.from(groups).length;
-        if (single_graph) {
+        if (single_graph && is_vertical) {
             for (let k = 0; k < datas.length; k++) {
                 datas[k].legendgroup = null;
                 datas[k].legendgrouptitle = null;
@@ -572,9 +593,9 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
 
     function computeFont() {
         if (is_compact) {
-            layout.font = { size: 10 };
+            layout.font = { size: fontSizeH5 };
         } else {
-            layout.font = { size: 12 + fontDelta };
+            layout.font = { size: fontSizeH3 };
         }
     }
 
@@ -593,7 +614,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
                 datas[k].colorbar.title = {
                     text: 'Contours: SPL (3dB steps)',
                     font: {
-                        size: 10 + fontDelta,
+                        size: fontSizeH3
                     },
                     side: 'bottom',
                 };
@@ -688,7 +709,7 @@ export function setRadar(speakerNames, speakerGraphs, width, height) {
             }
         }
     }
-    const options = setGraphOptions(speakerGraphs, width, height, 4);
+    const options = setGraphOptions(speakerGraphs, width, height, 1);
     options.layout.height += 20 * 12;
     options.layout.margin.t += 40;
     return [options];
@@ -778,7 +799,7 @@ export function setGlobe(speakerNames, speakerGraphs, width, height) {
                     colorbar: {
                         title: {
                             font: {
-                                size: 11,
+                                size: fontSizeH4,
                             },
                             text: 'dB (SPL)',
                             side: 'bottom',

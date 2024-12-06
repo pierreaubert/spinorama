@@ -144,8 +144,7 @@ function fetchDataAndMap(url, encoding, state) {
                 const newUrl = updateCache(url);
                 return fetchDataAndMap(newUrl, encoding, 2);
             }
-            console.log('ERROR fetchData for ' + url + ' failed: ' + response.status);
-            return null;
+            return response.json();
         })
         .catch((error) => {
             console.log('ERROR fetchData for ' + url + ' yield a json error: ' + error);
