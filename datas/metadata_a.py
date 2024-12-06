@@ -15,7 +15,7 @@ speakers_info_a: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-Aalto Speakers",
                 "format": "webplotdigitizer",
-		"quality": "low",
+                "quality": "low",
                 "reviews": {
                     "vendor": "",
                 },
@@ -1974,28 +1974,27 @@ speakers_info_a: SpeakerDatabase = {
                     "weight": 6.8,
                 },
             },
-#            "eac": {
-#                "origin": "ErinsAudioCorner",
-#                "format": "klippel",
-#                "reviews": {
-#                    "eac": "",
-#                    "yt": "https://www.youtube.com/watch?v=HKrm19_asro",
-#                },
-#                "review_published": "202404xx",
-#                "specifications": {
-#                    "sensitivity": 84,
-#                    "impedance": 3.2,
-#                    "size": {
-#                        "height": 300,
-#                        "width": 180,
-#                        "depth": 297.6,
-#                    },
-#                    "weight": 6.8,
-#                },
-#            },
+            #            "eac": {
+            #                "origin": "ErinsAudioCorner",
+            #                "format": "klippel",
+            #                "reviews": {
+            #                    "eac": "",
+            #                    "yt": "https://www.youtube.com/watch?v=HKrm19_asro",
+            #                },
+            #                "review_published": "202404xx",
+            #                "specifications": {
+            #                    "sensitivity": 84,
+            #                    "impedance": 3.2,
+            #                    "size": {
+            #                        "height": 300,
+            #                        "width": 180,
+            #                        "depth": 297.6,
+            #                    },
+            #                    "weight": 6.8,
+            #                },
+            #            },
         },
     },
-
     "Audiofocus VENU 8a": {
         "brand": "Audiofocus",
         "model": "VENU 8a",

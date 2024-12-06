@@ -35,7 +35,7 @@ def write_multiformat(chart, filename, force):
             print(filename)
             chart.write_image(filename)
         except RuntimeError as rt:
-            logger.error('writing image %s crashed! %s', filename, rt)
+            logger.error("writing image %s crashed! %s", filename, rt)
             return
     if os.path.getsize(filename) == 0:
         logger.warning("Saving %s failed!", filename)
