@@ -186,6 +186,13 @@ origins_info = {
         "max dB": 10,
         "url": "https://www.audiofocus.eu/",
     },
+    "Vendors-Audio First Design": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://www.audiofirstdesign.uk.co/",
+    },
     "Vendors-Axiom": {
         "min hz": 20,
         "max hz": 20000,

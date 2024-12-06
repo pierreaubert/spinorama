@@ -19,7 +19,7 @@ speakers_info_a: SpeakerDatabase = {
                 "reviews": {
                     "vendor": "",
                 },
-                "review_published": "202404xx",
+                "review_published": "20241206",
                 "specifications": {
                     "sensitivity": 81.5,
                     "impedance": 3.3,
@@ -1946,23 +1946,23 @@ speakers_info_a: SpeakerDatabase = {
         },
     },
     "Audio First Design Fidelia": {
-        "skip": True,
         "brand": "Audio First Design",
         "model": "Fidelia",
         "type": "passive",
         "price": "1200",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "eac",
+        "default_measurement": "vendor",
         "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
+            "vendor": {
+                "origin": "Vendors-Audio First Design",
+                "format": "webplotdigitizer",
+                "quality": "low",
                 "reviews": {
                     "eac": "",
                     "yt": "https://www.youtube.com/watch?v=HKrm19_asro",
                 },
-                "review_published": "202404xx",
+                "review_published": "20241206",
                 "specifications": {
                     "sensitivity": 84,
                     "impedance": 3.2,
@@ -1974,6 +1974,25 @@ speakers_info_a: SpeakerDatabase = {
                     "weight": 6.8,
                 },
             },
+#            "eac": {
+#                "origin": "ErinsAudioCorner",
+#                "format": "klippel",
+#                "reviews": {
+#                    "eac": "",
+#                    "yt": "https://www.youtube.com/watch?v=HKrm19_asro",
+#                },
+#                "review_published": "202404xx",
+#                "specifications": {
+#                    "sensitivity": 84,
+#                    "impedance": 3.2,
+#                    "size": {
+#                        "height": 300,
+#                        "width": 180,
+#                        "depth": 297.6,
+#                    },
+#                    "weight": 6.8,
+#                },
+#            },
         },
     },
 
