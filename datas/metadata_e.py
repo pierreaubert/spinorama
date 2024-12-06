@@ -645,6 +645,37 @@ speakers_info_e: SpeakerDatabase = {
             },
         },
     },
+    "Elac Debut 3.0 B6.3": {
+        "skip": True,
+        "brand": "Elac",
+        "model": "Debut 3.0 B6.3",
+        "type": "passive",
+        "price": "450",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_db63/",
+                    "yt": "https://www.youtube.com/watch?v=8kmjrC84vRg",
+                },
+                "review_published": "2024xxxx",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 6,
+                    "size": {
+                        "height": 339,
+                        "width": 195,
+                        "depth": 298,
+                    },
+                    "weight": 7.85,
+                },
+            },
+        },
+    },
     "Elac Debut 2.0 B5.2": {
         "brand": "Elac",
         "model": "Debut 2.0 B5.2",

@@ -119,6 +119,13 @@ origins_info = {
         "logo-small": "",
         "url": "",
     },
+    "Vendors-Aalto Speakers": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://aaltospeakers.fi",
+    },
     "Vendors-AIA Cinema": {
         "min hz": 20,
         "max hz": 20000,

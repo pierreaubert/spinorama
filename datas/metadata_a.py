@@ -2,6 +2,37 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_a: SpeakerDatabase = {
+    "Aalto Speakers Aalto 1 EVO": {
+        "brand": "Aalto Speakers",
+        "model": "Aalto 1 EVO",
+        "type": "passive",
+        "type": "active",
+        "price": "1000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Aalto Speakers",
+                "format": "webplotdigitizer",
+		"quality": "low",
+                "reviews": {
+                    "vendor": "",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 81.5,
+                    "impedance": 3.3,
+                    "size": {
+                        "height": 242,
+                        "width": 132,
+                        "depth": 208,
+                    },
+                    "weight": 2.4,
+                },
+            },
+        },
+    },
     "Acoustic Energy AE100 Mk2": {
         "brand": "Acoustic Energy",
         "model": "AE100 Mk2",
@@ -1914,6 +1945,38 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Audio First Design Fidelia": {
+        "skip": True,
+        "brand": "Audio First Design",
+        "model": "Fidelia",
+        "type": "passive",
+        "price": "1200",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://www.youtube.com/watch?v=HKrm19_asro",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 84,
+                    "impedance": 3.2,
+                    "size": {
+                        "height": 300,
+                        "width": 180,
+                        "depth": 297.6,
+                    },
+                    "weight": 6.8,
+                },
+            },
+        },
+    },
+
     "Audiofocus VENU 8a": {
         "brand": "Audiofocus",
         "model": "VENU 8a",
