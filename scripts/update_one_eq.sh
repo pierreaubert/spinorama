@@ -10,7 +10,7 @@ fi
 IP="127.0.0.1"
 
 if test "$OS" = "Linux"; then
-    IP=$(ifconfig | grep 192 | cut -d ' ' -f 2 | head -1)
+    IP=$(ip a | grep 192 | cut -d ' ' -f 6 | cut -d '/' -f 1 | head -1)
 elif test "$OS" = "Darwin"; then
     ulimit -n 10240
     IP=$(/sbin/ifconfig| grep 'inet ' | grep broadcast | cut -d ' ' -f 2 | head -1)
