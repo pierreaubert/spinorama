@@ -29,7 +29,8 @@ import sys
 import warnings
 
 import flammkuchen as fl
-from pandas.core.arrays.masked import to_numpy_dtype_inference
+
+# from pandas.core.arrays.masked import to_numpy_dtype_inference
 import tables
 
 import datas.metadata as metadata
