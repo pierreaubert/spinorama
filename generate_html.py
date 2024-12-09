@@ -430,11 +430,11 @@ def main():
     meta_sorted_score = sort_metadata_per_score(meta)
     try:
         for item in (
-            "scores",
-            "help",
             "compare",
-            "statistics",
+            "help",
+            "scores",
             "similar",
+            "statistics",
         ):
             item_name = "{0}.html".format(item)
             logger.info("Write %s", item_name)
