@@ -492,6 +492,7 @@ def main():
         window_size = int(args["--smooth-measurements"])
         current_optim_config["smooth_measurements"] = True
         current_optim_config["smooth_window_size"] = window_size
+        current_optim_config["smooth_window_order"] = 3
         if window_size < 2:
             print("ERROR: window size is {} which is below 2".format(window_size))
             parameter_error = True
