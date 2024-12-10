@@ -22,7 +22,7 @@ import Plotly from 'plotly-dist-min';
 
 import { setGraph } from './plot.js';
 
-export function displayGraph(divName, graphSpec) {
+export function displayGraph(jsonName, divName, graphSpec) {
     async function run() {
         const w = window.innerWidth;
         const h = window.innerHeight;
@@ -31,7 +31,14 @@ export function displayGraph(divName, graphSpec) {
         const graphOptions = setGraph([title], [graphSpec], w, h, 1);
 
         if (graphOptions?.length >= 1) {
-            Plotly.newPlot(divName, graphOptions[0]);
+	    let options = graphOptions[0];
+	    if (jsonName.indexOf('3D') !== -1) {
+		if (options.layout && options.layout?.shapes) {
+		    options.layout.shapes = null;
+		}
+	    }
+
+            Plotly.newPlot(divName, options);
         }
     }
 

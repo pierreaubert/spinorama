@@ -54,3 +54,5 @@ coverage.xml
 recompute_eqs.sh
 .ruff_cache
 .fleet
+.aider*
+.env

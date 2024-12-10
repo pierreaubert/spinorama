@@ -97,13 +97,19 @@ const labelShort = {
 
 const graphSmall = 550;
 const graphLarge = 1200;
-const graphRatio = 1.3;
-const graphMarginTop = 30;
+
+const graphRatio = 1.4;
+
+const graphMarginTop = 60;
+const graphMarginLeft = 30;
 const graphMarginRight = 30;
 const graphMarginBottom = 60;
+
 const graphTitle = 40;
 const graphSpacer = graphMarginTop + graphMarginBottom + graphTitle;
 const graphExtraPadding = 40;
+
+const graphLegendWidth = 164;
 
 const fontSizeH1 = 16;
 const fontSizeH2 = 14;
@@ -137,7 +143,7 @@ export function computeDims(windowWidth, windowHeight, is_vertical, is_compact, 
         if (is_vertical) {
             // portraint
             width = windowWidth;
-            height = Math.min(windowHeight, windowWidth / graphRatio + graphSpacer);
+            height = Math.min(windowHeight, windowWidth / graphRatio + graphMarginTop + graphMarginBottom + graphExtraPadding);
         } else {
             // landscape
             width = windowWidth - graphExtraPadding;
@@ -145,22 +151,17 @@ export function computeDims(windowWidth, windowHeight, is_vertical, is_compact, 
         }
     } else {
         if (is_vertical) {
-            width = Math.min(graphLarge, windowWidth);
-            height = windowWidth / graphRatio + graphSpacer;
-            if (height > windowHeight) {
-                height = windowHeight;
-                width = height * graphRatio - graphSpacer;
-            }
+            width = Math.min(graphLarge, windowWidth-graphMarginRight);
+            height = windowWidth / graphRatio + graphMarginTop+graphMarginBottom + graphExtraPadding;
         } else {
             width = windowWidth-graphMarginRight;
-            height = Math.min(windowHeight, width / graphRatio);
+	    const graphWidth = width-graphMarginLeft-graphLegendWidth;
+            height = graphWidth / graphRatio + graphMarginBottom+graphMarginTop + graphExtraPadding;
         }
         if (nb_graphs > 1) {
-            if (is_vertical) {
-		height = (windowHeight - graphExtraPadding) / nb_graphs;
-	    } else {
-		width = (windowWidth - graphExtraPadding) / nb_graphs;
-		height = Math.min(height, width / graphRatio);
+            if (!is_vertical) {
+		width = windowWidth / nb_graphs;
+		height = Math.min(height, width / graphRatio) + graphMarginTop + graphMarginBottom + graphExtraPadding;
 	    }
         }
     }
@@ -359,7 +360,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             speaker0 = spin[0].layout.title.text.slice(pos0for, pos0by);
             version0 = spin[0].layout.title.text.slice(pos0by + 13);
         }
-        if (!single_graph && spin[1] && spin[1]?.layout.title.text) {
+        if (single_graph && spin[1] && spin[1]?.layout.title.text) {
             title += '<br> v.s. ' + spin[1].layout.title.text;
             const pos1for = spin[1].layout.title.text.indexOf(' for ');
             const pos1by = spin[1].layout.title.text.indexOf(' measured by ');
@@ -380,30 +381,29 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         }
         if (is_compact) {
             layout.title.font = {
-                size: fontSizeH1,
+                size: fontSizeH3,
                 color: '#000',
             };
             if (single_graph) {
                 // split title on 2 lines
                 const measured_pos = title.indexOf(' measured ');
                 if (measured_pos !== -1) {
-                    title = title.slice(0, measured_pos) + ' <br>' + title.slice(measured_pos + 1);
+		    const vs_pos =  title.indexOf(' v.s. ');
+		    if (vs_pos !== -1 ) {
+		    } else {
+			title = title.slice(0, measured_pos) + ' <br>' + title.slice(measured_pos + 1);
+		    }
                 }
             }
             layout.title = {
                 text: title,
                 font: {
-                    size: fontSizeH1,
+                    size: fontSizeH3,
                     color: '#000',
                 },
                 xref: 'paper',
                 xanchor: 'left',
-                // title start sligthly on the right
                 x: 0.0,
-                // keep title below modBar if title is long
-                // yref: 'paper',
-                // yanchor: 'top',
-                // y: 1.15,
             };
         } else {
             layout.title = {
@@ -430,28 +430,28 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             layout.margin = {
                 l: 10,
                 r: 10,
-                t: graphMarginTop,
-                b: graphMarginBottom + 10,
+                t: graphMarginTop/2,
+                b: graphMarginBottom/2,
             };
         } else {
             // right margin depends on a if we have a second axis or not.
-            let offset = 25;
+            let offsetSecondYAxis = 25;
             if (layout.yaxis2) {
-                offset = 0;
+                offsetSecondYAxis = 0;
             }
 	    if (is_vertical) {
 		layout.margin = {
-                    l: 15,
-                    r: 15 + offset,
+                    l: graphMarginLeft,
+                    r: graphMarginRight + offsetSecondYAxis,
                     t: graphMarginTop,
-                    b: graphMarginBottom * 2
+                    b: graphMarginBottom
 		};
 	    } else {
 		layout.margin = {
-                    l: 15,
-                    r: 15 + graphMarginRight*2,
+                    l: graphMarginLeft,
+                    r: graphMarginRight,
                     t: graphMarginTop,
-                    b: 15
+                    b: graphMarginBottom
 		};
 	    }
         }
@@ -462,8 +462,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             layout.margin.t += 100;
         }
         if (is_spin && is_vertical) {
-		layout.margin.b += 100;
-		layout.height += 100;
+	    layout.margin.b += 100;
 	}
     }
 
@@ -485,7 +484,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             layout.legend.x = 0.85;
             layout.legend.xanchor = 'bottom';
             layout.legend.yanchor = 'top';
-	    layout.legend.width = 140;
+	    layout.legend.width = graphLegendWidth;
 	}
         // how many columns in legend?
         const groups = new Set();
@@ -577,7 +576,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         if (is_compact) {
             // remove mod bar
             config = {
-                responsive: true,
+                responsive: false,
                 displayModeBar: false,
             };
         } else {
@@ -585,7 +584,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
                 orientation: 'v',
             };
             config = {
-                responsive: true,
+                responsive: false,
                 displayModeBar: true,
             };
         }
@@ -595,18 +594,22 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         if (is_compact) {
             layout.font = { size: fontSizeH5 };
         } else {
-            layout.font = { size: fontSizeH3 };
+            layout.font = { size: fontSizeH4 };
         }
     }
 
     function computeColorbar() {
         for (let k = 0; k < datas.length; k++) {
             if (datas[k].colorbar) {
-                datas[k].colorbar.x = 0.5;
+                datas[k].colorbar.xref = 'paper';
                 datas[k].colorbar.xanchor = 'center';
-                datas[k].colorbar.y = -0.35;
+		datas[k].colorbar.x = 0.5;
+		datas[k].colorbar.xpad = 20;
+                datas[k].colorbar.yref = 'paper';
                 datas[k].colorbar.yanchor = 'bottom';
-                datas[k].colorbar.len = 1.0;
+		datas[k].colorbar.y = -0.4;
+		datas[k].colorbar.ypad = 20;
+                datas[k].colorbar.len = 0.8;
                 datas[k].colorbar.lenmode = 'fraction';
                 datas[k].colorbar.thickness = 15;
                 datas[k].colorbar.thicknessmode = 'pixels';
@@ -614,7 +617,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
                 datas[k].colorbar.title = {
                     text: 'Contours: SPL (3dB steps)',
                     font: {
-                        size: fontSizeH3
+                        size: fontSizeH4
                     },
                     side: 'bottom',
                 };
@@ -730,15 +733,21 @@ export function setContour(speakerNames, speakerGraphs, width, height) {
                 height,
                 2
             );
-            if (i == 0 && isCompact() && speakerGraphs.length > 1) {
-                // remove the axis to have the 2 graphs closer together
-                options.layout.xaxis.visible = false;
-                options.layout.showlegend = false;
-                options.data[0].showscale = false;
-                options.layout.margin.b = 0;
-                options.layout.margin.l = 15; // annoyingly the second graph has a label that shift the graphs
-                // size                  xaxis colorbar xticks
-                options.layout.height -= 14.5 + 63.5 + 44;
+	    options.layout.margin.t = graphMarginTop/2;
+            if (isCompact() && speakerGraphs.length > 1) {
+		if (i===0) {
+                    // remove the axis to have the 2 graphs closer together
+                    options.layout.xaxis.visible = false;
+                    options.layout.showlegend = false;
+                    options.data[0].showscale = false;
+		    options.layout.margin.b = 0;
+		} else {
+		    options.data[0].colorbar.y = -0.6;
+		}
+	    }
+            // this shapes are not working in 3D thus removing them
+            if (options.layout && options.layout?.shapes) {
+                options.layout.shapes = null;
             }
             graphsConfigs.push(options);
         }
@@ -807,8 +816,15 @@ export function setGlobe(speakerNames, speakerGraphs, width, height) {
                         orientation: 'h',
                         xanchor: 'center',
                         yanchor: 'bottom',
-                        yref: 'container',
-                        y: 0.0,
+                        xref: 'paper',
+                        yref: 'paper',
+			x: 0.5,
+			y: -0.5,
+			len: 0.8,
+			lenmode: 'fraction',
+			thickness: 15,
+			thicknessmode: 'pixels'
+
                     },
                     showscale: true,
                     line: {
@@ -829,7 +845,6 @@ export function setGlobe(speakerNames, speakerGraphs, width, height) {
                 speakerGraphs.length
             );
             if (speakerGraphs.length > 1 && i == 0) {
-                options.data[0].marker.showscale = false;
                 options.layout.margin.l += 60;
                 options.layout.margin.r += 60;
             }

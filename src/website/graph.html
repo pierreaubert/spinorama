@@ -19,7 +19,7 @@
       const spec = fetch("${graph | space2url}.json")
       .then( (response) => response.json() )
       .then( (spec) => {
-        displayGraph(visGraph, spec);
+        displayGraph("${graph}.json", visGraph, spec);
       });
     </script>
 
