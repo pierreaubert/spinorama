@@ -296,6 +296,37 @@ speakers_info_y: SpeakerDatabase = {
             },
         },
     },
+    "Yamaha NS-800A": {
+        "skip": True,
+        "brand": "Yamaha",
+        "model": "NS-800A",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://www.youtube.com/watch?v=jRdwPAjHHZA",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 86.5,
+                    "impedance": 3.8,
+                    "size": {
+                        "height": 420,
+                        "width": 231,
+                        "depth": 358,
+                    },
+                    "weight": 13.0,
+                },
+            },
+        },
+    },
     "Yamaha VXL1-8": {
         "brand": "Yamaha",
         "model": "VXL1-8",

@@ -1612,4 +1612,25 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
+    "Proson Twin 716": {
+        "brand": "Proson",
+        "model": "Twin 716",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/proson-twin-716-spinorama-measurements-cta-2034.59103/",
+                },
+                "review_published": "20241210",
+                "symmetry": "horizontal",
+            },
+        },
+    },
 }

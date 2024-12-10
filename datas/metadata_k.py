@@ -230,6 +230,38 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
+    "Kali SM-5": {
+        "skip": True,
+        "brand": "Kali",
+        "model": "SM-5",
+        "type": "active",
+        "price": "1700",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "/",
+                    "yt": "https://youtu.be/EMm5IV95X_U",
+                },
+                "review_published": "2024xxxx",
+                "specifications": {
+                    "SPL": {
+                        "peak": 117,
+                    },
+                    "size": {
+                        "height": 396,
+                        "width": 200,
+                        "depth": 248,
+                    },
+                    "weight": 9.5,
+                },
+            },
+        },
+    },
     "Kanto ORA": {
         "brand": "Kanto",
         "model": "ORA",

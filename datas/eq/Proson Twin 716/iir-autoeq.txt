@@ -1,0 +1,14 @@
+EQ for Proson Twin 716 computed from Misc data
+Preference Score 2.57 with EQ 5.04
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-12-10-17:38:26
+
+Preamp: -2.7 dB
+
+Filter  1: ON PK Fc    32 Hz Gain +3.00 dB Q 0.75
+Filter  2: ON PK Fc    83 Hz Gain -5.17 dB Q 2.15
+Filter  3: ON PK Fc   190 Hz Gain -1.99 dB Q 3.00
+Filter  4: ON PK Fc   470 Hz Gain -3.22 dB Q 0.81
+Filter  5: ON PK Fc  1586 Hz Gain -2.73 dB Q 3.00
+Filter  6: ON PK Fc  2670 Hz Gain +3.00 dB Q 1.00
+Filter  7: ON PK Fc 10707 Hz Gain -5.55 dB Q 0.50
