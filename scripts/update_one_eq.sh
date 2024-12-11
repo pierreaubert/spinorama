@@ -32,19 +32,23 @@ start_ray()
 compute_eq()
 {
     EXTRA=""
-    smooth="asis"
+    smooth="none"
     if [ "$4" != "" ]; then
-	smooth="smooth"
 	EXTRA="${EXTRA} $4"
+	IFS=' ' read -r -a parameters <<< "${4//[a-z-=]/}"
+	window=${parameters[0]}
+	order=${parameters[1]}
+	smooth="sw${window}o${order}"
     fi
     full="pk"
     if [ "$5" != "" ]; then
-	full="all"
 	EXTRA="${EXTRA} $5"
+	full="all"
     fi
-    target_dir="$(pwd)/build/eqs/$3/$2-$1-$smooth-$full"
+    target_dir="$(pwd)/build/eqs/$3/$2-$1-${smooth}-${full}"
+    echo "Creating ${target_dir}"
     mkdir -p "$target_dir"
-    echo  ./generate_peqs.py --verbose --force --optimisation=global --max-iter=15000 --speaker="$3" --max-peq=$1 --fitness=$2 --ray-cluster=$IP:$PORT ${EXTRA}  --output-dir="$target_dir"
+    # echo  ./generate_peqs.py --verbose --force --optimisation=global --max-iter=15000 --speaker="$3" --max-peq=$1 --fitness=$2 --ray-cluster=$IP:$PORT ${EXTRA}  --output-dir="$target_dir"
     { ./generate_peqs.py \
 	  --verbose \
 	  --force \
@@ -88,6 +92,30 @@ do
     compute_eq 5 "Score" "$spk" "--smooth-measurements=7 --smooth-order=3" ""
     compute_eq 6 "Score" "$spk" "--smooth-measurements=7 --smooth-order=3" ""
     compute_eq 7 "Score" "$spk" "--smooth-measurements=7 --smooth-order=3" ""
+
+    compute_eq 3 "Flat" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
+    compute_eq 4 "Flat" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
+    compute_eq 5 "Flat" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
+    compute_eq 6 "Flat" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
+    compute_eq 11 "Flat" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
+
+    compute_eq 3 "Score" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
+    compute_eq 4 "Score" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
+    compute_eq 5 "Score" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
+    compute_eq 6 "Score" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
+    compute_eq 11 "Score" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
+
+    compute_eq 3 "Flat" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
+    compute_eq 4 "Flat" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
+    compute_eq 5 "Flat" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
+    compute_eq 6 "Flat" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
+    compute_eq 21 "Flat" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
+
+    compute_eq 5 "Score" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
+    compute_eq 4 "Score" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
+    compute_eq 5 "Score" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
+    compute_eq 6 "Score" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
+    compute_eq 21 "Score" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
 
 done
 
