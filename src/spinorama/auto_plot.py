@@ -82,7 +82,7 @@ def graph_eq(freq, peq):
 
 
 def graph_eq_compare(freq, auto_peq, auto_target_interp, target, optim_config):
-    """ "return traces with eq v.s. target"""
+    """return traces with eq v.s. target"""
     # manual_peq = [
     #    (1.0, Biquad(3, 400, 48000, 4.32, -2)),
     #    (1.0, Biquad(3, 1600, 48000, 4.32, -1)),
@@ -164,6 +164,9 @@ def graph_results(
 
     # compare the 2 eqs
     target = -(auto_target[0] - auto_target_interp[0])
+    spl_max = optim_config.get('MAX_DBGAIN', None)
+    if spl_max:
+        target = np.clip(target, None, spl_max)
     # with open("debug_target.txt", "w") as fd:
     #    for f, a in zip(freq, target):
     #        fd.write("{} {}\n".format(f, a))
