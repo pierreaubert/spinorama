@@ -164,7 +164,7 @@ def graph_results(
 
     # compare the 2 eqs
     target = -(auto_target[0] - auto_target_interp[0])
-    spl_max = optim_config.get('MAX_DBGAIN', None)
+    spl_max = optim_config.get("MAX_DBGAIN", None)
     if spl_max:
         target = np.clip(target, None, spl_max)
     # with open("debug_target.txt", "w") as fd:

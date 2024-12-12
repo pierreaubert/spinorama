@@ -1072,10 +1072,18 @@ def plot_eqs(freq, peqs, names):
             dtick="D1",
         ),
     )
+    spl_min = -5
+    if len(peqs) > 0:
+        spl_min = np.min([np.min(peq_spl(freq, peq)) for peq in peqs])
+        spl_min = max(-10, -5 * round(-spl_min / 5)) if spl_min < -5 else -5
+    spl_max = 5
+    if len(peqs) > 0:
+        spl_max = np.max([np.max(peq_spl(freq, peq)) for peq in peqs])
+        spl_max = min(15, 5 * round(spl_max / 5) + 5) if spl_max > 5 else 5
     fig.update_yaxes(
         dict(
             title_text="SPL (dB)",
-            range=[-5, 5],
+            range=[spl_min, spl_max],
             showline=True,
             dtick="D1",
         ),
