@@ -120,30 +120,30 @@ getMetadata()
                         measurement === 'Horizontal Reflections' ||
                         measurement === 'Vertical Reflections'
                     ) {
-                        graphsConfigs = setGraph(speakersName, graphs, windowWidth, windowHeight);
+                        graphsConfigs = setGraph(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else if (measurement === 'SPL Horizontal Radar' || measurement === 'SPL Vertical Radar') {
-                        graphsConfigs = setRadar(speakersName, graphs, windowWidth, windowHeight);
+                        graphsConfigs = setRadar(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else if (
                         measurement === 'SPL Horizontal Contour' ||
                         measurement === 'SPL Vertical Contour' ||
                         measurement === 'SPL Horizontal Contour Normalized' ||
                         measurement === 'SPL Vertical Contour Normalized'
                     ) {
-                        graphsConfigs = setContour(speakersName, graphs, windowWidth, windowHeight);
+                        graphsConfigs = setContour(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else if (
                         measurement === 'SPL Horizontal Contour 3D' ||
                         measurement === 'SPL Vertical Contour 3D' ||
                         measurement === 'SPL Horizontal Contour Normalized 3D' ||
                         measurement === 'SPL Vertical Contour Normalized 3D'
                     ) {
-                        graphsConfigs = setSurface(speakersName, graphs, windowWidth, windowHeight);
+                        graphsConfigs = setSurface(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else if (
                         measurement === 'SPL Horizontal Globe' ||
                         measurement === 'SPL Vertical Globe' ||
                         measurement === 'SPL Horizontal Globe Normalized' ||
                         measurement === 'SPL Vertical Globe Normalized'
                     ) {
-                        graphsConfigs = setGlobe(speakersName, graphs, windowWidth, windowHeight);
+                        graphsConfigs = setGlobe(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else {
                         console.error('Measurement ' + measurement + ' is unknown');
                     }

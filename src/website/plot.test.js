@@ -76,6 +76,4 @@ describe('computeDims', () => {
             expect(ratio).toBeLessThan(ratioMax);
         });
     });
-
-
 });

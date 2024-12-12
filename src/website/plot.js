@@ -100,10 +100,13 @@ const graphLarge = 1200;
 
 const graphRatio = 1.4;
 
-const graphMarginTop = 60;
 const graphMarginLeft = 30;
 const graphMarginRight = 30;
+
+const graphMarginTop = 60;
 const graphMarginBottom = 60;
+const graphMarginTopSmall = 30;
+const graphMarginBottomSmall = 30;
 
 const graphTitle = 40;
 const graphSpacer = graphMarginTop + graphMarginBottom + graphTitle;
@@ -116,9 +119,9 @@ const fontSizeH2 = 14;
 const fontSizeH3 = 12;
 const fontSizeH4 = 11;
 const fontSizeH5 = 10;
-const fontSizeH6 =  9;
+const fontSizeH6 = 9;
 
-export function isVertical() {
+export function isDisplayVertical() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
     if (windowWidth <= windowHeight) {
@@ -127,7 +130,7 @@ export function isVertical() {
     return false;
 }
 
-export function isCompact() {
+export function isDisplayCompact() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
     if (windowWidth < graphSmall || windowHeight < graphSmall) {
@@ -136,11 +139,11 @@ export function isCompact() {
     return false;
 }
 
-export function computeDims(windowWidth, windowHeight, is_vertical, is_compact, nb_graphs) {
+export function computeDims(windowWidth, windowHeight, isVertical, isCompact, nbGraphs) {
     let width = windowWidth;
     let height = windowHeight;
-    if (is_compact) {
-        if (is_vertical) {
+    if (isCompact) {
+        if (isVertical) {
             // portraint
             width = windowWidth;
             height = Math.min(windowHeight, windowWidth / graphRatio + graphMarginTop + graphMarginBottom + graphExtraPadding);
@@ -150,19 +153,19 @@ export function computeDims(windowWidth, windowHeight, is_vertical, is_compact, 
             height = Math.min(windowHeight, windowWidth / graphRatio + graphSpacer);
         }
     } else {
-        if (is_vertical) {
-            width = Math.min(graphLarge, windowWidth-graphMarginRight);
-            height = windowWidth / graphRatio + graphMarginTop+graphMarginBottom + graphExtraPadding;
+        if (isVertical) {
+            width = Math.min(graphLarge, windowWidth - graphMarginRight);
+            height = windowWidth / graphRatio + graphMarginTop + graphMarginBottom + graphExtraPadding;
         } else {
-            width = windowWidth-graphMarginRight;
-	    const graphWidth = width-graphMarginLeft-graphLegendWidth;
-            height = graphWidth / graphRatio + graphMarginBottom+graphMarginTop + graphExtraPadding;
+            width = Math.min(graphLarge, windowWidth - graphMarginRight - graphExtraPadding);
+            const graphWidth = width - graphMarginLeft - graphLegendWidth;
+            height = graphWidth / graphRatio;
         }
-        if (nb_graphs > 1) {
-            if (!is_vertical) {
-		width = windowWidth / nb_graphs;
-		height = Math.min(height, width / graphRatio) + graphMarginTop + graphMarginBottom + graphExtraPadding;
-	    }
+        if (nbGraphs > 1) {
+            if (!isVertical) {
+                width = windowWidth / nbGraphs;
+                height = Math.min(height, width / graphRatio) + graphMarginTop + graphMarginBottom + graphExtraPadding;
+            }
         }
     }
     let ratio = (height / width).toFixed(2);
@@ -184,7 +187,7 @@ export function computeDims(windowWidth, windowHeight, is_vertical, is_compact, 
             ' ratio=' +
             ratio +
             '#graphs=' +
-            nb_graphs
+            nbGraphs
     );
 
     return [width, height];
@@ -208,35 +211,210 @@ function showMinMaxMeasurements(datas) {
     return results;
 }
 
-function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
+const GraphProperties = Object.freeze({
+    CEA2034: {
+        isGraph: true,
+        isSpin: true,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'CEA2034 Normalized': {
+        isGraph: true,
+        isSpin: true,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'On Axis': {
+        isGraph: true,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'Estimated In-Room Response': {
+        isGraph: true,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'Early Reflections': {
+        isGraph: true,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'Horizontal Reflections': {
+        isGraph: true,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'Vertical Reflections': {
+        isGraph: true,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'SPL Horizontal': {
+        isGraph: true,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'SPL Horizontal Normalized': {
+        isGraph: true,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'SPL Vertical': {
+        isGraph: true,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'SPL Vertical Normalized': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: false,
+        isSurface: true,
+        isGlobe: false,
+    },
+    'SPL Horizontal Contour': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: false,
+        isSurface: true,
+        isGlobe: false,
+    },
+    'SPL Horizontal Contour Normalized': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: false,
+        isSurface: true,
+        isGlobe: false,
+    },
+    'SPL Vertical Contour': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: false,
+        isSurface: true,
+        isGlobe: false,
+    },
+    'SPL Vertical Contour Normalized': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: false,
+        isSurface: true,
+        isGlobe: false,
+    },
+    'SPL Horizontal Contour 3D': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: false,
+        isSurface: true,
+        isGlobe: false,
+    },
+    'SPL Horizontal Contour Normalized 3D': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: false,
+        isSurface: true,
+        isGlobe: false,
+    },
+    'SPL Vertical Contour 3D': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: false,
+        isSurface: true,
+        isGlobe: false,
+    },
+    'SPL Vertical Contour Normalized 3D': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: false,
+        isSurface: true,
+        isGlobe: false,
+    },
+    'SPL Horizontal Globe': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: true,
+    },
+    'SPL Horizontal Globe Normalized': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: true,
+    },
+    'SPL Vertical Globe': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: true,
+    },
+    'SPL Vertical Globe Normalized': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: false,
+        isSurface: false,
+        isGlobe: true,
+    },
+    'SPL Horizontal Radar': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: true,
+        isSurface: false,
+        isGlobe: false,
+    },
+    'SPL Vertical Radar': {
+        isGraph: false,
+        isSpin: false,
+        isRadar: true,
+        isSurface: false,
+        isGlobe: false,
+    },
+});
+
+function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraphProperties, outputNumberGraphs) {
     let datas = null;
     let layout = null;
     let config = null;
-    // console.log('layout and data: ' + spin.length + ' w=' + windowWidth + ' h=' + windowHeight);
-    if (spin.length === 1) {
-        layout = spin[0].layout;
-        datas = spin[0].data;
-    } else if (spin.length === 2) {
-        if (spin[0] != null && spin[1] != null) {
-            layout = spin[0].layout;
-            datas = spin[0].data.concat(spin[1].data);
-        } else if (spin[0] != null) {
-            layout = spin[0].layout;
-            datas = spin[0].data;
-        } else if (spin[1] != null) {
-            layout = spin[1].layout;
-            datas = spin[1].data;
+    // console.log('layout and data: ' + inputGraphsData.length + ' w=' + windowWidth + ' h=' + windowHeight);
+    if (inputGraphsData.length === 1) {
+        layout = inputGraphsData[0].layout;
+        datas = inputGraphsData[0].data;
+    } else if (inputGraphsData.length === 2) {
+        if (inputGraphsData[0] != null && inputGraphsData[1] != null) {
+            layout = inputGraphsData[0].layout;
+            datas = inputGraphsData[0].data.concat(inputGraphsData[1].data);
+        } else if (inputGraphsData[0] != null) {
+            layout = inputGraphsData[0].layout;
+            datas = inputGraphsData[0].data;
+        } else if (inputGraphsData[1] != null) {
+            layout = inputGraphsData[1].layout;
+            datas = inputGraphsData[1].data;
         }
     }
 
-    const is_vertical = isVertical();
-    const is_compact = isCompact();
-    const single_graph = nb_graphs === 1;
-    let is_radar = false;
-    let is_globe = false;
-    let is_spin = false;
+    const isVertical = isDisplayVertical();
+    const isCompact = isDisplayCompact();
+
     let fontDelta = 0;
-    if (!is_compact) {
+    if (!isCompact) {
         fontDelta = Math.round(windowWidth / 300);
     }
 
@@ -289,14 +467,14 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         if (layout?.axis && layout.xaxis.title) {
             layout.xaxis.title.text = 'SPL (dB) v.s. Frequency (Hz)';
             layout.xaxis.title.font = {
-                size: fontSizeH5,
+                size: fontSizeH6,
                 color: '#000',
             };
             layout.xaxis.automargin = 'height';
             layout.xaxis.side = 'bottom';
         }
-        if (is_compact) {
-            if (is_vertical && layout?.yaxis && layout.yaxis.title) {
+        if (isCompact) {
+            if (isVertical && layout?.yaxis && layout.yaxis.title) {
                 const freq_min = Math.round(Math.pow(10, layout.xaxis.range[0]));
                 const freq_max = Math.round(Math.pow(10, layout.xaxis.range[1]));
                 let title = '';
@@ -331,7 +509,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
 
     function computeYaxis() {
         // hide axis to recover some space on mobile
-        if (is_compact && is_vertical) {
+        if (isCompact && isVertical) {
             if (layout.yaxis) {
                 layout.yaxis.title = null;
                 layout.yaxis.showticklabels = false;
@@ -353,19 +531,19 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         let pos0by = -1;
         let speaker0 = '';
         let version0 = '';
-        if (spin[0] && spin[0]?.layout.title.text) {
-            title = spin[0].layout.title.text;
-            pos0for = spin[0].layout.title.text.indexOf(' for ');
-            pos0by = spin[0].layout.title.text.indexOf(' measured by ');
-            speaker0 = spin[0].layout.title.text.slice(pos0for, pos0by);
-            version0 = spin[0].layout.title.text.slice(pos0by + 13);
+        if (inputGraphsData[0] && inputGraphsData[0]?.layout.title.text) {
+            title = inputGraphsData[0].layout.title.text;
+            pos0for = inputGraphsData[0].layout.title.text.indexOf(' for ');
+            pos0by = inputGraphsData[0].layout.title.text.indexOf(' measured by ');
+            speaker0 = inputGraphsData[0].layout.title.text.slice(pos0for, pos0by);
+            version0 = inputGraphsData[0].layout.title.text.slice(pos0by + 13);
         }
-        if (single_graph && spin[1] && spin[1]?.layout.title.text) {
-            title += '<br> v.s. ' + spin[1].layout.title.text;
-            const pos1for = spin[1].layout.title.text.indexOf(' for ');
-            const pos1by = spin[1].layout.title.text.indexOf(' measured by ');
-            const speaker1 = spin[1].layout.title.text.slice(pos1for, pos1by);
-            const version1 = spin[1].layout.title.text.slice(pos1by + 13);
+        if (outputNumberGraphs === 1 && inputGraphsData[1] && inputGraphsData[1]?.layout.title.text) {
+            title += '<br> v.s. ' + inputGraphsData[1].layout.title.text;
+            const pos1for = inputGraphsData[1].layout.title.text.indexOf(' for ');
+            const pos1by = inputGraphsData[1].layout.title.text.indexOf(' measured by ');
+            const speaker1 = inputGraphsData[1].layout.title.text.slice(pos1for, pos1by);
+            const version1 = inputGraphsData[1].layout.title.text.slice(pos1by + 13);
             if (speaker0 === speaker1) {
                 // if we have 1 speaker with 2 measurements, add some infos to make the difference explicit
                 datas[0].legendgrouptitle.text += ' (' + version0 + ')';
@@ -376,23 +554,20 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         if (title === '' && datas[0]?.legendgrouptitle.title) {
             title = datas[0].legendgrouptitle.text;
         }
-        if (title.indexOf('CEA2034') !== -1) {
-            is_spin = true;
-        }
-        if (is_compact) {
+        if (isCompact) {
             layout.title.font = {
                 size: fontSizeH3,
                 color: '#000',
             };
-            if (single_graph) {
+            if (outputNumberGraphs === 1) {
                 // split title on 2 lines
                 const measured_pos = title.indexOf(' measured ');
                 if (measured_pos !== -1) {
-		    const vs_pos =  title.indexOf(' v.s. ');
-		    if (vs_pos !== -1 ) {
-		    } else {
-			title = title.slice(0, measured_pos) + ' <br>' + title.slice(measured_pos + 1);
-		    }
+                    const vs_pos = title.indexOf(' v.s. ');
+                    if (vs_pos !== -1) {
+                    } else {
+                        title = title.slice(0, measured_pos) + ' <br>' + title.slice(measured_pos + 1);
+                    }
                 }
             }
             layout.title = {
@@ -425,13 +600,13 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
     }
 
     function computeMargin() {
-        if (is_compact) {
+        if (isCompact) {
             // get legend horizontal below the graph
             layout.margin = {
                 l: 10,
                 r: 10,
-                t: graphMarginTop/2,
-                b: graphMarginBottom/2,
+                t: graphMarginTop / 2,
+                b: graphMarginBottom / 2,
             };
         } else {
             // right margin depends on a if we have a second axis or not.
@@ -439,31 +614,35 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             if (layout.yaxis2) {
                 offsetSecondYAxis = 0;
             }
-	    if (is_vertical) {
-		layout.margin = {
+            if (isVertical) {
+                layout.margin = {
                     l: graphMarginLeft,
                     r: graphMarginRight + offsetSecondYAxis,
                     t: graphMarginTop,
-                    b: graphMarginBottom
-		};
-	    } else {
-		layout.margin = {
+                    b: graphMarginBottom,
+                };
+            } else {
+                layout.margin = {
                     l: graphMarginLeft,
                     r: graphMarginRight,
                     t: graphMarginTop,
-                    b: graphMarginBottom
-		};
-	    }
+                    b: graphMarginBottom,
+                };
+            }
         }
-        if (is_globe) {
+        if (outputGraphProperties.isGlobe) {
             layout.margin.t += 50;
         }
-        if (is_radar) {
+        if (outputGraphProperties.isSurface) {
+            layout.margin.t += 30;
+            layout.margin.b += 100;
+        }
+        if (outputGraphProperties.isRadar) {
             layout.margin.t += 100;
         }
-        if (is_spin && is_vertical) {
-	    layout.margin.b += 100;
-	}
+        if (outputGraphProperties.isSpin && isVertical) {
+            layout.margin.b += 100;
+        }
     }
 
     function computeLegend() {
@@ -478,14 +657,14 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             yref: 'container',
             groupclick: 'toggleitem',
         };
-	if (!is_compact && !is_vertical) {
+        if (!isCompact && !isVertical) {
             layout.legend.orientation = 'v';
             layout.legend.y = 1.0;
             layout.legend.x = 0.85;
             layout.legend.xanchor = 'bottom';
             layout.legend.yanchor = 'top';
-	    layout.legend.width = graphLegendWidth;
-	}
+            layout.legend.width = graphLegendWidth;
+        }
         // how many columns in legend?
         const groups = new Set();
         for (let k = 0; k < datas.length; k++) {
@@ -494,31 +673,33 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             }
         }
         const countColumns = Array.from(groups).length;
-        if (single_graph && is_vertical) {
+        if (outputNumberGraphs === 1 && isVertical) {
             for (let k = 0; k < datas.length; k++) {
                 datas[k].legendgroup = null;
                 datas[k].legendgrouptitle = null;
             }
-        } else if (!is_compact) {
+        } else if (!isCompact) {
             for (let k = 0; k < datas.length; k++) {
                 const title = datas[k].legendgrouptitle;
                 if (title?.text) {
-                    const pos_vs = title.text.indexOf(' v.s. ');
+                    const pos_vs = title.text.indexOf(' for ');
                     if (pos_vs !== -1) {
                         datas[k].legendgrouptitle.text = title.text.slice(0, pos_vs);
                     }
                 }
             }
         }
-        if (is_radar || is_globe) {
+        if (outputGraphProperties.isRadar || outputGraphProperties.isGlobe) {
             layout.height += (datas.length * 20) / countColumns;
         }
     }
 
     function computePolar() {
+        if (!layout) {
+            return;
+        }
         const polars = ['polar', 'polar2', 'polar3', 'polar4'];
-        if (layout && layout['polar4'] && is_compact) {
-            is_radar = true;
+        if (layout['polar4'] && isCompact && outputGraphProperties.isRadar) {
             layout.height = layout.width * 4;
             // fill defaults
             polars.forEach((polar) => {
@@ -546,19 +727,20 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             layout.legend.xanchor = 'center';
             layout.legend.y = 0.0;
         }
-        for (let i in polars) {
-            const polar = polars[i];
-            if (!layout[polar]) {
-                layout[polar] = {};
-                is_globe = true;
+        if (outputGraphProperties.isGlobe) {
+            for (let i in polars) {
+                const polar = polars[i];
+                if (!layout[polar]) {
+                    layout[polar] = {};
+                }
+                layout[polar].bargap = 0;
+                layout[polar].hole = 0.05;
             }
-            layout[polar].bargap = 0;
-            layout[polar].hole = 0.05;
         }
     }
 
     function computeLabel() {
-        if (is_compact) {
+        if (isCompact) {
             // shorten labels
             for (let k = 0; k < datas.length; k++) {
                 // remove group
@@ -573,7 +755,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
     }
 
     function computeModbar() {
-        if (is_compact) {
+        if (isCompact) {
             // remove mod bar
             config = {
                 responsive: false,
@@ -591,7 +773,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
     }
 
     function computeFont() {
-        if (is_compact) {
+        if (isCompact) {
             layout.font = { size: fontSizeH5 };
         } else {
             layout.font = { size: fontSizeH4 };
@@ -603,21 +785,23 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
             if (datas[k].colorbar) {
                 datas[k].colorbar.xref = 'paper';
                 datas[k].colorbar.xanchor = 'center';
-		datas[k].colorbar.x = 0.5;
-		datas[k].colorbar.xpad = 20;
+                datas[k].colorbar.x = 0.5;
+                datas[k].colorbar.xpad = 20;
                 datas[k].colorbar.yref = 'paper';
                 datas[k].colorbar.yanchor = 'bottom';
-		datas[k].colorbar.y = -0.4;
-		datas[k].colorbar.ypad = 20;
+                datas[k].colorbar.y = -0.4;
+                if (isCompact) {
+                    datas[k].colorbar.y = -0.7;
+                }
+                datas[k].colorbar.ypad = 20;
                 datas[k].colorbar.len = 0.8;
                 datas[k].colorbar.lenmode = 'fraction';
                 datas[k].colorbar.thickness = 15;
                 datas[k].colorbar.thicknessmode = 'pixels';
                 datas[k].colorbar.orientation = 'h';
                 datas[k].colorbar.title = {
-                    text: 'Contours: SPL (3dB steps)',
                     font: {
-                        size: fontSizeH4
+                        size: fontSizeH4,
                     },
                     side: 'bottom',
                 };
@@ -626,7 +810,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
     }
 
     if (layout != null && datas != null) {
-        [layout.width, layout.height] = computeDims(windowWidth, windowHeight, is_vertical, is_compact, nb_graphs);
+        [layout.width, layout.height] = computeDims(windowWidth, windowHeight, isVertical, isCompact, outputNumberGraphs);
         computeFont();
         computeXaxis();
         computeYaxis();
@@ -640,7 +824,7 @@ function setGraphOptions(spin, windowWidth, windowHeight, nb_graphs) {
         computeMargin(); // must be last
     } else {
         // should be a pop up
-        console.log('Error: No graph available');
+        console.log('Error: No graph is available');
     }
     return { data: datas, layout: layout, config: config };
 }
@@ -661,10 +845,10 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
             }
         }
     }
-    return [setGraphOptions(speakerGraphs, width, height, 1)];
+    return [setGraphOptions(speakerGraphs, width, height, 1, GraphProperties[measurement])];
 }
 
-export function setGraph(speakerNames, speakerGraphs, width, height) {
+export function setGraph(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setGraph got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     for (const i in speakerGraphs) {
         if (speakerGraphs[i] != null) {
@@ -693,10 +877,10 @@ export function setGraph(speakerNames, speakerGraphs, width, height) {
             }
         }
     }
-    return [setGraphOptions(speakerGraphs, width, height, 1)];
+    return [setGraphOptions(speakerGraphs, width, height, GraphProperties[measurement])];
 }
 
-export function setRadar(speakerNames, speakerGraphs, width, height) {
+export function setRadar(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setRadar got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     for (const i in speakerGraphs) {
         if (speakerGraphs[i] != null) {
@@ -718,7 +902,7 @@ export function setRadar(speakerNames, speakerGraphs, width, height) {
     return [options];
 }
 
-export function setContour(speakerNames, speakerGraphs, width, height) {
+export function setContour(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setContour got ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
     for (const i in speakerGraphs) {
@@ -727,24 +911,19 @@ export function setContour(speakerNames, speakerGraphs, width, height) {
                 speakerGraphs[i].data[j].legendgroup = 'speaker' + i;
                 speakerGraphs[i].data[j].legendgrouptitle = { text: speakerNames[i] };
             }
-            let options = setGraphOptions(
-                [{ data: speakerGraphs[i].data, layout: speakerGraphs[i].layout }],
-                width,
-                height,
-                2
-            );
-	    options.layout.margin.t = graphMarginTop/2;
-            if (isCompact() && speakerGraphs.length > 1) {
-		if (i===0) {
+            let options = setGraphOptions([{ data: speakerGraphs[i].data, layout: speakerGraphs[i].layout }], width, height, 2);
+            options.layout.margin.t = graphMarginTop / 2;
+            if (isDisplayCompact() && speakerGraphs.length > 1) {
+                if (i === 0) {
                     // remove the axis to have the 2 graphs closer together
                     options.layout.xaxis.visible = false;
                     options.layout.showlegend = false;
                     options.data[0].showscale = false;
-		    options.layout.margin.b = 0;
-		} else {
-		    options.data[0].colorbar.y = -0.6;
-		}
-	    }
+                    options.layout.margin.b = 0;
+                } else {
+                    options.data[0].colorbar.y = -0.6;
+                }
+            }
             // this shapes are not working in 3D thus removing them
             if (options.layout && options.layout?.shapes) {
                 options.layout.shapes = null;
@@ -755,7 +934,7 @@ export function setContour(speakerNames, speakerGraphs, width, height) {
     return graphsConfigs;
 }
 
-export function setGlobe(speakerNames, speakerGraphs, width, height) {
+export function setGlobe(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setGlobe ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
     for (const i in speakerGraphs) {
@@ -818,13 +997,12 @@ export function setGlobe(speakerNames, speakerGraphs, width, height) {
                         yanchor: 'bottom',
                         xref: 'paper',
                         yref: 'paper',
-			x: 0.5,
-			y: -0.5,
-			len: 0.8,
-			lenmode: 'fraction',
-			thickness: 15,
-			thicknessmode: 'pixels'
-
+                        x: 0.5,
+                        y: -0.5,
+                        len: 0.8,
+                        lenmode: 'fraction',
+                        thickness: 15,
+                        thicknessmode: 'pixels',
                     },
                     showscale: true,
                     line: {
@@ -854,7 +1032,7 @@ export function setGlobe(speakerNames, speakerGraphs, width, height) {
     return graphsConfigs;
 }
 
-export function setSurface(speakerNames, speakerGraphs, width, height) {
+export function setSurface(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setSurface ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
     for (const i in speakerGraphs) {

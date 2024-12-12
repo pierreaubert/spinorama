@@ -22,21 +22,21 @@ import Plotly from 'plotly-dist-min';
 
 import { setGraph } from './plot.js';
 
-export function displayGraph(jsonName, divName, graphSpec) {
+export function displayGraph(measurementName, jsonName, divName, graphSpec) {
     async function run() {
         const w = window.innerWidth;
         const h = window.innerHeight;
 
         const title = graphSpec.layout.title.text;
-        const graphOptions = setGraph([title], [graphSpec], w, h, 1);
+        const graphOptions = setGraph(measurementName, [title], [graphSpec], w, h, 1);
 
         if (graphOptions?.length >= 1) {
-	    let options = graphOptions[0];
-	    if (jsonName.indexOf('3D') !== -1) {
-		if (options.layout && options.layout?.shapes) {
-		    options.layout.shapes = null;
-		}
-	    }
+            let options = graphOptions[0];
+            if (jsonName.indexOf('3D') !== -1) {
+                if (options.layout && options.layout?.shapes) {
+                    options.layout.shapes = null;
+                }
+            }
 
             Plotly.newPlot(divName, options);
         }
