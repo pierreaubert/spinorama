@@ -373,6 +373,37 @@ speakers_info_t: SpeakerDatabase = {
             },
         },
     },
+    "Totem Acoustic Kin One": {
+        "skip": True,
+        "brand": "Totem Acoustic",
+        "model": "Kin One",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://youtu.be/37Nd7Uz_zlk",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 6,
+                    "size": {
+                        "height": 143,
+                        "width": 237,
+                        "depth": 159,
+                    },
+                    "weight": 2.83,
+                },
+            },
+        },
+    },
     "Totem Acoustics Rainmaker": {
         "brand": "Totem Acoustics",
         "model": "Rainmaker",
