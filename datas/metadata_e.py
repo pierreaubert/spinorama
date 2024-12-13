@@ -438,6 +438,33 @@ speakers_info_e: SpeakerDatabase = {
             },
         },
     },
+    "Edifier MR3BT": {
+        "skip": True,
+        "brand": "Edifier",
+        "model": "MR3BT",
+        "type": "active",
+        "price": "120",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-audiolabinsight",
+        "measurements": {
+            "misc-audiolabinsight": {
+                "origin": "Misc",
+                "format": "klippel",
+                "quality": "high",
+                "review": "https://audiolabinsight.com/t/edifier-mr3bt-mesearment-and-review/342",
+                "review_published": "20241214",
+                "specifications": {
+                    "size": {
+                        "height": 2230,
+                        "width": 125,
+                        "depth": 185,
+                    },
+                    "weight": 3.85,
+                },
+            },
+        },
+    },
     "Edifier MR4": {
         "brand": "Edifier",
         "model": "MR4",
