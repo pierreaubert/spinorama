@@ -38,6 +38,8 @@ import pathlib
 from docopt import docopt
 import plotly.graph_objects as go
 
+from spinorama.pict import write_multiformat
+
 
 from generate_common import (
     get_custom_logger,
@@ -124,7 +126,7 @@ def print_radar(meta_data, scale, speaker_data):
     measurement = meta_data["measurements"][def_measurement]
     if "pref_rating" not in measurement or "estimates" not in measurement:
         return
-    filename = "{}/{} {}/spider.jpg".format(
+    filename = "{}/{} {}/spider_large.png".format(
         CPATH_DOCS_SPEAKERS, meta_data["brand"], meta_data["model"]
     )
     # TODO: to add check for dependancies
@@ -133,7 +135,7 @@ def print_radar(meta_data, scale, speaker_data):
     graph_data = []
     pref_rating = measurement["pref_rating"]
     # pprint(pref_rating)
-    graph_data.append(build_scatterplot(pref_rating, scale, "no EQ"))
+    graph_data.append(build_scatterplot(pref_rating, scale, "Reference"))
     for eq_key in meta_data["eqs"]:
         if eq_key not in ("autoeq", "autoeq_lw", "autoeq_score"):
             continue
@@ -152,21 +154,20 @@ def print_radar(meta_data, scale, speaker_data):
         # print(iir)
         # compute pref_rating and estimates
         # print(speaker_data[measurement["origin"]][def_measurement].keys())
-        spin_eq, _, pref_rating_eq = scores_apply_filter(
+        _, _, pref_rating_eq = scores_apply_filter(
             speaker_data[measurement["origin"]][def_measurement], iir
         )
         # pprint(pref_rating_eq)
         # add results to data
         pretty_name = {
-            "no EQ": "Reference",
             "autoeq_lw": "autoEQ LW",
             "autoeq": "autoEQ Score",
         }
         graph_data.append(build_scatterplot(pref_rating_eq, scale, pretty_name.get(eq_key, eq_key)))
 
     layout = {
-        "width": 400,
-        "height": 300,
+        "width": 800,
+        "height": 600,
         "polar": {
             "radialaxis": {
                 "visible": True,
@@ -180,17 +181,17 @@ def print_radar(meta_data, scale, speaker_data):
             "xanchor": "center",
         },
         "margin": {
-            "t": 0,
-            "l": 0,
-            "r": 0,
-            "b": 0,
+            "t": 20,
+            "l": 20,
+            "r": 20,
+            "b": 20,
         },
     }
     fig = go.Figure()
     for gd in graph_data:
         fig.add_trace(go.Scatterpolar(gd))
     fig.update_layout(layout)
-    fig.write_image(filename)
+    write_multiformat(fig, filename, False);
 
 
 def main(args):
