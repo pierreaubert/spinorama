@@ -1185,6 +1185,56 @@ speakers_info_b: SpeakerDatabase = {
             },
         },
     },
+    "Bowers & Wilkins 607 S2 Anniversary Edition": {
+        "brand": "Bowers & Wilkins",
+        "model": "607 S2 Anniversary Edition",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "740",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-607-s2-anniversary-edition-review.21597/",
+            },
+        },
+    },
+    "Bowers & Wilkins 686 S2": {
+        "brand": "Bowers & Wilkins",
+        "model": "686 S2",
+        "type": "passive",
+        "type": "active",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+		"quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-686-s2-spinorama-measurements-cta-2034.59307/#post-2167509",
+                    "noa": "https://noaudiophile.com/Bowers_and_Wilkins_686_S2/",
+                    "ssn": "https://www.soundstagenetwork.com/index.php?option=com_content&view=article&id=1645:nrc-measurements-bowers-wilkins-685-s2-loudspeakers&catid=77&Itemid=153",
+                },
+                "review_published": "20241215",
+                "symmetry": "horizontal",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 5.2,
+                    "size": {
+                        "height": 315,
+                        "width": 160,
+                        "depth": 229,
+                    },
+                    "weight": 4.6,
+                },
+            },
+        },
+    },
+
     "Bowers & Wilkins 802N": {
         "brand": "Bowers & Wilkins",
         "model": "802N",
@@ -1226,21 +1276,6 @@ speakers_info_b: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-805s-bookshelf-speaker-review.16523/",
                 "review_published": "20201006",
-            },
-        },
-    },
-    "Bowers & Wilkins 607 S2 Anniversary Edition": {
-        "brand": "Bowers & Wilkins",
-        "model": "607 S2 Anniversary Edition",
-        "type": "passive",
-        "shape": "bookshelves",
-        "price": "740",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-607-s2-anniversary-edition-review.21597/",
             },
         },
     },

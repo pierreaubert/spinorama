@@ -10,16 +10,16 @@ speakers_info_a: SpeakerDatabase = {
         "price": "1000",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "vendor",
+        "default_measurement": "vendor-v2-20241215",
         "measurements": {
-            "vendor": {
+            "vendor-v2-20241215": {
                 "origin": "Vendors-Aalto Speakers",
-                "format": "webplotdigitizer",
+                "format": "spl_hv_txt",
                 "quality": "low",
                 "reviews": {
                     "vendor": "",
                 },
-                "review_published": "20241206",
+                "review_published": "20241215",
                 "specifications": {
                     "sensitivity": 81.5,
                     "impedance": 3.3,
@@ -30,6 +30,12 @@ speakers_info_a: SpeakerDatabase = {
                     },
                     "weight": 2.4,
                 },
+            },
+            "vendor-v1-20241207": {
+                "origin": "Vendors-Aalto Speakers",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review_published": "20241206",
             },
         },
     },
