@@ -46,8 +46,10 @@ def write_multiformat(chart, filename, force):
         filename = filename.replace("_large", "")
         webp = "{}.webp".format(filename[:-4])
         if not pathlib.Path(webp).is_file() or force:
+            print(webp)
             pict.convert("webp").save(filename=webp)
         pict.compression_quality = 75
         jpg = "{}.jpg".format(filename[:-4])
         if not pathlib.Path(jpg).is_file() or force:
+            print(jpg)
             pict.convert("jpg").save(filename=jpg)

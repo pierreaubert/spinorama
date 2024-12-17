@@ -49,7 +49,7 @@ def float2str(context, f):
     return f.split(".")[0]
 
 
-def eqtype2str(context, eq_type : str) -> str:
+def eqtype2str(context, eq_type: str) -> str:
     infos = {
         "0": "LP",
         "1": "HP",

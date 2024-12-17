@@ -44,10 +44,10 @@ from spinorama.load_misc import sort_angles
 
 pio.templates.default = "plotly_white"
 
-FONT_SIZE_H1 = 18
-FONT_SIZE_H2 = 16
-FONT_SIZE_H3 = 14
-FONT_SIZE_H4 = 12
+FONT_SIZE_H1 = 16
+FONT_SIZE_H2 = 14
+FONT_SIZE_H3 = 12
+FONT_SIZE_H4 = 11
 FONT_SIZE_H5 = 10
 FONT_SIZE_H6 = 9
 
@@ -506,6 +506,13 @@ def plot_spinorama(spin, params):
 def plot_spinorama_normalized_traces(spin, params):
     layout = params.get("layout", "")
     traces = []
+    lines = []
+    slope_min_freq = max(SLOPE_MIN_FREQ, spin.Freq.iat[0])
+    slope_max_freq = min(SLOPE_MAX_FREQ, spin.Freq.iat[-1])
+    restricted_freq = spin.loc[(spin.Freq >= slope_min_freq) & (spin.Freq <= slope_max_freq)]
+    first_freq = restricted_freq.Freq.iat[0]
+    last_freq = restricted_freq.Freq.iat[-1]
+    slope_octave = math.log2(last_freq / first_freq)
     for measurement in (
         "On Axis",
         "Listening Window",
@@ -521,26 +528,41 @@ def plot_spinorama_normalized_traces(spin, params):
             name=label_short.get(measurement, measurement),
             hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
-        restricted_freq = spin.loc[(spin.Freq >= SLOPE_MIN_FREQ) & (spin.Freq <= SLOPE_MAX_FREQ)]
-        slope, intercept, _, _, _ = stats.linregress(
-            x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement]
-        )
-        # line = go.Scatter(
-        #    x=restricted_freq,
-        #    y=[slope * math.log10(f) + intercept for f in restricted_freq.Freq],
-        #    marker_color=UNIFORM_COLORS.get(measurement, "black")
-        # )
-        # traces.append(line)
-        slope /= 6  # range covers ~6 octaves
+        res = stats.linregress(x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement])
+        slope_dboct = res.slope * (math.log10(last_freq) - math.log10(first_freq)) / slope_octave
+        first_spl = res.intercept + res.slope * math.log10(first_freq)
+        last_spl = res.intercept + res.slope * math.log10(last_freq)
+        if measurement in ("Sound Power", "Early Reflections"):
+            print(
+                "Freq [{}, {}]Hz SPL [{}, {}] regression slope {} slope {} db/oct intercept {}".format(
+                    first_freq,
+                    last_freq,
+                    first_spl,
+                    last_spl,
+                    res.slope,
+                    slope_dboct,
+                    res.intercept,
+                )
+            )
+            line_computed = go.Scatter(
+                x=[first_freq, last_freq],
+                y=[first_spl, last_spl],
+                line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
+                opacity=1,
+                legend="legend2",
+                name="{:20s} slope {:+4.1f}dB/oct".format(measurement, slope_dboct),
+            )
+            lines.append(line_computed)
         if layout == "compact":
-            trace.name = "{} {:3.1f}dB/oct".format(label_short.get(measurement, measurement), slope)
+            trace.name = label_short.get(measurement, measurement)
         else:
-            trace.name = "{} slope {:3.1f}dB/oct".format(measurement, slope)
+            trace.name = measurement
             trace.legendgroup = "measurements"
             trace.legendgrouptitle = {"text": "Measurements"}
         traces.append(trace)
 
     traces_di = []
+    lines_di = []
     for measurement in ("Early Reflections DI", "Sound Power DI"):
         if measurement not in spin:
             continue
@@ -550,32 +572,59 @@ def plot_spinorama_normalized_traces(spin, params):
             marker_color=UNIFORM_COLORS.get(measurement, "black"),
             hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
-        restricted_freq = spin.loc[(spin.Freq >= SLOPE_MIN_FREQ) & (spin.Freq <= SLOPE_MAX_FREQ)]
-        slope, intercept, _, _, _ = stats.linregress(
-            x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement]
+        res = stats.linregress(x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement])
+        slope_dboct = res.slope * (math.log10(last_freq) - math.log10(first_freq)) / slope_octave
+        first_spl = res.intercept + res.slope * math.log10(first_freq)
+        last_spl = res.intercept + res.slope * math.log10(last_freq)
+        line_computed = go.Scatter(
+            x=[first_freq, last_freq],
+            y=[first_spl, last_spl],
+            line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
+            opacity=1,
+            name="{:20s} slope {:+4.1f}dB/oct".format(measurement, slope_dboct),
+            showlegend=True,
+            legend="legend2",
         )
-        slope /= 6  # range covers ~6 octaves
+        lines_di.append(line_computed)
+        if measurement == "Sound Power DI":
+            # https://kimmosaunisto.net/Misc/speaker_review_feedback.pdf
+            spl_min = res.intercept + 0.85 * slope_octave * math.log10(last_freq / first_freq)
+            spl_max = res.intercept + 1.10 * slope_octave * math.log10(last_freq / first_freq)
+            x = [first_freq, last_freq, last_freq, first_freq]
+            y = [first_spl, spl_min, spl_max, first_spl]
+            lines_di.append(
+                go.Scatter(
+                    x=x,
+                    y=y,
+                    fill="toself",
+                    opacity=0.4,
+                    legend="legend2",
+                    name="recommended SPDI zone",
+                )
+            )
         if layout == "compact":
-            trace.name = "{} {:3.1f}dB/oct".format(label_short.get(measurement, measurement), slope)
+            trace.name = label_short.get(measurement, measurement)
         else:
-            trace.name = "{} slope {:3.1f}dB/oct".format(measurement, slope)
+            trace.name = measurement
             trace.legendgroup = "directivity"
             trace.legendgrouptitle = {"text": "Directivity"}
         traces_di.append(trace)
-    return traces, traces_di
+    return traces, traces_di, lines, lines_di
 
 
 def plot_spinorama_normalized(spin, params):
-    print(spin.keys())
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     t_max = 0
-    traces, traces_di = plot_spinorama_normalized_traces(spin, params)
+    traces, traces_di, lines, lines_di = plot_spinorama_normalized_traces(spin, params)
     for t in traces:
         t_max = max(t_max, np.max(t.y[np.where(t.x < 20000)]))
         fig.add_trace(t, secondary_y=False)
 
     t_max = 5 + int(t_max / 5) * 5
     t_min = t_max - 50
+
+    for l in lines:
+        fig.add_trace(l, secondary_y=False)
 
     di_max = 0
     for t in traces_di:
@@ -585,11 +634,23 @@ def plot_spinorama_normalized(spin, params):
     di_max = 35 + int(di_max / 5) * 5
     di_min = di_max - 50
 
+    for l in lines_di:
+        fig.add_trace(l, secondary_y=True)
+
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(t_min, t_max, 5))
     fig.update_yaxes(generate_yaxis_di(di_min, di_max, 5), secondary_y=True)
 
     fig.update_layout(common_layout(params))
+    fig.update_layout(
+        legend2=dict(
+            orientation="v",
+            yanchor="middle",
+            y=0.5,
+            xanchor="left",
+            x=0.05,
+        )
+    )
     return fig
 
 
@@ -936,11 +997,10 @@ def plot_radar(spl, params):
         db_mean = dfu.loc[(dfu.Freq > 900) & (dfu.Freq < 1100)]["On Axis"].mean()
         freq = dfu.Freq
         dfu = dfu.drop("Freq", axis=1)
-        db_min = np.min(dfu.min(axis=0).values)
-        db_max = np.max(dfu.max(axis=0).values)
-        max(abs(db_max), abs(db_min))
         # if df is normalized then 0 will be at the center of the radar which is not what
         # we want. Let's shift the whole graph up.
+        # db_min = np.min(dfu.min(axis=0).values)
+        # db_max = np.max(dfu.max(axis=0).values)
         # if db_mean < 45:
         #    dfu += db_scale
         # print(db_min, db_max, db_mean, db_scale)

@@ -24,6 +24,10 @@ import pandas as pd
 from scipy import stats
 
 from spinorama import logger
+from spinorama.constant_paths import (
+    SLOPE_MIN_FREQ,
+    SLOPE_MAX_FREQ,
+)
 from spinorama.load_misc import sort_angles
 from spinorama.compute_scores import octave
 
@@ -449,5 +453,15 @@ def compute_statistics(
     hist = np.histogram(hist_dist, bins=[0, 0.5, 1, 1.5, 2, 2.5, 3, 5], density=False)
     # 3 = math.log10(20000)-math.log10(20)
     # 11 octaves between 20Hz and 20kHz
-    db_per_octave = result.slope * 3.0 / 11.0
+    slope_min_freq = max(SLOPE_MIN_FREQ, data_frame.Freq.iat[0])
+    slope_max_freq = min(SLOPE_MAX_FREQ, data_frame.Freq.iat[-1])
+    slopes_minmax = data_frame.loc[
+        (data_frame.Freq > slope_min_freq) & (data_frame.Freq < slope_max_freq)
+    ]
+    slopes_spl = slopes_minmax[measurement]
+    first_freq = slopes_minmax.Freq.iat[0]
+    last_freq = slopes_minmax.Freq.iat[-1]
+    first_spl = slopes_spl.iat[0]
+    last_spl = slopes_spl.iat[-1]
+    db_per_octave = (last_spl - first_spl) / math.log2(last_freq / first_freq)
     return db_per_octave, hist, np.max(hist_dist)
