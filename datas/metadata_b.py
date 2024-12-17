@@ -1213,7 +1213,7 @@ speakers_info_b: SpeakerDatabase = {
             "misc-ageve": {
                 "origin": "Misc",
                 "format": "spl_hv_txt",
-		"quality": "low",
+                "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/bowers-wilkins-686-s2-spinorama-measurements-cta-2034.59307/#post-2167509",
                     "noa": "https://noaudiophile.com/Bowers_and_Wilkins_686_S2/",
@@ -1234,7 +1234,6 @@ speakers_info_b: SpeakerDatabase = {
             },
         },
     },
-
     "Bowers & Wilkins 802N": {
         "brand": "Bowers & Wilkins",
         "model": "802N",

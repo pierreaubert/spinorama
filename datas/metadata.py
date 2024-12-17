@@ -642,6 +642,13 @@ origins_info = {
         "logo-small": "docs/metadata/qsc.png",
         "url": "https://www.qsc.com",
     },
+    "Vendors-Taipuu Speakers": {
+        "min hz": 20,
+        "max hz": 20000,
+        "min dB": -40,
+        "max dB": 10,
+        "url": "https://aaltospeakers.fi",
+    },
     "Vendors-Turbosound": {
         "min hz": 20,
         "max hz": 20000,

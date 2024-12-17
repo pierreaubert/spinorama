@@ -5,7 +5,6 @@ speakers_info_a: SpeakerDatabase = {
     "Aalto Speakers Aalto 1 EVO": {
         "brand": "Aalto Speakers",
         "model": "Aalto 1 EVO",
-        "type": "passive",
         "type": "active",
         "price": "1000",
         "amount": "pair",
