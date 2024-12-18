@@ -533,26 +533,45 @@ def plot_spinorama_normalized_traces(spin, params):
         first_spl = res.intercept + res.slope * math.log10(first_freq)
         last_spl = res.intercept + res.slope * math.log10(last_freq)
         if measurement in ("Sound Power", "Early Reflections"):
-            print(
-                "Freq [{}, {}]Hz SPL [{}, {}] regression slope {} slope {} db/oct intercept {}".format(
-                    first_freq,
-                    last_freq,
-                    first_spl,
-                    last_spl,
-                    res.slope,
-                    slope_dboct,
-                    res.intercept,
+            #print(
+            #    "Freq [{}, {}]Hz SPL [{}, {}] regression slope {} slope {} db/oct intercept {}".format(
+            #        first_freq,
+            #        last_freq,
+            #        first_spl,
+            #        last_spl,
+            #        res.slope,
+            #        slope_dboct,
+            #        res.intercept,
+            #    )
+            #)
+            lines.append(
+                go.Scatter(
+                    x=[first_freq, last_freq],
+                    y=[first_spl, last_spl],
+                    line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
+                    opacity=1,
+                    legend="legend2",
+                    name="{:20s} slope {:+4.1f}dB/oct".format(measurement, slope_dboct),
                 )
             )
-            line_computed = go.Scatter(
-                x=[first_freq, last_freq],
-                y=[first_spl, last_spl],
-                line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
-                opacity=1,
-                legend="legend2",
-                name="{:20s} slope {:+4.1f}dB/oct".format(measurement, slope_dboct),
+        if measurement == "Sound Power":
+            # https://kimmosaunisto.net/Misc/speaker_review_feedback.pdf
+            spl_min = -1.2 * math.log2(last_freq / first_freq)
+            spl_max = -0.9 * math.log2(last_freq / first_freq)
+            x = [first_freq, last_freq, last_freq, first_freq, first_freq]
+            y = first_spl + [-1, -1+spl_min, 1+spl_max, +1, -1]
+            lines.append(
+                go.Scatter(
+                    x=x,
+                    y=y,
+                    fill="toself",
+                    opacity=0.25,
+                    legend="legend2",
+                    name="recommended SP zone",
+                    fillcolor=UNIFORM_COLORS[measurement],
+                    mode='text'
+                )
             )
-            lines.append(line_computed)
         if layout == "compact":
             trace.name = label_short.get(measurement, measurement)
         else:
@@ -576,30 +595,33 @@ def plot_spinorama_normalized_traces(spin, params):
         slope_dboct = res.slope * (math.log10(last_freq) - math.log10(first_freq)) / slope_octave
         first_spl = res.intercept + res.slope * math.log10(first_freq)
         last_spl = res.intercept + res.slope * math.log10(last_freq)
-        line_computed = go.Scatter(
-            x=[first_freq, last_freq],
-            y=[first_spl, last_spl],
-            line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
-            opacity=1,
-            name="{:20s} slope {:+4.1f}dB/oct".format(measurement, slope_dboct),
-            showlegend=True,
-            legend="legend2",
+        lines_di.append(
+            go.Scatter(
+                x=[first_freq, last_freq],
+                y=[first_spl, last_spl],
+                line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
+                opacity=1,
+                name="{:20s} slope {:+4.1f}dB/oct".format(measurement, slope_dboct),
+                showlegend=True,
+                legend="legend2",
+            )
         )
-        lines_di.append(line_computed)
         if measurement == "Sound Power DI":
             # https://kimmosaunisto.net/Misc/speaker_review_feedback.pdf
-            spl_min = res.intercept + 0.85 * slope_octave * math.log10(last_freq / first_freq)
-            spl_max = res.intercept + 1.10 * slope_octave * math.log10(last_freq / first_freq)
-            x = [first_freq, last_freq, last_freq, first_freq]
-            y = [first_spl, spl_min, spl_max, first_spl]
+            spl_min = 0.85 * math.log2(last_freq / first_freq)
+            spl_max = 1.10 * math.log2(last_freq / first_freq)
+            x = [first_freq, last_freq, last_freq, first_freq, first_freq]
+            y = first_spl + [-1, -1+spl_min, 1+spl_max, +1, -1]
             lines_di.append(
                 go.Scatter(
                     x=x,
                     y=y,
                     fill="toself",
-                    opacity=0.4,
+                    opacity=0.25,
                     legend="legend2",
                     name="recommended SPDI zone",
+                    fillcolor=UNIFORM_COLORS[measurement],
+                    mode='text'
                 )
             )
         if layout == "compact":

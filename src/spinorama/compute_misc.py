@@ -448,11 +448,10 @@ def compute_statistics(
     ]
     # for i, (f, db) in enumerate(zip(hist_minmax.Freq, hist_spl)):
     #    print('{:4f}hz {:0.2f} db {:2.1f} dist={:0.2f}'.format(f, math.log10(f), db, hist_dist[i]))
+
     # build an histogram to see where the deviation is above each treshhole
-    # hist = np.histogram(hist_dist, bins=[0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3], density=False)
     hist = np.histogram(hist_dist, bins=[0, 0.5, 1, 1.5, 2, 2.5, 3, 5], density=False)
-    # 3 = math.log10(20000)-math.log10(20)
-    # 11 octaves between 20Hz and 20kHz
+    # compute slope in db/oct
     slope_min_freq = max(SLOPE_MIN_FREQ, data_frame.Freq.iat[0])
     slope_max_freq = min(SLOPE_MAX_FREQ, data_frame.Freq.iat[-1])
     slopes_minmax = data_frame.loc[

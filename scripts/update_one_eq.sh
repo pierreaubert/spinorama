@@ -2,7 +2,7 @@
 
 OS=$(uname)
 
-if test "$(hostname)" = "horn"; then
+if test "$(hostname)" = "horn.home"; then
     export NUMEXPR_MAX_THREADS=96
 fi
 
@@ -87,35 +87,47 @@ do
     compute_eq 6 "Flat" "$spk" "--smooth-measurements=7 --smooth-order=3" ""
     compute_eq 7 "Flat" "$spk" "--smooth-measurements=7 --smooth-order=3" ""
 
+    compute_eq 3 "Score" "$spk" "--smooth-measurements=5 --smooth-order=3" ""
+    compute_eq 4 "Score" "$spk" "--smooth-measurements=5 --smooth-order=3" ""
+    compute_eq 5 "Score" "$spk" "--smooth-measurements=5 --smooth-order=3" ""
+    compute_eq 6 "Score" "$spk" "--smooth-measurements=5 --smooth-order=3" ""
+    compute_eq 7 "Score" "$spk" "--smooth-measurements=5 --smooth-order=3" ""
+
     compute_eq 3 "Score" "$spk" "--smooth-measurements=7 --smooth-order=3" ""
     compute_eq 4 "Score" "$spk" "--smooth-measurements=7 --smooth-order=3" ""
     compute_eq 5 "Score" "$spk" "--smooth-measurements=7 --smooth-order=3" ""
     compute_eq 6 "Score" "$spk" "--smooth-measurements=7 --smooth-order=3" ""
     compute_eq 7 "Score" "$spk" "--smooth-measurements=7 --smooth-order=3" ""
 
+    compute_eq 3 "Score" "$spk" "--smooth-measurements=9 --smooth-order=3" ""
+    compute_eq 4 "Score" "$spk" "--smooth-measurements=9 --smooth-order=3" ""
+    compute_eq 5 "Score" "$spk" "--smooth-measurements=9 --smooth-order=3" ""
+    compute_eq 6 "Score" "$spk" "--smooth-measurements=9 --smooth-order=3" ""
+    compute_eq 7 "Score" "$spk" "--smooth-measurements=9 --smooth-order=3" ""
+
     compute_eq 3 "Flat" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
     compute_eq 4 "Flat" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
     compute_eq 5 "Flat" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
     compute_eq 6 "Flat" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
-    compute_eq 11 "Flat" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
+    compute_eq 7 "Flat" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
 
     compute_eq 3 "Score" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
     compute_eq 4 "Score" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
     compute_eq 5 "Score" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
     compute_eq 6 "Score" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
-    compute_eq 11 "Score" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
+    compute_eq 7 "Score" "$spk" "--smooth-measurements=11 --smooth-order=3" ""
 
     compute_eq 3 "Flat" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
     compute_eq 4 "Flat" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
     compute_eq 5 "Flat" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
     compute_eq 6 "Flat" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
-    compute_eq 21 "Flat" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
+    compute_eq 7 "Flat" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
 
     compute_eq 5 "Score" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
     compute_eq 4 "Score" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
     compute_eq 5 "Score" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
     compute_eq 6 "Score" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
-    compute_eq 21 "Score" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
+    compute_eq 7 "Score" "$spk" "--smooth-measurements=21 --smooth-order=5" ""
 
 done
 
