@@ -33,6 +33,40 @@ speakers_info_d: SpeakerDatabase = {
             },
         },
     },
+    "Dali Rubikore 6": {
+        "skip": True,
+        "brand": "Dali",
+        "model": "Rubikore 6",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://www.youtube.com/watch?v=IlpFZPevKpM",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 88.5,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 990,
+                        "width": 200,
+                        "depth": 380,
+                    },
+                    "weight": 23.0,
+                },
+            },
+        },
+    },
     "Dali Spektor 1": {
         "brand": "Dali",
         "model": "Spektor 1",
