@@ -823,7 +823,8 @@ speakers_info_m: SpeakerDatabase = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/mesanovic_cdm65/",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/new-mesanovic-cdm65-monitors.40172/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mesanovic-cdm65-studio-monitor-review.59353/",
+                    "asrold": "https://www.audiosciencereview.com/forum/index.php?threads/new-mesanovic-cdm65-monitors.40172/",
                 },
                 "specifications": {
                     "SPL": {
@@ -841,22 +842,12 @@ speakers_info_m: SpeakerDatabase = {
             "eac-cardiod": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mesanovic_cdm65/",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/new-mesanovic-cdm65-monitors.40172/",
-                },
-                "specifications": {
-                    "SPL": {
-                        "peak": 103,
-                    },
-                    "size": {
-                        "height": 381,
-                        "width": 203,
-                        "depth": 355,
-                    },
-                    "weight": 16,
-                },
                 "review_published": "20230312",
+            },
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review_published": "20241219",
             },
         },
     },
