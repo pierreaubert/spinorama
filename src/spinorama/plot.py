@@ -533,7 +533,7 @@ def plot_spinorama_normalized_traces(spin, params):
         first_spl = res.intercept + res.slope * math.log10(first_freq)
         last_spl = res.intercept + res.slope * math.log10(last_freq)
         if measurement in ("Sound Power", "Early Reflections"):
-            #print(
+            # print(
             #    "Freq [{}, {}]Hz SPL [{}, {}] regression slope {} slope {} db/oct intercept {}".format(
             #        first_freq,
             #        last_freq,
@@ -543,7 +543,7 @@ def plot_spinorama_normalized_traces(spin, params):
             #        slope_dboct,
             #        res.intercept,
             #    )
-            #)
+            # )
             lines.append(
                 go.Scatter(
                     x=[first_freq, last_freq],
@@ -559,7 +559,7 @@ def plot_spinorama_normalized_traces(spin, params):
             spl_min = -1.2 * math.log2(last_freq / first_freq)
             spl_max = -0.9 * math.log2(last_freq / first_freq)
             x = [first_freq, last_freq, last_freq, first_freq, first_freq]
-            y = first_spl + [-1, -1+spl_min, 1+spl_max, +1, -1]
+            y = first_spl + [-1, -1 + spl_min, 1 + spl_max, +1, -1]
             lines.append(
                 go.Scatter(
                     x=x,
@@ -569,7 +569,7 @@ def plot_spinorama_normalized_traces(spin, params):
                     legend="legend2",
                     name="recommended SP zone",
                     fillcolor=UNIFORM_COLORS[measurement],
-                    mode='text'
+                    mode="text",
                 )
             )
         if layout == "compact":
@@ -611,7 +611,7 @@ def plot_spinorama_normalized_traces(spin, params):
             spl_min = 0.85 * math.log2(last_freq / first_freq)
             spl_max = 1.10 * math.log2(last_freq / first_freq)
             x = [first_freq, last_freq, last_freq, first_freq, first_freq]
-            y = first_spl + [-1, -1+spl_min, 1+spl_max, +1, -1]
+            y = first_spl + [-1, -1 + spl_min, 1 + spl_max, +1, -1]
             lines_di.append(
                 go.Scatter(
                     x=x,
@@ -621,7 +621,7 @@ def plot_spinorama_normalized_traces(spin, params):
                     legend="legend2",
                     name="recommended SPDI zone",
                     fillcolor=UNIFORM_COLORS[measurement],
-                    mode='text'
+                    mode="text",
                 )
             )
         if layout == "compact":
