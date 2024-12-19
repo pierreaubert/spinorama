@@ -635,7 +635,6 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
         }
         if (outputGraphProperties.isSurface) {
             layout.margin.t += 30;
-            layout.margin.b += 100;
         }
         if (outputGraphProperties.isRadar) {
             layout.margin.t += 100;
@@ -784,21 +783,29 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
         for (let k = 0; k < datas.length; k++) {
             if (datas[k].colorbar) {
                 datas[k].colorbar.xref = 'paper';
-                datas[k].colorbar.xanchor = 'center';
-                datas[k].colorbar.x = 0.5;
-                datas[k].colorbar.xpad = 20;
                 datas[k].colorbar.yref = 'paper';
-                datas[k].colorbar.yanchor = 'bottom';
-                datas[k].colorbar.y = -0.4;
-                if (isCompact) {
-                    datas[k].colorbar.y = -0.7;
-                }
+		if (isVertical) {
+                    datas[k].colorbar.orientation = 'h';
+                    datas[k].colorbar.xanchor = 'center';
+                    datas[k].colorbar.x = 0.5;
+                    datas[k].colorbar.yanchor = 'bottom';
+                    datas[k].colorbar.y = -0.4;
+                    if (isCompact) {
+			datas[k].colorbar.y = -0.7;
+                    }
+		} else {
+                    datas[k].colorbar.orientation = 'v';
+                    datas[k].colorbar.xanchor = 'top';
+                    datas[k].colorbar.x = 1.0;
+                    datas[k].colorbar.yref = 'paper';
+                    datas[k].colorbar.y = 0.5;
+		}
+                datas[k].colorbar.xpad = 20;
                 datas[k].colorbar.ypad = 20;
                 datas[k].colorbar.len = 0.8;
                 datas[k].colorbar.lenmode = 'fraction';
                 datas[k].colorbar.thickness = 15;
                 datas[k].colorbar.thicknessmode = 'pixels';
-                datas[k].colorbar.orientation = 'h';
                 datas[k].colorbar.title = {
                     font: {
                         size: fontSizeH4,

@@ -174,7 +174,7 @@ def lfq(lw, sp, lfx_log) -> float:
     return lfq_sum / n
 
 
-def sm(dfu):
+def sm(dfu: pd.DataFrame) -> float:
     """sm Smoothness
 
     For each of the 7 frequency response curves, the overall smoothness (SM) and

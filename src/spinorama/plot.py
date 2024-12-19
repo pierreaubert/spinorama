@@ -342,7 +342,7 @@ def common_layout(params):
         ),
         legend=dict(
             x=0.5,
-            y=1.12,  # TODO understand why it needs to be larger than 1
+            y=1.12,
             xanchor="center",
             yanchor="top",
             orientation=orientation,
@@ -551,7 +551,9 @@ def plot_spinorama_normalized_traces(spin, params):
                     line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
                     opacity=1,
                     legend="legend2",
-                    name="{:20s} slope {:+4.1f}dB/oct".format(measurement, slope_dboct),
+                    name="{:20s} slope {:+4.1f}dB/oct smoothness {:3.2f}".format(
+                        measurement, slope_dboct, res.rvalue**2
+                    ),
                 )
             )
         if measurement == "Sound Power":
@@ -601,7 +603,9 @@ def plot_spinorama_normalized_traces(spin, params):
                 y=[first_spl, last_spl],
                 line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
                 opacity=1,
-                name="{:20s} slope {:+4.1f}dB/oct".format(measurement, slope_dboct),
+                name="{:20s} slope {:+4.1f}dB/oct smoothness {:3.2f}".format(
+                    measurement, slope_dboct, res.rvalue**2
+                ),
                 showlegend=True,
                 legend="legend2",
             )
@@ -671,6 +675,17 @@ def plot_spinorama_normalized(spin, params):
             y=0.5,
             xanchor="left",
             x=0.05,
+            title=dict(
+                text="Slopes and smoothness",
+                font=dict(
+                    size=FONT_SIZE_H2,
+                    family="Arial",
+                ),
+            ),
+            font=dict(
+                size=FONT_SIZE_H3,
+                family="Arial",
+            ),
         )
     )
     return fig
