@@ -917,7 +917,6 @@ def flatten(l: list[list[T | None]]) -> list[T | None]:
 
 def plot_contour(spl, params):
     df_spl = spl.copy()
-    params.get("layout", "")
     min_freq = params.get("contour_min_freq", 100)
 
     contour_start = -30
@@ -925,7 +924,7 @@ def plot_contour(spl, params):
 
     fig = go.Figure()
 
-    af, am, az = compute_contour(df_spl.loc[df_spl.Freq > min_freq])
+    af, am, az = compute_contour(df_spl.loc[df_spl.Freq >= min_freq])
     az = np.clip(az, contour_start, contour_end)
     fig.add_trace(
         go.Contour(
@@ -950,6 +949,7 @@ def plot_contour(spl, params):
             autocolorscale=False,
             colorscale=CONTOUR_COLORSCALE,
             hovertemplate="Freq: %{x:.0f}Hz<br>Angle: %{y:.0f}<br>SPL: %{z:.1f}dB<br>",
+            zorder=0,
         )
     )
 
@@ -962,6 +962,7 @@ def plot_contour(spl, params):
                 marker_color="white",
                 line_width=1,
                 showlegend=False,
+                zorder=1,
             )
         )
 
@@ -1239,7 +1240,7 @@ def plot_contour_3d(spl, params):
             spl["-180°"] = spl["180°"]
         df_spl = spl.reindex(columns=sorted(spl.columns, key=a2v)) - db_max
         # freq, angle, spl, color
-        selector = (df_spl["Freq"] > min_freq) & (df_spl["Freq"] < 20000)
+        selector = (df_spl["Freq"] >= min_freq) & (df_spl["Freq"] <= 20000)
         freq = df_spl.Freq.loc[selector].to_numpy()
         angle = [a2v(i) for i in df_spl.loc[:, df_spl.columns != "Freq"].columns]
         spl = df_spl.loc[selector, df_spl.columns != "Freq"].clip(z_min, z_max).T.to_numpy()
