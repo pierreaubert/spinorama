@@ -234,6 +234,37 @@ speakers_info_y: SpeakerDatabase = {
             },
         },
     },
+    "Yamaha NS-10M": {
+        "skip": True,
+        "brand": "Yamaha",
+        "model": "NS-10M",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://www.youtube.com/watch?v=0pYKuBdhmdc",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 8,
+                    "size": {
+                        "height": 382,
+                        "width": 215,
+                        "depth": 199,
+                    },
+                    "weight": 6,
+                },
+            },
+        },
+    },
     "Yamaha NS-18": {
         "brand": "Yamaha",
         "model": "NS-18",
