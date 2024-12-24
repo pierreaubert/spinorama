@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
-note_kef_data = "Data computed by KEF is precise above 300Hz, the on axis is corrected below that. The other curves are interpolated below 300Hz and are not very precise."
+note_kef_data = "the off-axis average curves are truncated at 200Hz as this is close to the LF cut-off limit of our anechoic chamber. The on-axis LF response has been compensated using ground plane measurements carried out in free-field and is therefore valid only for that singular curve."
 
 
 speakers_info_k: SpeakerDatabase = {
@@ -515,39 +515,6 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
-    "KEF Q Concerto Meta": {
-        "brand": "KEF",
-        "model": "Q Concerto Meta",
-        "type": "passive",
-        "price": "1300",
-        "shape": "bookshelves",
-        "amount": "pair",
-        "default_measurement": "eac",
-        "measurements": {
-            "eac": {
-                "origin": "ErinsAudioCorner",
-                "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q3_meta/",
-                    "yt": "https://youtu.be/O-7b6sqDOus",
-                },
-                "review_published": "20241117",
-                "specifications": {
-                    "sensitivity": 85,
-                    "impedance": 3.2,
-                    "SPL": {
-                        "peak": 108,
-                    },
-                    "size": {
-                        "height": 415,
-                        "width": 210,
-                        "depth": 315,
-                    },
-                    "weight": 9.5,
-                },
-            },
-        },
-    },
     "KEF LS50": {
         "brand": "KEF",
         "model": "LS50",
@@ -921,6 +888,77 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
+    "KEF Q Concerto Meta": {
+        "brand": "KEF",
+        "model": "Q Concerto Meta",
+        "type": "passive",
+        "price": "1300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q3_meta/",
+                    "yt": "https://youtu.be/O-7b6sqDOus",
+                },
+                "review_published": "20241117",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 3.2,
+                    "SPL": {
+                        "peak": 108,
+                    },
+                    "size": {
+                        "height": 415,
+                        "width": 210,
+                        "depth": 315,
+                    },
+                    "weight": 9.5,
+                },
+            },
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "notes": note_kef_data,
+            },
+        },
+    },
+    "KEF Q1 Meta": {
+        "brand": "KEF",
+        "model": "Q1 Meta",
+        "type": "passive",
+        "price": "550",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 108,
+                    },
+                    "size": {
+                        "height": 302,
+                        "width": 180,
+                        "depth": 277,
+                    },
+                    "weight": 6.1,
+                },
+                "notes": note_kef_data,
+            },
+        },
+    },
     "KEF Q3 Meta": {
         "brand": "KEF",
         "model": "Q3 Meta",
@@ -951,6 +989,137 @@ speakers_info_k: SpeakerDatabase = {
                     },
                     "weight": 8.2,
                 },
+            },
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "notes": note_kef_data,
+            },
+        },
+    },
+    "KEF Q4 Meta": {
+        "brand": "KEF",
+        "model": "Q4 Meta",
+        "type": "passive",
+        "price": "400",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 108,
+                    },
+                    "size": {
+                        "height": 400,
+                        "width": 250,
+                        "depth": 142,
+                    },
+                    "weight": 5.7,
+                },
+                "notes": note_kef_data,
+            },
+        },
+    },
+    "KEF Q6 Meta": {
+        "brand": "KEF",
+        "model": "Q6 Meta",
+        "type": "passive",
+        "price": "750",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 109,
+                    },
+                    "size": {
+                        "height": 210,
+                        "width": 629,
+                        "depth": 303,
+                    },
+                    "weight": 14.1,
+                },
+                "notes": note_kef_data,
+            },
+        },
+    },
+    "KEF Q7 Meta": {
+        "brand": "KEF",
+        "model": "Q7 Meta",
+        "type": "passive",
+        "price": "1600",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 1001,
+                        "width": 317,
+                        "depth": 315,
+                    },
+                    "weight": 18.4,
+                },
+                "notes": note_kef_data,
+            },
+        },
+    },
+    "KEF Q11 Meta": {
+        "brand": "KEF",
+        "model": "Q11 Meta",
+        "type": "passive",
+        "price": "2200",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 113,
+                    },
+                    "size": {
+                        "height": 1112,
+                        "width": 317,
+                        "depth": 380,
+                    },
+                    "weight": 22.5,
+                },
+                "notes": note_kef_data,
             },
         },
     },

@@ -1,0 +1,13 @@
+EQ for KEF Q4 Meta computed from Vendors-KEF data
+Preference Score 5.60 with EQ 6.59
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-12-24-10:25:55
+
+Preamp: -2.8 dB
+
+Filter  1: ON PK Fc    41 Hz Gain +2.72 dB Q 2.68
+Filter  2: ON PK Fc    83 Hz Gain +2.55 dB Q 2.95
+Filter  3: ON PK Fc   155 Hz Gain -1.41 dB Q 1.97
+Filter  4: ON PK Fc   454 Hz Gain -1.68 dB Q 0.52
+Filter  5: ON PK Fc  1288 Hz Gain +2.99 dB Q 2.04
+Filter  6: ON PK Fc  3405 Hz Gain -0.97 dB Q 1.00

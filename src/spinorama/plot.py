@@ -285,7 +285,7 @@ def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
         title=dict(
             text="DI (dB)                                                    &nbsp;",
             font=dict(
-                size=12,
+                size=FONT_SIZE_H3,
                 family="Arial",
             ),
         ),
@@ -893,7 +893,6 @@ def plot_graph_flat(df, measurement, params):
 
 
 def plot_graph_regression(df, measurement, params):
-    params.get("layout", "")
     fig = go.Figure()
     traces = plot_graph_regression_traces(df, measurement, params)
     for t in traces:
@@ -945,6 +944,17 @@ def plot_contour(spl, params):
                 dtick=3,
                 len=1.0,
                 lenmode="fraction",
+                thickness=15,
+                thicknessmode="pixels",
+                tickfont=dict(
+                    size=FONT_SIZE_H5,
+                ),
+                title=dict(
+                    text="dB (SPL)",
+                    font=dict(
+                        size=FONT_SIZE_H4,
+                    ),
+                ),
             ),
             autocolorscale=False,
             colorscale=CONTOUR_COLORSCALE,
@@ -1121,16 +1131,16 @@ def plot_radar(spl, params):
     update_pict(anglelist, [4000, 5000, 6300, 8000], 2, 2, spl)
 
     fig.update_layout(radar_layout(params))
-    # fig.update_layout(polar=dict(radialaxis=radialaxis, angularaxis=angularaxis)), row=row, col=col)
-
     return fig
 
 
 def plot_image(df, params):
+    """Deprecated"""
     return None
 
 
 def plot_summary(df, summary, params):
+    """Deprecated"""
     return None
 
 

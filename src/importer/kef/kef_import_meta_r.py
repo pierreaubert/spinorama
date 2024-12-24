@@ -1,12 +1,8 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-#
-import os
-import glob
-import sys
-from shutil import copy
 from pathlib import Path
-
+from shutil import copy
+import sys
+import glob
+import os
 import numpy as np
 
 
@@ -91,6 +87,8 @@ def data_save(dir: str, curves):
             print("warning cowardly not overriding {}".format(filename))
             continue
         with open(filename, "w") as fd:
+            print(filename)
+            print(len(freq), len(curves[curve]))
             fd.writelines([f"{f} {c}\n" for f, c in zip(freq, curves[curve], strict=True)])
 
 
