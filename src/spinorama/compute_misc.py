@@ -425,6 +425,44 @@ def dist_point_line(x, y, p_a, p_b, p_c):
     return abs(p_a * x + p_b * y + p_c) / math.sqrt(p_a * p_a + p_b * p_b)
 
 
+def compute_slope_smoothness(
+    data_frame: pd.DataFrame,
+    measurement,
+) -> tuple[float, float, float, float]:
+    slope_min_freq = max(SLOPE_MIN_FREQ, data_frame.Freq.iat[0])
+    slope_max_freq = min(SLOPE_MAX_FREQ, data_frame.Freq.iat[-1])
+    slopes_minmax = None
+    slopes_freq = None
+    slopes_spl = None
+    if measurement in data_frame:
+        slopes_minmax = data_frame.loc[
+            (data_frame.Freq >= slope_min_freq) & (data_frame.Freq <= slope_max_freq)
+        ]
+        slopes_freq = slopes_minmax.Freq.tolist()
+        slopes_spl = slopes_minmax[measurement].tolist()
+    else:
+        slopes_minmax = data_frame.loc[
+            (data_frame.Freq >= slope_min_freq)
+            & (data_frame.Freq <= slope_max_freq)
+            & (data_frame.Measurements == measurement)
+        ]
+        slopes_freq = slopes_minmax.Freq.tolist()
+        slopes_spl = slopes_minmax.dB.tolist()
+    if len(slopes_freq) == 0 or len(slopes_spl) == 0:
+        logger.error("no data in df: likely incorrect measurement name %s", measurement)
+        return 0, 0, 0, 0
+    first_freq = slopes_freq[0]
+    last_freq = slopes_freq[-1]
+    slope_octave = math.log2(last_freq / first_freq)
+    # compute regression to get the slope and the smoothness
+    res = stats.linregress(x=np.log10(slopes_freq), y=slopes_spl)
+    slope_dboct = res.slope * (math.log10(last_freq) - math.log10(first_freq)) / slope_octave
+    first_spl = res.intercept + res.slope * math.log10(first_freq)
+    last_spl = res.intercept + res.slope * math.log10(last_freq)
+    # print("Slopes {} {} {} {}".format(first_spl, last_spl, slope_dboct, res.rvalue**2))
+    return first_spl, last_spl, slope_dboct, res.rvalue**2
+
+
 def compute_statistics(
     data_frame: pd.DataFrame,
     measurement,
@@ -439,7 +477,7 @@ def compute_statistics(
     result = stats.linregress(x=np.log10(restricted_minmax["Freq"]), y=restricted_spl)
     #
     hist_minmax = data_frame.loc[
-        (data_frame.Freq > hist_min_freq) & (data_frame.Freq < hist_max_freq)
+        (data_frame.Freq >= hist_min_freq) & (data_frame.Freq <= hist_max_freq)
     ]
     hist_spl = hist_minmax[measurement]
     hist_dist = [
@@ -452,15 +490,5 @@ def compute_statistics(
     # build an histogram to see where the deviation is above each treshhole
     hist = np.histogram(hist_dist, bins=[0, 0.5, 1, 1.5, 2, 2.5, 3, 5], density=False)
     # compute slope in db/oct
-    slope_min_freq = max(SLOPE_MIN_FREQ, data_frame.Freq.iat[0])
-    slope_max_freq = min(SLOPE_MAX_FREQ, data_frame.Freq.iat[-1])
-    slopes_minmax = data_frame.loc[
-        (data_frame.Freq > slope_min_freq) & (data_frame.Freq < slope_max_freq)
-    ]
-    slopes_spl = slopes_minmax[measurement]
-    first_freq = slopes_minmax.Freq.iat[0]
-    last_freq = slopes_minmax.Freq.iat[-1]
-    first_spl = slopes_spl.iat[0]
-    last_spl = slopes_spl.iat[-1]
-    db_per_octave = (last_spl - first_spl) / math.log2(last_freq / first_freq)
+    db_per_octave, _ = compute_slopes(data_frame, measurement)
     return db_per_octave, hist, np.max(hist_dist)

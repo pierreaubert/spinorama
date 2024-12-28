@@ -466,7 +466,7 @@ def add_scores(dataframe, parse_max, filters):
                 if (
                     "pref_rating"
                     not in metadata.speakers_info[speaker_name]["measurements"][version]
-                ):
+               ):
                     logger.debug(
                         "skipping normalization no pref_rating in %s for %s",
                         version,
@@ -576,6 +576,21 @@ def add_quality(parse_max: int, filters: dict):
                         quality = "medium"
                 logger.debug("Setting quality %s %s to %s", speaker_name, version, quality)
             metadata.speakers_info[speaker_name]["measurements"][version]["quality"] = quality
+
+
+# def add_slopes(parse_max: int, filters: dict):
+#     """Add slopes in db/oct for each curves and smoothness if available"""
+#     parsed = 0
+#     for speaker_name, speaker_data in metadata.speakers_info.items():
+#         if reject(filters, speaker_name) or (parse_max is not None and parsed > parse_max):
+#             break
+#         parsed = parsed + 1
+#         logger.info("Processing %s", speaker_name)
+#         for version, m_data in speaker_data["measurements"].items():
+#             for key, value in m_data.items():
+#                 if 'slope_' in key or 'smoothness_' in key:
+#                     print('accepted {}'.format(key))
+#                     metadata.speakers_info[speaker_name]["measurements"][version][key] = value
 
 
 def add_eq(speaker_path, dataframe, parse_max, filters):
@@ -944,6 +959,8 @@ def main():
     steps.append(("eq", time.perf_counter()))
     add_near(main_df, parse_max, filters)
     steps.append(("near", time.perf_counter()))
+    # add_slopes(parse_max, filters)
+    # steps.append(("slopes", time.perf_counter()))
 
     # write metadata in a json file for easy search
     logger.info("Write metadata")

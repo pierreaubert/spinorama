@@ -6,6 +6,7 @@ from pathlib import Path
 
 import numpy as np
 
+
 def kef2dict2(kef_dir: str) -> dict[str, tuple[list[float], list[float]]]:
     kef = {}
     for curve in ("On Axis", "LW", "ER", "SP"):
@@ -39,7 +40,7 @@ def interpolate2(
     while on_axis_freq[idx_300] < cut_freq_high:
         idx_300 += 1
     idx_3000 = idx_300 + 1
-    while on_axis_freq[idx_3000] < cut_freq_high*10:
+    while on_axis_freq[idx_3000] < cut_freq_high * 10:
         idx_3000 += 1
     y_ref = np.mean(on_axis_spl[idx_300:idx_3000])
     idx = 0
@@ -74,14 +75,15 @@ def interpolate2(
             freq = [f for f in on_axis_freq[0:idx_high]] + [f for f in curve_freq[idx_300:]]
             spl = (
                 [s for s in on_axis_spl[0:idx_low]]
-                + interp(on_axis_spl[idx_high], curve_spl[idx_300-1], ln)
+                + interp(on_axis_spl[idx_high], curve_spl[idx_300 - 1], ln)
                 + curve_spl[idx_300:]
             )
             # tmp = list(zip(freq, spl, strict=True)).sort(key=lambda a: a[0])
             merged[curve] = (freq, spl)
         print(
             "curve {} ln {} freq #{} [{}, {}], spl #{} [{}, {}]".format(
-                curve, ln,
+                curve,
+                ln,
                 len(merged[curve][0]),
                 min(merged[curve][0]),
                 max(merged[curve][0]),
@@ -103,7 +105,6 @@ def data_save2(dir: str, curves):
             fd.writelines(
                 [f"{f} {c}\n" for f, c in zip(curves[curve][0], curves[curve][1], strict=True)]
             )
-
 
 
 def process_copy(speaker_name, path_in, path_out):

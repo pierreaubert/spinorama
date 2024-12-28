@@ -38,7 +38,7 @@ from spinorama.constant_paths import (
     SLOPE_MAX_FREQ,
 )
 from spinorama.filter_peq import peq_spl
-from spinorama.compute_misc import compute_contour
+from spinorama.compute_misc import compute_contour, compute_slope_smoothness
 from spinorama.load_misc import sort_angles
 
 
@@ -248,6 +248,7 @@ def generate_xaxis(freq_min=20, freq_max=20000):
             size=FONT_SIZE_H3,
             family="Arial",
         ),
+        ticks="outside",
     )
 
 
@@ -271,6 +272,7 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
             size=FONT_SIZE_H3,
             family="Arial",
         ),
+        ticks="outside",
         showline=True,
     )
 
@@ -297,6 +299,7 @@ def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
             size=FONT_SIZE_H3,
             family="Arial",
         ),
+        ticks="outside",
         showline=True,
     )
 
@@ -313,12 +316,34 @@ def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
         range=[angle_min, angle_max],
         dtick=angle_step,
         tickvals=list(range(angle_min, angle_max + angle_step, angle_step)),
-        ticktext=["{}°".format(v) for v in range(angle_min, angle_max + angle_step, angle_step)],
+        ticktext=[""]
+        + ["{}°".format(v) for v in range(angle_min + angle_step, angle_max, angle_step)]
+        + [""],
         tickfont=dict(
             size=FONT_SIZE_H3,
             family="Arial",
         ),
+        ticks="outside",
         showline=True,
+    )
+
+
+def generate_colorbar():
+    return dict(
+        dtick=3,
+        len=0.5,
+        lenmode="fraction",
+        thickness=15,
+        thicknessmode="pixels",
+        tickfont=dict(
+            size=FONT_SIZE_H5,
+        ),
+        title=dict(
+            text="dB (SPL)",
+            font=dict(
+                size=FONT_SIZE_H4,
+            ),
+        ),
     )
 
 
@@ -512,7 +537,6 @@ def plot_spinorama_normalized_traces(spin, params):
     restricted_freq = spin.loc[(spin.Freq >= slope_min_freq) & (spin.Freq <= slope_max_freq)]
     first_freq = restricted_freq.Freq.iat[0]
     last_freq = restricted_freq.Freq.iat[-1]
-    slope_octave = math.log2(last_freq / first_freq)
     for measurement in (
         "On Axis",
         "Listening Window",
@@ -528,22 +552,8 @@ def plot_spinorama_normalized_traces(spin, params):
             name=label_short.get(measurement, measurement),
             hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
-        res = stats.linregress(x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement])
-        slope_dboct = res.slope * (math.log10(last_freq) - math.log10(first_freq)) / slope_octave
-        first_spl = res.intercept + res.slope * math.log10(first_freq)
-        last_spl = res.intercept + res.slope * math.log10(last_freq)
+        first_spl, last_spl, slope_dboct, smoothness = compute_slope_smoothness(spin, measurement)
         if measurement in ("Sound Power", "Early Reflections"):
-            # print(
-            #    "Freq [{}, {}]Hz SPL [{}, {}] regression slope {} slope {} db/oct intercept {}".format(
-            #        first_freq,
-            #        last_freq,
-            #        first_spl,
-            #        last_spl,
-            #        res.slope,
-            #        slope_dboct,
-            #        res.intercept,
-            #    )
-            # )
             lines.append(
                 go.Scatter(
                     x=[first_freq, last_freq],
@@ -552,7 +562,7 @@ def plot_spinorama_normalized_traces(spin, params):
                     opacity=1,
                     legend="legend2",
                     name="{:20s} slope {:+4.1f}dB/oct smoothness {:3.2f}".format(
-                        measurement, slope_dboct, res.rvalue**2
+                        measurement, slope_dboct, smoothness
                     ),
                 )
             )
@@ -593,10 +603,7 @@ def plot_spinorama_normalized_traces(spin, params):
             marker_color=UNIFORM_COLORS.get(measurement, "black"),
             hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
-        res = stats.linregress(x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement])
-        slope_dboct = res.slope * (math.log10(last_freq) - math.log10(first_freq)) / slope_octave
-        first_spl = res.intercept + res.slope * math.log10(first_freq)
-        last_spl = res.intercept + res.slope * math.log10(last_freq)
+        first_spl, last_spl, slope_dboct, smoothness = compute_slope_smoothness(spin, measurement)
         lines_di.append(
             go.Scatter(
                 x=[first_freq, last_freq],
@@ -604,7 +611,7 @@ def plot_spinorama_normalized_traces(spin, params):
                 line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
                 opacity=1,
                 name="{:20s} slope {:+4.1f}dB/oct smoothness {:3.2f}".format(
-                    measurement, slope_dboct, res.rvalue**2
+                    measurement, slope_dboct, smoothness
                 ),
                 showlegend=True,
                 legend="legend2",
@@ -940,22 +947,7 @@ def plot_contour(spl, params):
                 showlines=True,
                 # showlabels=True,
             ),
-            colorbar=dict(
-                dtick=3,
-                len=1.0,
-                lenmode="fraction",
-                thickness=15,
-                thicknessmode="pixels",
-                tickfont=dict(
-                    size=FONT_SIZE_H5,
-                ),
-                title=dict(
-                    text="dB (SPL)",
-                    font=dict(
-                        size=FONT_SIZE_H4,
-                    ),
-                ),
-            ),
+            colorbar=generate_colorbar(),
             autocolorscale=False,
             colorscale=CONTOUR_COLORSCALE,
             hovertemplate="Freq: %{x:.0f}Hz<br>Angle: %{y:.0f}<br>SPL: %{z:.1f}dB<br>",
@@ -1031,11 +1023,11 @@ def plot_radar(spl, params):
     anglelist = list(range(-180, 180, 10))
 
     def projection(anglelist, grid_z, hz):
-        dbs_r = [db for a, db in zip(anglelist, grid_z, strict=False)]
-        dbs_theta = [a for a, db in zip(anglelist, grid_z, strict=False)]
+        dbs_r = [db for _, db in zip(anglelist, grid_z, strict=False)]
+        dbs_theta = [a for a, _ in zip(anglelist, grid_z, strict=False)]
         dbs_r.append(dbs_r[0])
         dbs_theta.append(dbs_theta[0])
-        return dbs_r, dbs_theta, [hz for i in range(0, len(dbs_r))]
+        return dbs_r, dbs_theta, [hz for _ in range(0, len(dbs_r))]
 
     def label(i):
         return "{:d} Hz".format(i)
@@ -1109,7 +1101,7 @@ def plot_radar(spl, params):
     def update_pict(anglelist, freqlist, row, col, spl):
         _, dbs_df = plot_radar_freq(anglelist, freqlist, spl)
 
-        for freq in np.unique(dbs_df["Freq"].values):
+        for freq in np.unique(dbs_df["Freq"].to_list()):
             mslice = dbs_df.loc[dbs_df.Freq == freq]
             trace = go.Scatterpolar(
                 r=mslice.R,
@@ -1225,12 +1217,7 @@ def plot_contour_3d(spl, params):
     z_min = -45
     z_max = 5
 
-    colorbar = dict(
-        dtick=3,
-        len=0.5,
-        lenmode="fraction",
-        tickfont=dict(size=FONT_SIZE_H3),
-    )
+    colorbar = generate_colorbar()
 
     angle_list_3d = [-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
     angle_text_3d = [f"{a}°" for a in angle_list_3d]
