@@ -20,6 +20,7 @@ import datas.metadata as metadata
 
 from spinorama import logger
 from spinorama.load_misc import graph_unmelt
+from spinorama.compute_misc import compute_minmax_slopes
 from spinorama.compute_estimates import estimates
 from spinorama.compute_scores import speaker_pref_rating
 from spinorama.plot import (
@@ -53,15 +54,26 @@ def display_spinorama(df, graph_params=plot_params_default):
 
 
 def display_spinorama_normalized(df, graph_params=plot_params_default):
-    spin = df.get("CEA2034 Normalized_unmelted")
+    spin = df.get("CEA2034_unmelted")
     if spin is None:
-        spin_melted = df.get("CEA2034 Normalized")
+        spin_melted = df.get("CEA2034")
         if spin_melted is not None:
             spin = graph_unmelt(spin_melted)
         if spin is None:
             logger.info("Display CEA2034 not in dataframe (%s)", ", ".join(df.keys()))
             return None
-    return plot_spinorama_normalized(spin, graph_params)
+
+    spin_normalized = df.get("CEA2034 Normalized_unmelted")
+    if spin_normalized is None:
+        spin_normalized_melted = df.get("CEA2034 Normalized")
+        if spin_normalized_melted is not None:
+            spin_normalized = graph_unmelt(spin_normalized_melted)
+        if spin_normalized is None:
+            logger.info("Display CEA2034 Normalized not in dataframe (%s)", ", ".join(df.keys()))
+            return None
+
+    slopes = compute_minmax_slopes(spin)
+    return plot_spinorama_normalized(spin_normalized, graph_params, slopes)
 
 
 def display_reflection_early(df, graph_params=plot_params_default):

@@ -528,7 +528,7 @@ def plot_spinorama(spin, params):
     return fig
 
 
-def plot_spinorama_normalized_traces(spin, params):
+def plot_spinorama_normalized_traces(spin, params, minmax_slopes):
     layout = params.get("layout", "")
     traces = []
     lines = []
@@ -567,11 +567,12 @@ def plot_spinorama_normalized_traces(spin, params):
                 )
             )
         if measurement == "Sound Power":
-            # https://kimmosaunisto.net/Misc/speaker_review_feedback.pdf
-            spl_min = -1.2 * math.log2(last_freq / first_freq)
-            spl_max = -0.9 * math.log2(last_freq / first_freq)
+            # aligned with VituixCAD
+            slope_min, slope_max = minmax_slopes["Sound Power"]
+            spl_min = slope_min * math.log2(last_freq / first_freq)
+            spl_max = slope_max * math.log2(last_freq / first_freq)
             x = [first_freq, last_freq, last_freq, first_freq, first_freq]
-            y = first_spl + [-1, -1 + spl_min, 1 + spl_max, +1, -1]
+            y = [-1, -1 + spl_min, 1 + spl_max, +1, -1] + first_spl
             lines.append(
                 go.Scatter(
                     x=x,
@@ -619,8 +620,9 @@ def plot_spinorama_normalized_traces(spin, params):
         )
         if measurement == "Sound Power DI":
             # https://kimmosaunisto.net/Misc/speaker_review_feedback.pdf
-            spl_min = 0.85 * math.log2(last_freq / first_freq)
-            spl_max = 1.10 * math.log2(last_freq / first_freq)
+            slope_min, slope_max = minmax_slopes["Sound Power DI"]
+            spl_min = slope_min * math.log2(last_freq / first_freq)
+            spl_max = slope_max * math.log2(last_freq / first_freq)
             x = [first_freq, last_freq, last_freq, first_freq, first_freq]
             y = first_spl + [-1, -1 + spl_min, 1 + spl_max, +1, -1]
             lines_di.append(
@@ -645,10 +647,12 @@ def plot_spinorama_normalized_traces(spin, params):
     return traces, traces_di, lines, lines_di
 
 
-def plot_spinorama_normalized(spin, params):
+def plot_spinorama_normalized(spin, params, minmax_slopes):
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     t_max = 0
-    traces, traces_di, lines, lines_di = plot_spinorama_normalized_traces(spin, params)
+    traces, traces_di, lines, lines_di = plot_spinorama_normalized_traces(
+        spin, params, minmax_slopes
+    )
     for t in traces:
         t_max = max(t_max, np.max(t.y[np.where(t.x < 20000)]))
         fig.add_trace(t, secondary_y=False)

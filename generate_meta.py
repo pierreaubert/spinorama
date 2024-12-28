@@ -466,7 +466,7 @@ def add_scores(dataframe, parse_max, filters):
                 if (
                     "pref_rating"
                     not in metadata.speakers_info[speaker_name]["measurements"][version]
-               ):
+                ):
                     logger.debug(
                         "skipping normalization no pref_rating in %s for %s",
                         version,

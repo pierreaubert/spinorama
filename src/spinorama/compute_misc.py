@@ -27,6 +27,8 @@ from spinorama import logger
 from spinorama.constant_paths import (
     SLOPE_MIN_FREQ,
     SLOPE_MAX_FREQ,
+    DIRECTIVITY_MIN_FREQ,
+    DIRECTIVITY_MAX_FREQ,
 )
 from spinorama.load_misc import sort_angles
 from spinorama.compute_scores import octave
@@ -328,12 +330,16 @@ def directivity_matrix(spl_h, spl_v):
 
 
 def compute_directivity_deg_v2(df) -> tuple[float, float, float]:
+    on = df[((df.Freq >= DIRECTIVITY_MIN_FREQ) & (df.Freq < DIRECTIVITY_MAX_FREQ))]["On Axis"]
+    mean = on.mean() if not on.empty else 0.0
+
     def compute(spl, r):
-        on = spl[((spl.Freq > 1000) & (spl.Freq < 10000))]["On Axis"]
-        mean = on.mean() if not on.empty else 0.0
         for k in r:
             key = "{}°".format(k)
-            db = spl[((spl.Freq > 1000) & (spl.Freq < 6000))][key] - mean
+            db = (
+                spl[((spl.Freq >= DIRECTIVITY_MIN_FREQ) & (spl.Freq <= DIRECTIVITY_MAX_FREQ))][key]
+                - mean
+            )
             # smooth on 5 points
             pos = db.ewm(span=10).mean().min()
             # print('key {}  pos {} {}'.format(key, pos, db.values))
@@ -425,10 +431,38 @@ def dist_point_line(x, y, p_a, p_b, p_c):
     return abs(p_a * x + p_b * y + p_c) / math.sqrt(p_a * p_a + p_b * p_b)
 
 
+def compute_minmax_slopes(spin: pd.DataFrame) -> dict[str, tuple[float, float]]:
+    _, _, slope_on, _ = compute_slope_smoothness(spin, "On Axis")
+    _, _, slope_sp, _ = compute_slope_smoothness(spin, "Sound Power")
+    slope_di = (slope_on - slope_sp) * math.log(2)
+    slope_limited = max(min(slope_di, 1.2), 0)
+    minmax = {
+        "On Axis": (
+            0.0,
+            0.4583 * slope_limited - 0.55,
+        ),
+        "Listening Window": (
+            0.375 * slope_limited - 0.7,
+            0.0,
+        ),
+        "Sound Power": (
+            -0.15 * slope_limited - 1.02,
+            -0.0417 * slope_limited - 0.85,
+        ),
+        "Sound Power DI": (
+            max(min(slope_di + 1.15, 1.2) - 0.3, 0),
+            min(slope_di + 1.15, 1.2),
+        ),
+    }
+    print(slope_di, slope_limited, minmax)
+    return minmax
+
+
 def compute_slope_smoothness(
     data_frame: pd.DataFrame,
     measurement,
 ) -> tuple[float, float, float, float]:
+    """Compute the slope in db/oct of a measurement in the data frame"""
     slope_min_freq = max(SLOPE_MIN_FREQ, data_frame.Freq.iat[0])
     slope_max_freq = min(SLOPE_MAX_FREQ, data_frame.Freq.iat[-1])
     slopes_minmax = None
@@ -490,5 +524,5 @@ def compute_statistics(
     # build an histogram to see where the deviation is above each treshhole
     hist = np.histogram(hist_dist, bins=[0, 0.5, 1, 1.5, 2, 2.5, 3, 5], density=False)
     # compute slope in db/oct
-    db_per_octave, _ = compute_slopes(data_frame, measurement)
+    _, _, db_per_octave, _ = compute_slope_smoothness(data_frame, measurement)
     return db_per_octave, hist, np.max(hist_dist)
