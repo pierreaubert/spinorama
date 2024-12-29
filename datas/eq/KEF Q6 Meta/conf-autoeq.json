@@ -24,8 +24,8 @@
     "slope_estimated_inroom": -6.5,
     "slope_sound_power": -9,
     "smooth_measurements": true,
-    "smooth_window_size": 9,
-    "smooth_order": 3,
+    "smooth_window_size": 21,
+    "smooth_order": 5,
     "use_grapheq": false,
     "grapheq_name": null,
     "use_3dB_target": true,
@@ -46,5 +46,5 @@
     "version": "0.26",
     "level": 30,
     "generate_images_only": false,
-    "output_dir": "/home/pierre/src/spinorama/build/eqs/KEF Q6 Meta/Score-7-sw9o3-pk"
+    "output_dir": "/home/pierre/src/spinorama/build/eqs/KEF Q6 Meta/Score-7-sw21o5-pk"
 }

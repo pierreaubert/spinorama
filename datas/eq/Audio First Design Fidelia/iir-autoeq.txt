@@ -1,0 +1,13 @@
+EQ for Audio First Design Fidelia computed from Vendors-Audio First Design data
+Preference Score 6.77 with EQ 7.14
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-12-07-14:43:39
+
+Preamp: -2.8 dB
+
+Filter  1: ON PK Fc    36 Hz Gain +2.99 dB Q 1.07
+Filter  2: ON PK Fc    98 Hz Gain -1.45 dB Q 1.21
+Filter  3: ON PK Fc   211 Hz Gain -0.80 dB Q 0.68
+Filter  4: ON PK Fc   621 Hz Gain -0.88 dB Q 2.97
+Filter  5: ON PK Fc  1244 Hz Gain -0.73 dB Q 2.98
+Filter  6: ON PK Fc  1823 Hz Gain -0.73 dB Q 2.86

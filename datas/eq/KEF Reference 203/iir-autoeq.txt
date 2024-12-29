@@ -1,14 +1,13 @@
 EQ for KEF Reference 203 computed from ErinsAudioCorner data
-Preference Score 5.78 with EQ 6.32
+Preference Score 5.78 with EQ 6.33
 Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
-Dated: 2024-09-16-16:25:39
+Dated: 2024-09-16-16:22:28
 
 Preamp: -2.9 dB
 
-Filter  1: ON PK Fc    44 Hz Gain +2.87 dB Q 2.34
-Filter  2: ON PK Fc   121 Hz Gain +0.59 dB Q 2.85
-Filter  3: ON PK Fc   178 Hz Gain +1.11 dB Q 2.97
-Filter  4: ON PK Fc   279 Hz Gain -1.39 dB Q 1.15
-Filter  5: ON PK Fc   470 Hz Gain +2.51 dB Q 0.84
-Filter  6: ON PK Fc   714 Hz Gain -3.13 dB Q 1.25
-Filter  7: ON PK Fc   739 Hz Gain +2.65 dB Q 3.00
+Filter  1: ON PK Fc    44 Hz Gain +2.89 dB Q 2.48
+Filter  2: ON PK Fc   166 Hz Gain +0.69 dB Q 2.65
+Filter  3: ON PK Fc   289 Hz Gain -1.15 dB Q 2.75
+Filter  4: ON PK Fc   942 Hz Gain +1.27 dB Q 0.26
+Filter  5: ON PK Fc   976 Hz Gain -1.93 dB Q 2.90
+Filter  6: ON PK Fc  2491 Hz Gain -1.53 dB Q 0.99
