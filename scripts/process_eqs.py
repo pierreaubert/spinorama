@@ -10,24 +10,26 @@ import shutil
 from generate_common import find_metadata_file
 from spinorama.auto_save import get_previous_score
 
-def update_eq(speaker_name, from_dir , to_dir):
+
+def update_eq(speaker_name, from_dir, to_dir):
     to_path = pathlib.Path(to_dir)
     to_path.mkdir(mode=0x755, parents=False, exist_ok=True)
-    for f in ('conf-autoeq.json', 'iir.txt', 'iir-autoeq.txt'):
+    for f in ("conf-autoeq.json", "iir.txt", "iir-autoeq.txt"):
         # 3.14
         # pathlib.Path('{}/{}'.format(from_dir, f)).copy_into(to_dir)
-        from_file = '{}/{}'.format(from_dir, f)
+        from_file = "{}/{}".format(from_dir, f)
         shutil.copy(from_file, to_dir)
 
-def process(speaker : str, metadata : dict ):
+
+def process(speaker: str, metadata: dict):
     path = pathlib.Path(speaker)
     if not path.exists():
-        print('Path {} does not exists?'.format(path))
+        print("Path {} does not exists?".format(path))
         return
     #
     speaker_name = os.path.basename(speaker)
     #
-    prev_eq_path = './datas/eq/{}/iir-autoeq.txt'.format(speaker_name)
+    prev_eq_path = "./datas/eq/{}/iir-autoeq.txt".format(speaker_name)
     prev_score = get_previous_score(prev_eq_path)
     prev_score = prev_score if prev_score is not None else -10.0
     # print('Prev score={}'.format(prev_score))
@@ -52,12 +54,13 @@ def process(speaker : str, metadata : dict ):
         noeq_score = -10.0
         if noeq_pref_rating is not None:
             noeq_score = noeq_pref_rating.get("pref_score")
-        print('EQ: new {:4.2f} prev eq {:4.2f} noeq {:4.2f}'.format(best_score, prev_score, noeq_score))
-        update_eq(
-            speaker_name,
-            os.path.dirname(best_eq),
-            os.path.dirname(prev_eq_path)
+        print(
+            "EQ: new {:4.2f} prev eq {:4.2f} noeq {:4.2f} {}".format(
+                best_score, prev_score, noeq_score, speaker_name
+            )
         )
+        update_eq(speaker_name, os.path.dirname(best_eq), os.path.dirname(prev_eq_path))
+
 
 def run():
     metadata_file, _ = find_metadata_file()
@@ -65,7 +68,7 @@ def run():
     with open(metadata_file, "r") as f:
         jsmeta = json.load(f)
 
-    computed_speakers = glob('./build/eqs/*')
+    computed_speakers = glob("./build/eqs/*")
     for speaker in computed_speakers:
         process(speaker, jsmeta)
 
