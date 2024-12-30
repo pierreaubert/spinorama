@@ -1204,7 +1204,6 @@ speakers_info_b: SpeakerDatabase = {
         "brand": "Bowers & Wilkins",
         "model": "686 S2",
         "type": "passive",
-        "type": "active",
         "price": "",
         "amount": "pair",
         "shape": "bookshelves",

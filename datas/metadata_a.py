@@ -55,14 +55,14 @@ speakers_info_a: SpeakerDatabase = {
                     "vendor": "",
                 },
                 "review_published": "20241230",
-                #"specifications": {
+                # "specifications": {
                 #    "size": {
                 #        "height": 242,
                 #        "width": 132,
                 #        "depth": 208,
                 #    },
                 #    "weight": 2.4,
-                #},
+                # },
             },
         },
     },

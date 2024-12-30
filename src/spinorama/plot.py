@@ -248,7 +248,7 @@ def generate_xaxis(freq_min=20, freq_max=20000):
             size=FONT_SIZE_H3,
             family="Arial",
         ),
-        ticks="outside",
+        ticks="inside",
     )
 
 
@@ -272,7 +272,7 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
             size=FONT_SIZE_H3,
             family="Arial",
         ),
-        ticks="outside",
+        ticks="inside",
         showline=True,
     )
 
@@ -299,7 +299,7 @@ def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
             size=FONT_SIZE_H3,
             family="Arial",
         ),
-        ticks="outside",
+        ticks="inside",
         showline=True,
     )
 
@@ -323,7 +323,7 @@ def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
             size=FONT_SIZE_H3,
             family="Arial",
         ),
-        ticks="outside",
+        ticks="inside",
         showline=True,
     )
 
@@ -532,11 +532,13 @@ def plot_spinorama_normalized_traces(spin, params, minmax_slopes):
     layout = params.get("layout", "")
     traces = []
     lines = []
-    slope_min_freq = max(SLOPE_MIN_FREQ, spin.Freq.iat[0])
-    slope_max_freq = min(SLOPE_MAX_FREQ, spin.Freq.iat[-1])
-    restricted_freq = spin.loc[(spin.Freq >= slope_min_freq) & (spin.Freq <= slope_max_freq)]
-    first_freq = restricted_freq.Freq.iat[0]
-    last_freq = restricted_freq.Freq.iat[-1]
+    freq = spin.Freq.to_numpy()
+    slope_min_freq = max(SLOPE_MIN_FREQ, freq[0])
+    slope_max_freq = min(SLOPE_MAX_FREQ, freq[-1])
+    restricted_spin = spin.loc[(spin.Freq >= slope_min_freq) & (spin.Freq <= slope_max_freq)]
+    restricted_freq = restricted_spin.Freq.to_numpy()
+    first_freq = restricted_freq[0]
+    last_freq = restricted_freq[-1]
     for measurement in (
         "On Axis",
         "Listening Window",
@@ -572,7 +574,7 @@ def plot_spinorama_normalized_traces(spin, params, minmax_slopes):
             spl_min = slope_min * math.log2(last_freq / first_freq)
             spl_max = slope_max * math.log2(last_freq / first_freq)
             x = [first_freq, last_freq, last_freq, first_freq, first_freq]
-            y = [-1, -1 + spl_min, 1 + spl_max, +1, -1] + first_spl
+            y = np.add([-1, -1 + spl_min, 1 + spl_max, +1, -1], first_spl).tolist()
             lines.append(
                 go.Scatter(
                     x=x,
@@ -624,7 +626,7 @@ def plot_spinorama_normalized_traces(spin, params, minmax_slopes):
             spl_min = slope_min * math.log2(last_freq / first_freq)
             spl_max = slope_max * math.log2(last_freq / first_freq)
             x = [first_freq, last_freq, last_freq, first_freq, first_freq]
-            y = first_spl + [-1, -1 + spl_min, 1 + spl_max, +1, -1]
+            y = np.add([-1, -1 + spl_min, 1 + spl_max, +1, -1], first_spl).tolist()
             lines_di.append(
                 go.Scatter(
                     x=x,
@@ -779,8 +781,8 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     line_box15 = np.concatenate([np.add(line, 1.5), np.add(line, -1.5)[::-1]])
 
     # some speakers start very high
-    restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
-    restricted_line = [slope * math.log10(f) + intercept for f in restricted_freq.Freq]
+    restricted_spin = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
+    restricted_line = [slope * math.log10(f) + intercept for f in restricted_spin.Freq]
 
     # add 3 dBs zone
     traces.append(
@@ -833,7 +835,7 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     offset_spl = offset
     traces.append(
         go.Scatter(
-            x=restricted_freq.Freq + offset_freq,
+            x=restricted_spin.Freq + offset_freq,
             y=np.array(restricted_line) + offset_spl,
             line=dict(width=2, color="black", dash="dash"),
             opacity=1,
@@ -843,7 +845,7 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     )
     traces.append(
         go.Scatter(
-            x=restricted_freq.Freq + offset_freq,
+            x=restricted_spin.Freq + offset_freq,
             y=np.array(restricted_line) - offset_spl,
             line=dict(width=2, color="black", dash="dash"),
             opacity=1,
@@ -871,18 +873,16 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
 
 
 def plot_graph_flat_traces(df, measurement, params):
-    restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
+    restricted_df = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
     slope = 0
-    intercept = (
-        np.mean(restricted_freq[measurement]) if not restricted_freq[measurement].empty else 0.0
-    )
+    intercept = np.mean(restricted_df[measurement]) if not restricted_df[measurement].empty else 0.0
     return plot_graph_traces(df, measurement, params, slope, intercept, None)
 
 
 def plot_graph_regression_traces(df, measurement, params):
-    restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
+    restricted_df = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
     slope, intercept, _, _, _ = stats.linregress(
-        x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement]
+        x=np.log10(restricted_df["Freq"]), y=restricted_df[measurement]
     )
     return plot_graph_traces(df, measurement, params, slope, intercept, "Midrange ±3dB")
 
@@ -903,11 +903,39 @@ def plot_graph_flat(df, measurement, params):
     return fig
 
 
-def plot_graph_regression(df, measurement, params):
+def plot_graph_regression(df, measurement, params, minmax_slopes):
+    spin = df["CEA2034 Normalized_unmelted"]
+    freq = spin.Freq.to_numpy()
+    pir = df["Estimated In-Room Response_unmelted"]
     fig = go.Figure()
-    traces = plot_graph_regression_traces(df, measurement, params)
+    traces = plot_graph_regression_traces(pir, measurement, params)
     for t in traces:
         fig.add_trace(t)
+
+    if "Estimated In-Room Response" in measurement:
+        slope_min_freq = max(SLOPE_MIN_FREQ, freq[0])
+        slope_max_freq = min(SLOPE_MAX_FREQ, freq[-1])
+        restricted_df = spin.loc[(spin.Freq >= slope_min_freq) & (spin.Freq <= slope_max_freq)]
+        restricted_freq = restricted_df.Freq.to_numpy()
+        first_freq = restricted_freq[0]
+        last_freq = restricted_freq[-1]
+        first_spl, _, _, _ = compute_slope_smoothness(pir, measurement)
+        slope_min, slope_max = minmax_slopes["Sound Power"]
+        spl_min = slope_min * math.log2(last_freq / first_freq)
+        spl_max = slope_max * math.log2(last_freq / first_freq)
+        x = [first_freq, last_freq, last_freq, first_freq, first_freq]
+        y = np.add([-1, -1 + spl_min, 1 + spl_max, +1, -1], first_spl).tolist()
+        fig.add_trace(
+            go.Scatter(
+                x=x,
+                y=y,
+                fill="toself",
+                opacity=0.5,
+                name="recommended PIR zone",
+                fillcolor="#FF5C00",  # neon orange
+                mode="text",
+            )
+        )
 
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))

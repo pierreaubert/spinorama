@@ -439,22 +439,27 @@ def compute_minmax_slopes(spin: pd.DataFrame) -> dict[str, tuple[float, float]]:
     minmax = {
         "On Axis": (
             0.0,
-            0.4583 * slope_limited - 0.55,
+            0.4167 * slope_limited - 0.5,
         ),
         "Listening Window": (
-            0.375 * slope_limited - 0.7,
+            0.3333 * slope_limited - 0.65,
             0.0,
         ),
+        "Estimated In-Room Response": (
+            -0.80,
+            -0.0417 * slope_limited - 0.65,
+        ),
         "Sound Power": (
-            -0.15 * slope_limited - 1.02,
-            -0.0417 * slope_limited - 0.85,
+            -0.2083 * slope_limited - 0.95,
+            -0.0833 * slope_limited - 0.80,
         ),
         "Sound Power DI": (
             max(min(slope_di + 1.15, 1.2) - 0.3, 0),
             min(slope_di + 1.15, 1.2),
         ),
     }
-    print(slope_di, slope_limited, minmax)
+    minmax["Predicted In-Room Response"] = minmax["Estimated In-Room Response"]
+    # print(slope_di, slope_limited, minmax)
     return minmax
 
 
@@ -463,8 +468,9 @@ def compute_slope_smoothness(
     measurement,
 ) -> tuple[float, float, float, float]:
     """Compute the slope in db/oct of a measurement in the data frame"""
-    slope_min_freq = max(SLOPE_MIN_FREQ, data_frame.Freq.iat[0])
-    slope_max_freq = min(SLOPE_MAX_FREQ, data_frame.Freq.iat[-1])
+    freq = data_frame.Freq.to_numpy()
+    slope_min_freq = max(SLOPE_MIN_FREQ, freq[0])
+    slope_max_freq = min(SLOPE_MAX_FREQ, freq[-1])
     slopes_minmax = None
     slopes_freq = None
     slopes_spl = None

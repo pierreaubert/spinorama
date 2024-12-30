@@ -191,7 +191,7 @@ def print_radar(meta_data, scale, speaker_data):
     for gd in graph_data:
         fig.add_trace(go.Scatterpolar(gd))
     fig.update_layout(layout)
-    write_multiformat(fig, filename, False)
+    write_multiformat(chart=fig, filename=filename, force=False)
 
 
 def main(args):

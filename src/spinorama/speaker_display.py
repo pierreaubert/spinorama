@@ -104,6 +104,15 @@ def display_onaxis(df, graph_params=plot_params_default):
 
 
 def display_inroom(df, graph_params=plot_params_default):
+    spin = df.get("CEA2034_unmelted")
+    if spin is None:
+        spin_melted = df.get("CEA2034")
+        if spin_melted is not None:
+            spin = graph_unmelt(spin_melted)
+        if spin is None:
+            logger.info("Display CEA2034 not in dataframe (%s)", ", ".join(df.keys()))
+            return None
+
     try:
         if "Estimated In-Room Response_unmelted" not in df:
             return None
@@ -111,11 +120,8 @@ def display_inroom(df, graph_params=plot_params_default):
         logger.warning("Display In Room failed with %s", ke)
         return None
     else:
-        return plot_graph_regression(
-            df["Estimated In-Room Response_unmelted"],
-            "Estimated In-Room Response",
-            graph_params,
-        )
+        slopes = compute_minmax_slopes(spin)
+        return plot_graph_regression(df, "Estimated In-Room Response", graph_params, slopes)
 
 
 def display_reflection_horizontal(df, graph_params=plot_params_default):

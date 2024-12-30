@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from . import SpeakerDatabase, gll_data_acquisition_std
+from . import SpeakerDatabase
 
 speakers_info_x: SpeakerDatabase = {
     "XMechanik Mechano23 DIY": {

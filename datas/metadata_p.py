@@ -1428,40 +1428,6 @@ speakers_info_p: SpeakerDatabase = {
             },
         },
     },
-    "PSB Alpha P3": {
-        "brand": "PSB",
-        "model": "Alpha P3",
-        "type": "passive",
-        "price": "249",
-        "shape": "bookshelves",
-        "amount": "each",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/psb-alpha-p3-review-bookshelf-speaker.27498/",
-                "review_published": "20211022",
-            },
-        },
-    },
-    "PSB Alpha P5": {
-        "brand": "PSB",
-        "model": "Alpha P5",
-        "type": "passive",
-        "price": "349",
-        "shape": "bookshelves",
-        "amount": "each",
-        "default_measurement": "asr",
-        "measurements": {
-            "asr": {
-                "origin": "ASR",
-                "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/psb-alpha-p5-speaker-review.15161/",
-                "review_published": "20200806",
-            },
-        },
-    },
     "PSB Imagine B50": {
         "brand": "PSB",
         "model": "Imagine B50",
