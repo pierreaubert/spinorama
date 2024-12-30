@@ -38,6 +38,34 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Aalto Speakers Aalto 9": {
+        "brand": "Aalto Speakers",
+        "model": "Aalto 9",
+        "type": "active",
+        "price": "30000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Aalto Speakers",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "vendor": "",
+                },
+                "review_published": "20241230",
+                #"specifications": {
+                #    "size": {
+                #        "height": 242,
+                #        "width": 132,
+                #        "depth": 208,
+                #    },
+                #    "weight": 2.4,
+                #},
+            },
+        },
+    },
     "Acoustic Energy AE100 Mk2": {
         "brand": "Acoustic Energy",
         "model": "AE100 Mk2",

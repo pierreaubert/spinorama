@@ -1,14 +1,14 @@
 EQ for Revel C10 computed from ASR data
-Preference Score 0.10 with EQ 4.09
-Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v0.24
-Dated: 2023-09-14-14:49:59
+Preference Score 0.10 with EQ 4.34
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-12-29-19:37:06
 
-Preamp: -14.9 dB
+Preamp: -3.0 dB
 
-Filter  1: ON PK Fc    41 Hz Gain +2.98 dB Q 0.25
-Filter  2: ON PK Fc    44 Hz Gain +2.99 dB Q 0.29
-Filter  3: ON PK Fc    47 Hz Gain +2.99 dB Q 0.30
-Filter  4: ON PK Fc    47 Hz Gain +2.98 dB Q 0.29
-Filter  5: ON PK Fc    49 Hz Gain +2.99 dB Q 0.27
-Filter  6: ON PK Fc  1541 Hz Gain -2.91 dB Q 1.78
-Filter  7: ON PK Fc  1822 Hz Gain +1.94 dB Q 1.46
+Filter  1: ON PK Fc    32 Hz Gain +3.00 dB Q 0.26
+Filter  2: ON PK Fc    95 Hz Gain +2.99 dB Q 1.87
+Filter  3: ON PK Fc   160 Hz Gain -4.52 dB Q 1.41
+Filter  4: ON PK Fc   260 Hz Gain -3.20 dB Q 0.85
+Filter  5: ON PK Fc   522 Hz Gain -5.71 dB Q 1.08
+Filter  6: ON PK Fc  1288 Hz Gain -3.11 dB Q 1.21
+Filter  7: ON PK Fc  1532 Hz Gain -2.65 dB Q 0.27
