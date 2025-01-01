@@ -845,16 +845,16 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
                 datas[k].colorbar.lenmode = 'fraction';
                 datas[k].colorbar.thickness = 15;
                 datas[k].colorbar.thicknessmode = 'pixels';
-                datas[k].colorbar.tickfont = {
-                        size: fontSizeH6,
-		},
-                datas[k].colorbar.title = {
-		    text: 'dB (SPL)',
-                    font: {
-                        size: fontSizeH5,
-                    },
-                    side: 'bottom',
-                };
+                (datas[k].colorbar.tickfont = {
+                    size: fontSizeH6,
+                }),
+                    (datas[k].colorbar.title = {
+                        text: 'dB (SPL)',
+                        font: {
+                            size: fontSizeH5,
+                        },
+                        side: 'bottom',
+                    });
             }
         }
     }
@@ -892,12 +892,24 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
                 if (i % 2 === 1) {
                     speakerGraphs[i].data[trace].line = { dash: 'dashdot' };
                 }
+                if (speakerGraphs.length > 1) {
+                    // hide recommended zones by default
+                    if (
+                        'name' in speakerGraphs[i].data[trace] &&
+                        speakerGraphs[i].data[trace].name.indexOf('recommended') === 0
+                    ) {
+                        speakerGraphs[i].data[trace]['visible'] = 'legendonly';
+                    } else if ('line' in speakerGraphs[i].data[trace] && speakerGraphs[i].data[trace].x.length < 10) {
+                        speakerGraphs[i].data[trace]['visible'] = false;
+                    }
+                }
             }
         }
     }
     let option = setGraphOptions(speakerGraphs, width, height, 1, GraphProperties[measurement]);
     option.layout.height += 4 * 14;
 
+    // move the legend2 such that they do not overlap
     if (option.layout.legend2) {
         if (!isDisplayVertical()) {
             option.layout.legend.y = 0.75;
@@ -910,6 +922,15 @@ export function setCEA2034(measurement, speakerNames, speakerGraphs, width, heig
             option.layout.legend2.y = -0.75;
         }
         option.layout.height += 22 * 14;
+    }
+
+    // hide annotations if we compare 2 graphs
+    if (speakerGraphs.length > 1) {
+        if ('annotations' in option.layout) {
+            for (let i = 0; i < option.layout.annotations.length; i++) {
+                option.layout.annotations[i]['visible'] = false;
+            }
+        }
     }
     return [option];
 }
@@ -924,14 +945,22 @@ export function setGraph(measurement, speakerNames, speakerGraphs, width, height
                 // hide yellow bands since when you have more than one it is difficult to see the graphs
                 // also remove the midrange lines for the same reason
                 if (
-                    i > 0 && // keep only the first one
+                    speakerGraphs.length > 1 &&
                     name != null &&
                     (name == 'Band ±3dB' ||
                         name == 'Band ±1.5dB' ||
                         name == 'Midrange Band +3dB' ||
                         name == 'Midrange Band -3dB')
                 ) {
-                    speakerGraphs[i].data[trace].visible = false;
+                    speakerGraphs[i].data[trace].visible = 'legendonly';
+                }
+                if (speakerGraphs.length > 1) {
+                    if (
+                        'name' in speakerGraphs[i].data[trace] &&
+                        speakerGraphs[i].data[trace].name.indexOf('recommended') === 0
+                    ) {
+                        speakerGraphs[i].data[trace]['visible'] = 'legendonly';
+                    }
                 }
                 speakerGraphs[i].data[trace].legendgroup = 'speaker' + i;
                 speakerGraphs[i].data[trace].legendgrouptitle = {
