@@ -44,7 +44,9 @@ def estimates_slopes(spin: pd.DataFrame) -> dict[str, dict[str, dict[str, float]
         "Sound Power DI",
         "Early Reflections DI",
     ):
-        _, _, slope, sm = compute_slope_smoothness(spin, measurement)
+        _, _, slope, sm = compute_slope_smoothness(
+            data_frame=spin, measurement=measurement, is_normalized=False
+        )
         est[measurement] = {
             "slope": slope,
             "smoothness": sm,

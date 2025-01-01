@@ -174,9 +174,10 @@ def print_graphs(
         # logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
         graph = op_call(df_speaker, graph_params)
         if graph is None:
-            logger.debug("display %s failed for %s %s %s", op_title, speaker, version, origin)
-            if op_title == "CEA2034":
+            if op_title in ("CEA2034", "CEA2034 Normalized"):
                 logger.warning("display %s failed for %s %s %s", op_title, speaker, version, origin)
+            else:
+                logger.info("display %s failed for %s %s %s", op_title, speaker, version, origin)
             continue
         graphs[op_title] = graph
 

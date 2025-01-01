@@ -10,7 +10,7 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
@@ -453,92 +453,26 @@ def radar_layout(params):
     )
 
 
-def plot_spinorama_traces(spin, params):
-    layout = params.get("layout", "")
-    traces = []
-    for measurement in (
-        "On Axis",
-        "Listening Window",
-        "Early Reflections",
-        "Sound Power",
-    ):
-        if measurement not in spin:
-            continue
-        trace = go.Scatter(
-            x=spin.Freq,
-            y=spin[measurement],
-            marker_color=UNIFORM_COLORS.get(measurement, "black"),
-            name=label_short.get(measurement, measurement),
-            hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
-        )
-        if layout == "compact":
-            trace.name = label_short.get(measurement, measurement)
-        else:
-            trace.name = measurement
-            trace.legendgroup = "measurements"
-            trace.legendgrouptitle = {"text": "Measurements"}
-        traces.append(trace)
-
-    traces_di = []
-    for measurement in ("Early Reflections DI", "Sound Power DI"):
-        if measurement not in spin:
-            continue
-        trace = go.Scatter(
-            x=spin.Freq,
-            y=spin[measurement],
-            marker_color=UNIFORM_COLORS.get(measurement, "black"),
-            hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
-        )
-        if layout == "compact":
-            trace.name = label_short.get(measurement, measurement)
-        else:
-            trace.name = measurement
-            trace.legendgroup = "directivity"
-            trace.legendgrouptitle = {"text": "Directivity"}
-        traces_di.append(trace)
-    return traces, traces_di
-
-
-def plot_spinorama(spin, params):
-    fig = make_subplots(specs=[[{"secondary_y": True}]])
-    t_max = 0
-    traces, traces_di = plot_spinorama_traces(spin, params)
-    for t in traces:
-        t_max = max(t_max, np.max(t.y[np.where(t.x < 20000)]))
-        fig.add_trace(t, secondary_y=False)
-
-    t_max = 5 + int(t_max / 5) * 5
-    t_min = t_max - 50
-    # print('T min={} max={}'.format(t_min, t_max))
-
-    di_max = 0
-    for t in traces_di:
-        di_max = max(di_max, np.max(t.y[np.where(t.x < 20000)]))
-        fig.add_trace(t, secondary_y=True)
-
-    di_max = 35 + int(di_max / 5) * 5
-    di_min = di_max - 50
-    # print('DI min={} max={}'.format(di_min, di_max))
-
-    fig.update_xaxes(generate_xaxis())
-    fig.update_yaxes(generate_yaxis_spl(t_min, t_max, 5))
-    fig.update_yaxes(generate_yaxis_di(di_min, di_max, 5), secondary_y=True)
-
-    fig.update_layout(common_layout(params))
-    return fig
-
-
-def plot_spinorama_normalized_traces(spin, params, minmax_slopes):
+def plot_spinorama_traces(
+    spin: pd.DataFrame,
+    params: dict,
+    minmax_slopes: dict[str, tuple[float, float]],
+    is_normalized: bool,
+) -> tuple[list, list, list, list]:
     layout = params.get("layout", "")
     traces = []
     lines = []
     freq = spin.Freq.to_numpy()
+    if len(freq) == 0:
+        logger.error("Freq is not in spin")
+        return traces, traces, lines, lines
     slope_min_freq = max(SLOPE_MIN_FREQ, freq[0])
     slope_max_freq = min(SLOPE_MAX_FREQ, freq[-1])
     restricted_spin = spin.loc[(spin.Freq >= slope_min_freq) & (spin.Freq <= slope_max_freq)]
     restricted_freq = restricted_spin.Freq.to_numpy()
     first_freq = restricted_freq[0]
     last_freq = restricted_freq[-1]
+
     for measurement in (
         "On Axis",
         "Listening Window",
@@ -554,39 +488,39 @@ def plot_spinorama_normalized_traces(spin, params, minmax_slopes):
             name=label_short.get(measurement, measurement),
             hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
-        first_spl, last_spl, slope_dboct, smoothness = compute_slope_smoothness(spin, measurement)
-        if measurement in ("Sound Power", "Early Reflections"):
+        first_spl, last_spl, _, _ = compute_slope_smoothness(
+            data_frame=spin, measurement=measurement, is_normalized=is_normalized
+        )
+        if measurement in ("Sound Power", "Early Reflections", "Listening Window"):
             lines.append(
                 go.Scatter(
                     x=[first_freq, last_freq],
                     y=[first_spl, last_spl],
                     line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
                     opacity=1,
-                    legend="legend2",
-                    name="{:20s} slope {:+4.1f}dB/oct smoothness {:3.2f}".format(
-                        measurement, slope_dboct, smoothness
-                    ),
+                    showlegend=False,
                 )
             )
-        if measurement == "Sound Power":
+        if measurement in ("Sound Power") and len(minmax_slopes) > 0:
             # aligned with VituixCAD
-            slope_min, slope_max = minmax_slopes["Sound Power"]
+            ex = 1.0
+            slope_min, slope_max = minmax_slopes[measurement]
             spl_min = slope_min * math.log2(last_freq / first_freq)
             spl_max = slope_max * math.log2(last_freq / first_freq)
             x = [first_freq, last_freq, last_freq, first_freq, first_freq]
-            y = np.add([-1, -1 + spl_min, 1 + spl_max, +1, -1], first_spl).tolist()
+            y = np.add([-ex, -ex + spl_min, ex + spl_max, +ex, -ex], first_spl).tolist()
             lines.append(
                 go.Scatter(
                     x=x,
                     y=y,
                     fill="toself",
                     opacity=0.25,
-                    legend="legend2",
                     name="recommended SP zone",
                     fillcolor=UNIFORM_COLORS[measurement],
                     mode="text",
                 )
             )
+
         if layout == "compact":
             trace.name = label_short.get(measurement, measurement)
         else:
@@ -606,35 +540,33 @@ def plot_spinorama_normalized_traces(spin, params, minmax_slopes):
             marker_color=UNIFORM_COLORS.get(measurement, "black"),
             hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
-        first_spl, last_spl, slope_dboct, smoothness = compute_slope_smoothness(spin, measurement)
+        first_spl, last_spl, _, _ = compute_slope_smoothness(
+            data_frame=spin, measurement=measurement, is_normalized=is_normalized
+        )
         lines_di.append(
             go.Scatter(
                 x=[first_freq, last_freq],
                 y=[first_spl, last_spl],
                 line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
                 opacity=1,
-                name="{:20s} slope {:+4.1f}dB/oct smoothness {:3.2f}".format(
-                    measurement, slope_dboct, smoothness
-                ),
-                showlegend=True,
-                legend="legend2",
+                showlegend=False,
             )
         )
-        if measurement == "Sound Power DI":
-            # https://kimmosaunisto.net/Misc/speaker_review_feedback.pdf
-            slope_min, slope_max = minmax_slopes["Sound Power DI"]
+        if measurement == "Sound Power DI" and len(minmax_slopes) > 0:
+            # aligned with VituixCAD
+            ex = 1.0
+            slope_min, slope_max = minmax_slopes[measurement]
             spl_min = slope_min * math.log2(last_freq / first_freq)
             spl_max = slope_max * math.log2(last_freq / first_freq)
             x = [first_freq, last_freq, last_freq, first_freq, first_freq]
-            y = np.add([-1, -1 + spl_min, 1 + spl_max, +1, -1], first_spl).tolist()
+            y = np.add([-ex, -ex + spl_min, ex + spl_max, +ex, -ex], first_spl).tolist()
             lines_di.append(
                 go.Scatter(
                     x=x,
                     y=y,
                     fill="toself",
                     opacity=0.25,
-                    legend="legend2",
-                    name="recommended SPDI zone",
+                    name="recommended SP DI zone",
                     fillcolor=UNIFORM_COLORS[measurement],
                     mode="text",
                 )
@@ -649,21 +581,58 @@ def plot_spinorama_normalized_traces(spin, params, minmax_slopes):
     return traces, traces_di, lines, lines_di
 
 
-def plot_spinorama_normalized(spin, params, minmax_slopes):
+def plot_spinorama_annotation(fig, spin, is_normalized):
+    for freq, measurement, yref, ay, xanchor, yanchor in (
+        (2000, "On Axis", "y", -20, "right", "bottom"),
+        (10000, "Listening Window", "y", -20, "right", "bottom"),
+        (10000, "Early Reflections", "y", 20, "right", "top"),
+        (10000, "Sound Power", "y", 20, "right", "top"),
+        (10000, "Early Reflections DI", "y2", 20, "right", "top"),
+        (10000, "Sound Power DI", "y2", -20, "right", "bottom"),
+    ):
+        if measurement not in spin:
+            continue
+        _, _, slope, sm = compute_slope_smoothness(spin, measurement, is_normalized=is_normalized)
+        closest_freq = bisect.bisect_left(spin.Freq.to_numpy(), freq)
+        spl = spin[measurement].iat[closest_freq]
+        fig.add_annotation(
+            x=math.log10(freq),
+            y=spl,
+            text="{:4.2f} db/oct sm {:3.2f}".format(slope, sm),
+            font=dict(
+                size=10,
+                color=UNIFORM_COLORS.get(measurement, "black"),
+            ),
+            bordercolor=UNIFORM_COLORS.get(measurement, "black"),
+            showarrow=True,
+            arrowhead=2,
+            arrowcolor=UNIFORM_COLORS.get(measurement, "black"),
+            xanchor=xanchor,
+            yanchor=yanchor,
+            yref=yref,
+            ay=ay,
+        )
+    return fig
+
+
+def plot_spinorama(spin, params, minmax_slopes, is_normalized):
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     t_max = 0
-    traces, traces_di, lines, lines_di = plot_spinorama_normalized_traces(
-        spin, params, minmax_slopes
+    traces, traces_di, lines, lines_di = plot_spinorama_traces(
+        spin, params, minmax_slopes, is_normalized
     )
+
+    if len(traces) == 0:
+        logger.error("Error in plotting spinorama traces")
+        return None
+
     for t in traces:
         t_max = max(t_max, np.max(t.y[np.where(t.x < 20000)]))
         fig.add_trace(t, secondary_y=False)
 
     t_max = 5 + int(t_max / 5) * 5
     t_min = t_max - 50
-
-    for l in lines:
-        fig.add_trace(l, secondary_y=False)
+    # print('T min={} max={}'.format(t_min, t_max))
 
     di_max = 0
     for t in traces_di:
@@ -672,35 +641,19 @@ def plot_spinorama_normalized(spin, params, minmax_slopes):
 
     di_max = 35 + int(di_max / 5) * 5
     di_min = di_max - 50
+    # print('DI min={} max={}'.format(di_min, di_max))
 
-    for l in lines_di:
-        fig.add_trace(l, secondary_y=True)
+    fig.add_traces(lines)
+    for t in lines_di:
+        fig.add_trace(t, secondary_y=True)
 
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(t_min, t_max, 5))
     fig.update_yaxes(generate_yaxis_di(di_min, di_max, 5), secondary_y=True)
 
+    fig = plot_spinorama_annotation(fig, spin, False)
+
     fig.update_layout(common_layout(params))
-    fig.update_layout(
-        legend2=dict(
-            orientation="v",
-            yanchor="middle",
-            y=0.5,
-            xanchor="left",
-            x=0.05,
-            title=dict(
-                text="Slopes and smoothness",
-                font=dict(
-                    size=FONT_SIZE_H2,
-                    family="Arial",
-                ),
-            ),
-            font=dict(
-                size=FONT_SIZE_H3,
-                family="Arial",
-            ),
-        )
-    )
     return fig
 
 
@@ -904,22 +857,27 @@ def plot_graph_flat(df, measurement, params):
 
 
 def plot_graph_regression(df, measurement, params, minmax_slopes):
-    spin = df["CEA2034 Normalized_unmelted"]
-    freq = spin.Freq.to_numpy()
-    pir = df["Estimated In-Room Response_unmelted"]
     fig = go.Figure()
-    traces = plot_graph_regression_traces(pir, measurement, params)
-    for t in traces:
-        fig.add_trace(t)
 
-    if "Estimated In-Room Response" in measurement:
+    pir = df["Estimated In-Room Response_unmelted"]
+    fig.add_traces(plot_graph_regression_traces(pir, measurement, params))
+
+    if (
+        "Estimated In-Room Response" in measurement
+        and "CEA2034 Normalized_unmelted" in df
+        and minmax_slopes is not None
+    ):
+        spin = df["CEA2034 Normalized_unmelted"]
+        freq = spin.Freq.to_numpy()
         slope_min_freq = max(SLOPE_MIN_FREQ, freq[0])
         slope_max_freq = min(SLOPE_MAX_FREQ, freq[-1])
         restricted_df = spin.loc[(spin.Freq >= slope_min_freq) & (spin.Freq <= slope_max_freq)]
         restricted_freq = restricted_df.Freq.to_numpy()
         first_freq = restricted_freq[0]
         last_freq = restricted_freq[-1]
-        first_spl, _, _, _ = compute_slope_smoothness(pir, measurement)
+        first_spl, _, _, _ = compute_slope_smoothness(
+            data_frame=pir, measurement=measurement, is_normalized=True
+        )
         slope_min, slope_max = minmax_slopes["Sound Power"]
         spl_min = slope_min * math.log2(last_freq / first_freq)
         spl_max = slope_max * math.log2(last_freq / first_freq)

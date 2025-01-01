@@ -118,6 +118,14 @@ def parse_eq_speaker(
 
             df_eq["eq"] = iir
             return iir, df_eq
+        elif "CEA2034 Normalized" in df_ref:
+            spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir)
+            df_eq = {}
+            if spin_eq is not None:
+                df_eq["CEA2034 Normalized"] = spin_eq
+                df_eq["CEA2034 Normalized_unmelted"] = graph_unmelt(spin_eq)
+            df_eq["eq"] = iir
+            return iir, df_eq
 
     logger.debug("no EQ for %s/eq/%s", speaker_path, speaker_name)
     return [], {}

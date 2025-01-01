@@ -104,6 +104,12 @@ def norm_spl(spl):
     return df_normalized
 
 
+def norm_spl_unmelted(spl):
+    """Normalize SPL for a set of measurements"""
+    # nornalize v.s. on axis
+    return graph_melt(norm_spl(graph_unmelt(spl)))
+
+
 def filter_graphs(
     speaker_name: str,
     h_spl,
@@ -112,7 +118,7 @@ def filter_graphs(
     mean_max: float,
     mformat: str,
     mdistance: float,
-):
+) -> dict[str, pd.DataFrame]:
     """Filter a set of graphs defined by h_spl and v_spl.
 
     mean_min and max_min denote the range of frequencies on which you compute the mean SPL.
@@ -228,7 +234,7 @@ def filter_graphs_eq(
     mean_max,
     mformat,
     mdistance,
-):
+) -> dict[str, pd.DataFrame]:
     """Filter a set of graphs defined by h_spl and v_spl.
 
     mean_min and max_min denote the range of frequencies on which you compute the mean SPL.
@@ -370,8 +376,11 @@ def filter_graphs_partial(df, mformat, mdistance):
         for k in df:
             if k == "CEA2034":
                 logger.debug("DEBUG %s pre shift cols=(%s)", k, ", ".join(set(df[k].Measurements)))
-                dfs[k] = shift_spl_melted_cea2034(df[k], mean_midrange)
+                shifted_spin = shift_spl_melted_cea2034(df[k], mean_midrange)
+                dfs[k] = shifted_spin
                 logger.debug("DEBUG %s post shift cols=(%s)", k, ", ".join(set(df[k].Measurements)))
+                dfs["CEA2034 Normalized"] = norm_spl_unmelted(shifted_spin)
+                dfs["CEA2034 Normalized_unmelted"] = graph_unmelt(dfs["CEA2034 Normalized"])
             else:
                 dfs[k] = shift_spl_melted(df[k], mean_midrange)
     else:

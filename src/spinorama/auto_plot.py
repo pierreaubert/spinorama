@@ -186,11 +186,13 @@ def graph_results(
     # show the 2 spinoramas
     unmelted_spin = graph_unmelt(spin)
 
-    g_spin_noeq, g_spin_noeq_di = plot_spinorama_traces(unmelted_spin, g_params)
+    g_spin_noeq, _, g_spin_noeq_di, _ = plot_spinorama_traces(unmelted_spin, g_params, {}, True)
     g_spin_auto, g_spin_auto_di, unmelted_spin_auto = None, None, None
     if spin_auto is not None:
         unmelted_spin_auto = graph_unmelt(spin_auto)
-        g_spin_auto, g_spin_auto_di = plot_spinorama_traces(unmelted_spin_auto, g_params)
+        g_spin_auto, _, g_spin_auto_di, _ = plot_spinorama_traces(
+            unmelted_spin_auto, g_params, {}, True
+        )
 
     # show the 3 optimised curves
     g_curves = {}

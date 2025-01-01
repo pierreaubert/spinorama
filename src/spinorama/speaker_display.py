@@ -28,7 +28,6 @@ from spinorama.plot import (
     contour_params_default,
     radar_params_default,
     plot_spinorama,
-    plot_spinorama_normalized,
     plot_graph,
     plot_graph_flat,
     plot_graph_spl,
@@ -50,30 +49,31 @@ def display_spinorama(df, graph_params=plot_params_default):
         if spin is None:
             logger.info("Display CEA2034 not in dataframe (%s)", ", ".join(df.keys()))
             return None
-    return plot_spinorama(spin, graph_params)
+    slopes = compute_minmax_slopes(spin=spin, is_normalized=True)
+    fig = plot_spinorama(spin, graph_params, slopes, is_normalized=True)
+    if fig is None:
+        logger.error("plot_spinorama failed")
+        return None
+    return fig
 
 
 def display_spinorama_normalized(df, graph_params=plot_params_default):
-    spin = df.get("CEA2034_unmelted")
+    print(df.keys())
+    spin = df.get("CEA2034 Normalized_unmelted")
     if spin is None:
-        spin_melted = df.get("CEA2034")
+        spin_melted = df.get("CEA2034 Normalized")
         if spin_melted is not None:
             spin = graph_unmelt(spin_melted)
         if spin is None:
-            logger.info("Display CEA2034 not in dataframe (%s)", ", ".join(df.keys()))
-            return None
-
-    spin_normalized = df.get("CEA2034 Normalized_unmelted")
-    if spin_normalized is None:
-        spin_normalized_melted = df.get("CEA2034 Normalized")
-        if spin_normalized_melted is not None:
-            spin_normalized = graph_unmelt(spin_normalized_melted)
-        if spin_normalized is None:
             logger.info("Display CEA2034 Normalized not in dataframe (%s)", ", ".join(df.keys()))
             return None
 
-    slopes = compute_minmax_slopes(spin)
-    return plot_spinorama_normalized(spin_normalized, graph_params, slopes)
+    slopes = compute_minmax_slopes(spin=spin, is_normalized=True)
+    fig = plot_spinorama(spin, graph_params, slopes, is_normalized=True)
+    if fig is None:
+        logger.error("plot_spinorama failed")
+        return None
+    return fig
 
 
 def display_reflection_early(df, graph_params=plot_params_default):
@@ -104,14 +104,11 @@ def display_onaxis(df, graph_params=plot_params_default):
 
 
 def display_inroom(df, graph_params=plot_params_default):
-    spin = df.get("CEA2034_unmelted")
+    spin = df.get("CEA2034 Normalized_unmelted")
     if spin is None:
-        spin_melted = df.get("CEA2034")
+        spin_melted = df.get("CEA2034 Normalized")
         if spin_melted is not None:
             spin = graph_unmelt(spin_melted)
-        if spin is None:
-            logger.info("Display CEA2034 not in dataframe (%s)", ", ".join(df.keys()))
-            return None
 
     try:
         if "Estimated In-Room Response_unmelted" not in df:
@@ -120,7 +117,9 @@ def display_inroom(df, graph_params=plot_params_default):
         logger.warning("Display In Room failed with %s", ke)
         return None
     else:
-        slopes = compute_minmax_slopes(spin)
+        slopes = None
+        if spin is not None:
+            slopes = compute_minmax_slopes(spin, is_normalized=True)
         return plot_graph_regression(df, "Estimated In-Room Response", graph_params, slopes)
 
 

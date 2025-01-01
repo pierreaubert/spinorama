@@ -350,8 +350,7 @@ def compute_directivity_deg_v2(df) -> tuple[float, float, float]:
     dir_p = compute(df, range(10, 180, 10))
     dir_m = compute(df, range(-10, -180, -10))
 
-    # print('dir_p {}'.format(dir_p))
-    return float(dir_p), float(dir_m), float((dir_p + dir_m) / 2)
+    return float(dir_p), float(dir_m), float((dir_p - dir_m) / 2)
 
 
 def savitzky_golay(y, window_size, order, deriv=0, rate=1):
@@ -431,11 +430,11 @@ def dist_point_line(x, y, p_a, p_b, p_c):
     return abs(p_a * x + p_b * y + p_c) / math.sqrt(p_a * p_a + p_b * p_b)
 
 
-def compute_minmax_slopes(spin: pd.DataFrame) -> dict[str, tuple[float, float]]:
-    _, _, slope_on, _ = compute_slope_smoothness(spin, "On Axis")
-    _, _, slope_sp, _ = compute_slope_smoothness(spin, "Sound Power")
-    slope_di = (slope_on - slope_sp) * math.log(2)
-    slope_limited = max(min(slope_di, 1.2), 0)
+def compute_minmax_slopes(spin: pd.DataFrame, is_normalized) -> dict[str, tuple[float, float]]:
+    _, _, slope_on, _ = compute_slope_smoothness(spin, "On Axis", is_normalized)
+    _, _, slope_sp, _ = compute_slope_smoothness(spin, "Sound Power", is_normalized)
+    slope_di = slope_on - slope_sp  # * math.log(2)
+    slope_limited = max(min(slope_di, 1.2), 0.0)
     minmax = {
         "On Axis": (
             0.0,
@@ -459,16 +458,17 @@ def compute_minmax_slopes(spin: pd.DataFrame) -> dict[str, tuple[float, float]]:
         ),
     }
     minmax["Predicted In-Room Response"] = minmax["Estimated In-Room Response"]
-    # print(slope_di, slope_limited, minmax)
     return minmax
 
 
 def compute_slope_smoothness(
-    data_frame: pd.DataFrame,
-    measurement,
+    data_frame: pd.DataFrame, measurement: str, is_normalized: bool
 ) -> tuple[float, float, float, float]:
     """Compute the slope in db/oct of a measurement in the data frame"""
     freq = data_frame.Freq.to_numpy()
+    if len(freq) == 0:
+        logger.error("DataFrame Freq column is empty")
+        return 0, 0, 0, 0
     slope_min_freq = max(SLOPE_MIN_FREQ, freq[0])
     slope_max_freq = min(SLOPE_MAX_FREQ, freq[-1])
     slopes_minmax = None
@@ -480,7 +480,8 @@ def compute_slope_smoothness(
         ]
         slopes_freq = slopes_minmax.Freq.tolist()
         slopes_spl = slopes_minmax[measurement].tolist()
-    else:
+    elif "Measurements" in data_frame:
+        print(data_frame.head())
         slopes_minmax = data_frame.loc[
             (data_frame.Freq >= slope_min_freq)
             & (data_frame.Freq <= slope_max_freq)
@@ -488,6 +489,10 @@ def compute_slope_smoothness(
         ]
         slopes_freq = slopes_minmax.Freq.tolist()
         slopes_spl = slopes_minmax.dB.tolist()
+    else:
+        # partial measurement
+        logger.debug("%s not in DataFrame", measurement)
+        return 0, 0, 0, 0
     if len(slopes_freq) == 0 or len(slopes_spl) == 0:
         logger.error("no data in df: likely incorrect measurement name %s", measurement)
         return 0, 0, 0, 0
@@ -499,7 +504,11 @@ def compute_slope_smoothness(
     slope_dboct = res.slope * (math.log10(last_freq) - math.log10(first_freq)) / slope_octave
     first_spl = res.intercept + res.slope * math.log10(first_freq)
     last_spl = res.intercept + res.slope * math.log10(last_freq)
-    # print("Slopes {} {} {} {}".format(first_spl, last_spl, slope_dboct, res.rvalue**2))
+    # print(
+    #    "{:30s} freq [{:6.0f}, {:6.0f}] spl [{:+4.2f},{:+4.2f}] slope {:+4.2f} sm {:4.2f}".format(
+    #        measurement, first_freq, last_freq, first_spl, last_spl, slope_dboct, res.rvalue**2
+    #    )
+    # )
     return first_spl, last_spl, slope_dboct, res.rvalue**2
 
 
@@ -530,5 +539,5 @@ def compute_statistics(
     # build an histogram to see where the deviation is above each treshhole
     hist = np.histogram(hist_dist, bins=[0, 0.5, 1, 1.5, 2, 2.5, 3, 5], density=False)
     # compute slope in db/oct
-    _, _, db_per_octave, _ = compute_slope_smoothness(data_frame, measurement)
+    _, _, db_per_octave, _ = compute_slope_smoothness(data_frame, measurement, False)
     return db_per_octave, hist, np.max(hist_dist)
