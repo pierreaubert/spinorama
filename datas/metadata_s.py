@@ -490,6 +490,38 @@ speakers_info_s: SpeakerDatabase = {
             },
         },
     },
+    "Sonus Faber Sonetto II G2": {
+        "skip": True,
+        "brand": "Sonus Faber",
+        "model": "Sonetto II G2",
+        "type": "passive",
+        "price": "2500",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4,
+                    "size": {
+                        "height": 414,
+                        "width": 227,
+                        "depth": 335,
+                    },
+                    "weight": 10.4,
+                },
+            },
+        },
+    },
+
     "Sony SS-CS3": {
         "brand": "Sony",
         "model": "SS-CS3",
