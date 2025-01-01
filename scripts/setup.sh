@@ -75,5 +75,10 @@ PYTHONPATH=src cd src/spinorama && python3 setup.py build_ext --inplace && ln -s
 # install deepsource
 [ ! -x bin/deepsource ] && curl https://deepsource.io/cli | sh
 
-# run the test
+# install 3rd parties
+./scripts/update_3rdparties
+
+# run tests
 pytest tests
+vitest
+

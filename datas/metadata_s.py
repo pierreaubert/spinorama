@@ -470,6 +470,7 @@ speakers_info_s: SpeakerDatabase = {
             },
         },
     },
+    # Sonus faber Sonetto II G2
     "Sonus Faber Sonetto II": {
         "brand": "Sonus Faber",
         "model": "Sonetto II",

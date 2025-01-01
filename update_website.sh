@@ -58,7 +58,8 @@ fi
 ./scripts/update_pictures.sh
 
 # generate all graphs if some are missing
-rm -fr /tmp/ray
+mkdir -p build/ray
+rm -fr /tmp/ray && ln -s /home/pierre/src/spinorama/build/ray /tmp
 command=$(python3 ./generate_graphs.py --dash-ip="$IP")
 status=$?
 if [ $status -ne 0 ]; then
