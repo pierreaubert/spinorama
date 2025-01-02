@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,8 +49,8 @@ def display_spinorama(df, graph_params=plot_params_default):
         if spin is None:
             logger.info("Display CEA2034 not in dataframe (%s)", ", ".join(df.keys()))
             return None
-    slopes = compute_minmax_slopes(spin=spin, is_normalized=True)
-    fig = plot_spinorama(spin, graph_params, slopes, is_normalized=True)
+    slopes = compute_minmax_slopes(spin=spin, is_normalized=False)
+    fig = plot_spinorama(spin, graph_params, slopes, is_normalized=False)
     if fig is None:
         logger.error("plot_spinorama failed")
         return None
@@ -58,7 +58,6 @@ def display_spinorama(df, graph_params=plot_params_default):
 
 
 def display_spinorama_normalized(df, graph_params=plot_params_default):
-    print(df.keys())
     spin = df.get("CEA2034 Normalized_unmelted")
     if spin is None:
         spin_melted = df.get("CEA2034 Normalized")
@@ -172,7 +171,6 @@ def display_spl_vertical_normalized(df, graph_params=plot_params_default):
 
 
 def display_contour(df, direction, graph_params=contour_params_default):
-    # print('Display SPL: {} {}'.format(direction, df.keys()))
     if direction not in df:
         return None
     return plot_contour(df[direction], graph_params)
@@ -195,7 +193,6 @@ def display_contour_vertical_normalized(df, graph_params=contour_params_default)
 
 
 def display_contour_3d(df, direction, graph_params=contour_params_default):
-    # print('Display SPL: {} {}'.format(direction, df.keys()))
     if direction not in df:
         return None
     return plot_contour_3d(df[direction], graph_params)

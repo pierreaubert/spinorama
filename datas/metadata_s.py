@@ -521,7 +521,6 @@ speakers_info_s: SpeakerDatabase = {
             },
         },
     },
-
     "Sony SS-CS3": {
         "brand": "Sony",
         "model": "SS-CS3",

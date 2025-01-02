@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -595,6 +595,16 @@ def plot_spinorama_annotation(fig, spin, is_normalized):
         _, _, slope, sm = compute_slope_smoothness(spin, measurement, is_normalized=is_normalized)
         closest_freq = bisect.bisect_left(spin.Freq.to_numpy(), freq)
         spl = spin[measurement].iat[closest_freq]
+        if measurement == "On Axis":
+            res_spin = spin.loc[(spin.Freq>=1000) & (spin.Freq<5000)]
+            idx = res_spin['On Axis'].values.argmax()
+            freq = res_spin.Freq.to_numpy()[idx]
+            spl = res_spin['On Axis'].to_numpy()[idx]
+        elif measurement == "Listening Window":
+            res_spin = spin.loc[(spin.Freq>=4000) & (spin.Freq<10000)]
+            spl_on = res_spin['On Axis'].max()
+            if spl_on > spl+1.0:
+                ay -= int((spl_on-spl)*5)
         fig.add_annotation(
             x=math.log10(freq),
             y=spl,
