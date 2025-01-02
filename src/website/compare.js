@@ -22,7 +22,7 @@ import Plotly from 'plotly-dist-min';
 
 import { urlSite, flags_Screen } from './meta.js';
 import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
-import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setSurface } from './plot.js';
+import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setContour3D } from './plot.js';
 
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin
@@ -136,7 +136,7 @@ getMetadata()
                         measurement === 'SPL Horizontal Contour Normalized 3D' ||
                         measurement === 'SPL Vertical Contour Normalized 3D'
                     ) {
-                        graphsConfigs = setSurface(measurement, speakersName, graphs, windowWidth, windowHeight);
+                        graphsConfigs = setContour3D(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else if (
                         measurement === 'SPL Horizontal Globe' ||
                         measurement === 'SPL Vertical Globe' ||

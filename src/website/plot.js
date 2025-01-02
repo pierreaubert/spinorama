@@ -485,22 +485,22 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
                         layout.yaxis.range[0] +
                         'º, ' +
                         layout.yaxis.range[1] +
-                        'º]) v.s. Frequency (Hz [' +
+                        'º]) v.s. Frequency ([' +
                         freq_min +
-                        ', ' +
+                        'Hz, ' +
                         freq_max +
-                        ']).';
+                        'Hz]).';
                 } else {
                     title =
                         'SPL (dB [' +
                         layout.yaxis.range[0] +
                         ', ' +
                         layout.yaxis.range[1] +
-                        ']) v.s. Frequency (Hz [' +
+                        ']) v.s. Frequency ([' +
                         freq_min +
-                        ', ' +
+                        'Hz, ' +
                         freq_max +
-                        ']).';
+                        'Hz]).';
                 }
                 layout.xaxis.title.text = title;
                 layout.xaxis.title.standoff = 0;
@@ -1010,28 +1010,7 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
     const graphsConfigs = [];
     for (const i in speakerGraphs) {
         if (speakerGraphs[i]) {
-            for (const j in speakerGraphs[i].data) {
-                speakerGraphs[i].data[j].legendgroup = 'speaker' + i;
-                speakerGraphs[i].data[j].legendgrouptitle = { text: speakerNames[i] };
-            }
             let options = setGraphOptions([{ data: speakerGraphs[i].data, layout: speakerGraphs[i].layout }], width, height, 2);
-            options.layout.margin.t = graphMarginTop / 2;
-            if (speakerGraphs.length > 1) {
-                if (i === '0') {
-                    // remove the axis to have the 2 graphs closer together
-                    // options.layout.xaxis.visible = false;
-                    options.layout.showlegend = false;
-                    options.layout.margin.b -= 30;
-                    options.layout.margin.r += 20;
-                    options.data[0].showscale = false;
-                } else {
-                    options.layout.height += 140;
-                    options.layout.margin.r += 20;
-                    options.data[0].colorbar.orientation = 'h';
-                    options.data[0].colorbar.x = 0.5;
-                    options.data[0].colorbar.y = -0.4;
-                }
-            }
             // this shapes are not working in 3D thus removing them
             if (options.layout && options.layout?.shapes) {
                 options.layout.shapes = null;
@@ -1039,7 +1018,117 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
             graphsConfigs.push(options);
         }
     }
-    return graphsConfigs;
+    if (speakerGraphs.length <= 1) {
+        return graphsConfigs;
+    }
+
+    // merge the 2 graphs
+    let mergedConfig = {
+        data: [],
+        layout: structuredClone(graphsConfigs[0].layout),
+        config: structuredClone(graphsConfigs[0].config),
+    };
+    mergedConfig.layout.width = Math.min(600, window.innerWidth);
+    if (isDisplayCompact()) {
+        mergedConfig.layout.height = mergedConfig.layout.width + 300;
+        mergedConfig.layout.margin = {
+            t: 160, // double lines title + axis
+            r: 10, // colorbar horizontal
+            l: 10,
+            b: 140,
+        };
+    } else {
+        mergedConfig.layout.height = mergedConfig.layout.width + 240;
+        mergedConfig.layout.margin = {
+            t: 160, // double lines title + axis
+            r: 100, // colorbar
+        };
+    }
+    function split(title) {
+        const pos_for = title.indexOf(' for ');
+        const pos_measured = title.indexOf(' measured ');
+        const measurement = title.slice(0, pos_for);
+        const speaker = title.slice(pos_for + 5, pos_measured);
+        const reviewer = title.slice(pos_measured + 1);
+        return [measurement, speaker, reviewer];
+    }
+    const split0 = split(graphsConfigs[0].layout.title.text);
+    const split1 = split(graphsConfigs[1].layout.title.text);
+    const title = '(A) ' + split0[0] + ' ' + split0[1] + ' <br>v.s. (B) ' + split1[0] + ' ' + split1[1];
+    mergedConfig.layout.title = {
+        text: title,
+        font: { size: 14 },
+    };
+    for (const i in graphsConfigs) {
+        const config = graphsConfigs[i];
+        const offset = (parseInt(i) + 1).toString();
+        if (i !== '0') {
+            mergedConfig.layout['xaxis' + offset] = structuredClone(mergedConfig.layout.xaxis);
+            mergedConfig.layout['yaxis' + offset] = structuredClone(mergedConfig.layout.yaxis);
+        }
+        for (const j in config.data) {
+            let trace = structuredClone(config.data[j]);
+            if (i !== '0') {
+                trace['xaxis'] = 'x' + offset;
+                trace['yaxis'] = 'y' + offset;
+            }
+            if (trace?.colorbar) {
+                if (i === '0') {
+                    trace.colorbar.xref = 'paper';
+                    trace.colorbar.yref = 'paper';
+                    if (isDisplayCompact()) {
+                        trace.colorbar.orientation = 'h';
+                        trace.colorbar.x = 0.5;
+                        trace.colorbar.xanchor = 'center';
+                        trace.colorbar.y = -0.4;
+                        trace.colorbar.yanchor = 'bottom';
+                    } else {
+                        trace.colorbar.orientation = 'v';
+                        trace.colorbar.x = 1.25;
+                        trace.colorbar.xanchor = 'right';
+                        trace.colorbar.y = 0.5;
+                        trace.colorbar.yanchor = 'center';
+                    }
+                    trace.colorbar.len = 0.6;
+                    trace.colorbar.thickness = 15;
+                    trace.colorbar.title = {
+                        text: 'db (SPL)',
+                        side: 'bottom',
+                        font: { size: 10 },
+                    };
+                } else {
+                    trace.showscale = false;
+                }
+            }
+            mergedConfig.data.push(trace);
+        }
+    }
+    const range0 = graphsConfigs[0].layout.xaxis.range;
+    const range1 = graphsConfigs[1].layout.xaxis.range;
+    const range = [Math.min(range0[0], range1[0]), Math.max(range0[1], range1[1])];
+
+    mergedConfig.layout.xaxis.side = 'top';
+    mergedConfig.layout.xaxis.tick = 'outside';
+    mergedConfig.layout.xaxis.range = range;
+
+    mergedConfig.layout.xaxis2.side = 'bottom';
+    mergedConfig.layout.xaxis2.tick = 'outside';
+    mergedConfig.layout.xaxis2.range = range;
+    mergedConfig.layout.xaxis2['anchor'] = 'y2';
+
+    mergedConfig.layout.yaxis.tick = 'outside';
+    if (mergedConfig.layout.yaxis.title && mergedConfig.layout.yaxis.title.text) {
+        mergedConfig.layout.yaxis.title.text = 'Angle (A)';
+    }
+    mergedConfig.layout.yaxis['domain'] = [0.51, 1];
+
+    mergedConfig.layout.yaxis2.tick = 'outside';
+    if (mergedConfig.layout.yaxis2.title && mergedConfig.layout.yaxis2.title.text) {
+        mergedConfig.layout.yaxis2.title.text = 'Angle (B)';
+    }
+    mergedConfig.layout.yaxis2['domain'] = [0, 0.49];
+
+    return [mergedConfig];
 }
 
 export function setGlobe(measurement, speakerNames, speakerGraphs, width, height) {
@@ -1140,8 +1229,8 @@ export function setGlobe(measurement, speakerNames, speakerGraphs, width, height
     return graphsConfigs;
 }
 
-export function setSurface(measurement, speakerNames, speakerGraphs, width, height) {
-    // console.log('setSurface ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
+export function setContour3D(measurement, speakerNames, speakerGraphs, width, height) {
+    // console.log('setContour3D ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
     for (const i in speakerGraphs) {
         if (speakerGraphs[i]) {

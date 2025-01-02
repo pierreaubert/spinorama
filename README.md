@@ -58,8 +58,8 @@ The library support four different formats of data:
 3. Scanned data from a picture with [WebPlotDigitizer](https://automeris.io/WebPlotDigitizer/).
 4. Export in text form from [REW](https://www.roomeqwizard.com/)
 5. GLL data files are also (weakly) supported. If you want access to
-   the automation, then please drop an email. GLL viewer is a Windows
-   only application and the automation is based on Windows automation.
+   the automation, then please drop me an email. GLL viewer is a Windows
+   only application and the automation is based on Windows automation (PowerAutomate) which is not open source and does not allow to share easily the program.
 
 ## Computations
 
@@ -69,9 +69,8 @@ The library support four different formats of data:
 4. Compute various parameters defined in a paper from Olive (ref. below).
 5. It can generate an EQ to optimise the speaker (and get a better
    preference score also called Olive score) based on anechoic
-   data. Note: this is not yet a room correction software. EQ can be
-   PEQ based but it also can generate a solution for a hardware
-   graphical EQ.
+   data. Note: this is not yet a room correction software. EQ is a set of
+   PEQ but it also can generate a solution for a hardware graphical EQ.
 6. It can compute the effect of an EQ (IIR) on the spinorama.
 
 ## Website generation
@@ -105,9 +104,9 @@ ASR is a fantastic source of speakers data thanks to [amirm@](https://www.audios
 ## [ErinsAudioCorner _aka_ EAC](https://www.erinsaudiocorner.com/)
 
 Erin is a motivated person reviewing speakers and doing an outstanging
-jobs. He also has a [Youtube
+jobs. He has a [Youtube
 channel](https://youtube.com/c/ErinsAudioCorner). You can also
-[support him](https://www.erinsaudiocorner.com/contribute/).
+[support him](https://www.erinsaudiocorner.com/contribute/) via Patreon.
 
 ## [3D3A](https://www.princeton.edu/3D3A/) is a research organisation at [Princeton](https://www.princeton.edu).
 
@@ -139,7 +138,7 @@ Some papers related to finding the optimal IIR filters: I used a different algor
 
 ## Speakers manufacturers.
 
-- If you are a manufacturer of speakers, it would be great if you could provide spinorama datas. Send me an email pierre@spinorama.org.
+- If you are a manufacturer of speakers, it would be great if you could provide spinorama datas. Send me an email pierre(at)spinorama(dot)org.
 - Manufactures with good datas usually in speaker's manual:
   - Adam Audio
   - Arendal Sound
