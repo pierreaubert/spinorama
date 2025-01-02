@@ -1030,12 +1030,12 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
     };
     mergedConfig.layout.width = Math.min(600, window.innerWidth);
     if (isDisplayCompact()) {
-        mergedConfig.layout.height = mergedConfig.layout.width + 300;
+        mergedConfig.layout.height = mergedConfig.layout.width + 280;
         mergedConfig.layout.margin = {
             t: 160, // double lines title + axis
             r: 10, // colorbar horizontal
             l: 10,
-            b: 140,
+            b: 120,
         };
     } else {
         mergedConfig.layout.height = mergedConfig.layout.width + 240;
@@ -1082,14 +1082,15 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
                         trace.colorbar.xanchor = 'center';
                         trace.colorbar.y = -0.4;
                         trace.colorbar.yanchor = 'bottom';
+			trace.colorbar.len = 1.0;
                     } else {
                         trace.colorbar.orientation = 'v';
                         trace.colorbar.x = 1.25;
                         trace.colorbar.xanchor = 'right';
                         trace.colorbar.y = 0.5;
                         trace.colorbar.yanchor = 'center';
+			trace.colorbar.len = 0.6;
                     }
-                    trace.colorbar.len = 0.6;
                     trace.colorbar.thickness = 15;
                     trace.colorbar.title = {
                         text: 'db (SPL)',
