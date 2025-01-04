@@ -1,0 +1,24 @@
+---
+title: "Bibliography"
+---
+
+- <a
+              href="https://shop.cta.tech/products/standard-method-of-measurement-for-in-home-loudspeakers"
+              >ANSI/CTA-2034-A Standard Method of Measurement for In-Home
+              Loudspeakers</a
+            >.
+- <a
+              href="https://books.google.ch/books/about/Sound_Reproduction.html?id=tJ0uDwAAQBAJ&printsec=frontcover&source=kp_read_button&redir_esc=y#v=onepage&q&f=false"
+              >Sound Reproduction: The Acoustics and Psychoacoustics of
+              Loudspeakers and Rooms</a
+            >
+            By Floyd E. Toole
+- Standard Method of Measurement for In-Home Loudspeakers is available for free at <a href="https://www.cta.tech">CTA</a>
+- A Multiple Regression Model for Predicting Loudspeaker Preference Using Objective Measurements: Part II - Development of the Model by Sean E. Olive, AES Fellow. Convention paper 6190 from the <a href="https://www.aes.org">AES</a>.
+- Fast Template Matching. J.P.Lewis <a href="http://scribblethink.org/Work/nvisionInterface/vi95_lewis.pdf">pdf</a>
+- Farina, A. “Simultaneous Measurement of Impulse Response and Distortion with a Swept-Sine Technique,” Presented at the AES 108th Convention, Feb. 2000.
+- Hatziantoniou, P. D. and Mourjopoulos, J. N. “Generalized Fractional-Octave Smoothing of Audio and Acoustic Responses,” J. Audio Eng. Soc., 48(4):259&dash;280, 2000.
+- A. Mouchtaris, P. Reveliotis and C. Kyriakakis, "Inverse filter design for immersive audio rendering over loudspeakers," in IEEE Transactions on Multimedia, vol. 2, no. 2, pp. 77-87, June 2000,
+            doi: 10.1109/6046.84501
+- M. A. Poletti and P. D. Teal, "A Superfast Toeplitz Matrix Inversion Method for Single- and Multi-Channel Inverse Filters and Its Application to Room Equalization," in IEEE/ACM Transactions on Audio, Speech, and Language Processing, vol. 29, pp. 3144-3157,2021, doi: 10.1109/TASLP.2021.3120650.
+- Cecchi, Stefania &amp; Carini, Alberto &amp; Spors, Sascha. (2017). Room Response Equalization—A Review. Applied Sciences. 8. 16. 10.3390/app8010016.

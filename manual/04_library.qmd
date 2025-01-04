@@ -1,0 +1,232 @@
+---
+title: "Spinorama manual"
+date: 2025-01-04
+abstract: >
+  How to use the library step by step!
+---
+
+# How to use the library?
+
+## How to load the data?
+
+Start by loading some classical libraries:
+```{python}
+import numpy as np
+import pandas as pd
+import plotly as plt
+```
+
+Then some specific functions from Spinorama:
+
+```{python}
+from spinorama.load_spl_hv_txt import parse_graph_spl_hv_txt
+from spinorama.load import filter_graphs
+from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
+```
+
+### Loading a dataset in text format
+
+The parser expect to find 72 files in this directory:
+
+- name of the files matches *_H angle.txt for horizontal measurements with angle between -170 and 180 in 10 degrees increment
+- name of the files matches *_V angle.txt for vertical measurements with angle between -170 and 180 in 10 degrees increment
+
+```{python}
+speaker = 'Ascend Acoustics Sierra-2EX V2'
+dir = f'../datas/measurements/{speaker}/vendor'
+mformat='spl_hv_txt'
+
+# read horizontal and vertical data
+# spl_H and spl_V are dataframe
+_, spl_H = parse_graph_spl_hv_txt(dir, 'H')
+_, spl_V = parse_graph_spl_hv_txt(dir, 'V')
+
+# put them in a convenient dictionnary of dataframe
+df = filter_graphs(speaker, spl_H, spl_V, MEAN_MIN, MEAN_MAX, mformat=mformat, mdistance=1)
+```
+
+## Computing with the data
+
+### Computing the spinorama (CEA2034)
+
+```{python}
+from spinorama.compute_cea2034 import compute_cea2034
+# compute the spin
+spin = compute_cea2034(df['SPL Horizontal_unmelted'], df['SPL Vertical_unmelted'])
+```
+
+### Computing classical values for this speaker
+```{python}
+from spinorama.compute_estimates import estimates
+# compute the spin
+spin = compute_cea2034(df['SPL Horizontal_unmelted'], df['SPL Vertical_unmelted'])
+properties = estimates(spin, df['SPL Horizontal_unmelted'], df['SPL Vertical_unmelted'])
+print('Reference point (Hz) at which the SPL value dropped by 3 dB with respect to the average of the on-axis measurement between [{}, {}]: {:5.1f} Hz'.format(
+		 properties['ref_from'],
+		 properties['ref_to'],
+		 properties['ref_3dB'],
+))
+print('Directivity in degrees at which the SPL value dropped by 6 d with respect to the on-axis measurementB: {:5.1f} deg'.format(properties['dir_horizontal_p']))
+properties
+```
+
+### Compute the harmann/olive score
+
+#### Compute the PIR (Predicted In-Room Response)
+```{python}
+from spinorama.compute_cea2034 import estimated_inroom_hv
+pir = estimated_inroom_hv(df['SPL Horizontal_unmelted'], df['SPL Vertical_unmelted'])
+```
+
+#### Compute the PIR (Predicted In-Room Response)
+```{python}
+from spinorama.load import graph_melt, graph_unmelt
+from spinorama.compute_cea2034 import compute_cea2034, estimated_inroom_hv
+from spinorama.compute_scores import speaker_pref_rating
+spin = compute_cea2034(df['SPL Horizontal_unmelted'], df['SPL Vertical_unmelted'])
+pir = estimated_inroom_hv(df['SPL Horizontal_unmelted'], df['SPL Vertical_unmelted'])
+scores = speaker_pref_rating(graph_melt(spin), graph_melt(pir), rounded=True)
+scores
+```
+
+
+## Plotting the data
+
+Example of the parameters you can change to adapt the layout to your liking.
+See plotly documentation for all the options
+
+```{python}
+my_layout = dict(
+    width=700,
+    height=400,
+    title=dict(
+        x=0.5,
+        y=1.0,
+        xanchor="center",
+        yanchor="top",
+        text=speaker,
+        font=dict(
+            size=18,
+        ),
+    ),
+    legend=dict(
+        x=1.2,
+        y=1,
+        xanchor="center",
+        orientation="v",
+        font=dict(
+            size=10,
+        ),
+    ),
+    font=dict(
+        size=10
+    ),
+    margin=dict(
+	l=0,
+        r=0,
+        b=30,
+        t=30,
+        pad=4
+    ),
+)
+```
+
+All the plot functions are in:
+```{python}
+import spinorama.plot as plot
+```
+
+### CEA2034 plot (aka spinorama plot)
+```{python}
+plot_spin = plot.plot_spinorama(spin, plot.plot_params_default)
+plot_spin.update_layout(my_layout)
+plot_spin
+```
+
+### Normalized CEA2034 plot
+```{python}
+plot_spin = plot.plot_spinorama_normalized(spin, plot.plot_params_default)
+plot_spin.update_layout(my_layout)
+plot_spin
+```
+
+### On Axis plot
+```{python}
+plot_onaxis = plot.plot_graph(df['On Axis_unmelted'], plot.plot_params_default)
+plot_onaxis.update_layout(my_layout)
+plot_onaxis
+```
+If you also want to see regression lines:
+```{python}
+plot_onaxis = plot.plot_graph_flat(df['On Axis_unmelted'], "On Axis", plot.plot_params_default)
+plot_onaxis.update_layout(my_layout)
+plot_onaxis
+```
+
+### Early reflection plot
+```{python}
+plot_er = plot.plot_graph(df['Early Reflections_unmelted'], plot.plot_params_default)
+plot_er.update_layout(my_layout)
+plot_er
+```
+
+### Predicted In-Room Response (aka PIR) plot
+```{python}
+plot_pir = plot.plot_graph_regression(
+  df['Estimated In-Room Response_unmelted'],
+  'Estimated In-Room Response',
+  plot.plot_params_default
+)
+plot_pir.update_layout(my_layout)
+plot_pir
+```
+
+### Directivity plots
+
+There are various ways to represent directivity plots:
+
+#### Contour plots
+
+```{python}
+plot_contour_h = plot.plot_contour(df['SPL Horizontal_unmelted'], plot.contour_params_default)
+plot_contour_h.update_layout(my_layout)
+plot_contour_h
+```
+
+The same one, normalized to on axis:
+
+```{python}
+plot_contour_h = plot.plot_contour(df['SPL Horizontal_normalized_unmelted'], plot.contour_params_default)
+plot_contour_h.update_layout(my_layout)
+plot_contour_h
+```
+
+#### 3D Contour plots
+
+```{python}
+plot_contour_h = plot.plot_contour_3d(df['SPL Horizontal_unmelted'], plot.contour_params_default)
+plot_contour_h.update_layout(my_layout)
+plot_contour_h
+```
+
+The same one, normalized to on axis:
+
+```{python}
+plot_contour_h = plot.plot_contour_3d(df['SPL Horizontal_normalized_unmelted'], plot.contour_params_default)
+plot_contour_h.update_layout(my_layout)
+plot_contour_h
+```
+
+#### Radar plots
+
+```{python}
+plot_contour_h = plot.plot_radar(df['SPL Horizontal_unmelted'], plot.radar_params_default)
+plot_contour_h.update_layout(my_layout)
+plot_contour_h
+```
+
+```{python}
+plot_contour_h = plot.plot_radar(df['SPL Vertical_unmelted'], plot.radar_params_default)
+plot_contour_h.update_layout(my_layout)
+plot_contour_h
+```
