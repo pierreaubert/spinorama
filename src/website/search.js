@@ -234,7 +234,7 @@ export function sortMetadata2(metadata, sorter, results) {
             items.sort((a, b) => {
                 const sa = score(a);
                 const sb = score(b);
-                if (sa == sb) {
+                if (sa === sb) {
                     return a < b;
                 }
                 return sa - sb;
@@ -243,7 +243,7 @@ export function sortMetadata2(metadata, sorter, results) {
             items.sort((a, b) => {
                 const sa = score(a);
                 const sb = score(b);
-                if (sa == sb) {
+                if (sa === sb) {
                     return b < a;
                 }
                 return sb - sa;
@@ -400,11 +400,6 @@ export function sortMetadata2(metadata, sorter, results) {
             return spk.measurements[def].specifications.size.height;
         }
         return 0.0;
-    }
-
-    function getBrand(key) {
-        const spk = metadata.get(key);
-        return spk.brand + ' ' + spk.model;
     }
 
     function getBrand(key) {

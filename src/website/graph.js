@@ -42,5 +42,5 @@ export function displayGraph(measurementName, jsonName, divName, graphSpec) {
         }
     }
 
-    run();
+    return run();
 }

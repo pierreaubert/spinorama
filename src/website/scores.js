@@ -113,7 +113,7 @@ function contextFragment(context, index) {
     }
     let class1 = 'cell';
     let class2 = 'cell is-col-span-2';
-    if (index % 2 == 0) {
+    if (index % 2 === 0) {
         class1 += ' has-background-light';
         class2 += ' has-background-light';
     }

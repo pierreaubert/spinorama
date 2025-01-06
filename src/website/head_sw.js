@@ -18,7 +18,7 @@ function cleanupCache() {
         // not correct
         if (matchOldJS(name)) {
             console.debug('cleanup caches for entry: ' + name);
-            caches.delete(name);
+            return caches.delete(name);
         }
     });
 }
@@ -28,7 +28,7 @@ if ('serviceWorker' in navigator) {
 
     wb.addEventListener('install', (event) => {
         console.log('sw install');
-        self.skipWaiting();
+        const promise = self.skipWaiting();
         cleanupCache();
     });
 

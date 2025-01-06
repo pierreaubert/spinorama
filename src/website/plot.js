@@ -124,19 +124,15 @@ const fontSizeH6 = 9;
 export function isDisplayVertical() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
-    if (windowWidth <= windowHeight) {
-        return true;
-    }
-    return false;
+    return windowWidth <= windowHeight;
+
 }
 
 export function isDisplayCompact() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
-    if (windowWidth < graphSmall || windowHeight < graphSmall) {
-        return true;
-    }
-    return false;
+    return windowWidth < graphSmall || windowHeight < graphSmall;
+
 }
 
 export function computeDims(windowWidth, windowHeight, isVertical, isCompact, nbGraphs) {
@@ -450,7 +446,7 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
                     opacity: 0.2,
                     line: { width: 2 },
                 };
-                if (i == 0) {
+                if (i === 0) {
                     shape.label = {
                         text: title,
                         font: { size: fontSizeH5, color: 'green' },
@@ -465,7 +461,7 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
     }
 
     function computeXaxis() {
-        if (layout?.axis && layout.xaxis.title) {
+        if (layout.axis && layout.xaxis.title) {
             layout.xaxis.title.text = 'SPL (dB) v.s. Frequency (Hz)';
             layout.xaxis.title.font = {
                 size: fontSizeH6,
@@ -756,9 +752,9 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
             const start = 0.04;
             const len = 0.2;
             const gap = 0.05;
-            layout.polar4.domain.y = [start, start + len * 1];
+            layout.polar4.domain.y = [start, start + len ];
             layout.polar3.domain.y = [start + len * 2 + gap * 2, start + len * 3 + gap * 2];
-            layout.polar2.domain.y = [start + len * 1 + gap, start + len * 2 + gap];
+            layout.polar2.domain.y = [start + len + gap, start + len * 2 + gap];
             layout.polar.domain.y = [start + len * 3 + gap * 3, start + len * 4 + gap * 3];
             // move legend up
             layout.legend.x = 0.5;
@@ -845,16 +841,16 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
                 datas[k].colorbar.lenmode = 'fraction';
                 datas[k].colorbar.thickness = 15;
                 datas[k].colorbar.thicknessmode = 'pixels';
-                (datas[k].colorbar.tickfont = {
-                    size: fontSizeH6,
-                }),
-                    (datas[k].colorbar.title = {
-                        text: 'dB (SPL)',
-                        font: {
-                            size: fontSizeH5,
+                datas[k].colorbar.tickfont = {
+                    "size": fontSizeH6,
+                };
+                datas[k].colorbar.title = {
+                        "text": 'dB (SPL)',
+                        "font": {
+                            "size": fontSizeH5,
                         },
-                        side: 'bottom',
-                    });
+                        "side": 'bottom',
+                };
             }
         }
     }
@@ -947,10 +943,10 @@ export function setGraph(measurement, speakerNames, speakerGraphs, width, height
                 if (
                     speakerGraphs.length > 1 &&
                     name != null &&
-                    (name == 'Band ±3dB' ||
-                        name == 'Band ±1.5dB' ||
-                        name == 'Midrange Band +3dB' ||
-                        name == 'Midrange Band -3dB')
+                    (name === 'Band ±3dB' ||
+                        name === 'Band ±1.5dB' ||
+                        name === 'Midrange Band +3dB' ||
+                        name === 'Midrange Band -3dB')
                 ) {
                     speakerGraphs[i].data[trace].visible = 'legendonly';
                 }
@@ -1220,7 +1216,7 @@ export function setGlobe(measurement, speakerNames, speakerGraphs, width, height
                 height,
                 speakerGraphs.length
             );
-            if (speakerGraphs.length > 1 && i == 0) {
+            if (speakerGraphs.length > 1 && i === 0) {
                 options.layout.margin.l += 60;
                 options.layout.margin.r += 60;
             }

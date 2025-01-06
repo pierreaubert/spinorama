@@ -77,7 +77,7 @@ getMetadata()
                         ) {
                             graphOptions = setGraph(measurement, currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (measurement === 'SPL Horizontal Radar' || measurement === 'SPL Vertical Radar') {
-                            graphOptions = setRadar(currentNames, currentGraphs, windowWidth, windowHeight);
+                            graphOptions = setRadar(measurement, currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (
                             measurement === 'SPL Horizontal Contour' ||
                             measurement === 'SPL Vertical Contour' ||
@@ -123,7 +123,7 @@ getMetadata()
                     return null;
                 });
             }
-            run();
+            return run();
         }
 
         function buildInitSpeakers(speakers) {

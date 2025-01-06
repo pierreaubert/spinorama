@@ -184,7 +184,8 @@ getMetadata()
                     return null;
                 });
             }
-            run();
+
+            return run();
         }
 
         function buildInitSpeakers(speakers, count) {
@@ -353,12 +354,12 @@ getMetadata()
                 return;
             }
             console.log('DEBUG: resize ' + event.name);
-            if (graphsConfigs.length == 1) {
+            if (graphsConfigs.length === 1) {
                 Plotly.Plots.resize('plot0');
-            } else if (graphsConfigs.length == 2) {
+            } else if (graphsConfigs.length === 2) {
                 Plotly.Plots.resize('plot0');
                 Plotly.Plots.resize('plot1');
-            } else if (graphsConfigs.length == 3) {
+            } else if (graphsConfigs.length === 3) {
                 Plotly.Plots.resize('plot0');
                 Plotly.Plots.resize('plot1');
                 Plotly.Plots.resize('plot2');

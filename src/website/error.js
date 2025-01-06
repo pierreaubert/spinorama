@@ -10,7 +10,7 @@ sleep(5000).then(() => {
     const keywords = params[2];
     const counter = document.getElementById('speakers').children.length;
     // if no speaker displayed and no keyword
-    if (counter == 0 && keywords === '') {
+    if (counter === 0 && keywords === '') {
         const alert = document.getElementById('alert');
         alert.classList.remove('hidden');
         const debug = document.getElementById('alertdebug');

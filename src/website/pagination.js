@@ -100,7 +100,7 @@ export function pagination(numberSpeakers) {
         html += '</ul>';
     } else if (maxPage - currentPage <= 3) {
         let disabled = '';
-        if (currentPage == maxPage) {
+        if (currentPage === maxPage) {
             disabled = ' is-disabled';
         }
         html += '<a href="' + urlChangePage(url, prevPage) + '" class="pagination-previous">Prev</a>';
