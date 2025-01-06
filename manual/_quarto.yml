@@ -1,19 +1,6 @@
-author:
-  - name: "Pierre F. Aubert"
-    id: pfa
-    email: pierre@spinorama.org
-
-copyright:
-  holder: Pierre F. Aubert
-  year: 2020-2025
-
-funding: "The author received no specific funding for this work."
-
 project:
   type: website
-  output-dir: _site
-  resources:
-    - "/_redirects"
+  output-dir: ../docs/docs
 
 website:
   title: "Spinorama"

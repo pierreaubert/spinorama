@@ -2,23 +2,32 @@
 title: "Bibliography"
 ---
 
-- <a
-              href="https://shop.cta.tech/products/standard-method-of-measurement-for-in-home-loudspeakers"
-              >ANSI/CTA-2034-A Standard Method of Measurement for In-Home
-              Loudspeakers</a
-            >.
-- <a
-              href="https://books.google.ch/books/about/Sound_Reproduction.html?id=tJ0uDwAAQBAJ&printsec=frontcover&source=kp_read_button&redir_esc=y#v=onepage&q&f=false"
-              >Sound Reproduction: The Acoustics and Psychoacoustics of
-              Loudspeakers and Rooms</a
-            >
-            By Floyd E. Toole
-- Standard Method of Measurement for In-Home Loudspeakers is available for free at <a href="https://www.cta.tech">CTA</a>
-- A Multiple Regression Model for Predicting Loudspeaker Preference Using Objective Measurements: Part II - Development of the Model by Sean E. Olive, AES Fellow. Convention paper 6190 from the <a href="https://www.aes.org">AES</a>.
-- Fast Template Matching. J.P.Lewis <a href="http://scribblethink.org/Work/nvisionInterface/vi95_lewis.pdf">pdf</a>
+- [Sound Reproduction: The Acoustics and Psychoacoustics of Loudspeakers and Rooms](https://books.google.ch/books/about/Sound_Reproduction.html?id=tJ0uDwAAQBAJ&printsec=frontcover&source=kp_read_button&redir_esc=y#v=onepage&q&f=false) By Floyd E. Toole
+- Standard Method of Measurement for In-Home Loudspeakers is available for free at [CTA](https://www.cta.tech)
+
+- A Multiple Regression Model for Predicting Loudspeaker Preference Using Objective Measurements: Part II - Development of the Model by Sean E. Olive, AES Fellow. Convention paper 6190 from the [AES](https://www.aes.org).
+- Fast Template Matching. J.P.Lewis [pdf](http://scribblethink.org/Work/nvisionInterface/vi95_lewis.pdf)
+
 - Farina, A. “Simultaneous Measurement of Impulse Response and Distortion with a Swept-Sine Technique,” Presented at the AES 108th Convention, Feb. 2000.
-- Hatziantoniou, P. D. and Mourjopoulos, J. N. “Generalized Fractional-Octave Smoothing of Audio and Acoustic Responses,” J. Audio Eng. Soc., 48(4):259&dash;280, 2000.
-- A. Mouchtaris, P. Reveliotis and C. Kyriakakis, "Inverse filter design for immersive audio rendering over loudspeakers," in IEEE Transactions on Multimedia, vol. 2, no. 2, pp. 77-87, June 2000,
-            doi: 10.1109/6046.84501
-- M. A. Poletti and P. D. Teal, "A Superfast Toeplitz Matrix Inversion Method for Single- and Multi-Channel Inverse Filters and Its Application to Room Equalization," in IEEE/ACM Transactions on Audio, Speech, and Language Processing, vol. 29, pp. 3144-3157,2021, doi: 10.1109/TASLP.2021.3120650.
-- Cecchi, Stefania &amp; Carini, Alberto &amp; Spors, Sascha. (2017). Room Response Equalization—A Review. Applied Sciences. 8. 16. 10.3390/app8010016.
+- Hatziantoniou, P. D. and Mourjopoulos, J. N. “Generalized Fractional-Octave Smoothing of Audio and Acoustic Responses,” J. Audio Eng. Soc., 48(4):259–280, 2000.
+
+- Metrics for Constant Directivity ([abstract](https://www.princeton.edu/3D3A/Publications/Sridhar_AES140_CDMetrics.html), [paper](https://www.princeton.edu/3D3A/Publications/Sridhar_AES140_CDMetrics.pdf), [poster](https://www.princeton.edu/3D3A/Publications/Sridhar_AES140_CDMetrics-poster.pdf))
+  - Authors: Sridhar, R., Tylka, J. G., Choueiri, E. Y.
+  - Publication: 140th Convention of the Audio Engineering Society (AES 140)
+  - Date: May 26, 2016
+
+- A Database of Loudspeaker Polar Radiation Measurements ([abstract](https://www.princeton.edu/3D3A/Publications/Tylka_AES139_3D3ADirectivity.html), )
+
+- On the Calculation of Full and Partial Directivity Indices ([abstract](https://www.princeton.edu/3D3A/Publications/Tylka_3D3A_DICalculation.html))
+  - Authors: Tylka, J. G., Choueiri, E. Y.
+  - Publication: 3D3A Lab Technical Report #1
+  - Date: November 16, 2014
+
+Some papers related to finding the optimal IIR filters: I used a different algorithm but that's interesting to read.
+
+- Ramos, G., and Lopez, J. (2006). “Filter design method for loudspeaker equalization based on IIR parametric filters,” J. Audio Eng. Soc. 54(12), 1162–1178.
+
+- Vairetti, Giacomo & Sena, Enzo & Catrysse, Michael & Jensen, Søren & Moonen, Marc & Waterschoot, Toon. (2018). An Automatic Design Procedure for Low-order IIR Parametric Equalizers. Journal of the Audio Engineering Society. 66. 935-952. 10.17743/jaes.2018.0049.
+
+- Equalization of loudspeaker response using balanced model truncation, Xiansheng Li, Zhibo Cai, Chengshi Zheng, et al.
+

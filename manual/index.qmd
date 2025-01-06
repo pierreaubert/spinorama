@@ -1,6 +1,17 @@
 ---
 title: "Spinorama.org"
 
+author:
+  - name: "Pierre F. Aubert"
+    id: pfa
+    email: pierre@spinorama.org
+
+copyright:
+  holder: Pierre F. Aubert
+  year: 2020-2025
+
+funding: "The author received no specific funding for this work."
+
 date: 2025-01-02
 
 abstract: >
