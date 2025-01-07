@@ -1,0 +1,14 @@
+EQ for Dynavoice Definition DC-5 computed from Misc data
+Preference Score 3.91 with EQ 5.74
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-01-07-17:35:37
+
+Preamp: -2.2 dB
+
+Filter  1: ON PK Fc    58 Hz Gain +3.00 dB Q 1.04
+Filter  2: ON PK Fc   121 Hz Gain -4.43 dB Q 1.52
+Filter  3: ON PK Fc   211 Hz Gain -1.25 dB Q 0.74
+Filter  4: ON PK Fc   504 Hz Gain +2.84 dB Q 2.97
+Filter  5: ON PK Fc   976 Hz Gain -2.89 dB Q 2.18
+Filter  6: ON PK Fc  1046 Hz Gain +2.76 dB Q 3.00
+Filter  7: ON PK Fc 12736 Hz Gain -2.67 dB Q 0.48

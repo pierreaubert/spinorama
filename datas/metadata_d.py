@@ -2083,4 +2083,35 @@ speakers_info_d: SpeakerDatabase = {
             },
         },
     },
+    "Dynavoice Definition DC-5": {
+        "brand": "Dynavoice",
+        "model": "Definition DC-5",
+        "type": "passive",
+        "price": "225",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+		"quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/dynavoice-definition-dc-5-spinorama-measurements-cta-2034.59794/#post-2188105",
+                },
+                "review_published": "20250106",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 8,
+                    "size": {
+                        "height": 500,
+                        "width": 185,
+                        "depth": 300,
+                    },
+                    "weight": 9.8,
+                },
+            },
+        },
+    },
+
 }
