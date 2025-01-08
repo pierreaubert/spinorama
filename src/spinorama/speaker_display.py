@@ -29,7 +29,7 @@ from spinorama.plot import (
     radar_params_default,
     plot_spinorama,
     plot_graph,
-    plot_graph_flat,
+    #     plot_graph_flat,
     plot_graph_spl,
     plot_graph_regression,
     plot_contour,
@@ -87,6 +87,12 @@ def display_reflection_early(df, graph_params=plot_params_default):
 
 
 def display_onaxis(df, graph_params=plot_params_default):
+    spin = df.get("CEA2034_unmelted")
+    if spin is None:
+        spin_melted = df.get("CEA2034")
+        if spin_melted is not None:
+            spin = graph_unmelt(spin_melted)
+
     onaxis = df.get("CEA2034_unmelted")
     if onaxis is None:
         onaxis = df.get("On Axis_unmelted")
@@ -99,7 +105,10 @@ def display_onaxis(df, graph_params=plot_params_default):
         logger.debug("Display On Axis failed, known keys are (%s)", ", ".join(onaxis.keys()))
         return None
 
-    return plot_graph_flat(onaxis, "On Axis", graph_params)
+    slopes = None
+    if spin is not None:
+        slopes = compute_minmax_slopes(spin, is_normalized=False)
+    return plot_graph_regression(df, "On Axis", graph_params, slopes)
 
 
 def display_inroom(df, graph_params=plot_params_default):

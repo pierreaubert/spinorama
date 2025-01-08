@@ -138,40 +138,38 @@ UNIFORM_COLORS: dict[str, str] = {
     "15000 Hz": colors[5],
 }
 
-label_short = {}
-
-# label_short = {
-#     # regression
-#     "Linear Regression": "Reg",
-#     "Band ±1.5dB": "±1.5dB",
-#     "Band ±3dB": "±3dB",
-#     # PIR
-#     "Estimated In-Room Response": "PIR",
-#     # spin
-#     "On Axis": "ON",
-#     "Listening Window": "LW",
-#     "Early Reflections": "ER",
-#     "Sound Power": "SP",
-#     "Early Reflections DI": "ERDI",
-#     "Sound Power DI": "SPDI",
-#     # reflections
-#     "Ceiling Bounce": "CB",
-#     "Floor Bounce": "FB",
-#     "Front Wall Bounce": "FWB",
-#     "Rear Wall Bounce": "RWB",
-#     "Side Wall Bounce": "SWB",
-#     #
-#     "Ceiling Reflection": "CR",
-#     "Floor Reflection": "FR",
-#     #
-#     "Front": "F",
-#     "Rear": "R",
-#     "Side": "S",
-#     #
-#     "Total Early Reflection": "TER",
-#     "Total Horizontal Reflection": "THR",
-#     "Total Vertical Reflection": "TVR",
-# }
+label_short = {
+    # regression
+    "Linear Regression": "Reg",
+    "Band ±1.5dB": "±1.5dB",
+    "Band ±3dB": "±3dB",
+    # PIR
+    "Estimated In-Room Response": "PIR",
+    # spin
+    "On Axis": "ON",
+    "Listening Window": "LW",
+    "Early Reflections": "ER",
+    "Sound Power": "SP",
+    "Early Reflections DI": "ERDI",
+    "Sound Power DI": "SPDI",
+    # reflections
+    "Ceiling Bounce": "CB",
+    "Floor Bounce": "FB",
+    "Front Wall Bounce": "FWB",
+    "Rear Wall Bounce": "RWB",
+    "Side Wall Bounce": "SWB",
+    #
+    "Ceiling Reflection": "CR",
+    "Floor Reflection": "FR",
+    #
+    "Front": "F",
+    "Rear": "R",
+    "Side": "S",
+    #
+    "Total Early Reflection": "TER",
+    "Total Horizontal Reflection": "THR",
+    "Total Vertical Reflection": "TVR",
+}
 
 
 legend_rank = {
@@ -485,7 +483,7 @@ def plot_spinorama_traces(
             x=spin.Freq,
             y=spin[measurement],
             marker_color=UNIFORM_COLORS.get(measurement, "black"),
-            name=label_short.get(measurement, measurement),
+            name=measurement,
             hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
         first_spl, last_spl, _, _ = compute_slope_smoothness(
@@ -521,10 +519,8 @@ def plot_spinorama_traces(
                 )
             )
 
-        if layout == "compact":
-            trace.name = label_short.get(measurement, measurement)
-        else:
-            trace.name = measurement
+        trace.name = measurement
+        if layout != "compact":
             trace.legendgroup = "measurements"
             trace.legendgrouptitle = {"text": "Measurements"}
         traces.append(trace)
@@ -538,6 +534,7 @@ def plot_spinorama_traces(
             x=spin.Freq,
             y=spin[measurement],
             marker_color=UNIFORM_COLORS.get(measurement, "black"),
+            name=measurement,
             hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
         first_spl, last_spl, _, _ = compute_slope_smoothness(
@@ -571,10 +568,8 @@ def plot_spinorama_traces(
                     mode="text",
                 )
             )
-        if layout == "compact":
-            trace.name = label_short.get(measurement, measurement)
-        else:
-            trace.name = measurement
+        trace.name = measurement
+        if layout != "compact":
             trace.legendgroup = "directivity"
             trace.legendgrouptitle = {"text": "Directivity"}
         traces_di.append(trace)
@@ -582,29 +577,45 @@ def plot_spinorama_traces(
 
 
 def plot_spinorama_annotation(fig, spin, is_normalized):
-    for freq, measurement, yref, ay, xanchor, yanchor in (
+    _graph_param = (
         (2000, "On Axis", "y", -20, "right", "bottom"),
-        (10000, "Listening Window", "y", -20, "right", "bottom"),
+        (16000, "Listening Window", "y", -20, "right", "bottom"),
         (10000, "Early Reflections", "y", 20, "right", "top"),
         (10000, "Sound Power", "y", 20, "right", "top"),
         (10000, "Early Reflections DI", "y2", 20, "right", "top"),
         (10000, "Sound Power DI", "y2", -20, "right", "bottom"),
-    ):
+    )
+
+    for freq_initial, measurement, yref, ay_initial, xanchor, yanchor in _graph_param:
+        ay = ay_initial
+        freq = freq_initial
         if measurement not in spin:
             continue
         _, _, slope, sm = compute_slope_smoothness(spin, measurement, is_normalized=is_normalized)
         closest_freq = bisect.bisect_left(spin.Freq.to_numpy(), freq)
-        spl = spin[measurement].iat[closest_freq]
+        curve = spin[measurement].to_numpy()
+        spl = curve[closest_freq]
         if measurement == "On Axis":
-            res_spin = spin.loc[(spin.Freq>=1000) & (spin.Freq<5000)]
-            idx = res_spin['On Axis'].values.argmax()
+            res_spin = spin.loc[(spin.Freq >= 1000) & (spin.Freq < 5000)]
+            on = res_spin["On Axis"].to_numpy()
+            idx = on.argmax()
+            spl = on[idx]
             freq = res_spin.Freq.to_numpy()[idx]
-            spl = res_spin['On Axis'].to_numpy()[idx]
         elif measurement == "Listening Window":
-            res_spin = spin.loc[(spin.Freq>=4000) & (spin.Freq<10000)]
-            spl_on = res_spin['On Axis'].max()
-            if spl_on > spl+1.0:
-                ay -= int((spl_on-spl)*5)
+            res_spin = spin.loc[(spin.Freq >= 8000) & (spin.Freq < 16000)]
+            lw = res_spin["Listening Window"].to_numpy()
+            idx = lw.argmax()
+            spl = lw[idx]
+            freq = res_spin.Freq.to_numpy()[idx]
+            spl_on = res_spin["On Axis"].to_numpy()[idx]
+            if not is_normalized:
+                print(
+                    "freq={} spl_on={} spl_lw={} offset={}".format(
+                        freq, spl_on, spl, (spl_on - spl) * 5
+                    )
+                )
+            ay -= int((spl_on - spl) * 5)
+        # print("{:20s} {:5.0f}Hz voffset {}".format(measurement, freq, ay))
         fig.add_annotation(
             x=math.log10(freq),
             y=spl,
@@ -661,7 +672,7 @@ def plot_spinorama(spin, params, minmax_slopes, is_normalized):
     fig.update_yaxes(generate_yaxis_spl(t_min, t_max, 5))
     fig.update_yaxes(generate_yaxis_di(di_min, di_max, 5), secondary_y=True)
 
-    fig = plot_spinorama_annotation(fig, spin, False)
+    fig = plot_spinorama_annotation(fig, spin, is_normalized)
 
     fig.update_layout(common_layout(params))
     return fig
@@ -677,9 +688,8 @@ def plot_graph(df, params):
                 y=df[measurement],
                 hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
             )
-            if layout == "compact":
-                trace.name = label_short.get(measurement, measurement)
-            else:
+            trace.name = measurement
+            if layout != "compact":
                 trace.name = measurement
                 trace.legendgroup = "measurements"
                 trace.legendgrouptitle = {"text": "Measurements"}
@@ -824,10 +834,8 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
         opacity=1,
         hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
     )
-    if layout == "compact":
-        trace.name = label_short.get(measurement, measurement)
-    else:
-        trace.name = measurement
+    trace.name = measurement
+    if layout != "compact":
         trace.legendgroup = "measurements"
         trace.legendgrouptitle = {"text": "Measurements"}
     traces.append(trace)
@@ -843,7 +851,7 @@ def plot_graph_flat_traces(df, measurement, params):
 
 
 def plot_graph_regression_traces(df, measurement, params):
-    restricted_df = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
+    restricted_df = df.loc[(df.Freq >= SLOPE_MIN_FREQ) & (df.Freq <= SLOPE_MAX_FREQ)]
     slope, intercept, _, _, _ = stats.linregress(
         x=np.log10(restricted_df["Freq"]), y=restricted_df[measurement]
     )
@@ -869,11 +877,14 @@ def plot_graph_flat(df, measurement, params):
 def plot_graph_regression(df, measurement, params, minmax_slopes):
     fig = go.Figure()
 
-    pir = df["Estimated In-Room Response_unmelted"]
-    fig.add_traces(plot_graph_regression_traces(pir, measurement, params))
+    measurement_unmelted = "{}_unmelted".format(measurement)
+
+    if measurement_unmelted in df:
+        curve = df["{}_unmelted".format(measurement)]
+        fig.add_traces(plot_graph_regression_traces(curve, measurement, params))
 
     if (
-        "Estimated In-Room Response" in measurement
+        ("Estimated In-Room Response" in measurement or "Sound Power" in measurement)
         and "CEA2034 Normalized_unmelted" in df
         and minmax_slopes is not None
     ):
@@ -886,9 +897,9 @@ def plot_graph_regression(df, measurement, params, minmax_slopes):
         first_freq = restricted_freq[0]
         last_freq = restricted_freq[-1]
         first_spl, _, _, _ = compute_slope_smoothness(
-            data_frame=pir, measurement=measurement, is_normalized=True
+            data_frame=curve, measurement=measurement, is_normalized=True
         )
-        slope_min, slope_max = minmax_slopes["Sound Power"]
+        slope_min, slope_max = minmax_slopes[measurement]
         spl_min = slope_min * math.log2(last_freq / first_freq)
         spl_max = slope_max * math.log2(last_freq / first_freq)
         x = [first_freq, last_freq, last_freq, first_freq, first_freq]
@@ -899,7 +910,7 @@ def plot_graph_regression(df, measurement, params, minmax_slopes):
                 y=y,
                 fill="toself",
                 opacity=0.5,
-                name="recommended PIR zone",
+                name="recommended {} zone".format(label_short.get(measurement, "???")),
                 fillcolor="#FF5C00",  # neon orange
                 mode="text",
             )
@@ -917,8 +928,8 @@ def plot_graph_regression(df, measurement, params, minmax_slopes):
 T = TypeVar("T")
 
 
-def flatten(l: list[list[T | None]]) -> list[T | None]:
-    return list(itertools.chain.from_iterable(l))
+def flatten(the_list: list[list[T | None]]) -> list[T | None]:
+    return list(itertools.chain.from_iterable(the_list))
 
 
 def plot_contour(spl, params):

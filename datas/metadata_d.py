@@ -2095,7 +2095,7 @@ speakers_info_d: SpeakerDatabase = {
             "misc-ageve": {
                 "origin": "Misc",
                 "format": "spl_hv_txt",
-		"quality": "low",
+                "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/dynavoice-definition-dc-5-spinorama-measurements-cta-2034.59794/#post-2188105",
                 },
@@ -2113,5 +2113,4 @@ speakers_info_d: SpeakerDatabase = {
             },
         },
     },
-
 }

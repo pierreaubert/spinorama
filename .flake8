@@ -1,0 +1,5 @@
+[flake8]
+extend-ignore = E203
+exclude = .git,__pycache__,docs,build,dist,venv,data,datas
+max-complexity = 25
+max-line-length = 100
