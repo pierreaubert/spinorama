@@ -44,7 +44,7 @@ def process(speaker: str, metadata: dict):
             best_score = new_score
             best_eq = eqname
     if best_eq is not None:
-        meta = metadata.get(speaker_name, None)
+        meta = metadata.get(speaker_name)
         if meta is None:
             print("no metadata for {}".format(speaker_name))
             return
