@@ -798,6 +798,39 @@ speakers_info_r: SpeakerDatabase = {
             },
         },
     },
+    "RCF NXL 44-A MK2": {
+        "brand": "RCF",
+        "model": "NXL 44-A MK2",
+        "type": "active",
+        "price": "1200",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x25",
+        "measurements": {
+            "vendor-pattern-100x25": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20250109",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 25,
+                    },
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 1080,
+                        "width": 297,
+                        "depth": 373,
+                    },
+                    "weight": 33.4,
+                },
+            },
+        },
+    },
     "Realistic MC-1000": {
         "brand": "Realistic",
         "model": "MC-1000",

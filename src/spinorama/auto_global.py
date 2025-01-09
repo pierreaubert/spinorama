@@ -357,7 +357,7 @@ class GlobalOptimizer(object):
             for i in range(l):
                 _, f, _, g, _ = self._x2params(x, i)
                 # ko if between -min and +min
-                if (g > 0.0 and (g < self.min_db) or (g > self.max_db)) or (
+                if ((g > 0.0 and (g < self.min_db)) or (g > self.max_db)) or (
                     g < 0.0 and g > -self.min_db
                 ):
                     # print("gain {} = {} rejected".format(i, g))

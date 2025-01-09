@@ -5,10 +5,10 @@ requires = ["setuptools", "wheel", "Cython"]
 name = "spinorama"
 description = "Spinorama computes speaker measurements"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = "==3.12"
 license = "GPL"
 authors = [
-    { name = "Pierre Aubert", email = "pierre0aubert@gmail.com" },
+    { name = "Pierre Aubert", email = "pierre@spinorama.org" },
 ]
 
 [project.urls]
@@ -46,8 +46,13 @@ lint.ignore = [
        "T20",
        "ISC001",
        "FBT001",
+       "FBT003"
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
 lint.fixable = ["N", "YTT", "S", "B", "FBT", "EM", "ISC", "EXE", "G", "Q", "T20", "SIM", "PD", "PL", "TRY", "NPY", "RUF"]
 lint.unfixable = []
+
+[tool.sonar]
+projectKey = "spinorama"
+sources = "src"

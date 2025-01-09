@@ -123,7 +123,7 @@ def print_graphs(
     key: str,
     width: int,
     height: int,
-    force_print: bool,  # noqa: FBT001
+    force_print: bool,
     level: int,
 ) -> int:
     ray_setup_logger(level)
@@ -219,7 +219,7 @@ def print_graphs(
     graphs["SPL Vertical Radar"] = display_radar_vertical(df_speaker, radar_params)
 
     # add a title and setup legend
-    for k in graphs:
+    for k in graphs.values():
         title = k.replace("_smoothed", "")
         # optimised for small screens / vertical orientation
         if graphs[k] is not None:

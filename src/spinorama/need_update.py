@@ -44,7 +44,7 @@ def need_update(filename: str, dependencies: list[str]) -> bool:
     return False
 
 
-def write_if_different(new_content: str, filename: str, force: bool):  # noqa: FBT001
+def write_if_different(new_content: str, filename: str, force: bool):
     """Write the new content to disk only if it is different from the current one.
     The unchanged html files are then untouched and http cache effect is better.
     """

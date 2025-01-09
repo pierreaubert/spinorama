@@ -16,13 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import datas.metadata as metadata
-
 from spinorama import logger
 from spinorama.load_misc import graph_unmelt
 from spinorama.compute_misc import compute_minmax_slopes
-from spinorama.compute_estimates import estimates
-from spinorama.compute_scores import speaker_pref_rating
 from spinorama.plot import (
     plot_params_default,
     contour_params_default,
@@ -34,45 +30,56 @@ from spinorama.plot import (
     plot_graph_regression,
     plot_contour,
     plot_radar,
-    plot_image,
-    plot_summary,
     plot_contour_3d,
 )
 
 
-def display_spinorama(df, graph_params=plot_params_default):
+def get_spin_unmelted(df, is_normalized):
     spin = df.get("CEA2034_unmelted")
+    if is_normalized:
+        spin = df.get("CEA2034 Normalized_unmelted")
     if spin is None:
         spin_melted = df.get("CEA2034")
+        if is_normalized:
+            spin_melted = df.get("CEA2034 Normalized")
         if spin_melted is not None:
             spin = graph_unmelt(spin_melted)
+            if is_normalized:
+                df["CEA2034 Normalized_unmelted"] = spin
+            else:
+                df["CEA2034_unmelted"] = spin
         if spin is None:
             logger.info("Display CEA2034 not in dataframe (%s)", ", ".join(df.keys()))
             return None
-    slopes = compute_minmax_slopes(spin=spin, is_normalized=False)
-    fig = plot_spinorama(spin, graph_params, slopes, is_normalized=False)
+    return spin
+
+
+def get_minmax_slopes(df, is_normalized):
+    spin = get_spin_unmelted(df, is_normalized)
+    if spin is not None:
+        return spin, compute_minmax_slopes(spin=spin, is_normalized=is_normalized)
+    return None, None
+
+
+def display_spinorama_common(df, graph_params, is_normalized):
+    spin, slopes = get_minmax_slopes(df, is_normalized=is_normalized)
+    if spin is None:
+        logger.error("plot_spinorama failed, cannot get Spin")
+        return None
+
+    fig = plot_spinorama(spin, graph_params, slopes, is_normalized=is_normalized)
     if fig is None:
         logger.error("plot_spinorama failed")
         return None
     return fig
+
+
+def display_spinorama(df, graph_params=plot_params_default):
+    return display_spinorama_common(df, graph_params, is_normalized=False)
 
 
 def display_spinorama_normalized(df, graph_params=plot_params_default):
-    spin = df.get("CEA2034 Normalized_unmelted")
-    if spin is None:
-        spin_melted = df.get("CEA2034 Normalized")
-        if spin_melted is not None:
-            spin = graph_unmelt(spin_melted)
-        if spin is None:
-            logger.info("Display CEA2034 Normalized not in dataframe (%s)", ", ".join(df.keys()))
-            return None
-
-    slopes = compute_minmax_slopes(spin=spin, is_normalized=True)
-    fig = plot_spinorama(spin, graph_params, slopes, is_normalized=True)
-    if fig is None:
-        logger.error("plot_spinorama failed")
-        return None
-    return fig
+    return display_spinorama_common(df, graph_params, is_normalized=True)
 
 
 def display_reflection_early(df, graph_params=plot_params_default):
@@ -87,12 +94,6 @@ def display_reflection_early(df, graph_params=plot_params_default):
 
 
 def display_onaxis(df, graph_params=plot_params_default):
-    spin = df.get("CEA2034_unmelted")
-    if spin is None:
-        spin_melted = df.get("CEA2034")
-        if spin_melted is not None:
-            spin = graph_unmelt(spin_melted)
-
     onaxis = df.get("CEA2034_unmelted")
     if onaxis is None:
         onaxis = df.get("On Axis_unmelted")
@@ -105,10 +106,9 @@ def display_onaxis(df, graph_params=plot_params_default):
         logger.debug("Display On Axis failed, known keys are (%s)", ", ".join(onaxis.keys()))
         return None
 
-    slopes = None
-    if spin is not None:
-        slopes = compute_minmax_slopes(spin, is_normalized=False)
-    return plot_graph_regression(df, "On Axis", graph_params, slopes)
+    _, slopes = get_minmax_slopes(df, False)
+    fig = plot_graph_regression(df, "On Axis", graph_params, slopes, False)
+    return fig
 
 
 def display_inroom(df, graph_params=plot_params_default):
@@ -128,7 +128,7 @@ def display_inroom(df, graph_params=plot_params_default):
         slopes = None
         if spin is not None:
             slopes = compute_minmax_slopes(spin, is_normalized=True)
-        return plot_graph_regression(df, "Estimated In-Room Response", graph_params, slopes)
+        return plot_graph_regression(df, "Estimated In-Room Response", graph_params, slopes, False)
 
 
 def display_reflection_horizontal(df, graph_params=plot_params_default):
@@ -236,111 +236,3 @@ def display_radar_horizontal(df, graph_params=radar_params_default):
 
 def display_radar_vertical(df, graph_params=radar_params_default):
     return display_radar(df, "SPL Vertical_unmelted", graph_params)
-
-
-def display_summary(df, params, speaker, origin, key):
-    try:
-        speaker_type = ""
-        speaker_shape = ""
-        if speaker in metadata.speakers_info:
-            speaker_type = metadata.speakers_info[speaker].get("type", "")
-            speaker_shape = metadata.speakers_info[speaker].get("shape", "")
-
-        if "CEA2034" not in df:
-            return None
-        spin = df["CEA2034"]
-        spl_h = df.get("SPL Horizontal_unmelted", None)
-        spl_v = df.get("SPL Vertical_unmelted", None)
-        est = estimates(spin, spl_h, spl_v)
-
-        # 1
-        speaker_summary = [f"{speaker_shape.capitalize()} {speaker_type.capitalize()}"]
-
-        if est is None:
-            #                    2   3   4   5   6   7   8
-            speaker_summary += ["", "", "", "", "", "", ""]
-        else:
-            # 2, 3
-            if "ref_level" in est:
-                speaker_summary += [
-                    "• Reference level {0} dB".format(est["ref_level"]),
-                    "(mean over {0}-{1}k Hz)".format(
-                        int(est["ref_from"]), int(est["ref_to"]) / 1000
-                    ),
-                ]
-            else:
-                speaker_summary += ["", ""]
-
-            # 4
-            if "ref_3dB" in est:
-                speaker_summary += ["• -3dB at {0}Hz wrt Ref.".format(est["ref_3dB"])]
-            else:
-                speaker_summary += [""]
-
-            # 5
-            if "ref_6dB" in est:
-                speaker_summary += ["• -6dB at {0}Hz wrt Ref.".format(est["ref_6dB"])]
-            else:
-                speaker_summary += [""]
-
-            # 6
-            if "ref_band" in est:
-                speaker_summary += ["• +/-{0}dB wrt Ref.".format(est["ref_band"])]
-            else:
-                speaker_summary += [""]
-
-            # 7
-            if "dir_horizontal_p" in est and "dir_horizontal_m" in est:
-                speaker_summary += [
-                    "• Horizontal directivity ({}°, {}°)".format(
-                        int(est["dir_horizontal_m"]), int(est["dir_horizontal_p"])
-                    )
-                ]
-            else:
-                speaker_summary += [""]
-
-            # 8
-            if "dir_vertical_p" in est and "dir_vertical_m" in est:
-                speaker_summary += [
-                    "• Vertical directivity ({}°, {}°)".format(
-                        int(est["dir_vertical_m"]), int(est["dir_vertical_p"])
-                    )
-                ]
-            else:
-                speaker_summary += [""]
-
-        pref_score = None
-        if "Estimated In-Room Response" in df:
-            inroom = df["Estimated In-Room Response"]
-            if inroom is not None:
-                pref_score = speaker_pref_rating(cea2034=spin, pir=inroom, rounded=True)
-
-        # 9-17
-        if pref_score is not None:
-            speaker_summary += [
-                "Preference score: {0}".format(pref_score.get("pref_score", "--")),
-                "• Low Frequency:",
-                "  • Extension: {0} Hz".format(pref_score.get("lfx_hz", "--")),
-                "  • Quality : {0}".format(pref_score.get("lfq", "--")),
-                "• Narrow Bandwidth Deviation",
-                "  • On Axis: {0}".format(pref_score.get("nbd_on_axis", "--")),
-                "  • Predicted In-Room: {0}".format(pref_score.get("nbd_pred_in_room", "--")),
-                "• SM Deviation:",
-                "  • Predicted In-Room: {0}".format(pref_score.get("sm_pred_in_room", "--")),
-            ]
-        else:
-            #                    9  10  11  12, 13, 14, 15  16  17
-            speaker_summary += ["", "", "", "", "", "", "", "", ""]
-
-        if len(speaker_summary) != 17:
-            logger.error("speaker summary lenght is incorrect %s", speaker_summary)
-
-    except KeyError as ke:
-        logger.warning("Display Summary failed with %s", ke)
-        return None
-    else:
-        return plot_summary(speaker, speaker_summary, params)
-
-
-def display_pict(speaker, params):
-    return plot_image(speaker, params)

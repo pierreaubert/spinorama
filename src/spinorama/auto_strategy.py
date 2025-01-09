@@ -40,7 +40,7 @@ def optim_eval_strategy(
     current_speaker_name: str,
     df_speaker: DataSpeaker,
     optim_config: dict,
-    use_score: bool,  # noqa: FBT001
+    use_score: bool,
 ) -> tuple[bool, tuple[dict, OptimResult, Peq, float]]:
     """Find the best EQ for this speaker"""
     # shortcut
@@ -104,7 +104,7 @@ def optim_strategy(
     current_speaker_name: str,
     df_speaker: DataSpeaker,
     optim_config: dict,
-    use_score: bool,  # noqa: FBT001
+    use_score: bool,
 ) -> tuple[bool, tuple[dict, OptimResult, Peq, dict]]:
     # do we use -3dB point for target?
     if optim_config["target_min_freq"] is None:
@@ -324,14 +324,12 @@ def optim_strategy(
                 if (
                     current_optim_config["curve_names"][0] == "Listening Window"
                     and auto_slope_lw >= 0
-                    or auto_slope_lw > -1
-                ):
+                ) or auto_slope_lw > -1:
                     delta = optim_config[slope_name] - np.sign(auto_slope_lw) * 0.5 * loop
                 if (
                     current_optim_config["curve_names"][0] == "Estimated In-Room Response"
                     and auto_slope_lw >= 0
-                    or auto_slope_lw < -1
-                ):
+                ) or auto_slope_lw < -1:
                     delta = optim_config[slope_name] - np.sign(auto_slope_lw) * 0.5 * loop
                 if delta == 0.0:
                     continue

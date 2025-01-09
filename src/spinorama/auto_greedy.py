@@ -42,7 +42,7 @@ def optim_greedy(
     auto_target: list[Vector],
     auto_target_interp: list[Vector],
     optim_config: dict,
-    use_score: bool,  # noqa: FBT001
+    use_score: bool,
 ) -> tuple[bool, tuple[tuple[int, float, float], Peq]]:
     """Main optimiser: follow a greedy strategy"""
 

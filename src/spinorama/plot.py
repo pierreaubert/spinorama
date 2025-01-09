@@ -51,6 +51,37 @@ FONT_SIZE_H4 = 11
 FONT_SIZE_H5 = 10
 FONT_SIZE_H6 = 9
 
+FONT_FAMILY = "Arial"
+
+FONT_H1 = dict(
+    size=FONT_SIZE_H1,
+    family=FONT_FAMILY,
+)
+
+FONT_H2 = dict(
+    size=FONT_SIZE_H2,
+    family=FONT_FAMILY,
+)
+
+FONT_H3 = dict(
+    size=FONT_SIZE_H3,
+    family=FONT_FAMILY,
+)
+
+FONT_H4 = dict(
+    size=FONT_SIZE_H4,
+    family=FONT_FAMILY,
+)
+
+FONT_H5 = dict(
+    size=FONT_SIZE_H5,
+    family=FONT_FAMILY,
+)
+
+FONT_H6 = dict(
+    size=FONT_SIZE_H6,
+    family=FONT_FAMILY,
+)
 
 # ratio is 4x3
 plot_params_default: dict[str, int | str] = {
@@ -233,19 +264,13 @@ def generate_xaxis(freq_min=20, freq_max=20000):
     return dict(
         title=dict(
             text="Frequency (Hz)",
-            font=dict(
-                size=FONT_SIZE_H3,
-                family="Arial",
-            ),
+            font=FONT_H3,
         ),
         type="log",
         range=[math.log10(freq_min), math.log10(freq_max)],
         showline=True,
         dtick="D1",
-        tickfont=dict(
-            size=FONT_SIZE_H3,
-            family="Arial",
-        ),
+        tickfont=FONT_H3,
         ticks="inside",
     )
 
@@ -254,10 +279,7 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
     return dict(
         title=dict(
             text="SPL (dB)",
-            font=dict(
-                size=FONT_SIZE_H3,
-                family="Arial",
-            ),
+            font=FONT_H3,
         ),
         range=[range_min, range_max],
         dtick=range_step,
@@ -266,10 +288,7 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
             "{}".format(i) if not i % 5 else " "
             for i in range(range_min, range_max + range_step, range_step)
         ],
-        tickfont=dict(
-            size=FONT_SIZE_H3,
-            family="Arial",
-        ),
+        tickfont=FONT_H3,
         ticks="inside",
         showline=True,
     )
@@ -284,19 +303,13 @@ def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
     return dict(
         title=dict(
             text="DI (dB)                                                    &nbsp;",
-            font=dict(
-                size=FONT_SIZE_H3,
-                family="Arial",
-            ),
+            font=FONT_H3,
         ),
         range=[range_min, range_max],
         dtick=range_step,
         tickvals=tickvals,
         ticktext=ticktext,
-        tickfont=dict(
-            size=FONT_SIZE_H3,
-            family="Arial",
-        ),
+        tickfont=FONT_H3,
         ticks="inside",
         showline=True,
     )
@@ -306,10 +319,7 @@ def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
     return dict(
         title=dict(
             text="Angle",
-            font=dict(
-                size=FONT_SIZE_H3,
-                family="Arial",
-            ),
+            font=FONT_H3,
         ),
         range=[angle_min, angle_max],
         dtick=angle_step,
@@ -317,10 +327,7 @@ def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
         ticktext=[""]
         + ["{}°".format(v) for v in range(angle_min + angle_step, angle_max, angle_step)]
         + [""],
-        tickfont=dict(
-            size=FONT_SIZE_H3,
-            family="Arial",
-        ),
+        tickfont=FONT_H3,
         ticks="inside",
         showline=True,
     )
@@ -333,14 +340,10 @@ def generate_colorbar():
         lenmode="fraction",
         thickness=15,
         thicknessmode="pixels",
-        tickfont=dict(
-            size=FONT_SIZE_H5,
-        ),
+        tickfont=FONT_H5,
         title=dict(
             text="dB (SPL)",
-            font=dict(
-                size=FONT_SIZE_H4,
-            ),
+            font=FONT_H4,
         ),
     )
 
@@ -358,10 +361,7 @@ def common_layout(params):
             y=0.99,
             xanchor="center",
             yanchor="top",
-            font=dict(
-                size=FONT_SIZE_H1,
-                family="Arial",
-            ),
+            font=FONT_H1,
         ),
         legend=dict(
             x=0.5,
@@ -369,10 +369,7 @@ def common_layout(params):
             xanchor="center",
             yanchor="top",
             orientation=orientation,
-            font=dict(
-                size=FONT_SIZE_H2,
-                family="Arial",
-            ),
+            font=FONT_H2,
         ),
         margin={
             "t": 100,
@@ -404,9 +401,7 @@ def contour_layout(params):
             "l": 10,
             "r": 10,
         },
-        font=dict(
-            size=FONT_SIZE_H6,
-        ),
+        font=FONT_H6,
         polar=dict(
             bargap=0,
             hole=0.05,
@@ -427,14 +422,8 @@ def radar_layout(params):
             y=1.05,
             xanchor="center",
             orientation=orientation,
-            title=dict(
-                font=dict(
-                    size=FONT_SIZE_H5,
-                ),
-            ),
-            font=dict(
-                size=FONT_SIZE_H6,
-            ),
+            title_font=FONT_H5,
+            font=FONT_H6,
         ),
         title=dict(
             x=0.5,
@@ -874,7 +863,7 @@ def plot_graph_flat(df, measurement, params):
     return fig
 
 
-def plot_graph_regression(df, measurement, params, minmax_slopes):
+def plot_graph_regression(df, measurement, params, minmax_slopes, is_normalized):
     fig = go.Figure()
 
     measurement_unmelted = "{}_unmelted".format(measurement)
@@ -885,10 +874,15 @@ def plot_graph_regression(df, measurement, params, minmax_slopes):
 
     if (
         ("Estimated In-Room Response" in measurement or "Sound Power" in measurement)
-        and "CEA2034 Normalized_unmelted" in df
+        and (
+            (is_normalized and "CEA2034 Normalized_unmelted" in df)
+            or (not is_normalized and "CEA2034_unmelted" in df)
+        )
         and minmax_slopes is not None
     ):
-        spin = df["CEA2034 Normalized_unmelted"]
+        spin = df["CEA2034_unmelted"]
+        if is_normalized:
+            spin = df["CEA2034 Normalized_unmelted"]
         freq = spin.Freq.to_numpy()
         slope_min_freq = max(SLOPE_MIN_FREQ, freq[0])
         slope_max_freq = min(SLOPE_MAX_FREQ, freq[-1])
@@ -897,9 +891,10 @@ def plot_graph_regression(df, measurement, params, minmax_slopes):
         first_freq = restricted_freq[0]
         last_freq = restricted_freq[-1]
         first_spl, _, _, _ = compute_slope_smoothness(
-            data_frame=curve, measurement=measurement, is_normalized=True
+            data_frame=curve, measurement=measurement, is_normalized=is_normalized
         )
         slope_min, slope_max = minmax_slopes[measurement]
+        first_freq = 20
         spl_min = slope_min * math.log2(last_freq / first_freq)
         spl_max = slope_max * math.log2(last_freq / first_freq)
         x = [first_freq, last_freq, last_freq, first_freq, first_freq]
@@ -1093,9 +1088,7 @@ def plot_radar(spl, params):
     radialaxis = dict(
         range=[-45, 5],
         dtick=5,
-        tickfont=dict(
-            size=FONT_SIZE_H5,
-        ),
+        tickfont=FONT_H5,
     )
     angularaxis = dict(
         dtick=10,
@@ -1104,9 +1097,7 @@ def plot_radar(spl, params):
             f"{x}°" if abs(x) < 60 or not x % 30 else " "
             for x in (list(range(0, 190, 10)) + list(range(-170, 0, 10)))
         ],
-        tickfont=dict(
-            size=FONT_SIZE_H6,
-        ),
+        tickfont=FONT_H6,
     )
 
     def update_pict(anglelist, freqlist, row, col, spl):
@@ -1210,9 +1201,7 @@ def plot_eqs(freq, peqs, names):
             y=1.1,
             x=0.5,
             title=None,
-            font=dict(
-                size=FONT_SIZE_H3,
-            ),
+            font=FONT_H3,
         ),
     )
     return fig
@@ -1288,12 +1277,8 @@ def plot_contour_3d(spl, params):
                 range=[math.log10(min_freq), math.log10(20000)],
                 showline=True,
                 dtick="D1",
-                tickfont=dict(
-                    size=FONT_SIZE_H4,
-                ),
-                titlefont=dict(
-                    size=FONT_SIZE_H3,
-                ),
+                tickfont=FONT_H4,
+                titlefont=FONT_H3,
             ),
             yaxis=dict(
                 range=[-180, 180],
@@ -1301,12 +1286,8 @@ def plot_contour_3d(spl, params):
                 tickvals=angle_list_3d,
                 ticktext=angle_text_3d,
                 title="Angle",
-                tickfont=dict(
-                    size=FONT_SIZE_H4,
-                ),
-                titlefont=dict(
-                    size=FONT_SIZE_H3,
-                ),
+                tickfont=FONT_H4,
+                titlefont=FONT_H3,
             ),
             zaxis=dict(
                 range=[z_min, z_max],
@@ -1314,12 +1295,8 @@ def plot_contour_3d(spl, params):
                 showline=True,
                 tickvals=spl_list_3d,
                 ticktext=spl_text_3d,
-                tickfont=dict(
-                    size=FONT_SIZE_H4,
-                ),
-                titlefont=dict(
-                    size=FONT_SIZE_H3,
-                ),
+                tickfont=FONT_H4,
+                titlefont=FONT_H3,
             ),
             aspectratio=dict(
                 x=1.414,
