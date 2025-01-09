@@ -24,17 +24,21 @@ import pandas as pd
 from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
 from spinorama.compute_misc import unify_freq
 from spinorama.load_misc import sort_angles, graph_melt, graph_unmelt
+
 from spinorama.load_klippel import parse_graph_freq_klippel, parse_graphs_speaker_klippel
-from spinorama.load_princeton import parse_graph_princeton
+from spinorama.load_princeton import parse_graph_princeton, parse_graphs_speaker_princeton
+from spinorama.load_spl_hv_txt import parse_graphs_speaker_spl_hv_txt
+from spinorama.load_gll_hv_txt import parse_graphs_speaker_gll_hv_txt
 from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
+from spinorama.load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
 from spinorama.load import filter_graphs, filter_graphs_partial, spin_compute_di_eir
 
 # ----------------------------------------------------------------------------------------------------
-# KLIPPEL FORMAT
+# KLIPPEL FORMAT PRE COMPUTED CEA2034
 # ----------------------------------------------------------------------------------------------------
 
 
-class SpinoramaKlippelFreqLoadTests(unittest.TestCase):
+class SpinoramaKlippelCEA2034LoadTests(unittest.TestCase):
     def setUp(self):
         status, (self.title, self.df) = parse_graph_freq_klippel(
             "datas/measurements/Neumann KH 80/asr-v3-20200711/CEA2034.txt"
@@ -45,12 +49,26 @@ class SpinoramaKlippelFreqLoadTests(unittest.TestCase):
         self.assertEqual(self.title, "CEA2034")
         self.assertIsNotNone(self.df)
 
-    def test_smoke2(self):
-        self.assertIn("On Axis", self.df.columns)
+    def test_keys(self):
         self.assertNotIn("On-Axis", self.df.columns)
+        self.assertNotIn("Early Reflextions", self.df.columns)
+        self.assertNotIn("Predicted In-Room Response", self.df.columns)
+
+    def test_most_graphs(self):
+        self.assertIn("On Axis", self.df.columns)
+        self.assertIn("Listening Window", self.df.columns)
+        self.assertIn("Early Reflections", self.df.columns)
+        self.assertIn("Sound Power", self.df.columns)
+        self.assertIn("Early Reflections DI", self.df.columns)
+        self.assertIn("Sound Power DI", self.df.columns)
 
 
-class SpinoramaKlippelLoadTests(unittest.TestCase):
+# ----------------------------------------------------------------------------------------------------
+# KLIPPEL FORMAT H/V
+# ----------------------------------------------------------------------------------------------------
+
+
+class SpinoramaKlippeHVLoadTests(unittest.TestCase):
     def setUp(self):
         status, (self.h, self.v) = parse_graphs_speaker_klippel(
             "datas/measurements", "Neumann", "Neumann KH 80", "asr-v3-20200711", None
@@ -67,7 +85,7 @@ class SpinoramaKlippelLoadTests(unittest.TestCase):
 # ----------------------------------------------------------------------------------------------------
 
 
-class SpinoramaSortAnglePrincetonests(unittest.TestCase):
+class SpinoramaPrincetonSortAngleTests(unittest.TestCase):
     def setUp(self):
         status, self.df = parse_graph_princeton(
             "datas/measurements/Genelec 8351A/princeton/Genelec8351A_V_IR.mat", "V", pd.DataFrame()
@@ -79,25 +97,7 @@ class SpinoramaSortAnglePrincetonests(unittest.TestCase):
         self.assertListEqual(list(df_sa.columns), list(self.df.columns))
 
 
-class SpinoramaLoadSPLTests(unittest.TestCase):
-    def setUp(self):
-        status, (self.title, self.df) = parse_graph_freq_klippel(
-            "datas/measurements/Neumann KH 80/asr-v3-20200711/SPL Horizontal.txt"
-        )
-        self.assertTrue(status)
-
-    def test_smoke1(self):
-        self.assertEqual(self.title, "SPL Horizontal")
-        self.assertIsNotNone(self.df)
-
-    def test_smoke2(self):
-        self.assertIn("On Axis", self.df.columns)
-        self.assertNotIn("On-Axis", self.df.columns)
-        # 200 in Freq, -170 to 180 10 by 10
-        self.assertEqual(self.df.shape, (194, 2 * 18 + 1))
-
-
-class SpinoramaLoadPrinceton(unittest.TestCase):
+class SpinoramaPrincetonLoadMatTests(unittest.TestCase):
     def setUp(self):
         status, self.df = parse_graph_princeton(
             "datas/measurements/Genelec 8351A/princeton/Genelec8351A_V_IR.mat", "V", pd.DataFrame()
@@ -115,13 +115,49 @@ class SpinoramaLoadPrinceton(unittest.TestCase):
         self.assertLess(500, self.df.Freq.min())
 
 
+class SpinoramaPrincetonLoadTests(unittest.TestCase):
+    def setUp(self):
+        status, (self.h, self.v) = parse_graphs_speaker_princeton(
+            "datas/measurements", "Genelec", "Genelec 8351A", "princeton", None
+        )
+        self.assertTrue(status)
+
+    def test_spin(self):
+        # horizontal symmetry
+        self.assertEqual(self.h.shape, (208, 20))
+        self.assertEqual(self.v.shape, (208, 37))
+
+
 # ----------------------------------------------------------------------------------------------------
 # SPL TXT FORMAT
 # ----------------------------------------------------------------------------------------------------
+class SpinoramaSPLHVLoadTests(unittest.TestCase):
+    def setUp(self):
+        status, (self.h, self.v) = parse_graphs_speaker_spl_hv_txt(
+            "datas/measurements", "Andersson", "Andersson HIS 2.1", "misc-ageve"
+        )
+        self.assertTrue(status)
+
+    def test_spin(self):
+        # vertical symmetry
+        self.assertEqual(self.h.shape, (479, 37))
+        self.assertEqual(self.v.shape, (479, 19))
+
 
 # ----------------------------------------------------------------------------------------------------
 # GLL TXT FORMAT
 # ----------------------------------------------------------------------------------------------------
+class SpinoramaGLLHVLoadTests(unittest.TestCase):
+    def setUp(self):
+        status, (self.h, self.v) = parse_graphs_speaker_gll_hv_txt(
+            "datas/measurements", "RCF ART 708-A MK4", "vendor-pattern-90x70"
+        )
+        self.assertTrue(status)
+
+    def test_spin(self):
+        # vertical symmetry
+        self.assertEqual(self.h.shape, (236, 37))
+        self.assertEqual(self.v.shape, (236, 37))
 
 
 # ----------------------------------------------------------------------------------------------------
@@ -158,18 +194,72 @@ class SpinoramaRewLoadTests(unittest.TestCase):
 
 
 # ----------------------------------------------------------------------------------------------------
+# WEBPLOTDIGITIZER TAR FORMAT
+# ----------------------------------------------------------------------------------------------------
+class SpinoramaWebPlotDigitizerLoadTests(unittest.TestCase):
+    def setUp(self):
+        self.speaker_name = "RBH Sound R-5"
+        status, (self.title, self.df_melted) = parse_graphs_speaker_webplotdigitizer(
+            "datas/measurements",
+            "RBH Sound",
+            self.speaker_name,
+            "",
+            "misc-audioholics",
+        )
+        self.df_unmelted = graph_unmelt(self.df_melted)
+        self.assertTrue(status)
+        self.assertEqual(self.title, "CEA2034")
+
+    def test_keys(self):
+        expected_set = set(
+            [
+                "Freq",
+                "On Axis",
+                "Early Reflections",
+                "Early Reflections DI",
+                "Sound Power",
+                "Sound Power DI",
+                "Listening Window",
+                # "DI Offset",
+            ]
+        )
+        self.assertSetEqual(expected_set, set(self.df_unmelted.keys()))
+
+
+# ----------------------------------------------------------------------------------------------------
 # Analysis
 # ----------------------------------------------------------------------------------------------------
 
 
 class SpinoramaFilterGraphsTests(unittest.TestCase):
     def setUp(self):
-        status, (self.h, self.v) = parse_graphs_speaker_klippel(
+        self.df = {}
+        #
+        _, (h, v) = parse_graphs_speaker_klippel(
             "datas/measurements", "Neumann", "Neumann KH 80", "asr-v3-20200711", None
         )
-        self.assertTrue(status)
-        self.df = filter_graphs("Neumann KH 80", self.h, self.v, MEAN_MIN, MEAN_MAX, "klippel", 1.0)
-        self.assertIsNotNone(self.df)
+        self.df["klippel"] = filter_graphs("Neumann KH 80", h, v, MEAN_MIN, MEAN_MAX, "klippel", 1)
+        #
+        _, (h, v) = parse_graphs_speaker_princeton(
+            "datas/measurements", "Genelec", "Genelec 8351A", "princeton", None
+        )
+        self.df["princeton"] = filter_graphs(
+            "Genelec 8351A", h, v, MEAN_MIN, MEAN_MAX, "princeton", 1
+        )
+        #
+        _, (h, v) = parse_graphs_speaker_gll_hv_txt(
+            "datas/measurements", "RCF ART 708-A MK4", "vendor-pattern-90x70"
+        )
+        self.df["spl_hv"] = filter_graphs(
+            "RCF ART 708-A MK4", h, v, MEAN_MIN, MEAN_MAX, "gll_hv_txt", 10
+        )
+        #
+        _, (h, v) = parse_graphs_speaker_spl_hv_txt(
+            "datas/measurements", "Andersson", "Andersson HIS 2.1", "misc-ageve"
+        )
+        self.df["gll_hv"] = filter_graphs(
+            "Andersson HIS 2.1", h, v, MEAN_MIN, MEAN_MAX, "spl_hv_txt", 1
+        )
 
     def test_keys(self):
         expected_set = set(
@@ -199,7 +289,14 @@ class SpinoramaFilterGraphsTests(unittest.TestCase):
                 "CEA2034 Normalized",
             ]
         )
-        self.assertSetEqual(expected_set, set(self.df.keys()))
+        for df in self.df.values():
+            self.assertSetEqual(expected_set, set(df.keys()))
+
+
+#    def test_enough_measurements(self):
+#        for df in self.df.values():
+#            self.assertEqual(37, df['SPL Horizontal_unmelted'].shape[1])
+#            self.assertEqual(37, df['SPL Vertical_unmelted'].shape[1])
 
 
 class SpinoramaFilterGraphsPartialTests(unittest.TestCase):
