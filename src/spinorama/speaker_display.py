@@ -35,13 +35,12 @@ from spinorama.plot import (
 
 
 def get_spin_unmelted(df, is_normalized):
-    spin = df.get("CEA2034_unmelted")
-    if is_normalized:
-        spin = df.get("CEA2034 Normalized_unmelted")
+    print(df.keys())
+    spin = (
+        df.get("CEA2034_unmelted") if not is_normalized else df.get("CEA2034 Normalized_unmelted")
+    )
     if spin is None:
-        spin_melted = df.get("CEA2034")
-        if is_normalized:
-            spin_melted = df.get("CEA2034 Normalized")
+        spin_melted = df.get("CEA2034") if not is_normalized else df.get("CEA2034 Normalized")
         if spin_melted is not None:
             spin = graph_unmelt(spin_melted)
             if is_normalized:
@@ -49,7 +48,11 @@ def get_spin_unmelted(df, is_normalized):
             else:
                 df["CEA2034_unmelted"] = spin
         if spin is None:
-            logger.info("Display CEA2034 not in dataframe (%s)", ", ".join(df.keys()))
+            logger.info(
+                "Display CEA2034 not in dataframe (%s) is_normalized=%s",
+                ", ".join(df.keys()),
+                str(is_normalized),
+            )
             return None
     return spin
 
@@ -64,7 +67,9 @@ def get_minmax_slopes(df, is_normalized):
 def display_spinorama_common(df, graph_params, is_normalized):
     spin, slopes = get_minmax_slopes(df, is_normalized=is_normalized)
     if spin is None:
-        logger.error("plot_spinorama failed, cannot get Spin")
+        logger.error(
+            "plot_spinorama failed, cannot get Spin (is_normalized=%s)", str(is_normalized)
+        )
         return None
 
     fig = plot_spinorama(spin, graph_params, slopes, is_normalized=is_normalized)

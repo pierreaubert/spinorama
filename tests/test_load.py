@@ -23,15 +23,20 @@ import pandas as pd
 
 from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
 from spinorama.compute_misc import unify_freq
-from spinorama.load_misc import sort_angles, graph_melt, graph_unmelt
 
+from spinorama.load_misc import sort_angles, graph_melt, graph_unmelt
 from spinorama.load_klippel import parse_graph_freq_klippel, parse_graphs_speaker_klippel
 from spinorama.load_princeton import parse_graph_princeton, parse_graphs_speaker_princeton
 from spinorama.load_spl_hv_txt import parse_graphs_speaker_spl_hv_txt
 from spinorama.load_gll_hv_txt import parse_graphs_speaker_gll_hv_txt
 from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
 from spinorama.load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
-from spinorama.load import filter_graphs, filter_graphs_partial, spin_compute_di_eir
+from spinorama.load import (
+    filter_graphs,
+    filter_graphs_partial,
+    spin_compute_di_eir,
+    symmetrise_speaker_measurements,
+)
 
 # ----------------------------------------------------------------------------------------------------
 # KLIPPEL FORMAT PRE COMPUTED CEA2034
@@ -142,6 +147,16 @@ class SpinoramaSPLHVLoadTests(unittest.TestCase):
         # vertical symmetry
         self.assertEqual(self.h.shape, (479, 37))
         self.assertEqual(self.v.shape, (479, 19))
+
+    def test_symmetry(self):
+        # vertical symmetry
+        h2, v2 = symmetrise_speaker_measurements(self.h, self.v, "vertical")
+        self.assertIsNotNone(h2)
+        self.assertIsNotNone(v2)
+        if h2 is not None:
+            self.assertEqual(h2.shape, (479, 37))
+        if v2 is not None:
+            self.assertEqual(v2.shape, (479, 36))
 
 
 # ----------------------------------------------------------------------------------------------------
@@ -319,11 +334,11 @@ class SpinoramaFilterGraphsPartialTests(unittest.TestCase):
     def test_keys(self):
         expected_set = set(
             [
+                "CEA2034",
                 "CEA2034_unmelted",
-                "sensitivity",
                 "CEA2034 Normalized",
                 "CEA2034 Normalized_unmelted",
-                "CEA2034",
+                "sensitivity",
                 "sensitivity_distance",
                 "sensitivity_1m",
                 "Estimated In-Room Response",

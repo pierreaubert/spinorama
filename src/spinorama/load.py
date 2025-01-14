@@ -380,15 +380,27 @@ def filter_graphs_partial(df, mformat, mdistance):
                 dfs[k] = shifted_spin
                 logger.debug("DEBUG %s post shift cols=(%s)", k, ", ".join(set(df[k].Measurements)))
                 dfs["CEA2034 Normalized"] = norm_spl_unmelted(shifted_spin)
-                dfs["CEA2034 Normalized_unmelted"] = graph_unmelt(dfs["CEA2034 Normalized"])
             else:
                 dfs[k] = shift_spl_melted(df[k], mean_midrange)
     else:
+        logger.debug("DEBUG: mean is unknown")
         for k in df:
-            dfs[k] = df[k]
+            if k == "CEA2034":
+                shifted_spin = shift_spl_melted_cea2034(df[k], 0.0)
+                dfs[k] = shifted_spin
+                dfs["CEA2034 Normalized"] = norm_spl_unmelted(shifted_spin)
+            else:
+                dfs[k] = df[k]
 
     for k in df:
-        dfs["{}_unmelted".format(k)] = graph_unmelt(dfs[k])
+        if "unmelted" in k:
+            continue
+        unmelted = "{}_unmelted".format(k)
+        if unmelted not in dfs and isinstance(dfs[k], pd.DataFrame):
+            dfs[unmelted] = graph_unmelt(dfs[k])
+    # note: not in df but could be in dfs
+    if "CEA2034 Normalized" in dfs and "CEA2034 Normalized_unmelted" not in dfs:
+        dfs["CEA2034 Normalized_unmelted"] = graph_unmelt(dfs["CEA2034 Normalized"])
 
     logger.debug("DEBUG  filter_graphs partial (%s)", ", ".join(dfs.keys()))
     for k, v in dfs.items():
@@ -533,28 +545,54 @@ def spin_compute_di_eir(
     return dfs
 
 
-def symmetrise_measurement(spl: pd.DataFrame) -> pd.DataFrame:
-    """Apply a symmetry if any to the measurements"""
-    if spl.empty:
-        return pd.DataFrame()
+def symmetrise_speaker_measurements(
+    h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | None, symmetry: str
+) -> tuple[pd.DataFrame | None, pd.DataFrame | None]:
+    def symmetrise_measurement(spl: pd.DataFrame) -> pd.DataFrame:
+        """Apply a symmetry if any to the measurements"""
+        if spl.empty:
+            return pd.DataFrame()
 
-    # look for min and max
-    cols = spl.columns
-    min_angle = 180
-    max_angle = -180
-    for col in cols:
-        if col == "Freq":
-            continue
-        angle = 0 if col == "On Axis" else int(col[:-1])
-        min_angle = min(min_angle, angle)
-        max_angle = max(max_angle, angle)
+        # look for min and max
+        cols = spl.columns
+        min_angle = 180
+        max_angle = -180
+        for col in cols:
+            if col == "Freq":
+                continue
+            angle = 0 if col == "On Axis" else int(col[:-1])
+            min_angle = min(min_angle, angle)
+            max_angle = max(max_angle, angle)
 
-    # extend 0-180 to -170 0 180
-    # extend 0-90  to -90 to 90
-    new_spl = spl.copy()
-    for col in cols:
-        if col not in ("Freq", "On Axis", "180°") and col[0] != "-":
-            mangle = "-{}".format(col)
-            if mangle not in spl.columns:
-                new_spl[mangle] = spl[col]
-    return sort_angles(new_spl)
+        # extend 0-180 to -170 0 180
+        # extend 0-90  to -90 to 90
+        new_spl = spl.copy()
+        for col in cols:
+            if col not in ("Freq", "On Axis", "180°"):
+                m_angle = "{}".format(col[1:]) if col[0] == "-" else "-{}".format(col)
+                if m_angle not in spl.columns:
+                    new_spl[m_angle] = spl[col]
+        return sort_angles(new_spl)
+
+    if h_spl is None and v_spl is None:
+        logger.error("Symmetrisation cannot work with empty measurements")
+        return (None, None)
+
+    if symmetry == "coaxial":
+        if h_spl is not None:
+            h_spl2 = symmetrise_measurement(h_spl)
+            v_spl2 = h_spl2.copy() if v_spl is None else symmetrise_measurement(v_spl)
+        else:
+            v_spl2 = symmetrise_measurement(v_spl)
+            h_spl2 = v_spl2.copy()
+        return (h_spl2, v_spl2)
+    elif h_spl is not None and symmetry == "horizontal":
+        h_spl2 = symmetrise_measurement(h_spl)
+        return (h_spl2, v_spl.copy() if v_spl is not None else None)
+    elif v_spl is not None and symmetry == "vertical":
+        v_spl2 = symmetrise_measurement(v_spl)
+        return (h_spl.copy() if h_spl is not None else None, v_spl2)
+    return (
+        h_spl.copy() if h_spl is not None else None,
+        v_spl.copy() if v_spl is not None else None,
+    )

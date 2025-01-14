@@ -29,7 +29,7 @@ from spinorama.compute_misc import resample
 
 
 def parse_graph_freq_princeton_mat(
-    mat, suffix: str, on_axis: pd.DataFrame
+    mat, suffix: str, on_axis: None | pd.DataFrame
 ) -> StatusOr[pd.DataFrame]:
     """Suffix can be either H or V"""
     ir_name = "IR_{:1s}".format(suffix)
@@ -86,7 +86,7 @@ def parse_graph_freq_princeton_mat(
 
 
 def parse_graph_princeton(
-    filename: str, orient: str, on_axis: pd.DataFrame
+    filename: str, orient: str, on_axis: None | pd.DataFrame
 ) -> StatusOr[pd.DataFrame]:
     matfile = loadmat(filename)
     return parse_graph_freq_princeton_mat(matfile, orient, on_axis)
@@ -119,7 +119,7 @@ def parse_graphs_speaker_princeton(
         logger.info("Found file but loading didn't work for %s %s", speaker_name, version)
         return False, (pd.DataFrame(), pd.DataFrame())
 
-    on_axis = h_spl["On Axis"]
+    on_axis = h_spl.get("On Axis", None)
     v_status, v_spl = parse_graph_princeton(v_file, "V", on_axis)
 
     if not v_status:

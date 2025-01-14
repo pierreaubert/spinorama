@@ -20,6 +20,7 @@ import os
 import pathlib
 
 from wand.image import Image as Wim
+from wand.exceptions import CoderError
 
 from spinorama import logger
 
@@ -41,12 +42,15 @@ def write_multiformat(chart, filename, force):
         return
     logger.info("Saving %s", filename)
 
-    with Wim(filename=filename) as pict:
-        filename = filename.replace("_large", "")
-        webp = "{}.webp".format(filename[:-4])
-        if not pathlib.Path(webp).is_file() or force:
-            pict.convert("webp").save(filename=webp)
-        pict.compression_quality = 75
-        jpg = "{}.jpg".format(filename[:-4])
-        if not pathlib.Path(jpg).is_file() or force:
-            pict.convert("jpg").save(filename=jpg)
+    try:
+        with Wim(filename=filename) as pict:
+            filename = filename.replace("_large", "")
+            webp = "{}.webp".format(filename[:-4])
+            if not pathlib.Path(webp).is_file() or force:
+                pict.convert("webp").save(filename=webp)
+            pict.compression_quality = 75
+            jpg = "{}.jpg".format(filename[:-4])
+            if not pathlib.Path(jpg).is_file() or force:
+                pict.convert("jpg").save(filename=jpg)
+    except CoderError as ce:
+        logger.exception("Saving picture %s failed with %s", filename, ce)

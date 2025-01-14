@@ -41,9 +41,9 @@ from spinorama.filter_peq import peq_spl
 from spinorama.compute_misc import compute_contour, compute_slope_smoothness
 from spinorama.load_misc import sort_angles
 
-FLAG_FEATURE_TREND_LINES = False
-FLAG_FEATURE_CONFIDENCE_ZONES = False
-FLAG_FEATURE_ANNOTATION = False
+FLAG_FEATURE_TREND_LINES = True
+FLAG_FEATURE_CONFIDENCE_ZONES = True
+FLAG_FEATURE_ANNOTATION = True
 
 pio.templates.default = "plotly_white"
 

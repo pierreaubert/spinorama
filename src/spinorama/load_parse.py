@@ -50,7 +50,7 @@ from spinorama.load import (
     filter_graphs,
     filter_graphs_eq,
     filter_graphs_partial,
-    symmetrise_measurement,
+    symmetrise_speaker_measurements,
     spin_compute_di_eir,
 )
 
@@ -174,21 +174,10 @@ def parse_graphs_speaker(
             logger.info("Load %s failed for %s %s %s", mformat, speaker_name, mversion, morigin)
             return {}
 
-        if h_spl is not None and msymmetry == "coaxial":
-            h_spl2 = symmetrise_measurement(h_spl)
-            v_spl2 = h_spl2.copy() if v_spl is None else symmetrise_measurement(v_spl)
-            df_graph = filter_graphs(
-                speaker_name, h_spl2, v_spl2, mean_min, mean_max, mformat, distance
-            )
-        elif h_spl is not None and msymmetry == "horizontal":
-            h_spl2 = symmetrise_measurement(h_spl)
-            df_graph = filter_graphs(
-                speaker_name, h_spl2, v_spl, mean_min, mean_max, mformat, distance
-            )
-        else:
-            df_graph = filter_graphs(
-                speaker_name, h_spl, v_spl, mean_min, mean_max, mformat, distance
-            )
+        h_spl2, v_spl2 = symmetrise_speaker_measurements(h_spl, v_spl, msymmetry)
+        df_graph = filter_graphs(
+            speaker_name, h_spl2, v_spl2, mean_min, mean_max, mformat, distance
+        )
     elif mformat in ("webplotdigitizer", "rew_text_dump"):
         title = None
         df_uneven = None

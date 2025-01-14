@@ -57,10 +57,12 @@ from spinorama.speaker_display import (
 from spinorama.plot import plot_params_default, contour_params_default, radar_params_default
 
 
-def build_filename(speaker, origin, key, title, file_ext) -> str:
-    filedir = CPATH_DOCS_SPEAKERS + "/" + speaker + "/" + origin.replace("Vendors-", "") + "/" + key
+def build_filename(speaker, origin, version, graph_name, file_ext) -> str:
+    filedir = (
+        CPATH_DOCS_SPEAKERS + "/" + speaker + "/" + origin.replace("Vendors-", "") + "/" + version
+    )
     pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
-    filename = filedir + "/" + title.replace("_smoothed", "")
+    filename = filedir + "/" + graph_name.replace("_smoothed", "")
     if file_ext == "png":
         filename += "_large"
     filename += "." + file_ext
@@ -121,7 +123,7 @@ def print_graphs(
     version: str,
     origin: str,
     origins_info: dict,
-    key: str,
+    version_key: str,
     width: int,
     height: int,
     force_print: bool,
@@ -234,11 +236,12 @@ def print_graphs(
         )
 
     updated = 0
-    for title, graph in graphs.items():
-        if graph is not None:
-            # force_update = need_update()
-            force_update = False
-            for ext in ("png", "json"):
-                filename = build_filename(speaker, origin, key, title, ext)
-                updated += print_graph(filename, graph, ext, force_print or force_update)
+    for key, graph in graphs.items():
+        if graph is None:
+            continue
+        # force_update = need_update()
+        force_update = False
+        for ext in ("png", "json"):
+            filename = build_filename(speaker, origin, version_key, key, ext)
+            updated += print_graph(filename, graph, ext, force_print or force_update)
     return updated
