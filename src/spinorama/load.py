@@ -104,10 +104,33 @@ def norm_spl(spl):
     return df_normalized
 
 
+def norm_spl_not_di(spl):
+    """Normalize SPL for a set of measurements"""
+    # check
+    if "dB" in spl:
+        raise KeyError
+    # nornalize v.s. on axis
+    df_normalized = pd.DataFrame({"Freq": spl.Freq})
+    on = spl["On Axis"].to_numpy()
+    for k in spl:
+        if k != "Freq":
+            if " DI" not in k:
+                df_normalized[k] = spl[k] - on
+            else:
+                df_normalized[k] = spl[k]
+    return df_normalized
+
+
 def norm_spl_unmelted(spl):
     """Normalize SPL for a set of measurements"""
     # nornalize v.s. on axis
     return graph_melt(norm_spl(graph_unmelt(spl)))
+
+
+def norm_spl_unmelted_not_di(spl):
+    """Normalize SPL for a set of measurements"""
+    # nornalize v.s. on axis
+    return graph_melt(norm_spl_not_di(graph_unmelt(spl)))
 
 
 def filter_graphs(
@@ -379,18 +402,18 @@ def filter_graphs_partial(df, mformat, mdistance):
                 shifted_spin = shift_spl_melted_cea2034(df[k], mean_midrange)
                 dfs[k] = shifted_spin
                 logger.debug("DEBUG %s post shift cols=(%s)", k, ", ".join(set(df[k].Measurements)))
-                dfs["CEA2034 Normalized"] = norm_spl_unmelted(shifted_spin)
+                dfs["CEA2034 Normalized"] = norm_spl_unmelted_not_di(shifted_spin)
             else:
                 dfs[k] = shift_spl_melted(df[k], mean_midrange)
     else:
         logger.debug("DEBUG: mean is unknown")
         for k in df:
             if k == "CEA2034":
-                shifted_spin = shift_spl_melted_cea2034(df[k], 0.0)
+                shifted_spin = df[k].copy()
                 dfs[k] = shifted_spin
-                dfs["CEA2034 Normalized"] = norm_spl_unmelted(shifted_spin)
+                dfs["CEA2034 Normalized"] = norm_spl_unmelted_not_di(shifted_spin)
             else:
-                dfs[k] = df[k]
+                dfs[k] = df[k].copy()
 
     for k in df:
         if "unmelted" in k:
