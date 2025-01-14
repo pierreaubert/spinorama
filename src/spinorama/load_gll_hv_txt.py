@@ -123,17 +123,27 @@ def parse_graphs_speaker_gll_hv_txt(
             zipname = guesses[0]
         elif len(guesses) > 1:
             logger.error("Multiple zip files in %s", dirname)
-            return False, ()
+            return False, (pd.DataFrame(), pd.DataFrame())
         else:
             logger.error("%s does not exist", zipname)
-            return False, ()
+            return False, (pd.DataFrame(), pd.DataFrame())
 
-    tmp_dirname = "{}/tmp".format(dirname)
+    tmp_dirname = "{}/tmp/{}".format(dirname, speaker_name)
+    os.makedirs(tmp_dirname, mode=0o751, exist_ok=True)
     try:
         with zipfile.ZipFile(zipname, "r") as gll:
-            gll.extractall(tmp_dirname)
+            for file in gll.namelist():
+                with gll.open(file) as fd:
+                    base = os.path.basename(file)
+                    if base[-4:] != ".txt":
+                        continue
+                    data = fd.read()
+                    filename = "{}/{}".format(tmp_dirname, base)
+                    with open(filename, "wb") as out:
+                        out.write(data)
+
             return parse_graph_gll_hv_txt(dirname)
     except zipfile.BadZipFile:
         logger.exception("%s is a bad zipfile", zipname)
 
-    return False, ()
+    return False, (pd.DataFrame(), pd.DataFrame())

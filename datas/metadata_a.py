@@ -1933,7 +1933,6 @@ speakers_info_a: SpeakerDatabase = {
         },
     },
     "Audio Engine A2+": {
-        "skip": True,
         "brand": "Audio Engine",
         "model": "A2+",
         "type": "active",
@@ -1949,7 +1948,7 @@ speakers_info_a: SpeakerDatabase = {
                     "eac": "",
                     "yt": "https://youtu.be/mAMv_ueINlk?si=eGu5yNVAlAJ1encX",
                 },
-                "review_published": "2024xxxx",
+                "review_published": "20250114",
                 "specifications": {
                     "size": {
                         "height": 159,
@@ -1985,8 +1984,26 @@ speakers_info_a: SpeakerDatabase = {
         "price": "1200",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "vendor",
+        "default_measurement": "eac",
         "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "https://www.youtube.com/watch?v=HKrm19_asro",
+                },
+                "review_published": "20250114",
+                "specifications": {
+                    "sensitivity": 84,
+                    "impedance": 3.2,
+                    "size": {
+                        "height": 300,
+                        "width": 180,
+                        "depth": 297.6,
+                    },
+                    "weight": 6.8,
+                },
+            },
             "vendor": {
                 "origin": "Vendors-Audio First Design",
                 "format": "webplotdigitizer",
@@ -2007,25 +2024,6 @@ speakers_info_a: SpeakerDatabase = {
                     "weight": 6.8,
                 },
             },
-            #            "eac": {
-            #                "origin": "ErinsAudioCorner",
-            #                "format": "klippel",
-            #                "reviews": {
-            #                    "eac": "",
-            #                    "yt": "https://www.youtube.com/watch?v=HKrm19_asro",
-            #                },
-            #                "review_published": "202404xx",
-            #                "specifications": {
-            #                    "sensitivity": 84,
-            #                    "impedance": 3.2,
-            #                    "size": {
-            #                        "height": 300,
-            #                        "width": 180,
-            #                        "depth": 297.6,
-            #                    },
-            #                    "weight": 6.8,
-            #                },
-            #            },
         },
     },
     "Audiofocus VENU 8a": {

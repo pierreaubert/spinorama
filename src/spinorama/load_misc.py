@@ -53,12 +53,12 @@ def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:
 
 
 def check_nan(df: dict) -> float:
-    for k in df:
-        if not isinstance(df[k], pd.DataFrame):
+    for k, v in df.items():
+        if not isinstance(v, pd.DataFrame):
             continue
-        for j in df[k]:
-            if isinstance(df[k], pd.DataFrame):
-                count = df[k][j].isna().sum()
+        for j in v:
+            if isinstance(v, pd.DataFrame):
+                count = v[j].isna().sum()
                 if count > 0:
                     logger.error("%d %d %d", k, j, count)
     return np.sum(

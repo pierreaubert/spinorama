@@ -30,6 +30,7 @@ from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
 from spinorama.ltype import DataSpeaker
 from spinorama.filter_peq import Peq, peq_preamp_gain
 from spinorama.pict import write_multiformat
+from spinorama.plot import FONT_H1
 from spinorama.speaker_display import (
     display_spinorama,
     display_spinorama_normalized,
@@ -218,23 +219,19 @@ def print_graphs(
     graphs["SPL Horizontal Radar"] = display_radar_horizontal(df_speaker, radar_params)
     graphs["SPL Vertical Radar"] = display_radar_vertical(df_speaker, radar_params)
 
-    # add a title and setup legend
-    for k in graphs.values():
-        title = k.replace("_smoothed", "")
+    # add a title if needed
+    for key, graph in graphs.items():
+        title = key.replace("_smoothed", "")
         # optimised for small screens / vertical orientation
-        if graphs[k] is not None:
-            text = build_title(origin, version, speaker, title, iir)
-            graphs[k].update_layout(
-                title=dict(
-                    text=text,
-                    font=dict(
-                        size=20,
-                    ),
-                ),
-                font=dict(
-                    size=20,
-                ),
-            )
+        if graph is None:
+            continue
+        text = build_title(origin, version, speaker, title, iir)
+        graphs[key].update_layout(
+            title=dict(
+                text=text,
+                font=FONT_H1,
+            ),
+        )
 
     updated = 0
     for title, graph in graphs.items():

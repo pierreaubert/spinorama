@@ -88,7 +88,7 @@ def process(zipfile, speaker, destination_path):
     txts = glob.glob(f"{destination}/*/*.txt")
     for t in txts:
         os.unlink(t)
-    print("rmdir {}/*".format(destination))
+    print("removing {}/*".format(destination))
     dirs = glob.glob(f"{destination}/*")
     for d in dirs:
         if os.path.isdir(d):
@@ -191,10 +191,7 @@ def match(version, name):
         return True
 
     # some exceptions
-    if version == "wide":
-        return True
-
-    return False
+    return version == "wide"
 
 
 def find_speaker(zipfile):

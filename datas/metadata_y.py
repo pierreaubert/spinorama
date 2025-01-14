@@ -234,10 +234,9 @@ speakers_info_y: SpeakerDatabase = {
             },
         },
     },
-    "Yamaha NS-10M": {
-        "skip": True,
+    "Yamaha NS-10M Studio": {
         "brand": "Yamaha",
-        "model": "NS-10M",
+        "model": "NS-10M Studio",
         "type": "passive",
         "price": "",
         "amount": "pair",
@@ -248,7 +247,6 @@ speakers_info_y: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "",
                     "yt": "https://www.youtube.com/watch?v=0pYKuBdhmdc",
                 },
                 "review_published": "202404xx",
@@ -328,11 +326,10 @@ speakers_info_y: SpeakerDatabase = {
         },
     },
     "Yamaha NS-800A": {
-        "skip": True,
         "brand": "Yamaha",
         "model": "NS-800A",
         "type": "passive",
-        "price": "",
+        "price": "4800",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "eac",
@@ -341,10 +338,10 @@ speakers_info_y: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/yamaha_ns800a/",
                     "yt": "https://www.youtube.com/watch?v=jRdwPAjHHZA",
                 },
-                "review_published": "202404xx",
+                "review_published": "20250114",
                 "specifications": {
                     "sensitivity": 86.5,
                     "impedance": 3.8,

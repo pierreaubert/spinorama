@@ -34,23 +34,22 @@ speakers_info_d: SpeakerDatabase = {
         },
     },
     "Dali Rubikore 6": {
-        "skip": True,
         "brand": "Dali",
         "model": "Rubikore 6",
         "type": "passive",
-        "price": "",
+        "price": "8000",
         "amount": "pair",
         "shape": "floorstanders",
-        "default_measurement": "eac",
+        "default_measurement": "eac-v1-0-degree",
         "measurements": {
-            "eac": {
+            "eac-v1-0-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/dali_rubikore_6/",
                     "yt": "https://www.youtube.com/watch?v=IlpFZPevKpM",
                 },
-                "review_published": "202404xx",
+                "review_published": "20250114",
                 "specifications": {
                     "sensitivity": 88.5,
                     "impedance": 4,
@@ -64,6 +63,30 @@ speakers_info_d: SpeakerDatabase = {
                     },
                     "weight": 23.0,
                 },
+                "notes": "This measurement is done at 0 degree with respect to the speaker. Dali recommend to listen at 30 degrees and that's howthe other measurement as been done.",
+            },
+            "eac-v1-30-degree": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/dali_rubikore_6/",
+                    "yt": "https://www.youtube.com/watch?v=IlpFZPevKpM",
+                },
+                "review_published": "20250114",
+                "specifications": {
+                    "sensitivity": 88.5,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 990,
+                        "width": 200,
+                        "depth": 380,
+                    },
+                    "weight": 23.0,
+                },
+                "notes": "This measurement is done at 30 degrees with respect to the speaker, that's Dali recommend angle to listen to the speaker. The other measurement is done at 0 degree and is useful to compare speakers together",
             },
         },
     },
@@ -753,7 +776,6 @@ speakers_info_d: SpeakerDatabase = {
         },
     },
     "Dayton Audio OPAL1": {
-        "skip": True,
         "brand": "Dayton Audio",
         "model": "OPAL1",
         "type": "passive",
@@ -769,7 +791,7 @@ speakers_info_d: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/dayton_opal1/",
                     "yt": "https://youtu.be/BDv222LHNM0",
                 },
-                "review_published": "202404xx",
+                "review_published": "20250114",
                 "specifications": {
                     "sensitivity": 78.5,
                     "impedance": 4.3,
@@ -1948,7 +1970,6 @@ speakers_info_d: SpeakerDatabase = {
         },
     },
     "Dynaudio Emit 30": {
-        "skip": True,
         "brand": "Dynaudio",
         "model": "Emit 30",
         "type": "passive",
@@ -1963,7 +1984,7 @@ speakers_info_d: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/dynaudio_emit_30/",
                     "yt": "",
                 },
-                "review_published": "2024xxxx",
+                "review_published": "20250114",
                 "specifications": {
                     "sensitivity": 88,
                     "impedance": 4,

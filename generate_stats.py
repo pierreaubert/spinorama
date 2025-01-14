@@ -330,7 +330,7 @@ def main():
         eqmeta = json.load(f)
         for k in jsmeta:
             if k in eqmeta:
-                jsmeta[k]["eqs"] = eqmeta[k]["eqs"]
+                jsmeta[k]["eqs"] = eqmeta[k].get("eqs", {})
 
     logger.warning("Data %s loaded (%d speakers)!", meta_filename, len(jsmeta))
 

@@ -703,7 +703,7 @@ speakers_info_r: SpeakerDatabase = {
         "brand": "RCF",
         "model": "NX 915-A",
         "type": "active",
-        "price": "",
+        "price": "1000",
         "amount": "each",
         "shape": "liveportable",
         "default_measurement": "vendor-pattern-100x60",
@@ -728,6 +728,72 @@ speakers_info_r: SpeakerDatabase = {
                         "depth": 451,
                     },
                     "weight": 24.1,
+                },
+            },
+        },
+    },
+    "RCF NX 932-A": {
+        "brand": "RCF",
+        "model": "NX 932-A",
+        "type": "active",
+        "price": "1250",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x70",
+        "measurements": {
+            "vendor-pattern-100x70": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20250109",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 70,
+                    },
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 620,
+                        "width": 362,
+                        "depth": 405,
+                    },
+                    "weight": 22.9,
+                },
+            },
+        },
+    },
+    "RCF NX 945-A": {
+        "brand": "RCF",
+        "model": "NX 945-A",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x70",
+        "measurements": {
+            "vendor-pattern-100x70": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20250109",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 70,
+                    },
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 705,
+                        "width": 420,
+                        "depth": 451,
+                    },
+                    "weight": 27.3,
                 },
             },
         },
@@ -798,11 +864,44 @@ speakers_info_r: SpeakerDatabase = {
             },
         },
     },
+    "RCF NXL 24-A MK2": {
+        "brand": "RCF",
+        "model": "NXL 24-A MK2",
+        "type": "active",
+        "price": "1777",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x30",
+        "measurements": {
+            "vendor-pattern-100x30": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20250109",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 30,
+                    },
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 1051,
+                        "width": 198,
+                        "depth": 290,
+                    },
+                    "weight": 24.4,
+                },
+            },
+        },
+    },
     "RCF NXL 44-A MK2": {
         "brand": "RCF",
         "model": "NXL 44-A MK2",
         "type": "active",
-        "price": "1200",
+        "price": "2500",
         "amount": "each",
         "shape": "liveportable",
         "default_measurement": "vendor-pattern-100x25",
@@ -827,6 +926,39 @@ speakers_info_r: SpeakerDatabase = {
                         "depth": 373,
                     },
                     "weight": 33.4,
+                },
+            },
+        },
+    },
+    "RCF NXW 44-A": {
+        "brand": "RCF",
+        "model": "NXW 44-A",
+        "type": "active",
+        "price": "2444",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x50",
+        "measurements": {
+            "vendor-pattern-100x50": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20250109",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 1080,
+                        "width": 297,
+                        "depth": 373,
+                    },
+                    "weight": 31.55,
                 },
             },
         },

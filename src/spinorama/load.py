@@ -391,9 +391,9 @@ def filter_graphs_partial(df, mformat, mdistance):
         dfs["{}_unmelted".format(k)] = graph_unmelt(dfs[k])
 
     logger.debug("DEBUG  filter_graphs partial (%s)", ", ".join(dfs.keys()))
-    for k in dfs:
+    for k, v in dfs.items():
         if k not in ("sensitivity", "sensitivity_1m", "sensitivity_distance"):
-            logger.debug(dfs[k].head())
+            logger.debug(v.head())
 
     logger.debug(
         "filter in: keys=(%s) out: mean=%f keys=(%s)",

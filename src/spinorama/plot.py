@@ -41,6 +41,9 @@ from spinorama.filter_peq import peq_spl
 from spinorama.compute_misc import compute_contour, compute_slope_smoothness
 from spinorama.load_misc import sort_angles
 
+FLAG_FEATURE_TREND_LINES = False
+FLAG_FEATURE_CONFIDENCE_ZONES = False
+FLAG_FEATURE_ANNOTATION = False
 
 pio.templates.default = "plotly_white"
 
@@ -478,7 +481,11 @@ def plot_spinorama_traces(
         first_spl, last_spl, _, _ = compute_slope_smoothness(
             data_frame=spin, measurement=measurement, is_normalized=is_normalized
         )
-        if measurement in ("Sound Power", "Early Reflections", "Listening Window"):
+        if FLAG_FEATURE_TREND_LINES and measurement in (
+            "Sound Power",
+            "Early Reflections",
+            "Listening Window",
+        ):
             lines.append(
                 go.Scatter(
                     x=[first_freq, last_freq],
@@ -488,7 +495,11 @@ def plot_spinorama_traces(
                     showlegend=False,
                 )
             )
-        if measurement in ("Sound Power") and len(minmax_slopes) > 0:
+        if (
+            FLAG_FEATURE_CONFIDENCE_ZONES
+            and measurement in ("Sound Power")
+            and len(minmax_slopes) > 0
+        ):
             # aligned with VituixCAD
             ex = 1.0
             slope_min, slope_max = minmax_slopes[measurement]
@@ -529,16 +540,21 @@ def plot_spinorama_traces(
         first_spl, last_spl, _, _ = compute_slope_smoothness(
             data_frame=spin, measurement=measurement, is_normalized=is_normalized
         )
-        lines_di.append(
-            go.Scatter(
-                x=[first_freq, last_freq],
-                y=[first_spl, last_spl],
-                line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
-                opacity=1,
-                showlegend=False,
+        if FLAG_FEATURE_TREND_LINES:
+            lines_di.append(
+                go.Scatter(
+                    x=[first_freq, last_freq],
+                    y=[first_spl, last_spl],
+                    line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
+                    opacity=1,
+                    showlegend=False,
+                )
             )
-        )
-        if measurement == "Sound Power DI" and len(minmax_slopes) > 0:
+        if (
+            FLAG_FEATURE_CONFIDENCE_ZONES
+            and measurement == "Sound Power DI"
+            and len(minmax_slopes) > 0
+        ):
             # aligned with VituixCAD
             ex = 1.0
             slope_min, slope_max = minmax_slopes[measurement]
@@ -661,7 +677,8 @@ def plot_spinorama(spin, params, minmax_slopes, is_normalized):
     fig.update_yaxes(generate_yaxis_spl(t_min, t_max, 5))
     fig.update_yaxes(generate_yaxis_di(di_min, di_max, 5), secondary_y=True)
 
-    fig = plot_spinorama_annotation(fig, spin, is_normalized)
+    if FLAG_FEATURE_ANNOTATION:
+        fig = plot_spinorama_annotation(fig, spin, is_normalized)
 
     fig.update_layout(common_layout(params))
     return fig
@@ -873,7 +890,8 @@ def plot_graph_regression(df, measurement, params, minmax_slopes, is_normalized)
         fig.add_traces(plot_graph_regression_traces(curve, measurement, params))
 
     if (
-        ("Estimated In-Room Response" in measurement or "Sound Power" in measurement)
+        FLAG_FEATURE_CONFIDENCE_ZONES
+        and ("Estimated In-Room Response" in measurement or "Sound Power" in measurement)
         and (
             (is_normalized and "CEA2034 Normalized_unmelted" in df)
             or (not is_normalized and "CEA2034_unmelted" in df)

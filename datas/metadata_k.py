@@ -231,7 +231,6 @@ speakers_info_k: SpeakerDatabase = {
         },
     },
     "Kali SM-5": {
-        "skip": True,
         "brand": "Kali",
         "model": "SM-5",
         "type": "active",
@@ -244,7 +243,6 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "/",
                     "yt": "https://youtu.be/EMm5IV95X_U",
                 },
                 "review_published": "2024xxxx",
@@ -1099,13 +1097,15 @@ speakers_info_k: SpeakerDatabase = {
         "price": "2200",
         "shape": "floorstanders",
         "amount": "pair",
-        "default_measurement": "vendor",
+        "default_measurement": "eac",
         "measurements": {
-            "vendor": {
-                "origin": "Vendors-KEF",
-                "format": "rew_text_dump",
-                "quality": "medium",
-                "review_published": "20241223",
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20250114",
+                "reviews": {
+                    "yt": "https://youtu.be/dPIWppFirmk?feature=shared",
+                },
                 "specifications": {
                     "sensitivity": 89,
                     "impedance": 4,
@@ -1119,6 +1119,12 @@ speakers_info_k: SpeakerDatabase = {
                     },
                     "weight": 22.5,
                 },
+            },
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
                 "notes": note_kef_data,
             },
         },

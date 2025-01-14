@@ -1368,23 +1368,41 @@ speakers_info_p: SpeakerDatabase = {
         },
     },
     "PSAudio aspen FR5": {
-        "skip": True,
         "brand": "PSAudio",
         "model": "aspen FR5",
         "type": "passive",
         "price": "3500",
         "shape": "bookshelves",
         "amount": "pair",
-        "default_measurement": "eac",
+        "default_measurement": "eac-v1-20-degree",
         "measurements": {
-            "eac": {
+            "eac-v1-20-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/ps_audio_aspen_fr5/",
-                    "yt": "",
+                    "yt": "https://youtu.be/EGAmQC2hFbs?feature=shared",
                 },
-                "review_published": "2024xxxx",
+                "review_published": "20250114",
+                "specifications": {
+                    "sensitivity": 83.5,
+                    "impedance": 5.6,
+                    "size": {
+                        "height": 368.3,
+                        "width": 203.2,
+                        "depth": 330.2,
+                    },
+                    "weight": 12.1,
+                },
+            },
+            "eac-v1-0-degree": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/ps_audio_aspen_fr5/",
+                    "yt": "https://youtu.be/EGAmQC2hFbs?feature=shared",
+                },
+                "review_published": "20250114",
                 "specifications": {
                     "sensitivity": 83.5,
                     "impedance": 5.6,
