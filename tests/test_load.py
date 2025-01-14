@@ -248,31 +248,31 @@ class SpinoramaWebPlotDigitizerLoadTests(unittest.TestCase):
 
 class SpinoramaFilterGraphsTests(unittest.TestCase):
     def setUp(self):
-        self.df = {}
+        self.dfs = {}
         #
         _, (h, v) = parse_graphs_speaker_klippel(
             "datas/measurements", "Neumann", "Neumann KH 80", "asr-v3-20200711", None
         )
-        self.df["klippel"] = filter_graphs("Neumann KH 80", h, v, MEAN_MIN, MEAN_MAX, "klippel", 1)
+        self.dfs["klippel"] = filter_graphs("Neumann KH 80", h, v, MEAN_MIN, MEAN_MAX, "klippel", 1)
         #
         _, (h, v) = parse_graphs_speaker_princeton(
             "datas/measurements", "Genelec", "Genelec 8351A", "princeton", None
         )
-        self.df["princeton"] = filter_graphs(
+        self.dfs["princeton"] = filter_graphs(
             "Genelec 8351A", h, v, MEAN_MIN, MEAN_MAX, "princeton", 1
         )
         #
         _, (h, v) = parse_graphs_speaker_gll_hv_txt(
             "datas/measurements", "RCF ART 708-A MK4", "vendor-pattern-90x70"
         )
-        self.df["spl_hv"] = filter_graphs(
+        self.dfs["spl_hv"] = filter_graphs(
             "RCF ART 708-A MK4", h, v, MEAN_MIN, MEAN_MAX, "gll_hv_txt", 10
         )
         #
         _, (h, v) = parse_graphs_speaker_spl_hv_txt(
             "datas/measurements", "Andersson", "Andersson HIS 2.1", "misc-ageve"
         )
-        self.df["gll_hv"] = filter_graphs(
+        self.dfs["gll_hv"] = filter_graphs(
             "Andersson HIS 2.1", h, v, MEAN_MIN, MEAN_MAX, "spl_hv_txt", 1
         )
 
@@ -304,7 +304,7 @@ class SpinoramaFilterGraphsTests(unittest.TestCase):
                 "CEA2034 Normalized",
             ]
         )
-        for df in self.df.values():
+        for df in self.dfs.values():
             self.assertSetEqual(expected_set, set(df.keys()))
 
 
@@ -316,20 +316,39 @@ class SpinoramaFilterGraphsTests(unittest.TestCase):
 
 class SpinoramaFilterGraphsPartialTests(unittest.TestCase):
     def setUp(self):
-        self.speaker_name = "BIC America Venturi DV62si"
-        status, (self.title, self.df_melted) = parse_graphs_speaker_rew_text_dump(
+        self.dfs = {}
+
+        speaker_name = "BIC America Venturi DV62si"
+        status, (title, df_melted) = parse_graphs_speaker_rew_text_dump(
             "datas/measurements",
             "BIC America",
-            self.speaker_name,
+            speaker_name,
             "",
             "vendor",
         )
         self.assertTrue(status)
-        self.assertEqual(self.title, "CEA2034")
-        self.df_unmelted = graph_melt(unify_freq(self.df_melted))
-        self.df_full = spin_compute_di_eir(self.speaker_name, self.title, self.df_unmelted)
-        self.df = filter_graphs_partial(self.df_full, "rew_text_dump", 1.0)
-        self.assertIsNotNone(self.df)
+        self.assertEqual(title, "CEA2034")
+        df_unmelted = graph_melt(unify_freq(df_melted))
+        df_full = spin_compute_di_eir(speaker_name, title, df_unmelted)
+        df_filtered = filter_graphs_partial(df_full, "rew_text_dump", 1.0)
+        self.assertIsNotNone(df_filtered)
+        self.dfs["rew_text_dump"] = df_filtered
+
+        speaker_name = "RBH Sound R-5"
+        status, (title, df_melted) = parse_graphs_speaker_webplotdigitizer(
+            "datas/measurements",
+            "RBH Sound",
+            speaker_name,
+            "",
+            "misc-audioholics",
+        )
+        self.assertTrue(status)
+        self.assertEqual(title, "CEA2034")
+        df_unmelted = graph_unmelt(df_melted)
+        df_full = spin_compute_di_eir(speaker_name, title, df_unmelted)
+        df_filtered = filter_graphs_partial(df_full, "webplotdigitizer", 1.0)
+        self.assertIsNotNone(df_filtered)
+        self.dfs["webplotdigitizer"] = df_filtered
 
     def test_keys(self):
         expected_set = set(
@@ -345,7 +364,8 @@ class SpinoramaFilterGraphsPartialTests(unittest.TestCase):
                 "Estimated In-Room Response_unmelted",
             ]
         )
-        self.assertSetEqual(expected_set, set(self.df.keys()))
+        for df in self.dfs.values():
+            self.assertSetEqual(expected_set, set(df.keys()))
 
 
 if __name__ == "__main__":
