@@ -803,6 +803,7 @@ speakers_info_a: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/spinorama-measurements-of-a-19-center-speaker-andersson-pure-acoustics.55029/#post-2002105",
                 },
                 "review_published": "20240616",
+                "symmetry": "vertical",
                 "specifications": {
                     "sensitivity": 89,
                     "impedance": 8,
