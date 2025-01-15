@@ -20,7 +20,7 @@
 # import os
 import unittest
 import pandas as pd
-from spinorama.load import graph_melt
+from spinorama.misc import graph_melt
 from spinorama.load_klippel import parse_graph_freq_klippel
 from spinorama.load_gll_hv_txt import parse_graphs_speaker_gll_hv_txt
 from spinorama.compute_estimates import estimates, compute_sensitivity

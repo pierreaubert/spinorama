@@ -24,7 +24,7 @@ from scipy.io import loadmat
 
 from spinorama import logger
 from spinorama.ltype import StatusOr
-from spinorama.load_misc import sort_angles
+from spinorama.misc import sort_angles
 from spinorama.compute_misc import resample
 
 

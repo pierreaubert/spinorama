@@ -23,7 +23,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
-from spinorama.load_misc import graph_unmelt
+from spinorama.misc import graph_unmelt
 from spinorama.filter_peq import peq_spl, peq_preamp_gain
 from spinorama.compute_misc import savitzky_golay, compute_statistics
 from spinorama.plot import (

@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import pathlib
+
 import pandas as pd
 import numpy as np
 
@@ -64,3 +66,43 @@ def check_nan(df: dict) -> float:
     return np.sum(
         [df[frame].isna().sum().sum() for frame in df if isinstance(df[frame], pd.DataFrame)]
     )
+
+
+def need_update(filename: str, dependencies: list[str]) -> bool:
+    """return True if dependencies are newer than filename"""
+
+    # if filename doesn't exist then True
+    path = pathlib.Path(filename)
+    if not path.is_file():
+        return True
+
+    # if file is empty (we store images or json)
+    file_stats = path.stat()
+    if file_stats.st_size == 0:
+        return True
+
+    # if one of the dep is newer than file then True
+    for dep in dependencies:
+        dep_path = pathlib.Path(dep)
+        if not dep_path or dep_path.is_symlink():
+            continue
+        dep_stats = dep_path.stat()
+        if dep_stats.st_mtime > file_stats.st_mtime:
+            return True
+
+    return False
+
+
+def write_if_different(new_content: str, filename: str, force: bool):
+    """Write the new content to disk only if it is different from the current one.
+    The unchanged html files are then untouched and http cache effect is better.
+    """
+    identical = False
+    path = pathlib.Path(filename)
+    if path.exists():
+        old_content = path.read_text(encoding="utf-8")
+        if old_content == new_content:
+            identical = True
+
+    if not identical or force:
+        path.write_text(new_content, encoding="utf-8")

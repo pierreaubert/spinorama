@@ -29,7 +29,7 @@ from spinorama.compute_scores import octave
 from spinorama.filter_peq import Peq, peq_spl
 from spinorama.filter_scores import scores_apply_filter
 from spinorama.filter_peq import peq_apply_measurements
-from spinorama.load_misc import graph_melt
+from spinorama.misc import graph_melt
 from spinorama.auto_misc import have_full_measurements
 
 # cython import

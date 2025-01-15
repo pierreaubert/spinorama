@@ -24,7 +24,7 @@ import numpy as np
 import pandas as pd
 import scipy.io
 
-from spinorama.load import graph_melt
+from spinorama.misc import graph_melt
 from spinorama.load_klippel import parse_graph_freq_klippel
 from spinorama.compute_cea2034 import (
     compute_cea2034,

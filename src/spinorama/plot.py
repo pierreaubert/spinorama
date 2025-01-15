@@ -39,7 +39,7 @@ from spinorama.constant_paths import (
 )
 from spinorama.filter_peq import peq_spl
 from spinorama.compute_misc import compute_contour, compute_slope_smoothness
-from spinorama.load_misc import sort_angles
+from spinorama.misc import sort_angles
 
 FLAG_FEATURE_TREND_LINES = True
 FLAG_FEATURE_CONFIDENCE_ZONES = True

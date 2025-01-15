@@ -24,7 +24,7 @@ import pandas as pd
 
 from spinorama import logger
 from spinorama.ltype import StatusOr
-from spinorama.load_misc import sort_angles
+from spinorama.misc import sort_angles
 
 
 def parse_graph_gll_hv_txt(dir_path: str) -> StatusOr[tuple[pd.DataFrame, pd.DataFrame]]:

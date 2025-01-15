@@ -23,7 +23,7 @@ from scipy.stats import linregress
 
 from spinorama import logger
 from spinorama.ltype import Vector
-from spinorama.load_misc import graph_unmelt
+from spinorama.misc import graph_unmelt
 from spinorama.filter_peq import Peq, peq_spl
 from spinorama.compute_misc import savitzky_golay
 

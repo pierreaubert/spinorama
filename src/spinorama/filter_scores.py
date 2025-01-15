@@ -20,7 +20,7 @@ import pandas as pd
 
 from spinorama import logger
 from spinorama.ltype import DataSpeaker, ScoreType
-from spinorama.load import graph_melt, graph_unmelt
+from spinorama.misc import graph_melt, graph_unmelt
 from spinorama.compute_scores import speaker_pref_rating, nbd
 from spinorama.compute_cea2034 import compute_cea2034, estimated_inroom_hv, listening_window
 from spinorama.filter_peq import Peq, peq_apply_measurements

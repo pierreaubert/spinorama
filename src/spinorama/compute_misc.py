@@ -30,7 +30,7 @@ from spinorama.constant_paths import (
     DIRECTIVITY_MIN_FREQ,
     DIRECTIVITY_MAX_FREQ,
 )
-from spinorama.load_misc import sort_angles
+from spinorama.misc import sort_angles
 from spinorama.compute_scores import octave
 
 # pd.set_option('display.max_rows', None)

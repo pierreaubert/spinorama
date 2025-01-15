@@ -24,7 +24,7 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from spinorama.load_misc import sort_angles
+from spinorama.misc import sort_angles
 from spinorama.compute_misc import compute_contour, reshape
 
 

@@ -24,7 +24,7 @@ import pandas as pd
 from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
 from spinorama.compute_misc import unify_freq
 
-from spinorama.load_misc import sort_angles, graph_melt, graph_unmelt
+from spinorama.misc import sort_angles, graph_melt, graph_unmelt
 from spinorama.load_klippel import parse_graph_freq_klippel, parse_graphs_speaker_klippel
 from spinorama.load_princeton import parse_graph_princeton, parse_graphs_speaker_princeton
 from spinorama.load_spl_hv_txt import parse_graphs_speaker_spl_hv_txt

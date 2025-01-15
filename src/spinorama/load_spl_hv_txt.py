@@ -23,7 +23,7 @@ import pandas as pd
 from datas.incomplete import known_incomplete_measurements
 from spinorama import logger
 from spinorama.ltype import StatusOr
-from spinorama.load_misc import sort_angles
+from spinorama.misc import sort_angles
 
 
 def parse_graph_spl_find_file(dirpath: str, orientation: str) -> StatusOr[list[str]]:

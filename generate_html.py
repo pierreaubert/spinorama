@@ -56,7 +56,7 @@ from generate_common import (
 )
 
 import spinorama.constant_paths as cpaths
-from spinorama.need_update import need_update, write_if_different
+from spinorama.misc import need_update, write_if_different
 
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"

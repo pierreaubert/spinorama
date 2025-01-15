@@ -23,7 +23,7 @@ import numpy as np
 from spinorama import logger
 from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
 from spinorama.ltype import DataSpeaker, OptimResult
-from spinorama.load_misc import graph_unmelt
+from spinorama.misc import graph_unmelt
 from spinorama.filter_peq import Peq
 from spinorama.compute_misc import compute_statistics
 from spinorama.filter_peq import peq_print
