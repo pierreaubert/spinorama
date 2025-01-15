@@ -133,6 +133,16 @@ def norm_spl_unmelted_not_di(spl):
     return graph_melt(norm_spl_not_di(graph_unmelt(spl)))
 
 
+def norm_pir(df, on):
+    k = "Estimated In-Room Response"
+    pir_values = graph_unmelt(df[k])[k].to_numpy()
+    on_values = graph_unmelt(on)["On Axis"].to_numpy()
+    pir_normalized = pir_values - on_values
+    return graph_melt(
+        pd.DataFrame({"Freq": df[k].Freq, "Estimated In-Room Response": pir_normalized})
+    )
+
+
 def filter_graphs(
     speaker_name: str,
     h_spl,
@@ -200,6 +210,7 @@ def filter_graphs(
         ["Horizontal Reflections", horizontal_reflections],
         ["Vertical Reflections", vertical_reflections],
         ["Estimated In-Room Response", estimated_inroom_hv],
+        ["Estimated In-Room Response Normalized", estimated_inroom_hv],
         ["On Axis", compute_onaxis],
         ["CEA2034", compute_cea2034],
         ["CEA2034 Normalized", compute_cea2034],
@@ -230,7 +241,7 @@ def filter_graphs(
                 df_funct = functor(sh_spl)
             elif title == "Vertical Reflections":
                 df_funct = functor(sv_spl)
-            elif title == "CEA2034 Normalized":
+            elif "Normalized" in title:
                 df_funct = functor(norm_spl(sh_spl), norm_spl(sv_spl))
             else:
                 df_funct = functor(sh_spl, sv_spl)
@@ -312,6 +323,7 @@ def filter_graphs_eq(
         ["Horizontal Reflections", horizontal_reflections],
         ["Vertical Reflections", vertical_reflections],
         ["Estimated In-Room Response", estimated_inroom_hv],
+        ["Estimated In-Room Response Normalized", estimated_inroom_hv],
         ["On Axis", compute_onaxis],
         ["CEA2034", compute_cea2034],
         ["CEA2034 Normalized", compute_cea2034],
@@ -342,7 +354,7 @@ def filter_graphs_eq(
                 df_funct = functor(sh_spl)
             elif title == "Vertical Reflections":
                 df_funct = functor(sv_spl)
-            elif title == "CEA2034 Normalized":
+            elif "Normalized" in title:
                 df_funct = functor(norm_spl(sh_spl), norm_spl(sv_spl))
             else:
                 df_funct = functor(sh_spl, sv_spl)
@@ -390,40 +402,47 @@ def filter_graphs_partial(df, mformat, mdistance):
                 on, curve, mformat, mdistance
             )
 
-    if mean_midrange is not None:
-        logger.debug("DEBUG: mean %f", mean_midrange)
-        if mean_sensitivity is not None and mean_sensitivity > 20:
-            dfs["sensitivity"] = mean_sensitivity
-            dfs["sensitivity_distance"] = mdistance
-            dfs["sensitivity_1m"] = mean_sensitivity_1m
-        for k in df:
-            if k == "CEA2034":
-                logger.debug("DEBUG %s pre shift cols=(%s)", k, ", ".join(set(df[k].Measurements)))
-                shifted_spin = shift_spl_melted_cea2034(df[k], mean_midrange)
-                dfs[k] = shifted_spin
-                logger.debug("DEBUG %s post shift cols=(%s)", k, ", ".join(set(df[k].Measurements)))
-                dfs["CEA2034 Normalized"] = norm_spl_unmelted_not_di(shifted_spin)
-            else:
-                dfs[k] = shift_spl_melted(df[k], mean_midrange)
-    else:
-        logger.debug("DEBUG: mean is unknown")
-        for k in df:
-            if k == "CEA2034":
-                shifted_spin = df[k].copy()
-                dfs[k] = shifted_spin
-                dfs["CEA2034 Normalized"] = norm_spl_unmelted_not_di(shifted_spin)
-            else:
-                dfs[k] = df[k].copy()
+    if mean_midrange is None:
+        mean_midrange = 0.0
+    logger.debug("DEBUG: mean %f", mean_midrange)
 
+    # update sensitivity
+    if mean_sensitivity is not None and mean_sensitivity > 20:
+        dfs["sensitivity"] = mean_sensitivity
+        dfs["sensitivity_distance"] = mdistance
+        dfs["sensitivity_1m"] = mean_sensitivity_1m
+
+    # add normalized graphs if needed and unmelted ones
     for k in df:
+        logger.debug("DEBUG %s pre shift cols=(%s)", k, ", ".join(set(df[k].Measurements)))
+        if k == "CEA2034":
+            shifted_spin = shift_spl_melted_cea2034(df[k], mean_midrange)
+            dfs[k] = shifted_spin
+            dfs["CEA2034 Normalized"] = norm_spl_unmelted_not_di(shifted_spin)
+        elif k == "Estimated In-Room Response":
+            shifted_spl = shift_spl_melted(df[k], mean_midrange)
+            dfs[k] = shifted_spl
+            if on is not None:
+                dfs["Estimated In-Room Response Normalized"] = norm_pir(df, on)
+        else:
+            dfs[k] = shift_spl_melted(df[k], mean_midrange)
+
         if "unmelted" in k:
             continue
         unmelted = "{}_unmelted".format(k)
         if unmelted not in dfs and isinstance(dfs[k], pd.DataFrame):
             dfs[unmelted] = graph_unmelt(dfs[k])
+
     # note: not in df but could be in dfs
     if "CEA2034 Normalized" in dfs and "CEA2034 Normalized_unmelted" not in dfs:
         dfs["CEA2034 Normalized_unmelted"] = graph_unmelt(dfs["CEA2034 Normalized"])
+    if (
+        "Estimated In-Room Response Normalized" in dfs
+        and "Estimated In-Room Response Normalized_unmelted" not in dfs
+    ):
+        dfs["Estimated In-Room Response Normalized_unmelted"] = graph_unmelt(
+            dfs["Estimated In-Room Response Normalized"]
+        )
 
     logger.debug("DEBUG  filter_graphs partial (%s)", ", ".join(dfs.keys()))
     for k, v in dfs.items():

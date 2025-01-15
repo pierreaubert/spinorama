@@ -64,6 +64,9 @@ def get_minmax_slopes(df, is_normalized):
     return None, None
 
 
+# ----------------------------------------------------------------------
+# provide "as measured" and "normalized" versions
+# ----------------------------------------------------------------------
 def display_spinorama_common(df, graph_params, is_normalized):
     spin, slopes = get_minmax_slopes(df, is_normalized=is_normalized)
     if spin is None:
@@ -85,17 +88,6 @@ def display_spinorama(df, graph_params=plot_params_default):
 
 def display_spinorama_normalized(df, graph_params=plot_params_default):
     return display_spinorama_common(df, graph_params, is_normalized=True)
-
-
-def display_reflection_early(df, graph_params=plot_params_default):
-    try:
-        if "Early Reflections_unmelted" not in df:
-            return None
-    except KeyError as ke:
-        logger.warning("Display Early Reflections failed with %s", ke)
-        return None
-    else:
-        return plot_graph(df["Early Reflections_unmelted"], graph_params)
 
 
 def display_onaxis(df, graph_params=plot_params_default):
@@ -134,6 +126,20 @@ def display_inroom(df, graph_params=plot_params_default):
         if spin is not None:
             slopes = compute_minmax_slopes(spin, is_normalized=True)
         return plot_graph_regression(df, "Estimated In-Room Response", graph_params, slopes, False)
+
+
+# ----------------------------------------------------------------------
+# provide "as measured" graphs
+# ----------------------------------------------------------------------
+def display_reflection_early(df, graph_params=plot_params_default):
+    try:
+        if "Early Reflections_unmelted" not in df:
+            return None
+    except KeyError as ke:
+        logger.warning("Display Early Reflections failed with %s", ke)
+        return None
+    else:
+        return plot_graph(df["Early Reflections_unmelted"], graph_params)
 
 
 def display_reflection_horizontal(df, graph_params=plot_params_default):

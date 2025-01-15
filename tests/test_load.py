@@ -296,6 +296,8 @@ class SpinoramaFilterGraphsTests(unittest.TestCase):
                 "Vertical Reflections",
                 "Estimated In-Room Response_unmelted",
                 "Estimated In-Room Response",
+                "Estimated In-Room Response Normalized_unmelted",
+                "Estimated In-Room Response Normalized",
                 "On Axis_unmelted",
                 "On Axis",
                 "CEA2034_unmelted",
@@ -362,6 +364,8 @@ class SpinoramaFilterGraphsPartialTests(unittest.TestCase):
                 "sensitivity_1m",
                 "Estimated In-Room Response",
                 "Estimated In-Room Response_unmelted",
+                "Estimated In-Room Response Normalized_unmelted",
+                "Estimated In-Room Response Normalized",
             ]
         )
         for df in self.dfs.values():

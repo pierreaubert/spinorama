@@ -35,7 +35,9 @@ from spinorama.speaker_display import (
     display_spinorama,
     display_spinorama_normalized,
     display_onaxis,
+    display_onaxis_normalized,
     display_inroom,
+    display_inroom_normalized,
     display_reflection_early,
     display_reflection_horizontal,
     display_reflection_vertical,
@@ -91,7 +93,7 @@ def build_title(origin: str, version: str, speaker: str, title: str, iir: Peq) -
     return "{2} for {0} measured by {1}{3}".format(speaker, whom, title, gain)
 
 
-def print_graph(filename, chart, ext, force) -> int:
+def print_a_graph(filename, chart, ext, force) -> int:
     updated = 0
 
     check = (
@@ -144,7 +146,7 @@ def print_graphs(
         return 0
 
     if len(df_speaker.keys()) == 0:
-        # if print_graph is called before df_speaker is ready
+        # if print_a_graph is called before df_speaker is ready
         # fix: ray call above
         return 0
 
@@ -165,7 +167,9 @@ def print_graphs(
         ("CEA2034", display_spinorama),
         ("CEA2034 Normalized", display_spinorama_normalized),
         ("On Axis", display_onaxis),
+        ("On Axis Normalized", display_onaxis_normalized),
         ("Estimated In-Room Response", display_inroom),
+        ("Estimated In-Room Response Normalized", display_inroom_normalized),
         ("Early Reflections", display_reflection_early),
         ("Horizontal Reflections", display_reflection_horizontal),
         ("Vertical Reflections", display_reflection_vertical),
@@ -243,5 +247,5 @@ def print_graphs(
         force_update = False
         for ext in ("png", "json"):
             filename = build_filename(speaker, origin, version_key, key, ext)
-            updated += print_graph(filename, graph, ext, force_print or force_update)
+            updated += print_a_graph(filename, graph, ext, force_print or force_update)
     return updated
