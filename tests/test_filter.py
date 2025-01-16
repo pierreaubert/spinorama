@@ -23,7 +23,24 @@ import unittest
 import numpy as np
 import numpy.testing as npt
 
+from spinorama.compute_misc import unify_freq
 from spinorama.filter_iir import Biquad
+from spinorama.filter_scores import scores_apply_filter, noscore_apply_filter
+from spinorama.misc import graph_melt, graph_unmelt
+from spinorama.load_rew_eq import parse_eq_iir_rews
+from spinorama.load_klippel import parse_graphs_speaker_klippel
+from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
+from spinorama.load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
+from spinorama.load import (
+    filter_graphs,
+    filter_graphs_partial,
+    spin_compute_di_eir,
+    symmetrise_speaker_measurements,
+)
+from spinorama.load import (
+    filter_graphs,
+    filter_graphs_partial,
+)
 
 
 class SpinoramaFilterIIRTests(unittest.TestCase):
@@ -39,6 +56,89 @@ class SpinoramaFilterIIRTests(unittest.TestCase):
             npt.assert_array_almost_equal_nulp(peq_slow, peq_fast)
             npt.assert_array_almost_equal_nulp(peq_slow, peq_vec)
 
+
+class SpinoramaFilterScoresTests(unittest.TestCase):
+    def setUp(self):
+        _, (h, v) = parse_graphs_speaker_klippel(
+            "datas/measurements", "Neumann", "Neumann KH 80", "asr-v3-20200711", None
+        )
+        self.df = filter_graphs("Neumann KH 80", h, v, 100, 10000, "klippel", 1)
+        self.peq = parse_eq_iir_rews("datas/eq/Neumann KH 80/iir.txt", 48000)
+
+    def test_filtering(self):
+        spin, pir, score = scores_apply_filter(self.df, self.peq)
+        self.assertIsNotNone(spin)
+        keys = set(graph_unmelt(spin).keys())
+        self.assertSetEqual(
+            keys,
+            set(
+                [
+                    "Listening Window",
+                    "On Axis",
+                    "Freq",
+                    "Early Reflections",
+                    "Early Reflections DI",
+                    "Sound Power",
+                    "DI offset",
+                    "Sound Power DI",
+                ]
+            ),
+        )
+        self.assertIsNotNone(pir)
+        self.assertEqual(pir.shape, (194,3))
+
+        self.assertIsNotNone(score)
+        self.assertAlmostEqual(score['pref_score'], 6.3657834989030615, 5)
+
+class SpinoramaFilterNoScoresTests(unittest.TestCase):
+    def setUp(self):
+
+        self.peq = parse_eq_iir_rews("datas/eq/Neumann KH 80/iir.txt", 48000)
+
+        self.dfs = {}
+
+        speaker_name = "BIC America Venturi DV62si"
+        status, (title, df_melted) = parse_graphs_speaker_rew_text_dump(
+            "datas/measurements",
+            "BIC America",
+            speaker_name,
+            "",
+            "vendor",
+        )
+        self.assertTrue(status)
+        self.assertEqual(title, "CEA2034")
+        df_unmelted = graph_melt(unify_freq(df_melted))
+        df_full = spin_compute_di_eir(speaker_name, title, df_unmelted)
+        df_filtered = filter_graphs_partial(df_full, "rew_text_dump", 1.0)
+        self.assertIsNotNone(df_filtered)
+
+        self.dfs["rew_text_dump"] = df_filtered
+
+
+    def test_filtering(self):
+        for df in self.dfs.values():
+            spin, pir, score = noscore_apply_filter(df, self.peq, False)
+            self.assertIsNotNone(spin)
+            keys = set(graph_unmelt(spin).keys())
+            self.assertSetEqual(
+                keys,
+                set(
+                    [
+                        "Listening Window",
+                        "On Axis",
+                        "Freq",
+                        "Early Reflections",
+                        "Early Reflections DI",
+                        "Sound Power",
+                        "DI offset",
+                        "Sound Power DI",
+                    ]
+                ),
+            )
+            self.assertIsNotNone(pir)
+            self.assertEqual(pir.shape, (194,3))
+            self.assertIsNotNone(score)
+            self.assertAlmostEqual(score['pref_score'], 6.3657834989030615, 5)
 
 if __name__ == "__main__":
     unittest.main()

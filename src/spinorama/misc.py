@@ -33,11 +33,10 @@ def graph_melt(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def graph_unmelt(df: pd.DataFrame) -> pd.DataFrame:
-    return (
-        df.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc="max")
-        .rename_axis(columns=None)
-        .reset_index()
-    )
+    df_new = df.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc="max").rename_axis(columns=None).reset_index()
+    if 'level_0' in df_new:
+        df_new.drop(labels='level_0', axis=1)
+    return df_new
 
 
 def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:

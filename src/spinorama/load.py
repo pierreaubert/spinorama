@@ -147,18 +147,17 @@ def norm_spl_not_di(spl):
 
 
 def norm_spl_unmelted(spl):
-    """Normalize SPL for a set of measurements"""
-    # nornalize v.s. on axis
+    """Normalize SPL wrt On Axis for a set of measurements"""
     return graph_melt(norm_spl(graph_unmelt(spl)))
 
 
 def norm_spl_unmelted_not_di(spl):
-    """Normalize SPL for a set of measurements"""
-    # nornalize v.s. on axis
+    """Normalize Spinorama wrt to On Axis"""
     return graph_melt(norm_spl_not_di(graph_unmelt(spl)))
 
 
 def norm_pir(df, on):
+    """Normalized PIR wrt On Axis"""
     k = "Estimated In-Room Response"
     pir_values = graph_unmelt(df[k])[k].to_numpy()
     on_values = graph_unmelt(on)["On Axis"].to_numpy()
@@ -278,119 +277,6 @@ def filter_graphs(
         except KeyError as key_error:
             logger.warning(
                 "%s computation failed with key:%s for speaker %s", title, key_error, speaker_name
-            )
-
-    return dfs
-
-
-def filter_graphs_eq(
-    speaker_name,
-    h_spl,
-    v_spl,
-    h_eq_spl,
-    v_eq_spl,
-    mean_min,
-    mean_max,
-    mformat,
-    mdistance,
-) -> dict[str, pd.DataFrame]:
-    """Filter a set of graphs defined by h_spl and v_spl.
-
-    mean_min and max_min denote the range of frequencies on which you compute the mean SPL.
-    This mean SPL is then substracted from all measurements
-    """
-    dfs = {}
-    # add H and V SPL graphs
-    mean_min_max = None
-    mean_sensitivity = None
-    mean_sensitivity_1m = None
-    sv_spl = None
-    sh_spl = None
-
-    if h_spl is not None:
-        mean_min_max = np.mean(
-            h_spl.loc[(h_spl.Freq > mean_min) & (h_spl.Freq < mean_max)]["On Axis"]
-        )
-        mean_sensitivity, mean_sensitivity_1m = compute_sensitivity(h_eq_spl, mformat, mdistance)
-        sh_spl = shift_spl(h_eq_spl, mean_min_max)
-        dfs["SPL Horizontal"] = graph_melt(sh_spl)
-        dfs["SPL Horizontal_unmelted"] = sh_spl
-        dfs["SPL Horizontal_normalized_unmelted"] = norm_spl(sh_spl)
-    else:
-        logger.info("h_spl is None for speaker %s", speaker_name)
-
-    if v_spl is not None:
-        if mean_min_max is None:
-            mean_min_max = np.mean(
-                v_spl.loc[(v_spl.Freq > mean_min) & (v_spl.Freq < mean_max)]["On Axis"]
-            )
-        if mean_sensitivity is None:
-            mean_sensitivity, mean_sensitivity_1m = compute_sensitivity(
-                v_eq_spl, mformat, mdistance
-            )
-
-        sv_spl = shift_spl(v_eq_spl, mean_min_max)
-        dfs["SPL Vertical"] = graph_melt(sv_spl)
-        dfs["SPL Vertical_unmelted"] = sv_spl
-        dfs["SPL Vertical_normalized_unmelted"] = norm_spl(sv_spl)
-    else:
-        logger.info("v_spl is None for speaker %s", speaker_name)
-
-    # horrible hack for EQ speakers which are already normalized
-    if mean_sensitivity is not None and mean_sensitivity > 20:
-        dfs["sensitivity"] = mean_sensitivity
-        dfs["sensitivity_distance"] = mdistance
-        dfs["sensitivity_1m"] = mean_sensitivity_1m
-
-    # add computed graphs
-    table = [
-        ["Early Reflections", early_reflections],
-        ["Horizontal Reflections", horizontal_reflections],
-        ["Vertical Reflections", vertical_reflections],
-        ["Estimated In-Room Response", estimated_inroom_hv],
-        ["Estimated In-Room Response Normalized", estimated_inroom_hv],
-        ["On Axis", compute_onaxis],
-        ["CEA2034", compute_cea2034],
-        ["CEA2034 Normalized", compute_cea2034],
-    ]
-
-    if sh_spl is None or sv_spl is None:
-        #
-        df_on = compute_onaxis(sh_spl, sv_spl)
-        dfs["On Axis_unmelted"] = df_on
-        dfs["On Axis"] = graph_melt(df_on)
-        # SPL H
-        if sh_spl is not None:
-            df_hr = horizontal_reflections(sh_spl)
-            dfs["Horizontal Reflections_unmelted"] = df_hr
-            dfs["Horizontal Reflections"] = graph_melt(df_hr)
-        # SPL V
-        if sv_spl is not None:
-            df_vr = vertical_reflections(sv_spl)
-            dfs["Vectical Reflections_unmelted"] = df_vr
-            dfs["Vectical Reflections"] = graph_melt(df_vr)
-        # that's all folks
-        return dfs
-
-    for title, functor in table:
-        try:
-            df_funct = None
-            if title == "Horizontal Reflections":
-                df_funct = functor(sh_spl)
-            elif title == "Vertical Reflections":
-                df_funct = functor(sv_spl)
-            elif "Normalized" in title:
-                df_funct = functor(norm_spl(sh_spl), norm_spl(sv_spl))
-            else:
-                df_funct = functor(sh_spl, sv_spl)
-            if df_funct is not None:
-                dfs[title + "_unmelted"] = df_funct
-                dfs[title] = graph_melt(df_funct)
-            else:
-                logger.info("%s computation is None for speaker %s", title, speaker_name)
-        except KeyError as ke:
-            logger.warning(
-                "%s computation failed with key %s for speaker %s", title, ke, speaker_name
             )
 
     return dfs
@@ -687,58 +573,69 @@ def parse_eq_speaker(
     distance: float,
 ) -> tuple[Peq, DataSpeaker]:
     ray_setup_logger(level)
-    logger.debug("Level of debug is %d", level)
+
     iirname = "{0}/eq/{1}/iir.txt".format(speaker_path, speaker_name)
     mean_min, mean_max = get_mean_min_max(mparameters)
-    if df_ref is not None and isinstance(df_ref, dict) and os.path.isfile(iirname):
-        srate = 48000
-        logger.debug("found IIR eq %s: applying to %s", iirname, speaker_name)
-        iir = parse_eq_iir_rews(iirname, srate)
-        if "SPL Horizontal_unmelted" in df_ref and "SPL Vertical_unmelted" in df_ref:
-            h_spl = df_ref["SPL Horizontal_unmelted"]
-            v_spl = df_ref["SPL Vertical_unmelted"]
-            eq_h_spl = peq_apply_measurements(h_spl, iir)
-            eq_v_spl = peq_apply_measurements(v_spl, iir)
-            df_eq = filter_graphs_eq(
-                speaker_name,
-                h_spl,
-                v_spl,
-                eq_h_spl,
-                eq_v_spl,
-                mean_min,
-                mean_max,
-                mformat,
-                distance,
-            )
-            return iir, df_eq
-        elif "CEA2034" in df_ref:
-            spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir)
-            df_eq = {}
-            if spin_eq is not None:
-                df_eq["CEA2034"] = spin_eq
-                df_eq["CEA2034_unmelted"] = graph_unmelt(spin_eq)
+    if df_ref is None or not isinstance(df_ref, dict) or not os.path.isfile(iirname):
+        return [], {}
 
-            if eir_eq is not None:
-                df_eq["Estimated In-Room Response"] = eir_eq
-                df_eq["Estimated In-Room Response_unmelted"] = graph_unmelt(eir_eq)
+    srate = 48000
+    logger.debug("found IIR eq %s: applying to %s", iirname, speaker_name)
+    iir = parse_eq_iir_rews(iirname, srate)
 
-            if on_eq is not None:
-                df_eq["On Axis"] = on_eq
-                df_eq["On Axis_unmelted"] = graph_unmelt(on_eq)
+    df_eq = {}
 
-            df_eq["eq"] = iir
-            return iir, df_eq
-        elif "CEA2034 Normalized" in df_ref:
-            spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir)
-            df_eq = {}
-            if spin_eq is not None:
-                df_eq["CEA2034 Normalized"] = spin_eq
-                df_eq["CEA2034 Normalized_unmelted"] = graph_unmelt(spin_eq)
-            df_eq["eq"] = iir
-            return iir, df_eq
+    # full measurement
+    if "SPL Horizontal_unmelted" in df_ref and "SPL Vertical_unmelted" in df_ref:
+        h_spl = df_ref["SPL Horizontal_unmelted"]
+        v_spl = df_ref["SPL Vertical_unmelted"]
+        eq_h_spl = peq_apply_measurements(h_spl, iir)
+        eq_v_spl = peq_apply_measurements(v_spl, iir)
+        df_eq = filter_graphs(
+            speaker_name,
+            h_spl,
+            v_spl,
+            eq_h_spl,
+            eq_v_spl,
+            mean_min,
+            mean_max,
+            mformat,
+            distance,
+        )
+        return iir, df_eq
 
-    logger.debug("no EQ for %s/eq/%s", speaker_path, speaker_name)
-    return [], {}
+    # partial_measurements
+    if "CEA2034" in df_ref:
+        spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir, False)
+        if spin_eq is not None:
+            df_eq["CEA2034"] = spin_eq
+            df_eq["CEA2034_unmelted"] = graph_unmelt(spin_eq)
+
+        if eir_eq is not None:
+            df_eq["Estimated In-Room Response"] = eir_eq
+            df_eq["Estimated In-Room Response_unmelted"] = graph_unmelt(eir_eq)
+
+        if on_eq is not None:
+            df_eq["On Axis"] = on_eq
+            df_eq["On Axis_unmelted"] = graph_unmelt(on_eq)
+
+        df_eq["eq"] = iir
+
+    if "CEA2034 Normalized" in df_ref:
+        spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir, True)
+        if spin_eq is not None:
+            df_eq["CEA2034 Normalized"] = spin_eq
+            df_eq["CEA2034 Normalized_unmelted"] = graph_unmelt(spin_eq)
+
+        if eir_eq is not None:
+            df_eq["Estimated In-Room Response Normalized"] = eir_eq
+            df_eq["Estimated In-Room Response Normalized_unmelted"] = graph_unmelt(eir_eq)
+
+        if on_eq is not None:
+            df_eq["On Axis"] = on_eq
+            df_eq["On Axis_unmelted"] = graph_unmelt(on_eq)
+
+    return iir, df_eq
 
 
 @ray.remote(num_cpus=1)

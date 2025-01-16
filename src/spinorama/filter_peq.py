@@ -78,7 +78,7 @@ def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
     curve_peq = peq_spl(freq, peq)
 
     # create a new frame
-    filtered = spl.loc[:, spl.columns != "Freq"].add(curve_peq, axis=0)
+    filtered = spl.loc[:, (spl.columns != "Freq") & ('DI' not in spl.columns) ].add(curve_peq, axis=0)
     filtered["Freq"] = freq
     # check for issues
     if filtered.isna().to_numpy().any():
