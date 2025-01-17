@@ -65,4 +65,5 @@ def parse_graphs_speaker_rew_text_dump(
                 logger.exception("Speaker: %s File %s not found", speaker_brand, speaker_name)
                 return False, ("", pd.DataFrame({}))
 
+    # print('List of measurements {}'.format(sorted(set(msrts))))
     return True, ("CEA2034", pd.DataFrame({"Freq": freqs, "dB": spls, "Measurements": msrts}))

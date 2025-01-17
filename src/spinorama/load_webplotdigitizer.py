@@ -239,5 +239,6 @@ def parse_graphs_speaker_webplotdigitizer(
     except FileNotFoundError:
         logger.info("Speaker: %s Not found: %s", speaker_name, jsonfilename)
     else:
+        # print('List of measurements {}'.format(sorted(set(graph.loc[graph.Measurements]))))
         return True, graph
     return False, ("", pd.DataFrame())

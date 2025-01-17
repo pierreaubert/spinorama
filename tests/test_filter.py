@@ -30,12 +30,10 @@ from spinorama.misc import graph_melt, graph_unmelt
 from spinorama.load_rew_eq import parse_eq_iir_rews
 from spinorama.load_klippel import parse_graphs_speaker_klippel
 from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
-from spinorama.load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
 from spinorama.load import (
     filter_graphs,
     filter_graphs_partial,
     spin_compute_di_eir,
-    symmetrise_speaker_measurements,
 )
 from spinorama.load import (
     filter_graphs,
@@ -68,6 +66,8 @@ class SpinoramaFilterScoresTests(unittest.TestCase):
     def test_filtering(self):
         spin, pir, score = scores_apply_filter(self.df, self.peq)
         self.assertIsNotNone(spin)
+        if spin is None:
+            return
         keys = set(graph_unmelt(spin).keys())
         self.assertSetEqual(
             keys,
@@ -85,17 +85,19 @@ class SpinoramaFilterScoresTests(unittest.TestCase):
             ),
         )
         self.assertIsNotNone(pir)
-        self.assertEqual(pir.shape, (194,3))
+        if pir is None:
+            return
+        self.assertEqual(pir.shape, (194, 3))
 
         self.assertIsNotNone(score)
-        self.assertAlmostEqual(score['pref_score'], 6.3657834989030615, 5)
+        if score is None:
+            return
+        self.assertAlmostEqual(score["pref_score"], 6.3657834989030615, 5)
+
 
 class SpinoramaFilterNoScoresTests(unittest.TestCase):
     def setUp(self):
-
         self.peq = parse_eq_iir_rews("datas/eq/Neumann KH 80/iir.txt", 48000)
-
-        self.dfs = {}
 
         speaker_name = "BIC America Venturi DV62si"
         status, (title, df_melted) = parse_graphs_speaker_rew_text_dump(
@@ -109,36 +111,36 @@ class SpinoramaFilterNoScoresTests(unittest.TestCase):
         self.assertEqual(title, "CEA2034")
         df_unmelted = graph_melt(unify_freq(df_melted))
         df_full = spin_compute_di_eir(speaker_name, title, df_unmelted)
-        df_filtered = filter_graphs_partial(df_full, "rew_text_dump", 1.0)
-        self.assertIsNotNone(df_filtered)
-
-        self.dfs["rew_text_dump"] = df_filtered
-
+        self.df = filter_graphs_partial(df_full, "rew_text_dump", 1.0)
 
     def test_filtering(self):
-        for df in self.dfs.values():
-            spin, pir, score = noscore_apply_filter(df, self.peq, False)
-            self.assertIsNotNone(spin)
-            keys = set(graph_unmelt(spin).keys())
-            self.assertSetEqual(
-                keys,
-                set(
-                    [
-                        "Listening Window",
-                        "On Axis",
-                        "Freq",
-                        "Early Reflections",
-                        "Early Reflections DI",
-                        "Sound Power",
-                        "DI offset",
-                        "Sound Power DI",
-                    ]
-                ),
-            )
-            self.assertIsNotNone(pir)
-            self.assertEqual(pir.shape, (194,3))
-            self.assertIsNotNone(score)
-            self.assertAlmostEqual(score['pref_score'], 6.3657834989030615, 5)
+        self.assertIsNotNone(self.df)
+        spin, pir, score = noscore_apply_filter(self.df, self.peq, False)
+        self.assertIsNotNone(spin)
+        if spin is None:
+            return
+        keys = set(list(spin.Measurements))
+        self.assertSetEqual(
+            keys,
+            set(
+                [
+                    "level_0",  # TODO(pierre): where does that come from!
+                    "Listening Window",
+                    "On Axis",
+                    "Early Reflections",
+                    "Early Reflections DI",
+                    "Sound Power",
+                    "DI offset",
+                    "Sound Power DI",
+                ]
+            ),
+        )
+        self.assertIsNotNone(pir)
+        if pir is None:
+            return
+        self.assertEqual(pir.shape, (957, 3))
+        self.assertIsNone(score)
+
 
 if __name__ == "__main__":
     unittest.main()

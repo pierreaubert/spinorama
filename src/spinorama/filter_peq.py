@@ -63,7 +63,7 @@ def peq_preamp_gain_max(peq: Peq) -> float:
     individual = 0.0
     if len(peq) == 0:
         return 0.0
-    for _w, iir in peq:
+    for _, iir in peq:
         individual = max(individual, np.max(peq_spl(freq, [(1.0, iir)])))
     overall = np.max(np.clip(spl, 0, None))
     gain = -(max(individual, overall) + 0.2)
@@ -72,13 +72,16 @@ def peq_preamp_gain_max(peq: Peq) -> float:
 
 
 def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
+    if "Measurements" in spl.columns:
+        logger.error("peq_apply_measurement called with a melted frame")
+        print("peq_apply_measurement called with a melted frame")
     if len(peq) == 0:
         return spl
     freq = spl["Freq"].to_numpy()
     curve_peq = peq_spl(freq, peq)
 
-    # create a new frame
-    filtered = spl.loc[:, (spl.columns != "Freq") & ('DI' not in spl.columns) ].add(curve_peq, axis=0)
+    # create a new frame and skip DI columns that are not impacted by EQ
+    filtered = spl.loc[:, spl.columns != "Freq"].add(curve_peq, axis=0)
     filtered["Freq"] = freq
     # check for issues
     if filtered.isna().to_numpy().any():

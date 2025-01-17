@@ -53,28 +53,19 @@ def scores_apply_filter(
 
 def noscore_apply_filter(
     df_speaker: DataSpeaker, peq: Peq, is_normalized: bool
-) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+) -> tuple[pd.DataFrame | None, pd.DataFrame | None, pd.DataFrame | None]:
     spin_filtered = None
     pir_filtered = None
     on_filtered = None
 
-    key_cea2034 = "CEA203 Normalized" if is_normalized else "CEA2034"
+    key_cea2034 = "CEA203 Normalized_unmelted" if is_normalized else "CEA2034_unmelted"
     if key_cea2034 in df_speaker:
         spin = df_speaker[key_cea2034]
-        print(spin.keys())
         try:
-            spin_unmelted = graph_unmelt(spin)
-            print(spin_unmelted.keys())
-            # modify all curve but should not touch DI
-            spin_filtered = peq_apply_measurements(spin_unmelted, peq)
-            print(spin_filtered.keys())
-            # not modified by eq
-            #for curve in ("Early Reflections DI", "Sound Power DI", "DI offset"):
-            #    if curve in spin_unmelted:
-            #        spin_filtered[curve] = spin_unmelted[curve]
+            spin_filtered = peq_apply_measurements(spin, peq)
         except ValueError:
             logger.debug("%s", ",".join(list(spin.keys())))
-            return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+            return None, None, None
 
     key_pir = (
         "Estimated In-Room Response Normalized" if is_normalized else "Estimated In-Room Response"
