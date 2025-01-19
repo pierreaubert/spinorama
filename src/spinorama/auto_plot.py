@@ -243,7 +243,9 @@ def graph_results(
         noeq_counts, noeq_bins = noeq_hist
         auto_counts, auto_bins = auto_hist
         bins = sorted(list(set(noeq_bins).union(auto_bins)))
-        bins = [f"{noeq_bins[i]:0.1f}-{noeq_bins[i+1]:0.1f}" for i in range(0, len(noeq_bins) - 1)]
+        bins = [
+            f"{noeq_bins[i]:0.1f}-{noeq_bins[i + 1]:0.1f}" for i in range(0, len(noeq_bins) - 1)
+        ]
         bins.append(f"{noeq_bins[-1]:0.1f}+")
         hist_plot = [
             go.Bar(
@@ -285,7 +287,9 @@ def graph_results(
         noeq_counts, noeq_bins = noeq_hist
         auto_counts, auto_bins = auto_hist
         bins = sorted(list(set(noeq_bins).union(auto_bins)))
-        bins = [f"{noeq_bins[i]:0.1f}-{noeq_bins[i+1]:0.1f}" for i in range(0, len(noeq_bins) - 1)]
+        bins = [
+            f"{noeq_bins[i]:0.1f}-{noeq_bins[i + 1]:0.1f}" for i in range(0, len(noeq_bins) - 1)
+        ]
         bins.append(f"{noeq_bins[-1]:0.1f}+")
         hist_plot_midrange = [
             go.Bar(

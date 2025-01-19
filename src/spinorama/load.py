@@ -134,6 +134,8 @@ def norm_spl_not_di(spl):
     # check
     if "dB" in spl:
         raise KeyError
+    #
+    print("DEBUG norm_spl_not di {}".format(spl.keys()))
     # nornalize v.s. on axis
     df_normalized = pd.DataFrame({"Freq": spl.Freq})
     on = spl["On Axis"].to_numpy()
@@ -328,6 +330,7 @@ def filter_graphs_partial(df, mformat, mdistance):
         logger.debug("DEBUG %s pre shift cols=(%s)", k, ", ".join(set(df[k].Measurements)))
         if k == "CEA2034":
             shifted_spin = shift_spl_melted_cea2034(df[k], mean_midrange)
+            print("DEBUG shifted_spin {}".format(shifted_spin.keys()))
             dfs[k] = shifted_spin
             dfs["CEA2034 Normalized"] = norm_spl_unmelted_not_di(shifted_spin)
         elif k == "Estimated In-Room Response":
@@ -593,8 +596,6 @@ def parse_eq_speaker(
         eq_v_spl = peq_apply_measurements(v_spl, iir)
         df_eq = filter_graphs(
             speaker_name,
-            h_spl,
-            v_spl,
             eq_h_spl,
             eq_v_spl,
             mean_min,

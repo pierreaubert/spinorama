@@ -409,7 +409,9 @@ class GlobalOptimizer(object):
         score_status = (
             "{:3.1f}".format(self.current_score) if self.current_score is not None else "?"
         )
-        print(f"[f={1-convergence}<{CONVERGENCE_TOLERANCE}] iir={iir_status} score={score_status}")
+        print(
+            f"[f={1 - convergence}<{CONVERGENCE_TOLERANCE}] iir={iir_status} score={score_status}"
+        )
         peq_print(self._x2peq(xk))
 
     def run(self):

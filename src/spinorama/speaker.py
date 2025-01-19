@@ -452,7 +452,7 @@ def print_graphs(
         ("CEA2034 Normalized", display_spinorama_normalized),
         ("On Axis", display_onaxis),
         ("Estimated In-Room Response", display_inroom),
-        ("Estimated In-Room Response Normalized", display_inroom_normalized),
+        #        ("Estimated In-Room Response Normalized", display_inroom_normalized),
         ("Early Reflections", display_reflection_early),
         ("Horizontal Reflections", display_reflection_horizontal),
         ("Vertical Reflections", display_reflection_vertical),

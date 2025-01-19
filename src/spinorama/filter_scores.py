@@ -62,25 +62,27 @@ def noscore_apply_filter(
     if key_cea2034 in df_speaker:
         spin = df_speaker[key_cea2034]
         try:
+            print("DEBUG SPIN {} {}".format(is_normalized, spin.keys()))
             spin_filtered = peq_apply_measurements(spin, peq)
         except ValueError:
             logger.debug("%s", ",".join(list(spin.keys())))
             return None, None, None
 
     key_pir = (
-        "Estimated In-Room Response Normalized" if is_normalized else "Estimated In-Room Response"
+        "Estimated In-Room Response Normalized_unmelted"
+        if is_normalized
+        else "Estimated In-Room Response_unmelted"
     )
     if key_pir in df_speaker:
         pir = df_speaker[key_pir]
-        pivoted_pir = graph_unmelt(pir)
-        pir_filtered = peq_apply_measurements(pivoted_pir, peq)
+        pir_filtered = peq_apply_measurements(pir, peq)
 
-    if "On Axis" in df_speaker:
-        on = df_speaker["On Axis"]
-        pivoted_on = graph_unmelt(on)
+    if "On Axis_unmelted" in df_speaker:
+        on = df_speaker["On Axis_unmelted"]
         if is_normalized:
-            pivoted_on["On Axis"] = 0.0
-        on_filtered = peq_apply_measurements(pivoted_on, peq)
+            on["On Axis"] = 0.0
+        print("DEBUG ON {} {}".format(is_normalized, on.keys()))
+        on_filtered = peq_apply_measurements(on, peq)
 
     spin_melted = None
     if spin_filtered is not None:
