@@ -63,125 +63,111 @@ from spinorama.compute_cea2034 import (
 )
 
 
-def shift_spl(spl, mean):
-    """Shift all measurement by means"""
-    spl_copy = pd.DataFrame()
-    for k in spl:
-        if k == "Freq":
-            spl_copy[k] = spl[k]
+def _shift_spl_unmelted(spl: pd.DataFrame, mean: float) -> pd.DataFrame:
+    """Shift all measurements in a DataFrame by a mean value.
+
+    Args:
+        spl: DataFrame containing SPL measurements with 'Freq' and measurement columns
+        mean: Mean value to subtract from all measurements
+
+    Returns:
+        DataFrame with all measurements shifted by the mean value
+    """
+    spl_copy = spl.copy()
+    for c in spl.columns:
+        if c == "Freq":
+            continue
+        if "DI" in c:
+            spl_copy[c] = spl[c]
         else:
-            spl_copy[k] = spl[k] - mean
-        # too many side effects
-        # if k == "180°" and "-180°" not in spl_copy.keys():
-        #     spl_copy.insert(1, "-180°", spl["180°"] - mean)
+            spl_copy[c] = spl[c] - mean
     return spl_copy
 
 
-def shift_spl_melted(spl, mean):
-    """Shift one measurement by means"""
-    df_copy = spl.copy()
-    df_copy.dB -= mean
-    return df_copy
+def shift_spl(spl: pd.DataFrame, mean: float) -> pd.DataFrame:
+    """Shift a single melted SPL measurement by a mean value.
+
+    Args:
+        spl: Melted DataFrame with columns ['Freq', 'Measurements', 'dB']
+        mean: Mean value to subtract from the dB values
+
+    Returns:
+        DataFrame with dB values shifted by the mean value
+    """
+    if "Measurements" in spl:
+        return _shift_spl_unmelted(graph_unmelt(spl), mean)
+    return _shift_spl_unmelted(spl, mean)
 
 
-def shift_spl_melted_cea2034(spl, mean):
-    """Shift all measurements by means"""
-    logger.debug("DEBUG shift_spl_melted_cea2034")
-    # logger.debug(spl.head())
-    # shift all measurement by means
-    spl_copy = None
-    # for the rare case we do not have ON curve
-    for curve in ("On Axis", "Listening Window"):
-        if curve not in set(spl.Measurements):
-            continue
-        spl_copy = pd.DataFrame({"Freq": spl.loc[spl.Measurements == curve].Freq}).reset_index()
-    if spl_copy is None:
-        logger.error("CEA2034 is empty: known columns are (%s)", ", ".join(set(spl.Measurements)))
-        return spl
+def _normalize_spl_unmelted(spl: pd.DataFrame, on: np.array) -> pd.DataFrame:
+    """Normalize SPL measurements relative to the On Axis measurement.
 
-    for col in set(spl.Measurements):
-        logger.debug("shifting col %s", col)
-        logger.debug(spl.loc[spl.Measurements == col].dB.iloc[0:10])
-        if "DI" in col:
-            spl_copy[col] = spl.loc[spl.Measurements == col].dB.to_numpy()
-        else:
-            spl_copy[col] = spl.loc[spl.Measurements == col].dB.to_numpy() - mean
-    logger.debug("melted_cea %f (%s)", mean, ", ".join(spl_copy.keys()))
-    logger.debug(spl_copy.head())
-    for k in spl_copy:
-        count = spl_copy[k].isna().sum().sum()
-        logger.debug("%s %d", k, count)
-    logger.debug("DEBUG END shift_spl_melted_cea2034")
-    return graph_melt(spl_copy)
+    Args:
+        spl: DataFrame with SPL measurements including 'On Axis' measurement
 
+    Returns:
+        DataFrame with all measurements normalized relative to On Axis
 
-def norm_spl(spl):
-    """Normalize SPL for a set of measurements"""
+    Notes:
+        All measurements including DI (Directivity Index) are normalized
+    """
     # check
     if "dB" in spl:
         raise KeyError
     # nornalize v.s. on axis
     df_normalized = pd.DataFrame({"Freq": spl.Freq})
-    on = spl["On Axis"].to_numpy()
     for k in spl:
-        if k != "Freq":
+        if k == "Freq":
+            continue
+        if "DI" in k:
+            df_normalized[k] = spl[k]
+        else:
             df_normalized[k] = spl[k] - on
     return df_normalized
 
 
-def norm_spl_not_di(spl):
-    """Normalize SPL for a set of measurements"""
-    # check
-    if "dB" in spl:
-        raise KeyError
-    #
-    print("DEBUG norm_spl_not di {}".format(spl.keys()))
-    # nornalize v.s. on axis
-    df_normalized = pd.DataFrame({"Freq": spl.Freq})
-    on = spl["On Axis"].to_numpy()
-    for k in spl:
-        if k != "Freq":
-            if " DI" not in k:
-                df_normalized[k] = spl[k] - on
-            else:
-                df_normalized[k] = spl[k]
-    return df_normalized
-
-
-def norm_spl_unmelted(spl):
-    """Normalize SPL wrt On Axis for a set of measurements"""
-    return graph_melt(norm_spl(graph_unmelt(spl)))
-
-
-def norm_spl_unmelted_not_di(spl):
-    """Normalize Spinorama wrt to On Axis"""
-    return graph_melt(norm_spl_not_di(graph_unmelt(spl)))
-
-
-def norm_pir(df, on):
-    """Normalized PIR wrt On Axis"""
-    k = "Estimated In-Room Response"
-    pir_values = graph_unmelt(df[k])[k].to_numpy()
-    on_values = graph_unmelt(on)["On Axis"].to_numpy()
-    pir_normalized = pir_values - on_values
-    return graph_melt(
-        pd.DataFrame({"Freq": df[k].Freq, "Estimated In-Room Response": pir_normalized})
-    )
+def normalize_spl(spl: pd.DataFrame, on: pd.DataFrame | None = None) -> pd.DataFrame:
+    spl_unmelted = spl
+    if "Measurements" in spl:
+        spl_unmelted = graph_unmelt(spl)
+    if on is None:
+        on = spl_unmelted["On Axis"].to_numpy()
+    return _normalize_spl_unmelted(spl_unmelted, on)
 
 
 def filter_graphs(
     speaker_name: str,
-    h_spl,
-    v_spl,
+    h_spl: pd.DataFrame,
+    v_spl: pd.DataFrame,
     mean_min: float,
     mean_max: float,
     mformat: str,
     mdistance: float,
-) -> dict[str, pd.DataFrame]:
-    """Filter a set of graphs defined by h_spl and v_spl.
+) -> dict:
+    """Filter and process a set of horizontal and vertical SPL measurements.
 
-    mean_min and max_min denote the range of frequencies on which you compute the mean SPL.
-    This mean SPL is then substracted from all measurements
+    Args:
+        speaker_name: Name of the speaker being measured
+        h_spl: DataFrame containing horizontal SPL measurements
+        v_spl: DataFrame containing vertical SPL measurements
+        mean_min: Minimum frequency for mean calculation
+        mean_max: Maximum frequency for mean calculation
+        mformat: Measurement format identifier
+        mdistance: Measurement distance in meters
+
+    Returns:
+        Dictionary containing processed measurements including:
+        - SPL Horizontal/Vertical
+        - CEA2034
+        - Estimated In-Room Response
+        - Various normalized versions
+
+    Notes:
+        This function performs several operations:
+        1. Filters the measurements
+        2. Computes CEA2034 standard measurements
+        3. Estimates in-room response
+        4. Normalizes measurements relative to reference points
     """
     dfs = {}
     # add H and V SPL graphs
@@ -199,7 +185,7 @@ def filter_graphs(
         sh_spl = shift_spl(h_spl, mean_min_max)
         dfs["SPL Horizontal"] = graph_melt(sh_spl)
         dfs["SPL Horizontal_unmelted"] = sh_spl
-        dfs["SPL Horizontal_normalized_unmelted"] = norm_spl(sh_spl)
+        dfs["SPL Horizontal_normalized_unmelted"] = normalize_spl(sh_spl)
     else:
         logger.info("h_spl is None for speaker %s", speaker_name)
 
@@ -213,7 +199,7 @@ def filter_graphs(
         sv_spl = shift_spl(v_spl, mean_min_max)
         dfs["SPL Vertical"] = graph_melt(sv_spl)
         dfs["SPL Vertical_unmelted"] = sv_spl
-        dfs["SPL Vertical_normalized_unmelted"] = norm_spl(sv_spl)
+        dfs["SPL Vertical_normalized_unmelted"] = normalize_spl(sv_spl)
     else:
         logger.info("v_spl is None for speaker %s", speaker_name)
 
@@ -268,7 +254,7 @@ def filter_graphs(
             elif title == "Vertical Reflections":
                 df_funct = functor(sv_spl)
             elif "Normalized" in title:
-                df_funct = functor(norm_spl(sh_spl), norm_spl(sv_spl))
+                df_funct = functor(normalize_spl(sh_spl), normalize_spl(sv_spl))
             else:
                 df_funct = functor(sh_spl, sv_spl)
             if df_funct is not None:
@@ -325,44 +311,42 @@ def filter_graphs_partial(df, mformat, mdistance):
         dfs["sensitivity_distance"] = mdistance
         dfs["sensitivity_1m"] = mean_sensitivity_1m
 
-    # add normalized graphs if needed and unmelted ones
+    # add normalized graphs
     for k in df:
         logger.debug("DEBUG %s pre shift cols=(%s)", k, ", ".join(set(df[k].Measurements)))
         if k == "CEA2034":
-            shifted_spin = shift_spl_melted_cea2034(df[k], mean_midrange)
-            print("DEBUG shifted_spin {}".format(shifted_spin.keys()))
-            dfs[k] = shifted_spin
-            dfs["CEA2034 Normalized"] = norm_spl_unmelted_not_di(shifted_spin)
+            shifted_spin = shift_spl(df[k], mean_midrange)
+            dfs[k] = graph_melt(shifted_spin)
+            dfs["CEA2034 Normalized"] = graph_melt(normalize_spl(shifted_spin))
+            # create the on axis dataframe which usually does not exists for this partial measurements
+            if "On Axis" not in dfs:
+                dfs["On Axis"] = pd.DataFrame(
+                    {
+                        "Freq": shifted_spin.Freq,
+                        "Measurements": ["On Axis"] * len(shifted_spin.Freq),
+                        "dB": shifted_spin["On Axis"],
+                    }
+                )
         elif k == "Estimated In-Room Response":
-            shifted_spl = shift_spl_melted(df[k], mean_midrange)
-            dfs[k] = shifted_spl
-            if on is not None:
-                dfs["Estimated In-Room Response Normalized"] = norm_pir(df, on)
+            shifted_spl = shift_spl(df[k], mean_midrange)
+            dfs[k] = graph_melt(shifted_spl)
+            on_values = graph_unmelt(df["CEA2034"])["On Axis"].to_numpy()
+            dfs["Estimated In-Room Response Normalized"] = graph_melt(
+                normalize_spl(df[k], on_values)
+            )
         else:
-            dfs[k] = shift_spl_melted(df[k], mean_midrange)
+            dfs[k] = shift_spl(df[k], mean_midrange)
 
+    # create unmelted ones
+    previous_keys = list(dfs.keys())
+    for k in previous_keys:
         if "unmelted" in k:
             continue
         unmelted = "{}_unmelted".format(k)
         if unmelted not in dfs and isinstance(dfs[k], pd.DataFrame):
             dfs[unmelted] = graph_unmelt(dfs[k])
 
-    # note: not in df but could be in dfs
-    if "CEA2034 Normalized" in dfs and "CEA2034 Normalized_unmelted" not in dfs:
-        dfs["CEA2034 Normalized_unmelted"] = graph_unmelt(dfs["CEA2034 Normalized"])
-    if (
-        "Estimated In-Room Response Normalized" in dfs
-        and "Estimated In-Room Response Normalized_unmelted" not in dfs
-    ):
-        dfs["Estimated In-Room Response Normalized_unmelted"] = graph_unmelt(
-            dfs["Estimated In-Room Response Normalized"]
-        )
-
     logger.debug("DEBUG  filter_graphs partial (%s)", ", ".join(dfs.keys()))
-    for k, v in dfs.items():
-        if k not in ("sensitivity", "sensitivity_1m", "sensitivity_distance"):
-            logger.debug(v.head())
-
     logger.debug(
         "filter in: keys=(%s) out: mean=%f keys=(%s)",
         ", ".join(df.keys()),

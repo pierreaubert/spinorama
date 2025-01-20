@@ -25,23 +25,58 @@ from spinorama import logger
 
 
 def graph_melt(df: pd.DataFrame) -> pd.DataFrame:
-    return (
-        df.reset_index()
-        .melt(id_vars="Freq", var_name="Measurements", value_name="dB")
-        .loc[lambda df: df["Measurements"] != "index"]
-    )
+    """Convert wide-format DataFrame to long-format.
+
+    Args:
+        df: DataFrame with 'Freq' and measurement columns
+
+    Returns:
+        DataFrame with columns ['Freq', 'Measurements', 'dB']
+    """
+    # Ensure we have a clean index
+    df = df.copy()
+    if not isinstance(df.index, pd.RangeIndex):
+        df = df.reset_index(drop=True)
+
+    # Melt the dataframe
+    return df.melt(id_vars="Freq", var_name="Measurements", value_name="dB")
 
 
 def graph_unmelt(df: pd.DataFrame) -> pd.DataFrame:
-    return (
-        df.pivot_table(index="Freq", columns="Measurements", values="dB", aggfunc="max")
-        .rename_axis(columns=None)
-        .reset_index()
+    """Convert long-format DataFrame back to wide-format.
+
+    Args:
+        df: DataFrame with columns ['Freq', 'Measurements', 'dB']
+
+    Returns:
+        DataFrame with 'Freq' and measurement columns
+    """
+    # Handle potential duplicate (Freq, Measurements) pairs
+    result = df.pivot_table(
+        index="Freq",
+        columns="Measurements",
+        values="dB",
+        aggfunc="first",  # Take first value instead of max for duplicates
     )
+
+    # Clean up the index/columns
+    result.columns.name = None
+    return result.reset_index()
 
 
 def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:
-    # sort columns in increasing angle order
+    """Sort DataFrame columns by measurement angles in ascending order.
+
+    Special handling for 'Freq' (placed first) and 'On Axis'/'On-Axis' (placed after Freq).
+    Angles are expected to be in format like '30°', '-30°', etc.
+
+    Args:
+        dfi: DataFrame with angle measurements as columns
+
+    Returns:
+        DataFrame with columns sorted by angle values
+    """
+
     def a2v(angle):
         if angle == "Freq":
             return -1000
@@ -55,6 +90,17 @@ def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:
 
 
 def check_nan(df: dict) -> float:
+    """Check for NaN values in a dictionary of DataFrames.
+
+    Args:
+        df: Dictionary containing DataFrames to check
+
+    Returns:
+        Total number of NaN values found across all DataFrames
+
+    Notes:
+        Logs error messages for each column containing NaN values
+    """
     for k, v in df.items():
         if not isinstance(v, pd.DataFrame):
             continue
@@ -69,8 +115,22 @@ def check_nan(df: dict) -> float:
 
 
 def need_update(filename: str, dependencies: list[str]) -> bool:
-    """return True if dependencies are newer than filename"""
+    """Check if a file needs to be updated based on its dependencies.
 
+    Args:
+        filename: Path to the file to check
+        dependencies: List of paths to dependency files
+
+    Returns:
+        True if the file needs to be updated (doesn't exist, is empty,
+        or is older than any dependency), False otherwise
+
+    Notes:
+        A file needs updating if:
+        - It doesn't exist
+        - It's empty
+        - Any of its dependencies are newer than the file itself
+    """
     # if filename doesn't exist then True
     path = pathlib.Path(filename)
     if not path.is_file():
@@ -93,9 +153,18 @@ def need_update(filename: str, dependencies: list[str]) -> bool:
     return False
 
 
-def write_if_different(new_content: str, filename: str, force: bool):
-    """Write the new content to disk only if it is different from the current one.
-    The unchanged html files are then untouched and http cache effect is better.
+def write_if_different(new_content: str, filename: str, force: bool = False) -> None:
+    """Write content to a file only if it differs from current content.
+
+    Args:
+        new_content: Content to write to the file
+        filename: Path to the target file
+        force: If True, write regardless of current content
+
+    Notes:
+        This function helps optimize HTTP caching by only updating files
+        when their content actually changes. If force is True, the file
+        will be written regardless of current content.
     """
     identical = False
     path = pathlib.Path(filename)

@@ -49,7 +49,6 @@ def peq_preamp_gain(peq: Peq) -> float:
     freq = np.logspace(1 + math.log10(2), 4 + math.log10(2), 1000)
     spl = np.array(peq_spl(freq, peq))
     overall = np.max(np.clip(spl, 0, None))
-    # print('debug preamp gain: %f'.format(gain))
     return -overall
 
 
@@ -67,14 +66,12 @@ def peq_preamp_gain_max(peq: Peq) -> float:
         individual = max(individual, np.max(peq_spl(freq, [(1.0, iir)])))
     overall = np.max(np.clip(spl, 0, None))
     gain = -(max(individual, overall) + 0.2)
-    # print('debug preamp gain: %f'.format(gain))
     return gain
 
 
 def peq_apply_measurements(spl: pd.DataFrame, peq: Peq) -> pd.DataFrame:
     if "Measurements" in spl.columns:
         logger.error("peq_apply_measurement called with a melted frame")
-        print("peq_apply_measurement called with a melted frame")
     if len(peq) == 0:
         return spl
     freq = spl["Freq"].to_numpy()

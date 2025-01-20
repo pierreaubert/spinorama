@@ -136,8 +136,6 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
             if spdi is not None:
                 est["dir_constant"] = spdi.dB.std()
                 logger.debug("Constant directivity %d", est["dir_constant"])
-            else:
-                print(spin.keys())
 
     except TypeError:
         logger.exception("Estimates failed for %s", onaxis.shape)

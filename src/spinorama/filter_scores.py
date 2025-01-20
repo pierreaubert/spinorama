@@ -62,7 +62,6 @@ def noscore_apply_filter(
     if key_cea2034 in df_speaker:
         spin = df_speaker[key_cea2034]
         try:
-            print("DEBUG SPIN {} {}".format(is_normalized, spin.keys()))
             spin_filtered = peq_apply_measurements(spin, peq)
         except ValueError:
             logger.debug("%s", ",".join(list(spin.keys())))
@@ -81,7 +80,6 @@ def noscore_apply_filter(
         on = df_speaker["On Axis_unmelted"]
         if is_normalized:
             on["On Axis"] = 0.0
-        print("DEBUG ON {} {}".format(is_normalized, on.keys()))
         on_filtered = peq_apply_measurements(on, peq)
 
     spin_melted = None
