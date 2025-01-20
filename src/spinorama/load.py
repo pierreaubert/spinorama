@@ -131,6 +131,9 @@ def normalize_spl(spl: pd.DataFrame, on: pd.DataFrame | None = None) -> pd.DataF
     if "Measurements" in spl:
         spl_unmelted = graph_unmelt(spl)
     if on is None:
+        if "On Axis" not in spl_unmelted:
+            print("error -- {}".format(spl_unmelted.keys()))
+            raise Exception
         on = spl_unmelted["On Axis"].to_numpy()
     return _normalize_spl_unmelted(spl_unmelted, on)
 
@@ -431,14 +434,6 @@ def spin_compute_di_eir(
             delta = np.mean(sp_di) - np.mean(sp_di_computed)
             logger.debug("Sound Power DI curve: removing %f", delta)
             spin.loc[spin["Measurements"] == "Sound Power DI", "dB"] -= delta
-
-        # sp_di = spin.loc[spin['Measurements'] == 'Sound Power DI'].reset_index(drop=True)
-        # logger.debug(
-        #    "Post treatment SP DI: shape={0} min={1} max={2}",
-        #    sp_di.shape,
-        #    sp_di_computed.min(),
-        #    sp_di_computed.max(),
-        # )
     else:
         logger.debug("Shape LW=%s SP=%s", lw.shape, sp.shape)
 

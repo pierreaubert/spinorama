@@ -107,7 +107,6 @@ def scale_params(params, factor):
 
 
 def get_spin_unmelted(df, is_normalized):
-    print(df.keys())
     spin = (
         df.get("CEA2034_unmelted") if not is_normalized else df.get("CEA2034 Normalized_unmelted")
     )

@@ -355,6 +355,8 @@ class SpinoramaFilterGraphsPartialTests(unittest.TestCase):
     def test_keys(self):
         expected_set = set(
             [
+                "On Axis",
+                "On Axis_unmelted",
                 "CEA2034",
                 "CEA2034_unmelted",
                 "CEA2034 Normalized",

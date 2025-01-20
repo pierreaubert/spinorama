@@ -115,7 +115,7 @@ class SpinoramaFilterNoScoresTests(unittest.TestCase):
 
     def test_filtering(self):
         self.assertIsNotNone(self.df)
-        spin, pir, score = noscore_apply_filter(self.df, self.peq, False)
+        spin, pir, on = noscore_apply_filter(self.df, self.peq, False)
         self.assertIsNotNone(spin)
         if spin is None:
             return
@@ -124,7 +124,6 @@ class SpinoramaFilterNoScoresTests(unittest.TestCase):
             keys,
             set(
                 [
-                    "level_0",  # TODO(pierre): where does that come from!
                     "Listening Window",
                     "On Axis",
                     "Early Reflections",
@@ -139,7 +138,10 @@ class SpinoramaFilterNoScoresTests(unittest.TestCase):
         if pir is None:
             return
         self.assertEqual(pir.shape, (957, 3))
-        self.assertIsNone(score)
+        self.assertIsNotNone(on)
+        if on is None:
+            return
+        self.assertEqual(on.shape, (957, 3))
 
 
 if __name__ == "__main__":
