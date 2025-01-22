@@ -1469,6 +1469,38 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "Monitor Audio Apex A10": {
+        "brand": "Monitor Audio",
+        "model": "Apex A10",
+        "type": "passive",
+        "price": "1500",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/monitor-audio-apex-a10-speaker-review.60230/",
+                },
+                "review_published": "20250122",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 280,
+                        "width": 150,
+                        "depth": 180,
+                    },
+                    "weight": 3.95,
+                },
+            },
+        },
+    },
     "Monitor Audio Silver 50 7g": {
         "brand": "Monitor Audio",
         "model": "Silver 50 7g",
