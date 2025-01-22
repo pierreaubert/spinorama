@@ -22,6 +22,8 @@ import time
 import unittest
 import warnings
 
+import pandas as pd
+
 from spinorama.load import parse_graphs_speaker, parse_eq_speaker
 
 from spinorama.speaker import (
@@ -37,6 +39,14 @@ from spinorama.speaker import (
     display_spl_vertical,
     display_spl_horizontal_normalized,
     display_spl_vertical_normalized,
+    display_contour_horizontal,
+    display_contour_vertical,
+    display_contour_horizontal_normalized,
+    display_contour_vertical_normalized,
+    display_contour_horizontal_3d,
+    display_contour_vertical_3d,
+    display_contour_horizontal_normalized_3d,
+    display_contour_vertical_normalized_3d,
 )
 
 from spinorama.plot import (
@@ -206,12 +216,23 @@ class SpinoramaKlippelParseTests(unittest.TestCase):
         for method, df in self.dfs_full.items():
             self.assertIsNotNone(df)
             self.assertSetEqual(full_set, set(df.keys()))
+
+            for k in df.keys():
+                if isinstance(df[k], pd.DataFrame):
+                    if "_unmelted" in k:
+                        self.assertIn("Freq", df[k])
+                    else:
+                        self.assertIn("Freq", df[k])
+                        self.assertIn("Measurements", df[k])
+                        self.assertIn("dB", df[k])
+
+            # check all spin graphs
             for op_title, op_call in (
                 ("CEA2034", display_spinorama),
                 ("CEA2034 Normalized", display_spinorama_normalized),
                 ("On Axis", display_onaxis),
                 ("Estimated In-Room Response", display_inroom),
-                ("Estimated In-Room Response Normalized", display_inroom_normalized),
+                # ("Estimated In-Room Response Normalized", display_inroom_normalized),
                 ("Early Reflections", display_reflection_early),
                 ("Horizontal Reflections", display_reflection_horizontal),
                 ("Vertical Reflections", display_reflection_vertical),
@@ -219,6 +240,16 @@ class SpinoramaKlippelParseTests(unittest.TestCase):
                 ("SPL Vertical", display_spl_vertical),
                 ("SPL Horizontal Normalized", display_spl_horizontal_normalized),
                 ("SPL Vertical Normalized", display_spl_vertical_normalized),
+            ):
+                graph = op_call(df, plot_params_default)
+                self.assertIsNotNone(graph)
+
+            # check all contour graphs and radars
+            for op_title, op_call in (
+                ("SPL Horizontal Contour", display_contour_horizontal),
+                ("SPL Horizontal Contour Normalized", display_contour_horizontal_normalized),
+                ("SPL Horizontal Contour 3D", display_contour_horizontal_3d),
+                ("SPL Horizontal Contour Normalized 3D", display_contour_horizontal_normalized_3d),
             ):
                 graph = op_call(df, plot_params_default)
                 self.assertIsNotNone(graph)

@@ -58,13 +58,13 @@ def noscore_apply_filter(
     pir_filtered = None
     on_filtered = None
 
-    key_cea2034 = "CEA203 Normalized_unmelted" if is_normalized else "CEA2034_unmelted"
+    key_cea2034 = "CEA2034 Normalized_unmelted" if is_normalized else "CEA2034_unmelted"
     if key_cea2034 in df_speaker:
         spin = df_speaker[key_cea2034]
         try:
             spin_filtered = peq_apply_measurements(spin, peq)
         except ValueError:
-            logger.debug("%s", ",".join(list(spin.keys())))
+            logger.error("Peq apply measurement failed %s", ",".join(list(spin.keys())))
             return None, None, None
 
     key_pir = (

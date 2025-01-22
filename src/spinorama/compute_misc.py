@@ -481,7 +481,6 @@ def compute_slope_smoothness(
         slopes_freq = slopes_minmax.Freq.tolist()
         slopes_spl = slopes_minmax[measurement].tolist()
     elif "Measurements" in data_frame:
-        print(data_frame.head())
         slopes_minmax = data_frame.loc[
             (data_frame.Freq >= slope_min_freq)
             & (data_frame.Freq <= slope_max_freq)

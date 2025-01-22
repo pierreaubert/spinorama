@@ -30,12 +30,12 @@ from spinorama import logger, ray_setup_logger
 from spinorama.ltype import DataSpeaker, OptimResult
 from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
 from spinorama.load_rew_eq import parse_eq_iir_rews
-from spinorama.pict import write_multiformat
 from spinorama.filter_peq import peq_format_apo, Peq
 from spinorama.filter_scores import (
     scores_apply_filter,
     scores_print,
 )
+from spinorama.speaker import write_multiformat
 from spinorama.auto_target import get_freq, get_target
 from spinorama.auto_plot import graph_results as auto_graph_results
 from spinorama.auto_strategy import optim_strategy

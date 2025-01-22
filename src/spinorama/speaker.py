@@ -107,42 +107,37 @@ def scale_params(params, factor):
 
 
 def get_spin_unmelted(df, is_normalized):
-    spin = (
-        df.get("CEA2034_unmelted") if not is_normalized else df.get("CEA2034 Normalized_unmelted")
-    )
+    spin = df.get("CEA2034_unmelted")
+    if is_normalized:
+        spin = df.get("CEA2034 Normalized_unmelted")
     if spin is None:
-        spin_melted = df.get("CEA2034") if not is_normalized else df.get("CEA2034 Normalized")
-        if spin_melted is not None:
-            spin = graph_unmelt(spin_melted)
-            if is_normalized:
-                df["CEA2034 Normalized_unmelted"] = spin
-            else:
-                df["CEA2034_unmelted"] = spin
-        if spin is None:
-            logger.info(
-                "Display CEA2034 not in dataframe (%s) is_normalized=%s",
-                ", ".join(df.keys()),
-                str(is_normalized),
-            )
-            return None
+        logger.info(
+            "CEA2034 not in dataframe (known keys are %s) is_normalized=%s",
+            ", ".join(df.keys()),
+            str(is_normalized),
+        )
+        return None
     return spin
 
 
 def get_minmax_slopes(df, is_normalized):
-    spin = get_spin_unmelted(df, is_normalized)
-    if spin is not None:
-        return spin, compute_minmax_slopes(spin=spin, is_normalized=is_normalized)
+    spin_unmelted = get_spin_unmelted(df, is_normalized)
+    if spin_unmelted is not None:
+        slopes = compute_minmax_slopes(spin=spin_unmelted.copy(), is_normalized=is_normalized)
+        return spin_unmelted, slopes
     return None, None
 
 
 # ----------------------------------------------------------------------
 # provide "as measured" and "normalized" versions
 # ----------------------------------------------------------------------
-def display_spinorama_common(df, graph_params, is_normalized):
+def _display_spinorama_common(df, graph_params, is_normalized):
     spin, slopes = get_minmax_slopes(df, is_normalized=is_normalized)
     if spin is None:
         logger.error(
-            "plot_spinorama failed, cannot get Spin (is_normalized=%s)", str(is_normalized)
+            "plot_spinorama failed, cannot get Spin with is_normalized=%s. Known keys are %s",
+            str(is_normalized),
+            ", ".join(df.keys()),
         )
         return None
 
@@ -154,53 +149,32 @@ def display_spinorama_common(df, graph_params, is_normalized):
 
 
 def display_spinorama(df, graph_params=plot_params_default):
-    return display_spinorama_common(df, graph_params, is_normalized=False)
+    return _display_spinorama_common(df, graph_params, is_normalized=False)
 
 
 def display_spinorama_normalized(df, graph_params=plot_params_default):
-    return display_spinorama_common(df, graph_params, is_normalized=True)
+    return _display_spinorama_common(df, graph_params, is_normalized=True)
+
+
+def _display_inroom_common(df, graph_params, is_normalized):
+    spin, slopes = get_minmax_slopes(df, is_normalized=is_normalized)
+    if spin is None:
+        logger.error("plot_inroom failed, cannot get Spin (is_normalized=%s)", str(is_normalized))
+        return None
+
+    if "Estimated In-Room Response_unmelted" not in df:
+        logger.warning("Display In Room failed with %s", ke)
+        return None
+
+    return plot_graph_regression(df, "Estimated In-Room Response", graph_params, slopes, False)
 
 
 def display_inroom(df, graph_params=plot_params_default):
-    spin = df.get("CEA2034_unmelted")
-    if spin is None:
-        spin_melted = df.get("CEA2034")
-        if spin_melted is not None:
-            spin = graph_unmelt(spin_melted)
-
-    try:
-        if "Estimated In-Room Response_unmelted" not in df:
-            return None
-    except KeyError as ke:
-        logger.warning("Display In Room failed with %s", ke)
-        return None
-    else:
-        slopes = None
-        if spin is not None:
-            slopes = compute_minmax_slopes(spin, is_normalized=False)
-        return plot_graph_regression(df, "Estimated In-Room Response", graph_params, slopes, False)
+    return _display_inroom_common(df, graph_params, False)
 
 
 def display_inroom_normalized(df, graph_params=plot_params_default):
-    spin = df.get("CEA2034 Normalized_unmelted")
-    if spin is None:
-        spin_melted = df.get("CEA2034 Normalized")
-        if spin_melted is not None:
-            spin = graph_unmelt(spin_melted)
-
-    try:
-        if "Estimated In-Room Response Normalized_unmelted" not in df:
-            return None
-    except KeyError as ke:
-        logger.warning("Display In Room failed with %s", ke)
-        return None
-    else:
-        slopes = None
-        if spin is not None:
-            slopes = compute_minmax_slopes(spin, is_normalized=True)
-        return plot_graph_regression(
-            df, "Estimated In-Room Response Normalized", graph_params, slopes, True
-        )
+    return _display_inroom_common(df, graph_params, True)
 
 
 # ----------------------------------------------------------------------
@@ -451,7 +425,7 @@ def print_graphs(
         ("CEA2034 Normalized", display_spinorama_normalized),
         ("On Axis", display_onaxis),
         ("Estimated In-Room Response", display_inroom),
-        #        ("Estimated In-Room Response Normalized", display_inroom_normalized),
+        ("Estimated In-Room Response Normalized", display_inroom_normalized),
         ("Early Reflections", display_reflection_early),
         ("Horizontal Reflections", display_reflection_horizontal),
         ("Vertical Reflections", display_reflection_vertical),
@@ -460,14 +434,22 @@ def print_graphs(
         ("SPL Horizontal Normalized", display_spl_horizontal_normalized),
         ("SPL Vertical Normalized", display_spl_vertical_normalized),
     ):
-        # logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
-        graph = op_call(df_speaker, graph_params)
-        if graph is None:
-            if op_title in ("CEA2034", "CEA2034 Normalized"):
-                logger.warning("display %s failed for %s %s %s", op_title, speaker, version, origin)
-            else:
+        logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
+        try:
+            graph = op_call(df_speaker, graph_params)
+            if graph is None:
                 logger.info("display %s failed for %s %s %s", op_title, speaker, version, origin)
+                continue
+        except KeyError as ke:
+            logger.exception(
+                "display %s failed with a key error for %s %s %s",
+                op_title,
+                speaker,
+                version,
+                origin,
+            )
             continue
+
         graphs[op_title] = graph
 
     # change params for contour

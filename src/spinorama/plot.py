@@ -865,7 +865,6 @@ def plot_graph_regression_traces(df, measurement, params):
 
 
 def plot_graph_flat(df, measurement, params):
-    params.get("layout", "")
     fig = go.Figure()
     traces = plot_graph_flat_traces(df, measurement, params)
     for t in traces:

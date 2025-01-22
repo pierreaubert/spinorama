@@ -132,8 +132,7 @@ def normalize_spl(spl: pd.DataFrame, on: pd.DataFrame | None = None) -> pd.DataF
         spl_unmelted = graph_unmelt(spl)
     if on is None:
         if "On Axis" not in spl_unmelted:
-            print("error -- {}".format(spl_unmelted.keys()))
-            raise Exception
+            raise KeyError
         on = spl_unmelted["On Axis"].to_numpy()
     return _normalize_spl_unmelted(spl_unmelted, on)
 
@@ -270,22 +269,39 @@ def filter_graphs(
                 "%s computation failed with key:%s for speaker %s", title, key_error, speaker_name
             )
 
-    return dfs
+    df_out = {}
+    for k in dfs:
+        if not isinstance(dfs[k], pd.DataFrame):
+            df_out[k] = dfs[k]
+            continue
+        if "unmelted" in k:
+            if "Measurements" in dfs[k]:
+                logging.error("Correct misshaped data for %s", k)
+                df_out[k] = graph_unmelt(dfs[k])
+            else:
+                df_out[k] = dfs[k]
+        else:
+            if "Measurements" in dfs[k]:
+                df_out[k] = dfs[k]
+            else:
+                logging.error("Correct misshaped data for %s", k)
+                df_out[k] = graph_melt(dfs[k])
+    return df_out
 
 
-def filter_graphs_partial(df, mformat, mdistance):
-    dfs = {}
+def filter_graphs_partial(df_in, mformat, mdistance):
+    df_out = {}
     # normalize first
     mean_midrange = None
     mean_sensitivity = None
     mean_sensitivity_1m = None
     on = None
-    if "CEA2034" in df:
-        on = df["CEA2034"]
+    if "CEA2034" in df_in:
+        on = df_in["CEA2034"]
         if "Measurements" not in on:
             on = graph_melt(on)
-    if on is None and "On Axis" in df and "On Axis" in df["On Axis"]:
-        on = df["On Axis"]
+    if on is None and "On Axis" in df_in and "On Axis" in df_in["On Axis"]:
+        on = df_in["On Axis"]
     if on is not None:
         if "Measurements" not in on:
             on = graph_melt(on)
@@ -308,56 +324,65 @@ def filter_graphs_partial(df, mformat, mdistance):
         mean_midrange = 0.0
     logger.debug("DEBUG: mean %f", mean_midrange)
 
+    # add On Axis if missing
+    if "On Axis" not in df_in and "CEA2034" in df_in:
+        spin = df_in["CEA2034"]
+        on = spin.loc[spin.Measurements == "On Axis"]
+        df_in["On Axis"] = pd.DataFrame(
+            {"Freq": on.Freq, "Measurements": ["On Axis"] * len(on.Freq), "dB": on.dB}
+        )
+
+    # add PIR if missing
+    if "Estimated In-Room Response" not in df_in and "CEA2034" in df_in:
+        logging.warning("Missing PIR for speaker %s", speaker_name)
+        spin = df_in["CEA2034"]
+        pir = estimated_inroom(spin)
+        df_in["Estimated In-Room Response"] = graph_melt(pir)
+
+    # check that On Axis and PIR are in the correct format
+    if "On Axis" in df_in and "Measurements" not in df_in["On Axis"]:
+        df_in["On Axis"] = graph_melt(df_in["On Axis"])
+
+    if (
+        "Estimated In-Room Response" in df_in
+        and "Measurements" not in df_in["Estimated In-Room Response"]
+    ):
+        df_in["Estimated In-Room Response"] = graph_melt(df_in["Estimated In-Room Response"])
+
+    # normalized CEA2034 and PIR wrt On-Axis
+    if "CEA2034" in df_in:
+        df_out["CEA2034 Normalized"] = graph_melt(normalize_spl(df_in["CEA2034"]))
+        df_out["Estimated In-Room Response Normalized"] = graph_melt(
+            normalize_spl(df_in["Estimated In-Room Response"], df_in["On Axis"].dB.to_numpy())
+        )
+
+    # normalized curves v.s. the mean of On-Axis
+    for k in df_in:
+        if isinstance(df_in[k], pd.DataFrame):
+            shifted = shift_spl(df_in[k], mean_midrange)
+            if "Measurements" in shifted:
+                df_out[k] = shifted
+            else:
+                df_out[k] = graph_melt(shifted)
+
+    # create unmelted ones for each entry in df_out (not df_in)
+    previous_keys = list(df_out.keys())
+    for k in previous_keys:
+        unmelted = "{}_unmelted".format(k)
+        if isinstance(df_out[k], pd.DataFrame):
+            df_out[unmelted] = graph_unmelt(df_out[k])
+        elif k not in df_out:
+            df_out[k] = df_in[k]
+
     # update sensitivity
     if mean_sensitivity is not None and mean_sensitivity > 20:
-        dfs["sensitivity"] = mean_sensitivity
-        dfs["sensitivity_distance"] = mdistance
-        dfs["sensitivity_1m"] = mean_sensitivity_1m
+        df_out["sensitivity"] = mean_sensitivity
+        df_out["sensitivity_distance"] = mdistance
+        df_out["sensitivity_1m"] = mean_sensitivity_1m
 
-    # add normalized graphs
-    for k in df:
-        logger.debug("DEBUG %s pre shift cols=(%s)", k, ", ".join(set(df[k].Measurements)))
-        if k == "CEA2034":
-            shifted_spin = shift_spl(df[k], mean_midrange)
-            dfs[k] = graph_melt(shifted_spin)
-            dfs["CEA2034 Normalized"] = graph_melt(normalize_spl(shifted_spin))
-            # create the on axis dataframe which usually does not exists for this partial measurements
-            if "On Axis" not in dfs:
-                dfs["On Axis"] = pd.DataFrame(
-                    {
-                        "Freq": shifted_spin.Freq,
-                        "Measurements": ["On Axis"] * len(shifted_spin.Freq),
-                        "dB": shifted_spin["On Axis"],
-                    }
-                )
-        elif k == "Estimated In-Room Response":
-            shifted_spl = shift_spl(df[k], mean_midrange)
-            dfs[k] = graph_melt(shifted_spl)
-            on_values = graph_unmelt(df["CEA2034"])["On Axis"].to_numpy()
-            dfs["Estimated In-Room Response Normalized"] = graph_melt(
-                normalize_spl(df[k], on_values)
-            )
-        else:
-            dfs[k] = shift_spl(df[k], mean_midrange)
-
-    # create unmelted ones
-    previous_keys = list(dfs.keys())
-    for k in previous_keys:
-        if "unmelted" in k:
-            continue
-        unmelted = "{}_unmelted".format(k)
-        if unmelted not in dfs and isinstance(dfs[k], pd.DataFrame):
-            dfs[unmelted] = graph_unmelt(dfs[k])
-
-    logger.debug("DEBUG  filter_graphs partial (%s)", ", ".join(dfs.keys()))
-    logger.debug(
-        "filter in: keys=(%s) out: mean=%f keys=(%s)",
-        ", ".join(df.keys()),
-        mean_midrange,
-        ", ".join(dfs.keys()),
-    )
-    logger.debug("DEBUG END of filter_graphs_partial")
-    return dfs
+    logger.debug("DEBUG filter_graphs_partial  IN (%s)", ", ".join(df_in.keys()))
+    logger.debug("DEBUG filter_graphs_partial partial OUT (%s)", ", ".join(df_out.keys()))
+    return df_out
 
 
 def parse_graph_freq_check(speaker_name: str, df_spin: pd.DataFrame) -> bool:
@@ -399,6 +424,7 @@ def spin_compute_di_eir(
         spin_melted = graph_melt(spin_uneven)
 
     if not parse_graph_freq_check(speaker_name, spin_melted):
+        logging.error("parse graph failed for %s", speaker_name)
         dfs[title] = spin_melted
         return dfs
 
@@ -585,6 +611,7 @@ def parse_eq_speaker(
         return iir, df_eq
 
     # partial_measurements
+    print("DEBUG {}".format(df_ref.keys()))
     if "CEA2034" in df_ref:
         spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir, False)
         if spin_eq is not None:
@@ -615,6 +642,7 @@ def parse_eq_speaker(
             df_eq["On Axis"] = on_eq
             df_eq["On Axis_unmelted"] = graph_unmelt(on_eq)
 
+    print("DEBUG {}".format(df_eq.keys()))
     return iir, df_eq
 
 
@@ -705,10 +733,10 @@ def parse_graphs_speaker(
                         logger.error("------------ %s -----------", k)
                         logger.error(df_full[k].head())
 
-            for k in df_full:
-                logger.debug("-- DF FULL ---------- %s -----------", k)
-                if isinstance(df_full[k], pd.DataFrame):
-                    logger.debug(df_full[k].head())
+            # for k in df_full:
+            #     logger.debug("-- DF FULL ---------- %s -----------", k)
+            #     if isinstance(df_full[k], pd.DataFrame):
+            #         logger.debug(df_full[k].head())
 
             df_graph = filter_graphs_partial(df_full, mformat, distance)
             nan_count = check_nan(df_graph)
@@ -719,10 +747,10 @@ def parse_graphs_speaker(
                         logger.error("------------ %s -----------", k)
                         logger.error(df_graph[k].head())
 
-            for k in df_graph:
-                if isinstance(df_graph[k], pd.DataFrame):
-                    logger.debug("-- DF ---------- %s -----------", k)
-                    logger.debug(df_graph[k].head())
+            # for k in df_graph:
+            #     if isinstance(df_graph[k], pd.DataFrame):
+            #         logger.debug("-- DF ---------- %s -----------", k)
+            #         logger.debug(df_graph[k].head())
         except ValueError as ve:
             logger.exception("ValueError for speaker %s: %s", speaker_name, ve)
             raise
@@ -733,10 +761,5 @@ def parse_graphs_speaker(
     if df_graph is None:
         logger.warning("Parsing failed for %s/%s/%s", measurement_path, speaker_name, mversion)
         return {}
-
-    if "CEA2034" not in df_graph:
-        logger.info("CEA2034 not in graph after parsing for %s, %s", speaker_name, mversion)
-
-    # print("DEBUG {} {} : {}".format(speaker_name, mversion, df_graph.keys()))
 
     return df_graph
