@@ -41,8 +41,10 @@ if test "$OS" = "Linux"; then
   # sudo apt-get update
   # sudo apt-get -y install nvidia-cuda nvidia-cuda-toolkit libcudnn8
 elif test "$OS" = "Darwin"; then
-  brew install npm hdf5 c-blosc lzo bzip2 python@${PYVERSION} freetype imagemagick gawk gsed redis
-  export HDF5_DIR="$(brew --prefix hdf5)"
+    brew install npm hdf5 c-blosc lzo bzip2 python@${PYVERSION} freetype imagemagick gawk gsed redis chromedriver
+    xattr -d com.apple.quarantine $(which chromedriver)
+    chmod 755 $(which chromedriver)
+    export HDF5_DIR="$(brew --prefix hdf5)"
 fi
 
 export PYTHONPATH=./src:./src/website
