@@ -467,7 +467,7 @@ def compute_slope_smoothness(
     """Compute the slope in db/oct of a measurement in the data frame"""
     freq = data_frame.Freq.to_numpy()
     if len(freq) == 0:
-        logger.error("DataFrame Freq column is empty")
+        logger.error("DataFrame Freq column exists but is of len 0")
         return 0, 0, 0, 0
     slope_min_freq = max(SLOPE_MIN_FREQ, freq[0])
     slope_max_freq = min(SLOPE_MAX_FREQ, freq[-1])

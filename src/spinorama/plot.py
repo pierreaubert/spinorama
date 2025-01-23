@@ -1131,8 +1131,10 @@ def plot_radar(spl, params):
                 legendrank=int(freq[:-3]),
             )
             if layout != "compact":
-                trace.legendgroup = ("measurements",)
-                trace.legendgrouptitle_text = ("Frequencies",)
+                trace.legendgroup = "Measurements"
+                trace.legendgrouptitle = dict(
+                    text="Frequencies",
+                )
             fig.add_trace(trace, row=row, col=col)
             fig.update_polars(radialaxis=radialaxis, angularaxis=angularaxis, row=row, col=col)
 

@@ -137,7 +137,7 @@ def queue_measurement(
     )
     width = int(plot_params_default["width"])
     height = int(plot_params_default["height"])
-    tracing("calling print_graph remote for {}".format(speaker))
+    tracing("calling print_graph remote for {} {}".format(speaker, mversion))
     id_g1 = print_graphs.remote(
         id_df,
         speaker,
@@ -150,7 +150,7 @@ def queue_measurement(
         force,
         level,
     )
-    tracing("calling print_graph remote eq for {}".format(speaker))
+    tracing("calling print_graph remote eq for {} {}".format(speaker, mversion + "_eq"))
     id_g2 = print_graphs.remote(
         id_eq,
         speaker,
@@ -163,7 +163,7 @@ def queue_measurement(
         force,
         level,
     )
-    tracing("print_graph done")
+    tracing("print_graph done for {} {}".format(speaker, mversion))
     return (id_df, id_eq, id_g1, id_g2)
 
 
@@ -252,6 +252,11 @@ def compute(speakerlist, filters, ray_ids: dict, level: int):
             len(ids),
             len(done_ids),
         )
+        tracing(
+            "State: {:4d} ready IDs {:4d} remainings IDs {:4d} Total IDs {:4d} Done".format(
+                len(ready_ids), len(remaining_ids), len(ids), len(done_ids)
+            )
+        )
 
         for speaker in speakerlist:
             speaker_key = speaker  # .translate({ord(ch) : '_' for ch in '-.;/\' '})
@@ -287,21 +292,9 @@ def compute(speakerlist, filters, ray_ids: dict, level: int):
 
                 current_id = ray_ids[speaker][m_version][0]
                 if current_id in ready_ids:
-                    try:
-                        data_frame[speaker_key][m_origin][m_version_key] = ray.get(current_id)
-                        logger.debug(
-                            "Getting df done for %s / %s / %s", speaker, m_origin, m_version
-                        )
-                        done_ids[current_id] = True
-                    except KeyError as ke:
-                        logger.error(
-                            "Speaker %s/%s/%s KeyError: %s",
-                            speaker_key,
-                            m_origin,
-                            m_version_key,
-                            ke,
-                        )
-                        continue
+                    data_frame[speaker_key][m_origin][m_version_key] = ray.get(current_id)
+                    logger.debug("Getting df done for %s / %s / %s", speaker, m_origin, m_version)
+                    done_ids[current_id] = True
 
                 m_version_eq = f"{m_version_key}_eq"
                 current_id = ray_ids[speaker][m_version][1]
@@ -309,70 +302,36 @@ def compute(speakerlist, filters, ray_ids: dict, level: int):
                     logger.debug(
                         "Getting eq done for %s / %s / %s", speaker, m_version_eq, m_version
                     )
-
-                    try:
-                        _, computed_eq = ray.get(current_id)
-                    except KeyError as ke:
-                        logger.error(
-                            "Speaker %s/%s/%s KeyError: %s",
-                            speaker_key,
-                            m_origin,
-                            m_version_key,
-                            ke,
+                    _, computed_eq = ray.get(current_id)
+                    if computed_eq is not None and len(computed_eq) > 0:
+                        data_frame[speaker_key][m_origin][m_version_eq] = computed_eq
+                        logger.debug(
+                            "Getting preamp eq done for %s / %s / %s",
+                            speaker,
+                            m_version_eq,
+                            m_version,
                         )
-                        continue
-                    else:
-                        if computed_eq is not None and len(computed_eq) > 0:
-                            data_frame[speaker_key][m_origin][m_version_eq] = computed_eq
-                            logger.debug(
-                                "Getting preamp eq done for %s / %s / %s",
-                                speaker,
-                                m_version_eq,
-                                m_version,
+                        if "preamp_gain" in computed_eq:
+                            data_frame[speaker_key][m_origin][m_version_eq]["preamp_gain"] = (
+                                computed_eq["preamp_gain"]
                             )
-                            if "preamp_gain" in computed_eq:
-                                data_frame[speaker_key][m_origin][m_version_eq]["preamp_gain"] = (
-                                    computed_eq["preamp_gain"]
-                                )
-                            done_ids[current_id] = True
+                    done_ids[current_id] = True
 
                 current_id = ray_ids[speaker][m_version][2]
                 if current_id in g1_ids:
                     logger.debug(
                         "Getting graph done for %s / %s / %s", speaker, m_version, m_origin
                     )
-                    try:
-                        ray.get(current_id)
-                    except KeyError as ke:
-                        logger.error(
-                            "Speaker %s/%s/%s KeyError: %s",
-                            speaker_key,
-                            m_origin,
-                            m_version_key,
-                            ke,
-                        )
-                        continue
-                    else:
-                        done_ids[current_id] = True
+                    ray.get(current_id)
+                    done_ids[current_id] = True
 
                 current_id = ray_ids[speaker][m_version][3]
                 if current_id in g2_ids:
                     logger.debug(
                         "Getting graph done for %s / %s / %s", speaker, m_version_eq, m_origin
                     )
-                    try:
-                        ray.get(current_id)
-                    except KeyError as ke:
-                        logger.error(
-                            "Speaker %s/%s/%s KeyError: %s",
-                            speaker_name,
-                            m_origin,
-                            m_version_key,
-                            ke,
-                        )
-                        continue
-                    else:
-                        done_ids[current_id] = True
+                    ray.get(current_id)
+                    done_ids[current_id] = True
 
         if len(remaining_ids) == 0:
             break

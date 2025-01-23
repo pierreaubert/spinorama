@@ -110,7 +110,7 @@ def get_spin_unmelted(df, is_normalized):
     spin = df.get("CEA2034_unmelted")
     if is_normalized:
         spin = df.get("CEA2034 Normalized_unmelted")
-    if spin is None:
+    if spin is None or spin.Freq.shape[0] == 0:
         logger.info(
             "CEA2034 not in dataframe (known keys are %s) is_normalized=%s",
             ", ".join(df.keys()),
@@ -439,9 +439,13 @@ def print_graphs(
             graph = op_call(df_speaker, graph_params)
             if graph is None:
                 logger.info("display %s failed for %s %s %s", op_title, speaker, version, origin)
+                if "CEA2034" in op_title or "Estimated" in op_title:
+                    print(
+                        "display {} failed for {} {} {}".format(op_title, speaker, version, origin)
+                    )
                 continue
         except KeyError as ke:
-            logger.exception(
+            logger.error(
                 "display %s failed with a key error for %s %s %s",
                 op_title,
                 speaker,

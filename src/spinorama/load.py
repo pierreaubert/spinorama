@@ -99,7 +99,7 @@ def shift_spl(spl: pd.DataFrame, mean: float) -> pd.DataFrame:
     return _shift_spl_unmelted(spl, mean)
 
 
-def _normalize_spl_unmelted(spl: pd.DataFrame, on: np.array) -> pd.DataFrame:
+def _normalize_spl_unmelted(spl: pd.DataFrame, on: np.ndarray) -> pd.DataFrame:
     """Normalize SPL measurements relative to the On Axis measurement.
 
     Args:
@@ -276,7 +276,7 @@ def filter_graphs(
             continue
         if "unmelted" in k:
             if "Measurements" in dfs[k]:
-                logging.error("Correct misshaped data for %s", k)
+                logger.error("Correct misshaped data for %s", k)
                 df_out[k] = graph_unmelt(dfs[k])
             else:
                 df_out[k] = dfs[k]
@@ -284,7 +284,7 @@ def filter_graphs(
             if "Measurements" in dfs[k]:
                 df_out[k] = dfs[k]
             else:
-                logging.error("Correct misshaped data for %s", k)
+                logger.error("Correct misshaped data for %s", k)
                 df_out[k] = graph_melt(dfs[k])
     return df_out
 
@@ -360,7 +360,7 @@ def filter_graphs_partial(df_in, mformat, mdistance):
         normalized_spin = normalize_spl(spin, on)
         df_out["CEA2034 Normalized"] = graph_melt(normalized_spin)
 
-    if "Estimated In-Room Response Normalized" in df_in and "On Axis" in df_in:
+    if "Estimated In-Room Response" in df_in and "On Axis" in df_in:
         df_out["Estimated In-Room Response Normalized"] = graph_melt(
             normalize_spl(df_in["Estimated In-Room Response"], df_in["On Axis"].dB.to_numpy())
         )
@@ -398,7 +398,7 @@ def parse_graph_freq_check(speaker_name: str, df_spin: pd.DataFrame) -> bool:
     status = True
     spin_cols = set(df_spin.Measurements.to_numpy())
     mandatory_cols = ("Listening Window", "On Axis", "Early Reflections", "Sound Power")
-    other_cols = ("Early Reflections DI", "Sound Power DI")
+    other_cols = ("Early Reflections DI", "Sound Power DI", "DI Offset")
     for col in mandatory_cols:
         if col not in spin_cols:
             logger.info("%s measurement doesn't have a %s column", speaker_name, col)

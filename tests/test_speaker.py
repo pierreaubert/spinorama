@@ -47,6 +47,8 @@ from spinorama.speaker import (
     display_contour_vertical_3d,
     display_contour_horizontal_normalized_3d,
     display_contour_vertical_normalized_3d,
+    display_radar_horizontal,
+    display_radar_vertical,
 )
 
 from spinorama.plot import (
@@ -232,7 +234,7 @@ class SpinoramaKlippelParseTests(unittest.TestCase):
                 ("CEA2034 Normalized", display_spinorama_normalized),
                 ("On Axis", display_onaxis),
                 ("Estimated In-Room Response", display_inroom),
-                # ("Estimated In-Room Response Normalized", display_inroom_normalized),
+                ("Estimated In-Room Response Normalized", display_inroom_normalized),
                 ("Early Reflections", display_reflection_early),
                 ("Horizontal Reflections", display_reflection_horizontal),
                 ("Vertical Reflections", display_reflection_vertical),
@@ -244,14 +246,26 @@ class SpinoramaKlippelParseTests(unittest.TestCase):
                 graph = op_call(df, plot_params_default)
                 self.assertIsNotNone(graph)
 
-            # check all contour graphs and radars
+            # check all contour graphs
             for op_title, op_call in (
                 ("SPL Horizontal Contour", display_contour_horizontal),
                 ("SPL Horizontal Contour Normalized", display_contour_horizontal_normalized),
                 ("SPL Horizontal Contour 3D", display_contour_horizontal_3d),
                 ("SPL Horizontal Contour Normalized 3D", display_contour_horizontal_normalized_3d),
+                ("SPL Vertical Contour", display_contour_vertical),
+                ("SPL Vertical Contour Normalized", display_contour_vertical_normalized),
+                ("SPL Vertical Contour 3D", display_contour_vertical_3d),
+                ("SPL Vertical Contour Normalized 3D", display_contour_vertical_normalized_3d),
             ):
-                graph = op_call(df, plot_params_default)
+                graph = op_call(df, contour_params_default)
+                self.assertIsNotNone(graph)
+
+            # check all radar graphs
+            for op_title, op_call in (
+                ("SPL Horizontal Radar", display_radar_horizontal),
+                ("SPL Vertical Radar", display_radar_vertical),
+            ):
+                graph = op_call(df, radar_params_default)
                 self.assertIsNotNone(graph)
 
     def test_dfs_partial(self):
@@ -275,6 +289,34 @@ class SpinoramaKlippelParseTests(unittest.TestCase):
         for method, df in self.dfs_partial.items():
             self.assertIsNotNone(df)
             self.assertSetEqual(partial_set, set(df.keys()))
+
+        for method, df in self.dfs_full.items():
+            self.assertIsNotNone(df)
+            # Full measurements should contain all partial measurements plus additional ones
+            self.assertTrue(
+                partial_set.issubset(set(df.keys())),
+                f"Full measurements should contain all partial measurements. Missing: {partial_set - set(df.keys())}",
+            )
+
+            for k in df.keys():
+                if isinstance(df[k], pd.DataFrame):
+                    if "_unmelted" in k:
+                        self.assertIn("Freq", df[k])
+                    else:
+                        self.assertIn("Freq", df[k])
+                        self.assertIn("Measurements", df[k])
+                        self.assertIn("dB", df[k])
+
+            # check all spin graphs
+            for op_title, op_call in (
+                ("CEA2034", display_spinorama),
+                ("CEA2034 Normalized", display_spinorama_normalized),
+                ("On Axis", display_onaxis),
+                ("Estimated In-Room Response", display_inroom),
+                ("Estimated In-Room Response Normalized", display_inroom_normalized),
+            ):
+                graph = op_call(df, plot_params_default)
+                self.assertIsNotNone(graph)
 
 
 if __name__ == "__main__":
