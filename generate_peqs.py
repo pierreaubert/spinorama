@@ -552,7 +552,7 @@ def main():
             # default is too low for global optim
             if args["--max-iter"] is None:
                 current_optim_config["MAX_ITER"] = 2500
-    else:
+    elif not generate_images_only:
         print("ERROR: Optimisation algorithm needs to be either 'greedy' or 'global'.")
         sys.exit(1)
 
@@ -575,7 +575,7 @@ def main():
             parameter_error = True
         else:
             current_optim_config["loss"] = param_fitness_name_valid[current_fitness_name]
-    else:
+    elif not generate_images_only:
         print(
             "ERROR: fitness function is required: options are {}".format(
                 list(param_fitness_name_valid.keys())
