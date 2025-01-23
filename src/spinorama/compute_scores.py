@@ -218,11 +218,11 @@ def pref_rating(nbd_on: float, nbd_pir: float, lf_x: float, sm_pir: float) -> fl
     return 12.69 - 2.49 * nbd_on - 2.99 * nbd_pir - 4.31 * lf_x + 2.32 * sm_pir
 
 
-def speaker_pref_rating(cea2034, pir, rounded):
+def speaker_pref_rating(cea2034, pir, rounded) -> dict[str, float]:
     try:
         if pir is None or pir.shape[0] == 0:
             logger.info("PIR is empty")
-            return None
+            return {}
         df_on_axis = cea2034.loc[lambda df: df.Measurements == "On Axis"]
         df_listening_window = cea2034.loc[lambda df: df.Measurements == "Listening Window"]
         df_sound_power = cea2034.loc[lambda df: df.Measurements == "Sound Power"]
@@ -241,7 +241,7 @@ def speaker_pref_rating(cea2034, pir, rounded):
         sm_pred_in_room = sm(pir)
         if nbd_on_axis is None or nbd_pred_in_room is None or sm_pred_in_room is None:
             logger.info("One of the pref score components is None")
-            return None
+            return {}
         # 14.5hz or 20hz see discussion
         # https://www.audiosciencereview.com/forum/index.php?threads/master-preference-ratings-for-loudspeakers.11091/page-25#post-448733
         pref = None
@@ -249,7 +249,7 @@ def speaker_pref_rating(cea2034, pir, rounded):
         pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)
         if pref is None or pref_wsub is None:
             logger.info("Pref score is None")
-            return None
+            return {}
 
         if rounded:
             ratings = {
@@ -286,5 +286,5 @@ def speaker_pref_rating(cea2034, pir, rounded):
         logger.debug("Ratings: %s", ratings)
     except ValueError:
         logger.exception("Compute pref_rating failed")
-        return None
+        return {}
     return ratings

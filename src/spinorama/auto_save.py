@@ -271,7 +271,7 @@ def optim_save_peq_seq(
         optim_config["curve_names"] = ["Listening Window"]
 
     # do we have a previous score?
-    previous_score = get_previous_score(eq_name)
+    previous_score: float = get_previous_score(eq_name)
 
     skip_write_eq = False
     if (
@@ -300,7 +300,7 @@ def optim_save_peq_seq(
     # compute new score with this PEQ
     auto_spin = None
     auto_pir = None
-    scores = []
+    scores = (-1000, -1000)
     if use_score or optim_config["generate_images_only"]:
         if (
             previous_score is not None and previous_score > auto_score["pref_score"]
@@ -316,8 +316,13 @@ def optim_save_peq_seq(
             print_small_summary(current_speaker_name, score, auto_score)
 
         auto_spin, auto_pir, auto_score = scores_apply_filter(df_speaker, auto_peq)
-        scores = [score.get("pref_score", -1000), auto_score.get("pref_score", -1000)]
-        if previous_score is not None and previous_score > auto_score["pref_score"]:
+        if score is not None:
+            scores = [score.get("pref_score", -1000), auto_score.get("pref_score", -1000)]
+        if (
+            previous_score is not None
+            and auto_score is not None
+            and previous_score > auto_score.get("pref_score", -1000)
+        ):
             scores[1] = previous_score
 
     if auto_spin is None or auto_pir is None:

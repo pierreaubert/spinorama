@@ -401,7 +401,7 @@ def main():
         # max iterations (if algorithm is iterative)
         current_optim_config["MAX_ITER"] = 20
     else:
-        current_optim_config["MAX_NUMBER_PEQ"] = 9
+        current_optim_config["MAX_NUMBER_PEQ"] = 7
         current_optim_config["MAX_STEPS_FREQ"] = 6
         current_optim_config["MAX_STEPS_DBGAIN"] = 6
         current_optim_config["MAX_STEPS_Q"] = 6
@@ -529,26 +529,6 @@ def main():
                     param_curve_name_valid[current_curve_name]
                 )
 
-    # which fitness function?
-    if args["--fitness"] is not None:
-        current_fitness_name = args["--fitness"]
-        param_fitness_name_valid = {
-            "Flat": "flat_loss",
-            "Score": "score_loss",
-            "Combine": "combine_loss",
-            "LeastSquare": "leastsquare_loss",
-            "FlatPir": "flat_pir",
-        }
-        if current_fitness_name not in param_fitness_name_valid:
-            print(
-                "ERROR: {} is not known, acceptable values are {}".format(
-                    current_fitness_name, list(param_fitness_name_valid.keys())
-                )
-            )
-            parameter_error = True
-        else:
-            current_optim_config["loss"] = param_fitness_name_valid[current_fitness_name]
-
     # do we build EQ for a HW graphic one?
     if args["--graphic-eq"] is not None:
         grapheq_name = args["--graphic-eq"]
@@ -569,9 +549,39 @@ def main():
             current_optim_config["optimisation"] = "greedy"
         elif optimisation_name == "global":
             current_optim_config["optimisation"] = "global"
+            # default is too low for global optim
+            if args["--max-iter"] is None:
+                current_optim_config["MAX_ITER"] = 2500
+    else:
+        print("ERROR: Optimisation algorithm needs to be either 'greedy' or 'global'.")
+        sys.exit(1)
+
+    # which fitness function?
+    param_fitness_name_valid = {
+        "Flat": "flat_loss",
+        "Score": "score_loss",
+        "Combine": "combine_loss",
+        "LeastSquare": "leastsquare_loss",
+        "FlatPir": "flat_pir",
+    }
+    if args["--fitness"] is not None:
+        current_fitness_name = args["--fitness"]
+        if current_fitness_name not in param_fitness_name_valid:
+            print(
+                "ERROR: {} is not known, acceptable values are {}".format(
+                    current_fitness_name, list(param_fitness_name_valid.keys())
+                )
+            )
+            parameter_error = True
         else:
-            print("ERROR: Optimisation algorithm needs to be either 'greedy' or 'global'.")
-            sys.exit(1)
+            current_optim_config["loss"] = param_fitness_name_valid[current_fitness_name]
+    else:
+        print(
+            "ERROR: fitness function is required: options are {}".format(
+                list(param_fitness_name_valid.keys())
+            )
+        )
+        sys.exit(1)
 
     # name of speaker
     speaker_name = None

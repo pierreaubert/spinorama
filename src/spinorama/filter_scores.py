@@ -28,9 +28,10 @@ from spinorama.filter_peq import Peq, peq_apply_measurements
 
 def scores_apply_filter(
     df_speaker: DataSpeaker, peq: Peq
-) -> tuple[pd.DataFrame | None, pd.DataFrame | None, pd.DataFrame | None]:
+) -> tuple[pd.DataFrame | None, pd.DataFrame | None, dict[str, float] | None]:
     spin_filtered = pd.DataFrame()
     pir_filtered = pd.DataFrame()
+    score_filtered = None
     if "SPL Horizontal_unmelted" in df_speaker and "SPL Vertical_unmelted" in df_speaker:
         # get SPL H & V
         spl_h = df_speaker["SPL Horizontal_unmelted"]

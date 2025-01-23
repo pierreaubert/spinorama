@@ -153,7 +153,7 @@ def need_update(filename: str, dependencies: list[str]) -> bool:
     return False
 
 
-def write_if_different(new_content: str, filename: str, force: bool = False) -> None: #noqa: FBT002
+def write_if_different(new_content: str, filename: str, force: bool = False) -> None:  # noqa: FBT002
     """Write content to a file only if it differs from current content.
 
     Args:
