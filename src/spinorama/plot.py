@@ -613,12 +613,12 @@ def plot_spinorama_annotation(fig, spin, is_normalized):
             spl = lw[idx]
             freq = res_spin.Freq.to_numpy()[idx]
             spl_on = res_spin["On Axis"].to_numpy()[idx]
-            if not is_normalized:
-                print(
-                    "freq={} spl_on={} spl_lw={} offset={}".format(
-                        freq, spl_on, spl, (spl_on - spl) * 5
-                    )
-                )
+            # if not is_normalized:
+            #    print(
+            #        "freq={} spl_on={} spl_lw={} offset={}".format(
+            #            freq, spl_on, spl, (spl_on - spl) * 5
+            #        )
+            #    )
             ay -= int((spl_on - spl) * 5)
         # print("{:20s} {:5.0f}Hz voffset {}".format(measurement, freq, ay))
         fig.add_annotation(

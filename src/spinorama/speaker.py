@@ -163,7 +163,7 @@ def _display_inroom_common(df, graph_params, is_normalized):
         return None
 
     if "Estimated In-Room Response_unmelted" not in df:
-        logger.warning("Display In Room failed with %s", ke)
+        logger.debug("plot_inroom failed, likely partial measurements")
         return None
 
     return plot_graph_regression(df, "Estimated In-Room Response", graph_params, slopes, False)

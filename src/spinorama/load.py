@@ -328,16 +328,20 @@ def filter_graphs_partial(df_in, mformat, mdistance):
     if "On Axis" not in df_in and "CEA2034" in df_in:
         spin = df_in["CEA2034"]
         on = spin.loc[spin.Measurements == "On Axis"]
-        df_in["On Axis"] = pd.DataFrame(
-            {"Freq": on.Freq, "Measurements": ["On Axis"] * len(on.Freq), "dB": on.dB}
-        )
+        if on.shape[0] > 10:
+            df_in["On Axis"] = pd.DataFrame(
+                {"Freq": on.Freq, "Measurements": ["On Axis"] * len(on.Freq), "dB": on.dB}
+            )
 
     # add PIR if missing
     if "Estimated In-Room Response" not in df_in and "CEA2034" in df_in:
-        logging.warning("Missing PIR for speaker %s", speaker_name)
         spin = df_in["CEA2034"]
-        pir = estimated_inroom(spin)
-        df_in["Estimated In-Room Response"] = graph_melt(pir)
+        lw = spin.loc[spin.Measurements == "Listening Window"]
+        er = spin.loc[spin.Measurements == "Early Reflections"]
+        sp = spin.loc[spin.Measurements == "Sound Power"]
+        pir = estimated_inroom(lw, er, sp)
+        if "Estimated In-Room Response" in pir:
+            df_in["Estimated In-Room Response"] = graph_melt(pir)
 
     # check that On Axis and PIR are in the correct format
     if "On Axis" in df_in and "Measurements" not in df_in["On Axis"]:
@@ -350,8 +354,13 @@ def filter_graphs_partial(df_in, mformat, mdistance):
         df_in["Estimated In-Room Response"] = graph_melt(df_in["Estimated In-Room Response"])
 
     # normalized CEA2034 and PIR wrt On-Axis
-    if "CEA2034" in df_in:
-        df_out["CEA2034 Normalized"] = graph_melt(normalize_spl(df_in["CEA2034"]))
+    if "CEA2034" in df_in and "On Axis" in df_in:
+        spin = df_in["CEA2034"]
+        on = df_in["On Axis"].dB.to_numpy()
+        normalized_spin = normalize_spl(spin, on)
+        df_out["CEA2034 Normalized"] = graph_melt(normalized_spin)
+
+    if "Estimated In-Room Response Normalized" in df_in and "On Axis" in df_in:
         df_out["Estimated In-Room Response Normalized"] = graph_melt(
             normalize_spl(df_in["Estimated In-Room Response"], df_in["On Axis"].dB.to_numpy())
         )
@@ -424,7 +433,7 @@ def spin_compute_di_eir(
         spin_melted = graph_melt(spin_uneven)
 
     if not parse_graph_freq_check(speaker_name, spin_melted):
-        logging.error("parse graph failed for %s", speaker_name)
+        logger.debug("parse graph failed for %s", speaker_name)
         dfs[title] = spin_melted
         return dfs
 
@@ -611,7 +620,6 @@ def parse_eq_speaker(
         return iir, df_eq
 
     # partial_measurements
-    print("DEBUG {}".format(df_ref.keys()))
     if "CEA2034" in df_ref:
         spin_eq, eir_eq, on_eq = noscore_apply_filter(df_ref, iir, False)
         if spin_eq is not None:
@@ -642,7 +650,6 @@ def parse_eq_speaker(
             df_eq["On Axis"] = on_eq
             df_eq["On Axis_unmelted"] = graph_unmelt(on_eq)
 
-    print("DEBUG {}".format(df_eq.keys()))
     return iir, df_eq
 
 
@@ -753,7 +760,11 @@ def parse_graphs_speaker(
             #         logger.debug(df_graph[k].head())
         except ValueError as ve:
             logger.exception("ValueError for speaker %s: %s", speaker_name, ve)
-            raise
+            return {}
+        except KeyError as ke:
+            logger.exception("KeyError for speaker %s: %s", speaker_name, ke)
+            return {}
+
     else:
         logger.fatal("Format %s is unkown", mformat)
         sys.exit(1)
