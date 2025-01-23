@@ -215,11 +215,11 @@ class SpinoramaKlippelParseTests(unittest.TestCase):
                 "CEA2034 Normalized",
             ]
         )
-        for method, df in self.dfs_full.items():
+        for _, df in self.dfs_full.items():
             self.assertIsNotNone(df)
             self.assertSetEqual(full_set, set(df.keys()))
 
-            for k in df.keys():
+            for k in df:
                 if isinstance(df[k], pd.DataFrame):
                     if "_unmelted" in k:
                         self.assertIn("Freq", df[k])
@@ -229,7 +229,7 @@ class SpinoramaKlippelParseTests(unittest.TestCase):
                         self.assertIn("dB", df[k])
 
             # check all spin graphs
-            for op_title, op_call in (
+            for _, op_call in (
                 ("CEA2034", display_spinorama),
                 ("CEA2034 Normalized", display_spinorama_normalized),
                 ("On Axis", display_onaxis),
@@ -247,7 +247,7 @@ class SpinoramaKlippelParseTests(unittest.TestCase):
                 self.assertIsNotNone(graph)
 
             # check all contour graphs
-            for op_title, op_call in (
+            for _, op_call in (
                 ("SPL Horizontal Contour", display_contour_horizontal),
                 ("SPL Horizontal Contour Normalized", display_contour_horizontal_normalized),
                 ("SPL Horizontal Contour 3D", display_contour_horizontal_3d),
@@ -261,7 +261,7 @@ class SpinoramaKlippelParseTests(unittest.TestCase):
                 self.assertIsNotNone(graph)
 
             # check all radar graphs
-            for op_title, op_call in (
+            for _, op_call in (
                 ("SPL Horizontal Radar", display_radar_horizontal),
                 ("SPL Vertical Radar", display_radar_vertical),
             ):
@@ -286,11 +286,11 @@ class SpinoramaKlippelParseTests(unittest.TestCase):
                 "CEA2034 Normalized",
             ]
         )
-        for method, df in self.dfs_partial.items():
+        for _, df in self.dfs_partial.items():
             self.assertIsNotNone(df)
             self.assertSetEqual(partial_set, set(df.keys()))
 
-        for method, df in self.dfs_full.items():
+        for _, df in self.dfs_full.items():
             self.assertIsNotNone(df)
             # Full measurements should contain all partial measurements plus additional ones
             self.assertTrue(
@@ -298,7 +298,7 @@ class SpinoramaKlippelParseTests(unittest.TestCase):
                 f"Full measurements should contain all partial measurements. Missing: {partial_set - set(df.keys())}",
             )
 
-            for k in df.keys():
+            for k in df:
                 if isinstance(df[k], pd.DataFrame):
                     if "_unmelted" in k:
                         self.assertIn("Freq", df[k])
@@ -308,7 +308,7 @@ class SpinoramaKlippelParseTests(unittest.TestCase):
                         self.assertIn("dB", df[k])
 
             # check all spin graphs
-            for op_title, op_call in (
+            for _, op_call in (
                 ("CEA2034", display_spinorama),
                 ("CEA2034 Normalized", display_spinorama_normalized),
                 ("On Axis", display_onaxis),

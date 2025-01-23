@@ -126,7 +126,7 @@ def _normalize_spl_unmelted(spl: pd.DataFrame, on: np.ndarray) -> pd.DataFrame:
     return df_normalized
 
 
-def normalize_spl(spl: pd.DataFrame, on: pd.DataFrame | None = None) -> pd.DataFrame:
+def normalize_spl(spl: pd.DataFrame, on: pd.DataFrame | np.ndarray | None = None) -> pd.DataFrame:
     spl_unmelted = spl
     if "Measurements" in spl:
         spl_unmelted = graph_unmelt(spl)
@@ -270,22 +270,22 @@ def filter_graphs(
             )
 
     df_out = {}
-    for k in dfs:
-        if not isinstance(dfs[k], pd.DataFrame):
-            df_out[k] = dfs[k]
+    for k, df_item in dfs.items():
+        if not isinstance(df_item, pd.DataFrame):
+            df_out[k] = df_item
             continue
         if "unmelted" in k:
-            if "Measurements" in dfs[k]:
+            if "Measurements" in df_item:
                 logger.error("Correct misshaped data for %s", k)
-                df_out[k] = graph_unmelt(dfs[k])
+                df_out[k] = graph_unmelt(df_item)
             else:
-                df_out[k] = dfs[k]
+                df_out[k] = df_item
         else:
-            if "Measurements" in dfs[k]:
-                df_out[k] = dfs[k]
+            if "Measurements" in df_item:
+                df_out[k] = df_item
             else:
                 logger.error("Correct misshaped data for %s", k)
-                df_out[k] = graph_melt(dfs[k])
+                df_out[k] = graph_melt(df_item)
     return df_out
 
 

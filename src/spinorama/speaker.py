@@ -379,6 +379,7 @@ def print_a_graph(filename, chart, ext, force) -> int:
 def print_graphs(
     data: DataSpeaker | tuple[Peq, DataSpeaker],
     speaker: str,
+    mformat: str,
     version: str,
     origin: str,
     origins_info: dict,
@@ -426,13 +427,6 @@ def print_graphs(
         ("On Axis", display_onaxis),
         ("Estimated In-Room Response", display_inroom),
         ("Estimated In-Room Response Normalized", display_inroom_normalized),
-        ("Early Reflections", display_reflection_early),
-        ("Horizontal Reflections", display_reflection_horizontal),
-        ("Vertical Reflections", display_reflection_vertical),
-        ("SPL Horizontal", display_spl_horizontal),
-        ("SPL Vertical", display_spl_vertical),
-        ("SPL Horizontal Normalized", display_spl_horizontal_normalized),
-        ("SPL Vertical Normalized", display_spl_vertical_normalized),
     ):
         logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
         try:
@@ -456,42 +450,81 @@ def print_graphs(
 
         graphs[op_title] = graph
 
-    # change params for contour
-    contour_params = copy.deepcopy(contour_params_default)
-    contour_params["width"] = width
-    contour_params["height"] = height
-    contour_params["layout"] = "compact"
-    contour_params["xmin"] = origins_info[origin]["min hz"]
-    contour_params["xmax"] = origins_info[origin]["max hz"]
+    if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt"):
+        for op_title, op_call in (
+            ("Early Reflections", display_reflection_early),
+            ("Horizontal Reflections", display_reflection_horizontal),
+            ("Vertical Reflections", display_reflection_vertical),
+            ("SPL Horizontal", display_spl_horizontal),
+            ("SPL Vertical", display_spl_vertical),
+            ("SPL Horizontal Normalized", display_spl_horizontal_normalized),
+            ("SPL Vertical Normalized", display_spl_vertical_normalized),
+        ):
+            logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
+            try:
+                graph = op_call(df_speaker, graph_params)
+                if graph is None:
+                    logger.info(
+                        "display %s failed for %s %s %s", op_title, speaker, version, origin
+                    )
+                    if "CEA2034" in op_title or "Estimated" in op_title:
+                        print(
+                            "display {} failed for {} {} {}".format(
+                                op_title, speaker, version, origin
+                            )
+                        )
+                        continue
+            except KeyError as ke:
+                logger.error(
+                    "display %s failed with a key error for %s %s %s",
+                    op_title,
+                    speaker,
+                    version,
+                    origin,
+                )
+                continue
 
-    graphs["SPL Horizontal Contour"] = display_contour_horizontal(df_speaker, contour_params)
-    graphs["SPL Vertical Contour"] = display_contour_vertical(df_speaker, contour_params)
-    graphs["SPL Horizontal Contour Normalized"] = display_contour_horizontal_normalized(
-        df_speaker, contour_params
-    )
-    graphs["SPL Vertical Contour Normalized"] = display_contour_vertical_normalized(
-        df_speaker, contour_params
-    )
+            graphs[op_title] = graph
 
-    graphs["SPL Horizontal Contour 3D"] = display_contour_horizontal_3d(df_speaker, contour_params)
-    graphs["SPL Vertical Contour 3D"] = display_contour_vertical_3d(df_speaker, contour_params)
-    graphs["SPL Horizontal Contour Normalized 3D"] = display_contour_horizontal_normalized_3d(
-        df_speaker, contour_params
-    )
-    graphs["SPL Vertical Contour Normalized 3D"] = display_contour_vertical_normalized_3d(
-        df_speaker, contour_params
-    )
+    if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt"):
+        # change params for contour
+        contour_params = copy.deepcopy(contour_params_default)
+        contour_params["width"] = width
+        contour_params["height"] = height
+        contour_params["layout"] = "compact"
+        contour_params["xmin"] = origins_info[origin]["min hz"]
+        contour_params["xmax"] = origins_info[origin]["max hz"]
 
-    # better square
-    radar_params = copy.deepcopy(radar_params_default)
-    radar_params["width"] = int(height * 4 / 5)
-    radar_params["height"] = height
-    radar_params["layout"] = "compact"
-    radar_params["xmin"] = origins_info[origin]["min hz"]
-    radar_params["xmax"] = origins_info[origin]["max hz"]
+        graphs["SPL Horizontal Contour"] = display_contour_horizontal(df_speaker, contour_params)
+        graphs["SPL Vertical Contour"] = display_contour_vertical(df_speaker, contour_params)
+        graphs["SPL Horizontal Contour Normalized"] = display_contour_horizontal_normalized(
+            df_speaker, contour_params
+        )
+        graphs["SPL Vertical Contour Normalized"] = display_contour_vertical_normalized(
+            df_speaker, contour_params
+        )
 
-    graphs["SPL Horizontal Radar"] = display_radar_horizontal(df_speaker, radar_params)
-    graphs["SPL Vertical Radar"] = display_radar_vertical(df_speaker, radar_params)
+        graphs["SPL Horizontal Contour 3D"] = display_contour_horizontal_3d(
+            df_speaker, contour_params
+        )
+        graphs["SPL Vertical Contour 3D"] = display_contour_vertical_3d(df_speaker, contour_params)
+        graphs["SPL Horizontal Contour Normalized 3D"] = display_contour_horizontal_normalized_3d(
+            df_speaker, contour_params
+        )
+        graphs["SPL Vertical Contour Normalized 3D"] = display_contour_vertical_normalized_3d(
+            df_speaker, contour_params
+        )
+
+        # better square
+        radar_params = copy.deepcopy(radar_params_default)
+        radar_params["width"] = int(height * 4 / 5)
+        radar_params["height"] = height
+        radar_params["layout"] = "compact"
+        radar_params["xmin"] = origins_info[origin]["min hz"]
+        radar_params["xmax"] = origins_info[origin]["max hz"]
+
+        graphs["SPL Horizontal Radar"] = display_radar_horizontal(df_speaker, radar_params)
+        graphs["SPL Vertical Radar"] = display_radar_vertical(df_speaker, radar_params)
 
     # add a title if needed
     for key, graph in graphs.items():

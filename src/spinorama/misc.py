@@ -24,7 +24,7 @@ import numpy as np
 from spinorama import logger
 
 
-def graph_melt(df: pd.DataFrame) -> pd.DataFrame:
+def graph_melt(df_in: pd.DataFrame) -> pd.DataFrame:
     """Convert wide-format DataFrame to long-format.
 
     Args:
@@ -34,15 +34,15 @@ def graph_melt(df: pd.DataFrame) -> pd.DataFrame:
         DataFrame with columns ['Freq', 'Measurements', 'dB']
     """
     # Ensure we have a clean index
-    df = df.copy()
-    if not isinstance(df.index, pd.RangeIndex):
-        df = df.reset_index(drop=True)
+    df_out = df_in.copy()
+    if not isinstance(df_in.index, pd.RangeIndex):
+        df_out = df_out.reset_index(drop=True)
 
     # Melt the dataframe
-    return df.melt(id_vars="Freq", var_name="Measurements", value_name="dB")
+    return df_out.melt(id_vars="Freq", var_name="Measurements", value_name="dB")
 
 
-def graph_unmelt(df: pd.DataFrame) -> pd.DataFrame:
+def graph_unmelt(df_in: pd.DataFrame) -> pd.DataFrame:
     """Convert long-format DataFrame back to wide-format.
 
     Args:
@@ -52,7 +52,7 @@ def graph_unmelt(df: pd.DataFrame) -> pd.DataFrame:
         DataFrame with 'Freq' and measurement columns
     """
     # Handle potential duplicate (Freq, Measurements) pairs
-    result = df.pivot_table(
+    df_out = df_in.pivot_table(
         index="Freq",
         columns="Measurements",
         values="dB",
@@ -60,8 +60,8 @@ def graph_unmelt(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     # Clean up the index/columns
-    result.columns.name = None
-    return result.reset_index()
+    df_out.columns.name = None
+    return df_out.reset_index()
 
 
 def sort_angles(dfi: pd.DataFrame) -> pd.DataFrame:
@@ -153,7 +153,7 @@ def need_update(filename: str, dependencies: list[str]) -> bool:
     return False
 
 
-def write_if_different(new_content: str, filename: str, force: bool = False) -> None:
+def write_if_different(new_content: str, filename: str, force: bool = False) -> None: #noqa: FBT002
     """Write content to a file only if it differs from current content.
 
     Args:

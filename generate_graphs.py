@@ -141,6 +141,7 @@ def queue_measurement(
     id_g1 = print_graphs.remote(
         id_df,
         speaker,
+        mformat,
         mversion,
         morigin,
         metadata.origins_info,
@@ -154,6 +155,7 @@ def queue_measurement(
     id_g2 = print_graphs.remote(
         id_eq,
         speaker,
+        mformat,
         mversion,
         morigin,
         metadata.origins_info,
