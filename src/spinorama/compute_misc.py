@@ -433,7 +433,7 @@ def dist_point_line(x, y, p_a, p_b, p_c):
 def compute_minmax_slopes(spin: pd.DataFrame, is_normalized) -> dict[str, tuple[float, float]]:
     _, _, slope_on, _ = compute_slope_smoothness(spin, "On Axis", is_normalized)
     _, _, slope_sp, _ = compute_slope_smoothness(spin, "Sound Power", is_normalized)
-    slope_di = (slope_on - slope_sp)  * math.log(2)
+    slope_di = (slope_on - slope_sp) * math.log(2)
     slope_limited = max(min(slope_di, 1.2), 0.0)
     # print('Slope DI={} LimDI={}'.format(slope_di, slope_limited))
     minmax = {
@@ -454,8 +454,8 @@ def compute_minmax_slopes(spin: pd.DataFrame, is_normalized) -> dict[str, tuple[
             -0.0833 * slope_limited - 0.80,
         ),
         "Sound Power DI": (
-            max(min(slope_di + 1.15, 1.2) - 0.3, 0),
-            min(slope_di + 1.15, 1.2),
+            max(min(slope_di + 0.15, 1.2) - 0.3, 0),
+            min(slope_di + 0.15, 1.2),
         ),
     }
     minmax["Predicted In-Room Response"] = minmax["Estimated In-Room Response"]
