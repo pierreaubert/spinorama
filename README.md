@@ -5,6 +5,7 @@
 [![Website www.spinorama.org](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://www.spinorama.org/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![DeepSource](https://deepsource.io/gh/pierreaubert/spinorama.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/pierreaubert/spinorama/?ref=repository-badge)
+[<img src="https://api.gitsponsors.com/api/badge/img?id=239157027" height="20">](https://api.gitsponsors.com/api/badge/link?p=CmMKgxp7XWg5ZxAIlCG4inSt5MsTbyk0QoVRIeZEjqDTC5ryKBSGy93hPQjOLq8ulESISxl717zc/nAhtCVdqaLcpUMtv4u60pFc3QDgaDUAIjlcG3HueZmDS/YnhL4r)
 
 This library provides an easy way to view, compare or analyse speakers
 data. This can help you take informed
