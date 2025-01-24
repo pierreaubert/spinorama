@@ -911,7 +911,7 @@ def plot_graph_regression(df, measurement, params, minmax_slopes, is_normalized)
             data_frame=curve, measurement=measurement, is_normalized=is_normalized
         )
         slope_min, slope_max = minmax_slopes[measurement]
-        first_freq = 20
+        # first_freq = 20
         spl_min = slope_min * math.log2(last_freq / first_freq)
         spl_max = slope_max * math.log2(last_freq / first_freq)
         x = [first_freq, last_freq, last_freq, first_freq, first_freq]
