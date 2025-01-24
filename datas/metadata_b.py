@@ -303,6 +303,24 @@ speakers_info_b: SpeakerDatabase = {
             },
         },
     },
+    "Behringer C5A": {
+        "brand": "Behringer",
+        "model": "C5A",
+        "type": "active",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "review_published": "20250125",
+                "symmetry": "coaxial",
+            },
+        },
+    },
     "Behringer Eurolive B212XL": {
         "brand": "Behringer",
         "model": "Eurolive B212XL",

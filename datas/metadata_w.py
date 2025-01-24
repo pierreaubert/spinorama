@@ -75,6 +75,23 @@ speakers_info_w: SpeakerDatabase = {
             },
         },
     },
+    "Wharfedale Diamond 12 Center": {
+        "brand": "Wharfedale",
+        "model": "Diamond 12 Center",
+        "type": "passive",
+        "price": "",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "review_published": "20250125",
+            },
+        },
+    },
     "Wharfedale Diamond 220": {
         "brand": "Wharfedale",
         "model": "Diamond 220",

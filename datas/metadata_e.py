@@ -512,6 +512,23 @@ speakers_info_e: SpeakerDatabase = {
             },
         },
     },
+    "Edifier R1700BT Plus": {
+        "brand": "Edifier",
+        "model": "R1700BT Plus",
+        "type": "active",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "review_published": "20250125",
+            },
+        },
+    },
     "Edifier S2000 Mk III": {
         "brand": "Edifier",
         "model": "S2000 Mk III",

@@ -74,6 +74,23 @@ speakers_info_g: SpeakerDatabase = {
             },
         },
     },
+    "Genelec 1031A": {
+        "brand": "Genelec",
+        "model": "1031A",
+        "type": "active",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "review_published": "20250125",
+            },
+        },
+    },
     "Genelec 1032A": {
         "brand": "Genelec",
         "model": "1032A",

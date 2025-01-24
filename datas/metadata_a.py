@@ -1877,6 +1877,23 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "ATC SCM20SL MK2": {
+        "brand": "ATC",
+        "model": "SCM20SL MK2",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "review_published": "20250125",
+            },
+        },
+    },
     "Atlantic Technology 8600eLR Tower": {
         "brand": "Atlantic Technology",
         "model": "8600eLR Tower",
