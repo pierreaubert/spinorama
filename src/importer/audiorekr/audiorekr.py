@@ -20,6 +20,7 @@
 import os
 import sys
 
+
 def process_on(speakername, on_spl_filename) -> list[tuple[float, float]]:
     on_spl = []
 
@@ -27,7 +28,7 @@ def process_on(speakername, on_spl_filename) -> list[tuple[float, float]]:
         lines = fin.readlines()
         for line in lines:
             toparse = line
-            if line[-2:] == '];':
+            if line[-2:] == "];":
                 toparse = line[:-2]
             items = toparse.split()
             if len(items) == 2:
@@ -40,6 +41,7 @@ def process_on(speakername, on_spl_filename) -> list[tuple[float, float]]:
                     continue
     return on_spl
 
+
 def process_spl(speakername, spl_filename) -> dict[int, list[tuple[float, float]]]:
     spl = {}
     for angle in range(-180, 190, 5):
@@ -49,13 +51,13 @@ def process_spl(speakername, spl_filename) -> dict[int, list[tuple[float, float]
         lines = fin.readlines()
         for line in lines:
             toparse = line
-            if line[-2:] == '];':
+            if line[-2:] == "];":
                 toparse = line[:-2]
             items = toparse.split()
             if len(items) == 3:
                 try:
-                    freq = float(items[0].replace(',', ''))
-                    fspl = float(items[1].replace(',', ''))
+                    freq = float(items[0].replace(",", ""))
+                    fspl = float(items[1].replace(",", ""))
                     angle = int(items[2])
                     if freq >= 20.00 and freq <= 20000 and angle >= -180 and angle <= 180:
                         spl[angle].append((freq, fspl))
@@ -72,24 +74,25 @@ def process(speakername, on_spl_filename, h_spl_filename, v_spl_filename):
         v_spl = process_spl(speakername, v_spl_filename)
 
     for orientation, x_spl in (
-            ('_H', h_spl),
-            ('_V', v_spl),
+        ("_H", h_spl),
+        ("_V", v_spl),
     ):
         if x_spl is None:
             continue
         for angle, spl_at_angle in x_spl.items():
-
-            filename = '../{} {} {}.txt'.format(speakername, orientation, angle)
+            filename = "../{} {} {}.txt".format(speakername, orientation, angle)
 
             if len(spl_at_angle) == 0:
                 continue
 
             with open(filename, "w") as fout:
                 for freq, spl in spl_at_angle:
-                    fout.write('{} {}\n'.format(freq, spl))
+                    fout.write("{} {}\n".format(freq, spl))
 
 
 if __name__ == "__main__":
     speakername = sys.argv[1]
-    process(speakername, '01_FR.txt', '02_Horizontal Contour Plot.txt', '03_Vertical Contour Plot.txt')
+    process(
+        speakername, "01_FR.txt", "02_Horizontal Contour Plot.txt", "03_Vertical Contour Plot.txt"
+    )
     sys.exit(0)

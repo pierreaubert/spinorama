@@ -60,7 +60,7 @@ from spinorama.plot import (
 import ray
 
 
-class SpinoramaKlippelParseTests(unittest.TestCase):
+class SpinoramaDisplayTests(unittest.TestCase):
     def setUp(self):
         self.dfs_full = {}
         self.dfs_partial = {}
