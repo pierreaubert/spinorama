@@ -154,18 +154,29 @@ def print_radar(meta_data, scale, speaker_data):
         # print(iir)
         # compute pref_rating and estimates
         # print(speaker_data[measurement["origin"]][def_measurement].keys())
-        if mformat in ('klippel', 'spl_hv_txt', 'gll_hv_txt'):
-            _, _, pref_rating_eq = scores_apply_filter(speaker_data[measurement["origin"]][def_measurement], iir)
+        if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt"):
+            _, _, pref_rating_eq = scores_apply_filter(
+                speaker_data[measurement["origin"]][def_measurement], iir
+            )
         else:
-            _, _, pref_rating_eq = noscore_apply_filter(speaker_data[measurement["origin"]][def_measurement], iir)
+            _, _, pref_rating_eq = noscore_apply_filter(
+                speaker_data[measurement["origin"]][def_measurement], iir, is_normalized=False
+            )
         # pprint(pref_rating_eq)
         # add results to data
         pretty_name = {
             "autoeq_lw": "autoEQ LW",
             "autoeq": "autoEQ Score",
         }
-        if pref_rating_eq is not None:
-            graph_data.append(build_scatterplot(pref_rating_eq, scale, pretty_name.get(eq_key, eq_key)))
+        if (
+            pref_rating is not None
+            and pref_rating_eq is not None
+            and "pref_score" in pref_rating
+            and "pref_score" in pref_rating_eq
+        ):
+            graph_data.append(
+                build_scatterplot(pref_rating_eq, scale, pretty_name.get(eq_key, eq_key))
+            )
 
     layout = {
         "width": 800,
@@ -189,7 +200,7 @@ def print_radar(meta_data, scale, speaker_data):
             "b": 20,
         },
     }
-    if len(graph_data)==0:
+    if len(graph_data) == 0:
         return
 
     fig = go.Figure()
