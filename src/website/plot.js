@@ -637,7 +637,7 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
             layout.margin.t += 100;
         }
         if (outputGraphProperties.isSpin && isVertical) {
-            layout.margin.b += 100;
+            layout.margin.b += 150;
         }
     }
 
