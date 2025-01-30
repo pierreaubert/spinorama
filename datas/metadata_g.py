@@ -87,6 +87,21 @@ speakers_info_g: SpeakerDatabase = {
                 "origin": "Misc",
                 "format": "spl_hv_txt",
                 "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-1031a-measurements-review.49907/",
+                },
+                "specifications": {
+                    "SPL": {
+                        "max": 110,
+                        "peak": 120,
+                    },
+                    "size": {
+                        "height": 395,
+                        "width": 250,
+                        "depth": 290,
+                    },
+                    "weight": 12.7,
+                },
                 "review_published": "20250125",
             },
         },

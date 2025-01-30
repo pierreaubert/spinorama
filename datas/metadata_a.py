@@ -1891,6 +1891,22 @@ speakers_info_a: SpeakerDatabase = {
                 "format": "spl_hv_txt",
                 "quality": "low",
                 "review_published": "20250125",
+                "specifications": {
+                    "impedance": 5.5,
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 10,
+                    },
+                    "SPL": {
+                        "peak": 108,
+                    },
+                    "size": {
+                        "height": 440,
+                        "width": 239,
+                        "depth": 336,
+                    },
+                    "weight": 18,
+                },
             },
         },
     },

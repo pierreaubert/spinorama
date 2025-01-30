@@ -526,6 +526,17 @@ speakers_info_e: SpeakerDatabase = {
                 "format": "spl_hv_txt",
                 "quality": "low",
                 "review_published": "20250125",
+                "reviews": {
+                    "audiorekr": "https://audiore.kr/edifier-r1700bt-plus-%eb%a6%ac%eb%b7%b0/",
+                },
+                "specifications": {
+                    "size": {
+                        "height": 254,
+                        "width": 154,
+                        "depth": 214,
+                    },
+                    "weight": 6.6,
+                },
             },
         },
     },

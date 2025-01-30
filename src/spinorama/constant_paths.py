@@ -70,7 +70,7 @@ SENSITIVITY_MAX_FREQ = 1000
 # curve names
 C_ON = "On Axis"
 C_LW = "Listening Window"
-C_PIR = "Estimeated In-Room Response"
+C_PIR = "Estimated In-Room Response"
 C_SP = "Sound Power"
 C_ER = "Early Reflections"
 

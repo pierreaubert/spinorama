@@ -186,36 +186,34 @@ class SpinoramaDisplayTests(unittest.TestCase):
                 ray.shutdown()
 
     def test_dfs_full(self):
-        full_set = set(
-            [
-                "SPL Horizontal",
-                "SPL Horizontal_unmelted",
-                "SPL Horizontal_normalized_unmelted",
-                "SPL Vertical",
-                "SPL Vertical_unmelted",
-                "SPL Vertical_normalized_unmelted",
-                "sensitivity",
-                "sensitivity_distance",
-                "sensitivity_1m",
-                "Early Reflections_unmelted",
-                "Early Reflections",
-                "Horizontal Reflections_unmelted",
-                "Horizontal Reflections",
-                "Vertical Reflections_unmelted",
-                "Vertical Reflections",
-                "Estimated In-Room Response_unmelted",
-                "Estimated In-Room Response",
-                "Estimated In-Room Response Normalized_unmelted",
-                "Estimated In-Room Response Normalized",
-                "On Axis_unmelted",
-                "On Axis",
-                "CEA2034_unmelted",
-                "CEA2034",
-                "CEA2034 Normalized_unmelted",
-                "CEA2034 Normalized",
-            ]
-        )
-        for _, df in self.dfs_full.items():
+        full_set = {
+            "SPL Horizontal",
+            "SPL Horizontal_unmelted",
+            "SPL Horizontal_normalized_unmelted",
+            "SPL Vertical",
+            "SPL Vertical_unmelted",
+            "SPL Vertical_normalized_unmelted",
+            "sensitivity",
+            "sensitivity_distance",
+            "sensitivity_1m",
+            "Early Reflections_unmelted",
+            "Early Reflections",
+            "Horizontal Reflections_unmelted",
+            "Horizontal Reflections",
+            "Vertical Reflections_unmelted",
+            "Vertical Reflections",
+            "Estimated In-Room Response_unmelted",
+            "Estimated In-Room Response",
+            "Estimated In-Room Response Normalized_unmelted",
+            "Estimated In-Room Response Normalized",
+            "On Axis_unmelted",
+            "On Axis",
+            "CEA2034_unmelted",
+            "CEA2034",
+            "CEA2034 Normalized_unmelted",
+            "CEA2034 Normalized",
+        }
+        for df in self.dfs_full.values():
             self.assertIsNotNone(df)
             self.assertSetEqual(full_set, set(df.keys()))
 

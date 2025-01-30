@@ -17,10 +17,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import math
-from typing import List, Tuple
+from typing import List, Tuple, Any
 import numpy as np
 import pandas as pd
 from more_itertools import consecutive_groups
+from numpy import floating
 from scipy.stats import linregress
 
 from spinorama import logger
@@ -82,7 +83,7 @@ def mad(df: pd.Series) -> float:
     return (df - df.mean()).abs().mean()
 
 
-def nbd(dfu: pd.DataFrame, min_freq: float) -> float:
+def nbd(dfu: pd.DataFrame, min_freq: float) -> floating[Any]:
     """nbd Narrow Band
 
     The narrow band deviation is defined by:

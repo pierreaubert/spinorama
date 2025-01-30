@@ -166,7 +166,7 @@ def queue_measurement(
         level,
     )
     tracing("print_graph done for {} {}".format(speaker, mversion))
-    return (id_df, id_eq, id_g1, id_g2)
+    return id_df, id_eq, id_g1, id_g2
 
 
 def queue_speakers(speakerlist: set[str], filters: dict[str, dict], level: int) -> dict:
@@ -348,14 +348,12 @@ def main(level):
         if args["--smoke-test"] == "random":
             speakerlist = set(random.sample(list(speakerlist), 15))
         else:
-            speakerlist = set(
-                [
-                    "Genelec 8030C",
-                    "KEF LS50",
-                    "KRK Systems Classic 5",
-                    "Verdant Audio Bambusa MG 1",
-                ]
-            )
+            speakerlist = {
+                "Genelec 8030C",
+                "KEF LS50",
+                "KRK Systems Classic 5",
+                "Verdant Audio Bambusa MG 1",
+            }
         print(speakerlist)
 
     if args["--width"] is not None:
