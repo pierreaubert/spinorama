@@ -88,6 +88,7 @@ speakers_info_g: SpeakerDatabase = {
                 "format": "spl_hv_txt",
                 "quality": "low",
                 "reviews": {
+                    "audiorekr": "https://audiore.kr/genelec-1031a-%eb%a6%ac%eb%b7%b0/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-1031a-measurements-review.49907/",
                 },
                 "specifications": {
@@ -103,6 +104,7 @@ speakers_info_g: SpeakerDatabase = {
                     "weight": 12.7,
                 },
                 "review_published": "20250125",
+                "notes": "Data is valid above ~200Hz.",
             },
         },
     },

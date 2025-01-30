@@ -1890,6 +1890,9 @@ speakers_info_a: SpeakerDatabase = {
                 "origin": "Misc",
                 "format": "spl_hv_txt",
                 "quality": "low",
+                "reviews": {
+                    "audiorekr": "https://audiore.kr/atc-scm20sl-mk2-%eb%a6%ac%eb%b7%b0/"
+                },
                 "review_published": "20250125",
                 "specifications": {
                     "impedance": 5.5,
@@ -1907,6 +1910,7 @@ speakers_info_a: SpeakerDatabase = {
                     },
                     "weight": 18,
                 },
+                "notes": "Data is valid above ~200Hz.",
             },
         },
     },

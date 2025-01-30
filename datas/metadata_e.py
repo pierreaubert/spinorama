@@ -529,6 +529,7 @@ speakers_info_e: SpeakerDatabase = {
                 "reviews": {
                     "audiorekr": "https://audiore.kr/edifier-r1700bt-plus-%eb%a6%ac%eb%b7%b0/",
                 },
+                "notes": "Data is valid above ~200Hz.",
                 "specifications": {
                     "size": {
                         "height": 254,
