@@ -1894,6 +1894,9 @@ speakers_info_a: SpeakerDatabase = {
                     "audiorekr": "https://audiore.kr/atc-scm20sl-mk2-%eb%a6%ac%eb%b7%b0/"
                 },
                 "review_published": "20250125",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "specifications": {
                     "impedance": 5.5,
                     "dispersion": {
