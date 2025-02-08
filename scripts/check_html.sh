@@ -19,7 +19,7 @@
 OS=$(uname)
 status=0
 
-for d in docs/*.html; do
+for d in dist/*.html; do
     sz=0
     if test "$OS" = "Linux"; then
 	sz=$(stat -c %s "$d")
@@ -29,7 +29,7 @@ for d in docs/*.html; do
     if test $sz -eq 0; then
         status=1;
         echo "$d is empty (ERROR)";
-    elif test "$d" != "docs/icons.html"; then
+    elif test "$d" != "dist/icons.html"; then
         msg=$(./node_modules/.bin/w3c-html-validator --quiet "$d");
         if test -n "$msg"; then
             status=1;

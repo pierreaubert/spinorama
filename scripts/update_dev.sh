@@ -24,14 +24,14 @@
 # TARGET=pierre@web:/var/www/html/spinorama-dev
 TARGET=pierre@192.168.1.18:/var/www/html/spinorama-dev
 # check
-command=$(grep www.spinorama.org docs/*.html | wc -l)
+command=$(grep www.spinorama.org dist/*.html | wc -l)
 if [ $command -ne 0 ]; then
     echo "KO found prod url in dev site"
     exit 1;
 else
     echo "OK checking for prod site in dev"
 fi
-command=$(grep spinorama.internet-box.ch docs/*.html | wc -l)
+command=$(grep spinorama.internet-box.ch dist/*.html | wc -l)
 if [ $command -ne 0 ]; then
     echo "KO found old dev url in prod site"
     exit 1;
@@ -40,6 +40,6 @@ else
 fi
 # copy
 echo "Sync"
-rsync -arvz --exclude '*.png' --delete ./docs/* "$TARGET"
-rsync -arvz --include '*.png' --delete ./docs/pictures/* "$TARGET/pictures"
-rsync -arvz --include '*.png' --delete ./docs/help_pictures/* "$TARGET/help_pictures"
+rsync -arvz --exclude '*.png' --delete ./dist/* "$TARGET"
+rsync -arvz --include '*.png' --delete ./dist/pictures/* "$TARGET/pictures"
+rsync -arvz --include '*.png' --delete ./dist/help_pictures/* "$TARGET/help_pictures"

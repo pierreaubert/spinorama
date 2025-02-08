@@ -18,7 +18,7 @@
 
 export LOCALE=C
 mkdir -p build/website
-json_pp < ./docs/json/metadata.json  | \
+json_pp < ./dist/json/metadata.json  | \
     grep '"brand" : ' | \
     cut -d: -f 2 | \
     cut -b 2- | \

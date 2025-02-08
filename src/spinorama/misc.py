@@ -175,3 +175,45 @@ def write_if_different(new_content: str, filename: str, force: bool = False) -> 
 
     if not identical or force:
         path.write_text(new_content, encoding="utf-8")
+
+
+def measurements_complete_spl(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | None) -> bool:
+    complete_spl = False
+    expected = set(["{}°".format(i) for i in range(-180, 190, 10)])
+    expected.remove("0°")
+    expected.add("On Axis")
+    if (
+        h_spl is not None
+        and v_spl is not None
+        and expected.issubset(set(h_spl.keys()))
+        and expected.issubset(set(v_spl.keys()))
+    ):
+        complete_spl = True
+    return complete_spl
+
+
+def measurements_complete_freq(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | None) -> bool:
+    def check(spl: pd.DataFrame | None) -> bool:
+        complete_freq = False
+        if spl is not None:
+            freq = spl["Freq"]
+            if freq.min() < 40 and freq.max() > 16000 and freq.shape[0] > 100:
+                complete_freq = True
+        return complete_freq
+
+    return check(h_spl) and check(v_spl)
+
+def measurements_missing_angles(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> str:
+    expected = set(["{}°".format(i) for i in range(-180, 190, 10)])
+    expected.remove("0°")
+    expected.add("On Axis")
+    found_h = set(h_spl.keys())
+    found_v = set(v_spl.keys())
+    diff_h = expected - found_h
+    diff_v = expected - found_v
+    return "H {} V {}".format(
+        ", ".join(diff_h),
+        ", ".join(diff_v),
+    )
+
+

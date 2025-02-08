@@ -69,8 +69,8 @@ else
     echo "OK after generate graph!"
 fi
 
-# bug in generate_meta
-rm -f docs/json/*
+# potential bug in generate_meta
+rm -f dist/json/*
 
 # recompute metadata for all speakers
 command=$(python3 ./generate_meta.py  --dash-ip="$IP")

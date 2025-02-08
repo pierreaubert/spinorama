@@ -23,7 +23,7 @@ import pandas as pd
 from datas.incomplete import known_incomplete_measurements
 from spinorama import logger
 from spinorama.ltype import StatusOr
-from spinorama.misc import sort_angles
+from spinorama.misc import sort_angles, measurements_missing_angles
 
 
 def parse_graph_spl_find_file(dirpath: str, orientation: str) -> StatusOr[list[str]]:
@@ -135,20 +135,6 @@ def parse_graph_spl_hv_txt(dirpath: str, orientation: str) -> StatusOr[pd.DataFr
     return True, sort_angles(pd.concat(dfs, axis=1))
 
 
-def list_missing_angles(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> str:
-    expected = set(["{}°".format(i) for i in range(-180, 190, 10)])
-    expected.remove("0°")
-    expected.add("On Axis")
-    found_h = set(h_spl.keys())
-    found_v = set(v_spl.keys())
-    diff_h = expected - found_h
-    diff_v = expected - found_v
-    return "H {} V {}".format(
-        ", ".join(diff_h),
-        ", ".join(diff_v),
-    )
-
-
 def parse_graphs_speaker_spl_hv_txt(
     speaker_path: str, speaker_brand: str, speaker_name: str, version: str
 ) -> StatusOr[tuple[pd.DataFrame, pd.DataFrame]]:
@@ -170,7 +156,7 @@ def parse_graphs_speaker_spl_hv_txt(
             dirname,
             len(h_spl),
             len(v_spl),
-            list_missing_angles(h_spl, v_spl),
+            measurements_missing_angles(h_spl, v_spl),
         )
 
     return h_status and v_status, (h_spl, v_spl)

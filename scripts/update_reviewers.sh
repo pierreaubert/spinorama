@@ -28,7 +28,7 @@ fi
 
 mkdir -p build/website
 
-json_pp < docs/json/metadata.json  | \
+json_pp < dist/json/metadata.json  | \
     grep -e '"misc-' | \
     grep -v default | \
     $SED -e s'/[ \t"":{"]//g' | \

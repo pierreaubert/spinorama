@@ -44,7 +44,7 @@ rm -f src/spinorama/c_compute_scores.*.so
 rm -f src/spinorama/c_compute_scores.*~
 # spinorama
 rm -fr ./.cache
-rm -fr ./docs
+rm -fr ./dist
 rm -fr ./build
 rm -f *.log */*.log
 rm -fr /tmp/ray

@@ -15,8 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-git filter-branch --tree-filter "rm -rf docs" --prune-empty HEAD
+git filter-branch --tree-filter "rm -rf dist" --prune-empty HEAD
 git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
-git commit -m 'Removing docs from git history'
+git commit -m 'Removing dist from git history'
 git gc
 git push origin master --force

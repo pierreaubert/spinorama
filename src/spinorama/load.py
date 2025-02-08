@@ -39,7 +39,14 @@ from spinorama.filter_scores import noscore_apply_filter
 from spinorama.compute_misc import unify_freq
 from spinorama.compute_estimates import compute_sensitivity, compute_sensitivity_details
 
-from spinorama.misc import graph_melt, graph_unmelt, check_nan, sort_angles
+from spinorama.misc import (
+    graph_melt,
+    graph_unmelt,
+    check_nan,
+    sort_angles,
+    measurements_complete_freq,
+    measurements_complete_spl,
+)
 from spinorama.load_klippel import parse_graphs_speaker_klippel
 from spinorama.load_princeton import parse_graphs_speaker_princeton
 from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
@@ -139,8 +146,8 @@ def normalize_spl(spl: pd.DataFrame, on: pd.DataFrame | np.ndarray | None = None
 
 def filter_graphs(
     speaker_name: str,
-    h_spl: pd.DataFrame,
-    v_spl: pd.DataFrame,
+    h_spl: None | pd.DataFrame,
+    v_spl: None | pd.DataFrame,
     mean_min: float,
     mean_max: float,
     mformat: str,
@@ -230,18 +237,22 @@ def filter_graphs(
         ["CEA2034 Normalized", compute_cea2034],
     ]
 
+    complete_spl = measurements_complete_spl(h_spl, v_spl)
+    complete_freq = measurements_complete_freq(h_spl, v_spl)
+    complete = complete_spl and complete_freq
+
     if sh_spl is None or sv_spl is None:
         #
         df_on_axis = compute_onaxis(sh_spl, sv_spl)
         dfs["On Axis_unmelted"] = df_on_axis
         dfs["On Axis"] = graph_melt(df_on_axis)
         # SPL H
-        if sh_spl is not None:
+        if sh_spl is not None and complete_spl:
             df_horizontals = horizontal_reflections(sh_spl)
             dfs["Horizontal Reflections_unmelted"] = df_horizontals
             dfs["Horizontal Reflections"] = graph_melt(df_horizontals)
         # SPL V
-        if sv_spl is not None:
+        if sv_spl is not None and complete_spl:
             df_verticals = vertical_reflections(sv_spl)
             dfs["Vectical Reflections_unmelted"] = df_verticals
             dfs["Vectical Reflections"] = graph_melt(df_verticals)
@@ -250,6 +261,9 @@ def filter_graphs(
 
     for title, functor in table:
         try:
+            # skip all except on-axis if not complete
+            if not complete and title != "On Axis":
+                continue
             df_funct = None
             if title == "Horizontal Reflections":
                 df_funct = functor(sh_spl)
@@ -693,10 +707,19 @@ def parse_graphs_speaker(
             )
 
         if not status:
-            logger.info("Load %s failed for %s %s %s", mformat, speaker_name, mversion, morigin)
-            return {}
+            if h_spl is not None and "Freq" not in h_spl:
+                h_spl = None
+            if v_spl is not None and "Freq" not in v_spl:
+                v_spl = None
+            if h_spl is None and v_spl is None:
+                logger.error("Failed to load %s from measurement %s", speaker_name, mversion)
+                return {}
 
         h_spl2, v_spl2 = symmetrise_speaker_measurements(h_spl, v_spl, msymmetry)
+        if h_spl2 is None or v_spl2 is None:
+            logger.error("Failed to symmetrise %s from measurement %s", speaker_name, mversion)
+            return {}
+
         df_graph = filter_graphs(
             speaker_name, h_spl2, v_spl2, mean_min, mean_max, mformat, distance
         )

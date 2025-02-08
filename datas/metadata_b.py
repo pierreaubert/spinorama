@@ -304,7 +304,7 @@ speakers_info_b: SpeakerDatabase = {
         },
     },
     "Behringer C5A": {
-        "skip": True,
+        #        "skip": True,
         "brand": "Behringer",
         "model": "C5A",
         "type": "active",

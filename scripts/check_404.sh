@@ -19,8 +19,8 @@
 
 pylinkvalidate.py -P https://www.spinorama.org
 
-for f in ./docs/speakers/*/*/*/*.html; do
-    name=${f#docs/}
+for f in ./dist/speakers/*/*/*/*.html; do
+    name=${f#dist/}
     u=${name// /%20}
     pylinkvalidate.py -P "https://www.spinorama.org/$u"
 done

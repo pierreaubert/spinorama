@@ -195,7 +195,7 @@ def generate_measurement(
         ]
     eq = {k: dfs[k] for k in eq_filter if k in dfs}
     # get index.html filename
-    dirname = "{}/{}/".format(cpaths.CPATH_DOCS_SPEAKERS, speaker_name)
+    dirname = "{}/{}/".format(cpaths.CPATH_DIST_SPEAKERS, speaker_name)
     if origin in ("ASR", "Princeton", "ErinsAudioCorner", "Misc"):
         dirname += origin
     else:
@@ -313,11 +313,11 @@ def generate_speakers(mako, dataframe, meta, site, use_search, versions):
 def main():
     # create some directories
     for dir in (
-        cpaths.CPATH_DOCS,
-        cpaths.CPATH_DOCS_JS,
-        cpaths.CPATH_DOCS_JS3RD,
-        cpaths.CPATH_DOCS_JSON,
-        cpaths.CPATH_DOCS_CSS,
+        cpaths.CPATH_DIST,
+        cpaths.CPATH_DIST_JS,
+        cpaths.CPATH_DIST_JS3RD,
+        cpaths.CPATH_DIST_JSON,
+        cpaths.CPATH_DIST_CSS,
     ):
         os.makedirs(dir, mode=0o755, exist_ok=True)
 
@@ -349,12 +349,12 @@ def main():
 
     # only build a dictionnary will all graphs
     main_df = {}
-    speakers = glob("{}/*".format(cpaths.CPATH_DOCS_SPEAKERS))
+    speakers = glob("{}/*".format(cpaths.CPATH_DIST_SPEAKERS))
     for speaker in speakers:
         if not os.path.isdir(speaker):
             continue
         # humm annoying
-        speaker_name = speaker.replace(cpaths.CPATH_DOCS_SPEAKERS + "/", "")
+        speaker_name = speaker.replace(cpaths.CPATH_DIST_SPEAKERS + "/", "")
         if speaker_name in ("score", "assets", "stats", "compare", "logos", "pictures"):
             continue
         main_df[speaker_name] = {}
@@ -396,7 +396,7 @@ def main():
             min=".min" if flag_optim else "",
             versions=versions,
         )
-        html_filename = f"{cpaths.CPATH_DOCS}/index.html"
+        html_filename = f"{cpaths.CPATH_DIST}/index.html"
         write_if_different(html_content, html_filename, force=False)
     except KeyError as key_error:
         print("Generating index.html failed with {}".format(key_error))
@@ -416,7 +416,7 @@ def main():
             min=".min" if flag_optim else "",
             versions=versions,
         )
-        eqs_filename = f"{cpaths.CPATH_DOCS}/eqs.html"
+        eqs_filename = f"{cpaths.CPATH_DIST}/eqs.html"
         if isinstance(eqs_content, str):
             write_if_different(eqs_content, eqs_filename, force=False)
         else:
@@ -451,7 +451,7 @@ def main():
                 min=".min" if flag_optim else "",
                 versions=versions,
             )
-            item_filename = cpaths.CPATH_DOCS + "/" + item_name
+            item_filename = cpaths.CPATH_DIST + "/" + item_name
             write_if_different(item_content, item_filename, force=False)
 
     except KeyError as key_error:
@@ -507,7 +507,7 @@ def main():
         "spin.svg",
     ]:
         file_in = cpaths.CPATH_DATAS_ICONS + "/" + f
-        file_out = cpaths.CPATH_DOCS + "/pictures/" + f
+        file_out = cpaths.CPATH_DIST + "/pictures/" + f
         shutil.copy(file_in, file_out)
 
     # copy custom css and manifest
@@ -516,11 +516,11 @@ def main():
         ("manifest.json", "/"),
     ]:
         file_in = "{}/{}".format(cpaths.CPATH_WEBSITE, file)
-        file_out = "{}/{}{}".format(cpaths.CPATH_DOCS, sub, file)
+        file_out = "{}/{}{}".format(cpaths.CPATH_DIST, sub, file)
         shutil.copy(file_in, file_out)
 
     # copy css/js files
-    logger.info("Copy js files to %s", cpaths.CPATH_DOCS_JS)
+    logger.info("Copy js files to %s", cpaths.CPATH_DIST_JS)
     for item in (
         "compare",
         "download",
@@ -541,13 +541,13 @@ def main():
     ):
         try:
             # remove the ./docs parts
-            len_docs = len("/docs/")
-            metadata_filename = metadata_json_filename[len_docs:]
-            metadata_filename_head = metadata_json_chunks["head"][len_docs:]
+            len_dist = len("/dist/")
+            metadata_filename = metadata_json_filename[len_dist:]
+            metadata_filename_head = metadata_json_chunks["head"][len_dist:]
             js_chunks = "[{}]".format(
                 ", ".join(
                     [
-                        "'{}'".format(v[len_docs:])
+                        "'{}'".format(v[len_dist:])
                         for k, v in metadata_json_chunks.items()
                         if k != "head"
                     ]
@@ -561,9 +561,9 @@ def main():
             item_post_mako = "{}/{}-1-mako.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             item_post_import = "{}/{}-2-import.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             item_post_terser = "{}/{}-3-terser.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
-            item_dist = "{}/{}-{}.min.js".format(cpaths.CPATH_DOCS_JS, item, CACHE_VERSION)
+            item_dist = "{}/{}-{}.min.js".format(cpaths.CPATH_DIST_JS, item, CACHE_VERSION)
             if flag_dev:
-                item_dist = "{}/{}-{}.js".format(cpaths.CPATH_DOCS_JS, item, CACHE_VERSION)
+                item_dist = "{}/{}-{}.js".format(cpaths.CPATH_DIST_JS, item, CACHE_VERSION)
 
             # cleanup flow directives: currently unused
             flow_bin = "./node_modules/.bin/flow-remove-types"
@@ -583,7 +583,7 @@ def main():
             # build first generation with metadata expension, now only useful for meta.js
             if item == "meta":
                 item_html = mako_templates.get_template(item_mako_tmpl)
-                eqdata_filename = eqdata_json_filename[len_docs:]
+                eqdata_filename = eqdata_json_filename[len_dist:]
                 item_content = item_html.render(
                     df=main_df,
                     meta=meta_sorted_score,
@@ -648,7 +648,7 @@ def main():
             print("workbox failed!")
 
     # generate robots.txt and sitemap.xml
-    logger.info("Copy robots/sitemap files to %s", cpaths.CPATH_DOCS)
+    logger.info("Copy robots/sitemap files to %s", cpaths.CPATH_DIST)
     try:
         for item_name in (
             "robots.txt",
@@ -664,7 +664,7 @@ def main():
                 min=".min" if flag_optim else "",
                 versions=versions,
             )
-            item_filename = cpaths.CPATH_DOCS + "/" + item_name
+            item_filename = cpaths.CPATH_DIST + "/" + item_name
             # ok for robots but likely doesn't work for sitemap
             write_if_different(str(item_content), item_filename, force=True)
     except KeyError as key_error:

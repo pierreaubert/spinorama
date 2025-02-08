@@ -32,19 +32,21 @@ CPATH_DATAS_EQ = f"{CPATH_DATAS}/eq"
 
 # where the temporay files go
 CPATH_BUILD = f"{CPATH}/build"
+CPATH_BUILD_EQ = f"{CPATH_BUILD}/eq"
+CPATH_BUILD_RAY = f"{CPATH_BUILD}/eq"
 CPATH_BUILD_WEBSITE = f"{CPATH_BUILD}/website"
 CPATH_BUILD_MAKO = f"{CPATH_BUILD}/mako_modules"
 
 # where the generated files go
-CPATH_DOCS = f"{CPATH}/docs"
-CPATH_DOCS_JS = f"{CPATH_DOCS}/js"
-CPATH_DOCS_JS3RD = f"{CPATH_DOCS}/js3rd"
-CPATH_DOCS_CSS = f"{CPATH_DOCS}/css"
-CPATH_DOCS_JSON = f"{CPATH_DOCS}/json"
-CPATH_DOCS_METADATA_JSON = f"{CPATH_DOCS_JSON}/metadata.json"
-CPATH_DOCS_EQDATA_JSON = f"{CPATH_DOCS_JSON}/eqdata.json"
-CPATH_DOCS_SPEAKERS = f"{CPATH_DOCS}/speakers"
-CPATH_DOCS_PICTURES = f"{CPATH_DOCS}/pictures"
+CPATH_DIST = f"{CPATH}/dist"
+CPATH_DIST_JS = f"{CPATH_DIST}/js"
+CPATH_DIST_JS3RD = f"{CPATH_DIST}/js3rd"
+CPATH_DIST_CSS = f"{CPATH_DIST}/css"
+CPATH_DIST_JSON = f"{CPATH_DIST}/json"
+CPATH_DIST_METADATA_JSON = f"{CPATH_DIST_JSON}/metadata.json"
+CPATH_DIST_EQDATA_JSON = f"{CPATH_DIST_JSON}/eqdata.json"
+CPATH_DIST_SPEAKERS = f"{CPATH_DIST}/speakers"
+CPATH_DIST_PICTURES = f"{CPATH_DIST}/pictures"
 
 # mean is computed over a range
 MEAN_MIN = 300

@@ -7,7 +7,7 @@ for d in datas/eq/*; do
     if test -f "$current"; then
         mv "$current" "$d/iir-$version.txt";
     fi
-    rm -f docs/speakers/"$speaker"/*.png ;
+    rm -f dist/speakers/"$speaker"/*.png ;
 done
 
 ./generate_peqs.py --force --verbose

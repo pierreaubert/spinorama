@@ -30,7 +30,7 @@ exclude = [
     ".git",
     "__pycache__",
     "datas/measurements",
-    "docs",
+    "dist",
     "build"
 ]
 extend-ignore = [

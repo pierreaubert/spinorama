@@ -93,13 +93,13 @@ def args2level(args):
 def create_default_directories():
     for d in (
         CACHE_DIR,
-        "docs",
-        "docs/pictures",
-        "docs/speakers",
-        "build/eqs",
-        "build/ray",
-        "build/website",
-        "build/mako_modules",
+        cpaths.CPATH_DIST,
+        cpaths.CPATH_DIST_PICTURES,
+        cpaths.CPATH_DIST_SPEAKERS,
+        cpaths.CPATH_BUILD_EQ,
+        cpaths.CPATH_BUILD_RAY,
+        cpaths.CPATH_BUILD_WEBSITE,
+        cpaths.CPATH_BUILD_MAKO,
     ):
         pathlib.Path(d).mkdir(parents=True, exist_ok=True)
 
@@ -409,12 +409,12 @@ def sort_metadata_per_score(meta):
 
 def find_metadata_file():
     if not flags_ADD_HASH:
-        return [cpaths.CPATH_DOCS_METADATA_JSON, cpaths.CPATH_DOCS_EQDATA_JSON]
+        return [cpaths.CPATH_DIST_METADATA_JSON, cpaths.CPATH_DIST_EQDATA_JSON]
 
     json_paths = []
     for radical, json_path in (
-        ("metadata", cpaths.CPATH_DOCS_METADATA_JSON),
-        ("eqdata", cpaths.CPATH_DOCS_EQDATA_JSON),
+        ("metadata", cpaths.CPATH_DIST_METADATA_JSON),
+        ("eqdata", cpaths.CPATH_DIST_EQDATA_JSON),
     ):
         pattern = "{}-[0-9a-f]*.json".format(json_path[:-5])
         json_filenames = glob(pattern)
@@ -434,7 +434,7 @@ def find_metadata_file():
 
 def find_metadata_chunks():
     json_paths = {}
-    json_path = cpaths.CPATH_DOCS_METADATA_JSON
+    json_path = cpaths.CPATH_DIST_METADATA_JSON
     pattern = "{}*.json".format(json_path[:-5])
     regexp = "{}[-][0-9a-z]{{4}}[.]json$".format(json_path[:-5])
     if flags_ADD_HASH:

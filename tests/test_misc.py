@@ -71,7 +71,7 @@ class SpinoramaUnifyFreqTests(unittest.TestCase):
         ushape = self.unify.shape
         self.assertEqual(ushape, (957, 5))
         self.assertSetEqual(set(self.unify.keys()), self._measurements_set1)
-        self.assertFalse(self.unify.isna().values.any())
+        self.assertFalse(self.unify.isna().to_numpy().any())
         #
         self.assertEqual(self.df.shape, (ushape[0] * 4, 3))
         self.assertSetEqual(set(self.df.Measurements), self._measurements_set2)

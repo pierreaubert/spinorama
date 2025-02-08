@@ -1890,9 +1890,7 @@ speakers_info_a: SpeakerDatabase = {
                 "origin": "Misc",
                 "format": "spl_hv_txt",
                 "quality": "low",
-                "reviews": {
-                    "audiorekr": "https://audiore.kr/atc-scm20sl-mk2-%eb%a6%ac%eb%b7%b0/"
-                },
+                "reviews": {"audiorekr": "https://audiore.kr/atc-scm20sl-mk2-%eb%a6%ac%eb%b7%b0/"},
                 "review_published": "20250125",
                 "data_acquisition": {
                     "min_valid_freq": 200,
