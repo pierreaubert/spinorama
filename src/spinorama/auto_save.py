@@ -28,7 +28,7 @@ import ray
 
 from spinorama import logger, ray_setup_logger
 from spinorama.ltype import DataSpeaker, OptimResult
-from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
+from spinorama.constant_paths import CPATH_DIST_SPEAKERS
 from spinorama.load_rew_eq import parse_eq_iir_rews
 from spinorama.filter_peq import peq_format_apo, Peq
 from spinorama.filter_scores import (
@@ -138,7 +138,7 @@ def print_auto_graphs_seq(
             if "Vendors-" in origin:
                 origin = origin[8:]
             graph_filename = "{}/{}/{}/filters_{}".format(
-                CPATH_DOCS_SPEAKERS, speaker_name, origin, name
+                CPATH_DIST_SPEAKERS, speaker_name, origin, name
             )
             if optim_config["output_dir"] and pathlib.Path(optim_config["output_dir"]).exists():
                 graph_filename = "{}/filters_{}".format(

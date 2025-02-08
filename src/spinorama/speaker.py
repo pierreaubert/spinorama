@@ -30,7 +30,7 @@ from wand.image import Image as Wim
 from wand.exceptions import CoderError
 
 from spinorama import logger, ray_setup_logger
-from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
+from spinorama.constant_paths import CPATH_DIST_SPEAKERS
 from spinorama.ltype import DataSpeaker
 from spinorama.filter_peq import Peq, peq_preamp_gain
 from spinorama.misc import graph_unmelt
@@ -318,7 +318,7 @@ def display_radar_vertical(df, graph_params=radar_params_default):
 
 def build_filename(speaker, origin, version, graph_name, file_ext) -> str:
     filedir = (
-        CPATH_DOCS_SPEAKERS + "/" + speaker + "/" + origin.replace("Vendors-", "") + "/" + version
+        CPATH_DIST_SPEAKERS + "/" + speaker + "/" + origin.replace("Vendors-", "") + "/" + version
     )
     pathlib.Path(filedir).mkdir(parents=True, exist_ok=True)
     filename = filedir + "/" + graph_name.replace("_smoothed", "")
