@@ -41,14 +41,21 @@ b. if your data are from Princeton/3d3a (i have normally done all of them).
 c. if you only have a picture of the spinorama:
    - please use WebPlotDigitizer to generate a parsed json file
    - a complete [tutorial](03_digitalisation.qmd) is available.
-   - add it to *datas/Vendors* if it comes from the manufacturers. Here is an example:
+   - add it to *datas/vendor* if it comes from the manufacturers. Here is an example:
    ```
-   cd ./datas/Vendors
+   cd ./datas/measurements
+   mkdir -p Revel\ W522L
+   mv /tmp/wpd_project.tar Revel\ W522L/Revel\ W522L.tar
+   ```
+d. if you have a GLL file.
+   - you can use another software [gll2txt](https://github.com/pierreaubert/gll2txt) to extract the 72 measurements automatically from the GLL file. It will generate a zip file with all the measurements inside.
+   - copy the data to the usual place:
+   ```
+   cd ./datas/measurements
    mkdir -p Revel
    cd Revel
    mkdir -p Revel\ W522L
-   cd Revel\ W522L
-   mv /tmp/wpd_project.tar Revel\ W522L.tar
+   mv /tmp/Revel W5222L.zip Revel\ W522L
    ```
 
 ## Add a picture of the speaker in *datas/pictures* in png or jpeg format.
@@ -67,7 +74,7 @@ mv /tmp/Revel\ W522L.jpg ./datas/pictures
 ## Generate an entry in `./datas/metadata.py`
 
 - Please keep it sorted
-- Copy / Paste from another entry and add the relevant informations that you can find.
+- Copy / Paste from the template file (speaker.tmpl) and add the relevant informations that you can find.
 ```
  "Revel W522L": {
      "brand": "Revel",
@@ -85,6 +92,7 @@ mv /tmp/Revel\ W522L.jpg ./datas/pictures
      },
  },
 ```
+Add the change to the relevant metadata_x.py file for a revel, first letter is r, so metadata_r.py.
 - Test your changes with ```./test_meta.py```: if you see no output, then it is working.
 
 ## Test it works with:
@@ -95,23 +103,31 @@ mv /tmp/Revel\ W522L.jpg ./datas/pictures
 (spinorama-venv) pierre@spin:~/src/spinorama$ ./generate_graphs.py --speaker='Revel W522L' --log-level=INFO
 2021-02-24 08:53:53,259	INFO services.py:1172 -- View the Ray dashboard at http://127.0.0.1:8265
 Queued 188 speakers 1 measurements
-(pid=552950) Saving CEA2034 in docs/Revel W522L/Revel/vendor/CEA2034.json
-(pid=552950) Saving CEA2034 in docs/Revel W522L/Revel/vendor/CEA2034_large.png
-(pid=552950) Saving On Axis in docs/Revel W522L/Revel/vendor/On Axis.json
-(pid=552950) Saving On Axis in docs/Revel W522L/Revel/vendor/On Axis_large.png
-(pid=552950) Saving Estimated In-Room Response in docs/Revel W522L/Revel/vendor/Estimated In-Room Response.json
-(pid=552950) Saving Estimated In-Room Response in docs/Revel W522L/Revel/vendor/Estimated In-Room Response_large.png
-(pid=552950) Saving 2cols in docs/Revel W522L/Revel/vendor/2cols_large.png
+(pid=552950) Saving CEA2034 in dist/Revel W522L/Revel/vendor/CEA2034.json
+(pid=552950) Saving CEA2034 in dist/Revel W522L/Revel/vendor/CEA2034_large.png
+(pid=552950) Saving On Axis in dist/Revel W522L/Revel/vendor/On Axis.json
+(pid=552950) Saving On Axis in dist/Revel W522L/Revel/vendor/On Axis_large.png
+(pid=552950) Saving Estimated In-Room Response in dist/Revel W522L/Revel/vendor/Estimated In-Room Response.json
+(pid=552950) Saving Estimated In-Room Response in dist/Revel W522L/Revel/vendor/Estimated In-Room Response_large.png
+(pid=552950) Saving 2cols in dist/Revel W522L/Revel/vendor/2cols_large.png
 2021-02-24 08:53:58,927 - spinorama - INFO - State: 4 ready IDs 0 remainings IDs 4 Total IDs 0 Done
 ```
 - visualize results in directory:
-  - ```./docs/name of speaker/origin/default/CEA2034_large.png``` or
-  - ```./docs/name of speaker/origin/default/2cols_large.png```
+  - ```./dist/name of speaker/origin/default/CEA2034_large.png``` or
+  - ```./dist/name of speaker/origin/default/2cols_large.png```
+
+- if it does not work, run the generate_graph in debug mode: ```./generate_graphs --speaker='name of speaker' --log-level=debug```. Most of the time, the data is not in the correct place or there is a small bug in the metadata.
+
 
 ## Add your files to git and push to github on *develop* branch
 
 - ```git status``` you should see a long list of files that git doesn't now about yet.
-- ```git add all new files```
+- ```git add all new files``` usually via ```git add datas```
 - ```git commit -m 'add data for new speaker name' datas```
-- ```git push```
+- ```git push``` you will need to be loggued on github.
+
+If you do not want to use GitHub, then generate a diff and send it to me over email.
+
+- ```git diff > diff-speaker.txt```
+- mail it to `pierre /at\ spinorama \dot/ org`.
 

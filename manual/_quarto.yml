@@ -48,11 +48,11 @@ website:
     title: false
     collapse-below: lg
     left:
-      - text: "Bback to Spinorama.org"
+      - text: "Back to Spinorama.org"
         href: "https://spinorama.org"
-      - text: "Help for Spinorama.org"
+      - text: "Website"
         href: 01_intro.qmd
-      - text: "Help for spinorama software"
+      - text: "Software"
       - menu:
         - text: "How to install the software"
           href: 02_install.qmd

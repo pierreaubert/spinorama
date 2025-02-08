@@ -3,7 +3,7 @@ title: "How to install the software?"
 date: 2025-01-02
 ---
 
-# How to install the software?
+# How to use the software?
 
 ## Linux or Mac user
 
@@ -30,11 +30,11 @@ jupiter-lab &
 
 Your browser will open, go to _experiments_ directitory and click on _spinorama.ipynb_ and play around.
 
-## Linux or Mac developer
+## How to develop the software?
 
 You are very welcome to submit pull requests. Note that the license is GPLv3.
 
-Start with launching that should install a lot of software:
+Start with launching the setup script: (maybe as root if you need to install some packages)
 
 ```  {.shell}
 ./scripts/setup.sh
@@ -71,14 +71,10 @@ Before committing, please check that the various checks are fine:
 1. `./scripts/check_html.sh` : check that HTML generated files are conforming.
 2. `./scripts/check_meta.py` : check that the metadata file looks sane.
 3. `flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spinorama-venv` should report 0
-4. `black .` will take care of formatting all the python files.
+4. `ruff format .` will take care of formatting all the python files.
 5. `ruff check` also need to pass.
-
-and also (but WIP):
-
-5. `./scripts/check_404.sh` : check we do not have missing links.
-6. `./node_modules/.bin/pyright` : should not report new type error.
-7. Check that notebook are cleaned up before committing.
+6. `prettier -w src/website/*.js` will format the javascript files.
+7. `eslint` should be happy.
 
 Most of the checks are enforced in the pre-submit which means that
 you cannot commit new codes without passing tests and checks.
