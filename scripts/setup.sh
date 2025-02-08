@@ -30,16 +30,6 @@ if test "$OS" = "Linux"; then
   sudo [ -x /usr/bin/localedef ] && /usr/bin/localedef -f UTF-8 -i en_US en_US.UTF-8
   # or maybe
   # sudo apt -y install language-pack-en-base && localectl set-locale LANG=en_US.UTF-8
-  # ------------ NPM
-  # should not be required
-  # wget -O- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-  # ------------ CUDA stuff for tensorflow
-  # wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
-  # sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
-  # sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
-  # sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
-  # sudo apt-get update
-  # sudo apt-get -y install nvidia-cuda nvidia-cuda-toolkit libcudnn8
 elif test "$OS" = "Darwin"; then
     brew install npm hdf5 c-blosc lzo bzip2 python@${PYVERSION} freetype imagemagick gawk gsed redis chromedriver
     xattr -d com.apple.quarantine $(which chromedriver)
@@ -48,11 +38,11 @@ elif test "$OS" = "Darwin"; then
 fi
 
 export PYTHONPATH=./src:./src/website
-export NVM_DIR=$HOME/.nvm
 
 # python section
 python${PYVERSION} -m venv .venv
 . ./.venv/bin/activate
+
 ARCH=$(uname -a | awk '{print $NF}')
 if test "$OS" = "Darwin"  -a "$ARCH" = "arm64" ; then
     # ack to install tables on arm
@@ -64,7 +54,6 @@ pip3 install -U -r requirements-dev.txt
 pip3 install -U -r requirements-api.txt
 
 # node section
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 npm install .
 
 # lint
@@ -81,6 +70,6 @@ PYTHONPATH=src cd src/spinorama && python3 setup.py build_ext --inplace && ln -s
 ./scripts/update_3rdparties
 
 # run tests
-pytest tests
 vitest
+pytest -v tests
 

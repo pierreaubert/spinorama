@@ -160,7 +160,7 @@ def print_items(aggregated_results):
     df_results = pd.DataFrame(
         {"speaker_name": v_sn, "iter": v_iter, "loss": v_loss, "score": v_score}
     )
-    df_results.to_csv("results_iter.csv", index=False)
+    df_results.to_csv("build/results_iter.csv", index=False)
 
 
 def print_scores(aggregated_scores):
@@ -183,7 +183,7 @@ def print_scores(aggregated_scores):
             "auto": s_auto,
         }
     )
-    df_scores.to_csv("results_scores.csv", index=False)
+    df_scores.to_csv("build/results_scores.csv", index=False)
 
 
 def queue_speakers(df_all_speakers, optim_config, speaker_name):
