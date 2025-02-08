@@ -790,11 +790,11 @@ def add_near(dataframe, parse_max: int, filters: dict):
 
 
 def dump_metadata(meta):
-    metadir = cpaths.CPATH_DOCS
-    metafile = cpaths.CPATH_DOCS_METADATA_JSON
-    eqfile = cpaths.CPATH_DOCS_EQDATA_JSON
+    metadir = cpaths.CPATH_DIST
+    metafile = cpaths.CPATH_DIST_METADATA_JSON
+    eqfile = cpaths.CPATH_DIST_EQDATA_JSON
     os.makedirs(metadir, mode=0o755, exist_ok=True)
-    os.makedirs(cpaths.CPATH_DOCS_JSON, mode=0o755, exist_ok=True)
+    os.makedirs(cpaths.CPATH_DIST_JSON, mode=0o755, exist_ok=True)
 
     def check_link(hashed_filename):
         # add a link to make it easier for other scripts to find the metadata
@@ -805,11 +805,11 @@ def dump_metadata(meta):
             and flags_ADD_HASH
         ):
             try:
-                os.symlink(Path(hashed_filename).name, cpaths.CPATH_DOCS_METADATA_JSON)
+                os.symlink(Path(hashed_filename).name, cpaths.CPATH_DIST_METADATA_JSON)
             except OSError as e:
                 if e.errno == errno.EEXIST:
-                    os.remove(cpaths.CPATH_DOCS_METADATA_JSON)
-                    os.symlink(Path(hashed_filename).name, cpaths.CPATH_DOCS_METADATA_JSON)
+                    os.remove(cpaths.CPATH_DIST_METADATA_JSON)
+                    os.symlink(Path(hashed_filename).name, cpaths.CPATH_DIST_METADATA_JSON)
                 else:
                     print("print unlink/link didnt work for {} with {}".format(hashed_filename, e))
                     raise OSError from e

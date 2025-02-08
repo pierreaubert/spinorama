@@ -48,7 +48,7 @@ from generate_common import (
     find_metadata_file,
 )
 
-from spinorama.constant_paths import CPATH_DOCS_SPEAKERS, CPATH_DATAS_EQ
+from spinorama.constant_paths import CPATH_DIST_SPEAKERS, CPATH_DATAS_EQ
 from spinorama.filter_scores import scores_apply_filter, noscore_apply_filter
 from spinorama.load_rew_eq import parse_eq_iir_rews
 
@@ -127,7 +127,7 @@ def print_radar(meta_data, scale, speaker_data):
     if "pref_rating" not in measurement or "estimates" not in measurement:
         return
     filename = "{}/{} {}/spider_large.png".format(
-        CPATH_DOCS_SPEAKERS, meta_data["brand"], meta_data["model"]
+        CPATH_DIST_SPEAKERS, meta_data["brand"], meta_data["model"]
     )
     # TODO: to add check for dependancies
     if pathlib.Path(filename).is_file():

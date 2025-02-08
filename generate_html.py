@@ -24,7 +24,7 @@ usage: generate_html.py [--help] [--version] [--dev] [--optim] [--sw]\
 Options:
   --help            display usage()
   --version         script version number
-  --sitedev=<http>  default: http://localhost:8000/docs
+  --sitedev=<http>  default: http://localhost:8000/dist
   --dev             if you want to generate the dev websites
   --optim           if you want an optimised built
   --sw              if you want a service worker to be generated
@@ -193,7 +193,8 @@ def generate_measurement(
         eq_filter = [
             "ref_vs_eq",
         ]
-    eq = {k: dfs[k] for k in eq_filter if k in dfs}
+        # TODO
+        eq = {k: dfs[k] for k in eq_filter if k in dfs}
     # get index.html filename
     dirname = "{}/{}/".format(cpaths.CPATH_DIST_SPEAKERS, speaker_name)
     if origin in ("ASR", "Princeton", "ErinsAudioCorner", "Misc"):
@@ -540,7 +541,7 @@ def main():
         "tabs",
     ):
         try:
-            # remove the ./docs parts
+            # remove the ./dist parts
             len_dist = len("/dist/")
             metadata_filename = metadata_json_filename[len_dist:]
             metadata_filename_head = metadata_json_chunks["head"][len_dist:]
