@@ -203,6 +203,7 @@ def measurements_complete_freq(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame |
 
     return check(h_spl) and check(v_spl)
 
+
 def measurements_missing_angles(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> str:
     expected = set(["{}°".format(i) for i in range(-180, 190, 10)])
     expected.remove("0°")
@@ -215,5 +216,3 @@ def measurements_missing_angles(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> str
         ", ".join(diff_h),
         ", ".join(diff_v),
     )
-
-

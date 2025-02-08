@@ -41,7 +41,7 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
 
     There is no guaranty that all frequency points are the same on all graphs. This is
     an issue for operations on multiple graphs at the same time. Let's merge all freq
-    points such that all graphs have exactlty the same set of points and thus the same shape.
+    points such that all graphs have exactly the same set of points and thus the same shape.
 
     This use linear interpolation for missing points and can generate some NaN in the frame.
     Rows (Freq) with at least 1 NaN are removed.
@@ -136,7 +136,7 @@ def resample(df: pd.DataFrame, target_size: int) -> pd.DataFrame:
 
 
 def compute_contour(dfm_in):
-    # generate 3 arrays x, y, z suitable for computing equilevels
+    # generate 3 arrays x, y, z suitable for computing equi-levels
     dfm = sort_angles(dfm_in)
     # check if we have -180
     if "180°" in dfm and "-180°" not in dfm:
@@ -172,7 +172,7 @@ def reshape(x, y, z, nscale):
     lxi = [
         np.linspace(x[0][i], x[0][i + 1], nscale, endpoint=False) for i in range(0, len(x[0]) - 1)
     ]
-    lx = [i for j in lxi for i in j] + [x[0][-1] for i in range(0, nscale)]
+    lx = [i for j in lxi for i in j] + [x[0][-1] for _ in range(0, nscale)]
     nly = (nx - 1) * nscale + 1
     # keep order
     ly = []
@@ -201,17 +201,17 @@ def reshape(x, y, z, nscale):
     ]
 
     def close(x1, x2, xkeep):
-        for z in xkeep:
-            if abs((x1 - z) / z) < 0.01 and z < x2:
-                xkeep.remove(z)
-                return z
+        for zz in xkeep:
+            if abs((x1 - zz) / zz) < 0.01 and zz < x2:
+                xkeep.remove(zz)
+                return zz
         return x1
 
     lx2 = [close(lx[i], lx[i + 1], xkeep) for i in range(0, len(lx) - 1)]
     lx2 = np.append(lx2, lx[-1])
     # build the mesh
     rx, ry = np.meshgrid(lx2, ly)
-    # copy paste the values of z into rz
+    # copy and paste the values of z into rz
     rzi = np.repeat(z[:-1], nscale, axis=0)
     rzi_x, rzi_y = rzi.shape
     rzi2 = np.append(rzi, z[-1]).reshape(rzi_x + 1, rzi_y)
@@ -221,7 +221,7 @@ def reshape(x, y, z, nscale):
 
 
 def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
-    """ "compute +/- angle where directivity is most constant between 1kHz and 10kz"""
+    """Compute +/- angle where directivity is most constant between 1kHz and 10kz"""
     deg0 = bisect.bisect(am.T[0], 0) - 1
     # parameters
     k_hz_1 = bisect.bisect(af[0], 1000)
@@ -367,7 +367,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
         the length of the window. Must be an odd integer number.
     order : int
         the order of the polynomial used in the filtering.
-        Must be less then `window_size` - 1.
+        Must be less than `window_size` - 1.
     deriv: int
         the order of the derivative to compute (default = 0 means only smoothing)
     Returns
@@ -536,7 +536,7 @@ def compute_statistics(
     # for i, (f, db) in enumerate(zip(hist_minmax.Freq, hist_spl)):
     #    print('{:4f}hz {:0.2f} db {:2.1f} dist={:0.2f}'.format(f, math.log10(f), db, hist_dist[i]))
 
-    # build an histogram to see where the deviation is above each treshhole
+    # build a histogram to see where the deviation is above each treshhole
     hist = np.histogram(hist_dist, bins=[0, 0.5, 1, 1.5, 2, 2.5, 3, 5], density=False)
     # compute slope in db/oct
     _, _, db_per_octave, _ = compute_slope_smoothness(data_frame, measurement, False)

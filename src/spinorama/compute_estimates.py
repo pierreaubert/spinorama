@@ -148,7 +148,7 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
 
 
 def estimates(spin: pd.DataFrame, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> dict[str, float]:
-    """ "Compute values when you do not necessary have all the 72 measurements"""
+    """Compute values when you do not necessary have all the 72 measurements"""
     est = estimates_spin(spin)
     try:
         for orientation in ("horizontal", "vertical"):

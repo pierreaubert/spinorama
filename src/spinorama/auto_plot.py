@@ -74,7 +74,7 @@ def graph_eq(freq, peq):
                     y=data_frame[key],
                     name=key,
                     legendgroup="PEQ",
-                    legendgrouptitle_text="EQ",
+                    legendgrouptitle = { "text":"EQ"},
                     marker_color=colors[i % len(colors)],
                 )
             )
@@ -124,7 +124,7 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, target, optim_config):
                     y=df_compare[key],
                     name=key,
                     legendgroup="target",
-                    legendgrouptitle_text="EQ v.s. Target",
+                    legendgrouptitle = { "text":"EQ v.s. Target"},
                     marker_color=colors[i + 1],
                 )
             )
@@ -242,7 +242,7 @@ def graph_results(
         # generate histogram of deviation
         noeq_counts, noeq_bins = noeq_hist
         auto_counts, auto_bins = auto_hist
-        bins = sorted(list(set(noeq_bins).union(auto_bins)))
+        # bins = sorted(list(set(noeq_bins).union(auto_bins)))
         bins = [
             f"{noeq_bins[i]:0.1f}-{noeq_bins[i + 1]:0.1f}" for i in range(0, len(noeq_bins) - 1)
         ]
@@ -253,7 +253,7 @@ def graph_results(
                 y=noeq_counts,
                 marker_color=colors[0],
                 legendgroup="Errors",
-                legendgrouptitle_text="Errors",
+                legendgrouptitle = {"text":"Errors"},
                 name="noEQ",
             ),
             go.Bar(
@@ -261,7 +261,7 @@ def graph_results(
                 y=auto_counts,
                 marker_color=colors[1],
                 legendgroup="Errors",
-                legendgrouptitle_text="Errors",
+                legendgrouptitle = { "text": "Errors"},
                 name="autoEQ",
             ),
         ]
@@ -286,7 +286,7 @@ def graph_results(
         )
         noeq_counts, noeq_bins = noeq_hist
         auto_counts, auto_bins = auto_hist
-        bins = sorted(list(set(noeq_bins).union(auto_bins)))
+        # bins = sorted(list(set(noeq_bins).union(auto_bins)))
         bins = [
             f"{noeq_bins[i]:0.1f}-{noeq_bins[i + 1]:0.1f}" for i in range(0, len(noeq_bins) - 1)
         ]
@@ -297,7 +297,7 @@ def graph_results(
                 y=noeq_counts,
                 marker_color=colors[0],
                 legendgroup="Errors",
-                legendgrouptitle_text="Errors",
+                legendgrouptitle = { "text": "Errors"},
                 name="noEQ",
             ),
             go.Bar(
@@ -305,7 +305,7 @@ def graph_results(
                 y=auto_counts,
                 marker_color=colors[1],
                 legendgroup="Errors",
-                legendgrouptitle_text="Errors",
+                legendgrouptitle = { "text":" Errors"},
                 name="autoEQ",
             ),
         ]

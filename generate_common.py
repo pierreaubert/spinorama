@@ -319,8 +319,8 @@ def cache_load_distributed_reduce(filters, smoke_test, ids):
     count = 0
     while 1:
         done_ids, remaining_ids = ray.wait(ids, num_returns=min(len(ids), 64))
-        for id in done_ids:
-            df_read = ray.get(id)
+        for zid in done_ids:
+            df_read = ray.get(zid)
             for speaker, data in df_read.items():
                 if speaker in df_all:
                     print("error in cache: {} is already in keys".format(speaker))
@@ -443,7 +443,6 @@ def find_metadata_chunks():
     for json_filename in json_filenames:
         check = re.search(regexp, json_filename)
         if not check:
-            # print('{} does not match'.format(json_filename))
             continue
         if os.path.exists(json_filename):
             span = check.span()
