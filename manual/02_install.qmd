@@ -1,6 +1,6 @@
 ---
 title: "How to install the software?"
-date: 2025-01-02
+date: 2025-02-08
 ---
 
 # How to use the software?

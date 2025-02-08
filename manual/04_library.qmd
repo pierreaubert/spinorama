@@ -1,6 +1,6 @@
 ---
 title: "Spinorama manual"
-date: 2025-01-04
+date: 2025-02-04
 abstract: >
   How to use the library step by step!
 ---

@@ -1,6 +1,6 @@
 ---
 title: "How to add a speaker measurement?"
-date: 2025-01-04
+date: 2025-02-08
 ---
 
 # How to add a speaker?

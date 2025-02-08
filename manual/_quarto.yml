@@ -1,6 +1,6 @@
 project:
   type: website
-  output-dir: ../docs/docs
+  output-dir: ../dist/docs
 
 website:
   title: "Spinorama"
@@ -15,10 +15,10 @@ website:
   repo-actions: [edit, issue]
   page-navigation: true
   bread-crumbs: true
-  announcement:
-     content: "🎉 Spinorama has a new documentation website"
-     position: below-navbar
-     dismissable: true
+  #announcement:
+  #   content: "🎉 Spinorama has a new documentation website"
+  #   position: below-navbar
+  #   dismissable: true
   #search:
   #  show-item-context: true
   #  type: overlay
@@ -72,7 +72,7 @@ website:
 
   sidebar:
     - id: website
-      collapse-level: 1
+      collapse-level: 3
       contents:
         - section: "Help for Spinorama.org"
           href: 01_intro.qmd

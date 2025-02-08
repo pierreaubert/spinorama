@@ -1,7 +1,7 @@
 ---
 title: "Spinorama.org"
 
-date: 2025-01-02
+date: 2025-02-02
 
 abstract: >
   Help for the spinorama.org website. How to understand the graphs? What is a Spinorama? Why you should care?
