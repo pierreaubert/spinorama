@@ -17,11 +17,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-touch env.log
+mkdir -p build
+ENVLOG=build/env.log
+touch $ENVLOG
 
 ## SSH AGENT
 ## ----------------------------------------------------------------------
-ssh-agent -k >> env.log 2>&1
+ssh-agent -k >> $ENVLOG 2>&1
 eval $(ssh-agent)
 echo $SSH_AGENT_SOCK
 if ! test -f ~/.ssh/id_rsa_github; then
@@ -32,7 +34,7 @@ fi
 ## ----------------------------------------------------------------------
 github=$(ssh-add -l | grep github | cut -d ' ' -f 3)
 if test -z $github; then
-    ssh-add ~/.ssh/id_rsa_github >> env.log 2>&1
+    ssh-add ~/.ssh/id_rsa_github >> $ENVLOG 2>&1
     github=$(ssh-add -l 2>&1 | grep github | cut -d ' ' -f 3)
 fi
 
@@ -40,11 +42,11 @@ fi
 ## ----------------------------------------------------------------------
 RSA_ES=$HOME/.ssh/id_rsa_es_web
 if test -f $RSA_ES; then
-    ssh-add $RSA_ES >> env.log 2>&1
+    ssh-add $RSA_ES >> $ENVLOG 2>&1
 fi
 RSA_CH=$HOME/.ssh/id_rsa_ch_web
 if test -f $RSA_CH; then
-    ssh-add $RSA_CH >> env.log 2>&1
+    ssh-add $RSA_CH >> $ENVLOG 2>&1
 fi
 
 ## python virtualenv
@@ -100,7 +102,7 @@ fi
 export DEEPSOURCE_DSN=https://sampledsn@deepsource.io
 
 # for imagemagic on macos
-if test -d "/opt/homebrew/opt/imagemagick@7/"; then 
+if test -d "/opt/homebrew/opt/imagemagick@7/"; then
     export MAGICK_HOME="/opt/homebrew/opt/imagemagick@7/"
 fi
 
