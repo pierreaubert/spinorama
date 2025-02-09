@@ -41,7 +41,7 @@ export PYTHONPATH=./src:./src/website
 
 # python section
 python${PYVERSION} -m venv .venv
-. ./.venv/bin/activate
+source ./.venv/bin/activate
 
 ARCH=$(uname -a | awk '{print $NF}')
 if test "$OS" = "Darwin"  -a "$ARCH" = "arm64" ; then
@@ -52,6 +52,9 @@ pip3 install -U -r requirements.txt
 pip3 install -U -r requirements-test.txt
 pip3 install -U -r requirements-dev.txt
 pip3 install -U -r requirements-api.txt
+
+# update pip to prevent extra warning
+pip install -U pip
 
 # node section
 npm install .
@@ -67,9 +70,6 @@ PYTHONPATH=src cd src/spinorama && python3 setup.py build_ext --inplace && ln -s
 [ ! -x bin/deepsource ] && curl https://deepsource.io/cli | sh
 
 # install 3rd parties
-./scripts/update_3rdparties
+./scripts/update_3rdparties.sh
 
-# run tests
-vitest
-pytest -v tests
 

@@ -99,6 +99,11 @@ fi
 # for deepsource code coverage
 export DEEPSOURCE_DSN=https://sampledsn@deepsource.io
 
+# for imagemagic on macos
+if test -d "/opt/homebrew/opt/imagemagick@7/"; then 
+    export MAGICK_HOME="/opt/homebrew/opt/imagemagick@7/"
+fi
+
 ## summary
 ## ----------------------------------------------------------------------
 echo 'SPIN           ' "$SPIN"
@@ -110,3 +115,4 @@ echo '  github key   ' "$github"
 echo '  CUDA (Nvidia)' "$CUDA"
 echo '  ROCM (AMD)   ' "$ROCM"
 echo '  RAY          ' "$(ray --version)"
+echo '  MAGIC        ' "$MAGICK_HOME"

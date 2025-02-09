@@ -2,7 +2,7 @@
   "dependencies": {
     "@babel/core": "^7.26.0",
     "bulma": "^1.0.3",
-    "fuse.js": "^7.0.0",
+    "fuse.js": "^7.1.0",
     "handlebars": "^4.7.8",
     "npm": "^11.0.0",
     "npm-check-updates": "^17.1.12",
