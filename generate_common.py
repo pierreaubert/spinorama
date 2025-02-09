@@ -59,7 +59,7 @@ def get_similar_names(speakername):
 def get_custom_logger(level, duplicate):
     """Define properties of our logger"""
     custom = logging.getLogger("spinorama")
-    custom_file_handler = logging.FileHandler("debug_optim.log")
+    custom_file_handler = logging.FileHandler("build/debug_optim.log")
     formatter = logging.Formatter(
         "%(asctime)s - %(filename)s:%(funcName)s:%(lineno)d - %(levelname)s - %(message)s"
     )
