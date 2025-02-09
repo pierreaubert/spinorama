@@ -17,10 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import math
 import typing
 import unittest
 
-from spinorama.misc import graph_melt
+import numpy as np
+import pandas as pd
+
+from spinorama.misc import graph_melt, measurements_complete_freq, measurements_complete_spl
 
 from spinorama.compute_misc import unify_freq
 
@@ -75,6 +79,55 @@ class SpinoramaUnifyFreqTests(unittest.TestCase):
         #
         self.assertEqual(self.df.shape, (ushape[0] * 4, 3))
         self.assertSetEqual(set(self.df.Measurements), self._measurements_set2)
+
+
+class SpinoramaMeasurementsQualitySPLTest(unittest.TestCase):
+    def setUp(self):
+        self.df_10 = pd.DataFrame({"Freq": [1, 2, 3], "On Axis": [0, 0, 0]})
+        for iangle in range(-170, 190, 10):
+            if iangle == 0:
+                continue
+            angle = "{}°".format(iangle)
+            self.df_10[angle] = [iangle, iangle, iangle]
+        self.df_5 = self.df_10.copy()
+        for iangle in range(-165, 185, 10):
+            if iangle == 0:
+                continue
+            angle = "{}°".format(iangle)
+            self.df_5[angle] = [iangle, iangle, iangle]
+        self.df_e1 = pd.DataFrame({"Freq": [1, 2, 3], "On Axis": [0, 0, 0]})
+        for iangle in range(-170, 180, 10):
+            if iangle == 0:
+                continue
+            angle = "{}°".format(iangle)
+            self.df_e1[angle] = [iangle, iangle, iangle]
+        self.df_e2 = pd.DataFrame({"Freq": [1, 2, 3], "On Axis": [0, 0, 0]})
+        for iangle in range(-180, 190, 10):
+            angle = "{}°".format(iangle)
+            self.df_e2[angle] = [iangle, iangle, iangle]
+
+    def test_spl_full(self):
+        self.assertTrue(measurements_complete_spl(self.df_10, self.df_10))
+        self.assertTrue(measurements_complete_spl(self.df_5, self.df_5))
+        self.assertFalse(measurements_complete_spl(self.df_e1, self.df_e1))
+        self.assertFalse(measurements_complete_spl(self.df_10, self.df_e1))
+        self.assertFalse(measurements_complete_spl(self.df_e1, self.df_10))
+        self.assertNotIn("0°", self.df_10)
+        self.assertIn("0°", self.df_e2.keys())
+
+
+class SpinoramaMeasurementsQualityFreqTest(unittest.TestCase):
+    def setUp(self):
+        self.df_ok = pd.DataFrame({"Freq": np.logspace(1 + math.log10(2), 4 + math.log10(2), 200)})
+        self.df_ko1 = pd.DataFrame({"Freq": np.logspace(1 + math.log10(2), 4 + math.log10(2), 50)})
+        self.df_ko2 = pd.DataFrame({"Freq": np.logspace(2 + math.log10(2), 4 + math.log10(2), 200)})
+        self.df_ko3 = pd.DataFrame({"Freq": np.logspace(1 + math.log10(2), 3 + math.log10(2), 200)})
+
+    def test_spl_full(self):
+        self.assertTrue(measurements_complete_freq(self.df_ok, self.df_ok))
+        self.assertFalse(measurements_complete_freq(self.df_ko1, self.df_ko1))
+        self.assertFalse(measurements_complete_freq(self.df_ko2, self.df_ko2))
+        self.assertFalse(measurements_complete_freq(self.df_ko3, self.df_ko3))
 
 
 if __name__ == "__main__":

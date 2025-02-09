@@ -179,7 +179,7 @@ def write_if_different(new_content: str, filename: str, force: bool = False) -> 
 
 def measurements_complete_spl(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | None) -> bool:
     complete_spl = False
-    expected = set(["{}°".format(i) for i in range(-180, 190, 10)])
+    expected = set(["{}°".format(i) for i in range(-170, 190, 10)])
     expected.remove("0°")
     expected.add("On Axis")
     if (
@@ -189,6 +189,11 @@ def measurements_complete_spl(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | 
         and expected.issubset(set(v_spl.keys()))
     ):
         complete_spl = True
+    # print('check spl : {} H {} V {}'.format(
+    #    complete_spl,
+    #    expected.issubset(set(h_spl.keys())),
+    #    expected.issubset(set(v_spl.keys())),
+    # ))
     return complete_spl
 
 
@@ -201,6 +206,8 @@ def measurements_complete_freq(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame |
                 complete_freq = True
         return complete_freq
 
+    # print('check freq H: {}'.format(check(h_spl)))
+    # print('check freq V: {}'.format(check(v_spl)))
     return check(h_spl) and check(v_spl)
 
 
