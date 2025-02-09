@@ -1297,7 +1297,7 @@ def plot_contour_3d(spl, params):
                 showline=True,
                 dtick="D1",
                 tickfont=FONT_H4,
-                titlefont=FONT_H3,
+                title_font=FONT_H3,
             ),
             yaxis=dict(
                 range=[-180, 180],
@@ -1306,7 +1306,7 @@ def plot_contour_3d(spl, params):
                 ticktext=angle_text_3d,
                 title="Angle",
                 tickfont=FONT_H4,
-                titlefont=FONT_H3,
+                title_font=FONT_H3,
             ),
             zaxis=dict(
                 range=[z_min, z_max],
@@ -1315,7 +1315,7 @@ def plot_contour_3d(spl, params):
                 tickvals=spl_list_3d,
                 ticktext=spl_text_3d,
                 tickfont=FONT_H4,
-                titlefont=FONT_H3,
+                title_font=FONT_H3,
             ),
             aspectratio=dict(
                 x=1.414,
