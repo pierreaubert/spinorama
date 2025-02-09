@@ -241,6 +241,8 @@ def filter_graphs(
     complete_freq = measurements_complete_freq(h_spl, v_spl)
     complete = complete_spl and complete_freq
 
+    logger.info('%s completeness %s SPL %s Freq %s', speaker_name, str(complete), str(complete_spl), str(complete_freq))
+
     if sh_spl is None or sv_spl is None:
         #
         df_on_axis = compute_onaxis(sh_spl, sv_spl)
@@ -530,7 +532,7 @@ def spin_compute_di_eir(
 
 
 def symmetrise_speaker_measurements(
-    h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | None, symmetry: str
+    h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | None, symmetry: str | None
 ) -> tuple[pd.DataFrame | None, pd.DataFrame | None]:
     def symmetrise_measurement(spl: pd.DataFrame) -> pd.DataFrame:
         """Apply a symmetry if any to the measurements"""
@@ -559,14 +561,18 @@ def symmetrise_speaker_measurements(
         return sort_angles(new_spl)
 
     if h_spl is None and v_spl is None:
-        logger.error("Symmetrisation cannot work with empty measurements")
+        logger.error("Symmetrisation cannot work with no measurement")
+        return (None, None)
+
+    if symmetry is not None and symmetry not in ("coaxial", "vertical", "horizontal", "None"):
+        logger.error("symmetry %s is unknown", symmetry)
         return (None, None)
 
     if symmetry == "coaxial":
         if h_spl is not None:
             h_spl2 = symmetrise_measurement(h_spl)
             v_spl2 = h_spl2.copy() if v_spl is None else symmetrise_measurement(v_spl)
-        else:
+        elif v_spl is not None:
             v_spl2 = symmetrise_measurement(v_spl)
             h_spl2 = v_spl2.copy()
         return (h_spl2, v_spl2)
@@ -707,6 +713,7 @@ def parse_graphs_speaker(
             )
 
         if not status:
+            logger.debug("Failed to load %s from measurement %s", speaker_name, mversion)
             if h_spl is not None and "Freq" not in h_spl:
                 h_spl = None
             if v_spl is not None and "Freq" not in v_spl:

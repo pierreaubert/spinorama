@@ -21,10 +21,7 @@ import unittest
 
 import pandas as pd
 
-from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
-from spinorama.compute_misc import unify_freq
-
-from spinorama.misc import sort_angles, graph_melt, graph_unmelt
+from spinorama.misc import measurements_complete_spl, sort_angles, graph_unmelt, measurements_complete_freq
 from spinorama.load_klippel import parse_graph_freq_klippel, parse_graphs_speaker_klippel
 from spinorama.load_princeton import parse_graph_princeton, parse_graphs_speaker_princeton
 from spinorama.load_spl_hv_txt import parse_graphs_speaker_spl_hv_txt
@@ -32,11 +29,9 @@ from spinorama.load_gll_hv_txt import parse_graphs_speaker_gll_hv_txt
 from spinorama.load_rew_text_dump import parse_graphs_speaker_rew_text_dump
 from spinorama.load_webplotdigitizer import parse_graphs_speaker_webplotdigitizer
 from spinorama.load import (
-    filter_graphs,
-    filter_graphs_partial,
-    spin_compute_di_eir,
     symmetrise_speaker_measurements,
 )
+from tests.test_common import parse_full_each_format, EXPECTED_FULL_SET, EXPECTED_PARTIAL_SET, EXPECTED_LIMITED_SET, parse_partial_each_format
 
 # ----------------------------------------------------------------------------------------------------
 # KLIPPEL FORMAT PRE COMPUTED CEA2034
@@ -146,7 +141,9 @@ class SpinoramaSPLHVLoadTests(unittest.TestCase):
     def test_spin(self):
         # vertical symmetry
         self.assertEqual(self.h.shape, (479, 37))
-        self.assertEqual(self.v.shape, (479, 19))
+        self.assertEqual(self.v.shape, (479, 20))
+        self.assertTrue(measurements_complete_freq(self.h, self.v))
+        self.assertFalse(measurements_complete_spl(self.h, self.v))
 
     def test_symmetry(self):
         # vertical symmetry
@@ -156,7 +153,10 @@ class SpinoramaSPLHVLoadTests(unittest.TestCase):
         if h2 is not None:
             self.assertEqual(h2.shape, (479, 37))
         if v2 is not None:
-            self.assertEqual(v2.shape, (479, 36))
+            self.assertEqual(v2.shape, (479, 37))
+        if h2 is not None and v2 is not None:
+            self.assertTrue(measurements_complete_spl(h2, v2))
+
 
 
 # ----------------------------------------------------------------------------------------------------
@@ -248,130 +248,25 @@ class SpinoramaWebPlotDigitizerLoadTests(unittest.TestCase):
 
 class SpinoramaFilterGraphsTests(unittest.TestCase):
     def setUp(self):
-        self.dfs = {}
-        #
-        _, (h, v) = parse_graphs_speaker_klippel(
-            "datas/measurements", "Neumann", "Neumann KH 80", "asr-v3-20200711", None
-        )
-        self.dfs["klippel"] = filter_graphs("Neumann KH 80", h, v, MEAN_MIN, MEAN_MAX, "klippel", 1)
-        #
-        _, (h, v) = parse_graphs_speaker_princeton(
-            "datas/measurements", "Genelec", "Genelec 8351A", "princeton", None
-        )
-        self.dfs["princeton"] = filter_graphs(
-            "Genelec 8351A", h, v, MEAN_MIN, MEAN_MAX, "princeton", 1
-        )
-        #
-        _, (h, v) = parse_graphs_speaker_gll_hv_txt(
-            "datas/measurements", "RCF ART 708-A MK4", "vendor-pattern-90x70"
-        )
-        self.dfs["spl_hv"] = filter_graphs(
-            "RCF ART 708-A MK4", h, v, MEAN_MIN, MEAN_MAX, "gll_hv_txt", 10
-        )
-        #
-        _, (h, v) = parse_graphs_speaker_spl_hv_txt(
-            "datas/measurements", "Andersson", "Andersson HIS 2.1", "misc-ageve"
-        )
-        self.dfs["gll_hv"] = filter_graphs(
-            "Andersson HIS 2.1", h, v, MEAN_MIN, MEAN_MAX, "spl_hv_txt", 1
-        )
+        self.dfs = parse_full_each_format()
 
     def test_keys(self):
-        expected_set = set(
-            [
-                "SPL Horizontal",
-                "SPL Horizontal_unmelted",
-                "SPL Horizontal_normalized_unmelted",
-                "SPL Vertical",
-                "SPL Vertical_unmelted",
-                "SPL Vertical_normalized_unmelted",
-                "sensitivity",
-                "sensitivity_distance",
-                "sensitivity_1m",
-                "Early Reflections_unmelted",
-                "Early Reflections",
-                "Horizontal Reflections_unmelted",
-                "Horizontal Reflections",
-                "Vertical Reflections_unmelted",
-                "Vertical Reflections",
-                "Estimated In-Room Response_unmelted",
-                "Estimated In-Room Response",
-                "Estimated In-Room Response Normalized_unmelted",
-                "Estimated In-Room Response Normalized",
-                "On Axis_unmelted",
-                "On Axis",
-                "CEA2034_unmelted",
-                "CEA2034",
-                "CEA2034 Normalized_unmelted",
-                "CEA2034 Normalized",
-            ]
-        )
-        for df in self.dfs.values():
-            self.assertSetEqual(expected_set, set(df.keys()))
+        for res in self.dfs.values():
+            full, df = res["full"], res["graphs"]
+            if full:
+                self.assertSetEqual(EXPECTED_FULL_SET, set(df.keys()))
+            else:
+                self.assertSetEqual(EXPECTED_LIMITED_SET, set(df.keys()))
 
-
-#    def test_enough_measurements(self):
-#        for df in self.df.values():
-#            self.assertEqual(37, df['SPL Horizontal_unmelted'].shape[1])
-#            self.assertEqual(37, df['SPL Vertical_unmelted'].shape[1])
 
 
 class SpinoramaFilterGraphsPartialTests(unittest.TestCase):
     def setUp(self):
-        self.dfs = {}
-
-        speaker_name = "BIC America Venturi DV62si"
-        status, (title, df_melted) = parse_graphs_speaker_rew_text_dump(
-            "datas/measurements",
-            "BIC America",
-            speaker_name,
-            "",
-            "vendor",
-        )
-        self.assertTrue(status)
-        self.assertEqual(title, "CEA2034")
-        df_unmelted = graph_melt(unify_freq(df_melted))
-        df_full = spin_compute_di_eir(speaker_name, title, df_unmelted)
-        df_filtered = filter_graphs_partial(df_full, "rew_text_dump", 1.0)
-        self.assertIsNotNone(df_filtered)
-        self.dfs["rew_text_dump"] = df_filtered
-
-        speaker_name = "RBH Sound R-5"
-        status, (title, df_melted) = parse_graphs_speaker_webplotdigitizer(
-            "datas/measurements",
-            "RBH Sound",
-            speaker_name,
-            "",
-            "misc-audioholics",
-        )
-        self.assertTrue(status)
-        self.assertEqual(title, "CEA2034")
-        df_unmelted = graph_unmelt(df_melted)
-        df_full = spin_compute_di_eir(speaker_name, title, df_unmelted)
-        df_filtered = filter_graphs_partial(df_full, "webplotdigitizer", 1.0)
-        self.assertIsNotNone(df_filtered)
-        self.dfs["webplotdigitizer"] = df_filtered
+        self.dfs = parse_partial_each_format()
 
     def test_keys(self):
-        expected_set = set(
-            [
-                "On Axis",
-                "On Axis_unmelted",
-                "CEA2034",
-                "CEA2034_unmelted",
-                "CEA2034 Normalized",
-                "CEA2034 Normalized_unmelted",
-                "sensitivity",
-                "sensitivity_distance",
-                "sensitivity_1m",
-                "Estimated In-Room Response",
-                "Estimated In-Room Response_unmelted",
-                "Estimated In-Room Response Normalized_unmelted",
-                "Estimated In-Room Response Normalized",
-            ]
-        )
         for df in self.dfs.values():
-            self.assertSetEqual(expected_set, set(df.keys()))
+            self.assertSetEqual(EXPECTED_PARTIAL_SET, set(df.keys()))
 
 
 if __name__ == "__main__":
