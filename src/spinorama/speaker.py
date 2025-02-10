@@ -29,7 +29,7 @@ except ModuleNotFoundError:
 from spinorama import logger, ray_setup_logger
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS
 from spinorama.ltype import DataSpeaker
-from spinorama.misc import write_multiformat
+from spinorama.misc import measurements_valid_freq_range, write_multiformat
 from spinorama.filter_peq import Peq, peq_preamp_gain
 from spinorama.compute_misc import compute_minmax_slopes
 from spinorama.plot import (
@@ -49,6 +49,8 @@ from spinorama.plot import (
 
 SPACING = 20
 LEGEND = 60
+
+DEFAULT_FREQ_RANGE = (20.0, 20000.0)
 
 
 def scale_params(params, factor):
@@ -97,7 +99,9 @@ def get_minmax_slopes(df, is_normalized):
 # ----------------------------------------------------------------------
 # provide "as measured" and "normalized" versions
 # ----------------------------------------------------------------------
-def _display_spinorama_common(df, graph_params, is_normalized):
+def _display_spinorama_common(
+    df, graph_params, is_normalized, valid_freq_range: tuple[float, float]
+):
     spin, slopes = get_minmax_slopes(df, is_normalized=is_normalized)
     if spin is None:
         logger.error(
@@ -107,22 +111,34 @@ def _display_spinorama_common(df, graph_params, is_normalized):
         )
         return None
 
-    fig = plot_spinorama(spin, graph_params, slopes, is_normalized=is_normalized)
+    fig = plot_spinorama(
+        spin, graph_params, slopes, is_normalized=is_normalized, valid_freq_range=DEFAULT_FREQ_RANGE
+    )
     if fig is None:
         logger.error("plot_spinorama failed")
         return None
     return fig
 
 
-def display_spinorama(df, graph_params=plot_params_default):
-    return _display_spinorama_common(df, graph_params, is_normalized=False)
+def display_spinorama(
+    df, graph_params=plot_params_default, valid_freq_range: tuple[float, float] = DEFAULT_FREQ_RANGE
+):
+    return _display_spinorama_common(
+        df, graph_params, is_normalized=False, valid_freq_range=valid_freq_range
+    )
 
 
-def display_spinorama_normalized(df, graph_params=plot_params_default):
-    return _display_spinorama_common(df, graph_params, is_normalized=True)
+def display_spinorama_normalized(
+    df, graph_params=plot_params_default, valid_freq_range: tuple[float, float] = DEFAULT_FREQ_RANGE
+):
+    return _display_spinorama_common(
+        df, graph_params, is_normalized=True, valid_freq_range=valid_freq_range
+    )
 
 
-def _display_inroom_common(df, graph_params, is_normalized):
+def _display_inroom_common(
+    df: dict, graph_params: dict, is_normalized: bool, valid_freq_range: tuple[float, float]
+):
     spin, slopes = get_minmax_slopes(df, is_normalized=is_normalized)
     if spin is None:
         logger.error("plot_inroom failed, cannot get Spin (is_normalized=%s)", str(is_normalized))
@@ -132,21 +148,25 @@ def _display_inroom_common(df, graph_params, is_normalized):
         logger.debug("plot_inroom failed, likely partial measurements")
         return None
 
-    return plot_graph_regression(df, "Estimated In-Room Response", graph_params, slopes, False)
+    return plot_graph_regression(
+        df, "Estimated In-Room Response", graph_params, slopes, False, valid_freq_range
+    )
 
 
-def display_inroom(df, graph_params=plot_params_default):
-    return _display_inroom_common(df, graph_params, False)
+def display_inroom(df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
+    return _display_inroom_common(df, graph_params, False, valid_freq_range)
 
 
-def display_inroom_normalized(df, graph_params=plot_params_default):
-    return _display_inroom_common(df, graph_params, True)
+def display_inroom_normalized(
+    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    return _display_inroom_common(df, graph_params, True, valid_freq_range)
 
 
 # ----------------------------------------------------------------------
 # provide "as measured" graphs
 # ----------------------------------------------------------------------
-def display_onaxis(df, graph_params=plot_params_default):
+def display_onaxis(df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
     onaxis = df.get("CEA2034_unmelted")
     if onaxis is None:
         onaxis = df.get("On Axis_unmelted")
@@ -160,11 +180,13 @@ def display_onaxis(df, graph_params=plot_params_default):
         return None
 
     _, slopes = get_minmax_slopes(df, False)
-    fig = plot_graph_regression(df, "On Axis", graph_params, slopes, False)
+    fig = plot_graph_regression(df, "On Axis", graph_params, slopes, False, valid_freq_range)
     return fig
 
 
-def display_reflection_early(df, graph_params=plot_params_default):
+def display_reflection_early(
+    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
     try:
         if "Early Reflections_unmelted" not in df:
             return None
@@ -172,10 +194,12 @@ def display_reflection_early(df, graph_params=plot_params_default):
         logger.warning("Display Early Reflections failed with %s", ke)
         return None
     else:
-        return plot_graph(df["Early Reflections_unmelted"], graph_params)
+        return plot_graph(df["Early Reflections_unmelted"], graph_params, valid_freq_range)
 
 
-def display_reflection_horizontal(df, graph_params=plot_params_default):
+def display_reflection_horizontal(
+    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
     try:
         if "Horizontal Reflections_unmelted" not in df:
             return None
@@ -183,20 +207,22 @@ def display_reflection_horizontal(df, graph_params=plot_params_default):
         logger.warning("Display Horizontal Reflections failed with %s", ke)
         return None
     else:
-        return plot_graph(df["Horizontal Reflections_unmelted"], graph_params)
+        return plot_graph(df["Horizontal Reflections_unmelted"], graph_params, valid_freq_range)
 
 
-def display_reflection_vertical(df, graph_params=plot_params_default):
+def display_reflection_vertical(
+    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
     try:
         if "Vertical Reflections_unmelted" not in df:
             return None
     except KeyError:
         return None
     else:
-        return plot_graph(df["Vertical Reflections_unmelted"], graph_params)
+        return plot_graph(df["Vertical Reflections_unmelted"], graph_params, valid_freq_range)
 
 
-def display_spl(df, axis, graph_params=plot_params_default):
+def display_spl(df, axis, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
     try:
         if axis not in df:
             return None
@@ -204,82 +230,116 @@ def display_spl(df, axis, graph_params=plot_params_default):
         logger.warning("Display SPL failed with %s", ke)
         return None
     else:
-        return plot_graph_spl(df[axis], graph_params)
+        return plot_graph_spl(df[axis], graph_params, valid_freq_range)
 
 
-def display_spl_horizontal(df, graph_params=plot_params_default):
-    return display_spl(df, "SPL Horizontal_unmelted", graph_params)
+def display_spl_horizontal(
+    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    return display_spl(df, "SPL Horizontal_unmelted", graph_params, valid_freq_range)
 
 
-def display_spl_vertical(df, graph_params=plot_params_default):
-    return display_spl(df, "SPL Vertical_unmelted", graph_params)
+def display_spl_vertical(df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE):
+    return display_spl(df, "SPL Vertical_unmelted", graph_params, valid_freq_range)
 
 
-def display_spl_horizontal_normalized(df, graph_params=plot_params_default):
-    return display_spl(df, "SPL Horizontal_normalized_unmelted", graph_params)
+def display_spl_horizontal_normalized(
+    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    return display_spl(df, "SPL Horizontal_normalized_unmelted", graph_params, valid_freq_range)
 
 
-def display_spl_vertical_normalized(df, graph_params=plot_params_default):
-    return display_spl(df, "SPL Vertical_normalized_unmelted", graph_params)
+def display_spl_vertical_normalized(
+    df, graph_params=plot_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    return display_spl(df, "SPL Vertical_normalized_unmelted", graph_params, valid_freq_range)
 
 
-def display_contour(df, direction, graph_params=contour_params_default):
+def display_contour(
+    df, direction, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
     if direction not in df:
         return None
-    return plot_contour(df[direction], graph_params)
+    return plot_contour(df[direction], graph_params, valid_freq_range)
 
 
-def display_contour_horizontal(df, graph_params=contour_params_default):
-    return display_contour(df, "SPL Horizontal_unmelted", graph_params)
+def display_contour_horizontal(
+    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    return display_contour(df, "SPL Horizontal_unmelted", graph_params, valid_freq_range)
 
 
-def display_contour_vertical(df, graph_params=contour_params_default):
-    return display_contour(df, "SPL Vertical_unmelted", graph_params)
+def display_contour_vertical(
+    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    return display_contour(df, "SPL Vertical_unmelted", graph_params, valid_freq_range)
 
 
-def display_contour_horizontal_normalized(df, graph_params=contour_params_default):
-    return display_contour(df, "SPL Horizontal_normalized_unmelted", graph_params)
+def display_contour_horizontal_normalized(
+    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    return display_contour(df, "SPL Horizontal_normalized_unmelted", graph_params, valid_freq_range)
 
 
-def display_contour_vertical_normalized(df, graph_params=contour_params_default):
-    return display_contour(df, "SPL Vertical_normalized_unmelted", graph_params)
+def display_contour_vertical_normalized(
+    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    return display_contour(df, "SPL Vertical_normalized_unmelted", graph_params, valid_freq_range)
 
 
-def display_contour_3d(df, direction, graph_params=contour_params_default):
+def display_contour_3d(
+    df, direction, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
     if direction not in df:
         return None
-    return plot_contour_3d(df[direction], graph_params)
+    return plot_contour_3d(df[direction], graph_params, valid_freq_range)
 
 
-def display_contour_horizontal_3d(df, graph_params=contour_params_default):
-    return display_contour_3d(df, "SPL Horizontal_unmelted", graph_params)
+def display_contour_horizontal_3d(
+    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    return display_contour_3d(df, "SPL Horizontal_unmelted", graph_params, valid_freq_range)
 
 
-def display_contour_vertical_3d(df, graph_params=contour_params_default):
-    return display_contour_3d(df, "SPL Vertical_unmelted", graph_params)
+def display_contour_vertical_3d(
+    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    return display_contour_3d(df, "SPL Vertical_unmelted", graph_params, valid_freq_range)
 
 
-def display_contour_horizontal_normalized_3d(df, graph_params=contour_params_default):
-    return display_contour_3d(df, "SPL Horizontal_normalized_unmelted", graph_params)
+def display_contour_horizontal_normalized_3d(
+    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    return display_contour_3d(
+        df, "SPL Horizontal_normalized_unmelted", graph_params, valid_freq_range
+    )
 
 
-def display_contour_vertical_normalized_3d(df, graph_params=contour_params_default):
-    return display_contour_3d(df, "SPL Vertical_normalized_unmelted", graph_params)
+def display_contour_vertical_normalized_3d(
+    df, graph_params=contour_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    return display_contour_3d(
+        df, "SPL Vertical_normalized_unmelted", graph_params, valid_freq_range
+    )
 
 
-def display_radar(df, direction, graph_params):
+def display_radar(df, direction, graph_params, valid_freq_range=DEFAULT_FREQ_RANGE):
     dfs = df.get(direction)
     if dfs is None:
         return None
-    return plot_radar(dfs, graph_params)
+    return plot_radar(dfs, graph_params, valid_freq_range)
 
 
-def display_radar_horizontal(df, graph_params=radar_params_default):
-    return display_radar(df, "SPL Horizontal_unmelted", graph_params)
+def display_radar_horizontal(
+    df, graph_params=radar_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    return display_radar(df, "SPL Horizontal_unmelted", graph_params, valid_freq_range)
 
 
-def display_radar_vertical(df, graph_params=radar_params_default):
-    return display_radar(df, "SPL Vertical_unmelted", graph_params)
+def display_radar_vertical(
+    df, graph_params=radar_params_default, valid_freq_range=DEFAULT_FREQ_RANGE
+):
+    return display_radar(df, "SPL Vertical_unmelted", graph_params, valid_freq_range)
 
 
 def build_filename(speaker, origin, version, graph_name, file_ext) -> str:
@@ -386,7 +446,12 @@ def print_graphs(
     graph_params["ymin"] = origins_info[origin]["min dB"]
     graph_params["ymax"] = origins_info[origin]["max dB"]
 
-    print(df_speaker.keys())
+    valid_freq_range = measurements_valid_freq_range(
+        speaker,
+        version,
+        df_speaker.get("SPL Horizontal", None),
+        df_speaker.get("SPL Vertical", None),
+    )
 
     graphs = {}
     for op_title, op_call in (
@@ -398,7 +463,7 @@ def print_graphs(
     ):
         logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
         try:
-            graph = op_call(df_speaker, graph_params)
+            graph = op_call(df_speaker, graph_params, valid_freq_range)
             if graph is None:
                 logger.info("display %s failed for %s %s %s", op_title, speaker, version, origin)
                 continue
@@ -425,7 +490,7 @@ def print_graphs(
         ):
             logger.debug("%s %s %s %s", speaker, version, origin, ",".join(list(df_speaker.keys())))
             try:
-                graph = op_call(df_speaker, graph_params)
+                graph = op_call(df_speaker, graph_params, valid_freq_range)
                 if graph is None:
                     logger.info(
                         "display %s failed for %s %s %s", op_title, speaker, version, origin
@@ -457,24 +522,30 @@ def print_graphs(
         contour_params["xmin"] = origins_info[origin]["min hz"]
         contour_params["xmax"] = origins_info[origin]["max hz"]
 
-        graphs["SPL Horizontal Contour"] = display_contour_horizontal(df_speaker, contour_params)
-        graphs["SPL Vertical Contour"] = display_contour_vertical(df_speaker, contour_params)
+        graphs["SPL Horizontal Contour"] = display_contour_horizontal(
+            df_speaker, contour_params, valid_freq_range
+        )
+        graphs["SPL Vertical Contour"] = display_contour_vertical(
+            df_speaker, contour_params, valid_freq_range
+        )
         graphs["SPL Horizontal Contour Normalized"] = display_contour_horizontal_normalized(
-            df_speaker, contour_params
+            df_speaker, contour_params, valid_freq_range
         )
         graphs["SPL Vertical Contour Normalized"] = display_contour_vertical_normalized(
-            df_speaker, contour_params
+            df_speaker, contour_params, valid_freq_range
         )
 
         graphs["SPL Horizontal Contour 3D"] = display_contour_horizontal_3d(
-            df_speaker, contour_params
+            df_speaker, contour_params, valid_freq_range
         )
-        graphs["SPL Vertical Contour 3D"] = display_contour_vertical_3d(df_speaker, contour_params)
+        graphs["SPL Vertical Contour 3D"] = display_contour_vertical_3d(
+            df_speaker, contour_params, valid_freq_range
+        )
         graphs["SPL Horizontal Contour Normalized 3D"] = display_contour_horizontal_normalized_3d(
-            df_speaker, contour_params
+            df_speaker, contour_params, valid_freq_range
         )
         graphs["SPL Vertical Contour Normalized 3D"] = display_contour_vertical_normalized_3d(
-            df_speaker, contour_params
+            df_speaker, contour_params, valid_freq_range
         )
 
         # better square
@@ -485,8 +556,12 @@ def print_graphs(
         radar_params["xmin"] = origins_info[origin]["min hz"]
         radar_params["xmax"] = origins_info[origin]["max hz"]
 
-        graphs["SPL Horizontal Radar"] = display_radar_horizontal(df_speaker, radar_params)
-        graphs["SPL Vertical Radar"] = display_radar_vertical(df_speaker, radar_params)
+        graphs["SPL Horizontal Radar"] = display_radar_horizontal(
+            df_speaker, radar_params, valid_freq_range
+        )
+        graphs["SPL Vertical Radar"] = display_radar_vertical(
+            df_speaker, radar_params, valid_freq_range
+        )
 
     # add a title if needed
     for key, graph in graphs.items():

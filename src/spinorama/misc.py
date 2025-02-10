@@ -21,9 +21,13 @@ import pathlib
 
 import numpy as np
 import pandas as pd
+
 from wand.image import Image as Wim
 from wand.exceptions import CoderError
 
+from datas import Measurement
+from datas.metadata import speakers_info
+from datas.helpers import measurement_valid_freq
 from spinorama import logger
 
 
@@ -257,3 +261,22 @@ def measurements_missing_angles(h_spl: pd.DataFrame, v_spl: pd.DataFrame) -> str
         ", ".join(diff_h),
         ", ".join(diff_v),
     )
+
+
+def measurements_valid_freq_range(
+    speaker_name: str,
+    version: str,
+    h_spl: pd.DataFrame | None,
+    v_spl: pd.DataFrame | None,
+) -> tuple[float, float]:
+    measurement: Measurement = speakers_info[speaker_name]["measurements"][version]
+    min_valid_freq, max_valid_freq = measurement_valid_freq(speaker_name, measurement)
+    if h_spl is not None and "Freq" in h_spl:
+        min_valid_freq = max(min_valid_freq, h_spl.Freq.min())
+        max_valid_freq = min(max_valid_freq, h_spl.Freq.max())
+    if v_spl is not None and "Freq" in v_spl:
+        min_valid_freq = max(min_valid_freq, v_spl.Freq.min())
+        max_valid_freq = min(max_valid_freq, v_spl.Freq.max())
+    min_valid_freq = max(20.0, min_valid_freq)
+    max_valid_freq = min(20000.0, max_valid_freq)
+    return min_valid_freq, max_valid_freq

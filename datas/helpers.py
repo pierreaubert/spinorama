@@ -17,8 +17,28 @@ def measurement2distance(speaker_name: str, m: Measurement) -> float:
     return d
 
 
+def measurement_valid_freq(speaker_name: str, m: Measurement) -> tuple[float, float]:
+    min_valid_freq = 20.0
+    max_valid_freq = 20000.0
+    if "data_acquisition" in m and "min_valid_freq" in m["data_acquisition"]:
+        try:
+            freq = float(m["data_acquisition"]["min_valid_freq"])
+        except ValueError:
+            logger.warning("Found a min_valid_freq for %s but it is not a float", speaker_name)
+        else:
+            min_valid_freq = freq
+    if "data_acquisition" in m and "max_valid_freq" in m["data_acquisition"]:
+        try:
+            freq = float(m["data_acquisition"]["max_valid_freq"])
+        except ValueError:
+            logger.warning("Found a max_valid_freq for %s but it is not a float", speaker_name)
+        else:
+            max_valid_freq = freq
+    return min_valid_freq, max_valid_freq
+
+
 def speaker2unitprice(s: Speaker) -> float:
-    price = s["price"]
+    price = s.get("price", -1.0)
     fprice = -1
     try:
         fprice = float(price)

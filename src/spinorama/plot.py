@@ -449,6 +449,7 @@ def plot_spinorama_traces(
     params: dict,
     minmax_slopes: dict[str, tuple[float, float]],
     is_normalized: bool,
+    valid_freq_range: tuple[float, float],
 ) -> tuple[list, list, list, list]:
     layout = params.get("layout", "")
     traces = []
@@ -586,7 +587,12 @@ def plot_spinorama_traces(
     return traces, traces_di, lines, lines_di
 
 
-def plot_spinorama_annotation(fig, spin, is_normalized):
+def plot_spinorama_annotation(
+    fig,
+    spin,
+    is_normalized,
+    valid_freq_range: tuple[float, float],
+):
     _graph_param = (
         (2000, "On Axis", "y", -20, "right", "bottom"),
         (16000, "Listening Window", "y", -20, "right", "bottom"),
@@ -647,11 +653,17 @@ def plot_spinorama_annotation(fig, spin, is_normalized):
     return fig
 
 
-def plot_spinorama(spin, params, minmax_slopes, is_normalized):
+def plot_spinorama(
+    spin,
+    params,
+    minmax_slopes,
+    is_normalized,
+    valid_freq_range: tuple[float, float],
+):
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     t_max = 0
     traces, traces_di, lines, lines_di = plot_spinorama_traces(
-        spin, params, minmax_slopes, is_normalized
+        spin, params, minmax_slopes, is_normalized, valid_freq_range
     )
 
     if len(traces) == 0:
@@ -684,13 +696,17 @@ def plot_spinorama(spin, params, minmax_slopes, is_normalized):
     fig.update_yaxes(generate_yaxis_di(di_min, di_max, 5), secondary_y=True)
 
     if FLAG_FEATURE_ANNOTATION:
-        fig = plot_spinorama_annotation(fig, spin, is_normalized)
+        fig = plot_spinorama_annotation(fig, spin, is_normalized, valid_freq_range)
 
     fig.update_layout(common_layout(params))
     return fig
 
 
-def plot_graph(df, params):
+def plot_graph(
+    df,
+    params,
+    valid_freq_range: tuple[float, float],
+):
     layout = params.get("layout", "")
     fig = go.Figure()
     for measurement in df:
@@ -717,7 +733,11 @@ def plot_graph(df, params):
     return fig
 
 
-def plot_graph_spl(df, params):
+def plot_graph_spl(
+    df,
+    params,
+    valid_freq_range: tuple[float, float],
+):
     layout = params.get("layout", "")
     fig = go.Figure()
     for measurement in df:
@@ -755,7 +775,7 @@ def plot_graph_spl(df, params):
     return fig
 
 
-def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
+def plot_graph_traces(df, measurement, params, slope, intercept, line_title, valid_freq_range):
     layout = params.get("layout", "")
     traces = []
 
@@ -855,24 +875,26 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     return traces
 
 
-def plot_graph_flat_traces(df, measurement, params):
+def plot_graph_flat_traces(df, measurement, params, valid_freq_range):
     restricted_df = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
     slope = 0
     intercept = np.mean(restricted_df[measurement]) if not restricted_df[measurement].empty else 0.0
-    return plot_graph_traces(df, measurement, params, slope, intercept, None)
+    return plot_graph_traces(df, measurement, params, slope, intercept, None, valid_freq_range)
 
 
-def plot_graph_regression_traces(df, measurement, params):
+def plot_graph_regression_traces(df, measurement, params, valid_freq_range):
     restricted_df = df.loc[(df.Freq >= SLOPE_MIN_FREQ) & (df.Freq <= SLOPE_MAX_FREQ)]
     slope, intercept, _, _, _ = stats.linregress(
         x=np.log10(restricted_df["Freq"]), y=restricted_df[measurement]
     )
-    return plot_graph_traces(df, measurement, params, slope, intercept, "Midrange ±3dB")
+    return plot_graph_traces(
+        df, measurement, params, slope, intercept, "Midrange ±3dB", valid_freq_range
+    )
 
 
-def plot_graph_flat(df, measurement, params):
+def plot_graph_flat(df, measurement, params, valid_freq_range):
     fig = go.Figure()
-    traces = plot_graph_flat_traces(df, measurement, params)
+    traces = plot_graph_flat_traces(df, measurement, params, valid_freq_range)
     for t in traces:
         fig.add_trace(t)
 
@@ -885,14 +907,14 @@ def plot_graph_flat(df, measurement, params):
     return fig
 
 
-def plot_graph_regression(df, measurement, params, minmax_slopes, is_normalized):
+def plot_graph_regression(df, measurement, params, minmax_slopes, is_normalized, valid_freq_range):
     fig = go.Figure()
 
     measurement_unmelted = "{}_unmelted".format(measurement)
 
     if measurement_unmelted in df:
         curve = df["{}_unmelted".format(measurement)]
-        fig.add_traces(plot_graph_regression_traces(curve, measurement, params))
+        fig.add_traces(plot_graph_regression_traces(curve, measurement, params, valid_freq_range))
 
     if (
         FLAG_FEATURE_CONFIDENCE_ZONES
@@ -951,7 +973,7 @@ def flatten(the_list: list[list[T | None]]) -> list[T | None]:
     return list(itertools.chain.from_iterable(the_list))
 
 
-def plot_contour(spl, params):
+def plot_contour(spl, params, valid_freq_range):
     df_spl = spl.copy()
     min_freq = params.get("contour_min_freq", 100)
 
@@ -967,8 +989,8 @@ def plot_contour(spl, params):
             x=af[0],
             y=am.T[0],
             z=az,
-            zmin=contour_start,
-            zmax=contour_end,
+            cmin=contour_start,
+            cmax=contour_end,
             contours=dict(
                 coloring="fill",
                 start=contour_start + 0,
@@ -1047,7 +1069,7 @@ def find_nearest_freq(dfu: pd.DataFrame, hz: float, tolerance: float = 0.05) -> 
     return ihz
 
 
-def plot_radar(spl, params):
+def plot_radar(spl, params, valid_plot_range):
     layout = params.get("layout", "")
 
     anglelist = list(range(-180, 180, 10))
@@ -1154,16 +1176,6 @@ def plot_radar(spl, params):
     return fig
 
 
-def plot_image(df, params):
-    """Deprecated"""
-    return None
-
-
-def plot_summary(df, summary, params):
-    """Deprecated"""
-    return None
-
-
 def plot_eqs(freq, peqs, names):
     peqs_spl = [peq_spl(freq, peq) for peq in peqs]
     if len(peqs) > 1:
@@ -1233,7 +1245,7 @@ def plot_eqs(freq, peqs, names):
     return fig
 
 
-def plot_contour_3d(spl, params):
+def plot_contour_3d(spl, params, valid_freq_range):
     params.get("layout", "")
     min_freq = max(20, params.get("contour_min_freq", 100))
 

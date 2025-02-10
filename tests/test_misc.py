@@ -129,6 +129,5 @@ class SpinoramaMeasurementsQualityFreqTest(unittest.TestCase):
         self.assertFalse(measurements_complete_freq(self.df_ko2, self.df_ko2))
         self.assertFalse(measurements_complete_freq(self.df_ko3, self.df_ko3))
 
-
 if __name__ == "__main__":
     unittest.main()
