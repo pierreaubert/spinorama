@@ -589,8 +589,8 @@ def plot_spinorama_traces(
 
 def plot_spinorama_annotation(
     fig,
-    spin,
-    is_normalized,
+    spin: dict[str, pd.DataFrame | float],
+    is_normalized: bool,
     valid_freq_range: tuple[float, float],
 ):
     _graph_param = (
@@ -989,8 +989,8 @@ def plot_contour(spl, params, valid_freq_range):
             x=af[0],
             y=am.T[0],
             z=az,
-            cmin=contour_start,
-            cmax=contour_end,
+            zmin=contour_start,
+            zmax=contour_end,
             contours=dict(
                 coloring="fill",
                 start=contour_start + 0,

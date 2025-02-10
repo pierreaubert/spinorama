@@ -17,15 +17,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import math
 import unittest
 
 import pandas as pd
 
 from spinorama.misc import (
-    measurements_complete_spl,
-    sort_angles,
     graph_unmelt,
     measurements_complete_freq,
+    measurements_complete_spl,
+    measurements_valid_freq_range,
+    sort_angles,
 )
 from spinorama.load_klippel import parse_graph_freq_klippel, parse_graphs_speaker_klippel
 from spinorama.load_princeton import parse_graph_princeton, parse_graphs_speaker_princeton
@@ -267,6 +269,34 @@ class SpinoramaFilterGraphsTests(unittest.TestCase):
                 self.assertSetEqual(EXPECTED_FULL_SET, set(df.keys()))
             else:
                 self.assertSetEqual(EXPECTED_LIMITED_SET, set(df.keys()))
+
+    def test_freq_ranges(self):
+        expected_freq_range = {
+            "Neumann KH 80": (20, 20000),
+            "Genelec 8351A": (500, 20000),
+            "RCF ART 708-A MK4": (100, 16000),
+            "Andersson HIS 2.1": (20, 20000),
+        }
+        for res in self.dfs.values():
+            speaker_name = res["speaker_name"]
+            valid_freq_range = measurements_valid_freq_range(
+                speaker_name=speaker_name,
+                version=res["speaker_version"],
+                h_spl=res["h_spl"],
+                v_spl=res["v_spl"],
+            )
+            min_error = (
+                math.fabs(valid_freq_range[0] - expected_freq_range[speaker_name][0])
+                / expected_freq_range[speaker_name][0]
+                * 100.0
+            )
+            max_error = (
+                math.fabs(valid_freq_range[1] - expected_freq_range[speaker_name][1])
+                / expected_freq_range[speaker_name][1]
+                * 100.0
+            )
+            self.assertLess(min_error, 5)  # 5%
+            self.assertLess(max_error, 5)  # 5%
 
 
 class SpinoramaFilterGraphsPartialTests(unittest.TestCase):

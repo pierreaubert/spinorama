@@ -101,7 +101,14 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-90x70": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 2.5,
+                    "min_valid_freq": 100,
+                    "max_valid_freq": 16000,
+                },
                 "quality": "low",
                 "review_published": "20230114",
                 "specifications": {

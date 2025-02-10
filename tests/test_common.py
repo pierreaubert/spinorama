@@ -109,70 +109,97 @@ EXPECTED_PARTIAL_SET = set(
 def parse_full_each_format():
     dfs = {}
     # standard klippel measurement
+    speaker_name = "Neumann KH 80"
+    speaker_version = "asr-v3-20200711"
     _, (h, v) = parse_graphs_speaker_klippel(
-        "datas/measurements", "Neumann", "Neumann KH 80", "asr-v3-20200711", None
+        "datas/measurements", "Neumann", speaker_name, speaker_version, None
     )
     full = measurements_complete_spl(h, v) and measurements_complete_freq(h, v)
     dfs["klippel"] = {
+        "speaker_name": speaker_name,
+        "speaker_version": speaker_version,
         "full": full,
+        "h_spl": h,
+        "v_spl": v,
         "graphs": filter_graphs("Neumann KH 80", h, v, MEAN_MIN, MEAN_MAX, "klippel", 1),
     }
     # princeton data, no data below 500hz, horizontal symmetry, 1m
+    speaker_name = "Genelec 8351A"
+    speaker_version = "princeton"
     _, (h, v) = parse_graphs_speaker_princeton(
-        "datas/measurements", "Genelec", "Genelec 8351A", "princeton", "None"
+        "datas/measurements", "Genelec", speaker_name, speaker_version, "None"
     )
     h2, v2 = symmetrise_speaker_measurements(h, v, "horizontal")
     full = measurements_complete_spl(h2, v2) and measurements_complete_freq(h2, v2)
     dfs["princeton"] = {
+        "speaker_name": speaker_name,
+        "speaker_version": speaker_version,
         "full": full,
+        "h_spl": h2,
+        "v_spl": v2,
         "graphs": filter_graphs("Genelec 8351A", h2, v2, MEAN_MIN, MEAN_MAX, "princeton", 1),
     }
-    # standard gll file
-    _, (h, v) = parse_graphs_speaker_gll_hv_txt(
-        "datas/measurements", "RCF ART 708-A MK4", "vendor-pattern-90x70"
-    )
+    # standard gll file, distance is 10m
+    speaker_name = "RCF ART 708-A MK4"
+    speaker_version = "vendor-pattern-90x70"
+    _, (h, v) = parse_graphs_speaker_gll_hv_txt("datas/measurements", speaker_name, speaker_version)
     full = measurements_complete_spl(h, v) and measurements_complete_freq(h, v)
     dfs["spl_hv"] = {
+        "speaker_name": speaker_name,
+        "speaker_version": speaker_version,
         "full": full,
+        "h_spl": h,
+        "v_spl": v,
         "graphs": filter_graphs("RCF ART 708-A MK4", h, v, MEAN_MIN, MEAN_MAX, "gll_hv_txt", 10),
     }
     # standard spl file, vertical symmetry
+    speaker_name = "Andersson HIS 2.1"
+    speaker_version = "misc-ageve"
     _, (h, v) = parse_graphs_speaker_spl_hv_txt(
-        "datas/measurements", "Andersson", "Andersson HIS 2.1", "misc-ageve"
+        "datas/measurements",
+        "Andersson",
+        speaker_name,
+        speaker_version,
     )
     h2, v2 = symmetrise_speaker_measurements(h, v, "vertical")
     full = measurements_complete_spl(h2, v2) and measurements_complete_freq(h2, v2)
     dfs["gll_hv"] = {
+        "speaker_name": speaker_name,
+        "speaker_version": speaker_version,
         "full": full,
+        "h_spl": h2,
+        "v_spl": v2,
         "graphs": filter_graphs("Andersson HIS 2.1", h2, v2, MEAN_MIN, MEAN_MAX, "spl_hv_txt", 1),
     }
-
     return dfs
 
 
 def parse_partial_each_format():
     dfs = {}
-
+    # rew text dump
     speaker_name = "BIC America Venturi DV62si"
+    speaker_version = "vendor"
     _, (title, df_melted) = parse_graphs_speaker_rew_text_dump(
         "datas/measurements",
         "BIC America",
         speaker_name,
         "",
-        "vendor",
+        speaker_version,
     )
     df_unmelted = graph_melt(unify_freq(df_melted))
     df_full = spin_compute_di_eir(speaker_name, title, df_unmelted)
     df_filtered = filter_graphs_partial(df_full, "rew_text_dump", 1.0)
     dfs["rew_text_dump"] = df_filtered
 
+    # webplotdigitizer
     speaker_name = "RBH Sound R-5"
+    speaker_version = "misc-audioholics"
     _, (title, df_melted) = parse_graphs_speaker_webplotdigitizer(
         "datas/measurements",
         "RBH Sound",
         speaker_name,
         "",
-        "misc-audioholics",
+        speaker_version,
     )
     df_unmelted = graph_unmelt(df_melted)
     df_full = spin_compute_di_eir(speaker_name, title, df_unmelted)
@@ -185,9 +212,8 @@ def parse_partial_each_format():
 class SpinoramaLoaderCommon(unittest.TestCase):
     def test_full(self):
         measurements = parse_full_each_format()
-        for k, m in measurements.items():
+        for m in measurements.values():
             ln = len(m["graphs"])
-            print(k, m["full"], ln, m["graphs"].keys())
             if m["full"]:
                 self.assertEqual(len(m["graphs"].keys()), 25)
             else:
