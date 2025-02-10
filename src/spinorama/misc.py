@@ -16,10 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
 import pathlib
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+from wand.image import Image as Wim
+from wand.exceptions import CoderError
 
 from spinorama import logger
 
@@ -175,6 +178,37 @@ def write_if_different(new_content: str, filename: str, force: bool = False) -> 
 
     if not identical or force:
         path.write_text(new_content, encoding="utf-8")
+
+
+def write_multiformat(chart, filename, force):
+    """Write a png file and then convert and save to jpg and webp"""
+    filepath = pathlib.Path(filename)
+    if not filepath.parent.exists():
+        logger.warning("%s does not exists!", filename)
+        return
+    if not filepath.is_file() or force:
+        try:
+            chart.write_image(filename)
+        except RuntimeError as rt:
+            logger.error("writing image %s crashed! %s", filename, rt)
+            return
+    if os.path.getsize(filename) == 0:
+        logger.warning("Saving %s failed!", filename)
+        return
+    logger.info("Saving %s", filename)
+
+    try:
+        with Wim(filename=filename) as pict:
+            filename = filename.replace("_large", "")
+            webp = "{}.webp".format(filename[:-4])
+            if not pathlib.Path(webp).is_file() or force:
+                pict.convert("webp").save(filename=webp)
+            pict.compression_quality = 75
+            jpg = "{}.jpg".format(filename[:-4])
+            if not pathlib.Path(jpg).is_file() or force:
+                pict.convert("jpg").save(filename=jpg)
+    except CoderError as ce:
+        logger.exception("Saving picture %s failed with %s", filename, ce)
 
 
 def measurements_complete_spl(h_spl: pd.DataFrame | None, v_spl: pd.DataFrame | None) -> bool:

@@ -21,7 +21,12 @@ import unittest
 
 import pandas as pd
 
-from spinorama.misc import measurements_complete_spl, sort_angles, graph_unmelt, measurements_complete_freq
+from spinorama.misc import (
+    measurements_complete_spl,
+    sort_angles,
+    graph_unmelt,
+    measurements_complete_freq,
+)
 from spinorama.load_klippel import parse_graph_freq_klippel, parse_graphs_speaker_klippel
 from spinorama.load_princeton import parse_graph_princeton, parse_graphs_speaker_princeton
 from spinorama.load_spl_hv_txt import parse_graphs_speaker_spl_hv_txt
@@ -31,7 +36,13 @@ from spinorama.load_webplotdigitizer import parse_graphs_speaker_webplotdigitize
 from spinorama.load import (
     symmetrise_speaker_measurements,
 )
-from tests.test_common import parse_full_each_format, EXPECTED_FULL_SET, EXPECTED_PARTIAL_SET, EXPECTED_LIMITED_SET, parse_partial_each_format
+from tests.test_common import (
+    parse_full_each_format,
+    EXPECTED_FULL_SET,
+    EXPECTED_PARTIAL_SET,
+    EXPECTED_LIMITED_SET,
+    parse_partial_each_format,
+)
 
 # ----------------------------------------------------------------------------------------------------
 # KLIPPEL FORMAT PRE COMPUTED CEA2034
@@ -158,7 +169,6 @@ class SpinoramaSPLHVLoadTests(unittest.TestCase):
             self.assertTrue(measurements_complete_spl(h2, v2))
 
 
-
 # ----------------------------------------------------------------------------------------------------
 # GLL TXT FORMAT
 # ----------------------------------------------------------------------------------------------------
@@ -257,7 +267,6 @@ class SpinoramaFilterGraphsTests(unittest.TestCase):
                 self.assertSetEqual(EXPECTED_FULL_SET, set(df.keys()))
             else:
                 self.assertSetEqual(EXPECTED_LIMITED_SET, set(df.keys()))
-
 
 
 class SpinoramaFilterGraphsPartialTests(unittest.TestCase):

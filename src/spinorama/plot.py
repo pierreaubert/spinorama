@@ -44,6 +44,7 @@ from spinorama.misc import sort_angles
 FLAG_FEATURE_TREND_LINES = True
 FLAG_FEATURE_CONFIDENCE_ZONES = True
 FLAG_FEATURE_ANNOTATION = True
+FLAG_FEATURE_VISIBLE = False
 
 pio.templates.default = "plotly_white"
 
@@ -493,7 +494,7 @@ def plot_spinorama_traces(
                     line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
                     opacity=1,
                     showlegend=False,
-                    visible=False,
+                    visible=FLAG_FEATURE_VISIBLE,
                 )
             )
         if (
@@ -517,7 +518,7 @@ def plot_spinorama_traces(
                     name="recommended SP zone",
                     fillcolor=UNIFORM_COLORS[measurement],
                     mode="text",
-                    visible=False,
+                    visible=FLAG_FEATURE_VISIBLE,
                 )
             )
 
@@ -550,6 +551,7 @@ def plot_spinorama_traces(
                     line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
                     opacity=1,
                     showlegend=False,
+                    visible=FLAG_FEATURE_VISIBLE,
                 )
             )
         if (
@@ -573,7 +575,7 @@ def plot_spinorama_traces(
                     name="recommended SP DI zone",
                     fillcolor=UNIFORM_COLORS[measurement],
                     mode="text",
-                    visible=False,
+                    visible=FLAG_FEATURE_VISIBLE,
                 )
             )
         trace.name = measurement
@@ -640,7 +642,7 @@ def plot_spinorama_annotation(fig, spin, is_normalized):
             yanchor=yanchor,
             yref=yref,
             ay=ay,
-            visible=False,
+            visible=FLAG_FEATURE_VISIBLE,
         )
     return fig
 
@@ -929,6 +931,7 @@ def plot_graph_regression(df, measurement, params, minmax_slopes, is_normalized)
                 name="recommended {} zone".format(label_short.get(measurement, "???")),
                 fillcolor="#FF5C00",  # neon orange
                 mode="text",
+                visible=FLAG_FEATURE_VISIBLE,
             )
         )
 

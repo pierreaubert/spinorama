@@ -60,6 +60,7 @@ from spinorama.plot import (
 
 import ray
 
+
 class SpinoramaDisplayTests(unittest.TestCase):
     def setUp(self):
         self.dfs_full = {}

@@ -26,14 +26,11 @@ try:
 except ModuleNotFoundError:
     import src.miniray as ray
 
-from wand.image import Image as Wim
-from wand.exceptions import CoderError
-
 from spinorama import logger, ray_setup_logger
 from spinorama.constant_paths import CPATH_DIST_SPEAKERS
 from spinorama.ltype import DataSpeaker
+from spinorama.misc import write_multiformat
 from spinorama.filter_peq import Peq, peq_preamp_gain
-from spinorama.misc import graph_unmelt
 from spinorama.compute_misc import compute_minmax_slopes
 from spinorama.plot import (
     plot_params_default,
@@ -48,37 +45,6 @@ from spinorama.plot import (
     plot_contour_3d,
     FONT_H1,
 )
-
-
-def write_multiformat(chart, filename, force):
-    """Write a png file and then convert and save to jpg and webp"""
-    filepath = pathlib.Path(filename)
-    if not filepath.parent.exists():
-        logger.warning("%s does not exists!", filename)
-        return
-    if not filepath.is_file() or force:
-        try:
-            chart.write_image(filename)
-        except RuntimeError as rt:
-            logger.error("writing image %s crashed! %s", filename, rt)
-            return
-    if os.path.getsize(filename) == 0:
-        logger.warning("Saving %s failed!", filename)
-        return
-    logger.info("Saving %s", filename)
-
-    try:
-        with Wim(filename=filename) as pict:
-            filename = filename.replace("_large", "")
-            webp = "{}.webp".format(filename[:-4])
-            if not pathlib.Path(webp).is_file() or force:
-                pict.convert("webp").save(filename=webp)
-            pict.compression_quality = 75
-            jpg = "{}.jpg".format(filename[:-4])
-            if not pathlib.Path(jpg).is_file() or force:
-                pict.convert("jpg").save(filename=jpg)
-    except CoderError as ce:
-        logger.exception("Saving picture %s failed with %s", filename, ce)
 
 
 SPACING = 20
@@ -420,6 +386,8 @@ def print_graphs(
     graph_params["ymin"] = origins_info[origin]["min dB"]
     graph_params["ymax"] = origins_info[origin]["max dB"]
 
+    print(df_speaker.keys())
+
     graphs = {}
     for op_title, op_call in (
         ("CEA2034", display_spinorama),
@@ -433,24 +401,19 @@ def print_graphs(
             graph = op_call(df_speaker, graph_params)
             if graph is None:
                 logger.info("display %s failed for %s %s %s", op_title, speaker, version, origin)
-                if "CEA2034" in op_title or "Estimated" in op_title:
-                    print(
-                        "display {} failed for {} {} {}".format(op_title, speaker, version, origin)
-                    )
                 continue
+            graphs[op_title] = graph
         except KeyError as ke:
             logger.error(
-                "display %s failed with a key error for %s %s %s",
+                "display %s failed with a key error (%s) for %s %s %s",
                 op_title,
+                str(ke),
                 speaker,
                 version,
                 origin,
             )
-            continue
 
-        graphs[op_title] = graph
-
-    if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt"):
+    if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt", "princeton"):
         for op_title, op_call in (
             ("Early Reflections", display_reflection_early),
             ("Horizontal Reflections", display_reflection_horizontal),
@@ -473,20 +436,19 @@ def print_graphs(
                                 op_title, speaker, version, origin
                             )
                         )
-                        continue
+                    continue
+                graphs[op_title] = graph
             except KeyError as ke:
                 logger.error(
-                    "display %s failed with a key error for %s %s %s",
+                    "display %s failed with a key error (%s) for %s %s %s",
                     op_title,
+                    str(ke),
                     speaker,
                     version,
                     origin,
                 )
-                continue
 
-            graphs[op_title] = graph
-
-    if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt"):
+    if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt", "princeton"):
         # change params for contour
         contour_params = copy.deepcopy(contour_params_default)
         contour_params["width"] = width

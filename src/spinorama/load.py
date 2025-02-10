@@ -241,7 +241,13 @@ def filter_graphs(
     complete_freq = measurements_complete_freq(h_spl, v_spl)
     complete = complete_spl and complete_freq
 
-    logger.info('%s completeness %s SPL %s Freq %s', speaker_name, str(complete), str(complete_spl), str(complete_freq))
+    logger.info(
+        "%s completeness %s SPL %s Freq %s",
+        speaker_name,
+        str(complete),
+        str(complete_spl),
+        str(complete_freq),
+    )
 
     if sh_spl is None or sv_spl is None:
         #

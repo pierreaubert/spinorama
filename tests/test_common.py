@@ -18,7 +18,13 @@
 
 import unittest
 from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
-from spinorama.misc import measurements_complete_freq, measurements_complete_spl, graph_melt, graph_unmelt, measurements_missing_angles
+from spinorama.misc import (
+    measurements_complete_freq,
+    measurements_complete_spl,
+    graph_melt,
+    graph_unmelt,
+    measurements_missing_angles,
+)
 from spinorama.compute_misc import unify_freq
 
 from spinorama.load_klippel import parse_graphs_speaker_klippel
@@ -99,42 +105,38 @@ EXPECTED_PARTIAL_SET = set(
     ]
 )
 
+
 def parse_full_each_format():
     dfs = {}
-    #
+    # standard klippel measurement
     _, (h, v) = parse_graphs_speaker_klippel(
         "datas/measurements", "Neumann", "Neumann KH 80", "asr-v3-20200711", None
     )
     full = measurements_complete_spl(h, v) and measurements_complete_freq(h, v)
-    if not full:
-        print(measurements_missing_angles(h,v))
     dfs["klippel"] = {
         "full": full,
-        "graphs": filter_graphs("Neumann KH 80", h, v, MEAN_MIN, MEAN_MAX, "klippel", 1)
+        "graphs": filter_graphs("Neumann KH 80", h, v, MEAN_MIN, MEAN_MAX, "klippel", 1),
     }
-    #
+    # princeton data, no data below 500hz, horizontal symmetry, 1m
     _, (h, v) = parse_graphs_speaker_princeton(
-        "datas/measurements", "Genelec", "Genelec 8351A", "princeton", None
+        "datas/measurements", "Genelec", "Genelec 8351A", "princeton", "None"
     )
-    full = measurements_complete_spl(h, v) and measurements_complete_freq(h, v)
+    h2, v2 = symmetrise_speaker_measurements(h, v, "horizontal")
+    full = measurements_complete_spl(h2, v2) and measurements_complete_freq(h2, v2)
     dfs["princeton"] = {
         "full": full,
-        "graphs": filter_graphs(
-            "Genelec 8351A", h, v, MEAN_MIN, MEAN_MAX, "princeton", 1
-        )
+        "graphs": filter_graphs("Genelec 8351A", h2, v2, MEAN_MIN, MEAN_MAX, "princeton", 1),
     }
-    #
+    # standard gll file
     _, (h, v) = parse_graphs_speaker_gll_hv_txt(
         "datas/measurements", "RCF ART 708-A MK4", "vendor-pattern-90x70"
     )
     full = measurements_complete_spl(h, v) and measurements_complete_freq(h, v)
     dfs["spl_hv"] = {
         "full": full,
-        "graphs": filter_graphs(
-            "RCF ART 708-A MK4", h, v, MEAN_MIN, MEAN_MAX, "gll_hv_txt", 10
-        )
+        "graphs": filter_graphs("RCF ART 708-A MK4", h, v, MEAN_MIN, MEAN_MAX, "gll_hv_txt", 10),
     }
-    #
+    # standard spl file, vertical symmetry
     _, (h, v) = parse_graphs_speaker_spl_hv_txt(
         "datas/measurements", "Andersson", "Andersson HIS 2.1", "misc-ageve"
     )
@@ -142,9 +144,7 @@ def parse_full_each_format():
     full = measurements_complete_spl(h2, v2) and measurements_complete_freq(h2, v2)
     dfs["gll_hv"] = {
         "full": full,
-        "graphs": filter_graphs(
-            "Andersson HIS 2.1", h, v, MEAN_MIN, MEAN_MAX, "spl_hv_txt", 1
-        )
+        "graphs": filter_graphs("Andersson HIS 2.1", h2, v2, MEAN_MIN, MEAN_MAX, "spl_hv_txt", 1),
     }
 
     return dfs
@@ -181,8 +181,8 @@ def parse_partial_each_format():
 
     return dfs
 
-class SpinoramaLoaderCommon(unittest.TestCase):
 
+class SpinoramaLoaderCommon(unittest.TestCase):
     def test_full(self):
         measurements = parse_full_each_format()
         for k, m in measurements.items():
@@ -201,4 +201,3 @@ class SpinoramaLoaderCommon(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
