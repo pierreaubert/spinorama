@@ -540,7 +540,14 @@ speakers_info_g: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-Genelec",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 1,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5,
+                    "min_valid_freq": 100,
+                    "max_valid_freq": 20000,
+                },
                 "quality": "low",
                 "notes": "{}".format(note_genelec_gll),
                 "review_published": "20220918",
