@@ -1190,6 +1190,33 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "Micca MB42X-G2": {
+        "brand": "Micca",
+        "model": "MB42X-G2",
+        "type": "passive",
+        "price": "100",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/micca-mb42x-g2-budget-speaker-review.60712/",
+                "review_published": "20250211",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "size": {
+                        "height": 240,
+                        "width": 147,
+                        "depth": 165,
+                    },
+                    "weight": 5.1,
+                },
+            },
+        },
+    },
     "Micca RB42": {
         "brand": "Micca",
         "model": "RB42",
