@@ -69,6 +69,11 @@ SLOPE_MAX_FREQ = 12000
 SENSITIVITY_MIN_FREQ = 100
 SENSITIVITY_MAX_FREQ = 1000
 
+# default frequency range for plots
+DEFAULT_FREQ_RANGE = (20.0, 20000.0)
+# default SPL range for plots
+DEFAULT_SPL_RANGE = (-40.0, 10.0)
+
 # curve names
 C_ON = "On Axis"
 C_LW = "Listening Window"

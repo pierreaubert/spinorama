@@ -20,6 +20,7 @@ import bisect
 import itertools
 import math
 from typing import TypeVar
+import pprint
 import warnings
 
 import numpy as np
@@ -587,12 +588,59 @@ def plot_spinorama_traces(
     return traces, traces_di, lines, lines_di
 
 
+def plot_valid_freq_ranges(fig, freq_range, spl_range=(-40, 10)):
+    min_freq, max_freq = freq_range
+    min_spl, max_spl = spl_range
+    # for some reasons add_vrect is not working, using shape instead
+    if min_freq > 40.0:
+        # print('Debug adding low freq rect {}'.format(min_freq))
+        fig.add_shape(
+            type='rect',
+            x0=20,
+            x1=min_freq,
+            y0=min_spl,
+            y1=max_spl,
+            layer="between",
+            line_width=0,
+            label=dict(
+                text='no data or low quality',
+                textposition="top center",
+                font=FONT_H2,
+            ),
+            fillcolor="LightGreen",
+            opacity=0.6,
+            xref="x",
+            yref="y",
+            showlegend=True,
+        )
+    if max_freq < 19500:
+        # print('Debug adding max freq rect {}'.format(max_freq))
+        fig.add_shape(
+            type='rect',
+            x0=max_freq,
+            x1=20000,
+            y0=min_spl,
+            y1=max_spl,
+            fillcolor="LightGreen",
+            opacity=0.6,
+            layer="between",
+            line_width=0,
+            xref="x",
+            yref="y",
+            showlegend=True,
+        )
+    return fig
+
+
 def plot_spinorama_annotation(
     fig,
     spin: dict[str, pd.DataFrame | float],
     is_normalized: bool,
     valid_freq_range: tuple[float, float],
 ):
+    if not FLAG_FEATURE_ANNOTATION:
+        return fig
+
     _graph_param = (
         (2000, "On Axis", "y", -20, "right", "bottom"),
         (16000, "Listening Window", "y", -20, "right", "bottom"),
@@ -695,10 +743,10 @@ def plot_spinorama(
     fig.update_yaxes(generate_yaxis_spl(t_min, t_max, 5))
     fig.update_yaxes(generate_yaxis_di(di_min, di_max, 5), secondary_y=True)
 
-    if FLAG_FEATURE_ANNOTATION:
-        fig = plot_spinorama_annotation(fig, spin, is_normalized, valid_freq_range)
-
     fig.update_layout(common_layout(params))
+
+    fig = plot_spinorama_annotation(fig, spin, is_normalized, valid_freq_range)
+    fig = plot_valid_freq_ranges(fig, valid_freq_range, (t_min, t_max))
     return fig
 
 
@@ -730,6 +778,8 @@ def plot_graph(
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
     fig.update_layout(common_layout(params))
+    fig = plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"]))
+    # pprint.pp(fig.layout.shapes)
     return fig
 
 
@@ -772,6 +822,7 @@ def plot_graph_spl(
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
     fig.update_layout(common_layout(params))
+    fig = plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"]))
     return fig
 
 
@@ -903,6 +954,7 @@ def plot_graph_flat(df, measurement, params, valid_freq_range):
 
     fig.update_layout(common_layout(params))
     fig.update_traces(mode="lines")
+    fig = plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"]))
 
     return fig
 
@@ -962,6 +1014,8 @@ def plot_graph_regression(df, measurement, params, minmax_slopes, is_normalized,
 
     fig.update_layout(common_layout(params))
     fig.update_traces(mode="lines")
+
+    fig = plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"]))
 
     return fig
 

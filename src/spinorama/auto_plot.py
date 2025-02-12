@@ -22,7 +22,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ, DEFAULT_FREQ_RANGE
 from spinorama.misc import graph_unmelt
 from spinorama.filter_peq import peq_spl, peq_preamp_gain
 from spinorama.compute_misc import savitzky_golay, compute_statistics
@@ -186,12 +186,14 @@ def graph_results(
     # show the 2 spinoramas
     unmelted_spin = graph_unmelt(spin)
 
-    g_spin_noeq, _, g_spin_noeq_di, _ = plot_spinorama_traces(unmelted_spin, g_params, {}, True)
+    g_spin_noeq, _, g_spin_noeq_di, _ = plot_spinorama_traces(
+        unmelted_spin, g_params, {}, True, DEFAULT_FREQ_RANGE
+    )
     g_spin_auto, g_spin_auto_di, unmelted_spin_auto = None, None, None
     if spin_auto is not None:
         unmelted_spin_auto = graph_unmelt(spin_auto)
         g_spin_auto, _, g_spin_auto_di, _ = plot_spinorama_traces(
-            unmelted_spin_auto, g_params, {}, True
+            unmelted_spin_auto, g_params, {}, True, DEFAULT_FREQ_RANGE
         )
 
     # show the 3 optimised curves
@@ -203,17 +205,13 @@ def graph_results(
             data = graph_unmelt(pir)
             data_auto = graph_unmelt(pir_auto)
 
-        if which_curve == "Estimated In-Room Response":
-            g_curve_noeq = plot_graph_regression_traces(data, which_curve, g_params)
-        else:
-            g_curve_noeq = plot_graph_flat_traces(data, which_curve, g_params)
+        g_curve_noeq = plot_graph_regression_traces(data, which_curve, g_params, DEFAULT_FREQ_RANGE)
 
         g_curve_auto = None
         if data_auto is not None:
-            if which_curve == "Estimated In-Room Response":
-                g_curve_auto = plot_graph_regression_traces(data_auto, which_curve, g_params)
-            else:
-                g_curve_auto = plot_graph_flat_traces(data_auto, which_curve, g_params)
+            g_curve_auto = plot_graph_regression_traces(
+                data_auto, which_curve, g_params, DEFAULT_FREQ_RANGE
+            )
 
         # ranges in Freq
         target_min_freq = optim_config["target_min_freq"]
