@@ -448,7 +448,7 @@ def radar_layout(params):
 def plot_spinorama_traces(
     spin: pd.DataFrame,
     params: dict,
-    minmax_slopes: dict[str, tuple[float, float]],
+    minmax_slopes: dict[str, tuple[float, float]] | None,
     is_normalized: bool,
     valid_freq_range: tuple[float, float],
 ) -> tuple[list, list, list, list]:
@@ -502,6 +502,7 @@ def plot_spinorama_traces(
         if (
             FLAG_FEATURE_CONFIDENCE_ZONES
             and measurement in ("Sound Power")
+            and minmax_slopes is not None
             and len(minmax_slopes) > 0
         ):
             # aligned with VituixCAD
@@ -559,6 +560,7 @@ def plot_spinorama_traces(
         if (
             FLAG_FEATURE_CONFIDENCE_ZONES
             and measurement == "Sound Power DI"
+            and minmax_slopes is not None
             and len(minmax_slopes) > 0
         ):
             # aligned with VituixCAD
@@ -589,47 +591,42 @@ def plot_spinorama_traces(
 
 
 def plot_valid_freq_ranges(fig, freq_range, spl_range=(-40, 10)):
+    traces = []
     min_freq, max_freq = freq_range
     min_spl, max_spl = spl_range
-    # for some reasons add_vrect is not working, using shape instead
+    # for some reasons (possibly https://github.com/plotly/plotly.py/issues/2580)
+    #   add_vrect is not working
+    #   add_shape is working partially for some graphs and not others
     if min_freq > 40.0:
-        # print('Debug adding low freq rect {}'.format(min_freq))
-        fig.add_shape(
-            type='rect',
-            x0=20,
-            x1=min_freq,
-            y0=min_spl,
-            y1=max_spl,
-            layer="between",
-            line_width=0,
-            label=dict(
-                text='no data or low quality',
-                textposition="top center",
-                font=FONT_H2,
+        traces.append(
+            go.Scatter(
+                x=[20, min_freq, min_freq, 20],
+                y=[min_spl, min_spl, max_spl, max_spl],
+                mode="none",
+                fill="toself",
+                name="no data or low quality",
+                showlegend=True,
+                fillcolor="LightGreen",
+                opacity=0.6,
+                zorder=-1,
+                visible=True,
             ),
-            fillcolor="LightGreen",
-            opacity=0.6,
-            xref="x",
-            yref="y",
-            showlegend=True,
         )
     if max_freq < 19500:
-        # print('Debug adding max freq rect {}'.format(max_freq))
-        fig.add_shape(
-            type='rect',
-            x0=max_freq,
-            x1=20000,
-            y0=min_spl,
-            y1=max_spl,
-            fillcolor="LightGreen",
-            opacity=0.6,
-            layer="between",
-            line_width=0,
-            xref="x",
-            yref="y",
-            showlegend=True,
+        traces.append(
+            go.Scatter(
+                x=[max_freq, 20000, 20000, max_freq],
+                y=[min_spl, min_spl, max_spl, max_spl],
+                mode="none",
+                fill="toself",
+                name="no data or low quality",
+                showlegend=False,
+                fillcolor="LightGreen",
+                opacity=0.6,
+                zorder=-1,
+            ),
         )
-    return fig
+    return traces
 
 
 def plot_spinorama_annotation(
@@ -724,7 +721,10 @@ def plot_spinorama(
 
     t_max = 5 + int(t_max / 5) * 5
     t_min = t_max - 50
-    # print('T min={} max={}'.format(t_min, t_max))
+
+    shapes = plot_valid_freq_ranges(fig, valid_freq_range, (t_min, t_max))
+    for shape in shapes:
+        fig.add_trace(shape, secondary_y=False)
 
     di_max = 0
     for t in traces_di:
@@ -733,7 +733,7 @@ def plot_spinorama(
 
     di_max = 35 + int(di_max / 5) * 5
     di_min = di_max - 50
-    # print('DI min={} max={}'.format(di_min, di_max))
+    # # print('DI min={} max={}'.format(di_min, di_max))
 
     fig.add_traces(lines)
     for t in lines_di:
@@ -745,8 +745,9 @@ def plot_spinorama(
 
     fig.update_layout(common_layout(params))
 
-    fig = plot_spinorama_annotation(fig, spin, is_normalized, valid_freq_range)
-    fig = plot_valid_freq_ranges(fig, valid_freq_range, (t_min, t_max))
+    if minmax_slopes is not None:
+        fig = plot_spinorama_annotation(fig, spin, is_normalized, valid_freq_range)
+
     return fig
 
 
@@ -778,8 +779,7 @@ def plot_graph(
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
     fig.update_layout(common_layout(params))
-    fig = plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"]))
-    # pprint.pp(fig.layout.shapes)
+    fig.add_traces(plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"])))
     return fig
 
 
@@ -822,7 +822,7 @@ def plot_graph_spl(
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
     fig.update_layout(common_layout(params))
-    fig = plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"]))
+    fig.add_traces(plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"])))
     return fig
 
 
@@ -954,7 +954,7 @@ def plot_graph_flat(df, measurement, params, valid_freq_range):
 
     fig.update_layout(common_layout(params))
     fig.update_traces(mode="lines")
-    fig = plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"]))
+    fig.add_traces(plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"])))
 
     return fig
 
@@ -1015,7 +1015,7 @@ def plot_graph_regression(df, measurement, params, minmax_slopes, is_normalized,
     fig.update_layout(common_layout(params))
     fig.update_traces(mode="lines")
 
-    fig = plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"]))
+    fig.add_traces(plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"])))
 
     return fig
 

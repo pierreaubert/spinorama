@@ -304,7 +304,6 @@ speakers_info_b: SpeakerDatabase = {
         },
     },
     "Behringer C5A": {
-        #        "skip": True,
         "brand": "Behringer",
         "model": "C5A",
         "type": "active",
@@ -317,6 +316,9 @@ speakers_info_b: SpeakerDatabase = {
                 "origin": "Misc",
                 "format": "spl_hv_txt",
                 "quality": "low",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "review": "https://audiore.kr/behringer-c5a/",
                 "review_published": "20250125",
                 "symmetry": "coaxial",

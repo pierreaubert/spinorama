@@ -89,6 +89,9 @@ speakers_info_w: SpeakerDatabase = {
                 "format": "spl_hv_txt",
                 "quality": "low",
                 "review_published": "20250125",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },

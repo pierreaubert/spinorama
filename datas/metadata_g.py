@@ -91,6 +91,9 @@ speakers_info_g: SpeakerDatabase = {
                     "audiorekr": "https://audiore.kr/genelec-1031a-%eb%a6%ac%eb%b7%b0/",
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-1031a-measurements-review.49907/",
                 },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "specifications": {
                     "SPL": {
                         "max": 110,

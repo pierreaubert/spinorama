@@ -110,7 +110,7 @@ def _display_spinorama_common(
         return None
 
     fig = plot_spinorama(
-        spin, graph_params, slopes, is_normalized=is_normalized, valid_freq_range=DEFAULT_FREQ_RANGE
+        spin, graph_params, slopes, is_normalized=is_normalized, valid_freq_range=valid_freq_range
     )
     if fig is None:
         logger.error("plot_spinorama failed")

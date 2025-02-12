@@ -21,7 +21,7 @@ Then some specific functions from Spinorama:
 ```{python}
 from spinorama.load_spl_hv_txt import parse_graph_spl_hv_txt
 from spinorama.load import filter_graphs
-from spinorama.constant_paths import MEAN_MIN, MEAN_MAX
+from spinorama.constant_paths import MEAN_MIN, MEAN_MAX, DEFAULT_FREQ_RANGE
 ```
 
 ### Loading a dataset in text format
@@ -138,34 +138,34 @@ import spinorama.plot as plot
 
 ### CEA2034 plot (aka spinorama plot)
 ```{python}
-plot_spin = plot.plot_spinorama(spin, plot.plot_params_default)
+plot_spin = plot.plot_spinorama(spin, plot.plot_params_default, None, False, DEFAULT_FREQ_RANGE)
 plot_spin.update_layout(my_layout)
 plot_spin
 ```
 
 ### Normalized CEA2034 plot
 ```{python}
-plot_spin = plot.plot_spinorama_normalized(spin, plot.plot_params_default)
+plot_spin = plot.plot_spinorama(spin, plot.plot_params_default, True, DEFAULT_FREQ_RANGE)
 plot_spin.update_layout(my_layout)
 plot_spin
 ```
 
 ### On Axis plot
 ```{python}
-plot_onaxis = plot.plot_graph(df['On Axis_unmelted'], plot.plot_params_default)
+plot_onaxis = plot.plot_graph(df['On Axis_unmelted'], plot.plot_params_default, DEFAULT_FREQ_RANGE)
 plot_onaxis.update_layout(my_layout)
 plot_onaxis
 ```
 If you also want to see regression lines:
 ```{python}
-plot_onaxis = plot.plot_graph_flat(df['On Axis_unmelted'], "On Axis", plot.plot_params_default)
+plot_onaxis = plot.plot_graph_flat(df['On Axis_unmelted'], "On Axis", plot.plot_params_default, DEFAULT_FREQ_RANGE)
 plot_onaxis.update_layout(my_layout)
 plot_onaxis
 ```
 
 ### Early reflection plot
 ```{python}
-plot_er = plot.plot_graph(df['Early Reflections_unmelted'], plot.plot_params_default)
+plot_er = plot.plot_graph(df['Early Reflections_unmelted'], plot.plot_params_default, DEFAULT_FREQ_RANGE)
 plot_er.update_layout(my_layout)
 plot_er
 ```
@@ -175,7 +175,8 @@ plot_er
 plot_pir = plot.plot_graph_regression(
   df['Estimated In-Room Response_unmelted'],
   'Estimated In-Room Response',
-  plot.plot_params_default
+  plot.plot_params_default,
+  DEFAULT_FREQ_RANGE
 )
 plot_pir.update_layout(my_layout)
 plot_pir
@@ -188,7 +189,7 @@ There are various ways to represent directivity plots:
 #### Contour plots
 
 ```{python}
-plot_contour_h = plot.plot_contour(df['SPL Horizontal_unmelted'], plot.contour_params_default)
+plot_contour_h = plot.plot_contour(df['SPL Horizontal_unmelted'], plot.contour_params_default, DEFAULT_FREQ_RANGE)
 plot_contour_h.update_layout(my_layout)
 plot_contour_h
 ```
@@ -196,7 +197,7 @@ plot_contour_h
 The same one, normalized to on axis:
 
 ```{python}
-plot_contour_h = plot.plot_contour(df['SPL Horizontal_normalized_unmelted'], plot.contour_params_default)
+plot_contour_h = plot.plot_contour(df['SPL Horizontal_normalized_unmelted'], plot.contour_params_default, DEFAULT_FREQ_RANGE)
 plot_contour_h.update_layout(my_layout)
 plot_contour_h
 ```
@@ -204,7 +205,7 @@ plot_contour_h
 #### 3D Contour plots
 
 ```{python}
-plot_contour_h = plot.plot_contour_3d(df['SPL Horizontal_unmelted'], plot.contour_params_default)
+plot_contour_h = plot.plot_contour_3d(df['SPL Horizontal_unmelted'], plot.contour_params_default, DEFAULT_FREQ_RANGE)
 plot_contour_h.update_layout(my_layout)
 plot_contour_h
 ```
@@ -212,7 +213,7 @@ plot_contour_h
 The same one, normalized to on axis:
 
 ```{python}
-plot_contour_h = plot.plot_contour_3d(df['SPL Horizontal_normalized_unmelted'], plot.contour_params_default)
+plot_contour_h = plot.plot_contour_3d(df['SPL Horizontal_normalized_unmelted'], plot.contour_params_default, DEFAULT_FREQ_RANGE)
 plot_contour_h.update_layout(my_layout)
 plot_contour_h
 ```
@@ -220,13 +221,13 @@ plot_contour_h
 #### Radar plots
 
 ```{python}
-plot_contour_h = plot.plot_radar(df['SPL Horizontal_unmelted'], plot.radar_params_default)
+plot_contour_h = plot.plot_radar(df['SPL Horizontal_unmelted'], plot.radar_params_default, DEFAULT_FREQ_RANGE)
 plot_contour_h.update_layout(my_layout)
 plot_contour_h
 ```
 
 ```{python}
-plot_contour_h = plot.plot_radar(df['SPL Vertical_unmelted'], plot.radar_params_default)
+plot_contour_h = plot.plot_radar(df['SPL Vertical_unmelted'], plot.radar_params_default, DEFAULT_FREQ_RANGE)
 plot_contour_h.update_layout(my_layout)
 plot_contour_h
 ```
