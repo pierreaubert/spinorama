@@ -597,7 +597,7 @@ def plot_valid_freq_ranges(fig, freq_range, spl_range=(-40, 10)):
     # for some reasons (possibly https://github.com/plotly/plotly.py/issues/2580)
     #   add_vrect is not working
     #   add_shape is working partially for some graphs and not others
-    if min_freq > 40.0:
+    if min_freq > 30.0:
         traces.append(
             go.Scatter(
                 x=[20, min_freq, min_freq, 20],

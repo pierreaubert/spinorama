@@ -42,8 +42,12 @@ def parse_graph_gll_hv_txt(dir_path: str) -> StatusOr[tuple[pd.DataFrame, pd.Dat
     for file in files:
         base = os.path.basename(file)
         file_format = base[:-4].split("-")
-        meridian = int(file_format[-2][1:])
-        parallel = int(file_format[-1][1:])
+        try:
+            meridian = int(file_format[-2][1:])
+            parallel = int(file_format[-1][1:])
+        except ValueError as e:
+            # for files like sensitibity etc
+            continue
         angle = None
         orientation = None
 

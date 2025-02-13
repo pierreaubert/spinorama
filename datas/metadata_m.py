@@ -894,7 +894,14 @@ speakers_info_m: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-Meyer Sound",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 2.5,
+                    "min_valid_freq": 35,
+                    "max_valid_freq": 18000,
+                },
                 "review_published": "20220915",
                 "quality": "medium",
                 "notes": "{}".format(note_meyersound_gll),
