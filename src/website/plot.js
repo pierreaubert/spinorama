@@ -190,24 +190,6 @@ export function computeDims(windowWidth, windowHeight, isVertical, isCompact, nb
     return [width, height];
 }
 
-function showMinMaxMeasurements(datas) {
-    let results = new Map();
-    for (let i in datas) {
-        let speaker_name = 'Speaker';
-        if (datas[i].legendgrouptitle && datas[i].legendgrouptitle.text !== null) {
-            speaker_name = datas[i].legendgrouptitle.text;
-        }
-        if (datas[i].x && datas[i].x.length > 0) {
-            if (results.has(speaker_name)) {
-                results.set(speaker_name, Math.min(results.get(speaker_name), datas[i].x[0]));
-            } else {
-                results.set(speaker_name, datas[i].x[0]);
-            }
-        }
-    }
-    return results;
-}
-
 const GraphProperties = Object.freeze({
     CEA2034: {
         isGraph: true,
@@ -413,51 +395,6 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
     let fontDelta = 0;
     if (!isCompact) {
         fontDelta = Math.round(windowWidth / 300);
-    }
-
-    function displayMeasurementsLimits(datas) {
-        let shapes = [];
-        const mins = showMinMaxMeasurements(datas);
-        let title = '';
-        mins.forEach((min_freq, speaker_name) => {
-            if (min_freq > 40) {
-                if (title.length > 1) {
-                    title += '<br>';
-                }
-                title += 'No data below ' + Math.round(min_freq) + 'Hz';
-                if (speaker_name !== 'Speaker') {
-                    title += ' for ' + speaker_name;
-                }
-            }
-        });
-        let i = 0;
-        mins.forEach((min_freq) => {
-            // or maybe you need , _
-            if (min_freq > 40) {
-                let shape = {
-                    type: 'rect',
-                    xref: 'x',
-                    yref: 'y',
-                    x0: 20,
-                    y0: -45,
-                    x1: min_freq,
-                    y1: 5,
-                    fillcolor: '#d3d3d3',
-                    opacity: 0.2,
-                    line: { width: 2 },
-                };
-                if (i === 0) {
-                    shape.label = {
-                        text: title,
-                        font: { size: fontSizeH5, color: 'green' },
-                        textposition: 'top center',
-                    };
-                }
-                shapes.push(shape);
-                i += 1;
-            }
-        });
-        return shapes;
     }
 
     function computeXaxis() {
@@ -866,7 +803,6 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
         computeModbar();
         computeColorbar();
         computePolar();
-        layout.shapes = displayMeasurementsLimits(datas);
         computeMargin(); // must be last
     } else {
         // should be a pop up

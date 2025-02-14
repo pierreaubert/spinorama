@@ -495,8 +495,9 @@ def plot_spinorama_traces(
                     y=[first_spl, last_spl],
                     line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
                     opacity=1,
-                    showlegend=False,
                     visible=FLAG_FEATURE_VISIBLE,
+                    showlegend=True,
+                    name='{} slope'.format(measurement),
                 )
             )
         if (
@@ -518,10 +519,11 @@ def plot_spinorama_traces(
                     y=y,
                     fill="toself",
                     opacity=0.25,
-                    name="recommended SP zone",
                     fillcolor=UNIFORM_COLORS[measurement],
                     mode="text",
                     visible=FLAG_FEATURE_VISIBLE,
+                    name="recommended SP zone",
+                    showlegend=True,
                 )
             )
 
@@ -607,7 +609,7 @@ def plot_valid_freq_ranges(fig, freq_range, spl_range=(-40, 10)):
                 name="no data or low quality",
                 showlegend=True,
                 fillcolor="LightGreen",
-                opacity=0.6,
+                opacity=0.3,
                 zorder=-1,
                 visible=True,
             ),
@@ -622,7 +624,7 @@ def plot_valid_freq_ranges(fig, freq_range, spl_range=(-40, 10)):
                 name="no data or low quality",
                 showlegend=False,
                 fillcolor="LightGreen",
-                opacity=0.6,
+                opacity=0.3,
                 zorder=-1,
             ),
         )
