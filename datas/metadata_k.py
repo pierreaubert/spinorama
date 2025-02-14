@@ -402,6 +402,9 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20230503",
                 "notes": note_kef_data,
                 "quality": "medium",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "reviews": {
                     "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
                 },
@@ -410,6 +413,9 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "notes": note_kef_data,
                 "quality": "medium",
                 "reviews": {
@@ -458,6 +464,9 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "rew_text_dump",
                 "review_published": "20230503",
                 "notes": note_kef_data,
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "quality": "medium",
                 "reviews": {
                     "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
@@ -469,6 +478,9 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20220217",
                 "notes": note_kef_data,
                 "quality": "medium",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "reviews": {
                     "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
                 },
@@ -536,6 +548,9 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Princeton",
                 "format": "princeton",
                 "symmetry": "horizontal",
+                "data_acquisition": {
+                    "min_valid_freq": 500,
+                },
                 "review": "https://www.princeton.edu/3D3A/Directivity.html",
                 "review_published": "20151001",
             },
@@ -922,6 +937,9 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "rew_text_dump",
                 "quality": "medium",
                 "review_published": "20241223",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "notes": note_kef_data,
             },
         },
@@ -952,6 +970,9 @@ speakers_info_k: SpeakerDatabase = {
                         "depth": 277,
                     },
                     "weight": 6.1,
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
                 },
                 "notes": note_kef_data,
             },
@@ -1024,6 +1045,9 @@ speakers_info_k: SpeakerDatabase = {
                     },
                     "weight": 5.7,
                 },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "notes": note_kef_data,
             },
         },
@@ -1055,6 +1079,9 @@ speakers_info_k: SpeakerDatabase = {
                     },
                     "weight": 14.1,
                 },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "notes": note_kef_data,
             },
         },
@@ -1085,6 +1112,9 @@ speakers_info_k: SpeakerDatabase = {
                         "depth": 315,
                     },
                     "weight": 18.4,
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
                 },
                 "notes": note_kef_data,
             },
@@ -1125,6 +1155,9 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "rew_text_dump",
                 "quality": "medium",
                 "review_published": "20241223",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "notes": note_kef_data,
             },
         },
@@ -1251,6 +1284,9 @@ speakers_info_k: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r3/",
                     "yt": "https://www.youtube.com/watch?v=Gt96DBlQk8A",
                 },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -1318,6 +1354,9 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20230503",
                 "reviews": {
                     "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
                 },
             },
         },
@@ -1393,6 +1432,9 @@ speakers_info_k: SpeakerDatabase = {
                 "reviews": {
                     "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
                 },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -1412,6 +1454,9 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20230503",
                 "reviews": {
                     "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
                 },
             },
         },
@@ -1450,6 +1495,9 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "reviews": {
                     "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
                 },
             },
         },
@@ -1538,6 +1586,9 @@ speakers_info_k: SpeakerDatabase = {
                 "reviews": {
                     "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
                 },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -1574,6 +1625,9 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "review_published": "20230503",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "notes": note_kef_data,
                 "quality": "medium",
             },
@@ -1581,6 +1635,9 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "quality": "medium",
             },
         },
@@ -1633,6 +1690,9 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20230503",
                 "notes": note_kef_data,
                 "quality": "medium",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
@@ -1641,6 +1701,9 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20220217",
                 "reviews": {
                     "kef": "https://www.shop.us.kef.com/pub/media/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
                 },
             },
         },
@@ -1660,6 +1723,9 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20230503",
                 "notes": note_kef_data,
                 "quality": "medium",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
@@ -1667,6 +1733,9 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "notes": note_kef_data,
                 "review_published": "20220217",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -1714,12 +1783,18 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20230503",
                 "notes": note_kef_data,
                 "quality": "medium",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
                 "quality": "medium",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -1737,6 +1812,9 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "reviews": {
                     "white_paper": "https://assets.kef.com/pdf_doc/REF/REF-White-Paper-201219-LR.pdf",
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
                 },
             },
         },
@@ -1756,6 +1834,9 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "review_published": "20230428",
                 "notes": note_kef_data,
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
@@ -1763,6 +1844,9 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "review_published": "20220217",
                 "notes": note_kef_data,
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },

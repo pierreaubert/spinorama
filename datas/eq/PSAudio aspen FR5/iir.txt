@@ -1,0 +1,14 @@
+EQ for PSAudio aspen FR5 computed from ErinsAudioCorner data
+Preference Score 4.49 with EQ 6.43
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-02-12-15:26:08
+
+Preamp: -2.9 dB
+
+Filter  1: ON PK Fc    42 Hz Gain +2.86 dB Q 1.48
+Filter  2: ON PK Fc   579 Hz Gain +2.54 dB Q 0.48
+Filter  3: ON PK Fc   600 Hz Gain -4.94 dB Q 2.98
+Filter  4: ON PK Fc  1083 Hz Gain -2.64 dB Q 2.20
+Filter  5: ON PK Fc  1532 Hz Gain +2.70 dB Q 2.97
+Filter  6: ON PK Fc  1760 Hz Gain -1.31 dB Q 0.97
+Filter  7: ON PK Fc 15685 Hz Gain -3.99 dB Q 0.49

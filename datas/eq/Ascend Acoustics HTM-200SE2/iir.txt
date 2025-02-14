@@ -1,0 +1,14 @@
+EQ for Ascend Acoustics HTM-200SE2 computed from Vendors-Ascend Acoustics data
+Preference Score 4.97 with EQ 5.91
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-02-12-09:09:16
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    54 Hz Gain +2.68 dB Q 1.86
+Filter  2: ON PK Fc    88 Hz Gain +1.60 dB Q 2.96
+Filter  3: ON PK Fc   252 Hz Gain +0.99 dB Q 0.55
+Filter  4: ON PK Fc  1161 Hz Gain -1.98 dB Q 2.68
+Filter  5: ON PK Fc  1642 Hz Gain +2.92 dB Q 1.25
+Filter  6: ON PK Fc  1954 Hz Gain -2.83 dB Q 1.71
+Filter  7: ON PK Fc  8694 Hz Gain -0.99 dB Q 0.35

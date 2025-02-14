@@ -1,0 +1,14 @@
+EQ for Audio Engine A2+ computed from ErinsAudioCorner data
+Preference Score 1.91 with EQ 5.47
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-02-12-15:29:18
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    88 Hz Gain +2.99 dB Q 0.64
+Filter  2: ON PK Fc   155 Hz Gain -3.06 dB Q 1.45
+Filter  3: ON PK Fc   219 Hz Gain -4.38 dB Q 0.83
+Filter  4: ON PK Fc   279 Hz Gain +2.58 dB Q 0.26
+Filter  5: ON PK Fc  1010 Hz Gain +2.39 dB Q 2.84
+Filter  6: ON PK Fc  2245 Hz Gain -2.80 dB Q 0.97
+Filter  7: ON PK Fc 15150 Hz Gain -5.75 dB Q 0.27
