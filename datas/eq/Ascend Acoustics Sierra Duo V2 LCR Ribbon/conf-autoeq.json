@@ -24,7 +24,7 @@
     "slope_estimated_inroom": -6.5,
     "slope_sound_power": -9,
     "smooth_measurements": true,
-    "smooth_window_size": 11,
+    "smooth_window_size": 5,
     "smooth_order": 3,
     "use_grapheq": false,
     "grapheq_name": null,
@@ -46,5 +46,5 @@
     "version": "0.26",
     "level": 30,
     "generate_images_only": false,
-    "output_dir": "/home/pierre/src/spinorama/build/eqs/Ascend Acoustics Sierra Duo V2 LCR Ribbon/Score-7-sw11o3-pk"
+    "output_dir": "/home/pierre/src/spinorama/build/eqs/Ascend Acoustics Sierra Duo V2 LCR Ribbon/Score-7-sw5o3-pk"
 }

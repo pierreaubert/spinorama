@@ -1,14 +1,14 @@
 EQ for Ascend Acoustics Sierra Duo V2 LCR Ribbon computed from Vendors-Ascend Acoustics data
-Preference Score 4.89 with EQ 6.18
+Preference Score 4.89 with EQ 6.17
 Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
-Dated: 2025-02-12-09:09:13
+Dated: 2025-02-15-12:55:52
 
 Preamp: -2.7 dB
 
-Filter  1: ON PK Fc    51 Hz Gain +3.00 dB Q 0.44
-Filter  2: ON PK Fc   125 Hz Gain -3.70 dB Q 1.44
-Filter  3: ON PK Fc   600 Hz Gain -0.79 dB Q 2.97
-Filter  4: ON PK Fc   792 Hz Gain +1.29 dB Q 2.96
-Filter  5: ON PK Fc  1288 Hz Gain -2.72 dB Q 2.98
-Filter  6: ON PK Fc  1333 Hz Gain +1.35 dB Q 1.35
-Filter  7: ON PK Fc 12301 Hz Gain -0.91 dB Q 0.48
+Filter  1: ON PK Fc    54 Hz Gain +3.00 dB Q 0.26
+Filter  2: ON PK Fc   113 Hz Gain -2.53 dB Q 2.16
+Filter  3: ON PK Fc   149 Hz Gain -2.90 dB Q 1.49
+Filter  4: ON PK Fc   820 Hz Gain +2.49 dB Q 2.72
+Filter  5: ON PK Fc  1161 Hz Gain -1.60 dB Q 0.53
+Filter  6: ON PK Fc  1954 Hz Gain +1.65 dB Q 1.46
+Filter  7: ON PK Fc 12736 Hz Gain -0.85 dB Q 0.49

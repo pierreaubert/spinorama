@@ -1,14 +1,14 @@
 EQ for Ascend Acoustics Luna V2 Mini-Monitor Ribbon computed from Vendors-Ascend Acoustics data
-Preference Score 5.16 with EQ 6.35
+Preference Score 5.00 with EQ 6.29
 Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
-Dated: 2025-02-12-09:12:53
+Dated: 2025-02-15-12:59:02
 
 Preamp: -3.0 dB
 
-Filter  1: ON PK Fc    42 Hz Gain +2.92 dB Q 1.07
-Filter  2: ON PK Fc    74 Hz Gain +2.30 dB Q 2.43
-Filter  3: ON PK Fc   125 Hz Gain -1.80 dB Q 1.10
-Filter  4: ON PK Fc   454 Hz Gain +1.24 dB Q 0.73
-Filter  5: ON PK Fc   579 Hz Gain -2.35 dB Q 2.63
-Filter  6: ON PK Fc   849 Hz Gain +1.37 dB Q 2.85
-Filter  7: ON PK Fc  1288 Hz Gain -1.43 dB Q 2.97
+Filter  1: ON PK Fc    58 Hz Gain +3.00 dB Q 0.85
+Filter  2: ON PK Fc   130 Hz Gain -2.93 dB Q 0.89
+Filter  3: ON PK Fc   134 Hz Gain +0.87 dB Q 0.25
+Filter  4: ON PK Fc   579 Hz Gain -2.98 dB Q 2.30
+Filter  5: ON PK Fc  1244 Hz Gain +2.93 dB Q 0.36
+Filter  6: ON PK Fc  1288 Hz Gain -3.35 dB Q 2.10
+Filter  7: ON PK Fc  2862 Hz Gain -2.55 dB Q 1.00

@@ -24,7 +24,7 @@
     "slope_estimated_inroom": -6.5,
     "slope_sound_power": -9,
     "smooth_measurements": true,
-    "smooth_window_size": 7,
+    "smooth_window_size": 9,
     "smooth_order": 3,
     "use_grapheq": false,
     "grapheq_name": null,
@@ -46,5 +46,5 @@
     "version": "0.26",
     "level": 30,
     "generate_images_only": false,
-    "output_dir": "/home/pierre/src/spinorama/build/eqs/Ascend Acoustics Sierra Duo V2 LCR Titan/Score-7-sw7o3-pk"
+    "output_dir": "/home/pierre/src/spinorama/build/eqs/Ascend Acoustics Sierra Duo V2 LCR Titan/Score-7-sw9o3-pk"
 }
