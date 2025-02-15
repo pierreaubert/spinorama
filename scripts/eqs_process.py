@@ -13,7 +13,7 @@ from spinorama.auto_save import get_previous_score
 
 def update_eq(speaker_name, from_dir, to_dir):
     to_path = pathlib.Path(to_dir)
-    to_path.mkdir(mode=0x755, parents=False, exist_ok=True)
+    to_path.mkdir(mode=0o755, parents=False, exist_ok=True)
     for f in ("conf-autoeq.json", "iir.txt", "iir-autoeq.txt"):
         # 3.14
         # pathlib.Path('{}/{}'.format(from_dir, f)).copy_into(to_dir)
