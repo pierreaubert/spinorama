@@ -26,7 +26,7 @@ def ray_setup_logger(level=logging.WARNING):
     """Since ray execution is remote, the logger needs to be instanciated and
     configured in each process
     """
-    custom_file_handler = logging.FileHandler("build/debug_spin.log")
+    custom_file_handler = logging.FileHandler("build/debug_optim.log")
     formatter = logging.Formatter(
         "%(asctime)s - %(filename)s:%(funcName)s:%(lineno)d - %(levelname)s - %(message)s"
     )

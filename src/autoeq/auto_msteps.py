@@ -19,9 +19,9 @@
 from spinorama.ltype import Vector, OptimResult
 from spinorama.filter_peq import Peq
 from spinorama import logger
-from spinorama.auto_geq import optim_grapheq
-from spinorama.auto_greedy import optim_greedy
-from spinorama.auto_global import GlobalOptimizer
+from autoeq.auto_geq import optim_grapheq
+from autoeq.auto_greedy import optim_greedy
+from autoeq.auto_global import GlobalOptimizer
 
 
 def optim_multi_steps(

@@ -25,8 +25,8 @@ import numpy as np
 
 from spinorama.filter_iir import Biquad
 from spinorama.filter_peq import peq_spl
-from spinorama.auto_loss import loss
-from spinorama.auto_biquad import find_best_peak
+from autoeq.auto_loss import loss
+from autoeq.auto_biquad import find_best_peak
 
 
 class BiquadRangeTests(unittest.TestCase):

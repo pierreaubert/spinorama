@@ -21,7 +21,7 @@ import scipy.optimize as opt
 from spinorama import logger
 from spinorama.ltype import DataSpeaker, Vector
 from spinorama.filter_iir import Biquad
-from spinorama.auto_loss import loss
+from autoeq.auto_loss import loss
 
 POPSIZE = 15
 
