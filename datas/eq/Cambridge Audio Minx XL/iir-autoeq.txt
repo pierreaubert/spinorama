@@ -1,0 +1,14 @@
+EQ for Cambridge Audio Minx XL computed from ASR data
+Preference Score 2.88 with EQ 5.34
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-02-16-12:26:58
+
+Preamp: -2.9 dB
+
+Filter  1: ON PK Fc    47 Hz Gain +2.39 dB Q 0.99
+Filter  2: ON PK Fc    92 Hz Gain +2.05 dB Q 1.21
+Filter  3: ON PK Fc   227 Hz Gain -1.15 dB Q 0.96
+Filter  4: ON PK Fc   522 Hz Gain -1.13 dB Q 2.99
+Filter  5: ON PK Fc   910 Hz Gain -3.23 dB Q 2.97
+Filter  6: ON PK Fc  1823 Hz Gain +3.00 dB Q 0.80
+Filter  7: ON PK Fc  7308 Hz Gain -4.06 dB Q 0.50

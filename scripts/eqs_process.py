@@ -45,15 +45,16 @@ def process(speaker: str, metadata: dict):
             best_eq = eqname
     if best_eq is not None:
         meta = metadata.get(speaker_name)
-        if meta is None:
-            print("no metadata for {}".format(speaker_name))
-            return
-        meta_default = meta["default_measurement"]
-        measurement = meta["measurements"][meta_default]
-        noeq_pref_rating = measurement.get("pref_rating")
+        noeq_pref_rating = None
         noeq_score = -10.0
-        if noeq_pref_rating is not None:
-            noeq_score = noeq_pref_rating.get("pref_score")
+        if meta is None:
+            print("warning: no metadata for {}".format(speaker_name))
+        else:
+            meta_default = meta["default_measurement"]
+            measurement = meta["measurements"][meta_default]
+            noeq_pref_rating = measurement.get("pref_rating")
+            if noeq_pref_rating is not None:
+                noeq_score = noeq_pref_rating.get("pref_score")
         print(
             "EQ: new {:4.2f} prev eq {:4.2f} noeq {:4.2f} {}".format(
                 best_score, prev_score, noeq_score, speaker_name

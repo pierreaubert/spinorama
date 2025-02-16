@@ -497,7 +497,7 @@ def plot_spinorama_traces(
                     opacity=1,
                     visible=FLAG_FEATURE_VISIBLE,
                     showlegend=True,
-                    name='{} slope'.format(measurement),
+                    name="{} slope".format(measurement),
                 )
             )
         if (

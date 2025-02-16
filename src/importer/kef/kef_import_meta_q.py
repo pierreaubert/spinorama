@@ -61,16 +61,16 @@ def interpolate2(
         s = y - x
         return [on_axis_spl[idx_low + i] + i * s / (l - 1) for i in range(l)]
 
-    for curve in kef:
+    for curve, measurement in kef.items():
         # data from KEF valid above cut_freq
         if curve == "On Axis":
-            merged[curve] = kef[curve]
+            merged[curve] = measurement
         else:
-            curve_freq = kef[curve][0]
+            curve_freq = measurement[0]
             idx_300 = 0
             while curve_freq[idx_300] < cut_freq_high:
                 idx_300 += 1
-            curve_spl = kef[curve][1]
+            curve_spl = measurement[1]
             # print('debug {} freq=[{},{}] spl=[{}, {}]'.format(curve, min(curve_freq), max(curve_freq), min(curve_spl), max(curve_spl)))
             freq = [f for f in on_axis_freq[0:idx_high]] + [f for f in curve_freq[idx_300:]]
             spl = (

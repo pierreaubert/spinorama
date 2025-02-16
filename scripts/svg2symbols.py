@@ -41,6 +41,6 @@ if __name__ == "__main__":
         for svg_file in svg_files:
             with open(svg_file, "r") as fd:
                 lines = fd.read()
-                xml = ET.fromstring(lines)
+                xml = ET.fromstring(lines)  # noqa: S314
                 process(svg_file, xml)
     xml_post()

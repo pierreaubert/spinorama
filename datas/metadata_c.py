@@ -16,6 +16,35 @@ speakers_info_c: SpeakerDatabase = {
             },
         },
     },
+    "Cambridge Audio Minx XL": {
+        "brand": "Cambridge Audio",
+        "model": "Minx XL",
+        "type": "passive",
+        "price": "300",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/cambridge-audio-minx-xl-speaker-review.60824/",
+                },
+                "review_published": "20250216",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 8,
+                    "size": {
+                        "height": 225,
+                        "width": 161,
+                        "depth": 240,
+                    },
+                    "weight": 3.0,
+                },
+            },
+        },
+    },
     "Canon S-50": {
         "brand": "Canon",
         "model": "S-50",

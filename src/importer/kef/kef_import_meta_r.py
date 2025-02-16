@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
+
 from pathlib import Path
 from shutil import copy
 import sys
@@ -52,12 +56,12 @@ def interpolate(kef: dict[str, list[float]], cut_freq_high: float) -> dict[str, 
     idx_high = idx_low + 1
     while kef["freq"][idx_high] < cut_freq_high:
         idx_high += 1
-    for curve in kef:
+    for curve, measurement in kef.items():
         if curve == "freq":
             merged[curve] = kef["freq"]
             continue
         # data from KEF valid above cut_freq
-        spl_kef = kef[curve]
+        spl_kef = measurement
         if curve == "On Axis":
             merged[curve] = spl_kef
             continue

@@ -24,7 +24,7 @@ repos:
     -   id: csslint
         stages: [pre-commit, pre-push]
 -   repo: https://github.com/pre-commit/mirrors-eslint
-    rev: 'v9.17.0'  # Use the sha / tag you want to point at
+    rev: 'v9.20.1'  # Use the sha / tag you want to point at
     hooks:
     -   id: eslint
         additional_dependencies:
@@ -39,7 +39,7 @@ repos:
         types_or: [javascript]
         stages: [pre-commit, pre-push]
 -   repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 'v0.8.5' # version
+    rev: 'v0.9.6' # version
     hooks:
     -   id: ruff
         types_or: [ python, pyi ]
