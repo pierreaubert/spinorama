@@ -5,10 +5,10 @@ requires = ["setuptools", "wheel", "Cython"]
 name = "spinorama"
 description = "Spinorama computes speaker measurements"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = "==3.12"
 license = "GPL"
 authors = [
-    { name = "Pierre Aubert", email = "pierre0aubert@gmail.com" },
+    { name = "Pierre Aubert", email = "pierre@spinorama.org" },
 ]
 
 [project.urls]
@@ -24,62 +24,35 @@ typeCheckingMode = 'basic'
 pythonVersion = "3.12"
 pythonPlatform = "Linux"
 
+[tool.flake8]
+max-line-length = 100
+exclude = [
+    ".git",
+    "__pycache__",
+    "datas/measurements",
+    "dist",
+    "build"
+]
+extend-ignore = [
+    "E203"
+]
+
 [tool.ruff]
 line-length = 100
 
-#   F Pyflakes
-# E/W pycodestyle
-# C90 mccabe
-#   I isort
-#   N pep8-naming
-#   D pydocstyle
-#  UP pyupgrade
-# YTT flake8-2020
-# ANN flake8-annotations
-#   S flake8-bandit
-# BLE flake8-blind-except
-# FBT flake8-boolean-trap
-#   B flake8-bugbear
-#   A flake8-builtins
-# COM flake8-commas
-#  C4 flake8-comprehensions
-# DTZ flake8-datetimez
-# T10 flake8-debugger
-#  DJ flake8-django
-#  EM flake8-errmsg
-# EXE flake8-executable
-# ISC flake8-implicit-str-concat
-# ICN flake8-import-conventions
-#   G flake8-logging-format
-# INP flake8-no-pep420
-# PIE flake8-pie
-# T20 flake8-print
-# PYI flake8-pyi
-#  PT flake8-pytest-style
-#   Q flake8-quotes
-# RSE flake8-raise
-# RET flake8-return
-# SLF flake8-self
-# SIM flake8-simplify
-# TID flake8-tidy-imports
-# TCH flake8-type-checking
-# ARG flake8-unused-arguments
-# PTH flake8-use-pathlib
-# ERA eradicate
-#  PD pandas-vet
-# PGH pygrep-hooks
-#  PL Pylint
-# TRY tryceratops
-# NPY NumPy-specific rules
-# RUF Ruff-specific rules
-
-lint.select = ["F", "N", "YTT", "S", "B", "FBT", "EM", "ISC", "EXE", "G", "Q", "T20", "SIM", "PD", "PL", "TRY", "NPY", "RUF"]
+lint.select = ["N", "YTT", "S", "B", "FBT", "EM", "ISC", "EXE", "G", "Q", "T20", "SIM", "PD", "PL", "TRY", "NPY", "RUF"]
 lint.ignore = [
        "PLR",
        "T20",
        "ISC001",
+       "FBT001",
+       "FBT003"
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
-lint.fixable = ["F", "N", "YTT", "S", "B", "FBT", "EM", "ISC", "EXE", "G", "Q", "T20", "SIM", "PD", "PL", "TRY", "NPY", "RUF"]
+lint.fixable = ["N", "YTT", "S", "B", "FBT", "EM", "ISC", "EXE", "G", "Q", "T20", "SIM", "PD", "PL", "TRY", "NPY", "RUF"]
 lint.unfixable = []
+
+[tool.sonar]
+projectKey = "spinorama"
+sources = "src"

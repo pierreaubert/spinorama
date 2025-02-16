@@ -16,6 +16,35 @@ speakers_info_c: SpeakerDatabase = {
             },
         },
     },
+    "Cambridge Audio Minx XL": {
+        "brand": "Cambridge Audio",
+        "model": "Minx XL",
+        "type": "passive",
+        "price": "300",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/cambridge-audio-minx-xl-speaker-review.60824/",
+                },
+                "review_published": "20250216",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 8,
+                    "size": {
+                        "height": 225,
+                        "width": 161,
+                        "depth": 240,
+                    },
+                    "weight": 3.0,
+                },
+            },
+        },
+    },
     "Canon S-50": {
         "brand": "Canon",
         "model": "S-50",
@@ -423,6 +452,33 @@ speakers_info_c: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/css-criton-1td-x-kit-speaker-review.41923/",
                 "review_published": "20230211",
+            },
+        },
+    },
+    "CSS Criton 3TD-X DIY": {
+        "brand": "CSS",
+        "model": "Criton 3TD-X DIY",
+        "type": "passive",
+        "price": "2000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/css-criton-3td-x-kit-speaker-review.58467/",
+                "review_published": "20241113",
+                "specifications": {
+                    "sensitivity": 87.8,
+                    "impedance": 4,
+                    "size": {
+                        "height": 1054,
+                        "width": 216,
+                        "depth": 342,
+                    },
+                    "weight": 31.7,
+                },
             },
         },
     },

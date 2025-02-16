@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // A library to display spinorama charts
 //
-// Copyright (C) 2020-2024 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+// Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ function processOrigin(origin) {
 
 function processGraph(name) {
     if (name.includes('CEA2034')) {
-        return 'CEA2034';
+        return name;
     } else if (name.includes('Globe')) {
         return name.replace('Globe', 'Contour');
     }
@@ -68,8 +68,8 @@ function getVersion(metaSpeakers, speaker, origin, version) {
     return version;
 }
 
-function getSpeakerUrl(metaSpeakers, graph, speaker, origin, version) {
-    // console.log('getSpeakerUrl ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version=' + version)
+function constructSpeakerUrl(metaSpeakers, graph, speaker, origin, version) {
+    // console.log('constructSpeakerUrl ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version=' + version)
     const url =
         urlSite +
         'speakers/' +
@@ -87,10 +87,16 @@ function getSpeakerUrl(metaSpeakers, graph, speaker, origin, version) {
 export function getSpeakerData(metaSpeakers, graph, speaker, origin, version) {
     // console.log('getSpeakerData ' + graph + ' speaker=' + speaker + ' origin=' + origin + ' version=' + version)
 
-    const url = getSpeakerUrl(metaSpeakers, graph, speaker, origin, version);
+    const url = constructSpeakerUrl(metaSpeakers, graph, speaker, origin, version);
     // console.log('fetching url=' + url)
     const spec = fetch(url, { headers: { 'Accept-Encoding': 'bz2, gzip, deflate', 'Content-Type': 'application/json' } })
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                console.log('ERROR getSpeaker failed for ' + url + 'with error: ' + response.status);
+                return null;
+            }
+            return response.json();
+        })
         .catch((error) => {
             console.log('ERROR getSpeaker failed for ' + url + 'with error: ' + error);
             return null;
@@ -129,20 +135,16 @@ export function getAllSpeakers(table) {
 function fetchDataAndMap(url, encoding, state) {
     // console.log('fetching url=' + url + ' encoding=' + encoding);
     const spec = fetch(url, { headers: { 'Accept-Encoding': encoding, 'Content-Type': 'application/json' } })
-        .catch((error) => {
-            console.log('ERROR fetchData for ' + url + ' ' + error);
-            return null;
-        })
         .then((response) => {
-            if (response.ok) {
-                return response.json();
+            if (!response.ok) {
+                console.log('ERROR fetchData for ' + url + ' yield a ' + response.status);
+                return null;
             }
             if (state === 1 && response.status === 404) {
                 const newUrl = updateCache(url);
                 return fetchDataAndMap(newUrl, encoding, 2);
             }
-            console.log('ERROR fetchData for ' + url + ' failed: ' + response.status);
-            return null;
+            return response.json();
         })
         .catch((error) => {
             console.log('ERROR fetchData for ' + url + ' yield a json error: ' + error);

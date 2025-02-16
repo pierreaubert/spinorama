@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ from spinorama.compute_scores import octave
 from spinorama.filter_peq import Peq, peq_spl
 from spinorama.filter_scores import scores_apply_filter
 from spinorama.filter_peq import peq_apply_measurements
-from spinorama.load_misc import graph_melt
+from spinorama.misc import graph_melt
 from spinorama.auto_misc import have_full_measurements
 
 # cython import

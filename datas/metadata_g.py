@@ -74,6 +74,43 @@ speakers_info_g: SpeakerDatabase = {
             },
         },
     },
+    "Genelec 1031A": {
+        "brand": "Genelec",
+        "model": "1031A",
+        "type": "active",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "audiorekr": "https://audiore.kr/genelec-1031a-%eb%a6%ac%eb%b7%b0/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/genelec-1031a-measurements-review.49907/",
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+                "specifications": {
+                    "SPL": {
+                        "max": 110,
+                        "peak": 120,
+                    },
+                    "size": {
+                        "height": 395,
+                        "width": 250,
+                        "depth": 290,
+                    },
+                    "weight": 12.7,
+                },
+                "review_published": "20250125",
+                "notes": "Data is valid above ~200Hz.",
+            },
+        },
+    },
     "Genelec 1032A": {
         "brand": "Genelec",
         "model": "1032A",
@@ -506,7 +543,14 @@ speakers_info_g: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-Genelec",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 1,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 5,
+                    "min_valid_freq": 100,
+                    "max_valid_freq": 20000,
+                },
                 "quality": "low",
                 "notes": "{}".format(note_genelec_gll),
                 "review_published": "20220918",
@@ -690,16 +734,30 @@ speakers_info_g: SpeakerDatabase = {
         "price": "90",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "misc-napilopez",
+        "default_measurement": "asr",
         "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/google-nest-audio-speaker-review.58134/",
+                    "asr2": "https://www.audiosciencereview.com/forum/index.php?threads/google-nest-audio-spinorama-and-measurements.16464/",
+                    "tnw": "https://thenextweb.com/news/review-googles-nest-audio-is-a-legit-good-speaker-and-i-have-the-data-to-prove-it",
+                },
+                "specifications": {
+                    "size": {
+                        "height": 175,
+                        "width": 124,
+                        "depth": 78,
+                    },
+                    "weight": 1.2,
+                },
+                "review_published": "20241102",
+            },
             "misc-napilopez": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
                 "quality": "low",
-                "reviews": {
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/google-nest-audio-spinorama-and-measurements.16464/",
-                    "tnw": "https://thenextweb.com/news/review-googles-nest-audio-is-a-legit-good-speaker-and-i-have-the-data-to-prove-it",
-                },
             },
         },
     },

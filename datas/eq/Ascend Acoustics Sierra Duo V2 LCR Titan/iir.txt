@@ -1,0 +1,14 @@
+EQ for Ascend Acoustics Sierra Duo V2 LCR Titan computed from Vendors-Ascend Acoustics data
+Preference Score 5.17 with EQ 6.25
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-02-15-12:56:52
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    46 Hz Gain +2.91 dB Q 0.89
+Filter  2: ON PK Fc    80 Hz Gain +2.84 dB Q 2.71
+Filter  3: ON PK Fc   125 Hz Gain -3.12 dB Q 1.14
+Filter  4: ON PK Fc   279 Hz Gain +1.11 dB Q 0.84
+Filter  5: ON PK Fc   792 Hz Gain +1.98 dB Q 2.77
+Filter  6: ON PK Fc  1381 Hz Gain -1.49 dB Q 0.32
+Filter  7: ON PK Fc  2765 Hz Gain +2.12 dB Q 0.99

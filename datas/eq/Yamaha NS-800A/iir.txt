@@ -1,0 +1,14 @@
+EQ for Yamaha NS-800A computed from ErinsAudioCorner data
+Preference Score 4.46 with EQ 6.65
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-02-12-15:27:37
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    31 Hz Gain +2.73 dB Q 1.47
+Filter  2: ON PK Fc    67 Hz Gain +2.63 dB Q 1.70
+Filter  3: ON PK Fc   144 Hz Gain -1.02 dB Q 2.44
+Filter  4: ON PK Fc   190 Hz Gain -0.90 dB Q 1.38
+Filter  5: ON PK Fc   560 Hz Gain +2.47 dB Q 2.86
+Filter  6: ON PK Fc   643 Hz Gain -3.39 dB Q 2.92
+Filter  7: ON PK Fc 16239 Hz Gain -8.29 dB Q 0.50

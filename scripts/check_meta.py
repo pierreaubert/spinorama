@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,6 +30,12 @@ import sys
 
 from datas import metadata, Speaker, SpeakerDatabase, Measurement
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[logging.StreamHandler()],
+)
+
 
 def sanity_check_brand(name: str, speaker: Speaker) -> int:
     """check if name include brand"""
@@ -40,6 +46,8 @@ def sanity_check_brand(name: str, speaker: Speaker) -> int:
     if name[0 : len(brand)] != brand:
         logging.error("%s doesn't start with %s", name, brand)
         return 1
+    if brand[-1] == " ":
+        logging.info("Suspicious space at the end of brand >%s< >%s<", name, brand)
     return 0
 
 
@@ -84,6 +92,10 @@ def sanity_check_model(name: str, speaker: Speaker) -> int:
     if name[-len(model) :] != model:
         logging.error("%s doesn't end with %s", name, model)
         return 1
+    if model[0] == " ":
+        logging.info(
+            "Suspicious space for speaker >%s< at the beginning of model >%s<", name, model
+        )
     return 0
 
 
@@ -167,9 +179,7 @@ TERM_MIN_SIZE = 2
 
 def sanity_check_version_version(term: str) -> bool:
     """check that version match some pattern"""
-    if len(term) >= TERM_MIN_SIZE and (term[0] != "v" or not term[1].isdecimal()):
-        return False
-    return True
+    return not (len(term) >= TERM_MIN_SIZE and (term[0] != "v" or not term[1].isdecimal()))
 
 
 def sanity_check_version_date(term: str) -> bool:
@@ -190,9 +200,7 @@ def sanity_check_version_pattern(term: str) -> bool:
     if len(sterm) == PATTERN_LENGTH_2 and sterm[0].isdecimal() and sterm[1].isdecimal:
         return True
     # h90xv60
-    if len(sterm) == PATTERN_LENGTH_2 and sterm[0][1:].isdecimal() and sterm[1][1:].isdecimal:
-        return True
-    return False
+    return len(sterm) == PATTERN_LENGTH_2 and sterm[0][1:].isdecimal() and sterm[1][1:].isdecimal
 
 
 VALID_MODIFIERS = (
@@ -272,9 +280,7 @@ def sanity_check_version(version: str) -> int:
 
 def sanity_check_vendor(vendor: str) -> bool:
     """check that vendor is known"""
-    if vendor in metadata.origins_info:
-        return True
-    return False
+    return vendor in metadata.origins_info
 
 
 VALID_SPECIFICATIONS = (
@@ -586,7 +592,7 @@ def sanity_check_measurement(name: str, version: str, measurement: Measurement) 
                 try:
                     datetime.date.fromisoformat(v)
                 except ValueError:
-                    logging.error(
+                    logging.exception(
                         "%s: in measurement %s review_published %s is not a valid ISO date",
                         name,
                         version,

@@ -1,0 +1,16 @@
+EQ for Børresen X3 computed from ErinsAudioCorner data
+Preference Score 2.05 with EQ 5.51
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-11-18-10:10:35
+
+Preamp: -10.4 dB
+
+Filter  1: ON PK Fc    27 Hz Gain +8.69 dB Q 1.05
+Filter  2: ON PK Fc    74 Hz Gain -10.43 dB Q 3.28
+Filter  3: ON PK Fc   102 Hz Gain +1.72 dB Q 2.58
+Filter  4: ON PK Fc   243 Hz Gain +3.96 dB Q 3.56
+Filter  5: ON PK Fc   289 Hz Gain +9.97 dB Q 5.92
+Filter  6: ON PK Fc   321 Hz Gain -7.84 dB Q 5.99
+Filter  7: ON PK Fc   409 Hz Gain +2.32 dB Q 0.82
+Filter  8: ON PK Fc   792 Hz Gain -1.86 dB Q 4.15
+Filter  9: ON PK Fc  1161 Hz Gain -1.46 dB Q 3.30

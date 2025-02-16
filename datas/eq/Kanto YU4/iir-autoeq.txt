@@ -1,0 +1,14 @@
+EQ for Kanto YU4 computed from ErinsAudioCorner data
+Preference Score 2.86 with EQ 5.18
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-11-17-10:37:41
+
+Preamp: -2.4 dB
+
+Filter  1: ON PK Fc    69 Hz Gain +2.95 dB Q 1.19
+Filter  2: ON PK Fc   121 Hz Gain -3.77 dB Q 1.60
+Filter  3: ON PK Fc   149 Hz Gain -0.23 dB Q 1.71
+Filter  4: ON PK Fc   235 Hz Gain +0.42 dB Q 2.79
+Filter  5: ON PK Fc   424 Hz Gain +2.66 dB Q 0.55
+Filter  6: ON PK Fc  1202 Hz Gain -5.21 dB Q 2.04
+Filter  7: ON PK Fc  1642 Hz Gain +2.99 dB Q 3.00

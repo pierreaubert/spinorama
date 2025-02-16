@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // A library to display spinorama charts
 //
-// Copyright (C) 2020-23 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+// Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -61,10 +61,9 @@ getMetadata()
                     for (let i = 0; i < graphs.length - 1; i++) {
                         let graphOptions = [null];
                         const currentGraphs = [graphs[0], graphs[i + 1]];
-                        // const currentNames = [speakersName[0], speakersName[i + 1]];
                         const currentNames = [speakersName[0] + ' v.s. ' + speakersName[i + 1], speakersName[i + 1]];
                         if (measurement === 'CEA2034') {
-                            graphOptions = setCEA2034(currentNames, currentGraphs, windowWidth, windowHeight);
+                            graphOptions = setCEA2034(measurement, currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (
                             measurement === 'On Axis' ||
                             measurement === 'Estimated In-Room Response' ||
@@ -76,39 +75,55 @@ getMetadata()
                             measurement === 'Horizontal Reflections' ||
                             measurement === 'Vertical Reflections'
                         ) {
-                            graphOptions = setGraph(currentNames, currentGraphs, windowWidth, windowHeight);
+                            graphOptions = setGraph(measurement, currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (measurement === 'SPL Horizontal Radar' || measurement === 'SPL Vertical Radar') {
-                            graphOptions = setRadar(currentNames, currentGraphs, windowWidth, windowHeight);
+                            graphOptions = setRadar(measurement, currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (
                             measurement === 'SPL Horizontal Contour' ||
                             measurement === 'SPL Vertical Contour' ||
                             measurement === 'SPL Horizontal Contour Normalized' ||
                             measurement === 'SPL Vertical Contour Normalized'
                         ) {
-                            graphOptions = setContour(currentNames, currentGraphs, windowWidth, windowHeight);
+                            graphOptions = setContour(measurement, currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (
                             measurement === 'SPL Horizontal 3D' ||
                             measurement === 'SPL Vertical 3D' ||
                             measurement === 'SPL Horizontal 3D Normalized' ||
                             measurement === 'SPL Vertical 3D Normalized'
                         ) {
-                            graphOptions = setSurface(currentNames, currentGraphs, windowWidth, windowHeight);
+                            graphOptions = setSurface(measurement, currentNames, currentGraphs, windowWidth, windowHeight);
                         } else if (
                             measurement === 'SPL Horizontal Globe' ||
                             measurement === 'SPL Vertical Globe' ||
                             measurement === 'SPL Horizontal Globe Normalized' ||
                             measurement === 'SPL Vertical Globe Normalized'
                         ) {
-                            graphOptions = setGlobe(currentNames, currentGraphs, windowWidth, windowHeight);
+                            graphOptions = setGlobe(measurement, currentNames, currentGraphs, windowWidth, windowHeight);
                         }
                         if (graphOptions?.length === 1) {
-                            Plotly.newPlot('plot' + i, graphOptions[0]);
+                            let options = graphOptions[0];
+                            options.layout.title = currentNames[0];
+                            Plotly.newPlot('plot' + i, options);
+                        } else if (graphOptions?.length === 2) {
+                            if (i === 0) {
+                                let options0 = graphOptions[0];
+                                options0.layout.title = speakersName[0];
+                                Plotly.newPlot('plot0', options0);
+                                let options1 = graphOptions[1];
+                                options1.layout.title = speakersName[1];
+                                Plotly.newPlot('plot1', options1);
+                            } else {
+                                const pos = i + 1;
+                                let options = graphOptions[1];
+                                options.layout.title = speakersName[pos];
+                                Plotly.newPlot('plot' + pos, options);
+                            }
                         }
                     }
                     return null;
                 });
             }
-            run();
+            return run();
         }
 
         function buildInitSpeakers(speakers) {

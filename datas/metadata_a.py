@@ -2,6 +2,70 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_a: SpeakerDatabase = {
+    "Aalto Speakers Aalto 1 EVO": {
+        "brand": "Aalto Speakers",
+        "model": "Aalto 1 EVO",
+        "type": "active",
+        "price": "1000",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor-v2-20241215",
+        "measurements": {
+            "vendor-v2-20241215": {
+                "origin": "Vendors-Aalto Speakers",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "vendor": "",
+                },
+                "review_published": "20241215",
+                "specifications": {
+                    "sensitivity": 81.5,
+                    "impedance": 3.3,
+                    "size": {
+                        "height": 242,
+                        "width": 132,
+                        "depth": 208,
+                    },
+                    "weight": 2.4,
+                },
+            },
+            "vendor-v1-20241207": {
+                "origin": "Vendors-Aalto Speakers",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "review_published": "20241206",
+            },
+        },
+    },
+    "Aalto Speakers Aalto 9": {
+        "brand": "Aalto Speakers",
+        "model": "Aalto 9",
+        "type": "active",
+        "price": "30000",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Aalto Speakers",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "vendor": "",
+                },
+                "review_published": "20241230",
+                # "specifications": {
+                #    "size": {
+                #        "height": 242,
+                #        "width": 132,
+                #        "depth": 208,
+                #    },
+                #    "weight": 2.4,
+                # },
+            },
+        },
+    },
     "Acoustic Energy AE100 Mk2": {
         "brand": "Acoustic Energy",
         "model": "AE100 Mk2",
@@ -163,6 +227,36 @@ speakers_info_a: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/adam-t8v-studio-monitor-review.17118/",
                 "review_published": "20201028",
+            },
+        },
+    },
+    "ADS L520": {
+        "brand": "ADS",
+        "model": "L520",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-mab",
+        "measurements": {
+            "misc-mab": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/ads-l520-vintage-speaker-measurements.58690/#post-2144542",
+                },
+                "review_published": "20241123",
+                "specifications": {
+                    "sensitivity": 92,
+                    "impedance": 6,
+                    "size": {
+                        "height": 517,
+                        "width": 298,
+                        "depth": 241,
+                    },
+                    "weight": 14.0,
+                },
             },
         },
     },
@@ -709,6 +803,7 @@ speakers_info_a: SpeakerDatabase = {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/spinorama-measurements-of-a-19-center-speaker-andersson-pure-acoustics.55029/#post-2002105",
                 },
                 "review_published": "20240616",
+                "symmetry": "vertical",
                 "specifications": {
                     "sensitivity": 89,
                     "impedance": 8,
@@ -1385,6 +1480,33 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "Ascend Acoustics HTM-200SE2": {
+        "brand": "Ascend Acoustics",
+        "model": "HTM-200SE2",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "184",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Ascend Acoustics",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "review_published": "20250209",
+                "specifications": {
+                    "impedance": 8,
+                    "sensitivity": 90.0,
+                    "size": {
+                        "height": 279,
+                        "width": 165,
+                        "depth": 162,
+                    },
+                    "weight": 4.5,
+                },
+            },
+        },
+    },
     "Ascend Acoustics Luna Mini-Monitor": {
         "brand": "Ascend Acoustics",
         "model": "Luna Mini-Monitor",
@@ -1399,6 +1521,60 @@ speakers_info_a: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-luna-mini-monitor-review.17181/#post-556036",
                 "review_published": "20201031",
+            },
+        },
+    },
+    "Ascend Acoustics Luna V2 Mini-Monitor Ribbon": {
+        "brand": "Ascend Acoustics",
+        "model": "Luna V2 Mini-Monitor Ribbon",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "1248",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Ascend Acoustics",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "review_published": "20250209",
+                "specifications": {
+                    "impedance": 8,
+                    "sensitivity": 86.0,
+                    "size": {
+                        "height": 270,
+                        "width": 146,
+                        "depth": 152,
+                    },
+                    "weight": 3.75,
+                },
+            },
+        },
+    },
+    "Ascend Acoustics Luna V2 Mini-Monitor Titan": {
+        "brand": "Ascend Acoustics",
+        "model": "Luna V2 Mini-Monitor Titan",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "1248",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Ascend Acoustics",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "review_published": "20250209",
+                "specifications": {
+                    "impedance": 8,
+                    "sensitivity": 86.0,
+                    "size": {
+                        "height": 270,
+                        "width": 146,
+                        "depth": 152,
+                    },
+                    "weight": 3.75,
+                },
             },
         },
     },
@@ -1422,6 +1598,60 @@ speakers_info_a: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/ascend-sierra-luna-duo-center-main-speaker-review.17259/",
                 "review_published": "20201103",
+            },
+        },
+    },
+    "Ascend Acoustics Sierra Duo V2 LCR Ribbon": {
+        "brand": "Ascend Acoustics",
+        "model": "Sierra Duo V2 LCR Ribbon",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "1688",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Ascend Acoustics",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "review_published": "20250209",
+                "specifications": {
+                    "impedance": 8,
+                    "sensitivity": 89.0,
+                    "size": {
+                        "height": 412,
+                        "width": 146,
+                        "depth": 152,
+                    },
+                    "weight": 5.4,
+                },
+            },
+        },
+    },
+    "Ascend Acoustics Sierra Duo V2 LCR Titan": {
+        "brand": "Ascend Acoustics",
+        "model": "Sierra Duo V2 LCR Titan",
+        "type": "passive",
+        "shape": "bookshelves",
+        "price": "1688",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Ascend Acoustics",
+                "format": "spl_hv_txt",
+                "quality": "high",
+                "review_published": "20250209",
+                "specifications": {
+                    "impedance": 8,
+                    "sensitivity": 89.0,
+                    "size": {
+                        "height": 412,
+                        "width": 146,
+                        "depth": 152,
+                    },
+                    "weight": 5.4,
+                },
             },
         },
     },
@@ -1782,6 +2012,44 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
+    "ATC SCM20SL MK2": {
+        "brand": "ATC",
+        "model": "SCM20SL MK2",
+        "type": "passive",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {"audiorekr": "https://audiore.kr/atc-scm20sl-mk2-%eb%a6%ac%eb%b7%b0/"},
+                "review_published": "20250125",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+                "specifications": {
+                    "impedance": 5.5,
+                    "dispersion": {
+                        "horizontal": 80,
+                        "vertical": 10,
+                    },
+                    "SPL": {
+                        "peak": 108,
+                    },
+                    "size": {
+                        "height": 440,
+                        "width": 239,
+                        "depth": 336,
+                    },
+                    "weight": 18,
+                },
+                "notes": "Data is valid above ~200Hz.",
+            },
+        },
+    },
     "Atlantic Technology 8600eLR Tower": {
         "brand": "Atlantic Technology",
         "model": "8600eLR Tower",
@@ -1839,7 +2107,6 @@ speakers_info_a: SpeakerDatabase = {
         },
     },
     "Audio Engine A2+": {
-        "skip": True,
         "brand": "Audio Engine",
         "model": "A2+",
         "type": "active",
@@ -1855,7 +2122,7 @@ speakers_info_a: SpeakerDatabase = {
                     "eac": "",
                     "yt": "https://youtu.be/mAMv_ueINlk?si=eGu5yNVAlAJ1encX",
                 },
-                "review_published": "2024xxxx",
+                "review_published": "20250114",
                 "specifications": {
                     "size": {
                         "height": 159,
@@ -1881,6 +2148,55 @@ speakers_info_a: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/audioengine-a5-powered-speaker-review.13803/",
                 "review_published": "20200531",
+            },
+        },
+    },
+    "Audio First Design Fidelia": {
+        "brand": "Audio First Design",
+        "model": "Fidelia",
+        "type": "passive",
+        "price": "1200",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "https://www.youtube.com/watch?v=HKrm19_asro",
+                },
+                "review_published": "20250114",
+                "specifications": {
+                    "sensitivity": 84,
+                    "impedance": 3.2,
+                    "size": {
+                        "height": 300,
+                        "width": 180,
+                        "depth": 297.6,
+                    },
+                    "weight": 6.8,
+                },
+            },
+            "vendor": {
+                "origin": "Vendors-Audio First Design",
+                "format": "webplotdigitizer",
+                "quality": "low",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://www.youtube.com/watch?v=HKrm19_asro",
+                },
+                "review_published": "20241206",
+                "specifications": {
+                    "sensitivity": 84,
+                    "impedance": 3.2,
+                    "size": {
+                        "height": 300,
+                        "width": 180,
+                        "depth": 297.6,
+                    },
+                    "weight": 6.8,
+                },
             },
         },
     },

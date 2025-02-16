@@ -1,0 +1,178 @@
+---
+title: "Spinorama.org"
+
+date: 2025-02-02
+
+abstract: >
+  Help for the spinorama.org website. How to understand the graphs? What is a Spinorama? Why you should care?
+
+---
+
+# Measurements
+
+## What is a spinorama set of graphs?
+
+It is a way to understand quickly a speaker properties, how it will sound. It is [defined]("https://shop.cta.tech/products/standard-method-of-measurement-for-in-home-loudspeakers") as a standard from the
+from the US [CTA](https://cta.tech).
+
+Here is an example:
+![Genelec 8341A](https://spinorama.org/speakers/Genelec%208341A/ASR/asr-vertical/CEA2034.jpg)
+
+The spinorama gives you a few graphs:
+
+- *On Axis:*  this the frequency response of the speaker on axis. You expect it to be as flat as possible above 100Hz.
+- *Listening Window:* this an average of various measurements around on axis. The idea is that it is closer to real life since your head is always moving a bit in practice and you are not staying frozen in front on the speakers. It is expected to be close to the previous one, slighlty going down.
+- *Early reflections:* expected to be a smooth, slowy going down
+- *Sound power:* expected to be a smooth, slowy going down line  (slope is greater than Early Reflections for classical speakers).
+- *ERDI and SPDI:* are the difference between the Early
+            Reflection curve and the Listening Window (resp. Sound Power and
+            Listening Window). This should be as straight as possible above 100
+            Hz. If the DI curves are linear, you will be able to correct the
+            frequency aberations of your speaker easily. It is important to
+            understand that a bad directivy cannot be corrected with an IIR eq.
+            The slope of the line gives a good idea of the speaker properties.
+            Note that you will not get a flat line except for speakers designed
+            for this (and they are usually large): they are usually labelled as
+            constant directivity speakers.
+
+The speaker above is *very* good. You can compare with another one:
+
+![Tannoy XT6](https://spinorama.org/speakers/Tannoy%20Revolution%20XT6/ASR/asr/CEA2034.jpg)
+
+which is not flat at all. Remember that &plusmn;3dB means that the
+volume doubles/halves at the corresponding frequency. If you look at
+the on axis measurement below, you see that it going up, the speaker
+will likely be bright and emphasis high frequency.
+
+![Tannoy XT6](https://spinorama.org/speakers/Tannoy%20Revolution%20XT6/ASR/asr/On%20Axis.jpg)
+
+## Please tell me more
+
+### If you like to *read*:
+
+- You can go to the source (<a
+              href="https://shop.cta.tech/products/standard-method-of-measurement-for-in-home-loudspeakers"
+              >the standard document</a
+            >) and starting page 56, you have a good and compact explanation of
+            each curve.
+- This
+            <a
+              href="https://www.audiosciencereview.com/forum/index.php?threads/jbl-305p-mkii-and-control-1-pro-monitors-review.10811/"
+              >post on ASR</a
+            >
+            by
+            <a href="https://www.linkedin.com/in/amir-majidimehr-0014a75/"
+              >Amir Majidimehr</a
+            >
+            gives good insights on how to analyse a spinorama (20 min. read).
+- Another option is this
+            <a
+              href="https://www.audioholics.com/loudspeaker-design/understanding-loudspeaker-measurements"
+              >post on Audioholics</a
+            >
+            by
+            <a href="https://www.audioholics.com/authors/james-larson"
+              >James Larson</a
+            >
+- A reference article is
+            <a
+              href="https://www.audioholics.com/loudspeaker-design/measure-loudspeaker-performance"
+              >Objective Loudspeaker Measurements to Predict Subjective
+              Preferences?</a
+            >
+            written by
+            <a href="https://www.linkedin.com/in/floydtoole/"
+              >Dr. Floyd E. Toole</a
+            >
+            and
+            <a href="https://www.audioholics.com/authors/gene-dellasala"
+              >Gene DellaSala</a
+            >
+            on Audioholics.
+- <a href="https://www.harman.com/documents/AudioScience_0.pdf">Audio-Science in the service of Art</a> from Floyd E. Toole is a good, easy to read summary.
+
+### If you prefer to *watch*:
+
+There is a fine set of videos from <a href="https://www.youtube.com/channel/UCW_IqM21u0J-zsKtCq4Gj2w">ErinsAudioCorner</a> on Youtube:
+
+- <a href="https://www.youtube.com/watch?v=dltza-EGtCg">What Is Frequency Response? || Understanding the Measurements Part 1</a>
+- <a href="https://www.youtube.com/watch?v=j_-b6A1xJaw">Off-Axis vs On-Axis Response || Understanding the Measurements Part 2</a>
+- <a href="https://www.youtube.com/watch?v=b3hYn02uBog">What the heck is SPINORAMA?! || Understanding the Measurements Part 3</a>
+- <a href="https://www.youtube.com/watch?v=qmBit3GWSWE">Predicting Loudspeaker Performance In YOUR Room || Understanding the Measurements Part 4</a
+- <a href="https://www.youtube.com/watch?v=6YY71Wqv2u0&t=2s">Loudspeaker Compression || Understanding the Measurements Part 5</a>
+
+# How to select a speaker?
+
+That is a polemic section, I know, I know.
+
+## Criteria
+
+I believe there are a few criteria in whatever order you want:
+
+- *Price*: Price is not linked to quality (sadly) and is a factor where you are the only judge of the worthiness.
+- *Design*: Design is to each is own. Some like monkey coffins, some like studio monitors, some like big horns, it is up to you
+- *Build quality*: Some brands built to high standars some don't. Do some due diligence.
+- *Support quality*: Who can or will repair your speaker if you have an issue? How long do they store parts? How long is the guarantee? What is covered. It is worth a close look if you buy once in a lifetime expensive speakers.
+- *Tonality*: Here we have more concensus, a lot of people like the same thing.
+To be HIFI, you want to have a speaker with a high tonality score.
+This score takes into account flatness, directivity and how much
+bass you will get.
+- *SPL aka Sound Power level*: How loud do you want your speaker to be? It depends a lot of your room and at which level you want to listen.
+
+  Some examples:
+  - Bedroom 3m x 4m, listening distance &lt;2m, 73dB reference
+      level, +20 dB for peak: 93dB at 1 meter. Around 90dB per
+      speaker.
+  -  Living room 6m x 8m, listening distance &lt;3m, 73dB reference
+      level, +20 dB for peak: 93dB at 1 meter. Around 96dB per
+      speaker.
+  -  Large room or studio 7m x 12m, listening distance &lt;5m, 73dB
+      reference level, +20 dB for peak: 93dB at 1 meter. Around 116dB
+      per speaker.
+- *Bass extension*: Small speakers dont have much bass. You need a subwoofer or a large speaker if you want both deep bass and high volume. New speakers with DSP can produce a lot of bass while being small but not at high volume. If you listen to music only and do not like electronic music, you dont need subwoofers with large speakers.
+
+  Some examples:
+
+    - Bedroom 3m x 4m, one 10 inch subwoofer.
+    - Living room 6m x 8m, one 15 inch subwoofer or two 12 inch subwoofers.
+    - Large room or studio 7m x 12m, two 15 inch subwoofers, may be more.
+
+  You can choose floorstanders or bookshelves with subwoofers. Integration is not easy but very doable especially if you use an AVR. Most people like bass, your neighbourgh may not like  <i>your</i> bass.
+
+## How good is your room?
+
+- Is the room dedicated to music?
+- Is the room symmetrical?
+- Does the room have some absorption?
+- Did you add panels to control reflections?
+- Do you have multiple subwoofers to control bass linearity?
+- Did you measured your speakers in your room?
+- Are you using a room correction software?
+
+If you did not answer yes each times, then you do not need the best speakers in the world and obsessing over scores, SPL etc Great speakers need a great room to reveal all their potential. At the same time, I understand very well the appeal of having a great pair of speakers. Speakers with a high tonality score will be easier to EQ and will adapt well to your room.
+
+## How to interpret the numbers on the landing page?
+
+Each speaker measurement shows up in a box similar to:
+
+![Example for one speaker on the landing page](https://spinorama.org/help_pictures/example_main_page.jpg)
+
+- **Price**: should be self explanatory; it is in USD per speaker not for a pair. The price was the first hit on Google  when I looked it up. It may be different in your country and/or later in time.
+
+- **Tonality**: this is a value between -10 and 10. It is defined in the <a href="https://webstore.ansi.org/standards/cea/cea20342015ansi">CEA2034</a> standard and is computed from the spinorama data: Higher is better.
+
+  - It make sense for tower, bookshelves or center but not for surround, in-wall or column speakers; if you see *** instead of a number, it is to remind you that the score is not valid for some shapes of speakers. If you go to the page of a speaker you will still still see the computed value. It needs to be taken with care. It may "work" for some speakers but not for others. The predicted in-room response assumes a rectangular room with standard reflection and a dipole speaker. All bets are off for a stadium or an omnidirectional speaker.
+  - Note that a difference between two scores is only significant if the difference is greater than 0.6.
+  - Be also mindfull than smoother or less precise data can yield a higher score than an Klippel generated set of data for example. You can easily remove 0.5 to 1.5 to the score for highly smoothed data.
+  - The score does not tell about maximum output or about distorsion. You can get the same score for a portable bluetooth speaker and a large tower.
+  - If you know how to read code, you can find my implementation in Python <a href="https://github.com/pierreaubert/spinorama/blob/master/src/spinorama/compute_cea2034.py">here</a>. There is also a version in Cython which is faster if needed in the same repository.
+
+- **Bass extension**: this is low frequency extension (LFX in short) from a research paper from Olive. It is computed as <a href="https://github.com/pierreaubert/spinorama/blob/3b6e70966e0466328f44f36752cc182f3ae7baae/src/spinorama/compute_scores.py#L110">here</a>. Lower is better.
+
+    Note that it is slighlty different from the frequency of the -3dB point. The rational for using it is:
+
+    - The low frequency extension (LFX) LFX = log10(xSP-6dB.re:y _ LW(300Hz-10kHz) where LFX is the log10 of the first frequency x_SP below 300 Hz  in the sound power curve, that is -6 dB relative to the mean level y_LW  measured in listening window (LW) between 300 Hz-10 kHz.
+    - LFX is log-transformed to produce a linear relationship between the variable LFX and preference rating.
+    - The sound power curve (SP) is used for the calculation because it better defines the true bass output of the loudspeaker, particularly speakers that have rear-firing ports.
+
+- **Flatness**: This is the variation in dB around the average SPL of the on axis measurement between 300Hz and 5kHz. Lower is better.

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ def optim_greedy(
     auto_target: list[Vector],
     auto_target_interp: list[Vector],
     optim_config: dict,
-    use_score: bool,  # noqa: FBT001
+    use_score: bool,
 ) -> tuple[bool, tuple[tuple[int, float, float], Peq]]:
     """Main optimiser: follow a greedy strategy"""
 

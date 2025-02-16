@@ -2,25 +2,23 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_r: SpeakerDatabase = {
-    "Radiant Clarity 6.2": {
-        "skip": True,
-        "brand": "Radiant",
+    "Radiant Acoustics Clarity 6.2": {
+        "brand": "Radiant Acoustics",
         "model": "Clarity 6.2",
         "type": "passive",
         "price": "4000",
         "amount": "pair",
         "shape": "bookshelves",
-        "default_measurement": "eac",
+        "default_measurement": "eac-v1-0-degree",
         "measurements": {
-            "eac": {
-                "origin": "ASR",
+            "eac-v1-0-degree": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "",
-                    "yt": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/radiant_acoustics_clarity62/",
+                    "yt": "https://youtu.be/wV52ek8lUWc?si=Flb48-ZXMJP3ctFd",
                 },
-                "review_published": "2024xxxx",
+                "review_published": "20241117",
                 "specifications": {
                     "sensitivity": 85,
                     "impedance": 4,
@@ -30,6 +28,46 @@ speakers_info_r: SpeakerDatabase = {
                         "depth": 266,
                     },
                     "weight": 12.45,
+                },
+            },
+            "eac-v1-15-degree": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/radiant_acoustics_clarity62/",
+                    "yt": "https://youtu.be/wV52ek8lUWc?si=Flb48-ZXMJP3ctFd",
+                },
+                "review_published": "20241117",
+                "notes": "measured at 15 degrees from facing the speaker",
+            },
+        },
+    },
+    "Rauna Freja": {
+        "brand": "Rauna",
+        "model": "Freja",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-mab",
+        "measurements": {
+            "misc-mab": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/rauna-freja-vintage-2-way-loudspeaker-measurements.50093/page-2#post-2117440",
+                },
+                "review_published": "20241023",
+                "specifications": {
+                    "sensitivity": 88,
+                    "impedance": 7,
+                    "size": {
+                        "height": 805,
+                        "width": 280,
+                        "depth": 320,
+                    },
+                    "weight": 33.0,
                 },
             },
         },
@@ -63,7 +101,14 @@ speakers_info_r: SpeakerDatabase = {
             "vendor-pattern-90x70": {
                 "origin": "Vendors-RCF",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 2.5,
+                    "min_valid_freq": 100,
+                    "max_valid_freq": 16000,
+                },
                 "quality": "low",
                 "review_published": "20230114",
                 "specifications": {
@@ -665,7 +710,7 @@ speakers_info_r: SpeakerDatabase = {
         "brand": "RCF",
         "model": "NX 915-A",
         "type": "active",
-        "price": "",
+        "price": "1000",
         "amount": "each",
         "shape": "liveportable",
         "default_measurement": "vendor-pattern-100x60",
@@ -690,6 +735,72 @@ speakers_info_r: SpeakerDatabase = {
                         "depth": 451,
                     },
                     "weight": 24.1,
+                },
+            },
+        },
+    },
+    "RCF NX 932-A": {
+        "brand": "RCF",
+        "model": "NX 932-A",
+        "type": "active",
+        "price": "1250",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x70",
+        "measurements": {
+            "vendor-pattern-100x70": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20250109",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 70,
+                    },
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 620,
+                        "width": 362,
+                        "depth": 405,
+                    },
+                    "weight": 22.9,
+                },
+            },
+        },
+    },
+    "RCF NX 945-A": {
+        "brand": "RCF",
+        "model": "NX 945-A",
+        "type": "active",
+        "price": "",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x70",
+        "measurements": {
+            "vendor-pattern-100x70": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20250109",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 70,
+                    },
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 705,
+                        "width": 420,
+                        "depth": 451,
+                    },
+                    "weight": 27.3,
                 },
             },
         },
@@ -727,6 +838,138 @@ speakers_info_r: SpeakerDatabase = {
             },
         },
     },
+    "RCF NXL 14-A": {
+        "brand": "RCF",
+        "model": "NXL 14-A",
+        "type": "active",
+        "price": "1200",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x70",
+        "measurements": {
+            "vendor-pattern-100x70": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20241105",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 70,
+                    },
+                    "SPL": {
+                        "peak": 128,
+                    },
+                    "size": {
+                        "height": 576,
+                        "width": 197,
+                        "depth": 270,
+                    },
+                    "weight": 12.8,
+                },
+            },
+        },
+    },
+    "RCF NXL 24-A MK2": {
+        "brand": "RCF",
+        "model": "NXL 24-A MK2",
+        "type": "active",
+        "price": "1777",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x30",
+        "measurements": {
+            "vendor-pattern-100x30": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20250109",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 30,
+                    },
+                    "SPL": {
+                        "peak": 132,
+                    },
+                    "size": {
+                        "height": 1051,
+                        "width": 198,
+                        "depth": 290,
+                    },
+                    "weight": 24.4,
+                },
+            },
+        },
+    },
+    "RCF NXL 44-A MK2": {
+        "brand": "RCF",
+        "model": "NXL 44-A MK2",
+        "type": "active",
+        "price": "2500",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x25",
+        "measurements": {
+            "vendor-pattern-100x25": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20250109",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 25,
+                    },
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 1080,
+                        "width": 297,
+                        "depth": 373,
+                    },
+                    "weight": 33.4,
+                },
+            },
+        },
+    },
+    "RCF NXW 44-A": {
+        "brand": "RCF",
+        "model": "NXW 44-A",
+        "type": "active",
+        "price": "2444",
+        "amount": "each",
+        "shape": "liveportable",
+        "default_measurement": "vendor-pattern-100x50",
+        "measurements": {
+            "vendor-pattern-100x50": {
+                "origin": "Vendors-RCF",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20250109",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 100,
+                        "vertical": 50,
+                    },
+                    "SPL": {
+                        "peak": 135,
+                    },
+                    "size": {
+                        "height": 1080,
+                        "width": 297,
+                        "depth": 373,
+                    },
+                    "weight": 31.55,
+                },
+            },
+        },
+    },
     "Realistic MC-1000": {
         "brand": "Realistic",
         "model": "MC-1000",
@@ -749,12 +992,21 @@ speakers_info_r: SpeakerDatabase = {
         "type": "passive",
         "price": "",
         "shape": "bookshelves",
-        "default_measurement": "misc-archimago",
+        "default_measurement": "misc-mab",
         "measurements": {
+            "misc-mab": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/realistic-minimus-7-measurements.57184/",
+                    "amg": "https://archimago.blogspot.com/2021/01/retro-measure-radio-shack-realistic.html",
+                },
+                "review_published": "20241023",
+            },
             "misc-archimago": {
                 "origin": "Misc",
                 "format": "webplotdigitizer",
-                "review": "https://archimago.blogspot.com/2021/01/retro-measure-radio-shack-realistic.html",
                 "quality": "low",
             },
         },
@@ -1285,20 +1537,38 @@ speakers_info_r: SpeakerDatabase = {
             "asr": {
                 "origin": "ASR",
                 "format": "klippel",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-speaker-review.11884/",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-speaker-review.11884/",
+                    "asr-dominikz": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-quasi-anechoic-spinorama-and-misc-measurements.27076/#post-928962",
+                    "asr-ageve": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-spinorama-measurements-cta-2034.58370/",
+                },
                 "review_published": "20200305",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 6,
+                    "size": {
+                        "height": 370,
+                        "width": 220,
+                        "depth": 370,
+                    },
+                    "weight": 7.26,
+                },
             },
             "misc-dominikz": {
                 "origin": "Misc",
                 "format": "rew_text_dump",
                 "quality": "low",
-                "review": "https://www.audiosciencereview.com/forum/index.php?threads/revel-m16-quasi-anechoic-spinorama-and-misc-measurements.27076/#post-928962",
                 "review_published": "20211002",
             },
             "vendor": {
                 "origin": "Vendors-Revel",
                 "format": "webplotdigitizer",
-                "review": "",
+            },
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "review_published": "20241111",
             },
         },
     },

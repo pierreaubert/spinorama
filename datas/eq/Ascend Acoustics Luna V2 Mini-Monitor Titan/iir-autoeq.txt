@@ -1,0 +1,14 @@
+EQ for Ascend Acoustics Luna V2 Mini-Monitor Titan computed from Vendors-Ascend Acoustics data
+Preference Score 5.34 with EQ 6.60
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-02-15-13:07:45
+
+Preamp: -3.0 dB
+
+Filter  1: ON PK Fc    33 Hz Gain +2.56 dB Q 0.25
+Filter  2: ON PK Fc    80 Hz Gain +2.49 dB Q 0.75
+Filter  3: ON PK Fc   117 Hz Gain -4.20 dB Q 0.86
+Filter  4: ON PK Fc   579 Hz Gain -2.82 dB Q 2.32
+Filter  5: ON PK Fc   942 Hz Gain +2.99 dB Q 0.40
+Filter  6: ON PK Fc  1288 Hz Gain -3.28 dB Q 1.68
+Filter  7: ON PK Fc  2765 Hz Gain -1.23 dB Q 0.44

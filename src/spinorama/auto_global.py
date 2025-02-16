@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -140,6 +140,7 @@ class GlobalOptimizer(object):
         self.max_q = self.config["MAX_Q"]
         self.max_peq = self.config["MAX_NUMBER_PEQ"]
         self.max_iter = self.config["MAX_ITER"]
+        self.current_score = None
 
     def _freq2index(self, f: float):
         return bisect.bisect_left(self.freq_space, f)
@@ -177,6 +178,10 @@ class GlobalOptimizer(object):
             freq = self._index2freq(index_freq)
             peq.append((1.0, Biquad(iir_type, freq, 48000, q, spl)))
         return peq
+
+    def _x2print(self, x: Encoded) -> None:
+        peq = self._x2peq(x)
+        peq_print(peq)
 
     def _x2spl(self, x: Encoded) -> Vector:
         # take a list of encoded filters and return the magnitude of the filter across the freq range
@@ -228,9 +233,10 @@ class GlobalOptimizer(object):
 
     def _opt_peq(self, x: list[float | int]) -> float:
         # for  a given encoded peq, compute a loss function
-        return (
+        self.current_score = (
             self._opt_peq_score(x) if self.config["loss"] == "score_loss" else self._opt_peq_flat(x)
         )
+        return self.current_score
 
     def _opt_bounds_all(self, n: int) -> list[list[int | float]]:
         # compute bounds for variables
@@ -338,20 +344,32 @@ class GlobalOptimizer(object):
             l = len(x) // 4
             for i in range(l):
                 _, f, q, _, _ = self._x2params(x, i)
+                if q > self.max_q or q < self.min_q:
+                    return 1
                 f_hz = self._index2freq(f)
-                if (f_hz > 2000 and q > 1.0) or (f_hz > 3400 and q > 0.5):
+                if (f_hz > 2000 and q > 1.0) or (f_hz > 3500 and q > 0.5):
                     return 1
             return -1
 
         def _opt_constraints_gain(x) -> int:
             # check that total gain at any point in lower that max_db
             l = len(x) // 4
-            m = 0
             for i in range(l):
-                _, f, _, _, _ = self._x2params(x, i)
-                m += self._x2peq(x)[i][1].log_result(f)
-                if np.max(np.clip(m, 0, None)) > self.max_db:
+                _, f, _, g, _ = self._x2params(x, i)
+                # ko if between -min and +min
+                if ((g > 0.0 and (g < self.min_db)) or (g > self.max_db)) or (
+                    g < 0.0 and g > -self.min_db
+                ):
+                    # print("gain {} = {} rejected".format(i, g))
                     return 1
+
+            # check that we do not clip
+            spl = self._x2spl(x)
+            spl_max = np.max(np.clip(spl, 0, None))
+            if spl_max > self.max_db:
+                # print("max gain {} > {} rejected".format(spl_max, self.max_db))
+                # print(spl)
+                return 1
             return -1
 
         def _opt_constraints_freq(x) -> int:
@@ -373,11 +391,11 @@ class GlobalOptimizer(object):
             return -1
 
         def _opt_constraints_all(x) -> int:
-            if (
-                _opt_constraints_freq(x) == 1
-                or _opt_constraints_gain(x) == 1
-                or _opt_constraints_q(x) == 1
-            ):
+            c_freq = _opt_constraints_freq(x) == 1
+            c_gain = _opt_constraints_gain(x) == 1
+            c_q = _opt_constraints_q(x) == 1
+            if c_freq or c_gain or c_q:
+                # print("NL constraints: freq={} gain={} q={}".format(c_freq, c_gain, c_q))
                 return 1
             return -1
 
@@ -387,7 +405,13 @@ class GlobalOptimizer(object):
 
     def _opt_display(self, xk, convergence):
         # comment if you want to print verbose traces
-        print(f"[f={1-convergence}<{CONVERGENCE_TOLERANCE}] iir={self.config['use_all_biquad']}")
+        iir_status = "*" if self.config["use_all_biquad"] else "pk"
+        score_status = (
+            "{:3.1f}".format(self.current_score) if self.current_score is not None else "?"
+        )
+        print(
+            f"[f={1 - convergence}<{CONVERGENCE_TOLERANCE}] iir={iir_status} score={score_status}"
+        )
         peq_print(self._x2peq(xk))
 
     def run(self):

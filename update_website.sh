@@ -1,7 +1,7 @@
 #!/bin/bash
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -58,7 +58,8 @@ fi
 ./scripts/update_pictures.sh
 
 # generate all graphs if some are missing
-rm -fr /tmp/ray
+mkdir -p build/ray
+rm -fr /tmp/ray && ln -s ~/src/spinorama/build/ray /tmp
 command=$(python3 ./generate_graphs.py --dash-ip="$IP")
 status=$?
 if [ $status -ne 0 ]; then
@@ -68,8 +69,8 @@ else
     echo "OK after generate graph!"
 fi
 
-# bug in generate_meta
-rm -f docs/json/*
+# potential bug in generate_meta
+rm -f dist/json/*
 
 # recompute metadata for all speakers
 command=$(python3 ./generate_meta.py  --dash-ip="$IP")
@@ -126,7 +127,7 @@ fi
 
 # generate status
 today="$(date "+%Y-%m-%d")"
-command=$(python3 ./generate_stats.py --print=eq_csv --log-level=ERROR > spinorama.org-${today}.csv 2>&1)
+command=$(python3 ./generate_stats.py --print=eq_csv --log-level=ERROR > build/spinorama.org-${today}.csv 2>&1)
 status=$?
 if [ $status -ne 0 ]; then
     echo "KO after generate statistics in csv!"

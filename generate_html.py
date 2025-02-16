@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ usage: generate_html.py [--help] [--version] [--dev] [--optim] [--sw]\
 Options:
   --help            display usage()
   --version         script version number
-  --sitedev=<http>  default: http://localhost:8000/docs
+  --sitedev=<http>  default: http://localhost:8000/dist
   --dev             if you want to generate the dev websites
   --optim           if you want an optimised built
   --sw              if you want a service worker to be generated
@@ -56,14 +56,14 @@ from generate_common import (
 )
 
 import spinorama.constant_paths as cpaths
-from spinorama.need_update import need_update, write_if_different
+from spinorama.misc import need_update, write_if_different
 
 SITEPROD = "https://www.spinorama.org"
 SITEDEV = "https://dev.spinorama.org"
 CACHE_VERSION = "v5"
 
 
-def get_files(dir, ext):
+def get_files(dir: str, ext: str) -> list[str]:
     """return a list of files matching the extension in a directory, results are stripped of paths and extensions"""
     files = []
     filenames = glob("{}/*.{}".format(dir, ext))
@@ -74,7 +74,7 @@ def get_files(dir, ext):
     return files
 
 
-def get_versions(filename):
+def get_versions(filename: str) -> dict[str, str]:
     """get the current versions for some js libraries"""
     versions = {}
     with open(filename, "r") as fd:
@@ -101,7 +101,7 @@ def get_versions(filename):
     return versions
 
 
-def adapt_imports(jscode, versions, js_files):
+def adapt_imports(jscode, versions: dict[str, str], js_files: list[str], mini: str):
     """ " replace import statements
 
     The source code is compatible with node / vite / vitess.
@@ -125,7 +125,7 @@ def adapt_imports(jscode, versions, js_files):
     re_replacements = [
         (
             r"}} from '\.\/({})\.js';".format("|".join(js_files)),
-            r"}} from '/js/\1-{}.min.js';".format(CACHE_VERSION),
+            r"}} from '/js/\1-{}{}.js';".format(CACHE_VERSION, mini),
         ),
     ]
     code = jscode
@@ -139,6 +139,7 @@ def adapt_imports(jscode, versions, js_files):
 
 FREQ_FILTER = [
     "CEA2034",
+    "CEA2034 Normalized",
     "On Axis",
     "Early Reflections",
     "Estimated In-Room Response",
@@ -192,9 +193,10 @@ def generate_measurement(
         eq_filter = [
             "ref_vs_eq",
         ]
-    eq = {k: dfs[k] for k in eq_filter if k in dfs}
+        # TODO
+        eq = {k: dfs[k] for k in eq_filter if k in dfs}
     # get index.html filename
-    dirname = "{}/{}/".format(cpaths.CPATH_DOCS_SPEAKERS, speaker_name)
+    dirname = "{}/{}/".format(cpaths.CPATH_DIST_SPEAKERS, speaker_name)
     if origin in ("ASR", "Princeton", "ErinsAudioCorner", "Misc"):
         dirname += origin
     else:
@@ -280,6 +282,9 @@ def generate_speaker(
                         speaker_name, key_error
                     )
                 )
+                print("Maybe you forgot to cache the computations? Try running:")
+                print("./generate_graph.py --speaker={} --use-cache".format(key_error))
+                print("./generate_meta.py")
 
 
 def generate_speakers(mako, dataframe, meta, site, use_search, versions):
@@ -309,11 +314,11 @@ def generate_speakers(mako, dataframe, meta, site, use_search, versions):
 def main():
     # create some directories
     for dir in (
-        cpaths.CPATH_DOCS,
-        cpaths.CPATH_DOCS_JS,
-        cpaths.CPATH_DOCS_JS3RD,
-        cpaths.CPATH_DOCS_JSON,
-        cpaths.CPATH_DOCS_CSS,
+        cpaths.CPATH_DIST,
+        cpaths.CPATH_DIST_JS,
+        cpaths.CPATH_DIST_JS3RD,
+        cpaths.CPATH_DIST_JSON,
+        cpaths.CPATH_DIST_CSS,
     ):
         os.makedirs(dir, mode=0o755, exist_ok=True)
 
@@ -345,12 +350,12 @@ def main():
 
     # only build a dictionnary will all graphs
     main_df = {}
-    speakers = glob("{}/*".format(cpaths.CPATH_DOCS_SPEAKERS))
+    speakers = glob("{}/*".format(cpaths.CPATH_DIST_SPEAKERS))
     for speaker in speakers:
         if not os.path.isdir(speaker):
             continue
         # humm annoying
-        speaker_name = speaker.replace(cpaths.CPATH_DOCS_SPEAKERS + "/", "")
+        speaker_name = speaker.replace(cpaths.CPATH_DIST_SPEAKERS + "/", "")
         if speaker_name in ("score", "assets", "stats", "compare", "logos", "pictures"):
             continue
         main_df[speaker_name] = {}
@@ -392,7 +397,7 @@ def main():
             min=".min" if flag_optim else "",
             versions=versions,
         )
-        html_filename = f"{cpaths.CPATH_DOCS}/index.html"
+        html_filename = f"{cpaths.CPATH_DIST}/index.html"
         write_if_different(html_content, html_filename, force=False)
     except KeyError as key_error:
         print("Generating index.html failed with {}".format(key_error))
@@ -412,7 +417,7 @@ def main():
             min=".min" if flag_optim else "",
             versions=versions,
         )
-        eqs_filename = f"{cpaths.CPATH_DOCS}/eqs.html"
+        eqs_filename = f"{cpaths.CPATH_DIST}/eqs.html"
         if isinstance(eqs_content, str):
             write_if_different(eqs_content, eqs_filename, force=False)
         else:
@@ -426,11 +431,11 @@ def main():
     meta_sorted_score = sort_metadata_per_score(meta)
     try:
         for item in (
-            "scores",
-            "help",
             "compare",
-            "statistics",
+            "help",
+            "scores",
             "similar",
+            "statistics",
         ):
             item_name = "{0}.html".format(item)
             logger.info("Write %s", item_name)
@@ -447,7 +452,7 @@ def main():
                 min=".min" if flag_optim else "",
                 versions=versions,
             )
-            item_filename = cpaths.CPATH_DOCS + "/" + item_name
+            item_filename = cpaths.CPATH_DIST + "/" + item_name
             write_if_different(item_content, item_filename, force=False)
 
     except KeyError as key_error:
@@ -503,7 +508,7 @@ def main():
         "spin.svg",
     ]:
         file_in = cpaths.CPATH_DATAS_ICONS + "/" + f
-        file_out = cpaths.CPATH_DOCS + "/pictures/" + f
+        file_out = cpaths.CPATH_DIST + "/pictures/" + f
         shutil.copy(file_in, file_out)
 
     # copy custom css and manifest
@@ -512,11 +517,11 @@ def main():
         ("manifest.json", "/"),
     ]:
         file_in = "{}/{}".format(cpaths.CPATH_WEBSITE, file)
-        file_out = "{}/{}{}".format(cpaths.CPATH_DOCS, sub, file)
+        file_out = "{}/{}{}".format(cpaths.CPATH_DIST, sub, file)
         shutil.copy(file_in, file_out)
 
     # copy css/js files
-    logger.info("Copy js files to %s", cpaths.CPATH_DOCS_JS)
+    logger.info("Copy js files to %s", cpaths.CPATH_DIST_JS)
     for item in (
         "compare",
         "download",
@@ -536,14 +541,14 @@ def main():
         "tabs",
     ):
         try:
-            # remove the ./docs parts
-            len_docs = len("/docs/")
-            metadata_filename = metadata_json_filename[len_docs:]
-            metadata_filename_head = metadata_json_chunks["head"][len_docs:]
+            # remove the ./dist parts
+            len_dist = len("/dist/")
+            metadata_filename = metadata_json_filename[len_dist:]
+            metadata_filename_head = metadata_json_chunks["head"][len_dist:]
             js_chunks = "[{}]".format(
                 ", ".join(
                     [
-                        "'{}'".format(v[len_docs:])
+                        "'{}'".format(v[len_dist:])
                         for k, v in metadata_json_chunks.items()
                         if k != "head"
                     ]
@@ -557,7 +562,9 @@ def main():
             item_post_mako = "{}/{}-1-mako.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             item_post_import = "{}/{}-2-import.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
             item_post_terser = "{}/{}-3-terser.js".format(cpaths.CPATH_BUILD_WEBSITE, item)
-            item_dist = "{}/{}-{}.min.js".format(cpaths.CPATH_DOCS_JS, item, CACHE_VERSION)
+            item_dist = "{}/{}-{}.min.js".format(cpaths.CPATH_DIST_JS, item, CACHE_VERSION)
+            if flag_dev:
+                item_dist = "{}/{}-{}.js".format(cpaths.CPATH_DIST_JS, item, CACHE_VERSION)
 
             # cleanup flow directives: currently unused
             flow_bin = "./node_modules/.bin/flow-remove-types"
@@ -577,7 +584,7 @@ def main():
             # build first generation with metadata expension, now only useful for meta.js
             if item == "meta":
                 item_html = mako_templates.get_template(item_mako_tmpl)
-                eqdata_filename = eqdata_json_filename[len_docs:]
+                eqdata_filename = eqdata_json_filename[len_dist:]
                 item_content = item_html.render(
                     df=main_df,
                     meta=meta_sorted_score,
@@ -594,33 +601,36 @@ def main():
             else:
                 shutil.copy(item_post_flow, item_post_mako)
 
-            # change inport to match prod/dev and browser requirements
+            # change import to match prod/dev and browser requirements
             with open(item_post_mako, "r") as fd:
                 item_content = "".join(fd.readlines())
-                item_content = adapt_imports(item_content, versions, jsfiles)
+                item_content = adapt_imports(
+                    item_content, versions, jsfiles, ".min" if flag_optim else ""
+                )
                 write_if_different(item_content, item_post_import, force=True)
 
             # compress files with terser
-            terser_command = "{0} {1}".format("./node_modules/.bin/terser", item_post_import)
-            # print(terser_command)
-            try:
-                with open(item_post_terser, "w") as item_post_terser_fd:
-                    status = subprocess.run(  # noqa: S603
-                        shlex.split(terser_command),
-                        shell=False,
-                        check=True,
-                        stdout=item_post_terser_fd,
-                    )
-                    if status.returncode != 0:
-                        print("terser failed for item {}".format(item))
-            except subprocess.CalledProcessError as e:
-                print("terser failed for item {} with {}".format(item, e))
+            if flag_optim:
+                terser_command = "{0} {1}".format("./node_modules/.bin/terser", item_post_import)
+                # print(terser_command)
+                try:
+                    with open(item_post_terser, "w") as item_post_terser_fd:
+                        status = subprocess.run(  # noqa: S603
+                            shlex.split(terser_command),
+                            shell=False,
+                            check=True,
+                            stdout=item_post_terser_fd,
+                        )
+                        if status.returncode != 0:
+                            print("terser failed for item {}".format(item))
+                except subprocess.CalledProcessError as e:
+                    print("terser failed for item {} with {}".format(item, e))
 
-            # optimise files with critical
-            # TBD
-
-            # copy last file
-            shutil.copy(item_post_terser, item_dist)
+                # copy last file
+                shutil.copy(item_post_terser, item_dist)
+            else:
+                # copy last file
+                shutil.copy(item_post_import, item_dist)
 
         except KeyError as key_error:
             print("Generating {} js file failed with {}".format(item, key_error))
@@ -639,7 +649,7 @@ def main():
             print("workbox failed!")
 
     # generate robots.txt and sitemap.xml
-    logger.info("Copy robots/sitemap files to %s", cpaths.CPATH_DOCS)
+    logger.info("Copy robots/sitemap files to %s", cpaths.CPATH_DIST)
     try:
         for item_name in (
             "robots.txt",
@@ -655,7 +665,7 @@ def main():
                 min=".min" if flag_optim else "",
                 versions=versions,
             )
-            item_filename = cpaths.CPATH_DOCS + "/" + item_name
+            item_filename = cpaths.CPATH_DIST + "/" + item_name
             # ok for robots but likely doesn't work for sitemap
             write_if_different(str(item_content), item_filename, force=True)
     except KeyError as key_error:
@@ -674,6 +684,7 @@ if __name__ == "__main__":
     skip_speakers = False
     if flag_dev:
         site = SITEDEV
+        flag_optim = False
         if args["--sitedev"] is not None:
             site = args["--sitedev"]
             if len(site) < 4 or site[0:4] != "http":

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -578,6 +578,21 @@ def add_quality(parse_max: int, filters: dict):
             metadata.speakers_info[speaker_name]["measurements"][version]["quality"] = quality
 
 
+# def add_slopes(parse_max: int, filters: dict):
+#     """Add slopes in db/oct for each curves and smoothness if available"""
+#     parsed = 0
+#     for speaker_name, speaker_data in metadata.speakers_info.items():
+#         if reject(filters, speaker_name) or (parse_max is not None and parsed > parse_max):
+#             break
+#         parsed = parsed + 1
+#         logger.info("Processing %s", speaker_name)
+#         for version, m_data in speaker_data["measurements"].items():
+#             for key, value in m_data.items():
+#                 if 'slope_' in key or 'smoothness_' in key:
+#                     print('accepted {}'.format(key))
+#                     metadata.speakers_info[speaker_name]["measurements"][version][key] = value
+
+
 def add_eq(speaker_path, dataframe, parse_max, filters):
     """Compute some values per speaker and add them to metadata"""
     parsed = 0
@@ -775,11 +790,11 @@ def add_near(dataframe, parse_max: int, filters: dict):
 
 
 def dump_metadata(meta):
-    metadir = cpaths.CPATH_DOCS
-    metafile = cpaths.CPATH_DOCS_METADATA_JSON
-    eqfile = cpaths.CPATH_DOCS_EQDATA_JSON
+    metadir = cpaths.CPATH_DIST
+    metafile = cpaths.CPATH_DIST_METADATA_JSON
+    eqfile = cpaths.CPATH_DIST_EQDATA_JSON
     os.makedirs(metadir, mode=0o755, exist_ok=True)
-    os.makedirs(cpaths.CPATH_DOCS_JSON, mode=0o755, exist_ok=True)
+    os.makedirs(cpaths.CPATH_DIST_JSON, mode=0o755, exist_ok=True)
 
     def check_link(hashed_filename):
         # add a link to make it easier for other scripts to find the metadata
@@ -790,11 +805,11 @@ def dump_metadata(meta):
             and flags_ADD_HASH
         ):
             try:
-                os.symlink(Path(hashed_filename).name, cpaths.CPATH_DOCS_METADATA_JSON)
+                os.symlink(Path(hashed_filename).name, cpaths.CPATH_DIST_METADATA_JSON)
             except OSError as e:
                 if e.errno == errno.EEXIST:
-                    os.remove(cpaths.CPATH_DOCS_METADATA_JSON)
-                    os.symlink(Path(hashed_filename).name, cpaths.CPATH_DOCS_METADATA_JSON)
+                    os.remove(cpaths.CPATH_DIST_METADATA_JSON)
+                    os.symlink(Path(hashed_filename).name, cpaths.CPATH_DIST_METADATA_JSON)
                 else:
                     print("print unlink/link didnt work for {} with {}".format(hashed_filename, e))
                     raise OSError from e
@@ -944,6 +959,8 @@ def main():
     steps.append(("eq", time.perf_counter()))
     add_near(main_df, parse_max, filters)
     steps.append(("near", time.perf_counter()))
+    # add_slopes(parse_max, filters)
+    # steps.append(("slopes", time.perf_counter()))
 
     # write metadata in a json file for easy search
     logger.info("Write metadata")

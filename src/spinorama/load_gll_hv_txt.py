@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ import pandas as pd
 
 from spinorama import logger
 from spinorama.ltype import StatusOr
-from spinorama.load_misc import sort_angles
+from spinorama.misc import sort_angles
 
 
 def parse_graph_gll_hv_txt(dir_path: str) -> StatusOr[tuple[pd.DataFrame, pd.DataFrame]]:
@@ -42,8 +42,12 @@ def parse_graph_gll_hv_txt(dir_path: str) -> StatusOr[tuple[pd.DataFrame, pd.Dat
     for file in files:
         base = os.path.basename(file)
         file_format = base[:-4].split("-")
-        meridian = int(file_format[-2][1:])
-        parallel = int(file_format[-1][1:])
+        try:
+            meridian = int(file_format[-2][1:])
+            parallel = int(file_format[-1][1:])
+        except ValueError as e:
+            # for files like sensitibity etc
+            continue
         angle = None
         orientation = None
 
@@ -123,17 +127,27 @@ def parse_graphs_speaker_gll_hv_txt(
             zipname = guesses[0]
         elif len(guesses) > 1:
             logger.error("Multiple zip files in %s", dirname)
-            return False, ()
+            return False, (pd.DataFrame(), pd.DataFrame())
         else:
             logger.error("%s does not exist", zipname)
-            return False, ()
+            return False, (pd.DataFrame(), pd.DataFrame())
 
-    tmp_dirname = "{}/tmp".format(dirname)
+    tmp_dirname = "{}/tmp/{}".format(dirname, speaker_name)
+    os.makedirs(tmp_dirname, mode=0o751, exist_ok=True)
     try:
         with zipfile.ZipFile(zipname, "r") as gll:
-            gll.extractall(tmp_dirname)
+            for file in gll.namelist():
+                with gll.open(file) as fd:
+                    base = os.path.basename(file)
+                    if base[-4:] != ".txt":
+                        continue
+                    data = fd.read()
+                    filename = "{}/{}".format(tmp_dirname, base)
+                    with open(filename, "wb") as out:
+                        out.write(data)
+
             return parse_graph_gll_hv_txt(dirname)
     except zipfile.BadZipFile:
         logger.exception("%s is a bad zipfile", zipname)
 
-    return False, ()
+    return False, (pd.DataFrame(), pd.DataFrame())

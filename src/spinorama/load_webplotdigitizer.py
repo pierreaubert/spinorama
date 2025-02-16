@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,13 +45,15 @@ def parse_webplotdigitizer_get_jsonfilename(
     try:
         if os.path.exists(tarfilename):
             # we are looking for info.json that may or not be in a directory
-            with tarfile.open(tarfilename, "r|*") as tar:
+            with tarfile.open(name=tarfilename, mode="r|*") as tar:
                 info_json = None
                 for tarinfo in tar:
                     logger.debug("Tarinfo.name %s", tarinfo.name)
                     if tarinfo.isreg() and tarinfo.name[-9:] == "info.json":
                         # note that files/directory with name tmp are in .gitignore
-                        tar.extract(tarinfo, path=filedir + "/extracted", set_attrs=False)
+                        tar.extract(
+                            tarinfo, path=filedir + "/extracted", set_attrs=False, filter="data"
+                        )
                         info_json = filedir + "/extracted/" + tarinfo.name
                         with open(info_json, "r") as f:
                             info = json.load(f)
@@ -61,11 +63,13 @@ def parse_webplotdigitizer_get_jsonfilename(
 
             # now extract the large json file
             if jsonfilename is not None:
-                with tarfile.open(tarfilename, "r|*") as tar:
+                with tarfile.open(name=tarfilename, mode="r|*") as tar:
                     for tarinfo in tar:
                         if tarinfo.isfile() and tarinfo.name in jsonfilename:
                             logger.debug("Extracting: %s", tarinfo.name)
-                            tar.extract(tarinfo, path=filedir + "/extracted", set_attrs=False)
+                            tar.extract(
+                                tarinfo, path=filedir + "/extracted", set_attrs=False, filter="data"
+                            )
         else:
             logger.debug("Tarfilename %s doesn't exist", tarfilename)
 
@@ -235,5 +239,6 @@ def parse_graphs_speaker_webplotdigitizer(
     except FileNotFoundError:
         logger.info("Speaker: %s Not found: %s", speaker_name, jsonfilename)
     else:
+        # print('List of measurements {}'.format(sorted(set(graph.loc[graph.Measurements]))))
         return True, graph
     return False, ("", pd.DataFrame())

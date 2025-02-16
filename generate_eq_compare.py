@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,9 +38,9 @@ from docopt import docopt
 import numpy as np
 
 from generate_common import get_custom_logger, args2level, find_metadata_file
-from spinorama.constant_paths import CPATH_DOCS_SPEAKERS, CPATH_DATAS_EQ
-from spinorama.need_update import need_update
-from spinorama.pict import write_multiformat
+from spinorama.constant_paths import CPATH_DIST_SPEAKERS, CPATH_DATAS_EQ
+from spinorama.misc import need_update
+from spinorama.speaker import write_multiformat
 from spinorama.plot import plot_eqs
 from spinorama.load_rew_eq import parse_eq_iir_rews
 
@@ -51,7 +51,7 @@ VERSION = 0.2
 def print_eq_compare(data, force):
     brand = data["brand"]
     model = data["model"]
-    filename = "{}/{} {}/eq_compare.png".format(CPATH_DOCS_SPEAKERS, brand, model)
+    filename = "{}/{} {}/eq_compare.png".format(CPATH_DIST_SPEAKERS, brand, model)
     freq = np.logspace(math.log10(2) + 1, math.log10(2) + 4, 200)
     eqs = glob.glob("{}/{} {}/*.txt".format(CPATH_DATAS_EQ, brand, model))
     peqs = [parse_eq_iir_rews(eq, 48000) for eq in eqs if os.path.basename(eq) != "iir.txt"]

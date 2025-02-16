@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import numpy as np
 import numpy.testing as npt
 import pandas as pd
 
+# from spinorama.filter_peq import peq_print
 from spinorama.load_klippel import parse_graph_freq_klippel
 from spinorama.auto_global import GlobalOptimizer, _resample
 
@@ -73,7 +74,7 @@ class GlobalOptimizerTests(unittest.TestCase):
             "target_max_freq": 16000,
             "MIN_Q": 1.0,
             "MAX_Q": 3.0,
-            "MIN_DBGAIN": -3.0,
+            "MIN_DBGAIN": 1.0,
             "MAX_DBGAIN": 3.0,
             "MAX_ITER": 500,
             "MAX_NUMBER_PEQ": 3,
@@ -180,13 +181,16 @@ class GlobalOptimizerTests(unittest.TestCase):
     def test_non_linear_constraint(self):
         nlc = self.go._opt_constraints_nonlinear(3)
         fun = nlc.fun
-        x = np.array([0, 25, 0, 0, 0, 50, 0, 0, 0, 75, 0, 0])
+        x = np.array([0, 25, 2, 2, 1, 50, 2, -2, 2, 75, 2, 2])
+        # self.go._x2print(x)
         c = fun(x)
         self.assertEqual(c, -1)  # true
-        x = np.array([0, 25, 0, 0, 0, 34, 0, 0, 0, 75, 0, 0])
+        x = np.array([0, 25, 2, 2, 1, 34, 2, -2, 2, 75, 2, 2])
+        # self.go._x2print(x)
         c = fun(x)
         self.assertEqual(c, 1)  # false
-        x = np.array([0, 25, 0, 0, 0, 100, 0, 0, 0, 75, 0, 0])
+        x = np.array([0, 25, 2, 2, 1, 100, 2, -2, 2, 75, 2, 2])
+        # self.go._x2print(x)
         c = fun(x)
         self.assertEqual(c, 1)  # false
 

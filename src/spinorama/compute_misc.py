@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,13 @@ import pandas as pd
 from scipy import stats
 
 from spinorama import logger
-from spinorama.load_misc import sort_angles
+from spinorama.constant_paths import (
+    SLOPE_MIN_FREQ,
+    SLOPE_MAX_FREQ,
+    DIRECTIVITY_MIN_FREQ,
+    DIRECTIVITY_MAX_FREQ,
+)
+from spinorama.misc import sort_angles
 from spinorama.compute_scores import octave
 
 # pd.set_option('display.max_rows', None)
@@ -35,7 +41,7 @@ def unify_freq(dfs: pd.DataFrame) -> pd.DataFrame:
 
     There is no guaranty that all frequency points are the same on all graphs. This is
     an issue for operations on multiple graphs at the same time. Let's merge all freq
-    points such that all graphs have exactlty the same set of points and thus the same shape.
+    points such that all graphs have exactly the same set of points and thus the same shape.
 
     This use linear interpolation for missing points and can generate some NaN in the frame.
     Rows (Freq) with at least 1 NaN are removed.
@@ -130,7 +136,7 @@ def resample(df: pd.DataFrame, target_size: int) -> pd.DataFrame:
 
 
 def compute_contour(dfm_in):
-    # generate 3 arrays x, y, z suitable for computing equilevels
+    # generate 3 arrays x, y, z suitable for computing equi-levels
     dfm = sort_angles(dfm_in)
     # check if we have -180
     if "180°" in dfm and "-180°" not in dfm:
@@ -166,7 +172,7 @@ def reshape(x, y, z, nscale):
     lxi = [
         np.linspace(x[0][i], x[0][i + 1], nscale, endpoint=False) for i in range(0, len(x[0]) - 1)
     ]
-    lx = [i for j in lxi for i in j] + [x[0][-1] for i in range(0, nscale)]
+    lx = [i for j in lxi for i in j] + [x[0][-1] for _ in range(0, nscale)]
     nly = (nx - 1) * nscale + 1
     # keep order
     ly = []
@@ -195,17 +201,17 @@ def reshape(x, y, z, nscale):
     ]
 
     def close(x1, x2, xkeep):
-        for z in xkeep:
-            if abs((x1 - z) / z) < 0.01 and z < x2:
-                xkeep.remove(z)
-                return z
+        for zz in xkeep:
+            if abs((x1 - zz) / zz) < 0.01 and zz < x2:
+                xkeep.remove(zz)
+                return zz
         return x1
 
     lx2 = [close(lx[i], lx[i + 1], xkeep) for i in range(0, len(lx) - 1)]
     lx2 = np.append(lx2, lx[-1])
     # build the mesh
     rx, ry = np.meshgrid(lx2, ly)
-    # copy paste the values of z into rz
+    # copy and paste the values of z into rz
     rzi = np.repeat(z[:-1], nscale, axis=0)
     rzi_x, rzi_y = rzi.shape
     rzi2 = np.append(rzi, z[-1]).reshape(rzi_x + 1, rzi_y)
@@ -215,7 +221,7 @@ def reshape(x, y, z, nscale):
 
 
 def compute_directivity_deg(af, am, az) -> tuple[float, float, float]:
-    """ "compute +/- angle where directivity is most constant between 1kHz and 10kz"""
+    """Compute +/- angle where directivity is most constant between 1kHz and 10kz"""
     deg0 = bisect.bisect(am.T[0], 0) - 1
     # parameters
     k_hz_1 = bisect.bisect(af[0], 1000)
@@ -324,12 +330,16 @@ def directivity_matrix(spl_h, spl_v):
 
 
 def compute_directivity_deg_v2(df) -> tuple[float, float, float]:
+    on = df[((df.Freq >= DIRECTIVITY_MIN_FREQ) & (df.Freq < DIRECTIVITY_MAX_FREQ))]["On Axis"]
+    mean = on.mean() if not on.empty else 0.0
+
     def compute(spl, r):
-        on = spl[((spl.Freq > 1000) & (spl.Freq < 10000))]["On Axis"]
-        mean = on.mean() if not on.empty else 0.0
         for k in r:
             key = "{}°".format(k)
-            db = spl[((spl.Freq > 1000) & (spl.Freq < 6000))][key] - mean
+            db = (
+                spl[((spl.Freq >= DIRECTIVITY_MIN_FREQ) & (spl.Freq <= DIRECTIVITY_MAX_FREQ))][key]
+                - mean
+            )
             # smooth on 5 points
             pos = db.ewm(span=10).mean().min()
             # print('key {}  pos {} {}'.format(key, pos, db.values))
@@ -340,8 +350,7 @@ def compute_directivity_deg_v2(df) -> tuple[float, float, float]:
     dir_p = compute(df, range(10, 180, 10))
     dir_m = compute(df, range(-10, -180, -10))
 
-    # print('dir_p {}'.format(dir_p))
-    return float(dir_p), float(dir_m), float((dir_p + dir_m) / 2)
+    return float(dir_p), float(dir_m), float((dir_p - dir_m) / 2)
 
 
 def savitzky_golay(y, window_size, order, deriv=0, rate=1):
@@ -358,7 +367,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
         the length of the window. Must be an odd integer number.
     order : int
         the order of the polynomial used in the filtering.
-        Must be less then `window_size` - 1.
+        Must be less than `window_size` - 1.
     deriv: int
         the order of the derivative to compute (default = 0 means only smoothing)
     Returns
@@ -421,6 +430,88 @@ def dist_point_line(x, y, p_a, p_b, p_c):
     return abs(p_a * x + p_b * y + p_c) / math.sqrt(p_a * p_a + p_b * p_b)
 
 
+def compute_minmax_slopes(spin: pd.DataFrame, is_normalized) -> dict[str, tuple[float, float]]:
+    _, _, slope_on, _ = compute_slope_smoothness(spin, "On Axis", is_normalized)
+    _, _, slope_sp, _ = compute_slope_smoothness(spin, "Sound Power", is_normalized)
+    slope_di = (slope_on - slope_sp) * math.log(2)
+    slope_limited = max(min(slope_di, 1.2), 0.0)
+    # print('Slope DI={} LimDI={}'.format(slope_di, slope_limited))
+    minmax = {
+        "On Axis": (
+            0.0,
+            0.4167 * slope_limited - 0.5,
+        ),
+        "Listening Window": (
+            0.3333 * slope_limited - 0.65,
+            0.0,
+        ),
+        "Estimated In-Room Response": (
+            -0.80,
+            0.0417 * slope_limited - 0.65,
+        ),
+        "Sound Power": (
+            -0.2083 * slope_limited - 0.95,
+            -0.0833 * slope_limited - 0.80,
+        ),
+        "Sound Power DI": (
+            max(min(slope_di + 0.15, 1.2) - 0.3, 0),
+            min(slope_di + 0.15, 1.2),
+        ),
+    }
+    minmax["Predicted In-Room Response"] = minmax["Estimated In-Room Response"]
+    return minmax
+
+
+def compute_slope_smoothness(
+    data_frame: pd.DataFrame, measurement: str, is_normalized: bool
+) -> tuple[float, float, float, float]:
+    """Compute the slope in db/oct of a measurement in the data frame"""
+    freq = data_frame.Freq.to_numpy()
+    if len(freq) == 0:
+        logger.error("DataFrame Freq column exists but is of len 0")
+        return 0, 0, 0, 0
+    slope_min_freq = max(SLOPE_MIN_FREQ, freq[0])
+    slope_max_freq = min(SLOPE_MAX_FREQ, freq[-1])
+    slopes_minmax = None
+    slopes_freq = None
+    slopes_spl = None
+    if measurement in data_frame:
+        slopes_minmax = data_frame.loc[
+            (data_frame.Freq >= slope_min_freq) & (data_frame.Freq <= slope_max_freq)
+        ]
+        slopes_freq = slopes_minmax.Freq.tolist()
+        slopes_spl = slopes_minmax[measurement].tolist()
+    elif "Measurements" in data_frame:
+        slopes_minmax = data_frame.loc[
+            (data_frame.Freq >= slope_min_freq)
+            & (data_frame.Freq <= slope_max_freq)
+            & (data_frame.Measurements == measurement)
+        ]
+        slopes_freq = slopes_minmax.Freq.tolist()
+        slopes_spl = slopes_minmax.dB.tolist()
+    else:
+        # partial measurement
+        logger.debug("%s not in DataFrame", measurement)
+        return 0, 0, 0, 0
+    if len(slopes_freq) == 0 or len(slopes_spl) == 0:
+        logger.error("no data in df: likely incorrect measurement name %s", measurement)
+        return 0, 0, 0, 0
+    first_freq = slopes_freq[0]
+    last_freq = slopes_freq[-1]
+    slope_octave = math.log2(last_freq / first_freq)
+    # compute regression to get the slope and the smoothness
+    res = stats.linregress(x=np.log10(slopes_freq), y=slopes_spl)
+    slope_dboct = res.slope * (math.log10(last_freq) - math.log10(first_freq)) / slope_octave
+    first_spl = res.intercept + res.slope * math.log10(first_freq)
+    last_spl = res.intercept + res.slope * math.log10(last_freq)
+    # print(
+    #    "{:30s} freq [{:6.0f}, {:6.0f}] spl [{:+4.2f},{:+4.2f}] slope {:+4.2f} sm {:4.2f}".format(
+    #        measurement, first_freq, last_freq, first_spl, last_spl, slope_dboct, res.rvalue**2
+    #    )
+    # )
+    return first_spl, last_spl, slope_dboct, res.rvalue**2
+
+
 def compute_statistics(
     data_frame: pd.DataFrame,
     measurement,
@@ -435,7 +526,7 @@ def compute_statistics(
     result = stats.linregress(x=np.log10(restricted_minmax["Freq"]), y=restricted_spl)
     #
     hist_minmax = data_frame.loc[
-        (data_frame.Freq > hist_min_freq) & (data_frame.Freq < hist_max_freq)
+        (data_frame.Freq >= hist_min_freq) & (data_frame.Freq <= hist_max_freq)
     ]
     hist_spl = hist_minmax[measurement]
     hist_dist = [
@@ -444,10 +535,9 @@ def compute_statistics(
     ]
     # for i, (f, db) in enumerate(zip(hist_minmax.Freq, hist_spl)):
     #    print('{:4f}hz {:0.2f} db {:2.1f} dist={:0.2f}'.format(f, math.log10(f), db, hist_dist[i]))
-    # build an histogram to see where the deviation is above each treshhole
-    # hist = np.histogram(hist_dist, bins=[0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3], density=False)
+
+    # build a histogram to see where the deviation is above each treshhole
     hist = np.histogram(hist_dist, bins=[0, 0.5, 1, 1.5, 2, 2.5, 3, 5], density=False)
-    # 3 = math.log10(20000)-math.log10(20)
-    # 11 octaves between 20Hz and 20kHz
-    db_per_octave = result.slope * 3.0 / 11.0
+    # compute slope in db/oct
+    _, _, db_per_octave, _ = compute_slope_smoothness(data_frame, measurement, False)
     return db_per_octave, hist, np.max(hist_dist)

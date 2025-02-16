@@ -1,0 +1,67 @@
+# Source of data and citations
+
+- <a href="https://www.audiosciencereview.com">AudioScienceReview</a> <i>aka</i> ASR: it is a fantastic source of speakers data thanks to
+  <a href="https://www.audiosciencereview.com/forum/index.php?threads/a-bit-about-your-host.1906/">amirm@</a>. They also have a lot of data about DACs that you may found useful. There is little correlation between price and quality in the audio world and this data gives some objective criteria to decide what to buy. You can
+            <a
+              href="https://www.audiosciencereview.com/forum/index.php?threads/how-to-support-audio-science-review.8150/"
+              >support ASR</a
+            >.
+- <a href="https://www.erinsaudiocorner.com/">ErinsAudioCorner</a>
+            <i>aka</i> EAC: Hardis is a motivated person reviewing speakers and doing an outstanging job at it. He also has a <a href="https://youtube.com/c/ErinsAudioCorner">Youtube channel</a>. You can also   <a href="https://www.erinsaudiocorner.com/contribute/">support him</a>.
+- <a href="https://www.princeton.edu/3D3A/">3D3A</a> is a research organisation at <a href="https://www.princeton.edu">Princeton</a>:
+
+  - They provide a database of speaker measurements (<a href="https://www.princeton.edu/3D3A/Manuals/3D3A_Directivity_Database.pdf">manual</a>)
+  - Some scientific papers I have used:
+
+    - Metrics for Constant Directivity (<a href="https://www.princeton.edu/3D3A/Publications/Sridhar_AES140_CDMetrics.html">abstract</a>, <a href="https://www.princeton.edu/3D3A/Publications/Sridhar_AES140_CDMetrics.pdf">paper</a>, <a href="https://www.princeton.edu/3D3A/Publications/Sridhar_AES140_CDMetrics-poster.pdf">poster</a>) Authors: Sridhar, R., Tylka, J. G., Choueiri, E. Y.; Publication: 140th Convention of the Audio Engineering Society (AES 140) ; Date: May 26, 2016
+    - A Database of Loudspeaker Polar Radiation Measurements (<a
+                      href="https://www.princeton.edu/3D3A/Publications/Tylka_AES139_3D3ADirectivity.html"
+                      >abstract</a
+                    >, )
+   - On the Calculation of Full and Partial Directivity Indices
+                    (<a
+                      href="https://www.princeton.edu/3D3A/Publications/Tylka_3D3A_DICalculation.html"
+                      >abstract</a
+                    >); Authors: Tylka, J. G., Choueiri, E. Y.; Publication:
+                    3D3A Lab Technical Report #1; Date: November 16, 2014
+- <a href="https://speakerdata2034.blogspot.com/">speakerdata2034</a> is a blog with a collection of spinorama from various sources. Index of measurements is
+            <a
+              href="https://speakerdata2034.blogspot.com/2019/03/all-spinorama-data-index.html"
+              >available</a
+            >.
+- A number of companies provides data usually in the form of a GLL file which is format developped by <a href="https://www.afmg.eu/en/gll-loudspeaker-file-format">AFMG</a>. This format is very often used for live sound or tour speakers.
+
+  Here is a partial list of vendors providing data:
+
+  - Alcons Audio
+  - Axiom
+  - BiAmp
+  - Coda
+  - D&amp;B Technik
+  - DAS
+  - Danley
+  - FBT
+  - Fulcrum Acoustics
+  - Genelec
+  - Highlite
+  - Idea
+  - JBL
+  - K-Array
+  - KME Sound
+  - KV2 Audio
+  - Kling Freitag
+  - LD Systems
+  - Martin Audio
+  - Meyer Sound
+  - Neumann
+  - Nexo
+  - Presonus
+  - QSC
+  - RCF
+  - SE Audiotechnik
+  - Seeburg
+  - Soundvision
+  - Turbosound
+  - Wharfedale Pro
+  - Yamaha
+  - dB Technogies

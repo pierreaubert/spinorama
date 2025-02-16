@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -10,7 +10,7 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
@@ -20,6 +20,7 @@ import bisect
 import itertools
 import math
 from typing import TypeVar
+import pprint
 import warnings
 
 import numpy as np
@@ -31,14 +32,61 @@ from plotly.subplots import make_subplots
 import plotly.io as pio
 
 from spinorama import logger
-from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
+from spinorama.constant_paths import (
+    MIDRANGE_MIN_FREQ,
+    MIDRANGE_MAX_FREQ,
+    SLOPE_MIN_FREQ,
+    SLOPE_MAX_FREQ,
+)
 from spinorama.filter_peq import peq_spl
-from spinorama.compute_misc import compute_contour
-from spinorama.load_misc import sort_angles
+from spinorama.compute_misc import compute_contour, compute_slope_smoothness
+from spinorama.misc import sort_angles
 
+FLAG_FEATURE_TREND_LINES = True
+FLAG_FEATURE_CONFIDENCE_ZONES = True
+FLAG_FEATURE_ANNOTATION = True
+FLAG_FEATURE_VISIBLE = False
 
 pio.templates.default = "plotly_white"
 
+FONT_SIZE_H1 = 16
+FONT_SIZE_H2 = 14
+FONT_SIZE_H3 = 12
+FONT_SIZE_H4 = 11
+FONT_SIZE_H5 = 10
+FONT_SIZE_H6 = 9
+
+FONT_FAMILY = "Arial"
+
+FONT_H1 = dict(
+    size=FONT_SIZE_H1,
+    family=FONT_FAMILY,
+)
+
+FONT_H2 = dict(
+    size=FONT_SIZE_H2,
+    family=FONT_FAMILY,
+)
+
+FONT_H3 = dict(
+    size=FONT_SIZE_H3,
+    family=FONT_FAMILY,
+)
+
+FONT_H4 = dict(
+    size=FONT_SIZE_H4,
+    family=FONT_FAMILY,
+)
+
+FONT_H5 = dict(
+    size=FONT_SIZE_H5,
+    family=FONT_FAMILY,
+)
+
+FONT_H6 = dict(
+    size=FONT_SIZE_H6,
+    family=FONT_FAMILY,
+)
 
 # ratio is 4x3
 plot_params_default: dict[str, int | str] = {
@@ -51,7 +99,7 @@ plot_params_default: dict[str, int | str] = {
 }
 
 # ratio is 2x1
-contour_params_default = {
+contour_params_default: dict[str, int | str] = {
     "xmin": 100,
     "xmax": 20000,
     "width": 1200,
@@ -59,14 +107,14 @@ contour_params_default = {
 }
 
 # ratio is 4x5
-radar_params_default = {
+radar_params_default: dict[str, int | str] = {
     "xmin": 400,
     "xmax": 20000,
     "width": 1000,
     "height": 1200,
 }
 
-colors = [
+colors: list[str] = [
     "#5c77a5",
     "#dc842a",
     "#c85857",
@@ -79,7 +127,7 @@ colors = [
     "#ff9da7",
 ]
 
-UNIFORM_COLORS = {
+UNIFORM_COLORS: dict[str, str] = {
     # regression
     "Linear Regression": colors[0],
     "Band ±1.5dB": colors[1],
@@ -126,40 +174,38 @@ UNIFORM_COLORS = {
     "15000 Hz": colors[5],
 }
 
-label_short = {}
-
-# label_short = {
-#     # regression
-#     "Linear Regression": "Reg",
-#     "Band ±1.5dB": "±1.5dB",
-#     "Band ±3dB": "±3dB",
-#     # PIR
-#     "Estimated In-Room Response": "PIR",
-#     # spin
-#     "On Axis": "ON",
-#     "Listening Window": "LW",
-#     "Early Reflections": "ER",
-#     "Sound Power": "SP",
-#     "Early Reflections DI": "ERDI",
-#     "Sound Power DI": "SPDI",
-#     # reflections
-#     "Ceiling Bounce": "CB",
-#     "Floor Bounce": "FB",
-#     "Front Wall Bounce": "FWB",
-#     "Rear Wall Bounce": "RWB",
-#     "Side Wall Bounce": "SWB",
-#     #
-#     "Ceiling Reflection": "CR",
-#     "Floor Reflection": "FR",
-#     #
-#     "Front": "F",
-#     "Rear": "R",
-#     "Side": "S",
-#     #
-#     "Total Early Reflection": "TER",
-#     "Total Horizontal Reflection": "THR",
-#     "Total Vertical Reflection": "TVR",
-# }
+label_short = {
+    # regression
+    "Linear Regression": "Reg",
+    "Band ±1.5dB": "±1.5dB",
+    "Band ±3dB": "±3dB",
+    # PIR
+    "Estimated In-Room Response": "PIR",
+    # spin
+    "On Axis": "ON",
+    "Listening Window": "LW",
+    "Early Reflections": "ER",
+    "Sound Power": "SP",
+    "Early Reflections DI": "ERDI",
+    "Sound Power DI": "SPDI",
+    # reflections
+    "Ceiling Bounce": "CB",
+    "Floor Bounce": "FB",
+    "Front Wall Bounce": "FWB",
+    "Rear Wall Bounce": "RWB",
+    "Side Wall Bounce": "SWB",
+    #
+    "Ceiling Reflection": "CR",
+    "Floor Reflection": "FR",
+    #
+    "Front": "F",
+    "Rear": "R",
+    "Side": "S",
+    #
+    "Total Early Reflection": "TER",
+    "Total Horizontal Reflection": "THR",
+    "Total Vertical Reflection": "TVR",
+}
 
 
 legend_rank = {
@@ -199,7 +245,7 @@ CONTOUR_COLORSCALE = [
     [1, "rgb(253,14,13)"],
 ]
 
-RADAR_COLORS = {
+RADAR_COLORS: dict[str, str] = {
     "100 Hz": colors[0],
     "125 Hz": colors[1],
     "160 Hz": colors[2],
@@ -221,17 +267,25 @@ RADAR_COLORS = {
 
 def generate_xaxis(freq_min=20, freq_max=20000):
     return dict(
-        title_text="Frequency (Hz)",
+        title=dict(
+            text="Frequency (Hz)",
+            font=FONT_H3,
+        ),
         type="log",
         range=[math.log10(freq_min), math.log10(freq_max)],
         showline=True,
         dtick="D1",
+        tickfont=FONT_H3,
+        ticks="inside",
     )
 
 
 def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
     return dict(
-        title_text="SPL (dB)",
+        title=dict(
+            text="SPL (dB)",
+            font=FONT_H3,
+        ),
         range=[range_min, range_max],
         dtick=range_step,
         tickvals=list(range(range_min, range_max + range_step, range_step)),
@@ -239,6 +293,8 @@ def generate_yaxis_spl(range_min=-40, range_max=10, range_step=1):
             "{}".format(i) if not i % 5 else " "
             for i in range(range_min, range_max + range_step, range_step)
         ],
+        tickfont=FONT_H3,
+        ticks="inside",
         showline=True,
     )
 
@@ -250,23 +306,50 @@ def generate_yaxis_di(range_min=-5, range_max=45, range_step=5):
     ]
     # print('DEBUG {} {}'.format(tickvals, ticktext))
     return dict(
-        title_text="DI (dB)                                                    &nbsp;",
+        title=dict(
+            text="DI (dB)                                                    &nbsp;",
+            font=FONT_H3,
+        ),
         range=[range_min, range_max],
         dtick=range_step,
         tickvals=tickvals,
         ticktext=ticktext,
+        tickfont=FONT_H3,
+        ticks="inside",
         showline=True,
     )
 
 
 def generate_yaxis_angles(angle_min=-180, angle_max=180, angle_step=30):
     return dict(
-        title_text="Angle",
+        title=dict(
+            text="Angle",
+            font=FONT_H3,
+        ),
         range=[angle_min, angle_max],
         dtick=angle_step,
         tickvals=list(range(angle_min, angle_max + angle_step, angle_step)),
-        ticktext=["{}°".format(v) for v in range(angle_min, angle_max + angle_step, angle_step)],
+        ticktext=[""]
+        + ["{}°".format(v) for v in range(angle_min + angle_step, angle_max, angle_step)]
+        + [""],
+        tickfont=FONT_H3,
+        ticks="inside",
         showline=True,
+    )
+
+
+def generate_colorbar():
+    return dict(
+        dtick=3,
+        len=0.5,
+        lenmode="fraction",
+        thickness=15,
+        thicknessmode="pixels",
+        tickfont=FONT_H5,
+        title=dict(
+            text="dB (SPL)",
+            font=FONT_H4,
+        ),
     )
 
 
@@ -283,13 +366,15 @@ def common_layout(params):
             y=0.99,
             xanchor="center",
             yanchor="top",
+            font=FONT_H1,
         ),
         legend=dict(
             x=0.5,
-            y=1.12,  # TODO understand why it needs to be larger than 1
+            y=1.12,
             xanchor="center",
             yanchor="top",
             orientation=orientation,
+            font=FONT_H2,
         ),
         margin={
             "t": 100,
@@ -321,9 +406,7 @@ def contour_layout(params):
             "l": 10,
             "r": 10,
         },
-        font=dict(
-            size=9,
-        ),
+        font=FONT_H6,
         polar=dict(
             bargap=0,
             hole=0.05,
@@ -344,14 +427,8 @@ def radar_layout(params):
             y=1.05,
             xanchor="center",
             orientation=orientation,
-            title=dict(
-                font=dict(
-                    size=10,
-                ),
-            ),
-            font=dict(
-                size=9,
-            ),
+            title_font=FONT_H5,
+            font=FONT_H6,
         ),
         title=dict(
             x=0.5,
@@ -368,9 +445,27 @@ def radar_layout(params):
     )
 
 
-def plot_spinorama_traces(spin, params):
+def plot_spinorama_traces(
+    spin: pd.DataFrame,
+    params: dict,
+    minmax_slopes: dict[str, tuple[float, float]] | None,
+    is_normalized: bool,
+    valid_freq_range: tuple[float, float],
+) -> tuple[list, list, list, list]:
     layout = params.get("layout", "")
     traces = []
+    lines = []
+    freq = spin.Freq.to_numpy()
+    if len(freq) == 0:
+        logger.error("Freq is not in spin")
+        return traces, traces, lines, lines
+    slope_min_freq = max(SLOPE_MIN_FREQ, freq[0])
+    slope_max_freq = min(SLOPE_MAX_FREQ, freq[-1])
+    restricted_spin = spin.loc[(spin.Freq >= slope_min_freq) & (spin.Freq <= slope_max_freq)]
+    restricted_freq = restricted_spin.Freq.to_numpy()
+    first_freq = restricted_freq[0]
+    last_freq = restricted_freq[-1]
+
     for measurement in (
         "On Axis",
         "Listening Window",
@@ -383,16 +478,63 @@ def plot_spinorama_traces(spin, params):
             x=spin.Freq,
             y=spin[measurement],
             marker_color=UNIFORM_COLORS.get(measurement, "black"),
-            name=label_short.get(measurement, measurement),
+            name=measurement,
             hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
+        first_spl, last_spl, _, _ = compute_slope_smoothness(
+            data_frame=spin, measurement=measurement, is_normalized=is_normalized
+        )
+        if FLAG_FEATURE_TREND_LINES and measurement in (
+            "Sound Power",
+            "Early Reflections",
+            "Listening Window",
+        ):
+            lines.append(
+                go.Scatter(
+                    x=[first_freq, last_freq],
+                    y=[first_spl, last_spl],
+                    line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
+                    opacity=1,
+                    visible=FLAG_FEATURE_VISIBLE,
+                    showlegend=True,
+                    name="{} slope".format(measurement),
+                )
+            )
+        if (
+            FLAG_FEATURE_CONFIDENCE_ZONES
+            and measurement in ("Sound Power")
+            and minmax_slopes is not None
+            and len(minmax_slopes) > 0
+        ):
+            # aligned with VituixCAD
+            ex = 1.0
+            slope_min, slope_max = minmax_slopes[measurement]
+            spl_min = slope_min * math.log2(last_freq / first_freq)
+            spl_max = slope_max * math.log2(last_freq / first_freq)
+            x = [first_freq, last_freq, last_freq, first_freq, first_freq]
+            y = np.add([-ex, -ex + spl_min, ex + spl_max, +ex, -ex], first_spl).tolist()
+            lines.append(
+                go.Scatter(
+                    x=x,
+                    y=y,
+                    fill="toself",
+                    opacity=0.25,
+                    fillcolor=UNIFORM_COLORS[measurement],
+                    mode="text",
+                    visible=FLAG_FEATURE_VISIBLE,
+                    name="recommended SP zone",
+                    showlegend=True,
+                )
+            )
+
+        trace.name = measurement
         if layout != "compact":
-            trace.name = measurement
             trace.legendgroup = "measurements"
             trace.legendgrouptitle = {"text": "Measurements"}
         traces.append(trace)
 
     traces_di = []
+    lines_di = []
     for measurement in ("Early Reflections DI", "Sound Power DI"):
         if measurement not in spin:
             continue
@@ -400,29 +542,191 @@ def plot_spinorama_traces(spin, params):
             x=spin.Freq,
             y=spin[measurement],
             marker_color=UNIFORM_COLORS.get(measurement, "black"),
+            name=measurement,
             hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
         )
-        if layout == "compact":
-            trace.name = label_short.get(measurement, measurement)
-        else:
-            trace.name = measurement
+        first_spl, last_spl, _, _ = compute_slope_smoothness(
+            data_frame=spin, measurement=measurement, is_normalized=is_normalized
+        )
+        if FLAG_FEATURE_TREND_LINES:
+            lines_di.append(
+                go.Scatter(
+                    x=[first_freq, last_freq],
+                    y=[first_spl, last_spl],
+                    line=dict(width=2, dash="dash", color=UNIFORM_COLORS[measurement]),
+                    opacity=1,
+                    showlegend=False,
+                    visible=FLAG_FEATURE_VISIBLE,
+                )
+            )
+        if (
+            FLAG_FEATURE_CONFIDENCE_ZONES
+            and measurement == "Sound Power DI"
+            and minmax_slopes is not None
+            and len(minmax_slopes) > 0
+        ):
+            # aligned with VituixCAD
+            ex = 1.0
+            slope_min, slope_max = minmax_slopes[measurement]
+            spl_min = slope_min * math.log2(last_freq / first_freq)
+            spl_max = slope_max * math.log2(last_freq / first_freq)
+            x = [first_freq, last_freq, last_freq, first_freq, first_freq]
+            y = np.add([-ex, -ex + spl_min, ex + spl_max, +ex, -ex], first_spl).tolist()
+            lines_di.append(
+                go.Scatter(
+                    x=x,
+                    y=y,
+                    fill="toself",
+                    opacity=0.25,
+                    name="recommended SP DI zone",
+                    fillcolor=UNIFORM_COLORS[measurement],
+                    mode="text",
+                    visible=FLAG_FEATURE_VISIBLE,
+                )
+            )
+        trace.name = measurement
+        if layout != "compact":
             trace.legendgroup = "directivity"
             trace.legendgrouptitle = {"text": "Directivity"}
         traces_di.append(trace)
-    return traces, traces_di
+    return traces, traces_di, lines, lines_di
 
 
-def plot_spinorama(spin, params):
+def plot_valid_freq_ranges(fig, freq_range, spl_range=(-40, 10)):
+    traces = []
+    min_freq, max_freq = freq_range
+    min_spl, max_spl = spl_range
+    # for some reasons (possibly https://github.com/plotly/plotly.py/issues/2580)
+    #   add_vrect is not working
+    #   add_shape is working partially for some graphs and not others
+    if min_freq > 30.0:
+        traces.append(
+            go.Scatter(
+                x=[20, min_freq, min_freq, 20],
+                y=[min_spl, min_spl, max_spl, max_spl],
+                mode="none",
+                fill="toself",
+                name="no data or low quality",
+                showlegend=True,
+                fillcolor="LightGreen",
+                opacity=0.3,
+                zorder=-1,
+                visible=True,
+            ),
+        )
+    if max_freq < 19500:
+        traces.append(
+            go.Scatter(
+                x=[max_freq, 20000, 20000, max_freq],
+                y=[min_spl, min_spl, max_spl, max_spl],
+                mode="none",
+                fill="toself",
+                name="no data or low quality",
+                showlegend=False,
+                fillcolor="LightGreen",
+                opacity=0.3,
+                zorder=-1,
+            ),
+        )
+    return traces
+
+
+def plot_spinorama_annotation(
+    fig,
+    spin: dict[str, pd.DataFrame | float],
+    is_normalized: bool,
+    valid_freq_range: tuple[float, float],
+):
+    if not FLAG_FEATURE_ANNOTATION:
+        return fig
+
+    _graph_param = (
+        (2000, "On Axis", "y", -20, "right", "bottom"),
+        (16000, "Listening Window", "y", -20, "right", "bottom"),
+        (10000, "Early Reflections", "y", 20, "right", "top"),
+        (10000, "Sound Power", "y", 20, "right", "top"),
+        (10000, "Early Reflections DI", "y2", 20, "right", "top"),
+        (10000, "Sound Power DI", "y2", -20, "right", "bottom"),
+    )
+
+    for freq_initial, measurement, yref, ay_initial, xanchor, yanchor in _graph_param:
+        ay = ay_initial
+        freq = freq_initial
+        if measurement not in spin:
+            continue
+        _, _, slope, sm = compute_slope_smoothness(spin, measurement, is_normalized=is_normalized)
+        closest_freq = bisect.bisect_left(spin.Freq.to_numpy(), freq)
+        curve = spin[measurement].to_numpy()
+        spl = curve[closest_freq]
+        if measurement == "On Axis":
+            res_spin = spin.loc[(spin.Freq >= 1000) & (spin.Freq < 5000)]
+            on = res_spin["On Axis"].to_numpy()
+            idx = on.argmax()
+            spl = on[idx]
+            freq = res_spin.Freq.to_numpy()[idx]
+        elif measurement == "Listening Window":
+            res_spin = spin.loc[(spin.Freq >= 8000) & (spin.Freq < 16000)]
+            lw = res_spin["Listening Window"].to_numpy()
+            idx = lw.argmax()
+            spl = lw[idx]
+            freq = res_spin.Freq.to_numpy()[idx]
+            spl_on = res_spin["On Axis"].to_numpy()[idx]
+            # if not is_normalized:
+            # print(
+            #    "freq={} spl_on={} spl_lw={} offset={}".format(
+            #        freq, spl_on, spl, (spl_on - spl) * 5
+            #    )
+            # )
+            ay -= int((spl_on - spl) * 5)
+        # print("{:20s} {:5.0f}Hz voffset {}".format(measurement, freq, ay))
+        fig.add_annotation(
+            x=math.log10(freq),
+            y=spl,
+            text="{:4.2f} db/oct sm {:3.2f}".format(slope, sm),
+            font=dict(
+                size=10,
+                color=UNIFORM_COLORS.get(measurement, "black"),
+            ),
+            bordercolor=UNIFORM_COLORS.get(measurement, "black"),
+            showarrow=True,
+            arrowhead=2,
+            arrowcolor=UNIFORM_COLORS.get(measurement, "black"),
+            xanchor=xanchor,
+            yanchor=yanchor,
+            yref=yref,
+            ay=ay,
+            visible=FLAG_FEATURE_VISIBLE,
+        )
+    return fig
+
+
+def plot_spinorama(
+    spin,
+    params,
+    minmax_slopes,
+    is_normalized,
+    valid_freq_range: tuple[float, float],
+):
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     t_max = 0
-    traces, traces_di = plot_spinorama_traces(spin, params)
+    traces, traces_di, lines, lines_di = plot_spinorama_traces(
+        spin, params, minmax_slopes, is_normalized, valid_freq_range
+    )
+
+    if len(traces) == 0:
+        logger.error("Error in plotting spinorama traces")
+        return None
+
     for t in traces:
         t_max = max(t_max, np.max(t.y[np.where(t.x < 20000)]))
         fig.add_trace(t, secondary_y=False)
 
     t_max = 5 + int(t_max / 5) * 5
     t_min = t_max - 50
-    # print('T min={} max={}'.format(t_min, t_max))
+
+    shapes = plot_valid_freq_ranges(fig, valid_freq_range, (t_min, t_max))
+    for shape in shapes:
+        fig.add_trace(shape, secondary_y=False)
 
     di_max = 0
     for t in traces_di:
@@ -431,17 +735,29 @@ def plot_spinorama(spin, params):
 
     di_max = 35 + int(di_max / 5) * 5
     di_min = di_max - 50
-    # print('DI min={} max={}'.format(di_min, di_max))
+    # # print('DI min={} max={}'.format(di_min, di_max))
+
+    fig.add_traces(lines)
+    for t in lines_di:
+        fig.add_trace(t, secondary_y=True)
 
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(t_min, t_max, 5))
     fig.update_yaxes(generate_yaxis_di(di_min, di_max, 5), secondary_y=True)
 
     fig.update_layout(common_layout(params))
+
+    if minmax_slopes is not None:
+        fig = plot_spinorama_annotation(fig, spin, is_normalized, valid_freq_range)
+
     return fig
 
 
-def plot_graph(df, params):
+def plot_graph(
+    df,
+    params,
+    valid_freq_range: tuple[float, float],
+):
     layout = params.get("layout", "")
     fig = go.Figure()
     for measurement in df:
@@ -451,9 +767,8 @@ def plot_graph(df, params):
                 y=df[measurement],
                 hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
             )
-            if layout == "compact":
-                trace.name = label_short.get(measurement, measurement)
-            else:
+            trace.name = measurement
+            if layout != "compact":
                 trace.name = measurement
                 trace.legendgroup = "measurements"
                 trace.legendgrouptitle = {"text": "Measurements"}
@@ -466,10 +781,15 @@ def plot_graph(df, params):
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
     fig.update_layout(common_layout(params))
+    fig.add_traces(plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"])))
     return fig
 
 
-def plot_graph_spl(df, params):
+def plot_graph_spl(
+    df,
+    params,
+    valid_freq_range: tuple[float, float],
+):
     layout = params.get("layout", "")
     fig = go.Figure()
     for measurement in df:
@@ -504,10 +824,11 @@ def plot_graph_spl(df, params):
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
     fig.update_layout(common_layout(params))
+    fig.add_traces(plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"])))
     return fig
 
 
-def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
+def plot_graph_traces(df, measurement, params, slope, intercept, line_title, valid_freq_range):
     layout = params.get("layout", "")
     traces = []
 
@@ -518,8 +839,8 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     line_box15 = np.concatenate([np.add(line, 1.5), np.add(line, -1.5)[::-1]])
 
     # some speakers start very high
-    restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
-    restricted_line = [slope * math.log10(f) + intercept for f in restricted_freq.Freq]
+    restricted_spin = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
+    restricted_line = [slope * math.log10(f) + intercept for f in restricted_spin.Freq]
 
     # add 3 dBs zone
     traces.append(
@@ -572,7 +893,7 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     offset_spl = offset
     traces.append(
         go.Scatter(
-            x=restricted_freq.Freq + offset_freq,
+            x=restricted_spin.Freq + offset_freq,
             y=np.array(restricted_line) + offset_spl,
             line=dict(width=2, color="black", dash="dash"),
             opacity=1,
@@ -582,7 +903,7 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     )
     traces.append(
         go.Scatter(
-            x=restricted_freq.Freq + offset_freq,
+            x=restricted_spin.Freq + offset_freq,
             y=np.array(restricted_line) - offset_spl,
             line=dict(width=2, color="black", dash="dash"),
             opacity=1,
@@ -598,10 +919,8 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
         opacity=1,
         hovertemplate="Freq: %{x:.0f}Hz<br>SPL: %{y:.1f}dB<br>",
     )
-    if layout == "compact":
-        trace.name = label_short.get(measurement, measurement)
-    else:
-        trace.name = measurement
+    trace.name = measurement
+    if layout != "compact":
         trace.legendgroup = "measurements"
         trace.legendgrouptitle = {"text": "Measurements"}
     traces.append(trace)
@@ -609,27 +928,26 @@ def plot_graph_traces(df, measurement, params, slope, intercept, line_title):
     return traces
 
 
-def plot_graph_flat_traces(df, measurement, params):
-    restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
+def plot_graph_flat_traces(df, measurement, params, valid_freq_range):
+    restricted_df = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
     slope = 0
-    intercept = (
-        np.mean(restricted_freq[measurement]) if not restricted_freq[measurement].empty else 0.0
-    )
-    return plot_graph_traces(df, measurement, params, slope, intercept, None)
+    intercept = np.mean(restricted_df[measurement]) if not restricted_df[measurement].empty else 0.0
+    return plot_graph_traces(df, measurement, params, slope, intercept, None, valid_freq_range)
 
 
-def plot_graph_regression_traces(df, measurement, params):
-    restricted_freq = df.loc[(df.Freq >= MIDRANGE_MIN_FREQ) & (df.Freq <= MIDRANGE_MAX_FREQ)]
+def plot_graph_regression_traces(df, measurement, params, valid_freq_range):
+    restricted_df = df.loc[(df.Freq >= SLOPE_MIN_FREQ) & (df.Freq <= SLOPE_MAX_FREQ)]
     slope, intercept, _, _, _ = stats.linregress(
-        x=np.log10(restricted_freq["Freq"]), y=restricted_freq[measurement]
+        x=np.log10(restricted_df["Freq"]), y=restricted_df[measurement]
     )
-    return plot_graph_traces(df, measurement, params, slope, intercept, "Midrange ±3dB")
+    return plot_graph_traces(
+        df, measurement, params, slope, intercept, "Midrange ±3dB", valid_freq_range
+    )
 
 
-def plot_graph_flat(df, measurement, params):
-    params.get("layout", "")
+def plot_graph_flat(df, measurement, params, valid_freq_range):
     fig = go.Figure()
-    traces = plot_graph_flat_traces(df, measurement, params)
+    traces = plot_graph_flat_traces(df, measurement, params, valid_freq_range)
     for t in traces:
         fig.add_trace(t)
 
@@ -638,22 +956,68 @@ def plot_graph_flat(df, measurement, params):
 
     fig.update_layout(common_layout(params))
     fig.update_traces(mode="lines")
+    fig.add_traces(plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"])))
 
     return fig
 
 
-def plot_graph_regression(df, measurement, params):
-    params.get("layout", "")
+def plot_graph_regression(df, measurement, params, minmax_slopes, is_normalized, valid_freq_range):
     fig = go.Figure()
-    traces = plot_graph_regression_traces(df, measurement, params)
-    for t in traces:
-        fig.add_trace(t)
+
+    measurement_unmelted = "{}_unmelted".format(measurement)
+
+    if measurement_unmelted in df:
+        curve = df["{}_unmelted".format(measurement)]
+        fig.add_traces(plot_graph_regression_traces(curve, measurement, params, valid_freq_range))
+
+    if (
+        FLAG_FEATURE_CONFIDENCE_ZONES
+        and ("Estimated In-Room Response" in measurement or "Sound Power" in measurement)
+        and (
+            (is_normalized and "CEA2034 Normalized_unmelted" in df)
+            or (not is_normalized and "CEA2034_unmelted" in df)
+        )
+        and minmax_slopes is not None
+    ):
+        spin = df["CEA2034_unmelted"]
+        if is_normalized:
+            spin = df["CEA2034 Normalized_unmelted"]
+        freq = spin.Freq.to_numpy()
+        slope_min_freq = max(SLOPE_MIN_FREQ, freq[0])
+        slope_max_freq = min(SLOPE_MAX_FREQ, freq[-1])
+        restricted_df = spin.loc[(spin.Freq >= slope_min_freq) & (spin.Freq <= slope_max_freq)]
+        restricted_freq = restricted_df.Freq.to_numpy()
+        first_freq = restricted_freq[0]
+        last_freq = restricted_freq[-1]
+        first_spl, _, _, _ = compute_slope_smoothness(
+            data_frame=curve, measurement=measurement, is_normalized=is_normalized
+        )
+        slope_min, slope_max = minmax_slopes[measurement]
+        # first_freq = 20
+        spl_min = slope_min * math.log2(last_freq / first_freq)
+        spl_max = slope_max * math.log2(last_freq / first_freq)
+        x = [first_freq, last_freq, last_freq, first_freq, first_freq]
+        y = np.add([-1, -1 + spl_min, 1 + spl_max, +1, -1], first_spl).tolist()
+        fig.add_trace(
+            go.Scatter(
+                x=x,
+                y=y,
+                fill="toself",
+                opacity=0.5,
+                name="recommended {} zone".format(label_short.get(measurement, "???")),
+                fillcolor="#FF5C00",  # neon orange
+                mode="text",
+                visible=FLAG_FEATURE_VISIBLE,
+            )
+        )
 
     fig.update_xaxes(generate_xaxis())
     fig.update_yaxes(generate_yaxis_spl(params["ymin"], params["ymax"]))
 
     fig.update_layout(common_layout(params))
     fig.update_traces(mode="lines")
+
+    fig.add_traces(plot_valid_freq_ranges(fig, valid_freq_range, (params["ymin"], params["ymax"])))
 
     return fig
 
@@ -661,13 +1025,12 @@ def plot_graph_regression(df, measurement, params):
 T = TypeVar("T")
 
 
-def flatten(l: list[list[T | None]]) -> list[T | None]:
-    return list(itertools.chain.from_iterable(l))
+def flatten(the_list: list[list[T | None]]) -> list[T | None]:
+    return list(itertools.chain.from_iterable(the_list))
 
 
-def plot_contour(spl, params):
+def plot_contour(spl, params, valid_freq_range):
     df_spl = spl.copy()
-    params.get("layout", "")
     min_freq = params.get("contour_min_freq", 100)
 
     contour_start = -30
@@ -675,7 +1038,7 @@ def plot_contour(spl, params):
 
     fig = go.Figure()
 
-    af, am, az = compute_contour(df_spl.loc[df_spl.Freq > min_freq])
+    af, am, az = compute_contour(df_spl.loc[df_spl.Freq >= min_freq])
     az = np.clip(az, contour_start, contour_end)
     fig.add_trace(
         go.Contour(
@@ -692,14 +1055,11 @@ def plot_contour(spl, params):
                 showlines=True,
                 # showlabels=True,
             ),
-            colorbar=dict(
-                dtick=3,
-                len=1.0,
-                lenmode="fraction",
-            ),
+            colorbar=generate_colorbar(),
             autocolorscale=False,
             colorscale=CONTOUR_COLORSCALE,
             hovertemplate="Freq: %{x:.0f}Hz<br>Angle: %{y:.0f}<br>SPL: %{z:.1f}dB<br>",
+            zorder=0,
         )
     )
 
@@ -712,6 +1072,7 @@ def plot_contour(spl, params):
                 marker_color="white",
                 line_width=1,
                 showlegend=False,
+                zorder=1,
             )
         )
 
@@ -764,17 +1125,17 @@ def find_nearest_freq(dfu: pd.DataFrame, hz: float, tolerance: float = 0.05) -> 
     return ihz
 
 
-def plot_radar(spl, params):
+def plot_radar(spl, params, valid_plot_range):
     layout = params.get("layout", "")
 
     anglelist = list(range(-180, 180, 10))
 
     def projection(anglelist, grid_z, hz):
-        dbs_r = [db for a, db in zip(anglelist, grid_z, strict=False)]
-        dbs_theta = [a for a, db in zip(anglelist, grid_z, strict=False)]
+        dbs_r = [db for _, db in zip(anglelist, grid_z, strict=False)]
+        dbs_theta = [a for a, _ in zip(anglelist, grid_z, strict=False)]
         dbs_r.append(dbs_r[0])
         dbs_theta.append(dbs_theta[0])
-        return dbs_r, dbs_theta, [hz for i in range(0, len(dbs_r))]
+        return dbs_r, dbs_theta, [hz for _ in range(0, len(dbs_r))]
 
     def label(i):
         return "{:d} Hz".format(i)
@@ -784,11 +1145,10 @@ def plot_radar(spl, params):
         db_mean = dfu.loc[(dfu.Freq > 900) & (dfu.Freq < 1100)]["On Axis"].mean()
         freq = dfu.Freq
         dfu = dfu.drop("Freq", axis=1)
-        db_min = np.min(dfu.min(axis=0).values)
-        db_max = np.max(dfu.max(axis=0).values)
-        max(abs(db_max), abs(db_min))
         # if df is normalized then 0 will be at the center of the radar which is not what
         # we want. Let's shift the whole graph up.
+        # db_min = np.min(dfu.min(axis=0).values)
+        # db_max = np.max(dfu.max(axis=0).values)
         # if db_mean < 45:
         #    dfu += db_scale
         # print(db_min, db_max, db_mean, db_scale)
@@ -830,9 +1190,7 @@ def plot_radar(spl, params):
     radialaxis = dict(
         range=[-45, 5],
         dtick=5,
-        tickfont=dict(
-            size=10,
-        ),
+        tickfont=FONT_H5,
     )
     angularaxis = dict(
         dtick=10,
@@ -841,15 +1199,13 @@ def plot_radar(spl, params):
             f"{x}°" if abs(x) < 60 or not x % 30 else " "
             for x in (list(range(0, 190, 10)) + list(range(-170, 0, 10)))
         ],
-        tickfont=dict(
-            size=10,
-        ),
+        tickfont=FONT_H6,
     )
 
     def update_pict(anglelist, freqlist, row, col, spl):
         _, dbs_df = plot_radar_freq(anglelist, freqlist, spl)
 
-        for freq in np.unique(dbs_df["Freq"].values):
+        for freq in np.unique(dbs_df["Freq"].to_list()):
             mslice = dbs_df.loc[dbs_df.Freq == freq]
             trace = go.Scatterpolar(
                 r=mslice.R,
@@ -860,8 +1216,10 @@ def plot_radar(spl, params):
                 legendrank=int(freq[:-3]),
             )
             if layout != "compact":
-                trace.legendgroup = ("measurements",)
-                trace.legendgrouptitle_text = ("Frequencies",)
+                trace.legendgroup = "Measurements"
+                trace.legendgrouptitle = dict(
+                    text="Frequencies",
+                )
             fig.add_trace(trace, row=row, col=col)
             fig.update_polars(radialaxis=radialaxis, angularaxis=angularaxis, row=row, col=col)
 
@@ -871,17 +1229,7 @@ def plot_radar(spl, params):
     update_pict(anglelist, [4000, 5000, 6300, 8000], 2, 2, spl)
 
     fig.update_layout(radar_layout(params))
-    # fig.update_layout(polar=dict(radialaxis=radialaxis, angularaxis=angularaxis)), row=row, col=col)
-
     return fig
-
-
-def plot_image(df, params):
-    return None
-
-
-def plot_summary(df, summary, params):
-    return None
 
 
 def plot_eqs(freq, peqs, names):
@@ -920,10 +1268,18 @@ def plot_eqs(freq, peqs, names):
             dtick="D1",
         ),
     )
+    spl_min = -5
+    if len(peqs) > 0:
+        spl_min = np.min([np.min(peq_spl(freq, peq)) for peq in peqs])
+        spl_min = max(-10, -5 * round(-spl_min / 5)) if spl_min < -5 else -5
+    spl_max = 5
+    if len(peqs) > 0:
+        spl_max = np.max([np.max(peq_spl(freq, peq)) for peq in peqs])
+        spl_max = min(15, 5 * round(spl_max / 5) + 5) if spl_max > 5 else 5
     fig.update_yaxes(
         dict(
             title_text="SPL (dB)",
-            range=[-5, 5],
+            range=[spl_min, spl_max],
             showline=True,
             dtick="D1",
         ),
@@ -939,32 +1295,30 @@ def plot_eqs(freq, peqs, names):
             y=1.1,
             x=0.5,
             title=None,
-            font=dict(size=12),
+            font=FONT_H3,
         ),
     )
     return fig
 
 
-def plot_contour_3d(spl, params):
+def plot_contour_3d(spl, params, valid_freq_range):
     params.get("layout", "")
     min_freq = max(20, params.get("contour_min_freq", 100))
 
     contour_start = -30
     contour_end = 3
 
-    colorbar = dict(
-        dtick=3,
-        len=0.5,
-        lenmode="fraction",
-        tickfont=dict(size=14),
-    )
+    z_min = -45
+    z_max = 5
+
+    colorbar = generate_colorbar()
 
     angle_list_3d = [-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
     angle_text_3d = [f"{a}°" for a in angle_list_3d]
     spl_list_3d = [0, -5, -10, -15, -20, -25, -30, -35, -40, -45]
     spl_text_3d = [f"{s}" if s > -45 else "" for s in spl_list_3d]
 
-    def a2v(angle):
+    def a2v(angle: str) -> int:
         if angle == "Freq":
             return -1000
         elif angle == "On Axis":
@@ -972,16 +1326,15 @@ def plot_contour_3d(spl, params):
         iangle = int(angle[:-1])
         return iangle
 
-    def transform(spl, db_max, clip_min, clip_max):
+    def transform(spl: pd.DataFrame, db_max: float, clip_min: float, clip_max: float):
         if "-180°" not in spl and "180°" in spl:
             spl["-180°"] = spl["180°"]
         df_spl = spl.reindex(columns=sorted(spl.columns, key=a2v)) - db_max
-        # x,y,z
-        freq = df_spl.Freq
+        # freq, angle, spl, color
+        selector = (df_spl["Freq"] >= min_freq) & (df_spl["Freq"] <= 20000)
+        freq = df_spl.Freq.loc[selector].to_numpy()
         angle = [a2v(i) for i in df_spl.loc[:, df_spl.columns != "Freq"].columns]
-        selector = (df_spl["Freq"] > min_freq) & (df_spl["Freq"] < 20000)
-        spl = df_spl.loc[selector, df_spl.columns != "Freq"].T.to_numpy()
-        # color
+        spl = df_spl.loc[selector, df_spl.columns != "Freq"].clip(z_min, z_max).T.to_numpy()
         color = np.clip(np.multiply(np.floor_divide(spl, 3), 3), clip_min, clip_max)
         return freq, angle, spl, color
 
@@ -1008,18 +1361,18 @@ def plot_contour_3d(spl, params):
     fig.add_trace(trace)
 
     fig.update_layout(
-        autosize=False,
-        width=600,
-        height=700,
+        autosize=True,
+        width=800,
+        height=800,
         scene=dict(
             xaxis=dict(
                 title="Freq. (Hz)",
-                tickfont=dict(
-                    size=11,
-                ),
-                titlefont=dict(
-                    size=14,
-                ),
+                type="log",
+                range=[math.log10(min_freq), math.log10(20000)],
+                showline=True,
+                dtick="D1",
+                tickfont=FONT_H4,
+                title_font=FONT_H3,
             ),
             yaxis=dict(
                 range=[-180, 180],
@@ -1027,25 +1380,27 @@ def plot_contour_3d(spl, params):
                 tickvals=angle_list_3d,
                 ticktext=angle_text_3d,
                 title="Angle",
-                tickfont=dict(
-                    size=11,
-                ),
-                titlefont=dict(
-                    size=14,
-                ),
+                tickfont=FONT_H4,
+                title_font=FONT_H3,
             ),
             zaxis=dict(
-                range=[-45, 5],
+                range=[z_min, z_max],
                 title="SPL",
                 showline=True,
                 tickvals=spl_list_3d,
                 ticktext=spl_text_3d,
-                tickfont=dict(
-                    size=11,
-                ),
-                titlefont=dict(
-                    size=14,
-                ),
+                tickfont=FONT_H4,
+                title_font=FONT_H3,
+            ),
+            aspectratio=dict(
+                x=1.414,
+                y=1,
+                z=1,
+            ),
+            camera_eye=dict(
+                x=1.25,
+                y=-2.0,
+                z=1.5,
             ),
         ),
     )

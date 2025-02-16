@@ -437,6 +437,40 @@ speakers_info_s: SpeakerDatabase = {
             },
         },
     },
+    "Sonus Faber Picolo": {
+        "brand": "Sonus Faber",
+        "model": "Picolo",
+        "type": "passive",
+        "price": "585",
+        "amount": "each",
+        "shape": "center",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/sonus-faber-piccolo-solo-spinorama-measurements-cta-2034.58107/",
+                    "snv": "https://www.soundandvision.com/content/sonus-faber-concerto-speaker-system-page-2",
+                },
+                "review_published": "20241102",
+                # partial measurements
+                "symmetry": "coaxial",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 8,
+                    "size": {
+                        "height": 170,
+                        "width": 485,
+                        "depth": 235,
+                    },
+                    "weight": 10.0,
+                },
+            },
+        },
+    },
+    # Sonus faber Sonetto II G2
     "Sonus Faber Sonetto II": {
         "brand": "Sonus Faber",
         "model": "Sonetto II",
@@ -452,6 +486,37 @@ speakers_info_s: SpeakerDatabase = {
                 "quality": "low",
                 "reviews": {
                     "asr": "https://www.audiosciencereview.com/forum/index.php?threads/sonus-faber-sonetto-ii-measurements-now-with-a-spinorama.10727/#post-305705",
+                },
+            },
+        },
+    },
+    "Sonus Faber Sonetto II G2": {
+        "skip": True,
+        "brand": "Sonus Faber",
+        "model": "Sonetto II G2",
+        "type": "passive",
+        "price": "2500",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4,
+                    "size": {
+                        "height": 414,
+                        "width": 227,
+                        "depth": 335,
+                    },
+                    "weight": 10.4,
                 },
             },
         },
@@ -802,6 +867,37 @@ speakers_info_s: SpeakerDatabase = {
                         "depth": 390,
                     },
                     "weight": 16.5,
+                },
+            },
+        },
+    },
+    "System One S-15B": {
+        "brand": "System One",
+        "model": "S-15B",
+        "type": "passive",
+        "price": "130",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-ageve",
+        "measurements": {
+            "misc-ageve": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/system-one-s15b-spinorama-measurements-cta-2034.58759/",
+                },
+                "review_published": "20241124",
+                "notes": "Tweeter polarity was fixed before measuring. Out of the box, the speaker is worse!",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "size": {
+                        "height": 300,
+                        "width": 185,
+                        "depth": 225,
+                    },
+                    "weight": 3.25,
                 },
             },
         },

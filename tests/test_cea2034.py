@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ import numpy as np
 import pandas as pd
 import scipy.io
 
-from spinorama.load import graph_melt
+from spinorama.misc import graph_melt
 from spinorama.load_klippel import parse_graph_freq_klippel
 from spinorama.compute_cea2034 import (
     compute_cea2034,

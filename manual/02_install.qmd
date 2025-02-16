@@ -1,0 +1,81 @@
+---
+title: "How to install the software?"
+date: 2025-02-08
+---
+
+# How to use the software?
+
+## Linux or Mac user
+
+First install a few packages:
+
+``` {.shell}
+apt install imagemagick npm
+```
+
+On a Mac you can replace all `apt` calls by `brew`.
+
+### Using python3, ipython and Jupyter-Lab
+
+``` {.shell}
+pip3 install -r requirements.txt
+```
+
+pip3 may also be pip depending on your system.
+
+``` {.shell}
+export PYTHONPATH=src:src/website
+jupiter-lab &
+```
+
+Your browser will open, go to _experiments_ directitory and click on _spinorama.ipynb_ and play around.
+
+## How to develop the software?
+
+You are very welcome to submit pull requests. Note that the license is GPLv3.
+
+Start with launching the setup script: (maybe as root if you need to install some packages)
+
+```  {.shell}
+./scripts/setup.sh
+```
+
+If it doesn't work out of the box which is likely, please go step by step:
+
+```  {.shell}
+pip3 install -r requirements.txt
+pip3 install -r requirements-test.txt
+pip3 install -r requirements-dev.txt
+pip3 install -r requirements-api.txt
+```
+
+For linting the python, html and javascript code or generating helpers:
+
+```  {.shell}
+npm install .
+```
+
+Please add tests and run them.
+For Python files:
+```
+export PYTHONPATH=src
+python3 -m pytest --cov=src tests
+```
+and for javascript files:
+```
+npx vitest
+```
+
+Before committing, please check that the various checks are fine:
+
+1. `./scripts/check_html.sh` : check that HTML generated files are conforming.
+2. `./scripts/check_meta.py` : check that the metadata file looks sane.
+3. `flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude spinorama-venv` should report 0
+4. `ruff format .` will take care of formatting all the python files.
+5. `ruff check` also need to pass.
+6. `prettier -w src/website/*.js` will format the javascript files.
+7. `eslint` should be happy.
+
+Most of the checks are enforced in the pre-submit which means that
+you cannot commit new codes without passing tests and checks.
+

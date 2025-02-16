@@ -72,6 +72,111 @@ speakers_info_l: SpeakerDatabase = {
             },
         },
     },
+    "L-Acoustics SOKA": {
+        "brand": "L-Acoustics",
+        "model": "SOKA",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-L-Acoustics",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20250213",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 140,
+                        "vertical": 25,
+                    },
+                    "impedance": 8,
+                    "SPL": {
+                        "max": 125,
+                        "peak": 133,
+                    },
+                    "size": {
+                        "height": 1065,
+                        "width": 99,
+                        "depth": 104.2,
+                    },
+                    "weight": 9.4,
+                },
+            },
+        },
+    },
+    "L-Acoustics SYVA": {
+        "brand": "L-Acoustics",
+        "model": "SYVA",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-L-Acoustics",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20250213",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 140,
+                        "vertical": 25,
+                    },
+                    "impedance": 8,
+                    "SPL": {
+                        "max": 125,
+                        "peak": 137,
+                    },
+                    "size": {
+                        "height": 1301,
+                        "width": 144,
+                        "depth": 209,
+                    },
+                    "weight": 21,
+                },
+            },
+        },
+    },
+    "L-Acoustics SYVA-low+top": {
+        "brand": "L-Acoustics",
+        "model": "SYVA-low+top",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "liveportable",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-L-Acoustics",
+                "format": "gll_hv_txt",
+                "data_acquisition": gll_data_acquisition_std,
+                "quality": "medium",
+                "review_published": "20250213",
+                "specifications": {
+                    "dispersion": {
+                        "horizontal": 140,
+                        "vertical": 25,
+                    },
+                    "impedance": 4,
+                    "SPL": {
+                        "max": 125,
+                        "peak": 137,
+                    },
+                    "size": {
+                        "height": 2150,
+                        "width": 334,
+                        "depth": 350,
+                    },
+                    "weight": 50,
+                },
+            },
+        },
+    },
     "L-Acoustics X4i": {
         "brand": "L-Acoustics",
         "model": "X4i",

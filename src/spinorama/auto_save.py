@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,14 +28,14 @@ import ray
 
 from spinorama import logger, ray_setup_logger
 from spinorama.ltype import DataSpeaker, OptimResult
-from spinorama.constant_paths import CPATH_DOCS_SPEAKERS
+from spinorama.constant_paths import CPATH_DIST_SPEAKERS
 from spinorama.load_rew_eq import parse_eq_iir_rews
-from spinorama.pict import write_multiformat
 from spinorama.filter_peq import peq_format_apo, Peq
 from spinorama.filter_scores import (
     scores_apply_filter,
     scores_print,
 )
+from spinorama.speaker import write_multiformat
 from spinorama.auto_target import get_freq, get_target
 from spinorama.auto_plot import graph_results as auto_graph_results
 from spinorama.auto_strategy import optim_strategy
@@ -77,7 +77,7 @@ def write_eq_to_file(
 
     version = optim_config["version"]
     comments += [
-        f"Generated from http://github.com/pierreaubert/spinorama/generate_peqs.py v{version}",
+        f"Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v{version}",
         f"Dated: {datetime.today().strftime('%Y-%m-%d-%H:%M:%S')}",
         "",
     ]
@@ -138,7 +138,7 @@ def print_auto_graphs_seq(
             if "Vendors-" in origin:
                 origin = origin[8:]
             graph_filename = "{}/{}/{}/filters_{}".format(
-                CPATH_DOCS_SPEAKERS, speaker_name, origin, name
+                CPATH_DIST_SPEAKERS, speaker_name, origin, name
             )
             if optim_config["output_dir"] and pathlib.Path(optim_config["output_dir"]).exists():
                 graph_filename = "{}/filters_{}".format(
@@ -271,7 +271,7 @@ def optim_save_peq_seq(
         optim_config["curve_names"] = ["Listening Window"]
 
     # do we have a previous score?
-    previous_score = get_previous_score(eq_name)
+    previous_score: float = get_previous_score(eq_name)
 
     skip_write_eq = False
     if (
@@ -300,7 +300,7 @@ def optim_save_peq_seq(
     # compute new score with this PEQ
     auto_spin = None
     auto_pir = None
-    scores = []
+    scores = (-1000, -1000)
     if use_score or optim_config["generate_images_only"]:
         if (
             previous_score is not None and previous_score > auto_score["pref_score"]
@@ -316,8 +316,13 @@ def optim_save_peq_seq(
             print_small_summary(current_speaker_name, score, auto_score)
 
         auto_spin, auto_pir, auto_score = scores_apply_filter(df_speaker, auto_peq)
-        scores = [score.get("pref_score", -1000), auto_score.get("pref_score", -1000)]
-        if previous_score is not None and previous_score > auto_score["pref_score"]:
+        if score is not None:
+            scores = [score.get("pref_score", -1000), auto_score.get("pref_score", -1000)]
+        if (
+            previous_score is not None
+            and auto_score is not None
+            and previous_score > auto_score.get("pref_score", -1000)
+        ):
             scores[1] = previous_score
 
     if auto_spin is None or auto_pir is None:

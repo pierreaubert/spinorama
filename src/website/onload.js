@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // A library to display spinorama charts
 //
-// Copyright (C) 2020-2024 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+// Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -86,6 +86,15 @@ window.onload = () => {
             document.querySelectorAll('.modal').forEach((modal) => modal.remove('is-active'));
         }
     });
+
+    if (window.trustedTypes && window.trustedTypes.createPolicy && !window.trustedTypes.defaultPolicy) {
+        window.trustedTypes.createPolicy('default', {
+            createHTML: (string) => string,
+            // Optional, only needed for script (url) tags
+            //,createScriptURL: string => string
+            //,createScript: string => string,
+        });
+    }
 
     /*
     if (flags_Screen) {

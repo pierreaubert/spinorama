@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -69,14 +69,14 @@ from generate_common import (
 )
 from datas import metadata, Symmetry, Parameters
 from datas.helpers import measurement2distance
-from spinorama.load_parse import parse_graphs_speaker, parse_eq_speaker
-from spinorama.speaker_print import print_graphs
+from spinorama.load import parse_graphs_speaker, parse_eq_speaker
+from spinorama.speaker import print_graphs
 from spinorama.plot import plot_params_default
 
 
-VERSION = "2.03"
+VERSION = "2.05"
 
-ACTIVATE_TRACING: bool = False
+ACTIVATE_TRACING: bool = True
 
 
 def tracing(msg: str):
@@ -137,10 +137,11 @@ def queue_measurement(
     )
     width = int(plot_params_default["width"])
     height = int(plot_params_default["height"])
-    tracing("calling print_graph remote for {}".format(speaker))
+    tracing("calling print_graph remote for {} {}".format(speaker, mversion))
     id_g1 = print_graphs.remote(
         id_df,
         speaker,
+        mformat,
         mversion,
         morigin,
         metadata.origins_info,
@@ -150,10 +151,11 @@ def queue_measurement(
         force,
         level,
     )
-    tracing("calling print_graph remote eq for {}".format(speaker))
+    tracing("calling print_graph remote eq for {} {}".format(speaker, mversion + "_eq"))
     id_g2 = print_graphs.remote(
         id_eq,
         speaker,
+        mformat,
         mversion,
         morigin,
         metadata.origins_info,
@@ -163,8 +165,8 @@ def queue_measurement(
         force,
         level,
     )
-    tracing("print_graph done")
-    return (id_df, id_eq, id_g1, id_g2)
+    tracing("print_graph done for {} {}".format(speaker, mversion))
+    return id_df, id_eq, id_g1, id_g2
 
 
 def queue_speakers(speakerlist: set[str], filters: dict[str, dict], level: int) -> dict:
@@ -251,6 +253,11 @@ def compute(speakerlist, filters, ray_ids: dict, level: int):
             len(remaining_ids),
             len(ids),
             len(done_ids),
+        )
+        tracing(
+            "State: {:4d} ready IDs {:4d} remainings IDs {:4d} Total IDs {:4d} Done".format(
+                len(ready_ids), len(remaining_ids), len(ids), len(done_ids)
+            )
         )
 
         for speaker in speakerlist:
@@ -341,14 +348,12 @@ def main(level):
         if args["--smoke-test"] == "random":
             speakerlist = set(random.sample(list(speakerlist), 15))
         else:
-            speakerlist = set(
-                [
-                    "Genelec 8030C",
-                    "KEF LS50",
-                    "KRK Systems Classic 5",
-                    "Verdant Audio Bambusa MG 1",
-                ]
-            )
+            speakerlist = {
+                "Genelec 8030C",
+                "KEF LS50",
+                "KRK Systems Classic 5",
+                "Verdant Audio Bambusa MG 1",
+            }
         print(speakerlist)
 
     if args["--width"] is not None:

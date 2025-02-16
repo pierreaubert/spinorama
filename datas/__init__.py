@@ -79,6 +79,8 @@ class DataAcquisition(TypedDict, total=False):
     air_absorbtion: bool
     resolution: float
     notes: str
+    min_valid_freq: float
+    max_valid_freq: float
 
 
 class Parameters(TypedDict):

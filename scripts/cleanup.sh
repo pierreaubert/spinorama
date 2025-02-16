@@ -1,6 +1,6 @@
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -44,8 +44,10 @@ rm -f src/spinorama/c_compute_scores.*.so
 rm -f src/spinorama/c_compute_scores.*~
 # spinorama
 rm -fr ./.cache
-rm -fr ./docs
+rm -fr ./dist
 rm -fr ./build
 rm -f *.log */*.log
 rm -fr /tmp/ray
 rm -fr **/results_*.csv
+rm -f *.csv
+rm -f nohup.out

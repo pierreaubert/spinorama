@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,11 +26,32 @@ from spinorama.constant_paths import (
     SENSITIVITY_MIN_FREQ,
     SENSITIVITY_MAX_FREQ,
 )
-from spinorama.compute_misc import (
-    compute_directivity_deg_v2,
-)
+from spinorama.compute_misc import compute_directivity_deg_v2, compute_slope_smoothness
 
 pd.set_option("display.max_rows", 1000)
+
+
+def estimates_slopes(spin: pd.DataFrame) -> dict[str, dict[str, dict[str, float]]]:
+    est = {}
+    if "Measurements" not in spin:
+        logger.info("Measurements not in spin (%s)", ", ".join(spin.keys()))
+        return est
+    for measurement in (
+        "On Axis",
+        "Listening Window",
+        "Sound Power",
+        "Early Reflections",
+        "Sound Power DI",
+        "Early Reflections DI",
+    ):
+        _, _, slope, sm = compute_slope_smoothness(
+            data_frame=spin, measurement=measurement, is_normalized=False
+        )
+        est[measurement] = {
+            "slope": slope,
+            "smoothness": sm,
+        }
+    return {"slopes": est}
 
 
 def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
@@ -115,8 +136,6 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
             if spdi is not None:
                 est["dir_constant"] = spdi.dB.std()
                 logger.debug("Constant directivity %d", est["dir_constant"])
-            else:
-                print(spin.keys())
 
     except TypeError:
         logger.exception("Estimates failed for %s", onaxis.shape)
@@ -129,7 +148,7 @@ def estimates_spin(spin: pd.DataFrame) -> dict[str, float]:
 
 
 def estimates(spin: pd.DataFrame, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> dict[str, float]:
-    """ "Compute values when you do not necessary have all the 72 measurements"""
+    """Compute values when you do not necessary have all the 72 measurements"""
     est = estimates_spin(spin)
     try:
         for orientation in ("horizontal", "vertical"):
@@ -147,6 +166,12 @@ def estimates(spin: pd.DataFrame, spl_h: pd.DataFrame, spl_v: pd.DataFrame) -> d
                     logger.debug("Computing %s directivity failed! %s", orientation, error)
                 except Exception as error:
                     logger.warning("Computing %s directivity failed! %s", orientation, error)
+
+        slopes = estimates_slopes(spin)
+        if "slopes" in slopes:
+            for k, v in slopes["slopes"].items():
+                est["slope_{}".format(k.replace(" ", "_").lower())] = v["slope"]
+                est["smoothness_{}".format(k.replace(" ", "_").lower())] = v["smoothness"]
 
         logger.debug("Estimates v3: %s", est)
     except TypeError as type_error:

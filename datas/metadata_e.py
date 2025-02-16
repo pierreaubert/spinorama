@@ -438,6 +438,33 @@ speakers_info_e: SpeakerDatabase = {
             },
         },
     },
+    "Edifier MR3BT": {
+        "skip": True,
+        "brand": "Edifier",
+        "model": "MR3BT",
+        "type": "active",
+        "price": "120",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-audiolabinsight",
+        "measurements": {
+            "misc-audiolabinsight": {
+                "origin": "Misc",
+                "format": "klippel",
+                "quality": "high",
+                "review": "https://audiolabinsight.com/t/edifier-mr3bt-mesearment-and-review/342",
+                "review_published": "20241214",
+                "specifications": {
+                    "size": {
+                        "height": 2230,
+                        "width": 125,
+                        "depth": 185,
+                    },
+                    "weight": 3.85,
+                },
+            },
+        },
+    },
     "Edifier MR4": {
         "brand": "Edifier",
         "model": "MR4",
@@ -482,6 +509,38 @@ speakers_info_e: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/edifier-r1280t-powered-speaker-review.16112/",
                 "review_published": "20200920",
+            },
+        },
+    },
+    "Edifier R1700BT Plus": {
+        "brand": "Edifier",
+        "model": "R1700BT Plus",
+        "type": "active",
+        "price": "",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "misc-audiorekr",
+        "measurements": {
+            "misc-audiorekr": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "review_published": "20250125",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+                "reviews": {
+                    "audiorekr": "https://audiore.kr/edifier-r1700bt-plus-%eb%a6%ac%eb%b7%b0/",
+                },
+                "notes": "Data is valid above ~200Hz.",
+                "specifications": {
+                    "size": {
+                        "height": 254,
+                        "width": 154,
+                        "depth": 214,
+                    },
+                    "weight": 6.6,
+                },
             },
         },
     },
@@ -642,6 +701,37 @@ speakers_info_e: SpeakerDatabase = {
                     "yt": "https://youtu.be/FeicGL2UWzw",
                 },
                 "review_published": "20220813",
+            },
+        },
+    },
+    "Elac Debut 3.0 B6.3": {
+        "skip": True,
+        "brand": "Elac",
+        "model": "Debut 3.0 B6.3",
+        "type": "passive",
+        "price": "450",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/elac_db63/",
+                    "yt": "https://www.youtube.com/watch?v=8kmjrC84vRg",
+                },
+                "review_published": "2024xxxx",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 6,
+                    "size": {
+                        "height": 339,
+                        "width": 195,
+                        "depth": 298,
+                    },
+                    "weight": 7.85,
+                },
             },
         },
     },

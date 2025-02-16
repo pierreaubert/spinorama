@@ -39,7 +39,6 @@ speakers_info_i: SpeakerDatabase = {
         },
     },
     "IK Multimedia iLoud MTM MKII": {
-        "skip": True,
         "brand": "IK Multimedia",
         "model": "iLoud MTM MKII",
         "type": "active",
@@ -52,10 +51,9 @@ speakers_info_i: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "",
                     "yt": "https://www.youtube.com/watch?v=Pdj69hJNCAg",
                 },
-                "review_published": "202408xx",
+                "review_published": "20250114",
                 "specifications": {
                     "SPL": {
                         "peak": 110,

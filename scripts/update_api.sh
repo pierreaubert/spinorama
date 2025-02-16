@@ -1,7 +1,7 @@
 #!/bin/bash
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ DIST=/var/www/html/spinorama-api
 cp ./scripts/gunicorn_start.sh $DIST
 cp requirements-api.txt $DIST
 cp datas/metadata.py $DIST/datas
-cp docs/assets/metadata.json $DIST/datas
+cp dist/assets/metadata.json $DIST/datas
 for source in "__init__.py" "main.py" "ai-plugin.json"; do
     cp ./src/api/$source $DIST;
 done

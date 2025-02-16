@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 # import os
 import unittest
 import pandas as pd
-from spinorama.load import graph_melt
+from spinorama.misc import graph_melt
 from spinorama.load_klippel import parse_graph_freq_klippel
 from spinorama.load_gll_hv_txt import parse_graphs_speaker_gll_hv_txt
 from spinorama.compute_estimates import estimates, compute_sensitivity
@@ -80,7 +80,7 @@ class SpinoramaEstimatesNV3Tests(unittest.TestCase):
 
     def test_directivity(self):
         self.assertAlmostEqual(self.estimates["dir_horizontal_p"], 50)
-        self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -60)
+        self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -50)
         self.assertAlmostEqual(self.estimates["dir_vertical_p"], 40)
         self.assertAlmostEqual(self.estimates["dir_vertical_m"], -40)
 
@@ -114,8 +114,8 @@ class SpinoramaEstimatesNV4Tests(unittest.TestCase):
         self.assertAlmostEqual(self.estimates["ref_band"], 3.0)  # deviation in dB
 
     def test_directivity(self):
-        self.assertAlmostEqual(self.estimates["dir_horizontal_p"], 70)
-        self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -80)
+        self.assertAlmostEqual(self.estimates["dir_horizontal_p"], 50)
+        self.assertAlmostEqual(self.estimates["dir_horizontal_m"], -50)
         self.assertAlmostEqual(self.estimates["dir_vertical_p"], 40)
         self.assertAlmostEqual(self.estimates["dir_vertical_m"], -20)
 

@@ -2,6 +2,64 @@
 from . import SpeakerDatabase, gll_data_acquisition_std
 
 speakers_info_t: SpeakerDatabase = {
+    "Taipuu Speakers Kero Active Stream": {
+        "brand": "Taipuu Speakers",
+        "model": "Kero Active Stream",
+        "type": "active",
+        "price": "3800",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Taipuu Speakers",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "vendor": "https://aaltospeakers.fi/en/product/taipuu-kero-active-stream/",
+                },
+                "review_published": "20241216",
+                "specifications": {
+                    "size": {
+                        "height": 380,
+                        "width": 210,
+                        "depth": 300,
+                    },
+                    "weight": 9.5,
+                },
+                "notes": "Frequency responses are exported with current default 'factory' settings. Older presets had less parametric EQs in use so there were more variations at midrange. This model is using Platin Audio SM450 streaming DSP amplifier in external box.",
+            },
+        },
+    },
+    "Taipuu Speakers Kero L Active Pro": {
+        "brand": "Taipuu Speakers",
+        "model": "Kero L Active Pro",
+        "type": "active",
+        "price": "6800",
+        "amount": "pair",
+        "shape": "floorstanders",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-Taipuu Speakers",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "vendor": "https://aaltospeakers.fi/en/product/taipuu-kero-l-active-pro/",
+                },
+                "review_published": "20241216",
+                "specifications": {
+                    "size": {
+                        "height": 1000,
+                        "width": 210,
+                        "depth": 300,
+                    },
+                    "weight": 19.5,
+                },
+                "notes": "Frequency responses are exported with 'factory' settings of the speaker delivered ca. a month ago. On-axis has tiny tilt down, but it's possible to compensate with integrated DSP amp. We're using FourAudio PPA 1000-4 PC-IEC for small Active Pro models, both Aalto Speakers and Taipuu Speakers.",
+            },
+        },
+    },
     "TAD COMPACT REFERENCE ONE CR1TX": {
         "brand": "TAD",
         "model": "COMPACT REFERENCE ONE CR1TX",
@@ -370,6 +428,37 @@ speakers_info_t: SpeakerDatabase = {
                 "data_acquisition": gll_data_acquisition_std,
                 "quality": "high",
                 "review_published": "20230115",
+            },
+        },
+    },
+    "Totem Acoustic Kin One": {
+        "skip": True,
+        "brand": "Totem Acoustic",
+        "model": "Kin One",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "",
+                    "yt": "https://youtu.be/37Nd7Uz_zlk",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 6,
+                    "size": {
+                        "height": 143,
+                        "width": 237,
+                        "depth": 159,
+                    },
+                    "weight": 2.83,
+                },
             },
         },
     },

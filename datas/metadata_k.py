@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import SpeakerDatabase, gll_data_acquisition_std
 
-note_kef_data = "Data computed by KEF is precise above 300Hz, the on axis is corrected below that. The other curves are interpolated below 300Hz and are not very precise."
+note_kef_data = "the off-axis average curves are truncated at 200Hz as this is close to the LF cut-off limit of our anechoic chamber. The on-axis LF response has been compensated using ground plane measurements carried out in free-field and is therefore valid only for that singular curve."
 
 
 speakers_info_k: SpeakerDatabase = {
@@ -230,6 +230,36 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
+    "Kali SM-5": {
+        "brand": "Kali",
+        "model": "SM-5",
+        "type": "active",
+        "price": "1700",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "https://youtu.be/EMm5IV95X_U",
+                },
+                "review_published": "2024xxxx",
+                "specifications": {
+                    "SPL": {
+                        "peak": 117,
+                    },
+                    "size": {
+                        "height": 396,
+                        "width": 200,
+                        "depth": 248,
+                    },
+                    "weight": 9.5,
+                },
+            },
+        },
+    },
     "Kanto ORA": {
         "brand": "Kanto",
         "model": "ORA",
@@ -274,7 +304,6 @@ speakers_info_k: SpeakerDatabase = {
         },
     },
     "Kanto YU4": {
-        "skip": True,
         "brand": "Kanto",
         "model": "YU4",
         "type": "passive",
@@ -287,10 +316,10 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
                 "reviews": {
-                    "eac": "",
-                    "yt": "",
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kanto__yu4/",
+                    "yt": "https://youtu.be/aU_3cidukOE?si=29-suzrb4YdUd-ag",
                 },
-                "review_published": "202404xx",
+                "review_published": "20241117",
                 "specifications": {
                     "size": {
                         "height": 220,
@@ -373,6 +402,9 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20230503",
                 "notes": note_kef_data,
                 "quality": "medium",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "reviews": {
                     "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
                 },
@@ -381,6 +413,9 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "notes": note_kef_data,
                 "quality": "medium",
                 "reviews": {
@@ -429,6 +464,9 @@ speakers_info_k: SpeakerDatabase = {
                 "format": "rew_text_dump",
                 "review_published": "20230503",
                 "notes": note_kef_data,
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "quality": "medium",
                 "reviews": {
                     "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
@@ -440,6 +478,9 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20220217",
                 "notes": note_kef_data,
                 "quality": "medium",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "reviews": {
                     "white_paper": "https://assets.kef.com/documents/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
                 },
@@ -507,6 +548,9 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Princeton",
                 "format": "princeton",
                 "symmetry": "horizontal",
+                "data_acquisition": {
+                    "min_valid_freq": 500,
+                },
                 "review": "https://www.princeton.edu/3D3A/Directivity.html",
                 "review_published": "20151001",
             },
@@ -857,6 +901,267 @@ speakers_info_k: SpeakerDatabase = {
             },
         },
     },
+    "KEF Q Concerto Meta": {
+        "brand": "KEF",
+        "model": "Q Concerto Meta",
+        "type": "passive",
+        "price": "1300",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q3_meta/",
+                    "yt": "https://youtu.be/O-7b6sqDOus",
+                },
+                "review_published": "20241117",
+                "specifications": {
+                    "sensitivity": 85,
+                    "impedance": 3.2,
+                    "SPL": {
+                        "peak": 108,
+                    },
+                    "size": {
+                        "height": 415,
+                        "width": 210,
+                        "depth": 315,
+                    },
+                    "weight": 9.5,
+                },
+            },
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+                "notes": note_kef_data,
+            },
+        },
+    },
+    "KEF Q1 Meta": {
+        "brand": "KEF",
+        "model": "Q1 Meta",
+        "type": "passive",
+        "price": "550",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 108,
+                    },
+                    "size": {
+                        "height": 302,
+                        "width": 180,
+                        "depth": 277,
+                    },
+                    "weight": 6.1,
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+                "notes": note_kef_data,
+            },
+        },
+    },
+    "KEF Q3 Meta": {
+        "brand": "KEF",
+        "model": "Q3 Meta",
+        "type": "passive",
+        "price": "800",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_q3_meta/",
+                    "yt": "https://youtu.be/GhyF1ZnebRY?si=ajJ4qHTN25ofBy1Y",
+                },
+                "review_published": "20241117",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 109,
+                    },
+                    "size": {
+                        "height": 357,
+                        "width": 210,
+                        "depth": 305,
+                    },
+                    "weight": 8.2,
+                },
+            },
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "notes": note_kef_data,
+            },
+        },
+    },
+    "KEF Q4 Meta": {
+        "brand": "KEF",
+        "model": "Q4 Meta",
+        "type": "passive",
+        "price": "400",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 108,
+                    },
+                    "size": {
+                        "height": 400,
+                        "width": 250,
+                        "depth": 142,
+                    },
+                    "weight": 5.7,
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+                "notes": note_kef_data,
+            },
+        },
+    },
+    "KEF Q6 Meta": {
+        "brand": "KEF",
+        "model": "Q6 Meta",
+        "type": "passive",
+        "price": "750",
+        "shape": "center",
+        "amount": "each",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 109,
+                    },
+                    "size": {
+                        "height": 210,
+                        "width": 629,
+                        "depth": 303,
+                    },
+                    "weight": 14.1,
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+                "notes": note_kef_data,
+            },
+        },
+    },
+    "KEF Q7 Meta": {
+        "brand": "KEF",
+        "model": "Q7 Meta",
+        "type": "passive",
+        "price": "1600",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "vendor",
+        "measurements": {
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 1001,
+                        "width": 317,
+                        "depth": 315,
+                    },
+                    "weight": 18.4,
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+                "notes": note_kef_data,
+            },
+        },
+    },
+    "KEF Q11 Meta": {
+        "brand": "KEF",
+        "model": "Q11 Meta",
+        "type": "passive",
+        "price": "2200",
+        "shape": "floorstanders",
+        "amount": "pair",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "review_published": "20250114",
+                "reviews": {
+                    "yt": "https://youtu.be/dPIWppFirmk?feature=shared",
+                },
+                "specifications": {
+                    "sensitivity": 89,
+                    "impedance": 4,
+                    "SPL": {
+                        "peak": 113,
+                    },
+                    "size": {
+                        "height": 1112,
+                        "width": 317,
+                        "depth": 380,
+                    },
+                    "weight": 22.5,
+                },
+            },
+            "vendor": {
+                "origin": "Vendors-KEF",
+                "format": "rew_text_dump",
+                "quality": "medium",
+                "review_published": "20241223",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
+                "notes": note_kef_data,
+            },
+        },
+    },
     "KEF Q650C": {
         "brand": "KEF",
         "model": "Q650C",
@@ -979,6 +1284,9 @@ speakers_info_k: SpeakerDatabase = {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/kef_r3/",
                     "yt": "https://www.youtube.com/watch?v=Gt96DBlQk8A",
                 },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -1046,6 +1354,9 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20230503",
                 "reviews": {
                     "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
                 },
             },
         },
@@ -1121,6 +1432,9 @@ speakers_info_k: SpeakerDatabase = {
                 "reviews": {
                     "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
                 },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -1140,6 +1454,9 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20230503",
                 "reviews": {
                     "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
                 },
             },
         },
@@ -1178,6 +1495,9 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "reviews": {
                     "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
                 },
             },
         },
@@ -1266,6 +1586,9 @@ speakers_info_k: SpeakerDatabase = {
                 "reviews": {
                     "white_paper": "https://www.audiosciencereview.com/forum/index.php?attachments/kef_r_series_with_mat_whitepaper_compressed-pdf.280101/",
                 },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -1302,6 +1625,9 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Vendors-KEF",
                 "format": "rew_text_dump",
                 "review_published": "20230503",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "notes": note_kef_data,
                 "quality": "medium",
             },
@@ -1309,6 +1635,9 @@ speakers_info_k: SpeakerDatabase = {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
                 "quality": "medium",
             },
         },
@@ -1361,6 +1690,9 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20230503",
                 "notes": note_kef_data,
                 "quality": "medium",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
@@ -1369,6 +1701,9 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20220217",
                 "reviews": {
                     "kef": "https://www.shop.us.kef.com/pub/media/reference/KEF_Blade_Ref_Meta_Tech_Paper.pdf",
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
                 },
             },
         },
@@ -1388,6 +1723,9 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20230503",
                 "notes": note_kef_data,
                 "quality": "medium",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
@@ -1395,6 +1733,9 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "notes": note_kef_data,
                 "review_published": "20220217",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -1442,12 +1783,18 @@ speakers_info_k: SpeakerDatabase = {
                 "review_published": "20230503",
                 "notes": note_kef_data,
                 "quality": "medium",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
                 "format": "webplotdigitizer",
                 "review_published": "20220217",
                 "quality": "medium",
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },
@@ -1465,6 +1812,9 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "reviews": {
                     "white_paper": "https://assets.kef.com/pdf_doc/REF/REF-White-Paper-201219-LR.pdf",
+                },
+                "data_acquisition": {
+                    "min_valid_freq": 200,
                 },
             },
         },
@@ -1484,6 +1834,9 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "review_published": "20230428",
                 "notes": note_kef_data,
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
             "vendor-v1-20220217": {
                 "origin": "Vendors-KEF",
@@ -1491,6 +1844,9 @@ speakers_info_k: SpeakerDatabase = {
                 "quality": "medium",
                 "review_published": "20220217",
                 "notes": note_kef_data,
+                "data_acquisition": {
+                    "min_valid_freq": 200,
+                },
             },
         },
     },

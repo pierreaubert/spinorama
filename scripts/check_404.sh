@@ -1,7 +1,7 @@
 #!/bin/bash
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@
 
 pylinkvalidate.py -P https://www.spinorama.org
 
-for f in ./docs/speakers/*/*/*/*.html; do
-    name=${f#docs/}
+for f in ./dist/speakers/*/*/*/*.html; do
+    name=${f#dist/}
     u=${name// /%20}
     pylinkvalidate.py -P "https://www.spinorama.org/$u"
 done

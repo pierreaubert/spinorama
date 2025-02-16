@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ
-from spinorama.load_misc import graph_unmelt
+from spinorama.constant_paths import MIDRANGE_MIN_FREQ, MIDRANGE_MAX_FREQ, DEFAULT_FREQ_RANGE
+from spinorama.misc import graph_unmelt
 from spinorama.filter_peq import peq_spl, peq_preamp_gain
 from spinorama.compute_misc import savitzky_golay, compute_statistics
 from spinorama.plot import (
@@ -74,7 +74,7 @@ def graph_eq(freq, peq):
                     y=data_frame[key],
                     name=key,
                     legendgroup="PEQ",
-                    legendgrouptitle_text="EQ",
+                    legendgrouptitle={"text": "EQ"},
                     marker_color=colors[i % len(colors)],
                 )
             )
@@ -82,7 +82,7 @@ def graph_eq(freq, peq):
 
 
 def graph_eq_compare(freq, auto_peq, auto_target_interp, target, optim_config):
-    """ "return traces with eq v.s. target"""
+    """return traces with eq v.s. target"""
     # manual_peq = [
     #    (1.0, Biquad(3, 400, 48000, 4.32, -2)),
     #    (1.0, Biquad(3, 1600, 48000, 4.32, -1)),
@@ -124,7 +124,7 @@ def graph_eq_compare(freq, auto_peq, auto_target_interp, target, optim_config):
                     y=df_compare[key],
                     name=key,
                     legendgroup="target",
-                    legendgrouptitle_text="EQ v.s. Target",
+                    legendgrouptitle={"text": "EQ v.s. Target"},
                     marker_color=colors[i + 1],
                 )
             )
@@ -164,6 +164,9 @@ def graph_results(
 
     # compare the 2 eqs
     target = -(auto_target[0] - auto_target_interp[0])
+    spl_max = optim_config.get("MAX_DBGAIN", None)
+    if spl_max:
+        target = np.clip(target, None, spl_max)
     # with open("debug_target.txt", "w") as fd:
     #    for f, a in zip(freq, target):
     #        fd.write("{} {}\n".format(f, a))
@@ -183,11 +186,15 @@ def graph_results(
     # show the 2 spinoramas
     unmelted_spin = graph_unmelt(spin)
 
-    g_spin_noeq, g_spin_noeq_di = plot_spinorama_traces(unmelted_spin, g_params)
+    g_spin_noeq, _, g_spin_noeq_di, _ = plot_spinorama_traces(
+        unmelted_spin, g_params, {}, True, DEFAULT_FREQ_RANGE
+    )
     g_spin_auto, g_spin_auto_di, unmelted_spin_auto = None, None, None
     if spin_auto is not None:
         unmelted_spin_auto = graph_unmelt(spin_auto)
-        g_spin_auto, g_spin_auto_di = plot_spinorama_traces(unmelted_spin_auto, g_params)
+        g_spin_auto, _, g_spin_auto_di, _ = plot_spinorama_traces(
+            unmelted_spin_auto, g_params, {}, True, DEFAULT_FREQ_RANGE
+        )
 
     # show the 3 optimised curves
     g_curves = {}
@@ -198,17 +205,13 @@ def graph_results(
             data = graph_unmelt(pir)
             data_auto = graph_unmelt(pir_auto)
 
-        if which_curve == "Estimated In-Room Response":
-            g_curve_noeq = plot_graph_regression_traces(data, which_curve, g_params)
-        else:
-            g_curve_noeq = plot_graph_flat_traces(data, which_curve, g_params)
+        g_curve_noeq = plot_graph_regression_traces(data, which_curve, g_params, DEFAULT_FREQ_RANGE)
 
         g_curve_auto = None
         if data_auto is not None:
-            if which_curve == "Estimated In-Room Response":
-                g_curve_auto = plot_graph_regression_traces(data_auto, which_curve, g_params)
-            else:
-                g_curve_auto = plot_graph_flat_traces(data_auto, which_curve, g_params)
+            g_curve_auto = plot_graph_regression_traces(
+                data_auto, which_curve, g_params, DEFAULT_FREQ_RANGE
+            )
 
         # ranges in Freq
         target_min_freq = optim_config["target_min_freq"]
@@ -237,8 +240,10 @@ def graph_results(
         # generate histogram of deviation
         noeq_counts, noeq_bins = noeq_hist
         auto_counts, auto_bins = auto_hist
-        bins = sorted(list(set(noeq_bins).union(auto_bins)))
-        bins = [f"{noeq_bins[i]:0.1f}-{noeq_bins[i+1]:0.1f}" for i in range(0, len(noeq_bins) - 1)]
+        # bins = sorted(list(set(noeq_bins).union(auto_bins)))
+        bins = [
+            f"{noeq_bins[i]:0.1f}-{noeq_bins[i + 1]:0.1f}" for i in range(0, len(noeq_bins) - 1)
+        ]
         bins.append(f"{noeq_bins[-1]:0.1f}+")
         hist_plot = [
             go.Bar(
@@ -246,7 +251,7 @@ def graph_results(
                 y=noeq_counts,
                 marker_color=colors[0],
                 legendgroup="Errors",
-                legendgrouptitle_text="Errors",
+                legendgrouptitle={"text": "Errors"},
                 name="noEQ",
             ),
             go.Bar(
@@ -254,7 +259,7 @@ def graph_results(
                 y=auto_counts,
                 marker_color=colors[1],
                 legendgroup="Errors",
-                legendgrouptitle_text="Errors",
+                legendgrouptitle={"text": "Errors"},
                 name="autoEQ",
             ),
         ]
@@ -279,8 +284,10 @@ def graph_results(
         )
         noeq_counts, noeq_bins = noeq_hist
         auto_counts, auto_bins = auto_hist
-        bins = sorted(list(set(noeq_bins).union(auto_bins)))
-        bins = [f"{noeq_bins[i]:0.1f}-{noeq_bins[i+1]:0.1f}" for i in range(0, len(noeq_bins) - 1)]
+        # bins = sorted(list(set(noeq_bins).union(auto_bins)))
+        bins = [
+            f"{noeq_bins[i]:0.1f}-{noeq_bins[i + 1]:0.1f}" for i in range(0, len(noeq_bins) - 1)
+        ]
         bins.append(f"{noeq_bins[-1]:0.1f}+")
         hist_plot_midrange = [
             go.Bar(
@@ -288,7 +295,7 @@ def graph_results(
                 y=noeq_counts,
                 marker_color=colors[0],
                 legendgroup="Errors",
-                legendgrouptitle_text="Errors",
+                legendgrouptitle={"text": "Errors"},
                 name="noEQ",
             ),
             go.Bar(
@@ -296,7 +303,7 @@ def graph_results(
                 y=auto_counts,
                 marker_color=colors[1],
                 legendgroup="Errors",
-                legendgrouptitle_text="Errors",
+                legendgrouptitle={"text": " Errors"},
                 name="autoEQ",
             ),
         ]

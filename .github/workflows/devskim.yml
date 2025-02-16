@@ -7,16 +7,17 @@ name: DevSkim
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "develop" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "develop" ]
   schedule:
     - cron: '20 13 * * 4'
 
 jobs:
   lint:
     name: DevSkim
-    runs-on: ubuntu-20.04
+    runs-on: self-hosted
+    # runs-on: ubuntu-20.04
     permissions:
       actions: read
       contents: read

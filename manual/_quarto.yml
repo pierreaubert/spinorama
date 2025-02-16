@@ -1,0 +1,110 @@
+project:
+  type: website
+  output-dir: ../dist/docs
+
+website:
+  title: "Spinorama"
+  #image: ".jpeg"
+  #favicon: "favicon.png"
+  #google-analytics: "G-FV9Z7SDZ0M"
+  open-graph: true
+  twitter-card: true
+  site-url: https://docs.spinorama.org
+  repo-url: https://github.com/pierreaubert/spinorama
+  issue-url: https://github.com/pierreaubert/spinorama/issues/new/choose
+  repo-actions: [edit, issue]
+  page-navigation: true
+  bread-crumbs: true
+  #announcement:
+  #   content: "🎉 Spinorama has a new documentation website"
+  #   position: below-navbar
+  #   dismissable: true
+  #search:
+  #  show-item-context: true
+  #  type: overlay
+  #  algolia:
+  #    index-name: prod_QUARTO
+  #    application-id: ZPJB5I1QN7
+  #    search-only-api-key: 41be6c1e0a7fea4a51b107810facf577
+  #    analytics-events: true
+  #    show-logo: true
+  page-footer:
+    left: |
+      Proudly GPL
+    center:
+      - text: "FAQ"
+        href: 05_faq.qmd
+    right:
+      - icon: twitter
+        href: https://x.com/pierreaubert
+        aria-label: Spinorama Twitter
+      - icon: github
+        href: https://github.com/pierreaubert/spinorama
+        aria-label: Spinorama GitHub
+  navbar:
+    background: light
+    #logo: quarto.png
+    #logo-alt: "Quarto logo."
+    title: false
+    collapse-below: lg
+    left:
+      - text: "Back to Spinorama.org"
+        href: "https://spinorama.org"
+      - text: "Website"
+        href: 01_intro.qmd
+      - text: "Software"
+      - menu:
+        - text: "How to install the software"
+          href: 02_install.qmd
+        - text: "How to add new speakers?"
+          href: 03_metadata.qmd
+        - text: "How to use the library"
+          href: 04_library.qmd
+      - text: "FAQ"
+        href: 05_faq.qmd
+    tools:
+      - icon: twitter
+        href: https://x.com/pierreaubert
+        text: Spinorama Twitter
+      - icon: github
+        href: https://github.com/pierreaubert/spinorama
+        text: Spinorama GitHub
+
+  sidebar:
+    - id: website
+      collapse-level: 3
+      contents:
+        - section: "Help for Spinorama.org"
+          href: 01_intro.qmd
+        - section: "How to install the software?"
+          href: 02_install.qmd
+        - section: "How to add a speaker?"
+          href: 03_metadata.qmd
+        - section: "How to use the library?"
+          href: 04_library.qmd
+        - section: "FAQ"
+          href: 05_faq.qmd
+        - section: "Data sources"
+          href: 06_sources.qmd
+        - section: "Bibliography"
+          href: 07_biblio.qmd
+
+
+bibliography: audio.bib
+
+format:
+  html:
+    toc: true
+    #theme:
+    #  light: [cosmo, theme.scss]
+    code-copy: true
+    code-overflow: wrap
+    #css: styles.css
+    #include-after-body: js.html
+    grid:
+      sidebar-width: 0px
+      body-width: 900px
+      margin-width: 300px
+
+freeze: true
+

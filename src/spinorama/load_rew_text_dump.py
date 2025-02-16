@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -65,4 +65,5 @@ def parse_graphs_speaker_rew_text_dump(
                 logger.exception("Speaker: %s File %s not found", speaker_brand, speaker_name)
                 return False, ("", pd.DataFrame({}))
 
+    # print('List of measurements {}'.format(sorted(set(msrts))))
     return True, ("CEA2034", pd.DataFrame({"Freq": freqs, "dB": spls, "Measurements": msrts}))

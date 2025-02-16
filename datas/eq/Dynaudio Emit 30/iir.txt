@@ -1,0 +1,12 @@
+EQ for Dynaudio Emit 30 computed from ErinsAudioCorner data
+Preference Score 4.15 with EQ 5.65
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-02-12-15:16:08
+
+Preamp: -2.6 dB
+
+Filter  1: ON PK Fc    40 Hz Gain +2.63 dB Q 2.97
+Filter  2: ON PK Fc   540 Hz Gain +1.36 dB Q 2.99
+Filter  3: ON PK Fc  1202 Hz Gain -3.43 dB Q 3.00
+Filter  4: ON PK Fc  1532 Hz Gain +3.00 dB Q 2.99
+Filter  5: ON PK Fc 15150 Hz Gain -2.77 dB Q 0.50

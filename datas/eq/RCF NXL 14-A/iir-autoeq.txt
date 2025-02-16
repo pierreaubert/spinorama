@@ -1,0 +1,14 @@
+EQ for RCF NXL 14-A computed from Vendors-RCF data
+Preference Score -0.41 with EQ 2.49
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-11-05-11:25:30
+
+Preamp: -2.3 dB
+
+Filter  1: ON PK Fc    95 Hz Gain -3.01 dB Q 2.99
+Filter  2: ON PK Fc   113 Hz Gain +3.00 dB Q 3.00
+Filter  3: ON PK Fc   211 Hz Gain +1.59 dB Q 1.15
+Filter  4: ON PK Fc   424 Hz Gain +3.00 dB Q 3.00
+Filter  5: ON PK Fc   600 Hz Gain -3.33 dB Q 1.84
+Filter  6: ON PK Fc  2964 Hz Gain +1.54 dB Q 1.00
+Filter  7: ON PK Fc 14134 Hz Gain -8.95 dB Q 0.50

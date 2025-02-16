@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // A library to display spinorama charts
 //
-// Copyright (C) 2020-2024 Pierre Aubert pierreaubert(at)yahoo(dot)fr
+// Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ import Plotly from 'plotly-dist-min';
 
 import { urlSite, flags_Screen } from './meta.js';
 import { getMetadata, assignOptions, getAllSpeakers, getSpeakerData } from './download.js';
-import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setSurface } from './plot.js';
+import { knownMeasurements, setContour, setGlobe, setGraph, setCEA2034, setRadar, setContour3D } from './plot.js';
 
 function updateVersion(metaSpeakers, speaker, selector, origin, version) {
     // update possible version(s) for matching speaker and origin
@@ -77,11 +77,12 @@ getMetadata()
         const urlParams = new URLSearchParams(queryString);
 
         const plotContainers = document.querySelector('[data-num="0"');
-        const plotContainer = plotContainers.querySelector('.plot');
-        const plot0Container = plotContainers.querySelector('.plot0');
-        const plot1Container = plotContainers.querySelector('.plot1');
-        const plot2Container = plotContainers.querySelector('.plot2');
-        const formContainer = plotContainers.querySelector('.plotForm');
+        const plotContainer = plotContainers.querySelector('#plotZone');
+        const plotContainerError = plotContainers.querySelector('#plotError');
+        const plot0Container = plotContainers.querySelector('#plot0');
+        const plot1Container = plotContainers.querySelector('#plot1');
+        const plot2Container = plotContainers.querySelector('#plot2');
+        const formContainer = plotContainers.querySelector('#plotForm');
         const graphsSelector = formContainer.querySelector('#compare-select-graph');
 
         const windowWidth = window.innerWidth;
@@ -106,8 +107,8 @@ getMetadata()
             async function run() {
                 Promise.all(speakersGraph).then((graphs) => {
                     // console.log('plot: resolved ' + graphs.length + ' graphs')
-                    if (measurement === 'CEA2034') {
-                        graphsConfigs = setCEA2034(speakersName, graphs, windowWidth, windowHeight);
+                    if (measurement === 'CEA2034' || measurement === 'CEA2034 Normalized') {
+                        graphsConfigs = setCEA2034(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else if (
                         measurement === 'On Axis' ||
                         measurement === 'Estimated In-Room Response' ||
@@ -119,49 +120,50 @@ getMetadata()
                         measurement === 'Horizontal Reflections' ||
                         measurement === 'Vertical Reflections'
                     ) {
-                        graphsConfigs = setGraph(speakersName, graphs, windowWidth, windowHeight);
+                        graphsConfigs = setGraph(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else if (measurement === 'SPL Horizontal Radar' || measurement === 'SPL Vertical Radar') {
-                        graphsConfigs = setRadar(speakersName, graphs, windowWidth, windowHeight);
+                        graphsConfigs = setRadar(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else if (
                         measurement === 'SPL Horizontal Contour' ||
                         measurement === 'SPL Vertical Contour' ||
                         measurement === 'SPL Horizontal Contour Normalized' ||
                         measurement === 'SPL Vertical Contour Normalized'
                     ) {
-                        graphsConfigs = setContour(speakersName, graphs, windowWidth, windowHeight);
+                        graphsConfigs = setContour(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else if (
                         measurement === 'SPL Horizontal Contour 3D' ||
                         measurement === 'SPL Vertical Contour 3D' ||
                         measurement === 'SPL Horizontal Contour Normalized 3D' ||
                         measurement === 'SPL Vertical Contour Normalized 3D'
                     ) {
-                        graphsConfigs = setSurface(speakersName, graphs, windowWidth, windowHeight);
+                        graphsConfigs = setContour3D(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else if (
                         measurement === 'SPL Horizontal Globe' ||
                         measurement === 'SPL Vertical Globe' ||
                         measurement === 'SPL Horizontal Globe Normalized' ||
                         measurement === 'SPL Vertical Globe Normalized'
                     ) {
-                        graphsConfigs = setGlobe(speakersName, graphs, windowWidth, windowHeight);
+                        graphsConfigs = setGlobe(measurement, speakersName, graphs, windowWidth, windowHeight);
                     } else {
                         console.error('Measurement ' + measurement + ' is unknown');
                     }
 
+                    // hide blocks by default
+                    plotContainerError.style.display = 'none';
+                    plot0Container.style.display = 'none';
+                    plot1Container.style.display = 'none';
+                    plot2Container.style.display = 'none';
+
                     // console.log('datas and layouts length='+graphsConfigs.length)
                     if (graphsConfigs.length === 1) {
-                        plotContainer.style.display = 'block';
-                        plot0Container.style.display = 'none';
-                        plot1Container.style.display = 'none';
-                        plot2Container.style.display = 'none';
                         const graphConfig = graphsConfigs[0];
                         if (graphConfig) {
-                            Plotly.react('plot', graphConfig.data, graphConfig.layout, graphConfig.config);
+                            plot0Container.style.display = 'block';
+                            Plotly.react('plot0', graphConfig.data, graphConfig.layout, graphConfig.config);
                         }
                     } else if (graphsConfigs.length === 2) {
-                        plotContainer.style.display = 'none';
                         plot0Container.style.display = 'block';
                         plot1Container.style.display = 'block';
-                        plot2Container.style.display = 'none';
                         for (let i = 0; i < graphsConfigs.length; i++) {
                             const config = graphsConfigs[i];
                             if (config) {
@@ -169,7 +171,6 @@ getMetadata()
                             }
                         }
                     } else if (graphsConfigs.length === 3) {
-                        plotContainer.style.display = 'none';
                         plot0Container.style.display = 'block';
                         plot1Container.style.display = 'block';
                         plot2Container.style.display = 'block';
@@ -183,7 +184,8 @@ getMetadata()
                     return null;
                 });
             }
-            run();
+
+            return run();
         }
 
         function buildInitSpeakers(speakers, count) {
@@ -352,12 +354,12 @@ getMetadata()
                 return;
             }
             console.log('DEBUG: resize ' + event.name);
-            if (graphsConfigs.length == 1) {
-                Plotly.Plots.resize('plot');
-            } else if (graphsConfigs.length == 2) {
+            if (graphsConfigs.length === 1) {
+                Plotly.Plots.resize('plot0');
+            } else if (graphsConfigs.length === 2) {
                 Plotly.Plots.resize('plot0');
                 Plotly.Plots.resize('plot1');
-            } else if (graphsConfigs.length == 3) {
+            } else if (graphsConfigs.length === 3) {
                 Plotly.Plots.resize('plot0');
                 Plotly.Plots.resize('plot1');
                 Plotly.Plots.resize('plot2');

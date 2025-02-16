@@ -1,7 +1,7 @@
 #!/bin/sh
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ fi
 
 # convert is from imagemagick package
 sourcedir=datas
-targetdir=docs
+targetdir=dist
 mkdir -p ${targetdir}/pictures
 mkdir -p ${targetdir}/help_pictures
 for d in "${sourcedir}/pictures"; do
@@ -54,7 +54,7 @@ for d in "${sourcedir}/pictures"; do
     done
 done
 # copy logs
-cp datas/icons/* docs/pictures
+cp datas/icons/* dist/pictures
 # copy help pictures
 find ./src/website/help_pictures -type f -name '*.png'| while read pict; do
     smaller="$targetdir/help_pictures/$(basename $pict)"

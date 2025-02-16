@@ -1,0 +1,62 @@
+---
+title: "FAQ"
+date: 2025-02-04
+---
+
+# Can I trust the data?
+
+The measurements are collected on the internet. Some are of very high quality and done by independant reviewers, some are of medium or low quality or provided by vendors.
+
+You can filter the results by clicking the wheel on the website near the search bar.
+
+![How to filter on high quality measurements](https://spinorama.org/help_pictures/help_select_high_quality.jpg)
+
+## How precise are the measurement data?
+
+- **High quality data**: provided by a Klippel NFS or measured in a large anechoic chamber.
+
+  - Data precision is around 1%.
+  - Smoothing post measurement can be done by the Klippel software so you cannot necessary compare two Klippel measurements.
+- **Medium quality data**: medium size anechoc chamber, data precision decreases &lt;500Hz. By how much is unknown.
+- **Low quality data**:
+
+  - measured without an anechoic chamber but using windowing for high frequency and plane ground method for low frequency. Precision can be as good as a Klippel measurements.
+  - provided by vendors: usually smoothed data (less measurement points, or data is smoothed, or quality is just unknown).
+
+## Impact of smoothed or poor quality measurements.
+
+Smoothing <a href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/page-5#post-742037">generates on average</a> a higher score by `+0.7` with respect to a score computed from the raw data. Note that the `0.7` can change depending on the amount of smoothing and other factors. Personally I never compare a score computed with high quality data with something else.
+
+## How precise are the computed data?
+
+- Generally precision depends on the quality of the input data. If you want to compare 2 measurements, you should select them from the same category.
+- Score computations
+
+  - The score is not significant &pm;0.5. It means that 2 speakers  which have a difference in score less than 1 are in the same broad bucket. No point to look at the decimals.
+
+- Anechoic EQ computations
+
+  - EQ is for one measurement. Since there are variations speaker to speaker, you should not look at very sharp or very precise EQ. How much variation between speakers? This is very brand/model dependant. Some manufactures provide tolerance like Neumann or Genelec.
+
+  - IIR eq (aka PEQs) are not working if the phase is varying a lot over some frequency range. Group delay (phase derivative) must be relatively flat. That may explain why EQing around the crossover frequency does not necessary give excellent results. On this other side, we are less sensitive to phase anomaly than frequency anomaly.
+
+# Can I use this data to decide which speaker to buy
+
+See dedicated section below.
+
+# Should I use room EQ?
+
+Absolutly! Dirac, REW, Audyssey etc will provide audible improvement to the sound, in general making it flatter (so more tonally correct). Almost all AVR have one built-in. All computers and most phones can do  it with a built-in or free application.
+
+# Focus or broad radiation pattern?
+
+Speakers do not radiate uniformly. Some speakers are designed to be very focus: they minimise the reflections but the sweet spot is very tiny. Some speakers are designed to diffuse sound, research proved it is  something that people usually like.
+
+- If you are near field, for example on a desk, low directivity works well.
+- The farther from the speaker you are, the more good directivity becomes important.
+- If you live in a modern flat with hard walls and floor to ceiling windows, looking for speakers with a narrow directivity can be a very good way to solve room issues. You can also think about speakers with a large and smooth horizontal directivity and with a more narrow vertical directivity. They are likely to have less bounce on the frequency response but the sweet spot will be smaller.
+
+# How can I contribute?
+
+- This website is generated from <a href="https://github.com/pierreaubert/spinorama">this code</a> and data from various websites (see below). You are very welcome to contribute.
+- You can provide feedback (esp. on bugs, UX, data errors) or add more datas at <a href="https://github.com/pierreaubert/spinorama/issues">github</a> or in this <a href="https://www.audiosciencereview.com/forum/index.php?threads/new-set-of-graphs-for-all-speakers-reviews.11373/">thread</a> at ASR.

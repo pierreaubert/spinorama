@@ -1,0 +1,14 @@
+EQ for Bowers & Wilkins 686 S2 computed from Misc data
+Preference Score 4.02 with EQ 5.57
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-12-15-14:45:11
+
+Preamp: -2.9 dB
+
+Filter  1: ON PK Fc    52 Hz Gain +2.08 dB Q 1.82
+Filter  2: ON PK Fc    83 Hz Gain +2.36 dB Q 1.01
+Filter  3: ON PK Fc   172 Hz Gain -1.53 dB Q 0.54
+Filter  4: ON PK Fc   942 Hz Gain -1.58 dB Q 2.70
+Filter  5: ON PK Fc  1429 Hz Gain -2.41 dB Q 2.99
+Filter  6: ON PK Fc  2324 Hz Gain +2.99 dB Q 0.81
+Filter  7: ON PK Fc  7834 Hz Gain -2.94 dB Q 0.35

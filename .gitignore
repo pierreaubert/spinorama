@@ -1,4 +1,5 @@
 .ipynb_checkpoints
+.virtual_documents
 Untitled*.ipynb
 snippets*.ipynb
 **/*~
@@ -13,7 +14,7 @@ __pycache__
 TAGS
 .coverage
 .idea
-docs
+dist
 tmp
 extracted
 logs
@@ -52,3 +53,7 @@ coverage
 coverage.xml
 recompute_eqs.sh
 .ruff_cache
+.fleet
+.aider*
+.env
+.scannerwork

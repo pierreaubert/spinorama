@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ from scipy.stats import linregress
 
 from spinorama import logger
 from spinorama.ltype import Vector
-from spinorama.load_misc import graph_unmelt
+from spinorama.misc import graph_unmelt
 from spinorama.filter_peq import Peq, peq_spl
 from spinorama.compute_misc import savitzky_golay
 

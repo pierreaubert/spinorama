@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,6 +29,8 @@ import sys
 import warnings
 
 import flammkuchen as fl
+
+# from pandas.core.arrays.masked import to_numpy_dtype_inference
 import tables
 
 import datas.metadata as metadata
@@ -57,7 +59,7 @@ def get_similar_names(speakername):
 def get_custom_logger(level, duplicate):
     """Define properties of our logger"""
     custom = logging.getLogger("spinorama")
-    custom_file_handler = logging.FileHandler("debug_optim.log")
+    custom_file_handler = logging.FileHandler("build/debug_optim.log")
     formatter = logging.Formatter(
         "%(asctime)s - %(filename)s:%(funcName)s:%(lineno)d - %(levelname)s - %(message)s"
     )
@@ -89,7 +91,16 @@ def args2level(args):
 
 
 def create_default_directories():
-    for d in (CACHE_DIR, "docs", "docs/pictures", "docs/speakers"):
+    for d in (
+        CACHE_DIR,
+        cpaths.CPATH_DIST,
+        cpaths.CPATH_DIST_PICTURES,
+        cpaths.CPATH_DIST_SPEAKERS,
+        cpaths.CPATH_BUILD_EQ,
+        cpaths.CPATH_BUILD_RAY,
+        cpaths.CPATH_BUILD_WEBSITE,
+        cpaths.CPATH_BUILD_MAKO,
+    ):
         pathlib.Path(d).mkdir(parents=True, exist_ok=True)
 
 
@@ -147,6 +158,7 @@ def custom_ray_init(args):
             sys.exit(1)
         ray_address = check_address
 
+    # tmp_dir = (pathlib.Path.cwd().absolute() / 'build/ray').as_posix()
     if ray_address is not None:
         print(
             "Calling init with cluster at {} dashboard at {}:{}".format(
@@ -162,6 +174,7 @@ def custom_ray_init(args):
             configure_logging=True,
             logging_level=level,
             log_to_driver=True,
+            # _temp_dir=tmp_dir,
         )
     else:
         print("Calling init with dashboard at {}:{}".format(dashboard_ip, dashboard_port))
@@ -175,6 +188,7 @@ def custom_ray_init(args):
             configure_logging=True,
             logging_level=level,
             log_to_driver=True,
+            # _temp_dir=tmp_dir,
         )
 
 
@@ -305,8 +319,8 @@ def cache_load_distributed_reduce(filters, smoke_test, ids):
     count = 0
     while 1:
         done_ids, remaining_ids = ray.wait(ids, num_returns=min(len(ids), 64))
-        for id in done_ids:
-            df_read = ray.get(id)
+        for zid in done_ids:
+            df_read = ray.get(zid)
             for speaker, data in df_read.items():
                 if speaker in df_all:
                     print("error in cache: {} is already in keys".format(speaker))
@@ -395,12 +409,12 @@ def sort_metadata_per_score(meta):
 
 def find_metadata_file():
     if not flags_ADD_HASH:
-        return [cpaths.CPATH_DOCS_METADATA_JSON, cpaths.CPATH_DOCS_EQDATA_JSON]
+        return [cpaths.CPATH_DIST_METADATA_JSON, cpaths.CPATH_DIST_EQDATA_JSON]
 
     json_paths = []
     for radical, json_path in (
-        ("metadata", cpaths.CPATH_DOCS_METADATA_JSON),
-        ("eqdata", cpaths.CPATH_DOCS_EQDATA_JSON),
+        ("metadata", cpaths.CPATH_DIST_METADATA_JSON),
+        ("eqdata", cpaths.CPATH_DIST_EQDATA_JSON),
     ):
         pattern = "{}-[0-9a-f]*.json".format(json_path[:-5])
         json_filenames = glob(pattern)
@@ -420,7 +434,7 @@ def find_metadata_file():
 
 def find_metadata_chunks():
     json_paths = {}
-    json_path = cpaths.CPATH_DOCS_METADATA_JSON
+    json_path = cpaths.CPATH_DIST_METADATA_JSON
     pattern = "{}*.json".format(json_path[:-5])
     regexp = "{}[-][0-9a-z]{{4}}[.]json$".format(json_path[:-5])
     if flags_ADD_HASH:
@@ -429,7 +443,6 @@ def find_metadata_chunks():
     for json_filename in json_filenames:
         check = re.search(regexp, json_filename)
         if not check:
-            # print('{} does not match'.format(json_filename))
             continue
         if os.path.exists(json_filename):
             span = check.span()

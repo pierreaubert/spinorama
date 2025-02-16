@@ -823,7 +823,8 @@ speakers_info_m: SpeakerDatabase = {
                 "format": "klippel",
                 "reviews": {
                     "eac": "https://www.erinsaudiocorner.com/loudspeakers/mesanovic_cdm65/",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/new-mesanovic-cdm65-monitors.40172/",
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/mesanovic-cdm65-studio-monitor-review.59353/",
+                    "asrold": "https://www.audiosciencereview.com/forum/index.php?threads/new-mesanovic-cdm65-monitors.40172/",
                 },
                 "specifications": {
                     "SPL": {
@@ -841,22 +842,12 @@ speakers_info_m: SpeakerDatabase = {
             "eac-cardiod": {
                 "origin": "ErinsAudioCorner",
                 "format": "klippel",
-                "reviews": {
-                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/mesanovic_cdm65/",
-                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/new-mesanovic-cdm65-monitors.40172/",
-                },
-                "specifications": {
-                    "SPL": {
-                        "peak": 103,
-                    },
-                    "size": {
-                        "height": 381,
-                        "width": 203,
-                        "depth": 355,
-                    },
-                    "weight": 16,
-                },
                 "review_published": "20230312",
+            },
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review_published": "20241219",
             },
         },
     },
@@ -903,7 +894,14 @@ speakers_info_m: SpeakerDatabase = {
             "vendor": {
                 "origin": "Vendors-Meyer Sound",
                 "format": "gll_hv_txt",
-                "data_acquisition": gll_data_acquisition_std,
+                "data_acquisition": {
+                    "via": "gll",
+                    "distance": 10,
+                    "signal": "aes 20Hz-20kHz",
+                    "resolution": 2.5,
+                    "min_valid_freq": 35,
+                    "max_valid_freq": 18000,
+                },
                 "review_published": "20220915",
                 "quality": "medium",
                 "notes": "{}".format(note_meyersound_gll),
@@ -1199,6 +1197,33 @@ speakers_info_m: SpeakerDatabase = {
             },
         },
     },
+    "Micca MB42X-G2": {
+        "brand": "Micca",
+        "model": "MB42X-G2",
+        "type": "passive",
+        "price": "100",
+        "shape": "bookshelves",
+        "amount": "pair",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "review": "https://www.audiosciencereview.com/forum/index.php?threads/micca-mb42x-g2-budget-speaker-review.60712/",
+                "review_published": "20250211",
+                "specifications": {
+                    "sensitivity": 86,
+                    "impedance": 4,
+                    "size": {
+                        "height": 240,
+                        "width": 147,
+                        "depth": 165,
+                    },
+                    "weight": 5.1,
+                },
+            },
+        },
+    },
     "Micca RB42": {
         "brand": "Micca",
         "model": "RB42",
@@ -1474,6 +1499,38 @@ speakers_info_m: SpeakerDatabase = {
                         "depth": 170,
                     },
                     "weight": 2.6,
+                },
+            },
+        },
+    },
+    "Monitor Audio Apex A10": {
+        "brand": "Monitor Audio",
+        "model": "Apex A10",
+        "type": "passive",
+        "price": "1500",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "asr",
+        "measurements": {
+            "asr": {
+                "origin": "ASR",
+                "format": "klippel",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/monitor-audio-apex-a10-speaker-review.60230/",
+                },
+                "review_published": "20250122",
+                "specifications": {
+                    "sensitivity": 87,
+                    "impedance": 8,
+                    "SPL": {
+                        "peak": 110,
+                    },
+                    "size": {
+                        "height": 280,
+                        "width": 150,
+                        "depth": 180,
+                    },
+                    "weight": 3.95,
                 },
             },
         },

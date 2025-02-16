@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -160,7 +160,7 @@ def print_items(aggregated_results):
     df_results = pd.DataFrame(
         {"speaker_name": v_sn, "iter": v_iter, "loss": v_loss, "score": v_score}
     )
-    df_results.to_csv("results_iter.csv", index=False)
+    df_results.to_csv("build/results_iter.csv", index=False)
 
 
 def print_scores(aggregated_scores):
@@ -183,7 +183,7 @@ def print_scores(aggregated_scores):
             "auto": s_auto,
         }
     )
-    df_scores.to_csv("results_scores.csv", index=False)
+    df_scores.to_csv("build/results_scores.csv", index=False)
 
 
 def queue_speakers(df_all_speakers, optim_config, speaker_name):
@@ -401,7 +401,7 @@ def main():
         # max iterations (if algorithm is iterative)
         current_optim_config["MAX_ITER"] = 20
     else:
-        current_optim_config["MAX_NUMBER_PEQ"] = 9
+        current_optim_config["MAX_NUMBER_PEQ"] = 7
         current_optim_config["MAX_STEPS_FREQ"] = 6
         current_optim_config["MAX_STEPS_DBGAIN"] = 6
         current_optim_config["MAX_STEPS_Q"] = 6
@@ -492,6 +492,7 @@ def main():
         window_size = int(args["--smooth-measurements"])
         current_optim_config["smooth_measurements"] = True
         current_optim_config["smooth_window_size"] = window_size
+        current_optim_config["smooth_window_order"] = 3
         if window_size < 2:
             print("ERROR: window size is {} which is below 2".format(window_size))
             parameter_error = True
@@ -528,26 +529,6 @@ def main():
                     param_curve_name_valid[current_curve_name]
                 )
 
-    # which fitness function?
-    if args["--fitness"] is not None:
-        current_fitness_name = args["--fitness"]
-        param_fitness_name_valid = {
-            "Flat": "flat_loss",
-            "Score": "score_loss",
-            "Combine": "combine_loss",
-            "LeastSquare": "leastsquare_loss",
-            "FlatPir": "flat_pir",
-        }
-        if current_fitness_name not in param_fitness_name_valid:
-            print(
-                "ERROR: {} is not known, acceptable values are {}".format(
-                    current_fitness_name, list(param_fitness_name_valid.keys())
-                )
-            )
-            parameter_error = True
-        else:
-            current_optim_config["loss"] = param_fitness_name_valid[current_fitness_name]
-
     # do we build EQ for a HW graphic one?
     if args["--graphic-eq"] is not None:
         grapheq_name = args["--graphic-eq"]
@@ -568,9 +549,39 @@ def main():
             current_optim_config["optimisation"] = "greedy"
         elif optimisation_name == "global":
             current_optim_config["optimisation"] = "global"
+            # default is too low for global optim
+            if args["--max-iter"] is None:
+                current_optim_config["MAX_ITER"] = 2500
+    elif not generate_images_only:
+        print("ERROR: Optimisation algorithm needs to be either 'greedy' or 'global'.")
+        sys.exit(1)
+
+    # which fitness function?
+    param_fitness_name_valid = {
+        "Flat": "flat_loss",
+        "Score": "score_loss",
+        "Combine": "combine_loss",
+        "LeastSquare": "leastsquare_loss",
+        "FlatPir": "flat_pir",
+    }
+    if args["--fitness"] is not None:
+        current_fitness_name = args["--fitness"]
+        if current_fitness_name not in param_fitness_name_valid:
+            print(
+                "ERROR: {} is not known, acceptable values are {}".format(
+                    current_fitness_name, list(param_fitness_name_valid.keys())
+                )
+            )
+            parameter_error = True
         else:
-            print("ERROR: Optimisation algorithm needs to be either 'greedy' or 'global'.")
-            sys.exit(1)
+            current_optim_config["loss"] = param_fitness_name_valid[current_fitness_name]
+    elif not generate_images_only:
+        print(
+            "ERROR: fitness function is required: options are {}".format(
+                list(param_fitness_name_valid.keys())
+            )
+        )
+        sys.exit(1)
 
     # name of speaker
     speaker_name = None

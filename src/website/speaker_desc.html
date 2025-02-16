@@ -348,12 +348,12 @@ Links to other reviews: <a href="${review}">${key} review</a>
   <ul>
     <li>Width ${width}mm</li>
     <li>Height ${height}mm</li>
-    <li>Depth ${depth} mm)</li>
+    <li>Depth ${depth}mm</li>
   </ul>
 </li>
 %     endif
 %     if weight is not None:
-<li>Weight ${weight} kg</li>
+<li>Weight ${weight}kg</li>
 %     endif
 </ul>
 </li>
@@ -452,7 +452,7 @@ These EQ is designed by ASR member maiky76. These EQ optimise the Harman score a
   <tbody>
     % for iir in eq['peq']:
     <tr>
-      <td>${iir['type']}</td>
+      <td>${iir['type'] | eqtype2str}</td>
       <td>${iir['freq']}</td>
       <td>${iir['Q']}</td>
       <td>${iir['dbGain']}</td>
@@ -526,8 +526,8 @@ These EQ is designed by ASR member maiky76. These EQ optimise the Harman score a
 
 <%def name="eqs_spider(eq)">
 <picture class="image">
-  <source srcset="../spider.jpg" type="image/jpg"></source>
-  <img src="../spider.jpg" alt="${speaker_brand} ${speaker_model}" loading="lazy" decoding="async" width="700" height="500"/>
+  <source srcset="../spider.webp" type="image/webp"></source>
+  <img src="../spider.jpg" alt="${speaker_brand} ${speaker_model}" loading="lazy" decoding="async" width="800" height="600"/>
 </picture>
 </%def>
 

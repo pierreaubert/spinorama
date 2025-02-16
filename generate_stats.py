@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -88,6 +88,20 @@ structured = [
     ("EQ", "Preference Score with Sub w/eq", "SSE", None, "{:3.1f}"),
     ("EQ", "Preamp-Gain", "PAG", "dB", "{:3.1f}"),
     ("EQ", "Score Delta", "DEL", None, "{:3.1f}"),
+    #
+    ("Properties", "Slope On Axis", "SL ON", "db/oct", "{:+3.1f}"),
+    ("Properties", "Slope Listening Window", "SL LW", "db/oct", "{:+3.1f}"),
+    ("Properties", "Slope Early Reflections", "SL ER", "db/oct", "{:+3.1f}"),
+    ("Properties", "Slope Sound Power", "SL SP", "db/oct", "{:+3.1f}"),
+    ("Properties", "Slope Early Reflections DI", "SL ERDI", "db/oct", "{:+3.1f}"),
+    ("Properties", "Slope Sound Power DI", "SL SPDI", "db/oct", "{:+3.1f}"),
+    #
+    ("Properties", "Smoothness On Axis", "SM ON", "db/oct", "{:+3.1f}"),
+    ("Properties", "Smoothness Listening Window", "SM LW", "db/oct", "{:+3.1f}"),
+    ("Properties", "Smoothness Early Reflections", "SM ER", "db/oct", "{:+3.1f}"),
+    ("Properties", "Smoothness Sound Power", "SM SP", "db/oct", "{:+3.1f}"),
+    ("Properties", "Smoothness Early Reflections DI", "SM ERDI", "db/oct", "{:+3.1f}"),
+    ("Properties", "Smoothness Sound Power DI", "SM SPDI", "db/oct", "{:+3.1f}"),
 ]
 
 
@@ -266,6 +280,18 @@ def print_eq(speakers, txt_format):
             pref_eq.get("pref_score_wsub", -10.0),
             preamp_gain,
             delta,
+            estimates.get("slope_on_axis", -10.0),
+            estimates.get("slope_listening_window", -10.0),
+            estimates.get("slope_early_reflections", -10.0),
+            estimates.get("slope_sound_power", -10.0),
+            estimates.get("slope_early_reflections_di", -10.0),
+            estimates.get("slope_sound_power_di", -10.0),
+            estimates.get("smoothness_on_axis", -1.0),
+            estimates.get("smoothness_listening_window", -1.0),
+            estimates.get("smoothness_early_reflections", -1.0),
+            estimates.get("smoothness_sound_power", -1.0),
+            estimates.get("smoothness_early_reflections_di", -1.0),
+            estimates.get("smoothness_sound_power_di", -1.0),
         )
         if DEBUG_TYPE:
             for i, p in enumerate(format_parameters):
@@ -304,7 +330,7 @@ def main():
         eqmeta = json.load(f)
         for k in jsmeta:
             if k in eqmeta:
-                jsmeta[k]["eqs"] = eqmeta[k]["eqs"]
+                jsmeta[k]["eqs"] = eqmeta[k].get("eqs", {})
 
     logger.warning("Data %s loaded (%d speakers)!", meta_filename, len(jsmeta))
 

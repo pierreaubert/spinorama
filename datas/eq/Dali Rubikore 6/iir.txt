@@ -1,0 +1,14 @@
+EQ for Dali Rubikore 6 computed from ErinsAudioCorner data
+Preference Score 4.07 with EQ 6.71
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-02-12-15:18:34
+
+Preamp: -2.3 dB
+
+Filter  1: ON PK Fc    36 Hz Gain +2.89 dB Q 0.94
+Filter  2: ON PK Fc    69 Hz Gain -2.73 dB Q 1.27
+Filter  3: ON PK Fc   332 Hz Gain +1.09 dB Q 0.63
+Filter  4: ON PK Fc   579 Hz Gain -1.51 dB Q 2.98
+Filter  5: ON PK Fc  1642 Hz Gain +2.97 dB Q 1.12
+Filter  6: ON PK Fc  1700 Hz Gain -2.66 dB Q 2.99
+Filter  7: ON PK Fc  8110 Hz Gain -4.15 dB Q 0.28

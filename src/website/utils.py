@@ -47,3 +47,16 @@ def float2str(context, f):
     if "." not in f:
         return f
     return f.split(".")[0]
+
+
+def eqtype2str(context, eq_type: str) -> str:
+    infos = {
+        "0": "LP",
+        "1": "HP",
+        "2": "BP",
+        "3": "PK",
+        "4": "NO",
+        "5": "LS",
+        "6": "HS",
+    }
+    return infos.get(eq_type, "??")

@@ -9,7 +9,7 @@ more_itertools
 nptyping
 numpy>1.26.4
 pandas>=2.1.0
-plotly
-ray[default]>=1.35
+plotly>=6.0.0
+ray[default]>=2.42
 scipy>=1.14.1
 wand

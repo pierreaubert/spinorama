@@ -1,0 +1,12 @@
+Proson Twin 716  APO EQ LW 96000Hz
+December092024-124406
+
+Preamp: -8.00 dB 
+
+Filter 1: ON HPQ Fc 50.9 Hz Gain 0.00 dB Q 2.11
+Filter 2: ON PK Fc 77.8 Hz Gain -6.45 dB Q 1.77
+Filter 3: ON PK Fc 876.9 Hz Gain -1.90 dB Q 4.20
+Filter 4: ON PK Fc 1267.4 Hz Gain 2.31 dB Q 6.89
+Filter 5: ON PK Fc 1626.5 Hz Gain -0.95 dB Q 0.66
+Filter 6: ON PK Fc 2621.1 Hz Gain 8.66 dB Q 1.38
+Filter 7: ON PK Fc 8296.1 Hz Gain -2.20 dB Q 6.01

@@ -1,0 +1,14 @@
+EQ for Sonus Faber Picolo computed from Misc data
+Preference Score 4.57 with EQ 5.74
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-11-02-16:08:07
+
+Preamp: -2.7 dB
+
+Filter  1: ON PK Fc    65 Hz Gain +2.99 dB Q 0.49
+Filter  2: ON PK Fc   134 Hz Gain -2.12 dB Q 1.86
+Filter  3: ON PK Fc   487 Hz Gain -2.24 dB Q 0.45
+Filter  4: ON PK Fc   504 Hz Gain +2.39 dB Q 2.32
+Filter  5: ON PK Fc  1381 Hz Gain +2.93 dB Q 0.72
+Filter  6: ON PK Fc  1429 Hz Gain -4.10 dB Q 3.00
+Filter  7: ON PK Fc  5732 Hz Gain -1.75 dB Q 0.50

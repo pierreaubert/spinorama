@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ import pathlib
 from docopt import docopt
 import plotly.graph_objects as go
 
+from spinorama.speaker import write_multiformat
 
 from generate_common import (
     get_custom_logger,
@@ -47,8 +48,8 @@ from generate_common import (
     find_metadata_file,
 )
 
-from spinorama.constant_paths import CPATH_DOCS_SPEAKERS, CPATH_DATAS_EQ
-from spinorama.filter_scores import scores_apply_filter
+from spinorama.constant_paths import CPATH_DIST_SPEAKERS, CPATH_DATAS_EQ
+from spinorama.filter_scores import scores_apply_filter, noscore_apply_filter
 from spinorama.load_rew_eq import parse_eq_iir_rews
 
 VERSION = 0.2
@@ -122,10 +123,11 @@ def build_scatterplot(pref_rating, scale, name):
 def print_radar(meta_data, scale, speaker_data):
     def_measurement = meta_data["default_measurement"]
     measurement = meta_data["measurements"][def_measurement]
+    mformat = measurement["format"]
     if "pref_rating" not in measurement or "estimates" not in measurement:
         return
-    filename = "{}/{} {}/spider.jpg".format(
-        CPATH_DOCS_SPEAKERS, meta_data["brand"], meta_data["model"]
+    filename = "{}/{} {}/spider_large.png".format(
+        CPATH_DIST_SPEAKERS, meta_data["brand"], meta_data["model"]
     )
     # TODO: to add check for dependancies
     if pathlib.Path(filename).is_file():
@@ -133,7 +135,7 @@ def print_radar(meta_data, scale, speaker_data):
     graph_data = []
     pref_rating = measurement["pref_rating"]
     # pprint(pref_rating)
-    graph_data.append(build_scatterplot(pref_rating, scale, "no EQ"))
+    graph_data.append(build_scatterplot(pref_rating, scale, "Reference"))
     for eq_key in meta_data["eqs"]:
         if eq_key not in ("autoeq", "autoeq_lw", "autoeq_score"):
             continue
@@ -152,21 +154,33 @@ def print_radar(meta_data, scale, speaker_data):
         # print(iir)
         # compute pref_rating and estimates
         # print(speaker_data[measurement["origin"]][def_measurement].keys())
-        spin_eq, _, pref_rating_eq = scores_apply_filter(
-            speaker_data[measurement["origin"]][def_measurement], iir
-        )
+        if mformat in ("klippel", "spl_hv_txt", "gll_hv_txt"):
+            _, _, pref_rating_eq = scores_apply_filter(
+                speaker_data[measurement["origin"]][def_measurement], iir
+            )
+        else:
+            _, _, pref_rating_eq = noscore_apply_filter(
+                speaker_data[measurement["origin"]][def_measurement], iir, is_normalized=False
+            )
         # pprint(pref_rating_eq)
         # add results to data
         pretty_name = {
-            "no EQ": "Reference",
             "autoeq_lw": "autoEQ LW",
             "autoeq": "autoEQ Score",
         }
-        graph_data.append(build_scatterplot(pref_rating_eq, scale, pretty_name.get(eq_key, eq_key)))
+        if (
+            pref_rating is not None
+            and pref_rating_eq is not None
+            and "pref_score" in pref_rating
+            and "pref_score" in pref_rating_eq
+        ):
+            graph_data.append(
+                build_scatterplot(pref_rating_eq, scale, pretty_name.get(eq_key, eq_key))
+            )
 
     layout = {
-        "width": 400,
-        "height": 300,
+        "width": 800,
+        "height": 600,
         "polar": {
             "radialaxis": {
                 "visible": True,
@@ -180,17 +194,20 @@ def print_radar(meta_data, scale, speaker_data):
             "xanchor": "center",
         },
         "margin": {
-            "t": 0,
-            "l": 0,
-            "r": 0,
-            "b": 0,
+            "t": 20,
+            "l": 20,
+            "r": 20,
+            "b": 20,
         },
     }
+    if len(graph_data) == 0:
+        return
+
     fig = go.Figure()
     for gd in graph_data:
         fig.add_trace(go.Scatterpolar(gd))
-    fig.update_layout(layout)
-    fig.write_image(filename)
+        fig.update_layout(layout)
+        write_multiformat(chart=fig, filename=filename, force=False)
 
 
 def main(args):

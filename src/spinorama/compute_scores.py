@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # A library to display spinorama charts
 #
-# Copyright (C) 2020-2024 Pierre Aubert pierre(at)spinorama(dot)org
+# Copyright (C) 2020-2025 Pierre Aubert pierre(at)spinorama(dot)org
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,16 +17,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import math
-from typing import List, Tuple
+from typing import List, Tuple, Any
 import numpy as np
 import pandas as pd
 from more_itertools import consecutive_groups
+from numpy import floating
 from scipy.stats import linregress
 
 from spinorama import logger
 
 
-def round_down(x: float, decimals: int) -> float:
+def round_down(x: float | np.floating, decimals: int) -> float:
     """return a rounded value down"""
     if x > 0 and decimals <= 5:
         mul = 10**decimals
@@ -57,18 +58,18 @@ def octave(count: int) -> List[Tuple[float, float, float]]:
 
 def aad(dfu: pd.DataFrame, min_freq) -> float:
     """aad Absolute Average Deviation"""
-    # mean betwenn 200hz and 400hz
+    # mean between 200hz and 400hz
     y_data = dfu.loc[(dfu.Freq >= 200) & (dfu.Freq <= 400)].dB
     y_ref = np.mean(y_data) if not y_data.empty else 0.0
     aad_sum = 0
     n = 0
     # 1/20 octave
-    bmin_freq = max(100, min_freq)
-    for bmin, _, bmax in octave(20):
+    band_min_freq = max(100, min_freq)
+    for band_min, _, band_max in octave(20):
         # 100hz to 16k hz
-        if bmin < bmin_freq or bmax > 16000:
+        if band_min < band_min_freq or band_max > 16000:
             continue
-        mean = dfu.loc[(dfu.Freq >= bmin_freq) & (dfu.Freq < bmax)].dB.mean()
+        mean = dfu.loc[(dfu.Freq >= band_min_freq) & (dfu.Freq < band_max)].dB.mean()
         aad_sum += abs(y_ref - mean)
         n += 1
     if aad_sum is None or math.isnan(aad_sum) or n == 0:
@@ -82,10 +83,10 @@ def mad(df: pd.Series) -> float:
     return (df - df.mean()).abs().mean()
 
 
-def nbd(dfu: pd.DataFrame, min_freq: float) -> float:
+def nbd(dfu: pd.DataFrame, min_freq: float) -> floating[Any]:
     """nbd Narrow Band
 
-    The narrow band deviation is defined by:
+    The narrowband deviation is defined by:
       NBD(dB)=⎜ ∑ y -y ⎟÷N  ⎛
     where ⎜ OctaveBandn⎟ is the average amplitude value
     within the 1/2-octave band n, yb is the amplitude
@@ -93,12 +94,12 @@ def nbd(dfu: pd.DataFrame, min_freq: float) -> float:
     between 100 Hz-12 kHz. The mean absolute deviation within each
     1/2-octave band is based a sample of 10 equally log-spaced data points.
     """
-    bmin_freq = max(100, min_freq)
+    band_min_freq = max(100.0, min_freq)
     return np.nanmean(
         [
-            mad(dfu.loc[(dfu.Freq >= bmin) & (dfu.Freq <= bmax)].dB)
-            for (bmin, bcenter, bmax) in octave(2)
-            if bmin_freq <= bcenter and bcenter <= 12000
+            mad(dfu.loc[(dfu.Freq >= band_min) & (dfu.Freq <= band_max)].dB)
+            for (band_min, band_center, band_max) in octave(2)
+            if band_min_freq <= band_center <= 12000
         ]
     )
 
@@ -137,7 +138,7 @@ def lfx(lw, sp) -> float:
         lfx_pos = lfx_last[0]
         # get the next freq to be more inlined with the other people computing the code
         # nothing wrong if you remove the +1
-        lfx_hz = (sp.Freq)[lfx_pos + 1]
+        lfx_hz = sp.Freq[lfx_pos + 1]
     except Exception:
         # some speaker measurements start above 300Hz
         return LFX_DEFAULT
@@ -157,12 +158,12 @@ def lfq(lw, sp, lfx_log) -> float:
     lfq_sum = 0
     n = 0
     # print('DEBUG lfx={1} octave(2): {0}'.format(octave(2), val_lfx))
-    for bmin, _, bmax in octave(2):
+    for band_min, _, band_max in octave(2):
         # 100hz to 12k hz
-        if bmin < val_lfx or bmax > 300:
+        if band_min < val_lfx or band_max > 300:
             continue
-        s_lw = lw.loc[(lw.Freq >= bmin) & (lw.Freq < bmax)]
-        s_sp = sp.loc[(sp.Freq >= bmin) & (sp.Freq < bmax)]
+        s_lw = lw.loc[(lw.Freq >= band_min) & (lw.Freq < band_max)]
+        s_sp = sp.loc[(sp.Freq >= band_min) & (sp.Freq < band_max)]
         if s_lw.shape[0] > 0 and s_sp.shape[0] > 0:
             y_lw = np.mean(s_lw.dB) if not s_lw.dB.empty else 0.0
             y_sp = np.mean(s_sp.dB) if not s_sp.dB.empty else 0.0
@@ -174,7 +175,7 @@ def lfq(lw, sp, lfx_log) -> float:
     return lfq_sum / n
 
 
-def sm(dfu):
+def sm(dfu: pd.DataFrame) -> float:
     """sm Smoothness
 
     For each of the 7 frequency response curves, the overall smoothness (SM) and
@@ -214,15 +215,20 @@ def sm(dfu):
 """
 
 
-def pref_rating(nbd_on: float, nbd_pir: float, lf_x: float, sm_pir: float) -> float:
-    return 12.69 - 2.49 * nbd_on - 2.99 * nbd_pir - 4.31 * lf_x + 2.32 * sm_pir
+def pref_rating(
+    nbd_on: float | np.floating,
+    nbd_pir: float | np.floating,
+    lf_x: float | np.floating,
+    sm_pir: float | np.floating,
+) -> float:
+    return float(12.69 - 2.49 * nbd_on - 2.99 * nbd_pir - 4.31 * lf_x + 2.32 * sm_pir)
 
 
-def speaker_pref_rating(cea2034, pir, rounded):
+def speaker_pref_rating(cea2034, pir, rounded) -> dict[str, float]:
     try:
         if pir is None or pir.shape[0] == 0:
             logger.info("PIR is empty")
-            return None
+            return {}
         df_on_axis = cea2034.loc[lambda df: df.Measurements == "On Axis"]
         df_listening_window = cea2034.loc[lambda df: df.Measurements == "Listening Window"]
         df_sound_power = cea2034.loc[lambda df: df.Measurements == "Sound Power"]
@@ -231,9 +237,6 @@ def speaker_pref_rating(cea2034, pir, rounded):
         nbd_listening_window = nbd(df_listening_window, min_freq)
         nbd_sound_power = nbd(df_sound_power, min_freq)
         nbd_pred_in_room = nbd(pir, min_freq)
-        lfx_hz = LFX_DEFAULT
-        lfq_db = LFQ_DEFAULT
-        aad_on_axis = -1.0
         aad_on_axis = aad(df_on_axis, min_freq)
         lfx_hz = lfx(df_listening_window, df_sound_power)
         lfq_db = lfq(df_listening_window, df_sound_power, lfx_hz)
@@ -241,15 +244,14 @@ def speaker_pref_rating(cea2034, pir, rounded):
         sm_pred_in_room = sm(pir)
         if nbd_on_axis is None or nbd_pred_in_room is None or sm_pred_in_room is None:
             logger.info("One of the pref score components is None")
-            return None
+            return {}
         # 14.5hz or 20hz see discussion
         # https://www.audiosciencereview.com/forum/index.php?threads/master-preference-ratings-for-loudspeakers.11091/page-25#post-448733
-        pref = None
         pref_wsub = pref_rating(nbd_on_axis, nbd_pred_in_room, math.log10(14.5), sm_pred_in_room)
         pref = pref_rating(nbd_on_axis, nbd_pred_in_room, lfx_hz, sm_pred_in_room)
         if pref is None or pref_wsub is None:
             logger.info("Pref score is None")
-            return None
+            return {}
 
         if rounded:
             ratings = {
@@ -286,5 +288,5 @@ def speaker_pref_rating(cea2034, pir, rounded):
         logger.debug("Ratings: %s", ratings)
     except ValueError:
         logger.exception("Compute pref_rating failed")
-        return None
+        return {}
     return ratings

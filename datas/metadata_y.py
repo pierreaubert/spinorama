@@ -234,6 +234,64 @@ speakers_info_y: SpeakerDatabase = {
             },
         },
     },
+    "Yamaha NS-10M Studio": {
+        "brand": "Yamaha",
+        "model": "NS-10M Studio",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "yt": "https://www.youtube.com/watch?v=0pYKuBdhmdc",
+                },
+                "review_published": "202404xx",
+                "specifications": {
+                    "sensitivity": 90,
+                    "impedance": 8,
+                    "size": {
+                        "height": 382,
+                        "width": 215,
+                        "depth": 199,
+                    },
+                    "weight": 6,
+                },
+            },
+        },
+    },
+    "Yamaha NS-18": {
+        "brand": "Yamaha",
+        "model": "NS-18",
+        "type": "passive",
+        "price": "",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "misc-mab",
+        "measurements": {
+            "misc-mab": {
+                "origin": "Misc",
+                "format": "spl_hv_txt",
+                "quality": "low",
+                "reviews": {
+                    "asr": "https://www.audiosciencereview.com/forum/index.php?threads/vintage-yamaha-ns-18-speaker-measurements.58087/",
+                },
+                "review_published": "20241105",
+                "specifications": {
+                    "impedance": 8,
+                    "size": {
+                        "height": 720,
+                        "width": 540,
+                        "depth": 250,
+                    },
+                    "weight": 18.0,
+                },
+            },
+        },
+    },
     "Yamaha NS-A638": {
         "brand": "Yamaha",
         "model": "NS-A638",
@@ -264,6 +322,36 @@ speakers_info_y: SpeakerDatabase = {
                 "format": "klippel",
                 "review": "https://www.audiosciencereview.com/forum/index.php?threads/yamaha-ns-6490-3-way-budget-speaker-review.17042/",
                 "review_published": "20201026",
+            },
+        },
+    },
+    "Yamaha NS-800A": {
+        "brand": "Yamaha",
+        "model": "NS-800A",
+        "type": "passive",
+        "price": "4800",
+        "amount": "pair",
+        "shape": "bookshelves",
+        "default_measurement": "eac",
+        "measurements": {
+            "eac": {
+                "origin": "ErinsAudioCorner",
+                "format": "klippel",
+                "reviews": {
+                    "eac": "https://www.erinsaudiocorner.com/loudspeakers/yamaha_ns800a/",
+                    "yt": "https://www.youtube.com/watch?v=jRdwPAjHHZA",
+                },
+                "review_published": "20250114",
+                "specifications": {
+                    "sensitivity": 86.5,
+                    "impedance": 3.8,
+                    "size": {
+                        "height": 420,
+                        "width": 231,
+                        "depth": 358,
+                    },
+                    "weight": 13.0,
+                },
             },
         },
     },

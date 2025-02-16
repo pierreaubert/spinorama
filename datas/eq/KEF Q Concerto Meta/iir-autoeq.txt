@@ -1,0 +1,14 @@
+EQ for KEF Q Concerto Meta computed from ErinsAudioCorner data
+Preference Score 6.19 with EQ 6.91
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2024-11-17-10:37:33
+
+Preamp: -2.7 dB
+
+Filter  1: ON PK Fc    44 Hz Gain +2.90 dB Q 0.96
+Filter  2: ON PK Fc    95 Hz Gain -2.42 dB Q 2.06
+Filter  3: ON PK Fc   197 Hz Gain +1.21 dB Q 2.84
+Filter  4: ON PK Fc   395 Hz Gain -1.18 dB Q 2.90
+Filter  5: ON PK Fc   689 Hz Gain -2.26 dB Q 2.98
+Filter  6: ON PK Fc  1642 Hz Gain -2.29 dB Q 1.73
+Filter  7: ON PK Fc  2245 Hz Gain +1.74 dB Q 0.25
