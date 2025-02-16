@@ -125,14 +125,12 @@ export function isDisplayVertical() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
     return windowWidth <= windowHeight;
-
 }
 
 export function isDisplayCompact() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
     return windowWidth < graphSmall || windowHeight < graphSmall;
-
 }
 
 export function computeDims(windowWidth, windowHeight, isVertical, isCompact, nbGraphs) {
@@ -689,7 +687,7 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
             const start = 0.04;
             const len = 0.2;
             const gap = 0.05;
-            layout.polar4.domain.y = [start, start + len ];
+            layout.polar4.domain.y = [start, start + len];
             layout.polar3.domain.y = [start + len * 2 + gap * 2, start + len * 3 + gap * 2];
             layout.polar2.domain.y = [start + len + gap, start + len * 2 + gap];
             layout.polar.domain.y = [start + len * 3 + gap * 3, start + len * 4 + gap * 3];
@@ -779,14 +777,14 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
                 datas[k].colorbar.thickness = 15;
                 datas[k].colorbar.thicknessmode = 'pixels';
                 datas[k].colorbar.tickfont = {
-                    "size": fontSizeH6,
+                    size: fontSizeH6,
                 };
                 datas[k].colorbar.title = {
-                        "text": 'dB (SPL)',
-                        "font": {
-                            "size": fontSizeH5,
-                        },
-                        "side": 'bottom',
+                    text: 'dB (SPL)',
+                    font: {
+                        size: fontSizeH5,
+                    },
+                    side: 'bottom',
                 };
             }
         }
@@ -1014,14 +1012,14 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
                         trace.colorbar.xanchor = 'center';
                         trace.colorbar.y = -0.4;
                         trace.colorbar.yanchor = 'bottom';
-			trace.colorbar.len = 1.0;
+                        trace.colorbar.len = 1.0;
                     } else {
                         trace.colorbar.orientation = 'v';
                         trace.colorbar.x = 1.25;
                         trace.colorbar.xanchor = 'right';
                         trace.colorbar.y = 0.5;
                         trace.colorbar.yanchor = 'center';
-			trace.colorbar.len = 0.6;
+                        trace.colorbar.len = 0.6;
                     }
                     trace.colorbar.thickness = 15;
                     trace.colorbar.title = {
