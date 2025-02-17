@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-const flags_Contour_Delta = false;
+// const flags_Contour_Delta = false;
 
 export const knownMeasurements = [
     'CEA2034',
@@ -105,8 +105,8 @@ const graphMarginRight = 30;
 
 const graphMarginTop = 60;
 const graphMarginBottom = 30;
-const graphMarginTopSmall = 30;
-const graphMarginBottomSmall = 30;
+// const graphMarginTopSmall = 30;
+// const graphMarginBottomSmall = 30;
 
 const graphTitle = 40;
 const graphSpacer = graphMarginTop + graphMarginBottom + graphTitle;
@@ -115,7 +115,7 @@ const graphExtraPadding = 40;
 const graphLegendWidth = 164;
 
 const fontSizeH1 = 16;
-const fontSizeH2 = 14;
+// const fontSizeH2 = 14;
 const fontSizeH3 = 12;
 const fontSizeH4 = 11;
 const fontSizeH5 = 10;
@@ -399,7 +399,7 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
         if (layout.axis && layout.xaxis.title) {
             layout.xaxis.title.text = 'SPL (dB) v.s. Frequency (Hz)';
             layout.xaxis.title.font = {
-                size: fontSizeH6,
+                size: fontSizeH6 + fontDelta,
                 color: '#000',
             };
             layout.xaxis.automargin = 'height';
@@ -496,8 +496,7 @@ function setGraphOptions(inputGraphsData, windowWidth, windowHeight, outputGraph
                 const measured_pos = title.indexOf(' measured ');
                 if (measured_pos !== -1) {
                     const vs_pos = title.indexOf(' v.s. ');
-                    if (vs_pos !== -1) {
-                    } else {
+                    if (vs_pos === -1) {
                         title = title.slice(0, measured_pos) + ' <br>' + title.slice(measured_pos + 1);
                     }
                 }
@@ -1063,51 +1062,63 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
 }
 
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-var lookup = typeof Uint8Array === 'undefined' ? [] : new Uint8Array(256);
-for (var i = 0; i < chars.length; i++) {
+const lookup = typeof Uint8Array === 'undefined' ? [] : new Uint8Array(256);
+for (let i = 0; i < chars.length; i++) {
     lookup[chars.charCodeAt(i)] = i;
 }
 
-var decode64 = function (base64) {
-    var bufferLength = base64.length * 0.75, len = base64.length, i, p = 0, encoded1, encoded2, encoded3, encoded4;
+export function decode64(base64) {
+    let bufferLength = base64.length * 0.75;
+    const len = base64.length;
     if (base64[base64.length - 1] === '=') {
         bufferLength--;
         if (base64[base64.length - 2] === '=') {
             bufferLength--;
         }
     }
-    var arraybuffer = new ArrayBuffer(bufferLength), bytes = new Uint8Array(arraybuffer);
-    for (i = 0; i < len; i += 4) {
-        encoded1 = lookup[base64.charCodeAt(i)];
-        encoded2 = lookup[base64.charCodeAt(i + 1)];
-        encoded3 = lookup[base64.charCodeAt(i + 2)];
-        encoded4 = lookup[base64.charCodeAt(i + 3)];
+    const arraybuffer = new ArrayBuffer(bufferLength);
+    const bytes = new Uint8Array(arraybuffer);
+    let p = 0;
+    for (let i = 0; i < len; i += 4) {
+        const encoded1 = lookup[base64.charCodeAt(i)];
+        const encoded2 = lookup[base64.charCodeAt(i + 1)];
+        const encoded3 = lookup[base64.charCodeAt(i + 2)];
+        const encoded4 = lookup[base64.charCodeAt(i + 3)];
         bytes[p++] = (encoded1 << 2) | (encoded2 >> 4);
         bytes[p++] = ((encoded2 & 15) << 4) | (encoded3 >> 2);
         bytes[p++] = ((encoded3 & 3) << 6) | (encoded4 & 63);
     }
     return arraybuffer;
-};
+}
 
 export function decode(input) {
     // minimum to decode an array
     if (input?.dtype) {
-	const buffer = decode64(input.bdata)
-	switch (input.dtype) {
-	    // clamped
-	    case 'u1c': return new UInt8ClmapedArray(buffer);
-	    // int
-	    case 'i1': return new Int8Array(buffer);
-	    case 'i2': return new Int16Array(buffer);
-	    case 'i4': return new Int32Array(buffer);
-	    // unsigned int
-	    case 'u1': return new UInt8Array(buffer);
-	    case 'u2': return new UInt16Array(buffer);
-	    case 'u4': return new UInt32Array(buffer);
-	    // float
-	    case 'f4': return new Float32Array(buffer);
-	    case 'f8': return new Float64Array(buffer);
-	}
+        const buffer = decode64(input.bdata);
+        switch (input.dtype) {
+            // clamped
+            case 'u1c':
+                return new Uint8ClampedArray(buffer);
+            // int
+            case 'i1':
+                return new Int8Array(buffer);
+            case 'i2':
+                return new Int16Array(buffer);
+            case 'i4':
+                return new Int32Array(buffer);
+            // unsigned int
+            case 'u1':
+                return new Uint8Array(buffer);
+            case 'u2':
+                return new Uint16Array(buffer);
+            case 'u4':
+                return new Uint32Array(buffer);
+            // float
+            case 'f4':
+                return new Float32Array(buffer);
+            case 'f8':
+                return new Float64Array(buffer);
+        }
     }
     return input;
 }
@@ -1147,7 +1158,7 @@ export function setGlobe(measurement, speakerNames, speakerGraphs, width, height
                 const color = [];
                 for (let k1 = 0; k1 < freq.length; k1++) {
                     for (let k2 = 0; k2 < angle.length - 1; k2++) {
-			let val = spl[k1+k2*freq.length]
+                        let val = spl[k1 + k2 * freq.length];
                         val = Math.max(contourMin, val);
                         val = Math.min(contourMax, val);
                         color.push(val);

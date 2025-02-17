@@ -67,6 +67,7 @@ const knownSorter = new Set([
     'width',
 ]);
 
+/*
 function printParams(params) {
     const [sorter, filter, keywords, pagination] = [...params];
     console.log('  sorter: ' + sorter.by + ' reverse: ' + sorter.reverse);
@@ -90,6 +91,7 @@ function printParams(params) {
     console.log(' keywords=' + keywords.toString());
     console.log(' pagination: page=' + pagination.page);
 }
+*/
 
 function sortParameters2Sort(url) {
     const sorter = {
@@ -748,7 +750,7 @@ export function isSearch(key, results, minScore, keywords) {
     }
 
     const result = results.get(key);
-    const imeta = result.item.speaker;
+    // const imeta = result.item.speaker;
     const score = result.score;
 
     if (minScore < Math.pow(10, -15)) {
@@ -866,7 +868,8 @@ export function rank(fuse, brands, models, keywords) {
 export function search(data, params) {
     const brands = new Set();
     const models = new Set();
-    data.forEach((v, k) => {
+    // (v, k)
+    data.forEach((v) => {
         brands.add(v['brand'].toLowerCase());
         models.add(v['model'].toLowerCase());
     });
