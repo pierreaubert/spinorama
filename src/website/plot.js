@@ -1062,6 +1062,56 @@ export function setContour(measurement, speakerNames, speakerGraphs, width, heig
     return [mergedConfig];
 }
 
+const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+var lookup = typeof Uint8Array === 'undefined' ? [] : new Uint8Array(256);
+for (var i = 0; i < chars.length; i++) {
+    lookup[chars.charCodeAt(i)] = i;
+}
+
+var decode64 = function (base64) {
+    var bufferLength = base64.length * 0.75, len = base64.length, i, p = 0, encoded1, encoded2, encoded3, encoded4;
+    if (base64[base64.length - 1] === '=') {
+        bufferLength--;
+        if (base64[base64.length - 2] === '=') {
+            bufferLength--;
+        }
+    }
+    var arraybuffer = new ArrayBuffer(bufferLength), bytes = new Uint8Array(arraybuffer);
+    for (i = 0; i < len; i += 4) {
+        encoded1 = lookup[base64.charCodeAt(i)];
+        encoded2 = lookup[base64.charCodeAt(i + 1)];
+        encoded3 = lookup[base64.charCodeAt(i + 2)];
+        encoded4 = lookup[base64.charCodeAt(i + 3)];
+        bytes[p++] = (encoded1 << 2) | (encoded2 >> 4);
+        bytes[p++] = ((encoded2 & 15) << 4) | (encoded3 >> 2);
+        bytes[p++] = ((encoded3 & 3) << 6) | (encoded4 & 63);
+    }
+    return arraybuffer;
+};
+
+export function decode(input) {
+    // minimum to decode an array
+    if (input?.dtype) {
+	const buffer = decode64(input.bdata)
+	switch (input.dtype) {
+	    // clamped
+	    case 'u1c': return new UInt8ClmapedArray(buffer);
+	    // int
+	    case 'i1': return new Int8Array(buffer);
+	    case 'i2': return new Int16Array(buffer);
+	    case 'i4': return new Int32Array(buffer);
+	    // unsigned int
+	    case 'u1': return new UInt8Array(buffer);
+	    case 'u2': return new UInt16Array(buffer);
+	    case 'u4': return new UInt32Array(buffer);
+	    // float
+	    case 'f4': return new Float32Array(buffer);
+	    case 'f8': return new Float64Array(buffer);
+	}
+    }
+    return input;
+}
+
 export function setGlobe(measurement, speakerNames, speakerGraphs, width, height) {
     // console.log('setGlobe ' + speakerNames.length + ' names and ' + speakerGraphs.length + ' graphs')
     const graphsConfigs = [];
@@ -1069,9 +1119,9 @@ export function setGlobe(measurement, speakerNames, speakerGraphs, width, height
         if (speakerGraphs[i]) {
             let polarData = [];
             for (const j in speakerGraphs[i].data) {
-                const freq = speakerGraphs[i].data[j].x;
-                const angle = speakerGraphs[i].data[j].y;
-                const spl = speakerGraphs[i].data[j].z;
+                const freq = decode(speakerGraphs[i].data[j].x);
+                const angle = decode(speakerGraphs[i].data[j].y);
+                const spl = decode(speakerGraphs[i].data[j].z);
                 if (!spl) {
                     continue;
                 }
@@ -1097,7 +1147,7 @@ export function setGlobe(measurement, speakerNames, speakerGraphs, width, height
                 const color = [];
                 for (let k1 = 0; k1 < freq.length; k1++) {
                     for (let k2 = 0; k2 < angle.length - 1; k2++) {
-                        let val = spl[k2][k1];
+			let val = spl[k1+k2*freq.length]
                         val = Math.max(contourMin, val);
                         val = Math.min(contourMax, val);
                         color.push(val);
