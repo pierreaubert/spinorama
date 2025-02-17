@@ -28,7 +28,7 @@ import pandas as pd
 
 # from spinorama.filter_peq import peq_print
 from spinorama.load_klippel import parse_graph_freq_klippel
-from spinorama.auto_global import GlobalOptimizer, _resample
+from autoeq.auto_global import GlobalOptimizer, _resample
 
 pd.set_option("display.max_rows", 202)
 

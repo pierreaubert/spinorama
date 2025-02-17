@@ -35,6 +35,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.service import Service
 
 
 PROD = "https://www.spinorama.org"
@@ -46,11 +47,12 @@ SCORES = "/scores.html"
 
 class SpinoramaWebsiteTests(unittest.TestCase):
     def setUp(self):
+        service = Service()
         options = webdriver.ChromeOptions()
         options.add_argument("--headless=new")
         # unclear why we need that option but selenium crashes without it
         options.add_argument("--remote-debugging-pipe")
-        self.driver = webdriver.Chrome(options=options)
+        self.driver = webdriver.Chrome(service=service, options=options)
 
     def tearDown(self):
         self.driver.quit()
