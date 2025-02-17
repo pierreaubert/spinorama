@@ -446,7 +446,7 @@ describe('non regression for bug discussions/288', () => {
     it('search for JBL 306 and check that the results are sane', () => {
         const url1 = new URL(TEST_URL + '?search=JBL+306');
         const params1 = urlParameters2Sort(url1);
-        const [maxResults1, results1] = search(metadata, params1);
+        const results1 = search(metadata, params1)[1];
         expect(results1).toBeDefined();
         expect(results1).toBeTypeOf('object');
         expect(results1[0]).toBe('JBL-306P-Mark-ii');
