@@ -1496,7 +1496,7 @@ speakers_info_a: SpeakerDatabase = {
                 "review_published": "20250209",
                 "specifications": {
                     "impedance": 8,
-                    "sensitivity": 90.0,
+                    "sensitivity": 86.0,
                     "size": {
                         "height": 279,
                         "width": 165,
@@ -1540,7 +1540,7 @@ speakers_info_a: SpeakerDatabase = {
                 "review_published": "20250209",
                 "specifications": {
                     "impedance": 8,
-                    "sensitivity": 86.0,
+                    "sensitivity": 82.0,
                     "size": {
                         "height": 270,
                         "width": 146,
@@ -1556,7 +1556,7 @@ speakers_info_a: SpeakerDatabase = {
         "model": "Luna V2 Mini-Monitor Titan",
         "type": "passive",
         "shape": "bookshelves",
-        "price": "1248",
+        "price": "898",
         "amount": "pair",
         "default_measurement": "vendor",
         "measurements": {
@@ -1567,7 +1567,7 @@ speakers_info_a: SpeakerDatabase = {
                 "review_published": "20250209",
                 "specifications": {
                     "impedance": 8,
-                    "sensitivity": 86.0,
+                    "sensitivity": 82.0,
                     "size": {
                         "height": 270,
                         "width": 146,
@@ -1617,7 +1617,7 @@ speakers_info_a: SpeakerDatabase = {
                 "review_published": "20250209",
                 "specifications": {
                     "impedance": 8,
-                    "sensitivity": 89.0,
+                    "sensitivity": 86.0,
                     "size": {
                         "height": 412,
                         "width": 146,
@@ -1633,7 +1633,7 @@ speakers_info_a: SpeakerDatabase = {
         "model": "Sierra Duo V2 LCR Titan",
         "type": "passive",
         "shape": "bookshelves",
-        "price": "1688",
+        "price": "1338",
         "amount": "pair",
         "default_measurement": "vendor",
         "measurements": {
@@ -1644,7 +1644,7 @@ speakers_info_a: SpeakerDatabase = {
                 "review_published": "20250209",
                 "specifications": {
                     "impedance": 8,
-                    "sensitivity": 89.0,
+                    "sensitivity": 86.0,
                     "size": {
                         "height": 412,
                         "width": 146,
@@ -1660,7 +1660,7 @@ speakers_info_a: SpeakerDatabase = {
         "model": "Sierra 1 V2",
         "type": "passive",
         "shape": "bookshelves",
-        "price": "1000",
+        "price": "998",
         "amount": "pair",
         "default_measurement": "vendor",
         "measurements": {
@@ -1676,7 +1676,7 @@ speakers_info_a: SpeakerDatabase = {
                 },
                 "review_published": "20231209",
                 "specifications": {
-                    "sensitivity": 87,
+                    "sensitivity": 83,
                     "impedance": 8,
                     "size": {
                         "height": 362,
@@ -1773,7 +1773,7 @@ speakers_info_a: SpeakerDatabase = {
         "brand": "Ascend Acoustics",
         "model": "Sierra-2EX V2",
         "type": "passive",
-        "price": "1648",
+        "price": "1698",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "vendor",
@@ -1793,7 +1793,7 @@ speakers_info_a: SpeakerDatabase = {
         "brand": "Ascend Acoustics",
         "model": "Sierra-LX",
         "type": "passive",
-        "price": "1400",
+        "price": "1438",
         "amount": "pair",
         "shape": "bookshelves",
         "default_measurement": "vendor",
@@ -1811,9 +1811,9 @@ speakers_info_a: SpeakerDatabase = {
     },
     "Ascend Acoustics Sierra Titan": {
         "brand": "Ascend Acoustics",
-        "model": "Sierra Titan",
+        "model": "Sierra Titan Tower",
         "type": "passive",
-        "price": "3000",
+        "price": "2998",
         "amount": "pair",
         "shape": "floorstanders",
         "default_measurement": "vendor-dome-tweeter",
