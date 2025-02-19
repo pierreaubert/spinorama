@@ -1809,7 +1809,7 @@ speakers_info_a: SpeakerDatabase = {
             },
         },
     },
-    "Ascend Acoustics Sierra Titan": {
+    "Ascend Acoustics Sierra Titan Tower": {
         "brand": "Ascend Acoustics",
         "model": "Sierra Titan Tower",
         "type": "passive",
