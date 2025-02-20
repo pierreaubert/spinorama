@@ -1,0 +1,14 @@
+EQ for PMC Result6 computed from ASR data
+Preference Score 2.74 with EQ 5.87
+Generated from https://github.com/pierreaubert/spinorama/generate_peqs.py v0.26
+Dated: 2025-02-20-07:54:43
+
+Preamp: -2.8 dB
+
+Filter  1: ON PK Fc    42 Hz Gain +3.00 dB Q 0.44
+Filter  2: ON PK Fc   109 Hz Gain -4.51 dB Q 1.46
+Filter  3: ON PK Fc   252 Hz Gain +3.00 dB Q 1.87
+Filter  4: ON PK Fc   792 Hz Gain -3.36 dB Q 2.98
+Filter  5: ON PK Fc  1202 Hz Gain -3.12 dB Q 3.00
+Filter  6: ON PK Fc  2023 Hz Gain +2.99 dB Q 1.00
+Filter  7: ON PK Fc  7834 Hz Gain -3.24 dB Q 0.37
