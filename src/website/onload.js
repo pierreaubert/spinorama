@@ -64,7 +64,7 @@ window.onload = () => {
             console.log('error dropdown trigger+menu not found!');
         }
         trigger.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
+            filters.classList.toggle('is-active');
         });
     }
 
